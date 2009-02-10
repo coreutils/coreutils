@@ -70,10 +70,9 @@ require_controlling_input_terminal_()
   tty -s || have_input_tty=no
   test -t 0 || have_input_tty=no
   if test "$have_input_tty" = no; then
-    echo "$0: This test must have a controlling input \`terminal'," 1>&2
-    echo "  so it may not be run via \`batch', \`at', or \`rsh'." 1>&2
-    echo "  On some systems, it may not even be run in the background." 1>&2
-    (exit 77); exit 77
+    skip_test_ "This test must have a controlling input \`terminal'," \
+      "so it may not be run via \`batch', \`at', or \`rsh'." \
+      "On some systems, it may not even be run in the background."
   fi
 }
 
