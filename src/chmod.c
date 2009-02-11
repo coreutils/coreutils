@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -534,7 +534,8 @@ main (int argc, char **argv)
       root_dev_ino = NULL;
     }
 
-  ok = process_files (argv + optind, FTS_COMFOLLOW | FTS_PHYSICAL);
+  ok = process_files (argv + optind,
+		      FTS_COMFOLLOW | FTS_PHYSICAL | FTS_DEFER_STAT);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

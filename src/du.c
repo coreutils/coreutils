@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -660,7 +660,7 @@ main (int argc, char **argv)
   char *files_from = NULL;
 
   /* Bit flags that control how fts works.  */
-  int bit_flags = FTS_TIGHT_CYCLE_CHECK;
+  int bit_flags = FTS_TIGHT_CYCLE_CHECK | FTS_DEFER_STAT;
 
   /* Select one of the three FTS_ options that control if/when
      to follow a symlink.  */
