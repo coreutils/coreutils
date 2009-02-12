@@ -8689,8 +8689,31 @@ refers to a different file, by name.  When most operations (opening,
 reading, writing, and so on) are passed the symbolic link file, the
 kernel automatically @dfn{dereferences} the link and operates on the
 target of the link.  But some operations (e.g., removing) work on the
-link file itself, rather than on its target.  @xref{Symbolic Links,,,
+link file itself, rather than on its target.  The owner, group, and
+mode of a symlink are not significant to file access performed through
+the link.  @xref{Symbolic Links,,,
 libc, The GNU C Library Reference Manual}.
+
+Symbolic links can contain arbitrary strings; a @dfn{dangling symlink}
+occurs when the string in the symlink does not resolve to a file.
+There are no restrictions against creating dangling symbolic links.
+There are trade-offs to using absolute or relative symlinks.  An
+absolute symlink always points to the same file, even if the directory
+containing the link is moved.  However, if the symlink is visible from
+more than one machine (such as on a networked file system), the file
+pointed to might not always be the same.  A relative symbolic link is
+resolved in relation to the directory that contains the link, and is
+often useful in referring to files on the same device without regards
+to what name that device is mounted on when accessed via networked
+machines.
+
+When creating a relative symlink in a different location than the
+current directory, the resolution of the symlink will be different
+than the resolution of the same string from the current directory.
+Therefore, many users prefer to first change directories to the
+location where the relative symlink will be created, so that
+tab-completion or other file resolution will find the same target as
+what will be placed in the symlink.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
