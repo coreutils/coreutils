@@ -35,6 +35,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Even with this patch, on some systems, it still produces invalid output,
   from 3 to at least 1026 lines long. [bug introduced in coreutils-6.11]
 
+  seq -w now accounts for a decimal point added to the last number
+  to correctly print all numbers to the same width.
+
   wc --files0-from=FILE no longer reads all of FILE into RAM, before
   processing the first file name, unless the list of names is known
   to be small enough.
