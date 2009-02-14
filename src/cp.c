@@ -81,12 +81,6 @@ enum
   UNLINK_DEST_BEFORE_OPENING
 };
 
-/* Initial number of entries in each hash table entry's table of inodes.  */
-#define INITIAL_HASH_MODULE 100
-
-/* Initial number of entries in the inode hash table.  */
-#define INITIAL_ENTRY_TAB_SIZE 70
-
 /* True if the kernel is SELinux enabled.  */
 static bool selinux_enabled;
 
