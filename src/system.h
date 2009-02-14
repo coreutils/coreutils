@@ -655,4 +655,4 @@ bad_cast (char const *s)
   return (char *) s;
 }
 
-void usage (int status);
+void usage (int status) ATTRIBUTE_NORETURN;
