@@ -91,7 +91,7 @@ test_syntax_error (char const *format, char const *arg)
    past the end of the argument list.  This check is supressed if the
    argument is false.  */
 
-static inline void
+static void
 advance (bool f)
 {
   ++pos;
@@ -100,7 +100,7 @@ advance (bool f)
     beyond ();
 }
 
-static inline void
+static void
 unary_advance (void)
 {
   advance (true);
@@ -567,9 +567,9 @@ test_unop (char const *op)
     case 'u': case 'w': case 'x': case 'z':
     case 'G': case 'L': case 'O': case 'S': case 'N':
       return true;
+    default:
+      return false;
     }
-
-  return false;
 }
 
 static bool

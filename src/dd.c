@@ -669,7 +669,7 @@ cleanup (void)
 	   _("closing output file %s"), quote (output_file));
 }
 
-static inline void ATTRIBUTE_NORETURN
+static void ATTRIBUTE_NORETURN
 quit (int code)
 {
   cleanup ();
