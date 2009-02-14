@@ -1,7 +1,7 @@
 # -*- autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 1991, 1993-2008 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1993-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,23 +58,52 @@ AC_ARG_ENABLE([gcc-warnings],
 if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
   AC_SUBST([WERROR_CFLAGS])
-  gl_WARN_ADD([-Wall])
-  gl_WARN_ADD([-Wextra])
-  gl_WARN_ADD([-Wshadow])
-  gl_WARN_ADD([-Wno-sign-compare])
-  gl_WARN_ADD([-Wformat])
-  gl_WARN_ADD([-Wformat-security])
-  gl_WARN_ADD([-Wcast-align])
-  gl_WARN_ADD([-Wpointer-arith])
-  gl_WARN_ADD([-Wwrite-strings])
-  gl_WARN_ADD([-Wbad-function-cast])
-  gl_WARN_ADD([-Wmissing-declarations])
-  gl_WARN_ADD([-Wmissing-prototypes])
-  gl_WARN_ADD([-Wstrict-prototypes])
+
+  # Add many warnings, except some...
+  nw="$nw -Wdeclaration-after-statement" # too useful to forbid
+  nw="$nw -Waggregate-return"       # anachronistic
+  nw="$nw -Wc++-compat"             # We don't care about C++ compilers
+  nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
+  nw="$nw -Wtraditional"            # Warns on #elif which we use often
+  nw="$nw -Wcast-qual"              # Too many warnings for now
+  nw="$nw -Wconversion"             # Too many warnings for now
+  nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
+  nw="$nw -Wsign-conversion"        # Too many warnings for now
+  nw="$nw -Wtraditional-conversion" # Too many warnings for now
+  nw="$nw -Wunreachable-code"       # Too many warnings for now
+  nw="$nw -Wpadded"                 # Our structs are not padded
+  nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
+  nw="$nw -Wlogical-op"             # any use of fwrite provokes this
+  nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
+  nw="$nw -Wvla"                    # warnings in gettext.h
+  nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
+  nw="$nw -Wswitch-enum"            # Too many warnings for now
+  nw="$nw -Wswitch-default"         # Too many warnings for now
+  # things I might fix soon:
+  nw="$nw -Wfloat-equal"            # sort.c, seq.c
+  nw="$nw -Wmissing-format-attribute" # copy.c
+  nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
+  nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
+  nw="$nw -Wstrict-overflow"        # expr.c, pr.c, tr.c, factor.c
+  # ?? -Wstrict-overflow
+
+  gl_MANYWARN_ALL_GCC([ws])
+  gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
+  for w in $ws; do
+    gl_WARN_ADD([$w])
+  done
+  gl_WARN_ADD([-Wno-missing-field-initializers]) # We need this one
+  gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
+  gl_WARN_ADD([-Wno-pointer-sign])     # Too many warnings for now
+  gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
+  gl_WARN_ADD([-fdiagnostics-show-option])
+
   AC_SUBST([WARN_CFLAGS])
+
   AC_DEFINE([lint], [1], [Define to 1 if the compiler is checking for lint.])
   AC_DEFINE([_FORTIFY_SOURCE], [2],
     [enable compile-time and run-time bounds-checking, and some warnings])
+  AC_DEFINE([GNULIB_PORTCHECK], [1], [enable some gnulib portability checks])
 fi
 
 AC_FUNC_FORK
