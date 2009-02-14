@@ -81,7 +81,8 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
       fputs (_("\
-Print information for USERNAME, or the current user.\n\
+Print user and group information for the specified USERNAME,\n\
+or (when USERNAME omitted) for the current user.\n\
 \n\
   -a              ignore, for compatibility with other versions\n\
   -Z, --context   print only the security context of the current user\n\
