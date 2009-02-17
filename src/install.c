@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -255,11 +255,11 @@ need_copy (const char *src_name, const char *dest_name,
     }
 
   /* compare files content */
-  src_fd = open (src_name, O_RDONLY);
+  src_fd = open (src_name, O_RDONLY | O_BINARY);
   if (src_fd < 0)
     return true;
 
-  dest_fd = open (dest_name, O_RDONLY);
+  dest_fd = open (dest_name, O_RDONLY | O_BINARY);
   if (dest_fd < 0)
     {
       close (src_fd);
