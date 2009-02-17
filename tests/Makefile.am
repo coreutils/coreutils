@@ -25,6 +25,7 @@ root_tests =					\
   cp/preserve-gid				\
   cp/special-bits				\
   dd/skip-seek-past-dev				\
+  install/install-C-root			\
   ls/capability					\
   ls/nameless-uid				\
   misc/chcon					\
@@ -318,6 +319,8 @@ TESTS =						\
   install/basic-1				\
   install/create-leading			\
   install/d-slashdot				\
+  install/install-C				\
+  install/install-C-selinux			\
   install/strip-program				\
   install/trap					\
   ln/backup-1					\

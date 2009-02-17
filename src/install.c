@@ -31,6 +31,7 @@
 #include "cp-hash.h"
 #include "copy.h"
 #include "filenamecat.h"
+#include "full-read.h"
 #include "mkancesdirs.h"
 #include "mkdir-p.h"
 #include "modechange.h"
@@ -125,6 +126,9 @@ static mode_t dir_mode = DEFAULT_MODE;
    or S_ISGID bits.  */
 static mode_t dir_mode_bits = CHMOD_MODE_BITS;
 
+/* Compare files before installing (-C) */
+static bool copy_only_if_needed;
+
 /* If true, strip executable files after copying them. */
 static bool strip_files;
 
@@ -145,6 +149,7 @@ enum
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
+  {"compare", no_argument, NULL, 'C'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
@@ -166,6 +171,107 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* Compare content of opened files using file descriptors A_FD and B_FD. Return
+   true if files are equal. */
+static bool
+have_same_content (int a_fd, int b_fd)
+{
+  enum { CMP_BLOCK_SIZE = 4096 };
+  static char a_buff[CMP_BLOCK_SIZE];
+  static char b_buff[CMP_BLOCK_SIZE];
+
+  size_t size;
+  while (0 < (size = full_read (a_fd, a_buff, sizeof a_buff))) {
+    if (size != full_read (b_fd, b_buff, sizeof b_buff))
+      return false;
+
+    if (memcmp (a_buff, b_buff, size) != 0)
+      return false;
+  }
+
+  return size == 0;
+}
+
+/* Return true for mode with non-permission bits. */
+static bool
+extra_mode (mode_t input)
+{
+  const mode_t mask = ~S_IRWXUGO & ~S_IFMT;
+  return input & mask;
+}
+
+/* Return true if copy of file SRC_NAME to file DEST_NAME is necessary. */
+static bool
+need_copy (const char *src_name, const char *dest_name,
+	   const struct cp_options *x)
+{
+  struct stat src_sb, dest_sb;
+  int src_fd, dest_fd;
+  bool content_match;
+
+  if (extra_mode (mode))
+    return true;
+
+  /* compare files using stat */
+  if (lstat (src_name, &src_sb) != 0)
+    return true;
+
+  if (lstat (dest_name, &dest_sb) != 0)
+    return true;
+
+  if (!S_ISREG (src_sb.st_mode) || !S_ISREG (dest_sb.st_mode)
+      || extra_mode (src_sb.st_mode) || extra_mode (dest_sb.st_mode))
+    return true;
+
+  if (src_sb.st_size != dest_sb.st_size
+      || (dest_sb.st_mode & CHMOD_MODE_BITS) != mode
+      || dest_sb.st_uid != (owner_id == (uid_t) -1 ? getuid () : owner_id)
+      || dest_sb.st_gid != (group_id == (gid_t) -1 ? getgid () : group_id))
+    return true;
+
+  /* compare SELinux context if preserving */
+  if (selinux_enabled && x->preserve_security_context)
+    {
+      security_context_t file_scontext = NULL;
+      security_context_t to_scontext = NULL;
+      bool scontext_match;
+
+      if (getfilecon (src_name, &file_scontext) == -1)
+	return true;
+
+      if (getfilecon (dest_name, &to_scontext) == -1)
+	{
+	  freecon (file_scontext);
+	  return true;
+	}
+
+      scontext_match = STREQ (file_scontext, to_scontext);
+
+      freecon (file_scontext);
+      freecon (to_scontext);
+      if (!scontext_match)
+	return true;
+    }
+
+  /* compare files content */
+  src_fd = open (src_name, O_RDONLY);
+  if (src_fd < 0)
+    return true;
+
+  dest_fd = open (dest_name, O_RDONLY);
+  if (dest_fd < 0)
+    {
+      close (src_fd);
+      return true;
+    }
+
+  content_match = have_same_content (src_fd, dest_fd);
+
+  close (src_fd);
+  close (dest_fd);
+  return !content_match;
+}
 
 static void
 cp_option_init (struct cp_options *x)
@@ -361,7 +467,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pt:TvS:Z:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcCsDdg:m:o:pt:TvS:Z:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -372,6 +478,9 @@ main (int argc, char **argv)
 	    version_control_string = optarg;
 	  break;
 	case 'c':
+	  break;
+	case 'C':
+	  copy_only_if_needed = true;
 	  break;
 	case 's':
 	  strip_files = true;
@@ -529,6 +638,24 @@ main (int argc, char **argv)
     error (0, 0, _("WARNING: ignoring --strip-program option as -s option was "
 		   "not specified"));
 
+  if (copy_only_if_needed && x.preserve_timestamps)
+    {
+      error (0, 0, _("options --compare (-C) and --preserve-timestamps are "
+		     "mutually exclusive"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (copy_only_if_needed && strip_files)
+    {
+      error (0, 0, _("options --compare (-C) and --strip are mutually "
+		     "exclusive"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (copy_only_if_needed && extra_mode (mode))
+    error (0, 0, _("the --compare (-C) option is ignored when you"
+		   " specify a mode with non-permission bits"));
+
   get_ids ();
 
   if (dir_arg)
@@ -644,6 +771,9 @@ static bool
 copy_file (const char *from, const char *to, const struct cp_options *x)
 {
   bool copy_into_self;
+
+  if (copy_only_if_needed && !need_copy (from, to, x))
+    return true;
 
   /* Allow installing from non-regular files like /dev/null.
      Charles Karney reported that some Sun version of install allows that
@@ -835,6 +965,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --backup[=CONTROL]  make a backup of each existing destination file\n\
   -b                  like --backup but does not accept an argument\n\
   -c                  (ignored)\n\
+  -C, --compare       compare each pair of source and destination files, and\n\
+                        in some cases, do not modify the destination at all\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
 "), stdout);
