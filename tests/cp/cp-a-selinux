@@ -1,8 +1,10 @@
 #!/bin/sh
 # Ensure that cp -a and cp --preserve=context work properly.
 # In particular, test on a writable NFS partition.
+# Check also locally if --preserve=context, -a and --preserve=all
+# does work
 
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,15 +31,27 @@ require_selinux_
 cwd=`pwd`
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
+# This context is special: it works even when mcstransd isn't running.
+ctx=root:object_r:tmp_t:s0
+
+# Check basic functionality - before check on fixed context mount
+touch c || framework_failure
+chcon $ctx c || framework_failure
+cp -a c d 2>err || framework_failure
+cp --preserve=context c e || framework_failure
+cp --preserve=all c f || framework_failure
+ls -Z d | grep $ctx || fail=1
+test -s err && fail=1   #there must be no stderr output for -a
+ls -Z e | grep $ctx || fail=1
+ls -Z f | grep $ctx || fail=1
+
+
 # Create a file system, then mount it with the context=... option.
 dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
                                              || framework_failure
 mkdir mnt                                    || framework_failure
 mkfs -t ext2 -F blob ||
   skip_test_ "failed to create an ext2 file system"
-
-# This context is special: it works even when mcstransd isn't running.
-ctx=root:object_r:tmp_t:s0
 
 mount -oloop,context=$ctx blob mnt           || framework_failure
 cd mnt                                       || framework_failure

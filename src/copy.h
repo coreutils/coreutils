@@ -186,6 +186,12 @@ struct cp_options
      this flag is "true", while with "cp --preserve=all", it is false. */
   bool require_preserve_xattr;
 
+  /* Used as difference boolean between cp -a and cp -dR --preserve=all.
+     If true, non-mandatory failure diagnostics are not displayed. This
+     should prevent poluting cp -a output.
+   */
+  bool reduce_diagnostics;
+
   /* If true, copy directories recursively and copy special files
      as themselves rather than copying their contents. */
   bool recursive;

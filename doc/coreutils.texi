@@ -7262,7 +7262,10 @@ Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
 directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
-Equivalent to @option{-dpR}.
+Try to preserve SELinux security context, but ignore any failure to do that
+and print no corresponding diagnostic.
+This option does not preserve extended attributes(xattr) at the moment.
+Equivalent to @option{-dR --preserve=all} with a few exceptions.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
@@ -7404,6 +7407,9 @@ Preserve in the destination files
 any links between corresponding source files.
 @c Give examples illustrating how hard links are preserved.
 @c Also, show how soft links map to hard links with -L and -H.
+@itemx context
+Preserve SELinux security context of the file. @command{cp} will fail
+if the preserving of SELinux security context is not succesful.
 @itemx xattr
 Preserve extended attributes if @command{cp} is built with xattr support,
 and xattrs are supported and enabled on your file system.
@@ -7411,7 +7417,10 @@ If SELinux context and/or ACLs are implemented using xattrs,
 they are preserved by this option as well.
 @itemx all
 Preserve all file attributes.
-Equivalent to specifying all of the above.
+Equivalent to specifying all of the above, but with the difference
+that failure to preserve SELinux security context or extended attributes
+does not change @command{cp}'s exit status.
+@command{cp} does diagnose such failures.
 @end table
 
 Using @option{--preserve} with no @var{attribute_list} is equivalent

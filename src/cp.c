@@ -160,7 +160,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --archive                same as -dpR\n\
+  -a, --archive                same as -dR --preserve=all\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
       --copy-contents          copy contents of special files when recursive\n\
@@ -766,6 +766,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_security_context = false;
   x->require_preserve_context = false;
   x->preserve_xattr = false;
+  x->reduce_diagnostics = false;
   x->require_preserve_xattr = false;
 
   x->require_preserve = false;
@@ -921,13 +922,16 @@ main (int argc, char **argv)
 				     sparse_type_string, sparse_type);
 	  break;
 
-	case 'a':		/* Like -dpR. */
+	case 'a':		/* Like -dR --preserve=all with reduced failure diagnostics. */
 	  x.dereference = DEREF_NEVER;
 	  x.preserve_links = true;
 	  x.preserve_ownership = true;
 	  x.preserve_mode = true;
 	  x.preserve_timestamps = true;
 	  x.require_preserve = true;
+	  if (selinux_enabled)
+	     x.preserve_security_context = true;
+	  x.reduce_diagnostics = true;
 	  x.recursive = true;
 	  break;
 

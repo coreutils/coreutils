@@ -289,8 +289,10 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = false;
   x->preserve_mode = false;
   x->preserve_timestamps = false;
+  x->reduce_diagnostics=false;
   x->require_preserve = false;
   x->require_preserve_context = false;
+  x->require_preserve_xattr = false;
   x->recursive = false;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = false;

@@ -122,9 +122,11 @@ cp_option_init (struct cp_options *x)
   x->preserve_mode = true;
   x->preserve_timestamps = true;
   x->preserve_security_context = selinux_enabled;
+  x->reduce_diagnostics = false;
   x->require_preserve = false;  /* FIXME: maybe make this an option */
   x->require_preserve_context = false;
   x->preserve_xattr = true;
+  x->require_preserve_xattr = false;
   x->recursive = true;
   x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */
   x->symbolic_link = false;

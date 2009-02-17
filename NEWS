@@ -6,7 +6,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Add extended attribute support available on certain filesystems like ext2
   and XFS.
-    cp: Tries to copy xattrs when --preserve=xattr specified
+    cp: Tries to copy xattrs when --preserve=xattr or --preserve=all specified
     mv: Always tries to copy xattrs
     install: Never copies xattrs
 
@@ -31,6 +31,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-5.1]
 
   cp uses much less memory in some situations
+
+  cp -a now correctly tries to preserve SELinux context (announced in 6.9.90),
+  doesn't inform about failure, unlike with --preserve=all
 
   du --files0-from=FILE no longer reads all of FILE into RAM before
   processing the first file name
