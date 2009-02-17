@@ -198,7 +198,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --number-separator=STRING   add STRING after (possible) line number\n\
 "), stdout);
       fputs (_("\
-  -v, --first-page=NUMBER         first line number on each logical page\n\
+  -v, --starting-line-number=NUMBER  first line number on each logical page\n\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
