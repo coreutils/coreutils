@@ -32,9 +32,14 @@ inside your new coreutils/ directory:
 If you have made *no* changes:
     git pull
 
-If you *have* made changes and committed them to "master", do this:
-    git fetch
-    git rebase origin
+If you *have* made changes and mistakenly committed them to "master",
+do the following to put your changes on a private branch, "br", and
+to restore master to its unmodified (relative-to-upstream) state:
+    git checkout -b br
+    git checkout master
+    git reset --hard origin
+
+Then "git pull" should work.
 
 
 *Before* you commit changes
