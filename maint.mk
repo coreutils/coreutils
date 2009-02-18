@@ -426,7 +426,7 @@ sc_const_long_option:
 
 NEWS_hash = \
   $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
-     $(srcdir)/NEWS | md5sum -)
+     $(srcdir)/NEWS | grep -v '^Copyright .*Free Software' | md5sum -)
 
 # Ensure that we don't accidentally insert an entry into an old NEWS block.
 sc_immutable_NEWS:
