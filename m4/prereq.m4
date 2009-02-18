@@ -1,4 +1,4 @@
-#serial 75
+#serial 76
 
 dnl We use gl_ for non Autoconf macros.
 m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -7,7 +7,7 @@ m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 # directory of the coreutils package.
 
 
-# Copyright (C) 1998, 2000, 2001, 2003-2008 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000, 2001, 2003-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
