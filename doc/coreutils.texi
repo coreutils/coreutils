@@ -7605,6 +7605,7 @@ bytes (or the size specified with @samp{seek=}).
 @cindex input block size
 Set the input block size to @var{bytes}.
 This makes @command{dd} read @var{bytes} per block.
+The default is 512 bytes.
 
 @item obs=@var{bytes}
 @opindex obs
@@ -7612,6 +7613,7 @@ This makes @command{dd} read @var{bytes} per block.
 @cindex output block size
 Set the output block size to @var{bytes}.
 This makes @command{dd} write @var{bytes} per block.
+The default is 512 bytes.
 
 @item bs=@var{bytes}
 @opindex bs

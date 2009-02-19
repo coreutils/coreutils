@@ -463,16 +463,16 @@ Usage: %s [OPERAND]...\n\
       fputs (_("\
 Copy a file, converting and formatting according to the operands.\n\
 \n\
-  bs=BYTES        read and write BYTES bytes at a time\n\
+  bs=BYTES        read and write BYTES bytes at a time (also see ibs=,obs=)\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=CONVS      convert the file as per the comma separated symbol list\n\
   count=BLOCKS    copy only BLOCKS input blocks\n\
-  ibs=BYTES       read BYTES bytes at a time\n\
+  ibs=BYTES       read BYTES bytes at a time (default: 512)\n\
 "), stdout);
       fputs (_("\
   if=FILE         read from FILE instead of stdin\n\
   iflag=FLAGS     read as per the comma separated symbol list\n\
-  obs=BYTES       write BYTES bytes at a time\n\
+  obs=BYTES       write BYTES bytes at a time (default: 512)\n\
   of=FILE         write to FILE instead of stdout\n\
   oflag=FLAGS     write as per the comma separated symbol list\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
