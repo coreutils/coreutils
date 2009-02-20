@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -4503,7 +4503,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
-  -s, --size                 print the size of each file, in blocks\n\
+  -s, --size                 print the allocated size of each file, in blocks\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size\n\
