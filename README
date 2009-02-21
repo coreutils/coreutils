@@ -92,10 +92,14 @@ compiler, due to the use of declarations after non-declaration statements
 in several files in src/.  There is code in configure to find and, if
 possible, enable an appropriate compiler.  However, if configure doesn't
 find a C99 compiler, it continues nonetheless, and your build will fail.
-If that happens, simply apply the included patch using the following
+If that happens, simply[*] apply the included patch using the following
 command, and then run make again:
 
   cd src && patch < c99-to-c89.diff
+
+[*] however, as of coreutils-7.1, the "c99-to-c89.diff" file is no longer
+maintained, so even if the patches still apply, the result will be an
+incomplete conversion.  It's been 10 years.  Get a decent compiler! ;-)
 
 
 ***********************
