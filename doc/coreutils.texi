@@ -7649,6 +7649,11 @@ Skip @var{blocks} @samp{obs}-byte blocks in the output file before copying.
 Copy @var{blocks} @samp{ibs}-byte blocks from the input file, instead
 of everything until the end of the file.
 
+@item status=noxfer
+@opindex status
+Do not print the overall transfer rate and volume statistics
+that normally make up the third status line when @command{dd} exits.
+
 @item conv=@var{conversion}[,@var{conversion}]@dots{}
 @opindex conv
 Convert the file as specified by the @var{conversion} argument(s).
