@@ -25,9 +25,6 @@ fi
 . $srcdir/test-lib.sh
 require_controlling_input_terminal_
 skip_if_root_
-
-skip_test_ FIXME: skip, until portability of trap ... TTIN is assured
-
 trap '' TTIN # Ignore SIGTTIN
 
 touch f g h i || framework_failure

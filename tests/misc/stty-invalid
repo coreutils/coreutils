@@ -23,9 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 require_controlling_input_terminal_
-
-skip_test_ FIXME: skip, until portability of trap ... TTOU is assured
-
 trap '' TTOU # Ignore SIGTTOU
 
 fail=0
