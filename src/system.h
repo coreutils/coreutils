@@ -627,14 +627,16 @@ emit_bug_reporting_address (void)
   fputs (_("General help using GNU software: <http://www.gnu.org/gethelp/>\n"),
 	 stdout);
 
-  /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
-     <http://translationproject.org/team/LANG_CODE.html> to form one of
-     the URLs at http://translationproject.org/team/.  Otherwise, replace
-     the entire URL with your translation team's email address.  */
   if (hard_locale (LC_MESSAGES))
-    printf (_("Report %s translation bugs to "
-	      "<http://translationproject.org/team/>\n"),
-	    last_component (program_name));
+    {
+      /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
+	 <http://translationproject.org/team/LANG_CODE.html> to form one of
+	 the URLs at http://translationproject.org/team/.  Otherwise, replace
+	 the entire URL with your translation team's email address.  */
+      printf (_("Report %s translation bugs to "
+		"<http://translationproject.org/team/>\n"),
+		last_component (program_name));
+    }
 }
 
 #include "inttostr.h"
