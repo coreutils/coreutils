@@ -1366,7 +1366,6 @@ begfield (const struct line *line, const struct keyfield *key)
   char *ptr = line->text, *lim = ptr + line->length - 1;
   size_t sword = key->sword;
   size_t schar = key->schar;
-  size_t remaining_bytes;
 
   /* The leading field separator itself is included in a field when -t
      is absent.  */
@@ -1388,16 +1387,14 @@ begfield (const struct line *line, const struct keyfield *key)
 	  ++ptr;
       }
 
+  /* If we're ignoring leading blanks when computing the Start
+     of the field, skip past them here.  */
   if (key->skipsblanks)
     while (ptr < lim && blanks[to_uchar (*ptr)])
       ++ptr;
 
   /* Advance PTR by SCHAR (if possible), but no further than LIM.  */
-  remaining_bytes = lim - ptr;
-  if (schar < remaining_bytes)
-    ptr += schar;
-  else
-    ptr = lim;
+  ptr = MIN (lim, ptr + schar);
 
   return ptr;
 }
@@ -1410,7 +1407,9 @@ limfield (const struct line *line, const struct keyfield *key)
 {
   char *ptr = line->text, *lim = ptr + line->length - 1;
   size_t eword = key->eword, echar = key->echar;
-  size_t remaining_bytes;
+
+  if (echar == 0)
+    eword++; /* Skip all of end field.  */
 
   /* Move PTR past EWORD fields or to one past the last byte on LINE,
      whichever comes first.  If there are more than EWORD fields, leave
@@ -1487,19 +1486,17 @@ limfield (const struct line *line, const struct keyfield *key)
     }
 #endif
 
-  /* If we're ignoring leading blanks when computing the End
-     of the field, don't start counting bytes until after skipping
-     past any leading blanks. */
-  if (key->skipeblanks)
-    while (ptr < lim && blanks[to_uchar (*ptr)])
-      ++ptr;
+  if (echar != 0) /* We need to skip over a portion of the end field.  */
+    {
+      /* If we're ignoring leading blanks when computing the End
+	 of the field, skip past them here.  */
+      if (key->skipeblanks)
+	while (ptr < lim && blanks[to_uchar (*ptr)])
+	  ++ptr;
 
-  /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
-  remaining_bytes = lim - ptr;
-  if (echar < remaining_bytes)
-    ptr += echar;
-  else
-    ptr = lim;
+      /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
+      ptr = MIN (lim, ptr + echar);
+    }
 
   return ptr;
 }
@@ -3152,12 +3149,9 @@ main (int argc, char **argv)
 		  badfieldspec (optarg, N_("field number is zero"));
 		}
 	      if (*s == '.')
-		s = parse_field_count (s + 1, &key->echar,
-				       N_("invalid number after `.'"));
-	      else
 		{
-		  /* `-k 2,3' is equivalent to `+1 -3'.  */
-		  key->eword++;
+		  s = parse_field_count (s + 1, &key->echar,
+				         N_("invalid number after `.'"));
 		}
 	      s = set_ordering (s, key, bl_end);
 	    }

@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  sort now handles specified key ends correctly.
+  Previously -k1,1b would have caused leading space from field 2 to be
+  included in the sort while -k2,3.0 would have not included field 3.
+
 
 * Noteworthy changes in release 7.1 (2009-02-21) [stable]
 
