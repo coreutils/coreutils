@@ -6661,21 +6661,27 @@ foo.zml-25.gz      foo.zml-25.gz
 foo.zml-6.gz       foo.zml-100.gz
 @end example
 
-Note also that numeric parts with leading zeros are considered as
-fractional one:
+Version-sorted strings are compared such that if @var{ver1} and @var{ver2}
+are version numbers and @var{prefix} and @var{suffix} (@var{suffix} matching
+the regular expression @samp{(\.[A-Za-z][A-Za-z0-9]*)*}) are strings then
+@var{ver1} < @var{ver2} implies that the name composed of
+``@var{prefix} @var{ver1} @var{suffix}'' sorts before
+``@var{prefix} @var{ver2} @var{suffix}''.
+
+Note also that leading zeros of numeric parts are ignored:
 
 @example
 $ ls -1            $ ls -1v
-abc-1.007.tgz      abc-1.007.tgz
-abc-1.012b.tgz     abc-1.01a.tgz
+abc-1.007.tgz      abc-1.01a.tgz
+abc-1.012b.tgz     abc-1.007.tgz
 abc-1.01a.tgz      abc-1.012b.tgz
 @end example
 
-This functionality is implemented using the @code{strverscmp} function.
-@xref{String/Array Comparison, , , libc, The GNU C Library Reference Manual}.
-One result of that implementation decision is that @code{ls -v} does not
-use the locale category, @env{LC_COLLATE}.  As a result, non-numeric prefixes
-are sorted as if @env{LC_COLLATE} were set to @code{C}.
+This functionality is implemented using gnulib's @code{filevercmp} function.
+One result of that implementation decision is that @samp{ls -v}
+and @samp{sort -V} do not use the locale category, @env{LC_COLLATE},
+which means non-numeric prefixes are sorted as if @env{LC_COLLATE} were set
+to @samp{C}.
 
 @node General output formatting
 @subsection General output formatting
