@@ -26,9 +26,10 @@ fi
 long_name=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.foo
 touch $long_name || framework_failure
 
+e='\33'
 color_code='0;31;42'
-c_pre='\e[0m\e['"${color_code}m"
-c_post='\e[0m\e[K\n\e[m'
+c_pre="$e[0m$e[${color_code}m"
+c_post="$e[0m$e[K\n$e[m"
 printf "$c_pre$long_name$c_post" > exp || framework_failure
 
 fail=0
