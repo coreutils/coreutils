@@ -1,7 +1,7 @@
 #! /bin/sh
 # Test "stty" with rows and columns.
 
-# Copyright (C) 1998-2001, 2003-2008 Free Software Foundation, Inc.
+# Copyright (C) 1998-2001, 2003-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ export LC_ALL
 
 . $srcdir/test-lib.sh
 require_controlling_input_terminal_
+trap '' TTOU # Ignore SIGTTOU
 
 # Versions of GNU stty from shellutils-1.9.2c and earlier failed
 # tests #2 and #4 when run on SunOS 4.1.3.
