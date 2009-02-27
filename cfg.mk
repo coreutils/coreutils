@@ -206,4 +206,10 @@ sc_strftime_check:
 	  rm -f $@-src $@-info;						\
 	fi
 
+# Indent only with spaces.
+sc_prohibit_tab_based_indentation:
+	@re='^ *	'						\
+	msg='TAB in indentation; use only spaces'			\
+	  $(_prohibit_regexp)
+
 include $(srcdir)/dist-check.mk

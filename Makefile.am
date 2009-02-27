@@ -49,6 +49,7 @@ syntax_check_exceptions =		\
   .x-sc_prohibit_atoi_atof		\
   .x-sc_prohibit_stat_st_blocks		\
   .x-sc_prohibit_strcmp			\
+  .x-sc_prohibit_tab_based_indentation	\
   .x-sc_require_config_h		\
   .x-sc_require_config_h_first		\
   .x-sc_space_tab			\
