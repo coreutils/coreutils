@@ -229,8 +229,3 @@ mbsalign_cleanup:
 
   return ret;
 }
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */

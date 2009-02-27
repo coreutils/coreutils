@@ -214,9 +214,3 @@ main (int argc, char **argv)
     exit (exit_status);
   }
 }
-
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */

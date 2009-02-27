@@ -113,9 +113,3 @@ print_group (gid_t gid, bool use_name)
     printf ("%s", grp->gr_name);
   return ok;
 }
-
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */

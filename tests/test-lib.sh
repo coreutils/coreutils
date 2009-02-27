@@ -387,7 +387,3 @@ elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
 else
   compare() { cmp "$@"; }
 fi
-
-# Local Variables:
-# indent-tabs-mode: nil
-# End:

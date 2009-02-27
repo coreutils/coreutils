@@ -330,9 +330,3 @@ main (int argc, char **argv)
         return status;
     }
 }
-
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */

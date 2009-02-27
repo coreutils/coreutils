@@ -765,7 +765,3 @@ sed 's,\.\./\.\.,..,g' $m > $m-t
 mv -f $m-t $m
 
 echo "$0: done.  Now you can run './configure'."
-
-# Local Variables:
-# indent-tabs-mode: nil
-# End:

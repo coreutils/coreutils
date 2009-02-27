@@ -416,9 +416,3 @@ main (int argc, char **argv)
 
   return errors ? EXIT_FAILURE : EXIT_SUCCESS;
 }
-
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */

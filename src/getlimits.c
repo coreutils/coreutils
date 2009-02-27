@@ -172,9 +172,3 @@ main (int argc, char **argv)
   print_int (INTMAX);
   print_int (UINTMAX);
 }
-
-/*
- * Local variables:
- *  indent-tabs-mode: nil
- * End:
- */
