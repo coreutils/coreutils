@@ -24,6 +24,10 @@ my $prog = 'sort';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $mb_locale = $ENV{LOCALE_FR_UTF8};
+! defined $mb_locale || $mb_locale eq 'none'
+  and $mb_locale = 'C';
+
 # Since each test is run with a file name and with redirected stdin,
 # the name in the diagnostic is either the file name or "-".
 # Normalize each diagnostic to use '-'.
@@ -215,6 +219,12 @@ my @Tests =
 # When ignoring leading blanks for end position, ensure blanks from
 # next field are not included in the sort. I.E. order should not change here.
 ["18f", '-k1,1b', {IN=>"a  y\na z\n"}, {OUT=>"a  y\na z\n"}],
+
+# When ignoring leading blanks for start position, ensure blanks from
+# next field are not included in the sort. I.E. order should not change here.
+# This was noticed as an issue on fedora 8 (only in multibyte locales).
+["18g", '-k1b,1', {IN=>"a  y\na z\n"}, {OUT=>"a  y\na z\n"},
+ {ENV => "LC_ALL=$mb_locale"}],
 
 # This looks odd, but works properly -- 2nd keyspec is never
 # used because all lines are different.
