@@ -1,7 +1,7 @@
 #!/bin/sh
 # Confirm that copying a directory into itself gets a proper diagnostic.
 
-# Copyright (C) 2001, 2002, 2004, 2006-2008 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2004, 2006-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,15 +28,32 @@ fi
 
 . $srcdir/test-lib.sh
 
-mkdir dir || framework_failure
+mkdir a dir || framework_failure
 
 fail=0
 
 # This command should exit nonzero.
 cp -R dir dir 2> out && fail=1
+echo 1 >> out
+
+# This should, too.  However, with coreutils-7.1 it would infloop.
+cp -rl dir dir 2>> out && fail=1
+echo 2 >> out
+
+cp -rl a dir dir 2>> out && fail=1
+echo 3 >> out
+cp -rl a dir dir 2>> out && fail=1
+echo 4 >> out
 
 cat > exp <<\EOF
 cp: cannot copy a directory, `dir', into itself, `dir/dir'
+1
+cp: cannot copy a directory, `dir', into itself, `dir/dir'
+2
+cp: cannot copy a directory, `dir', into itself, `dir/dir'
+3
+cp: cannot copy a directory, `dir', into itself, `dir/dir'
+4
 EOF
 #'
 

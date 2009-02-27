@@ -104,6 +104,7 @@ static bool copy_internal (char const *src_name, char const *dst_name,
 			   struct dir_list *ancestors,
 			   const struct cp_options *x,
 			   bool command_line_arg,
+			   bool *first_dir_created_per_command_line_arg,
 			   bool *copy_into_self,
 			   bool *rename_succeeded);
 static bool owner_failure_ok (struct cp_options const *x);
@@ -201,13 +202,16 @@ copy_attr_by_name (char const *src_path, char const *dst_path)
    DST_NAME_IN is a directory that was created previously in the
    recursion.   SRC_SB and ANCESTORS describe SRC_NAME_IN.
    Set *COPY_INTO_SELF if SRC_NAME_IN is a parent of
+   FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG  FIXME
    (or the same as) DST_NAME_IN; otherwise, clear it.
    Return true if successful.  */
 
 static bool
 copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
 	  const struct stat *src_sb, struct dir_list *ancestors,
-	  const struct cp_options *x, bool *copy_into_self)
+	  const struct cp_options *x,
+	  bool *first_dir_created_per_command_line_arg,
+	  bool *copy_into_self)
 {
   char *name_space;
   char *namep;
@@ -237,11 +241,18 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
 
       ok &= copy_internal (src_name, dst_name, new_dst, src_sb->st_dev,
 			   ancestors, &non_command_line_options, false,
+			   first_dir_created_per_command_line_arg,
 			   &local_copy_into_self, NULL);
       *copy_into_self |= local_copy_into_self;
 
       free (dst_name);
       free (src_name);
+
+      /* If we're copying into self, there's no point in continuing,
+	 and in fact, that would even infloop, now that we record only
+	 the first created directory per command line argument.  */
+      if (local_copy_into_self)
+	break;
 
       namep += strlen (namep) + 1;
     }
@@ -1125,6 +1136,7 @@ restore_default_fscreatecon_or_die (void)
    not known.  ANCESTORS points to a linked, null terminated list of
    devices and inodes of parent directories of SRC_NAME.  COMMAND_LINE_ARG
    is true iff SRC_NAME was specified on the command line.
+   FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG is both input and output.
    Set *COPY_INTO_SELF if SRC_NAME is a parent of (or the
    same as) DST_NAME; otherwise, clear it.
    Return true if successful.  */
@@ -1135,6 +1147,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	       struct dir_list *ancestors,
 	       const struct cp_options *x,
 	       bool command_line_arg,
+	       bool *first_dir_created_per_command_line_arg,
 	       bool *copy_into_self,
 	       bool *rename_succeeded)
 {
@@ -1815,11 +1828,15 @@ copy_internal (char const *src_name, char const *dst_name,
 		}
 	    }
 
-	  /* Insert the created directory's inode and device
-             numbers into the search structure, so that we can
-             avoid copying it again.  */
-	  if (!x->hard_link)
-	    remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
+	  /* Record the created directory's inode and device numbers into
+	     the search structure, so that we can avoid copying it again.
+	     Do this only for the first directory that is created for each
+	     source command line argument.  */
+	  if (!*first_dir_created_per_command_line_arg)
+	    {
+	      remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
+	      *first_dir_created_per_command_line_arg = true;
+	    }
 
 	  if (x->verbose)
 	    emit_verbose (src_name, dst_name, NULL);
@@ -1838,6 +1855,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	     in a source directory would cause the containing destination
 	     directory not to have owner/perms set properly.  */
 	  delayed_ok = copy_dir (src_name, dst_name, new_dst, &src_sb, dir, x,
+				 first_dir_created_per_command_line_arg,
 				 copy_into_self);
 	}
     }
@@ -2185,8 +2203,11 @@ copy (char const *src_name, char const *dst_name,
   top_level_src_name = src_name;
   top_level_dst_name = dst_name;
 
+  bool first_dir_created_per_command_line_arg = false;
   return copy_internal (src_name, dst_name, nonexistent_dst, 0, NULL,
-			options, true, copy_into_self, rename_succeeded);
+			options, true,
+			&first_dir_created_per_command_line_arg,
+			copy_into_self, rename_succeeded);
 }
 
 /* Set *X to the default options for a value of type struct cp_options.  */
