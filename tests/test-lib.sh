@@ -136,7 +136,7 @@ rwx_to_mode_()
 
   case $rwx in
     [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]) ;;
-    [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]+) ;;
+    [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-][+.]) ;;
     *) echo "$0: invalid mode string: $rwx" 1>&2; return;;
   esac
 

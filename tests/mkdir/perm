@@ -2,7 +2,7 @@
 # Verify that mkdir's `-m MODE' option works properly
 # with various umask settings.
 
-# Copyright (C) 2000, 2002-2008 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -72,11 +72,11 @@ for p in empty -p; do
 
     mkdir $p $mode parent/sub || fail=1
 
-    perms=`ls -ld parent | sed 's/ .*//; s/+$//'`
+    perms=$(stat --printf %A parent)
     test "$parent_perms" = "$perms" \
       || { fail=1; echo parent: expected $parent_perms, got $perms; }
 
-    perms=`ls -ld parent/sub | sed 's/ .*//; s/+$//'`
+    perms=$(stat --printf %A parent/sub)
     test "$sub_perms" = "$perms" \
       || { fail=1; echo parent/sub: expected $sub_perms, got $perms; }
 
