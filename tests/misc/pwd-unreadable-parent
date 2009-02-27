@@ -3,7 +3,7 @@
 # is unreadable.  Perform this test only on systems with a usable getcwd
 # function that has this capability.
 
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ test $host_os != linux-gnu &&
 # Linux ia64 has the gl_FUNC_GETCWD_ABORT_BUG, so we can't use
 # the system getcwd.
 test $REPLACE_GETCWD = 1 &&
-  skip_test_ "can't use buggy system getcwd; skipping this test"
+  skip_test_ "can't use buggy system getcwd"
 
 mkdir -p a/b || framework_failure
 cd a/b || framework_failure

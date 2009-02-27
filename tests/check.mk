@@ -1,5 +1,5 @@
 # Include this file at the end of each tests/*/Makefile.am.
-# Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,6 +52,7 @@ TESTS_ENVIRONMENT =				\
   tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
   . $(srcdir)/envvar-check;			\
   TMPDIR=$$tmp__; export TMPDIR;		\
+  exec 9>&2;					\
   shell_or_perl_() {				\
     if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
       if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\

@@ -25,6 +25,7 @@ fi
 
 skip_test_()
 {
+  echo "$0: skipping test: $@" | head -1 1>&9
   echo "$0: skipping test: $@" 1>&2
   Exit 77
 }
@@ -85,9 +86,10 @@ require_controlling_input_terminal_()
   tty -s || have_input_tty=no
   test -t 0 || have_input_tty=no
   if test "$have_input_tty" = no; then
-    skip_test_ "This test must have a controlling input \`terminal'," \
-      "so it may not be run via \`batch', \`at', or \`rsh'." \
-      "On some systems, it may not even be run in the background."
+    skip_test_ 'requires controlling input terminal
+This test must have a controlling input "terminal", so it may not be
+run via "batch", "at", or "ssh".  On some systems, it may not even be
+run in the background.'
   fi
 }
 
@@ -175,7 +177,7 @@ require_selinux_()
 very_expensive_()
 {
   if test "$RUN_VERY_EXPENSIVE_TESTS" != yes; then
-    skip_test_ '
+    skip_test_ 'very expensive: disabled by default
 This test is very expensive, so it is disabled by default.
 To run it anyway, rerun make check with the RUN_VERY_EXPENSIVE_TESTS
 environment variable set to yes.  E.g.,
@@ -188,7 +190,7 @@ environment variable set to yes.  E.g.,
 expensive_()
 {
   if test "$RUN_EXPENSIVE_TESTS" != yes; then
-    skip_test_ '
+    skip_test_ 'expensive: disabled by default
 This test is relatively expensive, so it is disabled by default.
 To run it anyway, rerun make check with the RUN_EXPENSIVE_TESTS
 environment variable set to yes.  E.g.,
@@ -217,8 +219,8 @@ require_membership_in_two_groups_()
   groups=${COREUTILS_GROUPS-`(id -G || /usr/xpg4/bin/id -G) 2>/dev/null`}
   case "$groups" in
     *' '*) ;;
-    *) skip_test_ '
-$0: this test requires that you be a member of more than one group,
+    *) skip_test_ 'requires membership in two groups
+this test requires that you be a member of more than one group,
 but running `id -G'\'' either failed or found just one.  If you really
 are a member of at least two groups, then rerun this test with
 COREUTILS_GROUPS set in your environment to the space-separated list
