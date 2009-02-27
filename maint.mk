@@ -862,3 +862,11 @@ alpha beta major: $(local-check) writable-files
 	perl -pi -e '$$. == 3 and print "$(noteworthy)\n\n\n"' NEWS
 	$(emit-commit-log) > .ci-msg
 	$(VC) commit -F .ci-msg -a
+
+.PHONY: web-manual
+web-manual:
+	@cd '$(srcdir)/doc'; \
+	  $(SHELL) ../build-aux/gendocs.sh -o '$(abs_builddir)/doc/manual' \
+	     --email $(PACKAGE_BUGREPORT) $(PACKAGE) \
+	    "$(PACKAGE_NAME) - Core GNU utilities"
+	@echo " *** Upload the doc/manual directory to web-cvs."
