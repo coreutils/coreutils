@@ -233,20 +233,25 @@ Try to make the summary line fit one of the following forms:
   maint: change-description
 
 
-Use SPACE-only indentation in new files.
-========================================
-In any new file, eliminate all leading TABs (e.g., via running GNU indent
-with --no-tabs) and put these lines at the end of the file:
+Use SPACE-only indentation in all[*] files
+==========================================
+We use space-only indentation in nearly all files.
+If you use Emacs and your coreutils working directory name matches,
+this code enables the right mode:
+
+  ;; In coreutils, indent with spaces everywhere (not TABs).
+  ;; Exceptions: Makefile and ChangeLog modes.
+  (add-hook 'find-file-hook '(lambda ()
+    (if (and buffer-file-name
+             (string-match "/coreutils\\>" (buffer-file-name))
+             (not (string-equal mode-name "Change Log"))
+             (not (string-equal mode-name "Makefile")))
+        (setq indent-tabs-mode nil))))
+
+[*] Makefile and ChangeLog files are exempt, of course.
+
 [FIXME: suggest vim syntax to do same thing, if it can be done safely.
  Most distros now "set nomodeline" by default for a good reason. ]
-
-/*
- * Local variables:
- * indent-tabs-mode: nil
- * End:
- */
-
-Do not change TABs to spaces or vice versa in any existing file.
 
 
 Send patches to the address listed in --help output
