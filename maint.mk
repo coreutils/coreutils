@@ -812,6 +812,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --news=NEWS							\
 	    --bootstrap-tools=autoconf,automake,bison,gnulib		\
 	    --gnulib-version=$(gnulib-version)				\
+	    --no-print-checksums					\
 	    $(addprefix --url-dir=, $(url_dir_list))
 
 ## ---------------- ##
