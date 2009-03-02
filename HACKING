@@ -380,6 +380,25 @@ If you use vim, add this to ~/.vimrc:
     match RedundantSpaces /\s\+$\| \+\ze\t/
 
 
+Git can help too, by stopping you from committing any change that would
+add trailing blanks.  The example pre-commit hook contains code to check
+for trailing whitespace and spaces before tabs; enable it by moving it
+to the right place and making sure it is executable:
+
+    mv .git/hooks/pre-commit.sample .git/hooks/pre-commit
+
+With a repository created by git-1.5.6 or older, use this command:
+
+    chmod +x .git/hooks/pre-commit
+
+To manually check for whitespace errors before committing, you can use
+
+    git diff --check
+
+Git also has some settings to enable suitable internal whitespace checks.
+See the manpage for git-apply for details.
+
+
 -------------------------------------------
 
 Miscellaneous useful git commands
