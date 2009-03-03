@@ -21,6 +21,9 @@ gnu_ftp_host-beta = alpha.gnu.org
 gnu_ftp_host-major = ftp.gnu.org
 gnu_rel_host = $(gnu_ftp_host-$(RELEASE_TYPE))
 
+# Used in maint.mk's web-manual rule
+manual_title = Core GNU utilities
+
 url_dir_list = \
   ftp://$(gnu_rel_host)/gnu/coreutils
 

@@ -4,10 +4,10 @@ Here are most of the steps we (maintainers) follow when making a release.
 
     git checkout master; git pull
 
-* Run ./configure && make maintainerclean
+* Run ./configure && make maintainer-clean
 
 * Ensure that the desired versions of autoconf, automake, bison, etc.
-  are in your PATH.
+  are in your PATH.  See HACKING for the complete list.
 
 * Ensure that you're on "master" with no uncommitted diffs.
   This should produce no output: git checkout master; git diff
@@ -41,7 +41,7 @@ FIXME: enable excluded programs like arch? to get their manual pages?
   corresponding upload-to destination in the emitted gnupload command.
 
     # "TYPE" must be major, beta or alpha
-    XZ_OPT=-9e make TYPE
+    make TYPE
 
 * Test the tarball.  copy it to a few odd-ball systems and ensure that
   it builds and passes all tests.
@@ -90,6 +90,6 @@ Once all the builds and tests have passed,
     CVS_RSH=ssh \
     cvs -d:ext:$USER@cvs.savannah.gnu.org:/web/coreutils co coreutils
 
-  Be sure to "cvs add" any files that "cvs status" marks with "?".
+  Be sure to "cvs add -ko" any files that "cvs status" marks with "?".
   That is necessary whenever a new texinfo node is added.  Each becomes
   a new file in html_node that must then be "cvs add"ed.
