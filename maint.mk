@@ -374,7 +374,7 @@ sc_the_the:
 
 sc_trailing_blank:
 	@re='[	 ]$$'							\
-	ignore_case=1 msg='found trailing blank(s)'			\
+	msg='found trailing blank(s)'					\
 	  $(_prohibit_regexp)
 
 # Match lines like the following, but where there is only one space
