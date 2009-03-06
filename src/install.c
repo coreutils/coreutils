@@ -71,15 +71,6 @@ static bool use_default_selinux_context = true;
 # define matchpathcon_init_prefix(a, p) /* empty */
 #endif
 
-/* Initial number of entries in each hash table entry's table of inodes.  */
-#define INITIAL_HASH_MODULE 100
-
-/* Initial number of entries in the inode hash table.  */
-#define INITIAL_ENTRY_TAB_SIZE 70
-
-/* Number of bytes of a file to copy at a time. */
-#define READ_SIZE (32 * 1024)
-
 static bool change_timestamps (struct stat const *from_sb, char const *to);
 static bool change_attributes (char const *name);
 static bool copy_file (const char *from, const char *to,

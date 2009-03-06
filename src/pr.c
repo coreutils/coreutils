@@ -413,8 +413,6 @@ struct COLUMN
 
 typedef struct COLUMN COLUMN;
 
-#define NULLCOL (COLUMN *)0
-
 static int char_to_clump (char c);
 static bool read_line (COLUMN *p);
 static bool print_page (void);

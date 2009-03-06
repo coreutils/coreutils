@@ -76,7 +76,6 @@ static void process_signals (void);
 # define fdatasync(fd) (errno = ENOSYS, -1)
 #endif
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
 #define output_char(c)				\
   do						\
     {						\

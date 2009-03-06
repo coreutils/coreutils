@@ -41,12 +41,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
 
-/* Initial number of entries in each hash table entry's table of inodes.  */
-#define INITIAL_HASH_MODULE 100
-
-/* Initial number of entries in the inode hash table.  */
-#define INITIAL_ENTRY_TAB_SIZE 70
-
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum

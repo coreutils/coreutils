@@ -1,5 +1,5 @@
 /* csplit - split a file into sections determined by context lines
-   Copyright (C) 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@
 #define AUTHORS \
   proper_name ("Stuart Kemp"), \
   proper_name ("David MacKenzie")
-
-/* Increment size of area for control records. */
-#define ALLOC_SIZE 20
 
 /* The default prefix for output file names. */
 #define DEFAULT_PREFIX	"xx"

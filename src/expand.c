@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 1995-2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2006, 2008-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,10 +46,6 @@
 #define PROGRAM_NAME "expand"
 
 #define AUTHORS proper_name ("David MacKenzie")
-
-/* The number of bytes added at a time to the amount of memory
-   allocated for the output line.  */
-#define OUTPUT_BLOCK 256
 
 /* If true, convert blanks even after nonblank characters have been
    read on the line.  */

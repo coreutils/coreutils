@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2008 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2009 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software: you can redistribute it and/or modify
@@ -64,9 +64,6 @@
 /* Reallocation step when swallowing non regular files.  The value is not
    the actual reallocation step, but its base two logarithm.  */
 #define SWALLOW_REALLOC_LOG 12
-
-/* Imported from "regex.c".  */
-#define Sword 1
 
 /* Program options.  */
 

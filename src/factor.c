@@ -1,5 +1,5 @@
 /* factor -- print prime factors of n.
-   Copyright (C) 86, 1995-2005, 2007-2008 Free Software Foundation, Inc.
+   Copyright (C) 86, 1995-2005, 2007-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,9 +29,7 @@
 #include <gmp.h>
 #endif
 
-
 #include <assert.h>
-#define NDEBUG 1
 
 #include "system.h"
 #include "error.h"
