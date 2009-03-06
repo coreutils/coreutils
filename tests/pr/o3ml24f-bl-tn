@@ -1,6 +1,6 @@
    
 
--- Date/Time --                         x                         Page 1
+   -- Date/Time --                         x                         Page 1
 
 
    1   FF-Test: FF's in Text	       1   Test-INPUT: "Without FF set by
@@ -19,7 +19,7 @@
    14 456789 123456789 123456789 12345 14 456789 123456789 123456789 12345
    
 
--- Date/Time --                         x                         Page 2
+   -- Date/Time --                         x                         Page 2
 
 
    				       15 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -38,7 +38,7 @@
    				       28 no trunc
    
 
--- Date/Time --                         x                         Page 3
+   -- Date/Time --                         x                         Page 3
 
 
    15 xyzxyzxyz XYZXYZXYZ abcabcab     29 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -57,7 +57,7 @@
    				       42 456789 123456789 abcdefghi ABCDE
    
 
--- Date/Time --                         x                         Page 4
+   -- Date/Time --                         x                         Page 4
 
 
    				       43 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -76,7 +76,7 @@
    				       56 456789 123456789 abcdefghi ABCDE
    
 
--- Date/Time --                         x                         Page 5
+   -- Date/Time --                         x                         Page 5
 
 
    29 xyzxyzxyz XYZXYZXYZ abcabcab     57 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -95,19 +95,19 @@
    42 456789 123456789 abcdefghi ABCDE
    
 
--- Date/Time --                         x                         Page 6
+   -- Date/Time --                         x                         Page 6
 
 
 
    
 
--- Date/Time --                         x                         Page 7
+   -- Date/Time --                         x                         Page 7
 
 
 
    
 
--- Date/Time --                         x                         Page 8
+   -- Date/Time --                         x                         Page 8
 
 
    43 xyzxyzxyz XYZXYZXYZ abcabcab     
@@ -126,7 +126,7 @@
    56 456789 123456789 abcdefghi ABCDE
    
 
--- Date/Time --                         x                         Page 9
+   -- Date/Time --                         x                         Page 9
 
 
    				       
@@ -145,7 +145,7 @@
    70  456789 123456789 abcdefghi ABCD 
    
 
--- Date/Time --                        x                         Page 10
+   -- Date/Time --                        x                         Page 10
 
 
    1				       

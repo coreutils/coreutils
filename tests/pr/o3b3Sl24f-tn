@@ -1,6 +1,6 @@
    
 
--- Date/Time --                         x                         Page 1
+   -- Date/Time --                         x                         Page 1
 
 
    1   Test-INPUT: "With:--:15 xyzxyzxyz XYZXYZXY:--:29 xyzxyzxyz XYZXYZXY
@@ -19,7 +19,7 @@
    14 456789 123456789 1:--:28 no trunc		 :--:42 456789 123456789 a
    
 
--- Date/Time --                         x                         Page 2
+   -- Date/Time --                         x                         Page 2
 
 
    43 xyzxyzxyz XYZXYZXY:--:50			 :--:57 xyzxyzxyz XYZXYZXY
