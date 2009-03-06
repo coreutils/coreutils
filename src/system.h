@@ -147,6 +147,9 @@ enum
 # define D_INO(dp) NOT_AN_INODE_NUMBER
 #endif
 
+/* include here for SIZE_MAX.  */
+#include <inttypes.h>
+
 /* Get or fake the disk device blocksize.
    Usually defined by sys/param.h (if at all).  */
 #if !defined DEV_BSIZE && defined BSIZE
@@ -218,6 +221,51 @@ enum
 # endif
 #endif
 
+/* As of Mar 2009, 32KiB is determined to be the minimium
+   blksize to best minimize system call overhead.
+   This can be tested with this script with the results
+   shown for a 1.7GHz pentium-m with 2GB of 400MHz DDR2 RAM:
+
+   for i in $(seq 0 10); do
+     size=$((8*1024**3)) #ensure this is big enough
+     bs=$((1024*2**$i))
+     printf "%7s=" $bs
+     dd bs=$bs if=/dev/zero of=/dev/null count=$(($size/$bs)) 2>&1 |
+     sed -n 's/.* \([0-9.]* [GM]B\/s\)/\1/p'
+   done
+
+      1024=734 MB/s
+      2048=1.3 GB/s
+      4096=2.4 GB/s
+      8192=3.5 GB/s
+     16384=3.9 GB/s
+     32768=5.2 GB/s
+     65536=5.3 GB/s
+    131072=5.5 GB/s
+    262144=5.7 GB/s
+    524288=5.7 GB/s
+   1048576=5.8 GB/s
+
+   Note that this is to minimize system call overhead.
+   Other values may be appropriate to minimize file system
+   or disk overhead.  For example on my current linux system
+   the readahead setting is 128KiB which was read using:
+
+   file="."
+   device=$(df -P --local "$file" | tail -n1 | cut -d' ' -f1)
+   echo $(( $(blockdev --getra $device) * 512 ))
+
+   However there isn't a portable way to get the above.
+   In the future we could use the above method if available
+   and default to io_blksize() if not.
+ */
+enum { IO_BUFSIZE = 32*1024 };
+static inline size_t
+io_blksize (struct stat sb)
+{
+  return MAX (IO_BUFSIZE, ST_BLKSIZE (sb));
+}
+
 /* Redirection and wildcarding when done by the utility itself.
    Generally a noop, but used in particular for native VMS. */
 #ifndef initialize_main
@@ -227,8 +275,6 @@ enum
 #include "stat-macros.h"
 
 #include "timespec.h"
-
-#include <inttypes.h>
 
 #include <ctype.h>
 

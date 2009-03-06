@@ -24,6 +24,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously -k1,1b would have caused leading space from field 2 to be
   included in the sort while -k2,3.0 would have not included field 3.
 
+** Changes in behavior
+
+  cp,mv,install,cat,split: now read and write a minimum of 32KiB
+  at a time.  This was seen to increase throughput.  Up to 2 times
+  when reading cached files on linux for example.
 
 * Noteworthy changes in release 7.1 (2009-02-21) [stable]
 

@@ -554,7 +554,7 @@ main (int argc, char **argv)
 
   if (fstat (STDIN_FILENO, &stat_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
-  in_blk_size = ST_BLKSIZE (stat_buf);
+  in_blk_size = io_blksize (stat_buf);
 
   buf = ptr_align (xmalloc (in_blk_size + 1 + page_size - 1), page_size);
 

@@ -78,12 +78,6 @@ static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 /* Preserves the `cat' function's local `newlines' between invocations.  */
 static int newlines2 = 0;
 
-static inline size_t
-compute_buffer_size (struct stat st)
-{
-  return MIN (8 * ST_BLKSIZE (st), 32 * 1024);
-}
-
 void
 usage (int status)
 {
@@ -642,7 +636,7 @@ main (int argc, char **argv)
   if (fstat (STDOUT_FILENO, &stat_buf) < 0)
     error (EXIT_FAILURE, errno, _("standard output"));
 
-  outsize = compute_buffer_size (stat_buf);
+  outsize = io_blksize (stat_buf);
   /* Input file can be output file for non-regular files.
      fstat on pipes returns S_IFSOCK on some systems, S_IFIFO
      on others, so the checking should not be done for those types,
@@ -706,7 +700,7 @@ main (int argc, char **argv)
 	  ok = false;
 	  goto contin;
 	}
-      insize = compute_buffer_size (stat_buf);
+      insize = io_blksize (stat_buf);
 
       /* Compare the device and i-node numbers of this input file with
 	 the corresponding values of the (output file associated with)

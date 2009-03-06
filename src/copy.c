@@ -568,7 +568,7 @@ copy_reg (char const *src_name, char const *dst_name,
     /* Choose a suitable buffer size; it may be adjusted later.  */
     size_t buf_alignment = lcm (getpagesize (), sizeof (word));
     size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
-    size_t buf_size = ST_BLKSIZE (sb);
+    size_t buf_size = io_blksize (sb);
 
     /* Deal with sparse files.  */
     bool last_write_made_hole = false;
@@ -596,20 +596,11 @@ copy_reg (char const *src_name, char const *dst_name,
        buffer size.  */
     if (! make_holes)
       {
-	/* These days there's no point ever messing with buffers smaller
-	   than 8 KiB.  It would be nice to configure SMALL_BUF_SIZE
-	   dynamically for this host and pair of files, but there doesn't
-	   seem to be a good way to get readahead info portably.  */
-	enum { SMALL_BUF_SIZE = 8 * 1024 };
-
 	/* Compute the least common multiple of the input and output
 	   buffer sizes, adjusting for outlandish values.  */
 	size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment_slop;
-	size_t blcm = buffer_lcm (ST_BLKSIZE (src_open_sb), buf_size,
+	size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
 				  blcm_max);
-
-	/* Do not use a block size that is too small.  */
-	buf_size = MAX (SMALL_BUF_SIZE, blcm);
 
 	/* Do not bother with a buffer larger than the input file, plus one
 	   byte to make sure the file has not grown while reading it.  */
