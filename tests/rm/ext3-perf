@@ -70,7 +70,7 @@ echo creating a $n-entry directory took $setup_duration seconds
 # If set-up took longer than the default $threshold_seconds,
 # use the longer set-up duration as the limit.
 test $threshold_seconds -lt $setup_duration \
-  threshold_seconds=$setup_duration
+  && threshold_seconds=$setup_duration
 
 fail=0
 start=$(date +%s)
