@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright (C) 1998, 2000-2008 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,12 +64,20 @@ sub setuid_setup()
 		 . "so can't run this test\n"), exit 77;
 }
 
+sub mk_file(@)
+{
+  foreach my $f (@_)
+    {
+      open (F, '>', $f) && close F
+	or die "creating $f: $!\n";
+    }
+}
+
 sub mkdir_d {mkdir 'd',0755 or die "d: $!\n"}
 sub rmdir_d {rmdir 'd'      or die "d: $!\n"}
 my $mkdir = {PRE => sub {mkdir_d}};
 my $rmdir = {POST => sub {rmdir_d}};
-my $mkdir_reg = {PRE => sub {mkdir_d; open (FH, '>d/f') && close FH
-			       or die "d/f: $!\n" }};
+my $mkdir_reg = {PRE => sub {mkdir_d; mk_file 'd/f' }};
 my $rmdir_reg = {POST => sub {unlink 'd/f' or die "d/f: $!\n";
 			      rmdir 'd' or die "d: $!\n"}};
 
@@ -100,10 +108,12 @@ my $rmdir_d_slink = {POST => sub {unlink 'd/s' or die "d/s: $!\n";
 sub make_j_d ()
 {
   mkdir 'j', 0700 or die "creating j: $!\n";
-  (open F, '>j/d') && close F or die "creating j/d: $!\n";
+  mk_file 'j/d';
   chmod 0555, 'j/d' or die "making j/d executable: $!\n";
 }
 
+my @v1 = qw(0 9 A Z a z);
+my @v_files = ((map { ".$_" } @v1), @v1);
 my $exe_in_subdir = {PRE => sub { make_j_d (); push_ls_colors('ex=01;32') }};
 my $remove_j = {POST => sub {unlink 'j/d' or die "j/d: $!\n";
                              rmdir 'j' or die "j: $!\n";
@@ -207,6 +217,13 @@ my @Tests =
      # For 5.97 and earlier, --file-type acted like --indicator-style=slash.
      ['file-type', '--file-type d', {OUT => "s@\n"},
       $mkdir_d_slink, $rmdir_d_slink],
+
+     # 7.1 had a regression in how -v -a ordered some files
+     ['version-sort', '-v -A ' . join (' ', @v_files),
+      {OUT => join ("\n", @v_files) . "\n"},
+      {PRE => sub { mk_file @v_files }},
+      {POST => sub { unlink @v_files }},
+      ],
     );
 
 # Start with an unset LS_COLORS environment variable.
