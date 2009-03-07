@@ -2,7 +2,7 @@
 
 # Bootstrap this package from checked-out sources.
 
-# Copyright (C) 2003-2008 Free Software Foundation, Inc.
+# Copyright (C) 2003-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -342,7 +342,7 @@ cleanup_gnulib() {
 }
 
 git_modules_config () {
-  GIT_CONFIG_LOCAL=.gitmodules git config "$@"
+  GIT_CONFIG=.gitmodules git config "$@"
 }
 
 # Get gnulib files.
