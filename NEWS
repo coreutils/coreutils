@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  comm's new --check-order option would fail to detect disorder on any pair
+  of lines where one was a prefix of the other.  For example, this would
+  fail to report the disorder: printf 'Xb\nX\n'>k; comm --check-order k k
+  [bug introduced in coreutils-7.0]
+
   cp once again diagnoses the invalid "cp -rl dir dir" right away,
   rather than after creating a very deep dir/dir/dir/... hierarchy.
   The bug strikes only with both --recursive (-r, -R) and --link (-l).

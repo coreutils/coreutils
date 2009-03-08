@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Test comm
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -114,6 +114,13 @@ my @Tests =
    ['ooo7', '--check-order', {IN=>{a=>"2\n1\n0"}}, {IN=>{b=>"2\n1\n0"}},
     {EXIT=>1},
     {OUT => "\t\t2\n"},
+    {ERR => "$prog: file 1 is not in sorted order\n"}],
+
+   # out-of-order, line 2 is a prefix of line 1
+   # until coreutils-7.2, this test would fail -- no disorder detected
+   ['ooo-prefix', '--check-order', {IN=>{a=>"Xa\nX\n"}}, {IN=>{b=>""}},
+    {EXIT=>1},
+    {OUT => "Xa\n"},
     {ERR => "$prog: file 1 is not in sorted order\n"}],
 
    # alternate delimiter: ','
