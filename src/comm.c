@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 1995-2005, 2008 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 1995-2005, 2008-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include "error.h"
 #include "quote.h"
 #include "stdio--.h"
+#include "memcmp2.h"
 #include "xmemcoll.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -199,10 +200,8 @@ check_order (struct linebuffer const *prev,
 	    order = xmemcoll (prev->buffer, prev->length - 1,
 			      current->buffer, current->length - 1);
 	  else
-	    {
-	      size_t len = min (prev->length, current->length) - 1;
-	      order = memcmp (prev->buffer, current->buffer, len);
-	    }
+	    order = memcmp2 (prev->buffer, prev->length - 1,
+			     current->buffer, current->length - 1);
 
 	  if (0 < order)
 	    {
