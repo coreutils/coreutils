@@ -1,0 +1,54 @@
+#!/bin/sh
+# Test whether sort avoids opening more file descriptors than it is
+# allowed when merging files.
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  sort --version
+fi
+
+. $srcdir/test-lib.sh
+require_ulimit_
+
+mkdir in err || framework_failure
+
+fail=0
+
+for i in `seq 17`; do
+  echo $i >in/$i
+done
+
+# When these tests are run inside the automated testing framework, they
+# have one less available file descriptor than when run outside the
+# automated testing framework. If a test with a batch size of b fails
+# inside the ATF, then the same test with batch size b+1 may pass outside
+# the ATF but fail inside it.
+
+# The default batch size (nmerge) is 16.
+(ulimit -n 19 \
+   && sort -m --batch-size=16 in/* 2>err/merge-default-err \
+   || ! grep "open failed" err/merge-default-err) || fail=1
+
+# If sort opens a file (/dev/urandom) to sort by random hashes of keys,
+# it needs to consider this file against its limit on open file
+# descriptors.
+(ulimit -n 20 \
+   && sort -mR --batch-size=16 in/* 2>err/merge-random-err \
+   || ! grep "open failed" err/merge-random-err) || fail=1
+
+Exit $fail

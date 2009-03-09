@@ -204,6 +204,7 @@ TESTS =						\
   misc/sort-continue				\
   misc/sort-files0-from				\
   misc/sort-merge				\
+  misc/sort-merge-fdlimit			\
   misc/sort-rand				\
   misc/sort-version				\
   misc/split-a					\

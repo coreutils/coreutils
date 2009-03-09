@@ -3937,13 +3937,17 @@ and I/0.  Conversely a small value of @var{nmerge} may reduce memory
 requirements and I/0 at the expense of temporary storage consumption and
 merge performance.
 
-The value of @var{nmerge} must be at least 2.
+The value of @var{nmerge} must be at least 2.  The default value is
+currently 16, but this is implementation-dependent and may change in
+the future.
 
 The value of @var{nmerge} may be bounded by a resource limit for open
-file descriptors.  Try @samp{ulimit -n} or @samp{getconf OPEN_MAX} to
-to display the limit for a particular system.
-If the value of @var{nmerge} exceeds this limit, then @command{sort} will
-issue a warning to standard error and exit with a nonzero status.
+file descriptors.  The commands @samp{ulimit -n} or @samp{getconf
+OPEN_MAX} may display limits for your systems; these limits may be
+modified further if your program already has some files open, or if
+the operating system has other limits on the number of open files.  If
+the value of @var{nmerge} exceeds the resource limit, @command{sort}
+silently uses a smaller value.
 
 @item -o @var{output-file}
 @itemx --output=@var{output-file}
