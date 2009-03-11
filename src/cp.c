@@ -925,6 +925,7 @@ main (int argc, char **argv)
 	  x.require_preserve = true;
 	  if (selinux_enabled)
 	     x.preserve_security_context = true;
+	  x.preserve_xattr = true;
 	  x.reduce_diagnostics = true;
 	  x.recursive = true;
 	  break;

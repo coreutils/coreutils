@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   at a time.  This was seen to increase throughput.  Up to 2 times
   when reading cached files on linux for example.
 
+  cp -a now tries to preserve extended attributes (xattr), but does not
+  diagnose xattr-preservation failure.  However, cp --preserve=all still does.
+
+
 * Noteworthy changes in release 7.1 (2009-02-21) [stable]
 
 ** New features

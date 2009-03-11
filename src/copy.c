@@ -159,7 +159,7 @@ copy_attr_free (struct error_context *ctx ATTRIBUTE_UNUSED,
 
 static bool
 copy_attr_by_fd (char const *src_path, int src_fd,
-		 char const *dst_path, int dst_fd)
+                 char const *dst_path, int dst_fd, const struct cp_options *x)
 {
   struct error_context ctx =
   {
@@ -167,11 +167,13 @@ copy_attr_by_fd (char const *src_path, int src_fd,
     .quote = copy_attr_quote,
     .quote_free = copy_attr_free
   };
-  return 0 == attr_copy_fd (src_path, src_fd, dst_path, dst_fd, 0, &ctx);
+  return 0 == attr_copy_fd (src_path, src_fd, dst_path, dst_fd, 0,
+                            x->reduce_diagnostics ? NULL : &ctx);
 }
 
 static bool
-copy_attr_by_name (char const *src_path, char const *dst_path)
+copy_attr_by_name (char const *src_path, char const *dst_path,
+                   const struct cp_options *x)
 {
   struct error_context ctx =
   {
@@ -179,19 +181,21 @@ copy_attr_by_name (char const *src_path, char const *dst_path)
     .quote = copy_attr_quote,
     .quote_free = copy_attr_free
   };
-  return 0 == attr_copy_file (src_path, dst_path, 0, &ctx);
+  return 0 == attr_copy_file (src_path, dst_path, 0,
+                              x-> reduce_diagnostics ? NULL :&ctx);
 }
 #else /* USE_XATTR */
 
 static bool
 copy_attr_by_fd (char const *src_path, int src_fd,
-		 char const *dst_path, int dst_fd)
+                 char const *dst_path, int dst_fd, const struct cp_options *x)
 {
   return true;
 }
 
 static bool
-copy_attr_by_name (char const *src_path, char const *dst_path)
+copy_attr_by_name (char const *src_path, char const *dst_path,
+                   const struct cp_options *x)
 {
   return true;
 }
@@ -759,7 +763,7 @@ copy_reg (char const *src_name, char const *dst_name,
   set_author (dst_name, dest_desc, src_sb);
 
   if (x->preserve_xattr && ! copy_attr_by_fd (src_name, source_desc,
-					      dst_name, dest_desc)
+					      dst_name, dest_desc, x)
       && x->require_preserve_xattr)
     return false;
 
@@ -2076,7 +2080,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
   set_author (dst_name, -1, &src_sb);
 
-  if (x->preserve_xattr && ! copy_attr_by_name (src_name, dst_name)
+  if (x->preserve_xattr && ! copy_attr_by_name (src_name, dst_name, x)
       && x->require_preserve_xattr)
     return false;
 

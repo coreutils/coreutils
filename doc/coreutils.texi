@@ -7262,10 +7262,9 @@ Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
 directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
-Try to preserve SELinux security context, but ignore any failure to do that
-and print no corresponding diagnostic.
-This option does not preserve extended attributes(xattr) at the moment.
-Equivalent to @option{-dR --preserve=all} with a few exceptions.
+Try to preserve SELinux security context and extended attributes (xattr),
+but ignore any failure to do that and print no corresponding diagnostic.
+Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
