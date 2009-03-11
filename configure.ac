@@ -46,7 +46,7 @@ coreutils_MACROS
 
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings],
-		  [turn on lots of GCC warnings (not recommended)])],
+		  [turn on lots of GCC warnings (for developers)])],
   [case $enableval in
      yes|no) ;;
      *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
