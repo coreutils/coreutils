@@ -149,6 +149,7 @@ TESTS =						\
   misc/wc-files0-from				\
   misc/wc-files0				\
   misc/cat-proc					\
+  misc/cat-buf					\
   misc/base64					\
   misc/basename					\
   misc/close-stdout				\

@@ -333,7 +333,7 @@ cat (
 		input_pending = true;
 #endif
 
-	      if (input_pending)
+	      if (!input_pending)
 		write_pending (outbuf, &bpout);
 
 	      /* Read more input into INBUF.  */

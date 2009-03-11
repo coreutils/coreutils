@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cat once again immediately outputs data it has processed.
+  Previously it would have been buffered and only output if enough
+  data was read, or on process exit.
+  [bug introduced in coreutils-6.0]
+
   comm's new --check-order option would fail to detect disorder on any pair
   of lines where one was a prefix of the other.  For example, this would
   fail to report the disorder: printf 'Xb\nX\n'>k; comm --check-order k k
