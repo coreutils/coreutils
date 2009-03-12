@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure groups --version output is similar to id --version
 
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
-require_built_ groups id
+require_built_ groups
 
 fail=0
 groups --version | sed 's/^groups/id/; /^$/q' > out || fail=1
