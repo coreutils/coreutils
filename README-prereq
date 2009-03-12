@@ -16,6 +16,7 @@ getting the prerequisites for particular systems.
     # yum install emacs #autoconf build requires emacs (20MB)
     # rpmbuild --rebuild http://download.fedora.redhat.com/pub/fedora/linux/development/source/SRPMS/autoconf-2.63-1.fc10.src.rpm
     # rpm -Uvh /usr/src/redhat/RPMS/noarch/autoconf-2.63-1.fc8.noarch.rpm
+  Note Autoconf 2.61a-341 or newer is needed to build automake-1.10a in step 3.
   Apply the same method to install the lzma package.
   [FIXME: mention xz when it's packaged]
 
