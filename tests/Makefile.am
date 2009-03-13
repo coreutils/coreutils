@@ -201,6 +201,7 @@ TESTS =						\
   misc/shuf					\
   misc/sort					\
   misc/sort-compress				\
+  misc/sort-continue				\
   misc/sort-files0-from				\
   misc/sort-merge				\
   misc/sort-rand				\
