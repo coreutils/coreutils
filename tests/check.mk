@@ -58,7 +58,7 @@ TESTS_ENVIRONMENT =				\
       if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
 	grep '^\#!/usr/bin/perl -T' "$$1" > /dev/null && T_=T || T_=;	\
         $(PERL) -w$$T_ -I$(srcdir) -MCoreutils				\
-	      -M"CuTmpdir qw($$tst)" -- "$$1";	\
+	      -M"CuTmpdir qw($$f)" -- "$$1";	\
       else					\
 	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
 	  "so skipping this test";		\
@@ -93,11 +93,5 @@ TESTS_ENVIRONMENT =				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH" \
   ; shell_or_perl_
-
-TEST_LOGS = $(TESTS:=.log)
-
-# Parallel replacement of Automake's check-TESTS target.
-SUFFIXES =
-include $(top_srcdir)/build-aux/check.mk
 
 VERBOSE = yes
