@@ -537,6 +537,12 @@ changelog-check:
 	  exit 1;							\
 	fi
 
+sc_makefile_TAB_only_indentation:
+	@grep -nE '^	[ ]{8}'						\
+	    $$($(VC_LIST_EXCEPT) | grep -E 'akefile|\.mk$$')		\
+	  && { echo '$(ME): found TAB-8-space indentation' 1>&2;	\
+	       exit 1; } || :
+
 sc_m4_quote_check:
 	@grep -nE '(AC_DEFINE(_UNQUOTED)?|AC_DEFUN)\([^[]'		\
 	    $$($(VC_LIST_EXCEPT) | grep -E '(^configure\.ac|\.m4)$$')	\
@@ -588,7 +594,7 @@ sc_makefile_path_separator_check:
 writable-files:
 	if test -d $(release_archive_dir); then :; else			\
 	  for file in $(distdir).tar.gz					\
-	              $(release_archive_dir)/$(distdir).tar.gz; do	\
+		      $(release_archive_dir)/$(distdir).tar.gz; do	\
 	    test -e $$file || continue;					\
 	    test -w $$file						\
 	      || { echo ERROR: $$file is not writable; fail=1; };	\
@@ -740,8 +746,8 @@ define coreutils-path-check
 	  && ln -sf ../src/true $(bin)/false		\
 	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
 	  && { test -d gnulib-tests			\
-	         && $(MAKE) -C gnulib-tests check	\
-	         || :; }				\
+		 && $(MAKE) -C gnulib-tests check	\
+		 || :; }				\
 	  && rm -rf $(bin)				\
 	  && fail=0;					\
     else						\

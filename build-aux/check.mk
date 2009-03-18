@@ -213,8 +213,8 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    for f in $(TEST_LOGS);					\
 	    do								\
 	      case $$(sed 1q $$f) in					\
-	        SKIP:*|PASS:*|XFAIL:*);;				\
-	        *) echo; cat $$f;;					\
+		SKIP:*|PASS:*|XFAIL:*);;				\
+		*) echo; cat $$f;;					\
 	      esac;							\
 	    done;							\
 	  } >$(TEST_SUITE_LOG).tmp;					\

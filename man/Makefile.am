@@ -156,13 +156,13 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	  *)							\
 	    rm -f $@						\
 	    && { echo "Updating man page $@";			\
-	         rm -rf $t;					\
-	         mkdir $t;					\
-	         (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
-	            $(PERL) -- $(srcdir)/help2man		\
-	             --source='$(PACKAGE_STRING)'		\
-	             --include=$(srcdir)/$*.x			\
-	             --output=$t/$@ $t/$*;			\
+		 rm -rf $t;					\
+		 mkdir $t;					\
+		 (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
+		    $(PERL) -- $(srcdir)/help2man		\
+		     --source='$(PACKAGE_STRING)'		\
+		     --include=$(srcdir)/$*.x			\
+		     --output=$t/$@ $t/$*;			\
 	       }						\
 	    && sed 's|$*\.td/||g' $t/$@ > $@			\
 	    && rm -rf $t ;;					\
