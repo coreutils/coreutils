@@ -265,23 +265,28 @@ static struct symbol_value const conversions[] =
 
 enum
   {
-    /* Use a value that is larger than that of any other O_ symbol.  */
-    O_FULLBLOCK = ((MAX (O_APPEND,
-		    MAX (O_BINARY,
-		    MAX (O_CIO,
-		    MAX (O_DIRECT,
-		    MAX (O_DIRECTORY,
-		    MAX (O_DSYNC,
-		    MAX (O_NOATIME,
-		    MAX (O_NOCTTY,
-		    MAX (O_NOFOLLOW,
-		    MAX (O_NOLINKS,
-		    MAX (O_NONBLOCK,
-		    MAX (O_SYNC,
-		    MAX (O_TEXT, 0)))))))))))))) << 1)
+    /* Compute a value that's bitwise disjoint from the union
+       of all O_ values.  */
+    v = ~(0
+          | O_APPEND
+          | O_BINARY
+          | O_CIO
+          | O_DIRECT
+          | O_DIRECTORY
+          | O_DSYNC
+          | O_NOATIME
+          | O_NOCTTY
+          | O_NOFOLLOW
+          | O_NOLINKS
+          | O_NONBLOCK
+          | O_SYNC
+          | O_TEXT
+          ),
+    /* Use its lowest bit.  */
+    O_FULLBLOCK = v ^ (v & (v - 1))
   };
 
-/* Ensure that we didn't shift it off the end.  */
+/* Ensure that we got something.  */
 verify (O_FULLBLOCK != 0);
 
 #define MULTIPLE_BITS_SET(i) (((i) & ((i) - 1)) != 0)
