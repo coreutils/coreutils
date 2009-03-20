@@ -51,7 +51,7 @@ old_NEWS_hash = fa6cba1740b3f385520c1b54d90859ca  -
 dd = $(srcdir)/src/dd.c
 sc_dd_O_FLAGS:
 	@rm -f $@.1 $@.2
-	@{ echo O_FULLBLOCK; perl -nle '/MAX \((O_\w*),/ and print $$1' \
+	@{ echo O_FULLBLOCK; perl -nle '/^ +\| (O_\w*)$$/ and print $$1' \
 	  $(dd); } | sort > $@.1
 	@{ echo O_NOFOLLOW; perl -nle '/{"[a-z]+",\s*(O_\w+)},/ and print $$1' \
 	  $(dd); } | sort > $@.2
