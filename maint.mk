@@ -741,7 +741,8 @@ define coreutils-path-check
 	       esac;					\
 	     done					\
 	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
+	  && PATH=`pwd`/$(bin)$(PATH_SEPARATOR)$$PATH	\
+		$(MAKE) -C tests check			\
 	  && { test -d gnulib-tests			\
 		 && $(MAKE) -C gnulib-tests check	\
 		 || :; }				\
