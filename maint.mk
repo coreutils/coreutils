@@ -581,11 +581,8 @@ sc_po_check:
 
 # Sometimes it is useful to change the PATH environment variable
 # in Makefiles.  When doing so, it's better not to use the Unix-centric
-# path separator of `:', but rather the automake-provided `@PATH_SEPARATOR@'.
-# It'd be better to use `find -print0 ...|xargs -0 ...', but less portable,
-# and there probably aren't many projects with so many Makefile.am files
-# that we'd have to worry about limits on command line length.
-msg = '$(ME): Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
+# path separator of `:', but rather the automake-provided `$(PATH_SEPARATOR)'.
+msg = '$(ME): Do not use `:'\'' above; use $$(PATH_SEPARATOR) instead'
 sc_makefile_path_separator_check:
 	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
 	  && { echo $(msg) 1>&2; exit 1; } || :
