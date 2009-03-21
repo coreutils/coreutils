@@ -153,10 +153,9 @@ sc_prohibit_strcmp:
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
 sc_error_exit_success:
-	@grep -nF 'error (EXIT_SUCCESS,'				\
-	    $$(find -type f -name '*.[chly]') &&			\
-	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
-	    exit 1; } || :
+	@grep -nE 'error \(EXIT_SUCCESS,'				\
+	    $$($(VC_LIST_EXCEPT) | grep -E '\.[chly]$$') &&		\
+	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2; exit 1; } || :
 
 # `FATAL:' should be fully upper-cased in error messages
 # `WARNING:' should be fully upper-cased, or fully lower-cased
@@ -584,7 +583,8 @@ sc_po_check:
 # path separator of `:', but rather the automake-provided `$(PATH_SEPARATOR)'.
 msg = '$(ME): Do not use `:'\'' above; use $$(PATH_SEPARATOR) instead'
 sc_makefile_path_separator_check:
-	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
+	@grep -nE 'PATH[=].*:'						\
+	    $$($(VC_LIST_EXCEPT) | grep -E 'akefile|\.mk$$')		\
 	  && { echo $(msg) 1>&2; exit 1; } || :
 
 # Check that `make alpha' will not fail at the end of the process.
