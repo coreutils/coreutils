@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  pwd now accepts the options --logical (-L) and --physical (-P).  For
+  compatibility with existing scripts, -P is the default behavior
+  unless POSIXLY_CORRECT is requested.
+
 ** Bug fixes
 
   cat once again immediately outputs data it has processed.

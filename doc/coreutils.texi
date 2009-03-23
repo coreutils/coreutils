@@ -11872,13 +11872,39 @@ so forth.  See also the user-related commands in the next section.
 @cindex current working directory, printing
 @cindex working directory, printing
 
-@cindex symbolic links and @command{pwd}
-@command{pwd} prints the fully resolved name of the current directory.
-That is, all components of the printed name will be actual directory
-names---none will be symbolic links.
 
-The only options are a lone @option{--help} or
-@option{--version}.  @xref{Common options}.
+@command{pwd} prints the name of the current directory.  Synopsis:
+
+@example
+pwd [@var{option}]@dots{}
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+@item -L
+@itemx --logical
+@opindex -L
+@opindex --logical
+If the contents of the environment variable @env{PWD} provide an
+absolute name of the current directory with no @samp{.} or @samp{..}
+components, but possibly with symbolic links, then output those
+contents.  Otherwise, fall back to default @option{-P} handling.
+
+@item -P
+@itemx --physical
+@opindex -P
+@opindex --physical
+Print a fully resolved name for the current directory.  That is, all
+components of the printed name will be actual directory names---none
+will be symbolic links.
+@end table
+
+@cindex symbolic links and @command{pwd}
+If @option{-L} and @option{-P} are both given, the last one takes
+precedence.  If neither option is given, then this implementation uses
+@option{-P} as the default unless the @env{POSIXLY_CORRECT}
+environment variable is set.
 
 @mayConflictWithShellBuiltIn{pwd}
 

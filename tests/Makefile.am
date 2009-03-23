@@ -142,6 +142,7 @@ TESTS =						\
   misc/join					\
   pr/pr-tests					\
   misc/df-P					\
+  misc/pwd-option				\
   misc/pwd-unreadable-parent			\
   misc/chcon-fail				\
   misc/cut					\

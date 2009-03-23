@@ -1,5 +1,5 @@
 /* pwd - print current directory
-   Copyright (C) 1994-1997, 1999-2008 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xgetcwd.h"
@@ -38,6 +37,15 @@ struct file_name
   char *start;
 };
 
+static struct option const longopts[] =
+{
+  {"logical", no_argument, NULL, 'L'},
+  {"physical", no_argument, NULL, 'P'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {NULL, 0, NULL, 0}
+};
+
 void
 usage (int status)
 {
@@ -46,10 +54,14 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]\n"), program_name);
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
       fputs (_("\
 Print the full filename of the current working directory.\n\
 \n\
+"), stdout);
+      fputs (_("\
+  -L, --logical   use PWD from environment, even if it contains symlinks\n\
+  -P, --physical  avoid all symlinks\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -279,10 +291,42 @@ robust_getcwd (struct file_name *file_name)
     file_name_prepend (file_name, "", 0);
 }
 
+
+/* Return PWD from the environment if it is acceptable for 'pwd -L'
+   output, otherwise NULL.  */
+static char *
+logical_getcwd (void)
+{
+  struct stat st1;
+  struct stat st2;
+  char *wd = getenv ("PWD");
+  char *p;
+
+  /* Textual validation first.  */
+  if (!wd || wd[0] != '/')
+    return NULL;
+  p = wd;
+  while ((p = strstr (p, "/.")))
+    {
+      if (!p[2] || p[2] == '/'
+	  || (p[2] == '.' && (!p[3] || p[3] == '/')))
+	return NULL;
+      p++;
+    }
+
+  /* System call validation.  */
+  if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && SAME_INODE(st1, st2))
+    return wd;
+  return NULL;
+}
+
+
 int
 main (int argc, char **argv)
 {
   char *wd;
+  /* POSIX requires a default of -L, but most scripts expect -P.  */
+  bool logical = (getenv ("POSIXLY_CORRECT") != NULL);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -292,13 +336,41 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
-    usage (EXIT_FAILURE);
+  while (1)
+    {
+      int c = getopt_long (argc, argv, "LP", longopts, NULL);
+      if (c == -1)
+	break;
+      switch (c)
+	{
+	case 'L':
+	  logical = true;
+	  break;
+	case 'P':
+	  logical = false;
+	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	default:
+	  usage (EXIT_FAILURE);
+	}
+    }
 
   if (optind < argc)
     error (0, 0, _("ignoring non-option arguments"));
+
+  if (logical)
+    {
+      wd = logical_getcwd ();
+      if (wd)
+	{
+	  puts (wd);
+	  exit (EXIT_SUCCESS);
+	}
+    }
 
   wd = xgetcwd ();
   if (wd != NULL)
