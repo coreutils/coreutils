@@ -331,6 +331,7 @@ TESTS =						\
   ln/misc					\
   ln/sf-1					\
   ln/target-1					\
+  ls/abmon-align				\
   ls/color-clear-to-eol				\
   ls/color-dtype-dir				\
   ls/dangle					\

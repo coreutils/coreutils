@@ -67,6 +67,10 @@
 #include <selinux/selinux.h>
 #include <wchar.h>
 
+#if HAVE_LANGINFO_CODESET
+# include <langinfo.h>
+#endif
+
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
 #ifndef SA_NOCLDSTOP
@@ -105,6 +109,7 @@
 #include "strftime.h"
 #include "xstrtol.h"
 #include "areadlink.h"
+#include "mbsalign.h"
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
 		      : (ls_mode == LS_MULTI_COL \
@@ -695,6 +700,11 @@ static char const *long_time_format[2] =
        screen columns small, because many people work in windows with
        only 80 columns.  But make this as wide as the other string
        below, for recent files.  */
+    /* TRANSLATORS: ls output needs to be aligned for ease of reading,
+       so be wary of using variable width fields from the locale.
+       Note %b is handled specially by ls and aligned correctly.
+       Note also that specifying a width as in %5b is erroneous as strftime
+       will count bytes rather than characters in multibyte locales.  */
     N_("%b %e  %Y"),
     /* strftime format for recent files (younger than 6 months), in -l
        output.  This should contain the month, day and time (at
@@ -703,6 +713,11 @@ static char const *long_time_format[2] =
        screen columns small, because many people work in windows with
        only 80 columns.  But make this as wide as the other string
        above, for non-recent files.  */
+    /* TRANSLATORS: ls output needs to be aligned for ease of reading,
+       so be wary of using variable width fields from the locale.
+       Note %b is handled specially by ls and aligned correctly.
+       Note also that specifying a width as in %5b is erroneous as strftime
+       will count bytes rather than characters in multibyte locales.  */
     N_("%b %e %H:%M")
   };
 
@@ -976,6 +991,56 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
 	printf (" %lu", (unsigned long int) pos[i]);
       putchar ('\n');
     }
+}
+
+/* Read the abbreviated month names from the locale, to align them
+   and to determine the max width of the field and to truncate names
+   greater than our max allowed.
+   Note even though this handles multibyte locales correctly
+   it's not restricted to them as single byte locales can have
+   variable width abbreviated months and also precomputing/caching
+   the names was seen to increase the performance of ls significantly.  */
+
+/* max number of display cells to use */
+enum { MAX_MON_WIDTH = 5 };
+/* In the unlikely event that the abmon[] storage is not big enough
+   an error message will be displayed, and we revert to using
+   unmodified abbreviated month names from the locale database.  */
+static char abmon[12][MAX_MON_WIDTH * 2 * MB_LEN_MAX + 1];
+/* minimum width needed to align %b, 0 => don't use precomputed values.  */
+static size_t required_mon_width;
+
+static size_t
+abmon_init (void)
+{
+#ifdef HAVE_NL_LANGINFO
+  required_mon_width = MAX_MON_WIDTH;
+  size_t curr_max_width;
+  do
+    {
+      curr_max_width = required_mon_width;
+      required_mon_width = 0;
+      for (int i = 0; i < 12; i++)
+	{
+	  size_t width = curr_max_width;
+
+	  size_t req = mbsalign (nl_langinfo (ABMON_1 + i),
+				 abmon[i], sizeof (abmon[i]),
+				 &width, MBS_ALIGN_LEFT, 0);
+
+	  if (req == (size_t) -1 || req >= sizeof (abmon[i]))
+	    {
+	      required_mon_width = 0; /* ignore precomputed strings.  */
+	      return required_mon_width;
+	    }
+
+	  required_mon_width = MAX (required_mon_width, width);
+	}
+    }
+  while (curr_max_width > required_mon_width);
+#endif
+
+  return required_mon_width;
 }
 
 static size_t
@@ -1953,6 +2018,10 @@ decode_switches (int argc, char **argv)
 		  }
 	      }
 	  }
+      /* Note we leave %5b etc. alone so user widths/flags are honored.  */
+      if (strstr (long_time_format[0],"%b") || strstr (long_time_format[1],"%b"))
+	if (!abmon_init ())
+	  error (0, 0, _("error initializing month strings"));
     }
 
   return optind;
@@ -3317,6 +3386,35 @@ print_current_files (void)
     }
 }
 
+/* Replace the first %b with precomputed aligned month names.
+   Note on glibc-2.7 on linux at least this speeds up the whole `ls -lU`
+   process by around 17%, compared to letting strftime() handle the %b.  */
+
+static size_t
+align_nstrftime (char *buf, size_t size, char const *fmt, struct tm const *tm,
+		 int __utc, int __ns)
+{
+  const char *nfmt = fmt;
+  /* In the unlikely event that rpl_fmt below is not large enough,
+     the replacement is not done.  A malloc here slows ls down by 2%  */
+  char rpl_fmt[sizeof (abmon[0]) + 100];
+  const char *pb;
+  if (required_mon_width && (pb = strstr (fmt, "%b")))
+    {
+      if (strlen (fmt) < (sizeof (rpl_fmt) - sizeof (abmon[0]) + 2))
+	{
+	  char *pfmt = rpl_fmt;
+	  nfmt = rpl_fmt;
+
+	  pfmt = mempcpy (pfmt, fmt, pb - fmt);
+	  pfmt = stpcpy (pfmt, abmon[tm->tm_mon]);
+	  strcpy (pfmt, pb + 2);
+	}
+    }
+  size_t ret = nstrftime (buf, size, nfmt, tm, __utc, __ns);
+  return ret;
+}
+
 /* Return the expected number of columns in a long-format time stamp,
    or zero if it cannot be calculated.  */
 
@@ -3341,7 +3439,7 @@ long_time_expected_width (void)
       if (tm)
 	{
 	  size_t len =
-	    nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
+	    align_nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
 	  if (len != 0)
 	    width = mbsnwidth (buf, len, 0);
 	}
@@ -3616,8 +3714,8 @@ print_long_format (const struct fileinfo *f)
 
       /* We assume here that all time zones are offset from UTC by a
 	 whole number of seconds.  */
-      s = nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
-		     when_local, 0, when_timespec.tv_nsec);
+      s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
+			   when_local, 0, when_timespec.tv_nsec);
     }
 
   if (s || !*p)

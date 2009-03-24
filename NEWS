@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  ls now aligns output correctly in the presence of abbreviated month
+  names from the locale database that have differing widths.
 
 * Noteworthy changes in release 7.2 (2009-03-31) [stable]
 
