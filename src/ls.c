@@ -4008,7 +4008,7 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	    type = C_CAP;
 	  else if ((mode & S_IXUGO) != 0)
 	    type = C_EXEC;
-	  else if (1 < nlink)
+	  else if (is_colored (C_HARDLINK) && (1 < nlink))
 	    type = C_HARDLINK;
 	}
       else if (S_ISDIR (mode))

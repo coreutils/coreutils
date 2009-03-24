@@ -26,18 +26,34 @@ working_umask_or_skip_
 
 touch file file1 || framework_failure
 ln file1 file2 || skip_test_ "can't create hard link"
-code='44;37'
+code_hl='44;37'
+code_png='01;35'
 fail=0
 
 # regular file - not hard linked
-LS_COLORS="hl=$code" ls -U1 --color=always file > out || fail=1
+LS_COLORS="hl=$code_hl" ls -U1 --color=always file > out || fail=1
 printf "file\n" > out_ok || fail=1
 compare out out_ok || fail=1
 
 # hard links
-LS_COLORS="hl=$code" ls -U1 --color=always file1 file2 > out || fail=1
+LS_COLORS="hl=$code_hl" ls -U1 --color=always file1 file2 > out || fail=1
 printf "\033[0m\033[44;37mfile1\033[0m
 \033[44;37mfile2\033[0m
+\033[m" > out_ok || fail=1
+compare out out_ok || fail=1
+
+# hard links and png
+mv file2 file2.png || framework_failure
+LS_COLORS="hl=$code_hl:*.png=$code_png" ls -U1 --color=always file1 file2.png > out || fail=1
+printf "\033[0m\033[44;37mfile1\033[0m
+\033[44;37mfile2.png\033[0m
+\033[m" > out_ok || fail=1
+compare out out_ok || fail=1
+
+# hard links and png (hard links highlighting disabled)
+LS_COLORS="hl=:*.png=$code_png" ls -U1 --color=always file1 file2.png > out || fail=1
+printf "file1
+\033[0m\033[01;35mfile2.png\033[0m
 \033[m" > out_ok || fail=1
 compare out out_ok || fail=1
 

@@ -38,6 +38,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp -a now tries to preserve extended attributes (xattr), but does not
   diagnose xattr-preservation failure.  However, cp --preserve=all still does.
 
+  ls --color: hard link highlighting can be now disabled by changing the
+  LS_COLORS environment variable. To disable it you can add something like
+  this to your profile: eval `dircolors | sed s/hl=[^:]*:/hl=:/`
+
 
 * Noteworthy changes in release 7.1 (2009-02-21) [stable]
 
