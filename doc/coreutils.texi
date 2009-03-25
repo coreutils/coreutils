@@ -6667,7 +6667,7 @@ foo.zml-6.gz       foo.zml-100.gz
 
 Version-sorted strings are compared such that if @var{ver1} and @var{ver2}
 are version numbers and @var{prefix} and @var{suffix} (@var{suffix} matching
-the regular expression @samp{(\.[A-Za-z][A-Za-z0-9]*)*}) are strings then
+the regular expression @samp{(\.[A-Za-z~][A-Za-z0-9~]*)*}) are strings then
 @var{ver1} < @var{ver2} implies that the name composed of
 ``@var{prefix} @var{ver1} @var{suffix}'' sorts before
 ``@var{prefix} @var{ver2} @var{suffix}''.
