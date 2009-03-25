@@ -393,8 +393,10 @@ show_dev (char const *disk, char const *mount_point,
       negate_available = false;
       available_to_root = available;
 
-      grand_fsu.fsu_files += total;
-      grand_fsu.fsu_ffree += available;
+      if (total != UINTMAX_MAX)
+	grand_fsu.fsu_files += total;
+      if (available != UINTMAX_MAX)
+	grand_fsu.fsu_ffree += available;
     }
   else
     {
@@ -422,11 +424,14 @@ show_dev (char const *disk, char const *mount_point,
 			  & (available != UINTMAX_MAX));
       available_to_root = fsu.fsu_bfree;
 
-      grand_fsu.fsu_blocks += input_units * total;
-      grand_fsu.fsu_bfree  += input_units * available_to_root;
-      add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
-			      &grand_fsu.fsu_bavail_top_bit_set,
-			      input_units * available, negate_available);
+      if (total != UINTMAX_MAX)
+	grand_fsu.fsu_blocks += input_units * total;
+      if (available_to_root != UINTMAX_MAX)
+	grand_fsu.fsu_bfree  += input_units * available_to_root;
+      if (available != UINTMAX_MAX)
+	add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
+				&grand_fsu.fsu_bavail_top_bit_set,
+				input_units * available, negate_available);
     }
 
   used = UINTMAX_MAX;
