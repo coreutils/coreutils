@@ -1,7 +1,7 @@
 package CuTmpdir;
 # create, then chdir into a temporary sub-directory
 
-# Copyright (C) 2007-2008 Free Software Foundation, Inc.
+# Copyright (C) 2007-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,11 @@ sub chmod_1
 
 sub chmod_tree
 {
-  if (defined $dir && chdir $dir)
+  # When tempdir fails, it croaks, which leaves $dir undefined.
+  defined $dir
+    or return;
+
+  if (chdir $dir)
     {
       # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
       my $options = {untaint => 1, wanted => \&chmod_1};
