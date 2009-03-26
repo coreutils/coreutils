@@ -23,7 +23,7 @@ fi
 
 . $srcdir/test-lib.sh
 
-expensive_
+very_expensive_
 
 # Using rm -rf to remove a 400k-entry directory takes:
 # - 9 seconds with the patch, on a 2-yr-old system
