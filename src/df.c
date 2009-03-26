@@ -231,18 +231,28 @@ excluded_fstype (const char *fstype)
   return false;
 }
 
+/* Return true if N is a known integer value.  On many file systems,
+   UINTMAX_MAX represents an unknown value; on AIX, UINTMAX_MAX - 1
+   represents unknown.  Use a rule that works on AIX file systems, and
+   that almost-always works on other types.  */
+static bool
+known_value (uintmax_t n)
+{
+  return n < UINTMAX_MAX - 1;
+}
+
 /* Like human_readable (N, BUF, human_output_opts, INPUT_UNITS, OUTPUT_UNITS),
    except:
 
     - If NEGATIVE, then N represents a negative number,
       expressed in two's complement.
-    - Otherwise, return "-" if N is UINTMAX_MAX.  */
+    - Otherwise, return "-" if N is unknown.  */
 
 static char const *
 df_readable (bool negative, uintmax_t n, char *buf,
 	     uintmax_t input_units, uintmax_t output_units)
 {
-  if (n == UINTMAX_MAX && !negative)
+  if (! known_value (n) && !negative)
     return "-";
   else
     {
@@ -393,9 +403,9 @@ show_dev (char const *disk, char const *mount_point,
       negate_available = false;
       available_to_root = available;
 
-      if (total != UINTMAX_MAX)
+      if (known_value (total))
 	grand_fsu.fsu_files += total;
-      if (available != UINTMAX_MAX)
+      if (known_value (available))
 	grand_fsu.fsu_ffree += available;
     }
   else
@@ -421,14 +431,14 @@ show_dev (char const *disk, char const *mount_point,
       total = fsu.fsu_blocks;
       available = fsu.fsu_bavail;
       negate_available = (fsu.fsu_bavail_top_bit_set
-			  & (available != UINTMAX_MAX));
+			  & known_value (available));
       available_to_root = fsu.fsu_bfree;
 
-      if (total != UINTMAX_MAX)
+      if (known_value (total))
 	grand_fsu.fsu_blocks += input_units * total;
-      if (available_to_root != UINTMAX_MAX)
+      if (known_value (available_to_root))
 	grand_fsu.fsu_bfree  += input_units * available_to_root;
-      if (available != UINTMAX_MAX)
+      if (known_value (available))
 	add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
 				&grand_fsu.fsu_bavail_top_bit_set,
 				input_units * available, negate_available);
@@ -436,7 +446,7 @@ show_dev (char const *disk, char const *mount_point,
 
   used = UINTMAX_MAX;
   negate_used = false;
-  if (total != UINTMAX_MAX && available_to_root != UINTMAX_MAX)
+  if (known_value (total) && known_value (available_to_root))
     {
       used = total - available_to_root;
       negate_used = (total < available_to_root);
@@ -451,7 +461,7 @@ show_dev (char const *disk, char const *mount_point,
 	  width, df_readable (negate_available, available,
 			      buf[2], input_units, output_units));
 
-  if (used == UINTMAX_MAX || available == UINTMAX_MAX)
+  if (! known_value (used) || ! known_value (available))
     ;
   else if (!negate_used
 	   && used <= TYPE_MAXIMUM (uintmax_t) / 100
