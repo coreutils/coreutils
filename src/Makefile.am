@@ -448,6 +448,7 @@ sc_tight_scope: $(all_programs)
 	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* T //p'					\
+	    | sed 's/^_//'						\
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above functions should have static scope' 1>&2;	\
 	    exit 1; } || : ;						\
@@ -456,6 +457,7 @@ sc_tight_scope: $(all_programs)
 	    $$hdr *.h ) | $(ASSORT) -u > $$t;				\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* [BD] //p'					\
+	    | sed 's/^_//'						\
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above variables should have static scope' 1>&2;	\
 	    exit 1; } || :
