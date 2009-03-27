@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
-. "$abs_srcdir/setgid-check"
+skip_if_setgid_
 
 mode1=0644
 mode2=0755

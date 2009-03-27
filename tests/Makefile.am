@@ -15,7 +15,6 @@ EXTRA_DIST =		\
   other-fs-tmpdir	\
   require-perl		\
   sample-test		\
-  setgid-check		\
   test-lib.sh		\
   $(pr_data)
 

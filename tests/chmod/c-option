@@ -28,7 +28,7 @@ file=f
 touch $file || framework_failure
 chmod 444 $file || framework_failure
 
-. "$abs_srcdir/setgid-check"
+skip_if_setgid_
 
 fail=0
 

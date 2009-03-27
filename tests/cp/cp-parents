@@ -28,7 +28,7 @@ fi
 working_umask_or_skip_
 
 # Run the setgid check from the just-created directory.
-. "$abs_srcdir/setgid-check"
+skip_if_setgid_
 
 mkdir foo bar || framework_failure
 mkdir -p a/b/c d e g || framework_failure

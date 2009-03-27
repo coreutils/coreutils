@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
-. "$abs_srcdir/setgid-check"
+skip_if_setgid_
 
 mkdir -m 700 e-dir || framework_failure
 

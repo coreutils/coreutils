@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
-. "$abs_srcdir/setgid-check"
+skip_if_setgid_
 
 working_umask_or_skip_
 

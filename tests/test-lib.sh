@@ -262,6 +262,21 @@ mkfifo_or_skip_()
   fi
 }
 
+# Disable the current test if the working directory seems to have
+# the setgid bit set.
+skip_if_setgid_()
+{
+  setgid_tmpdir=setgid-$$
+  (umask 77; mkdir $setgid_tmpdir)
+  perms=$(stat --printf %A $setgid_tmpdir)
+  rmdir $setgid_tmpdir
+  case $perms in
+    drwx------);;
+    drwxr-xr-x);;  # Windows98 + DJGPP 2.03
+    *) skip_test_ 'this directory has the setgid bit set';;
+  esac
+}
+
 skip_if_mcstransd_is_running_()
 {
   test $# = 0 || framework_failure
