@@ -72,6 +72,7 @@ main ()
         {
           FILE *fp;
           struct argv_iterator *ai;
+          size_t n_found = 0;
           if (use_stream)
             {
               /* Generate an identical list to be read via FP.  */
@@ -85,7 +86,6 @@ main ()
             }
           ASSERT (ai);
 
-          size_t n_found = 0;
           while (1)
             {
               enum argv_iter_err ai_err;
