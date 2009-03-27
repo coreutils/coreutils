@@ -23,6 +23,7 @@ fi
 
 . $srcdir/test-lib.sh
 require_root_
+skip_if_setgid_
 
 u1=1
 u2=2
