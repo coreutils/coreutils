@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 test "${CANDIDATE_TMP_DIRS+set}" = set \
-  || CANDIDATE_TMP_DIRS="$TMPDIR /tmp /dev/shm /var/tmp /usr/tmp /usr/tmp $HOME"
+  || CANDIDATE_TMP_DIRS="$TMPDIR /tmp /dev/shm /var/tmp /usr/tmp $HOME"
 
 other_partition_tmpdir=
 
