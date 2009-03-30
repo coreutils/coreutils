@@ -587,5 +587,4 @@ pr_data =					\
   pr/ttb3-FF					\
   pr/w72l24f-ll
 
-AUTOMAKE_OPTIONS = parallel-tests color-tests
 include $(srcdir)/check.mk
