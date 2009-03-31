@@ -686,12 +686,6 @@ find "$m4_base" "$source_base" \
   -depth \( -name '*.m4' -o -name '*.[ch]' \) \
   -type l -xtype l -delete > /dev/null 2>&1
 
-# Use automake's --silent-rules option, if possible.
-automake="${AUTOMAKE-automake} --add-missing --copy --force-missing"
-(${AUTOMAKE-automake} --help) 2>&1 \
-    | grep -e '^  *--silent-rules' > /dev/null \
-  && automake="$automake --silent-rules"
-
 # Reconfigure, getting other files.
 
 for command in \
@@ -699,7 +693,7 @@ for command in \
   "${ACLOCAL-aclocal} --force -I m4" \
   "${AUTOCONF-autoconf} --force" \
   "${AUTOHEADER-autoheader} --force" \
-  "$automake"
+  "${AUTOMAKE-automake} --add-missing --copy --force-missing"
 do
   if test "$command" = libtool; then
     use_libtool=0

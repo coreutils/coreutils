@@ -32,7 +32,7 @@ AC_CONFIG_SRCDIR([src/ls.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
-AM_INIT_AUTOMAKE([1.10a dist-xz color-tests parallel-tests])
+AM_INIT_AUTOMAKE([1.10b dist-xz color-tests parallel-tests silent-rules])
 
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
