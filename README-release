@@ -73,8 +73,9 @@ Once all the builds and tests have passed,
     https://savannah.gnu.org/projects/coreutils/
   click on the "submit news", then write something like the following:
 
+    Subject: coreutils-7.2 released [stable]
     The announcement is here:
-      http://article.gmane.org/gmane.comp.gnu.core-utils.announce/48
+      http://article.gmane.org/gmane.comp.gnu.core-utils.announce/49
 
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
