@@ -4533,7 +4533,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                with -l: show access time and sort by name\n\
                                otherwise: sort by access time\n\
   -U                         do not sort; list entries in directory order\n\
-  -v                         sort by version\n\
+  -v                         natural sort of (version) numbers within text\n\
 "), stdout);
       fputs (_("\
   -w, --width=COLS           assume screen width instead of current value\n\

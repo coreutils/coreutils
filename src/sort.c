@@ -346,7 +346,7 @@ Ordering options:\n\
       --sort=WORD             sort according to WORD:\n\
                                 general-numeric -g, month -M, numeric -n,\n\
                                 random -R, version -V\n\
-  -V, --version-sort          sort by numeric version\n\
+  -V, --version-sort          natural sort of (version) numbers within text\n\
 \n\
 "), stdout);
       fputs (_("\
