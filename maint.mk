@@ -566,6 +566,7 @@ sc_po_check:
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
 	  for file in $$($(VC_LIST_EXCEPT)) lib/*.[ch]; do		\
+	    test -r $$file || continue;					\
 	    case $$file in						\
 	      *.?|*.??) ;;						\
 	      *) continue;;						\
