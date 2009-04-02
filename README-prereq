@@ -26,7 +26,8 @@ getting the prerequisites for particular systems.
     # yum install help2man #required to build automake fully
     $ git clone git://git.sv.gnu.org/automake.git
     $ cd automake
-    $ git checkout --track origin/next -b next
+    $ git checkout -b next --track origin/next
+    $ ./bootstrap
     $ ./configure --prefix=$HOME/coreutils/deps
     $ make install
 
