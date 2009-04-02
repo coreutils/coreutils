@@ -193,7 +193,7 @@ sc_prohibit_have_config_h:
 
 # Nearly all .c files must include <config.h>.
 sc_require_config_h:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then		\
 	  grep -L '^# *include <config\.h>'				\
 		$$($(VC_LIST_EXCEPT) | grep '\.c$$')			\
 	      | grep . &&						\
@@ -204,7 +204,7 @@ sc_require_config_h:
 
 # You must include <config.h> before including any other header file.
 sc_require_config_h_first:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then	\
 	  fail=0;							\
 	  for i in $$($(VC_LIST_EXCEPT) | grep '\.c$$'); do		\
 	    grep '^# *include\>' $$i | sed 1q				\
@@ -226,7 +226,7 @@ sc_prohibit_HAVE_MBRTOWC:
 # re: a regular expression that matches IFF something provided by $h is used.
 define _header_without_use
   h_esc=`echo "$$h"|sed 's/\./\\./g'`;					\
-  if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then			\
+  if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then		\
     files=$$(grep -l '^# *include '"$$h_esc"				\
 	     $$($(VC_LIST_EXCEPT) | grep '\.c$$')) &&			\
     grep -LE "$$re" $$files | grep . &&					\
@@ -332,16 +332,19 @@ sc_obsolete_symbols:
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
-# Each nonempty line must start with a year number, or a TAB.
+# Each nonempty ChangeLog line must start with a year number, or a TAB.
 sc_changelog:
-	@grep -n '^[^12	]' $$(find . -maxdepth 2 -name ChangeLog) &&	\
+	@if $(VC_LIST_EXCEPT) | grep -l '^ChangeLog$$' >/dev/null; then	\
+	  grep -n '^[^12	]'					\
+	    $$($(VC_LIST_EXCEPT) | grep '^ChangeLog$$') &&		\
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
-	    exit 1; } || :
+	    exit 1; } || :;						\
+	fi
 
 # Ensure that each .c file containing a "main" function also
 # calls set_program_name.
 sc_program_name:
-	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then	\
 	  files=$$(grep -l '^main *(' $$($(VC_LIST_EXCEPT) | grep '\.c$$')); \
 	  grep -LE 'set_program_name *\(m?argv\[0\]\);' $$files		\
 	      | grep . &&						\
