@@ -45,7 +45,7 @@ gnulib_dir = /gnulib
 # Now that we have better (check.mk) tests, make this the default.
 export VERBOSE = yes
 
-old_NEWS_hash = 323729e8ee5a0a21816811bc6ef87c9a
+old_NEWS_hash = 167c472319bf789462b664f47d4c18f6
 
 # Ensure that the list of O_ symbols used to compute O_FULLBLOCK is complete.
 dd = $(srcdir)/src/dd.c

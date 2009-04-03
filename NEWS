@@ -44,9 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  cp,mv,install,cat,split: now read and write a minimum of 32KiB
-  at a time.  This was seen to increase throughput.  Up to 2 times
-  when reading cached files on linux for example.
+  cat,cp,install,mv,split: these programs now read and write a minimum
+  of 32KiB at a time.  This was seen to double throughput when reading
+  cached files on GNU/Linux-based systems.
 
   cp -a now tries to preserve extended attributes (xattr), but does not
   diagnose xattr-preservation failure.  However, cp --preserve=all still does.
