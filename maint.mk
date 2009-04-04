@@ -103,7 +103,7 @@ _ignore_case = $$(test -n "$$ignore_case" && echo -i || :)
 # If the offending construct can be matched with a grep-E-style regexp,
 # use this macro.  The shell variables "re" and "msg" must be defined.
 define _prohibit_regexp
-  dummy=; : so we do not need a semicolon before each use		\
+  dummy=; : so we do not need a semicolon before each use;		\
   test "x$$re" != x || { echo '$(ME): re not defined' 1>&2; exit 1; };	\
   test "x$$msg" != x || { echo '$(ME): msg not defined' 1>&2; exit 1; };\
   grep $(_ignore_case) -nE "$$re" $$($(VC_LIST_EXCEPT)) &&		\
@@ -225,7 +225,7 @@ sc_prohibit_HAVE_MBRTOWC:
 # h: the header, enclosed in <> or ""
 # re: a regular expression that matches IFF something provided by $h is used.
 define _header_without_use
-  h_esc=`echo "$$h"|sed 's/\./\\./'`;					\
+  h_esc=`echo "$$h"|sed 's/\./\\./g'`;					\
   if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then			\
     files=$$(grep -l '^# *include '"$$h_esc"				\
 	     $$($(VC_LIST_EXCEPT) | grep '\.c$$')) &&			\
