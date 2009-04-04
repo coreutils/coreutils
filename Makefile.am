@@ -1,6 +1,6 @@
 # Make coreutils.					-*-Makefile-*-
 
-# Copyright (C) 1990, 1993-2008 Free Software Foundation, Inc.
+# Copyright (C) 1990, 1993-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,42 +16,56 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = lib src doc man po tests gnulib-tests
-EXTRA_DIST = cfg.mk maint.mk \
-  .prev-version THANKS-to-translators THANKStt.in \
-  .version \
-  .vg-suppressions \
-  .x-sc_GPL_version \
-  .x-sc_file_system \
-  .x-sc_obsolete_symbols \
-  .x-sc_po_check \
-  .x-sc_program_name \
-  .x-sc_prohibit_atoi_atof \
-  .x-sc_prohibit_stat_st_blocks \
-  .x-sc_prohibit_strcmp \
-  .x-sc_require_config_h \
-  .x-sc_space_tab .x-sc_sun_os_names \
-  .x-sc_trailing_blank \
-  .x-sc_unmarked_diagnostics \
-  .x-sc_useless_cpp_parens \
-  ChangeLog-2005 \
-  ChangeLog-2006 \
-  ChangeLog-2007 \
-  ChangeLog-2008 \
-  bootstrap \
-  bootstrap.conf \
-  build-aux/cvsu \
-  build-aux/git-version-gen \
-  build-aux/vc-list-files \
-  gl/modules/getloadavg.diff \
-  m4/ChangeLog \
-  old/fileutils/ChangeLog \
-  old/fileutils/ChangeLog-1997 \
-  old/fileutils/NEWS \
-  old/sh-utils/ChangeLog \
-  old/sh-utils/ChangeLog.0 \
-  old/sh-utils/NEWS \
-  old/textutils/ChangeLog \
-  old/textutils/NEWS
+
+changelog_etc =				\
+  ChangeLog-2005			\
+  ChangeLog-2006			\
+  ChangeLog-2007			\
+  ChangeLog-2008			\
+  build-aux/ChangeLog-2007		\
+  doc/ChangeLog-2007			\
+  lib/ChangeLog-2007			\
+  m4/ChangeLog-2007			\
+  old/fileutils/ChangeLog		\
+  old/fileutils/ChangeLog-1997		\
+  old/fileutils/NEWS			\
+  old/sh-utils/ChangeLog		\
+  old/sh-utils/ChangeLog.0		\
+  old/sh-utils/NEWS			\
+  old/textutils/ChangeLog		\
+  old/textutils/NEWS			\
+  po/ChangeLog-2007
+
+syntax_check_exceptions =		\
+  .x-sc_GPL_version			\
+  .x-sc_file_system			\
+  .x-sc_obsolete_symbols		\
+  .x-sc_po_check			\
+  .x-sc_program_name			\
+  .x-sc_prohibit_atoi_atof		\
+  .x-sc_prohibit_stat_st_blocks		\
+  .x-sc_prohibit_strcmp			\
+  .x-sc_require_config_h		\
+  .x-sc_space_tab			\
+  .x-sc_sun_os_names			\
+  .x-sc_trailing_blank			\
+  .x-sc_unmarked_diagnostics		\
+  .x-sc_useless_cpp_parens
+
+EXTRA_DIST =				\
+  $(changelog_etc)			\
+  $(syntax_check_exceptions)		\
+  .prev-version				\
+  .version				\
+  .vg-suppressions			\
+  THANKS-to-translators			\
+  THANKStt.in				\
+  bootstrap				\
+  bootstrap.conf			\
+  build-aux/cvsu			\
+  cfg.mk				\
+  gl/modules/getloadavg.diff		\
+  maint.mk
 
 install-root:
 	cd src && $(MAKE) $@
