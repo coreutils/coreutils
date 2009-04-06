@@ -1139,12 +1139,19 @@ sometimes need random data to do their work.  For example, @samp{sort
 -R} must choose a hash function at random, and it needs random data to
 make this selection.
 
-Normally these commands use the device file @file{/dev/urandom} as the
+By default these commands use an internal pseudorandom generator
+initialized by a small amount of entropy, but can be directed to use
+an external source with the @option{--random-source=@var{file}} option.
+An error is reported if @var{file} does not contain enough bytes.
+
+For example, the device file @file{/dev/urandom} could be used as the
 source of random data.  Typically, this device gathers environmental
 noise from device drivers and other sources into an entropy pool, and
 uses the pool to generate random bits.  If the pool is short of data,
 the device reuses the internal pool to produce more bits, using a
-cryptographically secure pseudorandom number generator.
+cryptographically secure pseudorandom number generator.  But be aware
+that this device is not designed for bulk random data generation
+and is relatively slow.
 
 @file{/dev/urandom} suffices for most practical uses, but applications
 requiring high-value or long-term protection of private data may
@@ -1152,20 +1159,9 @@ require an alternate data source like @file{/dev/random} or
 @file{/dev/arandom}.  The set of available sources depends on your
 operating system.
 
-To use such a source, specify the @option{--random-source=@var{file}}
-option, e.g., @samp{shuf --random-source=/dev/random}.  The contents
-of @var{file} should be as random as possible.  An error is reported
-if @var{file} does not contain enough bytes to randomize the input
-adequately.
-
 To reproduce the results of an earlier invocation of a command, you
 can save some random data into a file and then use that file as the
 random source in earlier and later invocations of the command.
-
-Some old-fashioned or stripped-down operating systems lack support for
-@command{/dev/urandom}.  On these systems commands like @command{shuf}
-by default fall back on an internal pseudorandom generator initialized
-by a small amount of entropy.
 
 @node Target directory
 @section Target directory

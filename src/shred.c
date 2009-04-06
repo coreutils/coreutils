@@ -167,7 +167,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       printf (_("\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  overwrite N times instead of the default (%d)\n\
-      --random-source=FILE  get random bytes from FILE (default /dev/urandom)\n\
+      --random-source=FILE  get random bytes from FILE\n\
   -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
 "), DEFAULT_PASSES);
       fputs (_("\

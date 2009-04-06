@@ -50,10 +50,6 @@
 # define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
 #endif
 
-#ifndef DEFAULT_RANDOM_FILE
-# define DEFAULT_RANDOM_FILE "/dev/urandom"
-#endif
-
 /* The maximum buffer size used for reads of random data.  Using the
    value 2 * ISAAC_BYTES makes this the largest power of two that
    would not otherwise cause struct randread_source to grow.  */
@@ -62,10 +58,8 @@
 /* A source of random data for generating random buffers.  */
 struct randread_source
 {
-  /* Stream to read random bytes from.  If null, the behavior is
-     undefined; the current implementation uses ISAAC in this case,
-     but this is for old-fashioned implementations that lack
-     /dev/urandom and callers should not rely on this.  */
+  /* Stream to read random bytes from.  If null, the current
+     implementation uses an internal PRNG (ISAAC).  */
   FILE *source;
 
   /* Function to call, and its argument, if there is an input error or
@@ -147,18 +141,14 @@ randread_new (char const *name, size_t bytes_bound)
     return simple_new (NULL, NULL);
   else
     {
-      char const *file_name = (name ? name : DEFAULT_RANDOM_FILE);
-      FILE *source = fopen_safer (file_name, "rb");
+      FILE *source = NULL;
       struct randread_source *s;
 
-      if (! source)
-	{
-	  if (name)
-	    return NULL;
-	  file_name = NULL;
-	}
+      if (name)
+	if (! (source = fopen_safer (name, "rb")))
+	  return NULL;
 
-      s = simple_new (source, file_name);
+      s = simple_new (source, name);
 
       if (source)
 	setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));

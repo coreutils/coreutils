@@ -62,7 +62,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --input-range=LO-HI   treat each number LO through HI as an input line\n\
   -n, --head-count=COUNT    output at most COUNT lines\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
-      --random-source=FILE  get random bytes from FILE (default /dev/urandom)\n\
+      --random-source=FILE  get random bytes from FILE\n\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

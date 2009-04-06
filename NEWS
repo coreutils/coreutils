@@ -7,6 +7,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now aligns output correctly in the presence of abbreviated month
   names from the locale database that have differing widths.
 
+** Changes in behavior
+
+  shred, sort, shuf: now use an internal pseudorandom generator by default.
+  This is mainly noticable in shred where the 3 random passes it does by
+  default should proceed at the speed of the disk.  Previously /dev/urandom
+  was used if available, which is relatively slow on GNU/Linux systems.
+
 * Noteworthy changes in release 7.2 (2009-03-31) [stable]
 
 ** New features

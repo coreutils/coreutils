@@ -339,7 +339,7 @@ Ordering options:\n\
       fputs (_("\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
-      --random-source=FILE    get random bytes from FILE (default /dev/urandom)\n\
+      --random-source=FILE    get random bytes from FILE\n\
   -r, --reverse               reverse the result of comparisons\n\
 "), stdout);
       fputs (_("\
