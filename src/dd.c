@@ -850,7 +850,7 @@ iwrite (int fd, char const *buf, size_t size)
       else if (nwritten == 0)
 	{
 	  /* Some buggy drivers return 0 when one tries to write beyond
-	     a device's end.  (Example: Linux 1.2.13 on /dev/fd0.)
+	     a device's end.  (Example: Linux kernel 1.2.13 on /dev/fd0.)
 	     Set errno to ENOSPC so they get a sensible diagnostic.  */
 	  errno = ENOSPC;
 	  break;
@@ -1201,7 +1201,7 @@ advance_input_offset (uintmax_t offset)
    to indicate that lseek failed.
 
    The offending behavior has been confirmed with an Exabyte SCSI tape
-   drive accessed via /dev/nst0 on both Linux-2.2.17 and Linux-2.4.16.  */
+   drive accessed via /dev/nst0 on both Linux 2.2.17 and 2.4.16 kernels.  */
 
 #ifdef __linux__
 
@@ -1565,7 +1565,7 @@ dd_copy (void)
      the input buffer;  thus we allocate 2 pages of slop in the
      real buffer.  8k above the blocksize shouldn't bother anyone.
 
-     The page alignment is necessary on any linux system that supports
+     The page alignment is necessary on any Linux kernel that supports
      either the SGI raw I/O patch or Steven Tweedies raw I/O patch.
      It is necessary when accessing raw (i.e. character special) disk
      devices on Unixware or other SVR4-derived system.  */
@@ -1887,7 +1887,7 @@ main (int argc, char **argv)
 	      /* Complain only when ftruncate fails on a regular file, a
 		 directory, or a shared memory object, as POSIX 1003.1-2004
 		 specifies ftruncate's behavior only for these file types.
-		 For example, do not complain when Linux 2.4 ftruncate
+		 For example, do not complain when Linux kernel 2.4 ftruncate
 		 fails on /dev/fd0.  */
 	      int ftruncate_errno = errno;
 	      struct stat stdout_stat;

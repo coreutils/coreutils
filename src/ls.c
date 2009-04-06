@@ -3387,7 +3387,7 @@ print_current_files (void)
 }
 
 /* Replace the first %b with precomputed aligned month names.
-   Note on glibc-2.7 on linux at least this speeds up the whole `ls -lU`
+   Note on glibc-2.7 at least, this speeds up the whole `ls -lU`
    process by around 17%, compared to letting strftime() handle the %b.  */
 
 static size_t

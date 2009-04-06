@@ -73,7 +73,7 @@
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
 
-/* Note ETIMEDOUT is 110 on linux but this is non standard */
+/* Note ETIMEDOUT is 110 on GNU/Linux systems but this is non standard */
 #define EXIT_TIMEDOUT 124
 
 /* Internal failure.  */
@@ -311,11 +311,11 @@ main (int argc, char **argv)
       alarm (timeout);
 
       /* We're just waiting for a single process here, so wait() suffices.
-         Note the signal() calls above on linux and BSD at least, essentially
-         call the lower level sigaction() with the SA_RESTART flag set, which
-         ensures the following wait call will only return if the child exits,
-         not on this process receiving a signal. Also we're not passing
-         WUNTRACED | WCONTINUED to a waitpid() call and so will not get
+         Note the signal() calls above on GNU/Linux and BSD at least,
+         essentially call the lower level sigaction() with the SA_RESTART flag
+         set, which ensures the following wait call will only return if the
+         child exits, not on this process receiving a signal. Also we're not
+         passing WUNTRACED | WCONTINUED to a waitpid() call and so will not get
          indication that the child has stopped or continued.  */
       wait (&status);
 

@@ -243,9 +243,9 @@ movefile (char *source, char *dest, bool dest_is_dir,
 
   /* This code was introduced to handle the ambiguity in the semantics
      of mv that is induced by the varying semantics of the rename function.
-     Some systems (e.g., Linux) have a rename function that honors a
+     Some systems (e.g., GNU/Linux) have a rename function that honors a
      trailing slash, while others (like Solaris 5,6,7) have a rename
-     function that ignores a trailing slash.  I believe the Linux
+     function that ignores a trailing slash.  I believe the GNU/Linux
      rename semantics are POSIX and susv2 compliant.  */
 
   if (remove_trailing_slashes)

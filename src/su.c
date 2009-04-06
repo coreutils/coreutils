@@ -471,7 +471,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0, _("user %s does not exist"), new_user);
 
   /* Make a copy of the password information and point pw at the local
-     copy instead.  Otherwise, some systems (e.g. Linux) would clobber
+     copy instead.  Otherwise, some systems (e.g. GNU/Linux) would clobber
      the static data through the getlogin call from log_su.
      Also, make sure pw->pw_shell is a nonempty string.
      It may be NULL when NEW_USER is a username that is retrieved via NIS (YP),

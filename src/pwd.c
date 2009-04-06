@@ -244,7 +244,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
    The getcwd function performs nearly the same task, but is typically
    unable to handle names longer than PATH_MAX.  This function has
    no such limitation.  However, this function *can* fail due to
-   permission problems or a lack of memory, while Linux's getcwd
+   permission problems or a lack of memory, while GNU/Linux's getcwd
    function works regardless of restricted permissions on parent
    directories.  Upon failure, give a diagnostic and exit nonzero.
 

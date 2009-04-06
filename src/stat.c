@@ -184,7 +184,7 @@ static char const *trailing_delim = "";
    Some systems have statfvs.f_basetype[FSTYPSZ] (AIX, HP-UX, and Solaris).
    Others have statvfs.f_fstypename[_VFS_NAMELEN] (NetBSD 3.0).
    Others have statfs.f_fstypename[MFSNAMELEN] (NetBSD 1.5.2).
-   Still others have neither and have to get by with f_type (Linux).
+   Still others have neither and have to get by with f_type (GNU/Linux).
    But f_type may only exist in statfs (Cygwin).  */
 static char const *
 human_fstype (STRUCT_STATVFS const *statfsbuf)

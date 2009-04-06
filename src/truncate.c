@@ -229,7 +229,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
       /* Complain only when ftruncate fails on a regular file, a
          directory, or a shared memory object, as POSIX 1003.1-2004
          specifies ftruncate's behavior only for these file types.
-         For example, do not complain when Linux 2.4 ftruncate
+         For example, do not complain when Linux kernel 2.4 ftruncate
          fails on /dev/fd0.  */
       int const ftruncate_errno = errno;
       if (fstat (fd, &sb) != 0)

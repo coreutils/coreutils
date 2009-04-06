@@ -84,7 +84,7 @@ if ! truncate --size=$OFF_T_MAX in 2>/dev/null; then
     # so just check for the skip warning.
     compare skip_err err || fail=1
   else
-    # On Linux at least lseek(>max file size) fails.
+    # On Linux kernels at least, lseek(>max file size) fails.
     # error message should be "... cannot skip: strerror(EINVAL)"
     grep "cannot skip:" err >/dev/null || fail=1
   fi

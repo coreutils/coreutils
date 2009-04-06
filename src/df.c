@@ -70,7 +70,7 @@ static bool file_systems_processed;
 /* If true, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
    busy disks.  Note that this may make a difference on some systems --
-   SunOS 4.1.3, for one.  It is *not* necessary on Linux.  */
+   SunOS 4.1.3, for one.  It is *not* necessary on GNU/Linux.  */
 static bool require_sync;
 
 /* Desired exit status.  */

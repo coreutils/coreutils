@@ -1,12 +1,12 @@
 Detailed below are concrete examples for
 getting the prerequisites for particular systems.
 
-- linux - fedora
+- GNU/Linux - fedora
 
   This shows the steps for getting the required tools to build coreutils 7.0
   on a Fedora 8 system. We try to use official packages where possible.
   The 3 methods described for making these required packages available, should
-  help clarify build requirements on any linux system at least.
+  help clarify build requirements on any GNU/Linux system at least.
 
   1. Make sure offical distro git package is installed
     # yum install git

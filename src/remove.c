@@ -1125,9 +1125,9 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
       DO_UNLINK (fd_cwd, filename, x);
 
-      /* Upon a failed attempt to unlink a directory, most non-Linux systems
-	 set errno to the POSIX-required value EPERM.  In that case, change
-	 errno to EISDIR so that we emit a better diagnostic.  */
+      /* Upon a failed attempt to unlink a directory, most non GNU/Linux
+	 systems set errno to the POSIX-required value EPERM.  In that case,
+	 change errno to EISDIR so that we emit a better diagnostic.  */
       if (! x->recursive && errno == EPERM && is_dir_lstat (fd_cwd,
 							    filename, st))
 	errno = EISDIR;

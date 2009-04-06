@@ -23,7 +23,7 @@
 # find tests -name Makefile.am|xargs grep -wl PATH|xargs perl -pi -e 's,src/vg,src,'
 #
 # Create this symlink for suppressions (this is no longer necessary,
-# with linux-2.6.9 and valgrind-2.2.0):
+# with Linux kernel 2.6.9 and valgrind-2.2.0):
 # ln -s $PWD/.vg-suppressions /tmp/cu-vg
 
 # Create src/vg:

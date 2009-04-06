@@ -422,7 +422,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	    }
 	}
 
-      /* On some systems (e.g., Linux-2.4.x),
+      /* On some systems (e.g., GNU/Linux 2.4.x),
 	 the chown function resets the `special' permission bits.
 	 Do *not* restore those bits;  doing so would open a window in
 	 which a malicious user, M, could subvert a chown command run

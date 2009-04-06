@@ -450,8 +450,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
 		  /* If the first write of the first pass for a given file
 		     has just failed with EINVAL, turn off direct mode I/O
-		     and try again.  This works around a bug in linux-2.4
-		     whereby opening with O_DIRECT would succeed for some
+		     and try again.  This works around a bug in Linux kernel
+		     2.4 whereby opening with O_DIRECT would succeed for some
 		     file system types (e.g., ext3), but any attempt to
 		     access a file through the resulting descriptor would
 		     fail with EINVAL.  */
