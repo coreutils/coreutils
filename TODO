@@ -15,7 +15,6 @@ document the following in coreutils.texi:
   mktemp
   [
   pinky
-Also document the SELinux changes.
 
 Suggestion from Paul Eggert:
   More generally, there's not that much use for imaxtostr nowadays,
