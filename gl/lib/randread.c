@@ -39,6 +39,16 @@
 #include "unlocked-io.h"
 #include "xalloc.h"
 
+#ifndef __attribute__
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
+#  define __attribute__(x) /* empty */
+# endif
+#endif
+
+#ifndef ATTRIBUTE_NORETURN
+# define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
+#endif
+
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
@@ -100,7 +110,7 @@ struct randread_source
 
 /* The default error handler.  */
 
-static void
+static void ATTRIBUTE_NORETURN
 randread_error (void const *file_name)
 {
   if (file_name)

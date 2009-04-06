@@ -50,10 +50,6 @@ main (int argc, char **argv)
 
 #include "xalloc.h"
 
-#ifndef MAX
-# define MAX(a,b) ((a) < (b) ? (b) : (a))
-#endif
-
 /* A source of random data for generating random integers.  */
 struct randint_source
 {
