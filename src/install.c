@@ -531,8 +531,8 @@ main (int argc, char **argv)
 	  break;
 
 	case PRESERVE_CONTEXT_OPTION_DEPRECATED:
-	  error (0, 0, _("WARNING: --preserve_context is deprecated. "
-			 "Please use --preserve-context instead."));
+	  error (0, 0, _("WARNING: --preserve_context is deprecated; "
+			 "use --preserve-context instead"));
 	  /* fall through */
 	case PRESERVE_CONTEXT_OPTION:
 	  if ( ! selinux_enabled)
