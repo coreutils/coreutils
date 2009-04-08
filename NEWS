@@ -14,6 +14,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   default should proceed at the speed of the disk.  Previously /dev/urandom
   was used if available, which is relatively slow on GNU/Linux systems.
 
+** Portability
+
+  `id -G $USER` now works correctly even on Darwin and NetBSD. Previously it
+  would either truncate the group list to 10, or go into an infinite loop,
+  due to their non-standard getgroups implementations.
+  [truncation introduced in coreutils-6.11]
+  [infinite loop introduced in coreutils-7.1]
+
 * Noteworthy changes in release 7.2 (2009-03-31) [stable]
 
 ** New features

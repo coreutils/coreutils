@@ -171,6 +171,7 @@ TESTS =						\
   misc/head-c					\
   misc/head-pos					\
   misc/id-context				\
+  misc/id-groups				\
   misc/md5sum					\
   misc/md5sum-newline				\
   misc/mknod					\

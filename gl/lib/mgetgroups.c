@@ -81,9 +81,15 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
       while (1)
 	{
 	  GETGROUPS_T *h;
+	  int last_n_groups = max_n_groups;
 
 	  /* getgrouplist updates max_n_groups to num required.  */
 	  ng = getgrouplist (username, gid, g, &max_n_groups);
+
+	  /* Some systems (like Darwin) have a bug where they
+	     never increase max_n_groups.  */
+	  if (ng < 0 && last_n_groups == max_n_groups)
+	    max_n_groups *= 2;
 
 	  if ((h = realloc_groupbuf (g, max_n_groups)) == NULL)
 	    {
@@ -97,7 +103,9 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
 	  if (0 <= ng)
 	    {
 	      *groups = g;
-	      return ng;
+	      /* On success some systems just return 0 from getgrouplist,
+		 so return max_n_groups rather than ng.  */
+	      return max_n_groups;
 	    }
 	}
     }
