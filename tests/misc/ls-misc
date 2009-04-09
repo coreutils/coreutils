@@ -240,10 +240,10 @@ $fail
   and exit 1;
 
 # Be careful to use the just-build dircolors.
-my $e = `$ENV{abs_top_builddir}/src/dircolors -b`;
-$e =~ s/^LS_COLORS=\'//;
-$e =~ s/\';.*//sm;
-$ENV{LS_COLORS} = $e;
+my $env = `$ENV{abs_top_builddir}/src/dircolors -b`;
+$env =~ s/^LS_COLORS=\'//;
+$env =~ s/\';.*//sm;
+$ENV{LS_COLORS} = $env;
 
 setuid_setup;
 $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
