@@ -7,6 +7,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now aligns output correctly in the presence of abbreviated month
   names from the locale database that have differing widths.
 
+  ls -v and sort -V now order names like "#.b#" properly
+
 ** Changes in behavior
 
   shred, sort, shuf: now use an internal pseudorandom generator by default.
@@ -21,6 +23,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   due to their non-standard getgroups implementations.
   [truncation introduced in coreutils-6.11]
   [infinite loop introduced in coreutils-7.1]
+
 
 * Noteworthy changes in release 7.2 (2009-03-31) [stable]
 
