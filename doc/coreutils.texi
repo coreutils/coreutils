@@ -15481,7 +15481,7 @@ that your spelling is incorrect.  So, we need a dictionary.
 The conventional location for a dictionary is @file{/usr/dict/words}.
 On my GNU/Linux system,@footnote{Redhat Linux 6.1, for the November 2000
 revision of this article.}
-this is a is a sorted, 45,402 word dictionary.
+this is a sorted, 45,402 word dictionary.
 
 Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
