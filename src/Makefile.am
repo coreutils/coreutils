@@ -434,7 +434,7 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 #
 # The second nm|grep checks for file-scope variables with `extern' scope.
 .PHONY: sc_tight_scope
-sc_tight_scope: $(all_programs)
+sc_tight_scope: $(bin_PROGRAMS)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
 	src=`for f in $(SOURCES); do					\
