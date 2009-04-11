@@ -484,6 +484,7 @@ update-NEWS-hash: NEWS
 	  $(srcdir)/cfg.mk
 
 epoch_date = 1970-01-01 00:00:00.000000000 +0000
+ALL_RECURSIVE_TARGETS += patch-check
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
@@ -509,6 +510,7 @@ patch-check:
 	test "$$msg" = ok && rm -rf src-c89 $@.1 $@.2 || echo "$$msg" 1>&2; \
 	test "$$msg" = ok
 
+ALL_RECURSIVE_TARGETS += check-AUTHORS
 check-AUTHORS:
 	$(MAKE) -C src $@
 
@@ -643,6 +645,7 @@ vc-diff-check:
 
 cvs-check: vc-diff-check
 
+ALL_RECURSIVE_TARGETS += maintainer-distcheck
 maintainer-distcheck:
 	$(MAKE) distcheck
 	$(MAKE) taint-distcheck
@@ -651,6 +654,7 @@ maintainer-distcheck:
 
 # Don't make a distribution if checks fail.
 # Also, make sure the NEWS file is up-to-date.
+ALL_RECURSIVE_TARGETS += vc-dist
 vc-dist: $(local-check) cvs-check maintainer-distcheck
 	XZ_OPT=-9ev $(MAKE) dist
 
@@ -686,6 +690,7 @@ fake_home = $(tp)/home
 # and don't affect anything in $HOME.  Create witness files in $HOME,
 # record their attributes, and build/test.  Then ensure that the
 # witnesses were not affected.
+ALL_RECURSIVE_TARGETS += taint-distcheck
 taint-distcheck: $(DIST_ARCHIVES)
 	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
 	-rm -rf $(t_taint) $(fake_home)
@@ -774,6 +779,7 @@ endef
 # the build srcdir, these always-failing programs will run.
 # Otherwise, it is too easy to test the wrong programs.
 # Note that "false" itself is a symlink to true, so it too will malfunction.
+ALL_RECURSIVE_TARGETS += my-distcheck
 my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	$(MAKE) syntax-check
 	$(MAKE) check
@@ -855,6 +861,7 @@ define emit-commit-log
 endef
 
 .PHONY: alpha beta major
+ALL_RECURSIVE_TARGETS += alpha beta major
 alpha beta major: $(local-check) writable-files
 	test $@ = major						\
 	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\

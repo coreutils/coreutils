@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+ALL_RECURSIVE_TARGETS =
+
 SUBDIRS = lib src doc man po tests gnulib-tests
 
 changelog_etc =				\
@@ -67,12 +69,14 @@ EXTRA_DIST =				\
   gl/modules/getloadavg.diff		\
   maint.mk
 
+ALL_RECURSIVE_TARGETS += install-root
 install-root:
 	cd src && $(MAKE) $@
 
 ACLOCAL_AMFLAGS = -I m4
 
 # Some tests always need root privileges, others need them only sometimes.
+ALL_RECURSIVE_TARGETS += check-root
 check-root:
 	cd tests && $(MAKE) $@ SUBDIRS=
 
@@ -108,6 +112,7 @@ gen-ChangeLog:
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
 	fi
 
+ALL_RECURSIVE_TARGETS += distcheck-hook
 distcheck-hook: check-ls-dircolors
 	$(MAKE) my-distcheck
 
