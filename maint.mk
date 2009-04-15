@@ -72,7 +72,7 @@ syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
-  patch-check $(syntax-check-rules) \
+  $(syntax-check-rules) \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
@@ -483,33 +483,6 @@ update-NEWS-hash: NEWS
 	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" \
 	  $(srcdir)/cfg.mk
 
-epoch_date = 1970-01-01 00:00:00.000000000 +0000
-ALL_RECURSIVE_TARGETS += patch-check
-# Ensure that the c99-to-c89 patch applies cleanly.
-patch-check:
-	rm -rf src-c89 $@.1 $@.2
-	cp -a $(srcdir)/src src-c89
-	if test "x$(srcdir)" != x.; then \
-	  cp -a src/* src-c89; \
-	  dotfiles=`ls src/.[!.]* 2>/dev/null`; \
-	  test -z "$$dotfiles" || cp -a src/.[!.]* src-c89; \
-	fi
-	(cd src-c89; patch -p1 -V never --fuzz=0) < $(srcdir)/src/c99-to-c89.diff \
-	  > $@.1 2>&1
-	if test "$(REGEN_PATCH)" = yes; then			\
-	  diff -upr $(srcdir)/src src-c89 | sed 's,$(srcdir)/src-c89/,src/,'	\
-	    | grep -vE '^(Only in|File )'			\
-	    | perl -pe 's/^((?:\+\+\+|---) \S+\t).*/$${1}$(epoch_date)/;' \
-	       -e 's/^ $$//'					\
-	    > new-diff || : ; fi
-	grep -v '^patching file ' $@.1 > $@.2 || :
-	msg=ok; test -s $@.2 && msg='fuzzy patch' || : ;	\
-	rm -f src-c89/*.o || msg='rm failed';			\
-	$(MAKE) -C src-c89 CFLAGS='-Wdeclaration-after-statement -Werror' \
-	  || msg='compile failure with extra options';		\
-	test "$$msg" = ok && rm -rf src-c89 $@.1 $@.2 || echo "$$msg" 1>&2; \
-	test "$$msg" = ok
-
 ALL_RECURSIVE_TARGETS += check-AUTHORS
 check-AUTHORS:
 	$(MAKE) -C src $@
@@ -532,15 +505,6 @@ news-date-check: NEWS
 	  :;								\
 	else								\
 	  echo "version or today's date is not in NEWS" 1>&2;		\
-	  exit 1;							\
-	fi
-
-changelog-check:
-	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$'	\
-	    >/dev/null; then						\
-	  :;								\
-	else								\
-	  echo "$(VERSION) not in ChangeLog" 1>&2;			\
 	  exit 1;							\
 	fi
 

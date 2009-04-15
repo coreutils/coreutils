@@ -31,12 +31,7 @@ url_dir_list = \
 gpg_key_ID = B9AB9A16
 
 # Tests not to run as part of "make distcheck".
-# Exclude changelog-check here so that there's less churn in ChangeLog
-# files -- otherwise, you'd need to have the upcoming version number
-# at the top of the file for each `make distcheck' run.
-local-checks-to-skip = changelog-check strftime-check
-
-local-checks-to-skip += patch-check
+local-checks-to-skip = strftime-check
 
 # The local directory containing the checked-out copy of gnulib used in this
 # release.  Used solely to get gnulib's SHA1 for the "announcement" target.
