@@ -35,9 +35,9 @@ local-checks-to-skip = strftime-check
 
 # The local directory containing the checked-out copy of gnulib used in this
 # release.  Used solely to get gnulib's SHA1 for the "announcement" target.
-gnulib_dir = /gnulib
+gnulib_dir = gnulib
 
-# Now that we have better (check.mk) tests, make this the default.
+# Now that we have better tests, make this the default.
 export VERBOSE = yes
 
 old_NEWS_hash = 40279d1aa0a0ef3ca9d1f0a001eb9e2f
