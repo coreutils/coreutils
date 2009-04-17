@@ -13,6 +13,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls -v and sort -V now order names like "#.b#" properly
 
+  mv: do not print diagnostics when failing to preserve xattr's on file
+  systems without xattr support.
+
 ** Changes in behavior
 
   shred, sort, shuf: now use an internal pseudorandom generator by default.

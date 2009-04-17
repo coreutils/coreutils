@@ -139,6 +139,22 @@ copy_attr_error (struct error_context *ctx ATTRIBUTE_UNUSED,
   int err = errno;
   va_list ap;
 
+  if (errno != ENOTSUP && errno != ENODATA)
+    {
+      /* use verror module to print error message */
+      va_start (ap, fmt);
+      verror (0, err, fmt, ap);
+      va_end (ap);
+    }
+}
+
+static void
+copy_attr_allerror (struct error_context *ctx ATTRIBUTE_UNUSED,
+		 char const *fmt, ...)
+{
+  int err = errno;
+  va_list ap;
+
   /* use verror module to print error message */
   va_start (ap, fmt);
   verror (0, err, fmt, ap);
@@ -163,7 +179,7 @@ copy_attr_by_fd (char const *src_path, int src_fd,
 {
   struct error_context ctx =
   {
-    .error = copy_attr_error,
+    .error = x->require_preserve_xattr ? copy_attr_allerror : copy_attr_error,
     .quote = copy_attr_quote,
     .quote_free = copy_attr_free
   };
@@ -177,7 +193,7 @@ copy_attr_by_name (char const *src_path, char const *dst_path,
 {
   struct error_context ctx =
   {
-    .error = copy_attr_error,
+    .error = x->require_preserve_xattr ? copy_attr_allerror : copy_attr_error,
     .quote = copy_attr_quote,
     .quote_free = copy_attr_free
   };
