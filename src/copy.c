@@ -700,9 +700,10 @@ copy_reg (char const *src_name, char const *dst_name,
 	      }
 	    last_write_made_hole = false;
 
-	    /* A short read on a regular file means EOF.  */
-	    if (n_read != buf_size && S_ISREG (src_open_sb.st_mode))
-	      break;
+            /* It is tempting to return early here upon a short read from a
+               regular file.  That would save the final read syscall for each
+               file.  Unfortunately that doesn't work for certain files in
+               /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
 	  }
       }
 

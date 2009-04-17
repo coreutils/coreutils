@@ -16,6 +16,18 @@ GNU coreutils NEWS                                    -*- outline -*-
   default should proceed at the speed of the disk.  Previously /dev/urandom
   was used if available, which is relatively slow on GNU/Linux systems.
 
+** Improved robustness
+
+  cp would exit successfully after copying less than the full contents
+  of a file larger than ~4000 bytes from a linux-/proc file system to a
+  destination file system with a fundamental block size of 4KiB or greater.
+  Reading into a 4KiB-or-larger buffer, cp's "read" syscall would return
+  a value smaller than 4096, and cp would interpret that as EOF (POSIX
+  allows this).  This optimization, now removed, saved 50% of cp's read
+  syscalls when copying small files.  Affected linux kernels: at least
+  2.6.9 through 2.6.29.
+  [the optimization was introduced in coreutils-6.0]
+
 ** Portability
 
   `id -G $USER` now works correctly even on Darwin and NetBSD. Previously it

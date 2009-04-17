@@ -281,6 +281,7 @@ TESTS =						\
   cp/parent-perm-race				\
   cp/perm					\
   cp/preserve-2					\
+  cp/proc-short-read				\
   cp/proc-zero-len				\
   cp/r-vs-symlink				\
   cp/same-file					\
