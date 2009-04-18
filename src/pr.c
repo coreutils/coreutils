@@ -73,7 +73,7 @@
 
    The interference of the POSIX-compliant small letter options -w and -s:
    (`interference' means `setting a _separator_ with -s switches off the
-   column sturctur and the default - not generally - page_width,
+   column structure and the default - not generally - page_width,
    acts on -w option')
        options:       text form  / separator:     equivalent new options:
        -w l   -s[x]
@@ -92,7 +92,7 @@
    Options:
 
    Including version 1.22i:
-   Some SMALL LETTER options has been redefined with the object of a
+   Some SMALL LETTER options have been redefined with the object of a
    better POSIX compliance. The output of some further cases has been
    adapted to other UNIXes. A violation of downward compatibility has to
    be accepted.

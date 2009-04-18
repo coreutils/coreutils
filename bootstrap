@@ -247,11 +247,11 @@ sort_ver() { #sort -V is not generally available
       echo "$2 $1"
       break
     elif [ ! "$p1" = "$p2" ]; then
-      if [ "$p1" -gt "$p2" ] 2>/dev/null; then #numeric comparision
+      if [ "$p1" -gt "$p2" ] 2>/dev/null; then #numeric comparison
         echo "$2 $1"
-      elif [ "$p2" -gt "$p1" ] 2>/dev/null; then #numeric comparision
+      elif [ "$p2" -gt "$p1" ] 2>/dev/null; then #numeric comparison
         echo "$1 $2"
-      else #numeric, then lexographic comparison
+      else #numeric, then lexicographic comparison
         lp=$(printf "$p1\n$p2\n" | LANG=C sort -n | tail -n1)
         if [ "$lp" = "$p2" ]; then
           echo "$1 $2"
