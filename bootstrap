@@ -231,11 +231,11 @@ fi
 # version formats or redundant trailing .0 in bootstrap.conf.
 # If we did want full compatibility then we should probably
 # use m4_version_compare from autoconf.
-sort_ver() { #sort -V is not generally available
+sort_ver() { # sort -V is not generally available
   ver1="$1"
   ver2="$2"
 
-  #split on '.' and compare each component
+  # split on '.' and compare each component
   i=1
   while : ; do
     p1=$(echo "$ver1" | cut -d. -f$i)
@@ -247,11 +247,11 @@ sort_ver() { #sort -V is not generally available
       echo "$2 $1"
       break
     elif [ ! "$p1" = "$p2" ]; then
-      if [ "$p1" -gt "$p2" ] 2>/dev/null; then #numeric comparison
+      if [ "$p1" -gt "$p2" ] 2>/dev/null; then # numeric comparison
         echo "$2 $1"
-      elif [ "$p2" -gt "$p1" ] 2>/dev/null; then #numeric comparison
+      elif [ "$p2" -gt "$p1" ] 2>/dev/null; then # numeric comparison
         echo "$1 $2"
-      else #numeric, then lexicographic comparison
+      else # numeric, then lexicographic comparison
         lp=$(printf "$p1\n$p2\n" | LANG=C sort -n | tail -n1)
         if [ "$lp" = "$p2" ]; then
           echo "$1 $2"
@@ -308,7 +308,7 @@ print_versions() {
   echo "----------------------"
   printf "$buildreq"
   echo "----------------------"
-  #can't depend on column -t
+  # can't depend on column -t
 }
 
 if ! printf "$buildreq" | check_versions; then
