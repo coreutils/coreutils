@@ -49,16 +49,9 @@ sub chmod_tree
   defined $dir
     or return;
 
-  if (chdir $dir)
-    {
-      # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
-      my $options = {untaint => 1, wanted => \&chmod_1};
-      find ($options, '.');
-    }
-  else
-    {
-      warn "$ME: failed to chdir to $dir: $!\n";
-    }
+  # Perform the equivalent of find "$dir" -type d -print0|xargs -0 chmod -R 700.
+  my $options = {untaint => 1, wanted => \&chmod_1};
+  find ($options, $dir);
 }
 
 sub import {
@@ -105,6 +98,11 @@ sub import {
 }
 
 END {
+  # Move cwd out of the directory we're about to remove.
+  # This is required on some systems, and by some versions of File::Temp.
+  chdir '..'
+    or warn "$ME: failed to chdir to .. from $dir: $!\n";
+
   my $saved_errno = $?;
   chmod_tree;
   $? = $saved_errno;
