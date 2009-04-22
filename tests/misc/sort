@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008, 2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -339,6 +339,21 @@ my @Tests =
 ["sort-numeric", '--sort=numeric', {IN=>".01\n0\n"}, {OUT=>"0\n.01\n"}],
 ["sort-gennum", '--sort=general-numeric',
   {IN=>"1e2\n2e1\n"}, {OUT=>"2e1\n1e2\n"}],
+
+# -m with output file also used as an input file
+# In coreutils-7.2, this caused a segfault.
+# This test looks a little strange.  Here's why:
+# since we're using "-o f", standard output will be empty, hence OUT=>''
+# We still want to ensure that the output file, "f" has expected contents,
+# hence the added CMP=> directive.
+["output-is-input", '-m -o f', {IN=> {f=> "a\n"}}, {OUT=>''},
+ {CMP=> ["a\n", {'f'=> undef}]} ],
+["output-is-input-2", '-m -o f', {OUT=>''},
+ {IN=> {f=> "a\n"}}, {IN=> {g=> "b\n"}}, {IN=> {h=> "c\n"}},
+ {CMP=> ["a\nb\nc\n", {'f'=> undef}]} ],
+["output-is-input-3", '-m -o f', {OUT=>''},
+ {IN=> {g=> "a\n"}}, {IN=> {h=> "b\n"}}, {IN=> {f=> "c\n"}},
+ {CMP=> ["a\nb\nc\n", {'f'=> undef}]} ],
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test

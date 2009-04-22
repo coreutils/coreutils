@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 1988, 1991-2008 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2602,18 +2602,20 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 	  pid_t pid;
 	  char *temp = create_temp (&tftp, &pid);
 	  size_t num_merged = 0;
-	  while (i + num_merged < nfiles)
+	  do
 	    {
 	      num_merged += mergefiles (&files[i], 0, nfiles - i, tftp, temp);
 	      files[i].name = temp;
 	      files[i].pid = pid;
 
-	      memmove(&files[i], &files[i + num_merged],
-		      num_merged * sizeof *files);
+	      if (i + num_merged < nfiles)
+		memmove(&files[i + 1], &files[i + num_merged],
+			num_merged * sizeof *files);
 	      ntemps += 1;
 	      nfiles -= num_merged - 1;;
 	      i += num_merged;
 	    }
+	  while (i < nfiles);
 	}
     }
 

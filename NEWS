@@ -1,8 +1,12 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Noteworthy changes in release ?.? (????-??-??) [?]
+* Noteworthy changes in release 7.3 (????-??-??) [?]
 
 ** Bug fixes
+
+  sort -m no longer segfaults when its output file is also an input file.
+  E.g., with this, touch 1; sort -m -o 1 1, sort would segfault.
+  [introduced in coreutils-7.2]
 
   ls now aligns output correctly in the presence of abbreviated month
   names from the locale database that have differing widths.
