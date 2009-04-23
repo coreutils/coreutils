@@ -382,12 +382,17 @@ check-duplicate-no-install: tr
 	test -z "`echo '$(EXTRA_PROGRAMS)'| ./tr ' ' '\n' | uniq -d`"
 
 # Ensure that the list of programs and author names is accurate.
+# We need a UTF8 locale, and any one should do, but since configure
+# already tries to find a French one, use it.  It's fine to skip this test.
 au_dotdot = authors-dotdot
 au_actual = authors-actual
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
-	@rm -f $(au_actual) $(au_dotdot)
-	@for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
+	@locale='$(LOCALE_FR_UTF8)';			\
+	case "$$locale" in				\
+	  ''|none) echo "$@: skipping this check"; exit 0;; esac; \
+	rm -f $(au_actual) $(au_dotdot);		\
+	for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
 	    | $(ASSORT) -u`; do				\
 	  test "$$i" = '[' && continue;			\
 	  exe=$$i;					\
@@ -396,7 +401,7 @@ check-AUTHORS: $(all_programs)
 	  elif test "$$i" = test; then			\
 	    exe='[';					\
 	  fi;						\
-	  LC_ALL=en_US.UTF-8 ./$$exe --version		\
+	  LC_ALL="$$locale" ./$$exe --version		\
 	    | perl -0 -pi -e 's/,\n/, /gm'		\
 	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
 		  -e 's/,* and /, /; s/\.$$//; p; }';	\
