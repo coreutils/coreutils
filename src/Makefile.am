@@ -69,6 +69,10 @@ EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
 BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
+# Also remove these sometimes-built programs.
+# For example, even when excluded, they're built via check-AUTHORS.
+CLEANFILES += $(no_install__progs)
+
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libver.a
@@ -359,7 +363,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-duplicate-no-install
+check: check-README check-duplicate-no-install check-AUTHORS
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -394,35 +398,11 @@ check-AUTHORS: $(all_programs)
 	  fi;						\
 	  LC_ALL=en_US.UTF-8 ./$$exe --version		\
 	    | perl -0 -pi -e 's/,\n/, /gm'		\
-	    |sed -n '/Written by /{ s//'"$$i"': /; s/,* and /, /; s/\.$$//; p; }'; \
+	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
+		  -e 's/,* and /, /; s/\.$$//; p; }';	\
 	done > $(au_actual)
 	@sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
 	@diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
-
-# Extract the list of authors from each file.
-sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
-# Sometimes the string is on the same line as the #define...
-s1 = '/^\#define AUTHORS \([^\\]\)/{;s//\1/;$(sed_filter);p;q;}'
-# Sometimes the string is on the backslash-continued line after the #define.
-s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
-../AUTHORS: $(SOURCES)
-	rm -f $@-t
-	(						\
-	  set -e;					\
-	  echo "Here are the names of the programs in this package,";	\
-	  echo "each followed by the name(s) of its author(s).";	\
-	  echo;						\
-	  for i in $(SOURCES); do			\
-	    a=`sed -n $(s1) $$i`;			\
-	    test "$$a" && :				\
-	      || a=`sed -n $(s2) $$i`;			\
-	    if test "$$a"; then				\
-	      prog=`echo $$i|sed 's/\.c$$//'`;		\
-	      echo "$$prog: $$a";			\
-	    fi;						\
-	  done | $(ASSORT) -u ) > $@-t
-	chmod a-w $@-t
-	mv $@-t $@
 
 # The following rule is not designed to be portable,
 # and relies on tools that not everyone has.

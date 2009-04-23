@@ -73,7 +73,7 @@ syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
 
 local-checks-available = \
   $(syntax-check-rules) \
-  makefile-check check-AUTHORS
+  makefile-check
 .PHONY: $(local-checks-available)
 
 # Arrange to print the name of each syntax-checking rule just before running it.
@@ -482,10 +482,6 @@ sc_immutable_NEWS:
 update-NEWS-hash: NEWS
 	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" \
 	  $(srcdir)/cfg.mk
-
-ALL_RECURSIVE_TARGETS += check-AUTHORS
-check-AUTHORS:
-	$(MAKE) -C src $@
 
 # Ensure that we use only the standard $(VAR) notation,
 # not @...@ in Makefile.am, now that we can rely on automake
