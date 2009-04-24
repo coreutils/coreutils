@@ -290,26 +290,29 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
-	@rm -f $@ $@-t
-	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
-	@chmod a-w $@-t
-	mv $@-t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_at)$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
+	$(AM_V_at)chmod a-w $@-t
+	$(AM_V_at)mv $@-t $@
 
 wheel_size = 5
 
 BUILT_SOURCES += wheel-size.h
 wheel-size.h: Makefile.am
-	@rm -f $@ $@-t
-	echo '#define WHEEL_SIZE $(wheel_size)' > $@-t
-	@chmod a-w $@-t
-	mv $@-t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_at)echo '#define WHEEL_SIZE $(wheel_size)' > $@-t
+	$(AM_V_at)chmod a-w $@-t
+	$(AM_V_at)mv $@-t $@
 
 BUILT_SOURCES += wheel.h
 wheel.h: wheel-gen.pl Makefile.am
-	@rm -f $@ $@-t
-	$(srcdir)/wheel-gen.pl $(wheel_size) > $@-t
-	@chmod a-w $@-t
-	mv $@-t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_at)$(srcdir)/wheel-gen.pl $(wheel_size) > $@-t
+	$(AM_V_at)chmod a-w $@-t
+	$(AM_V_at)mv $@-t $@
 
 # false exits nonzero even with --help or --version.
 # test doesn't support --help or --version.
@@ -318,25 +321,28 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic
-	rm -f $@
-	$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
-	@chmod a-w $@t
-	mv $@t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@
+	$(AM_V_at)$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
 
 BUILT_SOURCES += version.c
 version.c: Makefile
-	rm -f $@
-	printf '#include <config.h>\n' > $@t
-	printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
-	@chmod a-w $@t
-	mv $@t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@
+	$(AM_V_at)printf '#include <config.h>\n' > $@t
+	$(AM_V_at)printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
 
 BUILT_SOURCES += version.h
 version.h: Makefile
-	rm -f $@
-	printf 'extern char const *Version;\n' > $@t
-	@chmod a-w $@t
-	mv $@t $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@
+	$(AM_V_at)printf 'extern char const *Version;\n' > $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
 
 DISTCLEANFILES = version.c version.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
