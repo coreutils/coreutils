@@ -66,6 +66,7 @@ EXTRA_DIST =				\
   bootstrap.conf			\
   build-aux/cvsu			\
   cfg.mk				\
+  dist-check.mk				\
   gl/modules/getloadavg.diff		\
   maint.mk
 

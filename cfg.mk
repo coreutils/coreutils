@@ -191,3 +191,5 @@ sc_strftime_check:
 	  diff -u $@-src $@-info || exit 1;				\
 	  rm -f $@-src $@-info;						\
 	fi
+
+include $(srcdir)/dist-check.mk
