@@ -369,6 +369,14 @@ foreach my $t (@Tests)
 
 @Tests = triple_test \@Tests;
 
+# Remember that triple_test creates from each test with exactly one "IN"
+# file two more tests (.p and .r suffix on name) corresponding to reading
+# input from a file and from a pipe.  The pipe-reading test would fail
+# due to a race condition about 1 in 20 times.
+# Remove the IN_PIPE version of the "output-is-input" test above.
+# The others aren't susceptible because they have three inputs each.
+@Tests = grep {$_->[0] ne 'output-is-input.p'} @Tests;
+
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
