@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp now diagnoses failure to preserve selinux/xattr attributes when
+  --preserve=context,xattr is specified in combination with -a.
+  Also, cp no longer suppresses attribute-preservation diagnostics
+  when preserving SELinux context was explicitly requested.
+
   sort -m no longer segfaults when its output file is also an input file.
   E.g., with this, touch 1; sort -m -o 1 1, sort would segfault.
   [introduced in coreutils-7.2]

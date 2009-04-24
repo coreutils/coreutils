@@ -184,7 +184,8 @@ copy_attr_by_fd (char const *src_path, int src_fd,
     .quote_free = copy_attr_free
   };
   return 0 == attr_copy_fd (src_path, src_fd, dst_path, dst_fd, 0,
-                            x->reduce_diagnostics ? NULL : &ctx);
+                            (x->reduce_diagnostics
+                             && !x->require_preserve_xattr)? NULL : &ctx);
 }
 
 static bool
@@ -198,7 +199,8 @@ copy_attr_by_name (char const *src_path, char const *dst_path,
     .quote_free = copy_attr_free
   };
   return 0 == attr_copy_file (src_path, dst_path, 0,
-                              x-> reduce_diagnostics ? NULL :&ctx);
+                              (x-> reduce_diagnostics
+                               && !x->require_preserve_xattr) ? NULL : &ctx);
 }
 #else /* USE_XATTR */
 
@@ -481,7 +483,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	  security_context_t con = NULL;
 	  if (getfscreatecon (&con) < 0)
 	    {
-	      if (!x->reduce_diagnostics)
+	      if (!x->reduce_diagnostics || x->require_preserve_context)
 	        error (0, errno, _("failed to get file system create context"));
 	      if (x->require_preserve_context)
 		{
@@ -494,7 +496,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	    {
 	      if (fsetfilecon (dest_desc, con) < 0)
 		{
-		  if (!x->reduce_diagnostics)
+		  if (!x->reduce_diagnostics || x->require_preserve_context)
 		    error (0, errno,
 			   _("failed to set the security context of %s to %s"),
 			   quote_n (0, dst_name), quote_n (1, con));
@@ -1748,7 +1750,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	{
 	  if (setfscreatecon (con) < 0)
 	    {
-	      if (!x->reduce_diagnostics)
+	      if (!x->reduce_diagnostics || x->require_preserve_context)
 	        error (0, errno,
 		       _("failed to set default file creation context to %s"),
 		       quote (con));
@@ -1762,9 +1764,9 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
       else
 	{
-	  if (errno != ENOTSUP && errno != ENODATA)
+	  if ((errno != ENOTSUP && errno != ENODATA) || x->require_preserve_context)
 	    {
-	      if (!x->reduce_diagnostics)
+	      if (!x->reduce_diagnostics || x->require_preserve_context)
 	        error (0, errno,
 		       _("failed to get security context of %s"),
 		       quote (src_name));
