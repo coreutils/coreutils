@@ -148,14 +148,14 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 # That is necessary to avoid failures for programs that are also shell built-in
 # functions like echo, false, printf, pwd.
 .x.1:
-	@case '$(PERL)' in					\
+	$(AM_V_GEN)case '$(PERL)' in				\
 	  *"/missing "*)					\
 	    echo 'WARNING: cannot update man page $@ since perl is missing' \
-	      'or inadequate' 1>&2 \
+	      'or inadequate' 1>&2				\
 	    ;;							\
 	  *)							\
 	    rm -f $@						\
-	    && { echo "Updating man page $@";			\
+	    && {						\
 		 rm -rf $t;					\
 		 mkdir $t;					\
 		 (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
@@ -181,7 +181,7 @@ ASSORT = LC_ALL=C sort
 # add them here manually.
 .PHONY: check-x-vs-1
 check-x-vs-1:
-	PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;		\
+	$(AM_V_GEN)PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;	\
 	t=ls-files.$$$$;						\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
 	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
@@ -195,7 +195,7 @@ all_programs =								\
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
-	status=0;					\
+	$(AM_V_GEN)status=0;				\
 	for p in dummy `$(all_programs)`; do		\
 	  test $$p = dummy && continue;			\
 	  test $$p = ginstall && p=install || : ;	\
