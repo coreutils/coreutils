@@ -411,9 +411,9 @@ check-AUTHORS: $(all_programs)
 	    | perl -0 -pi -e 's/,\n/, /gm'		\
 	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
 		  -e 's/,* and /, /; s/\.$$//; p; }';	\
-	done > $(au_actual)
-	@sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
-	@diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
+	done > $(au_actual) &&				\
+	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot) && \
+	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
 # The following rule is not designed to be portable,
 # and relies on tools that not everyone has.
