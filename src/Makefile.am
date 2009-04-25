@@ -290,8 +290,7 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
@@ -300,16 +299,14 @@ wheel_size = 5
 
 BUILT_SOURCES += wheel-size.h
 wheel-size.h: Makefile.am
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)echo '#define WHEEL_SIZE $(wheel_size)' > $@-t
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
 
 BUILT_SOURCES += wheel.h
 wheel.h: wheel-gen.pl Makefile.am
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@ $@-t
+	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)$(srcdir)/wheel-gen.pl $(wheel_size) > $@-t
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
@@ -321,16 +318,14 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
 BUILT_SOURCES += version.c
 version.c: Makefile
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)printf '#include <config.h>\n' > $@t
 	$(AM_V_at)printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
 	$(AM_V_at)chmod a-w $@t
@@ -338,8 +333,7 @@ version.c: Makefile
 
 BUILT_SOURCES += version.h
 version.h: Makefile
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)printf 'extern char const *Version;\n' > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
