@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chroot now accepts the options --userspec and --groups.
 
+  sort accepts a new option, --human-numeric-sort (-h): sort numbers
+  while honoring human readable suffixes like KiB and MB etc.
+
 
 * Noteworthy changes in release 7.4 (2009-05-07) [stable]
 

@@ -176,6 +176,8 @@ struct keyfield
   bool random;			/* Sort by random hash of key.  */
   bool general_numeric;		/* Flag for general, numeric comparison.
 				   Handle numbers in exponential notation. */
+  bool human_numeric;		/* Flag for sorting by human readable
+				   units with either SI xor IEC prefixes. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
@@ -337,6 +339,9 @@ Ordering options:\n\
   -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
 "), stdout);
       fputs (_("\
+  -h, --human-numeric-sort    compare human readable numbers (e.g., 2K 1G)\n\
+"), stdout);
+      fputs (_("\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
       --random-source=FILE    get random bytes from FILE\n\
@@ -344,8 +349,8 @@ Ordering options:\n\
 "), stdout);
       fputs (_("\
       --sort=WORD             sort according to WORD:\n\
-                                general-numeric -g, month -M, numeric -n,\n\
-                                random -R, version -V\n\
+                                general-numeric -g, human-numeric -h, month -M,\n\
+                                numeric -n, random -R, version -V\n\
   -V, --version-sort          natural sort of (version) numbers within text\n\
 \n\
 "), stdout);
@@ -426,7 +431,7 @@ enum
   SORT_OPTION
 };
 
-static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uVy:z";
+static char const short_options[] = "-bcCdfghik:mMno:rRsS:t:T:uVy:z";
 
 static struct option const long_options[] =
 {
@@ -442,6 +447,7 @@ static struct option const long_options[] =
   {"merge", no_argument, NULL, 'm'},
   {"month-sort", no_argument, NULL, 'M'},
   {"numeric-sort", no_argument, NULL, 'n'},
+  {"human-numeric-sort", no_argument, NULL, 'h'},
   {"version-sort", no_argument, NULL, 'V'},
   {"random-sort", no_argument, NULL, 'R'},
   {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
@@ -480,6 +486,7 @@ static char const check_types[] =
 
 #define SORT_TABLE \
   _st_("general-numeric", 'g') \
+  _st_("human-numeric",   'h') \
   _st_("month",           'M') \
   _st_("numeric",         'n') \
   _st_("random",          'R') \
@@ -1673,6 +1680,87 @@ numcompare (const char *a, const char *b)
   return strnumcmp (a, b, decimal_point, thousands_sep);
 }
 
+/* Exit with an error if a mixture of SI and IEC units detected.  */
+
+static void
+check_mixed_SI_IEC (char prefix)
+{
+  static int seen_si = -1;
+  bool si_present = prefix == 'i';
+  if (seen_si != -1 && seen_si != si_present)
+    error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
+  seen_si = si_present;
+}
+
+/* Return an integer which represents the order of magnitude of
+   the unit following the number.  NUMBER can contain thousands separators
+   or a decimal point, but not have preceeding blanks.
+   Negative numbers return a negative unit order.  */
+
+static int
+find_unit_order (const char *number)
+{
+  static const char orders [UCHAR_LIM] = {
+    ['K']=1, ['M']=2, ['G']=3, ['T']=4, ['P']=5, ['E']=6, ['Z']=7, ['Y']=8,
+    ['k']=1,
+  };
+
+  const unsigned char *p = number;
+
+  int sign = 1;
+
+  if (*p == '-')
+    {
+      sign = -1;
+      p++;
+    }
+
+  /* Scan to end of number.
+     Decimals or separators not followed by digits stop the scan.
+     Numbers ending in decimals or separators are thus considered
+     to be lacking in units.
+     FIXME: add support for multibyte thousands_sep and decimal_point.  */
+
+  while (ISDIGIT (*p))
+    {
+      p++;
+
+      if (*p == decimal_point && ISDIGIT (*(p + 1)))
+	p += 2;
+      else if (*p == thousands_sep && ISDIGIT (*(p + 1)))
+	p += 2;
+    }
+
+  int order = orders[*p];
+
+  /* For valid units check for MiB vs MB etc.  */
+  if (order)
+    check_mixed_SI_IEC (*(p + 1));
+
+  return sign * order;
+}
+
+/* Compare numbers ending in units with SI xor IEC prefixes
+       <none/unknown> < K/k < M < G < T < P < E < Z < Y
+   Assume that numbers are properly abbreviated.
+   i.e. input will never have both 6000K and 5M.  */
+
+static int
+human_numcompare (const char *a, const char *b)
+{
+  while (blanks[to_uchar (*a)])
+    a++;
+  while (blanks[to_uchar (*b)])
+    b++;
+
+  int order_a = find_unit_order (a);
+  int order_b = find_unit_order (b);
+
+  return (order_a > order_b ? 1
+	  : order_a < order_b ? -1
+	  : strnumcmp (a, b, decimal_point, thousands_sep));
+}
+
 static int
 general_numcompare (const char *sa, const char *sb)
 {
@@ -1917,13 +2005,14 @@ keycompare (const struct line *a, const struct line *b)
 
       if (key->random)
 	diff = compare_random (texta, lena, textb, lenb);
-      else if (key->numeric | key->general_numeric)
+      else if (key->numeric | key->general_numeric | key->human_numeric)
 	{
 	  char savea = *lima, saveb = *limb;
 
 	  *lima = *limb = '\0';
-	  diff = ((key->numeric ? numcompare : general_numcompare)
-		  (texta, textb));
+	  diff = ((key->numeric ? numcompare
+		   : key->general_numeric ? general_numcompare
+		   : human_numcompare) (texta, textb));
 	  *lima = savea, *limb = saveb;
 	}
       else if (key->version)
@@ -2889,7 +2978,7 @@ check_ordering_compatibility (void)
 
   for (key = keylist; key; key = key->next)
     if ((1 < (key->random + key->numeric + key->general_numeric + key->month
-	      + key->version + !!key->ignore))
+	      + key->version + !!key->ignore + key->human_numeric))
 	|| (key->random && key->translate))
       {
 	/* The following is too big, but guaranteed to be "big enough". */
@@ -2901,6 +2990,8 @@ check_ordering_compatibility (void)
 	  *p++ = 'f';
 	if (key->general_numeric)
 	  *p++ = 'g';
+	if (key->human_numeric)
+	  *p++ = 'h';
 	if (key->ignore == nonprinting)
 	  *p++ = 'i';
 	if (key->month)
@@ -2991,6 +3082,9 @@ set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
 	  break;
 	case 'g':
 	  key->general_numeric = true;
+	  break;
+	case 'h':
+	  key->human_numeric = true;
 	  break;
 	case 'i':
 	  /* Option order should not matter, so don't let -i override
@@ -3140,7 +3234,8 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.random = gkey.version = false;
+  gkey.numeric = gkey.general_numeric = gkey.human_numeric = false;
+  gkey.random = gkey.version = false;
   gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
 
@@ -3219,6 +3314,7 @@ main (int argc, char **argv)
 	case 'd':
 	case 'f':
 	case 'g':
+	case 'h':
 	case 'i':
 	case 'M':
 	case 'n':
@@ -3471,6 +3567,7 @@ main (int argc, char **argv)
 		 | key->numeric
 		 | key->version
 		 | key->general_numeric
+		 | key->human_numeric
 		 | key->random)))
         {
           key->ignore = gkey.ignore;
@@ -3480,6 +3577,7 @@ main (int argc, char **argv)
           key->month = gkey.month;
           key->numeric = gkey.numeric;
           key->general_numeric = gkey.general_numeric;
+          key->human_numeric = gkey.human_numeric;
           key->random = gkey.random;
           key->reverse = gkey.reverse;
           key->version = gkey.version;
@@ -3495,6 +3593,7 @@ main (int argc, char **argv)
 		       | gkey.month
 		       | gkey.numeric
 		       | gkey.general_numeric
+		       | gkey.human_numeric
 		       | gkey.random
 		       | gkey.version)))
     {

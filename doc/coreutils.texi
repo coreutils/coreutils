@@ -3785,6 +3785,21 @@ Use this option only if there is no alternative; it is much slower than
 @option{--numeric-sort} (@option{-n}) and it can lose information when
 converting to floating point.
 
+@item -h
+@itemx --human-numeric-sort
+@itemx --sort=human-numeric
+@opindex -h
+@opindex --human-numeric-sort
+@opindex --sort
+@cindex human numeric sort
+@vindex LC_NUMERIC
+Sort numerically, as per the @option{--numeric-sort} option below, and in
+addition handle IEC or SI suffixes like MiB, MB etc (@ref{Block size}).
+Note a mixture of IEC and SI suffixes is not supported and will
+be flagged as an error.  Also the numbers must be abbreviated uniformly.
+I.E. values with different precisions like 6000K and 5M will be sorted
+incorrectly.
+
 @item -i
 @itemx --ignore-nonprinting
 @opindex -i
