@@ -23,6 +23,7 @@ root_tests =					\
   cp/cp-a-selinux				\
   cp/preserve-gid				\
   cp/special-bits				\
+  cp/cp-mv-enotsup-xattr			\
   dd/skip-seek-past-dev				\
   install/install-C-root			\
   ls/capability					\
