@@ -78,6 +78,14 @@ cp --preserve=context f g 2> out && fail=1
 # Here, we *do* expect the destination to be empty.
 test -s g && fail=1
 
+rm -f g
+echo > g
+# Check if -a option doesn't silence --preserve=context option diagnostics
+cp -a --preserve=context f g 2> out2 && fail=1
+
+# Here, we *do* expect the destination to be empty.
+test -s g && fail=1
+
 # An alternative to the current approach would be to run in a confined
 # domain (maybe creating/loading it) that lacks the required permissions
 # to the file type.
@@ -87,11 +95,14 @@ test -s g && fail=1
 #   Operation not supported
 sed "s/ .g' to .*//" out > k
 mv k out
+sed "s/ .g' to .*//" out2 > k
+mv k out2
 
 cat <<\EOF > exp || fail=1
 cp: failed to set the security context of
 EOF
 
 compare out exp || fail=1
+compare out2 exp || fail=1
 
 Exit $fail
