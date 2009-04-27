@@ -131,6 +131,12 @@ is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
   return false;
 }
 
+static bool
+errno_unsupported (int err)
+{
+  return err == ENOTSUP || err == ENODATA;
+}
+
 #if USE_XATTR
 static void
 copy_attr_error (struct error_context *ctx ATTRIBUTE_UNUSED,
@@ -139,6 +145,7 @@ copy_attr_error (struct error_context *ctx ATTRIBUTE_UNUSED,
   int err = errno;
   va_list ap;
 
+  if (!errno_unsupported (errno))
   if (errno != ENOTSUP && errno != ENODATA)
     {
       /* use verror module to print error message */
@@ -1764,7 +1771,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
       else
 	{
-	  if ((errno != ENOTSUP && errno != ENODATA) || x->require_preserve_context)
+          if (!errno_unsupported (errno) || x->require_preserve_context)
 	    {
 	      if (!x->reduce_diagnostics || x->require_preserve_context)
 	        error (0, errno,
