@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -993,12 +993,15 @@ main (int argc, char **argv)
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
 	{
-	  if (stat (argv[i], &stats[i - optind]))
+	  int fd = open (argv[i], O_RDONLY | O_NOCTTY);
+	  if (fd < 0 || fstat (fd, &stats[i - optind]))
 	    {
 	      error (0, errno, "%s", quote (argv[i]));
 	      exit_status = EXIT_FAILURE;
 	      argv[i] = NULL;
 	    }
+	  if (0 <= fd)
+	    close (fd);
 	}
     }
 
