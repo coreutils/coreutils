@@ -42,6 +42,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Portability
 
+  df now pre-mounts automountable directories even with automounters for
+  which stat-like syscalls no longer provoke mounting.  Now, df uses open.
+
   `id -G $USER` now works correctly even on Darwin and NetBSD. Previously it
   would either truncate the group list to 10, or go into an infinite loop,
   due to their non-standard getgroups implementations.
