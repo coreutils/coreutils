@@ -988,8 +988,9 @@ main (int argc, char **argv)
     {
       int i;
 
-      /* stat all the given entries to make sure they get automounted,
-	 if necessary, before reading the file system table.  */
+      /* Open each of the given entries to make sure any corresponding
+	 partition is automounted.  This must be done before reading the
+	 file system table.  */
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
 	{
