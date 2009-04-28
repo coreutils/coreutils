@@ -47,7 +47,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   `id -G $USER` now works correctly even on Darwin and NetBSD. Previously it
   would either truncate the group list to 10, or go into an infinite loop,
-  due to their non-standard getgroups implementations.
+  due to their non-standard getgrouplist implementations.
   [truncation introduced in coreutils-6.11]
   [infinite loop introduced in coreutils-7.1]
 
