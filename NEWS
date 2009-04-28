@@ -9,10 +9,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also, cp no longer suppresses attribute-preservation diagnostics
   when preserving SELinux context was explicitly requested.
 
-  sort -m no longer segfaults when its output file is also an input file.
-  E.g., with this, touch 1; sort -m -o 1 1, sort would segfault.
-  [introduced in coreutils-7.2]
-
   ls now aligns output correctly in the presence of abbreviated month
   names from the locale database that have differing widths.
 
@@ -20,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   mv: do not print diagnostics when failing to preserve xattr's on file
   systems without xattr support.
+
+  sort -m no longer segfaults when its output file is also an input file.
+  E.g., with this, touch 1; sort -m -o 1 1, sort would segfault.
+  [introduced in coreutils-7.2]
 
 ** Changes in behavior
 
