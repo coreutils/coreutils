@@ -55,6 +55,7 @@
 #include "remove.h"
 #include "root-dev-ino.h"
 #include "yesno.h"
+#include "priv-set.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rm"
@@ -240,6 +241,9 @@ main (int argc, char **argv)
   atexit (close_stdin);
 
   rm_option_init (&x);
+
+  /* Try to disable the ability to unlink a directory.  */
+  priv_set_remove_linkdir ();
 
   while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
     {

@@ -32,6 +32,7 @@
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
+#include "priv-set.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mv"
@@ -353,6 +354,9 @@ main (int argc, char **argv)
   atexit (close_stdin);
 
   cp_option_init (&x);
+
+  /* Try to disable the ability to unlink a directory.  */
+  priv_set_remove_linkdir ();
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
      we'll actually use backup_suffix_string.  */
