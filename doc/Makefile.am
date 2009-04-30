@@ -60,45 +60,45 @@ syntax_checks =		\
 
 # List words/regexps here that should not appear in the texinfo documentation.
 check-texinfo: $(syntax_checks)
-	@fail=0; \
-	grep '@url{' $(srcdir)/*.texi && fail=1; \
-	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
-	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
-	grep -n filename $(srcdir)/*.texi \
-	    | $(EGREP) -v 'setfilename|[{]filename[}]' \
-	  && fail=1; \
-	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
+	$(AM_V_GEN)fail=0;						\
+	grep '@url{' $(srcdir)/*.texi && fail=1;			\
+	grep '\$$@"' $(srcdir)/*.texi && fail=1;			\
+	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1;	\
+	grep -n filename $(srcdir)/*.texi				\
+	    | $(EGREP) -v 'setfilename|[{]filename[}]'			\
+	  && fail=1;							\
+	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne			\
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
-	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
-	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1; \
-	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi \
+	  $(srcdir)/*.texi 2> /dev/null || fail=1; };			\
+	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1;	\
+	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi		\
 	  | $(EGREP) -v 'search path|@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
 	exit $$fail
 
 # Use `time zone', not `timezone'.
 sc-avoid-timezone:
-	@$(EGREP) timezone $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) timezone $(srcdir)/*.texi && exit 1 || :
 
 # Check for insufficient exponent grouping, e.g.,
 # @math{2^64} should be @math{2^{64}}.
 sc-exponent-grouping:
-	@$(EGREP) '\{.*\^[0-9][0-9]' $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) '\{.*\^[0-9][0-9]' $(srcdir)/*.texi && exit 1 || :
 
 # E.g., use @sc{nul}, not NUL.
 sc-use-small-caps-NUL:
-	@$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && exit 1 || :
 
 # Say I/O, not IO.
 sc-avoid-io:
-	@$(EGREP) '$(_W)IO$(W_)' $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) '$(_W)IO$(W_)' $(srcdir)/*.texi && exit 1 || :
 
 # I prefer nonzero over non-zero.
 sc-avoid-non-zero:
-	@$(EGREP) non-zero $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) non-zero $(srcdir)/*.texi && exit 1 || :
 
 # Use `zeros', not `zeroes' (nothing wrong with `zeroes'. just be consistent).
 sc-avoid-zeroes:
-	@$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && exit 1 || :
 
 # ME = $(subdir)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 ME = doc/Makefile
@@ -115,7 +115,7 @@ find_upper_case_var =		\
      }				\
    END {$$m and (warn "$(ME): do not use upper case in \@var{...}\n"), exit 1}'
 sc-lower-case-var:
-	@$(PERL) -e 1 2> /dev/null && \
-	  $(PERL) -lne $(find_upper_case_var) $(srcdir)/*.texi
+	$(AM_V_GEN)$(PERL) -e 1 2> /dev/null \
+	  && $(PERL) -lne $(find_upper_case_var) $(srcdir)/*.texi
 
 check: check-texinfo
