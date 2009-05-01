@@ -44,7 +44,7 @@ bootstrap-tools = autoconf,automake,gnulib,bison
 # Now that we have better tests, make this the default.
 export VERBOSE = yes
 
-old_NEWS_hash = 40279d1aa0a0ef3ca9d1f0a001eb9e2f
+old_NEWS_hash = 2f661e60191e2c52ba73c22e5ac42b79
 
 # Ensure that the list of O_ symbols used to compute O_FULLBLOCK is complete.
 dd = $(srcdir)/src/dd.c
