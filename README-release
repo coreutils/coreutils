@@ -23,7 +23,7 @@ FIXME: enable excluded programs like arch? to get their manual pages?
   On at least one SELinux-enabled (enforcing) and one non-SELinux system,
     run all tests, both root-only and regular.
   Run *all* non-root tests, including expensive and very expensive ones i.e.,
-    run this: make check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
+    run this: make -j1 check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
 
   Run the root-only tests:
   sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
@@ -31,9 +31,9 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 * Run "make distcheck"
 
 * Manually set the date, version number, and [stable/alpha/beta] on
-  line 3 of NEWS, then do this:
+  line 3 of NEWS, then do e.g.,:
 
-    v=7.1
+    v=7.3
     git commit -F <(printf 'version '$v'\n\n* NEWS: Record release date.\n') -a
     git tag -s -m "coreutils $v" v$v HEAD
 
