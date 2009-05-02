@@ -382,15 +382,15 @@ check-duplicate-no-install: tr
 	test -z "`echo '$(EXTRA_PROGRAMS)'| ./tr ' ' '\n' | uniq -d`"
 
 # Ensure that the list of programs and author names is accurate.
-# We need a UTF8 locale, and any one should do, but since configure
-# already tries to find a French one, use it.  It's fine to skip this test.
+# We need a UTF8 locale.  If a lack of locale support or a missing
+# translation inhibits printing of UTF-8 names, just skip this test.
 au_dotdot = authors-dotdot
 au_actual = authors-actual
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
-	@locale='$(LOCALE_FR_UTF8)';			\
-	case "$$locale" in				\
-	  ''|none) echo "$@: skipping this check"; exit 0;; esac; \
+	$(AM_V_GEN)LC_ALL="$$locale" ./cat --version	\
+	    | grep ' Torbjorn '				\
+	  && { echo "$@: skipping this check"; exit 0; }; \
 	rm -f $(au_actual) $(au_dotdot);		\
 	for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
 	    | $(ASSORT) -u`; do				\
@@ -420,7 +420,7 @@ check-AUTHORS: $(all_programs)
 # The second nm|grep checks for file-scope variables with `extern' scope.
 .PHONY: sc_tight_scope
 sc_tight_scope: $(bin_PROGRAMS)
-	@t=exceptions-$$$$;						\
+	$(AM_V_GEN)t=exceptions-$$$$;					\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
 	src=`for f in $(SOURCES); do					\
 	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
