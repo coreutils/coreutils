@@ -133,6 +133,7 @@ TESTS =						\
   tail-2/tail-n0f				\
   misc/ls-misc					\
   misc/date					\
+  misc/date-next-dow				\
   misc/ptx-overrun				\
   misc/xstrtol					\
   misc/od					\
