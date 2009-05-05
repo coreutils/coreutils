@@ -4406,8 +4406,8 @@ duplicate lines, perhaps you want to use @code{sort -u}.
 @xref{sort invocation}.
 
 @vindex LC_COLLATE
-Comparisons use the character collating sequence specified by the
-@env{LC_COLLATE} locale category.
+Comparisons honor the rules specified by the @env{LC_COLLATE}
+locale category.
 
 If no @var{output} file is specified, @command{uniq} writes to standard
 output.

@@ -135,8 +135,10 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 "),
 	      program_name);
       fputs (_("\
-Discard all but one of successive identical lines from INPUT (or\n\
-standard input), writing to OUTPUT (or standard output).\n\
+Filter adjacent matching lines from INPUT (or standard input),\n\
+writing to OUTPUT (or standard output).\n\
+\n\
+With no options, matching lines are merged to the first occurrence.\n\
 \n\
 "), stdout);
      fputs (_("\
@@ -170,6 +172,7 @@ characters.  Fields are skipped before chars.\n\
 \n\
 Note: 'uniq' does not detect repeated lines unless they are adjacent.\n\
 You may want to sort the input first, or use `sort -u' without `uniq'.\n\
+Also, comparisons honor the rules specified by `LC_COLLATE'.\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
