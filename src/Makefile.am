@@ -388,8 +388,9 @@ au_dotdot = authors-dotdot
 au_actual = authors-actual
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
-	$(AM_V_GEN)LC_ALL="$$locale" ./cat --version	\
-	    | grep ' Torbjorn '				\
+	$(AM_V_GEN)locale=en_US.UTF-8;			\
+	LC_ALL="$$locale" ./cat --version		\
+	    | grep ' Torbjorn '	> /dev/null		\
 	  && { echo "$@: skipping this check"; exit 0; }; \
 	rm -f $(au_actual) $(au_dotdot);		\
 	for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
