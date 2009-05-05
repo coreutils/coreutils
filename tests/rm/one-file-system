@@ -1,7 +1,7 @@
 #!/bin/sh
 # Demonstrate rm's new --one-file-system option.
 
-# Copyright (C) 2006-2008 Free Software Foundation, Inc.
+# Copyright (C) 2006-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,11 @@ fi
 require_root_
 
 # If used, these must *follow* test-lib.sh.
-cleanup_() { rm -rf "$other_partition_tmpdir"; }
+cleanup_()
+{
+  umount "$other_partition_tmpdir"
+  rm -rf "$other_partition_tmpdir"
+}
 . "$abs_srcdir/other-fs-tmpdir"
 
 t=$other_partition_tmpdir
@@ -41,7 +45,6 @@ fail=0
 
 rm --one-file-system -rf a 2> out && fail=1
 test -d $t/y || fail=1
-umount $t
 
 compare out exp || fail=1
 
