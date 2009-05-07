@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   and the fact that there is no check to detect when the gnulib/ git
   submodule is dirty.
 
+** Build-related
+
+  make check: two tests have been corrected
+
 ** Portability
 
   There have been some ACL-related portability fixes for *BSD,
