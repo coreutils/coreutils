@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  truncate -s failed to skip all whitespace in the option argument in
+  some locales.
 
 * Noteworthy changes in release 7.4 (2009-05-07) [stable]
 

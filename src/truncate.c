@@ -1,5 +1,5 @@
 /* truncate -- truncate or extend the length of files.
-   Copyright (C) 2008 Free Software Foundation, Inc.
+   Copyright (C) 2008-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -287,7 +287,7 @@ main (int argc, char **argv)
 
         case 's':
           /* skip any whitespace */
-          while (isspace (*optarg))
+          while (isspace (to_uchar (*optarg)))
             optarg++;
           switch (*optarg)
             {
@@ -309,7 +309,7 @@ main (int argc, char **argv)
               break;
             }
           /* skip any whitespace */
-          while (isspace (*optarg))
+          while (isspace (to_uchar (*optarg)))
             optarg++;
           if (*optarg == '+' || *optarg == '-')
             {
