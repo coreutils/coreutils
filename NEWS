@@ -1,6 +1,25 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Noteworthy changes in release ?.? (????-??-??) [?]
+* Noteworthy changes in release 7.4 (2009-05-07) [stable]
+
+** Bug fixes
+
+  date -d 'next mon', when run on a Monday, now prints the date
+  7 days in the future rather than the current day.  Same for any other
+  day-of-the-week name, when run on that same day of the week.
+  [This bug appears to have been present in "the beginning". ]
+
+  date -d tuesday, when run on a Tuesday -- using date built from the 7.3
+  release tarball, not from git -- would print the date 7 days in the future.
+  Now, it works properly and prints the current date.  That was due to
+  human error (including not-committed changes in a release tarball)
+  and the fact that there is no check to detect when the gnulib/ git
+  submodule is dirty.
+
+** Portability
+
+  There have been some ACL-related portability fixes for *BSD,
+  inherited from gnulib.
 
 
 * Noteworthy changes in release 7.3 (2009-05-01) [stable]
