@@ -39,6 +39,8 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 
 * Run the following to create release tarballs.  Your choice selects the
   corresponding upload-to destination in the emitted gnupload command.
+  The different destinations are specified in cfg.mk.  See the definitions
+  of gnu_ftp_host-{alpha,beta,major}.
 
     # "TYPE" must be major, beta or alpha
     make TYPE
@@ -51,7 +53,7 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 
 Once all the builds and tests have passed,
 
-* Run the gnupload command suggested by your "XZ_OPT=-9e make major" run above.
+* Run the gnupload command that was suggested by your "make major" run above.
 
 * Wait a few minutes (maybe up to 30?) and then use the release URLs to
   download all tarball/signature pairs and use gpg --verify to ensure
