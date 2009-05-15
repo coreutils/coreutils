@@ -114,9 +114,9 @@ and column three contains lines common to both files.\n\
 "), stdout);
       fputs (_("\
 \n\
-  -1              suppress lines unique to FILE1\n\
-  -2              suppress lines unique to FILE2\n\
-  -3              suppress lines that appear in both files\n\
+  -1              suppress column 1 (lines unique to FILE1)\n\
+  -2              suppress column 2 (lines unique to FILE2)\n\
+  -3              suppress column 3 (lines that appear in both files)\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -133,6 +133,13 @@ and column three contains lines common to both files.\n\
 \n\
 Note, comparisons honor the rules specified by `LC_COLLATE'.\n\
 "), stdout);
+      printf (_("\
+\n\
+Examples:\n\
+  %s -12 file1 file2  Print only lines present in both file1 and file2.\n\
+  %s -3  file1 file2  Print lines in file1 not in file2, and vice versa.\n\
+"),
+	      program_name, program_name);
       emit_bug_reporting_address ();
     }
   exit (status);

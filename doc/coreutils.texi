@@ -4565,7 +4565,7 @@ Columns are separated by a single TAB character.
 @opindex -2
 @opindex -3
 The options @option{-1}, @option{-2}, and @option{-3} suppress printing of
-the corresponding columns.  Also see @ref{Common options}.
+the corresponding columns (and separators).  Also see @ref{Common options}.
 
 Unlike some other comparison utilities, @command{comm} has an exit
 status that does not depend on the result of the comparison.
