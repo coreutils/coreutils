@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -246,7 +246,6 @@ static char const *const char_class_name[] =
   "alnum", "alpha", "blank", "cntrl", "digit", "graph",
   "lower", "print", "punct", "space", "upper", "xdigit"
 };
-enum { N_CHAR_CLASSES = sizeof char_class_name / sizeof char_class_name[0] };
 
 /* Array of boolean values.  A character `c' is a member of the
    squeeze set if and only if in_squeeze_set[c] is true.  The squeeze
@@ -547,7 +546,7 @@ look_up_char_class (char const *class_str, size_t len)
 {
   enum Char_class i;
 
-  for (i = 0; i < N_CHAR_CLASSES; i++)
+  for (i = 0; i < ARRAY_CARDINALITY (char_class_name); i++)
     if (strncmp (class_str, char_class_name[i], len) == 0
 	&& strlen (char_class_name[i]) == len)
       return i;
