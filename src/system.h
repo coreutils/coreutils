@@ -702,3 +702,7 @@ io_blksize (struct stat sb)
 }
 
 void usage (int status) ATTRIBUTE_NORETURN;
+
+#ifndef ARRAY_CARDINALITY
+# define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
+#endif
