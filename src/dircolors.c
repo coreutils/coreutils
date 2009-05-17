@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1996-2008 Free Software Foundation, Inc.
+   Copyright (C) 1996-2009 Free Software Foundation, Inc.
    Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
 
    This program is free software: you can redistribute it and/or modify
@@ -73,8 +73,7 @@ static const char *const ls_codes[] =
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "hl", "cl", NULL
 };
-#define array_len(Array) (sizeof (Array) / sizeof *(Array))
-verify (array_len (slack_codes) == array_len (ls_codes));
+verify (ARRAY_CARDINALITY (slack_codes) == ARRAY_CARDINALITY (ls_codes));
 
 static struct option const long_options[] =
   {

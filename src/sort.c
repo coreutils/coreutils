@@ -3104,7 +3104,7 @@ main (int argc, char **argv)
 	SIGXFSZ,
 #endif
       };
-    enum { nsigs = sizeof sig / sizeof sig[0] };
+    enum { nsigs = ARRAY_CARDINALITY (sig) };
 
 #if SA_NOCLDSTOP
     struct sigaction act;

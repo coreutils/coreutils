@@ -1223,7 +1223,7 @@ main (int argc, char **argv)
       SIGXFSZ,
 #endif
     };
-  enum { nsigs = sizeof sig / sizeof sig[0] };
+  enum { nsigs = ARRAY_CARDINALITY (sig) };
 
 #if ! SA_NOCLDSTOP
   bool caught_sig[nsigs];
@@ -1238,8 +1238,8 @@ main (int argc, char **argv)
   initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
-#define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
-  assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
+  assert (ARRAY_CARDINALITY (color_indicator) + 1
+          == ARRAY_CARDINALITY (indicator_name));
 
   exit_status = EXIT_SUCCESS;
   print_dir_name = true;

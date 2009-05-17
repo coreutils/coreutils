@@ -282,7 +282,7 @@ static const unsigned char wheel_tab[] =
   };
 
 #define WHEEL_START (wheel_tab + WHEEL_SIZE)
-#define WHEEL_END (wheel_tab + (sizeof wheel_tab / sizeof wheel_tab[0]))
+#define WHEEL_END (wheel_tab + ARRAY_CARDINALITY (wheel_tab))
 
 /* FIXME: comment */
 

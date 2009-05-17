@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -148,8 +148,7 @@ static unsigned int const bytes_to_hex_digits[] =
 /* It'll be a while before we see integral types wider than 16 bytes,
    but if/when it happens, this check will catch it.  Without this check,
    a wider type would provoke a buffer overrun.  */
-verify (MAX_INTEGRAL_TYPE_SIZE
-	< sizeof bytes_to_hex_digits / sizeof *bytes_to_hex_digits);
+verify (MAX_INTEGRAL_TYPE_SIZE < ARRAY_CARDINALITY (bytes_to_hex_digits));
 
 /* Make sure the other arrays have the same length.  */
 verify (sizeof bytes_to_oct_digits == sizeof bytes_to_signed_dec_digits);
@@ -172,7 +171,7 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of `enum size_spec' there is an
    initializer in the width_bytes array.  */
-verify (sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
+verify (ARRAY_CARDINALITY (width_bytes) == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
 static char const charname[33][4] =
