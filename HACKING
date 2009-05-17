@@ -404,10 +404,16 @@ See the manpage for git-apply for details.
 Miscellaneous useful git commands
 =================================
 
-  * gitk: give a graphical view of the revision graph
+  * gitk: give a graphical view of the revision graph of the current branch
+  * gitk --all: same, but display all branches
   * git log: to get most of the same info in text form
   * git log -p: same as above, but with diffs
   * git log -p SOME_FILE: same as above, but limit to SOME_FILE
+  * git log -p -2 SOME_FILE: same as above, but print only two deltas
+  * git log -p -1: print the most recently committed change set
+  * git format-patch --stdout -1 > FILE: output the most recently committed
+      change set, in a format suitable to be submitted and/or applied via
+      "git am FILE".
   * git reset --soft HEAD^: Commit the delta required to restore
       state to the revision just before HEAD (i.e., next-to-last).
   * git rebase -i master: run this from on a branch, and it gives
