@@ -2653,22 +2653,22 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{n}
-@itemx --bytes=@var{n}
+@item -c @var{k}
+@itemx --bytes=@var{k}
 @opindex -c
 @opindex --bytes
-Print the first @var{n} bytes, instead of initial lines.
-However, if @var{n} starts with a @samp{-},
-print all but the last @var{n} bytes of each file.
-@multiplierSuffixes{n}
+Print the first @var{k} bytes, instead of initial lines.
+However, if @var{k} starts with a @samp{-},
+print all but the last @var{k} bytes of each file.
+@multiplierSuffixes{k}
 
-@itemx -n @var{n}
-@itemx --lines=@var{n}
+@itemx -n @var{k}
+@itemx --lines=@var{k}
 @opindex -n
 @opindex --lines
-Output the first @var{n} lines.
-However, if @var{n} starts with a @samp{-},
-print all but the last @var{n} lines of each file.
+Output the first @var{k} lines.
+However, if @var{k} starts with a @samp{-},
+print all but the last @var{k} lines of each file.
 Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item -q
@@ -2738,14 +2738,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{n}
-@itemx --bytes=@var{n}
+@item -c @var{k}
+@itemx --bytes=@var{k}
 @opindex -c
 @opindex --bytes
-Output the last @var{n} bytes, instead of final lines.
-However, if @var{n} starts with a @samp{+}, start printing with the
-@var{n}th byte from the start of each file, instead of from the end.
-@multiplierSuffixes{n}
+Output the last @var{k} bytes, instead of final lines.
+However, if @var{k} starts with a @samp{+}, start printing with the
+@var{k}th byte from the start of each file, instead of from the end.
+@multiplierSuffixes{k}
 
 @item -f
 @itemx --follow[=@var{how}]
@@ -2850,13 +2850,13 @@ number of seconds between when tail prints the last pre-rotation lines
 and when it prints the lines that have accumulated in the new log file.
 This option is meaningful only when following by name.
 
-@itemx -n @var{n}
-@itemx --lines=@var{n}
+@itemx -n @var{k}
+@itemx --lines=@var{k}
 @opindex -n
 @opindex --lines
-Output the last @var{n} lines.
-However, if @var{n} starts with a @samp{+}, start printing with the
-@var{n}th line from the start of each file, instead of from the end.
+Output the last @var{k} lines.
+However, if @var{k} starts with a @samp{+}, start printing with the
+@var{k}th line from the start of each file, instead of from the end.
 Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item -q

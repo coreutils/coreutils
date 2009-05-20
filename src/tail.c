@@ -1,5 +1,6 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2006, 2008-2009 Free Software
+   Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -226,8 +227,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
-  -c, --bytes=N            output the last N bytes; alternatively, use +N to\n\
-                           output bytes starting with the Nth of each file\n\
+  -c, --bytes=K            output the last K bytes; alternatively, use +K to\n\
+                           output bytes starting with the Kth of each file\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
@@ -237,8 +238,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -F                       same as --follow=name --retry\n\
 "), stdout);
      printf (_("\
-  -n, --lines=N            output the last N lines, instead of the last %d;\n\
-                           or use +N to output lines starting with the Nth\n\
+  -n, --lines=K            output the last K lines, instead of the last %d;\n\
+                           or use +K to output lines starting with the Kth\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                            changed size after N (default %d) iterations\n\
@@ -264,9 +265,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
      fputs (_("\
 \n\
-If the first character of N (the number of bytes or lines) is a `+',\n\
-print beginning with the Nth item from the start of each file, otherwise,\n\
-print the last N items in the file.  N may have a multiplier suffix:\n\
+If the first character of K (the number of bytes or lines) is a `+',\n\
+print beginning with the Kth item from the start of each file, otherwise,\n\
+print the last K items in the file.  K may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 \n\

@@ -1,5 +1,6 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 1995-2006, 2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2006, 2008-2009 Free Software
+   Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -118,12 +119,12 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -c, --bytes=[-]N         print the first N bytes of each file;\n\
+  -c, --bytes=[-]K         print the first K bytes of each file;\n\
                              with the leading `-', print all but the last\n\
-                             N bytes of each file\n\
-  -n, --lines=[-]N         print the first N lines instead of the first 10;\n\
+                             K bytes of each file\n\
+  -n, --lines=[-]K         print the first K lines instead of the first 10;\n\
                              with the leading `-', print all but the last\n\
-                             N lines of each file\n\
+                             K lines of each file\n\
 "), stdout);
       fputs (_("\
   -q, --quiet, --silent    never print headers giving file names\n\
@@ -133,7 +134,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-N may have a multiplier suffix:\n\
+K may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 "), stdout);
