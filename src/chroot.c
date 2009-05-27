@@ -207,6 +207,7 @@ main (int argc, char **argv)
       char *user;
       char *group;
       char const *err = parse_user_spec (userspec, &uid, &gid, &user, &group);
+      bool fail = false;
 
       if (err)
         error (EXIT_FAILURE, errno, "%s", err);
@@ -214,14 +215,28 @@ main (int argc, char **argv)
       free (user);
       free (group);
 
+      /* Attempt to set all three: supplementary groups, group ID, user ID.
+         Diagnose any failures.  If any have failed, exit before execvp.  */
       if (groups && set_additional_groups (groups))
-        error (0, errno, _("failed to set additional groups"));
+        {
+          error (0, errno, _("failed to set additional groups"));
+          fail = true;
+        }
 
       if (gid && setgid (gid))
-        error (0, errno, _("failed to set group-ID"));
+        {
+          error (0, errno, _("failed to set group-ID"));
+          fail = true;
+        }
 
       if (uid && setuid (uid))
-        error (0, errno, _("failed to set user-ID"));
+        {
+          error (0, errno, _("failed to set user-ID"));
+          fail = true;
+        }
+
+      if (fail)
+        exit (EXIT_FAILURE);
     }
 
   /* Execute the given command.  */
