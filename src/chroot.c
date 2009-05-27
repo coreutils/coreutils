@@ -202,8 +202,8 @@ main (int argc, char **argv)
 
   if (userspec)
     {
-      uid_t uid;
-      gid_t gid;
+      uid_t uid = -1;
+      gid_t gid = -1;
       char *user;
       char *group;
       char const *err = parse_user_spec (userspec, &uid, &gid, &user, &group);
@@ -223,13 +223,13 @@ main (int argc, char **argv)
           fail = true;
         }
 
-      if (gid && setgid (gid))
+      if (gid != (gid_t) -1 && setgid (gid))
         {
           error (0, errno, _("failed to set group-ID"));
           fail = true;
         }
 
-      if (uid && setuid (uid))
+      if (uid != (uid_t) -1 && setuid (uid))
         {
           error (0, errno, _("failed to set user-ID"));
           fail = true;
