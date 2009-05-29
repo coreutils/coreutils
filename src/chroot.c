@@ -54,7 +54,11 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Groups is a comma separated list of additional groups.  */
+/* Call setgroups to set the supplementary groups to those listed in GROUPS.
+   GROUPS is a comma separated list of supplementary groups (names or numbers).
+   Parse that list, converting any names to numbers, and call setgroups on the
+   resulting numbers.  Upon any failure give a diagnostic and return nonzero.
+   Otherwise return zero.  */
 static int
 set_additional_groups (char const *groups)
 {
@@ -63,7 +67,7 @@ set_additional_groups (char const *groups)
   size_t n_gids = 0;
   char *buffer = xstrdup (groups);
   char const *tmp;
-  int ret;
+  int ret = 0;
 
   for (tmp = strtok (buffer, ","); tmp; tmp = strtok (NULL, ","))
     {
@@ -71,9 +75,7 @@ set_additional_groups (char const *groups)
       unsigned long int value;
 
       if (xstrtoul (tmp, NULL, 10, &value, "") == LONGINT_OK && value <= MAXGID)
-        {
-          g = getgrgid (value);
-        }
+        g = getgrgid (value);
       else
         {
           g = getgrnam (tmp);
@@ -83,9 +85,9 @@ set_additional_groups (char const *groups)
 
       if (g == NULL)
         {
-          error (0, errno, _("cannot find group %s"), tmp);
-          free (buffer);
-          return 1;
+          error (0, errno, _("invalid group %s"), quote (tmp));
+          ret = -1;
+          continue;
         }
 
       if (n_gids == n_gids_allocated)
@@ -93,15 +95,23 @@ set_additional_groups (char const *groups)
       gids[n_gids++] = value;
     }
 
+  if (ret == 0 && n_gids == 0)
+    {
+      error (0, 0, _("invalid group list %s"), quote (groups));
+      ret = -1;
+    }
+
+  if (ret == 0)
+    {
+      ret = setgroups (n_gids, gids);
+      if (ret)
+        error (0, errno, _("failed to set additional groups"));
+    }
+
   free (buffer);
-
-  ret = setgroups (n_gids, gids);
-
   free (gids);
-
   return ret;
 }
-
 
 void
 usage (int status)
@@ -200,6 +210,10 @@ main (int argc, char **argv)
       argv += optind + 1;
     }
 
+  bool fail = false;
+
+  /* Attempt to set all three: supplementary groups, group ID, user ID.
+     Diagnose any failures.  If any have failed, exit before execvp.  */
   if (userspec)
     {
       uid_t uid = -1;
@@ -207,7 +221,6 @@ main (int argc, char **argv)
       char *user;
       char *group;
       char const *err = parse_user_spec (userspec, &uid, &gid, &user, &group);
-      bool fail = false;
 
       if (err)
         error (EXIT_FAILURE, errno, "%s", err);
@@ -215,13 +228,8 @@ main (int argc, char **argv)
       free (user);
       free (group);
 
-      /* Attempt to set all three: supplementary groups, group ID, user ID.
-         Diagnose any failures.  If any have failed, exit before execvp.  */
       if (groups && set_additional_groups (groups))
-        {
-          error (0, errno, _("failed to set additional groups"));
-          fail = true;
-        }
+        fail = true;
 
       if (gid != (gid_t) -1 && setgid (gid))
         {
@@ -234,10 +242,19 @@ main (int argc, char **argv)
           error (0, errno, _("failed to set user-ID"));
           fail = true;
         }
-
-      if (fail)
-        exit (EXIT_FAILURE);
     }
+  else
+    {
+      /* Yes, this call is identical to the one above.
+         However, when --userspec and --groups groups are used together,
+         we don't want to call this function until after parsing USER:GROUP,
+         and it must be called before setuid.  */
+      if (groups && set_additional_groups (groups))
+        fail = true;
+    }
+
+  if (fail)
+    exit (EXIT_FAILURE);
 
   /* Execute the given command.  */
   execvp (argv[0], argv);
