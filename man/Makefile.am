@@ -154,7 +154,7 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	      'or inadequate' 1>&2				\
 	    ;;							\
 	  *)							\
-	    rm -f $@						\
+	    rm -f $@ $@-t					\
 	    && {						\
 		 rm -rf $t;					\
 		 mkdir $t;					\
@@ -164,8 +164,11 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 		     --include=$(srcdir)/$*.x			\
 		     --output=$t/$@ $t/$*;			\
 	       }						\
-	    && sed 's|$*\.td/||g' $t/$@ > $@			\
-	    && rm -rf $t ;;					\
+	    && sed 's|$*\.td/||g' $t/$@ > $@-t			\
+	    && rm -rf $t					\
+	    && chmod -w $@-t					\
+	    && mv $@-t $@					\
+	    ;;							\
 	esac
 
 distcheck-hook: check-x-vs-1 check-programs-vs-x
