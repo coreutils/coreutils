@@ -1,7 +1,7 @@
 # Configuration file for dircolors, a utility to help you set the
 # LS_COLORS environment variable used by GNU ls with the --color option.
 
-# Copyright (C) 1996, 1999-2008
+# Copyright (C) 1996, 1999-2009
 # Free Software Foundation, Inc.
 # Copying and distribution of this file, with or without modification,
 # are permitted provided the copyright notice and this notice are preserved.
@@ -108,13 +108,17 @@ EXEC 01;32
 .taz 01;31
 .lzh 01;31
 .lzma 01;31
+.tlz 01;31
+.txz 01;31
 .zip 01;31
 .z   01;31
 .Z   01;31
 .dz  01;31
 .gz  01;31
+.xz  01;31
 .bz2 01;31
 .bz  01;31
+.tbz 01;31
 .tbz2 01;31
 .tz  01;31
 .deb 01;31
