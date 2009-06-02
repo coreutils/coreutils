@@ -3,12 +3,12 @@ getting the prerequisites for particular systems.
 
 - GNU/Linux - fedora
 
-  This shows the steps for getting the required tools to build coreutils
+  This shows the steps for getting the tools required to build coreutils
   on a Fedora 8 system. We try to use official packages where possible.
-  The 3 methods described for making these required packages available, should
-  help clarify build requirements on any GNU/Linux system at least.
+  The three methods described for making these required packages available
+  should help clarify build requirements on GNU/Linux systems.
 
-  1. Make sure offical distro git package is installed
+  1. Make sure the official distro git package is installed:
     # yum install git
 
   2. The distro autoconf is too old, but there is a newer one available
