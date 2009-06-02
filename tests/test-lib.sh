@@ -122,6 +122,11 @@ uid_is_privileged_()
   esac
 }
 
+get_process_status_()
+{
+  sed -n '/^State:[	 ]*\([[:alpha:]]\).*/s//\1/p' /proc/$1/status
+}
+
 # Convert an ls-style permission string, like drwxr----x and -rw-r-x-wx
 # to the equivalent chmod --mode (-m) argument, (=,u=rwx,g=r,o=x and
 # =,u=rw,g=rx,o=wx).  Ignore ACLs.
@@ -232,6 +237,17 @@ of group names or numbers.  E.g.,
 '
      ;;
   esac
+}
+
+# Is /proc/$PID/status supported?
+require_proc_pid_status_()
+{
+    sleep 2 &
+    local pid=$!
+    sleep .5
+    grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 ||
+    skip_test_ "/proc/$pid/status: missing or 'different'"
+    kill $pid
 }
 
 # Does the current (working-dir) file system support sparse files?

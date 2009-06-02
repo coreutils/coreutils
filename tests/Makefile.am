@@ -137,6 +137,7 @@ TESTS =						\
   misc/date-next-dow				\
   misc/ptx-overrun				\
   misc/xstrtol					\
+  tail-2/pid					\
   misc/od					\
   misc/mktemp					\
   misc/arch					\
@@ -243,6 +244,7 @@ TESTS =						\
   misc/unexpand					\
   misc/uniq					\
   misc/xattr					\
+  tail-2/wait					\
   chmod/c-option				\
   chmod/equal-x					\
   chmod/equals					\

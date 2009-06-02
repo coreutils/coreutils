@@ -21,7 +21,8 @@
 
    Original version by Paul Rubin <phr@ocf.berkeley.edu>.
    Extensions by David MacKenzie <djm@gnu.ai.mit.edu>.
-   tail -f for multiple files by Ian Lance Taylor <ian@airs.com>.  */
+   tail -f for multiple files by Ian Lance Taylor <ian@airs.com>.
+   inotify back-end by Giuseppe Scrivano <gscrivano@gnu.org>.  */
 
 #include <config.h>
 
@@ -45,6 +46,11 @@
 #include "xnanosleep.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
+
+#if HAVE_INOTIFY
+# include "hash.h"
+# include <sys/inotify.h>
+#endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
@@ -125,7 +131,25 @@ struct File_spec
   /* The value of errno seen last time we checked this file.  */
   int errnum;
 
+#if HAVE_INOTIFY
+  /* The watch descriptor used by inotify.  */
+  int wd;
+
+  /* The parent directory watch descriptor.  It is used only
+   * when Follow_name is used.  */
+  int parent_wd;
+
+  /* Offset in NAME of the basename part.  */
+  size_t basename_start;
+#endif
 };
+
+#if HAVE_INOTIFY
+/* The events mask used with inotify on files.  This mask is not used on
+   directories.  */
+const uint32_t inotify_wd_mask = (IN_MODIFY | IN_ATTRIB | IN_DELETE_SELF
+                                  | IN_MOVE_SELF);
+#endif
 
 /* Keep trying to open a file even if it is inaccessible when tail starts
    or if it becomes inaccessible later -- useful only with -f.  */
@@ -964,7 +988,7 @@ any_live_files (const struct File_spec *f, int n_files)
   return false;
 }
 
-/* Tail NFILES files forever, or until killed.
+/* Tail N_FILES files forever, or until killed.
    The pertinent information for each file is stored in an entry of F.
    Loop over each of them, doing an fstat to see if they have changed size,
    and an occasional open/fstat to see if any dev/ino pair has changed.
@@ -972,22 +996,22 @@ any_live_files (const struct File_spec *f, int n_files)
    while and try again.  Continue until the user interrupts us.  */
 
 static void
-tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
+tail_forever (struct File_spec *f, int n_files, double sleep_interval)
 {
   /* Use blocking I/O as an optimization, when it's easy.  */
   bool blocking = (pid == 0 && follow_mode == Follow_descriptor
-		   && nfiles == 1 && ! S_ISREG (f[0].mode));
+		   && n_files == 1 && ! S_ISREG (f[0].mode));
   int last;
   bool writer_is_dead = false;
 
-  last = nfiles - 1;
+  last = n_files - 1;
 
   while (1)
     {
       int i;
       bool any_input = false;
 
-      for (i = 0; i < nfiles; i++)
+      for (i = 0; i < n_files; i++)
 	{
 	  int fd;
 	  char const *name;
@@ -1087,7 +1111,7 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 	  f[i].size += bytes_read;
 	}
 
-      if (! any_live_files (f, nfiles) && ! reopen_inaccessible_files)
+      if (! any_live_files (f, n_files) && ! reopen_inaccessible_files)
 	{
 	  error (0, 0, _("no files remaining"));
 	  break;
@@ -1116,6 +1140,224 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 	}
     }
 }
+
+#if HAVE_INOTIFY
+
+static size_t
+wd_hasher (const void *entry, size_t tabsize)
+{
+  const struct File_spec *spec = entry;
+  return spec->wd % tabsize;
+}
+
+static bool
+wd_comparator (const void *e1, const void *e2)
+{
+  const struct File_spec *spec1 = e1;
+  const struct File_spec *spec2 = e2;
+  return spec1->wd == spec2->wd;
+}
+
+/* Tail N_FILES files forever, or until killed.
+   Check modifications using the inotify events system.  */
+
+static void
+tail_forever_inotify (int wd, struct File_spec *f, int n_files)
+{
+  unsigned int i;
+  unsigned int max_realloc = 3;
+  Hash_table *wd_table;
+
+  bool found_watchable = false;
+  size_t prev_wd;
+  size_t evlen = 0;
+  char *evbuf;
+  size_t evbuf_off = 0;
+  ssize_t len = 0;
+
+  wd_table = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
+  if (! wd_table)
+    xalloc_die ();
+
+  /* Add an inotify watch for each watched file.  If -F is specified then watch
+     its parent directory too, in this way when they re-appear we can add them
+     again to the watch list.  */
+  for (i = 0; i < n_files; i++)
+    {
+      if (!f[i].ignore)
+        {
+          size_t fnlen = strlen (f[i].name);
+          if (evlen < fnlen)
+            evlen = fnlen;
+
+          f[i].wd = 0;
+
+          if (follow_mode == Follow_name)
+            {
+              size_t dirlen = dir_len (f[i].name);
+              char prev = f[i].name[dirlen];
+              f[i].basename_start = last_component (f[i].name) - f[i].name;
+
+              f[i].name[dirlen] = '\0';
+
+               /* It's fine to add the same directory more than once.
+                  In that case the same watch descriptor is returned.  */
+              f[i].parent_wd = inotify_add_watch (wd, dirlen ? f[i].name : ".",
+                                                  (IN_CREATE | IN_MOVED_TO
+                                                   | IN_ATTRIB));
+
+              f[i].name[dirlen] = prev;
+
+              if (f[i].parent_wd < 0)
+                {
+                  error (0, errno, _("cannot watch parent directory of %s"),
+                         quote (f[i].name));
+                  continue;
+                }
+            }
+
+          f[i].wd = inotify_add_watch (wd, f[i].name, inotify_wd_mask);
+
+          if (f[i].wd < 0)
+            {
+              if (errno != f[i].errnum)
+                error (0, errno, _("cannot watch %s"), quote (f[i].name));
+              continue;
+            }
+
+          if (hash_insert (wd_table, &(f[i])) == NULL)
+            xalloc_die ();
+
+          if (follow_mode == Follow_name || f[i].wd)
+            found_watchable = true;
+        }
+    }
+
+  if (follow_mode == Follow_descriptor && !found_watchable)
+    return;
+
+  prev_wd = f[n_files - 1].wd;
+
+  evlen += sizeof (struct inotify_event) + 1;
+  evbuf = xmalloc (evlen);
+
+  /* Wait for inotify events and handle them.  Events on directories make sure
+     that watched files can be re-added when -F is used.
+     This loop sleeps on the `safe_read' call until a new event is notified.  */
+  while (1)
+    {
+      char const *name;
+      struct File_spec *fspec;
+      uintmax_t bytes_read;
+      struct stat stats;
+
+      struct inotify_event *ev;
+
+      if (len <= evbuf_off)
+        {
+          len = safe_read (wd, evbuf, evlen);
+          evbuf_off = 0;
+
+          if (len == SAFE_READ_ERROR && errno == EINVAL && max_realloc--)
+            {
+              len = 0;
+              evlen *= 2;
+              evbuf = xrealloc (evbuf, evlen);
+              continue;
+            }
+
+          if (len == SAFE_READ_ERROR)
+            error (EXIT_FAILURE, errno, _("error reading inotify event"));
+        }
+
+      ev = (struct inotify_event *) (evbuf + evbuf_off);
+      evbuf_off += sizeof (*ev) + ev->len;
+
+      if (ev->len)
+        {
+          for (i = 0; i < n_files; i++)
+            {
+              if (f[i].parent_wd == ev->wd &&
+                  STREQ (ev->name, f[i].name + f[i].basename_start))
+                break;
+            }
+
+          /* It is not a watched file.  */
+          if (i == n_files)
+            continue;
+
+          f[i].wd = inotify_add_watch (wd, f[i].name, inotify_wd_mask);
+
+          if (f[i].wd < 0)
+            {
+              error (0, errno, _("cannot watch %s"), quote (f[i].name));
+              continue;
+            }
+
+          fspec = &(f[i]);
+          if (hash_insert (wd_table, fspec) == NULL)
+            xalloc_die ();
+
+          if (follow_mode == Follow_name)
+            recheck (&(f[i]), false);
+        }
+      else
+        {
+          struct File_spec key;
+          key.wd = ev->wd;
+          fspec = hash_lookup (wd_table, &key);
+        }
+
+      if (! fspec)
+        continue;
+
+      if (ev->mask & (IN_ATTRIB | IN_DELETE_SELF | IN_MOVE_SELF))
+        {
+          if (ev->mask & (IN_DELETE_SELF | IN_MOVE_SELF))
+            {
+              inotify_rm_watch (wd, f[i].wd);
+              hash_delete (wd_table, &(f[i]));
+            }
+          if (follow_mode == Follow_name)
+            recheck (fspec, false);
+
+          continue;
+        }
+
+      name = pretty_name (fspec);
+
+      if (fstat (fspec->fd, &stats) != 0)
+        {
+          close_fd (fspec->fd, name);
+          fspec->fd = -1;
+          fspec->errnum = errno;
+          continue;
+        }
+
+      if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
+        {
+          error (0, 0, _("%s: file truncated"), name);
+          prev_wd = ev->wd;
+          xlseek (fspec->fd, stats.st_size, SEEK_SET, name);
+          fspec->size = stats.st_size;
+        }
+
+      if (ev->wd != prev_wd)
+        {
+          if (print_headers)
+            write_header (name);
+          prev_wd = ev->wd;
+        }
+
+      bytes_read = dump_remainder (name, fspec->fd, COPY_TO_EOF);
+      fspec->size += bytes_read;
+
+      if (fflush (stdout) != 0)
+        error (EXIT_FAILURE, errno, _("write error"));
+    }
+
+}
+#endif
 
 /* Output the last N_BYTES bytes of file FILENAME open for reading in FD.
    Return true if successful.  */
@@ -1691,7 +1933,24 @@ main (int argc, char **argv)
     ok &= tail_file (&F[i], n_units);
 
   if (forever)
-    tail_forever (F, n_files, sleep_interval);
+    {
+#if HAVE_INOTIFY
+      if (pid == 0)
+        {
+          int wd = inotify_init ();
+          if (wd < 0)
+            error (0, errno, _("inotify cannot be used, reverting to polling"));
+          else
+            {
+              tail_forever_inotify (wd, F, n_files);
+
+              /* The only way the above returns is upon failure.  */
+              exit (EXIT_FAILURE);
+            }
+        }
+#endif
+      tail_forever (F, n_files, sleep_interval);
+    }
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");

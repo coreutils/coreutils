@@ -52,6 +52,11 @@ AC_DEFUN([coreutils_MACROS],
   # Used by sort.c.
   AC_CHECK_FUNCS_ONCE([nl_langinfo])
 
+  # Used by tail.c.
+  AC_CHECK_FUNCS([inotify_init],
+    [AC_DEFINE([HAVE_INOTIFY], [1],
+     [Define to 1 if you have usable inotify support.])])
+
   AC_CHECK_FUNCS_ONCE( \
     endgrent \
     endpwent \
