@@ -37,7 +37,7 @@ This package's build procedure uses XZ to create a compressed
 distribution tarball.  Using this feature of Automake requires
 version 1.10a or newer, as well as the xz program itself.
 Make sure you have the latest version of the XZ Utils from
-<http://tukaani.org/lzma/download>.
+<http://tukaani.org/xz/>
 
 * First GIT checkout
 
