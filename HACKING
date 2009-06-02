@@ -261,6 +261,9 @@ When writing prose (documentation, comments, log entries), use an
 active voice, not a passive one.  I.e., say "print the frobnozzle",
 not "the frobnozzle will be printed".
 
+Please add comments per the GNU Coding Standard:
+  http://www.gnu.org/prep/standards/html_node/Comments.html
+
 
 Minor syntactic preferences
 ===========================
