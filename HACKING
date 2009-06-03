@@ -189,7 +189,7 @@ branch, and then realize that something about it is not right.
 It's easy to adjust:
 
   edit your files # this can include running "git add NEW" or "git rm BAD"
-  git commit --amend -e -a
+  git commit --amend -a
   git format-patch --stdout -1 > your-branch.diff
 
 That replaces the most recent change-set with the revised one.
@@ -214,7 +214,9 @@ Commit log requirements
 Your commit log should always start with a one-line summary, the second
 line should be blank, and the remaining lines are usually ChangeLog-style
 entries for all affected files.  Omit the leading TABs that you're used
-to seeing in a "real" ChangeLog file.
+to seeing in a "real" ChangeLog file, but keep the maximum line length
+at 72 or smaller, so that the generated ChangeLog lines, each with its
+leading TAB, will not exceed 80 columns.
 
 Try to make the summary line fit one of the following forms:
 
@@ -222,6 +224,8 @@ Try to make the summary line fit one of the following forms:
   prog1, prog2: change-description
   doc: change-description
   tests: change-description
+  build: change-description
+  maint: change-description
 
 
 Use SPACE-only indentation in new files.
