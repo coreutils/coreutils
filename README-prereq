@@ -3,7 +3,7 @@ getting the prerequisites for particular systems.
 
 - GNU/Linux - fedora
 
-  This shows the steps for getting the required tools to build coreutils 7.0
+  This shows the steps for getting the required tools to build coreutils
   on a Fedora 8 system. We try to use official packages where possible.
   The 3 methods described for making these required packages available, should
   help clarify build requirements on any GNU/Linux system at least.
@@ -16,20 +16,22 @@ getting the prerequisites for particular systems.
     # yum install emacs #autoconf build requires emacs (20MB)
     # rpmbuild --rebuild http://download.fedora.redhat.com/pub/fedora/linux/development/source/SRPMS/autoconf-2.63-1.fc10.src.rpm
     # rpm -Uvh /usr/src/redhat/RPMS/noarch/autoconf-2.63-1.fc8.noarch.rpm
-  Note Autoconf 2.61a-341 or newer is needed to build automake-1.10b in step 3.
+  Note Autoconf 2.62 or newer is needed to build automake-1.11 in step 3.
   Apply the same method to install the lzma package.
   [FIXME: mention xz when it's packaged]
 
   3. The latest stable automake (1.10.1) was not new enough, so we download
-  and build automake-1.10b or newer from its repository and make it available
+  and build automake-1.11 or newer from its repository and make it available
   just to coreutils:
     # yum install help2man #required to build automake fully
     $ git clone git://git.sv.gnu.org/automake.git
     $ cd automake
-    $ git checkout -b next --track origin/next
+    $ git checkout -b branch-1.11 --track origin/branch-1.11
     $ ./bootstrap
     $ ./configure --prefix=$HOME/coreutils/deps
     $ make install
 
   Now we can build coreutils as described in README-hacking
-  as long as $PATH starts with $HOME/coreutils/deps
+  as long as $PATH starts with $HOME/coreutils/deps/bin, which
+  one can set for the current shell like:
+    $ export PATH=$HOME/coreutils/deps/bin:$PATH
