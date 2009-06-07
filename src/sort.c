@@ -650,7 +650,8 @@ register_proc (pid_t pid)
       node->pid = pid;
       node->state = ALIVE;
       node->count = 1;
-      hash_insert (proctab, node);
+      if (hash_insert (proctab, node) == NULL)
+        xalloc_die ();
     }
 }
 
