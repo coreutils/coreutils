@@ -99,6 +99,18 @@ sc_root_tests:
 	       exit 1; } || :;						\
 	fi
 
+# Ensure that the syntax_check_exceptions file list in Makefile.am
+# stays in sync with corresponding files in the repository.
+sce = syntax_check_exceptions
+sc_x_sc_dist_check:
+	@test "$$( ($(VC_LIST) | sed -n '/^.x-sc_/p';			\
+		   sed -n '/^$(sce) =[	 ]*\\$$/,/[^\]$$/p'		\
+		     $(srcdir)/Makefile.am				\
+		       | sed 's/^  *//;/^$(sce) =/d'			\
+		       | tr -s '\012\\' '  ' | fmt -1			\
+		   ) | sort | uniq -u)"					\
+	  && { echo 'Makefile.am: $(sce) mismatch' >&2; exit 1; } || :;
+
 headers_with_interesting_macro_defs = \
   exit.h	\
   fcntl_.h	\
