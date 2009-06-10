@@ -64,14 +64,14 @@ static const char *const slack_codes[] =
   "CHR", "CHAR", "DOOR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE",
   "END", "ENDCODE", "SUID", "SETUID", "SGID", "SETGID", "STICKY",
   "OTHER_WRITABLE", "OWR", "STICKY_OTHER_WRITABLE", "OWT", "CAPABILITY",
-  "HARDLINK", "CLRTOEOL", NULL
+  "MULTIHARDLINK", "CLRTOEOL", NULL
 };
 
 static const char *const ls_codes[] =
 {
   "no", "no", "fi", "rs", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
-  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "hl", "cl", NULL
+  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "mh", "cl", NULL
 };
 verify (ARRAY_CARDINALITY (slack_codes) == ARRAY_CARDINALITY (ls_codes));
 

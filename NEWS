@@ -7,6 +7,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   truncate -s failed to skip all whitespace in the option argument in
   some locales.
 
+** Changes in behavior
+
+  ls --color: files with multiple hard links are no longer colored differently
+  by default. That can be enabled by changing the LS_COLORS environment
+  variable. You can control that using the MULTIHARDLINK dircolors input
+  variable which corresponds to the 'mh' LS_COLORS item. Note these variables
+  were renamed from 'HARDLINK' and 'hl' which were available since
+  coreutils-7.1 when this feature was introduced.
+
 ** New features
 
   chroot now accepts the options --userspec and --groups.

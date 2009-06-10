@@ -529,7 +529,7 @@ enum indicator_no
     C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
     C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
-    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_HARDLINK,
+    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_MULTIHARDLINK,
     C_CLR_TO_EOL
   };
 
@@ -537,7 +537,7 @@ static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", "hl", "cl", NULL
+    "ow", "tw", "ca", "mh", "cl", NULL
   };
 
 struct color_ext_type
@@ -571,7 +571,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
     { LEN_STR_PAIR ("30;41") },		/* ca: black on red */
-    { LEN_STR_PAIR ("44;37") },		/* hl: white on blue */
+    { 0, NULL },			/* mh: disabled by default */
     { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
   };
 
@@ -4106,8 +4106,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	    type = C_CAP;
 	  else if ((mode & S_IXUGO) != 0)
 	    type = C_EXEC;
-	  else if (is_colored (C_HARDLINK) && (1 < nlink))
-	    type = C_HARDLINK;
+	  else if (is_colored (C_MULTIHARDLINK) && (1 < nlink))
+	    type = C_MULTIHARDLINK;
 	}
       else if (S_ISDIR (mode))
 	{
