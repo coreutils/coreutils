@@ -1998,9 +1998,13 @@ keycompare (const struct line *a, const struct line *b)
       char const *translate = key->translate;
       bool const *ignore = key->ignore;
 
+      /* Treat field ends before field starts as empty fields.  */
+      lima = MAX (texta, lima);
+      limb = MAX (textb, limb);
+
       /* Find the lengths. */
-      size_t lena = lima <= texta ? 0 : lima - texta;
-      size_t lenb = limb <= textb ? 0 : limb - textb;
+      size_t lena = lima - texta;
+      size_t lenb = limb - textb;
 
       /* Actually compare the fields. */
 

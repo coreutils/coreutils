@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   truncate -s failed to skip all whitespace in the option argument in
   some locales.
 
+  sort now correctly ignores fields whose ending position is specified
+  before the start position. Previously in numeric mode the remaining
+  part of the line after the start position was used as the sort key.
+  [This bug appears to have been present in "the beginning".]
+
 ** Changes in behavior
 
   ls --color: files with multiple hard links are no longer colored differently
