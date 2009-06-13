@@ -213,7 +213,7 @@ main (int argc, char **argv)
        In other words, output the diagnostic if possible, but only if
        it will go to the original stderr.  */
     if (dup2 (saved_stderr_fd, STDERR_FILENO) == STDERR_FILENO)
-      error (0, saved_errno, _("cannot run command %s"), quote (*cmd));
+      error (0, saved_errno, _("failed to run command %s"), quote (*cmd));
 
     exit (exit_status);
   }

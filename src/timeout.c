@@ -301,7 +301,7 @@ main (int argc, char **argv)
 
       /* exit like sh, env, nohup, ...  */
       exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-      error (0, errno, _("cannot run command %s"), quote (argv[0]));
+      error (0, errno, _("failed to run command %s"), quote (argv[0]));
       return exit_status;
     }
   else

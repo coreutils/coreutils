@@ -210,7 +210,7 @@ main (int argc, char **argv)
     execvp (*cmd, cmd);
     exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
 
-    error (0, errno, _("cannot run command %s"), quote (*cmd));
+    error (0, errno, _("failed to run command %s"), quote (*cmd));
     exit (exit_status);
   }
 }
