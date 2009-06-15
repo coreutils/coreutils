@@ -124,8 +124,7 @@ uid_is_privileged_()
 
 get_process_status_()
 {
-  local pid=$1
-  sed -n '/^State:[	 ]*\([[:alpha:]]\).*/s//\1/p' /proc/$pid/status
+  sed -n '/^State:[	 ]*\([[:alpha:]]\).*/s//\1/p' /proc/$1/status
 }
 
 # Convert an ls-style permission string, like drwxr----x and -rw-r-x-wx
