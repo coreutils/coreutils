@@ -7388,6 +7388,9 @@ Make hard links instead of copies of non-directories.
 @opindex -L
 @opindex --dereference
 Follow symbolic links when copying from them.
+With this option, @command{cp} cannot create a symbolic link.
+For example, a symlink (to regular file) in the source tree will be copied to
+a regular file in the destination tree.
 
 @item -n
 @itemx --no-clobber
@@ -7435,8 +7438,27 @@ not yet take advantage of that.
 @itemx links
 Preserve in the destination files
 any links between corresponding source files.
-@c Give examples illustrating how hard links are preserved.
-@c Also, show how soft links map to hard links with -L and -H.
+Note that with @option{-L} or @option{-H}, this option can convert
+symbolic links to hard links.  For example,
+@example
+$ mkdir c; : > a; ln -s a b; cp -aH a b c; ls -i1 c
+74161745 a
+74161745 b
+@end example
+@noindent
+Note the inputs: @file{b} is a symlink to regular file @file{a},
+yet the files in destination directory, @file{c/}, are hard-linked.
+Since @option{-a} implies @option{--preserve=links}, and since @option{-H}
+tells @command{cp} to dereference command line arguments, it sees two files
+with the same inode number, and preserves the perceived hard link.
+
+Here is a similar example that exercises @command{cp}'s @option{-L} option:
+@smallexample
+$ mkdir b c; (cd b; : > a; ln -s a b); cp -aL b c; ls -i1 c/b
+74163295 a
+74163295 b
+@end smallexample
+
 @itemx context
 Preserve SELinux security context of the file. @command{cp} will fail
 if the preserving of SELinux security context is not succesful.
