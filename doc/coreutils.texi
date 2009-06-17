@@ -14533,7 +14533,7 @@ the exit status of @var{command} otherwise
 @cindex standard streams, buffering
 @cindex line buffered
 
-@command{stdbuf} allows one modify the buffering operations of the
+@command{stdbuf} allows one to modify the buffering operations of the
 three standard I/O streams associated with a program.  Synopsis:
 
 @example
