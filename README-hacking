@@ -2,7 +2,7 @@
 
 These notes intend to help people working on the checked-out sources.
 These requirements do not apply when building from a distribution tarball.
-See also HACKING for more detailed coreutils contribution guidlines.
+See also HACKING for more detailed coreutils contribution guidelines.
 
 * Requirements
 
@@ -23,8 +23,8 @@ bootstrap script shown below, and will include:
 - Rsync <http://samba.anu.edu.au/rsync/>
 - Tar <http://www.gnu.org/software/tar/>
 
-Only building the initial full source tree will be a bit painful.
-Later, a plain `git pull && make' should be sufficient.
+While building from a just-cloned source tree may require installing a
+few prerequisites, later, a plain `git pull && make' should be sufficient.
 
 - Valgrind
 
