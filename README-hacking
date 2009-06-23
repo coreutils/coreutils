@@ -23,9 +23,6 @@ bootstrap script shown below, and will include:
 - Rsync <http://samba.anu.edu.au/rsync/>
 - Tar <http://www.gnu.org/software/tar/>
 
-While building from a just-cloned source tree may require installing a
-few prerequisites, later, a plain `git pull && make' should be sufficient.
-
 - Valgrind
 
 Valgrind <http://valgrind.org/> is also highly recommended, if
@@ -38,6 +35,9 @@ distribution tarball.  Using this feature of Automake requires
 version 1.10a or newer, as well as the xz program itself.
 Make sure you have the latest version of the XZ Utils from
 <http://tukaani.org/xz/>
+
+While building from a just-cloned source tree may require installing a
+few prerequisites, later, a plain `git pull && make' should be sufficient.
 
 * First GIT checkout
 
