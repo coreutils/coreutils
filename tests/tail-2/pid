@@ -46,7 +46,7 @@ state=$(get_process_status_ $pid)
 if test -n "$state"; then
   case $state in
     S*) ;;
-    *) echo $0: process dead 1>&2; fail=1 ;;
+    *) echo "$0: process dead? (state=$state)" 1>&2; fail=1 ;;
   esac
   kill $pid
 fi
