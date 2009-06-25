@@ -33,7 +33,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort accepts a new option, --human-numeric-sort (-h): sort numbers
   while honoring human readable suffixes like KiB and MB etc.
 
-  tail uses inotify when possible.
+  tail --follow now uses inotify when possible, to be more responsive
+  to file changes and more efficient when monitoring many files.
 
 
 * Noteworthy changes in release 7.4 (2009-05-07) [stable]
