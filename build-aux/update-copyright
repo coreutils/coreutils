@@ -1,0 +1,62 @@
+#!/usr/bin/perl -w -pi
+# Update an FSF copyright year list to include the current year.
+
+my $VERSION = '2009-06-04 08:53'; # UTC
+
+# Copyright (C) 2009 Free Software Foundation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Written by Jim Meyering
+
+use strict;
+
+my ($sec, $min, $hour, $mday, $month, $this_year) = localtime (time());
+$this_year += 1900;
+
+my $holder = 'Free Software Foundation';
+
+if (/([- ])((?:\d\d)?\d\d)\s+$holder/)
+  {
+    my ($sep, $last_c_year) = ($1, $2);
+
+    # Handle two-digit year numbers like "98" and "99".
+    $last_c_year <= 99
+      and $last_c_year += 1900;
+
+    if ($last_c_year != $this_year)
+      {
+        if ($sep eq '-' && $last_c_year + 1 == $this_year)
+          {
+            s//-$this_year $holder/;
+          }
+        elsif ($sep eq ' ' && $last_c_year + 1 == $this_year)
+          {
+            s// $last_c_year-$this_year $holder/;
+          }
+        else
+          {
+            s//$sep$last_c_year, $this_year $holder/;
+          }
+      }
+  }
+
+# Local variables:
+# indent-tabs-mode: nil
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "my $VERSION = '"
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "'; # UTC"
+# End:

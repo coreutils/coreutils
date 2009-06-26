@@ -25,6 +25,7 @@ changelog_etc =				\
   ChangeLog-2007			\
   ChangeLog-2008			\
   build-aux/ChangeLog-2007		\
+  build-aux/update-copyright		\
   doc/ChangeLog-2007			\
   lib/ChangeLog-2007			\
   m4/ChangeLog-2007			\
@@ -143,3 +144,11 @@ check-ls-dircolors:
 	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
 	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
 	test "$$dc" = "$$ls"
+
+.PHONY: update-copyright
+update-copyright:
+	if test -d .git; then					\
+	  git grep -l -E '2[0-9]{3} +Free'			\
+	    | grep -v -E '^(COPYING|ChangeLog)'			\
+	    | xargs $(srcdir)/build-aux/$@;			\
+	fi
