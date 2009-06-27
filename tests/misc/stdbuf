@@ -41,6 +41,7 @@ stdbuf -oL true || fail=1 # verify line buffered syntax
 stdbuf -ol true && fail=1 # Capital 'L' required
 stdbuf -o$SIZE_OFLOW true && fail=1 # size too large
 stdbuf -iL true && fail=1 # line buffering stdin disallowed
+stdbuf -i0 -o0 -e0 true || fail=1 #check all files
 
 # Ensure line buffering stdout takes effect
 printf '1\n' > exp

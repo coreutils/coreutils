@@ -319,7 +319,7 @@ main (int argc, char **argv)
         case 'i':
         case 'o':
           opt_fileno = optc_to_fileno (c);
-          assert (0 < opt_fileno && opt_fileno <= ARRAY_CARDINALITY (stdbuf));
+          assert (0 <= opt_fileno && opt_fileno < ARRAY_CARDINALITY (stdbuf));
           stdbuf[opt_fileno].optc = c;
           while (c_isspace (*optarg))
             optarg++;
