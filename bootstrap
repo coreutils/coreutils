@@ -106,14 +106,14 @@ tests_base=tests
 
 # Extra files from gnulib, which override files from other sources.
 gnulib_extra_files="
-	$build_aux/install-sh
-	$build_aux/missing
-	$build_aux/mdate-sh
-	$build_aux/texinfo.tex
-	$build_aux/depcomp
-	$build_aux/config.guess
-	$build_aux/config.sub
-	doc/INSTALL
+        $build_aux/install-sh
+        $build_aux/missing
+        $build_aux/mdate-sh
+        $build_aux/texinfo.tex
+        $build_aux/depcomp
+        $build_aux/config.guess
+        $build_aux/config.sub
+        doc/INSTALL
 "
 
 # Additional gnulib-tool options to use.  Use "\newline" to break lines.
@@ -272,10 +272,10 @@ get_version() {
 
   $app --version 2>&1 |
   sed -n 's/[^0-9.]*\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/p
-	  t done
-	  d
-	  :done
-	  q'
+          t done
+          d
+          :done
+          q'
 }
 
 check_versions() {
@@ -371,7 +371,7 @@ case ${GNULIB_SRCDIR--} in
   # Redirect the gnulib submodule to the directory on the command line
   # if possible.
   if test -d "$GNULIB_SRCDIR"/.git && \
-	git_modules_config submodule.gnulib.url >/dev/null; then
+        git_modules_config submodule.gnulib.url >/dev/null; then
     git submodule init
     GNULIB_SRCDIR=`cd $GNULIB_SRCDIR && pwd`
     git config --replace-all submodule.gnulib.url $GNULIB_SRCDIR
@@ -419,8 +419,8 @@ update_po_files() {
     new_po="$ref_po_dir/$po.po"
     cksum_file="$ref_po_dir/$po.s1"
     if ! test -f "$cksum_file" ||
-	! test -f "$po_dir/$po.po" ||
-	! ${SHA1SUM-sha1sum} -c --status "$cksum_file" \
+        ! test -f "$po_dir/$po.po" ||
+        ! ${SHA1SUM-sha1sum} -c --status "$cksum_file" \
             < "$new_po" > /dev/null; then
       echo "updated $po_dir/$po.po..."
       cp "$new_po" "$po_dir/$po.po" \
@@ -458,45 +458,45 @@ symlink_to_dir()
       # FIXME: for now, this does only one level
       parent=`dirname "$dst_dir"`
       for dot_ig in x $vc_ignore; do
-	test $dot_ig = x && continue
-	ig=$parent/$dot_ig
-	insert_sorted_if_absent $ig `echo "$dst_dir"|sed 's,.*/,,'`
+        test $dot_ig = x && continue
+        ig=$parent/$dot_ig
+        insert_sorted_if_absent $ig `echo "$dst_dir"|sed 's,.*/,,'`
       done
     fi
 
     if $copy; then
       {
-	test ! -h "$dst" || {
-	  echo "$0: rm -f $dst" &&
-	  rm -f "$dst"
-	}
+        test ! -h "$dst" || {
+          echo "$0: rm -f $dst" &&
+          rm -f "$dst"
+        }
       } &&
       test -f "$dst" &&
       cmp -s "$src" "$dst" || {
-	echo "$0: cp -fp $src $dst" &&
-	cp -fp "$src" "$dst"
+        echo "$0: cp -fp $src $dst" &&
+        cp -fp "$src" "$dst"
       }
     else
       test -h "$dst" &&
       src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
       dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
       test "$src_i" = "$dst_i" || {
-	dot_dots=
-	case $src in
-	/*) ;;
-	*)
-	  case /$dst/ in
-	  *//* | */../* | */./* | /*/*/*/*/*/)
-	     echo >&2 "$0: invalid symlink calculation: $src -> $dst"
-	     exit 1;;
-	  /*/*/*/*/)	dot_dots=../../../;;
-	  /*/*/*/)	dot_dots=../../;;
-	  /*/*/)	dot_dots=../;;
-	  esac;;
-	esac
+        dot_dots=
+        case $src in
+        /*) ;;
+        *)
+          case /$dst/ in
+          *//* | */../* | */./* | /*/*/*/*/*/)
+             echo >&2 "$0: invalid symlink calculation: $src -> $dst"
+             exit 1;;
+          /*/*/*/*/)	dot_dots=../../../;;
+          /*/*/*/)	dot_dots=../../;;
+          /*/*/)	dot_dots=../;;
+          esac;;
+        esac
 
-	echo "$0: ln -fs $dot_dots$src $dst" &&
-	ln -fs "$dot_dots$src" "$dst"
+        echo "$0: ln -fs $dot_dots$src $dst" &&
+        ln -fs "$dot_dots$src" "$dst"
       }
     fi
   }
@@ -526,29 +526,29 @@ cp_mark_as_generated()
 
     if test -z "$c1"; then
       cmp -s "$cp_src" "$cp_dst" || {
-	# Copy the file first to get proper permissions if it
-	# doesn't already exist.  Then overwrite the copy.
-	echo "$0: cp -f $cp_src $cp_dst" &&
-	rm -f "$cp_dst" &&
-	cp "$cp_src" "$cp_dst-t" &&
-	sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst-t" &&
-	mv -f "$cp_dst-t" "$cp_dst"
+        # Copy the file first to get proper permissions if it
+        # doesn't already exist.  Then overwrite the copy.
+        echo "$0: cp -f $cp_src $cp_dst" &&
+        rm -f "$cp_dst" &&
+        cp "$cp_src" "$cp_dst-t" &&
+        sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst-t" &&
+        mv -f "$cp_dst-t" "$cp_dst"
       }
     else
       # Copy the file first to get proper permissions if it
       # doesn't already exist.  Then overwrite the copy.
       cp "$cp_src" "$cp_dst-t" &&
       (
-	echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
-	echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
-	echo '#line 1' &&
-	sed "s!$bt_regex/!!g" "$cp_src"
+        echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
+        echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
+        echo '#line 1' &&
+        sed "s!$bt_regex/!!g" "$cp_src"
       ) > $cp_dst-t &&
       if cmp -s "$cp_dst-t" "$cp_dst"; then
-	rm -f "$cp_dst-t"
+        rm -f "$cp_dst-t"
       else
-	echo "$0: cp $cp_src $cp_dst # with edits" &&
-	mv -f "$cp_dst-t" "$cp_dst"
+        echo "$0: cp $cp_src $cp_dst # with edits" &&
+        mv -f "$cp_dst-t" "$cp_dst"
       fi
     fi
   fi
@@ -560,7 +560,7 @@ version_controlled_file() {
   found=no
   if test -d CVS; then
     grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
-	     grep '^/[^/]*/[0-9]' > /dev/null && found=yes
+             grep '^/[^/]*/[0-9]' > /dev/null && found=yes
   elif test -d .git; then
     git rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
   elif test -d .svn; then
@@ -582,35 +582,35 @@ slurp() {
       esac
       test -d $1/$dir/$file && continue
       for excluded_file in $excluded_files; do
-	test "$dir/$file" = "$excluded_file" && continue 2
+        test "$dir/$file" = "$excluded_file" && continue 2
       done
       if test $file = Makefile.am; then
         copied=$copied${sep}$gnulib_mk; sep=$nl
-	remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
+        remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
         sed "$remove_intl" $1/$dir/$file | cmp - $dir/$gnulib_mk > /dev/null || {
-	  echo "$0: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
-	  rm -f $dir/$gnulib_mk &&
-	  sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk
-	}
+          echo "$0: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
+          rm -f $dir/$gnulib_mk &&
+          sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk
+        }
       elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
-	   version_controlled_file $dir $file; then
-	echo "$0: $dir/$file overrides $1/$dir/$file"
+           version_controlled_file $dir $file; then
+        echo "$0: $dir/$file overrides $1/$dir/$file"
       else
-	copied=$copied$sep$file; sep=$nl
-	if test $file = gettext.m4; then
-	  echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
-	  rm -f $dir/$file
-	  sed '
-	    /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
-	      AC_DEFUN([AM_INTL_SUBDIR], [
-	    /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
-	      AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
-	    $a\
-	      AC_DEFUN([gl_LOCK_EARLY], [])
-	  ' $1/$dir/$file >$dir/$file
-	else
-	  cp_mark_as_generated $1/$dir/$file $dir/$file
-	fi
+        copied=$copied$sep$file; sep=$nl
+        if test $file = gettext.m4; then
+          echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
+          rm -f $dir/$file
+          sed '
+            /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
+              AC_DEFUN([AM_INTL_SUBDIR], [
+            /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
+              AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
+            $a\
+              AC_DEFUN([gl_LOCK_EARLY], [])
+          ' $1/$dir/$file >$dir/$file
+        else
+          cp_mark_as_generated $1/$dir/$file $dir/$file
+        fi
       fi || exit
     done
 
@@ -618,18 +618,18 @@ slurp() {
       test $dot_ig = x && continue
       ig=$dir/$dot_ig
       if test -n "$copied"; then
-	insert_sorted_if_absent $ig "$copied"
-	# If an ignored file name ends with .in.h, then also add
-	# the name with just ".h".  Many gnulib headers are generated,
-	# e.g., stdint.in.h -> stdint.h, dirent.in.h ->..., etc.
-	# Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
-	f=`echo "$copied"|sed 's/\.in\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
-	insert_sorted_if_absent $ig "$f"
+        insert_sorted_if_absent $ig "$copied"
+        # If an ignored file name ends with .in.h, then also add
+        # the name with just ".h".  Many gnulib headers are generated,
+        # e.g., stdint.in.h -> stdint.h, dirent.in.h ->..., etc.
+        # Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
+        f=`echo "$copied"|sed 's/\.in\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
+        insert_sorted_if_absent $ig "$f"
 
-	# For files like sys_stat.in.h and sys_time.in.h, record as
-	# ignorable the directory we might eventually create: sys/.
-	f=`echo "$copied"|sed 's/sys_.*\.in\.h$/sys/'`
-	insert_sorted_if_absent $ig "$f"
+        # For files like sys_stat.in.h and sys_time.in.h, record as
+        # ignorable the directory we might eventually create: sys/.
+        f=`echo "$copied"|sed 's/sys_.*\.in\.h$/sys/'`
+        insert_sorted_if_absent $ig "$f"
       fi
     done
   done
@@ -735,7 +735,7 @@ if test $with_gettext = yes; then
     /^XGETTEXT_OPTIONS *=/{
       s/$/ \\/
       a\
-	  '"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
+          '"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
     }
   ' po/Makevars.template >po/Makevars
 
@@ -747,9 +747,9 @@ if test $with_gettext = yes; then
       /^subdir *=.*/s/=.*/= runtime-po/
       /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
       /^XGETTEXT_OPTIONS *=/{
-	s/$/ \\/
-	a\
-	    '"$XGETTEXT_OPTIONS_RUNTIME"' $${end_of_xgettext_options+}
+        s/$/ \\/
+        a\
+            '"$XGETTEXT_OPTIONS_RUNTIME"' $${end_of_xgettext_options+}
       }
     ' <po/Makevars.template >runtime-po/Makevars
 
@@ -765,3 +765,7 @@ sed 's,\.\./\.\.,..,g' $m > $m-t
 mv -f $m-t $m
 
 echo "$0: done.  Now you can run './configure'."
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
