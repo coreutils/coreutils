@@ -313,7 +313,7 @@ print_versions() {
 
 if ! printf "$buildreq" | check_versions; then
   test -f README-prereq &&
-  echo "Please see README-prereq for notes on obtaining these prerequisite programs:" >&2
+  echo "See README-prereq for notes on obtaining these prerequisite programs:" >&2
   echo
   print_versions
   exit 1
@@ -420,9 +420,11 @@ update_po_files() {
     cksum_file="$ref_po_dir/$po.s1"
     if ! test -f "$cksum_file" ||
 	! test -f "$po_dir/$po.po" ||
-	! ${SHA1SUM-sha1sum} -c --status "$cksum_file" < "$new_po" > /dev/null; then
+	! ${SHA1SUM-sha1sum} -c --status "$cksum_file" \
+            < "$new_po" > /dev/null; then
       echo "updated $po_dir/$po.po..."
-      cp "$new_po" "$po_dir/$po.po" && ${SHA1SUM-sha1sum} < "$new_po" > "$cksum_file"
+      cp "$new_po" "$po_dir/$po.po" \
+          && ${SHA1SUM-sha1sum} < "$new_po" > "$cksum_file"
     fi
   done
 }
