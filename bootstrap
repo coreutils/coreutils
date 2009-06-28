@@ -342,7 +342,7 @@ cleanup_gnulib() {
 }
 
 git_modules_config () {
-  GIT_CONFIG=.gitmodules git config "$@"
+  test -f .gitmodules && git config --file .gitmodules "$@"
 }
 
 # Get gnulib files.
