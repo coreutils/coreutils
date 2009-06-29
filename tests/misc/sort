@@ -71,6 +71,10 @@ my @Tests =
  {ERR=>"$prog: options `-hn' are incompatible\n"}],
 # check key processing
 ["h8", '-n -k2,2h', {IN=>"1 1E\n2 2M\n"}, {OUT=>"2 2M\n1 1E\n"}],
+# SI and IEC prefixes on separate keys allowed
+["h9", '-h -k1,1 -k2,2', {IN=>"1M 1Mi\n1M 1Mi\n"}, {OUT=>"1M 1Mi\n1M 1Mi\n"}],
+# This invalid SI and IEC prefix mixture is not significant so not noticed
+["h10", '-h -k1,1 -k2,2', {IN=>"1M 2M\n2M 1Mi\n"}, {OUT=>"1M 2M\n2M 1Mi\n"}],
 
 ["01a", '', {IN=>"A\nB\nC\n"}, {OUT=>"A\nB\nC\n"}],
 #

@@ -178,6 +178,7 @@ struct keyfield
 				   Handle numbers in exponential notation. */
   bool human_numeric;		/* Flag for sorting by human readable
 				   units with either SI xor IEC prefixes. */
+  int si_present;		/* Flag for checking for mixed SI and IEC. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
@@ -1684,13 +1685,12 @@ numcompare (const char *a, const char *b)
 /* Exit with an error if a mixture of SI and IEC units detected.  */
 
 static void
-check_mixed_SI_IEC (char prefix)
+check_mixed_SI_IEC (char prefix, struct keyfield *key)
 {
-  static int seen_si = -1;
-  bool si_present = prefix == 'i';
-  if (seen_si != -1 && seen_si != si_present)
+  int si_present = prefix == 'i';
+  if (key->si_present != -1 && si_present != key->si_present)
     error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
-  seen_si = si_present;
+  key->si_present = si_present;
 }
 
 /* Return an integer which represents the order of magnitude of
@@ -1699,7 +1699,7 @@ check_mixed_SI_IEC (char prefix)
    Negative numbers return a negative unit order.  */
 
 static int
-find_unit_order (const char *number)
+find_unit_order (const char *number, struct keyfield *key)
 {
   static const char orders [UCHAR_LIM] = {
     ['K']=1, ['M']=2, ['G']=3, ['T']=4, ['P']=5, ['E']=6, ['Z']=7, ['Y']=8,
@@ -1736,7 +1736,7 @@ find_unit_order (const char *number)
 
   /* For valid units check for MiB vs MB etc.  */
   if (order)
-    check_mixed_SI_IEC (*(p + 1));
+    check_mixed_SI_IEC (*(p + 1), key);
 
   return sign * order;
 }
@@ -1747,15 +1747,15 @@ find_unit_order (const char *number)
    i.e. input will never have both 6000K and 5M.  */
 
 static int
-human_numcompare (const char *a, const char *b)
+human_numcompare (const char *a, const char *b, struct keyfield *key)
 {
   while (blanks[to_uchar (*a)])
     a++;
   while (blanks[to_uchar (*b)])
     b++;
 
-  int order_a = find_unit_order (a);
-  int order_b = find_unit_order (b);
+  int order_a = find_unit_order (a, key);
+  int order_b = find_unit_order (b, key);
 
   return (order_a > order_b ? 1
 	  : order_a < order_b ? -1
@@ -1982,7 +1982,7 @@ compare_version (char *restrict texta, size_t lena,
 static int
 keycompare (const struct line *a, const struct line *b)
 {
-  struct keyfield const *key = keylist;
+  struct keyfield *key = keylist;
 
   /* For the first iteration only, the key positions have been
      precomputed for us. */
@@ -2015,9 +2015,9 @@ keycompare (const struct line *a, const struct line *b)
 	  char savea = *lima, saveb = *limb;
 
 	  *lima = *limb = '\0';
-	  diff = ((key->numeric ? numcompare
-		   : key->general_numeric ? general_numcompare
-		   : human_numcompare) (texta, textb));
+	  diff = (key->numeric ? numcompare (texta, textb)
+		  : key->general_numeric ? general_numcompare (texta, textb)
+		  : human_numcompare (texta, textb, key));
 	  *lima = savea, *limb = saveb;
 	}
       else if (key->version)
@@ -3125,6 +3125,7 @@ key_init (struct keyfield *key)
 {
   memset (key, 0, sizeof *key);
   key->eword = SIZE_MAX;
+  key->si_present = -1;
   return key;
 }
 
@@ -3240,6 +3241,7 @@ main (int argc, char **argv)
   gkey.ignore = NULL;
   gkey.translate = NULL;
   gkey.numeric = gkey.general_numeric = gkey.human_numeric = false;
+  gkey.si_present = -1;
   gkey.random = gkey.version = false;
   gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
