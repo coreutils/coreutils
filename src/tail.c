@@ -1258,6 +1258,8 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files)
           len = safe_read (wd, evbuf, evlen);
           evbuf_off = 0;
 
+          /* For kernels prior to 2.6.21, read returns 0 when the buffer
+             is too small.  FIXME: handle that.  */
           if (len == SAFE_READ_ERROR && errno == EINVAL && max_realloc--)
             {
               len = 0;
@@ -1277,8 +1279,10 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files)
         {
           for (i = 0; i < n_files; i++)
             {
-              if (f[i].parent_wd == ev->wd &&
-                  STREQ (ev->name, f[i].name + f[i].basename_start))
+              /* With N=hundreds of frequently-changing files, this O(N^2)
+                 process might be a problem.  FIXME: use a hash table?  */
+              if (f[i].parent_wd == ev->wd
+                  && STREQ (ev->name, f[i].name + f[i].basename_start))
                 break;
             }
 
