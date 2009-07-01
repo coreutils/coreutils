@@ -3723,7 +3723,9 @@ so portable shell scripts should specify global options first.
 @vindex LC_CTYPE
 Ignore leading blanks when finding sort keys in each line.
 By default a blank is a space or a tab, but the @env{LC_CTYPE} locale
-can change this.
+can change this.  Note blanks may be ignored by your locale's collating
+rules, but without this option they will be significant for character
+positions specified in keys with the @option{-k} option.
 
 @item -d
 @itemx --dictionary-order
@@ -3933,7 +3935,7 @@ according to different rules; see below for details.  Keys can span
 multiple fields.
 
 Example:  To sort on the second field, use @option{--key=2,2}
-(@option{-k 2,2}).  See below for more examples.
+(@option{-k 2,2}).  See below for more notes on keys and more examples.
 
 @item --batch-size=@var{nmerge}
 @opindex --batch-size
@@ -4102,15 +4104,15 @@ affect the meaning of character positions in field specifications in
 obscure cases.  The only fix is to add an explicit @option{-b}.
 
 A position in a sort field specified with @option{-k} may have any
-of the option letters @samp{Mbdfinr} appended to it, in which case the
-global ordering options are not used for that particular field.  The
+of the option letters @samp{MbdfghinRrV} appended to it, in which case no
+global ordering options are inherited by that particular field.  The
 @option{-b} option may be independently attached to either or both of
 the start and end positions of a field specification, and if it is
 inherited from the global options it will be attached to both.
 If input lines can contain leading or adjacent blanks and @option{-t}
-is not used, then @option{-k} is typically combined with @option{-b},
-@option{-g}, @option{-M}, or @option{-n}; otherwise the varying
-numbers of leading blanks in fields can cause confusing results.
+is not used, then @option{-k} is typically combined with @option{-b} or
+an option that implicitly ignores leading blanks (@samp{MghnV}) as otherwise
+the varying numbers of leading blanks in fields can cause confusing results.
 
 If the start position in a sort field specifier falls after the end of
 the line or after the end field, the field is empty.  If the @option{-b}
