@@ -1259,8 +1259,9 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files)
           evbuf_off = 0;
 
           /* For kernels prior to 2.6.21, read returns 0 when the buffer
-             is too small.  FIXME: handle that.  */
-          if (len == SAFE_READ_ERROR && errno == EINVAL && max_realloc--)
+             is too small.  */
+          if ((len == 0 || (len == SAFE_READ_ERROR && errno == EINVAL))
+              && max_realloc--)
             {
               len = 0;
               evlen *= 2;
@@ -1268,7 +1269,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files)
               continue;
             }
 
-          if (len == SAFE_READ_ERROR)
+          if (len == 0 || len == SAFE_READ_ERROR)
             error (EXIT_FAILURE, errno, _("error reading inotify event"));
         }
 
