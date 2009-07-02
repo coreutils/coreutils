@@ -45,17 +45,20 @@ if test -n "$state"; then
   kill $pid
 fi
 
-tail -s0.1 -f not_accessible &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
+# Check if the file is really not accessible before use it.
+if ! cat not_accessible; then
+    tail -s0.1 -f not_accessible &
+    pid=$!
+    sleep .5
+    state=$(get_process_status_ $pid)
 
-if test -n "$state"; then
-  case $state in
-    S*) echo $0: process still active 1>&2; fail=1 ;;
-    *) ;;
-  esac
-  kill $pid
+    if test -n "$state"; then
+        case $state in
+            S*) echo $0: process still active 1>&2; fail=1 ;;
+            *) ;;
+        esac
+        kill $pid
+    fi
 fi
 
 (tail -s0.1 -f here 2>tail.err) &
