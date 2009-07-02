@@ -9,32 +9,14 @@ See also HACKING for more detailed coreutils contribution guidelines.
 We've opted to keep only the highest-level sources in the GIT repository.
 This eases our maintenance burden, (fewer merges etc.), but imposes more
 requirements on anyone wishing to build from the just-checked-out sources.
-Specific tools and versions will be checked for and listed by the
-bootstrap script shown below, and will include:
-
-- Automake <http://www.gnu.org/software/automake/>
-- Autoconf <http://www.gnu.org/software/autoconf/>
-- Bison <http://www.gnu.org/software/bison/>
-- Gettext <http://www.gnu.org/software/gettext/>
-- Git <http://git.or.cz/>
-- Gperf <http://www.gnu.org/software/gperf/>
-- Gzip <http://www.gnu.org/software/gzip/>
-- Perl <http://www.cpan.org/>
-- Rsync <http://samba.anu.edu.au/rsync/>
-- Tar <http://www.gnu.org/software/tar/>
-
-- Valgrind
+Note the requirements to build the released archive are much less and
+are just the requirements of the standard ./configure && make procedure.
+Specific development tools and versions will be checked for and listed by
+the bootstrap script.  See README-prereq for specific notes on obtaining
+these prerequisite tools.
 
 Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture. See also README-valgrind.
-
-- XZ utils (successor to LZMA)
-
-This package's build procedure uses XZ to create a compressed
-distribution tarball.  Using this feature of Automake requires
-version 1.10a or newer, as well as the xz program itself.
-Make sure you have the latest version of the XZ Utils from
-<http://tukaani.org/xz/>
 
 While building from a just-cloned source tree may require installing a
 few prerequisites, later, a plain `git pull && make' should be sufficient.

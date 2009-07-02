@@ -1,36 +1,56 @@
-Detailed below are concrete examples for
-getting the prerequisites for particular systems.
+This gives some notes on obtaining the tools required for development.
+I.E. the tools checked for by the bootstrap script and include:
 
-- GNU/Linux - fedora
+- Autoconf  <http://www.gnu.org/software/autoconf/>
+- Automake  <http://www.gnu.org/software/automake/>
+- Bison     <http://www.gnu.org/software/bison/>
+- Gettext   <http://www.gnu.org/software/gettext/>
+- Git       <http://git.or.cz/>
+- Gperf     <http://www.gnu.org/software/gperf/>
+- Gzip      <http://www.gnu.org/software/gzip/>
+- Perl      <http://www.cpan.org/>
+- Rsync     <http://samba.anu.edu.au/rsync/>
+- Tar       <http://www.gnu.org/software/tar/>
+- Texinfo   <http://www.gnu.org/software/texinfo/>
 
-  This shows the steps for getting the tools required to build coreutils
-  on a Fedora 8 system. We try to use official packages where possible.
-  The three methods described for making these required packages available
-  should help clarify build requirements on GNU/Linux systems.
+Note please try to install/build official packages for your system.
+If these are not available then one can make them available only to
+the coreutils build using the following instructions.  Even if the
+official packages for your system are too old, please install them
+as they may be required to build the newer versions.
 
-  1. Make sure the official distro git package is installed:
-    # yum install git
+* autoconf *
 
-  2. The distro autoconf is too old, but there is a newer one available
-  so we rebuild that and make it available to the full system:
-    # yum install emacs #autoconf build requires emacs (20MB)
-    # rpmbuild --rebuild http://download.fedora.redhat.com/pub/fedora/linux/development/source/SRPMS/autoconf-2.63-1.fc10.src.rpm
-    # rpm -Uvh /usr/src/redhat/RPMS/noarch/autoconf-2.63-1.fc8.noarch.rpm
-  Note Autoconf 2.62 or newer is needed to build automake-1.11 in step 3.
-  Apply the same method to build and install "xz".
+  # Note Autoconf 2.62 or newer is needed to build automake-1.11
+  git clone --depth=1 git://git.sv.gnu.org/autoconf.git
+  git checkout v2.62
+  autoreconf -vi
+  ./configure --prefix=$HOME/coreutils/deps
+  make install
 
-  3. The latest stable automake (1.10.1) was not new enough, so we download
-  and build automake-1.11 or newer from its repository and make it available
-  just to coreutils:
-    # yum install help2man #required to build automake fully
-    $ git clone git://git.sv.gnu.org/automake.git
-    $ cd automake
-    $ git checkout -b branch-1.11 --track origin/branch-1.11
-    $ ./bootstrap
-    $ ./configure --prefix=$HOME/coreutils/deps
-    $ make install
+* automake *
 
-  Now we can build coreutils as described in README-hacking
-  as long as $PATH starts with $HOME/coreutils/deps/bin, which
-  one can set for the current shell like:
-    $ export PATH=$HOME/coreutils/deps/bin:$PATH
+  # Note help2man is required to build automake fully
+  git clone git://git.sv.gnu.org/automake.git
+  cd automake
+  git checkout -b branch-1.11 --track origin/branch-1.11
+  ./bootstrap
+  ./configure --prefix=$HOME/coreutils/deps
+  make install
+
+coreutils uses XZ utils (successor to LZMA) to create
+a compressed distribution tarball.  Using this feature of Automake
+requires version 1.10a or newer, as well as the xz program itself.
+
+* xz *
+
+  git clone git://ctrl.tukaani.org/xz.git
+  cd xz
+  ./autogen.sh
+  ./configure --prefix=$HOME/coreutils/deps
+  make install
+
+Now we can build coreutils as described in README-hacking
+as long as $PATH starts with $HOME/coreutils/deps/bin, which
+one can set for the current shell like:
+  $ export PATH=$HOME/coreutils/deps/bin:$PATH
