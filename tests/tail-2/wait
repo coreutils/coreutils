@@ -28,7 +28,7 @@ require_proc_pid_status_
 
 touch here || framework_failure
 touch k || framework_failure
-(touch not_accessible && chmod 0 not_accessible) || framework_failure
+(touch unreadable && chmod a-r unreadable) || framework_failure
 
 fail=0
 
@@ -46,8 +46,8 @@ if test -n "$state"; then
 fi
 
 # Check if the file is really not accessible before use it.
-if ! cat not_accessible; then
-    tail -s0.1 -f not_accessible &
+if ! cat unreadable; then
+    tail -s0.1 -f unreadable &
     pid=$!
     sleep .5
     state=$(get_process_status_ $pid)
@@ -90,7 +90,7 @@ if test -n "$state"; then
   kill $pid
 fi
 
-tail -s0.1 -F not_accessible &
+tail -s0.1 -F unreadable &
 pid=$!
 sleep .5
 state=$(get_process_status_ $pid)
