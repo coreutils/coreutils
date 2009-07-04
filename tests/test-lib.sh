@@ -209,7 +209,7 @@ require_root_()
 {
   uid_is_privileged_ || skip_test_ "must be run as root"
   NON_ROOT_USERNAME=${NON_ROOT_USERNAME=nobody}
-  NON_ROOT_GROUP=${NON_ROOT_GROUP=nobody}
+  NON_ROOT_GROUP=${NON_ROOT_GROUP=$(id -g $NON_ROOT_USERNAME)}
 }
 
 skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
