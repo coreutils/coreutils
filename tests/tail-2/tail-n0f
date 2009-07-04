@@ -40,9 +40,7 @@ for file in empty nonempty; do
     tail --sleep=4 -${c_or_n} 0 -f $file &
     pid=$!
     sleep .5
-    set _ `sed -n '/^State:[	 ]*\([^	 ]\)/s//\1/p' /proc/$pid/status`
-    shift # Remove the leading `_'.
-    state=$1
+    state=$(get_process_status_ $pid)
     case $state in
       S*) ;;
       *) echo $0: process in unexpected state: $state 1>&2; fail=1 ;;
