@@ -146,7 +146,6 @@ copy_attr_error (struct error_context *ctx ATTRIBUTE_UNUSED,
   va_list ap;
 
   if (!errno_unsupported (errno))
-  if (errno != ENOTSUP && errno != ENODATA)
     {
       /* use verror module to print error message */
       va_start (ap, fmt);
