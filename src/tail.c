@@ -978,9 +978,9 @@ recheck (struct File_spec *f, bool blocking)
    open file descriptors.  */
 
 static bool
-any_live_files (const struct File_spec *f, int n_files)
+any_live_files (const struct File_spec *f, size_t n_files)
 {
-  int i;
+  size_t i;
 
   for (i = 0; i < n_files; i++)
     if (0 <= f[i].fd)
@@ -996,19 +996,19 @@ any_live_files (const struct File_spec *f, int n_files)
    while and try again.  Continue until the user interrupts us.  */
 
 static void
-tail_forever (struct File_spec *f, int n_files, double sleep_interval)
+tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 {
   /* Use blocking I/O as an optimization, when it's easy.  */
   bool blocking = (pid == 0 && follow_mode == Follow_descriptor
 		   && n_files == 1 && ! S_ISREG (f[0].mode));
-  int last;
+  size_t last;
   bool writer_is_dead = false;
 
   last = n_files - 1;
 
   while (1)
     {
-      int i;
+      size_t i;
       bool any_input = false;
 
       for (i = 0; i < n_files; i++)
@@ -1162,9 +1162,9 @@ wd_comparator (const void *e1, const void *e2)
    Check modifications using the inotify events system.  */
 
 static void
-tail_forever_inotify (int wd, struct File_spec *f, int n_files)
+tail_forever_inotify (int wd, struct File_spec *f, size_t n_files)
 {
-  unsigned int i;
+  size_t i;
   unsigned int max_realloc = 3;
   Hash_table *wd_table;
 
@@ -1833,10 +1833,10 @@ main (int argc, char **argv)
      the number of items at the end of the file to print.  Although the type
      is signed, the value is never negative.  */
   uintmax_t n_units = DEFAULT_N_LINES;
-  int n_files;
+  size_t n_files;
   char **file;
   struct File_spec *F;
-  int i;
+  size_t i;
   bool obsolete_option;
 
   /* The number of seconds to sleep between iterations.
