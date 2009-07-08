@@ -1169,7 +1169,7 @@ tail_forever_inotify (int wd, struct File_spec *f, int n_files)
   Hash_table *wd_table;
 
   bool found_watchable = false;
-  size_t prev_wd;
+  int prev_wd;
   size_t evlen = 0;
   char *evbuf;
   size_t evbuf_off = 0;
