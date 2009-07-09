@@ -82,6 +82,7 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
   nw="$nw -Wswitch-enum"            # Too many warnings for now
   nw="$nw -Wswitch-default"         # Too many warnings for now
+  nw="$nw -Wstack-protector"        # not worth working around
   # things I might fix soon:
   nw="$nw -Wfloat-equal"            # sort.c, seq.c
   nw="$nw -Wmissing-format-attribute" # copy.c
