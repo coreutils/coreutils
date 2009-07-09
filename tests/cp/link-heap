@@ -36,6 +36,6 @@ mkdir e || framework_failure
 mv $a $b e || framework_failure
 
 fail=0
-(ulimit -v 14000; cp -al e f) || fail=1
+(ulimit -v 16000; cp -al e f) || fail=1
 
 Exit $fail
