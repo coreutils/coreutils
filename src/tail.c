@@ -1173,7 +1173,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files)
   size_t evlen = 0;
   char *evbuf;
   size_t evbuf_off = 0;
-  ssize_t len = 0;
+  size_t len = 0;
 
   wd_table = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
   if (! wd_table)
