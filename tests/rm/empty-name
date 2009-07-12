@@ -34,7 +34,7 @@ my @Tests =
      # test-name options input expected-output
      #
      ['empty-name-1', "''", {EXIT => 1},
-      {ERR => "$prog: cannot remove `': No such file or directory\n"}],
+      {ERR => "$prog: invalid argument: `'\n"}],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};

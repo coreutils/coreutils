@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Improvements
+
+  rm: rewrite to use gnulib's fts
+  This makes rm -rf significantly faster (400-500%) in some pathological
+  cases, and slightly slower (20%) in at least one pathological case.
+
 
 * Noteworthy changes in release 7.6 (2009-09-11) [stable]
 
