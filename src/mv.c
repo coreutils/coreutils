@@ -219,11 +219,14 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
         {
           struct rm_options rm_options;
           enum RM_status status;
+          char const *dir[2];
 
           rm_option_init (&rm_options);
           rm_options.verbose = x->verbose;
+          dir[0] = dir_to_remove;
+          dir[1] = NULL;
 
-          status = rm (1, &dir_to_remove, &rm_options);
+          status = rm ((void*) dir, &rm_options);
           assert (VALID_STATUS (status));
           if (status == RM_ERROR)
             ok = false;

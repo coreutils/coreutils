@@ -453,7 +453,7 @@ sc_tight_scope: $(bin_PROGRAMS)
 	( printf 'main\nusage\n_.*\n';					\
 	  grep -h -A1 '^extern .*[^;]$$' $$src				\
 	    | grep -vE '^(extern |--)' | sed 's/ .*//';			\
-	  perl -ne '/^extern \S+ (\S*) \(/ and print "$$1\n"' $$hdr;	\
+	  perl -ne '/^extern (?:enum )?\S+ (\S*) \(/ and print "$$1\n"' $$hdr;	\
 	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* T //p'					\
