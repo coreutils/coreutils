@@ -213,10 +213,15 @@ Commit log requirements
 =======================
 Your commit log should always start with a one-line summary, the second
 line should be blank, and the remaining lines are usually ChangeLog-style
-entries for all affected files.  Omit the leading TABs that you're used
-to seeing in a "real" ChangeLog file, but keep the maximum line length
-at 72 or smaller, so that the generated ChangeLog lines, each with its
-leading TAB, will not exceed 80 columns.
+entries for all affected files.  However, it's fine -- even recommended --
+to write a few lines of prose describing the change, when the summary
+and ChangeLog entries don't give enough of the big picture.  Omit the
+leading TABs that you're used to seeing in a "real" ChangeLog file, but
+keep the maximum line length at 72 or smaller, so that the generated
+ChangeLog lines, each with its leading TAB, will not exceed 80 columns.
+As for the ChangeLog-style content, please follow these guidelines:
+
+  http://www.gnu.org/software/guile/changelogs/guile-changelogs_3.html
 
 Try to make the summary line fit one of the following forms:
 
