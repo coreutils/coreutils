@@ -1,0 +1,297 @@
+==================================================
+[SSD: it's a toss-up, when removing a million-file (1000 per dir) tree
+on (sdd-ocz-summit-120G, F11, x86_64, lots of RAM)
+$ z-mktree --root=z --depth=2 --b=1000;env time /p/bin/rm -rf z
+0.50user 13.99system 0:17.83elapsed 81%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+10834minor)pagefaults 0swaps
+$ z-mktree --root=z --depth=2 --b=1000;env time src/rm -rf z
+0.52user 13.88system 0:17.41elapsed 82%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+8outputs (0major+10835minor)pagefaults 0swaps
+
+==================================================
+on (tmpfs, F11, x86_64, lots of RAM)
+/t, with very deep, narrow tree, new rm is >20% faster:
+$ z-mkdir 1000000
+$ env time /p/bin/rm -rf $TMPDIR/z
+6.25user 12.88system 0:19.22elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70976minor)pagefaults 0swaps
+$ z-mkdir 1000000
+env time /bin/rm -rf $TMPDIR/z
+$ env time /bin/rm -rf $TMPDIR/z
+11.06user 14.32system 0:25.43elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+56inputs+0outputs (1major+79999minor)pagefaults 0swaps
+
+*** slow*DOWN* of ~4% on a 1-1Kdir-1M-file (1k-files-per-dir) hierarchy
+again, this is on tmpfs:
+$ z-mktree --root=/t/z --depth=2 --b=1000;strace -c /p/bin/rm -rf /t/z
+vv$ z-mktree --root=/t/z --depth=2 --b=1000;env time /cu/src/rm -rf /t/z
+0.29user 2.75system 0:03.06elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+10834minor)pagefaults 0swaps
+$ z-mktree --root=/t/z --depth=2 --b=1000;env time /p/p/coreutils-7.5/bin/rm -rf /t/z
+0.14user 2.76system 0:02.92elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+184minor)pagefaults 0swaps
+
+
+==================================================
+
+[old rm]
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;strace -c /p/bin/rm -rf /t/z
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 90.66    0.086370           0   1001002         1 unlinkat
+  8.72    0.008310           1     10002           getdents64
+  0.22    0.000214           0      2001           openat
+  0.20    0.000188           0      2021           close
+  0.09    0.000089           0      6019           fstat64
+  0.08    0.000073           0      6003           fcntl64
+  0.03    0.000028           1        29        12 open
+  0.00    0.000000           0         4           read
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0      1000           lseek
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         2           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0        19           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0         1           fstatat64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.095272               1028117        16 total
+
+
+[new, fts-based rm]
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;strace -c ./rm -rf /t/z
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 95.88    0.122730           0   1001001           unlinkat
+  3.95    0.005058           1      7007           getdents64
+  0.10    0.000126           0      2022           close
+  0.05    0.000064           0      1001           openat
+  0.02    0.000020           0      1017           fstat64
+  0.00    0.000000           0         4           read
+  0.00    0.000000           0        29        12 open
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0       510           brk
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         2           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0        19           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0      3003           fcntl64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0      1001           fstatat64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.127998               1016627        15 total
+iou$ export LC_ALL=C                                               cu:198-rm-fts
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;strace -c ./rm -rf /t/z
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 93.49    0.110607           0   1001001           unlinkat
+  6.32    0.007475           1      7007           getdents64
+  0.10    0.000124           0      1001           fstatat64
+  0.06    0.000068           0       479           brk
+  0.02    0.000018           0      2008           close
+  0.01    0.000015           0      3003           fcntl64
+  0.00    0.000000           0         2           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         6           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0      1003           fstat64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0      1001           openat
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.118307               1016526         3 total
+
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;strace -c /p/bin/rm -rf /t/z
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 92.87    0.107659           0   1001002         1 unlinkat
+  6.59    0.007641           1     10002           getdents64
+  0.22    0.000252           0      2001           openat
+  0.15    0.000179           0      6005           fstat64
+  0.10    0.000113           0      6003           fcntl64
+  0.05    0.000054           0      1000           lseek
+  0.02    0.000027           0      2007           close
+  0.00    0.000000           0         2           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         6           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0         1           fstatat64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.115925               1028047         4 total
+
+**********************************************************************
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time /p/bin/rm -rf /t/z
+0.16user 3.35system 0:03.68elapsed 95%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+166minor)pagefaults 0swaps
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time /p/bin/rm -rf /t/z
+0.16user 3.12system 0:03.34elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+166minor)pagefaults 0swaps
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time /p/bin/rm -rf /t/z
+0.14user 3.12system 0:03.26elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+167minor)pagefaults 0swaps
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time /p/bin/rm -rf /t/z
+0.12user 2.98system 0:03.17elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+167minor)pagefaults 0swaps
+
+
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time ./rm -rf /t/z
+0.68user 3.08system 0:03.76elapsed 100%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+1566minor)pagefaults 0swaps
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time ./rm -rf /t/z
+0.64user 3.12system 0:03.79elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+1565minor)pagefaults 0swaps
+iou$ z-mktree --root=/t/z --depth=2 --b=1000;env time ./rm -rf /t/z
+0.60user 3.09system 0:03.78elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+1566minor)pagefaults 0swaps
+
+************************************************************************
+************************************************************************
+
+The above are relatively normal hierarchies.
+Here is one that is extreme (/t is a tmpfs file system):
+[shows that fts-based rm takes 20-25% more time than the old one]
+
+iou$ mkdir .j && (cd .j && seq 1000000|xargs touch)
+
+iou$ env time ./rm -rf /t/.j                                       cu:198-rm-fts
+0.10user 0.41system 0:00.59elapsed 87%CPU (0avgtext+0avgdata 0maxresident)k
+256inputs+0outputs (1major+4459minor)pagefaults 0swaps
+iou$ env time ./rm -rf /t/.j                                       cu:198-rm-fts
+0.82user 3.48system 0:04.35elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+256inputs+0outputs (1major+43130minor)pagefaults 0swaps
+iou$ env time /p/bin/rm -rf /t/.j                                  cu:198-rm-fts
+0.14user 3.02system 0:03.25elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+256inputs+0outputs (1major+164minor)pagefaults 0swaps
+iou$ env time strace -c /p/bin/rm -rf /t/.j                        cu:198-rm-fts
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 95.49    0.122568           0   1000002         1 unlinkat
+  4.51    0.005785           1      7797           getdents64
+  0.00    0.000000           0         2           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         7           close
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           lseek
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         6           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0         5           fstat64
+  0.00    0.000000           0         3           fcntl64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0         1           fstatfs64
+  0.00    0.000000           0         1           openat
+  0.00    0.000000           0         1           fstatat64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.128353               1007844         4 total
+2.96user 21.57system 0:24.80elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+8inputs+0outputs (0major+406minor)pagefaults 0swaps
+iou$ env time strace -c ./rm -rf /t/.j                             cu:198-rm-fts
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 83.46    0.160976           0   1000001           unlinkat
+ 14.54    0.028036          21      1306           brk
+  2.01    0.003873           0      7795           getdents64
+  0.00    0.000000           0         2           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         8           close
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         3         3 access
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         4           mprotect
+  0.00    0.000000           0         6           mmap2
+  0.00    0.000000           0         1           lstat64
+  0.00    0.000000           0         3           fstat64
+  0.00    0.000000           0         3           fcntl64
+  0.00    0.000000           0         1           set_thread_area
+  0.00    0.000000           0         1           fstatfs64
+  0.00    0.000000           0         1           openat
+  0.00    0.000000           0         1           fstatat64
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.192885               1009142         3 total
+3.86user 22.06system 0:26.30elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+43371minor)pagefaults 0swaps
+
+======================================================
+# On a faster system, the new fts-based rm still takes a 20% perf. hit,
+# probably due to malloc (ab)use, just like above.  Yep, sure looks like it.
+# in /tmpfs, /t
+mkdir .j && (cd .j && seq 1000000|xargs touch)
+vv$ env time /p/p/coreutils-7.5/bin/rm -rf .j
+0.14user 2.81system 0:02.98elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+264inputs+0outputs (1major+174minor)pagefaults 0swaps
+vv$ cd /t; env time /cu/src/rm -rf .j
+0.38user 3.17system 0:03.57elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+0inputs+0outputs (0major+70489minor)pagefaults 0swaps
+
+vv$ strace -c /p/p/coreutils-7.5/bin/rm -rf .j
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 66.41    0.081223           0   1000002         1 unlinkat
+ 33.43    0.040887          42       978           getdents
+  0.16    0.000199         199         1           execve
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         7           close
+  0.00    0.000000           0         6           fstat
+  0.00    0.000000           0         1           lstat
+  0.00    0.000000           0         1           lseek
+  0.00    0.000000           0         9           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         3           fcntl
+  0.00    0.000000           0         1           fstatfs
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           openat
+  0.00    0.000000           0         1           newfstatat
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.122309               1001025         2 total
+
+
+vv$ cd /t; strace -c /cu/src/rm -rf .j
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 51.26    0.087638           0   1000001           unlinkat
+ 26.49    0.045291          46       976           getdents
+ 22.24    0.038024          18      2134           brk
+  0.00    0.000000           0         1           read
+  0.00    0.000000           0         3           open
+  0.00    0.000000           0         8           close
+  0.00    0.000000           0         4           fstat
+  0.00    0.000000           0         1           lstat
+  0.00    0.000000           0         9           mmap
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         1           ioctl
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         3           fcntl
+  0.00    0.000000           0         1           fstatfs
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           openat
+  0.00    0.000000           0         1           newfstatat
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.170953               1003151         1 total

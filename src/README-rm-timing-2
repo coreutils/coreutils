@@ -1,0 +1,231 @@
+#!/bin/bash
+# Demonstrate  >5X speed-up in using fts-based rm on ext4
+# Demonstrate 1.5X speed-up in using fts-based rm on reiserfs
+
+set -x
+
+a=$(printf %031d 0)
+b=$(printf %031d 1)
+(mkdir $a \
+   && cd $a \
+   && seq --format=%031g 10000 |xargs touch \
+   && seq --format=d%030g 10000 |xargs mkdir ) || framework_failure
+cp -al $a $b || framework_failure
+mkdir e || framework_failure
+mv $a $b e || framework_failure
+
+cp -a e 1
+cp -a e 2
+
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+env time /p/bin/rm -rf 1
+env time /cu/src/rm -rf 2
+
+cp -a e 1
+cp -a e 2
+
+
+sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+env time cu/src/rm -rf 2
+env time /p/bin/rm -rf 1
+
+########################################################################
+# on ext4
+# + env time /p/bin/rm -rf 1
+# 0.19user 12.09system 0:14.42elapsed 85%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+212minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.13user 0.93system 0:01.08elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+1235minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + env time /cu/src/rm -rf 2
+# 0.12user 0.94system 0:01.07elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+1236minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.19user 12.08system 0:12.33elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+212minor)pagefaults 0swaps
+
+# on reiserfs:
+# + env time /p/bin/rm -rf 1
+# 0.30user 4.16system 0:04.49elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+168minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.21user 2.47system 0:02.88elapsed 93%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+80outputs (0major+1199minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + env time /cu/src/rm -rf 2
+# 0.19user 2.56system 0:02.76elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+1200minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.29user 4.17system 0:04.55elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+# 0inputs+0outputs (0major+168minor)pagefaults 0swaps
+
+########################################################################
+# on xfs, F11, slow-disk laptop: (shows slight improvement)
+# iou$ bash /cu/src/README-rm-timing-2                                          :
+# ++ printf %031d 0
+# + a=0000000000000000000000000000000
+# ++ printf %031d 1
+# + b=0000000000000000000000000000001
+# + mkdir 0000000000000000000000000000000
+# + cd 0000000000000000000000000000000
+# + xargs touch
+# + seq --format=%031g 10000
+# + seq --format=d%030g 10000
+# + xargs mkdir
+# + cp -al 0000000000000000000000000000000 0000000000000000000000000000001
+# + mkdir e
+# + mv 0000000000000000000000000000000 0000000000000000000000000000001 e
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /p/bin/rm -rf 1
+# 1.06user 12.10system 1:41.96elapsed 12%CPU (0avgtext+0avgdata 0maxresident)k
+# 16368inputs+0outputs (1major+175minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.57user 5.47system 1:32.69elapsed 6%CPU (0avgtext+0avgdata 0maxresident)k
+# 20112inputs+0outputs (1major+1214minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /cu/src/rm -rf 2
+# 0.54user 5.34system 1:28.43elapsed 6%CPU (0avgtext+0avgdata 0maxresident)k
+# 19032inputs+0outputs (1major+1198minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.99user 12.36system 1:37.36elapsed 13%CPU (0avgtext+0avgdata 0maxresident)k
+# 20256inputs+0outputs (1major+174minor)pagefaults 0swaps
+
+########################################################################
+# on btrfs, F11, slow-disk laptop: (shows 7-8X speed-up)
+# iou$ env time bash /cu/src/README-rm-timing-2                                 :
+# ++ printf %031d 0
+# + a=0000000000000000000000000000000
+# ++ printf %031d 1
+# + b=0000000000000000000000000000001
+# + mkdir 0000000000000000000000000000000
+# + cd 0000000000000000000000000000000
+# + seq --format=%031g 10000
+# + xargs touch
+# + seq --format=d%030g 10000
+# + xargs mkdir
+# + cp -al 0000000000000000000000000000000 0000000000000000000000000000001
+# + mkdir e
+# + mv 0000000000000000000000000000000 0000000000000000000000000000001 e
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /p/bin/rm -rf 1
+# 0.51user 59.42system 1:09.73elapsed 85%CPU (0avgtext+0avgdata 0maxresident)k
+# 43536inputs+82536outputs (1major+425minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.26user 8.01system 0:08.50elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
+# 808inputs+54984outputs (1major+1199minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# 0.26user 8.31system 0:09.17elapsed 93%CPU (0avgtext+0avgdata 0maxresident)k
+# 976inputs+47744outputs (1major+1197minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.48user 57.83system 1:04.81elapsed 89%CPU (0avgtext+0avgdata 0maxresident)k
+# 27408inputs+75632outputs (1major+423minor)pagefaults 0swaps
+# ---
+# 5.60user 214.36system 4:14.11elapsed 86%CPU (0avgtext+0avgdata 0maxresident)k
+# 131544inputs+551320outputs (83major+15945minor)pagefaults 0swaps
+
+########################################################################
+# on reiserfs, F11, slow-disk laptop: (shows ~4X speed-up)
+# but notice total test time: just 51s, compared with 4:11 for btrfs above.
+# iou$ env time bash /cu/src/README-rm-timing-2                                 :
+# ++ printf %031d 0
+# + a=0000000000000000000000000000000
+# ++ printf %031d 1
+# + b=0000000000000000000000000000001
+# + mkdir 0000000000000000000000000000000
+# + cd 0000000000000000000000000000000
+# + seq --format=%031g 10000
+# + xargs touch
+# + seq --format=d%030g 10000
+# + xargs mkdir
+# + cp -al 0000000000000000000000000000000 0000000000000000000000000000001
+# + mkdir e
+# + mv 0000000000000000000000000000000 0000000000000000000000000000001 e
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /p/bin/rm -rf 1
+# 0.48user 9.79system 0:10.33elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 256inputs+0outputs (1major+191minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.25user 2.15system 0:02.50elapsed 96%CPU (0avgtext+0avgdata 0maxresident)k
+# 808inputs+0outputs (1major+1198minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /cu/src/rm -rf 2
+# 0.26user 2.10system 0:02.46elapsed 95%CPU (0avgtext+0avgdata 0maxresident)k
+# 808inputs+0outputs (1major+1198minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.44user 9.89system 0:10.41elapsed 99%CPU (0avgtext+0avgdata 0maxresident)k
+# 264inputs+0outputs (1major+176minor)pagefaults 0swaps
+# ---
+# 4.48user 42.92system 0:51.14elapsed 92%CPU (0avgtext+0avgdata 0maxresident)k
+# 21680inputs+54232outputs (86major+16962minor)pagefaults 0swaps
+
+########################################################################
+# on ext2, F11, slow-disk laptop: (shows ~4X speed-up)
+# iou$ env time bash /cu/src/README-rm-timing-2                                 :
+# ++ printf %031d 0
+# + a=0000000000000000000000000000000
+# ++ printf %031d 1
+# + b=0000000000000000000000000000001
+# + mkdir 0000000000000000000000000000000
+# + cd 0000000000000000000000000000000
+# + seq --format=%031g 10000
+# + xargs touch
+# + seq --format=d%030g 10000
+# + xargs mkdir
+# + cp -al 0000000000000000000000000000000 0000000000000000000000000000001
+# + mkdir e
+# + mv 0000000000000000000000000000000 0000000000000000000000000000001 e
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /p/bin/rm -rf 1
+# 1.02user 15.25system 0:30.76elapsed 52%CPU (0avgtext+0avgdata 0maxresident)k
+# 178888inputs+19144outputs (1major+423minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.40user 2.30system 0:05.99elapsed 45%CPU (0avgtext+0avgdata 0maxresident)k
+# 83088inputs+18480outputs (1major+1199minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /cu/src/rm -rf 2
+# 0.38user 2.83system 0:08.18elapsed 39%CPU (0avgtext+0avgdata 0maxresident)k
+# 85848inputs+16024outputs (1major+1199minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.84user 15.24system 0:25.28elapsed 63%CPU (0avgtext+0avgdata 0maxresident)k
+# 178656inputs+18728outputs (1major+423minor)pagefaults 0swaps
+# ---
+# 6.73user 263.32system 5:27.69elapsed 82%CPU (0avgtext+0avgdata 0maxresident)k
+# 780296inputs+891712outputs (86major+17155minor)pagefaults 0swaps
+
+########################################################################
+# on tmpfs, F11, slow-disk laptop: (shows ~4X speed-up)
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /p/bin/rm -rf 1
+# 0.37user 2.47system 0:03.10elapsed 91%CPU (0avgtext+0avgdata 0maxresident)k
+# 256inputs+0outputs (1major+175minor)pagefaults 0swaps
+# + env time /cu/src/rm -rf 2
+# 0.23user 0.41system 0:00.76elapsed 85%CPU (0avgtext+0avgdata 0maxresident)k
+# 520inputs+0outputs (1major+2092minor)pagefaults 0swaps
+# + cp -a e 1
+# + cp -a e 2
+# + sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+# + env time /cu/src/rm -rf 2
+# 0.24user 0.41system 0:00.73elapsed 89%CPU (0avgtext+0avgdata 0maxresident)k
+# 800inputs+0outputs (1major+2090minor)pagefaults 0swaps
+# + env time /p/bin/rm -rf 1
+# 0.36user 2.47system 0:02.86elapsed 98%CPU (0avgtext+0avgdata 0maxresident)k
+# 256inputs+0outputs (1major+175minor)pagefaults 0swaps
