@@ -322,7 +322,7 @@ Special file types
 * mkdir invocation::            Make directories
 * mkfifo invocation::           Make FIFOs (named pipes)
 * mknod invocation::            Make block or character special files
-* readlink invocation::         Print the referent of a symbolic link
+* readlink invocation::         Print value of a symlink or canonical file name
 * rmdir invocation::            Remove empty directories
 * unlink invocation::           Remove files via unlink syscall
 
@@ -8683,7 +8683,7 @@ Besides directories, other special file types include named pipes
 * mkdir invocation::            Make directories.
 * mkfifo invocation::           Make FIFOs (named pipes).
 * mknod invocation::            Make block or character special files.
-* readlink invocation::         Print the referent of a symbolic link.
+* readlink invocation::         Print value of a symlink or canonical file name.
 * rmdir invocation::            Remove empty directories.
 * unlink invocation::           Remove files via the unlink syscall
 @end menu
@@ -9128,10 +9128,12 @@ Set the default SELinux security context to be used for created files.
 
 
 @node readlink invocation
-@section @command{readlink}: Print the referent of a symbolic link
+@section @command{readlink}: Print value of a symlink or canonical file name
 
 @pindex readlink
 @cindex displaying value of a symbolic link
+@cindex canonical file name
+@cindex canonicalize a file name
 
 @command{readlink} may work in one of two supported modes:
 
