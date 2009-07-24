@@ -1,5 +1,5 @@
 [NAME]
-readlink \- display value of a symbolic link
+readlink \- print value of a symbolic link or canonical file name
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]

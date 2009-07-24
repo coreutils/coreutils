@@ -61,7 +61,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE\n"), program_name);
-      fputs (_("Display value of a symbolic link on standard output.\n\n"),
+      fputs (_("Print value of a symbolic link or canonical file name\n\n"),
 	     stdout);
       fputs (_("\
   -f, --canonicalize            canonicalize by following every symlink in\n\
