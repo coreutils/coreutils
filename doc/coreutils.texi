@@ -4258,6 +4258,17 @@ by the sort operation.
 @c @end example
 
 @item
+Use the common @acronym{DSU, Decorate Sort Undecorate} idiom to
+sort lines according to their length.
+
+@example
+awk '@{print length, $0@}' /etc/passwd | sort -n | cut -f2- -d' '
+@end example
+
+In general this technique can be used to sort data that the @command{sort}
+command does not support, or is inefficient at, sorting directly.
+
+@item
 Shuffle a list of directories, but preserve the order of files within
 each directory.  For instance, one could use this to generate a music
 playlist in which albums are shuffled but the songs of each album are
