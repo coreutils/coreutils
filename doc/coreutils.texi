@@ -9134,6 +9134,8 @@ Set the default SELinux security context to be used for created files.
 @cindex displaying value of a symbolic link
 @cindex canonical file name
 @cindex canonicalize a file name
+@pindex realpath
+@findex realpath
 
 @command{readlink} may work in one of two supported modes:
 
@@ -9212,6 +9214,9 @@ Report error messages.
 @end table
 
 The @command{readlink} utility first appeared in OpenBSD 2.1.
+
+There is a @command{realpath} command on some systems
+which operates like @command{readlink} in canonicalize mode.
 
 @exitstatus
 
