@@ -186,7 +186,7 @@ ASSORT = LC_ALL=C sort
 .PHONY: check-x-vs-1
 check-x-vs-1:
 	$(AM_V_GEN)PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;	\
-	t=ls-files.$$$$;						\
+	t=$@-t;								\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
 	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
 	  | tr -s ' ' '\n' | sed 's/\.1$$//')				\
