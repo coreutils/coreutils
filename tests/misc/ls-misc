@@ -18,6 +18,7 @@
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
+my $prog = 'ls';
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -224,6 +225,18 @@ my @Tests =
       {PRE => sub { mk_file @v_files }},
       {POST => sub { unlink @v_files }},
       ],
+
+     # Test for the ls -1U bug fixed in coreutils-7.5.
+     # It is triggered only with -1U and with two or more arguments,
+     # at least one of which is a nonempty directory.
+     ['multi-arg-U1', '-U1 d no-such',
+      {OUT => "d:\nf\n"},
+      {ERR_SUBST=>'s/ch:.*/ch:/'},
+      {ERR => "$prog: cannot access no-such:\n"},
+      $mkdir_reg,
+      $rmdir_reg,
+      {EXIT => 2},
+     ],
     );
 
 # Start with an unset LS_COLORS environment variable.
@@ -231,8 +244,6 @@ delete $ENV{LS_COLORS};
 
 my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
-
-my $prog = 'ls';
 
 setuid_setup;
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
