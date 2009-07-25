@@ -61,6 +61,10 @@
 # include "verror.h"
 #endif
 
+#if HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
@@ -113,6 +117,23 @@ static bool owner_failure_ok (struct cp_options const *x);
    when we detect the user is trying to copy a directory into itself.  */
 static char const *top_level_src_name;
 static char const *top_level_dst_name;
+
+/* Perform the O(1) btrfs clone operation, if possible.
+   Upon success, return 0.  Otherwise, return -1 and set errno.  */
+static inline int
+clone_file (int dest_fd, int src_fd)
+{
+#ifdef __linux__
+# undef BTRFS_IOCTL_MAGIC
+# define BTRFS_IOCTL_MAGIC 0x94
+# undef BTRFS_IOC_CLONE
+# define BTRFS_IOC_CLONE _IOW (BTRFS_IOCTL_MAGIC, 9, int)
+  return ioctl (dest_fd, BTRFS_IOC_CLONE, src_fd);
+#else
+  errno = ENOTSUP;
+  return -1;
+#endif
+}
 
 /* FIXME: describe */
 /* FIXME: rewrite this to use a hash table so we avoid the quadratic
@@ -589,6 +610,13 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_and_dst_desc;
     }
 
+  /* If --sparse=auto is in effect, attempt a btrfs clone operation.
+     If the operation is not supported or it fails then copy the file
+     in the usual way.  */
+  bool copied = (x->sparse_mode == SPARSE_AUTO
+                 && clone_file (dest_desc, source_desc) == 0);
+
+  if (!copied)
   {
     typedef uintptr_t word;
     off_t n_read_total = 0;
