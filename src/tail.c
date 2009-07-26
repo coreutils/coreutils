@@ -50,6 +50,8 @@
 #if HAVE_INOTIFY
 # include "hash.h"
 # include <sys/inotify.h>
+/* `select' is used by tail_forever_inotify.  */
+# include <sys/select.h>
 #endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -1162,7 +1164,8 @@ wd_comparator (const void *e1, const void *e2)
    Check modifications using the inotify events system.  */
 
 static void
-tail_forever_inotify (int wd, struct File_spec *f, size_t n_files)
+tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
+                      double sleep_interval)
 {
   size_t i;
   unsigned int max_realloc = 3;
@@ -1252,6 +1255,36 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files)
       struct stat stats;
 
       struct inotify_event *ev;
+
+      /* When watching a PID, ensure that a read from WD will not block
+         indefinetely.  */
+      if (pid)
+        {
+          fd_set rfd;
+          struct timeval select_timeout;
+          int n_descriptors;
+
+          FD_ZERO (&rfd);
+          FD_SET (wd, &rfd);
+
+          select_timeout.tv_sec = (time_t) sleep_interval;
+          select_timeout.tv_usec = 1000000000 * (sleep_interval
+                                                 - select_timeout.tv_sec);
+
+          n_descriptors = select (wd + 1, &rfd, NULL, NULL, &select_timeout);
+
+          if (n_descriptors == -1)
+            error (EXIT_FAILURE, errno, _("error monitoring inotify event"));
+
+          if (n_descriptors == 0)
+            {
+              /* See if the process we are monitoring is still alive.  */
+              if (kill (pid, 0) != 0 && errno != EPERM)
+                break;
+
+              continue;
+            }
+        }
 
       if (len <= evbuf_off)
         {
@@ -1940,18 +1973,15 @@ main (int argc, char **argv)
   if (forever)
     {
 #if HAVE_INOTIFY
-      if (pid == 0)
+      int wd = inotify_init ();
+      if (wd < 0)
+        error (0, errno, _("inotify cannot be used, reverting to polling"));
+      else
         {
-          int wd = inotify_init ();
-          if (wd < 0)
-            error (0, errno, _("inotify cannot be used, reverting to polling"));
-          else
-            {
-              tail_forever_inotify (wd, F, n_files);
+          tail_forever_inotify (wd, F, n_files, sleep_interval);
 
-              /* The only way the above returns is upon failure.  */
-              exit (EXIT_FAILURE);
-            }
+          /* The only way the above returns is upon failure.  */
+          exit (EXIT_FAILURE);
         }
 #endif
       tail_forever (F, n_files, sleep_interval);
