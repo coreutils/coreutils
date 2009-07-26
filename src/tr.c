@@ -291,7 +291,7 @@ Usage: %s [OPTION]... SET1 [SET2]\n\
 Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.\n\
 \n\
-  -c, -C, --complement    first complement SET1\n\
+  -c, -C, --complement    use the complement of SET1\n\
   -d, --delete            delete characters in SET1, do not translate\n\
   -s, --squeeze-repeats   replace each input sequence of a repeated character\n\
                             that is listed in SET1 with a single occurrence\n\
