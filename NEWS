@@ -38,6 +38,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chroot now accepts the options --userspec and --groups.
 
+  cp now preserves time stamps on symbolic links, when possible
+
   cp, install, mv: take advantage of btrfs' O(1) copy-on-write feature
   when both the source and destination are on the same btrfs partition.
 

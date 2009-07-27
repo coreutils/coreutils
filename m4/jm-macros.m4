@@ -89,6 +89,9 @@ AC_DEFUN([coreutils_MACROS],
     tcgetpgrp \
   )
 
+  # for cp.c
+  AC_CHECK_FUNCS_ONCE([utimensat])
+
   dnl This can't use AC_REQUIRE; I'm not quite sure why.
   cu_PREREQ_STAT_PROG
 
