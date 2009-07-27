@@ -2456,6 +2456,19 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       DEV_INO_PUSH (dir_stat.st_dev, dir_stat.st_ino);
     }
 
+  if (recursive | print_dir_name)
+    {
+      if (!first)
+	DIRED_PUTCHAR ('\n');
+      first = false;
+      DIRED_INDENT ();
+      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
+      dired_pos += quote_name (stdout, realname ? realname : name,
+			       dirname_quoting_options, NULL);
+      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
+      DIRED_FPUTS_LITERAL (":\n", stdout);
+    }
+
   /* Read the directory entries, and insert the subfiles into the `cwd_file'
      table.  */
 
@@ -2495,7 +2508,8 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 		 ls uses constant memory while processing the entries of
 		 this directory.  Useful when there are many (millions)
 		 of entries in a directory.  */
-	      if (format == one_per_line && sort_type == sort_none)
+	      if (format == one_per_line && sort_type == sort_none
+		      && !print_block_size && !recursive)
 		{
 		  /* We must call sort_files in spite of
 		     "sort_type == sort_none" for its initialization
@@ -2530,19 +2544,6 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 
   if (recursive)
     extract_dirs_from_files (name, command_line_arg);
-
-  if (recursive | print_dir_name)
-    {
-      if (!first)
-	DIRED_PUTCHAR ('\n');
-      first = false;
-      DIRED_INDENT ();
-      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      dired_pos += quote_name (stdout, realname ? realname : name,
-			       dirname_quoting_options, NULL);
-      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      DIRED_FPUTS_LITERAL (":\n", stdout);
-    }
 
   if (format == long_format || print_block_size)
     {

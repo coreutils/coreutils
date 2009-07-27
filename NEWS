@@ -4,13 +4,18 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  truncate -s failed to skip all whitespace in the option argument in
-  some locales.
+  ls -1U (with two or more arguments, at least one a nonempty directory)
+  would print entry names *before* the name of the containing directory.
+  Also fixed incorrect output of ls -1RU and ls -1sU.
+  [introduced in coreutils-7.0]
 
   sort now correctly ignores fields whose ending position is specified
   before the start position. Previously in numeric mode the remaining
   part of the line after the start position was used as the sort key.
   [This bug appears to have been present in "the beginning".]
+
+  truncate -s failed to skip all whitespace in the option argument in
+  some locales.
 
 ** New programs
 
