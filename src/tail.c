@@ -1280,7 +1280,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             {
               /* See if the process we are monitoring is still alive.  */
               if (kill (pid, 0) != 0 && errno != EPERM)
-                break;
+                exit (EXIT_SUCCESS);
 
               continue;
             }
