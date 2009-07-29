@@ -1,7 +1,7 @@
 #!/usr/bin/perl -0777 -pi
 # Update an FSF copyright year list to include the current year.
 
-my $VERSION = '2009-07-29.08:43'; # UTC
+my $VERSION = '2009-07-29.13:34'; # UTC
 
 # Copyright (C) 2009 Free Software Foundation
 #
@@ -27,7 +27,7 @@ my ($sec, $min, $hour, $mday, $month, $year) = localtime (time());
 my $this_year = $year + 1900;
 my $holder = 'Free Software Foundation';
 
-if (/([- ])((?:\d\d)?\d\d)(\s+$holder)/s)
+if (/([- ])((?:\d\d)?\d\d)((?:\n\#)?\s+$holder)/s)
   {
     my ($sep, $last_c_year, $rest) = ($1, $2, $3);
 
