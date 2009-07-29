@@ -47,6 +47,21 @@ require_acl_()
     || skip_test_ "This test requires a local user named bin."
 }
 
+require_openat_support_()
+{
+  # Skip this test if your system has neither the openat-style functions
+  # nor /proc/self/fd support with which to emulate them.
+  test -z "$CONFIG_HEADER" \
+    && skip_test_ 'internal error: CONFIG_HEADER not defined'
+
+  _skip=yes
+  grep '^#define HAVE_OPENAT' "$CONFIG_HEADER" > /dev/null && _skip=no
+  test -d /proc/self/fd && _skip=no
+  if test $_skip = yes; then
+    skip_test_ 'this system lacks openat support'
+  fi
+}
+
 require_ulimit_()
 {
   ulimit_works=yes

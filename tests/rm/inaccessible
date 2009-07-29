@@ -26,13 +26,7 @@ fi
 
 # Skip this test if your system has neither the openat-style functions
 # nor /proc/self/fd support with which to emulate them.
-skip=yes
-grep '^#define HAVE_OPENAT' $CONFIG_HEADER > /dev/null && skip=no
-test -d /proc/self/fd && skip=no
-if test $skip = yes; then
-  skip_test_ 'this system lacks openat support'
-fi
-
+require_openat_support_
 skip_if_root_
 
 p=`pwd`
