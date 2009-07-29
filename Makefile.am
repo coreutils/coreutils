@@ -148,7 +148,7 @@ check-ls-dircolors:
 .PHONY: update-copyright
 update-copyright:
 	if test -d .git; then					\
-	  git grep -l -E '2[0-9]{3} +Free'			\
-	    | grep -v -E '^(COPYING|ChangeLog)'			\
+	  git grep -l -w Copyright				\
+	    | grep -v -E '(^|/)(COPYING|ChangeLog)'		\
 	    | xargs $(srcdir)/build-aux/$@;			\
 	fi
