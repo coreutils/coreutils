@@ -65,4 +65,9 @@ if test -n "$state"; then
   kill $pid
 fi
 
+# Ensure that tail --pid=PID exits successfully when PID is dead.
+# Use an unlikely-to-be-live PID: 2^31-1
+getlimits_
+tail --pid=$INT_MAX -f /dev/null || fail=1
+
 Exit $fail
