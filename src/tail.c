@@ -1269,7 +1269,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           select_timeout.tv_sec = (time_t) sleep_interval;
           select_timeout.tv_usec = 1000000 * (sleep_interval
-                                                 - select_timeout.tv_sec);
+                                              - select_timeout.tv_sec);
 
           n_descriptors = select (wd + 1, &rfd, NULL, NULL, &select_timeout);
 
