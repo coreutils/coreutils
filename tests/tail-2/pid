@@ -70,4 +70,8 @@ fi
 getlimits_
 tail --pid=$INT_MAX -f /dev/null || fail=1
 
+# Ensure fractional sleep parameter is honored with --pid
+timeout 1 tail -s.1 -f /dev/null --pid=$PID_T_MAX
+test $? = 124 && fail=1
+
 Exit $fail
