@@ -624,13 +624,16 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_and_dst_desc;
     }
 
-  /* If --sparse=auto is in effect, attempt a btrfs clone operation.
-     If the operation is not supported or it fails then copy the file
-     in the usual way.  */
-  bool copied = (x->sparse_mode == SPARSE_AUTO
-                 && clone_file (dest_desc, source_desc) == 0);
+  if (x->reflink)
+    {
+      if (clone_file (dest_desc, source_desc))
+        {
+          error (0, errno, _("failed to clone %s"), quote (dst_name));
+          return_val = false;
+        }
+      goto close_src_and_dst_desc;
+    }
 
-  if (!copied)
   {
     typedef uintptr_t word;
     off_t n_read_total = 0;
@@ -2232,6 +2235,7 @@ valid_options (const struct cp_options *co)
   assert (VALID_BACKUP_TYPE (co->backup_type));
   assert (VALID_SPARSE_MODE (co->sparse_mode));
   assert (!(co->hard_link && co->symbolic_link));
+  assert (!(co->reflink && co->sparse_mode != SPARSE_AUTO));
   return true;
 }
 

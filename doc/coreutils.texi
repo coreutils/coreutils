@@ -7543,6 +7543,15 @@ Also, it is not portable to use @option{-R} to copy symbolic links
 unless you also specify @option{-P}, as @acronym{POSIX} allows
 implementations that dereference symbolic links by default.
 
+@item --reflink
+@opindex --reflink
+Perform a lightweight, copy-on-write (COW) copy.
+Copying with this option can succeed only on some relatively new file systems.
+Once it has succeeded, beware that the source and destination files
+share the same disk data blocks as long as they remain unmodified.
+Thus, if a disk I/O error affects data blocks of one of the files,
+the other suffers the exact same fate.
+
 @item --remove-destination
 @opindex --remove-destination
 Remove each existing destination file before attempting to open it

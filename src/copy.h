@@ -219,6 +219,9 @@ struct cp_options
      such a symlink) and returns false.  */
   bool open_dangling_dest_symlink;
 
+  /* If true, attempt to clone the file instead of copying it.  */
+  bool reflink;
+
   /* This is a set of destination name/inode/dev triples.  Each such triple
      represents a file we have created corresponding to a source file name
      that was specified on the command line.  Use it to avoid clobbering

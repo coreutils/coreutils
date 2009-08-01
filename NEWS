@@ -41,6 +41,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chroot now accepts the options --userspec and --groups.
 
+  cp accepts a new option, --reflink: create a lightweight copy
+  using copy-on-write (COW).  This is currently supported only on
+  btrfs file systems.
+
   cp now preserves time stamps on symbolic links, when possible
 
   cp, install, mv: take advantage of btrfs' O(1) copy-on-write feature

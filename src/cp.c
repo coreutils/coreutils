@@ -76,6 +76,7 @@ enum
   NO_PRESERVE_ATTRIBUTES_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
+  REFLINK_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
   UNLINK_DEST_BEFORE_OPENING
@@ -121,6 +122,7 @@ static struct option const long_opts[] =
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
   {"sparse", required_argument, NULL, SPARSE_OPTION},
+  {"reflink", no_argument, NULL, REFLINK_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
@@ -190,6 +192,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -R, -r, --recursive          copy directories recursively\n\
+      --reflink                perform a lightweight (CoW/clone) copy\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
 "), stdout);
@@ -752,6 +755,7 @@ cp_option_init (struct cp_options *x)
   x->interactive = I_UNSPECIFIED;
   x->move_mode = false;
   x->one_file_system = false;
+  x->reflink = false;
 
   x->preserve_ownership = false;
   x->preserve_links = false;
@@ -916,6 +920,10 @@ main (int argc, char **argv)
 				     sparse_type_string, sparse_type);
 	  break;
 
+	case REFLINK_OPTION:
+	  x.reflink = true;
+	  break;
+
 	case 'a':		/* Like -dR --preserve=all with reduced failure diagnostics. */
 	  x.dereference = DEREF_NEVER;
 	  x.preserve_links = true;
@@ -1073,6 +1081,12 @@ main (int argc, char **argv)
     {
       error (0, 0,
 	     _("options --backup and --no-clobber are mutually exclusive"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (x.reflink && x.sparse_mode != SPARSE_AUTO)
+    {
+      error (0, 0, _("--reflink can be used only with --sparse=auto"));
       usage (EXIT_FAILURE);
     }
 
