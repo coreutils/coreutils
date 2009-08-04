@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  dd's oflag=direct option now works even when the size of the input
+  is not a multiple of e.g., 512 bytes.
+
   install runs faster again with SELinux enabled
   [introduced in coreutils-7.0]
 

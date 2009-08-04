@@ -7861,6 +7861,10 @@ same time.
 @opindex direct
 @cindex direct I/O
 Use direct I/O for data, avoiding the buffer cache.
+Note that the kernel may impose restrictions on read or write buffer sizes.
+For example, with an ext4 destination file system and a linux-based kernel,
+using @samp{oflag=direct} will cause writes to fail with @code{EINVAL} if the
+output buffer size is not a multiple of 512.
 
 @item directory
 @opindex directory

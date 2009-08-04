@@ -837,6 +837,14 @@ iwrite (int fd, char const *buf, size_t size)
 {
   size_t total_written = 0;
 
+  if ((output_flags & O_DIRECT) && size < output_blocksize)
+    {
+      int old_flags = fcntl (STDOUT_FILENO, F_GETFL);
+      if (fcntl (STDOUT_FILENO, F_SETFL, old_flags & ~O_DIRECT) != 0)
+        error (0, errno, _("failed to turn off O_DIRECT: %s"),
+               quote (output_file));
+    }
+
   while (total_written < size)
     {
       ssize_t nwritten;
@@ -1897,7 +1905,7 @@ main (int argc, char **argv)
 		  || S_ISDIR (stdout_stat.st_mode)
 		  || S_TYPEISSHM (&stdout_stat))
 		error (EXIT_FAILURE, ftruncate_errno,
-		       _("truncating at %"PRIuMAX" bytes in output file %s"),
+                   _("failed to truncate to %"PRIuMAX" bytes in output file %s"),
 		       size, quote (output_file));
 	    }
 	}

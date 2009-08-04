@@ -298,6 +298,7 @@ TESTS =						\
   cp/src-base-dot				\
   cp/symlink-slash				\
   cp/thru-dangling				\
+  dd/direct					\
   dd/misc					\
   dd/not-rewound				\
   dd/reblock					\
