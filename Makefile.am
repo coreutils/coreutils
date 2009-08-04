@@ -144,11 +144,3 @@ check-ls-dircolors:
 	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
 	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
 	test "$$dc" = "$$ls"
-
-.PHONY: update-copyright
-update-copyright:
-	if test -d .git; then					\
-	  git grep -l -w Copyright				\
-	    | grep -v -E '(^|/)(COPYING|ChangeLog)'		\
-	    | xargs $(srcdir)/build-aux/$@;			\
-	fi
