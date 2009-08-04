@@ -47,7 +47,21 @@ AC_DEFUN([coreutils_MACROS],
   AC_CHECK_FUNCS_ONCE([directio])
 
   # Used by install.c.
-  AC_CHECK_FUNCS_ONCE([matchpathcon_init_prefix])
+  coreutils_saved_libs=$LIBS
+    LIBS="$LIBS $LIB_SELINUX"
+    AC_CHECK_FUNCS([matchpathcon_init_prefix], [],
+    [
+      case "$ac_cv_search_setfilecon:$ac_cv_header_selinux_selinux_h" in
+	no:*) # SELinux disabled
+	  ;;
+	*:no) # SELinux disabled
+	  ;;
+	*)
+	AC_MSG_WARN([SELinux enabled, but matchpathcon_init_prefix not found])
+	AC_MSG_WARN([The install utility may run slowly])
+      esac
+    ])
+  LIBS=$coreutils_saved_libs
 
   # Used by sort.c.
   AC_CHECK_FUNCS_ONCE([nl_langinfo])

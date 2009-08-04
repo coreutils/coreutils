@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  install runs faster again with SELinux enabled
+  [introduced in coreutils-7.0]
+
   ls -1U (with two or more arguments, at least one a nonempty directory)
   would print entry names *before* the name of the containing directory.
   Also fixed incorrect output of ls -1RU and ls -1sU.
