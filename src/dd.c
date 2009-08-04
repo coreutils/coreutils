@@ -1869,7 +1869,6 @@ main (int argc, char **argv)
 	      < 0))
 	error (EXIT_FAILURE, errno, _("opening %s"), quote (output_file));
 
-#if HAVE_FTRUNCATE
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
 	{
 	  uintmax_t size = seek_records * output_blocksize;
@@ -1902,7 +1901,6 @@ main (int argc, char **argv)
 		       size, quote (output_file));
 	    }
 	}
-#endif
     }
 
   install_signal_handlers ();
