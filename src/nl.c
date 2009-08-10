@@ -577,15 +577,15 @@ main (int argc, char **argv)
 
   header_del_len = len * 3;
   header_del = xmalloc (header_del_len + 1);
-  strcat (strcat (strcpy (header_del, section_del), section_del), section_del);
+  stpcpy (stpcpy (stpcpy (header_del, section_del), section_del), section_del);
 
   body_del_len = len * 2;
   body_del = xmalloc (body_del_len + 1);
-  strcat (strcpy (body_del, section_del), section_del);
+  stpcpy (stpcpy (body_del, section_del), section_del);
 
   footer_del_len = len;
   footer_del = xmalloc (footer_del_len + 1);
-  strcpy (footer_del, section_del);
+  stpcpy (footer_del, section_del);
 
   /* Initialize the input buffer.  */
   initbuffer (&line_buf);

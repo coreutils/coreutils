@@ -363,10 +363,8 @@ print_long_entry (const char name[])
       char buf[1024];
       const char *const baseproject = "/.project";
       char *const project =
-      xmalloc (strlen (pw->pw_dir) + strlen (baseproject) + 1);
-
-      strcpy (project, pw->pw_dir);
-      strcat (project, baseproject);
+        xmalloc (strlen (pw->pw_dir) + strlen (baseproject) + 1);
+      stpcpy (stpcpy (project, pw->pw_dir), baseproject);
 
       stream = fopen (project, "r");
       if (stream)
@@ -389,10 +387,8 @@ print_long_entry (const char name[])
       char buf[1024];
       const char *const baseplan = "/.plan";
       char *const plan =
-      xmalloc (strlen (pw->pw_dir) + strlen (baseplan) + 1);
-
-      strcpy (plan, pw->pw_dir);
-      strcat (plan, baseplan);
+        xmalloc (strlen (pw->pw_dir) + strlen (baseplan) + 1);
+      stpcpy (stpcpy (plan, pw->pw_dir), baseplan);
 
       stream = fopen (plan, "r");
       if (stream)
