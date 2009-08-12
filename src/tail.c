@@ -1193,7 +1193,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           if (evlen < fnlen)
             evlen = fnlen;
 
-          f[i].wd = 0;
+          f[i].wd = -1;
 
           if (follow_mode == Follow_name)
             {
@@ -1231,8 +1231,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           if (hash_insert (wd_table, &(f[i])) == NULL)
             xalloc_die ();
 
-          if (follow_mode == Follow_name || f[i].wd)
-            found_watchable = true;
+          found_watchable = true;
         }
     }
 
