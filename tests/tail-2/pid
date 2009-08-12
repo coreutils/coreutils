@@ -66,9 +66,12 @@ if test -n "$state"; then
 fi
 
 # Ensure that tail --pid=PID exits successfully when PID is dead.
-# Use an unlikely-to-be-live PID: 2^31-1
+# Use an unlikely-to-be-live PID
 getlimits_
-tail --pid=$INT_MAX -f /dev/null || fail=1
+timeout 1 tail -s.1 --pid=$PID_T_MAX -f /dev/null
+ret=$?
+test $ret = 124 && skip_test_ "pid $PID_T_MAX present"
+test $ret = 0 || fail=1
 
 # Ensure fractional sleep parameter is honored with --pid
 timeout 1 tail -s.1 -f /dev/null --pid=$PID_T_MAX
