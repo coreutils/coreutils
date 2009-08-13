@@ -118,18 +118,18 @@ static bool owner_failure_ok (struct cp_options const *x);
 static char const *top_level_src_name;
 static char const *top_level_dst_name;
 
-/* Wrap utimensat-with-AT_FDCWD and utimens, to keep these
-   cpp directives out of the main code.  */
+/* Set the timestamp of symlink, FILE, to TIMESPEC.
+   If this system lacks support for that, simply return 0.  */
 static inline int
-utimensat_if_possible (char const *file, struct timespec const *timespec)
+utimens_symlink (char const *file, struct timespec const *timespec)
 {
-  return
 #if HAVE_UTIMENSAT
-    utimensat (AT_FDCWD, file, timespec, AT_SYMLINK_NOFOLLOW)
+  return utimensat (AT_FDCWD, file, timespec, AT_SYMLINK_NOFOLLOW);
 #else
-    utimens (file, timespec)
+  /* Don't set errno=ENOTSUP here as we don't want
+     to output an error message for this case.  */
+  return 0;
 #endif
-    ;
 }
 
 /* Perform the O(1) btrfs clone operation, if possible.
@@ -2117,7 +2117,10 @@ copy_internal (char const *src_name, char const *dst_name,
       timespec[0] = get_stat_atime (&src_sb);
       timespec[1] = get_stat_mtime (&src_sb);
 
-      if (utimensat_if_possible (dst_name, timespec) != 0)
+      if ((dest_is_symlink
+	   ? utimens_symlink (dst_name, timespec)
+	   : utimens (dst_name, timespec))
+	  != 0)
 	{
 	  error (0, errno, _("preserving times for %s"), quote (dst_name));
 	  if (x->require_preserve)

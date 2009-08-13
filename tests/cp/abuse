@@ -37,7 +37,7 @@ for i in dangling-dest existing-dest; do
   test $i = existing-dest && echo i > t
   test $i = dangling-dest && rm -f t
 
-  cp -a a/1 b/1 c 2> out && fail=1
+  cp -dR a/1 b/1 c 2> out && fail=1
 
   compare out exp || fail=1
 
