@@ -1828,6 +1828,8 @@ main (int argc, char **argv)
   int exit_status;
   off_t offset;
 
+  install_signal_handlers ();
+
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -1927,8 +1929,6 @@ main (int argc, char **argv)
 	    }
 	}
     }
-
-  install_signal_handlers ();
 
   start_time = gethrxtime ();
 

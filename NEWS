@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd's oflag=direct option now works even when the size of the input
   is not a multiple of e.g., 512 bytes.
 
+  dd now handles signals consistently even when they're received
+  before data copying has started.
+
   install runs faster again with SELinux enabled
   [introduced in coreutils-7.0]
 
