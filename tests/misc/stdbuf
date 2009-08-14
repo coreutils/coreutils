@@ -21,6 +21,12 @@ if test "$VERBOSE" = yes; then
   stdbuf --version
 fi
 
+# skip this test if stdbuf isn't being built.
+case " $built_programs " in
+  *" stdbuf "*) ;;
+  *) skip_test_ 'stdbuf not built';;
+esac
+
 . $srcdir/test-lib.sh
 getlimits_
 
