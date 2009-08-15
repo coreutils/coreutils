@@ -101,9 +101,6 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Wno-pointer-sign])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
 
-  # Offenders in pre-fts remove.c; FIXME: remove upon remove.c rewrite
-  gl_WARN_ADD([-Wno-jump-misses-init])
-
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
   gl_WARN_ADD([-Wno-logical-op])

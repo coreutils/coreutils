@@ -493,25 +493,27 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
             }
         }
 
-      Ternary is_empty_directory;
-      enum RM_status s = prompt (fts, ent, true /*is_dir*/, x,
-                                 PA_DESCEND_INTO_DIR, &is_empty_directory);
+      {
+        Ternary is_empty_directory;
+        enum RM_status s = prompt (fts, ent, true /*is_dir*/, x,
+                                   PA_DESCEND_INTO_DIR, &is_empty_directory);
 
-      if (s == RM_OK && is_empty_directory == T_YES)
-        {
-          /* When we know (from prompt when in interactive mode)
-             that this is an empty directory, don't prompt twice.  */
-          s = excise (fts, ent, x, true);
-          fts_skip_tree (fts, ent);
-        }
+        if (s == RM_OK && is_empty_directory == T_YES)
+          {
+            /* When we know (from prompt when in interactive mode)
+               that this is an empty directory, don't prompt twice.  */
+            s = excise (fts, ent, x, true);
+            fts_skip_tree (fts, ent);
+          }
 
-      if (s != RM_OK)
-        {
-          mark_ancestor_dirs (ent);
-          fts_skip_tree (fts, ent);
-        }
+        if (s != RM_OK)
+          {
+            mark_ancestor_dirs (ent);
+            fts_skip_tree (fts, ent);
+          }
 
-      return s;
+        return s;
+      }
 
     case FTS_F:			/* regular file */
     case FTS_NS:		/* stat(2) failed */
@@ -521,26 +523,27 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
     case FTS_DNR:		/* unreadable directory */
     case FTS_NSOK:		/* e.g., dangling symlink */
     case FTS_DEFAULT:		/* none of the above */
-      ;
-      /* With --one-file-system, do not attempt to remove a mount point.
-         fts' FTS_XDEV ensures that we don't process any entries under
-         the mount point.  */
-      if (ent->fts_info == FTS_DP
-          && x->one_file_system
-          && FTS_ROOTLEVEL < ent->fts_level
-          && ent->fts_statp->st_ino != fts->fts_dev)
-        {
-          mark_ancestor_dirs (ent);
-          error (0, 0, _("skipping %s, since it's on a different device"),
-                 quote (ent->fts_path));
-          return RM_ERROR;
-        }
+      {
+        /* With --one-file-system, do not attempt to remove a mount point.
+           fts' FTS_XDEV ensures that we don't process any entries under
+           the mount point.  */
+        if (ent->fts_info == FTS_DP
+            && x->one_file_system
+            && FTS_ROOTLEVEL < ent->fts_level
+            && ent->fts_statp->st_ino != fts->fts_dev)
+          {
+            mark_ancestor_dirs (ent);
+            error (0, 0, _("skipping %s, since it's on a different device"),
+                   quote (ent->fts_path));
+            return RM_ERROR;
+          }
 
-      bool is_dir = ent->fts_info == FTS_DP || ent->fts_info == FTS_DNR;
-      s = prompt (fts, ent, is_dir, x, PA_REMOVE_DIR, NULL);
-      if (s != RM_OK)
-        return s;
-      return excise (fts, ent, x, is_dir);
+        bool is_dir = ent->fts_info == FTS_DP || ent->fts_info == FTS_DNR;
+        enum RM_status s = prompt (fts, ent, is_dir, x, PA_REMOVE_DIR, NULL);
+        if (s != RM_OK)
+          return s;
+        return excise (fts, ent, x, is_dir);
+      }
 
     case FTS_DC:		/* directory that causes cycles */
       error (0, 0, _("\
