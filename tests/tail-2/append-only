@@ -39,7 +39,7 @@ fail=0
 
 sleep 1 &
 pid=$!
-tail --pid=$pid -f f > /dev/null 2>&1 || fail=1
+tail --pid=$pid -f f || fail=1
 chattr -a f 2>/dev/null
 
 Exit $fail
