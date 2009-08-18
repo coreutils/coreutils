@@ -21,14 +21,14 @@ if test "$VERBOSE" = yes; then
   stdbuf --version
 fi
 
+. $srcdir/test-lib.sh
+getlimits_
+
 # skip this test if stdbuf isn't being built.
 case " $built_programs " in
   *" stdbuf "*) ;;
   *) skip_test_ 'stdbuf not built';;
 esac
-
-. $srcdir/test-lib.sh
-getlimits_
 
 # Use a fifo rather than a pipe in the tests below
 # so that the producer (uniq) will wait until the
