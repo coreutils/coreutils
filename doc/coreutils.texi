@@ -1688,9 +1688,9 @@ Analogous to @option{--body-numbering}.
 Analogous to @option{--body-numbering}.
 
 @item -i @var{number}
-@itemx --page-increment=@var{number}
+@itemx --line-increment=@var{number}
 @opindex -i
-@opindex --page-increment
+@opindex --line-increment
 Increment line numbers by @var{number} (default 1).
 
 @item -l @var{number}

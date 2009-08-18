@@ -40,6 +40,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   were renamed from 'HARDLINK' and 'hl' which were available since
   coreutils-7.1 when this feature was introduced.
 
+** Deprecated options
+
+  nl --page-increment: deprecated in favor of --line-increment, the new option
+  maintains the previous semantics and the same short option, -i.
+
 ** New features
 
   chroot now accepts the options --userspec and --groups.

@@ -144,13 +144,20 @@ static intmax_t line_no;
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
+enum
+{
+  PAGE_INCREMENT_OPTION_DEPRECATED = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
   {"header-numbering", required_argument, NULL, 'h'},
   {"body-numbering", required_argument, NULL, 'b'},
   {"footer-numbering", required_argument, NULL, 'f'},
   {"starting-line-number", required_argument, NULL, 'v'},
-  {"page-increment", required_argument, NULL, 'i'},
+  {"line-increment", required_argument, NULL, 'i'},
+  /* FIXME: page-increment is deprecated, remove in dec-2011.  */
+  {"page-increment", required_argument, NULL, PAGE_INCREMENT_OPTION_DEPRECATED},
   {"no-renumber", no_argument, NULL, 'p'},
   {"join-blank-lines", required_argument, NULL, 'l'},
   {"number-separator", required_argument, NULL, 's'},
@@ -191,7 +198,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
-  -i, --page-increment=NUMBER     line number increment at each line\n\
+  -i, --line-increment=NUMBER     line number increment at each line\n\
   -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
   -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
   -p, --no-renumber               do not reset line numbers at logical pages\n\
@@ -504,6 +511,10 @@ main (int argc, char **argv)
 	      ok = false;
 	    }
 	  break;
+  case PAGE_INCREMENT_OPTION_DEPRECATED:
+    error (0, 0, _("WARNING: --page-increment is deprecated; "
+                   "use --line-increment instead"));
+    /* fall through */
 	case 'i':
 	  if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
 		 && 0 < page_incr))
