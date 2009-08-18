@@ -72,7 +72,7 @@ BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
 # Also remove these sometimes-built programs.
-# For example, even when excluded, they're built via check-AUTHORS.
+# For example, even when excluded, they're built via sc_check-AUTHORS.
 CLEANFILES += $(no_install__progs)
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
@@ -377,7 +377,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-duplicate-no-install check-AUTHORS
+check: check-README check-duplicate-no-install
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -401,8 +401,8 @@ check-duplicate-no-install: tr
 # translation inhibits printing of UTF-8 names, just skip this test.
 au_dotdot = authors-dotdot
 au_actual = authors-actual
-.PHONY: check-AUTHORS
-check-AUTHORS: $(all_programs)
+.PHONY: sc_check-AUTHORS
+sc_check-AUTHORS: $(all_programs)
 	$(AM_V_GEN)locale=en_US.UTF-8;			\
 	LC_ALL="$$locale" ./cat --version		\
 	    | grep ' Torbjorn '	> /dev/null		\

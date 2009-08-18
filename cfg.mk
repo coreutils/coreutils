@@ -176,6 +176,10 @@ ALL_RECURSIVE_TARGETS += sc_tight_scope
 sc_tight_scope:
 	@$(MAKE) -C src $@
 
+ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
+sc_check-AUTHORS:
+	@$(MAKE) -C src $@
+
 # Perl-based tests used to exec perl from a #!/bin/sh script.
 # Now they all start with #!/usr/bin/perl and the portability
 # infrastructure is in tests/Makefile.am.  Make sure no old-style
