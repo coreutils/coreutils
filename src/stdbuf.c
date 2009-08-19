@@ -108,10 +108,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\n\
-If MODE is `L' then corresponding stream will be line buffered.\n\
+If MODE is `L' the corresponding stream will be line buffered.\n\
 This option is invalid with standard input.\n"), stdout);
       fputs (_("\n\
-If MODE is `0' then corresponding stream will be unbuffered.\n\
+If MODE is `0' the corresponding stream will be unbuffered.\n\
 "), stdout);
       fputs (_("\n\
 Otherwise MODE is a number which may be followed by one of the following:\n\
