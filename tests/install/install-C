@@ -31,10 +31,10 @@ mode3=2755
 fail=0
 
 echo test > a || framework_failure
-echo "\`a' -> \`b'" > out_installed_first
+echo "\`a' -> \`b'" > out_installed_first || framework_failure
 echo "removed \`b'
-\`a' -> \`b'" > out_installed_second
-> out_empty
+\`a' -> \`b'" > out_installed_second || framework_failure
+: > out_empty || framework_failure
 
 # destination file does not exist
 ginstall -Cv -m$mode1 a b > out || fail=1
