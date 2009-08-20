@@ -30,6 +30,14 @@ case " $built_programs " in
   *) skip_test_ 'stdbuf not built';;
 esac
 
+# stdbuf fails when the absolute top build dir name contains e.g., space, TAB, NL
+lf='
+'
+case $abs_top_builddir in
+  *[\\\"\#\$\&\'\`$lf\ \	]*)
+    skip_test_ "unsafe absolute build directory name: $abs_top_builddir";;
+esac
+
 # Use a fifo rather than a pipe in the tests below
 # so that the producer (uniq) will wait until the
 # consumer (dd) opens the fifo therefore increasing
