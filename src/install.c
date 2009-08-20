@@ -189,7 +189,7 @@ static bool
 extra_mode (mode_t input)
 {
   const mode_t mask = ~S_IRWXUGO & ~S_IFMT;
-  return input & mask;
+  return !! (input & mask);
 }
 
 /* Return true if copy of file SRC_NAME to file DEST_NAME is necessary. */
