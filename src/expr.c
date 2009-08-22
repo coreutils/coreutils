@@ -89,7 +89,7 @@ mpz_mul (mpz_t r, mpz_t a0, mpz_t b0)
   intmax_t b = b0[0];
   intmax_t val = a * b;
   if (! (a == 0 || b == 0
-	 || ((val < 0) == ((a < 0) ^ (b < 0)) && val / a == b)))
+         || ((val < 0) == ((a < 0) ^ (b < 0)) && val / a == b)))
     integer_overflow ('*');
   r[0] = val;
 }
@@ -196,14 +196,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s EXPRESSION\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       putchar ('\n');
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -231,7 +231,7 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
   ARG1 - ARG2       arithmetic difference of ARG1 and ARG2\n\
 "), stdout);
       /* Tell xgettext that the "% A" below is not a printf-style
-	 format string:  xgettext:no-c-format */
+         format string:  xgettext:no-c-format */
       fputs (_("\
 \n\
   ARG1 * ARG2       arithmetic product of ARG1 and ARG2\n\
@@ -309,7 +309,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
   if (argc > 1 && STREQ (argv[1], "--"))
@@ -398,20 +398,20 @@ null (VALUE *v)
       return mpz_sgn (v->u.i) == 0;
     case string:
       {
-	char const *cp = v->u.s;
-	if (*cp == '\0')
-	  return true;
+        char const *cp = v->u.s;
+        if (*cp == '\0')
+          return true;
 
-	cp += (*cp == '-');
+        cp += (*cp == '-');
 
-	do
-	  {
-	    if (*cp != '0')
-	      return false;
-	  }
-	while (*++cp);
+        do
+          {
+            if (*cp != '0')
+              return false;
+          }
+        while (*++cp);
 
-	return true;
+        return true;
       }
     default:
       abort ();
@@ -442,10 +442,10 @@ tostring (VALUE *v)
     {
     case integer:
       {
-	char *s = mpz_get_str (NULL, 10, v->u.i);
-	mpz_clear (v->u.i);
-	v->u.s = s;
-	v->type = string;
+        char *s = mpz_get_str (NULL, 10, v->u.i);
+        mpz_clear (v->u.i);
+        v->u.s = s;
+        v->type = string;
       }
       break;
     case string:
@@ -466,15 +466,15 @@ toarith (VALUE *v)
       return true;
     case string:
       {
-	char *s = v->u.s;
+        char *s = v->u.s;
 
-	if (! looks_like_integer (s))
-	  return false;
-	if (mpz_init_set_str (v->u.i, s, 10) != 0 && !HAVE_GMP)
-	  error (EXPR_FAILURE, ERANGE, "%s", s);
-	free (s);
-	v->type = integer;
-	return true;
+        if (! looks_like_integer (s))
+          return false;
+        if (mpz_init_set_str (v->u.i, s, 10) != 0 && !HAVE_GMP)
+          error (EXPR_FAILURE, ERANGE, "%s", s);
+        free (s);
+        v->type = integer;
+        return true;
       }
     default:
       abort ();
@@ -493,7 +493,7 @@ getsize (mpz_t i)
     {
       unsigned long int ul = mpz_get_ui (i);
       if (ul < SIZE_MAX)
-	return ul;
+        return ul;
     }
   return SIZE_MAX - 1;
 }
@@ -575,25 +575,25 @@ docolon (VALUE *sv, VALUE *pv)
     {
       /* Were \(...\) used? */
       if (re_buffer.re_nsub > 0)
-	{
-	  sv->u.s[re_regs.end[1]] = '\0';
-	  v = str_value (sv->u.s + re_regs.start[1]);
-	}
+        {
+          sv->u.s[re_regs.end[1]] = '\0';
+          v = str_value (sv->u.s + re_regs.start[1]);
+        }
       else
-	v = int_value (matchlen);
+        v = int_value (matchlen);
     }
   else if (matchlen == -1)
     {
       /* Match failed -- return the right kind of null.  */
       if (re_buffer.re_nsub > 0)
-	v = str_value ("");
+        v = str_value ("");
       else
-	v = int_value (0);
+        v = int_value (0);
     }
   else
     error (EXPR_FAILURE,
-	   (matchlen == -2 ? errno : EOVERFLOW),
-	   _("error in regular expression matcher"));
+           (matchlen == -2 ? errno : EOVERFLOW),
+           _("error in regular expression matcher"));
 
   if (0 < re_regs.num_regs)
     {
@@ -622,7 +622,7 @@ eval7 (bool evaluate)
     {
       v = eval (evaluate);
       if (!nextarg (")"))
-	syntax_error ();
+        syntax_error ();
       return v;
     }
 
@@ -649,7 +649,7 @@ eval6 (bool evaluate)
   if (nextarg ("+"))
     {
       if (nomoreargs ())
-	syntax_error ();
+        syntax_error ();
       return str_value (*args++);
     }
   else if (nextarg ("length"))
@@ -665,12 +665,12 @@ eval6 (bool evaluate)
       l = eval6 (evaluate);
       r = eval6 (evaluate);
       if (evaluate)
-	{
-	  v = docolon (l, r);
-	  freev (l);
-	}
+        {
+          v = docolon (l, r);
+          freev (l);
+        }
       else
-	v = l;
+        v = l;
       freev (r);
       return v;
     }
@@ -698,25 +698,25 @@ eval6 (bool evaluate)
       llen = strlen (l->u.s);
 
       if (!toarith (i1) || !toarith (i2))
-	v = str_value ("");
+        v = str_value ("");
       else
-	{
-	  size_t pos = getsize (i1->u.i);
-	  size_t len = getsize (i2->u.i);
+        {
+          size_t pos = getsize (i1->u.i);
+          size_t len = getsize (i2->u.i);
 
-	  if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
-	    v = str_value ("");
-	  else
-	    {
-	      size_t vlen = MIN (len, llen - pos + 1);
-	      char *vlim;
-	      v = xmalloc (sizeof *v);
-	      v->type = string;
-	      v->u.s = xmalloc (vlen + 1);
-	      vlim = mempcpy (v->u.s, l->u.s + pos - 1, vlen);
-	      *vlim = '\0';
-	    }
-	}
+          if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
+            v = str_value ("");
+          else
+            {
+              size_t vlen = MIN (len, llen - pos + 1);
+              char *vlim;
+              v = xmalloc (sizeof *v);
+              v->type = string;
+              v->u.s = xmalloc (vlen + 1);
+              vlim = mempcpy (v->u.s, l->u.s + pos - 1, vlen);
+              *vlim = '\0';
+            }
+        }
       freev (l);
       freev (i1);
       freev (i2);
@@ -743,18 +743,18 @@ eval5 (bool evaluate)
   while (1)
     {
       if (nextarg (":"))
-	{
-	  r = eval6 (evaluate);
-	  if (evaluate)
-	    {
-	      v = docolon (l, r);
-	      freev (l);
-	      l = v;
-	    }
-	  freev (r);
-	}
+        {
+          r = eval6 (evaluate);
+          if (evaluate)
+            {
+              v = docolon (l, r);
+              freev (l);
+              l = v;
+            }
+          freev (r);
+        }
       else
-	return l;
+        return l;
     }
 }
 
@@ -774,25 +774,25 @@ eval4 (bool evaluate)
   while (1)
     {
       if (nextarg ("*"))
-	fxn = multiply;
+        fxn = multiply;
       else if (nextarg ("/"))
-	fxn = divide;
+        fxn = divide;
       else if (nextarg ("%"))
-	fxn = mod;
+        fxn = mod;
       else
-	return l;
+        return l;
       r = eval5 (evaluate);
       if (evaluate)
-	{
-	  if (!toarith (l) || !toarith (r))
-	    error (EXPR_INVALID, 0, _("non-numeric argument"));
-	  if (fxn != multiply && mpz_sgn (r->u.i) == 0)
-	    error (EXPR_INVALID, 0, _("division by zero"));
-	  ((fxn == multiply ? mpz_mul
-	    : fxn == divide ? mpz_tdiv_q
-	    : mpz_tdiv_r)
-	   (l->u.i, l->u.i, r->u.i));
-	}
+        {
+          if (!toarith (l) || !toarith (r))
+            error (EXPR_INVALID, 0, _("non-numeric argument"));
+          if (fxn != multiply && mpz_sgn (r->u.i) == 0)
+            error (EXPR_INVALID, 0, _("division by zero"));
+          ((fxn == multiply ? mpz_mul
+            : fxn == divide ? mpz_tdiv_q
+            : mpz_tdiv_r)
+           (l->u.i, l->u.i, r->u.i));
+        }
       freev (r);
     }
 }
@@ -813,18 +813,18 @@ eval3 (bool evaluate)
   while (1)
     {
       if (nextarg ("+"))
-	fxn = plus;
+        fxn = plus;
       else if (nextarg ("-"))
-	fxn = minus;
+        fxn = minus;
       else
-	return l;
+        return l;
       r = eval4 (evaluate);
       if (evaluate)
-	{
-	  if (!toarith (l) || !toarith (r))
-	    error (EXPR_INVALID, 0, _("non-numeric argument"));
-	  (fxn == plus ? mpz_add : mpz_sub) (l->u.i, l->u.i, r->u.i);
-	}
+        {
+          if (!toarith (l) || !toarith (r))
+            error (EXPR_INVALID, 0, _("non-numeric argument"));
+          (fxn == plus ? mpz_add : mpz_sub) (l->u.i, l->u.i, r->u.i);
+        }
       freev (r);
     }
 }
@@ -844,62 +844,62 @@ eval2 (bool evaluate)
     {
       VALUE *r;
       enum
-	{
-	  less_than, less_equal, equal, not_equal, greater_equal, greater_than
-	} fxn;
+        {
+          less_than, less_equal, equal, not_equal, greater_equal, greater_than
+        } fxn;
       bool val = false;
 
       if (nextarg ("<"))
-	fxn = less_than;
+        fxn = less_than;
       else if (nextarg ("<="))
-	fxn = less_equal;
+        fxn = less_equal;
       else if (nextarg ("=") || nextarg ("=="))
-	fxn = equal;
+        fxn = equal;
       else if (nextarg ("!="))
-	fxn = not_equal;
+        fxn = not_equal;
       else if (nextarg (">="))
-	fxn = greater_equal;
+        fxn = greater_equal;
       else if (nextarg (">"))
-	fxn = greater_than;
+        fxn = greater_than;
       else
-	return l;
+        return l;
       r = eval3 (evaluate);
 
       if (evaluate)
-	{
-	  int cmp;
-	  tostring (l);
-	  tostring (r);
+        {
+          int cmp;
+          tostring (l);
+          tostring (r);
 
-	  if (looks_like_integer (l->u.s) && looks_like_integer (r->u.s))
-	    cmp = strintcmp (l->u.s, r->u.s);
-	  else
-	    {
-	      errno = 0;
-	      cmp = strcoll (l->u.s, r->u.s);
+          if (looks_like_integer (l->u.s) && looks_like_integer (r->u.s))
+            cmp = strintcmp (l->u.s, r->u.s);
+          else
+            {
+              errno = 0;
+              cmp = strcoll (l->u.s, r->u.s);
 
-	      if (errno)
-		{
-		  error (0, errno, _("string comparison failed"));
-		  error (0, 0, _("set LC_ALL='C' to work around the problem"));
-		  error (EXPR_INVALID, 0,
-			 _("the strings compared were %s and %s"),
-			 quotearg_n_style (0, locale_quoting_style, l->u.s),
-			 quotearg_n_style (1, locale_quoting_style, r->u.s));
-		}
-	    }
+              if (errno)
+                {
+                  error (0, errno, _("string comparison failed"));
+                  error (0, 0, _("set LC_ALL='C' to work around the problem"));
+                  error (EXPR_INVALID, 0,
+                         _("the strings compared were %s and %s"),
+                         quotearg_n_style (0, locale_quoting_style, l->u.s),
+                         quotearg_n_style (1, locale_quoting_style, r->u.s));
+                }
+            }
 
-	  switch (fxn)
-	    {
-	    case less_than:     val = (cmp <  0); break;
-	    case less_equal:    val = (cmp <= 0); break;
-	    case equal:         val = (cmp == 0); break;
-	    case not_equal:     val = (cmp != 0); break;
-	    case greater_equal: val = (cmp >= 0); break;
-	    case greater_than:  val = (cmp >  0); break;
-	    default: abort ();
-	    }
-	}
+          switch (fxn)
+            {
+            case less_than:     val = (cmp <  0); break;
+            case less_equal:    val = (cmp <= 0); break;
+            case equal:         val = (cmp == 0); break;
+            case not_equal:     val = (cmp != 0); break;
+            case greater_equal: val = (cmp >= 0); break;
+            case greater_than:  val = (cmp >  0); break;
+            default: abort ();
+            }
+        }
 
       freev (l);
       freev (r);
@@ -922,19 +922,19 @@ eval1 (bool evaluate)
   while (1)
     {
       if (nextarg ("&"))
-	{
-	  r = eval2 (evaluate & ~ null (l));
-	  if (null (l) || null (r))
-	    {
-	      freev (l);
-	      freev (r);
-	      l = int_value (0);
-	    }
-	  else
-	    freev (r);
-	}
+        {
+          r = eval2 (evaluate & ~ null (l));
+          if (null (l) || null (r))
+            {
+              freev (l);
+              freev (r);
+              l = int_value (0);
+            }
+          else
+            freev (r);
+        }
       else
-	return l;
+        return l;
     }
 }
 
@@ -953,22 +953,22 @@ eval (bool evaluate)
   while (1)
     {
       if (nextarg ("|"))
-	{
-	  r = eval1 (evaluate & null (l));
-	  if (null (l))
-	    {
-	      freev (l);
-	      l = r;
-	      if (null (l))
-		{
-		  freev (l);
-		  l = int_value (0);
-		}
-	    }
-	  else
-	    freev (r);
-	}
+        {
+          r = eval1 (evaluate & null (l));
+          if (null (l))
+            {
+              freev (l);
+              l = r;
+              if (null (l))
+                {
+                  freev (l);
+                  l = int_value (0);
+                }
+            }
+          else
+            freev (r);
+        }
       else
-	return l;
+        return l;
     }
 }

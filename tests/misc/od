@@ -51,7 +51,7 @@ my @Tests =
                                                {IN=>{i=>'c'}}, {OUT=>''}],
      # Skip the sum of the lengths of the first three inputs, printing the 4th.
      ['j-bug4', '-c -j 3 -An', {IN=>{g=>'a'}}, {IN=>{h=>'b'}},
-			       {IN=>{i=>'c'}}, {IN=>{j=>'d'}}, {OUT=>"   d\n"}],
+                               {IN=>{i=>'c'}}, {IN=>{j=>'d'}}, {OUT=>"   d\n"}],
 
      # Ensure that od -j doesn't fseek across a nonempty file in /proc,
      # even if the kernel reports that the file has stat.st_size = 0.

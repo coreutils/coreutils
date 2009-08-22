@@ -161,13 +161,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... FILE1 FILE2\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
@@ -242,26 +242,26 @@ xfields (struct line *line)
     {
       char *sep;
       for (; (sep = memchr (ptr, tab, lim - ptr)) != NULL; ptr = sep + 1)
-	extract_field (line, ptr, sep - ptr);
+        extract_field (line, ptr, sep - ptr);
     }
   else
     {
       /* Skip leading blanks before the first field.  */
       while (isblank (to_uchar (*ptr)))
-	if (++ptr == lim)
-	  return;
+        if (++ptr == lim)
+          return;
 
       do
-	{
-	  char *sep;
-	  for (sep = ptr + 1; sep != lim && ! isblank (to_uchar (*sep)); sep++)
-	    continue;
-	  extract_field (line, ptr, sep - ptr);
-	  if (sep == lim)
-	    return;
-	  for (ptr = sep + 1; ptr != lim && isblank (to_uchar (*ptr)); ptr++)
-	    continue;
-	}
+        {
+          char *sep;
+          for (sep = ptr + 1; sep != lim && ! isblank (to_uchar (*sep)); sep++)
+            continue;
+          extract_field (line, ptr, sep - ptr);
+          if (sep == lim)
+            return;
+          for (ptr = sep + 1; ptr != lim && isblank (to_uchar (*ptr)); ptr++)
+            continue;
+        }
       while (ptr != lim);
     }
 
@@ -283,7 +283,7 @@ freeline (struct line *line)
 
 static int
 keycmp (struct line const *line1, struct line const *line2,
-	size_t jf_1, size_t jf_2)
+        size_t jf_1, size_t jf_2)
 {
   /* Start of field to compare in each file.  */
   char *beg1;
@@ -329,7 +329,7 @@ keycmp (struct line const *line1, struct line const *line2,
   else
     {
       if (hard_LC_COLLATE)
-	return xmemcoll (beg1, len1, beg2, len2);
+        return xmemcoll (beg1, len1, beg2, len2);
       diff = memcmp (beg1, beg2, MIN (len1, len2));
     }
 
@@ -351,26 +351,26 @@ keycmp (struct line const *line1, struct line const *line2,
 
 static void
 check_order (const struct line *prev,
-	     const struct line *current,
-	     int whatfile)
+             const struct line *current,
+             int whatfile)
 {
   if (check_input_order != CHECK_ORDER_DISABLED
       && ((check_input_order == CHECK_ORDER_ENABLED) || seen_unpairable))
     {
       if (!issued_disorder_warning[whatfile-1])
-	{
-	  size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
-	  if (keycmp (prev, current, join_field, join_field) > 0)
-	    {
-	      error ((check_input_order == CHECK_ORDER_ENABLED
-		      ? EXIT_FAILURE : 0),
-		     0, _("file %d is not in sorted order"), whatfile);
+        {
+          size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
+          if (keycmp (prev, current, join_field, join_field) > 0)
+            {
+              error ((check_input_order == CHECK_ORDER_ENABLED
+                      ? EXIT_FAILURE : 0),
+                     0, _("file %d is not in sorted order"), whatfile);
 
-	      /* If we get to here, the message was just a warning, but we
-		 want only to issue it once. */
-	      issued_disorder_warning[whatfile-1] = true;
-	    }
-	}
+              /* If we get to here, the message was just a warning, but we
+                 want only to issue it once. */
+              issued_disorder_warning[whatfile-1] = true;
+            }
+        }
     }
 }
 
@@ -411,7 +411,7 @@ get_line (FILE *fp, struct line **linep, int which)
   if (! readlinebuffer (&line->buf, fp))
     {
       if (ferror (fp))
-	error (EXIT_FAILURE, errno, _("read error"));
+        error (EXIT_FAILURE, errno, _("read error"));
       freeline (line);
       return false;
     }
@@ -433,10 +433,10 @@ free_spareline (void)
   for (i = 0; i < ARRAY_CARDINALITY (spareline); i++)
     {
       if (spareline[i])
-	{
-	  freeline (spareline[i]);
-	  free (spareline[i]);
-	}
+        {
+          freeline (spareline[i]);
+          free (spareline[i]);
+        }
     }
 }
 
@@ -458,7 +458,7 @@ getseq (FILE *fp, struct seq *seq, int whichfile)
       size_t i;
       seq->lines = X2NREALLOC (seq->lines, &seq->alloc);
       for (i = seq->count; i < seq->alloc; i++)
-	seq->lines[i] = NULL;
+        seq->lines[i] = NULL;
     }
 
   if (get_line (fp, &seq->lines[seq->count], whichfile))
@@ -487,9 +487,9 @@ delseq (struct seq *seq)
   for (i = 0; i < seq->alloc; i++)
     if (seq->lines[i])
       {
-	if (seq->lines[i]->buf.buffer)
-	  freeline (seq->lines[i]);
-	free (seq->lines[i]);
+        if (seq->lines[i]->buf.buffer)
+          freeline (seq->lines[i]);
+        free (seq->lines[i]);
       }
   free (seq->lines);
 }
@@ -507,9 +507,9 @@ prfield (size_t n, struct line const *line)
     {
       len = line->fields[n].len;
       if (len)
-	fwrite (line->fields[n].beg, 1, len, stdout);
+        fwrite (line->fields[n].beg, 1, len, stdout);
       else if (empty_filler)
-	fputs (empty_filler, stdout);
+        fputs (empty_filler, stdout);
     }
   else if (empty_filler)
     fputs (empty_filler, stdout);
@@ -530,34 +530,34 @@ prjoin (struct line const *line1, struct line const *line2)
 
       o = outlist;
       while (1)
-	{
-	  size_t field;
-	  struct line const *line;
+        {
+          size_t field;
+          struct line const *line;
 
-	  if (o->file == 0)
-	    {
-	      if (line1 == &uni_blank)
-	        {
-		  line = line2;
-		  field = join_field_2;
-		}
-	      else
-	        {
-		  line = line1;
-		  field = join_field_1;
-		}
-	    }
-	  else
-	    {
-	      line = (o->file == 1 ? line1 : line2);
-	      field = o->field;
-	    }
-	  prfield (field, line);
-	  o = o->next;
-	  if (o == NULL)
-	    break;
-	  putchar (output_separator);
-	}
+          if (o->file == 0)
+            {
+              if (line1 == &uni_blank)
+                {
+                  line = line2;
+                  field = join_field_2;
+                }
+              else
+                {
+                  line = line1;
+                  field = join_field_1;
+                }
+            }
+          else
+            {
+              line = (o->file == 1 ? line1 : line2);
+              field = o->field;
+            }
+          prfield (field, line);
+          o = o->next;
+          if (o == NULL)
+            break;
+          putchar (output_separator);
+        }
       putchar ('\n');
     }
   else
@@ -565,34 +565,34 @@ prjoin (struct line const *line1, struct line const *line2)
       size_t i;
 
       if (line1 == &uni_blank)
-	{
-	  struct line const *t;
-	  t = line1;
-	  line1 = line2;
-	  line2 = t;
-	}
+        {
+          struct line const *t;
+          t = line1;
+          line1 = line2;
+          line2 = t;
+        }
       prfield (join_field_1, line1);
       for (i = 0; i < join_field_1 && i < line1->nfields; ++i)
-	{
-	  putchar (output_separator);
-	  prfield (i, line1);
-	}
+        {
+          putchar (output_separator);
+          prfield (i, line1);
+        }
       for (i = join_field_1 + 1; i < line1->nfields; ++i)
-	{
-	  putchar (output_separator);
-	  prfield (i, line1);
-	}
+        {
+          putchar (output_separator);
+          prfield (i, line1);
+        }
 
       for (i = 0; i < join_field_2 && i < line2->nfields; ++i)
-	{
-	  putchar (output_separator);
-	  prfield (i, line2);
-	}
+        {
+          putchar (output_separator);
+          prfield (i, line2);
+        }
       for (i = join_field_2 + 1; i < line2->nfields; ++i)
-	{
-	  putchar (output_separator);
-	  prfield (i, line2);
-	}
+        {
+          putchar (output_separator);
+          prfield (i, line2);
+        }
       putchar ('\n');
     }
 }
@@ -619,75 +619,75 @@ join (FILE *fp1, FILE *fp2)
     {
       size_t i;
       diff = keycmp (seq1.lines[0], seq2.lines[0],
-		     join_field_1, join_field_2);
+                     join_field_1, join_field_2);
       if (diff < 0)
-	{
-	  if (print_unpairables_1)
-	    prjoin (seq1.lines[0], &uni_blank);
-	  advance_seq (fp1, &seq1, true, 1);
-	  seen_unpairable = true;
-	  continue;
-	}
+        {
+          if (print_unpairables_1)
+            prjoin (seq1.lines[0], &uni_blank);
+          advance_seq (fp1, &seq1, true, 1);
+          seen_unpairable = true;
+          continue;
+        }
       if (diff > 0)
-	{
-	  if (print_unpairables_2)
-	    prjoin (&uni_blank, seq2.lines[0]);
-	  advance_seq (fp2, &seq2, true, 2);
-	  seen_unpairable = true;
-	  continue;
-	}
+        {
+          if (print_unpairables_2)
+            prjoin (&uni_blank, seq2.lines[0]);
+          advance_seq (fp2, &seq2, true, 2);
+          seen_unpairable = true;
+          continue;
+        }
 
       /* Keep reading lines from file1 as long as they continue to
          match the current line from file2.  */
       eof1 = false;
       do
-	if (!advance_seq (fp1, &seq1, false, 1))
-	  {
-	    eof1 = true;
-	    ++seq1.count;
-	    break;
-	  }
+        if (!advance_seq (fp1, &seq1, false, 1))
+          {
+            eof1 = true;
+            ++seq1.count;
+            break;
+          }
       while (!keycmp (seq1.lines[seq1.count - 1], seq2.lines[0],
-		      join_field_1, join_field_2));
+                      join_field_1, join_field_2));
 
       /* Keep reading lines from file2 as long as they continue to
          match the current line from file1.  */
       eof2 = false;
       do
-	if (!advance_seq (fp2, &seq2, false, 2))
-	  {
-	    eof2 = true;
-	    ++seq2.count;
-	    break;
-	  }
+        if (!advance_seq (fp2, &seq2, false, 2))
+          {
+            eof2 = true;
+            ++seq2.count;
+            break;
+          }
       while (!keycmp (seq1.lines[0], seq2.lines[seq2.count - 1],
-		      join_field_1, join_field_2));
+                      join_field_1, join_field_2));
 
       if (print_pairables)
-	{
-	  for (i = 0; i < seq1.count - 1; ++i)
-	    {
-	      size_t j;
-	      for (j = 0; j < seq2.count - 1; ++j)
-		prjoin (seq1.lines[i], seq2.lines[j]);
-	    }
-	}
+        {
+          for (i = 0; i < seq1.count - 1; ++i)
+            {
+              size_t j;
+              for (j = 0; j < seq2.count - 1; ++j)
+                prjoin (seq1.lines[i], seq2.lines[j]);
+            }
+        }
 
       if (!eof1)
-	{
-	  SWAPLINES (seq1.lines[0], seq1.lines[seq1.count - 1]);
-	  seq1.count = 1;
-	}
+        {
+          SWAPLINES (seq1.lines[0], seq1.lines[seq1.count - 1]);
+          seq1.count = 1;
+        }
       else
-	seq1.count = 0;
+        seq1.count = 0;
 
       if (!eof2)
-	{
-	  SWAPLINES (seq2.lines[0], seq2.lines[seq2.count - 1]);
-	  seq2.count = 1;
-	}
+        {
+          SWAPLINES (seq2.lines[0], seq2.lines[seq2.count - 1]);
+          seq2.count = 1;
+        }
       else
-	seq2.count = 0;
+        seq2.count = 0;
     }
 
   /* If the user did not specify --check-order, and the we read the
@@ -703,29 +703,29 @@ join (FILE *fp1, FILE *fp2)
   if ((print_unpairables_1 || checktail) && seq1.count)
     {
       if (print_unpairables_1)
-	prjoin (seq1.lines[0], &uni_blank);
+        prjoin (seq1.lines[0], &uni_blank);
       seen_unpairable = true;
       while (get_line (fp1, linep, 1))
-	{
-	  if (print_unpairables_1)
-	    prjoin (*linep, &uni_blank);
-	  if (issued_disorder_warning[0] && !print_unpairables_1)
-	    break;
-	}
+        {
+          if (print_unpairables_1)
+            prjoin (*linep, &uni_blank);
+          if (issued_disorder_warning[0] && !print_unpairables_1)
+            break;
+        }
     }
 
   if ((print_unpairables_2 || checktail) && seq2.count)
     {
       if (print_unpairables_2)
-	prjoin (&uni_blank, seq2.lines[0]);
+        prjoin (&uni_blank, seq2.lines[0]);
       seen_unpairable = true;
       while (get_line (fp2, linep, 2))
-	{
-	  if (print_unpairables_2)
-	    prjoin (&uni_blank, *linep);
-	  if (issued_disorder_warning[1] && !print_unpairables_2)
-	    break;
-	}
+        {
+          if (print_unpairables_2)
+            prjoin (&uni_blank, *linep);
+          if (issued_disorder_warning[1] && !print_unpairables_2)
+            break;
+        }
     }
 
   free (*linep);
@@ -792,9 +792,9 @@ decode_field_spec (const char *s, int *file_index, size_t *field_index)
     case '0':
       if (s[1])
         {
-	  /* `0' must be all alone -- no `.FIELD'.  */
-	  error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
-	}
+          /* `0' must be all alone -- no `.FIELD'.  */
+          error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
+        }
       *file_index = 0;
       *field_index = 0;
       break;
@@ -802,18 +802,18 @@ decode_field_spec (const char *s, int *file_index, size_t *field_index)
     case '1':
     case '2':
       if (s[1] != '.')
-	error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
+        error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
       *file_index = s[0] - '0';
       *field_index = string_to_join_field (s + 2);
       break;
 
     default:
       error (EXIT_FAILURE, 0,
-	     _("invalid file number in field spec: %s"), quote (s));
+             _("invalid file number in field spec: %s"), quote (s));
 
       /* Tell gcc -W -Wall that we can't get beyond this point.
-	 This avoids a warning (otherwise legit) that the caller's copies
-	 of *file_index and *field_index might be used uninitialized.  */
+         This avoids a warning (otherwise legit) that the caller's copies
+         of *file_index and *field_index might be used uninitialized.  */
       abort ();
 
       break;
@@ -853,7 +853,7 @@ set_join_field (size_t *var, size_t val)
       unsigned long int var1 = *var + 1;
       unsigned long int val1 = val + 1;
       error (EXIT_FAILURE, 0, _("incompatible join fields %lu, %lu"),
-	     var1, val1);
+             var1, val1);
     }
   *var = val;
 }
@@ -881,8 +881,8 @@ enum operand_status
 
 static void
 add_file_name (char *name, char *names[2],
-	       int operand_status[2], int joption_count[2], int *nfiles,
-	       int *prev_optc_status, int *optc_status)
+               int operand_status[2], int joption_count[2], int *nfiles,
+               int *prev_optc_status, int *optc_status)
 {
   int n = *nfiles;
 
@@ -891,30 +891,30 @@ add_file_name (char *name, char *names[2],
       bool op0 = (operand_status[0] == MUST_BE_OPERAND);
       char *arg = names[op0];
       switch (operand_status[op0])
-	{
-	case MUST_BE_OPERAND:
-	  error (0, 0, _("extra operand %s"), quote (name));
-	  usage (EXIT_FAILURE);
+        {
+        case MUST_BE_OPERAND:
+          error (0, 0, _("extra operand %s"), quote (name));
+          usage (EXIT_FAILURE);
 
-	case MIGHT_BE_J1_ARG:
-	  joption_count[0]--;
-	  set_join_field (&join_field_1, string_to_join_field (arg));
-	  break;
+        case MIGHT_BE_J1_ARG:
+          joption_count[0]--;
+          set_join_field (&join_field_1, string_to_join_field (arg));
+          break;
 
-	case MIGHT_BE_J2_ARG:
-	  joption_count[1]--;
-	  set_join_field (&join_field_2, string_to_join_field (arg));
-	  break;
+        case MIGHT_BE_J2_ARG:
+          joption_count[1]--;
+          set_join_field (&join_field_2, string_to_join_field (arg));
+          break;
 
-	case MIGHT_BE_O_ARG:
-	  add_field_list (arg);
-	  break;
-	}
+        case MIGHT_BE_O_ARG:
+          add_field_list (arg);
+          break;
+        }
       if (!op0)
-	{
-	  operand_status[0] = operand_status[1];
-	  names[0] = names[1];
-	}
+        {
+          operand_status[0] = operand_status[1];
+          names[0] = names[1];
+        }
       n = 1;
     }
 
@@ -954,110 +954,110 @@ main (int argc, char **argv)
   check_input_order = CHECK_ORDER_DEFAULT;
 
   while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:",
-			      longopts, NULL))
-	 != -1)
+                              longopts, NULL))
+         != -1)
     {
       optc_status = MUST_BE_OPERAND;
 
       switch (optc)
-	{
-	case 'v':
-	    print_pairables = false;
-	    /* Fall through.  */
+        {
+        case 'v':
+            print_pairables = false;
+            /* Fall through.  */
 
-	case 'a':
-	  {
-	    unsigned long int val;
-	    if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
-		|| (val != 1 && val != 2))
-	      error (EXIT_FAILURE, 0,
-		     _("invalid field number: %s"), quote (optarg));
-	    if (val == 1)
-	      print_unpairables_1 = true;
-	    else
-	      print_unpairables_2 = true;
-	  }
-	  break;
+        case 'a':
+          {
+            unsigned long int val;
+            if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
+                || (val != 1 && val != 2))
+              error (EXIT_FAILURE, 0,
+                     _("invalid field number: %s"), quote (optarg));
+            if (val == 1)
+              print_unpairables_1 = true;
+            else
+              print_unpairables_2 = true;
+          }
+          break;
 
-	case 'e':
-	  if (empty_filler && ! STREQ (empty_filler, optarg))
-	    error (EXIT_FAILURE, 0,
-		   _("conflicting empty-field replacement strings"));
-	  empty_filler = optarg;
-	  break;
+        case 'e':
+          if (empty_filler && ! STREQ (empty_filler, optarg))
+            error (EXIT_FAILURE, 0,
+                   _("conflicting empty-field replacement strings"));
+          empty_filler = optarg;
+          break;
 
-	case 'i':
-	  ignore_case = true;
-	  break;
+        case 'i':
+          ignore_case = true;
+          break;
 
-	case '1':
-	  set_join_field (&join_field_1, string_to_join_field (optarg));
-	  break;
+        case '1':
+          set_join_field (&join_field_1, string_to_join_field (optarg));
+          break;
 
-	case '2':
-	  set_join_field (&join_field_2, string_to_join_field (optarg));
-	  break;
+        case '2':
+          set_join_field (&join_field_2, string_to_join_field (optarg));
+          break;
 
-	case 'j':
-	  if ((optarg[0] == '1' || optarg[0] == '2') && !optarg[1]
-	      && optarg == argv[optind - 1] + 2)
-	    {
-	      /* The argument was either "-j1" or "-j2".  */
-	      bool is_j2 = (optarg[0] == '2');
-	      joption_count[is_j2]++;
-	      optc_status = MIGHT_BE_J1_ARG + is_j2;
-	    }
-	  else
-	    {
-	      set_join_field (&join_field_1, string_to_join_field (optarg));
-	      set_join_field (&join_field_2, join_field_1);
-	    }
-	  break;
+        case 'j':
+          if ((optarg[0] == '1' || optarg[0] == '2') && !optarg[1]
+              && optarg == argv[optind - 1] + 2)
+            {
+              /* The argument was either "-j1" or "-j2".  */
+              bool is_j2 = (optarg[0] == '2');
+              joption_count[is_j2]++;
+              optc_status = MIGHT_BE_J1_ARG + is_j2;
+            }
+          else
+            {
+              set_join_field (&join_field_1, string_to_join_field (optarg));
+              set_join_field (&join_field_2, join_field_1);
+            }
+          break;
 
-	case 'o':
-	  add_field_list (optarg);
-	  optc_status = MIGHT_BE_O_ARG;
-	  break;
+        case 'o':
+          add_field_list (optarg);
+          optc_status = MIGHT_BE_O_ARG;
+          break;
 
-	case 't':
-	  {
-	    unsigned char newtab = optarg[0];
-	    if (! newtab)
-	      error (EXIT_FAILURE, 0, _("empty tab"));
-	    if (optarg[1])
-	      {
-		if (STREQ (optarg, "\\0"))
-		  newtab = '\0';
-		else
-		  error (EXIT_FAILURE, 0, _("multi-character tab %s"),
-			 quote (optarg));
-	      }
-	    if (0 <= tab && tab != newtab)
-	      error (EXIT_FAILURE, 0, _("incompatible tabs"));
-	    tab = newtab;
-	  }
-	  break;
+        case 't':
+          {
+            unsigned char newtab = optarg[0];
+            if (! newtab)
+              error (EXIT_FAILURE, 0, _("empty tab"));
+            if (optarg[1])
+              {
+                if (STREQ (optarg, "\\0"))
+                  newtab = '\0';
+                else
+                  error (EXIT_FAILURE, 0, _("multi-character tab %s"),
+                         quote (optarg));
+              }
+            if (0 <= tab && tab != newtab)
+              error (EXIT_FAILURE, 0, _("incompatible tabs"));
+            tab = newtab;
+          }
+          break;
 
-	case NOCHECK_ORDER_OPTION:
-	  check_input_order = CHECK_ORDER_DISABLED;
-	  break;
+        case NOCHECK_ORDER_OPTION:
+          check_input_order = CHECK_ORDER_DISABLED;
+          break;
 
-	case CHECK_ORDER_OPTION:
-	  check_input_order = CHECK_ORDER_ENABLED;
-	  break;
+        case CHECK_ORDER_OPTION:
+          check_input_order = CHECK_ORDER_ENABLED;
+          break;
 
-	case 1:		/* Non-option argument.  */
-	  add_file_name (optarg, names, operand_status, joption_count,
-			 &nfiles, &prev_optc_status, &optc_status);
-	  break;
+        case 1:		/* Non-option argument.  */
+          add_file_name (optarg, names, operand_status, joption_count,
+                         &nfiles, &prev_optc_status, &optc_status);
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
 
       prev_optc_status = optc_status;
     }
@@ -1066,14 +1066,14 @@ main (int argc, char **argv)
   prev_optc_status = MUST_BE_OPERAND;
   while (optind < argc)
     add_file_name (argv[optind++], names, operand_status, joption_count,
-		   &nfiles, &prev_optc_status, &optc_status);
+                   &nfiles, &prev_optc_status, &optc_status);
 
   if (nfiles != 2)
     {
       if (nfiles == 0)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+        error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 
@@ -1082,8 +1082,8 @@ main (int argc, char **argv)
   for (i = 0; i < 2; i++)
     if (joption_count[i] != 0)
       {
-	set_join_field (&join_field_1, i);
-	set_join_field (&join_field_2, i);
+        set_join_field (&join_field_1, i);
+        set_join_field (&join_field_2, i);
       }
 
   if (join_field_1 == SIZE_MAX)

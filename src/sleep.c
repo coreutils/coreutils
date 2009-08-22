@@ -40,7 +40,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -53,7 +53,7 @@ point number.  Given two or more arguments, pause for the amount of time\n\
 specified by the sum of their values.\n\
 \n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -112,7 +112,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
@@ -127,16 +127,16 @@ main (int argc, char **argv)
       double s;
       const char *p;
       if (! xstrtod (argv[i], &p, &s, c_strtod)
-	  /* Nonnegative interval.  */
-	  || ! (0 <= s)
-	  /* No extra chars after the number and an optional s,m,h,d char.  */
-	  || (*p && *(p+1))
-	  /* Check any suffix char and update S based on the suffix.  */
-	  || ! apply_suffix (&s, *p))
-	{
-	  error (0, 0, _("invalid time interval %s"), quote (argv[i]));
-	  ok = false;
-	}
+          /* Nonnegative interval.  */
+          || ! (0 <= s)
+          /* No extra chars after the number and an optional s,m,h,d char.  */
+          || (*p && *(p+1))
+          /* Check any suffix char and update S based on the suffix.  */
+          || ! apply_suffix (&s, *p))
+        {
+          error (0, 0, _("invalid time interval %s"), quote (argv[i]));
+          ok = false;
+        }
 
       seconds += s;
     }

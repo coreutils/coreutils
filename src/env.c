@@ -20,24 +20,24 @@
    -
    -i
    --ignore-environment
-	Construct a new environment from scratch; normally the
-	environment is inherited from the parent process, except as
-	modified by other options.
+        Construct a new environment from scratch; normally the
+        environment is inherited from the parent process, except as
+        modified by other options.
 
    -u variable
    --unset=variable
-	Unset variable VARIABLE (remove it from the environment).
-	If VARIABLE was not set, does nothing.
+        Unset variable VARIABLE (remove it from the environment).
+        If VARIABLE was not set, does nothing.
 
    variable=value (an arg containing a "=" character)
-	Set the environment variable VARIABLE to value VALUE.  VALUE
-	may be of zero length ("variable=").  Setting a variable to a
-	zero-length value is different from unsetting it.
+        Set the environment variable VARIABLE to value VALUE.  VALUE
+        may be of zero length ("variable=").  Setting a variable to a
+        zero-length value is different from unsetting it.
 
    --
-	Indicate that the following argument is the program
-	to invoke.  This is necessary when the program's name
-	begins with "-" or contains a "=".
+        Indicate that the following argument is the program
+        to invoke.  This is necessary when the program's name
+        begins with "-" or contains a "=".
 
    The first remaining argument specifies a program to invoke;
    it is searched for according to the specification of the PATH
@@ -51,29 +51,29 @@
    Examples:
 
    If the environment passed to "env" is
-	{ LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks }
+        { LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks }
 
    env - foo
-	runs "foo" in a null environment.
+        runs "foo" in a null environment.
 
    env foo
-	runs "foo" in the environment
-	{ LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks }
+        runs "foo" in the environment
+        { LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks }
 
    env DISPLAY=gnu:0 nemacs
-	runs "nemacs" in the environment
-	{ LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks DISPLAY=gnu:0 }
+        runs "nemacs" in the environment
+        { LOGNAME=rms EDITOR=emacs PATH=.:/gnubin:/hacks DISPLAY=gnu:0 }
 
    env - LOGNAME=foo /hacks/hack bar baz
-	runs the "hack" program on arguments "bar" and "baz" in an
-	environment in which the only variable is "LOGNAME".  Note that
-	the "-" option clears out the PATH variable, so one should be
-	careful to specify in which directory to find the program to
-	call.
+        runs the "hack" program on arguments "bar" and "baz" in an
+        environment in which the only variable is "LOGNAME".  Note that
+        the "-" option clears out the PATH variable, so one should be
+        careful to specify in which directory to find the program to
+        call.
 
    env -u EDITOR LOGNAME=foo PATH=/energy -- e=mc2 bar baz
-	runs the program "/energy/e=mc2" with environment
-	{ LOGNAME=foo PATH=/energy }
+        runs the program "/energy/e=mc2" with environment
+        { LOGNAME=foo PATH=/energy }
 */
 
 #include <config.h>
@@ -107,12 +107,12 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
-	      program_name);
+              program_name);
       fputs (_("\
 Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
@@ -148,17 +148,17 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'i':
-	  ignore_environment = true;
-	  break;
-	case 'u':
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'i':
+          ignore_environment = true;
+          break;
+        case 'u':
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind < argc && STREQ (argv[optind], "-"))
@@ -186,7 +186,7 @@ main (int argc, char **argv)
     {
       char *const *e = environ;
       while (*e)
-	puts (*e++);
+        puts (*e++);
       exit (EXIT_SUCCESS);
     }
 

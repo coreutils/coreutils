@@ -97,13 +97,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [INPUT [PREFIX]]\n\
 "),
-	      program_name);
+              program_name);
     fputs (_("\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 size is 1000 lines, and default PREFIX is `x'.  With no INPUT, or when INPUT\n\
@@ -153,7 +153,7 @@ next_file_name (void)
       size_t outbase_length = strlen (outbase);
       size_t outfile_length = outbase_length + suffix_length;
       if (outfile_length + 1 < outbase_length)
-	xalloc_die ();
+        xalloc_die ();
       outfile = xmalloc (outfile_length + 1);
       outfile_mid = outfile + outbase_length;
       memcpy (outfile, outbase, outbase_length);
@@ -163,15 +163,15 @@ next_file_name (void)
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       /* POSIX requires that if the output file name is too long for
-	 its directory, `split' must fail without creating any files.
-	 This must be checked for explicitly on operating systems that
-	 silently truncate file names.  */
+         its directory, `split' must fail without creating any files.
+         This must be checked for explicitly on operating systems that
+         silently truncate file names.  */
       {
-	char *dir = dir_name (outfile);
-	long name_max = pathconf (dir, _PC_NAME_MAX);
-	if (0 <= name_max && name_max < base_len (last_component (outfile)))
-	  error (EXIT_FAILURE, ENAMETOOLONG, "%s", outfile);
-	free (dir);
+        char *dir = dir_name (outfile);
+        long name_max = pathconf (dir, _PC_NAME_MAX);
+        if (0 <= name_max && name_max < base_len (last_component (outfile)))
+          error (EXIT_FAILURE, ENAMETOOLONG, "%s", outfile);
+        free (dir);
       }
 #endif
     }
@@ -181,14 +181,14 @@ next_file_name (void)
 
       size_t i = suffix_length;
       while (i-- != 0)
-	{
-	  sufindex[i]++;
-	  outfile_mid[i] = suffix_alphabet[sufindex[i]];
-	  if (outfile_mid[i])
-	    return;
-	  sufindex[i] = 0;
-	  outfile_mid[i] = suffix_alphabet[sufindex[i]];
-	}
+        {
+          sufindex[i]++;
+          outfile_mid[i] = suffix_alphabet[sufindex[i]];
+          if (outfile_mid[i])
+            return;
+          sufindex[i] = 0;
+          outfile_mid[i] = suffix_alphabet[sufindex[i]];
+        }
       error (EXIT_FAILURE, 0, _("output file suffixes exhausted"));
     }
 }
@@ -203,17 +203,17 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
   if (new_file_flag)
     {
       if (output_desc >= 0 && close (output_desc) < 0)
-	error (EXIT_FAILURE, errno, "%s", outfile);
+        error (EXIT_FAILURE, errno, "%s", outfile);
 
       next_file_name ();
       if (verbose)
-	fprintf (stdout, _("creating file %s\n"), quote (outfile));
+        fprintf (stdout, _("creating file %s\n"), quote (outfile));
       output_desc = open (outfile,
-			  O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
-			  (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
-			   | S_IROTH | S_IWOTH));
+                          O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
+                          (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
+                           | S_IROTH | S_IWOTH));
       if (output_desc < 0)
-	error (EXIT_FAILURE, errno, "%s", outfile);
+        error (EXIT_FAILURE, errno, "%s", outfile);
     }
   if (full_write (output_desc, bp, bytes) != bytes)
     error (EXIT_FAILURE, errno, "%s", outfile);
@@ -239,27 +239,27 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
       bp_out = buf;
       to_read = n_read;
       for (;;)
-	{
-	  if (to_read < to_write)
-	    {
-	      if (to_read)	/* do not write 0 bytes! */
-		{
-		  cwrite (new_file_flag, bp_out, to_read);
-		  to_write -= to_read;
-		  new_file_flag = false;
-		}
-	      break;
-	    }
-	  else
-	    {
-	      size_t w = to_write;
-	      cwrite (new_file_flag, bp_out, w);
-	      bp_out += w;
-	      to_read -= w;
-	      new_file_flag = true;
-	      to_write = n_bytes;
-	    }
-	}
+        {
+          if (to_read < to_write)
+            {
+              if (to_read)	/* do not write 0 bytes! */
+                {
+                  cwrite (new_file_flag, bp_out, to_read);
+                  to_write -= to_read;
+                  new_file_flag = false;
+                }
+              break;
+            }
+          else
+            {
+              size_t w = to_write;
+              cwrite (new_file_flag, bp_out, w);
+              bp_out += w;
+              to_read -= w;
+              new_file_flag = true;
+              to_write = n_bytes;
+            }
+        }
     }
   while (n_read == bufsize);
 }
@@ -279,33 +279,33 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
     {
       n_read = full_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
       *eob = '\n';
       for (;;)
-	{
-	  bp = memchr (bp, '\n', eob - bp + 1);
-	  if (bp == eob)
-	    {
-	      if (eob != bp_out) /* do not write 0 bytes! */
-		{
-		  size_t len = eob - bp_out;
-		  cwrite (new_file_flag, bp_out, len);
-		  new_file_flag = false;
-		}
-	      break;
-	    }
+        {
+          bp = memchr (bp, '\n', eob - bp + 1);
+          if (bp == eob)
+            {
+              if (eob != bp_out) /* do not write 0 bytes! */
+                {
+                  size_t len = eob - bp_out;
+                  cwrite (new_file_flag, bp_out, len);
+                  new_file_flag = false;
+                }
+              break;
+            }
 
-	  ++bp;
-	  if (++n >= n_lines)
-	    {
-	      cwrite (new_file_flag, bp_out, bp - bp_out);
-	      bp_out = bp;
-	      new_file_flag = true;
-	      n = 0;
-	    }
-	}
+          ++bp;
+          if (++n >= n_lines)
+            {
+              cwrite (new_file_flag, bp_out, bp - bp_out);
+              bp_out = bp;
+              new_file_flag = true;
+              n = 0;
+            }
+        }
     }
   while (n_read == bufsize);
 }
@@ -331,37 +331,37 @@ line_bytes_split (size_t n_bytes)
 
       n_read = full_read (STDIN_FILENO, buf + n_buffered, n_bytes - n_buffered);
       if (n_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", infile);
 
       n_buffered += n_read;
       if (n_buffered != n_bytes)
-	{
-	  if (n_buffered == 0)
-	    break;
-	  eof = true;
-	}
+        {
+          if (n_buffered == 0)
+            break;
+          eof = true;
+        }
 
       /* Find where to end this chunk.  */
       bp = buf + n_buffered;
       if (n_buffered == n_bytes)
-	{
-	  while (bp > buf && bp[-1] != '\n')
-	    bp--;
-	}
+        {
+          while (bp > buf && bp[-1] != '\n')
+            bp--;
+        }
 
       /* If chunk has no newlines, use all the chunk.  */
       if (bp == buf)
-	bp = buf + n_buffered;
+        bp = buf + n_buffered;
 
       /* Output the chars as one output file.  */
       cwrite (true, buf, bp - buf);
 
       /* Discard the chars we just output; move rest of chunk
-	 down to be the start of the next chunk.  Source and
-	 destination probably overlap.  */
+         down to be the start of the next chunk.  Source and
+         destination probably overlap.  */
       n_buffered -= bp - buf;
       if (n_buffered > 0)
-	memmove (buf, bp, n_buffered);
+        memmove (buf, bp, n_buffered);
     }
   while (!eof);
   free (buf);
@@ -411,103 +411,103 @@ main (int argc, char **argv)
 
       c = getopt_long (argc, argv, "0123456789C:a:b:dl:", longopts, NULL);
       if (c == -1)
-	break;
+        break;
 
       switch (c)
-	{
-	case 'a':
-	  {
-	    unsigned long tmp;
-	    if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
-		|| SIZE_MAX / sizeof (size_t) < tmp)
-	      {
-		error (0, 0, _("%s: invalid suffix length"), optarg);
-		usage (EXIT_FAILURE);
-	      }
-	    suffix_length = tmp;
-	  }
-	  break;
+        {
+        case 'a':
+          {
+            unsigned long tmp;
+            if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
+                || SIZE_MAX / sizeof (size_t) < tmp)
+              {
+                error (0, 0, _("%s: invalid suffix length"), optarg);
+                usage (EXIT_FAILURE);
+              }
+            suffix_length = tmp;
+          }
+          break;
 
-	case 'b':
-	  if (split_type != type_undef)
-	    FAIL_ONLY_ONE_WAY ();
-	  split_type = type_bytes;
-	  if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
-	      || n_units == 0)
-	    {
-	      error (0, 0, _("%s: invalid number of bytes"), optarg);
-	      usage (EXIT_FAILURE);
-	    }
-	  break;
+        case 'b':
+          if (split_type != type_undef)
+            FAIL_ONLY_ONE_WAY ();
+          split_type = type_bytes;
+          if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
+              || n_units == 0)
+            {
+              error (0, 0, _("%s: invalid number of bytes"), optarg);
+              usage (EXIT_FAILURE);
+            }
+          break;
 
-	case 'l':
-	  if (split_type != type_undef)
-	    FAIL_ONLY_ONE_WAY ();
-	  split_type = type_lines;
-	  if (xstrtoumax (optarg, NULL, 10, &n_units, "") != LONGINT_OK
-	      || n_units == 0)
-	    {
-	      error (0, 0, _("%s: invalid number of lines"), optarg);
-	      usage (EXIT_FAILURE);
-	    }
-	  break;
+        case 'l':
+          if (split_type != type_undef)
+            FAIL_ONLY_ONE_WAY ();
+          split_type = type_lines;
+          if (xstrtoumax (optarg, NULL, 10, &n_units, "") != LONGINT_OK
+              || n_units == 0)
+            {
+              error (0, 0, _("%s: invalid number of lines"), optarg);
+              usage (EXIT_FAILURE);
+            }
+          break;
 
-	case 'C':
-	  if (split_type != type_undef)
-	    FAIL_ONLY_ONE_WAY ();
-	  split_type = type_byteslines;
-	  if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
-	      || n_units == 0 || SIZE_MAX < n_units)
-	    {
-	      error (0, 0, _("%s: invalid number of bytes"), optarg);
-	      usage (EXIT_FAILURE);
-	    }
-	  break;
+        case 'C':
+          if (split_type != type_undef)
+            FAIL_ONLY_ONE_WAY ();
+          split_type = type_byteslines;
+          if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
+              || n_units == 0 || SIZE_MAX < n_units)
+            {
+              error (0, 0, _("%s: invalid number of bytes"), optarg);
+              usage (EXIT_FAILURE);
+            }
+          break;
 
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-	  if (split_type == type_undef)
-	    {
-	      split_type = type_digits;
-	      n_units = 0;
-	    }
-	  if (split_type != type_undef && split_type != type_digits)
-	    FAIL_ONLY_ONE_WAY ();
-	  if (digits_optind != 0 && digits_optind != this_optind)
-	    n_units = 0;	/* More than one number given; ignore other. */
-	  digits_optind = this_optind;
-	  if (!DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', uintmax_t))
-	    {
-	      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
-	      error (EXIT_FAILURE, 0,
-		     _("line count option -%s%c... is too large"),
-		     umaxtostr (n_units, buffer), c);
-	    }
-	  break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+          if (split_type == type_undef)
+            {
+              split_type = type_digits;
+              n_units = 0;
+            }
+          if (split_type != type_undef && split_type != type_digits)
+            FAIL_ONLY_ONE_WAY ();
+          if (digits_optind != 0 && digits_optind != this_optind)
+            n_units = 0;	/* More than one number given; ignore other. */
+          digits_optind = this_optind;
+          if (!DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', uintmax_t))
+            {
+              char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
+              error (EXIT_FAILURE, 0,
+                     _("line count option -%s%c... is too large"),
+                     umaxtostr (n_units, buffer), c);
+            }
+          break;
 
-	case 'd':
-	  suffix_alphabet = "0123456789";
-	  break;
+        case 'd':
+          suffix_alphabet = "0123456789";
+          break;
 
-	case VERBOSE_OPTION:
-	  verbose = true;
-	  break;
+        case VERBOSE_OPTION:
+          verbose = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   /* Handle default case.  */
@@ -541,7 +541,7 @@ main (int argc, char **argv)
   if (! STREQ (infile, "-")
       && fd_reopen (STDIN_FILENO, infile, O_RDONLY, 0) < 0)
     error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-	   quote (infile));
+           quote (infile));
 
   /* Binary I/O is safer when bytecounts are used.  */
   if (O_BINARY && ! isatty (STDIN_FILENO))

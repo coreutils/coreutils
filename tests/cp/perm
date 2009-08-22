@@ -37,39 +37,39 @@ for u in 31 37 2; do
   for cmd in mv 'cp -p' cp; do
     for force in '' -f; do
       for existing_dest in yes no; do
-	for g_perm in r w x rw wx xr rwx; do
-	  for o_perm in r w x rw wx xr rwx; do
-	    touch src || exit 1
-	    chmod u=r,g=rx,o= src || exit 1
-	    expected_perms=$(stat --format=%A src)
-	    rm -f dest
-	    test $existing_dest = yes && {
-	      touch dest || exit 1
-	      chmod u=rw,g=$g_perm,o=$o_perm dest || exit 1
-	      }
-	    $cmd $force src dest || exit 1
-	    test "$cmd" = mv && test -f src && exit 1
-	    test "$cmd" = cp && { test -f src || exit 1; }
-	    actual_perms=$(stat --format=%A dest)
+        for g_perm in r w x rw wx xr rwx; do
+          for o_perm in r w x rw wx xr rwx; do
+            touch src || exit 1
+            chmod u=r,g=rx,o= src || exit 1
+            expected_perms=$(stat --format=%A src)
+            rm -f dest
+            test $existing_dest = yes && {
+              touch dest || exit 1
+              chmod u=rw,g=$g_perm,o=$o_perm dest || exit 1
+              }
+            $cmd $force src dest || exit 1
+            test "$cmd" = mv && test -f src && exit 1
+            test "$cmd" = cp && { test -f src || exit 1; }
+            actual_perms=$(stat --format=%A dest)
 
-	    case "$cmd:$force:$existing_dest" in
-	      cp:*:yes)
-		_g_perm=`echo rwx|sed 's/[^'$g_perm']/-/g'`
-		_o_perm=`echo rwx|sed 's/[^'$o_perm']/-/g'`
-		expected_perms=-rw-$_g_perm$_o_perm
-		;;
-	      cp:*:no)
-		test $u = 37 &&
-		  expected_perms=`echo $expected_perms|sed 's/.....$/-----/'`
-		test $u = 31 &&
-		  expected_perms=`echo $expected_perms|sed 's/..\(..\).$/--\1-/'`
-		;;
-	    esac
-	    test _$actual_perms = _$expected_perms || exit 1
-	    # Perform only one iteration when there's no existing destination.
-	    test $existing_dest = no && break 3
-	  done
-	done
+            case "$cmd:$force:$existing_dest" in
+              cp:*:yes)
+                _g_perm=`echo rwx|sed 's/[^'$g_perm']/-/g'`
+                _o_perm=`echo rwx|sed 's/[^'$o_perm']/-/g'`
+                expected_perms=-rw-$_g_perm$_o_perm
+                ;;
+              cp:*:no)
+                test $u = 37 &&
+                  expected_perms=`echo $expected_perms|sed 's/.....$/-----/'`
+                test $u = 31 &&
+                  expected_perms=`echo $expected_perms|sed 's/..\(..\).$/--\1-/'`
+                ;;
+            esac
+            test _$actual_perms = _$expected_perms || exit 1
+            # Perform only one iteration when there's no existing destination.
+            test $existing_dest = no && break 3
+          done
+        done
       done
     done
   done

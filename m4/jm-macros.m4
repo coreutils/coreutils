@@ -37,9 +37,9 @@ AC_DEFUN([coreutils_MACROS],
 
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE([ARGMATCH_DIE], [usage (1)],
-	    [Define to the function xargmatch calls on failures.])
+            [Define to the function xargmatch calls on failures.])
   AC_DEFINE([ARGMATCH_DIE_DECL], [void usage (int _e)],
-	    [Define to the declaration of the xargmatch failure function.])
+            [Define to the declaration of the xargmatch failure function.])
 
   # used by ls
   AC_REQUIRE([gl_CLOCK_TIME])
@@ -52,13 +52,13 @@ AC_DEFUN([coreutils_MACROS],
     AC_CHECK_FUNCS([matchpathcon_init_prefix], [],
     [
       case "$ac_cv_search_setfilecon:$ac_cv_header_selinux_selinux_h" in
-	no:*) # SELinux disabled
-	  ;;
-	*:no) # SELinux disabled
-	  ;;
-	*)
-	AC_MSG_WARN([SELinux enabled, but matchpathcon_init_prefix not found])
-	AC_MSG_WARN([The install utility may run slowly])
+        no:*) # SELinux disabled
+          ;;
+        *:no) # SELinux disabled
+          ;;
+        *)
+        AC_MSG_WARN([SELinux enabled, but matchpathcon_init_prefix not found])
+        AC_MSG_WARN([The install utility may run slowly])
       esac
     ])
   LIBS=$coreutils_saved_libs
@@ -98,8 +98,8 @@ AC_DEFUN([coreutils_MACROS],
   # for dd.c and shred.c
   coreutils_saved_libs=$LIBS
     AC_SEARCH_LIBS([fdatasync], [rt posix4],
-		   [test "$ac_cv_search_fdatasync" = "none required" ||
-		    LIB_FDATASYNC=$ac_cv_search_fdatasync])
+                   [test "$ac_cv_search_fdatasync" = "none required" ||
+                    LIB_FDATASYNC=$ac_cv_search_fdatasync])
     AC_SUBST([LIB_FDATASYNC])
     AC_CHECK_FUNCS([fdatasync])
   LIBS=$coreutils_saved_libs
@@ -110,9 +110,9 @@ AC_DEFUN([coreutils_MACROS],
     AC_MSG_WARN([libcap support disabled by user]),
     [AC_CHECK_LIB([cap], [cap_get_file],
       [AC_CHECK_HEADER([sys/capability.h],
-	[LIB_CAP=-lcap
-	 AC_DEFINE([HAVE_CAP], [1], [libcap usability])],
-	[AC_MSG_WARN([header sys/capability.h was not found, support for libcap will not be built])]
+        [LIB_CAP=-lcap
+         AC_DEFINE([HAVE_CAP], [1], [libcap usability])],
+        [AC_MSG_WARN([header sys/capability.h was not found, support for libcap will not be built])]
       )],
       [AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])])
     ])

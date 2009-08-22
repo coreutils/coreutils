@@ -79,8 +79,8 @@ uid_to_name (uid_t);
 
 bool
 chown_files (char **files, int bit_flags,
-	     uid_t uid, gid_t gid,
-	     uid_t required_uid, gid_t required_gid,
-	     struct Chown_option const *chopt);
+             uid_t uid, gid_t gid,
+             uid_t required_uid, gid_t required_gid,
+             struct Chown_option const *chopt);
 
 #endif /* CHOWN_CORE_H */

@@ -22,7 +22,7 @@
    ../m4/stat-prog.m4.  */
 #if (STAT_STATVFS \
      && (HAVE_STRUCT_STATVFS_F_BASETYPE || HAVE_STRUCT_STATVFS_F_FSTYPENAME \
-	 || (! HAVE_STRUCT_STATFS_F_FSTYPENAME && HAVE_STRUCT_STATVFS_F_TYPE)))
+         || (! HAVE_STRUCT_STATFS_F_FSTYPENAME && HAVE_STRUCT_STATVFS_F_TYPE)))
 # define USE_STATVFS 1
 #else
 # define USE_STATVFS 0
@@ -96,11 +96,11 @@ statfs (char const *filename, struct fs_info *buf)
   if (device < 0)
     {
       errno = (device == B_ENTRY_NOT_FOUND ? ENOENT
-	       : device == B_BAD_VALUE ? EINVAL
-	       : device == B_NAME_TOO_LONG ? ENAMETOOLONG
-	       : device == B_NO_MEMORY ? ENOMEM
-	       : device == B_FILE_ERROR ? EIO
-	       : 0);
+               : device == B_BAD_VALUE ? EINVAL
+               : device == B_NAME_TOO_LONG ? ENAMETOOLONG
+               : device == B_NO_MEMORY ? ENOMEM
+               : device == B_FILE_ERROR ? EIO
+               : 0);
       return -1;
     }
   /* If successful, buf->dev will be == device.  */
@@ -145,7 +145,7 @@ statfs (char const *filename, struct fs_info *buf)
 #define isodigit(c) ('0' <= (c) && (c) <= '7')
 #define octtobin(c) ((c) - '0')
 #define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
-		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
+                     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 
 #define PROGRAM_NAME "stat"
 
@@ -197,23 +197,23 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 # if defined __linux__
 
       /* Compare with what's in libc:
-	 f=/a/libc/sysdeps/unix/sysv/linux/linux_fsinfo.h
-	 sed -n '/ADFS_SUPER_MAGIC/,/SYSFS_MAGIC/p' $f \
-	   | perl -n -e '/#define (.*?)_(?:SUPER_)MAGIC\s+0x(\S+)/' \
-	     -e 'and print "case S_MAGIC_$1: /\* 0x" . uc($2) . " *\/\n"' \
-	   | sort > sym_libc
-	 perl -ne '/^\s+(case S_MAGIC_.*?): \/\* 0x(\S+) \*\//' \
-	     -e 'and do { $v=uc$2; print "$1: /\* 0x$v *\/\n"}' stat.c \
-	   | sort > sym_stat
-	 diff -u sym_stat sym_libc
+         f=/a/libc/sysdeps/unix/sysv/linux/linux_fsinfo.h
+         sed -n '/ADFS_SUPER_MAGIC/,/SYSFS_MAGIC/p' $f \
+           | perl -n -e '/#define (.*?)_(?:SUPER_)MAGIC\s+0x(\S+)/' \
+             -e 'and print "case S_MAGIC_$1: /\* 0x" . uc($2) . " *\/\n"' \
+           | sort > sym_libc
+         perl -ne '/^\s+(case S_MAGIC_.*?): \/\* 0x(\S+) \*\//' \
+             -e 'and do { $v=uc$2; print "$1: /\* 0x$v *\/\n"}' stat.c \
+           | sort > sym_stat
+         diff -u sym_stat sym_libc
       */
 
       /* Also sync from the list in "man 2 statfs".  */
 
       /* IMPORTANT NOTE: Each of the following `case S_MAGIC_...:'
-	 statements must be followed by a hexadecimal constant in
-	 a comment.  The S_MAGIC_... name and constant are automatically
-	 combined to produce the #define directives in fs.h.  */
+         statements must be followed by a hexadecimal constant in
+         a comment.  The S_MAGIC_... name and constant are automatically
+         combined to produce the #define directives in fs.h.  */
 
     case S_MAGIC_ADFS: /* 0xADF5 */
       return "adfs";
@@ -384,11 +384,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 # endif
     default:
       {
-	unsigned long int type = statfsbuf->f_type;
-	static char buf[sizeof "UNKNOWN (0x%lx)" - 3
-			+ (sizeof type * CHAR_BIT + 3) / 4];
-	sprintf (buf, "UNKNOWN (0x%lx)", type);
-	return buf;
+        unsigned long int type = statfsbuf->f_type;
+        static char buf[sizeof "UNKNOWN (0x%lx)" - 3
+                        + (sizeof type * CHAR_BIT + 3) / 4];
+        sprintf (buf, "UNKNOWN (0x%lx)", type);
+        return buf;
       }
     }
 #endif
@@ -407,9 +407,9 @@ static char *
 human_time (struct timespec t)
 {
   static char str[MAX (INT_BUFSIZE_BOUND (intmax_t),
-		       (INT_STRLEN_BOUND (int) /* YYYY */
-			+ 1 /* because YYYY might equal INT_MAX + 1900 */
-			+ sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
+                       (INT_STRLEN_BOUND (int) /* YYYY */
+                        + 1 /* because YYYY might equal INT_MAX + 1900 */
+                        + sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
   struct tm const *tm = localtime (&t.tv_sec);
   if (tm == NULL)
     return timetostr (t.tv_sec, str);
@@ -459,7 +459,7 @@ out_file_context (char const *filename, char *pformat, size_t prefix_len)
        : lgetfilecon (filename, &scontext)) < 0)
     {
       error (0, errno, _("failed to get security context of %s"),
-	     quote (filename));
+             quote (filename));
       scontext = NULL;
     }
   strcpy (pformat + prefix_len, "s");
@@ -471,7 +471,7 @@ out_file_context (char const *filename, char *pformat, size_t prefix_len)
 /* print statfs info */
 static void
 print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
-	      void const *data)
+              void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
 
@@ -484,26 +484,26 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
     case 'i':
       {
 #if STRUCT_STATXFS_F_FSID_IS_INTEGER
-	uintmax_t fsid = statfsbuf->f_fsid;
+        uintmax_t fsid = statfsbuf->f_fsid;
 #else
-	typedef unsigned int fsid_word;
-	verify (alignof (STRUCT_STATVFS) % alignof (fsid_word) == 0);
-	verify (offsetof (STRUCT_STATVFS, f_fsid) % alignof (fsid_word) == 0);
-	verify (sizeof statfsbuf->f_fsid % alignof (fsid_word) == 0);
-	fsid_word const *p = (fsid_word *) &statfsbuf->f_fsid;
+        typedef unsigned int fsid_word;
+        verify (alignof (STRUCT_STATVFS) % alignof (fsid_word) == 0);
+        verify (offsetof (STRUCT_STATVFS, f_fsid) % alignof (fsid_word) == 0);
+        verify (sizeof statfsbuf->f_fsid % alignof (fsid_word) == 0);
+        fsid_word const *p = (fsid_word *) &statfsbuf->f_fsid;
 
-	/* Assume a little-endian word order, as that is compatible
-	   with glibc's statvfs implementation.  */
-	uintmax_t fsid = 0;
-	int words = sizeof statfsbuf->f_fsid / sizeof *p;
-	int i;
-	for (i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
-	  {
-	    uintmax_t u = p[words - 1 - i];
-	    fsid |= u << (i * CHAR_BIT * sizeof *p);
-	  }
+        /* Assume a little-endian word order, as that is compatible
+           with glibc's statvfs implementation.  */
+        uintmax_t fsid = 0;
+        int words = sizeof statfsbuf->f_fsid / sizeof *p;
+        int i;
+        for (i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
+          {
+            uintmax_t u = p[words - 1 - i];
+            fsid |= u << (i * CHAR_BIT * sizeof *p);
+          }
 #endif
-	out_uint_x (pformat, prefix_len, fsid);
+        out_uint_x (pformat, prefix_len, fsid);
       }
       break;
 
@@ -534,10 +534,10 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
       break;
     case 'S':
       {
-	uintmax_t frsize = STATFS_FRSIZE (statfsbuf);
-	if (! frsize)
-	  frsize = statfsbuf->f_bsize;
-	out_uint (pformat, prefix_len, frsize);
+        uintmax_t frsize = STATFS_FRSIZE (statfsbuf);
+        if (! frsize)
+          frsize = statfsbuf->f_bsize;
+        out_uint (pformat, prefix_len, frsize);
       }
       break;
     case 'c':
@@ -558,7 +558,7 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
 /* print stat info */
 static void
 print_stat (char *pformat, size_t prefix_len, char m,
-	    char const *filename, void const *data)
+            char const *filename, void const *data)
 {
   struct stat *statbuf = (struct stat *) data;
   struct passwd *pw_ent;
@@ -572,17 +572,17 @@ print_stat (char *pformat, size_t prefix_len, char m,
     case 'N':
       out_string (pformat, prefix_len, quote (filename));
       if (S_ISLNK (statbuf->st_mode))
-	{
-	  char *linkname = areadlink_with_size (filename, statbuf->st_size);
-	  if (linkname == NULL)
-	    {
-	      error (0, errno, _("cannot read symbolic link %s"),
-		     quote (filename));
-	      return;
-	    }
-	  printf (" -> ");
-	  out_string (pformat, prefix_len, quote (linkname));
-	}
+        {
+          char *linkname = areadlink_with_size (filename, statbuf->st_size);
+          if (linkname == NULL)
+            {
+              error (0, errno, _("cannot read symbolic link %s"),
+                     quote (filename));
+              return;
+            }
+          printf (" -> ");
+          out_string (pformat, prefix_len, quote (linkname));
+        }
       break;
     case 'd':
       out_uint (pformat, prefix_len, statbuf->st_dev);
@@ -615,7 +615,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
       setpwent ();
       pw_ent = getpwuid (statbuf->st_uid);
       out_string (pformat, prefix_len,
-		  pw_ent ? pw_ent->pw_name : "UNKNOWN");
+                  pw_ent ? pw_ent->pw_name : "UNKNOWN");
       break;
     case 'g':
       out_uint (pformat, prefix_len, statbuf->st_gid);
@@ -624,7 +624,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
       setgrent ();
       gw_ent = getgrgid (statbuf->st_gid);
       out_string (pformat, prefix_len,
-		  gw_ent ? gw_ent->gr_name : "UNKNOWN");
+                  gw_ent ? gw_ent->gr_name : "UNKNOWN");
       break;
     case 't':
       out_uint_x (pformat, prefix_len, major (statbuf->st_rdev));
@@ -649,27 +649,27 @@ print_stat (char *pformat, size_t prefix_len, char m,
       break;
     case 'X':
       if (TYPE_SIGNED (time_t))
-	out_int (pformat, prefix_len, statbuf->st_atime);
+        out_int (pformat, prefix_len, statbuf->st_atime);
       else
-	out_uint (pformat, prefix_len, statbuf->st_atime);
+        out_uint (pformat, prefix_len, statbuf->st_atime);
       break;
     case 'y':
       out_string (pformat, prefix_len, human_time (get_stat_mtime (statbuf)));
       break;
     case 'Y':
       if (TYPE_SIGNED (time_t))
-	out_int (pformat, prefix_len, statbuf->st_mtime);
+        out_int (pformat, prefix_len, statbuf->st_mtime);
       else
-	out_uint (pformat, prefix_len, statbuf->st_mtime);
+        out_uint (pformat, prefix_len, statbuf->st_mtime);
       break;
     case 'z':
       out_string (pformat, prefix_len, human_time (get_stat_ctime (statbuf)));
       break;
     case 'Z':
       if (TYPE_SIGNED (time_t))
-	out_int (pformat, prefix_len, statbuf->st_ctime);
+        out_int (pformat, prefix_len, statbuf->st_ctime);
       else
-	out_uint (pformat, prefix_len, statbuf->st_ctime);
+        out_uint (pformat, prefix_len, statbuf->st_ctime);
       break;
     case 'C':
       out_file_context (filename, pformat, prefix_len);
@@ -720,17 +720,17 @@ print_esc_char (char c)
 
 static void
 print_it (char const *format, char const *filename,
-	  void (*print_func) (char *, size_t, char, char const *, void const *),
-	  void const *data)
+          void (*print_func) (char *, size_t, char, char const *, void const *),
+          void const *data)
 {
   /* Add 2 to accommodate our conversion of the stat `%s' format string
      to the longer printf `%llu' one.  */
   enum
     {
       MAX_ADDITIONAL_BYTES =
-	(MAX (sizeof PRIdMAX,
-	      MAX (sizeof PRIoMAX, MAX (sizeof PRIuMAX, sizeof PRIxMAX)))
-	 - 1)
+        (MAX (sizeof PRIdMAX,
+              MAX (sizeof PRIoMAX, MAX (sizeof PRIuMAX, sizeof PRIxMAX)))
+         - 1)
     };
   size_t n_alloc = strlen (format) + MAX_ADDITIONAL_BYTES + 1;
   char *dest = xmalloc (n_alloc);
@@ -738,85 +738,85 @@ print_it (char const *format, char const *filename,
   for (b = format; *b; b++)
     {
       switch (*b)
-	{
-	case '%':
-	  {
-	    size_t len = strspn (b + 1, "#-+.I 0123456789");
-	    char const *fmt_char = b + len + 1;
-	    memcpy (dest, b, len + 1);
+        {
+        case '%':
+          {
+            size_t len = strspn (b + 1, "#-+.I 0123456789");
+            char const *fmt_char = b + len + 1;
+            memcpy (dest, b, len + 1);
 
-	    b = fmt_char;
-	    switch (*fmt_char)
-	      {
-	      case '\0':
-		--b;
-		/* fall through */
-	      case '%':
-		if (0 < len)
-		  {
-		    dest[len + 1] = *fmt_char;
-		    dest[len + 2] = '\0';
-		    error (EXIT_FAILURE, 0, _("%s: invalid directive"),
-			   quotearg_colon (dest));
-		  }
-		putchar ('%');
-		break;
-	      default:
-		print_func (dest, len + 1, *fmt_char, filename, data);
-		break;
-	      }
-	    break;
-	  }
+            b = fmt_char;
+            switch (*fmt_char)
+              {
+              case '\0':
+                --b;
+                /* fall through */
+              case '%':
+                if (0 < len)
+                  {
+                    dest[len + 1] = *fmt_char;
+                    dest[len + 2] = '\0';
+                    error (EXIT_FAILURE, 0, _("%s: invalid directive"),
+                           quotearg_colon (dest));
+                  }
+                putchar ('%');
+                break;
+              default:
+                print_func (dest, len + 1, *fmt_char, filename, data);
+                break;
+              }
+            break;
+          }
 
-	case '\\':
-	  if ( ! interpret_backslash_escapes)
-	    {
-	      putchar ('\\');
-	      break;
-	    }
-	  ++b;
-	  if (isodigit (*b))
-	    {
-	      int esc_value = octtobin (*b);
-	      int esc_length = 1;	/* number of octal digits */
-	      for (++b; esc_length < 3 && isodigit (*b);
-		   ++esc_length, ++b)
-		{
-		  esc_value = esc_value * 8 + octtobin (*b);
-		}
-	      putchar (esc_value);
-	      --b;
-	    }
-	  else if (*b == 'x' && isxdigit (to_uchar (b[1])))
-	    {
-	      int esc_value = hextobin (b[1]);	/* Value of \xhh escape. */
-	      /* A hexadecimal \xhh escape sequence must have
-		 1 or 2 hex. digits.  */
-	      ++b;
-	      if (isxdigit (to_uchar (b[1])))
-		{
-		  ++b;
-		  esc_value = esc_value * 16 + hextobin (*b);
-		}
-	      putchar (esc_value);
-	    }
-	  else if (*b == '\0')
-	    {
-	      error (0, 0, _("warning: backslash at end of format"));
-	      putchar ('\\');
-	      /* Arrange to exit the loop.  */
-	      --b;
-	    }
-	  else
-	    {
-	      print_esc_char (*b);
-	    }
-	  break;
+        case '\\':
+          if ( ! interpret_backslash_escapes)
+            {
+              putchar ('\\');
+              break;
+            }
+          ++b;
+          if (isodigit (*b))
+            {
+              int esc_value = octtobin (*b);
+              int esc_length = 1;	/* number of octal digits */
+              for (++b; esc_length < 3 && isodigit (*b);
+                   ++esc_length, ++b)
+                {
+                  esc_value = esc_value * 8 + octtobin (*b);
+                }
+              putchar (esc_value);
+              --b;
+            }
+          else if (*b == 'x' && isxdigit (to_uchar (b[1])))
+            {
+              int esc_value = hextobin (b[1]);	/* Value of \xhh escape. */
+              /* A hexadecimal \xhh escape sequence must have
+                 1 or 2 hex. digits.  */
+              ++b;
+              if (isxdigit (to_uchar (b[1])))
+                {
+                  ++b;
+                  esc_value = esc_value * 16 + hextobin (*b);
+                }
+              putchar (esc_value);
+            }
+          else if (*b == '\0')
+            {
+              error (0, 0, _("warning: backslash at end of format"));
+              putchar ('\\');
+              /* Arrange to exit the loop.  */
+              --b;
+            }
+          else
+            {
+              print_esc_char (*b);
+            }
+          break;
 
-	default:
-	  putchar (*b);
-	  break;
-	}
+        default:
+          putchar (*b);
+          break;
+        }
     }
   free (dest);
 
@@ -832,19 +832,19 @@ do_statfs (char const *filename, bool terse, char const *format)
   if (STATFS (filename, &statfsbuf) != 0)
     {
       error (0, errno, _("cannot read file system information for %s"),
-	     quote (filename));
+             quote (filename));
       return false;
     }
 
   if (format == NULL)
     {
       format = (terse
-		? "%n %i %l %t %s %S %b %f %a %c %d\n"
-		: "  File: \"%n\"\n"
-		"    ID: %-8i Namelen: %-7l Type: %T\n"
-		"Block size: %-10s Fundamental block size: %S\n"
-		"Blocks: Total: %-10b Free: %-10f Available: %a\n"
-		"Inodes: Total: %-10c Free: %d\n");
+                ? "%n %i %l %t %s %S %b %f %a %c %d\n"
+                : "  File: \"%n\"\n"
+                "    ID: %-8i Namelen: %-7l Type: %T\n"
+                "Block size: %-10s Fundamental block size: %S\n"
+                "Blocks: Total: %-10b Free: %-10f Available: %a\n"
+                "Inodes: Total: %-10c Free: %d\n");
     }
 
   print_it (format, filename, print_statfs, &statfsbuf);
@@ -866,33 +866,33 @@ do_stat (char const *filename, bool terse, char const *format)
   if (format == NULL)
     {
       if (terse)
-	{
-	  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o\n";
-	}
+        {
+          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o\n";
+        }
       else
-	{
-	  /* Temporary hack to match original output until conditional
-	     implemented.  */
-	  if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
-	    {
-	      format =
-		"  File: %N\n"
-		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		"Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-		" Device type: %t,%T\n"
-		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
-	    }
-	  else
-	    {
-	      format =
-		"  File: %N\n"
-		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		"Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
-		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
-	    }
-	}
+        {
+          /* Temporary hack to match original output until conditional
+             implemented.  */
+          if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
+            {
+              format =
+                "  File: %N\n"
+                "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+                "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
+                " Device type: %t,%T\n"
+                "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+                "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+            }
+          else
+            {
+              format =
+                "  File: %N\n"
+                "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+                "Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
+                "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+                "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+            }
+        }
     }
   print_it (format, filename, print_stat, &statbuf);
   return true;
@@ -903,7 +903,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
@@ -1009,47 +1009,47 @@ main (int argc, char *argv[])
   while ((c = getopt_long (argc, argv, "c:fLtZ", long_options, NULL)) != -1)
     {
       switch (c)
-	{
-	case PRINTF_OPTION:
-	  format = optarg;
-	  interpret_backslash_escapes = true;
-	  trailing_delim = "";
-	  break;
+        {
+        case PRINTF_OPTION:
+          format = optarg;
+          interpret_backslash_escapes = true;
+          trailing_delim = "";
+          break;
 
-	case 'c':
-	  format = optarg;
-	  interpret_backslash_escapes = false;
-	  trailing_delim = "\n";
-	  break;
+        case 'c':
+          format = optarg;
+          interpret_backslash_escapes = false;
+          trailing_delim = "\n";
+          break;
 
-	case 'L':
-	  follow_links = true;
-	  break;
+        case 'L':
+          follow_links = true;
+          break;
 
-	case 'f':
-	  fs = true;
-	  break;
+        case 'f':
+          fs = true;
+          break;
 
-	case 't':
-	  terse = true;
-	  break;
+        case 't':
+          terse = true;
+          break;
 
-	case 'Z':  /* FIXME: remove in 2010 */
-	  /* Ignore, for compatibility with distributions
-	     that implemented this before upstream.
-	     But warn of impending removal.  */
-	  error (0, 0,
-		 _("the --context (-Z) option is obsolete and will be removed\n"
-		   "in a future release"));
-	  break;
+        case 'Z':  /* FIXME: remove in 2010 */
+          /* Ignore, for compatibility with distributions
+             that implemented this before upstream.
+             But warn of impending removal.  */
+          error (0, 0,
+                 _("the --context (-Z) option is obsolete and will be removed\n"
+                   "in a future release"));
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (argc == optind)
@@ -1060,8 +1060,8 @@ main (int argc, char *argv[])
 
   for (i = optind; i < argc; i++)
     ok &= (fs
-	   ? do_statfs (argv[i], terse, format)
-	   : do_stat (argv[i], terse, format));
+           ? do_statfs (argv[i], terse, format)
+           : do_stat (argv[i], terse, format));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

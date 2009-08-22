@@ -24,12 +24,12 @@
    --tabs=tab1[,tab2[,...]]
    -t tab1[,tab2[,...]]
    -tab1[,tab2[,...]]	If only one tab stop is given, set the tabs tab1
-			columns apart instead of the default 8.  Otherwise,
-			set the tabs at columns tab1, tab2, etc. (numbered from
-			0); preserve any blanks beyond the tab stops given.
+                        columns apart instead of the default 8.  Otherwise,
+                        set the tabs at columns tab1, tab2, etc. (numbered from
+                        0); preserve any blanks beyond the tab stops given.
    --all
    -a			Use tabs wherever they would replace 2 or more blanks,
-			not just at the beginnings of lines.
+                        not just at the beginnings of lines.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
@@ -107,13 +107,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Convert blanks in each FILE to tabs, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -150,7 +150,7 @@ add_tab_stop (uintmax_t tabval)
   if (max_column_width < column_width)
     {
       if (SIZE_MAX < column_width)
-	error (EXIT_FAILURE, 0, _("tabs are too far apart"));
+        error (EXIT_FAILURE, 0, _("tabs are too far apart"));
       max_column_width = column_width;
     }
 }
@@ -169,38 +169,38 @@ parse_tab_stops (char const *stops)
   for (; *stops; stops++)
     {
       if (*stops == ',' || isblank (to_uchar (*stops)))
-	{
-	  if (have_tabval)
-	    add_tab_stop (tabval);
-	  have_tabval = false;
-	}
+        {
+          if (have_tabval)
+            add_tab_stop (tabval);
+          have_tabval = false;
+        }
       else if (ISDIGIT (*stops))
-	{
-	  if (!have_tabval)
-	    {
-	      tabval = 0;
-	      have_tabval = true;
-	      num_start = stops;
-	    }
+        {
+          if (!have_tabval)
+            {
+              tabval = 0;
+              have_tabval = true;
+              num_start = stops;
+            }
 
-	  /* Detect overflow.  */
-	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
-	    {
-	      size_t len = strspn (num_start, "0123456789");
-	      char *bad_num = xstrndup (num_start, len);
-	      error (0, 0, _("tab stop is too large %s"), quote (bad_num));
-	      free (bad_num);
-	      ok = false;
-	      stops = num_start + len - 1;
-	    }
-	}
+          /* Detect overflow.  */
+          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
+            {
+              size_t len = strspn (num_start, "0123456789");
+              char *bad_num = xstrndup (num_start, len);
+              error (0, 0, _("tab stop is too large %s"), quote (bad_num));
+              free (bad_num);
+              ok = false;
+              stops = num_start + len - 1;
+            }
+        }
       else
-	{
-	  error (0, 0, _("tab size contains invalid character(s): %s"),
-		 quote (stops));
-	  ok = false;
-	  break;
-	}
+        {
+          error (0, 0, _("tab size contains invalid character(s): %s"),
+                 quote (stops));
+          ok = false;
+          break;
+        }
     }
 
   if (!ok)
@@ -222,9 +222,9 @@ validate_tab_stops (uintmax_t const *tabs, size_t entries)
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
-	error (EXIT_FAILURE, 0, _("tab size cannot be 0"));
+        error (EXIT_FAILURE, 0, _("tab size cannot be 0"));
       if (tabs[i] <= prev_tab)
-	error (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
+        error (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
 }
@@ -243,33 +243,33 @@ next_file (FILE *fp)
   if (fp)
     {
       if (ferror (fp))
-	{
-	  error (0, errno, "%s", prev_file);
-	  exit_status = EXIT_FAILURE;
-	}
+        {
+          error (0, errno, "%s", prev_file);
+          exit_status = EXIT_FAILURE;
+        }
       if (STREQ (prev_file, "-"))
-	clearerr (fp);		/* Also clear EOF.  */
+        clearerr (fp);		/* Also clear EOF.  */
       else if (fclose (fp) != 0)
-	{
-	  error (0, errno, "%s", prev_file);
-	  exit_status = EXIT_FAILURE;
-	}
+        {
+          error (0, errno, "%s", prev_file);
+          exit_status = EXIT_FAILURE;
+        }
     }
 
   while ((file = *file_list++) != NULL)
     {
       if (STREQ (file, "-"))
-	{
-	  have_read_stdin = true;
-	  prev_file = file;
-	  return stdin;
-	}
+        {
+          have_read_stdin = true;
+          prev_file = file;
+          return stdin;
+        }
       fp = fopen (file, "r");
       if (fp)
-	{
-	  prev_file = file;
-	  return fp;
-	}
+        {
+          prev_file = file;
+          return fp;
+        }
       error (0, errno, "%s", file);
       exit_status = EXIT_FAILURE;
     }
@@ -308,7 +308,7 @@ unexpand (void)
 
 
       /* The following variables have valid values only when CONVERT
-	 is true:  */
+         is true:  */
 
       /* Column of next input character.  */
       uintmax_t column = 0;
@@ -323,8 +323,8 @@ unexpand (void)
       bool one_blank_before_tab_stop = false;
 
       /* If true, the previous input character was a blank.  This is
-	 initially true, since initial strings of blanks are treated
-	 as if the line was preceded by a blank.  */
+         initially true, since initial strings of blanks are treated
+         as if the line was preceded by a blank.  */
       bool prev_blank = true;
 
       /* Number of pending columns of blanks.  */
@@ -334,113 +334,113 @@ unexpand (void)
       /* Convert a line of text.  */
 
       do
-	{
-	  while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
-	    continue;
+        {
+          while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
+            continue;
 
-	  if (convert)
-	    {
-	      bool blank = !! isblank (c);
+          if (convert)
+            {
+              bool blank = !! isblank (c);
 
-	      if (blank)
-		{
-		  if (next_tab_column <= column)
-		    {
-		      if (tab_size)
-			next_tab_column =
-			  column + (tab_size - column % tab_size);
-		      else
-			for (;;)
-			  if (tab_index == first_free_tab)
-			    {
-			      convert = false;
-			      break;
-			    }
-			  else
-			    {
-			      uintmax_t tab = tab_list[tab_index++];
-			      if (column < tab)
-				{
-				  next_tab_column = tab;
-				  break;
-				}
-			    }
-		    }
+              if (blank)
+                {
+                  if (next_tab_column <= column)
+                    {
+                      if (tab_size)
+                        next_tab_column =
+                          column + (tab_size - column % tab_size);
+                      else
+                        for (;;)
+                          if (tab_index == first_free_tab)
+                            {
+                              convert = false;
+                              break;
+                            }
+                          else
+                            {
+                              uintmax_t tab = tab_list[tab_index++];
+                              if (column < tab)
+                                {
+                                  next_tab_column = tab;
+                                  break;
+                                }
+                            }
+                    }
 
-		  if (convert)
-		    {
-		      if (next_tab_column < column)
-			error (EXIT_FAILURE, 0, _("input line is too long"));
+                  if (convert)
+                    {
+                      if (next_tab_column < column)
+                        error (EXIT_FAILURE, 0, _("input line is too long"));
 
-		      if (c == '\t')
-			{
-			  column = next_tab_column;
+                      if (c == '\t')
+                        {
+                          column = next_tab_column;
 
-			  /* Discard pending blanks, unless it was a single
-			     blank just before the previous tab stop.  */
-			  if (! (pending == 1 && one_blank_before_tab_stop))
-			    {
-			      pending = 0;
-			      one_blank_before_tab_stop = false;
-			    }
-			}
-		      else
-			{
-			  column++;
+                          /* Discard pending blanks, unless it was a single
+                             blank just before the previous tab stop.  */
+                          if (! (pending == 1 && one_blank_before_tab_stop))
+                            {
+                              pending = 0;
+                              one_blank_before_tab_stop = false;
+                            }
+                        }
+                      else
+                        {
+                          column++;
 
-			  if (! (prev_blank && column == next_tab_column))
-			    {
-			      /* It is not yet known whether the pending blanks
-				 will be replaced by tabs.  */
-			      if (column == next_tab_column)
-				one_blank_before_tab_stop = true;
-			      pending_blank[pending++] = c;
-			      prev_blank = true;
-			      continue;
-			    }
+                          if (! (prev_blank && column == next_tab_column))
+                            {
+                              /* It is not yet known whether the pending blanks
+                                 will be replaced by tabs.  */
+                              if (column == next_tab_column)
+                                one_blank_before_tab_stop = true;
+                              pending_blank[pending++] = c;
+                              prev_blank = true;
+                              continue;
+                            }
 
-			  /* Replace the pending blanks by a tab or two.  */
-			  pending_blank[0] = c = '\t';
-			  pending = one_blank_before_tab_stop;
-			}
-		    }
-		}
-	      else if (c == '\b')
-		{
-		  /* Go back one column, and force recalculation of the
-		     next tab stop.  */
-		  column -= !!column;
-		  next_tab_column = column;
-		  tab_index -= !!tab_index;
-		}
-	      else
-		{
-		  column++;
-		  if (!column)
-		    error (EXIT_FAILURE, 0, _("input line is too long"));
-		}
+                          /* Replace the pending blanks by a tab or two.  */
+                          pending_blank[0] = c = '\t';
+                          pending = one_blank_before_tab_stop;
+                        }
+                    }
+                }
+              else if (c == '\b')
+                {
+                  /* Go back one column, and force recalculation of the
+                     next tab stop.  */
+                  column -= !!column;
+                  next_tab_column = column;
+                  tab_index -= !!tab_index;
+                }
+              else
+                {
+                  column++;
+                  if (!column)
+                    error (EXIT_FAILURE, 0, _("input line is too long"));
+                }
 
-	      if (pending)
-		{
-		  if (fwrite (pending_blank, 1, pending, stdout) != pending)
-		    error (EXIT_FAILURE, errno, _("write error"));
-		  pending = 0;
-		  one_blank_before_tab_stop = false;
-		}
+              if (pending)
+                {
+                  if (fwrite (pending_blank, 1, pending, stdout) != pending)
+                    error (EXIT_FAILURE, errno, _("write error"));
+                  pending = 0;
+                  one_blank_before_tab_stop = false;
+                }
 
-	      prev_blank = blank;
-	      convert &= convert_entire_line | blank;
-	    }
+              prev_blank = blank;
+              convert &= convert_entire_line | blank;
+            }
 
-	  if (c < 0)
-	    {
-	      free (pending_blank);
-	      return;
-	    }
+          if (c < 0)
+            {
+              free (pending_blank);
+              return;
+            }
 
-	  if (putchar (c) < 0)
-	    error (EXIT_FAILURE, errno, _("write error"));
-	}
+          if (putchar (c) < 0)
+            error (EXIT_FAILURE, errno, _("write error"));
+        }
       while (c != '\n');
     }
 }
@@ -471,39 +471,39 @@ main (int argc, char **argv)
   first_free_tab = 0;
 
   while ((c = getopt_long (argc, argv, ",0123456789at:", longopts, NULL))
-	 != -1)
+         != -1)
     {
       switch (c)
-	{
-	case '?':
-	  usage (EXIT_FAILURE);
-	case 'a':
-	  convert_entire_line = true;
-	  break;
-	case 't':
-	  convert_entire_line = true;
-	  parse_tab_stops (optarg);
-	  break;
-	case CONVERT_FIRST_ONLY_OPTION:
-	  convert_first_only = true;
-	  break;
-	case ',':
-	  if (have_tabval)
-	    add_tab_stop (tabval);
-	  have_tabval = false;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  if (!have_tabval)
-	    {
-	      tabval = 0;
-	      have_tabval = true;
-	    }
-	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', uintmax_t))
-	    error (EXIT_FAILURE, 0, _("tab stop value is too large"));
-	  break;
-	}
+        {
+        case '?':
+          usage (EXIT_FAILURE);
+        case 'a':
+          convert_entire_line = true;
+          break;
+        case 't':
+          convert_entire_line = true;
+          parse_tab_stops (optarg);
+          break;
+        case CONVERT_FIRST_ONLY_OPTION:
+          convert_first_only = true;
+          break;
+        case ',':
+          if (have_tabval)
+            add_tab_stop (tabval);
+          have_tabval = false;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          if (!have_tabval)
+            {
+              tabval = 0;
+              have_tabval = true;
+            }
+          if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', uintmax_t))
+            error (EXIT_FAILURE, 0, _("tab stop value is too large"));
+          break;
+        }
     }
 
   if (convert_first_only)

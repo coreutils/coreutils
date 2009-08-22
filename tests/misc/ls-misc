@@ -57,12 +57,12 @@ sub setuid_setup()
 {
   my $test = shell_quote "$ENV{abs_top_builddir}/src/test";
   system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
-	   touch setgid && chmod g+s setgid && $test -g setgid &&
-	   mkdir sticky && chmod +t sticky  && $test -k sticky &&
-	   mkdir owt    && chmod +t,o+w owt && $test -k owt &&
-	   mkdir owr    && chmod o+w owr)) == 0
-	     or (warn "$program_name: cannot create setuid/setgid/sticky files,"
-		 . "so can't run this test\n"), exit 77;
+           touch setgid && chmod g+s setgid && $test -g setgid &&
+           mkdir sticky && chmod +t sticky  && $test -k sticky &&
+           mkdir owt    && chmod +t,o+w owt && $test -k owt &&
+           mkdir owr    && chmod o+w owr)) == 0
+             or (warn "$program_name: cannot create setuid/setgid/sticky files,"
+                 . "so can't run this test\n"), exit 77;
 }
 
 sub mk_file(@)
@@ -70,7 +70,7 @@ sub mk_file(@)
   foreach my $f (@_)
     {
       open (F, '>', $f) && close F
-	or die "creating $f: $!\n";
+        or die "creating $f: $!\n";
     }
 }
 
@@ -80,31 +80,31 @@ my $mkdir = {PRE => sub {mkdir_d}};
 my $rmdir = {POST => sub {rmdir_d}};
 my $mkdir_reg = {PRE => sub {mkdir_d; mk_file 'd/f' }};
 my $rmdir_reg = {POST => sub {unlink 'd/f' or die "d/f: $!\n";
-			      rmdir 'd' or die "d: $!\n"}};
+                              rmdir 'd' or die "d: $!\n"}};
 
 my $mkdir2 = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
-			  mkdir 'd/e',0755 or die "d/e: $!\n" }};
+                          mkdir 'd/e',0755 or die "d/e: $!\n" }};
 my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
-			   rmdir 'd' or die "d: $!\n" }};
+                           rmdir 'd' or die "d: $!\n" }};
 
 my $target = {PRE => sub {
-		mkdir 'd',0755 or die "d: $!\n";
-		symlink '.', 'd/X' or die "d/X: $!\n";
-		push_ls_colors('ln=target')
-	      }};
+                mkdir 'd',0755 or die "d: $!\n";
+                symlink '.', 'd/X' or die "d/X: $!\n";
+                push_ls_colors('ln=target')
+              }};
 my $target2 = {POST => sub {unlink 'd/X' or die "d/X: $!\n";
-			    rmdir 'd' or die "d: $!\n";
-			    restore_ls_colors
-			    }};
+                            rmdir 'd' or die "d: $!\n";
+                            restore_ls_colors
+                            }};
 my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
                            push_ls_colors('ln=01;36:di=01;34:or=40;31;01')
                            }};
 my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"; restore_ls_colors}};
 
 my $mkdir_d_slink = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
-				 symlink '/', 'd/s' or die "d/s: $!\n" }};
+                                 symlink '/', 'd/s' or die "d/s: $!\n" }};
 my $rmdir_d_slink = {POST => sub {unlink 'd/s' or die "d/s: $!\n";
-				  rmdir 'd' or die "d: $!\n" }};
+                                  rmdir 'd' or die "d: $!\n" }};
 
 sub make_j_d ()
 {
@@ -118,7 +118,7 @@ my @v_files = ((map { ".$_" } @v1), @v1);
 my $exe_in_subdir = {PRE => sub { make_j_d (); push_ls_colors('ex=01;32') }};
 my $remove_j = {POST => sub {unlink 'j/d' or die "j/d: $!\n";
                              rmdir 'j' or die "j: $!\n";
-			     restore_ls_colors }};
+                             restore_ls_colors }};
 
 my $e = "\e[0m";
 my $q_bell = {IN => {"q\a" => ''}};
@@ -156,11 +156,11 @@ my @Tests =
 
      # Test for a bug that was fixed in coreutils-4.5.4.
      ['sl-F-color', '-F --color=always d',
-				 {OUT => "$e\e[01;36md$e\@\n\e[m"},
-				  $slink_d, $unlink_d],
+                                 {OUT => "$e\e[01;36md$e\@\n\e[m"},
+                                  $slink_d, $unlink_d],
      ['sl-dF-color', '-dF --color=always d',
-				 {OUT => "$e\e[01;36md$e\@\n\e[m"},
-				  $slink_d, $unlink_d],
+                                 {OUT => "$e\e[01;36md$e\@\n\e[m"},
+                                  $slink_d, $unlink_d],
 
      # A listing with no output should have no color sequences at all.
      ['no-c-empty', '--color=always d', {OUT => ""}, $mkdir, $rmdir],
@@ -176,44 +176,44 @@ my @Tests =
      ['sl-dangle', '--color=always d',
       {OUT => "$e\e[40;31;01mX$e\n\e[m"},
       {PRE => sub {
-		mkdir 'd',0755 or die "d: $!\n";
-		symlink 'non-existent', 'd/X' or die "d/X: $!\n";
-		push_ls_colors('or=40;31;01')
-	      }},
+                mkdir 'd',0755 or die "d: $!\n";
+                symlink 'non-existent', 'd/X' or die "d/X: $!\n";
+                push_ls_colors('or=40;31;01')
+              }},
       {POST => sub {unlink 'd/X' or die "d/X: $!\n";
-		    rmdir 'd' or die "d: $!\n";
-		    restore_ls_colors; }},
+                    rmdir 'd' or die "d: $!\n";
+                    restore_ls_colors; }},
      ],
 
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.
      ['color-exe1', '--color=always j',
-				 {OUT => "$e\e[01;32md$e\n\e[m"},
-				  $exe_in_subdir, $remove_j],
+                                 {OUT => "$e\e[01;32md$e\n\e[m"},
+                                  $exe_in_subdir, $remove_j],
 
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
-	 {OUT => "d:\n"},
-	 {ERR => "ls: cannot access no-dir: No such file or directory\n"},
-	 $mkdir, $rmdir, {EXIT => 2}],
+         {OUT => "d:\n"},
+         {ERR => "ls: cannot access no-dir: No such file or directory\n"},
+         $mkdir, $rmdir, {EXIT => 2}],
 
      ['recursive-2', '-R d', {OUT => "d:\ne\n\nd/e:\n"}, $mkdir2, $rmdir2],
 
      ['setuid-etc', '-1 -d --color=always owr owt setgid setuid sticky',
-	 {OUT =>
-	    "$e\e[34;42mowr$e\n"
-	    . "\e[30;42mowt$e\n"
-	    . "\e[30;43msetgid$e\n"
-	    . "\e[37;41msetuid$e\n"
-	    . "\e[37;44msticky$e\n"
-	    . "\e[m"
-	 },
+         {OUT =>
+            "$e\e[34;42mowr$e\n"
+            . "\e[30;42mowt$e\n"
+            . "\e[30;43msetgid$e\n"
+            . "\e[37;41msetuid$e\n"
+            . "\e[37;44msticky$e\n"
+            . "\e[m"
+         },
 
-	{POST => sub {
+        {POST => sub {
          unlink qw(setuid setgid);
-	 foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
-	 ],
+         foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
+         ],
 
      # For 5.97 and earlier, --file-type acted like --indicator-style=slash.
      ['file-type', '--file-type d', {OUT => "s@\n"},

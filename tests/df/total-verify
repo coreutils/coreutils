@@ -39,13 +39,13 @@ while (<>)
       or die "$0: invalid input line\n: $_";
     if ($1 eq 'total' && $5 eq '')
       {
-	$total == $2 or die "$total != $2";
-	$used  == $3 or die "$used  != $3";
-	$avail == $4 or die "$avail != $4";
-	my $line = <>;
-	defined $line
-	  and die "$0: extra line(s) after totals\n";
-	exit 0;
+        $total == $2 or die "$total != $2";
+        $used  == $3 or die "$used  != $3";
+        $avail == $4 or die "$avail != $4";
+        my $line = <>;
+        defined $line
+          and die "$0: extra line(s) after totals\n";
+        exit 0;
       }
     $total += $2 unless $2 eq '-';
     $used  += $3 unless $3 eq '-';

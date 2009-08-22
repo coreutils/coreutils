@@ -51,7 +51,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
@@ -102,9 +102,9 @@ file_name_prepend (struct file_name *p, char const *s, size_t s_len)
     {
       size_t half = p->n_alloc + 1 + s_len;
       /* Use xnmalloc+free rather than xnrealloc, since with the latter
-	 we'd end up copying the data twice: once via realloc, then again
-	 to align it with the end of the new buffer.  With xnmalloc, we
-	 copy it only once.  */
+         we'd end up copying the data twice: once via realloc, then again
+         to align it with the end of the new buffer.  With xnmalloc, we
+         copy it only once.  */
       char *q = xnmalloc (2, half);
       size_t n_used = p->n_alloc - n_free;
       p->start = q + 2 * half - n_used;
@@ -149,7 +149,7 @@ nth_parent (size_t n)
 
 static void
 find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
-		size_t parent_height)
+                size_t parent_height)
 {
   DIR *dirp;
   int fd;
@@ -160,16 +160,16 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
   dirp = opendir ("..");
   if (dirp == NULL)
     error (EXIT_FAILURE, errno, _("cannot open directory %s"),
-	   quote (nth_parent (parent_height)));
+           quote (nth_parent (parent_height)));
 
   fd = dirfd (dirp);
   if ((0 <= fd ? fchdir (fd) : chdir ("..")) < 0)
     error (EXIT_FAILURE, errno, _("failed to chdir to %s"),
-	   quote (nth_parent (parent_height)));
+           quote (nth_parent (parent_height)));
 
   if ((0 <= fd ? fstat (fd, &parent_sb) : stat (".", &parent_sb)) < 0)
     error (EXIT_FAILURE, errno, _("failed to stat %s"),
-	   quote (nth_parent (parent_height)));
+           quote (nth_parent (parent_height)));
 
   /* If parent and child directory are on different devices, then we
      can't rely on d_ino for useful i-node numbers; use lstat instead.  */
@@ -184,57 +184,57 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 
       errno = 0;
       if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
-	{
-	  if (errno)
-	    {
-	      /* Save/restore errno across closedir call.  */
-	      int e = errno;
-	      closedir (dirp);
-	      errno = e;
+        {
+          if (errno)
+            {
+              /* Save/restore errno across closedir call.  */
+              int e = errno;
+              closedir (dirp);
+              errno = e;
 
-	      /* Arrange to give a diagnostic after exiting this loop.  */
-	      dirp = NULL;
-	    }
-	  break;
-	}
+              /* Arrange to give a diagnostic after exiting this loop.  */
+              dirp = NULL;
+            }
+          break;
+        }
 
       ino = D_INO (dp);
 
       if (ino == NOT_AN_INODE_NUMBER || use_lstat)
-	{
-	  if (lstat (dp->d_name, &ent_sb) < 0)
-	    {
-	      /* Skip any entry we can't stat.  */
-	      continue;
-	    }
-	  ino = ent_sb.st_ino;
-	}
+        {
+          if (lstat (dp->d_name, &ent_sb) < 0)
+            {
+              /* Skip any entry we can't stat.  */
+              continue;
+            }
+          ino = ent_sb.st_ino;
+        }
 
       if (ino != dot_sb->st_ino)
-	continue;
+        continue;
 
       /* If we're not crossing a device boundary, then a simple i-node
-	 match is enough.  */
+         match is enough.  */
       if ( ! use_lstat || ent_sb.st_dev == dot_sb->st_dev)
-	{
-	  file_name_prepend (file_name, dp->d_name, _D_EXACT_NAMLEN (dp));
-	  found = true;
-	  break;
-	}
+        {
+          file_name_prepend (file_name, dp->d_name, _D_EXACT_NAMLEN (dp));
+          found = true;
+          break;
+        }
     }
 
   if (dirp == NULL || closedir (dirp) != 0)
     {
       /* Note that this diagnostic serves for both readdir
-	 and closedir failures.  */
+         and closedir failures.  */
       error (EXIT_FAILURE, errno, _("reading directory %s"),
-	     quote (nth_parent (parent_height)));
+             quote (nth_parent (parent_height)));
     }
 
   if ( ! found)
     error (EXIT_FAILURE, 0,
-	   _("couldn't find directory entry in %s with matching i-node"),
-	     quote (nth_parent (parent_height)));
+           _("couldn't find directory entry in %s with matching i-node"),
+             quote (nth_parent (parent_height)));
 
   *dot_sb = parent_sb;
 }
@@ -272,7 +272,7 @@ robust_getcwd (struct file_name *file_name)
 
   if (root_dev_ino == NULL)
     error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	   quote ("/"));
+           quote ("/"));
 
   if (stat (".", &dot_sb) < 0)
     error (EXIT_FAILURE, errno, _("failed to stat %s"), quote ("."));
@@ -281,7 +281,7 @@ robust_getcwd (struct file_name *file_name)
     {
       /* If we've reached the root, we're done.  */
       if (SAME_INODE (dot_sb, *root_dev_ino))
-	break;
+        break;
 
       find_dir_entry (&dot_sb, file_name, height++);
     }
@@ -309,8 +309,8 @@ logical_getcwd (void)
   while ((p = strstr (p, "/.")))
     {
       if (!p[2] || p[2] == '/'
-	  || (p[2] == '.' && (!p[3] || p[3] == '/')))
-	return NULL;
+          || (p[2] == '.' && (!p[3] || p[3] == '/')))
+        return NULL;
       p++;
     }
 
@@ -340,23 +340,23 @@ main (int argc, char **argv)
     {
       int c = getopt_long (argc, argv, "LP", longopts, NULL);
       if (c == -1)
-	break;
+        break;
       switch (c)
-	{
-	case 'L':
-	  logical = true;
-	  break;
-	case 'P':
-	  logical = false;
-	  break;
+        {
+        case 'L':
+          logical = true;
+          break;
+        case 'P':
+          logical = false;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind < argc)
@@ -366,10 +366,10 @@ main (int argc, char **argv)
     {
       wd = logical_getcwd ();
       if (wd)
-	{
-	  puts (wd);
-	  exit (EXIT_SUCCESS);
-	}
+        {
+          puts (wd);
+          exit (EXIT_SUCCESS);
+        }
     }
 
   wd = xgetcwd ();

@@ -114,25 +114,25 @@ foreach my $t (@Tests)
     foreach my $e (@$t)
       {
         ref $e && ref $e eq 'HASH'
-	  or next;
+          or next;
         defined $e->{EXIT}
-	  and $exit_val = $e->{EXIT};
-	defined $e->{IN}
-	  and $in = $e->{IN};
-	if (defined $e->{OUT})
-	  {
-	    my $t = $e->{OUT};
-	    push @out, $t;
-	    my $len = length $t;
-	    foreach my $i (0..$len)
-	      {
-		my $u = $t;
-		substr ($u, $i, 0) = "\n";
-		push @out, $u;
-		10 <= $i
-		  and last;
-	      }
-	  }
+          and $exit_val = $e->{EXIT};
+        defined $e->{IN}
+          and $in = $e->{IN};
+        if (defined $e->{OUT})
+          {
+            my $t = $e->{OUT};
+            push @out, $t;
+            my $len = length $t;
+            foreach my $i (0..$len)
+              {
+                my $u = $t;
+                substr ($u, $i, 0) = "\n";
+                push @out, $u;
+                10 <= $i
+                  and last;
+              }
+          }
       }
     $exit_val
       and next;
@@ -140,8 +140,8 @@ foreach my $t (@Tests)
     my $i = 0;
     foreach my $o (@out)
       {
-	push @new, ["d$i-$t->[0]", '--decode', {IN => $o}, {OUT => $in}];
-	++$i;
+        push @new, ["d$i-$t->[0]", '--decode', {IN => $o}, {OUT => $in}];
+        ++$i;
       }
   }
 push @Tests, @new;

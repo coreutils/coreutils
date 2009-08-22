@@ -66,8 +66,8 @@ for p in empty -p; do
     # and adjust expectations accordingly.
     test x$p = x && \
       {
-	mkdir -m =,u=rwx parent || fail=1
-	parent_perms=drwx------
+        mkdir -m =,u=rwx parent || fail=1
+        parent_perms=drwx------
       }
 
     mkdir $p $mode parent/sub || fail=1

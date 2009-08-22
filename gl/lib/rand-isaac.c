@@ -43,7 +43,7 @@
 /* This index operation is more efficient on many processors */
 #define ind(mm, x) \
   (* (uint32_t *) ((char *) (mm) \
-	           + ((x) & (ISAAC_WORDS - 1) * sizeof (uint32_t))))
+                   + ((x) & (ISAAC_WORDS - 1) * sizeof (uint32_t))))
 
 /*
  * The central step.  This uses two temporaries, x and y.  mm is the
@@ -191,18 +191,18 @@ isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
       isaac_mix (s, seed);
       /* Second and subsequent passes (extension to ISAAC) */
       while (seedsize -= ISAAC_BYTES)
-	{
-	  seed += ISAAC_WORDS;
-	  for (i = 0; i < ISAAC_WORDS; i++)
-	    s->mm[i] += seed[i];
-	  isaac_mix (s, s->mm);
-	}
+        {
+          seed += ISAAC_WORDS;
+          for (i = 0; i < ISAAC_WORDS; i++)
+            s->mm[i] += seed[i];
+          isaac_mix (s, s->mm);
+        }
     }
   else
     {
       /* The no seed case (as in reference ISAAC code) */
       for (i = 0; i < ISAAC_WORDS; i++)
-	s->mm[i] = 0;
+        s->mm[i] = 0;
     }
 
   /* Final pass */
@@ -252,7 +252,7 @@ isaac_seed_data (struct isaac_state *s, void const *buffer, size_t size)
     {
       p = (unsigned char *) s->mm + s->c;
       for (i = 0; i < avail; i++)
-	p[i] ^= buf[i];
+        p[i] ^= buf[i];
       buf += avail;
       size -= avail;
       isaac_mix (s, s->mm);

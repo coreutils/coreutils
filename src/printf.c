@@ -63,7 +63,7 @@
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
 #define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
-		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
+                     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 #define octtobin(c) ((c) - '0')
 
 /* The value to return to the calling program.  */
@@ -82,14 +82,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s FORMAT [ARGUMENT]...\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:\n\
 \n\
@@ -146,9 +146,9 @@ verify_numeric (const char *s, const char *end)
   else if (*end)
     {
       if (s == end)
-	error (0, 0, _("%s: expected a numeric value"), s);
+        error (0, 0, _("%s: expected a numeric value"), s);
       else
-	error (0, 0, _("%s: value not completely converted"), s);
+        error (0, 0, _("%s: value not completely converted"), s);
       exit_status = EXIT_FAILURE;
     }
 }
@@ -159,17 +159,17 @@ FUNC_NAME (char const *s)						 \
 {									 \
   char *end;								 \
   TYPE val;								 \
-									 \
+                                                                         \
   if (*s == '\"' || *s == '\'')						 \
     {									 \
       unsigned char ch = *++s;						 \
       val = ch;								 \
       /* If POSIXLY_CORRECT is not set, then give a warning that there	 \
-	 are characters following the character constant and that GNU	 \
-	 printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \
-	 set, then don't give the warning.  */				 \
+         are characters following the character constant and that GNU	 \
+         printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \
+         set, then don't give the warning.  */				 \
       if (*++s != 0 && !posixly_correct)				 \
-	error (0, 0, _(cfcc_msg), s);					 \
+        error (0, 0, _(cfcc_msg), s);					 \
     }									 \
   else									 \
     {									 \
@@ -238,11 +238,11 @@ print_esc (const char *escstart, bool octal_0)
     {
       /* A hexadecimal \xhh escape sequence must have 1 or 2 hex. digits.  */
       for (esc_length = 0, ++p;
-	   esc_length < 2 && isxdigit (to_uchar (*p));
-	   ++esc_length, ++p)
-	esc_value = esc_value * 16 + hextobin (*p);
+           esc_length < 2 && isxdigit (to_uchar (*p));
+           ++esc_length, ++p)
+        esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
-	error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
+        error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
       putchar (esc_value);
     }
   else if (isodigit (*p))
@@ -251,9 +251,9 @@ print_esc (const char *escstart, bool octal_0)
          Allow \ooo if octal_0 && *p != '0'; this is an undocumented
          extension to POSIX that is compatible with Bash 2.05b.  */
       for (esc_length = 0, p += octal_0 && *p == '0';
-	   esc_length < 3 && isodigit (*p);
-	   ++esc_length, ++p)
-	esc_value = esc_value * 8 + octtobin (*p);
+           esc_length < 3 && isodigit (*p);
+           ++esc_length, ++p)
+        esc_value = esc_value * 8 + octtobin (*p);
       putchar (esc_value);
     }
   else if (*p && strchr ("\"\\abcfnrtv", *p))
@@ -265,24 +265,24 @@ print_esc (const char *escstart, bool octal_0)
 
       uni_value = 0;
       for (esc_length = (esc_char == 'u' ? 4 : 8), ++p;
-	   esc_length > 0;
-	   --esc_length, ++p)
-	{
-	  if (! isxdigit (to_uchar (*p)))
-	    error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
-	  uni_value = uni_value * 16 + hextobin (*p);
-	}
+           esc_length > 0;
+           --esc_length, ++p)
+        {
+          if (! isxdigit (to_uchar (*p)))
+            error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
+          uni_value = uni_value * 16 + hextobin (*p);
+        }
 
       /* A universal character name shall not specify a character short
-	 identifier in the range 00000000 through 00000020, 0000007F through
-	 0000009F, or 0000D800 through 0000DFFF inclusive. A universal
-	 character name shall not designate a character in the required
-	 character set.  */
+         identifier in the range 00000000 through 00000020, 0000007F through
+         0000009F, or 0000D800 through 0000DFFF inclusive. A universal
+         character name shall not designate a character in the required
+         character set.  */
       if ((uni_value <= 0x9f
-	   && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
-	  || (uni_value >= 0xd800 && uni_value <= 0xdfff))
-	error (EXIT_FAILURE, 0, _("invalid universal character name \\%c%0*x"),
-	       esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
+           && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
+          || (uni_value >= 0xd800 && uni_value <= 0xdfff))
+        error (EXIT_FAILURE, 0, _("invalid universal character name \\%c%0*x"),
+               esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
 
       print_unicode_char (stdout, uni_value, 0);
     }
@@ -290,10 +290,10 @@ print_esc (const char *escstart, bool octal_0)
     {
       putchar ('\\');
       if (*p)
-	{
-	  putchar (*p);
-	  p++;
-	}
+        {
+          putchar (*p);
+          p++;
+        }
     }
   return p - escstart - 1;
 }
@@ -320,9 +320,9 @@ print_esc_string (const char *str)
 
 static void
 print_direc (const char *start, size_t length, char conversion,
-	     bool have_field_width, int field_width,
-	     bool have_precision, int precision,
-	     char const *argument)
+             bool have_field_width, int field_width,
+             bool have_precision, int precision,
+             char const *argument)
 {
   char *p;		/* Null-terminated copy of % directive. */
 
@@ -337,20 +337,20 @@ print_direc (const char *start, size_t length, char conversion,
     switch (conversion)
       {
       case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
-	length_modifier = PRIdMAX;
-	length_modifier_len = sizeof PRIdMAX - 2;
-	break;
+        length_modifier = PRIdMAX;
+        length_modifier_len = sizeof PRIdMAX - 2;
+        break;
 
       case 'a': case 'e': case 'f': case 'g':
       case 'A': case 'E': case 'F': case 'G':
-	length_modifier = "L";
-	length_modifier_len = 1;
-	break;
+        length_modifier = "L";
+        length_modifier_len = 1;
+        break;
 
       default:
-	length_modifier = start;  /* Any valid pointer will do.  */
-	length_modifier_len = 0;
-	break;
+        length_modifier = start;  /* Any valid pointer will do.  */
+        length_modifier_len = 0;
+        break;
       }
 
     p = xmalloc (length + length_modifier_len + 2);
@@ -365,21 +365,21 @@ print_direc (const char *start, size_t length, char conversion,
     case 'd':
     case 'i':
       {
-	intmax_t arg = vstrtoimax (argument);
-	if (!have_field_width)
-	  {
-	    if (!have_precision)
-	      xprintf (p, arg);
-	    else
-	      xprintf (p, precision, arg);
-	  }
-	else
-	  {
-	    if (!have_precision)
-	      xprintf (p, field_width, arg);
-	    else
-	      xprintf (p, field_width, precision, arg);
-	  }
+        intmax_t arg = vstrtoimax (argument);
+        if (!have_field_width)
+          {
+            if (!have_precision)
+              xprintf (p, arg);
+            else
+              xprintf (p, precision, arg);
+          }
+        else
+          {
+            if (!have_precision)
+              xprintf (p, field_width, arg);
+            else
+              xprintf (p, field_width, precision, arg);
+          }
       }
       break;
 
@@ -388,21 +388,21 @@ print_direc (const char *start, size_t length, char conversion,
     case 'x':
     case 'X':
       {
-	uintmax_t arg = vstrtoumax (argument);
-	if (!have_field_width)
-	  {
-	    if (!have_precision)
-	      xprintf (p, arg);
-	    else
-	      xprintf (p, precision, arg);
-	  }
-	else
-	  {
-	    if (!have_precision)
-	      xprintf (p, field_width, arg);
-	    else
-	      xprintf (p, field_width, precision, arg);
-	  }
+        uintmax_t arg = vstrtoumax (argument);
+        if (!have_field_width)
+          {
+            if (!have_precision)
+              xprintf (p, arg);
+            else
+              xprintf (p, precision, arg);
+          }
+        else
+          {
+            if (!have_precision)
+              xprintf (p, field_width, arg);
+            else
+              xprintf (p, field_width, precision, arg);
+          }
       }
       break;
 
@@ -415,46 +415,46 @@ print_direc (const char *start, size_t length, char conversion,
     case 'g':
     case 'G':
       {
-	long double arg = vstrtold (argument);
-	if (!have_field_width)
-	  {
-	    if (!have_precision)
-	      xprintf (p, arg);
-	    else
-	      xprintf (p, precision, arg);
-	  }
-	else
-	  {
-	    if (!have_precision)
-	      xprintf (p, field_width, arg);
-	    else
-	      xprintf (p, field_width, precision, arg);
-	  }
+        long double arg = vstrtold (argument);
+        if (!have_field_width)
+          {
+            if (!have_precision)
+              xprintf (p, arg);
+            else
+              xprintf (p, precision, arg);
+          }
+        else
+          {
+            if (!have_precision)
+              xprintf (p, field_width, arg);
+            else
+              xprintf (p, field_width, precision, arg);
+          }
       }
       break;
 
     case 'c':
       if (!have_field_width)
-	xprintf (p, *argument);
+        xprintf (p, *argument);
       else
-	xprintf (p, field_width, *argument);
+        xprintf (p, field_width, *argument);
       break;
 
     case 's':
       if (!have_field_width)
-	{
-	  if (!have_precision)
-	    xprintf (p, argument);
-	  else
-	    xprintf (p, precision, argument);
-	}
+        {
+          if (!have_precision)
+            xprintf (p, argument);
+          else
+            xprintf (p, precision, argument);
+        }
       else
-	{
-	  if (!have_precision)
-	    xprintf (p, field_width, argument);
-	  else
-	    xprintf (p, field_width, precision, argument);
-	}
+        {
+          if (!have_precision)
+            xprintf (p, field_width, argument);
+          else
+            xprintf (p, field_width, precision, argument);
+        }
       break;
     }
 
@@ -481,146 +481,146 @@ print_formatted (const char *format, int argc, char **argv)
   for (f = format; *f; ++f)
     {
       switch (*f)
-	{
-	case '%':
-	  direc_start = f++;
-	  direc_length = 1;
-	  have_field_width = have_precision = false;
-	  if (*f == '%')
-	    {
-	      putchar ('%');
-	      break;
-	    }
-	  if (*f == 'b')
-	    {
-	      /* FIXME: Field width and precision are not supported
-		 for %b, even though POSIX requires it.  */
-	      if (argc > 0)
-		{
-		  print_esc_string (*argv);
-		  ++argv;
-		  --argc;
-		}
-	      break;
-	    }
+        {
+        case '%':
+          direc_start = f++;
+          direc_length = 1;
+          have_field_width = have_precision = false;
+          if (*f == '%')
+            {
+              putchar ('%');
+              break;
+            }
+          if (*f == 'b')
+            {
+              /* FIXME: Field width and precision are not supported
+                 for %b, even though POSIX requires it.  */
+              if (argc > 0)
+                {
+                  print_esc_string (*argv);
+                  ++argv;
+                  --argc;
+                }
+              break;
+            }
 
-	  memset (ok, 0, sizeof ok);
-	  ok['a'] = ok['A'] = ok['c'] = ok['d'] = ok['e'] = ok['E'] =
-	    ok['f'] = ok['F'] = ok['g'] = ok['G'] = ok['i'] = ok['o'] =
-	    ok['s'] = ok['u'] = ok['x'] = ok['X'] = 1;
+          memset (ok, 0, sizeof ok);
+          ok['a'] = ok['A'] = ok['c'] = ok['d'] = ok['e'] = ok['E'] =
+            ok['f'] = ok['F'] = ok['g'] = ok['G'] = ok['i'] = ok['o'] =
+            ok['s'] = ok['u'] = ok['x'] = ok['X'] = 1;
 
-	  for (;; f++, direc_length++)
-	    switch (*f)
-	      {
+          for (;; f++, direc_length++)
+            switch (*f)
+              {
 #if (__GLIBC__ == 2 && 2 <= __GLIBC_MINOR__) || 3 <= __GLIBC__
-	      case 'I':
+              case 'I':
 #endif
-	      case '\'':
-		ok['a'] = ok['A'] = ok['c'] = ok['e'] = ok['E'] =
-		  ok['o'] = ok['s'] = ok['x'] = ok['X'] = 0;
-		break;
-	      case '-': case '+': case ' ':
-		break;
-	      case '#':
-		ok['c'] = ok['d'] = ok['i'] = ok['s'] = ok['u'] = 0;
-		break;
-	      case '0':
-		ok['c'] = ok['s'] = 0;
-		break;
-	      default:
-		goto no_more_flag_characters;
-	      }
-	no_more_flag_characters:;
+              case '\'':
+                ok['a'] = ok['A'] = ok['c'] = ok['e'] = ok['E'] =
+                  ok['o'] = ok['s'] = ok['x'] = ok['X'] = 0;
+                break;
+              case '-': case '+': case ' ':
+                break;
+              case '#':
+                ok['c'] = ok['d'] = ok['i'] = ok['s'] = ok['u'] = 0;
+                break;
+              case '0':
+                ok['c'] = ok['s'] = 0;
+                break;
+              default:
+                goto no_more_flag_characters;
+              }
+        no_more_flag_characters:;
 
-	  if (*f == '*')
-	    {
-	      ++f;
-	      ++direc_length;
-	      if (argc > 0)
-		{
-		  intmax_t width = vstrtoimax (*argv);
-		  if (INT_MIN <= width && width <= INT_MAX)
-		    field_width = width;
-		  else
-		    error (EXIT_FAILURE, 0, _("invalid field width: %s"),
-			   *argv);
-		  ++argv;
-		  --argc;
-		}
-	      else
-		field_width = 0;
-	      have_field_width = true;
-	    }
-	  else
-	    while (ISDIGIT (*f))
-	      {
-		++f;
-		++direc_length;
-	      }
-	  if (*f == '.')
-	    {
-	      ++f;
-	      ++direc_length;
-	      ok['c'] = 0;
-	      if (*f == '*')
-		{
-		  ++f;
-		  ++direc_length;
-		  if (argc > 0)
-		    {
-		      intmax_t prec = vstrtoimax (*argv);
-		      if (prec < 0)
-			{
-			  /* A negative precision is taken as if the
-			     precision were omitted, so -1 is safe
-			     here even if prec < INT_MIN.  */
-			  precision = -1;
-			}
-		      else if (INT_MAX < prec)
-			error (EXIT_FAILURE, 0, _("invalid precision: %s"),
-			       *argv);
-		      else
-			precision = prec;
-		      ++argv;
-		      --argc;
-		    }
-		  else
-		    precision = 0;
-		  have_precision = true;
-		}
-	      else
-		while (ISDIGIT (*f))
-		  {
-		    ++f;
-		    ++direc_length;
-		  }
-	    }
+          if (*f == '*')
+            {
+              ++f;
+              ++direc_length;
+              if (argc > 0)
+                {
+                  intmax_t width = vstrtoimax (*argv);
+                  if (INT_MIN <= width && width <= INT_MAX)
+                    field_width = width;
+                  else
+                    error (EXIT_FAILURE, 0, _("invalid field width: %s"),
+                           *argv);
+                  ++argv;
+                  --argc;
+                }
+              else
+                field_width = 0;
+              have_field_width = true;
+            }
+          else
+            while (ISDIGIT (*f))
+              {
+                ++f;
+                ++direc_length;
+              }
+          if (*f == '.')
+            {
+              ++f;
+              ++direc_length;
+              ok['c'] = 0;
+              if (*f == '*')
+                {
+                  ++f;
+                  ++direc_length;
+                  if (argc > 0)
+                    {
+                      intmax_t prec = vstrtoimax (*argv);
+                      if (prec < 0)
+                        {
+                          /* A negative precision is taken as if the
+                             precision were omitted, so -1 is safe
+                             here even if prec < INT_MIN.  */
+                          precision = -1;
+                        }
+                      else if (INT_MAX < prec)
+                        error (EXIT_FAILURE, 0, _("invalid precision: %s"),
+                               *argv);
+                      else
+                        precision = prec;
+                      ++argv;
+                      --argc;
+                    }
+                  else
+                    precision = 0;
+                  have_precision = true;
+                }
+              else
+                while (ISDIGIT (*f))
+                  {
+                    ++f;
+                    ++direc_length;
+                  }
+            }
 
-	  while (*f == 'l' || *f == 'L' || *f == 'h'
-		 || *f == 'j' || *f == 't' || *f == 'z')
-	    ++f;
+          while (*f == 'l' || *f == 'L' || *f == 'h'
+                 || *f == 'j' || *f == 't' || *f == 'z')
+            ++f;
 
-	  {
-	    unsigned char conversion = *f;
-	    if (! ok[conversion])
-	      error (EXIT_FAILURE, 0,
-		     _("%.*s: invalid conversion specification"),
-		     (int) (f + 1 - direc_start), direc_start);
-	  }
+          {
+            unsigned char conversion = *f;
+            if (! ok[conversion])
+              error (EXIT_FAILURE, 0,
+                     _("%.*s: invalid conversion specification"),
+                     (int) (f + 1 - direc_start), direc_start);
+          }
 
-	  print_direc (direc_start, direc_length, *f,
-		       have_field_width, field_width,
-		       have_precision, precision,
-		       (argc <= 0 ? "" : (argc--, *argv++)));
-	  break;
+          print_direc (direc_start, direc_length, *f,
+                       have_field_width, field_width,
+                       have_precision, precision,
+                       (argc <= 0 ? "" : (argc--, *argv++)));
+          break;
 
-	case '\\':
-	  f += print_esc (f, false);
-	  break;
+        case '\\':
+          f += print_esc (f, false);
+          break;
 
-	default:
-	  putchar (*f);
-	}
+        default:
+          putchar (*f);
+        }
     }
 
   return save_argc - argc;
@@ -649,14 +649,14 @@ main (int argc, char **argv)
   if (argc == 2)
     {
       if (STREQ (argv[1], "--help"))
-	usage (EXIT_SUCCESS);
+        usage (EXIT_SUCCESS);
 
       if (STREQ (argv[1], "--version"))
-	{
-	  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-		       (char *) NULL);
-	  exit (EXIT_SUCCESS);
-	}
+        {
+          version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+                       (char *) NULL);
+          exit (EXIT_SUCCESS);
+        }
     }
 
   /* The above handles --help and --version.
@@ -687,8 +687,8 @@ main (int argc, char **argv)
 
   if (argc > 0)
     error (0, 0,
-	   _("warning: ignoring excess arguments, starting with %s"),
-	   quote (argv[0]));
+           _("warning: ignoring excess arguments, starting with %s"),
+           quote (argv[0]));
 
   exit (exit_status);
 }

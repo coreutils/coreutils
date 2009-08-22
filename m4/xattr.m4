@@ -11,9 +11,9 @@
 AC_DEFUN([gl_FUNC_XATTR],
 [
   AC_ARG_ENABLE([xattr],
-	AC_HELP_STRING([--disable-xattr],
-		       [do not support extended attributes]),
-	[use_xattr=$enableval], [use_xattr=yes])
+        AC_HELP_STRING([--disable-xattr],
+                       [do not support extended attributes]),
+        [use_xattr=$enableval], [use_xattr=yes])
 
   if test "$use_xattr" = "yes"; then
     AC_CHECK_HEADERS([attr/error_context.h attr/libattr.h])
@@ -24,11 +24,11 @@ AC_DEFUN([gl_FUNC_XATTR],
       use_xattr=0
     fi
     AC_DEFINE_UNQUOTED([USE_XATTR], [$use_xattr],
-		       [Define if you want extended attribute support.])
+                       [Define if you want extended attribute support.])
     xattr_saved_LIBS=$LIBS
     AC_SEARCH_LIBS([attr_copy_file], [attr],
-		   [test "$ac_cv_search_attr_copy_file" = "none required" ||
-		      LIB_XATTR=$ac_cv_search_attr_copy_file])
+                   [test "$ac_cv_search_attr_copy_file" = "none required" ||
+                      LIB_XATTR=$ac_cv_search_attr_copy_file])
     AC_CHECK_FUNCS([attr_copy_file])
     LIBS=$xattr_saved_LIBS
     AC_SUBST([LIB_XATTR])

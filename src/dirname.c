@@ -39,14 +39,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s NAME\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
 output `.' (meaning the current directory).\n\
@@ -60,7 +60,7 @@ Examples:\n\
   %s /usr/bin/sort  Output \"/usr/bin\".\n\
   %s stdio.h        Output \".\".\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       emit_bug_reporting_address ();
     }
   exit (status);
@@ -82,7 +82,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 

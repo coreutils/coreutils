@@ -128,75 +128,75 @@ randint_genmax (struct randint_source *s, randint genmax)
   for (;;)
     {
       if (randmax < genmax)
-	{
-	  /* Calculate how many input bytes will be needed, and read
-	     the bytes.  */
+        {
+          /* Calculate how many input bytes will be needed, and read
+             the bytes.  */
 
-	  size_t i = 0;
-	  randint rmax = randmax;
-	  unsigned char buf[sizeof randnum];
+          size_t i = 0;
+          randint rmax = randmax;
+          unsigned char buf[sizeof randnum];
 
-	  do
-	    {
-	      rmax = shift_left (rmax) + UCHAR_MAX;
-	      i++;
-	    }
-	  while (rmax < genmax);
+          do
+            {
+              rmax = shift_left (rmax) + UCHAR_MAX;
+              i++;
+            }
+          while (rmax < genmax);
 
-	  randread (source, buf, i);
+          randread (source, buf, i);
 
-	  /* Increase RANDMAX by appending random bytes to RANDNUM and
-	     UCHAR_MAX to RANDMAX until RANDMAX is no less than
-	     GENMAX.  This may lose up to CHAR_BIT bits of information
-	     if shift_right (RANDINT_MAX) < GENMAX, but it is not
-	     worth the programming hassle of saving these bits since
-	     GENMAX is rarely that large in practice.  */
+          /* Increase RANDMAX by appending random bytes to RANDNUM and
+             UCHAR_MAX to RANDMAX until RANDMAX is no less than
+             GENMAX.  This may lose up to CHAR_BIT bits of information
+             if shift_right (RANDINT_MAX) < GENMAX, but it is not
+             worth the programming hassle of saving these bits since
+             GENMAX is rarely that large in practice.  */
 
-	  i = 0;
+          i = 0;
 
-	  do
-	    {
-	      randnum = shift_left (randnum) + buf[i];
-	      randmax = shift_left (randmax) + UCHAR_MAX;
-	      i++;
-	    }
-	  while (randmax < genmax);
-	}
+          do
+            {
+              randnum = shift_left (randnum) + buf[i];
+              randmax = shift_left (randmax) + UCHAR_MAX;
+              i++;
+            }
+          while (randmax < genmax);
+        }
 
       if (randmax == genmax)
-	{
-	  s->randnum = s->randmax = 0;
-	  return randnum;
-	}
+        {
+          s->randnum = s->randmax = 0;
+          return randnum;
+        }
       else
-	{
-	  /* GENMAX < RANDMAX, so attempt to generate a random number
-	     by taking RANDNUM modulo GENMAX+1.  This will choose
-	     fairly so long as RANDNUM falls within an integral
-	     multiple of GENMAX+1; otherwise, LAST_USABLE_CHOICE < RANDNUM,
-	     so discard this attempt and try again.
+        {
+          /* GENMAX < RANDMAX, so attempt to generate a random number
+             by taking RANDNUM modulo GENMAX+1.  This will choose
+             fairly so long as RANDNUM falls within an integral
+             multiple of GENMAX+1; otherwise, LAST_USABLE_CHOICE < RANDNUM,
+             so discard this attempt and try again.
 
-	     Since GENMAX cannot be RANDINT_MAX, CHOICES cannot be
-	     zero and there is no need to worry about dividing by
-	     zero.  */
+             Since GENMAX cannot be RANDINT_MAX, CHOICES cannot be
+             zero and there is no need to worry about dividing by
+             zero.  */
 
-	  randint excess_choices = randmax - genmax;
-	  randint unusable_choices = excess_choices % choices;
-	  randint last_usable_choice = randmax - unusable_choices;
-	  randint reduced_randnum = randnum % choices;
+          randint excess_choices = randmax - genmax;
+          randint unusable_choices = excess_choices % choices;
+          randint last_usable_choice = randmax - unusable_choices;
+          randint reduced_randnum = randnum % choices;
 
-	  if (randnum <= last_usable_choice)
-	    {
-	      s->randnum = randnum / choices;
-	      s->randmax = excess_choices / choices;
-	      return reduced_randnum;
-	    }
+          if (randnum <= last_usable_choice)
+            {
+              s->randnum = randnum / choices;
+              s->randmax = excess_choices / choices;
+              return reduced_randnum;
+            }
 
-	  /* Retry, but retain the randomness from the fact that RANDNUM fell
-	     into the range LAST_USABLE_CHOICE+1 .. RANDMAX.  */
-	  randnum = reduced_randnum;
-	  randmax = unusable_choices - 1;
-	}
+          /* Retry, but retain the randomness from the fact that RANDNUM fell
+             into the range LAST_USABLE_CHOICE+1 .. RANDMAX.  */
+          randnum = reduced_randnum;
+          randmax = unusable_choices - 1;
+        }
     }
 }
 

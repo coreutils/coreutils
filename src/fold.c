@@ -60,13 +60,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
@@ -97,16 +97,16 @@ adjust_column (size_t column, char c)
   if (!count_bytes)
     {
       if (c == '\b')
-	{
-	  if (column > 0)
-	    column--;
-	}
+        {
+          if (column > 0)
+            column--;
+        }
       else if (c == '\r')
-	column = 0;
+        column = 0;
       else if (c == '\t')
-	column += TAB_WIDTH - column % TAB_WIDTH;
+        column += TAB_WIDTH - column % TAB_WIDTH;
       else /* if (isprint (c)) */
-	column++;
+        column++;
     }
   else
     column++;
@@ -145,71 +145,71 @@ fold_file (char const *filename, size_t width)
   while ((c = getc (istream)) != EOF)
     {
       if (offset_out + 1 >= allocated_out)
-	line_out = X2REALLOC (line_out, &allocated_out);
+        line_out = X2REALLOC (line_out, &allocated_out);
 
       if (c == '\n')
-	{
-	  line_out[offset_out++] = c;
-	  fwrite (line_out, sizeof (char), offset_out, stdout);
-	  column = offset_out = 0;
-	  continue;
-	}
+        {
+          line_out[offset_out++] = c;
+          fwrite (line_out, sizeof (char), offset_out, stdout);
+          column = offset_out = 0;
+          continue;
+        }
 
     rescan:
       column = adjust_column (column, c);
 
       if (column > width)
-	{
-	  /* This character would make the line too long.
-	     Print the line plus a newline, and make this character
-	     start the next line. */
-	  if (break_spaces)
-	    {
-	      bool found_blank = false;
-	      size_t logical_end = offset_out;
+        {
+          /* This character would make the line too long.
+             Print the line plus a newline, and make this character
+             start the next line. */
+          if (break_spaces)
+            {
+              bool found_blank = false;
+              size_t logical_end = offset_out;
 
-	      /* Look for the last blank. */
-	      while (logical_end)
-		{
-		  --logical_end;
-		  if (isblank (to_uchar (line_out[logical_end])))
-		    {
-		      found_blank = true;
-		      break;
-		    }
-		}
+              /* Look for the last blank. */
+              while (logical_end)
+                {
+                  --logical_end;
+                  if (isblank (to_uchar (line_out[logical_end])))
+                    {
+                      found_blank = true;
+                      break;
+                    }
+                }
 
-	      if (found_blank)
-		{
-		  size_t i;
+              if (found_blank)
+                {
+                  size_t i;
 
-		  /* Found a blank.  Don't output the part after it. */
-		  logical_end++;
-		  fwrite (line_out, sizeof (char), (size_t) logical_end,
-			  stdout);
-		  putchar ('\n');
-		  /* Move the remainder to the beginning of the next line.
-		     The areas being copied here might overlap. */
-		  memmove (line_out, line_out + logical_end,
-			   offset_out - logical_end);
-		  offset_out -= logical_end;
-		  for (column = i = 0; i < offset_out; i++)
-		    column = adjust_column (column, line_out[i]);
-		  goto rescan;
-		}
-	    }
+                  /* Found a blank.  Don't output the part after it. */
+                  logical_end++;
+                  fwrite (line_out, sizeof (char), (size_t) logical_end,
+                          stdout);
+                  putchar ('\n');
+                  /* Move the remainder to the beginning of the next line.
+                     The areas being copied here might overlap. */
+                  memmove (line_out, line_out + logical_end,
+                           offset_out - logical_end);
+                  offset_out -= logical_end;
+                  for (column = i = 0; i < offset_out; i++)
+                    column = adjust_column (column, line_out[i]);
+                  goto rescan;
+                }
+            }
 
-	  if (offset_out == 0)
-	    {
-	      line_out[offset_out++] = c;
-	      continue;
-	    }
+          if (offset_out == 0)
+            {
+              line_out[offset_out++] = c;
+              continue;
+            }
 
-	  line_out[offset_out++] = '\n';
-	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
-	  column = offset_out = 0;
-	  goto rescan;
-	}
+          line_out[offset_out++] = '\n';
+          fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
+          column = offset_out = 0;
+          goto rescan;
+        }
 
       line_out[offset_out++] = c;
     }
@@ -223,7 +223,7 @@ fold_file (char const *filename, size_t width)
     {
       error (0, saved_errno, "%s", filename);
       if (!STREQ (filename, "-"))
-	fclose (istream);
+        fclose (istream);
       return false;
     }
   if (!STREQ (filename, "-") && fclose (istream) == EOF)
@@ -258,44 +258,44 @@ main (int argc, char **argv)
       char optargbuf[2];
 
       switch (optc)
-	{
-	case 'b':		/* Count bytes rather than columns. */
-	  count_bytes = true;
-	  break;
+        {
+        case 'b':		/* Count bytes rather than columns. */
+          count_bytes = true;
+          break;
 
-	case 's':		/* Break at word boundaries. */
-	  break_spaces = true;
-	  break;
+        case 's':		/* Break at word boundaries. */
+          break_spaces = true;
+          break;
 
-	case '0': case '1': case '2': case '3': case '4':
-	case '5': case '6': case '7': case '8': case '9':
-	  if (optarg)
-	    optarg--;
-	  else
-	    {
-	      optargbuf[0] = optc;
-	      optargbuf[1] = '\0';
-	      optarg = optargbuf;
-	    }
-	  /* Fall through.  */
-	case 'w':		/* Line width. */
-	  {
-	    unsigned long int tmp_ulong;
-	    if (! (xstrtoul (optarg, NULL, 10, &tmp_ulong, "") == LONGINT_OK
-		   && 0 < tmp_ulong && tmp_ulong < SIZE_MAX - TAB_WIDTH))
-	      error (EXIT_FAILURE, 0,
-		     _("invalid number of columns: %s"), quote (optarg));
-	    width = tmp_ulong;
-	  }
-	  break;
+        case '0': case '1': case '2': case '3': case '4':
+        case '5': case '6': case '7': case '8': case '9':
+          if (optarg)
+            optarg--;
+          else
+            {
+              optargbuf[0] = optc;
+              optargbuf[1] = '\0';
+              optarg = optargbuf;
+            }
+          /* Fall through.  */
+        case 'w':		/* Line width. */
+          {
+            unsigned long int tmp_ulong;
+            if (! (xstrtoul (optarg, NULL, 10, &tmp_ulong, "") == LONGINT_OK
+                   && 0 < tmp_ulong && tmp_ulong < SIZE_MAX - TAB_WIDTH))
+              error (EXIT_FAILURE, 0,
+                     _("invalid number of columns: %s"), quote (optarg));
+            width = tmp_ulong;
+          }
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (argc == optind)
@@ -304,7 +304,7 @@ main (int argc, char **argv)
     {
       ok = true;
       for (i = optind; i < argc; i++)
-	ok &= fold_file (argv[i], width);
+        ok &= fold_file (argv[i], width);
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)

@@ -437,8 +437,8 @@ Miscellaneous useful git commands
     its SHA1 and then tag it or cherry-pick it onto an existing branch.
     For example, run this:
       git fsck --lost-found HEAD && cd .git/lost-found/commit \
-	&& for i in *; do git show $i|grep SOME_IDENTIFYING_STRING \
-	&& echo $i; done
+        && for i in *; do git show $i|grep SOME_IDENTIFYING_STRING \
+        && echo $i; done
     The "git fsck ..." command creates the .git/lost-found/... hierarchy
     listing all unreachable objects.  Then the for loop
     print SHA1s for commits that match via log or patch.

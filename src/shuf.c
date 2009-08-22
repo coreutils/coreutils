@@ -41,7 +41,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -49,7 +49,7 @@ Usage: %s [OPTION]... [FILE]\n\
   or:  %s -e [OPTION]... [ARG]...\n\
   or:  %s -i LO-HI [OPTION]...\n\
 "),
-	      program_name, program_name, program_name);
+              program_name, program_name, program_name);
       fputs (_("\
 Write a random permutation of the input lines to standard output.\n\
 \n\
@@ -163,27 +163,27 @@ read_input (FILE *in, char eolbyte, char ***pline)
       off_t file_size = instat.st_size;
       off_t current_offset = ftello (in);
       if (0 <= current_offset)
-	{
-	  off_t remaining_size =
-	    (current_offset < file_size ? file_size - current_offset : 0);
-	  if (SIZE_MAX - 2 < remaining_size)
-	    xalloc_die ();
-	  next_alloc = remaining_size + 2;
-	}
+        {
+          off_t remaining_size =
+            (current_offset < file_size ? file_size - current_offset : 0);
+          if (SIZE_MAX - 2 < remaining_size)
+            xalloc_die ();
+          next_alloc = remaining_size + 2;
+        }
     }
 
   do
     {
       if (alloc <= used + 1)
-	{
-	  if (alloc == SIZE_MAX)
-	    xalloc_die ();
-	  alloc = next_alloc;
-	  next_alloc = alloc * 2;
-	  if (next_alloc < alloc)
-	    next_alloc = SIZE_MAX;
-	  buf = xrealloc (buf, alloc);
-	}
+        {
+          if (alloc == SIZE_MAX)
+            xalloc_die ();
+          alloc = next_alloc;
+          next_alloc = alloc * 2;
+          if (next_alloc < alloc)
+            next_alloc = SIZE_MAX;
+          buf = xrealloc (buf, alloc);
+        }
 
       bytes_to_read = alloc - used - 1;
       nread = fread (buf + used, sizeof (char), bytes_to_read, in);
@@ -214,24 +214,24 @@ read_input (FILE *in, char eolbyte, char ***pline)
 
 static int
 write_permuted_output (size_t n_lines, char * const *line, size_t lo_input,
-		       size_t const *permutation, char eolbyte)
+                       size_t const *permutation, char eolbyte)
 {
   size_t i;
 
   if (line)
     for (i = 0; i < n_lines; i++)
       {
-	char * const *p = line + permutation[i];
-	size_t len = p[1] - p[0];
-	if (fwrite (p[0], sizeof *p[0], len, stdout) != len)
-	  return -1;
+        char * const *p = line + permutation[i];
+        size_t len = p[1] - p[0];
+        if (fwrite (p[0], sizeof *p[0], len, stdout) != len)
+          return -1;
       }
   else
     for (i = 0; i < n_lines; i++)
       {
-	unsigned long int n = lo_input + permutation[i];
-	if (printf ("%lu%c", n, eolbyte) < 0)
-	  return -1;
+        unsigned long int n = lo_input + permutation[i];
+        if (printf ("%lu%c", n, eolbyte) < 0)
+          return -1;
       }
 
   return 0;
@@ -269,75 +269,75 @@ main (int argc, char **argv)
     switch (optc)
       {
       case 'e':
-	echo = true;
-	break;
+        echo = true;
+        break;
 
       case 'i':
-	{
-	  unsigned long int argval = 0;
-	  char *p = strchr (optarg, '-');
-	  char const *hi_optarg = optarg;
-	  bool invalid = !p;
+        {
+          unsigned long int argval = 0;
+          char *p = strchr (optarg, '-');
+          char const *hi_optarg = optarg;
+          bool invalid = !p;
 
-	  if (input_numbers_option_used (lo_input, hi_input))
-	    error (EXIT_FAILURE, 0, _("multiple -i options specified"));
+          if (input_numbers_option_used (lo_input, hi_input))
+            error (EXIT_FAILURE, 0, _("multiple -i options specified"));
 
-	  if (p)
-	    {
-	      *p = '\0';
-	      invalid = ((xstrtoul (optarg, NULL, 10, &argval, NULL)
-			  != LONGINT_OK)
-			 || SIZE_MAX < argval);
-	      *p = '-';
-	      lo_input = argval;
-	      hi_optarg = p + 1;
-	    }
+          if (p)
+            {
+              *p = '\0';
+              invalid = ((xstrtoul (optarg, NULL, 10, &argval, NULL)
+                          != LONGINT_OK)
+                         || SIZE_MAX < argval);
+              *p = '-';
+              lo_input = argval;
+              hi_optarg = p + 1;
+            }
 
-	  invalid |= ((xstrtoul (hi_optarg, NULL, 10, &argval, NULL)
-		       != LONGINT_OK)
-		      || SIZE_MAX < argval);
-	  hi_input = argval;
-	  n_lines = hi_input - lo_input + 1;
-	  invalid |= ((lo_input <= hi_input) == (n_lines == 0));
-	  if (invalid)
-	    error (EXIT_FAILURE, 0, _("invalid input range %s"),
-		   quote (optarg));
-	}
-	break;
+          invalid |= ((xstrtoul (hi_optarg, NULL, 10, &argval, NULL)
+                       != LONGINT_OK)
+                      || SIZE_MAX < argval);
+          hi_input = argval;
+          n_lines = hi_input - lo_input + 1;
+          invalid |= ((lo_input <= hi_input) == (n_lines == 0));
+          if (invalid)
+            error (EXIT_FAILURE, 0, _("invalid input range %s"),
+                   quote (optarg));
+        }
+        break;
 
       case 'n':
-	{
-	  unsigned long int argval;
-	  strtol_error e = xstrtoul (optarg, NULL, 10, &argval, NULL);
+        {
+          unsigned long int argval;
+          strtol_error e = xstrtoul (optarg, NULL, 10, &argval, NULL);
 
-	  if (e == LONGINT_OK)
-	    head_lines = MIN (head_lines, argval);
-	  else if (e != LONGINT_OVERFLOW)
-	    error (EXIT_FAILURE, 0, _("invalid line count %s"),
-		   quote (optarg));
-	}
-	break;
+          if (e == LONGINT_OK)
+            head_lines = MIN (head_lines, argval);
+          else if (e != LONGINT_OVERFLOW)
+            error (EXIT_FAILURE, 0, _("invalid line count %s"),
+                   quote (optarg));
+        }
+        break;
 
       case 'o':
-	if (outfile && !STREQ (outfile, optarg))
-	  error (EXIT_FAILURE, 0, _("multiple output files specified"));
-	outfile = optarg;
-	break;
+        if (outfile && !STREQ (outfile, optarg))
+          error (EXIT_FAILURE, 0, _("multiple output files specified"));
+        outfile = optarg;
+        break;
 
       case RANDOM_SOURCE_OPTION:
-	if (random_source && !STREQ (random_source, optarg))
-	  error (EXIT_FAILURE, 0, _("multiple random sources specified"));
-	random_source = optarg;
-	break;
+        if (random_source && !STREQ (random_source, optarg))
+          error (EXIT_FAILURE, 0, _("multiple random sources specified"));
+        random_source = optarg;
+        break;
 
       case 'z':
-	eolbyte = '\0';
-	break;
+        eolbyte = '\0';
+        break;
 
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
 
   n_operands = argc - optind;
@@ -346,7 +346,7 @@ main (int argc, char **argv)
   if (echo)
     {
       if (input_numbers_option_used (lo_input, hi_input))
-	error (EXIT_FAILURE, 0, _("cannot combine -e and -i options"));
+        error (EXIT_FAILURE, 0, _("cannot combine -e and -i options"));
       input_from_argv (operand, n_operands, eolbyte);
       n_lines = n_operands;
       line = operand;
@@ -354,29 +354,29 @@ main (int argc, char **argv)
   else if (input_numbers_option_used (lo_input, hi_input))
     {
       if (n_operands)
-	{
-	  error (0, 0, _("extra operand %s\n"), quote (operand[0]));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s\n"), quote (operand[0]));
+          usage (EXIT_FAILURE);
+        }
       n_lines = hi_input - lo_input + 1;
       line = NULL;
     }
   else
     {
       switch (n_operands)
-	{
-	case 0:
-	  break;
+        {
+        case 0:
+          break;
 
-	case 1:
-	  if (! (STREQ (operand[0], "-") || freopen (operand[0], "r", stdin)))
-	    error (EXIT_FAILURE, errno, "%s", operand[0]);
-	  break;
+        case 1:
+          if (! (STREQ (operand[0], "-") || freopen (operand[0], "r", stdin)))
+            error (EXIT_FAILURE, errno, "%s", operand[0]);
+          break;
 
-	default:
-	  error (0, 0, _("extra operand %s"), quote (operand[1]));
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          error (0, 0, _("extra operand %s"), quote (operand[1]));
+          usage (EXIT_FAILURE);
+        }
 
       n_lines = read_input (stdin, eolbyte, &input_lines);
       line = input_lines;
@@ -385,7 +385,7 @@ main (int argc, char **argv)
   head_lines = MIN (head_lines, n_lines);
 
   randint_source = randint_all_new (random_source,
-				    randperm_bound (head_lines, n_lines));
+                                    randperm_bound (head_lines, n_lines));
   if (! randint_source)
     error (EXIT_FAILURE, errno, "%s", quotearg_colon (random_source));
 

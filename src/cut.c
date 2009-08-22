@@ -60,11 +60,11 @@
   do							\
     {							\
       if (low == 0 || high == 0)			\
-	FATAL_ERROR (_("fields and positions are numbered from 1")); \
+        FATAL_ERROR (_("fields and positions are numbered from 1")); \
       if (n_rp >= n_rp_allocated)			\
-	{						\
-	  (rp) = X2NREALLOC (rp, &n_rp_allocated);	\
-	}						\
+        {						\
+          (rp) = X2NREALLOC (rp, &n_rp_allocated);	\
+        }						\
       rp[n_rp].lo = (low);				\
       rp[n_rp].hi = (high);				\
       ++n_rp;						\
@@ -183,13 +183,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s OPTION... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Print selected parts of lines from each FILE to standard output.\n\
 \n\
@@ -347,7 +347,7 @@ set_fields (const char *fieldstr)
   bool rhs_specified = false;
   bool dash_found = false;	/* True if a '-' is found in this field.  */
   bool field_found = false;	/* True if at least one field spec
-				   has been processed.  */
+                                   has been processed.  */
 
   struct range_pair *rp = NULL;
   size_t n_rp = 0;
@@ -361,139 +361,139 @@ set_fields (const char *fieldstr)
   for (;;)
     {
       if (*fieldstr == '-')
-	{
-	  in_digits = false;
-	  /* Starting a range. */
-	  if (dash_found)
-	    FATAL_ERROR (_("invalid byte or field list"));
-	  dash_found = true;
-	  fieldstr++;
+        {
+          in_digits = false;
+          /* Starting a range. */
+          if (dash_found)
+            FATAL_ERROR (_("invalid byte or field list"));
+          dash_found = true;
+          fieldstr++;
 
-	  initial = (lhs_specified ? value : 1);
-	  value = 0;
-	}
+          initial = (lhs_specified ? value : 1);
+          value = 0;
+        }
       else if (*fieldstr == ',' ||
-	       isblank (to_uchar (*fieldstr)) || *fieldstr == '\0')
-	{
-	  in_digits = false;
-	  /* Ending the string, or this field/byte sublist. */
-	  if (dash_found)
-	    {
-	      dash_found = false;
+               isblank (to_uchar (*fieldstr)) || *fieldstr == '\0')
+        {
+          in_digits = false;
+          /* Ending the string, or this field/byte sublist. */
+          if (dash_found)
+            {
+              dash_found = false;
 
-	      if (!lhs_specified && !rhs_specified)
-		FATAL_ERROR (_("invalid range with no endpoint: -"));
+              if (!lhs_specified && !rhs_specified)
+                FATAL_ERROR (_("invalid range with no endpoint: -"));
 
-	      /* A range.  Possibilities: -n, m-n, n-.
-		 In any case, `initial' contains the start of the range. */
-	      if (!rhs_specified)
-		{
-		  /* `n-'.  From `initial' to end of line. */
-		  eol_range_start = initial;
-		  field_found = true;
-		}
-	      else
-		{
-		  /* `m-n' or `-n' (1-n). */
-		  if (value < initial)
-		    FATAL_ERROR (_("invalid decreasing range"));
+              /* A range.  Possibilities: -n, m-n, n-.
+                 In any case, `initial' contains the start of the range. */
+              if (!rhs_specified)
+                {
+                  /* `n-'.  From `initial' to end of line. */
+                  eol_range_start = initial;
+                  field_found = true;
+                }
+              else
+                {
+                  /* `m-n' or `-n' (1-n). */
+                  if (value < initial)
+                    FATAL_ERROR (_("invalid decreasing range"));
 
-		  /* Is there already a range going to end of line? */
-		  if (eol_range_start != 0)
-		    {
-		      /* Yes.  Is the new sequence already contained
-			 in the old one?  If so, no processing is
-			 necessary. */
-		      if (initial < eol_range_start)
-			{
-			  /* No, the new sequence starts before the
-			     old.  Does the old range going to end of line
-			     extend into the new range?  */
-			  if (eol_range_start <= value)
-			    {
-			      /* Yes.  Simply move the end of line marker. */
-			      eol_range_start = initial;
-			    }
-			  else
-			    {
-			      /* No.  A simple range, before and disjoint from
-				 the range going to end of line.  Fill it. */
-			      ADD_RANGE_PAIR (rp, initial, value);
-			    }
+                  /* Is there already a range going to end of line? */
+                  if (eol_range_start != 0)
+                    {
+                      /* Yes.  Is the new sequence already contained
+                         in the old one?  If so, no processing is
+                         necessary. */
+                      if (initial < eol_range_start)
+                        {
+                          /* No, the new sequence starts before the
+                             old.  Does the old range going to end of line
+                             extend into the new range?  */
+                          if (eol_range_start <= value)
+                            {
+                              /* Yes.  Simply move the end of line marker. */
+                              eol_range_start = initial;
+                            }
+                          else
+                            {
+                              /* No.  A simple range, before and disjoint from
+                                 the range going to end of line.  Fill it. */
+                              ADD_RANGE_PAIR (rp, initial, value);
+                            }
 
-			  /* In any case, some fields were selected. */
-			  field_found = true;
-			}
-		    }
-		  else
-		    {
-		      /* There is no range going to end of line. */
-		      ADD_RANGE_PAIR (rp, initial, value);
-		      field_found = true;
-		    }
-		  value = 0;
-		}
-	    }
-	  else
-	    {
-	      /* A simple field number, not a range. */
-	      ADD_RANGE_PAIR (rp, value, value);
-	      value = 0;
-	      field_found = true;
-	    }
+                          /* In any case, some fields were selected. */
+                          field_found = true;
+                        }
+                    }
+                  else
+                    {
+                      /* There is no range going to end of line. */
+                      ADD_RANGE_PAIR (rp, initial, value);
+                      field_found = true;
+                    }
+                  value = 0;
+                }
+            }
+          else
+            {
+              /* A simple field number, not a range. */
+              ADD_RANGE_PAIR (rp, value, value);
+              value = 0;
+              field_found = true;
+            }
 
-	  if (*fieldstr == '\0')
-	    {
-	      break;
-	    }
+          if (*fieldstr == '\0')
+            {
+              break;
+            }
 
-	  fieldstr++;
-	  lhs_specified = false;
-	  rhs_specified = false;
-	}
+          fieldstr++;
+          lhs_specified = false;
+          rhs_specified = false;
+        }
       else if (ISDIGIT (*fieldstr))
-	{
-	  /* Record beginning of digit string, in case we have to
-	     complain about it.  */
-	  static char const *num_start;
-	  if (!in_digits || !num_start)
-	    num_start = fieldstr;
-	  in_digits = true;
+        {
+          /* Record beginning of digit string, in case we have to
+             complain about it.  */
+          static char const *num_start;
+          if (!in_digits || !num_start)
+            num_start = fieldstr;
+          in_digits = true;
 
-	  if (dash_found)
-	    rhs_specified = 1;
-	  else
-	    lhs_specified = 1;
+          if (dash_found)
+            rhs_specified = 1;
+          else
+            lhs_specified = 1;
 
-	  /* Detect overflow.  */
-	  if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t))
-	    {
-	      /* In case the user specified -c$(echo 2^64|bc),22,
-		 complain only about the first number.  */
-	      /* Determine the length of the offending number.  */
-	      size_t len = strspn (num_start, "0123456789");
-	      char *bad_num = xstrndup (num_start, len);
-	      if (operating_mode == byte_mode)
-		error (0, 0,
-		       _("byte offset %s is too large"), quote (bad_num));
-	      else
-		error (0, 0,
-		       _("field number %s is too large"), quote (bad_num));
-	      free (bad_num);
-	      exit (EXIT_FAILURE);
-	    }
+          /* Detect overflow.  */
+          if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t))
+            {
+              /* In case the user specified -c$(echo 2^64|bc),22,
+                 complain only about the first number.  */
+              /* Determine the length of the offending number.  */
+              size_t len = strspn (num_start, "0123456789");
+              char *bad_num = xstrndup (num_start, len);
+              if (operating_mode == byte_mode)
+                error (0, 0,
+                       _("byte offset %s is too large"), quote (bad_num));
+              else
+                error (0, 0,
+                       _("field number %s is too large"), quote (bad_num));
+              free (bad_num);
+              exit (EXIT_FAILURE);
+            }
 
-	  fieldstr++;
-	}
+          fieldstr++;
+        }
       else
-	FATAL_ERROR (_("invalid byte or field list"));
+        FATAL_ERROR (_("invalid byte or field list"));
     }
 
   max_range_endpoint = 0;
   for (i = 0; i < n_rp; i++)
     {
       if (rp[i].hi > max_range_endpoint)
-	max_range_endpoint = rp[i].hi;
+        max_range_endpoint = rp[i].hi;
     }
 
   /* Allocate an array large enough so that it may be indexed by
@@ -511,14 +511,14 @@ set_fields (const char *fieldstr)
       size_t rsi_candidate;
 
       /* Record the range-start indices, i.e., record each start
-	 index that is not part of any other (lo..hi] range.  */
+         index that is not part of any other (lo..hi] range.  */
       rsi_candidate = complement ? rp[i].hi + 1 : rp[i].lo;
       if (output_delimiter_specified
-	  && !is_printable_field (rsi_candidate))
-	mark_range_start (rsi_candidate);
+          && !is_printable_field (rsi_candidate))
+        mark_range_start (rsi_candidate);
 
       for (j = rp[i].lo; j <= rp[i].hi; j++)
-	mark_printable_field (j);
+        mark_printable_field (j);
     }
 
   if (output_delimiter_specified
@@ -550,32 +550,32 @@ cut_bytes (FILE *stream)
       c = getc (stream);
 
       if (c == '\n')
-	{
-	  putchar ('\n');
-	  byte_idx = 0;
-	  print_delimiter = false;
-	}
+        {
+          putchar ('\n');
+          byte_idx = 0;
+          print_delimiter = false;
+        }
       else if (c == EOF)
-	{
-	  if (byte_idx > 0)
-	    putchar ('\n');
-	  break;
-	}
+        {
+          if (byte_idx > 0)
+            putchar ('\n');
+          break;
+        }
       else
-	{
-	  bool range_start;
-	  bool *rs = output_delimiter_specified ? &range_start : NULL;
-	  if (print_kth (++byte_idx, rs))
-	    {
-	      if (rs && *rs && print_delimiter)
-		{
-		  fwrite (output_delimiter_string, sizeof (char),
-			  output_delimiter_length, stdout);
-		}
-	      print_delimiter = true;
-	      putchar (c);
-	    }
-	}
+        {
+          bool range_start;
+          bool *rs = output_delimiter_specified ? &range_start : NULL;
+          if (print_kth (++byte_idx, rs))
+            {
+              if (rs && *rs && print_delimiter)
+                {
+                  fwrite (output_delimiter_string, sizeof (char),
+                          output_delimiter_length, stdout);
+                }
+              print_delimiter = true;
+              putchar (c);
+            }
+        }
     }
 }
 
@@ -606,98 +606,98 @@ cut_fields (FILE *stream)
   while (1)
     {
       if (field_idx == 1 && buffer_first_field)
-	{
-	  ssize_t len;
-	  size_t n_bytes;
+        {
+          ssize_t len;
+          size_t n_bytes;
 
-	  len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
-			    GETNLINE_NO_LIMIT, delim, '\n', stream);
-	  if (len < 0)
-	    {
-	      free (field_1_buffer);
-	      field_1_buffer = NULL;
-	      if (ferror (stream) || feof (stream))
-		break;
-	      xalloc_die ();
-	    }
+          len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
+                            GETNLINE_NO_LIMIT, delim, '\n', stream);
+          if (len < 0)
+            {
+              free (field_1_buffer);
+              field_1_buffer = NULL;
+              if (ferror (stream) || feof (stream))
+                break;
+              xalloc_die ();
+            }
 
-	  n_bytes = len;
-	  assert (n_bytes != 0);
+          n_bytes = len;
+          assert (n_bytes != 0);
 
-	  /* If the first field extends to the end of line (it is not
-	     delimited) and we are printing all non-delimited lines,
-	     print this one.  */
-	  if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
-	    {
-	      if (suppress_non_delimited)
-		{
-		  /* Empty.  */
-		}
-	      else
-		{
-		  fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
-		  /* Make sure the output line is newline terminated.  */
-		  if (field_1_buffer[n_bytes - 1] != '\n')
-		    putchar ('\n');
-		}
-	      continue;
-	    }
-	  if (print_kth (1, NULL))
-	    {
-	      /* Print the field, but not the trailing delimiter.  */
-	      fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
-	      found_any_selected_field = true;
-	    }
-	  ++field_idx;
-	}
+          /* If the first field extends to the end of line (it is not
+             delimited) and we are printing all non-delimited lines,
+             print this one.  */
+          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
+            {
+              if (suppress_non_delimited)
+                {
+                  /* Empty.  */
+                }
+              else
+                {
+                  fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
+                  /* Make sure the output line is newline terminated.  */
+                  if (field_1_buffer[n_bytes - 1] != '\n')
+                    putchar ('\n');
+                }
+              continue;
+            }
+          if (print_kth (1, NULL))
+            {
+              /* Print the field, but not the trailing delimiter.  */
+              fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
+              found_any_selected_field = true;
+            }
+          ++field_idx;
+        }
 
       if (c != EOF)
-	{
-	  if (print_kth (field_idx, NULL))
-	    {
-	      if (found_any_selected_field)
-		{
-		  fwrite (output_delimiter_string, sizeof (char),
-			  output_delimiter_length, stdout);
-		}
-	      found_any_selected_field = true;
+        {
+          if (print_kth (field_idx, NULL))
+            {
+              if (found_any_selected_field)
+                {
+                  fwrite (output_delimiter_string, sizeof (char),
+                          output_delimiter_length, stdout);
+                }
+              found_any_selected_field = true;
 
-	      while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
-		{
-		  putchar (c);
-		}
-	    }
-	  else
-	    {
-	      while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
-		{
-		  /* Empty.  */
-		}
-	    }
-	}
+              while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+                {
+                  putchar (c);
+                }
+            }
+          else
+            {
+              while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+                {
+                  /* Empty.  */
+                }
+            }
+        }
 
       if (c == '\n')
-	{
-	  c = getc (stream);
-	  if (c != EOF)
-	    {
-	      ungetc (c, stream);
-	      c = '\n';
-	    }
-	}
+        {
+          c = getc (stream);
+          if (c != EOF)
+            {
+              ungetc (c, stream);
+              c = '\n';
+            }
+        }
 
       if (c == delim)
-	++field_idx;
+        ++field_idx;
       else if (c == '\n' || c == EOF)
-	{
-	  if (found_any_selected_field
-	      || !(suppress_non_delimited && field_idx == 1))
-	    putchar ('\n');
-	  if (c == EOF)
-	    break;
-	  field_idx = 1;
-	  found_any_selected_field = false;
-	}
+        {
+          if (found_any_selected_field
+              || !(suppress_non_delimited && field_idx == 1))
+            putchar ('\n');
+          if (c == EOF)
+            break;
+          field_idx = 1;
+          found_any_selected_field = false;
+        }
     }
 }
 
@@ -727,10 +727,10 @@ cut_file (char const *file)
     {
       stream = fopen (file, "r");
       if (stream == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
     }
 
   cut_stream (stream);
@@ -777,60 +777,60 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "b:c:d:f:ns", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'b':
-	case 'c':
-	  /* Build the byte list. */
-	  if (operating_mode != undefined_mode)
-	    FATAL_ERROR (_("only one type of list may be specified"));
-	  operating_mode = byte_mode;
-	  spec_list_string = optarg;
-	  break;
+        {
+        case 'b':
+        case 'c':
+          /* Build the byte list. */
+          if (operating_mode != undefined_mode)
+            FATAL_ERROR (_("only one type of list may be specified"));
+          operating_mode = byte_mode;
+          spec_list_string = optarg;
+          break;
 
-	case 'f':
-	  /* Build the field list. */
-	  if (operating_mode != undefined_mode)
-	    FATAL_ERROR (_("only one type of list may be specified"));
-	  operating_mode = field_mode;
-	  spec_list_string = optarg;
-	  break;
+        case 'f':
+          /* Build the field list. */
+          if (operating_mode != undefined_mode)
+            FATAL_ERROR (_("only one type of list may be specified"));
+          operating_mode = field_mode;
+          spec_list_string = optarg;
+          break;
 
-	case 'd':
-	  /* New delimiter. */
-	  /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
-	  if (optarg[0] != '\0' && optarg[1] != '\0')
-	    FATAL_ERROR (_("the delimiter must be a single character"));
-	  delim = optarg[0];
-	  delim_specified = true;
-	  break;
+        case 'd':
+          /* New delimiter. */
+          /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
+          if (optarg[0] != '\0' && optarg[1] != '\0')
+            FATAL_ERROR (_("the delimiter must be a single character"));
+          delim = optarg[0];
+          delim_specified = true;
+          break;
 
-	case OUTPUT_DELIMITER_OPTION:
-	  output_delimiter_specified = true;
-	  /* Interpret --output-delimiter='' to mean
-	     `use the NUL byte as the delimiter.'  */
-	  output_delimiter_length = (optarg[0] == '\0'
-				     ? 1 : strlen (optarg));
-	  output_delimiter_string = xstrdup (optarg);
-	  break;
+        case OUTPUT_DELIMITER_OPTION:
+          output_delimiter_specified = true;
+          /* Interpret --output-delimiter='' to mean
+             `use the NUL byte as the delimiter.'  */
+          output_delimiter_length = (optarg[0] == '\0'
+                                     ? 1 : strlen (optarg));
+          output_delimiter_string = xstrdup (optarg);
+          break;
 
-	case 'n':
-	  break;
+        case 'n':
+          break;
 
-	case 's':
-	  suppress_non_delimited = true;
-	  break;
+        case 's':
+          suppress_non_delimited = true;
+          break;
 
-	case COMPLEMENT_OPTION:
-	  complement = true;
-	  break;
+        case COMPLEMENT_OPTION:
+          complement = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (operating_mode == undefined_mode)
@@ -847,19 +847,19 @@ main (int argc, char **argv)
   if (output_delimiter_specified)
     {
       range_start_ht = hash_initialize (HT_RANGE_START_INDEX_INITIAL_CAPACITY,
-					NULL, hash_int,
-					hash_compare_ints, NULL);
+                                        NULL, hash_int,
+                                        hash_compare_ints, NULL);
       if (range_start_ht == NULL)
-	xalloc_die ();
+        xalloc_die ();
 
     }
 
   if (! set_fields (spec_list_string))
     {
       if (operating_mode == field_mode)
-	FATAL_ERROR (_("missing list of fields"));
+        FATAL_ERROR (_("missing list of fields"));
       else
-	FATAL_ERROR (_("missing list of positions"));
+        FATAL_ERROR (_("missing list of positions"));
     }
 
   if (!delim_specified)

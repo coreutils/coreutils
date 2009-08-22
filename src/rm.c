@@ -137,14 +137,14 @@ diagnose_leading_hyphen (int argc, char **argv)
       struct stat st;
 
       if (arg[0] == '-' && arg[1] && lstat (arg, &st) == 0)
-	{
-	  fprintf (stderr,
-		   _("Try `%s ./%s' to remove the file %s.\n"),
-		   argv[0],
-		   quotearg_n_style (1, shell_quoting_style, arg),
-		   quote (arg));
-	  break;
-	}
+        {
+          fprintf (stderr,
+                   _("Try `%s ./%s' to remove the file %s.\n"),
+                   argv[0],
+                   quotearg_n_style (1, shell_quoting_style, arg),
+                   quote (arg));
+          break;
+        }
     }
 }
 
@@ -153,7 +153,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
@@ -196,7 +196,7 @@ use one of these commands:\n\
 \n\
   %s ./-foo\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 \n\
 Note that if you use rm to remove a file, it is usually possible to recover\n\
@@ -248,104 +248,104 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
     {
       switch (c)
-	{
-	case 'd':
-	  /* Ignore this option, for backward compatibility with
-	     coreutils 5.92.  FIXME: Some time after 2005, change this
-	     to report an error (or perhaps behave like FreeBSD does)
-	     instead of ignoring the option.  */
-	  break;
+        {
+        case 'd':
+          /* Ignore this option, for backward compatibility with
+             coreutils 5.92.  FIXME: Some time after 2005, change this
+             to report an error (or perhaps behave like FreeBSD does)
+             instead of ignoring the option.  */
+          break;
 
-	case 'f':
-	  x.interactive = RMI_NEVER;
-	  x.ignore_missing_files = true;
-	  prompt_once = false;
-	  break;
+        case 'f':
+          x.interactive = RMI_NEVER;
+          x.ignore_missing_files = true;
+          prompt_once = false;
+          break;
 
-	case 'i':
-	  x.interactive = RMI_ALWAYS;
-	  x.ignore_missing_files = false;
-	  prompt_once = false;
-	  break;
+        case 'i':
+          x.interactive = RMI_ALWAYS;
+          x.ignore_missing_files = false;
+          prompt_once = false;
+          break;
 
-	case 'I':
-	  x.interactive = RMI_NEVER;
-	  x.ignore_missing_files = false;
-	  prompt_once = true;
-	  break;
+        case 'I':
+          x.interactive = RMI_NEVER;
+          x.ignore_missing_files = false;
+          prompt_once = true;
+          break;
 
-	case 'r':
-	case 'R':
-	  x.recursive = true;
-	  break;
+        case 'r':
+        case 'R':
+          x.recursive = true;
+          break;
 
-	case INTERACTIVE_OPTION:
-	  {
-	    int i;
-	    if (optarg)
-	      i = XARGMATCH ("--interactive", optarg, interactive_args,
-			     interactive_types);
-	    else
-	      i = interactive_always;
-	    switch (i)
-	      {
-	      case interactive_never:
-		x.interactive = RMI_NEVER;
-		prompt_once = false;
-		break;
+        case INTERACTIVE_OPTION:
+          {
+            int i;
+            if (optarg)
+              i = XARGMATCH ("--interactive", optarg, interactive_args,
+                             interactive_types);
+            else
+              i = interactive_always;
+            switch (i)
+              {
+              case interactive_never:
+                x.interactive = RMI_NEVER;
+                prompt_once = false;
+                break;
 
-	      case interactive_once:
-		x.interactive = RMI_SOMETIMES;
-		x.ignore_missing_files = false;
-		prompt_once = true;
-		break;
+              case interactive_once:
+                x.interactive = RMI_SOMETIMES;
+                x.ignore_missing_files = false;
+                prompt_once = true;
+                break;
 
-	      case interactive_always:
-		x.interactive = RMI_ALWAYS;
-		x.ignore_missing_files = false;
-		prompt_once = false;
-		break;
-	      }
-	    break;
-	  }
+              case interactive_always:
+                x.interactive = RMI_ALWAYS;
+                x.ignore_missing_files = false;
+                prompt_once = false;
+                break;
+              }
+            break;
+          }
 
-	case ONE_FILE_SYSTEM:
-	  x.one_file_system = true;
-	  break;
+        case ONE_FILE_SYSTEM:
+          x.one_file_system = true;
+          break;
 
-	case NO_PRESERVE_ROOT:
-	  preserve_root = false;
-	  break;
+        case NO_PRESERVE_ROOT:
+          preserve_root = false;
+          break;
 
-	case PRESERVE_ROOT:
-	  preserve_root = true;
-	  break;
+        case PRESERVE_ROOT:
+          preserve_root = true;
+          break;
 
-	case PRESUME_INPUT_TTY_OPTION:
-	  x.stdin_tty = true;
-	  break;
+        case PRESUME_INPUT_TTY_OPTION:
+          x.stdin_tty = true;
+          break;
 
-	case 'v':
-	  x.verbose = true;
-	  break;
+        case 'v':
+          x.verbose = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  diagnose_leading_hyphen (argc, argv);
-	  usage (EXIT_FAILURE);
-	}
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          diagnose_leading_hyphen (argc, argv);
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (argc <= optind)
     {
       if (x.ignore_missing_files)
-	exit (EXIT_SUCCESS);
+        exit (EXIT_SUCCESS);
       else
-	{
-	  error (0, 0, _("missing operand"));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("missing operand"));
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (x.recursive & preserve_root)
@@ -353,8 +353,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (x.root_dev_ino == NULL)
-	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	       quote ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quote ("/"));
     }
 
   size_t n_files = argc - optind;
@@ -363,12 +363,12 @@ main (int argc, char **argv)
   if (prompt_once && (x.recursive || 3 < n_files))
     {
       fprintf (stderr,
-	       (x.recursive
-		? _("%s: remove all arguments recursively? ")
-		: _("%s: remove all arguments? ")),
-	       program_name);
+               (x.recursive
+                ? _("%s: remove all arguments recursively? ")
+                : _("%s: remove all arguments? ")),
+               program_name);
       if (!yesno ())
-	exit (EXIT_SUCCESS);
+        exit (EXIT_SUCCESS);
     }
   enum RM_status status = rm (n_files, file, &x);
   assert (VALID_STATUS (status));

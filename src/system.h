@@ -188,8 +188,8 @@ enum
    anyone knows of a system for which this limit is too small, please
    report it as a bug in this code.  */
 # define ST_BLKSIZE(statbuf) ((0 < (statbuf).st_blksize \
-			       && (statbuf).st_blksize <= SIZE_MAX / 8 + 1) \
-			      ? (statbuf).st_blksize : DEV_BSIZE)
+                               && (statbuf).st_blksize <= SIZE_MAX / 8 + 1) \
+                              ? (statbuf).st_blksize : DEV_BSIZE)
 # if defined hpux || defined __hpux__ || defined __hpux
 /* HP-UX counts st_blocks in 1024-byte units.
    This loses when mixing HP-UX and BSD file systems with NFS.  */
@@ -335,7 +335,7 @@ uid_t getuid ();
    Ensure that sizeof *(P) is *not* 1.  In that case, it'd be
    better to use X2REALLOC, although not strictly necessary.  */
 #define X2NREALLOC(P, PN) ((void) verify_true (sizeof *(P) != 1), \
-			   x2nrealloc (P, PN, sizeof *(P)))
+                           x2nrealloc (P, PN, sizeof *(P)))
 
 /* Using x2realloc (when appropriate) usually makes your code more
    readable than using x2nrealloc, but it also makes it so your
@@ -370,7 +370,7 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
     {
       struct dirent const *dp = readdir (dirp);
       if (dp == NULL || ! dot_or_dotdot (dp->d_name))
-	return dp;
+        return dp;
     }
 }
 
@@ -382,8 +382,8 @@ is_empty_dir (int fd_cwd, char const *dir)
   struct dirent const *dp;
   int saved_errno;
   int fd = openat (fd_cwd, dir,
-		   (O_RDONLY | O_DIRECTORY
-		    | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
+                   (O_RDONLY | O_DIRECTORY
+                    | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
 
   if (fd < 0)
     return false;
@@ -621,22 +621,22 @@ static inline void
 emit_bug_reporting_address (void)
 {
   printf (_("\nReport %s bugs to %s\n"), last_component (program_name),
-	  PACKAGE_BUGREPORT);
+          PACKAGE_BUGREPORT);
   /* FIXME 2010: use AC_PACKAGE_URL once we require autoconf-2.64 */
   printf (_("%s home page: <http://www.gnu.org/software/%s/>\n"),
-	  PACKAGE_NAME, PACKAGE);
+          PACKAGE_NAME, PACKAGE);
   fputs (_("General help using GNU software: <http://www.gnu.org/gethelp/>\n"),
-	 stdout);
+         stdout);
 
   if (hard_locale (LC_MESSAGES))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
-	 <http://translationproject.org/team/LANG_CODE.html> to form one of
-	 the URLs at http://translationproject.org/team/.  Otherwise, replace
-	 the entire URL with your translation team's email address.  */
+         <http://translationproject.org/team/LANG_CODE.html> to form one of
+         the URLs at http://translationproject.org/team/.  Otherwise, replace
+         the entire URL with your translation team's email address.  */
       printf (_("Report %s translation bugs to "
-		"<http://translationproject.org/team/>\n"),
-		last_component (program_name));
+                "<http://translationproject.org/team/>\n"),
+                last_component (program_name));
     }
 }
 
@@ -646,8 +646,8 @@ static inline char *
 timetostr (time_t t, char *buf)
 {
   return (TYPE_SIGNED (time_t)
-	  ? imaxtostr (t, buf)
-	  : umaxtostr (t, buf));
+          ? imaxtostr (t, buf)
+          : umaxtostr (t, buf));
 }
 
 static inline char *

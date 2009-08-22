@@ -64,7 +64,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -150,25 +150,25 @@ scan_arg (const char *arg)
     {
       char const *decimal_point = strchr (arg, '.');
       if (! decimal_point)
-	ret.precision = 0;
+        ret.precision = 0;
       else
-	{
-	  size_t fraction_len = strcspn (decimal_point + 1, "eE");
-	  if (fraction_len <= INT_MAX)
-	    ret.precision = fraction_len;
-	  ret.width += (fraction_len == 0                      /* #.  -> #   */
-			? -1
-			: (decimal_point == arg                /* .#  -> 0.# */
-			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
-	}
+        {
+          size_t fraction_len = strcspn (decimal_point + 1, "eE");
+          if (fraction_len <= INT_MAX)
+            ret.precision = fraction_len;
+          ret.width += (fraction_len == 0                      /* #.  -> #   */
+                        ? -1
+                        : (decimal_point == arg                /* .#  -> 0.# */
+                           || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
+        }
       char const *e = strchr (arg, 'e');
       if (! e)
-	e = strchr (arg, 'E');
+        e = strchr (arg, 'E');
       if (e)
-	{
-	  long exponent = strtol (e + 1, NULL, 10);
-	  ret.precision += exponent < 0 ? -exponent : 0;
-	}
+        {
+          long exponent = strtol (e + 1, NULL, 10);
+          ret.precision += exponent < 0 ? -exponent : 0;
+        }
     }
 
   return ret;
@@ -191,8 +191,8 @@ long_double_format (char const *fmt, struct layout *layout)
   for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
       if (!fmt[i])
-	error (EXIT_FAILURE, 0,
-	       _("format %s has no %% directive"), quote (fmt));
+        error (EXIT_FAILURE, 0,
+               _("format %s has no %% directive"), quote (fmt));
       prefix_len++;
     }
 
@@ -212,25 +212,25 @@ long_double_format (char const *fmt, struct layout *layout)
     error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
   if (! strchr ("efgaEFGA", fmt[i]))
     error (EXIT_FAILURE, 0,
-	   _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
+           _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
 
   for (i++; ; i += (fmt[i] == '%') + 1)
     if (fmt[i] == '%' && fmt[i + 1] != '%')
       error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
-	     quote (fmt));
+             quote (fmt));
     else if (fmt[i])
       suffix_len++;
     else
       {
-	size_t format_size = i + 1;
-	char *ldfmt = xmalloc (format_size + 1);
-	memcpy (ldfmt, fmt, length_modifier_offset);
-	ldfmt[length_modifier_offset] = 'L';
-	strcpy (ldfmt + length_modifier_offset + 1,
-		fmt + length_modifier_offset + has_L);
-	layout->prefix_len = prefix_len;
-	layout->suffix_len = suffix_len;
-	return ldfmt;
+        size_t format_size = i + 1;
+        char *ldfmt = xmalloc (format_size + 1);
+        memcpy (ldfmt, fmt, length_modifier_offset);
+        ldfmt[length_modifier_offset] = 'L';
+        strcpy (ldfmt + length_modifier_offset + 1,
+                fmt + length_modifier_offset + has_L);
+        layout->prefix_len = prefix_len;
+        layout->suffix_len = suffix_len;
+        return ldfmt;
       }
 }
 
@@ -239,7 +239,7 @@ long_double_format (char const *fmt, struct layout *layout)
 
 static void
 print_numbers (char const *fmt, struct layout layout,
-	       long double first, long double step, long double last)
+               long double first, long double step, long double last)
 {
   bool out_of_range = (step < 0 ? first < last : last < first);
 
@@ -249,51 +249,51 @@ print_numbers (char const *fmt, struct layout layout,
       long double i;
 
       for (i = 1; ; i++)
-	{
-	  long double x0 = x;
-	  printf (fmt, x);
-	  if (out_of_range)
-	    break;
-	  x = first + i * step;
-	  out_of_range = (step < 0 ? x < last : last < x);
+        {
+          long double x0 = x;
+          printf (fmt, x);
+          if (out_of_range)
+            break;
+          x = first + i * step;
+          out_of_range = (step < 0 ? x < last : last < x);
 
-	  if (out_of_range)
-	    {
-	      /* If the number just past LAST prints as a value equal
-		 to LAST, and prints differently from the previous
-		 number, then print the number.  This avoids problems
-		 with rounding.  For example, with the x86 it causes
-		 "seq 0 0.000001 0.000003" to print 0.000003 instead
-		 of stopping at 0.000002.  */
+          if (out_of_range)
+            {
+              /* If the number just past LAST prints as a value equal
+                 to LAST, and prints differently from the previous
+                 number, then print the number.  This avoids problems
+                 with rounding.  For example, with the x86 it causes
+                 "seq 0 0.000001 0.000003" to print 0.000003 instead
+                 of stopping at 0.000002.  */
 
-	      bool print_extra_number = false;
-	      long double x_val;
-	      char *x_str;
-	      int x_strlen;
-	      setlocale (LC_NUMERIC, "C");
-	      x_strlen = asprintf (&x_str, fmt, x);
-	      setlocale (LC_NUMERIC, "");
-	      if (x_strlen < 0)
-		xalloc_die ();
-	      x_str[x_strlen - layout.suffix_len] = '\0';
+              bool print_extra_number = false;
+              long double x_val;
+              char *x_str;
+              int x_strlen;
+              setlocale (LC_NUMERIC, "C");
+              x_strlen = asprintf (&x_str, fmt, x);
+              setlocale (LC_NUMERIC, "");
+              if (x_strlen < 0)
+                xalloc_die ();
+              x_str[x_strlen - layout.suffix_len] = '\0';
 
-	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
-		  && x_val == last)
-		{
-		  char *x0_str = NULL;
-		  if (asprintf (&x0_str, fmt, x0) < 0)
-		    xalloc_die ();
-		  print_extra_number = !STREQ (x0_str, x_str);
-		  free (x0_str);
-		}
+              if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
+                  && x_val == last)
+                {
+                  char *x0_str = NULL;
+                  if (asprintf (&x0_str, fmt, x0) < 0)
+                    xalloc_die ();
+                  print_extra_number = !STREQ (x0_str, x_str);
+                  free (x0_str);
+                }
 
-	      free (x_str);
-	      if (! print_extra_number)
-		break;
-	    }
+              free (x_str);
+              if (! print_extra_number)
+                break;
+            }
 
-	  fputs (separator, stdout);
-	}
+          fputs (separator, stdout);
+        }
 
       fputs (terminator, stdout);
     }
@@ -310,28 +310,28 @@ get_default_format (operand first, operand step, operand last)
   if (prec != INT_MAX && last.precision != INT_MAX)
     {
       if (equal_width)
-	{
-	  /* increase first_width by any increased precision in step */
-	  size_t first_width = first.width + (prec - first.precision);
-	  /* adjust last_width to use precision from first/step */
-	  size_t last_width = last.width + (prec - last.precision);
-	  if (last.precision && prec == 0)
-	    last_width--;  /* don't include space for '.' */
-	  if (last.precision == 0 && prec)
-	    last_width++;  /* include space for '.' */
-	  size_t width = MAX (first_width, last_width);
-	  if (width <= INT_MAX)
-	    {
-	      int w = width;
-	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
-	      return format_buf;
-	    }
-	}
+        {
+          /* increase first_width by any increased precision in step */
+          size_t first_width = first.width + (prec - first.precision);
+          /* adjust last_width to use precision from first/step */
+          size_t last_width = last.width + (prec - last.precision);
+          if (last.precision && prec == 0)
+            last_width--;  /* don't include space for '.' */
+          if (last.precision == 0 && prec)
+            last_width++;  /* include space for '.' */
+          size_t width = MAX (first_width, last_width);
+          if (width <= INT_MAX)
+            {
+              int w = width;
+              sprintf (format_buf, "%%0%d.%dLf", w, prec);
+              return format_buf;
+            }
+        }
       else
-	{
-	  sprintf (format_buf, "%%.%dLf", prec);
-	  return format_buf;
-	}
+        {
+          sprintf (format_buf, "%%.%dLf", prec);
+          return format_buf;
+        }
     }
 
   return "%Lg";
@@ -366,37 +366,37 @@ main (int argc, char **argv)
   while (optind < argc)
     {
       if (argv[optind][0] == '-'
-	  && ((optc = argv[optind][1]) == '.' || ISDIGIT (optc)))
-	{
-	  /* means negative number */
-	  break;
-	}
+          && ((optc = argv[optind][1]) == '.' || ISDIGIT (optc)))
+        {
+          /* means negative number */
+          break;
+        }
 
       optc = getopt_long (argc, argv, "+f:s:w", long_options, NULL);
       if (optc == -1)
-	break;
+        break;
 
       switch (optc)
-	{
-	case 'f':
-	  format_str = optarg;
-	  break;
+        {
+        case 'f':
+          format_str = optarg;
+          break;
 
-	case 's':
-	  separator = optarg;
-	  break;
+        case 's':
+          separator = optarg;
+          break;
 
-	case 'w':
-	  equal_width = true;
-	  break;
+        case 'w':
+          equal_width = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (argc - optind < 1)
@@ -422,10 +422,10 @@ main (int argc, char **argv)
       last = scan_arg (argv[optind++]);
 
       if (optind < argc)
-	{
-	  step = last;
-	  last = scan_arg (argv[optind++]);
-	}
+        {
+          step = last;
+          last = scan_arg (argv[optind++]);
+        }
     }
 
   if (format_str != NULL && equal_width)

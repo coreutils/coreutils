@@ -53,8 +53,8 @@ $ac_includes_default
   # NetBSD needs -lcrypt for crypt.
   cu_saved_libs="$LIBS"
   AC_SEARCH_LIBS([crypt], [ufc crypt],
-		 [test "$ac_cv_search_crypt" = "none required" ||
-		  LIB_CRYPT="$ac_cv_search_crypt"])
+                 [test "$ac_cv_search_crypt" = "none required" ||
+                  LIB_CRYPT="$ac_cv_search_crypt"])
   LIBS="$cu_saved_libs"
   AC_SUBST([LIB_CRYPT])
 ])

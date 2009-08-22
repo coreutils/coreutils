@@ -34,7 +34,7 @@ my @Tests =
      ['4', {IN=> {f=> 'message digest'}}, {OUT=>"26423     1\n"}],
      ['5', {IN=> {f=> 'abcdefghijklmnopqrstuvwxyz'}}, {OUT=>"53553     1\n"}],
      ['6', {IN=> {f=> join ('', 'A'..'Z', 'a'..'z', '0'..'9')}},
-				{OUT=>"25587     1\n"}],
+                                {OUT=>"25587     1\n"}],
      ['7', {IN=> {f=> '1234567890' x 8}}, {OUT=>"21845     1\n"}],
 
      ['a-r-1k', '-r', {IN=> {f=> $in_1k}}, {OUT=>"65409     1\n"}],
@@ -49,7 +49,7 @@ my @Tests =
      ['5s', '-s', {IN=> {f=> 'abcdefghijklmnopqrstuvwxyz'}},
                                         {OUT=>"2847 1 f\n"}],
      ['6s', '-s', {IN=> {f=> join ('', 'A'..'Z', 'a'..'z', '0'..'9')}},
-				        {OUT=>"5387 1 f\n"}],
+                                        {OUT=>"5387 1 f\n"}],
      ['7s', '-s', {IN=> {f=> '1234567890' x 8}}, {OUT=>"4200 1 f\n"}],
     );
 

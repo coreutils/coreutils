@@ -118,7 +118,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -164,7 +164,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
 
   while ((c = getopt_long (argc, argv, "+", long_opts, NULL)) != -1)
     {
@@ -189,7 +189,7 @@ main (int argc, char **argv)
 
   if (chroot (argv[optind]) != 0)
     error (EXIT_FAILURE, errno, _("cannot change root directory to %s"),
-	   argv[optind]);
+           argv[optind]);
 
   if (chdir ("/"))
     error (EXIT_FAILURE, errno, _("cannot chdir to root directory"));
@@ -199,7 +199,7 @@ main (int argc, char **argv)
       /* No command.  Run an interactive shell.  */
       char *shell = getenv ("SHELL");
       if (shell == NULL)
-	shell = bad_cast ("/bin/sh");
+        shell = bad_cast ("/bin/sh");
       argv[0] = shell;
       argv[1] = bad_cast ("-i");
       argv[2] = NULL;

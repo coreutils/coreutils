@@ -76,7 +76,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
@@ -129,39 +129,39 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "agnruGZ", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'a':
-	  /* Ignore -a, for compatibility with SVR4.  */
-	  break;
+        {
+        case 'a':
+          /* Ignore -a, for compatibility with SVR4.  */
+          break;
 
         case 'Z':
-	  /* politely decline if we're not on a selinux-enabled kernel. */
-	  if (!selinux_enabled)
-	    error (EXIT_FAILURE, 0,
-		   _("--context (-Z) works only on an SELinux-enabled kernel"));
+          /* politely decline if we're not on a selinux-enabled kernel. */
+          if (!selinux_enabled)
+            error (EXIT_FAILURE, 0,
+                   _("--context (-Z) works only on an SELinux-enabled kernel"));
           just_context = 1;
           break;
 
-	case 'g':
-	  just_group = true;
-	  break;
-	case 'n':
-	  use_name = true;
-	  break;
-	case 'r':
-	  use_real = true;
-	  break;
-	case 'u':
-	  just_user = true;
-	  break;
-	case 'G':
-	  just_group_list = true;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        case 'g':
+          just_group = true;
+          break;
+        case 'n':
+          use_name = true;
+          break;
+        case 'r':
+          use_real = true;
+          break;
+        case 'u':
+          just_user = true;
+          break;
+        case 'G':
+          just_group_list = true;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (1 < argc - optind)
@@ -172,7 +172,7 @@ main (int argc, char **argv)
 
   if (argc - optind == 1 && just_context)
     error (EXIT_FAILURE, 0,
-	   _("cannot print security context when user specified"));
+           _("cannot print security context when user specified"));
 
   /* If we are on a selinux-enabled kernel and no user is specified,
      get our context. Otherwise, leave the context variable alone -
@@ -189,13 +189,13 @@ main (int argc, char **argv)
 
   if (just_user + just_group + just_group_list == 0 && (use_real | use_name))
     error (EXIT_FAILURE, 0,
-	   _("cannot print only names or real IDs in default format"));
+           _("cannot print only names or real IDs in default format"));
 
   if (argc - optind == 1)
     {
       struct passwd *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
-	error (EXIT_FAILURE, 0, _("%s: No such user"), argv[optind]);
+        error (EXIT_FAILURE, 0, _("%s: No such user"), argv[optind]);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }
@@ -214,12 +214,12 @@ main (int argc, char **argv)
   else if (just_group)
     {
       if (!print_group (use_real ? rgid : egid, use_name))
-	ok = false;
+        ok = false;
     }
   else if (just_group_list)
     {
       if (!print_group_list (argv[optind], ruid, rgid, egid, use_name))
-	ok = false;
+        ok = false;
     }
   else if (just_context)
     {
@@ -245,11 +245,11 @@ print_user (uid_t uid)
     {
       pwd = getpwuid (uid);
       if (pwd == NULL)
-	{
-	  error (0, 0, _("cannot find name for user ID %lu"),
-		 (unsigned long int) uid);
-	  ok = false;
-	}
+        {
+          error (0, 0, _("cannot find name for user ID %lu"),
+                 (unsigned long int) uid);
+          ok = false;
+        }
     }
 
   if (pwd == NULL)
@@ -281,7 +281,7 @@ print_full_info (const char *username)
       printf (_(" euid=%lu"), (unsigned long int) euid);
       pwd = getpwuid (euid);
       if (pwd)
-	printf ("(%s)", pwd->pw_name);
+        printf ("(%s)", pwd->pw_name);
     }
 
   if (egid != rgid)
@@ -289,7 +289,7 @@ print_full_info (const char *username)
       printf (_(" egid=%lu"), (unsigned long int) egid);
       grp = getgrgid (egid);
       if (grp)
-	printf ("(%s)", grp->gr_name);
+        printf ("(%s)", grp->gr_name);
     }
 
 #if HAVE_GETGROUPS
@@ -298,32 +298,32 @@ print_full_info (const char *username)
     int i;
 
     int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-			       &groups);
+                               &groups);
     if (n_groups < 0)
       {
-	if (username)
-	  {
-	    error (0, errno, _("failed to get groups for user %s"),
-		   quote (username));
-	  }
-	else
-	  {
-	    error (0, errno, _("failed to get groups for the current process"));
-	  }
-	ok = false;
-	return;
+        if (username)
+          {
+            error (0, errno, _("failed to get groups for user %s"),
+                   quote (username));
+          }
+        else
+          {
+            error (0, errno, _("failed to get groups for the current process"));
+          }
+        ok = false;
+        return;
       }
 
     if (n_groups > 0)
       fputs (_(" groups="), stdout);
     for (i = 0; i < n_groups; i++)
       {
-	if (i > 0)
-	  putchar (',');
-	printf ("%lu", (unsigned long int) groups[i]);
-	grp = getgrgid (groups[i]);
-	if (grp)
-	  printf ("(%s)", grp->gr_name);
+        if (i > 0)
+          putchar (',');
+        printf ("%lu", (unsigned long int) groups[i]);
+        grp = getgrgid (groups[i]);
+        if (grp)
+          printf ("(%s)", grp->gr_name);
       }
     free (groups);
   }

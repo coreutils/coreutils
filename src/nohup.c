@@ -48,14 +48,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s COMMAND [ARG]...\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
 
       fputs (_("\
 Run COMMAND, ignoring hangup signals.\n\
@@ -69,7 +69,7 @@ If standard output is a terminal, append output to `nohup.out' if possible,\n\
 `$HOME/nohup.out' otherwise.\n\
 If standard error is a terminal, redirect it to standard output.\n\
 To save output to FILE, use `%s COMMAND > FILE'.\n"),
-	      program_name);
+              program_name);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_bug_reporting_address ();
     }
@@ -96,7 +96,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (NOHUP_FAILURE);
 
@@ -118,7 +118,7 @@ main (int argc, char **argv)
     {
       fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
       if (!redirecting_stdout && !redirecting_stderr)
-	error (0, 0, _("ignoring input"));
+        error (0, 0, _("ignoring input"));
     }
 
   /* If standard output is a tty, redirect it (appending) to a file.
@@ -133,38 +133,38 @@ main (int argc, char **argv)
       mode_t mode = S_IRUSR | S_IWUSR;
       mode_t umask_value = umask (~mode);
       out_fd = (redirecting_stdout
-		? fd_reopen (STDOUT_FILENO, file, flags, mode)
-		: open (file, flags, mode));
+                ? fd_reopen (STDOUT_FILENO, file, flags, mode)
+                : open (file, flags, mode));
 
       if (out_fd < 0)
-	{
-	  int saved_errno = errno;
-	  char const *home = getenv ("HOME");
-	  if (home)
-	    {
-	      in_home = file_name_concat (home, file, NULL);
-	      out_fd = (redirecting_stdout
-			? fd_reopen (STDOUT_FILENO, in_home, flags, mode)
-			: open (in_home, flags, mode));
-	    }
-	  if (out_fd < 0)
-	    {
-	      int saved_errno2 = errno;
-	      error (0, saved_errno, _("failed to open %s"), quote (file));
-	      if (in_home)
-		error (0, saved_errno2, _("failed to open %s"),
-		       quote (in_home));
-	      exit (NOHUP_FAILURE);
-	    }
-	  file = in_home;
-	}
+        {
+          int saved_errno = errno;
+          char const *home = getenv ("HOME");
+          if (home)
+            {
+              in_home = file_name_concat (home, file, NULL);
+              out_fd = (redirecting_stdout
+                        ? fd_reopen (STDOUT_FILENO, in_home, flags, mode)
+                        : open (in_home, flags, mode));
+            }
+          if (out_fd < 0)
+            {
+              int saved_errno2 = errno;
+              error (0, saved_errno, _("failed to open %s"), quote (file));
+              if (in_home)
+                error (0, saved_errno2, _("failed to open %s"),
+                       quote (in_home));
+              exit (NOHUP_FAILURE);
+            }
+          file = in_home;
+        }
 
       umask (umask_value);
       error (0, 0,
-	     _(ignoring_input
-	       ? N_("ignoring input and appending output to %s")
-	       : N_("appending output to %s")),
-	     quote (file));
+             _(ignoring_input
+               ? N_("ignoring input and appending output to %s")
+               : N_("appending output to %s")),
+             quote (file));
       free (in_home);
     }
 
@@ -172,27 +172,27 @@ main (int argc, char **argv)
   if (redirecting_stderr)
     {
       /* Save a copy of stderr before redirecting, so we can use the original
-	 if execve fails.  It's no big deal if this dup fails.  It might
-	 not change anything, and at worst, it'll lead to suppression of
-	 the post-failed-execve diagnostic.  */
+         if execve fails.  It's no big deal if this dup fails.  It might
+         not change anything, and at worst, it'll lead to suppression of
+         the post-failed-execve diagnostic.  */
       saved_stderr_fd = dup (STDERR_FILENO);
 
       if (0 <= saved_stderr_fd
-	  && set_cloexec_flag (saved_stderr_fd, true) != 0)
-	error (NOHUP_FAILURE, errno,
-	       _("failed to set the copy of stderr to close on exec"));
+          && set_cloexec_flag (saved_stderr_fd, true) != 0)
+        error (NOHUP_FAILURE, errno,
+               _("failed to set the copy of stderr to close on exec"));
 
       if (!redirecting_stdout)
-	error (0, 0,
-	       _(ignoring_input
-		 ? N_("ignoring input and redirecting stderr to stdout")
-		 : N_("redirecting stderr to stdout")));
+        error (0, 0,
+               _(ignoring_input
+                 ? N_("ignoring input and redirecting stderr to stdout")
+                 : N_("redirecting stderr to stdout")));
 
       if (dup2 (out_fd, STDERR_FILENO) < 0)
-	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
+        error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
 
       if (stdout_is_closed)
-	close (out_fd);
+        close (out_fd);
     }
 
   signal (SIGHUP, SIG_IGN);
@@ -209,7 +209,7 @@ main (int argc, char **argv)
     /* The execve failed.  Output a diagnostic to stderr only if:
        - stderr was initially redirected to a non-tty, or
        - stderr was initially directed to a tty, and we
-	 can dup2 it to point back to that same tty.
+         can dup2 it to point back to that same tty.
        In other words, output the diagnostic if possible, but only if
        it will go to the original stderr.  */
     if (dup2 (saved_stderr_fd, STDERR_FILENO) == STDERR_FILENO)

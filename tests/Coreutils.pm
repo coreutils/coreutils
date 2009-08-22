@@ -29,7 +29,7 @@ use File::Compare qw(compare);
 my $debug = $ENV{DEBUG};
 
 my @Types = qw (IN IN_PIPE OUT ERR AUX CMP EXIT PRE POST OUT_SUBST
-		ERR_SUBST ENV ENV_DEL);
+                ERR_SUBST ENV ENV_DEL);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1}
    qw (OUT ERR EXIT PRE POST OUT_SUBST ERR_SUBST ENV);
@@ -135,7 +135,7 @@ sub _compare_files ($$$$$)
     {
       my $info = (defined $in_or_out ? "std$in_or_out " : '');
       warn "$program_name: test $test_name: ${info}mismatch, comparing "
-	. "$actual (actual) and $expected (expected)\n";
+        . "$actual (actual) and $expected (expected)\n";
       # Ignore any failure, discard stderr.
       system "diff -c $actual $expected 2>/dev/null";
     }
@@ -156,14 +156,14 @@ sub _process_file_spec ($$$$$)
     {
       my $n = keys %$file_spec;
       die "$program_name: $test_name: $type spec has $n elements --"
-	. " expected 1\n"
-	  if $n != 1;
+        . " expected 1\n"
+          if $n != 1;
       ($file_name, $contents) = each %$file_spec;
 
       # This happens for the AUX hash in an io_spec like this:
       # {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
       defined $contents
-	or return $file_name;
+        or return $file_name;
     }
   else
     {
@@ -171,10 +171,10 @@ sub _process_file_spec ($$$$$)
     }
 
   my $is_junk_file = (! defined $file_name
-		      || (($type eq 'IN' || $type eq 'AUX' || $type eq 'CMP')
-			  && defined $contents));
+                      || (($type eq 'IN' || $type eq 'AUX' || $type eq 'CMP')
+                          && defined $contents));
   my $file = _create_file ($program_name, $test_name,
-			   $file_name, $contents);
+                           $file_name, $contents);
 
   if ($is_junk_file)
     {
@@ -184,8 +184,8 @@ sub _process_file_spec ($$$$$)
     {
       # FIXME: put $srcdir in here somewhere
       warn "$program_name: $test_name: specified file `$file' does"
-	. " not exist\n"
-	  if ! -f "$srcdir/$file";
+        . " not exist\n"
+          if ! -f "$srcdir/$file";
     }
 
   return $file;
@@ -198,8 +198,8 @@ sub _at_replace ($$)
     {
       my $f = $map->{$eo};
       $f
-	and $s =~ /\@$eo\@/
-	  and $s =~ s/\@$eo\@/$f/g;
+        and $s =~ /\@$eo\@/
+          and $s =~ s/\@$eo\@/$f/g;
     }
   return $s;
 }
@@ -241,33 +241,33 @@ sub run_tests ($$$$$)
     {
       my $test_name = $t->[0];
       if ($seen{$test_name})
-	{
-	  warn "$program_name: $test_name: duplicate test name\n";
-	  $bad_test_name = 1;
-	}
+        {
+          warn "$program_name: $test_name: duplicate test name\n";
+          $bad_test_name = 1;
+        }
       $seen{$test_name} = 1;
 
       if (0)
-	{
-	  my $t8 = lc substr $test_name, 0, 8;
-	  if ($seen_8dot3{$t8})
-	    {
-	      warn "$program_name: 8.3 test name conflict: "
-		. "$test_name, $seen_8dot3{$t8}\n";
-	      $bad_test_name = 1;
-	    }
-	  $seen_8dot3{$t8} = $test_name;
-	}
+        {
+          my $t8 = lc substr $test_name, 0, 8;
+          if ($seen_8dot3{$t8})
+            {
+              warn "$program_name: 8.3 test name conflict: "
+                . "$test_name, $seen_8dot3{$t8}\n";
+              $bad_test_name = 1;
+            }
+          $seen_8dot3{$t8} = $test_name;
+        }
 
       # The test name may be no longer than 30 bytes.
       # Yes, this is an arbitrary limit.  If it causes trouble,
       # consider removing it.
       my $max = 30;
       if ($max < length $test_name)
-	{
-	  warn "$program_name: $test_name: test name is too long (> $max)\n";
-	  $bad_test_name = 1;
-	}
+        {
+          warn "$program_name: $test_name: test name is too long (> $max)\n";
+          $bad_test_name = 1;
+        }
     }
   return 1 if $bad_test_name;
 
@@ -294,150 +294,150 @@ sub run_tests ($$$$$)
       my $env_prefix = '';
       my $input_pipe_cmd;
       foreach $io_spec (@$t)
-	{
-	  if (!ref $io_spec)
-	    {
-	      push @args, $io_spec;
-	      next;
-	    }
+        {
+          if (!ref $io_spec)
+            {
+              push @args, $io_spec;
+              next;
+            }
 
-	  if (ref $io_spec ne 'HASH')
-	    {
-	      eval 'use Data::Dumper';
-	      die "$program_name: $test_name: invalid entry in test spec; "
-		. "expected HASH-ref,\nbut got this:\n"
-		  . Data::Dumper->Dump ([\$io_spec], ['$io_spec']) . "\n";
-	    }
+          if (ref $io_spec ne 'HASH')
+            {
+              eval 'use Data::Dumper';
+              die "$program_name: $test_name: invalid entry in test spec; "
+                . "expected HASH-ref,\nbut got this:\n"
+                  . Data::Dumper->Dump ([\$io_spec], ['$io_spec']) . "\n";
+            }
 
-	  my $n = keys %$io_spec;
-	  die "$program_name: $test_name: spec has $n elements --"
-	    . " expected 1\n"
-	      if $n != 1;
-	  my ($type, $val) = each %$io_spec;
-	  die "$program_name: $test_name: invalid key `$type' in test spec\n"
-	    if ! $Types{$type};
+          my $n = keys %$io_spec;
+          die "$program_name: $test_name: spec has $n elements --"
+            . " expected 1\n"
+              if $n != 1;
+          my ($type, $val) = each %$io_spec;
+          die "$program_name: $test_name: invalid key `$type' in test spec\n"
+            if ! $Types{$type};
 
-	  # Make sure there's no more than one of OUT, ERR, EXIT, etc.
-	  die "$program_name: $test_name: more than one $type spec\n"
-	    if $Zero_one_type{$type} and $seen_type{$type}++;
+          # Make sure there's no more than one of OUT, ERR, EXIT, etc.
+          die "$program_name: $test_name: more than one $type spec\n"
+            if $Zero_one_type{$type} and $seen_type{$type}++;
 
-	  if ($type eq 'PRE' or $type eq 'POST')
-	    {
-	      $expect->{$type} = $val;
-	      next;
-	    }
+          if ($type eq 'PRE' or $type eq 'POST')
+            {
+              $expect->{$type} = $val;
+              next;
+            }
 
-	  if ($type eq 'CMP')
-	    {
-	      my $t = ref $val;
-	      $t && $t eq 'ARRAY'
-		or die "$program_name: $test_name: invalid CMP spec\n";
-	      @$val == 2
-		or die "$program_name: $test_name: invalid CMP list;  must have"
-		  . " exactly 2 elements\n";
-	      my @cmp_files;
-	      foreach my $e (@$val)
-		{
-		  my $r = ref $e;
-		  $r && $r ne 'HASH'
-		    and die "$program_name: $test_name: invalid element ($r)"
-		      . " in CMP list;  only scalars and hash references "
-			. "are allowed\n";
-		  if ($r && $r eq 'HASH')
-		    {
-		      my $n = keys %$e;
-		      $n == 1
-			or die "$program_name: $test_name: CMP spec has $n "
-			  . "elements -- expected 1\n";
+          if ($type eq 'CMP')
+            {
+              my $t = ref $val;
+              $t && $t eq 'ARRAY'
+                or die "$program_name: $test_name: invalid CMP spec\n";
+              @$val == 2
+                or die "$program_name: $test_name: invalid CMP list;  must have"
+                  . " exactly 2 elements\n";
+              my @cmp_files;
+              foreach my $e (@$val)
+                {
+                  my $r = ref $e;
+                  $r && $r ne 'HASH'
+                    and die "$program_name: $test_name: invalid element ($r)"
+                      . " in CMP list;  only scalars and hash references "
+                        . "are allowed\n";
+                  if ($r && $r eq 'HASH')
+                    {
+                      my $n = keys %$e;
+                      $n == 1
+                        or die "$program_name: $test_name: CMP spec has $n "
+                          . "elements -- expected 1\n";
 
-		      # Replace any `@AUX@' in the key of %$e.
-		      my ($ff, $val) = each %$e;
-		      my $new_ff = _at_replace $expect, $ff;
-		      if ($new_ff ne $ff)
-			{
-			  $e->{$new_ff} = $val;
-			  delete $e->{$ff};
-			}
-		    }
-		  my $cmp_file = _process_file_spec ($program_name, $test_name,
-						     $e, $type, \@junk_files);
-		  push @cmp_files, $cmp_file;
-		}
-	      push @post_compare, [@cmp_files];
+                      # Replace any `@AUX@' in the key of %$e.
+                      my ($ff, $val) = each %$e;
+                      my $new_ff = _at_replace $expect, $ff;
+                      if ($new_ff ne $ff)
+                        {
+                          $e->{$new_ff} = $val;
+                          delete $e->{$ff};
+                        }
+                    }
+                  my $cmp_file = _process_file_spec ($program_name, $test_name,
+                                                     $e, $type, \@junk_files);
+                  push @cmp_files, $cmp_file;
+                }
+              push @post_compare, [@cmp_files];
 
-	      $expect->{$type} = $val;
-	      next;
-	    }
+              $expect->{$type} = $val;
+              next;
+            }
 
-	  if ($type eq 'EXIT')
-	    {
-	      die "$program_name: $test_name: invalid EXIT code\n"
-		if $val !~ /^\d+$/;
-	      # FIXME: make sure $data is numeric
-	      $expect->{EXIT} = $val;
-	      next;
-	    }
+          if ($type eq 'EXIT')
+            {
+              die "$program_name: $test_name: invalid EXIT code\n"
+                if $val !~ /^\d+$/;
+              # FIXME: make sure $data is numeric
+              $expect->{EXIT} = $val;
+              next;
+            }
 
-	  if ($type =~ /^(OUT|ERR)_SUBST$/)
-	    {
-	      $expect->{RESULT_SUBST} ||= {};
-	      $expect->{RESULT_SUBST}->{$1} = $val;
-	      next;
-	    }
+          if ($type =~ /^(OUT|ERR)_SUBST$/)
+            {
+              $expect->{RESULT_SUBST} ||= {};
+              $expect->{RESULT_SUBST}->{$1} = $val;
+              next;
+            }
 
-	  if ($type eq 'ENV')
-	    {
-	      $env_prefix = "$val ";
-	      next;
-	    }
+          if ($type eq 'ENV')
+            {
+              $env_prefix = "$val ";
+              next;
+            }
 
-	  if ($type eq 'ENV_DEL')
-	    {
-	      push @env_delete, $val;
-	      next;
-	    }
+          if ($type eq 'ENV_DEL')
+            {
+              push @env_delete, $val;
+              next;
+            }
 
-	  my $file = _process_file_spec ($program_name, $test_name, $val,
-					 $type, \@junk_files);
+          my $file = _process_file_spec ($program_name, $test_name, $val,
+                                         $type, \@junk_files);
 
-	  if ($type eq 'IN' || $type eq 'IN_PIPE')
-	    {
-	      my $quoted_file = _shell_quote $file;
-	      if ($type eq 'IN_PIPE')
-		{
-		  defined $input_pipe_cmd
-		    and die "$program_name: $test_name: only one input"
-		      . " may be specified with IN_PIPE\n";
-		  $input_pipe_cmd = "cat $quoted_file |";
-		}
-	      else
-		{
-		  push @args, $quoted_file;
-		}
-	    }
-	  elsif ($type eq 'AUX' || $type eq 'OUT' || $type eq 'ERR')
-	    {
-	      $expect->{$type} = $file;
-	    }
-	  else
-	    {
-	      die "$program_name: $test_name: invalid type: $type\n"
-	    }
-	}
+          if ($type eq 'IN' || $type eq 'IN_PIPE')
+            {
+              my $quoted_file = _shell_quote $file;
+              if ($type eq 'IN_PIPE')
+                {
+                  defined $input_pipe_cmd
+                    and die "$program_name: $test_name: only one input"
+                      . " may be specified with IN_PIPE\n";
+                  $input_pipe_cmd = "cat $quoted_file |";
+                }
+              else
+                {
+                  push @args, $quoted_file;
+                }
+            }
+          elsif ($type eq 'AUX' || $type eq 'OUT' || $type eq 'ERR')
+            {
+              $expect->{$type} = $file;
+            }
+          else
+            {
+              die "$program_name: $test_name: invalid type: $type\n"
+            }
+        }
 
       # Expect an exit status of zero if it's not specified.
       $expect->{EXIT} ||= 0;
 
       # Allow ERR to be omitted -- in that case, expect no error output.
       foreach my $eo (qw (OUT ERR))
-	{
-	  if (!exists $expect->{$eo})
-	    {
-	      $expect->{$eo} = _create_file ($program_name, $test_name,
-					     undef, '');
-	      push @junk_files, $expect->{$eo};
-	    }
-	}
+        {
+          if (!exists $expect->{$eo})
+            {
+              $expect->{$eo} = _create_file ($program_name, $test_name,
+                                             undef, '');
+              push @junk_files, $expect->{$eo};
+            }
+        }
 
       # FIXME: Does it ever make sense to specify a filename *and* contents
       # in OUT or ERR spec?
@@ -445,10 +445,10 @@ sub run_tests ($$$$$)
       # FIXME: this is really suboptimal...
       my @new_args;
       foreach my $a (@args)
-	{
-	  $a = _at_replace $expect, $a;
-	  push @new_args, $a;
-	}
+        {
+          $a = _at_replace $expect, $a;
+          push @new_args, $a;
+        }
       @args = @new_args;
 
       warn "$test_name...\n" if $verbose;
@@ -459,112 +459,112 @@ sub run_tests ($$$$$)
       push @junk_files, $actual{OUT}, $actual{ERR};
       my @cmd = (@prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
       $env_prefix
-	and unshift @cmd, $env_prefix;
+        and unshift @cmd, $env_prefix;
       defined $input_pipe_cmd
-	and unshift @cmd, $input_pipe_cmd;
+        and unshift @cmd, $input_pipe_cmd;
       my $cmd_str = join (' ', @cmd);
 
       # Delete from the environment any symbols specified by syntax
       # like this: {ENV_DEL => 'TZ'}.
       my %pushed_env;
       foreach my $env_sym (@env_delete)
-	{
-	  my $val = delete $ENV{$env_sym};
-	  defined $val
-	    and $pushed_env{$env_sym} = $val;
-	}
+        {
+          my $val = delete $ENV{$env_sym};
+          defined $val
+            and $pushed_env{$env_sym} = $val;
+        }
 
       warn "Running command: `$cmd_str'\n" if $debug;
       my $rc = 0xffff & system $cmd_str;
 
       # Restore any environment setting we changed via a deletion.
       foreach my $env_sym (keys %pushed_env)
-	{
-	  $ENV{$env_sym} = $pushed_env{$env_sym};
-	}
+        {
+          $ENV{$env_sym} = $pushed_env{$env_sym};
+        }
 
       if ($rc == 0xff00)
-	{
-	  warn "$program_name: test $test_name failed: command failed:\n"
-	    . "  `$cmd_str': $!\n";
-	  $fail = 1;
-	  goto cleanup;
-	}
+        {
+          warn "$program_name: test $test_name failed: command failed:\n"
+            . "  `$cmd_str': $!\n";
+          $fail = 1;
+          goto cleanup;
+        }
       $rc >>= 8 if $rc > 0x80;
       if ($expect->{EXIT} != $rc)
-	{
-	  warn "$program_name: test $test_name failed: exit status mismatch:"
-	    . "  expected $expect->{EXIT}, got $rc\n";
-	  $fail = 1;
-	  goto cleanup;
-	}
+        {
+          warn "$program_name: test $test_name failed: exit status mismatch:"
+            . "  expected $expect->{EXIT}, got $rc\n";
+          $fail = 1;
+          goto cleanup;
+        }
 
       my %actual_data;
       # Record actual stdout and stderr contents, if POST may need them.
       if ($expect->{POST})
-	{
-	  foreach my $eo (qw (OUT ERR))
-	    {
-	      my $out_file = $actual{$eo};
-	      open IN, $out_file
-		or (warn "$program_name: cannot open $out_file for reading: $!\n"),
-		  $fail = 1, next;
-	      $actual_data{$eo} = <IN>;
-	      close IN
-		or (warn "$program_name: failed to read $out_file: $!\n"),
-		  $fail = 1;
-	    }
-	}
+        {
+          foreach my $eo (qw (OUT ERR))
+            {
+              my $out_file = $actual{$eo};
+              open IN, $out_file
+                or (warn "$program_name: cannot open $out_file for reading: $!\n"),
+                  $fail = 1, next;
+              $actual_data{$eo} = <IN>;
+              close IN
+                or (warn "$program_name: failed to read $out_file: $!\n"),
+                  $fail = 1;
+            }
+        }
 
       foreach my $eo (qw (OUT ERR))
-	{
-	  my $subst_expr = $expect->{RESULT_SUBST}->{$eo};
-	  if (defined $subst_expr)
-	    {
-	      my $out = $actual{$eo};
-	      my $orig = "$out.orig";
+        {
+          my $subst_expr = $expect->{RESULT_SUBST}->{$eo};
+          if (defined $subst_expr)
+            {
+              my $out = $actual{$eo};
+              my $orig = "$out.orig";
 
-	      # Move $out aside (to $orig), then recreate $out
-	      # by transforming each line of $orig via $subst_expr.
-	      rename $out, $orig
-		or (warn "$program_name: cannot rename $out to $orig: $!\n"),
-		  $fail = 1, next;
-	      open IN, $orig
-		or (warn "$program_name: cannot open $orig for reading: $!\n"),
-		  $fail = 1, (unlink $orig), next;
-	      unlink $orig
-		or (warn "$program_name: cannot unlink $orig: $!\n"),
-		  $fail = 1;
-	      open OUT, ">$out"
-		or (warn "$program_name: cannot open $out for writing: $!\n"),
-		  $fail = 1, next;
-	      while (defined (my $line = <IN>))
-		{
-		  eval "\$_ = \$line; $subst_expr; \$line = \$_";
-		  print OUT $line;
-		}
-	      close IN;
-	      close OUT
-		or (warn "$program_name: failed to write $out: $!\n"),
-		  $fail = 1, next;
-	    }
+              # Move $out aside (to $orig), then recreate $out
+              # by transforming each line of $orig via $subst_expr.
+              rename $out, $orig
+                or (warn "$program_name: cannot rename $out to $orig: $!\n"),
+                  $fail = 1, next;
+              open IN, $orig
+                or (warn "$program_name: cannot open $orig for reading: $!\n"),
+                  $fail = 1, (unlink $orig), next;
+              unlink $orig
+                or (warn "$program_name: cannot unlink $orig: $!\n"),
+                  $fail = 1;
+              open OUT, ">$out"
+                or (warn "$program_name: cannot open $out for writing: $!\n"),
+                  $fail = 1, next;
+              while (defined (my $line = <IN>))
+                {
+                  eval "\$_ = \$line; $subst_expr; \$line = \$_";
+                  print OUT $line;
+                }
+              close IN;
+              close OUT
+                or (warn "$program_name: failed to write $out: $!\n"),
+                  $fail = 1, next;
+            }
 
-	  my $eo_lower = lc $eo;
-	  _compare_files ($program_name, $test_name, $eo_lower,
-			  $actual{$eo}, $expect->{$eo})
-	    and $fail = 1;
-	}
+          my $eo_lower = lc $eo;
+          _compare_files ($program_name, $test_name, $eo_lower,
+                          $actual{$eo}, $expect->{$eo})
+            and $fail = 1;
+        }
 
       foreach my $pair (@post_compare)
-	{
-	  my ($expected, $actual) = @$pair;
-	  _compare_files $program_name, $test_name, undef, $actual, $expected
-	    and $fail = 1;
-	}
+        {
+          my ($expected, $actual) = @$pair;
+          _compare_files $program_name, $test_name, undef, $actual, $expected
+            and $fail = 1;
+        }
 
     cleanup:
       $expect->{POST}
-	and &{$expect->{POST}} ($actual_data{OUT}, $actual_data{ERR});
+        and &{$expect->{POST}} ($actual_data{OUT}, $actual_data{ERR});
 
     }
 
@@ -595,19 +595,19 @@ sub triple_test($)
       my @args;
       my @list_of_hash;
       foreach my $e (@$t)
-	{
-	  !ref $e
-	    and push (@args, $e), next;
+        {
+          !ref $e
+            and push (@args, $e), next;
 
-	  ref $e && ref $e eq 'HASH'
-	    or (warn "$0: $t->[0]: unexpected entry type\n"), next;
-	  defined $e->{IN}
-	    and (push @in, $e->{IN}), next;
-	  push @list_of_hash, $e;
-	}
+          ref $e && ref $e eq 'HASH'
+            or (warn "$0: $t->[0]: unexpected entry type\n"), next;
+          defined $e->{IN}
+            and (push @in, $e->{IN}), next;
+          push @list_of_hash, $e;
+        }
       # Add variants IFF there is exactly one input file.
       @in == 1
-	or next;
+        or next;
       shift @args; # discard test name
       push @new, ["$t->[0].r", @args, '<', {IN => $in[0]}, @list_of_hash];
       push @new, ["$t->[0].p", @args, {IN_PIPE => $in[0]}, @list_of_hash];

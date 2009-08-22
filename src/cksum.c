@@ -58,8 +58,8 @@
   The i bit in GEN is set if X^i is a summand of G(X) except X^32.  */
 
 # define GEN	(BIT (26) | BIT (23) | BIT (22) | BIT (16) | BIT (12) \
-		 | BIT (11) | BIT (10) | BIT (8) | BIT (7) | BIT (5) \
-		 | BIT (4) | BIT (2) | BIT (1) | BIT (0))
+                 | BIT (11) | BIT (10) | BIT (8) | BIT (7) | BIT (5) \
+                 | BIT (4) | BIT (2) | BIT (1) | BIT (0))
 
 static uint_fast32_t r[8];
 
@@ -96,9 +96,9 @@ main (void)
   for (i = 0; i < 51; i++)
     {
       printf (",\n  0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x",
-	      crc_remainder (i * 5 + 1), crc_remainder (i * 5 + 2),
-	      crc_remainder (i * 5 + 3), crc_remainder (i * 5 + 4),
-	      crc_remainder (i * 5 + 5));
+              crc_remainder (i * 5 + 1), crc_remainder (i * 5 + 2),
+              crc_remainder (i * 5 + 3), crc_remainder (i * 5 + 4),
+              crc_remainder (i * 5 + 5));
     }
   printf ("\n};\n");
   exit (EXIT_SUCCESS);
@@ -193,16 +193,16 @@ cksum (const char *file, bool print_name)
       fp = stdin;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	xfreopen (NULL, "rb", stdin);
+        xfreopen (NULL, "rb", stdin);
     }
   else
     {
       fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
     }
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
@@ -210,19 +210,19 @@ cksum (const char *file, bool print_name)
       unsigned char *cp = buf;
 
       if (length + bytes_read < length)
-	error (EXIT_FAILURE, 0, _("%s: file too long"), file);
+        error (EXIT_FAILURE, 0, _("%s: file too long"), file);
       length += bytes_read;
       while (bytes_read--)
-	crc = (crc << 8) ^ crctab[((crc >> 24) ^ *cp++) & 0xFF];
+        crc = (crc << 8) ^ crctab[((crc >> 24) ^ *cp++) & 0xFF];
       if (feof (fp))
-	break;
+        break;
     }
 
   if (ferror (fp))
     {
       error (0, errno, "%s", file);
       if (!STREQ (file, "-"))
-	fclose (fp);
+        fclose (fp);
       return false;
     }
 
@@ -255,14 +255,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [FILE]...\n\
   or:  %s [OPTION]\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
@@ -289,7 +289,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
@@ -301,7 +301,7 @@ main (int argc, char **argv)
     {
       ok = true;
       for (i = optind; i < argc; i++)
-	ok &= cksum (argv[i], true);
+        ok &= cksum (argv[i], true);
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)

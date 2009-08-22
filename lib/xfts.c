@@ -35,28 +35,28 @@
 
 FTS *
 xfts_open (char * const *argv, int options,
-	   int (*compar) (const FTSENT **, const FTSENT **))
+           int (*compar) (const FTSENT **, const FTSENT **))
 {
   FTS *fts = fts_open (argv, options | FTS_CWDFD, compar);
   if (fts == NULL)
     {
       /* This can fail in three ways: out of memory, invalid bit_flags,
-	 and one or more of the FILES is an empty string.  We could try
-	 to decipher that errno==EINVAL means invalid bit_flags and
-	 errno==ENOENT means there's an empty string, but that seems wrong.
-	 Ideally, fts_open would return a proper error indicator.  For now,
-	 we'll presume that the bit_flags are valid and just check for
-	 empty strings.  */
+         and one or more of the FILES is an empty string.  We could try
+         to decipher that errno==EINVAL means invalid bit_flags and
+         errno==ENOENT means there's an empty string, but that seems wrong.
+         Ideally, fts_open would return a proper error indicator.  For now,
+         we'll presume that the bit_flags are valid and just check for
+         empty strings.  */
       bool invalid_arg = false;
       for (; *argv; ++argv)
-	{
-	  if (**argv == '\0')
-	    invalid_arg = true;
-	}
+        {
+          if (**argv == '\0')
+            invalid_arg = true;
+        }
       if (invalid_arg)
-	error (EXIT_FAILURE, 0, _("invalid argument: %s"), quote (""));
+        error (EXIT_FAILURE, 0, _("invalid argument: %s"), quote (""));
       else
-	xalloc_die ();
+        xalloc_die ();
     }
 
   return fts;

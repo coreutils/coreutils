@@ -184,7 +184,7 @@ log_su (struct passwd const *pw, bool successful)
   if (!old_user)
     {
       /* getlogin can fail -- usually due to lack of utmp entry.
-	 Resort to getpwuid.  */
+         Resort to getpwuid.  */
       struct passwd *pwd = getpwuid (getuid ());
       old_user = (pwd ? pwd->pw_name : "");
     }
@@ -194,20 +194,20 @@ log_su (struct passwd const *pw, bool successful)
   /* 4.2BSD openlog doesn't have the third parameter.  */
   openlog (last_component (program_name), 0
 # ifdef LOG_AUTH
-	   , LOG_AUTH
+           , LOG_AUTH
 # endif
-	   );
+           );
   syslog (LOG_NOTICE,
 # ifdef SYSLOG_NON_ROOT
-	  "%s(to %s) %s on %s",
+          "%s(to %s) %s on %s",
 # else
-	  "%s%s on %s",
+          "%s%s on %s",
 # endif
-	  successful ? "" : "FAILED SU ",
+          successful ? "" : "FAILED SU ",
 # ifdef SYSLOG_NON_ROOT
-	  new_user,
+          new_user,
 # endif
-	  old_user, tty);
+          old_user, tty);
   closelog ();
 }
 #endif
@@ -258,33 +258,33 @@ modify_environment (const struct passwd *pw, const char *shell)
          Unset all other environment variables.  */
       char const *term = getenv ("TERM");
       if (term)
-	term = xstrdup (term);
+        term = xstrdup (term);
       environ = xmalloc ((6 + !!term) * sizeof (char *));
       environ[0] = NULL;
       if (term)
-	xsetenv ("TERM", term);
+        xsetenv ("TERM", term);
       xsetenv ("HOME", pw->pw_dir);
       xsetenv ("SHELL", shell);
       xsetenv ("USER", pw->pw_name);
       xsetenv ("LOGNAME", pw->pw_name);
       xsetenv ("PATH", (pw->pw_uid
-			? DEFAULT_LOGIN_PATH
-			: DEFAULT_ROOT_LOGIN_PATH));
+                        ? DEFAULT_LOGIN_PATH
+                        : DEFAULT_ROOT_LOGIN_PATH));
     }
   else
     {
       /* Set HOME, SHELL, and if not becoming a super-user,
-	 USER and LOGNAME.  */
+         USER and LOGNAME.  */
       if (change_environment)
-	{
-	  xsetenv ("HOME", pw->pw_dir);
-	  xsetenv ("SHELL", shell);
-	  if (pw->pw_uid)
-	    {
-	      xsetenv ("USER", pw->pw_name);
-	      xsetenv ("LOGNAME", pw->pw_name);
-	    }
-	}
+        {
+          xsetenv ("HOME", pw->pw_dir);
+          xsetenv ("SHELL", shell);
+          if (pw->pw_uid)
+            {
+              xsetenv ("USER", pw->pw_name);
+              xsetenv ("LOGNAME", pw->pw_name);
+            }
+        }
     }
 }
 
@@ -312,7 +312,7 @@ change_identity (const struct passwd *pw)
 
 static void
 run_shell (char const *shell, char const *command, char **additional_args,
-	   size_t n_additional_args)
+           size_t n_additional_args)
 {
   size_t n_args = 1 + fast_startup + 2 * !!command + n_additional_args + 1;
   char const **args = xnmalloc (n_args, sizeof *args);
@@ -361,10 +361,10 @@ restricted_shell (const char *shell)
   while ((line = getusershell ()) != NULL)
     {
       if (*line != '#' && STREQ (line, shell))
-	{
-	  endusershell ();
-	  return false;
-	}
+        {
+          endusershell ();
+          return false;
+        }
     }
   endusershell ();
   return true;
@@ -375,7 +375,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [-] [USER [ARG]...]\n"), program_name);
@@ -426,35 +426,35 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "c:flmps:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'c':
-	  command = optarg;
-	  break;
+        {
+        case 'c':
+          command = optarg;
+          break;
 
-	case 'f':
-	  fast_startup = true;
-	  break;
+        case 'f':
+          fast_startup = true;
+          break;
 
-	case 'l':
-	  simulate_login = true;
-	  break;
+        case 'l':
+          simulate_login = true;
+          break;
 
-	case 'm':
-	case 'p':
-	  change_environment = false;
-	  break;
+        case 'm':
+        case 'p':
+          change_environment = false;
+          break;
 
-	case 's':
-	  shell = optarg;
-	  break;
+        case 's':
+          shell = optarg;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind < argc && STREQ (argv[optind], "-"))
@@ -467,7 +467,7 @@ main (int argc, char **argv)
 
   pw = getpwnam (new_user);
   if (! (pw && pw->pw_name && pw->pw_name[0] && pw->pw_dir && pw->pw_dir[0]
-	 && pw->pw_passwd))
+         && pw->pw_passwd))
     error (EXIT_FAILURE, 0, _("user %s does not exist"), new_user);
 
   /* Make a copy of the password information and point pw at the local
@@ -482,8 +482,8 @@ main (int argc, char **argv)
   pw->pw_passwd = xstrdup (pw->pw_passwd);
   pw->pw_dir = xstrdup (pw->pw_dir);
   pw->pw_shell = xstrdup (pw->pw_shell && pw->pw_shell[0]
-			  ? pw->pw_shell
-			  : DEFAULT_SHELL);
+                          ? pw->pw_shell
+                          : DEFAULT_SHELL);
   endpwent ();
 
   if (!correct_password (pw))
@@ -505,9 +505,9 @@ main (int argc, char **argv)
   if (shell && getuid () != 0 && restricted_shell (pw->pw_shell))
     {
       /* The user being su'd to has a nonstandard shell, and so is
-	 probably a uucp account or has restricted access.  Don't
-	 compromise the account by allowing access with a standard
-	 shell.  */
+         probably a uucp account or has restricted access.  Don't
+         compromise the account by allowing access with a standard
+         shell.  */
       error (0, 0, _("using restricted shell %s"), pw->pw_shell);
       shell = NULL;
     }

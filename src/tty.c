@@ -59,7 +59,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
@@ -95,18 +95,18 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 's':
-	  silent = true;
-	  break;
+        {
+        case 's':
+          silent = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (TTY_FAILURE);
-	}
+        default:
+          usage (TTY_FAILURE);
+        }
     }
 
   if (optind < argc)
@@ -116,9 +116,9 @@ main (int argc, char **argv)
   if (!silent)
     {
       if (tty)
-	puts (tty);
+        puts (tty);
       else
-	puts (_("not a tty"));
+        puts (_("not a tty"));
     }
 
   exit (isatty (STDIN_FILENO) ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -27,7 +27,7 @@ use File::stat;
 my $stat_single = stat('/');
 my $stat_double = stat('//');
 my $double_slash = ($stat_single->dev == $stat_double->dev
-		    && $stat_single->ino == $stat_double->ino) ? '/' : '//';
+                    && $stat_single->ino == $stat_double->ino) ? '/' : '//';
 
 my $prog = 'dirname';
 
@@ -61,8 +61,8 @@ foreach $t (@Tests)
     my $e;
     foreach $e (@$t)
       {
-	$e->{OUT} = "$e->{OUT}\n"
-	  if ref $e eq 'HASH' and exists $e->{OUT};
+        $e->{OUT} = "$e->{OUT}\n"
+          if ref $e eq 'HASH' and exists $e->{OUT};
       }
   }
 

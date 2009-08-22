@@ -46,7 +46,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
@@ -90,18 +90,18 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "m:Z:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'm':
-	  specified_mode = optarg;
-	  break;
-	case 'Z':
-	  scontext = optarg;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'm':
+          specified_mode = optarg;
+          break;
+        case 'Z':
+          scontext = optarg;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind == argc)
@@ -112,27 +112,27 @@ main (int argc, char **argv)
 
   if (scontext && setfscreatecon (scontext) < 0)
     error (EXIT_FAILURE, errno,
-	   _("failed to set default file creation context to %s"),
-	   quote (scontext));
+           _("failed to set default file creation context to %s"),
+           quote (scontext));
 
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (specified_mode)
     {
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-	error (EXIT_FAILURE, 0, _("invalid mode"));
+        error (EXIT_FAILURE, 0, _("invalid mode"));
       newmode = mode_adjust (newmode, false, umask (0), change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
-	error (EXIT_FAILURE, 0,
-	       _("mode must specify only file permission bits"));
+        error (EXIT_FAILURE, 0,
+               _("mode must specify only file permission bits"));
     }
 
   for (; optind < argc; ++optind)
     if (mkfifo (argv[optind], newmode) != 0)
       {
-	error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
-	exit_status = EXIT_FAILURE;
+        error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
+        exit_status = EXIT_FAILURE;
       }
 
   exit (exit_status);

@@ -26,7 +26,7 @@
 
    Options:
    -b, --before			The separator is attached to the beginning
-				of the record that it precedes in the file.
+                                of the record that it precedes in the file.
    -r, --regex			The separator is a regular expression.
    -s, --separator=separator	Use SEPARATOR as the record separator.
 
@@ -127,13 +127,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Write each FILE to standard output, last line first.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -248,133 +248,133 @@ tac_seekable (int input_fd, const char *file)
   for (;;)
     {
       /* Search backward from `match_start' - 1 to `G_buffer' for a match
-	 with `separator'; for speed, use strncmp if `separator' contains no
-	 metacharacters.
-	 If the match succeeds, set `match_start' to point to the start of
-	 the match and `match_length' to the length of the match.
-	 Otherwise, make `match_start' < `G_buffer'. */
+         with `separator'; for speed, use strncmp if `separator' contains no
+         metacharacters.
+         If the match succeeds, set `match_start' to point to the start of
+         the match and `match_length' to the length of the match.
+         Otherwise, make `match_start' < `G_buffer'. */
       if (sentinel_length == 0)
-	{
-	  size_t i = match_start - G_buffer;
-	  regoff_t ri = i;
-	  regoff_t range = 1 - ri;
-	  regoff_t ret;
+        {
+          size_t i = match_start - G_buffer;
+          regoff_t ri = i;
+          regoff_t range = 1 - ri;
+          regoff_t ret;
 
-	  if (1 < range)
-	    error (EXIT_FAILURE, 0, _("record too large"));
+          if (1 < range)
+            error (EXIT_FAILURE, 0, _("record too large"));
 
-	  if (range == 1
-	      || ((ret = re_search (&compiled_separator, G_buffer,
-				    i, i - 1, range, &regs))
-		  == -1))
-	    match_start = G_buffer - 1;
-	  else if (ret == -2)
-	    {
-	      error (EXIT_FAILURE, 0,
-		     _("error in regular expression search"));
-	    }
-	  else
-	    {
-	      match_start = G_buffer + regs.start[0];
-	      match_length = regs.end[0] - regs.start[0];
-	    }
-	}
+          if (range == 1
+              || ((ret = re_search (&compiled_separator, G_buffer,
+                                    i, i - 1, range, &regs))
+                  == -1))
+            match_start = G_buffer - 1;
+          else if (ret == -2)
+            {
+              error (EXIT_FAILURE, 0,
+                     _("error in regular expression search"));
+            }
+          else
+            {
+              match_start = G_buffer + regs.start[0];
+              match_length = regs.end[0] - regs.start[0];
+            }
+        }
       else
-	{
-	  /* `match_length' is constant for non-regexp boundaries. */
-	  while (*--match_start != first_char
-		 || (match_length1 && strncmp (match_start + 1, separator1,
-					       match_length1)))
-	    /* Do nothing. */ ;
-	}
+        {
+          /* `match_length' is constant for non-regexp boundaries. */
+          while (*--match_start != first_char
+                 || (match_length1 && strncmp (match_start + 1, separator1,
+                                               match_length1)))
+            /* Do nothing. */ ;
+        }
 
       /* Check whether we backed off the front of `G_buffer' without finding
          a match for `separator'. */
       if (match_start < G_buffer)
-	{
-	  if (file_pos == 0)
-	    {
-	      /* Hit the beginning of the file; print the remaining record. */
-	      output (G_buffer, past_end);
-	      return true;
-	    }
+        {
+          if (file_pos == 0)
+            {
+              /* Hit the beginning of the file; print the remaining record. */
+              output (G_buffer, past_end);
+              return true;
+            }
 
-	  saved_record_size = past_end - G_buffer;
-	  if (saved_record_size > read_size)
-	    {
-	      /* `G_buffer_size' is about twice `read_size', so since
-		 we want to read in another `read_size' bytes before
-		 the data already in `G_buffer', we need to increase
-		 `G_buffer_size'. */
-	      char *newbuffer;
-	      size_t offset = sentinel_length ? sentinel_length : 1;
-	      ptrdiff_t match_start_offset = match_start - G_buffer;
-	      ptrdiff_t past_end_offset = past_end - G_buffer;
-	      size_t old_G_buffer_size = G_buffer_size;
+          saved_record_size = past_end - G_buffer;
+          if (saved_record_size > read_size)
+            {
+              /* `G_buffer_size' is about twice `read_size', so since
+                 we want to read in another `read_size' bytes before
+                 the data already in `G_buffer', we need to increase
+                 `G_buffer_size'. */
+              char *newbuffer;
+              size_t offset = sentinel_length ? sentinel_length : 1;
+              ptrdiff_t match_start_offset = match_start - G_buffer;
+              ptrdiff_t past_end_offset = past_end - G_buffer;
+              size_t old_G_buffer_size = G_buffer_size;
 
-	      read_size *= 2;
-	      G_buffer_size = read_size * 2 + sentinel_length + 2;
-	      if (G_buffer_size < old_G_buffer_size)
-		xalloc_die ();
-	      newbuffer = xrealloc (G_buffer - offset, G_buffer_size);
-	      newbuffer += offset;
-	      /* Adjust the pointers for the new buffer location.  */
-	      match_start = newbuffer + match_start_offset;
-	      past_end = newbuffer + past_end_offset;
-	      G_buffer = newbuffer;
-	    }
+              read_size *= 2;
+              G_buffer_size = read_size * 2 + sentinel_length + 2;
+              if (G_buffer_size < old_G_buffer_size)
+                xalloc_die ();
+              newbuffer = xrealloc (G_buffer - offset, G_buffer_size);
+              newbuffer += offset;
+              /* Adjust the pointers for the new buffer location.  */
+              match_start = newbuffer + match_start_offset;
+              past_end = newbuffer + past_end_offset;
+              G_buffer = newbuffer;
+            }
 
-	  /* Back up to the start of the next bufferfull of the file.  */
-	  if (file_pos >= read_size)
-	    file_pos -= read_size;
-	  else
-	    {
-	      read_size = file_pos;
-	      file_pos = 0;
-	    }
-	  if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-	    error (0, errno, _("%s: seek failed"), quotearg_colon (file));
+          /* Back up to the start of the next bufferfull of the file.  */
+          if (file_pos >= read_size)
+            file_pos -= read_size;
+          else
+            {
+              read_size = file_pos;
+              file_pos = 0;
+            }
+          if (lseek (input_fd, file_pos, SEEK_SET) < 0)
+            error (0, errno, _("%s: seek failed"), quotearg_colon (file));
 
-	  /* Shift the pending record data right to make room for the new.
-	     The source and destination regions probably overlap.  */
-	  memmove (G_buffer + read_size, G_buffer, saved_record_size);
-	  past_end = G_buffer + read_size + saved_record_size;
-	  /* For non-regexp searches, avoid unneccessary scanning. */
-	  if (sentinel_length)
-	    match_start = G_buffer + read_size;
-	  else
-	    match_start = past_end;
+          /* Shift the pending record data right to make room for the new.
+             The source and destination regions probably overlap.  */
+          memmove (G_buffer + read_size, G_buffer, saved_record_size);
+          past_end = G_buffer + read_size + saved_record_size;
+          /* For non-regexp searches, avoid unneccessary scanning. */
+          if (sentinel_length)
+            match_start = G_buffer + read_size;
+          else
+            match_start = past_end;
 
-	  if (safe_read (input_fd, G_buffer, read_size) != read_size)
-	    {
-	      error (0, errno, _("%s: read error"), quotearg_colon (file));
-	      return false;
-	    }
-	}
+          if (safe_read (input_fd, G_buffer, read_size) != read_size)
+            {
+              error (0, errno, _("%s: read error"), quotearg_colon (file));
+              return false;
+            }
+        }
       else
-	{
-	  /* Found a match of `separator'. */
-	  if (separator_ends_record)
-	    {
-	      char *match_end = match_start + match_length;
+        {
+          /* Found a match of `separator'. */
+          if (separator_ends_record)
+            {
+              char *match_end = match_start + match_length;
 
-	      /* If this match of `separator' isn't at the end of the
-	         file, print the record. */
-	      if (!first_time || match_end != past_end)
-		output (match_end, past_end);
-	      past_end = match_end;
-	      first_time = false;
-	    }
-	  else
-	    {
-	      output (match_start, past_end);
-	      past_end = match_start;
-	    }
+              /* If this match of `separator' isn't at the end of the
+                 file, print the record. */
+              if (!first_time || match_end != past_end)
+                output (match_end, past_end);
+              past_end = match_end;
+              first_time = false;
+            }
+          else
+            {
+              output (match_start, past_end);
+              past_end = match_start;
+            }
 
-	  /* For non-regex matching, we can back up.  */
-	  if (sentinel_length > 0)
-	    match_start -= match_length - 1;
-	}
+          /* For non-regex matching, we can back up.  */
+          if (sentinel_length > 0)
+            match_start -= match_length - 1;
+        }
     }
 }
 
@@ -435,7 +435,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       char const * const Template = "%s/tacXXXXXX";
       tempdir = getenv ("TMPDIR");
       if (tempdir == NULL)
-	tempdir = DEFAULT_TMPDIR;
+        tempdir = DEFAULT_TMPDIR;
 
       /* Subtract 2 for `%s' and add 1 for the trailing NUL byte.  */
       template = xmalloc (strlen (tempdir) + strlen (Template) - 2 + 1);
@@ -456,7 +456,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
   if (fd < 0)
     {
       error (0, errno, _("cannot create temporary file in %s"),
-	     quote (tempdir));
+             quote (tempdir));
       return false;
     }
 
@@ -475,18 +475,18 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
     {
       size_t bytes_read = safe_read (input_fd, G_buffer, read_size);
       if (bytes_read == 0)
-	break;
+        break;
       if (bytes_read == SAFE_READ_ERROR)
-	{
-	  error (0, errno, _("%s: read error"), quotearg_colon (file));
-	  goto Fail;
-	}
+        {
+          error (0, errno, _("%s: read error"), quotearg_colon (file));
+          goto Fail;
+        }
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
-	{
-	  error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
-	  goto Fail;
-	}
+        {
+          error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
+          goto Fail;
+        }
     }
 
   if (fflush (tmp) != 0)
@@ -513,7 +513,7 @@ tac_nonseekable (int input_fd, const char *file)
   FILE *tmp_stream;
   char *tmp_file;
   return (copy_to_temp (&tmp_stream, &tmp_file, input_fd, file)
-	  && tac_seekable (fileno (tmp_stream), tmp_file));
+          && tac_seekable (fileno (tmp_stream), tmp_file));
 }
 
 /* Print FILE in reverse, copying it to a temporary
@@ -534,23 +534,23 @@ tac_file (const char *filename)
       fd = STDIN_FILENO;
       filename = _("standard input");
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	xfreopen (NULL, "rb", stdin);
+        xfreopen (NULL, "rb", stdin);
     }
   else
     {
       fd = open (filename, O_RDONLY | O_BINARY);
       if (fd < 0)
-	{
-	  error (0, errno, _("cannot open %s for reading"), quote (filename));
-	  return false;
-	}
+        {
+          error (0, errno, _("cannot open %s for reading"), quote (filename));
+          return false;
+        }
     }
 
   file_size = lseek (fd, (off_t) 0, SEEK_END);
 
   ok = (file_size < 0 || isatty (fd)
-	? tac_nonseekable (fd, filename)
-	: tac_seekable (fd, filename));
+        ? tac_nonseekable (fd, filename)
+        : tac_seekable (fd, filename));
 
   if (!is_stdin && close (fd) != 0)
     {
@@ -588,23 +588,23 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "brs:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'b':
-	  separator_ends_record = false;
-	  break;
-	case 'r':
-	  sentinel_length = 0;
-	  break;
-	case 's':
-	  separator = optarg;
-	  if (*separator == 0)
-	    error (EXIT_FAILURE, 0, _("separator cannot be empty"));
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'b':
+          separator_ends_record = false;
+          break;
+        case 'r':
+          sentinel_length = 0;
+          break;
+        case 's':
+          separator = optarg;
+          if (*separator == 0)
+            error (EXIT_FAILURE, 0, _("separator cannot be empty"));
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (sentinel_length == 0)
@@ -614,9 +614,9 @@ main (int argc, char **argv)
       compiled_separator.fastmap = compiled_separator_fastmap;
       compiled_separator.translate = NULL;
       error_message = re_compile_pattern (separator, strlen (separator),
-					  &compiled_separator);
+                                          &compiled_separator);
       if (error_message)
-	error (EXIT_FAILURE, 0, "%s", error_message);
+        error (EXIT_FAILURE, 0, "%s", error_message);
     }
   else
     match_length = sentinel_length = strlen (separator);
@@ -625,7 +625,7 @@ main (int argc, char **argv)
   while (sentinel_length >= read_size / 2)
     {
       if (SIZE_MAX / 2 < read_size)
-	xalloc_die ();
+        xalloc_die ();
       read_size *= 2;
     }
   half_buffer_size = read_size + sentinel_length + 1;
@@ -644,8 +644,8 @@ main (int argc, char **argv)
     }
 
   file = (optind < argc
-	  ? (char const *const *) &argv[optind]
-	  : default_file_list);
+          ? (char const *const *) &argv[optind]
+          : default_file_list);
 
   if (O_BINARY && ! isatty (STDOUT_FILENO))
     xfreopen (NULL, "wb", stdout);

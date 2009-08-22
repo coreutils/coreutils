@@ -66,7 +66,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION] [COMMAND [ARG]...]\n"), program_name);
@@ -77,7 +77,7 @@ With no COMMAND, print the current niceness.  Nicenesses range from\n\
 \n\
   -n, --adjustment=N   add integer N to the niceness (default 10)\n\
 "),
-	      - NZERO, NZERO - 1);
+              - NZERO, NZERO - 1);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
@@ -105,66 +105,66 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
 
   for (i = 1; i < argc; /* empty */)
     {
       char const *s = argv[i];
 
       if (s[0] == '-' && ISDIGIT (s[1 + (s[1] == '-' || s[1] == '+')]))
-	{
-	  adjustment_given = s + 1;
-	  ++i;
-	}
+        {
+          adjustment_given = s + 1;
+          ++i;
+        }
       else
-	{
-	  int optc;
-	  int fake_argc = argc - (i - 1);
-	  char **fake_argv = argv + (i - 1);
+        {
+          int optc;
+          int fake_argc = argc - (i - 1);
+          char **fake_argv = argv + (i - 1);
 
-	  /* Ensure that any getopt diagnostics use the right name.  */
-	  fake_argv[0] = argv[0];
+          /* Ensure that any getopt diagnostics use the right name.  */
+          fake_argv[0] = argv[0];
 
-	  /* Initialize getopt_long's internal state.  */
-	  optind = 0;
+          /* Initialize getopt_long's internal state.  */
+          optind = 0;
 
-	  optc = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
-	  i += optind - 1;
+          optc = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
+          i += optind - 1;
 
-	  if (optc == '?')
-	    usage (EXIT_FAILURE);
-	  else if (optc == 'n')
-	    adjustment_given = optarg;
-	  else /* optc == -1 */
-	    break;
-	}
+          if (optc == '?')
+            usage (EXIT_FAILURE);
+          else if (optc == 'n')
+            adjustment_given = optarg;
+          else /* optc == -1 */
+            break;
+        }
     }
 
   if (adjustment_given)
     {
       /* If the requested adjustment is outside the valid range,
-	 silently bring it to just within range; this mimics what
-	 "setpriority" and "nice" do.  */
+         silently bring it to just within range; this mimics what
+         "setpriority" and "nice" do.  */
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
       long int tmp;
       if (LONGINT_OVERFLOW < xstrtol (adjustment_given, NULL, 10, &tmp, ""))
-	error (EXIT_FAILURE, 0, _("invalid adjustment %s"),
-	       quote (adjustment_given));
+        error (EXIT_FAILURE, 0, _("invalid adjustment %s"),
+               quote (adjustment_given));
       adjustment = MAX (MIN_ADJUSTMENT, MIN (tmp, MAX_ADJUSTMENT));
     }
 
   if (i == argc)
     {
       if (adjustment_given)
-	{
-	  error (0, 0, _("a command must be given with an adjustment"));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("a command must be given with an adjustment"));
+          usage (EXIT_FAILURE);
+        }
       /* No command given; print the niceness.  */
       errno = 0;
       current_niceness = GET_NICENESS ();
       if (current_niceness == -1 && errno != 0)
-	error (EXIT_FAILURE, errno, _("cannot get niceness"));
+        error (EXIT_FAILURE, errno, _("cannot get niceness"));
       printf ("%d\n", current_niceness);
       exit (EXIT_SUCCESS);
     }

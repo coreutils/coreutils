@@ -94,7 +94,7 @@ rm_option_init (struct rm_options *x)
     x->root_dev_ino = get_root_dev_ino (&dev_ino_buf);
     if (x->root_dev_ino == NULL)
       error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	     quote ("/"));
+             quote ("/"));
   }
 }
 
@@ -167,67 +167,67 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
     {
       char const *dir_to_remove;
       if (copy_into_self)
-	{
-	  /* In general, when copy returns with copy_into_self set, SOURCE is
-	     the same as, or a parent of DEST.  In this case we know it's a
-	     parent.  It doesn't make sense to move a directory into itself, and
-	     besides in some situations doing so would give highly nonintuitive
-	     results.  Run this `mkdir b; touch a c; mv * b' in an empty
-	     directory.  Here's the result of running echo `find b -print`:
-	     b b/a b/b b/b/a b/c.  Notice that only file `a' was copied
-	     into b/b.  Handle this by giving a diagnostic, removing the
-	     copied-into-self directory, DEST (`b/b' in the example),
-	     and failing.  */
+        {
+          /* In general, when copy returns with copy_into_self set, SOURCE is
+             the same as, or a parent of DEST.  In this case we know it's a
+             parent.  It doesn't make sense to move a directory into itself, and
+             besides in some situations doing so would give highly nonintuitive
+             results.  Run this `mkdir b; touch a c; mv * b' in an empty
+             directory.  Here's the result of running echo `find b -print`:
+             b b/a b/b b/b/a b/c.  Notice that only file `a' was copied
+             into b/b.  Handle this by giving a diagnostic, removing the
+             copied-into-self directory, DEST (`b/b' in the example),
+             and failing.  */
 
-	  dir_to_remove = NULL;
-	  ok = false;
-	}
+          dir_to_remove = NULL;
+          ok = false;
+        }
       else if (rename_succeeded)
-	{
-	  /* No need to remove anything.  SOURCE was successfully
-	     renamed to DEST.  Or the user declined to rename a file.  */
-	  dir_to_remove = NULL;
-	}
+        {
+          /* No need to remove anything.  SOURCE was successfully
+             renamed to DEST.  Or the user declined to rename a file.  */
+          dir_to_remove = NULL;
+        }
       else
-	{
-	  /* This may mean SOURCE and DEST referred to different devices.
-	     It may also conceivably mean that even though they referred
-	     to the same device, rename wasn't implemented for that device.
+        {
+          /* This may mean SOURCE and DEST referred to different devices.
+             It may also conceivably mean that even though they referred
+             to the same device, rename wasn't implemented for that device.
 
-	     E.g., (from Joel N. Weber),
-	     [...] there might someday be cases where you can't rename
-	     but you can copy where the device name is the same, especially
-	     on Hurd.  Consider an ftpfs with a primitive ftp server that
-	     supports uploading, downloading and deleting, but not renaming.
+             E.g., (from Joel N. Weber),
+             [...] there might someday be cases where you can't rename
+             but you can copy where the device name is the same, especially
+             on Hurd.  Consider an ftpfs with a primitive ftp server that
+             supports uploading, downloading and deleting, but not renaming.
 
-	     Also, note that comparing device numbers is not a reliable
-	     check for `can-rename'.  Some systems can be set up so that
-	     files from many different physical devices all have the same
-	     st_dev field.  This is a feature of some NFS mounting
-	     configurations.
+             Also, note that comparing device numbers is not a reliable
+             check for `can-rename'.  Some systems can be set up so that
+             files from many different physical devices all have the same
+             st_dev field.  This is a feature of some NFS mounting
+             configurations.
 
-	     We reach this point if SOURCE has been successfully copied
-	     to DEST.  Now we have to remove SOURCE.
+             We reach this point if SOURCE has been successfully copied
+             to DEST.  Now we have to remove SOURCE.
 
-	     This function used to resort to copying only when rename
-	     failed and set errno to EXDEV.  */
+             This function used to resort to copying only when rename
+             failed and set errno to EXDEV.  */
 
-	  dir_to_remove = source;
-	}
+          dir_to_remove = source;
+        }
 
       if (dir_to_remove != NULL)
-	{
-	  struct rm_options rm_options;
-	  enum RM_status status;
+        {
+          struct rm_options rm_options;
+          enum RM_status status;
 
-	  rm_option_init (&rm_options);
-	  rm_options.verbose = x->verbose;
+          rm_option_init (&rm_options);
+          rm_options.verbose = x->verbose;
 
-	  status = rm (1, &dir_to_remove, &rm_options);
-	  assert (VALID_STATUS (status));
-	  if (status == RM_ERROR)
-	    ok = false;
-	}
+          status = rm (1, &dir_to_remove, &rm_options);
+          assert (VALID_STATUS (status));
+          if (status == RM_ERROR)
+            ok = false;
+        }
     }
 
   return ok;
@@ -239,7 +239,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 
 static bool
 movefile (char *source, char *dest, bool dest_is_dir,
-	  const struct cp_options *x)
+          const struct cp_options *x)
 {
   bool ok;
 
@@ -275,7 +275,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -283,7 +283,7 @@ Usage: %s [OPTION]... [-T] SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
   or:  %s [OPTION]... -t DIRECTORY SOURCE...\n\
 "),
-	      program_name, program_name, program_name);
+              program_name, program_name, program_name);
       fputs (_("\
 Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
@@ -364,59 +364,59 @@ main (int argc, char **argv)
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((c = getopt_long (argc, argv, "bfint:uvS:T", long_options, NULL))
-	 != -1)
+         != -1)
     {
       switch (c)
-	{
-	case 'b':
-	  make_backups = true;
-	  if (optarg)
-	    version_control_string = optarg;
-	  break;
-	case 'f':
-	  x.interactive = I_ALWAYS_YES;
-	  break;
-	case 'i':
-	  x.interactive = I_ASK_USER;
-	  break;
-	case 'n':
-	  x.interactive = I_ALWAYS_NO;
-	  break;
-	case STRIP_TRAILING_SLASHES_OPTION:
-	  remove_trailing_slashes = true;
-	  break;
-	case 't':
-	  if (target_directory)
-	    error (EXIT_FAILURE, 0, _("multiple target directories specified"));
-	  else
-	    {
-	      struct stat st;
-	      if (stat (optarg, &st) != 0)
-		error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
-	      if (! S_ISDIR (st.st_mode))
-		error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-		       quote (optarg));
-	    }
-	  target_directory = optarg;
-	  break;
-	case 'T':
-	  no_target_directory = true;
-	  break;
-	case 'u':
-	  x.update = true;
-	  break;
-	case 'v':
-	  x.verbose = true;
-	  break;
-	case 'S':
-	  make_backups = true;
-	  backup_suffix_string = optarg;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'b':
+          make_backups = true;
+          if (optarg)
+            version_control_string = optarg;
+          break;
+        case 'f':
+          x.interactive = I_ALWAYS_YES;
+          break;
+        case 'i':
+          x.interactive = I_ASK_USER;
+          break;
+        case 'n':
+          x.interactive = I_ALWAYS_NO;
+          break;
+        case STRIP_TRAILING_SLASHES_OPTION:
+          remove_trailing_slashes = true;
+          break;
+        case 't':
+          if (target_directory)
+            error (EXIT_FAILURE, 0, _("multiple target directories specified"));
+          else
+            {
+              struct stat st;
+              if (stat (optarg, &st) != 0)
+                error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+              if (! S_ISDIR (st.st_mode))
+                error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+                       quote (optarg));
+            }
+          target_directory = optarg;
+          break;
+        case 'T':
+          no_target_directory = true;
+          break;
+        case 'u':
+          x.update = true;
+          break;
+        case 'v':
+          x.verbose = true;
+          break;
+        case 'S':
+          make_backups = true;
+          backup_suffix_string = optarg;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   n_files = argc - optind;
@@ -425,39 +425,39 @@ main (int argc, char **argv)
   if (n_files <= !target_directory)
     {
       if (n_files <= 0)
-	error (0, 0, _("missing file operand"));
+        error (0, 0, _("missing file operand"));
       else
-	error (0, 0, _("missing destination file operand after %s"),
-	       quote (file[0]));
+        error (0, 0, _("missing destination file operand after %s"),
+               quote (file[0]));
       usage (EXIT_FAILURE);
     }
 
   if (no_target_directory)
     {
       if (target_directory)
-	error (EXIT_FAILURE, 0,
-	       _("cannot combine --target-directory (-t) "
-		 "and --no-target-directory (-T)"));
+        error (EXIT_FAILURE, 0,
+               _("cannot combine --target-directory (-t) "
+                 "and --no-target-directory (-T)"));
       if (2 < n_files)
-	{
-	  error (0, 0, _("extra operand %s"), quote (file[2]));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s"), quote (file[2]));
+          usage (EXIT_FAILURE);
+        }
     }
   else if (!target_directory)
     {
       assert (2 <= n_files);
       if (target_directory_operand (file[n_files - 1]))
-	target_directory = file[--n_files];
+        target_directory = file[--n_files];
       else if (2 < n_files)
-	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-	       quote (file[n_files - 1]));
+        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+               quote (file[n_files - 1]));
     }
 
   if (make_backups && x.interactive == I_ALWAYS_NO)
     {
       error (0, 0,
-	     _("options --backup and --no-clobber are mutually exclusive"));
+             _("options --backup and --no-clobber are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
 
@@ -465,9 +465,9 @@ main (int argc, char **argv)
     simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
-		   ? xget_version (_("backup type"),
-				   version_control_string)
-		   : no_backups);
+                   ? xget_version (_("backup type"),
+                                   version_control_string)
+                   : no_backups);
 
   hash_init ();
 
@@ -476,14 +476,14 @@ main (int argc, char **argv)
       int i;
 
       /* Initialize the hash table only if we'll need it.
-	 The problem it is used to detect can arise only if there are
-	 two or more files to move.  */
+         The problem it is used to detect can arise only if there are
+         two or more files to move.  */
       if (2 <= n_files)
-	dest_info_init (&x);
+        dest_info_init (&x);
 
       ok = true;
       for (i = 0; i < n_files; ++i)
-	ok &= movefile (file[i], target_directory, true, &x);
+        ok &= movefile (file[i], target_directory, true, &x);
     }
   else
     ok = movefile (file[0], file[1], false, &x);

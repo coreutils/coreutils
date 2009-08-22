@@ -107,21 +107,21 @@ struct List_element
     struct List_element *next;
     union
       {
-	unsigned char normal_char;
-	struct			/* unnamed */
-	  {
-	    unsigned char first_char;
-	    unsigned char last_char;
-	  }
-	range;
-	enum Char_class char_class;
-	unsigned char equiv_code;
-	struct			/* unnamed */
-	  {
-	    unsigned char the_repeated_char;
-	    count repeat_count;
-	  }
-	repeated_char;
+        unsigned char normal_char;
+        struct			/* unnamed */
+          {
+            unsigned char first_char;
+            unsigned char last_char;
+          }
+        range;
+        enum Char_class char_class;
+        unsigned char equiv_code;
+        struct			/* unnamed */
+          {
+            unsigned char the_repeated_char;
+            count repeat_count;
+          }
+        repeated_char;
       }
     u;
   };
@@ -280,13 +280,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... SET1 [SET2]\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.\n\
@@ -445,94 +445,94 @@ unquote (char const *s, struct E_string *es)
       int oct_digit;
 
       switch (s[i])
-	{
-	case '\\':
-	  es->escaped[j] = true;
-	  switch (s[i + 1])
-	    {
-	    case '\\':
-	      c = '\\';
-	      break;
-	    case 'a':
-	      c = '\a';
-	      break;
-	    case 'b':
-	      c = '\b';
-	      break;
-	    case 'f':
-	      c = '\f';
-	      break;
-	    case 'n':
-	      c = '\n';
-	      break;
-	    case 'r':
-	      c = '\r';
-	      break;
-	    case 't':
-	      c = '\t';
-	      break;
-	    case 'v':
-	      c = '\v';
-	      break;
-	    case '0':
-	    case '1':
-	    case '2':
-	    case '3':
-	    case '4':
-	    case '5':
-	    case '6':
-	    case '7':
-	      c = s[i + 1] - '0';
-	      oct_digit = s[i + 2] - '0';
-	      if (0 <= oct_digit && oct_digit <= 7)
-		{
-		  c = 8 * c + oct_digit;
-		  ++i;
-		  oct_digit = s[i + 2] - '0';
-		  if (0 <= oct_digit && oct_digit <= 7)
-		    {
-		      if (8 * c + oct_digit < N_CHARS)
-			{
-			  c = 8 * c + oct_digit;
-			  ++i;
-			}
-		      else
-			{
-			  /* A 3-digit octal number larger than \377 won't
-			     fit in 8 bits.  So we stop when adding the
-			     next digit would put us over the limit and
-			     give a warning about the ambiguity.  POSIX
-			     isn't clear on this, and we interpret this
-			     lack of clarity as meaning the resulting behavior
-			     is undefined, which means we're allowed to issue
-			     a warning.  */
-			  error (0, 0, _("warning: the ambiguous octal escape \
+        {
+        case '\\':
+          es->escaped[j] = true;
+          switch (s[i + 1])
+            {
+            case '\\':
+              c = '\\';
+              break;
+            case 'a':
+              c = '\a';
+              break;
+            case 'b':
+              c = '\b';
+              break;
+            case 'f':
+              c = '\f';
+              break;
+            case 'n':
+              c = '\n';
+              break;
+            case 'r':
+              c = '\r';
+              break;
+            case 't':
+              c = '\t';
+              break;
+            case 'v':
+              c = '\v';
+              break;
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+              c = s[i + 1] - '0';
+              oct_digit = s[i + 2] - '0';
+              if (0 <= oct_digit && oct_digit <= 7)
+                {
+                  c = 8 * c + oct_digit;
+                  ++i;
+                  oct_digit = s[i + 2] - '0';
+                  if (0 <= oct_digit && oct_digit <= 7)
+                    {
+                      if (8 * c + oct_digit < N_CHARS)
+                        {
+                          c = 8 * c + oct_digit;
+                          ++i;
+                        }
+                      else
+                        {
+                          /* A 3-digit octal number larger than \377 won't
+                             fit in 8 bits.  So we stop when adding the
+                             next digit would put us over the limit and
+                             give a warning about the ambiguity.  POSIX
+                             isn't clear on this, and we interpret this
+                             lack of clarity as meaning the resulting behavior
+                             is undefined, which means we're allowed to issue
+                             a warning.  */
+                          error (0, 0, _("warning: the ambiguous octal escape \
 \\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, %c"),
-				 s[i], s[i + 1], s[i + 2],
-				 s[i], s[i + 1], s[i + 2]);
-			}
-		    }
-		}
-	      break;
-	    case '\0':
-	      error (0, 0, _("warning: an unescaped backslash "
-			     "at end of string is not portable"));
-	      /* POSIX is not clear about this.  */
-	      es->escaped[j] = false;
-	      i--;
-	      c = '\\';
-	      break;
-	    default:
-	      c = s[i + 1];
-	      break;
-	    }
-	  ++i;
-	  es->s[j++] = c;
-	  break;
-	default:
-	  es->s[j++] = s[i];
-	  break;
-	}
+                                 s[i], s[i + 1], s[i + 2],
+                                 s[i], s[i + 1], s[i + 2]);
+                        }
+                    }
+                }
+              break;
+            case '\0':
+              error (0, 0, _("warning: an unescaped backslash "
+                             "at end of string is not portable"));
+              /* POSIX is not clear about this.  */
+              es->escaped[j] = false;
+              i--;
+              c = '\\';
+              break;
+            default:
+              c = s[i + 1];
+              break;
+            }
+          ++i;
+          es->s[j++] = c;
+          break;
+        default:
+          es->s[j++] = s[i];
+          break;
+        }
     }
   es->len = j;
   return true;
@@ -548,7 +548,7 @@ look_up_char_class (char const *class_str, size_t len)
 
   for (i = 0; i < ARRAY_CARDINALITY (char_class_name); i++)
     if (strncmp (class_str, char_class_name[i], len) == 0
-	&& strlen (char_class_name[i]) == len)
+        && strlen (char_class_name[i]) == len)
       return i;
   return CC_NO_CLASS;
 }
@@ -596,42 +596,42 @@ make_printable_str (char const *s, size_t len)
       unsigned char c = s[i];
 
       switch (c)
-	{
-	case '\\':
-	  tmp = "\\";
-	  break;
-	case '\a':
-	  tmp = "\\a";
-	  break;
-	case '\b':
-	  tmp = "\\b";
-	  break;
-	case '\f':
-	  tmp = "\\f";
-	  break;
-	case '\n':
-	  tmp = "\\n";
-	  break;
-	case '\r':
-	  tmp = "\\r";
-	  break;
-	case '\t':
-	  tmp = "\\t";
-	  break;
-	case '\v':
-	  tmp = "\\v";
-	  break;
-	default:
-	  if (isprint (c))
-	    {
-	      buf[0] = c;
-	      buf[1] = '\0';
-	    }
-	  else
-	    sprintf (buf, "\\%03o", c);
-	  tmp = buf;
-	  break;
-	}
+        {
+        case '\\':
+          tmp = "\\";
+          break;
+        case '\a':
+          tmp = "\\a";
+          break;
+        case '\b':
+          tmp = "\\b";
+          break;
+        case '\f':
+          tmp = "\\f";
+          break;
+        case '\n':
+          tmp = "\\n";
+          break;
+        case '\r':
+          tmp = "\\r";
+          break;
+        case '\t':
+          tmp = "\\t";
+          break;
+        case '\v':
+          tmp = "\\v";
+          break;
+        default:
+          if (isprint (c))
+            {
+              buf[0] = c;
+              buf[1] = '\0';
+            }
+          else
+            sprintf (buf, "\\%03o", c);
+          tmp = buf;
+          break;
+        }
       p = stpcpy (p, tmp);
     }
   return printable_buf;
@@ -671,7 +671,7 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
 
       error (0, 0,
        _("range-endpoints of `%s-%s' are in reverse collating sequence order"),
-	     tmp1, tmp2);
+             tmp1, tmp2);
       free (tmp1);
       free (tmp2);
       return false;
@@ -694,7 +694,7 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
 
 static bool
 append_char_class (struct Spec_list *list,
-		   char const *char_class_str, size_t len)
+                   char const *char_class_str, size_t len)
 {
   enum Char_class char_class;
   struct List_element *new;
@@ -719,7 +719,7 @@ append_char_class (struct Spec_list *list,
 
 static void
 append_repeated_char (struct Spec_list *list, unsigned char the_char,
-		      count repeat_count)
+                      count repeat_count)
 {
   struct List_element *new;
 
@@ -741,7 +741,7 @@ append_repeated_char (struct Spec_list *list, unsigned char the_char,
 
 static bool
 append_equiv_class (struct Spec_list *list,
-		    char const *equiv_class_str, size_t len)
+                    char const *equiv_class_str, size_t len)
 {
   struct List_element *new;
 
@@ -765,16 +765,16 @@ append_equiv_class (struct Spec_list *list,
 
 static bool
 find_closing_delim (const struct E_string *es, size_t start_idx,
-		    char pre_bracket_char, size_t *result_idx)
+                    char pre_bracket_char, size_t *result_idx)
 {
   size_t i;
 
   for (i = start_idx; i < es->len - 1; i++)
     if (es->s[i] == pre_bracket_char && es->s[i + 1] == ']'
-	&& !es->escaped[i] && !es->escaped[i + 1])
+        && !es->escaped[i] && !es->escaped[i + 1])
       {
-	*result_idx = i;
-	return true;
+        *result_idx = i;
+        return true;
       }
   return false;
 }
@@ -791,8 +791,8 @@ find_closing_delim (const struct E_string *es, size_t start_idx,
 
 static int
 find_bracketed_repeat (const struct E_string *es, size_t start_idx,
-		       unsigned char *char_to_repeat, count *repeat_count,
-		       size_t *closing_bracket_idx)
+                       unsigned char *char_to_repeat, count *repeat_count,
+                       size_t *closing_bracket_idx)
 {
   size_t i;
 
@@ -803,38 +803,38 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
   for (i = start_idx + 2; i < es->len && !es->escaped[i]; i++)
     {
       if (es->s[i] == ']')
-	{
-	  size_t digit_str_len = i - start_idx - 2;
+        {
+          size_t digit_str_len = i - start_idx - 2;
 
-	  *char_to_repeat = es->s[start_idx];
-	  if (digit_str_len == 0)
-	    {
-	      /* We've matched [c*] -- no explicit repeat count.  */
-	      *repeat_count = 0;
-	    }
-	  else
-	    {
-	      /* Here, we have found [c*s] where s should be a string
-		 of octal (if it starts with `0') or decimal digits.  */
-	      char const *digit_str = &es->s[start_idx + 2];
-	      char *d_end;
-	      if ((xstrtoumax (digit_str, &d_end, *digit_str == '0' ? 8 : 10,
-			       repeat_count, NULL)
-		   != LONGINT_OK)
-		  || REPEAT_COUNT_MAXIMUM < *repeat_count
-		  || digit_str + digit_str_len != d_end)
-		{
-		  char *tmp = make_printable_str (digit_str, digit_str_len);
-		  error (0, 0,
-			 _("invalid repeat count %s in [c*n] construct"),
-			 quote (tmp));
-		  free (tmp);
-		  return -2;
-		}
-	    }
-	  *closing_bracket_idx = i;
-	  return 0;
-	}
+          *char_to_repeat = es->s[start_idx];
+          if (digit_str_len == 0)
+            {
+              /* We've matched [c*] -- no explicit repeat count.  */
+              *repeat_count = 0;
+            }
+          else
+            {
+              /* Here, we have found [c*s] where s should be a string
+                 of octal (if it starts with `0') or decimal digits.  */
+              char const *digit_str = &es->s[start_idx + 2];
+              char *d_end;
+              if ((xstrtoumax (digit_str, &d_end, *digit_str == '0' ? 8 : 10,
+                               repeat_count, NULL)
+                   != LONGINT_OK)
+                  || REPEAT_COUNT_MAXIMUM < *repeat_count
+                  || digit_str + digit_str_len != d_end)
+                {
+                  char *tmp = make_printable_str (digit_str, digit_str_len);
+                  error (0, 0,
+                         _("invalid repeat count %s in [c*n] construct"),
+                         quote (tmp));
+                  free (tmp);
+                  return -2;
+                }
+            }
+          *closing_bracket_idx = i;
+          return 0;
+        }
     }
   return -1;			/* No bracket found.  */
 }
@@ -863,10 +863,10 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
       - [:str:] Character class where `str' is one of the 12 valid strings.
       - [=c=] Equivalence class where `c' is any single character.
       - [c*n] Repeat the single character `c' `n' times. n may be omitted.
-	  However, if `n' is present, it must be a non-negative octal or
-	  decimal integer.
+          However, if `n' is present, it must be a non-negative octal or
+          decimal integer.
       - r-s Range of characters from `r' to `s'.  The second endpoint must
-	  not precede the first in the current collating sequence.
+          not precede the first in the current collating sequence.
       - c Any other character is interpreted as itself.  */
 
 static bool
@@ -887,120 +887,120 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
   for (i = 0; i + 2 < es->len; /* empty */)
     {
       if (es_match (es, i, '['))
-	{
-	  bool matched_multi_char_construct;
-	  size_t closing_bracket_idx;
-	  unsigned char char_to_repeat;
-	  count repeat_count;
-	  int err;
+        {
+          bool matched_multi_char_construct;
+          size_t closing_bracket_idx;
+          unsigned char char_to_repeat;
+          count repeat_count;
+          int err;
 
-	  matched_multi_char_construct = true;
-	  if (es_match (es, i + 1, ':') || es_match (es, i + 1, '='))
-	    {
-	      size_t closing_delim_idx;
+          matched_multi_char_construct = true;
+          if (es_match (es, i + 1, ':') || es_match (es, i + 1, '='))
+            {
+              size_t closing_delim_idx;
 
-	      if (find_closing_delim (es, i + 2, p[i + 1], &closing_delim_idx))
-		{
-		  size_t opnd_str_len = closing_delim_idx - 1 - (i + 2) + 1;
-		  char const *opnd_str = p + i + 2;
+              if (find_closing_delim (es, i + 2, p[i + 1], &closing_delim_idx))
+                {
+                  size_t opnd_str_len = closing_delim_idx - 1 - (i + 2) + 1;
+                  char const *opnd_str = p + i + 2;
 
-		  if (opnd_str_len == 0)
-		    {
-		      if (p[i + 1] == ':')
-			error (0, 0, _("missing character class name `[::]'"));
-		      else
-			error (0, 0,
-			       _("missing equivalence class character `[==]'"));
-		      return false;
-		    }
+                  if (opnd_str_len == 0)
+                    {
+                      if (p[i + 1] == ':')
+                        error (0, 0, _("missing character class name `[::]'"));
+                      else
+                        error (0, 0,
+                               _("missing equivalence class character `[==]'"));
+                      return false;
+                    }
 
-		  if (p[i + 1] == ':')
-		    {
-		      /* FIXME: big comment.  */
-		      if (!append_char_class (result, opnd_str, opnd_str_len))
-			{
-			  if (star_digits_closebracket (es, i + 2))
-			    goto try_bracketed_repeat;
-			  else
-			    {
-			      char *tmp = make_printable_str (opnd_str,
-							      opnd_str_len);
-			      error (0, 0, _("invalid character class %s"),
-				     quote (tmp));
-			      free (tmp);
-			      return false;
-			    }
-			}
-		    }
-		  else
-		    {
-		      /* FIXME: big comment.  */
-		      if (!append_equiv_class (result, opnd_str, opnd_str_len))
-			{
-			  if (star_digits_closebracket (es, i + 2))
-			    goto try_bracketed_repeat;
-			  else
-			    {
-			      char *tmp = make_printable_str (opnd_str,
-							      opnd_str_len);
-			      error (0, 0,
-	       _("%s: equivalence class operand must be a single character"),
-				     tmp);
-			      free (tmp);
-			      return false;
-			    }
-			}
-		    }
+                  if (p[i + 1] == ':')
+                    {
+                      /* FIXME: big comment.  */
+                      if (!append_char_class (result, opnd_str, opnd_str_len))
+                        {
+                          if (star_digits_closebracket (es, i + 2))
+                            goto try_bracketed_repeat;
+                          else
+                            {
+                              char *tmp = make_printable_str (opnd_str,
+                                                              opnd_str_len);
+                              error (0, 0, _("invalid character class %s"),
+                                     quote (tmp));
+                              free (tmp);
+                              return false;
+                            }
+                        }
+                    }
+                  else
+                    {
+                      /* FIXME: big comment.  */
+                      if (!append_equiv_class (result, opnd_str, opnd_str_len))
+                        {
+                          if (star_digits_closebracket (es, i + 2))
+                            goto try_bracketed_repeat;
+                          else
+                            {
+                              char *tmp = make_printable_str (opnd_str,
+                                                              opnd_str_len);
+                              error (0, 0,
+               _("%s: equivalence class operand must be a single character"),
+                                     tmp);
+                              free (tmp);
+                              return false;
+                            }
+                        }
+                    }
 
-		  i = closing_delim_idx + 2;
-		  continue;
-		}
-	      /* Else fall through.  This could be [:*] or [=*].  */
-	    }
+                  i = closing_delim_idx + 2;
+                  continue;
+                }
+              /* Else fall through.  This could be [:*] or [=*].  */
+            }
 
-	try_bracketed_repeat:
+        try_bracketed_repeat:
 
-	  /* Determine whether this is a bracketed repeat range
-	     matching the RE \[.\*(dec_or_oct_number)?\].  */
-	  err = find_bracketed_repeat (es, i + 1, &char_to_repeat,
-				       &repeat_count,
-				       &closing_bracket_idx);
-	  if (err == 0)
-	    {
-	      append_repeated_char (result, char_to_repeat, repeat_count);
-	      i = closing_bracket_idx + 1;
-	    }
-	  else if (err == -1)
-	    {
-	      matched_multi_char_construct = false;
-	    }
-	  else
-	    {
-	      /* Found a string that looked like [c*n] but the
-		 numeric part was invalid.  */
-	      return false;
-	    }
+          /* Determine whether this is a bracketed repeat range
+             matching the RE \[.\*(dec_or_oct_number)?\].  */
+          err = find_bracketed_repeat (es, i + 1, &char_to_repeat,
+                                       &repeat_count,
+                                       &closing_bracket_idx);
+          if (err == 0)
+            {
+              append_repeated_char (result, char_to_repeat, repeat_count);
+              i = closing_bracket_idx + 1;
+            }
+          else if (err == -1)
+            {
+              matched_multi_char_construct = false;
+            }
+          else
+            {
+              /* Found a string that looked like [c*n] but the
+                 numeric part was invalid.  */
+              return false;
+            }
 
-	  if (matched_multi_char_construct)
-	    continue;
+          if (matched_multi_char_construct)
+            continue;
 
-	  /* We reach this point if P does not match [:str:], [=c=],
-	     [c*n], or [c*].  Now, see if P looks like a range `[-c'
-	     (from `[' to `c').  */
-	}
+          /* We reach this point if P does not match [:str:], [=c=],
+             [c*n], or [c*].  Now, see if P looks like a range `[-c'
+             (from `[' to `c').  */
+        }
 
       /* Look ahead one char for ranges like a-z.  */
       if (es_match (es, i + 1, '-'))
-	{
-	  if (!append_range (result, p[i], p[i + 2]))
-	    return false;
-	  i += 3;
-	}
+        {
+          if (!append_range (result, p[i], p[i + 2]))
+            return false;
+          i += 3;
+        }
       else
-	{
-	  append_normal_char (result, p[i]);
-	  ++i;
-	}
+        {
+          append_normal_char (result, p[i]);
+          ++i;
+        }
     }
 
   /* Now handle the (2 or fewer) remaining characters p[i]..p[es->len - 1].  */
@@ -1063,53 +1063,53 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 
     case RE_RANGE:
       if (s->state == NEW_ELEMENT)
-	s->state = p->u.range.first_char;
+        s->state = p->u.range.first_char;
       else
-	++(s->state);
+        ++(s->state);
       return_val = s->state;
       if (s->state == p->u.range.last_char)
-	{
-	  s->tail = p->next;
-	  s->state = NEW_ELEMENT;
-	}
+        {
+          s->tail = p->next;
+          s->state = NEW_ELEMENT;
+        }
       break;
 
     case RE_CHAR_CLASS:
       if (class)
-	{
-	  switch (p->u.char_class)
-	    {
-	    case CC_LOWER:
-	      *class = UL_LOWER;
-	      break;
-	    case CC_UPPER:
-	      *class = UL_UPPER;
-	      break;
-	    default:
-	      break;
-	    }
-	}
+        {
+          switch (p->u.char_class)
+            {
+            case CC_LOWER:
+              *class = UL_LOWER;
+              break;
+            case CC_UPPER:
+              *class = UL_UPPER;
+              break;
+            default:
+              break;
+            }
+        }
 
       if (s->state == NEW_ELEMENT)
-	{
-	  for (i = 0; i < N_CHARS; i++)
-	    if (is_char_class_member (p->u.char_class, i))
-	      break;
-	  assert (i < N_CHARS);
-	  s->state = i;
-	}
+        {
+          for (i = 0; i < N_CHARS; i++)
+            if (is_char_class_member (p->u.char_class, i))
+              break;
+          assert (i < N_CHARS);
+          s->state = i;
+        }
       assert (is_char_class_member (p->u.char_class, s->state));
       return_val = s->state;
       for (i = s->state + 1; i < N_CHARS; i++)
-	if (is_char_class_member (p->u.char_class, i))
-	  break;
+        if (is_char_class_member (p->u.char_class, i))
+          break;
       if (i < N_CHARS)
-	s->state = i;
+        s->state = i;
       else
-	{
-	  s->tail = p->next;
-	  s->state = NEW_ELEMENT;
-	}
+        {
+          s->tail = p->next;
+          s->state = NEW_ELEMENT;
+        }
       break;
 
     case RE_EQUIV_CLASS:
@@ -1126,25 +1126,25 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
     case RE_REPEATED_CHAR:
       /* Here, a repeat count of n == 0 means don't repeat at all.  */
       if (p->u.repeated_char.repeat_count == 0)
-	{
-	  s->tail = p->next;
-	  s->state = NEW_ELEMENT;
-	  return_val = get_next (s, class);
-	}
+        {
+          s->tail = p->next;
+          s->state = NEW_ELEMENT;
+          return_val = get_next (s, class);
+        }
       else
-	{
-	  if (s->state == NEW_ELEMENT)
-	    {
-	      s->state = 0;
-	    }
-	  ++(s->state);
-	  return_val = p->u.repeated_char.the_repeated_char;
-	  if (s->state == p->u.repeated_char.repeat_count)
-	    {
-	      s->tail = p->next;
-	      s->state = NEW_ELEMENT;
-	    }
-	}
+        {
+          if (s->state == NEW_ELEMENT)
+            {
+              s->state = 0;
+            }
+          ++(s->state);
+          return_val = p->u.repeated_char.the_repeated_char;
+          if (s->state == p->u.repeated_char.repeat_count)
+            {
+              s->tail = p->next;
+              s->state = NEW_ELEMENT;
+            }
+        }
       break;
 
     default:
@@ -1206,61 +1206,61 @@ get_spec_stats (struct Spec_list *s)
       count new_length;
 
       switch (p->type)
-	{
-	case RE_NORMAL_CHAR:
-	  len = 1;
-	  break;
+        {
+        case RE_NORMAL_CHAR:
+          len = 1;
+          break;
 
-	case RE_RANGE:
-	  assert (p->u.range.last_char >= p->u.range.first_char);
-	  len = p->u.range.last_char - p->u.range.first_char + 1;
-	  break;
+        case RE_RANGE:
+          assert (p->u.range.last_char >= p->u.range.first_char);
+          len = p->u.range.last_char - p->u.range.first_char + 1;
+          break;
 
-	case RE_CHAR_CLASS:
-	  s->has_char_class = true;
-	  for (i = 0; i < N_CHARS; i++)
-	    if (is_char_class_member (p->u.char_class, i))
-	      ++len;
-	  switch (p->u.char_class)
-	    {
-	    case CC_UPPER:
-	    case CC_LOWER:
-	      break;
-	    default:
-	      s->has_restricted_char_class = true;
-	      break;
-	    }
-	  break;
+        case RE_CHAR_CLASS:
+          s->has_char_class = true;
+          for (i = 0; i < N_CHARS; i++)
+            if (is_char_class_member (p->u.char_class, i))
+              ++len;
+          switch (p->u.char_class)
+            {
+            case CC_UPPER:
+            case CC_LOWER:
+              break;
+            default:
+              s->has_restricted_char_class = true;
+              break;
+            }
+          break;
 
-	case RE_EQUIV_CLASS:
-	  for (i = 0; i < N_CHARS; i++)
-	    if (is_equiv_class_member (p->u.equiv_code, i))
-	      ++len;
-	  s->has_equiv_class = true;
-	  break;
+        case RE_EQUIV_CLASS:
+          for (i = 0; i < N_CHARS; i++)
+            if (is_equiv_class_member (p->u.equiv_code, i))
+              ++len;
+          s->has_equiv_class = true;
+          break;
 
-	case RE_REPEATED_CHAR:
-	  if (p->u.repeated_char.repeat_count > 0)
-	    len = p->u.repeated_char.repeat_count;
-	  else
-	    {
-	      s->indefinite_repeat_element = p;
-	      ++(s->n_indefinite_repeats);
-	    }
-	  break;
+        case RE_REPEATED_CHAR:
+          if (p->u.repeated_char.repeat_count > 0)
+            len = p->u.repeated_char.repeat_count;
+          else
+            {
+              s->indefinite_repeat_element = p;
+              ++(s->n_indefinite_repeats);
+            }
+          break;
 
-	default:
-	  abort ();
-	  break;
-	}
+        default:
+          abort ();
+          break;
+        }
 
       /* Check for arithmetic overflow in computing length.  Also, reject
-	 any length greater than the maximum repeat count, in case the
-	 length is later used to compute the repeat count for an
-	 indefinite element.  */
+         any length greater than the maximum repeat count, in case the
+         length is later used to compute the repeat count for an
+         indefinite element.  */
       new_length = length + len;
       if (! (length <= new_length && new_length <= REPEAT_COUNT_MAXIMUM))
-	error (EXIT_FAILURE, 0, _("too many characters in set"));
+        error (EXIT_FAILURE, 0, _("too many characters in set"));
       length = new_length;
     }
 
@@ -1282,7 +1282,7 @@ get_s2_spec_stats (struct Spec_list *s2, count len_s1)
   if (len_s1 >= s2->length && s2->n_indefinite_repeats == 1)
     {
       s2->indefinite_repeat_element->u.repeated_char.repeat_count =
-	len_s1 - s2->length;
+        len_s1 - s2->length;
       s2->length = len_s1;
     }
 }
@@ -1347,8 +1347,8 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       break;
     case RE_CHAR_CLASS:
       for (i = N_CHARS - 1; i >= 0; i--)
-	if (is_char_class_member (p->u.char_class, i))
-	  break;
+        if (is_char_class_member (p->u.char_class, i))
+          break;
       assert (i >= 0);
       char_to_repeat = i;
       break;
@@ -1408,7 +1408,7 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
   if (s1->n_indefinite_repeats > 0)
     {
       error (EXIT_FAILURE, 0,
-	     _("the [c*] repeat construct may not appear in string1"));
+             _("the [c*] repeat construct may not appear in string1"));
     }
 
   if (s2)
@@ -1416,57 +1416,57 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
       get_s2_spec_stats (s2, s1->length);
 
       if (s2->n_indefinite_repeats > 1)
-	{
-	  error (EXIT_FAILURE, 0,
-		 _("only one [c*] repeat construct may appear in string2"));
-	}
+        {
+          error (EXIT_FAILURE, 0,
+                 _("only one [c*] repeat construct may appear in string2"));
+        }
 
       if (translating)
-	{
-	  if (s2->has_equiv_class)
-	    {
-	      error (EXIT_FAILURE, 0,
-		     _("[=c=] expressions may not appear in string2 \
+        {
+          if (s2->has_equiv_class)
+            {
+              error (EXIT_FAILURE, 0,
+                     _("[=c=] expressions may not appear in string2 \
 when translating"));
-	    }
+            }
 
-	  if (s1->length > s2->length)
-	    {
-	      if (!truncate_set1)
-		{
-		  /* string2 must be non-empty unless --truncate-set1 is
-		     given or string1 is empty.  */
+          if (s1->length > s2->length)
+            {
+              if (!truncate_set1)
+                {
+                  /* string2 must be non-empty unless --truncate-set1 is
+                     given or string1 is empty.  */
 
-		  if (s2->length == 0)
-		    error (EXIT_FAILURE, 0,
-		     _("when not truncating set1, string2 must be non-empty"));
-		  string2_extend (s1, s2);
-		}
-	    }
+                  if (s2->length == 0)
+                    error (EXIT_FAILURE, 0,
+                     _("when not truncating set1, string2 must be non-empty"));
+                  string2_extend (s1, s2);
+                }
+            }
 
-	  if (complement && s1->has_char_class
-	      && ! (s2->length == s1->length && homogeneous_spec_list (s2)))
-	    {
-	      error (EXIT_FAILURE, 0,
-		     _("when translating with complemented character classes,\
+          if (complement && s1->has_char_class
+              && ! (s2->length == s1->length && homogeneous_spec_list (s2)))
+            {
+              error (EXIT_FAILURE, 0,
+                     _("when translating with complemented character classes,\
 \nstring2 must map all characters in the domain to one"));
-	    }
+            }
 
-	  if (s2->has_restricted_char_class)
-	    {
-	      error (EXIT_FAILURE, 0,
-		     _("when translating, the only character classes that may \
+          if (s2->has_restricted_char_class)
+            {
+              error (EXIT_FAILURE, 0,
+                     _("when translating, the only character classes that may \
 appear in\nstring2 are `upper' and `lower'"));
-	    }
-	}
+            }
+        }
       else
-	/* Not translating.  */
-	{
-	  if (s2->n_indefinite_repeats > 0)
-	    error (EXIT_FAILURE, 0,
-		   _("the [c*] construct may appear in string2 only \
+        /* Not translating.  */
+        {
+          if (s2->n_indefinite_repeats > 0)
+            error (EXIT_FAILURE, 0,
+                   _("the [c*] construct may appear in string2 only \
 when translating"));
-	}
+        }
     }
 }
 
@@ -1494,74 +1494,74 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
       size_t begin;
 
       if (i >= nr)
-	{
-	  nr = reader (buf, size);
-	  if (nr == 0)
-	    break;
-	  i = 0;
-	}
+        {
+          nr = reader (buf, size);
+          if (nr == 0)
+            break;
+          i = 0;
+        }
 
       begin = i;
 
       if (char_to_squeeze == NOT_A_CHAR)
-	{
-	  size_t out_len;
-	  /* Here, by being a little tricky, we can get a significant
-	     performance increase in most cases when the input is
-	     reasonably large.  Since tr will modify the input only
-	     if two consecutive (and identical) input characters are
-	     in the squeeze set, we can step by two through the data
-	     when searching for a character in the squeeze set.  This
-	     means there may be a little more work in a few cases and
-	     perhaps twice as much work in the worst cases where most
-	     of the input is removed by squeezing repeats.  But most
-	     uses of this functionality seem to remove less than 20-30%
-	     of the input.  */
-	  for (; i < nr && !in_squeeze_set[to_uchar (buf[i])]; i += 2)
-	    continue;
+        {
+          size_t out_len;
+          /* Here, by being a little tricky, we can get a significant
+             performance increase in most cases when the input is
+             reasonably large.  Since tr will modify the input only
+             if two consecutive (and identical) input characters are
+             in the squeeze set, we can step by two through the data
+             when searching for a character in the squeeze set.  This
+             means there may be a little more work in a few cases and
+             perhaps twice as much work in the worst cases where most
+             of the input is removed by squeezing repeats.  But most
+             uses of this functionality seem to remove less than 20-30%
+             of the input.  */
+          for (; i < nr && !in_squeeze_set[to_uchar (buf[i])]; i += 2)
+            continue;
 
-	  /* There is a special case when i == nr and we've just
-	     skipped a character (the last one in buf) that is in
-	     the squeeze set.  */
-	  if (i == nr && in_squeeze_set[to_uchar (buf[i - 1])])
-	    --i;
+          /* There is a special case when i == nr and we've just
+             skipped a character (the last one in buf) that is in
+             the squeeze set.  */
+          if (i == nr && in_squeeze_set[to_uchar (buf[i - 1])])
+            --i;
 
-	  if (i >= nr)
-	    out_len = nr - begin;
-	  else
-	    {
-	      char_to_squeeze = buf[i];
-	      /* We're about to output buf[begin..i].  */
-	      out_len = i - begin + 1;
+          if (i >= nr)
+            out_len = nr - begin;
+          else
+            {
+              char_to_squeeze = buf[i];
+              /* We're about to output buf[begin..i].  */
+              out_len = i - begin + 1;
 
-	      /* But since we stepped by 2 in the loop above,
-	         out_len may be one too large.  */
-	      if (i > 0 && buf[i - 1] == char_to_squeeze)
-		--out_len;
+              /* But since we stepped by 2 in the loop above,
+                 out_len may be one too large.  */
+              if (i > 0 && buf[i - 1] == char_to_squeeze)
+                --out_len;
 
-	      /* Advance i to the index of first character to be
-	         considered when looking for a char different from
-	         char_to_squeeze.  */
-	      ++i;
-	    }
-	  if (out_len > 0
-	      && fwrite (&buf[begin], 1, out_len, stdout) != out_len)
-	    error (EXIT_FAILURE, errno, _("write error"));
-	}
+              /* Advance i to the index of first character to be
+                 considered when looking for a char different from
+                 char_to_squeeze.  */
+              ++i;
+            }
+          if (out_len > 0
+              && fwrite (&buf[begin], 1, out_len, stdout) != out_len)
+            error (EXIT_FAILURE, errno, _("write error"));
+        }
 
       if (char_to_squeeze != NOT_A_CHAR)
-	{
-	  /* Advance i to index of first char != char_to_squeeze
-	     (or to nr if all the rest of the characters in this
-	     buffer are the same as char_to_squeeze).  */
-	  for (; i < nr && buf[i] == char_to_squeeze; i++)
-	    continue;
-	  if (i < nr)
-	    char_to_squeeze = NOT_A_CHAR;
-	  /* If (i >= nr) we've squeezed the last character in this buffer.
-	     So now we have to read a new buffer and continue comparing
-	     characters against char_to_squeeze.  */
-	}
+        {
+          /* Advance i to index of first char != char_to_squeeze
+             (or to nr if all the rest of the characters in this
+             buffer are the same as char_to_squeeze).  */
+          for (; i < nr && buf[i] == char_to_squeeze; i++)
+            continue;
+          if (i < nr)
+            char_to_squeeze = NOT_A_CHAR;
+          /* If (i >= nr) we've squeezed the last character in this buffer.
+             So now we have to read a new buffer and continue comparing
+             characters against char_to_squeeze.  */
+        }
     }
 }
 
@@ -1594,7 +1594,7 @@ read_and_delete (char *buf, size_t size)
       size_t nr = plain_read (buf, size);
 
       if (nr == 0)
-	return 0;
+        return 0;
 
       /* This first loop may be a waste of code, but gives much
          better performance when no characters are deleted in
@@ -1602,12 +1602,12 @@ read_and_delete (char *buf, size_t size)
          of buf[i] into buf[n_saved] when it would be a NOP.  */
 
       for (i = 0; i < nr && !in_delete_set[to_uchar (buf[i])]; i++)
-	continue;
+        continue;
       n_saved = i;
 
       for (++i; i < nr; i++)
-	if (!in_delete_set[to_uchar (buf[i])])
-	  buf[n_saved++] = buf[i];
+        if (!in_delete_set[to_uchar (buf[i])])
+          buf[n_saved++] = buf[i];
     }
   while (n_saved == 0);
 
@@ -1672,32 +1672,32 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "+cCdst", long_options, NULL)) != -1)
     {
       switch (c)
-	{
-	case 'c':
-	case 'C':
-	  complement = true;
-	  break;
+        {
+        case 'c':
+        case 'C':
+          complement = true;
+          break;
 
-	case 'd':
-	  delete = true;
-	  break;
+        case 'd':
+          delete = true;
+          break;
 
-	case 's':
-	  squeeze_repeats = true;
-	  break;
+        case 's':
+          squeeze_repeats = true;
+          break;
 
-	case 't':
-	  truncate_set1 = true;
-	  break;
+        case 't':
+          truncate_set1 = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	  break;
-	}
+        default:
+          usage (EXIT_FAILURE);
+          break;
+        }
     }
 
   non_option_args = argc - optind;
@@ -1708,16 +1708,16 @@ main (int argc, char **argv)
   if (non_option_args < min_operands)
     {
       if (non_option_args == 0)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	{
-	  error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
-	  fprintf (stderr, "%s\n",
-		   _(squeeze_repeats
-		     ? N_("Two strings must be given when "
-			  "both deleting and squeezing repeats.")
-		     : N_("Two strings must be given when translating.")));
-	}
+        {
+          error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+          fprintf (stderr, "%s\n",
+                   _(squeeze_repeats
+                     ? N_("Two strings must be given when "
+                          "both deleting and squeezing repeats.")
+                     : N_("Two strings must be given when translating.")));
+        }
       usage (EXIT_FAILURE);
     }
 
@@ -1725,9 +1725,9 @@ main (int argc, char **argv)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind + max_operands]));
       if (non_option_args == 2)
-	fprintf (stderr, "%s\n",
-		 _("Only one string may be given when "
-		   "deleting without squeezing repeats."));
+        fprintf (stderr, "%s\n",
+                 _("Only one string may be given when "
+                   "deleting without squeezing repeats."));
       usage (EXIT_FAILURE);
     }
 
@@ -1739,7 +1739,7 @@ main (int argc, char **argv)
     {
       spec_init (s2);
       if (!parse_str (argv[optind + 1], s2))
-	exit (EXIT_FAILURE);
+        exit (EXIT_FAILURE);
     }
   else
     s2 = NULL;
@@ -1764,13 +1764,13 @@ main (int argc, char **argv)
       set_initialize (s1, complement, in_delete_set);
 
       for (;;)
-	{
-	  size_t nr = read_and_delete (io_buf, sizeof io_buf);
-	  if (nr == 0)
-	    break;
-	  if (fwrite (io_buf, 1, nr, stdout) != nr)
-	    error (EXIT_FAILURE, errno, _("write error"));
-	}
+        {
+          size_t nr = read_and_delete (io_buf, sizeof io_buf);
+          if (nr == 0)
+            break;
+          if (fwrite (io_buf, 1, nr, stdout) != nr)
+            error (EXIT_FAILURE, errno, _("write error"));
+        }
     }
   else if (squeeze_repeats && delete && non_option_args == 2)
     {
@@ -1781,111 +1781,111 @@ main (int argc, char **argv)
   else if (translating)
     {
       if (complement)
-	{
-	  int i;
-	  bool *in_s1 = in_delete_set;
+        {
+          int i;
+          bool *in_s1 = in_delete_set;
 
-	  set_initialize (s1, false, in_s1);
-	  s2->state = BEGIN_STATE;
-	  for (i = 0; i < N_CHARS; i++)
-	    xlate[i] = i;
-	  for (i = 0; i < N_CHARS; i++)
-	    {
-	      if (!in_s1[i])
-		{
-		  int ch = get_next (s2, NULL);
-		  assert (ch != -1 || truncate_set1);
-		  if (ch == -1)
-		    {
-		      /* This will happen when tr is invoked like e.g.
-		         tr -cs A-Za-z0-9 '\012'.  */
-		      break;
-		    }
-		  xlate[i] = ch;
-		}
-	    }
-	}
+          set_initialize (s1, false, in_s1);
+          s2->state = BEGIN_STATE;
+          for (i = 0; i < N_CHARS; i++)
+            xlate[i] = i;
+          for (i = 0; i < N_CHARS; i++)
+            {
+              if (!in_s1[i])
+                {
+                  int ch = get_next (s2, NULL);
+                  assert (ch != -1 || truncate_set1);
+                  if (ch == -1)
+                    {
+                      /* This will happen when tr is invoked like e.g.
+                         tr -cs A-Za-z0-9 '\012'.  */
+                      break;
+                    }
+                  xlate[i] = ch;
+                }
+            }
+        }
       else
-	{
-	  int c1, c2;
-	  int i;
-	  bool case_convert = false;
-	  enum Upper_Lower_class class_s1;
-	  enum Upper_Lower_class class_s2;
+        {
+          int c1, c2;
+          int i;
+          bool case_convert = false;
+          enum Upper_Lower_class class_s1;
+          enum Upper_Lower_class class_s2;
 
-	  for (i = 0; i < N_CHARS; i++)
-	    xlate[i] = i;
-	  s1->state = BEGIN_STATE;
-	  s2->state = BEGIN_STATE;
-	  for (;;)
-	    {
-	      /* When the previous pair identified case-converting classes,
-		 advance S1 and S2 so that each points to the following
-		 construct.  */
-	      if (case_convert)
-		{
-		  skip_construct (s1);
-		  skip_construct (s2);
-		  case_convert = false;
-		}
+          for (i = 0; i < N_CHARS; i++)
+            xlate[i] = i;
+          s1->state = BEGIN_STATE;
+          s2->state = BEGIN_STATE;
+          for (;;)
+            {
+              /* When the previous pair identified case-converting classes,
+                 advance S1 and S2 so that each points to the following
+                 construct.  */
+              if (case_convert)
+                {
+                  skip_construct (s1);
+                  skip_construct (s2);
+                  case_convert = false;
+                }
 
-	      c1 = get_next (s1, &class_s1);
-	      c2 = get_next (s2, &class_s2);
+              c1 = get_next (s1, &class_s1);
+              c2 = get_next (s2, &class_s2);
 
-	      /* When translating and there is an [:upper:] or [:lower:]
-		 class in SET2, then there must be a corresponding [:lower:]
-		 or [:upper:] class in SET1.  */
-	      if (class_s1 == UL_NONE
-		  && (class_s2 == UL_LOWER || class_s2 == UL_UPPER))
-		error (EXIT_FAILURE, 0,
-		       _("misaligned [:upper:] and/or [:lower:] construct"));
+              /* When translating and there is an [:upper:] or [:lower:]
+                 class in SET2, then there must be a corresponding [:lower:]
+                 or [:upper:] class in SET1.  */
+              if (class_s1 == UL_NONE
+                  && (class_s2 == UL_LOWER || class_s2 == UL_UPPER))
+                error (EXIT_FAILURE, 0,
+                       _("misaligned [:upper:] and/or [:lower:] construct"));
 
-	      if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
-		{
-		  case_convert = true;
-		  for (i = 0; i < N_CHARS; i++)
-		    if (islower (i))
-		      xlate[i] = toupper (i);
-		}
-	      else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
-		{
-		  case_convert = true;
-		  for (i = 0; i < N_CHARS; i++)
-		    if (isupper (i))
-		      xlate[i] = tolower (i);
-		}
-	      else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
-		       || (class_s1 == UL_UPPER && class_s2 == UL_UPPER))
-		{
-		  /* POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
-		     is undefined.  Treat it as a no-op.  */
-		}
-	      else
-		{
-		  /* The following should have been checked by validate...  */
-		  if (c1 == -1 || c2 == -1)
-		    break;
-		  xlate[c1] = c2;
-		}
-	    }
-	  assert (c1 == -1 || truncate_set1);
-	}
+              if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
+                {
+                  case_convert = true;
+                  for (i = 0; i < N_CHARS; i++)
+                    if (islower (i))
+                      xlate[i] = toupper (i);
+                }
+              else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
+                {
+                  case_convert = true;
+                  for (i = 0; i < N_CHARS; i++)
+                    if (isupper (i))
+                      xlate[i] = tolower (i);
+                }
+              else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
+                       || (class_s1 == UL_UPPER && class_s2 == UL_UPPER))
+                {
+                  /* POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
+                     is undefined.  Treat it as a no-op.  */
+                }
+              else
+                {
+                  /* The following should have been checked by validate...  */
+                  if (c1 == -1 || c2 == -1)
+                    break;
+                  xlate[c1] = c2;
+                }
+            }
+          assert (c1 == -1 || truncate_set1);
+        }
       if (squeeze_repeats)
-	{
-	  set_initialize (s2, false, in_squeeze_set);
-	  squeeze_filter (io_buf, sizeof io_buf, read_and_xlate);
-	}
+        {
+          set_initialize (s2, false, in_squeeze_set);
+          squeeze_filter (io_buf, sizeof io_buf, read_and_xlate);
+        }
       else
-	{
-	  for (;;)
-	    {
-	      size_t bytes_read = read_and_xlate (io_buf, sizeof io_buf);
-	      if (bytes_read == 0)
-		break;
-	      if (fwrite (io_buf, 1, bytes_read, stdout) != bytes_read)
-		error (EXIT_FAILURE, errno, _("write error"));
-	    }
-	}
+        {
+          for (;;)
+            {
+              size_t bytes_read = read_and_xlate (io_buf, sizeof io_buf);
+              if (bytes_read == 0)
+                break;
+              if (fwrite (io_buf, 1, bytes_read, stdout) != bytes_read)
+                error (EXIT_FAILURE, errno, _("write error"));
+            }
+        }
     }
 
   if (close (STDIN_FILENO) != 0)

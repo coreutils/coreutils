@@ -40,7 +40,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -48,7 +48,7 @@ Usage: %s FILE1 FILE2\n\
   or:  %s OPTION\n"), program_name, program_name);
       fputs (_("Call the link function to create a link named FILE2\
  to an existing FILE1.\n\n"),
-	     stdout);
+             stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -68,16 +68,16 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
   if (argc < optind + 2)
     {
       if (argc < optind + 1)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[optind]));
+        error (0, 0, _("missing operand after %s"), quote (argv[optind]));
       usage (EXIT_FAILURE);
     }
 
@@ -89,7 +89,7 @@ main (int argc, char **argv)
 
   if (link (argv[optind], argv[optind + 1]) != 0)
     error (EXIT_FAILURE, errno, _("cannot create link %s to %s"),
-	   quote_n (0, argv[optind + 1]), quote_n (1, argv[optind]));
+           quote_n (0, argv[optind + 1]), quote_n (1, argv[optind]));
 
   exit (EXIT_SUCCESS);
 }

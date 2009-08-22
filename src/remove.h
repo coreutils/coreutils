@@ -83,12 +83,12 @@ enum RM_status
   do								\
     {								\
       if ((New_value) == RM_ERROR				\
-	  || ((New_value) == RM_USER_DECLINED && (S) == RM_OK))	\
-	(S) = (New_value);					\
+          || ((New_value) == RM_USER_DECLINED && (S) == RM_OK))	\
+        (S) = (New_value);					\
     }								\
   while (0)
 
 enum RM_status rm (size_t n_files, char const *const *file,
-		   struct rm_options const *x);
+                   struct rm_options const *x);
 
 #endif

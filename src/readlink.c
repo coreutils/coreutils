@@ -57,12 +57,12 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... FILE\n"), program_name);
       fputs (_("Print value of a symbolic link or canonical file name\n\n"),
-	     stdout);
+             stdout);
       fputs (_("\
   -f, --canonicalize            canonicalize by following every symlink in\n\
                                 every component of the given name recursively;\n\
@@ -112,31 +112,31 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "efmnqsv", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'e':
-	  can_mode = CAN_EXISTING;
-	  break;
-	case 'f':
-	  can_mode = CAN_ALL_BUT_LAST;
-	  break;
-	case 'm':
-	  can_mode = CAN_MISSING;
-	  break;
-	case 'n':
-	  no_newline = true;
-	  break;
-	case 'q':
-	case 's':
-	  verbose = false;
-	  break;
-	case 'v':
-	  verbose = true;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'e':
+          can_mode = CAN_EXISTING;
+          break;
+        case 'f':
+          can_mode = CAN_ALL_BUT_LAST;
+          break;
+        case 'm':
+          can_mode = CAN_MISSING;
+          break;
+        case 'n':
+          no_newline = true;
+          break;
+        case 'q':
+        case 's':
+          verbose = false;
+          break;
+        case 'v':
+          verbose = true;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind >= argc)
@@ -154,8 +154,8 @@ main (int argc, char **argv)
     }
 
   value = (can_mode != -1
-	   ? canonicalize_filename_mode (fname, can_mode)
-	   : areadlink_with_size (fname, 63));
+           ? canonicalize_filename_mode (fname, can_mode)
+           : areadlink_with_size (fname, 63));
   if (value)
     {
       printf ("%s%s", value, (no_newline ? "" : "\n"));

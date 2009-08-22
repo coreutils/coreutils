@@ -77,12 +77,12 @@ __alloc_dir (int fd, bool close_fd)
   size_t allocation;
 #ifdef _STATBUF_ST_BLKSIZE
   if (__builtin_expect ((size_t) statp->st_blksize >= sizeof (struct dirent64),
-			1))
+                        1))
     allocation = statp->st_blksize;
   else
 #endif
     allocation = (BUFSIZ < sizeof (struct dirent64)
-		  ? sizeof (struct dirent64) : BUFSIZ);
+                  ? sizeof (struct dirent64) : BUFSIZ);
 
   const int pad = -sizeof (DIR) % __alignof__ (struct dirent64);
 
@@ -91,11 +91,11 @@ __alloc_dir (int fd, bool close_fd)
   lose:
     {
       if (close_fd)
-	{
-	  int save_errno = errno;
-	  close_not_cancel_no_status (fd);
-	  __set_errno (save_errno);
-	}
+        {
+          int save_errno = errno;
+          close_not_cancel_no_status (fd);
+          __set_errno (save_errno);
+        }
       return NULL;
     }
   memset (dirp, '\0', sizeof (DIR));

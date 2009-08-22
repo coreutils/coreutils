@@ -78,7 +78,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -131,47 +131,47 @@ main (int argc, char **argv)
     {
       int option_index = 0;
       int c = getopt_long (argc, argv, "+r:t:u:l:c", long_options,
-			   &option_index);
+                           &option_index);
       if (c == -1)
-	break;
+        break;
       switch (c)
-	{
-	case 'r':
-	  if (role)
-	    error (EXIT_FAILURE, 0, _("multiple roles"));
-	  role = optarg;
-	  break;
-	case 't':
-	  if (type)
-	    error (EXIT_FAILURE, 0, _("multiple types"));
-	  type = optarg;
-	  break;
-	case 'u':
-	  if (user)
-	    error (EXIT_FAILURE, 0, _("multiple users"));
-	  user = optarg;
-	  break;
-	case 'l':
-	  if (range)
-	    error (EXIT_FAILURE, 0, _("multiple levelranges"));
-	  range = optarg;
-	  break;
-	case 'c':
-	  compute_trans = true;
-	  break;
+        {
+        case 'r':
+          if (role)
+            error (EXIT_FAILURE, 0, _("multiple roles"));
+          role = optarg;
+          break;
+        case 't':
+          if (type)
+            error (EXIT_FAILURE, 0, _("multiple types"));
+          type = optarg;
+          break;
+        case 'u':
+          if (user)
+            error (EXIT_FAILURE, 0, _("multiple users"));
+          user = optarg;
+          break;
+        case 'l':
+          if (range)
+            error (EXIT_FAILURE, 0, _("multiple levelranges"));
+          range = optarg;
+          break;
+        case 'c':
+          compute_trans = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	  break;
-	}
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+          break;
+        }
     }
 
   if (argc - optind == 0)
     {
       if (getcon (&cur_context) < 0)
-	error (EXIT_FAILURE, errno, _("failed to get current context"));
+        error (EXIT_FAILURE, errno, _("failed to get current context"));
       fputs (cur_context, stdout);
       fputc ('\n', stdout);
       exit (EXIT_SUCCESS);
@@ -180,10 +180,10 @@ main (int argc, char **argv)
   if (!(user || role || type || range || compute_trans))
     {
       if (optind >= argc)
-	{
-	  error (0, 0, _("you must specify -c, -t, -u, -l, -r, or context"));
-	  usage (1);
-	}
+        {
+          error (0, 0, _("you must specify -c, -t, -u, -l, -r, or context"));
+          usage (1);
+        }
       context = argv[optind++];
     }
 
@@ -195,62 +195,62 @@ main (int argc, char **argv)
 
   if (is_selinux_enabled () != 1)
     error (EXIT_FAILURE, 0,
-	   _("runcon may be used only on a SELinux kernel"));
+           _("runcon may be used only on a SELinux kernel"));
 
   if (context)
     {
       con = context_new (context);
       if (!con)
-	error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
-	       quotearg_colon (context));
+        error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
+               quotearg_colon (context));
     }
   else
     {
       if (getcon (&cur_context) < 0)
-	error (EXIT_FAILURE, errno, _("failed to get current context"));
+        error (EXIT_FAILURE, errno, _("failed to get current context"));
 
       /* We will generate context based on process transition */
       if (compute_trans)
-	{
-	  /* Get context of file to be executed */
-	  if (getfilecon (argv[optind], &file_context) == -1)
-	    error (EXIT_FAILURE, errno,
-		   _("failed to get security context of %s"),
-		   quote (argv[optind]));
-	  /* compute result of process transition */
-	  if (security_compute_create (cur_context, file_context,
-				       SECCLASS_PROCESS, &new_context) != 0)
-	    error (EXIT_FAILURE, errno,
-		   _("failed to compute a new context"));
-	  /* free contexts */
-	  freecon (file_context);
-	  freecon (cur_context);
+        {
+          /* Get context of file to be executed */
+          if (getfilecon (argv[optind], &file_context) == -1)
+            error (EXIT_FAILURE, errno,
+                   _("failed to get security context of %s"),
+                   quote (argv[optind]));
+          /* compute result of process transition */
+          if (security_compute_create (cur_context, file_context,
+                                       SECCLASS_PROCESS, &new_context) != 0)
+            error (EXIT_FAILURE, errno,
+                   _("failed to compute a new context"));
+          /* free contexts */
+          freecon (file_context);
+          freecon (cur_context);
 
-	  /* set cur_context equal to new_context */
-	  cur_context = new_context;
-	}
+          /* set cur_context equal to new_context */
+          cur_context = new_context;
+        }
 
       con = context_new (cur_context);
       if (!con)
-	error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
-	       quotearg_colon (cur_context));
+        error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
+               quotearg_colon (cur_context));
       if (user && context_user_set (con, user))
-	error (EXIT_FAILURE, errno, _("failed to set new user %s"), user);
+        error (EXIT_FAILURE, errno, _("failed to set new user %s"), user);
       if (type && context_type_set (con, type))
-	error (EXIT_FAILURE, errno, _("failed to set new type %s"), type);
+        error (EXIT_FAILURE, errno, _("failed to set new type %s"), type);
       if (range && context_range_set (con, range))
-	error (EXIT_FAILURE, errno, _("failed to set new range %s"), range);
+        error (EXIT_FAILURE, errno, _("failed to set new range %s"), range);
       if (role && context_role_set (con, role))
-	error (EXIT_FAILURE, errno, _("failed to set new role %s"), role);
+        error (EXIT_FAILURE, errno, _("failed to set new role %s"), role);
     }
 
   if (security_check_context (context_str (con)) < 0)
     error (EXIT_FAILURE, errno, _("invalid context: %s"),
-	   quotearg_colon (context_str (con)));
+           quotearg_colon (context_str (con)));
 
   if (setexeccon (context_str (con)) != 0)
     error (EXIT_FAILURE, errno, _("unable to set security context %s"),
-	   quote (context_str (con)));
+           quote (context_str (con)));
   if (cur_context != NULL)
     freecon (cur_context);
 

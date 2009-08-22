@@ -110,7 +110,7 @@ factor_using_division (mpz_t t, unsigned int limit)
     {
       mpz_tdiv_qr_ui (q, r, t, 3);
       if (mpz_cmp_ui (r, 0) != 0)
-	break;
+        break;
       mpz_set (t, q);
       emit_ul_factor (3);
     }
@@ -119,7 +119,7 @@ factor_using_division (mpz_t t, unsigned int limit)
     {
       mpz_tdiv_qr_ui (q, r, t, 5);
       if (mpz_cmp_ui (r, 0) != 0)
-	break;
+        break;
       mpz_set (t, q);
       emit_ul_factor (5);
     }
@@ -131,21 +131,21 @@ factor_using_division (mpz_t t, unsigned int limit)
     {
       mpz_tdiv_qr_ui (q, r, t, f);
       if (mpz_cmp_ui (r, 0) != 0)
-	{
-	  f += addv[ai];
-	  if (mpz_cmp_ui (q, f) < 0)
-	    break;
-	  ai = (ai + 1) & 7;
-	  failures++;
-	  if (failures > limit)
-	    break;
-	}
+        {
+          f += addv[ai];
+          if (mpz_cmp_ui (q, f) < 0)
+            break;
+          ai = (ai + 1) & 7;
+          failures++;
+          if (failures > limit)
+            break;
+        }
       else
-	{
-	  mpz_swap (t, q);
-	  emit_ul_factor (f);
-	  failures = 0;
-	}
+        {
+          mpz_swap (t, q);
+          emit_ul_factor (f);
+          failures = 0;
+        }
     }
 
   mpz_clear (q);
@@ -184,67 +184,67 @@ S2:
       mpz_sub (t1, x1, x); mpz_mul (t2, P, t1); mpz_mod (P, t2, n);
       c++;
       if (c == 20)
-	{
-	  c = 0;
-	  mpz_gcd (g, P, n);
-	  if (mpz_cmp_ui (g, 1) != 0)
-	    goto S4;
-	  mpz_set (y, x);
-	}
+        {
+          c = 0;
+          mpz_gcd (g, P, n);
+          if (mpz_cmp_ui (g, 1) != 0)
+            goto S4;
+          mpz_set (y, x);
+        }
 
       k--;
       if (k > 0)
-	goto S2;
+        goto S2;
 
       mpz_gcd (g, P, n);
       if (mpz_cmp_ui (g, 1) != 0)
-	goto S4;
+        goto S4;
 
       mpz_set (x1, x);
       k = l;
       l = 2 * l;
       for (i = 0; i < k; i++)
-	{
-	  mpz_mul (x, x, x); mpz_add (x, x, a); mpz_mod (x, x, n);
-	}
+        {
+          mpz_mul (x, x, x); mpz_add (x, x, a); mpz_mod (x, x, n);
+        }
       mpz_set (y, x);
       c = 0;
       goto S2;
 S4:
       do
-	{
-	  mpz_mul (y, y, y); mpz_add (y, y, a); mpz_mod (y, y, n);
-	  mpz_sub (t1, x1, y); mpz_gcd (g, t1, n);
-	}
+        {
+          mpz_mul (y, y, y); mpz_add (y, y, a); mpz_mod (y, y, n);
+          mpz_sub (t1, x1, y); mpz_gcd (g, t1, n);
+        }
       while (mpz_cmp_ui (g, 1) == 0);
 
       mpz_div (n, n, g);	/* divide by g, before g is overwritten */
 
       if (!mpz_probab_prime_p (g, 3))
-	{
-	  do
-	    {
-	      mp_limb_t a_limb;
-	      mpn_random (&a_limb, (mp_size_t) 1);
-	      a_int = (int) a_limb;
-	    }
-	  while (a_int == -2 || a_int == 0);
+        {
+          do
+            {
+              mp_limb_t a_limb;
+              mpn_random (&a_limb, (mp_size_t) 1);
+              a_int = (int) a_limb;
+            }
+          while (a_int == -2 || a_int == 0);
 
-	  debug ("[composite factor--restarting pollard-rho] ");
-	  factor_using_pollard_rho (g, a_int);
-	}
+          debug ("[composite factor--restarting pollard-rho] ");
+          factor_using_pollard_rho (g, a_int);
+        }
       else
-	{
-	  emit_factor (g);
-	}
+        {
+          emit_factor (g);
+        }
       mpz_mod (x, x, n);
       mpz_mod (x1, x1, n);
       mpz_mod (y, y, n);
       if (mpz_probab_prime_p (n, 3))
-	{
-	  emit_factor (n);
-	  break;
-	}
+        {
+          emit_factor (n);
+          break;
+        }
     }
 
   mpz_clear (g);
@@ -309,15 +309,15 @@ factor_wheel (uintmax_t n0, size_t max_n_factors, uintmax_t *factors)
     {
       q = n / d;
       while (n == q * d)
-	{
-	  assert (n_factors < max_n_factors);
-	  factors[n_factors++] = d;
-	  n = q;
-	  q = n / d;
-	}
+        {
+          assert (n_factors < max_n_factors);
+          factors[n_factors++] = d;
+          n = q;
+          q = n / d;
+        }
       d += *(w++);
       if (w == WHEEL_END)
-	w = WHEEL_START;
+        w = WHEEL_START;
     }
   while (d <= q);
 
@@ -407,13 +407,13 @@ print_factors_multi (mpz_t t)
       factor_using_division (t, division_limit);
 
       if (mpz_cmp_ui (t, 1) != 0)
-	{
-	  debug ("[is number prime?] ");
-	  if (mpz_probab_prime_p (t, 3))
-	    emit_factor (t);
-	  else
-	    factor_using_pollard_rho (t, 1);
-	}
+        {
+          debug ("[is number prime?] ");
+          if (mpz_probab_prime_p (t, 3))
+            emit_factor (t);
+          else
+            factor_using_pollard_rho (t, 1);
+        }
     }
 
   mpz_clear (t);
@@ -443,11 +443,11 @@ print_factors (char const *s)
       mpz_t t;
       mpz_init (t);
       if (gmp_sscanf (s, "%Zd", t) == 1)
-	{
-	  debug ("[%s]", _("using arbitrary-precision arithmetic"));
-	  print_factors_multi (t);
-	  return true;
-	}
+        {
+          debug ("[%s]", _("using arbitrary-precision arithmetic"));
+          print_factors_multi (t);
+          return true;
+        }
       err = LONGINT_INVALID;
     }
 #endif
@@ -487,14 +487,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [NUMBER]...\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Print the prime factors of each specified integer NUMBER.  If none\n\
 are specified on the command line, read them from standard input.\n\
@@ -518,9 +518,9 @@ do_stdin (void)
   for (;;)
     {
       size_t token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
-				       &tokenbuffer);
+                                       &tokenbuffer);
       if (token_length == (size_t) -1)
-	break;
+        break;
       ok &= print_factors (tokenbuffer.buffer);
     }
   free (tokenbuffer.buffer);
@@ -545,18 +545,18 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
       switch (c)
-	{
-	case VERBOSE_OPTION:
-	  verbose = true;
-	  break;
+        {
+        case VERBOSE_OPTION:
+          verbose = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (argc <= optind)
@@ -566,8 +566,8 @@ main (int argc, char **argv)
       int i;
       ok = true;
       for (i = optind; i < argc; i++)
-	if (! print_factors (argv[i]))
-	  ok = false;
+        if (! print_factors (argv[i]))
+          ok = false;
     }
 #if HAVE_GMP
   free (factor);

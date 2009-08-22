@@ -50,7 +50,7 @@ sub is_prime ($)
         and return 0;
       $d += $w;
       $q < $d
-	and last;
+        and last;
       $w = 2;
     }
   return 1;
@@ -68,12 +68,12 @@ sub is_prime ($)
   for (my $i = 3; ; $i += 2)
     {
       if (is_prime $i)
-	{
-	  push @primes, $i;
-	  $product *= $i;
-	  ++$n_primes == $wheel_size
-	    and last;
-	}
+        {
+          push @primes, $i;
+          $product *= $i;
+          ++$n_primes == $wheel_size
+            and last;
+        }
     }
 
   my $ws_m1 = $wheel_size - 1;
@@ -92,20 +92,20 @@ EOF
     {
       my $rel_prime = 1;
       foreach my $divisor (@primes)
-	{
-	  $i != $divisor && $i % $divisor == 0
-	    and $rel_prime = 0;
-	}
+        {
+          $i != $divisor && $i % $divisor == 0
+            and $rel_prime = 0;
+        }
 
       if ($rel_prime)
-	{
-	  #warn $i, ' ', $i - $prev, "\n";
-	  push @increments, $i - $prev;
-	  $prev = $i;
+        {
+          #warn $i, ' ', $i - $prev, "\n";
+          push @increments, $i - $prev;
+          $prev = $i;
 
-	  $product + 1 < $i
-	    and last;
-	}
+          $product + 1 < $i
+            and last;
+        }
     }
 
   print join (",\n", @increments), "\n";

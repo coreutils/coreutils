@@ -84,15 +84,15 @@ parse_group (const char *name)
     {
       struct group *grp = getgrnam (name);
       if (grp)
-	gid = grp->gr_gid;
+        gid = grp->gr_gid;
       else
-	{
-	  unsigned long int tmp;
-	  if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
-		 && tmp <= GID_T_MAX))
-	    error (EXIT_FAILURE, 0, _("invalid group: %s"), quote (name));
-	  gid = tmp;
-	}
+        {
+          unsigned long int tmp;
+          if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
+                 && tmp <= GID_T_MAX))
+            error (EXIT_FAILURE, 0, _("invalid group: %s"), quote (name));
+          gid = tmp;
+        }
       endgrent ();		/* Save a file descriptor. */
     }
 
@@ -104,14 +104,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... GROUP FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Change the group of each FILE to GROUP.\n\
 With --reference, change the group of each FILE to that of RFILE.\n\
@@ -157,7 +157,7 @@ Examples:\n\
   %s staff /u      Change the group of /u to \"staff\".\n\
   %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       emit_bug_reporting_address ();
     }
   exit (status);
@@ -191,75 +191,75 @@ main (int argc, char **argv)
   chopt_init (&chopt);
 
   while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
-	 != -1)
+         != -1)
     {
       switch (optc)
-	{
-	case 'H': /* Traverse command-line symlinks-to-directories.  */
-	  bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
-	  break;
+        {
+        case 'H': /* Traverse command-line symlinks-to-directories.  */
+          bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
+          break;
 
-	case 'L': /* Traverse all symlinks-to-directories.  */
-	  bit_flags = FTS_LOGICAL;
-	  break;
+        case 'L': /* Traverse all symlinks-to-directories.  */
+          bit_flags = FTS_LOGICAL;
+          break;
 
-	case 'P': /* Traverse no symlinks-to-directories.  */
-	  bit_flags = FTS_PHYSICAL;
-	  break;
+        case 'P': /* Traverse no symlinks-to-directories.  */
+          bit_flags = FTS_PHYSICAL;
+          break;
 
-	case 'h': /* --no-dereference: affect symlinks */
-	  dereference = 0;
-	  break;
+        case 'h': /* --no-dereference: affect symlinks */
+          dereference = 0;
+          break;
 
-	case DEREFERENCE_OPTION: /* --dereference: affect the referent
-				    of each symlink */
-	  dereference = 1;
-	  break;
+        case DEREFERENCE_OPTION: /* --dereference: affect the referent
+                                    of each symlink */
+          dereference = 1;
+          break;
 
-	case NO_PRESERVE_ROOT:
-	  preserve_root = false;
-	  break;
+        case NO_PRESERVE_ROOT:
+          preserve_root = false;
+          break;
 
-	case PRESERVE_ROOT:
-	  preserve_root = true;
-	  break;
+        case PRESERVE_ROOT:
+          preserve_root = true;
+          break;
 
-	case REFERENCE_FILE_OPTION:
-	  reference_file = optarg;
-	  break;
+        case REFERENCE_FILE_OPTION:
+          reference_file = optarg;
+          break;
 
-	case 'R':
-	  chopt.recurse = true;
-	  break;
+        case 'R':
+          chopt.recurse = true;
+          break;
 
-	case 'c':
-	  chopt.verbosity = V_changes_only;
-	  break;
+        case 'c':
+          chopt.verbosity = V_changes_only;
+          break;
 
-	case 'f':
-	  chopt.force_silent = true;
-	  break;
+        case 'f':
+          chopt.force_silent = true;
+          break;
 
-	case 'v':
-	  chopt.verbosity = V_high;
-	  break;
+        case 'v':
+          chopt.verbosity = V_high;
+          break;
 
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (chopt.recurse)
     {
       if (bit_flags == FTS_PHYSICAL)
-	{
-	  if (dereference == 1)
-	    error (EXIT_FAILURE, 0,
-		   _("-R --dereference requires either -H or -L"));
-	  dereference = 0;
-	}
+        {
+          if (dereference == 1)
+            error (EXIT_FAILURE, 0,
+                   _("-R --dereference requires either -H or -L"));
+          dereference = 0;
+        }
     }
   else
     {
@@ -270,9 +270,9 @@ main (int argc, char **argv)
   if (argc - optind < (reference_file ? 1 : 2))
     {
       if (argc <= optind)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+        error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 
@@ -280,8 +280,8 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	       quote (reference_file));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quote (reference_file));
 
       gid = ref_stats.st_gid;
       chopt.group_name = gid_to_name (ref_stats.st_gid);
@@ -298,14 +298,14 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (chopt.root_dev_ino == NULL)
-	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	       quote ("/"));
+        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+               quote ("/"));
     }
 
   bit_flags |= FTS_DEFER_STAT;
   ok = chown_files (argv + optind, bit_flags,
-		    (uid_t) -1, gid,
-		    (uid_t) -1, (gid_t) -1, &chopt);
+                    (uid_t) -1, gid,
+                    (uid_t) -1, (gid_t) -1, &chopt);
 
   chopt_free (&chopt);
 

@@ -116,7 +116,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
@@ -139,14 +139,14 @@ Print certain system information.  With no OPTION, same as -s.\n\
   -i, --hardware-platform  print the hardware platform or \"unknown\"\n\
   -o, --operating-system   print the operating system\n\
 "), stdout);
-	}
+        }
       else
         {
-	  fputs (_("\
+          fputs (_("\
 Print machine architecture.\n\
 \n\
 "), stdout);
-	}
+        }
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -181,71 +181,71 @@ decode_switches (int argc, char **argv)
   if (uname_mode == UNAME_ARCH)
     {
       while ((c = getopt_long (argc, argv, "",
-			       arch_long_options, NULL)) != -1)
-	{
-	  switch (c)
-	    {
-	    case_GETOPT_HELP_CHAR;
+                               arch_long_options, NULL)) != -1)
+        {
+          switch (c)
+            {
+            case_GETOPT_HELP_CHAR;
 
-	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, ARCH_AUTHORS);
+            case_GETOPT_VERSION_CHAR (PROGRAM_NAME, ARCH_AUTHORS);
 
-	    default:
-	      usage (EXIT_FAILURE);
-	    }
+            default:
+              usage (EXIT_FAILURE);
+            }
         }
       toprint = PRINT_MACHINE;
     }
   else
     {
       while ((c = getopt_long (argc, argv, "asnrvmpio",
-			       uname_long_options, NULL)) != -1)
+                               uname_long_options, NULL)) != -1)
         {
-	  switch (c)
-	    {
-	    case 'a':
-	      toprint = UINT_MAX;
-	      break;
+          switch (c)
+            {
+            case 'a':
+              toprint = UINT_MAX;
+              break;
 
-	    case 's':
-	      toprint |= PRINT_KERNEL_NAME;
-	      break;
+            case 's':
+              toprint |= PRINT_KERNEL_NAME;
+              break;
 
-	    case 'n':
-	      toprint |= PRINT_NODENAME;
-	      break;
+            case 'n':
+              toprint |= PRINT_NODENAME;
+              break;
 
-	    case 'r':
-	      toprint |= PRINT_KERNEL_RELEASE;
-	      break;
+            case 'r':
+              toprint |= PRINT_KERNEL_RELEASE;
+              break;
 
-	    case 'v':
-	      toprint |= PRINT_KERNEL_VERSION;
-	      break;
+            case 'v':
+              toprint |= PRINT_KERNEL_VERSION;
+              break;
 
-	    case 'm':
-	      toprint |= PRINT_MACHINE;
-	      break;
+            case 'm':
+              toprint |= PRINT_MACHINE;
+              break;
 
-	    case 'p':
-	      toprint |= PRINT_PROCESSOR;
-	      break;
+            case 'p':
+              toprint |= PRINT_PROCESSOR;
+              break;
 
-	    case 'i':
-	      toprint |= PRINT_HARDWARE_PLATFORM;
-	      break;
+            case 'i':
+              toprint |= PRINT_HARDWARE_PLATFORM;
+              break;
 
-	    case 'o':
-	      toprint |= PRINT_OPERATING_SYSTEM;
-	      break;
+            case 'o':
+              toprint |= PRINT_OPERATING_SYSTEM;
+              break;
 
-	    case_GETOPT_HELP_CHAR;
+            case_GETOPT_HELP_CHAR;
 
-	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+            case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	    default:
-	      usage (EXIT_FAILURE);
-	    }
-	}
+            default:
+              usage (EXIT_FAILURE);
+            }
+        }
     }
 
   if (argc != optind)
@@ -280,23 +280,23 @@ main (int argc, char **argv)
 
   if (toprint
        & (PRINT_KERNEL_NAME | PRINT_NODENAME | PRINT_KERNEL_RELEASE
-	  | PRINT_KERNEL_VERSION | PRINT_MACHINE))
+          | PRINT_KERNEL_VERSION | PRINT_MACHINE))
     {
       struct utsname name;
 
       if (uname (&name) == -1)
-	error (EXIT_FAILURE, errno, _("cannot get system name"));
+        error (EXIT_FAILURE, errno, _("cannot get system name"));
 
       if (toprint & PRINT_KERNEL_NAME)
-	print_element (name.sysname);
+        print_element (name.sysname);
       if (toprint & PRINT_NODENAME)
-	print_element (name.nodename);
+        print_element (name.nodename);
       if (toprint & PRINT_KERNEL_RELEASE)
-	print_element (name.release);
+        print_element (name.release);
       if (toprint & PRINT_KERNEL_VERSION)
-	print_element (name.version);
+        print_element (name.version);
       if (toprint & PRINT_MACHINE)
-	print_element (name.machine);
+        print_element (name.machine);
     }
 
   if (toprint & PRINT_PROCESSOR)
@@ -304,43 +304,43 @@ main (int argc, char **argv)
       char const *element = unknown;
 #if HAVE_SYSINFO && defined SI_ARCHITECTURE
       {
-	static char processor[257];
-	if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
-	  element = processor;
+        static char processor[257];
+        if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
+          element = processor;
       }
 #endif
 #ifdef UNAME_PROCESSOR
       if (element == unknown)
-	{
-	  static char processor[257];
-	  size_t s = sizeof processor;
-	  static int mib[] = { CTL_HW, UNAME_PROCESSOR };
-	  if (sysctl (mib, 2, processor, &s, 0, 0) >= 0)
-	    element = processor;
+        {
+          static char processor[257];
+          size_t s = sizeof processor;
+          static int mib[] = { CTL_HW, UNAME_PROCESSOR };
+          if (sysctl (mib, 2, processor, &s, 0, 0) >= 0)
+            element = processor;
 
 # ifdef __APPLE__
-	  /* This kludge works around a bug in Mac OS X.  */
-	  if (element == unknown)
-	    {
-	      cpu_type_t cputype;
-	      size_t s = sizeof cputype;
-	      NXArchInfo const *ai;
-	      if (sysctlbyname ("hw.cputype", &cputype, &s, NULL, 0) == 0
-		  && (ai = NXGetArchInfoFromCpuType (cputype,
-						     CPU_SUBTYPE_MULTIPLE))
-		  != NULL)
-		element = ai->name;
+          /* This kludge works around a bug in Mac OS X.  */
+          if (element == unknown)
+            {
+              cpu_type_t cputype;
+              size_t s = sizeof cputype;
+              NXArchInfo const *ai;
+              if (sysctlbyname ("hw.cputype", &cputype, &s, NULL, 0) == 0
+                  && (ai = NXGetArchInfoFromCpuType (cputype,
+                                                     CPU_SUBTYPE_MULTIPLE))
+                  != NULL)
+                element = ai->name;
 
-	      /* Hack "safely" around the ppc vs. powerpc return value. */
-	      if (cputype == CPU_TYPE_POWERPC
-		  && strncmp (element, "ppc", 3) == 0)
-		element = "powerpc";
-	    }
+              /* Hack "safely" around the ppc vs. powerpc return value. */
+              if (cputype == CPU_TYPE_POWERPC
+                  && strncmp (element, "ppc", 3) == 0)
+                element = "powerpc";
+            }
 # endif
-	}
+        }
 #endif
       if (! (toprint == UINT_MAX && element == unknown))
-	print_element (element);
+        print_element (element);
     }
 
   if (toprint & PRINT_HARDWARE_PLATFORM)
@@ -348,24 +348,24 @@ main (int argc, char **argv)
       char const *element = unknown;
 #if HAVE_SYSINFO && defined SI_PLATFORM
       {
-	static char hardware_platform[257];
-	if (0 <= sysinfo (SI_PLATFORM,
-			  hardware_platform, sizeof hardware_platform))
-	  element = hardware_platform;
+        static char hardware_platform[257];
+        if (0 <= sysinfo (SI_PLATFORM,
+                          hardware_platform, sizeof hardware_platform))
+          element = hardware_platform;
       }
 #endif
 #ifdef UNAME_HARDWARE_PLATFORM
       if (element == unknown)
-	{
-	  static char hardware_platform[257];
-	  size_t s = sizeof hardware_platform;
-	  static int mib[] = { CTL_HW, UNAME_HARDWARE_PLATFORM };
-	  if (sysctl (mib, 2, hardware_platform, &s, 0, 0) >= 0)
-	    element = hardware_platform;
-	}
+        {
+          static char hardware_platform[257];
+          size_t s = sizeof hardware_platform;
+          static int mib[] = { CTL_HW, UNAME_HARDWARE_PLATFORM };
+          if (sysctl (mib, 2, hardware_platform, &s, 0, 0) >= 0)
+            element = hardware_platform;
+        }
 #endif
       if (! (toprint == UINT_MAX && element == unknown))
-	print_element (element);
+        print_element (element);
     }
 
   if (toprint & PRINT_OPERATING_SYSTEM)

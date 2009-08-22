@@ -31,11 +31,11 @@ xfreopen (char const *filename, char const *mode, FILE *fp)
   if (!freopen (filename, mode, fp))
     {
       char const *f = (filename ? filename
-		       : (fp == stdin ? _("stdin")
-			  : (fp == stdout ? _("stdout")
-			     : (fp == stderr ? _("stderr")
-				: _("unknown stream")))));
+                       : (fp == stdin ? _("stdin")
+                          : (fp == stdout ? _("stdout")
+                             : (fp == stderr ? _("stderr")
+                                : _("unknown stream")))));
       error (exit_failure, errno, _("failed to reopen %s with mode %s"),
-	     quote_n (0, f), quote_n (1, mode));
+             quote_n (0, f), quote_n (1, mode));
     }
 }

@@ -37,7 +37,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -50,13 +50,13 @@ Echo the STRING(s) to standard output.\n\
   -n             do not output the trailing newline\n\
 "), stdout);
       fputs (_(DEFAULT_ECHO_TO_XPG
-	       ? N_("\
+               ? N_("\
   -e             enable interpretation of backslash escapes (default)\n\
   -E             disable interpretation of backslash escapes\n")
-	       : N_("\
+               : N_("\
   -e             enable interpretation of backslash escapes\n\
   -E             disable interpretation of backslash escapes (default)\n")),
-	     stdout);
+             stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -128,14 +128,14 @@ main (int argc, char **argv)
   if (allow_options && argc == 2)
     {
       if (STREQ (argv[1], "--help"))
-	usage (EXIT_SUCCESS);
+        usage (EXIT_SUCCESS);
 
       if (STREQ (argv[1], "--version"))
-	{
-	  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-		       (char *) NULL);
-	  exit (EXIT_SUCCESS);
-	}
+        {
+          version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+                       (char *) NULL);
+          exit (EXIT_SUCCESS);
+        }
     }
 
   --argc;
@@ -144,45 +144,45 @@ main (int argc, char **argv)
   if (allow_options)
     while (argc > 0 && *argv[0] == '-')
       {
-	char const *temp = argv[0] + 1;
-	size_t i;
+        char const *temp = argv[0] + 1;
+        size_t i;
 
-	/* If it appears that we are handling options, then make sure that
-	   all of the options specified are actually valid.  Otherwise, the
-	   string should just be echoed.  */
+        /* If it appears that we are handling options, then make sure that
+           all of the options specified are actually valid.  Otherwise, the
+           string should just be echoed.  */
 
-	for (i = 0; temp[i]; i++)
-	  switch (temp[i])
-	    {
-	    case 'e': case 'E': case 'n':
-	      break;
-	    default:
-	      goto just_echo;
-	    }
+        for (i = 0; temp[i]; i++)
+          switch (temp[i])
+            {
+            case 'e': case 'E': case 'n':
+              break;
+            default:
+              goto just_echo;
+            }
 
-	if (i == 0)
-	  goto just_echo;
+        if (i == 0)
+          goto just_echo;
 
-	/* All of the options in TEMP are valid options to ECHO.
-	   Handle them. */
-	while (*temp)
-	  switch (*temp++)
-	    {
-	    case 'e':
-	      do_v9 = true;
-	      break;
+        /* All of the options in TEMP are valid options to ECHO.
+           Handle them. */
+        while (*temp)
+          switch (*temp++)
+            {
+            case 'e':
+              do_v9 = true;
+              break;
 
-	    case 'E':
-	      do_v9 = false;
-	      break;
+            case 'E':
+              do_v9 = false;
+              break;
 
-	    case 'n':
-	      display_return = false;
-	      break;
-	    }
+            case 'n':
+              display_return = false;
+              break;
+            }
 
-	argc--;
-	argv++;
+        argc--;
+        argv++;
       }
 
 just_echo:
@@ -190,77 +190,77 @@ just_echo:
   if (do_v9)
     {
       while (argc > 0)
-	{
-	  char const *s = argv[0];
-	  unsigned char c;
+        {
+          char const *s = argv[0];
+          unsigned char c;
 
-	  while ((c = *s++))
-	    {
-	      if (c == '\\' && *s)
-		{
-		  switch (c = *s++)
-		    {
-		    case 'a': c = '\a'; break;
-		    case 'b': c = '\b'; break;
-		    case 'c': exit (EXIT_SUCCESS);
-		    case 'f': c = '\f'; break;
-		    case 'n': c = '\n'; break;
-		    case 'r': c = '\r'; break;
-		    case 't': c = '\t'; break;
-		    case 'v': c = '\v'; break;
-		    case 'x':
-		      {
-			unsigned char ch = *s;
-			if (! isxdigit (ch))
-			  goto not_an_escape;
-			s++;
-			c = hextobin (ch);
-			ch = *s;
-			if (isxdigit (ch))
-			  {
-			    s++;
-			    c = c * 16 + hextobin (ch);
-			  }
-		      }
-		      break;
-		    case '0':
-		      c = 0;
-		      if (! ('0' <= *s && *s <= '7'))
-			break;
-		      c = *s++;
-		      /* Fall through.  */
-		    case '1': case '2': case '3':
-		    case '4': case '5': case '6': case '7':
-		      c -= '0';
-		      if ('0' <= *s && *s <= '7')
-			c = c * 8 + (*s++ - '0');
-		      if ('0' <= *s && *s <= '7')
-			c = c * 8 + (*s++ - '0');
-		      break;
-		    case '\\': break;
+          while ((c = *s++))
+            {
+              if (c == '\\' && *s)
+                {
+                  switch (c = *s++)
+                    {
+                    case 'a': c = '\a'; break;
+                    case 'b': c = '\b'; break;
+                    case 'c': exit (EXIT_SUCCESS);
+                    case 'f': c = '\f'; break;
+                    case 'n': c = '\n'; break;
+                    case 'r': c = '\r'; break;
+                    case 't': c = '\t'; break;
+                    case 'v': c = '\v'; break;
+                    case 'x':
+                      {
+                        unsigned char ch = *s;
+                        if (! isxdigit (ch))
+                          goto not_an_escape;
+                        s++;
+                        c = hextobin (ch);
+                        ch = *s;
+                        if (isxdigit (ch))
+                          {
+                            s++;
+                            c = c * 16 + hextobin (ch);
+                          }
+                      }
+                      break;
+                    case '0':
+                      c = 0;
+                      if (! ('0' <= *s && *s <= '7'))
+                        break;
+                      c = *s++;
+                      /* Fall through.  */
+                    case '1': case '2': case '3':
+                    case '4': case '5': case '6': case '7':
+                      c -= '0';
+                      if ('0' <= *s && *s <= '7')
+                        c = c * 8 + (*s++ - '0');
+                      if ('0' <= *s && *s <= '7')
+                        c = c * 8 + (*s++ - '0');
+                      break;
+                    case '\\': break;
 
-		    not_an_escape:
-		    default:  putchar ('\\'); break;
-		    }
-		}
-	      putchar (c);
-	    }
-	  argc--;
-	  argv++;
-	  if (argc > 0)
-	    putchar (' ');
-	}
+                    not_an_escape:
+                    default:  putchar ('\\'); break;
+                    }
+                }
+              putchar (c);
+            }
+          argc--;
+          argv++;
+          if (argc > 0)
+            putchar (' ');
+        }
     }
   else
     {
       while (argc > 0)
-	{
-	  fputs (argv[0], stdout);
-	  argc--;
-	  argv++;
-	  if (argc > 0)
-	    putchar (' ');
-	}
+        {
+          fputs (argv[0], stdout);
+          argc--;
+          argv++;
+          if (argc > 0)
+            putchar (' ');
+        }
     }
 
   if (display_return)

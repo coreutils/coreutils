@@ -57,8 +57,8 @@ euidaccess_stat (struct stat const *st, int mode)
     mode &= 7;
   else
     mode = ((mode & R_OK ? 4 : 0)
-	    + (mode & W_OK ? 2 : 0)
-	    + (mode & X_OK ? 1 : 0));
+            + (mode & W_OK ? 2 : 0)
+            + (mode & X_OK ? 1 : 0));
 
   if (mode == 0)
     return true;		/* The file exists.  */
@@ -68,7 +68,7 @@ euidaccess_stat (struct stat const *st, int mode)
   /* The super-user can read and write any file, and execute any file
      that anyone can execute.  */
   if (euid == 0 && ((mode & X_OK) == 0
-		    || (st->st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))))
+                    || (st->st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))))
     return true;
 
   /* Convert the file's permission bits to traditional form.  */
@@ -84,14 +84,14 @@ euidaccess_stat (struct stat const *st, int mode)
     granted = st->st_mode;
   else
     granted = (  (st->st_mode & S_IRUSR ? 4 << 6 : 0)
-	       + (st->st_mode & S_IWUSR ? 2 << 6 : 0)
-	       + (st->st_mode & S_IXUSR ? 1 << 6 : 0)
-	       + (st->st_mode & S_IRGRP ? 4 << 3 : 0)
-	       + (st->st_mode & S_IWGRP ? 2 << 3 : 0)
-	       + (st->st_mode & S_IXGRP ? 1 << 3 : 0)
-	       + (st->st_mode & S_IROTH ? 4 << 0 : 0)
-	       + (st->st_mode & S_IWOTH ? 2 << 0 : 0)
-	       + (st->st_mode & S_IXOTH ? 1 << 0 : 0));
+               + (st->st_mode & S_IWUSR ? 2 << 6 : 0)
+               + (st->st_mode & S_IXUSR ? 1 << 6 : 0)
+               + (st->st_mode & S_IRGRP ? 4 << 3 : 0)
+               + (st->st_mode & S_IWGRP ? 2 << 3 : 0)
+               + (st->st_mode & S_IXGRP ? 1 << 3 : 0)
+               + (st->st_mode & S_IROTH ? 4 << 0 : 0)
+               + (st->st_mode & S_IWOTH ? 2 << 0 : 0)
+               + (st->st_mode & S_IXOTH ? 1 << 0 : 0));
 
   if (euid == st->st_uid)
     granted >>= 6;
@@ -99,7 +99,7 @@ euidaccess_stat (struct stat const *st, int mode)
     {
       gid_t egid = getegid ();
       if (egid == st->st_gid || group_member (st->st_gid))
-	granted >>= 3;
+        granted >>= 3;
     }
 
   if ((mode & ~granted) == 0)

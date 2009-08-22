@@ -100,8 +100,8 @@ struct randread_source
       /* Up to a buffer's worth of pseudorandom data.  */
       union
       {
-	uint32_t w[ISAAC_WORDS];
-	unsigned char b[ISAAC_BYTES];
+        uint32_t w[ISAAC_WORDS];
+        unsigned char b[ISAAC_BYTES];
       } data;
     } isaac;
   } buf;
@@ -115,8 +115,8 @@ randread_error (void const *file_name)
 {
   if (file_name)
     error (exit_failure, errno,
-	   _(errno == 0 ? "%s: end of file" : "%s: read error"),
-	   quotearg_colon (file_name));
+           _(errno == 0 ? "%s: end of file" : "%s: read error"),
+           quotearg_colon (file_name));
   abort ();
 }
 
@@ -155,18 +155,18 @@ randread_new (char const *name, size_t bytes_bound)
       struct randread_source *s;
 
       if (name)
-	if (! (source = fopen_safer (name, "rb")))
-	  return NULL;
+        if (! (source = fopen_safer (name, "rb")))
+          return NULL;
 
       s = simple_new (source, name);
 
       if (source)
-	setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
+        setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
       else
-	{
-	  s->buf.isaac.buffered = 0;
-	  isaac_seed (&s->buf.isaac.state);
-	}
+        {
+          s->buf.isaac.buffered = 0;
+          isaac_seed (&s->buf.isaac.state);
+        }
 
       return s;
     }
@@ -206,7 +206,7 @@ readsource (struct randread_source *s, unsigned char *p, size_t size)
       p += inbytes;
       size -= inbytes;
       if (size == 0)
-	break;
+        break;
       errno = (ferror (s->source) ? fread_errno : 0);
       s->handler (s->handler_arg);
     }
@@ -224,34 +224,34 @@ readisaac (struct isaac *isaac, unsigned char *p, size_t size)
   for (;;)
     {
       if (size <= inbytes)
-	{
-	  memcpy (p, isaac->data.b + ISAAC_BYTES - inbytes, size);
-	  isaac->buffered = inbytes - size;
-	  return;
-	}
+        {
+          memcpy (p, isaac->data.b + ISAAC_BYTES - inbytes, size);
+          isaac->buffered = inbytes - size;
+          return;
+        }
 
       memcpy (p, isaac->data.b + ISAAC_BYTES - inbytes, inbytes);
       p += inbytes;
       size -= inbytes;
 
       /* If P is aligned, write to *P directly to avoid the overhead
-	 of copying from the buffer.  */
+         of copying from the buffer.  */
       if (ALIGNED_POINTER (p, uint32_t))
-	{
-	  uint32_t *wp = (uint32_t *) p;
-	  while (ISAAC_BYTES <= size)
-	    {
-	      isaac_refill (&isaac->state, wp);
-	      wp += ISAAC_WORDS;
-	      size -= ISAAC_BYTES;
-	      if (size == 0)
-		{
-		  isaac->buffered = 0;
-		  return;
-		}
-	    }
-	  p = (unsigned char *) wp;
-	}
+        {
+          uint32_t *wp = (uint32_t *) p;
+          while (ISAAC_BYTES <= size)
+            {
+              isaac_refill (&isaac->state, wp);
+              wp += ISAAC_WORDS;
+              size -= ISAAC_BYTES;
+              if (size == 0)
+                {
+                  isaac->buffered = 0;
+                  return;
+                }
+            }
+          p = (unsigned char *) wp;
+        }
 
       isaac_refill (&isaac->state, isaac->data.w);
       inbytes = ISAAC_BYTES;

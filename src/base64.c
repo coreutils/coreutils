@@ -53,7 +53,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -80,7 +80,7 @@ The data are encoded as described for the base64 alphabet in RFC 3548.\n\
 When decoding, the input may contain newlines in addition to the bytes of\n\
 the formal base64 alphabet.  Use --ignore-garbage to attempt to recover\n\
 from any other non-alphabet bytes in the encoded stream.\n"),
-	     stdout);
+             stdout);
       emit_bug_reporting_address ();
     }
 
@@ -99,7 +99,7 @@ from any other non-alphabet bytes in the encoded stream.\n"),
 
 static void
 wrap_write (const char *buffer, size_t len,
-	    uintmax_t wrap_column, size_t *current_column, FILE *out)
+            uintmax_t wrap_column, size_t *current_column, FILE *out)
 {
   size_t written;
 
@@ -107,28 +107,28 @@ wrap_write (const char *buffer, size_t len,
     {
       /* Simple write. */
       if (fwrite (buffer, 1, len, stdout) < len)
-	error (EXIT_FAILURE, errno, _("write error"));
+        error (EXIT_FAILURE, errno, _("write error"));
     }
   else
     for (written = 0; written < len;)
       {
-	uintmax_t cols_remaining = wrap_column - *current_column;
-	size_t to_write = MIN (cols_remaining, SIZE_MAX);
-	to_write = MIN (to_write, len - written);
+        uintmax_t cols_remaining = wrap_column - *current_column;
+        size_t to_write = MIN (cols_remaining, SIZE_MAX);
+        to_write = MIN (to_write, len - written);
 
-	if (to_write == 0)
-	  {
-	    if (fputs ("\n", out) < 0)
-	      error (EXIT_FAILURE, errno, _("write error"));
-	    *current_column = 0;
-	  }
-	else
-	  {
-	    if (fwrite (buffer + written, 1, to_write, stdout) < to_write)
-	      error (EXIT_FAILURE, errno, _("write error"));
-	    *current_column += to_write;
-	    written += to_write;
-	  }
+        if (to_write == 0)
+          {
+            if (fputs ("\n", out) < 0)
+              error (EXIT_FAILURE, errno, _("write error"));
+            *current_column = 0;
+          }
+        else
+          {
+            if (fwrite (buffer + written, 1, to_write, stdout) < to_write)
+              error (EXIT_FAILURE, errno, _("write error"));
+            *current_column += to_write;
+            written += to_write;
+          }
       }
 }
 
@@ -146,21 +146,21 @@ do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 
       sum = 0;
       do
-	{
-	  n = fread (inbuf + sum, 1, BLOCKSIZE - sum, in);
-	  sum += n;
-	}
+        {
+          n = fread (inbuf + sum, 1, BLOCKSIZE - sum, in);
+          sum += n;
+        }
       while (!feof (in) && !ferror (in) && sum < BLOCKSIZE);
 
       if (sum > 0)
-	{
-	  /* Process input one block at a time.  Note that BLOCKSIZE %
-	     3 == 0, so that no base64 pads will appear in output. */
-	  base64_encode (inbuf, sum, outbuf, BASE64_LENGTH (sum));
+        {
+          /* Process input one block at a time.  Note that BLOCKSIZE %
+             3 == 0, so that no base64 pads will appear in output. */
+          base64_encode (inbuf, sum, outbuf, BASE64_LENGTH (sum));
 
-	  wrap_write (outbuf, BASE64_LENGTH (sum), wrap_column,
-		      &current_column, out);
-	}
+          wrap_write (outbuf, BASE64_LENGTH (sum), wrap_column,
+                      &current_column, out);
+        }
     }
   while (!feof (in) && !ferror (in) && sum == BLOCKSIZE);
 
@@ -190,43 +190,43 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 
       sum = 0;
       do
-	{
-	  n = fread (inbuf + sum, 1, B64BLOCKSIZE - sum, in);
+        {
+          n = fread (inbuf + sum, 1, B64BLOCKSIZE - sum, in);
 
-	  if (ignore_garbage)
-	    {
-	      size_t i;
-	      for (i = 0; n > 0 && i < n;)
-		if (isbase64 (inbuf[sum + i]) || inbuf[sum + i] == '=')
-		  i++;
-		else
-		  memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
-	    }
+          if (ignore_garbage)
+            {
+              size_t i;
+              for (i = 0; n > 0 && i < n;)
+                if (isbase64 (inbuf[sum + i]) || inbuf[sum + i] == '=')
+                  i++;
+                else
+                  memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
+            }
 
-	  sum += n;
+          sum += n;
 
-	  if (ferror (in))
-	    error (EXIT_FAILURE, errno, _("read error"));
-	}
+          if (ferror (in))
+            error (EXIT_FAILURE, errno, _("read error"));
+        }
       while (sum < B64BLOCKSIZE && !feof (in));
 
       /* The following "loop" is usually iterated just once.
-	 However, when it processes the final input buffer, we want
-	 to iterate it one additional time, but with an indicator
-	 telling it to flush what is in CTX.  */
+         However, when it processes the final input buffer, we want
+         to iterate it one additional time, but with an indicator
+         telling it to flush what is in CTX.  */
       for (k = 0; k < 1 + !!feof (in); k++)
-	{
-	  if (k == 1 && ctx.i == 0)
-	    break;
-	  n = BLOCKSIZE;
-	  ok = base64_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
+        {
+          if (k == 1 && ctx.i == 0)
+            break;
+          n = BLOCKSIZE;
+          ok = base64_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
-	  if (fwrite (outbuf, 1, n, out) < n)
-	    error (EXIT_FAILURE, errno, _("write error"));
+          if (fwrite (outbuf, 1, n, out) < n)
+            error (EXIT_FAILURE, errno, _("write error"));
 
-	  if (!ok)
-	    error (EXIT_FAILURE, 0, _("invalid input"));
-	}
+          if (!ok)
+            error (EXIT_FAILURE, 0, _("invalid input"));
+        }
     }
   while (!feof (in));
 }
@@ -257,26 +257,26 @@ main (int argc, char **argv)
     switch (opt)
       {
       case 'd':
-	decode = true;
-	break;
+        decode = true;
+        break;
 
       case 'w':
-	if (xstrtoumax (optarg, NULL, 0, &wrap_column, NULL) != LONGINT_OK)
-	  error (EXIT_FAILURE, 0, _("invalid wrap size: %s"),
-		 quotearg (optarg));
-	break;
+        if (xstrtoumax (optarg, NULL, 0, &wrap_column, NULL) != LONGINT_OK)
+          error (EXIT_FAILURE, 0, _("invalid wrap size: %s"),
+                 quotearg (optarg));
+        break;
 
       case 'i':
-	ignore_garbage = true;
-	break;
+        ignore_garbage = true;
+        break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (EXIT_FAILURE);
-	break;
+        usage (EXIT_FAILURE);
+        break;
       }
 
   if (argc - optind > 1)
@@ -296,7 +296,7 @@ main (int argc, char **argv)
     {
       input_fh = fopen (infile, "r");
       if (input_fh == NULL)
-	error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", infile);
     }
 
   if (decode)
@@ -307,9 +307,9 @@ main (int argc, char **argv)
   if (fclose (input_fh) == EOF)
     {
       if (STREQ (infile, "-"))
-	error (EXIT_FAILURE, errno, _("closing standard input"));
+        error (EXIT_FAILURE, errno, _("closing standard input"));
       else
-	error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", infile);
     }
 
   exit (EXIT_SUCCESS);

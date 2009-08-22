@@ -106,14 +106,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
   or:  %s [OPTION]... --files0-from=F\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
@@ -140,11 +140,11 @@ read standard input.\n\
    associated with the specified counters.  */
 static void
 write_counts (uintmax_t lines,
-	      uintmax_t words,
-	      uintmax_t chars,
-	      uintmax_t bytes,
-	      uintmax_t linelength,
-	      const char *file)
+              uintmax_t words,
+              uintmax_t chars,
+              uintmax_t bytes,
+              uintmax_t linelength,
+              const char *file)
 {
   static char const format_sp_int[] = " %*s";
   char const *format_int = format_sp_int + 1;
@@ -225,52 +225,52 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       off_t current_pos, end_pos;
 
       if (0 < fstatus->failed)
-	fstatus->failed = fstat (fd, &fstatus->st);
+        fstatus->failed = fstat (fd, &fstatus->st);
 
       if (! fstatus->failed && S_ISREG (fstatus->st.st_mode)
-	  && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
-	  && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
-	{
-	  /* Be careful here.  The current position may actually be
-	     beyond the end of the file.  As in the example above.  */
-	  bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
-	}
+          && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+          && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
+        {
+          /* Be careful here.  The current position may actually be
+             beyond the end of the file.  As in the example above.  */
+          bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
+        }
       else
-	{
-	  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-	    {
-	      if (bytes_read == SAFE_READ_ERROR)
-		{
-		  error (0, errno, "%s", file);
-		  ok = false;
-		  break;
-		}
-	      bytes += bytes_read;
-	    }
-	}
+        {
+          while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+            {
+              if (bytes_read == SAFE_READ_ERROR)
+                {
+                  error (0, errno, "%s", file);
+                  ok = false;
+                  break;
+                }
+              bytes += bytes_read;
+            }
+        }
     }
   else if (!count_chars && !count_complicated)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
-	 but not chars or words.  */
+         but not chars or words.  */
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-	{
-	  char *p = buf;
+        {
+          char *p = buf;
 
-	  if (bytes_read == SAFE_READ_ERROR)
-	    {
-	      error (0, errno, "%s", file);
-	      ok = false;
-	      break;
-	    }
+          if (bytes_read == SAFE_READ_ERROR)
+            {
+              error (0, errno, "%s", file);
+              ok = false;
+              break;
+            }
 
-	  while ((p = memchr (p, '\n', (buf + bytes_read) - p)))
-	    {
-	      ++p;
-	      ++lines;
-	    }
-	  bytes += bytes_read;
-	}
+          while ((p = memchr (p, '\n', (buf + bytes_read) - p)))
+            {
+              ++p;
+              ++lines;
+            }
+          bytes += bytes_read;
+        }
     }
 #if MB_LEN_MAX > 1
 # define SUPPORT_OLD_MBRTOWC 1
@@ -282,133 +282,133 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       bool in_shift = false;
 # if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
-	 move the last incomplete character of the buffer to the front
-	 of the buffer.  This is needed because we don't know whether
-	 the `mbrtowc' function updates the state when it returns -2, -
-	 this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
-	 ANSI C, glibc-2.1 and Solaris 5.7 behaviour.  We don't have an
-	 autoconf test for this, yet.  */
+         move the last incomplete character of the buffer to the front
+         of the buffer.  This is needed because we don't know whether
+         the `mbrtowc' function updates the state when it returns -2, -
+         this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
+         ANSI C, glibc-2.1 and Solaris 5.7 behaviour.  We don't have an
+         autoconf test for this, yet.  */
       size_t prev = 0; /* number of bytes carried over from previous round */
 # else
       const size_t prev = 0;
 # endif
 
       while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
-	{
-	  const char *p;
+        {
+          const char *p;
 # if SUPPORT_OLD_MBRTOWC
-	  mbstate_t backup_state;
+          mbstate_t backup_state;
 # endif
-	  if (bytes_read == SAFE_READ_ERROR)
-	    {
-	      error (0, errno, "%s", file);
-	      ok = false;
-	      break;
-	    }
+          if (bytes_read == SAFE_READ_ERROR)
+            {
+              error (0, errno, "%s", file);
+              ok = false;
+              break;
+            }
 
-	  bytes += bytes_read;
-	  p = buf;
-	  bytes_read += prev;
-	  do
-	    {
-	      wchar_t wide_char;
-	      size_t n;
+          bytes += bytes_read;
+          p = buf;
+          bytes_read += prev;
+          do
+            {
+              wchar_t wide_char;
+              size_t n;
 
-	      if (!in_shift && is_basic (*p))
-		{
-		  /* Handle most ASCII characters quickly, without calling
-		     mbrtowc().  */
-		  n = 1;
-		  wide_char = *p;
-		}
-	      else
-		{
-		  in_shift = true;
+              if (!in_shift && is_basic (*p))
+                {
+                  /* Handle most ASCII characters quickly, without calling
+                     mbrtowc().  */
+                  n = 1;
+                  wide_char = *p;
+                }
+              else
+                {
+                  in_shift = true;
 # if SUPPORT_OLD_MBRTOWC
-		  backup_state = state;
+                  backup_state = state;
 # endif
-		  n = mbrtowc (&wide_char, p, bytes_read, &state);
-		  if (n == (size_t) -2)
-		    {
+                  n = mbrtowc (&wide_char, p, bytes_read, &state);
+                  if (n == (size_t) -2)
+                    {
 # if SUPPORT_OLD_MBRTOWC
-		      state = backup_state;
+                      state = backup_state;
 # endif
-		      break;
-		    }
-		  if (n == (size_t) -1)
-		    {
-		      /* Remember that we read a byte, but don't complain
-			 about the error.  Because of the decoding error,
-			 this is a considered to be byte but not a
-			 character (that is, chars is not incremented).  */
-		      p++;
-		      bytes_read--;
-		      continue;
-		    }
-		  if (mbsinit (&state))
-		    in_shift = false;
-		  if (n == 0)
-		    {
-		      wide_char = 0;
-		      n = 1;
-		    }
-		}
-	      p += n;
-	      bytes_read -= n;
-	      chars++;
-	      switch (wide_char)
-		{
-		case '\n':
-		  lines++;
-		  /* Fall through. */
-		case '\r':
-		case '\f':
-		  if (linepos > linelength)
-		    linelength = linepos;
-		  linepos = 0;
-		  goto mb_word_separator;
-		case '\t':
-		  linepos += 8 - (linepos % 8);
-		  goto mb_word_separator;
-		case ' ':
-		  linepos++;
-		  /* Fall through. */
-		case '\v':
-		mb_word_separator:
-		  words += in_word;
-		  in_word = false;
-		  break;
-		default:
-		  if (iswprint (wide_char))
-		    {
-		      int width = wcwidth (wide_char);
-		      if (width > 0)
-			linepos += width;
-		      if (iswspace (wide_char))
-			goto mb_word_separator;
-		      in_word = true;
-		    }
-		  break;
-		}
-	    }
-	  while (bytes_read > 0);
+                      break;
+                    }
+                  if (n == (size_t) -1)
+                    {
+                      /* Remember that we read a byte, but don't complain
+                         about the error.  Because of the decoding error,
+                         this is a considered to be byte but not a
+                         character (that is, chars is not incremented).  */
+                      p++;
+                      bytes_read--;
+                      continue;
+                    }
+                  if (mbsinit (&state))
+                    in_shift = false;
+                  if (n == 0)
+                    {
+                      wide_char = 0;
+                      n = 1;
+                    }
+                }
+              p += n;
+              bytes_read -= n;
+              chars++;
+              switch (wide_char)
+                {
+                case '\n':
+                  lines++;
+                  /* Fall through. */
+                case '\r':
+                case '\f':
+                  if (linepos > linelength)
+                    linelength = linepos;
+                  linepos = 0;
+                  goto mb_word_separator;
+                case '\t':
+                  linepos += 8 - (linepos % 8);
+                  goto mb_word_separator;
+                case ' ':
+                  linepos++;
+                  /* Fall through. */
+                case '\v':
+                mb_word_separator:
+                  words += in_word;
+                  in_word = false;
+                  break;
+                default:
+                  if (iswprint (wide_char))
+                    {
+                      int width = wcwidth (wide_char);
+                      if (width > 0)
+                        linepos += width;
+                      if (iswspace (wide_char))
+                        goto mb_word_separator;
+                      in_word = true;
+                    }
+                  break;
+                }
+            }
+          while (bytes_read > 0);
 
 # if SUPPORT_OLD_MBRTOWC
-	  if (bytes_read > 0)
-	    {
-	      if (bytes_read == BUFFER_SIZE)
-		{
-		  /* Encountered a very long redundant shift sequence.  */
-		  p++;
-		  bytes_read--;
-		}
-	      memmove (buf, p, bytes_read);
-	    }
-	  prev = bytes_read;
+          if (bytes_read > 0)
+            {
+              if (bytes_read == BUFFER_SIZE)
+                {
+                  /* Encountered a very long redundant shift sequence.  */
+                  p++;
+                  bytes_read--;
+                }
+              memmove (buf, p, bytes_read);
+            }
+          prev = bytes_read;
 # endif
-	}
+        }
       if (linepos > linelength)
-	linelength = linepos;
+        linelength = linepos;
       words += in_word;
     }
 #endif
@@ -418,55 +418,55 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       uintmax_t linepos = 0;
 
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-	{
-	  const char *p = buf;
-	  if (bytes_read == SAFE_READ_ERROR)
-	    {
-	      error (0, errno, "%s", file);
-	      ok = false;
-	      break;
-	    }
+        {
+          const char *p = buf;
+          if (bytes_read == SAFE_READ_ERROR)
+            {
+              error (0, errno, "%s", file);
+              ok = false;
+              break;
+            }
 
-	  bytes += bytes_read;
-	  do
-	    {
-	      switch (*p++)
-		{
-		case '\n':
-		  lines++;
-		  /* Fall through. */
-		case '\r':
-		case '\f':
-		  if (linepos > linelength)
-		    linelength = linepos;
-		  linepos = 0;
-		  goto word_separator;
-		case '\t':
-		  linepos += 8 - (linepos % 8);
-		  goto word_separator;
-		case ' ':
-		  linepos++;
-		  /* Fall through. */
-		case '\v':
-		word_separator:
-		  words += in_word;
-		  in_word = false;
-		  break;
-		default:
-		  if (isprint (to_uchar (p[-1])))
-		    {
-		      linepos++;
-		      if (isspace (to_uchar (p[-1])))
-			goto word_separator;
-		      in_word = true;
-		    }
-		  break;
-		}
-	    }
-	  while (--bytes_read);
-	}
+          bytes += bytes_read;
+          do
+            {
+              switch (*p++)
+                {
+                case '\n':
+                  lines++;
+                  /* Fall through. */
+                case '\r':
+                case '\f':
+                  if (linepos > linelength)
+                    linelength = linepos;
+                  linepos = 0;
+                  goto word_separator;
+                case '\t':
+                  linepos += 8 - (linepos % 8);
+                  goto word_separator;
+                case ' ':
+                  linepos++;
+                  /* Fall through. */
+                case '\v':
+                word_separator:
+                  words += in_word;
+                  in_word = false;
+                  break;
+                default:
+                  if (isprint (to_uchar (p[-1])))
+                    {
+                      linepos++;
+                      if (isspace (to_uchar (p[-1])))
+                        goto word_separator;
+                      in_word = true;
+                    }
+                  break;
+                }
+            }
+          while (--bytes_read);
+        }
       if (linepos > linelength)
-	linelength = linepos;
+        linelength = linepos;
       words += in_word;
     }
 
@@ -491,27 +491,27 @@ wc_file (char const *file, struct fstatus *fstatus)
     {
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	xfreopen (NULL, "rb", stdin);
+        xfreopen (NULL, "rb", stdin);
       return wc (STDIN_FILENO, file, fstatus);
     }
   else
     {
       int fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
       else
-	{
-	  bool ok = wc (fd, file, fstatus);
-	  if (close (fd) != 0)
-	    {
-	      error (0, errno, "%s", file);
-	      return false;
-	    }
-	  return ok;
-	}
+        {
+          bool ok = wc (fd, file, fstatus);
+          if (close (fd) != 0)
+            {
+              error (0, errno, "%s", file);
+              return false;
+            }
+          return ok;
+        }
     }
 }
 
@@ -528,18 +528,18 @@ get_input_fstatus (int nfiles, char *const *file)
 
   if (nfiles == 0
       || (nfiles == 1
-	  && ((print_lines + print_words + print_chars
-	       + print_bytes + print_linelength)
-	      == 1)))
+          && ((print_lines + print_words + print_chars
+               + print_bytes + print_linelength)
+              == 1)))
     fstatus[0].failed = 1;
   else
     {
       int i;
 
       for (i = 0; i < nfiles; i++)
-	fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
-			     ? fstat (STDIN_FILENO, &fstatus[i].st)
-			     : stat (file[i], &fstatus[i].st));
+        fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
+                             ? fstat (STDIN_FILENO, &fstatus[i].st)
+                             : stat (file[i], &fstatus[i].st));
     }
 
   return fstatus;
@@ -561,18 +561,18 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
       int i;
 
       for (i = 0; i < nfiles; i++)
-	if (! fstatus[i].failed)
-	  {
-	    if (S_ISREG (fstatus[i].st.st_mode))
-	      regular_total += fstatus[i].st.st_size;
-	    else
-	      minimum_width = 7;
-	  }
+        if (! fstatus[i].failed)
+          {
+            if (S_ISREG (fstatus[i].st.st_mode))
+              regular_total += fstatus[i].st.st_size;
+            else
+              minimum_width = 7;
+          }
 
       for (; 10 <= regular_total; regular_total /= 10)
-	width++;
+        width++;
       if (width < minimum_width)
-	width = minimum_width;
+        width = minimum_width;
     }
 
   return width;
@@ -606,39 +606,39 @@ main (int argc, char **argv)
     switch (optc)
       {
       case 'c':
-	print_bytes = true;
-	break;
+        print_bytes = true;
+        break;
 
       case 'm':
-	print_chars = true;
-	break;
+        print_chars = true;
+        break;
 
       case 'l':
-	print_lines = true;
-	break;
+        print_lines = true;
+        break;
 
       case 'w':
-	print_words = true;
-	break;
+        print_words = true;
+        break;
 
       case 'L':
-	print_linelength = true;
-	break;
+        print_linelength = true;
+        break;
 
       case FILES0_FROM_OPTION:
-	files_from = optarg;
-	break;
+        files_from = optarg;
+        break;
 
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
 
   if (! (print_lines | print_words | print_chars | print_bytes
-	 | print_linelength))
+         | print_linelength))
     print_lines = print_words = print_bytes = true;
 
   bool read_tokens = false;
@@ -648,47 +648,47 @@ main (int argc, char **argv)
       FILE *stream;
 
       /* When using --files0-from=F, you may not specify any files
-	 on the command-line.  */
+         on the command-line.  */
       if (optind < argc)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
-	  fprintf (stderr, "%s\n",
-		   _("file operands cannot be combined with --files0-from"));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s"), quote (argv[optind]));
+          fprintf (stderr, "%s\n",
+                   _("file operands cannot be combined with --files0-from"));
+          usage (EXIT_FAILURE);
+        }
 
       if (STREQ (files_from, "-"))
-	stream = stdin;
+        stream = stdin;
       else
-	{
-	  stream = fopen (files_from, "r");
-	  if (stream == NULL)
-	    error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-		   quote (files_from));
-	}
+        {
+          stream = fopen (files_from, "r");
+          if (stream == NULL)
+            error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+                   quote (files_from));
+        }
 
       /* Read the file list into RAM if we can detect its size and that
-	 size is reasonable.  Otherwise, we'll read a name at a time.  */
+         size is reasonable.  Otherwise, we'll read a name at a time.  */
       struct stat st;
       if (fstat (fileno (stream), &st) == 0
-	  && S_ISREG (st.st_mode)
-	  && st.st_size <= MIN (10 * 1024 * 1024, physmem_available () / 2))
-	{
-	  read_tokens = true;
-	  readtokens0_init (&tok);
-	  if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
-	    error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
-		   quote (files_from));
-	  files = tok.tok;
-	  nfiles = tok.n_tok;
-	  ai = argv_iter_init_argv (files);
-	}
+          && S_ISREG (st.st_mode)
+          && st.st_size <= MIN (10 * 1024 * 1024, physmem_available () / 2))
+        {
+          read_tokens = true;
+          readtokens0_init (&tok);
+          if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
+            error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
+                   quote (files_from));
+          files = tok.tok;
+          nfiles = tok.n_tok;
+          ai = argv_iter_init_argv (files);
+        }
       else
-	{
-	  files = NULL;
-	  nfiles = 0;
-	  ai = argv_iter_init_stream (stream);
-	}
+        {
+          files = NULL;
+          nfiles = 0;
+          ai = argv_iter_init_stream (stream);
+        }
     }
   else
     {
@@ -709,55 +709,55 @@ main (int argc, char **argv)
       enum argv_iter_err ai_err;
       char *file_name = argv_iter (ai, &ai_err);
       if (ai_err == AI_ERR_EOF)
-	break;
+        break;
       if (!file_name)
-	{
-	  switch (ai_err)
-	    {
-	    case AI_ERR_READ:
-	      error (0, errno, _("%s: read error"), quote (files_from));
-	      skip_file = true;
-	      continue;
-	    case AI_ERR_MEM:
-	      xalloc_die ();
-	    default:
-	      assert (!"unexpected error code from argv_iter");
-	    }
-	}
+        {
+          switch (ai_err)
+            {
+            case AI_ERR_READ:
+              error (0, errno, _("%s: read error"), quote (files_from));
+              skip_file = true;
+              continue;
+            case AI_ERR_MEM:
+              xalloc_die ();
+            default:
+              assert (!"unexpected error code from argv_iter");
+            }
+        }
       if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
-	{
-	  /* Give a better diagnostic in an unusual case:
-	     printf - | wc --files0-from=- */
-	  error (0, 0, _("when reading file names from stdin, "
-			 "no file name of %s allowed"),
-		 quote (file_name));
-	  skip_file = true;
-	}
+        {
+          /* Give a better diagnostic in an unusual case:
+             printf - | wc --files0-from=- */
+          error (0, 0, _("when reading file names from stdin, "
+                         "no file name of %s allowed"),
+                 quote (file_name));
+          skip_file = true;
+        }
 
       if (!file_name[0])
-	{
-	  /* Diagnose a zero-length file name.  When it's one
-	     among many, knowing the record number may help.
-	     FIXME: currently print the record number only with
-	     --files0-from=FILE.  Maybe do it for argv, too?  */
-	  if (files_from == NULL)
-	    error (0, 0, "%s", _("invalid zero-length file name"));
-	  else
-	    {
-	      /* Using the standard `filename:line-number:' prefix here is
-		 not totally appropriate, since NUL is the separator, not NL,
-		 but it might be better than nothing.  */
-	      unsigned long int file_number = argv_iter_n_args (ai);
-	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
-		     file_number, _("invalid zero-length file name"));
-	    }
-	  skip_file = true;
-	}
+        {
+          /* Diagnose a zero-length file name.  When it's one
+             among many, knowing the record number may help.
+             FIXME: currently print the record number only with
+             --files0-from=FILE.  Maybe do it for argv, too?  */
+          if (files_from == NULL)
+            error (0, 0, "%s", _("invalid zero-length file name"));
+          else
+            {
+              /* Using the standard `filename:line-number:' prefix here is
+                 not totally appropriate, since NUL is the separator, not NL,
+                 but it might be better than nothing.  */
+              unsigned long int file_number = argv_iter_n_args (ai);
+              error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+                     file_number, _("invalid zero-length file name"));
+            }
+          skip_file = true;
+        }
 
       if (skip_file)
-	ok = false;
+        ok = false;
       else
-	ok &= wc_file (file_name, &fstatus[nfiles ? i : 0]);
+        ok &= wc_file (file_name, &fstatus[nfiles ? i : 0]);
     }
 
   /* No arguments on the command line is fine.  That means read from stdin.
@@ -771,7 +771,7 @@ main (int argc, char **argv)
 
   if (1 < argv_iter_n_args (ai))
     write_counts (total_lines, total_words, total_chars, total_bytes,
-		  max_line_length, _("total"));
+                  max_line_length, _("total"));
 
   argv_iter_free (ai);
 

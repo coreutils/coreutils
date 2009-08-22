@@ -79,21 +79,21 @@ randperm_new (struct randint_source *r, size_t h, size_t n)
 
     default:
       {
-	size_t i;
+        size_t i;
 
-	v = xnmalloc (n, sizeof *v);
-	for (i = 0; i < n; i++)
-	  v[i] = i;
+        v = xnmalloc (n, sizeof *v);
+        for (i = 0; i < n; i++)
+          v[i] = i;
 
-	for (i = 0; i < h; i++)
-	  {
-	    size_t j = i + randint_choose (r, n - i);
-	    size_t t = v[i];
-	    v[i] = v[j];
-	    v[j] = t;
-	  }
+        for (i = 0; i < h; i++)
+          {
+            size_t j = i + randint_choose (r, n - i);
+            size_t t = v[i];
+            v[i] = v[j];
+            v[j] = t;
+          }
 
-	v = xnrealloc (v, h, sizeof *v);
+        v = xnrealloc (v, h, sizeof *v);
       }
       break;
     }

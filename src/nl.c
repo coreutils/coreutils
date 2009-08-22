@@ -176,13 +176,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -241,7 +241,7 @@ FORMAT is one of:\n\
 
 static bool
 build_type_arg (char const **typep,
-		struct re_pattern_buffer *regexp, char *fastmap)
+                struct re_pattern_buffer *regexp, char *fastmap)
 {
   char const *errmsg;
   bool rval = true;
@@ -260,10 +260,10 @@ build_type_arg (char const **typep,
       regexp->fastmap = fastmap;
       regexp->translate = NULL;
       re_syntax_options =
-	RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
+        RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
       errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
       if (errmsg)
-	error (EXIT_FAILURE, 0, "%s", errmsg);
+        error (EXIT_FAILURE, 0, "%s", errmsg);
       break;
     default:
       rval = false;
@@ -330,42 +330,42 @@ proc_text (void)
     {
     case 'a':
       if (blank_join > 1)
-	{
-	  if (1 < line_buf.length || ++blank_lines == blank_join)
-	    {
-	      print_lineno ();
-	      blank_lines = 0;
-	    }
-	  else
-	    fputs (print_no_line_fmt, stdout);
-	}
+        {
+          if (1 < line_buf.length || ++blank_lines == blank_join)
+            {
+              print_lineno ();
+              blank_lines = 0;
+            }
+          else
+            fputs (print_no_line_fmt, stdout);
+        }
       else
-	print_lineno ();
+        print_lineno ();
       break;
     case 't':
       if (1 < line_buf.length)
-	print_lineno ();
+        print_lineno ();
       else
-	fputs (print_no_line_fmt, stdout);
+        fputs (print_no_line_fmt, stdout);
       break;
     case 'n':
       fputs (print_no_line_fmt, stdout);
       break;
     case 'p':
       switch (re_search (current_regex, line_buf.buffer, line_buf.length - 1,
-			 0, line_buf.length - 1, NULL))
-	{
-	case -2:
-	  error (EXIT_FAILURE, errno, _("error in regular expression search"));
+                         0, line_buf.length - 1, NULL))
+        {
+        case -2:
+          error (EXIT_FAILURE, errno, _("error in regular expression search"));
 
-	case -1:
-	  fputs (print_no_line_fmt, stdout);
-	  break;
+        case -1:
+          fputs (print_no_line_fmt, stdout);
+          break;
 
-	default:
-	  print_lineno ();
-	  break;
-	}
+        default:
+          print_lineno ();
+          break;
+        }
     }
   fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
 }
@@ -399,20 +399,20 @@ process_file (FILE *fp)
   while (readlinebuffer (&line_buf, fp))
     {
       switch (check_section ())
-	{
-	case Header:
-	  proc_header ();
-	  break;
-	case Body:
-	  proc_body ();
-	  break;
-	case Footer:
-	  proc_footer ();
-	  break;
-	case Text:
-	  proc_text ();
-	  break;
-	}
+        {
+        case Header:
+          proc_header ();
+          break;
+        case Body:
+          proc_body ();
+          break;
+        case Footer:
+          proc_footer ();
+          break;
+        case Text:
+          proc_text ();
+          break;
+        }
     }
 }
 
@@ -433,10 +433,10 @@ nl_file (char const *file)
     {
       stream = fopen (file, "r");
       if (stream == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
     }
 
   process_file (stream);
@@ -474,110 +474,110 @@ main (int argc, char **argv)
   have_read_stdin = false;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
-			   NULL)) != -1)
+                           NULL)) != -1)
     {
       switch (c)
-	{
-	case 'h':
-	  if (! build_type_arg (&header_type, &header_regex, header_fastmap))
-	    {
-	      error (0, 0, _("invalid header numbering style: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 'b':
-	  if (! build_type_arg (&body_type, &body_regex, body_fastmap))
-	    {
-	      error (0, 0, _("invalid body numbering style: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 'f':
-	  if (! build_type_arg (&footer_type, &footer_regex, footer_fastmap))
-	    {
-	      error (0, 0, _("invalid footer numbering style: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 'v':
-	  if (xstrtoimax (optarg, NULL, 10, &starting_line_number, "")
-	      != LONGINT_OK)
-	    {
-	      error (0, 0, _("invalid starting line number: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
+        {
+        case 'h':
+          if (! build_type_arg (&header_type, &header_regex, header_fastmap))
+            {
+              error (0, 0, _("invalid header numbering style: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 'b':
+          if (! build_type_arg (&body_type, &body_regex, body_fastmap))
+            {
+              error (0, 0, _("invalid body numbering style: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 'f':
+          if (! build_type_arg (&footer_type, &footer_regex, footer_fastmap))
+            {
+              error (0, 0, _("invalid footer numbering style: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 'v':
+          if (xstrtoimax (optarg, NULL, 10, &starting_line_number, "")
+              != LONGINT_OK)
+            {
+              error (0, 0, _("invalid starting line number: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
   case PAGE_INCREMENT_OPTION_DEPRECATED:
     error (0, 0, _("WARNING: --page-increment is deprecated; "
                    "use --line-increment instead"));
     /* fall through */
-	case 'i':
-	  if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
-		 && 0 < page_incr))
-	    {
-	      error (0, 0, _("invalid line number increment: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 'p':
-	  reset_numbers = false;
-	  break;
-	case 'l':
-	  if (! (xstrtoimax (optarg, NULL, 10, &blank_join, "") == LONGINT_OK
-		 && 0 < blank_join))
-	    {
-	      error (0, 0, _("invalid number of blank lines: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 's':
-	  separator_str = optarg;
-	  break;
-	case 'w':
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      {
-		error (0, 0, _("invalid line number field width: %s"),
-		       quote (optarg));
-		ok = false;
-	      }
-	    else
-	      {
-		lineno_width = tmp_long;
-	      }
-	  }
-	  break;
-	case 'n':
-	  if (STREQ (optarg, "ln"))
-	    lineno_format = FORMAT_LEFT;
-	  else if (STREQ (optarg, "rn"))
-	    lineno_format = FORMAT_RIGHT_NOLZ;
-	  else if (STREQ (optarg, "rz"))
-	    lineno_format = FORMAT_RIGHT_LZ;
-	  else
-	    {
-	      error (0, 0, _("invalid line numbering format: %s"),
-		     quote (optarg));
-	      ok = false;
-	    }
-	  break;
-	case 'd':
-	  section_del = optarg;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  ok = false;
-	  break;
-	}
+        case 'i':
+          if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
+                 && 0 < page_incr))
+            {
+              error (0, 0, _("invalid line number increment: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 'p':
+          reset_numbers = false;
+          break;
+        case 'l':
+          if (! (xstrtoimax (optarg, NULL, 10, &blank_join, "") == LONGINT_OK
+                 && 0 < blank_join))
+            {
+              error (0, 0, _("invalid number of blank lines: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 's':
+          separator_str = optarg;
+          break;
+        case 'w':
+          {
+            long int tmp_long;
+            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
+                || tmp_long <= 0 || tmp_long > INT_MAX)
+              {
+                error (0, 0, _("invalid line number field width: %s"),
+                       quote (optarg));
+                ok = false;
+              }
+            else
+              {
+                lineno_width = tmp_long;
+              }
+          }
+          break;
+        case 'n':
+          if (STREQ (optarg, "ln"))
+            lineno_format = FORMAT_LEFT;
+          else if (STREQ (optarg, "rn"))
+            lineno_format = FORMAT_RIGHT_NOLZ;
+          else if (STREQ (optarg, "rz"))
+            lineno_format = FORMAT_RIGHT_LZ;
+          else
+            {
+              error (0, 0, _("invalid line numbering format: %s"),
+                     quote (optarg));
+              ok = false;
+            }
+          break;
+        case 'd':
+          section_del = optarg;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          ok = false;
+          break;
+        }
     }
 
   if (!ok)

@@ -40,7 +40,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
@@ -71,7 +71,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
@@ -89,6 +89,6 @@ main (int argc, char **argv)
       exit (EXIT_SUCCESS);
     }
   fprintf (stderr, _("%s: cannot find name for user ID %lu\n"),
-	   program_name, (unsigned long int) uid);
+           program_name, (unsigned long int) uid);
   exit (EXIT_FAILURE);
 }

@@ -158,22 +158,22 @@ print_header (void)
   else if (human_output_opts & human_autoscale)
     {
       if (human_output_opts & human_base_1024)
-	printf (_("    Size  Used Avail Use%%"));
+        printf (_("    Size  Used Avail Use%%"));
       else
-	printf (_("     Size   Used  Avail Use%%"));
+        printf (_("     Size   Used  Avail Use%%"));
     }
   else if (posix_format)
     printf (_(" %s-blocks      Used Available Capacity"),
-	    umaxtostr (output_block_size, buf));
+            umaxtostr (output_block_size, buf));
   else
     {
       int opts = (human_suppress_point_zero
-		  | human_autoscale | human_SI
-		  | (human_output_opts
-		     & (human_group_digits | human_base_1024 | human_B)));
+                  | human_autoscale | human_SI
+                  | (human_output_opts
+                     & (human_group_digits | human_base_1024 | human_B)));
 
       /* Prefer the base that makes the human-readable value more exact,
-	 if there is a difference.  */
+         if there is a difference.  */
 
       uintmax_t q1000 = output_block_size;
       uintmax_t q1024 = output_block_size;
@@ -181,21 +181,21 @@ print_header (void)
       bool divisible_by_1024;
 
       do
-	{
-	  divisible_by_1000 = q1000 % 1000 == 0;  q1000 /= 1000;
-	  divisible_by_1024 = q1024 % 1024 == 0;  q1024 /= 1024;
-	}
+        {
+          divisible_by_1000 = q1000 % 1000 == 0;  q1000 /= 1000;
+          divisible_by_1024 = q1024 % 1024 == 0;  q1024 /= 1024;
+        }
       while (divisible_by_1000 & divisible_by_1024);
 
       if (divisible_by_1000 < divisible_by_1024)
-	opts |= human_base_1024;
+        opts |= human_base_1024;
       if (divisible_by_1024 < divisible_by_1000)
-	opts &= ~human_base_1024;
+        opts &= ~human_base_1024;
       if (! (opts & human_base_1024))
-	opts |= human_B;
+        opts |= human_B;
 
       printf (_(" %4s-blocks      Used Available Use%%"),
-	      human_readable (output_block_size, buf, opts, 1, 1));
+              human_readable (output_block_size, buf, opts, 1, 1));
     }
 
   printf (_(" Mounted on\n"));
@@ -250,16 +250,16 @@ known_value (uintmax_t n)
 
 static char const *
 df_readable (bool negative, uintmax_t n, char *buf,
-	     uintmax_t input_units, uintmax_t output_units)
+             uintmax_t input_units, uintmax_t output_units)
 {
   if (! known_value (n) && !negative)
     return "-";
   else
     {
       char *p = human_readable (negative ? -n : n, buf + negative,
-				human_output_opts, input_units, output_units);
+                                human_output_opts, input_units, output_units);
       if (negative)
-	*--p = '-';
+        *--p = '-';
       return p;
     }
 }
@@ -273,7 +273,7 @@ df_readable (bool negative, uintmax_t n, char *buf,
    how the negation flag is used.  */
 static void
 add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
-			uintmax_t src, bool src_neg)
+                        uintmax_t src, bool src_neg)
 {
   if (LOG_EQ (*dest_neg, src_neg))
     {
@@ -314,9 +314,9 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
 
 static void
 show_dev (char const *disk, char const *mount_point,
-	  char const *stat_file, char const *fstype,
-	  bool me_dummy, bool me_remote,
-	  const struct fs_usage *force_fsu)
+          char const *stat_file, char const *fstype,
+          bool me_dummy, bool me_remote,
+          const struct fs_usage *force_fsu)
 {
   struct fs_usage fsu;
   char buf[3][LONGEST_HUMAN_READABLE + 2];
@@ -379,18 +379,18 @@ show_dev (char const *disk, char const *mount_point,
       size_t disk_name_len = strlen (disk);
       size_t fstype_len = strlen (fstype);
       if (disk_name_len + fstype_len < 18)
-	printf ("%s%*s  ", disk, 18 - (int) disk_name_len, fstype);
+        printf ("%s%*s  ", disk, 18 - (int) disk_name_len, fstype);
       else if (!posix_format)
-	printf ("%s\n%18s  ", disk, fstype);
+        printf ("%s\n%18s  ", disk, fstype);
       else
-	printf ("%s %s", disk, fstype);
+        printf ("%s %s", disk, fstype);
     }
   else
     {
       if (strlen (disk) > 20 && !posix_format)
-	printf ("%s\n%20s", disk, "");
+        printf ("%s\n%20s", disk, "");
       else
-	printf ("%-20s", disk);
+        printf ("%-20s", disk);
     }
 
   if (inode_format)
@@ -404,44 +404,44 @@ show_dev (char const *disk, char const *mount_point,
       available_to_root = available;
 
       if (known_value (total))
-	grand_fsu.fsu_files += total;
+        grand_fsu.fsu_files += total;
       if (known_value (available))
-	grand_fsu.fsu_ffree += available;
+        grand_fsu.fsu_ffree += available;
     }
   else
     {
       if (human_output_opts & human_autoscale)
-	width = 5 + ! (human_output_opts & human_base_1024);
+        width = 5 + ! (human_output_opts & human_base_1024);
       else
-	{
-	  width = 9;
-	  if (posix_format)
-	    {
-	      uintmax_t b;
-	      col1_adjustment = -3;
-	      for (b = output_block_size; 9 < b; b /= 10)
-		col1_adjustment++;
-	    }
-	}
+        {
+          width = 9;
+          if (posix_format)
+            {
+              uintmax_t b;
+              col1_adjustment = -3;
+              for (b = output_block_size; 9 < b; b /= 10)
+                col1_adjustment++;
+            }
+        }
       use_width = ((posix_format
-		    && ! (human_output_opts & human_autoscale))
-		   ? 8 : 4);
+                    && ! (human_output_opts & human_autoscale))
+                   ? 8 : 4);
       input_units = fsu.fsu_blocksize;
       output_units = output_block_size;
       total = fsu.fsu_blocks;
       available = fsu.fsu_bavail;
       negate_available = (fsu.fsu_bavail_top_bit_set
-			  & known_value (available));
+                          & known_value (available));
       available_to_root = fsu.fsu_bfree;
 
       if (known_value (total))
-	grand_fsu.fsu_blocks += input_units * total;
+        grand_fsu.fsu_blocks += input_units * total;
       if (known_value (available_to_root))
-	grand_fsu.fsu_bfree  += input_units * available_to_root;
+        grand_fsu.fsu_bfree  += input_units * available_to_root;
       if (known_value (available))
-	add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
-				&grand_fsu.fsu_bavail_top_bit_set,
-				input_units * available, negate_available);
+        add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
+                                &grand_fsu.fsu_bavail_top_bit_set,
+                                input_units * available, negate_available);
     }
 
   used = UINTMAX_MAX;
@@ -453,20 +453,20 @@ show_dev (char const *disk, char const *mount_point,
     }
 
   printf (" %*s %*s %*s ",
-	  width + col1_adjustment,
-	  df_readable (false, total,
-		       buf[0], input_units, output_units),
-	  width, df_readable (negate_used, used,
-			      buf[1], input_units, output_units),
-	  width, df_readable (negate_available, available,
-			      buf[2], input_units, output_units));
+          width + col1_adjustment,
+          df_readable (false, total,
+                       buf[0], input_units, output_units),
+          width, df_readable (negate_used, used,
+                              buf[1], input_units, output_units),
+          width, df_readable (negate_available, available,
+                              buf[2], input_units, output_units));
 
   if (! known_value (used) || ! known_value (available))
     ;
   else if (!negate_used
-	   && used <= TYPE_MAXIMUM (uintmax_t) / 100
-	   && used + available != 0
-	   && (used + available < used) == negate_available)
+           && used <= TYPE_MAXIMUM (uintmax_t) / 100
+           && used + available != 0
+           && (used + available < used) == negate_available)
     {
       uintmax_t u100 = used * 100;
       uintmax_t nonroot_total = used + available;
@@ -475,23 +475,23 @@ show_dev (char const *disk, char const *mount_point,
   else
     {
       /* The calculation cannot be done easily with integer
-	 arithmetic.  Fall back on floating point.  This can suffer
-	 from minor rounding errors, but doing it exactly requires
-	 multiple precision arithmetic, and it's not worth the
-	 aggravation.  */
+         arithmetic.  Fall back on floating point.  This can suffer
+         from minor rounding errors, but doing it exactly requires
+         multiple precision arithmetic, and it's not worth the
+         aggravation.  */
       double u = negate_used ? - (double) - used : used;
       double a = negate_available ? - (double) - available : available;
       double nonroot_total = u + a;
       if (nonroot_total)
-	{
-	  long int lipct = pct = u * 100 / nonroot_total;
-	  double ipct = lipct;
+        {
+          long int lipct = pct = u * 100 / nonroot_total;
+          double ipct = lipct;
 
-	  /* Like `pct = ceil (dpct);', but avoid ceil so that
-	     the math library needn't be linked.  */
-	  if (ipct - 1 < pct && pct <= ipct + 1)
-	    pct = ipct + (ipct < pct);
-	}
+          /* Like `pct = ceil (dpct);', but avoid ceil so that
+             the math library needn't be linked.  */
+          if (ipct - 1 < pct && pct <= ipct + 1)
+            pct = ipct + (ipct < pct);
+        }
     }
 
   if (0 <= pct)
@@ -503,12 +503,12 @@ show_dev (char const *disk, char const *mount_point,
     {
 #ifdef HIDE_AUTOMOUNT_PREFIX
       /* Don't print the first directory name in MOUNT_POINT if it's an
-	 artifact of an automounter.  This is a bit too aggressive to be
-	 the default.  */
+         artifact of an automounter.  This is a bit too aggressive to be
+         the default.  */
       if (strncmp ("/auto/", mount_point, 6) == 0)
-	mount_point += 5;
+        mount_point += 5;
       else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
-	mount_point += 8;
+        mount_point += 8;
 #endif
       printf (" %s", mount_point);
     }
@@ -537,10 +537,10 @@ find_mount_point (const char *file, const struct stat *file_stat)
     {
       last_stat = *file_stat;
       if (chdir (file) < 0)
-	{
-	  error (0, errno, _("cannot change to directory %s"), quote (file));
-	  return NULL;
-	}
+        {
+          error (0, errno, _("cannot change to directory %s"), quote (file));
+          return NULL;
+        }
     }
   else
     /* FILE is some other kind of file; use its directory.  */
@@ -551,17 +551,17 @@ find_mount_point (const char *file, const struct stat *file_stat)
       free (xdir);
 
       if (chdir (dir) < 0)
-	{
-	  error (0, errno, _("cannot change to directory %s"), quote (dir));
-	  return NULL;
-	}
+        {
+          error (0, errno, _("cannot change to directory %s"), quote (dir));
+          return NULL;
+        }
 
       if (stat (".", &last_stat) < 0)
-	{
-	  error (0, errno, _("cannot stat current directory (now %s)"),
-		 quote (dir));
-	  goto done;
-	}
+        {
+          error (0, errno, _("cannot stat current directory (now %s)"),
+                 quote (dir));
+          goto done;
+        }
     }
 
   /* Now walk up FILE's parents until we find another file system or /,
@@ -571,18 +571,18 @@ find_mount_point (const char *file, const struct stat *file_stat)
     {
       struct stat st;
       if (stat ("..", &st) < 0)
-	{
-	  error (0, errno, _("cannot stat %s"), quote (".."));
-	  goto done;
-	}
+        {
+          error (0, errno, _("cannot stat %s"), quote (".."));
+          goto done;
+        }
       if (st.st_dev != last_stat.st_dev || st.st_ino == last_stat.st_ino)
-	/* cwd is the mount point.  */
-	break;
+        /* cwd is the mount point.  */
+        break;
       if (chdir ("..") < 0)
-	{
-	  error (0, errno, _("cannot change to directory %s"), quote (".."));
-	  goto done;
-	}
+        {
+          error (0, errno, _("cannot change to directory %s"), quote (".."));
+          goto done;
+        }
       last_stat = st;
     }
 
@@ -595,7 +595,7 @@ done:
     int save_errno = errno;
     if (restore_cwd (&cwd) != 0)
       error (EXIT_FAILURE, errno,
-	     _("failed to return to initial working directory"));
+             _("failed to return to initial working directory"));
     free_cwd (&cwd);
     errno = save_errno;
   }
@@ -618,8 +618,8 @@ show_disk (char const *disk)
   if (best_match)
     {
       show_dev (best_match->me_devname, best_match->me_mountdir, NULL,
-		best_match->me_type, best_match->me_dummy,
-		best_match->me_remote, NULL);
+                best_match->me_type, best_match->me_dummy,
+                best_match->me_remote, NULL);
       return true;
     }
 
@@ -641,12 +641,12 @@ show_point (const char *point, const struct stat *statp)
   if (*point == '/')
     {
       /* Find the best match: prefer non-dummies, and then prefer the
-	 last match if there are ties.  */
+         last match if there are ties.  */
 
       for (me = mount_list; me; me = me->me_next)
-	if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs")
-	    && (!best_match || best_match->me_dummy || !me->me_dummy))
-	  best_match = me;
+        if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs")
+            && (!best_match || best_match->me_dummy || !me->me_dummy))
+          best_match = me;
     }
 
   /* Calculate the real absolute file name for POINT, and use that to find
@@ -657,87 +657,87 @@ show_point (const char *point, const struct stat *statp)
       char *resolved = canonicalize_file_name (point);
 
       if (resolved && resolved[0] == '/')
-	{
-	  size_t resolved_len = strlen (resolved);
-	  size_t best_match_len = 0;
+        {
+          size_t resolved_len = strlen (resolved);
+          size_t best_match_len = 0;
 
-	  for (me = mount_list; me; me = me->me_next)
-	    if (!STREQ (me->me_type, "lofs")
-		&& (!best_match || best_match->me_dummy || !me->me_dummy))
-	      {
-		size_t len = strlen (me->me_mountdir);
-		if (best_match_len <= len && len <= resolved_len
-		    && (len == 1 /* root file system */
-			|| ((len == resolved_len || resolved[len] == '/')
-			    && strncmp (me->me_mountdir, resolved, len) == 0)))
-		  {
-		    best_match = me;
-		    best_match_len = len;
-		  }
-	      }
-	}
+          for (me = mount_list; me; me = me->me_next)
+            if (!STREQ (me->me_type, "lofs")
+                && (!best_match || best_match->me_dummy || !me->me_dummy))
+              {
+                size_t len = strlen (me->me_mountdir);
+                if (best_match_len <= len && len <= resolved_len
+                    && (len == 1 /* root file system */
+                        || ((len == resolved_len || resolved[len] == '/')
+                            && strncmp (me->me_mountdir, resolved, len) == 0)))
+                  {
+                    best_match = me;
+                    best_match_len = len;
+                  }
+              }
+        }
 
       free (resolved);
 
       if (best_match
-	  && (stat (best_match->me_mountdir, &disk_stats) != 0
-	      || disk_stats.st_dev != statp->st_dev))
-	best_match = NULL;
+          && (stat (best_match->me_mountdir, &disk_stats) != 0
+              || disk_stats.st_dev != statp->st_dev))
+        best_match = NULL;
     }
 
   if (! best_match)
     for (me = mount_list; me; me = me->me_next)
       {
-	if (me->me_dev == (dev_t) -1)
-	  {
-	    if (stat (me->me_mountdir, &disk_stats) == 0)
-	      me->me_dev = disk_stats.st_dev;
-	    else
-	      {
-		/* Report only I/O errors.  Other errors might be
-		   caused by shadowed mount points, which means POINT
-		   can't possibly be on this file system.  */
-		if (errno == EIO)
-		  {
-		    error (0, errno, "%s", quote (me->me_mountdir));
-		    exit_status = EXIT_FAILURE;
-		  }
+        if (me->me_dev == (dev_t) -1)
+          {
+            if (stat (me->me_mountdir, &disk_stats) == 0)
+              me->me_dev = disk_stats.st_dev;
+            else
+              {
+                /* Report only I/O errors.  Other errors might be
+                   caused by shadowed mount points, which means POINT
+                   can't possibly be on this file system.  */
+                if (errno == EIO)
+                  {
+                    error (0, errno, "%s", quote (me->me_mountdir));
+                    exit_status = EXIT_FAILURE;
+                  }
 
-		/* So we won't try and fail repeatedly. */
-		me->me_dev = (dev_t) -2;
-	      }
-	  }
+                /* So we won't try and fail repeatedly. */
+                me->me_dev = (dev_t) -2;
+              }
+          }
 
-	if (statp->st_dev == me->me_dev
-	    && !STREQ (me->me_type, "lofs")
-	    && (!best_match || best_match->me_dummy || !me->me_dummy))
-	  {
-	    /* Skip bogus mtab entries.  */
-	    if (stat (me->me_mountdir, &disk_stats) != 0
-		|| disk_stats.st_dev != me->me_dev)
-	      me->me_dev = (dev_t) -2;
-	    else
-	      best_match = me;
-	  }
+        if (statp->st_dev == me->me_dev
+            && !STREQ (me->me_type, "lofs")
+            && (!best_match || best_match->me_dummy || !me->me_dummy))
+          {
+            /* Skip bogus mtab entries.  */
+            if (stat (me->me_mountdir, &disk_stats) != 0
+                || disk_stats.st_dev != me->me_dev)
+              me->me_dev = (dev_t) -2;
+            else
+              best_match = me;
+          }
       }
 
   if (best_match)
     show_dev (best_match->me_devname, best_match->me_mountdir, point,
-	      best_match->me_type, best_match->me_dummy, best_match->me_remote,
-	      NULL);
+              best_match->me_type, best_match->me_dummy, best_match->me_remote,
+              NULL);
   else
     {
       /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
-	 print as much info as we can; methods that require the device to be
-	 present will fail at a later point.  */
+         print as much info as we can; methods that require the device to be
+         present will fail at a later point.  */
 
       /* Find the actual mount point.  */
       char *mp = find_mount_point (point, statp);
       if (mp)
-	{
-	  show_dev (NULL, mp, NULL, NULL, false, false, NULL);
-	  free (mp);
-	}
+        {
+          show_dev (NULL, mp, NULL, NULL, false, false, NULL);
+          free (mp);
+        }
     }
 }
 
@@ -764,7 +764,7 @@ show_all_entries (void)
 
   for (me = mount_list; me; me = me->me_next)
     show_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
-	      me->me_dummy, me->me_remote, NULL);
+              me->me_dummy, me->me_remote, NULL);
 }
 
 /* Add FSTYPE to the list of file system types to display. */
@@ -798,7 +798,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
@@ -872,93 +872,93 @@ main (int argc, char **argv)
     {
       int oi = -1;
       int c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options,
-			   &oi);
+                           &oi);
       if (c == -1)
-	break;
+        break;
 
       switch (c)
-	{
-	case 'a':
-	  show_all_fs = true;
-	  break;
-	case 'B':
-	  {
-	    enum strtol_error e = human_options (optarg, &human_output_opts,
-						 &output_block_size);
-	    if (e != LONGINT_OK)
-	      xstrtol_fatal (e, oi, c, long_options, optarg);
-	  }
-	  break;
-	case 'i':
-	  inode_format = true;
-	  break;
-	case 'h':
-	  human_output_opts = human_autoscale | human_SI | human_base_1024;
-	  output_block_size = 1;
-	  break;
-	case 'H':
-	  human_output_opts = human_autoscale | human_SI;
-	  output_block_size = 1;
-	  break;
-	case 'k':
-	  human_output_opts = 0;
-	  output_block_size = 1024;
-	  break;
-	case 'l':
-	  show_local_fs = true;
-	  break;
-	case 'm': /* obsolescent */
-	  human_output_opts = 0;
-	  output_block_size = 1024 * 1024;
-	  break;
-	case 'T':
-	  print_type = true;
-	  break;
-	case 'P':
-	  posix_format = true;
-	  break;
-	case SYNC_OPTION:
-	  require_sync = true;
-	  break;
-	case NO_SYNC_OPTION:
-	  require_sync = false;
-	  break;
+        {
+        case 'a':
+          show_all_fs = true;
+          break;
+        case 'B':
+          {
+            enum strtol_error e = human_options (optarg, &human_output_opts,
+                                                 &output_block_size);
+            if (e != LONGINT_OK)
+              xstrtol_fatal (e, oi, c, long_options, optarg);
+          }
+          break;
+        case 'i':
+          inode_format = true;
+          break;
+        case 'h':
+          human_output_opts = human_autoscale | human_SI | human_base_1024;
+          output_block_size = 1;
+          break;
+        case 'H':
+          human_output_opts = human_autoscale | human_SI;
+          output_block_size = 1;
+          break;
+        case 'k':
+          human_output_opts = 0;
+          output_block_size = 1024;
+          break;
+        case 'l':
+          show_local_fs = true;
+          break;
+        case 'm': /* obsolescent */
+          human_output_opts = 0;
+          output_block_size = 1024 * 1024;
+          break;
+        case 'T':
+          print_type = true;
+          break;
+        case 'P':
+          posix_format = true;
+          break;
+        case SYNC_OPTION:
+          require_sync = true;
+          break;
+        case NO_SYNC_OPTION:
+          require_sync = false;
+          break;
 
-	case 'F':
-	  /* Accept -F as a synonym for -t for compatibility with Solaris.  */
-	case 't':
-	  add_fs_type (optarg);
-	  break;
+        case 'F':
+          /* Accept -F as a synonym for -t for compatibility with Solaris.  */
+        case 't':
+          add_fs_type (optarg);
+          break;
 
-	case 'v':		/* For SysV compatibility. */
-	  /* ignore */
-	  break;
-	case 'x':
-	  add_excluded_fs_type (optarg);
-	  break;
+        case 'v':		/* For SysV compatibility. */
+          /* ignore */
+          break;
+        case 'x':
+          add_excluded_fs_type (optarg);
+          break;
 
-	case 'c':
-	  print_grand_total = true;
-	  break;
+        case 'c':
+          print_grand_total = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (human_output_opts == -1)
     {
       if (posix_format)
-	{
-	  human_output_opts = 0;
-	  output_block_size = (getenv ("POSIXLY_CORRECT") ? 512 : 1024);
-	}
+        {
+          human_output_opts = 0;
+          output_block_size = (getenv ("POSIXLY_CORRECT") ? 512 : 1024);
+        }
       else
-	human_options (getenv ("DF_BLOCK_SIZE"),
-		       &human_output_opts, &output_block_size);
+        human_options (getenv ("DF_BLOCK_SIZE"),
+                       &human_output_opts, &output_block_size);
     }
 
   /* Fail if the same file system type was both selected and excluded.  */
@@ -967,18 +967,18 @@ main (int argc, char **argv)
     struct fs_type_list *fs_incl;
     for (fs_incl = fs_select_list; fs_incl; fs_incl = fs_incl->fs_next)
       {
-	struct fs_type_list *fs_excl;
-	for (fs_excl = fs_exclude_list; fs_excl; fs_excl = fs_excl->fs_next)
-	  {
-	    if (STREQ (fs_incl->fs_name, fs_excl->fs_name))
-	      {
-		error (0, 0,
-		       _("file system type %s both selected and excluded"),
-		       quote (fs_incl->fs_name));
-		match = true;
-		break;
-	      }
-	  }
+        struct fs_type_list *fs_excl;
+        for (fs_excl = fs_exclude_list; fs_excl; fs_excl = fs_excl->fs_next)
+          {
+            if (STREQ (fs_incl->fs_name, fs_excl->fs_name))
+              {
+                error (0, 0,
+                       _("file system type %s both selected and excluded"),
+                       quote (fs_incl->fs_name));
+                match = true;
+                break;
+              }
+          }
       }
     if (match)
       exit (EXIT_FAILURE);
@@ -989,38 +989,38 @@ main (int argc, char **argv)
       int i;
 
       /* Open each of the given entries to make sure any corresponding
-	 partition is automounted.  This must be done before reading the
-	 file system table.  */
+         partition is automounted.  This must be done before reading the
+         file system table.  */
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
-	{
-	  int fd = open (argv[i], O_RDONLY | O_NOCTTY);
-	  if (fd < 0 || fstat (fd, &stats[i - optind]))
-	    {
-	      error (0, errno, "%s", quote (argv[i]));
-	      exit_status = EXIT_FAILURE;
-	      argv[i] = NULL;
-	    }
-	  if (0 <= fd)
-	    close (fd);
-	}
+        {
+          int fd = open (argv[i], O_RDONLY | O_NOCTTY);
+          if (fd < 0 || fstat (fd, &stats[i - optind]))
+            {
+              error (0, errno, "%s", quote (argv[i]));
+              exit_status = EXIT_FAILURE;
+              argv[i] = NULL;
+            }
+          if (0 <= fd)
+            close (fd);
+        }
     }
 
   mount_list =
     read_file_system_list ((fs_select_list != NULL
-			    || fs_exclude_list != NULL
-			    || print_type
-			    || show_local_fs));
+                            || fs_exclude_list != NULL
+                            || print_type
+                            || show_local_fs));
 
   if (mount_list == NULL)
     {
       /* Couldn't read the table of mounted file systems.
-	 Fail if df was invoked with no file name arguments;
-	 Otherwise, merely give a warning and proceed.  */
+         Fail if df was invoked with no file name arguments;
+         Otherwise, merely give a warning and proceed.  */
       int status =          (optind < argc ? 0 : EXIT_FAILURE);
       const char *warning = (optind < argc ? _("Warning: ") : "");
       error (status, errno, "%s%s", warning,
-	     _("cannot read table of mounted file systems"));
+             _("cannot read table of mounted file systems"));
     }
 
   if (require_sync)
@@ -1034,8 +1034,8 @@ main (int argc, char **argv)
       show_listed_fs = true;
 
       for (i = optind; i < argc; ++i)
-	if (argv[i])
-	  show_entry (argv[i], &stats[i - optind]);
+        if (argv[i])
+          show_entry (argv[i], &stats[i - optind]);
     }
   else
     show_all_entries ();
@@ -1043,7 +1043,7 @@ main (int argc, char **argv)
   if (print_grand_total)
     {
       if (inode_format)
-	grand_fsu.fsu_blocks = 1;
+        grand_fsu.fsu_blocks = 1;
       show_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu);
     }
 

@@ -34,22 +34,22 @@ buffer_lcm (size_t a, size_t b, size_t lcm_max)
   else
     {
       if (b)
-	{
-	  /* Return lcm (A, B) if it is in range; otherwise, fall back
-	     on A.  */
+        {
+          /* Return lcm (A, B) if it is in range; otherwise, fall back
+             on A.  */
 
-	  size_t lcm, m, n, q, r;
+          size_t lcm, m, n, q, r;
 
-	  /* N = gcd (A, B).  */
-	  for (m = a, n = b;  (r = m % n) != 0;  m = n, n = r)
-	    continue;
+          /* N = gcd (A, B).  */
+          for (m = a, n = b;  (r = m % n) != 0;  m = n, n = r)
+            continue;
 
-	  /* LCM = lcm (A, B), if in range.  */
-	  q = a / n;
-	  lcm = q * b;
-	  if (lcm <= lcm_max && lcm / b == q)
-	    return lcm;
-	}
+          /* LCM = lcm (A, B), if in range.  */
+          q = a / n;
+          lcm = q * b;
+          if (lcm <= lcm_max && lcm / b == q)
+            return lcm;
+        }
 
       size = a;
     }

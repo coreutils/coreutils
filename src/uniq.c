@@ -127,13 +127,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Filter adjacent matching lines from INPUT (or standard input),\n\
 writing to OUTPUT (or standard output).\n\
@@ -215,9 +215,9 @@ find_field (struct linebuffer const *line)
   for (count = 0; count < skip_fields; count++)
     {
       while (i < size && isblank (to_uchar (lp[i])))
-	i++;
+        i++;
       while (i < size && !isblank (to_uchar (lp[i])))
-	i++;
+        i++;
     }
 
   for (count = 0; count < skip_chars && i < size; count++)
@@ -258,11 +258,11 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
 
 static void
 writeline (struct linebuffer const *line,
-	   bool match, uintmax_t linecount)
+           bool match, uintmax_t linecount)
 {
   if (! (linecount == 0 ? output_unique
-	 : !match ? output_first_repeated
-	 : output_later_repeated))
+         : !match ? output_first_repeated
+         : output_later_repeated))
     return;
 
   if (countmode == count_occurrences)
@@ -304,24 +304,24 @@ check_file (const char *infile, const char *outfile, char delimiter)
       size_t prevlen IF_LINT (= 0);
 
       while (!feof (stdin))
-	{
-	  char *thisfield;
-	  size_t thislen;
-	  if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
-	    break;
-	  thisfield = find_field (thisline);
-	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
-	  if (prevline->length == 0
-	      || different (thisfield, prevfield, thislen, prevlen))
-	    {
-	      fwrite (thisline->buffer, sizeof (char),
-		      thisline->length, stdout);
+        {
+          char *thisfield;
+          size_t thislen;
+          if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
+            break;
+          thisfield = find_field (thisline);
+          thislen = thisline->length - 1 - (thisfield - thisline->buffer);
+          if (prevline->length == 0
+              || different (thisfield, prevfield, thislen, prevlen))
+            {
+              fwrite (thisline->buffer, sizeof (char),
+                      thisline->length, stdout);
 
-	      SWAP_LINES (prevline, thisline);
-	      prevfield = thisfield;
-	      prevlen = thislen;
-	    }
-	}
+              SWAP_LINES (prevline, thisline);
+              prevfield = thisfield;
+              prevlen = thislen;
+            }
+        }
     }
   else
     {
@@ -331,59 +331,59 @@ check_file (const char *infile, const char *outfile, char delimiter)
       bool first_delimiter = true;
 
       if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
-	goto closefiles;
+        goto closefiles;
       prevfield = find_field (prevline);
       prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
 
       while (!feof (stdin))
-	{
-	  bool match;
-	  char *thisfield;
-	  size_t thislen;
-	  if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
-	    {
-	      if (ferror (stdin))
-		goto closefiles;
-	      break;
-	    }
-	  thisfield = find_field (thisline);
-	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
-	  match = !different (thisfield, prevfield, thislen, prevlen);
-	  match_count += match;
+        {
+          bool match;
+          char *thisfield;
+          size_t thislen;
+          if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
+            {
+              if (ferror (stdin))
+                goto closefiles;
+              break;
+            }
+          thisfield = find_field (thisline);
+          thislen = thisline->length - 1 - (thisfield - thisline->buffer);
+          match = !different (thisfield, prevfield, thislen, prevlen);
+          match_count += match;
 
-	  if (match_count == UINTMAX_MAX)
-	    {
-	      if (count_occurrences)
-		error (EXIT_FAILURE, 0, _("too many repeated lines"));
-	      match_count--;
-	    }
+          if (match_count == UINTMAX_MAX)
+            {
+              if (count_occurrences)
+                error (EXIT_FAILURE, 0, _("too many repeated lines"));
+              match_count--;
+            }
 
           if (delimit_groups != DM_NONE)
-	    {
-	      if (!match)
-		{
-		  if (match_count) /* a previous match */
-		    first_delimiter = false; /* Only used when DM_SEPARATE */
-		}
-	      else if (match_count == 1)
-		{
-		  if ((delimit_groups == DM_PREPEND)
-		      || (delimit_groups == DM_SEPARATE
-			  && !first_delimiter))
-		    putchar (delimiter);
-		}
-	    }
+            {
+              if (!match)
+                {
+                  if (match_count) /* a previous match */
+                    first_delimiter = false; /* Only used when DM_SEPARATE */
+                }
+              else if (match_count == 1)
+                {
+                  if ((delimit_groups == DM_PREPEND)
+                      || (delimit_groups == DM_SEPARATE
+                          && !first_delimiter))
+                    putchar (delimiter);
+                }
+            }
 
-	  if (!match || output_later_repeated)
-	    {
-	      writeline (prevline, match, match_count);
-	      SWAP_LINES (prevline, thisline);
-	      prevfield = thisfield;
-	      prevlen = thislen;
-	      if (!match)
-		match_count = 0;
-	    }
-	}
+          if (!match || output_later_repeated)
+            {
+              writeline (prevline, match, match_count);
+              SWAP_LINES (prevline, thisline);
+              prevfield = thisfield;
+              prevlen = thislen;
+              if (!match)
+                match_count = 0;
+            }
+        }
 
       writeline (prevline, false, match_count);
     }
@@ -440,121 +440,121 @@ main (int argc, char **argv)
          obsolete.  */
 
       if (optc == -1
-	  || (posixly_correct && nfiles != 0)
-	  || ((optc = getopt_long (argc, argv,
-				   "-0123456789Dcdf:is:uw:z", longopts, NULL))
-	      == -1))
-	{
-	  if (argc <= optind)
-	    break;
-	  if (nfiles == 2)
-	    {
-	      error (0, 0, _("extra operand %s"), quote (argv[optind]));
-	      usage (EXIT_FAILURE);
-	    }
-	  file[nfiles++] = argv[optind++];
-	}
+          || (posixly_correct && nfiles != 0)
+          || ((optc = getopt_long (argc, argv,
+                                   "-0123456789Dcdf:is:uw:z", longopts, NULL))
+              == -1))
+        {
+          if (argc <= optind)
+            break;
+          if (nfiles == 2)
+            {
+              error (0, 0, _("extra operand %s"), quote (argv[optind]));
+              usage (EXIT_FAILURE);
+            }
+          file[nfiles++] = argv[optind++];
+        }
       else switch (optc)
-	{
-	case 1:
-	  {
-	    unsigned long int size;
-	    if (optarg[0] == '+'
-		&& posix2_version () < 200112
-		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
-		&& size <= SIZE_MAX)
-	      skip_chars = size;
-	    else if (nfiles == 2)
-	      {
-		error (0, 0, _("extra operand %s"), quote (optarg));
-		usage (EXIT_FAILURE);
-	      }
-	    else
-	      file[nfiles++] = optarg;
-	  }
-	  break;
+        {
+        case 1:
+          {
+            unsigned long int size;
+            if (optarg[0] == '+'
+                && posix2_version () < 200112
+                && xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
+                && size <= SIZE_MAX)
+              skip_chars = size;
+            else if (nfiles == 2)
+              {
+                error (0, 0, _("extra operand %s"), quote (optarg));
+                usage (EXIT_FAILURE);
+              }
+            else
+              file[nfiles++] = optarg;
+          }
+          break;
 
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-	  {
-	    if (skip_field_option_type == SFO_NEW)
-	      skip_fields = 0;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+          {
+            if (skip_field_option_type == SFO_NEW)
+              skip_fields = 0;
 
-	    if (!DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', size_t))
-	      skip_fields = SIZE_MAX;
+            if (!DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', size_t))
+              skip_fields = SIZE_MAX;
 
-	    skip_field_option_type = SFO_OBSOLETE;
-	  }
-	  break;
+            skip_field_option_type = SFO_OBSOLETE;
+          }
+          break;
 
-	case 'c':
-	  countmode = count_occurrences;
-	  break;
+        case 'c':
+          countmode = count_occurrences;
+          break;
 
-	case 'd':
-	  output_unique = false;
-	  break;
+        case 'd':
+          output_unique = false;
+          break;
 
-	case 'D':
-	  output_unique = false;
-	  output_later_repeated = true;
-	  if (optarg == NULL)
-	    delimit_groups = DM_NONE;
-	  else
-	    delimit_groups = XARGMATCH ("--all-repeated", optarg,
-					delimit_method_string,
-					delimit_method_map);
-	  break;
+        case 'D':
+          output_unique = false;
+          output_later_repeated = true;
+          if (optarg == NULL)
+            delimit_groups = DM_NONE;
+          else
+            delimit_groups = XARGMATCH ("--all-repeated", optarg,
+                                        delimit_method_string,
+                                        delimit_method_map);
+          break;
 
-	case 'f':
-	  skip_field_option_type = SFO_NEW;
-	  skip_fields = size_opt (optarg,
-				  N_("invalid number of fields to skip"));
-	  break;
+        case 'f':
+          skip_field_option_type = SFO_NEW;
+          skip_fields = size_opt (optarg,
+                                  N_("invalid number of fields to skip"));
+          break;
 
-	case 'i':
-	  ignore_case = true;
-	  break;
+        case 'i':
+          ignore_case = true;
+          break;
 
-	case 's':
-	  skip_chars = size_opt (optarg,
-				 N_("invalid number of bytes to skip"));
-	  break;
+        case 's':
+          skip_chars = size_opt (optarg,
+                                 N_("invalid number of bytes to skip"));
+          break;
 
-	case 'u':
-	  output_first_repeated = false;
-	  break;
+        case 'u':
+          output_first_repeated = false;
+          break;
 
-	case 'w':
-	  check_chars = size_opt (optarg,
-				  N_("invalid number of bytes to compare"));
-	  break;
+        case 'w':
+          check_chars = size_opt (optarg,
+                                  N_("invalid number of bytes to compare"));
+          break;
 
-	case 'z':
-	  delimiter = '\0';
-	  break;
+        case 'z':
+          delimiter = '\0';
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (countmode == count_occurrences && output_later_repeated)
     {
       error (0, 0,
-	   _("printing all duplicated lines and repeat counts is meaningless"));
+           _("printing all duplicated lines and repeat counts is meaningless"));
       usage (EXIT_FAILURE);
     }
 

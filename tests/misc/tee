@@ -28,12 +28,12 @@ nums=`seq 9` || framework_failure
 
 fail=0
 for n in 0 $nums; do
-	files=`seq $n`
-	rm -f $files
-	tee $files <sample >out || fail=1
-	for f in out $files; do
-		compare sample $f || fail=1
-	done
+        files=`seq $n`
+        rm -f $files
+        tee $files <sample >out || fail=1
+        for f in out $files; do
+                compare sample $f || fail=1
+        done
 done
 
 Exit $fail

@@ -58,17 +58,17 @@ my @Tests =
    # invalid missing command line argument (1)
    ['missing-arg1', $inputs[0], {EXIT=>1},
     {ERR => "$prog: missing operand after `a'\n"
-	. "Try `$prog --help' for more information.\n"}],
+        . "Try `$prog --help' for more information.\n"}],
 
    # invalid missing command line argument (both)
    ['missing-arg2', {EXIT=>1},
     {ERR => "$prog: missing operand\n"
-	. "Try `$prog --help' for more information.\n"}],
+        . "Try `$prog --help' for more information.\n"}],
 
    # invalid extra command line argument
    ['extra-arg', @inputs, 'no-such', {EXIT=>1},
     {ERR => "$prog: extra operand `no-such'\n"
-	. "Try `$prog --help' for more information.\n"}],
+        . "Try `$prog --help' for more information.\n"}],
 
    # out-of-order input
    ['ooo', {IN=>{a=>"1\n3"}}, {IN=>{b=>"3\n2"}}, {EXIT=>1},
@@ -88,13 +88,13 @@ my @Tests =
    ['ooo4', {IN=>{a=>"3\n1\n0"}}, {IN=>{b=>"3\n2\n0"}}, {EXIT=>1},
     {OUT => "\t\t3\n1\n0\n\t2\n\t0\n"},
     {ERR => "$prog: file 1 is not in sorted order\n".
-	    "$prog: file 2 is not in sorted order\n" }],
+            "$prog: file 2 is not in sorted order\n" }],
 
    # both inputs out-of-order on last pair
    ['ooo5', {IN=>{a=>"3\n1"}}, {IN=>{b=>"3\n2"}}, {EXIT=>1},
     {OUT => "\t\t3\n1\n\t2\n"},
     {ERR => "$prog: file 1 is not in sorted order\n".
-	    "$prog: file 2 is not in sorted order\n" }],
+            "$prog: file 2 is not in sorted order\n" }],
 
    # first input out-of-order extended
    ['ooo5b', {IN=>{a=>"0\n3\n1"}}, {IN=>{b=>"2\n3"}}, {EXIT=>1},

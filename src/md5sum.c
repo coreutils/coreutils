@@ -147,7 +147,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -156,26 +156,26 @@ Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "),
-	      program_name,
-	      DIGEST_TYPE_STRING,
-	      DIGEST_BITS);
+              program_name,
+              DIGEST_TYPE_STRING,
+              DIGEST_BITS);
       if (O_BINARY)
-	fputs (_("\
+        fputs (_("\
   -b, --binary            read in binary mode (default unless reading tty stdin)\n\
 "), stdout);
       else
-	fputs (_("\
+        fputs (_("\
   -b, --binary            read in binary mode\n\
 "), stdout);
       printf (_("\
   -c, --check             read %s sums from the FILEs and check them\n"),
-	      DIGEST_TYPE_STRING);
+              DIGEST_TYPE_STRING);
       if (O_BINARY)
-	fputs (_("\
+        fputs (_("\
   -t, --text              read in text mode (default if reading tty stdin)\n\
 "), stdout);
       else
-	fputs (_("\
+        fputs (_("\
   -t, --text              read in text mode (default)\n\
 "), stdout);
       fputs (_("\
@@ -194,7 +194,7 @@ The sums are computed as described in %s.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
-	      DIGEST_REFERENCE);
+              DIGEST_REFERENCE);
       emit_bug_reporting_address ();
     }
 
@@ -249,7 +249,7 @@ bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest, char **file_name
 
 static bool
 split_3 (char *s, size_t s_len,
-	 unsigned char **hex_digest, int *binary, char **file_name)
+         unsigned char **hex_digest, int *binary, char **file_name)
 {
   size_t i;
   bool escaped_filename = false;
@@ -264,12 +264,12 @@ split_3 (char *s, size_t s_len,
   if (strncmp (s + i, DIGEST_TYPE_STRING, algo_name_len) == 0)
     {
       if (strncmp (s + i + algo_name_len, " (", 2) == 0)
-	{
-	  *binary = 0;
-	  return bsd_split_3 (s +      i + algo_name_len + 2,
-			      s_len - (i + algo_name_len + 2),
-			      hex_digest, file_name);
-	}
+        {
+          *binary = 0;
+          return bsd_split_3 (s +      i + algo_name_len + 2,
+                              s_len - (i + algo_name_len + 2),
+                              hex_digest, file_name);
+        }
     }
 
   /* Ignore this line if it is too short.
@@ -306,45 +306,45 @@ split_3 (char *s, size_t s_len,
   if (escaped_filename)
     {
       /* Translate each `\n' string in the file name to a NEWLINE,
-	 and each `\\' string to a backslash.  */
+         and each `\\' string to a backslash.  */
 
       char *dst = &s[i];
 
       while (i < s_len)
-	{
-	  switch (s[i])
-	    {
-	    case '\\':
-	      if (i == s_len - 1)
-		{
-		  /* A valid line does not end with a backslash.  */
-		  return false;
-		}
-	      ++i;
-	      switch (s[i++])
-		{
-		case 'n':
-		  *dst++ = '\n';
-		  break;
-		case '\\':
-		  *dst++ = '\\';
-		  break;
-		default:
-		  /* Only `\' or `n' may follow a backslash.  */
-		  return false;
-		}
-	      break;
+        {
+          switch (s[i])
+            {
+            case '\\':
+              if (i == s_len - 1)
+                {
+                  /* A valid line does not end with a backslash.  */
+                  return false;
+                }
+              ++i;
+              switch (s[i++])
+                {
+                case 'n':
+                  *dst++ = '\n';
+                  break;
+                case '\\':
+                  *dst++ = '\\';
+                  break;
+                default:
+                  /* Only `\' or `n' may follow a backslash.  */
+                  return false;
+                }
+              break;
 
-	    case '\0':
-	      /* The file name may not contain a NUL.  */
-	      return false;
-	      break;
+            case '\0':
+              /* The file name may not contain a NUL.  */
+              return false;
+              break;
 
-	    default:
-	      *dst++ = s[i++];
-	      break;
-	    }
-	}
+            default:
+              *dst++ = s[i++];
+              break;
+            }
+        }
       *dst = '\0';
     }
   return true;
@@ -388,21 +388,21 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
       have_read_stdin = true;
       fp = stdin;
       if (O_BINARY && *binary)
-	{
-	  if (*binary < 0)
-	    *binary = ! isatty (STDIN_FILENO);
-	  if (*binary)
-	    xfreopen (NULL, "rb", stdin);
-	}
+        {
+          if (*binary < 0)
+            *binary = ! isatty (STDIN_FILENO);
+          if (*binary)
+            xfreopen (NULL, "rb", stdin);
+        }
     }
   else
     {
       fp = fopen (filename, (O_BINARY && *binary ? "rb" : "r"));
       if (fp == NULL)
-	{
-	  error (0, errno, "%s", filename);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", filename);
+          return false;
+        }
     }
 
   err = DIGEST_STREAM (fp, bin_result);
@@ -410,7 +410,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
     {
       error (0, errno, "%s", filename);
       if (fp != stdin)
-	fclose (fp);
+        fclose (fp);
       return false;
     }
 
@@ -448,10 +448,10 @@ digest_check (const char *checkfile_name)
     {
       checkfile_stream = fopen (checkfile_name, "r");
       if (checkfile_stream == NULL)
-	{
-	  error (0, errno, "%s", checkfile_name);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", checkfile_name);
+          return false;
+        }
     }
 
   line_number = 0;
@@ -466,82 +466,82 @@ digest_check (const char *checkfile_name)
 
       ++line_number;
       if (line_number == 0)
-	error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
-	       checkfile_name);
+        error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
+               checkfile_name);
 
       line_length = getline (&line, &line_chars_allocated, checkfile_stream);
       if (line_length <= 0)
-	break;
+        break;
 
       /* Ignore comment lines, which begin with a '#' character.  */
       if (line[0] == '#')
-	continue;
+        continue;
 
       /* Remove any trailing newline.  */
       if (line[line_length - 1] == '\n')
-	line[--line_length] = '\0';
+        line[--line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)
-	     && ! (is_stdin && STREQ (filename, "-"))
-	     && hex_digits (hex_digest)))
-	{
-	  if (warn)
-	    {
-	      error (0, 0,
-		     _("%s: %" PRIuMAX
-		       ": improperly formatted %s checksum line"),
-		     checkfile_name, line_number,
-		     DIGEST_TYPE_STRING);
-	    }
-	}
+             && ! (is_stdin && STREQ (filename, "-"))
+             && hex_digits (hex_digest)))
+        {
+          if (warn)
+            {
+              error (0, 0,
+                     _("%s: %" PRIuMAX
+                       ": improperly formatted %s checksum line"),
+                     checkfile_name, line_number,
+                     DIGEST_TYPE_STRING);
+            }
+        }
       else
-	{
-	  static const char bin2hex[] = { '0', '1', '2', '3',
-					  '4', '5', '6', '7',
-					  '8', '9', 'a', 'b',
-					  'c', 'd', 'e', 'f' };
-	  bool ok;
+        {
+          static const char bin2hex[] = { '0', '1', '2', '3',
+                                          '4', '5', '6', '7',
+                                          '8', '9', 'a', 'b',
+                                          'c', 'd', 'e', 'f' };
+          bool ok;
 
-	  ++n_properly_formatted_lines;
+          ++n_properly_formatted_lines;
 
-	  ok = digest_file (filename, &binary, bin_buffer);
+          ok = digest_file (filename, &binary, bin_buffer);
 
-	  if (!ok)
-	    {
-	      ++n_open_or_read_failures;
-	      if (!status_only)
-		{
-		  printf (_("%s: FAILED open or read\n"), filename);
-		  fflush (stdout);
-		}
-	    }
-	  else
-	    {
-	      size_t digest_bin_bytes = digest_hex_bytes / 2;
-	      size_t cnt;
-	      /* Compare generated binary number with text representation
-		 in check file.  Ignore case of hex digits.  */
-	      for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
-		{
-		  if (tolower (hex_digest[2 * cnt])
-		      != bin2hex[bin_buffer[cnt] >> 4]
-		      || (tolower (hex_digest[2 * cnt + 1])
-			  != (bin2hex[bin_buffer[cnt] & 0xf])))
-		    break;
-		}
-	      if (cnt != digest_bin_bytes)
-		++n_mismatched_checksums;
+          if (!ok)
+            {
+              ++n_open_or_read_failures;
+              if (!status_only)
+                {
+                  printf (_("%s: FAILED open or read\n"), filename);
+                  fflush (stdout);
+                }
+            }
+          else
+            {
+              size_t digest_bin_bytes = digest_hex_bytes / 2;
+              size_t cnt;
+              /* Compare generated binary number with text representation
+                 in check file.  Ignore case of hex digits.  */
+              for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
+                {
+                  if (tolower (hex_digest[2 * cnt])
+                      != bin2hex[bin_buffer[cnt] >> 4]
+                      || (tolower (hex_digest[2 * cnt + 1])
+                          != (bin2hex[bin_buffer[cnt] & 0xf])))
+                    break;
+                }
+              if (cnt != digest_bin_bytes)
+                ++n_mismatched_checksums;
 
-	      if (!status_only)
-		{
-		  if (cnt != digest_bin_bytes)
-		    printf ("%s: %s\n", filename, _("FAILED"));
-		  else if (!quiet)
-		    printf ("%s: %s\n", filename, _("OK"));
-		  fflush (stdout);
-		}
-	    }
-	}
+              if (!status_only)
+                {
+                  if (cnt != digest_bin_bytes)
+                    printf ("%s: %s\n", filename, _("FAILED"));
+                  else if (!quiet)
+                    printf ("%s: %s\n", filename, _("OK"));
+                  fflush (stdout);
+                }
+            }
+        }
     }
   while (!feof (checkfile_stream) && !ferror (checkfile_stream));
 
@@ -563,39 +563,39 @@ digest_check (const char *checkfile_name)
     {
       /* Warn if no tests are found.  */
       error (0, 0, _("%s: no properly formatted %s checksum lines found"),
-	     checkfile_name, DIGEST_TYPE_STRING);
+             checkfile_name, DIGEST_TYPE_STRING);
     }
   else
     {
       if (!status_only)
-	{
-	  if (n_open_or_read_failures != 0)
-	    error (0, 0,
-		   ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
-			     " listed file could not be read",
-			     "WARNING: %" PRIuMAX " of %" PRIuMAX
-			     " listed files could not be read",
-			     select_plural (n_properly_formatted_lines)),
-		   n_open_or_read_failures, n_properly_formatted_lines);
+        {
+          if (n_open_or_read_failures != 0)
+            error (0, 0,
+                   ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
+                             " listed file could not be read",
+                             "WARNING: %" PRIuMAX " of %" PRIuMAX
+                             " listed files could not be read",
+                             select_plural (n_properly_formatted_lines)),
+                   n_open_or_read_failures, n_properly_formatted_lines);
 
-	  if (n_mismatched_checksums != 0)
-	    {
-	      uintmax_t n_computed_checksums =
-		(n_properly_formatted_lines - n_open_or_read_failures);
-	      error (0, 0,
-		     ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
-			       " computed checksum did NOT match",
-			       "WARNING: %" PRIuMAX " of %" PRIuMAX
-			       " computed checksums did NOT match",
-			       select_plural (n_computed_checksums)),
-		     n_mismatched_checksums, n_computed_checksums);
-	    }
-	}
+          if (n_mismatched_checksums != 0)
+            {
+              uintmax_t n_computed_checksums =
+                (n_properly_formatted_lines - n_open_or_read_failures);
+              error (0, 0,
+                     ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
+                               " computed checksum did NOT match",
+                               "WARNING: %" PRIuMAX " of %" PRIuMAX
+                               " computed checksums did NOT match",
+                               select_plural (n_computed_checksums)),
+                     n_mismatched_checksums, n_computed_checksums);
+            }
+        }
     }
 
   return (n_properly_formatted_lines != 0
-	  && n_mismatched_checksums == 0
-	  && n_open_or_read_failures == 0);
+          && n_mismatched_checksums == 0
+          && n_open_or_read_failures == 0);
 }
 
 int
@@ -622,33 +622,33 @@ main (int argc, char **argv)
     switch (opt)
       {
       case 'b':
-	binary = 1;
-	break;
+        binary = 1;
+        break;
       case 'c':
-	do_check = true;
-	break;
+        do_check = true;
+        break;
       case STATUS_OPTION:
-	status_only = true;
-	warn = false;
-	quiet = false;
-	break;
+        status_only = true;
+        warn = false;
+        quiet = false;
+        break;
       case 't':
-	binary = 0;
-	break;
+        binary = 0;
+        break;
       case 'w':
-	status_only = false;
-	warn = true;
-	quiet = false;
-	break;
+        status_only = false;
+        warn = true;
+        quiet = false;
+        break;
       case QUIET_OPTION:
-	status_only = false;
-	warn = false;
-	quiet = true;
-	break;
+        status_only = false;
+        warn = false;
+        quiet = true;
+        break;
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
 
   min_digest_line_length = MIN_DIGEST_LINE_LENGTH;
@@ -657,7 +657,7 @@ main (int argc, char **argv)
   if (0 <= binary && do_check)
     {
       error (0, 0, _("the --binary and --text options are meaningless when "
-		     "verifying checksums"));
+                     "verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
@@ -693,53 +693,53 @@ main (int argc, char **argv)
       char *file = argv[optind];
 
       if (do_check)
-	ok &= digest_check (file);
+        ok &= digest_check (file);
       else
-	{
-	  int file_is_binary = binary;
+        {
+          int file_is_binary = binary;
 
-	  if (! digest_file (file, &file_is_binary, bin_buffer))
-	    ok = false;
-	  else
-	    {
-	      size_t i;
+          if (! digest_file (file, &file_is_binary, bin_buffer))
+            ok = false;
+          else
+            {
+              size_t i;
 
-	      /* Output a leading backslash if the file name contains
-		 a newline or backslash.  */
-	      if (strchr (file, '\n') || strchr (file, '\\'))
-		putchar ('\\');
+              /* Output a leading backslash if the file name contains
+                 a newline or backslash.  */
+              if (strchr (file, '\n') || strchr (file, '\\'))
+                putchar ('\\');
 
-	      for (i = 0; i < (digest_hex_bytes / 2); ++i)
-		printf ("%02x", bin_buffer[i]);
+              for (i = 0; i < (digest_hex_bytes / 2); ++i)
+                printf ("%02x", bin_buffer[i]);
 
-	      putchar (' ');
-	      if (file_is_binary)
-		putchar ('*');
-	      else
-		putchar (' ');
+              putchar (' ');
+              if (file_is_binary)
+                putchar ('*');
+              else
+                putchar (' ');
 
-	      /* Translate each NEWLINE byte to the string, "\\n",
-		 and each backslash to "\\\\".  */
-	      for (i = 0; i < strlen (file); ++i)
-		{
-		  switch (file[i])
-		    {
-		    case '\n':
-		      fputs ("\\n", stdout);
-		      break;
+              /* Translate each NEWLINE byte to the string, "\\n",
+                 and each backslash to "\\\\".  */
+              for (i = 0; i < strlen (file); ++i)
+                {
+                  switch (file[i])
+                    {
+                    case '\n':
+                      fputs ("\\n", stdout);
+                      break;
 
-		    case '\\':
-		      fputs ("\\\\", stdout);
-		      break;
+                    case '\\':
+                      fputs ("\\\\", stdout);
+                      break;
 
-		    default:
-		      putchar (file[i]);
-		      break;
-		    }
-		}
-	      putchar ('\n');
-	    }
-	}
+                    default:
+                      putchar (file[i]);
+                      break;
+                    }
+                }
+              putchar ('\n');
+            }
+        }
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)

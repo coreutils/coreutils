@@ -78,10 +78,10 @@ sub import {
     my ($sig) = @_;
     if ($$ == $original_pid and defined $dir)
       {
-	chmod_tree;
-	# Older versions of File::Temp lack this method.
-	exists &File::Temp::cleanup
-	  and &File::Temp::cleanup;
+        chmod_tree;
+        # Older versions of File::Temp lack this method.
+        exists &File::Temp::cleanup
+          and &File::Temp::cleanup;
       }
     $SIG{$sig} = 'DEFAULT';
     kill $sig, $$;

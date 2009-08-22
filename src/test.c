@@ -143,11 +143,11 @@ find_int (char const *string)
   if (ISDIGIT (*p++))
     {
       while (ISDIGIT (*p))
-	p++;
+        p++;
       while (isblank (to_uchar (*p)))
-	p++;
+        p++;
       if (!*p)
-	return number_start;
+        return number_start;
     }
 
   test_syntax_error (_("invalid integer %s"), quote (string));
@@ -174,9 +174,9 @@ static bool
 binop (char const *s)
 {
   return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
-	  (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
-	  (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
-	  (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
+          (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
+          (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
+          (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
 }
 
 /*
@@ -221,20 +221,20 @@ term (void)
       advance (true);
 
       for (nargs = 1;
-	   pos + nargs < argc && ! STREQ (argv[pos + nargs], ")");
-	   nargs++)
-	if (nargs == 4)
-	  {
-	    nargs = argc - pos;
-	    break;
-	  }
+           pos + nargs < argc && ! STREQ (argv[pos + nargs], ")");
+           nargs++)
+        if (nargs == 4)
+          {
+            nargs = argc - pos;
+            break;
+          }
 
       value = posixtest (nargs);
       if (argv[pos] == 0)
-	test_syntax_error (_("')' expected"), NULL);
+        test_syntax_error (_("')' expected"), NULL);
       else
         if (argv[pos][0] != ')' || argv[pos][1])
-	  test_syntax_error (_("')' expected, found %s"), argv[pos]);
+          test_syntax_error (_("')' expected, found %s"), argv[pos]);
       advance (false);
     }
 
@@ -248,9 +248,9 @@ term (void)
   else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][2] == '\0')
     {
       if (test_unop (argv[pos]))
-	value = unary_operator ();
+        value = unary_operator ();
       else
-	test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+        test_syntax_error (_("%s: unary operator expected"), argv[pos]);
     }
   else
     {
@@ -285,76 +285,76 @@ binary_operator (bool l_is_l)
     {
       /* check for eq, nt, and stuff */
       if ((((argv[op][1] == 'l' || argv[op][1] == 'g')
-	    && (argv[op][2] == 'e' || argv[op][2] == 't'))
-	   || (argv[op][1] == 'e' && argv[op][2] == 'q')
-	   || (argv[op][1] == 'n' && argv[op][2] == 'e'))
-	  && !argv[op][3])
-	{
-	  char lbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-	  char rbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-	  char const *l = (l_is_l
-			   ? umaxtostr (strlen (argv[op - 1]), lbuf)
-			   : find_int (argv[op - 1]));
-	  char const *r = (r_is_l
-			   ? umaxtostr (strlen (argv[op + 2]), rbuf)
-			   : find_int (argv[op + 1]));
-	  int cmp = strintcmp (l, r);
-	  bool xe_operator = (argv[op][2] == 'e');
-	  pos += 3;
-	  return (argv[op][1] == 'l' ? cmp < xe_operator
-		  : argv[op][1] == 'g' ? cmp > - xe_operator
-		  : (cmp != 0) == xe_operator);
-	}
+            && (argv[op][2] == 'e' || argv[op][2] == 't'))
+           || (argv[op][1] == 'e' && argv[op][2] == 'q')
+           || (argv[op][1] == 'n' && argv[op][2] == 'e'))
+          && !argv[op][3])
+        {
+          char lbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+          char rbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+          char const *l = (l_is_l
+                           ? umaxtostr (strlen (argv[op - 1]), lbuf)
+                           : find_int (argv[op - 1]));
+          char const *r = (r_is_l
+                           ? umaxtostr (strlen (argv[op + 2]), rbuf)
+                           : find_int (argv[op + 1]));
+          int cmp = strintcmp (l, r);
+          bool xe_operator = (argv[op][2] == 'e');
+          pos += 3;
+          return (argv[op][1] == 'l' ? cmp < xe_operator
+                  : argv[op][1] == 'g' ? cmp > - xe_operator
+                  : (cmp != 0) == xe_operator);
+        }
 
       switch (argv[op][1])
-	{
-	default:
-	  break;
+        {
+        default:
+          break;
 
-	case 'n':
-	  if (argv[op][2] == 't' && !argv[op][3])
-	    {
-	      /* nt - newer than */
-	      struct timespec lt, rt;
-	      bool le, re;
-	      pos += 3;
-	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-nt does not accept -l"), NULL);
-	      le = get_mtime (argv[op - 1], &lt);
-	      re = get_mtime (argv[op + 1], &rt);
-	      return le && (!re || timespec_cmp (lt, rt) > 0);
-	    }
-	  break;
+        case 'n':
+          if (argv[op][2] == 't' && !argv[op][3])
+            {
+              /* nt - newer than */
+              struct timespec lt, rt;
+              bool le, re;
+              pos += 3;
+              if (l_is_l | r_is_l)
+                test_syntax_error (_("-nt does not accept -l"), NULL);
+              le = get_mtime (argv[op - 1], &lt);
+              re = get_mtime (argv[op + 1], &rt);
+              return le && (!re || timespec_cmp (lt, rt) > 0);
+            }
+          break;
 
-	case 'e':
-	  if (argv[op][2] == 'f' && !argv[op][3])
-	    {
-	      /* ef - hard link? */
-	      pos += 3;
-	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-ef does not accept -l"), NULL);
-	      return (stat (argv[op - 1], &stat_buf) == 0
-		      && stat (argv[op + 1], &stat_spare) == 0
-		      && stat_buf.st_dev == stat_spare.st_dev
-		      && stat_buf.st_ino == stat_spare.st_ino);
-	    }
-	  break;
+        case 'e':
+          if (argv[op][2] == 'f' && !argv[op][3])
+            {
+              /* ef - hard link? */
+              pos += 3;
+              if (l_is_l | r_is_l)
+                test_syntax_error (_("-ef does not accept -l"), NULL);
+              return (stat (argv[op - 1], &stat_buf) == 0
+                      && stat (argv[op + 1], &stat_spare) == 0
+                      && stat_buf.st_dev == stat_spare.st_dev
+                      && stat_buf.st_ino == stat_spare.st_ino);
+            }
+          break;
 
-	case 'o':
-	  if ('t' == argv[op][2] && '\000' == argv[op][3])
-	    {
-	      /* ot - older than */
-	      struct timespec lt, rt;
-	      bool le, re;
-	      pos += 3;
-	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-ot does not accept -l"), NULL);
-	      le = get_mtime (argv[op - 1], &lt);
-	      re = get_mtime (argv[op + 1], &rt);
-	      return re && (!le || timespec_cmp (lt, rt) < 0);
-	    }
-	  break;
-	}
+        case 'o':
+          if ('t' == argv[op][2] && '\000' == argv[op][3])
+            {
+              /* ot - older than */
+              struct timespec lt, rt;
+              bool le, re;
+              pos += 3;
+              if (l_is_l | r_is_l)
+                test_syntax_error (_("-ot does not accept -l"), NULL);
+              le = get_mtime (argv[op - 1], &lt);
+              re = get_mtime (argv[op + 1], &rt);
+              return re && (!le || timespec_cmp (lt, rt) < 0);
+            }
+          break;
+        }
 
       /* FIXME: is this dead code? */
       test_syntax_error (_("unknown binary operator"), argv[op]);
@@ -389,9 +389,9 @@ unary_operator (void)
       return false;
 
       /* All of the following unary operators use unary_advance (), which
-	 checks to make sure that there is an argument, and then advances
-	 pos right past it.  This means that pos - 1 is the location of the
-	 argument. */
+         checks to make sure that there is an argument, and then advances
+         pos right past it.  This means that pos - 1 is the location of the
+         argument. */
 
     case 'a':			/* file exists in the file system? */
     case 'e':
@@ -413,49 +413,49 @@ unary_operator (void)
     case 'O':			/* File is owned by you? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && (geteuid () == stat_buf.st_uid));
+              && (geteuid () == stat_buf.st_uid));
 
     case 'G':			/* File is owned by your group? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && (getegid () == stat_buf.st_gid));
+              && (getegid () == stat_buf.st_gid));
 
     case 'f':			/* File is a file? */
       unary_advance ();
       /* Under POSIX, -f is true if the given file exists
-	 and is a regular file. */
+         and is a regular file. */
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISREG (stat_buf.st_mode));
+              && S_ISREG (stat_buf.st_mode));
 
     case 'd':			/* File is a directory? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISDIR (stat_buf.st_mode));
+              && S_ISDIR (stat_buf.st_mode));
 
     case 's':			/* File has something in it? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && 0 < stat_buf.st_size);
+              && 0 < stat_buf.st_size);
 
     case 'S':			/* File is a socket? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISSOCK (stat_buf.st_mode));
+              && S_ISSOCK (stat_buf.st_mode));
 
     case 'c':			/* File is character special? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISCHR (stat_buf.st_mode));
+              && S_ISCHR (stat_buf.st_mode));
 
     case 'b':			/* File is block special? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISBLK (stat_buf.st_mode));
+              && S_ISBLK (stat_buf.st_mode));
 
     case 'p':			/* File is a named pipe? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISFIFO (stat_buf.st_mode));
+              && S_ISFIFO (stat_buf.st_mode));
 
     case 'L':			/* Same as -h  */
       /*FALLTHROUGH*/
@@ -463,32 +463,32 @@ unary_operator (void)
     case 'h':			/* File is a symbolic link? */
       unary_advance ();
       return (lstat (argv[pos - 1], &stat_buf) == 0
-	      && S_ISLNK (stat_buf.st_mode));
+              && S_ISLNK (stat_buf.st_mode));
 
     case 'u':			/* File is setuid? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && (stat_buf.st_mode & S_ISUID));
+              && (stat_buf.st_mode & S_ISUID));
 
     case 'g':			/* File is setgid? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && (stat_buf.st_mode & S_ISGID));
+              && (stat_buf.st_mode & S_ISGID));
 
     case 'k':			/* File has sticky bit set? */
       unary_advance ();
       return (stat (argv[pos - 1], &stat_buf) == 0
-	      && (stat_buf.st_mode & S_ISVTX));
+              && (stat_buf.st_mode & S_ISVTX));
 
     case 't':			/* File (fd) is a terminal? */
       {
-	long int fd;
-	char const *arg;
-	unary_advance ();
-	arg = find_int (argv[pos - 1]);
-	errno = 0;
-	fd = strtol (arg, NULL, 10);
-	return (errno != ERANGE && 0 <= fd && fd <= INT_MAX && isatty (fd));
+        long int fd;
+        char const *arg;
+        unary_advance ();
+        arg = find_int (argv[pos - 1]);
+        errno = 0;
+        fd = strtol (arg, NULL, 10);
+        return (errno != ERANGE && 0 <= fd && fd <= INT_MAX && isatty (fd));
       }
 
     case 'n':			/* True if arg has some length. */
@@ -515,7 +515,7 @@ and (void)
     {
       value &= term ();
       if (! (pos < argc && STREQ (argv[pos], "-a")))
-	return value;
+        return value;
       advance (false);
     }
 }
@@ -534,7 +534,7 @@ or (void)
     {
       value |= and ();
       if (! (pos < argc && STREQ (argv[pos], "-o")))
-	return value;
+        return value;
       advance (false);
     }
 }
@@ -589,13 +589,13 @@ two_arguments (void)
       value = ! one_argument ();
     }
   else if (argv[pos][0] == '-'
-	   && argv[pos][1] != '\0'
-	   && argv[pos][2] == '\0')
+           && argv[pos][1] != '\0'
+           && argv[pos][2] == '\0')
     {
       if (test_unop (argv[pos]))
-	value = unary_operator ();
+        value = unary_operator ();
       else
-	test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+        test_syntax_error (_("%s: unary operator expected"), argv[pos]);
     }
   else
     beyond ();
@@ -636,37 +636,37 @@ posixtest (int nargs)
   switch (nargs)
     {
       case 1:
-	value = one_argument ();
-	break;
+        value = one_argument ();
+        break;
 
       case 2:
-	value = two_arguments ();
-	break;
+        value = two_arguments ();
+        break;
 
       case 3:
-	value = three_arguments ();
-	break;
+        value = three_arguments ();
+        break;
 
       case 4:
-	if (STREQ (argv[pos], "!"))
-	  {
-	    advance (true);
-	    value = !three_arguments ();
-	    break;
-	  }
-	if (STREQ (argv[pos], "(") && STREQ (argv[pos + 3], ")"))
-	  {
-	    advance (false);
-	    value = two_arguments ();
-	    advance (false);
-	    break;
-	  }
-	/* FALLTHROUGH */
+        if (STREQ (argv[pos], "!"))
+          {
+            advance (true);
+            value = !three_arguments ();
+            break;
+          }
+        if (STREQ (argv[pos], "(") && STREQ (argv[pos + 3], ")"))
+          {
+            advance (false);
+            value = two_arguments ();
+            advance (false);
+            break;
+          }
+        /* FALLTHROUGH */
       case 5:
       default:
-	if (nargs <= 0)
-	  abort ();
-	value = expr ();
+        if (nargs <= 0)
+          abort ();
+        value = expr ();
     }
 
   return (value);
@@ -679,7 +679,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       fputs (_("\
@@ -818,25 +818,25 @@ main (int margc, char **margv)
   if (LBRACKET)
     {
       /* Recognize --help or --version, but only when invoked in the
-	 "[" form, when the last argument is not "]".  Use direct
-	 parsing, rather than parse_long_options, to avoid accepting
-	 abbreviations.  POSIX allows "[ --help" and "[ --version" to
-	 have the usual GNU behavior, but it requires "test --help"
-	 and "test --version" to exit silently with status 0.  */
+         "[" form, when the last argument is not "]".  Use direct
+         parsing, rather than parse_long_options, to avoid accepting
+         abbreviations.  POSIX allows "[ --help" and "[ --version" to
+         have the usual GNU behavior, but it requires "test --help"
+         and "test --version" to exit silently with status 0.  */
       if (margc == 2)
-	{
-	  if (STREQ (margv[1], "--help"))
-	    usage (EXIT_SUCCESS);
+        {
+          if (STREQ (margv[1], "--help"))
+            usage (EXIT_SUCCESS);
 
-	  if (STREQ (margv[1], "--version"))
-	    {
-	      version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
-			   (char *) NULL);
-	      test_exit (EXIT_SUCCESS);
-	    }
-	}
+          if (STREQ (margv[1], "--version"))
+            {
+              version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+                           (char *) NULL);
+              test_exit (EXIT_SUCCESS);
+            }
+        }
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
-	test_syntax_error (_("missing `]'"), NULL);
+        test_syntax_error (_("missing `]'"), NULL);
 
       --margc;
     }

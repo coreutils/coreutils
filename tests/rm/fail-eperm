@@ -51,89 +51,89 @@ foreach my $dir (@dir_list)
   {
     if (-d $dir && -k _ && -r _ && -w _ && -x _)
       {
-	$found_dir = 1;
+        $found_dir = 1;
 
-	# Find a non-directory there that is owned by some other user.
-	opendir DIR_HANDLE, $dir
-	  or die "$ME: couldn't open $dir: $!\n";
+        # Find a non-directory there that is owned by some other user.
+        opendir DIR_HANDLE, $dir
+          or die "$ME: couldn't open $dir: $!\n";
 
-	foreach my $f (readdir DIR_HANDLE)
-	  {
-	    # Consider only names containing "safe" characters.
-	    $f =~ /^([-\@\w.]+)$/
-	      or next;
-	    $f = $1;    # untaint $f
+        foreach my $f (readdir DIR_HANDLE)
+          {
+            # Consider only names containing "safe" characters.
+            $f =~ /^([-\@\w.]+)$/
+              or next;
+            $f = $1;    # untaint $f
 
-	    my $target_file = "$dir/$f";
-	    $verbose
-	      and warn "$ME: considering $target_file\n";
+            my $target_file = "$dir/$f";
+            $verbose
+              and warn "$ME: considering $target_file\n";
 
-	    # Skip files owned by self, symlinks, and directories.
-	    # It's not technically necessary to skip symlinks, but it's simpler.
-	    # SVR4-like systems (e.g., Solaris 9) let you unlink files that
-	    # you can write, so skip writable files too.
-	    -l $target_file || -o _ || -d _ || -w _
-	      and next;
+            # Skip files owned by self, symlinks, and directories.
+            # It's not technically necessary to skip symlinks, but it's simpler.
+            # SVR4-like systems (e.g., Solaris 9) let you unlink files that
+            # you can write, so skip writable files too.
+            -l $target_file || -o _ || -d _ || -w _
+              and next;
 
-	    $found_file = 1;
+            $found_file = 1;
 
-	    # Invoke rm on this file and ensure that we get the
-	    # expected exit code and diagnostic.
-	    my $cmd = "$rm -f -- $target_file";
-	    open RM, "$cmd 2>&1 |"
-	      or die "$ME: cannot execute `$cmd'\n";
+            # Invoke rm on this file and ensure that we get the
+            # expected exit code and diagnostic.
+            my $cmd = "$rm -f -- $target_file";
+            open RM, "$cmd 2>&1 |"
+              or die "$ME: cannot execute `$cmd'\n";
 
-	    my $line = <RM>;
+            my $line = <RM>;
 
-	    close RM;
-	    my $rc = $?;
-	    # This test opportunistically looks for files that can't
-	    # be removed but those files may already have been removed
-	    # by their owners by the time we get to them.  It is a
-	    # race condition.  If so then the rm is successful and our
-	    # test is thwarted.  Detect this case and ignore.
-	    if ($rc == 0)
-	      {
-		next if ! -e $target_file;
-		die "$ME: unexpected exit status from `$cmd';\n"
-		  . "  got 0, expected 1\n";
-	      }
-	    if (0x80 < $rc)
-	      {
-		my $status = $rc >> 8;
-		$status == 1
-		  or die "$ME: unexpected exit status from `$cmd';\n"
-		    . "  got $status, expected 1\n";
-	      }
-	    else
-	      {
-		# Terminated by a signal.
-		my $sig_num = $rc & 0x7F;
-		die "$ME: command `$cmd' died with signal $sig_num\n";
-	      }
+            close RM;
+            my $rc = $?;
+            # This test opportunistically looks for files that can't
+            # be removed but those files may already have been removed
+            # by their owners by the time we get to them.  It is a
+            # race condition.  If so then the rm is successful and our
+            # test is thwarted.  Detect this case and ignore.
+            if ($rc == 0)
+              {
+                next if ! -e $target_file;
+                die "$ME: unexpected exit status from `$cmd';\n"
+                  . "  got 0, expected 1\n";
+              }
+            if (0x80 < $rc)
+              {
+                my $status = $rc >> 8;
+                $status == 1
+                  or die "$ME: unexpected exit status from `$cmd';\n"
+                    . "  got $status, expected 1\n";
+              }
+            else
+              {
+                # Terminated by a signal.
+                my $sig_num = $rc & 0x7F;
+                die "$ME: command `$cmd' died with signal $sig_num\n";
+              }
 
-	    my $exp = "rm: cannot remove `$target_file':";
-	    $line
-	      or die "$ME: no output from `$cmd';\n"
-		. "expected something like `$exp ...'\n";
+            my $exp = "rm: cannot remove `$target_file':";
+            $line
+              or die "$ME: no output from `$cmd';\n"
+                . "expected something like `$exp ...'\n";
 
-	    # Transform the actual diagnostic so that it starts with "rm:".
-	    # Depending on your system, it might be "rm:" already, or
-	    # "../../src/rm:".
-	    $line =~ s,^\Q$rm\E:,rm:,;
+            # Transform the actual diagnostic so that it starts with "rm:".
+            # Depending on your system, it might be "rm:" already, or
+            # "../../src/rm:".
+            $line =~ s,^\Q$rm\E:,rm:,;
 
-	    my $regex = quotemeta $exp;
-	    $line =~ /^$regex/
-	      or die "$ME: unexpected diagnostic from `$cmd';\n"
-		. "  got      $line"
-		. "  expected $exp ...\n";
+            my $regex = quotemeta $exp;
+            $line =~ /^$regex/
+              or die "$ME: unexpected diagnostic from `$cmd';\n"
+                . "  got      $line"
+                . "  expected $exp ...\n";
 
-	    last;
-	  }
+            last;
+          }
 
-	closedir DIR_HANDLE;
-	$found_file
-	  and last;
+        closedir DIR_HANDLE;
+        $found_file
+          and last;
       }
   }
 

@@ -45,11 +45,11 @@ sub normalize_to_cwd_relative ($$$)
     {
       $slash = index $dir, '/', $slash + 1;
       $slash <= -1
-	and die "$ME: $dir does not contain old CWD\n";
+        and die "$ME: $dir does not contain old CWD\n";
       my $dir_prefix = $slash ? substr ($dir, 0, $slash) : '/';
       my ($d, $i) = (stat $dir_prefix)[0, 1];
       $d == $dev && $i == $ino
-	and return substr $dir, $slash + 1;
+        and return substr $dir, $slash + 1;
     }
 }
 

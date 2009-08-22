@@ -2,4 +2,4 @@
 
 FTS *
 xfts_open (char * const *, int options,
-	   int (*) (const FTSENT **, const FTSENT **));
+           int (*) (const FTSENT **, const FTSENT **));

@@ -68,13 +68,13 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
       char buf[BUFSIZ];
       char *b = fgets (buf, BUFSIZ, fp);
       if (b == buf)
-	{
-	  char *end_ptr;
-	  double upsecs = c_strtod (buf, &end_ptr);
-	  if (buf != end_ptr)
-	    uptime = (0 <= upsecs && upsecs < TYPE_MAXIMUM (time_t)
-		      ? upsecs : -1);
-	}
+        {
+          char *end_ptr;
+          double upsecs = c_strtod (buf, &end_ptr);
+          if (buf != end_ptr)
+            uptime = (0 <= upsecs && upsecs < TYPE_MAXIMUM (time_t)
+                      ? upsecs : -1);
+        }
 
       fclose (fp);
     }
@@ -108,7 +108,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
     {
       entries += IS_USER_PROCESS (this);
       if (UT_TYPE_BOOT_TIME (this))
-	boot_time = UT_TIME_MEMBER (this);
+        boot_time = UT_TIME_MEMBER (this);
       ++this;
     }
 #endif
@@ -118,7 +118,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 #endif
     {
       if (boot_time == 0)
-	error (EXIT_FAILURE, errno, _("couldn't get boot time"));
+        error (EXIT_FAILURE, errno, _("couldn't get boot time"));
       uptime = time_now - boot_time;
     }
   updays = uptime / 86400;
@@ -137,15 +137,15 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   else
     {
       if (0 < updays)
-	printf (ngettext ("up %ld day %2d:%02d,  ",
-			  "up %ld days %2d:%02d,  ",
-			  select_plural (updays)),
-		updays, uphours, upmins);
+        printf (ngettext ("up %ld day %2d:%02d,  ",
+                          "up %ld days %2d:%02d,  ",
+                          select_plural (updays)),
+                updays, uphours, upmins);
       else
-	printf ("up  %2d:%02d,  ", uphours, upmins);
+        printf ("up  %2d:%02d,  ", uphours, upmins);
     }
   printf (ngettext ("%lu user", "%lu users", entries),
-	  (unsigned long int) entries);
+          (unsigned long int) entries);
 
 #if defined HAVE_GETLOADAVG || defined C_GETLOADAVG
   loads = getloadavg (avg, 3);
@@ -158,13 +158,13 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   else
     {
       if (loads > 0)
-	printf (_(",  load average: %.2f"), avg[0]);
+        printf (_(",  load average: %.2f"), avg[0]);
       if (loads > 1)
-	printf (", %.2f", avg[1]);
+        printf (", %.2f", avg[1]);
       if (loads > 2)
-	printf (", %.2f", avg[2]);
+        printf (", %.2f", avg[2]);
       if (loads > 0)
-	putchar ('\n');
+        putchar ('\n');
     }
 }
 
@@ -191,7 +191,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
@@ -201,9 +201,9 @@ the number of users on the system, and the average number of jobs\n\
 in the run queue over the last 1, 5 and 15 minutes."));
 #ifdef __linux__
       /* It would be better to introduce a configure test for this,
-	 but such a test is hard to write.  For the moment then, we
-	 have a hack which depends on the preprocessor used at compile
-	 time to tell us what the running kernel is.  Ugh.  */
+         but such a test is hard to write.  For the moment then, we
+         have a hack which depends on the preprocessor used at compile
+         time to tell us what the running kernel is.  Ugh.  */
       printf(_("  \
 Processes in\n\
 an uninterruptible sleep state also contribute to the load average.\n"));
@@ -213,7 +213,7 @@ an uninterruptible sleep state also contribute to the load average.\n"));
       printf (_("\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n"),
-	      UTMP_FILE, WTMP_FILE);
+              UTMP_FILE, WTMP_FILE);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -233,7 +233,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 

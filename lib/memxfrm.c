@@ -40,7 +40,7 @@
 
 size_t
 memxfrm (char *restrict dest, size_t destsize,
-	 char *restrict src, size_t srcsize)
+         char *restrict src, size_t srcsize)
 {
 #if HAVE_STRXFRM
 
@@ -59,33 +59,33 @@ memxfrm (char *restrict dest, size_t destsize,
       errno = 0;
       result += strxfrm (dest + di, src + si, destsize - di) + 1;
       if (errno != 0)
-	break;
+        break;
       if (result <= result0)
-	{
-	  errno = ERANGE;
-	  break;
-	}
+        {
+          errno = ERANGE;
+          break;
+        }
 
       if (result == destsize + 1 && si + slen == srcsize)
-	{
-	  /* The destination is exactly the right size, but strxfrm wants
-	     room for a trailing null.  Work around the problem with a
-	     temporary buffer.  */
-	  size_t bufsize = destsize - di + 1;
-	  char stackbuf[4000];
-	  char *buf = stackbuf;
-	  if (sizeof stackbuf < bufsize)
-	    {
-	      buf = malloc (bufsize);
-	      if (! buf)
-		break;
-	    }
-	  strxfrm (buf, src + si, bufsize);
-	  memcpy (dest + di, buf, destsize - di);
-	  if (sizeof stackbuf < bufsize)
-	    free (buf);
-	  errno = 0;
-	}
+        {
+          /* The destination is exactly the right size, but strxfrm wants
+             room for a trailing null.  Work around the problem with a
+             temporary buffer.  */
+          size_t bufsize = destsize - di + 1;
+          char stackbuf[4000];
+          char *buf = stackbuf;
+          if (sizeof stackbuf < bufsize)
+            {
+              buf = malloc (bufsize);
+              if (! buf)
+                break;
+            }
+          strxfrm (buf, src + si, bufsize);
+          memcpy (dest + di, buf, destsize - di);
+          if (sizeof stackbuf < bufsize)
+            free (buf);
+          errno = 0;
+        }
 
       di = (result < destsize ? result : destsize);
       si += slen + 1;

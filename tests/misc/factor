@@ -79,14 +79,14 @@ foreach $t (@Tests)
     # Don't fiddle with expected OUT string if there's a nonzero exit status.
     foreach my $e (@$t)
       {
-	ref $e eq 'HASH' && exists $e->{EXIT} && $e->{EXIT}
-	  and next Test;
+        ref $e eq 'HASH' && exists $e->{EXIT} && $e->{EXIT}
+          and next Test;
       }
 
     foreach my $e (@$t)
       {
-	ref $e eq 'HASH' && exists $e->{OUT}
-	  and $e->{OUT} = "$arg1: $e->{OUT}\n"
+        ref $e eq 'HASH' && exists $e->{OUT}
+          and $e->{OUT} = "$arg1: $e->{OUT}\n"
       }
   }
 

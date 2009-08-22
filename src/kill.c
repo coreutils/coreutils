@@ -52,8 +52,8 @@
 # endif
 # if HAVE_DECL_SYS_SIGLIST || defined sys_siglist
 #  define strsignal(signum) (0 <= (signum) && (signum) <= SIGNUM_BOUND \
-			     ? sys_siglist[signum] \
-			     : 0)
+                             ? sys_siglist[signum] \
+                             : 0)
 # endif
 # ifndef strsignal
 #  define strsignal(signum) 0
@@ -81,7 +81,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -89,7 +89,7 @@ Usage: %s [-s SIGNAL | -SIGNAL] PID...\n\
   or:  %s -l [SIGNAL]...\n\
   or:  %s -t [SIGNAL]...\n\
 "),
-	      program_name, program_name, program_name);
+              program_name, program_name, program_name);
       fputs (_("\
 Send signals to processes, or list signals.\n\
 \n\
@@ -122,11 +122,11 @@ PID is an integer; if negative it identifies a process group.\n\
 
 static void
 print_table_row (unsigned int num_width, int signum,
-		 unsigned int name_width, char const *signame)
+                 unsigned int name_width, char const *signame)
 {
   char const *description = strsignal (signum);
   printf ("%*d %-*s %s\n", num_width, signum, name_width, signame,
-	  description ? description : "?");
+          description ? description : "?");
 }
 
 /* Print a list of signal names.  If TABLE, print a table.
@@ -147,51 +147,51 @@ list_signals (bool table, char *const *argv)
       /* Compute the maximum width of a signal number.  */
       unsigned int num_width = 1;
       for (signum = 1; signum <= SIGNUM_BOUND / 10; signum *= 10)
-	num_width++;
+        num_width++;
 
       /* Compute the maximum width of a signal name.  */
       for (signum = 1; signum <= SIGNUM_BOUND; signum++)
-	if (sig2str (signum, signame) == 0)
-	  {
-	    size_t len = strlen (signame);
-	    if (name_width < len)
-	      name_width = len;
-	  }
+        if (sig2str (signum, signame) == 0)
+          {
+            size_t len = strlen (signame);
+            if (name_width < len)
+              name_width = len;
+          }
 
       if (argv)
-	for (; *argv; argv++)
-	  {
-	    signum = operand2sig (*argv, signame);
-	    if (signum < 0)
-	      status = EXIT_FAILURE;
-	    else
-	      print_table_row (num_width, signum, name_width, signame);
-	  }
+        for (; *argv; argv++)
+          {
+            signum = operand2sig (*argv, signame);
+            if (signum < 0)
+              status = EXIT_FAILURE;
+            else
+              print_table_row (num_width, signum, name_width, signame);
+          }
       else
-	for (signum = 1; signum <= SIGNUM_BOUND; signum++)
-	  if (sig2str (signum, signame) == 0)
-	    print_table_row (num_width, signum, name_width, signame);
+        for (signum = 1; signum <= SIGNUM_BOUND; signum++)
+          if (sig2str (signum, signame) == 0)
+            print_table_row (num_width, signum, name_width, signame);
     }
   else
     {
       if (argv)
-	for (; *argv; argv++)
-	  {
-	    signum = operand2sig (*argv, signame);
-	    if (signum < 0)
-	      status = EXIT_FAILURE;
-	    else
-	      {
-		if (ISDIGIT (**argv))
-		  puts (signame);
-		else
-		  printf ("%d\n", signum);
-	      }
-	  }
+        for (; *argv; argv++)
+          {
+            signum = operand2sig (*argv, signame);
+            if (signum < 0)
+              status = EXIT_FAILURE;
+            else
+              {
+                if (ISDIGIT (**argv))
+                  puts (signame);
+                else
+                  printf ("%d\n", signum);
+              }
+          }
       else
-	for (signum = 1; signum <= SIGNUM_BOUND; signum++)
-	  if (sig2str (signum, signame) == 0)
-	    puts (signame);
+        for (signum = 1; signum <= SIGNUM_BOUND; signum++)
+          if (sig2str (signum, signame) == 0)
+            puts (signame);
     }
 
   return status;
@@ -213,15 +213,15 @@ send_signals (int signum, char *const *argv)
       pid_t pid = n;
 
       if (errno == ERANGE || pid != n || arg == endp || *endp)
-	{
-	  error (0, 0, _("%s: invalid process id"), arg);
-	  status = EXIT_FAILURE;
-	}
+        {
+          error (0, 0, _("%s: invalid process id"), arg);
+          status = EXIT_FAILURE;
+        }
       else if (kill (pid, signum) != 0)
-	{
-	  error (0, errno, "%s", arg);
-	  status = EXIT_FAILURE;
-	}
+        {
+          error (0, errno, "%s", arg);
+          status = EXIT_FAILURE;
+        }
     }
   while ((arg = *++argv));
 
@@ -246,61 +246,61 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
-	 != -1)
+         != -1)
     switch (optc)
       {
       case '0': case '1': case '2': case '3': case '4':
       case '5': case '6': case '7': case '8': case '9':
-	if (optind != 2)
-	  {
-	    /* This option is actually a process-id.  */
-	    optind--;
-	    goto no_more_options;
-	  }
-	/* Fall through.  */
+        if (optind != 2)
+          {
+            /* This option is actually a process-id.  */
+            optind--;
+            goto no_more_options;
+          }
+        /* Fall through.  */
       case 'A': case 'B': case 'C': case 'D': case 'E':
       case 'F': case 'G': case 'H': case 'I': case 'J':
       case 'K': case 'L': case 'M': case 'N': case 'O':
       case 'P': case 'Q': case 'R': case 'S': case 'T':
       case 'U': case 'V': case 'W': case 'X': case 'Y':
       case 'Z':
-	if (! optarg)
-	  optarg = argv[optind - 1] + strlen (argv[optind - 1]);
-	if (optarg != argv[optind - 1] + 2)
-	  {
-	    error (0, 0, _("invalid option -- %c"), optc);
-	    usage (EXIT_FAILURE);
-	  }
-	optarg--;
-	/* Fall through.  */
+        if (! optarg)
+          optarg = argv[optind - 1] + strlen (argv[optind - 1]);
+        if (optarg != argv[optind - 1] + 2)
+          {
+            error (0, 0, _("invalid option -- %c"), optc);
+            usage (EXIT_FAILURE);
+          }
+        optarg--;
+        /* Fall through.  */
       case 'n': /* -n is not documented, but is for Bash compatibility.  */
       case 's':
-	if (0 <= signum)
-	  {
-	    error (0, 0, _("%s: multiple signals specified"), optarg);
-	    usage (EXIT_FAILURE);
-	  }
-	signum = operand2sig (optarg, signame);
-	if (signum < 0)
-	  usage (EXIT_FAILURE);
-	break;
+        if (0 <= signum)
+          {
+            error (0, 0, _("%s: multiple signals specified"), optarg);
+            usage (EXIT_FAILURE);
+          }
+        signum = operand2sig (optarg, signame);
+        if (signum < 0)
+          usage (EXIT_FAILURE);
+        break;
 
       case 't':
-	table = true;
-	/* Fall through.  */
+        table = true;
+        /* Fall through.  */
       case 'l':
-	if (list)
-	  {
-	    error (0, 0, _("multiple -l or -t options specified"));
-	    usage (EXIT_FAILURE);
-	  }
-	list = true;
-	break;
+        if (list)
+          {
+            error (0, 0, _("multiple -l or -t options specified"));
+            usage (EXIT_FAILURE);
+          }
+        list = true;
+        break;
 
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
  no_more_options:;
 
@@ -319,6 +319,6 @@ main (int argc, char **argv)
     }
 
   return (list
-	  ? list_signals (table, optind < argc ? argv + optind : NULL)
-	  : send_signals (signum, argv + optind));
+          ? list_signals (table, optind < argc ? argv + optind : NULL)
+          : send_signals (signum, argv + optind));
 }

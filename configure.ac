@@ -24,8 +24,8 @@ AC_PREREQ([2.61])
 # indicates that it is built from the 219th delta (in _some_ repository)
 # following the v6.9 tag, and that 58ddd is a prefix of the commit SHA1.
 AC_INIT([GNU coreutils],
-	m4_esyscmd([build-aux/git-version-gen .tarball-version]),
-	[bug-coreutils@gnu.org])
+        m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+        [bug-coreutils@gnu.org])
 
 AC_CONFIG_SRCDIR([src/ls.c])
 
@@ -47,7 +47,7 @@ coreutils_MACROS
 
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings],
-		  [turn on lots of GCC warnings (for developers)])],
+                  [turn on lots of GCC warnings (for developers)])],
   [case $enableval in
      yes|no) ;;
      *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
@@ -122,11 +122,11 @@ AC_FUNC_FORK
 
 optional_bin_progs=
 AC_CHECK_FUNCS([uname],
-	gl_ADD_PROG([optional_bin_progs], [uname]))
+        gl_ADD_PROG([optional_bin_progs], [uname]))
 AC_CHECK_FUNCS([chroot],
-	gl_ADD_PROG([optional_bin_progs], [chroot]))
+        gl_ADD_PROG([optional_bin_progs], [chroot]))
 AC_CHECK_FUNCS([gethostid],
-	gl_ADD_PROG([optional_bin_progs], [hostid]))
+        gl_ADD_PROG([optional_bin_progs], [hostid]))
 
 gl_WINSIZE_IN_PTEM
 
@@ -168,9 +168,9 @@ int main()
 [# If we have tzset, assume the worst when cross-compiling.
 utils_cv_localtime_cache=yes])
 else
-	# If we lack tzset, report that localtime does not cache TZ,
-	# since we can't invalidate the cache if we don't have tzset.
-	utils_cv_localtime_cache=no
+        # If we lack tzset, report that localtime does not cache TZ,
+        # since we can't invalidate the cache if we don't have tzset.
+        utils_cv_localtime_cache=no
 fi])dnl
 AC_MSG_RESULT([$utils_cv_localtime_cache])
 if test $utils_cv_localtime_cache = yes; then
@@ -197,7 +197,7 @@ AC_CACHE_CHECK([for 3-argument setpriority function],
   [AC_LINK_IFELSE(
     [AC_LANG_PROGRAM(
        [[#include <sys/time.h>
-	 #include <sys/resource.h>
+         #include <sys/resource.h>
        ]],
        [[setpriority (0, 0, 0);]])],
     [utils_cv_func_setpriority=yes],
@@ -374,8 +374,8 @@ case $t in
   $no_install_progs_default) ;;
   *) AC_MSG_ERROR([[internal error: g'l_INCLUDE_EXCLUDE_PROG's 2nd arg, $t,
                    does not match the list of default-not-installed programs
-		   ($no_install_progs_default) also recorded in $mk]],
-		   1) ;;
+                   ($no_install_progs_default) also recorded in $mk]],
+                   1) ;;
 esac
 
 # Given the name of a variable containing a space-separated list of

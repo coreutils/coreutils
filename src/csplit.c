@@ -346,7 +346,7 @@ record_line_starts (struct buffer_record *b)
     {
       line_end = memchr (line_start, '\n', bytes_left);
       if (line_end == NULL)
-	break;
+        break;
       line_length = line_end - line_start + 1;
       keep_new_line (b, line_start, line_length);
       bytes_left -= line_length;
@@ -358,12 +358,12 @@ record_line_starts (struct buffer_record *b)
   if (bytes_left)
     {
       if (have_read_eof)
-	{
-	  keep_new_line (b, line_start, bytes_left);
-	  lines++;
-	}
+        {
+          keep_new_line (b, line_start, bytes_left);
+          lines++;
+        }
       else
-	save_to_hold_area (xmemdup (line_start, bytes_left), bytes_left);
+        save_to_hold_area (xmemdup (line_start, bytes_left), bytes_left);
     }
 
   b->num_lines = lines;
@@ -438,7 +438,7 @@ save_buffer (struct buffer_record *buf)
   else
     {
       for (p = head; p->next; p = p->next)
-	/* Do nothing. */ ;
+        /* Do nothing. */ ;
       p->next = buf;
     }
 }
@@ -481,25 +481,25 @@ load_buffer (void)
 
       /* First check the `holding' area for a partial line. */
       if (hold_count)
-	{
-	  memcpy (p, hold_area, hold_count);
-	  p += hold_count;
-	  b->bytes_used += hold_count;
-	  bytes_avail -= hold_count;
-	  hold_count = 0;
-	}
+        {
+          memcpy (p, hold_area, hold_count);
+          p += hold_count;
+          b->bytes_used += hold_count;
+          bytes_avail -= hold_count;
+          hold_count = 0;
+        }
 
       b->bytes_used += read_input (p, bytes_avail);
 
       lines_found = record_line_starts (b);
       if (!lines_found)
-	free_buffer (b);
+        free_buffer (b);
 
       if (lines_found || have_read_eof)
-	break;
+        break;
 
       if (xalloc_oversized (2, b->bytes_alloc))
-	xalloc_die ();
+        xalloc_die ();
       bytes_wanted = 2 * b->bytes_alloc;
       free_buffer (b);
       free (b);
@@ -563,13 +563,13 @@ remove_line (void)
       /* Go on to the next line record. */
       head->curr_line = l->next;
       if (head->curr_line == NULL || head->curr_line->used == 0)
-	{
-	  /* Go on to the next data block.
-	     but first record the current one so we can free it
-	     once the line we're returning has been processed.  */
-	  prev_buf = head;
-	  head = head->next;
-	}
+        {
+          /* Go on to the next data block.
+             but first record the current one so we can free it
+             once the line we're returning has been processed.  */
+          prev_buf = head;
+          head = head->next;
+        }
     }
 
   return line;
@@ -592,23 +592,23 @@ find_line (uintmax_t linenum)
   for (b = head;;)
     {
       if (linenum < b->start_line + b->num_lines)
-	{
-	  /* The line is in this buffer. */
-	  struct line *l;
-	  size_t offset;	/* How far into the buffer the line is. */
+        {
+          /* The line is in this buffer. */
+          struct line *l;
+          size_t offset;	/* How far into the buffer the line is. */
 
-	  l = b->line_start;
-	  offset = linenum - b->start_line;
-	  /* Find the control record. */
-	  while (offset >= CTRL_SIZE)
-	    {
-	      l = l->next;
-	      offset -= CTRL_SIZE;
-	    }
-	  return &l->starts[offset];
-	}
+          l = b->line_start;
+          offset = linenum - b->start_line;
+          /* Find the control record. */
+          while (offset >= CTRL_SIZE)
+            {
+              l = l->next;
+              offset -= CTRL_SIZE;
+            }
+          return &l->starts[offset];
+        }
       if (b->next == NULL && !load_buffer ())
-	return NULL;
+        return NULL;
       b = b->next;		/* Try the next data block. */
     }
 }
@@ -657,12 +657,12 @@ write_to_file (uintmax_t last_line, bool ignore, int argnum)
     {
       line = remove_line ();
       if (line == NULL)
-	{
-	  error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
-	  cleanup_fatal ();
-	}
+        {
+          error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
+          cleanup_fatal ();
+        }
       if (!ignore)
-	save_line_to_file (line);
+        save_line_to_file (line);
     }
 }
 
@@ -688,7 +688,7 @@ handle_line_error (const struct control *p, uintmax_t repetition)
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
   fprintf (stderr, _("%s: %s: line number out of range"),
-	   program_name, quote (umaxtostr (p->lines_required, buf)));
+           program_name, quote (umaxtostr (p->lines_required, buf)));
   if (repetition)
     fprintf (stderr, _(" on repetition %s\n"), umaxtostr (repetition, buf));
   else
@@ -717,7 +717,7 @@ process_line_count (const struct control *p, uintmax_t repetition)
     {
       line = remove_line ();
       if (line == NULL)
-	handle_line_error (p, repetition);
+        handle_line_error (p, repetition);
       save_line_to_file (line);
     }
 
@@ -734,7 +734,7 @@ static void
 regexp_error (struct control *p, uintmax_t repetition, bool ignore)
 {
   fprintf (stderr, _("%s: %s: match not found"),
-	   program_name, quote (global_argv[p->argnum]));
+           program_name, quote (global_argv[p->argnum]));
 
   if (repetition)
     {
@@ -774,75 +774,75 @@ process_regexp (struct control *p, uintmax_t repetition)
   if (p->offset >= 0)
     {
       for (;;)
-	{
-	  line = find_line (++current_line);
-	  if (line == NULL)
-	    {
-	      if (p->repeat_forever)
-		{
-		  if (!ignore)
-		    {
-		      dump_rest_of_file ();
-		      close_output_file ();
-		    }
-		  exit (EXIT_SUCCESS);
-		}
-	      else
-		regexp_error (p, repetition, ignore);
-	    }
-	  line_len = line->len;
-	  if (line->str[line_len - 1] == '\n')
-	    line_len--;
-	  ret = re_search (&p->re_compiled, line->str, line_len,
-			   0, line_len, NULL);
-	  if (ret == -2)
-	    {
-	      error (0, 0, _("error in regular expression search"));
-	      cleanup_fatal ();
-	    }
-	  if (ret == -1)
-	    {
-	      line = remove_line ();
-	      if (!ignore)
-		save_line_to_file (line);
-	    }
-	  else
-	    break;
-	}
+        {
+          line = find_line (++current_line);
+          if (line == NULL)
+            {
+              if (p->repeat_forever)
+                {
+                  if (!ignore)
+                    {
+                      dump_rest_of_file ();
+                      close_output_file ();
+                    }
+                  exit (EXIT_SUCCESS);
+                }
+              else
+                regexp_error (p, repetition, ignore);
+            }
+          line_len = line->len;
+          if (line->str[line_len - 1] == '\n')
+            line_len--;
+          ret = re_search (&p->re_compiled, line->str, line_len,
+                           0, line_len, NULL);
+          if (ret == -2)
+            {
+              error (0, 0, _("error in regular expression search"));
+              cleanup_fatal ();
+            }
+          if (ret == -1)
+            {
+              line = remove_line ();
+              if (!ignore)
+                save_line_to_file (line);
+            }
+          else
+            break;
+        }
     }
   else
     {
       /* Buffer the lines. */
       for (;;)
-	{
-	  line = find_line (++current_line);
-	  if (line == NULL)
-	    {
-	      if (p->repeat_forever)
-		{
-		  if (!ignore)
-		    {
-		      dump_rest_of_file ();
-		      close_output_file ();
-		    }
-		  exit (EXIT_SUCCESS);
-		}
-	      else
-		regexp_error (p, repetition, ignore);
-	    }
-	  line_len = line->len;
-	  if (line->str[line_len - 1] == '\n')
-	    line_len--;
-	  ret = re_search (&p->re_compiled, line->str, line_len,
-			   0, line_len, NULL);
-	  if (ret == -2)
-	    {
-	      error (0, 0, _("error in regular expression search"));
-	      cleanup_fatal ();
-	    }
-	  if (ret != -1)
-	    break;
-	}
+        {
+          line = find_line (++current_line);
+          if (line == NULL)
+            {
+              if (p->repeat_forever)
+                {
+                  if (!ignore)
+                    {
+                      dump_rest_of_file ();
+                      close_output_file ();
+                    }
+                  exit (EXIT_SUCCESS);
+                }
+              else
+                regexp_error (p, repetition, ignore);
+            }
+          line_len = line->len;
+          if (line->str[line_len - 1] == '\n')
+            line_len--;
+          ret = re_search (&p->re_compiled, line->str, line_len,
+                           0, line_len, NULL);
+          if (ret == -2)
+            {
+              error (0, 0, _("error in regular expression search"));
+              cleanup_fatal ();
+            }
+          if (ret != -1)
+            break;
+        }
     }
 
   /* Account for any offset from this regexp. */
@@ -868,17 +868,17 @@ split_file (void)
     {
       uintmax_t j;
       if (controls[i].regexpr)
-	{
-	  for (j = 0; (controls[i].repeat_forever
-		       || j <= controls[i].repeat); j++)
-	    process_regexp (&controls[i], j);
-	}
+        {
+          for (j = 0; (controls[i].repeat_forever
+                       || j <= controls[i].repeat); j++)
+            process_regexp (&controls[i], j);
+        }
       else
-	{
-	  for (j = 0; (controls[i].repeat_forever
-		       || j <= controls[i].repeat); j++)
-	    process_line_count (&controls[i], j);
-	}
+        {
+          for (j = 0; (controls[i].repeat_forever
+                       || j <= controls[i].repeat); j++)
+            process_line_count (&controls[i], j);
+        }
     }
 
   create_output_file ();
@@ -946,7 +946,7 @@ delete_all_files (bool in_signal_handler)
     {
       const char *name = make_filename (i);
       if (unlink (name) != 0 && !in_signal_handler)
-	error (0, errno, "%s", name);
+        error (0, errno, "%s", name);
     }
 
   files_created = 0;
@@ -961,41 +961,41 @@ close_output_file (void)
   if (output_stream)
     {
       if (ferror (output_stream))
-	{
-	  error (0, 0, _("write error for %s"), quote (output_filename));
-	  output_stream = NULL;
-	  cleanup_fatal ();
-	}
+        {
+          error (0, 0, _("write error for %s"), quote (output_filename));
+          output_stream = NULL;
+          cleanup_fatal ();
+        }
       if (fclose (output_stream) != 0)
-	{
-	  error (0, errno, "%s", output_filename);
-	  output_stream = NULL;
-	  cleanup_fatal ();
-	}
+        {
+          error (0, errno, "%s", output_filename);
+          output_stream = NULL;
+          cleanup_fatal ();
+        }
       if (bytes_written == 0 && elide_empty_files)
-	{
-	  sigset_t oldset;
-	  bool unlink_ok;
-	  int unlink_errno;
+        {
+          sigset_t oldset;
+          bool unlink_ok;
+          int unlink_errno;
 
-	  /* Remove the output file in a critical section, to avoid races.  */
-	  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-	  unlink_ok = (unlink (output_filename) == 0);
-	  unlink_errno = errno;
-	  files_created -= unlink_ok;
-	  sigprocmask (SIG_SETMASK, &oldset, NULL);
+          /* Remove the output file in a critical section, to avoid races.  */
+          sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+          unlink_ok = (unlink (output_filename) == 0);
+          unlink_errno = errno;
+          files_created -= unlink_ok;
+          sigprocmask (SIG_SETMASK, &oldset, NULL);
 
-	  if (! unlink_ok)
-	    error (0, unlink_errno, "%s", output_filename);
-	}
+          if (! unlink_ok)
+            error (0, unlink_errno, "%s", output_filename);
+        }
       else
-	{
-	  if (!suppress_count)
-	    {
-	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	      fprintf (stdout, "%s\n", umaxtostr (bytes_written, buf));
-	    }
-	}
+        {
+          if (!suppress_count)
+            {
+              char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+              fprintf (stdout, "%s\n", umaxtostr (bytes_written, buf));
+            }
+        }
       output_stream = NULL;
     }
 }
@@ -1062,11 +1062,11 @@ parse_repeat_count (int argnum, struct control *p, char *str)
   else
     {
       if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK)
-	{
-	  error (EXIT_FAILURE, 0,
-		 _("%s}: integer required between `{' and `}'"),
-		 global_argv[argnum]);
-	}
+        {
+          error (EXIT_FAILURE, 0,
+                 _("%s}: integer required between `{' and `}'"),
+                 global_argv[argnum]);
+        }
       p->repeat = val;
     }
 
@@ -1091,7 +1091,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
     error (EXIT_FAILURE, 0,
-	   _("%s: closing delimiter `%c' missing"), str, delim);
+           _("%s: closing delimiter `%c' missing"), str, delim);
 
   len = closing_delim - str - 1;
   p = new_control_record ();
@@ -1132,44 +1132,44 @@ parse_patterns (int argc, int start, char **argv)
   for (i = start; i < argc; i++)
     {
       if (*argv[i] == '/' || *argv[i] == '%')
-	{
-	  p = extract_regexp (i, *argv[i] == '%', argv[i]);
-	}
+        {
+          p = extract_regexp (i, *argv[i] == '%', argv[i]);
+        }
       else
-	{
-	  p = new_control_record ();
-	  p->argnum = i;
+        {
+          p = new_control_record ();
+          p->argnum = i;
 
-	  if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK)
-	    error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
-	  if (val == 0)
-	    error (EXIT_FAILURE, 0,
-		   _("%s: line number must be greater than zero"),
-		   argv[i]);
-	  if (val < last_val)
-	    {
-	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	      error (EXIT_FAILURE, 0,
-	       _("line number %s is smaller than preceding line number, %s"),
-		     quote (argv[i]), umaxtostr (last_val, buf));
-	    }
+          if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK)
+            error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
+          if (val == 0)
+            error (EXIT_FAILURE, 0,
+                   _("%s: line number must be greater than zero"),
+                   argv[i]);
+          if (val < last_val)
+            {
+              char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+              error (EXIT_FAILURE, 0,
+               _("line number %s is smaller than preceding line number, %s"),
+                     quote (argv[i]), umaxtostr (last_val, buf));
+            }
 
-	  if (val == last_val)
-	    error (0, 0,
-	   _("warning: line number %s is the same as preceding line number"),
-		   quote (argv[i]));
+          if (val == last_val)
+            error (0, 0,
+           _("warning: line number %s is the same as preceding line number"),
+                   quote (argv[i]));
 
-	  last_val = val;
+          last_val = val;
 
-	  p->lines_required = val;
-	}
+          p->lines_required = val;
+        }
 
       if (i + 1 < argc && *argv[i + 1] == '{')
-	{
-	  /* We have a repeat count. */
-	  i++;
-	  parse_repeat_count (i, p, argv[i]);
-	}
+        {
+          /* We have a repeat count. */
+          i++;
+          parse_repeat_count (i, p, argv[i]);
+        }
     }
 }
 
@@ -1181,22 +1181,22 @@ get_format_flags (char **format_ptr)
   for (; **format_ptr; (*format_ptr)++)
     {
       switch (**format_ptr)
-	{
-	case '-':
-	  break;
+        {
+        case '-':
+          break;
 
-	case '+':
-	case ' ':
-	  count |= 1;
-	  break;
+        case '+':
+        case ' ':
+          count |= 1;
+          break;
 
-	case '#':
-	  count |= 2;	/* Allow for 0x prefix preceding an `x' conversion.  */
-	  break;
+        case '#':
+          count |= 2;	/* Allow for 0x prefix preceding an `x' conversion.  */
+          break;
 
-	default:
-	  return count;
-	}
+        default:
+          return count;
+        }
     }
   return count;
 }
@@ -1208,7 +1208,7 @@ get_format_width (char **format_ptr)
 
   if (ISDIGIT (**format_ptr)
       && (xstrtoul (*format_ptr, format_ptr, 10, &val, NULL) != LONGINT_OK
-	  || SIZE_MAX < val))
+          || SIZE_MAX < val))
     error (EXIT_FAILURE, 0, _("invalid format width"));
 
   /* Allow for enough octal digits to represent the value of UINT_MAX,
@@ -1229,8 +1229,8 @@ get_format_prec (char **format_ptr)
     {
       unsigned long int val;
       if (xstrtoul (*format_ptr, format_ptr, 10, &val, NULL) != LONGINT_OK
-	  || SIZE_MAX < val)
-	error (EXIT_FAILURE, 0, _("invalid format precision"));
+          || SIZE_MAX < val)
+        error (EXIT_FAILURE, 0, _("invalid format precision"));
       return val;
     }
 }
@@ -1257,10 +1257,10 @@ get_format_conv_type (char **format_ptr)
     default:
       if (isprint (ch))
         error (EXIT_FAILURE, 0,
-	       _("invalid conversion specifier in suffix: %c"), ch);
+               _("invalid conversion specifier in suffix: %c"), ch);
       else
-	error (EXIT_FAILURE, 0,
-	       _("invalid conversion specifier in suffix: \\%.3o"), ch);
+        error (EXIT_FAILURE, 0,
+               _("invalid conversion specifier in suffix: \\%.3o"), ch);
     }
 }
 
@@ -1275,30 +1275,30 @@ max_out (char *format)
       if (*format++ != '%')
         out_count++;
       else if (*format == '%')
-	{
-	  format++;
-	  out_count++;
-	}
+        {
+          format++;
+          out_count++;
+        }
       else
-	{
-	  if (percent)
-	    error (EXIT_FAILURE, 0,
-		   _("too many %% conversion specifications in suffix"));
-	  percent = true;
-	  out_count += get_format_flags (&format);
-	  {
-	    size_t width = get_format_width (&format);
-	    size_t prec = get_format_prec (&format);
+        {
+          if (percent)
+            error (EXIT_FAILURE, 0,
+                   _("too many %% conversion specifications in suffix"));
+          percent = true;
+          out_count += get_format_flags (&format);
+          {
+            size_t width = get_format_width (&format);
+            size_t prec = get_format_prec (&format);
 
-	    out_count += MAX (width, prec);
-	  }
-	  get_format_conv_type (&format);
-	}
+            out_count += MAX (width, prec);
+          }
+          get_format_conv_type (&format);
+        }
     }
 
   if (! percent)
     error (EXIT_FAILURE, 0,
-	   _("missing %% conversion specification in suffix"));
+           _("missing %% conversion specification in suffix"));
 
   return out_count;
 }
@@ -1328,47 +1328,47 @@ main (int argc, char **argv)
     switch (optc)
       {
       case 'f':
-	prefix = optarg;
-	break;
+        prefix = optarg;
+        break;
 
       case 'b':
-	suffix = optarg;
-	break;
+        suffix = optarg;
+        break;
 
       case 'k':
-	remove_files = false;
-	break;
+        remove_files = false;
+        break;
 
       case 'n':
-	if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
-	    || val > INT_MAX)
-	  error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
-	digits = val;
-	break;
+        if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
+            || val > INT_MAX)
+          error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
+        digits = val;
+        break;
 
       case 's':
       case 'q':
-	suppress_count = true;
-	break;
+        suppress_count = true;
+        break;
 
       case 'z':
-	elide_empty_files = true;
-	break;
+        elide_empty_files = true;
+        break;
 
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
 
   if (argc - optind < 2)
     {
       if (argc <= optind)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+        error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 
@@ -1385,22 +1385,22 @@ main (int argc, char **argv)
     int i;
     static int const sig[] =
       {
-	/* The usual suspects.  */
-	SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
+        /* The usual suspects.  */
+        SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
 #ifdef SIGPOLL
-	SIGPOLL,
+        SIGPOLL,
 #endif
 #ifdef SIGPROF
-	SIGPROF,
+        SIGPROF,
 #endif
 #ifdef SIGVTALRM
-	SIGVTALRM,
+        SIGVTALRM,
 #endif
 #ifdef SIGXCPU
-	SIGXCPU,
+        SIGXCPU,
 #endif
 #ifdef SIGXFSZ
-	SIGXFSZ,
+        SIGXFSZ,
 #endif
       };
     enum { nsigs = ARRAY_CARDINALITY (sig) };
@@ -1410,9 +1410,9 @@ main (int argc, char **argv)
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
       {
-	sigaction (sig[i], NULL, &act);
-	if (act.sa_handler != SIG_IGN)
-	  sigaddset (&caught_signals, sig[i]);
+        sigaction (sig[i], NULL, &act);
+        if (act.sa_handler != SIG_IGN)
+          sigaddset (&caught_signals, sig[i]);
       }
 
     act.sa_handler = interrupt_handler;
@@ -1421,7 +1421,7 @@ main (int argc, char **argv)
 
     for (i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
-	sigaction (sig[i], &act, NULL);
+        sigaction (sig[i], &act, NULL);
   }
 
   split_file ();
@@ -1440,13 +1440,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... FILE PATTERN...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Output pieces of FILE separated by PATTERN(s) to files `xx00', `xx01', ...,\n\
 and output byte counts of each piece to standard output.\n\

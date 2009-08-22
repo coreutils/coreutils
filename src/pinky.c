@@ -92,7 +92,7 @@ count_ampersands (const char *str)
   do
     {
       if (*str == '&')
-	count++;
+        count++;
     } while (*str++);
   return count;
 }
@@ -117,7 +117,7 @@ create_fullname (const char *gecos_name, const char *user_name)
       size_t product = ampersands * ulen;
       rsize += product - ampersands;
       if (xalloc_oversized (ulen, ampersands) || rsize < product)
-	xalloc_die ();
+        xalloc_die ();
     }
 
   r = result = xmalloc (rsize);
@@ -125,17 +125,17 @@ create_fullname (const char *gecos_name, const char *user_name)
   while (*gecos_name)
     {
       if (*gecos_name == '&')
-	{
-	  const char *uname = user_name;
-	  if (islower (to_uchar (*uname)))
-	    *r++ = toupper (to_uchar (*uname++));
-	  while (*uname)
-	    *r++ = *uname++;
-	}
+        {
+          const char *uname = user_name;
+          if (islower (to_uchar (*uname)))
+            *r++ = toupper (to_uchar (*uname++));
+          while (*uname)
+            *r++ = *uname++;
+        }
       else
-	{
-	  *r++ = *gecos_name;
-	}
+        {
+          *r++ = *gecos_name;
+        }
 
       gecos_name++;
     }
@@ -249,32 +249,32 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       name[UT_USER_SIZE] = '\0';
       pw = getpwnam (name);
       if (pw == NULL)
-	/* TRANSLATORS: Real name is unknown; at most 19 characters. */
-	printf (" %19s", _("        ???"));
+        /* TRANSLATORS: Real name is unknown; at most 19 characters. */
+        printf (" %19s", _("        ???"));
       else
-	{
-	  char *const comma = strchr (pw->pw_gecos, ',');
-	  char *result;
+        {
+          char *const comma = strchr (pw->pw_gecos, ',');
+          char *result;
 
-	  if (comma)
-	    *comma = '\0';
+          if (comma)
+            *comma = '\0';
 
-	  result = create_fullname (pw->pw_gecos, pw->pw_name);
-	  printf (" %-19.19s", result);
-	  free (result);
-	}
+          result = create_fullname (pw->pw_gecos, pw->pw_name);
+          printf (" %-19.19s", result);
+          free (result);
+        }
     }
 
   printf (" %c%-8.*s",
-	  mesg, (int) sizeof (utmp_ent->ut_line), utmp_ent->ut_line);
+          mesg, (int) sizeof (utmp_ent->ut_line), utmp_ent->ut_line);
 
   if (include_idle)
     {
       if (last_change)
-	printf (" %-6s", idle_string (last_change));
+        printf (" %-6s", idle_string (last_change));
       else
-	/* TRANSLATORS: Idle time is unknown; at most 5 characters. */
-	printf (" %-6s", _("?????"));
+        /* TRANSLATORS: Idle time is unknown; at most 5 characters. */
+        printf (" %-6s", _("?????"));
     }
 
   printf (" %s", time_string (utmp_ent));
@@ -293,21 +293,21 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
       if (display)
-	*display++ = '\0';
+        *display++ = '\0';
 
       if (*ut_host)
-	/* See if we can canonicalize it.  */
-	host = canon_host (ut_host);
+        /* See if we can canonicalize it.  */
+        host = canon_host (ut_host);
       if ( ! host)
-	host = ut_host;
+        host = ut_host;
 
       if (display)
-	printf (" %s:%s", host, display);
+        printf (" %s:%s", host, display);
       else
-	printf (" %s", host);
+        printf (" %s", host);
 
       if (host != ut_host)
-	free (host);
+        free (host);
     }
 #endif
 
@@ -339,7 +339,7 @@ print_long_entry (const char name[])
       char *result;
 
       if (comma)
-	*comma = '\0';
+        *comma = '\0';
 
       result = create_fullname (pw->pw_gecos, pw->pw_name);
       printf (" %s", result);
@@ -368,15 +368,15 @@ print_long_entry (const char name[])
 
       stream = fopen (project, "r");
       if (stream)
-	{
-	  size_t bytes;
+        {
+          size_t bytes;
 
-	  printf (_("Project: "));
+          printf (_("Project: "));
 
-	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-	    fwrite (buf, 1, bytes, stdout);
-	  fclose (stream);
-	}
+          while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
+            fwrite (buf, 1, bytes, stdout);
+          fclose (stream);
+        }
 
       free (project);
     }
@@ -392,15 +392,15 @@ print_long_entry (const char name[])
 
       stream = fopen (plan, "r");
       if (stream)
-	{
-	  size_t bytes;
+        {
+          size_t bytes;
 
-	  printf (_("Plan:\n"));
+          printf (_("Plan:\n"));
 
-	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-	    fwrite (buf, 1, bytes, stdout);
-	  fclose (stream);
-	}
+          while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
+            fwrite (buf, 1, bytes, stdout);
+          fclose (stream);
+        }
 
       free (plan);
     }
@@ -432,7 +432,7 @@ print_heading (void)
 
 static void
 scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
-	      const int argc_names, char *const argv_names[])
+              const int argc_names, char *const argv_names[])
 {
   if (hard_locale (LC_TIME))
     {
@@ -451,22 +451,22 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
   while (n--)
     {
       if (IS_USER_PROCESS (utmp_buf))
-	{
-	  if (argc_names)
-	    {
-	      int i;
+        {
+          if (argc_names)
+            {
+              int i;
 
-	      for (i = 0; i < argc_names; i++)
-		if (strncmp (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE)
-		    == 0)
-		  {
-		    print_entry (utmp_buf);
-		    break;
-		  }
-	    }
-	  else
-	    print_entry (utmp_buf);
-	}
+              for (i = 0; i < argc_names; i++)
+                if (strncmp (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE)
+                    == 0)
+                  {
+                    print_entry (utmp_buf);
+                    break;
+                  }
+            }
+          else
+            print_entry (utmp_buf);
+        }
       utmp_buf++;
     }
 }
@@ -475,7 +475,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
 
 static void
 short_pinky (const char *filename,
-	     const int argc_names, char *const argv_names[])
+             const int argc_names, char *const argv_names[])
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf;
@@ -500,7 +500,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
@@ -548,57 +548,57 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 's':
-	  do_short_format = true;
-	  break;
+        {
+        case 's':
+          do_short_format = true;
+          break;
 
-	case 'l':
-	  do_short_format = false;
-	  break;
+        case 'l':
+          do_short_format = false;
+          break;
 
-	case 'f':
-	  include_heading = false;
-	  break;
+        case 'f':
+          include_heading = false;
+          break;
 
-	case 'w':
-	  include_fullname = false;
-	  break;
+        case 'w':
+          include_fullname = false;
+          break;
 
-	case 'i':
-	  include_fullname = false;
+        case 'i':
+          include_fullname = false;
 #ifdef HAVE_UT_HOST
-	  include_where = false;
+          include_where = false;
 #endif
-	  break;
+          break;
 
-	case 'q':
-	  include_fullname = false;
+        case 'q':
+          include_fullname = false;
 #ifdef HAVE_UT_HOST
-	  include_where = false;
+          include_where = false;
 #endif
-	  include_idle = false;
-	  break;
+          include_idle = false;
+          break;
 
-	case 'h':
-	  include_project = false;
-	  break;
+        case 'h':
+          include_project = false;
+          break;
 
-	case 'p':
-	  include_plan = false;
-	  break;
+        case 'p':
+          include_plan = false;
+          break;
 
-	case 'b':
-	  include_home_and_shell = false;
-	  break;
+        case 'b':
+          include_home_and_shell = false;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   n_users = argc - optind;

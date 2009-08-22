@@ -36,8 +36,8 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
   gl_no_install_progs_default=`echo '$2'|sed 's/,/ /g'`
   AC_ARG_ENABLE([install-program],
     [AS_HELP_STRING([--enable-install-program=PROG_LIST],
-		    [install the programs in PROG_LIST (comma-separated,
-		    default: none)])],
+                    [install the programs in PROG_LIST (comma-separated,
+                    default: none)])],
     [gl_do_install_prog=$enableval],
     [gl_do_install_prog=]
   )
@@ -46,8 +46,8 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
   # use --enable-no-install-program=A,B
   AC_ARG_ENABLE([no-install-program],
     [AS_HELP_STRING([--enable-no-install-program=PROG_LIST],
-		    [do NOT install the programs in PROG_LIST
-		    (comma-separated, default: $2)])],
+                    [do NOT install the programs in PROG_LIST
+                    (comma-separated, default: $2)])],
     [gl_no_install_prog=$enableval],
     [gl_no_install_prog=]
   )
@@ -78,7 +78,7 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
       # Warn about a request not to install a program that is
       # already on the default-no-install list.
       case " $gl_no_install_progs_default " in
-	*" $gl_i "*) gl_msg="by default, '$gl_i' is not installed" ;;
+        *" $gl_i "*) gl_msg="by default, '$gl_i' is not installed" ;;
       esac
     fi
 

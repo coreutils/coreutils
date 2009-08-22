@@ -93,12 +93,12 @@ enum
   {
     FMT_BYTES_ALLOCATED =
       MAX ((sizeof "%*.99" - 1
-	    + MAX (sizeof "ld",
-		   MAX (sizeof PRIdMAX,
-			MAX (sizeof PRIoMAX,
-			     MAX (sizeof PRIuMAX,
-				  sizeof PRIxMAX))))),
-	   sizeof "%*.99Le")
+            + MAX (sizeof "ld",
+                   MAX (sizeof PRIdMAX,
+                        MAX (sizeof PRIoMAX,
+                             MAX (sizeof PRIuMAX,
+                                  sizeof PRIxMAX))))),
+           sizeof "%*.99Le")
   };
 
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
@@ -116,7 +116,7 @@ struct tspec
        leading space, and PAD is total pad to divide among FIELDS.
        PAD is at least as large as FIELDS.  */
     void (*print_function) (size_t fields, size_t blank, void const *data,
-			    char const *fmt, int width, int pad);
+                            char const *fmt, int width, int pad);
     char fmt_string[FMT_BYTES_ALLOCATED]; /* Of the style "%*d".  */
     bool hexl_mode_trailer;
     int field_width; /* Minimum width of a field, excluding leading space.  */
@@ -302,7 +302,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -310,7 +310,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   or:  %s [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]\n\
   or:  %s --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]\n\
 "),
-	      program_name, program_name, program_name);
+              program_name, program_name, program_name);
       fputs (_("\n\
 Write an unambiguous representation, octal bytes by default,\n\
 of FILE to standard output.  With more than one FILE argument,\n\
@@ -446,8 +446,8 @@ dump_hexl_mode_trailer (size_t n_bytes, const char *block)
 
 static void
 print_named_ascii (size_t fields, size_t blank, void const *block,
-		   const char *unused_fmt_string ATTRIBUTE_UNUSED,
-		   int width, int pad)
+                   const char *unused_fmt_string ATTRIBUTE_UNUSED,
+                   int width, int pad)
 {
   unsigned char const *p = block;
   size_t i;
@@ -460,15 +460,15 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
       char buf[2];
 
       if (masked_c == 127)
-	s = "del";
+        s = "del";
       else if (masked_c <= 040)
-	s = charname[masked_c];
+        s = charname[masked_c];
       else
-	{
-	  buf[0] = masked_c;
-	  buf[1] = 0;
-	  s = buf;
-	}
+        {
+          buf[0] = masked_c;
+          buf[1] = 0;
+          s = buf;
+        }
 
       xprintf ("%*s", pad_remaining - next_pad + width, s);
       pad_remaining = next_pad;
@@ -477,8 +477,8 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
 
 static void
 print_ascii (size_t fields, size_t blank, void const *block,
-	     const char *unused_fmt_string ATTRIBUTE_UNUSED, int width,
-	     int pad)
+             const char *unused_fmt_string ATTRIBUTE_UNUSED, int width,
+             int pad)
 {
   unsigned char const *p = block;
   size_t i;
@@ -491,43 +491,43 @@ print_ascii (size_t fields, size_t blank, void const *block,
       char buf[4];
 
       switch (c)
-	{
-	case '\0':
-	  s = "\\0";
-	  break;
+        {
+        case '\0':
+          s = "\\0";
+          break;
 
-	case '\a':
-	  s = "\\a";
-	  break;
+        case '\a':
+          s = "\\a";
+          break;
 
-	case '\b':
-	  s = "\\b";
-	  break;
+        case '\b':
+          s = "\\b";
+          break;
 
-	case '\f':
-	  s = "\\f";
-	  break;
+        case '\f':
+          s = "\\f";
+          break;
 
-	case '\n':
-	  s = "\\n";
-	  break;
+        case '\n':
+          s = "\\n";
+          break;
 
-	case '\r':
-	  s = "\\r";
-	  break;
+        case '\r':
+          s = "\\r";
+          break;
 
-	case '\t':
-	  s = "\\t";
-	  break;
+        case '\t':
+          s = "\\t";
+          break;
 
-	case '\v':
-	  s = "\\v";
-	  break;
+        case '\v':
+          s = "\\v";
+          break;
 
-	default:
-	  sprintf (buf, (isprint (c) ? "%c" : "%03o"), c);
-	  s = buf;
-	}
+        default:
+          sprintf (buf, (isprint (c) ? "%c" : "%03o"), c);
+          s = buf;
+        }
 
       xprintf ("%*s", pad_remaining - next_pad + width, s);
       pad_remaining = next_pad;
@@ -552,7 +552,7 @@ simple_strtoul (const char *s, const char **p, unsigned long int *val)
     {
       int c = *s++ - '0';
       if (sum > (ULONG_MAX - c) / 10)
-	return false;
+        return false;
       sum = sum * 10 + c;
     }
   *p = s;
@@ -581,14 +581,14 @@ simple_strtoul (const char *s, const char **p, unsigned long int *val)
 
 static bool
 decode_one_format (const char *s_orig, const char *s, const char **next,
-		   struct tspec *tspec)
+                   struct tspec *tspec)
 {
   enum size_spec size_spec;
   unsigned long int size;
   enum output_format fmt;
   const char *pre_fmt_string;
   void (*print_function) (size_t, size_t, void const *, char const *,
-			  int, int);
+                          int, int);
   const char *p;
   char c;
   int field_width;
@@ -605,51 +605,51 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
       c = *s;
       ++s;
       switch (*s)
-	{
-	case 'C':
-	  ++s;
-	  size = sizeof (char);
-	  break;
+        {
+        case 'C':
+          ++s;
+          size = sizeof (char);
+          break;
 
-	case 'S':
-	  ++s;
-	  size = sizeof (short int);
-	  break;
+        case 'S':
+          ++s;
+          size = sizeof (short int);
+          break;
 
-	case 'I':
-	  ++s;
-	  size = sizeof (int);
-	  break;
+        case 'I':
+          ++s;
+          size = sizeof (int);
+          break;
 
-	case 'L':
-	  ++s;
-	  size = sizeof (long int);
-	  break;
+        case 'L':
+          ++s;
+          size = sizeof (long int);
+          break;
 
-	default:
-	  if (! simple_strtoul (s, &p, &size))
-	    {
-	      /* The integer at P in S would overflow an unsigned long int.
-		 A digit string that long is sufficiently odd looking
-		 that the following diagnostic is sufficient.  */
-	      error (0, 0, _("invalid type string %s"), quote (s_orig));
-	      return false;
-	    }
-	  if (p == s)
-	    size = sizeof (int);
-	  else
-	    {
-	      if (MAX_INTEGRAL_TYPE_SIZE < size
-		  || integral_type_size[size] == NO_SIZE)
-		{
-		  error (0, 0, _("invalid type string %s;\n\
+        default:
+          if (! simple_strtoul (s, &p, &size))
+            {
+              /* The integer at P in S would overflow an unsigned long int.
+                 A digit string that long is sufficiently odd looking
+                 that the following diagnostic is sufficient.  */
+              error (0, 0, _("invalid type string %s"), quote (s_orig));
+              return false;
+            }
+          if (p == s)
+            size = sizeof (int);
+          else
+            {
+              if (MAX_INTEGRAL_TYPE_SIZE < size
+                  || integral_type_size[size] == NO_SIZE)
+                {
+                  error (0, 0, _("invalid type string %s;\n\
 this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
-		  return false;
-		}
-	      s = p;
-	    }
-	  break;
-	}
+                  return false;
+                }
+              s = p;
+            }
+          break;
+        }
 
 #define ISPEC_TO_FORMAT(Spec, Min_format, Long_format, Max_format)	\
   ((Spec) == LONG_LONG ? (Max_format)					\
@@ -659,143 +659,143 @@ this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
       size_spec = integral_type_size[size];
 
       switch (c)
-	{
-	case 'd':
-	  fmt = SIGNED_DECIMAL;
-	  field_width = bytes_to_signed_dec_digits[size];
-	  sprintf (tspec->fmt_string, "%%*%s",
-		   ISPEC_TO_FORMAT (size_spec, "d", "ld", PRIdMAX));
-	  break;
+        {
+        case 'd':
+          fmt = SIGNED_DECIMAL;
+          field_width = bytes_to_signed_dec_digits[size];
+          sprintf (tspec->fmt_string, "%%*%s",
+                   ISPEC_TO_FORMAT (size_spec, "d", "ld", PRIdMAX));
+          break;
 
-	case 'o':
-	  fmt = OCTAL;
-	  sprintf (tspec->fmt_string, "%%*.%d%s",
-		   (field_width = bytes_to_oct_digits[size]),
-		   ISPEC_TO_FORMAT (size_spec, "o", "lo", PRIoMAX));
-	  break;
+        case 'o':
+          fmt = OCTAL;
+          sprintf (tspec->fmt_string, "%%*.%d%s",
+                   (field_width = bytes_to_oct_digits[size]),
+                   ISPEC_TO_FORMAT (size_spec, "o", "lo", PRIoMAX));
+          break;
 
-	case 'u':
-	  fmt = UNSIGNED_DECIMAL;
-	  field_width = bytes_to_unsigned_dec_digits[size];
-	  sprintf (tspec->fmt_string, "%%*%s",
-		   ISPEC_TO_FORMAT (size_spec, "u", "lu", PRIuMAX));
-	  break;
+        case 'u':
+          fmt = UNSIGNED_DECIMAL;
+          field_width = bytes_to_unsigned_dec_digits[size];
+          sprintf (tspec->fmt_string, "%%*%s",
+                   ISPEC_TO_FORMAT (size_spec, "u", "lu", PRIuMAX));
+          break;
 
-	case 'x':
-	  fmt = HEXADECIMAL;
-	  sprintf (tspec->fmt_string, "%%*.%d%s",
-		   (field_width = bytes_to_hex_digits[size]),
-		   ISPEC_TO_FORMAT (size_spec, "x", "lx", PRIxMAX));
-	  break;
+        case 'x':
+          fmt = HEXADECIMAL;
+          sprintf (tspec->fmt_string, "%%*.%d%s",
+                   (field_width = bytes_to_hex_digits[size]),
+                   ISPEC_TO_FORMAT (size_spec, "x", "lx", PRIxMAX));
+          break;
 
-	default:
-	  abort ();
-	}
+        default:
+          abort ();
+        }
 
       assert (strlen (tspec->fmt_string) < FMT_BYTES_ALLOCATED);
 
       switch (size_spec)
-	{
-	case CHAR:
-	  print_function = (fmt == SIGNED_DECIMAL
-			    ? print_s_char
-			    : print_char);
-	  break;
+        {
+        case CHAR:
+          print_function = (fmt == SIGNED_DECIMAL
+                            ? print_s_char
+                            : print_char);
+          break;
 
-	case SHORT:
-	  print_function = (fmt == SIGNED_DECIMAL
-			    ? print_s_short
-			    : print_short);
-	  break;
+        case SHORT:
+          print_function = (fmt == SIGNED_DECIMAL
+                            ? print_s_short
+                            : print_short);
+          break;
 
-	case INT:
-	  print_function = print_int;
-	  break;
+        case INT:
+          print_function = print_int;
+          break;
 
-	case LONG:
-	  print_function = print_long;
-	  break;
+        case LONG:
+          print_function = print_long;
+          break;
 
-	case LONG_LONG:
-	  print_function = print_long_long;
-	  break;
+        case LONG_LONG:
+          print_function = print_long_long;
+          break;
 
-	default:
-	  abort ();
-	}
+        default:
+          abort ();
+        }
       break;
 
     case 'f':
       fmt = FLOATING_POINT;
       ++s;
       switch (*s)
-	{
-	case 'F':
-	  ++s;
-	  size = sizeof (float);
-	  break;
+        {
+        case 'F':
+          ++s;
+          size = sizeof (float);
+          break;
 
-	case 'D':
-	  ++s;
-	  size = sizeof (double);
-	  break;
+        case 'D':
+          ++s;
+          size = sizeof (double);
+          break;
 
-	case 'L':
-	  ++s;
-	  size = sizeof (long double);
-	  break;
+        case 'L':
+          ++s;
+          size = sizeof (long double);
+          break;
 
-	default:
-	  if (! simple_strtoul (s, &p, &size))
-	    {
-	      /* The integer at P in S would overflow an unsigned long int.
-		 A digit string that long is sufficiently odd looking
-		 that the following diagnostic is sufficient.  */
-	      error (0, 0, _("invalid type string %s"), quote (s_orig));
-	      return false;
-	    }
-	  if (p == s)
-	    size = sizeof (double);
-	  else
-	    {
-	      if (size > MAX_FP_TYPE_SIZE
-		  || fp_type_size[size] == NO_SIZE)
-		{
-		  error (0, 0, _("invalid type string %s;\n\
+        default:
+          if (! simple_strtoul (s, &p, &size))
+            {
+              /* The integer at P in S would overflow an unsigned long int.
+                 A digit string that long is sufficiently odd looking
+                 that the following diagnostic is sufficient.  */
+              error (0, 0, _("invalid type string %s"), quote (s_orig));
+              return false;
+            }
+          if (p == s)
+            size = sizeof (double);
+          else
+            {
+              if (size > MAX_FP_TYPE_SIZE
+                  || fp_type_size[size] == NO_SIZE)
+                {
+                  error (0, 0, _("invalid type string %s;\n\
 this system doesn't provide a %lu-byte floating point type"),
-			 quote (s_orig), size);
-		  return false;
-		}
-	      s = p;
-	    }
-	  break;
-	}
+                         quote (s_orig), size);
+                  return false;
+                }
+              s = p;
+            }
+          break;
+        }
       size_spec = fp_type_size[size];
 
       switch (size_spec)
-	{
-	case FLOAT_SINGLE:
-	  print_function = print_float;
-	  /* FIXME - should we use %g instead of %e?  */
-	  pre_fmt_string = "%%*.%de";
-	  precision = FLT_DIG;
-	  break;
+        {
+        case FLOAT_SINGLE:
+          print_function = print_float;
+          /* FIXME - should we use %g instead of %e?  */
+          pre_fmt_string = "%%*.%de";
+          precision = FLT_DIG;
+          break;
 
-	case FLOAT_DOUBLE:
-	  print_function = print_double;
-	  pre_fmt_string = "%%*.%de";
-	  precision = DBL_DIG;
-	  break;
+        case FLOAT_DOUBLE:
+          print_function = print_double;
+          pre_fmt_string = "%%*.%de";
+          precision = DBL_DIG;
+          break;
 
-	case FLOAT_LONG_DOUBLE:
-	  print_function = print_long_double;
-	  pre_fmt_string = "%%*.%dLe";
-	  precision = LDBL_DIG;
-	  break;
+        case FLOAT_LONG_DOUBLE:
+          print_function = print_long_double;
+          pre_fmt_string = "%%*.%dLe";
+          precision = LDBL_DIG;
+          break;
 
-	default:
-	  abort ();
-	}
+        default:
+          abort ();
+        }
 
       field_width = precision + 8;
       sprintf (tspec->fmt_string, pre_fmt_string, precision);
@@ -820,7 +820,7 @@ this system doesn't provide a %lu-byte floating point type"),
 
     default:
       error (0, 0, _("invalid character `%c' in type string %s"),
-	     *s, quote (s_orig));
+             *s, quote (s_orig));
       return false;
     }
 
@@ -855,26 +855,26 @@ open_next_file (void)
     {
       input_filename = *file_list;
       if (input_filename == NULL)
-	return ok;
+        return ok;
       ++file_list;
 
       if (STREQ (input_filename, "-"))
-	{
-	  input_filename = _("standard input");
-	  in_stream = stdin;
-	  have_read_stdin = true;
-	  if (O_BINARY && ! isatty (STDIN_FILENO))
-	    xfreopen (NULL, "rb", stdin);
-	}
+        {
+          input_filename = _("standard input");
+          in_stream = stdin;
+          have_read_stdin = true;
+          if (O_BINARY && ! isatty (STDIN_FILENO))
+            xfreopen (NULL, "rb", stdin);
+        }
       else
-	{
-	  in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
-	  if (in_stream == NULL)
-	    {
-	      error (0, errno, "%s", input_filename);
-	      ok = false;
-	    }
-	}
+        {
+          in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
+          if (in_stream == NULL)
+            {
+              error (0, errno, "%s", input_filename);
+              ok = false;
+            }
+        }
     }
   while (in_stream == NULL);
 
@@ -899,17 +899,17 @@ check_and_close (int in_errno)
   if (in_stream != NULL)
     {
       if (ferror (in_stream))
-	{
-	  error (0, in_errno, _("%s: read error"), input_filename);
-	  if (! STREQ (file_list[-1], "-"))
-	    fclose (in_stream);
-	  ok = false;
-	}
+        {
+          error (0, in_errno, _("%s: read error"), input_filename);
+          if (! STREQ (file_list[-1], "-"))
+            fclose (in_stream);
+          ok = false;
+        }
       else if (! STREQ (file_list[-1], "-") && fclose (in_stream) != 0)
-	{
-	  error (0, errno, "%s", input_filename);
-	  ok = false;
-	}
+        {
+          error (0, errno, "%s", input_filename);
+          ok = false;
+        }
 
       in_stream = NULL;
     }
@@ -938,10 +938,10 @@ decode_format_string (const char *s)
       const char *next;
 
       if (n_specs_allocated <= n_specs)
-	spec = X2NREALLOC (spec, &n_specs_allocated);
+        spec = X2NREALLOC (spec, &n_specs_allocated);
 
       if (! decode_one_format (s_orig, s, &next, &spec[n_specs]))
-	return false;
+        return false;
 
       assert (s != next);
       s = next;
@@ -972,72 +972,72 @@ skip (uintmax_t n_skip)
       struct stat file_stats;
 
       /* First try seeking.  For large offsets, this extra work is
-	 worthwhile.  If the offset is below some threshold it may be
-	 more efficient to move the pointer by reading.  There are two
-	 issues when trying to seek:
-	   - the file must be seekable.
-	   - before seeking to the specified position, make sure
-	     that the new position is in the current file.
-	     Try to do that by getting file's size using fstat.
-	     But that will work only for regular files.  */
+         worthwhile.  If the offset is below some threshold it may be
+         more efficient to move the pointer by reading.  There are two
+         issues when trying to seek:
+           - the file must be seekable.
+           - before seeking to the specified position, make sure
+             that the new position is in the current file.
+             Try to do that by getting file's size using fstat.
+             But that will work only for regular files.  */
 
       if (fstat (fileno (in_stream), &file_stats) == 0)
-	{
-	  /* The st_size field is valid only for regular files
-	     (and for symbolic links, which cannot occur here).
-	     If the number of bytes left to skip is larger than
-	     the size of the current file, we can decrement n_skip
-	     and go on to the next file.  Skip this optimization also
-	     when st_size is 0, because some kernels report that
-	     nonempty files in /proc have st_size == 0.  */
-	  if (S_ISREG (file_stats.st_mode) && 0 < file_stats.st_size)
-	    {
-	      if ((uintmax_t) file_stats.st_size < n_skip)
-		n_skip -= file_stats.st_size;
-	      else
-		{
-		  if (fseeko (in_stream, n_skip, SEEK_CUR) != 0)
-		    {
-		      in_errno = errno;
-		      ok = false;
-		    }
-		  n_skip = 0;
-		}
-	    }
+        {
+          /* The st_size field is valid only for regular files
+             (and for symbolic links, which cannot occur here).
+             If the number of bytes left to skip is larger than
+             the size of the current file, we can decrement n_skip
+             and go on to the next file.  Skip this optimization also
+             when st_size is 0, because some kernels report that
+             nonempty files in /proc have st_size == 0.  */
+          if (S_ISREG (file_stats.st_mode) && 0 < file_stats.st_size)
+            {
+              if ((uintmax_t) file_stats.st_size < n_skip)
+                n_skip -= file_stats.st_size;
+              else
+                {
+                  if (fseeko (in_stream, n_skip, SEEK_CUR) != 0)
+                    {
+                      in_errno = errno;
+                      ok = false;
+                    }
+                  n_skip = 0;
+                }
+            }
 
-	  /* If it's not a regular file with nonnegative size,
-	     position the file pointer by reading.  */
+          /* If it's not a regular file with nonnegative size,
+             position the file pointer by reading.  */
 
-	  else
-	    {
-	      char buf[BUFSIZ];
-	      size_t n_bytes_read, n_bytes_to_read = BUFSIZ;
+          else
+            {
+              char buf[BUFSIZ];
+              size_t n_bytes_read, n_bytes_to_read = BUFSIZ;
 
-	      while (0 < n_skip)
-		{
-		  if (n_skip < n_bytes_to_read)
-		    n_bytes_to_read = n_skip;
-		  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
-		  n_skip -= n_bytes_read;
-		  if (n_bytes_read != n_bytes_to_read)
-		    {
-		      in_errno = errno;
-		      ok = false;
-		      n_skip = 0;
-		      break;
-		    }
-		}
-	    }
+              while (0 < n_skip)
+                {
+                  if (n_skip < n_bytes_to_read)
+                    n_bytes_to_read = n_skip;
+                  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
+                  n_skip -= n_bytes_read;
+                  if (n_bytes_read != n_bytes_to_read)
+                    {
+                      in_errno = errno;
+                      ok = false;
+                      n_skip = 0;
+                      break;
+                    }
+                }
+            }
 
-	  if (n_skip == 0)
-	    break;
-	}
+          if (n_skip == 0)
+            break;
+        }
 
       else   /* cannot fstat() file */
-	{
-	  error (0, errno, "%s", input_filename);
-	  ok = false;
-	}
+        {
+          error (0, errno, "%s", input_filename);
+          ok = false;
+        }
 
       ok &= check_and_close (in_errno);
 
@@ -1072,19 +1072,19 @@ format_address_std (uintmax_t address, char c)
     {
     case 8:
       do
-	*--p = '0' + (address & 7);
+        *--p = '0' + (address & 7);
       while ((address >>= 3) != 0);
       break;
 
     case 10:
       do
-	*--p = '0' + (address % 10);
+        *--p = '0' + (address % 10);
       while ((address /= 10) != 0);
       break;
 
     case 16:
       do
-	*--p = "0123456789abcdef"[address & 15];
+        *--p = "0123456789abcdef"[address & 15];
       while ((address >>= 4) != 0);
       break;
     }
@@ -1123,7 +1123,7 @@ format_address_label (uintmax_t address, char c)
 
 static void
 write_block (uintmax_t current_offset, size_t n_bytes,
-	     const char *prev_block, const char *curr_block)
+             const char *prev_block, const char *curr_block)
 {
   static bool first = true;
   static bool prev_pair_equal = false;
@@ -1135,15 +1135,15 @@ write_block (uintmax_t current_offset, size_t n_bytes,
       && EQUAL_BLOCKS (prev_block, curr_block))
     {
       if (prev_pair_equal)
-	{
-	  /* The two preceding blocks were equal, and the current
-	     block is the same as the last one, so print nothing.  */
-	}
+        {
+          /* The two preceding blocks were equal, and the current
+             block is the same as the last one, so print nothing.  */
+        }
       else
-	{
-	  printf ("*\n");
-	  prev_pair_equal = true;
-	}
+        {
+          printf ("*\n");
+          prev_pair_equal = true;
+        }
     }
   else
     {
@@ -1151,28 +1151,28 @@ write_block (uintmax_t current_offset, size_t n_bytes,
 
       prev_pair_equal = false;
       for (i = 0; i < n_specs; i++)
-	{
-	  int datum_width = width_bytes[spec[i].size];
-	  int fields_per_block = bytes_per_block / datum_width;
-	  int blank_fields = (bytes_per_block - n_bytes) / datum_width;
-	  if (i == 0)
-	    format_address (current_offset, '\0');
-	  else
-	    printf ("%*s", address_pad_len, "");
-	  (*spec[i].print_function) (fields_per_block, blank_fields,
-				     curr_block, spec[i].fmt_string,
-				     spec[i].field_width, spec[i].pad_width);
-	  if (spec[i].hexl_mode_trailer)
-	    {
-	      /* space-pad out to full line width, then dump the trailer */
-	      int field_width = spec[i].field_width;
-	      int pad_width = (spec[i].pad_width * blank_fields
-			       / fields_per_block);
-	      printf ("%*s", blank_fields * field_width + pad_width, "");
-	      dump_hexl_mode_trailer (n_bytes, curr_block);
-	    }
-	  putchar ('\n');
-	}
+        {
+          int datum_width = width_bytes[spec[i].size];
+          int fields_per_block = bytes_per_block / datum_width;
+          int blank_fields = (bytes_per_block - n_bytes) / datum_width;
+          if (i == 0)
+            format_address (current_offset, '\0');
+          else
+            printf ("%*s", address_pad_len, "");
+          (*spec[i].print_function) (fields_per_block, blank_fields,
+                                     curr_block, spec[i].fmt_string,
+                                     spec[i].field_width, spec[i].pad_width);
+          if (spec[i].hexl_mode_trailer)
+            {
+              /* space-pad out to full line width, then dump the trailer */
+              int field_width = spec[i].field_width;
+              int pad_width = (spec[i].pad_width * blank_fields
+                               / fields_per_block);
+              printf ("%*s", blank_fields * field_width + pad_width, "");
+              dump_hexl_mode_trailer (n_bytes, curr_block);
+            }
+          putchar ('\n');
+        }
     }
   first = false;
 }
@@ -1200,7 +1200,7 @@ read_char (int *c)
       *c = fgetc (in_stream);
 
       if (*c != EOF)
-	break;
+        break;
 
       ok &= check_and_close (errno);
 
@@ -1247,7 +1247,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
       *n_bytes_in_buffer += n_read;
 
       if (n_read == n_needed)
-	break;
+        break;
 
       ok &= check_and_close (errno);
 
@@ -1294,9 +1294,9 @@ parse_old_offset (const char *s, uintmax_t *offset)
   else
     {
       if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
-	radix = 16;
+        radix = 16;
       else
-	radix = 8;
+        radix = 8;
     }
 
   return xstrtoumax (s, NULL, radix, offset, "Bb") == LONGINT_OK;
@@ -1331,38 +1331,38 @@ dump (void)
   if (limit_bytes_to_format)
     {
       while (1)
-	{
-	  size_t n_needed;
-	  if (current_offset >= end_offset)
-	    {
-	      n_bytes_read = 0;
-	      break;
-	    }
-	  n_needed = MIN (end_offset - current_offset,
-			  (uintmax_t) bytes_per_block);
-	  ok &= read_block (n_needed, block[idx], &n_bytes_read);
-	  if (n_bytes_read < bytes_per_block)
-	    break;
-	  assert (n_bytes_read == bytes_per_block);
-	  write_block (current_offset, n_bytes_read,
-		       block[!idx], block[idx]);
-	  current_offset += n_bytes_read;
-	  idx = !idx;
-	}
+        {
+          size_t n_needed;
+          if (current_offset >= end_offset)
+            {
+              n_bytes_read = 0;
+              break;
+            }
+          n_needed = MIN (end_offset - current_offset,
+                          (uintmax_t) bytes_per_block);
+          ok &= read_block (n_needed, block[idx], &n_bytes_read);
+          if (n_bytes_read < bytes_per_block)
+            break;
+          assert (n_bytes_read == bytes_per_block);
+          write_block (current_offset, n_bytes_read,
+                       block[!idx], block[idx]);
+          current_offset += n_bytes_read;
+          idx = !idx;
+        }
     }
   else
     {
       while (1)
-	{
-	  ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
-	  if (n_bytes_read < bytes_per_block)
-	    break;
-	  assert (n_bytes_read == bytes_per_block);
-	  write_block (current_offset, n_bytes_read,
-		       block[!idx], block[idx]);
-	  current_offset += n_bytes_read;
-	  idx = !idx;
-	}
+        {
+          ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
+          if (n_bytes_read < bytes_per_block)
+            break;
+          assert (n_bytes_read == bytes_per_block);
+          write_block (current_offset, n_bytes_read,
+                       block[!idx], block[idx]);
+          current_offset += n_bytes_read;
+          idx = !idx;
+        }
     }
 
   if (n_bytes_read > 0)
@@ -1373,7 +1373,7 @@ dump (void)
       l_c_m = get_lcm ();
 
       /* Ensure zero-byte padding up to the smallest multiple of l_c_m that
-	 is at least as large as n_bytes_read.  */
+         is at least as large as n_bytes_read.  */
       bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
@@ -1414,87 +1414,87 @@ dump_strings (void)
     tryline:
 
       if (limit_bytes_to_format
-	  && (end_offset < string_min || end_offset - string_min <= address))
-	break;
+          && (end_offset < string_min || end_offset - string_min <= address))
+        break;
 
       for (i = 0; i < string_min; i++)
-	{
-	  ok &= read_char (&c);
-	  address++;
-	  if (c < 0)
-	    {
-	      free (buf);
-	      return ok;
-	    }
-	  if (! isprint (c))
-	    /* Found a non-printing.  Try again starting with next char.  */
-	    goto tryline;
-	  buf[i] = c;
-	}
+        {
+          ok &= read_char (&c);
+          address++;
+          if (c < 0)
+            {
+              free (buf);
+              return ok;
+            }
+          if (! isprint (c))
+            /* Found a non-printing.  Try again starting with next char.  */
+            goto tryline;
+          buf[i] = c;
+        }
 
       /* We found a run of `string_min' printable characters.
-	 Now see if it is terminated with a null byte.  */
+         Now see if it is terminated with a null byte.  */
       while (!limit_bytes_to_format || address < end_offset)
-	{
-	  if (i == bufsize)
-	    {
-	      buf = X2REALLOC (buf, &bufsize);
-	    }
-	  ok &= read_char (&c);
-	  address++;
-	  if (c < 0)
-	    {
-	      free (buf);
-	      return ok;
-	    }
-	  if (c == '\0')
-	    break;		/* It is; print this string.  */
-	  if (! isprint (c))
-	    goto tryline;	/* It isn't; give up on this string.  */
-	  buf[i++] = c;		/* String continues; store it all.  */
-	}
+        {
+          if (i == bufsize)
+            {
+              buf = X2REALLOC (buf, &bufsize);
+            }
+          ok &= read_char (&c);
+          address++;
+          if (c < 0)
+            {
+              free (buf);
+              return ok;
+            }
+          if (c == '\0')
+            break;		/* It is; print this string.  */
+          if (! isprint (c))
+            goto tryline;	/* It isn't; give up on this string.  */
+          buf[i++] = c;		/* String continues; store it all.  */
+        }
 
       /* If we get here, the string is all printable and null-terminated,
-	 so print it.  It is all in `buf' and `i' is its length.  */
+         so print it.  It is all in `buf' and `i' is its length.  */
       buf[i] = 0;
       format_address (address - i - 1, ' ');
 
       for (i = 0; (c = buf[i]); i++)
-	{
-	  switch (c)
-	    {
-	    case '\a':
-	      fputs ("\\a", stdout);
-	      break;
+        {
+          switch (c)
+            {
+            case '\a':
+              fputs ("\\a", stdout);
+              break;
 
-	    case '\b':
-	      fputs ("\\b", stdout);
-	      break;
+            case '\b':
+              fputs ("\\b", stdout);
+              break;
 
-	    case '\f':
-	      fputs ("\\f", stdout);
-	      break;
+            case '\f':
+              fputs ("\\f", stdout);
+              break;
 
-	    case '\n':
-	      fputs ("\\n", stdout);
-	      break;
+            case '\n':
+              fputs ("\\n", stdout);
+              break;
 
-	    case '\r':
-	      fputs ("\\r", stdout);
-	      break;
+            case '\r':
+              fputs ("\\r", stdout);
+              break;
 
-	    case '\t':
-	      fputs ("\\t", stdout);
-	      break;
+            case '\t':
+              fputs ("\\t", stdout);
+              break;
 
-	    case '\v':
-	      fputs ("\\v", stdout);
-	      break;
+            case '\v':
+              fputs ("\\v", stdout);
+              break;
 
-	    default:
-	      putc (c, stdout);
-	    }
-	}
+            default:
+              putc (c, stdout);
+            }
+        }
       putchar ('\n');
     }
 
@@ -1574,151 +1574,151 @@ main (int argc, char **argv)
         break;
 
       switch (c)
-	{
-	case 'A':
-	  modern = true;
-	  switch (optarg[0])
-	    {
-	    case 'd':
-	      format_address = format_address_std;
-	      address_base = 10;
-	      address_pad_len = 7;
-	      break;
-	    case 'o':
-	      format_address = format_address_std;
-	      address_base = 8;
-	      address_pad_len = 7;
-	      break;
-	    case 'x':
-	      format_address = format_address_std;
-	      address_base = 16;
-	      address_pad_len = 6;
-	      break;
-	    case 'n':
-	      format_address = format_address_none;
-	      address_pad_len = 0;
-	      break;
-	    default:
-	      error (EXIT_FAILURE, 0,
-		     _("invalid output address radix `%c'; \
+        {
+        case 'A':
+          modern = true;
+          switch (optarg[0])
+            {
+            case 'd':
+              format_address = format_address_std;
+              address_base = 10;
+              address_pad_len = 7;
+              break;
+            case 'o':
+              format_address = format_address_std;
+              address_base = 8;
+              address_pad_len = 7;
+              break;
+            case 'x':
+              format_address = format_address_std;
+              address_base = 16;
+              address_pad_len = 6;
+              break;
+            case 'n':
+              format_address = format_address_none;
+              address_pad_len = 0;
+              break;
+            default:
+              error (EXIT_FAILURE, 0,
+                     _("invalid output address radix `%c'; \
 it must be one character from [doxn]"),
-		     optarg[0]);
-	      break;
-	    }
-	  break;
+                     optarg[0]);
+              break;
+            }
+          break;
 
-	case 'j':
-	  modern = true;
-	  s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, multipliers);
-	  if (s_err != LONGINT_OK)
-	    xstrtol_fatal (s_err, oi, c, long_options, optarg);
-	  break;
+        case 'j':
+          modern = true;
+          s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, multipliers);
+          if (s_err != LONGINT_OK)
+            xstrtol_fatal (s_err, oi, c, long_options, optarg);
+          break;
 
-	case 'N':
-	  modern = true;
-	  limit_bytes_to_format = true;
+        case 'N':
+          modern = true;
+          limit_bytes_to_format = true;
 
-	  s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format,
-			      multipliers);
-	  if (s_err != LONGINT_OK)
-	    xstrtol_fatal (s_err, oi, c, long_options, optarg);
-	  break;
+          s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format,
+                              multipliers);
+          if (s_err != LONGINT_OK)
+            xstrtol_fatal (s_err, oi, c, long_options, optarg);
+          break;
 
-	case 'S':
-	  modern = true;
-	  if (optarg == NULL)
-	    string_min = 3;
-	  else
-	    {
-	      s_err = xstrtoumax (optarg, NULL, 0, &tmp, multipliers);
-	      if (s_err != LONGINT_OK)
-		xstrtol_fatal (s_err, oi, c, long_options, optarg);
+        case 'S':
+          modern = true;
+          if (optarg == NULL)
+            string_min = 3;
+          else
+            {
+              s_err = xstrtoumax (optarg, NULL, 0, &tmp, multipliers);
+              if (s_err != LONGINT_OK)
+                xstrtol_fatal (s_err, oi, c, long_options, optarg);
 
-	      /* The minimum string length may be no larger than SIZE_MAX,
-		 since we may allocate a buffer of this size.  */
-	      if (SIZE_MAX < tmp)
-		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+              /* The minimum string length may be no larger than SIZE_MAX,
+                 since we may allocate a buffer of this size.  */
+              if (SIZE_MAX < tmp)
+                error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
 
-	      string_min = tmp;
-	    }
-	  flag_dump_strings = true;
-	  break;
+              string_min = tmp;
+            }
+          flag_dump_strings = true;
+          break;
 
-	case 't':
-	  modern = true;
-	  ok &= decode_format_string (optarg);
-	  break;
+        case 't':
+          modern = true;
+          ok &= decode_format_string (optarg);
+          break;
 
-	case 'v':
-	  modern = true;
-	  abbreviate_duplicate_blocks = false;
-	  break;
+        case 'v':
+          modern = true;
+          abbreviate_duplicate_blocks = false;
+          break;
 
-	case TRADITIONAL_OPTION:
-	  traditional = true;
-	  break;
+        case TRADITIONAL_OPTION:
+          traditional = true;
+          break;
 
-	  /* The next several cases map the traditional format
-	     specification options to the corresponding modern format
-	     specs.  GNU od accepts any combination of old- and
-	     new-style options.  Format specification options accumulate.
-	     The obsolescent and undocumented formats are compatible
-	     with FreeBSD 4.10 od.  */
+          /* The next several cases map the traditional format
+             specification options to the corresponding modern format
+             specs.  GNU od accepts any combination of old- and
+             new-style options.  Format specification options accumulate.
+             The obsolescent and undocumented formats are compatible
+             with FreeBSD 4.10 od.  */
 
 #define CASE_OLD_ARG(old_char,new_string)		\
-	case old_char:					\
-	  ok &= decode_format_string (new_string);	\
-	  break
+        case old_char:					\
+          ok &= decode_format_string (new_string);	\
+          break
 
-	  CASE_OLD_ARG ('a', "a");
-	  CASE_OLD_ARG ('b', "o1");
-	  CASE_OLD_ARG ('c', "c");
-	  CASE_OLD_ARG ('D', "u4"); /* obsolescent and undocumented */
-	  CASE_OLD_ARG ('d', "u2");
-	case 'F': /* obsolescent and undocumented alias */
-	  CASE_OLD_ARG ('e', "fD"); /* obsolescent and undocumented */
-	  CASE_OLD_ARG ('f', "fF");
-	case 'X': /* obsolescent and undocumented alias */
-	  CASE_OLD_ARG ('H', "x4"); /* obsolescent and undocumented */
-	  CASE_OLD_ARG ('i', "dI");
-	case 'I': case 'L': /* obsolescent and undocumented aliases */
-	  CASE_OLD_ARG ('l', "dL");
-	  CASE_OLD_ARG ('O', "o4"); /* obsolesent and undocumented */
-	case 'B': /* obsolescent and undocumented alias */
-	  CASE_OLD_ARG ('o', "o2");
-	  CASE_OLD_ARG ('s', "d2");
-	case 'h': /* obsolescent and undocumented alias */
-	  CASE_OLD_ARG ('x', "x2");
+          CASE_OLD_ARG ('a', "a");
+          CASE_OLD_ARG ('b', "o1");
+          CASE_OLD_ARG ('c', "c");
+          CASE_OLD_ARG ('D', "u4"); /* obsolescent and undocumented */
+          CASE_OLD_ARG ('d', "u2");
+        case 'F': /* obsolescent and undocumented alias */
+          CASE_OLD_ARG ('e', "fD"); /* obsolescent and undocumented */
+          CASE_OLD_ARG ('f', "fF");
+        case 'X': /* obsolescent and undocumented alias */
+          CASE_OLD_ARG ('H', "x4"); /* obsolescent and undocumented */
+          CASE_OLD_ARG ('i', "dI");
+        case 'I': case 'L': /* obsolescent and undocumented aliases */
+          CASE_OLD_ARG ('l', "dL");
+          CASE_OLD_ARG ('O', "o4"); /* obsolesent and undocumented */
+        case 'B': /* obsolescent and undocumented alias */
+          CASE_OLD_ARG ('o', "o2");
+          CASE_OLD_ARG ('s', "d2");
+        case 'h': /* obsolescent and undocumented alias */
+          CASE_OLD_ARG ('x', "x2");
 
 #undef CASE_OLD_ARG
 
-	case 'w':
-	  modern = true;
-	  width_specified = true;
-	  if (optarg == NULL)
-	    {
-	      desired_width = 32;
-	    }
-	  else
-	    {
-	      uintmax_t w_tmp;
-	      s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
-	      if (s_err != LONGINT_OK)
-		xstrtol_fatal (s_err, oi, c, long_options, optarg);
-	      if (SIZE_MAX < w_tmp)
-		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
-	      desired_width = w_tmp;
-	    }
-	  break;
+        case 'w':
+          modern = true;
+          width_specified = true;
+          if (optarg == NULL)
+            {
+              desired_width = 32;
+            }
+          else
+            {
+              uintmax_t w_tmp;
+              s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
+              if (s_err != LONGINT_OK)
+                xstrtol_fatal (s_err, oi, c, long_options, optarg);
+              if (SIZE_MAX < w_tmp)
+                error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+              desired_width = w_tmp;
+            }
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	  break;
-	}
+        default:
+          usage (EXIT_FAILURE);
+          break;
+        }
     }
 
   if (!ok)
@@ -1726,20 +1726,20 @@ it must be one character from [doxn]"),
 
   if (flag_dump_strings && n_specs > 0)
     error (EXIT_FAILURE, 0,
-	   _("no type may be specified when dumping strings"));
+           _("no type may be specified when dumping strings"));
 
   n_files = argc - optind;
 
   /* If the --traditional option is used, there may be from
      0 to 3 remaining command line arguments;  handle each case
      separately.
-	od [file] [[+]offset[.][b] [[+]label[.][b]]]
+        od [file] [[+]offset[.][b] [[+]label[.][b]]]
      The offset and label have the same syntax.
 
      If --traditional is not given, and if no modern options are
      given, and if the offset begins with + or (if there are two
      operands) a digit, accept only this form, as per POSIX:
-	od [file] [[+]offset[.][b]]
+        od [file] [[+]offset[.][b]]
   */
 
   if (!modern | traditional)
@@ -1748,81 +1748,81 @@ it must be one character from [doxn]"),
       uintmax_t o2;
 
       switch (n_files)
-	{
-	case 1:
-	  if ((traditional || argv[optind][0] == '+')
-	      && parse_old_offset (argv[optind], &o1))
-	    {
-	      n_bytes_to_skip = o1;
-	      --n_files;
-	      ++argv;
-	    }
-	  break;
+        {
+        case 1:
+          if ((traditional || argv[optind][0] == '+')
+              && parse_old_offset (argv[optind], &o1))
+            {
+              n_bytes_to_skip = o1;
+              --n_files;
+              ++argv;
+            }
+          break;
 
-	case 2:
-	  if ((traditional || argv[optind + 1][0] == '+'
-	       || ISDIGIT (argv[optind + 1][0]))
-	      && parse_old_offset (argv[optind + 1], &o2))
-	    {
-	      if (traditional && parse_old_offset (argv[optind], &o1))
-		{
-		  n_bytes_to_skip = o1;
-		  flag_pseudo_start = true;
-		  pseudo_start = o2;
-		  argv += 2;
-		  n_files -= 2;
-		}
-	      else
-		{
-		  n_bytes_to_skip = o2;
-		  --n_files;
-		  argv[optind + 1] = argv[optind];
-		  ++argv;
-		}
-	    }
-	  break;
+        case 2:
+          if ((traditional || argv[optind + 1][0] == '+'
+               || ISDIGIT (argv[optind + 1][0]))
+              && parse_old_offset (argv[optind + 1], &o2))
+            {
+              if (traditional && parse_old_offset (argv[optind], &o1))
+                {
+                  n_bytes_to_skip = o1;
+                  flag_pseudo_start = true;
+                  pseudo_start = o2;
+                  argv += 2;
+                  n_files -= 2;
+                }
+              else
+                {
+                  n_bytes_to_skip = o2;
+                  --n_files;
+                  argv[optind + 1] = argv[optind];
+                  ++argv;
+                }
+            }
+          break;
 
-	case 3:
-	  if (traditional
-	      && parse_old_offset (argv[optind + 1], &o1)
-	      && parse_old_offset (argv[optind + 2], &o2))
-	    {
-	      n_bytes_to_skip = o1;
-	      flag_pseudo_start = true;
-	      pseudo_start = o2;
-	      argv[optind + 2] = argv[optind];
-	      argv += 2;
-	      n_files -= 2;
-	    }
-	  break;
-	}
+        case 3:
+          if (traditional
+              && parse_old_offset (argv[optind + 1], &o1)
+              && parse_old_offset (argv[optind + 2], &o2))
+            {
+              n_bytes_to_skip = o1;
+              flag_pseudo_start = true;
+              pseudo_start = o2;
+              argv[optind + 2] = argv[optind];
+              argv += 2;
+              n_files -= 2;
+            }
+          break;
+        }
 
       if (traditional && 1 < n_files)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-	  error (0, 0, "%s\n",
-		 _("compatibility mode supports at most one file"));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
+          error (0, 0, "%s\n",
+                 _("compatibility mode supports at most one file"));
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (flag_pseudo_start)
     {
       if (format_address == format_address_none)
-	{
-	  address_base = 8;
-	  address_pad_len = 7;
-	  format_address = format_address_paren;
-	}
+        {
+          address_base = 8;
+          address_pad_len = 7;
+          format_address = format_address_paren;
+        }
       else
-	format_address = format_address_label;
+        format_address = format_address_label;
     }
 
   if (limit_bytes_to_format)
     {
       end_offset = n_bytes_to_skip + max_bytes_to_format;
       if (end_offset < n_bytes_to_skip)
-	error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
+        error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
     }
 
   if (n_specs == 0)
@@ -1831,15 +1831,15 @@ it must be one character from [doxn]"),
   if (n_files > 0)
     {
       /* Set the global pointer FILE_LIST so that it
-	 references the first file-argument on the command-line.  */
+         references the first file-argument on the command-line.  */
 
       file_list = (char const *const *) &argv[optind];
     }
   else
     {
       /* No files were listed on the command line.
-	 Set the global pointer FILE_LIST so that it
-	 references the null-terminated list of one name: "-".  */
+         Set the global pointer FILE_LIST so that it
+         references the null-terminated list of one name: "-".  */
 
       file_list = default_file_list;
     }
@@ -1862,20 +1862,20 @@ it must be one character from [doxn]"),
   if (width_specified)
     {
       if (desired_width != 0 && desired_width % l_c_m == 0)
-	bytes_per_block = desired_width;
+        bytes_per_block = desired_width;
       else
-	{
-	  error (0, 0, _("warning: invalid width %lu; using %d instead"),
-		 (unsigned long int) desired_width, l_c_m);
-	  bytes_per_block = l_c_m;
-	}
+        {
+          error (0, 0, _("warning: invalid width %lu; using %d instead"),
+                 (unsigned long int) desired_width, l_c_m);
+          bytes_per_block = l_c_m;
+        }
     }
   else
     {
       if (l_c_m < DEFAULT_BYTES_PER_BLOCK)
-	bytes_per_block = l_c_m * (DEFAULT_BYTES_PER_BLOCK / l_c_m);
+        bytes_per_block = l_c_m * (DEFAULT_BYTES_PER_BLOCK / l_c_m);
       else
-	bytes_per_block = l_c_m;
+        bytes_per_block = l_c_m;
     }
 
   /* Compute padding necessary to align output block.  */
@@ -1884,7 +1884,7 @@ it must be one character from [doxn]"),
       int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
       int block_width = (spec[i].field_width + 1) * fields_per_block;
       if (width_per_block < block_width)
-	width_per_block = block_width;
+        width_per_block = block_width;
     }
   for (i = 0; i < n_specs; i++)
     {
@@ -1901,8 +1901,8 @@ it must be one character from [doxn]"),
       assert (bytes_per_block % width_bytes[spec[i].size] == 0);
       assert (1 <= spec[i].pad_width / fields_per_block);
       printf ("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n",
-	      i, spec[i].fmt_string, width_bytes[spec[i].size],
-	      spec[i].field_width, spec[i].pad_width);
+              i, spec[i].fmt_string, width_bytes[spec[i].size],
+              spec[i].field_width, spec[i].pad_width);
     }
 #endif
 

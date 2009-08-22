@@ -51,7 +51,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... DIRECTORY...\n"), program_name);
@@ -129,10 +129,10 @@ process_dir (char *dir, struct savewd *wd, void *options)
 {
   struct mkdir_options const *o = options;
   return (make_dir_parents (dir, wd, o->make_ancestor_function, options,
-			    o->mode, announce_mkdir,
-			    o->mode_bits, (uid_t) -1, (gid_t) -1, true)
-	  ? EXIT_SUCCESS
-	  : EXIT_FAILURE);
+                            o->mode, announce_mkdir,
+                            o->mode_bits, (uid_t) -1, (gid_t) -1, true)
+          ? EXIT_SUCCESS
+          : EXIT_FAILURE);
 }
 
 int
@@ -159,24 +159,24 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "pm:vZ:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'p':
-	  options.make_ancestor_function = make_ancestor;
-	  break;
-	case 'm':
-	  specified_mode = optarg;
-	  break;
-	case 'v': /* --verbose  */
-	  options.created_directory_format = _("created directory %s");
-	  break;
-	case 'Z':
-	  scontext = optarg;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'p':
+          options.make_ancestor_function = make_ancestor;
+          break;
+        case 'm':
+          specified_mode = optarg;
+          break;
+        case 'v': /* --verbose  */
+          options.created_directory_format = _("created directory %s");
+          break;
+        case 'Z':
+          scontext = optarg;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind == argc)
@@ -187,8 +187,8 @@ main (int argc, char **argv)
 
   if (scontext && setfscreatecon (scontext) < 0)
     error (EXIT_FAILURE, errno,
-	   _("failed to set default file creation context to %s"),
-	   quote (scontext));
+           _("failed to set default file creation context to %s"),
+           quote (scontext));
 
   if (options.make_ancestor_function || specified_mode)
     {
@@ -197,19 +197,19 @@ main (int argc, char **argv)
       options.ancestor_mode = (S_IRWXUGO & ~umask_value) | (S_IWUSR | S_IXUSR);
 
       if (specified_mode)
-	{
-	  struct mode_change *change = mode_compile (specified_mode);
-	  if (!change)
-	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
-		   quote (specified_mode));
-	  options.mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
-				      &options.mode_bits);
-	  free (change);
-	}
+        {
+          struct mode_change *change = mode_compile (specified_mode);
+          if (!change)
+            error (EXIT_FAILURE, 0, _("invalid mode %s"),
+                   quote (specified_mode));
+          options.mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
+                                      &options.mode_bits);
+          free (change);
+        }
       else
-	options.mode = S_IRWXUGO & ~umask_value;
+        options.mode = S_IRWXUGO & ~umask_value;
     }
 
   exit (savewd_process_files (argc - optind, argv + optind,
-			      process_dir, &options));
+                              process_dir, &options));
 }

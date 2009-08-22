@@ -76,45 +76,45 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
 
       g = realloc_groupbuf (NULL, max_n_groups);
       if (g == NULL)
-	return -1;
+        return -1;
 
       while (1)
-	{
-	  GETGROUPS_T *h;
-	  int last_n_groups = max_n_groups;
+        {
+          GETGROUPS_T *h;
+          int last_n_groups = max_n_groups;
 
-	  /* getgrouplist updates max_n_groups to num required.  */
-	  ng = getgrouplist (username, gid, g, &max_n_groups);
+          /* getgrouplist updates max_n_groups to num required.  */
+          ng = getgrouplist (username, gid, g, &max_n_groups);
 
-	  /* Some systems (like Darwin) have a bug where they
-	     never increase max_n_groups.  */
-	  if (ng < 0 && last_n_groups == max_n_groups)
-	    max_n_groups *= 2;
+          /* Some systems (like Darwin) have a bug where they
+             never increase max_n_groups.  */
+          if (ng < 0 && last_n_groups == max_n_groups)
+            max_n_groups *= 2;
 
-	  if ((h = realloc_groupbuf (g, max_n_groups)) == NULL)
-	    {
-	      int saved_errno = errno;
-	      free (g);
-	      errno = saved_errno;
-	      return -1;
-	    }
-	  g = h;
+          if ((h = realloc_groupbuf (g, max_n_groups)) == NULL)
+            {
+              int saved_errno = errno;
+              free (g);
+              errno = saved_errno;
+              return -1;
+            }
+          g = h;
 
-	  if (0 <= ng)
-	    {
-	      *groups = g;
-	      /* On success some systems just return 0 from getgrouplist,
-		 so return max_n_groups rather than ng.  */
-	      return max_n_groups;
-	    }
-	}
+          if (0 <= ng)
+            {
+              *groups = g;
+              /* On success some systems just return 0 from getgrouplist,
+                 so return max_n_groups rather than ng.  */
+              return max_n_groups;
+            }
+        }
     }
   /* else no username, so fall through and use getgroups. */
 #endif
 
   max_n_groups = (username
-		  ? getugroups (0, NULL, username, gid)
-		  : getgroups (0, NULL));
+                  ? getugroups (0, NULL, username, gid)
+                  : getgroups (0, NULL));
 
   /* If we failed to count groups with NULL for a buffer,
      try again with a non-NULL one, just in case.  */
@@ -126,8 +126,8 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
     return -1;
 
   ng = (username
-	? getugroups (max_n_groups, g, username, gid)
-	: getgroups (max_n_groups, g));
+        ? getugroups (max_n_groups, g, username, gid)
+        : getgroups (max_n_groups, g));
 
   if (ng < 0)
     {

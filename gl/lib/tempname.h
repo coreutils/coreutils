@@ -30,9 +30,9 @@
 
    KIND may be one of:
    GT_NOCREATE:		simply verify that the name does not exist
-			at the time of the call.
+                        at the time of the call.
    GT_FILE:		create a large file using open(O_CREAT|O_EXCL)
-			and return a read-write fd.  The file is mode 0600.
+                        and return a read-write fd.  The file is mode 0600.
    GT_DIR:		create a directory, which will be mode 0700.
 
    We use a clever algorithm to get hard-to-predict names. */

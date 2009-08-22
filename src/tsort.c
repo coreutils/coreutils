@@ -76,7 +76,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -141,120 +141,120 @@ search_item (struct item *root, const char *str)
       /* A2. Compare.  */
       a = strcmp (str, p->str);
       if (a == 0)
-	return p;
+        return p;
 
       /* A3 & A4.  Move left & right.  */
       if (a < 0)
-	q = p->left;
+        q = p->left;
       else
-	q = p->right;
+        q = p->right;
 
       if (q == NULL)
-	{
-	  /* A5. Insert.  */
-	  q = new_item (str);
+        {
+          /* A5. Insert.  */
+          q = new_item (str);
 
-	  /* A3 & A4.  (continued).  */
-	  if (a < 0)
-	    p->left = q;
-	  else
-	    p->right = q;
+          /* A3 & A4.  (continued).  */
+          if (a < 0)
+            p->left = q;
+          else
+            p->right = q;
 
-	  /* A6. Adjust balance factors.  */
-	  assert (!STREQ (str, s->str));
-	  if (strcmp (str, s->str) < 0)
-	    {
-	      r = p = s->left;
-	      a = -1;
-	    }
-	  else
-	    {
-	      r = p = s->right;
-	      a = 1;
-	    }
+          /* A6. Adjust balance factors.  */
+          assert (!STREQ (str, s->str));
+          if (strcmp (str, s->str) < 0)
+            {
+              r = p = s->left;
+              a = -1;
+            }
+          else
+            {
+              r = p = s->right;
+              a = 1;
+            }
 
-	  while (p != q)
-	    {
-	      assert (!STREQ (str, p->str));
-	      if (strcmp (str, p->str) < 0)
-		{
-		  p->balance = -1;
-		  p = p->left;
-		}
-	      else
-		{
-		  p->balance = 1;
-		  p = p->right;
-		}
-	    }
+          while (p != q)
+            {
+              assert (!STREQ (str, p->str));
+              if (strcmp (str, p->str) < 0)
+                {
+                  p->balance = -1;
+                  p = p->left;
+                }
+              else
+                {
+                  p->balance = 1;
+                  p = p->right;
+                }
+            }
 
-	  /* A7. Balancing act.  */
-	  if (s->balance == 0 || s->balance == -a)
-	    {
-	      s->balance += a;
-	      return q;
-	    }
+          /* A7. Balancing act.  */
+          if (s->balance == 0 || s->balance == -a)
+            {
+              s->balance += a;
+              return q;
+            }
 
-	  if (r->balance == a)
-	    {
-	      /* A8. Single Rotation.  */
-	      p = r;
-	      if (a < 0)
-		{
-		  s->left = r->right;
-		  r->right = s;
-		}
-	      else
-		{
-		  s->right = r->left;
-		  r->left = s;
-		}
-	      s->balance = r->balance = 0;
-	    }
-	  else
-	    {
-	      /* A9. Double rotation.  */
-	      if (a < 0)
-		{
-		  p = r->right;
-		  r->right = p->left;
-		  p->left = r;
-		  s->left = p->right;
-		  p->right = s;
-		}
-	      else
-		{
-		  p = r->left;
-		  r->left = p->right;
-		  p->right = r;
-		  s->right = p->left;
-		  p->left = s;
-		}
+          if (r->balance == a)
+            {
+              /* A8. Single Rotation.  */
+              p = r;
+              if (a < 0)
+                {
+                  s->left = r->right;
+                  r->right = s;
+                }
+              else
+                {
+                  s->right = r->left;
+                  r->left = s;
+                }
+              s->balance = r->balance = 0;
+            }
+          else
+            {
+              /* A9. Double rotation.  */
+              if (a < 0)
+                {
+                  p = r->right;
+                  r->right = p->left;
+                  p->left = r;
+                  s->left = p->right;
+                  p->right = s;
+                }
+              else
+                {
+                  p = r->left;
+                  r->left = p->right;
+                  p->right = r;
+                  s->right = p->left;
+                  p->left = s;
+                }
 
-	      s->balance = 0;
-	      r->balance = 0;
-	      if (p->balance == a)
-		s->balance = -a;
-	      else if (p->balance == -a)
-		r->balance = a;
-	      p->balance = 0;
-	    }
+              s->balance = 0;
+              r->balance = 0;
+              if (p->balance == a)
+                s->balance = -a;
+              else if (p->balance == -a)
+                r->balance = a;
+              p->balance = 0;
+            }
 
-	  /* A10. Finishing touch.  */
-	  if (s == t->right)
-	    t->right = p;
-	  else
-	    t->left = p;
+          /* A10. Finishing touch.  */
+          if (s == t->right)
+            t->right = p;
+          else
+            t->left = p;
 
-	  return q;
-	}
+          return q;
+        }
 
       /* A3 & A4.  (continued).  */
       if (q->balance)
-	{
-	  t = p;
-	  s = q;
-	}
+        {
+          t = p;
+          s = q;
+        }
 
       p = q;
     }
@@ -293,9 +293,9 @@ scan_zeros (struct item *k)
   if (k->count == 0 && k->str)
     {
       if (head == NULL)
-	head = k;
+        head = k;
       else
-	zeros->qlink = k;
+        zeros->qlink = k;
 
       zeros = k;
     }
@@ -327,67 +327,67 @@ detect_loop (struct item *k)
   if (k->count > 0)
     {
       /* K does not have to be part of a cycle.  It is however part of
-	 a graph that contains a cycle.  */
+         a graph that contains a cycle.  */
 
       if (loop == NULL)
-	/* Start traversing the graph at K.  */
-	loop = k;
+        /* Start traversing the graph at K.  */
+        loop = k;
       else
-	{
-	  struct successor **p = &k->top;
+        {
+          struct successor **p = &k->top;
 
-	  while (*p)
-	    {
-	      if ((*p)->suc == loop)
-		{
-		  if (k->qlink)
-		    {
-		      /* We have found a loop.  Retrace our steps.  */
-		      while (loop)
-			{
-			  struct item *tmp = loop->qlink;
+          while (*p)
+            {
+              if ((*p)->suc == loop)
+                {
+                  if (k->qlink)
+                    {
+                      /* We have found a loop.  Retrace our steps.  */
+                      while (loop)
+                        {
+                          struct item *tmp = loop->qlink;
 
-			  fprintf (stderr, "%s: %s\n", program_name,
-				   loop->str);
+                          fprintf (stderr, "%s: %s\n", program_name,
+                                   loop->str);
 
-			  /* Until we encounter K again.  */
-			  if (loop == k)
-			    {
-			      /* Remove relation.  */
-			      (*p)->suc->count--;
-			      *p = (*p)->next;
-			      break;
-			    }
+                          /* Until we encounter K again.  */
+                          if (loop == k)
+                            {
+                              /* Remove relation.  */
+                              (*p)->suc->count--;
+                              *p = (*p)->next;
+                              break;
+                            }
 
-			  /* Tidy things up since we might have to
+                          /* Tidy things up since we might have to
                              detect another loop.  */
-			  loop->qlink = NULL;
-			  loop = tmp;
-			}
+                          loop->qlink = NULL;
+                          loop = tmp;
+                        }
 
-		      while (loop)
-			{
-			  struct item *tmp = loop->qlink;
+                      while (loop)
+                        {
+                          struct item *tmp = loop->qlink;
 
-			  loop->qlink = NULL;
-			  loop = tmp;
-			}
+                          loop->qlink = NULL;
+                          loop = tmp;
+                        }
 
-		      /* Since we have found the loop, stop walking
+                      /* Since we have found the loop, stop walking
                          the tree.  */
-		      return true;
-		    }
-		  else
-		    {
-		      k->qlink = loop;
-		      loop = k;
-		      break;
-		    }
-		}
+                      return true;
+                    }
+                  else
+                    {
+                      k->qlink = loop;
+                      loop = k;
+                      break;
+                    }
+                }
 
-	      p = &(*p)->next;
-	    }
-	}
+              p = &(*p)->next;
+            }
+        }
     }
 
   return false;
@@ -404,13 +404,13 @@ recurse_tree (struct item *root, bool (*action) (struct item *))
   else
     {
       if (root->left != NULL)
-	if (recurse_tree (root->left, action))
-	  return true;
+        if (recurse_tree (root->left, action))
+          return true;
       if ((*action) (root))
-	return true;
+        return true;
       if (root->right != NULL)
-	if (recurse_tree (root->right, action))
-	  return true;
+        if (recurse_tree (root->right, action))
+          return true;
     }
 
   return false;
@@ -451,24 +451,24 @@ tsort (const char *file)
       /* T2. Next Relation.  */
       size_t len = readtoken (stdin, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
       if (len == (size_t) -1)
-	break;
+        break;
 
       assert (len != 0);
 
       k = search_item (root, tokenbuffer.buffer);
       if (j)
-	{
-	  /* T3. Record the relation.  */
-	  record_relation (j, k);
-	  k = NULL;
-	}
+        {
+          /* T3. Record the relation.  */
+          record_relation (j, k);
+          k = NULL;
+        }
 
       j = k;
     }
 
   if (k != NULL)
     error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
-	   file);
+           file);
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
@@ -479,48 +479,48 @@ tsort (const char *file)
       walk_tree (root, scan_zeros);
 
       while (head)
-	{
-	  struct successor *p = head->top;
+        {
+          struct successor *p = head->top;
 
-	  /* T5. Output front of queue.  */
-	  puts (head->str);
-	  head->str = NULL;	/* Avoid printing the same string twice.  */
-	  n_strings--;
+          /* T5. Output front of queue.  */
+          puts (head->str);
+          head->str = NULL;	/* Avoid printing the same string twice.  */
+          n_strings--;
 
-	  /* T6. Erase relations.  */
-	  while (p)
-	    {
-	      p->suc->count--;
-	      if (p->suc->count == 0)
-		{
-		  zeros->qlink = p->suc;
-		  zeros = p->suc;
-		}
+          /* T6. Erase relations.  */
+          while (p)
+            {
+              p->suc->count--;
+              if (p->suc->count == 0)
+                {
+                  zeros->qlink = p->suc;
+                  zeros = p->suc;
+                }
 
-	      p = p->next;
-	    }
+              p = p->next;
+            }
 
-	  /* T7. Remove from queue.  */
-	  head = head->qlink;
-	}
+          /* T7. Remove from queue.  */
+          head = head->qlink;
+        }
 
       /* T8.  End of process.  */
       if (n_strings > 0)
-	{
-	  /* The input contains a loop.  */
-	  error (0, 0, _("%s: input contains a loop:"), file);
-	  ok = false;
+        {
+          /* The input contains a loop.  */
+          error (0, 0, _("%s: input contains a loop:"), file);
+          ok = false;
 
-	  /* Print the loop and remove a relation to break it.  */
-	  do
-	    walk_tree (root, detect_loop);
-	  while (loop);
-	}
+          /* Print the loop and remove a relation to break it.  */
+          do
+            walk_tree (root, detect_loop);
+          while (loop);
+        }
     }
 
   if (fclose (stdin) != 0)
     error (EXIT_FAILURE, errno, "%s",
-	   is_stdin ? _("standard input") : quote (file));
+           is_stdin ? _("standard input") : quote (file));
 
   return ok;
 }
@@ -539,7 +539,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 

@@ -263,7 +263,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [-WIDTH] [OPTION]... [FILE]...\n"), program_name);
@@ -281,7 +281,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                               reattaching the prefix to reformatted lines\n\
   -s, --split-only          split long lines, but do not refill\n\
 "),
-	     stdout);
+             stdout);
       fputs (_("\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
@@ -292,7 +292,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n"),
-	     stdout);
+             stdout);
       emit_bug_reporting_address ();
     }
   exit (status);
@@ -345,40 +345,40 @@ main (int argc, char **argv)
     }
 
   while ((optchar = getopt_long (argc, argv, "0123456789cstuw:p:",
-				 long_options, NULL))
-	 != -1)
+                                 long_options, NULL))
+         != -1)
     switch (optchar)
       {
       default:
-	if (ISDIGIT (optchar))
-	  error (0, 0, _("invalid option -- %c; -WIDTH is recognized\
+        if (ISDIGIT (optchar))
+          error (0, 0, _("invalid option -- %c; -WIDTH is recognized\
  only when it is the first\noption; use -w N instead"),
-		 optchar);
-	usage (EXIT_FAILURE);
+                 optchar);
+        usage (EXIT_FAILURE);
 
       case 'c':
-	crown = true;
-	break;
+        crown = true;
+        break;
 
       case 's':
-	split = true;
-	break;
+        split = true;
+        break;
 
       case 't':
-	tagged = true;
-	break;
+        tagged = true;
+        break;
 
       case 'u':
-	uniform = true;
-	break;
+        uniform = true;
+        break;
 
       case 'w':
-	max_width_option = optarg;
-	break;
+        max_width_option = optarg;
+        break;
 
       case 'p':
-	set_prefix (optarg);
-	break;
+        set_prefix (optarg);
+        break;
 
       case_GETOPT_HELP_CHAR;
 
@@ -389,12 +389,12 @@ main (int argc, char **argv)
   if (max_width_option)
     {
       /* Limit max_width to MAXCHARS / 2; otherwise, the resulting
-	 output can be quite ugly.  */
+         output can be quite ugly.  */
       unsigned long int tmp;
       if (! (xstrtoul (max_width_option, NULL, 10, &tmp, "") == LONGINT_OK
-	     && tmp <= MAXCHARS / 2))
-	error (EXIT_FAILURE, 0, _("invalid width: %s"),
-	       quote (max_width_option));
+             && tmp <= MAXCHARS / 2))
+        error (EXIT_FAILURE, 0, _("invalid width: %s"),
+               quote (max_width_option));
       max_width = tmp;
     }
 
@@ -405,31 +405,31 @@ main (int argc, char **argv)
   else
     {
       for (; optind < argc; optind++)
-	{
-	  char *file = argv[optind];
-	  if (STREQ (file, "-"))
-	    fmt (stdin);
-	  else
-	    {
-	      FILE *in_stream;
-	      in_stream = fopen (file, "r");
-	      if (in_stream != NULL)
-		{
-		  fmt (in_stream);
-		  if (fclose (in_stream) == EOF)
-		    {
-		      error (0, errno, "%s", file);
-		      ok = false;
-		    }
-		}
-	      else
-		{
-		  error (0, errno, _("cannot open %s for reading"),
-			 quote (file));
-		  ok = false;
-		}
-	    }
-	}
+        {
+          char *file = argv[optind];
+          if (STREQ (file, "-"))
+            fmt (stdin);
+          else
+            {
+              FILE *in_stream;
+              in_stream = fopen (file, "r");
+              if (in_stream != NULL)
+                {
+                  fmt (in_stream);
+                  if (fclose (in_stream) == EOF)
+                    {
+                      error (0, errno, "%s", file);
+                      ok = false;
+                    }
+                }
+              else
+                {
+                  error (0, errno, _("cannot open %s for reading"),
+                         quote (file));
+                  ok = false;
+                }
+            }
+        }
     }
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -488,9 +488,9 @@ set_other_indent (bool same_paragraph)
   else if (tagged)
     {
       if (same_paragraph && in_column != first_indent)
-	{
-	  other_indent = in_column;
-	}
+        {
+          other_indent = in_column;
+        }
 
       /* Only one line: use the secondary indent from last time if it
          splits, or 0 if there have been no multi-line paragraphs in the
@@ -498,7 +498,7 @@ set_other_indent (bool same_paragraph)
          pick a new secondary indent.  */
 
       else if (other_indent == first_indent)
-	other_indent = first_indent == 0 ? DEF_INDENT : 0;
+        other_indent = first_indent == 0 ? DEF_INDENT : 0;
     }
   else
     {
@@ -532,15 +532,15 @@ get_paragraph (FILE *f)
   /* Scan (and copy) blank lines, and lines not introduced by the prefix.  */
 
   while (c == '\n' || c == EOF
-	 || next_prefix_indent < prefix_lead_space
-	 || in_column < next_prefix_indent + prefix_full_length)
+         || next_prefix_indent < prefix_lead_space
+         || in_column < next_prefix_indent + prefix_full_length)
     {
       c = copy_rest (f, c);
       if (c == EOF)
-	{
-	  next_char = EOF;
-	  return false;
-	}
+        {
+          next_char = EOF;
+          return false;
+        }
       putchar ('\n');
       c = get_prefix (f);
     }
@@ -563,29 +563,29 @@ get_paragraph (FILE *f)
   else if (crown)
     {
       if (same_para (c))
-	{
-	  do
-	    {			/* for each line till the end of the para */
-	      c = get_line (f, c);
-	    }
-	  while (same_para (c) && in_column == other_indent);
-	}
+        {
+          do
+            {			/* for each line till the end of the para */
+              c = get_line (f, c);
+            }
+          while (same_para (c) && in_column == other_indent);
+        }
     }
   else if (tagged)
     {
       if (same_para (c) && in_column != first_indent)
-	{
-	  do
-	    {			/* for each line till the end of the para */
-	      c = get_line (f, c);
-	    }
-	  while (same_para (c) && in_column == other_indent);
-	}
+        {
+          do
+            {			/* for each line till the end of the para */
+              c = get_line (f, c);
+            }
+          while (same_para (c) && in_column == other_indent);
+        }
     }
   else
     {
       while (same_para (c) && in_column == other_indent)
-	c = get_line (f, c);
+        c = get_line (f, c);
     }
   (word_limit - 1)->period = (word_limit - 1)->final = true;
   next_char = c;
@@ -607,11 +607,11 @@ copy_rest (FILE *f, int c)
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column && *s; out_column++)
-	putchar (*s++);
+        putchar (*s++);
       if (c != EOF && c != '\n')
-	put_space (in_column - out_column);
+        put_space (in_column - out_column);
       if (c == EOF && in_column >= next_prefix_indent + prefix_length)
-	putchar ('\n');
+        putchar ('\n');
     }
   while (c != '\n' && c != EOF)
     {
@@ -629,8 +629,8 @@ static bool
 same_para (int c)
 {
   return (next_prefix_indent == prefix_indent
-	  && in_column >= next_prefix_indent + prefix_full_length
-	  && c != '\n' && c != EOF);
+          && in_column >= next_prefix_indent + prefix_full_length
+          && c != '\n' && c != EOF);
 }
 
 /* Read a line from input file F, given first non-blank character C
@@ -658,15 +658,15 @@ get_line (FILE *f, int c)
 
       word_limit->text = wptr;
       do
-	{
-	  if (wptr == end_of_parabuf)
-	    {
-	      set_other_indent (true);
-	      flush_paragraph ();
-	    }
-	  *wptr++ = c;
-	  c = getc (f);
-	}
+        {
+          if (wptr == end_of_parabuf)
+            {
+              set_other_indent (true);
+              flush_paragraph ();
+            }
+          *wptr++ = c;
+          c = getc (f);
+        }
       while (c != EOF && !isspace (c));
       in_column += word_limit->length = wptr - word_limit->text;
       check_punctuation (word_limit);
@@ -677,15 +677,15 @@ get_line (FILE *f, int c)
       c = get_space (f, c);
       word_limit->space = in_column - start;
       word_limit->final = (c == EOF
-			   || (word_limit->period
-			       && (c == '\n' || word_limit->space > 1)));
+                           || (word_limit->period
+                               && (c == '\n' || word_limit->space > 1)));
       if (c == '\n' || c == EOF || uniform)
-	word_limit->space = word_limit->final ? 2 : 1;
+        word_limit->space = word_limit->final ? 2 : 1;
       if (word_limit == end_of_word)
-	{
-	  set_other_indent (true);
-	  flush_paragraph ();
-	}
+        {
+          set_other_indent (true);
+          flush_paragraph ();
+        }
       word_limit++;
     }
   while (c != '\n' && c != EOF);
@@ -710,13 +710,13 @@ get_prefix (FILE *f)
       const char *p;
       next_prefix_indent = in_column;
       for (p = prefix; *p != '\0'; p++)
-	{
-	  unsigned char pc = *p;
-	  if (c != pc)
-	    return c;
-	  in_column++;
-	  c = getc (f);
-	}
+        {
+          unsigned char pc = *p;
+          if (c != pc)
+            return c;
+          in_column++;
+          c = getc (f);
+        }
       c = get_space (f, c);
     }
   return c;
@@ -731,14 +731,14 @@ get_space (FILE *f, int c)
   for (;;)
     {
       if (c == ' ')
-	in_column++;
+        in_column++;
       else if (c == '\t')
-	{
-	  tabs = true;
-	  in_column = (in_column / TABWIDTH + 1) * TABWIDTH;
-	}
+        {
+          tabs = true;
+          in_column = (in_column / TABWIDTH + 1) * TABWIDTH;
+        }
       else
-	return c;
+        return c;
       c = getc (f);
     }
 }
@@ -794,12 +794,12 @@ flush_paragraph (void)
   for (w = word->next_break; w != word_limit; w = w->next_break)
     {
       if (w->best_cost - w->next_break->best_cost < best_break)
-	{
-	  split_point = w;
-	  best_break = w->best_cost - w->next_break->best_cost;
-	}
+        {
+          split_point = w;
+          best_break = w->best_cost - w->next_break->best_cost;
+        }
       if (best_break <= MAXCOST - LINE_CREDIT)
-	best_break += LINE_CREDIT;
+        best_break += LINE_CREDIT;
     }
   put_paragraph (split_point);
 
@@ -848,30 +848,30 @@ fmt_paragraph (void)
       w = start;
       len += w->length;
       do
-	{
-	  w++;
+        {
+          w++;
 
-	  /* Consider breaking before w.  */
+          /* Consider breaking before w.  */
 
-	  wcost = line_cost (w, len) + w->best_cost;
-	  if (start == word && last_line_length > 0)
-	    wcost += RAGGED_COST (len - last_line_length);
-	  if (wcost < best)
-	    {
-	      best = wcost;
-	      start->next_break = w;
-	      start->line_length = len;
-	    }
+          wcost = line_cost (w, len) + w->best_cost;
+          if (start == word && last_line_length > 0)
+            wcost += RAGGED_COST (len - last_line_length);
+          if (wcost < best)
+            {
+              best = wcost;
+              start->next_break = w;
+              start->line_length = len;
+            }
 
-	  /* This is a kludge to keep us from computing `len' as the
-	     sum of the sentinel length and some non-zero number.
-	     Since the sentinel w->length may be INT_MAX, adding
-	     to that would give a negative result.  */
-	  if (w == word_limit)
-	    break;
+          /* This is a kludge to keep us from computing `len' as the
+             sum of the sentinel length and some non-zero number.
+             Since the sentinel w->length may be INT_MAX, adding
+             to that would give a negative result.  */
+          if (w == word_limit)
+            break;
 
-	  len += (w - 1)->space + w->length;	/* w > start >= word */
-	}
+          len += (w - 1)->space + w->length;	/* w > start >= word */
+        }
       while (len < max_width);
       start->best_cost = best + base_cost (start);
     }
@@ -892,16 +892,16 @@ base_cost (WORD *this)
   if (this > word)
     {
       if ((this - 1)->period)
-	{
-	  if ((this - 1)->final)
-	    cost -= SENTENCE_BONUS;
-	  else
-	    cost += NOBREAK_COST;
-	}
+        {
+          if ((this - 1)->final)
+            cost -= SENTENCE_BONUS;
+          else
+            cost += NOBREAK_COST;
+        }
       else if ((this - 1)->punct)
-	cost -= PUNCT_BONUS;
+        cost -= PUNCT_BONUS;
       else if (this > word + 1 && (this - 2)->final)
-	cost += WIDOW_COST ((this - 1)->length);
+        cost += WIDOW_COST ((this - 1)->length);
     }
 
   if (this->paren)
@@ -997,11 +997,11 @@ put_space (int space)
     {
       tab_target = space_target / TABWIDTH * TABWIDTH;
       if (out_column + 1 < tab_target)
-	while (out_column < tab_target)
-	  {
-	    putchar ('\t');
-	    out_column = (out_column / TABWIDTH + 1) * TABWIDTH;
-	  }
+        while (out_column < tab_target)
+          {
+            putchar ('\t');
+            out_column = (out_column / TABWIDTH + 1) * TABWIDTH;
+          }
     }
   while (out_column < space_target)
     {

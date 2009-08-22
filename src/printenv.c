@@ -52,7 +52,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -62,7 +62,7 @@ Print the values of the specified environment VARIABLE(s).\n\
 If no VARIABLE is specified, print name and value pairs for them all.\n\
 \n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
@@ -89,14 +89,14 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (PRINTENV_FAILURE);
 
   if (optind >= argc)
     {
       for (env = environ; *env != NULL; ++env)
-	puts (*env);
+        puts (*env);
       ok = true;
     }
   else
@@ -104,26 +104,26 @@ main (int argc, char **argv)
       int matches = 0;
 
       for (i = optind; i < argc; ++i)
-	{
-	  bool matched = false;
+        {
+          bool matched = false;
 
-	  for (env = environ; *env; ++env)
-	    {
-	      ep = *env;
-	      ap = argv[i];
-	      while (*ep != '\0' && *ap != '\0' && *ep++ == *ap++)
-		{
-		  if (*ep == '=' && *ap == '\0')
-		    {
-		      puts (ep + 1);
-		      matched = true;
-		      break;
-		    }
-		}
-	    }
+          for (env = environ; *env; ++env)
+            {
+              ep = *env;
+              ap = argv[i];
+              while (*ep != '\0' && *ap != '\0' && *ep++ == *ap++)
+                {
+                  if (*ep == '=' && *ap == '\0')
+                    {
+                      puts (ep + 1);
+                      matched = true;
+                      break;
+                    }
+                }
+            }
 
-	  matches += matched;
-	}
+          matches += matched;
+        }
 
       ok = (matches == argc - optind);
     }

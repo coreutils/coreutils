@@ -26,12 +26,12 @@
    Options:
    --serial
    -s				Paste one file at a time rather than
-				one line from each file.
+                                one line from each file.
    --delimiters=delim-list
    -d delim-list		Consecutively use the characters in
-				DELIM-LIST instead of tab to separate
-				merged lines.  When DELIM-LIST is exhausted,
-				start again at its beginning.
+                                DELIM-LIST instead of tab to separate
+                                merged lines.  When DELIM-LIST is exhausted,
+                                start again at its beginning.
    A FILE of `-' means standard input.
    If no FILEs are given, standard input is used. */
 
@@ -95,53 +95,53 @@ collapse_escapes (char const *strptr)
   while (*strptr)
     {
       if (*strptr != '\\')	/* Is it an escape character? */
-	*strout++ = *strptr++;	/* No, just transfer it. */
+        *strout++ = *strptr++;	/* No, just transfer it. */
       else
-	{
-	  switch (*++strptr)
-	    {
-	    case '0':
-	      *strout++ = EMPTY_DELIM;
-	      break;
+        {
+          switch (*++strptr)
+            {
+            case '0':
+              *strout++ = EMPTY_DELIM;
+              break;
 
-	    case 'b':
-	      *strout++ = '\b';
-	      break;
+            case 'b':
+              *strout++ = '\b';
+              break;
 
-	    case 'f':
-	      *strout++ = '\f';
-	      break;
+            case 'f':
+              *strout++ = '\f';
+              break;
 
-	    case 'n':
-	      *strout++ = '\n';
-	      break;
+            case 'n':
+              *strout++ = '\n';
+              break;
 
-	    case 'r':
-	      *strout++ = '\r';
-	      break;
+            case 'r':
+              *strout++ = '\r';
+              break;
 
-	    case 't':
-	      *strout++ = '\t';
-	      break;
+            case 't':
+              *strout++ = '\t';
+              break;
 
-	    case 'v':
-	      *strout++ = '\v';
-	      break;
+            case 'v':
+              *strout++ = '\v';
+              break;
 
-	    case '\\':
-	      *strout++ = '\\';
-	      break;
+            case '\\':
+              *strout++ = '\\';
+              break;
 
-	    case '\0':
-	      backslash_at_end = true;
-	      goto done;
+            case '\0':
+              backslash_at_end = true;
+              goto done;
 
-	    default:
-	      *strout++ = *strptr;
-	      break;
-	    }
-	  strptr++;
-	}
+            default:
+              *strout++ = *strptr;
+              break;
+            }
+          strptr++;
+        }
     }
 
  done:;
@@ -200,18 +200,18 @@ paste_parallel (size_t nfiles, char **fnamptr)
   for (files_open = 0; files_open < nfiles; ++files_open)
     {
       if (STREQ (fnamptr[files_open], "-"))
-	{
-	  have_read_stdin = true;
-	  fileptr[files_open] = stdin;
-	}
+        {
+          have_read_stdin = true;
+          fileptr[files_open] = stdin;
+        }
       else
-	{
-	  fileptr[files_open] = fopen (fnamptr[files_open], "r");
-	  if (fileptr[files_open] == NULL)
-	    error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
-	  else if (fileno (fileptr[files_open]) == STDIN_FILENO)
-	    opened_stdin = true;
-	}
+        {
+          fileptr[files_open] = fopen (fnamptr[files_open], "r");
+          if (fileptr[files_open] == NULL)
+            error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
+          else if (fileno (fileptr[files_open]) == STDIN_FILENO)
+            opened_stdin = true;
+        }
     }
 
   if (opened_stdin && have_read_stdin)
@@ -230,107 +230,107 @@ paste_parallel (size_t nfiles, char **fnamptr)
       size_t i;
 
       for (i = 0; i < nfiles && files_open; i++)
-	{
-	  int chr IF_LINT (= 0);	/* Input character. */
-	  int err IF_LINT (= 0);	/* Input errno value.  */
-	  size_t line_length = 0;	/* Number of chars in line. */
+        {
+          int chr IF_LINT (= 0);	/* Input character. */
+          int err IF_LINT (= 0);	/* Input errno value.  */
+          size_t line_length = 0;	/* Number of chars in line. */
 
-	  if (fileptr[i])
-	    {
-	      chr = getc (fileptr[i]);
-	      err = errno;
-	      if (chr != EOF && delims_saved)
-		{
-		  if (fwrite (delbuf, 1, delims_saved, stdout) != delims_saved)
-		    write_error ();
-		  delims_saved = 0;
-		}
+          if (fileptr[i])
+            {
+              chr = getc (fileptr[i]);
+              err = errno;
+              if (chr != EOF && delims_saved)
+                {
+                  if (fwrite (delbuf, 1, delims_saved, stdout) != delims_saved)
+                    write_error ();
+                  delims_saved = 0;
+                }
 
-	      while (chr != EOF)
-		{
-		  line_length++;
-		  if (chr == '\n')
-		    break;
-		  xputchar (chr);
-		  chr = getc (fileptr[i]);
-		  err = errno;
-		}
-	    }
+              while (chr != EOF)
+                {
+                  line_length++;
+                  if (chr == '\n')
+                    break;
+                  xputchar (chr);
+                  chr = getc (fileptr[i]);
+                  err = errno;
+                }
+            }
 
-	  if (line_length == 0)
-	    {
-	      /* EOF, read error, or closed file.
-		 If an EOF or error, close the file.  */
-	      if (fileptr[i])
-		{
-		  if (ferror (fileptr[i]))
-		    {
-		      error (0, err, "%s", fnamptr[i]);
-		      ok = false;
-		    }
-		  if (fileptr[i] == stdin)
-		    clearerr (fileptr[i]); /* Also clear EOF. */
-		  else if (fclose (fileptr[i]) == EOF)
-		    {
-		      error (0, errno, "%s", fnamptr[i]);
-		      ok = false;
-		    }
+          if (line_length == 0)
+            {
+              /* EOF, read error, or closed file.
+                 If an EOF or error, close the file.  */
+              if (fileptr[i])
+                {
+                  if (ferror (fileptr[i]))
+                    {
+                      error (0, err, "%s", fnamptr[i]);
+                      ok = false;
+                    }
+                  if (fileptr[i] == stdin)
+                    clearerr (fileptr[i]); /* Also clear EOF. */
+                  else if (fclose (fileptr[i]) == EOF)
+                    {
+                      error (0, errno, "%s", fnamptr[i]);
+                      ok = false;
+                    }
 
-		  fileptr[i] = NULL;
-		  files_open--;
-		}
+                  fileptr[i] = NULL;
+                  files_open--;
+                }
 
-	      if (i + 1 == nfiles)
-		{
-		  /* End of this output line.
-		     Is this the end of the whole thing? */
-		  if (somedone)
-		    {
-		      /* No.  Some files were not closed for this line. */
-		      if (delims_saved)
-			{
-			  if (fwrite (delbuf, 1, delims_saved, stdout)
-			      != delims_saved)
-			    write_error ();
-			  delims_saved = 0;
-			}
-		      xputchar ('\n');
-		    }
-		  continue;	/* Next read of files, or exit. */
-		}
-	      else
-		{
-		  /* Closed file; add delimiter to `delbuf'. */
-		  if (*delimptr != EMPTY_DELIM)
-		    delbuf[delims_saved++] = *delimptr;
-		  if (++delimptr == delim_end)
-		    delimptr = delims;
-		}
-	    }
-	  else
-	    {
-	      /* Some data read. */
-	      somedone = true;
+              if (i + 1 == nfiles)
+                {
+                  /* End of this output line.
+                     Is this the end of the whole thing? */
+                  if (somedone)
+                    {
+                      /* No.  Some files were not closed for this line. */
+                      if (delims_saved)
+                        {
+                          if (fwrite (delbuf, 1, delims_saved, stdout)
+                              != delims_saved)
+                            write_error ();
+                          delims_saved = 0;
+                        }
+                      xputchar ('\n');
+                    }
+                  continue;	/* Next read of files, or exit. */
+                }
+              else
+                {
+                  /* Closed file; add delimiter to `delbuf'. */
+                  if (*delimptr != EMPTY_DELIM)
+                    delbuf[delims_saved++] = *delimptr;
+                  if (++delimptr == delim_end)
+                    delimptr = delims;
+                }
+            }
+          else
+            {
+              /* Some data read. */
+              somedone = true;
 
-	      /* Except for last file, replace last newline with delim. */
-	      if (i + 1 != nfiles)
-		{
-		  if (chr != '\n' && chr != EOF)
-		    xputchar (chr);
-		  if (*delimptr != EMPTY_DELIM)
-		    xputchar (*delimptr);
-		  if (++delimptr == delim_end)
-		    delimptr = delims;
-		}
-	      else
-		{
-		  /* If the last line of the last file lacks a newline,
-		     print one anyhow.  POSIX requires this.  */
-		  char c = (chr == EOF ? '\n' : chr);
-		  xputchar (c);
-		}
-	    }
-	}
+              /* Except for last file, replace last newline with delim. */
+              if (i + 1 != nfiles)
+                {
+                  if (chr != '\n' && chr != EOF)
+                    xputchar (chr);
+                  if (*delimptr != EMPTY_DELIM)
+                    xputchar (*delimptr);
+                  if (++delimptr == delim_end)
+                    delimptr = delims;
+                }
+              else
+                {
+                  /* If the last line of the last file lacks a newline,
+                     print one anyhow.  POSIX requires this.  */
+                  char c = (chr == EOF ? '\n' : chr);
+                  xputchar (c);
+                }
+            }
+        }
     }
   free (fileptr);
   free (delbuf);
@@ -354,70 +354,70 @@ paste_serial (size_t nfiles, char **fnamptr)
       int saved_errno;
       bool is_stdin = STREQ (*fnamptr, "-");
       if (is_stdin)
-	{
-	  have_read_stdin = true;
-	  fileptr = stdin;
-	}
+        {
+          have_read_stdin = true;
+          fileptr = stdin;
+        }
       else
-	{
-	  fileptr = fopen (*fnamptr, "r");
-	  if (fileptr == NULL)
-	    {
-	      error (0, errno, "%s", *fnamptr);
-	      ok = false;
-	      continue;
-	    }
-	}
+        {
+          fileptr = fopen (*fnamptr, "r");
+          if (fileptr == NULL)
+            {
+              error (0, errno, "%s", *fnamptr);
+              ok = false;
+              continue;
+            }
+        }
 
       delimptr = delims;	/* Set up for delimiter string. */
 
       charold = getc (fileptr);
       saved_errno = errno;
       if (charold != EOF)
-	{
-	  /* `charold' is set up.  Hit it!
-	     Keep reading characters, stashing them in `charnew';
-	     output `charold', converting to the appropriate delimiter
-	     character if needed.  After the EOF, output `charold'
-	     if it's a newline; otherwise, output it and then a newline. */
+        {
+          /* `charold' is set up.  Hit it!
+             Keep reading characters, stashing them in `charnew';
+             output `charold', converting to the appropriate delimiter
+             character if needed.  After the EOF, output `charold'
+             if it's a newline; otherwise, output it and then a newline. */
 
-	  while ((charnew = getc (fileptr)) != EOF)
-	    {
-	      /* Process the old character. */
-	      if (charold == '\n')
-		{
-		  if (*delimptr != EMPTY_DELIM)
-		    xputchar (*delimptr);
+          while ((charnew = getc (fileptr)) != EOF)
+            {
+              /* Process the old character. */
+              if (charold == '\n')
+                {
+                  if (*delimptr != EMPTY_DELIM)
+                    xputchar (*delimptr);
 
-		  if (++delimptr == delim_end)
-		    delimptr = delims;
-		}
-	      else
-		xputchar (charold);
+                  if (++delimptr == delim_end)
+                    delimptr = delims;
+                }
+              else
+                xputchar (charold);
 
-	      charold = charnew;
-	    }
-	  saved_errno = errno;
+              charold = charnew;
+            }
+          saved_errno = errno;
 
-	  /* Hit EOF.  Process that last character. */
-	  xputchar (charold);
-	}
+          /* Hit EOF.  Process that last character. */
+          xputchar (charold);
+        }
 
       if (charold != '\n')
-	xputchar ('\n');
+        xputchar ('\n');
 
       if (ferror (fileptr))
-	{
-	  error (0, saved_errno, "%s", *fnamptr);
-	  ok = false;
-	}
+        {
+          error (0, saved_errno, "%s", *fnamptr);
+          ok = false;
+        }
       if (is_stdin)
-	clearerr (fileptr);	/* Also clear EOF. */
+        clearerr (fileptr);	/* Also clear EOF. */
       else if (fclose (fileptr) == EOF)
-	{
-	  error (0, errno, "%s", *fnamptr);
-	  ok = false;
-	}
+        {
+          error (0, errno, "%s", *fnamptr);
+          ok = false;
+        }
     }
   return ok;
 }
@@ -427,13 +427,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
@@ -476,23 +476,23 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "d:s", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'd':
-	  /* Delimiter character(s). */
-	  delim_arg = (optarg[0] == '\0' ? "\\0" : optarg);
-	  break;
+        {
+        case 'd':
+          /* Delimiter character(s). */
+          delim_arg = (optarg[0] == '\0' ? "\\0" : optarg);
+          break;
 
-	case 's':
-	  serial_merge = true;
-	  break;
+        case 's':
+          serial_merge = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind == argc)
@@ -501,11 +501,11 @@ main (int argc, char **argv)
   if (collapse_escapes (delim_arg))
     {
       /* Don't use the default quoting style, because that would double the
-	 number of displayed backslashes, making the diagnostic look bogus.  */
+         number of displayed backslashes, making the diagnostic look bogus.  */
       set_quoting_style (NULL, escape_quoting_style);
       error (EXIT_FAILURE, 0,
-	     _("delimiter list ends with an unescaped backslash: %s"),
-	     quotearg_colon (delim_arg));
+             _("delimiter list ends with an unescaped backslash: %s"),
+             quotearg_colon (delim_arg));
     }
 
   if (!serial_merge)

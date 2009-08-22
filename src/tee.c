@@ -56,7 +56,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
@@ -97,22 +97,22 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "ai", long_options, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'a':
-	  append = true;
-	  break;
+        {
+        case 'a':
+          append = true;
+          break;
 
-	case 'i':
-	  ignore_interrupts = true;
-	  break;
+        case 'i':
+          ignore_interrupts = true;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (ignore_interrupts)
@@ -166,15 +166,15 @@ tee_files (int nfiles, const char **files)
   for (i = 1; i <= nfiles; i++)
     {
       descriptors[i] = (STREQ (files[i], "-")
-			? stdout
-			: fopen (files[i], mode_string));
+                        ? stdout
+                        : fopen (files[i], mode_string));
       if (descriptors[i] == NULL)
-	{
-	  error (0, errno, "%s", files[i]);
-	  ok = false;
-	}
+        {
+          error (0, errno, "%s", files[i]);
+          ok = false;
+        }
       else
-	setvbuf (descriptors[i], NULL, _IONBF, 0);
+        setvbuf (descriptors[i], NULL, _IONBF, 0);
     }
 
   while (1)
@@ -185,18 +185,18 @@ tee_files (int nfiles, const char **files)
         continue;
 #endif
       if (bytes_read <= 0)
-	break;
+        break;
 
       /* Write to all NFILES + 1 descriptors.
-	 Standard output is the first one.  */
+         Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
-	if (descriptors[i]
-	    && fwrite (buffer, bytes_read, 1, descriptors[i]) != 1)
-	  {
-	    error (0, errno, "%s", files[i]);
-	    descriptors[i] = NULL;
-	    ok = false;
-	  }
+        if (descriptors[i]
+            && fwrite (buffer, bytes_read, 1, descriptors[i]) != 1)
+          {
+            error (0, errno, "%s", files[i]);
+            descriptors[i] = NULL;
+            ok = false;
+          }
     }
 
   if (bytes_read == -1)
@@ -208,10 +208,10 @@ tee_files (int nfiles, const char **files)
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
     if (!STREQ (files[i], "-")
-	&& descriptors[i] && fclose (descriptors[i]) != 0)
+        && descriptors[i] && fclose (descriptors[i]) != 0)
       {
-	error (0, errno, "%s", files[i]);
-	ok = false;
+        error (0, errno, "%s", files[i]);
+        ok = false;
       }
 
   free (descriptors);

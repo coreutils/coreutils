@@ -38,42 +38,42 @@ sub add_z_variants($)
 
       # skip the obsolete-syntax tests
       $t->[0] =~ /^obs-plus/
-	and next;
+        and next;
 
       my @args;
       my @list_of_hash;
 
       foreach my $e (@$t)
-	{
-	  !ref $e
-	    and push (@args, $e), next;
+        {
+          !ref $e
+            and push (@args, $e), next;
 
-	  ref $e && ref $e eq 'HASH'
-	    or (warn "$0: $t->[0]: unexpected entry type\n"), next;
-	  my $tmp = $e;
-	  foreach my $k (qw(IN OUT))
-	    {
-	      my $val = $e->{$k};
-	      # skip any test whose input or output already contains a NUL byte
-	      if (defined $val)
-		{
-		  $val =~ /\0/
-		    and next TEST;
+          ref $e && ref $e eq 'HASH'
+            or (warn "$0: $t->[0]: unexpected entry type\n"), next;
+          my $tmp = $e;
+          foreach my $k (qw(IN OUT))
+            {
+              my $val = $e->{$k};
+              # skip any test whose input or output already contains a NUL byte
+              if (defined $val)
+                {
+                  $val =~ /\0/
+                    and next TEST;
 
-		  # Convert each NL in input or output to \0.
-		  $val =~ s/\n/\0/g;
-		  $tmp = {$k => $val};
-		  last;
-		}
-	    }
-	  push @list_of_hash, $tmp;
-	}
+                  # Convert each NL in input or output to \0.
+                  $val =~ s/\n/\0/g;
+                  $tmp = {$k => $val};
+                  last;
+                }
+            }
+          push @list_of_hash, $tmp;
+        }
 
       shift @args; # discard test name
 
       # skip any test that uses the -z option
       grep /z/, @args
-	and next;
+        and next;
 
       push @new, ["$t->[0]-z", '-z', @args, @list_of_hash];
     }

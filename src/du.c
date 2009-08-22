@@ -262,7 +262,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
@@ -396,7 +396,7 @@ static void
 hash_init (void)
 {
   htab = hash_initialize (INITIAL_TABLE_SIZE, NULL,
-			  entry_hash, entry_compare, free);
+                          entry_hash, entry_compare, free);
   if (htab == NULL)
     xalloc_die ();
 }
@@ -427,7 +427,7 @@ print_only_size (uintmax_t n_bytes)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
   fputs (human_readable (n_bytes, buf, human_output_opts,
-			 1, output_block_size), stdout);
+                         1, output_block_size), stdout);
 }
 
 /* Print size (and optionally time) indicated by *PDUI, followed by STRING.  */
@@ -492,7 +492,7 @@ process_file (FTS *fts, FTSENT *ent)
 
     case FTS_DNR:
       /* Don't return just yet, since although the directory is not readable,
-	 we were able to stat it, so we do have a size.  */
+         we were able to stat it, so we do have a size.  */
       error (0, ent->fts_errno, _("cannot read directory %s"), quote (file));
       ok = false;
       break;
@@ -512,25 +512,25 @@ process_file (FTS *fts, FTSENT *ent)
      via a hard link, then don't let it contribute to the sums.  */
   if (skip
       || (!opt_count_all
-	  && ! S_ISDIR (sb->st_mode)
-	  && 1 < sb->st_nlink
-	  && ! hash_ins (sb->st_ino, sb->st_dev)))
+          && ! S_ISDIR (sb->st_mode)
+          && 1 < sb->st_nlink
+          && ! hash_ins (sb->st_ino, sb->st_dev)))
     {
       /* Note that we must not simply return here.
-	 We still have to update prev_level and maybe propagate
-	 some sums up the hierarchy.  */
+         We still have to update prev_level and maybe propagate
+         some sums up the hierarchy.  */
       duinfo_init (&dui);
       print = false;
     }
   else
     {
       duinfo_set (&dui,
-		  (apparent_size
-		   ? sb->st_size
-		   : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
-		  (time_type == time_mtime ? get_stat_mtime (sb)
-		   : time_type == time_atime ? get_stat_atime (sb)
-		   : get_stat_ctime (sb)));
+                  (apparent_size
+                   ? sb->st_size
+                   : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
+                  (time_type == time_mtime ? get_stat_mtime (sb)
+                   : time_type == time_atime ? get_stat_atime (sb)
+                   : get_stat_ctime (sb)));
     }
 
   level = ent->fts_level;
@@ -544,44 +544,44 @@ process_file (FTS *fts, FTSENT *ent)
   else
     {
       if (level == prev_level)
-	{
-	  /* This is usually the most common case.  Do nothing.  */
-	}
+        {
+          /* This is usually the most common case.  Do nothing.  */
+        }
       else if (level > prev_level)
-	{
-	  /* Descending the hierarchy.
-	     Clear the accumulators for *all* levels between prev_level
-	     and the current one.  The depth may change dramatically,
-	     e.g., from 1 to 10.  */
-	  size_t i;
+        {
+          /* Descending the hierarchy.
+             Clear the accumulators for *all* levels between prev_level
+             and the current one.  The depth may change dramatically,
+             e.g., from 1 to 10.  */
+          size_t i;
 
-	  if (n_alloc <= level)
-	    {
-	      dulvl = xnrealloc (dulvl, level, 2 * sizeof *dulvl);
-	      n_alloc = level * 2;
-	    }
+          if (n_alloc <= level)
+            {
+              dulvl = xnrealloc (dulvl, level, 2 * sizeof *dulvl);
+              n_alloc = level * 2;
+            }
 
-	  for (i = prev_level + 1; i <= level; i++)
-	    {
-	      duinfo_init (&dulvl[i].ent);
-	      duinfo_init (&dulvl[i].subdir);
-	    }
-	}
+          for (i = prev_level + 1; i <= level; i++)
+            {
+              duinfo_init (&dulvl[i].ent);
+              duinfo_init (&dulvl[i].subdir);
+            }
+        }
       else /* level < prev_level */
-	{
-	  /* Ascending the hierarchy.
-	     Process a directory only after all entries in that
-	     directory have been processed.  When the depth decreases,
-	     propagate sums from the children (prev_level) to the parent.
-	     Here, the current level is always one smaller than the
-	     previous one.  */
-	  assert (level == prev_level - 1);
-	  duinfo_add (&dui_to_print, &dulvl[prev_level].ent);
-	  if (!opt_separate_dirs)
-	    duinfo_add (&dui_to_print, &dulvl[prev_level].subdir);
-	  duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].ent);
-	  duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].subdir);
-	}
+        {
+          /* Ascending the hierarchy.
+             Process a directory only after all entries in that
+             directory have been processed.  When the depth decreases,
+             propagate sums from the children (prev_level) to the parent.
+             Here, the current level is always one smaller than the
+             previous one.  */
+          assert (level == prev_level - 1);
+          duinfo_add (&dui_to_print, &dulvl[prev_level].ent);
+          if (!opt_separate_dirs)
+            duinfo_add (&dui_to_print, &dulvl[prev_level].subdir);
+          duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].ent);
+          duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].subdir);
+        }
     }
 
   prev_level = level;
@@ -623,28 +623,28 @@ du_files (char **files, int bit_flags)
       FTS *fts = xfts_open (files, bit_flags, NULL);
 
       while (1)
-	{
-	  FTSENT *ent;
+        {
+          FTSENT *ent;
 
-	  ent = fts_read (fts);
-	  if (ent == NULL)
-	    {
-	      if (errno != 0)
-		{
-		  /* FIXME: try to give a better message  */
-		  error (0, errno, _("fts_read failed"));
-		  ok = false;
-		}
-	      break;
-	    }
-	  FTS_CROSS_CHECK (fts);
+          ent = fts_read (fts);
+          if (ent == NULL)
+            {
+              if (errno != 0)
+                {
+                  /* FIXME: try to give a better message  */
+                  error (0, errno, _("fts_read failed"));
+                  ok = false;
+                }
+              break;
+            }
+          FTS_CROSS_CHECK (fts);
 
-	  ok &= process_file (fts, ent);
-	}
+          ok &= process_file (fts, ent);
+        }
 
       /* Ignore failure, since the only way it can do so is in failing to
-	 return to the original directory, and since we're about to exit,
-	 that doesn't matter.  */
+         return to the original directory, and since we're about to exit,
+         that doesn't matter.  */
       fts_close (fts);
     }
 
@@ -683,162 +683,162 @@ main (int argc, char **argv)
   exclude = new_exclude ();
 
   human_options (getenv ("DU_BLOCK_SIZE"),
-		 &human_output_opts, &output_block_size);
+                 &human_output_opts, &output_block_size);
 
   for (;;)
     {
       int oi = -1;
       int c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
-			   long_options, &oi);
+                           long_options, &oi);
       if (c == -1)
-	break;
+        break;
 
       switch (c)
-	{
+        {
 #if DU_DEBUG
-	case 'd':
-	  fts_debug = true;
-	  break;
+        case 'd':
+          fts_debug = true;
+          break;
 #endif
 
-	case '0':
-	  opt_nul_terminate_output = true;
-	  break;
+        case '0':
+          opt_nul_terminate_output = true;
+          break;
 
-	case 'a':
-	  opt_all = true;
-	  break;
+        case 'a':
+          opt_all = true;
+          break;
 
-	case APPARENT_SIZE_OPTION:
-	  apparent_size = true;
-	  break;
+        case APPARENT_SIZE_OPTION:
+          apparent_size = true;
+          break;
 
-	case 'b':
-	  apparent_size = true;
-	  human_output_opts = 0;
-	  output_block_size = 1;
-	  break;
+        case 'b':
+          apparent_size = true;
+          human_output_opts = 0;
+          output_block_size = 1;
+          break;
 
-	case 'c':
-	  print_grand_total = true;
-	  break;
+        case 'c':
+          print_grand_total = true;
+          break;
 
-	case 'h':
-	  human_output_opts = human_autoscale | human_SI | human_base_1024;
-	  output_block_size = 1;
-	  break;
+        case 'h':
+          human_output_opts = human_autoscale | human_SI | human_base_1024;
+          output_block_size = 1;
+          break;
 
-	case HUMAN_SI_OPTION:
-	  human_output_opts = human_autoscale | human_SI;
-	  output_block_size = 1;
-	  break;
+        case HUMAN_SI_OPTION:
+          human_output_opts = human_autoscale | human_SI;
+          output_block_size = 1;
+          break;
 
-	case 'k':
-	  human_output_opts = 0;
-	  output_block_size = 1024;
-	  break;
+        case 'k':
+          human_output_opts = 0;
+          output_block_size = 1024;
+          break;
 
-	case MAX_DEPTH_OPTION:		/* --max-depth=N */
-	  {
-	    unsigned long int tmp_ulong;
-	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
-		&& tmp_ulong <= SIZE_MAX)
-	      {
-		max_depth_specified = true;
-		max_depth = tmp_ulong;
-	      }
-	    else
-	      {
-		error (0, 0, _("invalid maximum depth %s"),
-		       quote (optarg));
-		ok = false;
-	      }
-	  }
-	  break;
+        case MAX_DEPTH_OPTION:		/* --max-depth=N */
+          {
+            unsigned long int tmp_ulong;
+            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
+                && tmp_ulong <= SIZE_MAX)
+              {
+                max_depth_specified = true;
+                max_depth = tmp_ulong;
+              }
+            else
+              {
+                error (0, 0, _("invalid maximum depth %s"),
+                       quote (optarg));
+                ok = false;
+              }
+          }
+          break;
 
-	case MEGABYTES_LONG_OPTION: /* FIXME: remove in 2009 */
-	  error (0, 0,
-		 _("the --megabytes option is deprecated; use -m instead"));
-	  /* fall through */
-	case 'm':
-	  human_output_opts = 0;
-	  output_block_size = 1024 * 1024;
-	  break;
+        case MEGABYTES_LONG_OPTION: /* FIXME: remove in 2009 */
+          error (0, 0,
+                 _("the --megabytes option is deprecated; use -m instead"));
+          /* fall through */
+        case 'm':
+          human_output_opts = 0;
+          output_block_size = 1024 * 1024;
+          break;
 
-	case 'l':
-	  opt_count_all = true;
-	  break;
+        case 'l':
+          opt_count_all = true;
+          break;
 
-	case 's':
-	  opt_summarize_only = true;
-	  break;
+        case 's':
+          opt_summarize_only = true;
+          break;
 
-	case 'x':
-	  bit_flags |= FTS_XDEV;
-	  break;
+        case 'x':
+          bit_flags |= FTS_XDEV;
+          break;
 
-	case 'B':
-	  {
-	    enum strtol_error e = human_options (optarg, &human_output_opts,
-						 &output_block_size);
-	    if (e != LONGINT_OK)
-	      xstrtol_fatal (e, oi, c, long_options, optarg);
-	  }
-	  break;
+        case 'B':
+          {
+            enum strtol_error e = human_options (optarg, &human_output_opts,
+                                                 &output_block_size);
+            if (e != LONGINT_OK)
+              xstrtol_fatal (e, oi, c, long_options, optarg);
+          }
+          break;
 
-	case 'H':  /* NOTE: before 2008-12, -H was equivalent to --si.  */
-	case 'D':
-	  symlink_deref_bits = FTS_COMFOLLOW | FTS_PHYSICAL;
-	  break;
+        case 'H':  /* NOTE: before 2008-12, -H was equivalent to --si.  */
+        case 'D':
+          symlink_deref_bits = FTS_COMFOLLOW | FTS_PHYSICAL;
+          break;
 
-	case 'L': /* --dereference */
-	  symlink_deref_bits = FTS_LOGICAL;
-	  break;
+        case 'L': /* --dereference */
+          symlink_deref_bits = FTS_LOGICAL;
+          break;
 
-	case 'P': /* --no-dereference */
-	  symlink_deref_bits = FTS_PHYSICAL;
-	  break;
+        case 'P': /* --no-dereference */
+          symlink_deref_bits = FTS_PHYSICAL;
+          break;
 
-	case 'S':
-	  opt_separate_dirs = true;
-	  break;
+        case 'S':
+          opt_separate_dirs = true;
+          break;
 
-	case 'X':
-	  if (add_exclude_file (add_exclude, exclude, optarg,
-				EXCLUDE_WILDCARDS, '\n'))
-	    {
-	      error (0, errno, "%s", quotearg_colon (optarg));
-	      ok = false;
-	    }
-	  break;
+        case 'X':
+          if (add_exclude_file (add_exclude, exclude, optarg,
+                                EXCLUDE_WILDCARDS, '\n'))
+            {
+              error (0, errno, "%s", quotearg_colon (optarg));
+              ok = false;
+            }
+          break;
 
-	case FILES0_FROM_OPTION:
-	  files_from = optarg;
-	  break;
+        case FILES0_FROM_OPTION:
+          files_from = optarg;
+          break;
 
-	case EXCLUDE_OPTION:
-	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
-	  break;
+        case EXCLUDE_OPTION:
+          add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
+          break;
 
-	case TIME_OPTION:
-	  opt_time = true;
-	  time_type =
-	    (optarg
-	     ? XARGMATCH ("--time", optarg, time_args, time_types)
-	     : time_mtime);
-	  break;
+        case TIME_OPTION:
+          opt_time = true;
+          time_type =
+            (optarg
+             ? XARGMATCH ("--time", optarg, time_args, time_types)
+             : time_mtime);
+          break;
 
-	case TIME_STYLE_OPTION:
-	  time_style = optarg;
-	  break;
+        case TIME_STYLE_OPTION:
+          time_style = optarg;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  ok = false;
-	}
+        default:
+          ok = false;
+        }
     }
 
   if (!ok)
@@ -853,7 +853,7 @@ main (int argc, char **argv)
   if (opt_summarize_only && max_depth_specified && max_depth == 0)
     {
       error (0, 0,
-	     _("warning: summarizing is the same as using --max-depth=0"));
+             _("warning: summarizing is the same as using --max-depth=0"));
     }
 
   if (opt_summarize_only && max_depth_specified && max_depth != 0)
@@ -870,48 +870,48 @@ main (int argc, char **argv)
   if (opt_time)
     {
       if (! time_style)
-	{
-	  time_style = getenv ("TIME_STYLE");
+        {
+          time_style = getenv ("TIME_STYLE");
 
-	  /* Ignore TIMESTYLE="locale", for compatibility with ls.  */
-	  if (! time_style || STREQ (time_style, "locale"))
-	    time_style = "long-iso";
-	  else if (*time_style == '+')
-	    {
-	      /* Ignore anything after a newline, for compatibility
-		 with ls.  */
-	      char *p = strchr (time_style, '\n');
-	      if (p)
-		*p = '\0';
-	    }
-	  else
-	    {
-	      /* Ignore "posix-" prefix, for compatibility with ls.  */
-	      static char const posix_prefix[] = "posix-";
-	      while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1)
-		     == 0)
-		time_style += sizeof posix_prefix - 1;
-	    }
-	}
+          /* Ignore TIMESTYLE="locale", for compatibility with ls.  */
+          if (! time_style || STREQ (time_style, "locale"))
+            time_style = "long-iso";
+          else if (*time_style == '+')
+            {
+              /* Ignore anything after a newline, for compatibility
+                 with ls.  */
+              char *p = strchr (time_style, '\n');
+              if (p)
+                *p = '\0';
+            }
+          else
+            {
+              /* Ignore "posix-" prefix, for compatibility with ls.  */
+              static char const posix_prefix[] = "posix-";
+              while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1)
+                     == 0)
+                time_style += sizeof posix_prefix - 1;
+            }
+        }
 
       if (*time_style == '+')
-	time_format = time_style + 1;
+        time_format = time_style + 1;
       else
         {
           switch (XARGMATCH ("time style", time_style,
                              time_style_args, time_style_types))
             {
-	    case full_iso_time_style:
-	      time_format = "%Y-%m-%d %H:%M:%S.%N %z";
-	      break;
+            case full_iso_time_style:
+              time_format = "%Y-%m-%d %H:%M:%S.%N %z";
+              break;
 
-	    case long_iso_time_style:
-	      time_format = "%Y-%m-%d %H:%M";
-	      break;
+            case long_iso_time_style:
+              time_format = "%Y-%m-%d %H:%M";
+              break;
 
-	    case iso_time_style:
-	      time_format = "%Y-%m-%d";
-	      break;
+            case iso_time_style:
+              time_format = "%Y-%m-%d";
+              break;
             }
         }
     }
@@ -920,18 +920,18 @@ main (int argc, char **argv)
   if (files_from)
     {
       /* When using --files0-from=F, you may not specify any files
-	 on the command-line.  */
+         on the command-line.  */
       if (optind < argc)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
-	  fprintf (stderr, "%s\n",
-		   _("file operands cannot be combined with --files0-from"));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s"), quote (argv[optind]));
+          fprintf (stderr, "%s\n",
+                   _("file operands cannot be combined with --files0-from"));
+          usage (EXIT_FAILURE);
+        }
 
       if (! (STREQ (files_from, "-") || freopen (files_from, "r", stdin)))
-	error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-	       quote (files_from));
+        error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+               quote (files_from));
 
       ai = argv_iter_init_stream (stdin);
     }
@@ -956,64 +956,64 @@ main (int argc, char **argv)
       enum argv_iter_err ai_err;
       char *file_name = argv_iter (ai, &ai_err);
       if (ai_err == AI_ERR_EOF)
-	break;
+        break;
       if (!file_name)
-	{
-	  switch (ai_err)
-	    {
-	    case AI_ERR_READ:
-	      error (0, errno, _("%s: read error"), quote (files_from));
-	      skip_file = true;
-	      continue;
+        {
+          switch (ai_err)
+            {
+            case AI_ERR_READ:
+              error (0, errno, _("%s: read error"), quote (files_from));
+              skip_file = true;
+              continue;
 
-	    case AI_ERR_MEM:
-	      xalloc_die ();
+            case AI_ERR_MEM:
+              xalloc_die ();
 
-	    default:
-	      assert (!"unexpected error code from argv_iter");
-	    }
-	}
+            default:
+              assert (!"unexpected error code from argv_iter");
+            }
+        }
       if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
-	{
-	  /* Give a better diagnostic in an unusual case:
-	     printf - | du --files0-from=- */
-	  error (0, 0, _("when reading file names from stdin, "
-			 "no file name of %s allowed"),
-		 quote (file_name));
-	  skip_file = true;
-	}
+        {
+          /* Give a better diagnostic in an unusual case:
+             printf - | du --files0-from=- */
+          error (0, 0, _("when reading file names from stdin, "
+                         "no file name of %s allowed"),
+                 quote (file_name));
+          skip_file = true;
+        }
 
       /* Report and skip any empty file names before invoking fts.
-	 This works around a glitch in fts, which fails immediately
-	 (without looking at the other file names) when given an empty
-	 file name.  */
+         This works around a glitch in fts, which fails immediately
+         (without looking at the other file names) when given an empty
+         file name.  */
       if (!file_name[0])
-	{
-	  /* Diagnose a zero-length file name.  When it's one
-	     among many, knowing the record number may help.
-	     FIXME: currently print the record number only with
-	     --files0-from=FILE.  Maybe do it for argv, too?  */
-	  if (files_from == NULL)
-	    error (0, 0, "%s", _("invalid zero-length file name"));
-	  else
-	    {
-	      /* Using the standard `filename:line-number:' prefix here is
-		 not totally appropriate, since NUL is the separator, not NL,
-		 but it might be better than nothing.  */
-	      unsigned long int file_number = argv_iter_n_args (ai);
-	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
-		     file_number, _("invalid zero-length file name"));
-	    }
-	  skip_file = true;
-	}
+        {
+          /* Diagnose a zero-length file name.  When it's one
+             among many, knowing the record number may help.
+             FIXME: currently print the record number only with
+             --files0-from=FILE.  Maybe do it for argv, too?  */
+          if (files_from == NULL)
+            error (0, 0, "%s", _("invalid zero-length file name"));
+          else
+            {
+              /* Using the standard `filename:line-number:' prefix here is
+                 not totally appropriate, since NUL is the separator, not NL,
+                 but it might be better than nothing.  */
+              unsigned long int file_number = argv_iter_n_args (ai);
+              error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+                     file_number, _("invalid zero-length file name"));
+            }
+          skip_file = true;
+        }
 
       if (skip_file)
-	ok = false;
+        ok = false;
       else
-	{
-	  temp_argv[0] = file_name;
-	  ok &= du_files (temp_argv, bit_flags);
-	}
+        {
+          temp_argv[0] = file_name;
+          ok &= du_files (temp_argv, bit_flags);
+        }
     }
 
   argv_iter_free (ai);

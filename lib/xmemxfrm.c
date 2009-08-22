@@ -45,7 +45,7 @@
 
 size_t
 xmemxfrm (char *restrict dest, size_t destsize,
-	  char *restrict src, size_t srcsize)
+          char *restrict src, size_t srcsize)
 {
   size_t translated_size = memxfrm (dest, destsize, src, srcsize);
 
@@ -54,8 +54,8 @@ xmemxfrm (char *restrict dest, size_t destsize,
       error (0, errno, _("string transformation failed"));
       error (0, 0, _("set LC_ALL='C' to work around the problem"));
       error (exit_failure, 0,
-	     _("the untransformed string was %s"),
-	     quotearg_n_style_mem (0, locale_quoting_style, src, srcsize));
+             _("the untransformed string was %s"),
+             quotearg_n_style_mem (0, locale_quoting_style, src, srcsize));
     }
 
   return translated_size;

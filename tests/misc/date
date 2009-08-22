@@ -128,7 +128,7 @@ my @Tests =
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {OUT=>"$dy $t0"}],
 
      ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {OUT=>"08/01/97,06:00"},
-	       {ENV => 'TZ=UTC+4'}],
+               {ENV => 'TZ=UTC+4'}],
 
      ['utc-0a', "-u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'",
       {OUT=>"08/01/97,10:00"}],
@@ -189,7 +189,7 @@ my @Tests =
 
      # Relative days, no time, across time zones.
      ['relative-3', "-I -d '2006-04-23 21 days ago'", {OUT=>"2006-04-02"},
-	 {ENV=>'TZ=PST8PDT,M4.1.0,M10.5.0'}],
+         {ENV=>'TZ=PST8PDT,M4.1.0,M10.5.0'}],
 
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
@@ -243,8 +243,8 @@ my @Tests =
      # Unfortunately (for ease of testing), if you set TZ at all, this
      # failure is not triggered, hence the removal of TZ from the environment.
      ['cross-dst', "-d'2005-03-27 +1 day'", '+%Y', {OUT=>"2005"},
-		  {ENV_DEL => 'TZ'},
-		  ],
+                  {ENV_DEL => 'TZ'},
+                  ],
 
      ['empty-fmt', '+', {OUT=>""}],
 
@@ -284,9 +284,9 @@ my @Tests =
 foreach my $i (1..364)
   {
     push @Tests, ["cross-dst$i",
-		  "-d'2005-01-01 +$i day'", '+%Y', {OUT=>"2005"},
-		  {ENV_DEL => 'TZ'},
-		  ];
+                  "-d'2005-01-01 +$i day'", '+%Y', {OUT=>"2005"},
+                  {ENV_DEL => 'TZ'},
+                  ];
   }
 
 # Append "\n" to each OUT=> RHS if the expected exit value is either
@@ -297,12 +297,12 @@ foreach my $t (@Tests)
     foreach my $e (@$t)
       {
         ref $e && ref $e eq 'HASH' && defined $e->{EXIT}
-	  and $exit_val = $e->{EXIT};
+          and $exit_val = $e->{EXIT};
       }
     foreach my $e (@$t)
       {
         ref $e && ref $e eq 'HASH' && defined $e->{OUT} && ! $exit_val
-	  and $e->{OUT} .= "\n";
+          and $e->{OUT} .= "\n";
       }
   }
 

@@ -57,30 +57,30 @@ AC_INCLUDES_DEFAULT
      { AC_CHECK_MEMBERS([struct statvfs.f_basetype],,, [$statvfs_includes])
        test $ac_cv_member_struct_statvfs_f_basetype = yes ||
        { AC_CHECK_MEMBERS([struct statvfs.f_fstypename],,, [$statvfs_includes])
-	 test $ac_cv_member_struct_statvfs_f_fstypename = yes ||
-	 { test $ac_cv_member_struct_statfs_f_fstypename != yes &&
-	   { AC_CHECK_MEMBERS([struct statvfs.f_type],,, [$statvfs_includes])
-	     test $ac_cv_member_struct_statvfs_f_type = yes; }; }; }; }
+         test $ac_cv_member_struct_statvfs_f_fstypename = yes ||
+         { test $ac_cv_member_struct_statfs_f_fstypename != yes &&
+           { AC_CHECK_MEMBERS([struct statvfs.f_type],,, [$statvfs_includes])
+             test $ac_cv_member_struct_statvfs_f_type = yes; }; }; }; }
   then
     AC_CHECK_MEMBERS([struct statvfs.f_namemax],,, [$statvfs_includes])
     AC_COMPILE_IFELSE(
       [AC_LANG_PROGRAM(
-	 [$statvfs_includes],
-	 [static statvfs s;
-	  return (s.s_fsid ^ 0) == 0;])],
+         [$statvfs_includes],
+         [static statvfs s;
+          return (s.s_fsid ^ 0) == 0;])],
       [AC_DEFINE([STRUCT_STATVFS_F_FSID_IS_INTEGER], [1],
-	 [Define to 1 if the f_fsid member of struct statvfs is an integer.])])
+         [Define to 1 if the f_fsid member of struct statvfs is an integer.])])
   else
     AC_CHECK_MEMBERS([struct statfs.f_namelen, struct statfs.f_type],,,
       [$statfs_includes])
     if test $ac_cv_header_OS_h != yes; then
       AC_COMPILE_IFELSE(
-	[AC_LANG_PROGRAM(
-	   [$statfs_includes],
-	   [static statfs s;
-	    return (s.s_fsid ^ 0) == 0;])],
-	[AC_DEFINE([STRUCT_STATFS_F_FSID_IS_INTEGER], [1],
-	   [Define to 1 if the f_fsid member of struct statfs is an integer.])])
+        [AC_LANG_PROGRAM(
+           [$statfs_includes],
+           [static statfs s;
+            return (s.s_fsid ^ 0) == 0;])],
+        [AC_DEFINE([STRUCT_STATFS_F_FSID_IS_INTEGER], [1],
+           [Define to 1 if the f_fsid member of struct statfs is an integer.])])
     fi
   fi
 ])

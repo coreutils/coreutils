@@ -69,7 +69,7 @@ TERM xterm-debian
 RESET 0		# reset to "normal" color
 DIR 01;34	# directory
 LINK 01;36	# symbolic link.  (If you set this to 'target' instead of a
-		# numerical value, the color is as for the file pointed to.)
+                # numerical value, the color is as for the file pointed to.)
 MULTIHARDLINK 00	# regular file with more than one link
 FIFO 40;33	# pipe
 SOCK 01;35	# socket

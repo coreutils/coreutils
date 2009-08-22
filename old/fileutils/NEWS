@@ -504,17 +504,17 @@ Changes in release 4.0:
 * ls accepts new options:
     --indicator-style=none (no indicators, the default)
     --indicator-style=classify (all indicators)
-	 (equivalent to -F or --classify)
+         (equivalent to -F or --classify)
     --indicator-style=file-type (file type indicators)
-	 (equivalent to -p or --file-type)
+         (equivalent to -p or --file-type)
 
     --quoting-style=literal (do not quote output)
     --quoting-style=shell (minimally quote output for the shell)
     --quoting-style=shell-always (always quote output with '' for the shell)
     --quoting-style=c (quote output as for a C-language string)
-	 (equivalent to -Q or --quote-name)
+         (equivalent to -Q or --quote-name)
     --quoting-style=escape (like c but omit enclosing "")
-	 (equivalent to -b or --escape)
+         (equivalent to -b or --escape)
 
     --show-control-chars is the opposite of --hide-control-chars
       This option can be useful if output is to a terminal,

@@ -17,8 +17,8 @@
 
 /* Options:
    -p, --parent		Remove any parent dirs that are explicitly mentioned
-			in an argument, if they become empty after the
-			argument file is removed.
+                        in an argument, if they become empty after the
+                        argument file is removed.
 
    David MacKenzie <djm@ai.mit.edu>  */
 
@@ -101,9 +101,9 @@ static bool
 ignorable_failure (int error_number, char const *dir)
 {
   return (ignore_fail_on_non_empty
-	  && (errno_rmdir_non_empty (error_number)
-	      || (errno_may_be_empty (error_number)
-		  && is_empty_dir (AT_FDCWD, dir))));
+          && (errno_rmdir_non_empty (error_number)
+              || (errno_may_be_empty (error_number)
+                  && is_empty_dir (AT_FDCWD, dir))));
 }
 
 /* Remove any empty parent directories of DIR.
@@ -122,34 +122,34 @@ remove_parents (char *dir)
     {
       slash = strrchr (dir, '/');
       if (slash == NULL)
-	break;
+        break;
       /* Remove any characters after the slash, skipping any extra
-	 slashes in a row. */
+         slashes in a row. */
       while (slash > dir && *slash == '/')
-	--slash;
+        --slash;
       slash[1] = 0;
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
+        prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
 
       ok = (rmdir (dir) == 0);
 
       if (!ok)
-	{
-	  /* Stop quietly if --ignore-fail-on-non-empty. */
-	  if (ignorable_failure (errno, dir))
-	    {
-	      ok = true;
-	    }
-	  else
-	    {
-	      /* Barring race conditions, DIR is expected to be a directory.  */
-	      error (0, errno, _("failed to remove directory %s"),
-		     quote (dir));
-	    }
-	  break;
-	}
+        {
+          /* Stop quietly if --ignore-fail-on-non-empty. */
+          if (ignorable_failure (errno, dir))
+            {
+              ok = true;
+            }
+          else
+            {
+              /* Barring race conditions, DIR is expected to be a directory.  */
+              error (0, errno, _("failed to remove directory %s"),
+                     quote (dir));
+            }
+          break;
+        }
     }
   return ok;
 }
@@ -159,7 +159,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... DIRECTORY...\n"), program_name);
@@ -201,21 +201,21 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "pv", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'p':
-	  remove_empty_parents = true;
-	  break;
-	case IGNORE_FAIL_ON_NON_EMPTY_OPTION:
-	  ignore_fail_on_non_empty = true;
-	  break;
-	case 'v':
-	  verbose = true;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'p':
+          remove_empty_parents = true;
+          break;
+        case IGNORE_FAIL_ON_NON_EMPTY_OPTION:
+          ignore_fail_on_non_empty = true;
+          break;
+        case 'v':
+          verbose = true;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   if (optind == argc)
@@ -230,22 +230,22 @@ main (int argc, char **argv)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
+        prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
 
       if (rmdir (dir) != 0)
-	{
-	  if (ignorable_failure (errno, dir))
-	    continue;
+        {
+          if (ignorable_failure (errno, dir))
+            continue;
 
-	  /* Here, the diagnostic is less precise, since we have no idea
-	     whether DIR is a directory.  */
-	  error (0, errno, _("failed to remove %s"), quote (dir));
-	  ok = false;
-	}
+          /* Here, the diagnostic is less precise, since we have no idea
+             whether DIR is a directory.  */
+          error (0, errno, _("failed to remove %s"), quote (dir));
+          ok = false;
+        }
       else if (remove_empty_parents)
-	{
-	  ok &= remove_parents (dir);
-	}
+        {
+          ok &= remove_parents (dir);
+        }
     }
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);

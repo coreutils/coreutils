@@ -47,11 +47,11 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"),
-	      program_name);
+              program_name);
       fputs (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
@@ -107,18 +107,18 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "m:Z:", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'm':
-	  specified_mode = optarg;
-	  break;
-	case 'Z':
-	  scontext = optarg;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        {
+        case 'm':
+          specified_mode = optarg;
+          break;
+        case 'Z':
+          scontext = optarg;
+          break;
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
@@ -126,47 +126,47 @@ main (int argc, char **argv)
     {
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-	error (EXIT_FAILURE, 0, _("invalid mode"));
+        error (EXIT_FAILURE, 0, _("invalid mode"));
       newmode = mode_adjust (newmode, false, umask (0), change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
-	error (EXIT_FAILURE, 0,
-	       _("mode must specify only file permission bits"));
+        error (EXIT_FAILURE, 0,
+               _("mode must specify only file permission bits"));
     }
 
   /* If the number of arguments is 0 or 1,
      or (if it's 2 or more and the second one starts with `p'), then there
      must be exactly two operands.  Otherwise, there must be four.  */
   expected_operands = (argc <= optind
-		       || (optind + 1 < argc && argv[optind + 1][0] == 'p')
-		       ? 2 : 4);
+                       || (optind + 1 < argc && argv[optind + 1][0] == 'p')
+                       ? 2 : 4);
 
   if (argc - optind < expected_operands)
     {
       if (argc <= optind)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+        error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       if (expected_operands == 4 && argc - optind == 2)
-	fprintf (stderr, "%s\n",
-		 _("Special files require major and minor device numbers."));
+        fprintf (stderr, "%s\n",
+                 _("Special files require major and minor device numbers."));
       usage (EXIT_FAILURE);
     }
 
   if (expected_operands < argc - optind)
     {
       error (0, 0, _("extra operand %s"),
-	     quote (argv[optind + expected_operands]));
+             quote (argv[optind + expected_operands]));
       if (expected_operands == 2 && argc - optind == 4)
-	fprintf (stderr, "%s\n",
-		 _("Fifos do not have major and minor device numbers."));
+        fprintf (stderr, "%s\n",
+                 _("Fifos do not have major and minor device numbers."));
       usage (EXIT_FAILURE);
     }
 
   if (scontext && setfscreatecon (scontext) < 0)
     error (EXIT_FAILURE, errno,
-	   _("failed to set default file creation context to %s"),
-	   quote (scontext));
+           _("failed to set default file creation context to %s"),
+           quote (scontext));
 
   /* Only check the first character, to allow mnemonic usage like
      `mknod /dev/rst0 character 18 0'. */
@@ -192,35 +192,35 @@ main (int argc, char **argv)
 
     block_or_character:
       {
-	char const *s_major = argv[optind + 2];
-	char const *s_minor = argv[optind + 3];
-	uintmax_t i_major, i_minor;
-	dev_t device;
+        char const *s_major = argv[optind + 2];
+        char const *s_minor = argv[optind + 3];
+        uintmax_t i_major, i_minor;
+        dev_t device;
 
-	if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
-	    || i_major != (major_t) i_major)
-	  error (EXIT_FAILURE, 0,
-		 _("invalid major device number %s"), quote (s_major));
+        if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
+            || i_major != (major_t) i_major)
+          error (EXIT_FAILURE, 0,
+                 _("invalid major device number %s"), quote (s_major));
 
-	if (xstrtoumax (s_minor, NULL, 0, &i_minor, NULL) != LONGINT_OK
-	    || i_minor != (minor_t) i_minor)
-	  error (EXIT_FAILURE, 0,
-		 _("invalid minor device number %s"), quote (s_minor));
+        if (xstrtoumax (s_minor, NULL, 0, &i_minor, NULL) != LONGINT_OK
+            || i_minor != (minor_t) i_minor)
+          error (EXIT_FAILURE, 0,
+                 _("invalid minor device number %s"), quote (s_minor));
 
-	device = makedev (i_major, i_minor);
+        device = makedev (i_major, i_minor);
 #ifdef NODEV
-	if (device == NODEV)
-	  error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
+        if (device == NODEV)
+          error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
 #endif
 
-	if (mknod (argv[optind], newmode | node_type, device) != 0)
-	  error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
+        if (mknod (argv[optind], newmode | node_type, device) != 0)
+          error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       }
       break;
 
     case 'p':			/* `pipe' */
       if (mkfifo (argv[optind], newmode) != 0)
-	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
+        error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       break;
 
     default:

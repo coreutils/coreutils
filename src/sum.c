@@ -53,13 +53,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 "),
-	      program_name);
+              program_name);
       fputs (_("\
 Print checksum and block counts for each FILE.\n\
 \n\
@@ -98,16 +98,16 @@ bsd_sum_file (const char *file, int print_name)
       fp = stdin;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	xfreopen (NULL, "rb", stdin);
+        xfreopen (NULL, "rb", stdin);
     }
   else
     {
       fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
     }
 
   while ((ch = getc (fp)) != EOF)
@@ -122,7 +122,7 @@ bsd_sum_file (const char *file, int print_name)
     {
       error (0, errno, "%s", file);
       if (!is_stdin)
-	fclose (fp);
+        fclose (fp);
       return false;
     }
 
@@ -133,7 +133,7 @@ bsd_sum_file (const char *file, int print_name)
     }
 
   printf ("%05d %5s", checksum,
-	  human_readable (total_bytes, hbuf, human_ceiling, 1, 1024));
+          human_readable (total_bytes, hbuf, human_ceiling, 1, 1024));
   if (print_name > 1)
     printf (" %s", file);
   putchar ('\n');
@@ -166,16 +166,16 @@ sysv_sum_file (const char *file, int print_name)
       fd = STDIN_FILENO;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	xfreopen (NULL, "rb", stdin);
+        xfreopen (NULL, "rb", stdin);
     }
   else
     {
       fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          return false;
+        }
     }
 
   while (1)
@@ -184,18 +184,18 @@ sysv_sum_file (const char *file, int print_name)
       size_t bytes_read = safe_read (fd, buf, sizeof buf);
 
       if (bytes_read == 0)
-	break;
+        break;
 
       if (bytes_read == SAFE_READ_ERROR)
-	{
-	  error (0, errno, "%s", file);
-	  if (!is_stdin)
-	    close (fd);
-	  return false;
-	}
+        {
+          error (0, errno, "%s", file);
+          if (!is_stdin)
+            close (fd);
+          return false;
+        }
 
       for (i = 0; i < bytes_read; i++)
-	s += buf[i];
+        s += buf[i];
       total_bytes += bytes_read;
     }
 
@@ -209,7 +209,7 @@ sysv_sum_file (const char *file, int print_name)
   checksum = (r & 0xffff) + (r >> 16);
 
   printf ("%d %s", checksum,
-	  human_readable (total_bytes, hbuf, human_ceiling, 1, 512));
+          human_readable (total_bytes, hbuf, human_ceiling, 1, 512));
   if (print_name)
     printf (" %s", file);
   putchar ('\n');
@@ -238,22 +238,22 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)
     {
       switch (optc)
-	{
-	case 'r':		/* For SysV compatibility. */
-	  sum_func = bsd_sum_file;
-	  break;
+        {
+        case 'r':		/* For SysV compatibility. */
+          sum_func = bsd_sum_file;
+          break;
 
-	case 's':
-	  sum_func = sysv_sum_file;
-	  break;
+        case 's':
+          sum_func = sysv_sum_file;
+          break;
 
-	case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
-	default:
-	  usage (EXIT_FAILURE);
-	}
+        default:
+          usage (EXIT_FAILURE);
+        }
     }
 
   files_given = argc - optind;

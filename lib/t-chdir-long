@@ -38,10 +38,10 @@ function mkdir_len
   ( cd $root &&
     perl -e 'my $len='$n'-length "'$root'";$i=100;$d="z"x$i;
                   while ($i+2 < $len) {
-		    $len -= $i + 1;
-		    mkdir $d,0700 or die "$!\n";
-		    chdir $d} $d="z"x($len-1);
-		    mkdir $d or die "mkdir_len: $d: $!\n"' )
+                    $len -= $i + 1;
+                    mkdir $d,0700 or die "$!\n";
+                    chdir $d} $d="z"x($len-1);
+                    mkdir $d or die "mkdir_len: $d: $!\n"' )
 }
 
 size_list=

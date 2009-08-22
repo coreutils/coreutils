@@ -159,7 +159,7 @@ my @Tests =
      ['fail-b', '9 9', {ERR => "$prog: syntax error\n"},
       {EXIT => 2}],
      ['fail-c', {ERR => "$prog: missing operand\n"
-		 . "Try `$prog --help' for more information.\n"},
+                 . "Try `$prog --help' for more information.\n"},
       {EXIT => 2}],
 
      ['bignum-add', "$big + 1", {OUT => $big_p1}],
@@ -182,8 +182,8 @@ foreach $t (@Tests)
     my $e;
     foreach $e (@$t)
       {
-	$e->{OUT} .= "\n"
-	  if ref $e eq 'HASH' and exists $e->{OUT};
+        $e->{OUT} .= "\n"
+          if ref $e eq 'HASH' and exists $e->{OUT};
       }
   }
 

@@ -55,12 +55,12 @@ foreach my $t (@Tests)
     foreach my $e (@$t)
       {
         ref $e && ref $e eq 'HASH' && defined $e->{EXIT}
-	  and $exit_val = $e->{EXIT};
+          and $exit_val = $e->{EXIT};
       }
     foreach my $e (@$t)
       {
         ref $e && ref $e eq 'HASH' && defined $e->{OUT} && ! $exit_val
-	  and $e->{OUT} .= "\n";
+          and $e->{OUT} .= "\n";
       }
   }
 

@@ -114,10 +114,10 @@ EOF
   while (defined (my $line = <FH>))
     {
       $line =~ /^[ \t]+case S_MAGIC_/
-	or next;
+        or next;
       $line =~ m!^[ \t]+case (S_MAGIC_\w+): /\* (0x[0-9A-Fa-f]+) \*/$!
-	or (warn "$ME:$file:$.: malformed case S_MAGIC_... line"),
-	  $fail = 1, next;
+        or (warn "$ME:$file:$.: malformed case S_MAGIC_... line"),
+          $fail = 1, next;
       my $name = $1;
       my $value = $2;
       print "# define $name $value\n";

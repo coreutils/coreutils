@@ -44,7 +44,7 @@
 
 #define ISODIGIT(C) ((C) >= '0' && (C) <= '7')
 #define HEXTOBIN(C) ((C) >= 'a' && (C) <= 'f' ? (C)-'a'+10 \
-		     : (C) >= 'A' && (C) <= 'F' ? (C)-'A'+10 : (C)-'0')
+                     : (C) >= 'A' && (C) <= 'F' ? (C)-'A'+10 : (C)-'0')
 #define OCTTOBIN(C) ((C) - '0')
 
 /* Debugging the memory allocator.  */
@@ -82,10 +82,10 @@ static bool right_reference = false;	/* output refs after right context  */
 static int line_width = 72;	/* output line width in characters */
 static int gap_size = 3;	/* number of spaces between output fields */
 static const char *truncation_string = "/";
-				/* string used to mark line truncations */
+                                /* string used to mark line truncations */
 static const char *macro_name = "xx";	/* macro name for roff or TeX output */
 static enum Format output_format = UNKNOWN_FORMAT;
-				/* output format */
+                                /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
 static const char *break_file = NULL;	/* name of the `Break characters' file */
@@ -306,94 +306,94 @@ copy_unescaped_string (const char *string)
   while (*string)
     {
       if (*string == '\\')
-	{
-	  string++;
-	  switch (*string)
-	    {
-	    case 'x':		/* \xhhh escape, 3 chars maximum */
-	      value = 0;
-	      for (length = 0, string++;
-		   length < 3 && isxdigit (to_uchar (*string));
-		   length++, string++)
-		value = value * 16 + HEXTOBIN (*string);
-	      if (length == 0)
-		{
-		  *cursor++ = '\\';
-		  *cursor++ = 'x';
-		}
-	      else
-		*cursor++ = value;
-	      break;
+        {
+          string++;
+          switch (*string)
+            {
+            case 'x':		/* \xhhh escape, 3 chars maximum */
+              value = 0;
+              for (length = 0, string++;
+                   length < 3 && isxdigit (to_uchar (*string));
+                   length++, string++)
+                value = value * 16 + HEXTOBIN (*string);
+              if (length == 0)
+                {
+                  *cursor++ = '\\';
+                  *cursor++ = 'x';
+                }
+              else
+                *cursor++ = value;
+              break;
 
-	    case '0':		/* \0ooo escape, 3 chars maximum */
-	      value = 0;
-	      for (length = 0, string++;
-		   length < 3 && ISODIGIT (*string);
-		   length++, string++)
-		value = value * 8 + OCTTOBIN (*string);
-	      *cursor++ = value;
-	      break;
+            case '0':		/* \0ooo escape, 3 chars maximum */
+              value = 0;
+              for (length = 0, string++;
+                   length < 3 && ISODIGIT (*string);
+                   length++, string++)
+                value = value * 8 + OCTTOBIN (*string);
+              *cursor++ = value;
+              break;
 
-	    case 'a':		/* alert */
+            case 'a':		/* alert */
 #if __STDC__
-	      *cursor++ = '\a';
+              *cursor++ = '\a';
 #else
-	      *cursor++ = 7;
+              *cursor++ = 7;
 #endif
-	      string++;
-	      break;
+              string++;
+              break;
 
-	    case 'b':		/* backspace */
-	      *cursor++ = '\b';
-	      string++;
-	      break;
+            case 'b':		/* backspace */
+              *cursor++ = '\b';
+              string++;
+              break;
 
-	    case 'c':		/* cancel the rest of the output */
-	      while (*string)
-		string++;
-	      break;
+            case 'c':		/* cancel the rest of the output */
+              while (*string)
+                string++;
+              break;
 
-	    case 'f':		/* form feed */
-	      *cursor++ = '\f';
-	      string++;
-	      break;
+            case 'f':		/* form feed */
+              *cursor++ = '\f';
+              string++;
+              break;
 
-	    case 'n':		/* new line */
-	      *cursor++ = '\n';
-	      string++;
-	      break;
+            case 'n':		/* new line */
+              *cursor++ = '\n';
+              string++;
+              break;
 
-	    case 'r':		/* carriage return */
-	      *cursor++ = '\r';
-	      string++;
-	      break;
+            case 'r':		/* carriage return */
+              *cursor++ = '\r';
+              string++;
+              break;
 
-	    case 't':		/* horizontal tab */
-	      *cursor++ = '\t';
-	      string++;
-	      break;
+            case 't':		/* horizontal tab */
+              *cursor++ = '\t';
+              string++;
+              break;
 
-	    case 'v':		/* vertical tab */
+            case 'v':		/* vertical tab */
 #if __STDC__
-	      *cursor++ = '\v';
+              *cursor++ = '\v';
 #else
-	      *cursor++ = 11;
+              *cursor++ = 11;
 #endif
-	      string++;
-	      break;
+              string++;
+              break;
 
-	    case '\0':		/* lone backslash at end of string */
-	      /* ignore it */
-	      break;
+            case '\0':		/* lone backslash at end of string */
+              /* ignore it */
+              break;
 
-	    default:
-	      *cursor++ = '\\';
-	      *cursor++ = *string++;
-	      break;
-	    }
-	}
+            default:
+              *cursor++ = '\\';
+              *cursor++ = *string++;
+              break;
+            }
+        }
       else
-	*cursor++ = *string++;
+        *cursor++ = *string++;
     }
 
   *cursor = '\0';
@@ -453,7 +453,7 @@ initialize_regex (void)
   if (context_regex.string)
     {
       if (!*context_regex.string)
-	context_regex.string = NULL;
+        context_regex.string = NULL;
     }
   else if (gnu_extensions & !input_reference)
     context_regex.string = "[.?!][]\"')}]*\\($\\|\t\\|  \\)[ \t\n]*";
@@ -476,23 +476,23 @@ initialize_regex (void)
   else if (!break_file)
     {
       if (gnu_extensions)
-	{
+        {
 
-	  /* Simulate \w+.  */
+          /* Simulate \w+.  */
 
-	  for (character = 0; character < CHAR_SET_SIZE; character++)
-	    word_fastmap[character] = !! isalpha (character);
-	}
+          for (character = 0; character < CHAR_SET_SIZE; character++)
+            word_fastmap[character] = !! isalpha (character);
+        }
       else
-	{
+        {
 
-	  /* Simulate [^ \t\n]+.  */
+          /* Simulate [^ \t\n]+.  */
 
-	  memset (word_fastmap, 1, CHAR_SET_SIZE);
-	  word_fastmap[' '] = 0;
-	  word_fastmap['\t'] = 0;
-	  word_fastmap['\n'] = 0;
-	}
+          memset (word_fastmap, 1, CHAR_SET_SIZE);
+          word_fastmap[' '] = 0;
+          word_fastmap['\t'] = 0;
+          word_fastmap['\n'] = 0;
+        }
     }
 }
 
@@ -541,23 +541,23 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
       block->start = xmalloc ((size_t) stat_block.st_size);
 
       if ((in_memory_size = read (file_handle,
-				  block->start, (size_t) stat_block.st_size))
-	  != stat_block.st_size)
-	{
+                                  block->start, (size_t) stat_block.st_size))
+          != stat_block.st_size)
+        {
 #if MSDOS
-	  /* On MSDOS, in memory size may be smaller than the file
-	     size, because of end of line conversions.  But it can
-	     never be smaller than half the file size, because the
-	     minimum is when all lines are empty and terminated by
-	     CR+LF.  */
-	  if (in_memory_size != (size_t)-1
-	      && in_memory_size >= stat_block.st_size / 2)
-	    block->start = xrealloc (block->start, in_memory_size);
-	  else
+          /* On MSDOS, in memory size may be smaller than the file
+             size, because of end of line conversions.  But it can
+             never be smaller than half the file size, because the
+             minimum is when all lines are empty and terminated by
+             CR+LF.  */
+          if (in_memory_size != (size_t)-1
+              && in_memory_size >= stat_block.st_size / 2)
+            block->start = xrealloc (block->start, in_memory_size);
+          else
 #endif /* not MSDOS */
 
-	    error (EXIT_FAILURE, errno, "%s", file_name);
-	}
+            error (EXIT_FAILURE, errno, "%s", file_name);
+        }
       block->end = block->start + in_memory_size;
     }
   else
@@ -567,21 +567,21 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
       allocated_length = (1 << SWALLOW_REALLOC_LOG);
 
       while (read_length = read (file_handle,
-				 block->start + used_length,
-				 allocated_length - used_length),
-	     read_length > 0)
-	{
-	  used_length += read_length;
-	  if (used_length == allocated_length)
-	    {
-	      allocated_length += (1 << SWALLOW_REALLOC_LOG);
-	      block->start
-		= xrealloc (block->start, allocated_length);
-	    }
-	}
+                                 block->start + used_length,
+                                 allocated_length - used_length),
+             read_length > 0)
+        {
+          used_length += read_length;
+          if (used_length == allocated_length)
+            {
+              allocated_length += (1 << SWALLOW_REALLOC_LOG);
+              block->start
+                = xrealloc (block->start, allocated_length);
+            }
+        }
 
       if (read_length < 0)
-	error (EXIT_FAILURE, errno, "%s", file_name);
+        error (EXIT_FAILURE, errno, "%s", file_name);
 
       block->end = block->start + used_length;
     }
@@ -616,22 +616,22 @@ compare_words (const void *void_first, const void *void_second)
   if (ignore_case)
     {
       for (counter = 0; counter < length; counter++)
-	{
-	  value = (folded_chars [to_uchar (first->start[counter])]
-		   - folded_chars [to_uchar (second->start[counter])]);
-	  if (value != 0)
-	    return value;
-	}
+        {
+          value = (folded_chars [to_uchar (first->start[counter])]
+                   - folded_chars [to_uchar (second->start[counter])]);
+          if (value != 0)
+            return value;
+        }
     }
   else
     {
       for (counter = 0; counter < length; counter++)
-	{
-	  value = (to_uchar (first->start[counter])
-		   - to_uchar (second->start[counter]));
-	  if (value != 0)
-	    return value;
-	}
+        {
+          value = (to_uchar (first->start[counter])
+                   - to_uchar (second->start[counter]));
+          if (value != 0)
+            return value;
+        }
     }
 
   return first->size - second->size;
@@ -677,11 +677,11 @@ search_table (WORD *word, WORD_TABLE *table)
       middle = (lowest + highest) / 2;
       value = compare_words (word, table->start + middle);
       if (value < 0)
-	highest = middle - 1;
+        highest = middle - 1;
       else if (value > 0)
-	lowest = middle + 1;
+        lowest = middle + 1;
       else
-	return 1;
+        return 1;
     }
   return 0;
 }
@@ -699,7 +699,7 @@ sort_found_occurs (void)
   /* Only one language for the time being.  */
 
   qsort (occurs_table[0], number_of_occurs[0], sizeof **occurs_table,
-	 compare_occurs);
+         compare_occurs);
 }
 
 /* Parameter files reading routines.  */
@@ -728,10 +728,10 @@ digest_break_file (const char *file_name)
     {
 
       /* If GNU extensions are enabled, the only way to avoid newline as
-	 a break character is to write all the break characters in the
-	 file with no newline at all, not even at the end of the file.
-	 If disabled, spaces, tabs and newlines are always considered as
-	 break characters even if not included in the break file.  */
+         a break character is to write all the break characters in the
+         file with no newline at all, not even at the end of the file.
+         If disabled, spaces, tabs and newlines are always considered as
+         break characters even if not included in the break file.  */
 
       word_fastmap[' '] = 0;
       word_fastmap['\t'] = 0;
@@ -773,30 +773,30 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
 
       word_start = cursor;
       while (cursor < file_contents.end && *cursor != '\n')
-	cursor++;
+        cursor++;
 
       /* Record the word in table if it is not empty.  */
 
       if (cursor > word_start)
-	{
-	  if (table->length == table->alloc)
-	    {
-	      if ((SIZE_MAX / sizeof *table->start - 1) / 2 < table->alloc)
-		xalloc_die ();
-	      table->alloc = table->alloc * 2 + 1;
-	      table->start = xrealloc (table->start,
-				       table->alloc * sizeof *table->start);
-	    }
+        {
+          if (table->length == table->alloc)
+            {
+              if ((SIZE_MAX / sizeof *table->start - 1) / 2 < table->alloc)
+                xalloc_die ();
+              table->alloc = table->alloc * 2 + 1;
+              table->start = xrealloc (table->start,
+                                       table->alloc * sizeof *table->start);
+            }
 
-	  table->start[table->length].start = word_start;
-	  table->start[table->length].size = cursor - word_start;
-	  table->length++;
-	}
+          table->start[table->length].start = word_start;
+          table->start[table->length].size = cursor - word_start;
+          table->length++;
+        }
 
       /* This test allows for an incomplete line at end of file.  */
 
       if (cursor < file_contents.end)
-	cursor++;
+        cursor++;
     }
 
   /* Finally, sort all the words read.  */
@@ -859,223 +859,223 @@ find_occurs_in_text (void)
     {
 
       /* `context_start' gets initialized before the processing of each
-	 line, or once for the whole buffer if no end of line or sentence
-	 sequence separator.  */
+         line, or once for the whole buffer if no end of line or sentence
+         sequence separator.  */
 
       context_start = cursor;
 
       /* If a end of line or end of sentence sequence is defined and
-	 non-empty, `next_context_start' will be recomputed to be the end of
-	 each line or sentence, before each one is processed.  If no such
-	 sequence, then `next_context_start' is set at the end of the whole
-	 buffer, which is then considered to be a single line or sentence.
-	 This test also accounts for the case of an incomplete line or
-	 sentence at the end of the buffer.  */
+         non-empty, `next_context_start' will be recomputed to be the end of
+         each line or sentence, before each one is processed.  If no such
+         sequence, then `next_context_start' is set at the end of the whole
+         buffer, which is then considered to be a single line or sentence.
+         This test also accounts for the case of an incomplete line or
+         sentence at the end of the buffer.  */
 
       next_context_start = text_buffer.end;
       if (context_regex.string)
-	switch (re_search (&context_regex.pattern, cursor,
-			   text_buffer.end - cursor,
-			   0, text_buffer.end - cursor, &context_regs))
-	  {
-	  case -2:
-	    matcher_error ();
+        switch (re_search (&context_regex.pattern, cursor,
+                           text_buffer.end - cursor,
+                           0, text_buffer.end - cursor, &context_regs))
+          {
+          case -2:
+            matcher_error ();
 
-	  case -1:
-	    break;
+          case -1:
+            break;
 
-	  default:
-	    next_context_start = cursor + context_regs.end[0];
-	    break;
-	  }
+          default:
+            next_context_start = cursor + context_regs.end[0];
+            break;
+          }
 
       /* Include the separator into the right context, but not any suffix
-	 white space in this separator; this insures it will be seen in
-	 output and will not take more space than necessary.  */
+         white space in this separator; this insures it will be seen in
+         output and will not take more space than necessary.  */
 
       context_end = next_context_start;
       SKIP_WHITE_BACKWARDS (context_end, context_start);
 
       /* Read and process a single input line or sentence, one word at a
-	 time.  */
+         time.  */
 
       while (1)
-	{
-	  if (word_regex.string)
+        {
+          if (word_regex.string)
 
-	    /* If a word regexp has been compiled, use it to skip at the
-	       beginning of the next word.  If there is no such word, exit
-	       the loop.  */
+            /* If a word regexp has been compiled, use it to skip at the
+               beginning of the next word.  If there is no such word, exit
+               the loop.  */
 
-	    {
-	      regoff_t r = re_search (&word_regex.pattern, cursor,
-				      context_end - cursor,
-				      0, context_end - cursor, &word_regs);
-	      if (r == -2)
-		matcher_error ();
-	      if (r == -1)
-		break;
-	      word_start = cursor + word_regs.start[0];
-	      word_end = cursor + word_regs.end[0];
-	    }
-	  else
+            {
+              regoff_t r = re_search (&word_regex.pattern, cursor,
+                                      context_end - cursor,
+                                      0, context_end - cursor, &word_regs);
+              if (r == -2)
+                matcher_error ();
+              if (r == -1)
+                break;
+              word_start = cursor + word_regs.start[0];
+              word_end = cursor + word_regs.end[0];
+            }
+          else
 
-	    /* Avoid re_search and use the fastmap to skip to the
-	       beginning of the next word.  If there is no more word in
-	       the buffer, exit the loop.  */
+            /* Avoid re_search and use the fastmap to skip to the
+               beginning of the next word.  If there is no more word in
+               the buffer, exit the loop.  */
 
-	    {
-	      scan = cursor;
-	      while (scan < context_end
-		     && !word_fastmap[to_uchar (*scan)])
-		scan++;
+            {
+              scan = cursor;
+              while (scan < context_end
+                     && !word_fastmap[to_uchar (*scan)])
+                scan++;
 
-	      if (scan == context_end)
-		break;
+              if (scan == context_end)
+                break;
 
-	      word_start = scan;
+              word_start = scan;
 
-	      while (scan < context_end
-		     && word_fastmap[to_uchar (*scan)])
-		scan++;
+              while (scan < context_end
+                     && word_fastmap[to_uchar (*scan)])
+                scan++;
 
-	      word_end = scan;
-	    }
+              word_end = scan;
+            }
 
-	  /* Skip right to the beginning of the found word.  */
+          /* Skip right to the beginning of the found word.  */
 
-	  cursor = word_start;
+          cursor = word_start;
 
-	  /* Skip any zero length word.  Just advance a single position,
-	     then go fetch the next word.  */
+          /* Skip any zero length word.  Just advance a single position,
+             then go fetch the next word.  */
 
-	  if (word_end == word_start)
-	    {
-	      cursor++;
-	      continue;
-	    }
+          if (word_end == word_start)
+            {
+              cursor++;
+              continue;
+            }
 
-	  /* This is a genuine, non empty word, so save it as a possible
-	     key.  Then skip over it.  Also, maintain the maximum length of
-	     all words read so far.  It is mandatory to take the maximum
-	     length of all words in the file, without considering if they
-	     are actually kept or rejected, because backward jumps at output
-	     generation time may fall in *any* word.  */
+          /* This is a genuine, non empty word, so save it as a possible
+             key.  Then skip over it.  Also, maintain the maximum length of
+             all words read so far.  It is mandatory to take the maximum
+             length of all words in the file, without considering if they
+             are actually kept or rejected, because backward jumps at output
+             generation time may fall in *any* word.  */
 
-	  possible_key.start = cursor;
-	  possible_key.size = word_end - word_start;
-	  cursor += possible_key.size;
+          possible_key.start = cursor;
+          possible_key.size = word_end - word_start;
+          cursor += possible_key.size;
 
-	  if (possible_key.size > maximum_word_length)
-	    maximum_word_length = possible_key.size;
+          if (possible_key.size > maximum_word_length)
+            maximum_word_length = possible_key.size;
 
-	  /* In input reference mode, update `line_start' from its previous
-	     value.  Count the lines just in case auto reference mode is
-	     also selected. If it happens that the word just matched is
-	     indeed part of a reference; just ignore it.  */
+          /* In input reference mode, update `line_start' from its previous
+             value.  Count the lines just in case auto reference mode is
+             also selected. If it happens that the word just matched is
+             indeed part of a reference; just ignore it.  */
 
-	  if (input_reference)
-	    {
-	      while (line_scan < possible_key.start)
-		if (*line_scan == '\n')
-		  {
-		    total_line_count++;
-		    line_scan++;
-		    line_start = line_scan;
-		    SKIP_NON_WHITE (line_scan, text_buffer.end);
-		    reference_length = line_scan - line_start;
-		  }
-		else
-		  line_scan++;
-	      if (line_scan > possible_key.start)
-		continue;
-	    }
+          if (input_reference)
+            {
+              while (line_scan < possible_key.start)
+                if (*line_scan == '\n')
+                  {
+                    total_line_count++;
+                    line_scan++;
+                    line_start = line_scan;
+                    SKIP_NON_WHITE (line_scan, text_buffer.end);
+                    reference_length = line_scan - line_start;
+                  }
+                else
+                  line_scan++;
+              if (line_scan > possible_key.start)
+                continue;
+            }
 
-	  /* Ignore the word if an `Ignore words' table exists and if it is
-	     part of it.  Also ignore the word if an `Only words' table and
-	     if it is *not* part of it.
+          /* Ignore the word if an `Ignore words' table exists and if it is
+             part of it.  Also ignore the word if an `Only words' table and
+             if it is *not* part of it.
 
-	     It is allowed that both tables be used at once, even if this
-	     may look strange for now.  Just ignore a word that would appear
-	     in both.  If regexps are eventually implemented for these
-	     tables, the Ignore table could then reject words that would
-	     have been previously accepted by the Only table.  */
+             It is allowed that both tables be used at once, even if this
+             may look strange for now.  Just ignore a word that would appear
+             in both.  If regexps are eventually implemented for these
+             tables, the Ignore table could then reject words that would
+             have been previously accepted by the Only table.  */
 
-	  if (ignore_file && search_table (&possible_key, &ignore_table))
-	    continue;
-	  if (only_file && !search_table (&possible_key, &only_table))
-	    continue;
+          if (ignore_file && search_table (&possible_key, &ignore_table))
+            continue;
+          if (only_file && !search_table (&possible_key, &only_table))
+            continue;
 
-	  /* A non-empty word has been found.  First of all, insure
-	     proper allocation of the next OCCURS, and make a pointer to
-	     where it will be constructed.  */
+          /* A non-empty word has been found.  First of all, insure
+             proper allocation of the next OCCURS, and make a pointer to
+             where it will be constructed.  */
 
-	  if (number_of_occurs[0] == occurs_alloc[0])
-	    {
-	      if ((SIZE_MAX / sizeof *occurs_table[0] - 1) / 2
-		  < occurs_alloc[0])
-		xalloc_die ();
-	      occurs_alloc[0] = occurs_alloc[0] * 2 + 1;
-	      occurs_table[0] = xrealloc (occurs_table[0],
-					  occurs_alloc[0] * sizeof *occurs_table[0]);
-	    }
+          if (number_of_occurs[0] == occurs_alloc[0])
+            {
+              if ((SIZE_MAX / sizeof *occurs_table[0] - 1) / 2
+                  < occurs_alloc[0])
+                xalloc_die ();
+              occurs_alloc[0] = occurs_alloc[0] * 2 + 1;
+              occurs_table[0] = xrealloc (occurs_table[0],
+                                          occurs_alloc[0] * sizeof *occurs_table[0]);
+            }
 
-	  occurs_cursor = occurs_table[0] + number_of_occurs[0];
+          occurs_cursor = occurs_table[0] + number_of_occurs[0];
 
-	  /* Define the refence field, if any.  */
+          /* Define the refence field, if any.  */
 
-	  if (auto_reference)
-	    {
+          if (auto_reference)
+            {
 
-	      /* While auto referencing, update `line_start' from its
-		 previous value, counting lines as we go.  If input
-		 referencing at the same time, `line_start' has been
-		 advanced earlier, and the following loop is never really
-		 executed.  */
+              /* While auto referencing, update `line_start' from its
+                 previous value, counting lines as we go.  If input
+                 referencing at the same time, `line_start' has been
+                 advanced earlier, and the following loop is never really
+                 executed.  */
 
-	      while (line_scan < possible_key.start)
-		if (*line_scan == '\n')
-		  {
-		    total_line_count++;
-		    line_scan++;
-		    line_start = line_scan;
-		    SKIP_NON_WHITE (line_scan, text_buffer.end);
-		  }
-		else
-		  line_scan++;
+              while (line_scan < possible_key.start)
+                if (*line_scan == '\n')
+                  {
+                    total_line_count++;
+                    line_scan++;
+                    line_start = line_scan;
+                    SKIP_NON_WHITE (line_scan, text_buffer.end);
+                  }
+                else
+                  line_scan++;
 
-	      occurs_cursor->reference = total_line_count;
-	    }
-	  else if (input_reference)
-	    {
+              occurs_cursor->reference = total_line_count;
+            }
+          else if (input_reference)
+            {
 
-	      /* If only input referencing, `line_start' has been computed
-		 earlier to detect the case the word matched would be part
-		 of the reference.  The reference position is simply the
-		 value of `line_start'.  */
+              /* If only input referencing, `line_start' has been computed
+                 earlier to detect the case the word matched would be part
+                 of the reference.  The reference position is simply the
+                 value of `line_start'.  */
 
-	      occurs_cursor->reference
-		= (DELTA) (line_start - possible_key.start);
-	      if (reference_length > reference_max_width)
-		reference_max_width = reference_length;
-	    }
+              occurs_cursor->reference
+                = (DELTA) (line_start - possible_key.start);
+              if (reference_length > reference_max_width)
+                reference_max_width = reference_length;
+            }
 
-	  /* Exclude the reference from the context in simple cases.  */
+          /* Exclude the reference from the context in simple cases.  */
 
-	  if (input_reference && line_start == context_start)
-	    {
-	      SKIP_NON_WHITE (context_start, context_end);
-	      SKIP_WHITE (context_start, context_end);
-	    }
+          if (input_reference && line_start == context_start)
+            {
+              SKIP_NON_WHITE (context_start, context_end);
+              SKIP_WHITE (context_start, context_end);
+            }
 
-	  /* Completes the OCCURS structure.  */
+          /* Completes the OCCURS structure.  */
 
-	  occurs_cursor->key = possible_key;
-	  occurs_cursor->left = context_start - possible_key.start;
-	  occurs_cursor->right = context_end - possible_key.start;
+          occurs_cursor->key = possible_key;
+          occurs_cursor->left = context_start - possible_key.start;
+          occurs_cursor->right = context_end - possible_key.start;
 
-	  number_of_occurs[0]++;
-	}
+          number_of_occurs[0]++;
+        }
     }
 }
 
@@ -1112,144 +1112,144 @@ print_field (BLOCK field)
     {
       unsigned char character = *cursor;
       if (edited_flag[character])
-	{
+        {
 
-	  /* First check if this is a diacriticized character.
+          /* First check if this is a diacriticized character.
 
-	     This works only for TeX.  I do not know how diacriticized
-	     letters work with `roff'.  Please someone explain it to me!  */
+             This works only for TeX.  I do not know how diacriticized
+             letters work with `roff'.  Please someone explain it to me!  */
 
-	  diacritic = todiac (character);
-	  if (diacritic != 0 && output_format == TEX_FORMAT)
-	    {
-	      base = tobase (character);
-	      switch (diacritic)
-		{
+          diacritic = todiac (character);
+          if (diacritic != 0 && output_format == TEX_FORMAT)
+            {
+              base = tobase (character);
+              switch (diacritic)
+                {
 
-		case 1:		/* Latin diphthongs */
-		  switch (base)
-		    {
-		    case 'o':
-		      fputs ("\\oe{}", stdout);
-		      break;
+                case 1:		/* Latin diphthongs */
+                  switch (base)
+                    {
+                    case 'o':
+                      fputs ("\\oe{}", stdout);
+                      break;
 
-		    case 'O':
-		      fputs ("\\OE{}", stdout);
-		      break;
+                    case 'O':
+                      fputs ("\\OE{}", stdout);
+                      break;
 
-		    case 'a':
-		      fputs ("\\ae{}", stdout);
-		      break;
+                    case 'a':
+                      fputs ("\\ae{}", stdout);
+                      break;
 
-		    case 'A':
-		      fputs ("\\AE{}", stdout);
-		      break;
+                    case 'A':
+                      fputs ("\\AE{}", stdout);
+                      break;
 
-		    default:
-		      putchar (' ');
-		    }
-		  break;
+                    default:
+                      putchar (' ');
+                    }
+                  break;
 
-		case 2:		/* Acute accent */
-		  printf ("\\'%s%c", (base == 'i' ? "\\" : ""), base);
-		  break;
+                case 2:		/* Acute accent */
+                  printf ("\\'%s%c", (base == 'i' ? "\\" : ""), base);
+                  break;
 
-		case 3:		/* Grave accent */
-		  printf ("\\`%s%c", (base == 'i' ? "\\" : ""), base);
-		  break;
+                case 3:		/* Grave accent */
+                  printf ("\\`%s%c", (base == 'i' ? "\\" : ""), base);
+                  break;
 
-		case 4:		/* Circumflex accent */
-		  printf ("\\^%s%c", (base == 'i' ? "\\" : ""), base);
-		  break;
+                case 4:		/* Circumflex accent */
+                  printf ("\\^%s%c", (base == 'i' ? "\\" : ""), base);
+                  break;
 
-		case 5:		/* Diaeresis */
-		  printf ("\\\"%s%c", (base == 'i' ? "\\" : ""), base);
-		  break;
+                case 5:		/* Diaeresis */
+                  printf ("\\\"%s%c", (base == 'i' ? "\\" : ""), base);
+                  break;
 
-		case 6:		/* Tilde accent */
-		  printf ("\\~%s%c", (base == 'i' ? "\\" : ""), base);
-		  break;
+                case 6:		/* Tilde accent */
+                  printf ("\\~%s%c", (base == 'i' ? "\\" : ""), base);
+                  break;
 
-		case 7:		/* Cedilla */
-		  printf ("\\c{%c}", base);
-		  break;
+                case 7:		/* Cedilla */
+                  printf ("\\c{%c}", base);
+                  break;
 
-		case 8:		/* Small circle beneath */
-		  switch (base)
-		    {
-		    case 'a':
-		      fputs ("\\aa{}", stdout);
-		      break;
+                case 8:		/* Small circle beneath */
+                  switch (base)
+                    {
+                    case 'a':
+                      fputs ("\\aa{}", stdout);
+                      break;
 
-		    case 'A':
-		      fputs ("\\AA{}", stdout);
-		      break;
+                    case 'A':
+                      fputs ("\\AA{}", stdout);
+                      break;
 
-		    default:
-		      putchar (' ');
-		    }
-		  break;
+                    default:
+                      putchar (' ');
+                    }
+                  break;
 
-		case 9:		/* Strike through */
-		  switch (base)
-		    {
-		    case 'o':
-		      fputs ("\\o{}", stdout);
-		      break;
+                case 9:		/* Strike through */
+                  switch (base)
+                    {
+                    case 'o':
+                      fputs ("\\o{}", stdout);
+                      break;
 
-		    case 'O':
-		      fputs ("\\O{}", stdout);
-		      break;
+                    case 'O':
+                      fputs ("\\O{}", stdout);
+                      break;
 
-		    default:
-		      putchar (' ');
-		    }
-		  break;
-		}
-	    }
-	  else
+                    default:
+                      putchar (' ');
+                    }
+                  break;
+                }
+            }
+          else
 
-	    /* This is not a diacritic character, so handle cases which are
-	       really specific to `roff' or TeX.  All white space processing
-	       is done as the default case of this switch.  */
+            /* This is not a diacritic character, so handle cases which are
+               really specific to `roff' or TeX.  All white space processing
+               is done as the default case of this switch.  */
 
-	    switch (character)
-	      {
-	      case '"':
-		/* In roff output format, double any quote.  */
-		putchar ('"');
-		putchar ('"');
-		break;
+            switch (character)
+              {
+              case '"':
+                /* In roff output format, double any quote.  */
+                putchar ('"');
+                putchar ('"');
+                break;
 
-	      case '$':
-	      case '%':
-	      case '&':
-	      case '#':
-	      case '_':
-		/* In TeX output format, precede these with a backslash.  */
-		putchar ('\\');
-		putchar (character);
-		break;
+              case '$':
+              case '%':
+              case '&':
+              case '#':
+              case '_':
+                /* In TeX output format, precede these with a backslash.  */
+                putchar ('\\');
+                putchar (character);
+                break;
 
-	      case '{':
-	      case '}':
-		/* In TeX output format, precede these with a backslash and
-		   force mathematical mode.  */
-		printf ("$\\%c$", character);
-		break;
+              case '{':
+              case '}':
+                /* In TeX output format, precede these with a backslash and
+                   force mathematical mode.  */
+                printf ("$\\%c$", character);
+                break;
 
-	      case '\\':
-		/* In TeX output mode, request production of a backslash.  */
-		fputs ("\\backslash{}", stdout);
-		break;
+              case '\\':
+                /* In TeX output mode, request production of a backslash.  */
+                fputs ("\\backslash{}", stdout);
+                break;
 
-	      default:
-		/* Any other flagged character produces a single space.  */
-		putchar (' ');
-	      }
-	}
+              default:
+                /* Any other flagged character produces a single space.  */
+                putchar (' ');
+              }
+        }
       else
-	putchar (*cursor);
+        putchar (*cursor);
     }
 }
 
@@ -1278,17 +1278,17 @@ fix_output_parameters (void)
     {
       reference_max_width = 0;
       for (file_index = 0; file_index < number_input_files; file_index++)
-	{
-	  line_ordinal = file_line_count[file_index] + 1;
-	  if (file_index > 0)
-	    line_ordinal -= file_line_count[file_index - 1];
-	  sprintf (ordinal_string, "%d", line_ordinal);
-	  reference_width = strlen (ordinal_string);
-	  if (input_file_name[file_index])
-	    reference_width += strlen (input_file_name[file_index]);
-	  if (reference_width > reference_max_width)
-	    reference_max_width = reference_width;
-	}
+        {
+          line_ordinal = file_line_count[file_index] + 1;
+          if (file_index > 0)
+            line_ordinal -= file_line_count[file_index - 1];
+          sprintf (ordinal_string, "%d", line_ordinal);
+          reference_width = strlen (ordinal_string);
+          if (input_file_name[file_index])
+            reference_width += strlen (input_file_name[file_index]);
+          if (reference_width > reference_max_width)
+            reference_max_width = reference_width;
+        }
       reference_max_width++;
       reference.start = xmalloc ((size_t) reference_max_width + 1);
     }
@@ -1328,40 +1328,40 @@ fix_output_parameters (void)
     {
 
       /* When flagging truncation at the left of the keyword, the
-	 truncation mark goes at the beginning of the before field,
-	 unless there is a head field, in which case the mark goes at the
-	 left of the head field.  When flagging truncation at the right
-	 of the keyword, the mark goes at the end of the keyafter field,
-	 unless there is a tail field, in which case the mark goes at the
-	 end of the tail field.  Only eight combination cases could arise
-	 for truncation marks:
+         truncation mark goes at the beginning of the before field,
+         unless there is a head field, in which case the mark goes at the
+         left of the head field.  When flagging truncation at the right
+         of the keyword, the mark goes at the end of the keyafter field,
+         unless there is a tail field, in which case the mark goes at the
+         end of the tail field.  Only eight combination cases could arise
+         for truncation marks:
 
-	 . None.
-	 . One beginning the before field.
-	 . One beginning the head field.
-	 . One ending the keyafter field.
-	 . One ending the tail field.
-	 . One beginning the before field, another ending the keyafter field.
-	 . One ending the tail field, another beginning the before field.
-	 . One ending the keyafter field, another beginning the head field.
+         . None.
+         . One beginning the before field.
+         . One beginning the head field.
+         . One ending the keyafter field.
+         . One ending the tail field.
+         . One beginning the before field, another ending the keyafter field.
+         . One ending the tail field, another beginning the before field.
+         . One ending the keyafter field, another beginning the head field.
 
-	 So, there is at most two truncation marks, which could appear both
-	 on the left side of the center of the output line, both on the
-	 right side, or one on either side.  */
+         So, there is at most two truncation marks, which could appear both
+         on the left side of the center of the output line, both on the
+         right side, or one on either side.  */
 
       before_max_width -= 2 * truncation_string_length;
       if (before_max_width < 0)
-	before_max_width = 0;
+        before_max_width = 0;
       keyafter_max_width -= 2 * truncation_string_length;
     }
   else
     {
 
       /* I never figured out exactly how UNIX' ptx plans the output width
-	 of its various fields.  If GNU extensions are disabled, do not
-	 try computing the field widths correctly; instead, use the
-	 following formula, which does not completely imitate UNIX' ptx,
-	 but almost.  */
+         of its various fields.  If GNU extensions are disabled, do not
+         try computing the field widths correctly; instead, use the
+         following formula, which does not completely imitate UNIX' ptx,
+         but almost.  */
 
       keyafter_max_width -= 2 * truncation_string_length + 1;
     }
@@ -1397,13 +1397,13 @@ fix_output_parameters (void)
       /* Various characters need special processing.  */
 
       for (cursor = "$%&#_{}\\"; *cursor; cursor++)
-	edited_flag[to_uchar (*cursor)] = 1;
+        edited_flag[to_uchar (*cursor)] = 1;
 
       /* Any character with 8th bit set will print to a single space, unless
-	 it is diacriticized.  */
+         it is diacriticized.  */
 
       for (character = 0200; character < CHAR_SET_SIZE; character++)
-	edited_flag[character] = todiac (character) != 0;
+        edited_flag[character] = todiac (character) != 0;
       break;
     }
 }
@@ -1439,7 +1439,7 @@ define_all_fields (OCCURS *occurs)
 
   cursor = keyafter.end;
   while (cursor < right_context_end
-	 && cursor <= keyafter.start + keyafter_max_width)
+         && cursor <= keyafter.start + keyafter_max_width)
     {
       keyafter.end = cursor;
       SKIP_SOMETHING (cursor, right_context_end);
@@ -1466,7 +1466,7 @@ define_all_fields (OCCURS *occurs)
   if (-occurs->left > half_line_width + maximum_word_length)
     {
       left_field_start
-	= keyafter.start - (half_line_width + maximum_word_length);
+        = keyafter.start - (half_line_width + maximum_word_length);
       SKIP_SOMETHING (left_field_start, keyafter.start);
     }
   else
@@ -1514,22 +1514,22 @@ define_all_fields (OCCURS *occurs)
       tail.end = tail.start;
       cursor = tail.end;
       while (cursor < right_context_end
-	     && cursor < tail.start + tail_max_width)
-	{
-	  tail.end = cursor;
-	  SKIP_SOMETHING (cursor, right_context_end);
-	}
+             && cursor < tail.start + tail_max_width)
+        {
+          tail.end = cursor;
+          SKIP_SOMETHING (cursor, right_context_end);
+        }
 
       if (cursor < tail.start + tail_max_width)
-	tail.end = cursor;
+        tail.end = cursor;
 
       if (tail.end > tail.start)
-	{
-	  keyafter_truncation = 0;
-	  tail_truncation = truncation_string && tail.end < right_context_end;
-	}
+        {
+          keyafter_truncation = 0;
+          tail_truncation = truncation_string && tail.end < right_context_end;
+        }
       else
-	tail_truncation = 0;
+        tail_truncation = 0;
 
       SKIP_WHITE_BACKWARDS (tail.end, tail.start);
     }
@@ -1559,16 +1559,16 @@ define_all_fields (OCCURS *occurs)
 
       head.start = left_field_start;
       while (head.start + head_max_width < head.end)
-	SKIP_SOMETHING (head.start, head.end);
+        SKIP_SOMETHING (head.start, head.end);
 
       if (head.end > head.start)
-	{
-	  before_truncation = 0;
-	  head_truncation = (truncation_string
-			     && head.start > left_context_start);
-	}
+        {
+          before_truncation = 0;
+          head_truncation = (truncation_string
+                             && head.start > left_context_start);
+        }
       else
-	head_truncation = 0;
+        head_truncation = 0;
 
       SKIP_WHITE (head.start, head.end);
     }
@@ -1586,21 +1586,21 @@ define_all_fields (OCCURS *occurs)
     {
 
       /* Construct the reference text in preallocated space from the file
-	 name and the line number.  Find out in which file the reference
-	 occurred.  Standard input yields an empty file name.  Insure line
-	 numbers are one based, even if they are computed zero based.  */
+         name and the line number.  Find out in which file the reference
+         occurred.  Standard input yields an empty file name.  Insure line
+         numbers are one based, even if they are computed zero based.  */
 
       file_index = 0;
       while (file_line_count[file_index] < occurs->reference)
-	file_index++;
+        file_index++;
 
       file_name = input_file_name[file_index];
       if (!file_name)
-	file_name = "";
+        file_name = "";
 
       line_ordinal = occurs->reference + 1;
       if (file_index > 0)
-	line_ordinal -= file_line_count[file_index - 1];
+        line_ordinal -= file_line_count[file_index - 1];
 
       sprintf (reference.start, "%s:%d", file_name, line_ordinal);
       reference.end = reference.start + strlen (reference.start);
@@ -1609,7 +1609,7 @@ define_all_fields (OCCURS *occurs)
     {
 
       /* Reference starts at saved position for reference and extends right
-	 until some white space is met.  */
+         until some white space is met.  */
 
       reference.start = keyafter.start + (DELTA) occurs->reference;
       reference.end = reference.start;
@@ -1718,29 +1718,29 @@ output_one_dumb_line (void)
   if (!right_reference)
     {
       if (auto_reference)
-	{
+        {
 
-	  /* Output the `reference' field, in such a way that GNU emacs
-	     next-error will handle it.  The ending colon is taken from the
-	     gap which follows.  */
+          /* Output the `reference' field, in such a way that GNU emacs
+             next-error will handle it.  The ending colon is taken from the
+             gap which follows.  */
 
-	  print_field (reference);
-	  putchar (':');
-	  print_spaces (reference_max_width
-			+ gap_size
-			- (reference.end - reference.start)
-			- 1);
-	}
+          print_field (reference);
+          putchar (':');
+          print_spaces (reference_max_width
+                        + gap_size
+                        - (reference.end - reference.start)
+                        - 1);
+        }
       else
-	{
+        {
 
-	  /* Output the `reference' field and its following gap.  */
+          /* Output the `reference' field and its following gap.  */
 
-	  print_field (reference);
-	  print_spaces (reference_max_width
-			+ gap_size
-			- (reference.end - reference.start));
-	}
+          print_field (reference);
+          print_spaces (reference_max_width
+                        + gap_size
+                        - (reference.end - reference.start));
+        }
     }
 
   if (tail.start < tail.end)
@@ -1749,18 +1749,18 @@ output_one_dumb_line (void)
 
       print_field (tail);
       if (tail_truncation)
-	fputs (truncation_string, stdout);
+        fputs (truncation_string, stdout);
 
       print_spaces (half_line_width - gap_size
-		    - (before.end - before.start)
-		    - (before_truncation ? truncation_string_length : 0)
-		    - (tail.end - tail.start)
-		    - (tail_truncation ? truncation_string_length : 0));
+                    - (before.end - before.start)
+                    - (before_truncation ? truncation_string_length : 0)
+                    - (tail.end - tail.start)
+                    - (tail_truncation ? truncation_string_length : 0));
     }
   else
     print_spaces (half_line_width - gap_size
-		  - (before.end - before.start)
-		  - (before_truncation ? truncation_string_length : 0));
+                  - (before.end - before.start)
+                  - (before_truncation ? truncation_string_length : 0));
 
   /* Output the `before' field.  */
 
@@ -1781,20 +1781,20 @@ output_one_dumb_line (void)
       /* Output the `head' field.  */
 
       print_spaces (half_line_width
-		    - (keyafter.end - keyafter.start)
-		    - (keyafter_truncation ? truncation_string_length : 0)
-		    - (head.end - head.start)
-		    - (head_truncation ? truncation_string_length : 0));
+                    - (keyafter.end - keyafter.start)
+                    - (keyafter_truncation ? truncation_string_length : 0)
+                    - (head.end - head.start)
+                    - (head_truncation ? truncation_string_length : 0));
       if (head_truncation)
-	fputs (truncation_string, stdout);
+        fputs (truncation_string, stdout);
       print_field (head);
     }
   else
 
     if ((auto_reference | input_reference) & right_reference)
       print_spaces (half_line_width
-		    - (keyafter.end - keyafter.start)
-		    - (keyafter_truncation ? truncation_string_length : 0));
+                    - (keyafter.end - keyafter.start)
+                    - (keyafter_truncation ? truncation_string_length : 0));
 
   if ((auto_reference | input_reference) & right_reference)
     {
@@ -1837,29 +1837,29 @@ generate_all_output (void)
   for (occurs_index = 0; occurs_index < number_of_occurs[0]; occurs_index++)
     {
       /* Compute the exact size of every field and whenever truncation flags
-	 are present or not.  */
+         are present or not.  */
 
       define_all_fields (occurs_cursor);
 
       /* Produce one output line according to selected format.  */
 
       switch (output_format)
-	{
-	case UNKNOWN_FORMAT:
-	  /* Should never happen.  */
+        {
+        case UNKNOWN_FORMAT:
+          /* Should never happen.  */
 
-	case DUMB_FORMAT:
-	  output_one_dumb_line ();
-	  break;
+        case DUMB_FORMAT:
+          output_one_dumb_line ();
+          break;
 
-	case ROFF_FORMAT:
-	  output_one_roff_line ();
-	  break;
+        case ROFF_FORMAT:
+          output_one_roff_line ();
+          break;
 
-	case TEX_FORMAT:
-	  output_one_tex_line ();
-	  break;
-	}
+        case TEX_FORMAT:
+          output_one_tex_line ();
+          break;
+        }
 
       /* Advance the cursor into the occurs table.  */
 
@@ -1878,13 +1878,13 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s [OPTION]... [INPUT]...   (without -G)\n\
   or:  %s -G [OPTION]... [INPUT [OUTPUT]]\n"),
-	      program_name, program_name);
+              program_name, program_name);
       fputs (_("\
 Output a permuted index, including context, of the words in the input files.\n\
 \n\
@@ -1988,105 +1988,105 @@ main (int argc, char **argv)
 #endif
 
   while (optchar = getopt_long (argc, argv, "AF:GM:ORS:TW:b:i:fg:o:trw:",
-				long_options, NULL),
-	 optchar != EOF)
+                                long_options, NULL),
+         optchar != EOF)
     {
       switch (optchar)
-	{
-	default:
-	  usage (EXIT_FAILURE);
+        {
+        default:
+          usage (EXIT_FAILURE);
 
-	case 'G':
-	  gnu_extensions = false;
-	  break;
+        case 'G':
+          gnu_extensions = false;
+          break;
 
-	case 'b':
-	  break_file = optarg;
-	  break;
+        case 'b':
+          break_file = optarg;
+          break;
 
-	case 'f':
-	  ignore_case = true;
-	  break;
+        case 'f':
+          ignore_case = true;
+          break;
 
-	case 'g':
-	  {
-	    unsigned long int tmp_ulong;
-	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-		|| ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
-	      error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
-		     quotearg (optarg));
-	    gap_size = tmp_ulong;
-	    break;
-	  }
+        case 'g':
+          {
+            unsigned long int tmp_ulong;
+            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
+                || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+              error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
+                     quotearg (optarg));
+            gap_size = tmp_ulong;
+            break;
+          }
 
-	case 'i':
-	  ignore_file = optarg;
-	  break;
+        case 'i':
+          ignore_file = optarg;
+          break;
 
-	case 'o':
-	  only_file = optarg;
-	  break;
+        case 'o':
+          only_file = optarg;
+          break;
 
-	case 'r':
-	  input_reference = true;
-	  break;
+        case 'r':
+          input_reference = true;
+          break;
 
-	case 't':
-	  /* Yet to understand...  */
-	  break;
+        case 't':
+          /* Yet to understand...  */
+          break;
 
-	case 'w':
-	  {
-	    unsigned long int tmp_ulong;
-	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-		|| ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
-	      error (EXIT_FAILURE, 0, _("invalid line width: %s"),
-		     quotearg (optarg));
-	    line_width = tmp_ulong;
-	    break;
-	  }
+        case 'w':
+          {
+            unsigned long int tmp_ulong;
+            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
+                || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+              error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+                     quotearg (optarg));
+            line_width = tmp_ulong;
+            break;
+          }
 
-	case 'A':
-	  auto_reference = true;
-	  break;
+        case 'A':
+          auto_reference = true;
+          break;
 
-	case 'F':
-	  truncation_string = copy_unescaped_string (optarg);
-	  break;
+        case 'F':
+          truncation_string = copy_unescaped_string (optarg);
+          break;
 
-	case 'M':
-	  macro_name = optarg;
-	  break;
+        case 'M':
+          macro_name = optarg;
+          break;
 
-	case 'O':
-	  output_format = ROFF_FORMAT;
-	  break;
+        case 'O':
+          output_format = ROFF_FORMAT;
+          break;
 
-	case 'R':
-	  right_reference = true;
-	  break;
+        case 'R':
+          right_reference = true;
+          break;
 
-	case 'S':
-	  context_regex.string = copy_unescaped_string (optarg);
-	  break;
+        case 'S':
+          context_regex.string = copy_unescaped_string (optarg);
+          break;
 
-	case 'T':
-	  output_format = TEX_FORMAT;
-	  break;
+        case 'T':
+          output_format = TEX_FORMAT;
+          break;
 
-	case 'W':
-	  word_regex.string = copy_unescaped_string (optarg);
-	  if (!*word_regex.string)
-	    word_regex.string = NULL;
-	  break;
+        case 'W':
+          word_regex.string = copy_unescaped_string (optarg);
+          if (!*word_regex.string)
+            word_regex.string = NULL;
+          break;
 
-	case 10:
-	  output_format = XARGMATCH ("--format", optarg,
-				     format_args, format_vals);
-	case_GETOPT_HELP_CHAR;
+        case 10:
+          output_format = XARGMATCH ("--format", optarg,
+                                     format_args, format_vals);
+        case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	}
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        }
     }
 
   /* Process remaining arguments.  If GNU extensions are enabled, process
@@ -2110,13 +2110,13 @@ main (int argc, char **argv)
       file_line_count = xmalloc (number_input_files * sizeof *file_line_count);
 
       for (file_index = 0; file_index < number_input_files; file_index++)
-	{
-	  if (!*argv[optind] || STREQ (argv[optind], "-"))
-	    input_file_name[file_index] = NULL;
-	  else
-	    input_file_name[file_index] = argv[optind];
-	  optind++;
-	}
+        {
+          if (!*argv[optind] || STREQ (argv[optind], "-"))
+            input_file_name[file_index] = NULL;
+          else
+            input_file_name[file_index] = argv[optind];
+          optind++;
+        }
     }
   else
     {
@@ -2127,27 +2127,27 @@ main (int argc, char **argv)
       input_file_name = xmalloc (sizeof *input_file_name);
       file_line_count = xmalloc (sizeof *file_line_count);
       if (!*argv[optind] || STREQ (argv[optind], "-"))
-	input_file_name[0] = NULL;
+        input_file_name[0] = NULL;
       else
-	input_file_name[0] = argv[optind];
+        input_file_name[0] = argv[optind];
       optind++;
 
       /* Redirect standard output, only if requested.  */
 
       if (optind < argc)
-	{
-	  if (! freopen (argv[optind], "w", stdout))
-	    error (EXIT_FAILURE, errno, "%s", argv[optind]);
-	  optind++;
-	}
+        {
+          if (! freopen (argv[optind], "w", stdout))
+            error (EXIT_FAILURE, errno, "%s", argv[optind]);
+          optind++;
+        }
 
       /* Diagnose any other argument as an error.  */
 
       if (optind < argc)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
-	  usage (EXIT_FAILURE);
-	}
+        {
+          error (0, 0, _("extra operand %s"), quote (argv[optind]));
+          usage (EXIT_FAILURE);
+        }
     }
 
   /* If the output format has not been explicitly selected, choose dumb
@@ -2173,14 +2173,14 @@ main (int argc, char **argv)
     {
       digest_word_file (ignore_file, &ignore_table);
       if (ignore_table.length == 0)
-	ignore_file = NULL;
+        ignore_file = NULL;
     }
 
   if (only_file)
     {
       digest_word_file (only_file, &only_table);
       if (only_table.length == 0)
-	only_file = NULL;
+        only_file = NULL;
     }
 
   /* Prepare to study all the input files.  */
@@ -2199,8 +2199,8 @@ main (int argc, char **argv)
       find_occurs_in_text ();
 
       /* Maintain for each file how many lines has been read so far when its
-	 end is reached.  Incrementing the count first is a simple kludge to
-	 handle a possible incomplete line at end of file.  */
+         end is reached.  Incrementing the count first is a simple kludge to
+         handle a possible incomplete line at end of file.  */
 
       total_line_count++;
       file_line_count[file_index] = total_line_count;

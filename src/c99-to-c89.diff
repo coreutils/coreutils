@@ -43,21 +43,21 @@ diff -upr src/remove.c src/remove.c
        && ((x->interactive == RMI_ALWAYS) || x->stdin_tty)
        && dirent_type != DT_LNK)
 @@ -889,6 +890,7 @@ prompt (int fd_cwd, Dirstack_state const
- 	    break;
- 	  }
+            break;
+          }
 
 +      {
        char const *quoted_name = quote (full_filename (filename));
 
        if (write_protected < 0)
 @@ -928,6 +930,7 @@ prompt (int fd_cwd, Dirstack_state const
- 		    : _("%s: remove %s %s? ")),
- 		   program_name, file_type (sbuf), quoted_name);
- 	}
+                    : _("%s: remove %s %s? ")),
+                   program_name, file_type (sbuf), quoted_name);
+        }
 +      }
 
        if (!yesno ())
- 	return RM_USER_DECLINED;
+        return RM_USER_DECLINED;
 @@ -1547,6 +1550,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
@@ -72,7 +72,7 @@ diff -upr src/remove.c src/remove.c
 
 +  {
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
- 					DT_UNKNOWN, &st, x);
+                                        DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
 @@ -1587,6 +1592,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
@@ -87,7 +87,7 @@ diff -upr src/rm.c src/rm.c
 --- src/rm.c	1970-01-01 00:00:00.000000000 +0000
 +++ src/rm.c	1970-01-01 00:00:00.000000000 +0000
 @@ -354,6 +354,7 @@ main (int argc, char **argv)
- 	       quote ("/"));
+               quote ("/"));
      }
 
 +  {
@@ -96,7 +96,7 @@ diff -upr src/rm.c src/rm.c
 
 @@ -367,7 +368,10 @@ main (int argc, char **argv)
        if (!yesno ())
- 	exit (EXIT_SUCCESS);
+        exit (EXIT_SUCCESS);
      }
 +  {
    enum RM_status status = rm (n_files, file, &x);
@@ -109,37 +109,37 @@ diff -upr src/seq.c src/seq.c
 --- src/seq.c	1970-01-01 00:00:00.000000000 +0000
 +++ src/seq.c	1970-01-01 00:00:00.000000000 +0000
 @@ -163,6 +163,7 @@ scan_arg (const char *arg)
- 			: (decimal_point == arg                /* .#  -> 0.# */
- 			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
- 	}
+                        : (decimal_point == arg                /* .#  -> 0.# */
+                           || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
+        }
 +      {
        char const *e = strchr (arg, 'e');
        if (! e)
- 	e = strchr (arg, 'E');
+        e = strchr (arg, 'E');
 @@ -171,6 +172,7 @@ scan_arg (const char *arg)
- 	  long exponent = strtol (e + 1, NULL, 10);
- 	  ret.precision += exponent < 0 ? -exponent : 0;
- 	}
+          long exponent = strtol (e + 1, NULL, 10);
+          ret.precision += exponent < 0 ? -exponent : 0;
+        }
 +      }
      }
 
    return ret;
 @@ -346,6 +348,7 @@ get_default_format (operand first, opera
- 	  size_t last_width = last.width + (prec - last.precision);
- 	  if (last.precision && prec == 0)
- 	    last_width--;  /* don't include space for '.' */
+          size_t last_width = last.width + (prec - last.precision);
+          if (last.precision && prec == 0)
+            last_width--;  /* don't include space for '.' */
 +	  {
- 	  size_t width = MAX (first_width, last_width);
- 	  if (width <= INT_MAX)
- 	    {
+          size_t width = MAX (first_width, last_width);
+          if (width <= INT_MAX)
+            {
 @@ -353,6 +356,7 @@ get_default_format (operand first, opera
- 	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
- 	      return format_buf;
- 	    }
+              sprintf (format_buf, "%%0%d.%dLf", w, prec);
+              return format_buf;
+            }
 +	  }
- 	}
+        }
        else
- 	{
+        {
 @@ -441,6 +445,7 @@ main (int argc, char **argv)
    if (format_str)
      {
@@ -147,10 +147,10 @@ diff -upr src/seq.c src/seq.c
 +      {
        char const *f = long_double_format (format_str, &layout);
        if (! f)
- 	{
+        {
 @@ -448,6 +453,7 @@ main (int argc, char **argv)
- 	  usage (EXIT_FAILURE);
- 	}
+          usage (EXIT_FAILURE);
+        }
        format_str = f;
 +      }
      }
@@ -160,11 +160,11 @@ diff -upr src/shred.c src/shred.c
 --- src/shred.c	1970-01-01 00:00:00.000000000 +0000
 +++ src/shred.c	1970-01-01 00:00:00.000000000 +0000
 @@ -468,7 +468,7 @@ dopass (int fd, char const *qname, off_t
- 		     out.  Thus, it shouldn't give up on bad blocks.  This
- 		     code works because lim is always a multiple of
- 		     SECTOR_SIZE, except at the end.  */
+                     out.  Thus, it shouldn't give up on bad blocks.  This
+                     code works because lim is always a multiple of
+                     SECTOR_SIZE, except at the end.  */
 -		  verify (sizeof r % SECTOR_SIZE == 0);
 +		  { verify (sizeof r % SECTOR_SIZE == 0); }
- 		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
- 		    {
- 		      size_t soff1 = (soff | SECTOR_MASK) + 1;
+                  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
+                    {
+                      size_t soff1 = (soff | SECTOR_MASK) + 1;

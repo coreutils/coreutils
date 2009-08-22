@@ -33,12 +33,12 @@ sub digest_test ($)
   foreach my $e (@$t)
     {
       !ref $e
-	and push (@args, $e), next;
+        and push (@args, $e), next;
       ref $e eq 'HASH'
-	or (warn "$0: $t->[0]: unexpected entry type\n"), next;
+        or (warn "$0: $t->[0]: unexpected entry type\n"), next;
 
       exists $e->{EXIT}
-	and $ret = $e->{EXIT}, next;
+        and $ret = $e->{EXIT}, next;
 
       push @list_of_hashref, $e;
     }
@@ -70,16 +70,16 @@ sub add_inverse_op_tests($)
       # Generate corresponding tests of inverse ops.
       # E.g. generate tests of `-ge' from those of `-lt'.
       foreach my $op (qw(gt lt eq))
-	{
-	  if ($test_name =~ /$op-/ && $flags =~ / -$op /)
-	    {
-	      my $inv = $inverse_op{$op};
-	      $test_name =~ s/$op/$inv/;
-	      $flags =~ s/-$op/-$inv/;
-	      $ret = 1 - $ret;
-	      push (@new, [$test_name, $flags, {EXIT=>$ret}, @$LoH]);
-	    }
-	}
+        {
+          if ($test_name =~ /$op-/ && $flags =~ / -$op /)
+            {
+              my $inv = $inverse_op{$op};
+              $test_name =~ s/$op/$inv/;
+              $flags =~ s/-$op/-$inv/;
+              $ret = 1 - $ret;
+              push (@new, [$test_name, $flags, {EXIT=>$ret}, @$LoH]);
+            }
+        }
     }
   return @new;
 }
@@ -93,8 +93,8 @@ sub add_pn_tests($)
   # There are a few exceptions.
   my %not_N   = map {$_ => 1} qw (1a);
   my %not_P   = map {$_ => 1} qw (1a
-				  streq-6 strne-6
-				  paren-1 paren-2 paren-3 paren-4 paren-5);
+                                  streq-6 strne-6
+                                  paren-1 paren-2 paren-3 paren-4 paren-5);
   foreach my $t (@$tests)
     {
       push @new, $t;
@@ -104,13 +104,13 @@ sub add_pn_tests($)
       next if $ret == 2;
 
       push (@new, ["N-$test_name", "! $flags", {EXIT=>1-$ret}, @$LoH])
-	unless $not_N{$test_name};
+        unless $not_N{$test_name};
       push (@new, ["P-$test_name", "'(' $flags ')'", {EXIT=>$ret}, @$LoH])
-	unless $not_P{$test_name};
+        unless $not_P{$test_name};
       push (@new, ["NP-$test_name", "! '(' $flags ')'", {EXIT=>1-$ret}, @$LoH])
-	unless $not_P{$test_name};
+        unless $not_P{$test_name};
       push (@new, ["NNP-$test_name", "! ! '(' $flags ')'", {EXIT=>$ret, @$LoH}])
-	unless $not_P{$test_name};
+        unless $not_P{$test_name};
     }
 
   return @new;

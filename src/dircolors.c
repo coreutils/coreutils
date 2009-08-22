@@ -198,29 +198,29 @@ append_quoted (const char *str)
   while (*str != '\0')
     {
       switch (*str)
-	{
-	case '\'':
-	  APPEND_CHAR ('\'');
-	  APPEND_CHAR ('\\');
-	  APPEND_CHAR ('\'');
-	  need_backslash = true;
-	  break;
+        {
+        case '\'':
+          APPEND_CHAR ('\'');
+          APPEND_CHAR ('\\');
+          APPEND_CHAR ('\'');
+          need_backslash = true;
+          break;
 
-	case '\\':
-	case '^':
-	  need_backslash = !need_backslash;
-	  break;
+        case '\\':
+        case '^':
+          need_backslash = !need_backslash;
+          break;
 
-	case ':':
-	case '=':
-	  if (need_backslash)
-	    APPEND_CHAR ('\\');
-	  /* Fall through */
+        case ':':
+        case '=':
+          if (need_backslash)
+            APPEND_CHAR ('\\');
+          /* Fall through */
 
-	default:
-	  need_backslash = true;
-	  break;
-	}
+        default:
+          need_backslash = true;
+          break;
+        }
 
       APPEND_CHAR (*str);
       ++str;
@@ -261,106 +261,106 @@ dc_parse_stream (FILE *fp, const char *filename)
       ++line_number;
 
       if (fp)
-	{
-	  if (getline (&input_line, &input_line_size, fp) <= 0)
-	    {
-	      free (input_line);
-	      break;
-	    }
-	  line = input_line;
-	}
+        {
+          if (getline (&input_line, &input_line_size, fp) <= 0)
+            {
+              free (input_line);
+              break;
+            }
+          line = input_line;
+        }
       else
-	{
-	  if (next_G_line == G_line + sizeof G_line)
-	    break;
-	  line = next_G_line;
-	  next_G_line += strlen (next_G_line) + 1;
-	}
+        {
+          if (next_G_line == G_line + sizeof G_line)
+            break;
+          line = next_G_line;
+          next_G_line += strlen (next_G_line) + 1;
+        }
 
       parse_line (line, &keywd, &arg);
 
       if (keywd == NULL)
-	continue;
+        continue;
 
       if (arg == NULL)
-	{
-	  error (0, 0, _("%s:%lu: invalid line;  missing second token"),
-		 filename, (unsigned long int) line_number);
-	  ok = false;
-	  free (keywd);
-	  continue;
-	}
+        {
+          error (0, 0, _("%s:%lu: invalid line;  missing second token"),
+                 filename, (unsigned long int) line_number);
+          ok = false;
+          free (keywd);
+          continue;
+        }
 
       unrecognized = false;
       if (c_strcasecmp (keywd, "TERM") == 0)
-	{
-	  if (STREQ (arg, term))
-	    state = ST_TERMSURE;
-	  else if (state != ST_TERMSURE)
-	    state = ST_TERMNO;
-	}
+        {
+          if (STREQ (arg, term))
+            state = ST_TERMSURE;
+          else if (state != ST_TERMSURE)
+            state = ST_TERMNO;
+        }
       else
-	{
-	  if (state == ST_TERMSURE)
-	    state = ST_TERMYES; /* Another TERM can cancel */
+        {
+          if (state == ST_TERMSURE)
+            state = ST_TERMYES; /* Another TERM can cancel */
 
-	  if (state != ST_TERMNO)
-	    {
-	      if (keywd[0] == '.')
-		{
-		  APPEND_CHAR ('*');
-		  append_quoted (keywd);
-		  APPEND_CHAR ('=');
-		  append_quoted (arg);
-		  APPEND_CHAR (':');
-		}
-	      else if (keywd[0] == '*')
-		{
-		  append_quoted (keywd);
-		  APPEND_CHAR ('=');
-		  append_quoted (arg);
-		  APPEND_CHAR (':');
-		}
-	      else if (c_strcasecmp (keywd, "OPTIONS") == 0
-		       || c_strcasecmp (keywd, "COLOR") == 0
-		       || c_strcasecmp (keywd, "EIGHTBIT") == 0)
-		{
-		  /* Ignore.  */
-		}
-	      else
-		{
-		  int i;
+          if (state != ST_TERMNO)
+            {
+              if (keywd[0] == '.')
+                {
+                  APPEND_CHAR ('*');
+                  append_quoted (keywd);
+                  APPEND_CHAR ('=');
+                  append_quoted (arg);
+                  APPEND_CHAR (':');
+                }
+              else if (keywd[0] == '*')
+                {
+                  append_quoted (keywd);
+                  APPEND_CHAR ('=');
+                  append_quoted (arg);
+                  APPEND_CHAR (':');
+                }
+              else if (c_strcasecmp (keywd, "OPTIONS") == 0
+                       || c_strcasecmp (keywd, "COLOR") == 0
+                       || c_strcasecmp (keywd, "EIGHTBIT") == 0)
+                {
+                  /* Ignore.  */
+                }
+              else
+                {
+                  int i;
 
-		  for (i = 0; slack_codes[i] != NULL; ++i)
-		    if (c_strcasecmp (keywd, slack_codes[i]) == 0)
-		      break;
+                  for (i = 0; slack_codes[i] != NULL; ++i)
+                    if (c_strcasecmp (keywd, slack_codes[i]) == 0)
+                      break;
 
-		  if (slack_codes[i] != NULL)
-		    {
-		      APPEND_TWO_CHAR_STRING (ls_codes[i]);
-		      APPEND_CHAR ('=');
-		      append_quoted (arg);
-		      APPEND_CHAR (':');
-		    }
-		  else
-		    {
-		      unrecognized = true;
-		    }
-		}
-	    }
-	  else
-	    {
-	      unrecognized = true;
-	    }
-	}
+                  if (slack_codes[i] != NULL)
+                    {
+                      APPEND_TWO_CHAR_STRING (ls_codes[i]);
+                      APPEND_CHAR ('=');
+                      append_quoted (arg);
+                      APPEND_CHAR (':');
+                    }
+                  else
+                    {
+                      unrecognized = true;
+                    }
+                }
+            }
+          else
+            {
+              unrecognized = true;
+            }
+        }
 
       if (unrecognized && (state == ST_TERMSURE || state == ST_TERMYES))
-	{
-	  error (0, 0, _("%s:%lu: unrecognized keyword %s"),
-		 (filename ? quote (filename) : _("<internal>")),
-		 (unsigned long int) line_number, keywd);
-	  ok = false;
-	}
+        {
+          error (0, 0, _("%s:%lu: unrecognized keyword %s"),
+                 (filename ? quote (filename) : _("<internal>")),
+                 (unsigned long int) line_number, keywd);
+          ok = false;
+        }
 
       free (keywd);
       free (arg);
@@ -411,23 +411,23 @@ main (int argc, char **argv)
     switch (optc)
       {
       case 'b':	/* Bourne shell syntax.  */
-	syntax = SHELL_SYNTAX_BOURNE;
-	break;
+        syntax = SHELL_SYNTAX_BOURNE;
+        break;
 
       case 'c':	/* C shell syntax.  */
-	syntax = SHELL_SYNTAX_C;
-	break;
+        syntax = SHELL_SYNTAX_C;
+        break;
 
       case 'p':
-	print_database = true;
-	break;
+        print_database = true;
+        break;
 
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (EXIT_FAILURE);
+        usage (EXIT_FAILURE);
       }
 
   argc -= optind;
@@ -438,7 +438,7 @@ main (int argc, char **argv)
   if (print_database && syntax != SHELL_SYNTAX_UNKNOWN)
     {
       error (0, 0,
-	     _("the options to output dircolors' internal database and\n\
+             _("the options to output dircolors' internal database and\n\
 to select a shell syntax are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
@@ -447,9 +447,9 @@ to select a shell syntax are mutually exclusive"));
     {
       error (0, 0, _("extra operand %s"), quote (argv[!print_database]));
       if (print_database)
-	fprintf (stderr, "%s\n",
-		 _("file operands cannot be combined with "
-		   "--print-database (-p)"));
+        fprintf (stderr, "%s\n",
+                 _("file operands cannot be combined with "
+                   "--print-database (-p)"));
       usage (EXIT_FAILURE);
     }
 
@@ -457,51 +457,51 @@ to select a shell syntax are mutually exclusive"));
     {
       char const *p = G_line;
       while (p < G_line + sizeof G_line)
-	{
-	  puts (p);
-	  p += strlen (p) + 1;
-	}
+        {
+          puts (p);
+          p += strlen (p) + 1;
+        }
     }
   else
     {
       /* If shell syntax was not explicitly specified, try to guess it. */
       if (syntax == SHELL_SYNTAX_UNKNOWN)
-	{
-	  syntax = guess_shell_syntax ();
-	  if (syntax == SHELL_SYNTAX_UNKNOWN)
-	    {
-	      error (EXIT_FAILURE, 0,
-	 _("no SHELL environment variable, and no shell type option given"));
-	    }
-	}
+        {
+          syntax = guess_shell_syntax ();
+          if (syntax == SHELL_SYNTAX_UNKNOWN)
+            {
+              error (EXIT_FAILURE, 0,
+         _("no SHELL environment variable, and no shell type option given"));
+            }
+        }
 
       obstack_init (&lsc_obstack);
       if (argc == 0)
-	ok = dc_parse_stream (NULL, NULL);
+        ok = dc_parse_stream (NULL, NULL);
       else
-	ok = dc_parse_file (argv[0]);
+        ok = dc_parse_file (argv[0]);
 
       if (ok)
-	{
-	  size_t len = obstack_object_size (&lsc_obstack);
-	  char *s = obstack_finish (&lsc_obstack);
-	  const char *prefix;
-	  const char *suffix;
+        {
+          size_t len = obstack_object_size (&lsc_obstack);
+          char *s = obstack_finish (&lsc_obstack);
+          const char *prefix;
+          const char *suffix;
 
-	  if (syntax == SHELL_SYNTAX_BOURNE)
-	    {
-	      prefix = "LS_COLORS='";
-	      suffix = "';\nexport LS_COLORS\n";
-	    }
-	  else
-	    {
-	      prefix = "setenv LS_COLORS '";
-	      suffix = "'\n";
-	    }
-	  fputs (prefix, stdout);
-	  fwrite (s, 1, len, stdout);
-	  fputs (suffix, stdout);
-	}
+          if (syntax == SHELL_SYNTAX_BOURNE)
+            {
+              prefix = "LS_COLORS='";
+              suffix = "';\nexport LS_COLORS\n";
+            }
+          else
+            {
+              prefix = "setenv LS_COLORS '";
+              suffix = "'\n";
+            }
+          fputs (prefix, stdout);
+          fwrite (s, 1, len, stdout);
+          fputs (suffix, stdout);
+        }
     }
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -53,14 +53,14 @@ list_entries_users (size_t n, const STRUCT_UTMP *this)
   while (n--)
     {
       if (IS_USER_PROCESS (this))
-	{
-	  char *trimmed_name;
+        {
+          char *trimmed_name;
 
-	  trimmed_name = extract_trimmed_name (this);
+          trimmed_name = extract_trimmed_name (this);
 
-	  u[n_entries] = trimmed_name;
-	  ++n_entries;
-	}
+          u[n_entries] = trimmed_name;
+          ++n_entries;
+        }
       this++;
     }
 
@@ -100,7 +100,7 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
@@ -109,7 +109,7 @@ Output who is currently logged in according to FILE.\n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n\
 "),
-	      UTMP_FILE, WTMP_FILE);
+              UTMP_FILE, WTMP_FILE);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -129,7 +129,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 

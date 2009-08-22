@@ -252,8 +252,8 @@ int rpl_rename (const char *, const char *);
 # endif
 
 bool copy (char const *src_name, char const *dst_name,
-	   bool nonexistent_dst, const struct cp_options *options,
-	   bool *copy_into_self, bool *rename_succeeded);
+           bool nonexistent_dst, const struct cp_options *options,
+           bool *copy_into_self, bool *rename_succeeded);
 
 void dest_info_init (struct cp_options *);
 void src_info_init (struct cp_options *);
