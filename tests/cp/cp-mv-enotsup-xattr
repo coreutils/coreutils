@@ -30,16 +30,20 @@ require_root_
 cwd=`pwd`
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
+skip=0
 # Create a file system without user xattr support, then mount it.
 dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
-                                             || framework_failure
-mkdir mnt                                    || framework_failure
+                                             || skip=1
+mkdir mnt                                    || skip=1
 mkfs -t ext2 -F blob ||
   skip_test_ "failed to create ext2 file system"
 
-mount -oloop,nouser_xattr blob mnt           || framework_failure
-echo test > mnt/f                            || framework_failure
-test -s mnt/f                                || framework_failure
+mount -oloop,nouser_xattr blob mnt           || skip=1
+echo test > mnt/f                            || skip=1
+test -s mnt/f                                || skip=1
+
+test $skip = 1 \
+    && skip_test_ "insufficient mount/ext2 support"
 
 # testing xattr name-value pair
 xattr_name="user.foo"
@@ -55,8 +59,7 @@ getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_a >/dev/null \
   || skip_test_ "failed to set xattr of file"
 
-fail=0                                       || framework_failure
-
+fail=0
 
 # This should pass without diagnostics
 cp -a a mnt/ 2>err  || fail=1
