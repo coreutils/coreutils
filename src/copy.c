@@ -123,13 +123,18 @@ static char const *top_level_dst_name;
 static inline int
 utimens_symlink (char const *file, struct timespec const *timespec)
 {
+  int err = 0;
+
 #if HAVE_UTIMENSAT
-  return utimensat (AT_FDCWD, file, timespec, AT_SYMLINK_NOFOLLOW);
-#else
-  /* Don't set errno=ENOTSUP here as we don't want
-     to output an error message for this case.  */
-  return 0;
+  err = utimensat (AT_FDCWD, file, timespec, AT_SYMLINK_NOFOLLOW);
+  /* When configuring on a system with new headers and libraries, and
+     running on one with a kernel that is old enough to lack the syscall,
+     utimensat fails with ENOSYS.  Ignore that.  */
+  if (err && errno == ENOSYS)
+    err = 0;
 #endif
+
+  return err;
 }
 
 /* Perform the O(1) btrfs clone operation, if possible.

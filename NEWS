@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  cp, mv now ignore failure to preserve a symlink time stamp, when it is
+  due to their running on a kernel older than what was implied by headers
+  and libraries tested at configure time.
+
 
 * Noteworthy changes in release 7.5 (2009-08-20) [stable]
 
