@@ -635,14 +635,18 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_and_dst_desc;
     }
 
-  if (x->reflink)
+  if (x->reflink_mode)
     {
-      if (clone_file (dest_desc, source_desc))
+      bool clone_ok = clone_file (dest_desc, source_desc) == 0;
+      if (clone_ok || x->reflink_mode == REFLINK_ALWAYS)
         {
-          error (0, errno, _("failed to clone %s"), quote (dst_name));
-          return_val = false;
+          if (!clone_ok)
+            {
+              error (0, errno, _("failed to clone %s"), quote (dst_name));
+              return_val = false;
+            }
+          goto close_src_and_dst_desc;
         }
-      goto close_src_and_dst_desc;
     }
 
   {
@@ -2248,8 +2252,11 @@ valid_options (const struct cp_options *co)
   assert (co != NULL);
   assert (VALID_BACKUP_TYPE (co->backup_type));
   assert (VALID_SPARSE_MODE (co->sparse_mode));
+  assert (VALID_REFLINK_MODE (co->reflink_mode));
   assert (!(co->hard_link && co->symbolic_link));
-  assert (!(co->reflink && co->sparse_mode != SPARSE_AUTO));
+  assert (!
+          (co->reflink_mode == REFLINK_ALWAYS
+           && co->sparse_mode != SPARSE_AUTO));
   return true;
 }
 

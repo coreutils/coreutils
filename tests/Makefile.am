@@ -291,6 +291,7 @@ TESTS =						\
   cp/proc-short-read				\
   cp/proc-zero-len				\
   cp/r-vs-symlink				\
+  cp/reflink-auto				\
   cp/same-file					\
   cp/slink-2-slink				\
   cp/sparse					\

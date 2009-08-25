@@ -102,6 +102,16 @@ static enum Sparse_type const sparse_type[] =
 };
 ARGMATCH_VERIFY (sparse_type_string, sparse_type);
 
+static char const *const reflink_type_string[] =
+{
+  "auto", "always", NULL
+};
+static enum Reflink_type const reflink_type[] =
+{
+  REFLINK_AUTO, REFLINK_ALWAYS
+};
+ARGMATCH_VERIFY (reflink_type_string, reflink_type);
+
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -122,7 +132,7 @@ static struct option const long_opts[] =
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
   {"sparse", required_argument, NULL, SPARSE_OPTION},
-  {"reflink", no_argument, NULL, REFLINK_OPTION},
+  {"reflink", optional_argument, NULL, REFLINK_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
@@ -192,12 +202,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -R, -r, --recursive          copy directories recursively\n\
-      --reflink                perform a lightweight (CoW/clone) copy\n\
+      --reflink[=WHEN]         control clone/CoW copies. See below.\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
 "), stdout);
       fputs (_("\
-      --sparse=WHEN            control creation of sparse files\n\
+      --sparse=WHEN            control creation of sparse files. See below.\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
 "), stdout);
@@ -223,6 +233,10 @@ corresponding DEST file is made sparse as well.  That is the behavior\n\
 selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n\
 file whenever the SOURCE file contains a long enough sequence of zero bytes.\n\
 Use --sparse=never to inhibit creation of sparse files.\n\
+\n\
+When --reflink[=always] is specified, perform a lightweight copy, where the\n\
+data blocks are copied only when modified.  If this is not possible the copy\n\
+fails, or if --reflink=auto is specified, fall back to a standard copy.\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -755,7 +769,7 @@ cp_option_init (struct cp_options *x)
   x->interactive = I_UNSPECIFIED;
   x->move_mode = false;
   x->one_file_system = false;
-  x->reflink = false;
+  x->reflink_mode = REFLINK_NEVER;
 
   x->preserve_ownership = false;
   x->preserve_links = false;
@@ -921,7 +935,11 @@ main (int argc, char **argv)
           break;
 
         case REFLINK_OPTION:
-          x.reflink = true;
+          if (optarg == NULL)
+            x.reflink_mode = REFLINK_ALWAYS;
+          else
+            x.reflink_mode = XARGMATCH ("--reflink", optarg,
+                                       reflink_type_string, reflink_type);
           break;
 
         case 'a':		/* Like -dR --preserve=all with reduced failure diagnostics. */
@@ -1084,7 +1102,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (x.reflink && x.sparse_mode != SPARSE_AUTO)
+  if (x.reflink_mode == REFLINK_ALWAYS && x.sparse_mode != SPARSE_AUTO)
     {
       error (0, 0, _("--reflink can be used only with --sparse=auto"));
       usage (EXIT_FAILURE);
