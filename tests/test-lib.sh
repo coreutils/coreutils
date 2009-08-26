@@ -47,6 +47,14 @@ require_acl_()
     || skip_test_ "This test requires a local user named bin."
 }
 
+# Skip this test if we're not in SELinux "enforcing" mode.
+require_selinux_enforcing_()
+{
+  test "$(getenforce)" = Enforcing \
+    || skip_test_ "This test is useful only with SELinux in Enforcing mode."
+}
+
+
 require_openat_support_()
 {
   # Skip this test if your system has neither the openat-style functions
