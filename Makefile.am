@@ -98,20 +98,20 @@ rm_subst = \
 
 BUILT_SOURCES = .version
 .version:
-	echo $(VERSION) > $@-t && mv $@-t $@
+	$(AM_V_GEN)echo $(VERSION) > $@-t && mv $@-t $@
 
 # Arrange so that .tarball-version appears only in the distribution
 # tarball, and never in a checked-out repository.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
 dist-hook: gen-ChangeLog
-	echo $(VERSION) > $(distdir)/.tarball-version
-	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
+	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
+	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
 
 gen_start_date = 2008-02-08
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
-	if test -d .git; then						\
+	$(AM_V_GEN)if test -d .git; then				\
 	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
 	    --since=$(gen_start_date) > $(distdir)/cl-t;		\
 	  rm -f $(distdir)/ChangeLog;					\
@@ -125,7 +125,7 @@ distcheck-hook: check-ls-dircolors
 DISTCLEANFILES = VERSION
 MAINTAINERCLEANFILES = THANKS-to-translators
 THANKS-to-translators: po/LINGUAS THANKStt.in
-	(								\
+	$(AM_V_GEN)(							\
 	  cat $(srcdir)/THANKStt.in;					\
 	  for lang in `cat $(srcdir)/po/LINGUAS`; do			\
 	    echo http://translationproject.org/team/$$lang.html;	\
@@ -136,7 +136,7 @@ THANKS-to-translators: po/LINGUAS THANKStt.in
 # remain in sync.
 .PHONY: check-ls-dircolors
 check-ls-dircolors:
-	dc=$$(sed -n '/static.*ls_codes\[/,/};'/p		\
+	$(AM_V_GEN)dc=$$(sed -n '/static.*ls_codes\[/,/};'/p	\
 	    $(srcdir)/src/dircolors.c				\
 	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
 	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
