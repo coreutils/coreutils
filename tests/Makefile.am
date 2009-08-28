@@ -305,6 +305,7 @@ TESTS =						\
   dd/skip-seek					\
   dd/skip-seek2					\
   dd/skip-seek-past-file			\
+  dd/stderr					\
   dd/unblock-sync				\
   df/total-verify				\
   du/2g						\

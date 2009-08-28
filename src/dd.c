@@ -25,6 +25,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "close-stream.h"
 #include "error.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
@@ -444,12 +445,16 @@ static bool close_stdout_required = true;
    close_stdout function call "fclose (stdout)" would result in a
    harmless failure of the close syscall (with errno EBADF).
    This function serves solely to avoid the unnecessary close_stdout
-   call, once parse_long_options has succeeded.  */
+   call, once parse_long_options has succeeded.
+   Meanwhile, we guarantee that the standard error stream is flushed,
+   by inlining the last half of close_stdout as needed.  */
 static void
 maybe_close_stdout (void)
 {
   if (close_stdout_required)
     close_stdout ();
+  else if (close_stream (stderr) != 0)
+    _exit (EXIT_FAILURE);
 }
 
 void

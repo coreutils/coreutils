@@ -24,7 +24,7 @@ fi
 
 . $srcdir/test-lib.sh
 
-p="$abs_top_builddir"
+p=$abs_top_builddir
 
 fail=0
 
