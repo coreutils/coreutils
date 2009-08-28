@@ -149,6 +149,8 @@ clone_file (int dest_fd, int src_fd)
 # define BTRFS_IOC_CLONE _IOW (BTRFS_IOCTL_MAGIC, 9, int)
   return ioctl (dest_fd, BTRFS_IOC_CLONE, src_fd);
 #else
+  (void) dest_fd;
+  (void) src_fd;
   errno = ENOTSUP;
   return -1;
 #endif
@@ -251,15 +253,19 @@ copy_attr_by_name (char const *src_path, char const *dst_path,
 #else /* USE_XATTR */
 
 static bool
-copy_attr_by_fd (char const *src_path, int src_fd,
-                 char const *dst_path, int dst_fd, const struct cp_options *x)
+copy_attr_by_fd (char const *src_path ATTRIBUTE_UNUSED,
+                 int src_fd ATTRIBUTE_UNUSED,
+                 char const *dst_path ATTRIBUTE_UNUSED,
+                 int dst_fd ATTRIBUTE_UNUSED,
+                 const struct cp_options *x ATTRIBUTE_UNUSED)
 {
   return true;
 }
 
 static bool
-copy_attr_by_name (char const *src_path, char const *dst_path,
-                   const struct cp_options *x)
+copy_attr_by_name (char const *src_path ATTRIBUTE_UNUSED,
+                   char const *dst_path ATTRIBUTE_UNUSED,
+                   const struct cp_options *x ATTRIBUTE_UNUSED)
 {
   return true;
 }

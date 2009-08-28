@@ -1311,7 +1311,10 @@ dirent_inode_sort_may_be_useful (int dir_fd)
     }
 }
 # else /* !HAVE_STRUCT_STATFS_F_TYPE */
-static bool dirent_inode_sort_may_be_useful (int dir_fd) { return true; }
+static bool dirent_inode_sort_may_be_useful (int dir_fd ATTRIBUTE_UNUSED)
+{
+  return true;
+}
 # endif /* !HAVE_STRUCT_STATFS_F_TYPE */
 #endif /* HAVE_STRUCT_DIRENT_D_TYPE */
 
