@@ -490,6 +490,7 @@ copy_reg (char const *src_name, char const *dst_name,
   struct stat sb;
   struct stat src_open_sb;
   bool return_val = true;
+  bool data_copy_required = true;
 
   source_desc = open (src_name,
                       (O_RDONLY | O_BINARY
@@ -644,175 +645,177 @@ copy_reg (char const *src_name, char const *dst_name,
             {
               error (0, errno, _("failed to clone %s"), quote (dst_name));
               return_val = false;
+              goto close_src_and_dst_desc;
             }
-          goto close_src_and_dst_desc;
+          data_copy_required = false;
         }
     }
 
-  {
-    typedef uintptr_t word;
-    off_t n_read_total = 0;
+  if (data_copy_required)
+    {
+      typedef uintptr_t word;
+      off_t n_read_total = 0;
 
-    /* Choose a suitable buffer size; it may be adjusted later.  */
-    size_t buf_alignment = lcm (getpagesize (), sizeof (word));
-    size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
-    size_t buf_size = io_blksize (sb);
+      /* Choose a suitable buffer size; it may be adjusted later.  */
+      size_t buf_alignment = lcm (getpagesize (), sizeof (word));
+      size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
+      size_t buf_size = io_blksize (sb);
 
-    /* Deal with sparse files.  */
-    bool last_write_made_hole = false;
-    bool make_holes = false;
+      /* Deal with sparse files.  */
+      bool last_write_made_hole = false;
+      bool make_holes = false;
 
-    if (S_ISREG (sb.st_mode))
-      {
-        /* Even with --sparse=always, try to create holes only
-           if the destination is a regular file.  */
-        if (x->sparse_mode == SPARSE_ALWAYS)
-          make_holes = true;
+      if (S_ISREG (sb.st_mode))
+        {
+          /* Even with --sparse=always, try to create holes only
+             if the destination is a regular file.  */
+          if (x->sparse_mode == SPARSE_ALWAYS)
+            make_holes = true;
 
 #if HAVE_STRUCT_STAT_ST_BLOCKS
-        /* Use a heuristic to determine whether SRC_NAME contains any sparse
-           blocks.  If the file has fewer blocks than would normally be
-           needed for a file of its size, then at least one of the blocks in
-           the file is a hole.  */
-        if (x->sparse_mode == SPARSE_AUTO && S_ISREG (src_open_sb.st_mode)
-            && ST_NBLOCKS (src_open_sb) < src_open_sb.st_size / ST_NBLOCKSIZE)
-          make_holes = true;
+          /* Use a heuristic to determine whether SRC_NAME contains any sparse
+             blocks.  If the file has fewer blocks than would normally be
+             needed for a file of its size, then at least one of the blocks in
+             the file is a hole.  */
+          if (x->sparse_mode == SPARSE_AUTO && S_ISREG (src_open_sb.st_mode)
+              && ST_NBLOCKS (src_open_sb) < src_open_sb.st_size / ST_NBLOCKSIZE)
+            make_holes = true;
 #endif
-      }
+        }
 
-    /* If not making a sparse file, try to use a more-efficient
-       buffer size.  */
-    if (! make_holes)
-      {
-        /* Compute the least common multiple of the input and output
-           buffer sizes, adjusting for outlandish values.  */
-        size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment_slop;
-        size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
-                                  blcm_max);
+      /* If not making a sparse file, try to use a more-efficient
+         buffer size.  */
+      if (! make_holes)
+        {
+          /* Compute the least common multiple of the input and output
+             buffer sizes, adjusting for outlandish values.  */
+          size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment_slop;
+          size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
+                                    blcm_max);
 
-        /* Do not bother with a buffer larger than the input file, plus one
-           byte to make sure the file has not grown while reading it.  */
-        if (S_ISREG (src_open_sb.st_mode) && src_open_sb.st_size < buf_size)
-          buf_size = src_open_sb.st_size + 1;
+          /* Do not bother with a buffer larger than the input file, plus one
+             byte to make sure the file has not grown while reading it.  */
+          if (S_ISREG (src_open_sb.st_mode) && src_open_sb.st_size < buf_size)
+            buf_size = src_open_sb.st_size + 1;
 
-        /* However, stick with a block size that is a positive multiple of
-           blcm, overriding the above adjustments.  Watch out for
-           overflow.  */
-        buf_size += blcm - 1;
-        buf_size -= buf_size % blcm;
-        if (buf_size == 0 || blcm_max < buf_size)
-          buf_size = blcm;
-      }
+          /* However, stick with a block size that is a positive multiple of
+             blcm, overriding the above adjustments.  Watch out for
+             overflow.  */
+          buf_size += blcm - 1;
+          buf_size -= buf_size % blcm;
+          if (buf_size == 0 || blcm_max < buf_size)
+            buf_size = blcm;
+        }
 
-    /* Make a buffer with space for a sentinel at the end.  */
-    buf_alloc = xmalloc (buf_size + buf_alignment_slop);
-    buf = ptr_align (buf_alloc, buf_alignment);
+      /* Make a buffer with space for a sentinel at the end.  */
+      buf_alloc = xmalloc (buf_size + buf_alignment_slop);
+      buf = ptr_align (buf_alloc, buf_alignment);
 
-    for (;;)
-      {
-        word *wp = NULL;
+      for (;;)
+        {
+          word *wp = NULL;
 
-        ssize_t n_read = read (source_desc, buf, buf_size);
-        if (n_read < 0)
-          {
+          ssize_t n_read = read (source_desc, buf, buf_size);
+          if (n_read < 0)
+            {
 #ifdef EINTR
-            if (errno == EINTR)
-              continue;
+              if (errno == EINTR)
+                continue;
 #endif
-            error (0, errno, _("reading %s"), quote (src_name));
-            return_val = false;
-            goto close_src_and_dst_desc;
-          }
-        if (n_read == 0)
-          break;
+              error (0, errno, _("reading %s"), quote (src_name));
+              return_val = false;
+              goto close_src_and_dst_desc;
+            }
+          if (n_read == 0)
+            break;
 
-        n_read_total += n_read;
+          n_read_total += n_read;
 
-        if (make_holes)
-          {
-            char *cp;
+          if (make_holes)
+            {
+              char *cp;
 
-            /* Sentinel to stop loop.  */
-            buf[n_read] = '\1';
+              /* Sentinel to stop loop.  */
+              buf[n_read] = '\1';
 #ifdef lint
-            /* Usually, buf[n_read] is not the byte just before a "word"
-               (aka uintptr_t) boundary.  In that case, the word-oriented
-               test below (*wp++ == 0) would read some uninitialized bytes
-               after the sentinel.  To avoid false-positive reports about
-               this condition (e.g., from a tool like valgrind), set the
-               remaining bytes -- to any value.  */
-            memset (buf + n_read + 1, 0, sizeof (word) - 1);
+              /* Usually, buf[n_read] is not the byte just before a "word"
+                 (aka uintptr_t) boundary.  In that case, the word-oriented
+                 test below (*wp++ == 0) would read some uninitialized bytes
+                 after the sentinel.  To avoid false-positive reports about
+                 this condition (e.g., from a tool like valgrind), set the
+                 remaining bytes -- to any value.  */
+              memset (buf + n_read + 1, 0, sizeof (word) - 1);
 #endif
 
-            /* Find first nonzero *word*, or the word with the sentinel.  */
+              /* Find first nonzero *word*, or the word with the sentinel.  */
 
-            wp = (word *) buf;
-            while (*wp++ == 0)
-              continue;
+              wp = (word *) buf;
+              while (*wp++ == 0)
+                continue;
 
-            /* Find the first nonzero *byte*, or the sentinel.  */
+              /* Find the first nonzero *byte*, or the sentinel.  */
 
-            cp = (char *) (wp - 1);
-            while (*cp++ == 0)
-              continue;
+              cp = (char *) (wp - 1);
+              while (*cp++ == 0)
+                continue;
 
-            if (cp <= buf + n_read)
-              /* Clear to indicate that a normal write is needed. */
-              wp = NULL;
-            else
-              {
-                /* We found the sentinel, so the whole input block was zero.
-                   Make a hole.  */
-                if (lseek (dest_desc, n_read, SEEK_CUR) < 0)
-                  {
-                    error (0, errno, _("cannot lseek %s"), quote (dst_name));
-                    return_val = false;
-                    goto close_src_and_dst_desc;
-                  }
-                last_write_made_hole = true;
-              }
-          }
+              if (cp <= buf + n_read)
+                /* Clear to indicate that a normal write is needed. */
+                wp = NULL;
+              else
+                {
+                  /* We found the sentinel, so the whole input block was zero.
+                     Make a hole.  */
+                  if (lseek (dest_desc, n_read, SEEK_CUR) < 0)
+                    {
+                      error (0, errno, _("cannot lseek %s"), quote (dst_name));
+                      return_val = false;
+                      goto close_src_and_dst_desc;
+                    }
+                  last_write_made_hole = true;
+                }
+            }
 
-        if (!wp)
-          {
-            size_t n = n_read;
-            if (full_write (dest_desc, buf, n) != n)
-              {
-                error (0, errno, _("writing %s"), quote (dst_name));
-                return_val = false;
-                goto close_src_and_dst_desc;
-              }
-            last_write_made_hole = false;
+          if (!wp)
+            {
+              size_t n = n_read;
+              if (full_write (dest_desc, buf, n) != n)
+                {
+                  error (0, errno, _("writing %s"), quote (dst_name));
+                  return_val = false;
+                  goto close_src_and_dst_desc;
+                }
+              last_write_made_hole = false;
 
-            /* It is tempting to return early here upon a short read from a
-               regular file.  That would save the final read syscall for each
-               file.  Unfortunately that doesn't work for certain files in
-               /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
-          }
-      }
+              /* It is tempting to return early here upon a short read from a
+                 regular file.  That would save the final read syscall for each
+                 file.  Unfortunately that doesn't work for certain files in
+                 /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
+            }
+        }
 
-    /* If the file ends with a `hole', we need to do something to record
-       the length of the file.  On modern systems, calling ftruncate does
-       the job.  On systems without native ftruncate support, we have to
-       write a byte at the ending position.  Otherwise the kernel would
-       truncate the file at the end of the last write operation.  */
+      /* If the file ends with a `hole', we need to do something to record
+         the length of the file.  On modern systems, calling ftruncate does
+         the job.  On systems without native ftruncate support, we have to
+         write a byte at the ending position.  Otherwise the kernel would
+         truncate the file at the end of the last write operation.  */
 
-    if (last_write_made_hole)
-      {
-        if (HAVE_FTRUNCATE
-            ? /* ftruncate sets the file size,
-                 so there is no need for a write.  */
-            ftruncate (dest_desc, n_read_total) < 0
-            : /* Seek backwards one character and write a null.  */
-            (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
-             || full_write (dest_desc, "", 1) != 1))
-          {
-            error (0, errno, _("writing %s"), quote (dst_name));
-            return_val = false;
-            goto close_src_and_dst_desc;
-          }
-      }
-  }
+      if (last_write_made_hole)
+        {
+          if (HAVE_FTRUNCATE
+              ? /* ftruncate sets the file size,
+                   so there is no need for a write.  */
+              ftruncate (dest_desc, n_read_total) < 0
+              : /* Seek backwards one character and write a null.  */
+              (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
+               || full_write (dest_desc, "", 1) != 1))
+            {
+              error (0, errno, _("writing %s"), quote (dst_name));
+              return_val = false;
+              goto close_src_and_dst_desc;
+            }
+        }
+    }
 
   if (x->preserve_timestamps)
     {
