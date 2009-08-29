@@ -34,7 +34,7 @@ bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
 bt2=${bt}2
 
 usage() {
-  echo >&2 "\
+  cat <<EOF
 Usage: $0 [OPTION]...
 Bootstrap this package from the checked-out sources.
 
@@ -56,7 +56,7 @@ For build prerequisites, environment variables like \$AUTOCONF and \$AMTAR
 are honored.
 
 Running without arguments will suffice in most cases.
-"
+EOF
 }
 
 # Configuration.
@@ -147,6 +147,37 @@ copy=false
 # Or set it to 'auto' to make this script select which to use based
 # on which version control system (if any) is used in the source directory.
 vc_ignore=auto
+
+# find_tool ENVVAR NAMES...
+# -------------------------
+find_tool ()
+{
+  # Find sha1sum, named gsha1sum on MacPorts.
+  find_tool_envvar=$1
+  shift
+  if eval test x"\$$find_tool_envvar" = x; then
+    for i
+    do
+      if ($i --version </dev/null) >/dev/null 2>&1; then
+       find_tool_res=$i
+       break
+      fi
+    done
+  fi
+  if test x"$find_tool_res" = x; then
+    echo >&2 "$0: $find_tool_name is required"
+    exit 1
+  fi
+  ($find_tool_res --version </dev/null) >/dev/null 2>&1 || {
+    echo >&2 "$0: cannot run $find_tool_res --version"
+    exit 1
+  }
+  eval "$find_tool_envvar=\"$find_tool_res\""
+  eval "export $find_tool_envvar"
+}
+
+# Find sha1sum, named gsha1sum on MacPorts.
+find_tool SHA1SUM sha1sum gsha1sum
 
 # Override the default configuration, if necessary.
 # Make sure that bootstrap.conf is sourced from the current directory
@@ -420,11 +451,11 @@ update_po_files() {
     cksum_file="$ref_po_dir/$po.s1"
     if ! test -f "$cksum_file" ||
         ! test -f "$po_dir/$po.po" ||
-        ! ${SHA1SUM-sha1sum} -c --status "$cksum_file" \
+        ! $SHA1SUM -c --status "$cksum_file" \
             < "$new_po" > /dev/null; then
       echo "updated $po_dir/$po.po..."
       cp "$new_po" "$po_dir/$po.po" \
-          && ${SHA1SUM-sha1sum} < "$new_po" > "$cksum_file"
+          && $SHA1SUM < "$new_po" > "$cksum_file"
     fi
   done
 }
