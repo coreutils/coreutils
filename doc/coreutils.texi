@@ -7445,12 +7445,10 @@ may preserve the group ownership of a file only if they happen to be
 a member of the desired group.
 @itemx timestamps
 Preserve the times of last access and last modification, when possible.
-In general, it is not possible to preserve these attributes
+On older systems, it is not possible to preserve these attributes
 when the affected file is a symbolic link.
-However, FreeBSD now provides the @code{lutimes} function, which makes
-it possible even for symbolic links.  However, this implementation does
-not yet take advantage of that.
-@c FIXME: once we provide lutimes support, update the above.
+However, many systems now provide the @code{utimensat} function,
+which makes it possible even for symbolic links.
 @itemx links
 Preserve in the destination files
 any links between corresponding source files.
