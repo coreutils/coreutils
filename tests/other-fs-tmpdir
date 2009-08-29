@@ -29,12 +29,12 @@ dot_mount_point=`stat -c %d .`
 for d in $CANDIDATE_TMP_DIRS; do
 
   # Skip nonexistent directories.
-  test -d $d || continue
+  test -d "$d" || continue
 
-  d_mount_point=`stat -L -c %d $d`
+  d_mount_point=`stat -L -c %d "$d"`
 
   # Same partition?  Skip it.
-  test x$d_mount_point = x$dot_mount_point && continue
+  test "x$d_mount_point" = "x$dot_mount_point" && continue
 
   # See if we can create a directory in it.
   if mkdir "$d/tmp$$" > /dev/null 2>&1; then
