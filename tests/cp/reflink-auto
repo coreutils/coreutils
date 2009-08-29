@@ -26,7 +26,7 @@ fi
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 a_other="$other_partition_tmpdir/a"
-rm -f $a_other || framework_failure
+rm -f "$a_other" || framework_failure
 
 echo non_zero_size > "$a_other"
 
