@@ -121,6 +121,7 @@ gen-ChangeLog:
 ALL_RECURSIVE_TARGETS += distcheck-hook
 distcheck-hook: check-ls-dircolors
 	$(MAKE) my-distcheck
+	$(MAKE) taint-distcheck
 
 DISTCLEANFILES = VERSION
 MAINTAINERCLEANFILES = THANKS-to-translators
