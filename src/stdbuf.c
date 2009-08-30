@@ -145,7 +145,6 @@ set_program_path (const char *arg)
     }
   else
     {
-      char *path;
       char tmppath[PATH_MAX + 1];
       ssize_t len = readlink ("/proc/self/exe", tmppath, sizeof (tmppath) - 1);
       if (len > 0)
@@ -156,7 +155,7 @@ set_program_path (const char *arg)
       else if ((path = getenv ("PATH")))
         {
           char *dir;
-          path = xstrdup (path);
+          char *path = xstrdup (path);
           for (dir = strtok (path, ":"); dir != NULL; dir = strtok (NULL, ":"))
             {
               int req = snprintf (tmppath, sizeof (tmppath), "%s/%s", dir, arg);
