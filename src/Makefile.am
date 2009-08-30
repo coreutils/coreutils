@@ -385,21 +385,21 @@ pr = progs-readme
 check: check-README check-duplicate-no-install
 .PHONY: check-README
 check-README:
-	rm -rf $(pr) $(pm)
-	echo $(all_programs) \
+	$(AM_V_GEN)rm -rf $(pr) $(pm)
+	$(AM_V_at)echo $(all_programs) \
 	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,;s/ginstall/install/' \
 	 | sed /libstdbuf/d \
 	 | $(ASSORT) -u > $(pm) && \
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
-	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+	$(AM_V_at)diff $(pm) $(pr) && rm -rf $(pr) $(pm)
 
 # Ensure that a by-default-not-installed program (listed in
 # $(no_install__progs) is not also listed in $(EXTRA_PROGRAMS), because
 # if that were to happen, it *would* be installed by default.
 .PHONY: check-duplicate-no-install
 check-duplicate-no-install: tr
-	test -z "`echo '$(EXTRA_PROGRAMS)'| ./tr ' ' '\n' | uniq -d`"
+	$(AM_V_GEN)test -z "`echo '$(EXTRA_PROGRAMS)'| ./tr ' ' '\n' | uniq -d`"
 
 # Ensure that the list of programs and author names is accurate.
 # We need a UTF8 locale.  If a lack of locale support or a missing
