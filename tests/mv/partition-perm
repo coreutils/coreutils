@@ -29,14 +29,14 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 chmod a=rwx file
 
 umask 077
-mv file $other_partition_tmpdir
+mv file "$other_partition_tmpdir"
 
 fail=0
 test -f file && fail=1
-test -f $other_partition_tmpdir/file || fail=1
+test -f "$other_partition_tmpdir/file" || fail=1
 
 # This would have failed with the mv from fileutils-4.0i.
-mode=`ls -l $other_partition_tmpdir/file|cut -b-10`
+mode=`ls -l "$other_partition_tmpdir/file" | cut -b-10`
 test "$mode" = "-rwxrwxrwx" || fail=1
 
 Exit $fail

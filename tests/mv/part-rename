@@ -31,6 +31,6 @@ mkdir foo || framework_failure
 
 fail=0
 
-mv foo/ $other_partition_tmpdir/bar || fail=1
+mv foo/ "$other_partition_tmpdir/bar" || fail=1
 
 Exit $fail

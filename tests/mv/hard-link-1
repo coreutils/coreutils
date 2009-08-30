@@ -32,10 +32,10 @@ mkdir $dir || framework_failure
 > $dir/a || framework_failure
 ln $dir/a $dir/b || framework_failure
 
-mv $dir $other_partition_tmpdir || fail=1
+mv $dir "$other_partition_tmpdir" || fail=1
 
 # Display inode numbers, one per line.
-ls -1i $other_partition_tmpdir/$dir > out || fail=1
+ls -1i "$other_partition_tmpdir/$dir" > out || fail=1
 
 # Make sure the inode numbers are the same.
 a=`sed -n 's/ a$//p' out`

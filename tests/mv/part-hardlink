@@ -36,10 +36,10 @@ ln a/1 b/1 || framework_failure
 
 fail=0
 
-mv f g $other_partition_tmpdir || fail=1
-mv a b $other_partition_tmpdir || fail=1
+mv f g "$other_partition_tmpdir" || fail=1
+mv a b "$other_partition_tmpdir" || fail=1
 
-cd $other_partition_tmpdir
+cd "$other_partition_tmpdir"
 set `ls -Ci f g`
 test $1 = $3 || fail=1
 set `ls -Ci a/1 b/1`

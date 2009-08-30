@@ -69,7 +69,7 @@ for copy in cp mv; do
     for options in '' --rem '--rem -d' '--rem -b' -b -bd -d; do
       case "$options" in *d*|*--rem*) test $copy = mv && continue;; esac
       rm -rf dir || fail=1
-      rm -f $other_partition_tmpdir/* || fail=1
+      rm -f "$other_partition_tmpdir"/* || fail=1
       mkdir dir || fail=1
       cd dir || fail=1
       case "$args" in *loc_reg*) reg_abs="`pwd`/$loc_reg" ;; esac
@@ -94,7 +94,7 @@ for copy in cp mv; do
           # and put brackets around the output.
           test -s .err && {
             echo '[' | tr -d '\n'
-            sed 's/^[^:][^:]*\(..\):/\1:/;s,'$other_partition_tmpdir/,, .err
+            sed 's/^[^:][^:]*\(..\):/\1:/;s,'"$other_partition_tmpdir/,," .err
             echo ']' | tr -d '\n'
             }
           # Strip off all but the file names.
@@ -102,13 +102,13 @@ for copy in cp mv; do
           ls=`ls -gG --ignore=.err . \
               | sed \
                   -e '/^total /d' \
-                  -e s,$other_partition_tmpdir/,, \
+                  -e "s,$other_partition_tmpdir/,," \
                   -e "s,$pwd_tmp/,," \
                   -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`
-          ls2=`cd $other_partition_tmpdir && ls -gG --ignore=.err . \
+          ls2=`cd "$other_partition_tmpdir" && ls -gG --ignore=.err . \
               | sed \
                   -e '/^total /d' \
-                  -e s,$other_partition_tmpdir/,, \
+                  -e "s,$other_partition_tmpdir/,," \
                   -e "s,$pwd_tmp/,," \
                   -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`
           echo "($ls) ($ls2)"

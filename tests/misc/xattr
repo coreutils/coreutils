@@ -36,7 +36,7 @@ cp --preserve=xattr -n src dest 2>/dev/null \
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 b_other="$other_partition_tmpdir/b"
-rm -f $b_other || framework_failure
+rm -f "$b_other" || framework_failure
 
 # testing xattr name-value pair
 xattr_name="user.foo"
@@ -98,17 +98,18 @@ EOF
 
 # try to set user xattr on file on other partition
 test_mv=1
-touch $b_other || framework_failure
-setfattr -n "$xattr_name" -v "$xattr_value" $b_other >out_a 2>/dev/null \
+touch "$b_other" || framework_failure
+setfattr -n "$xattr_name" -v "$xattr_value" "$b_other" >out_a 2>/dev/null \
   || test_mv=0
-getfattr -d $b_other >out_b 2>/dev/null || test_mv=0
+getfattr -d "$b_other" >out_b 2>/dev/null || test_mv=0
 grep -F "$xattr_pair" out_b >/dev/null || test_mv=0
-rm -f $b_other || framework_failure
+rm -f "$b_other" || framework_failure
 
 if test $test_mv -eq 1; then
   # mv should preserve xattr when copying content from one partition to another
-  mv b $b_other || fail=1
-  getfattr -d $b_other >out_b 2>/dev/null || skip_test_ "failed to get xattr of file"
+  mv b "$b_other" || fail=1
+  getfattr -d "$b_other" >out_b 2>/dev/null ||
+    skip_test_ "failed to get xattr of file"
   grep -F "$xattr_pair" out_b >/dev/null || fail=1
 else
   cat >&2 <<EOF

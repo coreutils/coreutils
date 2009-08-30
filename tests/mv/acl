@@ -49,24 +49,24 @@ test $skip_partition != none &&
   skip_test_ "'$skip' is not on a suitable file system for this test"
 
 # move the access acl of a file
-mv file $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl file` || framework_failure
+mv file "$other_partition_tmpdir" || fail=1
+acl2=`cd "$other_partition_tmpdir" && getfacl file` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
 # move the access acl of a directory
 mkdir dir || framework_failure
 setfacl -m user:bin:rw dir || framework_failure
 acl1=`getfacl dir` || framework_failure
-mv dir $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl dir` || framework_failure
+mv dir "$other_partition_tmpdir" || fail=1
+acl2=`cd "$other_partition_tmpdir" && getfacl dir` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
 # move the default acl of a directory
 mkdir dir2 || framework_failure
 setfacl -d -m user:bin:rw dir2 || framework_failure
 acl1=`getfacl dir2` || framework_failure
-mv dir2 $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl dir2` || framework_failure
+mv dir2 "$other_partition_tmpdir" || fail=1
+acl2=`cd "$other_partition_tmpdir" && getfacl dir2` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
 Exit $fail
