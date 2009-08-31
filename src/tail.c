@@ -1437,7 +1437,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
           off_t diff = end_pos - current_pos;
           /* Be careful here.  The current position may actually be
              beyond the end of the file.  */
-          off_t bytes_remaining = (diff = end_pos - current_pos) < 0 ? 0 : diff;
+          off_t bytes_remaining = diff < 0 ? 0 : diff;
           off_t nb = n_bytes;
 
           if (bytes_remaining <= nb)
