@@ -1315,14 +1315,13 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
   else
     {
       int lseek_errno = errno;
-      off_t soffset;
 
       /* The seek request may have failed above if it was too big
          (> device size, > max file size, etc.)
          Or it may not have been done at all (> OFF_T_MAX).
          Therefore try to seek to the end of the file,
          to avoid redundant reading.  */
-      if ((soffset = skip_via_lseek (file, fdesc, 0, SEEK_END)) >= 0)
+      if ((skip_via_lseek (file, fdesc, 0, SEEK_END)) >= 0)
         {
           /* File is seekable, and we're at the end of it, and
              size <= OFF_T_MAX. So there's no point using read to advance.  */
