@@ -268,7 +268,6 @@ main (int argc, char **argv)
     }
   optind++;
 
-  argc -= optind;
   argv += optind;
 
   /* Ensure we're in our own group so all subprocesses can be killed.
