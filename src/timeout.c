@@ -317,12 +317,25 @@ main (int argc, char **argv)
          child exits, not on this process receiving a signal. Also we're not
          passing WUNTRACED | WCONTINUED to a waitpid() call and so will not get
          indication that the child has stopped or continued.  */
-      wait (&status);
-
-      if (WIFEXITED (status))
-        status = WEXITSTATUS (status);
-      else if (WIFSIGNALED (status))
-        status = WTERMSIG (status) + 128;     /* what sh does at least.  */
+      if (wait (&status) == -1)
+        {
+          /* shouldn't happen.  */
+          error (0, errno, _("error waiting for command"));
+          status = EXIT_CANCELED;
+        }
+      else
+        {
+          if (WIFEXITED (status))
+            status = WEXITSTATUS (status);
+          else if (WIFSIGNALED (status))
+            status = WTERMSIG (status) + 128; /* what sh does at least.  */
+          else
+            {
+              /* shouldn't happen.  */
+              error (0, 0, _("unknown status from command (0x%X)"), status);
+              status = EXIT_FAILURE;
+            }
+        }
 
       if (timed_out)
         return EXIT_TIMEDOUT;
