@@ -25,6 +25,7 @@
 #include "system.h"
 #include "chown-core.h"
 #include "error.h"
+#include "ignore-value.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
@@ -270,7 +271,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
               /* Tell fts not to traverse into this hierarchy.  */
               fts_set (fts, ent, FTS_SKIP);
               /* Ensure that we do not process "/" on the second visit.  */
-              ent = fts_read (fts);
+              ignore_ptr (fts_read (fts));
               return false;
             }
           return true;
