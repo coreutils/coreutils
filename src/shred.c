@@ -677,7 +677,6 @@ genpattern (int *dest, size_t num, struct randint_source *s)
           if ((size_t) k >= n)
             {
               randpasses += n;
-              n = 0;
               break;
             }
           randpasses += k;
