@@ -219,7 +219,7 @@ mbsalign (const char *src, char *dest, size_t dest_size,
 
       dest = mbs_align_pad (dest, dest_end, start_spaces);
       dest = mempcpy(dest, str_to_print, MIN (n_used_bytes, dest_end - dest));
-      dest = mbs_align_pad (dest, dest_end, end_spaces);
+      mbs_align_pad (dest, dest_end, end_spaces);
     }
 
 mbsalign_cleanup:
