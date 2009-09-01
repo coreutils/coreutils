@@ -335,10 +335,8 @@ process_files (char **files, int bit_flags)
       ok &= process_file (fts, ent);
     }
 
-  /* Ignore failure, since the only way it can do so is in failing to
-     return to the original directory, and since we're about to exit,
-     that doesn't matter.  */
-  fts_close (fts);
+  if (fts_close (fts) != 0)
+    ok = false;
 
   return ok;
 }
