@@ -336,7 +336,10 @@ process_files (char **files, int bit_flags)
     }
 
   if (fts_close (fts) != 0)
-    ok = false;
+    {
+      error (0, errno, _("fts_close failed"));
+      ok = false;
+    }
 
   return ok;
 }
