@@ -24,97 +24,32 @@ fi
 
 . $srcdir/test-lib.sh
 
-require_proc_pid_status_
-
 touch here || framework_failure
 touch k || framework_failure
-(touch unreadable && chmod a-r unreadable) || framework_failure
+{ touch unreadable && chmod a-r unreadable; } || framework_failure
+cat unreadable && framework_failure
 
 fail=0
 
-tail -s0.1 -f not_here &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
+timeout 1 tail -s0.1 -f not_here
+test $? = 124 && fail=1
 
-if test -n "$state"; then
-  case $state in
-    S*) echo $0: process still active 1>&2; fail=1 ;;
-    *) ;;
-  esac
-  kill $pid
-fi
+timeout 1 tail -s0.1 -f unreadable
+test $? = 124 && fail=1
 
-# Check if the file is really not accessible before use it.
-if ! cat unreadable; then
-    tail -s0.1 -f unreadable &
-    pid=$!
-    sleep .5
-    state=$(get_process_status_ $pid)
-
-    if test -n "$state"; then
-        case $state in
-            S*) echo $0: process still active 1>&2; fail=1 ;;
-            *) ;;
-        esac
-        kill $pid
-    fi
-fi
-
-(tail -s0.1 -f here 2>tail.err) &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
-
-if test -n "$state"; then
-  case $state in
-    S*) ;;
-    *)  echo $0: process died 1>&2; fail=1 ;;
-  esac
-  kill $pid
-fi
-
+timeout 1 tail -s0.1 -f here 2>tail.err
+test $? = 124 || fail=1
 
 # `tail -F' must wait in any case.
 
-(tail -s0.1 -F here 2>>tail.err) &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
+timeout 1 tail -s0.1 -F here 2>>tail.err
+test $? = 124 || fail=1
 
-if test -n "$state"; then
-  case $state in
-    S*) ;;
-    *) echo $0: process died 1>&2; fail=1 ;;
-  esac
-  kill $pid
-fi
+timeout 1 tail -s0.1 -F unreadable
+test $? = 124 || fail=1
 
-tail -s0.1 -F unreadable &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
-
-if test -n "$state"; then
-  case $state in
-    S*) ;;
-    *) echo $0: process died 1>&2; fail=1 ;;
-  esac
-  kill $pid
-fi
-
-tail -s0.1 -F not_here &
-pid=$!
-sleep .5
-state=$(get_process_status_ $pid)
-
-if test -n "$state"; then
-  case $state in
-    S*) ;;
-    *) echo $0: process died 1>&2; fail=1 ;;
-  esac
-  kill $pid
-fi
+timeout 1 tail -s0.1 -F not_here
+test $? = 124 || fail=1
 
 test -s tail.err && fail=1
 

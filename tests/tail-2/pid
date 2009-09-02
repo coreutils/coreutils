@@ -23,47 +23,20 @@ fi
 
 . $srcdir/test-lib.sh
 
-require_proc_pid_status_
-
 touch here || framework_failure
-
 
 fail=0
 
-# Use tail itself to create a background process.
-
+# Use tail itself to create a background process to monitor.
 tail -f here &
 bg_pid=$!
 
-tail -s0.1 -f here --pid=$bg_pid &
+# Ensure that tail --pid=PID does not exit when PID is alive.
+timeout 1 tail -s.1 -f here --pid=$bg_pid
+test $? = 124 || fail=1
 
-pid=$!
-
-sleep 0.5
-
-state=$(get_process_status_ $pid)
-
-if test -n "$state"; then
-  case $state in
-    S*) ;;
-    *) echo "$0: process dead? (state=$state)" 1>&2; fail=1 ;;
-  esac
-  kill $pid
-fi
-
+# Cleanup background process
 kill $bg_pid
-
-sleep 0.5
-
-state=$(get_process_status_ $pid)
-
-if test -n "$state"; then
-  case $state in
-    S*) echo $0: process still active 1>&2; fail=1 ;;
-    *) ;;
-  esac
-  kill $pid
-fi
 
 # Ensure that tail --pid=PID exits successfully when PID is dead.
 # Use an unlikely-to-be-live PID
