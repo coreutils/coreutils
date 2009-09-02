@@ -853,7 +853,7 @@ copy_reg (char const *src_name, char const *dst_name,
   if (x->preserve_xattr && ! copy_attr_by_fd (src_name, source_desc,
                                               dst_name, dest_desc, x)
       && x->require_preserve_xattr)
-    return false;
+    return_val = false;
 
   if (x->preserve_mode || x->move_mode)
     {

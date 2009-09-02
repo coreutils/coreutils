@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp --reflink --preserve now preserves attributes when cloning a file.
   [bug introduced in coreutils-7.5]
 
+  cp --preserve=xattr no longer leaks resources on each preservation failure.
+  [bug introduced in coreutils-7.1]
+
   dd now returns non-zero status if it encountered a write error while
   printing a summary to stderr.
   [bug introduced in coreutils-6.11]
