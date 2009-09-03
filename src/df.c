@@ -994,8 +994,11 @@ main (int argc, char **argv)
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
         {
+          /* Prefer to open with O_NOCTTY and use fstat, but fall back
+             on using "stat", in case the file is unreadable.  */
           int fd = open (argv[i], O_RDONLY | O_NOCTTY);
-          if (fd < 0 || fstat (fd, &stats[i - optind]))
+          if ((fd < 0 || fstat (fd, &stats[i - optind]))
+              && stat (argv[i], &stats[i - optind]))
             {
               error (0, errno, "%s", quote (argv[i]));
               exit_status = EXIT_FAILURE;

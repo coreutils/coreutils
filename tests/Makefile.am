@@ -300,6 +300,7 @@ TESTS =						\
   cp/src-base-dot				\
   cp/symlink-slash				\
   cp/thru-dangling				\
+  df/unreadable					\
   dd/direct					\
   dd/misc					\
   dd/not-rewound				\
