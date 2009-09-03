@@ -105,17 +105,25 @@ AC_DEFUN([coreutils_MACROS],
   LIBS=$coreutils_saved_libs
 
   # Check whether libcap is usable -- for ls --color support
+  LIB_CAP=
   AC_ARG_ENABLE([libcap],
-    AC_HELP_STRING([--disable-libcap], [disable libcap support]),
-    AC_MSG_WARN([libcap support disabled by user]),
-    [AC_CHECK_LIB([cap], [cap_get_file],
+    AC_HELP_STRING([--disable-libcap], [disable libcap support]))
+  if test "X$enable_libcap" != "Xno"; then
+    AC_CHECK_LIB([cap], [cap_get_file],
       [AC_CHECK_HEADER([sys/capability.h],
         [LIB_CAP=-lcap
-         AC_DEFINE([HAVE_CAP], [1], [libcap usability])],
-        [AC_MSG_WARN([header sys/capability.h was not found, support for libcap will not be built])]
-      )],
-      [AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])])
-    ])
+         AC_DEFINE([HAVE_CAP], [1], [libcap usability])]
+      )])
+    if test "X$LIB_CAP" = "X"; then
+      if test "X$enable_libcap" = "Xyes"; then
+        AC_MSG_ERROR([libcap library was not found or not usable])
+      else
+        AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])
+      fi
+    fi
+  else
+    AC_MSG_WARN([libcap support disabled by user])
+  fi
   AC_SUBST([LIB_CAP])
 
   # See if linking `seq' requires -lm.
