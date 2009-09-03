@@ -2122,14 +2122,6 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -C
-@itemx --compare
-@opindex -C
-@opindex --compare
-Compare each pair of source and destination files, and if the destination has
-identical content and any specified owner, group, permissions, and possibly
-SELinux context, then do not modify the destination at all.
-
 @item -c
 @itemx --crown-margin
 @opindex -c
@@ -8071,6 +8063,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 @table @samp
 
 @optBackup
+
+@item -C
+@itemx --compare
+@opindex -C
+@opindex --compare
+Compare each pair of source and destination files, and if the destination has
+identical content and any specified owner, group, permissions, and possibly
+SELinux context, then do not modify the destination at all.
 
 @item -c
 @opindex -c
