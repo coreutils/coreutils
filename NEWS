@@ -27,6 +27,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   because ls must stat every file in order to obtain a guaranteed-valid
   inode number.  [bug introduced in coreutils-6.0]
 
+** Improved robustness
+
+  rm has been rewritten to use gnulib's fts
+  This makes it significantly faster (400-500%) in some pathological
+  cases, and slightly slower (20%) in at least one pathological case.
+  Unrelated to its use of fts, rm -r is now slightly more standards-
+  conformant when operating on write-protected relative file names
+  longer than 8KiB.
+
 ** New features
 
   cp --reflink accepts a new "auto" parameter which falls back to
