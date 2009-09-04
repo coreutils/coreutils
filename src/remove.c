@@ -575,7 +575,7 @@ The following directory is part of the cycle:\n  %s\n"),
              ent->fts_info,
              quote (ent->fts_path),
              PACKAGE_BUGREPORT);
-      assert (0);
+      abort ();
     }
 }
 
