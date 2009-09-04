@@ -290,7 +290,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              name, i.e., with --follow=name\n\
 "), stdout);
      fputs (_("\
-  -s, --sleep-interval=S   with -f, sleep for approximately S seconds\n\
+  -s, --sleep-interval=N   with -f, sleep for approximately N seconds\n\
                              (default 1.0) between iterations\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
