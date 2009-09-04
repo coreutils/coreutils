@@ -27,15 +27,16 @@ fi
 touch here || framework_failure
 touch k || framework_failure
 { touch unreadable && chmod a-r unreadable; } || framework_failure
-cat unreadable && framework_failure
 
 fail=0
 
 timeout 1 tail -s0.1 -f not_here
 test $? = 124 && fail=1
 
-timeout 1 tail -s0.1 -f unreadable
-test $? = 124 && fail=1
+if test ! -r unreadable; then # can't test this when root
+  timeout 1 tail -s0.1 -f unreadable
+  test $? = 124 && fail=1
+fi
 
 timeout 1 tail -s0.1 -f here 2>tail.err
 test $? = 124 || fail=1
@@ -45,8 +46,10 @@ test $? = 124 || fail=1
 timeout 1 tail -s0.1 -F here 2>>tail.err
 test $? = 124 || fail=1
 
-timeout 1 tail -s0.1 -F unreadable
-test $? = 124 || fail=1
+if test ! -r unreadable; then # can't test this when root
+  timeout 1 tail -s0.1 -F unreadable
+  test $? = 124 || fail=1
+fi
 
 timeout 1 tail -s0.1 -F not_here
 test $? = 124 || fail=1
