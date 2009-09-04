@@ -1974,21 +1974,23 @@ copy_internal (char const *src_name, char const *dst_name,
         }
     }
 
+  /* POSIX 2008 states that it is implementation-defined whether
+     link() on a symlink creates a hard-link to the symlink, or only
+     to the referent (effectively dereferencing the symlink) (POSIX
+     2001 required the latter behavior, although many systems provided
+     the former).  Yet cp, invoked with `--link --no-dereference',
+     should not follow the link.  We can approximate the desired
+     behavior by skipping this hard-link creating block and instead
+     copying the symlink, via the `S_ISLNK'- copying code below.
+     LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
+     how link() behaves, so we use the fallback case for safety.
+
+     FIXME - use a gnulib linkat emulation for more fine-tuned
+     emulation, particularly when LINK_FOLLOWS_SYMLINKS is -1.  */
   else if (x->hard_link
-#ifdef LINK_FOLLOWS_SYMLINKS
-  /* A POSIX-conforming link syscall dereferences a symlink, yet cp,
-     invoked with `--link --no-dereference', should not.  Thus, with
-     a POSIX-conforming link system call, we can't use link() here,
-     since that would create a hard link to the referent (effectively
-     dereferencing the symlink), rather than to the symlink itself.
-     We can approximate the desired behavior by skipping this hard-link
-     creating block and instead copying the symlink, via the `S_ISLNK'-
-     copying code below.
-     When link operates on the symlinks themselves, we use this block
-     and just call link().  */
-           && !(S_ISLNK (src_mode) && x->dereference == DEREF_NEVER)
-#endif
-           )
+	   && (!LINK_FOLLOWS_SYMLINKS
+	       || !S_ISLNK (src_mode)
+	       || x->dereference != DEREF_NEVER))
     {
       if (link (src_name, dst_name))
         {
