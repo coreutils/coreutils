@@ -56,7 +56,7 @@ test $? = 124 || fail=1
 
 test -s tail.err && fail=1
 
-tail -s.1 -F k > tail.out &
+tail -s.1 --max-unchanged-stats=2 -F k > tail.out &
 pid=$!
 sleep .5
 mv k l
