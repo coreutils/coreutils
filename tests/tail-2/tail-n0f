@@ -35,17 +35,19 @@ echo anything > nonempty || framework_failure
 
 fail=0
 
-for file in empty nonempty; do
-  for c_or_n in c n; do
-    tail --sleep=4 -${c_or_n} 0 -f $file &
-    pid=$!
-    sleep .5
-    state=$(get_process_status_ $pid)
-    case $state in
-      S*) ;;
-      *) echo $0: process in unexpected state: $state 1>&2; fail=1 ;;
-    esac
-    kill $pid
+for inotify in ---disable-inotify ''; do
+  for file in empty nonempty; do
+    for c_or_n in c n; do
+      tail --sleep=4 -${c_or_n} 0 -f $inotify $file &
+      pid=$!
+      sleep .5
+      state=$(get_process_status_ $pid)
+      case $state in
+        S*) ;;
+        *) echo $0: process in unexpected state: $state 1>&2; fail=1 ;;
+      esac
+      kill $pid
+    done
   done
 done
 

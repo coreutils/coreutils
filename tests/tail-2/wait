@@ -30,43 +30,48 @@ touch k || framework_failure
 
 fail=0
 
-timeout 1 tail -s0.1 -f not_here
-test $? = 124 && fail=1
-
-if test ! -r unreadable; then # can't test this when root
-  timeout 1 tail -s0.1 -f unreadable
+for inotify in ---disable-inotify ''; do
+  timeout 1 tail -s0.1 -f $inotify not_here
   test $? = 124 && fail=1
-fi
 
-timeout 1 tail -s0.1 -f here 2>tail.err
-test $? = 124 || fail=1
+  if test ! -r unreadable; then # can't test this when root
+    timeout 1 tail -s0.1 -f $inotify unreadable
+    test $? = 124 && fail=1
+  fi
 
-# `tail -F' must wait in any case.
-
-timeout 1 tail -s0.1 -F here 2>>tail.err
-test $? = 124 || fail=1
-
-if test ! -r unreadable; then # can't test this when root
-  timeout 1 tail -s0.1 -F unreadable
+  timeout 1 tail -s0.1 -f $inotify here 2>tail.err
   test $? = 124 || fail=1
-fi
 
-timeout 1 tail -s0.1 -F not_here
-test $? = 124 || fail=1
+  # `tail -F' must wait in any case.
 
-test -s tail.err && fail=1
+  timeout 1 tail -s0.1 -F $inotify here 2>>tail.err
+  test $? = 124 || fail=1
 
-tail -s.1 --max-unchanged-stats=2 -F k > tail.out &
-pid=$!
-sleep .5
-mv k l
-sleep .5
-touch k
-mv k l
-sleep .5
-echo NO >> l
-sleep .5
-kill $pid
-test -s tail.out && fail=1
+  if test ! -r unreadable; then # can't test this when root
+    timeout 1 tail -s0.1 -F $inotify unreadable
+    test $? = 124 || fail=1
+  fi
+
+  timeout 1 tail -s0.1 -F $inotify not_here
+  test $? = 124 || fail=1
+
+
+  test -s tail.err && fail=1
+  :>tail.err
+
+
+  tail -s.1 --max-unchanged-stats=2 -F $inotify k > tail.out &
+  pid=$!
+  sleep .5
+  mv k l
+  sleep .5
+  touch k
+  mv k l
+  sleep .5
+  echo NO >> l
+  sleep .5
+  kill $pid
+  test -s tail.out && fail=1
+done
 
 Exit $fail

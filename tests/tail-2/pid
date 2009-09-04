@@ -22,32 +22,34 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 touch here || framework_failure
 
 fail=0
 
-# Use tail itself to create a background process to monitor.
-tail -f here &
-bg_pid=$!
+for inotify in ---disable-inotify ''; do
+  # Use tail itself to create a background process to monitor.
+  tail -f $inotify here &
+  bg_pid=$!
 
-# Ensure that tail --pid=PID does not exit when PID is alive.
-timeout 1 tail -s.1 -f here --pid=$bg_pid
-test $? = 124 || fail=1
+  # Ensure that tail --pid=PID does not exit when PID is alive.
+  timeout 1 tail -s.1 -f $inotify here --pid=$bg_pid
+  test $? = 124 || fail=1
 
-# Cleanup background process
-kill $bg_pid
+  # Cleanup background process
+  kill $bg_pid
 
-# Ensure that tail --pid=PID exits successfully when PID is dead.
-# Use an unlikely-to-be-live PID
-getlimits_
-timeout 1 tail -s.1 --pid=$PID_T_MAX -f /dev/null
-ret=$?
-test $ret = 124 && skip_test_ "pid $PID_T_MAX present"
-test $ret = 0 || fail=1
+  # Ensure that tail --pid=PID exits successfully when PID is dead.
+  # Use an unlikely-to-be-live PID
+  timeout 1 tail -s.1 --pid=$PID_T_MAX -f $inotify /dev/null
+  ret=$?
+  test $ret = 124 && skip_test_ "pid $PID_T_MAX present"
+  test $ret = 0 || fail=1
 
-# Ensure fractional sleep parameter is honored with --pid
-timeout 1 tail -s.1 -f /dev/null --pid=$PID_T_MAX
-test $? = 124 && fail=1
+  # Ensure fractional sleep parameter is honored with --pid
+  timeout 1 tail -s.1 -f $inotify /dev/null --pid=$PID_T_MAX
+  test $? = 124 && fail=1
+done
 
 Exit $fail

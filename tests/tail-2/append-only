@@ -37,9 +37,12 @@ fi
 
 fail=0
 
-sleep 1 &
-pid=$!
-tail --pid=$pid -f f || fail=1
+for inotify in ---disable-inotify ''; do
+  sleep 1 &
+  pid=$!
+  tail --pid=$pid -f $inotify f || fail=1
+done
+
 chattr -a f 2>/dev/null
 
 Exit $fail

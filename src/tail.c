@@ -201,6 +201,10 @@ static bool have_read_stdin;
    more expensive) code unconditionally. Intended solely for testing.  */
 static bool presume_input_pipe;
 
+/* If nonzero then don't use inotify even if available.
+   Intended solely for testing.  */
+static bool disable_inotify;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -209,7 +213,8 @@ enum
   MAX_UNCHANGED_STATS_OPTION,
   PID_OPTION,
   PRESUME_INPUT_PIPE_OPTION,
-  LONG_FOLLOW_OPTION
+  LONG_FOLLOW_OPTION,
+  DISABLE_INOTIFY_OPTION
 };
 
 static struct option const long_options[] =
@@ -218,6 +223,8 @@ static struct option const long_options[] =
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
+  {"-disable-inotify", no_argument, NULL,
+   DISABLE_INOTIFY_OPTION}, /* do not document */
   {"pid", required_argument, NULL, PID_OPTION},
   {"-presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
@@ -1794,6 +1801,10 @@ parse_options (int argc, char **argv,
             }
           break;
 
+        case DISABLE_INOTIFY_OPTION:
+          disable_inotify = true;
+          break;
+
         case PID_OPTION:
           {
             strtol_error s_err;
@@ -1972,15 +1983,18 @@ main (int argc, char **argv)
   if (forever)
     {
 #if HAVE_INOTIFY
-      int wd = inotify_init ();
-      if (wd < 0)
-        error (0, errno, _("inotify cannot be used, reverting to polling"));
-      else
+      if (!disable_inotify)
         {
-          tail_forever_inotify (wd, F, n_files, sleep_interval);
+          int wd = inotify_init ();
+          if (wd < 0)
+            error (0, errno, _("inotify cannot be used, reverting to polling"));
+          else
+            {
+              tail_forever_inotify (wd, F, n_files, sleep_interval);
 
-          /* The only way the above returns is upon failure.  */
-          exit (EXIT_FAILURE);
+              /* The only way the above returns is upon failure.  */
+              exit (EXIT_FAILURE);
+            }
         }
 #endif
       tail_forever (F, n_files, sleep_interval);
