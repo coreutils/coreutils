@@ -39,10 +39,6 @@
   proper_name ("Mike Parker"), \
   proper_name ("David MacKenzie")
 
-#ifndef ENABLE_HARD_LINK_TO_SYMLINK_WARNING
-# define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
-#endif
-
 /* In being careful not even to try to make hard links to directories,
    we have to know whether link(2) follows symlinks.  If it does, then
    we have to *stat* the `source' to see if the resulting link would be
@@ -150,21 +146,18 @@ do_link (const char *source, const char *dest)
   /* Use stat here instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
      making hard links to symlinks that point to directories.  Big deal.
-     On other systems, link follows symlinks, so this check is right.  */
+     On other systems, link follows symlinks, so this check is right.
+
+     FIXME - POSIX 2008 added the AT_SYMLINK_FOLLOW flag to linkat so
+     that we can specify either behavior, via the new options -L
+     (hard-link to symlinks) and -P (hard-link to the referent).  Once
+     gnulib has a decent implementation, we should use it here.  */
   if (!symbolic_link)
     {
       if (STAT_LIKE_LINK (source, &source_stats) != 0)
         {
           error (0, errno, _("accessing %s"), quote (source));
           return false;
-        }
-
-      if (ENABLE_HARD_LINK_TO_SYMLINK_WARNING
-          && S_ISLNK (source_stats.st_mode))
-        {
-          error (0, 0, _("%s: warning: making a hard link to a symbolic link\
- is not portable"),
-                 quote (source));
         }
 
       if (S_ISDIR (source_stats.st_mode))
@@ -271,14 +264,15 @@ do_link (const char *source, const char *dest)
   /* If the attempt to create a link failed and we are removing or
      backing up destinations, unlink the destination and try again.
 
-     POSIX 1003.1-2004 requires that ln -f A B must unlink B even on
-     failure (e.g., when A does not exist).  This is counterintuitive,
-     and we submitted a defect report
-     <http://www.opengroup.org/austin/mailarchives/ag-review/msg01794.html>
-     (2004-06-24).  If the committee does not fix the standard we'll
-     have to change the behavior of ln -f, at least if POSIXLY_CORRECT
-     is set.  In the meantime ln -f A B will not unlink B unless the
-     attempt to link A to B failed because B already existed.
+     On the surface, POSIX describes an algorithm that states that
+     'ln -f A B' will call unlink() on B before ever attempting
+     link() on A.  But strictly following this has the counterintuitive
+     effect of losing the contents of B, if A does not exist.
+     Fortunately, POSIX 2008 clarified that an application is free
+     to fail early if it can prove that continuing onwards cannot
+     succeed, so we are justified in trying link() before blindly
+     removing B, thus sometimes calling link() a second time during
+     a successful 'ln -f A B'.
 
      Try to unlink DEST even if we may have backed it up successfully.
      In some unusual cases (when DEST and DEST_BACKUP are hard-links
