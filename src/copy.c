@@ -1988,9 +1988,9 @@ copy_internal (char const *src_name, char const *dst_name,
      FIXME - use a gnulib linkat emulation for more fine-tuned
      emulation, particularly when LINK_FOLLOWS_SYMLINKS is -1.  */
   else if (x->hard_link
-	   && (!LINK_FOLLOWS_SYMLINKS
-	       || !S_ISLNK (src_mode)
-	       || x->dereference != DEREF_NEVER))
+           && (!LINK_FOLLOWS_SYMLINKS
+               || !S_ISLNK (src_mode)
+               || x->dereference != DEREF_NEVER))
     {
       if (link (src_name, dst_name))
         {
