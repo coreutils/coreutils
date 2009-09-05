@@ -43,7 +43,10 @@ while :; do
     # Make sure that they are the same.
     # We know from experience that there may be mismatches on some
     # buggy file systems, at mount points.
-    if test "$d_ino" != "$st_ino"; then
+    # Note that when a directory contains only entries whose names
+    # start with ".", d_ino and file will both be empty.  In that case,
+    # skip the test.
+    if test -n "$d_ino" && test "$d_ino" != "$st_ino"; then
       echo "$0: test failed: $t/$file: d_ino($d_ino) != st_ino($st_ino)
         This may indicate a flaw in your kernel or file system implementation.
         The flaw isn't serious for coreutils, but it might break other tools,
