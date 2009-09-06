@@ -239,6 +239,8 @@ my @Tests =
      ],
     );
 
+umask 022;
+
 # Start with an unset LS_COLORS environment variable.
 delete $ENV{LS_COLORS};
 
