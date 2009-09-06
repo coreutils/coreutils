@@ -27,6 +27,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   because ls must stat every file in order to obtain a guaranteed-valid
   inode number.  [bug introduced in coreutils-6.0]
 
+  tail -f (inotify-enabled) now flushes any initial output before blocking.
+  Before, this would print nothing and wait: stdbuf -o 4K tail -f /etc/passwd
+  Note that this bug affects tail -f only when its standard output is buffered,
+  which is relatively unusual.
+
 ** New features
 
   cp --reflink accepts a new "auto" parameter which falls back to

@@ -1399,7 +1399,6 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       if (fflush (stdout) != 0)
         error (EXIT_FAILURE, errno, _("write error"));
     }
-
 }
 #endif
 
@@ -1990,6 +1989,12 @@ main (int argc, char **argv)
             error (0, errno, _("inotify cannot be used, reverting to polling"));
           else
             {
+              /* Flush any output from tail_file, now, since
+                 tail_forever_inotify flushes only after writing,
+                 not before reading.  */
+              if (fflush (stdout) != 0)
+                error (EXIT_FAILURE, errno, _("write error"));
+
               tail_forever_inotify (wd, F, n_files, sleep_interval);
 
               /* The only way the above returns is upon failure.  */
