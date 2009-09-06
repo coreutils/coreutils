@@ -28,9 +28,10 @@ echo line > in || fail=1
 stdbuf --output=1K tail -f in > out &
 tail_pid=$!
 
-# Wait for the backgrounded `tail' to start.
-while :; do
-  env kill -0 $tail_pid && break
+# Wait for 1 second for the file to be flushed.
+for i in $(seq 10); do
+  test -s out && break
+  echo sleep .1s
   sleep .1
 done
 
