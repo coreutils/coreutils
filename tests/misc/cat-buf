@@ -30,11 +30,11 @@ fi
 # write separately.
 mkfifo fifo || framework_failure
 
-echo '1' > exp
+echo 1 > exp
 
-dd count=1 if=fifo > out 2> err&
-(echo '1'; sleep .2; echo '2') | cat -v > fifo
-wait #for dd to complete
+dd count=1 if=fifo > out &
+(echo 1; sleep .2; echo 2) | cat -v > fifo
+wait # for dd to complete
 
 compare out exp || fail=1
 
