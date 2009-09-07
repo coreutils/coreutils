@@ -358,7 +358,7 @@ record_open_fd (struct File_spec *f, int fd,
   f->mode = st->st_mode;
   f->blocking = blocking;
   f->n_unchanged_stats = 0;
-  f->ignore = 0;
+  f->ignore = false;
 }
 
 /* Close the file with descriptor FD and name FILENAME.  */
