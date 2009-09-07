@@ -25,7 +25,9 @@ fi
 
 fail=0
 echo line > in || fail=1
-stdbuf --output=1K tail -f in > out &
+# Output should be buffered since we're writing to file
+# so we're depending on the flush to write out
+tail -f in > out &
 tail_pid=$!
 
 # Wait for 1 second for the file to be flushed.
