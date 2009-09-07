@@ -1991,7 +1991,7 @@ main (int argc, char **argv)
       bool stdin_cmdline_arg = false;
 
       for (i = 0; i < n_files; i++)
-        if (STREQ (file[i], "-"))
+        if (!F[i].ignore && STREQ (F[i].name, "-"))
           stdin_cmdline_arg = true;
 
       if (!disable_inotify && !stdin_cmdline_arg)
