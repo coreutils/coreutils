@@ -1982,7 +1982,19 @@ main (int argc, char **argv)
   if (forever)
     {
 #if HAVE_INOTIFY
-      if (!disable_inotify)
+      /* If the user specifies stdin via a command line argument of "-",
+         or implicitly by providing no arguments, we won't use inotify.
+         Technically, on systems with a working /dev/stdin, we *could*,
+         but would it be worth it?  Verifying that it's a real device
+         and hooked up to stdin is not trivial, while reverting to
+         non-inotify-based tail_forever is easy and portable.  */
+      bool stdin_cmdline_arg = false;
+
+      for (i = 0; i < n_files; i++)
+        if (STREQ (file[i], "-"))
+          stdin_cmdline_arg = true;
+
+      if (!disable_inotify && !stdin_cmdline_arg)
         {
           int wd = inotify_init ();
           if (wd < 0)

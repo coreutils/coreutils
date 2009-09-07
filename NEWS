@@ -31,6 +31,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   Before, this would print nothing and wait: stdbuf -o 4K tail -f /etc/passwd
   Note that this bug affects tail -f only when its standard output is buffered,
   which is relatively unusual.
+  [bug introduced in coreutils-7.5]
+
+  tail -f once again works with standard input.  inotify-enabled tail -f
+  would fail when operating on a nameless stdin.  I.e., tail -f < /etc/passwd
+  would say "tail: cannot watch `-': No such file or directory", yet the
+  relatively baroque tail -f /dev/stdin < /etc/passwd would work.  Now, the
+  offending usage causes tail to revert to its conventional sleep-based
+  (i.e., not inotify-based) implementation.
+  [bug introduced in coreutils-7.5]
 
 ** New features
 
