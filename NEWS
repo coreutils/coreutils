@@ -46,6 +46,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp --reflink accepts a new "auto" parameter which falls back to
   a standard copy if creating a copy-on-write clone is not possible.
 
+** POSIX conformance
+
+  tail -f now ignores "-" when stdin is a pipe or FIFO, per POSIX.
+  Now, :|tail -f terminates immediately.  Before, it would block indefinitely.
+  [the old behavior dates back to the original implementation]
+
 
 * Noteworthy changes in release 7.5 (2009-08-20) [stable]
 

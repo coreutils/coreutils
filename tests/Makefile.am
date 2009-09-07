@@ -429,6 +429,8 @@ TESTS =						\
   tail-2/big-4gb				\
   tail-2/flush-initial				\
   tail-2/follow-stdin				\
+  tail-2/pipe-f					\
+  tail-2/pipe-f2				\
   tail-2/proc-ksyms				\
   tail-2/start-middle				\
   touch/dangling-symlink			\

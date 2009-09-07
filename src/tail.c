@@ -1979,7 +1979,21 @@ main (int argc, char **argv)
   for (i = 0; i < n_files; i++)
     ok &= tail_file (&F[i], n_units);
 
-  if (forever)
+  /* When there is no FILE operand and stdin is a pipe or FIFO
+     POSIX requires that tail ignore the -f option.
+     Since we allow multiple FILE operands, we extend that to say:
+     ignore any "-" operand that corresponds to a pipe or FIFO.  */
+  size_t n_viable = 0;
+  for (i = 0; i < n_files; i++)
+    {
+      if (STREQ (F[i].name, "-") && !F[i].ignore
+          && 0 <= F[i].fd && S_ISFIFO (F[i].mode))
+        F[i].ignore = true;
+      else
+        ++n_viable;
+    }
+
+  if (forever && n_viable)
     {
 #if HAVE_INOTIFY
       /* If the user specifies stdin via a command line argument of "-",
