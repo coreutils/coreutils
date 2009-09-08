@@ -42,13 +42,9 @@ tail_pid=$!
 
 echo sleeping for 7 seconds...
 
-# Wait for the backgrounded `tail' to start before removing foo.
+# Give the backgrounded `tail' a chance to start before removing foo.
 # Otherwise, without --retry, tail wouldn't try to open `foo' again.
-while :; do
-  env kill -0 $tail_pid && break
-  echo sleep .1
-  sleep .1
-done
+sleep 1
 
 rm -f foo
 sleep 6
