@@ -1922,28 +1922,6 @@ main (int argc, char **argv)
       static char *dummy_stdin = (char *) "-";
       n_files = 1;
       file = &dummy_stdin;
-
-      /* POSIX says that -f is ignored if no file operand is specified
-         and standard input is a pipe.  However, the GNU coding
-         standards say that program behavior should not depend on
-         device type, because device independence is an important
-         principle of the system's design.
-
-         Follow the POSIX requirement only if POSIXLY_CORRECT is set.  */
-
-      if (forever && getenv ("POSIXLY_CORRECT"))
-        {
-          struct stat st;
-          int is_a_fifo_or_pipe =
-            (fstat (STDIN_FILENO, &st) != 0 ? -1
-             : S_ISFIFO (st.st_mode) ? 1
-             : HAVE_FIFO_PIPES == 1 ? 0
-             : isapipe (STDIN_FILENO));
-          if (is_a_fifo_or_pipe < 0)
-            error (EXIT_FAILURE, errno, _("standard input"));
-          if (is_a_fifo_or_pipe)
-            forever = false;
-        }
     }
 
   {
@@ -1986,8 +1964,13 @@ main (int argc, char **argv)
   size_t n_viable = 0;
   for (i = 0; i < n_files; i++)
     {
-      if (STREQ (F[i].name, "-") && !F[i].ignore
-          && 0 <= F[i].fd && S_ISFIFO (F[i].mode))
+      bool is_a_fifo_or_pipe =
+        (STREQ (F[i].name, "-")
+         && !F[i].ignore
+         && 0 <= F[i].fd
+         && (S_ISFIFO (F[i].mode)
+             || (HAVE_FIFO_PIPES != 1 && isapipe (F[i].fd))));
+      if (is_a_fifo_or_pipe)
         F[i].ignore = true;
       else
         ++n_viable;

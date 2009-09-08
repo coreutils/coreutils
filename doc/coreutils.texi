@@ -2782,9 +2782,10 @@ growing.
 The option values @samp{descriptor} and @samp{name} may be specified only
 with the long form of the option, not with @option{-f}.
 
-@vindex POSIXLY_CORRECT
-If @env{POSIXLY_CORRECT} is set, the @option{-f} option is ignored if
+The @option{-f} option is ignored if
 no @var{file} operand is specified and standard input is a FIFO or a pipe.
+Likewise, the @option{-f} option has no effect for any
+operand specified as @samp{-}, when standard input is a FIFO or a pipe.
 
 @item -F
 @opindex -F
