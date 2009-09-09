@@ -25,7 +25,7 @@ gnu_rel_host = $(gnu_ftp_host-$(RELEASE_TYPE))
 manual_title = Core GNU utilities
 
 url_dir_list = \
-  ftp://$(gnu_rel_host)/gnu/coreutils
+  ftp://$(gnu_rel_host)/gnu/$(PACKAGE)
 
 # The GnuPG ID of the key used to sign the tarballs.
 gpg_key_ID = B9AB9A16
