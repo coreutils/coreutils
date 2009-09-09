@@ -7775,8 +7775,8 @@ input newline with a space and padding with spaces as necessary.
 
 @item unblock
 @opindex unblock
-Replace trailing spaces in each @samp{cbs}-sized input block with a
-newline.
+Remove any trailing spaces in each @samp{cbs}-sized input block,
+and append a newline.
 
 The @samp{block} and @samp{unblock} conversions are mutually exclusive.
 

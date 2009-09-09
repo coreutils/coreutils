@@ -19,6 +19,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   printing a summary to stderr.
   [bug introduced in coreutils-6.11]
 
+  dd cbs=N conv=unblock would fail to print a final newline when the size
+  of the input was not a multiple of N bytes.
+  [the non-conforming behavior dates back to the initial implementation]
+
   df no longer requires that each command-line argument be readable
   [bug introduced in coreutils-7.3]
 

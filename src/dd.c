@@ -1785,10 +1785,11 @@ dd_copy (void)
         output_char (space_character);
     }
 
-  if ((conversions_mask & C_UNBLOCK) && col == conversion_blocksize)
-    /* Add a final '\n' if there are exactly `conversion_blocksize'
-       characters in the final record. */
-    output_char (newline_character);
+  if (col && (conversions_mask & C_UNBLOCK))
+    {
+      /* If there was any output, add a final '\n'.  */
+      output_char (newline_character);
+    }
 
   /* Write out the last block. */
   if (oc != 0)
