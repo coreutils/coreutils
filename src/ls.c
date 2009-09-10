@@ -4553,8 +4553,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         control whether color is used to distinguish file\n\
-                               types.  WHEN may be `never', `always', or `auto'\n\
+      --color[=WHEN]         colorize the output.  WHEN defaults to `always'\n\
+                               or can be `never' or `auto'.  More info below\n\
   -d, --directory            list directory entries instead of contents,\n\
                                and do not dereference symbolic links\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
@@ -4668,12 +4668,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       emit_size_note ();
       fputs (_("\
 \n\
-By default, color is not used to distinguish types of files.  That is\n\
-equivalent to using --color=none.  Using the --color option without the\n\
-optional WHEN argument is equivalent to using --color=always.  With\n\
---color=auto, color codes are output only if standard output is connected\n\
-to a terminal (tty).  The environment variable LS_COLORS can influence the\n\
-colors, and can be set easily by the dircolors command.\n\
+Using color to distinguish types of files is not enabled by default, or when\n\
+--color=never is specified.  With --color=auto, color codes are output only\n\
+when standard output is connected to a terminal.  The LS_COLORS environment\n\
+variable can change the default codes and can be set using dircolors command.\n\
 "), stdout);
       fputs (_("\
 \n\
