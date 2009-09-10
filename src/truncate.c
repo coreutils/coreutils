@@ -124,10 +124,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --size=SIZE        use this SIZE\n"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\n\
-SIZE is a number which may be followed by one of the following suffixes:\n\
-KB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
-"), stdout);
+      emit_size_note ();
       fputs (_("\n\
 SIZE may also be prefixed by one of the following modifying characters:\n\
 `+' extend by, `-' reduce by, `<' at most, `>' at least,\n\

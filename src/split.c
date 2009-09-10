@@ -126,12 +126,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-SIZE may have a multiplier suffix:\n\
-b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
-GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
-"), stdout);
+      emit_size_note ();
       emit_bug_reporting_address ();
     }
   exit (status);

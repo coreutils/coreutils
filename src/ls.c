@@ -4543,7 +4543,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
-      --block-size=SIZE      use SIZE-byte blocks\n\
+      --block-size=SIZE      use SIZE-byte blocks.  See SIZE format below\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information)\n\
@@ -4664,10 +4664,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\n\
-SIZE may be (or may be an integer optionally followed by) one of following:\n\
-kB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
-"), stdout);
+      emit_size_note ();
       fputs (_("\
 \n\
 By default, color is not used to distinguish types of files.  That is\n\

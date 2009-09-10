@@ -618,15 +618,8 @@ from the shell.
 @end macro
 
 @macro multiplierSuffixes{varName}
-@ignore
-Appending @samp{b} multiplies @var{\varName\} by 512,
-@samp{kB} by 1000, @samp{K} by 1024,
-@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
-@samp{GB} by 1000*1000*1000, @samp{G} by 1024*1024*1024,
-and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
-@end ignore
-@var{\varName\} is a number which may have one of the following
-multiplicative suffixes:
+@var{\varName\} may be, or may be an integer optionally followed by,
+one of the following multiplicative suffixes:
 @example
 @samp{b}  =>            512 ("blocks")
 @samp{KB} =>           1000 (KiloBytes)
@@ -641,8 +634,8 @@ and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 @c FIXME: same as above, but no ``blocks'' line.
 @macro multiplierSuffixesNoBlocks{varName}
-@var{\varName\} is a number which may have one of the following
-multiplicative suffixes:
+@var{\varName\} may be, or may be an integer optionally followed by,
+one of the following multiplicative suffixes:
 @example
 @samp{KB} =>           1000 (KiloBytes)
 @samp{K}  =>           1024 (KibiBytes)

@@ -616,6 +616,25 @@ ptr_align (void const *ptr, size_t alignment)
     ? false : (((Accum) = (Accum) * 10 + (Digit_val)), true))		\
   )
 
+static inline void
+emit_size_note (void)
+{
+  fputs (_("\n\
+SIZE may be (or may be an integer optionally followed by) one of following:\n\
+KB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
+"), stdout);
+}
+
+static inline void
+emit_blocksize_note (char const *program)
+{
+  printf (_("\n\
+Display values are in units of the first available SIZE from --block-size,\n\
+and the %s_BLOCK_SIZE, BLOCK_SIZE and BLOCKSIZE environment variables.\n\
+Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
+"), program);
+}
+
 #include "hard-locale.h"
 static inline void
 emit_bug_reporting_address (void)
