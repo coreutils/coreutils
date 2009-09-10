@@ -345,6 +345,7 @@ TESTS =						\
   ln/hard-backup				\
   ln/misc					\
   ln/sf-1					\
+  ln/slash-decorated-nonexistent-dest		\
   ln/target-1					\
   ls/abmon-align				\
   ls/color-clear-to-eol				\

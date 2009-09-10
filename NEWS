@@ -45,6 +45,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   (i.e., not inotify-based) implementation.
   [bug introduced in coreutils-7.5]
 
+** Portability
+
+  ln, link: link f z/ would mistakenly succeed on Solaris 10, given an
+  existing file, f, and nothing named "z".  ln -T f z/ has the same problem.
+  Each would mistakenly create "z" as a link to "f".  Now, even on such a
+  system, each command reports the error, e.g.,
+  link: cannot create link `z/' to `f': Not a directory
+
 ** New features
 
   cp --reflink accepts a new "auto" parameter which falls back to
