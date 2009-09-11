@@ -14,8 +14,7 @@ Here are most of the steps we (maintainers) follow when making a release.
 
 * Make sure your local gnulib directory is up to date.
 
-* Run bootstrap, (assuming your local copy of gnulib is in /gnulib):
-  ./bootstrap --gnulib-srcdir=/gnulib
+* Run bootstrap: ./bootstrap
 
 FIXME: enable excluded programs like arch? to get their manual pages?
 
