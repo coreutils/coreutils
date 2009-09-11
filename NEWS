@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  id no longer prints SELinux " context=..." when the POSIXLY_CORRECT
+  environment variable is set.
+
 ** Improvements
 
   rm: rewrite to use gnulib's fts

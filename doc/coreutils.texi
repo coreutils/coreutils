@@ -12825,9 +12825,13 @@ running it if no user is specified.  Synopsis:
 id [@var{option}]@dots{} [@var{username}]
 @end example
 
+@vindex POSIXLY_CORRECT
 By default, it prints the real user ID, real group ID, effective user ID
 if different from the real user ID, effective group ID if different from
 the real group ID, and supplemental group IDs.
+In addition, if SELinux
+is enabled and the @env{POSIXLY_CORRECT} environment variable is not set,
+then print @samp{context=@var{c}}, where @var{c} is the security context.
 
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.

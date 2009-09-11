@@ -328,6 +328,9 @@ print_full_info (const char *username)
     free (groups);
   }
 #endif /* HAVE_GETGROUPS */
-  if (context != NULL)
+
+  /* POSIX mandates the precise output format, and that it not include
+     any context=... part, so skip that if POSIXLY_CORRECT is set.  */
+  if (context != NULL && ! getenv ("POSIXLY_CORRECT"))
     printf (_(" context=%s"), context);
 }
