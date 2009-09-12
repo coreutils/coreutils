@@ -436,6 +436,7 @@ TESTS =						\
   tail-2/pipe-f2				\
   tail-2/proc-ksyms				\
   tail-2/start-middle				\
+  touch/60-seconds				\
   touch/dangling-symlink			\
   touch/dir-1					\
   touch/fail-diag				\

@@ -8,6 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   when the source file doesn't have write access.
   [bug introduced in coreutils-7.1]
 
+  touch -t [[CC]YY]MMDDhhmm[.ss] now accepts a timestamp string ending in .60,
+  to accommodate leap seconds.
+
 ** Changes in behavior
 
   id no longer prints SELinux " context=..." when the POSIXLY_CORRECT
