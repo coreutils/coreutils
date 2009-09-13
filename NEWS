@@ -14,14 +14,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   cases, and slightly slower (20%) in at least one pathological case.
 
   rm -r deletes deep hierarchies more efficiently.  Before, it took O(N^2)
-  time, now it takes O(N).  However, this improvement is not as pronounced
-  as might be expected for very deep trees, because prior to this change, for
-  any relative name length longer than 8KiB, rm -r would sacrifice official
-  conformance to avoid the disproportionate O(N^2) performance penalty.
-  Leading to another improvement:
+  time, now it takes O(N), where N is the depth of the hierarchy.  However,
+  this improvement is not as pronounced as might be expected for very
+  deep trees, because prior to this change, for any relative name length
+  longer than 8KiB, rm -r would sacrifice official conformance to avoid the
+  disproportionate O(N^2) performance penalty.  Leading to another improvement:
 
   rm -r is now slightly more standards-conformant when operating on
-  write-protected relative file names longer than 8KiB.
+  write-protected files with relative names longer than 8KiB.
 
 
 * Noteworthy changes in release 7.6 (2009-09-11) [stable]
