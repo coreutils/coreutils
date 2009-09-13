@@ -279,18 +279,18 @@ static struct mode_info const mode_info[] =
   {"cr0", output, SANE_SET, CR0, CRDLY},
 #endif
 #ifdef TABDLY
-#ifdef TAB3
+# ifdef TAB3
   {"tab3", output, SANE_UNSET, TAB3, TABDLY},
-#endif
-#ifdef TAB2
+# endif
+# ifdef TAB2
   {"tab2", output, SANE_UNSET, TAB2, TABDLY},
-#endif
-#ifdef TAB1
+# endif
+# ifdef TAB1
   {"tab1", output, SANE_UNSET, TAB1, TABDLY},
-#endif
-#ifdef TAB0
+# endif
+# ifdef TAB0
   {"tab0", output, SANE_SET, TAB0, TABDLY},
-#endif
+# endif
 #else
 # ifdef OXTABS
   {"tab3", output, SANE_UNSET, OXTABS, 0},

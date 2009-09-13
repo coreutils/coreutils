@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #if HAVE_GMP
-#include <gmp.h>
+# include <gmp.h>
 #endif
 
 #include <assert.h>
