@@ -9916,6 +9916,7 @@ If the year is specified with only two digits, then @var{cc}
 is 20 for years in the range 0 @dots{} 68, and 19 for years in
 69 @dots{} 99.  If no digits of the year are specified,
 the argument is interpreted as a date in the current year.
+Note that @var{ss} may be @samp{60}, to accommodate leap seconds.
 
 @end table
 
