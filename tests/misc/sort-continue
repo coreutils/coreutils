@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Tests for file descriptor exhaustion.
 
 # Copyright (C) 2009 Free Software Foundation, Inc.
