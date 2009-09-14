@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   to accommodate leap seconds.
   [the bug dates back to the initial implementation]
 
+  ls --color now reverts to the color of a base file type consistently
+  when the color of a more specific type is disabled.
+  [bug introduced in coreutils-5.90]
+
 ** Changes in behavior
 
   id no longer prints SELinux " context=..." when the POSIXLY_CORRECT

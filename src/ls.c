@@ -4103,7 +4103,7 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
                        bool stat_ok, enum filetype filetype,
                        nlink_t nlink)
 {
-  int type;
+  enum indicator_no type;
   struct color_ext_type *ext;	/* Color extension */
   size_t len;			/* Length of name */
 
@@ -4121,27 +4121,29 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
       if (S_ISREG (mode))
         {
           type = C_FILE;
-          if ((mode & S_ISUID) != 0)
+
+          if ((mode & S_ISUID) != 0 && is_colored (C_SETUID))
             type = C_SETUID;
-          else if ((mode & S_ISGID) != 0)
+          else if ((mode & S_ISGID) != 0 && is_colored (C_SETGID))
             type = C_SETGID;
-          else if (is_colored (C_CAP) && has_capability (name))
+          else if (has_capability (name) && is_colored (C_CAP))
             type = C_CAP;
-          else if ((mode & S_IXUGO) != 0)
+          else if ((mode & S_IXUGO) != 0 && is_colored (C_EXEC))
             type = C_EXEC;
-          else if (is_colored (C_MULTIHARDLINK) && (1 < nlink))
+          else if ((1 < nlink) && is_colored (C_MULTIHARDLINK))
             type = C_MULTIHARDLINK;
         }
       else if (S_ISDIR (mode))
         {
-          if ((mode & S_ISVTX) && (mode & S_IWOTH))
+          type = C_DIR;
+
+          if ((mode & S_ISVTX) && (mode & S_IWOTH)
+              && is_colored (C_STICKY_OTHER_WRITABLE))
             type = C_STICKY_OTHER_WRITABLE;
-          else if ((mode & S_IWOTH) != 0)
+          else if ((mode & S_IWOTH) != 0 && is_colored (C_OTHER_WRITABLE))
             type = C_OTHER_WRITABLE;
-          else if ((mode & S_ISVTX) != 0)
+          else if ((mode & S_ISVTX) != 0 && is_colored (C_STICKY))
             type = C_STICKY;
-          else
-            type = C_DIR;
         }
       else if (S_ISLNK (mode))
         type = ((!linkok && color_indicator[C_ORPHAN].string)

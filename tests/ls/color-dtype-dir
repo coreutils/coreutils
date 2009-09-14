@@ -50,4 +50,24 @@ EOF
 
 compare out exp || fail=1
 
+rm exp
+
+# Turn off colors for other-writable dirs and ensure
+# we fall back to the color for standard directories.
+
+LS_COLORS="ow=:" ls --color=always > out || fail=1
+cat -A out > o1 || fail=1
+echo >> o1 || fail=1
+mv o1 out || fail=1
+
+cat <<\EOF > exp || fail=1
+^[[0m^[[01;34md^[[0m$
+^[[01;34mother-writable^[[0m$
+out$
+^[[37;44msticky^[[0m$
+^[[m
+EOF
+
+compare out exp || fail=1
+
 Exit $fail
