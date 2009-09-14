@@ -29,7 +29,7 @@ fi
 
 # Skip this test if cp was built without xattr support:
 touch src dest || framework_failure
-cp --preserve=xattr -n src dest 2>/dev/null \
+cp --preserve=xattr -n src dest \
   || skip_test_ "coreutils built without xattr support"
 
 # this code was taken from test mv/backup-is-src
@@ -46,13 +46,13 @@ xattr_pair="$xattr_name=\"$xattr_value\""
 # create new file and check its xattrs
 touch a || framework_failure
 getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_a >/dev/null && framework_failure
+grep -F "$xattr_pair" out_a && framework_failure
 
 # try to set user xattr on file
 setfattr -n "$xattr_name" -v "$xattr_value" a >out_a \
   || skip_test_ "failed to set xattr of file"
 getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_a >/dev/null \
+grep -F "$xattr_pair" out_a \
   || skip_test_ "failed to set xattr of file"
 
 fail=0
@@ -60,36 +60,50 @@ fail=0
 # cp should not preserve xattr by default
 cp a b || fail=1
 getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_b >/dev/null && fail=1
+grep -F "$xattr_pair" out_b && fail=1
 
 # test if --preserve=xattr option works
 cp --preserve=xattr a b || fail=1
 getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_b >/dev/null || fail=1
+grep -F "$xattr_pair" out_b || fail=1
 
 #test if --preserve=all option works
 cp --preserve=all a c || fail=1
 getfattr -d c >out_c || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_c >/dev/null || fail=1
+grep -F "$xattr_pair" out_c || fail=1
 
 #test if -a option works without any diagnostics
 cp -a a d 2>err && test -s err && fail=1
 getfattr -d d >out_d || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_d >/dev/null || fail=1
+grep -F "$xattr_pair" out_d || fail=1
+
+#test if --preserve=xattr works even for files without write access
+chmod a-w a || framework_failure
+rm -f e
+cp --preserve=xattr a e || fail=1
+getfattr -d e >out_e || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_e || fail=1
+
+#Ensure that permission bits are preserved, too.
+src_perm=$(stat --format=%a a)
+dst_perm=$(stat --format=%a e)
+test "$dst_perm" = "$src_perm" || fail=1
+
+chmod u+w a || framework_failure
 
 rm b || framework_failure
 
 # install should never preserve xattr
 ginstall a b || fail=1
 getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_b >/dev/null && fail=1
+grep -F "$xattr_pair" out_b && fail=1
 
 # mv should preserve xattr when renaming within a file system.
 # This is implicitly done by rename () and doesn't need explicit
 # xattr support in mv.
 mv a b || fail=1
 getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_b >/dev/null || cat >&2 <<EOF
+grep -F "$xattr_pair" out_b || cat >&2 <<EOF
 =================================================================
 $0: WARNING!!!
 rename () does not preserve extended attributes
@@ -99,18 +113,18 @@ EOF
 # try to set user xattr on file on other partition
 test_mv=1
 touch "$b_other" || framework_failure
-setfattr -n "$xattr_name" -v "$xattr_value" "$b_other" >out_a 2>/dev/null \
+setfattr -n "$xattr_name" -v "$xattr_value" "$b_other" >out_a \
   || test_mv=0
-getfattr -d "$b_other" >out_b 2>/dev/null || test_mv=0
-grep -F "$xattr_pair" out_b >/dev/null || test_mv=0
+getfattr -d "$b_other" >out_b || test_mv=0
+grep -F "$xattr_pair" out_b || test_mv=0
 rm -f "$b_other" || framework_failure
 
 if test $test_mv -eq 1; then
   # mv should preserve xattr when copying content from one partition to another
   mv b "$b_other" || fail=1
-  getfattr -d "$b_other" >out_b 2>/dev/null ||
+  getfattr -d "$b_other" >out_b ||
     skip_test_ "failed to get xattr of file"
-  grep -F "$xattr_pair" out_b >/dev/null || fail=1
+  grep -F "$xattr_pair" out_b || fail=1
 else
   cat >&2 <<EOF
 =================================================================

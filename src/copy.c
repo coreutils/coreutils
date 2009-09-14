@@ -834,6 +834,24 @@ copy_reg (char const *src_name, char const *dst_name,
         }
     }
 
+  /* To allow copying xattrs on read-only files, temporarily chmod u+rw.
+     This workaround is required as an inode permission check is done
+     by xattr_permission() in fs/xattr.c of the GNU/Linux kernel tree.  */
+  if (x->preserve_xattr)
+    {
+      bool access_changed = true;
+
+      if (!(sb.st_mode & S_IWUSR) && geteuid() != 0)
+        access_changed = fchmod_or_lchmod (dest_desc, dst_name, 0600) == 0;
+
+      if (!copy_attr_by_fd (src_name, source_desc, dst_name, dest_desc, x)
+          && x->require_preserve_xattr)
+        return_val = false;
+
+      if (access_changed)
+        fchmod_or_lchmod (dest_desc, dst_name, dst_mode & ~omitted_permissions);
+    }
+
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
       switch (set_owner (x, dst_name, dest_desc, src_sb, *new_dst, &sb))
@@ -849,11 +867,6 @@ copy_reg (char const *src_name, char const *dst_name,
     }
 
   set_author (dst_name, dest_desc, src_sb);
-
-  if (x->preserve_xattr && ! copy_attr_by_fd (src_name, source_desc,
-                                              dst_name, dest_desc, x)
-      && x->require_preserve_xattr)
-    return_val = false;
 
   if (x->preserve_mode || x->move_mode)
     {
