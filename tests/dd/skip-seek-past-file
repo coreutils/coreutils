@@ -22,7 +22,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
-eval $(getlimits) #for OFF_T limits
+require_sparse_support_ # for `truncate --size=$OFF_T_MAX`
+eval $(getlimits) # for OFF_T limits
 
 fail=0
 
