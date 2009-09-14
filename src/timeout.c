@@ -153,12 +153,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\n\
-If the command times out, then we exit with status 124,\n\
-otherwise the normal exit status of the command is returned.\n\
-If no signal is specified, the TERM signal is sent. The TERM signal\n\
-will kill processes which do not catch this signal. For other processes,\n\
-it may be necessary to use the KILL (9) signal, since this signal cannot\n\
-be caught.\n"), stdout);
+If the command times out, then exit with status 124.  Otherwise, exit\n\
+with the status of COMMAND.  If no signal is specified, send the TERM\n\
+signal upon timeout.  The TERM signal kills any process that does not\n\
+block or catch that signal.  For other processes, it may be necessary to\n\
+use the KILL (9) signal, since this signal cannot be caught.\n"), stdout);
       emit_bug_reporting_address ();
     }
   exit (status);
