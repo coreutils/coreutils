@@ -10,6 +10,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   touch -t [[CC]YY]MMDDhhmm[.ss] now accepts a timestamp string ending in .60,
   to accommodate leap seconds.
+  [the bug dates back to the initial implementation]
 
 ** Changes in behavior
 
