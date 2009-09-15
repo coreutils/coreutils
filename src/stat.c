@@ -829,6 +829,13 @@ do_statfs (char const *filename, bool terse, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
 
+  if (STREQ (filename, "-"))
+    {
+      error (0, 0, _("using %s to denote standard input does not work"
+                     " in file system mode"), quote (filename));
+      return false;
+    }
+
   if (STATFS (filename, &statfsbuf) != 0)
     {
       error (0, errno, _("cannot read file system information for %s"),
@@ -857,7 +864,15 @@ do_stat (char const *filename, bool terse, char const *format)
 {
   struct stat statbuf;
 
-  if ((follow_links ? stat : lstat) (filename, &statbuf) != 0)
+  if (STREQ (filename, "-"))
+    {
+      if (fstat (STDIN_FILENO, &statbuf) != 0)
+        {
+          error (0, errno, _("cannot stat standard input"));
+          return false;
+        }
+    }
+  else if ((follow_links ? stat : lstat) (filename, &statbuf) != 0)
     {
       error (0, errno, _("cannot stat %s"), quote (filename));
       return false;

@@ -48,6 +48,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   GNU/Linux where link(2) creates hard links to symlinks, and -L on
   BSD systems where link(2) follows symlinks.
 
+  stat: without -f, a command-line argument of "-" now means standard input.
+  With --file-system (-f), an argument of "-" is now rejected.
+  If you really must operate on a file named "-", specify it as
+  "./-" or use "--" to separate options from arguments.
+
 ** Improvements
 
   rm: rewrite to use gnulib's fts

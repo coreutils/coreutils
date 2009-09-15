@@ -216,6 +216,7 @@ TESTS =						\
   misc/split-fail				\
   misc/split-l					\
   misc/stat-fmt					\
+  misc/stat-hyphen				\
   misc/stat-printf				\
   misc/stdbuf					\
   misc/stty					\
