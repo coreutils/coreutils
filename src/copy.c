@@ -839,7 +839,7 @@ copy_reg (char const *src_name, char const *dst_name,
      by xattr_permission() in fs/xattr.c of the GNU/Linux kernel tree.  */
   if (x->preserve_xattr)
     {
-      bool access_changed = true;
+      bool access_changed = false;
 
       if (!(sb.st_mode & S_IWUSR) && geteuid() != 0)
         access_changed = fchmod_or_lchmod (dest_desc, dst_name, 0600) == 0;
