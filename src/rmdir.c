@@ -74,7 +74,7 @@ static struct option const longopts[] =
 static bool
 errno_rmdir_non_empty (int error_number)
 {
-  return (error_number == RMDIR_ERRNO_NOT_EMPTY);
+  return error_number == ENOTEMPTY || error_number == EEXIST;
 }
 
 /* Return true if when rmdir fails with errno == ERROR_NUMBER
