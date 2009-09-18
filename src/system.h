@@ -635,9 +635,8 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 "), program);
 }
 
-#include "hard-locale.h"
 static inline void
-emit_bug_reporting_address (void)
+emit_ancillary_info (void)
 {
   printf (_("\nReport %s bugs to %s\n"), last_component (program_name),
           PACKAGE_BUGREPORT);
@@ -646,8 +645,10 @@ emit_bug_reporting_address (void)
           PACKAGE_NAME, PACKAGE);
   fputs (_("General help using GNU software: <http://www.gnu.org/gethelp/>\n"),
          stdout);
-
-  if (hard_locale (LC_MESSAGES))
+  /* Don't output this redundant message for English locales.
+     Note we still output for 'C' so that it gets included in the man page.  */
+  const char *lc_messages = setlocale (LC_MESSAGES, NULL);
+  if (lc_messages && strncmp (lc_messages, "en_", 3))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
          <http://translationproject.org/team/LANG_CODE.html> to form one of
@@ -657,6 +658,8 @@ emit_bug_reporting_address (void)
                 "<http://translationproject.org/team/>\n"),
                 last_component (program_name));
     }
+  printf (_("For complete documentation, run: "
+            "info coreutils '%s invocation'\n"), last_component (program_name));
 }
 
 #include "inttostr.h"

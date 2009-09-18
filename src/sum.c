@@ -72,7 +72,7 @@ Print checksum and block counts for each FILE.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

@@ -61,7 +61,7 @@ Examples:\n\
   %s stdio.h        Output \".\".\n\
 "),
               program_name, program_name);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

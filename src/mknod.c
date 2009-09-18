@@ -81,7 +81,7 @@ otherwise, as decimal.  TYPE may be:\n\
   p      create a FIFO\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

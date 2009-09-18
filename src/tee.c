@@ -72,7 +72,7 @@ Copy standard input to each FILE, and also to standard output.\n\
 \n\
 If a FILE is -, copy again to standard output.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

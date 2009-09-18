@@ -93,6 +93,7 @@
 #include "dev-ino.h"
 #include "error.h"
 #include "filenamecat.h"
+#include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
 #include "filemode.h"
@@ -4681,7 +4682,7 @@ Exit status:\n\
  1  if minor problems (e.g., cannot access subdirectory),\n\
  2  if serious trouble (e.g., cannot access command-line argument).\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

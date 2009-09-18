@@ -770,7 +770,7 @@ NOTE: [ honors the --help and --version options, but test does not.\n\
 test treats each of those as it treats any other nonempty STRING.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

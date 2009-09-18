@@ -125,7 +125,7 @@ for e.g.) then that will override corresponding settings changed by `stdbuf'.\n\
 Also some filters (like `dd' and `cat' etc.) don't use streams for I/O,\n\
 and are thus unaffected by `stdbuf' settings.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

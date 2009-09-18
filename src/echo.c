@@ -77,7 +77,7 @@ If -e is in effect, the following sequences are recognized:\n\
   \\v     vertical tab\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

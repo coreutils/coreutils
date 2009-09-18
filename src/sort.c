@@ -30,6 +30,7 @@
 #include "argmatch.h"
 #include "error.h"
 #include "filevercmp.h"
+#include "hard-locale.h"
 #include "hash.h"
 #include "md5.h"
 #include "physmem.h"
@@ -414,7 +415,7 @@ The locale specified by the environment affects sort order.\n\
 Set LC_ALL=C to get the traditional sort order that uses\n\
 native byte values.\n\
 "), stdout );
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
 
   exit (status);

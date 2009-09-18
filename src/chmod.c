@@ -379,7 +379,7 @@ Change the mode of each FILE to MODE.\n\
 \n\
 Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

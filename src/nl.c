@@ -231,7 +231,7 @@ FORMAT is one of:\n\
   rz   right justified, leading zeros\n\
 \n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

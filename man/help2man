@@ -373,6 +373,7 @@ my $PAT_AUTHOR		= _('Written +by');
 my $PAT_OPTIONS		= _('Options');
 my $PAT_EXAMPLES	= _('Examples');
 my $PAT_FREE_SOFTWARE	= _('This +is +free +software');
+my $PAT_INFO		= _('For +complete +documentation');
 
 # Start a new paragraph (if required) for these.
 s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR)/$1\n\n$2/og;
@@ -390,6 +391,11 @@ while (length)
     elsif (s/^($PAT_EXAMPLES): *\n//o)
     {
 	$sect = _('EXAMPLES');
+	next;
+    }
+    # Skip any texinfo reference as that's handled separately
+    if (s/($PAT_INFO).*\n//o)
+    {
 	next;
     }
 

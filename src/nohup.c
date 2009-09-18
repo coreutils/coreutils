@@ -71,7 +71,7 @@ If standard error is a terminal, redirect it to standard output.\n\
 To save output to FILE, use `%s COMMAND > FILE'.\n"),
               program_name);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

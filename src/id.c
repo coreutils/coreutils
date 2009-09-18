@@ -98,7 +98,7 @@ or (when USERNAME omitted) for the current user.\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

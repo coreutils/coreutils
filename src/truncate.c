@@ -133,7 +133,7 @@ SIZE may also be prefixed by one of the following modifying characters:\n\
 \n\
 Note that the -r and -s options are mutually exclusive.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

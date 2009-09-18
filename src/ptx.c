@@ -1923,7 +1923,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

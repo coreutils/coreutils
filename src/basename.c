@@ -66,7 +66,7 @@ Examples:\n\
   %s include/stdio.h .h  Output \"stdio\".\n\
 "),
               program_name, program_name);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

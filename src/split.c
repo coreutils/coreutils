@@ -127,7 +127,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_size_note ();
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

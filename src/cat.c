@@ -119,7 +119,7 @@ Examples:\n\
   %s        Copy standard input to standard output.\n\
 "),
               program_name, program_name);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

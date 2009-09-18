@@ -195,7 +195,7 @@ should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
               DIGEST_REFERENCE);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
 
   exit (status);

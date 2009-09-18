@@ -263,7 +263,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }

@@ -314,6 +314,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "hard-locale.h"
 #include "mbswidth.h"
 #include "quote.h"
 #include "stat-time.h"
@@ -2870,7 +2871,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 -t is implied if PAGE_LENGTH <= 10.  With no FILE, or when\n\
 FILE is -, read standard input.\n\
 "), stdout);
-      emit_bug_reporting_address ();
+      emit_ancillary_info ();
     }
   exit (status);
 }
