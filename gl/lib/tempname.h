@@ -37,5 +37,6 @@
 
    We use a clever algorithm to get hard-to-predict names. */
 #include <stddef.h>
-extern int gen_tempname (char *tmpl, int kind);
-extern int gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len);
+extern int gen_tempname (char *tmpl, int flags, int kind);
+extern int gen_tempname_len (char *tmpl, int flags, int kind,
+                             size_t x_suffix_len);

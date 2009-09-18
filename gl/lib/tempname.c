@@ -41,8 +41,7 @@
 # define TMP_MAX 238328
 #endif
 #ifndef __GT_FILE
-# define __GT_FILE	0
-# define __GT_BIGFILE	1
+# define __GT_FILE	1
 # define __GT_DIR	2
 # define __GT_NOCREATE	3
 #endif
@@ -61,12 +60,9 @@
 
 #if _LIBC
 # define struct_stat64 struct stat64
-# define small_open __open
-# define large_open __open64
 #else
 # define struct_stat64 struct stat
-# define small_open open
-# define large_open open
+# define __open open
 # define __gen_tempname gen_tempname
 # define __getpid getpid
 # define __gettimeofday gettimeofday
@@ -172,12 +168,11 @@ static const char letters[] =
                         at the time of the call.
    __GT_FILE:		create the file using open(O_CREAT|O_EXCL)
                         and return a read-write fd.  The file is mode 0600.
-   __GT_BIGFILE:	same as __GT_FILE but use open64().
    __GT_DIR:		create a directory, which will be mode 0700.
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len)
+gen_tempname_len (char *tmpl, int flags, int kind, size_t x_suffix_len)
 {
   size_t len;
   char *XXXXXX;
@@ -230,11 +225,9 @@ gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len)
       switch (kind)
         {
         case __GT_FILE:
-          fd = small_open (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-          break;
-
-        case __GT_BIGFILE:
-          fd = large_open (tmpl, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+          fd = __open (tmpl,
+                       (flags & ~0777) | O_RDWR | O_CREAT | O_EXCL,
+                       S_IRUSR | S_IWUSR);
           break;
 
         case __GT_DIR:
@@ -295,7 +288,7 @@ gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len)
 }
 
 int
-__gen_tempname (char *tmpl, int kind)
+__gen_tempname (char *tmpl, int flags, int kind)
 {
-  return gen_tempname_len (tmpl, kind, 6);
+  return gen_tempname_len (tmpl, flags, kind, 6);
 }
