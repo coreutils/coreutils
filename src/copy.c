@@ -132,6 +132,9 @@ utimens_symlink (char const *file, struct timespec const *timespec)
      utimensat fails with ENOSYS.  Ignore that.  */
   if (err && errno == ENOSYS)
     err = 0;
+#else
+  (void) file;
+  (void) timespec;
 #endif
 
   return err;

@@ -53,15 +53,8 @@
 #include <pwd.h>
 #include <grp.h>
 
-/* Hide any system prototype for getusershell.
-   This is necessary because some Cray systems have a conflicting
-   prototype (returning `int') in <unistd.h>.  */
-#define getusershell _getusershell_sys_proto_
-
 #include "system.h"
 #include "getpass.h"
-
-#undef getusershell
 
 #if HAVE_SYSLOG_H && HAVE_SYSLOG
 # include <syslog.h>
@@ -119,9 +112,6 @@
 #define DEFAULT_USER "root"
 
 char *crypt (char const *key, char const *salt);
-char *getusershell (void);
-void endusershell (void);
-void setusershell (void);
 
 extern char **environ;
 
