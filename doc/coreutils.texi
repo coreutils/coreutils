@@ -176,198 +176,198 @@ Free Documentation License''.
 @cindex file utilities
 
 @menu
-* Introduction::                       Caveats, overview, and authors.
-* Common options::                     Common options.
-* Output of entire files::             cat tac nl od
-* Formatting file contents::           fmt pr fold
-* Output of parts of files::           head tail split csplit
-* Summarizing files::                  wc sum cksum md5sum sha1sum sha2
-* Operating on sorted files::          sort shuf uniq comm ptx tsort
-* Operating on fields within a line::  cut paste join
-* Operating on characters::            tr expand unexpand
-* Directory listing::                  ls dir vdir dircolors
-* Basic operations::                   cp dd install mv rm shred
-* Special file types::                 ln mkdir rmdir mkfifo mknod
-* Changing file attributes::           chgrp chmod chown touch
-* Disk usage::                         df du stat sync truncate
-* Printing text::                      echo printf yes
-* Conditions::                         false true test expr
-* Redirection::                        tee
-* File name manipulation::             dirname basename pathchk
-* Working context::                    pwd stty printenv tty
-* User information::                   id logname whoami groups users who
-* System context::                     date uname hostname hostid uptime
-* SELinux context::                    chcon runcon
-* Modified command invocation::        chroot env nice nohup stdbuf su timeout
-* Process control::                    kill
-* Delaying::                           sleep
-* Numeric operations::                 factor seq
-* File permissions::                   Access modes.
-* Date input formats::                 Specifying date strings.
-* Opening the software toolbox::       The software tools philosophy.
-* GNU Free Documentation License::     Copying and sharing this manual.
-* Concept index::                      General index.
+* Introduction::                 Caveats, overview, and authors
+* Common options::               Common options
+* Output of entire files::       cat tac nl od base64
+* Formatting file contents::     fmt pr fold
+* Output of parts of files::     head tail split csplit
+* Summarizing files::            wc sum cksum md5sum sha1sum sha2
+* Operating on sorted files::    sort shuf uniq comm ptx tsort
+* Operating on fields::          cut paste join
+* Operating on characters::      tr expand unexpand
+* Directory listing::            ls dir vdir dircolors
+* Basic operations::             cp dd install mv rm shred
+* Special file types::         mkdir rmdir unlink mkfifo mknod ln link readlink
+* Changing file attributes::     chgrp chmod chown touch
+* Disk usage::                   df du stat sync truncate
+* Printing text::                echo printf yes
+* Conditions::                   false true test expr
+* Redirection::                  tee
+* File name manipulation::       dirname basename pathchk
+* Working context::              pwd stty printenv tty
+* User information::             id logname whoami groups users who
+* System context::               date arch uname hostname hostid uptime
+* SELinux context::              chcon runcon
+* Modified command invocation::  chroot env nice nohup stdbuf su timeout
+* Process control::              kill
+* Delaying::                     sleep
+* Numeric operations::           factor seq
+* File permissions::             Access modes
+* Date input formats::           Specifying date strings
+* Opening the software toolbox:: The software tools philosophy
+* GNU Free Documentation License:: Copying and sharing this manual
+* Concept index::                General index
 
 @detailmenu
  --- The Detailed Node Listing ---
 
 Common Options
 
-* Exit status::                 Indicating program success or failure.
-* Backup options::              Backup options
-* Block size::                  Block size
-* Signal specifications::       Specifying signals
+* Exit status::                  Indicating program success or failure
+* Backup options::               Backup options
+* Block size::                   Block size
+* Signal specifications::        Specifying signals
 * Disambiguating names and IDs:: chgrp and chown owner and group syntax
-* Random sources::              Sources of random data
-* Target directory::            Target directory
-* Trailing slashes::            Trailing slashes
-* Traversing symlinks::         Traversing symlinks to directories
-* Treating / specially::        Treating / specially
-* Standards conformance::       Standards conformance
+* Random sources::               Sources of random data
+* Target directory::             Target directory
+* Trailing slashes::             Trailing slashes
+* Traversing symlinks::          Traversing symlinks to directories
+* Treating / specially::         Treating / specially
+* Standards conformance::        Standards conformance
 
 Output of entire files
 
-* cat invocation::              Concatenate and write files.
-* tac invocation::              Concatenate and write files in reverse.
-* nl invocation::               Number lines and write files.
-* od invocation::               Write files in octal or other formats.
-* base64 invocation::           Transform data into printable data.
+* cat invocation::               Concatenate and write files
+* tac invocation::               Concatenate and write files in reverse
+* nl invocation::                Number lines and write files
+* od invocation::                Write files in octal or other formats
+* base64 invocation::            Transform data into printable data
 
 Formatting file contents
 
-* fmt invocation::              Reformat paragraph text.
-* pr invocation::               Paginate or columnate files for printing.
-* fold invocation::             Wrap input lines to fit in specified width.
+* fmt invocation::               Reformat paragraph text
+* pr invocation::                Paginate or columnate files for printing
+* fold invocation::              Wrap input lines to fit in specified width
 
 Output of parts of files
 
-* head invocation::             Output the first part of files.
-* tail invocation::             Output the last part of files.
-* split invocation::            Split a file into fixed-size pieces.
-* csplit invocation::           Split a file into context-determined pieces.
+* head invocation::              Output the first part of files
+* tail invocation::              Output the last part of files
+* split invocation::             Split a file into fixed-size pieces
+* csplit invocation::            Split a file into context-determined pieces
 
 Summarizing files
 
-* wc invocation::               Print newline, word, and byte counts.
-* sum invocation::              Print checksum and block counts.
-* cksum invocation::            Print CRC checksum and byte counts.
-* md5sum invocation::           Print or check MD5 digests.
-* sha1sum invocation::          Print or check SHA-1 digests.
-* sha2 utilities::              Print or check SHA-2 digests.
+* wc invocation::                Print newline, word, and byte counts
+* sum invocation::               Print checksum and block counts
+* cksum invocation::             Print CRC checksum and byte counts
+* md5sum invocation::            Print or check MD5 digests
+* sha1sum invocation::           Print or check SHA-1 digests
+* sha2 utilities::               Print or check SHA-2 digests
 
 Operating on sorted files
 
-* sort invocation::             Sort text files.
-* shuf invocation::             Shuffle text files.
-* uniq invocation::             Uniquify files.
-* comm invocation::             Compare two sorted files line by line.
-* ptx invocation::              Produce a permuted index of file contents.
-* tsort invocation::            Topological sort.
+* sort invocation::              Sort text files
+* shuf invocation::              Shuffle text files
+* uniq invocation::              Uniquify files
+* comm invocation::              Compare two sorted files line by line
+* ptx invocation::               Produce a permuted index of file contents
+* tsort invocation::             Topological sort
 
 @command{ptx}: Produce permuted indexes
 
-* General options in ptx::      Options which affect general program behavior.
-* Charset selection in ptx::    Underlying character set considerations.
-* Input processing in ptx::     Input fields, contexts, and keyword selection.
-* Output formatting in ptx::    Types of output format, and sizing the fields.
-* Compatibility in ptx::        The @acronym{GNU} extensions to @command{ptx}
+* General options in ptx::       Options which affect general program behavior
+* Charset selection in ptx::     Underlying character set considerations
+* Input processing in ptx::      Input fields, contexts, and keyword selection
+* Output formatting in ptx::     Types of output format, and sizing the fields
+* Compatibility in ptx::         The @acronym{GNU} extensions to @command{ptx}
 
-Operating on fields within a line
+Operating on fields
 
-* cut invocation::              Print selected parts of lines.
-* paste invocation::            Merge lines of files.
-* join invocation::             Join lines on a common field.
+* cut invocation::               Print selected parts of lines
+* paste invocation::             Merge lines of files
+* join invocation::              Join lines on a common field
 
 Operating on characters
 
-* tr invocation::               Translate, squeeze, and/or delete characters.
-* expand invocation::           Convert tabs to spaces.
-* unexpand invocation::         Convert spaces to tabs.
+* tr invocation::                Translate, squeeze, and/or delete characters
+* expand invocation::            Convert tabs to spaces
+* unexpand invocation::          Convert spaces to tabs
 
 @command{tr}: Translate, squeeze, and/or delete characters
 
-* Character sets::              Specifying sets of characters.
-* Translating::                 Changing one set of characters to another.
-* Squeezing::                   Squeezing repeats and deleting.
+* Character sets::               Specifying sets of characters
+* Translating::                  Changing one set of characters to another
+* Squeezing::                    Squeezing repeats and deleting
 
 Directory listing
 
-* ls invocation::               List directory contents
-* dir invocation::              Briefly list directory contents
-* vdir invocation::             Verbosely list directory contents
-* dircolors invocation::        Color setup for @command{ls}
+* ls invocation::                List directory contents
+* dir invocation::               Briefly list directory contents
+* vdir invocation::              Verbosely list directory contents
+* dircolors invocation::         Color setup for @command{ls}
 
 @command{ls}:  List directory contents
 
-* Which files are listed::      Which files are listed
-* What information is listed::  What information is listed
-* Sorting the output::          Sorting the output
-* More details about version sort::  More details about version sort
-* General output formatting::   General output formatting
-* Formatting the file names::   Formatting the file names
+* Which files are listed::       Which files are listed
+* What information is listed::   What information is listed
+* Sorting the output::           Sorting the output
+* Details about version sort::   More details about version sort
+* General output formatting::    General output formatting
+* Formatting the file names::    Formatting the file names
 
 Basic operations
 
-* cp invocation::               Copy files and directories
-* dd invocation::               Convert and copy a file
-* install invocation::          Copy files and set attributes
-* mv invocation::               Move (rename) files
-* rm invocation::               Remove files or directories
-* shred invocation::            Remove files more securely
+* cp invocation::                Copy files and directories
+* dd invocation::                Convert and copy a file
+* install invocation::           Copy files and set attributes
+* mv invocation::                Move (rename) files
+* rm invocation::                Remove files or directories
+* shred invocation::             Remove files more securely
 
 Special file types
 
-* link invocation::             Make a hard link via the link syscall
-* ln invocation::               Make links between files
-* mkdir invocation::            Make directories
-* mkfifo invocation::           Make FIFOs (named pipes)
-* mknod invocation::            Make block or character special files
-* readlink invocation::         Print value of a symlink or canonical file name
-* rmdir invocation::            Remove empty directories
-* unlink invocation::           Remove files via unlink syscall
+* link invocation::              Make a hard link via the link syscall
+* ln invocation::                Make links between files
+* mkdir invocation::             Make directories
+* mkfifo invocation::            Make FIFOs (named pipes)
+* mknod invocation::             Make block or character special files
+* readlink invocation::          Print value of a symlink or canonical file name
+* rmdir invocation::             Remove empty directories
+* unlink invocation::            Remove files via unlink syscall
 
 Changing file attributes
 
-* chown invocation::            Change file owner and group
-* chgrp invocation::            Change group ownership
-* chmod invocation::            Change access permissions
-* touch invocation::            Change file timestamps
+* chown invocation::             Change file owner and group
+* chgrp invocation::             Change group ownership
+* chmod invocation::             Change access permissions
+* touch invocation::             Change file timestamps
 
 Disk usage
 
-* df invocation::               Report file system disk space usage
-* du invocation::               Estimate file space usage
-* stat invocation::             Report file or file system status
-* sync invocation::             Synchronize data on disk with memory
-* truncate invocation::         Shrink or extend the size of a file
+* df invocation::                Report file system disk space usage
+* du invocation::                Estimate file space usage
+* stat invocation::              Report file or file system status
+* sync invocation::              Synchronize data on disk with memory
+* truncate invocation::          Shrink or extend the size of a file
 
 Printing text
 
-* echo invocation::             Print a line of text
-* printf invocation::           Format and print data
-* yes invocation::              Print a string until interrupted
+* echo invocation::              Print a line of text
+* printf invocation::            Format and print data
+* yes invocation::               Print a string until interrupted
 
 Conditions
 
-* false invocation::              Do nothing, unsuccessfully
-* true invocation::               Do nothing, successfully
-* test invocation::               Check file types and compare values
-* expr invocation::               Evaluate expressions
+* false invocation::             Do nothing, unsuccessfully
+* true invocation::              Do nothing, successfully
+* test invocation::              Check file types and compare values
+* expr invocation::              Evaluate expressions
 
 @command{test}: Check file types and compare values
 
-* File type tests::               File type tests
-* Access permission tests::       Access permission tests
-* File characteristic tests::     File characteristic tests
-* String tests::                  String tests
-* Numeric tests::                 Numeric tests
+* File type tests::              File type tests
+* Access permission tests::      Access permission tests
+* File characteristic tests::    File characteristic tests
+* String tests::                 String tests
+* Numeric tests::                Numeric tests
 
 @command{expr}: Evaluate expression
 
-* String expressions::         + : match substr index length
-* Numeric expressions::        + - * / %
-* Relations for expr::         | & < <= = == != >= >
-* Examples of expr::           Examples of using @command{expr}
+* String expressions::           + : match substr index length
+* Numeric expressions::          + - * / %
+* Relations for expr::           | & < <= = == != >= >
+* Examples of expr::             Examples of using @command{expr}
 
 Redirection
 
@@ -388,13 +388,13 @@ Working context
 
 @command{stty}: Print or change terminal characteristics
 
-* Control::                     Control settings
-* Input::                       Input settings
-* Output::                      Output settings
-* Local::                       Local settings
-* Combination::                 Combination settings
-* Characters::                  Special characters
-* Special::                     Special settings
+* Control::                      Control settings
+* Input::                        Input settings
+* Output::                       Output settings
+* Local::                        Local settings
+* Combination::                  Combination settings
+* Characters::                   Special characters
+* Special::                      Special settings
 
 User information
 
@@ -420,10 +420,10 @@ System context
 * Date conversion specifiers::   %[aAbBcCdDeFgGhjmuUVwWxyY]
 * Literal conversion specifiers:: %[%nt]
 * Padding and other flags::      Pad with zeros, spaces, etc.
-* Setting the time::             Changing the system clock.
-* Options for date::             Instead of the current time.
-* Date input formats::           Specifying date strings.
-* Examples of date::             Examples.
+* Setting the time::             Changing the system clock
+* Options for date::             Instead of the current time
+* Date input formats::           Specifying date strings
+* Examples of date::             Examples
 
 SELinux context
 
@@ -455,23 +455,23 @@ Numeric operations
 
 File permissions
 
-* Mode Structure::               Structure of file mode bits.
-* Symbolic Modes::               Mnemonic representation of file mode bits.
-* Numeric Modes::                File mode bits as octal numbers.
-* Directory Setuid and Setgid::  Set-user-ID and set-group-ID on directories.
+* Mode Structure::               Structure of file mode bits
+* Symbolic Modes::               Mnemonic representation of file mode bits
+* Numeric Modes::                File mode bits as octal numbers
+* Directory Setuid and Setgid::  Set-user-ID and set-group-ID on directories
 
 Date input formats
 
-* General date syntax::          Common rules.
-* Calendar date items::          19 Dec 1994.
-* Time of day items::            9:20pm.
-* Time zone items::              @sc{est}, @sc{pdt}, @sc{gmt}.
-* Day of week items::            Monday and others.
-* Relative items in date strings:: next tuesday, 2 years ago.
-* Pure numbers in date strings:: 19931219, 1440.
-* Seconds since the Epoch::      @@1078100502.
-* Specifying time zone rules::   TZ="America/New_York", TZ="UTC0".
-* Authors of get_date::          Bellovin, Eggert, Salz, Berets, et al.
+* General date syntax::          Common rules
+* Calendar date items::          19 Dec 1994
+* Time of day items::            9:20pm
+* Time zone items::              @sc{est}, @sc{pdt}, @sc{gmt}
+* Day of week items::            Monday and others
+* Relative items in date strings:: next tuesday, 2 years ago
+* Pure numbers in date strings:: 19931219, 1440
+* Seconds since the Epoch::      @@1078100502
+* Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
+* Authors of get_date::          Bellovin, Eggert, Salz, Berets, et al
 
 Opening the software toolbox
 
@@ -485,7 +485,7 @@ Opening the software toolbox
 
 Copying This Manual
 
-* GNU Free Documentation License::     Copying and sharing this manual.
+* GNU Free Documentation License::     Copying and sharing this manual
 
 @end detailmenu
 @end menu
@@ -5236,8 +5236,8 @@ the way the linker handled archive files, which has since been solved
 in different ways.
 
 
-@node Operating on fields within a line
-@chapter Operating on fields within a line
+@node Operating on fields
+@chapter Operating on fields
 
 @menu
 * cut invocation::              Print selected parts of lines.
@@ -6123,7 +6123,7 @@ Also see @ref{Common options}.
 * Which files are listed::
 * What information is listed::
 * Sorting the output::
-* More details about version sort::
+* Details about version sort::
 * General output formatting::
 * Formatting file timestamps::
 * Formatting the file names::
@@ -6653,7 +6653,7 @@ directories, since not doing any sorting can be noticeably faster.
 @opindex version@r{, sorting option for @command{ls}}
 Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
-as an index/version number.  (@xref{More details about version sort}.)
+as an index/version number.  (@xref{Details about version sort}.)
 
 @item -X
 @itemx --sort=extension
@@ -6666,8 +6666,8 @@ after the last @samp{.}); files with no extension are sorted first.
 @end table
 
 
-@node More details about version sort
-@subsection More details about version sort
+@node Details about version sort
+@subsection Details about version sort
 
 The version sort takes into account the fact that file names frequently include
 indices or version numbers.  Standard sorting functions usually do not produce
