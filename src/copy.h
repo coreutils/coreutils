@@ -170,6 +170,10 @@ struct cp_options
      will be hard links to the same file (a copy of F).  */
   bool preserve_links;
 
+  /* Optionally don't copy the data, either with CoW reflink files or
+     explicitly with the --attributes-only option.  */
+  bool data_copy_required;
+
   /* If true and any of the above (for preserve) file attributes cannot
      be applied to a destination file, treat it as a failure and return
      nonzero immediately.  E.g. for cp -p this must be true, for mv it

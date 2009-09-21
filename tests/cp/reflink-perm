@@ -39,4 +39,8 @@ test "$mode" = "-rwxrwxrwx" || fail=1
 
 test copy -nt file && fail=1
 
+echo > file2 # file with data
+cp --reflink=auto --preserve --attributes-only file2 empty_copy || fail=1
+test -s empty_copy && fail=1
+
 Exit $fail

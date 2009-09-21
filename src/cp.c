@@ -72,7 +72,8 @@ struct dir_attr
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  COPY_CONTENTS_OPTION = CHAR_MAX + 1,
+  ATTRIBUTES_ONLY_OPTION = CHAR_MAX + 1,
+  COPY_CONTENTS_OPTION,
   NO_PRESERVE_ATTRIBUTES_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
@@ -115,6 +116,7 @@ ARGMATCH_VERIFY (reflink_type_string, reflink_type);
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
+  {"attributes-only", no_argument, NULL, ATTRIBUTES_ONLY_OPTION},
   {"backup", optional_argument, NULL, 'b'},
   {"copy-contents", no_argument, NULL, COPY_CONTENTS_OPTION},
   {"dereference", no_argument, NULL, 'L'},
@@ -167,6 +169,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --archive                same as -dR --preserve=all\n\
+      --attributes-only        don't copy the file data, just the attributes\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
       --copy-contents          copy contents of special files when recursive\n\
@@ -781,6 +784,7 @@ cp_option_init (struct cp_options *x)
   x->reduce_diagnostics = false;
   x->require_preserve_xattr = false;
 
+  x->data_copy_required = true;
   x->require_preserve = false;
   x->recursive = false;
   x->sparse_mode = SPARSE_AUTO;
@@ -960,6 +964,10 @@ main (int argc, char **argv)
           make_backups = true;
           if (optarg)
             version_control_string = optarg;
+          break;
+
+        case ATTRIBUTES_ONLY_OPTION:
+          x.data_copy_required = false;
           break;
 
         case COPY_CONTENTS_OPTION:

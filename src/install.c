@@ -280,6 +280,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_mode = false;
   x->preserve_timestamps = false;
   x->reduce_diagnostics=false;
+  x->data_copy_required = true;
   x->require_preserve = false;
   x->require_preserve_context = false;
   x->require_preserve_xattr = false;

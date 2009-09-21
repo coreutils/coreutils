@@ -36,27 +36,31 @@ grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
 mkdir -p a b || framework_failure
 touch a/file || framework_failure
 
-skip=no
 # Ensure that setfacl and getfacl work on this file system.
+skip=no
+acl1=`cd a && getfacl file` || skip=yes
 setfacl -m user:bin:rw a/file 2> /dev/null || skip=yes
-acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` \
-  || skip=yes
-
 test $skip = yes &&
   skip_test_ "'.' is not on a suitable file system for this test"
 
 # copy a file without preserving permissions
 cp a/file b/ || fail=1
-
 acl2=`cd b && getfacl file` || framework_failure
 test "$acl1" = "$acl2" || fail=1
-rm a/file || framework_failure
+
+# Update with acl set above
+acl1=`cd a && getfacl file` || framework_failure
 
 # copy a file, preserving permissions
-touch a/file || framework_failure
-setfacl -m user:bin:rw a/file || framework_failure
-acl1=`cd a && getfacl file` || framework_failure
 cp -p a/file b/ || fail=1
+acl2=`cd b && getfacl file` || framework_failure
+test "$acl1" = "$acl2" || fail=1
+
+# copy a file, preserving permissions, with --attributes-only
+echo > a/file || framework_failure # add some data
+test -s a/file || framework_failure
+cp -p --attributes-only a/file b/ || fail=1
+test -s b/file && fail=1
 acl2=`cd b && getfacl file` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 

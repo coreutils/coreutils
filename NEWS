@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp now accepts the --attributes-only option to not copy file data,
+  which is useful for efficiently modifying files.
+
   du recognizes -d N as equivalent to --max-depth=N, for compatibility
   with FreeBSD.
 
