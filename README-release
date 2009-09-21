@@ -81,17 +81,8 @@ Once all the builds and tests have passed,
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
 
-* For non-alpha releases, update the on-line manual at
+* After each non-alpha release, update the on-line manual accessible via
 
     http://www.gnu.org/software/coreutils/manual/
 
-  Run `make web-manual', then copy the contents of doc/manual
-  into a CVS checkout of the coreutils manual repository.
-  Also edit coreutils.html (FIXME? why?) before doing a CVS commit.
-
-    CVS_RSH=ssh \
-    cvs -d:ext:$USER@cvs.savannah.gnu.org:/web/coreutils co coreutils
-
-  Be sure to "cvs add -ko" any files that "cvs status" marks with "?".
-  That is necessary whenever a new texinfo node is added.  Each becomes
-  a new file in html_node that must then be "cvs add"ed.
+  by running the gnu-web-doc-update script.

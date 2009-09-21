@@ -1,0 +1,40 @@
+#!/bin/sh
+# Run this after each non-alpha release, to update the web documentation at
+# http://www.gnu.org/software/$pkg/manual/
+# Requirements: everything required to bootstrap your package,
+# plus these: git, cvs, cvsu, rsync, mktemp
+
+version=$(cat .prev-version)
+pkg=$(sed -n 's/^PACKAGE = \(.*\)/\1/p' Makefile)
+tmp_branch=web-doc-$version-$$
+
+cleanup()
+{
+  __st=$?;
+  rm -rf "$tmp"
+  git checkout master
+  git branch -d $tmp_branch
+  exit $__st
+}
+trap cleanup 0
+trap 'exit $?' 1 2 13 15
+
+# We must build using sources for which --version reports the
+# just-released version number, not some string like 7.6.18-20761.
+# That version string propagates into all documentation.
+git checkout -b $tmp_branch v$version
+./bootstrap && ./configure && make && make web-manual
+
+tmp=$(mktemp -d --tmpdir=. web-doc-update.XXXXXX) || exit 1
+( cd $tmp \
+    && cvs -d $USER@cvs.sv.gnu.org:/webcvs/$pkg co $pkg )
+rsync -avP doc/manual/ $tmp/$pkg/manual
+
+(
+  cd $tmp/$pkg/manual
+
+  # Add any new files:
+  cvsu --types='?'|sed s/..// | xargs --no-run-if-empty -- cvs add -ko
+
+  cvs ci -m $version
+)
