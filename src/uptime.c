@@ -111,7 +111,11 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
         boot_time = UT_TIME_MEMBER (this);
       ++this;
     }
+#else
+  (void) n;
+  (void) this;
 #endif
+
   time_now = time (NULL);
 #if defined HAVE_PROC_UPTIME
   if (uptime == 0)
