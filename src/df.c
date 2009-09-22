@@ -24,7 +24,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "canonicalize.h"
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
