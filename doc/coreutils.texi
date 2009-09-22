@@ -745,8 +745,8 @@ However, some of the programs documented here do produce
 other exit status values and a few associate different
 meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
-@command{chroot}, @command{env}, @command{expr},
-@command{nice}, @command{nohup}, @command{printenv}, @command{sort},
+@command{chroot}, @command{env}, @command{expr}, @command{nice},
+@command{nohup}, @command{printenv}, @command{sort}, @command{stdbuf},
 @command{su}, @command{test}, @command{timeout}, @command{tty}.
 
 
