@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  canonicalize -f now ignores a trailing slash when deciding if the
+  last component (possibly via a dangling symlink) can be created,
+  since mkdir will succeed in that case.
+
   id no longer prints SELinux " context=..." when the POSIXLY_CORRECT
   environment variable is set.
 

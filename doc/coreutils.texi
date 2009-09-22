@@ -9204,7 +9204,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --canonicalize
 Activate canonicalize mode.
 If any component of the file name except the last one is missing or unavailable,
-@command{readlink} produces no output and exits with a nonzero exit code.
+@command{readlink} produces no output and exits with a nonzero exit
+code.  A trailing slash is ignored.
 
 @item -e
 @itemx --canonicalize-existing
@@ -9212,7 +9213,8 @@ If any component of the file name except the last one is missing or unavailable,
 @opindex --canonicalize-existing
 Activate canonicalize mode.
 If any component is missing or unavailable, @command{readlink} produces
-no output and exits with a nonzero exit code.
+no output and exits with a nonzero exit code.  A trailing slash
+requires that the name resolve to a directory.
 
 @item -m
 @itemx --canonicalize-missing

@@ -38,6 +38,7 @@ ln -s regfile link1 || framework_failure
 ln -s subdir link2 || framework_failure
 ln -s missing link3 || framework_failure
 ln -s subdir/missing link4 || framework_failure
+ln -s link5 link5 || framework_failure
 
 cd "$pwd/$tmp/removed" || framework_failure
 
@@ -73,14 +74,14 @@ for p in "" "$pwd/$tmp/"; do
   v=`readlink -f "${p}subdir/more"` || fail=1
   test "$v" = "$my_pwd/$tmp/subdir/more" || fail=1
 
-  v=`readlink -f "${p}./subdir/more/"` && fail=1
-  test -z "$v" || fail=1
+  v=`readlink -f "${p}./subdir/more/"` || fail=1
+  test "$v" = "$my_pwd/$tmp/subdir/more" || fail=1
 
   v=`readlink -f "${p}missing"` || fail=1
   test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
-  v=`readlink -f "${p}./missing/"` && fail=1
-  test -z "$v" || fail=1
+  v=`readlink -f "${p}./missing/"` || fail=1
+  test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
   v=`readlink -f "${p}missing/more"` && fail=1
   test -z "$v" || fail=1
@@ -109,8 +110,8 @@ for p in "" "$pwd/$tmp/"; do
   v=`readlink -f "${p}link2/more"` || fail=1
   test "$v" = "$my_pwd/$tmp/subdir/more" || fail=1
 
-  v=`readlink -f "${p}./link2/more/"` && fail=1
-  test -z "$v" || fail=1
+  v=`readlink -f "${p}./link2/more/"` || fail=1
+  test "$v" = "$my_pwd/$tmp/subdir/more" || fail=1
 
   v=`readlink -f "${p}link2/more/more2"` && fail=1
   test -z "$v" || fail=1
@@ -121,8 +122,8 @@ for p in "" "$pwd/$tmp/"; do
   v=`readlink -f "${p}link3"` || fail=1
   test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
-  v=`readlink -f "${p}./link3/"` && fail=1
-  test -z "$v" || fail=1
+  v=`readlink -f "${p}./link3/"` || fail=1
+  test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
   v=`readlink -f "${p}link3/more"` && fail=1
   test -z "$v" || fail=1
@@ -133,10 +134,25 @@ for p in "" "$pwd/$tmp/"; do
   v=`readlink -f "${p}link4"` || fail=1
   test "$v" = "$my_pwd/$tmp/subdir/missing" || fail=1
 
-  v=`readlink -f "${p}./link4/"` && fail=1
-  test -z "$v" || fail=1
+  v=`readlink -f "${p}./link4/"` || fail=1
+  test "$v" = "$my_pwd/$tmp/subdir/missing" || fail=1
 
   v=`readlink -f "${p}link4/more"` && fail=1
+  test -z "$v" || fail=1
+
+  v=`readlink -f "${p}./link4/more"` && fail=1
+  test -z "$v" || fail=1
+
+  v=`readlink -f "${p}link5"` && fail=1
+  test -z "$v" || fail=1
+
+  v=`readlink -f "${p}./link5/"` && fail=1
+  test -z "$v" || fail=1
+
+  v=`readlink -f "${p}link5/more"` && fail=1
+  test -z "$v" || fail=1
+
+  v=`readlink -f "${p}./link5/more"` && fail=1
   test -z "$v" || fail=1
 done
 
