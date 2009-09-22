@@ -4126,7 +4126,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
             type = C_SETUID;
           else if ((mode & S_ISGID) != 0 && is_colored (C_SETGID))
             type = C_SETGID;
-          else if (has_capability (name) && is_colored (C_CAP))
+          /* has_capability() called second for performance.  */
+          else if (is_colored (C_CAP) && has_capability (name))
             type = C_CAP;
           else if ((mode & S_IXUGO) != 0 && is_colored (C_EXEC))
             type = C_EXEC;
