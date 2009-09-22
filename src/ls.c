@@ -4671,9 +4671,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       emit_size_note ();
       fputs (_("\
 \n\
-Using color to distinguish types of files is not enabled by default, or when\n\
---color=never is specified.  With --color=auto, color codes are output only\n\
-when standard output is connected to a terminal.  The LS_COLORS environment\n\
+Using color to distinguish file types is disabled both by default and\n\
+with --color=never.  With --color=auto, ls emits color codes only when\n\
+standard output is connected to a terminal.  The LS_COLORS environment\n\
 variable can change the settings.  Use the dircolors command to set it.\n\
 "), stdout);
       fputs (_("\
