@@ -55,7 +55,7 @@ static void integer_overflow (char) ATTRIBUTE_NORETURN;
 #else
 /* Approximate gmp.h well enough for expr.c's purposes.  */
 typedef intmax_t mpz_t[1];
-static void mpz_clear (mpz_t z) {}
+static void mpz_clear (mpz_t z) { (void) z; }
 static void mpz_init_set_ui (mpz_t z, unsigned long int i) { z[0] = i; }
 static int
 mpz_init_set_str (mpz_t z, char *s, int base)
@@ -116,6 +116,7 @@ mpz_tdiv_r (mpz_t r, mpz_t a0, mpz_t b0)
 static char *
 mpz_get_str (char const *str, int base, mpz_t z)
 {
+  (void) str; (void) base;
   char buf[INT_BUFSIZE_BOUND (intmax_t)];
   return xstrdup (imaxtostr (z[0], buf));
 }
@@ -137,6 +138,7 @@ mpz_get_ui (mpz_t z)
 static int
 mpz_out_str (FILE *stream, int base, mpz_t z)
 {
+  (void) base;
   char buf[INT_BUFSIZE_BOUND (intmax_t)];
   return fputs (imaxtostr (z[0], buf), stream) != EOF;
 }
