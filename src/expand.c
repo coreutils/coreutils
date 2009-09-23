@@ -344,7 +344,7 @@ expand (void)
                     error (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
-              convert &= convert_entire_line | !! isblank (c);
+              convert &= convert_entire_line || !! isblank (c);
             }
 
           if (c < 0)

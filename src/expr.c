@@ -925,7 +925,7 @@ eval1 (bool evaluate)
     {
       if (nextarg ("&"))
         {
-          r = eval2 (evaluate & ~ null (l));
+          r = eval2 (evaluate && !null (l));
           if (null (l) || null (r))
             {
               freev (l);
@@ -956,7 +956,7 @@ eval (bool evaluate)
     {
       if (nextarg ("|"))
         {
-          r = eval1 (evaluate & null (l));
+          r = eval1 (evaluate && null (l));
           if (null (l))
             {
               freev (l);

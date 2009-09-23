@@ -1126,7 +1126,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           break;
         }
 
-      if ((!any_input | blocking) && fflush (stdout) != 0)
+      if ((!any_input || blocking) && fflush (stdout) != 0)
         error (EXIT_FAILURE, errno, _("write error"));
 
       /* If nothing was read, sleep and/or check for dead writers.  */

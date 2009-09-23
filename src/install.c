@@ -563,7 +563,7 @@ main (int argc, char **argv)
     }
 
   /* Check for invalid combinations of arguments. */
-  if (dir_arg & strip_files)
+  if (dir_arg && strip_files)
     error (EXIT_FAILURE, 0,
            _("the strip option may not be used when installing a directory"));
   if (dir_arg && target_directory)

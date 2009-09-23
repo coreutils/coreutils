@@ -279,7 +279,7 @@ process_file (FTS *fts, FTSENT *ent)
         }
     }
 
-  if (chmod_succeeded & diagnose_surprises)
+  if (chmod_succeeded && diagnose_surprises)
     {
       mode_t naively_expected_mode =
         mode_adjust (old_mode, S_ISDIR (old_mode) != 0, 0, change, NULL);
@@ -523,7 +523,7 @@ main (int argc, char **argv)
       umask_value = umask (0);
     }
 
-  if (recurse & preserve_root)
+  if (recurse && preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);

@@ -187,7 +187,7 @@ main (int argc, char **argv)
   if (just_user + just_group + just_group_list + just_context > 1)
     error (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
 
-  if (just_user + just_group + just_group_list == 0 && (use_real | use_name))
+  if (just_user + just_group + just_group_list == 0 && (use_real || use_name))
     error (EXIT_FAILURE, 0,
            _("cannot print only names or real IDs in default format"));
 

@@ -363,11 +363,11 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
      group.  Avoid the window by first changing to a restrictive
      temporary mode if necessary.  */
 
-  if (!new_dst && (x->preserve_mode | x->move_mode | x->set_mode))
+  if (!new_dst && (x->preserve_mode || x->move_mode || x->set_mode))
     {
       mode_t old_mode = dst_sb->st_mode;
       mode_t new_mode =
-        (x->preserve_mode | x->move_mode ? src_sb->st_mode : x->mode);
+        (x->preserve_mode || x->move_mode ? src_sb->st_mode : x->mode);
       mode_t restrictive_temp_mode = old_mode & new_mode & S_IRWXU;
 
       if ((USE_ACL

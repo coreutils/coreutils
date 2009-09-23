@@ -324,7 +324,7 @@ static bool color_symlink_as_referent;
 
 /* mode of appropriate file for colorization */
 #define FILE_OR_LINK_MODE(File) \
-    ((color_symlink_as_referent & (File)->linkok) \
+    ((color_symlink_as_referent && (File)->linkok) \
      ? (File)->linkmode : (File)->stat.st_mode)
 
 
@@ -1176,7 +1176,7 @@ stophandler (int sig)
 static void
 process_signals (void)
 {
-  while (interrupt_signal | stop_signal_count)
+  while (interrupt_signal || stop_signal_count)
     {
       int sig;
       int stops;
@@ -2477,7 +2477,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       DEV_INO_PUSH (dir_stat.st_dev, dir_stat.st_ino);
     }
 
-  if (recursive | print_dir_name)
+  if (recursive || print_dir_name)
     {
       if (!first)
         DIRED_PUTCHAR ('\n');
@@ -2885,7 +2885,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
         f->filetype = symbolic_link;
       else if (S_ISDIR (f->stat.st_mode))
         {
-          if (command_line_arg & !immediate_dirs)
+          if (command_line_arg && !immediate_dirs)
             f->filetype = arg_directory;
           else
             f->filetype = directory;
@@ -3652,7 +3652,7 @@ print_long_format (const struct fileinfo *f)
 
   DIRED_INDENT ();
 
-  if (print_owner | print_group | print_author | print_scontext)
+  if (print_owner || print_group || print_author || print_scontext)
     {
       DIRED_FPUTS (buf, stdout, p - buf);
 

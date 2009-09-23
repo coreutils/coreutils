@@ -325,7 +325,7 @@ main (int argc, char **argv)
         }
     }
 
-  if (x.recursive & preserve_root)
+  if (x.recursive && preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);

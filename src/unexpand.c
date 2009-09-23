@@ -429,7 +429,7 @@ unexpand (void)
                 }
 
               prev_blank = blank;
-              convert &= convert_entire_line | blank;
+              convert &= convert_entire_line || blank;
             }
 
           if (c < 0)

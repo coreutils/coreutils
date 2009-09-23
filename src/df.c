@@ -332,10 +332,10 @@ show_dev (char const *disk, char const *mount_point,
   bool negate_used;
   double pct = -1;
 
-  if (me_remote & show_local_fs)
+  if (me_remote && show_local_fs)
     return;
 
-  if (me_dummy & !show_all_fs & !show_listed_fs)
+  if (me_dummy && !show_all_fs && !show_listed_fs)
     return;
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
@@ -430,7 +430,7 @@ show_dev (char const *disk, char const *mount_point,
       total = fsu.fsu_blocks;
       available = fsu.fsu_bavail;
       negate_available = (fsu.fsu_bavail_top_bit_set
-                          & known_value (available));
+                          && known_value (available));
       available_to_root = fsu.fsu_bfree;
 
       if (known_value (total))

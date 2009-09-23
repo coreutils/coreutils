@@ -843,7 +843,7 @@ main (int argc, char **argv)
   if (!ok)
     usage (EXIT_FAILURE);
 
-  if (opt_all & opt_summarize_only)
+  if (opt_all && opt_summarize_only)
     {
       error (0, 0, _("cannot both summarize and show all entries"));
       usage (EXIT_FAILURE);

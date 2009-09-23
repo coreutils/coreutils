@@ -549,7 +549,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  if (recurse & preserve_root)
+  if (recurse && preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);

@@ -817,13 +817,13 @@ main (int argc, char **argv)
     }
 
   /* Specifying both -a and -g gets an error.  */
-  if (verbose_output & recoverable_output)
+  if (verbose_output && recoverable_output)
     error (EXIT_FAILURE, 0,
            _("the options for verbose and stty-readable output styles are\n"
              "mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
-  if (!noargs && (verbose_output | recoverable_output))
+  if (!noargs && (verbose_output || recoverable_output))
     error (EXIT_FAILURE, 0,
            _("when specifying an output style, modes may not be set"));
 
@@ -849,7 +849,7 @@ main (int argc, char **argv)
   if (tcgetattr (STDIN_FILENO, &mode))
     error (EXIT_FAILURE, errno, "%s", device_name);
 
-  if (verbose_output | recoverable_output | noargs)
+  if (verbose_output || recoverable_output || noargs)
     {
       max_col = screen_columns ();
       current_col = 0;
@@ -883,7 +883,7 @@ main (int argc, char **argv)
               break;
             }
         }
-      if (!match_found & reversed)
+      if (!match_found && reversed)
         {
           error (0, 0, _("invalid argument %s"), quote (arg - 1));
           usage (EXIT_FAILURE);

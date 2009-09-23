@@ -661,21 +661,21 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (status_only & !do_check)
+  if (status_only && !do_check)
     {
       error (0, 0,
        _("the --status option is meaningful only when verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
-  if (warn & !do_check)
+  if (warn && !do_check)
     {
       error (0, 0,
        _("the --warn option is meaningful only when verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
-  if (quiet & !do_check)
+  if (quiet && !do_check)
     {
       error (0, 0,
        _("the --quiet option is meaningful only when verifying checksums"));

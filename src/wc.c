@@ -205,10 +205,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
   else
 #endif
     {
-      count_bytes = print_bytes | print_chars;
+      count_bytes = print_bytes || print_chars;
       count_chars = false;
     }
-  count_complicated = print_words | print_linelength;
+  count_complicated = print_words || print_linelength;
 
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
@@ -220,7 +220,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
-  if (count_bytes & !count_chars & !print_lines & !count_complicated)
+  if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
       off_t current_pos, end_pos;
 
@@ -637,8 +637,8 @@ main (int argc, char **argv)
         usage (EXIT_FAILURE);
       }
 
-  if (! (print_lines | print_words | print_chars | print_bytes
-         | print_linelength))
+  if (! (print_lines || print_words || print_chars || print_bytes
+         || print_linelength))
     print_lines = print_words = print_bytes = true;
 
   bool read_tokens = false;

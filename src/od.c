@@ -878,7 +878,7 @@ open_next_file (void)
     }
   while (in_stream == NULL);
 
-  if (limit_bytes_to_format & !flag_dump_strings)
+  if (limit_bytes_to_format && !flag_dump_strings)
     setvbuf (in_stream, NULL, _IONBF, 0);
 
   return ok;
@@ -1742,7 +1742,7 @@ it must be one character from [doxn]"),
         od [file] [[+]offset[.][b]]
   */
 
-  if (!modern | traditional)
+  if (!modern || traditional)
     {
       uintmax_t o1;
       uintmax_t o2;

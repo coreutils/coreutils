@@ -388,7 +388,7 @@ cat (
 
                   /* Are line numbers to be written at empty lines (-n)?  */
 
-                  if (number & !number_nonblank)
+                  if (number && !number_nonblank)
                     {
                       next_line_num ();
                       bpout = stpcpy (bpout, line_num_print);
@@ -657,7 +657,7 @@ main (int argc, char **argv)
 #endif
     }
 
-  if (! (number | show_ends | squeeze_blank))
+  if (! (number || show_ends || squeeze_blank))
     {
       file_open_mode |= O_BINARY;
       if (O_BINARY && ! isatty (STDOUT_FILENO))
@@ -719,8 +719,8 @@ main (int argc, char **argv)
       /* Select which version of `cat' to use.  If any format-oriented
          options were given use `cat'; otherwise use `simple_cat'.  */
 
-      if (! (number | show_ends | show_nonprinting
-             | show_tabs | squeeze_blank))
+      if (! (number || show_ends || show_nonprinting
+             || show_tabs || squeeze_blank))
         {
           insize = MAX (insize, outsize);
           inbuf = xmalloc (insize + page_size - 1);

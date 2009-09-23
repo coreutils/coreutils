@@ -270,7 +270,7 @@ validate_file_name (char *file, bool check_basic_portability,
   if (check_extra_portability && ! no_leading_hyphen (file))
     return false;
 
-  if ((check_basic_portability | check_extra_portability)
+  if ((check_basic_portability || check_extra_portability)
       && filelen == 0)
     {
       /* Fail, since empty names are not portable.  As of

@@ -317,7 +317,7 @@ main (int argc, char **argv)
       optind++;
     }
 
-  if (chopt.recurse & preserve_root)
+  if (chopt.recurse && preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);

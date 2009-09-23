@@ -1474,7 +1474,7 @@ limfield (const struct line *line, const struct keyfield *key)
       {
         while (ptr < lim && *ptr != tab)
           ++ptr;
-        if (ptr < lim && (eword | echar))
+        if (ptr < lim && (eword || echar))
           ++ptr;
       }
   else
@@ -2030,7 +2030,7 @@ keycompare (const struct line *a, const struct line *b)
 
       if (key->random)
         diff = compare_random (texta, lena, textb, lenb);
-      else if (key->numeric | key->general_numeric | key->human_numeric)
+      else if (key->numeric || key->general_numeric || key->human_numeric)
         {
           char savea = *lima, saveb = *limb;
 
@@ -2195,7 +2195,7 @@ compare (const struct line *a, const struct line *b)
   if (keylist)
     {
       diff = keycompare (a, b);
-      if (diff | unique | stable)
+      if (diff || unique || stable)
         return diff;
     }
 
@@ -3299,7 +3299,7 @@ main (int argc, char **argv)
             {
               bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
                                       && ISDIGIT (argv[optind][1]));
-              obsolete_usage |= minus_pos_usage & ~posixly_correct;
+              obsolete_usage |= minus_pos_usage && !posixly_correct;
               if (obsolete_usage)
                 {
                   /* Treat +POS1 [-POS2] as a key if possible; but silently
@@ -3308,7 +3308,7 @@ main (int argc, char **argv)
                   s = parse_field_count (optarg + 1, &key->sword, NULL);
                   if (s && *s == '.')
                     s = parse_field_count (s + 1, &key->schar, NULL);
-                  if (! (key->sword | key->schar))
+                  if (! (key->sword || key->schar))
                     key->sword = SIZE_MAX;
                   if (! s || *set_ordering (s, key, bl_start))
                     key = NULL;
@@ -3399,7 +3399,7 @@ main (int argc, char **argv)
                   badfieldspec (optarg, N_("character offset is zero"));
                 }
             }
-          if (! (key->sword | key->schar))
+          if (! (key->sword || key->schar))
             key->sword = SIZE_MAX;
           s = set_ordering (s, key, bl_start);
           if (*s != ',')
@@ -3588,14 +3588,14 @@ main (int argc, char **argv)
       if (! (key->ignore
              || key->translate
              || (key->skipsblanks
-                 | key->reverse
-                 | key->skipeblanks
-                 | key->month
-                 | key->numeric
-                 | key->version
-                 | key->general_numeric
-                 | key->human_numeric
-                 | key->random)))
+                 || key->reverse
+                 || key->skipeblanks
+                 || key->month
+                 || key->numeric
+                 || key->version
+                 || key->general_numeric
+                 || key->human_numeric
+                 || key->random)))
         {
           key->ignore = gkey.ignore;
           key->translate = gkey.translate;
@@ -3616,13 +3616,13 @@ main (int argc, char **argv)
   if (!keylist && (gkey.ignore
                    || gkey.translate
                    || (gkey.skipsblanks
-                       | gkey.skipeblanks
-                       | gkey.month
-                       | gkey.numeric
-                       | gkey.general_numeric
-                       | gkey.human_numeric
-                       | gkey.random
-                       | gkey.version)))
+                       || gkey.skipeblanks
+                       || gkey.month
+                       || gkey.numeric
+                       || gkey.general_numeric
+                       || gkey.human_numeric
+                       || gkey.random
+                       || gkey.version)))
     {
       insertkey (&gkey);
       need_random |= gkey.random;

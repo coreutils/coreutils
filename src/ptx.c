@@ -455,7 +455,7 @@ initialize_regex (void)
       if (!*context_regex.string)
         context_regex.string = NULL;
     }
-  else if (gnu_extensions & !input_reference)
+  else if (gnu_extensions && !input_reference)
     context_regex.string = "[.?!][]\"')}]*\\($\\|\t\\|  \\)[ \t\n]*";
   else
     context_regex.string = "\n";
@@ -1296,7 +1296,7 @@ fix_output_parameters (void)
   /* If the reference appears to the left of the output line, reserve some
      space for it right away, including one gap size.  */
 
-  if ((auto_reference | input_reference) & !right_reference)
+  if ((auto_reference || input_reference) && !right_reference)
     line_width -= reference_max_width + gap_size;
 
   /* The output lines, minimally, will contain from left to right a left
@@ -1660,7 +1660,7 @@ output_one_roff_line (void)
 
   /* Conditionally output the `reference' field.  */
 
-  if (auto_reference | input_reference)
+  if (auto_reference || input_reference)
     {
       fputs (" \"", stdout);
       print_field (reference);
@@ -1699,7 +1699,7 @@ output_one_tex_line (void)
   fputs ("}{", stdout);
   print_field (head);
   putchar ('}');
-  if (auto_reference | input_reference)
+  if (auto_reference || input_reference)
     {
       putchar ('{');
       print_field (reference);
@@ -1791,12 +1791,12 @@ output_one_dumb_line (void)
     }
   else
 
-    if ((auto_reference | input_reference) & right_reference)
+    if ((auto_reference || input_reference) && right_reference)
       print_spaces (half_line_width
                     - (keyafter.end - keyafter.start)
                     - (keyafter_truncation ? truncation_string_length : 0));
 
-  if ((auto_reference | input_reference) & right_reference)
+  if ((auto_reference || input_reference) && right_reference)
     {
       /* Output the `reference' field.  */
 
