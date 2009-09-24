@@ -39,25 +39,14 @@
   proper_name ("Mike Parker"), \
   proper_name ("David MacKenzie")
 
-/* In being careful not even to try to make hard links to directories,
-   we have to know whether link(2) follows symlinks.  If it does, then
-   we have to *stat* the `source' to see if the resulting link would be
-   to a directory.  Otherwise, we have to use *lstat* so that we allow
-   users to make hard links to symlinks-that-point-to-directories.  */
-
-#if LINK_FOLLOWS_SYMLINKS
-# define STAT_LIKE_LINK(File, Stat_buf) \
-  stat (File, Stat_buf)
-#else
-# define STAT_LIKE_LINK(File, Stat_buf) \
-  lstat (File, Stat_buf)
-#endif
-
 /* FIXME: document */
 static enum backup_type backup_type;
 
 /* If true, make symbolic links; otherwise, make hard links.  */
 static bool symbolic_link;
+
+/* If true, hard links are logical rather than physical.  */
+static bool logical = !!LINK_FOLLOWS_SYMLINKS;
 
 /* If true, ask the user before removing existing files.  */
 static bool interactive;
@@ -71,7 +60,7 @@ static bool verbose;
 /* If true, allow the superuser to *attempt* to make hard links
    to directories.  However, it appears that this option is not useful
    in practice, since even the superuser is prohibited from hard-linking
-   directories on most (all?) existing systems.  */
+   directories on most existing systems (Solaris being an exception).  */
 static bool hard_dir_link;
 
 /* If nonzero, and the specified destination is a symbolic link to a
@@ -99,6 +88,8 @@ static struct option const long_options[] =
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
+  {"logical", no_argument, NULL, 'L'},
+  {"physical", no_argument, NULL, 'P'},
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -143,18 +134,15 @@ do_link (const char *source, const char *dest)
   bool source_is_dir = false;
   bool ok;
 
-  /* Use stat here instead of lstat.
-     On SVR4, link does not follow symlinks, so this check disallows
-     making hard links to symlinks that point to directories.  Big deal.
-     On other systems, link follows symlinks, so this check is right.
-
-     FIXME - POSIX 2008 added the AT_SYMLINK_FOLLOW flag to linkat so
-     that we can specify either behavior, via the new options -L
-     (hard-link to symlinks) and -P (hard-link to the referent).  Once
-     gnulib has a decent implementation, we should use it here.  */
   if (!symbolic_link)
     {
-      if (STAT_LIKE_LINK (source, &source_stats) != 0)
+       /* Which stat to use depends on whether linkat will follow the
+          symlink.  We can't use the shorter
+          (logical ? stat : lstat) (source, &source_stats)
+          since stat might be a function-like macro.  */
+      if ((logical ? stat (source, &source_stats)
+           : lstat (source, &source_stats))
+          != 0)
         {
           error (0, errno, _("accessing %s"), quote (source));
           return false;
@@ -258,7 +246,9 @@ do_link (const char *source, const char *dest)
         }
     }
 
-  ok = ((symbolic_link ? symlink (source, dest) : link (source, dest))
+  ok = ((symbolic_link ? symlink (source, dest)
+         : linkat (AT_FDCWD, source, AT_FDCWD, dest,
+                   logical ? AT_SYMLINK_FOLLOW : 0))
         == 0);
 
   /* If the attempt to create a link failed and we are removing or
@@ -289,7 +279,9 @@ do_link (const char *source, const char *dest)
           return false;
         }
 
-      ok = ((symbolic_link ? symlink (source, dest) : link (source, dest))
+      ok = ((symbolic_link ? symlink (source, dest)
+             : linkat (AT_FDCWD, source, AT_FDCWD, dest,
+                       logical ? AT_SYMLINK_FOLLOW : 0))
             == 0);
     }
 
@@ -370,9 +362,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -f, --force                 remove existing destination files\n\
 "), stdout);
       fputs (_("\
+  -i, --interactive           prompt whether to remove destinations\n\
+  -L, --logical               make hard links to symbolic link references\n\
   -n, --no-dereference        treat destination that is a symlink to a\n\
                                 directory as if it were a normal file\n\
-  -i, --interactive           prompt whether to remove destinations\n\
+  -P, --physical              make hard links directly to symbolic links\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
 "), stdout);
       fputs (_("\
@@ -391,6 +385,11 @@ The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
 "), stdout);
+      printf (_("\
+Using -s ignores -L and -P.  Otherwise, the last option specified controls\n\
+behavior when the source is a symbolic link, defaulting to %s.\n\
+\n\
+"), LINK_FOLLOWS_SYMLINKS ? "-L" : "-P");
       fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
@@ -430,7 +429,7 @@ main (int argc, char **argv)
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = false;
 
-  while ((c = getopt_long (argc, argv, "bdfinst:vFS:T", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "bdfinst:vFLPS:T", long_options, NULL))
          != -1)
     {
       switch (c)
@@ -452,8 +451,14 @@ main (int argc, char **argv)
           remove_existing_files = false;
           interactive = true;
           break;
+        case 'L':
+          logical = true;
+          break;
         case 'n':
           dereference_dest_dir_symlinks = false;
+          break;
+        case 'P':
+          logical = false;
           break;
         case 's':
           symbolic_link = true;

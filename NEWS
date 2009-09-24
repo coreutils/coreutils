@@ -32,6 +32,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   last component (possibly via a dangling symlink) can be created,
   since mkdir will succeed in that case.
 
+** New features
+
+  ln now accepts the options --logical (-L) and --physical (-P),
+  added by POSIX 2008.  The default behavior is -P on systems like
+  GNU/Linux where link(2) creates hard links to symlinks, and -L on
+  BSD systems where link(2) follows symlinks.
+
 ** Improvements
 
   rm: rewrite to use gnulib's fts

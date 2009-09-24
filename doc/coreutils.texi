@@ -8753,6 +8753,11 @@ On a @acronym{GNU} system, this command acts like @samp{ln --directory
 not specified by @acronym{POSIX}, and the @command{link} command is
 more portable in practice.
 
+If @var{filename} is a symbolic link, it is unspecified whether
+@var{linkname} will be a hard link to the symbolic link or to the
+target of the symbolic link.  Use @command{ln -P} or @command{ln -L}
+to specify which behavior is desired.
+
 @exitstatus
 
 
@@ -8808,8 +8813,10 @@ A @dfn{hard link} is another name for an existing file; the link and the
 original are indistinguishable.  Technically speaking, they share the
 same inode, and the inode contains all the information about a
 file---indeed, it is not incorrect to say that the inode @emph{is} the
-file.  On all existing implementations, you cannot make a hard link to
-a directory, and hard links cannot cross file system boundaries.  (These
+file.  Most systems prohibit making a hard link to
+a directory; on those where it is allowed, only the super-user can do
+so (and with caution, since creating a cycle will cause problems to many
+other utilities).  Hard links cannot cross file system boundaries.  (These
 restrictions are not mandated by @acronym{POSIX}, however.)
 
 @cindex dereferencing symbolic links
@@ -8821,9 +8828,13 @@ refers to a different file, by name.  When most operations (opening,
 reading, writing, and so on) are passed the symbolic link file, the
 kernel automatically @dfn{dereferences} the link and operates on the
 target of the link.  But some operations (e.g., removing) work on the
-link file itself, rather than on its target.  The owner, group, and
-mode of a symlink are not significant to file access performed through
-the link.  @xref{Symbolic Links,,,
+link file itself, rather than on its target.  The owner and group of a
+symlink are not significant to file access performed through
+the link, but do have implications on deleting a symbolic link from a
+directory with the restricted deletion bit set.  On the GNU system,
+the mode of a symlink has no significance and cannot be changed, but
+on some BSD systems, the mode can be changed and will affect whether
+the symlink will be traversed in file name resolution.  @xref{Symbolic Links,,,
 libc, The GNU C Library Reference Manual}.
 
 Symbolic links can contain arbitrary strings; a @dfn{dangling symlink}
@@ -8878,6 +8889,14 @@ Remove existing destination files.
 @cindex prompting, and @command{ln}
 Prompt whether to remove existing destination files.
 
+@item -L
+@itemx --logical
+@opindex -L
+@opindex --logical
+If @option{-s} is not in effect, and the source file is a symbolic
+link, create the hard link to the file referred to by the symbolic
+link, rather than the symbolic link itself.
+
 @item -n
 @itemx --no-dereference
 @opindex -n
@@ -8899,6 +8918,17 @@ just like a directory.
 This option is weaker than the @option{--no-target-directory}
 (@option{-T}) option, so it has no effect if both options are given.
 
+@item -P
+@itemx --physical
+@opindex -P
+@opindex --physical
+If @option{-s} is not in effect, and the source file is a symbolic
+link, create the hard link to the symbolic link itself.  On platforms
+where this is not supported by the kernel, this option creates a
+symbolic link with identical contents; since symbolic link contents
+cannot be edited, any file name resolution performed through either
+link will be the same as if a hard link had been created.
+
 @item -s
 @itemx --symbolic
 @opindex -s
@@ -8919,6 +8949,15 @@ an error message on systems that do not support symbolic links.
 Print the name of each file after linking it successfully.
 
 @end table
+
+@cindex hard links to symbolic links
+@cindex symbolic links and @command{ln}
+If @option{-L} and @option{-P} are both given, the last one takes
+precedence.  If @option{-s} is also given, @option{-L} and @option{-P}
+are silently ignored.  If neither option is given, then this
+implementation defaults to @option{-P} if the system @code{link} supports
+hard links to symbolic links (such as the GNU system), and @option{-L}
+if @code{link} follows symbolic links (such as on BSD).
 
 @exitstatus
 

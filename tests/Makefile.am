@@ -344,6 +344,7 @@ TESTS =						\
   install/trap					\
   ln/backup-1					\
   ln/hard-backup				\
+  ln/hard-to-sym				\
   ln/misc					\
   ln/sf-1					\
   ln/slash-decorated-nonexistent-dest		\
