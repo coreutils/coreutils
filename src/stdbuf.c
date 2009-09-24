@@ -24,8 +24,10 @@
 
 #include "system.h"
 #include "error.h"
+#include "filenamecat.h"
 #include "posixver.h"
 #include "quote.h"
+#include "xreadlink.h"
 #include "xstrtol.h"
 #include "c-ctype.h"
 
@@ -145,34 +147,26 @@ set_program_path (const char *arg)
     }
   else
     {
-      char *path;
-      char tmppath[PATH_MAX + 1];
-      ssize_t len = readlink ("/proc/self/exe", tmppath, sizeof (tmppath) - 1);
-      if (len > 0)
-        {
-          tmppath[len] = '\0';
-          program_path = dir_name (tmppath);
-        }
+      char *path = xreadlink ("/proc/self/exe");
+      if (path)
+        program_path = dir_name (path);
       else if ((path = getenv ("PATH")))
         {
           char *dir;
           path = xstrdup (path);
           for (dir = strtok (path, ":"); dir != NULL; dir = strtok (NULL, ":"))
             {
-              int req = snprintf (tmppath, sizeof (tmppath), "%s/%s", dir, arg);
-              if (req >= sizeof (tmppath))
+              char *candidate = file_name_concat (dir, arg, NULL);
+              if (access (candidate, X_OK) == 0)
                 {
-                  error (0, 0, _("path truncated when looking for %s"),
-                         quote (arg));
-                }
-              else if (access (tmppath, X_OK) == 0)
-                {
-                  program_path = dir_name (tmppath);
+                  program_path = dir_name (candidate);
+                  free (candidate);
                   break;
                 }
+              free (candidate);
             }
-          free (path);
         }
+      free (path);
     }
 }
 
