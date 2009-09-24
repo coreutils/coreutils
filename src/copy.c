@@ -1687,7 +1687,9 @@ copy_internal (char const *src_name, char const *dst_name,
         }
       else
         {
-          bool link_failed = (link (earlier_file, dst_name) != 0);
+          /* We want to guarantee that symlinks are not followed.  */
+          bool link_failed = (linkat (AT_FDCWD, earlier_file, AT_FDCWD,
+                                      dst_name, 0) != 0);
 
           /* If the link failed because of an existing destination,
              remove that file and then call link again.  */
@@ -1700,7 +1702,8 @@ copy_internal (char const *src_name, char const *dst_name,
                 }
               if (x->verbose)
                 printf (_("removed %s\n"), quote (dst_name));
-              link_failed = (link (earlier_file, dst_name) != 0);
+              link_failed = (linkat (AT_FDCWD, earlier_file, AT_FDCWD,
+                                     dst_name, 0) != 0);
             }
 
           if (link_failed)
@@ -1990,25 +1993,15 @@ copy_internal (char const *src_name, char const *dst_name,
         }
     }
 
-  /* POSIX 2008 states that it is implementation-defined whether
-     link() on a symlink creates a hard-link to the symlink, or only
-     to the referent (effectively dereferencing the symlink) (POSIX
-     2001 required the latter behavior, although many systems provided
-     the former).  Yet cp, invoked with `--link --no-dereference',
-     should not follow the link.  We can approximate the desired
-     behavior by skipping this hard-link creating block and instead
-     copying the symlink, via the `S_ISLNK'- copying code below.
-     LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
-     how link() behaves, so we use the fallback case for safety.
-
-     FIXME - use a gnulib linkat emulation for more fine-tuned
-     emulation, particularly when LINK_FOLLOWS_SYMLINKS is -1.  */
+  /* cp, invoked with `--link --no-dereference', should not follow the
+     link; we guarantee this with gnulib's linkat module (on systems
+     where link(2) follows the link, gnulib creates a symlink with
+     identical contents, which is good enough for our purposes).  */
   else if (x->hard_link
-           && (!LINK_FOLLOWS_SYMLINKS
-               || !S_ISLNK (src_mode)
+           && (!S_ISLNK (src_mode)
                || x->dereference != DEREF_NEVER))
     {
-      if (link (src_name, dst_name))
+       if (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0))
         {
           error (0, errno, _("cannot create link %s"), quote (dst_name));
           goto un_backup;
