@@ -70,6 +70,9 @@ gnulib_modules=
 # Any gnulib files needed that are not in modules.
 gnulib_files=
 
+# A function to be called after everything else in this script.
+bootstrap_epilogue() { :; }
+
 # The command to download all .po files for a specified domain into
 # a specified directory.  Fill in the first %s is the domain name, and
 # the second with the destination directory.  Use rsync's -L and -r
@@ -801,10 +804,6 @@ if test $with_gettext = yes; then
   fi
 fi
 
-# Horrible, coreutils-specific kludges.
-# Change paths in gnulib-tests/gnulib.mk from "../.." to "..".
-m=gnulib-tests/gnulib.mk
-sed 's,\.\./\.\.,..,g' $m > $m-t
-mv -f $m-t $m
+bootstrap_epilogue
 
 echo "$0: done.  Now you can run './configure'."
