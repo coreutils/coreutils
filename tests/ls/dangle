@@ -26,6 +26,9 @@ fi
 ln -s no-such-file dangle || framework_failure
 mkdir -p dir/sub || framework_failure
 ln -s dir slink-to-dir || framework_failure
+mkdir d || framework_failure
+ln -s no-such d/dangle || framework_failure
+echo '? dangle' > subdir_exp || framework_failure
 
 fail=0
 
@@ -49,5 +52,10 @@ sub
 EOF
 
 compare out exp || fail=1
+
+# Ensure that ls -Li prints "?" as the inode of a dangling symlink.
+rm -f out
+ls -Li d > out 2>/dev/null && fail=1
+compare out subdir_exp || fail=1
 
 Exit $fail

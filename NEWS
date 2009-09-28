@@ -18,6 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls -LR exits with status 2, not 0, when it encounters a cycle
 
+  ls -Li is now consistent with ls -Lil in printing "?", not "0" as the
+  inode of a dangling symlink.
+
 ** Portability
 
   On Solaris 9, many commands would mistakenly treat file/ the same as

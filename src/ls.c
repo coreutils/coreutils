@@ -3556,9 +3556,19 @@ format_group_width (gid_t g)
   return format_user_or_group_width (numeric_ids ? NULL : getgroup (g), g);
 }
 
+/* Return a pointer to a formatted version of F->stat.st_ino,
+   possibly using buffer, BUF, of length BUFLEN, which must be at least
+   INT_BUFSIZE_BOUND (uintmax_t) bytes.  */
+static char *
+format_inode (char *buf, size_t buflen, const struct fileinfo *f)
+{
+  assert (INT_BUFSIZE_BOUND (uintmax_t) <= buflen);
+  return (f->stat.st_ino == NOT_AN_INODE_NUMBER
+          ? (char *) "?"
+          : umaxtostr (f->stat.st_ino, buf));
+}
 
 /* Print information about F in long format.  */
-
 static void
 print_long_format (const struct fileinfo *f)
 {
@@ -3615,9 +3625,7 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       sprintf (p, "%*s ", inode_number_width,
-               (f->stat.st_ino == NOT_AN_INODE_NUMBER
-                ? "?"
-                : umaxtostr (f->stat.st_ino, hbuf)));
+               format_inode (hbuf, sizeof hbuf, f));
       /* Increment by strlen (p) here, rather than by inode_number_width + 1.
          The latter is wrong when inode_number_width is zero.  */
       p += strlen (p);
@@ -4004,7 +4012,7 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
 
   if (print_inode)
     printf ("%*s ", format == with_commas ? 0 : inode_number_width,
-            umaxtostr (f->stat.st_ino, buf));
+            format_inode (buf, sizeof buf, f));
 
   if (print_block_size)
     printf ("%*s ", format == with_commas ? 0 : block_size_width,
