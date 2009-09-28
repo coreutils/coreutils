@@ -1,7 +1,7 @@
 #!/bin/sh
 # show that the following no longer makes ls infloop
 # mkdir loop; cd loop; ln -s ../loop sub; ls -RL
-
+# Also ensure ls exits with status = 2 in that case.
 # Copyright (C) 2001-2002, 2004, 2006-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -27,21 +27,22 @@ fi
 mkdir loop || framework_failure
 ln -s ../loop loop/sub || framework_failure
 
-fail=0
-
-ls -RL loop 2>err | head -n 7 > out
-# With an inf-looping ls, out will contain these 7 lines:
-cat <<EOF > bad
+cat <<\EOF > exp-out || framework_failure
 loop:
 sub
-
-loop/sub:
-sub
-
-loop/sub/sub:
 EOF
 
-# Make sure we don't get the "bad" output.
-compare out bad > /dev/null 2>&1 && fail=1
+cat <<\EOF > exp-err || framework_failure
+ls: loop/sub: not listing already-listed directory
+EOF
+
+fail=0
+
+timeout 1 ls -RL loop 2>err > out
+# Ensure that ls exits with status 2 upon detecting a cycle
+test $? = 2 || fail=1
+
+compare err exp-err || fail=1
+compare out exp-out || fail=1
 
 Exit $fail

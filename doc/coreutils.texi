@@ -6113,8 +6113,9 @@ Exit status:
 1 minor problems  (e.g., failure to access a file or directory not
   specified as a command line argument.  This happens when listing a
   directory in which entries are actively being removed or renamed.)
-2 serious trouble (e.g., memory exhausted, invalid option or failure
-  to access file or directory specified as a command line argument)
+2 serious trouble (e.g., memory exhausted, invalid option, failure
+  to access a file or directory specified as a command line argument
+  or a directory loop)
 @end display
 
 Also see @ref{Common options}.

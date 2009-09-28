@@ -2471,6 +2471,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
           error (0, 0, _("%s: not listing already-listed directory"),
                  quotearg_colon (name));
           closedir (dirp);
+          set_exit_status (true);
           return;
         }
 
