@@ -2032,7 +2032,6 @@ decode_switches (int argc, char **argv)
             break;
 
           case long_iso_time_style:
-          case_long_iso_time_style:
             long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
             break;
 
@@ -2044,17 +2043,10 @@ decode_switches (int argc, char **argv)
           case locale_time_style:
             if (hard_locale (LC_TIME))
               {
-                /* Ensure that the locale has translations for both
-                   formats.  If not, fall back on long-iso format.  */
                 int i;
                 for (i = 0; i < 2; i++)
-                  {
-                    char const *locale_format =
-                      dcgettext (NULL, long_time_format[i], LC_TIME);
-                    if (locale_format == long_time_format[i])
-                      goto case_long_iso_time_style;
-                    long_time_format[i] = locale_format;
-                  }
+                  long_time_format[i] =
+                    dcgettext (NULL, long_time_format[i], LC_TIME);
               }
           }
       /* Note we leave %5b etc. alone so user widths/flags are honored.  */

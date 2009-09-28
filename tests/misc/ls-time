@@ -122,4 +122,24 @@ EOF
   fail=1
 fi
 
+# This check is ineffective if:
+#   en_US locale is not on the system.
+#   The system en_US message catalog has a specific TIME_FMT translation,
+#   which was inadvertently the case between coreutils 8.1 and 8.5 inclusive.
+
+if gettext --version >/dev/null 2>&1; then
+
+  default_tf1='%b %e  %Y'
+  en_tf1=$(LC_ALL=en_US gettext coreutils "$default_tf1")
+
+  if test "$default_tf1" = "$en_tf1"; then
+    LC_ALL=en_US ls -l c >en_output
+    ls -l --time-style=long-iso c >liso_output
+    if compare en_output liso_output; then
+      fail=1
+      echo "Long ISO TIME_FMT being used for en_US locale." >&2
+    fi
+  fi
+fi
+
 Exit $fail

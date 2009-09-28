@@ -12,6 +12,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  ls -l now uses the traditional three field time style rather than
+  the wider two field numeric ISO style, in locales where a style has
+  not been specified.  The new approach has nicer behavior in some
+  locales, including English, which was judged to outweigh the disadvantage
+  of generating less-predictable and often worse output in poorly-configured
+  locales where there is an onus to specify appropriate non-default styles.
+  [The old behavior was introduced in coreutils-6.0 and had been removed
+   for English only using a different method since coreutils-8.1]
+
   sort -g now uses long doubles for greater range and precision.
 
   stat no longer accepts the --context (-Z) option.  Initially it was

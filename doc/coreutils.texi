@@ -6927,11 +6927,10 @@ is 80.
 @node Formatting file timestamps
 @subsection Formatting file timestamps
 
-By default, file timestamps are listed in abbreviated form.  Most
-locales use a timestamp like @samp{2002-03-30 23:45}.  However, the
-default @acronym{POSIX} locale uses a date like @samp{Mar 30@ @ 2002}
-for non-recent timestamps, and a date-without-year and time like
-@samp{Mar 30 23:45} for recent timestamps.
+By default, file timestamps are listed in abbreviated form, using
+a date like @samp{Mar 30@ @ 2002} for non-recent timestamps, and a
+date-without-year and time like @samp{Mar 30 23:45} for recent timestamps.
+This format can change depending on the current locale as detailed below.
 
 A timestamp is considered to be @dfn{recent} if it is less than six
 months old, and is not dated in the future.  If a timestamp dated
