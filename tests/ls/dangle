@@ -28,7 +28,8 @@ mkdir -p dir/sub || framework_failure
 ln -s dir slink-to-dir || framework_failure
 mkdir d || framework_failure
 ln -s no-such d/dangle || framework_failure
-echo '? dangle' > subdir_exp || framework_failure
+printf '? dangle\n' > subdir_Li_exp || framework_failure
+printf 'total 0\n? dangle\n' > subdir_Ls_exp || framework_failure
 
 fail=0
 
@@ -56,6 +57,11 @@ compare out exp || fail=1
 # Ensure that ls -Li prints "?" as the inode of a dangling symlink.
 rm -f out
 ls -Li d > out 2>/dev/null && fail=1
-compare out subdir_exp || fail=1
+compare out subdir_Li_exp || fail=1
+
+# Ensure that ls -Ls prints "?" as the allocation of a dangling symlink.
+rm -f out
+ls -Ls d > out 2>/dev/null && fail=1
+compare out subdir_Ls_exp || fail=1
 
 Exit $fail

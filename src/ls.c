@@ -4016,8 +4016,9 @@ print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
 
   if (print_block_size)
     printf ("%*s ", format == with_commas ? 0 : block_size_width,
-            human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
-                            ST_NBLOCKSIZE, output_block_size));
+            ! f->stat_ok ? "?"
+            : human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
+                              ST_NBLOCKSIZE, output_block_size));
 
   if (print_scontext)
     printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);
@@ -4234,9 +4235,10 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 
   if (print_block_size)
     len += 1 + (format == with_commas
-                ? strlen (human_readable (ST_NBLOCKS (f->stat), buf,
-                                          human_output_opts, ST_NBLOCKSIZE,
-                                          output_block_size))
+                ? strlen (! f->stat_ok ? "?"
+                          : human_readable (ST_NBLOCKS (f->stat), buf,
+                                            human_output_opts, ST_NBLOCKSIZE,
+                                            output_block_size))
                 : block_size_width);
 
   if (print_scontext)

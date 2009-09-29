@@ -18,12 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls -LR exits with status 2, not 0, when it encounters a cycle
 
-  ls -Li is now consistent with ls -Lil in printing "?", not "0" as the
-  inode of a dangling symlink.
-
-  ls -Li no longer relies on unspecified behavior of stat/lstat.
-  Before this change, "ls -Li dangling-symlink" would mistakenly
-  print the inode number of the symlink under some conditions.
+  ls -is is now consistent with ls -lis in ignoring values returned
+  from a failed stat/lstat.  For example ls -Lis now prints "?", not "0",
+  for the inode number and allocated size of a dereferenced dangling symlink.
 
 ** Portability
 
