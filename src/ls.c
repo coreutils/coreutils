@@ -3563,9 +3563,9 @@ static char *
 format_inode (char *buf, size_t buflen, const struct fileinfo *f)
 {
   assert (INT_BUFSIZE_BOUND (uintmax_t) <= buflen);
-  return (f->stat.st_ino == NOT_AN_INODE_NUMBER
-          ? (char *) "?"
-          : umaxtostr (f->stat.st_ino, buf));
+  return (f->stat_ok && f->stat.st_ino != NOT_AN_INODE_NUMBER
+          ? umaxtostr (f->stat.st_ino, buf)
+          : (char *) "?");
 }
 
 /* Print information about F in long format.  */

@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls -Li is now consistent with ls -Lil in printing "?", not "0" as the
   inode of a dangling symlink.
 
+  ls -Li no longer relies on unspecified behavior of stat/lstat.
+  Before this change, "ls -Li dangling-symlink" would mistakenly
+  print the inode number of the symlink under some conditions.
+
 ** Portability
 
   On Solaris 9, many commands would mistakenly treat file/ the same as
