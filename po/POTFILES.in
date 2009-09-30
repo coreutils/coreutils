@@ -20,6 +20,8 @@ lib/regcomp.c
 lib/root-dev-ino.h
 lib/rpmatch.c
 lib/set-mode-acl.c
+lib/siglist.h
+lib/strsignal.c
 lib/unicodeio.c
 lib/userspec.c
 lib/verror.c
