@@ -42,13 +42,13 @@ for inotify in ---disable-inotify ''; do
 
   # Ensure that tail --pid=PID exits successfully when PID is dead.
   # Use an unlikely-to-be-live PID
-  timeout 1 tail -s.1 --pid=$PID_T_MAX -f $inotify /dev/null
+  timeout 3 tail -s.1 --pid=$PID_T_MAX -f $inotify /dev/null
   ret=$?
   test $ret = 124 && skip_test_ "pid $PID_T_MAX present"
   test $ret = 0 || fail=1
 
   # Ensure fractional sleep parameter is honored with --pid
-  timeout 1 tail -s.1 -f $inotify /dev/null --pid=$PID_T_MAX
+  timeout 3 tail -s.1 -f $inotify /dev/null --pid=$PID_T_MAX
   test $? = 124 && fail=1
 done
 
