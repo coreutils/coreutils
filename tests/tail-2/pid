@@ -29,26 +29,27 @@ touch here || framework_failure
 fail=0
 
 for inotify in ---disable-inotify ''; do
-  # Use tail itself to create a background process to monitor.
+  # Use tail itself to create a background process to monitor,
+  # which will auto exit when "here" is removed.
   tail -f $inotify here &
   bg_pid=$!
 
   # Ensure that tail --pid=PID does not exit when PID is alive.
-  timeout 1 tail -s.1 -f $inotify here --pid=$bg_pid
+  timeout 1 tail -f -s.1 --pid=$bg_pid $inotify here
   test $? = 124 || fail=1
 
   # Cleanup background process
   kill $bg_pid
 
-  # Ensure that tail --pid=PID exits successfully when PID is dead.
+  # Ensure that tail --pid=PID exits with success status when PID is dead.
   # Use an unlikely-to-be-live PID
-  timeout 3 tail -s.1 --pid=$PID_T_MAX -f $inotify /dev/null
+  timeout 3 tail -f -s.1 --pid=$PID_T_MAX $inotify /dev/null
   ret=$?
-  test $ret = 124 && skip_test_ "pid $PID_T_MAX present"
+  test $ret = 124 && skip_test_ "pid $PID_T_MAX present or tail too slow"
   test $ret = 0 || fail=1
 
-  # Ensure fractional sleep parameter is honored with --pid
-  timeout 3 tail -s.1 -f $inotify /dev/null --pid=$PID_T_MAX
+  # Ensure tail doesn't wait for data when PID is dead
+  timeout 3 tail -f -s10 --pid=$PID_T_MAX $inotify /dev/null
   test $? = 124 && fail=1
 done
 

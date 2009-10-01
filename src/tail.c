@@ -1135,9 +1135,6 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           if (writer_is_dead)
             break;
 
-          if (xnanosleep (sleep_interval))
-            error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
-
           /* Once the writer is dead, read the files once more to
              avoid a race condition.  */
           writer_is_dead = (pid != 0
@@ -1146,6 +1143,10 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                                signal to the writer, so kill fails and sets
                                errno to EPERM.  */
                             && errno != EPERM);
+
+          if (!writer_is_dead && xnanosleep (sleep_interval))
+            error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
+
         }
     }
 }
@@ -1179,6 +1180,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   Hash_table *wd_table;
 
   bool found_watchable = false;
+  bool writer_is_dead = false;
   int prev_wd;
   size_t evlen = 0;
   char *evbuf;
@@ -1266,30 +1268,30 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
          indefinetely.  */
       if (pid)
         {
-          fd_set rfd;
-          struct timeval select_timeout;
-          int n_descriptors;
+          if (writer_is_dead)
+            exit (EXIT_SUCCESS);
 
-          FD_ZERO (&rfd);
-          FD_SET (wd, &rfd);
+          writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
 
-          select_timeout.tv_sec = (time_t) sleep_interval;
-          select_timeout.tv_usec = 1000000 * (sleep_interval
-                                              - select_timeout.tv_sec);
-
-          n_descriptors = select (wd + 1, &rfd, NULL, NULL, &select_timeout);
-
-          if (n_descriptors == -1)
-            error (EXIT_FAILURE, errno, _("error monitoring inotify event"));
-
-          if (n_descriptors == 0)
+          struct timeval delay; /* how long to wait for file changes.  */
+          if (writer_is_dead)
+            delay.tv_sec = delay.tv_usec = 0;
+          else
             {
-              /* See if the process we are monitoring is still alive.  */
-              if (kill (pid, 0) != 0 && errno != EPERM)
-                exit (EXIT_SUCCESS);
-
-              continue;
+              delay.tv_sec = (time_t) sleep_interval;
+              delay.tv_usec = 1000000 * (sleep_interval - delay.tv_sec);
             }
+
+           fd_set rfd;
+           FD_ZERO (&rfd);
+           FD_SET (wd, &rfd);
+
+           int file_change = select (wd + 1, &rfd, NULL, NULL, &delay);
+
+           if (file_change == 0)
+             continue;
+           else if (file_change == -1)
+             error (EXIT_FAILURE, errno, _("error monitoring inotify event"));
         }
 
       if (len <= evbuf_off)

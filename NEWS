@@ -22,6 +22,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   from a failed stat/lstat.  For example ls -Lis now prints "?", not "0",
   for the inode number and allocated size of a dereferenced dangling symlink.
 
+  tail --follow --pid now avoids a race condition where data written
+  just before the process dies might not have been output by tail.
+  Also, tail no longer delays at all when the specified pid is not live.
+  [The race was introduced in coreutils-7.5,
+   and the unnecessary delay was present since textutils-1.22o]
+
 ** Portability
 
   On Solaris 9, many commands would mistakenly treat file/ the same as
