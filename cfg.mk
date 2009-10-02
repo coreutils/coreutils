@@ -31,7 +31,7 @@ url_dir_list = \
 gpg_key_ID = B9AB9A16
 
 # Tests not to run as part of "make distcheck".
-local-checks-to-skip = strftime-check
+local-checks-to-skip =
 
 # Tools used to bootstrap this package, used for "announcement".
 bootstrap-tools = autoconf,automake,gnulib,bison
