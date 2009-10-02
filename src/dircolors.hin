@@ -176,6 +176,8 @@ EXEC 01;32
 .xcf 01;35
 .xwd 01;35
 .yuv 01;35
+.cgm 01;35
+.emf 01;35
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
 .axv 01;35
