@@ -251,11 +251,10 @@ static bool
 split_3 (char *s, size_t s_len,
          unsigned char **hex_digest, int *binary, char **file_name)
 {
-  size_t i;
   bool escaped_filename = false;
   size_t algo_name_len;
 
-  i = 0;
+  size_t i = 0;
   while (ISWHITE (s[i]))
     ++i;
 
@@ -263,11 +262,13 @@ split_3 (char *s, size_t s_len,
   algo_name_len = strlen (DIGEST_TYPE_STRING);
   if (strncmp (s + i, DIGEST_TYPE_STRING, algo_name_len) == 0)
     {
-      if (strncmp (s + i + algo_name_len, " (", 2) == 0)
+      if (s[i + algo_name_len] == ' ')
+        ++i;
+      if (s[i + algo_name_len] == '(')
         {
           *binary = 0;
-          return bsd_split_3 (s +      i + algo_name_len + 2,
-                              s_len - (i + algo_name_len + 2),
+          return bsd_split_3 (s +      i + algo_name_len + 1,
+                              s_len - (i + algo_name_len + 1),
                               hex_digest, file_name);
         }
     }

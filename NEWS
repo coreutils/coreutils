@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+** New features
+
+  md5sum --check now also accepts openssl-style checksums.
+  So do sha1sum, sha224sum, sha384sum and sha512sum.
+
 
 * Noteworthy changes in release 8.0 (2009-10-06) [beta]
 

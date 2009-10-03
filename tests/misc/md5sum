@@ -67,6 +67,16 @@ my @Tests =
      ['check-bsd3', '--check', '--status',
                                 {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
+     ['check-openssl', '--check', {IN=> {'f.sha1' => "SHA1(f)= $degenerate\n"}},
+                                {AUX=> {f=> ''}},
+                                {ERR=>"md5sum: f.sha1: no properly formatted "
+                                       . "MD5 checksum lines found\n"},
+                                {EXIT=> 1}],
+     ['check-openssl2', '--check', {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
+                                {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+     ['check-openssl3', '--check', '--status',
+                                {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
+                                {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
 
