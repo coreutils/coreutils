@@ -519,6 +519,10 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  if (is_selinux_enabled () != 1)
+    error (EXIT_FAILURE, 0,
+           _("%s may be used only on a SELinux kernel"), program_name);
+
   if (reference_file)
     {
       if (getfilecon (reference_file, &ref_context) < 0)

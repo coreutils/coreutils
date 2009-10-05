@@ -195,7 +195,7 @@ main (int argc, char **argv)
 
   if (is_selinux_enabled () != 1)
     error (EXIT_FAILURE, 0,
-           _("runcon may be used only on a SELinux kernel"));
+           _("%s may be used only on a SELinux kernel"), program_name);
 
   if (context)
     {
