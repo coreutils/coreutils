@@ -7,18 +7,18 @@ Here are most of the steps we (maintainers) follow when making a release.
 * Run ./configure && make maintainer-clean
 
 * Ensure that the desired versions of autoconf, automake, bison, etc.
-  are in your PATH.  See HACKING for the complete list.
+  are in your PATH.  See the buildreq list in bootstrap.conf for
+  the complete list.
 
 * Ensure that you're on "master" with no uncommitted diffs.
   This should produce no output: git checkout master; git diff
-
-* Make sure your local gnulib directory is up to date.
 
 * Run bootstrap: ./bootstrap
 
 FIXME: enable excluded programs like arch? to get their manual pages?
 
 * Pre-release testing:
+  Ensure that make check syntax-check succeeds.
   On at least one SELinux-enabled (enforcing) and one non-SELinux system,
     run all tests, both root-only and regular.
   Run *all* non-root tests, including expensive and very expensive ones i.e.,
@@ -32,16 +32,17 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 * Manually set the date, version number, and [stable/alpha/beta] on
   line 3 of NEWS, then do e.g.,:
 
-    v=7.3
+    v=8.0
+    pkg=$(sed -n 's/^PACKAGE = \(.*\)/\1/p' Makefile)
     git commit -F <(printf 'version '$v'\n\n* NEWS: Record release date.\n') -a
-    git tag -s -m "coreutils $v" v$v HEAD
+    git tag -s -m "$pkg $v" v$v HEAD
 
 * Run the following to create release tarballs.  Your choice selects the
   corresponding upload-to destination in the emitted gnupload command.
   The different destinations are specified in cfg.mk.  See the definitions
-  of gnu_ftp_host-{alpha,beta,major}.
+  of gnu_ftp_host-{alpha,beta,stable}.
 
-    # "TYPE" must be major, beta or alpha
+    # "TYPE" must be stable, beta or alpha
     make TYPE
 
 * Test the tarball.  copy it to a few odd-ball systems and ensure that
@@ -59,12 +60,15 @@ Once all the builds and tests have passed,
   that they're all valid.
 
 * Push the new tag:
-  git push origin tag v<JUST_RELEASED_VERSION_NUMBER>
+
+    v=$(cat .prev-version)
+    git push origin tag v$v
 
 * Send the gpg-signed announcement mail, e.g.,
+
     To: info-gnu@gnu.org, coreutils-announce@gnu.org
     Cc: coordinator@translationproject.org, bug-coreutils@gnu.org
-    Subject: coreutils-7.1 released [stable]
+    Subject: coreutils-8.0 released [beta]
 
 * Approve the announcement here:
   http://lists.gnu.org/mailman/admindb/coreutils-announce
@@ -73,10 +77,13 @@ Once all the builds and tests have passed,
   From here:
     https://savannah.gnu.org/projects/coreutils/
   click on the "submit news", then write something like the following:
+  (If there is no such button, then enable "News" for the project via
+   the Main -> "Select Features" menu item, or via this link:
+   https://savannah.gnu.org/project/admin/editgroupfeatures.php?group=gzip)
 
-    Subject: coreutils-7.2 released [stable]
+    Subject: coreutils-0.0 released [beta]
     The announcement is here:
-      http://article.gmane.org/gmane.comp.gnu.core-utils.announce/49
+      http://article.gmane.org/gmane.comp.gnu.core-utils.announce/54
 
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
@@ -85,4 +92,6 @@ Once all the builds and tests have passed,
 
     http://www.gnu.org/software/coreutils/manual/
 
-  by running the gnu-web-doc-update script.
+  by running this:
+
+    build-aux/gnu-web-doc-update
