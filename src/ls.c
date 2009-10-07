@@ -2802,17 +2802,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                           : lgetfilecon (absolute_name, &f->scontext));
           err = (attr_len < 0);
 
-          /* Contrary to its documented API, getfilecon may return 0,
-             yet set f->scontext to NULL (on at least Debian's libselinux1
-             2.0.15-2+b1), so work around that bug.
-             FIXME: remove this work-around in 2011, or whenever affected
-             versions of libselinux are long gone.  */
-          if (attr_len == 0)
-            {
-              err = 0;
-              f->scontext = xstrdup ("unlabeled");
-            }
-
           if (err == 0)
             have_selinux = ! STREQ ("unlabeled", f->scontext);
           else
