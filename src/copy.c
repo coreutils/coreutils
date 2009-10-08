@@ -123,20 +123,12 @@ static char const *top_level_dst_name;
 static inline int
 utimens_symlink (char const *file, struct timespec const *timespec)
 {
-  int err = 0;
-
-#if HAVE_UTIMENSAT
-  err = utimensat (AT_FDCWD, file, timespec, AT_SYMLINK_NOFOLLOW);
+  int err = lutimens (file, timespec);
   /* When configuring on a system with new headers and libraries, and
      running on one with a kernel that is old enough to lack the syscall,
      utimensat fails with ENOSYS.  Ignore that.  */
   if (err && errno == ENOSYS)
     err = 0;
-#else
-  (void) file;
-  (void) timespec;
-#endif
-
   return err;
 }
 
