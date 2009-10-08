@@ -37,9 +37,6 @@
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
 
-/* Internal error  */
-enum { EXIT_CANCELED = 125 };
-
 static char *program_path;
 
 extern char **environ;

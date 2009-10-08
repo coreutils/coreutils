@@ -107,8 +107,10 @@ you must include <sys/types.h> before including this file
 /* Exit statuses for programs like 'env' that exec other programs.  */
 enum
 {
-  EXIT_CANNOT_INVOKE = 126,
-  EXIT_ENOENT = 127
+  EXIT_TIMEDOUT = 124, /* Time expired before child completed.  */
+  EXIT_CANCELED = 125, /* Internal error prior to exec attempt.  */
+  EXIT_CANNOT_INVOKE = 126, /* Program located, but not usable.  */
+  EXIT_ENOENT = 127 /* Could not find program to exec.  */
 };
 
 #include "exitfail.h"

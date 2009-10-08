@@ -73,12 +73,6 @@
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
 
-/* Note ETIMEDOUT is 110 on GNU/Linux systems but this is non standard */
-#define EXIT_TIMEDOUT 124
-
-/* Internal failure.  */
-#define EXIT_CANCELED 125
-
 static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
