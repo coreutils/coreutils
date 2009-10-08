@@ -333,14 +333,16 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 # Compare fs.h with the list of file system names/magic-numbers in the
 # Linux statfs man page.  This target prints any new name/number pairs.
 .PHONY: fs-magic-compare
-fs-magic-compare: fs-magic fs-def
+fs-magic-compare: fs-magic fs-kernel-magic fs-def
 	join -v1 -t@ fs-magic fs-def
+	join -v1 -t@ fs-kernel-magic fs-def
 
-CLEANFILES += fs-magic fs-def
+CLEANFILES += fs-def
 fs-def: fs.h
 	grep '^# *define ' $< > $@-t && mv $@-t $@
 
-fs-magic:
+CLEANFILES += fs-magic
+fs-magic: Makefile
 	man statfs \
           |perl -ne '/File system types:/.../Nobody kno/ and print'	\
           |grep 0x | perl -p						\
@@ -357,7 +359,29 @@ fs-magic:
             -e 's/NTFS_SB/NTFS/;'					\
             -e 's/^/# define S_MAGIC_/;'				\
             -e 's,\s*/\* .*? \*/,,;'					\
-          | grep -v S_MAGIC_EXT3					\
+          | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
+          | LC_ALL=C sort						\
+          > $@-t && mv $@-t $@
+
+CLEANFILES += fs-kernel-magic
+fs-kernel-magic: Makefile
+	perl -ne '/^#define.*0x/ and print' /usr/include/linux/magic.h	\
+          | perl -p							\
+            -e 's/MINIX_SUPER_MAGIC\b/MINIX/;'				\
+            -e 's/MINIX_SUPER_MAGIC2\b/MINIX_30/;'			\
+            -e 's/MINIX2_SUPER_MAGIC\b/MINIX_V2/;'			\
+            -e 's/MINIX2_SUPER_MAGIC2\b/MINIX_V2_30/;'			\
+            -e 's/MINIX3_SUPER_MAGIC\b/MINIX_V3/;'			\
+            -e 's/(_SUPER)?_MAGIC//;'					\
+            -e 's/\s+0x(\S+)/" 0x" . uc $$1/e;'				\
+            -e 's/(\s+0x)(\X{3})\b/$${1}0$$2/;'				\
+            -e 's/(\s+0x)(\X{6})\b/$${1}00$$2/;'			\
+            -e 's/(\s+0x)(\X{7})\b/$${1}0$$2/;'				\
+            -e 's/^#define\s+//;'					\
+            -e 's/^USBDEVICE/USBDEVFS/;'				\
+            -e 's/^/# define S_MAGIC_/;'				\
+            -e 's,\s*/\* .*? \*/,,;'					\
+          | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
           | LC_ALL=C sort						\
           > $@-t && mv $@-t $@
 

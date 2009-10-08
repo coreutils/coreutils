@@ -219,7 +219,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "adfs";
     case S_MAGIC_AFFS: /* 0xADFF */
       return "affs";
-    case S_MAGIC_AUTOFS: /* 0x187 */
+    case S_MAGIC_AFS: /* 0x5346414F */
+      return "afs";
+    case S_MAGIC_ANON_INODE_FS: /* 0x09041934 */
+      return "anon-inode FS";
+    case S_MAGIC_AUTOFS: /* 0x0187 */
       return "autofs";
     case S_MAGIC_BEFS: /* 0x42465331 */
       return "befs";
@@ -227,6 +231,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "bfs";
     case S_MAGIC_BINFMT_MISC: /* 0x42494E4D */
       return "binfmt_misc";
+    case S_MAGIC_BTRFS: /* 0x9123683E */
+      return "btrfs";
+    case S_MAGIC_CGROUP: /* 0x0027E0EB */
+      return "cgroupfs";
     case S_MAGIC_CIFS: /* 0xFF534D42 */
       return "cifs";
     case S_MAGIC_CODA: /* 0x73757245 */
@@ -235,6 +243,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "coh";
     case S_MAGIC_CRAMFS: /* 0x28CD3D45 */
       return "cramfs";
+    case S_MAGIC_CRAMFS_WEND: /* 0x453DCD28 */
+      return "cramfs-wend";
+    case S_MAGIC_DEBUGFS: /* 0x64626720 */
+      return "debugfs";
     case S_MAGIC_DEVFS: /* 0x1373 */
       return "devfs";
     case S_MAGIC_DEVPTS: /* 0x1CD1 */
@@ -251,12 +263,16 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "fat";
     case S_MAGIC_FUSECTL: /* 0x65735543 */
       return "fusectl";
+    case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA */
+      return "futexfs";
     case S_MAGIC_HFS: /* 0x4244 */
       return "hfs";
     case S_MAGIC_HPFS: /* 0xF995E849 */
       return "hpfs";
     case S_MAGIC_HUGETLBFS: /* 0x958458F6 */
       return "hugetlbfs";
+    case S_MAGIC_INOTIFYFS: /* 0x2BAD1DEA */
+      return "inotifyfs";
     case S_MAGIC_ISOFS: /* 0x9660 */
       return "isofs";
     case S_MAGIC_ISOFS_R_WIN: /* 0x4004 */
@@ -279,6 +295,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "minix v2";
     case S_MAGIC_MINIX_V2_30: /* 0x2478 */
       return "minix v2 (30 char.)";
+    case S_MAGIC_MINIX_V3: /* 0x4D5A */
+      return "minux3";
     case S_MAGIC_MSDOS: /* 0x4D44 */
       return "msdos";
     case S_MAGIC_NCP: /* 0x564C */
@@ -287,6 +305,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "nfs";
     case S_MAGIC_NFSD: /* 0x6E667364 */
       return "nfsd";
+    case S_MAGIC_NILFS: /* 0x3434 */
+      return "nilfs";
     case S_MAGIC_NTFS: /* 0x5346544E */
       return "ntfs";
     case S_MAGIC_OPENPROM: /* 0x9FA1 */
@@ -301,6 +321,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "reiserfs";
     case S_MAGIC_ROMFS: /* 0x7275 */
       return "romfs";
+    case S_MAGIC_SECURITYFS: /* 0x73636673 */
+      return "securityfs";
+    case S_MAGIC_SELINUX: /* 0xF97CFF8C */
+      return "selinux";
     case S_MAGIC_SMB: /* 0x517B */
       return "smb";
     case S_MAGIC_SQUASHFS: /* 0x73717368 */
@@ -323,6 +347,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "usbdevfs";
     case S_MAGIC_VXFS: /* 0xA501FCF5 */
       return "vxfs";
+    case S_MAGIC_XENFS: /* 0xABBA1974 */
+      return "xenfs";
     case S_MAGIC_XENIX: /* 0x012FF7B4 */
       return "xenix";
     case S_MAGIC_XFS: /* 0x58465342 */

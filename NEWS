@@ -4,7 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  stat -f recognizes more file system types: CIFS, HFS
+  stat -f recognizes more file system types: afs, cifs, anon-inode FS,
+  btrfs, cgroupfs, cramfs-wend, debugfs, futexfs, hfs, inotifyfs, minux3,
+  nilfs, securityfs, selinux, xenfs
 
 ** New features
 
