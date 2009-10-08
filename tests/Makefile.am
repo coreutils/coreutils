@@ -218,6 +218,7 @@ TESTS =						\
   misc/stat-fmt					\
   misc/stat-hyphen				\
   misc/stat-printf				\
+  misc/stat-slash				\
   misc/stdbuf					\
   misc/stty					\
   misc/stty-invalid				\
