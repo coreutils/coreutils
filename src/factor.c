@@ -67,7 +67,7 @@ static void
 emit_factor (mpz_t n)
 {
   if (nfactors_found == nfactors_allocated)
-    factor = x2nrealloc (factor, &nfactors_allocated, sizeof *factor);
+    factor = X2NREALLOC (factor, &nfactors_allocated);
   mpz_init (factor[nfactors_found]);
   mpz_set (factor[nfactors_found], n);
   ++nfactors_found;

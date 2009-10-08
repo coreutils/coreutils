@@ -110,7 +110,7 @@ main (int argc, char **argv)
                       error (EXIT_FAILURE, 0, _("invalid group %s"),
                              quote (gr));
                     if (n_gids == n_gids_allocated)
-                      gids = x2nrealloc (gids, &n_gids_allocated, sizeof *gids);
+                      gids = X2NREALLOC (gids, &n_gids_allocated);
                     gids[n_gids++] = tmp_ul;
 
                     if (*ptr == '\0')

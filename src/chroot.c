@@ -91,7 +91,7 @@ set_additional_groups (char const *groups)
         }
 
       if (n_gids == n_gids_allocated)
-        gids = x2nrealloc (gids, &n_gids_allocated, sizeof *gids);
+        gids = X2NREALLOC (gids, &n_gids_allocated);
       gids[n_gids++] = value;
     }
 
