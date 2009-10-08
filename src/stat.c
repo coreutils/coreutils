@@ -902,7 +902,12 @@ do_stat (char const *filename, bool terse, char const *format)
           return false;
         }
     }
-  else if ((follow_links ? stat : lstat) (filename, &statbuf) != 0)
+  /* We can't use the shorter
+     (follow_links ? stat : lstat) (filename, &statbug)
+     since stat might be a function-like macro.  */
+  else if ((follow_links
+            ? stat (filename, &statbuf)
+            : lstat (filename, &statbuf)) != 0)
     {
       error (0, errno, _("cannot stat %s"), quote (filename));
       return false;
