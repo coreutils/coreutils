@@ -44,16 +44,8 @@ you must include <sys/types.h> before including this file
 
 #include "configmake.h"
 
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
 
 /* Since major is a function on SVR4, we can't use `ifndef major'.  */
 #if MAJOR_IN_MKDEV
@@ -86,16 +78,8 @@ you must include <sys/types.h> before including this file
 
 #include <errno.h>
 
-/* Some systems don't define the following symbols.  */
-#ifndef EDQUOT
-# define EDQUOT (-1)
-#endif
-#ifndef EISDIR
-# define EISDIR (-1)
-#endif
-#ifndef ENOSYS
-# define ENOSYS (-1)
-#endif
+/* Some systems don't define this; POSIX mentions it but says it is
+   obsolete, so gnulib does not provide it either.  */
 #ifndef ENODATA
 # define ENODATA (-1)
 #endif
@@ -124,13 +108,6 @@ initialize_exit_failure (int status)
 }
 
 #include <fcntl.h>
-
-#ifndef F_OK
-# define F_OK 0
-# define X_OK 1
-# define W_OK 2
-# define R_OK 4
-#endif
 
 #include <dirent.h>
 #ifndef _D_EXACT_NAMLEN
@@ -280,30 +257,6 @@ select_plural (uintmax_t n)
 }
 
 #define STREQ(a, b) (strcmp (a, b) == 0)
-
-#if !HAVE_DECL_FREE
-void free ();
-#endif
-
-#if !HAVE_DECL_MALLOC
-char *malloc ();
-#endif
-
-#if !HAVE_DECL_MEMCHR
-char *memchr ();
-#endif
-
-#if !HAVE_DECL_REALLOC
-char *realloc ();
-#endif
-
-#if !HAVE_DECL_GETENV
-char *getenv ();
-#endif
-
-#if !HAVE_DECL_LSEEK
-off_t lseek ();
-#endif
 
 #if !HAVE_DECL_GETLOGIN
 char *getlogin ();
@@ -547,10 +500,6 @@ enum
       DEST = memcpy (tmp_dest_, s_, len_);	\
     }						\
   while (0)
-#endif
-
-#ifndef EOVERFLOW
-# define EOVERFLOW EINVAL
 #endif
 
 #if ! HAVE_SYNC
