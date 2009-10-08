@@ -330,6 +330,37 @@ wheel.h: wheel-gen.pl Makefile.am
 # Tell automake to exempt then from that installcheck test.
 AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 
+# Compare fs.h with the list of file system names/magic-numbers in the
+# Linux statfs man page.  This target prints any new name/number pairs.
+.PHONY: fs-magic-compare
+fs-magic-compare: fs-magic fs-def
+	join -v1 -t@ fs-magic fs-def
+
+CLEANFILES += fs-magic fs-def
+fs-def: fs.h
+	grep '^# *define ' $< > $@-t && mv $@-t $@
+
+fs-magic:
+	man statfs \
+          |perl -ne '/File system types:/.../Nobody kno/ and print'	\
+          |grep 0x | perl -p						\
+            -e 's/MINIX_SUPER_MAGIC\b/MINIX/;'				\
+            -e 's/MINIX_SUPER_MAGIC2\b/MINIX_30/;'			\
+            -e 's/MINIX2_SUPER_MAGIC\b/MINIX_V2/;'			\
+            -e 's/MINIX2_SUPER_MAGIC2\b/MINIX_V2_30/;'			\
+            -e 's/CIFS_MAGIC_NUMBER/CIFS/;'				\
+            -e 's/(_SUPER)?_MAGIC//;'					\
+            -e 's/\s+0x(\S+)/" 0x" . uc $$1/e;'				\
+            -e 's/^\s+//;'						\
+            -e 's/^_(XIAFS)/$$1/;'					\
+            -e 's/^USBDEVICE/USBDEVFS/;'				\
+            -e 's/NTFS_SB/NTFS/;'					\
+            -e 's/^/# define S_MAGIC_/;'				\
+            -e 's,\s*/\* .*? \*/,,;'					\
+          | grep -v S_MAGIC_EXT3					\
+          | LC_ALL=C sort						\
+          > $@-t && mv $@-t $@
+
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic
 	$(AM_V_GEN)rm -f $@

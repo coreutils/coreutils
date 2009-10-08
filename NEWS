@@ -4,6 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  stat -f recognizes more file system types: CIFS, HFS
+
 ** New features
 
   md5sum --check now also accepts openssl-style checksums.

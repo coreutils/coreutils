@@ -225,8 +225,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "befs";
     case S_MAGIC_BFS: /* 0x1BADFACE */
       return "bfs";
-    case S_MAGIC_BINFMT_MISC: /* 0x42494e4d */
+    case S_MAGIC_BINFMT_MISC: /* 0x42494E4D */
       return "binfmt_misc";
+    case S_MAGIC_CIFS: /* 0xFF534D42 */
+      return "cifs";
     case S_MAGIC_CODA: /* 0x73757245 */
       return "coda";
     case S_MAGIC_COH: /* 0x012FF7B7 */
@@ -237,7 +239,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "devfs";
     case S_MAGIC_DEVPTS: /* 0x1CD1 */
       return "devpts";
-    case S_MAGIC_EFS: /* 0x414A53 */
+    case S_MAGIC_EFS: /* 0x00414A53 */
       return "efs";
     case S_MAGIC_EXT: /* 0x137D */
       return "ext";
@@ -249,9 +251,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "fat";
     case S_MAGIC_FUSECTL: /* 0x65735543 */
       return "fusectl";
+    case S_MAGIC_HFS: /* 0x4244 */
+      return "hfs";
     case S_MAGIC_HPFS: /* 0xF995E849 */
       return "hpfs";
-    case S_MAGIC_HUGETLBFS: /* 0x958458f6 */
+    case S_MAGIC_HUGETLBFS: /* 0x958458F6 */
       return "hugetlbfs";
     case S_MAGIC_ISOFS: /* 0x9660 */
       return "isofs";
@@ -259,10 +263,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "isofs";
     case S_MAGIC_ISOFS_WIN: /* 0x4000 */
       return "isofs";
-    case S_MAGIC_JFFS2: /* 0x72B6 */
-      return "jffs2";
     case S_MAGIC_JFFS: /* 0x07C0 */
       return "jffs";
+    case S_MAGIC_JFFS2: /* 0x72B6 */
+      return "jffs2";
     case S_MAGIC_JFS: /* 0x3153464A */
       return "jfs";
     case S_MAGIC_LUSTRE: /* 0x0BD00BD0 */
@@ -285,7 +289,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "nfsd";
     case S_MAGIC_NTFS: /* 0x5346544E */
       return "ntfs";
-    case S_MAGIC_OPENPROM: /* 0x9fa1 */
+    case S_MAGIC_OPENPROM: /* 0x9FA1 */
       return "openprom";
     case S_MAGIC_PROC: /* 0x9FA0 */
       return "proc";
@@ -307,7 +311,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "sysv2";
     case S_MAGIC_SYSV4: /* 0x012FF7B5 */
       return "sysv4";
-    case S_MAGIC_TMPFS: /* 0x1021994 */
+    case S_MAGIC_TMPFS: /* 0x01021994 */
       return "tmpfs";
     case S_MAGIC_UDF: /* 0x15013346 */
       return "udf";
