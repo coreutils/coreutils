@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <assert.h>
 
 #include "system.h"
 #include "argmatch.h"
@@ -119,11 +120,9 @@ static bool
 touch (const char *file)
 {
   bool ok;
-  struct stat sbuf;
   int fd = -1;
   int open_errno = 0;
-  struct timespec timespec[2];
-  struct timespec const *t;
+  struct timespec const *t = newtime;
 
   if (STREQ (file, "-"))
     fd = STDOUT_FILENO;
@@ -144,24 +143,13 @@ touch (const char *file)
 
   if (change_times != (CH_ATIME | CH_MTIME))
     {
-      /* We're setting only one of the time values.  stat the target to get
-         the other one.  If we have the file descriptor already, use fstat.
-         Otherwise, either we're in no-create mode (and hence didn't call open)
-         or FILE is inaccessible or a directory, so we have to use stat.  */
-      if (fd != -1 ? fstat (fd, &sbuf) : stat (file, &sbuf))
+      /* We're setting only one of the time values.  */
+      if (change_times == CH_MTIME)
+        newtime[0].tv_nsec = UTIME_OMIT;
+      else
         {
-          if (open_errno)
-            error (0, open_errno, _("creating %s"), quote (file));
-          else
-            {
-              if (no_create && (errno == ENOENT || errno == EBADF))
-                return true;
-              error (0, errno, _("failed to get attributes of %s"),
-                     quote (file));
-            }
-          if (fd == STDIN_FILENO)
-            close (fd);
-          return false;
+          assert (change_times == CH_ATIME);
+          newtime[1].tv_nsec = UTIME_OMIT;
         }
     }
 
@@ -170,16 +158,6 @@ touch (const char *file)
       /* Pass NULL to futimens so it will not fail if we have
          write access to the file, but don't own it.  */
       t = NULL;
-    }
-  else
-    {
-      timespec[0] = (change_times & CH_ATIME
-                     ? newtime[0]
-                     : get_stat_atime (&sbuf));
-      timespec[1] = (change_times & CH_MTIME
-                     ? newtime[1]
-                     : get_stat_mtime (&sbuf));
-      t = timespec;
     }
 
   ok = (gl_futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
@@ -195,8 +173,7 @@ touch (const char *file)
   else if (fd == STDOUT_FILENO)
     {
       /* Do not diagnose "touch -c - >&-".  */
-      if (!ok && errno == EBADF && no_create
-          && change_times == (CH_ATIME | CH_MTIME))
+      if (!ok && errno == EBADF && no_create)
         return true;
     }
 
@@ -429,10 +406,7 @@ main (int argc, char **argv)
       if (change_times == (CH_ATIME | CH_MTIME))
         amtime_now = true;
       else
-        {
-          gettime (&newtime[0]);
-          newtime[1] = newtime[0];
-        }
+        newtime[1].tv_nsec = newtime[0].tv_nsec = UTIME_NOW;
     }
 
   if (optind == argc)
