@@ -166,6 +166,7 @@ sleep_LDADD = $(LDADD)
 sort_LDADD = $(LDADD)
 split_LDADD = $(LDADD)
 stat_LDADD = $(LDADD)
+stdbuf_LDADD = $(LDADD)
 stty_LDADD = $(LDADD)
 su_LDADD = $(LDADD)
 sum_LDADD = $(LDADD)
@@ -292,6 +293,10 @@ truncate_LDADD += $(LIBICONV)
 # for canon_host
 pinky_LDADD += $(GETADDRINFO_LIB)
 who_LDADD += $(GETADDRINFO_LIB)
+
+# for gethostname, uname
+hostname_LDADD += $(GETHOSTNAME_LIB)
+uname_LDADD += $(GETHOSTNAME_LIB)
 
 $(PROGRAMS): ../lib/libcoreutils.a
 
