@@ -361,7 +361,6 @@ su_LDADD += $(LIB_CRYPT)
 
 # for various ACL functions
 copy_LDADD += $(LIB_ACL)
-dir_LDADD += $(LIB_ACL)
 ls_LDADD += $(LIB_ACL)
 
 # for various xattr functions
