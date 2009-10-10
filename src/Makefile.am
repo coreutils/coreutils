@@ -33,7 +33,6 @@ build_if_possible__progs = \
   stdbuf	\
   stty		\
   su		\
-  uname		\
   uptime	\
   users		\
   who
@@ -125,6 +124,7 @@ EXTRA_PROGRAMS = \
   truncate	\
   tsort		\
   tty		\
+  uname		\
   unexpand	\
   uniq		\
   unlink	\

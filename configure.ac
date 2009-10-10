@@ -118,8 +118,6 @@ fi
 AC_FUNC_FORK
 
 optional_bin_progs=
-AC_CHECK_FUNCS([uname],
-        gl_ADD_PROG([optional_bin_progs], [uname]))
 AC_CHECK_FUNCS([chroot],
         gl_ADD_PROG([optional_bin_progs], [chroot]))
 AC_CHECK_FUNCS([gethostid],
