@@ -24,7 +24,7 @@ fi
 . $srcdir/test-lib.sh
 getlimits_
 
-touch here || framework_failure
+touch empty here || framework_failure
 
 fail=0
 
@@ -43,13 +43,13 @@ for inotify in ---disable-inotify ''; do
 
   # Ensure that tail --pid=PID exits with success status when PID is dead.
   # Use an unlikely-to-be-live PID
-  timeout 3 tail -f -s.1 --pid=$PID_T_MAX $inotify /dev/null
+  timeout 3 tail -f -s.1 --pid=$PID_T_MAX $inotify empty
   ret=$?
   test $ret = 124 && skip_test_ "pid $PID_T_MAX present or tail too slow"
   test $ret = 0 || fail=1
 
   # Ensure tail doesn't wait for data when PID is dead
-  timeout 3 tail -f -s10 --pid=$PID_T_MAX $inotify /dev/null
+  timeout 3 tail -f -s10 --pid=$PID_T_MAX $inotify empty
   test $? = 124 && fail=1
 done
 
