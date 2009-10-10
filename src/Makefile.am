@@ -24,25 +24,114 @@ no_install__progs = \
   arch hostname su
 
 build_if_possible__progs = \
-  chroot df hostid nice pinky stdbuf libstdbuf.so stty su uname uptime users who
+  chroot	\
+  df		\
+  hostid	\
+  libstdbuf.so	\
+  nice		\
+  pinky		\
+  stdbuf	\
+  stty		\
+  su		\
+  uname		\
+  uptime	\
+  users		\
+  who
 
 AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 EXTRA_PROGRAMS = \
   $(no_install__progs) \
   $(build_if_possible__progs) \
-  [ chcon chgrp chown chmod cp dd dircolors du \
-  ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mktemp \
-  mv nohup readlink rm rmdir shred stat sync touch unlink \
-  cat cksum comm csplit cut expand fmt fold head join groups md5sum \
-  nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
-  shuf sort split sum tac tail tr tsort unexpand uniq wc \
-  basename date dirname echo env expr factor false \
-  id kill logname pathchk printenv printf pwd \
-  runcon seq sleep tee \
-  test timeout true truncate tty whoami yes \
-  base64
+  [		\
+  base64	\
+  basename	\
+  cat		\
+  chcon		\
+  chgrp		\
+  chmod		\
+  chown		\
+  cksum		\
+  comm		\
+  cp		\
+  csplit	\
+  cut		\
+  date		\
+  dd		\
+  dir		\
+  dircolors	\
+  dirname	\
+  du		\
+  echo		\
+  env		\
+  expand	\
+  expr		\
+  factor	\
+  false		\
+  fmt		\
+  fold		\
+  ginstall	\
+  groups	\
+  head		\
+  id		\
+  join		\
+  kill		\
+  link		\
+  ln		\
+  logname	\
+  ls		\
+  md5sum	\
+  mkdir		\
+  mkfifo	\
+  mknod		\
+  mktemp	\
+  mv		\
+  nl		\
+  nohup		\
+  od		\
+  paste		\
+  pathchk	\
+  pr		\
+  printenv	\
+  printf	\
+  ptx		\
+  pwd		\
+  readlink	\
+  rm		\
+  rmdir		\
+  runcon	\
+  seq		\
+  sha1sum	\
+  sha224sum	\
+  sha256sum	\
+  sha384sum	\
+  sha512sum	\
+  shred		\
+  shuf		\
+  sleep		\
+  sort		\
+  split		\
+  stat		\
+  sum		\
+  sync		\
+  tac		\
+  tail		\
+  tee		\
+  test		\
+  timeout	\
+  touch		\
+  tr		\
+  true		\
+  truncate	\
+  tsort		\
+  tty		\
+  unexpand	\
+  uniq		\
+  unlink	\
+  vdir		\
+  wc		\
+  whoami	\
+  yes
 
 bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
 
@@ -50,20 +139,20 @@ noinst_PROGRAMS = setuidgid getlimits
 
 pkglib_PROGRAMS = $(OPTIONAL_PKGLIB_PROGS)
 
-noinst_HEADERS = \
-  chown-core.h \
-  copy.h \
-  cp-hash.h \
-  dircolors.h \
-  fs.h \
-  group-list.h \
-  ls.h \
-  operand2sig.h \
-  prog-fprintf.h \
-  remove.h \
-  system.h \
-  wheel-size.h \
-  wheel.h \
+noinst_HEADERS =	\
+  chown-core.h		\
+  copy.h		\
+  cp-hash.h		\
+  dircolors.h		\
+  fs.h			\
+  group-list.h		\
+  ls.h			\
+  operand2sig.h		\
+  prog-fprintf.h	\
+  remove.h		\
+  system.h		\
+  wheel-size.h		\
+  wheel.h		\
   uname.h
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
