@@ -260,8 +260,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
-  -c, --bytes=K            output the last K bytes; alternatively, use +K to\n\
-                           output bytes starting with the Kth of each file\n\
+  -c, --bytes=K            output the last K bytes; alternatively, use -c +K\n
+                           to output bytes starting with the Kth of each file\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
@@ -272,7 +272,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      printf (_("\
   -n, --lines=K            output the last K lines, instead of the last %d;\n\
-                           or use +K to output lines starting with the Kth\n\
+                           or use -n +K to output lines starting with the Kth\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                            changed size after N (default %d) iterations\n\
