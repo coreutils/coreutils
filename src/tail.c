@@ -1168,6 +1168,47 @@ wd_comparator (const void *e1, const void *e2)
   return spec1->wd == spec2->wd;
 }
 
+/* Helper function used by `tail_forever_inotify'.  */
+
+static void
+check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
+{
+  struct stat stats;
+  char const *name = pretty_name (fspec);
+
+  if (fstat (fspec->fd, &stats) != 0)
+    {
+      close_fd (fspec->fd, name);
+      fspec->fd = -1;
+      fspec->errnum = errno;
+      return;
+    }
+
+  if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
+    {
+      error (0, 0, _("%s: file truncated"), name);
+      *prev_wd = wd;
+      xlseek (fspec->fd, stats.st_size, SEEK_SET, name);
+      fspec->size = stats.st_size;
+    }
+  else if (S_ISREG (fspec->mode) && stats.st_size == fspec->size
+           && timespec_cmp (fspec->mtime, get_stat_mtime (&stats)) == 0)
+    return;
+
+  if (wd != *prev_wd)
+    {
+      if (print_headers)
+        write_header (name);
+      *prev_wd = wd;
+    }
+
+  uintmax_t bytes_read = dump_remainder (name, fspec->fd, COPY_TO_EOF);
+  fspec->size += bytes_read;
+
+  if (fflush (stdout) != 0)
+    error (EXIT_FAILURE, errno, _("write error"));
+}
+
 /* Tail N_FILES files forever, or until killed.
    Check modifications using the inotify events system.  */
 
@@ -1249,6 +1290,14 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
   prev_wd = f[n_files - 1].wd;
 
+  /* Check files again.  New data can be available since last time we checked
+     and before they are watched by inotify.  */
+  for (i = 0; i < n_files; i++)
+    {
+      if (!f[i].ignore)
+        check_fspec (&f[i], f[i].wd, &prev_wd);
+    }
+
   evlen += sizeof (struct inotify_event) + 1;
   evbuf = xmalloc (evlen);
 
@@ -1257,11 +1306,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
      This loop sleeps on the `safe_read' call until a new event is notified.  */
   while (1)
     {
-      char const *name;
       struct File_spec *fspec;
-      uintmax_t bytes_read;
-      struct stat stats;
-
       struct inotify_event *ev;
 
       /* When watching a PID, ensure that a read from WD will not block
@@ -1369,37 +1414,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           continue;
         }
-
-      name = pretty_name (fspec);
-
-      if (fstat (fspec->fd, &stats) != 0)
-        {
-          close_fd (fspec->fd, name);
-          fspec->fd = -1;
-          fspec->errnum = errno;
-          continue;
-        }
-
-      if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
-        {
-          error (0, 0, _("%s: file truncated"), name);
-          prev_wd = ev->wd;
-          xlseek (fspec->fd, stats.st_size, SEEK_SET, name);
-          fspec->size = stats.st_size;
-        }
-
-      if (ev->wd != prev_wd)
-        {
-          if (print_headers)
-            write_header (name);
-          prev_wd = ev->wd;
-        }
-
-      bytes_read = dump_remainder (name, fspec->fd, COPY_TO_EOF);
-      fspec->size += bytes_read;
-
-      if (fflush (stdout) != 0)
-        error (EXIT_FAILURE, errno, _("write error"));
+      check_fspec (fspec, ev->wd, &prev_wd);
     }
 }
 #endif
