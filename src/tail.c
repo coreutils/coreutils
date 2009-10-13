@@ -260,7 +260,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
-  -c, --bytes=K            output the last K bytes; alternatively, use -c +K\n
+  -c, --bytes=K            output the last K bytes; alternatively, use -c +K\n\
                            to output bytes starting with the Kth of each file\n\
 "), stdout);
      fputs (_("\
