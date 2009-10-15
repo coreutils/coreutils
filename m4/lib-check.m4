@@ -51,6 +51,7 @@ $ac_includes_default
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
+  LIB_CRYPT=
   cu_saved_libs="$LIBS"
   AC_SEARCH_LIBS([crypt], [ufc crypt],
                  [test "$ac_cv_search_crypt" = "none required" ||

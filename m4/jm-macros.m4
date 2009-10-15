@@ -94,6 +94,7 @@ AC_DEFUN([coreutils_MACROS],
 
   # for dd.c and shred.c
   coreutils_saved_libs=$LIBS
+    LIB_FDATASYNC=
     AC_SEARCH_LIBS([fdatasync], [rt posix4],
                    [test "$ac_cv_search_fdatasync" = "none required" ||
                     LIB_FDATASYNC=$ac_cv_search_fdatasync])

@@ -25,6 +25,7 @@ AC_DEFUN([gl_FUNC_XATTR],
     fi
     AC_DEFINE_UNQUOTED([USE_XATTR], [$use_xattr],
                        [Define if you want extended attribute support.])
+    LIB_XATTR=
     xattr_saved_LIBS=$LIBS
     AC_SEARCH_LIBS([attr_copy_file], [attr],
                    [test "$ac_cv_search_attr_copy_file" = "none required" ||
