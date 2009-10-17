@@ -9855,7 +9855,9 @@ touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
 @cindex empty files, creating
-Any @var{file} argument that does not exist is created empty.
+Any @var{file} argument that does not exist is created empty, unless
+option @option{--no-create} (@option{-c}) or @option{--no-dereference}
+(@option{-h}) was in effect.
 
 A @var{file} argument string of @samp{-} is handled specially and
 causes @command{touch} to change the times of the file associated with
@@ -9869,8 +9871,8 @@ user must own the files.
 
 Although @command{touch} provides options for changing two of the times---the
 times of last access and modification---of a file, there is actually
-a third one as well: the inode change time.  This is often referred to
-as a file's @code{ctime}.
+a standard third one as well: the inode change time.  This is often
+referred to as a file's @code{ctime}.
 The inode change time represents the time when the file's meta-information
 last changed.  One common example of this is when the permissions of a
 file change.  Changing the permissions doesn't access the file, so
@@ -9882,6 +9884,9 @@ fresh copy of the file, including the new permissions value.
 Another operation that modifies a file's ctime without affecting
 the others is renaming.  In any case, it is not possible, in normal
 operations, for a user to change the ctime field to a user-specified value.
+Some operating systems and file systems support a fourth time: the
+birth time, when the file was first created; by definition, this
+timestamp never changes.
 
 @vindex TZ
 Time stamps assume the time zone rules specified by the @env{TZ}
@@ -9910,7 +9915,7 @@ Change the access time only.
 @itemx --no-create
 @opindex -c
 @opindex --no-create
-Do not create files that do not exist.
+Do not warn about or create files that do not exist.
 
 @item -d
 @itemx --date=@var{time}
@@ -9931,6 +9936,24 @@ silently ignore any excess precision here.
 @cindex BSD @command{touch} compatibility
 Ignored; for compatibility with BSD versions of @command{touch}.
 
+@item -h
+@itemx --no-dereference
+@opindex -h
+@opindex --no-dereference
+@cindex symbolic links, changing time
+@findex lutimes
+Attempt to change the timestamps of a symbolic link, rather than what
+the link refers to.  When using this option, empty files are not
+created, but option @option{-c} must also be used to avoid warning
+about files that do not exist.  Not all systems support changing the
+timestamps of symlinks, since underlying system support for this
+action was not required until @acronym{POSIX} 2008.  Also, on some
+systems, the mere act of examining a symbolic link changes the access
+time, such that only changes to the modification time will persist
+long enough to be observable.  When coupled with option @option{-r}, a
+reference timestamp is taken from a symbolic link rather than the file
+it refers to.
+
 @item -m
 @itemx --time=mtime
 @itemx --time=modify
@@ -9950,6 +9973,8 @@ If this option is combined with the @option{--date=@var{time}}
 the origin for any relative @var{time}s given, but is otherwise ignored.
 For example, @samp{-r foo -d '-5 seconds'} specifies a time stamp
 equal to five seconds before the corresponding time stamp for @file{foo}.
+If @var{file} is a symbolic link, the reference timestamp is taken
+from the target of the symlink, unless @option{-h} was also in effect.
 
 @item -t [[@var{cc}]@var{yy}]@var{mmddhhmm}[.@var{ss}]
 Use the argument (optional four-digit or two-digit years, months,

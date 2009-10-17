@@ -17,6 +17,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   md5sum --check now also accepts openssl-style checksums.
   So do sha1sum, sha224sum, sha384sum and sha512sum.
 
+  touch now accepts the option --no-dereference (-h), as a means to
+  change symlink timestamps on platforms with enough support.
+
 
 * Noteworthy changes in release 8.0 (2009-10-06) [beta]
 

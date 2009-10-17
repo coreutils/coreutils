@@ -58,6 +58,9 @@ static bool no_create;
 /* (-r) If true, use times from a reference file.  */
 static bool use_ref;
 
+/* (-h) If true, change the times of an existing symlink, if possible.  */
+static bool no_dereference;
+
 /* If true, the only thing we have to do is change both the
    modification and access time to the current time, so we don't
    have to own the file, just be able to read and write it.
@@ -85,6 +88,7 @@ static struct option const longopts[] =
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'r'}, /* FIXME: remove --file in 2010 */
   {"reference", required_argument, NULL, 'r'},
+  {"no-dereference", no_argument, NULL, 'h'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -126,7 +130,7 @@ touch (const char *file)
 
   if (STREQ (file, "-"))
     fd = STDOUT_FILENO;
-  else if (! no_create)
+  else if (! (no_create || no_dereference))
     {
       /* Try to open FILE, creating it if necessary.  */
       fd = fd_reopen (STDIN_FILENO, file,
@@ -160,7 +164,8 @@ touch (const char *file)
       t = NULL;
     }
 
-  ok = (gl_futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
+  ok = ((no_dereference && fd == -1) ? lutimens (file, t)
+        : gl_futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t)) == 0;
 
   if (fd == STDIN_FILENO)
     {
@@ -211,7 +216,8 @@ usage (int status)
       fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
-A FILE argument that does not exist is created empty.\n\
+A FILE argument that does not exist is created empty, unless -c or -h\n\
+is supplied.\n\
 \n\
 A FILE argument string of - is handled specially and causes touch to\n\
 change the times of the file associated with standard output.\n\
@@ -225,6 +231,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --no-create        do not create any files\n\
   -d, --date=STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
+"), stdout);
+      fputs (_("\
+  -h, --no-dereference   affect each symbolic link instead of any referenced\n\
+                         file (useful only on systems that can change the\n\
+                         timestamps of a symlink)\n\
   -m                     change only the modification time\n\
 "), stdout);
       fputs (_("\
@@ -265,7 +276,7 @@ main (int argc, char **argv)
   change_times = 0;
   no_create = use_ref = false;
 
-  while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, &long_idx)) != -1)
+  while ((c = getopt_long (argc, argv, "acd:fhmr:t:", longopts, &long_idx)) != -1)
     {
       switch (c)
         {
@@ -282,6 +293,10 @@ main (int argc, char **argv)
           break;
 
         case 'f':
+          break;
+
+        case 'h':
+          no_dereference = true;
           break;
 
         case 'm':
@@ -333,7 +348,10 @@ main (int argc, char **argv)
   if (use_ref)
     {
       struct stat ref_stats;
-      if (stat (ref_file, &ref_stats))
+      /* Don't use (no_dereference ? lstat : stat) (args), since stat
+         might be an object-like macro.  */
+      if (no_dereference ? lstat (ref_file, &ref_stats)
+          : stat (ref_file, &ref_stats))
         error (EXIT_FAILURE, errno,
                _("failed to get attributes of %s"), quote (ref_file));
       newtime[0] = get_stat_atime (&ref_stats);

@@ -445,6 +445,7 @@ TESTS =						\
   touch/fail-diag				\
   touch/fifo					\
   touch/no-create-missing			\
+  touch/no-dereference				\
   touch/no-rights				\
   touch/not-owner				\
   touch/obsolescent				\
