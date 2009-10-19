@@ -35,7 +35,7 @@ which are extracted from other source packages:
 
 And there you are!  Just
 
-        $ ./configure #[--enable-gcc-warnings]
+        $ ./configure --quiet #[--enable-gcc-warnings]
         $ make
         $ make check
 

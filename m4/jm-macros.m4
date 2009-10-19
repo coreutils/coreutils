@@ -116,7 +116,8 @@ AC_DEFUN([coreutils_MACROS],
       if test "X$enable_libcap" = "Xyes"; then
         AC_MSG_ERROR([libcap library was not found or not usable])
       else
-        AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])
+        AC_MSG_WARN([libcap library was not found or not usable.])
+        AC_MSG_WARN([AC_PACKAGE_NAME will be built without capability support.])
       fi
     fi
   else

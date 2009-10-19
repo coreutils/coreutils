@@ -22,6 +22,8 @@ AC_DEFUN([gl_FUNC_XATTR],
       use_xattr=1
     else
       use_xattr=0
+      AC_MSG_WARN([libattr development library was not found or not usable.])
+      AC_MSG_WARN([AC_PACKAGE_NAME will be built without xattr support.])
     fi
     AC_DEFINE_UNQUOTED([USE_XATTR], [$use_xattr],
                        [Define if you want extended attribute support.])
