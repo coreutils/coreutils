@@ -212,10 +212,6 @@ enum
 
 #include <ctype.h>
 
-#if ! (defined isblank || HAVE_DECL_ISBLANK)
-# define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
-
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char
      or EOF.

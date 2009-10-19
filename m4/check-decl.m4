@@ -1,4 +1,4 @@
-#serial 25
+#serial 26
 # Check declarations for this package.
 
 dnl Copyright (C) 1997-2001, 2003-2006, 2008-2009 Free Software
@@ -34,8 +34,6 @@ AC_DEFUN([gl_CHECK_DECLS],
     getgrgid,
     getpwuid,
     ttyname], , , $headers)
-
-  AC_CHECK_DECLS([isblank], [], [], [#include <ctype.h>])
 
   AC_CHECK_DECLS_ONCE([geteuid])
   AC_CHECK_DECLS_ONCE([getlogin])
