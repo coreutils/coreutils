@@ -74,6 +74,7 @@ EXTRA_DIST += $(TESTS)
 
 TESTS =						\
   misc/help-version				\
+  tail-2/inotify-race			        \
   misc/invalid-opt				\
   rm/ext3-perf					\
   rm/cycle					\
