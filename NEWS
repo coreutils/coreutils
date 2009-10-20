@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   btrfs, cgroupfs, cramfs-wend, debugfs, futexfs, hfs, inotifyfs, minux3,
   nilfs, securityfs, selinux, xenfs
 
+  md5sum now prints checksums atomically so that concurrent
+  processes will not intersperse their output.
+  This also affected sum, sha1sum, sha224sum, sha384sum and sha512sum.
+  [the bug dates back to the initial implementation]
+
 ** New features
 
   md5sum --check now also accepts openssl-style checksums.

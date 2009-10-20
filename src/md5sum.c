@@ -513,7 +513,6 @@ digest_check (const char *checkfile_name)
               if (!status_only)
                 {
                   printf (_("%s: FAILED open or read\n"), filename);
-                  fflush (stdout);
                 }
             }
           else
@@ -539,7 +538,6 @@ digest_check (const char *checkfile_name)
                     printf ("%s: %s\n", filename, _("FAILED"));
                   else if (!quiet)
                     printf ("%s: %s\n", filename, _("OK"));
-                  fflush (stdout);
                 }
             }
         }
@@ -618,6 +616,10 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
+
+  /* Line buffer stdout to ensure lines are written atomically and immediately
+     so that processes running in parallel do not intersperse their output.  */
+  setvbuf (stdout, NULL, _IOLBF, 0);
 
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)

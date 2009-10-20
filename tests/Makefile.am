@@ -178,6 +178,7 @@ TESTS =						\
   misc/id-groups				\
   misc/md5sum					\
   misc/md5sum-newline				\
+  misc/md5sum-parallel				\
   misc/mknod					\
   misc/nice					\
   misc/nl					\

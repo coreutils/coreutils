@@ -233,6 +233,10 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  /* Line buffer stdout to ensure lines are written atomically and immediately
+     so that processes running in parallel do not intersperse their output.  */
+  setvbuf (stdout, NULL, _IOLBF, 0);
+
   have_read_stdin = false;
 
   while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)
