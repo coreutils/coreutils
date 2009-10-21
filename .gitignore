@@ -47,11 +47,13 @@ lib/arpa
 lib/binary-io.h
 lib/charset.alias
 lib/configmake.h
+lib/glthread
 lib/libcoreutils.a
 lib/printf.c
 lib/progname.c
 lib/progname.h
 lib/selinux
+lib/unistr
 lib/uniwidth
 m4/.cvsignore
 m4/.gitignore
@@ -72,3 +74,4 @@ src/version.c
 src/version.h
 stamp-h1
 tests/*/*.log
+tests/test-suite.log
