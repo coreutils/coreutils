@@ -452,6 +452,7 @@ TESTS =						\
   touch/obsolescent				\
   touch/read-only				\
   touch/relative				\
+  touch/trailing-slash				\
   $(root_tests)
 
 pr_data =					\
