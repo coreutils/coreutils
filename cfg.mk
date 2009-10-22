@@ -191,6 +191,12 @@ sc_no_exec_perl_coreutils:
 	      exit 1; } || :;						\
 	fi
 
+# Don't use "readlink" or "readlinkat" directly
+sc_prohibit_readlink:
+	@re='\<readlink(at)? \('					\
+	msg='do not use readlink(at); use via xreadlink or areadlink*'	\
+	  $(_prohibit_regexp)
+
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
 # which date accepts but GNU strftime does not.
