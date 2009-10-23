@@ -16,19 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+. $srcdir/test-lib.sh
+getlimits_
+require_built_ stdbuf
+
 if test "$VERBOSE" = yes; then
   set -x
   stdbuf --version
 fi
-
-. $srcdir/test-lib.sh
-getlimits_
-
-# skip this test if stdbuf isn't being built.
-case " $built_programs " in
-  *" stdbuf "*) ;;
-  *) skip_test_ 'stdbuf not built';;
-esac
 
 # stdbuf fails when the absolute top build dir name contains e.g., space, TAB, NL
 lf='
@@ -52,10 +47,17 @@ stdbuf -o1 true || fail=1 # verify size syntax
 stdbuf -oK true || fail=1 # verify size syntax
 stdbuf -o0 true || fail=1 # verify unbuffered syntax
 stdbuf -oL true || fail=1 # verify line buffered syntax
-stdbuf -ol true && fail=1 # Capital 'L' required
-stdbuf -o$SIZE_OFLOW true && fail=1 # size too large
-stdbuf -iL true && fail=1 # line buffering stdin disallowed
+stdbuf -ol true # Capital 'L' required
+test $? = 125 || fail=1 # Internal error is a particular status
+stdbuf -o$SIZE_OFLOW true # size too large
+test $? = 125 || fail=1
+stdbuf -iL true # line buffering stdin disallowed
+test $? = 125 || fail=1
 stdbuf -i0 -o0 -e0 true || fail=1 #check all files
+stdbuf -o1 . # invalid command
+test $? = 126 || fail=1
+stdbuf -o1 ... # no such command
+test $? = 127 || fail=1
 
 # Ensure line buffering stdout takes effect
 printf '1\n' > exp

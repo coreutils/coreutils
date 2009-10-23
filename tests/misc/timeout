@@ -36,6 +36,8 @@ timeout 0 true || fail=1
 
 # exit status propagation
 timeout 1 false && fail=1
+timeout 1 sh -c 'exit 2'
+test $? = 2 || fail=1
 
 # timeout
 timeout 1 sleep 2

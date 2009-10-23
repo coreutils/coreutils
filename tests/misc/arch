@@ -17,12 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/test-lib.sh
-
-# skip this test if arch isn't being built.
-case " $built_programs " in
-  *" arch "*) ;;
-  *) skip_test_ 'not building arch';;
-esac
+require_built_ arch
 
 if test "$VERBOSE" = yes; then
   set -x

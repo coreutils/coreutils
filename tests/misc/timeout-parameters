@@ -26,28 +26,38 @@ getlimits_
 
 fail=0
 
+# internal errors are 125, distinct from execution failure
+
 # --help and --version must be specified alone
-timeout --help --version && fail=1
+timeout --help --version
+test $? = 125 || fail=1
 
 # invalid timeout
-timeout invalid sleep 0 && fail=1
+timeout invalid sleep 0
+test $? = 125 || fail=1
 
 # invalid timeout suffix
-timeout 42D sleep 0 && fail=1
+timeout 42D sleep 0
+test $? = 125 || fail=1
 
 # timeout overflow
-timeout $UINT_OFLOW sleep 0 && fail=1
+timeout $UINT_OFLOW sleep 0
+test $? = 125 || fail=1
 
 # timeout overflow
-timeout $(expr $UINT_MAX / 86400 + 1)d sleep 0 && fail=1
+timeout $(expr $UINT_MAX / 86400 + 1)d sleep 0
+test $? = 125 || fail=1
 
 # invalid signal spec
-timeout --signal=invalid 1 sleep 0 && fail=1
+timeout --signal=invalid 1 sleep 0
+test $? = 125 || fail=1
 
 # invalid command
-timeout 1 . && fail=1
+timeout 1 .
+test $? = 126 || fail=1
 
-# non existant command
-timeout 1 ... && fail=1
+# no such command
+timeout 1 ...
+test $? = 127 || fail=1
 
 Exit $fail
