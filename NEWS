@@ -24,6 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   were first renamed or unlinked or never modified.
   [The race was introduced in coreutils-7.5]
 
+  timeout now doesn't exit unless the command it is monitoring does,
+  for any specified signal. [bug introduced in coreutils-7.0].
+
 ** Changes in behavior
 
   chroot, env, nice, and su fail with status 125, rather than 1, on
