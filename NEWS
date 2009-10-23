@@ -24,6 +24,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   were first renamed or unlinked or never modified.
   [The race was introduced in coreutils-7.5]
 
+** Changes in behavior
+
+  chroot, env, nice, and su fail with status 125, rather than 1, on
+  internal error such as failure to parse command line arguments; this
+  is for consistency with stdbuf and timeout, and avoids ambiguity
+  with the invoked command failing with status 1.
+
 ** New features
 
   md5sum --check now also accepts openssl-style checksums.

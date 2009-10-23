@@ -142,7 +142,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAILURE);
+  initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
@@ -157,7 +157,7 @@ main (int argc, char **argv)
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
-          usage (EXIT_FAILURE);
+          usage (EXIT_CANCELED);
         }
     }
 

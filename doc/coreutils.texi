@@ -14363,7 +14363,7 @@ device files), copy them into place, too.
 Exit status:
 
 @display
-1   if @command{chroot} itself fails
+125 if @command{chroot} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
@@ -14441,7 +14441,7 @@ Exit status:
 
 @display
 0   if no @var{command} is specified and the environment is output
-1   if @command{env} itself fails
+125 if @command{env} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
@@ -14516,7 +14516,7 @@ Exit status:
 
 @display
 0   if no @var{command} is specified and the niceness is output
-1   if @command{nice} itself fails
+125 if @command{nice} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
@@ -14843,7 +14843,7 @@ shell is restricted (see @option{-m} just above).
 Exit status:
 
 @display
-1   if @command{su} itself fails
+125 if @command{su} itself fails
 126 if subshell is found but cannot be invoked
 127 if subshell cannot be found
 the exit status of the subshell otherwise

@@ -160,7 +160,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAILURE);
+  initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
@@ -177,22 +177,22 @@ main (int argc, char **argv)
           groups = optarg;
           break;
         default:
-          usage (EXIT_FAILURE);
+          usage (EXIT_CANCELED);
         }
     }
 
   if (argc <= optind)
     {
       error (0, 0, _("missing operand"));
-      usage (EXIT_FAILURE);
+      usage (EXIT_CANCELED);
     }
 
   if (chroot (argv[optind]) != 0)
-    error (EXIT_FAILURE, errno, _("cannot change root directory to %s"),
+    error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
            argv[optind]);
 
   if (chdir ("/"))
-    error (EXIT_FAILURE, errno, _("cannot chdir to root directory"));
+    error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
 
   if (argc == optind + 1)
     {
@@ -223,7 +223,7 @@ main (int argc, char **argv)
       char const *err = parse_user_spec (userspec, &uid, &gid, &user, &group);
 
       if (err)
-        error (EXIT_FAILURE, errno, "%s", err);
+        error (EXIT_CANCELED, errno, "%s", err);
 
       free (user);
       free (group);
@@ -254,7 +254,7 @@ main (int argc, char **argv)
     }
 
   if (fail)
-    exit (EXIT_FAILURE);
+    exit (EXIT_CANCELED);
 
   /* Execute the given command.  */
   execvp (argv[0], argv);
