@@ -903,7 +903,7 @@ do_stat (char const *filename, bool terse, char const *format)
         }
     }
   /* We can't use the shorter
-     (follow_links ? stat : lstat) (filename, &statbug)
+     (follow_links?stat:lstat) (filename, &statbug)
      since stat might be a function-like macro.  */
   else if ((follow_links
             ? stat (filename, &statbuf)

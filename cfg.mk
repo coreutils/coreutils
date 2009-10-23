@@ -197,6 +197,12 @@ sc_prohibit_readlink:
 	msg='do not use readlink(at); use via xreadlink or areadlink*'	\
 	  $(_prohibit_regexp)
 
+# Don't use address of "stat" or "lstat" functions
+sc_prohibit_stat_macro_address:
+	@re='\<l?stat '':|&l?stat\>'					\
+	msg='stat() and lstat() may be function-like macros'		\
+	  $(_prohibit_regexp)
+
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
 # which date accepts but GNU strftime does not.

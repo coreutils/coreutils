@@ -348,7 +348,7 @@ main (int argc, char **argv)
   if (use_ref)
     {
       struct stat ref_stats;
-      /* Don't use (no_dereference ? lstat : stat) (args), since stat
+      /* Don't use (no_dereference?lstat:stat) (args), since stat
          might be an object-like macro.  */
       if (no_dereference ? lstat (ref_file, &ref_stats)
           : stat (ref_file, &ref_stats))

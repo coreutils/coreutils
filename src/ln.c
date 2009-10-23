@@ -138,7 +138,7 @@ do_link (const char *source, const char *dest)
     {
        /* Which stat to use depends on whether linkat will follow the
           symlink.  We can't use the shorter
-          (logical ? stat : lstat) (source, &source_stats)
+          (logical?stat:lstat) (source, &source_stats)
           since stat might be a function-like macro.  */
       if ((logical ? stat (source, &source_stats)
            : lstat (source, &source_stats))
