@@ -74,7 +74,7 @@ EXTRA_DIST += $(TESTS)
 
 TESTS =						\
   misc/help-version				\
-  tail-2/inotify-race			        \
+  tail-2/inotify-race				\
   misc/invalid-opt				\
   rm/ext3-perf					\
   rm/cycle					\
@@ -126,6 +126,7 @@ TESTS =						\
   chgrp/no-x					\
   chgrp/posix-H					\
   chgrp/recurse					\
+  misc/env					\
   misc/ptx					\
   misc/test					\
   misc/seq					\
@@ -158,6 +159,7 @@ TESTS =						\
   misc/base64					\
   misc/basename					\
   misc/close-stdout				\
+  misc/chroot-fail				\
   misc/comm					\
   misc/csplit					\
   misc/date-sec					\
@@ -182,6 +184,7 @@ TESTS =						\
   misc/md5sum-parallel				\
   misc/mknod					\
   misc/nice					\
+  misc/nice-fail				\
   misc/nl					\
   misc/nohup					\
   misc/od-N					\
@@ -225,6 +228,7 @@ TESTS =						\
   misc/stty					\
   misc/stty-invalid				\
   misc/stty-row-col				\
+  misc/su-fail					\
   misc/sum					\
   misc/sum-sysv					\
   misc/tac					\

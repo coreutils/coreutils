@@ -1,0 +1,116 @@
+#!/bin/sh
+# Verify behavior of env.
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+if test "$VERBOSE" = yes; then
+  set -x
+  env --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+# Verify clearing the environment
+a=1
+export a
+env - > out || fail=1
+test -s out && fail=1
+env -i > out || fail=1
+test -s out && fail=1
+env -u a -i -u a -- > out || fail=1
+test -s out && fail=1
+env -i -- a=b > out || fail=1
+echo a=b > exp || framework_failure
+compare exp out || fail=1
+
+# These tests verify exact status of internal failure.
+env --- # unknown option
+test $? = 125 || fail=1
+env -u # missing option argument
+test $? = 125 || fail=1
+env sh -c 'exit 2' # exit status propagation
+test $? = 2 || fail=2
+env . # invalid command
+test $? = 126 || fail=1
+env ... # no such command
+test $? = 127 || fail=1
+
+# Cygwin requires a minimal environment to launch new processes, so a
+# subsequent env will show more than just what we set.  Hence, it is
+# more portable to grep that our desired changes took place.
+if env | grep '^ENV_TEST' >/dev/null ; then
+  skip_test_ "environment has potential interference from ENV_TEST*"
+fi
+
+ENV_TEST1=a
+export ENV_TEST1
+: >out || framework_failure
+env ENV_TEST2= > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+env -u ENV_TEST1 ENV_TEST3=c > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+env ENV_TEST1=b > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+env ENV_TEST2= env > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+env -u ENV_TEST1 ENV_TEST3=c env > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+env ENV_TEST1=b env > all || fail=1
+grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure
+cat <<EOF >exp || framework_failure
+ENV_TEST1=a
+ENV_TEST2=
+ENV_TEST3=c
+ENV_TEST1=b
+ENV_TEST1=a
+ENV_TEST2=
+ENV_TEST3=c
+ENV_TEST1=b
+EOF
+compare exp out || fail=1
+
+# Use -- to end arguments.
+cat <<EOF >./-i || framework_failure
+#!/bin/sh
+echo pass
+EOF
+chmod +x ./-i || framework_failure
+case `env -i PATH="$PATH" echo good` in
+  good) ;;
+  *) fail=1 ;;
+esac
+case `env -- -i PATH="$PATH" echo fail` in
+  pass) ;;
+  *) fail=1 ;;
+esac
+
+# FIXME - POSIX does not allow this; decide what we want to do
+# cat <<EOF >./c=d || framework_failure
+# #!/bin/sh
+# echo pass
+# EOF
+# chmod +x c=d || framework_failure
+# test "x`env c=d echo fail`" = xfail || fail=1
+# test "x`env -- c=d echo fail`" = xpass || fail=1
+
+# FIXME - decide whether we like this behavior
+# test `env -i -u a=b` = a=b || fail=1
+# env -u '' true || fail=1
+
+Exit $fail
