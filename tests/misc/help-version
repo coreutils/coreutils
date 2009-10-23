@@ -30,7 +30,7 @@ export SHELL
 expected_failure_status_chroot=125
 expected_failure_status_env=125
 expected_failure_status_nice=125
-expected_failure_status_nohup=127
+expected_failure_status_nohup=125
 expected_failure_status_stdbuf=125
 expected_failure_status_su=125
 expected_failure_status_timeout=125

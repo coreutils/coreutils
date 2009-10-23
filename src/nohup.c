@@ -40,7 +40,7 @@
 enum
   {
     /* `nohup' itself failed.  */
-    NOHUP_FAILURE = 127
+    POSIX_NOHUP_FAILURE = 127
   };
 
 void
@@ -85,6 +85,7 @@ main (int argc, char **argv)
   bool redirecting_stdout;
   bool stdout_is_closed;
   bool redirecting_stderr;
+  int exit_internal_failure;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -92,18 +93,24 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (NOHUP_FAILURE);
+  /* POSIX 2008 requires that internal failure give status 127; unlike
+     for env, exec, nice, time, and xargs where it requires internal
+     failure give something in the range 1-125.  For consistency with
+     other tools, fail with EXIT_CANCELED unless POSIXLY_CORRECT.  */
+  exit_internal_failure = (getenv ("POSIXLY_CORRECT")
+                           ? POSIX_NOHUP_FAILURE : EXIT_CANCELED);
+  initialize_exit_failure (exit_internal_failure);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (NOHUP_FAILURE);
+    usage (exit_internal_failure);
 
   if (argc <= optind)
     {
       error (0, 0, _("missing operand"));
-      usage (NOHUP_FAILURE);
+      usage (exit_internal_failure);
     }
 
   ignoring_input = isatty (STDIN_FILENO);
@@ -154,7 +161,7 @@ main (int argc, char **argv)
               if (in_home)
                 error (0, saved_errno2, _("failed to open %s"),
                        quote (in_home));
-              exit (NOHUP_FAILURE);
+              exit (exit_internal_failure);
             }
           file = in_home;
         }
@@ -179,7 +186,7 @@ main (int argc, char **argv)
 
       if (0 <= saved_stderr_fd
           && set_cloexec_flag (saved_stderr_fd, true) != 0)
-        error (NOHUP_FAILURE, errno,
+        error (exit_internal_failure, errno,
                _("failed to set the copy of stderr to close on exec"));
 
       if (!redirecting_stdout)
@@ -189,7 +196,8 @@ main (int argc, char **argv)
                  : N_("redirecting stderr to stdout")));
 
       if (dup2 (out_fd, STDERR_FILENO) < 0)
-        error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
+        error (exit_internal_failure, errno,
+               _("failed to redirect standard error"));
 
       if (stdout_is_closed)
         close (out_fd);

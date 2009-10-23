@@ -14634,10 +14634,14 @@ options}.  Options must precede operands.
 Exit status:
 
 @display
+125 if @command{nohup} itself fails, and @env{POSIXLY_CORRECT} is not set
 126 if @var{command} is found but cannot be invoked
-127 if @command{nohup} itself fails or if @var{command} cannot be found
+127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
+
+If @env{POSIXLY_CORRECT} is set, internal failures give status 127
+instead of 125.
 
 
 @node stdbuf invocation
