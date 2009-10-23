@@ -24,12 +24,12 @@ root_tests =					\
   cp/preserve-gid				\
   cp/special-bits				\
   cp/cp-mv-enotsup-xattr			\
-  chroot/credentials				\
   dd/skip-seek-past-dev				\
   install/install-C-root			\
   ls/capability					\
   ls/nameless-uid				\
   misc/chcon					\
+  misc/chroot-credentials			\
   misc/selinux					\
   misc/truncate-owned-by-other			\
   mkdir/writable-under-readonly			\
