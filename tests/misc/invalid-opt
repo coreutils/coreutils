@@ -76,7 +76,8 @@ foreach my $prog (@built_programs)
 
     # Accommodate different syntax in glibc's getopt
     # diagnostics by filtering out single quotes.
-    my $err_subst = "s,'/',/,";
+    # Also accommodate BSD getopt.
+    my $err_subst = "s,'/',/,; s,unknown,invalid,";
 
     # Depending on how this script is run, stty emits different
     # diagnostics.  Don't bother checking them.
