@@ -86,6 +86,12 @@ With no COMMAND, print the current niceness.  Nicenesses range from\n\
   exit (status);
 }
 
+static bool
+perm_related_errno (int err)
+{
+  return err == EACCES || err == EPERM;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -179,7 +185,8 @@ main (int argc, char **argv)
   ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
 #endif
   if (!ok)
-    error (errno == EPERM ? 0 : EXIT_CANCELED, errno, _("cannot set niceness"));
+    error (perm_related_errno (errno) ? 0
+           : EXIT_CANCELED, errno, _("cannot set niceness"));
 
   execvp (argv[i], &argv[i]);
 

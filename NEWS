@@ -13,6 +13,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   This also affected sum, sha1sum, sha224sum, sha384sum and sha512sum.
   [the bug dates back to the initial implementation]
 
+  nice -n -1 PROGRAM now runs PROGRAM even when its internal setpriority
+  call fails with errno == EACCES.
+  [the bug dates back to the initial implementation]
+
   stat -f recognizes more file system types: afs, cifs, anon-inode FS,
   btrfs, cgroupfs, cramfs-wend, debugfs, futexfs, hfs, inotifyfs, minux3,
   nilfs, securityfs, selinux, xenfs
