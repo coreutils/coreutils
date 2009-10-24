@@ -75,7 +75,7 @@ while :; do
 done
 
 # Test negative niceness - command must be run whether or not change happens.
-if test `nice -n -1 nice 2> /dev/null` = 0 ; then
+if test x`nice -n -1 nice 2> /dev/null` = x0 ; then
   # unprivileged user - warn about failure to change
   nice -n -1 true 2> err || fail=1
   test -s err || fail=1
@@ -86,8 +86,8 @@ else
   # superuser - change succeeds
   nice -n -1 nice 2> err || fail=1
   test -s err && fail=1
-  test `nice -n -1 nice` = -1 || fail=1
-  test `nice --1 nice` = -1 || fail=1
+  test x`nice -n -1 nice` = x-1 || fail=1
+  test x`nice --1 nice` = x-1 || fail=1
 fi
 
 Exit $fail
