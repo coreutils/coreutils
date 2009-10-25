@@ -86,17 +86,13 @@ EOF
 compare exp out || fail=1
 
 # Use -- to end arguments.
-cat <<EOF >./-i || framework_failure
-#!/bin/sh
-echo pass
-EOF
-chmod +x ./-i || framework_failure
-case `env -i PATH="$PATH" echo good` in
+ln -s "$abs_top_builddir/src/echo" ./-i || framework_failure
+case `PATH="$PATH:" env -i echo good` in
   good) ;;
   *) fail=1 ;;
 esac
-case `env -- -i PATH="$PATH" echo fail` in
-  pass) ;;
+case `env -i -- PATH=. -i no-echo` in
+  no-echo) ;;
   *) fail=1 ;;
 esac
 
