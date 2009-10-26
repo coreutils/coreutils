@@ -48,7 +48,7 @@ env sh -c 'exit 2' # exit status propagation
 test $? = 2 || fail=2
 env . # invalid command
 test $? = 126 || fail=1
-env ... # no such command
+env no_such # no such command
 test $? = 127 || fail=1
 
 # Cygwin requires a minimal environment to launch new processes, so a
@@ -105,8 +105,10 @@ esac
 # test "x`env c=d echo fail`" = xfail || fail=1
 # test "x`env -- c=d echo fail`" = xpass || fail=1
 
-# FIXME - decide whether we like this behavior
-# test `env -i -u a=b` = a=b || fail=1
-# env -u '' true || fail=1
+# catch unsetenv failure, broken through coreutils 8.0
+env -u a=b true && fail=1
+test $? = 125 || fail=1
+env -u '' true && fail=1
+test $? = 125 || fail=1
 
 Exit $fail

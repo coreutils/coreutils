@@ -83,6 +83,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "env"
@@ -170,14 +171,19 @@ main (int argc, char **argv)
 
   optind = 0;			/* Force GNU getopt to re-initialize. */
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
-    if (optc == 'u')
-      putenv (optarg);		/* Requires GNU putenv. */
+    if (optc == 'u' && unsetenv (optarg))
+      error (EXIT_CANCELED, errno, _("cannot unset %s"), quote (optarg));
 
   if (optind < argc && STREQ (argv[optind], "-"))
     ++optind;
 
   while (optind < argc && strchr (argv[optind], '='))
-    putenv (argv[optind++]);
+    if (putenv (argv[optind++]))
+      {
+        char *name = argv[optind - 1];
+        *(strchr (name, '=')) = '\0';
+        error (EXIT_CANCELED, errno, _("cannot set %s"), quote (name));
+      }
 
   /* If no program is specified, print the environment and exit. */
   if (argc <= optind)
