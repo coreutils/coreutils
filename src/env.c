@@ -91,8 +91,6 @@
   proper_name ("Richard Mlynarik"), \
   proper_name ("David MacKenzie")
 
-extern char **environ;
-
 static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},

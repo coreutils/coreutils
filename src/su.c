@@ -113,8 +113,6 @@
 
 char *crypt (char const *key, char const *salt);
 
-extern char **environ;
-
 static void run_shell (char const *, char const *, char **, size_t)
      ATTRIBUTE_NORETURN;
 

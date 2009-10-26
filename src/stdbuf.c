@@ -39,8 +39,6 @@
 
 static char *program_path;
 
-extern char **environ;
-
 static struct
 {
   size_t size;

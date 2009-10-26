@@ -45,8 +45,6 @@ enum { PRINTENV_FAILURE = 2 };
   proper_name ("David MacKenzie"), \
   proper_name ("Richard Mlynarik")
 
-extern char **environ;
-
 void
 usage (int status)
 {
