@@ -56,7 +56,7 @@ test $? = 125 || fail=1
 stdbuf -i0 -o0 -e0 true || fail=1 #check all files
 stdbuf -o1 . # invalid command
 test $? = 126 || fail=1
-stdbuf -o1 ... # no such command
+stdbuf -o1 no_such # no such command
 test $? = 127 || fail=1
 
 # Ensure line buffering stdout takes effect

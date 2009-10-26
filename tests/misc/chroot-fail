@@ -41,7 +41,7 @@ if chroot / true ; then
   test $? = 2 || fail=1
   chroot / . # invalid command
   test $? = 126 || fail=1
-  chroot / ... # no such command
+  chroot / no_such # no such command
   test $? = 127 || fail=1
 else
   test $? = 125 || fail=1

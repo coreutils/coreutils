@@ -39,7 +39,7 @@ nice sh -c 'exit 2' # exit status propagation
 test $? = 2 || fail=2
 nice . # invalid command
 test $? = 126 || fail=1
-nice ... # no such command
+nice no_such # no such command
 test $? = 127 || fail=1
 
 Exit $fail
