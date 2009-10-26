@@ -14408,6 +14408,11 @@ remaining arguments are passed as arguments to that program.
 The program should not be a special built-in utility
 (@pxref{Special built-in utilities}).
 
+Modifications to @env{PATH} take effect prior to searching for
+@var{command}.  Use caution when reducing @env{PATH}; behavior is
+not portable when @env{PATH} is undefined or omits key directories
+such as @file{/bin}.
+
 @cindex environment, printing
 
 If no command name is specified following the environment

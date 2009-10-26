@@ -51,9 +51,16 @@ test $? = 126 || fail=1
 env no_such # no such command
 test $? = 127 || fail=1
 
-# Cygwin requires a minimal environment to launch new processes, so a
-# subsequent env will show more than just what we set.  Hence, it is
-# more portable to grep that our desired changes took place.
+# POSIX is clear that environ may, but need not be, sorted.
+# Environment variable values may contain newlines, which cannot be
+# observed by merely inspecting output from env.
+# Cygwin requires a minimal environment to launch new processes: execve
+# adds missing variables SYSTEMROOT and WINDIR, which show up in a
+# subsequent env.  Cygwin also requires /bin to always be part of PATH,
+# and attempts to unset or reduce PATH may cause execve to fail.
+#
+# For these reasons, it is more portable to grep that our desired changes
+# took place, rather than comparing output of env over an entire environment.
 if env | grep '^ENV_TEST' >/dev/null ; then
   skip_test_ "environment has potential interference from ENV_TEST*"
 fi
@@ -84,6 +91,17 @@ ENV_TEST3=c
 ENV_TEST1=b
 EOF
 compare exp out || fail=1
+
+# PATH modifications affect exec.
+mkdir unlikely_name || framework_failure
+cat <<EOF > unlikely_name/also_unlikely || framework_failure
+#!/bin/sh
+echo pass
+EOF
+chmod +x unlikely_name/also_unlikely || framework_failure
+env also_unlikely && fail=1
+test x`PATH=$PATH:unlikely_name env also_unlikely` = xpass || fail=1
+test x`env PATH="$PATH":unlikely_name also_unlikely` = xpass || fail=1
 
 # Use -- to end arguments.
 ln -s "$abs_top_builddir/src/echo" ./-i || framework_failure
