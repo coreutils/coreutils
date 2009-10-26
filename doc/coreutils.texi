@@ -14413,6 +14413,20 @@ Modifications to @env{PATH} take effect prior to searching for
 not portable when @env{PATH} is undefined or omits key directories
 such as @file{/bin}.
 
+In the rare case that a utility contains a @samp{=} in the name, the
+only way to disambiguate it from a variable assignment is to use an
+intermediate command for @var{command}, and pass the problematic
+program name via @var{args}.  For example, if @file{./prog=} is an
+executable in the current @env{PATH}:
+
+@example
+env prog= true # runs 'true', with prog= in environment
+env ./prog= true # runs 'true', with ./prog= in environment
+env -- prog= true # runs 'true', with prog= in environment
+env sh -c '\prog= true' # runs 'prog=' with argument 'true'
+env sh -c 'exec "$@@"' sh prog= true # also runs 'prog='
+@end example
+
 @cindex environment, printing
 
 If no command name is specified following the environment

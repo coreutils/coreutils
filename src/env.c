@@ -35,14 +35,14 @@
         zero-length value is different from unsetting it.
 
    --
-        Indicate that the following argument is the program
-        to invoke.  This is necessary when the program's name
-        begins with "-" or contains a "=".
+        Indicate that the following argument is not an option.
+        This is necessary when the program's name begins with "-",
+        but does not help if the program's name contains a "=".
 
    The first remaining argument specifies a program to invoke;
    it is searched for according to the specification of the PATH
-   environment variable.  Any arguments following that are
-   passed as arguments to that program.
+   environment variable, after environment modifications.  Any
+   arguments following that are passed as arguments to that program.
 
    If no command name is specified following the environment
    specifications, the resulting environment is printed.
@@ -72,8 +72,9 @@
         call.
 
    env -u EDITOR LOGNAME=foo PATH=/energy -- e=mc2 bar baz
-        runs the program "/energy/e=mc2" with environment
-        { LOGNAME=foo PATH=/energy }
+        attempts to run the program "/energy/--" with arguments
+        "e=mc2", "bar" and "baz" in the environment
+        { LOGNAME=foo PATH=/energy }.
 */
 
 #include <config.h>

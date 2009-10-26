@@ -103,25 +103,49 @@ env also_unlikely && fail=1
 test x`PATH=$PATH:unlikely_name env also_unlikely` = xpass || fail=1
 test x`env PATH="$PATH":unlikely_name also_unlikely` = xpass || fail=1
 
-# Use -- to end arguments.
-ln -s "$abs_top_builddir/src/echo" ./-i || framework_failure
-case `PATH="$PATH:" env -i echo good` in
+# Explicitly put . on the PATH for the rest of this test.
+PATH=$PATH:
+export PATH
+
+# Use -- to end options (but not variable assignments).
+# On some systems, execve("-i") invokes a shebang script ./-i on PATH as
+# '/bin/sh -i', rather than '/bin/sh -- -i', which doesn't do what we want.
+# Avoid the issue by using an executable rather than a script.
+# Test -u, rather than -i, to minimize PATH problems.
+ln -s "$abs_top_builddir/src/echo" ./-u || framework_failure
+case `env -u echo echo good` in
   good) ;;
   *) fail=1 ;;
 esac
-case `env -i -- PATH=. -i no-echo` in
-  no-echo) ;;
+case `env -u echo -- echo good` in
+  good) ;;
+  *) fail=1 ;;
+esac
+case `env -- -u pass` in
+  pass) ;;
   *) fail=1 ;;
 esac
 
-# FIXME - POSIX does not allow this; decide what we want to do
-# cat <<EOF >./c=d || framework_failure
-# #!/bin/sh
-# echo pass
-# EOF
-# chmod +x c=d || framework_failure
-# test "x`env c=d echo fail`" = xfail || fail=1
-# test "x`env -- c=d echo fail`" = xpass || fail=1
+# After options have ended, the first argument not containing = is a program.
+env a=b -- true
+test $? = 127 || fail=1
+ln -s "$abs_top_builddir/src/echo" ./-- || framework_failure
+case `env a=b -- true || echo fail` in
+  true) ;;
+  *) fail=1 ;;
+esac
+
+# No way to directly invoke program name containing =.
+cat <<EOF >./c=d || framework_failure
+#!/bin/sh
+echo pass
+EOF
+chmod +x c=d || framework_failure
+test "x`env c=d echo fail`" = xfail || fail=1
+test "x`env -- c=d echo fail`" = xfail || fail=1
+test "x`env ./c=d echo fail`" = xfail || fail=1
+test "x$(env sh -c '\c=d echo fail')" = xpass || fail=1
+test "x$(env sh -c 'exec "$@"' sh c=d echo fail)" = xpass || fail=1
 
 # catch unsetenv failure, broken through coreutils 8.0
 env -u a=b true && fail=1
