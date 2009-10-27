@@ -74,4 +74,5 @@ src/version.c
 src/version.h
 stamp-h1
 tests/*/*.log
+tests/t?
 tests/test-suite.log

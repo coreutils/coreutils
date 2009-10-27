@@ -192,6 +192,7 @@ TESTS =						\
   misc/od-x8					\
   misc/paste					\
   misc/pathchk1					\
+  misc/printenv					\
   misc/printf					\
   misc/printf-cov				\
   misc/printf-hex				\
