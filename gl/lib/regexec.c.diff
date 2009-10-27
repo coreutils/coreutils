@@ -1,0 +1,45 @@
+diff --git a/lib/regexec.c b/lib/regexec.c
+index 21a8166..3b0d85c 100644
+--- a/lib/regexec.c
++++ b/lib/regexec.c
+@@ -18,6 +18,8 @@
+    with this program; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
+
++#include "verify.h"
++#include "intprops.h"
+ static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
+ 				     Idx n) internal_function;
+ static void match_ctx_clean (re_match_context_t *mctx) internal_function;
+@@ -378,8 +380,11 @@ re_search_2_stub (struct re_pattern_buffer *bufp,
+   Idx len = length1 + length2;
+   char *s = NULL;
+
+-  if (BE (length1 < 0 || length2 < 0 || stop < 0 || len < length1, 0))
+-    return -2;
++  verify (! TYPE_SIGNED (Idx));
++  if (BE (len < length1, 0))
++     return -2; */
++  /* if (BE (length1 < 0 || length2 < 0 || stop < 0, 0))
++     return -2; */
+
+   /* Concatenate the strings.  */
+   if (length2 > 0)
+@@ -431,11 +436,14 @@ re_search_stub (struct re_pattern_buffer *bufp,
+   Idx last_start = start + range;
+
+   /* Check for out-of-range.  */
+-  if (BE (start < 0 || start > length, 0))
+-    return -1;
++  verify (! TYPE_SIGNED (Idx));
++  /* if (BE (start < 0, 0))
++     return -1; */
++  if (BE (start > length, 0))
++     return -1;
+   if (BE (length < last_start || (0 <= range && last_start < start), 0))
+     last_start = length;
+-  else if (BE (last_start < 0 || (range < 0 && start <= last_start), 0))
++  else if (BE (/* last_start < 0 || */ (range < 0 && start <= last_start), 0))
+     last_start = 0;
+
+   __libc_lock_lock (dfa->lock);

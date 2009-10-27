@@ -17,7 +17,7 @@
 
 include gnulib.mk
 
-AM_CFLAGS += $(WARN_CFLAGS) # $(WERROR_CFLAGS)
+AM_CFLAGS += $(GNULIB_WARN_CFLAGS) $(WERROR_CFLAGS)
 
 libcoreutils_a_SOURCES += \
   buffer-lcm.c buffer-lcm.h \

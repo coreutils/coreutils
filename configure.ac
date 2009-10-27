@@ -114,6 +114,16 @@ if test "$gl_gcc_warnings" = yes; then
   AC_DEFINE([_FORTIFY_SOURCE], [2],
     [enable compile-time and run-time bounds-checking, and some warnings])
   AC_DEFINE([GNULIB_PORTCHECK], [1], [enable some gnulib portability checks])
+
+  # We use a slightly smaller set of warning options for lib/.
+  # Remove the following and save the result in GNULIB_WARN_CFLAGS.
+  nw=
+  nw="$nw -Wuninitialized"
+  nw="$nw -Wunused-macros"
+  nw="$nw -Wmissing-prototypes"
+  nw="$nw -Wold-style-definition"
+  gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
+  AC_SUBST([GNULIB_WARN_CFLAGS])
 fi
 
 AC_FUNC_FORK
