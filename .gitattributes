@@ -5,3 +5,5 @@
 # # Derived from the regexp in emacs' lisp/add-log.el.
 # [diff "texinfo"]
 #         funcname = "^@node[ \t][ \t]*\\([^,][^,]*\\)"
+
+gl/lib/*.diff -whitespace

@@ -4,3 +4,4 @@ Makefile\.am$
 ^tests/pr/
 ChangeLog.*
 ^man/help2man$
+^gl/lib/.*\.c\.diff$
