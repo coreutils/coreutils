@@ -25,6 +25,7 @@
    \a = alert (bell)
    \b = backspace
    \c = produce no further output
+   \e = escape
    \f = form feed
    \n = new line
    \r = carriage return
@@ -108,6 +109,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   \\a      alert (BEL)\n\
   \\b      backspace\n\
   \\c      produce no further output\n\
+  \\e      escape\n\
   \\f      form feed\n\
 "), stdout);
       fputs (_("\
@@ -200,6 +202,9 @@ print_esc_char (char c)
     case 'c':			/* Cancel the rest of the output. */
       exit (EXIT_SUCCESS);
       break;
+    case 'e':			/* Escape. */
+      putchar ('\x1B');
+      break;
     case 'f':			/* Form feed. */
       putchar ('\f');
       break;
@@ -256,7 +261,7 @@ print_esc (const char *escstart, bool octal_0)
         esc_value = esc_value * 8 + octtobin (*p);
       putchar (esc_value);
     }
-  else if (*p && strchr ("\"\\abcfnrtv", *p))
+  else if (*p && strchr ("\"\\abcefnrtv", *p))
     print_esc_char (*p++);
   else if (*p == 'u' || *p == 'U')
     {

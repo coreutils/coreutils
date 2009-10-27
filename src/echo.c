@@ -70,6 +70,7 @@ If -e is in effect, the following sequences are recognized:\n\
 "), stdout);
       fputs (_("\
   \\c     produce no further output\n\
+  \\e     escape\n\
   \\f     form feed\n\
   \\n     new line\n\
   \\r     carriage return\n\
@@ -203,6 +204,7 @@ just_echo:
                     case 'a': c = '\a'; break;
                     case 'b': c = '\b'; break;
                     case 'c': exit (EXIT_SUCCESS);
+                    case 'e': c = '\x1B'; break;
                     case 'f': c = '\f'; break;
                     case 'n': c = '\n'; break;
                     case 'r': c = '\r'; break;

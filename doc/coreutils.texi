@@ -10800,6 +10800,8 @@ alert (bell)
 backspace
 @item \c
 produce no further output
+@item \e
+escape
 @item \f
 form feed
 @item \n

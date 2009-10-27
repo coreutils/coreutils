@@ -28,6 +28,9 @@ getlimits_
 
 fail=0
 
+# Verify the 3 methods of specifying "Escape":
+test $("$prog" "\x1b\n\33\n\e\n" | uniq -u) && fail=1
+
 # This would fail (by printing the `--') for printf in sh-utils
 # and in coreutils 4.5.1.
 "$prog" -- 'foo\n' > out || fail=1

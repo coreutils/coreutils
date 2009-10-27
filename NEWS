@@ -43,6 +43,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   with the invoked command failing with status 1.  Likewise, nohup
   fails with status 125 instead of 127.
 
+  echo and printf now interpret \e as the Escape character (0x1B).
+
 ** New features
 
   env and printenv now accept the option --null (-0), as a means to

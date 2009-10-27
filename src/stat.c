@@ -723,6 +723,9 @@ print_esc_char (char c)
     case 'b':			/* Backspace. */
       c ='\b';
       break;
+    case 'e':			/* Escape. */
+      c ='\x1B';
+      break;
     case 'f':			/* Form feed. */
       c ='\f';
       break;
