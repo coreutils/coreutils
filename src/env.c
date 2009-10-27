@@ -29,6 +29,11 @@
         Unset variable VARIABLE (remove it from the environment).
         If VARIABLE was not set, does nothing.
 
+   -0
+   --null
+        When no program is specified, output environment information
+        terminated by NUL bytes rather than newlines.
+
    variable=value (an arg containing a "=" character)
         Set the environment variable VARIABLE to value VALUE.  VALUE
         may be of zero length ("variable=").  Setting a variable to a
@@ -96,6 +101,7 @@
 static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
+  {"null", no_argument, NULL, '0'},
   {"unset", required_argument, NULL, 'u'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -116,8 +122,9 @@ Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
       fputs (_("\
 Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
-  -i, --ignore-environment   start with an empty environment\n\
-  -u, --unset=NAME           remove variable from the environment\n\
+  -i, --ignore-environment  start with an empty environment\n\
+  -0, --null           end each output line with 0 byte rather than newline\n\
+  -u, --unset=NAME     remove variable from the environment\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -135,6 +142,7 @@ main (int argc, char **argv)
 {
   int optc;
   bool ignore_environment = false;
+  bool opt_nul_terminate_output = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -145,7 +153,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "+iu:0", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -153,6 +161,9 @@ main (int argc, char **argv)
           ignore_environment = true;
           break;
         case 'u':
+          break;
+        case '0':
+          opt_nul_terminate_output = true;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -171,7 +182,7 @@ main (int argc, char **argv)
     }
 
   optind = 0;			/* Force GNU getopt to re-initialize. */
-  while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "+iu:0", longopts, NULL)) != -1)
     if (optc == 'u' && unsetenv (optarg))
       error (EXIT_CANCELED, errno, _("cannot unset %s"), quote (optarg));
 
@@ -191,8 +202,14 @@ main (int argc, char **argv)
     {
       char *const *e = environ;
       while (*e)
-        puts (*e++);
+        printf ("%s%c", *e++, opt_nul_terminate_output ? '\0' : '\n');
       exit (EXIT_SUCCESS);
+    }
+
+  if (opt_nul_terminate_output)
+    {
+      error (0, errno, _("cannot specify --null (-0) with command"));
+      usage (EXIT_CANCELED);
     }
 
   execvp (argv[optind], &argv[optind]);

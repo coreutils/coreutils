@@ -166,6 +166,7 @@ TESTS =						\
   misc/dircolors				\
   misc/df					\
   misc/dirname					\
+  misc/env-null					\
   misc/expand					\
   misc/expr					\
   misc/factor					\

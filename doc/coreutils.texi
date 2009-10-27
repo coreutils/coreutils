@@ -574,6 +574,18 @@ Do not treat the last operand specially when it is a directory or a
 symbolic link to a directory.  @xref{Target directory}.
 @end macro
 
+@macro optNull{cmd}
+@item -0
+@opindex -0
+@itemx --null
+@opindex --null
+@cindex output @sc{nul}-byte-terminated lines
+Output a zero byte (@acronym{ASCII} @sc{nul}) at the end of each line,
+rather than a newline. This option enables other programs to parse the
+output of @command{\cmd\} even when that output would contain data
+with embedded newlines.
+@end macro
+
 @macro optSi
 @itemx --si
 @opindex --si
@@ -10376,15 +10388,7 @@ Show the total for each directory (and file if --all) that is at
 most MAX_DEPTH levels down from the root of the hierarchy.  The root
 is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 
-@item -0
-@opindex -0
-@itemx --null
-@opindex --null
-@cindex output null-byte-terminated lines
-Output a zero byte (@acronym{ASCII} @sc{nul}) at the end of each line,
-rather than a newline. This option enables other programs to parse the
-output of @command{du} even when that output would contain file names
-with embedded newlines.
+@optNull{du}
 
 @optSi
 
@@ -12806,8 +12810,13 @@ If no @var{variable}s are specified, @command{printenv} prints the value of
 every environment variable.  Otherwise, it prints the value of each
 @var{variable} that is set, and nothing for those that are not set.
 
-The only options are a lone @option{--help} or @option{--version}.
-@xref{Common options}.
+The program accepts the following option.  Also see @ref{Common options}.
+
+@table @samp
+
+@optNull{printenv}
+
+@end table
 
 @cindex exit status of @command{printenv}
 Exit status:
@@ -14437,6 +14446,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
+
+@optNull{env}
 
 @item -u @var{name}
 @itemx --unset=@var{name}

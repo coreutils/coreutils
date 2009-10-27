@@ -44,6 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  env and printenv now accept the option --null (-0), as a means to
+  avoid ambiguity with newlines embedded in the environment.
+
   md5sum --check now also accepts openssl-style checksums.
   So do sha1sum, sha224sum, sha384sum and sha512sum.
 
