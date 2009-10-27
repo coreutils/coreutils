@@ -32,8 +32,13 @@ my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 $ENV{LC_ALL} = 'C';
 
 # Set up a safe, well-known environment
-delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
+delete @ENV{qw(BASH_ENV CDPATH ENV)};
 $ENV{IFS}  = '';
+# PATH is tricky - we can't just clear it, or cygwin will fail.  But we
+# can't use it as-is, or taint checking in `` will stop us.  For this
+# script, it is enough to scrub the incoming $PATH first.
+$ENV{'PATH'} =~ /(.*)/;
+$ENV{'PATH'} = "$1";
 
 my @dir_list = qw(/tmp /var/tmp /usr/tmp);
 my $rm = "$ENV{abs_top_builddir}/src/rm";

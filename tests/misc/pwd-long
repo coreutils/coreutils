@@ -48,14 +48,19 @@ sub normalize_to_cwd_relative ($$$)
         and die "$ME: $dir does not contain old CWD\n";
       my $dir_prefix = $slash ? substr ($dir, 0, $slash) : '/';
       my ($d, $i) = (stat $dir_prefix)[0, 1];
-      $d == $dev && $i == $ino
+      $d eq $dev && $i eq $ino
         and return substr $dir, $slash + 1;
     }
 }
 
 # Set up a safe, well-known environment
-delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
+delete @ENV{qw(BASH_ENV CDPATH ENV)};
 $ENV{IFS}  = '';
+# PATH is tricky - we can't just clear it, or cygwin will fail.  But we
+# can't use it as-is, or taint checking in `` will stop us.  For this
+# script, it is enough to scrub the incoming $PATH first.
+$ENV{'PATH'} =~ /(.*)/;
+$ENV{'PATH'} = "$1";
 
 # Save CWD's device and inode numbers.
 my ($dev, $ino) = (stat '.')[0, 1];
@@ -70,9 +75,13 @@ substr ($expected, 0, 1) = '';
 my $i = 0;
 do
   {
-    mkdir $z, 0700
-      or die "$ME: at depth $i: $!\n";
-    chdir $z;
+    if (!mkdir $z, 0700)
+      {
+        warn "$ME: skipping this test; cannot create long directory name "
+          . "at depth $i: $!\n";
+        exit 77;
+      }
+    chdir $z
   }
 until (++$i == $n);
 
@@ -82,7 +91,7 @@ $abs_top_builddir
 my $build_src_dir = "$abs_top_builddir/src";
 if ($build_src_dir !~ m!^([-+.:/\w]+)$!)
   {
-    warn "$0: skipping this test; odd build source directory name:\n"
+    warn "$ME: skipping this test; odd build source directory name:\n"
       . "$build_src_dir\n";
     exit 77;
   }
