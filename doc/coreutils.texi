@@ -14442,6 +14442,57 @@ If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying the @command{printenv} program.
 
+For some examples, suppose the environment passed to @command{env}
+contains @samp{LOGNAME=rms}, @samp{EDITOR=emacs}, and
+@samp{PATH=.:/gnubin:/hacks}:
+
+@itemize @bullet
+
+@item
+Output the current environment.
+@example
+$ env | LC_ALL=C sort
+EDITOR=emacs
+LOGNAME=rms
+PATH=.:/gnubin:/hacks
+@end example
+
+@item
+Run @command{foo} with a reduced environment, preserving only the
+original @env{PATH} to avoid problems in locating @command{foo}.
+@example
+env - PATH="$PATH" foo
+@end example
+
+@item
+Run @command{foo} with the environment containing @samp{LOGNAME=rms},
+@samp{EDITOR=emacs}, and @samp{PATH=.:/gnubin:/hacks}, and guarantees
+that @command{foo} was found in the file system rather than a shell
+builtin.
+@example
+env foo
+@end example
+
+@item
+Run @command{nemacs} with the environment containing @samp{LOGNAME=foo},
+@samp{EDITOR=emacs}, @samp{PATH=.:/gnubin:/hacks}, and
+@samp{DISPLAY=gnu:0}.
+@example
+env DISPLAY=gnu:0 LOGNAME=foo nemacs
+@end example
+
+@item
+Attempt to run the program @command{/energy/--} (as that is the only
+possible path search result); if the command exists, the environment
+will contain @samp{LOGNAME=rms} and @samp{PATH=/energy}, and the
+arguments will be @samp{e=mc2}, @samp{bar}, and @samp{baz}.
+@example
+env -u EDITOR PATH=/energy -- e=mc2 bar baz
+@end example
+
+@end itemize
+
+
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
