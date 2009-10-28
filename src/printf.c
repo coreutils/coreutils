@@ -102,23 +102,21 @@ Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:\n\
 FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 \n\
   \\\"      double quote\n\
-  \\NNN    character with octal value NNN (1 to 3 digits)\n\
-  \\\\      backslash\n\
 "), stdout);
       fputs (_("\
+  \\\\      backslash\n\
   \\a      alert (BEL)\n\
   \\b      backspace\n\
   \\c      produce no further output\n\
   \\e      escape\n\
   \\f      form feed\n\
-"), stdout);
-      fputs (_("\
   \\n      new line\n\
   \\r      carriage return\n\
   \\t      horizontal tab\n\
   \\v      vertical tab\n\
 "), stdout);
       fputs (_("\
+  \\NNN    byte with octal value NNN (1 to 3 digits)\n\
   \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
   \\uHHHH  Unicode (ISO/IEC 10646) character with hex value HHHH (4 digits)\n\
   \\UHHHHHHHH  Unicode character with hex value HHHHHHHH (8 digits)\n\

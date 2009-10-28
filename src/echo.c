@@ -63,19 +63,22 @@ Echo the STRING(s) to standard output.\n\
 \n\
 If -e is in effect, the following sequences are recognized:\n\
 \n\
-  \\0NNN   the character whose ASCII code is NNN (octal)\n\
-  \\\\     backslash\n\
-  \\a     alert (BEL)\n\
-  \\b     backspace\n\
 "), stdout);
       fputs (_("\
-  \\c     produce no further output\n\
-  \\e     escape\n\
-  \\f     form feed\n\
-  \\n     new line\n\
-  \\r     carriage return\n\
-  \\t     horizontal tab\n\
-  \\v     vertical tab\n\
+  \\\\      backslash\n\
+  \\a      alert (BEL)\n\
+  \\b      backspace\n\
+  \\c      produce no further output\n\
+  \\e      escape\n\
+  \\f      form feed\n\
+  \\n      new line\n\
+  \\r      carriage return\n\
+  \\t      horizontal tab\n\
+  \\v      vertical tab\n\
+"), stdout);
+      fputs (_("\
+  \\0NNN   byte with octal value NNN (1 to 3 digits)\n\
+  \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_ancillary_info ();
