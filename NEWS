@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   call fails with errno == EACCES.
   [the bug dates back to the initial implementation]
 
+  nice, nohup, and su now refuse to execute the subsidiary program if
+  they detect write failure in printing an otherwise non-fatal warning
+  message to stderr.
+
   stat -f recognizes more file system types: afs, cifs, anon-inode FS,
   btrfs, cgroupfs, cramfs-wend, debugfs, futexfs, hfs, inotifyfs, minux3,
   nilfs, securityfs, selinux, xenfs

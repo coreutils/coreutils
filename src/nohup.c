@@ -203,6 +203,15 @@ main (int argc, char **argv)
         close (out_fd);
     }
 
+  /* error() flushes stderr, but does not check for write failure.
+     Normally, we would catch this via our atexit() hook of
+     close_stdout, but execvp() gets in the way.  If stderr
+     encountered a write failure, there is no need to try calling
+     error() again, particularly since we may have just changed the
+     underlying fd out from under stderr.  */
+  if (ferror (stderr))
+    exit (exit_internal_failure);
+
   signal (SIGHUP, SIG_IGN);
 
   {

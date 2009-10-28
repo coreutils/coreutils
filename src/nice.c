@@ -185,8 +185,17 @@ main (int argc, char **argv)
   ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
 #endif
   if (!ok)
-    error (perm_related_errno (errno) ? 0
-           : EXIT_CANCELED, errno, _("cannot set niceness"));
+    {
+      error (perm_related_errno (errno) ? 0
+             : EXIT_CANCELED, errno, _("cannot set niceness"));
+      /* error() flushes stderr, but does not check for write failure.
+         Normally, we would catch this via our atexit() hook of
+         close_stdout, but execvp() gets in the way.  If stderr
+         encountered a write failure, there is no need to try calling
+         error() again.  */
+      if (ferror (stderr))
+        exit (EXIT_CANCELED);
+    }
 
   execvp (argv[i], &argv[i]);
 

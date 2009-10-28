@@ -506,5 +506,13 @@ main (int argc, char **argv)
   if (simulate_login && chdir (pw->pw_dir) != 0)
     error (0, errno, _("warning: cannot change directory to %s"), pw->pw_dir);
 
+  /* error() flushes stderr, but does not check for write failure.
+     Normally, we would catch this via our atexit() hook of
+     close_stdout, but execv() gets in the way.  If stderr
+     encountered a write failure, there is no need to try calling
+     error() again.  */
+  if (ferror (stderr))
+    exit (EXIT_CANCELED);
+
   run_shell (shell, command, argv + optind, MAX (0, argc - optind));
 }
