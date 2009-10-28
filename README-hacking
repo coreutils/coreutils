@@ -35,7 +35,7 @@ which are extracted from other source packages:
 
 And there you are!  Just
 
-        $ ./configure --quiet #[--enable-gcc-warnings]
+        $ ./configure --quiet #[--enable-gcc-warnings] [*]
         $ make
         $ make check
 
@@ -48,6 +48,12 @@ should output no difference.
 
 Enjoy!
 
+[*] The --enable-gcc-warnings option is useful only with glibc
+and with a very recent version of gcc.  You'll probably also have
+to use recent system headers.  If you configure with this option,
+and spot a problem, please be sure to send the report to the bug
+reporting address of this package, and not to that of gnulib, even
+if the problem seems to originate in a gnulib-provided file.
 -----
 
 Copyright (C) 2002-2009 Free Software Foundation, Inc.
