@@ -125,6 +125,10 @@ main (int argc, char **argv)
         {
           bool matched = false;
 
+          /* 'printenv a=b' is silent, even if 'a=b=c' is in environ.  */
+          if (strchr (argv[i], '='))
+            continue;
+
           for (env = environ; *env; ++env)
             {
               ep = *env;

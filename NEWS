@@ -9,7 +9,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-8.0]
 
   env -u A=B now fails, rather than silently adding A to the
-  environment.  [the bug dates back to the initial implementation]
+  environment.  Likewise, printenv A=B silently ignores the invalid
+  name.  [the bugs date back to the initial implementation]
 
   md5sum now prints checksums atomically so that concurrent
   processes will not intersperse their output.

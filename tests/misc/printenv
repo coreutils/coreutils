@@ -77,4 +77,10 @@ echo b > exp || framework_failure
 env -- -a=b printenv -- -a > out || fail=1
 compare exp out || fail=1
 
+# Silently reject invalid env-var names.
+# Bug present through coreutils 8.0.
+env a=b=c printenv a=b > out
+test $? = 1 || fail=1
+test -s out && fail=1
+
 Exit $fail
