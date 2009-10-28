@@ -14469,8 +14469,8 @@ env - PATH="$PATH" foo
 @item
 Run @command{foo} with the environment containing @samp{LOGNAME=rms},
 @samp{EDITOR=emacs}, and @samp{PATH=.:/gnubin:/hacks}, and guarantees
-that @command{foo} was found in the file system rather than a shell
-builtin.
+that @command{foo} was found in the file system rather than as a shell
+built-in.
 @example
 env foo
 @end example
