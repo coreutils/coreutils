@@ -33,7 +33,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "long-options.h"
 
 /* Exit status for syntax errors, etc.  */
 enum { PRINTENV_FAILURE = 2 };
