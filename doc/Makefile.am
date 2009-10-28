@@ -48,8 +48,10 @@ _W = (^|[^A-Za-z0-9_])
 W_ = ([^A-Za-z0-9_]|$$)
 
 syntax_checks =		\
+  sc-avoid-builtin	\
   sc-avoid-io		\
   sc-avoid-non-zero	\
+  sc-avoid-path		\
   sc-avoid-timezone	\
   sc-avoid-zeroes	\
   sc-exponent-grouping	\
@@ -70,9 +72,18 @@ check-texinfo: $(syntax_checks)
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne			\
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; };			\
-	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1;	\
+	exit $$fail
+
+sc-avoid-builtin:
+	$(AM_V_GEN)$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi	\
+	  && exit 1 || :
+
+sc-avoid-path:
+	$(AM_V_GEN)fail=0;						\
 	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi		\
-	  | $(EGREP) -v 'search path|@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
+	  | $(EGREP) -v							\
+	  'PATH=|path search|search path|@vindex PATH$$|@env[{]PATH[}]'	\
+	  && fail=1;							\
 	exit $$fail
 
 # Use `time zone', not `timezone'.
