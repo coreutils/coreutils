@@ -1,5 +1,5 @@
 diff --git a/lib/regexec.c b/lib/regexec.c
-index 21a8166..3b0d85c 100644
+index 21a8166..7762437 100644
 --- a/lib/regexec.c
 +++ b/lib/regexec.c
 @@ -18,6 +18,8 @@
@@ -19,7 +19,7 @@ index 21a8166..3b0d85c 100644
 -    return -2;
 +  verify (! TYPE_SIGNED (Idx));
 +  if (BE (len < length1, 0))
-+     return -2; */
++     return -2;
 +  /* if (BE (length1 < 0 || length2 < 0 || stop < 0, 0))
 +     return -2; */
 
