@@ -546,7 +546,7 @@ main (int argc, char **argv)
   if (reference_file && component_specified)
     {
       error (0, 0, _("conflicting security context specifiers given"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (recurse && preserve_root)

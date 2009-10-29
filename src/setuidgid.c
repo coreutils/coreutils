@@ -181,7 +181,7 @@ main (int argc, char **argv)
       {
         int n = mgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
         if (n <= 0)
-          error (1, errno, _("failed to get groups for user %s"),
+          error (EXIT_FAILURE, errno, _("failed to get groups for user %s"),
                  quote (pwd->pw_name));
         n_gids = n;
       }

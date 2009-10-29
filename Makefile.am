@@ -47,6 +47,7 @@ syntax_check_exceptions =		\
   .x-sc_po_check			\
   .x-sc_program_name			\
   .x-sc_prohibit_atoi_atof		\
+  .x-sc_prohibit_magic_number_exit	\
   .x-sc_prohibit_stat_st_blocks		\
   .x-sc_prohibit_strcmp			\
   .x-sc_prohibit_tab_based_indentation	\

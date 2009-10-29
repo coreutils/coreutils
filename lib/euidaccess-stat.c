@@ -130,6 +130,6 @@ main (int argc, char **argv)
 
   ok = euidaccess_stat (&st, mode);
   printf ("%s: %s\n", file, ok ? "y" : "n");
-  exit (0);
+  return 0;
 }
 #endif

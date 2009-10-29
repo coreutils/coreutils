@@ -182,7 +182,7 @@ main (int argc, char **argv)
       if (optind >= argc)
         {
           error (0, 0, _("you must specify -c, -t, -u, -l, -r, or context"));
-          usage (1);
+          usage (EXIT_FAILURE);
         }
       context = argv[optind++];
     }
@@ -190,7 +190,7 @@ main (int argc, char **argv)
   if (optind >= argc)
     {
       error (0, 0, _("no command specified"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (is_selinux_enabled () != 1)
