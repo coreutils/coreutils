@@ -33,6 +33,7 @@ require_selinux_enforcing_
 c=invalid-selinux-context
 msg="failed to set default file creation context to \`$c':"
 
+fail=0
 # Test each of mkdir, mknod, mkfifo with "-Z invalid-context".
 
 for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do

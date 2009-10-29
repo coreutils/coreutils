@@ -28,6 +28,7 @@ dir2=is3-dir2
 
 mkdir $dir1 $dir2 || framework_failure
 
+fail=0
 # This mv command should exit nonzero.
 mv $dir1 $dir2 $dir2 > out 2>&1 && fail=1
 

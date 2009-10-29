@@ -29,6 +29,7 @@ ff2=mvforce2
 echo force-contents > $ff || framework_failure
 ln $ff $ff2 || framework_failure
 
+fail=0
 # This mv command should exit nonzero.
 mv $ff $ff > out 2>&1 && fail=1
 

@@ -26,6 +26,7 @@ fi
 set_mode_string=u=rwx,g=rx,o=w,-s,+t
 output_mode_string=drwxr-x-wT
 
+fail=0
 tmp=t
 mkdir -m$set_mode_string $tmp || fail=1
 

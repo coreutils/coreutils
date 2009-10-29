@@ -23,6 +23,7 @@ fi
 
 . $srcdir/test-lib.sh
 
+fail=0
 umask 022
 mkfifo fifo ||
   skip_test_ "fifos not supported"

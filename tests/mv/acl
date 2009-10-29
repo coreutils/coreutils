@@ -48,6 +48,7 @@ acl1=`getfacl file` || skip_partition=.
 test $skip_partition != none &&
   skip_test_ "'$skip' is not on a suitable file system for this test"
 
+fail=0
 # move the access acl of a file
 mv file "$other_partition_tmpdir" || fail=1
 acl2=`cd "$other_partition_tmpdir" && getfacl file` || framework_failure

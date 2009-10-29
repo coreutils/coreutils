@@ -26,6 +26,7 @@ fi
 echo a > a || framework_failure
 echo a-tilde > a~ || framework_failure
 
+fail=0
 # This cp command should exit nonzero.
 cp --b=simple a~ a > out 2>&1 && fail=1
 
