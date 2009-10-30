@@ -56,7 +56,6 @@ else
   skip_test_ "this test must be run at nice level 0"
 fi
 
-fail=0
 while :; do
   test_name=$1
   args=$2

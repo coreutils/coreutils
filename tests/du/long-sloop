@@ -62,7 +62,6 @@ cat $file > /dev/null 2> err &&
 in file name resolution'
 too_many=`sed 's/.*: //' err`
 
-fail=0
 
 # With coreutils-5.93 there was no failure.
 # With coreutils-5.94 we get the desired diagnostic:

@@ -25,7 +25,6 @@ fi
 require_controlling_input_terminal_
 trap '' TTOU # Ignore SIGTTOU
 
-fail=0
 
 saved_state=`stty -g` || fail=1
 stty $saved_state || fail=1

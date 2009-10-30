@@ -44,7 +44,6 @@ $CC -c long.c \
 a=$INTMAX_MAX
 b=$INTMAX_OFLOW
 
-fail=0
 seq $a $b > out || fail=1
 printf "$a\n$b\n" > exp || fail=1
 compare out exp || fail=1

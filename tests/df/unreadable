@@ -24,7 +24,6 @@ fi
 . $srcdir/test-lib.sh
 skip_if_root_
 
-fail=0
 touch unreadable || fail=1
 chmod a-r unreadable || fail=1
 df unreadable || fail=1

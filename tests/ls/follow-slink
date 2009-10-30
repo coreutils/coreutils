@@ -34,7 +34,6 @@ ln -s ../../dir1 sub/link-to-dir || framework_failure
 # systems running some DJGPP-2.03 libc.
 ls -F link > /dev/null || framework_failure
 
-fail=0
 
 # When explicitly listing a broken link, the command must fail.
 ls -L link 2> /dev/null && fail=1

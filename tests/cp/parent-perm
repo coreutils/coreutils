@@ -34,7 +34,6 @@ cp -p --parent a/b/c/foo e || framework_failure
 # to a destination directory that it doesn't create.
 chmod g-rx e/a e/a/b || framework_failure
 
-fail=0
 cp -p --parent a/b/d/foo e || fail=1
 
 # Ensure that permissions on just-created directory, e/a/,

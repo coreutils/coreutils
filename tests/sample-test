@@ -29,7 +29,6 @@ fi
 # FIXME: cleanup_() { rm -rf "$other_partition_tmpdir"; }
 # FIXME: . "$abs_srcdir/other-fs-tmpdir"
 
-fail=0
 FIXME > out || fail=1
 cat <<\EOF > exp || fail=1
 FIXME

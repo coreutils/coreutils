@@ -27,7 +27,6 @@ skip_if_setgid_
 
 working_umask_or_skip_
 
-fail=0
 
 #                         parent        parent/dir
 # umask   -m option   resulting perm  resulting perm

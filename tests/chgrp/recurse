@@ -28,7 +28,6 @@ set _ $groups; shift
 g1=$1
 g2=$2
 
-fail=0
 
 # chgrp -R should not traverse a symlink to a directory.
 mkdir d e

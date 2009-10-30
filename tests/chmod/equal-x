@@ -26,7 +26,6 @@ fi
 file=f
 touch $file || framework_failure
 
-fail=0
 umask 005
 for mode in =x =xX =Xx =x,=X =X,=x; do
   chmod a=r,$mode $file || fail=1

@@ -28,7 +28,6 @@ mkdir -p a/b
 touch a/b/file
 chmod u-w a/b
 
-fail=0
 
 rm -rf a a 2>&1 | sed 's/:[^:]*$//' > out || fail=1
 cat <<\EOF > exp

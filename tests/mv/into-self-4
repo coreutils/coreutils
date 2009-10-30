@@ -27,7 +27,6 @@ fi
 touch file || framework_failure
 ln -s file s || framework_failure
 
-fail=0
 
 # This must fail.
 mv s s 2> /dev/null && fail=1

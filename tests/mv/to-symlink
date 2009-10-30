@@ -30,7 +30,6 @@ rem_file="$other_partition_tmpdir/file"
 rem_symlink="$other_partition_tmpdir/symlink"
 file=to-sym-$$
 
-fail=0
 
 rm -f $file || framework_failure
 echo local > $file || framework_failure

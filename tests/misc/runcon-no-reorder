@@ -26,7 +26,6 @@ fi
 diag='runcon: runcon may be used only on a SELinux kernel'
 echo "$diag" > exp || framework_failure
 
-fail=0
 
 # This test works even on systems without SELinux.
 # On such a system it fails with the above diagnostic, which is fine.

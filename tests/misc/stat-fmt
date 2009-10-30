@@ -24,7 +24,6 @@ fi
 . $srcdir/test-lib.sh
 
 
-fail=0
 
 for i in `seq 50`; do
   fmt=`printf "%${i}s" %`

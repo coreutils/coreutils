@@ -41,7 +41,6 @@ mkdir e           &&
   ok=1
 test $ok = 1 || framework_failure
 
-fail=0
 
 rm -rf d/f 2> out && fail=1
 cat <<\EOF > exp

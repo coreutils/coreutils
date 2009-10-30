@@ -35,7 +35,6 @@ directory
 directory
 EOF
 
-fail=0
 # This failed on Solaris 9 for coreutils 8.0.
 stat --format=%n link1 > out || fail=1
 stat --format=%n link1/ >> out && fail=1

@@ -25,7 +25,6 @@ fi
 
 ln -s non-existent dangle || framework_failure
 
-fail=0
 
 # This operation cannot succeed since the symbolic link dangles.
 chmod 644 dangle 2> out && fail=1

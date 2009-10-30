@@ -29,7 +29,6 @@ fi
 . $srcdir/test-lib.sh
 
 mkdir d || framework_failure
-fail=0
 ln -s --target-dir=d ../f || fail=1
 
 Exit $fail

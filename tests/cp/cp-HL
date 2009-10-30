@@ -28,7 +28,6 @@ echo f > f || framework_failure
 ln -s f slink || framework_failure
 ln -s no-such-file src-dir/slink || framework_failure
 
-fail=0
 
 cp -H -R slink src-dir dest-dir || fail=1
 test -d src-dir || fail=1

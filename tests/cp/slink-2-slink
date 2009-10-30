@@ -30,7 +30,6 @@ ln -s file b || framework_failure
 ln -s no-such-file c || framework_failure
 ln -s no-such-file d || framework_failure
 
-fail=0
 cp --update --no-dereference a b || fail=1
 cp --update --no-dereference c d || fail=1
 

@@ -24,7 +24,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (

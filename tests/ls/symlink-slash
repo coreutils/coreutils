@@ -26,7 +26,6 @@ fi
 mkdir dir || framework_failure
 ln -s dir symlink || framework_failure
 
-fail=0
 set `ls -l symlink/`
 
 # Prior to fileutils-4.0k, the following would have output `... symlink -> dir'.

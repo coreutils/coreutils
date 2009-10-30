@@ -34,7 +34,6 @@ out
 symlink
 EOF
 
-fail=0
 
 ls -1 > out || fail=1
 

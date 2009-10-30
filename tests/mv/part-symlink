@@ -33,7 +33,6 @@ pwd_tmp=`pwd`
 # can make this test fail.
 (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
-fail=0
 
 # Four cases:
 # local regular file w/symlink on another partition

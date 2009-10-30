@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # Without arguments, printenv behaves like env.  Some shells provide
 # printenv as a builtin, so we must test via absolute name.

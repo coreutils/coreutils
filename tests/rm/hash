@@ -35,7 +35,6 @@ for i in 1 2 3; do
   done
 done
 
-fail=0
 
 rm -r t || fail=1
 

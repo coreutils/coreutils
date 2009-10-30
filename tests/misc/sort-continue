@@ -31,7 +31,6 @@ for i in $(seq 31); do
   echo $i | tee -a in > __test.$i || framework_failure
 done
 
-fail=0
 
 (
  ulimit -n 6

@@ -27,7 +27,6 @@ ln -s nowhere dangling || framework_failure
 touch file || framework_failure
 ln -s file link || framework_failure
 
-fail=0
 
 # These first tests should work on every platform.
 # -h does not create files, but it warns.  Use -c to silence warning.

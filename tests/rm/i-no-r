@@ -28,7 +28,6 @@ fi
 mkdir dir || framework_failure
 echo y > y || framework_failure
 
-fail=0
 
 # This must fail.
 rm -i dir < y > /dev/null 2>&1 && fail=1

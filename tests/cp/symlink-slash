@@ -27,7 +27,6 @@ fi
 mkdir dir || framework_failure
 ln -s dir symlink || framework_failure
 
-fail=0
 cp -dR symlink/ s || fail=1
 set `ls -l s`
 

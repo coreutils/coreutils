@@ -44,7 +44,6 @@ for i in $(seq 30); do
     sleep .1
 done
 
-fail=0
 kill $tail_pid && fail=1 || :
 
 Exit $fail

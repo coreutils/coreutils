@@ -29,7 +29,6 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 
 mkdir foo || framework_failure
 
-fail=0
 
 mv foo/ "$other_partition_tmpdir/bar" || fail=1
 

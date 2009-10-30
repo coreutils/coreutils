@@ -40,7 +40,6 @@ cp -Pp dangle d2 || framework_failure
 stat --format=%y dangle > t1 || framework_failure
 stat --format=%y d2 > t2 || framework_failure
 
-fail=0
 compare t1 t2 || fail=1
 
 Exit $fail

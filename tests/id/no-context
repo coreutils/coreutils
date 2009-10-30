@@ -27,7 +27,6 @@ fi
 # but this is as good a witness as any, in general.
 require_selinux_
 
-fail=0
 
 # Require the context=... part by default.
 id > out || fail=1

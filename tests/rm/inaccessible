@@ -32,7 +32,6 @@ skip_if_root_
 p=`pwd`
 mkdir abs1 abs2 no-access || framework_failure
 
-fail=0
 
 set +x
 (cd no-access; chmod 0 . && rm -r "$p/abs1" rel "$p/abs2") 2> out && fail=1

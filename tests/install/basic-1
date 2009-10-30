@@ -31,7 +31,6 @@ rm -rf $dir $file || framework_failure
 mkdir -p $dir || framework_failure
 echo foo > $file || framework_failure
 
-fail=0
 ginstall $file $dir || fail=1
 # Make sure the source file still exists.
 test -f $file || fail=1

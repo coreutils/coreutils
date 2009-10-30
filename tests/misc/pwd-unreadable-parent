@@ -38,7 +38,6 @@ mkdir -p a/b || framework_failure
 cd a/b || framework_failure
 chmod a=x .. || framework_failure
 
-fail=0
 env -- pwd > exp || fail=1
 readlink -ev . > out || fail=1
 

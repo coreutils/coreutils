@@ -34,7 +34,6 @@ ln -s 1 1s || framework_failure
 ln -s ../3 2/2s || framework_failure
 chgrp -R $g1 1 2 3 || framework_failure
 
-fail=0
 
 chgrp --preserve-root -H -R $g2 1s 2 || fail=1
 

@@ -31,7 +31,6 @@ touch -d "$date" c || framework_failure
 touch -d "$date" a || framework_failure
 touch -d "$date" b || framework_failure
 
-fail=0
 
 ls -1t a b c > out || fail=1
 cat <<EOF > exp

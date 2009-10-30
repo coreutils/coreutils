@@ -45,7 +45,6 @@ touch a || framework_failure
 ln a x/b || framework_failure
 ln a c || framework_failure
 
-fail=0
 
 # ======================================
 # This must fail -- because x/b cannot be unlinked.

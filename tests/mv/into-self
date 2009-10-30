@@ -30,7 +30,6 @@ rm -rf $dir $file || framework_failure
 mkdir -p $dir/a/b || framework_failure
 touch $file || framework_failure
 
-fail=0
 
 # This mv command should fail.
 mv $dir $file $dir > out 2>&1 && fail=1

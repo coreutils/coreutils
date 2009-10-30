@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 touch -c no-file > /dev/null 2>&1 || fail=1
 touch -cm no-file > /dev/null 2>&1 || fail=1

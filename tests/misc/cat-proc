@@ -29,7 +29,6 @@ f=/proc/cpuinfo
 test -f $f \
   || skip_test_ "no $f"
 
-fail=0
 
 # Yes, parts of /proc/cpuinfo might change between cat runs.
 # If that happens, consider choosing a file that's less likely to change,

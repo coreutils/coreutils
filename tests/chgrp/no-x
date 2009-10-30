@@ -33,7 +33,6 @@ g2=$2
 mkdir -p d/no-x/y || framework_failure
 chmod u=rw d/no-x || framework_failure
 
-fail=0
 
 # This must exit nonzero.
 chgrp -R $g2 d >/dev/null 2>out && fail=1

@@ -30,7 +30,6 @@ mkdir -m0 inacc || framework_failure
 # that is empty (hence removable) and unreadable.
 mkdir -m a-r -p a/unreadable
 
-fail=0
 
 # This would fail for e.g., coreutils-5.93.
 rm -rf inacc || fail=1

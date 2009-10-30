@@ -29,7 +29,6 @@ touch f || framework_failure
 chmod 0 f || framework_failure
 touch exp || framework_failure
 
-fail=0
 
 rm --interactive=never f > out || fail=1
 

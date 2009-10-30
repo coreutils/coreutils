@@ -32,7 +32,6 @@ touch a || framework_failure
 ln a b || framework_failure
 ln a c || framework_failure
 
-fail=0
 
 # ======================================
 cp --preserve=link a b c dst || fail=1

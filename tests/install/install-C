@@ -28,7 +28,6 @@ mode1=0644
 mode2=0755
 mode3=2755
 
-fail=0
 
 echo test > a || framework_failure
 echo "\`a' -> \`b'" > out_installed_first || framework_failure

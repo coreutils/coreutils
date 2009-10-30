@@ -30,7 +30,6 @@ cd b
 ln -s ../a/foo .
 cd ..
 
-fail=0
 
 # It should fail with a message something like this:
 #   ./cp: `a/foo' and `b/foo' are the same file

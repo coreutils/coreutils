@@ -30,7 +30,6 @@ chmod 444 $file || framework_failure
 
 skip_if_setgid_
 
-fail=0
 
 chmod u=rwx $file || fail=1
 chmod -c g=rwx $file > out || fail=1

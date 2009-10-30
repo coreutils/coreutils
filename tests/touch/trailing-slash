@@ -30,7 +30,6 @@ ln -s file link1 || framework_failure
 mkdir dir || framework_failure
 ln -s dir link2 || framework_failure
 
-fail=0
 
 # Trailing slash can only appear on directory or symlink-to-directory.
 # Up through coreutils 8.0, Solaris 9 failed these tests.

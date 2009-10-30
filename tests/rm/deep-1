@@ -32,7 +32,6 @@ fi
 
 umask 022
 
-fail=0
 
 k20=/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k
 k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20

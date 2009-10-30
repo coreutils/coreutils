@@ -26,7 +26,6 @@ fi
 mkdir A B || framework_failure
 touch X Y || framework_failure
 
-fail=0
 
 # Before coreutils-6.2, the " (backup: `B.~1~')" suffix was not printed.
 mv --verbose --backup=numbered -T A B > out || fail=1

@@ -25,7 +25,6 @@ fi
 
 mkdir x y || framework_failure
 
-fail=0
 
 cp -a x y || fail=1
 

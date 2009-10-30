@@ -35,7 +35,6 @@ done
 chmod 0 b d f h || framework_failure
 echo y > y || framework_failure
 
-fail=0
 mv -if a b || fail=1
 mv -fi c d < y >/dev/null 2>&1 || fail=1
 

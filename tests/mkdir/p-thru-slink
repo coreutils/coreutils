@@ -25,7 +25,6 @@ fi
 
 ln -s . slink || framework_failure
 
-fail=0
 mkdir -p slink/x || fail=1
 test -d x || fail=1
 

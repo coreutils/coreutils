@@ -27,7 +27,6 @@ fi
 mkdir d d/e d/e/f || framework_failure
 chmod a-w d || framework_failure
 
-fail=0
 
 # This rmdir command outputs two diagnostics.
 # Before coreutils-5.1.2, it would mistakenly exit successfully.

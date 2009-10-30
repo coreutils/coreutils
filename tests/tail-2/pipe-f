@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 echo foo | timeout 2 tail -f -c3 > out || fail=1
 echo oo > exp || fail=1
 

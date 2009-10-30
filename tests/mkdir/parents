@@ -26,7 +26,6 @@ skip_if_setgid_
 
 mkdir -m 700 e-dir || framework_failure
 
-fail=0
 
 # Make sure `mkdir -p existing-dir' succeeds
 # and that `mkdir existing-dir' fails.

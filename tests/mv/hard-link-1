@@ -32,7 +32,6 @@ mkdir $dir || framework_failure
 > $dir/a || framework_failure
 ln $dir/a $dir/b || framework_failure
 
-fail=0
 mv $dir "$other_partition_tmpdir" || fail=1
 
 # Display inode numbers, one per line.

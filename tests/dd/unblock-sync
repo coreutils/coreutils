@@ -25,7 +25,6 @@ fi
 
 printf 000100020003xx > in || framework_failure
 
-fail=0
 
 dd cbs=4 ibs=4 conv=unblock,sync < in > out 2> /dev/null || fail=1
 cat <<\EOF > exp || fail=1

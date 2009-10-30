@@ -34,7 +34,6 @@ fi
 
 skip_if_root_
 
-fail=0
 
 # Before fileutils-4.1, we'd get the following misleading
 # diagnostic instead of `...: Permission denied'.

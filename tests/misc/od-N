@@ -25,7 +25,6 @@ fi
 
 echo abcdefg > in || framework_failure
 
-fail=0
 
 (od -An -N3 -c; od -An -N3 -c) < in > out
 cat <<EOF > exp || fail=1

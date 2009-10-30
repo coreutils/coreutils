@@ -24,7 +24,6 @@ if test "$VERBOSE" = yes; then
   md5sum --version
 fi
 
-fail=0
 
 (mkdir tmp && cd tmp && seq 500 | xargs touch)
 

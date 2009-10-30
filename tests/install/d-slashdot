@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 ginstall -d d1/. || fail=1
 test -d d1 || fail=1

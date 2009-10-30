@@ -20,7 +20,6 @@ touch f || framework_failure
 mkdir d s1 s2 || framework_failure
 mkfifo p || framework_failure
 
-fail=0
 
 # special context that works both with and without mcstransd
 ctx=root:object_r:tmp_t:s0

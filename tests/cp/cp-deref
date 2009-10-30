@@ -28,7 +28,6 @@ mkdir a b c d || framework_failure
 ln -s ../c a || framework_failure
 ln -s ../c b || framework_failure
 
-fail=0
 
 # Before coreutils-5.94, the following would fail with this message:
 # cp: will not create hard link `d/b/c' to directory `d/a/c'

@@ -29,7 +29,6 @@ fi
 ln -s no-file dangle
 ln -s / symlink
 
-fail=0
 
 rm ---presume-input-tty dangle symlink &
 pid=$!

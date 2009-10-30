@@ -28,7 +28,6 @@ fi
 # Creating a 2GB file counts as `very expensive'.
 very_expensive_
 
-fail=0
 
 # Get number of free kilobytes on current partition, so we can
 # skip this test if there is insufficient free space.

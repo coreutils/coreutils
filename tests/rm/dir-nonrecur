@@ -26,7 +26,6 @@ fi
 
 mkdir d || framework_failure
 
-fail=0
 
 rm d 2> out && fail=1
 cat <<\EOF > exp || fail=1

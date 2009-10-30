@@ -28,7 +28,6 @@ touch x || framework_failure
 chmod a+x x || framework_failure
 ln -s x link-to-x || framework_failure
 
-fail=0
 
 # ls from coreutils 6.9 would unnecessarily stat a symlink in an unusual case:
 # When not coloring orphan and missing entries, and without ln=target,

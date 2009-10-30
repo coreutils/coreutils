@@ -29,7 +29,6 @@ ln -s dir slink || framework_failure
 printf %65536s x > 64k || framework_failure
 ln -s 64k slink-to-64k || framework_failure
 
-fail=0
 
 du -D slink | sed 's/^[0-9][0-9]*	//' > out
 # Ensure that the trailing slash is preserved and handled properly.

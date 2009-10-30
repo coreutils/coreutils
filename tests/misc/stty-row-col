@@ -60,7 +60,6 @@ set $tests
 saved_size=`stty size` && test -n "$saved_size" \
   || skip_test_ "can't get window size"
 
-fail=0
 while :; do
   test_name=$1
   args=$2

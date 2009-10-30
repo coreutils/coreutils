@@ -26,7 +26,6 @@ fi
 . $srcdir/test-lib.sh
 require_ulimit_
 
-fail=0
 
 # Up to coreutils-6.9, "printf %.Nf 0" would encounter an ENOMEM internal
 # error from glibc's printf(3) function whenever N was large relative to

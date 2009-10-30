@@ -31,7 +31,6 @@ cp -d a b c || framework_failure
 test -f c/a || framework_failure
 test -f c/b || framework_failure
 
-fail=0
 
 a_inode=`ls -i c/a|sed 's,c/.*,,'`
 b_inode=`ls -i c/b|sed 's,c/.*,,'`

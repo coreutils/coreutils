@@ -28,7 +28,6 @@ touch src || framework_failure
 touch dest || framework_failure
 touch dest2 || framework_failure
 
-fail=0
 
 cp -f --link src dest || fail=1
 cp -f --symbolic-link src dest2 || fail=1

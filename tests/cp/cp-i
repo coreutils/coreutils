@@ -26,7 +26,6 @@ fi
 mkdir -p a b/a/c || framework_failure
 touch a/c || framework_failure
 
-fail=0
 
 # coreutils 6.2 cp would neglect to prompt in this case.
 echo n | cp -iR a b 2>/dev/null || fail=1

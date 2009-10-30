@@ -27,7 +27,6 @@ umask 002
 mkdir mode ownership d || framework_failure
 chmod g+s d 2>/dev/null # The cp test is valid either way.
 
-fail=0
 
 for attr in mode ownership
 do

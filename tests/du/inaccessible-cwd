@@ -33,7 +33,6 @@ mkdir -p no-x a/b || framework_failure
 cd no-x || framework_failure
 chmod 0 . || framework_failure
 
-fail=0
 
 du "$cwd/a" > /dev/null || fail=1
 

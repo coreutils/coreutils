@@ -26,7 +26,6 @@ require_root_
 
 touch f || framework_failure
 
-fail=0
 chown -R --preserve-root 0:1 f
 
 # Make sure the owner and group are 0 and 1 respectively.

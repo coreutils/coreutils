@@ -220,7 +220,6 @@ cat <<\EOF | sed "$remove_these_sed" > $expected
 
 EOF
 
-fail=0
 
 compare $expected $actual 1>&2 || fail=1
 

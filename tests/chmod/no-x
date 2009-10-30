@@ -28,7 +28,6 @@ skip_if_root_
 mkdir -p d/no-x/y a/b || framework_failure
 chmod u=rw d/no-x || framework_failure
 
-fail=0
 
 # This must exit nonzero.
 chmod -R o=r d >/dev/null 2>out && fail=1

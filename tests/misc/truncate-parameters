@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # must specify at least 1 file
 truncate --size=0 && fail=1

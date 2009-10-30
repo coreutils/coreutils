@@ -27,7 +27,6 @@ t=tln-symlink
 d=tln-subdir
 ld=tln-symlink-to-subdir
 f=tln-file
-fail=0
 
 # Create a simple symlink with both source and destination files
 # in current directory.

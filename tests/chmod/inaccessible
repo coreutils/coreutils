@@ -26,7 +26,6 @@ fi
 mkdir -p d/e || framework_failure
 chmod 0 d/e d || framework_failure
 
-fail=0
 
 chmod u+rwx d d/e || fail=1
 

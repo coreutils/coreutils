@@ -24,7 +24,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # These tests verify exact status of internal failure.
 nice -n 1 # missing command

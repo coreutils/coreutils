@@ -29,7 +29,6 @@ tmp_in2=dd-in2.$$
 tmp_sym=dd-sym.$$
 tmp_out=dd-out.$$
 
-fail=0
 warn=0
 echo data > $tmp_in || framework_failure
 ln $tmp_in $tmp_in2 || framework_failure

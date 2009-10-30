@@ -57,7 +57,6 @@ cat <<\EOF > exp || framework_failure
  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
 EOF
 
-fail=0
 
 fmt -s in > out || fail=1
 

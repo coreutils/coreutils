@@ -24,7 +24,6 @@ fi
 . $srcdir/test-lib.sh
 require_strace_ capget
 
-fail=0
 strace -e capget ls --color=always > /dev/null 2> out || fail=1
 $EGREP 'capget\(' out || skip_test_ "your ls doesn't call capget"
 

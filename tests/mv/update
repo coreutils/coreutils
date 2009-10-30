@@ -28,7 +28,6 @@ echo old > old || framework_failure
 touch -d yesterday old || framework_failure
 echo new > new || framework_failure
 
-fail=0
 
 for interactive in '' -i; do
   for cp_or_mv in cp mv; do

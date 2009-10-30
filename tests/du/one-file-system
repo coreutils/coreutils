@@ -26,7 +26,6 @@ fi
 
 mkdir -p b/c y/z || framework_failure
 
-fail=0
 
 # Due to a used-uninitialized variable, the "du -x" from coreutils-6.6
 # would not traverse into second and subsequent directories listed

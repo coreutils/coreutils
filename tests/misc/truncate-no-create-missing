@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # truncate -c no-such-file should not fail.
 truncate -s0 -c no-such-file || fail=1

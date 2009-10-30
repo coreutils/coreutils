@@ -33,7 +33,6 @@ test -f $t/a || framework_failure
 echo y > $t/$test.Iy
 echo n > $t/$test.In
 
-fail=0
 rm -i $t/a < $t/$test.In > /dev/null 2>&1 || fail=1
 # The file should not have been removed.
 test -f $t/a || fail=1

@@ -28,7 +28,6 @@ touch f1 || framework_failure
 touch f2 || framework_failure
 touch d || framework_failure
 
-fail=0
 # These mv commands should all exit nonzero.
 
 # Too few args.  This first one did fail, but with an incorrect diagnostic

@@ -25,7 +25,6 @@ fi
 
 mkfifo_or_skip_ fifo
 
-fail=0
 
 touch fifo || fail=1
 

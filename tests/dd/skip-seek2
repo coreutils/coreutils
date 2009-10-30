@@ -24,7 +24,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 echo LA:3456789abcdef > in || fail=1
 (dd bs=1 skip=3 count=0 && dd bs=5) < in > out 2> /dev/null || fail=1

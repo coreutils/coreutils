@@ -46,7 +46,6 @@ test -f 0a || framework_failure
 test -f by || framework_failure
 cd .. || framework_failure
 
-fail=0
 rm -rf t || fail=1
 test -d t && fail=1
 

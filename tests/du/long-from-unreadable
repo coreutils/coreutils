@@ -65,7 +65,6 @@ mkdir inaccessible || framework_failure
 cd inaccessible || framework_failure
 chmod 0 . || framework_failure
 
-fail=0
 du -s "$cwd/$dir" > /dev/null || fail=1
 
 Exit $fail

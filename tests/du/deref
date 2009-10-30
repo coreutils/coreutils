@@ -28,7 +28,6 @@ mkdir -p a/sub || framework_failure
 ln -s a/sub slink || framework_failure
 touch b || framework_failure
 
-fail=0
 
 # This used to fail with the following diagnostic:
 # du: `b': No such file or directory

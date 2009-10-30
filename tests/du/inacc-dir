@@ -25,7 +25,6 @@ skip_if_root_
 
 mkdir -p a/sub || framework_failure
 
-fail=0
 
 du -s a > exp || fail=1
 chmod 0 a/sub || fail=1

@@ -28,7 +28,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 rm -r '' > /dev/null 2>&1 && fail=1
 
 Exit $fail

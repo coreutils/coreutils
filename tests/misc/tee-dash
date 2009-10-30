@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 tee - </dev/null || fail=1
 
 Exit $fail

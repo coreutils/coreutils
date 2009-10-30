@@ -37,7 +37,6 @@ cat <<\EOF > exp-no-reblock || framework_failure
 4 bytes (4 B) copied
 EOF
 
-fail=0
 
 # Use a fifo rather than a pipe in the tests below
 # so that the producer (printf subshell) will wait

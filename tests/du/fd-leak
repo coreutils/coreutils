@@ -40,7 +40,6 @@ done
 # This may fail due to command line limitations.
 touch $f || framework_failure
 
-fail=0
 
 # With coreutils-5.0, this would fail due to a file descriptor leak.
 du $f > out || fail=1

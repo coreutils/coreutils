@@ -35,7 +35,6 @@ cp -al $a $b || framework_failure
 mkdir e || framework_failure
 mv $a $b e || framework_failure
 
-fail=0
 (ulimit -v 20000; cp -al e f) || fail=1
 
 Exit $fail

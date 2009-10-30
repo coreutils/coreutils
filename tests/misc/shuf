@@ -25,7 +25,6 @@ fi
 
 seq 100 > in || framework_failure
 
-fail=0
 shuf in >out || fail=1
 
 # Fail if the input is the same as the output.

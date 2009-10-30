@@ -28,7 +28,6 @@ fi
 mkdir -p dir/sub
 ( cd dir && { echo non-empty > f1; ln f1 f2; echo non-empty > sub/F; } )
 
-fail=0
 
 # Note that for this first test, we transform f1 or f2
 # (whichever name we find first) to f_.  That is necessary because,

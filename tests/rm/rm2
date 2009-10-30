@@ -29,7 +29,6 @@ mkdir -p a/1/2 b/3 || framework_failure
 mkdir a/2 a/3 || framework_failure
 chmod u-x a/1 b || framework_failure
 
-fail=0
 
 # Exercise two separate code paths -- though both result
 # in the same sort of diagnostic.

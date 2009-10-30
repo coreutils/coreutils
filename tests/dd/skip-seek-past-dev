@@ -33,7 +33,6 @@ get_device_size() {
   $BLOCKDEV --getsize64 "$1"
 }
 
-fail=0
 
 # Get path to device the current dir is on.
 # Note df can only get fs size, not device size.

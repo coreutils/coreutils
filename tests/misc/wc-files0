@@ -27,7 +27,6 @@ echo 2 > 2b || framework_failure
 echo 2 words > 2w || framework_failure
 printf '2b\n2w\n' |tr '\n' '\0' > names || framework_failure
 
-fail=0
 
 wc --files0-from=names > out || fail=1
 cat <<\EOF > exp || fail=1

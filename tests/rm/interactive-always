@@ -32,7 +32,6 @@ echo 'n
 y' > $test.I || framework_failure
 rm -f out err || framework_failure
 
-fail=0
 
 # The prompt has a trailing space, and no newline, so an extra
 # 'echo .' is inserted after each rm to make it obvious what was asked.

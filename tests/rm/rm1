@@ -27,7 +27,6 @@ skip_if_root_
 mkdir -p b/a/p b/c b/d || framework_failure
 chmod u-w b/a || framework_failure
 
-fail=0
 
 # This should fail.
 rm -rf b > out 2>&1 && fail=1

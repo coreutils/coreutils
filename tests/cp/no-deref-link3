@@ -27,7 +27,6 @@ msg=bar
 echo $msg > a
 ln -s a b
 
-fail=0
 
 # It should fail with a message something like this:
 #   cp: `a' and `b' are the same file

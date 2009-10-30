@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 mkdir -pv foo/a/b/c/d >out || fail=1
 
 diff - out <<\EOF

@@ -28,7 +28,6 @@ fi
 
 touch a b || framework_failure
 
-fail=0
 ln b b~ || fail=1
 ln -f --b=simple a b || fail=1
 

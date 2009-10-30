@@ -44,7 +44,6 @@ chmod 600 d || framework_failure
 mkdir -p e/a2345 e/b || framework_failure
 chmod 600 e || framework_failure
 
-fail=0
 
 ls --file-type d > out || fail=1
 cat <<\EOF > exp || fail=1

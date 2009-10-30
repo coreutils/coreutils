@@ -25,7 +25,6 @@ fi
 
 echo abc > in || framework_failure
 
-fail=0
 (head -c1; head -c1) < in > out || fail=1
 case "`cat out`" in
   ab) ;;

@@ -26,7 +26,6 @@ skip_if_root_
 
 touch existing-non-dir || framework_failure
 
-fail=0
 
 # With coreutils-6.3, this would exit nonzero.  It should not.
 # Example from Andreas Schwab.

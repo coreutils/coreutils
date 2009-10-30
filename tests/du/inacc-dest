@@ -28,7 +28,6 @@ skip_if_root_
 mkdir f && cd f && mkdir a b c d e && touch c/j && chmod a-x c \
     || framework_failure
 
-fail=0
 du > ../t 2>&1 && fail=1
 
 # Accept either of the following outputs.

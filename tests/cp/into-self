@@ -30,7 +30,6 @@ fi
 
 mkdir a dir || framework_failure
 
-fail=0
 
 # This command should exit nonzero.
 cp -R dir dir 2> out && fail=1

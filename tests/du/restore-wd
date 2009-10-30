@@ -26,7 +26,6 @@ fi
 
 mkdir a b || framework_failure
 
-fail=0
 
 # With du from coreutils-4.5.5 and 4.5.6, this would fail with
 # du: `b': No such file or directory

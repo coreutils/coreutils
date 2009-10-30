@@ -31,7 +31,6 @@ fi
 DEFAULT_SLEEP_SECONDS=2
 SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
 
-fail=0
 
 # FIXME: find writable directories on other partitions
 # and run the test in those directories, too.

@@ -29,7 +29,6 @@ file_backup="$file$suffix"
 temp_files="$file $file_backup"
 rm -f $temp_files
 
-fail=0
 echo test > $file || fail=1
 
 # Specify both version control and suffix so the environment variables

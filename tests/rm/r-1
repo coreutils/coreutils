@@ -35,7 +35,6 @@ removed directory: `a'
 removed `b'
 EOF
 
-fail=0
 rm --verbose -r a b > $test.O || fail=1
 
 for d in $dirs; do

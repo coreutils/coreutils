@@ -48,7 +48,6 @@ sed 's,$,/f,' .dirs | xargs touch
 last_file=`tail -n1 .dirs`/f
 test -f $last_file || framework_failure
 
-fail=0
 
 mv * "$other_partition_tmpdir" || fail=1
 test -f $last_file/f && fail=1

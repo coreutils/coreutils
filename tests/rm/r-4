@@ -26,7 +26,6 @@ fi
 mkdir d || framework_failure
 touch d/a || framework_failure
 
-fail=0
 rm -fr d/. 2>/dev/null && fail=1
 rm -fr d/./ 2>/dev/null && fail=1
 rm -fr d/.//// 2>/dev/null && fail=1

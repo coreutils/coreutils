@@ -27,7 +27,6 @@ for mon in $(seq -w 12); do
     touch -d"+$mon month" $mon.ts || framework_failure
 done
 
-fail=0
 
 # Note some of the following locales may be missing but if so
 # we should fail back to the C locale which should be aligned

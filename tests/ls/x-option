@@ -27,7 +27,6 @@ mkdir subdir || framework_failure
 touch subdir/b || framework_failure
 touch subdir/a || framework_failure
 
-fail=0
 
 # Coreutils 6.8 and 6.9 would output this in the wrong order.
 ls -x subdir > out || fail=1

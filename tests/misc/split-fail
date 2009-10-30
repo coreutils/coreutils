@@ -26,7 +26,6 @@ getlimits_
 
 touch in || framework_failure
 
-fail=0
 
 split -a 0 in 2> /dev/null || fail=1
 split -b 0 in 2> /dev/null && fail=1

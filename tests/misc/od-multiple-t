@@ -29,7 +29,6 @@ fi
 seq 19 > in || framework_failure
 test `wc -c < in` -eq 48 || framework_failure
 
-fail=0
 
 list='a c dC dS dI dL oC oS oI oL uC uS uI uL xC xS xI xL fF fD fL'
 for format1 in $list; do

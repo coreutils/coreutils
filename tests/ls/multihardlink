@@ -34,7 +34,6 @@ c_end=$(printf '\033[m')
 c_mh=$(printf '\033[%sm' $code_mh)
 c_ex=$(printf '\033[%sm' $code_ex)
 c_png=$(printf '\033[%sm' $code_png)
-fail=0
 
 # regular file - not hard linked
 LS_COLORS="mh=$code_mh" ls -U1 --color=always file > out || fail=1

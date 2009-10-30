@@ -29,7 +29,6 @@ od -t x8 /dev/null >/dev/null ||
 
 echo abcdefgh |tr -d '\n' > in || framework_failure
 
-fail=0
 
 od -An -t x8 in > out-raw || fail=1
 sed 's/^ //;s/\(..\)/\1 /g;s/ $//' out-raw \

@@ -34,7 +34,6 @@ mkdir d du || framework_failure
 chmod u-w fu du empty-u || framework_failure
 cd ..
 
-fail=0
 
 cat <<EOF > in
 y

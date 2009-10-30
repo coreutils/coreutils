@@ -32,7 +32,6 @@ chown -R $NON_ROOT_USERNAME d || framework_failure
 # Ensure that non-root can access files in root-owned ".".
 chmod go=x . || framework_failure
 
-fail=0
 
 # This must fail, since `.' is not writable by $NON_ROOT_USERNAME.
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf d 2>/dev/null && fail=1

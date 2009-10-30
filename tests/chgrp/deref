@@ -38,7 +38,6 @@ test "$g" = $g2 ||
   skip_test_ "your system doesn't support changing the owner or group" \
       "of a symbolic link."
 
-fail=0
 
 chgrp $g1 f
 set _ `ls -ln f`; g=$5; test "$g" = $g1 || fail=1

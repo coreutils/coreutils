@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 echo line > in || fail=1
 # Output should be buffered since we're writing to file
 # so we're depending on the flush to write out

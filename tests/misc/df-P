@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
               df -P . > t1 || fail=1
 BLOCK_SIZE=1M df -P . > t2 || fail=1

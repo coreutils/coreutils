@@ -32,7 +32,6 @@ echo "cp: will not copy \`b/1' through just-created symlink \`c/1'" \
 
 # Check both cases: a dangling symlink, and one pointing to a writable file.
 
-fail=0
 for i in dangling-dest existing-dest; do
   test $i = existing-dest && echo i > t
   test $i = dangling-dest && rm -f t

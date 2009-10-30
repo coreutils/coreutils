@@ -31,7 +31,6 @@ truncate -s 511 short || framework_failure
 truncate -s 8191 m1 || framework_failure
 truncate -s 8193 p1 || framework_failure
 
-fail=0
 for i in short m1 p1; do
   rm -f out
   dd if=$i oflag=direct of=out || fail=1

@@ -72,7 +72,6 @@ echo creating a $n-entry directory took $setup_duration seconds
 test $threshold_seconds -lt $setup_duration \
   && threshold_seconds=$setup_duration
 
-fail=0
 start=$(date +%s)
 timeout ${threshold_seconds}s rm -rf d; err=$?
 duration=$(expr $(date +%s) - $start)

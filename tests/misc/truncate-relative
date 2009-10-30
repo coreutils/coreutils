@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # mixture of relative modifiers not allowed
 truncate --size="+>0" file && fail=1

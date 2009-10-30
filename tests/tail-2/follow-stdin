@@ -26,7 +26,6 @@ fi
 echo line > exp || framework_failure
 echo line > in || framework_failure
 
-fail=0
 timeout 1 tail -f < in > out 2> err
 
 # tail from coreutils-7.5 would fail

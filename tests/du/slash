@@ -24,7 +24,6 @@ fi
 . $srcdir/test-lib.sh
 require_readable_root_
 
-fail=0
 
 du --exclude='[^/]*' -x / > out-t || fail=1
 sed 's/^[0-9][0-9]*	//' out-t > out

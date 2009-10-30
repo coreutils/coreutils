@@ -24,7 +24,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 mkdir -p dir/ || fail=1
 test -d dir || fail=1

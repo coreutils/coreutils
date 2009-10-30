@@ -26,7 +26,6 @@ fi
 
 TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure
 
-fail=0
 
 # Set times back by 5 days.
 touch --ref f --date='-5 days' f || fail=1

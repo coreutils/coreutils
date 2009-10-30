@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 kall=/proc/kallsyms
 
 test -r $kall || skip_test_ "your system lacks $kall"

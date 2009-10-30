@@ -25,7 +25,6 @@ fi
 
 ln -s no-such-file dangling-slink || framework_failure
 
-fail=0
 
 # Prior to coreutils-6.0, this would fail on non-Linux kernels,
 # with link being applied to the dangling symlink.

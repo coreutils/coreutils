@@ -32,7 +32,6 @@ rm -f "$a" "$a2" || framework_failure
 echo a > "$a" || framework_failure
 echo a2 > "$a2" || framework_failure
 
-fail=0
 # This mv command should exit nonzero.
 mv --b=simple "$a2" "$a" > out 2>&1 && fail=1
 

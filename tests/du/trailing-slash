@@ -29,7 +29,6 @@ fi
 mkdir -p dir/1/2 || framework_failure
 ln -s dir slink || framework_failure
 
-fail=0
 
 du slink/ | sed 's/^[0-9][0-9]*	//' > out
 echo === >> out

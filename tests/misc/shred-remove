@@ -31,7 +31,6 @@ file=0123456789
 touch $file || framework_failure
 chmod u-w $file || framework_failure
 
-fail=0
 
 # This would take so long that it appears to infloop
 # when using version from fileutils-4.0k.

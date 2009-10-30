@@ -41,7 +41,6 @@ touch $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure
 # from an OpenBSD system, the above mknod fails.
 # It's not worth making an exception any more.
 
-fail=0
 mv --verbose $null $dir "$other_partition_tmpdir" > out || fail=1
 # Make sure the files are gone.
 test -p $null && fail=1

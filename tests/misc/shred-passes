@@ -35,7 +35,6 @@ shred: f: removing
 shred: f: renamed to 0
 shred: f: removed" > exp || framework_failure
 
-fail=0
 
 shred -v -u f 2>out || fail=1
 

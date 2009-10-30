@@ -45,7 +45,6 @@ acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` \
 test $skip = yes &&
   skip_test_ "'.' is not on a suitable file system for this test"
 
-fail=0
 # copy a file without preserving permissions
 cp a/file b/ || fail=1
 

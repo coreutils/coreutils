@@ -26,7 +26,6 @@ require_built_ groups
 
 # Coreutils 6.9 and earlier failed to display information on first argument
 # if later argument was --.
-fail=0
 groups none -- > out 2>&1 && fail=1
 echo $? >> out
 groups -- none -- > exp 2>&1 && fail=1

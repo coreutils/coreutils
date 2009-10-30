@@ -31,7 +31,6 @@ ln b/FUBAR b/bar || framework_failure
 chmod a-w b/bar || framework_failure
 echo n > no || framework_failure
 
-fail=0
 
 mv a/bar a/foo b < no > out 2> err || fail=1
 touch exp

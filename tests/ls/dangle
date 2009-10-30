@@ -31,7 +31,6 @@ ln -s no-such d/dangle || framework_failure
 printf '? dangle\n' > subdir_Li_exp || framework_failure
 printf 'total 0\n? dangle\n' > subdir_Ls_exp || framework_failure
 
-fail=0
 
 # This must exit nonzero.
 ls -L dangle > /dev/null 2>&1 && fail=1

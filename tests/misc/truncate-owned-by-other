@@ -35,7 +35,6 @@ chmod g+w root-owned
 # Ensure that the current directory is searchable by $NON_ROOT_USERNAME.
 chmod g+x .
 
-fail=0
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" truncate -s0 root-owned || fail=1
 
 Exit $fail

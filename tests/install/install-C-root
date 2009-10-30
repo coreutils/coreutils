@@ -30,7 +30,6 @@ u2=2
 g1=1
 g2=2
 
-fail=0
 
 echo test > a || framework_failure
 echo "\`a' -> \`b'" > out_installed_first

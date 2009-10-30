@@ -25,7 +25,6 @@ fi
 
 p=$abs_top_builddir
 
-fail=0
 
 # Ensure this exits successfully, even though stderr is closed,
 # because it generates no stderr output.

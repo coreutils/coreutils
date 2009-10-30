@@ -28,7 +28,6 @@ touch here || framework_failure
 touch k || framework_failure
 { touch unreadable && chmod a-r unreadable; } || framework_failure
 
-fail=0
 
 for inotify in ---disable-inotify ''; do
   timeout 1 tail -s0.1 -f $inotify not_here

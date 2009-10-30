@@ -35,7 +35,6 @@ chmod a=r,ug+sx c || framework_failure
 chown $NON_ROOT_USERNAME . || framework_failure
 chmod u=rwx,g=rx,o=rx . || framework_failure
 
-fail=0
 
 cp -p a a2 || fail=1
 set _ `ls -l a`; shift; p1=$1

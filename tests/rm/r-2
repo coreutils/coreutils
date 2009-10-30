@@ -38,7 +38,6 @@ EOF
 
 # Note that both the expected output (above) and the actual output lines
 # are sorted, because directory entries may be processed in arbitrary order.
-fail=0
 rm --verbose -r t/a | sort > t/O || fail=1
 
 if test -d t/a; then

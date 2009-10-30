@@ -39,7 +39,6 @@ mkfifo fifo
 cd ..
 
 
-fail=0
 
 ls -F sub > out || fail=1
 cat <<EOF > exp

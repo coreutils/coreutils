@@ -34,7 +34,6 @@ mkdir -p a/b/c d e g || framework_failure
 ln -s d/a sym || framework_failure
 touch f || framework_failure
 
-fail=0
 
 # With 4.0.37 and earlier (back to when?), this would fail
 # with the failed assertion from dirname.c.

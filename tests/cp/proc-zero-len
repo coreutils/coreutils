@@ -28,7 +28,6 @@ touch empty || framework_failure
 f=/proc/cpuinfo
 test -r $f || f=empty
 
-fail=0
 cat $f > out || fail=1
 
 # With coreutils-6.9, this would create a zero-length "exp" file.

@@ -29,7 +29,6 @@ dir=/$d1/such-dir
 # Ensure that $d1 doesn't already exist.
 ls -d $d1 2> /dev/null && framework_failure
 
-fail=0
 
 touch $dir > out 2>&1 && fail=1
 cat <<EOF > exp

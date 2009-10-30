@@ -25,7 +25,6 @@ fi
 
 touch f || framework_failure
 
-fail=0
 
 ln --backup f f 2> out && fail=1
 cat <<\EOF > exp || fail=1

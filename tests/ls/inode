@@ -26,7 +26,6 @@ fi
 touch f || framework_failure
 ln -s f slink || framework_failure
 
-fail=0
 
 # When listed explicitly:
 

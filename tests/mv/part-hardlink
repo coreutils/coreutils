@@ -34,7 +34,6 @@ mkdir a b || framework_failure
 touch a/1 || framework_failure
 ln a/1 b/1 || framework_failure
 
-fail=0
 
 mv f g "$other_partition_tmpdir" || fail=1
 mv a b "$other_partition_tmpdir" || fail=1

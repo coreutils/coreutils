@@ -26,7 +26,6 @@ fi
 touch x || framework_failure
 ln x y || framework_failure
 
-fail=0
 
 mv --verbose x y > out || fail=1
 cat <<\EOF > exp || fail=1

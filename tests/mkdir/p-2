@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 mkdir --parents "`pwd`/t/u" || fail=1
 test -d t/u || fail=1
 

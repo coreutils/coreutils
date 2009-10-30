@@ -36,7 +36,6 @@ cat <<\EOF > exp-err || framework_failure
 ls: loop/sub: not listing already-listed directory
 EOF
 
-fail=0
 
 timeout 1 ls -RL loop 2>err > out
 # Ensure that ls exits with status 2 upon detecting a cycle

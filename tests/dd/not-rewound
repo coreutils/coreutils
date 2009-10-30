@@ -24,7 +24,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 echo abcde > in
 (dd skip=1 count=1 bs=1; dd skip=1 bs=1) < in > out 2> /dev/null || fail=1

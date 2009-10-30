@@ -46,7 +46,6 @@ case $host_triplet in
   *) ;;
 esac
 
-fail=0
 
 chown '' . || fail=1
 

@@ -41,7 +41,6 @@ $PERL \
 cd .. || framework_failure
 echo n > no || framework_failure
 
-fail=0
 rm ---presume-input-tty -r x < no > out || fail=1
 
 # expect empty output

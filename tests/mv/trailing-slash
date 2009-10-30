@@ -28,7 +28,6 @@ fi
 
 mkdir foo || framework_failure
 
-fail=0
 
 mv foo/ bar || fail=1
 

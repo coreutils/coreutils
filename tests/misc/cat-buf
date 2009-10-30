@@ -30,7 +30,6 @@ fi
 # write separately.
 mkfifo fifo || framework_failure
 
-fail=0
 
 echo 1 > exp
 

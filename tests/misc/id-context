@@ -24,7 +24,6 @@ fi
 # Require selinux - when selinux is disabled, id never prints scontext.
 require_selinux_
 
-fail=0
 
 # Check without specified user, context string should be present.
 id | grep context= >/dev/null || fail=1

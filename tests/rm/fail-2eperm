@@ -32,7 +32,6 @@ mkdir a || framework_failure
 chmod 1777 a || framework_failure
 touch a/b || framework_failure
 
-fail=0
 
 # Try to ensure that $NON_ROOT_USERNAME can access
 # the required version of rm.

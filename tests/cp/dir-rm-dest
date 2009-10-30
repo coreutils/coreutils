@@ -25,7 +25,6 @@ fi
 
 mkdir d e || framework_failure
 
-fail=0
 # Do it once with no destination...
 cp -R --remove-destination d e || fail=1
 

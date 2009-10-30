@@ -32,7 +32,6 @@ mkdir a b c || framework_failure
 echo a > a/f || framework_failure
 echo b > b/f || framework_failure
 
-fail=0
 
 cp a/f b/f c 2> /dev/null && fail=1
 test -f a/f || fail=1

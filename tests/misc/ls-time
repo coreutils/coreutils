@@ -46,7 +46,6 @@ touch -a -d "$u2" b || framework_failure
 sleep 2
 touch -a -d "$u1" a || framework_failure
 
-fail=0
 
 # A has ctime more recent than C.
 set `ls -c a c`

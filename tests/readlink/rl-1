@@ -28,7 +28,6 @@ touch regfile || framework_failure
 ln -s regfile link1 || framework_failure
 ln -s missing link2 || framework_failure
 
-fail=0
 
 v=`readlink link1` || fail=1
 test "$v" = regfile || fail=1

@@ -27,7 +27,6 @@ fi
 
 touch f || framework_failure
 
-fail=0
 
 expected_u=-rwx------
 expected_g=----rwx---

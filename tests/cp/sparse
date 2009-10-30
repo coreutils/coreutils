@@ -31,7 +31,6 @@ require_sparse_support_
 size=`expr 128 \* 1024 + 1`
 dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure
 
-fail=0
 
 cp --sparse=always sparse copy || fail=1
 

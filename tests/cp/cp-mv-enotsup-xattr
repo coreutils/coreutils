@@ -59,7 +59,6 @@ getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_a >/dev/null \
   || skip_test_ "failed to set xattr of file"
 
-fail=0
 
 # This should pass without diagnostics
 cp -a a mnt/ 2>err  || fail=1

@@ -25,7 +25,6 @@ fi
 
 mkdir x y || framework_failure
 
-fail=0
 
 cd y
 cp --verbose -ab ../x/. . > out 2>&1 || fail=1

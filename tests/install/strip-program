@@ -31,7 +31,6 @@ sed s/b/B/ \$1 > \$1.t && mv \$1.t \$1
 EOF
 chmod a+x b || framework_failure
 
-fail=0
 
 echo abc > src || fail=1
 echo aBc > exp || fail=1

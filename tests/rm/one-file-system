@@ -44,7 +44,6 @@ cat <<\EOF > exp || framework_failure
 rm: skipping `a/b', since it's on a different device
 EOF
 
-fail=0
 
 rm --one-file-system -rf a 2> out && fail=1
 test -d $t/y || fail=1

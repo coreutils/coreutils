@@ -61,7 +61,6 @@ cat space  # this helps when debugging any test failure
 df --total -i -P               > inode || framework_failure
 cat inode
 
-fail=0
 $PERL check-df space || fail=1
 $PERL check-df inode || fail=1
 

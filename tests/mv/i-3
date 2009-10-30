@@ -30,7 +30,6 @@ trap '' TTIN # Ignore SIGTTIN
 touch f g h i || framework_failure
 chmod 0 g i || framework_failure
 
-fail=0
 
 ls /dev/stdin >/dev/null 2>&1 \
   || skip_test_ 'there is no /dev/stdin file'

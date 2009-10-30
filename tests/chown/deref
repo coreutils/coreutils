@@ -26,7 +26,6 @@ fi
 
 ln -s no-such dangle || framework_failure
 
-fail=0
 
 set _ `ls -ldo dangle`; shift; user=$3
 

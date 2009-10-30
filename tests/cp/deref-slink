@@ -27,7 +27,6 @@ fi
 touch f slink-target || framework_failure
 ln -s slink-target slink || framework_failure
 
-fail=0
 cp -d f slink || fail=1
 
 Exit $fail

@@ -27,7 +27,6 @@ fi
 
 mkdir -p d || framework_failure
 
-fail=0
 rm -f d/no-such-file || fail=1
 
 Exit $fail

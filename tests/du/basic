@@ -32,7 +32,6 @@ printf '%*s' 257 make-sure-the-file-is-non-empty > a/b/F || framework_failure
 printf %4096s x > d/1
 cp d/1 d/sub/2
 
-fail=0
 
 B=`stat --format=%B a/b/F`
 

@@ -31,7 +31,6 @@ echo abc > foo || framework_failure
 ln -s foo slink || framework_failure
 ln -s no-such-file no-file || framework_failure
 
-fail=0
 
 # This would fail in 4.1.5, not in 4.1.6.
 cp -r no-file junk 2>/dev/null || fail=1

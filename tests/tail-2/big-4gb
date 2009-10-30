@@ -41,7 +41,6 @@ possibly because this system does not support large files;
 Consider rerunning this test on a different file system.'
 fi
 
-fail=0
 
 tail -c1 big > out || fail=1
 # Append a newline.

@@ -27,7 +27,6 @@ pwd=`pwd`
 my_pwd=$("$abs_top_builddir/src/pwd")
 tmp=d
 
-fail=0
 mkdir $tmp || framework_failure
 cd $tmp || framework_failure
 
@@ -42,7 +41,6 @@ ln -s link5 link5 || framework_failure
 
 cd "$pwd/$tmp/removed" || framework_failure
 
-fail=0
 # Skip this test if the system doesn't let you remove the working directory.
 if rmdir ../removed 2>/dev/null; then
   v=`readlink -e .` && fail=1

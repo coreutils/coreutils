@@ -33,7 +33,6 @@ mkdir a b b/a || framework_failure
 mv a b ||
   skip_test_ "your kernel's rename syscall is buggy"
 
-fail=0
 
 # This should succeed, since both src and dest are directories,
 # and the dest dir is empty.

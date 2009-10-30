@@ -35,7 +35,6 @@ for i in `seq 1 250`; do
 done
 cd .. || framework_failure
 
-fail=0
 
 # On a buggy system, this would fail with the diagnostic,
 # "cannot remove directory `b': Directory not empty"

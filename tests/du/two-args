@@ -33,7 +33,6 @@ cd sub || framework_failure
 t=t
 mkdir -p $t/1 $t/2 || framework_failure
 
-fail=0
 test -d $t || fail=1
 du $t/1 $t/2 > /dev/null || fail=1
 

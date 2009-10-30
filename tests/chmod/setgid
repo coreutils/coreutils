@@ -44,7 +44,6 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
 env -- test -g d ||
   skip_test_ 'cannot create setgid directories'
 
-fail=0
 
 chmod 755 d
 

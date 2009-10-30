@@ -35,7 +35,6 @@ require_strace_ unlink
 touch a b || framework_failure
 ln b b2 || framework_failure
 
-fail=0
 
 strace -qe unlink mv a b > out 2>&1 || fail=1
 $EGREP 'unlink.*"b"' out && fail=1

@@ -28,7 +28,6 @@ skip_if_root_
 mkdir -p no-write/dir || framework_failure
 chmod u-w no-write || framework_failure
 
-fail=0
 
 mv no-write/dir . > out 2>&1 && fail=1
 cat <<\EOF > exp

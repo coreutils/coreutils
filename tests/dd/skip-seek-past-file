@@ -25,7 +25,6 @@ fi
 require_sparse_support_ # for `truncate --size=$OFF_T_MAX`
 eval $(getlimits) # for OFF_T limits
 
-fail=0
 
 printf "1234" > file || framework_failure
 

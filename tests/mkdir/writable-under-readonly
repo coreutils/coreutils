@@ -37,7 +37,6 @@ skip_test_ temporarily disabled
 
 # FIXME: define cleanup_ to do the umount
 
-fail=0
 # FIXME: use mktemp
 cd /tmp                                    \
   && dd if=/dev/zero of=1 bs=8192 count=50 \

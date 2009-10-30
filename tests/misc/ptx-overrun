@@ -28,7 +28,6 @@ fi
 f=01234567890123456789012345678901234567890123456789
 touch $f empty || framework_failure
 
-fail=0
 
 # Specifying a regular expression ending in a lone backslash
 # would cause ptx to write beyond the end of a malloc'd buffer.

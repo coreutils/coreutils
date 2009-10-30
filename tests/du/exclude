@@ -25,7 +25,6 @@ fi
 
 mkdir -p a/b/c a/x/y a/u/v || framework_failure
 
-fail=0
 
 du --exclude=x a | sed 's/^[0-9][0-9]*	//' | sort > out || fail=1
 printf '===\n' >> out

@@ -24,7 +24,6 @@ fi
 . $srcdir/test-lib.sh
 require_membership_in_two_groups_
 
-fail=0
 
 set _ $groups; shift
 g1=$1

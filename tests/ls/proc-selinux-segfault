@@ -26,7 +26,6 @@ fi
 f=/proc/sys
 test -r $f || f=.
 
-fail=0
 ls -l $f > out || fail=1
 
 Exit $fail

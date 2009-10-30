@@ -41,7 +41,6 @@ done > exp || framework_failure
 echo split: output file suffixes exhausted \
   > exp-too-short || framework_failure
 
-fail=0
 
 # This should fail.
 split -b 1 -a 1 in 2> err && fail=1

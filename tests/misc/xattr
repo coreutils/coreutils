@@ -55,7 +55,6 @@ getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_a \
   || skip_test_ "failed to set xattr of file"
 
-fail=0
 
 # cp should not preserve xattr by default
 cp a b || fail=1

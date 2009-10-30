@@ -27,7 +27,6 @@ fi
 echo foo > a || framework_failure
 ln -s . b || framework_failure
 
-fail=0
 ln -sf a b > err 2>&1 && fail=1
 case `cat err` in
   *'are the same file') ;;

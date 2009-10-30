@@ -27,7 +27,6 @@ fi
 mkdir dir1 dir2 || framework_failure
 touch dir1/file || framework_failure
 
-fail=0
 cp -R dir1/ dir2 || fail=1
 
 # This file should not exist, but it did with fileutils-4.0w.

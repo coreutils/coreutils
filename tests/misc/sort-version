@@ -105,7 +105,6 @@ cat > exp <<- _EOF_
         string start 5.90.0 end of str
         _EOF_
 
-fail=0
 sort --sort=version -o out in || fail=1
 compare exp out || fail=1
 Exit $fail

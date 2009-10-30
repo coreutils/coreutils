@@ -26,7 +26,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 file=file
 echo foo > $file

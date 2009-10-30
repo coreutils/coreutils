@@ -28,7 +28,6 @@ set _ $groups; shift
 g1=$1
 g2=$2
 
-fail=0
 
 umask 077
 mkfifo fifo ||

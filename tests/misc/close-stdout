@@ -26,7 +26,6 @@ fi
 
 p=$abs_top_builddir
 
-fail=0
 
 # Ensure these exit successfully, even though stdout is closed,
 # because they generate no output.

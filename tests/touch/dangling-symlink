@@ -26,7 +26,6 @@ fi
 
 rm -f touch-target t-symlink
 ln -s touch-target t-symlink
-fail=0
 
 # This used to infloop.
 touch t-symlink || fail=1

@@ -28,7 +28,6 @@ for i in a b; do
 done
 echo y > y || framework_failure
 
-fail=0
 mv -i a b < y >/dev/null 2>&1 || fail=1
 
 # Make sure out contains the prompt.

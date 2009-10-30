@@ -40,7 +40,6 @@ REV_ctlecho=1 REV_echoke=1 REV_crtkill=1 REV_evenp=1 REV_parity=1
 REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1 REV_litout=1
 REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
-fail=0
 
 saved_state=.saved-state
 stty --save > $saved_state || fail=1

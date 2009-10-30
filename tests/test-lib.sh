@@ -395,3 +395,6 @@ elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
 else
   compare() { cmp "$@"; }
 fi
+
+# Initialize; all bourne shell scripts end with "Exit $fail".
+fail=0

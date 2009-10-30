@@ -40,7 +40,6 @@ esac
 # write separately.
 mkfifo fifo || framework_failure
 
-fail=0
 
 # Verify input parameter checking
 stdbuf -o1 true || fail=1 # verify size syntax

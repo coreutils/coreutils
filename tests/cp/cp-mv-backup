@@ -36,7 +36,6 @@ expected=expected
 
 exec 1> $actual
 
-fail=0
 for prog in cp mv; do
   for initial_files in 'x' 'x y' 'x y y~' 'x y y.~1~' 'x y y~ y.~1~'; do
     for opt in none off  numbered t  existing nil  simple never; do

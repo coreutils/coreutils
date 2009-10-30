@@ -25,7 +25,6 @@ fi
 
 seq 100 > in || framework_failure
 
-fail=0
 
 sort --random-sort in > out || fail=1
 

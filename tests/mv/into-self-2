@@ -30,7 +30,6 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 file="$other_partition_tmpdir/file"
 symlink=symlink
 
-fail=0
 
 echo whatever > $file || framework_failure
 ln -s $file $symlink || framework_failure

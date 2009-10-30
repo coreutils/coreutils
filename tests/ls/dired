@@ -25,7 +25,6 @@ fi
 
 mkdir dir || framework_failure
 
-fail=0
 
 LC_MESSAGES=C ls -lR --dired dir > out || fail=1
 cat <<EOF > exp

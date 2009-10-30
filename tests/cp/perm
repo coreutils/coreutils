@@ -27,7 +27,6 @@ very_expensive_
 
 umask 037
 
-fail=0
 
 # Now, try it with `mv', with combinations of --force, no-f and
 # existing-destination and not.

@@ -31,7 +31,6 @@ chmod a=rwx file
 umask 077
 mv file "$other_partition_tmpdir"
 
-fail=0
 test -f file && fail=1
 test -f "$other_partition_tmpdir/file" || fail=1
 

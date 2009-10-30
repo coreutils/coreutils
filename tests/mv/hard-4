@@ -25,7 +25,6 @@ fi
 touch a || framework_failure
 ln a b || framework_failure
 
-fail=0
 
 mv a b || fail=1
 

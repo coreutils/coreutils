@@ -24,7 +24,6 @@ if test "$VERBOSE" = yes; then
   arch --version
 fi
 
-fail=0
 
 arch > out || fail=1
 uname -m > exp || fail=1

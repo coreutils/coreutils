@@ -25,7 +25,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 chmod -f 0   no-such 2> out && fail=1
 chgrp -f 0   no-such 2>> out && fail=1
 chown -f 0:0 no-such 2>> out && fail=1

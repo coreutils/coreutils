@@ -28,7 +28,6 @@ mkfifo fifo ||
   skip_test_ "fifos not supported"
 touch e || framework-failure
 
-fail=0
 
 # Without -f, expect it to fail.
 cp -R fifo e || fail=1

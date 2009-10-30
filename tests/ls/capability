@@ -29,7 +29,6 @@ grep '^#define HAVE_CAP 1$' $CONFIG_HEADER > /dev/null \
 
 (setcap --help) 2>&1 |grep 'usage: setcap' > /dev/null \
   || skip_test_ "setcap utility not found"
-fail=0
 
 # Don't let a different umask perturb the results.
 umask 22

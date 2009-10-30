@@ -54,7 +54,6 @@ fi
 
 seq 5 > in
 
-fail=0
 
 # Give tac a fifo command line argument.
 # This makes it try to create a temporary file in $TMPDIR.

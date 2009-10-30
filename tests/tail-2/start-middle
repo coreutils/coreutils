@@ -26,7 +26,6 @@ fi
 
 (echo 1; echo 2) > k || framework_failure
 
-fail=0
 
 sh -c 'read x; tail' < k > out || fail=1
 cat <<EOF > exp

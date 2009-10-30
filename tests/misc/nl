@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 echo a | nl > out || fail=1
 echo b | nl -s%n >> out || fail=1

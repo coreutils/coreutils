@@ -25,7 +25,6 @@ fi
 
 mkdir dir || framework_failure
 
-fail=0
 
 # Prior to coreutils-4.5.2, this would fail with the following:
 # rmdir: `dir': No such file or directory

@@ -25,7 +25,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 
 # POSIX is clear that environ may, but need not be, sorted.
 # Environment variable values may contain newlines, which cannot be

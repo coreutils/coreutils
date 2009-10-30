@@ -37,7 +37,6 @@ rm: remove directory `d/e'
 rm: remove directory `d'
 EOF
 
-fail=0
 
 rm -ir d < in > out 2>&1 || fail=1
 

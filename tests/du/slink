@@ -45,7 +45,6 @@ if df --type=nfsv3 . >/dev/null 2>&1; then
   skip_test_ "\`.' is on an NFS file system"
 fi
 
-fail=0
 symlink_name_lengths='1 15 16 31 32 59 60 63 64 127 128 255 256 511 512 1024'
 for len in $symlink_name_lengths; do
   name=`seq 1 $len|tr -c x y |head -c$len`

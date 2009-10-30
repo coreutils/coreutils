@@ -24,7 +24,6 @@ if test "$VERBOSE" = yes; then
   su --version
 fi
 
-fail=0
 
 # Very little that we can test without a root password
 su --- / true # unknown option

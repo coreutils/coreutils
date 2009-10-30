@@ -25,7 +25,6 @@ fi
 
 printf '1\n2\n3\n4\n5\n' > in || framework_failure
 
-fail=0
 split --lines=2 in > out || fail=1
 cat <<\EOF > exp-1
 1

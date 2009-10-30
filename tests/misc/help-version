@@ -43,7 +43,6 @@ expected_failure_status_dir=2
 expected_failure_status_ls=2
 expected_failure_status_vdir=2
 
-fail=0
 
 test "$built_programs" \
   || { echo "$this_test: no programs built!?!" 1>&2; Exit $fail; }

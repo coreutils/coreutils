@@ -59,7 +59,6 @@ cd mnt                                       || framework_failure
 echo > f                                     || framework_failure
 echo > g                                     || framework_failure
 
-fail=0
 
 # /bin/cp from coreutils-6.7-3.fc7 would fail this test by letting cp
 # succeed (giving no diagnostics), yet leaving the destination file empty.
