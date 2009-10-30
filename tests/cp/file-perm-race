@@ -23,7 +23,6 @@ fi
 
 . $srcdir/test-lib.sh
 
-fail=0
 umask 022
 mkfifo fifo ||
   skip_test_ "fifos not supported"
@@ -50,10 +49,8 @@ cp_pid=$!
 ) >fifo
 
 case `cat ls.out` in
--???------*)
-  fail=0;;
-*)
-  fail=1;;
+-???------*) ;;
+*) fail=1;;
 esac
 
 wait $cp_pid || fail=1

@@ -25,10 +25,8 @@ fi
 
 case `df .` in
 *'
-'*)
-  fail=0;;
-*)
-  fail=1;;
+'*) ;;
+*) fail=1;;
 esac
 
 Exit $fail

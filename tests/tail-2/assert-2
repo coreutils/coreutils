@@ -43,7 +43,7 @@ mv f foo
 wait
 
 case "`cat err`" in
-  *$ok) fail=0;;
+  *$ok) ;;
   *) fail=1;;
 esac
 
