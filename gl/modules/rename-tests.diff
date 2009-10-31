@@ -1,0 +1,9 @@
+diff --git a/modules/rename-tests b/modules/rename-tests
+index be1b423..fea330a 100644
+--- a/modules/rename-tests
++++ b/modules/rename-tests
+@@ -14,3 +14,4 @@ configure.ac:
+ Makefile.am:
+ TESTS += test-rename
+ check_PROGRAMS += test-rename
++test_rename_LDADD = $(LDADD) @LIBINTL@

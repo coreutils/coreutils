@@ -1,7 +1,7 @@
-diff --git a/lib/regcomp.c b/lib/regcomp.c
-index 6472ff6..fadf36d 100644
---- a/lib/regcomp.c
-+++ b/lib/regcomp.c
+diff --git c/lib/regcomp.c i/lib/regcomp.c
+index 6472ff6..665b2ab 100644
+--- c/lib/regcomp.c
++++ i/lib/regcomp.c
 @@ -18,6 +18,8 @@
     with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
@@ -11,6 +11,24 @@ index 6472ff6..fadf36d 100644
  static reg_errcode_t re_compile_internal (regex_t *preg, const char * pattern,
  					  size_t length, reg_syntax_t syntax);
  static void re_compile_fastmap_iter (regex_t *bufp,
+@@ -541,7 +543,7 @@ regerror (errcode, preg, errbuf, errbuf_size)
+     size_t errbuf_size;
+ #else /* size_t might promote */
+ size_t
+-regerror (int errcode, const regex_t *_Restrict_ preg,
++regerror (int errcode, const regex_t *_Restrict_ preg _UNUSED_PARAMETER_,
+ 	  char *_Restrict_ errbuf, size_t errbuf_size)
+ #endif
+ {
+@@ -1375,7 +1377,7 @@ calc_first (void *extra, bin_tree_t *node)
+
+ /* Pass 2: compute NEXT on the tree.  Preorder visit.  */
+ static reg_errcode_t
+-calc_next (void *extra, bin_tree_t *node)
++calc_next (void *extra _UNUSED_PARAMETER_, bin_tree_t *node)
+ {
+   switch (node->token.type)
+     {
 @@ -2571,7 +2573,8 @@ parse_dup_op (bin_tree_t *elem, re_string_t *regexp, re_dfa_t *dfa,
    /* This loop is actually executed only when end != REG_MISSING,
       to rewrite <re>{0,n} as (<re>(<re>...<re>?)?)?...  We have
@@ -21,3 +39,44 @@ index 6472ff6..fadf36d 100644
      for (i = start + 2; i <= end; ++i)
        {
  	elem = duplicate_tree (elem, dfa);
+@@ -2731,7 +2734,8 @@ static reg_errcode_t
+ internal_function
+ build_collating_symbol (bitset_t sbcset,
+ # ifdef RE_ENABLE_I18N
+-			re_charset_t *mbcset, Idx *coll_sym_alloc,
++			re_charset_t *mbcset _UNUSED_PARAMETER_,
++			Idx *coll_sym_alloc _UNUSED_PARAMETER_,
+ # endif
+ 			const unsigned char *name)
+ {
+@@ -3309,7 +3313,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
+
+ static reg_errcode_t
+ parse_bracket_element (bracket_elem_t *elem, re_string_t *regexp,
+-		       re_token_t *token, int token_len, re_dfa_t *dfa,
++		       re_token_t *token, int token_len,
++		       re_dfa_t *dfa _UNUSED_PARAMETER_,
+ 		       reg_syntax_t syntax, bool accept_hyphen)
+ {
+ #ifdef RE_ENABLE_I18N
+@@ -3396,8 +3401,9 @@ parse_bracket_symbol (bracket_elem_t *elem, re_string_t *regexp,
+
+ static reg_errcode_t
+ #ifdef RE_ENABLE_I18N
+-build_equiv_class (bitset_t sbcset, re_charset_t *mbcset,
+-		   Idx *equiv_class_alloc, const unsigned char *name)
++build_equiv_class (bitset_t sbcset, re_charset_t *mbcset _UNUSED_PARAMETER_,
++		   Idx *equiv_class_alloc _UNUSED_PARAMETER_,
++		   const unsigned char *name)
+ #else /* not RE_ENABLE_I18N */
+ build_equiv_class (bitset_t sbcset, const unsigned char *name)
+ #endif /* not RE_ENABLE_I18N */
+@@ -3798,7 +3804,7 @@ free_token (re_token_t *node)
+    and its children. */
+
+ static reg_errcode_t
+-free_tree (void *extra, bin_tree_t *node)
++free_tree (void *extra _UNUSED_PARAMETER_, bin_tree_t *node)
+ {
+   free_token (&node->token);
+   return REG_NOERROR;

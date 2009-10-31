@@ -3,6 +3,7 @@
 *.o
 */.deps
 *~
+._bootmp
 .gdb-history
 .kludge-stamp
 .tarball-version

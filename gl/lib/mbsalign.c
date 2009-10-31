@@ -129,7 +129,7 @@ mbs_align_pad (char *dest, const char* dest_end, size_t n_spaces)
 
 size_t
 mbsalign (const char *src, char *dest, size_t dest_size,
-          size_t *width, mbs_align_t align, int flags)
+          size_t *width, mbs_align_t align, int flags _UNUSED_PARAMETER_)
 {
   size_t ret = -1;
   size_t src_size = strlen (src) + 1;
