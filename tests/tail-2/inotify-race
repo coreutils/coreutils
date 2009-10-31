@@ -31,17 +31,17 @@ fi
 touch file || framework_failure
 touch tail.out || framework_failure
 
-( gdb --version ) > gdb.out 2>&1
+( timeout 10s gdb --version ) > gdb.out 2>&1
 case $(cat gdb.out) in
     *'GNU gdb'*) ;;
     *) skip_test_ "can't run gdb";;
 esac
 
 # See if gdb works:
-gdb -nx --batch-silent              \
+timeout 10s gdb -nx --batch-silent                  \
     --eval-command='break tail_forever_inotify'    \
-    --eval-command='run -f file'    \
-    --eval-command='quit'    \
+    --eval-command='run -f file'                   \
+    --eval-command='quit'                          \
     tail < /dev/null > gdb.out 2>&1
 
 test -s gdb.out && skip_test_ "can't set breakpoints in tail"
@@ -49,12 +49,12 @@ test -s gdb.out && skip_test_ "can't set breakpoints in tail"
 # Run "tail -f file", stopping to append a line just before
 # inotify initialization, and then continue.  Before the fix,
 # that just-appended line would never be output.
-timeout 10s gdb -nx --batch-silent    \
+timeout 10s gdb -nx --batch-silent                 \
     --eval-command='break tail_forever_inotify'    \
-    --eval-command='run -f file >> tail.out'    \
+    --eval-command='run -f file >> tail.out'       \
     --eval-command="shell echo never-seen-with-tail-7.5 >> file" \
-    --eval-command='continue' \
-    --eval-command='quit'    \
+    --eval-command='continue'                      \
+    --eval-command='quit'                          \
     tail < /dev/null &
 pid=$!
 
