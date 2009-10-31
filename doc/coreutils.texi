@@ -84,6 +84,7 @@
 * nice: (coreutils)nice invocation.             Modify niceness.
 * nl: (coreutils)nl invocation.                 Number lines and write files.
 * nohup: (coreutils)nohup invocation.           Immunize to hangups.
+* nproc: (coreutils)nproc invocation.           Print the number of processors.
 * od: (coreutils)od invocation.                 Dump files in octal, etc.
 * paste: (coreutils)paste invocation.           Merge lines of files.
 * pathchk: (coreutils)pathchk invocation.       Check file name portability.
@@ -410,6 +411,7 @@ System context
 
 * arch invocation::              Print machine hardware name
 * date invocation::              Print or set system date and time
+* nproc invocation::             Print the number of processors
 * uname invocation::             Print system information
 * hostname invocation::          Print or set system name
 * hostid invocation::            Print numeric host identifier
@@ -13407,6 +13409,7 @@ information.
 @menu
 * date invocation::             Print or set system date and time.
 * arch invocation::             Print machine hardware name.
+* nproc invocation::            Print the number of processors.
 * uname invocation::            Print system information.
 * hostname invocation::         Print or set system name.
 * hostid invocation::           Print numeric host identifier.
@@ -14062,6 +14065,43 @@ arch [@var{option}]
 @end example
 
 The program accepts the @ref{Common options} only.
+
+@exitstatus
+
+
+@node nproc invocation
+@section @command{nproc}: Print the number of available processors
+
+@pindex nproc
+@cindex Print the number of processors
+@cindex system information, printing
+
+Print the number of processing units available to the current process,
+which may be less than the number of online processors.
+If this information is not accessible, then print the number of
+processors installed.  If the @env{OMP_NUM_THREADS} environment variable is
+set, then it will determine the returned value.  The result is guaranteed to be
+greater than zero.  Synopsis:
+
+@example
+nproc [@var{option}]
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item --all
+@opindex --all
+Print the number of installed processors on the system, which may
+be greater than the number online or available to the current process.
+The @env{OMP_NUM_THREADS} environment variable is not honored in this case.
+
+@item --ignore=@var{number}
+@opindex --ignore
+If possible, exclude this @var{number} of processing units.
+
+@end table
 
 @exitstatus
 

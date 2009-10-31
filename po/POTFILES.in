@@ -89,6 +89,7 @@ src/mv.c
 src/nice.c
 src/nl.c
 src/nohup.c
+src/nproc.c
 src/od.c
 src/operand2sig.c
 src/paste.c

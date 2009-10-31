@@ -86,6 +86,7 @@ EXTRA_PROGRAMS = \
   mktemp	\
   mv		\
   nl		\
+  nproc		\
   nohup		\
   od		\
   paste		\
@@ -189,6 +190,7 @@ chown_LDADD = $(LDADD)
 chroot_LDADD = $(LDADD)
 cksum_LDADD = $(LDADD)
 comm_LDADD = $(LDADD)
+nproc_LDADD = $(LDADD)
 cp_LDADD = $(LDADD)
 csplit_LDADD = $(LDADD)
 cut_LDADD = $(LDADD)
@@ -480,6 +482,7 @@ rmdir_SOURCES = rmdir.c prog-fprintf.c
 
 uname_SOURCES = uname.c uname-uname.c
 arch_SOURCES = uname.c uname-arch.c
+nproc_SOURCES = nproc.c
 
 md5sum_SOURCES = md5sum.c
 md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)

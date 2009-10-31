@@ -62,6 +62,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also, "rm /read-only-fs/nonexistent" now reports "file not found" rather
   than the less precise "Read-only file system" error.
 
+** New programs
+
+  nproc: Print the number of processing units available to a process.
+
 ** New features
 
   env and printenv now accept the option --null (-0), as a means to

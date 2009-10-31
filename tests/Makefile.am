@@ -189,6 +189,8 @@ TESTS =						\
   misc/nice-fail				\
   misc/nl					\
   misc/nohup					\
+  misc/nproc-avail				\
+  misc/nproc-positive				\
   misc/od-N					\
   misc/od-multiple-t				\
   misc/od-x8					\
