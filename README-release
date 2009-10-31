@@ -29,13 +29,10 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 
 * Run "make distcheck"
 
-* Manually set the date, version number, and [stable/alpha/beta] on
-  line 3 of NEWS, then do e.g.,:
+* Set the date, version number, and release type [stable/alpha/beta] on
+  line 3 of NEWS, commit that, and tag the release by running e.g.,
 
-    v=8.0
-    pkg=$(sed -n 's/^PACKAGE = \(.*\)/\1/p' Makefile)
-    git commit -F <(printf 'version '$v'\n\n* NEWS: Record release date.\n') -a
-    git tag -s -m "$pkg $v" v$v HEAD
+    build-aux/do-release-commit-and-tag 8.1 beta
 
 * Run the following to create release tarballs.  Your choice selects the
   corresponding upload-to destination in the emitted gnupload command.
