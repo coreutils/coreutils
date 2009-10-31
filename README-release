@@ -79,7 +79,7 @@ Once all the builds and tests have passed,
   click on the "submit news", then write something like the following:
   (If there is no such button, then enable "News" for the project via
    the Main -> "Select Features" menu item, or via this link:
-   https://savannah.gnu.org/project/admin/editgroupfeatures.php?group=gzip)
+   https://savannah.gnu.org/project/admin/editgroupfeatures.php?group=coreutils)
 
     Subject: coreutils-0.0 released [beta]
     The announcement is here:
