@@ -110,13 +110,15 @@ count_trailing_X_s (const char *s)
 static int
 mkstemp_len (char *tmpl, size_t suff_len, bool dry_run)
 {
-  return gen_tempname_len (tmpl, 0, dry_run ? GT_NOCREATE : GT_FILE, suff_len);
+  return gen_tempname_len (tmpl, 0, 0, dry_run ? GT_NOCREATE : GT_FILE,
+                           suff_len);
 }
 
 static int
 mkdtemp_len (char *tmpl, size_t suff_len, bool dry_run)
 {
-  return gen_tempname_len (tmpl, 0, dry_run ? GT_NOCREATE : GT_DIR, suff_len);
+  return gen_tempname_len (tmpl, 0, 0, dry_run ? GT_NOCREATE : GT_DIR,
+                           suff_len);
 }
 
 int
