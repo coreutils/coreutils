@@ -37,6 +37,7 @@ root_tests =					\
   rm/fail-2eperm				\
   rm/no-give-up					\
   rm/one-file-system				\
+  rm/read-only					\
   tail-2/append-only				\
   touch/now-owned-by-other
 
