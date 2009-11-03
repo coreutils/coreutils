@@ -49,6 +49,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   echo and printf now interpret \e as the Escape character (0x1B).
 
+  rm -f /read-only-fs/nonexistent now succeeds and prints no diagnostic
+  on systems with an unlinkat syscall that sets errno to EROFS in that case.
+  Before, it would fail with a "Read-only file system" diagnostic.
+  Also, "rm /read-only-fs/nonexistent" now reports "file not found" rather
+  than the less precise "Read-only file system" error.
+
 ** New features
 
   env and printenv now accept the option --null (-0), as a means to

@@ -437,6 +437,18 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
       return RM_OK;
     }
 
+  /* The unlinkat from kernels like linux-2.6.32 reports EROFS even for
+     nonexistent files.  When the file is indeed missing, map that to ENOENT,
+     so that rm -f ignores it, as required.  Even without -f, this is useful
+     because it makes rm print the more precise diagnostic.  */
+  if (errno == EROFS)
+    {
+      struct stat st;
+      if ( ! (lstatat (fts->fts_cwd_fd, ent->fts_accpath, &st)
+                       && errno == ENOENT))
+        errno = EROFS;
+    }
+
   if (ignorable_missing (x, errno))
     return RM_OK;
 
