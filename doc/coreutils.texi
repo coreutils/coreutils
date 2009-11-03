@@ -31,7 +31,6 @@
 @c FIXME: the following need documentation
 @c * [: (coreutils)[ invocation.                   File/string tests.
 @c * pinky: (coreutils)pinky invocation.           FIXME.
-@c * mktemp: (coreutils)mktemp invocation.         FIXME.
 
 @dircategory Individual utilities
 @direntry
@@ -80,6 +79,7 @@
 * mkdir: (coreutils)mkdir invocation.           Create directories.
 * mkfifo: (coreutils)mkfifo invocation.         Create FIFOs (named pipes).
 * mknod: (coreutils)mknod invocation.           Create special files.
+* mktemp: (coreutils)mktemp invocation.         Create temporary files.
 * mv: (coreutils)mv invocation.                 Rename files.
 * nice: (coreutils)nice invocation.             Modify niceness.
 * nl: (coreutils)nl invocation.                 Number lines and write files.
@@ -193,7 +193,7 @@ Free Documentation License''.
 * Printing text::                echo printf yes
 * Conditions::                   false true test expr
 * Redirection::                  tee
-* File name manipulation::       dirname basename pathchk
+* File name manipulation::       dirname basename pathchk mktemp
 * Working context::              pwd stty printenv tty
 * User information::             id logname whoami groups users who
 * System context::               date arch uname hostname hostid uptime
@@ -378,6 +378,7 @@ File name manipulation
 * basename invocation::          Strip directory and suffix from a file name
 * dirname invocation::           Strip non-directory suffix from a file name
 * pathchk invocation::           Check file name validity and portability
+* mktemp invocation::            Create temporary file or directory
 
 Working context
 
@@ -11876,6 +11877,7 @@ This section describes commands that manipulate file names.
 * basename invocation::         Strip directory and suffix from a file name.
 * dirname invocation::          Strip non-directory suffix from a file name.
 * pathchk invocation::          Check file name validity and portability.
+* mktemp invocation::           Create temporary file or directory.
 @end menu
 
 
@@ -12047,6 +12049,160 @@ Exit status:
 
 @display
 0 if all specified file names passed all checks,
+1 otherwise.
+@end display
+
+@node mktemp invocation
+@section @command{mktemp}: Create temporary file or directory
+
+@pindex mktemp
+@cindex file names, creating temporary
+@cindex directory, creating temporary
+@cindex temporary files and directories
+
+@command{mktemp} manages the creation of temporary files and
+directories.  Synopsis:
+
+@example
+mktemp [@var{option}]@dots{} [@var{template}]
+@end example
+
+Safely create a temporary file or directory based on @var{template},
+and print its name.  If given, @var{template} must end in at least
+three consecutive @samp{X}s.  If omitted, the template
+@samp{tmp.XXXXXXXXXX} is used, and option @option{--tmpdir} is
+implied.  The trailing @samp{X}s in the @var{template} will be replaced
+by alpha-numeric characters; thus, on a case-sensitive file system,
+and with a @var{template} ending in @var{n} instances of @samp{X},
+there are @samp{62**@var{n}} potential file names.
+
+Older scripts used to create temporary files by simply joining the
+name of the program with the process id (@samp{$$}) as a suffix.
+However, that naming scheme is easily predictable, and suffers from a
+race condition where the attacker can create an appropriately named
+symbolic link, such that when the script then opens a handle to what
+it thought was an unused file, it is instead modifying an existing
+file.  Using the same scheme to create a directory is slightly safer,
+since the @command{mkdir} will fail if the target already exists, but
+it is still inferior because it allows for denial of service attacks.
+Therefore, modern scripts should use the @command{mktemp} command to
+guarantee that the generated name will be unpredictable, and that
+knowledge of the temporary file name implies that the file was created
+by the current script and cannot be modified by other users.
+
+When creating a file, the resulting file has read and write
+permissions for the current user, but no permissions for the group or
+others; these permissions are reduced if the current umask is more
+restrictive.
+
+Here are some examples (although note that if you repeat them, you
+will most likely get different file names):
+
+@itemize @bullet
+
+@item
+Create a temporary file in the current directory.
+@example
+$ mktemp file.XXXX
+file.H47c
+@end example
+
+@item
+Create a secure fifo relative to the user's choice of @env{TMPDIR},
+but falling back to the current directory rather than @file{/tmp}.
+Note that @command{mktemp} does not create fifos, but can create a
+secure directory in which the fifo can live.  Exit the shell if the
+directory or fifo could not be created.
+@example
+$ dir=$(mktemp -p "$@{TMPDIR:-.@}" -d dir-XXXX) || exit 1
+$ fifo=$dir/fifo
+$ mkfifo "$fifo" || @{ rmdir $dir; exit 1; @}
+@end example
+
+@item
+Create and use a temporary file if possible, but ignore failure.  The
+file will reside in the directory named by @env{TMPDIR}, if specified,
+or else in @file{/tmp}.
+@example
+$ file=$(mktemp -q) && @{
+>   # Safe to use $file only within this block
+>   echo ... > $file
+>   rm $file
+> @}
+@end example
+
+@item
+Act as a semi-random character generator (it is not fully random,
+since it is impacted by the contents of the current directory).  To
+avoid security holes, do not use the resulting names to create a file.
+@example
+$ mktemp -u XXX
+Gb9
+$ mktemp -u XXX
+nzC
+@end example
+
+@end itemize
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -d
+@itemx --directory
+@opindex -d
+@opindex --directory
+Create a directory rather than a file.  The directory will have read,
+write, and search permissions for the current user, but no permissions
+for the group or others; these permissions are reduced if the current
+umask is more restrictive.
+
+@item -q
+@itemx --quiet
+@opindex -q
+@opindex --quiet
+Suppress diagnostics about failure to create a file or directory.  The
+exit status will still reflect whether a file was created.
+
+@item -u
+@itemx --dry-run
+@opindex -u
+@opindex --dry-run
+Generate a temporary name that does not name an existing file, without
+changing the file system contents.  Using the output of this command
+to create a new file is inherently unsafe, as there is a window of
+time between generating the name and using it where another process
+can create an object by the same name.
+
+@item -p @var{dir}
+@itemx --tempdir[=@var{dir}]
+@opindex -p
+@opindex --tempdir
+Treat @var{template} relative to the directory @var{dir}.  If
+@var{dir} is not specified (only possible with the long option
+@option{--tempdir}) or is the empty string, use the value of
+@env{TMPDIR} if available, otherwise use @samp{/tmp}.  If this is
+specified, @var{template} must not be absolute.  However,
+@var{template} can still contain slashes, although intermediate
+directories must already exist.
+
+@item -t
+@opindex -t
+Treat @var{template} as a single file relative to the value of
+@env{TMPDIR} if available, or to the directory specified by
+@option{-p}, otherwise to @samp{/tmp}.  @var{template} must not
+contain slashes.  This option is deprecated; the use of @option{-p}
+without @option{-t} offers better defaults (by favoring the command
+line over @env{TMPDIR}) and more flexibility (by allowing intermediate
+directories).
+
+@end table
+
+@cindex exit status of @command{mktemp}
+Exit status:
+
+@display
+0 if the file was created,
 1 otherwise.
 @end display
 

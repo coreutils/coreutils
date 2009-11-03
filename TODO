@@ -12,7 +12,6 @@ Modify chmod so that it does not change an inode's st_ctime
   Discussed more recently on <http://bugs.debian.org/497514>.
 
 document the following in coreutils.texi:
-  mktemp
   [
   pinky
 
