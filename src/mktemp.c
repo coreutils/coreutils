@@ -65,33 +65,28 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [TEMPLATE]\n"), program_name);
       fputs (_("\
 Create a temporary file or directory, safely, and print its name.\n\
-If TEMPLATE is not specified, use tmp.XXXXXXXXXX.\n\
+TEMPLATE must end in at least 3 consecutive `X's.\n\
+If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
 "), stdout);
       fputs ("\n", stdout);
       fputs (_("\
-  -d, --directory  create a directory, not a file\n\
+  -d, --directory     create a directory, not a file\n\
+  -u, --dry-run       do not create anything; merely print a name (unsafe)\n\
+  -q, --quiet         suppress diagnostics about file/dir-creation failure\n\
 "), stdout);
       fputs (_("\
-  -q, --quiet      suppress diagnostics about file/dir-creation failure\n\
-"), stdout);
-      fputs (_("\
-  -u, --dry-run    do not create anything; merely print a name (unsafe)\n\
-"), stdout);
-      fputs (_("\
-  --tmpdir[=DIR]   interpret TEMPLATE relative to DIR.  If DIR is\n\
-                     not specified, use $TMPDIR if set, else /tmp.\n\
-                     With this option, TEMPLATE must not be an absolute name.\n\
-                     Unlike with -t, TEMPLATE may contain slashes, but even\n\
-                     here, mktemp still creates only the final component.\n\
+      --tmpdir[=DIR]  interpret TEMPLATE relative to DIR.  If DIR is not\n\
+                        specified, use $TMPDIR if set, else /tmp.  With\n\
+                        this option, TEMPLATE must not be an absolute name.\n\
+                        Unlike with -t, TEMPLATE may contain slashes, but\n\
+                        mktemp creates only the final component.\n\
 "), stdout);
       fputs ("\n", stdout);
       fputs (_("\
-  -p DIR           use DIR as a prefix; implies -t [deprecated]\n\
-"), stdout);
-      fputs (_("\
-  -t               interpret TEMPLATE as a single file name component,\n\
-                     relative to a directory: $TMPDIR, if set; else the\n\
-                     directory specified via -p; else /tmp [deprecated]\n\
+  -p DIR              use DIR as a prefix; implies -t [deprecated]\n\
+  -t                  interpret TEMPLATE as a single file name component,\n\
+                        relative to a directory: $TMPDIR, if set; else the\n\
+                        directory specified via -p; else /tmp [deprecated]\n\
 "), stdout);
       fputs ("\n", stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -178,7 +173,7 @@ main (int argc, char **argv)
 
         case_GETOPT_HELP_CHAR;
 
-        case 'V':
+        case 'V': /* Undocumented alias.  FIXME: remove in 2011.  */
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
           usage (EXIT_FAILURE);
