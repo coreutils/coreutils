@@ -62,9 +62,16 @@ my @Tests =
 
      ['too-few-x', 'foo.XX',
       {ERR=>"$prog: too few X's in template `foo.XX'\n"}, {EXIT => 1} ],
+     ['too-few-xq', '-q foo.XX', {EXIT => 1} ],
 
      ['1f', 'bar.XXXX', {OUT => "bar.ZZZZ\n"},
       {OUT_SUBST => 's,\.....$,.ZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}
+     ],
+
+     ['2f', '-- -XXXX', {OUT => "-ZZZZ\n"},
+      {OUT_SUBST => 's,-....$,-ZZZZ,'},
       {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
        check_tmp $f, 'F'; }}
      ],
@@ -83,7 +90,18 @@ my @Tests =
        check_tmp $f, 'D'; }}
      ],
 
-     ['invalid-tmpl', '-t a/bXXXX',
+     # Test -u
+     ['uf', '-u f.XXXX', {OUT => "f.ZZZZ\n"},
+      {OUT_SUBST => 's,\.....$,.ZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       -e $f and die "dry-run created file"; }}],
+     ['ud', '-d --dry-run d.XXXX', {OUT => "d.ZZZZ\n"},
+      {OUT_SUBST => 's,\.....$,.ZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       -e $f and die "dry-run created directory"; }}],
+
+     # Test bad templates
+     ['invalid-tl', '-t a/bXXXX',
       {ERR=>"$prog: invalid template, `a/bXXXX', "
        . "contains directory separator\n"}, {EXIT => 1} ],
 
@@ -91,6 +109,11 @@ my @Tests =
       {ERR=>"$prog: invalid template, `/bXXXX'; "
        . "with --tmpdir, it may not be absolute\n"}, {EXIT => 1} ],
 
+     # Suffix after X.
+     ['invalid-t3', 'aXXXXb',
+      {ERR=>"$prog: too few X's in template `aXXXXb'\n"}, {EXIT => 1} ],
+
+     # Test template with subdirectory
      ['tmp-w-slash', '--tmpdir=. a/bXXXX',
       {PRE => sub {mkdir 'a',0755 or die "a: $!\n"}},
       {OUT_SUBST => 's,b....$,bZZZZ,'},
@@ -104,6 +127,9 @@ my @Tests =
       {ERR_SUBST => "s,($bad_dir/)[^']+': .*,\$1...,"},
       {ERR => "$prog: failed to create file via template `$bad_dir/...\n"},
       {EXIT => 1}],
+     ['pipe-bad-tmpdir-u', '-u', {OUT => "$bad_dir/tmp.ZZZZZZZZZZ\n"},
+      {ENV => "TMPDIR=$bad_dir"},
+      {OUT_SUBST => 's,\..{10}$,.ZZZZZZZZZZ,'}],
     );
 
 my $save_temps = $ENV{DEBUG};
