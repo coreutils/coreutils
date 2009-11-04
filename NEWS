@@ -8,6 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Even then, chcon may still be useful.
   [bug introduced in coreutils-8.0]
 
+  du now diagnoses an ostensible directory cycle and arranges to exit nonzero.
+  Before, it would silently ignore the offending directory and all "contents."
+
   env -u A=B now fails, rather than silently adding A to the
   environment.  Likewise, printenv A=B silently ignores the invalid
   name.  [the bugs date back to the initial implementation]
