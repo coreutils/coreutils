@@ -46,7 +46,7 @@ md5sum: Ulrich Drepper, Scott Miller, David Madore
 mkdir: David MacKenzie
 mkfifo: David MacKenzie
 mknod: David MacKenzie
-mktemp: Jim Meyering
+mktemp: Jim Meyering, Eric Blake
 mv: Mike Parker, David MacKenzie, Jim Meyering
 nice: David MacKenzie
 nl: Scott Bartram, David MacKenzie

@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Jim Meyering.  */
+/* Written by Jim Meyering and Eric Blake.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -32,7 +32,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mktemp"
 
-#define AUTHORS proper_name ("Jim Meyering")
+#define AUTHORS \
+  proper_name ("Jim Meyering"), \
+  proper_name ("Eric Blake")
 
 static const char *default_template = "tmp.XXXXXXXXXX";
 
@@ -40,7 +42,8 @@ static const char *default_template = "tmp.XXXXXXXXXX";
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TMPDIR_OPTION = CHAR_MAX + 1
+  SUFFIX_OPTION = CHAR_MAX + 1,
+  TMPDIR_OPTION
 };
 
 static struct option const longopts[] =
@@ -48,6 +51,7 @@ static struct option const longopts[] =
   {"directory", no_argument, NULL, 'd'},
   {"quiet", no_argument, NULL, 'q'},
   {"dry-run", no_argument, NULL, 'u'},
+  {"suffix", required_argument, NULL, SUFFIX_OPTION},
   {"tmpdir", optional_argument, NULL, TMPDIR_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -65,7 +69,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [TEMPLATE]\n"), program_name);
       fputs (_("\
 Create a temporary file or directory, safely, and print its name.\n\
-TEMPLATE must end in at least 3 consecutive `X's.\n\
+TEMPLATE must contain at least 3 consecutive `X's in last component.\n\
 If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
 "), stdout);
       fputs ("\n", stdout);
@@ -73,6 +77,10 @@ If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
   -d, --directory     create a directory, not a file\n\
   -u, --dry-run       do not create anything; merely print a name (unsafe)\n\
   -q, --quiet         suppress diagnostics about file/dir-creation failure\n\
+"), stdout);
+      fputs (_("\
+      --suffix=SUFF   append SUFF to TEMPLATE.  SUFF must not contain slash.\n\
+                        This option is implied if TEMPLATE does not end in X.\n\
 "), stdout);
       fputs (_("\
       --tmpdir[=DIR]  interpret TEMPLATE relative to DIR.  If DIR is not\n\
@@ -98,9 +106,8 @@ If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
 }
 
 static size_t
-count_trailing_X_s (const char *s)
+count_consecutive_X_s (const char *s, size_t len)
 {
-  size_t len = strlen (s);
   size_t n = 0;
   for ( ; len && s[len-1] == 'X'; len--)
     ++n;
@@ -108,16 +115,16 @@ count_trailing_X_s (const char *s)
 }
 
 static int
-mkstemp_len (char *tmpl, size_t suff_len, bool dry_run)
+mkstemp_len (char *tmpl, size_t suff_len, size_t x_len, bool dry_run)
 {
-  return gen_tempname_len (tmpl, 0, 0, dry_run ? GT_NOCREATE : GT_FILE,
+  return gen_tempname_len (tmpl, suff_len, 0, dry_run ? GT_NOCREATE : GT_FILE,
                            suff_len);
 }
 
 static int
-mkdtemp_len (char *tmpl, size_t suff_len, bool dry_run)
+mkdtemp_len (char *tmpl, size_t suff_len, size_t x_len, bool dry_run)
 {
-  return gen_tempname_len (tmpl, 0, 0, dry_run ? GT_NOCREATE : GT_DIR,
+  return gen_tempname_len (tmpl, suff_len, 0, dry_run ? GT_NOCREATE : GT_DIR,
                            suff_len);
 }
 
@@ -130,12 +137,14 @@ main (int argc, char **argv)
   int c;
   unsigned int n_args;
   char *template;
+  char *suffix = NULL;
   bool use_dest_dir = false;
   bool deprecated_t_option = false;
   bool create_directory = false;
   bool dry_run = false;
   int status = EXIT_SUCCESS;
   size_t x_count;
+  size_t suffix_len;
   char *dest_name;
 
   initialize_main (&argc, &argv);
@@ -173,6 +182,10 @@ main (int argc, char **argv)
           dest_dir_arg = optarg;
           break;
 
+        case SUFFIX_OPTION:
+          suffix = optarg;
+          break;
+
         case_GETOPT_HELP_CHAR;
 
         case 'V': /* Undocumented alias.  FIXME: remove in 2011.  */
@@ -208,7 +221,41 @@ main (int argc, char **argv)
       template = argv[optind];
     }
 
-  x_count = count_trailing_X_s (template);
+  if (suffix)
+    {
+      size_t len = strlen (template);
+      if (!len || template[len - 1] != 'X')
+        {
+          error (EXIT_FAILURE, 0,
+                 _("with --suffix, template %s must end in X"),
+                 quote (template));
+        }
+      suffix_len = strlen (suffix);
+      dest_name = xcharalloc (len + suffix_len + 1);
+      memcpy (dest_name, template, len);
+      memcpy (dest_name + len, suffix, suffix_len + 1);
+      template = dest_name;
+      suffix = dest_name + len;
+    }
+  else
+    {
+      template = xstrdup (template);
+      suffix = strrchr (template, 'X');
+      if (!suffix)
+        suffix = strchr (template, '\0');
+      else
+        suffix++;
+      suffix_len = strlen (suffix);
+    }
+
+  /* At this point, template is malloc'd, and suffix points into template.  */
+  if (suffix_len && last_component (suffix) != suffix)
+    {
+      error (EXIT_FAILURE, 0,
+             _("invalid suffix %s, contains directory separator"),
+             quote (suffix));
+    }
+  x_count = count_consecutive_X_s (template, suffix - template);
   if (x_count < 3)
     error (EXIT_FAILURE, 0, _("too few X's in template %s"), quote (template));
 
@@ -242,11 +289,10 @@ main (int argc, char **argv)
                    quote (template));
         }
 
-      template = file_name_concat (dest_dir, template, NULL);
-    }
-  else
-    {
-      template = xstrdup (template);
+      dest_name = file_name_concat (dest_dir, template, NULL);
+      free (template);
+      template = dest_name;
+      /* Note that suffix is now invalid.  */
     }
 
   /* Make a copy to be used in case of diagnostic, since failing
@@ -255,7 +301,7 @@ main (int argc, char **argv)
 
   if (create_directory)
     {
-      int err = mkdtemp_len (dest_name, x_count, dry_run);
+      int err = mkdtemp_len (dest_name, suffix_len, x_count, dry_run);
       if (err != 0)
         {
           error (0, errno, _("failed to create directory via template %s"),
@@ -265,7 +311,7 @@ main (int argc, char **argv)
     }
   else
     {
-      int fd = mkstemp_len (dest_name, x_count, dry_run);
+      int fd = mkstemp_len (dest_name, suffix_len, x_count, dry_run);
       if (fd < 0 || (!dry_run && close (fd) != 0))
         {
           error (0, errno, _("failed to create file via template %s"),

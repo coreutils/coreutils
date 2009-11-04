@@ -70,6 +70,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   md5sum --check now also accepts openssl-style checksums.
   So do sha1sum, sha224sum, sha384sum and sha512sum.
 
+  mktemp now accepts the option --suffix to provide a known suffix
+  after the substitution in the template.  Additionally, uses such as
+  "mktemp fileXXXXXX.txt" are able to infer an appropriate --suffix.
+
   touch now accepts the option --no-dereference (-h), as a means to
   change symlink timestamps on platforms with enough support.
 

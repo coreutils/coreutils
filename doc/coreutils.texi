@@ -12068,12 +12068,12 @@ mktemp [@var{option}]@dots{} [@var{template}]
 @end example
 
 Safely create a temporary file or directory based on @var{template},
-and print its name.  If given, @var{template} must end in at least
-three consecutive @samp{X}s.  If omitted, the template
+and print its name.  If given, @var{template} must include at least
+three consecutive @samp{X}s in the last component.  If omitted, the template
 @samp{tmp.XXXXXXXXXX} is used, and option @option{--tmpdir} is
-implied.  The trailing @samp{X}s in the @var{template} will be replaced
+implied.  The final run of @samp{X}s in the @var{template} will be replaced
 by alpha-numeric characters; thus, on a case-sensitive file system,
-and with a @var{template} ending in @var{n} instances of @samp{X},
+and with a @var{template} including a run of @var{n} instances of @samp{X},
 there are @samp{62**@var{n}} potential file names.
 
 Older scripts used to create temporary files by simply joining the
@@ -12105,6 +12105,15 @@ Create a temporary file in the current directory.
 @example
 $ mktemp file.XXXX
 file.H47c
+@end example
+
+@item
+Create a temporary file with a known suffix.
+@example
+$ mktemp --suffix=.txt file-XXXX
+file-H08W.txt
+$ mktemp file-XXXX-XXXX.txt
+file-XXXX-eI9L.txt
 @end example
 
 @item
@@ -12185,6 +12194,16 @@ Treat @var{template} relative to the directory @var{dir}.  If
 specified, @var{template} must not be absolute.  However,
 @var{template} can still contain slashes, although intermediate
 directories must already exist.
+
+@item --suffix=@var{suffix}
+@opindex --suffix
+Append @var{suffix} to the @var{template}.  @var{suffix} must not
+contain slash.  If @option{--suffix} is specified, @var{template} must
+end in @samp{X}; if it is not specified, then an appropriate
+@option{--suffix} is inferred by finding the last @samp{X} in
+@var{template}.  This option exists for use with the default
+@var{template} and for the creation of a @var{suffix} that starts with
+@samp{X}.
 
 @item -t
 @opindex -t

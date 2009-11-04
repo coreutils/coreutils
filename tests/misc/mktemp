@@ -60,8 +60,8 @@ my @Tests =
        . "Try `$prog --help' for more information.\n"}, {EXIT => 1} ],
      ['too-many-q', '-q a b', {EXIT => 1} ],
 
-     ['too-few-x', 'foo.XX',
-      {ERR=>"$prog: too few X's in template `foo.XX'\n"}, {EXIT => 1} ],
+     ['too-few-x', 'foo.XX', {EXIT => 1},
+      {ERR=>"$prog: too few X's in template `foo.XX'\n"}],
      ['too-few-xq', '-q foo.XX', {EXIT => 1} ],
 
      ['1f', 'bar.XXXX', {OUT => "bar.ZZZZ\n"},
@@ -110,8 +110,72 @@ my @Tests =
        . "with --tmpdir, it may not be absolute\n"}, {EXIT => 1} ],
 
      # Suffix after X.
-     ['invalid-t3', 'aXXXXb',
-      {ERR=>"$prog: too few X's in template `aXXXXb'\n"}, {EXIT => 1} ],
+     ['suffix1f', 'aXXXXb', {OUT=>"aZZZZb\n"},
+      {OUT_SUBST=>'s,a....b,aZZZZb,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+     ['suffix1d', '-d aXXXXb', {OUT=>"aZZZZb\n"},
+      {OUT_SUBST=>'s,a....b,aZZZZb,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'D'; }}],
+     ['suffix1u', '-u aXXXXb', {OUT=>"aZZZZb\n"},
+      {OUT_SUBST=>'s,a....b,aZZZZb,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       -e $f and die "dry-run created file"; }}],
+
+     ['suffix2f', 'aXXXXaaXXXXa', {OUT=>"aXXXXaaZZZZa\n"},
+      {OUT_SUBST=>'s,a....a$,aZZZZa,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+     ['suffix2d', '-d --suffix= aXXXXaaXXXX', {OUT=>"aXXXXaaZZZZ\n"},
+      {OUT_SUBST=>'s,a....$,aZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'D'; }}],
+
+     ['suffix3f', '--suffix=b aXXXX', {OUT=>"aZZZZb\n"},
+      {OUT_SUBST=>'s,a....b,aZZZZb,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+
+     ['suffix4f', '--suffix=X aXXXX', {OUT=>"aZZZZX\n"},
+      {OUT_SUBST=>'s,^a....,aZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+
+     ['suffix5f', '--suffix /b aXXXX', {EXIT=>1},
+      {ERR=>"$prog: invalid suffix `/b', contains directory separator\n"}],
+
+     ['suffix6f', 'aXXXX/b', {EXIT=>1},
+      {ERR=>"$prog: invalid suffix `/b', contains directory separator\n"}],
+     ['suffix6f-q', '-q aXXXX/b', {EXIT=>1}],
+
+     ['suffix7f', '--suffix= aXXXXb', {EXIT=>1},
+      {ERR=>"$prog: with --suffix, template `aXXXXb' must end in X\n"}],
+     ['suffix7f-q', '-q --suffix= aXXXXb', {EXIT=>1}],
+     ['suffix7d', '-d --suffix=aXXXXb ""', {EXIT=>1},
+      {ERR=>"$prog: with --suffix, template `' must end in X\n"}],
+
+     ['suffix8f', 'aXXXX --suffix=b', {OUT=>"aZZZZb\n"},
+      {OUT_SUBST=>'s,^a....,aZZZZ,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+
+     ['suffix9f', 'aXXXX --suffix=b', {EXIT=>1},
+      {ENV=>"POSIXLY_CORRECT=1"},
+      {ERR=>"$prog: too many templates\n"
+       . "Try `$prog --help' for more information.\n"}],
+
+     ['suffix10f', 'aXXb', {EXIT => 1},
+      {ERR=>"$prog: too few X's in template `aXXb'\n"}],
+     ['suffix10d', '-d --suffix=X aXX', {EXIT => 1},
+      {ERR=>"$prog: too few X's in template `aXXX'\n"}],
+
+     ['suffix11f', '--suffix=.txt', {OUT=>"./tmp.ZZZZZZZZZZ.txt\n"},
+      {ENV=>"TMPDIR=."},
+      {OUT_SUBST=>'s,\..{10}\.,.ZZZZZZZZZZ.,'},
+      {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
+       check_tmp $f, 'F'; }}],
+
 
      # Test template with subdirectory
      ['tmp-w-slash', '--tmpdir=. a/bXXXX',
