@@ -23,6 +23,7 @@
 
 #include "system.h"
 
+#include "close-stream.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
@@ -277,7 +278,17 @@ main (int argc, char **argv)
     }
 
   if (status == EXIT_SUCCESS)
-    puts (dest_name);
+    {
+      puts (dest_name);
+      /* If we created a file, but then failed to output the file
+         name, we should clean up the mess before failing.  */
+      if (!dry_run && close_stream (stdout))
+        {
+          int saved_errno = errno;
+          remove (dest_name);
+          error (EXIT_FAILURE, saved_errno, _("write error"));
+        }
+    }
 
 #ifdef lint
   free (dest_name);
