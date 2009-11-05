@@ -1,0 +1,12 @@
+diff --git c/lib/tempname.h i/lib/tempname.h
+index edf7074..707edf4 100644
+--- c/lib/tempname.h
++++ i/lib/tempname.h
+@@ -34,4 +34,7 @@
+    GT_DIR:		create a directory, which will be mode 0700.
+
+    We use a clever algorithm to get hard-to-predict names. */
++#include <stddef.h>
+ extern int gen_tempname (char *tmpl, int flags, int kind);
++extern int gen_tempname_len (char *tmpl, int flags, int kind,
++                             size_t x_suffix_len);

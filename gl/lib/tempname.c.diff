@@ -1,0 +1,192 @@
+diff --git c/lib/tempname.c i/lib/tempname.c
+index 4102134..a03346e 100644
+--- c/lib/tempname.c
++++ i/lib/tempname.c
+@@ -22,6 +22,7 @@
+ #if !_LIBC
+ # include <config.h>
+ # include "tempname.h"
++# include "randint.h"
+ #endif
+
+ #include <sys/types.h>
+@@ -45,6 +46,7 @@
+ # define __GT_NOCREATE	3
+ #endif
+
++#include <stdbool.h>
+ #include <stddef.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -174,14 +176,20 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
+ }
+ #endif /* _LIBC */
+
++static inline bool
++check_x_suffix (char const *s, size_t len)
++{
++  return strspn (s, "X") == len;
++}
++
+ /* These are the characters used in temporary file names.  */
+ static const char letters[] =
+ "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+-/* Generate a temporary file name based on TMPL.  TMPL must match the
+-   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+-   does not exist at the time of the call to __gen_tempname.  TMPL is
+-   overwritten with the result.
++/* Generate a temporary file name based on TMPL.  TMPL must end in a
++   a sequence of at least X_SUFFIX_LEN "X"s.
++   The name constructed does not exist at the time of the call to
++   this function.  TMPL is overwritten with the result.
+
+    KIND may be one of:
+    __GT_NOCREATE:	simply verify that the name does not exist
+@@ -192,23 +200,23 @@ static const char letters[] =
+
+    We use a clever algorithm to get hard-to-predict names. */
+ int
+-__gen_tempname (char *tmpl, int flags, int kind)
++gen_tempname_len (char *tmpl, int flags, int kind, size_t x_suffix_len)
+ {
+-  int len;
++  size_t len;
+   char *XXXXXX;
+-  static uint64_t value;
+-  uint64_t random_time_bits;
+   unsigned int count;
+   int fd = -1;
+   int save_errno = errno;
+   struct_stat64 st;
++  struct randint_source *rand_src;
+
+   /* A lower bound on the number of temporary files to attempt to
+      generate.  The maximum total number of temporary file names that
+      can exist for a given template is 62**6.  It should never be
+      necessary to try all these combinations.  Instead if a reasonable
+      number of names is tried (we define reasonable as 62**3) fail to
+-     give the system administrator the chance to remove the problems.  */
++     give the system administrator the chance to remove the problems.
++     This value requires that X_SUFFIX_LEN be at least 3.  */
+ #define ATTEMPTS_MIN (62 * 62 * 62)
+
+   /* The number of times to attempt to generate a temporary file.  To
+@@ -220,43 +228,27 @@ __gen_tempname (char *tmpl, int flags, int kind)
+ #endif
+
+   len = strlen (tmpl);
+-  if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
++  if (len < x_suffix_len || ! check_x_suffix (&tmpl[len - x_suffix_len],
++                                              x_suffix_len))
+     {
+       __set_errno (EINVAL);
+       return -1;
+     }
+
+   /* This is where the Xs start.  */
+-  XXXXXX = &tmpl[len - 6];
++  XXXXXX = &tmpl[len - x_suffix_len];
+
+   /* Get some more or less random data.  */
+-#ifdef RANDOM_BITS
+-  RANDOM_BITS (random_time_bits);
+-#else
+-  {
+-    struct timeval tv;
+-    __gettimeofday (&tv, NULL);
+-    random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
+-  }
+-#endif
+-  value += random_time_bits ^ __getpid ();
++  rand_src = randint_all_new (NULL, 8);
++  if (! rand_src)
++    return -1;
+
+-  for (count = 0; count < attempts; value += 7777, ++count)
++  for (count = 0; count < attempts; ++count)
+     {
+-      uint64_t v = value;
+-
+-      /* Fill in the random bits.  */
+-      XXXXXX[0] = letters[v % 62];
+-      v /= 62;
+-      XXXXXX[1] = letters[v % 62];
+-      v /= 62;
+-      XXXXXX[2] = letters[v % 62];
+-      v /= 62;
+-      XXXXXX[3] = letters[v % 62];
+-      v /= 62;
+-      XXXXXX[4] = letters[v % 62];
+-      v /= 62;
+-      XXXXXX[5] = letters[v % 62];
++      size_t i;
++
++      for (i = 0; i < x_suffix_len; i++)
++        XXXXXX[i] = letters[randint_genmax (rand_src, sizeof letters - 2)];
+
+       switch (kind)
+ 	{
+@@ -271,7 +263,7 @@ __gen_tempname (char *tmpl, int flags, int kind)
+ 	  break;
+
+ 	case __GT_NOCREATE:
+-	  /* This case is backward from the other three.  __gen_tempname
++	  /* This case is backward from the other three.  This function
+ 	     succeeds if __xstat fails because the name does not exist.
+ 	     Note the continue to bypass the common logic at the bottom
+ 	     of the loop.  */
+@@ -280,11 +272,15 @@ __gen_tempname (char *tmpl, int flags, int kind)
+ 	      if (errno == ENOENT)
+ 		{
+ 		  __set_errno (save_errno);
+-		  return 0;
++		  fd = 0;
++		  goto done;
+ 		}
+ 	      else
+-		/* Give up now. */
+-		return -1;
++		{
++		  /* Give up now. */
++		  fd = -1;
++		  goto done;
++		}
+ 	    }
+ 	  continue;
+
+@@ -295,13 +291,32 @@ __gen_tempname (char *tmpl, int flags, int kind)
+       if (fd >= 0)
+ 	{
+ 	  __set_errno (save_errno);
+-	  return fd;
++	  goto done;
+ 	}
+       else if (errno != EEXIST)
+-	return -1;
++	{
++	  fd = -1;
++	  goto done;
++	}
+     }
+
++  randint_all_free (rand_src);
++
+   /* We got out of the loop because we ran out of combinations to try.  */
+   __set_errno (EEXIST);
+   return -1;
++
++ done:
++  {
++    int saved_errno = errno;
++    randint_all_free (rand_src);
++    __set_errno (saved_errno);
++  }
++  return fd;
++}
++
++int
++__gen_tempname (char *tmpl, int flags, int kind)
++{
++  return gen_tempname_len (tmpl, flags, kind, 6);
+ }
