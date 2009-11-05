@@ -85,9 +85,10 @@ my @Tests =
 
      # Use a template consisting solely of X's
      ['1d-allX', '-d XXXX', {OUT => "ZZZZ\n"},
+      {PRE => sub {mkdir 'XXXX',0755 or die "XXXX: $!\n"}},
       {OUT_SUBST => 's,^....$,ZZZZ,'},
       {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
-       check_tmp $f, 'D'; }}
+       check_tmp $f, 'D'; rmdir 'XXXX' or die "rmdir XXXX: $!\n"; }}
      ],
 
      # Test -u
