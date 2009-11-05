@@ -325,7 +325,7 @@ main (int argc, char **argv)
       puts (dest_name);
       /* If we created a file, but then failed to output the file
          name, we should clean up the mess before failing.  */
-      if (!dry_run && close_stream (stdout))
+      if (!dry_run && (ferror (stdout) || fflush (stdout) != 0))
         {
           int saved_errno = errno;
           remove (dest_name);
