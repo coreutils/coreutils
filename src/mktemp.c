@@ -17,7 +17,6 @@
 /* Written by Jim Meyering and Eric Blake.  */
 
 #include <config.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
 
@@ -27,6 +26,7 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
+#include "stdio--.h"
 #include "tempname.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
