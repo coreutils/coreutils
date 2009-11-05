@@ -128,6 +128,22 @@ mkdtemp_len (char *tmpl, size_t suff_len, size_t x_len, bool dry_run)
                            x_len);
 }
 
+/* True if we have already closed standard output.  */
+static bool stdout_closed;
+
+/* Avoid closing stdout twice.  Since we conditionally call
+   close_stream (stdout) in order to decide whether to clean up a
+   temporary file, the exit hook needs to know whether to do all of
+   close_stdout or just the stderr half.  */
+static void
+maybe_close_stdout (void)
+{
+  if (!stdout_closed)
+    close_stdout ();
+  else if (close_stream (stderr) != 0)
+    _exit (EXIT_FAILURE);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -153,7 +169,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  atexit (close_stdout);
+  atexit (maybe_close_stdout);
 
   while ((c = getopt_long (argc, argv, "dp:qtuV", longopts, NULL)) != -1)
     {
@@ -325,7 +341,7 @@ main (int argc, char **argv)
       puts (dest_name);
       /* If we created a file, but then failed to output the file
          name, we should clean up the mess before failing.  */
-      if (!dry_run && (ferror (stdout) || fflush (stdout) != 0))
+      if (!dry_run && (stdout_closed = true) && close_stream (stdout) != 0)
         {
           int saved_errno = errno;
           remove (dest_name);
