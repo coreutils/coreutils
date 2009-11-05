@@ -197,7 +197,6 @@ enum
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
   MAX_DEPTH_OPTION,
-  MEGABYTES_LONG_OPTION,
   TIME_OPTION,
   TIME_STYLE_OPTION
 };
@@ -768,10 +767,6 @@ main (int argc, char **argv)
           }
           break;
 
-        case MEGABYTES_LONG_OPTION: /* FIXME: remove in 2009 */
-          error (0, 0,
-                 _("the --megabytes option is deprecated; use -m instead"));
-          /* fall through */
         case 'm':
           human_output_opts = 0;
           output_block_size = 1024 * 1024;
