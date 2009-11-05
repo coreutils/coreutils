@@ -19,7 +19,6 @@
 
 #include <sys/types.h>
 #include <getopt.h>
-#include <stdio.h>
 
 #include "system.h"
 #include "dircolors.h"
@@ -27,6 +26,7 @@
 #include "error.h"
 #include "obstack.h"
 #include "quote.h"
+#include "stdio--.h"
 #include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

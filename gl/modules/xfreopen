@@ -8,6 +8,7 @@ lib/xfreopen.h
 Depends-on:
 error
 exitfail
+freopen-safer
 quote
 
 configure.ac:

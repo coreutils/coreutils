@@ -24,7 +24,6 @@
    Rewritten to use nftw, then to use fts by Jim Meyering.  */
 
 #include <config.h>
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <assert.h>
@@ -40,6 +39,7 @@
 #include "quotearg.h"
 #include "same.h"
 #include "stat-time.h"
+#include "stdio--.h"
 #include "xfts.h"
 #include "xstrtol.h"
 

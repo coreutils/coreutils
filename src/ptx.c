@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
@@ -29,6 +28,7 @@
 #include "quote.h"
 #include "quotearg.h"
 #include "regex.h"
+#include "stdio--.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

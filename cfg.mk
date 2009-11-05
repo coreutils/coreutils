@@ -237,4 +237,16 @@ sc_prohibit_fail_0:
 	msg='fail=0 initialization'					\
 	  $(_prohibit_regexp)
 
+# Ensure that "stdio--.h" is used where appropriate.
+sc_require_stdio_safer:
+	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
+	  files=$$(grep -l '\bfreopen \?(' $$($(VC_LIST_EXCEPT)		\
+	      | grep '\.[ch]$$'));					\
+	  test -n "$$files" && grep -LE 'include "stdio--.h"' $$files	\
+	      | grep . &&						\
+	  { echo '$(ME): the above files should use "stdio--.h"'	\
+		1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 include $(srcdir)/dist-check.mk

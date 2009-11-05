@@ -18,7 +18,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 
@@ -29,6 +28,7 @@
 #include "hard-locale.h"
 #include "posixver.h"
 #include "quote.h"
+#include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
