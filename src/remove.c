@@ -564,12 +564,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
       }
 
     case FTS_DC:		/* directory that causes cycles */
-      error (0, 0, _("\
-WARNING: Circular directory structure.\n\
-This almost certainly means that you have a corrupted file system.\n\
-NOTIFY YOUR SYSTEM MANAGER.\n\
-The following directory is part of the cycle:\n  %s\n"),
-             quote (ent->fts_path));
+      emit_cycle_warning (ent->fts_path);
       fts_skip_tree (fts, ent);
       return RM_ERROR;
 

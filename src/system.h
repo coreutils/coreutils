@@ -672,6 +672,18 @@ io_blksize (struct stat sb)
 
 void usage (int status) ATTRIBUTE_NORETURN;
 
+#define emit_cycle_warning(file_name)	\
+  do					\
+    {					\
+      error (0, 0, _("\
+WARNING: Circular directory structure.\n\
+This almost certainly means that you have a corrupted file system.\n\
+NOTIFY YOUR SYSTEM MANAGER.\n\
+The following directory is part of the cycle:\n  %s\n"), \
+             quote (file_name));	\
+    }					\
+  while (0)
+
 #ifndef ARRAY_CARDINALITY
 # define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
 #endif
