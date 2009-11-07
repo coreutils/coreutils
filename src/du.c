@@ -65,10 +65,6 @@ extern bool fts_debug;
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
 
-/* Select one of the three FTS_ options that control if/when
-     to follow a symlink.  */
-static int symlink_deref_bits = FTS_PHYSICAL;
-
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
 struct entry
@@ -498,14 +494,9 @@ process_file (FTS *fts, FTSENT *ent)
       break;
 
     case FTS_DC:		/* directory that causes cycles */
-      /* When dereferencing no symlinks, or when dereferencing only
-         those listed on the command line and we're not processing
-         a command-line argument, then a cycle is a serious problem. */
-      if (symlink_deref_bits == FTS_PHYSICAL
-          || (symlink_deref_bits == (FTS_COMFOLLOW | FTS_PHYSICAL)
-              && ent->fts_level != FTS_ROOTLEVEL))
+      if (cycle_warning_required (fts, ent))
         {
-          emit_cycle_warning (ent->fts_path);
+          emit_cycle_warning (file);
           return false;
         }
       ok = true;
@@ -676,6 +667,10 @@ main (int argc, char **argv)
 
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_TIGHT_CYCLE_CHECK | FTS_DEFER_STAT;
+
+  /* Select one of the three FTS_ options that control if/when
+     to follow a symlink.  */
+  int symlink_deref_bits = FTS_PHYSICAL;
 
   /* If true, display only a total for each argument. */
   bool opt_summarize_only = false;
