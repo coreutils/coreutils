@@ -316,6 +316,14 @@ change_file_owner (FTS *fts, FTSENT *ent,
       ok = false;
       break;
 
+    case FTS_DC:		/* directory that causes cycles */
+      if (cycle_warning_required (fts, ent))
+        {
+          emit_cycle_warning (file_full_name);
+          return false;
+        }
+      break;
+
     default:
       break;
     }

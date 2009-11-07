@@ -61,3 +61,22 @@ xfts_open (char * const *argv, int options,
 
   return fts;
 }
+
+/* When fts_read returns FTS_DC to indicate a directory cycle,
+   it may or may not indicate a real problem.  When a program like
+   chgrp performs a recursive traversal that requires traversing
+   symbolic links, it is *not* a problem.  However, when invoked
+   with "-P -R", it deserves a warning.  The fts_options member
+   records the options that control this aspect of fts's behavior,
+   so test that.  */
+bool
+cycle_warning_required (FTS const *fts, FTSENT const *ent)
+{
+#define ISSET(Fts,Opt) ((Fts)->fts_options & (Opt))
+  /* When dereferencing no symlinks, or when dereferencing only
+     those listed on the command line and we're not processing
+     a command-line argument, then a cycle is a serious problem. */
+  return ((ISSET (fts, FTS_PHYSICAL) && !ISSET (fts, FTS_COMFOLLOW))
+          || (ISSET (fts, FTS_PHYSICAL) && ISSET (fts, FTS_COMFOLLOW)
+              && ent->fts_level != FTS_ROOTLEVEL));
+}
