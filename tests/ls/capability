@@ -33,13 +33,35 @@ grep '^#define HAVE_CAP 1$' $CONFIG_HEADER > /dev/null \
 # Don't let a different umask perturb the results.
 umask 22
 
-touch test
-setcap cap_net_bind_service=ep test \
-  || skip_test_ "setcap doesn't work"
+# We create 2 files of the same name as
+# before coreutils 8.1 only the name rather than
+# the full path was used to read the capabilities
+# thus giving false positives and negatives.
+mkdir test test/dir
+cd test
+touch cap_pos dir/cap_pos dir/cap_neg
+for file in cap_pos dir/cap_neg; do
+  setcap 'cap_net_bind_service=ep' $file ||
+    skip_test_ "setcap doesn't work"
+done
+
 code='30;41'
-LS_COLORS="ca=$code" \
-  ls --color=always test > out || fail=1
-printf "\033[0m\033[${code}mtest\033[0m\n\033[m" > out_ok || fail=1
-compare out out_ok || fail=1
+# Note we explicitly disable "executable" coloring
+# so that capability coloring is not dependent on it,
+# as was the case before coreutils 8.1
+for ex in '' ex=:; do
+  LS_COLORS="di=:${ex}ca=$code" \
+    ls --color=always cap_pos dir > out || fail=1
+
+  env printf "\
+\e[0m\e[${code}mcap_pos\e[0m
+
+dir:
+\e[${code}mcap_neg\e[0m
+cap_pos
+\e[m" > out_ok || framework_failure
+
+  compare out out_ok || fail=1
+done
 
 Exit $fail
