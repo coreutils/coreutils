@@ -12127,7 +12127,7 @@ directory or fifo could not be created.
 @example
 $ dir=$(mktemp -p "$@{TMPDIR:-.@}" -d dir-XXXX) || exit 1
 $ fifo=$dir/fifo
-$ mkfifo "$fifo" || @{ rmdir $dir; exit 1; @}
+$ mkfifo "$fifo" || @{ rmdir "$dir"; exit 1; @}
 @end example
 
 @item
@@ -12136,9 +12136,10 @@ file will reside in the directory named by @env{TMPDIR}, if specified,
 or else in @file{/tmp}.
 @example
 $ file=$(mktemp -q) && @{
->   # Safe to use $file only within this block
->   echo ... > $file
->   rm $file
+>   # Safe to use $file only within this block.  Use quotes,
+>   # since $TMPDIR, and thus $file, may contain whitespace.
+>   echo ... > "$file"
+>   rm "$file"
 > @}
 @end example
 
@@ -12186,12 +12187,12 @@ time between generating the name and using it where another process
 can create an object by the same name.
 
 @item -p @var{dir}
-@itemx --tempdir[=@var{dir}]
+@itemx --tmpdir[=@var{dir}]
 @opindex -p
-@opindex --tempdir
+@opindex --tmpdir
 Treat @var{template} relative to the directory @var{dir}.  If
 @var{dir} is not specified (only possible with the long option
-@option{--tempdir}) or is the empty string, use the value of
+@option{--tmpdir}) or is the empty string, use the value of
 @env{TMPDIR} if available, otherwise use @samp{/tmp}.  If this is
 specified, @var{template} must not be absolute.  However,
 @var{template} can still contain slashes, although intermediate
