@@ -416,7 +416,7 @@ case ${GNULIB_SRCDIR--} in
         git_modules_config submodule.gnulib.url >/dev/null; then
     git submodule init
     GNULIB_SRCDIR=`cd $GNULIB_SRCDIR && pwd`
-    git config --replace-all submodule.gnulib.url $GNULIB_SRCDIR
+    git_modules_config --replace-all submodule.gnulib.url $GNULIB_SRCDIR
     echo "$0: getting gnulib files..."
     git submodule update || exit $?
     GNULIB_SRCDIR=gnulib
