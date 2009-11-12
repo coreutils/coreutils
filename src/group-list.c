@@ -54,14 +54,13 @@ print_group_list (const char *username,
         ok = false;
     }
 
-#if HAVE_GETGROUPS
   {
-    GETGROUPS_T *groups;
+    gid_t *groups;
     int i;
 
     int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
                                &groups);
-    if (n_groups < 0)
+    if (n_groups < 0 && errno != ENOSYS)
       {
         if (username)
           {
@@ -84,7 +83,6 @@ print_group_list (const char *username,
         }
     free (groups);
   }
-#endif /* HAVE_GETGROUPS */
   return ok;
 }
 

@@ -292,14 +292,13 @@ print_full_info (const char *username)
         printf ("(%s)", grp->gr_name);
     }
 
-#if HAVE_GETGROUPS
   {
-    GETGROUPS_T *groups;
+    gid_t *groups;
     int i;
 
     int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
                                &groups);
-    if (n_groups < 0)
+    if (n_groups < 0 && errno != ENOSYS)
       {
         if (username)
           {
@@ -327,7 +326,6 @@ print_full_info (const char *username)
       }
     free (groups);
   }
-#endif /* HAVE_GETGROUPS */
 
   /* POSIX mandates the precise output format, and that it not include
      any context=... part, so skip that if POSIXLY_CORRECT is set.  */
