@@ -71,6 +71,7 @@ gnulib_modules=
 gnulib_files=
 
 # A function to be called after everything else in this script.
+# Override it via your own definition in bootstrap.conf.
 bootstrap_epilogue() { :; }
 
 # The command to download all .po files for a specified domain into
@@ -733,7 +734,7 @@ find "$m4_base" "$source_base" \
 # Reconfigure, getting other files.
 
 # Skip autoheader if it's not needed.
-grep '^[	 ]*AC_CONFIG_HEADERS\>' configure.ac >/dev/null ||
+grep -E '^[	 ]*AC_CONFIG_HEADERS?\>' configure.ac >/dev/null ||
   AUTOHEADER=true
 
 for command in \
