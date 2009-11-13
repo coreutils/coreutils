@@ -430,7 +430,7 @@ AC_SUBST([CONFIG_STATUS_DEPENDENCIES])
 ############################################################################
 
 AM_GNU_GETTEXT([external], [need-ngettext])
-AM_GNU_GETTEXT_VERSION([0.15])
+AM_GNU_GETTEXT_VERSION([0.17])
 
 # For a test of uniq: it uses the $LOCALE_FR envvar.
 gt_LOCALE_FR
