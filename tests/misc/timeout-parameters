@@ -52,7 +52,7 @@ timeout --signal=invalid 1 sleep 0
 test $? = 125 || fail=1
 
 # invalid command
-timeout 1 .
+timeout 10 .
 test $? = 126 || fail=1
 
 # no such command
