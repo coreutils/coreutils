@@ -56,7 +56,7 @@ timeout 10 .
 test $? = 126 || fail=1
 
 # no such command
-timeout 1 no_such
+timeout 10 no_such
 test $? = 127 || fail=1
 
 Exit $fail
