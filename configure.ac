@@ -429,7 +429,7 @@ CONFIG_STATUS_DEPENDENCIES='$(top_srcdir)/src/Makefile.am'
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES])
 ############################################################################
 
-AM_GNU_GETTEXT([external], [need-formatstring-macros])
+AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION([0.15])
 
 # For a test of uniq: it uses the $LOCALE_FR envvar.
