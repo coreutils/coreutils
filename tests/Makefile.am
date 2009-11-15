@@ -80,6 +80,7 @@ TESTS =						\
   rm/ext3-perf					\
   rm/cycle					\
   cp/link-heap					\
+  tail-2/inotify-rotate				\
   chmod/no-x					\
   chgrp/basic					\
   rm/dangling-symlink				\

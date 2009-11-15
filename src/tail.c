@@ -1404,7 +1404,13 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
       if (ev->mask & (IN_ATTRIB | IN_DELETE_SELF | IN_MOVE_SELF))
         {
-          if (ev->mask & (IN_DELETE_SELF | IN_MOVE_SELF))
+          /* For IN_DELETE_SELF, we always want to remove the watch.
+             However, for IN_MOVE_SELF (the file we're watching has
+             been clobbered via a rename), when tailing by NAME, we
+             must continue to watch the file.  It's only when following
+             by file descriptor that we must remove the watch.  */
+          if ((ev->mask & IN_DELETE_SELF)
+              || ((ev->mask & IN_MOVE_SELF) && follow_mode == Follow_descriptor))
             {
               inotify_rm_watch (wd, f[i].wd);
               hash_delete (wd_table, &(f[i]));
