@@ -64,6 +64,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   with the invoked command failing with status 1.  Likewise, nohup
   fails with status 125 instead of 127.
 
+  du (due to a change in gnulib's fts) can now traverse NFSv4 automounted
+  directories in which the stat'd device number of the mount point differs
+  during a traversal.  Before, it would fail, because such a mismatch would
+  usually represent a serious error or a subversion attempt.
+
   echo and printf now interpret \e as the Escape character (0x1B).
 
   rm -f /read-only-fs/nonexistent now succeeds and prints no diagnostic
