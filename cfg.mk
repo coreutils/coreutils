@@ -18,7 +18,7 @@
 # Use ftp.gnu.org for major releases.
 gnu_ftp_host-alpha = alpha.gnu.org
 gnu_ftp_host-beta = alpha.gnu.org
-gnu_ftp_host-major = ftp.gnu.org
+gnu_ftp_host-stable = ftp.gnu.org
 gnu_rel_host = $(gnu_ftp_host-$(RELEASE_TYPE))
 
 # Used in maint.mk's web-manual rule

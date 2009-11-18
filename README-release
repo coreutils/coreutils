@@ -50,7 +50,7 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 
 Once all the builds and tests have passed,
 
-* Run the gnupload command that was suggested by your "make major" run above.
+* Run the gnupload command that was suggested by your "make stable" run above.
 
 * Wait a few minutes (maybe up to 30?) and then use the release URLs to
   download all tarball/signature pairs and use gpg --verify to ensure
