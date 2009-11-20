@@ -37,7 +37,7 @@ $ENV{IFS}  = '';
 
 # Taint checking requires a sanitized $PATH.  This script performs no $PATH
 # search, so on most Unix-based systems, it is fine simply to clear $ENV{PATH}.
-# However, on Cygwin, it's used to find cygwin.dll, so set it.
+# However, on Cygwin, it's used to find cygwin1.dll, so set it.
 $ENV{PATH} = '/bin:/usr/bin';
 
 my @dir_list = qw(/tmp /var/tmp /usr/tmp);
