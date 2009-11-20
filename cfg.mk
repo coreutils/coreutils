@@ -14,18 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Use alpha.gnu.org for alpha and beta releases.
-# Use ftp.gnu.org for major releases.
-gnu_ftp_host-alpha = alpha.gnu.org
-gnu_ftp_host-beta = alpha.gnu.org
-gnu_ftp_host-stable = ftp.gnu.org
-gnu_rel_host = $(gnu_ftp_host-$(RELEASE_TYPE))
-
 # Used in maint.mk's web-manual rule
 manual_title = Core GNU utilities
-
-url_dir_list = \
-  ftp://$(gnu_rel_host)/gnu/$(PACKAGE)
 
 # The GnuPG ID of the key used to sign the tarballs.
 gpg_key_ID = B9AB9A16
