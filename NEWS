@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  join now accepts the --header option, to treat the first line of each
+  file as a header line to be joined and printed unconditionally.
+
   who: the "+/-" --mesg (-T) indicator of whether a user/tty is accepting
   messages could be incorrectly listed as "+", when in fact, the user was
   not accepting messages (mesg no).  Before, who would examine only the

@@ -185,6 +185,34 @@ my @tv = (
 # Before 6.10.143, this would mistakenly fail with the diagnostic:
 # join: File 1 is not in sorted order
 ['chkodr-7', '-12', ["2 a\n1 b\n", ""], "", 0],
+
+# Test '--header' feature
+['header-1', '--header',
+ [ "ID Name\n1 A\n2 B\n", "ID Color\n1 red\n"], "ID Name Color\n1 A red\n", 0],
+
+# '--header' with '--check-order' : The header line is out-of-order but the
+# actual data is in order. This join should succeed.
+['header-2', '--header --check-order',
+ ["ID Name\n1 A\n2 B\n", "ID Color\n2 green\n"],
+ "ID Name Color\n2 B green\n", 0],
+
+# '--header' with '--check-order' : The header line is out-of-order AND the
+# actual data out-of-order. This join should fail.
+['header-3', '--header --check-order',
+ ["ID Name\n2 B\n1 A\n", "ID Color\n2 blue\n"], "ID Name Color\n", 1,
+ "$prog: file 1 is not in sorted order\n"],
+
+# '--header' with specific output format '-o'.
+# output header line should respect the requested format
+['header-4', '--header -o "0,1.3,2.2"',
+ ["ID Group Name\n1 Foo A\n2 Bar B\n", "ID Color\n2 blue\n"],
+ "ID Name Color\n2 B blue\n", 0],
+
+# '--header' always outputs headers from the first file
+# even if the headers from the second file don't match
+['header-5', '--header',
+ [ "ID1 Name\n1 A\n2 B\n", "ID2 Color\n1 red\n"], "ID1 Name Color\n1 A red\n", 0],
+
 );
 
 # Convert the above old-style test vectors to the newer

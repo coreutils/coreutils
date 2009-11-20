@@ -137,7 +137,8 @@ static enum
 enum
 {
   CHECK_ORDER_OPTION = CHAR_MAX + 1,
-  NOCHECK_ORDER_OPTION
+  NOCHECK_ORDER_OPTION,
+  HEADER_LINE_OPTION
 };
 
 
@@ -146,6 +147,7 @@ static struct option const longopts[] =
   {"ignore-case", no_argument, NULL, 'i'},
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
+  {"header", no_argument, NULL, HEADER_LINE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -156,6 +158,10 @@ static struct line uni_blank;
 
 /* If nonzero, ignore case when comparing join fields.  */
 static bool ignore_case;
+
+/* If nonzero, treat the first line of each file as column headers -
+   join them without checking for ordering */
+static bool join_header_lines;
 
 void
 usage (int status)
@@ -191,6 +197,8 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   --check-order     check that the input is correctly sorted, even\n\
                       if all input lines are pairable\n\
   --nocheck-order   do not check that the input is correctly sorted\n\
+  --header          treat first line in each file as field header line,\n\
+                      print them without trying to pair them.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -613,6 +621,15 @@ join (FILE *fp1, FILE *fp2)
   getseq (fp1, &seq1, 1);
   initseq (&seq2);
   getseq (fp2, &seq2, 2);
+
+  if (join_header_lines && seq1.count && seq2.count)
+    {
+      prjoin(seq1.lines[0], seq2.lines[0]);
+      prevline[0] = NULL;
+      prevline[1] = NULL;
+      advance_seq (fp1, &seq1, true, 1);
+      advance_seq (fp2, &seq2, true, 2);
+    }
 
   while (seq1.count && seq2.count)
     {
@@ -1049,6 +1066,10 @@ main (int argc, char **argv)
         case 1:		/* Non-option argument.  */
           add_file_name (optarg, names, operand_status, joption_count,
                          &nfiles, &prev_optc_status, &optc_status);
+          break;
+
+        case HEADER_LINE_OPTION:
+          join_header_lines = true;
           break;
 
         case_GETOPT_HELP_CHAR;

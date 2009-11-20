@@ -5515,6 +5515,15 @@ Do not check that both input files are in sorted order.  This is the default.
 Replace those output fields that are missing in the input with
 @var{string}.
 
+@item --header
+@opindex --header
+Treat the first line of each input file as a header line. The header lines will
+be joined and printed as the first output line.  If @option{-o} is used to
+specify output format, the header line will be printed according to the
+specified format.  The header lines will not be checked for ordering even if
+@option{--check-order} is specified.  Also if the header lines from each file
+do not match, the heading fields from the first file will be used.
+
 @item -i
 @itemx --ignore-case
 @opindex -i
