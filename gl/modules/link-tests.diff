@@ -1,0 +1,9 @@
+diff --git i/modules/link-tests w/modules/link-tests
+index d8e7b1a..aca0e74 100644
+--- i/modules/link-tests
++++ w/modules/link-tests
+@@ -12,3 +12,4 @@ configure.ac:
+ Makefile.am:
+ TESTS += test-link
+ check_PROGRAMS += test-link
++test_link_LDADD = $(LDADD) @LIBINTL@
