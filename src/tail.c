@@ -1619,7 +1619,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
           /* Before the tail function provided `read_pos', there was
              a race condition described in the URL below.  This sleep
              call made the window big enough to exercise the problem.  */
-          sleep (1);
+          xnanosleep (1);
 #endif
           f->errnum = ok - 1;
           if (fstat (fd, &stats) < 0)

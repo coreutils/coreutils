@@ -239,4 +239,10 @@ sc_require_stdio_safer:
 	else :;								\
 	fi
 
+# Prefer xnanosleep over other less-precise sleep methods
+sc_prohibit_sleep:
+	@re='\<(nano|u)?sleep \('					\
+	msg='prefer xnanosleep over other sleep interfaces'		\
+	  $(_prohibit_regexp)
+
 include $(srcdir)/dist-check.mk

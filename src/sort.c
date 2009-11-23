@@ -44,6 +44,7 @@
 #include "strnumcmp.h"
 #include "xmemcoll.h"
 #include "xmemxfrm.h"
+#include "xnanosleep.h"
 #include "xstrtol.h"
 
 #if HAVE_SYS_RESOURCE_H
@@ -107,13 +108,13 @@ enum
     /* The number of times we should try to fork a compression process
        (we retry if the fork call fails).  We don't _need_ to compress
        temp files, this is just to reduce disk access, so this number
-       can be small.  */
-    MAX_FORK_TRIES_COMPRESS = 2,
+       can be small.  Each retry doubles in duration.  */
+    MAX_FORK_TRIES_COMPRESS = 4,
 
     /* The number of times we should try to fork a decompression process.
        If we can't fork a decompression process, we can't sort, so this
-       number should be big.  */
-    MAX_FORK_TRIES_DECOMPRESS = 8
+       number should be big.  Each retry doubles in duration.  */
+    MAX_FORK_TRIES_DECOMPRESS = 9
   };
 
 /* The representation of the decimal point in the current locale.  */
@@ -868,7 +869,7 @@ pipe_fork (int pipefds[2], size_t tries)
 #if HAVE_WORKING_FORK
   struct tempnode *saved_temphead;
   int saved_errno;
-  unsigned int wait_retry = 1;
+  double wait_retry = 0.25;
   pid_t pid IF_LINT (= -1);
   struct cs_status cs;
 
@@ -895,7 +896,7 @@ pipe_fork (int pipefds[2], size_t tries)
         break;
       else
         {
-          sleep (wait_retry);
+          xnanosleep (wait_retry);
           wait_retry *= 2;
           reap_some ();
         }
