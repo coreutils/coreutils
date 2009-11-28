@@ -14,18 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/*
-              |		              user
-              | unchanged                 explicit
- -------------|-------------------------+-------------------------|
- g unchanged  | ---                     | chown u		  |
- r            |-------------------------+-------------------------|
- o explicit   | chgrp g or chown .g     | chown u.g		  |
- u            |-------------------------+-------------------------|
- p from passwd| ---			| chown u.		  |
-              |-------------------------+-------------------------|
-
-   Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
 
 #include <config.h>
 #include <stdio.h>
