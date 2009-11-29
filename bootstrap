@@ -311,6 +311,13 @@ sort_ver() { # sort -V is not generally available
 get_version() {
   app=$1
 
+  # perl 5.11's --version output does not fit the mold,
+  # handle perl as a special case.
+  if test "_$app" = _perl; then
+      perl -le 'print $]' || return 1
+      return 0
+  fi
+
   $app --version >/dev/null 2>&1 || return 1
 
   $app --version 2>&1 |
