@@ -311,20 +311,23 @@ sort_ver() { # sort -V is not generally available
 get_version() {
   app=$1
 
-  # perl 5.11's --version output does not fit the mold,
-  # handle perl as a special case.
-  if test "_$app" = _perl; then
-      perl -le 'print $]' || return 1
-      return 0
-  fi
-
   $app --version >/dev/null 2>&1 || return 1
 
   $app --version 2>&1 |
-  sed -n 's/[^0-9.]*\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/p
+  sed -n '# extract version within line
+          s/.*[v ]\{1,\}\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/
           t done
+
+          # extract version at start of line
+          s/^\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/
+          t done
+
           d
+
           :done
+          #the following essentially does s/5.005/5.5/
+          s/\.0*\([1-9]\)/.\1/g
+          p
           q'
 }
 
