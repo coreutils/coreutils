@@ -349,6 +349,7 @@ uptime_LDADD += $(POW_LIB)
 
 # for xnanosleep
 sleep_LDADD += $(LIB_NANOSLEEP)
+sort_LDADD += $(LIB_NANOSLEEP)
 tail_LDADD += $(LIB_NANOSLEEP)
 
 # for various GMP functions
