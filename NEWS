@@ -2,6 +2,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  rm once again handles zero-length arguments properly.
+  The rewrite to make rm use fts introduced a regression whereby
+  a command like "rm a '' b" would fail to remove "a" and "b", due to
+  the presence of the empty string argument.
+  [bug introduced in coreutils-8.0]
+
 
 * Noteworthy changes in release 8.1 (2009-11-18) [stable]
 

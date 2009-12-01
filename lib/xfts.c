@@ -21,13 +21,9 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <assert.h>
 
-#include "error.h"
-
-#include "gettext.h"
-#define _(msgid) gettext (msgid)
-
-#include "quote.h"
 #include "xalloc.h"
 #include "xfts.h"
 
@@ -40,23 +36,10 @@ xfts_open (char * const *argv, int options,
   FTS *fts = fts_open (argv, options | FTS_CWDFD, compar);
   if (fts == NULL)
     {
-      /* This can fail in three ways: out of memory, invalid bit_flags,
-         and one or more of the FILES is an empty string.  We could try
-         to decipher that errno==EINVAL means invalid bit_flags and
-         errno==ENOENT means there's an empty string, but that seems wrong.
-         Ideally, fts_open would return a proper error indicator.  For now,
-         we'll presume that the bit_flags are valid and just check for
-         empty strings.  */
-      bool invalid_arg = false;
-      for (; *argv; ++argv)
-        {
-          if (**argv == '\0')
-            invalid_arg = true;
-        }
-      if (invalid_arg)
-        error (EXIT_FAILURE, 0, _("invalid argument: %s"), quote (""));
-      else
-        xalloc_die ();
+      /* This can fail in two ways: out of memory or with errno==EINVAL,
+         which indicates it was called with invalid bit_flags.  */
+      assert (errno != EINVAL);
+      xalloc_die ();
     }
 
   return fts;

@@ -29,12 +29,28 @@ use strict;
 
 my $prog = 'rm';
 
+# FIXME: copied from misc/ls-misc; factor into Coreutils.pm?
+sub mk_file(@)
+{
+  foreach my $f (@_)
+    {
+      open (F, '>', $f) && close F
+        or die "creating $f: $!\n";
+    }
+}
+
 my @Tests =
     (
      # test-name options input expected-output
      #
      ['empty-name-1', "''", {EXIT => 1},
-      {ERR => "$prog: invalid argument: `'\n"}],
+      {ERR => "$prog: cannot remove `': No such file or directory\n"}],
+
+     ['empty-name-2', "a '' b", {EXIT => 1},
+      {ERR => "$prog: cannot remove `': No such file or directory\n"},
+      {PRE => sub { mk_file qw(a b) }},
+      {POST => sub {-f 'a' || -f 'b' and die "a or b remain\n" }},
+     ],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
