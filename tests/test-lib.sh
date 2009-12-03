@@ -30,7 +30,7 @@ sanitize_path_()
 {
   local saved_IFS=$IFS
     IFS=:
-    set - $PATH
+    set -- $PATH
   IFS=$saved_IFS
 
   local d d1
