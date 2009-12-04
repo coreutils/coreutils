@@ -58,9 +58,9 @@ print_group_list (const char *username,
     gid_t *groups;
     int i;
 
-    int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
                                &groups);
-    if (n_groups < 0 && errno != ENOSYS)
+    if (n_groups < 0)
       {
         if (username)
           {

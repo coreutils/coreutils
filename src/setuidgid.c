@@ -179,7 +179,7 @@ main (int argc, char **argv)
 #if HAVE_SETGROUPS
     if (n_gids == 0)
       {
-        int n = mgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
+        int n = xgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
         if (n <= 0)
           error (EXIT_FAILURE, errno, _("failed to get groups for user %s"),
                  quote (pwd->pw_name));
