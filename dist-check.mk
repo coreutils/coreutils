@@ -4,14 +4,15 @@ bin=bin-$$$$
 
 write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
 
-TMPDIR ?= /tmp
-t=$(TMPDIR)/$(PACKAGE)/test
+tmpdir = $(abs_top_builddir)/tests/torture
+
+t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
 
 # More than once, tainted build and source directory names would
 # have caused at least one "make check" test to apply "chmod 700"
 # to all directories under $HOME.  Make sure it doesn't happen again.
-tp := $(shell echo "$(TMPDIR)/$(PACKAGE)-$$$$")
+tp = $(tmpdir)/taint
 t_prefix = $(tp)/a
 t_taint = '$(t_prefix) b'
 fake_home = $(tp)/home
@@ -30,10 +31,11 @@ taint-distcheck: $(DIST_ARCHIVES)
 	touch $(fake_home)/f
 	mkdir -p $(fake_home)/d/e
 	ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-before
+	HOME=$(fake_home); export HOME;			\
 	cd $(t_taint)/$(distdir)			\
 	  && ./configure				\
 	  && $(MAKE)					\
-	  && HOME=$(fake_home) $(MAKE) check		\
+	  && $(MAKE) check				\
 	  && ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-after \
 	  && diff $(tp)/.ls-before $(tp)/.ls-after	\
 	  && test -d $(t_prefix)
@@ -52,6 +54,7 @@ endef
 # Install, then verify that all binaries and man pages are in place.
 # Note that neither the binary, ginstall, nor the ].1 man page is installed.
 define my-instcheck
+  echo running my-instcheck;				\
   $(MAKE) prefix=$(pfx) install				\
     && test ! -f $(pfx)/bin/ginstall			\
     && { fail=0;					\
@@ -70,6 +73,7 @@ endef
 
 define coreutils-path-check
   {							\
+    echo running coreutils-path-check;			\
     if test -f $(srcdir)/src/true.c; then		\
       fail=1;						\
       mkdir $(bin)					\
@@ -117,7 +121,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
-	  && ./configure --enable-gcc-warnings --disable-nls \
+	  && ./configure --quiet --enable-gcc-warnings --disable-nls \
 	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi				\
 	  && $(install-transform-check)			\
@@ -128,6 +132,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
+	rmdir $(tmpdir)/$(PACKAGE) $(tmpdir)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
