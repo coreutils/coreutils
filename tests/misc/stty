@@ -63,8 +63,10 @@ options=`stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g"`
 for opt in $options; do
   # `stty parenb' and `stty -parenb' fail with this message
   # stty: standard input: unable to perform all requested operations
-  # on Linux 2.2.0-pre4 kernels, so skip those tests.
-  test $opt = parenb && continue
+  # on Linux 2.2.0-pre4 kernels.  Also since around Linux 2.6.30
+  # other serial control settings give the same error. So skip them.
+  case $opt in parenb|parodd|cstopb|crtscts) continue;; esac
+
   stty $opt || fail=1
 
   # Likewise, `stty -cread' would fail, so skip that, too.
