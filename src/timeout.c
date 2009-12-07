@@ -275,6 +275,7 @@ main (int argc, char **argv)
   install_signal_handlers (term_signal);
   signal (SIGTTIN, SIG_IGN);    /* don't sTop if background child needs tty.  */
   signal (SIGTTOU, SIG_IGN);    /* don't sTop if background child needs tty.  */
+  signal (SIGCHLD, SIG_DFL);    /* Don't inherit CHLD handling from parent.   */
 
   monitored_pid = fork ();
   if (monitored_pid == -1)
