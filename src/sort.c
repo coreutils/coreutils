@@ -3254,6 +3254,7 @@ main (int argc, char **argv)
         }
 #endif
   }
+  signal (SIGCHLD, SIG_DFL); /* Don't inherit CHLD handling from parent.  */
 
   /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
   atexit (exit_cleanup);

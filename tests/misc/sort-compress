@@ -30,7 +30,6 @@ SORT="$abs_top_builddir/src/sort"
 # Ensure that $TMPDIR is valid.
 TMPDIR=.; export TMPDIR
 
-
 # This should force the use of temp files
 sort -S 1k in > out || fail=1
 compare exp out || fail=1
@@ -43,6 +42,16 @@ touch ok
 EOF
 
 chmod +x gzip
+
+# Ensure `sort` is immune to parent's SIGCHLD handler
+# Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
+(
+  # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
+  sig=`"$abs_top_builddir/src/kill" -l CHLD 2>/dev/null` && trap '' $sig
+
+  # This should force the use of child processes for "compression"
+  PATH=.:$PATH exec sort -S 1k --compress-program=gzip in > /dev/null
+) || fail=1
 
 # This will find our new gzip in PATH
 PATH=.:$PATH sort -S 1k --compress-program=gzip in > out || fail=1

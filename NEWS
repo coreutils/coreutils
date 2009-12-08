@@ -13,6 +13,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   the presence of the empty string argument.
   [bug introduced in coreutils-8.0]
 
+  sort is now immune to the signal handling of its parent.
+  Specifically sort now doesn't exit with an error message
+  if it uses helper processes for compression and its parent
+  ignores CHLD signals. [bug introduced in coreutils-6.9]
+
   timeout is now immune to the signal handling of its parent.
   Specifically timeout now doesn't exit with an error message
   if its parent ignores CHLD signals. [bug introduced in coreutils-7.6]
