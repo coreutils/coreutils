@@ -23,8 +23,11 @@ fake_home = $(tp)/home
 # and don't affect anything in $HOME.  Create witness files in $HOME,
 # record their attributes, and build/test.  Then ensure that the
 # witnesses were not affected.
+# Skip this test when using libtool, since libtool-generated scripts
+# cannot deal with a space-tainted srcdir.
 ALL_RECURSIVE_TARGETS += taint-distcheck
 taint-distcheck: $(DIST_ARCHIVES)
+	grep '^[	 ]*LT_INIT' configure.ac >/dev/null && exit 0
 	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
 	-rm -rf $(t_taint) $(fake_home)
 	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
