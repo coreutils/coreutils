@@ -19,6 +19,9 @@
 . $srcdir/test-lib.sh
 require_root_
 
+# Some of the tests expect a umask that grants group and/or world read access.
+working_umask_or_skip_
+
 # Record primary group number, usually 0.
 # This is the group ID used when cp (without -p) creates a new file.
 primary_group_num=$(id -g)
