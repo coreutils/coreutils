@@ -26,7 +26,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   with TMPDIR unset or set to the name of a world-writable directory,
   and with a malicious user on the same system
   was vulnerable to arbitrary code execution
-  [bug introduced in coreutils-7.0]
+  [bug introduced in coreutils-5.0]
 
 
 * Noteworthy changes in release 8.1 (2009-11-18) [stable]
