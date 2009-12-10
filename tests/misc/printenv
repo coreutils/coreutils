@@ -25,10 +25,11 @@ fi
 
 
 # Without arguments, printenv behaves like env.  Some shells provide
-# printenv as a builtin, so we must test via absolute name.
+# printenv as a builtin, so we must invoke it via "env".
 # But beware of $_, set by many shells to the last command run.
-env | grep -v '^_' > exp || framework_failure
-env -- printenv | grep -v '^_' > out || fail=1
+# Also, filter out LD_PRELOAD, which is set when running under valgrind.
+env | grep -Ev '^(_|LD_LIBRARY=)' > exp || framework_failure
+env -- printenv | grep -Ev '^(_|LD_LIBRARY=)' > out || fail=1
 compare exp out || fail=1
 
 # POSIX is clear that environ may, but need not be, sorted.
