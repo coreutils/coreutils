@@ -1889,6 +1889,35 @@ parse_options (int argc, char **argv,
     }
 }
 
+/* Mark as '.ignore'd each member of F that corresponds to a
+   pipe or fifo, and return the number of non-ignored members.  */
+static size_t
+ignore_fifo_and_pipe (struct File_spec *f, size_t n_files)
+{
+  /* When there is no FILE operand and stdin is a pipe or FIFO
+     POSIX requires that tail ignore the -f option.
+     Since we allow multiple FILE operands, we extend that to say: with -f,
+     ignore any "-" operand that corresponds to a pipe or FIFO.  */
+  size_t n_viable = 0;
+
+  size_t i;
+  for (i = 0; i < n_files; i++)
+    {
+      bool is_a_fifo_or_pipe =
+        (STREQ (f[i].name, "-")
+         && !f[i].ignore
+         && 0 <= f[i].fd
+         && (S_ISFIFO (f[i].mode)
+             || (HAVE_FIFO_PIPES != 1 && isapipe (f[i].fd))));
+      if (is_a_fifo_or_pipe)
+        f[i].ignore = true;
+      else
+        ++n_viable;
+    }
+
+  return n_viable;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1980,26 +2009,7 @@ main (int argc, char **argv)
   for (i = 0; i < n_files; i++)
     ok &= tail_file (&F[i], n_units);
 
-  /* When there is no FILE operand and stdin is a pipe or FIFO
-     POSIX requires that tail ignore the -f option.
-     Since we allow multiple FILE operands, we extend that to say:
-     ignore any "-" operand that corresponds to a pipe or FIFO.  */
-  size_t n_viable = 0;
-  for (i = 0; i < n_files; i++)
-    {
-      bool is_a_fifo_or_pipe =
-        (STREQ (F[i].name, "-")
-         && !F[i].ignore
-         && 0 <= F[i].fd
-         && (S_ISFIFO (F[i].mode)
-             || (HAVE_FIFO_PIPES != 1 && isapipe (F[i].fd))));
-      if (is_a_fifo_or_pipe)
-        F[i].ignore = true;
-      else
-        ++n_viable;
-    }
-
-  if (forever && n_viable)
+  if (forever && ignore_fifo_and_pipe (F, n_files))
     {
 #if HAVE_INOTIFY
       /* If the user specifies stdin via a command line argument of "-",
