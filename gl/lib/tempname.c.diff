@@ -127,48 +127,48 @@ index 2da5afe..562955a 100644
 +        XXXXXX[i] = letters[randint_genmax (rand_src, sizeof letters - 2)];
 
        switch (kind)
- 	{
+         {
 @@ -276,7 +271,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
- 	  break;
+           break;
 
- 	case __GT_NOCREATE:
--	  /* This case is backward from the other three.  __gen_tempname
-+	  /* This case is backward from the other three.  This function
- 	     succeeds if __xstat fails because the name does not exist.
- 	     Note the continue to bypass the common logic at the bottom
- 	     of the loop.  */
+         case __GT_NOCREATE:
+-          /* This case is backward from the other three.  __gen_tempname
++          /* This case is backward from the other three.  This function
+              succeeds if __xstat fails because the name does not exist.
+              Note the continue to bypass the common logic at the bottom
+              of the loop.  */
 @@ -285,11 +280,15 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
- 	      if (errno == ENOENT)
- 		{
- 		  __set_errno (save_errno);
--		  return 0;
-+		  fd = 0;
-+		  goto done;
- 		}
- 	      else
--		/* Give up now. */
--		return -1;
-+		{
-+		  /* Give up now. */
-+		  fd = -1;
-+		  goto done;
-+		}
- 	    }
- 	  continue;
+               if (errno == ENOENT)
+                 {
+                   __set_errno (save_errno);
+-                  return 0;
++                  fd = 0;
++                  goto done;
+                 }
+               else
+-                /* Give up now. */
+-                return -1;
++                {
++                  /* Give up now. */
++                  fd = -1;
++                  goto done;
++                }
+             }
+           continue;
 
 @@ -301,13 +300,32 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
        if (fd >= 0)
- 	{
- 	  __set_errno (save_errno);
--	  return fd;
-+	  goto done;
- 	}
+         {
+           __set_errno (save_errno);
+-          return fd;
++          goto done;
+         }
        else if (errno != EEXIST)
--	return -1;
-+	{
-+	  fd = -1;
-+	  goto done;
-+	}
+-        return -1;
++        {
++          fd = -1;
++          goto done;
++        }
      }
 
 +  randint_all_free (rand_src);
