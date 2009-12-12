@@ -54,7 +54,8 @@ for inotify in ---disable-inotify ''; do
   timeout 1 tail -s0.1 -F $inotify not_here
   test $? = 124 || fail=1
 
-
+  grep -v 'tail: inotify cannot be used, reverting to polling:' tail.err > x
+  mv x tail.err
   test -s tail.err && fail=1
   :>tail.err
 
