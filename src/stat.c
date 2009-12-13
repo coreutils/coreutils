@@ -327,6 +327,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "selinux";
     case S_MAGIC_SMB: /* 0x517B */
       return "smb";
+    case S_MAGIC_SOCKFS: /* 0x534F434B */
+      return "sockfs";
     case S_MAGIC_SQUASHFS: /* 0x73717368 */
       return "squashfs";
     case S_MAGIC_SYSFS: /* 0x62656572 */
