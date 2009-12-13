@@ -22,6 +22,23 @@ t_prefix = $(tp)/a
 t_taint = '$(t_prefix) b'
 fake_home = $(tp)/home
 
+# When extracting from a distribution tarball, extract using the fastest
+# method possible.  With dist-xz, that means using the *.xz file.
+ifneq ('', $(filter *.xz, $(DIST_ARCHIVES)))
+  tar_decompress_opt_ = J
+  suffix_ = xz
+else
+  ifneq ('', $(filter *.gz, $(DIST_ARCHIVES)))
+    tar_decompress_opt_ = z
+    suffix_ = gz
+  else
+    tar_decompress_opt_ = j
+    suffix_ = bz2
+  endif
+endif
+amtar_extract_ = $(AMTAR) -$(tar_decompress_opt_)xf
+preferred_tarball_ = $(distdir).tar.$(suffix_)
+
 # Ensure that tests run from tainted build and src dir names work,
 # and don't affect anything in $HOME.  Create witness files in $HOME,
 # record their attributes, and build/test.  Then ensure that the
@@ -34,7 +51,7 @@ taint-distcheck: $(DIST_ARCHIVES)
 	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
 	-rm -rf $(t_taint) $(fake_home)
 	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
-	$(AMTAR) -C $(t_taint) -zxf $(distdir).tar.gz
+	$(amtar_extract_) $(preferred_tarball_) -C $(t_taint)
 	mkfifo $(fake_home)/fifo
 	touch $(fake_home)/f
 	mkdir -p $(fake_home)/d/e
@@ -60,7 +77,7 @@ define install-transform-check
 endef
 
 # Install, then verify that all binaries and man pages are in place.
-# Note that neither the binary, ginstall, nor the ].1 man page is installed.
+# Note that neither the binary, ginstall, nor the [.1 man page is installed.
 define my-instcheck
   echo running my-instcheck;				\
   $(MAKE) prefix=$(pfx) install				\
@@ -117,7 +134,7 @@ define coreutils-path-check
 endef
 
 # Use this to make sure we don't run these programs when building
-# from a virgin tgz file, below.
+# from a virgin compressed tarball file, below.
 null_AM_MAKEFLAGS ?= \
   ACLOCAL=false \
   AUTOCONF=false \
@@ -133,7 +150,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	$(MAKE) check
 	-rm -rf $(t)
 	mkdir -p $(t)
-	$(AMTAR) -C $(t) -zxf $(distdir).tar.gz
+	$(amtar_extract_) $(preferred_tarball_) -C $(t)
 	cd $(t)/$(distdir)				\
 	  && ./configure --quiet --enable-gcc-warnings --disable-nls \
 	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
@@ -143,7 +160,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  && $(coreutils-path-check)			\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
-	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
+	  && $(amtar_extract_) - ) < $(preferred_tarball_)
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
 	rmdir $(tmpdir)/$(PACKAGE) $(tmpdir)
