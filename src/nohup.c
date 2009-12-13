@@ -123,7 +123,11 @@ main (int argc, char **argv)
      to ensure any read evokes an error.  */
   if (ignoring_input)
     {
-      fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
+      if (fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0) < 0)
+        {
+          error (0, errno, _("failed to render standard input unusable"));
+          exit (exit_internal_failure);
+        }
       if (!redirecting_stdout && !redirecting_stderr)
         error (0, 0, _("ignoring input"));
     }
