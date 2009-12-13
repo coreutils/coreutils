@@ -9,7 +9,10 @@ tmpdir = $(abs_top_builddir)/tests/torture
 t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
 
-built_programs = $$(cd src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+built_programs =						\
+  $$(echo 'spy:;@echo $$(PROGRAMS)'				\
+    | MAKEFLAGS= $(MAKE) -s -C src -f Makefile -f - spy		\
+    | fmt -1 | sed 's,$(EXEEXT)$$,,' | sort -u)
 
 # More than once, tainted build and source directory names would
 # have caused at least one "make check" test to apply "chmod 700"
@@ -31,7 +34,7 @@ taint-distcheck: $(DIST_ARCHIVES)
 	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
 	-rm -rf $(t_taint) $(fake_home)
 	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
-	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t_taint) -zxf $(distdir).tar.gz
+	$(AMTAR) -C $(t_taint) -zxf $(distdir).tar.gz
 	mkfifo $(fake_home)/fifo
 	touch $(fake_home)/f
 	mkdir -p $(fake_home)/d/e
@@ -130,7 +133,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	$(MAKE) check
 	-rm -rf $(t)
 	mkdir -p $(t)
-	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
+	$(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
 	  && ./configure --quiet --enable-gcc-warnings --disable-nls \
 	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
@@ -145,5 +148,6 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	-rm -rf $(t)
 	rmdir $(tmpdir)/$(PACKAGE) $(tmpdir)
 	@echo "========================"; \
-	echo "$(distdir).tar.gz is ready for distribution"; \
+	echo "ready for distribution:"; \
+	for i in $(DIST_ARCHIVES); do echo "  $$i"; done; \
 	echo "========================"
