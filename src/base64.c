@@ -68,9 +68,8 @@ Base64 encode or decode FILE, or standard input, to standard output.\n\
   -i, --ignore-garbage  When decoding, ignore non-alphabet characters.\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --help            Display this help and exit.\n\
-      --version         Output version information and exit.\n"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n"), stdout);
