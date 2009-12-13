@@ -9,6 +9,8 @@ tmpdir = $(abs_top_builddir)/tests/torture
 t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
 
+built_programs = $$(cd src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+
 # More than once, tainted build and source directory names would
 # have caused at least one "make check" test to apply "chmod 700"
 # to all directories under $HOME.  Make sure it doesn't happen again.
@@ -71,6 +73,13 @@ define my-instcheck
     }
 endef
 
+# The hard-linking for-loop below ensures that there is a bin/ directory
+# full of all of the programs under test (except the ones that are required
+# for basic Makefile rules), all symlinked to the just-built "false" program.
+# This is to ensure that if ever a test neglects to make PATH include
+# the build srcdir, these always-failing programs will run.
+# Otherwise, it is too easy to test the wrong programs.
+# Note that "false" itself is a symlink to true, so it too will malfunction.
 define coreutils-path-check
   {							\
     echo running coreutils-path-check;			\
@@ -101,18 +110,17 @@ define coreutils-path-check
   }
 endef
 
-# Use -Wformat -Werror to detect format-string/arg-list mismatches.
-# Also, check for shadowing problems with -Wshadow, and for pointer
-# arithmetic problems with -Wpointer-arith.
-# These CFLAGS are pretty strict.  If you build this target, you probably
-# have to have a recent version of gcc and glibc headers.
-# The hard-linking for-loop below ensures that there is a bin/ directory
-# full of all of the programs under test (except the ones that are required
-# for basic Makefile rules), all symlinked to the just-built "false" program.
-# This is to ensure that if ever a test neglects to make PATH include
-# the build srcdir, these always-failing programs will run.
-# Otherwise, it is too easy to test the wrong programs.
-# Note that "false" itself is a symlink to true, so it too will malfunction.
+# Use this to make sure we don't run these programs when building
+# from a virgin tgz file, below.
+null_AM_MAKEFLAGS ?= \
+  ACLOCAL=false \
+  AUTOCONF=false \
+  AUTOMAKE=false \
+  AUTOHEADER=false \
+  GPERF=false \
+  LIBTOOL=false \
+  MAKEINFO=false
+
 ALL_RECURSIVE_TARGETS += my-distcheck
 my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	$(MAKE) syntax-check
