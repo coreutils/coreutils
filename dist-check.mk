@@ -141,7 +141,6 @@ null_AM_MAKEFLAGS ?= \
   AUTOMAKE=false \
   AUTOHEADER=false \
   GPERF=false \
-  LIBTOOL=false \
   MAKEINFO=false
 
 ALL_RECURSIVE_TARGETS += my-distcheck
@@ -151,14 +150,15 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	-rm -rf $(t)
 	mkdir -p $(t)
 	$(amtar_extract_) $(preferred_tarball_) -C $(t)
-	cd $(t)/$(distdir)				\
-	  && ./configure --quiet --enable-gcc-warnings --disable-nls \
-	  && $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
-	  && $(MAKE) dvi				\
-	  && $(install-transform-check)			\
-	  && $(my-instcheck)				\
-	  && $(coreutils-path-check)			\
-	  && $(MAKE) distclean
+	(set -e; cd $(t)/$(distdir);			\
+	  ./configure --quiet --enable-gcc-warnings --disable-nls; \
+	  $(MAKE) AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)';	\
+	  $(MAKE) dvi;					\
+	  $(install-transform-check);			\
+	  $(my-instcheck);				\
+	  $(coreutils-path-check);			\
+	  $(MAKE) distclean				\
+	)
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(amtar_extract_) - ) < $(preferred_tarball_)
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
