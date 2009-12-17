@@ -3862,10 +3862,9 @@ To compare such strings numerically, use the
 @opindex -V
 @opindex --version-sort
 @cindex version number sort
-@vindex LC_NUMERIC
-Sort per @code{strverscmp(3)}.  This is a normal string comparison, except
-that embedded decimal numbers are sorted by numeric value
-(see @option{--numeric-sort} above).
+Sort by version name and number.  It behaves like a standard sort,
+except that each sequence of decimal digits is treated numerically
+as an index/version number.  (@xref{Details about version sort}.)
 
 @item -r
 @itemx --reverse
@@ -6685,23 +6684,17 @@ after the last @samp{.}); files with no extension are sorted first.
 @node Details about version sort
 @subsection Details about version sort
 
-The version sort takes into account the fact that file names frequently include
-indices or version numbers.  Standard sorting functions usually do not produce
-the ordering that people expect because comparisons are made on a
-character-by-character basis.  The version
-sort addresses this problem, and is especially useful when browsing
-directories that contain many files with indices/version numbers in their
-names:
+Version sorting handles the fact that file names frequently include indices or
+version numbers.  Standard sorting usually does not produce the order that one
+expects because comparisons are made on a character-by-character basis.
+Version sorting is especially useful when browsing directories that contain
+many files with indices/version numbers in their names:
 
 @example
 $ ls -1            $ ls -1v
-foo.zml-1.gz       foo.zml-1.gz
-foo.zml-100.gz     foo.zml-2.gz
-foo.zml-12.gz      foo.zml-6.gz
-foo.zml-13.gz      foo.zml-12.gz
-foo.zml-2.gz       foo.zml-13.gz
-foo.zml-25.gz      foo.zml-25.gz
-foo.zml-6.gz       foo.zml-100.gz
+abc.zml-1.gz       abc.zml-1.gz
+abc.zml-12.gz      abc.zml-2.gz
+abc.zml-2.gz       abc.zml-12.gz
 @end example
 
 Version-sorted strings are compared such that if @var{ver1} and @var{ver2}
@@ -6720,11 +6713,27 @@ abc-1.012b.tgz     abc-1.007.tgz
 abc-1.01a.tgz      abc-1.012b.tgz
 @end example
 
-This functionality is implemented using gnulib's @code{filevercmp} function.
-One result of that implementation decision is that @samp{ls -v}
-and @samp{sort -V} do not use the locale category, @env{LC_COLLATE},
-which means non-numeric prefixes are sorted as if @env{LC_COLLATE} were set
-to @samp{C}.
+This functionality is implemented using gnulib's @code{filevercmp} function,
+which has some caveats worth noting.
+
+@itemize @bullet
+@item @env{LC_COLLATE} is ignored, which means @samp{ls -v} and @samp{sort -V}
+will sort non-numeric prefixes as if the @env{LC_COLLATE} locale category
+was set to @samp{C}.
+@item Some suffixes will not be matched by the regular
+expression mentioned above.  Consequently these examples may
+not sort as you expect:
+
+@example
+abc-1.2.3.4.7z
+abc-1.2.3.7z
+@end example
+
+@example
+abc-1.2.3.4.x86_64.rpm
+abc-1.2.3.x86_64.rpm
+@end example
+@end itemize
 
 @node General output formatting
 @subsection General output formatting

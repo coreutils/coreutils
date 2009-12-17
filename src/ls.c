@@ -3272,8 +3272,7 @@ DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
    All the other sort options, in fact, need xstrcoll and strcmp variants,
    because they all use a string comparison (either as the primary or secondary
    sort key), and xstrcoll has the ability to do a longjmp if strcoll fails for
-   locale reasons.  Last, strverscmp is ALWAYS available in coreutils,
-   thanks to the gnulib library. */
+   locale reasons.  Lastly, filevercmp is ALWAYS available with gnulib.  */
 static inline int
 cmp_version (struct fileinfo const *a, struct fileinfo const *b)
 {
