@@ -548,7 +548,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
         if (ent->fts_info == FTS_DP
             && x->one_file_system
             && FTS_ROOTLEVEL < ent->fts_level
-            && ent->fts_statp->st_ino != fts->fts_dev)
+            && ent->fts_statp->st_dev != fts->fts_dev)
           {
             mark_ancestor_dirs (ent);
             error (0, 0, _("skipping %s, since it's on a different device"),

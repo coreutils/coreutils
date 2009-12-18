@@ -107,6 +107,7 @@ TESTS =						\
   rm/interactive-always				\
   rm/interactive-once				\
   rm/ir-1					\
+  rm/one-file-system2				\
   rm/r-1					\
   rm/r-2					\
   rm/r-3					\
