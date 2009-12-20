@@ -10,7 +10,7 @@ t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
 
 built_programs =						\
-  $$(echo 'spy:;@echo $$(PROGRAMS)'				\
+  $$(echo 'spy:;@echo $$(bin_PROGRAMS)'				\
     | MAKEFLAGS= $(MAKE) -s -C src -f Makefile -f - spy		\
     | fmt -1 | sed 's,$(EXEEXT)$$,,' | sort -u)
 
@@ -47,7 +47,7 @@ preferred_tarball_ = $(distdir).tar.$(suffix_)
 # cannot deal with a space-tainted srcdir.
 ALL_RECURSIVE_TARGETS += taint-distcheck
 taint-distcheck: $(DIST_ARCHIVES)
-	grep '^[	 ]*LT_INIT' configure.ac >/dev/null && exit 0
+	grep '^[	 ]*LT_INIT' configure.ac >/dev/null && exit 0 || :
 	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
 	-rm -rf $(t_taint) $(fake_home)
 	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
