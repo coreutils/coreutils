@@ -9,6 +9,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   a commmand of the above form would fail for all subdirectories.
   [bug introduced in coreutils-8.0]
 
+  stat -f recognizes more file system types: fuseblk, rpc_pipefs.
+  Also Minix V3 is displayed correctly as minix3, not minux3.
+  [bug introduced in coreutils-8.1]
+
   touch -a once again guarantees that a file's change time is
   adjusted, working around a bug in current Linux kernels.
   [bug introduced in coreutils-8.1]

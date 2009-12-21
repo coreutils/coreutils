@@ -208,7 +208,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
          diff -u sym_stat sym_libc
       */
 
-      /* Also sync from the list in "man 2 statfs".  */
+      /* Also compare with the list in "man 2 statfs" using the
+         fs-magic-compare make target.  */
 
       /* IMPORTANT NOTE: Each of the following `case S_MAGIC_...:'
          statements must be followed by a hexadecimal constant in
@@ -261,6 +262,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ext2";
     case S_MAGIC_FAT: /* 0x4006 */
       return "fat";
+    case S_MAGIC_FUSEBLK: /* 0x65735546 */
+      return "fuseblk";
     case S_MAGIC_FUSECTL: /* 0x65735543 */
       return "fusectl";
     case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA */
@@ -296,7 +299,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     case S_MAGIC_MINIX_V2_30: /* 0x2478 */
       return "minix v2 (30 char.)";
     case S_MAGIC_MINIX_V3: /* 0x4D5A */
-      return "minux3";
+      return "minix3";
     case S_MAGIC_MSDOS: /* 0x4D44 */
       return "msdos";
     case S_MAGIC_NCP: /* 0x564C */
@@ -321,6 +324,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "reiserfs";
     case S_MAGIC_ROMFS: /* 0x7275 */
       return "romfs";
+    case S_MAGIC_RPC_PIPEFS: /* 0x67596969 */
+      return "rpc_pipefs";
     case S_MAGIC_SECURITYFS: /* 0x73636673 */
       return "securityfs";
     case S_MAGIC_SELINUX: /* 0xF97CFF8C */
