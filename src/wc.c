@@ -598,6 +598,10 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  /* Line buffer stdout to ensure lines are written atomically and immediately
+     so that processes running in parallel do not intersperse their output.  */
+  setvbuf (stdout, NULL, _IOLBF, 0);
+
   print_lines = print_words = print_chars = print_bytes = false;
   print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;

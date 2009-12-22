@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   adjusted, working around a bug in current Linux kernels.
   [bug introduced in coreutils-8.1]
 
+  wc now prints counts atomically so that concurrent
+  processes will not intersperse their output.
+  [the issue dates back to the initial implementation]
+
 
 * Noteworthy changes in release 8.2 (2009-12-11) [stable]
 

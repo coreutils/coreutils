@@ -157,6 +157,7 @@ TESTS =						\
   misc/wc					\
   misc/wc-files0-from				\
   misc/wc-files0				\
+  misc/wc-parallel				\
   misc/cat-proc					\
   misc/cat-buf					\
   misc/base64					\
