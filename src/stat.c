@@ -268,6 +268,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "fusectl";
     case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA */
       return "futexfs";
+    case S_MAGIC_GFS: /* 0x1161970 */
+      return "gfs/gfs2";
     case S_MAGIC_HFS: /* 0x4244 */
       return "hfs";
     case S_MAGIC_HPFS: /* 0xF995E849 */
@@ -288,6 +290,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "jffs2";
     case S_MAGIC_JFS: /* 0x3153464A */
       return "jfs";
+    case S_MAGIC_KAFS: /* 0x6B414653 */
+      return "k-afs";
     case S_MAGIC_LUSTRE: /* 0x0BD00BD0 */
       return "lustre";
     case S_MAGIC_MINIX: /* 0x137F */
@@ -314,6 +318,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ntfs";
     case S_MAGIC_OPENPROM: /* 0x9FA1 */
       return "openprom";
+    case S_MAGIC_OCFS2: /* 0x7461636f */
+      return "ocfs2";
     case S_MAGIC_PROC: /* 0x9FA0 */
       return "proc";
     case S_MAGIC_QNX4: /* 0x002F */
