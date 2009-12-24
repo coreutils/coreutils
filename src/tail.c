@@ -149,10 +149,10 @@ struct File_spec
 
   /* Offset in NAME of the basename part.  */
   size_t basename_start;
-
-  /* inotify doesn't work for remotely updated files.  */
-  bool remote;
 #endif
+
+  /* See the description of fremote.  */
+  bool remote;
 };
 
 #if HAVE_INOTIFY
@@ -160,8 +160,6 @@ struct File_spec
    directories.  */
 const uint32_t inotify_wd_mask = (IN_MODIFY | IN_ATTRIB | IN_DELETE_SELF
                                   | IN_MOVE_SELF);
-
-static bool fremote (int fd, const char *name);
 #endif
 
 /* Keep trying to open a file even if it is inaccessible when tail starts
@@ -875,6 +873,56 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     }
 }
 
+#if HAVE_INOTIFY
+/* Without inotify support, always return false.  Otherwise, return false
+   when FD is open on a file known to reside on a local file system.
+   If fstatfs fails, give a diagnostic and return true.
+   If fstatfs cannot be called, return true.  */
+static bool
+fremote (int fd, const char *name)
+{
+  bool remote = true;           /* be conservative (poll by default).  */
+
+# if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE && defined __linux__
+  struct statfs buf;
+  int err = fstatfs (fd, &buf);
+  if (err != 0)
+    {
+      error (0, errno, _("cannot determine location of %s. "
+                         "reverting to polling"), quote (name));
+    }
+  else
+    {
+      switch (buf.f_type)
+        {
+        case S_MAGIC_AFS:
+        case S_MAGIC_CIFS:
+        case S_MAGIC_CODA:
+        case S_MAGIC_FUSEBLK:
+        case S_MAGIC_FUSECTL:
+        case S_MAGIC_GFS:
+        case S_MAGIC_KAFS:
+        case S_MAGIC_LUSTRE:
+        case S_MAGIC_NCP:
+        case S_MAGIC_NFS:
+        case S_MAGIC_NFSD:
+        case S_MAGIC_OCFS2:
+        case S_MAGIC_SMB:
+          break;
+        default:
+          remote = false;
+        }
+    }
+# endif
+
+  return remote;
+}
+#else
+/* Without inotify support, whether a file is remote is irrelevant.
+   Always return "false" in that case.  */
+# define fremote(fd, name) false
+#endif
+
 /* FIXME: describe */
 
 static void
@@ -931,7 +979,6 @@ recheck (struct File_spec *f, bool blocking)
              quote (pretty_name (f)));
       f->ignore = true;
     }
-#if HAVE_INOTIFY
   else if (!disable_inotify && fremote (fd, pretty_name (f)))
     {
       ok = false;
@@ -941,7 +988,6 @@ recheck (struct File_spec *f, bool blocking)
       f->ignore = true;
       f->remote = true;
     }
-#endif
   else
     {
       f->errnum = 0;
@@ -1174,11 +1220,11 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 
 #if HAVE_INOTIFY
 
-/* Return true if any of the N_FILES files in F are remote, i.e., have
-   open file descriptors and are on network file systems.  */
+/* Return true if any of the N_FILES files in F is remote, i.e., has
+   an open file descriptor and is on a network file system.  */
 
 static bool
-any_remote_files (const struct File_spec *f, size_t n_files)
+any_remote_file (const struct File_spec *f, size_t n_files)
 {
   size_t i;
 
@@ -1188,8 +1234,8 @@ any_remote_files (const struct File_spec *f, size_t n_files)
   return false;
 }
 
-/* Return true if any of the N_FILES files in F represent
-   stdin and are tailable.  */
+/* Return true if any of the N_FILES files in F represents
+   stdin and is tailable.  */
 
 static bool
 tailable_stdin (const struct File_spec *f, size_t n_files)
@@ -1200,46 +1246,6 @@ tailable_stdin (const struct File_spec *f, size_t n_files)
     if (!f[i].ignore && STREQ (f[i].name, "-"))
       return true;
   return false;
-}
-
-static bool
-fremote (int fd, const char *name)
-{
-  bool remote = true;           /* be conservative (poll by default).  */
-
-# if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE && defined __linux__
-  struct statfs buf;
-  int err = fstatfs (fd, &buf);
-  if (err != 0)
-    {
-      error (0, errno, _("cannot determine location of %s. "
-                         "reverting to polling"), quote (name));
-    }
-  else
-    {
-      switch (buf.f_type)
-        {
-        case S_MAGIC_AFS:
-        case S_MAGIC_CIFS:
-        case S_MAGIC_CODA:
-        case S_MAGIC_FUSEBLK:
-        case S_MAGIC_FUSECTL:
-        case S_MAGIC_GFS:
-        case S_MAGIC_KAFS:
-        case S_MAGIC_LUSTRE:
-        case S_MAGIC_NCP:
-        case S_MAGIC_NFS:
-        case S_MAGIC_NFSD:
-        case S_MAGIC_OCFS2:
-        case S_MAGIC_SMB:
-          break;
-        default:
-          remote = false;
-        }
-    }
-# endif
-
-  return remote;
 }
 
 static size_t
@@ -1739,9 +1745,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
                  to avoid a race condition described by Ken Raeburn:
         http://mail.gnu.org/archive/html/bug-textutils/2003-05/msg00007.html */
               record_open_fd (f, fd, read_pos, &stats, (is_stdin ? -1 : 1));
-#if HAVE_INOTIFY
               f->remote = fremote (fd, pretty_name (f));
-#endif
             }
         }
       else
@@ -2112,7 +2116,7 @@ main (int argc, char **argv)
          and hooked up to stdin is not trivial, while reverting to
          non-inotify-based tail_forever is easy and portable.
 
-         any_remote_files() checks if the user has specified any
+         any_remote_file() checks if the user has specified any
          files that reside on remote file systems.  inotify is not used
          in this case because it would miss any updates to the file
          that were not initiated from the local system.
@@ -2123,7 +2127,7 @@ main (int argc, char **argv)
          Note if there is a change to the original file then we'll
          recheck it and follow the new file, or ignore it if the
          file has changed to being remote.  */
-      if (tailable_stdin (F, n_files) || any_remote_files (F, n_files))
+      if (tailable_stdin (F, n_files) || any_remote_file (F, n_files))
         disable_inotify = true;
 
       if (!disable_inotify)
