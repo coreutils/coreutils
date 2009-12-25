@@ -111,9 +111,6 @@ struct File_spec
   /* The actual file name, or "-" for stdin.  */
   char *name;
 
-  /* File descriptor on which the file is open; -1 if it's not open.  */
-  int fd;
-
   /* Attributes of the file the last time we checked.  */
   off_t size;
   struct timespec mtime;
@@ -121,23 +118,26 @@ struct File_spec
   ino_t ino;
   mode_t mode;
 
-  /* 1 if O_NONBLOCK is clear, 0 if set, -1 if not known.  */
-  int blocking;
-
   /* The specified name initially referred to a directory or some other
      type for which tail isn't meaningful.  Unlike for a permission problem
      (tailable, below) once this is set, the name is not checked ever again.  */
   bool ignore;
 
-  /* See description of DEFAULT_MAX_N_... below.  */
-  uintmax_t n_unchanged_stats;
+  /* See the description of fremote.  */
+  bool remote;
 
   /* A file is tailable if it exists, is readable, and is of type
      IS_TAILABLE_FILE_TYPE.  */
   bool tailable;
 
+  /* File descriptor on which the file is open; -1 if it's not open.  */
+  int fd;
+
   /* The value of errno seen last time we checked this file.  */
   int errnum;
+
+  /* 1 if O_NONBLOCK is clear, 0 if set, -1 if not known.  */
+  int blocking;
 
 #if HAVE_INOTIFY
   /* The watch descriptor used by inotify.  */
@@ -151,8 +151,8 @@ struct File_spec
   size_t basename_start;
 #endif
 
-  /* See the description of fremote.  */
-  bool remote;
+  /* See description of DEFAULT_MAX_N_... below.  */
+  uintmax_t n_unchanged_stats;
 };
 
 #if HAVE_INOTIFY
