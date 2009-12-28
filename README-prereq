@@ -17,7 +17,11 @@ Note please try to install/build official packages for your system.
 If these are not available then one can make them available only to
 the coreutils build using the following instructions.  Even if the
 official packages for your system are too old, please install them
-as they may be required to build the newer versions.
+as they may be required to build the newer versions.  The examples
+below build into $HOME/coreutils/deps/, so first ensure that your
+$PATH is set correctly, which can be done for the current shell like:
+
+  export PATH=$HOME/coreutils/deps/bin:$PATH
 
 * autoconf *
 
@@ -50,7 +54,4 @@ requires version 1.10a or newer, as well as the xz program itself.
   ./configure --prefix=$HOME/coreutils/deps
   make install
 
-Now we can build coreutils as described in README-hacking
-as long as $PATH starts with $HOME/coreutils/deps/bin, which
-one can set for the current shell like:
-  $ export PATH=$HOME/coreutils/deps/bin:$PATH
+Now one can build coreutils as described in README-hacking.
