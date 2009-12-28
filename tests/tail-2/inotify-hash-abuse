@@ -1,0 +1,69 @@
+#!/bin/sh
+# Exercise an abort-inducing flaw in inotify-enabled tail -F.
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+. $srcdir/test-lib.sh
+
+# 9 is a magic number, related to internal details of tail.c and hash.c
+n=9
+seq $n | xargs touch || framework_failure
+
+debug='---disable-inotify -s .01'
+debug=
+tail $debug -qF $(seq $n) > out 2>&1 & pid=$!
+
+# Wait until tail has started...
+echo x > $n
+until grep '^x$' out >/dev/null 2>&1; do :; done
+
+mv 1 f || fail=1
+
+# Wait for this diagnostic:
+# tail: `1' has become inaccessible: No such file or directory
+until grep inaccessible out >/dev/null 2>&1; do :; done
+
+# Trigger the bug.  Before the fix, this would provoke the abort.
+echo a > 1 || fail=1
+
+# Wait up to 2s for the buggy tail to die,
+# or for the "tail: `1' has appeared;  following end of new file" output
+dead=0
+for i in $(seq 10); do
+  kill -0 $pid || { dead=1; break; }
+  grep 'has appeared;' out > /dev/null && break
+  sleep .2
+done
+
+# Fixed tail will not have aborted.  Kill it.
+test $dead = 0 && kill -HUP $pid
+
+wait $pid
+st=$?
+
+case $st in
+  129) ;;
+  *) echo tail died via unexpected signal: $st; fail=1;;
+esac
+
+cat out
+
+Exit $fail
