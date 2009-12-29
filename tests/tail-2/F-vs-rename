@@ -1,0 +1,78 @@
+#!/bin/sh
+# demonstrate that tail -F works when renaming the tailed files
+# Before coreutils-8.3, tail -F a b would stop tracking additions to b
+# after "mv a b".
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+. $srcdir/test-lib.sh
+
+touch a b || framework_failure
+
+debug='---disable-inotify -s .01'
+debug=
+tail $debug -F a b > out 2>&1 & pid=$!
+
+# Wait until tail has started...
+echo x > a
+until grep '^x$' out >/dev/null 2>&1; do :; done
+
+mv a b || fail=1
+
+# Wait for the diagnostic:
+# tail: `a' has become inaccessible: No such file or directory
+until grep inaccessible out >/dev/null 2>&1; do :; done
+
+echo x > a
+# Wait up to 4s for this to appear in the output:
+# "tail: `...' has appeared;  following end of new file"
+found=false
+for i in $(seq 20); do
+  grep 'has appeared;' out > /dev/null && { found=true; break; }
+  sleep .2
+done
+$found || { echo "$0: a: unexpected delay?"; cat out; fail=1; }
+
+echo y >> b
+# Wait up to 4s for "y" to appear in the output:
+found=false
+for i in $(seq 20); do
+  case $(tr '\n' @ < out) in
+    *'@@==> b <==@y@') found=true; break 2;;
+  esac
+  sleep .2
+done
+$found || { echo "$0: b: unexpected delay?"; cat out; fail=1; }
+
+echo z >> a
+# Wait up to 4s for "z" to appear in the output:
+found=false
+for i in $(seq 20); do
+  case $(tr '\n' @ < out) in
+    *'@@==> a <==@z@') found=true; break 2;;
+  esac
+  sleep .2
+done
+$found || { echo "$0: b: unexpected delay?"; cat out; fail=1; }
+
+kill -HUP $pid
+
+Exit $fail
