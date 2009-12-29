@@ -1264,7 +1264,6 @@ wd_comparator (const void *e1, const void *e2)
 }
 
 /* Helper function used by `tail_forever_inotify'.  */
-
 static void
 check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
 {
@@ -1306,12 +1305,10 @@ check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
 
 /* Tail N_FILES files forever, or until killed.
    Check modifications using the inotify events system.  */
-
 static void
 tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                       double sleep_interval)
 {
-  size_t i;
   unsigned int max_realloc = 3;
   Hash_table *wd_table;
 
@@ -1330,6 +1327,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   /* Add an inotify watch for each watched file.  If -F is specified then watch
      its parent directory too, in this way when they re-appear we can add them
      again to the watch list.  */
+  size_t i;
   for (i = 0; i < n_files; i++)
     {
       if (!f[i].ignore)
@@ -1459,34 +1457,35 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
       if (ev->len) /* event on ev->name in watched directory  */
         {
-          for (i = 0; i < n_files; i++)
+          size_t j;
+          for (j = 0; j < n_files; j++)
             {
               /* With N=hundreds of frequently-changing files, this O(N^2)
                  process might be a problem.  FIXME: use a hash table?  */
-              if (f[i].parent_wd == ev->wd
-                  && STREQ (ev->name, f[i].name + f[i].basename_start))
+              if (f[j].parent_wd == ev->wd
+                  && STREQ (ev->name, f[j].name + f[j].basename_start))
                 break;
             }
 
           /* It is not a watched file.  */
-          if (i == n_files)
+          if (j == n_files)
             continue;
 
           /* It's fine to add the same file more than once.  */
-          f[i].wd = inotify_add_watch (wd, f[i].name, inotify_wd_mask);
+          f[j].wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
 
-          if (f[i].wd < 0)
+          if (f[j].wd < 0)
             {
-              error (0, errno, _("cannot watch %s"), quote (f[i].name));
+              error (0, errno, _("cannot watch %s"), quote (f[j].name));
               continue;
             }
 
-          fspec = &(f[i]);
+          fspec = &(f[j]);
           if (hash_insert (wd_table, fspec) == NULL)
             xalloc_die ();
 
           if (follow_mode == Follow_name)
-            recheck (&(f[i]), false);
+            recheck (&(f[j]), false);
         }
       else
         {
@@ -1508,8 +1507,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           if ((ev->mask & IN_DELETE_SELF)
               || ((ev->mask & IN_MOVE_SELF) && follow_mode == Follow_descriptor))
             {
-              inotify_rm_watch (wd, f[i].wd);
-              hash_delete (wd_table, &(f[i]));
+              inotify_rm_watch (wd, fspec->wd);
+              hash_delete (wd_table, fspec);
             }
           if (follow_mode == Follow_name)
             recheck (fspec, false);
