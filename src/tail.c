@@ -1474,15 +1474,18 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             continue;
 
           /* It's fine to add the same file more than once.  */
-          f[j].wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
-
-          if (f[j].wd < 0)
+          int new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
+          if (new_wd < 0)
             {
               error (0, errno, _("cannot watch %s"), quote (f[j].name));
               continue;
             }
 
           fspec = &(f[j]);
+
+          /* Remove `fspec' and re-add it using `new_fd' as its key.  */
+          hash_delete (wd_to_name, fspec);
+          fspec->wd = new_wd;
           if (hash_insert (wd_to_name, fspec) == NULL)
             xalloc_die ();
 
