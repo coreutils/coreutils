@@ -81,6 +81,7 @@ TESTS =						\
   rm/cycle					\
   cp/link-heap					\
   tail-2/inotify-hash-abuse			\
+  tail-2/inotify-hash-abuse2			\
   tail-2/inotify-rotate				\
   chmod/no-x					\
   chgrp/basic					\
