@@ -1310,7 +1310,9 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                       double sleep_interval)
 {
   unsigned int max_realloc = 3;
-  Hash_table *wd_table;
+
+  /* Map an inotify watch descriptor to the name of the file it's watching.  */
+  Hash_table *wd_to_name;
 
   bool found_watchable = false;
   bool writer_is_dead = false;
@@ -1320,8 +1322,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   size_t evbuf_off = 0;
   size_t len = 0;
 
-  wd_table = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
-  if (! wd_table)
+  wd_to_name = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
+  if (! wd_to_name)
     xalloc_die ();
 
   /* Add an inotify watch for each watched file.  If -F is specified then watch
@@ -1371,7 +1373,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               continue;
             }
 
-          if (hash_insert (wd_table, &(f[i])) == NULL)
+          if (hash_insert (wd_to_name, &(f[i])) == NULL)
             xalloc_die ();
 
           found_watchable = true;
@@ -1481,7 +1483,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             }
 
           fspec = &(f[j]);
-          if (hash_insert (wd_table, fspec) == NULL)
+          if (hash_insert (wd_to_name, fspec) == NULL)
             xalloc_die ();
 
           if (follow_mode == Follow_name)
@@ -1491,7 +1493,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
         {
           struct File_spec key;
           key.wd = ev->wd;
-          fspec = hash_lookup (wd_table, &key);
+          fspec = hash_lookup (wd_to_name, &key);
         }
 
       if (! fspec)
@@ -1508,7 +1510,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               || ((ev->mask & IN_MOVE_SELF) && follow_mode == Follow_descriptor))
             {
               inotify_rm_watch (wd, fspec->wd);
-              hash_delete (wd_table, fspec);
+              hash_delete (wd_to_name, fspec);
             }
           if (follow_mode == Follow_name)
             recheck (fspec, false);
