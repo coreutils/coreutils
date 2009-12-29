@@ -1486,11 +1486,24 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           /* Remove `fspec' and re-add it using `new_fd' as its key.  */
           hash_delete (wd_to_name, fspec);
           fspec->wd = new_wd;
+
+          /* If the file was moved then inotify will use the source file wd for
+             the destination file.  Make sure the key is not present in the
+             table.  */
+          struct File_spec *prev = hash_delete (wd_to_name, fspec);
+          if (prev && prev != fspec)
+            {
+              if (follow_mode == Follow_name)
+                recheck (prev, false);
+              prev->wd = -1;
+              close_fd (prev->fd, pretty_name (prev));
+            }
+
           if (hash_insert (wd_to_name, fspec) == NULL)
             xalloc_die ();
 
           if (follow_mode == Follow_name)
-            recheck (&(f[j]), false);
+            recheck (fspec, false);
         }
       else
         {
