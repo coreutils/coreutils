@@ -316,14 +316,10 @@ GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
      fputs (_("\
 With --follow (-f), tail defaults to following the file descriptor, which\n\
 means that even if a tail'ed file is renamed, tail will continue to track\n\
-its end.  \
-"), stdout);
-     fputs (_("\
-This default behavior is not desirable when you really want to\n\
+its end.  This default behavior is not desirable when you really want to\n\
 track the actual name of the file, not the file descriptor (e.g., log\n\
 rotation).  Use --follow=name in that case.  That causes tail to track the\n\
-named file by reopening it periodically to see if it has been removed and\n\
-recreated by some other program.\n\
+named file in a way that accommodates renaming, removal and creation.\n\
 "), stdout);
       emit_ancillary_info ();
     }

@@ -2770,8 +2770,10 @@ If you'd like to continue to track the end of a growing file even after
 it has been unlinked, use @option{--follow=descriptor}.  This is the default
 behavior, but it is not useful if you're tracking a log file that may be
 rotated (removed or renamed, then reopened).  In that case, use
-@option{--follow=name} to track the named file by reopening it periodically
-to see if it has been removed and recreated by some other program.
+@option{--follow=name} to track the named file, perhaps by reopening it
+periodically to see if it has been removed and recreated by some other program.
+Note that the inotify-based implementation handles this case without
+the need for any periodic reopening.
 
 No matter which method you use, if the tracked file is determined to have
 shrunk, @command{tail} prints a message saying the file has been truncated
