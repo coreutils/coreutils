@@ -18,6 +18,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   files that was not done from the local system would go unnoticed.
   [bug introduced in coreutils-7.5]
 
+  tail -F (inotify-enabled) would abort when a tailed file is repeated
+  renamed-aside and then recreated.
+  [bug introduced in coreutils-7.5]
+
+  tail -F (inotify-enabled) could fail to follow renamed files.
+  E.g., given a "tail -F a b" process, running "mv a b" would
+  make tail stop tracking additions to "b".
+  [bug introduced in coreutils-7.5]
+
   touch -a once again guarantees that a file's change time is
   adjusted, working around a bug in current Linux kernels.
   [bug introduced in coreutils-8.1]
