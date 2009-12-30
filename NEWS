@@ -27,8 +27,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   make tail stop tracking additions to "b".
   [bug introduced in coreutils-7.5]
 
-  touch -a once again guarantees that a file's change time is
-  adjusted, working around a bug in current Linux kernels.
+  touch -a and touch -m could trigger bugs in some file systems, such
+  as xfs or ntfs-3g, and fail to update timestamps.
   [bug introduced in coreutils-8.1]
 
   wc now prints counts atomically so that concurrent
