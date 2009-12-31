@@ -2868,8 +2868,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
--t is implied if PAGE_LENGTH <= 10.  With no FILE, or when\n\
-FILE is -, read standard input.\n\
+-t is implied if PAGE_LENGTH <= 10.  With no FILE, or when FILE is -, read\n\
+standard input.\n\
 "), stdout);
       emit_ancillary_info ();
     }
