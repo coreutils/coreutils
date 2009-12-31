@@ -2835,7 +2835,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     omit warning when a file cannot be opened\n\
 "), stdout);
       fputs (_("\
-  -s[CHAR],--separator[=CHAR]\n\
+  -s[CHAR], --separator[=CHAR]\n\
                     separate columns by a single character, default for CHAR\n\
                     is the <TAB> character without -w and \'no char\' with -w\n\
                     -s[CHAR] turns off line truncation of all 3 column\n\
