@@ -148,11 +148,19 @@ print_header (void)
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_type)
+    /* TRANSLATORS:
+       For best results (df header/column alignment), ensure that
+       your translation has the same length as the original.  */
     fputs (_("Filesystem    Type"), stdout);
   else
     fputs (_("Filesystem        "), stdout);
 
   if (inode_format)
+    /* TRANSLATORS:
+       For best results (df header/column alignment), ensure that
+       your translation has the same length as the original.
+       Also, each column name translation should end at the same
+       column as the corresponding original.  */
     printf (_("    Inodes   IUsed   IFree IUse%%"));
   else if (human_output_opts & human_autoscale)
     {
