@@ -17,9 +17,6 @@
 # Used in maint.mk's web-manual rule
 manual_title = Core GNU utilities
 
-# The GnuPG ID of the key used to sign the tarballs.
-gpg_key_ID = B9AB9A16
-
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip =
 
