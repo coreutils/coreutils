@@ -185,6 +185,44 @@ my @Tests =
                     restore_ls_colors; }},
      ],
 
+     # Test for a bug fixed after coreutils-8.2.
+     ['sl-dangle2', '-o --color=always l',
+      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+      {OUT => "l -> nowhere\n"},
+      {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
+                   push_ls_colors('ln=target')
+       }},
+      {POST => sub {unlink 'l' or die "l: $!\n";
+                    restore_ls_colors; }},
+     ],
+     ['sl-dangle3', '-o --color=always l',
+      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+      {OUT => "$e\e[40ml$e -> \e[34mnowhere$e\n\e[m"},
+      {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
+                   push_ls_colors('ln=target:or=40:mi=34:')
+       }},
+      {POST => sub {unlink 'l' or die "l: $!\n";
+                    restore_ls_colors; }},
+     ],
+     ['sl-dangle4', '-o --color=always l',
+      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+      {OUT => "$e\e[36ml$e -> \e[35mnowhere$e\n\e[m"},
+      {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
+                   push_ls_colors('ln=34:mi=35:or=36:')
+       }},
+      {POST => sub {unlink 'l' or die "l: $!\n";
+                    restore_ls_colors; }},
+     ],
+     ['sl-dangle5', '-o --color=always l',
+      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+      {OUT => "$e\e[34ml$e -> \e[35mnowhere$e\n\e[m"},
+      {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
+                   push_ls_colors('ln=34:mi=35:')
+       }},
+      {POST => sub {unlink 'l' or die "l: $!\n";
+                    restore_ls_colors; }},
+     ],
+
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.

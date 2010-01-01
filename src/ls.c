@@ -4164,7 +4164,9 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
             type = C_STICKY;
         }
       else if (S_ISLNK (mode))
-        type = ((!linkok && color_indicator[C_ORPHAN].string)
+        type = ((!linkok
+                 && (!strncmp (color_indicator[C_LINK].string, "target", 6)
+                     || color_indicator[C_ORPHAN].string))
                 ? C_ORPHAN : C_LINK);
       else if (S_ISFIFO (mode))
         type = C_FIFO;

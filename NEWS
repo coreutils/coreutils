@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  ls -l --color no longer prints "argetm" in front of dangling
+  symlinks when the 'LINK target' directive was given to dircolors.
+  [bug introduced in fileutils-4.0]
+
   rm -r --one-file-system works once again.
   The rewrite to make rm use fts introduced a regression whereby
   a commmand of the above form would fail for all subdirectories.
