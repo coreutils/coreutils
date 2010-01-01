@@ -1,6 +1,6 @@
 # Invoke open, but return either a desired file descriptor or -1.
 
-dnl Copyright (C) 2005, 2009 Free Software Foundation, Inc.
+dnl Copyright (C) 2005, 2009-2010 Free Software Foundation, Inc.
 
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,

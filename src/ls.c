@@ -1,5 +1,6 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2009 Free Software Foundation, Inc.
+   Copyright (C) 1985, 1988, 1990-1991, 1995-2010 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

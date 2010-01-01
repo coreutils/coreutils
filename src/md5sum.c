@@ -1,5 +1,5 @@
 /* Compute MD5, SHA1, SHA224, SHA256, SHA384 or SHA512 checksum of files or strings
-   Copyright (C) 1995-2009 Free Software Foundation, Inc.
+   Copyright (C) 1995-2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

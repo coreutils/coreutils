@@ -1,7 +1,7 @@
 #!/bin/sh
 # exercise the fix of 2001-08-18, based on test case from Ian Bruce
 
-# Copyright (C) 2001, 2004, 2006-2009 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2004, 2006-2010 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
