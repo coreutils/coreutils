@@ -8,7 +8,6 @@ ASSORT = LC_ALL=C sort
 EXTRA_DIST =		\
   Coreutils.pm		\
   CuTmpdir.pm		\
-  README		\
   check.mk		\
   envvar-check		\
   lang-default		\
