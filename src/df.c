@@ -161,13 +161,13 @@ print_header (void)
        your translation has the same length as the original.
        Also, each column name translation should end at the same
        column as the corresponding original.  */
-    printf (_("    Inodes   IUsed   IFree IUse%%"));
+    fputs (_("    Inodes   IUsed   IFree IUse%"), stdout);
   else if (human_output_opts & human_autoscale)
     {
       if (human_output_opts & human_base_1024)
-        printf (_("    Size  Used Avail Use%%"));
+        fputs (_("    Size  Used Avail Use%"), stdout);
       else
-        printf (_("     Size   Used  Avail Use%%"));
+        fputs (_("     Size   Used  Avail Use%"), stdout);
     }
   else if (posix_format)
     printf (_(" %s-blocks      Used Available Capacity"),
@@ -205,7 +205,7 @@ print_header (void)
               human_readable (output_block_size, buf, opts, 1, 1));
     }
 
-  printf (_(" Mounted on\n"));
+  fputs (_(" Mounted on\n"), stdout);
 }
 
 /* Is FSTYPE a type of file system that should be listed?  */
