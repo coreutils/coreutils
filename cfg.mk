@@ -243,3 +243,7 @@ sc_prohibit_sleep:
 	  $(_prohibit_regexp)
 
 include $(srcdir)/dist-check.mk
+
+update-copyright-env = \
+  UPDATE_COPYRIGHT_USE_INTERVALS=1 \
+  UPDATE_COPYRIGHT_MAX_LINE_LENGTH=79
