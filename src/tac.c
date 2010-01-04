@@ -633,6 +633,7 @@ main (int argc, char **argv)
   if (! (read_size < half_buffer_size && half_buffer_size < G_buffer_size))
     xalloc_die ();
   G_buffer = xmalloc (G_buffer_size);
+  void *buf = G_buffer;
   if (sentinel_length)
     {
       strcpy (G_buffer, separator);
@@ -661,6 +662,10 @@ main (int argc, char **argv)
   output ((char *) NULL, (char *) NULL);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
-    error (EXIT_FAILURE, errno, "-");
+    {
+      error (0, errno, "-");
+      ok = false;
+    }
+  free (buf);
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
