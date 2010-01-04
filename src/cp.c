@@ -411,8 +411,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
           *slash = '\0';
           missing_dir = (stat (dir, &stats) != 0);
 
-          if (missing_dir | x->preserve_ownership | x->preserve_mode
-              | x->preserve_timestamps)
+          if (missing_dir || x->preserve_ownership || x->preserve_mode
+              || x->preserve_timestamps)
             {
               /* Add this directory to the list of directories whose
                  modes might need fixing later. */
