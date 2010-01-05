@@ -22,7 +22,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   files that was not done from the local system would go unnoticed.
   [bug introduced in coreutils-7.5]
 
-  tail -F (inotify-enabled) would abort when a tailed file is repeated
+  tail -F (inotify-enabled) would abort when a tailed file is repeatedly
   renamed-aside and then recreated.
   [bug introduced in coreutils-7.5]
 
