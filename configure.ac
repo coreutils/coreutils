@@ -18,7 +18,7 @@
 
 dnl Written by Jim Meyering.
 
-AC_PREREQ([2.61])
+AC_PREREQ([2.62])
 
 # Make inter-release version strings look like, e.g., v6.9-219-g58ddd, which
 # indicates that it is built from the 219th delta (in _some_ repository)
@@ -32,7 +32,7 @@ AC_CONFIG_SRCDIR([src/ls.c])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
-AM_INIT_AUTOMAKE([1.11 dist-xz color-tests parallel-tests])
+AM_INIT_AUTOMAKE([1.11.1 dist-xz color-tests parallel-tests])
 AM_SILENT_RULES([yes]) # make --enable-silent-rules the default.
 
 AC_PROG_CC_STDC
