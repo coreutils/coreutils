@@ -2403,10 +2403,10 @@ print_header (void)
   lhs_spaces = available_width >> 1;
   rhs_spaces = available_width - lhs_spaces;
 
-  printf ("\n\n%*.*s%s%*.*s%s%*.*s%s\n\n\n",
-          chars_per_margin, chars_per_margin, " ",
-          date_text, lhs_spaces, lhs_spaces, " ",
-          file_text, rhs_spaces, rhs_spaces, " ", page_text);
+  printf ("\n\n%*s%s%*s%s%*s%s\n\n\n",
+          chars_per_margin, "",
+          date_text, lhs_spaces, " ",
+          file_text, rhs_spaces, " ", page_text);
 
   print_a_header = false;
   output_position = 0;
