@@ -240,8 +240,11 @@ TESTS =						\
   misc/sort-unique				\
   misc/sort-version				\
   misc/split-a					\
+  misc/split-bchunk				\
   misc/split-fail				\
   misc/split-l					\
+  misc/split-lchunk				\
+  misc/split-rchunk				\
   misc/stat-birthtime				\
   misc/stat-fmt					\
   misc/stat-hyphen				\

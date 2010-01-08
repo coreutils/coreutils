@@ -104,7 +104,7 @@
 * shuf: (coreutils)shuf invocation.             Shuffling text files.
 * sleep: (coreutils)sleep invocation.           Delay for a specified time.
 * sort: (coreutils)sort invocation.             Sort text files.
-* split: (coreutils)split invocation.           Split into fixed-size pieces.
+* split: (coreutils)split invocation.           Split into pieces.
 * stat: (coreutils)stat invocation.             Report file(system) status.
 * stdbuf: (coreutils)stdbuf invocation.         Modify stdio buffering.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
@@ -2624,7 +2624,7 @@ These commands output pieces of the input.
 @menu
 * head invocation::             Output the first part of files.
 * tail invocation::             Output the last part of files.
-* split invocation::            Split a file into fixed-size pieces.
+* split invocation::            Split a file into pieces.
 * csplit invocation::           Split a file into context-determined pieces.
 @end menu
 
@@ -2920,15 +2920,15 @@ mean either @samp{tail ./+4} or @samp{tail -n +4}.
 
 
 @node split invocation
-@section @command{split}: Split a file into fixed-size pieces
+@section @command{split}: Split a file into pieces.
 
 @pindex split
 @cindex splitting a file into pieces
 @cindex pieces, splitting a file into
 
-@command{split} creates output files containing consecutive sections of
-@var{input} (standard input if none is given or @var{input} is
-@samp{-}).  Synopsis:
+@command{split} creates output files containing consecutive or interleaved
+sections of @var{input}  (standard input if none is given or @var{input}
+is @samp{-}).  Synopsis:
 
 @example
 split [@var{option}] [@var{input} [@var{prefix}]]
@@ -2941,10 +2941,9 @@ left over for the last section), into each output file.
 The output files' names consist of @var{prefix} (@samp{x} by default)
 followed by a group of characters (@samp{aa}, @samp{ab}, @dots{} by
 default), such that concatenating the output files in traditional
-sorted order by file name produces
-the original input file.  If the output file names are exhausted,
-@command{split} reports an error without deleting the output files
-that it did create.
+sorted order by file name produces the original input file (except
+@option{-r}).  If the output file names are exhausted, @command{split}
+reports an error without deleting the output files that it did create.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -2976,6 +2975,41 @@ possible without exceeding @var{size} bytes.  Individual lines longer than
 @var{size} bytes are broken into multiple files.
 @var{size} has the same format as for the @option{--bytes} option.
 
+@item -n @var{chunks}
+@itemx --number=@var{chunks}
+@opindex -n
+@opindex --number
+
+Split @var{input} to @var{chunks} output files where @var{chunks} may be:
+
+@example
+@var{n}      generate @var{n} files based on current size of @var{input}
+@var{k}/@var{n}    only output @var{k}th of @var{n} to stdout
+l/@var{n}    generate @var{n} files without splitting lines
+l/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
+r/@var{n}    like @samp{l} but use round robin distribution
+r/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
+@end example
+
+Any excess bytes remaining after dividing the @var{input}
+into @var{n} chunks, are assigned to the last chunk.
+Any excess bytes appearing after the initial calculation are discarded
+(except when using @samp{r} mode).
+
+All @var{n} files are created even if there are fewer than @var{n} lines,
+or the @var{input} is truncated.
+
+For @samp{l} mode, chunks are approximately @var{input} size / @var{n}.
+The @var{input} is partitioned into @var{n} equal sized portions, with
+the last assigned any excess.  If a line @emph{starts} within a partition
+it is written completely to the corresponding file.  Since lines
+are not split even if they overlap a partition, the files written
+can be larger or smaller than the partition size, and even empty
+if a line is so long as to completely overlap the partition.
+
+For @samp{r} mode, the size of @var{input} is irrelevant,
+and so can be a pipe for example.
+
 @item -a @var{length}
 @itemx --suffix-length=@var{length}
 @opindex -a
@@ -2987,6 +3021,23 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 @opindex -d
 @opindex --numeric-suffixes
 Use digits in suffixes rather than lower-case letters.
+
+@item -e
+@itemx --elide-empty-files
+@opindex -e
+@opindex --elide-empty-files
+Suppress the generation of zero-length output files.  This can happen
+with the @option{--number} option if a file is (truncated to be) shorter
+than the number requested, or if a line is so long as to completely
+span a chunk.  The output file sequence numbers, always run consecutively
+even when this option is specified.
+
+@item -u
+@itemx --unbuffered
+@opindex -u
+@opindex --unbuffered
+Immediately copy input to output in @option{--number r/...} mode,
+which is a much slower mode of operation.
 
 @itemx --verbose
 @opindex --verbose

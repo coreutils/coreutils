@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   od now prints floating-point numbers without losing information, and
   it no longer omits spaces between floating-point columns in some cases.
 
+** New features
+
+  split accepts the --number option to generate a specific number of files.
+
 
 * Noteworthy changes in release 8.7 (2010-11-13) [stable]
 
