@@ -28,6 +28,9 @@ export VERBOSE = yes
 
 old_NEWS_hash = beab130e9d41bf8014a0594cfe8b28d4
 
+# Add an exemption for sc_makefile_at_at_check.
+_makefile_at_at_check_exceptions = ' && !/^cu_install_program =/'
+
 # Ensure that the list of O_ symbols used to compute O_FULLBLOCK is complete.
 dd = $(srcdir)/src/dd.c
 sc_dd_O_FLAGS:
