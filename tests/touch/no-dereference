@@ -48,8 +48,17 @@ grep '^#define HAVE_LUTIMES' "$CONFIG_HEADER" > /dev/null ||
   skip_test_ 'this system lacks the utimensat function'
 
 # Changing time of dangling symlink is okay.
-touch -h dangling || fail=1
-test -f nowhere && fail=1
+# Skip the test if this fails, but the error text corresponds to
+# ENOSYS (possible with old kernel but new glibc).
+touch -h dangling 2> err
+case $? in
+  0) test -f nowhere && fail=1
+     test -s err && fail=1;;
+  1) grep 'Function not implemented' err \
+       && skip_test_ 'this system lacks the utimensat function'
+     fail=1;;
+  *) fail=1;;
+esac
 
 # Change the mtime of a symlink.
 touch -m -h -d 2009-10-10 link || fail=1
