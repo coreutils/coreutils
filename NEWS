@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Build-related
+
+  Work around a build failure when using buggy <sys/capability.h>.
+  Alternatively, configure with --disable-libcap.
+
 
 * Noteworthy changes in release 8.3 (2010-01-07) [stable]
 

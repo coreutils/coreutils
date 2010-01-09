@@ -39,10 +39,6 @@
 #include <config.h>
 #include <sys/types.h>
 
-#ifdef HAVE_CAP
-# include <sys/capability.h>
-#endif
-
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #endif
@@ -112,6 +108,13 @@
 #include "xstrtol.h"
 #include "areadlink.h"
 #include "mbsalign.h"
+
+/* Include <sys/capability.h> last to avoid a clash of <sys/types.h>
+   include guards with some premature versions of libcap.
+   For more details, see <http://bugzilla.redhat.com/483548>.  */
+#ifdef HAVE_CAP
+# include <sys/capability.h>
+#endif
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
                       : (ls_mode == LS_MULTI_COL \
