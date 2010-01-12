@@ -59,10 +59,6 @@ Integrate use of sendfile, suggested here:
   http://mail.gnu.org/archive/html/bug-fileutils/2003-03/msg00030.html
 I don't plan to do that, since a few tests demonstrate no significant benefit.
 
-Should printf '\0123' print "\n3"?
-  per report from TAKAI Kousuke on Mar 27
-  http://mail.gnu.org/archive/html/bug-coreutils/2003-03/index.html
-
 printf: consider adapting builtins/printf.def from bash
 
 tail: don't use xlseek; it *exits*.
