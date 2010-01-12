@@ -19,6 +19,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   own <wchar.h> header.  Now, gnulib works around the bug in those older
   glibc <wchar.h> headers.
 
+  Building would fail with a link error (cp/copy.o) when XATTR headers
+  were installed without the corresponding library.  Now, configure
+  detects that and disables xattr support, as one would expect.
+
 
 * Noteworthy changes in release 8.3 (2010-01-07) [stable]
 
