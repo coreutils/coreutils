@@ -25,7 +25,7 @@ $PATH is set correctly, which can be done for the current shell like:
 
 * autoconf *
 
-  # Note Autoconf 2.62 or newer is needed to build automake-1.11
+  # Note Autoconf 2.62 or newer is needed to build automake-1.11.1
   git clone --depth=1 git://git.sv.gnu.org/autoconf.git
   git checkout v2.62
   autoreconf -vi
@@ -37,7 +37,7 @@ $PATH is set correctly, which can be done for the current shell like:
   # Note help2man is required to build automake fully
   git clone git://git.sv.gnu.org/automake.git
   cd automake
-  git checkout -b branch-1.11 --track origin/branch-1.11
+  git checkout v1.11.1
   ./bootstrap
   ./configure --prefix=$HOME/coreutils/deps
   make install
