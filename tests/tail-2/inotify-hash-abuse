@@ -46,23 +46,14 @@ echo a > 1 || fail=1
 
 # Wait up to 2s for the buggy tail to die,
 # or for the "tail: `1' has appeared;  following end of new file" output
-dead=0
 for i in $(seq 10); do
-  kill -0 $pid || { dead=1; break; }
+  kill -0 $pid || break
   grep 'has appeared;' out > /dev/null && break
   sleep .2
 done
 
-# Fixed tail will not have aborted.  Kill it.
-test $dead = 0 && kill -HUP $pid
-
-wait $pid
-st=$?
-
-case $st in
-  129) ;;
-  *) echo tail died via unexpected signal: $st; fail=1;;
-esac
+# Kill the working tail, or fail if it has already aborted
+kill $pid || fail=1
 
 cat out
 

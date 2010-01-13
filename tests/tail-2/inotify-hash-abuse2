@@ -36,15 +36,7 @@ for i in $(seq 200); do
   touch f
 done
 
-# Fixed tail will not have aborted.  Kill it.
-kill -HUP $pid
-
-wait $pid
-st=$?
-
-case $st in
-  129) ;;
-  *) echo tail died via unexpected signal: $st; fail=1;;
-esac
+# Kill the working tail, or fail if it has already aborted
+kill $pid || fail=1
 
 Exit $fail
