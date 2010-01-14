@@ -56,10 +56,10 @@ Once all the builds and tests have passed,
   download all tarball/signature pairs and use gpg --verify to ensure
   that they're all valid.
 
-* Push the new tag:
+* Push the NEWS-updating changes and the new tag:
 
     v=$(cat .prev-version)
-    git push origin tag v$v
+    git push origin master tag v$v
 
 * Send the gpg-signed announcement mail, e.g.,
 
