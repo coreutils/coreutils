@@ -1,4 +1,5 @@
 # xattr.m4 - check for Extended Attributes (Linux)
+# serial 3
 
 # Copyright (C) 2003, 2008-2010 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -33,11 +34,11 @@ AC_DEFUN([gl_FUNC_XATTR],
         use_xattr=yes
       fi
     fi
-    AC_DEFINE_UNQUOTED([USE_XATTR], [$use_xattr],
-                       [Define if you want extended attribute support.])
     if test $use_xattr = no; then
       AC_MSG_WARN([libattr development library was not found or not usable.])
       AC_MSG_WARN([AC_PACKAGE_NAME will be built without xattr support.])
     fi
   fi
+  AC_DEFINE_UNQUOTED([USE_XATTR], [`test $use_xattr != yes; echo $?`],
+                     [Define if you want extended attribute support.])
 ])
