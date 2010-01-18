@@ -123,6 +123,7 @@ apply_mode (FILE *stream, const char *mode)
     {
       fprintf (stderr, _("could not set buffering of %s to mode %s\n"),
                fileno_to_name (fileno (stream)), mode);
+      free (buf);
     }
 }
 
