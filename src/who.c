@@ -37,6 +37,10 @@
 #include "hard-locale.h"
 #include "quote.h"
 
+#ifdef TTY_GROUP_NAME
+# include <grp.h>
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "who"
 
@@ -308,6 +312,22 @@ print_line (int userlen, const char *user, const char state,
   free (x_exitstr);
 }
 
+/* Return true if a terminal device given as PSTAT allows other users
+   to send messages to; false otherwise */
+static bool
+is_tty_writable (struct stat const *pstat)
+{
+#ifdef TTY_GROUP_NAME
+  /* Ensure the group of the TTY device matches TTY_GROUP_NAME, more info at
+     https://bugzilla.redhat.com/454261 */
+  struct group *ttygr = getgrnam (TTY_GROUP_NAME);
+  if (!ttygr || (pstat->st_gid != ttygr->gr_gid))
+    return false;
+#endif
+
+  return pstat->st_mode & S_IWGRP;
+}
+
 /* Send properly parsed USER_PROCESS info to print_line.  The most
    recent boot time is BOOTTIME. */
 static void
@@ -346,7 +366,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 
   if (stat (line, &stats) == 0)
     {
-      mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
+      mesg = is_tty_writable (&stats) ? '+' : '-';
       last_change = stats.st_atime;
     }
   else

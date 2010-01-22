@@ -2,6 +2,18 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  who: the "+/-" --mesg (-T) indicator of whether a user/tty is accepting
+  messages could be incorrectly listed as "+", when in fact, the user was
+  not accepting messages (mesg no).  Before, who would examine only the
+  permission bits, and not consider the group of the TTY device file.
+  Thus, if a login tty's group would change somehow e.g., to "root",
+  that would make it unwritable (via write(1)) by normal users, in spite
+  of whatever the permission bits might imply.  Now, when configured
+  using the --with-tty-group[=NAME] option, who also compares the group
+  of the TTY device with NAME (or "tty" if no group name is specified).
+
 
 * Noteworthy changes in release 8.4 (2010-01-13) [stable]
 
