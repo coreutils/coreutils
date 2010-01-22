@@ -23,8 +23,8 @@ fi
 
 . $srcdir/test-lib.sh
 
-grep '^#define HAVE_UTIMENSAT' "$CONFIG_HEADER" > /dev/null ||
-grep '^#define HAVE_LUTIMES' "$CONFIG_HEADER" > /dev/null ||
+grep '^#define HAVE_UTIMENSAT 1' "$CONFIG_HEADER" > /dev/null ||
+grep '^#define HAVE_LUTIMES 1' "$CONFIG_HEADER" > /dev/null ||
   skip_test_ 'this system lacks the utimensat function'
 
 ln -s no-such dangle || framework_failure

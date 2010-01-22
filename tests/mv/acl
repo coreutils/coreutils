@@ -28,7 +28,7 @@ fi
 require_acl_
 
 # Skip this test if cp was built without ACL support:
-grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null &&
+grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
   skip_test_ "insufficient ACL support"
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
@@ -46,7 +46,7 @@ setfacl -m user:bin:rw $t1 || skip_partition=$other_partition_tmpdir
 acl1=`getfacl file` || skip_partition=.
 
 test $skip_partition != none &&
-  skip_test_ "'$skip' is not on a suitable file system for this test"
+  skip_test_ "'$skip_partition' is not on a suitable file system for this test"
 
 # move the access acl of a file
 mv file "$other_partition_tmpdir" || fail=1

@@ -30,7 +30,7 @@ fi
 require_acl_
 
 # Skip this test if cp was built without ACL support:
-grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null &&
+grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
   skip_test_ "insufficient ACL support"
 
 mkdir -p a b || framework_failure

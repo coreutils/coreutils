@@ -43,8 +43,8 @@ touch -h -r dangling file || fail=1
 test -f nowhere && fail=1
 
 # The remaining tests of -h require kernel support for changing symlink times.
-grep '^#define HAVE_UTIMENSAT' "$CONFIG_HEADER" > /dev/null ||
-grep '^#define HAVE_LUTIMES' "$CONFIG_HEADER" > /dev/null ||
+grep '^#define HAVE_UTIMENSAT 1' "$CONFIG_HEADER" > /dev/null ||
+grep '^#define HAVE_LUTIMES 1' "$CONFIG_HEADER" > /dev/null ||
   skip_test_ 'this system lacks the utimensat function'
 
 # Changing time of dangling symlink is okay.
