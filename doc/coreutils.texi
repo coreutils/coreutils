@@ -197,7 +197,7 @@ Free Documentation License''.
 * File name manipulation::       dirname basename pathchk mktemp
 * Working context::              pwd stty printenv tty
 * User information::             id logname whoami groups users who
-* System context::               date arch uname hostname hostid uptime
+* System context::               date arch nproc uname hostname hostid uptime
 * SELinux context::              chcon runcon
 * Modified command invocation::  chroot env nice nohup stdbuf su timeout
 * Process control::              kill
