@@ -28,65 +28,81 @@ fi
 require_root_
 
 cwd=`pwd`
-cleanup_() { cd /; umount "$cwd/mnt"; }
+cleanup_() { cd /; umount "$cwd/noxattr"; umount "$cwd/xattr"; }
 
 skip=0
-# Create a file system without user xattr support, then mount it.
-dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
-                                             || skip=1
-mkdir mnt                                    || skip=1
-mkfs -t ext2 -F blob ||
-  skip_test_ "failed to create ext2 file system"
 
-mount -oloop,nouser_xattr blob mnt           || skip=1
-echo test > mnt/f                            || skip=1
-test -s mnt/f                                || skip=1
+# Mount an ext2 loopback file system at $WHERE with $OPTS
+make_fs() {
+  where="$1"
+  opts="$2"
 
-test $skip = 1 \
-    && skip_test_ "insufficient mount/ext2 support"
+  fs="$where.bin"
+
+  dd if=/dev/zero of="$fs" bs=8192 count=200 > /dev/null 2>&1 \
+                                                 || skip=1
+  mkdir "$where"                                 || skip=1
+  mkfs -t ext2 -F "$fs" ||
+    skip_test_ "failed to create ext2 file system"
+  mount -oloop,$opts "$fs" "$where"              || skip=1
+  echo test > "$where"/f                         || skip=1
+  test -s "$where"/f                             || skip=1
+
+  test $skip = 1 &&
+    skip_test_ "insufficient mount/ext2 support"
+}
+
+make_fs noxattr nouser_xattr
+make_fs xattr   user_xattr
 
 # testing xattr name-value pair
 xattr_name="user.foo"
 xattr_value="bar"
 xattr_pair="$xattr_name=\"$xattr_value\""
 
-echo test > a || framework_failure
-getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
+echo test > xattr/a || framework_failure
+getfattr -d xattr/a >out_a || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_a >/dev/null && framework_failure
-setfattr -n "$xattr_name" -v "$xattr_value" a >out_a \
+setfattr -n "$xattr_name" -v "$xattr_value" xattr/a >out_a \
   || skip_test_ "failed to set xattr of file"
-getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
+getfattr -d xattr/a >out_a || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_a >/dev/null \
   || skip_test_ "failed to set xattr of file"
 
 
 # This should pass without diagnostics
-cp -a a mnt/ 2>err  || fail=1
-test -s mnt/a       || fail=1  # destination file must not be empty
+cp -a xattr/a noxattr/ 2>err || fail=1
+test -s noxattr/a   || fail=1  # destination file must not be empty
 test -s err         && fail=1  # there must be no stderr output
 
-rm -f err mnt/a
+rm -f err noxattr/a
 
 # This should pass without diagnostics
-cp --preserve=all a mnt/ 2>err  || fail=1
-test -s mnt/a       || fail=1  # destination file must not be empty
+cp --preserve=all xattr/a noxattr/ 2>err || fail=1
+test -s noxattr/a   || fail=1  # destination file must not be empty
 test -s err         && fail=1  # there must be no stderr output
 
-rm -f err mnt/a
+rm -f err noxattr/a
 
 # This should fail with coresponding diagnostics
-cp -a --preserve=xattr a mnt/ 2>err  && fail=1
-cat <<\EOF > exp || fail=1
-cp: setting attributes for `mnt/a': Operation not supported
+cp -a --preserve=xattr xattr/a noxattr/ 2>err && fail=1
+if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+cat <<\EOF > exp
+cp: setting attributes for `noxattr/a': Operation not supported
 EOF
+else
+cat <<\EOF > exp
+cp: cannot preserve extended attributes, cp is built without xattr support
+EOF
+fi
 
 compare err exp     || fail=1
 
-rm -f err mnt/a
+rm -f err noxattr/a
 
 # This should pass without diagnostics
-mv a mnt/ 2>err     || fail=1
-test -s mnt/a       || fail=1  # destination file must not be empty
-test -s err         && fail=1  # there must be no stderr output
+mv xattr/a noxattr/ 2>err || fail=1
+test -s noxattr/a         || fail=1  # destination file must not be empty
+test -s err               && fail=1  # there must be no stderr output
 
 Exit $fail
