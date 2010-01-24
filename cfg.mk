@@ -93,7 +93,8 @@ sc_root_tests:
 # stays in sync with corresponding files in the repository.
 sce = syntax_check_exceptions
 sc_x_sc_dist_check:
-	@test "$$( ($(VC_LIST) | sed -n '/^.x-sc_/p';			\
+	@test "$$( ($(VC_LIST) | sed -n '/\.x-sc_/p'			\
+		     | sed 's|^$(_dot_escaped_srcdir)/||';		\
 		   sed -n '/^$(sce) =[	 ]*\\$$/,/[^\]$$/p'		\
 		     $(srcdir)/Makefile.am				\
 		       | sed 's/^  *//;/^$(sce) =/d'			\
