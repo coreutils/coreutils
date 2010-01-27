@@ -272,7 +272,10 @@ xfields (struct line *line)
 static void
 freeline (struct line *line)
 {
+  if (line == NULL)
+    return;
   free (line->fields);
+  line->fields = NULL;
   free (line->buf.buffer);
   line->buf.buffer = NULL;
 }
@@ -486,12 +489,10 @@ delseq (struct seq *seq)
 {
   size_t i;
   for (i = 0; i < seq->alloc; i++)
-    if (seq->lines[i])
-      {
-        if (seq->lines[i]->buf.buffer)
-          freeline (seq->lines[i]);
-        free (seq->lines[i]);
-      }
+    {
+      freeline (seq->lines[i]);
+      free (seq->lines[i]);
+    }
   free (seq->lines);
 }
 
@@ -604,11 +605,8 @@ static void
 join (FILE *fp1, FILE *fp2)
 {
   struct seq seq1, seq2;
-  struct line **linep = xmalloc (sizeof *linep);
   int diff;
-  bool eof1, eof2, checktail;
-
-  *linep = NULL;
+  bool eof1, eof2;
 
   /* Read the first line of each file.  */
   initseq (&seq1);
@@ -691,25 +689,26 @@ join (FILE *fp1, FILE *fp2)
         seq2.count = 0;
     }
 
-  /* If the user did not specify --check-order, and the we read the
+  /* If the user did not specify --check-order, then we read the
      tail ends of both inputs to verify that they are in order.  We
      skip the rest of the tail once we have issued a warning for that
      file, unless we actually need to print the unpairable lines.  */
+  struct line *line = NULL;
+  bool checktail = false;
+
   if (check_input_order != CHECK_ORDER_DISABLED
       && !(issued_disorder_warning[0] && issued_disorder_warning[1]))
     checktail = true;
-  else
-    checktail = false;
 
   if ((print_unpairables_1 || checktail) && seq1.count)
     {
       if (print_unpairables_1)
         prjoin (seq1.lines[0], &uni_blank);
       seen_unpairable = true;
-      while (get_line (fp1, linep, 1))
+      while (get_line (fp1, &line, 1))
         {
           if (print_unpairables_1)
-            prjoin (*linep, &uni_blank);
+            prjoin (line, &uni_blank);
           if (issued_disorder_warning[0] && !print_unpairables_1)
             break;
         }
@@ -720,18 +719,18 @@ join (FILE *fp1, FILE *fp2)
       if (print_unpairables_2)
         prjoin (&uni_blank, seq2.lines[0]);
       seen_unpairable = true;
-      while (get_line (fp2, linep, 2))
+      while (get_line (fp2, &line, 2))
         {
           if (print_unpairables_2)
-            prjoin (&uni_blank, *linep);
+            prjoin (&uni_blank, line);
           if (issued_disorder_warning[1] && !print_unpairables_2)
             break;
         }
     }
 
-  free (*linep);
+  freeline (line);
+  free (line);
 
-  free (linep);
   delseq (&seq1);
   delseq (&seq2);
 }
