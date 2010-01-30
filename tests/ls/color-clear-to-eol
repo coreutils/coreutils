@@ -29,7 +29,7 @@ touch $long_name || framework_failure
 e='\33'
 color_code='0;31;42'
 c_pre="$e[0m$e[${color_code}m"
-c_post="$e[0m$e[K\n$e[m"
+c_post="$e[0m$e[K\n"
 printf "$c_pre$long_name$c_post\n" > exp || framework_failure
 
 env TERM=xterm COLUMNS=80 LS_COLORS="*.foo=$color_code" TIME_STYLE=+T \

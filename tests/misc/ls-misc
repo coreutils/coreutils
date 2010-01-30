@@ -156,10 +156,10 @@ my @Tests =
 
      # Test for a bug that was fixed in coreutils-4.5.4.
      ['sl-F-color', '-F --color=always d',
-                                 {OUT => "$e\e[01;36md$e\@\n\e[m"},
+                                 {OUT => "$e\e[01;36md$e\@\n"},
                                   $slink_d, $unlink_d],
      ['sl-dF-color', '-dF --color=always d',
-                                 {OUT => "$e\e[01;36md$e\@\n\e[m"},
+                                 {OUT => "$e\e[01;36md$e\@\n"},
                                   $slink_d, $unlink_d],
 
      # A listing with no output should have no color sequences at all.
@@ -169,12 +169,12 @@ my @Tests =
 
      # Test for a bug fixed after coreutils-6.9.
      ['sl-target', '--color=always d',
-      {OUT => "$e\e[01;34mX$e\n\e[m"}, $target, $target2],
+      {OUT => "$e\e[01;34mX$e\n"}, $target, $target2],
 
      # Test for another bug fixed after coreutils-6.9.
      # This one bites only for a system/file system with d_type support.
      ['sl-dangle', '--color=always d',
-      {OUT => "$e\e[40;31;01mX$e\n\e[m"},
+      {OUT => "$e\e[40;31;01mX$e\n"},
       {PRE => sub {
                 mkdir 'd',0755 or die "d: $!\n";
                 symlink 'non-existent', 'd/X' or die "d/X: $!\n";
@@ -197,7 +197,7 @@ my @Tests =
      ],
      ['sl-dangle3', '-o --color=always l',
       {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
-      {OUT => "$e\e[40ml$e -> \e[34mnowhere$e\n\e[m"},
+      {OUT => "$e\e[40ml$e -> \e[34mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=target:or=40:mi=34:')
        }},
@@ -206,7 +206,7 @@ my @Tests =
      ],
      ['sl-dangle4', '-o --color=always l',
       {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
-      {OUT => "$e\e[36ml$e -> \e[35mnowhere$e\n\e[m"},
+      {OUT => "$e\e[36ml$e -> \e[35mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=34:mi=35:or=36:')
        }},
@@ -215,7 +215,7 @@ my @Tests =
      ],
      ['sl-dangle5', '-o --color=always l',
       {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
-      {OUT => "$e\e[34ml$e -> \e[35mnowhere$e\n\e[m"},
+      {OUT => "$e\e[34ml$e -> \e[35mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=34:mi=35:')
        }},
@@ -227,7 +227,7 @@ my @Tests =
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.
      ['color-exe1', '--color=always j',
-                                 {OUT => "$e\e[01;32md$e\n\e[m"},
+                                 {OUT => "$e\e[01;32md$e\n"},
                                   $exe_in_subdir, $remove_j],
 
      # From Stéphane Chazelas.
@@ -245,7 +245,6 @@ my @Tests =
             . "\e[30;43msetgid$e\n"
             . "\e[37;41msetuid$e\n"
             . "\e[37;44msticky$e\n"
-            . "\e[m"
          },
 
         {POST => sub {

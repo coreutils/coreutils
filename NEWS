@@ -14,6 +14,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   using the --with-tty-group[=NAME] option, who also compares the group
   of the TTY device with NAME (or "tty" if no group name is specified).
 
+** Changes in behavior
+
+  ls --color no longer emits the final 3-byte color-resetting escape
+  sequence when it would be a no-op.
+
 
 * Noteworthy changes in release 8.4 (2010-01-13) [stable]
 

@@ -1442,7 +1442,15 @@ main (int argc, char **argv)
       int j;
 
       if (used_color)
-        restore_default_color ();
+        {
+          /* Skip the restore when it would be a no-op, i.e.,
+             when left is "\033[" and right is "m".  */
+          if (!(color_indicator[C_LEFT].len == 2
+                && memcmp (color_indicator[C_LEFT].string, "\033[", 2) == 0
+                && color_indicator[C_RIGHT].len == 1
+                && color_indicator[C_RIGHT].string[0] == 'm'))
+            restore_default_color ();
+        }
       fflush (stdout);
 
       /* Restore the default signal handling.  */

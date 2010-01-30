@@ -30,7 +30,6 @@ code_mh='44;37'
 code_ex='01;32'
 code_png='01;35'
 c0=$(printf '\033[0m')
-c_end=$(printf '\033[m')
 c_mh=$(printf '\033[%sm' $code_mh)
 c_ex=$(printf '\033[%sm' $code_ex)
 c_png=$(printf '\033[%sm' $code_png)
@@ -44,7 +43,7 @@ compare out out_ok || fail=1
 LS_COLORS="mh=$code_mh" ls -U1 --color=always file1 file2 > out || fail=1
 printf "$c0${c_mh}file1$c0
 ${c_mh}file2$c0
-$c_end" > out_ok || framework_failure
+" > out_ok || framework_failure
 compare out out_ok || fail=1
 
 # hard links and png (hard link coloring takes precedence)
@@ -53,7 +52,7 @@ LS_COLORS="mh=$code_mh:*.png=$code_png" ls -U1 --color=always file1 file2.png \
   > out || fail=1
 printf "$c0${c_mh}file1$c0
 ${c_mh}file2.png$c0
-$c_end" > out_ok || framework_failure
+" > out_ok || framework_failure
 compare out out_ok || fail=1
 
 # hard links and exe (exe coloring takes precedence)
@@ -63,7 +62,7 @@ LS_COLORS="mh=$code_mh:*.png=$code_png:ex=$code_ex" \
 chmod a-x file2.png || framework_failure
 printf "$c0${c_ex}file1$c0
 ${c_ex}file2.png$c0
-$c_end" > out_ok || framework_failure
+" > out_ok || framework_failure
 compare out out_ok || fail=1
 
 # hard links and png (hard link coloring disabled => png coloring enabled)
@@ -71,7 +70,7 @@ LS_COLORS="mh=00:*.png=$code_png" ls -U1 --color=always file1 file2.png > out \
   || fail=1
 printf "file1
 $c0${c_png}file2.png$c0
-$c_end" > out_ok || framework_failure
+" > out_ok || framework_failure
 compare out out_ok || fail=1
 
 # hard links and png (hard link coloring not enabled explicitly => png coloring)
@@ -79,7 +78,7 @@ LS_COLORS="*.png=$code_png" ls -U1 --color=always file1 file2.png > out \
   || fail=1
 printf "file1
 $c0${c_png}file2.png$c0
-$c_end" > out_ok || framework_failure
+" > out_ok || framework_failure
 compare out out_ok || fail=1
 
 Exit $fail

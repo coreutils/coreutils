@@ -46,7 +46,6 @@ grep '^stat("x"' err && fail=1
 {
   printf '\033[0m\033[01;35mlink-to-x\033[0m@\n'
   printf '\033[01;32mx\033[0m*\n'
-  printf '\033[m'
 } > exp || fail=1
 
 compare out exp || fail=1
