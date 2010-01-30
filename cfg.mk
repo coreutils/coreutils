@@ -134,7 +134,10 @@ headers_with_interesting_macro_defs = \
 # Don't define macros that we already get from gnulib header files.
 sc_always_defined_macros: .re-defmac
 	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0 1 2 3 15;	\
+	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0;			\
+	  am__exit='(exit $rc); exit $rc';				\
+	  trap "rc=129; $$am__exit" 1; trap "rc=130; $$am__exit" 2;	\
+	  trap "rc=131; $$am__exit" 3; trap "rc=143; $$am__exit" 15;	\
 	  grep -f .re-defmac $$($(VC_LIST))				\
 	    && { echo '$(ME): define the above via some gnulib .h file'	\
 		  1>&2;  exit 1; } || :;				\
@@ -153,7 +156,10 @@ sc_always_defined_macros: .re-defmac
 # the headers already included via system.h.
 sc_system_h_headers: .re-list
 	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0 1 2 3 15;		\
+	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0;			\
+	  am__exit='(exit $rc); exit $rc';				\
+	  trap "rc=129; $$am__exit" 1; trap "rc=130; $$am__exit" 2;	\
+	  trap "rc=131; $$am__exit" 3; trap "rc=143; $$am__exit" 15;	\
 	  grep -nE -f .re-list						\
 	      $$($(VC_LIST_EXCEPT) | grep '^src/')			\
 	    && { echo '$(ME): the above are already included via system.h'\

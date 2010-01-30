@@ -408,7 +408,10 @@ remove_tmp_()
 # Run each test from within a temporary sub-directory named after the
 # test itself, and arrange to remove it upon exception or normal exit.
 trap remove_tmp_ 0
-trap 'Exit $?' 1 2 13 15
+trap 'Exit 129' 1
+trap 'Exit 130' 2
+trap 'Exit 141' 13
+trap 'Exit 143' 15
 
 cd "$t_" || error_ "failed to cd to $t_"
 

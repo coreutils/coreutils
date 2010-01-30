@@ -721,7 +721,10 @@ sc_check-AUTHORS: $(all_programs)
 .PHONY: sc_tight_scope
 sc_tight_scope: $(bin_PROGRAMS)
 	@t=exceptions-$$$$;						\
-	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
+	trap 's=$$?; rm -f $$t; exit $$s' 0;				\
+	am__exit='(exit $s); exit $s';					\
+	trap "s=129; $$am__exit" 1; trap "s=130; $$am__exit" 2;		\
+	trap "s=141; $$am__exit" 13; trap "s=143; $$am__exit" 15;	\
 	src=`for f in $(SOURCES); do					\
 	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
 	hdr=`for f in $(noinst_HEADERS); do				\
