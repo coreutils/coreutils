@@ -212,7 +212,8 @@ the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
 \n\
 Important: FILE1 and FILE2 must be sorted on the join fields.\n\
-E.g., use `sort -k 1b,1' if `join' has no options.\n\
+E.g., use ` sort -k 1b,1 ' if `join' has no options,\n\
+or use ` join -t '' ' if `sort' has no options.\n\
 Note, comparisons honor the rules specified by `LC_COLLATE'.\n\
 If the input is not sorted and some lines cannot be joined, a\n\
 warning message will be given.\n\
@@ -1040,8 +1041,8 @@ main (int argc, char **argv)
           {
             unsigned char newtab = optarg[0];
             if (! newtab)
-              error (EXIT_FAILURE, 0, _("empty tab"));
-            if (optarg[1])
+              newtab = '\n'; /* '' => process the whole line.  */
+            else if (optarg[1])
               {
                 if (STREQ (optarg, "\\0"))
                   newtab = '\0';

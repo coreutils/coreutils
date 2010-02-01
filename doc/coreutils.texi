@@ -5462,6 +5462,8 @@ locales and options if the output of @command{sort} is fed to
 sort a file on its default join field, but if you select a non-default
 locale, join field, separator, or comparison options, then you should
 do so consistently between @command{join} and @command{sort}.
+If @samp{join -t ''} is specified then the whole line is considered which
+matches the default operation of sort.
 
 If the input has no unpairable lines, a @acronym{GNU} extension is
 available; the sort order can be any order that considers two fields
@@ -5572,7 +5574,10 @@ option---are subject to the specified @var{field-list}.
 Use character @var{char} as the input and output field separator.
 Treat as significant each occurrence of @var{char} in the input file.
 Use @samp{sort -t @var{char}}, without the @option{-b} option of
-@samp{sort}, to produce this ordering.
+@samp{sort}, to produce this ordering.  If @samp{join -t ''} is specified,
+the whole line is considered, matching the default operation of sort.
+If @samp{-t '\0'} is specified then the @acronym{ASCII} @sc{nul}
+character is used to delimit the fields.
 
 @item -v @var{file-number}
 Print a line for each unpairable line in file @var{file-number}

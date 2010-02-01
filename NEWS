@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --color no longer emits the final 3-byte color-resetting escape
   sequence when it would be a no-op.
 
+  join -t '' no longer emits an error and instead operates on
+  each line as a whole (even if they contains NUL characters).
+
 
 * Noteworthy changes in release 8.4 (2010-01-13) [stable]
 

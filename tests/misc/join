@@ -51,6 +51,11 @@ my @tv = (
 
 ['3a', '-t:', ["a:1\nb:1\n", "a:2:\nb:2:\n"], "a:1:2:\nb:1:2:\n", 0],
 
+# operate on whole line (as sort does by default)
+['3b', '-t ""', ["a 1\nb 1\n", "a 1\nb 2\n"], "a 1\n", 0],
+# use NUL as the field delimiter
+['3c', '-t "\\0"', ["a\0a\n", "a\0b\n"], "a\0a\0b\n", 0],
+
 # Just like -a1 and -a2 when there are no pairable lines
 ['4a', '-v 1', ["a 1\n", "b\n"],   "a 1\n",          0],
 ['4b', '-v 2', ["a 1\n", "b\n"],   "b\n",            0],
