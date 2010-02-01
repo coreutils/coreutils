@@ -23,7 +23,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   sequence when it would be a no-op.
 
   join -t '' no longer emits an error and instead operates on
-  each line as a whole (even if they contains NUL characters).
+  each line as a whole (even if they contain NUL characters).
 
 
 * Noteworthy changes in release 8.4 (2010-01-13) [stable]
