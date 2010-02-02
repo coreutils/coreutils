@@ -42,17 +42,17 @@ device=$(df -P --local . | tail -n1 | cut -d' ' -f1) ||
 dev_size=$(get_device_size "$device") ||
   skip_test_ "failed to determine size of $device"
 
-# Don't use shell arithimetic as older version of dash use longs
+# Don't use shell arithmetic as older versions of dash use longs
 DEV_OFLOW=$(expr $dev_size + 1)
 
-timeout 1 dd bs=1 skip=$DEV_OFLOW count=0 status=noxfer < "$device" 2> err
+timeout 10 dd bs=1 skip=$DEV_OFLOW count=0 status=noxfer < "$device" 2> err
 test "$?" = "1" || fail=1
 echo "dd: \`standard input': cannot skip: Invalid argument
 0+0 records in
 0+0 records out" > err_ok || framework_failure
 compare err_ok err || fail=1
 
-timeout 1 dd bs=1 seek=$DEV_OFLOW count=0 status=noxfer > "$device" 2> err
+timeout 10 dd bs=1 seek=$DEV_OFLOW count=0 status=noxfer > "$device" 2> err
 test "$?" = "1" || fail=1
 echo "dd: \`standard output': cannot seek: Invalid argument
 0+0 records in

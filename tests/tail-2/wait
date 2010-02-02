@@ -30,11 +30,11 @@ touch k || framework_failure
 
 
 for inotify in ---disable-inotify ''; do
-  timeout 1 tail -s0.1 -f $inotify not_here
+  timeout 10 tail -s0.1 -f $inotify not_here
   test $? = 124 && fail=1
 
   if test ! -r unreadable; then # can't test this when root
-    timeout 1 tail -s0.1 -f $inotify unreadable
+    timeout 10 tail -s0.1 -f $inotify unreadable
     test $? = 124 && fail=1
   fi
 

@@ -24,7 +24,7 @@ fi
 . $srcdir/test-lib.sh
 
 # no timeout
-timeout 1 true || fail=1
+timeout 10 true || fail=1
 
 # no timeout (suffix check)
 timeout 1d true || fail=1
@@ -33,12 +33,11 @@ timeout 1d true || fail=1
 timeout 0 true || fail=1
 
 # exit status propagation
-timeout 1 false && fail=1
-timeout 1 sh -c 'exit 2'
+timeout 10 sh -c 'exit 2'
 test $? = 2 || fail=1
 
 # timeout
-timeout 1 sleep 2
+timeout 1 sleep 10
 test $? = 124 || fail=1
 
 # Ensure `timeout` is immune to parent's SIGCHLD handler
@@ -47,7 +46,7 @@ test $? = 124 || fail=1
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
   sig=`"$abs_top_builddir/src/kill" -l CHLD 2>/dev/null` && trap '' $sig
 
-  exec timeout 1 true
+  exec timeout 10 true
 ) || fail=1
 
 Exit $fail
