@@ -587,10 +587,11 @@ copy_reg (char const *src_name, char const *dst_name,
          lstat'ing the DST_NAME shows that it is a symlink, then we
          have a problem: trying to resolve this dangling symlink to
          a directory/destination-entry pair is fundamentally racy,
-         so punt.  If POSIXLY_CORRECT is set, simply call open again,
-         but without O_EXCL (potentially dangerous).  If not, fail
-         with a diagnostic.  These shenanigans are necessary only
-         when copying, i.e., not in move_mode.  */
+         so punt.  If x->open_dangling_dest_symlink is set (cp sets
+         that when POSIXLY_CORRECT is set in the environment), simply
+         call open again, but without O_EXCL (potentially dangerous).
+         If not, fail with a diagnostic.  These shenanigans are necessary
+         only when copying, i.e., not in move_mode.  */
       if (dest_desc < 0 && dest_errno == EEXIST && ! x->move_mode)
         {
           struct stat dangling_link_sb;
