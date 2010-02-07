@@ -13,21 +13,29 @@ Here are most of the steps we (maintainers) follow when making a release.
 * Ensure that you're on "master" with no uncommitted diffs.
   This should produce no output: git checkout master; git diff
 
-* Run bootstrap: ./bootstrap
+* Run bootstrap one last time.  This downloads any new translations:
+
+    ./bootstrap
 
 FIXME: enable excluded programs like arch? to get their manual pages?
 
 * Pre-release testing:
-  Ensure that make check syntax-check succeeds.
-  On at least one SELinux-enabled (enforcing) and one non-SELinux system,
-    run all tests, both root-only and regular.
-  Run *all* non-root tests, including expensive and very expensive ones i.e.,
-    run this: make -j1 check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
 
-  Run the root-only tests:
-  sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
+  Run the following on at least one SELinux-enabled (enforcing) and
+  one non-SELinux system:
 
-* Run "make distcheck"
+    make distcheck
+    make -j1 check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
+    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
+
+  Note the -j1 above.  If you use -jN, for larger N, some of the expensive
+  tests are likely to interfere with concurrent performance-measuring or
+  timing-sensitive tests, resulting in spurious failures.
+
+  If "make distcheck" doesn't run "make syntax-check" for you, then run
+  it manually:
+
+    make syntax-check
 
 * Set the date, version number, and release type [stable/alpha/beta] on
   line 3 of NEWS, commit that, and tag the release by running e.g.,
