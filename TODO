@@ -34,6 +34,9 @@ printf:
   platforms where the native *printf(3) is deficient.
   Suggestion from Eric Blake.
 
+consider adding some implementation of the "col" utility
+  Suggested by Karl Berry.
+
 renice: POSIX utility, needs implementing.
   suggestion from Karl Berry (among others).
   Bob Proulx is working on this.
