@@ -202,12 +202,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -R, -r, --recursive          copy directories recursively\n\
-      --reflink[=WHEN]         control clone/CoW copies. See below.\n\
+      --reflink[=WHEN]         control clone/CoW copies. See below\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
 "), stdout);
       fputs (_("\
-      --sparse=WHEN            control creation of sparse files. See below.\n\
+      --sparse=WHEN            control creation of sparse files. See below\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
 "), stdout);

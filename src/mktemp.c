@@ -87,7 +87,7 @@ If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
                         specified, use $TMPDIR if set, else /tmp.  With\n\
                         this option, TEMPLATE must not be an absolute name.\n\
                         Unlike with -t, TEMPLATE may contain slashes, but\n\
-                        mktemp creates only the final component.\n\
+                        mktemp creates only the final component\n\
 "), stdout);
       fputs ("\n", stdout);
       fputs (_("\

@@ -61,11 +61,10 @@ Usage: %s [OPTION]... [FILE]\n\
 Base64 encode or decode FILE, or standard input, to standard output.\n\
 \n"), program_name);
       fputs (_("\
+  -d, --decode          Decode data\n\
+  -i, --ignore-garbage  When decoding, ignore non-alphabet characters\n\
   -w, --wrap=COLS       Wrap encoded lines after COLS character (default 76).\n\
-                        Use 0 to disable line wrapping.\n\
-\n\
-  -d, --decode          Decode data.\n\
-  -i, --ignore-garbage  When decoding, ignore non-alphabet characters.\n\
+                          Use 0 to disable line wrapping\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

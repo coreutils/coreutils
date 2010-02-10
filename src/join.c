@@ -197,8 +197,8 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   --check-order     check that the input is correctly sorted, even\n\
                       if all input lines are pairable\n\
   --nocheck-order   do not check that the input is correctly sorted\n\
-  --header          treat first line in each file as field header line,\n\
-                      print them without trying to pair them.\n\
+  --header          treat the first line in each file as field headers,\n\
+                      print them without trying to pair them\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

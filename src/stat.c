@@ -984,7 +984,7 @@ Display file or file system status.\n\
                           output a newline after each use of FORMAT\n\
       --printf=FORMAT   like --format, but interpret backslash escapes,\n\
                           and do not output a mandatory trailing newline.\n\
-                          If you want a newline, include \\n in FORMAT.\n\
+                          If you want a newline, include \\n in FORMAT\n\
   -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

@@ -2783,7 +2783,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -COLUMN, --columns=COLUMN\n\
                     output COLUMN columns and print columns down,\n\
                     unless -a is used. Balance number of lines in the\n\
-                    columns on each page.\n\
+                    columns on each page\n\
 "), stdout);
       fputs (_("\
   -a, --across      print columns across rather than down, used together\n\
