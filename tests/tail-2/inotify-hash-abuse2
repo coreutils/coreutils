@@ -28,7 +28,8 @@ touch f || framework_failure
 
 debug='---disable-inotify -s .001'
 debug=
-timeout 10 tail $debug -F f & pid=$!
+tail $debug -F f & pid=$!
+cleanup_() { kill $pid; }
 
 for i in $(seq 200); do
   kill -0 $pid || break;
