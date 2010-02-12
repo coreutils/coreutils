@@ -642,6 +642,11 @@ all_programs.list:
 # install a binary, require that all programs be built at distribution time.
 dist-hook: $(all_programs)
 
+# Ensure that all programs are built so we can for example
+# subsequently syntax check all man pages.
+.PHONY: all_programs
+all_programs: $(all_programs)
+
 pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list

@@ -98,9 +98,9 @@ Run COMMAND, with modified buffering operations for its standard streams.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -i, --input=MODE   Adjust standard input stream buffering\n\
-  -o, --output=MODE  Adjust standard output stream buffering\n\
-  -e, --error=MODE   Adjust standard error stream buffering\n\
+  -i, --input=MODE   adjust standard input stream buffering\n\
+  -o, --output=MODE  adjust standard output stream buffering\n\
+  -e, --error=MODE   adjust standard error stream buffering\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

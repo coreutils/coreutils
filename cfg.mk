@@ -171,6 +171,15 @@ ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
 	@$(MAKE) -C src $@
 
+# Option descriptions should not start with a capital letter
+# One could grep source directly as follows:
+# grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
+# but that would miss descriptions not on the same line as the -option.
+ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
+sc_option_desc_uppercase:
+	@$(MAKE) -s -C src all_programs
+	@$(MAKE) -s -C man $@
+
 # Perl-based tests used to exec perl from a #!/bin/sh script.
 # Now they all start with #!/usr/bin/perl and the portability
 # infrastructure is in tests/Makefile.am.  Make sure no old-style

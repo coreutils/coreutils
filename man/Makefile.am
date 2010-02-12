@@ -173,6 +173,13 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	    ;;							\
 	esac
 
+# Option descriptions should not start with a capital letter
+.PHONY: sc_option_desc_uppercase
+sc_option_desc_uppercase: $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT:%=%.1)
+	@grep '^\\fB\\-' -A1 *.1 | LC_ALL=C grep '\.1.[A-Z][a-z]' && \
+	    { echo 1>&2 '$(ME): found initial capitals in --help';   \
+	      exit 1; } || :;
+
 distcheck-hook: check-x-vs-1 check-programs-vs-x
 
 # Sort in traditional ASCII order, regardless of the current locale;
