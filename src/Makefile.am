@@ -635,6 +635,7 @@ built_programs.list:
 
 all_programs.list:
 	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	  | sed /libstdbuf/d \
 	  | $(ASSORT) -u
 
 # This is required because we have broken inter-directory dependencies:

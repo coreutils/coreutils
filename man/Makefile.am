@@ -180,7 +180,8 @@ sc_option_desc_uppercase: $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT:%=%.1)
 	    { echo 1>&2 '$(ME): found initial capitals in --help';   \
 	      exit 1; } || :;
 
-distcheck-hook: check-x-vs-1 check-programs-vs-x
+.PHONY: sc_man_file_correlation
+sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
 
 # Sort in traditional ASCII order, regardless of the current locale;
 # otherwise we may get into trouble with distinct strings that the
@@ -193,7 +194,7 @@ ASSORT = LC_ALL=C sort
 # add them here manually.
 .PHONY: check-x-vs-1
 check-x-vs-1:
-	$(AM_V_GEN)PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;	\
+	@PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;		\
 	t=$@-t;								\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
 	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
@@ -207,7 +208,7 @@ all_programs =								\
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
-	$(AM_V_GEN)status=0;				\
+	@status=0;					\
 	for p in dummy `$(all_programs)`; do		\
 	  test $$p = dummy && continue;			\
 	  test $$p = ginstall && p=install || : ;	\

@@ -180,6 +180,12 @@ sc_option_desc_uppercase:
 	@$(MAKE) -s -C src all_programs
 	@$(MAKE) -s -C man $@
 
+# Ensure all man/*.[1x] files are present
+ALL_RECURSIVE_TARGETS += sc_man_file_correlation
+sc_man_file_correlation:
+	@$(MAKE) -s -C src all_programs
+	@$(MAKE) -s -C man $@
+
 # Perl-based tests used to exec perl from a #!/bin/sh script.
 # Now they all start with #!/usr/bin/perl and the portability
 # infrastructure is in tests/Makefile.am.  Make sure no old-style
