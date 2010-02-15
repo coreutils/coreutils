@@ -60,6 +60,7 @@ lib/selinux
 lib/unistr
 lib/uniwidth
 lib/unused-parameter.h
+lib/warn-on-use.h
 m4/.cvsignore
 m4/.gitignore
 maint.mk
