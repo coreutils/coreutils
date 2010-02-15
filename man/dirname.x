@@ -1,5 +1,5 @@
 [NAME]
-dirname \- strip non-directory suffix from file name
+dirname \- strip last component from file name
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]

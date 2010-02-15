@@ -53,7 +53,7 @@
 * df: (coreutils)df invocation.                 Report file system disk usage.
 * dir: (coreutils)dir invocation.               List directories briefly.
 * dircolors: (coreutils)dircolors invocation.   Color setup for ls.
-* dirname: (coreutils)dirname invocation.       Strip non-directory suffix.
+* dirname: (coreutils)dirname invocation.       Strip last file name component.
 * du: (coreutils)du invocation.                 Report on disk usage.
 * echo: (coreutils)echo invocation.             Print a line of text.
 * env: (coreutils)env invocation.               Modify the environment.
@@ -377,7 +377,7 @@ Redirection
 File name manipulation
 
 * basename invocation::          Strip directory and suffix from a file name
-* dirname invocation::           Strip non-directory suffix from a file name
+* dirname invocation::           Strip last file name component
 * pathchk invocation::           Check file name validity and portability
 * mktemp invocation::            Create temporary file or directory
 
@@ -11902,7 +11902,7 @@ This section describes commands that manipulate file names.
 
 @menu
 * basename invocation::         Strip directory and suffix from a file name.
-* dirname invocation::          Strip non-directory suffix from a file name.
+* dirname invocation::          Strip last file name component.
 * pathchk invocation::          Check file name validity and portability.
 * mktemp invocation::           Create temporary file or directory.
 @end menu
@@ -11963,7 +11963,7 @@ basename include/stdio.h .h
 
 
 @node dirname invocation
-@section @command{dirname}: Strip non-directory suffix from a file name
+@section @command{dirname}: Strip last file name component
 
 @pindex dirname
 @cindex directory components, printing
@@ -11971,7 +11971,7 @@ basename include/stdio.h .h
 @cindex non-directory suffix, stripping
 
 @command{dirname} prints all but the final slash-delimited component of
-a string (presumably a file name).  Synopsis:
+a string (presumably a file name, but also works on directories).  Synopsis:
 
 @example
 dirname @var{name}
