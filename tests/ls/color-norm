@@ -1,0 +1,80 @@
+#!/bin/sh
+# Ensure "ls --color" properly colors "normal" text and files.
+# I.E. that it uses NORMAL to style non file name output and
+# file names with no associated color (unless FILE is also set).
+
+# Copyright (C) 2010 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+
+# Don't let a different umask perturb the results.
+umask 22
+
+touch exe || framework_failure
+chmod u+x exe || framework_failure
+touch nocolor || framework_failure
+
+# Non coloured files inherit NORMAL attributes
+LS_COLORS=no=7      ls -s1U --color exe nocolor >> out || fail=1
+LS_COLORS=no=7      ls -sxU --color exe nocolor >> out || fail=1
+LS_COLORS=no=7      ls -s1U --color nocolor exe >> out || fail=1
+LS_COLORS=no=7      ls -sxU --color nocolor exe >> out || fail=1
+
+# NORMAL does not override FILE though
+LS_COLORS=no=7:fi=1 ls -s1U --color nocolor exe >> out || fail=1
+
+# Support uncolored ordinary files that do _not_ inherit from NORMAL.
+# Note there is a redundant RESET output before a non colored
+# file in this case which may be removed in future.
+LS_COLORS=no=7:fi=  ls -s1U --color nocolor exe >> out || fail=1
+LS_COLORS=no=7:fi=0 ls -s1U --color nocolor exe >> out || fail=1
+
+# A caveat worth noting is that commas (-m), indicator chars (-F)
+# and the "total" line, do not currently use NORMAL attributes
+LS_COLORS="no=7"    ls -mFU --color nocolor exe >> out || fail=1
+
+# Ensure no coloring is done unless enabled
+LS_COLORS="no=7"    ls -s1U         nocolor exe >> out || fail=1
+
+cat -A out > out.display || framework_failure
+mv out.display out || framework_failure
+
+cat <<\EOF > exp || framework_failure
+^[[0m^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[7m0 nocolor^[[0m$
+^[[0m^[[7m0 ^[[m^[[01;32mexe^[[0m  ^[[7m0 nocolor^[[0m$
+^[[0m^[[7m0 nocolor^[[0m$
+^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[0m^[[7m0 nocolor^[[0m  ^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[0m^[[7m0 ^[[m^[[1mnocolor^[[0m$
+^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[0m^[[7m0 ^[[m^[[mnocolor^[[0m$
+^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[0m^[[7m0 ^[[m^[[0mnocolor^[[0m$
+^[[7m0 ^[[m^[[01;32mexe^[[0m$
+^[[0m^[[7mnocolor^[[0m, ^[[7m^[[m^[[01;32mexe^[[0m*$
+0 nocolor$
+0 exe$
+EOF
+
+compare out exp || fail=1
+
+Exit $fail

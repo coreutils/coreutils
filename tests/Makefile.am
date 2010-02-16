@@ -370,6 +370,7 @@ TESTS =						\
   ls/abmon-align				\
   ls/color-clear-to-eol				\
   ls/color-dtype-dir				\
+  ls/color-norm					\
   ls/dangle					\
   ls/dired					\
   ls/file-type					\
