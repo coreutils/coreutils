@@ -165,11 +165,11 @@ sc_sun_os_names:
 
 ALL_RECURSIVE_TARGETS += sc_tight_scope
 sc_tight_scope:
-	@$(MAKE) -C src $@
+	@$(MAKE) -s -C src $@
 
 ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
-	@$(MAKE) -C src $@
+	@$(MAKE) -s -C src $@
 
 # Option descriptions should not start with a capital letter
 # One could grep source directly as follows:
@@ -218,7 +218,7 @@ sc_strftime_check:
 	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
 	  { echo N;							\
-	    info libc date calendar format | grep '^    `%.'\'		\
+	    info libc date calendar format 2>/dev/null|grep '^    `%.'\'\
 	      | $(extract_char); } | sort > $@-info;			\
 	  diff -u $@-src $@-info || exit 1;				\
 	  rm -f $@-src $@-info;						\

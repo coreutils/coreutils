@@ -678,7 +678,7 @@ au_dotdot = authors-dotdot
 au_actual = authors-actual
 .PHONY: sc_check-AUTHORS
 sc_check-AUTHORS: $(all_programs)
-	$(AM_V_GEN)locale=en_US.UTF-8;			\
+	@locale=en_US.UTF-8;				\
 	LC_ALL="$$locale" ./cat --version		\
 	    | grep ' Torbjorn '	> /dev/null		\
 	  && { echo "$@: skipping this check"; exit 0; }; \
@@ -714,7 +714,7 @@ sc_check-AUTHORS: $(all_programs)
 # The second nm|grep checks for file-scope variables with `extern' scope.
 .PHONY: sc_tight_scope
 sc_tight_scope: $(bin_PROGRAMS)
-	$(AM_V_GEN)t=exceptions-$$$$;					\
+	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
 	src=`for f in $(SOURCES); do					\
 	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
