@@ -3939,6 +3939,11 @@ multiple fields.
 
 Example:  To sort on the second field, use @option{--key=2,2}
 (@option{-k 2,2}).  See below for more notes on keys and more examples.
+See also the @option{--debug} option to help determine the part
+of the line being used in the sort.
+
+@item --debug
+Highlight the portion of each line used for sorting.
 
 @item --batch-size=@var{nmerge}
 @opindex --batch-size

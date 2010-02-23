@@ -34,6 +34,7 @@
 #include "hash.h"
 #include "ignore-value.h"
 #include "md5.h"
+#include "mbswidth.h"
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
@@ -291,6 +292,9 @@ static struct keyfield *keylist;
 /* Program used to (de)compress temp files.  Must accept -d.  */
 static char const *compress_program;
 
+/* Annotate the output with extra info to aid the user.  */
+static bool debug;
+
 /* Maximum number of files to merge in one go.  If more than this
    number are present, temp files will be used. */
 static unsigned int nmerge = NMERGE_DEFAULT;
@@ -371,6 +375,7 @@ Other options:\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
                               decompress them with PROG -d\n\
+      --debug               annotate the part of the line used to sort\n\
       --files0-from=F       read input from the files specified by\n\
                             NUL-terminated names in file F;\n\
                             If F is - then read names from standard input\n\
@@ -429,6 +434,7 @@ enum
 {
   CHECK_OPTION = CHAR_MAX + 1,
   COMPRESS_PROGRAM_OPTION,
+  DEBUG_PROGRAM_OPTION,
   FILES0_FROM_OPTION,
   NMERGE_OPTION,
   RANDOM_SOURCE_OPTION,
@@ -442,6 +448,7 @@ static struct option const long_options[] =
   {"ignore-leading-blanks", no_argument, NULL, 'b'},
   {"check", optional_argument, NULL, CHECK_OPTION},
   {"compress-program", required_argument, NULL, COMPRESS_PROGRAM_OPTION},
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
   {"dictionary-order", no_argument, NULL, 'd'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
@@ -1111,13 +1118,6 @@ open_temp (const char *name, pid_t pid)
   return fp;
 }
 
-static void
-write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
-{
-  if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
-    die (_("write failed"), output_file);
-}
-
 /* Append DIR to the array of temporary directory names.  */
 static void
 add_temp_dir (char const *dir)
@@ -1734,30 +1734,19 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
     }
 }
 
-/* Compare strings A and B as numbers without explicitly converting them to
-   machine numbers.  Comparatively slow for short strings, but asymptotically
-   hideously fast. */
-
-static int
-numcompare (const char *a, const char *b)
-{
-  while (blanks[to_uchar (*a)])
-    a++;
-  while (blanks[to_uchar (*b)])
-    b++;
-
-  return strnumcmp (a, b, decimal_point, thousands_sep);
-}
-
 /* Exit with an error if a mixture of SI and IEC units detected.  */
 
-static void
+static bool
 check_mixed_SI_IEC (char prefix, struct keyfield *key)
 {
   int iec_present = prefix == 'i';
-  if (key->iec_present != -1 && iec_present != key->iec_present)
-    error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
-  key->iec_present = iec_present;
+  if (key)
+    {
+      if (key->iec_present != -1 && iec_present != key->iec_present)
+        error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
+      key->iec_present = iec_present;
+    }
+  return iec_present;
 }
 
 /* Return an integer which represents the order of magnitude of
@@ -1766,7 +1755,7 @@ check_mixed_SI_IEC (char prefix, struct keyfield *key)
    Negative numbers return a negative unit order.  */
 
 static int
-find_unit_order (const char *number, struct keyfield *key)
+find_unit_order (const char *number, struct keyfield *key, char const **endptr)
 {
   static const char orders [UCHAR_LIM] =
     {
@@ -1822,7 +1811,13 @@ find_unit_order (const char *number, struct keyfield *key)
 
   /* For valid units check for MiB vs MB etc.  */
   if (order)
-    check_mixed_SI_IEC (*(p + 1), key);
+    {
+      p++;
+      p += check_mixed_SI_IEC (*p, key);
+    }
+
+  if (endptr)
+    *endptr = p;
 
   return sign * order;
 }
@@ -1833,25 +1828,50 @@ find_unit_order (const char *number, struct keyfield *key)
    i.e. input will never have both 6000K and 5M.  */
 
 static int
-human_numcompare (const char *a, const char *b, struct keyfield *key)
+human_numcompare (const char *a, const char *b, struct keyfield *key,
+                  char const **ea)
 {
   while (blanks[to_uchar (*a)])
     a++;
   while (blanks[to_uchar (*b)])
     b++;
 
-  int order_a = find_unit_order (a, key);
-  int order_b = find_unit_order (b, key);
+  int order_a = find_unit_order (a, key, ea);
+  int order_b = find_unit_order (b, key, NULL);
 
   return (order_a > order_b ? 1
           : order_a < order_b ? -1
           : strnumcmp (a, b, decimal_point, thousands_sep));
 }
 
+/* Compare strings A and B as numbers without explicitly converting them to
+   machine numbers.  Comparatively slow for short strings, but asymptotically
+   hideously fast. */
+
 static int
-general_numcompare (const char *sa, const char *sb)
+numcompare (const char *a, const char *b, char const **ea)
 {
-  /* FIXME: add option to warn about failed conversions.  */
+  while (blanks[to_uchar (*a)])
+    a++;
+  while (blanks[to_uchar (*b)])
+    b++;
+
+  if (debug)
+    {
+      /* Approximate strnumcmp extents with find_unit_order.  */
+      if (find_unit_order (a, NULL, ea))
+        {
+          *ea -= 1; /* ignore the order letter */
+          *ea -= (**ea == 'i'); /* and IEC prefix */
+        }
+    }
+
+  return strnumcmp (a, b, decimal_point, thousands_sep);
+}
+
+static int
+general_numcompare (const char *sa, const char *sb, char const **ea)
+{
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
 
@@ -1863,13 +1883,12 @@ general_numcompare (const char *sa, const char *sb)
 # define strtold strtod
 #endif
 
-  char *ea;
   char *eb;
-  long_double a = strtold (sa, &ea);
+  long_double a = strtold (sa, (char **) ea);
   long_double b = strtold (sb, &eb);
 
   /* Put conversion errors at the start of the collating sequence.  */
-  if (sa == ea)
+  if (sa == *ea)
     return sb == eb ? 0 : -1;
   if (sb == eb)
     return 1;
@@ -1889,7 +1908,7 @@ general_numcompare (const char *sa, const char *sb)
    Return 0 if the name in S is not recognized.  */
 
 static int
-getmonth (char const *month, size_t len)
+getmonth (char const *month, size_t len, char const **ea)
 {
   size_t lo = 0;
   size_t hi = MONTHS_PER_YEAR;
@@ -1913,7 +1932,11 @@ getmonth (char const *month, size_t len)
       for (;; m++, n++)
         {
           if (!*n)
-            return monthtab[ix].val;
+            {
+              if (ea)
+                *ea = m;
+              return monthtab[ix].val;
+            }
           if (m == monthlim || fold_toupper[to_uchar (*m)] < to_uchar (*n))
             {
               hi = ix;
@@ -2070,11 +2093,76 @@ compare_version (char *restrict texta, size_t lena,
   return diff;
 }
 
+/* For debug mode, count tabs in the passed string
+   so we can adjust the widths returned by mbswidth.
+   FIXME: Should we generally be counting non printable chars?  */
+
+static size_t
+count_tabs (char const *text, const size_t len)
+{
+  size_t tabs = 0;
+  size_t tlen = strnlen (text, len);
+
+  while (tlen--)
+    {
+      if (*text++ == '\t')
+        tabs++;
+    }
+
+  return tabs;
+}
+
+/* For debug mode, "underline" a key at the
+   specified offset and screen width.  */
+
+static void
+mark_key (size_t offset, size_t width)
+{
+  printf ("%*s", offset, "");
+
+  if (!width)
+    printf (_("^ no match for key\n"));
+  else
+    {
+      while (width--)
+        putchar ('_');
+      putchar ('\n');
+    }
+}
+
+/* For debug mode, determine the screen offset and width
+   to highlight for a key, and then output the highlight.  */
+
+static void
+debug_key (char const *sline, char const *sfield, char const *efield,
+           size_t flen, bool skipb)
+{
+  char const *sa = sfield;
+
+  if (skipb) /* This key type implicitly skips leading blanks.  */
+    {
+      while (sa < efield && blanks[to_uchar (*sa)])
+        {
+          sa++;
+          if (flen)
+            flen--; /* This assumes TABs same width as SPACEs.  */
+        }
+    }
+
+  size_t offset = mbsnwidth (sline, sfield - sline, 0) + (sa - sfield);
+  offset += count_tabs (sline, sfield - sline);
+
+  size_t width = mbsnwidth (sa, flen, 0);
+  width += count_tabs (sa, flen);
+
+  mark_key (offset, width);
+}
+
 /* Compare two lines A and B trying every key in sequence until there
    are no more keys or a difference is found. */
 
 static int
-keycompare (const struct line *a, const struct line *b)
+keycompare (const struct line *a, const struct line *b, bool show_debug)
 {
   struct keyfield *key = keylist;
 
@@ -2091,6 +2179,7 @@ keycompare (const struct line *a, const struct line *b)
     {
       char const *translate = key->translate;
       bool const *ignore = key->ignore;
+      bool skipb = false; /* Whether key type auto skips leading blanks.  */
 
       /* Treat field ends before field starts as empty fields.  */
       lima = MAX (texta, lima);
@@ -2107,21 +2196,42 @@ keycompare (const struct line *a, const struct line *b)
       else if (key->numeric || key->general_numeric || key->human_numeric)
         {
           char savea = *lima, saveb = *limb;
+          char const* ea = lima;
 
           *lima = *limb = '\0';
-          diff = (key->numeric ? numcompare (texta, textb)
-                  : key->general_numeric ? general_numcompare (texta, textb)
-                  : human_numcompare (texta, textb, key));
+          diff = (key->numeric ? numcompare (texta, textb, &ea)
+                  : key->general_numeric ? general_numcompare (texta, textb,
+                                                               &ea)
+                  : human_numcompare (texta, textb, key, &ea));
+          if (show_debug)
+            {
+              lena = ea - texta;
+              skipb = true;
+            }
           *lima = savea, *limb = saveb;
         }
       else if (key->version)
         diff = compare_version (texta, lena, textb, lenb);
       else if (key->month)
-        diff = getmonth (texta, lena) - getmonth (textb, lenb);
+        {
+          char const *ea = lima;
+
+          int amon = getmonth (texta, lena, &ea);
+          diff = amon - getmonth (textb, lenb, NULL);
+
+          if (show_debug)
+            {
+              lena = amon ? ea - texta : 0;
+              skipb = true;
+            }
+        }
       /* Sorting like this may become slow, so in a simple locale the user
          can select a faster sort that is similar to ascii sort.  */
       else if (hard_LC_COLLATE)
         {
+          /* FIXME: for debug, account for skipped chars, while handling mb chars.
+             Generally perhaps xmemfrm could be used to determine chars that are
+             excluded from the collating order?  */
           if (ignore || translate)
             {
               char buf[4000];
@@ -2165,6 +2275,8 @@ keycompare (const struct line *a, const struct line *b)
         }
       else if (ignore)
         {
+          char *savea = texta;
+
 #define CMP_WITH_IGNORE(A, B)						\
   do									\
     {									\
@@ -2192,6 +2304,10 @@ keycompare (const struct line *a, const struct line *b)
                              translate[to_uchar (*textb)]);
           else
             CMP_WITH_IGNORE (*texta, *textb);
+
+          /* We only need to restore this for debug_key
+             in which case the keys being compared are equal.  */
+          texta = savea;
         }
       else if (lena == 0)
         diff = - NONZERO (lenb);
@@ -2201,6 +2317,8 @@ keycompare (const struct line *a, const struct line *b)
         {
           if (translate)
             {
+              char *savea = texta;
+
               while (texta < lima && textb < limb)
                 {
                   diff = (to_uchar (translate[to_uchar (*texta++)])
@@ -2208,6 +2326,10 @@ keycompare (const struct line *a, const struct line *b)
                   if (diff)
                     goto not_equal;
                 }
+
+              /* We only need to restore this for debug_key
+                 in which case the keys being compared are equal.  */
+              texta = savea;
             }
           else
             {
@@ -2220,6 +2342,9 @@ keycompare (const struct line *a, const struct line *b)
 
       if (diff)
         goto not_equal;
+
+      if (show_debug)
+        debug_key (a->text, texta, lima, lena, skipb);
 
       key = key->next;
       if (! key)
@@ -2258,7 +2383,7 @@ keycompare (const struct line *a, const struct line *b)
    depending on whether A compares less than, equal to, or greater than B. */
 
 static int
-compare (const struct line *a, const struct line *b)
+compare (const struct line *a, const struct line *b, bool show_debug)
 {
   int diff;
   size_t alen, blen;
@@ -2268,7 +2393,7 @@ compare (const struct line *a, const struct line *b)
      and unadorned sort -r. */
   if (keylist)
     {
-      diff = keycompare (a, b);
+      diff = keycompare (a, b, show_debug);
       if (diff || unique || stable)
         return diff;
     }
@@ -2276,6 +2401,9 @@ compare (const struct line *a, const struct line *b)
   /* If the keys all compare equal (or no keys were specified)
      fall through to the default comparison.  */
   alen = a->length - 1, blen = b->length - 1;
+
+  if (show_debug)
+    debug_key (a->text, a->text, a->text + alen, alen, false);
 
   if (alen == 0)
     diff = - NONZERO (blen);
@@ -2287,6 +2415,38 @@ compare (const struct line *a, const struct line *b)
     diff = alen < blen ? -1 : alen != blen;
 
   return reverse ? -diff : diff;
+}
+
+static void
+write_bytes (struct line const *line, FILE *fp, char const *output_file)
+{
+  char const *buf = line->text;
+  size_t n_bytes = line->length;
+
+  /* Convert TABs to '>' and \0 to \n when -z specified.  */
+  if (debug && fp == stdout)
+    {
+      char const *ebuf = buf + n_bytes;
+      char const *c = buf;
+
+      while (c < ebuf)
+        {
+          char wc = *c++;
+          if (wc == '\t')
+            wc = '>';
+          else if (wc == 0 && eolchar == 0)
+            wc = '\n';
+          if (fputc (wc, fp) == EOF)
+            die (_("write failed"), output_file);
+        }
+
+      compare (line, line, true);
+    }
+  else
+    {
+      if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
+        die (_("write failed"), output_file);
+    }
 }
 
 /* Check that the lines read from FILE_NAME come in order.  Return
@@ -2317,7 +2477,7 @@ check (char const *file_name, char checkonly)
 
       /* Make sure the line saved from the old buffer contents is
          less than or equal to the first line of the new buffer. */
-      if (alloc && nonunique <= compare (&temp, line - 1))
+      if (alloc && nonunique <= compare (&temp, line - 1, false))
         {
         found_disorder:
           {
@@ -2330,8 +2490,10 @@ check (char const *file_name, char checkonly)
                 fprintf (stderr, _("%s: %s:%s: disorder: "),
                          program_name, file_name,
                          umaxtostr (disorder_line_number, hr_buf));
-                write_bytes (disorder_line->text, disorder_line->length,
-                             stderr, _("standard error"));
+                if (debug)
+                  fputc ('\n', stderr);
+                write_bytes (disorder_line, debug ? stdout : stderr,
+                             debug ? _("standard out") : _("standard error"));
               }
 
             ordered = false;
@@ -2341,7 +2503,7 @@ check (char const *file_name, char checkonly)
 
       /* Compare each line in the buffer with its successor.  */
       while (linebase < --line)
-        if (nonunique <= compare (line, line - 1))
+        if (nonunique <= compare (line, line - 1, false))
           goto found_disorder;
 
       line_number += buf.nlines;
@@ -2470,7 +2632,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
   for (i = 0; i < nfiles; ++i)
     ord[i] = i;
   for (i = 1; i < nfiles; ++i)
-    if (0 < compare (cur[ord[i - 1]], cur[ord[i]]))
+    if (0 < compare (cur[ord[i - 1]], cur[ord[i]], false))
       t = ord[i - 1], ord[i - 1] = ord[i], ord[i] = t, i = 0;
 
   /* Repeatedly output the smallest line until no input remains. */
@@ -2482,10 +2644,10 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
          an identical series of lines. */
       if (unique)
         {
-          if (savedline && compare (savedline, smallest))
+          if (savedline && compare (savedline, smallest, false))
             {
               savedline = NULL;
-              write_bytes (saved.text, saved.length, ofp, output_file);
+              write_bytes (&saved, ofp, output_file);
             }
           if (!savedline)
             {
@@ -2514,7 +2676,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
             }
         }
       else
-        write_bytes (smallest->text, smallest->length, ofp, output_file);
+        write_bytes (smallest, ofp, output_file);
 
       /* Check if we need to read more lines into core. */
       if (base[ord[0]] < smallest)
@@ -2568,7 +2730,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
 
         while (lo < hi)
           {
-            int cmp = compare (cur[ord0], cur[ord[probe]]);
+            int cmp = compare (cur[ord0], cur[ord[probe]], false);
             if (cmp < 0 || (cmp == 0 && ord0 < ord[probe]))
               hi = probe;
             else
@@ -2589,7 +2751,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
 
   if (unique && savedline)
     {
-      write_bytes (saved.text, saved.length, ofp, output_file);
+      write_bytes (&saved, ofp, output_file);
       free (saved.text);
     }
 
@@ -2634,7 +2796,7 @@ mergelines (struct line *t,
             struct line const *hi, size_t nhi)
 {
   for (;;)
-    if (compare (lo - 1, hi - 1) <= 0)
+    if (compare (lo - 1, hi - 1, false) <= 0)
       {
         *--t = *--lo;
         if (! --nlo)
@@ -2676,7 +2838,7 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
 {
   if (nlines == 2)
     {
-      if (0 < compare (&lines[-1], &lines[-2]))
+      if (0 < compare (&lines[-1], &lines[-2], false))
         {
           struct line tmp = lines[-1];
           lines[-1] = lines[-2];
@@ -2712,7 +2874,7 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
       /* Declare `swap' as int, not bool, to work around a bug
          <http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html>
          in the IBM xlc 6.0.0.0 compiler in 64-bit mode.  */
-      int swap = (0 < compare (&lines[-1], &lines[-2]));
+      int swap = (0 < compare (&lines[-1], &lines[-2], false));
       temp[-1] = lines[-1 - swap];
       temp[-2] = lines[-2 + swap];
     }
@@ -2994,9 +3156,9 @@ sort (char * const *files, size_t nfiles, char const *output_file)
           do
             {
               line--;
-              write_bytes (line->text, line->length, tfp, temp_output);
+              write_bytes (line, tfp, temp_output);
               if (unique)
-                while (linebase < line && compare (line, line - 1) == 0)
+                while (linebase < line && compare (line, line - 1, false) == 0)
                   line--;
             }
           while (linebase < line);
@@ -3459,6 +3621,10 @@ main (int argc, char **argv)
           compress_program = optarg;
           break;
 
+        case DEBUG_PROGRAM_OPTION:
+          debug = true;
+          break;
+
         case FILES0_FROM_OPTION:
           files_from = optarg;
           break;
@@ -3714,6 +3880,9 @@ main (int argc, char **argv)
     }
 
   check_ordering_compatibility ();
+
+  if (debug && outfile)
+    error (SORT_FAILURE, 0, _("options -o and --debug are incompatible"));
 
   reverse = gkey.reverse;
 
