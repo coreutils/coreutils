@@ -787,7 +787,7 @@ eval4 (bool evaluate)
       if (evaluate)
         {
           if (!toarith (l) || !toarith (r))
-            error (EXPR_INVALID, 0, _("non-numeric argument"));
+            error (EXPR_INVALID, 0, _("non-integer argument"));
           if (fxn != multiply && mpz_sgn (r->u.i) == 0)
             error (EXPR_INVALID, 0, _("division by zero"));
           ((fxn == multiply ? mpz_mul
@@ -824,7 +824,7 @@ eval3 (bool evaluate)
       if (evaluate)
         {
           if (!toarith (l) || !toarith (r))
-            error (EXPR_INVALID, 0, _("non-numeric argument"));
+            error (EXPR_INVALID, 0, _("non-integer argument"));
           (fxn == plus ? mpz_add : mpz_sub) (l->u.i, l->u.i, r->u.i);
         }
       freev (r);

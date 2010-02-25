@@ -70,7 +70,7 @@ my @Tests =
 
 
      # This erroneously succeeded and output `3' before 2.0.12.
-     ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
+     ['fail-a', '3 + -', {ERR => "$prog: non-integer argument\n"},
       {EXIT => 2}],
 
      # This erroneously succeeded before 5.3.1.
