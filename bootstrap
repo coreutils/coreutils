@@ -1,4 +1,6 @@
 #! /bin/sh
+# Print a version string.
+scriptversion=2010-02-24.17; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -17,7 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Written by Paul Eggert.
+# Originally written by Paul Eggert.  The canonical version of this
+# script is maintained as build-aux/bootstrap in gnulib, however, to
+# be useful to your project, you should place a copy of it under
+# version control in the top-level directory of your project.  The
+# intent is that all customization can be done with a bootstrap.conf
+# file also maintained in your version control; gnulib comes with a
+# template build-aux/bootstrap.conf to get you started.
+
+# Please report bugs or propose patches to bug-gnulib@gnu.org.
 
 nl='
 '
@@ -43,7 +53,7 @@ Options:
                           sources reside.  Use this if you already
                           have gnulib sources on your machine, and
                           do not want to waste your bandwidth downloading
-                          them again.
+                          them again.  Defaults to \$GNULIB_SRCDIR.
  --copy                   Copy files instead of creating symbolic links.
  --force                  Attempt to bootstrap even if the sources seem
                           not to have been checked out.
@@ -133,7 +143,8 @@ XGETTEXT_OPTIONS='\\\
  --flag=error:3:c-format --flag=error_at_line:5:c-format\\\
 '
 
-# Package bug report address for gettext files
+# Package bug report address and copyright holder for gettext files
+COPYRIGHT_HOLDER='Free Software Foundation, Inc.'
 MSGID_BUGS_ADDRESS=bug-$package@gnu.org
 
 # Files we don't want to import.
@@ -160,7 +171,6 @@ vc_ignore=auto
 # die otherwise.
 find_tool ()
 {
-  # Find sha1sum, named gsha1sum on MacPorts.
   find_tool_envvar=$1
   shift
   find_tool_names=$@
@@ -188,8 +198,8 @@ find_tool ()
   eval "export $find_tool_envvar"
 }
 
-# Find sha1sum, named gsha1sum on MacPorts.
-find_tool SHA1SUM sha1sum gsha1sum
+# Find sha1sum, named gsha1sum on MacPorts, and shasum on MacOS 10.6.
+find_tool SHA1SUM sha1sum gsha1sum shasum
 
 # Override the default configuration, if necessary.
 # Make sure that bootstrap.conf is sourced from the current directory
@@ -390,13 +400,15 @@ fi
 
 cleanup_gnulib() {
   status=$?
-  rm -fr gnulib
+  rm -fr "$gnulib_path"
   exit $status
 }
 
 git_modules_config () {
   test -f .gitmodules && git config --file .gitmodules "$@"
 }
+
+gnulib_path=`git_modules_config submodule.gnulib.path`
 
 # Get gnulib files.
 
@@ -407,30 +419,43 @@ case ${GNULIB_SRCDIR--} in
     git submodule init || exit $?
     git submodule update || exit $?
 
-  elif [ ! -d gnulib ]; then
+  elif [ ! -d "$gnulib_path" ]; then
     echo "$0: getting gnulib files..."
 
     trap cleanup_gnulib 1 2 13 15
 
     git clone --help|grep depth > /dev/null && shallow='--depth 2' || shallow=
-    git clone $shallow git://git.sv.gnu.org/gnulib ||
+    git clone $shallow git://git.sv.gnu.org/gnulib "$gnulib_path" ||
       cleanup_gnulib
 
     trap - 1 2 13 15
   fi
-  GNULIB_SRCDIR=gnulib
+  GNULIB_SRCDIR=$gnulib_path
   ;;
 *)
-  # Redirect the gnulib submodule to the directory on the command line
-  # if possible.
+  # Use GNULIB_SRCDIR as a reference.
   if test -d "$GNULIB_SRCDIR"/.git && \
         git_modules_config submodule.gnulib.url >/dev/null; then
-    git submodule init
-    GNULIB_SRCDIR=`cd $GNULIB_SRCDIR && pwd`
-    git_modules_config --replace-all submodule.gnulib.url $GNULIB_SRCDIR
     echo "$0: getting gnulib files..."
-    git submodule update || exit $?
-    GNULIB_SRCDIR=gnulib
+    if git submodule --help|grep reference > /dev/null; then
+      # Prefer the one-liner available in git 1.6.4 or newer.
+      git submodule update --init --reference "$GNULIB_SRCDIR" \
+        "$gnulib_path" || exit $?
+    else
+      # This fallback allows at least git 1.5.5.
+      if test -f "$gnulib_path"/gnulib-tool; then
+        # Since file already exists, assume submodule init already complete.
+        git submodule update || exit $?
+      else
+        # Older git can't clone into an empty directory.
+        rmdir "$gnulib_path" 2>/dev/null
+        git clone --reference "$GNULIB_SRCDIR" \
+          "$(git_modules_config submodule.gnulib.url)" "$gnulib_path" \
+          && git submodule init && git submodule update \
+          || exit $?
+      fi
+    fi
+    GNULIB_SRCDIR=$gnulib_path
   fi
   ;;
 esac
@@ -594,7 +619,6 @@ cp_mark_as_generated()
       (
         echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
         echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
-        echo '#line 1' &&
         sed "s!$bt_regex/!!g" "$cp_src"
       ) > $cp_dst-t &&
       if cmp -s "$cp_dst-t" "$cp_dst"; then
@@ -637,7 +661,7 @@ slurp() {
       for excluded_file in $excluded_files; do
         test "$dir/$file" = "$excluded_file" && continue 2
       done
-      if test $file = Makefile.am; then
+      if test $file = Makefile.am && test "X$gnulib_mk" != XMakefile.am; then
         copied=$copied${sep}$gnulib_mk; sep=$nl
         remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
         sed "$remove_intl" $1/$dir/$file | cmp - $dir/$gnulib_mk > /dev/null || {
@@ -655,7 +679,7 @@ slurp() {
           rm -f $dir/$file
           sed '
             /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
-              AC_DEFUN([AM_INTL_SUBDIR], [
+              AC_DEFUN([AM_INTL_SUBDIR], [])
             /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
               AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
             $a\
@@ -788,7 +812,8 @@ if test $with_gettext = yes; then
   rm -f po/Makevars
   sed '
     /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
-    /^MSGID_BUGS_ADDRESS *=/s/=.*/= '"$MSGID_BUGS_ADDRESS"'/
+    /^COPYRIGHT_HOLDER *=/s/=.*/= '"$COPYRIGHT_HOLDER"'/
+    /^MSGID_BUGS_ADDRESS *=/s|=.*|= '"$MSGID_BUGS_ADDRESS"'|
     /^XGETTEXT_OPTIONS *=/{
       s/$/ \\/
       a\
@@ -818,3 +843,11 @@ fi
 bootstrap_epilogue
 
 echo "$0: done.  Now you can run './configure'."
+
+# Local variables:
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-time-zone: "UTC"
+# time-stamp-end: "; # UTC"
+# End:
