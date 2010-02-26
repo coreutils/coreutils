@@ -209,7 +209,7 @@ static bool nonprinting[UCHAR_LIM];
 static bool nondictionary[UCHAR_LIM];
 
 /* Translation table folding lower case to upper.  */
-static char fold_toupper[UCHAR_LIM];
+static unsigned char fold_toupper[UCHAR_LIM];
 
 #define MONTHS_PER_YEAR 12
 
@@ -1129,7 +1129,7 @@ inittables (void)
         {
           char const *s;
           size_t s_len;
-          size_t j;
+          size_t j, k;
           char *name;
 
           s = (char *) nl_langinfo (ABMON_1 + i);
@@ -1137,9 +1137,10 @@ inittables (void)
           monthtab[i].name = name = xmalloc (s_len + 1);
           monthtab[i].val = i + 1;
 
-          for (j = 0; j < s_len; j++)
-            name[j] = fold_toupper[to_uchar (s[j])];
-          name[j] = '\0';
+          for (j = k = 0; j < s_len; j++)
+            if (! isblank (to_uchar (s[j])))
+              name[k++] = fold_toupper[to_uchar (s[j])];
+          name[k] = '\0';
         }
       qsort ((void *) monthtab, MONTHS_PER_YEAR,
              sizeof *monthtab, struct_month_cmp);

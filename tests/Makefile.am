@@ -225,6 +225,7 @@ TESTS =						\
   misc/sort-files0-from				\
   misc/sort-merge				\
   misc/sort-merge-fdlimit			\
+  misc/sort-month				\
   misc/sort-rand				\
   misc/sort-version				\
   misc/split-a					\
