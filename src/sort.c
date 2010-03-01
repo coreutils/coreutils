@@ -32,6 +32,7 @@
 #include "filevercmp.h"
 #include "hard-locale.h"
 #include "hash.h"
+#include "ignore-value.h"
 #include "md5.h"
 #include "physmem.h"
 #include "posixver.h"
@@ -794,6 +795,61 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   return node;
 }
 
+/* Predeclare an access pattern for input files.
+   Ignore any errors -- this is only advisory.
+
+   There are a few hints we could possibly provide,
+   and after careful testing it was decided that
+   specifying POSIX_FADV_SEQUENTIAL was not detrimental
+   to any cases.  On Linux 2.6.31, this option doubles
+   the size of read ahead performed and thus was seen to
+   benefit these cases:
+     Merging
+     Sorting with a smaller internal buffer
+     Reading from faster flash devices
+
+   In _addition_ one could also specify other hints...
+
+   POSIX_FADV_WILLNEED was tested, but Linux 2.6.31
+   at least uses that to _synchronously_ prepopulate the cache
+   with the specified range.  While sort does need to
+   read all of its input before outputting, a synchronous
+   read of the whole file up front precludes any processing
+   that sort could do in parallel with the system doing
+   read ahead of the data. This was seen to have negative effects
+   in a couple of cases:
+     Merging
+     Sorting with a smaller internal buffer
+   Note this option was seen to shorten the runtime for sort
+   on a multicore system with lots of RAM and other processes
+   competing for CPU.  It could be argued that more explicit
+   scheduling hints with `nice` et. al. are more appropriate
+   for this situation.
+
+   POSIX_FADV_NOREUSE is a possibility as it could lower
+   the priority of input data in the cache as sort will
+   only need to process it once.  However its functionality
+   has changed over Linux kernel versions and as of 2.6.31
+   it does nothing and thus we can't depend on what it might
+   do in future.
+
+   POSIX_FADV_DONTNEED is not appropriate for user specified
+   input files, but for temp files we do want to drop the
+   cache immediately after processing.  This is done implicitly
+   however when the files are unlinked.  */
+
+static void
+fadvise_input (FILE *fp)
+{
+#if HAVE_POSIX_FADVISE
+  if (fp)
+    {
+      int fd = fileno (fp);
+      ignore_value (posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL));
+    }
+#endif
+}
+
 /* Return a stream for FILE, opened with mode HOW.  A null FILE means
    standard output; HOW should be "w".  When opening for input, "-"
    means standard input.  To avoid confusion, do not return file
@@ -805,10 +861,18 @@ stream_open (const char *file, const char *how)
 {
   if (!file)
     return stdout;
-  if (STREQ (file, "-") && *how == 'r')
+  if (*how == 'r')
     {
-      have_read_stdin = true;
-      return stdin;
+      FILE *fp;
+      if (STREQ (file, "-"))
+        {
+          have_read_stdin = true;
+          fp = stdin;
+        }
+      else
+        fp = fopen (file, how);
+      fadvise_input (fp);
+      return fp;
     }
   return fopen (file, how);
 }
