@@ -181,7 +181,7 @@ struct keyfield
                                    Handle numbers in exponential notation. */
   bool human_numeric;		/* Flag for sorting by human readable
                                    units with either SI xor IEC prefixes. */
-  int si_present;		/* Flag for checking for mixed SI and IEC. */
+  int iec_present;		/* Flag for checking for mixed SI and IEC. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
@@ -1754,10 +1754,10 @@ numcompare (const char *a, const char *b)
 static void
 check_mixed_SI_IEC (char prefix, struct keyfield *key)
 {
-  int si_present = prefix == 'i';
-  if (key->si_present != -1 && si_present != key->si_present)
+  int iec_present = prefix == 'i';
+  if (key->iec_present != -1 && iec_present != key->iec_present)
     error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
-  key->si_present = si_present;
+  key->iec_present = iec_present;
 }
 
 /* Return an integer which represents the order of magnitude of
@@ -3211,7 +3211,7 @@ key_init (struct keyfield *key)
 {
   memset (key, 0, sizeof *key);
   key->eword = SIZE_MAX;
-  key->si_present = -1;
+  key->iec_present = -1;
   return key;
 }
 
@@ -3328,7 +3328,7 @@ main (int argc, char **argv)
   gkey.ignore = NULL;
   gkey.translate = NULL;
   gkey.numeric = gkey.general_numeric = gkey.human_numeric = false;
-  gkey.si_present = -1;
+  gkey.iec_present = -1;
   gkey.random = gkey.version = false;
   gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
