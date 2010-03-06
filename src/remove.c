@@ -171,9 +171,13 @@ write_protected_non_symlink (int fd_cwd,
   {
     /* This implements #1: on decent systems, either faccessat is
        native or /proc/self/fd allows us to skip a chdir.  */
-    if (!openat_needs_fchdir ()
-        && faccessat (fd_cwd, file, W_OK, AT_EACCESS) == 0)
-      return 0;
+    if (!openat_needs_fchdir ())
+      {
+        if (faccessat (fd_cwd, file, W_OK, AT_EACCESS) == 0)
+          return 0;
+
+        return errno == EACCES ? 1 : -1;
+      }
 
     /* This implements #5: */
     size_t file_name_len = strlen (full_name);
