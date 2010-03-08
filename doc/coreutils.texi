@@ -5318,7 +5318,13 @@ of selected bytes.
 Select for printing only the fields listed in @var{field-list}.
 Fields are separated by a TAB character by default.  Also print any
 line that contains no delimiter character, unless the
-@option{--only-delimited} (@option{-s}) option is specified
+@option{--only-delimited} (@option{-s}) option is specified.
+Note @command{cut} does not support specifying runs of whitespace as a
+delimiter, so to achieve that common functionality one can pre-process
+with @command{tr} like:
+@example
+tr -s '[:blank:]' '\t' | cut -f@dots{}
+@end example
 
 @item -d @var{input_delim_byte}
 @itemx --delimiter=@var{input_delim_byte}
