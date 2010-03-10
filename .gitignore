@@ -42,6 +42,8 @@ coreutils-*.tar.gz
 coreutils-*.tar.gz.sig
 coreutils-*.tar.lzma
 coreutils-*.tar.lzma.sig
+coreutils-*.tar.xz
+coreutils-*.tar.xz.sig
 gnulib-tests
 lib/.cvsignore
 lib/.gitignore
