@@ -40,8 +40,6 @@ coreutils-*.tar.bz2
 coreutils-*.tar.bz2.sig
 coreutils-*.tar.gz
 coreutils-*.tar.gz.sig
-coreutils-*.tar.lzma
-coreutils-*.tar.lzma.sig
 coreutils-*.tar.xz
 coreutils-*.tar.xz.sig
 gnulib-tests
