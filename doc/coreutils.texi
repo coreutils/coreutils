@@ -8718,7 +8718,7 @@ The intended use of this is to shred a removed temporary file.
 For example:
 
 @example
-i=`tempfile -m 0600`
+i=`mktemp`
 exec 3<>"$i"
 rm -- "$i"
 echo "Hello, world" >&3
