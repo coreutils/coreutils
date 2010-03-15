@@ -1,0 +1,11 @@
+Files:
+tests/test-mbsalign.c
+tests/macros.h
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-mbsalign
+check_PROGRAMS += test-mbsalign
