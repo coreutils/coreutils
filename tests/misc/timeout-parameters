@@ -35,6 +35,10 @@ test $? = 125 || fail=1
 timeout invalid sleep 0
 test $? = 125 || fail=1
 
+# invalid kill delay
+timeout --kill-after=invalid 1 sleep 0
+test $? = 125 || fail=1
+
 # invalid timeout suffix
 timeout 42D sleep 0
 test $? = 125 || fail=1

@@ -15221,31 +15221,25 @@ might find this idea strange at first.
 still running after the specified time interval.  Synopsis:
 
 @example
-timeout [@var{option}] @var{number}[smhd] @var{command} [@var{arg}]@dots{}
+timeout [@var{option}] @var{duration} @var{command} [@var{arg}]@dots{}
 @end example
-
-@cindex time units
-@var{number} is an integer followed by an optional unit; the default
-is seconds.  The units are:
-
-@table @samp
-@item s
-seconds
-@item m
-minutes
-@item h
-hours
-@item d
-days
-@end table
 
 @var{command} must not be a special built-in utility (@pxref{Special
 built-in utilities}).
 
-The program accepts the following option.  Also see @ref{Common options}.
+The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
+@item -k @var{duration}
+@itemx --kill-after=@var{duration}
+@opindex -k
+@opindex --kill-after
+Ensure the monitored @var{command} is killed by also sending a @samp{KILL}
+signal, after the specified @var{duration}.  Without this option, if the
+selected signal proves not to be fatal, @command{timeout} does not kill
+the @var{command}.
+
 @item -s @var{signal}
 @itemx --signal=@var{signal}
 @opindex -s
@@ -15253,8 +15247,17 @@ Options must precede operands.
 Send this @var{signal} to @var{command} on timeout, rather than the
 default @samp{TERM} signal. @var{signal} may be a name like @samp{HUP}
 or a number. Also see @xref{Signal specifications}.
-
 @end table
+
+@cindex time units
+@var{duration} is an integer followed by an optional unit:
+@display
+@samp{s} for seconds (the default)
+@samp{m} for minutes
+@samp{h} for hours
+@samp{d} for days
+@end display
+A duration of 0 disables the associated timeout.
 
 @cindex exit status of @command{timeout}
 Exit status:

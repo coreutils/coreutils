@@ -40,6 +40,12 @@ test $? = 2 || fail=1
 timeout 1 sleep 10
 test $? = 124 || fail=1
 
+# kill delay. Note once the initial timeout triggers,
+# the exit status will be 124 even if the command
+# exits on its own accord.
+timeout -s0 -k1 1 sleep 10
+test $? = 124 && fail=1
+
 # Ensure `timeout` is immune to parent's SIGCHLD handler
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (

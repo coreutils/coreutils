@@ -77,9 +77,11 @@ static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
+static unsigned long kill_after;
 
 static struct option const long_options[] =
 {
+  {"kill-after", required_argument, NULL, 'k'},
   {"signal", required_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
 };
@@ -108,6 +110,13 @@ cleanup (int sig)
           sigs_to_ignore[sig] = 0;
           return;
         }
+      if (kill_after)
+        {
+          /* Start a new timeout after which we'll send SIGKILL.  */
+          term_signal = SIGKILL;
+          alarm (kill_after);
+          kill_after = 0; /* Don't let later signals reset kill alarm.  */
+        }
       send_sig (0, sig);
       if (sig != SIGKILL && sig != SIGCONT)
         send_sig (0, SIGCONT);
@@ -125,20 +134,18 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] NUMBER[SUFFIX] COMMAND [ARG]...\n\
+Usage: %s [OPTION] DURATION COMMAND [ARG]...\n\
   or:  %s [OPTION]\n"), program_name, program_name);
 
       fputs (_("\
-Start COMMAND, and kill it if still running after NUMBER seconds.\n\
-SUFFIX may be `s' for seconds (the default), `m' for minutes,\n\
-`h' for hours or `d' for days.\n\
+Start COMMAND, and kill it if still running after DURATION.\n\
 \n\
-"), stdout);
-
-      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
+  -k, --kill-after=DURATION\n\
+                   also send a KILL signal if COMMAND is still running\n\
+                   this long after the initial signal was sent.\n\
   -s, --signal=SIGNAL\n\
                    specify the signal to be sent on timeout.\n\
                    SIGNAL may be a name like `HUP' or a number.\n\
@@ -146,6 +153,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+
+      fputs (_("\n\
+DURATION is an integer with an optional suffix:\n\
+`s' for seconds(the default), `m' for minutes, `h' for hours or `d' for days.\n\
+"), stdout);
+
       fputs (_("\n\
 If the command times out, then exit with status 124.  Otherwise, exit\n\
 with the status of COMMAND.  If no signal is specified, send the TERM\n\
@@ -195,11 +208,32 @@ apply_time_suffix (unsigned long *x, char suffix_char)
   return true;
 }
 
+static unsigned long
+parse_duration (const char* str)
+{
+  unsigned long duration;
+  char *ep;
+
+  if (xstrtoul (str, &ep, 10, &duration, NULL)
+      /* Invalid interval. Note 0 disables timeout  */
+      || (duration > UINT_MAX)
+      /* Extra chars after the number and an optional s,m,h,d char.  */
+      || (*ep && *(ep + 1))
+      /* Check any suffix char and update timeout based on the suffix.  */
+      || !apply_time_suffix (&duration, *ep))
+    {
+      error (0, 0, _("invalid time interval %s"), quote (str));
+      usage (EXIT_CANCELED);
+    }
+
+  return duration;
+}
+
 static void
 install_signal_handlers (int sigterm)
 {
   struct sigaction sa;
-  sigemptyset(&sa.sa_mask);  /* Allow concurrent calls to handler */
+  sigemptyset (&sa.sa_mask);  /* Allow concurrent calls to handler */
   sa.sa_handler = cleanup;
   sa.sa_flags = SA_RESTART;  /* restart syscalls (like wait() below) */
 
@@ -217,7 +251,6 @@ main (int argc, char **argv)
   unsigned long timeout;
   char signame[SIG2STR_MAX];
   int c;
-  char *ep;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -231,10 +264,13 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
 
-  while ((c = getopt_long (argc, argv, "+s:", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+k:s:", long_options, NULL)) != -1)
     {
       switch (c)
         {
+        case 'k':
+          kill_after = parse_duration (optarg);
+          break;
         case 's':
           term_signal = operand2sig (optarg, signame);
           if (term_signal == -1)
@@ -249,18 +285,7 @@ main (int argc, char **argv)
   if (argc - optind < 2)
     usage (EXIT_CANCELED);
 
-  if (xstrtoul (argv[optind], &ep, 10, &timeout, NULL)
-      /* Invalid interval. Note 0 disables timeout  */
-      || (timeout > UINT_MAX)
-      /* Extra chars after the number and an optional s,m,h,d char.  */
-      || (*ep && *(ep + 1))
-      /* Check any suffix char and update timeout based on the suffix.  */
-      || !apply_time_suffix (&timeout, *ep))
-    {
-      error (0, 0, _("invalid time interval %s"), quote (argv[optind]));
-      usage (EXIT_CANCELED);
-    }
-  optind++;
+  timeout = parse_duration (argv[optind++]);
 
   argv += optind;
 

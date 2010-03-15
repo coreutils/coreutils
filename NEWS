@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   join now accepts the --header option, to treat the first line of each
   file as a header line to be joined and printed unconditionally.
 
+  timeout now accepts the --kill-after option which sends a kill
+  signal to the monitored command if it's still running the specified
+  duration after the initial signal was sent.
+
   who: the "+/-" --mesg (-T) indicator of whether a user/tty is accepting
   messages could be incorrectly listed as "+", when in fact, the user was
   not accepting messages (mesg no).  Before, who would examine only the
