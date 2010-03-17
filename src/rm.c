@@ -176,9 +176,9 @@ use one of these commands:\n\
               program_name, program_name);
       fputs (_("\
 \n\
-Note that if you use rm to remove a file, it is usually possible to recover\n\
-the contents of that file.  If you want more assurance that the contents are\n\
-truly unrecoverable, consider using shred.\n\
+Note that if you use rm to remove a file, it might be possible to recover\n\
+some of its contents, given sufficient expertise and/or time.  For greater\n\
+assurance that the contents are truly unrecoverable, consider using shred.\n\
 "), stdout);
       emit_ancillary_info ();
     }
