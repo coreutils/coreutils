@@ -756,7 +756,7 @@ main (int argc, char **argv)
   int optc;
   bool ok;
   bool delim_specified = false;
-  char *spec_list_string IF_LINT(= NULL);
+  char *spec_list_string IF_LINT (= NULL);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

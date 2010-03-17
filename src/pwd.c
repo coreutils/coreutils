@@ -315,7 +315,7 @@ logical_getcwd (void)
     }
 
   /* System call validation.  */
-  if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && SAME_INODE(st1, st2))
+  if (stat (wd, &st1) == 0 && stat (".", &st2) == 0 && SAME_INODE (st1, st2))
     return wd;
   return NULL;
 }

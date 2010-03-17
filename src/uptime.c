@@ -208,11 +208,11 @@ in the run queue over the last 1, 5 and 15 minutes."));
          but such a test is hard to write.  For the moment then, we
          have a hack which depends on the preprocessor used at compile
          time to tell us what the running kernel is.  Ugh.  */
-      printf(_("  \
+      printf (_("  \
 Processes in\n\
 an uninterruptible sleep state also contribute to the load average.\n"));
 #else
-      printf(_("\n"));
+      printf (_("\n"));
 #endif
       printf (_("\
 If FILE is not specified, use %s.  %s as FILE is common.\n\

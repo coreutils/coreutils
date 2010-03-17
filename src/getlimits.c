@@ -139,14 +139,14 @@ main (int argc, char **argv)
                       usage, AUTHORS, (char const *) NULL);
 
 #define print_int(TYPE)                                                  \
-  snprintf (limit, sizeof(limit), "%"PRIuMAX, (uintmax_t)TYPE##_MAX);    \
+  snprintf (limit, sizeof limit, "%"PRIuMAX, (uintmax_t)TYPE##_MAX);    \
   printf (#TYPE"_MAX=%s\n", limit);                                      \
   oflow = decimal_ascii_add (limit, "1");                                \
   printf (#TYPE"_OFLOW=%s\n", oflow);                                    \
   free (oflow);                                                          \
   if (TYPE##_MIN)                                                        \
     {                                                                    \
-      snprintf (limit, sizeof(limit), "%"PRIdMAX, (intmax_t)TYPE##_MIN); \
+      snprintf (limit, sizeof limit, "%"PRIdMAX, (intmax_t)TYPE##_MIN); \
       printf (#TYPE"_MIN=%s\n", limit);                                  \
       oflow = decimal_ascii_add (limit, "-1");                           \
       printf (#TYPE"_UFLOW=%s\n", oflow);                                \

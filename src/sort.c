@@ -1240,10 +1240,10 @@ specify_nmerge (int oi, char c, char const *s)
           if (nmerge < 2)
             {
               error (0, 0, _("invalid --%s argument %s"),
-                     long_options[oi].name, quote(s));
+                     long_options[oi].name, quote (s));
               error (SORT_FAILURE, 0,
                      _("minimum --%s argument is %s"),
-                     long_options[oi].name, quote("2"));
+                     long_options[oi].name, quote ("2"));
             }
           else if (max_nmerge < nmerge)
             {
@@ -1258,7 +1258,7 @@ specify_nmerge (int oi, char c, char const *s)
     {
       char max_nmerge_buf[INT_BUFSIZE_BOUND (unsigned int)];
       error (0, 0, _("--%s argument %s too large"),
-             long_options[oi].name, quote(s));
+             long_options[oi].name, quote (s));
       error (SORT_FAILURE, 0,
              _("maximum --%s argument with current rlimit is %s"),
              long_options[oi].name,
@@ -2586,11 +2586,11 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
     }
 
   xfclose (ofp, output_file);
-  free(fps);
-  free(buffer);
-  free(ord);
-  free(base);
-  free(cur);
+  free (fps);
+  free (buffer);
+  free (ord);
+  free (base);
+  free (cur);
 }
 
 /* Merge lines from FILES onto OFP.  NTEMPS is the number of temporary
@@ -2789,8 +2789,8 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
               files[i].pid = pid;
 
               if (i + num_merged < nfiles)
-                memmove(&files[i + 1], &files[i + num_merged],
-                        num_merged * sizeof *files);
+                memmove (&files[i + 1], &files[i + num_merged],
+                         num_merged * sizeof *files);
               ntemps += 1;
               nfiles -= num_merged - 1;;
               i += num_merged;
@@ -2864,7 +2864,7 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
 
       /* Put the remaining input files into the last NMERGE-sized output
          window, so they will be merged in the next pass.  */
-      memmove(&files[out], &files[in], (nfiles - in) * sizeof *files);
+      memmove (&files[out], &files[in], (nfiles - in) * sizeof *files);
       ntemps += out;
       nfiles -= in - out;
     }

@@ -625,7 +625,7 @@ join (FILE *fp1, FILE *fp2)
 
   if (join_header_lines && seq1.count && seq2.count)
     {
-      prjoin(seq1.lines[0], seq2.lines[0]);
+      prjoin (seq1.lines[0], seq2.lines[0]);
       prevline[0] = NULL;
       prevline[1] = NULL;
       advance_seq (fp1, &seq1, true, 1);

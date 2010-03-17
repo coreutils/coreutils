@@ -1875,7 +1875,7 @@ main (int argc, char **argv)
 
   offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
   input_seekable = (0 <= offset);
-  input_offset = MAX(0, offset);
+  input_offset = MAX (0, offset);
   input_seek_errno = errno;
 
   if (output_file == NULL)

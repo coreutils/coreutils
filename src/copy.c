@@ -837,7 +837,7 @@ copy_reg (char const *src_name, char const *dst_name,
     {
       bool access_changed = false;
 
-      if (!(sb.st_mode & S_IWUSR) && geteuid() != 0)
+      if (!(sb.st_mode & S_IWUSR) && geteuid () != 0)
         access_changed = fchmod_or_lchmod (dest_desc, dst_name, 0600) == 0;
 
       if (!copy_attr_by_fd (src_name, source_desc, dst_name, dest_desc, x)
