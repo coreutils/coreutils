@@ -4594,7 +4594,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -a, --all                  do not ignore entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
       --author               with -l, print the author of each file\n\
-  -b, --escape               print octal escapes for nongraphic characters\n\
+  -b, --escape               print C-style escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
       --block-size=SIZE      use SIZE-byte blocks.  See SIZE format below\n\
