@@ -642,6 +642,7 @@ all_programs.list:
 # in order to generate all man pages, even those for which we don't
 # install a binary, require that all programs be built at distribution time.
 dist-hook: $(all_programs)
+.PHONY: dist-hook
 
 # Ensure that all programs are built so we can for example
 # subsequently syntax check all man pages.
