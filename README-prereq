@@ -46,7 +46,7 @@ set correctly by running this command:
   ./configure --prefix=$prefix
   make install
 
-coreutils uses XZ utils (successor to LZMA) to create
+This package uses XZ utils (successor to LZMA) to create
 a compressed distribution tarball.  Using this feature of Automake
 requires version 1.10a or newer, as well as the xz program itself.
 
