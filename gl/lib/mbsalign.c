@@ -178,6 +178,12 @@ mbsalign (const char *src, char *dest, size_t dest_size,
      then create a modified copy of it.  */
   if (wc_enabled && (conversion || (n_cols > *width)))
     {
+        if (conversion)
+          {
+             /* May have increased the size by converting
+                \t to \uFFFD for example.  */
+            src_size = wcstombs (NULL, str_wc, 0) + 1;
+          }
         newstr = malloc (src_size);
         if (newstr == NULL)
         {

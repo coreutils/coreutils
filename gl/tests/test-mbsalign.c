@@ -87,6 +87,13 @@ main (void)
       width = 4;                /* cells */
       n = mbsalign ("¹²³", dest, 0, &width, MBS_ALIGN_LEFT, 0);
       ASSERT (width == 3);
+
+      /* Test case where output is larger than input
+         (as tab converted to multi byte replacement char).  */
+      width = 4;
+      n = mbsalign ("t\tés" /* 6 including NUL */ , dest, sizeof dest,
+                    &width, MBS_ALIGN_LEFT, 0);
+      ASSERT (n == 7);
     }
 
   return 0;
