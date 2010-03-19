@@ -14,14 +14,18 @@ I.E. the tools checked for by the bootstrap script and include:
 - Texinfo   <http://www.gnu.org/software/texinfo/>
 
 Note please try to install/build official packages for your system.
-If these are not available then one can make them available only to
-the coreutils build using the following instructions.  Even if the
-official packages for your system are too old, please install them
-as they may be required to build the newer versions.  The examples
-below build into $HOME/coreutils/deps/, so first ensure that your
-$PATH is set correctly, which can be done for the current shell like:
+If these programs are not available use the following instructions
+to build them and install the results into a directory that you will
+then use when building this package.
 
-  export PATH=$HOME/coreutils/deps/bin:$PATH
+Even if the official version of a package for your system is too old,
+please install it, as it may be required to build the newer versions.
+The examples below install into $HOME/coreutils/deps/, so if you are
+going to follow these instructions, first ensure that your $PATH is
+set correctly by running this command:
+
+  prefix=$HOME/coreutils/deps
+  export PATH=$prefix/bin:$PATH
 
 * autoconf *
 
@@ -29,7 +33,7 @@ $PATH is set correctly, which can be done for the current shell like:
   git clone --depth=1 git://git.sv.gnu.org/autoconf.git
   git checkout v2.62
   autoreconf -vi
-  ./configure --prefix=$HOME/coreutils/deps
+  ./configure --prefix=$prefix
   make install
 
 * automake *
@@ -39,7 +43,7 @@ $PATH is set correctly, which can be done for the current shell like:
   cd automake
   git checkout v1.11.1
   ./bootstrap
-  ./configure --prefix=$HOME/coreutils/deps
+  ./configure --prefix=$prefix
   make install
 
 coreutils uses XZ utils (successor to LZMA) to create
@@ -51,7 +55,7 @@ requires version 1.10a or newer, as well as the xz program itself.
   git clone git://ctrl.tukaani.org/xz.git
   cd xz
   ./autogen.sh
-  ./configure --prefix=$HOME/coreutils/deps
+  ./configure --prefix=$prefix
   make install
 
-Now one can build coreutils as described in README-hacking.
+Now you can build this package as described in README-hacking.
