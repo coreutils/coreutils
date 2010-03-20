@@ -261,27 +261,56 @@ sc_prohibit_sleep:
 	msg='prefer xnanosleep over other sleep interfaces'		\
 	  $(_prohibit_regexp)
 
+###########################################################
+_p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
+_pre = $(_p0)\|[/][^"'/*]\|[/]"\([^\"]\|[\].\)*"\|[/]'\([^\']\|[\].\)*'\)*
+_pre_anchored = ^\($(_pre)\)
+_comment_and_close = [^*]\|[*][^/*]\)*[*][*]*/
+# help font-lock mode: '
+
+# A sed expression that removes ANSI C and ISO C99 comments.
+# Derived from the one in GNU gettext's 'moopp' preprocessor.
+_sed_remove_comments =					\
+/[/][/*]/{						\
+  ta;							\
+  :a;							\
+  s,$(_pre_anchored)//.*,\1,;				\
+  te;							\
+  s,$(_pre_anchored)/[*]\($(_comment_and_close),\1 ,;	\
+  ta;							\
+  /^$(_pre)[/][*]/{					\
+    s,$(_pre_anchored)/[*].*,\1 ,;			\
+    tu;							\
+    :u;							\
+    n;							\
+    s,^\($(_comment_and_close),,;			\
+    tv;							\
+    s,^.*$$,,;						\
+    bu;							\
+    :v;							\
+  };							\
+  :e;							\
+}
+# Quote all single quotes.
+_sed_rm_comments_q = $(subst ','\'',$(_sed_remove_comments))
+# help font-lock mode: '
+
 _space_before_paren_exempt =? \\n\\$$
 _space_before_paren_exempt = \
-  (\\n\\$$|%s\(to %s|delimit-method|(date|group|character)\(s\))
+  (^ *\#|\\n\\$$|%s\(to %s|(date|group|character)\(s\))
 # Ensure that there is a space before each open parenthesis in C code.
 sc_space_before_open_paren:
 	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
-	  if (cpp -fpreprocessed < /dev/null > /dev/null 2>&1); then	\
-	    fail=0;							\
-	    for c in $$($(VC_LIST_EXCEPT) | grep '\.[ch]$$'); do	\
-	      cpp -fpreprocessed $$c 2>/dev/null			\
-		| grep -ni '[[:alnum:]]('				\
-		| grep -vE '$(_space_before_paren_exempt)'		\
-		| grep . && { fail=1; echo "*** $$c"; };		\
-	    done;							\
-	    test $$fail = 1 &&						\
-	      { echo '$(ME): the above files lack a space-before-open-paren' \
-		  1>&2; exit 1; } || :;					\
-	  else								\
-	    echo '$(ME): skipping test $@: cpp -fpreprocessed does not work' \
-	      1>&2;							\
-	  fi;								\
+	  fail=0;							\
+	  for c in $$($(VC_LIST_EXCEPT) | grep '\.[ch]$$'); do		\
+	    sed '$(_sed_rm_comments_q)' $$c 2>/dev/null			\
+	      | grep -i '[[:alnum:]]('					\
+	      | grep -vE '$(_space_before_paren_exempt)'		\
+	      | grep . && { fail=1; echo "*** $$c"; };			\
+	  done;								\
+	  test $$fail = 1 &&						\
+	    { echo '$(ME): the above files lack a space-before-open-paren' \
+		1>&2; exit 1; } || :;					\
 	else :;								\
 	fi
 
