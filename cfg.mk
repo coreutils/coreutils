@@ -261,6 +261,29 @@ sc_prohibit_sleep:
 	msg='prefer xnanosleep over other sleep interfaces'		\
 	  $(_prohibit_regexp)
 
+_space_before_paren_exempt =? \\n\\$$
+_space_before_paren_exempt = \
+  (\\n\\$$|%s\(to %s|delimit-method|(date|group|character)\(s\))
+# Ensure that there is a space before each open parenthesis in C code.
+sc_space_before_open_paren:
+	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
+	  if (cpp -fpreprocessed < /dev/null > /dev/null 2>&1); then	\
+	    fail=0;							\
+	    for c in $$($(VC_LIST_EXCEPT) | grep '\.[ch]$$'); do	\
+	      cpp -fpreprocessed $$c 2>/dev/null			\
+		| grep -ni '[[:alnum:]]('				\
+		| grep -vE '$(_space_before_paren_exempt)'		\
+		| grep . && { fail=1; echo "*** $$c"; };		\
+	    done;							\
+	    test $$fail = 1 &&						\
+	      { echo '$(ME): the above files lack a space-before-open-paren' \
+		  1>&2; exit 1; } || :;					\
+	  else								\
+	    echo '$(ME): skipping test $@: cppi not installed' 1>&2;	\
+	  fi;								\
+	else :;								\
+	fi
+
 include $(srcdir)/dist-check.mk
 
 update-copyright-env = \
