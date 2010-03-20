@@ -182,7 +182,7 @@ enum
 #    define ST_NBLOCKS(statbuf) \
   (S_ISREG ((statbuf).st_mode) \
    || S_ISDIR ((statbuf).st_mode) \
-   ? (statbuf).st_blocks * ST_BLKSIZE(statbuf)/ST_NBLOCKSIZE : 0)
+   ? (statbuf).st_blocks * ST_BLKSIZE (statbuf) / ST_NBLOCKSIZE : 0)
 #   endif /* _CRAY */
 #  endif /* not AIX PS/2 */
 # endif /* !hpux */
