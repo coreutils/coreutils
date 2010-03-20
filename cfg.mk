@@ -279,7 +279,8 @@ sc_space_before_open_paren:
 	      { echo '$(ME): the above files lack a space-before-open-paren' \
 		  1>&2; exit 1; } || :;					\
 	  else								\
-	    echo '$(ME): skipping test $@: cppi not installed' 1>&2;	\
+	    echo '$(ME): skipping test $@: cpp -fpreprocessed does not work' \
+	      1>&2;							\
 	  fi;								\
 	else :;								\
 	fi
