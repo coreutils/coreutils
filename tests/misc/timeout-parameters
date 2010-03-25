@@ -27,10 +27,6 @@ getlimits_
 
 # internal errors are 125, distinct from execution failure
 
-# --help and --version must be specified alone
-timeout --help --version
-test $? = 125 || fail=1
-
 # invalid timeout
 timeout invalid sleep 0
 test $? = 125 || fail=1

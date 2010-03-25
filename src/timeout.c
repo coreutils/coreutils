@@ -66,7 +66,6 @@
 #include "operand2sig.h"
 #include "cloexec.h"
 #include "error.h"
-#include "long-options.h"
 #include "quote.h"
 
 #define PROGRAM_NAME "timeout"
@@ -83,6 +82,8 @@ static struct option const long_options[] =
 {
   {"kill-after", required_argument, NULL, 'k'},
   {"signal", required_argument, NULL, 's'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -261,9 +262,6 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-                      usage, AUTHORS, (char const *) NULL);
-
   while ((c = getopt_long (argc, argv, "+k:s:", long_options, NULL)) != -1)
     {
       switch (c)
@@ -271,11 +269,17 @@ main (int argc, char **argv)
         case 'k':
           kill_after = parse_duration (optarg);
           break;
+
         case 's':
           term_signal = operand2sig (optarg, signame);
           if (term_signal == -1)
             usage (EXIT_CANCELED);
           break;
+
+        case_GETOPT_HELP_CHAR;
+
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
         default:
           usage (EXIT_CANCELED);
           break;
