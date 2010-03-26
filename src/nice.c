@@ -30,7 +30,6 @@
 #endif
 
 #include "error.h"
-#include "long-options.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -58,6 +57,8 @@
 static struct option const longopts[] =
 {
   {"adjustment", required_argument, NULL, 'n'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -110,9 +111,6 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-                      usage, AUTHORS, (char const *) NULL);
-
   for (i = 1; i < argc; /* empty */)
     {
       char const *s = argv[i];
@@ -124,7 +122,7 @@ main (int argc, char **argv)
         }
       else
         {
-          int optc;
+          int c;
           int fake_argc = argc - (i - 1);
           char **fake_argv = argv + (i - 1);
 
@@ -134,14 +132,28 @@ main (int argc, char **argv)
           /* Initialize getopt_long's internal state.  */
           optind = 0;
 
-          optc = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
+          c = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
           i += optind - 1;
 
-          if (optc == '?')
-            usage (EXIT_CANCELED);
-          else if (optc == 'n')
-            adjustment_given = optarg;
-          else /* optc == -1 */
+          switch (c)
+            {
+            case 'n':
+              adjustment_given = optarg;
+              break;
+
+            case -1:
+              break;
+
+            case_GETOPT_HELP_CHAR;
+
+            case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+            default:
+              usage (EXIT_CANCELED);
+              break;
+            }
+
+          if (c == -1)
             break;
         }
     }

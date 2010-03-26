@@ -29,8 +29,6 @@ fi
 # them actually run a command, we don't need root privileges
 chroot # missing argument
 test $? = 125 || fail=1
-chroot --help --version # too many options
-test $? = 125 || fail=1
 chroot --- / true # unknown option
 test $? = 125 || fail=1
 

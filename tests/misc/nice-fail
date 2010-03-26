@@ -28,8 +28,6 @@ fi
 # These tests verify exact status of internal failure.
 nice -n 1 # missing command
 test $? = 125 || fail=1
-nice --help --version # too many options
-test $? = 125 || fail=1
 nice --- # unknown option
 test $? = 125 || fail=1
 nice -n 1a # invalid adjustment

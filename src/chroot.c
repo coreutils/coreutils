@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "quote.h"
 #include "userspec.h"
 #include "xstrtol.h"
@@ -162,9 +161,6 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-                      usage, AUTHORS, (char const *) NULL);
-
   while ((c = getopt_long (argc, argv, "+", long_opts, NULL)) != -1)
     {
       switch (c)
@@ -172,9 +168,15 @@ main (int argc, char **argv)
         case USERSPEC:
           userspec = optarg;
           break;
+
         case GROUPS:
           groups = optarg;
           break;
+
+        case_GETOPT_HELP_CHAR;
+
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
         default:
           usage (EXIT_CANCELED);
         }
