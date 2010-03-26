@@ -22,7 +22,7 @@ else
   as_unset=false
 fi
 
-envvar_check_failed=0
+envvar_check_fail=0
 vars='
   _POSIX2_VERSION
   BLOCKSIZE
@@ -49,7 +49,7 @@ do
   if eval test \"\${$var+set}\" = set; then
     echo "$0: the $var environment variable is set --" \
       ' unset it and rerun this test' >&2
-    envvar_check_failed=1
+    envvar_check_fail=1
   fi
 done
 
