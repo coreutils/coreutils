@@ -7344,7 +7344,7 @@ directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
 Try to preserve SELinux security context and extended attributes (xattr),
 but ignore any failure to do that and print no corresponding diagnostic.
-Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
+Equivalent to @option{-dR --preserve=all}.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
@@ -7518,8 +7518,7 @@ they are preserved by this option as well.
 Preserve all file attributes.
 Equivalent to specifying all of the above, but with the difference
 that failure to preserve SELinux security context or extended attributes
-does not change @command{cp}'s exit status.
-@command{cp} does diagnose such failures.
+does not change @command{cp}'s exit status, or produce error messages.
 @end table
 
 Using @option{--preserve} with no @var{attribute_list} is equivalent
