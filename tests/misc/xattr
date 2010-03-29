@@ -66,24 +66,24 @@ cp --preserve=xattr a b || fail=1
 getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_b || fail=1
 
-#test if --preserve=all option works
+# test if --preserve=all option works
 cp --preserve=all a c || fail=1
 getfattr -d c >out_c || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_c || fail=1
 
-#test if -a option works without any diagnostics
+# cp's -a option must produce no diagnostics.
 cp -a a d 2>err && test -s err && fail=1
 getfattr -d d >out_d || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_d || fail=1
 
-#test if --preserve=xattr works even for files without write access
+# test if --preserve=xattr works even for files without write access
 chmod a-w a || framework_failure
 rm -f e
 cp --preserve=xattr a e || fail=1
 getfattr -d e >out_e || skip_test_ "failed to get xattr of file"
 grep -F "$xattr_pair" out_e || fail=1
 
-#Ensure that permission bits are preserved, too.
+# Ensure that permission bits are preserved, too.
 src_perm=$(stat --format=%a a)
 dst_perm=$(stat --format=%a e)
 test "$dst_perm" = "$src_perm" || fail=1

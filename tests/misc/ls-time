@@ -77,14 +77,14 @@ EOF
   ;;
 esac
 
-# Now test touch's -a option.
+# Ensure that touch's -a option works.
 set -- `ls --full -lu a`
 case "$*" in
   *" $u1:00.000000000 +0000 a") ;;
   *)
   # This might be what's making HPUX 11 systems fail this test.
   cat >&2 << EOF
-A basic test of touch -a has just failed, so the subsequent
+A fundamental touch -a test has just failed, so the subsequent
 tests in this file will not be run.
 
 In the output below, the date of last access for \`a' should
