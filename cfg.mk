@@ -18,7 +18,8 @@
 manual_title = Core GNU utilities
 
 # Tests not to run as part of "make distcheck".
-local-checks-to-skip =
+local-checks-to-skip = \
+  sc_texinfo_acronym
 
 # Tools used to bootstrap this package, used for "announcement".
 bootstrap-tools = autoconf,automake,gnulib,bison
