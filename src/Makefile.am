@@ -170,6 +170,9 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 noinst_LIBRARIES = libver.a
 nodist_libver_a_SOURCES = version.c version.h
 
+# Tell the linker to omit references to unused shared libraries.
+AM_LDFLAGS = $(IGNORE_UNUSED_LIBRARIES_CFLAGS)
+
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
