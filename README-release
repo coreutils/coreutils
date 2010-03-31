@@ -40,7 +40,7 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 * Set the date, version number, and release type [stable/alpha/beta] on
   line 3 of NEWS, commit that, and tag the release by running e.g.,
 
-    build-aux/do-release-commit-and-tag 8.1 beta
+    build-aux/do-release-commit-and-tag 8.x stable
 
 * Run the following to create release tarballs.  Your choice selects the
   corresponding upload-to destination in the emitted gnupload command.
@@ -71,9 +71,11 @@ Once all the builds and tests have passed,
 
 * Send the gpg-signed announcement mail, e.g.,
 
-    To: info-gnu@gnu.org, coreutils-announce@gnu.org
-    Cc: coordinator@translationproject.org, bug-coreutils@gnu.org
-    Subject: coreutils-8.0 released [beta]
+    To: info-gnu@gnu.org
+    Cc: coordinator@translationproject.org, coreutils@gnu.org
+    Cc: coreutils-announce@gnu.org
+    Subject: coreutils-8.0 released [stable]
+    Reply-To: bug-coreutils@gnu.org
 
 * Approve the announcement here:
   http://lists.gnu.org/mailman/admindb/coreutils-announce
@@ -86,9 +88,11 @@ Once all the builds and tests have passed,
    the Main -> "Select Features" menu item, or via this link:
    https://savannah.gnu.org/project/admin/editgroupfeatures.php?group=coreutils)
 
-    Subject: coreutils-0.0 released [beta]
-    The announcement is here:
-      http://article.gmane.org/gmane.comp.gnu.core-utils.announce/54
+    Subject: coreutils-8.0 released [stable]
+
+    +verbatim+
+    ...paste the announcement here...
+    -verbatim-
 
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
