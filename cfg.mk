@@ -200,15 +200,15 @@ sc_no_exec_perl_coreutils:
 
 # Don't use "readlink" or "readlinkat" directly
 sc_prohibit_readlink:
-	@re='\<readlink(at)? \('					\
-	msg='do not use readlink(at); use via xreadlink or areadlink*'	\
-	  $(_prohibit_regexp)
+	@prohibit='\<readlink(at)? \('					\
+	halt='do not use readlink(at); use via xreadlink or areadlink*'	\
+	  $(_sc_search_regexp)
 
 # Don't use address of "stat" or "lstat" functions
 sc_prohibit_stat_macro_address:
-	@re='\<l?stat '':|&l?stat\>'					\
-	msg='stat() and lstat() may be function-like macros'		\
-	  $(_prohibit_regexp)
+	@prohibit='\<l?stat '':|&l?stat\>'				\
+	halt='stat() and lstat() may be function-like macros'		\
+	  $(_sc_search_regexp)
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
@@ -227,22 +227,22 @@ sc_strftime_check:
 
 # Indent only with spaces.
 sc_prohibit_tab_based_indentation:
-	@re='^ *	'						\
-	msg='TAB in indentation; use only spaces'			\
-	  $(_prohibit_regexp)
+	@prohibit='^ *	'						\
+	halt='TAB in indentation; use only spaces'			\
+	  $(_sc_search_regexp)
 
 # Don't use "indent-tabs-mode: nil" anymore.  No longer needed.
 sc_prohibit_emacs__indent_tabs_mode__setting:
-	@re='^( *[*#] *)?indent-tabs-mode:'				\
-	msg='use of emacs indent-tabs-mode: setting'			\
-	  $(_prohibit_regexp)
+	@prohibit='^( *[*#] *)?indent-tabs-mode:'			\
+	halt='use of emacs indent-tabs-mode: setting'			\
+	  $(_sc_search_regexp)
 
 # Ensure that each file that contains fail=1 also contains fail=0.
 # Otherwise, setting file=1 in the environment would make tests fail unexpectedly.
 sc_prohibit_fail_0:
-	@re='\<fail=0\>'						\
-	msg='fail=0 initialization'					\
-	  $(_prohibit_regexp)
+	@prohibit='\<fail=0\>'						\
+	halt='fail=0 initialization'					\
+	  $(_sc_search_regexp)
 
 # Ensure that "stdio--.h" is used where appropriate.
 sc_require_stdio_safer:
@@ -258,9 +258,9 @@ sc_require_stdio_safer:
 
 # Prefer xnanosleep over other less-precise sleep methods
 sc_prohibit_sleep:
-	@re='\<(nano|u)?sleep \('					\
-	msg='prefer xnanosleep over other sleep interfaces'		\
-	  $(_prohibit_regexp)
+	@prohibit='\<(nano|u)?sleep \('					\
+	halt='prefer xnanosleep over other sleep interfaces'		\
+	  $(_sc_search_regexp)
 
 ###########################################################
 _p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
