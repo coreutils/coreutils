@@ -56,6 +56,8 @@
 # include "fs.h"
 # if HAVE_SYS_STATFS_H
 #  include <sys/statfs.h>
+# elif HAVE_SYS_VFS_H
+#  include <sys/vfs.h>
 # endif
 #endif
 
