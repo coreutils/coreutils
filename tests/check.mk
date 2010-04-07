@@ -69,6 +69,7 @@ TESTS_ENVIRONMENT =				\
     fi;						\
   };						\
   export					\
+  VERSION='$(VERSION)'				\
   LOCALE_FR='$(LOCALE_FR)'			\
   LOCALE_FR_UTF8='$(LOCALE_FR_UTF8)'		\
   abs_top_builddir='$(abs_top_builddir)'	\
