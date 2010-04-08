@@ -75,7 +75,7 @@ Once all the builds and tests have passed,
     Cc: coordinator@translationproject.org, coreutils@gnu.org
     Cc: coreutils-announce@gnu.org
     Subject: coreutils-8.0 released [stable]
-    Reply-To: bug-coreutils@gnu.org
+    Mail-Followup-To: bug-coreutils@gnu.org
 
 * Approve the announcement here:
   http://lists.gnu.org/mailman/admindb/coreutils-announce
