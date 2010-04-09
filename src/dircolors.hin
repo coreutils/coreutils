@@ -38,9 +38,11 @@ TERM mach-color
 TERM mlterm
 TERM putty
 TERM rxvt
+TERM rxvt-256color
 TERM rxvt-cygwin
 TERM rxvt-cygwin-native
 TERM rxvt-unicode
+TERM rxvt-unicode256
 TERM screen
 TERM screen-256color
 TERM screen-256color-bce
