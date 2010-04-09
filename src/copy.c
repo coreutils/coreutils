@@ -798,15 +798,9 @@ copy_reg (char const *src_name, char const *dst_name,
 
       if (last_write_made_hole)
         {
-          if (HAVE_FTRUNCATE
-              ? /* ftruncate sets the file size,
-                   so there is no need for a write.  */
-              ftruncate (dest_desc, n_read_total) < 0
-              : /* Seek backwards one character and write a null.  */
-              (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
-               || full_write (dest_desc, "", 1) != 1))
+          if (ftruncate (dest_desc, n_read_total) < 0)
             {
-              error (0, errno, _("writing %s"), quote (dst_name));
+              error (0, errno, _("truncating %s"), quote (dst_name));
               return_val = false;
               goto close_src_and_dst_desc;
             }

@@ -18,12 +18,7 @@
 
    This is backwards compatible with the FreeBSD utility, but is more
    flexible wrt the size specifications and the use of long options,
-   to better fit the "GNU" environment.
-
-   Note if !defined(HAVE_FTRUNCATE) then the --skip-ftruncate configure flag
-   was specified or we're in a mingw environment. In these cases gnulib
-   emulation will be used and GNULIB_FTRUNCATE is defined. Note if emulation
-   can't even be provided ftruncate() will return EIO.  */
+   to better fit the "GNU" environment.  */
 
 #include <config.h>             /* sets _FILE_OFFSET_BITS=64 etc. */
 #include <stdio.h>
