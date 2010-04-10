@@ -7512,7 +7512,7 @@ if the preserving of SELinux security context is not succesful.
 @itemx xattr
 Preserve extended attributes if @command{cp} is built with xattr support,
 and xattrs are supported and enabled on your file system.
-If SELinux context and/or ACLs are implemented using xattrs,
+If SELinux context, ACLs or Capabilities are implemented using xattrs,
 they are preserved by this option as well.
 @itemx all
 Preserve all file attributes.
@@ -8274,7 +8274,8 @@ the destination partition and the second and third would be left on the
 original partition.
 
 @cindex extended attributes, xattr
-@command{mv} always tries to copy extended attributes (xattr).
+@command{mv} always tries to copy extended attributes (xattr), which may
+include SELinux context, ACLs or Capabilities.
 
 @cindex prompting, and @command{mv}
 If a destination file exists but is normally unwritable, standard input
