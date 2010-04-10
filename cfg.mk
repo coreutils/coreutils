@@ -315,6 +315,30 @@ sc_space_before_open_paren:
 	else :;								\
 	fi
 
+# The following tail+perl pipeline would be much more concise, and would
+# produce slightly better output (including counts) if written as
+#   perl -ln -0777 -e '/\n(\n+)$/ and print "$ARGV: ".length $1' ...
+# but that would be far less efficient, reading the entire contents
+# of each file, rather than just the last few bytes of each.
+#
+# This is a perl script that operates on the output of
+# tail -n1 TWO_OR_MORE_FILES
+# Print the name of each file that ends in two or more newline bytes.
+# Exit nonzero if at least one such file is found, otherwise, exit 0.
+#
+# Use this if you want to remove trailing empty lines from selected files:
+#   perl -pi -0777 -e 's/\n\n+$/\n/' files...
+#
+detect_empty_lines_at_EOF_ =						\
+  /^==> ([^\n]+) <==\n\n/m and (print "$$1\n"), $$fail = 1;		\
+  END { exit defined $$fail }
+
+sc_prohibit_empty_lines_at_EOF:
+	@tail -n1 $$($(VC_LIST_EXCEPT)) /dev/null			\
+	    | perl -00 -ne '$(detect_empty_lines_at_EOF_)'		\
+	  || { echo '$(ME): the above files end with empty line(s)'	\
+		1>&2; exit 1; } || :;					\
+
 include $(srcdir)/dist-check.mk
 
 update-copyright-env = \
