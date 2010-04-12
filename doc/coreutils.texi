@@ -7344,7 +7344,7 @@ directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
 Try to preserve SELinux security context and extended attributes (xattr),
 but ignore any failure to do that and print no corresponding diagnostic.
-Equivalent to @option{-dR --preserve=all}.
+Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
@@ -7507,18 +7507,18 @@ $ mkdir b c; (cd b; : > a; ln -s a b); cp -aL b c; ls -i1 c/b
 @end smallexample
 
 @itemx context
-Preserve SELinux security context of the file. @command{cp} will fail
-if the preserving of SELinux security context is not succesful.
+Preserve SELinux security context of the file, or fail with full diagnostics.
 @itemx xattr
-Preserve extended attributes if @command{cp} is built with xattr support,
-and xattrs are supported and enabled on your file system.
+Preserve extended attributes of the file, or fail with full diagnostics.
+If @command{cp} is built without xattr support, ignore this option.
 If SELinux context, ACLs or Capabilities are implemented using xattrs,
 they are preserved by this option as well.
 @itemx all
 Preserve all file attributes.
 Equivalent to specifying all of the above, but with the difference
 that failure to preserve SELinux security context or extended attributes
-does not change @command{cp}'s exit status, or produce error messages.
+does not change @command{cp}'s exit status.  In contrast to @option{-a},
+all but @samp{Operation not supported} warnings are output.
 @end table
 
 Using @option{--preserve} with no @var{attribute_list} is equivalent
@@ -8276,6 +8276,7 @@ original partition.
 @cindex extended attributes, xattr
 @command{mv} always tries to copy extended attributes (xattr), which may
 include SELinux context, ACLs or Capabilities.
+Upon failure all but @samp{Operation not supported} warnings are output.
 
 @cindex prompting, and @command{mv}
 If a destination file exists but is normally unwritable, standard input

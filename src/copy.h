@@ -180,15 +180,13 @@ struct cp_options
      Set this only if the kernel is SELinux enabled.  */
   bool preserve_security_context;
 
-  /* Useful only when preserve_security_context is true.
-     If true, a failed attempt to preserve a file's security context
-     propagates failure "out" to the caller.  If false, a failure to
-     preserve a file's security context does not change the invoking
-     application's exit status.  Give diagnostics for failed syscalls
-     regardless of this setting.  For example, with "cp --preserve=context"
-     this flag is "true", while with "cp -a", it is false.  That means
-     "cp -a" attempts to preserve any security context, but does not
-     fail if it is unable to do so.  */
+  /* Useful only when preserve_context is true.
+     If true, a failed attempt to preserve file's security context
+     propagates failure "out" to the caller, along with full diagnostics.
+     If false, a failure to preserve file's security context does not
+     change the invoking application's exit status, but may output diagnostics.
+     For example, with `cp --preserve=context` this flag is "true",
+     while with `cp --preserve=all` or `cp -a`, it is "false". */
   bool require_preserve_context;
 
   /* If true, attempt to preserve extended attributes using libattr.
@@ -197,16 +195,19 @@ struct cp_options
 
   /* Useful only when preserve_xattr is true.
      If true, a failed attempt to preserve file's extended attributes
-     propagates failure "out" to the caller.  If false, a failure to
-     preserve file's extended attributes does not change the invoking
-     application's exit status.  Give diagnostics for failed syscalls
-     regardless of this setting.  For example, with "cp --preserve=xattr"
-     this flag is "true", while with "cp --preserve=all", it is false. */
+     propagates failure "out" to the caller, along with full diagnostics.
+     If false, a failure to preserve file's extended attributes does not
+     change the invoking application's exit status, but may output diagnostics.
+     For example, with `cp --preserve=xattr` this flag is "true",
+     while with `cp --preserve=all` or `cp -a`, it is "false". */
   bool require_preserve_xattr;
 
-  /* Used as difference boolean between cp -a and cp -dR --preserve=all.
-     If true, non-mandatory failure diagnostics are not displayed. This
-     should prevent poluting cp -a output.
+  /* This allows us to output warnings in cases 2 and 4 below,
+     while being quiet for case 1 (when reduce_diagnostics is true).
+       1. cp -a                       try to copy xattrs with no errors
+       2. cp --preserve=all           copy xattrs with all but ENOTSUP warnings
+       3. cp --preserve=xattr,context copy xattrs with all errors
+       4. mv                          copy xattrs with all but ENOTSUP warnings
    */
   bool reduce_diagnostics;
 
