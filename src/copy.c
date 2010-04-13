@@ -531,7 +531,8 @@ copy_reg (char const *src_name, char const *dst_name,
           security_context_t con = NULL;
           if (getfscreatecon (&con) < 0)
             {
-              if (!x->reduce_diagnostics || x->require_preserve_context)
+              if (x->require_preserve_context ||
+                  (!x->reduce_diagnostics && !errno_unsupported (errno)))
                 error (0, errno, _("failed to get file system create context"));
               if (x->require_preserve_context)
                 {
@@ -544,7 +545,8 @@ copy_reg (char const *src_name, char const *dst_name,
             {
               if (fsetfilecon (dest_desc, con) < 0)
                 {
-                  if (!x->reduce_diagnostics || x->require_preserve_context)
+                  if (x->require_preserve_context ||
+                      (!x->reduce_diagnostics && !errno_unsupported (errno)))
                     error (0, errno,
                            _("failed to set the security context of %s to %s"),
                            quote_n (0, dst_name), quote_n (1, con));
@@ -1825,7 +1827,8 @@ copy_internal (char const *src_name, char const *dst_name,
         {
           if (setfscreatecon (con) < 0)
             {
-              if (!x->reduce_diagnostics || x->require_preserve_context)
+              if (x->require_preserve_context ||
+                  (!x->reduce_diagnostics && !errno_unsupported (errno)))
                 error (0, errno,
                        _("failed to set default file creation context to %s"),
                        quote (con));
@@ -1839,15 +1842,15 @@ copy_internal (char const *src_name, char const *dst_name,
         }
       else
         {
-          if (!errno_unsupported (errno) || x->require_preserve_context)
+          if (x->require_preserve_context ||
+              (!x->reduce_diagnostics && !errno_unsupported (errno)))
             {
-              if (!x->reduce_diagnostics || x->require_preserve_context)
-                error (0, errno,
-                       _("failed to get security context of %s"),
-                       quote (src_name));
-              if (x->require_preserve_context)
-                return false;
+              error (0, errno,
+                     _("failed to get security context of %s"),
+                     quote (src_name));
             }
+          if (x->require_preserve_context)
+            return false;
         }
     }
 

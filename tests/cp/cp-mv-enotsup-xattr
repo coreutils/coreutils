@@ -77,7 +77,12 @@ test -s err         && fail=1  # there must be no stderr output
 
 rm -f err noxattr/a
 
-# This should pass without diagnostics
+# This should pass without diagnostics (new file)
+cp --preserve=all xattr/a noxattr/ 2>err || fail=1
+test -s noxattr/a   || fail=1  # destination file must not be empty
+test -s err         && fail=1  # there must be no stderr output
+
+# This should pass without diagnostics (existing file)
 cp --preserve=all xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a   || fail=1  # destination file must not be empty
 test -s err         && fail=1  # there must be no stderr output
