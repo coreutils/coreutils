@@ -233,6 +233,107 @@ Try to make the summary line fit one of the following forms:
   maint: change-description
 
 
+Curly braces: use judiciously
+=============================
+Omit the curly braces around an "if", "while", "for" etc. body only when
+that body occupies a single line.  In every other case we require the braces.
+This ensures that it is trivially easy to identify a single-*statement* loop:
+each has only one *line* in its body.
+
+Omitting braces with a single-line body is fine:
+
+     while (expr)
+       single_line_stmt ();
+
+However, the moment your loop/if/else body extends onto a second line,
+for whatever reason (even if it's just an added comment), then you should
+add braces.  Otherwise, it would be too easy to insert a statement just
+before that comment (without adding braces), thinking it is already a
+multi-statement loop:
+
+     while (true)
+       /* comment... */      // BAD: multi-line body without braces
+       single_line_stmt ();
+
+Do this instead:
+
+     while (true)
+       {  /* Always put braces around a multi-line body.  */
+         /* explanation... */
+         single_line_stmt ();
+       }
+
+There is one exception: when the second body line is not
+at the same indentation level as the first body line.
+
+     if (expr)
+       error (0, 0, _("a diagnostic that would make this line"
+                      " extend past the 80-column limit"));
+
+It is safe not to require curly braces in code like this,
+since the further-indented second body line makes it obvious
+that this is still a single-statement body.
+
+To reiterate, don't do this:
+
+     if (expr)
+       while (expr_2)        // BAD: multi-line body without braces
+         {
+           ...
+         }
+
+Do this, instead:
+
+     if (expr)
+       {
+         while (expr_2)
+           {
+             ...
+           }
+       }
+
+However, there is one exception in the other direction, when
+even a one-line block should have braces.
+That occurs when that one-line, brace-less block
+is an "else" block, and the corresponding "then" block *does* use braces.
+In that case, either put braces around the "else" block, or negate the
+"if"-condition and swap the bodies, putting the one-line block first
+and making the longer, multi-line block be the "else" block.
+
+    if (expr)
+      {
+        ...
+        ...
+      }
+    else
+      x = y;    // BAD: braceless "else" with braced "then"
+
+This is preferred, especially when the multi-line body is more
+than a few lines long, because it is easier to read and grasp
+the semantics of an if-then-else block when the simpler block
+occurs first, rather than after the more involved block:
+
+    if (!expr)
+      x = y;                  /* more readable */
+    else
+      {
+        ...
+        ...
+      }
+
+If you'd rather not negate the condition, then add braces:
+
+    if (expr)
+      {
+        ...
+        ...
+      }
+    else
+      {
+        x = y;
+      }
+
+
 Use SPACE-only indentation in all[*] files
 ==========================================
 We use space-only indentation in nearly all files.
