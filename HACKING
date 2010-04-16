@@ -263,16 +263,16 @@ Do this instead:
          single_line_stmt ();
        }
 
-There is one exception: when the second body line is not
-at the same indentation level as the first body line.
+There is one exception: when the second body line is not at the same
+indentation level as the first body line.
 
      if (expr)
        error (0, 0, _("a diagnostic that would make this line"
                       " extend past the 80-column limit"));
 
-It is safe not to require curly braces in code like this,
-since the further-indented second body line makes it obvious
-that this is still a single-statement body.
+It is safe to omit the braces in the code above, since the
+further-indented second body line makes it obvious that this is still
+a single-statement body.
 
 To reiterate, don't do this:
 
@@ -292,13 +292,13 @@ Do this, instead:
            }
        }
 
-However, there is one exception in the other direction, when
-even a one-line block should have braces.
-That occurs when that one-line, brace-less block
-is an "else" block, and the corresponding "then" block *does* use braces.
-In that case, either put braces around the "else" block, or negate the
-"if"-condition and swap the bodies, putting the one-line block first
-and making the longer, multi-line block be the "else" block.
+However, there is one exception in the other direction, when even a
+one-line block should have braces.  That occurs when that one-line,
+brace-less block is an "else" block, and the corresponding "then" block
+*does* use braces.  In that case, either put braces around the "else"
+block, or negate the "if"-condition and swap the bodies, putting the
+one-line block first and making the longer, multi-line block be the
+"else" block.
 
     if (expr)
       {
@@ -308,10 +308,10 @@ and making the longer, multi-line block be the "else" block.
     else
       x = y;    // BAD: braceless "else" with braced "then"
 
-This is preferred, especially when the multi-line body is more
-than a few lines long, because it is easier to read and grasp
-the semantics of an if-then-else block when the simpler block
-occurs first, rather than after the more involved block:
+This is preferred, especially when the multi-line body is more than a
+few lines long, because it is easier to read and grasp the semantics of
+an if-then-else block when the simpler block occurs first, rather than
+after the more involved block:
 
     if (!expr)
       x = y;                  /* more readable */
