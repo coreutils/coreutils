@@ -23,6 +23,7 @@ root_tests =					\
   cp/preserve-gid				\
   cp/special-bits				\
   cp/cp-mv-enotsup-xattr			\
+  cp/capability					\
   dd/skip-seek-past-dev				\
   install/install-C-root			\
   ls/capability					\

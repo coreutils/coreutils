@@ -826,6 +826,22 @@ copy_reg (char const *src_name, char const *dst_name,
         }
     }
 
+  /* Set ownership before xattrs as changing owners will
+     clear capabilities.  */
+  if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
+    {
+      switch (set_owner (x, dst_name, dest_desc, src_sb, *new_dst, &sb))
+        {
+        case -1:
+          return_val = false;
+          goto close_src_and_dst_desc;
+
+        case 0:
+          src_mode &= ~ (S_ISUID | S_ISGID | S_ISVTX);
+          break;
+        }
+    }
+
   /* To allow copying xattrs on read-only files, temporarily chmod u+rw.
      This workaround is required as an inode permission check is done
      by xattr_permission() in fs/xattr.c of the GNU/Linux kernel tree.  */
@@ -842,20 +858,6 @@ copy_reg (char const *src_name, char const *dst_name,
 
       if (access_changed)
         fchmod_or_lchmod (dest_desc, dst_name, dst_mode & ~omitted_permissions);
-    }
-
-  if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
-    {
-      switch (set_owner (x, dst_name, dest_desc, src_sb, *new_dst, &sb))
-        {
-        case -1:
-          return_val = false;
-          goto close_src_and_dst_desc;
-
-        case 0:
-          src_mode &= ~ (S_ISUID | S_ISGID | S_ISVTX);
-          break;
-        }
     }
 
   set_author (dst_name, dest_desc, src_sb);
