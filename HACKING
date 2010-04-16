@@ -411,9 +411,9 @@ Nearly every significant change must be accompanied by a test suite
 addition that exercises it.  If you fix a bug, add at least one test that
 fails without the patch, but that succeeds once your patch is applied.
 If you add a feature, add tests to exercise as much of the new code
-as possible. Note to run tests/misc/newtest in isolation you can do:
+as possible. Note to run tests/misc/new-test in isolation you can do:
 
-  (cd tests && make check TESTS=misc/newtest VERBOSE=yes)
+  (cd tests && make check TESTS=misc/new-test VERBOSE=yes)
 
 There are hundreds of tests in the tests/ directories.  You can use
 tests/sample-test as a template, or one of the various Perl-based ones
