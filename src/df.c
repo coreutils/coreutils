@@ -22,11 +22,14 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+#include <assert.h>
 
 #include "system.h"
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
+#include "mbsalign.h"
+#include "mbswidth.h"
 #include "mountlist.h"
 #include "quote.h"
 #include "find-mount-point.h"
@@ -112,6 +115,52 @@ static bool print_grand_total;
 /* Grand total data. */
 static struct fs_usage grand_fsu;
 
+/* Display modes.  */
+enum { DEFAULT_MODE, INODES_MODE, HUMAN_MODE, POSIX_MODE, NMODES };
+static int header_mode = DEFAULT_MODE;
+
+/* Displayable fields.  */
+enum
+{
+  DEV_FIELD,   /* file system */
+  TYPE_FIELD,  /* FS type */
+  TOTAL_FIELD, /* blocks or inodes */
+  USED_FIELD,  /* ditto */
+  FREE_FIELD,  /* ditto */
+  PCENT_FIELD, /* percent used */
+  MNT_FIELD,   /* mount point */
+  NFIELDS
+};
+
+/* Header strings for the above fields in each mode.
+   NULL means to use the header for the default mode.  */
+static const char *headers[NFIELDS][NMODES] = {
+/*  DEFAULT_MODE	INODES_MODE	HUMAN_MODE	POSIX_MODE  */
+  { N_("Filesystem"),   NULL,           NULL,           NULL },
+  { N_("Type"),         NULL,           NULL,           NULL },
+  { N_("blocks"),       N_("Inodes"),   N_("Size"),     NULL },
+  { N_("Used"),         N_("IUsed"),    NULL,           NULL },
+  { N_("Available"),    N_("IFree"),    N_("Avail"),    NULL },
+  { N_("Use%"),         N_("IUse%"),    NULL,           N_("Capacity") },
+  { N_("Mounted on"),   NULL,           NULL,           NULL }
+};
+
+/* Alignments for the 3 textual and 4 numeric fields.  */
+static mbs_align_t alignments[NFIELDS] = {
+  MBS_ALIGN_LEFT, MBS_ALIGN_LEFT,
+  MBS_ALIGN_RIGHT, MBS_ALIGN_RIGHT, MBS_ALIGN_RIGHT, MBS_ALIGN_RIGHT,
+  MBS_ALIGN_LEFT
+};
+
+/* Auto adjusted (up) widths used to align columns.  */
+static size_t widths[NFIELDS] = { 14, 4, 5, 5, 5, 4, 0 };
+
+/* Storage for pointers for each string (cell of table).  */
+static char ***table;
+
+/* The current number of processed rows (including header).  */
+static size_t nrows;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -141,70 +190,133 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Dynamically allocate a row of pointers in TABLE, which
+   can then be accessed with standard 2D array notation.  */
+
 static void
-print_header (void)
+alloc_table_row (void)
 {
-  char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
+  nrows++;
+  table = xnrealloc (table, nrows, sizeof (char *));
+  table[nrows-1] = xnmalloc (NFIELDS, sizeof (char *));
+}
 
-  if (print_type)
-    /* TRANSLATORS:
-       For best results (df header/column alignment), ensure that
-       your translation has the same length as the original.  */
-    fputs (_("Filesystem    Type"), stdout);
-  else
-    fputs (_("Filesystem        "), stdout);
+/* Output each cell in the table, accounting for the
+   alignment and max width of each column.  */
 
-  if (inode_format)
-    /* TRANSLATORS:
-       For best results (df header/column alignment), ensure that
-       your translation has the same length as the original.
-       Also, each column name translation should end at the same
-       column as the corresponding original.  */
-    fputs (_("    Inodes   IUsed   IFree IUse%"), stdout);
-  else if (human_output_opts & human_autoscale)
+static void
+print_table (void)
+{
+  size_t field, row;
+
+  for (row = 0; row < nrows; row ++)
     {
-      if (human_output_opts & human_base_1024)
-        fputs (_("    Size  Used Avail Use%"), stdout);
-      else
-        fputs (_("     Size   Used  Avail Use%"), stdout);
-    }
-  else if (posix_format)
-    printf (_(" %s-blocks      Used Available Capacity"),
-            umaxtostr (output_block_size, buf));
-  else
-    {
-      int opts = (human_suppress_point_zero
-                  | human_autoscale | human_SI
-                  | (human_output_opts
-                     & (human_group_digits | human_base_1024 | human_B)));
-
-      /* Prefer the base that makes the human-readable value more exact,
-         if there is a difference.  */
-
-      uintmax_t q1000 = output_block_size;
-      uintmax_t q1024 = output_block_size;
-      bool divisible_by_1000;
-      bool divisible_by_1024;
-
-      do
+      for (field = 0; field < NFIELDS; field++)
         {
-          divisible_by_1000 = q1000 % 1000 == 0;  q1000 /= 1000;
-          divisible_by_1024 = q1024 % 1024 == 0;  q1024 /= 1024;
+          size_t width = widths[field];
+          char *cell = table[row][field];
+          if (!cell)
+            continue;
+
+          /* Note the DEV_FIELD used to be displayed on it's own line
+             if (!posix_format && mbswidth (cell) > 20), but that
+             functionality is probably more problematic than helpful.  */
+          if (field != 0)
+            putchar (' ');
+          if (field == MNT_FIELD) /* The last one.  */
+            fputs (cell, stdout);
+          else
+            {
+              cell = ambsalign (table[row][field], &width,
+                                alignments[field], MBA_UNIBYTE_FALLBACK);
+              fputs (cell, stdout);
+              free (cell);
+            }
+          IF_LINT (free (table[row][field]));
         }
-      while (divisible_by_1000 & divisible_by_1024);
-
-      if (divisible_by_1000 < divisible_by_1024)
-        opts |= human_base_1024;
-      if (divisible_by_1024 < divisible_by_1000)
-        opts &= ~human_base_1024;
-      if (! (opts & human_base_1024))
-        opts |= human_B;
-
-      printf (_(" %4s-blocks      Used Available Use%%"),
-              human_readable (output_block_size, buf, opts, 1, 1));
+      putchar ('\n');
+      IF_LINT (free (table[row]));
     }
 
-  fputs (_(" Mounted on\n"), stdout);
+  IF_LINT (free (table));
+}
+
+/* Optain the appropriate header entries.  */
+
+static void
+get_header (void)
+{
+  size_t field;
+
+  alloc_table_row ();
+
+  for (field = 0; field < NFIELDS; field++)
+    {
+      if (field == TYPE_FIELD && !print_type)
+        {
+          table[nrows-1][field] = NULL;
+          continue;
+        }
+
+      char *cell = NULL;
+      char const *header = _(headers[field][header_mode]);
+      if (!header)
+        header = _(headers[field][DEFAULT_MODE]);
+
+      if (header_mode == DEFAULT_MODE && field == TOTAL_FIELD)
+        {
+          char buf[LONGEST_HUMAN_READABLE + 1];
+
+          int opts = (human_suppress_point_zero
+                      | human_autoscale | human_SI
+                      | (human_output_opts
+                         & (human_group_digits | human_base_1024 | human_B)));
+
+          /* Prefer the base that makes the human-readable value more exact,
+             if there is a difference.  */
+
+          uintmax_t q1000 = output_block_size;
+          uintmax_t q1024 = output_block_size;
+          bool divisible_by_1000;
+          bool divisible_by_1024;
+
+          do
+            {
+              divisible_by_1000 = q1000 % 1000 == 0;  q1000 /= 1000;
+              divisible_by_1024 = q1024 % 1024 == 0;  q1024 /= 1024;
+            }
+          while (divisible_by_1000 & divisible_by_1024);
+
+          if (divisible_by_1000 < divisible_by_1024)
+            opts |= human_base_1024;
+          if (divisible_by_1024 < divisible_by_1000)
+            opts &= ~human_base_1024;
+          if (! (opts & human_base_1024))
+            opts |= human_B;
+
+          char *num = human_readable (output_block_size, buf, opts, 1, 1);
+
+          if (asprintf (&cell, "%s-%s", num, header) == -1)
+            cell = NULL;
+        }
+      else if (header_mode == POSIX_MODE && field == TOTAL_FIELD)
+        {
+          char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+          char *num = umaxtostr (output_block_size, buf);
+
+          if (asprintf (&cell, "%s-%s", num, header) == -1)
+            cell = NULL;
+        }
+      else
+        cell = strdup (header);
+
+      if (!cell)
+        xalloc_die ();
+
+      table[nrows-1][field] = cell;
+
+      widths[field] = MAX (widths[field], mbswidth (cell, 0));
+    }
 }
 
 /* Is FSTYPE a type of file system that should be listed?  */
@@ -305,7 +417,7 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
     *dest = -*dest;
 }
 
-/* Display a space listing for the disk device with absolute file name DISK.
+/* Optain a space listing for the disk device with absolute file name DISK.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
    If STAT_FILE is non-null, it is the name of a file within the file
@@ -319,16 +431,13 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
    ME_DUMMY and ME_REMOTE are the mount entry flags.  */
 
 static void
-show_dev (char const *disk, char const *mount_point,
-          char const *stat_file, char const *fstype,
-          bool me_dummy, bool me_remote,
-          const struct fs_usage *force_fsu)
+get_dev (char const *disk, char const *mount_point,
+         char const *stat_file, char const *fstype,
+         bool me_dummy, bool me_remote,
+         const struct fs_usage *force_fsu)
 {
   struct fs_usage fsu;
-  char buf[3][LONGEST_HUMAN_READABLE + 2];
-  int width;
-  int col1_adjustment = 0;
-  int use_width;
+  char buf[LONGEST_HUMAN_READABLE + 2];
   uintmax_t input_units;
   uintmax_t output_units;
   uintmax_t total;
@@ -338,6 +447,8 @@ show_dev (char const *disk, char const *mount_point,
   uintmax_t used;
   bool negate_used;
   double pct = -1;
+  char* cell;
+  size_t field;
 
   if (me_remote && show_local_fs)
     return;
@@ -370,39 +481,18 @@ show_dev (char const *disk, char const *mount_point,
   if (! file_systems_processed)
     {
       file_systems_processed = true;
-      print_header ();
+      get_header ();
     }
+
+  alloc_table_row ();
 
   if (! disk)
     disk = "-";			/* unknown */
   if (! fstype)
     fstype = "-";		/* unknown */
 
-  /* df.c reserved 5 positions for fstype,
-     but that does not suffice for type iso9660 */
-  if (print_type)
-    {
-      size_t disk_name_len = strlen (disk);
-      size_t fstype_len = strlen (fstype);
-      if (disk_name_len + fstype_len < 18)
-        printf ("%s%*s  ", disk, 18 - (int) disk_name_len, fstype);
-      else if (!posix_format)
-        printf ("%s\n%18s  ", disk, fstype);
-      else
-        printf ("%s %s", disk, fstype);
-    }
-  else
-    {
-      if (strlen (disk) > 20 && !posix_format)
-        printf ("%s\n%20s", disk, "");
-      else
-        printf ("%-20s", disk);
-    }
-
   if (inode_format)
     {
-      width = 7;
-      use_width = 5;
       input_units = output_units = 1;
       total = fsu.fsu_files;
       available = fsu.fsu_ffree;
@@ -416,22 +506,6 @@ show_dev (char const *disk, char const *mount_point,
     }
   else
     {
-      if (human_output_opts & human_autoscale)
-        width = 5 + ! (human_output_opts & human_base_1024);
-      else
-        {
-          width = 9;
-          if (posix_format)
-            {
-              uintmax_t b;
-              col1_adjustment = -3;
-              for (b = output_block_size; 9 < b; b /= 10)
-                col1_adjustment++;
-            }
-        }
-      use_width = ((posix_format
-                    && ! (human_output_opts & human_autoscale))
-                   ? 8 : 4);
       input_units = fsu.fsu_blocksize;
       output_units = output_block_size;
       total = fsu.fsu_blocks;
@@ -458,73 +532,110 @@ show_dev (char const *disk, char const *mount_point,
       negate_used = (total < available_to_root);
     }
 
-  printf (" %*s %*s %*s ",
-          width + col1_adjustment,
-          df_readable (false, total,
-                       buf[0], input_units, output_units),
-          width, df_readable (negate_used, used,
-                              buf[1], input_units, output_units),
-          width, df_readable (negate_available, available,
-                              buf[2], input_units, output_units));
-
-  if (! known_value (used) || ! known_value (available))
-    ;
-  else if (!negate_used
-           && used <= TYPE_MAXIMUM (uintmax_t) / 100
-           && used + available != 0
-           && (used + available < used) == negate_available)
+  for (field = 0; field < NFIELDS; field++)
     {
-      uintmax_t u100 = used * 100;
-      uintmax_t nonroot_total = used + available;
-      pct = u100 / nonroot_total + (u100 % nonroot_total != 0);
-    }
-  else
-    {
-      /* The calculation cannot be done easily with integer
-         arithmetic.  Fall back on floating point.  This can suffer
-         from minor rounding errors, but doing it exactly requires
-         multiple precision arithmetic, and it's not worth the
-         aggravation.  */
-      double u = negate_used ? - (double) - used : used;
-      double a = negate_available ? - (double) - available : available;
-      double nonroot_total = u + a;
-      if (nonroot_total)
+      switch (field)
         {
-          long int lipct = pct = u * 100 / nonroot_total;
-          double ipct = lipct;
+        case DEV_FIELD:
+          cell = xstrdup (disk);
+          break;
 
-          /* Like `pct = ceil (dpct);', but avoid ceil so that
-             the math library needn't be linked.  */
-          if (ipct - 1 < pct && pct <= ipct + 1)
-            pct = ipct + (ipct < pct);
-        }
-    }
+        case TYPE_FIELD:
+          cell = print_type ? xstrdup (fstype) : NULL;
+          break;
 
-  if (0 <= pct)
-    printf ("%*.0f%%", use_width - 1, pct);
-  else
-    printf ("%*s", use_width, "- ");
+        case TOTAL_FIELD:
+          cell = xstrdup (df_readable (false, total, buf,
+                                       input_units, output_units));
+          break;
+        case USED_FIELD:
+          cell = xstrdup (df_readable (negate_used, used, buf,
+                                       input_units, output_units));
+          break;
+        case FREE_FIELD:
+          cell = xstrdup (df_readable (negate_available, available, buf,
+                                       input_units, output_units));
+          break;
 
-  if (mount_point)
-    {
+        case PCENT_FIELD:
+          if (! known_value (used) || ! known_value (available))
+            ;
+          else if (!negate_used
+                   && used <= TYPE_MAXIMUM (uintmax_t) / 100
+                   && used + available != 0
+                   && (used + available < used) == negate_available)
+            {
+              uintmax_t u100 = used * 100;
+              uintmax_t nonroot_total = used + available;
+              pct = u100 / nonroot_total + (u100 % nonroot_total != 0);
+            }
+          else
+            {
+              /* The calculation cannot be done easily with integer
+                 arithmetic.  Fall back on floating point.  This can suffer
+                 from minor rounding errors, but doing it exactly requires
+                 multiple precision arithmetic, and it's not worth the
+                 aggravation.  */
+              double u = negate_used ? - (double) - used : used;
+              double a = negate_available ? - (double) - available : available;
+              double nonroot_total = u + a;
+              if (nonroot_total)
+                {
+                  long int lipct = pct = u * 100 / nonroot_total;
+                  double ipct = lipct;
+
+                  /* Like `pct = ceil (dpct);', but avoid ceil so that
+                     the math library needn't be linked.  */
+                  if (ipct - 1 < pct && pct <= ipct + 1)
+                    pct = ipct + (ipct < pct);
+                }
+            }
+
+          if (0 <= pct)
+            {
+              if (asprintf (&cell, "%.0f%%", pct) == -1)
+                cell = NULL;
+            }
+          else
+            cell = strdup ("-");
+
+          if (!cell)
+            xalloc_die ();
+
+          break;
+
+        case MNT_FIELD:
+          if (mount_point)
+            {
 #ifdef HIDE_AUTOMOUNT_PREFIX
-      /* Don't print the first directory name in MOUNT_POINT if it's an
-         artifact of an automounter.  This is a bit too aggressive to be
-         the default.  */
-      if (strncmp ("/auto/", mount_point, 6) == 0)
-        mount_point += 5;
-      else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
-        mount_point += 8;
+              /* Don't print the first directory name in MOUNT_POINT if it's an
+                 artifact of an automounter.  This is a bit too aggressive to be
+                 the default.  */
+              if (strncmp ("/auto/", mount_point, 6) == 0)
+                mount_point += 5;
+              else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
+                mount_point += 8;
 #endif
-      printf (" %s", mount_point);
+              cell = xstrdup (mount_point);
+            }
+          else
+            cell = NULL;
+          break;
+
+        default:
+          assert (!"unhandled field");
+        }
+
+      if (cell)
+        widths[field] = MAX (widths[field], mbswidth (cell, 0));
+      table[nrows-1][field] = cell;
     }
-  putchar ('\n');
 }
 
 /* If DISK corresponds to a mount point, show its usage
    and return true.  Otherwise, return false.  */
 static bool
-show_disk (char const *disk)
+get_disk (char const *disk)
 {
   struct mount_entry const *me;
   struct mount_entry const *best_match = NULL;
@@ -535,9 +646,9 @@ show_disk (char const *disk)
 
   if (best_match)
     {
-      show_dev (best_match->me_devname, best_match->me_mountdir, NULL,
-                best_match->me_type, best_match->me_dummy,
-                best_match->me_remote, NULL);
+      get_dev (best_match->me_devname, best_match->me_mountdir, NULL,
+               best_match->me_type, best_match->me_dummy,
+               best_match->me_remote, NULL);
       return true;
     }
 
@@ -548,7 +659,7 @@ show_disk (char const *disk)
    and show its disk usage.
    STATP must be the result of `stat (POINT, STATP)'.  */
 static void
-show_point (const char *point, const struct stat *statp)
+get_point (const char *point, const struct stat *statp)
 {
   struct stat disk_stats;
   struct mount_entry *me;
@@ -621,9 +732,9 @@ show_point (const char *point, const struct stat *statp)
       }
 
   if (best_match)
-    show_dev (best_match->me_devname, best_match->me_mountdir, point,
-              best_match->me_type, best_match->me_dummy, best_match->me_remote,
-              NULL);
+    get_dev (best_match->me_devname, best_match->me_mountdir, point,
+             best_match->me_type, best_match->me_dummy, best_match->me_remote,
+             NULL);
   else
     {
       /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
@@ -634,7 +745,7 @@ show_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
         {
-          show_dev (NULL, mp, NULL, NULL, false, false, NULL);
+          get_dev (NULL, mp, NULL, NULL, false, false, NULL);
           free (mp);
         }
     }
@@ -644,25 +755,25 @@ show_point (const char *point, const struct stat *statp)
    for it.  STATP is the results of `stat' on NAME.  */
 
 static void
-show_entry (char const *name, struct stat const *statp)
+get_entry (char const *name, struct stat const *statp)
 {
   if ((S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-      && show_disk (name))
+      && get_disk (name))
     return;
 
-  show_point (name, statp);
+  get_point (name, statp);
 }
 
 /* Show all mounted file systems, except perhaps those that are of
    an unselected type or are empty. */
 
 static void
-show_all_entries (void)
+get_all_entries (void)
 {
   struct mount_entry *me;
 
   for (me = mount_list; me; me = me->me_next)
-    show_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
+    get_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
               me->me_dummy, me->me_remote, NULL);
 }
 
@@ -862,6 +973,13 @@ main (int argc, char **argv)
                        &human_output_opts, &output_block_size);
     }
 
+  if (inode_format)
+    header_mode = INODES_MODE;
+  else if (human_output_opts & human_autoscale)
+    header_mode = HUMAN_MODE;
+  else if (posix_format)
+    header_mode = POSIX_MODE;
+
   /* Fail if the same file system type was both selected and excluded.  */
   {
     bool match = false;
@@ -939,17 +1057,19 @@ main (int argc, char **argv)
 
       for (i = optind; i < argc; ++i)
         if (argv[i])
-          show_entry (argv[i], &stats[i - optind]);
+          get_entry (argv[i], &stats[i - optind]);
     }
   else
-    show_all_entries ();
+    get_all_entries ();
 
   if (print_grand_total)
     {
       if (inode_format)
         grand_fsu.fsu_blocks = 1;
-      show_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu);
+      get_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu);
     }
+
+  print_table ();
 
   if (! file_systems_processed)
     error (EXIT_FAILURE, 0, _("no file systems processed"));

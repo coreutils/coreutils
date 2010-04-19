@@ -28,6 +28,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  df now aligns columns consistently, and no longer wraps entries
+  with longer device identifiers, over two lines.
+
   test now accepts "==" as a synonym for "="
 
 
