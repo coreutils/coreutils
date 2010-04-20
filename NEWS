@@ -14,6 +14,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   handled correctly, including multi byte locales with the caveat
   that multi byte characters are matched case sensitively.
 
+  sort again handles obsolescent key formats (+POS -POS) correctly.
+  Previously if -POS was specified, 1 field too many was used in the sort.
+  [bug introduced in coreutils-7.2]
+
 ** New features
 
   join now accepts the --header option, to treat the first line of each

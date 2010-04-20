@@ -167,7 +167,7 @@ struct keyfield
 {
   size_t sword;			/* Zero-origin 'word' to start at. */
   size_t schar;			/* Additional characters to skip. */
-  size_t eword;			/* Zero-origin first word after field. */
+  size_t eword;			/* Zero-origin last 'word' of key. */
   size_t echar;			/* Additional characters in field. */
   bool const *ignore;		/* Boolean array of characters to ignore. */
   char const *translate;	/* Translation applied to characters. */
@@ -3389,6 +3389,16 @@ main (int argc, char **argv)
                           if (*s == '.')
                             s = parse_field_count (s + 1, &key->echar,
                                                N_("invalid number after `.'"));
+                          if (!key->echar && key->eword)
+                            {
+                              /* obsolescent syntax +A.x -B.y is equivalent to:
+                                   -k A+1.x+1,B.y   (when y = 0)
+                                   -k A+1.x+1,B+1.y (when y > 0)
+                                 So eword is decremented as in the -k case
+                                 only when the end field (B) is specified and
+                                 echar (y) is 0.  */
+                              key->eword--;
+                            }
                           if (*set_ordering (s, key, bl_end))
                             badfieldspec (optarg1,
                                       N_("stray character in field spec"));
