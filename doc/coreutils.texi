@@ -4126,6 +4126,11 @@ is counted from the first nonblank character of the field.
 @vindex POSIXLY_CORRECT
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
+The obsolete sequence @samp{sort +@var{a}.@var{x} -@var{b}.@var{y}}
+is equivalent to @samp{sort -k @var{a+1}.@var{x+1},@var{b}} if @var{y}
+is @samp{0} or absent, otherwise it is equivalent to @samp{sort -k
+@var{a+1}.@var{x+1},@var{b+1}.@var{y}}.
+
 This obsolete behavior can be enabled or disabled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
 conformance}); it can also be enabled when @env{POSIXLY_CORRECT} is
