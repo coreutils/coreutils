@@ -29,6 +29,7 @@
 #include "xstrtol.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "xfreopen.h"
 
 #include "base64.h"
 
@@ -289,10 +290,14 @@ main (int argc, char **argv)
     infile = "-";
 
   if (STREQ (infile, "-"))
-    input_fh = stdin;
+    {
+      if (O_BINARY)
+        xfreopen (NULL, "rb", stdin);
+      input_fh = stdin;
+    }
   else
     {
-      input_fh = fopen (infile, "r");
+      input_fh = fopen (infile, "rb");
       if (input_fh == NULL)
         error (EXIT_FAILURE, errno, "%s", infile);
     }
