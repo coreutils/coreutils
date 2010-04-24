@@ -59,6 +59,7 @@ syntax_check_exceptions =		\
   .x-sc_sun_os_names			\
   .x-sc_system_h_headers		\
   .x-sc_trailing_blank			\
+  .x-sc_prohibit_always_true_header_tests \
   .x-sc_unmarked_diagnostics		\
   .x-sc_useless_cpp_parens
 

@@ -30,9 +30,7 @@
 #if HAVE_STROPTS_H
 # include <stropts.h>
 #endif
-#if HAVE_SYS_IOCTL_H
-# include <sys/ioctl.h>
-#endif
+#include <sys/ioctl.h>
 
 #include "system.h"
 #include "error.h"

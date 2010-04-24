@@ -44,7 +44,7 @@
 /* NetBSD 1.5.2 needs these, for the declaration of struct statfs. */
 # include <sys/param.h>
 # include <sys/mount.h>
-# if HAVE_NETINET_IN_H && HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
+# if HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
 /* Ultrix 4.4 needs these for the declaration of struct statfs.  */
 #  include <netinet/in.h>
 #  include <nfs/nfs_clnt.h>

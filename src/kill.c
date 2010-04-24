@@ -22,9 +22,7 @@
 #include <sys/types.h>
 #include <signal.h>
 
-#if HAVE_SYS_WAIT_H
-# include <sys/wait.h>
-#endif
+#include <sys/wait.h>
 #ifndef WIFSIGNALED
 # define WIFSIGNALED(s) (((s) & 0xFFFF) - 1 < (unsigned int) 0xFF)
 #endif

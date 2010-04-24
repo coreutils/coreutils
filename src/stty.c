@@ -42,9 +42,7 @@
 #if HAVE_STROPTS_H
 # include <stropts.h>
 #endif
-#ifdef HAVE_SYS_IOCTL_H
-# include <sys/ioctl.h>
-#endif
+#include <sys/ioctl.h>
 
 #ifdef WINSIZE_IN_PTEM
 # include <sys/stream.h>

@@ -48,9 +48,7 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-#if HAVE_SYS_WAIT_H
-# include <sys/wait.h>
-#endif
+#include <sys/wait.h>
 
 static int selinux_enabled = 0;
 static bool use_default_selinux_context = true;

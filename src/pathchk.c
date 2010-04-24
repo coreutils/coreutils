@@ -18,9 +18,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#if HAVE_WCHAR_H
-# include <wchar.h>
-#endif
+#include <wchar.h>
 
 #include "system.h"
 #include "error.h"

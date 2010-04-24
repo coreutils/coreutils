@@ -61,9 +61,7 @@
 # include "verror.h"
 #endif
 
-#if HAVE_SYS_IOCTL_H
-# include <sys/ioctl.h>
-#endif
+#include <sys/ioctl.h>
 
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
