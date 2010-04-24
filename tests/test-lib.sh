@@ -410,6 +410,7 @@ remove_tmp_()
 trap remove_tmp_ 0
 trap 'Exit 129' 1
 trap 'Exit 130' 2
+trap 'Exit 131' 3
 trap 'Exit 141' 13
 trap 'Exit 143' 15
 
