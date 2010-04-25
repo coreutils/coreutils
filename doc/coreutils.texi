@@ -15470,7 +15470,7 @@ M8=`echo 2^31-1|bc` ; M9=`echo 2^61-1|bc`
 Similarly, factoring the eighth Fermat number @math{2^{256}+1} takes
 about 20 seconds on the same machine.
 
-Factoring large prime numbers is, in general, hard.  The Pollard Rho
+Factoring large numbers is, in general, hard.  The Pollard Rho
 algorithm used by @command{factor} is particularly effective for
 numbers with relatively small factors.  If you wish to factor large
 numbers which do not have small factors (for example, numbers which
