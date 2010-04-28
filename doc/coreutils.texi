@@ -3767,8 +3767,8 @@ the final result, after the throwing away.))
 @opindex --sort
 @cindex general numeric sort
 @vindex LC_NUMERIC
-Sort numerically, using the standard C function @code{strtod} to convert
-a prefix of each line to a double-precision floating point number.
+Sort numerically, using the standard C function @code{strtold} to convert
+a prefix of each line to a long double-precision floating point number.
 This allows floating point numbers to be specified in scientific notation,
 like @code{1.0e-34} and @code{10e100}.
 The @env{LC_NUMERIC} locale determines the decimal-point character.

@@ -1855,10 +1855,16 @@ general_numcompare (const char *sa, const char *sb)
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
 
+#if HAVE_C99_STRTOLD /* provided by c-strtold module.  */
+# define STRTOD strtold
+#else
+# define STRTOD strtod
+#endif
+
   char *ea;
   char *eb;
-  double a = strtod (sa, &ea);
-  double b = strtod (sb, &eb);
+  long double a = STRTOD (sa, &ea);
+  long double b = STRTOD (sb, &eb);
 
   /* Put conversion errors at the start of the collating sequence.  */
   if (sa == ea)

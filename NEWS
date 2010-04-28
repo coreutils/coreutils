@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  sort -g now uses long doubles for greater range and precision.
+
 
 * Noteworthy changes in release 8.5 (2010-04-23) [stable]
 

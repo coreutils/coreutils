@@ -224,6 +224,7 @@ TESTS =						\
   misc/sort-compress				\
   misc/sort-continue				\
   misc/sort-files0-from				\
+  misc/sort-float				\
   misc/sort-merge				\
   misc/sort-merge-fdlimit			\
   misc/sort-month				\

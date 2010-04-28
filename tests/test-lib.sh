@@ -57,8 +57,8 @@ skip_test_()
 
 getlimits_()
 {
-    eval $(getlimits)
-    test "$INT_MAX" ||
+  eval $(getlimits)
+  test "$INT_MAX" ||
     error_ "Error running getlimits"
 }
 

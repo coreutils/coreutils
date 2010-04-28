@@ -19,6 +19,7 @@
 #include <config.h>             /* sets _FILE_OFFSET_BITS=64 etc. */
 #include <stdio.h>
 #include <sys/types.h>
+#include <float.h>
 
 #include "system.h"
 #include "c-ctype.h"
@@ -123,7 +124,7 @@ decimal_ascii_add (const char *str1, const char *str2)
 int
 main (int argc, char **argv)
 {
-  char limit[64];               /* big enough for 128 bit at least */
+  char limit[64];               /* big enough for 128 bit integers at least */
   char *oflow;
 
   initialize_main (&argc, &argv);
@@ -139,19 +140,23 @@ main (int argc, char **argv)
                       usage, AUTHORS, (char const *) NULL);
 
 #define print_int(TYPE)                                                  \
-  snprintf (limit, sizeof limit, "%"PRIuMAX, (uintmax_t)TYPE##_MAX);    \
+  snprintf (limit, sizeof limit, "%"PRIuMAX, (uintmax_t)TYPE##_MAX);     \
   printf (#TYPE"_MAX=%s\n", limit);                                      \
   oflow = decimal_ascii_add (limit, "1");                                \
   printf (#TYPE"_OFLOW=%s\n", oflow);                                    \
   free (oflow);                                                          \
   if (TYPE##_MIN)                                                        \
     {                                                                    \
-      snprintf (limit, sizeof limit, "%"PRIdMAX, (intmax_t)TYPE##_MIN); \
+      snprintf (limit, sizeof limit, "%"PRIdMAX, (intmax_t)TYPE##_MIN);  \
       printf (#TYPE"_MIN=%s\n", limit);                                  \
       oflow = decimal_ascii_add (limit, "-1");                           \
       printf (#TYPE"_UFLOW=%s\n", oflow);                                \
       free (oflow);                                                      \
     }
+
+#define print_float(TYPE)                                                \
+  printf (#TYPE"_MIN=%Le\n", (long double)TYPE##_MIN);                   \
+  printf (#TYPE"_MAX=%Le\n", (long double)TYPE##_MAX);
 
   /* Variable sized ints */
   print_int (CHAR);
@@ -171,4 +176,9 @@ main (int argc, char **argv)
   print_int (OFF_T);
   print_int (INTMAX);
   print_int (UINTMAX);
+
+  /* Variable sized floats */
+  print_float (FLT);
+  print_float (DBL);
+  print_float (LDBL);
 }

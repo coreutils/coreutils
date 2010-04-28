@@ -1,0 +1,56 @@
+#!/bin/sh
+# Ensure sort -g sorts floating point limits correctly
+
+# Copyright (C) 2010 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  sort --version
+fi
+
+. $srcdir/test-lib.sh
+
+for LOC in C $LOCALE_FR; do
+
+  LC_ALL=$LOC getlimits_
+
+  # See if sort should be using long doubles
+  grep '^#define HAVE_C99_STRTOLD 1' $CONFIG_HEADER > /dev/null ||
+    { LDBL_MAX="$DBL_MAX"; LDBL_MIN="$DBL_MIN"; }
+
+  printf -- "\
+-$LDBL_MAX
+-$DBL_MAX
+-$FLT_MAX
+-$FLT_MIN
+-$DBL_MIN
+-$LDBL_MIN
+0
+$LDBL_MIN
+$DBL_MIN
+$FLT_MIN
+$FLT_MAX
+$DBL_MAX
+$LDBL_MAX
+" |
+  grep '^[0-9.,e+-]*$' > exp # restrict to numeric just in case
+
+  tac exp | LC_ALL=$LOC sort -sg > out || fail=1
+
+  compare out exp || fail=1
+done
+
+Exit $fail
