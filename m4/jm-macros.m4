@@ -189,11 +189,6 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
 # This macro must be invoked before any tests that run the compiler.
 AC_DEFUN([gl_CHECK_ALL_TYPES],
 [
-  dnl This test must come as early as possible after the compiler configuration
-  dnl tests, because the choice of the file model can (in principle) affect
-  dnl whether functions and headers are available, whether they work, etc.
-  AC_REQUIRE([AC_SYS_LARGEFILE])
-
   dnl This test must precede tests of compiler characteristics like
   dnl that for the inline keyword, since it may change the degree to
   dnl which the compiler supports such features.
