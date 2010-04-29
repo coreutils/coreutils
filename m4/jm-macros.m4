@@ -173,12 +173,9 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     paths.h \
     priv.h \
     stropts.h \
-    sys/ioctl.h \
     sys/param.h \
     sys/resource.h \
     sys/systeminfo.h \
-    sys/time.h \
-    sys/wait.h \
     syslog.h \
     termios.h \
   )
