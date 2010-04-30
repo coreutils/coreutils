@@ -1856,15 +1856,17 @@ general_numcompare (const char *sa, const char *sb)
      only if A and B can't be compared more cheaply/accurately.  */
 
 #if HAVE_C99_STRTOLD /* provided by c-strtold module.  */
-# define STRTOD strtold
+# define long_double long double
 #else
-# define STRTOD strtod
+# define long_double double
+# undef strtold
+# define strtold strtod
 #endif
 
   char *ea;
   char *eb;
-  long double a = STRTOD (sa, &ea);
-  long double b = STRTOD (sb, &eb);
+  long_double a = strtold (sa, &ea);
+  long_double b = strtold (sb, &eb);
 
   /* Put conversion errors at the start of the collating sequence.  */
   if (sa == ea)
