@@ -574,7 +574,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
   /* Now walk up FILE's parents until we find another file system or /,
      chdiring as we go.  LAST_STAT holds stat information for the last place
      we visited.  */
-  for (;;)
+  while (true)
     {
       struct stat st;
       if (stat ("..", &st) < 0)
@@ -873,7 +873,7 @@ main (int argc, char **argv)
   print_grand_total = false;
   grand_fsu.fsu_blocksize = 1;
 
-  for (;;)
+  while (true)
     {
       int oi = -1;
       int c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options,

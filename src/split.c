@@ -233,7 +233,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
       to_read = n_read;
-      for (;;)
+      while (true)
         {
           if (to_read < to_write)
             {
@@ -278,7 +278,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
       bp = bp_out = buf;
       eob = bp + n_read;
       *eob = '\n';
-      for (;;)
+      while (true)
         {
           bp = memchr (bp, '\n', eob - bp + 1);
           if (bp == eob)

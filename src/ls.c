@@ -1635,7 +1635,7 @@ decode_switches (int argc, char **argv)
       }
   }
 
-  for (;;)
+  while (true)
     {
       int oi = -1;
       int c = getopt_long (argc, argv,

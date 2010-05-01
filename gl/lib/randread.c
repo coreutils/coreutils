@@ -199,7 +199,7 @@ randread_set_handler_arg (struct randread_source *s, void const *handler_arg)
 static void
 readsource (struct randread_source *s, unsigned char *p, size_t size)
 {
-  for (;;)
+  while (true)
     {
       size_t inbytes = fread (p, sizeof *p, size, s->source);
       int fread_errno = errno;
@@ -221,7 +221,7 @@ readisaac (struct isaac *isaac, unsigned char *p, size_t size)
 {
   size_t inbytes = isaac->buffered;
 
-  for (;;)
+  while (true)
     {
       if (size <= inbytes)
         {

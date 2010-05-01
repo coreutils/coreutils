@@ -358,7 +358,7 @@ set_fields (const char *fieldstr)
   /* Collect and store in RP the range end points.
      It also sets EOL_RANGE_START if appropriate.  */
 
-  for (;;)
+  while (true)
     {
       if (*fieldstr == '-')
         {

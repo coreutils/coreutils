@@ -299,7 +299,7 @@ unexpand (void)
      allocate MAX_COLUMN_WIDTH bytes to store the blanks.  */
   pending_blank = xmalloc (max_column_width);
 
-  for (;;)
+  while (true)
     {
       /* Input character, or EOF.  */
       int c;
@@ -351,7 +351,7 @@ unexpand (void)
                         next_tab_column =
                           column + (tab_size - column % tab_size);
                       else
-                        for (;;)
+                        while (true)
                           if (tab_index == first_free_tab)
                             {
                               convert = false;

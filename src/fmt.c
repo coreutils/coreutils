@@ -728,7 +728,7 @@ get_prefix (FILE *f)
 static int
 get_space (FILE *f, int c)
 {
-  for (;;)
+  while (true)
     {
       if (c == ' ')
         in_column++;

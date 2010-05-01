@@ -796,7 +796,7 @@ process_signals (void)
 static ssize_t
 iread (int fd, char *buf, size_t size)
 {
-  for (;;)
+  while (true)
     {
       ssize_t nread;
       process_signals ();
@@ -926,7 +926,7 @@ parse_symbols (char const *str, struct symbol_value const *table,
 {
   int value = 0;
 
-  for (;;)
+  while (true)
     {
       char const *strcomma = strchr (str, ',');
       struct symbol_value const *entry;

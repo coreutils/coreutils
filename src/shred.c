@@ -417,7 +417,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
     }
 
   offset = 0;
-  for (;;)
+  while (true)
     {
       /* How much to write this time? */
       lim = sizeof r;
@@ -664,7 +664,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
   d = dest;			/* Destination for generated pass list */
   n = num;			/* Passes remaining to fill */
 
-  for (;;)
+  while (true)
     {
       k = *p++;			/* Block descriptor word */
       if (!k)

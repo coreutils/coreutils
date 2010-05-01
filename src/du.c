@@ -690,7 +690,7 @@ main (int argc, char **argv)
   human_options (getenv ("DU_BLOCK_SIZE"),
                  &human_output_opts, &output_block_size);
 
-  for (;;)
+  while (true)
     {
       int oi = -1;
       int c = getopt_long (argc, argv, "0abd:chHklmsxB:DLPSX:",

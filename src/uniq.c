@@ -434,7 +434,7 @@ main (int argc, char **argv)
   countmode = count_none;
   delimit_groups = DM_NONE;
 
-  for (;;)
+  while (true)
     {
       /* Parse an operand with leading "+" as a file after "--" was
          seen; or if pedantic and a file was seen; or if not

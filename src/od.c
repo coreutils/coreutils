@@ -1564,7 +1564,7 @@ main (int argc, char **argv)
   address_pad_len = 7;
   flag_dump_strings = false;
 
-  for (;;)
+  while (true)
     {
       uintmax_t tmp;
       enum strtol_error s_err;

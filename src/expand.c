@@ -270,7 +270,7 @@ expand (void)
   if (!fp)
     return;
 
-  for (;;)
+  while (true)
     {
       /* Input character, or EOF.  */
       int c;
@@ -306,7 +306,7 @@ expand (void)
                   if (tab_size)
                     next_tab_column = column + (tab_size - column % tab_size);
                   else
-                    for (;;)
+                    while (true)
                       if (tab_index == first_free_tab)
                         {
                           next_tab_column = column + 1;

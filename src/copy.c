@@ -707,7 +707,7 @@ copy_reg (char const *src_name, char const *dst_name,
       buf_alloc = xmalloc (buf_size + buf_alignment_slop);
       buf = ptr_align (buf_alloc, buf_alignment);
 
-      for (;;)
+      while (true)
         {
           word *wp = NULL;
 

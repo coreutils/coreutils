@@ -511,7 +511,7 @@ and (void)
 {
   bool value = true;
 
-  for (;;)
+  while (true)
     {
       value &= term ();
       if (! (pos < argc && STREQ (argv[pos], "-a")))
@@ -530,7 +530,7 @@ or (void)
 {
   bool value = false;
 
-  for (;;)
+  while (true)
     {
       value |= and ();
       if (! (pos < argc && STREQ (argv[pos], "-o")))

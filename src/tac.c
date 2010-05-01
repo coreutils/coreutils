@@ -245,7 +245,7 @@ tac_seekable (int input_fd, const char *file)
   if (sentinel_length)
     match_start -= match_length1;
 
-  for (;;)
+  while (true)
     {
       /* Search backward from `match_start' - 1 to `G_buffer' for a match
          with `separator'; for speed, use strncmp if `separator' contains no

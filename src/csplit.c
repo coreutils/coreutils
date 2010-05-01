@@ -342,7 +342,7 @@ record_line_starts (struct buffer_record *b)
   line_start = b->buffer;
   bytes_left = b->bytes_used;
 
-  for (;;)
+  while (true)
     {
       line_end = memchr (line_start, '\n', bytes_left);
       if (line_end == NULL)
@@ -773,7 +773,7 @@ process_regexp (struct control *p, uintmax_t repetition)
 
   if (p->offset >= 0)
     {
-      for (;;)
+      while (true)
         {
           line = find_line (++current_line);
           if (line == NULL)
@@ -813,7 +813,7 @@ process_regexp (struct control *p, uintmax_t repetition)
   else
     {
       /* Buffer the lines. */
-      for (;;)
+      while (true)
         {
           line = find_line (++current_line);
           if (line == NULL)

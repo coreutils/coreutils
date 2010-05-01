@@ -136,7 +136,7 @@ search_item (struct item *root, const char *str)
   t = root;
   s = p = root->right;
 
-  for (;;)
+  while (true)
     {
       /* A2. Compare.  */
       a = strcmp (str, p->str);

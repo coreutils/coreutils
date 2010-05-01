@@ -876,7 +876,7 @@ main (int argc, char **argv)
                 ? xmalloc ((argc - 1) * sizeof (char *))
                 : NULL);
 
-  for (;;)
+  while (true)
     {
       int oi = -1;
       int c = getopt_long (argc, argv, short_options, long_options, &oi);
@@ -2526,7 +2526,7 @@ read_line (COLUMN *p)
 
   print_clump (p, chars, clump_buff);
 
-  for (;;)
+  while (true)
     {
       c = getc (p->fp);
 

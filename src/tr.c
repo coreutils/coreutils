@@ -1489,7 +1489,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
   size_t i = 0;
   size_t nr = 0;
 
-  for (;;)
+  while (true)
     {
       size_t begin;
 
@@ -1763,7 +1763,7 @@ main (int argc, char **argv)
     {
       set_initialize (s1, complement, in_delete_set);
 
-      for (;;)
+      while (true)
         {
           size_t nr = read_and_delete (io_buf, sizeof io_buf);
           if (nr == 0)
@@ -1817,7 +1817,7 @@ main (int argc, char **argv)
             xlate[i] = i;
           s1->state = BEGIN_STATE;
           s2->state = BEGIN_STATE;
-          for (;;)
+          while (true)
             {
               /* When the previous pair identified case-converting classes,
                  advance S1 and S2 so that each points to the following
@@ -1877,7 +1877,7 @@ main (int argc, char **argv)
         }
       else
         {
-          for (;;)
+          while (true)
             {
               size_t bytes_read = read_and_xlate (io_buf, sizeof io_buf);
               if (bytes_read == 0)

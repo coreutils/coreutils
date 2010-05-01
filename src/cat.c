@@ -160,7 +160,7 @@ simple_cat (
 
   /* Loop until the end of the file.  */
 
-  for (;;)
+  while (true)
     {
       /* Read a block of input.  */
 
@@ -269,7 +269,7 @@ cat (
 
   bpout = outbuf;
 
-  for (;;)
+  while (true)
     {
       do
         {
@@ -424,7 +424,7 @@ cat (
          scan for chars that need conversion.  */
       if (show_nonprinting)
         {
-          for (;;)
+          while (true)
             {
               if (ch >= 32)
                 {
@@ -475,7 +475,7 @@ cat (
       else
         {
           /* Not quoting, neither of -v, -e, or -t specified.  */
-          for (;;)
+          while (true)
             {
               if (ch == '\t' && show_tabs)
                 {

@@ -107,7 +107,7 @@ factor_using_division (mpz_t t, unsigned int limit)
       --f;
     }
 
-  for (;;)
+  while (true)
     {
       mpz_tdiv_qr_ui (q, r, t, 3);
       if (mpz_cmp_ui (r, 0) != 0)
@@ -116,7 +116,7 @@ factor_using_division (mpz_t t, unsigned int limit)
       emit_ul_factor (3);
     }
 
-  for (;;)
+  while (true)
     {
       mpz_tdiv_qr_ui (q, r, t, 5);
       if (mpz_cmp_ui (r, 0) != 0)
@@ -516,7 +516,7 @@ do_stdin (void)
 
   init_tokenbuffer (&tokenbuffer);
 
-  for (;;)
+  while (true)
     {
       size_t token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
                                        &tokenbuffer);

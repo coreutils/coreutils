@@ -125,7 +125,7 @@ randint_genmax (struct randint_source *s, randint genmax)
   randint randmax = s->randmax;
   randint choices = genmax + 1;
 
-  for (;;)
+  while (1)
     {
       if (randmax < genmax)
         {

@@ -1453,7 +1453,7 @@ initbuf (struct buffer *buf, size_t line_bytes, size_t alloc)
      size cannot be allocated, repeatedly halve it until allocation
      succeeds.  The smaller allocation may hurt overall performance,
      but that's better than failing.  */
-  for (;;)
+  while (true)
     {
       alloc += sizeof (struct line) - alloc % sizeof (struct line);
       buf->buf = malloc (alloc);
@@ -1646,7 +1646,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
       buf->nlines = 0;
     }
 
-  for (;;)
+  while (true)
     {
       char *ptr = buf->buf + buf->used;
       struct line *linelim = buffer_linelim (buf);
@@ -1918,7 +1918,7 @@ getmonth (char const *month, size_t len, char const **ea)
   size_t hi = MONTHS_PER_YEAR;
   char const *monthlim = month + len;
 
-  for (;;)
+  while (true)
     {
       if (month == monthlim)
         return 0;
@@ -2340,7 +2340,7 @@ keycompare (const struct line *a, const struct line *b, bool show_debug)
 
   int diff;
 
-  for (;;)
+  while (true)
     {
       char const *translate = key->translate;
       bool const *ignore = key->ignore;
@@ -2445,7 +2445,7 @@ keycompare (const struct line *a, const struct line *b, bool show_debug)
 #define CMP_WITH_IGNORE(A, B)						\
   do									\
     {									\
-          for (;;)							\
+          while (true)							\
             {								\
               while (texta < lima && ignore[to_uchar (*texta)])		\
                 ++texta;						\
@@ -2960,7 +2960,7 @@ mergelines (struct line *t,
             struct line const *lo, size_t nlo,
             struct line const *hi, size_t nhi)
 {
-  for (;;)
+  while (true)
     if (compare (lo - 1, hi - 1, false) <= 0)
       {
         *--t = *--lo;
@@ -3210,7 +3210,7 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
      try to merge into the output, and then merge as much as we can into a
      temp file if we can't. Repeat.  */
 
-  for (;;)
+  while (true)
     {
       /* Merge directly into the output file if possible.  */
       FILE **fps;
@@ -3648,7 +3648,7 @@ main (int argc, char **argv)
 
   files = xnmalloc (argc, sizeof *files);
 
-  for (;;)
+  while (true)
     {
       /* Parse an operand as a file after "--" was seen; or if
          pedantic and a file was seen, unless the POSIX version
