@@ -57,18 +57,17 @@
 
 #include "system.h"
 
+#include "alignof.h"
+#include "areadlink.h"
 #include "error.h"
-#include "filemode.h"
 #include "file-type.h"
+#include "filemode.h"
 #include "fs.h"
 #include "getopt.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "stat-time.h"
 #include "strftime.h"
-#include "areadlink.h"
-
-#define alignof(type) offsetof (struct { char c; type x; }, x)
 
 #if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
