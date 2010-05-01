@@ -789,9 +789,9 @@ main (int argc, char **argv)
           do_lookup = true;
           break;
 
-          case_GETOPT_HELP_CHAR;
+        case_GETOPT_HELP_CHAR;
 
-          case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
         default:
           usage (EXIT_FAILURE);

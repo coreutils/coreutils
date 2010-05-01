@@ -269,9 +269,9 @@ main (int argc, char **argv)
         ignore_garbage = true;
         break;
 
-        case_GETOPT_HELP_CHAR;
+      case_GETOPT_HELP_CHAR;
 
-        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
         usage (EXIT_FAILURE);
