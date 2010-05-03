@@ -331,6 +331,10 @@ sc_space_before_open_paren:
 	else :;								\
 	fi
 
+# Override the default Cc: used in generating an announcement.
+announcement_Cc_ = $(translation_project_), \
+  coreutils@gnu.org, coreutils-announce@gnu.org
+
 include $(srcdir)/dist-check.mk
 
 update-copyright-env = \

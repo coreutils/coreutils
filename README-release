@@ -54,7 +54,8 @@ FIXME: enable excluded programs like arch? to get their manual pages?
   it builds and passes all tests.
 
 * While that's happening, write the release announcement that you will
-  soon post.
+  soon post.  Start with the template, $HOME/announce-coreutils-X.Y
+  that was just created by that "make" command.
 
 Once all the builds and tests have passed,
 
@@ -71,6 +72,7 @@ Once all the builds and tests have passed,
 
 * Announce it on Savannah first, so you can include the preferable
   savannah.org announcement link in the email message.
+
   From here:
     https://savannah.gnu.org/projects/coreutils/
   click on the "submit news", then write something like the following:
@@ -86,13 +88,7 @@ Once all the builds and tests have passed,
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
 
-* Send the gpg-signed announcement mail, e.g.,
-
-    To: info-gnu@gnu.org
-    Cc: coordinator@translationproject.org, coreutils@gnu.org
-    Cc: coreutils-announce@gnu.org
-    Subject: coreutils-X.Y released [stable]
-    Mail-Followup-To: bug-coreutils@gnu.org
+* Send the announcement email message.
 
 * Approve the announcement here:
   http://lists.gnu.org/mailman/admindb/coreutils-announce
