@@ -135,13 +135,18 @@ gl_extract_significant_defines_ = \
 	  > $@-t
 	@mv $@-t $@
 
+define gl_trap_
+  Exit () { set +e; (exit $$1); exit $$1; };				\
+  for sig in 1 2 3 13 15; do						\
+    eval "trap 'Exit $$(expr $$sig + 128)' $$sig";			\
+  done
+endef
+
 # Don't define macros that we already get from gnulib header files.
 sc_always_defined_macros: .re-defmac
 	@if test -d $(gnulib_dir); then					\
 	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0;			\
-	  am__exit='(exit $rc); exit $rc';				\
-	  trap "rc=129; $$am__exit" 1; trap "rc=130; $$am__exit" 2;	\
-	  trap "rc=131; $$am__exit" 3; trap "rc=143; $$am__exit" 15;	\
+	  $(gl_trap_);							\
 	  grep -f .re-defmac $$($(VC_LIST_EXCEPT))			\
 	    && { echo '$(ME): define the above via some gnulib .h file'	\
 		  1>&2;  exit 1; } || :;				\
@@ -161,9 +166,7 @@ sc_always_defined_macros: .re-defmac
 sc_system_h_headers: .re-list
 	@if test -f $(srcdir)/src/system.h; then			\
 	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0;			\
-	  am__exit='(exit $rc); exit $rc';				\
-	  trap "rc=129; $$am__exit" 1; trap "rc=130; $$am__exit" 2;	\
-	  trap "rc=131; $$am__exit" 3; trap "rc=143; $$am__exit" 15;	\
+	  $(gl_trap_);							\
 	  grep -nE -f .re-list						\
 	      $$($(VC_LIST_EXCEPT) | grep '^src/')			\
 	    && { echo '$(ME): the above are already included via system.h'\
