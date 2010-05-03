@@ -51,13 +51,6 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#ifndef WIFSIGNALED
-# define WIFSIGNALED(s) (((s) & 0xFFFF) - 1 < (unsigned int) 0xFF)
-#endif
-#ifndef WTERMSIG
-# define WTERMSIG(s) ((s) & 0x7F)
-#endif
-
 #include "system.h"
 #include "xstrtol.h"
 #include "sig2str.h"
