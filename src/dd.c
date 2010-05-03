@@ -57,12 +57,6 @@ static void process_signals (void);
 #  define siginterrupt(sig, flag) /* empty */
 # endif
 #endif
-#ifndef SA_NODEFER
-# define SA_NODEFER 0
-#endif
-#ifndef SA_RESETHAND
-# define SA_RESETHAND 0
-#endif
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
