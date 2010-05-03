@@ -106,24 +106,28 @@ sc_x_sc_dist_check:
 		   ) | sort | uniq -u)"					\
 	  && { echo 'Makefile.am: $(sce) mismatch' >&2; exit 1; } || :;
 
+gl_generated_headers_ = \
+  $$(cd $(gnulib_dir)/lib && echo *.in.h|sed 's,sys_,sys/,g;s/\.in\.h/.h/g')
+
 headers_with_interesting_macro_defs = \
   exit.h	\
-  fcntl_.h	\
-  fnmatch_.h	\
   intprops.h	\
-  inttypes_.h	\
   lchown.h	\
   openat.h	\
-  stat-macros.h	\
-  stdint_.h
+  stat-macros.h
+
+gl_extract_significant_defines_ = \
+  /^\# *define ([^_ (][^ (]*)\s*(\(|\w+)/ && $$2 !~ /(?:rpl_|_used_without_)/ \
+    and print $$1
 
 # Create a list of regular expressions matching the names
 # of macros that are guaranteed by parts of gnulib to be defined.
 .re-defmac:
-	@(cd $(srcdir)/lib;						\
-	  for f in $(headers_with_interesting_macro_defs); do		\
+	@gen_h=$(gl_generated_headers_);				\
+	(cd $(srcdir)/lib;						\
+	  for f in $(headers_with_interesting_macro_defs) $$gen_h; do	\
 	    test -f $$f &&						\
-	      sed -n '/^# *define \([^_ (][^ (]*\)[ (].*/s//\1/p' $$f;	\
+	      perl -lne '$(gl_extract_significant_defines_)' $$f;	\
 	   done;							\
 	 ) | sort -u							\
 	   | grep -Ev 'ATTRIBUTE_NORETURN|SIZE_MAX'			\
@@ -133,12 +137,12 @@ headers_with_interesting_macro_defs = \
 
 # Don't define macros that we already get from gnulib header files.
 sc_always_defined_macros: .re-defmac
-	@if test -f $(srcdir)/src/system.h; then			\
+	@if test -d $(gnulib_dir); then					\
 	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0;			\
 	  am__exit='(exit $rc); exit $rc';				\
 	  trap "rc=129; $$am__exit" 1; trap "rc=130; $$am__exit" 2;	\
 	  trap "rc=131; $$am__exit" 3; trap "rc=143; $$am__exit" 15;	\
-	  grep -f .re-defmac $$($(VC_LIST))				\
+	  grep -f .re-defmac $$($(VC_LIST_EXCEPT))			\
 	    && { echo '$(ME): define the above via some gnulib .h file'	\
 		  1>&2;  exit 1; } || :;				\
 	fi
