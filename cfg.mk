@@ -106,32 +106,29 @@ sc_x_sc_dist_check:
 		   ) | sort | uniq -u)"					\
 	  && { echo 'Makefile.am: $(sce) mismatch' >&2; exit 1; } || :;
 
-gl_generated_headers_ = \
-  $$(cd $(gnulib_dir)/lib && echo *.in.h|sed 's,sys_,sys/,g;s/\.in\.h/.h/g')
-
-headers_with_interesting_macro_defs = \
-  exit.h	\
+# ==================================================================
+gl_other_headers_ ?= \
   intprops.h	\
-  lchown.h	\
   openat.h	\
   stat-macros.h
 
+# Perl -lne code to extract "significant" cpp-defined symbols from a
+# gnulib header file, eliminating a few common false-positives.
 gl_extract_significant_defines_ = \
-  /^\# *define ([^_ (][^ (]*)\s*(\(|\w+)/ && $$2 !~ /(?:rpl_|_used_without_)/ \
+  /^\# *define ([^_ (][^ (]*)(\s*\(|\s+\w+)/ && $$2 !~ /(?:rpl_|_used_without_)/\
     and print $$1
 
 # Create a list of regular expressions matching the names
-# of macros that are guaranteed by parts of gnulib to be defined.
+# of macros that are guaranteed to be defined by parts of gnulib.
 .re-defmac:
 	@gen_h=$(gl_generated_headers_);				\
-	(cd $(srcdir)/lib;						\
-	  for f in $(headers_with_interesting_macro_defs) $$gen_h; do	\
-	    test -f $$f &&						\
-	      perl -lne '$(gl_extract_significant_defines_)' $$f;	\
-	   done;							\
-	 ) | sort -u							\
-	   | grep -Ev 'ATTRIBUTE_NORETURN|SIZE_MAX'			\
-	   | sed 's/^/^# *define /'					\
+	(cd $(gnulib_dir)/lib;						\
+	  for f in *.in.h $(gl_other_headers_); do			\
+	    perl -lne '$(gl_extract_significant_defines_)' $$f;		\
+	  done;								\
+	) | sort -u							\
+	  | grep -Ev '^ATTRIBUTE_NORETURN'				\
+	  | sed 's/^/^# *define /'					\
 	  > $@-t
 	@mv $@-t $@
 
@@ -151,6 +148,7 @@ sc_always_defined_macros: .re-defmac
 	    && { echo '$(ME): define the above via some gnulib .h file'	\
 		  1>&2;  exit 1; } || :;				\
 	fi
+# ==================================================================
 
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
