@@ -128,7 +128,7 @@ gl_extract_significant_defines_ = \
 	  done;								\
 	) | sort -u							\
 	  | grep -Ev '^ATTRIBUTE_NORETURN'				\
-	  | sed 's/^/^# *define /'					\
+	  | sed 's/^/^ *# *define /;s/$$/\\>/'				\
 	  > $@-t
 	@mv $@-t $@
 
