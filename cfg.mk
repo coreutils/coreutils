@@ -140,7 +140,7 @@ define gl_trap_
 endef
 
 # Don't define macros that we already get from gnulib header files.
-sc_always_defined_macros: .re-defmac
+sc_prohibit_always-defined_macros: .re-defmac
 	@if test -d $(gnulib_dir); then					\
 	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0;			\
 	  $(gl_trap_);							\
