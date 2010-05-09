@@ -17,15 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test "$VERBOSE" = yes && set -x
-
 # Ensure that $SHELL is set to *some* value and exported.
 # This is required for dircolors, which would fail e.g., when
 # invoked via debuild (which removes SHELL from the environment).
 test "x$SHELL" = x && SHELL=/bin/sh
 export SHELL
 
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 
 expected_failure_status_chroot=125
 expected_failure_status_env=125
@@ -184,6 +182,16 @@ rm_setup () { args=$tmp_in; }
 shred_setup () { args=$tmp_in; }
 touch_setup () { args=$tmp_in2; }
 truncate_setup () { args="--reference=$tmp_in $tmp_in2"; }
+
+mkid_setup () { printf 'f(){}\ntypedef int t;\n' > f.c; args=. ; }
+lid_setup () { args=; }
+fid_setup () { args=f.c; }
+fnid_setup () { args=; }
+xtokid_setup () { args=; }
+aid_setup () { args=f; }
+eid_setup () { args=--version; }
+gid_setup () { args=f; }
+defid_setup () { args=t; }
 
 basename_setup () { args=$tmp_in; }
 dirname_setup () { args=$tmp_in; }
