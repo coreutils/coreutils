@@ -115,6 +115,13 @@ sc_x_sc_dist_check:
 	  > $@-t
 	@mv $@-t $@
 
+define gl_trap_
+  Exit () { set +e; (exit $$1); exit $$1; };				\
+  for sig in 1 2 3 13 15; do						\
+    eval "trap 'Exit $$(expr $$sig + 128)' $$sig";			\
+  done
+endef
+
 # Files in src/ should not include directly any of
 # the headers already included via system.h.
 sc_system_h_headers: .re-list
