@@ -10,6 +10,7 @@ EXTRA_DIST =		\
   CuTmpdir.pm		\
   check.mk		\
   envvar-check		\
+  init.sh		\
   lang-default		\
   other-fs-tmpdir	\
   require-perl		\
