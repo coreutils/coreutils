@@ -1,3 +1,4 @@
 \.mk$
 /Makefile\.am$
+^tests/init\.sh$
 ^tests/test-lib\.sh$
