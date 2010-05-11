@@ -98,7 +98,7 @@ test -n "$EXEEXT" && shopt -s expand_aliases
 # This is cheap and useful for exposing code that depends on the fact that
 # malloc-related functions often return memory that is mostly zeroed.
 # If you have the time and cycles, use valgrind to do an even better job.
-${MALLOC_PERTURB_=87}
+: ${MALLOC_PERTURB_=87}
 export MALLOC_PERTURB_
 
 # We use a trap below for cleanup.  This requires us to go through
