@@ -3944,6 +3944,7 @@ of the line being used in the sort.
 
 @item --debug
 Highlight the portion of each line used for sorting.
+Also issue warnings about questionable usage to stderr.
 
 @item --batch-size=@var{nmerge}
 @opindex --batch-size

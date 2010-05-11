@@ -225,6 +225,7 @@ TESTS =						\
   misc/sort-compress				\
   misc/sort-continue				\
   misc/sort-debug-keys				\
+  misc/sort-debug-warn				\
   misc/sort-files0-from				\
   misc/sort-float				\
   misc/sort-merge				\

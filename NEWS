@@ -5,7 +5,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** New features
 
   sort now accepts the --debug option, to highlight the part of the
-  line significant in the sort.
+  line significant in the sort, and warn about questionable options.
 
 ** Changes in behavior
 

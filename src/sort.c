@@ -186,6 +186,7 @@ struct keyfield
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
+  bool obsolete_used;		/* obsolescent key option format is used. */
   struct keyfield *next;	/* Next keyfield to try. */
 };
 
@@ -375,7 +376,10 @@ Other options:\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
                               decompress them with PROG -d\n\
-      --debug               annotate the part of the line used to sort\n\
+"), stdout);
+      fputs (_("\
+      --debug               annotate the part of the line used to sort,\n\
+                              and warn about questionable usage to stderr\n\
       --files0-from=F       read input from the files specified by\n\
                             NUL-terminated names in file F;\n\
                             If F is - then read names from standard input\n\
@@ -2158,6 +2162,161 @@ debug_key (char const *sline, char const *sfield, char const *efield,
   mark_key (offset, width);
 }
 
+/* Testing if a key is numeric is done in various places.  */
+
+static inline bool
+key_numeric (struct keyfield const *key)
+{
+  return key->numeric || key->general_numeric || key->human_numeric;
+}
+
+/* Return whether sorting options specified for key.  */
+
+static bool
+default_key_compare (struct keyfield const *key)
+{
+  return ! (key->ignore
+            || key->translate
+            || key->skipsblanks
+            || key->skipeblanks
+            || key_numeric (key)
+            || key->month
+            || key->version
+            || key->random
+            /* || key->reverse */
+           );
+}
+
+/* Convert a key to the short options used to specify it.  */
+
+static void
+key_to_opts (struct keyfield const *key, char *opts)
+{
+  if (key->skipsblanks || key->skipeblanks)
+    *opts++ = 'b';/* either disables global -b  */
+  if (key->ignore == nondictionary)
+    *opts++ = 'd';
+  if (key->translate)
+    *opts++ = 'f';
+  if (key->general_numeric)
+    *opts++ = 'g';
+  if (key->human_numeric)
+    *opts++ = 'h';
+  if (key->ignore == nonprinting)
+    *opts++ = 'i';
+  if (key->month)
+    *opts++ = 'M';
+  if (key->numeric)
+    *opts++ = 'n';
+  if (key->random)
+    *opts++ = 'R';
+  if (key->reverse)
+    *opts++ = 'r';
+  if (key->version)
+    *opts++ = 'V';
+  *opts = '\0';
+}
+
+/* Output data independent key warnings to stderr.  */
+
+static void
+key_warnings (struct keyfield const *gkey, bool gkey_only)
+{
+  struct keyfield const *key;
+  struct keyfield ugkey = *gkey;
+  unsigned long keynum = 1;
+
+  for (key = keylist; key; key = key->next, keynum++)
+    {
+      if (key->obsolete_used)
+        {
+          /* obsolescent syntax +A.x -B.y is equivalent to:
+               -k A+1.x+1,B.y   (when y = 0)
+               -k A+1.x+1,B+1.y (when y > 0)  */
+          char obuf[INT_BUFSIZE_BOUND (size_t) * 2 + 4]; /* +# -#  */
+          char nbuf[INT_BUFSIZE_BOUND (size_t) * 2 + 5]; /* -k #,#  */
+
+          char *po = obuf;
+          char *pn = nbuf;
+
+          size_t sword = key->sword;
+          size_t eword = key->eword;
+          if (sword == SIZE_MAX)
+            sword++;
+
+          po += sprintf (po, "+%" PRIuMAX, (uintmax_t) sword);
+          pn += sprintf (pn, "-k %" PRIuMAX, (uintmax_t) sword + 1);
+          if (key->eword != SIZE_MAX)
+            {
+              po += sprintf (po, " -%" PRIuMAX, (uintmax_t) eword + 1);
+              pn += sprintf (pn, ",%" PRIuMAX,
+                             (uintmax_t) eword + 1 + (key->echar == SIZE_MAX));
+            }
+          error (0, 0, _("obsolescent key `%s' used; consider `%s' instead"),
+                 obuf, nbuf);
+        }
+
+      /* Warn about field specs that will never match.  */
+      if (key->sword != SIZE_MAX && key->eword < key->sword)
+        error (0, 0, _("key %lu has zero width and will be ignored"), keynum);
+
+      /* Warn about significant leading blanks.  */
+      if (!gkey_only && tab == TAB_DEFAULT && !key->skipsblanks
+          && !key_numeric (key) && !key->month)
+        error (0, 0, _("leading blanks are significant in key %lu; "
+                       "consider also specifying `b'"), keynum);
+
+      /* Warn about numeric comparisons spanning fields,
+         as field delimiters could be interpreted as part
+         of the number (maybe only in other locales).  */
+      if (!gkey_only && key_numeric (key))
+        {
+          size_t sword = key->sword + 1;
+          size_t eword = key->eword + 1;
+          if (!sword)
+            sword++;
+          if (sword != eword)
+            error (0, 0, _("key %lu is numeric and spans multiple fields"),
+                   keynum);
+        }
+
+      /* Flag global options not copied or specified in any key.  */
+      if (ugkey.ignore && (ugkey.ignore == key->ignore))
+        ugkey.ignore = NULL;
+      if (ugkey.translate && (ugkey.translate == key->translate))
+        ugkey.translate = NULL;
+      ugkey.skipsblanks &= !key->skipsblanks;
+      ugkey.skipeblanks &= !key->skipeblanks;
+      ugkey.month &= !key->month;
+      ugkey.numeric &= !key->numeric;
+      ugkey.general_numeric &= !key->general_numeric;
+      ugkey.human_numeric &= !key->human_numeric;
+      ugkey.random &= !key->random;
+      ugkey.version &= !key->version;
+      ugkey.reverse &= !key->reverse;
+    }
+
+  /* Warn about ignored global options flagged above.
+     Note if gkey is the only one in the list, all flags are cleared.  */
+  if (!default_key_compare (&ugkey)
+      || (ugkey.reverse && (stable || unique) && keylist))
+    {
+      bool ugkey_reverse = ugkey.reverse;
+      if (!(stable || unique))
+        ugkey.reverse = false;
+      /* The following is too big, but guaranteed to be "big enough".  */
+      char opts[sizeof short_options];
+      key_to_opts (&ugkey, opts);
+      error (0, 0,
+             ngettext ("option `-%s' is ignored",
+                       "options `-%s' are ignored",
+                       select_plural (strlen (opts))), opts);
+      ugkey.reverse = ugkey_reverse;
+    }
+  if (ugkey.reverse && !(stable || unique) && keylist)
+    error (0, 0, _("option `-r' only applies to last-resort comparison"));
+}
+
 /* Compare two lines A and B trying every key in sequence until there
    are no more keys or a difference is found. */
 
@@ -2193,7 +2352,7 @@ keycompare (const struct line *a, const struct line *b, bool show_debug)
 
       if (key->random)
         diff = compare_random (texta, lena, textb, lenb);
-      else if (key->numeric || key->general_numeric || key->human_numeric)
+      else if (key_numeric (key))
         {
           char savea = *lima, saveb = *limb;
           char const* ea = lima;
@@ -3235,35 +3394,18 @@ incompatible_options (char const *opts)
 static void
 check_ordering_compatibility (void)
 {
-  struct keyfield const *key;
+  struct keyfield *key;
 
   for (key = keylist; key; key = key->next)
     if ((1 < (key->random + key->numeric + key->general_numeric + key->month
               + key->version + !!key->ignore + key->human_numeric))
         || (key->random && key->translate))
       {
-        /* The following is too big, but guaranteed to be "big enough". */
+        /* The following is too big, but guaranteed to be "big enough".  */
         char opts[sizeof short_options];
-        char *p = opts;
-        if (key->ignore == nondictionary)
-          *p++ = 'd';
-        if (key->translate)
-          *p++ = 'f';
-        if (key->general_numeric)
-          *p++ = 'g';
-        if (key->human_numeric)
-          *p++ = 'h';
-        if (key->ignore == nonprinting)
-          *p++ = 'i';
-        if (key->month)
-          *p++ = 'M';
-        if (key->numeric)
-          *p++ = 'n';
-        if (key->version)
-          *p++ = 'V';
-        if (key->random)
-          *p++ = 'R';
-        *p = '\0';
+        /* Clear flags we're not interested in.  */
+        key->skipsblanks = key->skipeblanks = key->reverse = false;
+        key_to_opts (key, opts);
         incompatible_options (opts);
       }
 }
@@ -3391,6 +3533,7 @@ main (int argc, char **argv)
   struct keyfield *key;
   struct keyfield key_buf;
   struct keyfield gkey;
+  bool gkey_only = false;
   char const *s;
   int c = 0;
   char checkonly = 0;
@@ -3494,14 +3637,8 @@ main (int argc, char **argv)
   /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
   atexit (exit_cleanup);
 
-  gkey.sword = gkey.eword = SIZE_MAX;
-  gkey.ignore = NULL;
-  gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.human_numeric = false;
-  gkey.iec_present = -1;
-  gkey.random = gkey.version = false;
-  gkey.month = gkey.reverse = false;
-  gkey.skipsblanks = gkey.skipeblanks = false;
+  key_init (&gkey);
+  gkey.sword = SIZE_MAX;
 
   files = xnmalloc (argc, sizeof *files);
 
@@ -3573,6 +3710,7 @@ main (int argc, char **argv)
                             badfieldspec (optarg1,
                                       N_("stray character in field spec"));
                         }
+                      key->obsolete_used = true;
                       insertkey (key);
                     }
                 }
@@ -3836,17 +3974,7 @@ main (int argc, char **argv)
   /* Inheritance of global options to individual keys. */
   for (key = keylist; key; key = key->next)
     {
-      if (! (key->ignore
-             || key->translate
-             || (key->skipsblanks
-                 || key->reverse
-                 || key->skipeblanks
-                 || key->month
-                 || key->numeric
-                 || key->version
-                 || key->general_numeric
-                 || key->human_numeric
-                 || key->random)))
+      if (default_key_compare (key) && !key->reverse)
         {
           key->ignore = gkey.ignore;
           key->translate = gkey.translate;
@@ -3856,33 +3984,40 @@ main (int argc, char **argv)
           key->numeric = gkey.numeric;
           key->general_numeric = gkey.general_numeric;
           key->human_numeric = gkey.human_numeric;
+          key->version = gkey.version;
           key->random = gkey.random;
           key->reverse = gkey.reverse;
-          key->version = gkey.version;
         }
 
       need_random |= key->random;
     }
 
-  if (!keylist && (gkey.ignore
-                   || gkey.translate
-                   || (gkey.skipsblanks
-                       || gkey.skipeblanks
-                       || gkey.month
-                       || gkey.numeric
-                       || gkey.general_numeric
-                       || gkey.human_numeric
-                       || gkey.random
-                       || gkey.version)))
+  if (!keylist && !default_key_compare (&gkey))
     {
+      gkey_only = true;
       insertkey (&gkey);
       need_random |= gkey.random;
     }
 
   check_ordering_compatibility ();
 
+  /* Disable this combination so that users are less likely
+     to inadvertantly update a file with debugging enabled.
+     Also it simplifies the code for handling temp files.  */
   if (debug && outfile)
     error (SORT_FAILURE, 0, _("options -o and --debug are incompatible"));
+
+  if (debug)
+    {
+      /* Always output the locale in debug mode, since this
+         is such a common source of confusion.  */
+      if (hard_LC_COLLATE)
+        error (0, 0, _("using %s sorting rules"),
+               quote (setlocale (LC_COLLATE, NULL)));
+      else
+        error (0, 0, _("using simple byte comparison"));
+      key_warnings (&gkey, gkey_only);
+    }
 
   reverse = gkey.reverse;
 
