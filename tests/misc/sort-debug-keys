@@ -300,8 +300,8 @@ _____
 ___________________
 EOF
 
-(
 if test "$LOCALE_FR_UTF8"; then
+  (
   echo "   1²---++3   1,234  Mi" |
     LC_ALL=C sort --debug -k2g -k1b,1
   echo "   1²---++3   1,234  Mi" |
@@ -309,9 +309,8 @@ if test "$LOCALE_FR_UTF8"; then
   echo "+1234 1234Gi 1,234M" |
     LC_ALL=$LOCALE_FR_UTF8 sort --debug -k1,1n -k1,1g \
     -k1,1h -k2,2n -k2,2g -k2,2h -k3,3n -k3,3g -k3,3h
+  ) > out
+  compare out exp || fail=1
 fi
-) > out
-
-compare out exp || fail=1
 
 Exit $fail
