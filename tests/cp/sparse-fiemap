@@ -1,0 +1,56 @@
+#!/bin/sh
+# Test cp --sparse=always through fiemap copy
+
+# Copyright (C) 2006-2010 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+. $srcdir/test-lib.sh
+require_root_
+
+cwd=`pwd`
+cleanup_() { cd /; umount "$cwd/mnt"; }
+
+skip=0
+# Create an ext4 loopback file system
+dd if=/dev/zero of=blob bs=8192 count=1000 || skip=1
+mkdir mnt
+mkfs -t ext4 -F blob ||
+  skip_test_ "failed to create ext4 file system"
+mount -oloop blob mnt   || skip=1
+cd mnt                  || skip=1
+echo test > f           || skip=1
+test -s f               || skip=1
+
+test $skip = 1 &&
+  skip_test_ "insufficient mount/ext4 support"
+
+# Create a 1TiB sparse file
+dd if=/dev/zero of=mnt/sparse bs=1k count=1 seek=1G || framework_failure
+
+
+# It takes many minutes to copy this sparse file using the old method.
+# By contrast, it takes far less than 1 second using FIEMAP-copy.
+timeout 10 cp --sparse=always sparse fiemap || fail=1
+
+# Ensure that the sparse file copied through fiemap has the same size
+# in bytes as the original.
+test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
+
+Exit $fail

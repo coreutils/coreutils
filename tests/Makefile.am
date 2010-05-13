@@ -25,6 +25,7 @@ root_tests =					\
   cp/special-bits				\
   cp/cp-mv-enotsup-xattr			\
   cp/capability					\
+  cp/sparse-fiemap                              \
   dd/skip-seek-past-dev				\
   install/install-C-root			\
   ls/capability					\
