@@ -1513,7 +1513,7 @@ main (int argc, char **argv)
   int n_files;
   size_t i;
   int l_c_m;
-  size_t desired_width IF_LINT (= 0);
+  size_t desired_width IF_LINT ( = 0);
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
@@ -1522,7 +1522,7 @@ main (int argc, char **argv)
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
-  uintmax_t pseudo_start IF_LINT (= 0);
+  uintmax_t pseudo_start IF_LINT ( = 0);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

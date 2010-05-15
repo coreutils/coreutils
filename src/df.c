@@ -850,7 +850,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 int
 main (int argc, char **argv)
 {
-  struct stat *stats IF_LINT (= 0);
+  struct stat *stats IF_LINT ( = 0);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

@@ -228,7 +228,7 @@ int
 main (int argc, char **argv)
 {
   bool got_size = false;
-  off_t size IF_LINT (= 0);
+  off_t size IF_LINT ( = 0);
   off_t rsize = -1;
   rel_mode_t rel_mode = rm_abs;
   mode_t omode;

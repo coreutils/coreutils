@@ -460,9 +460,9 @@ digest_check (const char *checkfile_name)
   line_chars_allocated = 0;
   do
     {
-      char *filename IF_LINT (= NULL);
+      char *filename IF_LINT ( = NULL);
       int binary;
-      unsigned char *hex_digest IF_LINT (= NULL);
+      unsigned char *hex_digest IF_LINT ( = NULL);
       ssize_t line_length;
 
       ++line_number;

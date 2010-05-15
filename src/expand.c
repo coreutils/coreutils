@@ -144,8 +144,8 @@ static void
 parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
-  uintmax_t tabval IF_LINT (= 0);
-  char const *num_start IF_LINT (= NULL);
+  uintmax_t tabval IF_LINT ( = 0);
+  char const *num_start IF_LINT ( = NULL);
   bool ok = true;
 
   for (; *stops; stops++)

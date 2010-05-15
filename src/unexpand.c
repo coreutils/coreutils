@@ -163,8 +163,8 @@ static void
 parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
-  uintmax_t tabval IF_LINT (= 0);
-  char const *num_start IF_LINT (= NULL);
+  uintmax_t tabval IF_LINT ( = 0);
+  char const *num_start IF_LINT ( = NULL);
   bool ok = true;
 
   for (; *stops; stops++)
@@ -450,7 +450,7 @@ int
 main (int argc, char **argv)
 {
   bool have_tabval = false;
-  uintmax_t tabval IF_LINT (= 0);
+  uintmax_t tabval IF_LINT ( = 0);
   int c;
 
   /* If true, cancel the effect of any -a (explicit or implicit in -t),

@@ -547,7 +547,7 @@ trace (fxn)
 static VALUE *
 docolon (VALUE *sv, VALUE *pv)
 {
-  VALUE *v IF_LINT (= NULL);
+  VALUE *v IF_LINT ( = NULL);
   const char *errmsg;
   struct re_pattern_buffer re_buffer;
   char fastmap[UCHAR_MAX + 1];

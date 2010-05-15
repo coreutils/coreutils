@@ -301,8 +301,8 @@ check_file (const char *infile, const char *outfile, char delimiter)
 
   if (output_unique && output_first_repeated && countmode == count_none)
     {
-      char *prevfield IF_LINT (= NULL);
-      size_t prevlen IF_LINT (= 0);
+      char *prevfield IF_LINT ( = NULL);
+      size_t prevlen IF_LINT ( = 0);
 
       while (!feof (stdin))
         {

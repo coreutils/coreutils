@@ -3849,7 +3849,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
   char smallbuf[BUFSIZ];
   size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
   char *buf;
-  size_t displayed_width IF_LINT (= 0);
+  size_t displayed_width IF_LINT ( = 0);
 
   if (len < sizeof smallbuf)
     buf = smallbuf;

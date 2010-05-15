@@ -180,8 +180,8 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
-  mode_t old_mode IF_LINT (= 0);
-  mode_t new_mode IF_LINT (= 0);
+  mode_t old_mode IF_LINT ( = 0);
+  mode_t new_mode IF_LINT ( = 0);
   bool ok = true;
   bool chmod_succeeded = false;
 

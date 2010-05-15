@@ -365,7 +365,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 {
   off_t size = *sizep;
   off_t offset;			/* Current file posiiton */
-  time_t thresh IF_LINT (= 0);	/* Time to maybe print next status update */
+  time_t thresh IF_LINT ( = 0);	/* Time to maybe print next status update */
   time_t now = 0;		/* Current time */
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
@@ -388,7 +388,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
-  char const *previous_human_offset IF_LINT (= 0);
+  char const *previous_human_offset IF_LINT ( = 0);
 
   if (lseek (fd, 0, SEEK_SET) == -1)
     {
