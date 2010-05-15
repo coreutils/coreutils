@@ -233,6 +233,11 @@ sc_require_stdio_safer:
 	else :;								\
 	fi
 
+sc_prohibit_perl_hash_quotes:
+	@prohibit="\{'[A-Z_]+' *[=}]"					\
+	halt="in Perl code, write \$$hash{KEY}, not \$$hash{'K''EY'}"	\
+	  $(_sc_search_regexp)
+
 # Prefer xnanosleep over other less-precise sleep methods
 sc_prohibit_sleep:
 	@prohibit='\<(nano|u)?sleep \('					\

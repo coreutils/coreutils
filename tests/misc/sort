@@ -353,9 +353,9 @@ my @Tests =
  {IN=>"a\0z\01\nb\0y\02\n"}, {OUT=>"b\0y\02\na\0z\01\n"}],
 
 # fields > SIZE_MAX are silently interpreted as SIZE_MAX
-["bigfield1", "-k $limits->{'UINTMAX_OFLOW'}",
+["bigfield1", "-k $limits->{UINTMAX_OFLOW}",
  {IN=>"2\n1\n"}, {OUT=>"1\n2\n"}],
-["bigfield2", "-k $limits->{'SIZE_OFLOW'}",
+["bigfield2", "-k $limits->{SIZE_OFLOW}",
  {IN=>"2\n1\n"}, {OUT=>"1\n2\n"}],
 
 # Using an old-style key-specifying option like +1 with an invalid

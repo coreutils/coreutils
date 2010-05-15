@@ -146,9 +146,9 @@ my @tv = (
  t_subst "a:1:2:\nb:1:2:\n", 0],
 
 # fields > SIZE_MAX are silently interpreted as SIZE_MAX
-['bigfield1', "-1 $limits->{'UINTMAX_OFLOW'} -2 2",
+['bigfield1', "-1 $limits->{UINTMAX_OFLOW} -2 2",
  ["a\n", "b\n"], " a b\n", 0],
-['bigfield2', "-1 $limits->{'SIZE_OFLOW'} -2 2",
+['bigfield2', "-1 $limits->{SIZE_OFLOW} -2 2",
  ["a\n", "b\n"], " a b\n", 0],
 
 # FIXME: change this to ensure the diagnostic makes sense

@@ -34,7 +34,7 @@ my $big_input = "aaa\n" x 1024;
 # don't need to check for existence, since we're running in a temp dir
 my $badtmp = 'does/not/exist';
 
-my $bigint = $limits->{'UINTMAX_OFLOW'};
+my $bigint = $limits->{UINTMAX_OFLOW};
 
 my @Tests =
     (

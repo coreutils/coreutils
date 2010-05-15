@@ -158,19 +158,19 @@ my @Tests =
   ['eq-3', qw(0 -eq 00)],
   ['eq-4', qw(8 -eq 9), {EXIT=>1}],
   ['eq-5', qw(1 -eq 0), {EXIT=>1}],
-  ['eq-6', "$limits->{'UINTMAX_OFLOW'} -eq 0", {EXIT=>1}],
+  ['eq-6', "$limits->{UINTMAX_OFLOW} -eq 0", {EXIT=>1}],
 
   ['gt-1', qw(5 -gt 5), {EXIT=>1}],
   ['gt-2', qw(5 -gt 4)],
   ['gt-3', qw(4 -gt 5), {EXIT=>1}],
   ['gt-4', qw(-1 -gt -2)],
-  ['gt-5', "$limits->{'UINTMAX_OFLOW'} -gt $limits->{'INTMAX_UFLOW'}"],
+  ['gt-5', "$limits->{UINTMAX_OFLOW} -gt $limits->{INTMAX_UFLOW}"],
 
   ['lt-1', qw(5 -lt 5), {EXIT=>1}],
   ['lt-2', qw(5 -lt 4), {EXIT=>1}],
   ['lt-3', qw(4 -lt 5)],
   ['lt-4', qw(-1 -lt -2), {EXIT=>1}],
-  ['lt-5', "$limits->{'INTMAX_UFLOW'} -lt $limits->{'UINTMAX_OFLOW'}"],
+  ['lt-5', "$limits->{INTMAX_UFLOW} -lt $limits->{UINTMAX_OFLOW}"],
 
   ['inv-1', qw(0x0 -eq 00), {EXIT=>2},
    {ERR=>"$prog: invalid integer `0x0'\n"}],

@@ -78,7 +78,7 @@ my @Tests =
 
      # It is debatable whether this test should require an environment
      # setting of e.g., _POSIX2_VERSION=1.
-     ['obs-ovflo', "-$limits->{'UINTMAX_OFLOW'}", {IN=>''}, {OUT=>''},
+     ['obs-ovflo', "-$limits->{UINTMAX_OFLOW}", {IN=>''}, {OUT=>''},
       {EXIT => 1}, {ERR => "$prog: tab stop value is too large\n"}],
     );
 

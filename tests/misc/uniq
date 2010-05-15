@@ -194,8 +194,8 @@ my @Tests =
         . $try}],
  # Check that -d and -u suppress all output, as POSIX requires.
  ['120', qw(-d -u), {IN=>"a\na\n\b"}, {OUT=>""}],
- ['121', "-d -u -w$limits->{'UINTMAX_OFLOW'}", {IN=>"a\na\n\b"}, {OUT=>""}],
- ['122', "-d -u -w$limits->{'SIZE_OFLOW'}", {IN=>"a\na\n\b"}, {OUT=>""}],
+ ['121', "-d -u -w$limits->{UINTMAX_OFLOW}", {IN=>"a\na\n\b"}, {OUT=>""}],
+ ['122', "-d -u -w$limits->{SIZE_OFLOW}", {IN=>"a\na\n\b"}, {OUT=>""}],
  # Check that --zero-terminated is synonymous with -z.
  ['123', '--zero-terminated', {IN=>"a\na\nb"}, {OUT=>"a\na\nb\0"}],
  ['124', '--zero-terminated', {IN=>"a\0a\0b"}, {OUT=>"a\0b\0"}],
