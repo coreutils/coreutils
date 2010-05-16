@@ -4120,7 +4120,7 @@ the start and end positions of a field specification, and if it is
 inherited from the global options it will be attached to both.
 If input lines can contain leading or adjacent blanks and @option{-t}
 is not used, then @option{-k} is typically combined with @option{-b} or
-an option that implicitly ignores leading blanks (@samp{MghnV}) as otherwise
+an option that implicitly ignores leading blanks (@samp{Mghn}) as otherwise
 the varying numbers of leading blanks in fields can cause confusing results.
 
 If the start position in a sort field specifier falls after the end of
