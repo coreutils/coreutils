@@ -2122,7 +2122,7 @@ count_tabs (char const *text, const size_t len)
 static void
 mark_key (size_t offset, size_t width)
 {
-  printf ("%*s", offset, "");
+  printf ("%*s", (int) offset, "");
 
   if (!width)
     printf (_("^ no match for key\n"));
