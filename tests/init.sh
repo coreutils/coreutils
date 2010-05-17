@@ -63,33 +63,50 @@
 # - hyphen-containing alias names
 # - we prefer to use ${var#...} substitution, rather than having
 #   to work around lack of support for that feature.
-# The following code attempts to find a shell with support for these features
-# and re-exec's it.  If not, it skips the current test.
+# The following code attempts to find a shell with support for these features.
+# If the current shell passes the test, we're done.  Otherwise, test other
+# shells until we find one that passes.  If one is found, re-exec it.
+# If no acceptable shell is found, skip the current test.
+#
+# Use "9" to indicate success (rather than 0), in case some shell acts
+# like Solaris 10's /bin/sh but exits successfully instead of with status 2.
 
 gl_shell_test_script_='
 test $(echo y) = y || exit 1
-test -z "$EXEEXT" && exit 0
+test -z "$EXEEXT" && exit 9
 shopt -s expand_aliases
 alias a-b="echo zoo"
 v=abx
      test ${v%x} = ab \
   && test ${v#a} = bx \
-  && test $(a-b) = zoo
+  && test $(a-b) = zoo \
+  && exit 9
 '
 
 if test "x$1" = "x--no-reexec"; then
   shift
 else
-  for re_shell_ in "${CONFIG_SHELL:-no_shell}" /bin/sh bash dash zsh pdksh fail
-  do
-    test "$re_shell_" = no_shell && continue
-    test "$re_shell_" = fail && skip_ failed to find an adequate shell
-    if "$re_shell_" -c "$gl_shell_test_script_" 2>/dev/null; then
-      exec "$re_shell_" "$0" --no-reexec "$@"
-      echo "$ME_: exec failed" 1>&2
-      exit 127
-    fi
-  done
+  # 'eval'ing the above code makes Solaris 10's /bin/sh exit with $? set to 2.
+  # It does not evaluate any of the code after the "unexpected" `('.  Thus,
+  # we must run it in a subshell.
+  ( eval "$gl_shell_test_script_" ) > /dev/null 2>&1
+  if test $? = 9; then
+    : # The current shell is adequate.  No re-exec required.
+  else
+    # Search for a shell that meets our requirements.
+    for re_shell_ in "${CONFIG_SHELL:-no_shell}" /bin/sh bash dash zsh pdksh fail
+    do
+      test "$re_shell_" = no_shell && continue
+      test "$re_shell_" = fail && skip_ failed to find an adequate shell
+      "$re_shell_" -c "$gl_shell_test_script_" 2>/dev/null
+      if test $? = 9; then
+        # Found an acceptable shell.
+        exec "$re_shell_" "$0" --no-reexec "$@"
+        echo "$ME_: exec failed" 1>&2
+        exit 127
+      fi
+    done
+  fi
 fi
 
 test -n "$EXEEXT" && shopt -s expand_aliases
