@@ -300,7 +300,8 @@ _____
 ___________________
 EOF
 
-if test "$LOCALE_FR_UTF8"; then
+: ${LOCALE_FR_UTF8=none}
+if test "$LOCALE_FR_UTF8" != "none"; then
   (
   echo "   1²---++3   1,234  Mi" |
     LC_ALL=C sort --debug -k2g -k1b,1
