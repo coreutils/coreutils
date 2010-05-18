@@ -350,6 +350,7 @@ TESTS =						\
   du/inaccessible-cwd				\
   du/long-from-unreadable			\
   du/long-sloop					\
+  du/max-depth					\
   du/no-deref					\
   du/no-x					\
   du/one-file-system				\
