@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  du recognizes -d N as equivalent to --max-depth=N, for compatibility
+  with FreeBSD.
+
   sort now accepts the --debug option, to highlight the part of the
   line significant in the sort, and warn about questionable options.
 

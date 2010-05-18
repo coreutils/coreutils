@@ -10427,7 +10427,9 @@ This option is equivalent to @option{--block-size=1M}.
 For each symbolic links encountered by @command{du},
 consider the disk space used by the symbolic link.
 
+@item -d @var{depth}
 @item --max-depth=@var{depth}
+@opindex -d @var{depth}
 @opindex --max-depth=@var{depth}
 @cindex limiting output of @command{du}
 Show the total for each directory (and file if --all) that is at

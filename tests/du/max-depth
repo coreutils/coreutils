@@ -28,4 +28,11 @@ cut -f2- out > k && mv k out
 compare out exp || fail=1
 compare err /dev/null || fail=1
 
+# Repeat, but use -d 1.
+printf 'a/b\na\n' > exp || framework_failure_
+du -d 1 a > out 2>err || fail=1
+cut -f2- out > k && mv k out
+compare out exp || fail=1
+compare err /dev/null || fail=1
+
 Exit $fail

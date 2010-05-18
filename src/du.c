@@ -56,10 +56,8 @@ extern bool fts_debug;
 
 #if DU_DEBUG
 # define FTS_CROSS_CHECK(Fts) fts_cross_check (Fts)
-# define DEBUG_OPT "d"
 #else
 # define FTS_CROSS_CHECK(Fts)
-# define DEBUG_OPT
 #endif
 
 /* Initial size of the hash table.  */
@@ -192,7 +190,7 @@ enum
   EXCLUDE_OPTION,
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
-  MAX_DEPTH_OPTION,
+  FTS_DEBUG,
   TIME_OPTION,
   TIME_STYLE_OPTION
 };
@@ -204,6 +202,7 @@ static struct option const long_options[] =
   {"block-size", required_argument, NULL, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
+  /* {"-debug", no_argument, NULL, FTS_DEBUG}, */
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, NULL, 'D'},
   {"exclude", required_argument, NULL, EXCLUDE_OPTION},
@@ -211,7 +210,7 @@ static struct option const long_options[] =
   {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, HUMAN_SI_OPTION},
-  {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
+  {"max-depth", required_argument, NULL, 'd'},
   {"null", no_argument, NULL, '0'},
   {"no-dereference", no_argument, NULL, 'P'},
   {"one-file-system", no_argument, NULL, 'x'},
@@ -312,7 +311,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -x, --one-file-system    skip directories on different file systems\n\
   -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\
       --exclude=PATTERN    exclude files that match PATTERN\n\
-      --max-depth=N     print the total for a directory (or file, with --all)\n\
+  -d, --max-depth=N     print the total for a directory (or file, with --all)\n\
                           only if it is N or fewer levels below the command\n\
                           line argument;  --max-depth=0 is the same as\n\
                           --summarize\n\
@@ -694,7 +693,7 @@ main (int argc, char **argv)
   for (;;)
     {
       int oi = -1;
-      int c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
+      int c = getopt_long (argc, argv, "0abd:chHklmsxB:DLPSX:",
                            long_options, &oi);
       if (c == -1)
         break;
@@ -702,7 +701,7 @@ main (int argc, char **argv)
       switch (c)
         {
 #if DU_DEBUG
-        case 'd':
+        case FTS_DEBUG:
           fts_debug = true;
           break;
 #endif
@@ -744,7 +743,7 @@ main (int argc, char **argv)
           output_block_size = 1024;
           break;
 
-        case MAX_DEPTH_OPTION:		/* --max-depth=N */
+        case 'd':		/* --max-depth=N */
           {
             unsigned long int tmp_ulong;
             if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
