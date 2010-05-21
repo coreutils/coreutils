@@ -53,4 +53,42 @@ timeout 10 cp --sparse=always sparse fiemap || fail=1
 # in bytes as the original.
 test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
 
+# =================================================
+# Ensure that we exercise the FIEMAP-copying code enough
+# to provoke at least two iterations of the do...while loop
+# in which it calls ioctl (fd, FS_IOC_FIEMAP,...
+# This also verifies that non-trivial extents are preserved.
+
+$PERL -e 1 || skip_test_ 'skipping part of this test; you lack perl'
+
+$PERL -e 'BEGIN { $n = 16 * 1024; *F = *STDOUT }' \
+      -e 'for (1..100) { sysseek (*F, $n, 1)' \
+      -e '&& syswrite (*F, "."x$n) or die "$!"}' > j1 || fail=1
+
+cp --sparse=always j1 j2 || fail=1
+cmp j1 j2 || fail=1
+
+filefrag j1 | grep extent \
+  || skip_test_ 'skipping part of this test; you lack filefrag'
+
+# Here is sample filefrag output:
+#   $ perl -e 'BEGIN{$n=16*1024; *F=*STDOUT}' \
+#          -e 'for (1..5) { sysseek(*F,$n,1)' \
+#          -e '&& syswrite *F,"."x$n or die "$!"}' > j
+#   $ filefrag -v j
+#   File system type is: ef53
+#   File size of j is 163840 (40 blocks, blocksize 4096)
+#    ext logical physical expected length flags
+#      0       4  6258884               4
+#      1      12  6258892  6258887      4
+#      2      20  6258900  6258895      4
+#      3      28  6258908  6258903      4
+#      4      36  6258916  6258911      4 eof
+#   j: 6 extents found
+
+# exclude the physical block numbers; they always differ
+filefrag -v j1 | awk '/^ / {print $1,$2,$NF}' > ff1 || fail=1
+filefrag -v j2 | awk '/^ / {print $1,$2,$NF}' > ff2 || fail=1
+compare ff1 ff2 || fail=1
+
 Exit $fail
