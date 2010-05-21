@@ -45,10 +45,9 @@ test -s err && fail=1   #there must be no stderr output for -a
 ls -Z e | grep $ctx || fail=1
 ls -Z f | grep $ctx || fail=1
 
-
+skip=0
 # Create a file system, then mount it with the context=... option.
-dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
-                                             || skip=1
+dd if=/dev/zero of=blob bs=8192 count=200    || skip=1
 mkdir mnt                                    || skip=1
 mkfs -t ext2 -F blob ||
   skip_test_ "failed to create an ext2 file system"
