@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test cp --sparse=always through fiemap copy
 
-# Copyright (C) 2006-2010 Free Software Foundation, Inc.
+# Copyright (C) 2010 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,29 +21,34 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/test-lib.sh
-require_root_
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 
-cwd=`pwd`
-cleanup_() { cd /; umount "$cwd/mnt"; }
+if df -T -t btrfs -t xfs -t ext4 -t ocfs2 . ; then
+  : # Current dir is on a partition with working extents.  Good!
+else
+  # It's not;  we need to create one, hence we need root access.
+  require_root_
 
-skip=0
-# Create an ext4 loopback file system
-dd if=/dev/zero of=blob bs=8192 count=1000 || skip=1
-mkdir mnt
-mkfs -t ext4 -F blob ||
-  skip_test_ "failed to create ext4 file system"
-mount -oloop blob mnt   || skip=1
-cd mnt                  || skip=1
-echo test > f           || skip=1
-test -s f               || skip=1
+  cwd=$PWD
+  cleanup_() { cd /; umount "$cwd/mnt"; }
 
-test $skip = 1 &&
-  skip_test_ "insufficient mount/ext4 support"
+  skip=0
+  # Create an ext4 loopback file system
+  dd if=/dev/zero of=blob bs=32k count=1000 || skip=1
+  mkdir mnt
+  mkfs -t ext4 -F blob ||
+    skip_test_ "failed to create ext4 file system"
+  mount -oloop blob mnt   || skip=1
+  cd mnt                  || skip=1
+  echo test > f           || skip=1
+  test -s f               || skip=1
+
+  test $skip = 1 &&
+    skip_test_ "insufficient mount/ext4 support"
+fi
 
 # Create a 1TiB sparse file
-dd if=/dev/zero of=mnt/sparse bs=1k count=1 seek=1G || framework_failure
-
+dd if=/dev/zero of=sparse bs=1k count=1 seek=1G || framework_failure
 
 # It takes many minutes to copy this sparse file using the old method.
 # By contrast, it takes far less than 1 second using FIEMAP-copy.
@@ -52,5 +57,62 @@ timeout 10 cp --sparse=always sparse fiemap || fail=1
 # Ensure that the sparse file copied through fiemap has the same size
 # in bytes as the original.
 test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
+
+# =================================================
+# Ensure that we exercise the FIEMAP-copying code enough
+# to provoke at least two iterations of the do...while loop
+# in which it calls ioctl (fd, FS_IOC_FIEMAP,...
+# This also verifies that non-trivial extents are preserved.
+
+$PERL -e 1 || skip_test_ 'skipping part of this test; you lack perl'
+
+# Extract logical block number and length pairs from filefrag -v output.
+# The initial sed is to remove the "eof" from the normally-empty "flags" field.
+# That is required when that final extent has no number in the "expected" field.
+f()
+{
+  sed 's/ eof$//' $@ \
+    | awk '/^ *[0-9]/ {printf "%d %d ", $2 ,NF < 5 ? $NF : $5 } END {print ""}'
+}
+
+for i in $(seq 1 2 21); do
+  for j in 1 2 31 100; do
+    $PERL -e 'BEGIN { $n = '$i' * 1024; *F = *STDOUT }' \
+          -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
+          -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
+    # sync
+    cp --sparse=always j1 j2 || fail=1
+    # sync
+    # Technically we may need the 'sync' uses above, but
+    # uncommenting them makes this test take much longer.
+
+    cmp j1 j2 || fail=1
+    filefrag -v j1 | grep extent \
+      || skip_test_ 'skipping part of this test; you lack filefrag'
+
+    # Here is sample filefrag output:
+    #   $ perl -e 'BEGIN{$n=16*1024; *F=*STDOUT}' \
+    #          -e 'for (1..5) { sysseek(*F,$n,1)' \
+    #          -e '&& syswrite *F,"."x$n or die "$!"}' > j
+    #   $ filefrag -v j
+    #   File system type is: ef53
+    #   File size of j is 163840 (40 blocks, blocksize 4096)
+    #    ext logical physical expected length flags
+    #      0       4  6258884               4
+    #      1      12  6258892  6258887      4
+    #      2      20  6258900  6258895      4
+    #      3      28  6258908  6258903      4
+    #      4      36  6258916  6258911      4 eof
+    #   j: 6 extents found
+
+    # exclude the physical block numbers; they always differ
+    filefrag -v j1 > ff1 || fail=1
+    filefrag -v j2 > ff2 || fail=1
+    { f ff1; f ff2; } \
+      | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
+        || { fail=1; break; }
+  done
+  test $fail = 1 && break
+done
 
 Exit $fail
