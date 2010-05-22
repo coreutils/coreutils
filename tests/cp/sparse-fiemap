@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test cp --sparse=always through fiemap copy
 
-# Copyright (C) 2006-2010 Free Software Foundation, Inc.
+# Copyright (C) 2010 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,29 +21,34 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/test-lib.sh
-require_root_
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 
-cwd=`pwd`
-cleanup_() { cd /; umount "$cwd/mnt"; }
+if df -T -t btrfs -t xfs . ; then
+  : # Current dir is on a partition with working extents.  Good!
+else
+  # It's not;  we need to create one, hence we need root access.
+  require_root_
 
-skip=0
-# Create an ext4 loopback file system
-dd if=/dev/zero of=blob bs=8192 count=1000 || skip=1
-mkdir mnt
-mkfs -t ext4 -F blob ||
-  skip_test_ "failed to create ext4 file system"
-mount -oloop blob mnt   || skip=1
-cd mnt                  || skip=1
-echo test > f           || skip=1
-test -s f               || skip=1
+  cwd=$PWD
+  cleanup_() { cd /; umount "$cwd/mnt"; }
 
-test $skip = 1 &&
-  skip_test_ "insufficient mount/ext4 support"
+  skip=0
+  # Create an XFS loopback file system
+  dd if=/dev/zero of=blob bs=32k count=1000 || skip=1
+  mkdir mnt
+  mkfs -t xfs blob ||
+    skip_test_ "failed to create XFS file system"
+  mount -oloop blob mnt   || skip=1
+  cd mnt                  || skip=1
+  echo test > f           || skip=1
+  test -s f               || skip=1
+
+  test $skip = 1 &&
+    skip_test_ "insufficient mount/XFS support"
+fi
 
 # Create a 1TiB sparse file
-dd if=/dev/zero of=mnt/sparse bs=1k count=1 seek=1G || framework_failure
-
+dd if=/dev/zero of=sparse bs=1k count=1 seek=1G || framework_failure
 
 # It takes many minutes to copy this sparse file using the old method.
 # By contrast, it takes far less than 1 second using FIEMAP-copy.
