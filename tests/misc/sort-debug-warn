@@ -26,7 +26,6 @@ fi
 cat <<\EOF > exp
 sort: using simple byte comparison
 sort: key 1 has zero width and will be ignored
-sort: leading blanks are significant in key 1; consider also specifying `b'
 sort: using simple byte comparison
 sort: options `-bghMRrV' are ignored
 sort: using simple byte comparison
@@ -35,14 +34,12 @@ sort: option `-r' only applies to last-resort comparison
 sort: using simple byte comparison
 sort: option `-r' only applies to last-resort comparison
 sort: using simple byte comparison
-sort: leading blanks are significant in key 2; consider also specifying `b'
 sort: options `-bg' are ignored
 sort: using simple byte comparison
 sort: using simple byte comparison
 sort: option `-b' is ignored
 sort: using simple byte comparison
 sort: using simple byte comparison
-sort: leading blanks are significant in key 1; consider also specifying `b'
 sort: using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying `b'
 sort: using simple byte comparison
@@ -84,7 +81,7 @@ sort: option `-b' is ignored
 sort: option `-r' only applies to last-resort comparison
 EOF
 
-sort --debug -rb -k2n +2 -1b /dev/null 2>out
+sort --debug -rb -k2n +2.2 -1b /dev/null 2>out
 
 compare exp out || fail=1
 

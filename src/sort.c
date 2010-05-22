@@ -2261,8 +2261,14 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
         error (0, 0, _("key %lu has zero width and will be ignored"), keynum);
 
       /* Warn about significant leading blanks.  */
-      if (!gkey_only && tab == TAB_DEFAULT && !key->skipsblanks
-          && !key_numeric (key) && !key->month)
+      bool implicit_skip = key_numeric (key) || key->month;
+      bool maybe_space_aligned = !hard_LC_COLLATE && default_key_compare (key)
+                                 && !(key->schar || key->echar);
+      bool line_offset = key->eword == 0 && key->echar != 0; /* -k1.x,1.y  */
+      if (!gkey_only && tab == TAB_DEFAULT && !line_offset
+          && ((!key->skipsblanks && !(implicit_skip || maybe_space_aligned))
+              || (!key->skipsblanks && key->schar)
+              || (!key->skipeblanks && key->echar)))
         error (0, 0, _("leading blanks are significant in key %lu; "
                        "consider also specifying `b'"), keynum);
 
