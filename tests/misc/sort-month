@@ -30,7 +30,7 @@ locale --version >/dev/null 2>&1 ||
 for LOC in "$LOCALE_FR" "$LOCALE_FR_UTF8" "ja_JP.utf8"; do
   mon="$(LC_ALL="$LOC" locale abmon 2>/dev/null);"
   smon=$(LC_ALL="$LOC" locale abmon 2>/dev/null |
-          tr ';' '\n' | shuf | nl | LC_ALL="$LOC" sort -b -k2,2M |
+          tr ';' '\n' | shuf | nl | LC_ALL="$LOC" sort -k2,2M |
           cut -f2 | tr '\n' ';')
   test "$mon" = "$smon" || { fail=1; break; }
 done
