@@ -685,7 +685,7 @@ au_actual = authors-actual
 .PHONY: sc_check-AUTHORS
 sc_check-AUTHORS: $(all_programs)
 	@locale=en_US.UTF-8;				\
-	LC_ALL="$$locale" ./cat --version		\
+	LC_ALL=$$locale ./cat --version		\
 	    | grep ' Torbjorn '	> /dev/null		\
 	  && { echo "$@: skipping this check"; exit 0; }; \
 	rm -f $(au_actual) $(au_dotdot);		\
@@ -699,7 +699,7 @@ sc_check-AUTHORS: $(all_programs)
 	  elif test "$$i" = test; then			\
 	    exe='[';					\
 	  fi;						\
-	  LC_ALL="$$locale" ./$$exe --version		\
+	  LC_ALL=$$locale ./$$exe --version		\
 	    | perl -0 -pi -e 's/,\n/, /gm'		\
 	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
 		  -e 's/,* and /, /; s/\.$$//; p; }';	\

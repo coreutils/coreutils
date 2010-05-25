@@ -450,7 +450,7 @@ main (int argc, char **argv)
       if (! *format)
         {
           /* Do not wrap the following literal format string with _(...).
-             For example, suppose LC_ALL is unset, LC_TIME="POSIX",
+             For example, suppose LC_ALL is unset, LC_TIME=POSIX,
              and LANG="ko_KR".  In that case, POSIX says that LC_TIME
              determines the format and contents of date and time strings
              written by date, which means "date" must generate output
