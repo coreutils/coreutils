@@ -355,7 +355,7 @@ main (int argc, char **argv)
     {
       if (n_operands)
         {
-          error (0, 0, _("extra operand %s\n"), quote (operand[0]));
+          error (0, 0, _("extra operand %s"), quote (operand[0]));
           usage (EXIT_FAILURE);
         }
       n_lines = hi_input - lo_input + 1;

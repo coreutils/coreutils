@@ -1800,7 +1800,7 @@ it must be one character from [doxn]"),
       if (traditional && 1 < n_files)
         {
           error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-          error (0, 0, "%s\n",
+          error (0, 0, "%s",
                  _("compatibility mode supports at most one file"));
           usage (EXIT_FAILURE);
         }
