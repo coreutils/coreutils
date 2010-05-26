@@ -14,6 +14,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g now uses long doubles for greater range and precision.
 
+  truncate now supports setting file sizes relative to a reference file.
 
 * Noteworthy changes in release 8.5 (2010-04-23) [stable]
 

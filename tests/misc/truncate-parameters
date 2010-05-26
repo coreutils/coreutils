@@ -30,7 +30,7 @@ truncate --size=0 && fail=1
 # must specify size. don't default to 0
 truncate file && fail=1
 
-# mixture of size & reference not allowed
+# mixture of absolute size & reference not allowed
 truncate --size=0 --reference=file file && fail=1
 
 # blocks without size is not valid
@@ -44,5 +44,15 @@ truncate --size="> -1" file && fail=1
 truncate --size=" >1" file || fail=1 #file now 1
 truncate --size=" +1" file || fail=1 #file now 2
 test $(stat --format %s file) = 2 || fail=1
+
+# reference allowed with relative size
+truncate --size=" +1" -r file file || fail=1 #file now 3
+test $(stat --format %s file) = 3 || fail=1
+
+# reference allowed alone also
+truncate -r file file || fail=1 #file still 3
+test $(stat --format %s file) = 3 || fail=1
+truncate -r file file2 || fail=1 #file2 now 3
+test $(stat --format %s file2) = 3 || fail=1
 
 Exit $fail

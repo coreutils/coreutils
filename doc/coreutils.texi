@@ -10767,13 +10767,13 @@ Treat @var{size} as number of I/O blocks of the @var{file} rather than bytes.
 @itemx --reference=@var{rfile}
 @opindex -r
 @opindex --reference
-Set the size of each @var{file} to the same size as @var{rfile}.
+Base the size of each @var{file} on the size of @var{rfile}.
 
 @item -s @var{size}
 @itemx --size=@var{size}
 @opindex -s
 @opindex --size
-Set the size of each @var{file} to this @var{size}.
+Set or adjust the size of each @var{file} according to @var{size}.
 @multiplierSuffixesNoBlocks{size}
 
 @var{size} may also be prefixed by one of the following to adjust

@@ -115,8 +115,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -o, --io-blocks        treat SIZE as number of IO blocks instead of bytes\n\
 "), stdout);
       fputs (_("\
-  -r, --reference=FILE   use this FILE's size\n\
-  -s, --size=SIZE        use this SIZE\n"), stdout);
+  -r, --reference=RFILE  base size on RFILE\n\
+  -s, --size=SIZE        set or adjust the file size by SIZE\n"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_size_note ();
@@ -124,10 +124,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 SIZE may also be prefixed by one of the following modifying characters:\n\
 `+' extend by, `-' reduce by, `<' at most, `>' at least,\n\
 `/' round down to multiple of, `%' round up to multiple of.\n"), stdout);
-      fputs (_("\
-\n\
-Note that the -r and -s options are mutually exclusive.\n\
-"), stdout);
       emit_ancillary_info ();
     }
   exit (status);
@@ -135,12 +131,13 @@ Note that the -r and -s options are mutually exclusive.\n\
 
 /* return 1 on error, 0 on success */
 static int
-do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
+do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
+              rel_mode_t rel_mode)
 {
   struct stat sb;
   off_t nsize;
 
-  if ((block_mode || rel_mode) && fstat (fd, &sb) != 0)
+  if ((block_mode || (rel_mode && rsize < 0)) && fstat (fd, &sb) != 0)
     {
       error (0, errno, _("cannot fstat %s"), quote (fname));
       return 1;
@@ -161,9 +158,9 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
     }
   if (rel_mode)
     {
-      uintmax_t const fsize = sb.st_size;
+      uintmax_t const fsize = rsize < 0 ? sb.st_size : rsize;
 
-      if (sb.st_size < 0)
+      if (rsize < 0 && sb.st_size < 0)
         {
           /* Complain only for a regular file, a directory,
              or a shared memory object, as POSIX 1003.1-2004 specifies
@@ -248,6 +245,7 @@ main (int argc, char **argv)
 {
   bool got_size = false;
   off_t size IF_LINT (= 0);
+  off_t rsize = -1;
   rel_mode_t rel_mode = rm_abs;
   mode_t omode;
   int c, errors = 0, fd = -1, oflags;
@@ -335,9 +333,16 @@ main (int argc, char **argv)
   argc -= optind;
 
   /* must specify either size or reference file */
-  if ((ref_file && got_size) || (!ref_file && !got_size))
+  if (!ref_file && !got_size)
     {
-      error (0, 0, _("you must specify one of %s or %s"),
+      error (0, 0, _("you must specify either %s or %s"),
+             quote_n (0, "--size"), quote_n (1, "--reference"));
+      usage (EXIT_FAILURE);
+    }
+  /* must specify a relative size with a reference file */
+  if (ref_file && got_size && !rel_mode)
+    {
+      error (0, 0, _("you must specify a relative %s with %s"),
              quote_n (0, "--size"), quote_n (1, "--reference"));
       usage (EXIT_FAILURE);
     }
@@ -360,7 +365,10 @@ main (int argc, char **argv)
       struct stat sb;
       if (stat (ref_file, &sb) != 0)
         error (EXIT_FAILURE, errno, _("cannot stat %s"), quote (ref_file));
-      size = sb.st_size;
+      if (!got_size)
+        size = sb.st_size;
+      else
+        rsize = sb.st_size;
     }
 
   oflags = O_WRONLY | (no_create ? 0 : O_CREAT) | O_NONBLOCK;
@@ -397,7 +405,7 @@ main (int argc, char **argv)
 
       if (fd != -1)
         {
-          errors += do_ftruncate (fd, fname, size, rel_mode);
+          errors += do_ftruncate (fd, fname, size, rsize, rel_mode);
           if (close (fd) != 0)
             {
               error (0, errno, _("closing %s"), quote (fname));
