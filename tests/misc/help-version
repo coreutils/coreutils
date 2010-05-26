@@ -242,6 +242,9 @@ stat_setup () { args=$tmp_in; }
 unlink_setup () { args=$tmp_in; }
 lbracket_setup () { args=": ]"; }
 
+parted_setup () { args="-s $tmp_in mklabel gpt"
+  dd if=/dev/null of=$tmp_in seek=2000; }
+
 # Ensure that each program "works" (exits successfully) when doing
 # something more than --help or --version.
 for i in $built_programs; do
