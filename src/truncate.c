@@ -160,21 +160,21 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
     {
       uintmax_t const fsize = rsize < 0 ? sb.st_size : rsize;
 
-      if (rsize < 0 && sb.st_size < 0)
+      if (rsize < 0) /* fstat used above to get size.  */
         {
-          /* Complain only for a regular file, a directory,
-             or a shared memory object, as POSIX 1003.1-2004 specifies
-             ftruncate's behavior only for these file types.  */
-          if (S_ISREG (sb.st_mode) || S_ISDIR (sb.st_mode)
-              || S_TYPEISSHM (&sb))
+          if (!S_ISREG (sb.st_mode) && !S_TYPEISSHM (&sb))
             {
-              /* overflow is the only reason I can think
-                 this would ever go negative for the above types */
+              error (0, 0, _("cannot get the size of %s"), quote (fname));
+              return 1;
+            }
+          if (sb.st_size < 0)
+            {
+              /* Sanity check. Overflow is the only reason I can think
+                 this would ever go negative. */
               error (0, 0, _("%s has unusable, apparently negative size"),
                      quote (fname));
               return 1;
             }
-          return 0;
         }
 
       if (rel_mode == rm_min)
@@ -215,26 +215,10 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
 
   if (ftruncate (fd, nsize) == -1)      /* note updates mtime & ctime */
     {
-      /* Complain only when ftruncate fails on a regular file, a
-         directory, or a shared memory object, as POSIX 1003.1-2004
-         specifies ftruncate's behavior only for these file types.
-         For example, do not complain when Linux kernel 2.4 ftruncate
-         fails on /dev/fd0.  */
-      int const ftruncate_errno = errno;
-      if (fstat (fd, &sb) != 0)
-        {
-          error (0, errno, _("cannot fstat %s"), quote (fname));
-          return 1;
-        }
-      else if (S_ISREG (sb.st_mode) || S_ISDIR (sb.st_mode)
-               || S_TYPEISSHM (&sb))
-        {
-          error (0, ftruncate_errno,
-                 _("truncating %s at %" PRIdMAX " bytes"), quote (fname),
-                 (intmax_t) nsize);
-          return 1;
-        }
-      return 0;
+      error (0, errno,
+             _("failed to truncate %s at %" PRIdMAX " bytes"), quote (fname),
+             (intmax_t) nsize);
+      return 1;
     }
 
   return 0;
@@ -362,9 +346,13 @@ main (int argc, char **argv)
 
   if (ref_file)
     {
+      /* FIXME: Maybe support getting size of block devices.  */
       struct stat sb;
       if (stat (ref_file, &sb) != 0)
         error (EXIT_FAILURE, errno, _("cannot stat %s"), quote (ref_file));
+      if (!S_ISREG (sb.st_mode) && !S_TYPEISSHM (&sb))
+        error (EXIT_FAILURE, 0, _("cannot get the size of %s"),
+               quote (ref_file));
       if (!got_size)
         size = sb.st_size;
       else
@@ -384,18 +372,7 @@ main (int argc, char **argv)
              `truncate -s0 .` should gen EISDIR error */
           if (!(no_create && errno == ENOENT))
             {
-              int const open_errno = errno;
-              struct stat sb;
-              if (stat (fname, &sb) == 0)
-                {
-                  /* Complain only for a regular file, a directory,
-                     or a shared memory object, as POSIX 1003.1-2004 specifies
-                     ftruncate's behavior only for these file types.  */
-                  if (!S_ISREG (sb.st_mode) && !S_ISDIR (sb.st_mode)
-                      && !S_TYPEISSHM (&sb))
-                    continue;
-                }
-              error (0, open_errno, _("cannot open %s for writing"),
+              error (0, errno, _("cannot open %s for writing"),
                      quote (fname));
               errors++;
             }

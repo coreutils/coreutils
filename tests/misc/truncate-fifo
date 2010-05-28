@@ -1,5 +1,5 @@
 #!/bin/sh
-# Make sure truncate works on fifos without hanging or errors
+# Make sure truncate works on fifos without hanging
 
 # Copyright (C) 2008-2010 Free Software Foundation, Inc.
 
@@ -23,9 +23,9 @@ fi
 
 . $srcdir/test-lib.sh
 
-mkfifo_or_skip_ "fifo"
+mkfifo_or_skip_ fifo
 
-
-truncate -s0 "fifo" || fail=1
+timeout 10 truncate -s0 fifo
+test "$?" = 124 && fail=1
 
 Exit $fail
