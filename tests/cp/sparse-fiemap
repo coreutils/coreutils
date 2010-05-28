@@ -33,9 +33,10 @@ dd if=/dev/zero of=blob bs=8192 count=1000 || skip=1
 mkdir mnt
 mkfs -t ext4 -F blob ||
   skip_test_ "failed to create ext4 file system"
-mount -oloop blob mnt                          || skip=1
-echo test > mnt/f                              || skip=1
-test -s mnt/f                                  || skip=1
+mount -oloop blob mnt   || skip=1
+cd mnt                  || skip=1
+echo test > f           || skip=1
+test -s f               || skip=1
 
 test $skip = 1 &&
   skip_test_ "insufficient mount/ext4 support"
@@ -43,7 +44,6 @@ test $skip = 1 &&
 # Create a 1TiB sparse file
 dd if=/dev/zero of=mnt/sparse bs=1k count=1 seek=1G || framework_failure
 
-cd mnt || fail=1
 
 # It takes many minutes to copy this sparse file using the old method.
 # By contrast, it takes far less than 1 second using FIEMAP-copy.
