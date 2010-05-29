@@ -80,7 +80,7 @@ sc_root_tests:
 	@if test -d tests \
 	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
 	t1=sc-root.expected; t2=sc-root.actual;				\
-	grep -nl '^require_root_$$'					\
+	grep -nl '^ *require_root_$$'					\
 	  $$($(VC_LIST) tests) |sed s,tests/,, |sort > $$t1;		\
 	sed -n '/^root_tests =[	 ]*\\$$/,/[^\]$$/p'			\
 	  $(srcdir)/tests/Makefile.am					\
