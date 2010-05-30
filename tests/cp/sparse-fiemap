@@ -23,7 +23,7 @@ fi
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 
-if df -T -t btrfs -t xfs . ; then
+if df -T -t btrfs -t xfs -t ext4 -t ocfs2 . ; then
   : # Current dir is on a partition with working extents.  Good!
 else
   # It's not;  we need to create one, hence we need root access.
@@ -33,18 +33,18 @@ else
   cleanup_() { cd /; umount "$cwd/mnt"; }
 
   skip=0
-  # Create an XFS loopback file system
+  # Create an ext4 loopback file system
   dd if=/dev/zero of=blob bs=32k count=1000 || skip=1
   mkdir mnt
-  mkfs -t xfs blob ||
-    skip_test_ "failed to create XFS file system"
+  mkfs -t ext4 -F blob ||
+    skip_test_ "failed to create ext4 file system"
   mount -oloop blob mnt   || skip=1
   cd mnt                  || skip=1
   echo test > f           || skip=1
   test -s f               || skip=1
 
   test $skip = 1 &&
-    skip_test_ "insufficient mount/XFS support"
+    skip_test_ "insufficient mount/ext4 support"
 fi
 
 # Create a 1TiB sparse file
@@ -66,13 +66,26 @@ test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
 
 $PERL -e 1 || skip_test_ 'skipping part of this test; you lack perl'
 
-for i in $(seq 20); do
+# Extract logical block number and length pairs from filefrag -v output.
+# The initial sed is to remove the "eof" from the normally-empty "flags" field.
+# That is required when that final extent has no number in the "expected" field.
+f()
+{
+  sed 's/ eof$//' $@ \
+    | awk '/^ *[0-9]/ {printf "%d %d ", $2 ,NF < 5 ? $NF : $5 } END {print ""}'
+}
+
+for i in $(seq 1 2 21); do
   for j in 1 2 31 100; do
     $PERL -e 'BEGIN { $n = '$i' * 1024; *F = *STDOUT }' \
           -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
-          -e '&& syswrite (*F, "."x$n) or die "$!"}' > j1 || fail=1
-
+          -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
+    # sync
     cp --sparse=always j1 j2 || fail=1
+    # sync
+    # Technically we may need the 'sync' uses above, but
+    # uncommenting them makes this test take much longer.
+
     cmp j1 j2 || fail=1
     filefrag -v j1 | grep extent \
       || skip_test_ 'skipping part of this test; you lack filefrag'
@@ -93,10 +106,13 @@ for i in $(seq 20); do
     #   j: 6 extents found
 
     # exclude the physical block numbers; they always differ
-    filefrag -v j1 | awk '/^ / {print $1,$2}' > ff1 || fail=1
-    filefrag -v j2 | awk '/^ / {print $1,$2}' > ff2 || fail=1
-    compare ff1 ff2 || fail=1
+    filefrag -v j1 > ff1 || fail=1
+    filefrag -v j2 > ff2 || fail=1
+    { f ff1; f ff2; } \
+      | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
+        || { fail=1; break; }
   done
+  test $fail = 1 && break
 done
 
 Exit $fail
