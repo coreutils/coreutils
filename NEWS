@@ -14,9 +14,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g now uses long doubles for greater range and precision.
 
+  touch's --file option is no longer recognized.  Use --reference=F (-r)
+  instead.  --file has not been documented for 15 years, and its use has
+  elicited a warning since coreutils-7.1.
+
   truncate now supports setting file sizes relative to a reference file.
   Also errors are no longer suppressed for unsupported file types, and
   relative sizes are restricted to supported file types.
+
 
 * Noteworthy changes in release 8.5 (2010-04-23) [stable]
 
