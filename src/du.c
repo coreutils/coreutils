@@ -61,7 +61,7 @@ extern bool fts_debug;
 #endif
 
 /* Initial size of the hash table.  */
-enum { INITIAL_DI_SET_SIZE = 103 };
+enum { INITIAL_DI_SET_SIZE = 1021 };
 
 /* A set of dev/ino pairs.  */
 static struct di_set_state di_set;
