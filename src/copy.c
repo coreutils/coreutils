@@ -157,30 +157,33 @@ clone_file (int dest_fd, int src_fd)
 # ifndef FS_IOC_FIEMAP
 #  define FS_IOC_FIEMAP _IOWR ('f', 11, struct fiemap)
 # endif
-/* Perform FIEMAP(available in mainline 2.6.27) copy if possible.
-   Call ioctl(2) with FS_IOC_FIEMAP to efficiently map file allocation
-   excepts holes.  So the overhead to deal with holes with lseek(2) in
-   normal copy could be saved.  This would result in much faster backups
-   for any kind of sparse file.  */
+/* Perform a FIEMAP copy, if possible.
+   Call ioctl(2) with FS_IOC_FIEMAP (available in linux 2.6.27) to
+   obtain a map of file extents excluding holes.  This avoids the
+   overhead of detecting holes in a hole-introducing/preserving copy,
+   and thus makes copying sparse files much more efficient.  Upon a
+   successful copy, return true.  If the initial ioctl fails, set
+   *NORMAL_COPY_REQUIRED to true and return false.  Upon any other
+   failure, set *NORMAL_COPY_REQUIRED to false and return false.  */
 static bool
-fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
-                off_t src_total_size, char const *src_name,
-                char const *dst_name, bool *normal_copy_required)
+fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
+             off_t src_total_size, char const *src_name,
+             char const *dst_name, bool *normal_copy_required)
 {
-  bool fail = false;
   bool last = false;
   char fiemap_buf[4096];
-  struct fiemap *fiemap = (struct fiemap *)fiemap_buf;
+  struct fiemap *fiemap = (struct fiemap *) fiemap_buf;
   struct fiemap_extent *fm_ext = &fiemap->fm_extents[0];
-  uint32_t count = (sizeof (fiemap_buf) - sizeof (*fiemap)) /
-                    sizeof (struct fiemap_extent);
+  uint32_t count = ((sizeof fiemap_buf - sizeof (*fiemap))
+                    / sizeof (struct fiemap_extent));
   off_t last_ext_logical = 0;
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
   unsigned int i = 0;
+  *normal_copy_required = false;
 
   /* This is required at least to initialize fiemap->fm_start,
-     but also serves (in May 2010) to appease valgrind, which
+     but also serves (in mid 2010) to appease valgrind, which
      appears not to know the semantics of the FIEMAP ioctl. */
   memset (fiemap_buf, 0, sizeof fiemap_buf);
 
@@ -193,9 +196,16 @@ fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
          is the first time we met.  */
       if (ioctl (src_fd, FS_IOC_FIEMAP, fiemap) < 0)
         {
-          /* If `i > 0', then at least one ioctl(2) has been performed before.  */
+          /* If the first ioctl fails, tell the caller that it is
+             ok to proceed with a normal copy.  */
           if (i == 0)
             *normal_copy_required = true;
+          else
+            {
+              /* If the second or subsequent ioctl fails, diagnose it,
+                 since it ends up causing the entire copy/cp to fail.  */
+              error (0, errno, _("%s: FIEMAP ioctl failed"), quote (src_name));
+            }
           return false;
         }
 
@@ -213,13 +223,13 @@ fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
           if (lseek (src_fd, ext_logical, SEEK_SET) < 0LL)
             {
               error (0, errno, _("cannot lseek %s"), quote (src_name));
-              return fail;
+              return false;
             }
 
           if (lseek (dest_fd, ext_logical, SEEK_SET) < 0LL)
             {
               error (0, errno, _("cannot lseek %s"), quote (dst_name));
-              return fail;
+              return false;
             }
 
           if (fm_ext[i].fe_flags & FIEMAP_EXTENT_LAST)
@@ -246,7 +256,7 @@ fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
                     continue;
 #endif
                   error (0, errno, _("reading %s"), quote (src_name));
-                  return fail;
+                  return false;
                 }
 
               if (n_read == 0)
@@ -259,7 +269,7 @@ fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
               if (full_write (dest_fd, buf, n_read) != n_read)
                 {
                   error (0, errno, _("writing %s"), quote (dst_name));
-                  return fail;
+                  return false;
                 }
 
               ext_len -= n_read;
@@ -277,15 +287,15 @@ fiemap_copy_ok (int src_fd, int dest_fd, size_t buf_size,
     {
       if (ftruncate (dest_fd, src_total_size) < 0)
         {
-          error (0, errno, _("extending %s"), quote (dst_name));
-          return fail;
+          error (0, errno, _("failed to extend %s"), quote (dst_name));
+          return false;
         }
     }
 
-  return ! fail;
+  return true;
 }
 #else
-static bool fiemap_copy_ok (ignored) { errno == ENOTSUP; return false; }
+static bool fiemap_copy (ignored) { errno == ENOTSUP; return false; }
 #endif
 
 /* FIXME: describe */
@@ -820,12 +830,12 @@ copy_reg (char const *src_name, char const *dst_name,
 
       if (make_holes)
         {
-          bool require_normal_copy = false;
+          bool require_normal_copy;
           /* Perform efficient FIEMAP copy for sparse files, fall back to the
              standard copy only if the ioctl(2) fails.  */
-          if (fiemap_copy_ok (source_desc, dest_desc, buf_size,
-                              src_open_sb.st_size, src_name,
-                              dst_name, &require_normal_copy))
+          if (fiemap_copy (source_desc, dest_desc, buf_size,
+                           src_open_sb.st_size, src_name,
+                           dst_name, &require_normal_copy))
             goto preserve_metadata;
           else
             {
