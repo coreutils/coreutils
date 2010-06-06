@@ -1260,7 +1260,7 @@ specify_nmerge (int oi, char c, char const *s)
 
   if (e == LONGINT_OVERFLOW)
     {
-      char max_nmerge_buf[INT_BUFSIZE_BOUND (unsigned int)];
+      char max_nmerge_buf[INT_BUFSIZE_BOUND (max_nmerge)];
       error (0, 0, _("--%s argument %s too large"),
              long_options[oi].name, quote (s));
       error (SORT_FAILURE, 0,
@@ -2230,27 +2230,28 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
     {
       if (key->obsolete_used)
         {
+          size_t sword = key->sword;
+          size_t eword = key->eword;
+          char tmp[INT_BUFSIZE_BOUND (sword)];
           /* obsolescent syntax +A.x -B.y is equivalent to:
                -k A+1.x+1,B.y   (when y = 0)
                -k A+1.x+1,B+1.y (when y > 0)  */
-          char obuf[INT_BUFSIZE_BOUND (size_t) * 2 + 4]; /* +# -#  */
-          char nbuf[INT_BUFSIZE_BOUND (size_t) * 2 + 5]; /* -k #,#  */
-
+          char obuf[INT_BUFSIZE_BOUND (sword) * 2 + 4]; /* +# -#  */
+          char nbuf[INT_BUFSIZE_BOUND (sword) * 2 + 5]; /* -k #,#  */
           char *po = obuf;
           char *pn = nbuf;
 
-          size_t sword = key->sword;
-          size_t eword = key->eword;
           if (sword == SIZE_MAX)
             sword++;
 
-          po += sprintf (po, "+%" PRIuMAX, (uintmax_t) sword);
-          pn += sprintf (pn, "-k %" PRIuMAX, (uintmax_t) sword + 1);
+          po = stpcpy (stpcpy (po, "+"), umaxtostr (sword, tmp));
+          pn = stpcpy (stpcpy (pn, "-k "), umaxtostr (sword + 1, tmp));
           if (key->eword != SIZE_MAX)
             {
-              po += sprintf (po, " -%" PRIuMAX, (uintmax_t) eword + 1);
-              pn += sprintf (pn, ",%" PRIuMAX,
-                             (uintmax_t) eword + 1 + (key->echar == SIZE_MAX));
+              po = stpcpy (stpcpy (po, " -"), umaxtostr (eword + 1, tmp));
+              pn = stpcpy (stpcpy (pn, ","),
+                           umaxtostr (eword + 1
+                                      + (key->echar == SIZE_MAX), tmp));
             }
           error (0, 0, _("obsolescent key `%s' used; consider `%s' instead"),
                  obuf, nbuf);
@@ -2651,7 +2652,7 @@ check (char const *file_name, char checkonly)
                 struct line const *disorder_line = line - 1;
                 uintmax_t disorder_line_number =
                   buffer_linelim (&buf) - disorder_line + line_number;
-                char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+                char hr_buf[INT_BUFSIZE_BOUND (disorder_line_number)];
                 fprintf (stderr, _("%s: %s:%s: disorder: "),
                          program_name, file_name,
                          umaxtostr (disorder_line_number, hr_buf));
