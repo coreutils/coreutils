@@ -11991,14 +11991,17 @@ basename include/stdio.h .h
 @cindex non-directory suffix, stripping
 
 @command{dirname} prints all but the final slash-delimited component of
-a string (presumably a file name, but also works on directories).  Synopsis:
+@var{name}.  Slashes on either side of the final component are also
+removed.  If the string contains no slash, @command{dirname} prints
+@samp{.} (meaning the current directory).  Synopsis:
 
 @example
 dirname @var{name}
 @end example
 
-If @var{name} is a single component, @command{dirname} prints @samp{.}
-(meaning the current directory).
+@var{name} need not be a file name, but if it is, this operation
+effectively lists the directory that contains the final component,
+including the case when the final component is itself a directory.
 
 @basenameAndDirname
 
@@ -12017,6 +12020,7 @@ Examples:
 @smallexample
 # Output "/usr/bin".
 dirname /usr/bin/sort
+dirname /usr/bin//.//
 
 # Output ".".
 dirname stdio.h

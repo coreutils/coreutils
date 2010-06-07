@@ -48,8 +48,8 @@ Usage: %s NAME\n\
 "),
               program_name, program_name);
       fputs (_("\
-Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
-output `.' (meaning the current directory).\n\
+Output NAME with its last non-slash component and trailing slashes removed;\n\
+if NAME contains no /'s, output `.' (meaning the current directory).\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -57,7 +57,7 @@ output `.' (meaning the current directory).\n\
       printf (_("\
 \n\
 Examples:\n\
-  %s /usr/bin/sort  Output \"/usr/bin\".\n\
+  %s /usr/bin/      Output \"/usr\".\n\
   %s stdio.h        Output \".\".\n\
 "),
               program_name, program_name);
