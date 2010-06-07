@@ -2986,7 +2986,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (format == long_format)
         {
-          char b[INT_BUFSIZE_BOUND (uintmax_t)];
+          char b[INT_BUFSIZE_BOUND (f->stat.st_nlink)];
           int b_len = strlen (umaxtostr (f->stat.st_nlink, b));
           if (nlink_width < b_len)
             nlink_width = b_len;
@@ -3582,7 +3582,7 @@ format_user_or_group_width (char const *name, unsigned long int id)
     }
   else
     {
-      char buf[INT_BUFSIZE_BOUND (unsigned long int)];
+      char buf[INT_BUFSIZE_BOUND (id)];
       sprintf (buf, "%lu", id);
       return strlen (buf);
     }

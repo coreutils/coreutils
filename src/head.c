@@ -226,7 +226,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 
   if (SIZE_MAX < n_elide_0 + READ_BUFSIZE)
     {
-      char umax_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      char umax_buf[INT_BUFSIZE_BOUND (n_elide_0)];
       error (EXIT_FAILURE, 0, _("%s: number of bytes is too large"),
              umaxtostr (n_elide_0, umax_buf));
     }
@@ -611,7 +611,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
   pos -= bytes_read;
   if (lseek (fd, pos, SEEK_SET) < 0)
     {
-      char offset_buf[INT_BUFSIZE_BOUND (off_t)];
+      char offset_buf[INT_BUFSIZE_BOUND (pos)];
       error (0, errno, _("%s: cannot seek to offset %s"),
              pretty_filename, offtostr (pos, offset_buf));
       return false;
@@ -682,7 +682,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
       pos -= BUFSIZ;
       if (lseek (fd, pos, SEEK_SET) < 0)
         {
-          char offset_buf[INT_BUFSIZE_BOUND (off_t)];
+          char offset_buf[INT_BUFSIZE_BOUND (pos)];
           error (0, errno, _("%s: cannot seek to offset %s"),
                  pretty_filename, offtostr (pos, offset_buf));
           return false;
@@ -1042,7 +1042,7 @@ main (int argc, char **argv)
 
   if ( ! count_lines && elide_from_end && OFF_T_MAX < n_units)
     {
-      char umax_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      char umax_buf[INT_BUFSIZE_BOUND (n_units)];
       error (EXIT_FAILURE, 0, _("%s: number of bytes is too large"),
              umaxtostr (n_units, umax_buf));
     }

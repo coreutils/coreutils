@@ -434,7 +434,7 @@ static off_t
 xlseek (int fd, off_t offset, int whence, char const *filename)
 {
   off_t new_offset = lseek (fd, offset, whence);
-  char buf[INT_BUFSIZE_BOUND (off_t)];
+  char buf[INT_BUFSIZE_BOUND (offset)];
   char *s;
 
   if (0 <= new_offset)
