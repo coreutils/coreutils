@@ -171,11 +171,12 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
              char const *dst_name, bool *normal_copy_required)
 {
   bool last = false;
-  char fiemap_buf[4096];
-  struct fiemap *fiemap = (struct fiemap *) fiemap_buf;
+  union { struct fiemap f; char c[4096]; } fiemap_buf;
+  struct fiemap *fiemap = &fiemap_buf.f;
   struct fiemap_extent *fm_ext = &fiemap->fm_extents[0];
-  uint32_t count = ((sizeof fiemap_buf - sizeof (*fiemap))
-                    / sizeof (struct fiemap_extent));
+  enum { count = (sizeof fiemap_buf - sizeof *fiemap) / sizeof *fm_ext };
+  verify (count != 0);
+
   off_t last_ext_logical = 0;
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
@@ -185,7 +186,7 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
   /* This is required at least to initialize fiemap->fm_start,
      but also serves (in mid 2010) to appease valgrind, which
      appears not to know the semantics of the FIEMAP ioctl. */
-  memset (fiemap_buf, 0, sizeof fiemap_buf);
+  memset (&fiemap_buf, 0, sizeof fiemap_buf);
 
   do
     {
@@ -220,13 +221,13 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
           off_t ext_logical = fm_ext[i].fe_logical;
           uint64_t ext_len = fm_ext[i].fe_length;
 
-          if (lseek (src_fd, ext_logical, SEEK_SET) < 0LL)
+          if (lseek (src_fd, ext_logical, SEEK_SET) < 0)
             {
               error (0, errno, _("cannot lseek %s"), quote (src_name));
               return false;
             }
 
-          if (lseek (dest_fd, ext_logical, SEEK_SET) < 0LL)
+          if (lseek (dest_fd, ext_logical, SEEK_SET) < 0)
             {
               error (0, errno, _("cannot lseek %s"), quote (dst_name));
               return false;
