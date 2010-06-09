@@ -92,7 +92,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
   -A, --show-all           equivalent to -vET\n\
-  -b, --number-nonblank    number nonempty output lines\n\
+  -b, --number-nonblank    number nonempty output lines, overrides -n\n\
   -e                       equivalent to -vE\n\
   -E, --show-ends          display $ at end of each line\n\
   -n, --number             number all output lines\n\

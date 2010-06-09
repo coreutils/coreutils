@@ -1494,7 +1494,8 @@ Display a @samp{$} after the end of each line.
 @itemx --number
 @opindex -n
 @opindex --number
-Number all output lines, starting with 1.
+Number all output lines, starting with 1.  This option is ignored
+if @option{-b} is in effect.
 
 @item -s
 @itemx --squeeze-blank
