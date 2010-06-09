@@ -9,7 +9,7 @@
 #ifndef _LINUX_FIEMAP_H
 # define _LINUX_FIEMAP_H
 
-# include <linux/types.h>
+# include <stdint.h>
 
 struct fiemap_extent
 {
