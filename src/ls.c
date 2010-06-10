@@ -2986,7 +2986,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (format == long_format)
         {
-          char b[INT_BUFSIZE_BOUND (f->stat.st_nlink)];
+          char b[INT_BUFSIZE_BOUND (uintmax_t)];
           int b_len = strlen (umaxtostr (f->stat.st_nlink, b));
           if (nlink_width < b_len)
             nlink_width = b_len;
