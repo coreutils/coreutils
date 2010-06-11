@@ -68,10 +68,11 @@ $PERL -e 1 || skip_test_ 'skipping part of this test; you lack perl'
 
 # Extract logical block number and length pairs from filefrag -v output.
 # The initial sed is to remove the "eof" from the normally-empty "flags" field.
+# Similarly, remove flags values like "unknown,delalloc,eof".
 # That is required when that final extent has no number in the "expected" field.
 f()
 {
-  sed 's/ eof$//' $@ \
+  sed 's/ [a-z,][a-z,]*$//' $@ \
     | awk '/^ *[0-9]/ {printf "%d %d ", $2 ,NF < 5 ? $NF : $5 } END {print ""}'
 }
 
