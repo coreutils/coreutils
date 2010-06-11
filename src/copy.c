@@ -191,6 +191,7 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
   do
     {
       fiemap->fm_length = FIEMAP_MAX_OFFSET;
+      fiemap->fm_flags = FIEMAP_FLAG_SYNC;
       fiemap->fm_extent_count = count;
 
       /* When ioctl(2) fails, fall back to the normal copy only if it
