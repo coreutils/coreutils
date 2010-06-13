@@ -1557,6 +1557,16 @@ set_fd_flags (int fd, int add_flags, char const *name)
     }
 }
 
+static char *
+human_size (size_t n)
+{
+  static char hbuf[LONGEST_HUMAN_READABLE + 1];
+  int human_opts =
+    (human_autoscale | human_round_to_nearest | human_base_1024
+     | human_space_before_unit | human_SI | human_B);
+  return human_readable (n, hbuf, human_opts, 1, 1);
+}
+
 /* The main loop.  */
 
 static int
@@ -1593,7 +1603,13 @@ dd_copy (void)
      It is necessary when accessing raw (i.e. character special) disk
      devices on Unixware or other SVR4-derived system.  */
 
-  real_buf = xmalloc (input_blocksize + INPUT_BLOCK_SLOP);
+  size_t sz = input_blocksize + INPUT_BLOCK_SLOP;
+  real_buf = malloc (sz);
+  if (!real_buf)
+    error (EXIT_FAILURE, 0,
+           _("failed to allocate an input buffer of size %s"),
+           human_size (sz));
+
   ibuf = real_buf;
   ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
@@ -1602,7 +1618,12 @@ dd_copy (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      real_obuf = xmalloc (output_blocksize + OUTPUT_BLOCK_SLOP);
+      sz = output_blocksize + OUTPUT_BLOCK_SLOP;
+      real_obuf = malloc (sz);
+      if (!real_obuf)
+        error (EXIT_FAILURE, 0,
+               _("failed to allocate an output buffer of size %s"),
+               human_size (sz));
       obuf = ptr_align (real_obuf, page_size);
     }
   else
