@@ -145,6 +145,7 @@ noinst_HEADERS =	\
   copy.h		\
   cp-hash.h		\
   dircolors.h		\
+  fiemap.h		\
   fs.h			\
   group-list.h		\
   ls.h			\
