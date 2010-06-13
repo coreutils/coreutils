@@ -10,6 +10,7 @@ EXTRA_DIST =		\
   CuTmpdir.pm		\
   check.mk		\
   envvar-check		\
+  filefrag-extent-compare \
   init.cfg		\
   init.sh		\
   lang-default		\
