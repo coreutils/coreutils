@@ -8020,6 +8020,11 @@ followed by a multiplier: @samp{b}=512, @samp{c}=1,
 @samp{w}=2, @samp{x@var{m}}=@var{m}, or any of the
 standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
 
+Any block size you specify via @samp{bs=}, @samp{ibs=}, @samp{obs=}, @samp{cbs=}
+should not be too large---values larger than a few megabytes
+are generally wasteful or (as in the gigabyte..exabyte case) downright
+counterproductive or error-inducing.
+
 Use different @command{dd} invocations to use different block sizes for
 skipping and I/O@.  For example, the following shell commands copy data
 in 512 KiB blocks between a disk and a tape, but do not save or restore a
