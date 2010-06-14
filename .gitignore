@@ -48,6 +48,7 @@ lib/.gitignore
 lib/arg-nonnull.h
 lib/arpa
 lib/binary-io.h
+lib/c++defs.h
 lib/charset.alias
 lib/configmake.h
 lib/glthread
