@@ -139,7 +139,7 @@ Note, comparisons honor the rules specified by `LC_COLLATE'.\n\
 \n\
 Examples:\n\
   %s -12 file1 file2  Print only lines present in both file1 and file2.\n\
-  %s -3  file1 file2  Print lines in file1 not in file2, and vice versa.\n\
+  %s -3 file1 file2  Print lines in file1 not in file2, and vice versa.\n\
 "),
               program_name, program_name);
       emit_ancillary_info ();
