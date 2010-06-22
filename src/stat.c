@@ -1071,7 +1071,7 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:fLtZ", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLt", long_options, NULL)) != -1)
     {
       switch (c)
         {
@@ -1097,15 +1097,6 @@ main (int argc, char *argv[])
 
         case 't':
           terse = true;
-          break;
-
-        case 'Z':  /* FIXME: remove in 2010 */
-          /* Ignore, for compatibility with distributions
-             that implemented this before upstream.
-             But warn of impending removal.  */
-          error (0, 0,
-                 _("the --context (-Z) option is obsolete and will be removed\n"
-                   "in a future release"));
           break;
 
         case_GETOPT_HELP_CHAR;

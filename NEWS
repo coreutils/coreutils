@@ -14,6 +14,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g now uses long doubles for greater range and precision.
 
+  stat no longer accepts the --context (-Z) option.  Initially it was
+  merely accepted and ignored, for compatibility.  Starting two years
+  ago, with coreutils-7.0, its use evoked a warning.
+
   touch's --file option is no longer recognized.  Use --reference=F (-r)
   instead.  --file has not been documented for 15 years, and its use has
   elicited a warning since coreutils-7.1.
