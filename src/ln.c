@@ -304,14 +304,14 @@ do_link (const char *source, const char *dest)
       error (0, errno,
              (symbolic_link
               ? (errno != ENAMETOOLONG && *source
-                 ? _("creating symbolic link %s")
-                 : _("creating symbolic link %s -> %s"))
+                 ? _("failed to create symbolic link %s")
+                 : _("failed to create symbolic link %s -> %s"))
               : (errno == EMLINK && !source_is_dir
-                 ? _("creating hard link to %.0s%s")
+                 ? _("failed to create hard link to %.0s%s")
                  : (errno == EDQUOT || errno == EEXIST || errno == ENOSPC
                     || errno == EROFS)
-                 ? _("creating hard link %s")
-                 : _("creating hard link %s => %s"))),
+                 ? _("failed to create hard link %s")
+                 : _("failed to create hard link %s => %s"))),
              quote_n (0, dest), quote_n (1, source));
 
       if (dest_backup)
