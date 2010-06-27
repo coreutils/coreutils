@@ -1,0 +1,10 @@
+Files:
+tests/test-di-set.c
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-di-set
+check_PROGRAMS += test-di-set
