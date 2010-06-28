@@ -281,7 +281,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           fragmentation, indirect blocks, and the like\n\
 "), stdout);
       fputs (_("\
-  -B, --block-size=SIZE  use SIZE-byte blocks\n\
+  -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\
+                           `-BM' prints sizes in units of 1,048,576 bytes.\n\
+                           See SIZE format below.\n\
   -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference only symlinks that are listed on the\n\

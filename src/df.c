@@ -819,7 +819,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             include dummy file systems\n\
-  -B, --block-size=SIZE  use SIZE-byte blocks\n\
+  -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\
+                           `-BM' prints sizes in units of 1,048,576 bytes.\n\
+                           See SIZE format below.\n\
       --total           produce a grand total\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\

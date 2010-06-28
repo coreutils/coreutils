@@ -4592,7 +4592,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --escape               print C-style escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
-      --block-size=SIZE      use SIZE-byte blocks.  See SIZE format below\n\
+      --block-size=SIZE      scale sizes by SIZE before printing them.  E.g.,\n\
+                               `--block-size=M' prints sizes in units of\n\
+                               1,048,576 bytes.  See SIZE format below.\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information)\n\
