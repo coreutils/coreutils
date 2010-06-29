@@ -386,7 +386,7 @@ Other options:\n\
 "), stdout);
       fputs (_("\
   -k, --key=POS1[,POS2]     start a key at POS1 (origin 1), end it at POS2\n\
-                            (default end of line)\n\
+                            (default end of line).  See POS syntax below\n\
   -m, --merge               merge already sorted files; do not sort\n\
 "), stdout);
       fputs (_("\
