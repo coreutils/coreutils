@@ -57,6 +57,28 @@
 #   4. Finally
 #   $ exit
 
+ME_=`expr "./$0" : '.*/\(.*\)$'`
+
+# We use a trap below for cleanup.  This requires us to go through
+# hoops to get the right exit status transported through the handler.
+# So use `Exit STATUS' instead of `exit STATUS' inside of the tests.
+# Turn off errexit here so that we don't trip the bug with OSF1/Tru64
+# sh inside this function.
+Exit () { set +e; (exit $1); exit $1; }
+
+# Print warnings (e.g., about skipped and failed tests) to this file number.
+# Override by defining to say, 9, in init.cfg, and putting say,
+# "export ...ENVVAR_SETTINGS...; exec 9>&2; $(SHELL)" in the definition
+# of TESTS_ENVIRONMENT in your tests/Makefile.am file.
+# This is useful when using automake's parallel tests mode, to print
+# the reason for skip/failure to console, rather than to the .log files.
+: ${stderr_fileno_=2}
+
+warn_() { echo "$@" 1>&$stderr_fileno_; }
+fail_() { warn_ "$ME_: failed test: $@"; Exit 1; }
+skip_() { warn_ "$ME_: skipped test: $@"; Exit 77; }
+framework_failure_() { warn_ "$ME_: set-up failure: $@"; Exit 99; }
+
 # We require $(...) support unconditionally.
 # We require a few additional shell features only when $EXEEXT is nonempty,
 # in order to support automatic $EXEEXT emulation:
@@ -118,34 +140,14 @@ test -n "$EXEEXT" && shopt -s expand_aliases
 : ${MALLOC_PERTURB_=87}
 export MALLOC_PERTURB_
 
-# We use a trap below for cleanup.  This requires us to go through
-# hoops to get the right exit status transported through the handler.
-# So use `Exit STATUS' instead of `exit STATUS' inside of the tests.
-# Turn off errexit here so that we don't trip the bug with OSF1/Tru64
-# sh inside this function.
-Exit () { set +e; (exit $1); exit $1; }
-
-# Print warnings (e.g., about skipped and failed tests) to this file number.
-# Override by defining to say, 9, in init.cfg, and putting say,
-# "export ...ENVVAR_SETTINGS...; exec 9>&2; $(SHELL)" in the definition
-# of TESTS_ENVIRONMENT in your tests/Makefile.am file.
-# This is useful when using automake's parallel tests mode, to print
-# the reason for skip/failure to console, rather than to the .log files.
-: ${stderr_fileno_=2}
-
-warn_() { echo "$@" 1>&$stderr_fileno_; }
-fail_() { warn_ "$ME_: failed test: $@"; Exit 1; }
-skip_() { warn_ "$ME_: skipped test: $@"; Exit 77; }
-framework_failure_() { warn_ "$ME_: set-up failure: $@"; Exit 1; }
-
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount
 # a partition, or to undo any other global state changes.
 cleanup_() { :; }
 
-if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
+if ( diff --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
   compare() { diff -u "$@"; }
-elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
+elif ( cmp --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
   compare() { cmp -s "$@"; }
 else
   compare() { cmp "$@"; }
@@ -247,7 +249,6 @@ setup_()
   test "$VERBOSE" = yes && set -x
 
   initial_cwd_=$PWD
-  ME_=`expr "./$0" : '.*/\(.*\)$'`
 
   pfx_=`testdir_prefix_`
   test_dir_=`mktempd_ "$initial_cwd_" "$pfx_-$ME_.XXXX"` \
