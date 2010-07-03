@@ -132,6 +132,9 @@ static bool apparent_size = false;
 /* If true, count each hard link of files with multiple links.  */
 static bool opt_count_all = false;
 
+/* If true, hash all files to look for hard links.  */
+static bool hash_all;
+
 /* If true, output the NUL byte instead of a newline at the end of each line. */
 static bool opt_nul_terminate_output = false;
 
@@ -518,8 +521,7 @@ process_file (FTS *fts, FTSENT *ent)
      via a hard link, then don't let it contribute to the sums.  */
   if (skip
       || (!opt_count_all
-          && ! S_ISDIR (sb->st_mode)
-          && 1 < sb->st_nlink
+          && (hash_all || (! S_ISDIR (sb->st_mode) && 1 < sb->st_nlink))
           && ! hash_ins (sb->st_ino, sb->st_dev)))
     {
       /* Note that we must not simply return here.
@@ -937,11 +939,20 @@ main (int argc, char **argv)
                quote (files_from));
 
       ai = argv_iter_init_stream (stdin);
+
+      /* It's not easy here to count the arguments, so assume the
+         worst.  */
+      hash_all = true;
     }
   else
     {
       char **files = (optind < argc ? argv + optind : cwd_only);
       ai = argv_iter_init_argv (files);
+
+      /* Hash all dev,ino pairs if there are multiple arguments, or if
+         following non-command-line symlinks, because in either case a
+         file with just one hard link might be seen more than once.  */
+      hash_all = (optind + 1 < argc || symlink_deref_bits == FTS_LOGICAL);
     }
 
   if (!ai)

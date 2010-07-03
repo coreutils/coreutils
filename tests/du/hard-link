@@ -26,24 +26,40 @@ fi
 . $srcdir/test-lib.sh
 
 mkdir -p dir/sub
-( cd dir && { echo non-empty > f1; ln f1 f2; echo non-empty > sub/F; } )
+( cd dir &&
+  { echo non-empty > f1
+    ln f1 f2
+    ln -s f1 f3
+    echo non-empty > sub/F; } )
 
+du -a -L --exclude=sub --count-links dir \
+  | sed 's/^[0-9][0-9]*	//' | sort -r > out || fail=1
 
-# Note that for this first test, we transform f1 or f2
-# (whichever name we find first) to f_.  That is necessary because,
-# depending on the type of file system, du could encounter either of those
-# two hard-linked files first, thus listing that one and not the other.
-du -a --exclude=sub dir \
-  | sed 's/^[0-9][0-9]*	//' | sed 's/f[12]/f_/' > out || fail=1
-echo === >> out
-du -a --exclude=sub --count-links dir \
-  | sed 's/^[0-9][0-9]*	//' | sort -r >> out || fail=1
+# For these tests, transform f1 or f2 or f3 (whichever name is find
+# first) to f_.  That is necessary because, depending on the type of
+# file system, du could encounter any of those linked files first,
+# thus listing that one and not the others.
+for args in '-L' 'dir' '-L dir'
+do
+  echo === >> out
+  du -a --exclude=sub $args dir \
+    | sed 's/^[0-9][0-9]*	//' | sed 's/f[123]/f_/' >> out || fail=1
+done
+
 cat <<\EOF > exp
+dir/f3
+dir/f2
+dir/f1
+dir
+===
 dir/f_
 dir
 ===
-dir/f2
-dir/f1
+dir/f_
+dir/f_
+dir
+===
+dir/f_
 dir
 EOF
 

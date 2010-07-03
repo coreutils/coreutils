@@ -70,15 +70,15 @@ my @Tests =
     {IN=>{f=>"g\0"}}, {AUX=>{g=>''}},
     {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
-   # two file names, no final NUL
+   # two identical file names, no final NUL
    ['2', '--files0-from=-', '<',
     {IN=>{f=>"g\0g"}}, {AUX=>{g=>''}},
-    {OUT=>"0\tg\n0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
+    {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
-   # two file names, with final NUL
+   # two identical file names, with final NUL
    ['2a', '--files0-from=-', '<',
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>''}},
-    {OUT=>"0\tg\n0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
+    {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
    # Ensure that $prog processes FILEs following a zero-length name.
    ['zero-len', '--files0-from=-', '<',
