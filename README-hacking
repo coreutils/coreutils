@@ -39,6 +39,12 @@ which are extracted from other source packages:
 
         $ ./bootstrap
 
+To use the most-recent gnulib (as opposed to the gnulib version that
+the package last synchronized to), do this next:
+
+        $ git submodule foreach git pull origin master
+        $ git commit -m 'build: update gnulib submodule to latest' gnulib
+
 And there you are!  Just
 
         $ ./configure --quiet #[--enable-gcc-warnings] [*]
@@ -60,6 +66,29 @@ to use recent system headers.  If you configure with this option,
 and spot a problem, please be sure to send the report to the bug
 reporting address of this package, and not to that of gnulib, even
 if the problem seems to originate in a gnulib-provided file.
+
+* Submitting patches
+
+If you develop a fix or a new feature, please send it to the
+appropriate bug-reporting address as reported by the --help option of
+each program.  One way to do this is to use vc-dwim
+<http://www.gnu.org/software/vc-dwim/>), as follows.
+
+  Run the command "vc-dwim --help", copy its definition of the
+  "git-changelog-symlink-init" function into your shell, and then run
+  this function at the top-level directory of the package.
+
+  Edit the ChangeLog file that this command creates, creating a
+  properly-formatted entry according to the GNU coding standards
+  <http://www.gnu.org/prep/standards/html_node/Change-Logs.html>.
+
+  Run the command "vc-dwim" and make sure its output looks good.
+
+  Run "vc-dwim --commit".
+
+  Run the command "git format-patch --stdout -1", and email its output
+  in, using the output's subject line.
+
 -----
 
 Copyright (C) 2002-2010 Free Software Foundation, Inc.
