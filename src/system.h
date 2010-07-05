@@ -483,6 +483,14 @@ enum
 # define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 #endif
 
+/* The warn_unused_result attribute appeared first in gcc-3.4.0 */
+#undef ATTRIBUTE_WARN_UNUSED_RESULT
+#if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)
+# define ATTRIBUTE_WARN_UNUSED_RESULT /* empty */
+#else
+# define ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
+#endif
+
 #if defined strdupa
 # define ASSIGN_STRDUPA(DEST, S)		\
   do { DEST = strdupa (S); } while (0)
