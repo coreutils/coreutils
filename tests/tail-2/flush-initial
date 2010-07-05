@@ -29,14 +29,15 @@ echo line > in || fail=1
 tail -f in > out &
 tail_pid=$!
 
-# Wait for 1 second for the file to be flushed.
-for i in $(seq 10); do
-  test -s out && break
-  echo sleep .1s
-  sleep .1
-done
+# Wait for 1.5s for the file to be flushed.
+tail_flush()
+{
+  local delay="$1"
 
-test -s out || fail=1
+  test -s out ||
+    { sleep "$delay"; return 1; }
+}
+retry_delay_ tail_flush .1 5 || fail=1
 
 kill $tail_pid
 

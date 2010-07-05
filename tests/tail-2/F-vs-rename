@@ -42,36 +42,36 @@ mv a b || fail=1
 until grep inaccessible out >/dev/null 2>&1; do :; done
 
 echo x > a
-# Wait up to 4s for this to appear in the output:
+# Wait up to 6.3s for this to appear in the output:
 # "tail: `...' has appeared;  following end of new file"
-found=false
-for i in $(seq 20); do
-  grep 'has appeared;' out > /dev/null && { found=true; break; }
-  sleep .2
-done
-$found || { echo "$0: a: unexpected delay?"; cat out; fail=1; }
+tail_f_vs_rename_1()
+{
+  local delay="$1"
+  grep 'has appeared;' out > /dev/null ||
+    { sleep $delay; return 1; }
+}
+retry_delay_ tail_f_vs_rename_1 .1 7 ||
+  { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 
 echo y >> b
-# Wait up to 4s for "y" to appear in the output:
-found=false
-for i in $(seq 20); do
-  case $(tr '\n' @ < out) in
-    *'@@==> b <==@y@') found=true; break 2;;
-  esac
-  sleep .2
-done
-$found || { echo "$0: b: unexpected delay?"; cat out; fail=1; }
+# Wait up to 6.3s for "y" to appear in the output:
+tail_f_vs_rename_2() {
+  local delay="$1"
+  tr '\n' @ < out | grep '@@==> b <==@y@$' > /dev/null ||
+    { sleep $delay; return 1; }
+}
+retry_delay_ tail_f_vs_rename_2 .1 7 ||
+  { echo "$0: b: unexpected delay?"; cat out; fail=1; }
 
 echo z >> a
-# Wait up to 4s for "z" to appear in the output:
-found=false
-for i in $(seq 20); do
-  case $(tr '\n' @ < out) in
-    *'@@==> a <==@z@') found=true; break 2;;
-  esac
-  sleep .2
-done
-$found || { echo "$0: b: unexpected delay?"; cat out; fail=1; }
+# Wait up to 6.3s for "z" to appear in the output:
+tail_f_vs_rename_3() {
+  local delay="$1"
+  tr '\n' @ < out | grep '@@==> a <==@z@$' > /dev/null ||
+    { sleep $delay; return 1; }
+}
+retry_delay_ tail_f_vs_rename_3 .1 7 ||
+  { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 
 kill -HUP $pid
 

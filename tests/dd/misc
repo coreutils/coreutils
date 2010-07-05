@@ -87,6 +87,8 @@ fi
 outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
 test "$outbytes" -eq 3 || fail=1
 
+# A delay is required to trigger a failure.
+# There might be some missed failures but it's unlikely.
 (echo a; sleep .1; echo b) \
   | env LC_ALL=C dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
 printf 'a\nb\n' > out_ok || framework_failure

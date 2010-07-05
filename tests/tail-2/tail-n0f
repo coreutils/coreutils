@@ -39,12 +39,18 @@ for inotify in ---disable-inotify ''; do
     for c_or_n in c n; do
       tail --sleep=4 -${c_or_n} 0 -f $inotify $file &
       pid=$!
-      sleep .5
-      state=$(get_process_status_ $pid)
-      case $state in
-        S*) ;;
-        *) echo $0: process in unexpected state: $state 1>&2; fail=1 ;;
-      esac
+      tail_sleeping()
+      {
+        local delay="$1"; sleep $delay
+        state=$(get_process_status_ $pid)
+        case $state in
+          S*) ;;
+          *) return 1;;
+        esac
+      }
+      # Wait up to 1.5s for tail to sleep
+      retry_delay_ tail_sleeping .1 4 ||
+        { echo $0: process in unexpected state: $state >&2; fail=1; }
       kill $pid
     done
   done

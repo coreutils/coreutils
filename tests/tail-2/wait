@@ -25,7 +25,6 @@ fi
 . $srcdir/test-lib.sh
 
 touch here || framework_failure
-touch k || framework_failure
 { touch unreadable && chmod a-r unreadable; } || framework_failure
 
 
@@ -59,19 +58,27 @@ for inotify in ---disable-inotify ''; do
   test -s tail.err && fail=1
   :>tail.err
 
+  tail_F()
+  {
+    local delay="$1"
 
-  tail -s.1 --max-unchanged-stats=2 -F $inotify k > tail.out &
-  pid=$!
-  sleep .5
-  mv k l
-  sleep .5
-  touch k
-  mv k l
-  sleep .5
-  echo NO >> l
-  sleep .5
-  kill $pid
-  test -s tail.out && fail=1
+    touch k || framework_failure
+    tail -s.1 --max-unchanged-stats=2 -F $inotify k > tail.out &
+    pid=$!
+    sleep $delay
+    mv k l
+    sleep $delay
+    touch k
+    mv k l
+    sleep $delay
+    echo NO >> l
+    sleep $delay
+    kill $pid
+    rm -f k l
+
+    test ! -s tail.out
+  }
+  retry_delay_ tail_F .1 4 || fail=1
 done
 
 Exit $fail
