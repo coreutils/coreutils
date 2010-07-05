@@ -88,7 +88,7 @@
 /* BeOS has a statvfs function, but it does not return sensible values
    for f_files, f_ffree and f_favail, and lacks f_type, f_basetype and
    f_fstypename.  Use 'struct fs_info' instead.  */
-static int
+static int ATTRIBUTE_WARN_UNUSED_RESULT
 statfs (char const *filename, struct fs_info *buf)
 {
   dev_t device = dev_for_path (filename);
@@ -185,7 +185,7 @@ static char const *trailing_delim = "";
    Others have statfs.f_fstypename[MFSNAMELEN] (NetBSD 1.5.2).
    Still others have neither and have to get by with f_type (GNU/Linux).
    But f_type may only exist in statfs (Cygwin).  */
-static char const *
+static char const * ATTRIBUTE_WARN_UNUSED_RESULT
 human_fstype (STRUCT_STATVFS const *statfsbuf)
 {
 #ifdef STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME
@@ -436,7 +436,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 #endif
 }
 
-static char *
+static char * ATTRIBUTE_WARN_UNUSED_RESULT
 human_access (struct stat const *statbuf)
 {
   static char modebuf[12];
@@ -445,7 +445,7 @@ human_access (struct stat const *statbuf)
   return modebuf;
 }
 
-static char *
+static char * ATTRIBUTE_WARN_UNUSED_RESULT
 human_time (struct timespec t)
 {
   static char str[MAX (INT_BUFSIZE_BOUND (intmax_t),
@@ -491,11 +491,14 @@ out_uint_x (char *pformat, size_t prefix_len, uintmax_t arg)
 }
 
 /* Very specialized function (modifies FORMAT), just so as to avoid
-   duplicating this code between both print_statfs and print_stat.  */
-static void
+   duplicating this code between both print_statfs and print_stat.
+   Return zero upon success, nonzero upon failure.  */
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
 out_file_context (char const *filename, char *pformat, size_t prefix_len)
 {
   char *scontext;
+  bool fail = false;
+
   if ((follow_links
        ? getfilecon (filename, &scontext)
        : lgetfilecon (filename, &scontext)) < 0)
@@ -503,19 +506,22 @@ out_file_context (char const *filename, char *pformat, size_t prefix_len)
       error (0, errno, _("failed to get security context of %s"),
              quote (filename));
       scontext = NULL;
+      fail = true;
     }
   strcpy (pformat + prefix_len, "s");
   printf (pformat, (scontext ? scontext : "?"));
   if (scontext)
     freecon (scontext);
+  return fail;
 }
 
-/* print statfs info */
-static void
+/* Print statfs info.  Return zero upon success, nonzero upon failure.  */
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
 print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
               void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
+  bool fail = false;
 
   switch (m)
     {
@@ -589,22 +595,24 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
       out_int (pformat, prefix_len, statfsbuf->f_ffree);
       break;
     case 'C':
-      out_file_context (filename, pformat, prefix_len);
+      fail |= out_file_context (filename, pformat, prefix_len);
       break;
     default:
       fputc ('?', stdout);
       break;
     }
+  return fail;
 }
 
-/* print stat info */
-static void
+/* Print stat info.  Return zero upon success, nonzero upon failure.  */
+static bool
 print_stat (char *pformat, size_t prefix_len, char m,
             char const *filename, void const *data)
 {
   struct stat *statbuf = (struct stat *) data;
   struct passwd *pw_ent;
   struct group *gw_ent;
+  bool fail = false;
 
   switch (m)
     {
@@ -620,7 +628,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
             {
               error (0, errno, _("cannot read symbolic link %s"),
                      quote (filename));
-              return;
+              return true;
             }
           printf (" -> ");
           out_string (pformat, prefix_len, quote (linkname));
@@ -714,12 +722,13 @@ print_stat (char *pformat, size_t prefix_len, char m,
         out_uint (pformat, prefix_len, statbuf->st_ctime);
       break;
     case 'C':
-      out_file_context (filename, pformat, prefix_len);
+      fail |= out_file_context (filename, pformat, prefix_len);
       break;
     default:
       fputc ('?', stdout);
       break;
     }
+  return fail;
 }
 
 /* Output a single-character \ escape.  */
@@ -763,11 +772,16 @@ print_esc_char (char c)
   putchar (c);
 }
 
-static void
+/* Print the information specified by the format string, FORMAT,
+   calling PRINT_FUNC for each %-directive encountered.
+   Return zero upon success, nonzero upon failure.  */
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
 print_it (char const *format, char const *filename,
-          void (*print_func) (char *, size_t, char, char const *, void const *),
+          bool (*print_func) (char *, size_t, char, char const *, void const *),
           void const *data)
 {
+  bool fail = false;
+
   /* Add 2 to accommodate our conversion of the stat `%s' format string
      to the longer printf `%llu' one.  */
   enum
@@ -807,7 +821,7 @@ print_it (char const *format, char const *filename,
                 putchar ('%');
                 break;
               default:
-                print_func (dest, len + 1, *fmt_char, filename, data);
+                fail |= print_func (dest, len + 1, *fmt_char, filename, data);
                 break;
               }
             break;
@@ -866,10 +880,12 @@ print_it (char const *format, char const *filename,
   free (dest);
 
   fputs (trailing_delim, stdout);
+
+  return fail;
 }
 
 /* Stat the file system and print what we find.  */
-static bool
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
 do_statfs (char const *filename, bool terse, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
@@ -899,12 +915,12 @@ do_statfs (char const *filename, bool terse, char const *format)
                 "Inodes: Total: %-10c Free: %d\n");
     }
 
-  print_it (format, filename, print_statfs, &statfsbuf);
-  return true;
+  bool fail = print_it (format, filename, print_statfs, &statfsbuf);
+  return ! fail;
 }
 
 /* stat the file and print what we find */
-static bool
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
 do_stat (char const *filename, bool terse, char const *format)
 {
   struct stat statbuf;
@@ -959,8 +975,8 @@ do_stat (char const *filename, bool terse, char const *format)
             }
         }
     }
-  print_it (format, filename, print_stat, &statbuf);
-  return true;
+  bool fail = print_it (format, filename, print_stat, &statbuf);
+  return ! fail;
 }
 
 void
