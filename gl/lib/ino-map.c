@@ -61,7 +61,7 @@ ino_hash (void const *x, size_t table_size)
   size_t h = ino;
   int i;
   for (i = 1; i < sizeof ino / sizeof h + (sizeof ino % sizeof h != 0); i++)
-    h ^= ino >>= CHAR_BIT * sizeof h;
+    h ^= ino >> CHAR_BIT * sizeof h * i;
 
   return h % table_size;
 }
