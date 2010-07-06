@@ -60,11 +60,8 @@ extern bool fts_debug;
 # define FTS_CROSS_CHECK(Fts)
 #endif
 
-/* Initial size of the hash table.  */
-enum { INITIAL_DI_SET_SIZE = 1021 };
-
 /* A set of dev/ino pairs.  */
-static struct di_set_state di_set;
+static struct di_set *di_set;
 
 /* Define a class for collecting directory information. */
 
@@ -337,14 +334,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 static bool
 hash_ins (ino_t ino, dev_t dev)
 {
-  int inserted = di_set_insert (&di_set, dev, ino);
+  int inserted = di_set_insert (di_set, dev, ino);
   if (inserted < 0)
-    {
-      /* Insertion failed due to lack of memory.  */
-      xalloc_die ();
-    }
-
-  return inserted ? true : false;
+    xalloc_die ();
+  return inserted;
 }
 
 /* FIXME: this code is nearly identical to code in date.c  */
@@ -905,7 +898,8 @@ main (int argc, char **argv)
     xalloc_die ();
 
   /* Initialize the set of dev,inode pairs.  */
-  if (di_set_init (&di_set, INITIAL_DI_SET_SIZE))
+  di_set = di_set_alloc ();
+  if (!di_set)
     xalloc_die ();
 
   bit_flags |= symlink_deref_bits;
@@ -977,14 +971,13 @@ main (int argc, char **argv)
     }
 
   argv_iter_free (ai);
+  di_set_free (di_set);
 
   if (files_from && (ferror (stdin) || fclose (stdin) != 0))
     error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));
 
   if (print_grand_total)
     print_size (&tot_dui, _("total"));
-
-  di_set_free (&di_set);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

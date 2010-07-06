@@ -6,9 +6,8 @@ lib/di-set.c
 lib/di-set.h
 
 Depends-on:
-dev-map
+ino-map
 hash
-verify
 
 configure.ac:
 

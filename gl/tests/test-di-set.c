@@ -1,4 +1,4 @@
-/* Test the dev-map module.
+/* Test the di-set module.
    Copyright (C) 2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -36,41 +36,21 @@
 
 #include "di-set.h"
 
-/* FIXME: ugly duplication of code from di-set.c */
-#define N_DEV_BITS_4 5
-#define N_INO_BITS_4 (32 - N_DEV_BITS_4 - 2 - 1)
-
-#define N_DEV_BITS_8 8
-#define N_INO_BITS_8 (64 - N_DEV_BITS_8 - 2 - 1)
-
 int
 main (void)
 {
   /* set_program_name (argv[0]); placate overzealous "syntax-check" test.  */
-  size_t initial_size = 61;
-  /* "real" code might prefer to avoid the allocation here, simply
-     declaring "struct di_set_state dis;", do a global substitution,
-     s/\<dis\>/\&dis/, and remove the final free.  */
-  struct di_set_state *dis = malloc (sizeof *dis);
+  struct di_set *dis = di_set_alloc ();
   ASSERT (dis);
-  ASSERT (di_set_init (dis, initial_size) == 0);
-
-  struct di_ent *di_ent;
-  ASSERT (di_ent_create (dis, 1, 1, &di_ent) == 0);
-  ASSERT (di_ent_create (dis, 1 << N_DEV_BITS_4, 1, &di_ent) == 0);
-  ASSERT (di_ent_create (dis, 1, 1 << N_INO_BITS_4, &di_ent) == 0);
-  ASSERT (di_ent_create (dis, 1,
-                         (uint64_t) 1 << N_INO_BITS_8, &di_ent) == 0);
-  free (di_ent);
 
   ASSERT (di_set_insert (dis, 2, 5) == 1); /* first insertion succeeds */
   ASSERT (di_set_insert (dis, 2, 5) == 0); /* duplicate fails */
   ASSERT (di_set_insert (dis, 3, 5) == 1); /* diff dev, duplicate inode is ok */
   ASSERT (di_set_insert (dis, 2, 8) == 1); /* same dev, different inode is ok */
 
-  /* very large inode number */
-  ASSERT (di_set_insert (dis, 5, (uint64_t) 1 << 63) == 1);
-  ASSERT (di_set_insert (dis, 5, (uint64_t) 1 << 63) == 0); /* dup */
+  /* very large (or negative) inode number */
+  ASSERT (di_set_insert (dis, 5, (ino_t) -1) == 1);
+  ASSERT (di_set_insert (dis, 5, (ino_t) -1) == 0); /* dup */
 
   unsigned int i;
   for (i = 0; i < 3000; i++)
@@ -79,7 +59,6 @@ main (void)
     ASSERT (di_set_insert (dis, 9, i) == 0); /* duplicate fails */
 
   di_set_free (dis);
-  free (dis);
 
   return 0;
 }

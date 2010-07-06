@@ -1,4 +1,4 @@
-/* Test the dev-map module.
+/* Test the ino-map module.
    Copyright (C) 2010 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -34,30 +34,30 @@
     }                                                                        \
   while (0)
 
-#include "dev-map.h"
-
-/* Risky: this is also defined in di-set.c; they should match.  */
-#define N_DEV_BITS_4 5
+#include "ino-map.h"
 
 int
 main ()
 {
   /* set_program_name (argv[0]); placate overzealous "syntax-check" test.  */
-  struct dev_map dev_map;
-  ASSERT (dev_map_init (&dev_map) == 0);
+  enum { INO_MAP_INIT = 123 };
+  struct ino_map *ino_map = ino_map_alloc (INO_MAP_INIT);
+  ASSERT (ino_map != NULL);
 
-  ASSERT (dev_map_insert (&dev_map, 42) == 0);
-  ASSERT (dev_map_insert (&dev_map, 42) == 0);
-  ASSERT (dev_map_insert (&dev_map, 398) == 1);
-  ASSERT (dev_map_insert (&dev_map, 398) == 1);
+  ASSERT (ino_map_insert (ino_map, 42) == INO_MAP_INIT);
+  ASSERT (ino_map_insert (ino_map, 42) == INO_MAP_INIT);
+  ASSERT (ino_map_insert (ino_map, 398) == INO_MAP_INIT + 1);
+  ASSERT (ino_map_insert (ino_map, 398) == INO_MAP_INIT + 1);
+  ASSERT (ino_map_insert (ino_map, 0) == INO_MAP_INIT + 2);
+  ASSERT (ino_map_insert (ino_map, 0) == INO_MAP_INIT + 2);
 
-  int32_t i;
-  for (i = 0; i < (1 << N_DEV_BITS_4); i++)
+  int i;
+  for (i = 0; i < 100; i++)
     {
-      ASSERT (dev_map_insert (&dev_map, 10000+i) == 2+i);
+      ASSERT (ino_map_insert (ino_map, 10000 + i) == INO_MAP_INIT + 3 + i);
     }
 
-  dev_map_free (&dev_map);
+  ino_map_free (ino_map);
 
   return 0;
 }
