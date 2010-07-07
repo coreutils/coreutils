@@ -56,11 +56,13 @@ ino_hash (void const *x, size_t table_size)
   struct ino_map_ent const *p = x;
   ino_t ino = p->ino;
 
-  /* Exclusive-OR the words of INO into H.  This avoids loss of info,
-     without using a wider % that could be quite slow.  */
+  /* When INO is wider than size_t, exclusive-OR the words of INO into H.
+     This avoids loss of info, without applying % to the wider type,
+     which could be quite slow on some systems.  */
   size_t h = ino;
-  int i;
-  for (i = 1; i < sizeof ino / sizeof h + (sizeof ino % sizeof h != 0); i++)
+  unsigned int i;
+  unsigned int n_words = sizeof ino / sizeof h + (sizeof ino % sizeof h != 0);
+  for (i = 1; i < n_words; i++)
     h ^= ino >> CHAR_BIT * sizeof h * i;
 
   return h % table_size;

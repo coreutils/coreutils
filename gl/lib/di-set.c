@@ -78,11 +78,13 @@ di_ent_hash (void const *x, size_t table_size)
   struct di_ent const *p = x;
   dev_t dev = p->dev;
 
-  /* Exclusive-OR the words of DEV into H.  This avoids loss of info,
-     without using a wider % that could be quite slow.  */
+  /* When DEV is wider than size_t, exclusive-OR the words of DEV into H.
+     This avoids loss of info, without applying % to the wider type,
+     which could be quite slow on some systems.  */
   size_t h = dev;
-  int i;
-  for (i = 1; i < sizeof dev / sizeof h + (sizeof dev % sizeof h != 0); i++)
+  unsigned int i;
+  unsigned int n_words = sizeof dev / sizeof h + (sizeof dev % sizeof h != 0);
+  for (i = 1; i < n_words; i++)
     h ^= dev >> CHAR_BIT * sizeof h * i;
 
   return h % table_size;
