@@ -30,6 +30,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g now uses long doubles for greater range and precision.
 
+  sort now uses the number of available processors to parallelize
+  the sorting operation.  The number of sorts run concurrently can be
+  limited with the --parallel option or with external process
+  control like taskset for example.
+
   stat no longer accepts the --context (-Z) option.  Initially it was
   merely accepted and ignored, for compatibility.  Starting two years
   ago, with coreutils-7.0, its use evoked a warning.

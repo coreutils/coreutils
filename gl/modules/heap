@@ -1,0 +1,24 @@
+Description:
+Binary heap with minimal number of methods. Used in sort.
+
+Files:
+lib/heap.c
+lib/heap.h
+
+Depends-on:
+stdlib-safer
+xalloc
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += heap.c heap.h
+
+Include:
+"heap.h"
+
+License
+GPL
+
+Maintainer:
+Gene Auyeung

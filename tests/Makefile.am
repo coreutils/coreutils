@@ -223,6 +223,7 @@ TESTS =						\
   misc/shred-remove				\
   misc/shuf					\
   misc/sort					\
+  misc/sort-benchmark-random			\
   misc/sort-compress				\
   misc/sort-continue				\
   misc/sort-debug-keys				\

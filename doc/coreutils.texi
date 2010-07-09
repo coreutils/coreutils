@@ -4068,6 +4068,14 @@ have a large sort or merge that is I/O-bound, you can often improve
 performance by using this option to specify directories on different
 disks and controllers.
 
+@item --parallel=@var{n}
+@opindex --parallel
+@cindex multithreaded sort
+Limit the number of sorts run in parallel to @var{n}. By default,
+@var{n} is set to the number of available processors, and values
+greater than that are reduced to that limit. Also see
+@ref{nproc invocation}.
+
 @item -u
 @itemx --unique
 @opindex -u
@@ -4160,6 +4168,13 @@ Sort in descending (reverse) numeric order.
 
 @example
 sort -n -r
+@end example
+
+@item
+Run no more that 4 sorts concurrently, using a buffer size of 10M.
+
+@example
+sort --parallel=4 -S 10M
 @end example
 
 @item

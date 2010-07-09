@@ -397,6 +397,9 @@ uname_LDADD += $(GETHOSTNAME_LIB)
 # for strsignal
 kill_LDADD += $(LIBTHREAD)
 
+# for pthread
+sort_LDADD += $(LIB_PTHREAD)
+
 $(PROGRAMS): ../lib/libcoreutils.a
 
 # Get the release year from ../lib/version-etc.c.
