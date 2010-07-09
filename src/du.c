@@ -426,7 +426,7 @@ process_file (FTS *fts, FTSENT *ent)
 
     case FTS_ERR:
       /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
-      error (0, ent->fts_errno, _("%s"), quote (file));
+      error (0, ent->fts_errno, "%s", quote (file));
       return false;
 
     case FTS_DNR:

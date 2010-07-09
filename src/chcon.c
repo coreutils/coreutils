@@ -257,7 +257,7 @@ process_file (FTS *fts, FTSENT *ent)
       break;
 
     case FTS_ERR:
-      error (0, ent->fts_errno, _("%s"), quote (file_full_name));
+      error (0, ent->fts_errno, "%s", quote (file_full_name));
       ok = false;
       break;
 

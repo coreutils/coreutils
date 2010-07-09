@@ -305,7 +305,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
     case FTS_ERR:
       if (! chopt->force_silent)
-        error (0, ent->fts_errno, _("%s"), quote (file_full_name));
+        error (0, ent->fts_errno, "%s", quote (file_full_name));
       ok = false;
       break;
 
