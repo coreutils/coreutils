@@ -36,22 +36,12 @@ static void heapify_up (void **, size_t,
 struct heap *
 heap_alloc (int (*compare)(const void *, const void *), size_t n_reserve)
 {
-  struct heap *heap;
-  void *xmalloc_ret = xmalloc (sizeof *heap);
-  heap = (struct heap *) xmalloc_ret;
-  if (!heap)
-    return NULL;
+  struct heap *heap = xmalloc (sizeof *heap);
 
-  if (n_reserve <= 0)
+  if (n_reserve == 0)
     n_reserve = 1;
 
-  xmalloc_ret = xmalloc (n_reserve * sizeof *(heap->array));
-  heap->array = (void **) xmalloc_ret;
-  if (!heap->array)
-    {
-      free (heap);
-      return NULL;
-    }
+  heap->array = xmalloc (n_reserve * sizeof *(heap->array));
 
   heap->array[0] = NULL;
   heap->capacity = n_reserve;
@@ -82,15 +72,8 @@ int
 heap_insert (struct heap *heap, void *item)
 {
   if (heap->capacity - 1 <= heap->count)
-    {
-      size_t new_size = (2 + heap->count) * sizeof *(heap->array);
-      void *realloc_ret = xrealloc (heap->array, new_size);
-      heap->array = (void **) realloc_ret;
-      heap->capacity = (2 + heap->count);
-
-      if (!heap->array)
-        return -1;
-    }
+    heap->array = x2nrealloc (heap->array, &heap->capacity,
+                              sizeof *(heap->array));
 
   heap->array[++heap->count] = item;
   heapify_up (heap->array, heap->count, heap->compare);
