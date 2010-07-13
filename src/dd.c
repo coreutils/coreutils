@@ -1603,12 +1603,11 @@ dd_copy (void)
      It is necessary when accessing raw (i.e. character special) disk
      devices on Unixware or other SVR4-derived system.  */
 
-  size_t sz = input_blocksize + INPUT_BLOCK_SLOP;
-  real_buf = malloc (sz);
+  real_buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
   if (!real_buf)
     error (EXIT_FAILURE, 0,
-           _("failed to allocate an input buffer of size %s"),
-           human_size (sz));
+           _("memory exhausted by input buffer of size %zu bytes (%s)"),
+           input_blocksize, human_size (input_blocksize));
 
   ibuf = real_buf;
   ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
@@ -1618,12 +1617,11 @@ dd_copy (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      sz = output_blocksize + OUTPUT_BLOCK_SLOP;
-      real_obuf = malloc (sz);
+      real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
       if (!real_obuf)
         error (EXIT_FAILURE, 0,
-               _("failed to allocate an output buffer of size %s"),
-               human_size (sz));
+               _("memory exhausted by output buffer of size %zu bytes (%s)"),
+               output_blocksize, human_size (output_blocksize));
       obuf = ptr_align (real_obuf, page_size);
     }
   else
