@@ -343,14 +343,6 @@ ls_LDADD += $(LIB_CAP)
 dd_LDADD += $(LIB_FDATASYNC)
 shred_LDADD += $(LIB_FDATASYNC)
 
-# for strtod, strtold
-printf_LDADD += $(POW_LIB)
-seq_LDADD += $(POW_LIB)
-sleep_LDADD += $(POW_LIB)
-sort_LDADD += $(POW_LIB)
-tail_LDADD += $(POW_LIB)
-uptime_LDADD += $(POW_LIB)
-
 # for xnanosleep
 sleep_LDADD += $(LIB_NANOSLEEP)
 sort_LDADD += $(LIB_NANOSLEEP)
