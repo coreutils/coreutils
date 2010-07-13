@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  du no longer multiply counts a file that is a directory or whose
+  link count is 1, even if the file is reached multiple times by
+  following symlinks or via multiple arguments.
+
 ** New features
 
   cp now accepts the --attributes-only option to not copy file data,
@@ -10,14 +16,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   du recognizes -d N as equivalent to --max-depth=N, for compatibility
   with FreeBSD.
 
-  du now uses less than half as much memory when operating on trees
-  with many hard-linked files.  With --count-links (-l), or when
-  operating on trees with no hard-linked files, there is no change.
-
   sort now accepts the --debug option, to highlight the part of the
   line significant in the sort, and warn about questionable options.
 
 ** Changes in behavior
+
+  du now uses less than half as much memory when operating on trees
+  with many hard-linked files.  With --count-links (-l), or when
+  operating on trees with no hard-linked files, there is no change.
 
   ls -l now uses the traditional three field time style rather than
   the wider two field numeric ISO style, in locales where a style has
@@ -47,11 +53,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also errors are no longer suppressed for unsupported file types, and
   relative sizes are restricted to supported file types.
 
-** Bug fixes
-
-  du no longer multiply counts a file that is a directory or whose
-  link count is 1, even if the file is reached multiple times by
-  following symlinks or via multiple arguments.
 
 * Noteworthy changes in release 8.5 (2010-04-23) [stable]
 
