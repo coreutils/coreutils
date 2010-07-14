@@ -1743,13 +1743,17 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
                   if (buf->buf == ptrlim)
                     return false;
                   if (ptrlim[-1] != eol)
-                    *ptrlim++ = eol;
+                    *ptrlim++ = '\0';
                 }
             }
 
           /* Find and record each line in the just-read input.  */
           while ((p = memchr (ptr, eol, ptrlim - ptr)))
             {
+              /* Delimit the line with NUL. This eliminates the need to
+                 temporarily replace the last byte with NUL when calling
+                 xmemcoll(), which increases performance.  */
+              *p = '\0';
               ptr = p + 1;
               line--;
               line->text = line_start;
@@ -2642,7 +2646,13 @@ compare (const struct line *a, const struct line *b, bool show_debug)
   else if (blen == 0)
     diff = 1;
   else if (hard_LC_COLLATE)
-    diff = xmemcoll (a->text, alen, b->text, blen);
+    {
+      /* Note xmemcoll0 is a performance enhancement as
+         it will not unconditionally write '\0' after the
+         passed in buffers, which was seen to give around
+         a 3% increase in performance for short lines.  */
+      diff = xmemcoll0 (a->text, alen + 1, b->text, blen + 1);
+    }
   else if (! (diff = memcmp (a->text, b->text, MIN (alen, blen))))
     diff = alen < blen ? -1 : alen != blen;
 
@@ -2652,8 +2662,10 @@ compare (const struct line *a, const struct line *b, bool show_debug)
 static void
 write_bytes (struct line const *line, FILE *fp, char const *output_file)
 {
-  char const *buf = line->text;
+  char *buf = line->text;
   size_t n_bytes = line->length;
+
+  *(buf + n_bytes - 1) = eolchar;
 
   /* Convert TABs to '>' and \0 to \n when -z specified.  */
   if (debug && fp == stdout)
