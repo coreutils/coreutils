@@ -41,7 +41,7 @@ heap_alloc (int (*compare)(const void *, const void *), size_t n_reserve)
   if (n_reserve == 0)
     n_reserve = 1;
 
-  heap->array = xmalloc (n_reserve * sizeof *(heap->array));
+  heap->array = xnmalloc (n_reserve, sizeof *(heap->array));
 
   heap->array[0] = NULL;
   heap->capacity = n_reserve;
