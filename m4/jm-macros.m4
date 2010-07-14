@@ -64,7 +64,6 @@ AC_DEFUN([coreutils_MACROS],
   LIBS=$coreutils_saved_libs
 
   # Used by sort.c.
-  AC_CHECK_FUNCS_ONCE([posix_fadvise])
   AC_CHECK_FUNCS_ONCE([nl_langinfo])
 
   # Used by tail.c.

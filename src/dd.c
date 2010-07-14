@@ -27,10 +27,10 @@
 #include "system.h"
 #include "close-stream.h"
 #include "error.h"
+#include "fadvise.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "human.h"
-#include "ignore-value.h"
 #include "long-options.h"
 #include "quote.h"
 #include "quotearg.h"
@@ -849,12 +849,9 @@ iwrite (int fd, char const *buf, size_t size)
          posix_fadvise to tell the system not to pollute the buffer
          cache with this data.  Don't bother to diagnose lseek or
          posix_fadvise failure. */
-#ifdef POSIX_FADV_DONTNEED
       off_t off = lseek (STDOUT_FILENO, 0, SEEK_CUR);
       if (0 <= off)
-        ignore_value (posix_fadvise (STDOUT_FILENO,
-                                     off, 0, POSIX_FADV_DONTNEED));
-#endif
+        fdadvise (STDOUT_FILENO, off, 0, FADVISE_DONTNEED);
 
       /* Attempt to ensure that that final block is committed
          to disk as quickly as possible.  */

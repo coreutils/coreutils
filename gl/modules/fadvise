@@ -1,0 +1,24 @@
+Description:
+Declare an access pattern hint for files.
+
+Files:
+lib/fadvise.c
+lib/fadvise.h
+
+Depends-on:
+ignore-value
+
+configure.ac:
+AC_CHECK_FUNCS_ONCE([posix_fadvise])
+
+Makefile.am:
+lib_SOURCES += fadvise.c fadvise.h
+
+Include:
+"fadvise.h"
+
+License:
+LGPL
+
+Maintainer:
+Pádraig Brady

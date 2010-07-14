@@ -30,11 +30,11 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
+#include "fadvise.h"
 #include "filevercmp.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "heap.h"
-#include "ignore-value.h"
 #include "md5.h"
 #include "mbswidth.h"
 #include "nproc.h"
@@ -856,9 +856,13 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   return node;
 }
 
-/* Predeclare an access pattern for input files.
-   Ignore any errors -- this is only advisory.
+/* Return a stream for FILE, opened with mode HOW.  A null FILE means
+   standard output; HOW should be "w".  When opening for input, "-"
+   means standard input.  To avoid confusion, do not return file
+   descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
+   opening an ordinary FILE.  Return NULL if unsuccessful.
 
+   fadvise() is used to specify an access pattern for input files.
    There are a few hints we could possibly provide,
    and after careful testing it was decided that
    specifying POSIX_FADV_SEQUENTIAL was not detrimental
@@ -899,24 +903,6 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    cache immediately after processing.  This is done implicitly
    however when the files are unlinked.  */
 
-static void
-fadvise_input (FILE *fp)
-{
-#if HAVE_POSIX_FADVISE
-  if (fp)
-    {
-      int fd = fileno (fp);
-      ignore_value (posix_fadvise (fd, 0, 0, POSIX_FADV_SEQUENTIAL));
-    }
-#endif
-}
-
-/* Return a stream for FILE, opened with mode HOW.  A null FILE means
-   standard output; HOW should be "w".  When opening for input, "-"
-   means standard input.  To avoid confusion, do not return file
-   descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
-   opening an ordinary FILE.  Return NULL if unsuccessful.  */
-
 static FILE *
 stream_open (const char *file, const char *how)
 {
@@ -932,7 +918,7 @@ stream_open (const char *file, const char *how)
         }
       else
         fp = fopen (file, how);
-      fadvise_input (fp);
+      fadvise (fp, FADVISE_SEQUENTIAL);
       return fp;
     }
   return fopen (file, how);
