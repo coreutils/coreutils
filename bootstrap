@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2010-05-17.18; # UTC
+scriptversion=2010-07-06.10; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -90,7 +90,8 @@ bootstrap_epilogue() { :; }
 # options because the latest/%s directory and the .po files within are
 # all symlinks.
 po_download_command_format=\
-"rsync -Lrtvz 'translationproject.org::tp/latest/%s/' '%s'"
+"rsync --delete --exclude '*.s1' -Lrtvz \
+ 'translationproject.org::tp/latest/%s/' '%s'"
 
 extract_package_name='
   /^AC_INIT(/{
@@ -475,15 +476,17 @@ download_po_files() {
   eval "$cmd"
 }
 
-# Download .po files to $po_dir/.reference and copy only the new
+# Mirror .po files to $po_dir/.reference and copy only the new
 # or modified ones into $po_dir.  Also update $po_dir/LINGUAS.
+# Note po files that exist locally only are left in $po_dir but will
+# not be included in LINGUAS and hence will not be distributed.
 update_po_files() {
   # Directory containing primary .po files.
   # Overwrite them only when we're sure a .po file is new.
   po_dir=$1
   domain=$2
 
-  # Download *.po files into this dir.
+  # Mirror *.po files into this dir.
   # Usually contains *.s1 checksum files.
   ref_po_dir="$po_dir/.reference"
 
