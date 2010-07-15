@@ -2497,7 +2497,9 @@ keycompare (const struct line *a, const struct line *b, bool show_debug)
                     }
                 }
 
-              diff = xmemcoll (copy_a, new_len_a, copy_b, new_len_b);
+              copy_a[new_len_a++] = '\0';
+              copy_b[new_len_b++] = '\0';
+              diff = xmemcoll0 (copy_a, new_len_a, copy_b, new_len_b);
 
               if (sizeof buf < size)
                 free (copy_a);
@@ -2664,13 +2666,11 @@ write_bytes (struct line const *line, FILE *fp, char const *output_file)
 {
   char *buf = line->text;
   size_t n_bytes = line->length;
-
-  *(buf + n_bytes - 1) = eolchar;
+  char *ebuf = buf + n_bytes;
 
   /* Convert TABs to '>' and \0 to \n when -z specified.  */
   if (debug && fp == stdout)
     {
-      char const *ebuf = buf + n_bytes;
       char const *c = buf;
 
       while (c < ebuf)
@@ -2678,7 +2678,7 @@ write_bytes (struct line const *line, FILE *fp, char const *output_file)
           char wc = *c++;
           if (wc == '\t')
             wc = '>';
-          else if (wc == 0 && eolchar == 0)
+          else if (c == ebuf)
             wc = '\n';
           if (fputc (wc, fp) == EOF)
             die (_("write failed"), output_file);
@@ -2688,8 +2688,10 @@ write_bytes (struct line const *line, FILE *fp, char const *output_file)
     }
   else
     {
+      ebuf[-1] = eolchar;
       if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
         die (_("write failed"), output_file);
+      ebuf[-1] = '\0';
     }
 }
 
