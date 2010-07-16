@@ -11,7 +11,7 @@ Depends-on:
 error
 exitfail
 fopen-safer
-gethrxtime
+gettimeofday
 quotearg
 stdbool
 stdint

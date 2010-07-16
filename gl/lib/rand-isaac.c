@@ -35,9 +35,8 @@
 #include "rand-isaac.h"
 
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
-
-#include "gethrxtime.h"
 
 
 /* This index operation is more efficient on many processors */
@@ -292,7 +291,8 @@ isaac_seed (struct isaac_state *s)
   { gid_t t = getgid ();   ISAAC_SEED (s, t); }
 
   {
-    xtime_t t = gethrxtime ();
+    struct timeval t;
+    gettimeofday (&t, NULL);
     ISAAC_SEED (s, t);
   }
 

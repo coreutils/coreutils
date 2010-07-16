@@ -328,13 +328,8 @@ ls_LDADD += $(LIB_CLOCK_GETTIME)
 pr_LDADD += $(LIB_CLOCK_GETTIME)
 touch_LDADD += $(LIB_CLOCK_GETTIME)
 
-# for gethrxtime, randint, randread, gen_tempname, mkstemp
+# for gethrxtime
 dd_LDADD += $(LIB_GETHRXTIME)
-mktemp_LDADD += $(LIB_GETHRXTIME)
-shred_LDADD += $(LIB_GETHRXTIME)
-shuf_LDADD += $(LIB_GETHRXTIME)
-sort_LDADD += $(LIB_GETHRXTIME)
-tac_LDADD += $(LIB_GETHRXTIME)
 
 # for cap_get_file
 ls_LDADD += $(LIB_CAP)
