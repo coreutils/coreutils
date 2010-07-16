@@ -61,6 +61,7 @@ src/expand.c
 src/expr.c
 src/factor.c
 src/false.c
+src/find-mount-point.c
 src/fmt.c
 src/fold.c
 src/getlimits.c

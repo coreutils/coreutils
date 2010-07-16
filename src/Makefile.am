@@ -145,6 +145,7 @@ noinst_HEADERS =	\
   copy.h		\
   cp-hash.h		\
   dircolors.h		\
+  find-mount-point.h	\
   fs.h			\
   group-list.h		\
   ls.h			\
@@ -477,6 +478,9 @@ rm_SOURCES = rm.c remove.c
 
 mkdir_SOURCES = mkdir.c prog-fprintf.c
 rmdir_SOURCES = rmdir.c prog-fprintf.c
+
+df_SOURCES = df.c find-mount-point.c
+stat_SOURCES = stat.c find-mount-point.c
 
 uname_SOURCES = uname.c uname-uname.c
 arch_SOURCES = uname.c uname-arch.c

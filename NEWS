@@ -24,6 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort now supports -d, -f, -i, -R, and -V in any combination.
 
+  stat now accepts the %m format directive to output
+  the mount point for a file.
+
 ** Changes in behavior
 
   df now consistently prints the device name for a bind mounted file,

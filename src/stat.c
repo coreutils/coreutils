@@ -64,10 +64,12 @@
 #include "filemode.h"
 #include "fs.h"
 #include "getopt.h"
+#include "mountlist.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "stat-time.h"
 #include "strftime.h"
+#include "find-mount-point.h"
 
 #if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
@@ -604,6 +606,94 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
   return fail;
 }
 
+/* Return any bind mounted source for a path.
+   The caller should not free the returned buffer.
+   Return NULL if no bind mount found.  */
+static char const * ATTRIBUTE_WARN_UNUSED_RESULT
+find_bind_mount (char const * name)
+{
+  char const * bind_mount = NULL;
+
+  static struct mount_entry *mount_list;
+  static bool tried_mount_list = false;
+  if (!tried_mount_list) /* attempt/warn once per process.  */
+    {
+      if (!(mount_list = read_file_system_list (false)))
+        error (0, errno, "%s", _("cannot read table of mounted file systems"));
+      tried_mount_list = true;
+    }
+
+  struct mount_entry *me;
+  for (me = mount_list; me; me = me->me_next)
+    {
+      if (me->me_dummy && me->me_devname[0] == '/'
+          && STREQ (me->me_mountdir, name))
+        {
+          struct stat name_stats;
+          struct stat dev_stats;
+
+          if (stat (name, &name_stats) == 0
+              && stat (me->me_devname, &dev_stats) == 0
+              && SAME_INODE (name_stats, dev_stats))
+            {
+              bind_mount = me->me_devname;
+              break;
+            }
+        }
+    }
+
+  return bind_mount;
+}
+
+/* Print mount point.  Return zero upon success, nonzero upon failure.  */
+static bool ATTRIBUTE_WARN_UNUSED_RESULT
+out_mount_point (char const *filename, char *pformat, size_t prefix_len,
+                 const struct stat *statp)
+{
+
+  char const *np = "?", *bp = NULL;
+  char *mp = NULL;
+  bool fail = true;
+
+  /* Look for bind mounts first.  Note we output the immediate alias,
+     rather than further resolving to a base device mount point.  */
+  if (follow_links || !S_ISLNK (statp->st_mode))
+    {
+      char *resolved = canonicalize_file_name (filename);
+      if (!resolved)
+        {
+          error (0, errno, _("failed to canonicalize %s"), quote (filename));
+          goto print_mount_point;
+        }
+      bp = find_bind_mount (resolved);
+      free (resolved);
+      if (bp)
+        {
+          fail = false;
+          goto print_mount_point;
+        }
+    }
+
+  /* If there is no direct bind mount, then navigate
+     back up the tree looking for a device change.
+     Note we don't detect if any of the directory components
+     are bind mounted to the same device, but that's OK
+     since we've not directly queried them.  */
+  if ((mp = find_mount_point (filename, statp)))
+    {
+      /* This dir might be bind mounted to another device,
+         so we resolve the bound source in that case also.  */
+      bp = find_bind_mount (mp);
+      fail = false;
+    }
+
+print_mount_point:
+
+  out_string (pformat, prefix_len, bp ? bp : mp ? mp : np);
+  free (mp);
+  return fail;
+}
+
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
 print_stat (char *pformat, size_t prefix_len, char m,
@@ -679,6 +769,9 @@ print_stat (char *pformat, size_t prefix_len, char m,
       break;
     case 't':
       out_uint_x (pformat, prefix_len, major (statbuf->st_rdev));
+      break;
+    case 'm':
+      fail |= out_mount_point (filename, pformat, prefix_len, statbuf);
       break;
     case 'T':
       out_uint_x (pformat, prefix_len, minor (statbuf->st_rdev));
@@ -1026,6 +1119,7 @@ The valid format sequences for files (without --file-system):\n\
       fputs (_("\
   %h   Number of hard links\n\
   %i   Inode number\n\
+  %m   Mount point\n\
   %n   File name\n\
   %N   Quoted file name with dereference if symbolic link\n\
   %o   I/O block size\n\

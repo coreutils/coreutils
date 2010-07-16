@@ -8487,6 +8487,7 @@ removal is requested.  Equivalent to @option{-I}.
 When removing a hierarchy recursively, skip any directory that is on a
 file system different from that of the corresponding command line argument.
 
+@cindex bind mount
 This option is useful when removing a build ``chroot'' hierarchy,
 which normally contains no valuable data.  However, it is not uncommon
 to bind-mount @file{/home} into such a hierarchy, to make it easier to
@@ -10685,6 +10686,7 @@ The valid @var{format} directives for files with @option{--format} and
 @item %G - Group name of owner
 @item %h - Number of hard links
 @item %i - Inode number
+@item %m - Mount point (See note below)
 @item %n - File name
 @item %N - Quoted file name with dereference if symbolic link
 @item %o - I/O block size
@@ -10699,6 +10701,22 @@ The valid @var{format} directives for files with @option{--format} and
 @item %Y - Time of last modification as seconds since Epoch
 @item %z - Time of last change
 @item %Z - Time of last change as seconds since Epoch
+@end itemize
+
+The mount point printed by @samp{%m} is similar to that output
+by @command{df}, except that:
+@itemize @bullet
+@item
+stat does not dereference symlinks by default
+(unless @option{-L} is specified)
+@item
+stat does not search for specified device nodes in the
+file system list, instead operating on them directly
+@item
+@cindex bind mount
+stat outputs the alias for a bind mounted file,
+rather than its backing device.  One can recursively call stat
+until there is no change in output, to get the base mount point
 @end itemize
 
 When listing file system information (@option{--file-system} (@option{-f})),

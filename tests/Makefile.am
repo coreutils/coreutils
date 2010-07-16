@@ -241,6 +241,7 @@ TESTS =						\
   misc/split-l					\
   misc/stat-fmt					\
   misc/stat-hyphen				\
+  misc/stat-mount				\
   misc/stat-printf				\
   misc/stat-slash				\
   misc/stdbuf					\
