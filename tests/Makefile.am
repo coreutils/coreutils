@@ -234,6 +234,7 @@ TESTS =						\
   misc/sort-merge-fdlimit			\
   misc/sort-month				\
   misc/sort-rand				\
+  misc/sort-unique				\
   misc/sort-version				\
   misc/split-a					\
   misc/split-fail				\
