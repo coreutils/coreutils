@@ -2028,42 +2028,23 @@ getmonth (char const *month, size_t len, char const **ea)
   return 0;
 }
 
-/* A source of random data.  */
-static struct randread_source *randread_source;
+/* A randomly chosen MD5 state, used for random comparison.  */
+static struct md5_ctx random_md5_state;
 
-/* Return the Ith randomly-generated state.  The caller must invoke
-   random_state (H) for all H less than I before invoking random_state
-   (I).  */
+/* Initialize the randomly chosen MD5 state.  */
 
-static struct md5_ctx
-random_state (size_t i)
+static void
+random_md5_state_init (char const *random_source)
 {
-  /* An array of states resulting from the random data, and counts of
-     its used and allocated members.  */
-  static struct md5_ctx *state;
-  static size_t used;
-  static size_t allocated;
-
-  struct md5_ctx *s = &state[i];
-
-  if (used <= i)
-    {
-      unsigned char buf[MD5_DIGEST_SIZE];
-
-      used++;
-
-      if (allocated <= i)
-        {
-          state = X2NREALLOC (state, &allocated);
-          s = &state[i];
-        }
-
-      randread (randread_source, buf, sizeof buf);
-      md5_init_ctx (s);
-      md5_process_bytes (buf, sizeof buf, s);
-    }
-
-  return *s;
+  unsigned char buf[MD5_DIGEST_SIZE];
+  struct randread_source *r = randread_new (random_source, sizeof buf);
+  if (! r)
+    die (_("open failed"), random_source);
+  randread (r, buf, sizeof buf);
+  if (randread_free (r) != 0)
+    die (_("close failed"), random_source);
+  md5_init_ctx (&random_md5_state);
+  md5_process_bytes (buf, sizeof buf, &random_md5_state);
 }
 
 /* Compare the hashes of TEXTA with length LENGTHA to those of TEXTB
@@ -2078,19 +2059,19 @@ cmp_hashes (char const *texta, size_t lena,
      first pair of random hashes agree, check whether the keys are
      identical and if so report no difference.  */
   int diff;
-  size_t i;
-  for (i = 0; ; i++)
+  uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
+  struct md5_ctx s[2];
+  s[0] = s[1] = random_md5_state;
+  md5_process_bytes (texta, lena, &s[0]);  md5_finish_ctx (&s[0], dig[0]);
+  md5_process_bytes (textb, lenb, &s[1]);  md5_finish_ctx (&s[1], dig[1]);
+  diff = memcmp (dig[0], dig[1], sizeof dig[0]);
+  if (! diff)
     {
-      uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
-      struct md5_ctx s[2];
-      s[0] = s[1] = random_state (i);
-      md5_process_bytes (texta, lena, &s[0]);  md5_finish_ctx (&s[0], dig[0]);
-      md5_process_bytes (textb, lenb, &s[1]);  md5_finish_ctx (&s[1], dig[1]);
-      diff = memcmp (dig[0], dig[1], sizeof dig[0]);
-      if (diff != 0)
-        break;
-      if (i == 0 && lena == lenb && memcmp (texta, textb, lena) == 0)
-        break;
+      /* Break ties with memcmp.  This is good enough given the
+         astronomically low probability of an MD5 collision.  */
+      diff = memcmp (texta, textb, MIN (lena, lenb));
+      if (! diff)
+        diff = lena < lenb ? -1 : lena != lenb;
     }
 
   return diff;
@@ -4485,14 +4466,7 @@ main (int argc, char **argv)
   reverse = gkey.reverse;
 
   if (need_random)
-    {
-      /* Threading does not lock the randread_source structure, so
-         downgrade to one thread to avoid race conditions. */
-      nthreads = 1;
-      randread_source = randread_new (random_source, MD5_DIGEST_SIZE);
-      if (! randread_source)
-        die (_("open failed"), random_source);
-    }
+    random_md5_state_init (random_source);
 
   if (temp_dir_count == 0)
     {
