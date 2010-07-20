@@ -209,9 +209,10 @@ isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
 }
 #endif
 
-/* Initialize *S to a somewhat-random value.  */
+/* Initialize *S to a somewhat-random value.  The first SEEDED bytes
+   in S->mm are already seeded with random data.  */
 static void
-isaac_seed_start (struct isaac_state *s)
+isaac_seed_start (struct isaac_state *s, size_t seeded)
 {
   static uint32_t const iv[8] =
     {
@@ -228,11 +229,12 @@ isaac_seed_start (struct isaac_state *s)
     mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
 #endif
 
-  memset (s->mm, 0, sizeof s->mm);
+  memset ((char *) s->mm + seeded, 0, sizeof s->mm - seeded);
   memcpy (s->iv, iv, sizeof s->iv);
 
   /* s->c gets used for a data pointer during the seeding phase */
-  s->a = s->b = s->c = 0;
+  s->a = s->b = 0;
+  s->c = seeded;
 }
 
 /* Add a buffer of seed material.  */
@@ -279,22 +281,37 @@ isaac_seed_finish (struct isaac_state *s)
 #define ISAAC_SEED(s,x) isaac_seed_data (s, &(x), sizeof (x))
 
 /* Initialize *S to a somewhat-random value; this starts seeding,
-   seeds with somewhat-random data, and finishes seeding.  */
+   seeds with somewhat-random data, and finishes seeding.  If FD is
+   nonnegative, seed by reading at most BYTES_BOUNDS bytes from it.  */
 void
-isaac_seed (struct isaac_state *s)
+isaac_seed (struct isaac_state *s, int fd, size_t bytes_bound)
 {
-  isaac_seed_start (s);
+  /* Get some data from FD if available.  */
+  ssize_t seeded = 0;
+  if (0 <= fd)
+    {
+      if (sizeof s->mm < bytes_bound)
+        bytes_bound = sizeof s->mm;
+      seeded = read (fd, s->mm, bytes_bound);
+      if (seeded < 0)
+        seeded = 0;
+    }
 
-  { pid_t t = getpid ();   ISAAC_SEED (s, t); }
-  { pid_t t = getppid ();  ISAAC_SEED (s, t); }
-  { uid_t t = getuid ();   ISAAC_SEED (s, t); }
-  { gid_t t = getgid ();   ISAAC_SEED (s, t); }
+  isaac_seed_start (s, seeded);
 
-  {
-    struct timeval t;
-    gettimeofday (&t, NULL);
-    ISAAC_SEED (s, t);
-  }
+  if (seeded < sizeof s->mm)
+    {
+      { pid_t t = getpid ();   ISAAC_SEED (s, t); }
+      { pid_t t = getppid ();  ISAAC_SEED (s, t); }
+      { uid_t t = getuid ();   ISAAC_SEED (s, t); }
+      { gid_t t = getgid ();   ISAAC_SEED (s, t); }
+
+      {
+        struct timeval t;
+        gettimeofday (&t, NULL);
+        ISAAC_SEED (s, t);
+      }
+    }
 
   isaac_seed_finish (s);
 }

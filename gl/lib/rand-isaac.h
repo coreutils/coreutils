@@ -21,6 +21,7 @@
 #ifndef RAND_ISAAC_H
 # define RAND_ISAAC_H
 
+# include <stddef.h>
 # include <stdint.h>
 
 /* Size of the state tables to use.  ISAAC_LOG should be at least 3,
@@ -37,7 +38,7 @@ struct isaac_state
     uint32_t a, b, c;		/* Extra index variables */
   };
 
-void isaac_seed (struct isaac_state *);
+void isaac_seed (struct isaac_state *, int, size_t);
 void isaac_refill (struct isaac_state *, uint32_t[ISAAC_WORDS]);
 
 #endif

@@ -24,12 +24,14 @@
 #include <errno.h>
 #include <error.h>
 #include <exitfail.h>
+#include <fcntl.h>
 #include <quotearg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
@@ -58,6 +60,10 @@
 #else
 # define alignof(type) offsetof (struct { char c; type x; }, x)
 # define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
+#endif
+
+#ifndef NAME_OF_NONCE_DEVICE
+#define NAME_OF_NONCE_DEVICE "/dev/urandom"
 #endif
 
 /* The maximum buffer size used for reads of random data.  Using the
@@ -164,8 +170,11 @@ randread_new (char const *name, size_t bytes_bound)
         setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
       else
         {
+          int nonce_device = open (NAME_OF_NONCE_DEVICE, O_RDONLY | O_BINARY);
           s->buf.isaac.buffered = 0;
-          isaac_seed (&s->buf.isaac.state);
+          isaac_seed (&s->buf.isaac.state, nonce_device, bytes_bound);
+          if (0 <= nonce_device)
+            close (nonce_device);
         }
 
       return s;
