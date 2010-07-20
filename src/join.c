@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
@@ -616,6 +617,9 @@ join (FILE *fp1, FILE *fp2)
   struct seq seq1, seq2;
   int diff;
   bool eof1, eof2;
+
+  fadvise (fp1, FADVISE_SEQUENTIAL);
+  fadvise (fp2, FADVISE_SEQUENTIAL);
 
   /* Read the first line of each file.  */
   initseq (&seq1);

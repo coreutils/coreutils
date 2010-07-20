@@ -24,6 +24,7 @@
 #include "system.h"
 #include "linebuffer.h"
 #include "error.h"
+#include "fadvise.h"
 #include "hard-locale.h"
 #include "quote.h"
 #include "stdio--.h"
@@ -272,6 +273,8 @@ compare_files (char **infiles)
       streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
         error (EXIT_FAILURE, errno, "%s", infiles[i]);
+
+      fadvise (streams[i], FADVISE_SEQUENTIAL);
 
       thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
       if (ferror (streams[i]))

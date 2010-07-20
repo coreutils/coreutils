@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "human.h"
 #include "safe-read.h"
 #include "xfreopen.h"
@@ -109,6 +110,8 @@ bsd_sum_file (const char *file, int print_name)
           return false;
         }
     }
+
+  fadvise (fp, FADVISE_SEQUENTIAL);
 
   while ((ch = getc (fp)) != EOF)
     {

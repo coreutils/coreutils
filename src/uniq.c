@@ -25,6 +25,7 @@
 #include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"
+#include "fadvise.h"
 #include "hard-locale.h"
 #include "posixver.h"
 #include "quote.h"
@@ -285,6 +286,8 @@ check_file (const char *infile, const char *outfile, char delimiter)
     error (EXIT_FAILURE, errno, "%s", infile);
   if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
     error (EXIT_FAILURE, errno, "%s", outfile);
+
+  fadvise (stdin, FADVISE_SEQUENTIAL);
 
   thisline = &lb1;
   prevline = &lb2;

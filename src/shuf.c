@@ -23,6 +23,7 @@
 #include "system.h"
 
 #include "error.h"
+#include "fadvise.h"
 #include "getopt.h"
 #include "quote.h"
 #include "quotearg.h"
@@ -377,6 +378,8 @@ main (int argc, char **argv)
           error (0, 0, _("extra operand %s"), quote (operand[1]));
           usage (EXIT_FAILURE);
         }
+
+      fadvise (stdin, FADVISE_SEQUENTIAL);
 
       n_lines = read_input (stdin, eolbyte, &input_lines);
       line = input_lines;

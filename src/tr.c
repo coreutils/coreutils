@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "xfreopen.h"
@@ -1753,6 +1754,8 @@ main (int argc, char **argv)
     xfreopen (NULL, "rb", stdin);
   if (O_BINARY && ! isatty (STDOUT_FILENO))
     xfreopen (NULL, "wb", stdout);
+
+  fadvise (stdin, FADVISE_SEQUENTIAL);
 
   if (squeeze_repeats && non_option_args == 1)
     {

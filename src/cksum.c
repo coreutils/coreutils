@@ -43,6 +43,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include "system.h"
+#include "fadvise.h"
 #include "xfreopen.h"
 
 #ifdef CRCTAB
@@ -204,6 +205,8 @@ cksum (const char *file, bool print_name)
           return false;
         }
     }
+
+  fadvise (fp, FADVISE_SEQUENTIAL);
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
     {

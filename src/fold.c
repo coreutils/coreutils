@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -141,6 +142,8 @@ fold_file (char const *filename, size_t width)
       error (0, errno, "%s", filename);
       return false;
     }
+
+  fadvise (stdin, FADVISE_SEQUENTIAL);
 
   while ((c = getc (istream)) != EOF)
     {

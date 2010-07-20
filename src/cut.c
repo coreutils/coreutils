@@ -31,6 +31,7 @@
 #include "system.h"
 
 #include "error.h"
+#include "fadvise.h"
 #include "getndelim2.h"
 #include "hash.h"
 #include "quote.h"
@@ -732,6 +733,8 @@ cut_file (char const *file)
           return false;
         }
     }
+
+  fadvise (stream, FADVISE_SEQUENTIAL);
 
   cut_stream (stream);
 

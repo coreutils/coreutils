@@ -29,6 +29,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "readtokens.h"
 #include "stdio--.h"
@@ -443,6 +444,8 @@ tsort (const char *file)
 
   if (!is_stdin && ! freopen (file, "r", stdin))
     error (EXIT_FAILURE, errno, "%s", file);
+
+  fadvise (stdin, FADVISE_SEQUENTIAL);
 
   init_tokenbuffer (&tokenbuffer);
 

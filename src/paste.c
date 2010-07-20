@@ -42,6 +42,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quotearg.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -211,6 +212,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
             error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
           else if (fileno (fileptr[files_open]) == STDIN_FILENO)
             opened_stdin = true;
+          fadvise (fileptr[files_open], FADVISE_SEQUENTIAL);
         }
     }
 
@@ -367,6 +369,7 @@ paste_serial (size_t nfiles, char **fnamptr)
               ok = false;
               continue;
             }
+          fadvise (fileptr, FADVISE_SEQUENTIAL);
         }
 
       delimptr = delims;	/* Set up for delimiter string. */

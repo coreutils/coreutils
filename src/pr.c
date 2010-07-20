@@ -314,6 +314,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "hard-locale.h"
 #include "mbswidth.h"
 #include "quote.h"
@@ -1507,6 +1508,7 @@ open_file (char *name, COLUMN *p)
         error (0, errno, "%s", name);
       return false;
     }
+  fadvise (p->fp, FADVISE_SEQUENTIAL);
   p->status = OPEN;
   p->full_page_printed = false;
   ++total_files;

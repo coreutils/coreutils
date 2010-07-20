@@ -29,6 +29,7 @@
 #include "system.h"
 #include "argv-iter.h"
 #include "error.h"
+#include "fadvise.h"
 #include "mbchar.h"
 #include "physmem.h"
 #include "quote.h"
@@ -211,6 +212,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
     }
   count_complicated = print_words || print_linelength;
 
+  /* Advise the kernel of our access pattern only if we will read().  */
+  if (!count_bytes || count_chars || print_lines || count_complicated)
+    fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
+
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
      to get its `size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
@@ -238,6 +243,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
         }
       else
         {
+          fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
           while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
             {
               if (bytes_read == SAFE_READ_ERROR)

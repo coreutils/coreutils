@@ -25,6 +25,7 @@
 #include "argmatch.h"
 #include "diacrit.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "regex.h"
@@ -537,6 +538,8 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
   if (S_ISREG (stat_block.st_mode))
     {
       size_t in_memory_size;
+
+      fdadvise (file_handle, 0, 0, FADVISE_SEQUENTIAL);
 
       block->start = xmalloc ((size_t) stat_block.st_size);
 

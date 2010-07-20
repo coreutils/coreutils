@@ -27,6 +27,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -463,6 +464,7 @@ set_prefix (char *p)
 static void
 fmt (FILE *f)
 {
+  fadvise (f, FADVISE_SEQUENTIAL);
   tabs = false;
   other_indent = 0;
   next_char = get_prefix (f);

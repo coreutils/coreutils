@@ -34,6 +34,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "full-write.h"
 #include "quote.h"
 #include "safe-read.h"
@@ -699,6 +700,8 @@ main (int argc, char **argv)
           goto contin;
         }
       insize = io_blksize (stat_buf);
+
+      fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
       /* Compare the device and i-node numbers of this input file with
          the corresponding values of the (output file associated with)

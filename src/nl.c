@@ -28,6 +28,7 @@
 #include <regex.h>
 
 #include "error.h"
+#include "fadvise.h"
 #include "linebuffer.h"
 #include "quote.h"
 #include "xstrtol.h"
@@ -438,6 +439,8 @@ nl_file (char const *file)
           return false;
         }
     }
+
+  fadvise (stream, FADVISE_SEQUENTIAL);
 
   process_file (stream);
 

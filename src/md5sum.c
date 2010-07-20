@@ -36,6 +36,7 @@
 # include "sha512.h"
 #endif
 #include "error.h"
+#include "fadvise.h"
 #include "stdio--.h"
 #include "xfreopen.h"
 
@@ -405,6 +406,8 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
           return false;
         }
     }
+
+  fadvise (fp, FADVISE_SEQUENTIAL);
 
   err = DIGEST_STREAM (fp, bin_result);
   if (err)

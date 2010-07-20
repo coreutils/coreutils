@@ -41,6 +41,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "fadvise.h"
 #include "quote.h"
 #include "xstrndup.h"
 
@@ -262,13 +263,14 @@ next_file (FILE *fp)
       if (STREQ (file, "-"))
         {
           have_read_stdin = true;
-          prev_file = file;
-          return stdin;
+          fp = stdin;
         }
-      fp = fopen (file, "r");
+      else
+        fp = fopen (file, "r");
       if (fp)
         {
           prev_file = file;
+          fadvise (fp, FADVISE_SEQUENTIAL);
           return fp;
         }
       error (0, errno, "%s", file);
