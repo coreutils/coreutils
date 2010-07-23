@@ -1,4 +1,4 @@
-/* Bob Jenkins's cryptographic random number generator, ISAAC.
+/* Bob Jenkins's cryptographic random number generators, ISAAC and ISAAC64.
 
    Copyright (C) 1999-2005, 2009-2010 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
@@ -16,29 +16,50 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-   Written by Colin Plumb.  */
+   Written by Colin Plumb and Paul Eggert.  */
 
-#ifndef RAND_ISAAC_H
-# define RAND_ISAAC_H
+#ifndef _GL_RAND_ISAAC_H
+#define _GL_RAND_ISAAC_H
 
-# include <stddef.h>
-# include <stdint.h>
+#include <stddef.h>
+#include <stdint.h>
 
-/* Size of the state tables to use.  ISAAC_LOG should be at least 3,
+/* Log base 2 of the number of useful bits in an ISAAC word.  It must
+   be either 5 or 6.  By default, this uses a value that should be
+   faster for this architecture.  */
+#ifndef ISAAC_BITS_LOG
+ #if SIZE_MAX >> 31 >> 31 < 3 /* SIZE_MAX < 2**64 - 1 */
+  #define ISAAC_BITS_LOG 5
+ #else
+  #define ISAAC_BITS_LOG 6
+ #endif
+#endif
+
+/* The number of bits in an ISAAC word.  */
+#define ISAAC_BITS (1 << ISAAC_BITS_LOG)
+
+#if ISAAC_BITS == 32
+  typedef uint_least32_t isaac_word;
+#else
+  typedef uint_least64_t isaac_word;
+#endif
+
+/* Size of the state tables to use.  ISAAC_WORDS_LOG should be at least 3,
    and smaller values give less security.  */
-# define ISAAC_LOG 8
-# define ISAAC_WORDS (1 << ISAAC_LOG)
-# define ISAAC_BYTES (ISAAC_WORDS * sizeof (uint32_t))
+#define ISAAC_WORDS_LOG 8
+#define ISAAC_WORDS (1 << ISAAC_WORDS_LOG)
+#define ISAAC_BYTES (ISAAC_WORDS * sizeof (isaac_word))
 
-/* RNG state variables.  The members of this structure are private.  */
+/* State variables for the random number generator.  The M member
+   should be seeded with nonce data before calling isaac_seed.  The
+   other members are private.  */
 struct isaac_state
   {
-    uint32_t mm[ISAAC_WORDS];	/* Main state array */
-    uint32_t iv[8];		/* Seeding initial vector */
-    uint32_t a, b, c;		/* Extra index variables */
+    isaac_word m[ISAAC_WORDS];	/* Main state array */
+    isaac_word a, b, c;		/* Extra variables */
   };
 
-void isaac_seed (struct isaac_state *, int, size_t);
-void isaac_refill (struct isaac_state *, uint32_t[ISAAC_WORDS]);
+void isaac_seed (struct isaac_state *);
+void isaac_refill (struct isaac_state *, isaac_word[ISAAC_WORDS]);
 
 #endif

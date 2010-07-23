@@ -10,6 +10,7 @@ lib/randread.h
 Depends-on:
 error
 exitfail
+inline
 fopen-safer
 gettimeofday
 quotearg

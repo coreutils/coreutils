@@ -1,4 +1,4 @@
-/* Bob Jenkins's cryptographic random number generator, ISAAC.
+/* Bob Jenkins's cryptographic random number generators, ISAAC and ISAAC64.
 
    Copyright (C) 1999-2006, 2009-2010 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
@@ -16,7 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-   Written by Colin Plumb.  */
+   Written by Colin Plumb and Paul Eggert.  */
 
 /*
  * --------------------------------------------------------------------
@@ -34,59 +34,90 @@
 
 #include "rand-isaac.h"
 
-#include <string.h>
-#include <sys/time.h>
-#include <unistd.h>
+#include <limits.h>
 
-
-/* This index operation is more efficient on many processors */
-#define ind(mm, x) \
-  (* (uint32_t *) ((char *) (mm) \
-                   + ((x) & (ISAAC_WORDS - 1) * sizeof (uint32_t))))
-
-/*
- * The central step.  This uses two temporaries, x and y.  mm is the
- * whole state array, while m is a pointer to the current word.  off is
- * the offset from m to the word ISAAC_WORDS/2 words away in the mm array,
- * i.e. +/- ISAAC_WORDS/2.
- */
-#define isaac_step(mix, a, b, mm, m, off, r) \
-( \
-  a = ((a) ^ (mix)) + (m)[off], \
-  x = *(m), \
-  *(m) = y = ind (mm, x) + (a) + (b), \
-  *(r) = b = ind (mm, (y) >> ISAAC_LOG) + x \
-)
-
-/* Use and update *S to generate random data to fill R.  */
-void
-isaac_refill (struct isaac_state *s, uint32_t r[ISAAC_WORDS])
+/* The minimum of two sizes A and B.  */
+static inline size_t
+min (size_t a, size_t b)
 {
-  uint32_t a, b;		/* Caches of a and b */
-  uint32_t x, y;		/* Temps needed by isaac_step macro */
-  uint32_t *m = s->mm;	/* Pointer into state array */
+  return (a < b ? a : b);
+}
 
-  a = s->a;
-  b = s->b + (++s->c);
+/* A if 32-bit ISAAC, B if 64-bit.  This is a macro, not an inline
+   function, to prevent undefined behavior if the unused argument
+   shifts by more than a word width.  */
+#define IF32(a, b) (ISAAC_BITS == 32 ? (a) : (b))
+
+/* Discard bits outside the desired range.  On typical machines, any
+   decent compiler should optimize this function call away to nothing.
+   But machines with pad bits in integers may need to do more work.  */
+static inline isaac_word
+just (isaac_word a)
+{
+  isaac_word desired_bits = ((isaac_word) 1 << 1 << (ISAAC_BITS - 1)) - 1;
+  return a & desired_bits;
+}
+
+/* The index operation.  On typical machines whose words are exactly
+   the right size, this is optimized to a mask, an addition, and an
+   indirect load.  Atypical machines need more work.  */
+static inline isaac_word
+ind (isaac_word const *m, isaac_word x)
+{
+  return (sizeof *m * CHAR_BIT == ISAAC_BITS
+          ? (* (isaac_word *) ((char *) m
+                               + (x & ((ISAAC_WORDS - 1) * sizeof *m))))
+          : m[(x / (ISAAC_BITS / CHAR_BIT)) & (ISAAC_WORDS - 1)]);
+}
+
+/* Use and update *S to generate random data to fill RESULT.  */
+void
+isaac_refill (struct isaac_state *s, isaac_word result[ISAAC_WORDS])
+{
+  /* Caches of S->a and S->b.  */
+  isaac_word a = s->a;
+  isaac_word b = s->b + (++s->c);
+
+  /* Pointers into state array and into result.  */
+  isaac_word *m = s->m;
+  isaac_word *r = result;
+
+  enum { HALF = ISAAC_WORDS / 2 };
+
+  /* The central step.  S->m is the whole state array, while M is a
+     pointer to the current word.  OFF is the offset from M to the
+     word ISAAC_WORDS/2 words away in the SM array, i.e. +/-
+     ISAAC_WORDS/2.  A and B are state variables, and R the result.
+     This updates A, B, M[I], and R[I].  */
+  #define ISAAC_STEP(i, off, mix)                             \
+    {                                                         \
+      isaac_word x, y;                                        \
+      a = (IF32 (a, 0) ^ (mix)) + m[off + (i)];               \
+      x = m[i];                                               \
+      m[i] = y = ind (s->m, x) + a + b;                       \
+      r[i] = b = just (ind (s->m, y >> ISAAC_WORDS_LOG) + x); \
+    }
 
   do
     {
-      isaac_step (a << 13, a, b, s->mm, m, ISAAC_WORDS / 2, r);
-      isaac_step (a >> 6, a, b, s->mm, m + 1, ISAAC_WORDS / 2, r + 1);
-      isaac_step (a << 2, a, b, s->mm, m + 2, ISAAC_WORDS / 2, r + 2);
-      isaac_step (a >> 16, a, b, s->mm, m + 3, ISAAC_WORDS / 2, r + 3);
+      ISAAC_STEP (0, HALF, IF32 (      a  << 13, ~ (a ^ (a << 21))));
+      ISAAC_STEP (1, HALF, IF32 (just (a) >>  6, a ^ (just (a) >>  5)));
+      ISAAC_STEP (2, HALF, IF32 (      a  <<  2, a ^ (      a  << 12)));
+      ISAAC_STEP (3, HALF, IF32 (just (a) >> 16, a ^ (just (a) >> 33)));
       r += 4;
     }
-  while ((m += 4) < s->mm + ISAAC_WORDS / 2);
+  while ((m += 4) < s->m + HALF);
+
   do
     {
-      isaac_step (a << 13, a, b, s->mm, m, -ISAAC_WORDS / 2, r);
-      isaac_step (a >> 6, a, b, s->mm, m + 1, -ISAAC_WORDS / 2, r + 1);
-      isaac_step (a << 2, a, b, s->mm, m + 2, -ISAAC_WORDS / 2, r + 2);
-      isaac_step (a >> 16, a, b, s->mm, m + 3, -ISAAC_WORDS / 2, r + 3);
+      ISAAC_STEP (0, -HALF, IF32 (      a  << 13, ~ (a ^ (a << 21))));
+      ISAAC_STEP (1, -HALF, IF32 (just (a) >>  6, a ^ (just (a) >>  5)));
+      ISAAC_STEP (2, -HALF, IF32 (      a  <<  2, a ^ (      a  << 12)));
+      ISAAC_STEP (3, -HALF, IF32 (just (a) >> 16, a ^ (just (a) >> 33)));
       r += 4;
     }
-  while ((m += 4) < s->mm + ISAAC_WORDS);
+  while ((m += 4) < s->m + ISAAC_WORDS);
+
   s->a = a;
   s->b = b;
 }
@@ -95,223 +126,133 @@ isaac_refill (struct isaac_state *s, uint32_t r[ISAAC_WORDS])
  * The basic seed-scrambling step for initialization, based on Bob
  * Jenkins' 256-bit hash.
  */
-#define mix(a,b,c,d,e,f,g,h) \
-   (       a ^= b << 11, d += a, \
-   b += c, b ^= c >>  2, e += b, \
-   c += d, c ^= d <<  8, f += c, \
-   d += e, d ^= e >> 16, g += d, \
-   e += f, e ^= f << 10, h += e, \
-   f += g, f ^= g >>  4, a += f, \
-   g += h, g ^= h <<  8, b += g, \
-   h += a, h ^= a >>  9, c += h, \
-   a += b                        )
+#if ISAAC_BITS == 32
+ #define mix(a, b, c, d, e, f, g, h)       \
+    {                                      \
+              a ^=       b  << 11; d += a; \
+      b += c; b ^= just (c) >>  2; e += b; \
+      c += d; c ^=       d  <<  8; f += c; \
+      d += e; d ^= just (e) >> 16; g += d; \
+      e += f; e ^=       f  << 10; h += e; \
+      f += g; f ^= just (g) >>  4; a += f; \
+      g += h; g ^=       h  <<  8; b += g; \
+      h += a; h ^= just (a) >>  9; c += h; \
+      a += b;                              \
+    }
+#else
+ #define mix(a, b, c, d, e, f, g, h)       \
+    {                                      \
+      a -= e; f ^= just (h) >>  9; h += a; \
+      b -= f; g ^=       a  <<  9; a += b; \
+      c -= g; h ^= just (b) >> 23; b += c; \
+      d -= h; a ^=       c  << 15; c += d; \
+      e -= a; b ^= just (d) >> 14; d += e; \
+      f -= b; c ^=       e  << 20; e += f; \
+      g -= c; d ^= just (f) >> 17; f += g; \
+      h -= d; e ^=       g  << 14; g += h; \
+    }
+#endif
+
 
 /* The basic ISAAC initialization pass.  */
-static void
-isaac_mix (struct isaac_state *s, uint32_t const seed[/* ISAAC_WORDS */])
-{
-  int i;
-  uint32_t a = s->iv[0];
-  uint32_t b = s->iv[1];
-  uint32_t c = s->iv[2];
-  uint32_t d = s->iv[3];
-  uint32_t e = s->iv[4];
-  uint32_t f = s->iv[5];
-  uint32_t g = s->iv[6];
-  uint32_t h = s->iv[7];
-
-  for (i = 0; i < ISAAC_WORDS; i += 8)
-    {
-      a += seed[i];
-      b += seed[i + 1];
-      c += seed[i + 2];
-      d += seed[i + 3];
-      e += seed[i + 4];
-      f += seed[i + 5];
-      g += seed[i + 6];
-      h += seed[i + 7];
-
-      mix (a, b, c, d, e, f, g, h);
-
-      s->mm[i] = a;
-      s->mm[i + 1] = b;
-      s->mm[i + 2] = c;
-      s->mm[i + 3] = d;
-      s->mm[i + 4] = e;
-      s->mm[i + 5] = f;
-      s->mm[i + 6] = g;
-      s->mm[i + 7] = h;
-    }
-
-  s->iv[0] = a;
-  s->iv[1] = b;
-  s->iv[2] = c;
-  s->iv[3] = d;
-  s->iv[4] = e;
-  s->iv[5] = f;
-  s->iv[6] = g;
-  s->iv[7] = h;
-}
+#define ISAAC_MIX(s, a, b, c, d, e, f, g, h, seed) \
+  {                                                \
+    int i;                                         \
+                                                   \
+    for (i = 0; i < ISAAC_WORDS; i += 8)           \
+      {                                            \
+        a += seed[i];                              \
+        b += seed[i + 1];                          \
+        c += seed[i + 2];                          \
+        d += seed[i + 3];                          \
+        e += seed[i + 4];                          \
+        f += seed[i + 5];                          \
+        g += seed[i + 6];                          \
+        h += seed[i + 7];                          \
+        mix (a, b, c, d, e, f, g, h);              \
+        s->m[i] = a;                               \
+        s->m[i + 1] = b;                           \
+        s->m[i + 2] = c;                           \
+        s->m[i + 3] = d;                           \
+        s->m[i + 4] = e;                           \
+        s->m[i + 5] = f;                           \
+        s->m[i + 6] = g;                           \
+        s->m[i + 7] = h;                           \
+      }                                            \
+  }
 
 #if 0 /* Provided for reference only; not used in this code */
 /*
  * Initialize the ISAAC RNG with the given seed material.
  * Its size MUST be a multiple of ISAAC_BYTES, and may be
- * stored in the s->mm array.
+ * stored in the s->m array.
  *
  * This is a generalization of the original ISAAC initialization code
  * to support larger seed sizes.  For seed sizes of 0 and ISAAC_BYTES,
  * it is identical.
  */
 static void
-isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
+isaac_init (struct isaac_state *s, isaac_word const *seed, size_t seedsize)
 {
-  static uint32_t const iv[8] =
-  {
-    0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
-    0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119};
-  int i;
+  isaac_word a, b, c, d, e, f, g, h;
 
-# if 0
-  /* The initialization of iv is a precomputed form of: */
-  for (i = 0; i < 7; i++)
-    iv[i] = 0x9e3779b9;		/* the golden ratio */
-  for (i = 0; i < 4; ++i)	/* scramble it */
-    mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
-# endif
+  a = b = c = d = e = f = g = h =          /* the golden ratio */
+    IF32 (UINT32_C (0x9e3779b9), UINT64_C (0x9e3779b97f4a7c13));
+  for (int i = 0; i < 4; i++)              /* scramble it */
+    mix (a, b, c, d, e, f, g, h);
   s->a = s->b = s->c = 0;
-
-  for (i = 0; i < 8; i++)
-    s->iv[i] = iv[i];
 
   if (seedsize)
     {
       /* First pass (as in reference ISAAC code) */
-      isaac_mix (s, seed);
+      ISAAC_MIX (s, a, b, c, d, e, f, g, h, seed);
       /* Second and subsequent passes (extension to ISAAC) */
       while (seedsize -= ISAAC_BYTES)
         {
           seed += ISAAC_WORDS;
           for (i = 0; i < ISAAC_WORDS; i++)
-            s->mm[i] += seed[i];
-          isaac_mix (s, s->mm);
+            s->m[i] += seed[i];
+          ISAAC_MIX (s, a, b, c, d, e, f, g, h, s->m);
         }
     }
   else
     {
       /* The no seed case (as in reference ISAAC code) */
       for (i = 0; i < ISAAC_WORDS; i++)
-        s->mm[i] = 0;
+        s->m[i] = 0;
     }
 
   /* Final pass */
-  isaac_mix (s, s->mm);
+  ISAAC_MIX (s, a, b, c, d, e, f, g, h, s->m);
 }
 #endif
 
-/* Initialize *S to a somewhat-random value.  The first SEEDED bytes
-   in S->mm are already seeded with random data.  */
-static void
-isaac_seed_start (struct isaac_state *s, size_t seeded)
+/* Initialize *S to a somewhat-random value, derived from a seed
+   stored in S->m.  */
+void
+isaac_seed (struct isaac_state *s)
 {
-  static uint32_t const iv[8] =
-    {
-      0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
-      0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119
-    };
+  isaac_word a = IF32 (UINT32_C (0x1367df5a), UINT64_C (0x647c4677a2884b7c));
+  isaac_word b = IF32 (UINT32_C (0x95d90059), UINT64_C (0xb9f8b322c73ac862));
+  isaac_word c = IF32 (UINT32_C (0xc3163e4b), UINT64_C (0x8c0ea5053d4712a0));
+  isaac_word d = IF32 (UINT32_C (0x0f421ad8), UINT64_C (0xb29b2e824a595524));
+  isaac_word e = IF32 (UINT32_C (0xd92a4a78), UINT64_C (0x82f053db8355e0ce));
+  isaac_word f = IF32 (UINT32_C (0xa51a3c49), UINT64_C (0x48fe4a0fa5a09315));
+  isaac_word g = IF32 (UINT32_C (0xc4efea1b), UINT64_C (0xae985bf2cbfc89ed));
+  isaac_word h = IF32 (UINT32_C (0x30609119), UINT64_C (0x98f5704f6c44c0ab));
 
 #if 0
-  /* The initialization of iv is a precomputed form of: */
-  int i;
-  for (i = 0; i < 7; i++)
-    iv[i] = 0x9e3779b9;		/* the golden ratio */
-  for (i = 0; i < 4; ++i)	/* scramble it */
-    mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
+  /* The initialization of a through h is a precomputed form of: */
+  a = b = c = d = e = f = g = h =          /* the golden ratio */
+    IF32 (UINT32_C (0x9e3779b9), UINT64_C (0x9e3779b97f4a7c13));
+  for (int i = 0; i < 4; i++)              /* scramble it */
+    mix (a, b, c, d, e, f, g, h);
 #endif
 
-  memset ((char *) s->mm + seeded, 0, sizeof s->mm - seeded);
-  memcpy (s->iv, iv, sizeof s->iv);
+  /* Mix S->m so that every part of the seed affects every part of the
+     state.  */
+  ISAAC_MIX (s, a, b, c, d, e, f, g, h, s->m);
+  ISAAC_MIX (s, a, b, c, d, e, f, g, h, s->m);
 
-  /* s->c gets used for a data pointer during the seeding phase */
-  s->a = s->b = 0;
-  s->c = seeded;
-}
-
-/* Add a buffer of seed material.  */
-static void
-isaac_seed_data (struct isaac_state *s, void const *buffer, size_t size)
-{
-  unsigned char const *buf = buffer;
-  unsigned char *p;
-  size_t avail;
-  size_t i;
-
-  avail = sizeof s->mm - s->c;	/* s->c is used as a write pointer */
-
-  /* Do any full buffers that are necessary */
-  while (size > avail)
-    {
-      p = (unsigned char *) s->mm + s->c;
-      for (i = 0; i < avail; i++)
-        p[i] ^= buf[i];
-      buf += avail;
-      size -= avail;
-      isaac_mix (s, s->mm);
-      s->c = 0;
-      avail = sizeof s->mm;
-    }
-
-  /* And the final partial block */
-  p = (unsigned char *) s->mm + s->c;
-  for (i = 0; i < size; i++)
-    p[i] ^= buf[i];
-  s->c = size;
-}
-
-
-/* End of seeding phase; get everything ready to produce output. */
-static void
-isaac_seed_finish (struct isaac_state *s)
-{
-  isaac_mix (s, s->mm);
-  isaac_mix (s, s->mm);
-  /* Now reinitialize c to start things off right */
-  s->c = 0;
-}
-#define ISAAC_SEED(s,x) isaac_seed_data (s, &(x), sizeof (x))
-
-/* Initialize *S to a somewhat-random value; this starts seeding,
-   seeds with somewhat-random data, and finishes seeding.  If FD is
-   nonnegative, seed by reading at most BYTES_BOUNDS bytes from it.  */
-void
-isaac_seed (struct isaac_state *s, int fd, size_t bytes_bound)
-{
-  /* Get some data from FD if available.  */
-  ssize_t seeded = 0;
-  if (0 <= fd)
-    {
-      if (sizeof s->mm < bytes_bound)
-        bytes_bound = sizeof s->mm;
-      seeded = read (fd, s->mm, bytes_bound);
-      if (seeded < 0)
-        seeded = 0;
-    }
-
-  isaac_seed_start (s, seeded);
-
-  if (seeded < sizeof s->mm)
-    {
-      { pid_t t = getpid ();   ISAAC_SEED (s, t); }
-      { pid_t t = getppid ();  ISAAC_SEED (s, t); }
-      { uid_t t = getuid ();   ISAAC_SEED (s, t); }
-      { gid_t t = getgid ();   ISAAC_SEED (s, t); }
-
-      {
-        struct timeval t;
-        gettimeofday (&t, NULL);
-        ISAAC_SEED (s, t);
-      }
-    }
-
-  isaac_seed_finish (s);
+  s->a = s->b = s->c = 0;
 }

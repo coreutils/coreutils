@@ -1,0 +1,10 @@
+Files:
+tests/test-rand-isaac.c
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-rand-isaac
+check_PROGRAMS += test-rand-isaac
