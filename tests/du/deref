@@ -1,6 +1,8 @@
 #!/bin/sh
 # prior to coreutils-4.5.3, du -D didn't work in some cases
 # Based on an example from Andreas Schwab and/or Michal Svec.
+# Also, up to coreutils-8.5, du -L sometimes incorrectly
+# counted the space of the followed symlinks.
 
 # Copyright (C) 2002, 2006-2010 Free Software Foundation, Inc.
 
@@ -27,10 +29,24 @@ fi
 mkdir -p a/sub || framework_failure
 ln -s a/sub slink || framework_failure
 touch b || framework_failure
+ln -s .. a/sub/dotdot || framework_failure
+ln -s nowhere dangle || framework_failure
 
 
 # This used to fail with the following diagnostic:
 # du: `b': No such file or directory
 du -sD slink b > /dev/null 2>&1 || fail=1
+
+# This used to fail to report the dangling symlink.
+du -L dangle > /dev/null 2>&1 && fail=1
+
+# du -L used to mess up, either by counting the symlink's disk space itself
+# (-L should follow symlinks, not count their space)
+# or (briefly in July 2010) by omitting the entry for "a".
+du_L_output=`du -L a` || fail=1
+du_lL_output=`du -lL a` || fail=1
+du_x_output=`du --exclude=dotdot a` || fail=1
+test "X$du_L_output" = "X$du_x_output" || fail=1
+test "X$du_lL_output" = "X$du_x_output" || fail=1
 
 Exit $fail

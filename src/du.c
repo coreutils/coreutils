@@ -392,7 +392,7 @@ print_size (const struct duinfo *pdui, const char *string)
 static bool
 process_file (FTS *fts, FTSENT *ent)
 {
-  bool ok;
+  bool ok = true;
   struct duinfo dui;
   struct duinfo dui_to_print;
   size_t level;
@@ -407,78 +407,85 @@ process_file (FTS *fts, FTSENT *ent)
      The sum of the sizes of all entries in the hierarchy at or below the
      directory at the specified level.  */
   static struct dulevel *dulvl;
-  bool print = true;
 
   const char *file = ent->fts_path;
   const struct stat *sb = ent->fts_statp;
-  bool skip;
+  int info = ent->fts_info;
 
-  /* If necessary, set FTS_SKIP before returning.  */
-  skip = excluded_file_name (exclude, file);
-  if (skip)
-    fts_set (fts, ent, FTS_SKIP);
-
-  switch (ent->fts_info)
+  if (info == FTS_DNR)
     {
-    case FTS_NS:
-      error (0, ent->fts_errno, _("cannot access %s"), quote (file));
-      return false;
-
-    case FTS_ERR:
-      /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
-      error (0, ent->fts_errno, "%s", quote (file));
-      return false;
-
-    case FTS_DNR:
-      /* Don't return just yet, since although the directory is not readable,
-         we were able to stat it, so we do have a size.  */
+      /* An error occurred, but the size is known, so count it.  */
       error (0, ent->fts_errno, _("cannot read directory %s"), quote (file));
       ok = false;
-      break;
-
-    case FTS_DC:		/* directory that causes cycles */
-      if (cycle_warning_required (fts, ent))
+    }
+  else if (info != FTS_DP)
+    {
+      bool excluded = excluded_file_name (exclude, file);
+      if (! excluded)
         {
-          emit_cycle_warning (file);
-          return false;
+          /* Make the stat buffer *SB valid, or fail noisily.  */
+
+          if (info == FTS_NSOK)
+            {
+              fts_set (fts, ent, FTS_AGAIN);
+              FTSENT const *e = fts_read (fts);
+              assert (e == ent);
+              info = ent->fts_info;
+            }
+
+          if (info == FTS_NS || info == FTS_SLNONE)
+            {
+              error (0, ent->fts_errno, _("cannot access %s"), quote (file));
+              return false;
+            }
         }
-      ok = true;
-      break;
 
-    default:
-      ok = true;
-      break;
+      if (excluded
+          || (! opt_count_all
+              && (hash_all || (! S_ISDIR (sb->st_mode) && 1 < sb->st_nlink))
+              && ! hash_ins (sb->st_ino, sb->st_dev)))
+        {
+          /* If ignoring a directory in preorder, skip its children.
+             Ignore the next fts_read output too, as it's a postorder
+             visit to the same directory.  */
+          if (info == FTS_D)
+            {
+              fts_set (fts, ent, FTS_SKIP);
+              FTSENT const *e = fts_read (fts);
+              assert (e == ent);
+            }
+
+          return true;
+        }
+
+      switch (info)
+        {
+        case FTS_D:
+          return true;
+
+        case FTS_ERR:
+          /* An error occurred, but the size is known, so count it.  */
+          error (0, ent->fts_errno, "%s", quote (file));
+          ok = false;
+          break;
+
+        case FTS_DC:
+          if (cycle_warning_required (fts, ent))
+            {
+              emit_cycle_warning (file);
+              return false;
+            }
+          return true;
+        }
     }
 
-  /* If this is the first (pre-order) encounter with a directory,
-     or if it's the second encounter for a skipped directory, then
-     return right away.  */
-  if (ent->fts_info == FTS_D || skip)
-    return ok;
-
-  /* If the file is being excluded or if it has already been counted
-     via a hard link, then don't let it contribute to the sums.  */
-  if (skip
-      || (!opt_count_all
-          && (hash_all || (! S_ISDIR (sb->st_mode) && 1 < sb->st_nlink))
-          && ! hash_ins (sb->st_ino, sb->st_dev)))
-    {
-      /* Note that we must not simply return here.
-         We still have to update prev_level and maybe propagate
-         some sums up the hierarchy.  */
-      duinfo_init (&dui);
-      print = false;
-    }
-  else
-    {
-      duinfo_set (&dui,
-                  (apparent_size
-                   ? sb->st_size
-                   : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
-                  (time_type == time_mtime ? get_stat_mtime (sb)
-                   : time_type == time_atime ? get_stat_atime (sb)
-                   : get_stat_ctime (sb)));
-    }
+  duinfo_set (&dui,
+              (apparent_size
+               ? sb->st_size
+               : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
+              (time_type == time_mtime ? get_stat_mtime (sb)
+               : time_type == time_atime ? get_stat_atime (sb)
+               : get_stat_ctime (sb)));
 
   level = ent->fts_level;
   dui_to_print = dui;
@@ -535,20 +542,14 @@ process_file (FTS *fts, FTSENT *ent)
 
   /* Let the size of a directory entry contribute to the total for the
      containing directory, unless --separate-dirs (-S) is specified.  */
-  if ( ! (opt_separate_dirs && IS_DIR_TYPE (ent->fts_info)))
+  if (! (opt_separate_dirs && IS_DIR_TYPE (info)))
     duinfo_add (&dulvl[level].ent, &dui);
 
   /* Even if this directory is unreadable or we can't chdir into it,
      do let its size contribute to the total. */
   duinfo_add (&tot_dui, &dui);
 
-  /* If we're not counting an entry, e.g., because it's a hard link
-     to a file we've already counted (and --count-links), then don't
-     print a line for it.  */
-  if (!print)
-    return ok;
-
-  if ((IS_DIR_TYPE (ent->fts_info) && level <= max_depth)
+  if ((IS_DIR_TYPE (info) && level <= max_depth)
       || ((opt_all && level <= max_depth) || level == 0))
     print_size (&dui_to_print, file);
 
@@ -608,7 +609,7 @@ main (int argc, char **argv)
   char *files_from = NULL;
 
   /* Bit flags that control how fts works.  */
-  int bit_flags = FTS_TIGHT_CYCLE_CHECK | FTS_DEFER_STAT;
+  int bit_flags = FTS_NOSTAT;
 
   /* Select one of the three FTS_ options that control if/when
      to follow a symlink.  */
@@ -901,6 +902,11 @@ main (int argc, char **argv)
   di_set = di_set_alloc ();
   if (!di_set)
     xalloc_die ();
+
+  /* If not hashing everything, process_file won't find cycles on its
+     own, so ask fts_read to check for them accurately.  */
+  if (opt_count_all || ! hash_all)
+    bit_flags |= FTS_TIGHT_CYCLE_CHECK;
 
   bit_flags |= symlink_deref_bits;
   static char *temp_argv[] = { NULL, NULL };
