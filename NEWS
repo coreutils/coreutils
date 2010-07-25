@@ -8,6 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   link count is 1, even if the file is reached multiple times by
   following symlinks or via multiple arguments.
 
+  du -H and -L now consistently count pointed-to files instead of
+  symbolic links, and correctly diagnose dangling symlinks.
+
 ** New features
 
   cp now accepts the --attributes-only option to not copy file data,
