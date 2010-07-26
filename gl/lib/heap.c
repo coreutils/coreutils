@@ -24,17 +24,17 @@
 #include "stdlib--.h"
 #include "xalloc.h"
 
-static int heap_default_compare (const void *, const void *);
+static int heap_default_compare (void const *, void const *);
 static size_t heapify_down (void **, size_t, size_t,
-                            int (*)(const void *, const void *));
+                            int (*) (void const *, void const *));
 static void heapify_up (void **, size_t,
-                        int (*)(const void *, const void *));
+                        int (*) (void const *, void const *));
 
 
 /* Allocate memory for the heap. */
 
 struct heap *
-heap_alloc (int (*compare)(const void *, const void *), size_t n_reserve)
+heap_alloc (int (*compare) (void const *, void const *), size_t n_reserve)
 {
   struct heap *heap = xmalloc (sizeof *heap);
 
@@ -53,7 +53,7 @@ heap_alloc (int (*compare)(const void *, const void *), size_t n_reserve)
 
 
 static int
-heap_default_compare (const void *a, const void *b)
+heap_default_compare (void const *a, void const *b)
 {
   return 0;
 }
@@ -100,7 +100,7 @@ heap_remove_top (struct heap *heap)
 
 static size_t
 heapify_down (void **array, size_t count, size_t initial,
-              int (*compare)(const void *, const void *))
+              int (*compare) (void const *, void const *))
 {
   void *element = array[initial];
 
@@ -127,7 +127,7 @@ heapify_down (void **array, size_t count, size_t initial,
 
 static void
 heapify_up (void **array, size_t count,
-            int (*compare)(const void *, const void *))
+            int (*compare) (void const *, void const *))
 {
   size_t k = count;
   void *new_element = array[k];

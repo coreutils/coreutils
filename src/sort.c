@@ -638,16 +638,16 @@ struct procnode
 };
 
 static size_t
-proctab_hasher (const void *entry, size_t tabsize)
+proctab_hasher (void const *entry, size_t tabsize)
 {
-  const struct procnode *node = entry;
+  struct procnode const *node = entry;
   return node->pid % tabsize;
 }
 
 static bool
-proctab_comparator (const void *e1, const void *e2)
+proctab_comparator (void const *e1, void const *e2)
 {
-  const struct procnode *n1 = e1, *n2 = e2;
+  struct procnode const *n1 = e1, *n2 = e2;
   return n1->pid == n2->pid;
 }
 
@@ -904,7 +904,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    however when the files are unlinked.  */
 
 static FILE *
-stream_open (const char *file, const char *how)
+stream_open (char const *file, char const *how)
 {
   if (!file)
     return stdout;
@@ -928,7 +928,7 @@ stream_open (const char *file, const char *how)
    failure.  */
 
 static FILE *
-xfopen (const char *file, const char *how)
+xfopen (char const *file, char const *how)
  {
   FILE *fp = stream_open (file, how);
   if (!fp)
@@ -1109,7 +1109,7 @@ create_temp (FILE **pfp, pid_t *ppid)
    kind of failure.  */
 
 static FILE *
-open_temp (const char *name, pid_t pid)
+open_temp (char const *name, pid_t pid)
 {
   int tempfd, pipefds[2];
   FILE *fp = NULL;
@@ -1171,7 +1171,7 @@ add_temp_dir (char const *dir)
 /* Remove NAME from the list of temporary files.  */
 
 static void
-zaptemp (const char *name)
+zaptemp (char const *name)
 {
   struct tempnode *volatile *pnode;
   struct tempnode *node;
@@ -1201,7 +1201,7 @@ zaptemp (const char *name)
 #if HAVE_NL_LANGINFO
 
 static int
-struct_month_cmp (const void *m1, const void *m2)
+struct_month_cmp (void const *m1, void const *m2)
 {
   struct month const *month1 = m1;
   struct month const *month2 = m2;
@@ -1534,7 +1534,7 @@ buffer_linelim (struct buffer const *buf)
    by KEY in LINE. */
 
 static char *
-begfield (const struct line *line, const struct keyfield *key)
+begfield (struct line const *line, struct keyfield const *key)
 {
   char *ptr = line->text, *lim = ptr + line->length - 1;
   size_t sword = key->sword;
@@ -1576,7 +1576,7 @@ begfield (const struct line *line, const struct keyfield *key)
    in LINE specified by KEY. */
 
 static char *
-limfield (const struct line *line, const struct keyfield *key)
+limfield (struct line const *line, struct keyfield const *key)
 {
   char *ptr = line->text, *lim = ptr + line->length - 1;
   size_t eword = key->eword, echar = key->echar;
@@ -1815,9 +1815,9 @@ check_mixed_SI_IEC (char prefix, struct keyfield *key)
    Negative numbers return a negative unit order.  */
 
 static int
-find_unit_order (const char *number, struct keyfield *key, char const **endptr)
+find_unit_order (char const *number, struct keyfield *key, char const **endptr)
 {
-  static const char orders [UCHAR_LIM] =
+  static char const orders[UCHAR_LIM] =
     {
 #if SOME_DAY_WE_WILL_REQUIRE_C99
       ['K']=1, ['M']=2, ['G']=3, ['T']=4, ['P']=5, ['E']=6, ['Z']=7, ['Y']=8,
@@ -1841,7 +1841,7 @@ find_unit_order (const char *number, struct keyfield *key, char const **endptr)
 #endif
     };
 
-  const unsigned char *p = number;
+  unsigned char const *p = number;
 
   int sign = 1;
 
@@ -1888,7 +1888,7 @@ find_unit_order (const char *number, struct keyfield *key, char const **endptr)
    i.e. input will never have both 6000K and 5M.  */
 
 static int
-human_numcompare (const char *a, const char *b, struct keyfield *key,
+human_numcompare (char const *a, char const *b, struct keyfield *key,
                   char const **ea)
 {
   while (blanks[to_uchar (*a)])
@@ -1909,7 +1909,7 @@ human_numcompare (const char *a, const char *b, struct keyfield *key,
    hideously fast. */
 
 static int
-numcompare (const char *a, const char *b, char const **ea)
+numcompare (char const *a, char const *b, char const **ea)
 {
   while (blanks[to_uchar (*a)])
     a++;
@@ -1930,7 +1930,7 @@ numcompare (const char *a, const char *b, char const **ea)
 }
 
 static int
-general_numcompare (const char *sa, const char *sb, char const **ea)
+general_numcompare (char const *sa, char const *sb, char const **ea)
 {
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
@@ -2139,7 +2139,7 @@ compare_version (char *restrict texta, size_t lena,
    FIXME: Should we generally be counting non printable chars?  */
 
 static size_t
-count_tabs (char const *text, const size_t len)
+count_tabs (char const *text, size_t len)
 {
   size_t tabs = 0;
   size_t tlen = strnlen (text, len);
@@ -2365,7 +2365,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
    are no more keys or a difference is found. */
 
 static int
-keycompare (const struct line *a, const struct line *b, bool show_debug)
+keycompare (struct line const *a, struct line const *b, bool show_debug)
 {
   struct keyfield *key = keylist;
 
@@ -2588,7 +2588,7 @@ keycompare (const struct line *a, const struct line *b, bool show_debug)
    depending on whether A compares less than, equal to, or greater than B. */
 
 static int
-compare (const struct line *a, const struct line *b, bool show_debug)
+compare (struct line const *a, struct line const *b, bool show_debug)
 {
   int diff;
   size_t alen, blen;
@@ -3105,10 +3105,10 @@ sequential_sort (struct line *restrict lines, size_t nlines,
    lines has priority. */
 
 static int
-compare_nodes (const void *a, const void *b)
+compare_nodes (void const *a, void const *b)
 {
-  const struct merge_node *nodea = (const struct merge_node *) a;
-  const struct merge_node *nodeb = (const struct merge_node *) b;
+  struct merge_node const *nodea = (struct merge_node const *) a;
+  struct merge_node const *nodeb = (struct merge_node const *) b;
   if (nodea->level == nodeb->level)
       return (nodea->nlo + nodea->nhi) < (nodeb->nlo + nodeb->nhi);
   return nodea->level < nodeb->level;
@@ -3120,7 +3120,7 @@ compare_nodes (const void *a, const void *b)
    number of processors.  */
 
 static inline void
-lock_node (struct merge_node *const restrict node)
+lock_node (struct merge_node *restrict node)
 {
   pthread_spin_lock (node->lock);
 }
@@ -3128,7 +3128,7 @@ lock_node (struct merge_node *const restrict node)
 /* Unlock a merge tree NODE. */
 
 static inline void
-unlock_node (struct merge_node *const restrict node)
+unlock_node (struct merge_node *restrict node)
 {
   pthread_spin_unlock (node->lock);
 }
@@ -3136,7 +3136,7 @@ unlock_node (struct merge_node *const restrict node)
 /* Destroy merge QUEUE. */
 
 static inline void
-queue_destroy (struct merge_node_queue *const restrict queue)
+queue_destroy (struct merge_node_queue *restrict queue)
 {
   heap_free (queue->priority_queue);
   pthread_cond_destroy (&queue->cond);
@@ -3149,7 +3149,7 @@ queue_destroy (struct merge_node_queue *const restrict queue)
    heap, RESERVE should be 2 * NTHREADS. */
 
 static inline void
-queue_init (struct merge_node_queue *const restrict queue, size_t reserve)
+queue_init (struct merge_node_queue *restrict queue, size_t reserve)
 {
   queue->priority_queue = (struct heap *) heap_alloc (compare_nodes, reserve);
   pthread_mutex_init (&queue->mutex, NULL);
@@ -3160,8 +3160,8 @@ queue_init (struct merge_node_queue *const restrict queue, size_t reserve)
    or does not need to lock NODE. */
 
 static inline void
-queue_insert (struct merge_node_queue *const restrict queue,
-              struct merge_node *const restrict node)
+queue_insert (struct merge_node_queue *restrict queue,
+              struct merge_node *restrict node)
 {
   pthread_mutex_lock (&queue->mutex);
   heap_insert (queue->priority_queue, node);
@@ -3173,7 +3173,7 @@ queue_insert (struct merge_node_queue *const restrict queue,
 /* Pop NODE off priority QUEUE. Guarantee a non-null, spinlocked NODE. */
 
 static inline struct merge_node *
-queue_pop (struct merge_node_queue *const restrict queue)
+queue_pop (struct merge_node_queue *restrict queue)
 {
   struct merge_node *node = NULL;
 
@@ -3200,10 +3200,10 @@ queue_pop (struct merge_node_queue *const restrict queue)
    thus is only appropriate for internal sort. */
 
 static inline void
-write_unique (struct line *const restrict line, FILE *tfp,
-              const char *temp_output)
+write_unique (struct line const *restrict line, FILE *tfp,
+              char const *temp_output)
 {
-  static struct line *saved = NULL;
+  static struct line const *saved = NULL;
 
   if (!unique)
     write_bytes (line, tfp, temp_output);
@@ -3218,8 +3218,8 @@ write_unique (struct line *const restrict line, FILE *tfp,
    merge tree, up to a maximum specified by MAX_MERGE. */
 
 static inline size_t
-mergelines_node (struct merge_node *const restrict node, size_t total_lines,
-                 FILE *tfp, const char *temp_output)
+mergelines_node (struct merge_node *restrict node, size_t total_lines,
+                 FILE *tfp, char const *temp_output)
 {
   struct line *lo_orig = node->lo;
   struct line *hi_orig = node->hi;
@@ -3285,8 +3285,7 @@ mergelines_node (struct merge_node *const restrict node, size_t total_lines,
 /* Insert NODE into QUEUE if it passes insertion checks. */
 
 static inline void
-check_insert (struct merge_node *node,
-              struct merge_node_queue *const restrict queue)
+check_insert (struct merge_node *node, struct merge_node_queue *restrict queue)
 {
   size_t lo_avail = node->lo - node->end_lo;
   size_t hi_avail = node->hi - node->end_hi;
@@ -3306,8 +3305,8 @@ check_insert (struct merge_node *node,
 /* Update parent merge tree NODE. */
 
 static inline void
-update_parent (struct merge_node *const restrict node, size_t merged,
-               struct merge_node_queue *const restrict queue)
+update_parent (struct merge_node *restrict node, size_t merged,
+               struct merge_node_queue *restrict queue)
 {
   if (node->level > MERGE_ROOT)
     {
@@ -3328,8 +3327,8 @@ update_parent (struct merge_node *const restrict node, size_t merged,
    some of those lines, until the MERGE_END node is popped. */
 
 static void
-merge_loop (struct merge_node_queue *const restrict queue,
-            const size_t total_lines, FILE *tfp, const char *temp_output)
+merge_loop (struct merge_node_queue *restrict queue,
+            size_t total_lines, FILE *tfp, char const *temp_output)
 {
   while (1)
     {
@@ -3353,10 +3352,10 @@ merge_loop (struct merge_node_queue *const restrict queue,
 
 
 static void sortlines (struct line *restrict, struct line *restrict,
-                       unsigned long int, const size_t,
-                       struct merge_node *const restrict, bool,
-                       struct merge_node_queue *const restrict,
-                       FILE *, const char *);
+                       unsigned long int, size_t,
+                       struct merge_node *restrict, bool,
+                       struct merge_node_queue *restrict,
+                       FILE *, char const *);
 
 /* Thread arguments for sortlines_thread. */
 
@@ -3365,12 +3364,12 @@ struct thread_args
   struct line *lines;
   struct line *dest;
   unsigned long int nthreads;
-  const size_t total_lines;
+  size_t const total_lines;
   struct merge_node *const restrict parent;
   bool lo_child;
   struct merge_node_queue *const restrict merge_queue;
   FILE *tfp;
-  const char *output_temp;
+  char const *output_temp;
 };
 
 /* Like sortlines, except with a signature acceptable to pthread_create.  */
@@ -3408,10 +3407,10 @@ sortlines_thread (void *data)
 
 static void
 sortlines (struct line *restrict lines, struct line *restrict dest,
-           unsigned long int nthreads, const size_t total_lines,
-           struct merge_node *const restrict parent, bool lo_child,
-           struct merge_node_queue *const restrict merge_queue,
-           FILE *tfp, const char *temp_output)
+           unsigned long int nthreads, size_t total_lines,
+           struct merge_node *restrict parent, bool lo_child,
+           struct merge_node_queue *restrict merge_queue,
+           FILE *tfp, char const *temp_output)
 {
   /* Create merge tree NODE. */
   size_t nlines = (lo_child)? parent->nlo : parent->nhi;
@@ -3890,7 +3889,7 @@ sighandler (int sig)
    BLANKTYPE is the kind of blanks that 'b' should skip. */
 
 static char *
-set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
+set_ordering (char const *s, struct keyfield *key, enum blanktype blanktype)
 {
   while (*s)
     {
