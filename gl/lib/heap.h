@@ -20,14 +20,6 @@
 
 #include <stddef.h>
 
-struct heap
-{
-  void **array;     /* array[0] is not used */
-  size_t capacity;  /* Array size */
-  size_t count;     /* Used as index to last element. Also is num of items. */
-  int (*compare) (void const *, void const *);
-};
-
 struct heap *heap_alloc (int (*) (void const *, void const *), size_t);
 void heap_free (struct heap *);
 int heap_insert (struct heap *heap, void *item);

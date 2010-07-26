@@ -30,6 +30,13 @@ static size_t heapify_down (void **, size_t, size_t,
 static void heapify_up (void **, size_t,
                         int (*) (void const *, void const *));
 
+struct heap
+{
+  void **array;     /* array[0] is not used */
+  size_t capacity;  /* Array size */
+  size_t count;     /* Used as index to last element. Also is num of items. */
+  int (*compare) (void const *, void const *);
+};
 
 /* Allocate memory for the heap. */
 
