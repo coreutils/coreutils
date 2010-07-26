@@ -1818,7 +1818,11 @@ find_unit_order (char const *number, struct keyfield *key, char const **endptr)
 {
   static char const orders[UCHAR_LIM] =
     {
-#if SOME_DAY_WE_WILL_REQUIRE_C99
+#if ! ('K' == 75 && 'M' == 77 && 'G' == 71 && 'T' == 84 && 'P' == 80 \
+       && 'E' == 69 && 'Z' == 90 && 'Y' == 89 && 'k' == 107)
+      /* This initializer syntax works on all C99 hosts.  For now, use
+         it only on non-ASCII hosts, to ease the pain of porting to
+         pre-C99 ASCII hosts.  */
       ['K']=1, ['M']=2, ['G']=3, ['T']=4, ['P']=5, ['E']=6, ['Z']=7, ['Y']=8,
       ['k']=1,
 #else
