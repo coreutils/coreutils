@@ -1236,7 +1236,7 @@ inittables (void)
           size_t j, k;
           char *name;
 
-          s = (char *) nl_langinfo (ABMON_1 + i);
+          s = nl_langinfo (ABMON_1 + i);
           s_len = strlen (s);
           monthtab[i].name = name = xmalloc (s_len + 1);
           monthtab[i].val = i + 1;
@@ -1246,8 +1246,7 @@ inittables (void)
               name[k++] = fold_toupper[to_uchar (s[j])];
           name[k] = '\0';
         }
-      qsort ((void *) monthtab, MONTHS_PER_YEAR,
-             sizeof *monthtab, struct_month_cmp);
+      qsort (monthtab, MONTHS_PER_YEAR, sizeof *monthtab, struct_month_cmp);
     }
 #endif
 }
@@ -1961,7 +1960,7 @@ general_numcompare (char const *sa, char const *sb, char const **ea)
           : a == b ? 0
           : b == b ? -1
           : a == a ? 1
-          : memcmp ((char *) &a, (char *) &b, sizeof a));
+          : memcmp (&a, &b, sizeof a));
 }
 
 /* Return an integer in 1..12 of the month name MONTH with length LEN.
@@ -3107,8 +3106,8 @@ sequential_sort (struct line *restrict lines, size_t nlines,
 static int
 compare_nodes (void const *a, void const *b)
 {
-  struct merge_node const *nodea = (struct merge_node const *) a;
-  struct merge_node const *nodeb = (struct merge_node const *) b;
+  struct merge_node const *nodea = a;
+  struct merge_node const *nodeb = b;
   if (nodea->level == nodeb->level)
       return (nodea->nlo + nodea->nhi) < (nodeb->nlo + nodeb->nhi);
   return nodea->level < nodeb->level;
@@ -3151,7 +3150,7 @@ queue_destroy (struct merge_node_queue *restrict queue)
 static inline void
 queue_init (struct merge_node_queue *restrict queue, size_t reserve)
 {
-  queue->priority_queue = (struct heap *) heap_alloc (compare_nodes, reserve);
+  queue->priority_queue = heap_alloc (compare_nodes, reserve);
   pthread_mutex_init (&queue->mutex, NULL);
   pthread_cond_init (&queue->cond, NULL);
 }
@@ -3181,7 +3180,7 @@ queue_pop (struct merge_node_queue *restrict queue)
     {
       pthread_mutex_lock (&queue->mutex);
       if (queue->priority_queue->count)
-        node = (struct merge_node *) heap_remove_top (queue->priority_queue);
+        node = heap_remove_top (queue->priority_queue);
       else
         {
           /* Go into conditional wait if no NODE is immediately available.  */
