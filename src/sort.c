@@ -3119,7 +3119,7 @@ compare_nodes (void const *a, void const *b)
    number of processors.  */
 
 static inline void
-lock_node (struct merge_node *restrict node)
+lock_node (struct merge_node *node)
 {
   pthread_spin_lock (node->lock);
 }
@@ -3127,7 +3127,7 @@ lock_node (struct merge_node *restrict node)
 /* Unlock a merge tree NODE. */
 
 static inline void
-unlock_node (struct merge_node *restrict node)
+unlock_node (struct merge_node *node)
 {
   pthread_spin_unlock (node->lock);
 }
@@ -3135,7 +3135,7 @@ unlock_node (struct merge_node *restrict node)
 /* Destroy merge QUEUE. */
 
 static inline void
-queue_destroy (struct merge_node_queue *restrict queue)
+queue_destroy (struct merge_node_queue *queue)
 {
   heap_free (queue->priority_queue);
   pthread_cond_destroy (&queue->cond);
@@ -3148,7 +3148,7 @@ queue_destroy (struct merge_node_queue *restrict queue)
    heap, RESERVE should be 2 * NTHREADS. */
 
 static inline void
-queue_init (struct merge_node_queue *restrict queue, size_t reserve)
+queue_init (struct merge_node_queue *queue, size_t reserve)
 {
   queue->priority_queue = heap_alloc (compare_nodes, reserve);
   pthread_mutex_init (&queue->mutex, NULL);
@@ -3159,8 +3159,7 @@ queue_init (struct merge_node_queue *restrict queue, size_t reserve)
    or does not need to lock NODE. */
 
 static inline void
-queue_insert (struct merge_node_queue *restrict queue,
-              struct merge_node *restrict node)
+queue_insert (struct merge_node_queue *queue, struct merge_node *node)
 {
   pthread_mutex_lock (&queue->mutex);
   heap_insert (queue->priority_queue, node);
@@ -3172,7 +3171,7 @@ queue_insert (struct merge_node_queue *restrict queue,
 /* Pop NODE off priority QUEUE. Guarantee a non-null, spinlocked NODE. */
 
 static inline struct merge_node *
-queue_pop (struct merge_node_queue *restrict queue)
+queue_pop (struct merge_node_queue *queue)
 {
   struct merge_node *node = NULL;
 
@@ -3199,8 +3198,7 @@ queue_pop (struct merge_node_queue *restrict queue)
    thus is only appropriate for internal sort. */
 
 static inline void
-write_unique (struct line const *restrict line, FILE *tfp,
-              char const *temp_output)
+write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 {
   static struct line const *saved = NULL;
 
@@ -3284,7 +3282,7 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
 /* Insert NODE into QUEUE if it passes insertion checks. */
 
 static inline void
-check_insert (struct merge_node *node, struct merge_node_queue *restrict queue)
+check_insert (struct merge_node *node, struct merge_node_queue *queue)
 {
   size_t lo_avail = node->lo - node->end_lo;
   size_t hi_avail = node->hi - node->end_hi;
@@ -3304,8 +3302,8 @@ check_insert (struct merge_node *node, struct merge_node_queue *restrict queue)
 /* Update parent merge tree NODE. */
 
 static inline void
-update_parent (struct merge_node *restrict node, size_t merged,
-               struct merge_node_queue *restrict queue)
+update_parent (struct merge_node *node, size_t merged,
+               struct merge_node_queue *queue)
 {
   if (node->level > MERGE_ROOT)
     {
@@ -3326,7 +3324,7 @@ update_parent (struct merge_node *restrict node, size_t merged,
    some of those lines, until the MERGE_END node is popped. */
 
 static void
-merge_loop (struct merge_node_queue *restrict queue,
+merge_loop (struct merge_node_queue *queue,
             size_t total_lines, FILE *tfp, char const *temp_output)
 {
   while (1)
@@ -3352,8 +3350,8 @@ merge_loop (struct merge_node_queue *restrict queue,
 
 static void sortlines (struct line *restrict, struct line *restrict,
                        unsigned long int, size_t,
-                       struct merge_node *restrict, bool,
-                       struct merge_node_queue *restrict,
+                       struct merge_node *, bool,
+                       struct merge_node_queue *,
                        FILE *, char const *);
 
 /* Thread arguments for sortlines_thread. */
@@ -3364,9 +3362,9 @@ struct thread_args
   struct line *dest;
   unsigned long int nthreads;
   size_t const total_lines;
-  struct merge_node *const restrict parent;
+  struct merge_node *const parent;
   bool lo_child;
-  struct merge_node_queue *const restrict merge_queue;
+  struct merge_node_queue *const merge_queue;
   FILE *tfp;
   char const *output_temp;
 };
@@ -3407,8 +3405,8 @@ sortlines_thread (void *data)
 static void
 sortlines (struct line *restrict lines, struct line *restrict dest,
            unsigned long int nthreads, size_t total_lines,
-           struct merge_node *restrict parent, bool lo_child,
-           struct merge_node_queue *restrict merge_queue,
+           struct merge_node *parent, bool lo_child,
+           struct merge_node_queue *merge_queue,
            FILE *tfp, char const *temp_output)
 {
   /* Create merge tree NODE. */
