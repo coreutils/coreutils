@@ -3173,20 +3173,11 @@ queue_insert (struct merge_node_queue *queue, struct merge_node *node)
 static inline struct merge_node *
 queue_pop (struct merge_node_queue *queue)
 {
-  struct merge_node *node = NULL;
-
-  while (!node)
-    {
-      pthread_mutex_lock (&queue->mutex);
-      if (queue->priority_queue->count)
-        node = heap_remove_top (queue->priority_queue);
-      else
-        {
-          /* Go into conditional wait if no NODE is immediately available.  */
-          pthread_cond_wait (&queue->cond, &queue->mutex);
-        }
-      pthread_mutex_unlock (&queue->mutex);
-    }
+  struct merge_node *node;
+  pthread_mutex_lock (&queue->mutex);
+  while (! (node = heap_remove_top (queue->priority_queue)))
+    pthread_cond_wait (&queue->cond, &queue->mutex);
+  pthread_mutex_unlock (&queue->mutex);
   lock_node (node);
   node->queued = false;
   return node;
