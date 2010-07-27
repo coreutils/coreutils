@@ -3007,7 +3007,7 @@ mergefiles (struct sortfile *files, size_t ntemps, size_t nfiles,
    T and LO point just past their respective arrays, and the arrays
    are in reverse order.  NLINES must be at least 2.  */
 
-static inline void
+static void
 mergelines (struct line *restrict t, size_t nlines,
             struct line const *restrict lo)
 {
@@ -3138,7 +3138,7 @@ unlock_node (struct merge_node *node)
 
 /* Destroy merge QUEUE. */
 
-static inline void
+static void
 queue_destroy (struct merge_node_queue *queue)
 {
   heap_free (queue->priority_queue);
@@ -3151,7 +3151,7 @@ queue_destroy (struct merge_node_queue *queue)
    RESERVE should accommodate all of them. Counting a NULL dummy head for the
    heap, RESERVE should be 2 * NTHREADS. */
 
-static inline void
+static void
 queue_init (struct merge_node_queue *queue, size_t reserve)
 {
   queue->priority_queue = heap_alloc (compare_nodes, reserve);
@@ -3162,7 +3162,7 @@ queue_init (struct merge_node_queue *queue, size_t reserve)
 /* Insert NODE into priority QUEUE. Assume caller either holds lock on NODE
    or does not need to lock NODE. */
 
-static inline void
+static void
 queue_insert (struct merge_node_queue *queue, struct merge_node *node)
 {
   pthread_mutex_lock (&queue->mutex);
@@ -3174,7 +3174,7 @@ queue_insert (struct merge_node_queue *queue, struct merge_node *node)
 
 /* Pop NODE off priority QUEUE. Guarantee a non-null, spinlocked NODE. */
 
-static inline struct merge_node *
+static struct merge_node *
 queue_pop (struct merge_node_queue *queue)
 {
   struct merge_node *node;
@@ -3192,7 +3192,7 @@ queue_pop (struct merge_node_queue *queue)
    this function does not actually save the line, nor any key information,
    thus is only appropriate for internal sort. */
 
-static inline void
+static void
 write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 {
   static struct line const *saved = NULL;
@@ -3209,7 +3209,7 @@ write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 /* Merge the lines currently available to a NODE in the binary
    merge tree, up to a maximum specified by MAX_MERGE. */
 
-static inline size_t
+static size_t
 mergelines_node (struct merge_node *restrict node, size_t total_lines,
                  FILE *tfp, char const *temp_output)
 {
@@ -3276,7 +3276,7 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
 
 /* Insert NODE into QUEUE if it passes insertion checks. */
 
-static inline void
+static void
 check_insert (struct merge_node *node, struct merge_node_queue *queue)
 {
   size_t lo_avail = node->lo - node->end_lo;
@@ -3296,7 +3296,7 @@ check_insert (struct merge_node *node, struct merge_node_queue *queue)
 
 /* Update parent merge tree NODE. */
 
-static inline void
+static void
 update_parent (struct merge_node *node, size_t merged,
                struct merge_node_queue *queue)
 {
