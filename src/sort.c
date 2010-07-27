@@ -1727,7 +1727,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
                   buf->eof = true;
                   if (buf->buf == ptrlim)
                     return false;
-                  if (ptrlim[-1] != eol)
+                  if (line_start != ptrlim && ptrlim[-1] != eol)
                     *ptrlim++ = eol;
                 }
             }

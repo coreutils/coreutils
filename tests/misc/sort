@@ -367,6 +367,7 @@ my @Tests =
 # Exercise the code that enlarges the line buffer.  See the thread here:
 # http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/11006
 ['realloc-buf', '-S1', {IN=>'a'x4000 ."\n"}, {OUT=>'a'x4000 ."\n"}],
+['realloc-buf-2', '-S1', {IN=>'a'x5 ."\n"}, {OUT=>'a'x5 ."\n"}],
 
 ["sort-numeric", '--sort=numeric', {IN=>".01\n0\n"}, {OUT=>"0\n.01\n"}],
 ["sort-gennum", '--sort=general-numeric',
