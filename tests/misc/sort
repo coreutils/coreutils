@@ -55,17 +55,17 @@ my @Tests =
 ["n11b", '-s -n -k1,1', {IN=>".010\n.01a\n"}, {OUT=>".010\n.01a\n"}],
 
 # human readable suffixes
-["h1", '-h', {IN=>"Y\nZ\nE\nP\nT\nG\nM\nK\n"},
- {OUT=>"K\nM\nG\nT\nP\nE\nZ\nY\n"}],
+["h1", '-h', {IN=>"1Y\n1Z\n1E\n1P\n1T\n1G\n1M\n1K\n02\n1\n"},
+ {OUT=>"1\n02\n1K\n1M\n1G\n1T\n1P\n1E\n1Z\n1Y\n"}],
 ["h2", '-h', {IN=>"1M\n-2G\n-3K"}, {OUT=>"-2G\n-3K\n1M\n"}],
-["h3", '-h', {IN=>"1Mi\n1M\n"}, {OUT=>""}, {EXIT=>2},
- {ERR=>"$prog: both SI and IEC prefixes present on units\n"}],
-# decimal at end => ignore suffix
-["h4", '-h', {IN=>"1.E\n2.M\n"}, {OUT=>"1.E\n2.M\n"}],
+# check that powers of 1024 beat powers of 1000
+["h3", '-k 2,2h -k 1,1', {IN=>"a 1Mi\nb 1M\n"}, {OUT=>"b 1M\na 1Mi\n"}],
+# decimal at end => allowed
+["h4", '-h', {IN=>"1.E\n2.M\n"}, {OUT=>"2.M\n1.E\n"}],
 # double decimal => ignore suffix
 ["h5", '-h', {IN=>"1..2E\n2..2M\n"}, {OUT=>"1..2E\n2..2M\n"}],
-# illustrate misordering of ambiguous abbreviations
-["h6", '-h', {IN=>"1GiB\n1030MiB\n"}, {OUT=>"1030MiB\n1GiB\n"}],
+# handle inconsistent use of multiplers
+["h6", '-h', {IN=>"1GiB\n1030MiB\n"}, {OUT=>"1GiB\n1030MiB\n"}],
 # check option incompatibility
 ["h7", '-hn', {IN=>""}, {OUT=>""}, {EXIT=>2},
  {ERR=>"$prog: options `-hn' are incompatible\n"}],

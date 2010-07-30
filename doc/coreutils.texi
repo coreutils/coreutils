@@ -3802,12 +3802,19 @@ converting to floating point.
 @opindex --sort
 @cindex human numeric sort
 @vindex LC_NUMERIC
-Sort numerically, as per the @option{--numeric-sort} option below, and in
-addition handle IEC or SI suffixes like MiB, MB etc (@ref{Block size}).
-Note a mixture of IEC and SI suffixes is not supported and will
-be flagged as an error.  Also the numbers must be abbreviated uniformly.
-I.E. values with different precisions like 6000K and 5M will be sorted
-incorrectly.
+Sort numerically, and in addition handle IEC or SI suffixes like MiB,
+MB etc (@ref{Block size}).  Each number consists of optional blanks,
+an optional @samp{-} sign, zero or more digits, optionally followed by
+a decimal-point character and zero or more digits, and optionally
+followed by an IEC or SI suffix.  A number with no digits is treated
+as @samp{0}. The @env{LC_NUMERIC} locale specifies the decimal-point
+character.
+
+Numbers containing differing suffixes are compared using
+floating-point arithmetic, and therefore may not be compared exactly
+due to rounding error.  However, the output of @command{df},
+@command{du}, and @command{ls} contains so few digits before suffixes
+that rounding error is not significant and comparisons are exact.
 
 @item -i
 @itemx --ignore-nonprinting

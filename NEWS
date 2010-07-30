@@ -39,6 +39,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g now uses long doubles for greater range and precision.
 
+  sort -h no longer mishandles comparisons such as 5MiB vs 5MB, or
+  6000K vs 5M.  It uses floating-point arithmetic for these cases,
+  though, which means that the comparisons are not exact.  This is not
+  a problem when sorting the output of df, du, and ls because this
+  output contains so few digits before suffixes.
+
+  sort -h no longer rejects numbers ending in trailing "." or having
+  leading ".".  It no longer accepts numbers with multiple "." or
+  numbers with thousands separators.
+
   sort now uses the number of available processors to parallelize
   the sorting operation.  The number of sorts run concurrently can be
   limited with the --parallel option or with external process

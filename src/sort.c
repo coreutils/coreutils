@@ -92,6 +92,16 @@ struct rlimit { size_t rlim_cur; };
 
 #define UCHAR_LIM (UCHAR_MAX + 1)
 
+#if HAVE_C99_STRTOLD
+# define long_double long double
+# define LD(x) x##L
+#else
+# define long_double double
+# undef strtold
+# define strtold strtod
+# define LD(x) x
+#endif
+
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
@@ -206,7 +216,6 @@ struct keyfield
                                    Handle numbers in exponential notation. */
   bool human_numeric;		/* Flag for sorting by human readable
                                    units with either SI xor IEC prefixes. */
-  int iec_present;		/* Flag for checking for mixed SI and IEC. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
@@ -1793,30 +1802,16 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
     }
 }
 
-/* Exit with an error if a mixture of SI and IEC units detected.  */
-
-static bool
-check_mixed_SI_IEC (char prefix, struct keyfield *key)
-{
-  int iec_present = prefix == 'i';
-  if (key)
-    {
-      if (key->iec_present != -1 && iec_present != key->iec_present)
-        error (SORT_FAILURE, 0, _("both SI and IEC prefixes present on units"));
-      key->iec_present = iec_present;
-    }
-  return iec_present;
-}
-
-/* Return an integer which represents the order of magnitude of
-   the unit following the number.  NUMBER can contain thousands separators
-   or a decimal point, but not have preceeding blanks.
-   Negative numbers return a negative unit order.  */
+/* Return an integer that represents the order of magnitude of the
+   unit following the number.  If THOU_SEP is not negative, NUMBER can
+   contain thousands separators equal to THOU_SEP.  It can also
+   contain a decimal point.  But it may not contain leading blanks.
+   Store the address of the end of the number into *ENDPTR.  */
 
 static int
-find_unit_order (char const *number, struct keyfield *key, char const **endptr)
+find_unit_order (char const *number, int thou_sep, char **endptr)
 {
-  static char const orders[UCHAR_LIM] =
+  static char const powers[UCHAR_LIM] =
     {
 #if ! ('K' == 75 && 'M' == 77 && 'G' == 71 && 'T' == 84 && 'P' == 80 \
        && 'E' == 69 && 'Z' == 90 && 'Y' == 89 && 'k' == 107)
@@ -1844,15 +1839,7 @@ find_unit_order (char const *number, struct keyfield *key, char const **endptr)
 #endif
     };
 
-  unsigned char const *p = number;
-
-  int sign = 1;
-
-  if (*p == '-')
-    {
-      sign = -1;
-      p++;
-    }
+  char const *p = number + (*number == '-');
 
   /* Scan to end of number.
      Decimals or separators not followed by digits stop the scan.
@@ -1860,51 +1847,87 @@ find_unit_order (char const *number, struct keyfield *key, char const **endptr)
      to be lacking in units.
      FIXME: add support for multibyte thousands_sep and decimal_point.  */
 
-  while (ISDIGIT (*p))
+  do
     {
-      p++;
-
-      if (*p == decimal_point && ISDIGIT (*(p + 1)))
-        p += 2;
-      else if (*p == thousands_sep && ISDIGIT (*(p + 1)))
-        p += 2;
+      while (*p == thousands_sep)
+        p++;
     }
+  while (ISDIGIT (*p++));
 
-  int order = orders[*p];
+  if (p[-1] == decimal_point)
+    while (ISDIGIT (*p++))
+      continue;
 
-  /* For valid units check for MiB vs MB etc.  */
-  if (order)
-    {
-      p++;
-      p += check_mixed_SI_IEC (*p, key);
-    }
-
-  if (endptr)
-    *endptr = p;
-
-  return sign * order;
+  unsigned char ch = p[-1];
+  int power = powers[ch];
+  int binary = (power ? *p == 'i': 0);
+  *endptr = (char *) p + (power ? binary : -1);
+  return 2 * power + binary;
 }
 
-/* Compare numbers ending in units with SI xor IEC prefixes
+/* Convert the string P (ending at ENDP) to a floating point value.
+   The string is assumed to be followed by a SI or IEC prefix of type
+   ORDER.  */
+
+static long_double
+compute_human (char const *p, char *endp, int order)
+{
+  static long_double const multiplier[] =
+    {
+      LD (1e00), LD (                        1.0),
+      LD (1e03), LD (                     1024.0),
+      LD (1e06), LD (                  1048576.0),
+      LD (1e09), LD (               1073741824.0),
+      LD (1e12), LD (            1099511627776.0),
+      LD (1e15), LD (         1125899906842624.0),
+      LD (1e18), LD (      1152921504606846976.0),
+      LD (1e21), LD (   1180591620717411303424.0),
+      LD (1e24), LD (1208925819614629174706176.0)
+    };
+
+  char *e = endp;
+  if (order)
+    e -= 1 + (order & 1);
+  char ch = *e;
+  *e = '\0';
+  long_double v = strtold (p, NULL);
+  *e = ch;
+  return v * multiplier[order];
+}
+
+/* Compare numbers A and B ending in units with SI or IEC prefixes
        <none/unknown> < K/k < M < G < T < P < E < Z < Y
-   Assume that numbers are properly abbreviated.
-   i.e. input will never have both 6000K and 5M.  */
+   This may temporarily modify the strings.  Store into *EA the end
+   of the string A.  */
 
 static int
-human_numcompare (char const *a, char const *b, struct keyfield *key,
-                  char const **ea)
+human_numcompare (char *a, char *b, char **ea)
 {
+  char *endb;
+
   while (blanks[to_uchar (*a)])
     a++;
   while (blanks[to_uchar (*b)])
     b++;
 
-  int order_a = find_unit_order (a, key, ea);
-  int order_b = find_unit_order (b, key, NULL);
+  int order_a = find_unit_order (a, -1, ea);
+  int order_b = find_unit_order (b, -1, &endb);
 
-  return (order_a > order_b ? 1
-          : order_a < order_b ? -1
-          : strnumcmp (a, b, decimal_point, thousands_sep));
+  if (order_a == order_b)
+    {
+      /* Use strnumcmp if the orders are the same, since it has no
+         rounding problems and is faster.  Do not allow thousands
+         separators since strtold does not.  */
+      return strnumcmp (a, b, decimal_point, -1);
+    }
+  else
+    {
+      /* Fall back on floating point, despite its rounding errors,
+         since strnumcmp can't handle mixed orders.  */
+      long_double aval = compute_human (a, *ea, order_a);
+      long_double bval = compute_human (b, endb, order_b);
+      return (aval < bval ? -1 : aval > bval);
+    }
 }
 
 /* Compare strings A and B as numbers without explicitly converting them to
@@ -1912,7 +1935,7 @@ human_numcompare (char const *a, char const *b, struct keyfield *key,
    hideously fast. */
 
 static int
-numcompare (char const *a, char const *b, char const **ea)
+numcompare (char const *a, char const *b, char **ea)
 {
   while (blanks[to_uchar (*a)])
     a++;
@@ -1922,32 +1945,20 @@ numcompare (char const *a, char const *b, char const **ea)
   if (debug)
     {
       /* Approximate strnumcmp extents with find_unit_order.  */
-      if (find_unit_order (a, NULL, ea))
-        {
-          *ea -= 1; /* ignore the order letter */
-          *ea -= (**ea == 'i'); /* and IEC prefix */
-        }
+      int order = find_unit_order (a, thousands_sep, ea);
+      *ea -= !!order + (order & 1);
     }
 
   return strnumcmp (a, b, decimal_point, thousands_sep);
 }
 
 static int
-general_numcompare (char const *sa, char const *sb, char const **ea)
+general_numcompare (char const *sa, char const *sb, char **ea)
 {
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
-
-#if HAVE_C99_STRTOLD /* provided by c-strtold module.  */
-# define long_double long double
-#else
-# define long_double double
-# undef strtold
-# define strtold strtod
-#endif
-
   char *eb;
-  long_double a = strtold (sa, (char **) ea);
+  long_double a = strtold (sa, ea);
   long_double b = strtold (sb, &eb);
 
   /* Put conversion errors at the start of the collating sequence.  */
@@ -2405,13 +2416,13 @@ keycompare (struct line const *a, struct line const *b, bool show_debug)
       else if (key_numeric (key))
         {
           char savea = *lima, saveb = *limb;
-          char const* ea = lima;
+          char *ea = lima;
 
           *lima = *limb = '\0';
           diff = (key->numeric ? numcompare (texta, textb, &ea)
                   : key->general_numeric ? general_numcompare (texta, textb,
                                                                &ea)
-                  : human_numcompare (texta, textb, key, &ea));
+                  : human_numcompare (texta, textb, &ea));
           if (show_debug)
             {
               lena = ea - texta;
@@ -3942,7 +3953,6 @@ key_init (struct keyfield *key)
 {
   memset (key, 0, sizeof *key);
   key->eword = SIZE_MAX;
-  key->iec_present = -1;
   return key;
 }
 
