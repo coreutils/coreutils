@@ -64,6 +64,7 @@ inode_via_readdir()
 
 for dir in $mount_points; do
   readdir_inode=$(inode_via_readdir $dir)
+  test $? = 77 && continue
   stat_inode=$(env stat --format=%i $dir)
   # If stat fails or says the inode is 0, skip $dir.
   case $stat_inode in 0|'') continue;; esac
