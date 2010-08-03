@@ -3802,19 +3802,18 @@ converting to floating point.
 @opindex --sort
 @cindex human numeric sort
 @vindex LC_NUMERIC
-Sort numerically, and in addition handle IEC or SI suffixes like MiB,
-MB etc (@ref{Block size}).  Each number consists of optional blanks,
-an optional @samp{-} sign, zero or more digits, optionally followed by
-a decimal-point character and zero or more digits, and optionally
-followed by an IEC or SI suffix.  A number with no digits is treated
-as @samp{0}. The @env{LC_NUMERIC} locale specifies the decimal-point
-character.
-
-Numbers containing differing suffixes are compared using
-floating-point arithmetic, and therefore may not be compared exactly
-due to rounding error.  However, the output of @command{df},
-@command{du}, and @command{ls} contains so few digits before suffixes
-that rounding error is not significant and comparisons are exact.
+Sort numerically, first by numeric sign (negative, zero, or positive);
+then by @acronym{SI} suffix (either empty, or @samp{k} or @samp{K}, or
+one of @samp{MGTPEZY}, in that order; @xref{Block size}); and finally
+by numeric value.  For example, @samp{1023M} sorts before @samp{1G}
+because @samp{M} (mega) precedes @samp{G} (giga) as an @acronym{SI}
+suffix.  This option sorts values that are consistently scaled to the
+nearest suffix, regardless of whether suffixes denote powers of 1000
+or 1024, and it therefore sorts the output of any single invocation of
+the @command{df}, @command{du}, or @command{ls} commands that are
+invoked with their @option{--human-readable} or @option{--si} options.
+The syntax for numbers is the same as for the @option{--numeric-sort}
+option; the @acronym{SI} suffix must immediately follow the number.
 
 @item -i
 @itemx --ignore-nonprinting

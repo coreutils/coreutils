@@ -92,16 +92,6 @@ struct rlimit { size_t rlim_cur; };
 
 #define UCHAR_LIM (UCHAR_MAX + 1)
 
-#if HAVE_C99_STRTOLD
-# define long_double long double
-# define LD(x) x##L
-#else
-# define long_double double
-# undef strtold
-# define strtold strtod
-# define LD(x) x
-#endif
-
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
@@ -1803,15 +1793,15 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
 }
 
 /* Return an integer that represents the order of magnitude of the
-   unit following the number.  If THOU_SEP is not negative, NUMBER can
-   contain thousands separators equal to THOU_SEP.  It can also
-   contain a decimal point.  But it may not contain leading blanks.
+   unit following the number.  The number may contain thousands
+   separators and a decimal point, but it may not contain leading blanks.
+   Negative numbers get negative orders; zero numbers have a zero order.
    Store the address of the end of the number into *ENDPTR.  */
 
 static int
-find_unit_order (char const *number, int thou_sep, char **endptr)
+find_unit_order (char const *number, char **endptr)
 {
-  static char const powers[UCHAR_LIM] =
+  static char const orders[UCHAR_LIM] =
     {
 #if ! ('K' == 75 && 'M' == 77 && 'G' == 71 && 'T' == 84 && 'P' == 80 \
        && 'E' == 69 && 'Z' == 90 && 'Y' == 89 && 'k' == 107)
@@ -1839,7 +1829,10 @@ find_unit_order (char const *number, int thou_sep, char **endptr)
 #endif
     };
 
-  char const *p = number + (*number == '-');
+  bool minus_sign = (*number == '-');
+  char const *p = number + minus_sign;
+  int nonzero = 0;
+  unsigned char ch;
 
   /* Scan to end of number.
      Decimals or separators not followed by digits stop the scan.
@@ -1849,50 +1842,18 @@ find_unit_order (char const *number, int thou_sep, char **endptr)
 
   do
     {
-      while (*p == thousands_sep)
-        p++;
+      while (ISDIGIT (ch = *p++))
+        nonzero |= ch - '0';
     }
-  while (ISDIGIT (*p++));
+  while (ch == thousands_sep);
 
-  if (p[-1] == decimal_point)
-    while (ISDIGIT (*p++))
-      continue;
+  if (ch == decimal_point)
+    while (ISDIGIT (ch = *p++))
+      nonzero |= ch - '0';
 
-  unsigned char ch = p[-1];
-  int power = powers[ch];
-  int binary = (power ? *p == 'i': 0);
-  *endptr = (char *) p + (power ? binary : -1);
-  return 2 * power + binary;
-}
-
-/* Convert the string P (ending at ENDP) to a floating point value.
-   The string is assumed to be followed by a SI or IEC prefix of type
-   ORDER.  */
-
-static long_double
-compute_human (char const *p, char *endp, int order)
-{
-  static long_double const multiplier[] =
-    {
-      LD (1e00), LD (                        1.0),
-      LD (1e03), LD (                     1024.0),
-      LD (1e06), LD (                  1048576.0),
-      LD (1e09), LD (               1073741824.0),
-      LD (1e12), LD (            1099511627776.0),
-      LD (1e15), LD (         1125899906842624.0),
-      LD (1e18), LD (      1152921504606846976.0),
-      LD (1e21), LD (   1180591620717411303424.0),
-      LD (1e24), LD (1208925819614629174706176.0)
-    };
-
-  char *e = endp;
-  if (order)
-    e -= 1 + (order & 1);
-  char ch = *e;
-  *e = '\0';
-  long_double v = strtold (p, NULL);
-  *e = ch;
-  return v * multiplier[order];
+  int order = (nonzero ? orders[ch] : 0);
+  *endptr = (char *) p - !order;
+  return (minus_sign ? -order : order);
 }
 
 /* Compare numbers A and B ending in units with SI or IEC prefixes
@@ -1910,24 +1871,8 @@ human_numcompare (char *a, char *b, char **ea)
   while (blanks[to_uchar (*b)])
     b++;
 
-  int order_a = find_unit_order (a, -1, ea);
-  int order_b = find_unit_order (b, -1, &endb);
-
-  if (order_a == order_b)
-    {
-      /* Use strnumcmp if the orders are the same, since it has no
-         rounding problems and is faster.  Do not allow thousands
-         separators since strtold does not.  */
-      return strnumcmp (a, b, decimal_point, -1);
-    }
-  else
-    {
-      /* Fall back on floating point, despite its rounding errors,
-         since strnumcmp can't handle mixed orders.  */
-      long_double aval = compute_human (a, *ea, order_a);
-      long_double bval = compute_human (b, endb, order_b);
-      return (aval < bval ? -1 : aval > bval);
-    }
+  int diff = find_unit_order (a, ea) - find_unit_order (b, &endb);
+  return (diff ? diff : strnumcmp (a, b, decimal_point, thousands_sep));
 }
 
 /* Compare strings A and B as numbers without explicitly converting them to
@@ -1945,8 +1890,8 @@ numcompare (char const *a, char const *b, char **ea)
   if (debug)
     {
       /* Approximate strnumcmp extents with find_unit_order.  */
-      int order = find_unit_order (a, thousands_sep, ea);
-      *ea -= !!order + (order & 1);
+      int order = find_unit_order (a, ea);
+      *ea -= !!order;
     }
 
   return strnumcmp (a, b, decimal_point, thousands_sep);
@@ -1957,6 +1902,15 @@ general_numcompare (char const *sa, char const *sb, char **ea)
 {
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
+
+#if HAVE_C99_STRTOLD
+# define long_double long double
+#else
+# define long_double double
+# undef strtold
+# define strtold strtod
+#endif
+
   char *eb;
   long_double a = strtold (sa, ea);
   long_double b = strtold (sb, &eb);
