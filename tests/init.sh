@@ -255,9 +255,9 @@ setup_()
     || fail_ "failed to create temporary directory in $initial_cwd_"
   cd "$test_dir_"
 
-  # These trap statements ensure that the temporary directory, $test_dir_,
-  # is removed upon exit as well as upon receipt of any of the listed signals.
-  trap remove_tmp_ 0
+  # This trap statement, along with a trap on 0 below, ensure that the
+  # temporary directory, $test_dir_, is removed upon exit as well as
+  # upon receipt of any of the listed signals.
   for sig_ in 1 2 3 13 15; do
     eval "trap 'Exit $(expr $sig_ + 128)' $sig_"
   done
@@ -385,3 +385,6 @@ test -f "$srcdir/init.cfg" \
   && . "$srcdir/init.cfg"
 
 setup_ "$@"
+# This trap is here, rather than in the setup_ function, because some
+# shells run the exit trap at shell function exit, rather than script exit.
+trap remove_tmp_ 0
