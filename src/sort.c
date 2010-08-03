@@ -2102,23 +2102,17 @@ compare_version (char *restrict texta, size_t lena,
   return diff;
 }
 
-/* For debug mode, count tabs in the passed string
-   so we can adjust the widths returned by mbswidth.
+/* Return the printable width of the block of memory starting at
+   TEXT and ending just before LIM, counting each tab as one byte.
    FIXME: Should we generally be counting non printable chars?  */
 
 static size_t
-count_tabs (char const *text, size_t len)
+debug_width (char const *text, char const *lim)
 {
-  size_t tabs = 0;
-  size_t tlen = strnlen (text, len);
-
-  while (tlen--)
-    {
-      if (*text++ == '\t')
-        tabs++;
-    }
-
-  return tabs;
+  size_t width = mbsnwidth (text, lim - text, 0);
+  while (text < lim)
+    width += (*text++ == '\t');
+  return width;
 }
 
 /* For debug mode, "underline" a key at the
@@ -2161,12 +2155,8 @@ debug_key (char const *sline, char const *sfield, char const *efield,
         }
     }
 
-  size_t offset = mbsnwidth (sline, sfield - sline, 0) + (sa - sfield);
-  offset += count_tabs (sline, sfield - sline);
-
-  size_t width = mbsnwidth (sa, flen, 0);
-  width += count_tabs (sa, flen);
-
+  size_t offset = debug_width (sline, sfield) + (sa - sfield);
+  size_t width = debug_width (sa, sa + flen);
   mark_key (offset, width);
 }
 

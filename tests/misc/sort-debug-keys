@@ -236,6 +236,8 @@ ___
 _
 2b
 _
+>a
+ _
 EOF
 
 (
@@ -274,6 +276,9 @@ printf "2,,3\n2.4\n" | sort -s -k1n --debug
 
 # -z means we convert \0 to \n
 printf "1a\x002b\x00" | sort -s -n -z --debug
+
+# Check that \0 and \t intermix.
+printf "\0\ta\n" | sort -s -k2b,2 --debug | tr -d '\0'
 ) > out
 
 compare out exp || fail=1
