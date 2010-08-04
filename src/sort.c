@@ -48,7 +48,6 @@
 #include "stdlib--.h"
 #include "strnumcmp.h"
 #include "xmemcoll.h"
-#include "xmemxfrm.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
 
@@ -2001,34 +2000,24 @@ random_md5_state_init (char const *random_source)
   md5_process_bytes (buf, sizeof buf, &random_md5_state);
 }
 
-/* Compare the hashes of TEXTA with length LENGTHA to those of TEXTB
-   with length LENGTHB.  Return negative if less, zero if equal,
-   positive if greater.  */
+/* This is like strxfrm, except it reports any error and exits.  */
 
-static int
-cmp_hashes (char const *texta, size_t lena,
-            char const *textb, size_t lenb)
+static size_t
+xstrxfrm (char *restrict dest, char const *restrict src, size_t destsize)
 {
-  /* Try random hashes until a pair of hashes disagree.  But if the
-     first pair of random hashes agree, check whether the keys are
-     identical and if so report no difference.  */
-  int diff;
-  uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
-  struct md5_ctx s[2];
-  s[0] = s[1] = random_md5_state;
-  md5_process_bytes (texta, lena, &s[0]);  md5_finish_ctx (&s[0], dig[0]);
-  md5_process_bytes (textb, lenb, &s[1]);  md5_finish_ctx (&s[1], dig[1]);
-  diff = memcmp (dig[0], dig[1], sizeof dig[0]);
-  if (! diff)
+  errno = 0;
+  size_t translated_size = strxfrm (dest, src, destsize);
+
+  if (errno)
     {
-      /* Break ties with memcmp.  This is good enough given the
-         astronomically low probability of an MD5 collision.  */
-      diff = memcmp (texta, textb, MIN (lena, lenb));
-      if (! diff)
-        diff = lena < lenb ? -1 : lena != lenb;
+      error (0, errno, _("string transformation failed"));
+      error (0, 0, _("set LC_ALL='C' to work around the problem"));
+      error (SORT_FAILURE, 0,
+             _("the untransformed string was %s"),
+             quotearg_n_style (0, locale_quoting_style, src));
     }
 
-  return diff;
+  return translated_size;
 }
 
 /* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
@@ -2038,40 +2027,116 @@ static int
 compare_random (char *restrict texta, size_t lena,
                 char *restrict textb, size_t lenb)
 {
-  int diff;
+  /* XFRM_DIFF records the equivalent of memcmp on the transformed
+     data.  This is used to break ties if there is an checksum
+     collision, and this is good enough given the astronomically low
+     probability of a collision.  */
+  int xfrm_diff = 0;
 
-  if (! hard_LC_COLLATE)
-    diff = cmp_hashes (texta, lena, textb, lenb);
-  else
+  char stackbuf[4000];
+  char *buf = stackbuf;
+  size_t bufsize = sizeof stackbuf;
+  uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
+  struct md5_ctx s[2];
+  s[0] = s[1] = random_md5_state;
+
+  if (hard_LC_COLLATE)
     {
-      /* Transform the text into the basis of comparison, so that byte
-         strings that would otherwise considered to be equal are
-         considered equal here even if their bytes differ.  */
+      /* Null-terminate the keys so that strxfrm knows where to stop.  */
+      char *lima = texta + lena; char enda = *lima; *lima = '\0';
+      char *limb = textb + lenb; char endb = *limb; *limb = '\0';
 
-      char *buf = NULL;
-      char stackbuf[4000];
-      size_t tlena = xmemxfrm (stackbuf, sizeof stackbuf, texta, lena);
-      bool a_fits = tlena <= sizeof stackbuf;
-      size_t tlenb = xmemxfrm ((a_fits ? stackbuf + tlena : NULL),
-                               (a_fits ? sizeof stackbuf - tlena : 0),
-                               textb, lenb);
-
-      if (a_fits && tlena + tlenb <= sizeof stackbuf)
-        buf = stackbuf;
-      else
+      while (true)
         {
-          /* Adding 1 to the buffer size lets xmemxfrm run a bit
-             faster by avoiding the need for an extra buffer copy.  */
-          buf = xmalloc (tlena + tlenb + 1);
-          xmemxfrm (buf, tlena + 1, texta, lena);
-          xmemxfrm (buf + tlena, tlenb + 1, textb, lenb);
+          /* Transform the text into the basis of comparison, so that byte
+             strings that would otherwise considered to be equal are
+             considered equal here even if their bytes differ.
+
+             Each time through this loop, transform one
+             null-terminated string's worth from TEXTA or from TEXTB
+             or both.  That way, there's no need to store the
+             transformation of the whole line, if it contains many
+             null-terminated strings.  */
+
+          /* Store the transformed data into a big-enough buffer.  */
+
+          size_t sizea =
+            (texta < lima ? xstrxfrm (buf, texta, bufsize) + 1 : 0);
+          bool a_fits = sizea <= bufsize;
+          size_t sizeb =
+            (textb < limb
+             ? (xstrxfrm ((a_fits ? buf + sizea : NULL), textb,
+                          (a_fits ? bufsize - sizea : 0))
+                + 1)
+             : 0);
+
+          if (! (a_fits && sizea + sizeb <= bufsize))
+            {
+              bufsize = sizea + sizeb;
+              if (bufsize < SIZE_MAX / 3)
+                bufsize = bufsize * 3 / 2;
+              buf = (buf == stackbuf
+                     ? xmalloc (bufsize)
+                     : xrealloc (buf, bufsize));
+              if (texta < lima)
+                strxfrm (buf, texta, sizea);
+              if (textb < limb)
+                strxfrm (buf + sizea, textb, sizeb);
+            }
+
+          /* Advance past NULs to the next part of each input string,
+             exiting the loop if both strings are exhausted.  When
+             exiting the loop, prepare to finish off the tiebreaker
+             comparison properly.  */
+          if (texta < lima)
+            texta += strlen (texta) + 1;
+          if (textb < limb)
+            textb += strlen (textb) + 1;
+          if (! (texta < lima || textb < limb))
+            {
+              lena = sizea; texta = buf;
+              lenb = sizeb; textb = buf + sizea;
+              break;
+            }
+
+          /* Accumulate the transformed data in the corresponding
+             checksums.  */
+          md5_process_bytes (buf, sizea, &s[0]);
+          md5_process_bytes (buf + sizea, sizeb, &s[1]);
+
+          /* Update the tiebreaker comparison of the transformed data.  */
+          if (! xfrm_diff)
+            {
+              xfrm_diff = memcmp (buf, buf + sizea, MIN (sizea, sizeb));
+              if (! xfrm_diff)
+                xfrm_diff = (sizea > sizeb) - (sizea < sizeb);
+            }
         }
 
-      diff = cmp_hashes (buf, tlena, buf + tlena, tlenb);
-
-      if (buf != stackbuf)
-        free (buf);
+      *lima = enda;
+      *limb = endb;
     }
+
+  /* Compute and compare the checksums.  */
+  md5_process_bytes (texta, lena, &s[0]); md5_finish_ctx (&s[0], dig[0]);
+  md5_process_bytes (textb, lenb, &s[1]); md5_finish_ctx (&s[1], dig[1]);
+  int diff = memcmp (dig[0], dig[1], sizeof dig[0]);
+
+  /* Fall back on the tiebreaker if the checksums collide.  */
+  if (! diff)
+    {
+      if (! xfrm_diff)
+        {
+          xfrm_diff = memcmp (texta, textb, MIN (lena, lenb));
+          if (! xfrm_diff)
+            xfrm_diff = (lena > lenb) - (lena < lenb);
+        }
+
+      diff = xfrm_diff;
+    }
+
+  if (buf != stackbuf)
+    free (buf);
 
   return diff;
 }

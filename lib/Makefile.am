@@ -20,8 +20,7 @@ include gnulib.mk
 AM_CFLAGS += $(GNULIB_WARN_CFLAGS) $(WERROR_CFLAGS)
 
 libcoreutils_a_SOURCES += \
-  buffer-lcm.c buffer-lcm.h \
-  xmemxfrm.c xmemxfrm.h
+  buffer-lcm.c buffer-lcm.h
 
 libcoreutils_a_LIBADD += $(LIBOBJS)
 libcoreutils_a_DEPENDENCIES += $(LIBOBJS)
