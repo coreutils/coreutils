@@ -1925,24 +1925,17 @@ general_numcompare (char const *sa, char const *sb)
           : memcmp (&a, &b, sizeof a));
 }
 
-/* Return an integer in 1..12 of the month name MONTH with length LEN.
+/* Return an integer in 1..12 of the month name MONTH.
    Return 0 if the name in S is not recognized.  */
 
 static int
-getmonth (char const *month, size_t len, char **ea)
+getmonth (char const *month, char **ea)
 {
   size_t lo = 0;
   size_t hi = MONTHS_PER_YEAR;
-  char const *monthlim = month + len;
 
-  while (true)
-    {
-      if (month == monthlim)
-        return 0;
-      if (!blanks[to_uchar (*month)])
-        break;
-      ++month;
-    }
+  while (blanks[to_uchar (*month)])
+    month++;
 
   do
     {
@@ -1958,7 +1951,7 @@ getmonth (char const *month, size_t len, char **ea)
                 *ea = (char *) m;
               return monthtab[ix].val;
             }
-          if (m == monthlim || fold_toupper[to_uchar (*m)] < to_uchar (*n))
+          if (fold_toupper[to_uchar (*m)] < to_uchar (*n))
             {
               hi = ix;
               break;
@@ -2015,7 +2008,8 @@ xstrxfrm (char *restrict dest, char const *restrict src, size_t destsize)
 }
 
 /* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
-   using one or more random hash functions.  */
+   using one or more random hash functions.  TEXTA[LENA] and
+   TEXTB[LENB] must be zero.  */
 
 static int
 compare_random (char *restrict texta, size_t lena,
@@ -2036,9 +2030,8 @@ compare_random (char *restrict texta, size_t lena,
 
   if (hard_LC_COLLATE)
     {
-      /* Null-terminate the keys so that strxfrm knows where to stop.  */
-      char *lima = texta + lena; char enda = *lima; *lima = '\0';
-      char *limb = textb + lenb; char endb = *limb; *limb = '\0';
+      char const *lima = texta + lena;
+      char const *limb = textb + lenb;
 
       while (true)
         {
@@ -2106,9 +2099,6 @@ compare_random (char *restrict texta, size_t lena,
                 xfrm_diff = (sizea > sizeb) - (sizea < sizeb);
             }
         }
-
-      *lima = enda;
-      *limb = endb;
     }
 
   /* Compute and compare the checksums.  */
@@ -2131,32 +2121,6 @@ compare_random (char *restrict texta, size_t lena,
 
   if (buf != stackbuf)
     free (buf);
-
-  return diff;
-}
-
-/* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
-   using filevercmp. See lib/filevercmp.h for function description. */
-
-static int
-compare_version (char *restrict texta, size_t lena,
-                 char *restrict textb, size_t lenb)
-{
-  int diff;
-
-  /* It is necessary to save the character after the end of the field.
-     "filevercmp" works with NUL terminated strings.  Our blocks of
-     text are not necessarily terminated with a NUL byte. */
-  char sv_a = texta[lena];
-  char sv_b = textb[lenb];
-
-  texta[lena] = '\0';
-  textb[lenb] = '\0';
-
-  diff = filevercmp (texta, textb);
-
-  texta[lena] = sv_a;
-  textb[lenb] = sv_b;
 
   return diff;
 }
@@ -2221,17 +2185,19 @@ debug_key (struct line const *line, struct keyfield const *key)
         lim = limfield (line, key);
 
       if (key->skipsblanks || key->month || key_numeric (key))
-        while (beg < lim && blanks[to_uchar (*beg)])
-          beg++;
-
-      if (key_numeric (key))
         {
-          char *numlim;
           char saved = *lim; *lim = '\0';
 
-          if (key->general_numeric)
-            strtold (beg, &numlim);
-          else
+          while (blanks[to_uchar (*beg)])
+            beg++;
+
+          char *tighter_lim = beg;
+
+          if (key->month)
+            getmonth (beg, &tighter_lim);
+          else if (key->general_numeric)
+            strtold (beg, &tighter_lim);
+          else if (key->numeric || key->human_numeric)
             {
               char *p = beg + (beg < lim && *beg == '-');
               bool found_digit = false;
@@ -2248,19 +2214,14 @@ debug_key (struct line const *line, struct keyfield const *key)
                 while (ISDIGIT (ch = *p++))
                   found_digit = true;
 
-              numlim = (found_digit
-                        ? p - ! (key->human_numeric && unit_order[ch])
-                        : beg);
+              if (found_digit)
+                tighter_lim = p - ! (key->human_numeric && unit_order[ch]);
             }
+          else
+            tighter_lim = lim;
 
           *lim = saved;
-          lim = numlim;
-        }
-      else if (key->month)
-        {
-          char *monthlim = beg;
-          getmonth (beg, lim - beg, &monthlim);
-          lim = monthlim;
+          lim = tighter_lim;
         }
     }
 
@@ -2465,73 +2426,89 @@ keycompare (struct line const *a, struct line const *b)
       size_t lena = lima - texta;
       size_t lenb = limb - textb;
 
-      /* Actually compare the fields. */
-
-      if (key->random)
-        diff = compare_random (texta, lena, textb, lenb);
-      else if (key_numeric (key))
+      if (hard_LC_COLLATE || key_numeric (key)
+          || key->month || key->random || key->version)
         {
-          char savea = *lima, saveb = *limb;
+          char *ta;
+          char *tb;
+          size_t tlena;
+          size_t tlenb;
 
-          *lima = *limb = '\0';
-          diff = (key->numeric ? numcompare (texta, textb)
-                  : key->general_numeric ? general_numcompare (texta, textb)
-                  : human_numcompare (texta, textb));
-          *lima = savea, *limb = saveb;
-        }
-      else if (key->version)
-        diff = compare_version (texta, lena, textb, lenb);
-      else if (key->month)
-        diff = getmonth (texta, lena, NULL) - getmonth (textb, lenb, NULL);
-      /* Sorting like this may become slow, so in a simple locale the user
-         can select a faster sort that is similar to ascii sort.  */
-      else if (hard_LC_COLLATE)
-        {
-          /* FIXME: for debug, account for skipped chars, while handling mb chars.
-             Generally perhaps xmemfrm could be used to determine chars that are
-             excluded from the collating order?  */
+          char enda IF_LINT (= 0);
+          char endb IF_LINT (= 0);
+          void *allocated IF_LINT (= NULL);
+          char stackbuf[4000];
+
           if (ignore || translate)
             {
-              char buf[4000];
+              /* Compute with copies of the keys, which are the result of
+                 translating or ignoring characters, and which need their
+                 own storage.  */
+
+              size_t i;
+
+              /* Allocate space for copies.  */
               size_t size = lena + 1 + lenb + 1;
-              char *copy_a = (size <= sizeof buf ? buf : xmalloc (size));
-              char *copy_b = copy_a + lena + 1;
-              size_t new_len_a, new_len_b, i;
+              if (size <= sizeof stackbuf)
+                ta = stackbuf, allocated = NULL;
+              else
+                ta = allocated = xmalloc (size);
+              tb = ta + lena + 1;
 
-              /* Ignore and/or translate chars before comparing.  */
-              for (new_len_a = new_len_b = i = 0; i < MAX (lena, lenb); i++)
-                {
-                  if (i < lena)
-                    {
-                      copy_a[new_len_a] = (translate
-                                           ? translate[to_uchar (texta[i])]
-                                           : texta[i]);
-                      if (!ignore || !ignore[to_uchar (texta[i])])
-                        ++new_len_a;
-                    }
-                  if (i < lenb)
-                    {
-                      copy_b[new_len_b] = (translate
-                                           ? translate[to_uchar (textb[i])]
-                                           : textb [i]);
-                      if (!ignore || !ignore[to_uchar (textb[i])])
-                        ++new_len_b;
-                    }
-                }
+              /* Put into each copy a version of the key in which the
+                 requested characters are ignored or translated.  */
+              for (tlena = i = 0; i < lena; i++)
+                if (! (ignore && ignore[to_uchar (texta[i])]))
+                  ta[tlena++] = (translate
+                                 ? translate[to_uchar (texta[i])]
+                                 : texta[i]);
+              ta[tlena] = '\0';
 
-              copy_a[new_len_a++] = '\0';
-              copy_b[new_len_b++] = '\0';
-              diff = xmemcoll0 (copy_a, new_len_a, copy_b, new_len_b);
-
-              if (sizeof buf < size)
-                free (copy_a);
+              for (tlenb = i = 0; i < lenb; i++)
+                if (! (ignore && ignore[to_uchar (textb[i])]))
+                  tb[tlenb++] = (translate
+                                 ? translate[to_uchar (textb[i])]
+                                 : textb[i]);
+              tb[tlenb] = '\0';
             }
-          else if (lena == 0)
-            diff = - NONZERO (lenb);
-          else if (lenb == 0)
-            goto greater;
           else
-            diff = xmemcoll (texta, lena, textb, lenb);
+            {
+              /* Use the keys in-place, temporarily null-terminated.  */
+              ta = texta; tlena = lena; enda = ta[tlena]; ta[tlena] = '\0';
+              tb = textb; tlenb = lenb; endb = tb[tlenb]; tb[tlenb] = '\0';
+            }
+
+          if (key->numeric)
+            diff = numcompare (ta, tb);
+          else if (key->general_numeric)
+            diff = general_numcompare (ta, tb);
+          else if (key->human_numeric)
+            diff = human_numcompare (ta, tb);
+          else if (key->month)
+            diff = getmonth (ta, NULL) - getmonth (tb, NULL);
+          else if (key->random)
+            diff = compare_random (ta, tlena, tb, tlenb);
+          else if (key->version)
+            diff = filevercmp (ta, tb);
+          else
+            {
+              /* Locale-dependent string sorting.  This is slower than
+                 C-locale sorting, which is implemented below.  */
+              if (tlena == 0)
+                diff = - NONZERO (tlenb);
+              else if (tlenb == 0)
+                diff = 1;
+              else
+                diff = xmemcoll0 (ta, tlena + 1, tb, tlenb + 1);
+            }
+
+          if (ignore || translate)
+            free (allocated);
+          else
+            {
+              ta[tlena] = enda;
+              tb[tlenb] = endb;
+            }
         }
       else if (ignore)
         {
@@ -3849,9 +3826,8 @@ check_ordering_compatibility (void)
   struct keyfield *key;
 
   for (key = keylist; key; key = key->next)
-    if ((1 < (key->random + key->numeric + key->general_numeric + key->month
-              + key->version + !!key->ignore + key->human_numeric))
-        || (key->random && key->translate))
+    if (1 < (key->numeric + key->general_numeric + key->human_numeric
+             + key->month + (key->version | key->random | !!key->ignore)))
       {
         /* The following is too big, but guaranteed to be "big enough".  */
         char opts[sizeof short_options];

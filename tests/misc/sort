@@ -92,6 +92,10 @@ my @Tests =
  {ERR=>"$prog: -:3: disorder: B\n"}, $normalize_filename],
 ["02p", '-cu', {IN=>"B\nA\nB\n"}, {OUT=>''}, {EXIT=>1},
  {ERR=>"$prog: -:2: disorder: A\n"}, $normalize_filename],
+["02q", '-c -k 1,1fR', {IN=>"ABC\nABc\nAbC\nAbc\naBC\naBc\nabC\nabc\n"}],
+["02r", '-c -k 1,1fV', {IN=>"ABC\nABc\nAbC\nAbc\naBC\naBc\nabC\nabc\n"}],
+["02s", '-c -k 1,1dfR',
+                 {IN=>".ABC\n.ABc.\nA.bC\nA.bc.\naB.C\naB.c.\nabC.\nabc..\n"}],
 #
 ["03a", '-k1', {IN=>"B\nA\n"}, {OUT=>"A\nB\n"}],
 ["03b", '-k1,1', {IN=>"B\nA\n"}, {OUT=>"A\nB\n"}],
@@ -335,8 +339,8 @@ my @Tests =
 # Specifying incompatible options should evoke a failure.
 ["incompat1", '-in', {EXIT=>2},
  {ERR=>"$prog: options `-in' are incompatible\n"}],
-["incompat2", '-fR', {EXIT=>2},
- {ERR=>"$prog: options `-fR' are incompatible\n"}],
+["incompat2", '-nR', {EXIT=>2},
+ {ERR=>"$prog: options `-nR' are incompatible\n"}],
 ["incompat3", '-dfgiMnR', {EXIT=>2},
  {ERR=>"$prog: options `-dfgMnR' are incompatible\n"}],
 ["incompat4", qw(-c -o /dev/null), {EXIT=>2},
