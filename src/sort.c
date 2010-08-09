@@ -2024,6 +2024,7 @@ compare_random (char *restrict texta, size_t lena,
   char stackbuf[4000];
   char *buf = stackbuf;
   size_t bufsize = sizeof stackbuf;
+  void *allocated = NULL;
   uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
   struct md5_ctx s[2];
   s[0] = s[1] = random_md5_state;
@@ -2047,6 +2048,16 @@ compare_random (char *restrict texta, size_t lena,
 
           /* Store the transformed data into a big-enough buffer.  */
 
+          /* A 3X size guess avoids the overhead of calling strxfrm
+             twice on typical implementations.  Don't worry about
+             size_t overflow, as the guess need not be correct.  */
+          size_t guess_bufsize = 3 * (lena + lenb) + 2;
+          if (bufsize < guess_bufsize)
+            {
+              bufsize = MAX (guess_bufsize, bufsize * 3 / 2);
+              buf = allocated = xrealloc (allocated, bufsize);
+            }
+
           size_t sizea =
             (texta < lima ? xstrxfrm (buf, texta, bufsize) + 1 : 0);
           bool a_fits = sizea <= bufsize;
@@ -2062,9 +2073,7 @@ compare_random (char *restrict texta, size_t lena,
               bufsize = sizea + sizeb;
               if (bufsize < SIZE_MAX / 3)
                 bufsize = bufsize * 3 / 2;
-              buf = (buf == stackbuf
-                     ? xmalloc (bufsize)
-                     : xrealloc (buf, bufsize));
+              buf = allocated = xrealloc (allocated, bufsize);
               if (texta < lima)
                 strxfrm (buf, texta, sizea);
               if (textb < limb)
@@ -2119,8 +2128,7 @@ compare_random (char *restrict texta, size_t lena,
       diff = xfrm_diff;
     }
 
-  if (buf != stackbuf)
-    free (buf);
+  free (allocated);
 
   return diff;
 }
