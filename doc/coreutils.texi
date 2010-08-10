@@ -3414,14 +3414,12 @@ options}.
 Note: The MD5 digest is more reliable than a simple CRC (provided by
 the @command{cksum} command) for detecting accidental file corruption,
 as the chances of accidentally having two files with identical MD5
-are vanishingly small.  However, it should not be considered truly
-secure against malicious tampering: although finding a file with a
-given MD5 fingerprint, or modifying a file so as to retain its MD5 are
-considered infeasible at the moment, it is known how to produce
-different files with identical MD5 (a ``collision''), something which
-can be a security issue in certain contexts.  For more secure hashes,
-consider using SHA-1 or SHA-2.  @xref{sha1sum invocation}, and
-@ref{sha2 utilities}.
+are vanishingly small.  However, it should not be considered secure
+against malicious tampering: although finding a file with a given MD5
+fingerprint is considered infeasible at the moment, it is known how
+to modify certain files, including digital certificates, so that they
+appear valid when signed with an MD5 digest.
+For more secure hashes, consider using SHA-2.  @xref{sha2 utilities}.
 
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
