@@ -129,7 +129,7 @@ sc_system_h_headers: .re-list
 	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0;			\
 	  $(gl_trap_);							\
 	  grep -nE -f .re-list						\
-	      $$($(VC_LIST_EXCEPT) | grep '^src/')			\
+	      $$($(VC_LIST_EXCEPT) | grep '^\($(srcdir)/\)\?src/')	\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2;  exit 1; } || :;				\
 	fi
