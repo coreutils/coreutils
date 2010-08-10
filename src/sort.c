@@ -2056,7 +2056,13 @@ compare_random (char *restrict texta, size_t lena,
           if (bufsize < guess_bufsize)
             {
               bufsize = MAX (guess_bufsize, bufsize * 3 / 2);
-              buf = allocated = xrealloc (allocated, bufsize);
+              free (allocated);
+              buf = allocated = malloc (bufsize);
+              if (! buf)
+                {
+                  buf = stackbuf;
+                  bufsize = sizeof stackbuf;
+                }
             }
 
           size_t sizea =
@@ -2074,7 +2080,8 @@ compare_random (char *restrict texta, size_t lena,
               bufsize = sizea + sizeb;
               if (bufsize < SIZE_MAX / 3)
                 bufsize = bufsize * 3 / 2;
-              buf = allocated = xrealloc (allocated, bufsize);
+              free (allocated);
+              buf = allocated = xmalloc (bufsize);
               if (texta < lima)
                 strxfrm (buf, texta, sizea);
               if (textb < limb)
