@@ -35,6 +35,7 @@
 #include "hard-locale.h"
 #include "hash.h"
 #include "heap.h"
+#include "ignore-value.h"
 #include "md5.h"
 #include "mbswidth.h"
 #include "nproc.h"
@@ -2204,7 +2205,7 @@ debug_key (struct line const *line, struct keyfield const *key)
           if (key->month)
             getmonth (beg, &tighter_lim);
           else if (key->general_numeric)
-            strtold (beg, &tighter_lim);
+            ignore_value (strtold (beg, &tighter_lim));
           else if (key->numeric || key->human_numeric)
             {
               char *p = beg + (beg < lim && *beg == '-');
