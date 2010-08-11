@@ -2767,7 +2767,8 @@ check (char const *file_name, char checkonly)
             }
           while (alloc < line->length);
 
-          temp.text = xrealloc (temp.text, alloc);
+          free (temp.text);
+          temp.text = xmalloc (alloc);
         }
       memcpy (temp.text, line->text, line->length);
       temp.length = line->length;
@@ -2907,7 +2908,8 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
                       }
                   while ((savealloc *= 2) < smallest->length);
 
-                  saved.text = xrealloc (saved.text, savealloc);
+                  free (saved.text);
+                  saved.text = xmalloc (savealloc);
                 }
               saved.length = smallest->length;
               memcpy (saved.text, smallest->text, saved.length);

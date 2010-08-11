@@ -410,7 +410,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
           if (hostlen < strlen (host) + strlen (display) + 4)
             {
               hostlen = strlen (host) + strlen (display) + 4;
-              hoststr = xrealloc (hoststr, hostlen);
+              free (hoststr);
+              hoststr = xmalloc (hostlen);
             }
           sprintf (hoststr, "(%s:%s)", host, display);
         }
@@ -419,7 +420,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
           if (hostlen < strlen (host) + 3)
             {
               hostlen = strlen (host) + 3;
-              hoststr = xrealloc (hoststr, hostlen);
+              free (hoststr);
+              hoststr = xmalloc (hostlen);
             }
           sprintf (hoststr, "(%s)", host);
         }
@@ -432,7 +434,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
       if (hostlen < 1)
         {
           hostlen = 1;
-          hoststr = xrealloc (hoststr, hostlen);
+          free (hoststr);
+          hoststr = xmalloc (hostlen);
         }
       *hoststr = '\0';
     }
