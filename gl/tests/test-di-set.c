@@ -39,7 +39,6 @@
 int
 main (void)
 {
-  /* set_program_name (argv[0]); placate overzealous "syntax-check" test.  */
   struct di_set *dis = di_set_alloc ();
   ASSERT (dis);
 

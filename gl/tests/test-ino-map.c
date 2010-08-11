@@ -39,7 +39,6 @@
 int
 main ()
 {
-  /* set_program_name (argv[0]); placate overzealous "syntax-check" test.  */
   enum { INO_MAP_INIT = 123 };
   struct ino_map *ino_map = ino_map_alloc (INO_MAP_INIT);
   ASSERT (ino_map != NULL);

@@ -1,4 +1,3 @@
 gl/lib/randint.c
 lib/euidaccess-stat.c
-gl/tests/test-mbsalign.c
-gl/tests/test-fadvise.c
+gl/tests/.*\.c

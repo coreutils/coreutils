@@ -576,7 +576,6 @@ static isaac_word const expected[2][ISAAC_WORDS] =
 int
 main (int argc, char **argv)
 {
-  /* set_program_name (argv[0]); placate overzealous "syntax-check" test.  */
   unsigned int i;
   isaac_word r[ISAAC_WORDS];
   int iterations;
