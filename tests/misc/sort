@@ -310,26 +310,13 @@ my @Tests =
 ["nul-nls", '', {IN=>"\0b\n\0a\n"}, {OUT=>"\0a\n\0b\n"}],
 
 # Paul Eggert wrote:
-# I tested the revised `sort' against Solaris `sort', and found a
-# discrepancy that turns out to be a longstanding bug in GNU sort.
-# POSIX.2 specifies that a newline is part of the input line, and should
-# be significant during comparison; but with GNU sort the newline is
-# insignificant.  Here is an example of the bug:
-#
-#        $ od -c t
-#        0000000  \n  \t  \n
-#        0000003
-#        $ sort t | od -c
-#        0000000  \n  \t  \n
-#        0000003
-#
-# The correct output of the latter command should be
-#
-#        0000000  \t  \n  \n
-#        0000003
-#
-# because \t comes before \n in the collating sequence, and the trailing
-# \n's are part of the input line.
+# A previous version of POSIX incorrectly required that the newline
+# at the end of the input line contributed to the sort, which would
+# mean that an empty line should sort after a line starting with a tab
+# (because \t precedes \n in the ASCII collating sequence).
+# GNU 'sort' was altered to do this, but was changed back once it
+# was discovered to be a POSIX bug (and the POSIX bug was fixed).
+# Check that 'sort' conforms to the fixed POSIX, not to the buggy one.
 ["use-nl", '', {IN=>"\n\t\n"}, {OUT=>"\n\t\n"}],
 
 # Specifying two -o options should evoke a failure
