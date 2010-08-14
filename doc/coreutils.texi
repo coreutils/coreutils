@@ -3802,7 +3802,7 @@ converting to floating point.
 @vindex LC_NUMERIC
 Sort numerically, first by numeric sign (negative, zero, or positive);
 then by @acronym{SI} suffix (either empty, or @samp{k} or @samp{K}, or
-one of @samp{MGTPEZY}, in that order; @xref{Block size}); and finally
+one of @samp{MGTPEZY}, in that order; @pxref{Block size}); and finally
 by numeric value.  For example, @samp{1023M} sorts before @samp{1G}
 because @samp{M} (mega) precedes @samp{G} (giga) as an @acronym{SI}
 suffix.  This option sorts values that are consistently scaled to the
