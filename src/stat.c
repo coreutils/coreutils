@@ -632,6 +632,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
             }
           printf (" -> ");
           out_string (pformat, prefix_len, quote (linkname));
+          free (linkname);
         }
       break;
     case 'd':
