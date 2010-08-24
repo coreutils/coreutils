@@ -26,6 +26,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  df now consistently prints the device name for a bind mounted file,
+  rather than its aliased target.
+
   du now uses less than half as much memory when operating on trees
   with many hard-linked files.  With --count-links (-l), or when
   operating on trees with no hard-linked files, there is no change.

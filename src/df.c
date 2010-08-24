@@ -643,54 +643,35 @@ show_point (const char *point, const struct stat *statp)
   struct mount_entry *me;
   struct mount_entry const *best_match = NULL;
 
-  /* If POINT is an absolute file name, see if we can find the
-     mount point without performing any extra stat calls at all.  */
-  if (*point == '/')
-    {
-      /* Find the best match: prefer non-dummies, and then prefer the
-         last match if there are ties.  */
-
-      for (me = mount_list; me; me = me->me_next)
-        if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs")
-            && (!best_match || best_match->me_dummy || !me->me_dummy))
-          best_match = me;
-    }
-
   /* Calculate the real absolute file name for POINT, and use that to find
      the mount point.  This avoids statting unavailable mount points,
      which can hang df.  */
-  if (! best_match)
+  char *resolved = canonicalize_file_name (point);
+  if (resolved && resolved[0] == '/')
     {
-      char *resolved = canonicalize_file_name (point);
+      size_t resolved_len = strlen (resolved);
+      size_t best_match_len = 0;
 
-      if (resolved && resolved[0] == '/')
+      for (me = mount_list; me; me = me->me_next)
+      if (!STREQ (me->me_type, "lofs")
+          && (!best_match || best_match->me_dummy || !me->me_dummy))
         {
-          size_t resolved_len = strlen (resolved);
-          size_t best_match_len = 0;
-
-          for (me = mount_list; me; me = me->me_next)
-            if (!STREQ (me->me_type, "lofs")
-                && (!best_match || best_match->me_dummy || !me->me_dummy))
-              {
-                size_t len = strlen (me->me_mountdir);
-                if (best_match_len <= len && len <= resolved_len
-                    && (len == 1 /* root file system */
-                        || ((len == resolved_len || resolved[len] == '/')
-                            && strncmp (me->me_mountdir, resolved, len) == 0)))
-                  {
-                    best_match = me;
-                    best_match_len = len;
-                  }
-              }
+          size_t len = strlen (me->me_mountdir);
+          if (best_match_len <= len && len <= resolved_len
+              && (len == 1 /* root file system */
+                  || ((len == resolved_len || resolved[len] == '/')
+                      && strncmp (me->me_mountdir, resolved, len) == 0)))
+            {
+              best_match = me;
+              best_match_len = len;
+            }
         }
-
-      free (resolved);
-
-      if (best_match
-          && (stat (best_match->me_mountdir, &disk_stats) != 0
-              || disk_stats.st_dev != statp->st_dev))
-        best_match = NULL;
     }
+  free (resolved);
+  if (best_match
+      && (stat (best_match->me_mountdir, &disk_stats) != 0
+          || disk_stats.st_dev != statp->st_dev))
+    best_match = NULL;
 
   if (! best_match)
     for (me = mount_list; me; me = me->me_next)
