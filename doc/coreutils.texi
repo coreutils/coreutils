@@ -10630,6 +10630,7 @@ Without it, @command{stat} acts on any symbolic link argument directly.
 @cindex file systems
 Report information about the file systems where the given files are located
 instead of information about the files themselves.
+This option implies the @option{-L} option.
 
 @item -c
 @itemx --format=@var{format}
