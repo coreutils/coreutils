@@ -666,8 +666,10 @@ main (int argc, char **argv)
       ok = false;
     }
 
+#ifdef lint
   size_t offset = sentinel_length ? sentinel_length : 1;
   free (G_buffer - offset);
+#endif
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
