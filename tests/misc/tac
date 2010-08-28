@@ -24,6 +24,9 @@ my $prog = 'tac';
 
 my $bad_dir = 'no/such/dir';
 
+# This must be longer than 16KiB to trigger the double free in coreutils-8.5.
+my $long_line = 'o' x (16 * 1024 + 1);
+
 my @Tests =
 (
   ['segfault', '-r', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\nb\n"}],
@@ -67,6 +70,9 @@ my @Tests =
    {ERR_SUBST => "s,`$bad_dir': .*,...,"},
    {ERR => "$prog: cannot create temporary file in ...\n"},
    {EXIT => 1}],
+
+  # coreutils-8.5's tac would double-free its primary buffer.
+  ['double-free', {IN=>$long_line}, {OUT=>$long_line}],
 );
 
 @Tests = triple_test \@Tests;

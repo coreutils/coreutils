@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   du -H and -L now consistently count pointed-to files instead of
   symbolic links, and correctly diagnose dangling symlinks.
 
+  tac would perform a double-free when given an input line longer than 16KiB.
+  [bug introduced in coreutils-8.3]
+
 ** New features
 
   cp now accepts the --attributes-only option to not copy file data,

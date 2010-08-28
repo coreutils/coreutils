@@ -633,7 +633,6 @@ main (int argc, char **argv)
   if (! (read_size < half_buffer_size && half_buffer_size < G_buffer_size))
     xalloc_die ();
   G_buffer = xmalloc (G_buffer_size);
-  void *buf = G_buffer;
   if (sentinel_length)
     {
       strcpy (G_buffer, separator);
@@ -666,6 +665,9 @@ main (int argc, char **argv)
       error (0, errno, "-");
       ok = false;
     }
-  free (buf);
+
+  size_t offset = sentinel_length ? sentinel_length : 1;
+  free (G_buffer - offset);
+
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
