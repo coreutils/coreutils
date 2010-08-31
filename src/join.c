@@ -249,13 +249,13 @@ xfields (struct line *line)
   if (ptr == lim)
     return;
 
-  if (0 <= tab)
+  if (0 <= tab && tab != '\n')
     {
       char *sep;
       for (; (sep = memchr (ptr, tab, lim - ptr)) != NULL; ptr = sep + 1)
         extract_field (line, ptr, sep - ptr);
     }
-  else
+  else if (tab < 0)
     {
       /* Skip leading blanks before the first field.  */
       while (isblank (to_uchar (*ptr)))
