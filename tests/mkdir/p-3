@@ -42,7 +42,7 @@ test -d "$p/b/b" && test -d "$p/z" || fail=1
 # whose parent is inaccessible.  coreutils 5.97 fails this test.
 # Perform this test only if "." is on a local file system.
 # Otherwise, it would fail e.g., on an NFS-mounted file system.
-if df --local . >/dev/null 2>&1; then
+if is_local_dir_ .; then
   (cd no-acce3s/d && chmod a-r . && chmod a-rx .. &&
       mkdir -p a/b "$p/b/c" d/e && test -d a/b && test -d d/e) || fail=1
   test -d "$p/b/c" || fail=1

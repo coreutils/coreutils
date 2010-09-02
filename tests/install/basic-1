@@ -105,7 +105,7 @@ test -d xx/rel && fail=1
 # inaccessible parent.  coreutils 5.97 fails this test.
 # Perform this test only if "." is on a local file system.
 # Otherwise, it would fail e.g., on an NFS-mounted file system.
-if df --local . >/dev/null 2>&1; then
+if is_local_dir_ .; then
   mkdir -p sub1/d || fail=1
   (cd sub1/d && chmod a-r . && chmod a-rx .. &&
    ginstall -d "$iwd/xx/zz" rel/a rel/b) || fail=1

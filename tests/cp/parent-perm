@@ -24,6 +24,8 @@ fi
 . $srcdir/test-lib.sh
 
 working_umask_or_skip_
+# cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
+require_local_dir_
 
 mkdir -p a/b/c a/b/d e || framework_failure
 touch a/b/c/foo a/b/d/foo || framework_failure

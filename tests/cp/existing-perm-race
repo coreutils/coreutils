@@ -22,7 +22,11 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+
 require_membership_in_two_groups_
+
+# cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
+require_local_dir_
 
 set _ $groups; shift
 g1=$1

@@ -23,8 +23,10 @@ fi
 
 . $srcdir/test-lib.sh
 
-touch f || framework_failure
+# cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
+require_local_dir_
 
+touch f || framework_failure
 
 cp --preserve=mode,links f g || fail=1
 

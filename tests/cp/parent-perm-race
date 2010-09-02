@@ -23,6 +23,9 @@ fi
 
 . $srcdir/test-lib.sh
 
+# cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
+require_local_dir_
+
 umask 002
 mkdir mode ownership d || framework_failure
 chmod g+s d 2>/dev/null # The cp test is valid either way.

@@ -23,6 +23,9 @@ fi
 
 . $srcdir/test-lib.sh
 
+# cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
+require_local_dir_
+
 umask 022
 mkfifo fifo ||
   skip_test_ "fifos not supported"

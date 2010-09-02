@@ -27,6 +27,10 @@ fi
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 
+# On NFS on Linux 2.6.9 at least we get:
+# mv: preserving permissions for `rem_sl': Operation not supported
+require_local_dir_
+
 pwd_tmp=`pwd`
 
 # Unset CDPATH.  Otherwise, output from the `cd dir' command

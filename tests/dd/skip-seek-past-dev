@@ -23,9 +23,10 @@ fi
 
 . $srcdir/test-lib.sh
 
-# need write access to device
+# need write access to local device
 # (even though we don't actually write anything)
 require_root_
+require_local_dir_
 
 get_device_size() {
   BLOCKDEV=blockdev
@@ -36,8 +37,7 @@ get_device_size() {
 
 # Get path to device the current dir is on.
 # Note df can only get fs size, not device size.
-device=$(df -P --local . | tail -n1 | cut -d' ' -f1) ||
-  skip_test_ 'this test runs only on local file systems'
+device=$(df -P . | tail -n1 | cut -d' ' -f1) || framework_failure
 
 dev_size=$(get_device_size "$device") ||
   skip_test_ "failed to determine size of $device"
