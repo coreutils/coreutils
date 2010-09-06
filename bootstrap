@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-11-20.08; # UTC
+scriptversion=2011-11-24.20; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -83,6 +83,9 @@ gnulib_modules=
 
 # Any gnulib files needed that are not in modules.
 gnulib_files=
+
+: ${AUTOPOINT=autopoint}
+: ${AUTORECONF=autoreconf}
 
 # A function to be called to edit gnulib.mk right after it's created.
 # Override it via your own definition in bootstrap.conf.
@@ -707,6 +710,33 @@ symlink_to_dir()
   }
 }
 
+# NOTE: we have to be careful to run both autopoint and libtoolize
+# before gnulib-tool, since gnulib-tool is likely to provide newer
+# versions of files "installed" by these two programs.
+# Then, *after* gnulib-tool (see below), we have to be careful to
+# run autoreconf in such a way that it does not run either of these
+# two just-pre-run programs.
+
+# Import from gettext.
+with_gettext=yes
+grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
+    with_gettext=no
+
+if test $with_gettext = yes; then
+  # Released autopoint has the tendency to install macros that have been
+  # obsoleted in current gnulib, so run this before gnulib-tool.
+  echo "$0: $AUTOPOINT --force"
+  $AUTOPOINT --force || exit
+fi
+
+# Autoreconf runs aclocal before libtoolize, which causes spurious
+# warnings if the initial aclocal is confused by the libtoolized
+# (or worse out-of-date) macro directory.
+if grep '^[    ]*LT_INIT' configure.ac >/dev/null; then
+  echo "running: $LIBTOOLIZE --copy --install"
+  $LIBTOOLIZE --copy --install
+fi
+
 version_controlled_file() {
   dir=$1
   file=$2
@@ -751,17 +781,6 @@ for file in $gnulib_files; do
   symlink_to_dir "$GNULIB_SRCDIR" $file || exit
 done
 
-
-# Import from gettext.
-with_gettext=yes
-grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
-    with_gettext=no
-
-if test $with_gettext = yes; then
-  echo "$0: ${AUTOPOINT-autopoint} ..."
-  ${AUTOPOINT-autopoint} || exit
-fi
-
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
 # The following requires GNU find 4.2.3 or newer.  Considering the usual
@@ -774,28 +793,12 @@ find "$m4_base" "$source_base" \
   -depth \( -name '*.m4' -o -name '*.[ch]' \) \
   -type l -xtype l -delete > /dev/null 2>&1
 
-# Reconfigure, getting other files.
-
-# Skip autoheader if it's not needed.
-grep -E '^[	 ]*AC_CONFIG_HEADERS?\>' configure.ac >/dev/null ||
-  AUTOHEADER=true
-
-for command in \
-  libtool \
-  "${ACLOCAL-aclocal} --force -I '$m4_base' $ACLOCAL_FLAGS" \
-  "${AUTOCONF-autoconf} --force" \
-  "${AUTOHEADER-autoheader} --force" \
-  "${AUTOMAKE-automake} --add-missing --copy --force-missing"
-do
-  if test "$command" = libtool; then
-    test $use_libtool = 0 \
-      && continue
-    command="${LIBTOOLIZE-libtoolize} -c -f"
-  fi
-  echo "$0: $command ..."
-  eval "$command" || exit
-done
-
+# Tell autoreconf not to invoke autopoint or libtoolize; they were run above.
+echo "running: AUTOPOINT=true LIBTOOLIZE=true " \
+    "$AUTORECONF --verbose --install --no-recursive -I $m4_base"
+AUTOPOINT=true LIBTOOLIZE=true \
+    $AUTORECONF --verbose --install --no-recursive -I $m4_base \
+  || exit 1
 
 # Get some extra files from gnulib, overriding existing files.
 for file in $gnulib_extra_files; do
