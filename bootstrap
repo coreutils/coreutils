@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-08-11.17; # UTC
+scriptversion=2011-11-20.08; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -38,10 +38,6 @@ export LC_ALL
 
 local_gl_dir=gl
 
-# Temporary directory names.
-bt='._bootmp'
-bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
-bt2=${bt}2
 me=$0
 
 usage() {
@@ -711,57 +707,6 @@ symlink_to_dir()
   }
 }
 
-cp_mark_as_generated()
-{
-  cp_src=$1
-  cp_dst=$2
-
-  if cmp -s "$cp_src" "$GNULIB_SRCDIR/$cp_dst"; then
-    symlink_to_dir "$GNULIB_SRCDIR" "$cp_dst"
-  elif cmp -s "$cp_src" "$local_gl_dir/$cp_dst"; then
-    symlink_to_dir $local_gl_dir "$cp_dst"
-  else
-    case $cp_dst in
-      *.[ch])             c1='/* '; c2=' */';;
-      *.texi)             c1='@c '; c2=     ;;
-      *.m4|*/Make*|Make*) c1='# ' ; c2=     ;;
-      *)                  c1=     ; c2=     ;;
-    esac
-
-    # If the destination directory doesn't exist, create it.
-    # This is required at least for "lib/uniwidth/cjk.h".
-    dst_dir=`dirname "$cp_dst"`
-    test -d "$dst_dir" || mkdir -p "$dst_dir"
-
-    if test -z "$c1"; then
-      cmp -s "$cp_src" "$cp_dst" || {
-        # Copy the file first to get proper permissions if it
-        # doesn't already exist.  Then overwrite the copy.
-        echo "$me: cp -f $cp_src $cp_dst" &&
-        rm -f "$cp_dst" &&
-        cp "$cp_src" "$cp_dst-t" &&
-        sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst-t" &&
-        mv -f "$cp_dst-t" "$cp_dst"
-      }
-    else
-      # Copy the file first to get proper permissions if it
-      # doesn't already exist.  Then overwrite the copy.
-      cp "$cp_src" "$cp_dst-t" &&
-      (
-        echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
-        echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
-        sed "s!$bt_regex/!!g" "$cp_src"
-      ) > $cp_dst-t &&
-      if cmp -s "$cp_dst-t" "$cp_dst"; then
-        rm -f "$cp_dst-t"
-      else
-        echo "$me: cp $cp_src $cp_dst # with edits" &&
-        mv -f "$cp_dst-t" "$cp_dst"
-      fi
-    fi
-  fi
-}
-
 version_controlled_file() {
   dir=$1
   file=$2
@@ -779,83 +724,17 @@ version_controlled_file() {
   test $found = yes
 }
 
-slurp() {
-  for dir in . `(cd $1 && find * -type d -print)`; do
-    copied=
-    sep=
-    for file in `ls -a $1/$dir`; do
-      case $file in
-      .|..) continue;;
-      # FIXME: should all file names starting with "." be ignored?
-      .*) continue;;
-      esac
-      test -d $1/$dir/$file && continue
-      for excluded_file in $excluded_files; do
-        test "$dir/$file" = "$excluded_file" && continue 2
-      done
-      if test $file = Makefile.am && test "X$gnulib_mk" != XMakefile.am; then
-        copied=$copied${sep}$gnulib_mk; sep=$nl
-        remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
-        sed "$remove_intl" $1/$dir/$file |
-        cmp - $dir/$gnulib_mk > /dev/null || {
-          echo "$me: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
-          rm -f $dir/$gnulib_mk &&
-          sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk &&
-          gnulib_mk_hook $dir/$gnulib_mk
-        }
-      elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
-           version_controlled_file $dir $file; then
-        echo "$me: $dir/$file overrides $1/$dir/$file"
-      else
-        copied=$copied$sep$file; sep=$nl
-        cp_mark_as_generated $1/$dir/$file $dir/$file
-      fi || exit
-    done
-
-    for dot_ig in x $vc_ignore; do
-      test $dot_ig = x && continue
-      ig=$dir/$dot_ig
-      if test -n "$copied"; then
-        insert_vc_ignore $ig "$copied"
-        # If an ignored file name ends with .in.h, then also add
-        # the name with just ".h".  Many gnulib headers are generated,
-        # e.g., stdint.in.h -> stdint.h, dirent.in.h ->..., etc.
-        # Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
-        f=`echo "$copied" |
-          sed '
-            s/\.in\.h$/.h/
-            s/\.sin$/.sed/
-            s/\.y$/.c/
-            s/\.gperf$/.h/
-          '
-        `
-        insert_vc_ignore $ig "$f"
-
-        # For files like sys_stat.in.h and sys_time.in.h, record as
-        # ignorable the directory we might eventually create: sys/.
-        f=`echo "$copied"|sed 's/sys_.*\.in\.h$/sys/'`
-        insert_vc_ignore $ig "$f"
-      fi
-    done
-  done
-}
-
-
-# Create boot temporary directories to import from gnulib and gettext.
-rm -fr $bt $bt2 &&
-mkdir $bt $bt2 || exit
-
 # Import from gnulib.
 
 gnulib_tool_options="\
  --import\
  --no-changelog\
- --aux-dir $bt/$build_aux\
- --doc-base $bt/$doc_base\
+ --aux-dir $build_aux\
+ --doc-base $doc_base\
  --lib $gnulib_name\
- --m4-base $bt/$m4_base/\
- --source-base $bt/$source_base/\
- --tests-base $bt/$tests_base\
+ --m4-base $m4_base/\
+ --source-base $source_base/\
+ --tests-base $tests_base\
  --local-dir $local_gl_dir\
  $gnulib_tool_option_extras\
 "
@@ -867,7 +746,6 @@ if test $use_libtool = 1; then
 fi
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
-slurp $bt || exit
 
 for file in $gnulib_files; do
   symlink_to_dir "$GNULIB_SRCDIR" $file || exit
@@ -880,12 +758,9 @@ grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
     with_gettext=no
 
 if test $with_gettext = yes; then
-  echo "$0: (cd $bt2; ${AUTOPOINT-autopoint}) ..."
-  cp configure.ac $bt2 &&
-  (cd $bt2 && ${AUTOPOINT-autopoint} && rm configure.ac) &&
-  slurp $bt2 $bt || exit
+  echo "$0: ${AUTOPOINT-autopoint} ..."
+  ${AUTOPOINT-autopoint} || exit
 fi
-rm -fr $bt $bt2 || exit
 
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
