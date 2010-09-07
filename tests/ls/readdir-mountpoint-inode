@@ -23,7 +23,8 @@ fi
 
 . $srcdir/test-lib.sh
 
-
+# We use --local here so as to not activate
+# potentially very many remote mounts.
 mount_points=$(df --local -P 2>&1 | sed -n 's,.*[0-9]% \(/.\),\1,p')
 test -z "$mount_points" && skip_test_ "this test requires a non-root mount point"
 
@@ -60,12 +61,10 @@ inode_via_readdir()
   eval "ls -i $opts $parent_dir" | sed 's/ .*//'
 }
 
-# FIXME: use a timeout, in case stat'ing mount points takes too long.
-
 for dir in $mount_points; do
   readdir_inode=$(inode_via_readdir $dir)
   test $? = 77 && continue
-  stat_inode=$(env stat --format=%i $dir)
+  stat_inode=$(timeout 1 stat --format=%i $dir)
   # If stat fails or says the inode is 0, skip $dir.
   case $stat_inode in 0|'') continue;; esac
   test "$readdir_inode" = "$stat_inode" || fail=1

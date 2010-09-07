@@ -38,14 +38,19 @@ test -r /dev/stdin 2>&1 \
   || skip_test_ '/dev/stdin is not readable'
 
 mv f g < /dev/stdin > out 2>&1 & pid=$!
-sleep 1
-kill $pid
 
-# Make sure out contains the prompt.
-case "`cat out`" in
-  "mv: try to overwrite \`g', overriding mode 0000"*) ;;
-  *) fail=1 ;;
-esac
+# Wait up to 3.1s for the expected prompt
+check_overwrite_prompt()
+{
+  local delay="$1"
+  case "`cat out`" in
+    "mv: try to overwrite \`g', overriding mode 0000"*) ;;
+    *) sleep $delay; return 1;;
+  esac
+}
+retry_delay_ check_overwrite_prompt .1 5 || fail=1
+
+kill $pid
 
 mv -f h i > out 2>&1 || fail=1
 test -f i || fail=1

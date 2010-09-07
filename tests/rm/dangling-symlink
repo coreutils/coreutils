@@ -34,12 +34,15 @@ rm ---presume-input-tty dangle symlink &
 pid=$!
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
 
-# Give the working rm a chance to remove the file.
-sleep 1
-
-# The file must no longer exist.
-ls -l dangle > /dev/null 2>&1 && fail=1
-ls -l symlink > /dev/null 2>&1 && fail=1
+# Wait up to 3.1s for rm to remove the files
+check_files_removed() {
+  local delay="$1"
+  local present=0
+  ls -l dangle > /dev/null 2>&1 && present=1
+  ls -l symlink > /dev/null 2>&1 && present=1
+  test $present = 1 && { sleep $delay; return 1; } || :
+}
+retry_delay_ check_files_removed .1 5 || fail=1
 
 kill $pid > /dev/null 2>&1
 
