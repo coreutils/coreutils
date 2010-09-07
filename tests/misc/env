@@ -143,8 +143,9 @@ chmod +x c=d || framework_failure
 test "x`env c=d echo fail`" = xfail || fail=1
 test "x`env -- c=d echo fail`" = xfail || fail=1
 test "x`env ./c=d echo fail`" = xfail || fail=1
-test "x$(env sh -c '\c=d echo fail')" = xpass || fail=1
 test "x$(env sh -c 'exec "$@"' sh c=d echo fail)" = xpass || fail=1
+test "x$(sh -c '\c=d echo fail')" = xpass && #dash 0.5.4 fails so check first
+  { test "x$(env sh -c '\c=d echo fail')" = xpass || fail=1; }
 
 # catch unsetenv failure, broken through coreutils 8.0
 env -u a=b true && fail=1
