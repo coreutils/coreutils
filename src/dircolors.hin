@@ -42,6 +42,7 @@ TERM rxvt-256color
 TERM rxvt-cygwin
 TERM rxvt-cygwin-native
 TERM rxvt-unicode
+TERM rxvt-unicode-256color
 TERM rxvt-unicode256
 TERM screen
 TERM screen-256color
