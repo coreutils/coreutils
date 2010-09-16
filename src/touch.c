@@ -163,8 +163,9 @@ touch (const char *file)
       t = NULL;
     }
 
-  ok = ((no_dereference && fd == -1) ? lutimens (file, t)
-        : gl_futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t)) == 0;
+  ok = (fdutimensat (AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), fd, t,
+                     (no_dereference && fd == -1) ? AT_SYMLINK_NOFOLLOW : 0)
+        == 0);
 
   if (fd == STDIN_FILENO)
     {
