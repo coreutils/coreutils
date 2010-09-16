@@ -48,6 +48,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   [The old behavior was introduced in coreutils-6.0 and had been removed
    for English only using a different method since coreutils-8.1]
 
+  rm's -d now evokes an error;  before, it was silently ignored.
+
   sort -g now uses long doubles for greater range and precision.
 
   sort -h no longer rejects numbers with leading or trailing ".", and

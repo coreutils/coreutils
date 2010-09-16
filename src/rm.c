@@ -63,7 +63,6 @@ enum interactive_type
 
 static struct option const long_opts[] =
 {
-  {"directory", no_argument, NULL, 'd'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", optional_argument, NULL, INTERACTIVE_OPTION},
 
@@ -222,17 +221,10 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
-  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "firvIR", long_opts, NULL)) != -1)
     {
       switch (c)
         {
-        case 'd':
-          /* Ignore this option, for backward compatibility with
-             coreutils 5.92.  FIXME: Some time after 2005, change this
-             to report an error (or perhaps behave like FreeBSD does)
-             instead of ignoring the option.  */
-          break;
-
         case 'f':
           x.interactive = RMI_NEVER;
           x.ignore_missing_files = true;
