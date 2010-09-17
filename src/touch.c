@@ -163,7 +163,7 @@ touch (const char *file)
       t = NULL;
     }
 
-  ok = (fdutimensat (AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), fd, t,
+  ok = (fdutimensat (fd, AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), t,
                      (no_dereference && fd == -1) ? AT_SYMLINK_NOFOLLOW : 0)
         == 0);
 

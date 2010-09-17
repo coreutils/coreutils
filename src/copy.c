@@ -803,7 +803,7 @@ copy_reg (char const *src_name, char const *dst_name,
       timespec[0] = get_stat_atime (src_sb);
       timespec[1] = get_stat_mtime (src_sb);
 
-      if (gl_futimens (dest_desc, dst_name, timespec) != 0)
+      if (fdutimens (dest_desc, dst_name, timespec) != 0)
         {
           error (0, errno, _("preserving times for %s"), quote (dst_name));
           if (x->require_preserve)
