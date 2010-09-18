@@ -1,4 +1,4 @@
-#serial 109   -*- autoconf -*-
+#serial 110   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -176,7 +176,6 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     sys/resource.h \
     sys/systeminfo.h \
     syslog.h \
-    termios.h \
   )
   AC_CHECK_HEADERS([sys/sysctl.h], [], [],
     [AC_INCLUDES_DEFAULT

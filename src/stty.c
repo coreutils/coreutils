@@ -36,9 +36,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#if HAVE_TERMIOS_H
-# include <termios.h>
-#endif
+#include <termios.h>
 #if HAVE_STROPTS_H
 # include <stropts.h>
 #endif
