@@ -3480,6 +3480,8 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
       queue_insert (merge_queue, &node);
       merge_loop (merge_queue, total_lines, tfp, temp_output);
     }
+
+  pthread_spin_destroy (&lock);
 }
 
 /* Scan through FILES[NTEMPS .. NFILES-1] looking for a file that is
@@ -3765,6 +3767,7 @@ sort (char * const *files, size_t nfiles, char const *output_file,
               sortlines (line, line, nthreads, buf.nlines, &node, true,
                          &merge_queue, tfp, temp_output);
               queue_destroy (&merge_queue);
+              pthread_spin_destroy (&lock);
             }
           else
             write_unique (line - 1, tfp, temp_output);
