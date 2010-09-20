@@ -10715,9 +10715,10 @@ stat does not search for specified device nodes in the
 file system list, instead operating on them directly
 @item
 @cindex bind mount
-stat outputs the alias for a bind mounted file,
-rather than its backing device.  One can recursively call stat
-until there is no change in output, to get the base mount point
+stat outputs the alias for a bind mounted file, rather than
+the initial mount point of its backing device.
+One can recursively call stat until there is no change in output,
+to get the current base mount point
 @end itemize
 
 When listing file system information (@option{--file-system} (@option{-f})),

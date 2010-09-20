@@ -18,14 +18,8 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 
-# Note we assume that the current directory is not bind mounted
-# (as then, stat and df may have different results).
-# This should be the case given the directory is temporary
-# for the duration of the test.
-
 df_mnt=$(df -P . | sed -n '2s/.* \([^ ]*$\)/\1/p')
-stat_mnt=$(stat -c%m .)
-
-test "$df_mnt" = "$stat_mnt" || fail=1
+stat_mnt=$(stat -c%m .) || fail=1
+test "$stat_mnt" || fail=1
 
 Exit $fail
