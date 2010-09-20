@@ -242,43 +242,43 @@ EOF
 
 (
 for type in n h g; do
-  printf "1\n\n44\n33\n2\n" | sort -s -k2$type --debug
-  printf "1\n\n44\n33\n2\n" | sort -s -k1.3$type --debug
-  printf "1\n\n44\n33\n2\n" | sort -s -k1$type --debug
-  printf "2\n\n1\n" | number | sort -s -k2g --debug
+  printf '1\n\n44\n33\n2\n' | sort -s -k2$type --debug
+  printf '1\n\n44\n33\n2\n' | sort -s -k1.3$type --debug
+  printf '1\n\n44\n33\n2\n' | sort -s -k1$type --debug
+  printf '2\n\n1\n' | number | sort -s -k2g --debug
 done
 
-printf "FEB\n\nJAN\n" | sort -s -k1M --debug
-printf "FEB\n\nJAN\n" | sort -s -k2,2M --debug
-printf "FEB\nJAZZ\n\nJAN\n" | sort -s -k1M --debug
-printf "FEB\nJAZZ\n\nJAN\n" | number | sort -s -k2,2M --debug
-printf "FEB\nJANZ\n\nJAN\n" | sort -s -k1M --debug
-printf "FEB\nJANZ\n\nJAN\n" | number | sort -s -k2,2M --debug
+printf 'FEB\n\nJAN\n' | sort -s -k1M --debug
+printf 'FEB\n\nJAN\n' | sort -s -k2,2M --debug
+printf 'FEB\nJAZZ\n\nJAN\n' | sort -s -k1M --debug
+printf 'FEB\nJAZZ\n\nJAN\n' | number | sort -s -k2,2M --debug
+printf 'FEB\nJANZ\n\nJAN\n' | sort -s -k1M --debug
+printf 'FEB\nJANZ\n\nJAN\n' | number | sort -s -k2,2M --debug
 
-printf " 1.2ignore\n 1.1e4ignore\n" | sort -s -g --debug
+printf ' 1.2ignore\n 1.1e4ignore\n' | sort -s -g --debug
 
-printf "\tb\n\t\ta\n" | sort -s -d --debug # ignore = 1
+printf '\tb\n\t\ta\n' | sort -s -d --debug # ignore = 1
 
-printf "a\n\n" | sort -s -k2,2 --debug #lena = 0
+printf 'a\n\n' | sort -s -k2,2 --debug #lena = 0
 
-printf "b\na\n" | sort -s -k1 --debug #otherwise key compare
+printf 'b\na\n' | sort -s -k1 --debug #otherwise key compare
 
-printf -- "-0\n1\n-2\n--Mi-1\n-3\n-0\n" | sort -s --debug -k1,1h
+printf -- '-0\n1\n-2\n--Mi-1\n-3\n-0\n' | sort -s --debug -k1,1h
 
-printf " 1\n1\n" | sort -b --debug
-printf " 1\n1\n" | sort -sb --debug
-printf " 1\n1\n" | sort --debug
+printf ' 1\n1\n' | sort -b --debug
+printf ' 1\n1\n' | sort -sb --debug
+printf ' 1\n1\n' | sort --debug
 
 # strnumcmp is a bit weird, so we don't match exactly
-printf "2,5\n2.4\n" | sort -s -k1n --debug
-printf "2.,,3\n2.4\n" | sort -s -k1n --debug
-printf "2,,3\n2.4\n" | sort -s -k1n --debug
+printf '2,5\n2.4\n' | sort -s -k1n --debug
+printf '2.,,3\n2.4\n' | sort -s -k1n --debug
+printf '2,,3\n2.4\n' | sort -s -k1n --debug
 
 # -z means we convert \0 to \n
-printf "1a\x002b\x00" | sort -s -n -z --debug
+env printf '1a\x002b\x00' | sort -s -n -z --debug
 
 # Check that \0 and \t intermix.
-printf "\0\ta\n" | sort -s -k2b,2 --debug | tr -d '\0'
+printf '\0\ta\n' | sort -s -k2b,2 --debug | tr -d '\0'
 ) > out
 
 compare out exp || fail=1
@@ -308,11 +308,11 @@ EOF
 : ${LOCALE_FR_UTF8=none}
 if test "$LOCALE_FR_UTF8" != "none"; then
   (
-  echo "   1²---++3   1,234  Mi" |
+  echo '   1²---++3   1,234  Mi' |
     LC_ALL=C sort --debug -k2g -k1b,1
-  echo "   1²---++3   1,234  Mi" |
+  echo '   1²---++3   1,234  Mi' |
     LC_ALL=$LOCALE_FR_UTF8 sort --debug -k2g -k1b,1
-  echo "+1234 1234Gi 1,234M" |
+  echo '+1234 1234Gi 1,234M' |
     LC_ALL=$LOCALE_FR_UTF8 sort --debug -k1,1n -k1,1g \
     -k1,1h -k2,2n -k2,2g -k2,2h -k3,3n -k3,3g -k3,3h
   ) > out
