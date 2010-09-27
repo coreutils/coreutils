@@ -1177,6 +1177,78 @@ card_of_complement (struct Spec_list *s)
   return cardinality;
 }
 
+/* Discard the lengths associated with a case conversion,
+   as using the actual number of upper or lower case characters
+   is problematic when they don't match in some locales.
+   Also ensure the case conversion classes in string2 are
+   aligned correctly with those in string1.
+   Note POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
+   is undefined.  Therefore we allow it (unlike Solaris)
+   and treat it as a no-op.  */
+
+static void
+validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
+{
+  size_t n_upper = 0;
+  size_t n_lower = 0;
+  unsigned int i;
+  int c1 = 0;
+  int c2 = 0;
+  count old_s1_len = s1->length;
+  count old_s2_len = s2->length;
+  struct List_element *s1_tail = s1->tail;
+  struct List_element *s2_tail = s2->tail;
+  bool s1_new_element = true;
+  bool s2_new_element = true;
+
+  if (!s2->has_char_class)
+    return;
+
+  for (i = 0; i < N_CHARS; i++)
+    {
+      if (isupper (i))
+        n_upper++;
+      if (islower (i))
+        n_lower++;
+    }
+
+  s1->state = BEGIN_STATE;
+  s2->state = BEGIN_STATE;
+
+  while (c1 != -1 && c2 != -1)
+    {
+      enum Upper_Lower_class class_s1, class_s2;
+
+      c1 = get_next (s1, &class_s1);
+      c2 = get_next (s2, &class_s2);
+
+      /* If c2 transitions to a new case class, then
+         c1 must also transition at the same time.  */
+      if (s2_new_element && class_s2 != UL_NONE
+          && !(s1_new_element && class_s1 != UL_NONE))
+        error (EXIT_FAILURE, 0,
+               _("misaligned [:upper:] and/or [:lower:] construct"));
+
+      /* If case converting, quickly skip over the elements.  */
+      if (class_s2 != UL_NONE)
+        {
+          skip_construct (s1);
+          skip_construct (s2);
+          /* Discount insignificant/problematic lengths.  */
+          s1->length -= (class_s1 == UL_UPPER ? n_upper : n_lower) - 1;
+          s2->length -= (class_s2 == UL_UPPER ? n_upper : n_lower) - 1;
+        }
+
+      s1_new_element = s1->state == NEW_ELEMENT; /* Next element is new.  */
+      s2_new_element = s2->state == NEW_ELEMENT; /* Next element is new.  */
+    }
+
+  assert (old_s1_len >= s1->length && old_s2_len >= s2->length);
+
+  s1->tail = s1_tail;
+  s2->tail = s2_tail;
+}
+
 /* Gather statistics about the spec-list S in preparation for the tests
    in validate that determine the consistency of the specs.  This function
    is called at most twice; once for string1, and again for any string2.
@@ -1318,20 +1390,14 @@ parse_str (char const *s, struct Spec_list *spec_list)
    Upon successful completion, S2->length is set to S1->length.  The only
    way this function can fail to make S2 as long as S1 is when S2 has
    zero-length, since in that case, there is no last character to repeat.
-   So S2->length is required to be at least 1.
+   So S2->length is required to be at least 1.  */
 
-   Providing this functionality allows the user to do some pretty
-   non-BSD (and non-portable) things:  For example, the command
-       tr -cs '[:upper:]0-9' '[:lower:]'
-   is almost guaranteed to give results that depend on your collating
-   sequence.  */
 
 static void
 string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
 {
   struct List_element *p;
   unsigned char char_to_repeat;
-  int i;
 
   assert (translating);
   assert (s1->length > s2->length);
@@ -1347,11 +1413,13 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       char_to_repeat = p->u.range.last_char;
       break;
     case RE_CHAR_CLASS:
-      for (i = N_CHARS - 1; i >= 0; i--)
-        if (is_char_class_member (p->u.char_class, i))
-          break;
-      assert (i >= 0);
-      char_to_repeat = i;
+      /* Note BSD allows extending of classes in string2.  For example:
+           tr '[:upper:]0-9' '[:lower:]'
+         That's not portable however, contradicts POSIX and is dependent
+         on your collating sequence.  */
+      error (EXIT_FAILURE, 0,
+             _("when translating with string1 longer than string2,\n\
+the latter string must not end with a character class"));
       break;
 
     case RE_REPEATED_CHAR:
@@ -1431,6 +1499,15 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
 when translating"));
             }
 
+          if (s2->has_restricted_char_class)
+            {
+              error (EXIT_FAILURE, 0,
+                     _("when translating, the only character classes that may \
+appear in\nstring2 are `upper' and `lower'"));
+            }
+
+          validate_case_classes (s1, s2);
+
           if (s1->length > s2->length)
             {
               if (!truncate_set1)
@@ -1451,13 +1528,6 @@ when translating"));
               error (EXIT_FAILURE, 0,
                      _("when translating with complemented character classes,\
 \nstring2 must map all characters in the domain to one"));
-            }
-
-          if (s2->has_restricted_char_class)
-            {
-              error (EXIT_FAILURE, 0,
-                     _("when translating, the only character classes that may \
-appear in\nstring2 are `upper' and `lower'"));
             }
         }
       else
@@ -1812,7 +1882,6 @@ main (int argc, char **argv)
         {
           int c1, c2;
           int i;
-          bool case_convert = false;
           enum Upper_Lower_class class_s1;
           enum Upper_Lower_class class_s2;
 
@@ -1822,46 +1891,20 @@ main (int argc, char **argv)
           s2->state = BEGIN_STATE;
           while (true)
             {
-              /* When the previous pair identified case-converting classes,
-                 advance S1 and S2 so that each points to the following
-                 construct.  */
-              if (case_convert)
-                {
-                  skip_construct (s1);
-                  skip_construct (s2);
-                  case_convert = false;
-                }
-
               c1 = get_next (s1, &class_s1);
               c2 = get_next (s2, &class_s2);
 
-              /* When translating and there is an [:upper:] or [:lower:]
-                 class in SET2, then there must be a corresponding [:lower:]
-                 or [:upper:] class in SET1.  */
-              if (class_s1 == UL_NONE
-                  && (class_s2 == UL_LOWER || class_s2 == UL_UPPER))
-                error (EXIT_FAILURE, 0,
-                       _("misaligned [:upper:] and/or [:lower:] construct"));
-
               if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
                 {
-                  case_convert = true;
                   for (i = 0; i < N_CHARS; i++)
                     if (islower (i))
                       xlate[i] = toupper (i);
                 }
               else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
                 {
-                  case_convert = true;
                   for (i = 0; i < N_CHARS; i++)
                     if (isupper (i))
                       xlate[i] = tolower (i);
-                }
-              else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
-                       || (class_s1 == UL_UPPER && class_s2 == UL_UPPER))
-                {
-                  /* POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
-                     is undefined.  Treat it as a no-op.  */
                 }
               else
                 {
@@ -1869,6 +1912,13 @@ main (int argc, char **argv)
                   if (c1 == -1 || c2 == -1)
                     break;
                   xlate[c1] = c2;
+                }
+
+              /* When case-converting, skip the elements as an optimization.  */
+              if (class_s2 != UL_NONE)
+                {
+                  skip_construct (s1);
+                  skip_construct (s2);
                 }
             }
           assert (c1 == -1 || truncate_set1);

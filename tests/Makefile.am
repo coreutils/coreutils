@@ -260,6 +260,7 @@ TESTS =						\
   misc/timeout					\
   misc/timeout-parameters			\
   misc/tr					\
+  misc/tr-case-class				\
   misc/truncate-dangling-symlink		\
   misc/truncate-dir-fail			\
   misc/truncate-fail-diag			\

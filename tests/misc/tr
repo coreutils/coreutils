@@ -155,33 +155,7 @@ my @Tests =
 
   # Up to coreutils-6.9, this would provoke a failed assertion.
   ['no-abort-1', qw(-c a '[b*256]'), {IN=>'abc'}, {OUT=>'abb'}],
-
-  # Up to coreutils-6.9, tr rejected an unmatched [:lower:] or [:upper:] in SET1.
-  ['s1-lower', qw('[:lower:]' '[.*]'),
-   {IN=>'#$%123abcABC'}, {OUT=>'#$%123...ABC'}],
-  ['s1-upper', qw('[:upper:]' '[.*]'),
-   {IN=>'#$%123abcABC'}, {OUT=>'#$%123abc...'}],
-
-  # Up to coreutils-6.9.91, this would fail with the diagnostic:
-  # tr: misaligned [:upper:] and/or [:lower:] construct
-  # with LC_CTYPE=en_US.ISO-8859-1.
-  ['tolower-F', qw('[:upper:]' '[:lower:]'), {IN=>'A'}, {OUT=>'a'}],
-
-  # When doing a case-converting translation with something after the
-  # [:upper:] and [:lower:] elements, ensure that tr honors the following byte.
-  ['upcase-xtra', qw('[:lower:].' '[:upper:]x'), {IN=>'abc.'}, {OUT=>'ABCx'}],
-  ['dncase-xtra', qw('[:upper:].' '[:lower:]x'), {IN=>'ABC.'}, {OUT=>'abcx'}],
 );
-
-# Set LC_CTYPE=en_US.ISO-8859-1 in the environment of the tolower-F test.
-foreach my $t (@Tests)
-  {
-    if ($t->[0] eq 'tolower-F')
-      {
-        push @$t, {ENV=>'LC_CTYPE=en_US.ISO-8859-1'};
-        last;
-      }
-  }
 
 @Tests = triple_test \@Tests;
 

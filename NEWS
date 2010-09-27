@@ -14,6 +14,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   tac would perform a double-free when given an input line longer than 16KiB.
   [bug introduced in coreutils-8.3]
 
+  tr now consistently handles case conversion character classes.
+  In some locales, valid conversion specifications caused tr to abort,
+  while in all locales, some invalid specifications were undiagnosed.
+  [bugs introduced in coreutils 6.9.90 and 6.9.92]
+
 ** New features
 
   cp now accepts the --attributes-only option to not copy file data,
