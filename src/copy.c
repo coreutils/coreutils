@@ -36,6 +36,7 @@
 #include "buffer-lcm.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "extent-scan.h"
 #include "error.h"
 #include "fcntl--.h"
 #include "file-set.h"
@@ -152,74 +153,79 @@ clone_file (int dest_fd, int src_fd)
 #endif
 }
 
-#ifdef __linux__
-# ifndef FS_IOC_FIEMAP
-#  define FS_IOC_FIEMAP _IOWR ('f', 11, struct fiemap)
-# endif
-/* Perform a FIEMAP copy, if possible.
-   Call ioctl(2) with FS_IOC_FIEMAP (available in linux 2.6.27) to
-   obtain a map of file extents excluding holes.  This avoids the
-   overhead of detecting holes in a hole-introducing/preserving copy,
-   and thus makes copying sparse files much more efficient.  Upon a
-   successful copy, return true.  If the initial ioctl fails, set
-   *NORMAL_COPY_REQUIRED to true and return false.  Upon any other
-   failure, set *NORMAL_COPY_REQUIRED to false and return false.  */
 static bool
-fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
-             off_t src_total_size, char const *src_name,
-             char const *dst_name, bool *normal_copy_required)
+write_zeros (int fd, uint64_t n_bytes)
 {
-  bool last = false;
-  union { struct fiemap f; char c[4096]; } fiemap_buf;
-  struct fiemap *fiemap = &fiemap_buf.f;
-  struct fiemap_extent *fm_ext = &fiemap->fm_extents[0];
-  enum { count = (sizeof fiemap_buf - sizeof *fiemap) / sizeof *fm_ext };
-  verify (count != 0);
+  static char *zeros;
+  static size_t nz = IO_BUFSIZE;
 
+  if (zeros == NULL)
+    {
+      static char fallback[1024];
+      zeros = calloc (nz, 1);
+      if (zeros == NULL)
+        {
+          zeros = fallback;
+          nz = sizeof fallback;
+        }
+    }
+
+  while (n_bytes)
+    {
+      uint64_t n = MIN (sizeof nz, n_bytes);
+      if ((full_write (fd, zeros, n)) != n)
+        return false;
+      n_bytes -= n;
+    }
+
+  return true;
+}
+
+/* Perform an efficient extent copy, if possible.  This avoids
+   the overhead of detecting holes in hole-introducing/preserving
+   copy, and thus makes copying sparse files much more efficient.
+   Upon a successful copy, return true.  If the initial extent scan
+   fails, set *NORMAL_COPY_REQUIRED to true and return false.
+   Upon any other failure, set *NORMAL_COPY_REQUIRED to false and
+   return false.  */
+static bool
+extent_copy (int src_fd, int dest_fd, size_t buf_size,
+             off_t src_total_size, bool make_holes,
+             char const *src_name, char const *dst_name,
+             bool *require_normal_copy)
+{
+  struct extent_scan scan;
   off_t last_ext_logical = 0;
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
-  unsigned int i = 0;
-  *normal_copy_required = false;
+  unsigned int i;
+  bool ok = true;
 
-  /* This is required at least to initialize fiemap->fm_start,
-     but also serves (in mid 2010) to appease valgrind, which
-     appears not to know the semantics of the FIEMAP ioctl. */
-  memset (&fiemap_buf, 0, sizeof fiemap_buf);
+  open_extent_scan (src_fd, &scan);
 
   do
     {
-      fiemap->fm_length = FIEMAP_MAX_OFFSET;
-      fiemap->fm_flags = FIEMAP_FLAG_SYNC;
-      fiemap->fm_extent_count = count;
-
-      /* When ioctl(2) fails, fall back to the normal copy only if it
-         is the first time we met.  */
-      if (ioctl (src_fd, FS_IOC_FIEMAP, fiemap) < 0)
+      ok = get_extents_info (&scan);
+      if (! ok)
         {
-          /* If the first ioctl fails, tell the caller that it is
-             ok to proceed with a normal copy.  */
-          if (i == 0)
-            *normal_copy_required = true;
-          else
+          if (scan.hit_last_extent)
+            break;
+
+          if (scan.initial_scan_failed)
             {
-              /* If the second or subsequent ioctl fails, diagnose it,
-                 since it ends up causing the entire copy/cp to fail.  */
-              error (0, errno, _("%s: FIEMAP ioctl failed"), quote (src_name));
+              close_extent_scan (&scan);
+              *require_normal_copy = true;
+              return false;
             }
+
+          error (0, errno, _("failed to get extents info %s"), quote (src_name));
           return false;
         }
 
-      /* If 0 extents are returned, then more ioctls are not needed.  */
-      if (fiemap->fm_mapped_extents == 0)
-        break;
-
-      for (i = 0; i < fiemap->fm_mapped_extents; i++)
+      for (i = 0; i < scan.ei_count; i++)
         {
-          assert (fm_ext[i].fe_logical <= OFF_T_MAX);
-
-          off_t ext_logical = fm_ext[i].fe_logical;
-          uint64_t ext_len = fm_ext[i].fe_length;
+          off_t ext_logical = scan.ext_info[i].ext_logical;
+          uint64_t ext_len = scan.ext_info[i].ext_length;
 
           if (lseek (src_fd, ext_logical, SEEK_SET) < 0)
             {
@@ -227,18 +233,29 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
               return false;
             }
 
-          if (lseek (dest_fd, ext_logical, SEEK_SET) < 0)
+          if (make_holes)
             {
-              error (0, errno, _("cannot lseek %s"), quote (dst_name));
-              return false;
+              if (lseek (dest_fd, ext_logical, SEEK_SET) < 0)
+                {
+                  error (0, errno, _("cannot lseek %s"), quote (dst_name));
+                  return false;
+                }
+            }
+          else
+            {
+              /* If not making a sparse file, write zeros to the destination
+                 file if there is a hole between the last and current extent.  */
+              if (last_ext_logical + last_ext_len < ext_logical)
+                {
+                  uint64_t holes_len = ext_logical - last_ext_logical - last_ext_len;
+                  if (! write_zeros (dest_fd, holes_len))
+                    return false;
+                }
             }
 
-          if (fm_ext[i].fe_flags & FIEMAP_EXTENT_LAST)
-            {
-              last_ext_logical = ext_logical;
-              last_ext_len = ext_len;
-              last = true;
-            }
+          last_ext_logical = ext_logical;
+          last_ext_len = ext_len;
+          last_read_size = 0;
 
           while (ext_len)
             {
@@ -246,8 +263,7 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
 
               /* Avoid reading into the holes if the left extent
                  length is shorter than the buffer size.  */
-              if (ext_len < buf_size)
-                buf_size = ext_len;
+              buf_size = MIN (ext_len, buf_size);
 
               ssize_t n_read = read (src_fd, buf, buf_size);
               if (n_read < 0)
@@ -257,12 +273,12 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
                     continue;
 #endif
                   error (0, errno, _("reading %s"), quote (src_name));
-                  return false;
+                    return false;
                 }
 
               if (n_read == 0)
                 {
-                  /* Figure out how many bytes read from the last extent.  */
+                  /* Figure out how many bytes read from the previous extent.  */
                   last_read_size = last_ext_len - ext_len;
                   break;
                 }
@@ -277,27 +293,44 @@ fiemap_copy (int src_fd, int dest_fd, size_t buf_size,
             }
         }
 
-      fiemap->fm_start = fm_ext[i - 1].fe_logical + fm_ext[i - 1].fe_length;
+      /* Release the space allocated to scan->ext_info.  */
+      free_extents_info (&scan);
+    } while (! scan.hit_last_extent);
 
-    } while (! last);
+  /* Do nothing now.  */
+  close_extent_scan (&scan);
 
   /* If a file ends up with holes, the sum of the last extent logical offset
-     and the read-returned size will be shorter than the actual size of the
-     file.  Use ftruncate to extend the length of the destination file.  */
-  if (last_ext_logical + last_read_size < src_total_size)
+     and the read-returned size or the last extent length will be shorter than
+     the actual size of the file.  Use ftruncate to extend the length of the
+     destination file if make_holes, or write zeros up to the actual size of the
+     file.  */
+  if (make_holes)
     {
-      if (ftruncate (dest_fd, src_total_size) < 0)
+      if (last_ext_logical + last_read_size < src_total_size)
         {
-          error (0, errno, _("failed to extend %s"), quote (dst_name));
-          return false;
+          if (ftruncate (dest_fd, src_total_size) < 0)
+            {
+              error (0, errno, _("failed to extend %s"), quote (dst_name));
+              return false;
+            }
+        }
+    }
+  else
+    {
+      if (last_ext_logical + last_ext_len < src_total_size)
+        {
+          uint64_t holes_len = src_total_size - last_ext_logical - last_ext_len;
+          if (0 < holes_len)
+            {
+              if (! write_zeros (dest_fd, holes_len))
+                return false;
+            }
         }
     }
 
   return true;
 }
-#else
-static bool fiemap_copy (ignored) { errno == ENOTSUP; return false; }
-#endif
 
 /* FIXME: describe */
 /* FIXME: rewrite this to use a hash table so we avoid the quadratic
@@ -830,11 +863,13 @@ copy_reg (char const *src_name, char const *dst_name,
       if (make_holes)
         {
           bool require_normal_copy;
-          /* Perform efficient FIEMAP copy for sparse files, fall back to the
-             standard copy only if the ioctl(2) fails.  */
-          if (fiemap_copy (source_desc, dest_desc, buf_size,
-                           src_open_sb.st_size, src_name,
-                           dst_name, &require_normal_copy))
+          /* Perform efficient extent copy for sparse file, fall back to the
+             standard copy only if the initial extent scan fails.  If the
+             '--sparse=never' option was specified, we writing all data but
+             use extent copy if available to efficiently read.  */
+          if (extent_copy (source_desc, dest_desc, buf_size,
+                           src_open_sb.st_size, make_holes,
+                           src_name, dst_name, &require_normal_copy))
             goto preserve_metadata;
           else
             {
