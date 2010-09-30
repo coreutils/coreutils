@@ -17,6 +17,7 @@ coreutils.tp
 coreutils.vr
 fdl.texi
 gendocs_template
+get_date.texi
 getdate.texi
 stamp-vti
 version.texi

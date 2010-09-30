@@ -15675,7 +15675,7 @@ outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 @chapter File permissions
 @include perm.texi
 
-@include getdate.texi
+@include get_date.texi
 
 @c              What's GNU?
 @c              Arnold Robbins
