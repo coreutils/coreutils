@@ -239,6 +239,7 @@ TESTS =						\
   misc/split-a					\
   misc/split-fail				\
   misc/split-l					\
+  misc/stat-birthtime				\
   misc/stat-fmt					\
   misc/stat-hyphen				\
   misc/stat-mount				\

@@ -788,6 +788,26 @@ print_stat (char *pformat, size_t prefix_len, char m,
     case 'o':
       out_uint (pformat, prefix_len, statbuf->st_blksize);
       break;
+    case 'w':
+      {
+        struct timespec t = get_stat_birthtime (statbuf);
+        if (t.tv_nsec < 0)
+          out_string (pformat, prefix_len, "-");
+        else
+          out_string (pformat, prefix_len, human_time (t));
+      }
+      break;
+    case 'W':
+      {
+        struct timespec t = get_stat_birthtime (statbuf);
+        if (t.tv_nsec < 0)
+          out_string (pformat, prefix_len, "-");
+        else if (TYPE_SIGNED (time_t))
+          out_int (pformat, prefix_len, t.tv_sec);
+        else
+          out_uint (pformat, prefix_len, t.tv_sec);
+      }
+      break;
     case 'x':
       out_string (pformat, prefix_len, human_time (get_stat_atime (statbuf)));
       break;
@@ -1042,7 +1062,7 @@ do_stat (char const *filename, bool terse, char const *format)
     {
       if (terse)
         {
-          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o\n";
+          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %W %o\n";
         }
       else
         {
@@ -1056,7 +1076,7 @@ do_stat (char const *filename, bool terse, char const *format)
                 "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
                 " Device type: %t,%T\n"
                 "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-                "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+                "Access: %x\n" "Modify: %y\n" "Change: %z\n" " Birth: %w\n";
             }
           else
             {
@@ -1065,7 +1085,7 @@ do_stat (char const *filename, bool terse, char const *format)
                 "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
                 "Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
                 "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-                "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+                "Access: %x\n" "Modify: %y\n" "Change: %z\n" " Birth: %w\n";
             }
         }
     }
@@ -1130,6 +1150,8 @@ The valid format sequences for files (without --file-system):\n\
       fputs (_("\
   %u   User ID of owner\n\
   %U   User name of owner\n\
+  %w   Time of file birth, or - if unknown\n\
+  %W   Time of file birth as seconds since Epoch, or - if unknown\n\
   %x   Time of last access\n\
   %X   Time of last access as seconds since Epoch\n\
   %y   Time of last modification\n\

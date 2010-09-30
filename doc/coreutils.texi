@@ -10696,6 +10696,8 @@ The valid @var{format} directives for files with @option{--format} and
 @item %T - Minor device type in hex
 @item %u - User ID of owner
 @item %U - User name of owner
+@item %w - Time of file birth, or @samp{-} if unknown
+@item %W - Time of file birth as seconds since Epoch, or @samp{-}
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
 @item %y - Time of last modification

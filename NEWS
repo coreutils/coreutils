@@ -36,8 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort now supports -d, -f, -i, -R, and -V in any combination.
 
-  stat now accepts the %m format directive to output
-  the mount point for a file.
+  stat now accepts the %m format directive to output the mount point
+  for a file.  It also accepts the %w and %W format directives for
+  outputting the birth time of a file, if one is available.
 
 ** Changes in behavior
 
