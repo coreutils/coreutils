@@ -28,8 +28,7 @@ ctime=$(stat --format %Z a) || fail=1
 
 case $(stat --format %x a) in
   *.000000000*) sleep 2;; # worst case file system is FAT
-  *) # FIXME: sleep .1 would be sufficient if %X is fixed to show nanoseconds
- sleep 1;;
+  *) sleep .02;; # should be adequate for any system with subsecond resolution
 esac
 
 touch a || fail=1

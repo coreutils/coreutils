@@ -461,6 +461,26 @@ human_time (struct timespec t)
   return str;
 }
 
+static char * ATTRIBUTE_WARN_UNUSED_RESULT
+epoch_time (struct timespec t)
+{
+  static char str[INT_STRLEN_BOUND (time_t) + sizeof ".NNNNNNNNN"];
+  /* Note that time_t can technically be a floating point value, such
+     that casting to [u]intmax_t could lose a fractional value or
+     suffer from overflow.  However, most porting targets have an
+     integral time_t; also, we know of no file systems that store
+     valid time values outside the bounds of intmax_t even if that
+     value were represented as a floating point.  Besides, the cost of
+     converting to struct tm just to use nstrftime (str, len, "%s.%N",
+     tm, 0, t.tv_nsec) is pointless, since nstrftime would have to
+     convert back to seconds as time_t.  */
+  if (TYPE_SIGNED (time_t))
+    sprintf (str, "%" PRIdMAX ".%09ld", (intmax_t) t.tv_sec, t.tv_nsec);
+  else
+    sprintf (str, "%" PRIuMAX ".%09ld", (uintmax_t) t.tv_sec, t.tv_nsec);
+  return str;
+}
+
 static void
 out_string (char *pformat, size_t prefix_len, char const *arg)
 {
@@ -802,38 +822,27 @@ print_stat (char *pformat, size_t prefix_len, char m,
         struct timespec t = get_stat_birthtime (statbuf);
         if (t.tv_nsec < 0)
           out_string (pformat, prefix_len, "-");
-        else if (TYPE_SIGNED (time_t))
-          out_int (pformat, prefix_len, t.tv_sec);
         else
-          out_uint (pformat, prefix_len, t.tv_sec);
+          out_string (pformat, prefix_len, epoch_time (t));
       }
       break;
     case 'x':
       out_string (pformat, prefix_len, human_time (get_stat_atime (statbuf)));
       break;
     case 'X':
-      if (TYPE_SIGNED (time_t))
-        out_int (pformat, prefix_len, statbuf->st_atime);
-      else
-        out_uint (pformat, prefix_len, statbuf->st_atime);
+      out_string (pformat, prefix_len, epoch_time (get_stat_atime (statbuf)));
       break;
     case 'y':
       out_string (pformat, prefix_len, human_time (get_stat_mtime (statbuf)));
       break;
     case 'Y':
-      if (TYPE_SIGNED (time_t))
-        out_int (pformat, prefix_len, statbuf->st_mtime);
-      else
-        out_uint (pformat, prefix_len, statbuf->st_mtime);
+      out_string (pformat, prefix_len, epoch_time (get_stat_mtime (statbuf)));
       break;
     case 'z':
       out_string (pformat, prefix_len, human_time (get_stat_ctime (statbuf)));
       break;
     case 'Z':
-      if (TYPE_SIGNED (time_t))
-        out_int (pformat, prefix_len, statbuf->st_ctime);
-      else
-        out_uint (pformat, prefix_len, statbuf->st_ctime);
+      out_string (pformat, prefix_len, epoch_time (get_stat_ctime (statbuf)));
       break;
     case 'C':
       fail |= out_file_context (filename, pformat, prefix_len);

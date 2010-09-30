@@ -75,6 +75,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   merely accepted and ignored, for compatibility.  Starting two years
   ago, with coreutils-7.0, its use evoked a warning.
 
+  stat now outputs the full sub-second resolution for the atime,
+  mtime, and ctime values since the Epoch, when using the %X, %Y, and
+  %Z directives of the --format option.  This matches the fact that
+  %x, %y, and %z were already doing so for the human-readable variant.
+
   touch's --file option is no longer recognized.  Use --reference=F (-r)
   instead.  --file has not been documented for 15 years, and its use has
   elicited a warning since coreutils-7.1.

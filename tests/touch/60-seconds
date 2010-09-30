@@ -23,7 +23,7 @@ fi
 
 . $srcdir/test-lib.sh
 
-echo 60 > exp || framework_failure
+echo 60.000000000 > exp || framework_failure
 
 
 # Before coreutils-7.7, this would fail, complaining of
