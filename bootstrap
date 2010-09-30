@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2010-07-06.10; # UTC
+scriptversion=2010-09-30.21; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -346,6 +346,10 @@ check_versions() {
   ret=0
 
   while read app req_ver; do
+    # We only need libtoolize from the libtool package.
+    if test "$app" = libtool; then
+      app=libtoolize
+    fi
     # Honor $APP variables ($TAR, $AUTOCONF, etc.)
     appvar=`echo $app | tr '[a-z]' '[A-Z]'`
     test "$appvar" = TAR && appvar=AMTAR
@@ -374,6 +378,18 @@ print_versions() {
   echo "----------------------"
   # can't depend on column -t
 }
+
+use_libtool=0
+# We'd like to use grep -E, to see if any of LT_INIT,
+# AC_PROG_LIBTOOL, AM_PROG_LIBTOOL is used in configure.ac,
+# but that's not portable enough (e.g., for Solaris).
+grep '^[	 ]*A[CM]_PROG_LIBTOOL' configure.ac >/dev/null \
+  && use_libtool=1
+grep '^[	 ]*LT_INIT' configure.ac >/dev/null \
+  && use_libtool=1
+if test $use_libtool = 1; then
+  find_tool LIBTOOLIZE glibtoolize libtoolize
+fi
 
 if ! printf "$buildreq" | check_versions; then
   test -f README-prereq &&
@@ -736,6 +752,12 @@ gnulib_tool_options="\
  --local-dir $local_gl_dir\
  $gnulib_tool_option_extras\
 "
+if test $use_libtool = 1; then
+  case "$gnulib_tool_options " in
+    *' --libtool '*) ;;
+    *) gnulib_tool_options="$gnulib_tool_options --libtool" ;;
+  esac
+fi
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
 slurp $bt || exit
@@ -778,20 +800,12 @@ grep -E '^[	 ]*AC_CONFIG_HEADERS?\>' configure.ac >/dev/null ||
 
 for command in \
   libtool \
-  "${ACLOCAL-aclocal} --force -I m4" \
+  "${ACLOCAL-aclocal} --force -I m4 $ACLOCAL_FLAGS" \
   "${AUTOCONF-autoconf} --force" \
   "${AUTOHEADER-autoheader} --force" \
   "${AUTOMAKE-automake} --add-missing --copy --force-missing"
 do
   if test "$command" = libtool; then
-    use_libtool=0
-    # We'd like to use grep -E, to see if any of LT_INIT,
-    # AC_PROG_LIBTOOL, AM_PROG_LIBTOOL is used in configure.ac,
-    # but that's not portable enough (e.g., for Solaris).
-    grep '^[	 ]*A[CM]_PROG_LIBTOOL' configure.ac >/dev/null \
-      && use_libtool=1
-    grep '^[	 ]*LT_INIT' configure.ac >/dev/null \
-      && use_libtool=1
     test $use_libtool = 0 \
       && continue
     command="${LIBTOOLIZE-libtoolize} -c -f"
