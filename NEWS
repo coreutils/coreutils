@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   du -H and -L now consistently count pointed-to files instead of
   symbolic links, and correctly diagnose dangling symlinks.
 
+  du --ignore=D now ignores directory D even when that directory is
+  found to be part of a directory cycle.  Before, du would issue a
+  "NOTIFY YOUR SYSTEM MANAGER" diagnostic and fail.
+
   tac would perform a double-free when given an input line longer than 16KiB.
   [bug introduced in coreutils-8.3]
 
