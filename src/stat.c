@@ -70,6 +70,7 @@
 #include "stat-time.h"
 #include "strftime.h"
 #include "find-mount-point.h"
+#include "xvasprintf.h"
 
 #if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
@@ -1027,24 +1028,14 @@ do_statfs (char const *filename, bool terse, char const *format)
       return false;
     }
 
-  if (format == NULL)
-    {
-      format = (terse
-                ? "%n %i %l %t %s %S %b %f %a %c %d\n"
-                : "  File: \"%n\"\n"
-                "    ID: %-8i Namelen: %-7l Type: %T\n"
-                "Block size: %-10s Fundamental block size: %S\n"
-                "Blocks: Total: %-10b Free: %-10f Available: %a\n"
-                "Inodes: Total: %-10c Free: %d\n");
-    }
-
   bool fail = print_it (format, filename, print_statfs, &statfsbuf);
   return ! fail;
 }
 
 /* stat the file and print what we find */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-do_stat (char const *filename, bool terse, char const *format)
+do_stat (char const *filename, bool terse, char const *format,
+         char const *format2)
 {
   struct stat statbuf;
 
@@ -1067,39 +1058,83 @@ do_stat (char const *filename, bool terse, char const *format)
       return false;
     }
 
-  if (format == NULL)
+  if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
+    format = format2;
+
+  bool fail = print_it (format, filename, print_stat, &statbuf);
+  return ! fail;
+}
+
+/* Return an allocated format string in static storage that
+   corresponds to whether FS and TERSE options were declared.  */
+static char *
+default_format (bool fs, bool terse, bool device)
+{
+  char *format;
+  if (fs)
     {
       if (terse)
-        {
-          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %W %o\n";
-        }
+        format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
       else
         {
-          /* Temporary hack to match original output until conditional
-             implemented.  */
-          if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
+          /* TRANSLATORS: This string uses format specifiers from
+             'stat --help' with --file-system, and NOT from printf.  */
+          format = xstrdup (_("\
+  File: \"%n\"\n\
+    ID: %-8i Namelen: %-7l Type: %T\n\
+Block size: %-10s Fundamental block size: %S\n\
+Blocks: Total: %-10b Free: %-10f Available: %a\n\
+Inodes: Total: %-10c Free: %d\n\
+"));
+        }
+    }
+  else /* ! fs */
+    {
+      if (terse)
+        format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %W %o\n");
+      else
+        {
+          char *temp;
+          /* TRANSLATORS: This string uses format specifiers from
+             'stat --help' without --file-system, and NOT from printf.  */
+          format = xstrdup (_("\
+  File: %N\n\
+  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n\
+"));
+
+          temp = format;
+          if (device)
             {
-              format =
-                "  File: %N\n"
-                "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-                "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-                " Device type: %t,%T\n"
-                "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-                "Access: %x\n" "Modify: %y\n" "Change: %z\n" " Birth: %w\n";
+              /* TRANSLATORS: This string uses format specifiers from
+                 'stat --help' without --file-system, and NOT from printf.  */
+              format = xasprintf ("%s%s", format, _("\
+Device: %Dh/%dd\tInode: %-10i  Links: %-5h Device type: %t,%T\n\
+"));
             }
           else
             {
-              format =
-                "  File: %N\n"
-                "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-                "Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
-                "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-                "Access: %x\n" "Modify: %y\n" "Change: %z\n" " Birth: %w\n";
+              /* TRANSLATORS: This string uses format specifiers from
+                 'stat --help' without --file-system, and NOT from printf.  */
+              format = xasprintf ("%s%s", format, _("\
+Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
+"));
             }
+          free (temp);
+
+          temp = format;
+          /* TRANSLATORS: This string uses format specifiers from
+             'stat --help' without --file-system, and NOT from printf.  */
+          format = xasprintf ("%s%s", format, _("\
+Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n\
+Access: %x\n\
+Modify: %y\n\
+Change: %z\n\
+ Birth: %w\n\
+"));
+          free (temp);
         }
     }
-  bool fail = print_it (format, filename, print_stat, &statbuf);
-  return ! fail;
+  return format;
 }
 
 void
@@ -1203,6 +1238,7 @@ main (int argc, char *argv[])
   bool fs = false;
   bool terse = false;
   char *format = NULL;
+  char *format2;
   bool ok = true;
 
   initialize_main (&argc, &argv);
@@ -1256,10 +1292,18 @@ main (int argc, char *argv[])
       usage (EXIT_FAILURE);
     }
 
+  if (format)
+    format2 = format;
+  else
+    {
+      format = default_format (fs, terse, false);
+      format2 = default_format (fs, terse, true);
+    }
+
   for (i = optind; i < argc; i++)
     ok &= (fs
            ? do_statfs (argv[i], terse, format)
-           : do_stat (argv[i], terse, format));
+           : do_stat (argv[i], terse, format, format2));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

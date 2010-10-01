@@ -71,6 +71,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   limited with the --parallel option or with external process
   control like taskset for example.
 
+  stat now provides translated output when no format is specified.
+
   stat no longer accepts the --context (-Z) option.  Initially it was
   merely accepted and ignored, for compatibility.  Starting two years
   ago, with coreutils-7.0, its use evoked a warning.
