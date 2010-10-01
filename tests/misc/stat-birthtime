@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && stat --version
 
 # Whether birthtime is supported or not, it better not change even when
 # [acm]time are modified.  :)

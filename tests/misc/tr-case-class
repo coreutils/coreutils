@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && tr --version
 
 # Ensure we support translation of case classes with extension
 echo '01234567899999999999999999' > exp

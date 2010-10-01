@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && FIXME --version
+
 # FIXME: skip_if_root_
 # FIXME: require_root_
 

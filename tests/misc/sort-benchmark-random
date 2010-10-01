@@ -19,6 +19,7 @@
 # Written by Glen Lenker.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && sort --version
 
 very_expensive_
 
