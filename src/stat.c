@@ -1074,7 +1074,12 @@ default_format (bool fs, bool terse, bool device)
   if (fs)
     {
       if (terse)
-        format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
+        {
+          if (0 < is_selinux_enabled ())
+            format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d %C\n");
+          else
+            format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
+        }
       else
         {
           /* TRANSLATORS: This string uses format specifiers from
@@ -1086,12 +1091,30 @@ Block size: %-10s Fundamental block size: %S\n\
 Blocks: Total: %-10b Free: %-10f Available: %a\n\
 Inodes: Total: %-10c Free: %d\n\
 "));
+
+          if (0 < is_selinux_enabled ())
+            {
+              /* TRANSLATORS: This string uses format specifiers from
+                 'stat --help' with --file-system, and NOT from printf.  */
+              char *temp = format;
+              format = xasprintf ("%s%s", format, _("\
+Context: %C\n\
+"));
+              free (temp);
+            }
         }
     }
   else /* ! fs */
     {
       if (terse)
-        format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %W %o\n");
+        {
+          if (0 < is_selinux_enabled ())
+            format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
+                              " %X %Y %Z %W %o\n");
+          else
+            format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
+                              " %X %Y %Z %W %o %C\n");
+        }
       else
         {
           char *temp;
@@ -1126,6 +1149,24 @@ Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
              'stat --help' without --file-system, and NOT from printf.  */
           format = xasprintf ("%s%s", format, _("\
 Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n\
+"));
+          free (temp);
+
+          if (0 < is_selinux_enabled ())
+            {
+              temp = format;
+              /* TRANSLATORS: This string uses format specifiers from
+                 'stat --help' without --file-system, and NOT from printf.  */
+              format = xasprintf ("%s%s", format, _("\
+Context: %C\n\
+"));
+              free (temp);
+            }
+
+          temp = format;
+          /* TRANSLATORS: This string uses format specifiers from
+             'stat --help' without --file-system, and NOT from printf.  */
+          format = xasprintf ("%s%s", format, _("\
 Access: %x\n\
 Modify: %y\n\
 Change: %z\n\
