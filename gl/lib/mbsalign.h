@@ -21,7 +21,7 @@ typedef enum { MBS_ALIGN_LEFT, MBS_ALIGN_RIGHT, MBS_ALIGN_CENTER } mbs_align_t;
 enum {
   /* Use unibyte mode for invalid multibyte strings or
      or when heap memory is exhausted.  */
-  MBA_UNIBYTE_FALLBACK = 0x0001,
+  MBA_UNIBYTE_FALLBACK = 0x0001
 
 #if 0 /* Other possible options.  */
   /* Skip invalid multibyte chars rather than failing  */

@@ -217,7 +217,7 @@ mbsalign_unibyte:
   /* Write as much NUL terminated output to DEST as possible.  */
   if (dest_size != 0)
     {
-      size_t start_spaces, end_spaces;
+      size_t start_spaces, end_spaces, space_left;
       char *dest_end = dest + dest_size - 1;
 
       switch (align)
@@ -238,7 +238,7 @@ mbsalign_unibyte:
         }
 
       dest = mbs_align_pad (dest, dest_end, start_spaces);
-      size_t space_left = dest_end - dest;
+      space_left = dest_end - dest;
       dest = mempcpy (dest, str_to_print, MIN (n_used_bytes, space_left));
       mbs_align_pad (dest, dest_end, end_spaces);
     }
@@ -265,8 +265,9 @@ ambsalign (const char *src, size_t *width, mbs_align_t align, int flags)
 
   while (req >= size)
     {
+      char *nbuf;
       size = req + 1;           /* Space for NUL.  */
-      char *nbuf = realloc (buf, size);
+      nbuf = realloc (buf, size);
       if (nbuf == NULL)
         {
           free (buf);
