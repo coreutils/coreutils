@@ -13,6 +13,11 @@ Here are most of the steps we (maintainers) follow when making a release.
 * Ensure that you're on "master" with no uncommitted diffs.
   This should produce no output: git checkout master; git diff
 
+* Ensure that you've pushed all changes that belong in the release
+  and that the NixOS/Hydra autobuilder is reporting all is well:
+
+      http://hydra.nixos.org/jobset/gnu/coreutils-master
+
 * Run bootstrap one last time.  This downloads any new translations:
 
     ./bootstrap
