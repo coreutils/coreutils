@@ -10679,6 +10679,7 @@ The valid @var{format} directives for files with @option{--format} and
 @item %A - Access rights in human readable form
 @item %b - Number of blocks allocated (see @samp{%B})
 @item %B - The size in bytes of each block reported by @samp{%b}
+@item %C - The SELinux security context of a file, if available
 @item %d - Device number in decimal
 @item %D - Device number in hex
 @item %f - Raw mode in hex

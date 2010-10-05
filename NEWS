@@ -76,9 +76,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat no longer accepts the --context (-Z) option.  Initially it was
   merely accepted and ignored, for compatibility.  Starting two years
   ago, with coreutils-7.0, its use evoked a warning.  Printing the
-  SELinux context can be done with the %C format directive, and the
-  default output when no format is specified now automatically
+  SELinux context of a file can be done with the %C format directive,
+  and the default output when no format is specified now automatically
   includes %C when context information is available.
+
+  stat no longer accepts the %C directive when the --file-system
+  option is in effect, since security context is a file attribute
+  rather than a file system attribute.
 
   stat now outputs the full sub-second resolution for the atime,
   mtime, and ctime values since the Epoch, when using the %X, %Y, and

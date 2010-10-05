@@ -513,11 +513,10 @@ out_uint_x (char *pformat, size_t prefix_len, uintmax_t arg)
   printf (pformat, arg);
 }
 
-/* Very specialized function (modifies FORMAT), just so as to avoid
-   duplicating this code between both print_statfs and print_stat.
-   Return zero upon success, nonzero upon failure.  */
+/* Print the context information of FILENAME, and return true iff the
+   context could not be obtained.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-out_file_context (char const *filename, char *pformat, size_t prefix_len)
+out_file_context (char *pformat, size_t prefix_len, char const *filename)
 {
   char *scontext;
   bool fail = false;
@@ -616,9 +615,6 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
       break;
     case 'd':
       out_int (pformat, prefix_len, statfsbuf->f_ffree);
-      break;
-    case 'C':
-      fail |= out_file_context (filename, pformat, prefix_len);
       break;
     default:
       fputc ('?', stdout);
@@ -846,7 +842,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
       out_string (pformat, prefix_len, epoch_time (get_stat_ctime (statbuf)));
       break;
     case 'C':
-      fail |= out_file_context (filename, pformat, prefix_len);
+      fail |= out_file_context (pformat, prefix_len, filename);
       break;
     default:
       fputc ('?', stdout);
@@ -1238,7 +1234,6 @@ Valid format sequences for file systems:\n\
   %c   Total file nodes in file system\n\
   %d   Free file nodes in file system\n\
   %f   Free blocks in file system\n\
-  %C   SELinux security context string\n\
 "), stdout);
       fputs (_("\
   %i   File System ID in hex\n\
