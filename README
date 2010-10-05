@@ -223,6 +223,9 @@ For general documentation on the coding and usage standards
 this distribution follows, see the GNU Coding Standards,
 http://www.gnu.org/prep/standards_toc.html.
 
+For any copyright year range specified as YYYY-ZZZZ in this package
+note that the range specifies every single year in that closed interval.
+
 Mail suggestions and bug reports for these programs to
 the address on the last line of --help output.
 
