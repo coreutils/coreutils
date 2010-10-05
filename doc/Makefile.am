@@ -17,7 +17,7 @@
 
 info_TEXINFOS = coreutils.texi
 
-EXTRA_DIST = perm.texi get_date.texi constants.texi fdl.texi
+EXTRA_DIST = perm.texi parse-datetime.texi constants.texi fdl.texi
 
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,

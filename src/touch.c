@@ -28,7 +28,7 @@
 #include "argmatch.h"
 #include "error.h"
 #include "fd-reopen.h"
-#include "getdate.h"
+#include "parse-datetime.h"
 #include "posixtm.h"
 #include "posixver.h"
 #include "quote.h"
@@ -112,7 +112,7 @@ static void
 get_reldate (struct timespec *result,
              char const *flex_date, struct timespec const *now)
 {
-  if (! get_date (result, flex_date, now))
+  if (! parse_datetime (result, flex_date, now))
     error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
 }
 

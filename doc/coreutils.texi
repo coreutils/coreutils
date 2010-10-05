@@ -474,7 +474,7 @@ Date input formats
 * Pure numbers in date strings:: 19931219, 1440
 * Seconds since the Epoch::      @@1078100502
 * Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
-* Authors of get_date::          Bellovin, Eggert, Salz, Berets, et al
+* Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al
 
 Opening the software toolbox
 
@@ -15678,7 +15678,7 @@ outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 @chapter File permissions
 @include perm.texi
 
-@include get_date.texi
+@include parse-datetime.texi
 
 @c              What's GNU?
 @c              Arnold Robbins

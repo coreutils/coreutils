@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2010-10-05.14; # UTC
+scriptversion=2010-10-05.15; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -351,7 +351,7 @@ check_versions() {
       app=libtoolize
     fi
     # Honor $APP variables ($TAR, $AUTOCONF, etc.)
-    appvar=`echo $app | tr 'a-z-' 'A-Z_'`
+    appvar=`echo $app | tr '[a-z]-' '[A-Z]_'`
     test "$appvar" = TAR && appvar=AMTAR
     eval "app=\${$appvar-$app}"
     inst_ver=$(get_version $app)

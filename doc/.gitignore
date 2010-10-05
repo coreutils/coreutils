@@ -19,5 +19,6 @@ fdl.texi
 gendocs_template
 get_date.texi
 getdate.texi
+parse-datetime.texi
 stamp-vti
 version.texi
