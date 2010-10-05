@@ -1074,12 +1074,7 @@ default_format (bool fs, bool terse, bool device)
   if (fs)
     {
       if (terse)
-        {
-          if (0 < is_selinux_enabled ())
-            format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d %C\n");
-          else
-            format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
-        }
+        format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
       else
         {
           /* TRANSLATORS: This string uses format specifiers from
@@ -1091,17 +1086,6 @@ Block size: %-10s Fundamental block size: %S\n\
 Blocks: Total: %-10b Free: %-10f Available: %a\n\
 Inodes: Total: %-10c Free: %d\n\
 "));
-
-          if (0 < is_selinux_enabled ())
-            {
-              /* TRANSLATORS: This string uses format specifiers from
-                 'stat --help' with --file-system, and NOT from printf.  */
-              char *temp = format;
-              format = xasprintf ("%s%s", format, _("\
-Context: %C\n\
-"));
-              free (temp);
-            }
         }
     }
   else /* ! fs */
@@ -1110,10 +1094,10 @@ Context: %C\n\
         {
           if (0 < is_selinux_enabled ())
             format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
-                              " %X %Y %Z %W %o\n");
+                              " %X %Y %Z %W %o %C\n");
           else
             format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
-                              " %X %Y %Z %W %o %C\n");
+                              " %X %Y %Z %W %o\n");
         }
       else
         {
