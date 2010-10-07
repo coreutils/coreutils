@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   found to be part of a directory cycle.  Before, du would issue a
   "NOTIFY YOUR SYSTEM MANAGER" diagnostic and fail.
 
+  split now diagnoses read errors rather than silently exiting.
+  [bug introduced in coreutils-4.5.8]
+
   tac would perform a double-free when given an input line longer than 16KiB.
   [bug introduced in coreutils-8.3]
 

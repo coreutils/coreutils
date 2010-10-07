@@ -33,7 +33,6 @@
 #include "full-read.h"
 #include "full-write.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "xfreopen.h"
 #include "xstrtol.h"
 
@@ -229,7 +228,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
   do
     {
       n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      if (n_read < bufsize && errno)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
       to_read = n_read;
@@ -273,7 +272,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
   do
     {
       n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      if (n_read < bufsize && errno)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
@@ -314,7 +313,6 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 static void
 line_bytes_split (size_t n_bytes)
 {
-  size_t n_read;
   char *bp;
   bool eof = false;
   size_t n_buffered = 0;
@@ -324,8 +322,9 @@ line_bytes_split (size_t n_bytes)
     {
       /* Fill up the full buffer size from the input file.  */
 
-      n_read = full_read (STDIN_FILENO, buf + n_buffered, n_bytes - n_buffered);
-      if (n_read == SAFE_READ_ERROR)
+      size_t to_read = n_bytes - n_buffered;
+      size_t n_read = full_read (STDIN_FILENO, buf + n_buffered, to_read);
+      if (n_read < to_read && errno)
         error (EXIT_FAILURE, errno, "%s", infile);
 
       n_buffered += n_read;
