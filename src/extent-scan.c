@@ -40,7 +40,7 @@ open_extent_scan (int src_fd, struct extent_scan *scan)
   scan->ei_count = 0;
   scan->scan_start = 0;
   scan->initial_scan_failed = false;
-  scan->hit_last_extent = false;
+  scan->hit_final_extent = false;
 }
 
 #ifdef __linux__
@@ -81,7 +81,7 @@ get_extents_info (struct extent_scan *scan)
   /* If 0 extents are returned, then more get_extent_table() are not needed.  */
   if (fiemap->fm_mapped_extents == 0)
     {
-      scan->hit_last_extent = true;
+      scan->hit_final_extent = true;
       return false;
     }
 
@@ -100,7 +100,7 @@ get_extents_info (struct extent_scan *scan)
   i--;
   if (scan->ext_info[i].ext_flags & FIEMAP_EXTENT_LAST)
     {
-      scan->hit_last_extent = true;
+      scan->hit_final_extent = true;
       return true;
     }
 

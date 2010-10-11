@@ -50,7 +50,7 @@ struct extent_scan
   bool initial_scan_failed;
 
   /* If ture, the total extent scan per file has been finished.  */
-  bool hit_last_extent;
+  bool hit_final_extent;
 
   /* Extent information.  */
   struct extent_info *ext_info;
