@@ -211,7 +211,7 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
       bool ok = get_extents_info (&scan);
       if (! ok)
         {
-          if (scan.hit_last_extent)
+          if (scan.hit_final_extent)
             break;
 
           if (scan.initial_scan_failed)
@@ -305,7 +305,7 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
 
       /* Release the space allocated to scan->ext_info.  */
       free_extents_info (&scan);
-    } while (! scan.hit_last_extent);
+    } while (! scan.hit_final_extent);
 
   /* Do nothing now.  */
   close_extent_scan (&scan);
