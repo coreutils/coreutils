@@ -1,0 +1,10 @@
+# Map git author names and email addresses to canonical/preferred form.
+<jim@meyering.net> <meyering@iou.iou>
+<jim@meyering.net> <meyering@rho.meyering.net>
+<jim@meyering.net> <meyering@vm.meyering.net.localdomain>
+Paul R. Eggert <eggert@cs.ucla.edu> <eggert@penguin.cs.ucla.edu>
+Paul R. Eggert <eggert@cs.ucla.edu> <eggert@CS.UCLA.EDU>
+# Evan's two changes listed my email address.
+Evan Hunt <ethanol@armory.com> Evan Hunt <jim@meyering.net>
+<P@draigBrady.com> <P@draigBrady.com  (trivial change)>
+Pádraig Brady <p@draigbrady.com> <p@draigBrady.com>
