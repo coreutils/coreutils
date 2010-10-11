@@ -32,9 +32,9 @@
 #endif
 
 /* Allocate space for struct extent_scan, initialize the entries if
-   necessary and return it as the input argument of get_extents_info().  */
+   necessary and return it as the input argument of extent_scan_read().  */
 extern void
-open_extent_scan (int src_fd, struct extent_scan *scan)
+extent_scan_init (int src_fd, struct extent_scan *scan)
 {
   scan->fd = src_fd;
   scan->ei_count = 0;
@@ -50,14 +50,13 @@ open_extent_scan (int src_fd, struct extent_scan *scan)
 /* Call ioctl(2) with FS_IOC_FIEMAP (available in linux 2.6.27) to
    obtain a map of file extents excluding holes.  */
 extern bool
-get_extents_info (struct extent_scan *scan)
+extent_scan_read (struct extent_scan *scan)
 {
   union { struct fiemap f; char c[4096]; } fiemap_buf;
   struct fiemap *fiemap = &fiemap_buf.f;
   struct fiemap_extent *fm_extents = &fiemap->fm_extents[0];
   enum { count = (sizeof fiemap_buf - sizeof *fiemap) / sizeof *fm_extents };
   verify (count != 0);
-  unsigned int i;
 
   /* This is required at least to initialize fiemap->fm_start,
      but also serves (in mid 2010) to appease valgrind, which
@@ -88,6 +87,7 @@ get_extents_info (struct extent_scan *scan)
   scan->ei_count = fiemap->fm_mapped_extents;
   scan->ext_info = xnmalloc (scan->ei_count, sizeof (struct extent_info));
 
+  unsigned int i;
   for (i = 0; i < scan->ei_count; i++)
     {
       assert (fm_extents[i].fe_logical <= OFF_T_MAX);
@@ -109,5 +109,5 @@ get_extents_info (struct extent_scan *scan)
   return true;
 }
 #else
-extern bool get_extents_info (ignored) { errno = ENOTSUP; return false; }
+extern bool extent_scan_read (ignored) { errno = ENOTSUP; return false; }
 #endif
