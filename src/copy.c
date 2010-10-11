@@ -153,12 +153,17 @@ clone_file (int dest_fd, int src_fd)
 #endif
 }
 
+/* Write N_BYTES zero bytes to file descriptor FD.  Return true if successful.
+   Upon write failure, set errno and return false.  */
 static bool
 write_zeros (int fd, uint64_t n_bytes)
 {
   static char *zeros;
   static size_t nz = IO_BUFSIZE;
 
+  /* Attempt to use a relatively large calloc'd source buffer for
+     efficiency, but if that allocation fails, resort to a smaller
+     statically allocated one.  */
   if (zeros == NULL)
     {
       static char fallback[1024];
@@ -198,14 +203,12 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
   off_t last_ext_logical = 0;
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
-  unsigned int i;
-  bool ok = true;
 
   open_extent_scan (src_fd, &scan);
 
   do
     {
-      ok = get_extents_info (&scan);
+      bool ok = get_extents_info (&scan);
       if (! ok)
         {
           if (scan.hit_last_extent)
@@ -218,10 +221,12 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
               return false;
             }
 
-          error (0, errno, _("failed to get extents info %s"), quote (src_name));
+          error (0, errno, _("%s: failed to get extents info"),
+                 quote (src_name));
           return false;
         }
 
+      unsigned int i;
       for (i = 0; i < scan.ei_count; i++)
         {
           off_t ext_logical = scan.ext_info[i].ext_logical;
@@ -243,13 +248,18 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
             }
           else
             {
-              /* If not making a sparse file, write zeros to the destination
-                 file if there is a hole between the last and current extent.  */
+              /* We're not inducing holes; write zeros to the destination file
+                 if there is a hole between the last and current extent.  */
               if (last_ext_logical + last_ext_len < ext_logical)
                 {
-                  uint64_t holes_len = ext_logical - last_ext_logical - last_ext_len;
-                  if (! write_zeros (dest_fd, holes_len))
-                    return false;
+                  uint64_t hole_size = (ext_logical
+                                        - last_ext_logical
+                                        - last_ext_len);
+                  if (! write_zeros (dest_fd, hole_size))
+                    {
+                      error (0, errno, _("%s: write failed"), quote (dst_name));
+                      return false;
+                    }
                 }
             }
 
