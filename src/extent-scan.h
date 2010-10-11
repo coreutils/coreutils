@@ -19,7 +19,7 @@
 #ifndef EXTENT_SCAN_H
 # define EXTENT_SCAN_H
 
-/* Structure used to reserve information of each extent.  */
+/* Structure used to store information of each extent.  */
 struct extent_info
 {
   /* Logical offset of an extent.  */
@@ -44,25 +44,27 @@ struct extent_scan
   /* How many extent info returned for a scan.  */
   uint32_t ei_count;
 
-  /* If true, fall back to a normal copy, either
-     set by the failure of ioctl(2) for FIEMAP or
-     lseek(2) with SEEK_DATA.  */
+  /* If true, fall back to a normal copy, either set by the
+     failure of ioctl(2) for FIEMAP or lseek(2) with SEEK_DATA.  */
   bool initial_scan_failed;
 
-  /* If ture, the total extent scan per file has been finished.  */
+  /* If true, the total extent scan per file has been finished.  */
   bool hit_final_extent;
 
-  /* Extent information.  */
+  /* Extent information: a malloc'd array of ei_count structs.  */
   struct extent_info *ext_info;
 };
 
 void
-open_extent_scan (int src_fd, struct extent_scan *scan);
+extent_scan_init (int src_fd, struct extent_scan *scan);
 
 bool
-get_extents_info (struct extent_scan *scan);
+extent_scan_read (struct extent_scan *scan);
 
-#define free_extents_info(ext_scan) free ((ext_scan)->ext_info)
-#define close_extent_scan(ext_scan) /* empty */
+static inline void
+extent_scan_free (struct extent_scan *scan)
+{
+  free (scan->ext_info);
+}
 
 #endif /* EXTENT_SCAN_H */
