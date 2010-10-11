@@ -55,11 +55,9 @@ struct extent_scan
   struct extent_info *ext_info;
 };
 
-void
-extent_scan_init (int src_fd, struct extent_scan *scan);
+void extent_scan_init (int src_fd, struct extent_scan *scan);
 
-bool
-extent_scan_read (struct extent_scan *scan);
+bool extent_scan_read (struct extent_scan *scan);
 
 static inline void
 extent_scan_free (struct extent_scan *scan)

@@ -109,5 +109,10 @@ extent_scan_read (struct extent_scan *scan)
   return true;
 }
 #else
-extern bool extent_scan_read (ignored) { errno = ENOTSUP; return false; }
+extern bool
+extent_scan_read (struct extent_scan *scan ATTRIBUTE_UNUSED)
+{
+  errno = ENOTSUP;
+  return false;
+}
 #endif
