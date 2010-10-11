@@ -24,8 +24,6 @@
 
 #include "system.h"
 #include "extent-scan.h"
-#include "error.h"
-#include "quote.h"
 
 #ifndef HAVE_FIEMAP
 # include "fiemap.h"
