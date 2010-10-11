@@ -204,19 +204,18 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
 
-  open_extent_scan (src_fd, &scan);
+  extent_scan_init (src_fd, &scan);
 
   do
     {
-      bool ok = get_extents_info (&scan);
+      bool ok = extent_scan_read (&scan);
       if (! ok)
         {
-          if (scan.hit_last_extent)
+          if (scan.hit_final_extent)
             break;
 
           if (scan.initial_scan_failed)
             {
-              close_extent_scan (&scan);
               *require_normal_copy = true;
               return false;
             }
@@ -288,7 +287,7 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
 
               if (n_read == 0)
                 {
-                  /* Figure out how many bytes read from the previous extent.  */
+                  /* Record number of bytes read from the previous extent.  */
                   last_read_size = last_ext_len - ext_len;
                   break;
                 }
@@ -304,11 +303,10 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
         }
 
       /* Release the space allocated to scan->ext_info.  */
-      free_extents_info (&scan);
-    } while (! scan.hit_last_extent);
+      extent_scan_free (&scan);
 
-  /* Do nothing now.  */
-  close_extent_scan (&scan);
+    }
+  while (! scan.hit_final_extent);
 
   /* If a file ends up with holes, the sum of the last extent logical offset
      and the read-returned size or the last extent length will be shorter than
