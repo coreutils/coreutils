@@ -16,30 +16,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  tail --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && tail --version
 
 # 9 is a magic number, related to internal details of tail.c and hash.c
 n=9
 seq $n | xargs touch || framework_failure
 
-debug='---disable-inotify -s .01'
+debug='---disable-inotify'
 debug=
-tail $debug -qF $(seq $n) > out 2>&1 & pid=$!
+tail $debug -s.1 -qF $(seq $n) > out 2>&1 & pid=$!
 
-# Wait until tail has started...
+check_tail_output()
+{
+  local delay="$1"
+  grep "$tail_re" out > /dev/null ||
+    { sleep $delay; return 1; }
+}
+
+# Wait up to 6.3s for tail to start
 echo x > $n
-until grep '^x$' out >/dev/null 2>&1; do :; done
+tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
 
 mv 1 f || fail=1
 
-# Wait for this diagnostic:
+# Wait 6.3s for this diagnostic:
 # tail: `1' has become inaccessible: No such file or directory
-until grep inaccessible out >/dev/null 2>&1; do :; done
+tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
 
 # Trigger the bug.  Before the fix, this would provoke the abort.
 echo a > 1 || fail=1

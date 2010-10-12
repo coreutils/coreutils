@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   tac would perform a double-free when given an input line longer than 16KiB.
   [bug introduced in coreutils-8.3]
 
+  tail -F once again notices changes in a currently unavailable directory,
+  and works around a Linux kernel bug where inotify runs out of resources.
+  [bugs introduced in coreutils-7.5]
+
   tr now consistently handles case conversion character classes.
   In some locales, valid conversion specifications caused tr to abort,
   while in all locales, some invalid specifications were undiagnosed.
