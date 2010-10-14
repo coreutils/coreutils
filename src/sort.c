@@ -268,7 +268,7 @@ static bool nonprinting[UCHAR_LIM];
 static bool nondictionary[UCHAR_LIM];
 
 /* Translation table folding lower case to upper.  */
-static unsigned char fold_toupper[UCHAR_LIM];
+static char fold_toupper[UCHAR_LIM];
 
 #define MONTHS_PER_YEAR 12
 
@@ -1952,12 +1952,12 @@ getmonth (char const *month, char **ea)
                 *ea = (char *) m;
               return monthtab[ix].val;
             }
-          if (fold_toupper[to_uchar (*m)] < to_uchar (*n))
+          if (to_uchar (fold_toupper[to_uchar (*m)]) < to_uchar (*n))
             {
               hi = ix;
               break;
             }
-          else if (fold_toupper[to_uchar (*m)] > to_uchar (*n))
+          else if (to_uchar (fold_toupper[to_uchar (*m)]) > to_uchar (*n))
             {
               lo = ix + 1;
               break;
