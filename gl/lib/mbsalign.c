@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <limits.h>
 #include <wchar.h>
@@ -124,7 +125,7 @@ mbs_align_pad (char *dest, const char* dest_end, size_t n_spaces)
    Return the length in bytes required for the final result, not counting
    the trailing NUL.  A return value of DEST_SIZE or larger means there
    wasn't enough space.  DEST will be NUL terminated in any case.
-   Return (size_t) -1 upon error (invalid multi-byte sequence in SRC,
+   Return SIZE_MAX upon error (invalid multi-byte sequence in SRC,
    or malloc failure), unless MBA_UNIBYTE_FALLBACK is specified.
    Update *WIDTH to indicate how many columns were used before padding.  */
 
@@ -132,7 +133,7 @@ size_t
 mbsalign (const char *src, char *dest, size_t dest_size,
           size_t *width, mbs_align_t align, int flags)
 {
-  size_t ret = -1;
+  size_t ret = SIZE_MAX;
   size_t src_size = strlen (src) + 1;
   char *newstr = NULL;
   wchar_t *str_wc = NULL;
@@ -149,7 +150,7 @@ mbsalign (const char *src, char *dest, size_t dest_size,
   if (MB_CUR_MAX > 1)
     {
       size_t src_chars = mbstowcs (NULL, src, 0);
-      if (src_chars == (size_t) -1)
+      if (src_chars == SIZE_MAX)
         {
           if (flags & MBA_UNIBYTE_FALLBACK)
             goto mbsalign_unibyte;
@@ -277,7 +278,7 @@ ambsalign (const char *src, size_t *width, mbs_align_t align, int flags)
       buf = nbuf;
       *width = orig_width;
       req = mbsalign (src, buf, size, width, align, flags);
-      if (req == (size_t) -1)
+      if (req == SIZE_MAX)
         {
           free (buf);
           buf = NULL;
