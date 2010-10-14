@@ -2320,7 +2320,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
         {
           size_t sword = key->sword;
           size_t eword = key->eword;
-          char tmp[INT_BUFSIZE_BOUND (sword)];
+          char tmp[INT_BUFSIZE_BOUND (uintmax_t)];
           /* obsolescent syntax +A.x -B.y is equivalent to:
                -k A+1.x+1,B.y   (when y = 0)
                -k A+1.x+1,B+1.y (when y > 0)  */
