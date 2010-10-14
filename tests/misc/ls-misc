@@ -27,7 +27,7 @@ my $saved_ls_colors;
 
 sub push_ls_colors($)
 {
-  $saved_ls_colors = $ENV{LS_COLORS};
+  $saved_ls_colors = $ENV{LS_COLORS} || '';
   $ENV{LS_COLORS} = $_[0];
 }
 
@@ -186,8 +186,8 @@ my @Tests =
      ],
 
      # Test for a bug fixed after coreutils-8.2.
-     ['sl-dangle2', '-o --color=always l',
-      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+     ['sl-dangle2', '-o --time-style=+:TIME: --color=always l',
+      {OUT_SUBST => 's/.*:TIME: //'},
       {OUT => "l -> nowhere\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=target')
@@ -195,8 +195,8 @@ my @Tests =
       {POST => sub {unlink 'l' or die "l: $!\n";
                     restore_ls_colors; }},
      ],
-     ['sl-dangle3', '-o --color=always l',
-      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+     ['sl-dangle3', '-o --time-style=+:TIME: --color=always l',
+      {OUT_SUBST => 's/.*:TIME: //'},
       {OUT => "$e\e[40ml$e -> \e[34mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=target:or=40:mi=34:')
@@ -204,8 +204,8 @@ my @Tests =
       {POST => sub {unlink 'l' or die "l: $!\n";
                     restore_ls_colors; }},
      ],
-     ['sl-dangle4', '-o --color=always l',
-      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+     ['sl-dangle4', '-o --time-style=+:TIME: --color=always l',
+      {OUT_SUBST => 's/.*:TIME: //'},
       {OUT => "$e\e[36ml$e -> \e[35mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=34:mi=35:or=36:')
@@ -213,8 +213,8 @@ my @Tests =
       {POST => sub {unlink 'l' or die "l: $!\n";
                     restore_ls_colors; }},
      ],
-     ['sl-dangle5', '-o --color=always l',
-      {OUT_SUBST => 's/.*[0-9][0-9]:[0-9][0-9] //'},
+     ['sl-dangle5', '-o --time-style=+:TIME: --color=always l',
+      {OUT_SUBST => 's/.*:TIME: //'},
       {OUT => "$e\e[34ml$e -> \e[35mnowhere$e\n"},
       {PRE => sub {symlink 'nowhere', 'l' or die "l: $!\n";
                    push_ls_colors('ln=34:mi=35:')
