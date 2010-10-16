@@ -143,7 +143,7 @@ fold_file (char const *filename, size_t width)
       return false;
     }
 
-  fadvise (stdin, FADVISE_SEQUENTIAL);
+  fadvise (istream, FADVISE_SEQUENTIAL);
 
   while ((c = getc (istream)) != EOF)
     {
