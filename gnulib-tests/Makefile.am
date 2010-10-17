@@ -1,6 +1,6 @@
 include gnulib.mk
 
-AM_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS) # $(WERROR_CFLAGS)
+AM_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS) $(WERROR_CFLAGS)
 
 # A few tests are inherently warning-evoking.
 # Since we require -Werror, exempt the few offenders.
