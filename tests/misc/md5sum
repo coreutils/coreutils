@@ -51,7 +51,7 @@ my @Tests =
      ['check-quiet2', '--check', '--quiet',
                                 {IN=>{'f.md5' => "$degenerate  f\n"}},
                                 {AUX=> {f=> 'foo'}}, {OUT=>"f: FAILED\n"},
-                                {ERR=>"md5sum: WARNING: 1 of 1 computed"
+                                {ERR=>"md5sum: WARNING: 1 computed"
                                        . " checksum did NOT match\n"},
                                 {EXIT=> 1}],
      # The sha1sum and md5sum drivers share a lot of code.

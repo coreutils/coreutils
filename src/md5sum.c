@@ -431,6 +431,7 @@ static bool
 digest_check (const char *checkfile_name)
 {
   FILE *checkfile_stream;
+  uintmax_t n_misformatted_lines = 0;
   uintmax_t n_properly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
@@ -489,6 +490,8 @@ digest_check (const char *checkfile_name)
              && ! (is_stdin && STREQ (filename, "-"))
              && hex_digits (hex_digest)))
         {
+          ++n_misformatted_lines;
+
           if (warn)
             {
               error (0, 0,
@@ -571,27 +574,26 @@ digest_check (const char *checkfile_name)
     {
       if (!status_only)
         {
+          if (n_misformatted_lines != 0)
+            error (0, 0,
+                   ngettext ("WARNING: %" PRIuMAX " line is improperly formatted",
+                             "WARNING: %" PRIuMAX " lines are improperly formatted",
+                             select_plural (n_misformatted_lines)),
+                   n_misformatted_lines);
+
           if (n_open_or_read_failures != 0)
             error (0, 0,
-                   ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
-                             " listed file could not be read",
-                             "WARNING: %" PRIuMAX " of %" PRIuMAX
-                             " listed files could not be read",
-                             select_plural (n_properly_formatted_lines)),
-                   n_open_or_read_failures, n_properly_formatted_lines);
+                   ngettext ("WARNING: %" PRIuMAX " listed file could not be read",
+                             "WARNING: %" PRIuMAX " listed files could not be read",
+                             select_plural (n_open_or_read_failures)),
+                   n_open_or_read_failures);
 
           if (n_mismatched_checksums != 0)
-            {
-              uintmax_t n_computed_checksums =
-                (n_properly_formatted_lines - n_open_or_read_failures);
-              error (0, 0,
-                     ngettext ("WARNING: %" PRIuMAX " of %" PRIuMAX
-                               " computed checksum did NOT match",
-                               "WARNING: %" PRIuMAX " of %" PRIuMAX
-                               " computed checksums did NOT match",
-                               select_plural (n_computed_checksums)),
-                     n_mismatched_checksums, n_computed_checksums);
-            }
+            error (0, 0,
+                   ngettext ("WARNING: %" PRIuMAX " computed checksum did NOT match",
+                             "WARNING: %" PRIuMAX " computed checksums did NOT match",
+                             select_plural (n_mismatched_checksums)),
+                   n_mismatched_checksums);
         }
     }
 
