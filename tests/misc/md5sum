@@ -54,6 +54,29 @@ my @Tests =
                                 {ERR=>"md5sum: WARNING: 1 computed"
                                        . " checksum did NOT match\n"},
                                 {EXIT=> 1}],
+     # Exercise new-after-8.6, easier-to-translate diagnostics.
+     ['check-multifail', '--check',
+                                {IN=>{'f.md5' =>
+                                      "$degenerate  f\n"
+                                      . "$degenerate  f\n"
+                                      . "invalid\n" }},
+                                {AUX=> {f=> 'foo'}},
+                                {OUT=>"f: FAILED\nf: FAILED\n"},
+                  {ERR=>"md5sum: WARNING: 1 line is improperly formatted\n"
+                      . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
+                                {EXIT=> 1}],
+     # Similar to the above, but use --warn to evoke one more diagnostic.
+     ['check-multifail-warn', '--check', '--warn',
+                                {IN=>{'f.md5' =>
+                                      "$degenerate  f\n"
+                                      . "$degenerate  f\n"
+                                      . "invalid\n" }},
+                                {AUX=> {f=> 'foo'}},
+                                {OUT=>"f: FAILED\nf: FAILED\n"},
+              {ERR=>"md5sum: f.md5: 3: improperly formatted MD5 checksum line\n"
+                  . "md5sum: WARNING: 1 line is improperly formatted\n"
+                  . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
+                                {EXIT=> 1}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that md5sum does *not* share the part that makes
      # sha1sum accept BSD format.
