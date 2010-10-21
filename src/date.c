@@ -163,7 +163,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   %C   century; like %Y, except omit last two digits (e.g., 20)\n\
-  %d   day of month (e.g, 01)\n\
+  %d   day of month (e.g., 01)\n\
   %D   date; same as %m/%d/%y\n\
   %e   day of month, space padded; same as %_d\n\
 "), stdout);
@@ -212,8 +212,8 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %Y   year\n\
 "), stdout);
       fputs (_("\
-  %z   +hhmm numeric timezone (e.g., -0400)\n\
-  %:z  +hh:mm numeric timezone (e.g., -04:00)\n\
+  %z   +hhmm numeric time zone (e.g., -0400)\n\
+  %:z  +hh:mm numeric time zone (e.g., -04:00)\n\
   %::z  +hh:mm:ss numeric time zone (e.g., -04:00:00)\n\
   %:::z  numeric time zone with : to necessary precision (e.g., -04, +05:30)\n\
   %Z   alphabetic time zone abbreviation (e.g., EDT)\n\
