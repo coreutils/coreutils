@@ -10706,14 +10706,39 @@ The valid @var{format} directives for files with @option{--format} and
 @item %u - User ID of owner
 @item %U - User name of owner
 @item %w - Time of file birth, or @samp{-} if unknown
-@item %W - Time of file birth as seconds since Epoch, or @samp{-}
+@item %W - Time of file birth as seconds since Epoch, or @samp{0}
+@item %:W - Time of file birth: nanoseconds remainder, or @samp{0}
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
+@item %:X - Time of last access: nanoseconds remainder
 @item %y - Time of last modification
 @item %Y - Time of last modification as seconds since Epoch
+@item %:Y - Time of last modification: nanoseconds remainder
 @item %z - Time of last change
 @item %Z - Time of last change as seconds since Epoch
+@item %:Z - Time of last change: nanoseconds remainder
 @end itemize
+
+Note that each of @samp{%:W}, @samp{%:X}, @samp{%:Y} and @samp{%:Z}
+prints its zero-padded number of nanoseconds on a field of width 9.
+However, if you specify anything between the @samp{%} and @samp{:},
+e.g., @samp{%10:X}, your modifier replaces the default of @samp{09}.
+
+Here are some examples:
+
+@example
+zero pad:
+  $ stat -c '[%015:Y]' /usr
+  [000000031367045]
+space align:
+  $ stat -c '[%15:Y]' /usr
+  [       31367045]
+  $ stat -c '[%-15:Y]' /usr
+  [31367045       ]
+truncate:
+  $ stat -c '[%.3:Y]' /usr
+  [031]
+@end example
 
 The mount point printed by @samp{%m} is similar to that output
 by @command{df}, except that:

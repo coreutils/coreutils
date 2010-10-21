@@ -70,6 +70,7 @@
 #include "stat-time.h"
 #include "strftime.h"
 #include "find-mount-point.h"
+#include "xstrtol.h"
 #include "xvasprintf.h"
 
 #if USE_STATVFS
@@ -462,24 +463,50 @@ human_time (struct timespec t)
   return str;
 }
 
+/* Return a string representation (in static storage)
+   of the number of seconds in T since the epoch.  */
 static char * ATTRIBUTE_WARN_UNUSED_RESULT
-epoch_time (struct timespec t)
+epoch_sec (struct timespec t)
 {
-  static char str[INT_STRLEN_BOUND (time_t) + sizeof ".NNNNNNNNN"];
-  /* Note that time_t can technically be a floating point value, such
-     that casting to [u]intmax_t could lose a fractional value or
-     suffer from overflow.  However, most porting targets have an
-     integral time_t; also, we know of no file systems that store
-     valid time values outside the bounds of intmax_t even if that
-     value were represented as a floating point.  Besides, the cost of
-     converting to struct tm just to use nstrftime (str, len, "%s.%N",
-     tm, 0, t.tv_nsec) is pointless, since nstrftime would have to
-     convert back to seconds as time_t.  */
-  if (TYPE_SIGNED (time_t))
-    sprintf (str, "%" PRIdMAX ".%09ld", (intmax_t) t.tv_sec, t.tv_nsec);
+  static char str[INT_BUFSIZE_BOUND (time_t)];
+  return timetostr (t.tv_sec, str);
+}
+
+/* Output the number of nanoseconds, ARG.tv_nsec, honoring a
+   WIDTH.PRECISION format modifier, where PRECISION specifies
+   how many leading digits(on a field of 9) to print.  */
+static void
+out_ns (char *pformat, size_t prefix_len, struct timespec arg)
+{
+  /* If no format modifier is specified, i.e., nothing between the
+     "%" and ":" of "%:X", then use the default of zero-padding and
+     a width of 9.  Otherwise, use the specified modifier(s).
+     This is to avoid the mistake of omitting the zero padding on
+     a number with fewer digits than the field width: when printing
+     nanoseconds after a decimal place, the resulting floating point
+     fraction would be off by a factor of 10 or more.
+
+     If a precision/max width is specified, i.e., a '.' is present
+     in the modifier, then then treat the modifier as operating
+     on the default representation, i.e., a zero padded number
+     of width 9.  */
+  unsigned long int ns = arg.tv_nsec;
+
+  if (memchr (pformat, '.', prefix_len)) /* precision specified.  */
+    {
+      char tmp[INT_BUFSIZE_BOUND (uintmax_t)];
+      snprintf (tmp, sizeof tmp, "%09lu", ns);
+      strcpy (pformat + prefix_len, "s");
+      printf (pformat, tmp);
+    }
   else
-    sprintf (str, "%" PRIuMAX ".%09ld", (uintmax_t) t.tv_sec, t.tv_nsec);
-  return str;
+    {
+      char const *fmt = (prefix_len == 1) ? "09lu" : "lu";
+      /* Note that pformat is big enough, as %:X -> %09lu
+         and two extra bytes are already allocated.  */
+      strcpy (pformat + prefix_len, fmt);
+      printf (pformat, ns);
+    }
 }
 
 static void
@@ -539,7 +566,8 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
+print_statfs (char *pformat, size_t prefix_len, unsigned int m,
+              char const *filename,
               void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
@@ -711,9 +739,19 @@ print_mount_point:
   return fail;
 }
 
+/* Map a TS with negative TS.tv_nsec to {0,0}.  */
+static inline struct timespec
+neg_to_zero (struct timespec ts)
+{
+  if (0 <= ts.tv_nsec)
+    return ts;
+  struct timespec z = {0, 0};
+  return z;
+}
+
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
-print_stat (char *pformat, size_t prefix_len, char m,
+print_stat (char *pformat, size_t prefix_len, unsigned int m,
             char const *filename, void const *data)
 {
   struct stat *statbuf = (struct stat *) data;
@@ -815,31 +853,38 @@ print_stat (char *pformat, size_t prefix_len, char m,
       }
       break;
     case 'W':
-      {
-        struct timespec t = get_stat_birthtime (statbuf);
-        if (t.tv_nsec < 0)
-          out_string (pformat, prefix_len, "-");
-        else
-          out_string (pformat, prefix_len, epoch_time (t));
-      }
+      out_string (pformat, prefix_len,
+                  epoch_sec (neg_to_zero (get_stat_birthtime (statbuf))));
+      break;
+    case 'W' + 256:
+      out_ns (pformat, prefix_len, neg_to_zero (get_stat_birthtime (statbuf)));
       break;
     case 'x':
       out_string (pformat, prefix_len, human_time (get_stat_atime (statbuf)));
       break;
     case 'X':
-      out_string (pformat, prefix_len, epoch_time (get_stat_atime (statbuf)));
+      out_string (pformat, prefix_len, epoch_sec (get_stat_atime (statbuf)));
+      break;
+    case 'X' + 256:
+      out_ns (pformat, prefix_len, get_stat_atime (statbuf));
       break;
     case 'y':
       out_string (pformat, prefix_len, human_time (get_stat_mtime (statbuf)));
       break;
     case 'Y':
-      out_string (pformat, prefix_len, epoch_time (get_stat_mtime (statbuf)));
+      out_string (pformat, prefix_len, epoch_sec (get_stat_mtime (statbuf)));
+      break;
+    case 'Y' + 256:
+      out_ns (pformat, prefix_len, get_stat_mtime (statbuf));
       break;
     case 'z':
       out_string (pformat, prefix_len, human_time (get_stat_ctime (statbuf)));
       break;
     case 'Z':
-      out_string (pformat, prefix_len, epoch_time (get_stat_ctime (statbuf)));
+      out_string (pformat, prefix_len, epoch_sec (get_stat_ctime (statbuf)));
+      break;
+    case 'Z' + 256:
+      out_ns (pformat, prefix_len, get_stat_ctime (statbuf));
       break;
     case 'C':
       fail |= out_file_context (pformat, prefix_len, filename);
@@ -897,7 +942,8 @@ print_esc_char (char c)
    Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
 print_it (char const *format, char const *filename,
-          bool (*print_func) (char *, size_t, char, char const *, void const *),
+          bool (*print_func) (char *, size_t, unsigned int,
+                              char const *, void const *),
           void const *data)
 {
   bool fail = false;
@@ -922,10 +968,23 @@ print_it (char const *format, char const *filename,
           {
             size_t len = strspn (b + 1, "#-+.I 0123456789");
             char const *fmt_char = b + len + 1;
+            unsigned int fmt_code;
             memcpy (dest, b, len + 1);
 
+            /* The ":" modifier just before the letter in %W, %X, %Y, %Z
+               tells stat to print the nanoseconds portion of the date.  */
+            if (*fmt_char == ':' && strchr ("WXYZ", fmt_char[1]))
+              {
+                fmt_code = fmt_char[1] + 256;
+                ++fmt_char;
+              }
+            else
+              {
+                fmt_code = fmt_char[0];
+              }
+
             b = fmt_char;
-            switch (*fmt_char)
+            switch (fmt_code)
               {
               case '\0':
                 --b;
@@ -941,7 +1000,7 @@ print_it (char const *format, char const *filename,
                 putchar ('%');
                 break;
               default:
-                fail |= print_func (dest, len + 1, *fmt_char, filename, data);
+                fail |= print_func (dest, len + 1, fmt_code, filename, data);
                 break;
               }
             break;
@@ -1215,14 +1274,18 @@ The valid format sequences for files (without --file-system):\n\
       fputs (_("\
   %u   User ID of owner\n\
   %U   User name of owner\n\
-  %w   Time of file birth, or - if unknown\n\
-  %W   Time of file birth as seconds since Epoch, or - if unknown\n\
-  %x   Time of last access\n\
-  %X   Time of last access as seconds since Epoch\n\
-  %y   Time of last modification\n\
-  %Y   Time of last modification as seconds since Epoch\n\
-  %z   Time of last change\n\
-  %Z   Time of last change as seconds since Epoch\n\
+  %w   Time of file birth, human-readable; - if unknown\n\
+  %W   Time of file birth, seconds since Epoch; 0 if unknown\n\
+  %:W  Time of file birth, nanoseconds remainder; 0 if unknown\n\
+  %x   Time of last access, human-readable\n\
+  %X   Time of last access, seconds since Epoch\n\
+  %:X  Time of last access, nanoseconds remainder\n\
+  %y   Time of last modification, human-readable\n\
+  %Y   Time of last modification, seconds since Epoch\n\
+  %:Y  Time of last modification, nanoseconds remainder\n\
+  %z   Time of last change, human-readable\n\
+  %Z   Time of last change, seconds since Epoch\n\
+  %:Z  Time of last change, nanoseconds remainder\n\
 \n\
 "), stdout);
 

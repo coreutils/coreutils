@@ -244,6 +244,7 @@ TESTS =						\
   misc/stat-fmt					\
   misc/stat-hyphen				\
   misc/stat-mount				\
+  misc/stat-nanoseconds				\
   misc/stat-printf				\
   misc/stat-slash				\
   misc/stdbuf					\

@@ -30,7 +30,7 @@ echo 60.000000000 > exp || framework_failure
 # an `invalid date format'.  Specifying 60 seconds *is* valid.
 TZ=UTC0 touch -t 197001010000.60 f || fail=1
 
-stat --p='%Y\n' f > out || fail=1
+stat --p='%Y.%:Y\n' f > out || fail=1
 
 compare out exp || fail=1
 
