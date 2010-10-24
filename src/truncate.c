@@ -129,8 +129,8 @@ SIZE may also be prefixed by one of the following modifying characters:\n\
   exit (status);
 }
 
-/* return 1 on error, 0 on success */
-static int
+/* return true on success, false on error.  */
+static bool
 do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
               rel_mode_t rel_mode)
 {
@@ -140,7 +140,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
   if ((block_mode || (rel_mode && rsize < 0)) && fstat (fd, &sb) != 0)
     {
       error (0, errno, _("cannot fstat %s"), quote (fname));
-      return 1;
+      return false;
     }
   if (block_mode)
     {
@@ -152,7 +152,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
                    " * %" PRIdMAX " byte blocks for file %s"),
                  (intmax_t) ssize, (intmax_t) blksize,
                  quote (fname));
-          return 1;
+          return false;
         }
       ssize *= blksize;
     }
@@ -165,7 +165,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
           if (!S_ISREG (sb.st_mode) && !S_TYPEISSHM (&sb))
             {
               error (0, 0, _("cannot get the size of %s"), quote (fname));
-              return 1;
+              return false;
             }
           if (sb.st_size < 0)
             {
@@ -173,7 +173,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
                  this would ever go negative. */
               error (0, 0, _("%s has unusable, apparently negative size"),
                      quote (fname));
-              return 1;
+              return false;
             }
         }
 
@@ -193,7 +193,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
             {
               error (0, 0, _("overflow rounding up size of file %s"),
                      quote (fname));
-              return 1;
+              return false;
             }
           nsize = overflow;
         }
@@ -203,7 +203,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
             {
               error (0, 0, _("overflow extending size of file %s"),
                      quote (fname));
-              return 1;
+              return false;
             }
           nsize = fsize + ssize;
         }
@@ -218,21 +218,22 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
       error (0, errno,
              _("failed to truncate %s at %" PRIdMAX " bytes"), quote (fname),
              (intmax_t) nsize);
-      return 1;
+      return false;
     }
 
-  return 0;
+  return true;
 }
 
 int
 main (int argc, char **argv)
 {
   bool got_size = false;
+  bool errors = false;
   off_t size IF_LINT ( = 0);
   off_t rsize = -1;
   rel_mode_t rel_mode = rm_abs;
   mode_t omode;
-  int c, errors = 0, fd = -1, oflags;
+  int c, fd = -1, oflags;
   char const *fname;
 
   initialize_main (&argc, &argv);
@@ -374,7 +375,7 @@ main (int argc, char **argv)
             {
               error (0, errno, _("cannot open %s for writing"),
                      quote (fname));
-              errors++;
+              errors = true;
             }
           continue;
         }
@@ -382,11 +383,11 @@ main (int argc, char **argv)
 
       if (fd != -1)
         {
-          errors += do_ftruncate (fd, fname, size, rsize, rel_mode);
+          errors |= !do_ftruncate (fd, fname, size, rsize, rel_mode);
           if (close (fd) != 0)
             {
               error (0, errno, _("closing %s"), quote (fname));
-              errors++;
+              errors = true;
             }
         }
     }
