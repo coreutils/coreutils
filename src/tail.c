@@ -2169,7 +2169,8 @@ main (int argc, char **argv)
          FIXME: when using inotify, and a directory for a watched file
          is recreated, then we don't recheck any new file when
          follow_mode == Follow_name  */
-      if (tailable_stdin (F, n_files) || any_remote_file (F, n_files))
+      if (!disable_inotify && (tailable_stdin (F, n_files)
+                               || any_remote_file (F, n_files)))
         disable_inotify = true;
 
       if (!disable_inotify)
@@ -2189,6 +2190,7 @@ main (int argc, char **argv)
           error (0, errno, _("inotify cannot be used, reverting to polling"));
         }
 #endif
+      disable_inotify = true;
       tail_forever (F, n_files, sleep_interval);
     }
 
