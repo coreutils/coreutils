@@ -351,8 +351,9 @@ show_date (const char *format, struct timespec when)
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      error (0, 0, _("time %s is out of range"), timetostr (when.tv_sec, buf));
-      fputs (buf, stdout);
+      char *when_str = timetostr (when.tv_sec, buf);
+      error (0, 0, _("time %s is out of range"), when_str);
+      fputs (when_str, stdout);
       return;
     }
 

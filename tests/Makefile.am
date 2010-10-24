@@ -346,6 +346,7 @@ TESTS =						\
   du/2g						\
   du/8gb					\
   du/basic					\
+  du/bigtime					\
   du/deref					\
   du/deref-args					\
   du/exclude					\
