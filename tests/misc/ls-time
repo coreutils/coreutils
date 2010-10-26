@@ -113,6 +113,8 @@ else
   cat >&2 << \EOF
 failed ls ctime test -- this failure is expected at least for SunOS4.1.4
 and for tmpfs file systems on Solaris 5.5.1.
+It is also expected to fail on a btrfs file system until
+http://bugzilla.redhat.com/591068 is addressed.
 
 In the output below, `c' should have had a ctime more recent than
 that of `a', but does not.
