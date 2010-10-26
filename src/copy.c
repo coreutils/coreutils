@@ -622,7 +622,8 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_and_dst_desc;
     }
 
-  if (x->reflink_mode)
+  /* --attributes-only overrides --reflink.  */
+  if (data_copy_required && x->reflink_mode)
     {
       bool clone_ok = clone_file (dest_desc, source_desc) == 0;
       if (clone_ok || x->reflink_mode == REFLINK_ALWAYS)

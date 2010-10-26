@@ -7614,12 +7614,11 @@ implementations that dereference symbolic links by default.
 @cindex COW
 @cindex clone
 @cindex copy on write
-Perform a lightweight, copy-on-write (COW) copy.
-Copying with this option can succeed only on some file systems.
-Once it has succeeded, beware that the source and destination files
-share the same disk data blocks as long as they remain unmodified.
+Perform a lightweight, copy-on-write (COW) copy, if supported by the
+file system. Once it has succeeded, beware that the source and destination
+files share the same disk data blocks as long as they remain unmodified.
 Thus, if a disk I/O error affects data blocks of one of the files,
-the other suffers the exact same fate.
+the other suffers the same fate.
 
 The @var{when} value can be one of the following:
 
@@ -7633,6 +7632,15 @@ If the copy-on-write operation is not supported then fall back
 to the standard copy behaviour.
 @end table
 
+This option is overridden by the @option{--link}, @option{--symbolic-link}
+and @option{--attributes-only} options, thus allowing it to be used
+to configure the default data copying behavior for @command{cp}.
+For example, with the following alias, @command{cp} will use the
+minimum amount of space supported by the file system.
+
+@example
+alias cp='cp --reflink=auto --sparse=always'
+@end example
 
 @item --remove-destination
 @opindex --remove-destination
