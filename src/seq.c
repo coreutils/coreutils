@@ -46,7 +46,6 @@ static char const *separator;
 
 /* The string output after all numbers have been output.
    Usually "\n" or "\0".  */
-/* FIXME: make this an option.  */
 static char const terminator[] = "\n";
 
 static struct option const long_options[] =
