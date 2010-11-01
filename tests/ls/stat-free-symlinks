@@ -36,7 +36,10 @@ ln -s x link-to-x || framework_failure
 # symlink and an executable file properly.
 
 LS_COLORS='or=0:mi=0:ex=01;32:ln=01;35' \
-  strace -qe stat ls -F --color=always x link-to-x > out 2> err || fail=1
+  strace -qe stat ls -F --color=always x link-to-x > out.tmp 2> err || fail
+# Elide info messages strace can send to stdout of the form:
+#   [ Process PID=1234 runs in 32 bit mode. ]
+sed '/Process PID=/d' out.tmp > out
 
 # With coreutils 6.9 and earlier, this file would contain a
 # line showing ls had called stat on "x".
