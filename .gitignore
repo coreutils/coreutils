@@ -51,6 +51,7 @@
 /lib/progname.c
 /lib/progname.h
 /lib/selinux
+/lib/stamp-h1
 /lib/unistr
 /lib/uniwidth
 /lib/unused-parameter.h
