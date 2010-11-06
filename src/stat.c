@@ -150,6 +150,16 @@ statfs (char const *filename, struct fs_info *buf)
 #define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
                      (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 
+static char const digits[] = "0123456789";
+
+/* Flags that are portable for use in printf, for at least one
+   conversion specifier; make_format removes unportable flags as
+   needed for particular specifiers.  The glibc 2.2 extension "I" is
+   listed here; it is removed by make_format because it has undefined
+   behavior elsewhere and because it is incompatible with
+   out_epoch_sec.  */
+static char const printf_flags[] = "'-+ #0I";
+
 #define PROGRAM_NAME "stat"
 
 #define AUTHORS proper_name ("Michael Meskes")
@@ -467,40 +477,59 @@ human_time (struct timespec t)
   return str;
 }
 
+/* PFORMAT points to a '%' followed by a prefix of a format, all of
+   size PREFIX_LEN.  The flags allowed for this format are
+   ALLOWED_FLAGS; remove other printf flags from the prefix, then
+   append SUFFIX.  */
+static void
+make_format (char *pformat, size_t prefix_len, char const *allowed_flags,
+             char const *suffix)
+{
+  char *dst = pformat + 1;
+  char const *src;
+  char const *srclim = pformat + prefix_len;
+  for (src = dst; src < srclim && strchr (printf_flags, *src); src++)
+    if (strchr (allowed_flags, *src))
+      *dst++ = *src;
+  while (src < srclim)
+    *dst++ = *src++;
+  strcpy (dst, suffix);
+}
+
 static void
 out_string (char *pformat, size_t prefix_len, char const *arg)
 {
-  strcpy (pformat + prefix_len, "s");
+  make_format (pformat, prefix_len, "-", "s");
   printf (pformat, arg);
 }
 static int
 out_int (char *pformat, size_t prefix_len, intmax_t arg)
 {
-  strcpy (pformat + prefix_len, PRIdMAX);
+  make_format (pformat, prefix_len, "'-+ 0", PRIdMAX);
   return printf (pformat, arg);
 }
 static int
 out_uint (char *pformat, size_t prefix_len, uintmax_t arg)
 {
-  strcpy (pformat + prefix_len, PRIuMAX);
+  make_format (pformat, prefix_len, "'-0", PRIuMAX);
   return printf (pformat, arg);
 }
 static void
 out_uint_o (char *pformat, size_t prefix_len, uintmax_t arg)
 {
-  strcpy (pformat + prefix_len, PRIoMAX);
+  make_format (pformat, prefix_len, "-#0", PRIoMAX);
   printf (pformat, arg);
 }
 static void
 out_uint_x (char *pformat, size_t prefix_len, uintmax_t arg)
 {
-  strcpy (pformat + prefix_len, PRIxMAX);
+  make_format (pformat, prefix_len, "-#0", PRIxMAX);
   printf (pformat, arg);
 }
 static int
 out_minus_zero (char *pformat, size_t prefix_len)
 {
-  strcpy (pformat + prefix_len, ".0f");
+  make_format (pformat, prefix_len, "'-+ 0", ".0f");
   return printf (pformat, -0.25);
 }
 
@@ -1028,8 +1057,12 @@ print_it (char const *format, char const *filename,
         {
         case '%':
           {
-            size_t len = strspn (b + 1, "#-+.I 0123456789");
+            size_t len = strspn (b + 1, printf_flags);
             char const *fmt_char = b + len + 1;
+            fmt_char += strspn (fmt_char, digits);
+            if (*fmt_char == '.')
+              fmt_char += 1 + strspn (fmt_char + 1, digits);
+            len = fmt_char - (b + 1);
             unsigned int fmt_code = *fmt_char;
             memcpy (dest, b, len + 1);
 
