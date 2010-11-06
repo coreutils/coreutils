@@ -93,6 +93,9 @@ else
 fi
 
 # We require $(...) support unconditionally.
+# We also require "local" support.  The local-vs-IFS test is required to
+# eliminate FreeBSD 8.1's /bin/sh, which would otherwise pass these tests
+# and provoke opaque test failures in coreutils.
 # We require a few additional shell features only when $EXEEXT is nonempty,
 # in order to support automatic $EXEEXT emulation:
 # - hyphen-containing alias names
@@ -115,6 +118,7 @@ fi
 #  ? - not ok
 gl_shell_test_script_='
 test $(echo y) = y || exit 1
+gl_local_test_(){ local s=$IFS; test -n "$s"; }; gl_local_test_ || exit 1
 score_=10
 if test "$VERBOSE" = yes; then
   test -n "$( (exec 3>&1; set -x; P=1 true 2>&3) 2> /dev/null)" && score_=9
