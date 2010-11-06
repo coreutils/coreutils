@@ -19,18 +19,27 @@
 test "$VERBOSE" = yes && stat --version
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 
-touch -d '2010-10-21 18:43:33.023456789' k || framework_failure_
+# Set this to avoid problems with weird time zones.
+TZ=UTC0
+export TZ
+
+# Use a time stamp near the Epoch to avoid trouble with leap seconds.
+touch -d '1970-01-01 18:43:33.023456789' k || framework_failure_
 
 ls --full-time | grep 18:43:33.023456789 \
   || skip_ this file system does not support sub-second time stamps
 
-test "$(stat -c      %:X k)" = 023456789  || fail=1
-test "$(stat -c     %3:X k)" = 23456789   || fail=1
-test "$(stat -c   %3.3:X k)" = 023        || fail=1
-test "$(stat -c    %.3:X k)" = 023        || fail=1
-test "$(stat -c  %03.3:X k)" = 023        || fail=1
-test "$(stat -c  %-5.3:X k)" = '023  '    || fail=1
-test "$(stat -c  %05.3:X k)" = '  023'    || fail=1
-test "$(stat -c %010.3:X k)" = '       023' || fail=1
+test "$(stat -c       %X k)" =    67413               || fail=1
+test "$(stat -c      %.X k)" =    67413.023456789     || fail=1
+test "$(stat -c     %.1X k)" =    67413.0             || fail=1
+test "$(stat -c     %.3X k)" =    67413.023           || fail=1
+test "$(stat -c     %.6X k)" =    67413.023456        || fail=1
+test "$(stat -c     %.9X k)" =    67413.023456789     || fail=1
+test "$(stat -c   %13.6X k)" =  ' 67413.023456'       || fail=1
+test "$(stat -c  %013.6X k)" =   067413.023456        || fail=1
+test "$(stat -c  %-13.6X k)" =   '67413.023456 '      || fail=1
+test "$(stat -c  %18.10X k)" = '  67413.0234567890'   || fail=1
+test "$(stat -c %018.10X k)" =  0067413.0234567890    || fail=1
+test "$(stat -c %-18.10X k)" =   '67413.0234567890  ' || fail=1
 
 Exit $fail

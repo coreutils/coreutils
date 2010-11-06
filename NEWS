@@ -20,15 +20,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat's %X, %Y, and %Z directives once again print only the integer
   part of seconds since the epoch.  This reverts a change from
   coreutils-8.6, that was deemed unnecessarily disruptive.  To obtain
-  the nanoseconds portion corresponding to %X, you may now use %:X.
-  I.e., to print the floating point number of seconds using maximum
-  precision, use this format string: %X.%:X.  Likewise for %Y, %Z and %W.
+  a full resolution time stamp for %X, use %.X; if you want (say) just
+  3 fractional digits, use %.3X.  Likewise for %Y and %Z.
 
   stat's new %W format directive would print floating point seconds.
   However, with the above change to %X, %Y and %Z, we've made %W work
-  the same way:  %W now expands to seconds since the epoch (or 0 when
-  not supported), and %:W expands to the nanoseconds portion, or to
-  0 if not supported.
+  the same way as the others.
 
 
 * Noteworthy changes in release 8.6 (2010-10-15) [stable]

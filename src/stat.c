@@ -63,6 +63,7 @@
 #include "file-type.h"
 #include "filemode.h"
 #include "fs.h"
+#include "fstimeprec.h"
 #include "getopt.h"
 #include "mountlist.h"
 #include "quote.h"
@@ -70,7 +71,6 @@
 #include "stat-time.h"
 #include "strftime.h"
 #include "find-mount-point.h"
-#include "xstrtol.h"
 #include "xvasprintf.h"
 
 #if USE_STATVFS
@@ -182,6 +182,10 @@ static bool interpret_backslash_escapes;
 /* The trailing delimiter string:
    "" for --printf=FMT, "\n" for --format=FMT (-c).  */
 static char const *trailing_delim = "";
+
+/* The representation of the decimal point in the current locale.  */
+static char const *decimal_point;
+static size_t decimal_point_len;
 
 /* Return the type of the specified file system.
    Some systems have statfvs.f_basetype[FSTYPSZ] (AIX, HP-UX, and Solaris).
@@ -463,69 +467,23 @@ human_time (struct timespec t)
   return str;
 }
 
-/* Return a string representation (in static storage)
-   of the number of seconds in T since the epoch.  */
-static char * ATTRIBUTE_WARN_UNUSED_RESULT
-epoch_sec (struct timespec t)
-{
-  static char str[INT_BUFSIZE_BOUND (time_t)];
-  return timetostr (t.tv_sec, str);
-}
-
-/* Output the number of nanoseconds, ARG.tv_nsec, honoring a
-   WIDTH.PRECISION format modifier, where PRECISION specifies
-   how many leading digits(on a field of 9) to print.  */
-static void
-out_ns (char *pformat, size_t prefix_len, struct timespec arg)
-{
-  /* If no format modifier is specified, i.e., nothing between the
-     "%" and ":" of "%:X", then use the default of zero-padding and
-     a width of 9.  Otherwise, use the specified modifier(s).
-     This is to avoid the mistake of omitting the zero padding on
-     a number with fewer digits than the field width: when printing
-     nanoseconds after a decimal place, the resulting floating point
-     fraction would be off by a factor of 10 or more.
-
-     If a precision/max width is specified, i.e., a '.' is present
-     in the modifier, then then treat the modifier as operating
-     on the default representation, i.e., a zero padded number
-     of width 9.  */
-  unsigned long int ns = arg.tv_nsec;
-
-  if (memchr (pformat, '.', prefix_len)) /* precision specified.  */
-    {
-      char tmp[INT_BUFSIZE_BOUND (uintmax_t)];
-      snprintf (tmp, sizeof tmp, "%09lu", ns);
-      strcpy (pformat + prefix_len, "s");
-      printf (pformat, tmp);
-    }
-  else
-    {
-      char const *fmt = (prefix_len == 1) ? "09lu" : "lu";
-      /* Note that pformat is big enough, as %:X -> %09lu
-         and two extra bytes are already allocated.  */
-      strcpy (pformat + prefix_len, fmt);
-      printf (pformat, ns);
-    }
-}
-
 static void
 out_string (char *pformat, size_t prefix_len, char const *arg)
 {
   strcpy (pformat + prefix_len, "s");
   printf (pformat, arg);
 }
-static void
+static int
 out_int (char *pformat, size_t prefix_len, intmax_t arg)
 {
   strcpy (pformat + prefix_len, PRIdMAX);
-  printf (pformat, arg);
+  return printf (pformat, arg);
 }
-static void
+static int
 out_uint (char *pformat, size_t prefix_len, uintmax_t arg)
 {
   strcpy (pformat + prefix_len, PRIuMAX);
-  printf (pformat, arg);
+  return printf (pformat, arg);
 }
 static void
 out_uint_o (char *pformat, size_t prefix_len, uintmax_t arg)
@@ -538,6 +496,122 @@ out_uint_x (char *pformat, size_t prefix_len, uintmax_t arg)
 {
   strcpy (pformat + prefix_len, PRIxMAX);
   printf (pformat, arg);
+}
+static int
+out_minus_zero (char *pformat, size_t prefix_len)
+{
+  strcpy (pformat + prefix_len, ".0f");
+  return printf (pformat, -0.25);
+}
+
+/* Output the number of seconds since the Epoch, using a format that
+   acts like printf's %f format.  */
+static void
+out_epoch_sec (char *pformat, size_t prefix_len, struct stat const *statbuf,
+               struct timespec arg)
+{
+  char *dot = memchr (pformat, '.', prefix_len);
+  size_t sec_prefix_len = prefix_len;
+  int width = 0;
+  int precision = 0;
+  bool frac_left_adjust = false;
+
+  if (dot)
+    {
+      sec_prefix_len = dot - pformat;
+      pformat[prefix_len] = '\0';
+
+      if (ISDIGIT (dot[1]))
+        {
+          long int lprec = strtol (dot + 1, NULL, 10);
+          precision = (lprec <= INT_MAX ? lprec : INT_MAX);
+        }
+      else
+        {
+          static struct fstimeprec *tab;
+          if (! tab)
+            tab = fstimeprec_alloc ();
+          precision = fstimeprec (tab, statbuf);
+        }
+
+      if (precision && ISDIGIT (dot[-1]))
+        {
+          /* If a nontrivial width is given, subtract the width of the
+             decimal point and PRECISION digits that will be output
+             later.  */
+          char *p = dot;
+          *dot = '\0';
+
+          do
+            --p;
+          while (ISDIGIT (p[-1]));
+
+          long int lwidth = strtol (p, NULL, 10);
+          width = (lwidth <= INT_MAX ? lwidth : INT_MAX);
+          if (1 < width)
+            {
+              p += (*p == '0');
+              sec_prefix_len = p - pformat;
+              int w_d = (decimal_point_len < width
+                         ? width - decimal_point_len
+                         : 0);
+              if (1 < w_d)
+                {
+                  int w = w_d - precision;
+                  if (1 < w)
+                    {
+                      char *dst = pformat;
+                      for (char const *src = dst; src < p; src++)
+                        {
+                          if (*src == '-')
+                            frac_left_adjust = true;
+                          else
+                            *dst++ = *src;
+                        }
+                      sec_prefix_len =
+                        (dst - pformat
+                         + (frac_left_adjust ? 0 : sprintf (dst, "%d", w)));
+                    }
+                }
+            }
+        }
+    }
+
+  int divisor = 1;
+  for (int i = precision; i < 9; i++)
+    divisor *= 10;
+  int frac_sec = arg.tv_nsec / divisor;
+  int int_len;
+
+  if (TYPE_SIGNED (time_t))
+    {
+      bool minus_zero = false;
+      if (arg.tv_sec < 0 && arg.tv_nsec != 0)
+        {
+          int frac_sec_modulus = 1000000000 / divisor;
+          frac_sec = (frac_sec_modulus - frac_sec
+                      - (arg.tv_nsec % divisor != 0));
+          arg.tv_sec += (frac_sec != 0);
+          minus_zero = (arg.tv_sec == 0);
+        }
+      int_len = (minus_zero
+                 ? out_minus_zero (pformat, sec_prefix_len)
+                 : out_int (pformat, sec_prefix_len, arg.tv_sec));
+    }
+  else
+    int_len = out_uint (pformat, sec_prefix_len, arg.tv_sec);
+
+  if (precision)
+    {
+      int prec = (precision < 9 ? precision : 9);
+      int trailing_prec = precision - prec;
+      int ilen = (int_len < 0 ? 0 : int_len);
+      int trailing_width = (ilen < width && decimal_point_len < width - ilen
+                            ? width - ilen - decimal_point_len - prec
+                            : 0);
+      printf ("%s%.*d%-*.*d", decimal_point, prec, frac_sec,
+              trailing_width, trailing_prec, 0);
+    }
 }
 
 /* Print the context information of FILENAME, and return true iff the
@@ -853,38 +927,26 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       }
       break;
     case 'W':
-      out_string (pformat, prefix_len,
-                  epoch_sec (neg_to_zero (get_stat_birthtime (statbuf))));
-      break;
-    case 'W' + 256:
-      out_ns (pformat, prefix_len, neg_to_zero (get_stat_birthtime (statbuf)));
+      out_epoch_sec (pformat, prefix_len, statbuf,
+                     neg_to_zero (get_stat_birthtime (statbuf)));
       break;
     case 'x':
       out_string (pformat, prefix_len, human_time (get_stat_atime (statbuf)));
       break;
     case 'X':
-      out_string (pformat, prefix_len, epoch_sec (get_stat_atime (statbuf)));
-      break;
-    case 'X' + 256:
-      out_ns (pformat, prefix_len, get_stat_atime (statbuf));
+      out_epoch_sec (pformat, prefix_len, statbuf, get_stat_atime (statbuf));
       break;
     case 'y':
       out_string (pformat, prefix_len, human_time (get_stat_mtime (statbuf)));
       break;
     case 'Y':
-      out_string (pformat, prefix_len, epoch_sec (get_stat_mtime (statbuf)));
-      break;
-    case 'Y' + 256:
-      out_ns (pformat, prefix_len, get_stat_mtime (statbuf));
+      out_epoch_sec (pformat, prefix_len, statbuf, get_stat_mtime (statbuf));
       break;
     case 'z':
       out_string (pformat, prefix_len, human_time (get_stat_ctime (statbuf)));
       break;
     case 'Z':
-      out_string (pformat, prefix_len, epoch_sec (get_stat_ctime (statbuf)));
-      break;
-    case 'Z' + 256:
-      out_ns (pformat, prefix_len, get_stat_ctime (statbuf));
+      out_epoch_sec (pformat, prefix_len, statbuf, get_stat_ctime (statbuf));
       break;
     case 'C':
       fail |= out_file_context (pformat, prefix_len, filename);
@@ -968,20 +1030,8 @@ print_it (char const *format, char const *filename,
           {
             size_t len = strspn (b + 1, "#-+.I 0123456789");
             char const *fmt_char = b + len + 1;
-            unsigned int fmt_code;
+            unsigned int fmt_code = *fmt_char;
             memcpy (dest, b, len + 1);
-
-            /* The ":" modifier just before the letter in %W, %X, %Y, %Z
-               tells stat to print the nanoseconds portion of the date.  */
-            if (*fmt_char == ':' && strchr ("WXYZ", fmt_char[1]))
-              {
-                fmt_code = fmt_char[1] + 256;
-                ++fmt_char;
-              }
-            else
-              {
-                fmt_code = fmt_char[0];
-              }
 
             b = fmt_char;
             switch (fmt_code)
@@ -1276,16 +1326,12 @@ The valid format sequences for files (without --file-system):\n\
   %U   User name of owner\n\
   %w   Time of file birth, human-readable; - if unknown\n\
   %W   Time of file birth, seconds since Epoch; 0 if unknown\n\
-  %:W  Time of file birth, nanoseconds remainder; 0 if unknown\n\
   %x   Time of last access, human-readable\n\
   %X   Time of last access, seconds since Epoch\n\
-  %:X  Time of last access, nanoseconds remainder\n\
   %y   Time of last modification, human-readable\n\
   %Y   Time of last modification, seconds since Epoch\n\
-  %:Y  Time of last modification, nanoseconds remainder\n\
   %z   Time of last change, human-readable\n\
   %Z   Time of last change, seconds since Epoch\n\
-  %:Z  Time of last change, nanoseconds remainder\n\
 \n\
 "), stdout);
 
@@ -1329,6 +1375,10 @@ main (int argc, char *argv[])
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  struct lconv const *locale = localeconv ();
+  decimal_point = (locale->decimal_point[0] ? locale->decimal_point : ".");
+  decimal_point_len = strlen (decimal_point);
 
   atexit (close_stdout);
 

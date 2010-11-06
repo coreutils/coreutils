@@ -1,0 +1,10 @@
+Files:
+tests/test-fstimeprec.c
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-fstimeprec
+check_PROGRAMS += test-fstimeprec

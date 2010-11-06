@@ -10707,37 +10707,36 @@ The valid @var{format} directives for files with @option{--format} and
 @item %U - User name of owner
 @item %w - Time of file birth, or @samp{-} if unknown
 @item %W - Time of file birth as seconds since Epoch, or @samp{0}
-@item %:W - Time of file birth: nanoseconds remainder, or @samp{0}
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
-@item %:X - Time of last access: nanoseconds remainder
 @item %y - Time of last modification
 @item %Y - Time of last modification as seconds since Epoch
-@item %:Y - Time of last modification: nanoseconds remainder
 @item %z - Time of last change
 @item %Z - Time of last change as seconds since Epoch
-@item %:Z - Time of last change: nanoseconds remainder
 @end itemize
 
-Note that each of @samp{%:W}, @samp{%:X}, @samp{%:Y} and @samp{%:Z}
-prints its zero-padded number of nanoseconds on a field of width 9.
-However, if you specify anything between the @samp{%} and @samp{:},
-e.g., @samp{%10:X}, your modifier replaces the default of @samp{09}.
-
-Here are some examples:
+The @samp{%W}, @samp{%X}, @samp{%Y}, and @samp{%Z} formats accept a
+precision preceded by a period to specify the number of digits to
+print after the decimal point. For example, @samp{%.9X} outputs the
+last access time to nanosecond precision.  If a period is given but no
+precision, @command{stat} uses the estimated precision of the file
+system. When discarding excess precision, time stamps are truncated
+toward minus infinity.
 
 @example
 zero pad:
-  $ stat -c '[%015:Y]' /usr
-  [000000031367045]
+  $ stat -c '[%015Y]' /usr
+  [000001288929712]
 space align:
-  $ stat -c '[%15:Y]' /usr
-  [       31367045]
-  $ stat -c '[%-15:Y]' /usr
-  [31367045       ]
-truncate:
-  $ stat -c '[%.3:Y]' /usr
-  [031]
+  $ stat -c '[%15Y]' /usr
+  [     1288929712]
+  $ stat -c '[%-15Y]' /usr
+  [1288929712     ]
+precision:
+  $ stat -c '[%.3Y]' /usr
+  [1288929712.114]
+  $ stat -c '[%.Y]' /usr
+  [1288929712.114951]
 @end example
 
 The mount point printed by @samp{%m} is similar to that output

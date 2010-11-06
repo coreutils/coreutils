@@ -1,0 +1,24 @@
+Description:
+estimate precision of time stamps in file systems
+
+Files:
+lib/fstimeprec.c
+lib/fstimeprec.h
+
+Depends-on:
+hash
+stat-time
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += fstimeprec.c fstimeprec.h
+
+Include:
+"fstimeprec.h"
+
+License
+GPL
+
+Maintainer:
+Paul Eggert and Jim Meyering
