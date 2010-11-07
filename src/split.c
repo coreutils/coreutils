@@ -432,6 +432,13 @@ main (int argc, char **argv)
               error (0, 0, _("%s: invalid number of bytes"), optarg);
               usage (EXIT_FAILURE);
             }
+          /* If input is a pipe, we could get more data than is possible
+             to write to a single file, so indicate that immediately
+             rather than having possibly future invocations fail.  */
+          if (OFF_T_MAX < n_units)
+            error (EXIT_FAILURE, EFBIG,
+                   _("%s: invalid number of bytes"), optarg);
+
           break;
 
         case 'l':
@@ -456,6 +463,9 @@ main (int argc, char **argv)
               error (0, 0, _("%s: invalid number of bytes"), optarg);
               usage (EXIT_FAILURE);
             }
+          if (OFF_T_MAX < n_units)
+            error (EXIT_FAILURE, EFBIG,
+                   _("%s: invalid number of bytes"), optarg);
           break;
 
         case '0':

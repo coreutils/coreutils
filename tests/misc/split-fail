@@ -45,7 +45,8 @@ split -1 in 2> /dev/null || fail=1
 split -0 in 2> /dev/null && fail=1
 
 split --lines=$UINTMAX_MAX in || fail=1
-split --bytes=$UINTMAX_MAX in || fail=1
+split --bytes=$OFF_T_MAX in || fail=1
+split --line-bytes=$OFF_T_OFLOW 2> /dev/null in && fail=1
 split --line-bytes=$SIZE_OFLOW 2> /dev/null in && fail=1
 
 # Make sure that a huge obsolete option evokes the right failure.
