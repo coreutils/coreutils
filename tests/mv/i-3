@@ -34,10 +34,14 @@ chmod 0 g i || framework_failure
 ls /dev/stdin >/dev/null 2>&1 \
   || skip_test_ 'there is no /dev/stdin file'
 
-test -r /dev/stdin 2>&1 \
+# work around a dash bug when redirecting
+# from symlinked ttys in the background
+tty=$(readlink -f /dev/stdin)
+
+test -r "$tty" 2>&1 \
   || skip_test_ '/dev/stdin is not readable'
 
-mv f g < /dev/stdin > out 2>&1 & pid=$!
+mv f g < $tty > out 2>&1 & pid=$!
 
 # Wait up to 3.1s for the expected prompt
 check_overwrite_prompt()
