@@ -1372,10 +1372,11 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (suffix)
-    filename_space = xmalloc (strlen (prefix) + max_out (suffix) + 2);
-  else
-    filename_space = xmalloc (strlen (prefix) + digits + 2);
+  unsigned int max_digit_string_len
+    = (suffix
+       ? max_out (suffix)
+       : MAX (INT_STRLEN_BOUND (unsigned int), digits));
+  filename_space = xmalloc (strlen (prefix) + max_digit_string_len + 1);
 
   set_input_file (argv[optind++]);
 

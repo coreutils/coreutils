@@ -172,6 +172,7 @@ TESTS =						\
   misc/chroot-fail				\
   misc/comm					\
   misc/csplit					\
+  misc/csplit-1000				\
   misc/date-sec					\
   misc/dircolors				\
   misc/df					\
