@@ -418,6 +418,13 @@ get_new_buffer (size_t min_size)
 static void
 free_buffer (struct buffer_record *buf)
 {
+  struct line *l;
+  for (l = buf->line_start; l;)
+    {
+      struct line *n = l->next;
+      free (l);
+      l = n;
+    }
   free (buf->buffer);
   buf->buffer = NULL;
 }
@@ -542,6 +549,7 @@ remove_line (void)
   if (prev_buf)
     {
       free_buffer (prev_buf);
+      free (prev_buf);
       prev_buf = NULL;
     }
 

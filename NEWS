@@ -9,9 +9,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   latent bug introduced in coreutils 8.1, and possibly a second latent
   bug going at least as far back as coreutils 5.97]
 
-  csplit no longer corrupts heap when writing more than 999 files.
-  Demonstrate with: seq 1000 | csplit - /./ '{*}'
-  [the bug was present in the initial implementation]
+  csplit no longer corrupts heap when writing more than 999 files,
+  nor does it leak memory for every chunk of input processed
+  [the bugs were present in the initial implementation]
 
   tail -F once again notices changes in a currently unavailable
   remote directory [bug introduced in coreutils-7.5]

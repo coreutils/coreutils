@@ -173,6 +173,7 @@ TESTS =						\
   misc/comm					\
   misc/csplit					\
   misc/csplit-1000				\
+  misc/csplit-heap				\
   misc/date-sec					\
   misc/dircolors				\
   misc/df					\
