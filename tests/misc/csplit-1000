@@ -1,5 +1,5 @@
 #!/bin/sh
-# various csplit tests
+# cause a 1-byte heap buffer overrun
 
 # Copyright (C) 2010 Free Software Foundation, Inc.
 
@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && FIXME --version
+test "$VERBOSE" = yes && csplit --version
 
 # Before coreutils-8.7, this would overrun the 6-byte filename_space buffer.
 # It's hard to detect that without using valgrind, so here, we simply
