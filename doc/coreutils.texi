@@ -3082,7 +3082,8 @@ specified, the suffix string must include exactly one
 @code{printf(3)}-style conversion specification, possibly including
 format specification flags, a field width, a precision specifications,
 or all of these kinds of modifiers.  The format letter must convert a
-binary integer argument to readable form; thus, only @samp{d}, @samp{i},
+binary unsigned integer argument to readable form.  The format letters
+@samp{d} and @samp{i} are aliases for @samp{u}, and the
 @samp{u}, @samp{o}, @samp{x}, and @samp{X} conversions are allowed.  The
 entire @var{suffix} is given (with the current output file number) to
 @code{sprintf(3)} to form the file name suffixes for each of the

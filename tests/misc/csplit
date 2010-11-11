@@ -67,6 +67,21 @@ EOF
 compare err experr || fail=1
 rm -f in out exp err experr
 
+# `echo | csplit -b '%0#6.3x' - 1' incorrectly warned about the format
+# up through coreutils 8.6.
+echo > in
+csplit -b '%0#6.3x' in 1 > out 2> err || fail=1
+cat <<EOF > exp
+0
+1
+EOF
+compare out exp || fail=1
+touch experr
+compare err experr || fail=1
+compare 'xx   000' experr || fail=1
+compare 'xx 0x001' in || fail=1
+rm -f in out exp err experr xx*
+
 # make sure `csplit FILE 0' fails.
 echo > in
 csplit in 0 > out 2> err && fail=1
