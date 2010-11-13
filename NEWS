@@ -24,8 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat's %X, %Y, and %Z directives once again print only the integer
   part of seconds since the epoch.  This reverts a change from
   coreutils-8.6, that was deemed unnecessarily disruptive.  To obtain
-  a full resolution time stamp for %X, use %.X; if you want (say) just
-  3 fractional digits, use %.3X.  Likewise for %Y and %Z.
+  a nanosecond-precision floating point time stamp for %X use %.X;
+  if you want (say) just 3 fractional digits, use %.3X.  Likewise
+  for %Y and %Z.
 
   stat's new %W format directive would print floating point seconds.
   However, with the above change to %X, %Y and %Z, we've made %W work

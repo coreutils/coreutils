@@ -63,7 +63,6 @@
 #include "file-type.h"
 #include "filemode.h"
 #include "fs.h"
-#include "fstimeprec.h"
 #include "getopt.h"
 #include "mountlist.h"
 #include "quote.h"
@@ -557,10 +556,7 @@ out_epoch_sec (char *pformat, size_t prefix_len, struct stat const *statbuf,
         }
       else
         {
-          static struct fstimeprec *tab;
-          if (! tab)
-            tab = fstimeprec_alloc ();
-          precision = fstimeprec (tab, statbuf);
+          precision = 9;
         }
 
       if (precision && ISDIGIT (dot[-1]))

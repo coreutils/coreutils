@@ -10718,10 +10718,10 @@ The valid @var{format} directives for files with @option{--format} and
 
 The @samp{%W}, @samp{%X}, @samp{%Y}, and @samp{%Z} formats accept a
 precision preceded by a period to specify the number of digits to
-print after the decimal point. For example, @samp{%.9X} outputs the
-last access time to nanosecond precision.  If a period is given but no
-precision, @command{stat} uses the estimated precision of the file
-system. When discarding excess precision, time stamps are truncated
+print after the decimal point.  For example, @samp{%.3X} outputs the
+last access time to millisecond precision.  If a period is given but no
+precision, @command{stat} uses 9 digits, so @samp{%.X} is equivalent to
+@samp{%.9X}  When discarding excess precision, time stamps are truncated
 toward minus infinity.
 
 @example
@@ -10737,7 +10737,7 @@ precision:
   $ stat -c '[%.3Y]' /usr
   [1288929712.114]
   $ stat -c '[%.Y]' /usr
-  [1288929712.114951]
+  [1288929712.114951834]
 @end example
 
 The mount point printed by @samp{%m} is similar to that output
