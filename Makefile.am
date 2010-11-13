@@ -41,6 +41,7 @@ changelog_etc =				\
 
 syntax_check_exceptions =		\
   .x-sc_GPL_version			\
+  .x-sc_bindtextdomain			\
   .x-sc_error_message_uppercase		\
   .x-sc_file_system			\
   .x-sc_obsolete_symbols		\
