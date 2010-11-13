@@ -10721,7 +10721,7 @@ precision preceded by a period to specify the number of digits to
 print after the decimal point.  For example, @samp{%.3X} outputs the
 last access time to millisecond precision.  If a period is given but no
 precision, @command{stat} uses 9 digits, so @samp{%.X} is equivalent to
-@samp{%.9X}  When discarding excess precision, time stamps are truncated
+@samp{%.9X}.  When discarding excess precision, time stamps are truncated
 toward minus infinity.
 
 @example
