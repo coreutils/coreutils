@@ -16,14 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  chgrp --version
-  chmod --version
-  chown --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && { chgrp --version; chmod --version; chown --version; }
 
 chmod -f 0   no-such 2> out && fail=1
 chgrp -f 0   no-such 2>> out && fail=1

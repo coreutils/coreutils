@@ -18,12 +18,9 @@
 
 prog=printf
 
-if test "$VERBOSE" = yes; then
-  set -x
-  env $prog --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && env -- printf --version
+
 require_ulimit_
 
 

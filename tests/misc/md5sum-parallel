@@ -18,12 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/test-lib.sh
-
-if test "$VERBOSE" = yes; then
-  set -x
-  md5sum --version
-fi
-
+test "$VERBOSE" = yes && md5sum --version
 
 (mkdir tmp && cd tmp && seq 500 | xargs touch)
 

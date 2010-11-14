@@ -16,15 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-if test "$VERBOSE" = yes; then
-  set -x
-  env --version
-  env -- printenv --version
-fi
-
 . $srcdir/test-lib.sh
-
+test "$VERBOSE" = yes && { env --version; env -- printenv --version; }
 
 # POSIX is clear that environ may, but need not be, sorted.
 # Environment variable values may contain newlines, which cannot be

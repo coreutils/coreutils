@@ -18,13 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  env -- pwd --version
-  readlink --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && { env -- pwd --version; readlink --version; }
 
 test $host_os != linux-gnu &&
   skip_test_ 'vendor getcwd may be inadequate'

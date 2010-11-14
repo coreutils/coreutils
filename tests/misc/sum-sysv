@@ -16,11 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  sum --version
-fi
-
 : ${srcdir=.}
 . $srcdir/require-perl
 
@@ -31,7 +26,7 @@ LC_ALL=C
 export LC_ALL
 
 . $srcdir/test-lib.sh
-
+test "$VERBOSE" = yes && sum --version
 
 # FYI, 16843009 is floor (2^32 / 255).
 

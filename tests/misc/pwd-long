@@ -21,6 +21,8 @@
 . $srcdir/require-perl
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && env -- pwd --version
+
 require_readable_root_
 
 ARGV_0=$0

@@ -18,14 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-  mv --version
-  ginstall --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && { cp --version; mv --version; ginstall --version; }
 
 # Skip this test if cp was built without xattr support:
 touch src dest || framework_failure

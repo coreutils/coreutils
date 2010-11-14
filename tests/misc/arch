@@ -17,13 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && arch --version
+
 require_built_ arch
-
-if test "$VERBOSE" = yes; then
-  set -x
-  arch --version
-fi
-
 
 arch > out || fail=1
 uname -m > exp || fail=1

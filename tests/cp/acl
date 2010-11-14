@@ -17,16 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Make sure we get English translations.
-
-if test "$VERBOSE" = yes; then
-  set -x
-  mv --version
-  getfacl --version
-  setfacl --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && { mv --version; getfacl --version; setfacl --version; }
+
 require_acl_
 
 # Skip this test if cp was built without ACL support:

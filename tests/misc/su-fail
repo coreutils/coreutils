@@ -17,13 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && su --version
+
 require_built_ su
-
-if test "$VERBOSE" = yes; then
-  set -x
-  su --version
-fi
-
 
 # Very little that we can test without a root password
 su --- / true # unknown option

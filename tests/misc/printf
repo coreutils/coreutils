@@ -18,12 +18,9 @@
 
 prog="$abs_top_builddir/src/printf"
 
-if test "$VERBOSE" = yes; then
-  set -x
-  "$prog" --version
-fi
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && env -- printf --version
+
 getlimits_
 
 

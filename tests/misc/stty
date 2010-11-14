@@ -16,13 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  stty --version
-fi
-
 # Make sure there's a tty on stdin.
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && stty --version
+
 require_controlling_input_terminal_
 trap '' TTOU # Ignore SIGTTOU
 

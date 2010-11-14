@@ -16,14 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# This script takes no arguments.
-
-if test "$VERBOSE" = yes; then
-  set -x
-  stty --version
-fi
-
 # Setting this envvar to a very small value used to cause e.g., `stty size'
 # to generate slightly different output on certain systems.
 COLUMNS=80
@@ -37,6 +29,8 @@ LC_ALL=C
 export LC_ALL
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && stty --version
+
 require_controlling_input_terminal_
 trap '' TTOU # Ignore SIGTTOU
 

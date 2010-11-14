@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && cp --version
+
 require_root_
 
 # Some of the tests expect a umask that grants group and/or world read access.
@@ -57,11 +59,6 @@ t1() {
   t0 "$f" "$u" "$g" setuidgid -g "$nameless_gid1,$nameless_gid2" \
       "$nameless_uid" "$@"
 }
-
-if test "x$VERBOSE" = xyes; then
-  set -x
-  cp --version
-fi
 
 nameless_uid=`$PERL -le 'foreach my $i (1000..16*1024-1) { getpwuid $i or (print $i), exit }'`
 nameless_gid1=`$PERL -le 'foreach my $i (1000..16*1024) { getgrgid $i or (print $i), exit }'`

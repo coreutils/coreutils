@@ -16,15 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  ls --version
-fi
-
 : ${srcdir=.}
 . $srcdir/require-perl
 
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && ls --version
+
 require_root_
 
 nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }'`

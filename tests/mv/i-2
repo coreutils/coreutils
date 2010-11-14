@@ -17,16 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  mv --version
-  cp --version
-fi
-
-
-# Make sure we get English translations.
-
 . $srcdir/test-lib.sh
+test "$VERBOSE" = yes && { cp --version; mv --version; }
+
 skip_if_root_
 
 for i in a b c d e f g h; do
