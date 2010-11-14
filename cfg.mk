@@ -164,6 +164,13 @@ sc_man_file_correlation:
 	@$(MAKE) -s -C src all_programs
 	@$(MAKE) -s -C man $@
 
+# Ensure that the end of each release's section is marked by two empty lines.
+sc_NEWS_two_empty_lines:
+	@sed -n 4,/Noteworthy/p $(srcdir)/NEWS				\
+	    | perl -n0e '/(^|\n)\n\n\* Noteworthy/ or exit 1'		\
+	  || { echo '$(ME): use two empty lines to separate NEWS sections' \
+		 1>&2; exit 1; } || :;					\
+
 # Perl-based tests used to exec perl from a #!/bin/sh script.
 # Now they all start with #!/usr/bin/perl and the portability
 # infrastructure is in tests/Makefile.am.  Make sure no old-style
