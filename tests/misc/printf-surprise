@@ -18,7 +18,7 @@
 
 prog=printf
 
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 test "$VERBOSE" = yes && env -- printf --version
 
 require_ulimit_

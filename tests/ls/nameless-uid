@@ -19,7 +19,7 @@
 : ${srcdir=.}
 . $srcdir/require-perl
 
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 test "$VERBOSE" = yes && ls --version
 
 require_root_

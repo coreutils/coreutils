@@ -28,7 +28,7 @@ export COLUMNS
 LC_ALL=C
 export LC_ALL
 
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 test "$VERBOSE" = yes && stty --version
 
 require_controlling_input_terminal_

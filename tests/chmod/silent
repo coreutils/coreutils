@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
 test "$VERBOSE" = yes && { chgrp --version; chmod --version; chown --version; }
 
 chmod -f 0   no-such 2> out && fail=1
