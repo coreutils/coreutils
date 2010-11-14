@@ -18,12 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  rm --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && rm --version
 expensive_
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.

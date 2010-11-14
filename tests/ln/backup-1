@@ -19,12 +19,8 @@
 
 # Based on a problem report from Jamie Lokier.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  ln --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && ln --version
 
 touch a b || framework_failure
 

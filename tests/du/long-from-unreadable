@@ -28,12 +28,8 @@
 # on Linux+PROC_FS systems because its fts implementation would revert
 # unnecessarily to using FTS_NOCHDIR mode in this corner case.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  du --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && du --version
 
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then

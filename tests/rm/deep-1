@@ -23,12 +23,8 @@
 
 # If this test takes too long on your system, blame the OS.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  rm --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && rm --version
 
 umask 022
 

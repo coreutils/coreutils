@@ -23,12 +23,8 @@
 #   Aborted
 # due to a race condition in which a dev/inode pair is reused.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  tail --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && tail --version
 
 # Not "expensive" per se, but sleeping for so long is annoying.
 very_expensive_

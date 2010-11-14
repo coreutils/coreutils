@@ -18,12 +18,8 @@
 
 test=interactive-always
 
-if test "$VERBOSE" = yes; then
-  set -x
-  rm --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && rm --version
 
 touch file1-1 file1-2 file2-1 file2-2 file3-1 file3-2 file4-1 file4-2 \
   || framework_failure

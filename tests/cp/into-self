@@ -21,12 +21,8 @@
 # Now it gives this:
 #   cp: can't copy a directory `dir' into itself `dir/dir'
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && cp --version
 
 mkdir a dir || framework_failure
 

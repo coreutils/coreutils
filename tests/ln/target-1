@@ -21,12 +21,8 @@
 # ln: `d/.': cannot overwrite directory
 # Based on a test case from Dmitry V. Levin.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  ln --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && ln --version
 
 mkdir d || framework_failure
 ln -s --target-dir=d ../f || fail=1

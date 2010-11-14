@@ -20,12 +20,8 @@
 # This test would fail due to a bug introduced in 4.0y.
 # The bug was fixed in 4.0z.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && cp --version
 require_root_
 
 touch a b c || framework_failure

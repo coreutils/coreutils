@@ -30,12 +30,8 @@
 # directory, because it requires use of the --preserve=link option that
 # mv enables by default.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && cp --version
 skip_if_root_
 
 mkdir -p x dst/x || framework_failure

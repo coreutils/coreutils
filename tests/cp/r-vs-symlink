@@ -20,12 +20,8 @@
 # though now such usage evokes a warning:
 # cp: `slink': WARNING: using -r to copy symbolic links is not portable
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && cp --version
 
 echo abc > foo || framework_failure
 ln -s foo slink || framework_failure

@@ -17,12 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-if test "$VERBOSE" = yes; then
-  set -x
-  chroot --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && chroot --version
 
 
 # These tests verify exact status of internal failure; since none of

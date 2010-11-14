@@ -21,12 +21,8 @@
 # The trick is to create an un-stat'able symlink and to see if ls
 # can report its type nonetheless, using dirent.d_type.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  ls --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && ls --version
 
 # Skip this test unless "." is on a file system with useful d_type info.
 # FIXME: This uses "ls -p" to decide whether to test "ls" with other options,

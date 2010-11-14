@@ -19,12 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  mv --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && mv --version
 skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
 . "$abs_srcdir/other-fs-tmpdir"

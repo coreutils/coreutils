@@ -21,12 +21,8 @@
 # It skips the test if your system lacks a /proc/$pid/status
 # file, or if its contents don't look right.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  tail --version
-fi
-
-. $srcdir/test-lib.sh
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+test "$VERBOSE" = yes && tail --version
 
 require_proc_pid_status_
 
