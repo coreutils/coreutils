@@ -23,8 +23,9 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-# Not "expensive" per se, but sleeping for so long is annoying.
 . $srcdir/test-lib.sh
+
+# Not "expensive" per se, but sleeping for so long is annoying.
 very_expensive_
 
 ok='ok ok ok'
