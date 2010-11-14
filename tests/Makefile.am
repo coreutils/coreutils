@@ -16,7 +16,6 @@ EXTRA_DIST =		\
   other-fs-tmpdir	\
   require-perl		\
   sample-test		\
-  test-lib.sh		\
   $(pr_data)
 
 root_tests =					\

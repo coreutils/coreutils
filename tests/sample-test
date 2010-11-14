@@ -22,7 +22,7 @@ test "$VERBOSE" = yes && FIXME --version
 # FIXME: skip_if_root_
 # FIXME: require_root_
 
-# If used, these must *follow* test-lib.sh.
+# If used, these must *follow* init.sh.
 # FIXME: cleanup_() { rm -rf "$other_partition_tmpdir"; }
 # FIXME: . "$abs_srcdir/other-fs-tmpdir"
 
