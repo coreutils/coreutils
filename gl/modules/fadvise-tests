@@ -1,0 +1,10 @@
+Files:
+tests/test-fadvise.c
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-fadvise
+check_PROGRAMS += test-fadvise

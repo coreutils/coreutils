@@ -21,6 +21,13 @@
 
 #include "fadvise.h"
 
+/* We ignore any errors as these hints are only advisory.
+ * There is the chance one can pass invalid ADVICE, which will
+ * not be indicated, but given the simplicity of the interface
+ * this is unlikely.  Also not returning errors allows the
+ * unconditional passing of descriptors to non standard files,
+ * which will just be ignored if unsupported.  */
+
 int
 main (void)
 {
