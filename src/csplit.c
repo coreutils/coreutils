@@ -1275,7 +1275,7 @@ max_out (char *format)
           error (EXIT_FAILURE, 0,
                  _("too many %% conversion specifications in suffix"));
         percent = true;
-        unsigned int flags;
+        int flags;
         f += get_format_flags (f, &flags);
         while (ISDIGIT (*f))
           f++;
