@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && for i in chcon cp ls mv stat; do $i --version; done
+print_ver_ chcon cp ls mv stat
 
 require_root_
 require_selinux_
