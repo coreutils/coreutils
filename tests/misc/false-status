@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && false --version
+print_ver_ false
 
 false --version > /dev/null && fail=1
 false --help > /dev/null && fail=1

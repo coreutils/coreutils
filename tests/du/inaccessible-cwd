@@ -21,7 +21,7 @@
 # this test would fail.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && du --version
+print_ver_ du
 skip_if_root_
 
 cwd=`pwd`

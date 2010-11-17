@@ -20,7 +20,7 @@
 # that's the name of the binary in ../../src.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ginstall --version
+print_ver_ ginstall
 
 
 file=file

@@ -20,7 +20,7 @@
 # Before coreutils-4.5.3, it would remove a single trailing slash.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && du --version
+print_ver_ du
 
 mkdir -p dir/1/2 || framework_failure
 ln -s dir slink || framework_failure

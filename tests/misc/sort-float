@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && sort --version
+print_ver_ sort
 
 # Return 0 if LDBL_MIN is smaller than DBL_MIN, else 1.
 # Dissect numbers like these, comparing first exponent, then

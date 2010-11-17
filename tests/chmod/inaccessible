@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && chmod --version
+print_ver_ chmod
 
 mkdir -p d/e || framework_failure
 chmod 0 d/e d || framework_failure

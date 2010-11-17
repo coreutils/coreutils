@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && du --version
+print_ver_ du
 
 # Create lots of directories, each containing a single symlink
 # pointing at the next directory in the list.

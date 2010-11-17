@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && rm --version
+print_ver_ rm
 require_root_
 
 # The containing directory must be owned by the user who eventually runs rm.

@@ -18,7 +18,7 @@
 
 # Make sure there's a tty on stdin.
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && stty --version
+print_ver_ stty
 
 require_controlling_input_terminal_
 trap '' TTOU # Ignore SIGTTOU

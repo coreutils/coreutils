@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ls --version
+print_ver_ ls
 
 ln -s no-such-file dangle || framework_failure
 mkdir -p dir/sub || framework_failure

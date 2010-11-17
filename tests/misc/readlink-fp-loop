@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && readlink --version
+print_ver_ readlink
 cwd=$("$abs_top_builddir/src/pwd")
 
 # To trigger this bug, we have to construct a name/situation during

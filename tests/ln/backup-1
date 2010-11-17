@@ -20,7 +20,7 @@
 # Based on a problem report from Jamie Lokier.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ln --version
+print_ver_ ln
 
 touch a b || framework_failure
 

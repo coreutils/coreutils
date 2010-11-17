@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && chcon --version
+print_ver_ chcon
 require_root_
 require_selinux_
 skip_if_mcstransd_is_running_

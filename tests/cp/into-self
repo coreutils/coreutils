@@ -22,7 +22,7 @@
 #   cp: can't copy a directory `dir' into itself `dir/dir'
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && cp --version
+print_ver_ cp
 
 mkdir a dir || framework_failure
 

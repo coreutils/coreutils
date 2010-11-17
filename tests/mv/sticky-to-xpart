@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && mv --version
+print_ver_ mv
 require_root_
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }

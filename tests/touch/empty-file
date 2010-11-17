@@ -22,7 +22,7 @@
 # the empty file is on an NFS-mounted 4.2 volume.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && touch --version
+print_ver_ touch
 
 DEFAULT_SLEEP_SECONDS=2
 SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}

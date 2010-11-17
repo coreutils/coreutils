@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && tail --version
+print_ver_ tail
 
 echo foo | timeout 10 tail -f -c3 > out || fail=1
 echo oo > exp || fail=1

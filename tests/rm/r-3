@@ -24,7 +24,7 @@
 # are 338 or more files in a directory on a Darwin-6.5 system
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && rm --version
+print_ver_ rm
 
 mkdir t || framework_failure
 cd t || framework_failure

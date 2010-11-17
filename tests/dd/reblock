@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && dd --version
+print_ver_ dd
 
 # 2 short reads -> 1 full write + 1 partial write
 cat <<\EOF > exp-reblock || framework_failure

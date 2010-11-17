@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && csplit --version
+print_ver_ csplit
 
 # Before coreutils-8.7, this would overrun the 6-byte filename_space buffer.
 # It's hard to detect that without using valgrind, so here, we simply

@@ -21,7 +21,7 @@
 # cp: `slink': WARNING: using -r to copy symbolic links is not portable
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && cp --version
+print_ver_ cp
 
 echo abc > foo || framework_failure
 ln -s foo slink || framework_failure

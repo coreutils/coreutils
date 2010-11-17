@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && sort --version
+print_ver_ sort
 
 locale --version >/dev/null 2>&1 ||
   skip_test_ 'The locale utility is not present'

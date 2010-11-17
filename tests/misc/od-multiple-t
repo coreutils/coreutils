@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && od --version
+print_ver_ od
 
 # Choose 48 bytes for the input, as that is lcm for 1, 2, 4, 8, 12, 16;
 # we don't anticipate any other native object size on modern hardware.

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && id --version
+print_ver_ id
 
 # We don't need selinux *FS* support to test id,
 # but this is as good a witness as any, in general.

@@ -18,7 +18,7 @@
 
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && nice --version
+print_ver_ nice
 
 
 # These tests verify exact status of internal failure.

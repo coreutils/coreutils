@@ -26,7 +26,7 @@ LC_ALL=C
 export LC_ALL
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && sum --version
+print_ver_ sum
 
 # FYI, 16843009 is floor (2^32 / 255).
 

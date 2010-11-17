@@ -18,7 +18,7 @@
 
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && chroot --version
+print_ver_ chroot
 
 
 # These tests verify exact status of internal failure; since none of

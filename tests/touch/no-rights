@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && touch --version
+print_ver_ touch
 
 # Make sure t2 is newer than t1.
 touch -d '2000-01-01 00:00' t1 || framework_failure

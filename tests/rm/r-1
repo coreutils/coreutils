@@ -20,7 +20,7 @@
 test=r-1
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && rm --version
+print_ver_ rm
 
 mkdir a a/a || framework_failure
 > b || framework_failure

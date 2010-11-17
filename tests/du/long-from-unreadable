@@ -29,7 +29,7 @@
 # unnecessarily to using FTS_NOCHDIR mode in this corner case.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && du --version
+print_ver_ du
 
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then

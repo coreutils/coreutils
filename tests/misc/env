@@ -18,7 +18,7 @@
 
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && env --version
+print_ver_ env
 
 
 # Verify clearing the environment

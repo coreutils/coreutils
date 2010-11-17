@@ -21,7 +21,7 @@
 # The bug was fixed in 4.0z.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && cp --version
+print_ver_ cp
 require_root_
 
 touch a b c || framework_failure

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && tail --version
+print_ver_ tail
 
 # 9 is a magic number, related to internal details of tail.c and hash.c
 n=9

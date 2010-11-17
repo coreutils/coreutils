@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && tail --version
+print_ver_ tail
 expensive_
 
 # Create a file of size exactly 4GB (2^32) with 8 bytes

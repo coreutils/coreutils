@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && wc --version
+print_ver_ wc
 
 echo 2 > 2b || framework_failure
 echo 2 words > 2w || framework_failure

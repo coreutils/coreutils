@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ginstall --version
+print_ver_ ginstall
 
 
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.

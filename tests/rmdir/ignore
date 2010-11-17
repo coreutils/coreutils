@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && rmdir --version
+print_ver_ rmdir
 
 cwd=`pwd`
 mkdir -p "$cwd/a/b/c" "$cwd/a/x" || framework_failure

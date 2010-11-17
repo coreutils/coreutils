@@ -3,7 +3,7 @@
 # This was broken in the 4.0[efg] test releases.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && touch --version
+print_ver_ touch
 
 touch . || fail=1
 Exit $fail

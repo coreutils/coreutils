@@ -22,7 +22,7 @@
 # Based on a test case from Dmitry V. Levin.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ln --version
+print_ver_ ln
 
 mkdir d || framework_failure
 ln -s --target-dir=d ../f || fail=1

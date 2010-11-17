@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && tac --version
+print_ver_ tac
 
 # See if the envvar is defined.
 if test x = "x$FULL_PARTITION_TMPDIR"; then

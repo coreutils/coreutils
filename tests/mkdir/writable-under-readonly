@@ -25,7 +25,7 @@
 # Demonstrate the problem, as root:
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && mkdir --version
+print_ver_ mkdir
 require_root_
 
 # FIXME: for now, skip it unconditionally

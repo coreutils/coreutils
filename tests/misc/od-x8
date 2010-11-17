@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && od --version
+print_ver_ od
 
 od -t x8 /dev/null >/dev/null ||
   skip_test_ "od lacks support for 8-byte quantities"

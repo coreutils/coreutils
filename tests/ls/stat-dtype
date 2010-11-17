@@ -22,7 +22,7 @@
 # can report its type nonetheless, using dirent.d_type.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ls --version
+print_ver_ ls
 
 # Skip this test unless "." is on a file system with useful d_type info.
 # FIXME: This uses "ls -p" to decide whether to test "ls" with other options,

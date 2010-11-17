@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && tail --version
+print_ver_ tail
 
 # Don't run this test by default because sometimes it's skipped as noted below.
 # Also gdb has a bug in Debian's gdb-6.8-3 at least that causes it to not

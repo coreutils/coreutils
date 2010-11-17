@@ -20,7 +20,7 @@
 . $srcdir/require-perl
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && ls --version
+print_ver_ ls
 
 require_root_
 
