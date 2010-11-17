@@ -19,7 +19,7 @@
 prog=printf
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && env -- printf --version
+print_ver_ printf
 
 require_ulimit_
 

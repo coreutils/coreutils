@@ -21,7 +21,7 @@
 . $srcdir/require-perl
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && env -- pwd --version
+print_ver_ pwd
 
 require_readable_root_
 

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && env -- printenv --version
+print_ver_ printenv
 
 # Without arguments, printenv behaves like env.  Some shells provide
 # printenv as a builtin, so we must invoke it via "env".
