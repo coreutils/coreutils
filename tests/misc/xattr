@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-test "$VERBOSE" = yes && { cp --version; mv --version; ginstall --version; }
+print_ver_ cp mv ginstall
 
 # Skip this test if cp was built without xattr support:
 touch src dest || framework_failure
