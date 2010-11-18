@@ -251,6 +251,12 @@ sc_prohibit_sleep:
 	halt='prefer xnanosleep over other sleep interfaces'		\
 	  $(_sc_search_regexp)
 
+# Use print_ver_ (from init.cfg), not open-coded $VERBOSE check.
+sc_prohibit_verbose_version:
+	@prohibit='test "\$$VERBOSE" = yes && .* --version'		\
+	halt='use the print_ver_ function instead...'			\
+	  $(_sc_search_regexp)
+
 ###########################################################
 _p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
 _pre = $(_p0)\|[/][^"'/*]\|[/]"\([^\"]\|[\].\)*"\|[/]'\([^\']\|[\].\)*'\)*
