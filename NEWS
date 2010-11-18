@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  od now prints floating-point numbers without losing information, and
+  it no longer omits spaces between floating-point columns in some cases.
 
 * Noteworthy changes in release 8.7 (2010-11-13) [stable]
 

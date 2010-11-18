@@ -149,6 +149,7 @@ TESTS =						\
   misc/xstrtol					\
   tail-2/pid					\
   misc/od					\
+  misc/od-float					\
   misc/mktemp					\
   misc/arch					\
   misc/pr					\
