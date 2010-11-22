@@ -603,6 +603,12 @@ copy_reg (char const *src_name, char const *dst_name,
                 }
             }
         }
+
+      /* Improve quality of diagnostic when a nonexistent dst_name
+         ends in a slash and open fails with errno == EISDIR.  */
+      if (dest_desc < 0 && dest_errno == EISDIR
+          && *dst_name && dst_name[strlen (dst_name) - 1] == '/')
+        dest_errno = ENOTDIR;
     }
   else
     omitted_permissions = 0;
