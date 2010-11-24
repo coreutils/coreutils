@@ -5506,11 +5506,26 @@ Select for printing only the fields listed in @var{field-list}.
 Fields are separated by a TAB character by default.  Also print any
 line that contains no delimiter character, unless the
 @option{--only-delimited} (@option{-s}) option is specified.
-Note @command{cut} does not support specifying runs of whitespace as a
-delimiter, so to achieve that common functionality one can pre-process
-with @command{tr} like:
+
+Note @command{awk} supports more sophisticated field processing,
+and by default will use (and discard) runs of blank characters to
+separate fields, and ignore leading and trailing blanks.
 @example
-tr -s '[:blank:]' '\t' | cut -f@dots{}
+@verbatim
+awk '{print $2}'    # print the second field
+awk '{print $NF-1}' # print the penultimate field
+awk '{print $2,$1}' # reorder the first two fields
+@end verbatim
+@end example
+
+In the unlikely event that @command{awk} is unavailable,
+one can use the @command{join} command, to process blank
+characters as @command{awk} does above.
+@example
+@verbatim
+join -a1 -o 1.2     - /dev/null # print the second field
+join -a1 -o 1.2,1.1 - /dev/null # reorder the first two fields
+@end verbatim
 @end example
 
 @item -d @var{input_delim_byte}
