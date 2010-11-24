@@ -16,26 +16,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
 # Convert Makefile.am files:
-#  find tests -name Makefile.am | xargs grep -wl PATH|xargs perl -pi -e \
-#    's,src(\$\(PATH_SEPARATOR\)\$\$PATH),src/vg$1,'
+#  find tests -name check.mk | xargs grep -wl PATH |
+#    xargs perl -pi -e 's,src(\$\(PATH_SEPARATOR\)),src/vg$1,'
 # To restore:
-# find tests -name Makefile.am|xargs grep -wl PATH|xargs perl -pi -e 's,src/vg,src,'
+#  find tests -name check.mk | xargs grep -wl PATH |
+#    xargs perl -pi -e 's,src/vg,src,'
 #
 # Create this symlink for suppressions (this is no longer necessary,
 # with Linux kernel 2.6.9 and valgrind-2.2.0):
 # ln -s $PWD/.vg-suppressions /tmp/cu-vg
 
+
 # Create src/vg:
 
-coreutils=$(echo 'spy:;@echo $(all_programs)' | (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
+coreutils=$(echo 'spy:;@echo $(all_programs) $(noinst_PROGRAMS)' |
+            (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
 mkdir -p src/vg
 pwd=`pwd`
 srcdir=$pwd/src
 _path='export PATH='$srcdir':${PATH#*:}'
 pre='#!/bin/sh\n'"$_path"'\n'
-n=15
-vg='exec /usr/bin/valgrind --suppressions=/tmp/cu-vg --log-fd=3 --leak-check=yes --track-fds=yes --leak-check=full --num-callers='$n
+n=15 # stack trace depth
+log_fd=3 # One can redirect this to file like 3>vg.log
+test -e /tmp/cu-vg && suppressions='--supressions=/tmp/cu-vg'
+vg="exec /usr/bin/valgrind $suppressions --log-fd=$log_fd \
+--leak-check=yes --track-fds=yes --leak-check=full --num-callers=$n"
 cat <<EOF > src/vg/gen
 for i in $coreutils; do
   printf "$pre$vg -- \$i"' "\$@"\n' > \$i
