@@ -487,6 +487,11 @@ tsort (const char *file)
 
           /* T5. Output front of queue.  */
           puts (head->str);
+#ifdef lint
+          /* suppress valgrind "definitely lost" warnings.  */
+          void *head_str = (void *) head->str;
+          free (head_str);
+#endif
           head->str = NULL;	/* Avoid printing the same string twice.  */
           n_strings--;
 
