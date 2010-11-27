@@ -237,6 +237,7 @@ TESTS =						\
   misc/sort-merge-fdlimit			\
   misc/sort-month				\
   misc/sort-rand				\
+  misc/sort-spinlock-abuse			\
   misc/sort-unique				\
   misc/sort-version				\
   misc/split-a					\
@@ -653,5 +654,8 @@ pr_data =					\
   pr/ttb3-0FF					\
   pr/ttb3-FF					\
   pr/w72l24f-ll
+
+XFAIL_TESTS =					\
+  misc/sort-spinlock-abuse
 
 include $(srcdir)/check.mk
