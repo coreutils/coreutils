@@ -239,6 +239,7 @@ TESTS =						\
   misc/sort-rand				\
   misc/sort-spinlock-abuse			\
   misc/sort-unique				\
+  misc/sort-unique-segv				\
   misc/sort-version				\
   misc/split-a					\
   misc/split-bchunk				\
