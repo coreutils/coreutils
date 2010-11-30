@@ -3226,13 +3226,13 @@ queue_pop (struct merge_node_queue *queue)
 static void
 write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 {
-  static struct line const *saved = NULL;
+  static struct line saved;
 
   if (!unique)
     write_line (line, tfp, temp_output);
-  else if (!saved || compare (line, saved))
+  else if (!saved.text || compare (line, &saved))
     {
-      saved = line;
+      saved = *line;
       write_line (line, tfp, temp_output);
     }
 }

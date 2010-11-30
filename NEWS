@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   od now prints floating-point numbers without losing information, and
   it no longer omits spaces between floating-point columns in some cases.
 
+  sort -u with at least two threads could attempt to read through a
+  corrupted pointer. [bug introduced in coreutils-8.6]
+
 ** New features
 
   split accepts the --number option to generate a specific number of files.
