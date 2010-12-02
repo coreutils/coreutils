@@ -107,7 +107,7 @@ struct rlimit { size_t rlim_cur; };
 /* Maximum number of lines to merge every time a NODE is taken from
    the MERGE_QUEUE.  Node is at LEVEL in the binary merge tree,
    and is responsible for merging TOTAL lines. */
-#define MAX_MERGE(total, level) ((total) / ((2 << level) * (2 << level)) + 1)
+#define MAX_MERGE(total, level) (((total) >> (2 * ((level) + 1))) + 1)
 
 /* Heuristic value for the number of lines for which it is worth
    creating a subthread, during an internal merge sort, on a machine
