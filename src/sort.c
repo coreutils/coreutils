@@ -238,10 +238,10 @@ struct merge_node
   struct line **dest;           /* Pointer to destination of merge. */
   size_t nlo;                   /* Total Lines remaining from LO. */
   size_t nhi;                   /* Total lines remaining from HI. */
-  size_t level;                 /* Level in merge tree. */
   struct merge_node *parent;    /* Parent node. */
+  unsigned int level;           /* Level in merge tree. */
   bool queued;                  /* Node is already in heap. */
-  pthread_spinlock_t *lock;     /* Lock for node operations. */
+  pthread_spinlock_t lock;      /* Lock for node operations. */
 };
 
 /* Priority queue of merge nodes. */
@@ -3157,7 +3157,7 @@ compare_nodes (void const *a, void const *b)
 static inline void
 lock_node (struct merge_node *node)
 {
-  pthread_spin_lock (node->lock);
+  pthread_spin_lock (&node->lock);
 }
 
 /* Unlock a merge tree NODE. */
@@ -3165,7 +3165,7 @@ lock_node (struct merge_node *node)
 static inline void
 unlock_node (struct merge_node *node)
 {
-  pthread_spin_unlock (node->lock);
+  pthread_spin_unlock (&node->lock);
 }
 
 /* Destroy merge QUEUE. */
@@ -3477,10 +3477,17 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
   struct line *lo = dest - total_lines;
   struct line *hi = lo - nlo;
   struct line **parent_end = (lo_child)? &parent->end_lo : &parent->end_hi;
-  pthread_spinlock_t lock;
-  pthread_spin_init (&lock, PTHREAD_PROCESS_PRIVATE);
-  struct merge_node node = {lo, hi, lo, hi, parent_end, nlo, nhi,
-                            parent->level + 1, parent, false, &lock};
+
+  struct merge_node node;
+  node.lo = node.end_lo = lo;
+  node.hi = node.end_hi = hi;
+  node.dest = parent_end;
+  node.nlo = nlo;
+  node.nhi = nhi;
+  node.parent = parent;
+  node.level = parent->level + 1;
+  node.queued = false;
+  pthread_spin_init (&node.lock, PTHREAD_PROCESS_PRIVATE);
 
   /* Calculate thread arguments. */
   unsigned long int lo_threads = nthreads / 2;
@@ -3516,7 +3523,7 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
       merge_loop (merge_queue, total_lines, tfp, temp_output);
     }
 
-  pthread_spin_destroy (&lock);
+  pthread_spin_destroy (&node.lock);
 }
 
 /* Scan through FILES[NTEMPS .. NFILES-1] looking for a file that is
@@ -3793,16 +3800,19 @@ sort (char * const *files, size_t nfiles, char const *output_file,
               struct merge_node_queue merge_queue;
               queue_init (&merge_queue, 2 * nthreads);
 
-              pthread_spinlock_t lock;
-              pthread_spin_init (&lock, PTHREAD_PROCESS_PRIVATE);
-              struct merge_node node =
-                {NULL, NULL, NULL, NULL, NULL, buf.nlines,
-                 buf.nlines, MERGE_END, NULL, false, &lock};
+              struct merge_node node;
+              node.lo = node.hi = node.end_lo = node.end_hi = NULL;
+              node.dest = NULL;
+              node.nlo = node.nhi = buf.nlines;
+              node.parent = NULL;
+              node.level = MERGE_END;
+              node.queued = false;
+              pthread_spin_init (&node.lock, PTHREAD_PROCESS_PRIVATE);
 
               sortlines (line, line, nthreads, buf.nlines, &node, true,
                          &merge_queue, tfp, temp_output);
               queue_destroy (&merge_queue);
-              pthread_spin_destroy (&lock);
+              pthread_spin_destroy (&node.lock);
             }
           else
             write_unique (line - 1, tfp, temp_output);
