@@ -3248,7 +3248,7 @@ write_unique (struct line const *line, FILE *tfp, char const *temp_output)
    If merging at the top level, send output to TFP.  TEMP_OUTPUT is
    the name of TFP, or is null if TFP is standard output.  */
 
-static size_t
+static void
 mergelines_node (struct merge_node *restrict node, size_t total_lines,
                  FILE *tfp, char const *temp_output)
 {
@@ -3277,6 +3277,7 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
       else if (node->nlo == merged_lo)
         while (node->hi != node->end_hi && to_merge--)
           *--dest = *--node->hi;
+      *node->dest = dest;
     }
   else
     {
@@ -3302,7 +3303,6 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
           while (node->hi != node->end_hi && to_merge--)
             write_unique (--node->hi, tfp, temp_output);
         }
-      node->dest -= lo_orig - node->lo + hi_orig - node->hi;
     }
 
   /* Update NODE. */
@@ -3310,7 +3310,6 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
   merged_hi = hi_orig - node->hi;
   node->nlo -= merged_lo;
   node->nhi -= merged_hi;
-  return merged_lo + merged_hi;
 }
 
 /* Into QUEUE, insert NODE if it is not already queued, and if one of
@@ -3339,12 +3338,11 @@ queue_check_insert (struct merge_node_queue *queue, struct merge_node *node)
 
 static void
 queue_check_insert_parent (struct merge_node_queue *queue,
-                           struct merge_node *node, size_t merged)
+                           struct merge_node *node)
 {
   if (node->level > MERGE_ROOT)
     {
       lock_node (node->parent);
-      *node->dest -= merged;
       queue_check_insert (queue, node->parent);
       unlock_node (node->parent);
     }
@@ -3377,10 +3375,9 @@ merge_loop (struct merge_node_queue *queue,
           queue_insert (queue, node);
           break;
         }
-      size_t merged_lines = mergelines_node (node, total_lines, tfp,
-                                             temp_output);
+      mergelines_node (node, total_lines, tfp, temp_output);
       queue_check_insert (queue, node);
-      queue_check_insert_parent (queue, node, merged_lines);
+      queue_check_insert_parent (queue, node);
 
       unlock_node (node);
     }
