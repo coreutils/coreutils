@@ -3312,12 +3312,12 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
   return merged_lo + merged_hi;
 }
 
-/* Insert NODE into QUEUE if it is not already queued, and if one of
+/* Into QUEUE, insert NODE if it is not already queued, and if one of
    NODE's children has available lines and the other either has
    available lines or has exhausted its lines.  */
 
 static void
-check_insert (struct merge_node *node, struct merge_node_queue *queue)
+queue_check_insert (struct merge_node_queue *queue, struct merge_node *node)
 {
   size_t lo_avail = node->lo - node->end_lo;
   size_t hi_avail = node->hi - node->end_hi;
@@ -3334,17 +3334,17 @@ check_insert (struct merge_node *node, struct merge_node_queue *queue)
     }
 }
 
-/* Insert NODE's parent into QUEUE if the parent can now be worked on.  */
+/* Into QUEUE, insert NODE's parent if the parent can now be worked on.  */
 
 static void
-update_parent (struct merge_node *node, size_t merged,
-               struct merge_node_queue *queue)
+queue_check_insert_parent (struct merge_node_queue *queue,
+                           struct merge_node *node, size_t merged)
 {
   if (node->level > MERGE_ROOT)
     {
       lock_node (node->parent);
       *node->dest -= merged;
-      check_insert (node->parent, queue);
+      queue_check_insert (queue, node->parent);
       unlock_node (node->parent);
     }
   else if (node->nlo + node->nhi == 0)
@@ -3378,8 +3378,8 @@ merge_loop (struct merge_node_queue *queue,
         }
       size_t merged_lines = mergelines_node (node, total_lines, tfp,
                                              temp_output);
-      check_insert (node, queue);
-      update_parent (node, merged_lines, queue);
+      queue_check_insert (queue, node);
+      queue_check_insert_parent (queue, node, merged_lines);
 
       unlock_node (node);
     }
