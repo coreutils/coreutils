@@ -3231,13 +3231,14 @@ write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 {
   static struct line saved;
 
-  if (!unique)
-    write_line (line, tfp, temp_output);
-  else if (!saved.text || compare (line, &saved))
+  if (unique)
     {
+      if (saved.text && ! compare (line, &saved))
+        return;
       saved = *line;
-      write_line (line, tfp, temp_output);
     }
+
+  write_line (line, tfp, temp_output);
 }
 
 /* Merge the lines currently available to a NODE in the binary
