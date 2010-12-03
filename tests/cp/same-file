@@ -42,7 +42,7 @@ test $hard_link_to_symlink_does_the_deref = yes \
 actual=actual-$$
 expected=expected-$$
 
-exec 1> $actual
+exec 3>&1 1> $actual
 
 # FIXME: This should be bigger: like more than 8k
 contents=XYZ
@@ -216,6 +216,7 @@ cat <<\EOF | sed "$remove_these_sed" > $expected
 
 EOF
 
+exec 1>&3 3>&-
 
 compare $expected $actual 1>&2 || fail=1
 
