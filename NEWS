@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp -u no longer does unnecessary copying merely because the source
+  has finer-grained time stamps than the destination.
+
   od now prints floating-point numbers without losing information, and
   it no longer omits spaces between floating-point columns in some cases.
 
