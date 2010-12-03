@@ -3319,18 +3319,12 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
 static void
 queue_check_insert (struct merge_node_queue *queue, struct merge_node *node)
 {
-  size_t lo_avail = node->lo - node->end_lo;
-  size_t hi_avail = node->hi - node->end_hi;
-
-  /* Conditions for insertion:
-     1. NODE is not already in heap.
-     2. NODE has available lines from both it's children, OR one child has
-          available lines, but the other has exhausted all its lines. */
-  if ((!node->queued)
-      && ((lo_avail && (hi_avail || !(node->nhi)))
-          || (hi_avail && !(node->nlo))))
+  if (! node->queued)
     {
-      queue_insert (queue, node);
+      bool lo_avail = (node->lo - node->end_lo) != 0;
+      bool hi_avail = (node->hi - node->end_hi) != 0;
+      if (lo_avail ? hi_avail || ! node->nhi : hi_avail && ! node->nlo)
+        queue_insert (queue, node);
     }
 }
 
