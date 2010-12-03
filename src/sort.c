@@ -3411,7 +3411,7 @@ struct thread_args
 
   /* The priority queue controlling available work for the entire
      internal sort.  */
-  struct merge_node_queue *const merge_queue;
+  struct merge_node_queue *const queue;
 
   /* If at the top level, the file to output to, and the file's name.
      If the file is standard output, the file's name is null.  */
@@ -3426,7 +3426,7 @@ sortlines_thread (void *data)
 {
   struct thread_args const *args = data;
   sortlines (args->lines, args->dest, args->nthreads, args->total_lines,
-             args->parent, args->lo_child, args->merge_queue,
+             args->parent, args->lo_child, args->queue,
              args->tfp, args->output_temp);
   return NULL;
 }
@@ -3459,7 +3459,7 @@ static void
 sortlines (struct line *restrict lines, struct line *restrict dest,
            unsigned long int nthreads, size_t total_lines,
            struct merge_node *parent, bool lo_child,
-           struct merge_node_queue *merge_queue,
+           struct merge_node_queue *queue,
            FILE *tfp, char const *temp_output)
 {
   /* Create merge tree NODE. */
@@ -3486,13 +3486,13 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
   unsigned long int hi_threads = nthreads - lo_threads;
   pthread_t thread;
   struct thread_args args = {lines, lo, lo_threads, total_lines, &node,
-                             true, merge_queue, tfp, temp_output};
+                             true, queue, tfp, temp_output};
 
   if (nthreads > 1 && SUBTHREAD_LINES_HEURISTIC <= nlines
       && pthread_create (&thread, NULL, sortlines_thread, &args) == 0)
     {
       sortlines (lines - nlo, hi, hi_threads, total_lines, &node, false,
-                 merge_queue, tfp, temp_output);
+                 queue, tfp, temp_output);
       pthread_join (thread, NULL);
     }
   else
@@ -3511,8 +3511,8 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
       node.end_lo = lines - nlo;
       node.end_hi = lines - nlo - nhi;
 
-      queue_insert (merge_queue, &node);
-      merge_loop (merge_queue, total_lines, tfp, temp_output);
+      queue_insert (queue, &node);
+      merge_loop (queue, total_lines, tfp, temp_output);
     }
 
   pthread_spin_destroy (&node.lock);
@@ -3789,8 +3789,8 @@ sort (char * const *files, size_t nfiles, char const *output_file,
             }
           if (1 < buf.nlines)
             {
-              struct merge_node_queue merge_queue;
-              queue_init (&merge_queue, 2 * nthreads);
+              struct merge_node_queue queue;
+              queue_init (&queue, 2 * nthreads);
 
               struct merge_node node;
               node.lo = node.hi = node.end_lo = node.end_hi = NULL;
@@ -3802,8 +3802,8 @@ sort (char * const *files, size_t nfiles, char const *output_file,
               pthread_spin_init (&node.lock, PTHREAD_PROCESS_PRIVATE);
 
               sortlines (line, line, nthreads, buf.nlines, &node, true,
-                         &merge_queue, tfp, temp_output);
-              queue_destroy (&merge_queue);
+                         &queue, tfp, temp_output);
+              queue_destroy (&queue);
               pthread_spin_destroy (&node.lock);
             }
           else
