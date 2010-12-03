@@ -105,7 +105,7 @@ struct rlimit { size_t rlim_cur; };
 #endif
 
 /* Maximum number of lines to merge every time a NODE is taken from
-   the MERGE_QUEUE.  Node is at LEVEL in the binary merge tree,
+   the merge queue.  Node is at LEVEL in the binary merge tree,
    and is responsible for merging TOTAL lines. */
 #define MAX_MERGE(total, level) (((total) >> (2 * ((level) + 1))) + 1)
 
@@ -196,6 +196,7 @@ struct buffer
   bool eof;			/* An EOF has been read.  */
 };
 
+/* Sort key.  */
 struct keyfield
 {
   size_t sword;			/* Zero-origin 'word' to start at. */
@@ -3072,7 +3073,9 @@ mergelines (struct line *restrict t, size_t nlines,
 }
 
 /* Sort the array LINES with NLINES members, using TEMP for temporary space.
-   NLINES must be at least 2.
+   Do this all within one thread.  NLINES must be at least 2.
+   If TO_TEMP, put the sorted output into TEMP, and TEMP is as large as LINES.
+   Otherwise the sort is in-place and TEMP is half-sized.
    The input and output arrays are in reverse order, and LINES and
    TEMP point just past the end of their respective arrays.
 
@@ -3134,9 +3137,7 @@ sequential_sort (struct line *restrict lines, size_t nlines,
     }
 }
 
-/* Compare two NODEs for priority. The NODE with the higher (numerically
-   lower) level has priority. If tie, the NODE with the most remaining
-   lines has priority. */
+/* Compare two merge nodes A and B for priority.  */
 
 static int
 compare_nodes (void const *a, void const *b)
@@ -3149,9 +3150,9 @@ compare_nodes (void const *a, void const *b)
 }
 
 /* Lock a merge tree NODE.
-   Note spin locks were seen to perform better than mutexes
-   as long as the number of threads is limited to the
-   number of processors.  */
+   Spin locks were seen to perform better than mutexes when the number
+   of threads is limited to the number of processors, assuming 'sort'
+   never waits when writing to stdout.  */
 
 static inline void
 lock_node (struct merge_node *node)
@@ -3190,8 +3191,8 @@ queue_init (struct merge_node_queue *queue, size_t reserve)
   pthread_cond_init (&queue->cond, NULL);
 }
 
-/* Insert NODE into priority QUEUE. Assume caller either holds lock on NODE
-   or does not need to lock NODE. */
+/* Insert NODE into QUEUE.  The caller either holds a lock on NODE, or
+   does not need to lock NODE.  */
 
 static void
 queue_insert (struct merge_node_queue *queue, struct merge_node *node)
@@ -3203,7 +3204,7 @@ queue_insert (struct merge_node_queue *queue, struct merge_node *node)
   pthread_cond_signal (&queue->cond);
 }
 
-/* Pop NODE off priority QUEUE. Guarantee a non-null, spinlocked NODE. */
+/* Pop the top node off the priority QUEUE, lock the node, return it.  */
 
 static struct merge_node *
 queue_pop (struct merge_node_queue *queue)
@@ -3218,10 +3219,12 @@ queue_pop (struct merge_node_queue *queue)
   return node;
 }
 
-/* If UNQIUE is set, checks to make sure line isn't a duplicate before
-   outputting. If UNIQUE is not set, output the passed in line. Note that
-   this function does not actually save the line, nor any key information,
-   thus is only appropriate for internal sort. */
+/* Output LINE to TFP, unless -u is specified and the line compares
+   equal to the previous line.  TEMP_OUTPUT is the name of TFP, or
+   is null if TFP is standard output.
+
+   This function does not save the line for comparison later, so it is
+   appropriate only for internal sort.  */
 
 static void
 write_unique (struct line const *line, FILE *tfp, char const *temp_output)
@@ -3238,7 +3241,11 @@ write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 }
 
 /* Merge the lines currently available to a NODE in the binary
-   merge tree, up to a maximum specified by MAX_MERGE. */
+   merge tree.  Merge a number of lines appropriate for this merge
+   level, assuming TOTAL_LINES is the total number of lines.
+
+   If merging at the top level, send output to TFP.  TEMP_OUTPUT is
+   the name of TFP, or is null if TFP is standard output.  */
 
 static size_t
 mergelines_node (struct merge_node *restrict node, size_t total_lines,
@@ -3305,7 +3312,9 @@ mergelines_node (struct merge_node *restrict node, size_t total_lines,
   return merged_lo + merged_hi;
 }
 
-/* Insert NODE into QUEUE if it passes insertion checks. */
+/* Insert NODE into QUEUE if it is not already queued, and if one of
+   NODE's children has available lines and the other either has
+   available lines or has exhausted its lines.  */
 
 static void
 check_insert (struct merge_node *node, struct merge_node_queue *queue)
@@ -3325,7 +3334,7 @@ check_insert (struct merge_node *node, struct merge_node_queue *queue)
     }
 }
 
-/* Update parent merge tree NODE. */
+/* Insert NODE's parent into QUEUE if the parent can now be worked on.  */
 
 static void
 update_parent (struct merge_node *node, size_t merged,
@@ -3346,8 +3355,11 @@ update_parent (struct merge_node *node, size_t merged,
     }
 }
 
-/* Repeatedly pop QUEUE for a NODE with lines to merge, and merge at least
-   some of those lines, until the MERGE_END node is popped. */
+/* Repeatedly pop QUEUE for a node with lines to merge, and merge at least
+   some of those lines, until the MERGE_END node is popped.
+   TOTAL_LINES is the total number of lines.  If merging at the top
+   level, send output to TFP.  TEMP_OUTPUT is the name of TFP, or is
+   null if TFP is standard output.  */
 
 static void
 merge_loop (struct merge_node_queue *queue,
@@ -3384,13 +3396,33 @@ static void sortlines (struct line *restrict, struct line *restrict,
 
 struct thread_args
 {
+  /* Source, i.e., the array of lines to sort.  This points just past
+     the end of the array.  */
   struct line *lines;
+
+  /* Destination, i.e., the array of lines to store result into.  This
+     also points just past the end of the array.  */
   struct line *dest;
+
+  /* Number of threads to use.  If 0 or 1, sort single-threaded.  */
   unsigned long int nthreads;
+
+  /* Number of lines in LINES and DEST.  */
   size_t const total_lines;
+
+  /* Parent node; it will merge this node's output to the output
+     of this node's sibling.  */
   struct merge_node *const parent;
+
+  /* True if this node is sorting the lower half of the parent's work.  */
   bool lo_child;
+
+  /* The priority queue controlling available work for the entire
+     internal sort.  */
   struct merge_node_queue *const merge_queue;
+
+  /* If at the top level, the file to output to, and the file's name.
+     If the file is standard output, the file's name is null.  */
   FILE *tfp;
   char const *output_temp;
 };
@@ -3407,7 +3439,10 @@ sortlines_thread (void *data)
   return NULL;
 }
 
-/* There are three phases to the algorithm: node creation, sequential sort,
+/* Sort lines, possibly in parallel.  The arguments are as in struct
+   thread_args above.
+
+   The algorithm has three phases: node creation, sequential sort,
    and binary merge.
 
    During node creation, sortlines recursively visits each node in the
@@ -3683,7 +3718,7 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
     }
 }
 
-/* Sort NFILES FILES onto OUTPUT_FILE. */
+/* Sort NFILES FILES onto OUTPUT_FILE.  Use at most NTHREADS threads.  */
 
 static void
 sort (char * const *files, size_t nfiles, char const *output_file,
@@ -3966,6 +4001,8 @@ set_ordering (char const *s, struct keyfield *key, enum blanktype blanktype)
     }
   return (char *) s;
 }
+
+/* Initialize KEY.  */
 
 static struct keyfield *
 key_init (struct keyfield *key)
