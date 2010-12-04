@@ -25,9 +25,9 @@ test "$(nproc)" = 1 && skip_ "requires a multi-core system"
 seq 100000 > in || framework_failure_
 mkfifo fifo || framework_failure_
 
-# Arrange for sort to require 1.2+ seconds of wall-clock time,
+# Arrange for sort to require 5.0+ seconds of wall-clock time,
 # while actually using far less than 1 second of CPU time.
-(for i in $(seq 12); do read line; echo $i; sleep .1; done
+(for i in $(seq 50); do read line; echo $i; sleep .1; done
   cat > /dev/null) < fifo &
 
 # Limit CPU time to 1 second
