@@ -21,7 +21,6 @@ print_ver_ sort
 
 seq -w 2000 > exp || framework_failure
 tac exp > in || framework_failure
-SORT="$abs_top_builddir/src/sort"
 
 # Ensure that $TMPDIR is valid.
 TMPDIR=.; export TMPDIR
