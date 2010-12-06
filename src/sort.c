@@ -241,7 +241,7 @@ struct merge_node
   struct merge_node *parent;    /* Parent node. */
   unsigned int level;           /* Level in merge tree. */
   bool queued;                  /* Node is already in heap. */
-  pthread_spinlock_t lock;      /* Lock for node operations. */
+  pthread_mutex_t lock;         /* Lock for node operations. */
 };
 
 /* Priority queue of merge nodes. */
@@ -3157,7 +3157,7 @@ compare_nodes (void const *a, void const *b)
 static inline void
 lock_node (struct merge_node *node)
 {
-  pthread_spin_lock (&node->lock);
+  pthread_mutex_lock (&node->lock);
 }
 
 /* Unlock a merge tree NODE. */
@@ -3165,7 +3165,7 @@ lock_node (struct merge_node *node)
 static inline void
 unlock_node (struct merge_node *node)
 {
-  pthread_spin_unlock (&node->lock);
+  pthread_mutex_unlock (&node->lock);
 }
 
 /* Destroy merge QUEUE. */
@@ -3479,7 +3479,7 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
   node.parent = parent;
   node.level = parent->level + 1;
   node.queued = false;
-  pthread_spin_init (&node.lock, PTHREAD_PROCESS_PRIVATE);
+  pthread_mutex_init (&node.lock, NULL);
 
   /* Calculate thread arguments. */
   unsigned long int lo_threads = nthreads / 2;
@@ -3515,7 +3515,7 @@ sortlines (struct line *restrict lines, struct line *restrict dest,
       merge_loop (queue, total_lines, tfp, temp_output);
     }
 
-  pthread_spin_destroy (&node.lock);
+  pthread_mutex_destroy (&node.lock);
 }
 
 /* Scan through FILES[NTEMPS .. NFILES-1] looking for a file that is
@@ -3799,12 +3799,12 @@ sort (char * const *files, size_t nfiles, char const *output_file,
               node.parent = NULL;
               node.level = MERGE_END;
               node.queued = false;
-              pthread_spin_init (&node.lock, PTHREAD_PROCESS_PRIVATE);
+              pthread_mutex_init (&node.lock, NULL);
 
               sortlines (line, line, nthreads, buf.nlines, &node, true,
                          &queue, tfp, temp_output);
               queue_destroy (&queue);
-              pthread_spin_destroy (&node.lock);
+              pthread_mutex_destroy (&node.lock);
             }
           else
             write_unique (line - 1, tfp, temp_output);

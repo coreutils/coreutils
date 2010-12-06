@@ -656,7 +656,4 @@ pr_data =					\
   pr/ttb3-FF					\
   pr/w72l24f-ll
 
-XFAIL_TESTS =					\
-  misc/sort-spinlock-abuse
-
 include $(srcdir)/check.mk
