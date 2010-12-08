@@ -48,7 +48,6 @@ echo 'split: 16: invalid chunk number' > exp
 split -n l/16/15 in 2>err && fail=1
 compare err exp || fail=1
 
-: > out
 printf '%s' "\
 14 16 09 15 16 10
 14 08 08 10 14 08 08 10
@@ -57,42 +56,48 @@ printf '%s' "\
 06 00 08 00 02 06 00 02 06 00 08 00 01 07 00 02 06 00 08 00 02 16
 " > exp || framework_failure
 
-# Note for full testing one should set bufsize to 1,2,5,10,80,100
-# at the start of lines_chunk_split(), for each run of this test.
+sed 's/00 *//g' exp > exp.elide_empty || framework_failure
 
 DEBUGGING=
 test "$DEBUGGING" && test "$VERBOSE" && set +x
-for N in 6 8 12 15 22; do
-  rm -f x*
-  split -n l/$N in
-  echo $(stat -c "%02s" x*) >> out
+for ELIDE_EMPTY in '' '-e'; do
+  for IO_BLKSIZE in 1 2 5 10 80 100; do
+    : > out
+    test "$DEBUGGING" && printf "\n---io-blk-size=$IO_BLKSIZE $ELIDE_EMPTY\n"
+    for N in 6 8 12 15 22; do
+      rm -f x*
+      split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/$N in
+      echo $(stat -c "%02s" x*) >> out
 
-  if test "$DEBUGGING"; then
-    # Output partition pattern
-    size=$(printf "%s" "$lines" | wc -c)
-    chunk_size=$(($size/$N))
-    end_size=$(($chunk_size + ($size % $N)))
-    {
-      yes "$(printf %${chunk_size}s ])" | head -n$(($N-1))
-      printf %${end_size}s ]
-    } | tr -d '\n' | sed "s/\\(^.\\{1,$size\\}\\).*/\\1/"
-    echo
+      if test "$DEBUGGING"; then
+        # Output partition pattern
+        size=$(printf "%s" "$lines" | wc -c)
+        chunk_size=$(($size/$N))
+        end_size=$(($chunk_size + ($size % $N)))
+        {
+          yes "$(printf %${chunk_size}s ])" | head -n$(($N-1))
+          printf %${end_size}s ]
+        } | tr -d '\n' | sed "s/\\(^.\\{1,$size\\}\\).*/\\1/"
+        echo
 
-    # Output pattern generated for comparison
-    for s in $(stat -c "%s" x*); do
-      #s=0 transitions are not shown
-      test "$m" = "_" && m=- || m=_
-      printf "%${s}s" '' | tr ' ' $m
+        # Output pattern generated for comparison
+        for s in $(stat -c "%s" x*); do
+          #s=0 transitions are not shown
+          test "$m" = "_" && m=- || m=_
+          printf "%${s}s" '' | tr ' ' $m
+        done
+        echo
+
+        # Output lines for reference
+        echo "$lines"
+      fi
     done
-    echo
-
-    # Output lines for reference
-    echo "$lines"
-  fi
+    test "$ELIDE_EMPTY" && EXP=exp.elide_empty || EXP=exp
+    compare out $EXP || fail=1
+  done
 done
 test "$DEBUGGING" && test "$VERBOSE" && set -x
 
-compare out exp || fail=1
 
 # Check extraction of particular chunks
 : > out

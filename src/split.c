@@ -82,7 +82,8 @@ static bool unbuffered;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  VERBOSE_OPTION = CHAR_MAX + 1
+  VERBOSE_OPTION = CHAR_MAX + 1,
+  IO_BLKSIZE_OPTION
 };
 
 static struct option const longopts[] =
@@ -96,6 +97,8 @@ static struct option const longopts[] =
   {"suffix-length", required_argument, NULL, 'a'},
   {"numeric-suffixes", no_argument, NULL, 'd'},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
+  {"-io-blksize", required_argument, NULL,
+    IO_BLKSIZE_OPTION}, /* do not document */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -255,6 +258,8 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
 {
   if (new_file_flag)
     {
+      if (!bp && bytes == 0 && elide_empty_files)
+        return;
       if (output_desc >= 0 && close (output_desc) < 0)
         error (EXIT_FAILURE, errno, "%s", outfile);
       next_file_name ();
@@ -315,7 +320,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.
      FIXME: Should we do this before EXIT_FAILURE?  */
-  while (!elide_empty_files && opened++ < max_files)
+  while (opened++ < max_files)
     cwrite (true, NULL, 0);
 }
 
@@ -506,7 +511,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
                 chunk_end = file_size - 1; /* >= chunk_size.  */
               else
                 chunk_end += chunk_size;
-              if (!elide_empty_files && chunk_end <= n_written - 1)
+              if (chunk_end <= n_written - 1)
                 cwrite (true, NULL, 0);
               else
                 next = false;
@@ -517,7 +522,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.
      FIXME: Should we do this before EXIT_FAILURE?  */
-  while (!k && !elide_empty_files && chunk_no++ <= n)
+  while (!k && chunk_no++ <= n)
     cwrite (true, NULL, 0);
 }
 
@@ -780,7 +785,7 @@ main (int argc, char **argv)
       type_undef, type_bytes, type_byteslines, type_lines, type_digits,
       type_chunk_bytes, type_chunk_lines, type_rr
     } split_type = type_undef;
-  size_t in_blk_size;		/* optimal block size of input file device */
+  size_t in_blk_size = 0;	/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
   size_t page_size = getpagesize ();
   uintmax_t k_units = 0;
@@ -941,6 +946,18 @@ main (int argc, char **argv)
           elide_empty_files = true;
           break;
 
+        case IO_BLKSIZE_OPTION:
+          {
+            uintmax_t tmp_blk_size;
+            if (xstrtoumax (optarg, NULL, 10, &tmp_blk_size,
+                            multipliers) != LONGINT_OK
+                || tmp_blk_size == 0 || SIZE_MAX - page_size < tmp_blk_size)
+              error (0, 0, _("%s: invalid IO block size"), optarg);
+            else
+              in_blk_size = tmp_blk_size;
+          }
+          break;
+
         case VERBOSE_OPTION:
           verbose = true;
           break;
@@ -997,7 +1014,8 @@ main (int argc, char **argv)
 
   if (fstat (STDIN_FILENO, &stat_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
-  in_blk_size = io_blksize (stat_buf);
+  if (in_blk_size == 0)
+    in_blk_size = io_blksize (stat_buf);
   file_size = stat_buf.st_size;
 
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
