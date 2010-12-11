@@ -3149,10 +3149,7 @@ compare_nodes (void const *a, void const *b)
   return nodea->level < nodeb->level;
 }
 
-/* Lock a merge tree NODE.
-   Spin locks were seen to perform better than mutexes when the number
-   of threads is limited to the number of processors, assuming 'sort'
-   never waits when writing to stdout.  */
+/* Lock a merge tree NODE.  */
 
 static inline void
 lock_node (struct merge_node *node)
@@ -4567,8 +4564,6 @@ main (int argc, char **argv)
     }
   else
     {
-      /* If NTHREADS > number of cores on the machine, spinlocking
-         could be wasteful.  */
       unsigned long int np2 = num_processors (NPROC_CURRENT_OVERRIDABLE);
       if (!nthreads || nthreads > np2)
         nthreads = np2;
