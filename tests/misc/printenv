@@ -23,8 +23,8 @@ print_ver_ printenv
 # printenv as a builtin, so we must invoke it via "env".
 # But beware of $_, set by many shells to the last command run.
 # Also, filter out LD_PRELOAD, which is set when running under valgrind.
-env | grep -Ev '^(_|LD_LIBRARY=)' > exp || framework_failure
-env -- printenv | grep -Ev '^(_|LD_LIBRARY=)' > out || fail=1
+env | grep -Ev '^(_|LD_PRELOAD=)' > exp || framework_failure
+env -- printenv | grep -Ev '^(_|LD_PRELOAD=)' > out || fail=1
 compare exp out || fail=1
 
 # POSIX is clear that environ may, but need not be, sorted.
