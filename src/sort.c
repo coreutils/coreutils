@@ -939,7 +939,7 @@ stream_open (char const *file, char const *how)
 
 static FILE *
 xfopen (char const *file, char const *how)
- {
+{
   FILE *fp = stream_open (file, how);
   if (!fp)
     die (_("open failed"), file);
@@ -2207,7 +2207,8 @@ debug_key (struct line const *line, struct keyfield const *key)
 
       if (key->skipsblanks || key->month || key_numeric (key))
         {
-          char saved = *lim; *lim = '\0';
+          char saved = *lim;
+          *lim = '\0';
 
           while (blanks[to_uchar (*beg)])
             beg++;
@@ -3782,7 +3783,7 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
 /* Sort NFILES FILES onto OUTPUT_FILE.  Use at most NTHREADS threads.  */
 
 static void
-sort (char * const *files, size_t nfiles, char const *output_file,
+sort (char *const *files, size_t nfiles, char const *output_file,
       size_t nthreads)
 {
   struct buffer buf;
@@ -4498,7 +4499,7 @@ main (int argc, char **argv)
           files = tok.tok;
           nfiles = tok.n_tok;
           for (i = 0; i < nfiles; i++)
-          {
+            {
               if (STREQ (files[i], "-"))
                 error (SORT_FAILURE, 0, _("when reading file names from stdin, "
                                           "no file name of %s allowed"),
@@ -4513,7 +4514,7 @@ main (int argc, char **argv)
                          _("%s:%lu: invalid zero-length file name"),
                          quotearg_colon (files_from), file_number);
                 }
-          }
+            }
         }
       else
         error (SORT_FAILURE, 0, _("no input from %s"),
