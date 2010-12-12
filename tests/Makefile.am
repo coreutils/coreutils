@@ -238,6 +238,7 @@ TESTS =						\
   misc/sort-month				\
   misc/sort-rand				\
   misc/sort-spinlock-abuse			\
+  misc/sort-stale-thread-mem			\
   misc/sort-unique				\
   misc/sort-unique-segv				\
   misc/sort-version				\
