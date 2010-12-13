@@ -39,28 +39,16 @@ dd2=dd2$EXEEXT
 
 just_built_dd=$abs_top_builddir/src/$dd
 
-test -r "$just_built_dd" || \
-  {
-    cat 1>&2 <<EOF
-$0: WARNING!!!
-Your just-built dd binary, $just_built_dd
-is not readable, so skipping the remaining tests in this file.
-EOF
-    exit 77
-  }
+test -r "$just_built_dd" \
+  || warn_ "WARNING!!! Your just-built dd binary, $just_built_dd
+is not readable, so skipping the remaining tests in this file."
 
 cp "$just_built_dd" . || fail=1
 cp $dd $dd2 || fail=1
 
-strip $dd2 || \
-  {
-    cat 1>&2 <<EOF
-$0: WARNING!!!
-Your strip command doesn't seem to work, so skipping
-the test of install's --strip option.
-EOF
-    exit 77
-  }
+strip $dd2 \
+  || warn_ "WARNING!!! Your strip command doesn't seem to work,
+so skipping the test of install's --strip option."
 
 # This test would fail with 3.16s when using versions of strip that
 # don't work on read-only files (the one from binutils works fine).
