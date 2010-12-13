@@ -21,7 +21,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
 
-expensive_
+very_expensive_
 
 valgrind --help >/dev/null || skip_ "requires valgrind"
 test "$(nproc)" = 1 && skip_ "requires a multi-core system"
@@ -36,9 +36,10 @@ test "$(nproc)" = 1 && skip_ "requires a multi-core system"
 # on some circa-2010 multicore Linux platforms.  Run the test 10 times
 # so that the probability of missing the bug should be about 1 in
 # 2**100 on these hosts.
-fail=0
 for i in $(seq 100); do
   valgrind --quiet --error-exitcode=3 \
       sort -S 100K --parallel=2 in > /dev/null ||
     { fail=$?; echo iteration $i failed; Exit $fail; }
 done
+
+Exit $fail
