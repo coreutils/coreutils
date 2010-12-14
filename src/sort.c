@@ -3613,9 +3613,8 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
               files[i].name = temp;
               files[i].pid = pid;
 
-              if (i + num_merged < nfiles)
-                memmove (&files[i + 1], &files[i + num_merged],
-                         num_merged * sizeof *files);
+              memmove (&files[i + 1], &files[i + num_merged],
+                       (nfiles - (i + num_merged)) * sizeof *files);
               ntemps += 1;
               nfiles -= num_merged - 1;;
               i += num_merged;
