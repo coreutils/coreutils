@@ -2821,6 +2821,7 @@ Historical implementations of @command{tail} have required that
 @var{number} be an integer.  However, GNU @command{tail} accepts
 an arbitrary floating point number (using a period before any
 fractional digits).
+When @command{tail} uses inotify, this polling-related option is ignored.
 
 @itemx --pid=@var{pid}
 @opindex --pid
@@ -2855,7 +2856,8 @@ still associated with the same device/inode-number pair as before.
 When following a log file that is rotated, this is approximately the
 number of seconds between when tail prints the last pre-rotation lines
 and when it prints the lines that have accumulated in the new log file.
-This option is meaningful only when following by name.
+This option is meaningful only when polling (i.e., without inotify)
+and when following by name.
 
 @itemx -n @var{k}
 @itemx --lines=@var{k}

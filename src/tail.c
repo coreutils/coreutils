@@ -286,7 +286,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                            with --follow=name, reopen a FILE which has not\n\
                            changed size after N (default %d) iterations\n\
                            to see if it has been unlinked or renamed\n\
-                           (this is the usual case of rotated log files)\n\
+                           (this is the usual case of rotated log files).\n\
+                           With inotify, this option is rarely useful.\n\
 "),
              DEFAULT_N_LINES,
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
@@ -300,7 +301,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
   -s, --sleep-interval=N   with -f, sleep for approximately N seconds\n\
-                             (default 1.0) between iterations\n\
+                             (default 1.0) between iterations.\n\
+                             With inotify, this option is rarely useful.\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
