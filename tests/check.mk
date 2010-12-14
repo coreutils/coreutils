@@ -49,7 +49,8 @@ built_programs = \
 # variables to test scripts.
 TESTS_ENVIRONMENT =				\
   . $(srcdir)/lang-default;			\
-  tmp__=$$TMPDIR; test -d "$$tmp__" || tmp__=.;	\
+  tmp__=$${TMPDIR-/tmp};			\
+  test -d "$$tmp__" && test -w "$$tmp__" || tmp__=.;	\
   . $(srcdir)/envvar-check;			\
   TMPDIR=$$tmp__; export TMPDIR;		\
   exec 9>&2;					\

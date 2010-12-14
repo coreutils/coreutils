@@ -22,9 +22,6 @@ print_ver_ sort
 seq -w 2000 > exp || framework_failure
 tac exp > in || framework_failure
 
-# Ensure that $TMPDIR is valid.
-TMPDIR=.; export TMPDIR
-
 # This should force the use of temp files
 sort -S 1k in > out || fail=1
 compare exp out || fail=1

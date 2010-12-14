@@ -20,13 +20,6 @@
 print_ver_ sort
 expensive_
 
-# Ensure that $TMPDIR is valid.
-if test -d /tmp && test -w /tmp
-then TMPDIR=/tmp
-else TMPDIR=.
-fi
-export TMPDIR
-
 seq -w 2000 > exp || fail=1
 tac exp > in || fail=1
 insize=$(stat -c %s - <in) || fail=1
@@ -78,10 +71,13 @@ rm -f ok
 
 rm -f compress
 
-# Give compression subprocesses time to react when 'sort' exits.
+# If $TMPDIR is relative, give subprocesses time to react when 'sort' exits.
 # Otherwise, under NFS, when 'sort' unlinks the temp files and they
 # are renamed to .nfsXXXX instead of being removed, the parent cleanup
 # of this directory will fail because the files are still open.
-sleep 1
+case $TMPDIR in
+/*) ;;
+*) sleep 1;;
+esac
 
 Exit $fail
