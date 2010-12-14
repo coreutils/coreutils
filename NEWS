@@ -21,6 +21,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort with at least two threads no longer segfaults due to use of pointers
   into the stack of an expired thread. [bug introduced in coreutils-8.6]
 
+  sort --compress no longer mishandles subprocesses' exit statuses.
+
 ** New features
 
   split accepts the --number option to generate a specific number of files.
