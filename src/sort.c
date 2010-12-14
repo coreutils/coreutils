@@ -626,63 +626,60 @@ struct sortfile
   pid_t pid;     /* If compressed, the pid of compressor, else zero */
 };
 
-/* A table where we store compression process states.  We clean up all
-   processes in a timely manner so as not to exhaust system resources,
-   so we store the info on whether the process is still running, or has
-   been reaped here.  */
+/* An integer that is the same size as a pointer.  To avoid GCC warnings,
+   cast from void * to this type rather than directly to pid_t.  */
+#ifdef UINTPTR_MAX
+typedef uintptr_t uintptr;
+#else
+typedef size_t uintptr;
+#endif
+verify (sizeof (pid_t) <= sizeof (uintptr));
+
+/* IDs of unreaped compression and decompression subprocesses.  */
 static Hash_table *proctab;
 
 enum { INIT_PROCTAB_SIZE = 47 };
 
-enum procstate { ALIVE, ZOMBIE };
-
-/* A proctab entry.  The COUNT field is there in case we fork a new
-   compression process that has the same PID as an old zombie process
-   that is still in the table (because the process to decompress the
-   temp file it was associated with hasn't started yet).  */
-struct procnode
-{
-  pid_t pid;
-  enum procstate state;
-  size_t count;
-};
-
 static size_t
 proctab_hasher (void const *entry, size_t tabsize)
 {
-  struct procnode const *node = entry;
-  return node->pid % tabsize;
+  pid_t pid = (uintptr) entry;
+  return pid % tabsize;
 }
 
 static bool
 proctab_comparator (void const *e1, void const *e2)
 {
-  struct procnode const *n1 = e1, *n2 = e2;
-  return n1->pid == n2->pid;
+  pid_t p1 = (uintptr) e1;
+  pid_t p2 = (uintptr) e2;
+  return p1 == p2;
 }
 
-/* The total number of forked processes (compressors and decompressors)
-   that have not been reaped yet. */
-static size_t nprocs;
+/* The number of unreaped child processes.  */
+static pid_t nprocs;
 
 /* The number of child processes we'll allow before we try to reap some. */
 enum { MAX_PROCS_BEFORE_REAP = 2 };
 
-/* If 0 < PID, wait for the child process with that PID to exit.
-   If PID is -1, clean up a random child process which has finished and
-   return the process ID of that child.  If PID is -1 and no processes
-   have quit yet, return 0 without waiting.  */
+static bool delete_proc (pid_t);
+
+/* If PID is positive, wait for the child process with that PID to
+   exit, and assume that PID has already been removed from the process
+   table.  If PID is 0 or -1, clean up some child that has exited (by
+   waiting for it, and removing it from the proc table) and return the
+   child's process ID.  However, if PID is 0 and no children have
+   exited, return 0 without waiting.  */
 
 static pid_t
 reap (pid_t pid)
 {
   int status;
-  pid_t cpid = waitpid (pid, &status, pid < 0 ? WNOHANG : 0);
+  pid_t cpid = waitpid ((pid ? pid : -1), &status, (pid ? 0 : WNOHANG));
 
   if (cpid < 0)
     error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
            compress_program);
-  else if (0 < cpid)
+  else if (0 < cpid && (0 < pid || delete_proc (cpid)))
     {
       if (! WIFEXITED (status) || WEXITSTATUS (status))
         error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
@@ -693,96 +690,64 @@ reap (pid_t pid)
   return cpid;
 }
 
-/* Add the PID of a running compression process to proctab, or update
-   the entry COUNT and STATE fields if it's already there.  This also
-   creates the table for us the first time it's called.  */
+/* Add PID to the process table.  Create the process table the first
+   time it's called.  */
 
 static void
 register_proc (pid_t pid)
 {
-  struct procnode test, *node;
-
   if (! proctab)
     {
       proctab = hash_initialize (INIT_PROCTAB_SIZE, NULL,
                                  proctab_hasher,
                                  proctab_comparator,
-                                 free);
+                                 NULL);
       if (! proctab)
         xalloc_die ();
     }
 
-  test.pid = pid;
-  node = hash_lookup (proctab, &test);
-  if (node)
-    {
-      node->state = ALIVE;
-      ++node->count;
-    }
-  else
-    {
-      node = xmalloc (sizeof *node);
-      node->pid = pid;
-      node->state = ALIVE;
-      node->count = 1;
-      if (hash_insert (proctab, node) == NULL)
-        xalloc_die ();
-    }
+  uintptr p = pid;
+  if (! hash_insert (proctab, (void *) p))
+    xalloc_die ();
 }
 
-/* This is called when we reap a random process.  We don't know
-   whether we have reaped a compression process or a decompression
-   process until we look in the table.  If there's an ALIVE entry for
-   it, then we have reaped a compression process, so change the state
-   to ZOMBIE.  Otherwise, it's a decompression processes, so ignore it.  */
+/* If PID is in the process table, remove it and return true.
+   Otherwise, return false.  */
 
-static void
-update_proc (pid_t pid)
+static bool
+delete_proc (pid_t pid)
 {
-  struct procnode test, *node;
-
-  test.pid = pid;
-  node = hash_lookup (proctab, &test);
-  if (node)
-    node->state = ZOMBIE;
+  uintptr p = pid;
+  return !! hash_delete (proctab, (void *) p);
 }
 
-/* This is for when we need to wait for a compression process to exit.
-   If it has a ZOMBIE entry in the table then it's already dead and has
-   been reaped.  Note that if there's an ALIVE entry for it, it still may
-   already have died and been reaped if a second process was created with
-   the same PID.  This is probably exceedingly rare, but to be on the safe
-   side we will have to wait for any compression process with this PID.  */
+/* Remove PID from the process table, and wait for it to exit if it
+   hasn't already.  */
 
 static void
 wait_proc (pid_t pid)
 {
-  struct procnode test, *node;
-
-  test.pid = pid;
-  node = hash_lookup (proctab, &test);
-  if (node->state == ALIVE)
+  if (delete_proc (pid))
     reap (pid);
-
-  node->state = ZOMBIE;
-  if (! --node->count)
-    {
-      hash_delete (proctab, node);
-      free (node);
-    }
 }
 
-/* Keep reaping finished children as long as there are more to reap.
-   This doesn't block waiting for any of them, it only reaps those
-   that are already dead.  */
+/* Reap any exited children.  Do not block; reap only those that have
+   already exited.  */
 
 static void
 reap_some (void)
 {
-  pid_t pid;
+  while (0 < nprocs && reap (0))
+    continue;
+}
 
-  while (0 < nprocs && (pid = reap (-1)))
-    update_proc (pid);
+/* Reap all children, waiting if necessary.  */
+
+static void
+reap_all (void)
+{
+  while (0 < nprocs)
+    reap (-1);
 }
 
 /* Clean up any remaining temporary files.  */
@@ -1130,7 +1095,9 @@ open_temp (char const *name, pid_t pid)
   if (tempfd < 0)
     return NULL;
 
-  switch (pipe_fork (pipefds, MAX_FORK_TRIES_DECOMPRESS))
+  pid_t child = pipe_fork (pipefds, MAX_FORK_TRIES_DECOMPRESS);
+
+  switch (child)
     {
     case -1:
       if (errno != EMFILE)
@@ -1152,6 +1119,7 @@ open_temp (char const *name, pid_t pid)
              compress_program);
 
     default:
+      register_proc (child);
       close (tempfd);
       close (pipefds[1]);
 
@@ -3896,6 +3864,8 @@ sort (char *const *files, size_t nfiles, char const *output_file,
       merge (tempfiles, ntemps, ntemps, output_file);
       free (tempfiles);
     }
+
+  reap_all ();
 }
 
 /* Insert a malloc'd copy of key KEY_ARG at the end of the key list.  */

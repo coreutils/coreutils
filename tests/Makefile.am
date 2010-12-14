@@ -228,6 +228,7 @@ TESTS =						\
   misc/sort					\
   misc/sort-benchmark-random			\
   misc/sort-compress				\
+  misc/sort-compress-proc			\
   misc/sort-continue				\
   misc/sort-debug-keys				\
   misc/sort-debug-warn				\
