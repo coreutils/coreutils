@@ -3549,12 +3549,12 @@ sortlines (struct line *restrict lines, size_t nthreads,
   pthread_mutex_destroy (&node->lock);
 }
 
-/* Scan through FILES[NTEMPS .. NFILES-1] looking for a file that is
-   the same as OUTFILE.  If found, merge the found instances (and perhaps
-   some other files) into a temporary file so that it can in turn be
-   merged into OUTFILE without destroying OUTFILE before it is completely
-   read.  Return the new value of NFILES, which differs from the old if
-   some merging occurred.
+/* Scan through FILES[NTEMPS .. NFILES-1] looking for files that are
+   the same as OUTFILE.  If found, replace each with the same
+   temporary copy that can be merged into OUTFILE without destroying
+   OUTFILE before it is completely read.  This temporary copy does not
+   count as a merge temp, so don't worry about incrementing NTEMPS in
+   the caller; final cleanup will remove it, not zaptemp.
 
    This test ensures that an otherwise-erroneous use like
    "sort -m -o FILE ... FILE ..." copies FILE before writing to it.
@@ -3566,13 +3566,15 @@ sortlines (struct line *restrict lines, size_t nthreads,
    Catching these obscure cases would slow down performance in
    common cases.  */
 
-static size_t
+static void
 avoid_trashing_input (struct sortfile *files, size_t ntemps,
                       size_t nfiles, char const *outfile)
 {
   size_t i;
   bool got_outstat = false;
   struct stat outstat;
+  char const *tempcopy = NULL;
+  pid_t pid IF_LINT (= 0);
 
   for (i = ntemps; i < nfiles; i++)
     {
@@ -3603,27 +3605,17 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 
       if (same)
         {
-          FILE *tftp;
-          pid_t pid;
-          char *temp = create_temp (&tftp, &pid);
-          size_t num_merged = 0;
-          do
+          if (! tempcopy)
             {
-              num_merged += mergefiles (&files[i], 0, nfiles - i, tftp, temp);
-              files[i].name = temp;
-              files[i].pid = pid;
-
-              memmove (&files[i + 1], &files[i + num_merged],
-                       (nfiles - (i + num_merged)) * sizeof *files);
-              ntemps += 1;
-              nfiles -= num_merged - 1;;
-              i += num_merged;
+              FILE *tftp;
+              tempcopy = create_temp (&tftp, &pid);
+              mergefiles (&files[i], 0, 1, tftp, tempcopy);
             }
-          while (i < nfiles);
+
+          files[i].name = tempcopy;
+          files[i].pid = pid;
         }
     }
-
-  return nfiles;
 }
 
 /* Merge the input FILES.  NTEMPS is the number of files at the
@@ -3693,7 +3685,7 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
       nfiles -= in - out;
     }
 
-  nfiles = avoid_trashing_input (files, ntemps, nfiles, output_file);
+  avoid_trashing_input (files, ntemps, nfiles, output_file);
 
   /* We aren't guaranteed that this final mergefiles will work, therefore we
      try to merge into the output, and then merge as much as we can into a

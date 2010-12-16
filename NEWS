@@ -23,6 +23,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort --compress no longer mishandles subprocesses' exit statuses.
 
+  sort -m -o f f ... f no longer dumps core when file descriptors are limited.
+
 ** New features
 
   split accepts the --number option to generate a specific number of files.
