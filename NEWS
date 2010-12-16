@@ -21,7 +21,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort with at least two threads no longer segfaults due to use of pointers
   into the stack of an expired thread. [bug introduced in coreutils-8.6]
 
-  sort --compress no longer mishandles subprocesses' exit statuses.
+  sort --compress no longer mishandles subprocesses' exit statuses,
+  and no longer hangs indefinitely due to a bug in waiting for subprocesses.
 
   sort -m -o f f ... f no longer dumps core when file descriptors are limited.
 

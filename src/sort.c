@@ -610,32 +610,33 @@ cs_leave (struct cs_status status)
     }
 }
 
+/* Possible states for a temp file.  If compressed, the file's status
+   is unreaped or reaped, depending on whether 'sort' has waited for
+   the subprocess to finish.  */
+enum { UNCOMPRESSED, UNREAPED, REAPED };
+
 /* The list of temporary files. */
 struct tempnode
 {
   struct tempnode *volatile next;
-  pid_t pid;     /* If compressed, the pid of compressor, else zero */
+  pid_t pid;     /* The subprocess PID; undefined if state == UNCOMPRESSED.  */
+  char state;
   char name[1];  /* Actual size is 1 + file name length.  */
 };
 static struct tempnode *volatile temphead;
 static struct tempnode *volatile *temptail = &temphead;
 
+/* A file to be sorted.  */
 struct sortfile
 {
+  /* The file's name.  */
   char const *name;
-  pid_t pid;     /* If compressed, the pid of compressor, else zero */
+
+  /* Nonnull if this is a temporary file, in which case NAME == TEMP->name.  */
+  struct tempnode *temp;
 };
 
-/* An integer that is the same size as a pointer.  To avoid GCC warnings,
-   cast from void * to this type rather than directly to pid_t.  */
-#ifdef UINTPTR_MAX
-typedef uintptr_t uintptr;
-#else
-typedef size_t uintptr;
-#endif
-verify (sizeof (pid_t) <= sizeof (uintptr));
-
-/* IDs of unreaped compression and decompression subprocesses.  */
+/* Map PIDs of unreaped subprocesses to their struct tempnode objects.  */
 static Hash_table *proctab;
 
 enum { INIT_PROCTAB_SIZE = 47 };
@@ -643,16 +644,16 @@ enum { INIT_PROCTAB_SIZE = 47 };
 static size_t
 proctab_hasher (void const *entry, size_t tabsize)
 {
-  pid_t pid = (uintptr) entry;
-  return pid % tabsize;
+  struct tempnode const *node = entry;
+  return node->pid % tabsize;
 }
 
 static bool
 proctab_comparator (void const *e1, void const *e2)
 {
-  pid_t p1 = (uintptr) e1;
-  pid_t p2 = (uintptr) e2;
-  return p1 == p2;
+  struct tempnode const *n1 = e1;
+  struct tempnode const *n2 = e2;
+  return n1->pid == n2->pid;
 }
 
 /* The number of unreaped child processes.  */
@@ -690,11 +691,11 @@ reap (pid_t pid)
   return cpid;
 }
 
-/* Add PID to the process table.  Create the process table the first
-   time it's called.  */
+/* TEMP represents a new process; add it to the process table.  Create
+   the process table the first time it's called.  */
 
 static void
-register_proc (pid_t pid)
+register_proc (struct tempnode *temp)
 {
   if (! proctab)
     {
@@ -706,8 +707,9 @@ register_proc (pid_t pid)
         xalloc_die ();
     }
 
-  uintptr p = pid;
-  if (! hash_insert (proctab, (void *) p))
+  temp->state = UNREAPED;
+
+  if (! hash_insert (proctab, temp))
     xalloc_die ();
 }
 
@@ -717,8 +719,14 @@ register_proc (pid_t pid)
 static bool
 delete_proc (pid_t pid)
 {
-  uintptr p = pid;
-  return !! hash_delete (proctab, (void *) p);
+  struct tempnode test;
+
+  test.pid = pid;
+  struct tempnode *node = hash_delete (proctab, &test);
+  if (! node)
+    return false;
+  node->state = REAPED;
+  return true;
 }
 
 /* Remove PID from the process table, and wait for it to exit if it
@@ -802,7 +810,6 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   memcpy (file, temp_dir, len);
   memcpy (file + len, slashbase, sizeof slashbase);
   node->next = NULL;
-  node->pid = 0;
   if (++temp_dir_index == temp_dir_count)
     temp_dir_index = 0;
 
@@ -1010,23 +1017,21 @@ pipe_fork (int pipefds[2], size_t tries)
 #endif
 }
 
-/* Create a temporary file and start a compression program to filter output
-   to that file.  Set *PFP to the file handle and if PPID is non-NULL,
-   set *PPID to the PID of the newly-created process.  If the creation
+/* Create a temporary file and, if asked for, start a compressor
+   to that file.  Set *PFP to the file handle and return
+   the address of the new temp node.  If the creation
    fails, return NULL if the failure is due to file descriptor
    exhaustion and SURVIVE_FD_EXHAUSTION; otherwise, die.  */
 
-static char *
-maybe_create_temp (FILE **pfp, pid_t *ppid, bool survive_fd_exhaustion)
+static struct tempnode *
+maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
 {
   int tempfd;
   struct tempnode *node = create_temp_file (&tempfd, survive_fd_exhaustion);
-  char *name;
-
   if (! node)
     return NULL;
 
-  name = node->name;
+  node->state = UNCOMPRESSED;
 
   if (compress_program)
     {
@@ -1039,7 +1044,7 @@ maybe_create_temp (FILE **pfp, pid_t *ppid, bool survive_fd_exhaustion)
           close (pipefds[0]);
           tempfd = pipefds[1];
 
-          register_proc (node->pid);
+          register_proc (node);
         }
       else if (node->pid == 0)
         {
@@ -1053,45 +1058,40 @@ maybe_create_temp (FILE **pfp, pid_t *ppid, bool survive_fd_exhaustion)
             error (SORT_FAILURE, errno, _("couldn't execute %s"),
                    compress_program);
         }
-      else
-        node->pid = 0;
     }
 
   *pfp = fdopen (tempfd, "w");
   if (! *pfp)
-    die (_("couldn't create temporary file"), name);
+    die (_("couldn't create temporary file"), node->name);
 
-  if (ppid)
-    *ppid = node->pid;
-
-  return name;
+  return node;
 }
 
-/* Create a temporary file and start a compression program to filter output
-   to that file.  Set *PFP to the file handle and if *PPID is non-NULL,
-   set it to the PID of the newly-created process.  Die on failure.  */
+/* Create a temporary file and, if asked for, start a compressor
+   to that file.  Set *PFP to the file handle and return the address
+   of the new temp node.  Die on failure.  */
 
-static char *
-create_temp (FILE **pfp, pid_t *ppid)
+static struct tempnode *
+create_temp (FILE **pfp)
 {
-  return maybe_create_temp (pfp, ppid, false);
+  return maybe_create_temp (pfp, false);
 }
 
 /* Open a compressed temp file and start a decompression process through
-   which to filter the input.  PID must be the valid processes ID of the
-   process used to compress the file.  Return NULL (setting errno to
+   which to filter the input.  Return NULL (setting errno to
    EMFILE) if we ran out of file descriptors, and die on any other
    kind of failure.  */
 
 static FILE *
-open_temp (char const *name, pid_t pid)
+open_temp (struct tempnode *temp)
 {
   int tempfd, pipefds[2];
   FILE *fp = NULL;
 
-  wait_proc (pid);
+  if (temp->state == UNREAPED)
+    wait_proc (temp->pid);
 
-  tempfd = open (name, O_RDONLY);
+  tempfd = open (temp->name, O_RDONLY);
   if (tempfd < 0)
     return NULL;
 
@@ -1119,7 +1119,8 @@ open_temp (char const *name, pid_t pid)
              compress_program);
 
     default:
-      register_proc (child);
+      temp->pid = child;
+      register_proc (temp);
       close (tempfd);
       close (pipefds[1]);
 
@@ -1160,6 +1161,9 @@ zaptemp (char const *name)
 
   for (pnode = &temphead; (node = *pnode)->name != name; pnode = &node->next)
     continue;
+
+  if (node->state == UNREAPED)
+    wait_proc (node->pid);
 
   /* Unlink the temporary file in a critical section to avoid races.  */
   next = node->next;
@@ -2773,8 +2777,8 @@ open_input_files (struct sortfile *files, size_t nfiles, FILE ***pfps)
   /* Open as many input files as we can.  */
   for (i = 0; i < nfiles; i++)
     {
-      fps[i] = (files[i].pid
-                ? open_temp (files[i].name, files[i].pid)
+      fps[i] = (files[i].temp && files[i].temp->state != UNCOMPRESSED
+                ? open_temp (files[i].temp)
                 : stream_open (files[i].name, "r"));
       if (!fps[i])
         break;
@@ -3573,8 +3577,7 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
   size_t i;
   bool got_outstat = false;
   struct stat outstat;
-  char const *tempcopy = NULL;
-  pid_t pid IF_LINT (= 0);
+  struct tempnode *tempcopy = NULL;
 
   for (i = ntemps; i < nfiles; i++)
     {
@@ -3608,12 +3611,12 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
           if (! tempcopy)
             {
               FILE *tftp;
-              tempcopy = create_temp (&tftp, &pid);
-              mergefiles (&files[i], 0, 1, tftp, tempcopy);
+              tempcopy = create_temp (&tftp);
+              mergefiles (&files[i], 0, 1, tftp, tempcopy->name);
             }
 
-          files[i].name = tempcopy;
-          files[i].pid = pid;
+          files[i].name = tempcopy->name;
+          files[i].temp = tempcopy;
         }
     }
 }
@@ -3648,13 +3651,12 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
       for (out = in = 0; nmerge <= nfiles - in; out++)
         {
           FILE *tfp;
-          pid_t pid;
-          char *temp = create_temp (&tfp, &pid);
+          struct tempnode *temp = create_temp (&tfp);
           size_t num_merged = mergefiles (&files[in], MIN (ntemps, nmerge),
-                                          nmerge, tfp, temp);
+                                          nmerge, tfp, temp->name);
           ntemps -= MIN (ntemps, num_merged);
-          files[out].name = temp;
-          files[out].pid = pid;
+          files[out].name = temp->name;
+          files[out].temp = temp;
           in += num_merged;
         }
 
@@ -3668,13 +3670,12 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
              files as possible, to avoid needless I/O.  */
           size_t nshortmerge = remainder - cheap_slots + 1;
           FILE *tfp;
-          pid_t pid;
-          char *temp = create_temp (&tfp, &pid);
+          struct tempnode *temp = create_temp (&tfp);
           size_t num_merged = mergefiles (&files[in], MIN (ntemps, nshortmerge),
-                                          nshortmerge, tfp, temp);
+                                          nshortmerge, tfp, temp->name);
           ntemps -= MIN (ntemps, num_merged);
-          files[out].name = temp;
-          files[out++].pid = pid;
+          files[out].name = temp->name;
+          files[out++].temp = temp;
           in += num_merged;
         }
 
@@ -3717,21 +3718,21 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
          (e.g., some other process could open a file between the time
          we closed and tried to create).  */
       FILE *tfp;
-      pid_t pid;
-      char *temp;
+      struct tempnode *temp;
       do
         {
           nopened--;
           xfclose (fps[nopened], files[nopened].name);
-          temp = maybe_create_temp (&tfp, &pid, ! (nopened <= 2));
+          temp = maybe_create_temp (&tfp, ! (nopened <= 2));
         }
       while (!temp);
 
       /* Merge into the newly allocated temporary.  */
-      mergefps (&files[0], MIN (ntemps, nopened), nopened, tfp, temp, fps);
+      mergefps (&files[0], MIN (ntemps, nopened), nopened, tfp, temp->name,
+                fps);
       ntemps -= MIN (ntemps, nopened);
-      files[0].name = temp;
-      files[0].pid = pid;
+      files[0].name = temp->name;
+      files[0].temp = temp;
 
       memmove (&files[1], &files[nopened], (nfiles - nopened) * sizeof *files);
       ntemps++;
@@ -3807,7 +3808,7 @@ sort (char *const *files, size_t nfiles, char const *output_file,
           else
             {
               ++ntemps;
-              temp_output = create_temp (&tfp, NULL);
+              temp_output = create_temp (&tfp)->name;
             }
           if (1 < buf.nlines)
             {
@@ -3849,7 +3850,7 @@ sort (char *const *files, size_t nfiles, char const *output_file,
       for (i = 0; node; i++)
         {
           tempfiles[i].name = node->name;
-          tempfiles[i].pid = node->pid;
+          tempfiles[i].temp = node;
           node = node->next;
         }
       merge (tempfiles, ntemps, ntemps, output_file);
