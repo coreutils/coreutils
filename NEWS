@@ -22,7 +22,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   into the stack of an expired thread. [bug introduced in coreutils-8.6]
 
   sort --compress no longer mishandles subprocesses' exit statuses,
-  and no longer hangs indefinitely due to a bug in waiting for subprocesses.
+  no longer hangs indefinitely due to a bug in waiting for subprocesses,
+  and no longer generates many more than NMERGE subprocesses.
 
   sort -m -o f f ... f no longer dumps core when file descriptors are limited.
 

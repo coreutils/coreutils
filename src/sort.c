@@ -659,9 +659,6 @@ proctab_comparator (void const *e1, void const *e2)
 /* The number of unreaped child processes.  */
 static pid_t nprocs;
 
-/* The number of child processes we'll allow before we try to reap some. */
-enum { MAX_PROCS_BEFORE_REAP = 2 };
-
 static bool delete_proc (pid_t);
 
 /* If PID is positive, wait for the child process with that PID to
@@ -743,10 +740,19 @@ wait_proc (pid_t pid)
    already exited.  */
 
 static void
-reap_some (void)
+reap_exited (void)
 {
   while (0 < nprocs && reap (0))
     continue;
+}
+
+/* Reap at least one exited child, waiting if necessary.  */
+
+static void
+reap_some (void)
+{
+  reap (-1);
+  reap_exited ();
 }
 
 /* Reap all children, waiting if necessary.  */
@@ -969,6 +975,16 @@ pipe_fork (int pipefds[2], size_t tries)
   if (pipe (pipefds) < 0)
     return -1;
 
+  /* At least NMERGE + 1 subprocesses are needed.  More could be created, but
+     uncontrolled subprocess generation can hurt performance significantly.
+     Allow at most NMERGE + 2 subprocesses, on the theory that there
+     may be some useful parallelism by letting compression for the
+     previous merge finish (1 subprocess) in parallel with the current
+     merge (NMERGE + 1 subprocesses).  */
+
+  if (nmerge + 1 < nprocs)
+    reap_some ();
+
   while (tries--)
     {
       /* This is so the child process won't delete our temp files
@@ -991,7 +1007,7 @@ pipe_fork (int pipefds[2], size_t tries)
         {
           xnanosleep (wait_retry);
           wait_retry *= 2;
-          reap_some ();
+          reap_exited ();
         }
     }
 
@@ -2968,10 +2984,6 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
           ord[j] = ord[j + 1];
         ord[count_of_smaller_lines] = ord0;
       }
-
-      /* Free up some resources every once in a while.  */
-      if (MAX_PROCS_BEFORE_REAP < nprocs)
-        reap_some ();
     }
 
   if (unique && savedline)
@@ -3828,10 +3840,6 @@ sort (char *const *files, size_t nfiles, char const *output_file,
             write_unique (line - 1, tfp, temp_output);
 
           xfclose (tfp, temp_output);
-
-          /* Free up some resources every once in a while.  */
-          if (MAX_PROCS_BEFORE_REAP < nprocs)
-            reap_some ();
 
           if (output_file_created)
             goto finish;
