@@ -39,6 +39,11 @@ printf "0\t$bignum\tfuture\n" > exp || framework_failure_
 printf "du: time $bignum is out of range\n" > err_ok || framework_failure_
 
 du --time future >out 2>err || fail=1
+
+# On some systems an empty file occupies 4 blocks.
+# Map the number of blocks to 0.
+sed 's/^[0-9][0-9]*/0/' out > k && mv k out
+
 compare out exp || fail=1
 compare err err_ok || fail=1
 
