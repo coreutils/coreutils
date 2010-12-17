@@ -3049,6 +3049,67 @@ Write a diagnostic just before each output file is opened.
 
 @exitstatus
 
+Here are a few examples to illustrate how the
+@option{--number} (@option{-n}) option works:
+
+Notice how, by default, one line may be split onto two or more:
+
+@example
+$ seq -w 6 10 > k; split -n3 k; head xa?
+==> xaa <==
+06
+07
+==> xab <==
+
+08
+0
+==> xac <==
+9
+10
+@end example
+
+Use the "l/" modifier to suppress that:
+
+@example
+$ seq -w 6 10 > k; split -nl/3 k; head xa?
+==> xaa <==
+06
+07
+
+==> xab <==
+08
+09
+
+==> xac <==
+10
+@end example
+
+Use the "r/" modifier to distribute lines in a round-robin fashion:
+
+@example
+$ seq -w 6 10 > k; split -nr/3 k; head xa?
+==> xaa <==
+06
+09
+
+==> xab <==
+07
+10
+
+==> xac <==
+08
+@end example
+
+You can also extract just the Kth chunk.
+This extracts and prints just the 7th "chunk" of 33:
+
+@example
+$ seq 100 > k; split -nl/7/33 k
+20
+21
+22
+@end example
+
 
 @node csplit invocation
 @section @command{csplit}: Split a file into context-determined pieces
