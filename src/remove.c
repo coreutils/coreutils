@@ -25,6 +25,7 @@
 #include "error.h"
 #include "euidaccess-stat.h"
 #include "file-type.h"
+#include "ignore-value.h"
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
@@ -402,7 +403,7 @@ fts_skip_tree (FTS *fts, FTSENT *ent)
 {
   fts_set (fts, ent, FTS_SKIP);
   /* Ensure that we do not process ENT a second time.  */
-  ent = fts_read (fts);
+  ignore_value (fts_read (fts));
 }
 
 /* Upon unlink failure, or when the user declines to remove ENT, mark

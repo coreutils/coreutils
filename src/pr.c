@@ -2695,7 +2695,7 @@ char_to_clump (char c)
               width = 2;
               chars = 2;
               *s++ = '^';
-              *s++ = c ^ 0100;
+              *s = c ^ 0100;
             }
           else
             {
