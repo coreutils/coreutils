@@ -604,6 +604,8 @@ do_copy (int n_files, char **file, const char *target_directory,
           error (0, 0, _("extra operand %s"), quote (file[2]));
           usage (EXIT_FAILURE);
         }
+      /* Update NEW_DST and SB, which may be checked below.  */
+      ignore_value (target_directory_operand (file[n_files -1], &sb, &new_dst));
     }
   else if (!target_directory)
     {

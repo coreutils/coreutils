@@ -30,8 +30,8 @@ echo test > $file || fail=1
 
 # Specify both version control and suffix so the environment variables
 # (possibly set by the user running these tests) aren't used.
-cp --force --backup=simple --suffix=$suffix $file $file \
-  || fail=1
+cp --force --backup=simple --suffix=$suffix $file $file || fail=1
+cp -T --force --backup=simple --suffix=$suffix $file $file || fail=1
 
 test -f $file || fail=1
 test -f $file_backup || fail=1
