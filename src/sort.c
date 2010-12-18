@@ -116,6 +116,10 @@ struct rlimit { size_t rlim_cur; };
    this number has any practical effect.  */
 enum { SUBTHREAD_LINES_HEURISTIC = 4 };
 
+/* The number of threads after which there are
+   diminishing performance gains.  */
+enum { DEFAULT_MAX_THREADS = 8 };
+
 /* Exit statuses.  */
 enum
   {
@@ -455,7 +459,7 @@ Other options:\n\
   -t, --field-separator=SEP  use SEP instead of non-blank to blank transition\n\
   -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s;\n\
                               multiple options specify multiple directories\n\
-      --parallel=N          limit the number of sorts run concurrently to N\n\
+      --parallel=N          change the number sorts run concurrently to N\n\
   -u, --unique              with -c, check for strict ordering;\n\
                               without -c, output only the first of an equal run\n\
 "), DEFAULT_TMPDIR);
@@ -4595,14 +4599,15 @@ main (int argc, char **argv)
     }
   else
     {
-      unsigned long int np2 = num_processors (NPROC_CURRENT_OVERRIDABLE);
-      if (!nthreads || nthreads > np2)
-        nthreads = np2;
+      if (!nthreads)
+        {
+          nthreads = MIN (DEFAULT_MAX_THREADS,
+                          num_processors (NPROC_CURRENT_OVERRIDABLE));
+        }
 
       /* Avoid integer overflow later.  */
       size_t nthreads_max = SIZE_MAX / (2 * sizeof (struct merge_node));
-      if (nthreads_max < nthreads)
-        nthreads = nthreads_max;
+      nthreads = MIN (nthreads, nthreads_max);
 
       sort (files, nfiles, outfile, nthreads);
     }

@@ -4190,10 +4190,11 @@ disks and controllers.
 @item --parallel=@var{n}
 @opindex --parallel
 @cindex multithreaded sort
-Limit the number of sorts run in parallel to @var{n}. By default,
-@var{n} is set to the number of available processors, and values
-greater than that are reduced to that limit. Also see
-@ref{nproc invocation}.
+Set the number of sorts run in parallel to @var{n}. By default,
+@var{n} is set to the number of available processors, but limited
+to 8, as there are diminishing performance gains after that.
+Note also that using @var{n} threads increases the memory usage by
+a factor of log @var{n}.  Also see @ref{nproc invocation}.
 
 @item -u
 @itemx --unique

@@ -24,7 +24,8 @@ print_ver_ sort
 very_expensive_
 
 valgrind --help >/dev/null || skip_ "requires valgrind"
-test "$(nproc)" = 1 && skip_ "requires a multi-core system"
+grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
+  skip_test_ 'requires pthreads'
 
 # gensort output seems to trigger the failure more often,
 # so prefer gensort if it is available.

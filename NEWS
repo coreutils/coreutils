@@ -27,6 +27,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -m -o f f ... f no longer dumps core when file descriptors are limited.
 
+** Changes in behavior
+
+  sort will not create more than 8 threads by default due to diminishing
+  performance gains.  Also the --parallel option is no longer restricted
+  to the number of available processors.
+
 ** New features
 
   split accepts the --number option to generate a specific number of files.

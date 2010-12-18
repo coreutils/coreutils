@@ -20,7 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
 
-test "$(nproc)" = 1 && skip_ "requires a multi-core system"
+grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
+  skip_test_ 'requires pthreads'
 
 seq 100000 > in || framework_failure_
 mkfifo fifo || framework_failure_
