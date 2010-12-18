@@ -336,6 +336,9 @@ setup_()
   for sig_ in 1 2 3 13 15; do
     eval "trap 'Exit $(expr $sig_ + 128)' $sig_"
   done
+
+  # Set up for the "Exit $fail" at the end of many tests.
+  fail=0
 }
 
 # Create a temporary directory, much like mktemp -d does.
