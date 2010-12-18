@@ -726,8 +726,8 @@ main (int argc, char **argv)
           switch (ai_err)
             {
             case AI_ERR_READ:
-              error (0, errno, _("%s: read error"), quote (files_from));
-              skip_file = true;
+              error (EXIT_FAILURE, errno, _("%s: read error"),
+                     quote (files_from));
               continue;
             case AI_ERR_MEM:
               xalloc_die ();
