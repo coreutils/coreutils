@@ -324,11 +324,18 @@ setup_()
   fi
 
   initial_cwd_=$PWD
+  fail=0
 
   pfx_=`testdir_prefix_`
   test_dir_=`mktempd_ "$initial_cwd_" "$pfx_-$ME_.XXXX"` \
     || fail_ "failed to create temporary directory in $initial_cwd_"
   cd "$test_dir_"
+
+  # As autoconf-generated configure scripts do, ensure that IFS
+  # is defined initially, so that saving and restoring $IFS works.
+  gl_init_sh_nl_='
+'
+  IFS=" ""	$gl_init_sh_nl_"
 
   # This trap statement, along with a trap on 0 below, ensure that the
   # temporary directory, $test_dir_, is removed upon exit as well as
@@ -336,9 +343,6 @@ setup_()
   for sig_ in 1 2 3 13 15; do
     eval "trap 'Exit $(expr $sig_ + 128)' $sig_"
   done
-
-  # Set up for the "Exit $fail" at the end of many tests.
-  fail=0
 }
 
 # Create a temporary directory, much like mktemp -d does.
@@ -412,8 +416,6 @@ mktempd_()
   *XXXX) ;;
   *) fail_ "invalid template: $template_ (must have a suffix of at least 4 X's)";;
   esac
-
-  fail=0
 
   # First, try to use mktemp.
   d=`unset TMPDIR; mktemp -d -t -p "$destdir_" "$template_" 2>/dev/null` \
