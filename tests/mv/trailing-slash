@@ -56,6 +56,10 @@ printf '%s\n' \
 > expected-err
 touch b
 cp b no-such/ 2> err && fail=1
+
+# Map "No such file..." diagnostic to the expected "Not a directory"
+sed 's/No such file or directory/Not a directory/' err > k && mv k err
+
 compare err expected-err || fail=1
 
 Exit $fail
