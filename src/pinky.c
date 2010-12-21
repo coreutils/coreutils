@@ -37,10 +37,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Kaveh Ghazi")
 
-#ifndef MAXHOSTNAMELEN
-# define MAXHOSTNAMELEN 64
-#endif
-
 char *ttyname (int);
 
 /* If true, display the hours:minutes since each user has touched

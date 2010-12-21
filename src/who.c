@@ -49,10 +49,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Michael Stone")
 
-#ifndef MAXHOSTNAMELEN
-# define MAXHOSTNAMELEN 64
-#endif
-
 #ifdef RUN_LVL
 # define UT_TYPE_RUN_LVL(U) UT_TYPE_EQ (U, RUN_LVL)
 #else
