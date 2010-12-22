@@ -9,12 +9,12 @@ AM_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS) $(WERROR_CFLAGS)
 # test-xvasprintf.c:100: error: format not a string literal and no \
 #   format arguments [-Wformat-security]
 test_xvasprintf_CFLAGS = $(AM_CFLAGS) \
-  `test X$(WERROR_CFLAGS) = X || echo ' -Wno-format-security'`
+  `test -n '$(WERROR_CFLAGS)' && echo ' -Wno-format-security'`
 
 # test-lock.c: In function 'lock_mutator_thread':
 # test-lock.c:148: error: cast from function call of type 'pthread_t' to \
 #   non-matching type 'void *' [-Wbad-function-cast]
 test_lock_CFLAGS = $(AM_CFLAGS) \
-  `test X$(WERROR_CFLAGS) = X || echo ' -Wno-bad-function-cast'`
+  `test -n '$(WERROR_CFLAGS)' && echo ' -Wno-bad-function-cast'`
 test_tls_CFLAGS = $(AM_CFLAGS) \
-  `test X$(WERROR_CFLAGS) = X || echo ' -Wno-bad-function-cast'`
+  `test -n '$(WERROR_CFLAGS)' && echo ' -Wno-bad-function-cast'`
