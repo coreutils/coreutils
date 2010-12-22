@@ -39,7 +39,7 @@ test -r "$tty" 2>&1 \
 
 mv f g < $tty > out 2>&1 & pid=$!
 
-# Wait up to 3.1s for the expected prompt
+# Test for the expected prompt; sleep upon non-match.
 check_overwrite_prompt()
 {
   local delay="$1"
@@ -48,6 +48,8 @@ check_overwrite_prompt()
     *) sleep $delay; return 1;;
   esac
 }
+
+# Wait for up to 12.7 seconds for the expected prompt.
 retry_delay_ check_overwrite_prompt .1 7 || fail=1
 
 kill $pid
