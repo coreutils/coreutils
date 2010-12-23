@@ -4601,8 +4601,8 @@ main (int argc, char **argv)
     {
       if (!nthreads)
         {
-          nthreads = MIN (DEFAULT_MAX_THREADS,
-                          num_processors (NPROC_CURRENT_OVERRIDABLE));
+          unsigned long int np = num_processors (NPROC_CURRENT_OVERRIDABLE);
+          nthreads = MIN (np, DEFAULT_MAX_THREADS);
         }
 
       /* Avoid integer overflow later.  */
