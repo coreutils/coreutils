@@ -79,53 +79,31 @@ Output platform dependent limits in a format useful for shell scripts.\n\
   exit (status);
 }
 
-/* Add absolute values of ascii decimal strings.
- * Strings can have leading spaces.
- * If any string has a '-' it's preserved in the output:
- * I.E.
- *    1 +  1 ->  2
- *   -1 + -1 -> -2
- *   -1 +  1 -> -2
- *    1 + -1 -> -2
- */
-static char *
-decimal_ascii_add (const char *str1, const char *str2)
+/* Add one to the absolute value of the number whose textual
+   representation is BUF + 1.  Do this in-place, in the buffer.
+   Return a pointer to the result, which is normally BUF + 1, but is
+   BUF if the representation grew in size.  */
+static char const *
+decimal_absval_add_one (char *buf)
 {
-  int len1 = strlen (str1);
-  int len2 = strlen (str2);
-  int rlen = MAX (len1, len2) + 3;  /* space for extra digit or sign + NUL */
-  char *result = xmalloc (rlen);
-  char *rp = result + rlen - 1;
-  const char *d1 = str1 + len1 - 1;
-  const char *d2 = str2 + len2 - 1;
-  int carry = 0;
-  *rp = '\0';
-
-  while (1)
-    {
-      char c1 = (d1 < str1 ? ' ' : (*d1 == '-' ? ' ' : *d1--));
-      char c2 = (d2 < str2 ? ' ' : (*d2 == '-' ? ' ' : *d2--));
-      char t1 = c1 + c2 + carry;    /* ASCII digits are BCD */
-      if (!c_isdigit (c1) && !c_isdigit (c2) && !carry)
-        break;
-      carry = t1 > '0' + '9' || t1 == ' ' + '9' + 1;
-      t1 += 6 * carry;
-      *--rp = (t1 & 0x0F) | 0x30;   /* top nibble to ASCII */
-    }
-  if ((d1 >= str1 && *d1 == '-') || (d2 >= str2 && (*d2 == '-')))
-    *--rp = '-';
-
-  if (rp != result)
-    memmove (result, rp, rlen - (rp - result));
-
+  bool negative = (buf[1] == '-');
+  char *absnum = buf + 1 + negative;
+  char *p = absnum + strlen (absnum);
+  absnum[-1] = '0';
+  while (*--p == '9')
+    *p = '0';
+  ++*p;
+  char *result = MIN (absnum, p);
+  if (negative)
+    *--result = '-';
   return result;
 }
 
 int
 main (int argc, char **argv)
 {
-  char limit[64];               /* big enough for 128 bit integers at least */
-  char *oflow;
+  char limit[1 + MAX (INT_BUFSIZE_BOUND (intmax_t),
+                      INT_BUFSIZE_BOUND (uintmax_t))];
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -140,18 +118,14 @@ main (int argc, char **argv)
                       usage, AUTHORS, (char const *) NULL);
 
 #define print_int(TYPE)                                                  \
-  snprintf (limit, sizeof limit, "%"PRIuMAX, (uintmax_t)TYPE##_MAX);     \
-  printf (#TYPE"_MAX=%s\n", limit);                                      \
-  oflow = decimal_ascii_add (limit, "1");                                \
-  printf (#TYPE"_OFLOW=%s\n", oflow);                                    \
-  free (oflow);                                                          \
+  sprintf (limit + 1, "%"PRIuMAX, (uintmax_t) TYPE##_MAX);               \
+  printf (#TYPE"_MAX=%s\n", limit + 1);                                  \
+  printf (#TYPE"_OFLOW=%s\n", decimal_absval_add_one (limit));           \
   if (TYPE##_MIN)                                                        \
     {                                                                    \
-      snprintf (limit, sizeof limit, "%"PRIdMAX, (intmax_t)TYPE##_MIN);  \
-      printf (#TYPE"_MIN=%s\n", limit);                                  \
-      oflow = decimal_ascii_add (limit, "-1");                           \
-      printf (#TYPE"_UFLOW=%s\n", oflow);                                \
-      free (oflow);                                                      \
+      sprintf (limit + 1, "%"PRIdMAX, (intmax_t) TYPE##_MIN);            \
+      printf (#TYPE"_MIN=%s\n", limit + 1);                              \
+      printf (#TYPE"_UFLOW=%s\n", decimal_absval_add_one (limit));       \
     }
 
 #define print_float(TYPE)                                                \
