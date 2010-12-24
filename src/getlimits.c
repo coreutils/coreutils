@@ -22,7 +22,6 @@
 #include <float.h>
 
 #include "system.h"
-#include "c-ctype.h"
 #include "long-options.h"
 
 #define PROGRAM_NAME "getlimits"
