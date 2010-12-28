@@ -62,8 +62,8 @@ my @Tests =
                                       . "invalid\n" }},
                                 {AUX=> {f=> 'foo'}},
                                 {OUT=>"f: FAILED\nf: FAILED\n"},
-                  {ERR=>"md5sum: WARNING: 1 line is improperly formatted\n"
-                      . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
+                {ERR=>"md5sum: WARNING: 1 line is improperly formatted\n"
+                    . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
                                 {EXIT=> 1}],
      # Similar to the above, but use --warn to evoke one more diagnostic.
      ['check-multifail-warn', '--check', '--warn',

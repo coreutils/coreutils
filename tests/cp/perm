@@ -55,9 +55,13 @@ for u in 31 37 2; do
                 ;;
               cp:*:no)
                 test $u = 37 &&
-                  expected_perms=`echo $expected_perms|sed 's/.....$/-----/'`
+                  expected_perms=`
+                    echo $expected_perms | sed 's/.....$/-----/'
+                  `
                 test $u = 31 &&
-                  expected_perms=`echo $expected_perms|sed 's/..\(..\).$/--\1-/'`
+                  expected_perms=`
+                    echo $expected_perms | sed 's/..\(..\).$/--\1-/'
+                  `
                 ;;
             esac
             test _$actual_perms = _$expected_perms || exit 1

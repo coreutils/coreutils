@@ -30,9 +30,10 @@ chmod u-w "$other_partition_tmpdir" || framework_failure
 
 
 mv -f k "$other_partition_tmpdir" 2> out && fail=1
-cat <<EOF > exp
-mv: inter-device move failed: \`k' to \`$other_partition_tmpdir/k'; unable to remove target: Permission denied
-EOF
+printf \
+'mv: inter-device move failed: `%s'\'' to `%s'\'';'\
+' unable to remove target: Permission denied\n' \
+  k "$other_partition_tmpdir/k" >exp
 
 # On some (less-compliant) systems, we get EPERM in this case.
 # Accept either diagnostic.

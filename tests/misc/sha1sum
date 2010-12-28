@@ -60,7 +60,8 @@ my @Tests =
      ['check-bsd3', '--check', '--status',
                         {IN=> {'f.sha1' => "SHA1 (f) = $sha_degenerate\n"}},
                         {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
-     ['check-openssl', '--check', {IN=> {'f.md5' => "MD5(f)= $sha_degenerate\n"}},
+     ['check-openssl', '--check',
+                        {IN=> {'f.md5' => "MD5(f)= $sha_degenerate\n"}},
                         {AUX=> {f=> ''}},
                         {ERR=>"sha1sum: f.md5: no properly formatted "
                           . "SHA1 checksum lines found\n"},

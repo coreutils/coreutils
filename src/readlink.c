@@ -65,15 +65,18 @@ usage (int status)
              stdout);
       fputs (_("\
   -f, --canonicalize            canonicalize by following every symlink in\n\
-                                every component of the given name recursively;\n\
+                                every component of the given name recursively;\
+\n\
                                 all but the last component must exist\n\
   -e, --canonicalize-existing   canonicalize by following every symlink in\n\
-                                every component of the given name recursively,\n\
+                                every component of the given name recursively,\
+\n\
                                 all components must exist\n\
 "), stdout);
       fputs (_("\
   -m, --canonicalize-missing    canonicalize by following every symlink in\n\
-                                every component of the given name recursively,\n\
+                                every component of the given name recursively,\
+\n\
                                 without requirements on components existence\n\
   -n, --no-newline              do not output the trailing newline\n\
   -q, --quiet,\n\

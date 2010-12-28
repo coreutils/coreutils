@@ -180,10 +180,13 @@ my @Tests =
   "$prog: printing all duplicated lines and repeat counts is meaningless\n$try"}
   ],
  ['113', '--all-repeated=separate', {IN=>"a\na\n"}, {OUT=>"a\na\n"}],
- ['114', '--all-repeated=separate', {IN=>"a\na\nb\nc\nc\n"}, {OUT=>"a\na\n\nc\nc\n"}],
- ['115', '--all-repeated=separate', {IN=>"a\na\nb\nb\nc\n"}, {OUT=>"a\na\n\nb\nb\n"}],
+ ['114', '--all-repeated=separate',
+  {IN=>"a\na\nb\nc\nc\n"}, {OUT=>"a\na\n\nc\nc\n"}],
+ ['115', '--all-repeated=separate',
+  {IN=>"a\na\nb\nb\nc\n"}, {OUT=>"a\na\n\nb\nb\n"}],
  ['116', '--all-repeated=prepend', {IN=>"a\na\n"}, {OUT=>"\na\na\n"}],
- ['117', '--all-repeated=prepend', {IN=>"a\na\nb\nc\nc\n"}, {OUT=>"\na\na\n\nc\nc\n"}],
+ ['117', '--all-repeated=prepend',
+  {IN=>"a\na\nb\nc\nc\n"}, {OUT=>"\na\na\n\nc\nc\n"}],
  ['118', '--all-repeated=prepend', {IN=>"a\nb\n"}, {OUT=>""}],
  ['119', '--all-repeated=badoption', {IN=>"a\n"}, {OUT=>""}, {EXIT=>1},
   {ERR=>"$prog: invalid argument \`badoption' for \`--all-repeated'\n"

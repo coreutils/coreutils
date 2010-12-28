@@ -986,7 +986,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --preserve-context  preserve SELinux security context\n\
-  -Z, --context=CONTEXT  set SELinux security context of files and directories\n\
+  -Z, --context=CONTEXT  set SELinux security context of files and directories\
+\n\
 "), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);

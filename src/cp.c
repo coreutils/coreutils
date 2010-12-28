@@ -170,16 +170,19 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -a, --archive                same as -dR --preserve=all\n\
       --attributes-only        don't copy the file data, just the attributes\n\
-      --backup[=CONTROL]       make a backup of each existing destination file\n\
+      --backup[=CONTROL]       make a backup of each existing destination file\
+\n\
   -b                           like --backup but does not accept an argument\n\
       --copy-contents          copy contents of special files when recursive\n\
   -d                           same as --no-dereference --preserve=links\n\
 "), stdout);
       fputs (_("\
   -f, --force                  if an existing destination file cannot be\n\
-                                 opened, remove it and try again (redundant if\n\
+                                 opened, remove it and try again (redundant if\
+\n\
                                  the -n option is used)\n\
-  -i, --interactive            prompt before overwrite (overrides a previous -n\n\
+  -i, --interactive            prompt before overwrite (overrides a previous -n\
+\n\
                                   option)\n\
   -H                           follow command-line symbolic links in SOURCE\n\
 "), stdout);
@@ -196,7 +199,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -p                           same as --preserve=mode,ownership,timestamps\n\
       --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
                                  mode,ownership,timestamps), if possible\n\
-                                 additional attributes: context, links, xattr,\n\
+                                 additional attributes: context, links, xattr,\
+\n\
                                  all\n\
 "), stdout);
       fputs (_("\
@@ -207,8 +211,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -R, -r, --recursive          copy directories recursively\n\
       --reflink[=WHEN]         control clone/CoW copies. See below\n\
       --remove-destination     remove each existing destination file before\n\
-                                 attempting to open it (contrast with --force)\n\
-"), stdout);
+                                 attempting to open it (contrast with --force)\
+\n"), stdout);
       fputs (_("\
       --sparse=WHEN            control creation of sparse files. See below\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
@@ -948,7 +952,8 @@ main (int argc, char **argv)
                                        reflink_type_string, reflink_type);
           break;
 
-        case 'a':		/* Like -dR --preserve=all with reduced failure diagnostics. */
+        case 'a':
+          /* Like -dR --preserve=all with reduced failure diagnostics.  */
           x.dereference = DEREF_NEVER;
           x.preserve_links = true;
           x.preserve_ownership = true;

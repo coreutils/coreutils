@@ -354,7 +354,8 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
           && qset_acl (dst_name, dest_desc, restrictive_temp_mode) != 0)
         {
           if (! owner_failure_ok (x))
-            error (0, errno, _("clearing permissions for %s"), quote (dst_name));
+            error (0, errno, _("clearing permissions for %s"),
+                   quote (dst_name));
           return -x->require_preserve;
         }
     }

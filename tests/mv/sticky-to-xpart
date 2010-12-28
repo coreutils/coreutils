@@ -41,7 +41,10 @@ chmod go+x . || framework_failure
 
 
 # Ensure that $NON_ROOT_USERNAME can access the required version of mv.
-version=`setuidgid $NON_ROOT_USERNAME env PATH="$PATH" mv --version|sed -n '1s/.* //p'`
+version=`
+  setuidgid $NON_ROOT_USERNAME env PATH="$PATH" mv --version |
+  sed -n '1s/.* //p'
+`
 case $version in
   $PACKAGE_VERSION) ;;
   *) echo "$0: cannot access just-built mv as user $NON_ROOT_USERNAME" 1>&2

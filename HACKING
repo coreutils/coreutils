@@ -439,12 +439,12 @@ The forms to choose from are in gnulib's doc/Copyright/ directory.
 If you want to assign a single change, you should use the file,
 doc/Copyright/request-assign.changes:
 
-    http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.changes;hb=HEAD
+    http://www.gnu.org/software/gnulib/Copyright/request-assign.changes
 
 If you would like to assign past and future contributions to a project,
 you'd use doc/Copyright/request-assign.future:
 
-    http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.future;hb=HEAD
+    http://www.gnu.org/software/gnulib/Copyright/request-assign.future
 
 You may make assignments for up to four projects at a time.
 

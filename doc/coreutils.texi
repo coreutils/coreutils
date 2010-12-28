@@ -736,7 +736,7 @@ name.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
 * Traversing symlinks::         -H, -L, or -P, in some programs.
 * Treating / specially::        --preserve-root and --no-preserve-root.
-* Special built-in utilities::  @command{break}, @command{:}, @command{eval}, @dots{}
+* Special built-in utilities::  @command{break}, @command{:}, @dots{}
 * Standards conformance::       Conformance to the @acronym{POSIX} standard.
 @end menu
 
@@ -1316,7 +1316,7 @@ a symlink or its referent.
 @macro choptH
 @item -H
 @opindex -H
-@cindex symbolic link to directory, traverse each that is specified on the command line
+@cindex symbolic link to directory, traverse if on the command line
 If @option{--recursive} (@option{-R}) is specified and
 a command line argument is a symbolic link to a directory, traverse it.
 @end macro
@@ -1778,7 +1778,8 @@ Synopses:
 @smallexample
 od [@var{option}]@dots{} [@var{file}]@dots{}
 od [-abcdfilosx]@dots{} [@var{file}] [[+]@var{offset}[.][b]]
-od [@var{option}]@dots{} --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
+od [@var{option}]@dots{} --traditional [@var{file}]@c
+ [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
 @end smallexample
 
 Each line of output consists of the offset in the input, followed by
@@ -3408,10 +3409,11 @@ length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
-One way to produce a list of @acronym{ASCII} @sc{nul} terminated file names is with @sc{gnu}
+One way to produce a list of @acronym{ASCII} @sc{nul} terminated file
+names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
-If @var{file} is @samp{-} then the @acronym{ASCII} @sc{nul} terminated file names
-are read from standard input.
+If @var{file} is @samp{-} then the @acronym{ASCII} @sc{nul} terminated
+file names are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
 
@@ -4234,7 +4236,8 @@ or other special characters).
 
 Historical (BSD and System V) implementations of @command{sort} have
 differed in their interpretation of some options, particularly
-@option{-b}, @option{-f}, and @option{-n}.  @sc{gnu} sort follows the @acronym{POSIX}
+@option{-b}, @option{-f}, and @option{-n}.
+@sc{gnu} sort follows the @acronym{POSIX}
 behavior, which is usually (but not always!) like the System V behavior.
 According to @acronym{POSIX}, @option{-n} no longer implies @option{-b}.  For
 consistency, @option{-M} has been changed in the same way.  This may
@@ -4404,7 +4407,10 @@ by the sort operation.
 @c and converting each @samp{\0} back to the original record delimiter.
 @c
 @c @example
-@c printf 'c\n\nb\n\na\n'|perl -0pe 's/\n\n/\n\0/g'|sort -z|perl -0pe 's/\0/\n/g'
+@c printf 'c\n\nb\n\na\n' |
+@c perl -0pe 's/\n\n/\n\0/g' |
+@c sort -z |
+@c perl -0pe 's/\0/\n/g'
 @c @end example
 
 @item
@@ -5118,7 +5124,8 @@ Choose an output format suitable for @command{nroff} or @command{troff}
 processing.  Each output line will look like:
 
 @smallexample
-.xx "@var{tail}" "@var{before}" "@var{keyword_and_after}" "@var{head}" "@var{ref}"
+.xx "@var{tail}" "@var{before}" "@var{keyword_and_after}"@c
+ "@var{head}" "@var{ref}"
 @end smallexample
 
 so it will be possible to write a @samp{.xx} roff macro to take care of
@@ -5138,7 +5145,8 @@ Choose an output format suitable for @TeX{} processing.  Each output
 line will look like:
 
 @smallexample
-\xx @{@var{tail}@}@{@var{before}@}@{@var{keyword}@}@{@var{after}@}@{@var{head}@}@{@var{ref}@}
+\xx @{@var{tail}@}@{@var{before}@}@{@var{keyword}@}@c
+@{@var{after}@}@{@var{head}@}@{@var{ref}@}
 @end smallexample
 
 @noindent
@@ -6017,7 +6025,8 @@ newlines.
 @noindent
 By the way, the above idiom is not portable because it uses ranges, and
 it assumes that the octal code for newline is 012.
-Assuming a @acronym{POSIX} compliant @command{tr}, here is a better way to write it:
+Assuming a @acronym{POSIX} compliant @command{tr}, here is a better
+way to write it:
 
 @example
 tr -cs '[:alnum:]' '[\n*]'
@@ -8454,7 +8463,8 @@ response is not affirmative, the file is skipped.
 when it might be a symlink to a directory.
 Otherwise, @command{mv} may do something very surprising, since
 its behavior depends on the underlying rename system call.
-On a system with a modern Linux-based kernel, it fails with @code{errno=ENOTDIR}.
+On a system with a modern Linux-based kernel, it fails with
+@code{errno=ENOTDIR}.
 However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
 renames not the symlink but rather the directory referenced by the symlink.
 @xref{Trailing slashes}.
@@ -8845,7 +8855,8 @@ Display to standard error all status updates as sterilization proceeds.
 @opindex -x
 @opindex --exact
 By default, @command{shred} rounds the size of a regular file up to the next
-multiple of the file system block size to fully erase the last block of the file.
+multiple of the file system block size to fully erase the last block
+of the file.
 Use @option{--exact} to suppress that behavior.
 Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,
@@ -9628,7 +9639,8 @@ to @var{new-owner} or to the user and group of an existing reference file.
 Synopsis:
 
 @example
-chown [@var{option}]@dots{} @{@var{new-owner} | --reference=@var{ref_file}@} @var{file}@dots{}
+chown [@var{option}]@dots{} @{@var{new-owner} | --reference=@var{ref_file}@}@c
+ @var{file}@dots{}
 @end example
 
 If used, @var{new-owner} specifies the new owner and/or group as follows
@@ -9843,7 +9855,8 @@ to @var{group} (which can be either a group name or a numeric group ID)
 or to the group of an existing reference file.  Synopsis:
 
 @example
-chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@} @var{file}@dots{}
+chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@}@c
+ @var{file}@dots{}
 @end example
 
 If @var{group} is intended to represent a
@@ -9964,7 +9977,8 @@ chgrp -hR staff /u
 @command{chmod} changes the access permissions of the named files.  Synopsis:
 
 @example
-chmod [@var{option}]@dots{} @{@var{mode} | --reference=@var{ref_file}@} @var{file}@dots{}
+chmod [@var{option}]@dots{} @{@var{mode} | --reference=@var{ref_file}@}@c
+ @var{file}@dots{}
 @end example
 
 @cindex symbolic links, permissions of
@@ -10264,7 +10278,8 @@ Non-integer quantities are rounded up to the next higher unit.
 If an argument @var{file} is a disk device file containing a mounted
 file system, @command{df} shows the space available on that file system
 rather than on the file system containing the device node (i.e., the root
-file system).  @sc{gnu} @command{df} does not attempt to determine the disk usage
+file system).  @sc{gnu} @command{df} does not attempt to determine the
+disk usage
 on unmounted file systems, because on most kinds of systems doing so
 requires extremely nonportable intimate knowledge of file system
 structures.
@@ -11390,7 +11405,8 @@ test
 
 If @var{expression} is omitted, @command{test} returns false.
 If @var{expression} is a single argument,
-@command{test} returns false if the argument is null and true otherwise.  The argument
+@command{test} returns false if the argument is null and true
+otherwise.  The argument
 can be any string, including strings like @samp{-d}, @samp{-1},
 @samp{--}, @samp{--help}, and @samp{--version} that most other
 programs would treat as options.  To get help and version information,
@@ -12586,8 +12602,9 @@ be used in combination with any line settings.
 @opindex --file
 Set the line opened by the file name specified in @var{device} instead of
 the tty line connected to standard input.  This option is necessary
-because opening a @acronym{POSIX} tty requires use of the @code{O_NONDELAY} flag to
-prevent a @acronym{POSIX} tty from blocking until the carrier detect line is high if
+because opening a @acronym{POSIX} tty requires use of the
+@code{O_NONDELAY} flag to prevent a @acronym{POSIX} tty from blocking
+until the carrier detect line is high if
 the @code{clocal} flag is not set.  Hence, it is not always possible
 to allow the shell to open the device in the traditional manner.
 
@@ -12609,8 +12626,9 @@ case, that is, when @emph{not} negated (unless stated otherwise,
 of course).
 
 Some settings are not available on all @acronym{POSIX} systems, since they use
-extensions.  Such arguments are marked below with ``Non-@acronym{POSIX}'' in their
-description.  On non-@acronym{POSIX} systems, those or other settings also may not
+extensions.  Such arguments are marked below with
+``Non-@acronym{POSIX}'' in their description.  On non-@acronym{POSIX}
+systems, those or other settings also may not
 be available, but it's not feasible to document all the variations: just
 try it and see.
 
@@ -12817,7 +12835,8 @@ Newline performs a carriage return.  Non-@acronym{POSIX}.  May be negated.
 @item ofill
 @opindex ofill
 @cindex pad instead of timing for delaying
-Use fill (padding) characters instead of timing for delays.  Non-@acronym{POSIX}.
+Use fill (padding) characters instead of timing for delays.
+Non-@acronym{POSIX}.
 May be negated.
 
 @item ofdel
@@ -12945,7 +12964,8 @@ of literally.  Non-@acronym{POSIX}.  May be negated.
 @opindex crtkill
 Echo the @code{kill} special character by erasing each character on
 the line as indicated by the @code{echoprt} and @code{echoe} settings,
-instead of by the @code{echoctl} and @code{echok} settings.  Non-@acronym{POSIX}.
+instead of by the @code{echoctl} and @code{echok} settings.
+Non-@acronym{POSIX}.
 May be negated.
 @end table
 
@@ -13169,7 +13189,8 @@ Set the output speed to @var{n}.
 
 @item rows @var{n}
 @opindex rows
-Tell the tty kernel driver that the terminal has @var{n} rows.  Non-@acronym{POSIX}.
+Tell the tty kernel driver that the terminal has @var{n} rows.
+Non-@acronym{POSIX}.
 
 @item cols @var{n}
 @itemx columns @var{n}
@@ -14386,7 +14407,8 @@ parsed reliably.  In the following example, @var{release} is
 
 @smallexample
 uname -a
-@result{} Linux dum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686 unknown unknown GNU/Linux
+@result{} Linux dum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686@c
+ unknown unknown GNU/Linux
 @end smallexample
 
 
@@ -14592,7 +14614,8 @@ Synopses:
 
 @smallexample
 chcon [@var{option}]@dots{} @var{context} @var{file}@dots{}
-chcon [@var{option}]@dots{} [-u @var{user}] [-r @var{role}] [-l @var{range}] [-t @var{type}] @var{file}@dots{}
+chcon [@var{option}]@dots{} [-u @var{user}] [-r @var{role}] [-l @var{range}]@c
+ [-t @var{type}] @var{file}@dots{}
 chcon [@var{option}]@dots{} --reference=@var{rfile} @var{file}@dots{}
 @end smallexample
 
@@ -14678,7 +14701,8 @@ Set range @var{range} in the target security context.
 Synopses:
 @smallexample
 runcon @var{context} @var{command} [@var{args}]
-runcon [ -c ] [-u @var{user}] [-r @var{role}] [-t @var{type}] [-l @var{range}] @var{command} [@var{args}]
+runcon [ -c ] [-u @var{user}] [-r @var{role}] [-t @var{type}]@c
+ [-l @var{range}] @var{command} [@var{args}]
 @end smallexample
 
 Run @var{command} with completely-specified @var{context}, or with
@@ -14690,7 +14714,8 @@ is specified, the first argument is used as the complete context.
 Any additional arguments after @var{command}
 are interpreted as arguments to the command.
 
-With neither @var{context} nor @var{command}, print the current security context.
+With neither @var{context} nor @var{command}, print the current
+security context.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -15853,7 +15878,8 @@ It was written by Arnold Robbins.
 @unnumberedsec Toolbox Introduction
 
 This month's column is only peripherally related to the GNU Project, in
-that it describes a number of the GNU tools on your GNU/Linux system and how they
+that it describes a number of the GNU tools on your GNU/Linux system
+and how they
 might be used.  What it's really about is the ``Software Tools'' philosophy
 of program development and usage.
 
@@ -16053,7 +16079,8 @@ by a count of the number of times that line occurred in the input.
 @unnumberedsec Putting the Tools Together
 
 Now, let's suppose this is a large ISP server system with dozens of users
-logged in.  The management wants the system administrator to write a program that will
+logged in.  The management wants the system administrator to write a
+program that will
 generate a sorted list of logged in users.  Furthermore, even if a user
 is logged in multiple times, his or her name should only show up in the
 output once.
@@ -16095,7 +16122,8 @@ The @command{sort} command actually has a @option{-u} option that does what
 @command{uniq} does.  However, @command{uniq} has other uses for which one
 cannot substitute @samp{sort -u}.
 
-The administrator puts this pipeline into a shell script, and makes it available for
+The administrator puts this pipeline into a shell script, and makes it
+available for
 all the users on the system (@samp{#} is the system administrator,
 or @code{root}, prompt):
 

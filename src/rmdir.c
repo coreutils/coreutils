@@ -171,7 +171,8 @@ Remove the DIRECTORY(ies), if they are empty.\n\
                     is non-empty\n\
 "), stdout);
       fputs (_("\
-  -p, --parents   remove DIRECTORY and its ancestors; e.g., `rmdir -p a/b/c' is\n\
+  -p, --parents   remove DIRECTORY and its ancestors; e.g., `rmdir -p a/b/c' is\
+\n\
                     similar to `rmdir a/b/c a/b a'\n\
   -v, --verbose   output a diagnostic for every directory processed\n\
 "), stdout);

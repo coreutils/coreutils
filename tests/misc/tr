@@ -54,7 +54,8 @@ my @Tests =
   ['i', qw(-d '[:xdigit:]'), {IN=>'w0x1y2z3456789acbdefABCDEFz'},
    {OUT=>'wxyzz'}],
   ['j', qw(-d '[:digit:]'), {IN=>'0123456789'}, {OUT=>''}],
-  ['k', qw(-d '[:digit:]'), {IN=>'a0b1c2d3e4f5g6h7i8j9k'}, {OUT=>'abcdefghijk'}],
+  ['k', qw(-d '[:digit:]'),
+   {IN=>'a0b1c2d3e4f5g6h7i8j9k'}, {OUT=>'abcdefghijk'}],
   ['l', qw(-d '[:lower:]'), {IN=>'abcdefghijklmnopqrstuvwxyz'}, {OUT=>''}],
   ['m', qw(-d '[:upper:]'), {IN=>'ABCDEFGHIJKLMNOPQRSTUVWXYZ'}, {OUT=>''}],
   ['n', qw(-d '[:lower:][:upper:]'),
@@ -83,11 +84,13 @@ my @Tests =
   ['u', qw(-ds b a), {IN=>'aabbaa'}, {OUT=>'a'}],
   ['v', qw(-ds '[:xdigit:]' Z), {IN=>'ZZ0123456789acbdefABCDEFZZ'}, {OUT=>'Z'}],
 
-  # Try some data with 8th bit set in case something is mistakenly sign-extended.
+  # Try some data with 8th bit set in case something is mistakenly
+  # sign-extended.
   ['w', qw(-ds '\350' '\345'),
    {IN=>"\300\301\377\345\345\350\345"},
    {OUT=>"\300\301\377\345"}],
-  ['x', qw(-s abcdefghijklmn '[:*016]'), {IN=>'abcdefghijklmnop'}, {OUT=>':op'}],
+  ['x', qw(-s abcdefghijklmn '[:*016]'),
+   {IN=>'abcdefghijklmnop'}, {OUT=>':op'}],
   ['y', qw(-d a-z), {IN=>'abc $code'}, {OUT=>' $'}],
   ['z', qw(-ds a-z '$.'), {IN=>'a.b.c $$$$code\\'}, {OUT=>'. $\\'}],
 

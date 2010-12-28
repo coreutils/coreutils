@@ -40,7 +40,8 @@ esac
 min_kb=3000000
 test $min_kb -lt $free_kb ||
 {
-  skip_test_ "too little free space on current partition: $free_kb (need $min_kb KB)"
+  skip_test_ \
+    "too little free space on current partition: $free_kb (need $min_kb KB)"
 }
 
 big=big

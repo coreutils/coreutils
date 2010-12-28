@@ -89,7 +89,7 @@ static enum Format output_format = UNKNOWN_FORMAT;
                                 /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static const char *break_file = NULL;	/* name of the `Break characters' file */
+static const char *break_file = NULL;	/* name of the `Break chars' file */
 static const char *only_file = NULL;	/* name of the `Only words' file */
 static const char *ignore_file = NULL;	/* name of the `Ignore words' file */
 
@@ -254,7 +254,7 @@ static char edited_flag[CHAR_SET_SIZE];
 static int half_line_width;	/* half of line width, reference excluded */
 static int before_max_width;	/* maximum width of before field */
 static int keyafter_max_width;	/* maximum width of keyword-and-after field */
-static int truncation_string_length;/* length of string used to flag truncation */
+static int truncation_string_length;/* length of string that flags truncation */
 
 /* When context is limited by lines, wraparound may happen on final output:
    the `head' pointer gives access to some supplementary left context which
@@ -1019,8 +1019,9 @@ find_occurs_in_text (void)
                   < occurs_alloc[0])
                 xalloc_die ();
               occurs_alloc[0] = occurs_alloc[0] * 2 + 1;
-              occurs_table[0] = xrealloc (occurs_table[0],
-                                          occurs_alloc[0] * sizeof *occurs_table[0]);
+              occurs_table[0] =
+                xrealloc (occurs_table[0],
+                          occurs_alloc[0] * sizeof *occurs_table[0]);
             }
 
           occurs_cursor = occurs_table[0] + number_of_occurs[0];

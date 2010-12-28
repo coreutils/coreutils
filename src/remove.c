@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Extracted from rm.c and librarified, then rewritten twice by Jim Meyering.  */
+/* Extracted from rm.c, librarified, then rewritten twice by Jim Meyering.  */
 
 #include <config.h>
 #include <stdio.h>

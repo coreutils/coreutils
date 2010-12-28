@@ -400,7 +400,8 @@ Ordering options:\n\
 "), stdout);
       fputs (_("\
   -b, --ignore-leading-blanks  ignore leading blanks\n\
-  -d, --dictionary-order      consider only blanks and alphanumeric characters\n\
+  -d, --dictionary-order      consider only blanks and alphanumeric characters\
+\n\
   -f, --ignore-case           fold lower case to upper case characters\n\
 "), stdout);
       fputs (_("\
@@ -419,7 +420,8 @@ Ordering options:\n\
 "), stdout);
       fputs (_("\
       --sort=WORD             sort according to WORD:\n\
-                                general-numeric -g, human-numeric -h, month -M,\n\
+                                general-numeric -g, human-numeric -h, month -M,\
+\n\
                                 numeric -n, random -R, version -V\n\
   -V, --version-sort          natural sort of (version) numbers within text\n\
 \n\
@@ -434,7 +436,8 @@ Other options:\n\
 "), stdout);
       fputs (_("\
   -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
-  -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
+  -C, --check=quiet, --check=silent  like -c, but do not report first bad line\
+\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
                               decompress them with PROG -d\n\
 "), stdout);
@@ -452,7 +455,8 @@ Other options:\n\
 "), stdout);
       fputs (_("\
   -o, --output=FILE         write result to FILE instead of standard output\n\
-  -s, --stable              stabilize sort by disabling last-resort comparison\n\
+  -s, --stable              stabilize sort by disabling last-resort comparison\
+\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
 "), stdout);
       printf (_("\
@@ -461,7 +465,8 @@ Other options:\n\
                               multiple options specify multiple directories\n\
       --parallel=N          change the number of sorts run concurrently to N\n\
   -u, --unique              with -c, check for strict ordering;\n\
-                              without -c, output only the first of an equal run\n\
+                              without -c, output only the first of an equal run\
+\n\
 "), DEFAULT_TMPDIR);
       fputs (_("\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
@@ -471,8 +476,10 @@ Other options:\n\
       fputs (_("\
 \n\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
-in the field; both are origin 1.  If neither -t nor -b is in effect, characters\n\
-in a field are counted from the beginning of the preceding whitespace.  OPTS is\n\
+in the field; both are origin 1.  If neither -t nor -b is in effect, characters\
+\n\
+in a field are counted from the beginning of the preceding whitespace.  OPTS is\
+\n\
 one or more single-letter ordering options, which override global ordering\n\
 options for that key.  If no key is given, use the entire line as the key.\n\
 \n\
@@ -4481,8 +4488,8 @@ main (int argc, char **argv)
               else if (files[i][0] == '\0')
                 {
                   /* Using the standard `filename:line-number:' prefix here is
-                     not totally appropriate, since NUL is the separator, not NL,
-                     but it might be better than nothing.  */
+                     not totally appropriate, since NUL is the separator,
+                     not NL, but it might be better than nothing.  */
                   unsigned long int file_number = i + 1;
                   error (SORT_FAILURE, 0,
                          _("%s:%lu: invalid zero-length file name"),

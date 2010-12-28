@@ -256,8 +256,10 @@ my @tv = (
 ['10md', '-J -m -l 24 -f', [\'tFFt-lm', \'loli'], [\'Jml24f-lm-lo'], 0],
 ['10me', '-W 35 -J -m -l 24 -f', [\'tFFt-lm', \'loli'], [\'W35Jml24f-lmlo'], 0],
 ['10mf', '-w 35 -J -m -l 24 -f', [\'tFFt-lm', \'loli'], [\'W35Jml24f-lmlo'], 0],
-['10mg', '-n.3 -J -m -l 24 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'nJml24f-lmlmlo'], 0],
-['10mh', '-n.3 -J -m -l 24 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'nJml24f-lmlolm'], 0],
+['10mg', '-n.3 -J -m -l 24 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'],
+ [\'nJml24f-lmlmlo'], 0],
+['10mh', '-n.3 -J -m -l 24 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'],
+ [\'nJml24f-lmlolm'], 0],
 ['10aa', '-a -3 -l 24 -f', [\'tFFt-lm'], [\'a3l24f-lm'], 0],
 ['10ab', '-W 35 -a -3 -l 24 -f', [\'tFFt-lm'], [\'W35a3l24f-lm'], 0],
 ['10ac', '-J -a -3 -l 24 -f', [\'tFFt-lm'], [\'Ja3l24f-lm'], 0],
@@ -268,12 +270,18 @@ my @tv = (
 ['10bd', '-W 35 -J -b -3 -l 24 -f', [\'tFFt-lm'], [\'W35Jb3l24f-lm'], 0],
 #
 # merge files (-m option)  use separator string (-S option)
-['11sa', '-n.3 -S:--: -m -l 20 -f', [\'tFFt-bl', \'FnFn'], [\'nSml20-bl-FF'], 0],
-['11sb', '-n.3 -S:--: -m -l 24 -f', [\'tFFt-bl', \'FnFn'], [\'nSml24-bl-FF'], 0],
-['11se', '-n.3 -S:--: -m -l 20 -f', [\'tn', \'tn', \'FnFn'], [\'nSml20-t-t-FF'], 0],
-['11sf', '-n.3 -S:--: -m -l 24 -f', [\'tn', \'tn', \'FnFn'], [\'nSml24-t-t-FF'], 0],
-['11sg', '-n.3 -S:--: -m -l 20 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nSml20-t-tFFFF'], 0],
-['11sh', '-n.3 -S:--: -m -l 24 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nSml24-t-tFFFF'], 0],
+['11sa', '-n.3 -S:--: -m -l 20 -f', [\'tFFt-bl', \'FnFn'],
+ [\'nSml20-bl-FF'], 0],
+['11sb', '-n.3 -S:--: -m -l 24 -f', [\'tFFt-bl', \'FnFn'],
+ [\'nSml24-bl-FF'], 0],
+['11se', '-n.3 -S:--: -m -l 20 -f', [\'tn', \'tn', \'FnFn'],
+ [\'nSml20-t-t-FF'], 0],
+['11sf', '-n.3 -S:--: -m -l 24 -f', [\'tn', \'tn', \'FnFn'],
+ [\'nSml24-t-t-FF'], 0],
+['11sg', '-n.3 -S:--: -m -l 20 -f', [\'tn', \'tn', \'FnFn', \'FnFn'],
+ [\'nSml20-t-tFFFF'], 0],
+['11sh', '-n.3 -S:--: -m -l 24 -f', [\'tn', \'tn', \'FnFn', \'FnFn'],
+ [\'nSml24-t-tFFFF'], 0],
 #
 # left margin (-o option) and separator string (-S option)
 ['12aa', '-o3 -a -3 -l24 -f', [\'tn'], [\'o3a3l24f-tn'], 0],
@@ -284,7 +292,8 @@ my @tv = (
 ['12bc', '-o3 -b -3 -S:--: -n. -l24 -f', [\'tn'], [\'o3b3Snl24f-tn'], 0],
 ['12ma', '-o3 -m -l24 -f', [\'tFFt-bl', \'tn'], [\'o3ml24f-bl-tn'], 0],
 ['12mb', '-o3 -m -S:--: -l24 -f', [\'tFFt-bl', \'tn'], [\'o3mSl24f-bl-tn'], 0],
-['12mc', '-o3 -m -S:--: -n. -l24 -f', [\'tFFt-bl', \'tn'], [\'o3mSnl24fbltn'], 0],
+['12mc', '-o3 -m -S:--: -n. -l24 -f', [\'tFFt-bl', \'tn'],
+ [\'o3mSnl24fbltn'], 0],
 ['12md', '-o3 -J -m -l24 -f', [\'tFFt-lm', \'loli'], [\'o3Jml24f-lm-lo'], 0],
 #
 #
@@ -342,18 +351,23 @@ my @tv = (
 # SunOS.5.5.1-BUG: 8 input spaces --> 11 output spaces between a and b;
 ['i-opt-a', '-tn -i5 -h ""', "a        b\n", "    1	a	    b\n", 0],
 # SunOS.5.5.1-BUG: 8 input spaces -->  9 output spaces between a and b;
-['i-opt-b', '-tn -i5 -o9 -h ""', "a        b\n", "		   1	a	    b\n", 0],
+['i-opt-b', '-tn -i5 -o9 -h ""', "a        b\n",
+ "		   1	a	    b\n", 0],
 #
 # line number overflow not allowed: cut off leading digits;
 # don't adapt other UNIXes, no real standard to follow, a consequent
 # programming of column handling may change the GNU pr concept.
-['ncut-a', '-tn2 -N98', "y\ny\ny\ny\ny\n", "98	y\n99	y\n00	y\n01	y\n02	y\n", 0],
-['ncut-b', '-tn:2 -N98', "y\ny\ny\ny\ny\n", "98:y\n99:y\n00:y\n01:y\n02:y\n", 0],
+['ncut-a', '-tn2 -N98', "y\ny\ny\ny\ny\n",
+ "98	y\n99	y\n00	y\n01	y\n02	y\n", 0],
+['ncut-b', '-tn:2 -N98', "y\ny\ny\ny\ny\n",
+ "98:y\n99:y\n00:y\n01:y\n02:y\n", 0],
 
 ['margin-0', '-o 0', '', '', 0],
 
 # BUG fixed: that leading space on 3rd line of output should not be there
-['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n-- Date/Time --                                                   Page 1\n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
+['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n",
+ "\n\n-- Date/Time --                                                   "
+ . "Page 1\n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
 # This test failed with 1.22e and earlier.
 ['dbl-sp-b', '-d -t', "1\n2\n", "1\n\n2\n\n", 0],
 

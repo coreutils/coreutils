@@ -2048,7 +2048,8 @@ decode_switches (int argc, char **argv)
               }
           }
       /* Note we leave %5b etc. alone so user widths/flags are honored.  */
-      if (strstr (long_time_format[0],"%b") || strstr (long_time_format[1],"%b"))
+      if (strstr (long_time_format[0], "%b")
+          || strstr (long_time_format[1], "%b"))
         if (!abmon_init ())
           error (0, 0, _("error initializing month strings"));
     }
@@ -4628,15 +4629,18 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
                              that points to a directory\n\
-      --hide=PATTERN         do not list implied entries matching shell PATTERN\n\
+      --hide=PATTERN         do not list implied entries matching shell PATTERN\
+\n\
                                (overridden by -a or -A)\n\
 "), stdout);
       fputs (_("\
-      --indicator-style=WORD  append indicator with style WORD to entry names:\n\
+      --indicator-style=WORD  append indicator with style WORD to entry names:\
+\n\
                                none (default), slash (-p),\n\
                                file-type (--file-type), classify (-F)\n\
   -i, --inode                print the index number of each file\n\
-  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
+  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
+\n\
   -k                         like --block-size=1K\n\
 "), stdout);
       fputs (_("\
@@ -4644,7 +4648,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -L, --dereference          when showing file information for a symbolic\n\
                                link, show information for the file the link\n\
                                references rather than for the link itself\n\
-  -m                         fill width with a comma separated list of entries\n\
+  -m                         fill width with a comma separated list of entries\
+\n\
 "), stdout);
       fputs (_("\
   -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
@@ -4660,7 +4665,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              unless program is `ls' and output is a terminal)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
-                               literal, locale, shell, shell-always, c, escape\n\
+                               literal, locale, shell, shell-always, c, escape\
+\n\
 "), stdout);
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\
@@ -4671,7 +4677,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -S                         sort by file size\n\
       --sort=WORD            sort by WORD instead of name: none -U,\n\
                              extension -X, size -S, time -t, version -v\n\
-      --time=WORD            with -l, show time as WORD instead of modification\n\
+      --time=WORD            with -l, show time as WORD instead of modification\
+\n\
                              time: atime -u, access -u, use -u, ctime -c,\n\
                              or status -c; use specified time as sort key\n\
                              if --sort=time\n\

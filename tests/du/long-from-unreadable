@@ -47,7 +47,9 @@ dir=`printf '%200s\n' ' '|tr ' ' x`
 # cd $tmp || framework_failure
 
 # Sheesh.  Bash 3.1.5 can't create this hierarchy.  I get
-# cd: error retrieving current directory: getcwd: cannot access parent directories:
+#   cd: error retrieving current directory: getcwd:
+#     cannot access parent directories:
+# (all on one line).
 
 cwd=`pwd`
 # Use perl instead:

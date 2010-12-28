@@ -374,7 +374,8 @@ RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
 BYTES is hexadecimal with 0x or 0X prefix, and may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
-Adding a z suffix to any type displays printable characters at the end of each\n\
+Adding a z suffix to any type displays printable characters at the end of each\
+\n\
 output line.\n\
 "), stdout);
       fputs (_("\
@@ -1046,7 +1047,8 @@ skip (uintmax_t n_skip)
 }
 
 static void
-format_address_none (uintmax_t address ATTRIBUTE_UNUSED, char c ATTRIBUTE_UNUSED)
+format_address_none (uintmax_t address ATTRIBUTE_UNUSED,
+                     char c ATTRIBUTE_UNUSED)
 {
 }
 

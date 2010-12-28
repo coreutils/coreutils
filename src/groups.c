@@ -53,7 +53,8 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [USERNAME]...\n"), program_name);
       fputs (_("\
-Print group memberships for each USERNAME or, if no USERNAME is specified, for\n\
+Print group memberships for each USERNAME or, if no USERNAME is specified, for\
+\n\
 the current process (which may differ if the groups database has changed).\n"),
              stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

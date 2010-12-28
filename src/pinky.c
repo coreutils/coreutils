@@ -220,7 +220,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
   else
     {
       strcpy (line, DEV_DIR_WITH_TRAILING_SLASH);
-      strncpy (line + DEV_DIR_LEN, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
+      strncpy (line + DEV_DIR_LEN, utmp_ent->ut_line, sizeof utmp_ent->ut_line);
       line[DEV_DIR_LEN + sizeof (utmp_ent->ut_line)] = '\0';
     }
 

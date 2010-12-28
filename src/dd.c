@@ -1939,7 +1939,8 @@ main (int argc, char **argv)
                   || S_ISDIR (stdout_stat.st_mode)
                   || S_TYPEISSHM (&stdout_stat))
                 error (EXIT_FAILURE, ftruncate_errno,
-                   _("failed to truncate to %"PRIuMAX" bytes in output file %s"),
+                       _("failed to truncate to %"PRIuMAX" bytes"
+                         " in output file %s"),
                        size, quote (output_file));
             }
         }

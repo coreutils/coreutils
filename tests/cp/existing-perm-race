@@ -71,8 +71,8 @@ case $mode in
   # a $g2 process can maintain an open file descriptor to the
   # destination, but it's safer anyway.
   -rw-r-----*)
-    # If the file has group $g1 and is group-readable, that is definitely
-    # bogus, as neither the source nor the destination was readable to group $g1.
+    # If the file has group $g1 and is group-readable, that is definitely bogus,
+    # as neither the source nor the destination was readable to group $g1.
     test "$group" = "$g1" && fail=1;;
 
   *) fail=1;;

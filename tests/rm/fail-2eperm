@@ -31,7 +31,10 @@ touch a/b || framework_failure
 
 # Try to ensure that $NON_ROOT_USERNAME can access
 # the required version of rm.
-rm_version=`setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm --version|sed -n '1s/.* //p'`
+rm_version=`
+  setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm --version |
+  sed -n '1s/.* //p'
+`
 case $rm_version in
   $PACKAGE_VERSION) ;;
   *) skip_test_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;

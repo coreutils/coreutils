@@ -80,7 +80,7 @@ my @Tests =
    ['2a', '--files0-from=-', '<',
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>'a'}}, {OUT=>"a\na\n"} ],
 
-   # Ensure that $prog performs no processing when there is a zero-length filename
+   # Ensure that $prog does nothing when there is a zero-length filename.
    # Note that the behavior here differs from `wc' in that the
    # first zero-length file name is treated as fatal, so there
    # should be no output on STDOUT.

@@ -323,7 +323,8 @@ cat (
                     use_fionread = false;
                   else
                     {
-                      error (0, errno, _("cannot do ioctl on %s"), quote (infile));
+                      error (0, errno, _("cannot do ioctl on %s"),
+                             quote (infile));
                       newlines2 = newlines;
                       return false;
                     }

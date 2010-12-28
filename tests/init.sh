@@ -111,7 +111,7 @@ fi
 
 # Eval this code in a subshell to determine a shell's suitability.
 # 10 - passes all tests; ok to use
-#  9 - ok, but enabling "set -x" corrupts application stderr; prefer higher score
+#  9 - ok, but enabling "set -x" corrupts app stderr; prefer higher score
 #  ? - not ok
 gl_shell_test_script_='
 test $(echo y) = y || exit 1
@@ -414,7 +414,8 @@ mktempd_()
 
   case $template_ in
   *XXXX) ;;
-  *) fail_ "invalid template: $template_ (must have a suffix of at least 4 X's)";;
+  *) fail_ \
+       "invalid template: $template_ (must have a suffix of at least 4 X's)";;
   esac
 
   # First, try to use mktemp.

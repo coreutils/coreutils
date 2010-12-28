@@ -52,7 +52,9 @@ AC_DEFUN([GNULIB_BOOT_TIME],
 #endif
 ],
 [[
-#if defined BOOT_TIME || (defined CTL_KERN && defined KERN_BOOTTIME) || HAVE_OS_H
+#if (defined BOOT_TIME                              \
+     || (defined CTL_KERN && defined KERN_BOOTTIME) \
+     || HAVE_OS_H)
 /* your system *does* have the infrastructure to determine boot time */
 #else
 please_tell_us_how_to_determine_boot_time_on_your_system

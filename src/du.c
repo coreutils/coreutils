@@ -267,7 +267,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             write counts for all files, not just directories\n\
-      --apparent-size   print apparent sizes, rather than disk usage; although\n\
+      --apparent-size   print apparent sizes, rather than disk usage; although\
+\n\
                           the apparent size is usually smaller, it may be\n\
                           larger due to holes in (`sparse') files, internal\n\
                           fragmentation, indirect blocks, and the like\n\
@@ -286,7 +287,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           names specified in file F;\n\
                           If F is - then read names from standard input\n\
   -H                    equivalent to --dereference-args (-D)\n\
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
+  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
+\n\
       --si              like -h, but use powers of 1000 not 1024\n\
 "), stdout);
       fputs (_("\

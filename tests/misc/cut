@@ -87,7 +87,8 @@ my @Tests =
     . "\tonly when operating on fields\n$try"}],
   # You must specify bytes or fields (or chars)
   ['z', '', {IN=>":\n"}, {OUT=>""}, {EXIT=>1},
-   {ERR=>"$prog: you must specify a list of bytes, characters, or fields\n$try"}],
+   {ERR=>"$prog: you must specify a list of bytes, characters, or fields\n$try"}
+  ],
   # Empty field list
   ['empty-fl', qw(-f ''), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$from_1}],
   # Missing field list
@@ -124,7 +125,7 @@ my @Tests =
   ['out-delim3a', '-c1-3,2-4,6-', '--output-d=:', {IN=>"abcdefg\n"},
    {OUT=>"abcd:fg\n"}],
   # Ensure that the following two commands produce the same output.
-  # Before an off-by-one fix, the output from the former would not contain a `:'.
+  # Before an off-by-1 fix, the output from the former would not contain a `:'.
   ['out-delim4', '-c4-,2-3', '--output-d=:',
    {IN=>"abcdefg\n"}, {OUT=>"bc:defg\n"}],
   ['out-delim5', '-c2-3,4-', '--output-d=:',
@@ -137,14 +138,16 @@ my @Tests =
   ['od-overlap2', '-b1-2,2-', '--output-d=:', {IN=>"abc\n"}, {OUT=>"abc\n"}],
   ['od-overlap3', '-b1-3,2-', '--output-d=:', {IN=>"abcd\n"}, {OUT=>"abcd\n"}],
   ['od-overlap4', '-b1-3,2-3', '--output-d=:', {IN=>"abcd\n"}, {OUT=>"abc\n"}],
-  ['od-overlap5', '-b1-3,1-4', '--output-d=:', {IN=>"abcde\n"}, {OUT=>"abcd\n"}],
+  ['od-overlap5', '-b1-3,1-4', '--output-d=:',
+   {IN=>"abcde\n"}, {OUT=>"abcd\n"}],
 
   # None of the following invalid ranges provoked an error up to coreutils-6.9.
   ['inval1', qw(-f 2-0), {IN=>''}, {OUT=>''}, {EXIT=>1},
    {ERR=>"$prog: invalid decreasing range\n$try"}],
   ['inval2', qw(-f -), {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
   ['inval3', '-f', '4,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
-  ['inval4', '-f', '1-2,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
+  ['inval4', '-f', '1-2,-', {IN=>''}, {OUT=>''}, {EXIT=>1},
+   {ERR=>$no_endpoint}],
   ['inval5', '-f', '1-,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
   ['inval6', '-f', '-1,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
  );

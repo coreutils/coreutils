@@ -216,7 +216,8 @@ my @tv = (
 # '--header' always outputs headers from the first file
 # even if the headers from the second file don't match
 ['header-5', '--header',
- [ "ID1 Name\n1 A\n2 B\n", "ID2 Color\n1 red\n"], "ID1 Name Color\n1 A red\n", 0],
+ [ "ID1 Name\n1 A\n2 B\n", "ID2 Color\n1 red\n"],
+   "ID1 Name Color\n1 A red\n", 0],
 
 );
 

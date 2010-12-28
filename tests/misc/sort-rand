@@ -40,11 +40,13 @@ if (locale --version) > /dev/null 2>&1; then
   LC_ALL=$locale sort --random-sort in > out2 || fail=1
 
   # Fail if the output "randomly" is the same twice in a row.
-  compare out1 out2 > /dev/null && { fail=1; echo "not random with LC_ALL=$locale" 1>&2; }
+  compare out1 out2 > /dev/null &&
+    { fail=1; echo "not random with LC_ALL=$locale" 1>&2; }
 
   # Fail if the sorted output is not the same as the input.
   sort -n out > out1
-  compare in out1 || { fail=1; echo "not a permutation with LC_ALL=$locale" 1>&2; }
+  compare in out1 ||
+    { fail=1; echo "not a permutation with LC_ALL=$locale" 1>&2; }
 fi
 
 Exit $fail

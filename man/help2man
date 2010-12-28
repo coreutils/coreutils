@@ -316,7 +316,10 @@ unless ($manual)
 # Extract usage clause(s) [if any] for SYNOPSIS.
 my $PAT_USAGE = _('Usage');
 my $PAT_USAGE_CONT = _('or');
-if ($help_text =~ s/^($PAT_USAGE):( +(\S+))(.*)((?:\n(?: {6}\1| *($PAT_USAGE_CONT): +\S).*)*)//om)
+if ($help_text =~ s/^($PAT_USAGE):
+                     ([ ]+(\S+))
+                     (.*)
+                     ((?:\n(?:[ ]{6}\1|[ ]*($PAT_USAGE_CONT):[ ]+\S).*)*)//omx)
 {
     my @syn = $3 . $4;
 

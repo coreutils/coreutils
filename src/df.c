@@ -715,14 +715,16 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                            `-BM' prints sizes in units of 1,048,576 bytes.\n\
                            See SIZE format below.\n\
       --total           produce a grand total\n\
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
+  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
+\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
 "), stdout);
       fputs (_("\
   -i, --inodes          list inode information instead of block usage\n\
   -k                    like --block-size=1K\n\
   -l, --local           limit listing to local file systems\n\
-      --no-sync         do not invoke sync before getting usage info (default)\n\
+      --no-sync         do not invoke sync before getting usage info (default)\
+\n\
 "), stdout);
       fputs (_("\
   -P, --portability     use the POSIX output format\n\

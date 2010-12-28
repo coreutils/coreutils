@@ -149,6 +149,23 @@ ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
 	@$(MAKE) -s -C src $@
 
+# Look for lines longer than 80 characters, except omit:
+# - program-generated long lines in diff headers,
+# - tests involving long checksum lines, and
+# - the 'pr' test cases.
+LINE_LEN_MAX = 80
+FILTER_LONG_LINES =						\
+  /^[^:]*\.diff:[^:]*:@@ / d;					\
+  \|^[^:]*tests/misc/sha[0-9]*sum[-:]| d;			\
+  \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
+sc_long_lines:
+	@files=$$($(VC_LIST_EXCEPT))					\
+	halt='line(s) with more than $(LINE_LEN_MAX) characters; reindent'; \
+	for file in $$files; do						\
+	  expand $$file | grep -nE '^.{$(LINE_LEN_MAX)}.' |		\
+	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
+	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
+
 # Option descriptions should not start with a capital letter
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
@@ -222,7 +239,8 @@ sc_prohibit_emacs__indent_tabs_mode__setting:
 	  $(_sc_search_regexp)
 
 # Ensure that each file that contains fail=1 also contains fail=0.
-# Otherwise, setting file=1 in the environment would make tests fail unexpectedly.
+# Otherwise, setting file=1 in the environment would make tests fail
+# unexpectedly.
 sc_prohibit_fail_0:
 	@prohibit='\<fail=0\>'						\
 	halt='fail=0 initialization'					\

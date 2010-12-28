@@ -22,7 +22,8 @@ print_ver_ ls
 # We use --local here so as to not activate
 # potentially very many remote mounts.
 mount_points=$(df --local -P 2>&1 | sed -n 's,.*[0-9]% \(/.\),\1,p')
-test -z "$mount_points" && skip_test_ "this test requires a non-root mount point"
+test -z "$mount_points" &&
+   skip_test_ "this test requires a non-root mount point"
 
 # Given e.g., /dev/shm, produce the list of GNU ls options that
 # let us list just that entry using readdir data from its parent:

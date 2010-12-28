@@ -33,7 +33,8 @@ constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	$(AM_V_GEN)LC_ALL=C; export LC_ALL; \
 	{ sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
 	    $(top_srcdir)/src/tail.c && \
-	  sed -n -e 's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
+	  sed -n -e \
+	      's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
 	    $(top_srcdir)/src/shred.c; } > t-$@ \
 	  && mv t-$@ $@
 
@@ -60,6 +61,7 @@ syntax_checks =		\
 .PHONY: $(syntax_checks) check-texinfo
 
 # List words/regexps here that should not appear in the texinfo documentation.
+BAD_POSIX_PERL = /\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/
 check-texinfo: $(syntax_checks)
 	$(AM_V_GEN)fail=0;						\
 	grep '@url{' $(srcdir)/*.texi && fail=1;			\
@@ -69,7 +71,7 @@ check-texinfo: $(syntax_checks)
 	    | $(EGREP) -v 'setfilename|[{]filename[}]'			\
 	  && fail=1;							\
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne			\
-	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
+	  '$(BAD_POSIX_PERL) and print,exit 1'				\
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; };			\
 	exit $$fail
 
@@ -108,7 +110,8 @@ sc-avoid-non-zero:
 
 # Use `zeros', not `zeroes' (nothing wrong with `zeroes'. just be consistent).
 sc-avoid-zeroes:
-	$(AM_V_GEN)$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && exit 1 || :
+	$(AM_V_GEN)$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi \
+	  && exit 1 || :
 
 # ME = $(subdir)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 ME = doc/Makefile

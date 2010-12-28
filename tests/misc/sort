@@ -55,8 +55,11 @@ my @Tests =
 ["n11b", '-s -n -k1,1', {IN=>".010\n.01a\n"}, {OUT=>".010\n.01a\n"}],
 
 # human readable suffixes
-["h1", '-h', {IN=>"1Y\n1Z\n1E\n1P\n1T\n1G\n1M\n1K\n02\n1\nY\n-1k\n-1M\n-1G\n-1T\n-1P\n-1E\n-1Z\n-1Y\n"},
- {OUT=>"-1Y\n-1Z\n-1E\n-1P\n-1T\n-1G\n-1M\n-1k\nY\n1\n02\n1K\n1M\n1G\n1T\n1P\n1E\n1Z\n1Y\n"}],
+["h1", '-h',
+ {IN=>"1Y\n1Z\n1E\n1P\n1T\n1G\n1M\n1K\n02\n1\nY\n-1k\n-1M\n-1G\n-1T\n"
+      . "-1P\n-1E\n-1Z\n-1Y\n"},
+ {OUT=>"-1Y\n-1Z\n-1E\n-1P\n-1T\n-1G\n-1M\n-1k\nY\n1\n02\n1K\n1M\n1G\n1T\n"
+      . "1P\n1E\n1Z\n1Y\n"}],
 ["h2", '-h', {IN=>"1M\n-2G\n-3K"}, {OUT=>"-2G\n-3K\n1M\n"}],
 # check that it works with powers of 1024
 ["h3", '-k 2,2h -k 1,1', {IN=>"a 1G\nb 1023M\n"}, {OUT=>"b 1023M\na 1G\n"}],
@@ -275,8 +278,14 @@ my @Tests =
 # of memcmp in the Next C library.  With optimization, gcc uses its
 # (working) builtin version.  Test case form William Lewis.
 ["20a", '',
- {IN=>"_________U__free\n_________U__malloc\n_________U__abort\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n_________U__malloc\n_________U___iob\n_________U__abort\n_________U__fprintf\n"},
- {OUT=>"_________U___iob\n_________U__abort\n_________U__abort\n_________U__fprintf\n_________U__free\n_________U__malloc\n_________U__malloc\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n"}],
+ {IN=>"_________U__free\n_________U__malloc\n_________U__abort\n"
+      . "_________U__memcpy\n_________U__memset\n"
+      . "_________U_dyld_stub_binding_helper\n_________U__malloc\n"
+      . "_________U___iob\n_________U__abort\n_________U__fprintf\n"},
+ {OUT=>"_________U___iob\n_________U__abort\n_________U__abort\n"
+       . "_________U__fprintf\n_________U__free\n_________U__malloc\n"
+       . "_________U__malloc\n_________U__memcpy\n_________U__memset\n"
+       . "_________U_dyld_stub_binding_helper\n"}],
 
 # Demonstrate that folding changes the ordering of e.g. A, a, and _
 # because while they normally (in the C locale) collate like A, _, a,

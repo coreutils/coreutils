@@ -4,7 +4,8 @@
 '\" of the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
 '\" There is NO WARRANTY, to the extent permitted by law.
 [NAME]
-stdbuf \- Run COMMAND, with modified buffering operations for its standard streams.
+stdbuf \-
+Run COMMAND, with modified buffering operations for its standard streams.
 [DESCRIPTION]
 .\" Add any additional description here
 [EXAMPLES]

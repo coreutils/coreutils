@@ -60,9 +60,24 @@ t1() {
       "$nameless_uid" "$@"
 }
 
-nameless_uid=`$PERL -le 'foreach my $i (1000..16*1024-1) { getpwuid $i or (print $i), exit }'`
-nameless_gid1=`$PERL -le 'foreach my $i (1000..16*1024) { getgrgid $i or (print $i), exit }'`
-nameless_gid2=`$PERL -le 'foreach my $i ('"$nameless_gid1"'+1..16*1024) { getgrgid $i or (print $i), exit }'`
+nameless_uid=`$PERL -le '
+  foreach my $i (1000..16*1024-1)
+    {
+      getpwuid $i or (print $i), exit
+    }
+'`
+nameless_gid1=`$PERL -le '
+  foreach my $i (1000..16*1024)
+    {
+      getgrgid $i or (print $i), exit
+    }
+'`
+nameless_gid2=`$PERL -le '
+  foreach my $i ('"$nameless_gid1"'+1..16*1024)
+    {
+      getgrgid $i or (print $i), exit
+    }
+'`
 
 if test -z "$nameless_uid" \
     || test -z "$nameless_gid1" \
