@@ -78,6 +78,13 @@ static bool elide_empty_files;
    input to output, which is much slower, so disabled by default.  */
 static bool unbuffered;
 
+/* The split mode to use.  */
+enum Split_type
+{
+  type_undef, type_bytes, type_byteslines, type_lines, type_digits,
+  type_chunk_bytes, type_chunk_lines, type_rr
+};
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -105,16 +112,22 @@ static struct option const longopts[] =
 };
 
 static void
-set_suffix_length (uintmax_t n_units)
+set_suffix_length (uintmax_t n_units, enum Split_type split_type)
 {
 #define DEFAULT_SUFFIX_LENGTH 2
 
   size_t suffix_needed = 0;
-  size_t alphabet_len = strlen (suffix_alphabet);
-  bool alphabet_slop = (n_units % alphabet_len) != 0;
-  while (n_units /= alphabet_len)
-    suffix_needed++;
-  suffix_needed += alphabet_slop;
+
+  /* Auto-calculate the suffix length if the number of files is given.  */
+  if (split_type == type_chunk_bytes || split_type == type_chunk_lines
+      || split_type == type_rr)
+    {
+      size_t alphabet_len = strlen (suffix_alphabet);
+      bool alphabet_slop = (n_units % alphabet_len) != 0;
+      while (n_units /= alphabet_len)
+        suffix_needed++;
+      suffix_needed += alphabet_slop;
+    }
 
   if (suffix_length)            /* set by user */
     {
@@ -780,11 +793,7 @@ int
 main (int argc, char **argv)
 {
   struct stat stat_buf;
-  enum
-    {
-      type_undef, type_bytes, type_byteslines, type_lines, type_digits,
-      type_chunk_bytes, type_chunk_lines, type_rr
-    } split_type = type_undef;
+  enum Split_type split_type = type_undef;
   size_t in_blk_size = 0;	/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
   size_t page_size = getpagesize ();
@@ -984,7 +993,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  set_suffix_length (n_units);
+  set_suffix_length (n_units, split_type);
 
   /* Get out the filename arguments.  */
 

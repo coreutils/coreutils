@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  split no longer creates files with a suffix length that
+  is dependent on the number of bytes or lines per file.
+  [bug introduced in coreutils-8.8]
+
 
 * Noteworthy changes in release 8.8 (2010-12-22) [stable]
 
