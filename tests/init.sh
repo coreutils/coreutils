@@ -245,6 +245,9 @@ find_exe_basenames_()
     # below, just skip it.
     test "x$feb_file_" = "x$feb_dir_/*.exe" && test ! -f "$feb_file_" \
       && continue
+    # Exempt [.exe, since we can't create a function by that name, yet
+    # we can't invoke [ by PATH search anyways due to shell builtins.
+    test "x$feb_file_" = "x$feb_dir_/[.exe" && continue
     case $feb_file_ in
       *[!-a-zA-Z/0-9_.+]*) feb_fail_=1; break;;
       *) # Remove leading file name components as well as the .exe suffix.
@@ -272,7 +275,7 @@ create_exe_shims_()
   esac
 
   base_names_=`find_exe_basenames_ $1` \
-    || { echo "$0 (exe_shim): skipping directory: $1" 1>&2; return 1; }
+    || { echo "$0 (exe_shim): skipping directory: $1" 1>&2; return 0; }
 
   if test -n "$base_names_"; then
     for base_ in $base_names_; do

@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2010-10-08.16; # UTC
+scriptversion=2010-11-20.03; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -54,6 +54,12 @@ Options:
                           have gnulib sources on your machine, and
                           do not want to waste your bandwidth downloading
                           them again.  Defaults to \$GNULIB_SRCDIR.
+ --bootstrap-sync         If this bootstrap script is not identical to
+                          the version in the local gnulib sources,
+                          update this script, and then restart it with
+                          /bin/sh or the shell \$CONFIG_SHELL if
+                          defined.
+ --no-bootstrap-sync      Do not check whether bootstrap is out of sync.
  --copy                   Copy files instead of creating symbolic links.
  --force                  Attempt to bootstrap even if the sources seem
                           not to have been checked out.
@@ -168,6 +174,10 @@ copy=false
 # on which version control system (if any) is used in the source directory.
 vc_ignore=auto
 
+# Set this to true in bootstrap.conf to enable --bootstrap-sync by
+# default.
+bootstrap_sync=false
+
 # find_tool ENVVAR NAMES...
 # -------------------------
 # Search for a required program.  Use the value of ENVVAR, if set,
@@ -239,6 +249,10 @@ do
     checkout_only_file=;;
   --copy)
     copy=true;;
+  --bootstrap-sync)
+    bootstrap_sync=true;;
+  --no-bootstrap-sync)
+    bootstrap_sync=false;;
   *)
     echo >&2 "$0: $option: unknown option"
     exit 1;;
@@ -344,17 +358,18 @@ get_version() {
   $app --version >/dev/null 2>&1 || return 1
 
   $app --version 2>&1 |
-  sed -n '# extract version within line
-          s/.*[v ]\{1,\}\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/
-          t done
+  sed -n '# Move version to start of line.
+          s/.*[v ]\([0-9]\)/\1/
 
-          # extract version at start of line
-          s/^\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/
-          t done
+          # Skip lines that do not start with version.
+          /^[0-9]/!d
 
-          d
+          # Remove characters after the version.
+          s/[^.a-z0-9-].*//
 
-          :done
+          # The first component must be digits only.
+          s/^\([0-9]*\)[a-z-].*/\1/
+
           #the following essentially does s/5.005/5.5/
           s/\.0*\([1-9]\)/.\1/g
           p
@@ -499,6 +514,16 @@ case ${GNULIB_SRCDIR--} in
   fi
   ;;
 esac
+
+if $bootstrap_sync; then
+  cmp -s "$0" "$GNULIB_SRCDIR/build-aux/bootstrap" || {
+    echo "$0: updating bootstrap and restarting..."
+    exec sh -c \
+      'cp "$1" "$2" && shift && exec "${CONFIG_SHELL-/bin/sh}" "$@"' \
+      -- "$GNULIB_SRCDIR/build-aux/bootstrap" \
+      "$0" "$@" --no-bootstrap-sync
+  }
+fi
 
 gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 <$gnulib_tool || exit
