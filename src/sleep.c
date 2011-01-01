@@ -1,5 +1,5 @@
 /* sleep - delay for a specified amount of time.
-   Copyright (C) 1984, 1991-1997, 1999-2005, 2007-2010 Free Software
+   Copyright (C) 1984, 1991-1997, 1999-2005, 2007-2011 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify

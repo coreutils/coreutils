@@ -1,4 +1,4 @@
-'\" Copyright (C) 1998-1999, 2001, 2006, 2009-2010 Free Software Foundation,
+'\" Copyright (C) 1998-1999, 2001, 2006, 2009-2011 Free Software Foundation,
 '\" Inc.
 '\"
 '\" This is free software.  You may redistribute copies of it under the terms

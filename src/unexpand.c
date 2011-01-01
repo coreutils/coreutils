@@ -1,5 +1,5 @@
 /* unexpand - convert blanks to tabs
-   Copyright (C) 1989, 1991, 1995-2006, 2008-2010 Free Software Foundation,
+   Copyright (C) 1989, 1991, 1995-2006, 2008-2011 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify

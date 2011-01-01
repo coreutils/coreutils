@@ -1,6 +1,6 @@
 /* uname -- print system information
 
-   Copyright (C) 1989, 1992-1993, 1996-1997, 1999-2005, 2007-2010 Free Software
+   Copyright (C) 1989, 1992-1993, 1996-1997, 1999-2005, 2007-2011 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify

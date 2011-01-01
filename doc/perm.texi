@@ -1,6 +1,6 @@
 @c File mode bits
 
-@c Copyright (C) 1994, 1996, 1999-2001, 2003-2006, 2008-2010 Free Software
+@c Copyright (C) 1994, 1996, 1999-2001, 2003-2006, 2008-2011 Free Software
 @c Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document

@@ -1,6 +1,6 @@
 /* Compare numeric strings.  This is an internal include file.
 
-   Copyright (C) 1988, 1991-1993, 1995-1996, 1998-2000, 2003-2006, 2009-2010
+   Copyright (C) 1988, 1991-1993, 1995-1996, 1998-2000, 2003-2006, 2009-2011
    Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
