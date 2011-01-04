@@ -29,13 +29,15 @@ FIXME: enable excluded programs like arch? to get their manual pages?
   Run the following on at least one SELinux-enabled (enforcing) and
   one non-SELinux system:
 
-    make distcheck
-    make -j1 check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
-    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
+    n=$(( ($(nproc) + 1) / 2 ))
+    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k -j$(nproc) check-root\
+      && make distcheck \
+      && make -j$n check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
 
-  Note the -j1 above.  If you use -jN, for larger N, some of the expensive
-  tests are likely to interfere with concurrent performance-measuring or
-  timing-sensitive tests, resulting in spurious failures.
+  Note that the use of -j$n tells make to use approximately half of the
+  available processing units.  If you use -jN, for larger N, some of the
+  expensive tests are likely to interfere with concurrent performance-measuring
+  or timing-sensitive tests, resulting in spurious failures.
 
   If "make distcheck" doesn't run "make syntax-check" for you, then run
   it manually:
