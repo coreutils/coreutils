@@ -127,6 +127,26 @@ my @tv = (
 # From David Dyck
 ['9a', '', [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
 
+# -o 'auto'
+['10a', '-a1 -a2 -e . -o auto',
+ ["a 1 2\nb 1\nd 1 2\n", "a 3 4\nb 3 4\nc 3 4\n"],
+ "a 1 2 3 4\nb 1 . 3 4\nc . . 3 4\nd 1 2 . .\n", 0],
+['10b', '-a1 -a2 -j3 -e . -o auto',
+ ["a 1 2\nb 1\nd 1 2\n", "a 3 4\nb 3 4\nc 3 4\n"],
+ "2 a 1 . .\n. b 1 . .\n2 d 1 . .\n4 . . a 3\n4 . . b 3\n4 . . c 3\n"],
+['10c', '-a1 -1 1 -2 4 -e. -o auto',
+ ["a 1 2\nb 1\nd 1 2\n", "a 3 4\nb 3 4\nc 3 4\n"],
+ "a 1 2 . . .\nb 1 . . . .\nd 1 2 . . .\n"],
+['10d', '-a2 -1 1 -2 4 -e. -o auto',
+ ["a 1 2\nb 1\nd 1 2\n", "a 3 4\nb 3 4\nc 3 4\n"],
+ ". . . a 3 4\n. . . b 3 4\n. . . c 3 4\n"],
+['10e', '-o auto',
+ ["a 1 2\nb 1 2 discard\n", "a 3 4\nb 3 4 discard\n"],
+ "a 1 2 3 4\nb 1 2 3 4\n"],
+['10f', '-t, -o auto',
+ ["a,1,,2\nb,1,2\n", "a,3,4\nb,3,4\n"],
+ "a,1,,2,3,4\nb,1,2,,3,4\n"],
+
 # From Tim Smithers: fixed in 1.22l
 ['trailing-sp', '-t: -1 1 -2 1', ["a:x \n", "a:y \n"], "a:x :y \n", 0],
 

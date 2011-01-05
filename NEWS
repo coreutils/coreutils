@@ -16,6 +16,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   uniq -f NUM no longer tries to process fields after end of line.
   [bug introduced in coreutils-7.0]
 
+** New features
+
+  join now supports -o 'auto' which will automatically infer the
+  output format from the first line in each file, to ensure
+  the same number of fields are output for each line.
+
 
 * Noteworthy changes in release 8.9 (2011-01-04) [stable]
 

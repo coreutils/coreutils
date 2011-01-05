@@ -112,6 +112,13 @@ static bool issued_disorder_warning[2];
 /* Empty output field filler.  */
 static char const *empty_filler;
 
+/* Whether to ensure the same number of fields are output from each line.  */
+static bool autoformat;
+/* The number of fields to output for each line.
+   Only significant when autoformat is true.  */
+static size_t autocount_1;
+static size_t autocount_2;
+
 /* Field to join on; SIZE_MAX means they haven't been determined yet.  */
 static size_t join_field_1 = SIZE_MAX;
 static size_t join_field_2 = SIZE_MAX;
@@ -210,7 +217,8 @@ else fields are separated by CHAR.  Any FIELD is a field number counted\n\
 from 1.  FORMAT is one or more comma or blank separated specifications,\n\
 each being `FILENUM.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
 the remaining fields from FILE1, the remaining fields from FILE2, all\n\
-separated by CHAR.\n\
+separated by CHAR.  If FORMAT is the keyword 'auto', then the first\n\
+line of each file determines the number of fields output for each line.\n\
 \n\
 Important: FILE1 and FILE2 must be sorted on the join fields.\n\
 E.g., use ` sort -k 1b,1 ' if `join' has no options,\n\
@@ -527,6 +535,27 @@ prfield (size_t n, struct line const *line)
     fputs (empty_filler, stdout);
 }
 
+/* Output all the fields in line, other than the join field.  */
+
+static void
+prfields (struct line const *line, size_t join_field, size_t autocount)
+{
+  size_t i;
+  size_t nfields = autoformat ? autocount : line->nfields;
+  char output_separator = tab < 0 ? ' ' : tab;
+
+  for (i = 0; i < join_field && i < nfields; ++i)
+    {
+      putchar (output_separator);
+      prfield (i, line);
+    }
+  for (i = join_field + 1; i < nfields; ++i)
+    {
+      putchar (output_separator);
+      prfield (i, line);
+    }
+}
+
 /* Print the join of LINE1 and LINE2.  */
 
 static void
@@ -534,6 +563,8 @@ prjoin (struct line const *line1, struct line const *line2)
 {
   const struct outlist *outlist;
   char output_separator = tab < 0 ? ' ' : tab;
+  size_t field;
+  struct line const *line;
 
   outlist = outlist_head.next;
   if (outlist)
@@ -543,9 +574,6 @@ prjoin (struct line const *line1, struct line const *line2)
       o = outlist;
       while (1)
         {
-          size_t field;
-          struct line const *line;
-
           if (o->file == 0)
             {
               if (line1 == &uni_blank)
@@ -574,37 +602,24 @@ prjoin (struct line const *line1, struct line const *line2)
     }
   else
     {
-      size_t i;
-
       if (line1 == &uni_blank)
         {
-          struct line const *t;
-          t = line1;
-          line1 = line2;
-          line2 = t;
+          line = line2;
+          field = join_field_2;
         }
-      prfield (join_field_1, line1);
-      for (i = 0; i < join_field_1 && i < line1->nfields; ++i)
+      else
         {
-          putchar (output_separator);
-          prfield (i, line1);
-        }
-      for (i = join_field_1 + 1; i < line1->nfields; ++i)
-        {
-          putchar (output_separator);
-          prfield (i, line1);
+          line = line1;
+          field = join_field_1;
         }
 
-      for (i = 0; i < join_field_2 && i < line2->nfields; ++i)
-        {
-          putchar (output_separator);
-          prfield (i, line2);
-        }
-      for (i = join_field_2 + 1; i < line2->nfields; ++i)
-        {
-          putchar (output_separator);
-          prfield (i, line2);
-        }
+      /* Output the join field.  */
+      prfield (field, line);
+
+      /* Output other fields.  */
+      prfields (line1, join_field_1, autocount_1);
+      prfields (line2, join_field_2, autocount_2);
+
       putchar ('\n');
     }
 }
@@ -626,6 +641,12 @@ join (FILE *fp1, FILE *fp2)
   getseq (fp1, &seq1, 1);
   initseq (&seq2);
   getseq (fp2, &seq2, 2);
+
+  if (autoformat)
+    {
+      autocount_1 = seq1.count ? seq1.lines[0]->nfields : 0;
+      autocount_2 = seq2.count ? seq2.lines[0]->nfields : 0;
+    }
 
   if (join_header_lines && seq1.count && seq2.count)
     {
@@ -1037,8 +1058,13 @@ main (int argc, char **argv)
           break;
 
         case 'o':
-          add_field_list (optarg);
-          optc_status = MIGHT_BE_O_ARG;
+          if (STREQ (optarg, "auto"))
+            autoformat = true;
+          else
+            {
+              add_field_list (optarg);
+              optc_status = MIGHT_BE_O_ARG;
+            }
           break;
 
         case 't':

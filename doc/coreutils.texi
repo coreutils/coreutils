@@ -5701,8 +5701,8 @@ Do not check that both input files are in sorted order.  This is the default.
 
 @item -e @var{string}
 @opindex -e
-Replace those output fields that are missing in the input with
-@var{string}.
+Replace those output fields that are missing in the input with @var{string}.
+I.E. missing fields specified with the @option{-12jo} options.
 
 @item --header
 @opindex --header
@@ -5733,10 +5733,17 @@ Join on field @var{field} (a positive integer) of file 2.
 Equivalent to @option{-1 @var{field} -2 @var{field}}.
 
 @item -o @var{field-list}
-Construct each output line according to the format in @var{field-list}.
-Each element in @var{field-list} is either the single character @samp{0} or
-has the form @var{m.n} where the file number, @var{m}, is @samp{1} or
-@samp{2} and @var{n} is a positive field number.
+@itemx -o auto
+If the keyword @samp{auto} is specified, infer the output format from
+the first line in each file.  This is the same as the default output format
+but also ensures the same number of fields are output for each line.
+Missing fields are replaced with the @option{-e} option and extra fields
+are discarded.
+
+Otherwise, construct each output line according to the format in
+@var{field-list}.  Each element in @var{field-list} is either the single
+character @samp{0} or has the form @var{m.n} where the file number, @var{m},
+is @samp{1} or @samp{2} and @var{n} is a positive field number.
 
 A field specification of @samp{0} denotes the join field.
 In most cases, the functionality of the @samp{0} field spec
