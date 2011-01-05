@@ -248,7 +248,7 @@ process_file (FTS *fts, FTSENT *ent)
       /* Tell fts not to traverse into this hierarchy.  */
       fts_set (fts, ent, FTS_SKIP);
       /* Ensure that we do not process "/" on the second visit.  */
-      ignore_ptr (fts_read (fts));
+      ignore_value (fts_read (fts));
       return false;
     }
 
