@@ -63,8 +63,11 @@ extern bool fts_debug;
 /* A set of dev/ino pairs.  */
 static struct di_set *di_set;
 
-/* Define a class for collecting directory information. */
+/* Keep track of the preceding "level" (depth in hierarchy)
+   from one call of process_file to the next.  */
+static size_t prev_level;
 
+/* Define a class for collecting directory information. */
 struct duinfo
 {
   /* Size of files in directory.  */
@@ -399,7 +402,6 @@ process_file (FTS *fts, FTSENT *ent)
   struct duinfo dui;
   struct duinfo dui_to_print;
   size_t level;
-  static size_t prev_level;
   static size_t n_alloc;
   /* First element of the structure contains:
      The sum of the st_size values of all entries in the single directory
@@ -582,10 +584,15 @@ du_files (char **files, int bit_flags)
             {
               if (errno != 0)
                 {
-                  /* FIXME: try to give a better message  */
-                  error (0, errno, _("fts_read failed"));
+                  error (0, errno, _("fts_read failed: %s"),
+                         quotearg_colon (fts->fts_path));
                   ok = false;
                 }
+
+              /* When exiting this loop early, be careful to reset the
+                 global, prev_level, used in process_file.  Otherwise, its
+                 (level == prev_level - 1) assertion could fail.  */
+              prev_level = 0;
               break;
             }
           FTS_CROSS_CHECK (fts);

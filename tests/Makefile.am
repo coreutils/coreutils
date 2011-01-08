@@ -370,6 +370,7 @@ TESTS =						\
   du/long-from-unreadable			\
   du/long-sloop					\
   du/max-depth					\
+  du/move-dir-while-traversing			\
   du/no-deref					\
   du/no-x					\
   du/one-file-system				\
