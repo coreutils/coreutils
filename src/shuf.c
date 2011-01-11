@@ -29,6 +29,7 @@
 #include "quotearg.h"
 #include "randint.h"
 #include "randperm.h"
+#include "read-file.h"
 #include "stdio--.h"
 #include "xstrtol.h"
 
@@ -147,52 +148,14 @@ read_input (FILE *in, char eolbyte, char ***pline)
 {
   char *p;
   char *buf = NULL;
+  size_t used;
   char *lim;
-  size_t alloc = 0;
-  size_t used = 0;
-  size_t next_alloc = (1 << 13) + 1;
-  size_t bytes_to_read;
-  size_t nread;
   char **line;
   size_t i;
   size_t n_lines;
-  int fread_errno;
-  struct stat instat;
 
-  if (fstat (fileno (in), &instat) == 0 && S_ISREG (instat.st_mode))
-    {
-      off_t file_size = instat.st_size;
-      off_t current_offset = ftello (in);
-      if (0 <= current_offset)
-        {
-          off_t remaining_size =
-            (current_offset < file_size ? file_size - current_offset : 0);
-          if (SIZE_MAX - 2 < remaining_size)
-            xalloc_die ();
-          next_alloc = remaining_size + 2;
-        }
-    }
-
-  do
-    {
-      if (alloc <= used + 1)
-        {
-          if (alloc == SIZE_MAX)
-            xalloc_die ();
-          alloc = next_alloc;
-          next_alloc = alloc * 2;
-          if (next_alloc < alloc)
-            next_alloc = SIZE_MAX;
-          buf = xrealloc (buf, alloc);
-        }
-
-      bytes_to_read = alloc - used - 1;
-      nread = fread (buf + used, sizeof (char), bytes_to_read, in);
-      used += nread;
-    }
-  while (nread == bytes_to_read);
-
-  fread_errno = errno;
+  if (!(buf = fread_file (in, &used)))
+    error (EXIT_FAILURE, errno, _("read error"));
 
   if (used && buf[used - 1] != eolbyte)
     buf[used++] = eolbyte;
@@ -209,7 +172,6 @@ read_input (FILE *in, char eolbyte, char ***pline)
   for (i = 1; i <= n_lines; i++)
     line[i] = p = next_line (p, eolbyte, lim - p);
 
-  errno = fread_errno;
   return n_lines;
 }
 
@@ -396,7 +358,7 @@ main (int argc, char **argv)
      doesn't have to worry about opening something other than
      stdin.  */
   if (! (echo || input_numbers_option_used (lo_input, hi_input))
-      && (ferror (stdin) || fclose (stdin) != 0))
+      && (fclose (stdin) != 0))
     error (EXIT_FAILURE, errno, _("read error"));
 
   permutation = randperm_new (randint_source, head_lines, n_lines);

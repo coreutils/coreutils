@@ -29,6 +29,7 @@
 #include "fadvise.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "read-file.h"
 #include "stdio--.h"
 #include "xstrtol.h"
 
@@ -61,10 +62,6 @@
    that will cause this command to misbehave given large inputs or
    options.  Many of the "int" values below should be "size_t" or
    something else like that.  */
-
-/* Reallocation step when swallowing non regular files.  The value is not
-   the actual reallocation step, but its base two logarithm.  */
-#define SWALLOW_REALLOC_LOG 12
 
 /* Program options.  */
 
@@ -511,88 +508,21 @@ initialize_regex (void)
 static void
 swallow_file_in_memory (const char *file_name, BLOCK *block)
 {
-  int file_handle;		/* file descriptor number */
-  struct stat stat_block;	/* stat block for file */
-  size_t allocated_length;	/* allocated length of memory buffer */
   size_t used_length;		/* used length in memory buffer */
-  int read_length;		/* number of character gotten on last read */
 
   /* As special cases, a file name which is NULL or "-" indicates standard
      input, which is already opened.  In all other cases, open the file from
      its name.  */
   bool using_stdin = !file_name || !*file_name || STREQ (file_name, "-");
   if (using_stdin)
-    file_handle = STDIN_FILENO;
+    block->start = fread_file (stdin, &used_length);
   else
-    if ((file_handle = open (file_name, O_RDONLY)) < 0)
-      error (EXIT_FAILURE, errno, "%s", file_name);
+    block->start = read_file (file_name, &used_length);
 
-  /* If the file is a plain, regular file, allocate the memory buffer all at
-     once and swallow the file in one blow.  In other cases, read the file
-     repeatedly in smaller chunks until we have it all, reallocating memory
-     once in a while, as we go.  */
+  if (!block->start)
+    error (EXIT_FAILURE, errno, "%s", quote (using_stdin ? "-" : file_name));
 
-  if (fstat (file_handle, &stat_block) < 0)
-    error (EXIT_FAILURE, errno, "%s", file_name);
-
-  if (S_ISREG (stat_block.st_mode))
-    {
-      size_t in_memory_size;
-
-      fdadvise (file_handle, 0, 0, FADVISE_SEQUENTIAL);
-
-      block->start = xmalloc ((size_t) stat_block.st_size);
-
-      if ((in_memory_size = read (file_handle,
-                                  block->start, (size_t) stat_block.st_size))
-          != stat_block.st_size)
-        {
-#if MSDOS
-          /* On MSDOS, in memory size may be smaller than the file
-             size, because of end of line conversions.  But it can
-             never be smaller than half the file size, because the
-             minimum is when all lines are empty and terminated by
-             CR+LF.  */
-          if (in_memory_size != (size_t)-1
-              && in_memory_size >= stat_block.st_size / 2)
-            block->start = xrealloc (block->start, in_memory_size);
-          else
-#endif /* not MSDOS */
-
-            error (EXIT_FAILURE, errno, "%s", file_name);
-        }
-      block->end = block->start + in_memory_size;
-    }
-  else
-    {
-      block->start = xmalloc ((size_t) 1 << SWALLOW_REALLOC_LOG);
-      used_length = 0;
-      allocated_length = (1 << SWALLOW_REALLOC_LOG);
-
-      while (read_length = read (file_handle,
-                                 block->start + used_length,
-                                 allocated_length - used_length),
-             read_length > 0)
-        {
-          used_length += read_length;
-          if (used_length == allocated_length)
-            {
-              allocated_length += (1 << SWALLOW_REALLOC_LOG);
-              block->start
-                = xrealloc (block->start, allocated_length);
-            }
-        }
-
-      if (read_length < 0)
-        error (EXIT_FAILURE, errno, "%s", file_name);
-
-      block->end = block->start + used_length;
-    }
-
-  /* Close the file, but only if it was not the standard input.  */
-
-  if (! using_stdin && close (file_handle) != 0)
-    error (EXIT_FAILURE, errno, "%s", file_name);
+  block->end = block->start + used_length;
 }
 
 /* Sort and search routines.  */
