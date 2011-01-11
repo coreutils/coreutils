@@ -378,10 +378,18 @@ nonexistent_file_errno (int errnum)
      exist, but be (in)accessible only via too long a symlink chain.
      Likewise for ENAMETOOLONG, since rm -f ./././.../foo may fail
      if the "..." part expands to a long enough sequence of "./"s,
-     even though ./foo does indeed exist.  */
+     even though ./foo does indeed exist.
+
+     Another case to consider is when a particular name is invalid for
+     a given file system.  In 2011, smbfs returns EINVAL, but the next
+     revision of POSIX will require EILSEQ for that situation:
+     http://austingroupbugs.net/view.php?id=293
+  */
 
   switch (errnum)
     {
+    case EILSEQ:
+    case EINVAL:
     case ENOENT:
     case ENOTDIR:
       return true;
