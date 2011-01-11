@@ -287,7 +287,7 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
 
               if (n_read == 0)
                 {
-                  /* Figure out how many bytes read from the previous extent.  */
+                  /* Record number of bytes read from the previous extent.  */
                   last_read_size = last_ext_len - ext_len;
                   break;
                 }
