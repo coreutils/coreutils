@@ -468,10 +468,8 @@ versions of gcc and the linux kernel, and modern GNU tools.
 Ensure that your changes are indented properly.
 ===============================================
 Format the code the way GNU indent does.
-In a file with the "indent-tabs-mode: nil" directive at the end,
-running "indent --no-tabs" should induce no change.
-With other files, there will be some existing differences.
-Try not to add any more.
+Filtering most source files through "indent --no-tabs" should
+induce no change in indentation.  Try not to add any more.
 
 
 Avoid trailing white space
@@ -484,13 +482,11 @@ Do not add any more trailing blanks anywhere.  While "make syntax-check"
 will alert you if you slip up, it's better to nip any problem in the
 bud, as you're typing.  A good way to help you adapt to this rule is
 to configure your editor to highlight any offending characters in the
-files you edit.  If you use Emacs, customize its font-lock mode (FIXME:
-provide more detail) or try one of its whitespace packages.  This appears
-to be the one that will end up in emacs 23:
+files you edit.  If you use Emacs, customize its font-lock mode
+or use its WhiteSpace mode:
 
     http://www.emacswiki.org/emacs/WhiteSpace
 
-[that page says its version also works with emacs 21 and 22]
 If you use vim, add this to ~/.vimrc:
 
     let c_space_errors=1
