@@ -22,13 +22,13 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include <regex.h>
 #include "argmatch.h"
 #include "diacrit.h"
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
 #include "quotearg.h"
-#include "regex.h"
 #include "stdio--.h"
 #include "xstrtol.h"
 

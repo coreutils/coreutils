@@ -24,6 +24,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <selinux/selinux.h>
+#include <sys/wait.h>
 
 #include "system.h"
 #include "backupfile.h"
@@ -47,8 +48,6 @@
 #define PROGRAM_NAME "install"
 
 #define AUTHORS proper_name ("David MacKenzie")
-
-#include <sys/wait.h>
 
 static int selinux_enabled = 0;
 static bool use_default_selinux_context = true;

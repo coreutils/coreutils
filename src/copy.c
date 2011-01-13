@@ -19,6 +19,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <assert.h>
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <selinux/selinux.h>
 
@@ -60,8 +61,6 @@
 # include <stdarg.h>
 # include "verror.h"
 #endif
-
-#include <sys/ioctl.h>
 
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
