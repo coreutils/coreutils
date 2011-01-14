@@ -239,6 +239,12 @@ my @tv = (
  [ "ID1 Name\n1 A\n2 B\n", "ID2 Color\n1 red\n"],
    "ID1 Name Color\n1 A red\n", 0],
 
+# '--header' doesn't check order of a header
+# even if there is no header in the second file
+['header-6', '--header -a1',
+ [ "ID1 Name\n1 A\n", ""],
+   "ID1 Name\n1 A\n", 0],
+
 );
 
 # Convert the above old-style test vectors to the newer

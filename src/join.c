@@ -648,13 +648,17 @@ join (FILE *fp1, FILE *fp2)
       autocount_2 = seq2.count ? seq2.lines[0]->nfields : 0;
     }
 
-  if (join_header_lines && seq1.count && seq2.count)
+  if (join_header_lines && (seq1.count || seq2.count))
     {
-      prjoin (seq1.lines[0], seq2.lines[0]);
+      struct line const *hline1 = seq1.count ? seq1.lines[0] : &uni_blank;
+      struct line const *hline2 = seq2.count ? seq2.lines[0] : &uni_blank;
+      prjoin (hline1, hline2);
       prevline[0] = NULL;
       prevline[1] = NULL;
-      advance_seq (fp1, &seq1, true, 1);
-      advance_seq (fp2, &seq2, true, 2);
+      if (seq1.count)
+        advance_seq (fp1, &seq1, true, 1);
+      if (seq2.count)
+        advance_seq (fp2, &seq2, true, 2);
     }
 
   while (seq1.count && seq2.count)

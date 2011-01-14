@@ -10,6 +10,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   argument following the one containing the moved sub-tree.
   [bug introduced in coreutils-5.1.0]
 
+  join --header now skips the ordering check for the first line
+  even if the other file is empty.  [bug introduced in coreutils-8.5]
+
   rm -f no longer fails for EINVAL or EILSEQ on file systems that
   reject file names invalid for that file system.
 
