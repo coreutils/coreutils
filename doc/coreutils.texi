@@ -5850,8 +5850,9 @@ Control-I.
 @item \v
 Control-K.
 @item \@var{ooo}
-The character with the value given by @var{ooo}, which is 1 to 3
-octal digits,
+The 8-bit character with the value given by @var{ooo}, which is 1 to 3
+octal digits.  Note that @samp{\400} is interpreted as the two-byte
+sequence, @samp{\040} @samp{0}.
 @item \\
 A backslash.
 @end table
@@ -11080,10 +11081,12 @@ vertical tab
 backslash
 @item \0@var{nnn}
 the eight-bit value that is the octal number @var{nnn}
-(zero to three octal digits)
+(zero to three octal digits), if @var{nnn} is
+a nine-bit value, the ninth bit is ignored
 @item \@var{nnn}
 the eight-bit value that is the octal number @var{nnn}
-(one to three octal digits)
+(one to three octal digits), if @var{nnn} is
+a nine-bit value, the ninth bit is ignored
 @item \x@var{hh}
 the eight-bit value that is the hexadecimal number @var{hh}
 (one or two hexadecimal digits)
@@ -11164,7 +11167,8 @@ one.
 @command{printf} has an additional directive, @samp{%b}, which prints its
 argument string with @samp{\} escapes interpreted in the same way as in
 the @var{format} string, except that octal escapes are of the form
-@samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.
+@samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.  If
+@samp{\@var{ooo}} is nine-bit value, ignore the ninth bit.
 If a precision is also given, it limits the number of bytes printed
 from the converted string.
 
@@ -11195,9 +11199,12 @@ the command @samp{printf %g 3,14} is an error.
 @kindex \@var{ooo}
 @kindex \x@var{hh}
 @command{printf} interprets @samp{\@var{ooo}} in @var{format} as an octal number
-(if @var{ooo} is 1 to 3 octal digits) specifying a character to print,
+(if @var{ooo} is 1 to 3 octal digits) specifying a byte to print,
 and @samp{\x@var{hh}} as a hexadecimal number (if @var{hh} is 1 to 2 hex
 digits) specifying a character to print.
+Note however that when @samp{\@var{ooo}} specifies a number larger than 255,
+@command{printf} ignores the ninth bit.
+For example, @samp{printf '\400'} is equivalent to @samp{printf '\0'}.
 
 @kindex \uhhhh
 @kindex \Uhhhhhhhh
