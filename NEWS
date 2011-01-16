@@ -13,6 +13,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm -f no longer fails for EINVAL or EILSEQ on file systems that
   reject file names invalid for that file system.
 
+  uniq -f NUM no longer tries to process fields after end of line.
+
 
 * Noteworthy changes in release 8.9 (2011-01-04) [stable]
 
