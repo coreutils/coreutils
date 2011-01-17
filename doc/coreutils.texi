@@ -8892,6 +8892,20 @@ your hard disk, you could give a command like this:
 shred --verbose /dev/sda5
 @end example
 
+On modern disks, a single pass should be adequate,
+and it will take one third the time of the default three-pass approach.
+
+@example
+# 1 pass, write pseudo-random data; 3x faster than the default
+shred --verbose -n1 /dev/sda5
+@end example
+
+To be on the safe side, use at least one pass that overwrites using
+pseudo-random data.  I.e., don't be tempted to use @samp{-n0 --zero},
+in case some disk controller optimizes the process of writing blocks
+of all zeros, and thereby does not clear all bytes in a block.
+Some SSDs may do just that.
+
 A @var{file} of @samp{-} denotes standard output.
 The intended use of this is to shred a removed temporary file.
 For example:
