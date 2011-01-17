@@ -286,6 +286,7 @@ TESTS =						\
   misc/tty-eof					\
   misc/unexpand					\
   misc/uniq					\
+  misc/uniq-perf				\
   misc/xattr					\
   tail-2/wait					\
   chmod/c-option				\
