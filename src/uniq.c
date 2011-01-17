@@ -222,8 +222,7 @@ find_field (struct linebuffer const *line)
         i++;
     }
 
-  for (count = 0; count < skip_chars && i < size; count++)
-    i++;
+  i += MIN (skip_chars, size - i);
 
   return line->buffer + i;
 }
