@@ -58,9 +58,16 @@ notifier.loop()
 EOF
 chmod a+x inotify-watch-for-dir-access.py
 
-long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 t=T/U
-mkdir -p $t/3/a/b/c/$long d2 || framework_failure
+mkdir d2 || framework_failure
+long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
+# One iteration of this loop creates a tree with which
+# du sometimes completes its traversal before the above rename.
+# Even 5 iterations was not enough in 2 of 7 "make -j20 check" runs on a
+# 6/12-core system.  However, using "10", I saw no failure in 20 trials.
+for i in $(seq 10); do
+  mkdir -p $t/3/a/b/c/$i/$long || framework_failure
+done
 timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg &
 
 # Wait for the watcher to start...
