@@ -625,7 +625,7 @@ Remove any trailing slashes from each @var{source} argument.
 @macro mayConflictWithShellBuiltIn{cmd}
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
-Due to shell aliases and built-in @command{\cmd\} command, using an
+Due to shell aliases and built-in @command{\cmd\} functions, using an
 unadorned @command{\cmd\} interactively or in a script may get you
 different functionality than that described here.  Invoke it via
 @command{env} (i.e., @code{env \cmd\ @dots{}}) to avoid interference
