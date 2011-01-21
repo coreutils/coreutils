@@ -217,6 +217,7 @@ Common Options
 * Exit status::                  Indicating program success or failure
 * Backup options::               Backup options
 * Block size::                   Block size
+* Floating point::               Floating point number representation
 * Signal specifications::        Specifying signals
 * Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::               Sources of random data
@@ -729,6 +730,7 @@ name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Floating point::              Floating point number representation.
 * Signal specifications::       Specifying signals using the --signal option.
 * Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              --random-source, in some programs.
@@ -1010,6 +1012,34 @@ is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
 equivalent to @option{--block-size=si}.
+
+@node Floating point
+@section Floating point numbers
+@cindex floating point
+@cindex IEEE floating point
+
+Commands that accept or produce floating point numbers employ the
+floating point representation of the underlying system, and suffer
+from rounding error, overflow, and similar floating-point issues.
+Almost all modern systems use IEEE-754 floating point, and it is
+typically portable to assume IEEE-754 behavior these days.  IEEE-754
+has positive and negative infinity, distinguishes positive from
+negative zero, and uses special values called NaNs to represent
+invalid computations such as dividing zero by itself.  For more
+information, please see David Goldberg's paper
+@uref{http://@/www.validlab.com/@/goldberg/@/paper.pdf, What Every
+Computer Scientist Should Know About Floating-Point Arithmetic}.
+
+@vindex LC_NUMERIC
+Commands that accept floating point numbers as options, operands or
+input use the standard C functions @code{strtod} and @code{strtold} to
+convert from text to floating point numbers.  These floating point
+numbers therefore can use scientific notation like @code{1.0e-34} and
+@code{-10e100}.  Modern C implementations also accept hexadecimal
+floating point numbers such as @code{-0x.ep-3}, which stands for
+@minus{}14/16 times @math{2^-3}, which equals @minus{}0.109375.  The
+@env{LC_NUMERIC} locale determines the decimal-point character.
+@xref{Parsing of Floats,,, libc, The GNU C Library Reference Manual}.
 
 @node Signal specifications
 @section Signal specifications
@@ -1880,7 +1910,7 @@ named character, ignoring high-order bit
 @item d
 signed decimal
 @item f
-floating point
+floating point (@pxref{Floating point})
 @item o
 octal
 @item u
@@ -2820,8 +2850,7 @@ During one iteration, every specified file is checked to see if it has
 changed size.
 Historical implementations of @command{tail} have required that
 @var{number} be an integer.  However, GNU @command{tail} accepts
-an arbitrary floating point number (using a period before any
-fractional digits).
+an arbitrary floating point number.  @xref{Floating point}.
 When @command{tail} uses inotify, this polling-related option is ignored.
 
 @itemx --pid=@var{pid}
@@ -3883,11 +3912,8 @@ the final result, after the throwing away.))
 @opindex --sort
 @cindex general numeric sort
 @vindex LC_NUMERIC
-Sort numerically, using the standard C function @code{strtold} to convert
-a prefix of each line to a long double-precision floating point number.
-This allows floating point numbers to be specified in scientific notation,
-like @code{1.0e-34} and @code{10e100}.
-The @env{LC_NUMERIC} locale determines the decimal-point character.
+Sort numerically, converting a prefix of each line to a long
+double-precision floating point number.  @xref{Floating point}.
 Do not report overflow, underflow, or conversion errors.
 Use the following collating sequence:
 
@@ -11209,6 +11235,7 @@ digits, but is printed according to the @env{LC_NUMERIC} category of the
 current locale.  For example, in a locale whose radix character is a
 comma, the command @samp{printf %g 3.14} outputs @samp{3,14} whereas
 the command @samp{printf %g 3,14} is an error.
+@xref{Floating point}.
 
 @kindex \@var{ooo}
 @kindex \x@var{hh}
@@ -15664,8 +15691,7 @@ days
 Historical implementations of @command{sleep} have required that
 @var{number} be an integer, and only accepted a single argument
 without a suffix.  However, GNU @command{sleep} accepts
-arbitrary floating point numbers (using a period before any fractional
-digits).
+arbitrary floating point numbers.  @xref{Floating point}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -15765,8 +15791,7 @@ When @var{increment} is not specified, it defaults to @samp{1},
 even when @var{first} is larger than @var{last}.
 @var{first} also defaults to @samp{1}.  So @code{seq 1} prints
 @samp{1}, but @code{seq 0} and @code{seq 10 5} produce no output.
-Floating-point numbers
-may be specified (using a period before any fractional digits).
+Floating-point numbers may be specified.  @xref{Floating point}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
@@ -15843,7 +15868,8 @@ of @code{%x}.
 
 On most systems, seq can produce whole-number output for values up to
 at least @math{2^{53}}.  Larger integers are approximated.  The details
-differ depending on your floating-point implementation, but a common
+differ depending on your floating-point implementation.
+@xref{Floating point}.  A common
 case is that @command{seq} works with integers through @math{2^{64}},
 and larger integers may not be numerically correct:
 
