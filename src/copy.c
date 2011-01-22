@@ -868,17 +868,17 @@ copy_reg (char const *src_name, char const *dst_name,
 #endif
         }
 
-      bool require_normal_copy;
-      /* Perform efficient extent copy for sparse file, fall back to the
+      bool normal_copy_required;
+      /* Perform an efficient extent-based copy, falling back to the
          standard copy only if the initial extent scan fails.  If the
-         '--sparse=never' option was specified, we writing all data but
-         use extent copy if available to efficiently read.  */
+         '--sparse=never' option is specified, write all data but use
+         any extents to read more efficiently.  */
       if (extent_copy (source_desc, dest_desc, buf_size,
                        src_open_sb.st_size, make_holes,
-                       src_name, dst_name, &require_normal_copy))
+                       src_name, dst_name, &normal_copy_required))
         goto preserve_metadata;
 
-      if (! require_normal_copy)
+      if (! normal_copy_required)
         {
           return_val = false;
           goto close_src_and_dst_desc;
