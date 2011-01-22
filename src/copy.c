@@ -879,13 +879,11 @@ copy_reg (char const *src_name, char const *dst_name,
                            src_open_sb.st_size, make_holes,
                            src_name, dst_name, &require_normal_copy))
             goto preserve_metadata;
-          else
+
+          if (! require_normal_copy)
             {
-              if (! require_normal_copy)
-                {
-                  return_val = false;
-                  goto close_src_and_dst_desc;
-                }
+              return_val = false;
+              goto close_src_and_dst_desc;
             }
         }
 
