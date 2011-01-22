@@ -194,7 +194,7 @@ write_zeros (int fd, uint64_t n_bytes)
    Upon any other failure, set *NORMAL_COPY_REQUIRED to false and
    return false.  */
 static bool
-extent_copy (int src_fd, int dest_fd, size_t buf_size,
+extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              off_t src_total_size, bool make_holes,
              char const *src_name, char const *dst_name,
              bool *require_normal_copy)
@@ -268,8 +268,6 @@ extent_copy (int src_fd, int dest_fd, size_t buf_size,
 
           while (ext_len)
             {
-              char buf[buf_size];
-
               /* Avoid reading into the holes if the left extent
                  length is shorter than the buffer size.  */
               buf_size = MIN (ext_len, buf_size);
@@ -868,22 +866,6 @@ copy_reg (char const *src_name, char const *dst_name,
 #endif
         }
 
-      bool normal_copy_required;
-      /* Perform an efficient extent-based copy, falling back to the
-         standard copy only if the initial extent scan fails.  If the
-         '--sparse=never' option is specified, write all data but use
-         any extents to read more efficiently.  */
-      if (extent_copy (source_desc, dest_desc, buf_size,
-                       src_open_sb.st_size, make_holes,
-                       src_name, dst_name, &normal_copy_required))
-        goto preserve_metadata;
-
-      if (! normal_copy_required)
-        {
-          return_val = false;
-          goto close_src_and_dst_desc;
-        }
-
       /* If not making a sparse file, try to use a more-efficient
          buffer size.  */
       if (! make_holes)
@@ -911,6 +893,22 @@ copy_reg (char const *src_name, char const *dst_name,
       /* Make a buffer with space for a sentinel at the end.  */
       buf_alloc = xmalloc (buf_size + buf_alignment_slop);
       buf = ptr_align (buf_alloc, buf_alignment);
+
+      bool normal_copy_required;
+      /* Perform an efficient extent-based copy, falling back to the
+         standard copy only if the initial extent scan fails.  If the
+         '--sparse=never' option is specified, write all data but use
+         any extents to read more efficiently.  */
+      if (extent_copy (source_desc, dest_desc, buf, buf_size,
+                       src_open_sb.st_size, make_holes,
+                       src_name, dst_name, &normal_copy_required))
+        goto preserve_metadata;
+
+      if (! normal_copy_required)
+        {
+          return_val = false;
+          goto close_src_and_dst_desc;
+        }
 
       while (true)
         {
