@@ -868,23 +868,20 @@ copy_reg (char const *src_name, char const *dst_name,
 #endif
         }
 
-      if (make_holes)
-        {
-          bool require_normal_copy;
-          /* Perform efficient extent copy for sparse file, fall back to the
-             standard copy only if the initial extent scan fails.  If the
-             '--sparse=never' option was specified, we writing all data but
-             use extent copy if available to efficiently read.  */
-          if (extent_copy (source_desc, dest_desc, buf_size,
-                           src_open_sb.st_size, make_holes,
-                           src_name, dst_name, &require_normal_copy))
-            goto preserve_metadata;
+      bool require_normal_copy;
+      /* Perform efficient extent copy for sparse file, fall back to the
+         standard copy only if the initial extent scan fails.  If the
+         '--sparse=never' option was specified, we writing all data but
+         use extent copy if available to efficiently read.  */
+      if (extent_copy (source_desc, dest_desc, buf_size,
+                       src_open_sb.st_size, make_holes,
+                       src_name, dst_name, &require_normal_copy))
+        goto preserve_metadata;
 
-          if (! require_normal_copy)
-            {
-              return_val = false;
-              goto close_src_and_dst_desc;
-            }
+      if (! require_normal_copy)
+        {
+          return_val = false;
+          goto close_src_and_dst_desc;
         }
 
       /* If not making a sparse file, try to use a more-efficient
