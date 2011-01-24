@@ -887,8 +887,11 @@ fremote (int fd, const char *name)
   int err = fstatfs (fd, &buf);
   if (err != 0)
     {
-      error (0, errno, _("cannot determine location of %s. "
-                         "reverting to polling"), quote (name));
+      /* On at least linux-2.6.38, fstatfs fails with ENOSYS when FD
+         is open on a pipe.  Treat that like a remote file.  */
+      if (errno != ENOSYS)
+        error (0, errno, _("cannot determine location of %s. "
+                           "reverting to polling"), quote (name));
     }
   else
     {
