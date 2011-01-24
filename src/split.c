@@ -660,7 +660,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
 {
   bool file_limit;
   size_t i_file;
-  of_t *files;
+  of_t *files IF_LINT (= NULL);
   uintmax_t line_no;
 
   if (k)
