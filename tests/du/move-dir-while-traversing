@@ -70,6 +70,10 @@ long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 for i in $(seq 30); do
   mkdir -p $t/3/a/b/c/$i/$long || framework_failure
 done
+
+# Prohibit suspension, which could otherwise cause a timeout-induced FP failure.
+trap '' STOP TSTP
+
 timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg &
 
 # Wait for the watcher to start...
