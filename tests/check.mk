@@ -20,8 +20,8 @@
 _v = TESTS
 _w = root_tests
 vc_exe_in_TESTS: Makefile
-	@rm -f t1 t2
-	@if test -d $(top_srcdir)/.git && test $(srcdir) = .; then	\
+	$(AM_V_GEN)rm -f t1 t2;						\
+	if test -d $(top_srcdir)/.git && test $(srcdir) = .; then	\
 	  { sed -n '/^$(_v) =[	 ]*\\$$/,/[^\]$$/p'			\
 		$(srcdir)/Makefile.am					\
 	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d';			\
