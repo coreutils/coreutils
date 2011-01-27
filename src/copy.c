@@ -268,8 +268,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
           while (ext_len)
             {
-              /* Avoid reading into the holes if the left extent
-                 length is shorter than the buffer size.  */
+              /* Don't read from a following hole if EXT_LEN
+                 is smaller than the buffer size.  */
               buf_size = MIN (ext_len, buf_size);
 
               ssize_t n_read = read (src_fd, buf, buf_size);
@@ -285,7 +285,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
               if (n_read == 0)
                 {
-                  /* Record number of bytes read from the previous extent.  */
+                  /* Record number of bytes read from this extent-at-EOF.  */
                   last_read_size = last_ext_len - ext_len;
                   break;
                 }
@@ -306,33 +306,19 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
     }
   while (! scan.hit_final_extent);
 
-  /* If a file ends up with holes, the sum of the last extent logical offset
-     and the read-returned size or the last extent length will be shorter than
-     the actual size of the file.  Use ftruncate to extend the length of the
-     destination file if make_holes, or write zeros up to the actual size of the
-     file.  */
-  if (make_holes)
+  /* When the source file ends with a hole, the sum of the last extent start
+     offset and (the read-returned size or the last extent length) is smaller
+     than the actual size of the file.  In that case, extend the destination
+     file to the required length.  When MAKE_HOLES is set, use ftruncate;
+     otherwise, use write_zeros.  */
+  uint64_t eof_hole_len = (src_total_size - last_ext_start
+                           - (last_read_size ? last_read_size : last_ext_len));
+  if (eof_hole_len && (make_holes
+                       ? ftruncate (dest_fd, src_total_size)
+                       : ! write_zeros (dest_fd, eof_hole_len)))
     {
-      if (last_ext_start + last_read_size < src_total_size)
-        {
-          if (ftruncate (dest_fd, src_total_size) < 0)
-            {
-              error (0, errno, _("failed to extend %s"), quote (dst_name));
-              return false;
-            }
-        }
-    }
-  else
-    {
-      if (last_ext_start + last_ext_len < src_total_size)
-        {
-          uint64_t holes_len = src_total_size - last_ext_start - last_ext_len;
-          if (0 < holes_len)
-            {
-              if (! write_zeros (dest_fd, holes_len))
-                return false;
-            }
-        }
+      error (0, errno, _("failed to extend %s"), quote (dst_name));
+      return false;
     }
 
   return true;
