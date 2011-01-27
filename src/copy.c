@@ -134,6 +134,116 @@ utimens_symlink (char const *file, struct timespec const *timespec)
   return err;
 }
 
+/* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
+   honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
+   BUF for temporary storage.  Return true upon successful completion;
+   print a diagnostic and return false upon error.  */
+static bool
+sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
+             bool make_holes,
+             char const *src_name, char const *dst_name)
+{
+  typedef uintptr_t word;
+  off_t n_read_total = 0;
+  bool last_write_made_hole = false;
+
+  while (true)
+    {
+      word *wp = NULL;
+
+      ssize_t n_read = read (src_fd, buf, buf_size);
+      if (n_read < 0)
+        {
+#ifdef EINTR
+          if (errno == EINTR)
+            continue;
+#endif
+          error (0, errno, _("reading %s"), quote (src_name));
+          return false;
+        }
+      if (n_read == 0)
+        break;
+
+      n_read_total += n_read;
+
+      if (make_holes)
+        {
+          char *cp;
+
+          /* Sentinel to stop loop.  */
+          buf[n_read] = '\1';
+#ifdef lint
+          /* Usually, buf[n_read] is not the byte just before a "word"
+             (aka uintptr_t) boundary.  In that case, the word-oriented
+             test below (*wp++ == 0) would read some uninitialized bytes
+             after the sentinel.  To avoid false-positive reports about
+             this condition (e.g., from a tool like valgrind), set the
+             remaining bytes -- to any value.  */
+          memset (buf + n_read + 1, 0, sizeof (word) - 1);
+#endif
+
+          /* Find first nonzero *word*, or the word with the sentinel.  */
+
+          wp = (word *) buf;
+          while (*wp++ == 0)
+            continue;
+
+          /* Find the first nonzero *byte*, or the sentinel.  */
+
+          cp = (char *) (wp - 1);
+          while (*cp++ == 0)
+            continue;
+
+          if (cp <= buf + n_read)
+            /* Clear to indicate that a normal write is needed. */
+            wp = NULL;
+          else
+            {
+              /* We found the sentinel, so the whole input block was zero.
+                 Make a hole.  */
+              if (lseek (dest_fd, n_read, SEEK_CUR) < 0)
+                {
+                  error (0, errno, _("cannot lseek %s"), quote (dst_name));
+                  return false;
+                }
+              last_write_made_hole = true;
+            }
+        }
+
+      if (!wp)
+        {
+          size_t n = n_read;
+          if (full_write (dest_fd, buf, n) != n)
+            {
+              error (0, errno, _("writing %s"), quote (dst_name));
+              return false;
+            }
+          last_write_made_hole = false;
+
+          /* It is tempting to return early here upon a short read from a
+             regular file.  That would save the final read syscall for each
+             file.  Unfortunately that doesn't work for certain files in
+             /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
+        }
+    }
+
+  /* If the file ends with a `hole', we need to do something to record
+     the length of the file.  On modern systems, calling ftruncate does
+     the job.  On systems without native ftruncate support, we have to
+     write a byte at the ending position.  Otherwise the kernel would
+     truncate the file at the end of the last write operation.  */
+  if (last_write_made_hole)
+    {
+      if (ftruncate (dest_fd, n_read_total) < 0)
+        {
+          error (0, errno, _("truncating %s"), quote (dst_name));
+          return false;
+        }
+    }
+
+  return true;
+}
+
 /* Perform the O(1) btrfs clone operation, if possible.
    Upon success, return 0.  Otherwise, return -1 and set errno.  */
 static inline int
@@ -824,7 +934,6 @@ copy_reg (char const *src_name, char const *dst_name,
   if (data_copy_required)
     {
       typedef uintptr_t word;
-      off_t n_read_total = 0;
 
       /* Choose a suitable buffer size; it may be adjusted later.  */
       size_t buf_alignment = lcm (getpagesize (), sizeof (word));
@@ -832,7 +941,6 @@ copy_reg (char const *src_name, char const *dst_name,
       size_t buf_size = io_blksize (sb);
 
       /* Deal with sparse files.  */
-      bool last_write_made_hole = false;
       bool make_holes = false;
 
       if (S_ISREG (sb.st_mode))
@@ -897,103 +1005,11 @@ copy_reg (char const *src_name, char const *dst_name,
           goto close_src_and_dst_desc;
         }
 
-      while (true)
+      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size,
+                          make_holes, src_name, dst_name))
         {
-          word *wp = NULL;
-
-          ssize_t n_read = read (source_desc, buf, buf_size);
-          if (n_read < 0)
-            {
-#ifdef EINTR
-              if (errno == EINTR)
-                continue;
-#endif
-              error (0, errno, _("reading %s"), quote (src_name));
-              return_val = false;
-              goto close_src_and_dst_desc;
-            }
-          if (n_read == 0)
-            break;
-
-          n_read_total += n_read;
-
-          if (make_holes)
-            {
-              char *cp;
-
-              /* Sentinel to stop loop.  */
-              buf[n_read] = '\1';
-#ifdef lint
-              /* Usually, buf[n_read] is not the byte just before a "word"
-                 (aka uintptr_t) boundary.  In that case, the word-oriented
-                 test below (*wp++ == 0) would read some uninitialized bytes
-                 after the sentinel.  To avoid false-positive reports about
-                 this condition (e.g., from a tool like valgrind), set the
-                 remaining bytes -- to any value.  */
-              memset (buf + n_read + 1, 0, sizeof (word) - 1);
-#endif
-
-              /* Find first nonzero *word*, or the word with the sentinel.  */
-
-              wp = (word *) buf;
-              while (*wp++ == 0)
-                continue;
-
-              /* Find the first nonzero *byte*, or the sentinel.  */
-
-              cp = (char *) (wp - 1);
-              while (*cp++ == 0)
-                continue;
-
-              if (cp <= buf + n_read)
-                /* Clear to indicate that a normal write is needed. */
-                wp = NULL;
-              else
-                {
-                  /* We found the sentinel, so the whole input block was zero.
-                     Make a hole.  */
-                  if (lseek (dest_desc, n_read, SEEK_CUR) < 0)
-                    {
-                      error (0, errno, _("cannot lseek %s"), quote (dst_name));
-                      return_val = false;
-                      goto close_src_and_dst_desc;
-                    }
-                  last_write_made_hole = true;
-                }
-            }
-
-          if (!wp)
-            {
-              size_t n = n_read;
-              if (full_write (dest_desc, buf, n) != n)
-                {
-                  error (0, errno, _("writing %s"), quote (dst_name));
-                  return_val = false;
-                  goto close_src_and_dst_desc;
-                }
-              last_write_made_hole = false;
-
-              /* It is tempting to return early here upon a short read from a
-                 regular file.  That would save the final read syscall for each
-                 file.  Unfortunately that doesn't work for certain files in
-                 /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
-            }
-        }
-
-      /* If the file ends with a `hole', we need to do something to record
-         the length of the file.  On modern systems, calling ftruncate does
-         the job.  On systems without native ftruncate support, we have to
-         write a byte at the ending position.  Otherwise the kernel would
-         truncate the file at the end of the last write operation.  */
-
-      if (last_write_made_hole)
-        {
-          if (ftruncate (dest_desc, n_read_total) < 0)
-            {
-              error (0, errno, _("truncating %s"), quote (dst_name));
-              return_val = false;
-              goto close_src_and_dst_desc;
-            }
+          return_val = false;
+          goto close_src_and_dst_desc;
         }
     }
 
