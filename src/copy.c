@@ -234,6 +234,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           if (lseek (src_fd, ext_start, SEEK_SET) < 0)
             {
               error (0, errno, _("cannot lseek %s"), quote (src_name));
+            fail:
+              extent_scan_free (&scan);
               return false;
             }
 
@@ -242,7 +244,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
                 {
                   error (0, errno, _("cannot lseek %s"), quote (dst_name));
-                  return false;
+                  goto fail;
                 }
             }
           else
@@ -257,7 +259,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                   if (! write_zeros (dest_fd, hole_size))
                     {
                       error (0, errno, _("%s: write failed"), quote (dst_name));
-                      return false;
+                      goto fail;
                     }
                 }
             }
@@ -279,7 +281,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                     continue;
 #endif
                   error (0, errno, _("reading %s"), quote (src_name));
-                    return false;
+                  goto fail;
                 }
 
               if (n_read == 0)
@@ -292,7 +294,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               if (full_write (dest_fd, buf, n_read) != n_read)
                 {
                   error (0, errno, _("writing %s"), quote (dst_name));
-                  return false;
+                  goto fail;
                 }
 
               ext_len -= n_read;
