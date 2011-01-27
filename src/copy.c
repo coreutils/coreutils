@@ -137,7 +137,10 @@ utimens_symlink (char const *file, struct timespec const *timespec)
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
    BUF for temporary storage.  Return true upon successful completion;
-   print a diagnostic and return false upon error.  */
+   print a diagnostic and return false upon error.
+   Note that for best results, BUF should be "well"-aligned.
+   BUF must have sizeof(uintptr_t)-1 bytes of additional space
+   beyond BUF[BUF_SIZE-1].  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              bool make_holes,
@@ -227,18 +230,12 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         }
     }
 
-  /* If the file ends with a `hole', we need to do something to record
-     the length of the file.  On modern systems, calling ftruncate does
-     the job.  On systems without native ftruncate support, we have to
-     write a byte at the ending position.  Otherwise the kernel would
-     truncate the file at the end of the last write operation.  */
-  if (last_write_made_hole)
+  /* If the file ends with a `hole', we need to do something to record the
+     length of the file.  On modern systems, calling ftruncate does the job.  */
+  if (last_write_made_hole && ftruncate (dest_fd, n_read_total) < 0)
     {
-      if (ftruncate (dest_fd, n_read_total) < 0)
-        {
-          error (0, errno, _("truncating %s"), quote (dst_name));
-          return false;
-        }
+      error (0, errno, _("truncating %s"), quote (dst_name));
+      return false;
     }
 
   return true;
