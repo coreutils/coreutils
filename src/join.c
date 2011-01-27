@@ -736,7 +736,7 @@ join (FILE *fp1, FILE *fp2)
         seq2.count = 0;
     }
 
-  /* If the user did not specify --check-order, then we read the
+  /* If the user did not specify --nocheck-order, then we read the
      tail ends of both inputs to verify that they are in order.  We
      skip the rest of the tail once we have issued a warning for that
      file, unless we actually need to print the unpairable lines.  */
@@ -751,7 +751,8 @@ join (FILE *fp1, FILE *fp2)
     {
       if (print_unpairables_1)
         prjoin (seq1.lines[0], &uni_blank);
-      seen_unpairable = true;
+      if (seq2.count)
+        seen_unpairable = true;
       while (get_line (fp1, &line, 1))
         {
           if (print_unpairables_1)
@@ -765,7 +766,8 @@ join (FILE *fp1, FILE *fp2)
     {
       if (print_unpairables_2)
         prjoin (&uni_blank, seq2.lines[0]);
-      seen_unpairable = true;
+      if (seq1.count)
+        seen_unpairable = true;
       while (get_line (fp2, &line, 2))
         {
           if (print_unpairables_2)

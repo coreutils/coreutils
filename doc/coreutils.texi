@@ -4787,11 +4787,17 @@ If there is an error it exits with nonzero status.
 @macro checkOrderOption{cmd}
 If the @option{--check-order} option is given, unsorted inputs will
 cause a fatal error message.  If the option @option{--nocheck-order}
-is given, unsorted inputs will never cause an error message.  If
-neither of these options is given, wrongly sorted inputs are diagnosed
-only if an input file is found to contain unpairable lines.  If an
-input file is diagnosed as being unsorted, the @command{\cmd\} command
-will exit with a nonzero status (and the output should not be used).
+is given, unsorted inputs will never cause an error message.  If neither
+of these options is given, wrongly sorted inputs are diagnosed
+only if an input file is found to contain unpairable
+@ifset JOIN_COMMAND
+lines, and when both input files are non empty.
+@end ifset
+@ifclear JOIN_COMMAND
+lines.
+@end ifclear
+If an input file is diagnosed as being unsorted, the @command{\cmd\}
+command will exit with a nonzero status (and the output should not be used).
 
 Forcing @command{\cmd\} to process wrongly sorted input files
 containing unpairable lines by specifying @option{--nocheck-order} is
@@ -5672,7 +5678,9 @@ c c1 c2
 b b1 b2
 @end example
 
+@set JOIN_COMMAND
 @checkOrderOption{join}
+@clear JOIN_COMMAND
 
 The defaults are:
 @itemize

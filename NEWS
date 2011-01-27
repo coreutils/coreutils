@@ -25,6 +25,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   output format from the first line in each file, to ensure
   the same number of fields are output for each line.
 
+** Changes in behavior
+
+  join no longer reports disorder when one of the files is empty.
+  This allows one to use join as a field extractor like:
+  join -a1 -o 1.3,1.1 - /dev/null
+
 
 * Noteworthy changes in release 8.9 (2011-01-04) [stable]
 

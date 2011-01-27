@@ -209,7 +209,11 @@ my @tv = (
 
 # Before 6.10.143, this would mistakenly fail with the diagnostic:
 # join: File 1 is not in sorted order
-['chkodr-7', '-12', ["2 a\n1 b\n", ""], "", 0],
+['chkodr-7', '-12', ["2 a\n1 b\n", "2 c\n1 d"], "", 0],
+
+# After 8.9, join doesn't report disorder by default
+# when comparing against an empty input file.
+['chkodr-8', '', ["2 a\n1 b\n", ""], "", 0],
 
 # Test '--header' feature
 ['header-1', '--header',
