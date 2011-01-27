@@ -200,7 +200,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              bool *require_normal_copy)
 {
   struct extent_scan scan;
-  off_t last_ext_logical = 0;
+  off_t last_ext_start = 0;
   uint64_t last_ext_len = 0;
   uint64_t last_read_size = 0;
 
@@ -228,10 +228,10 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       unsigned int i;
       for (i = 0; i < scan.ei_count; i++)
         {
-          off_t ext_logical = scan.ext_info[i].ext_logical;
+          off_t ext_start = scan.ext_info[i].ext_logical;
           uint64_t ext_len = scan.ext_info[i].ext_length;
 
-          if (lseek (src_fd, ext_logical, SEEK_SET) < 0)
+          if (lseek (src_fd, ext_start, SEEK_SET) < 0)
             {
               error (0, errno, _("cannot lseek %s"), quote (src_name));
               return false;
@@ -239,7 +239,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
           if (make_holes)
             {
-              if (lseek (dest_fd, ext_logical, SEEK_SET) < 0)
+              if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
                 {
                   error (0, errno, _("cannot lseek %s"), quote (dst_name));
                   return false;
@@ -249,10 +249,10 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
             {
               /* We're not inducing holes; write zeros to the destination file
                  if there is a hole between the last and current extent.  */
-              if (last_ext_logical + last_ext_len < ext_logical)
+              if (last_ext_start + last_ext_len < ext_start)
                 {
-                  uint64_t hole_size = (ext_logical
-                                        - last_ext_logical
+                  uint64_t hole_size = (ext_start
+                                        - last_ext_start
                                         - last_ext_len);
                   if (! write_zeros (dest_fd, hole_size))
                     {
@@ -262,7 +262,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                 }
             }
 
-          last_ext_logical = ext_logical;
+          last_ext_start = ext_start;
           last_ext_len = ext_len;
           last_read_size = 0;
 
@@ -313,7 +313,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
      file.  */
   if (make_holes)
     {
-      if (last_ext_logical + last_read_size < src_total_size)
+      if (last_ext_start + last_read_size < src_total_size)
         {
           if (ftruncate (dest_fd, src_total_size) < 0)
             {
@@ -324,9 +324,9 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
     }
   else
     {
-      if (last_ext_logical + last_ext_len < src_total_size)
+      if (last_ext_start + last_ext_len < src_total_size)
         {
-          uint64_t holes_len = src_total_size - last_ext_logical - last_ext_len;
+          uint64_t holes_len = src_total_size - last_ext_start - last_ext_len;
           if (0 < holes_len)
             {
               if (! write_zeros (dest_fd, holes_len))
