@@ -270,9 +270,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
             {
               /* Don't read from a following hole if EXT_LEN
                  is smaller than the buffer size.  */
-              buf_size = MIN (ext_len, buf_size);
-
-              ssize_t n_read = read (src_fd, buf, buf_size);
+              size_t b_size = MIN (ext_len, buf_size);
+              ssize_t n_read = read (src_fd, buf, b_size);
               if (n_read < 0)
                 {
 #ifdef EINTR
