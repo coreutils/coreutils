@@ -21,10 +21,8 @@
 print_ver_ cp
 
 suffix=.b
-file=b1.$$
+file=F
 file_backup="$file$suffix"
-temp_files="$file $file_backup"
-rm -f $temp_files
 
 echo test > $file || fail=1
 

@@ -39,10 +39,7 @@ test $hard_link_to_symlink_does_the_deref = yes \
     && remove_these_sed='/^0 -[bf]*l .*sl1 ->/d' \
     || remove_these_sed='/^ELIDE NO TEST OUTPUT/d'
 
-actual=actual-$$
-expected=expected-$$
-
-exec 3>&1 1> $actual
+exec 3>&1 1> actual
 
 # FIXME: This should be bigger: like more than 8k
 contents=XYZ
@@ -130,7 +127,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
   echo
 done
 
-cat <<\EOF | sed "$remove_these_sed" > $expected
+cat <<\EOF | sed "$remove_these_sed" > expected
 1 [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
 1 -d [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
 1 -f [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
@@ -218,6 +215,6 @@ EOF
 
 exec 1>&3 3>&-
 
-compare $expected $actual 1>&2 || fail=1
+compare expected actual 1>&2 || fail=1
 
 Exit $fail

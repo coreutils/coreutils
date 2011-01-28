@@ -20,10 +20,10 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ dd
 
-tmp_in=dd-in.$$
-tmp_in2=dd-in2.$$
-tmp_sym=dd-sym.$$
-tmp_out=dd-out.$$
+tmp_in=dd-in
+tmp_in2=dd-in2
+tmp_sym=dd-sym
+tmp_out=dd-out
 
 warn=0
 echo data > $tmp_in || framework_failure

@@ -45,10 +45,7 @@ pwd_tmp=`pwd`
 # Exercise those four cases for each of
 # cp and mv, with lots of combinations of options.
 
-actual=actual-$$
-expected=expected-$$
-
-exec 1> $actual
+exec 1> actual
 
 # FIXME: This should be bigger: like more than 8k
 contents=XYZ
@@ -153,7 +150,7 @@ done
 test $fail = 1 &&
   { (exit 1); exit; }
 
-cat <<\EOF > $expected
+cat <<\EOF > expected
 1 cp loc_reg rem_sl
  [cp: `loc_reg' and `rem_sl' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
@@ -259,6 +256,6 @@ cat <<\EOF > $expected
 EOF
 
 # Redirect to stderr, since stdout is already taken.
-compare $expected $actual 1>&2 || fail=1
+compare expected actual 1>&2 || fail=1
 
 Exit $fail

@@ -20,15 +20,11 @@
 print_ver_ touch
 skip_if_root_
 
-d1=no-$$
-dir=/$d1/such-dir
-# Ensure that $d1 doesn't already exist.
-ls -d $d1 2> /dev/null && framework_failure
+file=/no-such-dir/file
 
-
-touch $dir > out 2>&1 && fail=1
+touch $file > out 2>&1 && fail=1
 cat <<EOF > exp
-touch: cannot touch \`$dir': No such file or directory
+touch: cannot touch \`$file': No such file or directory
 EOF
 
 compare out exp || fail=1

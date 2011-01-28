@@ -24,10 +24,8 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 
 rem_file="$other_partition_tmpdir/file"
 rem_symlink="$other_partition_tmpdir/symlink"
-file=to-sym-$$
+file=to-sym
 
-
-rm -f $file || framework_failure
 echo local > $file || framework_failure
 echo remote > $rem_file || framework_failure
 ln -s $rem_file $rem_symlink || framework_failure
