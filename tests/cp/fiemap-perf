@@ -1,0 +1,32 @@
+#!/bin/sh
+# ensure that a sparse file is copied efficiently, by default
+
+# Copyright (C) 2011 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+print_ver_ cp
+
+# Require a fiemap-enabled FS.
+df -T -t btrfs -t xfs -t ext4 -t ocfs2 . \
+  || skip_ "this file system lacks FIEMAP support"
+
+# Create a large-but-sparse file.
+timeout 10 truncate -s1T f || framework_failure_
+
+# Nothing can read (much less write) that many bytes in so little time.
+timeout 10 cp f f2 || fail=1
+
+Exit $fail
