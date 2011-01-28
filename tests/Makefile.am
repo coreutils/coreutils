@@ -320,6 +320,7 @@ TESTS =						\
   cp/dir-vs-file				\
   cp/existing-perm-race				\
   cp/fail-perm					\
+  cp/fiemap-perf                                \
   cp/file-perm-race				\
   cp/into-self					\
   cp/link					\
