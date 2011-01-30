@@ -160,10 +160,8 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       ssize_t n_read = read (src_fd, buf, MIN (max_n_read, buf_size));
       if (n_read < 0)
         {
-#ifdef EINTR
           if (errno == EINTR)
             continue;
-#endif
           error (0, errno, _("reading %s"), quote (src_name));
           return false;
         }

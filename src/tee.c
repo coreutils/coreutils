@@ -183,10 +183,8 @@ tee_files (int nfiles, const char **files)
   while (1)
     {
       bytes_read = read (0, buffer, sizeof buffer);
-#ifdef EINTR
       if (bytes_read < 0 && errno == EINTR)
         continue;
-#endif
       if (bytes_read <= 0)
         break;
 
