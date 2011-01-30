@@ -21,6 +21,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp now copies sparse files efficiently on file systems with FIEMAP
+  support (ext4, btrfs, xfs, ocfs2).  Before, it had to read 2^20 bytes
+  when copying a 1MiB sparse file.  Now, it copies bytes only for the
+  non-sparse sections of a file.  Similarly, to induce a hole in the
+  output file, it had to detect a long sequence of zero bytes.  Now,
+  it knows precisely where each hole in an input file is, and can
+  reproduce them efficiently in the output file.  mv also benefits
+  when it resorts to copying, e.g., between file systems.
+
   join now supports -o 'auto' which will automatically infer the
   output format from the first line in each file, to ensure
   the same number of fields are output for each line.
