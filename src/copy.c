@@ -139,15 +139,18 @@ utimens_symlink (char const *file, struct timespec const *timespec)
    BUF must have sizeof(uintptr_t)-1 bytes of additional space
    beyond BUF[BUF_SIZE-1].
    Set *LAST_WRITE_MADE_HOLE to true if the final operation on
-   DEST_FD introduced a hole.  */
+   DEST_FD introduced a hole.  Set *TOTAL_N_READ to the number of
+   bytes read.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              bool make_holes,
              char const *src_name, char const *dst_name,
-             uintmax_t max_n_read, bool *last_write_made_hole)
+             uintmax_t max_n_read, off_t *total_n_read,
+             bool *last_write_made_hole)
 {
   typedef uintptr_t word;
   *last_write_made_hole = false;
+  *total_n_read = 0;
 
   while (max_n_read)
     {
@@ -164,6 +167,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       if (n_read == 0)
         break;
       max_n_read -= n_read;
+      *total_n_read += n_read;
 
       if (make_holes)
         {
@@ -313,6 +317,10 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
   off_t last_ext_start = 0;
   uint64_t last_ext_len = 0;
 
+  /* Keep track of the output position.
+     We may need this at the end, for a final ftruncate.  */
+  off_t dest_pos = 0;
+
   extent_scan_init (src_fd, &scan);
 
   bool wrote_hole_at_eof = true;
@@ -378,10 +386,14 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           last_ext_start = ext_start;
           last_ext_len = ext_len;
 
+          off_t n_read;
           if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
-                              make_holes, src_name, dst_name, ext_len,
+                              make_holes, src_name, dst_name,
+                              ext_len, &n_read,
                               &wrote_hole_at_eof))
             return false;
+
+          dest_pos = ext_start + n_read;
         }
 
       /* Release the space allocated to scan->ext_info.  */
@@ -398,11 +410,10 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
      In addition, if the final extent was a block of zeros at EOF and we've
      just converted them to a hole in the destination, we must call ftruncate
      here in order to record the proper length in the destination.  */
-  off_t dest_len = lseek (dest_fd, 0, SEEK_CUR);
-  if ((dest_len < src_total_size || wrote_hole_at_eof)
+  if ((dest_pos < src_total_size || wrote_hole_at_eof)
       && (make_holes
           ? ftruncate (dest_fd, src_total_size)
-          : ! write_zeros (dest_fd, src_total_size - dest_len)))
+          : ! write_zeros (dest_fd, src_total_size - dest_pos)))
     {
       error (0, errno, _("failed to extend %s"), quote (dst_name));
       return false;
@@ -981,9 +992,11 @@ copy_reg (char const *src_name, char const *dst_name,
           goto close_src_and_dst_desc;
         }
 
+      off_t n_read;
       bool wrote_hole_at_eof;
       if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size,
-                          make_holes, src_name, dst_name, UINTMAX_MAX,
+                          make_holes, src_name, dst_name,
+                          UINTMAX_MAX, &n_read,
                           &wrote_hole_at_eof)
            || (wrote_hole_at_eof &&
                ! sparse_copy_finalize (dest_desc, dst_name)))
