@@ -63,10 +63,6 @@
 # include "verror.h"
 #endif
 
-#ifndef HAVE_FIEMAP
-# include "fiemap.h"
-#endif
-
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
