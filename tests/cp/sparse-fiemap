@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-if df -T -t btrfs -t xfs -t ext4 -t ocfs2 . ; then
+if fiemap_capable_ . ; then
   : # Current dir is on a partition with working extents.  Good!
 else
   # It's not;  we need to create one, hence we need root access.

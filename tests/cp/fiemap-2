@@ -20,7 +20,7 @@
 print_ver_ cp
 
 # Require a fiemap-enabled FS.
-df -T -t btrfs -t xfs -t ext4 -t ocfs2 . \
+fiemap_capable_ . \
   || skip_ "this file system lacks FIEMAP support"
 
 # Exercise the code that handles a file ending in a hole.
