@@ -16,12 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  cp --version
-fi
-
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
+print_ver_ cp
 
 if df -T -t btrfs -t xfs -t ext4 -t ocfs2 . ; then
   : # Current dir is on a partition with working extents.  Good!
