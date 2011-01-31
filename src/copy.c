@@ -323,6 +323,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
   extent_scan_init (src_fd, &scan);
 
+  *require_normal_copy = false;
   bool wrote_hole_at_eof = true;
   do
     {
