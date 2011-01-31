@@ -343,6 +343,7 @@ TESTS =						\
   cp/same-file					\
   cp/slink-2-slink				\
   cp/sparse					\
+  cp/sparse-to-pipe				\
   cp/special-f					\
   cp/src-base-dot				\
   cp/symlink-slash				\
