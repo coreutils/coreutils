@@ -291,7 +291,7 @@ write_zeros (int fd, uint64_t n_bytes)
 
   while (n_bytes)
     {
-      uint64_t n = MIN (sizeof nz, n_bytes);
+      uint64_t n = MIN (nz, n_bytes);
       if ((full_write (fd, zeros, n)) != n)
         return false;
       n_bytes -= n;
