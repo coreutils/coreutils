@@ -29,4 +29,8 @@ timeout 10 truncate -s1T f || framework_failure_
 # Nothing can read (much less write) that many bytes in so little time.
 timeout 10 cp f f2 || fail=1
 
+# Ensure that the sparse file copied through fiemap has the same size
+# in bytes as the original.
+test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
+
 Exit $fail
