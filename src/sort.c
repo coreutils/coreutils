@@ -2214,7 +2214,9 @@ debug_key (struct line const *line, struct keyfield const *key)
 
           char *tighter_lim = beg;
 
-          if (key->month)
+          if (lim < beg)
+            tighter_lim = lim;
+          else if (key->month)
             getmonth (beg, &tighter_lim);
           else if (key->general_numeric)
             ignore_value (strtold (beg, &tighter_lim));

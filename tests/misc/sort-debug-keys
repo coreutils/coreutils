@@ -234,6 +234,10 @@ _
 _
 >a
  _
+A>chr10
+     ^ no match for key
+B>chr1
+     ^ no match for key
 EOF
 
 (
@@ -275,6 +279,9 @@ env printf '1a\x002b\x00' | sort -s -n -z --debug
 
 # Check that \0 and \t intermix.
 printf '\0\ta\n' | sort -s -k2b,2 --debug | tr -d '\0'
+
+# Check that key end before key start is not underlined
+printf 'A\tchr10\nB\tchr1\n' | sort -s -k2.4b,2.3n --debug
 ) > out
 
 compare out exp || fail=1
