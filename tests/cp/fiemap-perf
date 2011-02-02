@@ -31,6 +31,6 @@ timeout 10 cp f f2 || fail=1
 
 # Ensure that the sparse file copied through fiemap has the same size
 # in bytes as the original.
-test $(stat --printf %s sparse) = $(stat --printf %s fiemap) || fail=1
+test "$(stat --printf %s f)" = "$(stat --printf %s f2)" || fail=1
 
 Exit $fail
