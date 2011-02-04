@@ -27,7 +27,7 @@ bootstrap-tools = autoconf,automake,gnulib,bison
 # Now that we have better tests, make this the default.
 export VERBOSE = yes
 
-old_NEWS_hash = f2ebf9f1f16209f7a4b9927a755956fa
+old_NEWS_hash = 6830d50281733e19bb2baff7a891e1f8
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_program =/'
