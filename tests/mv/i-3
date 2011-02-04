@@ -23,6 +23,8 @@ require_controlling_input_terminal_
 skip_if_root_
 trap '' TTIN # Ignore SIGTTIN
 
+test "$(uname -s)" = FreeBSD && skip_ "known spurious failure on FreeBSD"
+
 touch f g h i || framework_failure
 chmod 0 g i || framework_failure
 
