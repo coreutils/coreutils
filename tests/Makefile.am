@@ -11,6 +11,7 @@ EXTRA_DIST =		\
   check.mk		\
   envvar-check		\
   filefrag-extent-compare \
+  fiemap-capable	\
   init.cfg		\
   init.sh		\
   lang-default		\

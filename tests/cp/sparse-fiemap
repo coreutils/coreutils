@@ -19,6 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
+# Note we don't check a file here as that could enable
+# the test on ext3 where this test is seen to fail.
 if fiemap_capable_ . ; then
   : # Current dir is on a partition with working extents.  Good!
 else
@@ -66,11 +68,13 @@ for i in $(seq 1 2 21); do
     $PERL -e 'BEGIN { $n = '$i' * 1024; *F = *STDOUT }' \
           -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
           -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
-    # sync
+
+    # Note the explicit fdatasync is used here as
+    # it was seen that `filefrag -s` (FIEMAP_FLAG_SYNC) was
+    # ineffective on ext4 loopback on Linux 2.6.35.10-72.fc14.i686
+    dd if=/dev/null of=j1 conv=notrunc,fdatasync
     cp --sparse=always j1 j2 || fail=1
-    # sync
-    # Technically we may need the 'sync' uses above, but
-    # uncommenting them makes this test take much longer.
+    dd if=/dev/null of=j2 conv=notrunc,fdatasync
 
     cmp j1 j2 || fail=1
     filefrag -v j1 | grep extent \

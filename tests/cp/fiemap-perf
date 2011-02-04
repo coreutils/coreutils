@@ -20,6 +20,8 @@
 print_ver_ cp
 
 # Require a fiemap-enabled FS.
+# Note we don't check a file here as that could enable
+# the test on ext3 where emulated extent scanning can be slow.
 fiemap_capable_ . \
   || skip_ "this file system lacks FIEMAP support"
 
