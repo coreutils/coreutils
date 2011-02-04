@@ -110,6 +110,7 @@ extent_scan_read (struct extent_scan *scan)
 extern bool
 extent_scan_read (struct extent_scan *scan ATTRIBUTE_UNUSED)
 {
+  scan->initial_scan_failed = true;
   errno = ENOTSUP;
   return false;
 }
