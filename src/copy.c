@@ -233,21 +233,6 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
   return true;
 }
 
-/* If the file ends with a `hole' (i.e., if sparse_copy set wrote_hole_at_eof),
-   call this function to record the length of the output file.  */
-static bool
-sparse_copy_finalize (int dest_fd, char const *dst_name)
-{
-  off_t len = lseek (dest_fd, 0, SEEK_CUR);
-  if (0 <= len && ftruncate (dest_fd, len) < 0)
-    {
-      error (0, errno, _("truncating %s"), quote (dst_name));
-      return false;
-    }
-
-  return true;
-}
-
 /* Perform the O(1) btrfs clone operation, if possible.
    Upon success, return 0.  Otherwise, return -1 and set errno.  */
 static inline int
@@ -1000,8 +985,9 @@ copy_reg (char const *src_name, char const *dst_name,
                           UINTMAX_MAX, &n_read,
                           &wrote_hole_at_eof)
            || (wrote_hole_at_eof &&
-               ! sparse_copy_finalize (dest_desc, dst_name)))
+               ftruncate (dest_desc, n_read) < 0))
         {
+          error (0, errno, _("failed to extend %s"), quote (dst_name));
           return_val = false;
           goto close_src_and_dst_desc;
         }
