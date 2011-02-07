@@ -496,6 +496,8 @@ set_fields (const char *fieldstr)
       if (rp[i].hi > max_range_endpoint)
         max_range_endpoint = rp[i].hi;
     }
+  if (max_range_endpoint < eol_range_start)
+    max_range_endpoint = eol_range_start;
 
   /* Allocate an array large enough so that it may be indexed by
      the field numbers corresponding to all finite ranges
