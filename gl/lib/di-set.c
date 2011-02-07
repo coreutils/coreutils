@@ -235,3 +235,25 @@ di_set_insert (struct di_set *dis, dev_t dev, ino_t ino)
   /* Put I into the inode set.  */
   return hash_insert0 (ino_set, (void *) i, NULL);
 }
+
+/* Look up the DEV,INO pair in the set DIS.
+   If found, return 1; if not found, return 0.
+   Upon any failure return -1.  */
+int
+di_set_lookup (struct di_set *dis, dev_t dev, ino_t ino)
+{
+  hashint i;
+
+  /* Map the device number to a set of inodes.  */
+  struct hash_table *ino_set = map_device (dis, dev);
+  if (! ino_set)
+    return -1;
+
+  /* Map the inode number to a small representative I.  */
+  i = map_inode_number (dis, ino);
+  if (i == INO_MAP_INSERT_FAILURE)
+    return -1;
+
+  /* Perform the look-up.  */
+  return !!hash_lookup (ino_set, (void const *) i);
+}

@@ -42,10 +42,12 @@ main (void)
   struct di_set *dis = di_set_alloc ();
   ASSERT (dis);
 
+  ASSERT (di_set_lookup (dis, 2, 5) == 0); /* initial lookup fails */
   ASSERT (di_set_insert (dis, 2, 5) == 1); /* first insertion succeeds */
   ASSERT (di_set_insert (dis, 2, 5) == 0); /* duplicate fails */
   ASSERT (di_set_insert (dis, 3, 5) == 1); /* diff dev, duplicate inode is ok */
   ASSERT (di_set_insert (dis, 2, 8) == 1); /* same dev, different inode is ok */
+  ASSERT (di_set_lookup (dis, 2, 5) == 1); /* now, the lookup succeeds */
 
   /* very large (or negative) inode number */
   ASSERT (di_set_insert (dis, 5, (ino_t) -1) == 1);

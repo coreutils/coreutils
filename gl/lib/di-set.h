@@ -10,3 +10,5 @@
 struct di_set *di_set_alloc (void);
 int di_set_insert (struct di_set *, dev_t, ino_t) _ATTRIBUTE_NONNULL_ (1);
 void di_set_free (struct di_set *) _ATTRIBUTE_NONNULL_ (1);
+int di_set_lookup (struct di_set *dis, dev_t dev, ino_t ino)
+  _ATTRIBUTE_NONNULL_ (1);;
