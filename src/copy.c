@@ -334,33 +334,31 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         {
           off_t ext_start = scan.ext_info[i].ext_logical;
           uint64_t ext_len = scan.ext_info[i].ext_length;
+          uint64_t hole_size = ext_start - last_ext_start - last_ext_len;
 
-          if (lseek (src_fd, ext_start, SEEK_SET) < 0)
+          if (hole_size)
             {
-              error (0, errno, _("cannot lseek %s"), quote (src_name));
-            fail:
-              extent_scan_free (&scan);
-              return false;
-            }
-
-          if (make_holes)
-            {
-              if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
+              if (lseek (src_fd, ext_start, SEEK_SET) < 0)
                 {
-                  error (0, errno, _("cannot lseek %s"), quote (dst_name));
-                  goto fail;
+                  error (0, errno, _("cannot lseek %s"), quote (src_name));
+                fail:
+                  extent_scan_free (&scan);
+                  return false;
                 }
-            }
-          else
-            {
-              /* When not inducing holes and when there is a hole between
-                 the end of the previous extent and the beginning of the
-                 current one, write zeros to the destination file.  */
-              if (last_ext_start + last_ext_len < ext_start)
+
+              if (make_holes)
                 {
-                  uint64_t hole_size = (ext_start
-                                        - last_ext_start
-                                        - last_ext_len);
+                  if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
+                    {
+                      error (0, errno, _("cannot lseek %s"), quote (dst_name));
+                      goto fail;
+                    }
+                }
+              else
+                {
+                  /* When not inducing holes and when there is a hole between
+                     the end of the previous extent and the beginning of the
+                     current one, write zeros to the destination file.  */
                   if (! write_zeros (dest_fd, hole_size))
                     {
                       error (0, errno, _("%s: write failed"), quote (dst_name));
