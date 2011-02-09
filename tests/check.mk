@@ -40,8 +40,13 @@ vc_exe_in_TESTS: Makefile
 check: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
 
-built_programs = \
-  (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+CLEANFILES =
+CLEANFILES += .built-programs
+check-am: .built-programs
+.built-programs:
+	$(AM_V_GEN)cd $(top_builddir)/src				\
+            && MAKEFLAGS= $(MAKE) -s built_programs.list		\
+          > $@-t && mv $@-t $@
 
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
@@ -76,7 +81,7 @@ TESTS_ENVIRONMENT =				\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   abs_srcdir='$(abs_srcdir)'			\
-  built_programs="`$(built_programs)`"		\
+  built_programs="`cat .built-programs`"	\
   host_os=$(host_os)				\
   host_triplet='$(host_triplet)'		\
   srcdir='$(srcdir)'				\

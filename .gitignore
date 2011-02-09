@@ -76,6 +76,7 @@
 /stamp-h1
 /tests/*/*.log
 /tests/t?
+/tests/.built-programs
 /tests/test-suite.log
 ID
 Makefile
