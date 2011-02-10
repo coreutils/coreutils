@@ -109,12 +109,16 @@ struct rlimit { size_t rlim_cur; };
    and is responsible for merging TOTAL lines. */
 #define MAX_MERGE(total, level) (((total) >> (2 * ((level) + 1))) + 1)
 
-/* Heuristic value for the number of lines for which it is worth
-   creating a subthread, during an internal merge sort, on a machine
-   that has processors galore.  Currently this number is just a guess.
-   This value must be at least 4.  We don't know of any machine where
-   this number has any practical effect.  */
-enum { SUBTHREAD_LINES_HEURISTIC = 4 };
+/* Heuristic value for the number of lines for which it is worth creating
+   a subthread, during an internal merge sort.  I.e., it is a small number
+   of "average" lines for which sorting via two threads is faster than
+   sorting via one on an "average" system.  On an dual-core 2.0 GHz i686
+   system with 3GB of RAM and 2MB of L2 cache, a file containing 128K
+   lines of gensort -a output is sorted slightly faster with --parallel=2
+   than with --parallel=1.  By contrast, using --parallel=1 is about 10%
+   faster than using --parallel=2 with a 64K-line input.  */
+enum { SUBTHREAD_LINES_HEURISTIC = 128 * 1024 };
+verify (4 <= SUBTHREAD_LINES_HEURISTIC);
 
 /* The number of threads after which there are
    diminishing performance gains.  */

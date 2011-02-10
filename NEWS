@@ -4,12 +4,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  du would infloop when given --files0-from=DIR
-  [bug introduced in coreutils-7.1]
-
   cut could segfault when invoked with a user-specified output
   delimiter and an unbounded range like "-f1234567890-".
   [bug introduced in coreutils-5.3.0]
+
+  du would infloop when given --files0-from=DIR
+  [bug introduced in coreutils-7.1]
+
+  sort no longer spawns 7 worker threads to sort 16 lines
+  [bug introduced in coreutils-8.6]
 
   wc would dereference a NULL pointer upon an early out-of-memory error
   [bug introduced in coreutils-7.1]
