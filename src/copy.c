@@ -294,7 +294,7 @@ write_zeros (int fd, uint64_t n_bytes)
    return false.  */
 static bool
 extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             off_t src_total_size, bool make_holes,
+             off_t src_total_size, enum Sparse_type sparse_mode,
              char const *src_name, char const *dst_name,
              bool *require_normal_copy)
 {
@@ -346,7 +346,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                   return false;
                 }
 
-              if (make_holes)
+              if (sparse_mode != SPARSE_NEVER)
                 {
                   if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
                     {
@@ -372,7 +372,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
           off_t n_read;
           if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
-                              make_holes, src_name, dst_name,
+                              sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
                               ext_len, &n_read,
                               &wrote_hole_at_eof))
             return false;
@@ -395,7 +395,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
      just converted them to a hole in the destination, we must call ftruncate
      here in order to record the proper length in the destination.  */
   if ((dest_pos < src_total_size || wrote_hole_at_eof)
-      && (make_holes
+      && (sparse_mode != SPARSE_NEVER
           ? ftruncate (dest_fd, src_total_size)
           : ! write_zeros (dest_fd, src_total_size - dest_pos)))
     {
@@ -966,7 +966,8 @@ copy_reg (char const *src_name, char const *dst_name,
          '--sparse=never' option is specified, write all data but use
          any extents to read more efficiently.  */
       if (extent_copy (source_desc, dest_desc, buf, buf_size,
-                       src_open_sb.st_size, make_holes,
+                       src_open_sb.st_size,
+                       S_ISREG (sb.st_mode) ? x->sparse_mode : SPARSE_NEVER,
                        src_name, dst_name, &normal_copy_required))
         goto preserve_metadata;
 
