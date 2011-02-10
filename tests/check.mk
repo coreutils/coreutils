@@ -44,8 +44,8 @@ CLEANFILES =
 CLEANFILES += .built-programs
 check-am: .built-programs
 .built-programs:
-	$(AM_V_GEN)cd $(top_builddir)/src				\
-            && MAKEFLAGS= $(MAKE) -s built_programs.list		\
+	$(AM_V_GEN)(cd $(top_builddir)/src				\
+            && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
           > $@-t && mv $@-t $@
 
 # Note that the first lines are statements.  They ensure that environment
