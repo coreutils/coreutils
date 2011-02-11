@@ -40,6 +40,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   The sync in only needed on Linux kernels before 2.6.38.
   [The sync was introduced in coreutils-8.10]
 
+  cp now copies empty extents efficiently, when doing a FIEMAP copy.
+  It no longer reads the zero bytes from the input, and also can efficiently
+  create a hole in the output file when --sparse=always is specified.
+
   df now aligns columns consistently, and no longer wraps entries
   with longer device identifiers, over two lines.
 

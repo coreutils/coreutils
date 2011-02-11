@@ -321,8 +321,9 @@ TESTS =						\
   cp/dir-vs-file				\
   cp/existing-perm-race				\
   cp/fail-perm					\
-  cp/fiemap-perf				\
-  cp/fiemap-2					\
+  cp/fiemap-empty                               \
+  cp/fiemap-perf                                \
+  cp/fiemap-2                                   \
   cp/file-perm-race				\
   cp/into-self					\
   cp/link					\

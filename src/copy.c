@@ -39,6 +39,7 @@
 #include "extent-scan.h"
 #include "error.h"
 #include "fcntl--.h"
+#include "fiemap.h"
 #include "file-set.h"
 #include "filemode.h"
 #include "filenamecat.h"
@@ -330,11 +331,28 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         }
 
       unsigned int i;
-      for (i = 0; i < scan.ei_count; i++)
+      bool empty_extent = false;
+      for (i = 0; i < scan.ei_count || empty_extent; i++)
         {
-          off_t ext_start = scan.ext_info[i].ext_logical;
-          uint64_t ext_len = scan.ext_info[i].ext_length;
-          uint64_t hole_size = ext_start - last_ext_start - last_ext_len;
+          off_t ext_start;
+          uint64_t ext_len;
+          uint64_t hole_size;
+
+          if (i < scan.ei_count)
+            {
+              ext_start = scan.ext_info[i].ext_logical;
+              ext_len = scan.ext_info[i].ext_length;
+            }
+          else /* empty extent at EOF.  */
+            {
+              i--;
+              ext_start = last_ext_start + scan.ext_info[i].ext_length;
+              ext_len = 0;
+            }
+
+          hole_size = ext_start - last_ext_start - last_ext_len;
+
+          wrote_hole_at_eof = false;
 
           if (hole_size)
             {
@@ -346,38 +364,72 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                   return false;
                 }
 
-              if (sparse_mode != SPARSE_NEVER)
+              if ((empty_extent && sparse_mode == SPARSE_ALWAYS)
+                  || (!empty_extent && sparse_mode != SPARSE_NEVER))
                 {
                   if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
                     {
                       error (0, errno, _("cannot lseek %s"), quote (dst_name));
                       goto fail;
                     }
+                  wrote_hole_at_eof = true;
                 }
               else
                 {
                   /* When not inducing holes and when there is a hole between
                      the end of the previous extent and the beginning of the
                      current one, write zeros to the destination file.  */
-                  if (! write_zeros (dest_fd, hole_size))
+                  off_t nzeros = hole_size;
+                  if (empty_extent)
+                    nzeros = MIN (src_total_size - dest_pos, hole_size);
+
+                  if (! write_zeros (dest_fd, nzeros))
                     {
                       error (0, errno, _("%s: write failed"), quote (dst_name));
                       goto fail;
                     }
+
+                  dest_pos = MIN (src_total_size, ext_start);
                 }
             }
 
           last_ext_start = ext_start;
-          last_ext_len = ext_len;
 
-          off_t n_read;
-          if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
-                              sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
-                              ext_len, &n_read,
-                              &wrote_hole_at_eof))
-            return false;
+          /* Treat an unwritten but allocated extent much like a hole.
+             I.E. don't read, but don't convert to a hole in the destination,
+             unless SPARSE_ALWAYS.  */
+          if (scan.ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN)
+            {
+              empty_extent = true;
+              last_ext_len = 0;
+              if (ext_len == 0) /* The last extent is empty and processed.  */
+                empty_extent = false;
+            }
+          else
+            {
+              off_t n_read;
+              empty_extent = false;
+              last_ext_len = ext_len;
 
-          dest_pos = ext_start + n_read;
+              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
+                                  sparse_mode == SPARSE_ALWAYS,
+                                  src_name, dst_name, ext_len, &n_read,
+                                  &wrote_hole_at_eof))
+                return false;
+
+              dest_pos = ext_start + n_read;
+            }
+
+          /* If the file ends with unwritten extents not accounted for in the
+             size, then skip processing them, and the associated redundant
+             read() calls which will always return 0.  We will need to
+             remove this when we add fallocate() so that we can maintain
+             extents beyond the apparent size.  */
+          if (dest_pos == src_total_size)
+            {
+              scan.hit_final_extent = true;
+              break;
+            }
         }
 
       /* Release the space allocated to scan->ext_info.  */
