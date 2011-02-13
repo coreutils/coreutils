@@ -19,10 +19,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-# Note we don't check a file here as that could enable
-# the test on ext3 where this test is seen to fail.
-if fiemap_capable_ . ; then
-  : # Current dir is on a partition with working extents.  Good!
+# The test was seen to fail on ext3 so exclude that type
+# (or any file system where the type can't be determined)
+touch fiemap_chk
+if fiemap_capable_ fiemap_chk && ! df -t ext3 . >/dev/null; then
+  : # Current partition has working extents.  Good!
 else
   # It's not;  we need to create one, hence we need root access.
   require_root_
