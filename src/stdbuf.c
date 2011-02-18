@@ -209,7 +209,7 @@ set_LD_PRELOAD (void)
   char const *const *path = search_path;
   char *libstdbuf;
 
-  do
+  while (true)
     {
       struct stat sb;
 
@@ -224,8 +224,11 @@ set_LD_PRELOAD (void)
       if (stat (libstdbuf, &sb) == 0)   /* file_exists  */
         break;
       free (libstdbuf);
+
+      ++path;
+      if ( ! *path)
+        error (EXIT_CANCELED, 0, _("failed to find %s"), quote (LIB_NAME));
     }
-  while (*++path);
 
   /* FIXME: Do we need to support libstdbuf.dll, c:, '\' separators etc?  */
 
