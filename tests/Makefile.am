@@ -27,7 +27,7 @@ root_tests =					\
   cp/special-bits				\
   cp/cp-mv-enotsup-xattr			\
   cp/capability					\
-  cp/sparse-fiemap                              \
+  cp/sparse-fiemap				\
   dd/skip-seek-past-dev				\
   install/install-C-root			\
   ls/capability					\
@@ -321,8 +321,8 @@ TESTS =						\
   cp/dir-vs-file				\
   cp/existing-perm-race				\
   cp/fail-perm					\
-  cp/fiemap-perf                                \
-  cp/fiemap-2                                   \
+  cp/fiemap-perf				\
+  cp/fiemap-2					\
   cp/file-perm-race				\
   cp/into-self					\
   cp/link					\
