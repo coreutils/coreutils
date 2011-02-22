@@ -8174,6 +8174,31 @@ last-access and last-modified time) is not necessarily synchronized.
 @cindex synchronized data and metadata I/O
 Use synchronized I/O for both data and metadata.
 
+@item nocache
+@opindex nocache
+@cindex discarding file cache
+Discard the data cache for a file.
+When count=0 all cache is discarded,
+otherwise the cache is dropped for the processed
+portion of the file.  Also when count=0
+failure to discard the cache is diagnosed
+and reflected in the exit status.
+Here as some usage examples:
+
+@example
+# Advise to drop cache for whole file
+dd if=ifile iflag=nocache count=0
+
+# Ensure drop cache for the whole file
+dd of=ofile oflag=nocache conv=notrunc,fdatasync count=0
+
+# Drop cache for part of file
+dd if=ifile iflag=nocache skip=10 count=10 of=/dev/null
+
+# Stream data using just the read-ahead cache
+dd if=ifile of=ofile iflag=nocache oflag=nocache
+@end example
+
 @item nonblock
 @opindex nonblock
 @cindex nonblocking I/O

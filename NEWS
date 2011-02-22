@@ -14,6 +14,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   wc would dereference a NULL pointer upon an early out-of-memory error
   [bug introduced in coreutils-7.1]
 
+** New features
+
+  dd now accepts the 'nocache' flag to the iflag and oflag options,
+  which will discard any cache associated with the files, or
+  processed portion thereof.
+
 
 * Noteworthy changes in release 8.10 (2011-02-04) [stable]
 

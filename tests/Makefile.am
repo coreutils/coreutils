@@ -352,6 +352,7 @@ TESTS =						\
   df/unreadable					\
   dd/direct					\
   dd/misc					\
+  dd/nocache					\
   dd/not-rewound				\
   dd/reblock					\
   dd/skip-seek					\

@@ -225,6 +225,9 @@ static sig_atomic_t volatile interrupt_signal;
 /* A count of the number of pending info signals that have been received.  */
 static sig_atomic_t volatile info_signal_count;
 
+/* Whether to discard cache for input or output.  */
+static bool i_nocache, o_nocache;
+
 /* Function used for read (to handle iflag=fullblock parameter).  */
 static ssize_t (*iread_fnc) (int fd, char *buf, size_t size);
 
@@ -259,6 +262,7 @@ static struct symbol_value const conversions[] =
   {"", 0}
 };
 
+#define FFS_MASK(x) ((x) ^ ((x) & ((x) - 1)))
 enum
   {
     /* Compute a value that's bitwise disjoint from the union
@@ -278,17 +282,23 @@ enum
           | O_SYNC
           | O_TEXT
           ),
-    /* Use its lowest bit.  */
-    O_FULLBLOCK = v ^ (v & (v - 1))
+
+    /* Use its lowest bits for private flags.  */
+    O_FULLBLOCK = FFS_MASK (v),
+    v2 = v ^ O_FULLBLOCK,
+
+    O_NOCACHE = FFS_MASK (v2)
   };
 
 /* Ensure that we got something.  */
 verify (O_FULLBLOCK != 0);
+verify (O_NOCACHE != 0);
 
 #define MULTIPLE_BITS_SET(i) (((i) & ((i) - 1)) != 0)
 
 /* Ensure that this is a single-bit value.  */
 verify ( ! MULTIPLE_BITS_SET (O_FULLBLOCK));
+verify ( ! MULTIPLE_BITS_SET (O_NOCACHE));
 
 /* Flags, for iflag="..." and oflag="...".  */
 static struct symbol_value const flags[] =
@@ -300,6 +310,7 @@ static struct symbol_value const flags[] =
   {"directory",	O_DIRECTORY},
   {"dsync",	O_DSYNC},
   {"noatime",	O_NOATIME},
+  {"nocache",	O_NOCACHE},   /* Discard cache.  */
   {"noctty",	O_NOCTTY},
   {"nofollow",	HAVE_WORKING_O_NOFOLLOW ? O_NOFOLLOW : 0},
   {"nolinks",	O_NOLINKS},
@@ -534,6 +545,10 @@ Each FLAG symbol may be:\n\
         fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
       if (O_NOATIME)
         fputs (_("  noatime   do not update access time\n"), stdout);
+#if HAVE_POSIX_FADVISE
+      if (O_NOCACHE)
+        fputs (_("  nocache   discard cached data\n"), stdout);
+#endif
       if (O_NOCTTY)
         fputs (_("  noctty    do not assign controlling terminal from file\n"),
                stdout);
@@ -787,6 +802,91 @@ process_signals (void)
     }
 }
 
+/* Return LEN rounded down to a multiple of PAGE_SIZE
+   while storing the remainder internally per FD.
+   Pass LEN == 0 to get the current remainder.  */
+
+static off_t
+cache_round (int fd, off_t len)
+{
+  static off_t i_pending, o_pending;
+  off_t *pending = (fd == STDIN_FILENO ? &i_pending : &o_pending);
+
+  if (len)
+    {
+      off_t c_pending = *pending + len;
+      *pending = c_pending % page_size;
+      if (c_pending > *pending)
+        len = c_pending - *pending;
+      else
+        len = 0;
+    }
+  else
+    len = *pending;
+
+  return len;
+}
+
+/* Discard the cache from the current offset of either
+   STDIN_FILENO or STDOUT_FILENO.
+   Return true on success.  */
+
+static bool
+invalidate_cache (int fd, off_t len)
+{
+  int adv_ret = -1;
+
+  /* Minimize syscalls.  */
+  off_t clen = cache_round (fd, len);
+  if (len && !clen)
+    return true; /* Don't advise this time.  */
+  if (!len && !clen && max_records)
+    return true; /* Nothing pending.  */
+  off_t pending = len ? cache_round (fd, 0) : 0;
+
+  if (fd == STDIN_FILENO)
+    {
+      if (input_seekable)
+        {
+          /* Note we're being careful here to only invalidate what
+             we've read, so as not to dump any read ahead cache.  */
+#if HAVE_POSIX_FADVISE
+            adv_ret = posix_fadvise (fd, input_offset - clen - pending, clen,
+                                     POSIX_FADV_DONTNEED);
+#else
+            errno = ENOTSUP;
+#endif
+        }
+      else
+        errno = ESPIPE;
+    }
+  else if (fd == STDOUT_FILENO)
+    {
+      static off_t output_offset = -2;
+
+      if (output_offset != -1)
+        {
+          if (0 > output_offset)
+            {
+              output_offset = lseek (fd, 0, SEEK_CUR);
+              output_offset -= clen + pending;
+            }
+          if (0 <= output_offset)
+            {
+#if HAVE_POSIX_FADVISE
+              adv_ret = posix_fadvise (fd, output_offset, clen,
+                                       POSIX_FADV_DONTNEED);
+#else
+              errno = ENOTSUP;
+#endif
+              output_offset += clen + pending;
+            }
+        }
+    }
+
+  return adv_ret != -1 ? true : false;
+}
+
 /* Read from FD into the buffer BUF of size SIZE, processing any
    signals that arrive before bytes are read.  Return the number of
    bytes read if successful, -1 (setting errno) on failure.  */
@@ -853,9 +953,7 @@ iwrite (int fd, char const *buf, size_t size)
          posix_fadvise to tell the system not to pollute the buffer
          cache with this data.  Don't bother to diagnose lseek or
          posix_fadvise failure. */
-      off_t off = lseek (STDOUT_FILENO, 0, SEEK_CUR);
-      if (0 <= off)
-        fdadvise (STDOUT_FILENO, off, 0, FADVISE_DONTNEED);
+      invalidate_cache (STDOUT_FILENO, 0);
 
       /* Attempt to ensure that that final block is committed
          to disk as quickly as possible.  */
@@ -883,6 +981,9 @@ iwrite (int fd, char const *buf, size_t size)
       else
         total_written += nwritten;
     }
+
+  if (o_nocache && total_written)
+    invalidate_cache (fd, total_written);
 
   return total_written;
 }
@@ -1107,6 +1208,20 @@ scanargs (int argc, char *const *argv)
     error (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
   if (multiple_bits_set (conversions_mask & (C_EXCL | C_NOCREAT)))
     error (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
+  if (multiple_bits_set (input_flags & (O_DIRECT | O_NOCACHE))
+      || multiple_bits_set (output_flags & (O_DIRECT | O_NOCACHE)))
+    error (EXIT_FAILURE, 0, _("cannot combine direct and nocache"));
+
+  if (input_flags & O_NOCACHE)
+    {
+      i_nocache = true;
+      input_flags &= ~O_NOCACHE;
+    }
+  if (output_flags & O_NOCACHE)
+    {
+      o_nocache = true;
+      output_flags &= ~O_NOCACHE;
+    }
 }
 
 /* Fix up translation table. */
@@ -1689,6 +1804,9 @@ dd_copy (void)
 
       nread = iread_fnc (STDIN_FILENO, ibuf, input_blocksize);
 
+      if (nread >= 0 && i_nocache)
+        invalidate_cache (STDIN_FILENO, nread);
+
       if (nread == 0)
         break;			/* EOF.  */
 
@@ -1698,8 +1816,14 @@ dd_copy (void)
           if (conversions_mask & C_NOERROR)
             {
               print_stats ();
+              size_t bad_portion = input_blocksize - partread;
+
+              /* We already know this data is not cached,
+                 but call this so that correct offsets are maintained.  */
+              invalidate_cache (STDIN_FILENO, bad_portion);
+
               /* Seek past the bad block if possible. */
-              if (!advance_input_after_read_error (input_blocksize - partread))
+              if (!advance_input_after_read_error (bad_portion))
                 {
                   exit_status = EXIT_FAILURE;
 
@@ -1953,6 +2077,32 @@ main (int argc, char **argv)
   start_time = gethrxtime ();
 
   exit_status = dd_copy ();
+
+  if (max_records == 0)
+    {
+      /* Special case to invalidate cache to end of file.  */
+      if (i_nocache && !invalidate_cache (STDIN_FILENO, 0))
+        {
+          error (0, errno, _("failed to discard cache for: %s"),
+                 quote (input_file));
+          exit_status = EXIT_FAILURE;
+        }
+      if (o_nocache && !invalidate_cache (STDOUT_FILENO, 0))
+        {
+          error (0, errno, _("failed to discard cache for: %s"),
+                 quote (output_file));
+          exit_status = EXIT_FAILURE;
+        }
+    }
+  else if (max_records != (uintmax_t) -1)
+    {
+      /* Invalidate any pending region less that page size,
+         in case the kernel might round up.  */
+      if (i_nocache)
+        invalidate_cache (STDIN_FILENO, 0);
+      if (o_nocache)
+        invalidate_cache (STDOUT_FILENO, 0);
+    }
 
   quit (exit_status);
 }
