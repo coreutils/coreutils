@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
+$PERL -e 1 || skip_test_ 'you lack perl'
 
 # The test was seen to fail on ext3 so exclude that type
 # (or any file system where the type can't be determined)
@@ -52,8 +53,6 @@ fi
 # in which it calls ioctl (fd, FS_IOC_FIEMAP,...
 # This also verifies that non-trivial extents are preserved.
 
-$PERL -e 1 || skip_test_ 'skipping part of this test; you lack perl'
-
 # Extract logical block number and length pairs from filefrag -v output.
 # The initial sed is to remove the "eof" from the normally-empty "flags" field.
 # Similarly, remove flags values like "unknown,delalloc,eof".
@@ -78,32 +77,33 @@ for i in $(seq 1 2 21); do
     dd if=/dev/null of=j2 conv=notrunc,fdatasync
 
     cmp j1 j2 || fail=1
-    filefrag -v j1 | grep extent \
-      || skip_test_ 'skipping part of this test; you lack filefrag'
+    if ! filefrag -v j1 | grep -F extent >/dev/null; then
+      test $skip != 1 && warn_ 'skipping part; you lack filefrag'
+      skip=1
+    else
+      # Here is sample filefrag output:
+      #   $ perl -e 'BEGIN{$n=16*1024; *F=*STDOUT}' \
+      #          -e 'for (1..5) { sysseek(*F,$n,1)' \
+      #          -e '&& syswrite *F,"."x$n or die "$!"}' > j
+      #   $ filefrag -v j
+      #   File system type is: ef53
+      #   File size of j is 163840 (40 blocks, blocksize 4096)
+      #    ext logical physical expected length flags
+      #      0       4  6258884               4
+      #      1      12  6258892  6258887      4
+      #      2      20  6258900  6258895      4
+      #      3      28  6258908  6258903      4
+      #      4      36  6258916  6258911      4 eof
+      #   j: 6 extents found
 
-    # Here is sample filefrag output:
-    #   $ perl -e 'BEGIN{$n=16*1024; *F=*STDOUT}' \
-    #          -e 'for (1..5) { sysseek(*F,$n,1)' \
-    #          -e '&& syswrite *F,"."x$n or die "$!"}' > j
-    #   $ filefrag -v j
-    #   File system type is: ef53
-    #   File size of j is 163840 (40 blocks, blocksize 4096)
-    #    ext logical physical expected length flags
-    #      0       4  6258884               4
-    #      1      12  6258892  6258887      4
-    #      2      20  6258900  6258895      4
-    #      3      28  6258908  6258903      4
-    #      4      36  6258916  6258911      4 eof
-    #   j: 6 extents found
-
-    # exclude the physical block numbers; they always differ
-    filefrag -v j1 > ff1 || fail=1
-    filefrag -v j2 > ff2 || fail=1
-    { f ff1; f ff2; } \
-      | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
-        || { fail=1; break; }
+      # exclude the physical block numbers; they always differ
+      filefrag -v j1 > ff1 || framework_failure
+      filefrag -v j2 > ff2 || framework_failure
+      { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare ||
+        fail=1
+    fi
+    test $fail = 1 && break 2
   done
-  test $fail = 1 && break
 done
 
 Exit $fail
