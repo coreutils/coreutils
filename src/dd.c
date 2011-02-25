@@ -837,6 +837,12 @@ iwrite (int fd, char const *buf, size_t size)
 {
   size_t total_written = 0;
 
+  if ((output_flags & O_DIRECT) && w_partial == 1)
+    {
+      error (0, 0, _("dd: warning: partial read; oflag=direct disabled; "
+                     "suggest iflag=fullblock"));
+    }
+
   if ((output_flags & O_DIRECT) && size < output_blocksize)
     {
       int old_flags = fcntl (STDOUT_FILENO, F_GETFL);
