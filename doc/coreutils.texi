@@ -8062,21 +8062,28 @@ Swap every pair of input bytes.  @sc{gnu} @command{dd}, unlike others, works
 when an odd number of bytes are read---the last byte is simply copied
 (since there is nothing to swap it with).
 
-@item noerror
-@opindex noerror
-@cindex read errors, ignoring
-Continue after read errors.
+@item sync
+@opindex sync @r{(padding with @acronym{ASCII} @sc{nul}s)}
+Pad every input block to size of @samp{ibs} with trailing zero bytes.
+When used with @samp{block} or @samp{unblock}, pad with spaces instead of
+zero bytes.
 
-@item nocreat
-@opindex nocreat
-@cindex creating output file, avoiding
-Do not create the output file; the output file must already exist.
+@end table
 
+The following ''conversions'' are really file flags
+and don't effect and internal processing:
+
+@table @samp
 @item excl
 @opindex excl
 @cindex creating output file, requiring
 Fail if the output file already exists; @command{dd} must create the
 output file itself.
+
+@item nocreat
+@opindex nocreat
+@cindex creating output file, avoiding
+Do not create the output file; the output file must already exist.
 
 The @samp{excl} and @samp{nocreat} conversions are mutually exclusive.
 
@@ -8085,11 +8092,10 @@ The @samp{excl} and @samp{nocreat} conversions are mutually exclusive.
 @cindex truncating output file, avoiding
 Do not truncate the output file.
 
-@item sync
-@opindex sync @r{(padding with @acronym{ASCII} @sc{nul}s)}
-Pad every input block to size of @samp{ibs} with trailing zero bytes.
-When used with @samp{block} or @samp{unblock}, pad with spaces instead of
-zero bytes.
+@item noerror
+@opindex noerror
+@cindex read errors, ignoring
+Continue after read errors.
 
 @item fdatasync
 @opindex fdatasync

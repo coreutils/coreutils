@@ -499,18 +499,16 @@ Each CONV symbol may be:\n\
   block     pad newline-terminated records with spaces to cbs-size\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
-"), stdout);
-      fputs (_("\
-  nocreat   do not create the output file\n\
-  excl      fail if the output file already exists\n\
-  notrunc   do not truncate the output file\n\
   ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
-"), stdout);
-      fputs (_("\
-  noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
             with block or unblock, pad with spaces rather than NULs\n\
+"), stdout);
+      fputs (_("\
+  excl      fail if the output file already exists\n\
+  nocreat   do not create the output file\n\
+  notrunc   do not truncate the output file\n\
+  noerror   continue after read errors\n\
   fdatasync  physically write output file data before finishing\n\
   fsync     likewise, but also write metadata\n\
 "), stdout);
