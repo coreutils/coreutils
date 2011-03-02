@@ -926,19 +926,19 @@ main (int argc, char **argv)
       bool skip_file = false;
       enum argv_iter_err ai_err;
       char *file_name = argv_iter (ai, &ai_err);
-      if (ai_err == AI_ERR_EOF)
-        break;
       if (!file_name)
         {
           switch (ai_err)
             {
+            case AI_ERR_EOF:
+              goto argv_iter_done;
             case AI_ERR_READ:
-              error (0, errno, _("%s: read error"), quote (files_from));
-              continue;
-
+              error (0, errno, _("%s: read error"),
+                     quotearg_colon (files_from));
+              ok = false;
+              goto argv_iter_done;
             case AI_ERR_MEM:
               xalloc_die ();
-
             default:
               assert (!"unexpected error code from argv_iter");
             }
@@ -985,11 +985,12 @@ main (int argc, char **argv)
           ok &= du_files (temp_argv, bit_flags);
         }
     }
+ argv_iter_done:
 
   argv_iter_free (ai);
   di_set_free (di_set);
 
-  if (files_from && (ferror (stdin) || fclose (stdin) != 0))
+  if (files_from && (ferror (stdin) || fclose (stdin) != 0) && ok)
     error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));
 
   if (print_grand_total)

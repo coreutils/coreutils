@@ -722,16 +722,17 @@ main (int argc, char **argv)
       bool skip_file = false;
       enum argv_iter_err ai_err;
       char *file_name = argv_iter (ai, &ai_err);
-      if (ai_err == AI_ERR_EOF)
-        break;
       if (!file_name)
         {
           switch (ai_err)
             {
+            case AI_ERR_EOF:
+              goto argv_iter_done;
             case AI_ERR_READ:
-              error (EXIT_FAILURE, errno, _("%s: read error"),
-                     quote (files_from));
-              continue;
+              error (0, errno, _("%s: read error"),
+                     quotearg_colon (files_from));
+              ok = false;
+              goto argv_iter_done;
             case AI_ERR_MEM:
               xalloc_die ();
             default:
@@ -773,6 +774,7 @@ main (int argc, char **argv)
       else
         ok &= wc_file (file_name, &fstatus[nfiles ? i : 0]);
     }
+ argv_iter_done:
 
   /* No arguments on the command line is fine.  That means read from stdin.
      However, no arguments on the --files0-from input stream is an error

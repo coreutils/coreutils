@@ -370,6 +370,7 @@ TESTS =						\
   du/exclude					\
   du/fd-leak					\
   du/files0-from				\
+  du/files0-from-dir				\
   du/hard-link					\
   du/inacc-dest					\
   du/inacc-dir					\
