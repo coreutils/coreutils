@@ -709,6 +709,9 @@ main (int argc, char **argv)
       ai = argv_iter_init_argv (files);
     }
 
+  if (!ai)
+    xalloc_die ();
+
   fstatus = get_input_fstatus (nfiles, files);
   number_width = compute_number_width (nfiles, fstatus);
 
