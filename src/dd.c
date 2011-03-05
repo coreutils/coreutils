@@ -467,11 +467,11 @@ Usage: %s [OPERAND]...\n\
       fputs (_("\
 Copy a file, converting and formatting according to the operands.\n\
 \n\
-  bs=BYTES        read and write BYTES bytes at a time (also see ibs=,obs=)\n\
+  bs=BYTES        read and write up to BYTES bytes at a time\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=CONVS      convert the file as per the comma separated symbol list\n\
   count=BLOCKS    copy only BLOCKS input blocks\n\
-  ibs=BYTES       read BYTES bytes at a time (default: 512)\n\
+  ibs=BYTES       read up to BYTES bytes at a time (default: 512)\n\
 "), stdout);
       fputs (_("\
   if=FILE         read from FILE instead of stdin\n\

@@ -7971,8 +7971,8 @@ Set both input and output block sizes to @var{bytes}.
 This makes @command{dd} read and write @var{bytes} per block,
 overriding any @samp{ibs} and @samp{obs} settings.
 In addition, if no data-transforming @option{conv} option is specified,
-each input block is copied to the output as a single block,
-without aggregating short reads.
+input is copied to the output as soon as it's read,
+even if it is smaller than the block size.
 
 @item cbs=@var{bytes}
 @opindex cbs
