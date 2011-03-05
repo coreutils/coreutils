@@ -199,6 +199,9 @@ static int input_seek_errno;
 static uintmax_t input_offset;
 static bool input_offset_overflow;
 
+/* True if a partial read should be diagnosed.  */
+static bool warn_partial_read;
+
 /* Records truncated by conv=block. */
 static uintmax_t r_truncate = 0;
 
@@ -894,14 +897,35 @@ invalidate_cache (int fd, off_t len)
 static ssize_t
 iread (int fd, char *buf, size_t size)
 {
-  while (true)
+  ssize_t nread;
+
+  do
     {
-      ssize_t nread;
       process_signals ();
       nread = read (fd, buf, size);
-      if (! (nread < 0 && errno == EINTR))
-        return nread;
     }
+  while (nread < 0 && errno == EINTR);
+
+  if (0 < nread && warn_partial_read)
+    {
+      static ssize_t prev_nread;
+
+      if (0 < prev_nread && prev_nread < size)
+        {
+          uintmax_t prev = prev_nread;
+          error (0, 0, ngettext (("warning: partial read (%"PRIuMAX" byte); "
+                                  "suggest iflag=fullblock"),
+                                 ("warning: partial read (%"PRIuMAX" bytes); "
+                                  "suggest iflag=fullblock"),
+                                 select_plural (prev)),
+                 prev);
+          warn_partial_read = false;
+        }
+
+      prev_nread = nread;
+    }
+
+  return nread;
 }
 
 /* Wrapper around iread function to accumulate full blocks.  */
@@ -934,12 +958,6 @@ static size_t
 iwrite (int fd, char const *buf, size_t size)
 {
   size_t total_written = 0;
-
-  if ((output_flags & O_DIRECT) && w_partial == 1)
-    {
-      error (0, 0, _("dd: warning: partial read; oflag=direct disabled; "
-                     "suggest iflag=fullblock"));
-    }
 
   if ((output_flags & O_DIRECT) && size < output_blocksize)
     {
@@ -1175,7 +1193,7 @@ scanargs (int argc, char *const *argv)
     input_blocksize = output_blocksize = blocksize;
   else
     {
-      /* POSIX says dd aggregates short reads into
+      /* POSIX says dd aggregates partial reads into
          output_blocksize if bs= is not specified.  */
       conversions_mask |= C_TWOBUFS;
     }
@@ -1195,6 +1213,17 @@ scanargs (int argc, char *const *argv)
       error (0, 0, "%s: %s", _("invalid output flag"), "'fullblock'");
       usage (EXIT_FAILURE);
     }
+
+  /* Warn about partial reads if bs=SIZE is given and iflag=fullblock
+     is not, and if counting or skipping bytes or using direct I/O.
+     This helps to avoid confusion with miscounts, and to avoid issues
+     with direct I/O on GNU/Linux.  */
+  warn_partial_read =
+    (! (conversions_mask & C_TWOBUFS) && ! (input_flags & O_FULLBLOCK)
+     && (skip_records
+         || (0 < max_records && max_records < (uintmax_t) -1)
+         || (input_flags | output_flags) & O_DIRECT));
+
   iread_fnc = ((input_flags & O_FULLBLOCK)
                ? iread_fullblock
                : iread);
@@ -1758,7 +1787,7 @@ dd_copy (void)
          There are 3 reasons why there might be unskipped blocks/bytes:
              1. file is too small
              2. pipe has not enough data
-             3. short reads  */
+             3. partial reads  */
       if (us_blocks || (!input_offset_overflow && us_bytes))
         {
           error (0, 0,
