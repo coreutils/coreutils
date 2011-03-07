@@ -85,24 +85,41 @@ extent_scan_read (struct extent_scan *scan)
   scan->ei_count = fiemap->fm_mapped_extents;
   scan->ext_info = xnmalloc (scan->ei_count, sizeof (struct extent_info));
 
-  unsigned int i;
+  unsigned int i, si = 0;
+  struct extent_info *last_ei IF_LINT ( = scan->ext_info);
+
   for (i = 0; i < scan->ei_count; i++)
     {
       assert (fm_extents[i].fe_logical <= OFF_T_MAX);
 
-      scan->ext_info[i].ext_logical = fm_extents[i].fe_logical;
-      scan->ext_info[i].ext_length = fm_extents[i].fe_length;
-      scan->ext_info[i].ext_flags = fm_extents[i].fe_flags;
+      if (si && last_ei->ext_flags ==
+          (fm_extents[i].fe_flags & ~FIEMAP_EXTENT_LAST)
+          && (last_ei->ext_logical + last_ei->ext_length
+              == fm_extents[i].fe_logical))
+        {
+          /* Merge previous with last.  */
+          last_ei->ext_length += fm_extents[i].fe_length;
+          /* Copy flags in case different.  */
+          last_ei->ext_flags = fm_extents[i].fe_flags;
+        }
+      else
+        {
+          last_ei = scan->ext_info + si;
+          last_ei->ext_logical = fm_extents[i].fe_logical;
+          last_ei->ext_length = fm_extents[i].fe_length;
+          last_ei->ext_flags = fm_extents[i].fe_flags;
+          si++;
+        }
     }
 
-  i--;
-  if (scan->ext_info[i].ext_flags & FIEMAP_EXTENT_LAST)
-    {
-      scan->hit_final_extent = true;
-      return true;
-    }
+  /* We don't bother reallocating.  We should though if we change
+     to looping through all extents, within this function.  */
+  scan->ei_count = si;
 
-  scan->scan_start = fm_extents[i].fe_logical + fm_extents[i].fe_length;
+  if (last_ei->ext_flags & FIEMAP_EXTENT_LAST)
+    scan->hit_final_extent = true;
+  else
+    scan->scan_start = last_ei->ext_logical + last_ei->ext_length;
 
   return true;
 }
