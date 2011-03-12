@@ -79,27 +79,6 @@ wc_truncate (wchar_t *wc, size_t width)
   return cells;
 }
 
-/* FIXME: move this function to gnulib as it's missing on:
-   OpenBSD 3.8, IRIX 5.3, Solaris 2.5.1, mingw, BeOS  */
-
-static int
-rpl_wcswidth (const wchar_t *s, size_t n)
-{
-  int ret = 0;
-
-  while (n-- > 0 && *s != L'\0')
-    {
-      int nwidth = wcwidth (*s++);
-      if (nwidth == -1)             /* non printable */
-        return -1;
-      if (ret > (INT_MAX - nwidth)) /* overflow */
-        return -1;
-      ret += nwidth;
-    }
-
-  return ret;
-}
-
 /* Write N_SPACES space characters to DEST while ensuring
    nothing is written beyond DEST_END. A terminating NUL
    is always added to DEST.
@@ -171,7 +150,7 @@ mbsalign (const char *src, char *dest, size_t dest_size,
           str_wc[src_chars - 1] = L'\0';
           wc_enabled = true;
           conversion = wc_ensure_printable (str_wc);
-          n_cols = rpl_wcswidth (str_wc, src_chars);
+          n_cols = wcswidth (str_wc, src_chars);
         }
     }
 
