@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2010-11-20.03; # UTC
+scriptversion=2011-03-03.12; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -42,30 +42,32 @@ local_gl_dir=gl
 bt='._bootmp'
 bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
 bt2=${bt}2
+me=$0
 
 usage() {
   cat <<EOF
-Usage: $0 [OPTION]...
+Usage: $me [OPTION]...
 Bootstrap this package from the checked-out sources.
 
 Options:
- --gnulib-srcdir=DIRNAME  Specify the local directory where gnulib
+ --gnulib-srcdir=DIRNAME  specify the local directory where gnulib
                           sources reside.  Use this if you already
                           have gnulib sources on your machine, and
                           do not want to waste your bandwidth downloading
-                          them again.  Defaults to \$GNULIB_SRCDIR.
- --bootstrap-sync         If this bootstrap script is not identical to
+                          them again.  Defaults to \$GNULIB_SRCDIR
+ --bootstrap-sync         if this bootstrap script is not identical to
                           the version in the local gnulib sources,
                           update this script, and then restart it with
-                          /bin/sh or the shell \$CONFIG_SHELL if
-                          defined.
- --no-bootstrap-sync      Do not check whether bootstrap is out of sync.
- --copy                   Copy files instead of creating symbolic links.
- --force                  Attempt to bootstrap even if the sources seem
-                          not to have been checked out.
- --skip-po                Do not download po files.
+                          /bin/sh or the shell \$CONFIG_SHELL
+ --no-bootstrap-sync      do not check whether bootstrap is out of sync
+ --copy                   copy files instead of creating symbolic links
+ --force                  attempt to bootstrap even if the sources seem
+                          not to have been checked out
+ --no-git                 do not use git to update gnulib.  Requires that
+                          --gnulib-srcdir point to a correct gnulib snapshot
+ --skip-po                do not download po files
 
-If the file $0.conf exists in the same directory as this script, its
+If the file $me.conf exists in the same directory as this script, its
 contents are read as shell variables to configure the bootstrap.
 
 For build prerequisites, environment variables like \$AUTOCONF and \$AMTAR
@@ -178,6 +180,9 @@ vc_ignore=auto
 # default.
 bootstrap_sync=false
 
+# Use git to update gnulib sources
+use_git=true
+
 # find_tool ENVVAR NAMES...
 # -------------------------
 # Search for a required program.  Use the value of ENVVAR, if set,
@@ -202,11 +207,11 @@ find_tool ()
     find_tool_error_prefix="\$$find_tool_envvar: "
   fi
   if test x"$find_tool_res" = x; then
-    echo >&2 "$0: one of these is required: $find_tool_names"
+    echo >&2 "$me: one of these is required: $find_tool_names"
     exit 1
   fi
   ($find_tool_res --version </dev/null) >/dev/null 2>&1 || {
-    echo >&2 "$0: ${find_tool_error_prefix}cannot run $find_tool_res --version"
+    echo >&2 "$me: ${find_tool_error_prefix}cannot run $find_tool_res --version"
     exit 1
   }
   eval "$find_tool_envvar=\$find_tool_res"
@@ -253,11 +258,20 @@ do
     bootstrap_sync=true;;
   --no-bootstrap-sync)
     bootstrap_sync=false;;
+  --no-git)
+    use_git=false;;
   *)
     echo >&2 "$0: $option: unknown option"
     exit 1;;
   esac
 done
+
+if $use_git || test -d "$GNULIB_SRCDIR"; then
+  :
+else
+  echo "$0: Error: --no-git requires --gnulib-srcdir" >&2
+  exit 1
+fi
 
 if test -n "$checkout_only_file" && test ! -r "$checkout_only_file"; then
   echo "$0: Bootstrapping from a non-checked-out distribution is risky." >&2
@@ -384,18 +398,22 @@ check_versions() {
     if test "$app" = libtool; then
       app=libtoolize
     fi
+    # Exempt git if --no-git is in effect.
+    if test "$app" = git; then
+      $use_git || continue
+    fi
     # Honor $APP variables ($TAR, $AUTOCONF, etc.)
     appvar=`echo $app | tr '[a-z]-' '[A-Z]_'`
     test "$appvar" = TAR && appvar=AMTAR
     eval "app=\${$appvar-$app}"
     inst_ver=$(get_version $app)
     if [ ! "$inst_ver" ]; then
-      echo "Error: '$app' not found" >&2
+      echo "$me: Error: '$app' not found" >&2
       ret=1
     elif [ ! "$req_ver" = "-" ]; then
       latest_ver=$(sort_ver $req_ver $inst_ver | cut -d' ' -f2)
       if [ ! "$latest_ver" = "$inst_ver" ]; then
-        echo "Error: '$app' version == $inst_ver is too old" >&2
+        echo "$me: Error: '$app' version == $inst_ver is too old" >&2
         echo "       '$app' version >= $req_ver is required" >&2
         ret=1
       fi
@@ -428,9 +446,9 @@ fi
 if ! printf "$buildreq" | check_versions; then
   echo >&2
   if test -f README-prereq; then
-    echo "See README-prereq for how to get the prerequisite programs" >&2
+    echo "$0: See README-prereq for how to get the prerequisite programs" >&2
   else
-    echo "Please install the prerequisite programs" >&2
+    echo "$0: Please install the prerequisite programs" >&2
   fi
   exit 1
 fi
@@ -442,11 +460,11 @@ if test -d .git && (git --version) >/dev/null 2>/dev/null ; then
   if git config merge.merge-changelog.driver >/dev/null ; then
     :
   elif (git-merge-changelog --version) >/dev/null 2>/dev/null ; then
-    echo "initializing git-merge-changelog driver"
+    echo "$0: initializing git-merge-changelog driver"
     git config merge.merge-changelog.name 'GNU-style ChangeLog merge driver'
     git config merge.merge-changelog.driver 'git-merge-changelog %O %A %B'
   else
-    echo "consider installing git-merge-changelog from gnulib"
+    echo "$0: consider installing git-merge-changelog from gnulib"
   fi
 fi
 
@@ -462,7 +480,7 @@ git_modules_config () {
 }
 
 gnulib_path=`git_modules_config submodule.gnulib.path`
-: ${gnulib_path=gnulib}
+test -z "$gnulib_path" && gnulib_path=gnulib
 
 # Get gnulib files.
 
@@ -533,7 +551,7 @@ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 download_po_files() {
   subdir=$1
   domain=$2
-  echo "$0: getting translations into $subdir for $domain..."
+  echo "$me: getting translations into $subdir for $domain..."
   cmd=`printf "$po_download_command_format" "$domain" "$subdir"`
   eval "$cmd"
 }
@@ -567,7 +585,7 @@ update_po_files() {
         ! test -f "$po_dir/$po.po" ||
         ! $SHA1SUM -c --status "$cksum_file" \
             < "$new_po" > /dev/null; then
-      echo "updated $po_dir/$po.po..."
+      echo "$me: updated $po_dir/$po.po..."
       cp "$new_po" "$po_dir/$po.po" \
           && $SHA1SUM < "$new_po" > "$cksum_file"
     fi
@@ -612,13 +630,13 @@ symlink_to_dir()
     if $copy; then
       {
         test ! -h "$dst" || {
-          echo "$0: rm -f $dst" &&
+          echo "$me: rm -f $dst" &&
           rm -f "$dst"
         }
       } &&
       test -f "$dst" &&
       cmp -s "$src" "$dst" || {
-        echo "$0: cp -fp $src $dst" &&
+        echo "$me: cp -fp $src $dst" &&
         cp -fp "$src" "$dst"
       }
     else
@@ -632,7 +650,7 @@ symlink_to_dir()
         *)
           case /$dst/ in
           *//* | */../* | */./* | /*/*/*/*/*/)
-             echo >&2 "$0: invalid symlink calculation: $src -> $dst"
+             echo >&2 "$me: invalid symlink calculation: $src -> $dst"
              exit 1;;
           /*/*/*/*/)	dot_dots=../../../;;
           /*/*/*/)	dot_dots=../../;;
@@ -640,7 +658,7 @@ symlink_to_dir()
           esac;;
         esac
 
-        echo "$0: ln -fs $dot_dots$src $dst" &&
+        echo "$me: ln -fs $dot_dots$src $dst" &&
         ln -fs "$dot_dots$src" "$dst"
       }
     fi
@@ -673,7 +691,7 @@ cp_mark_as_generated()
       cmp -s "$cp_src" "$cp_dst" || {
         # Copy the file first to get proper permissions if it
         # doesn't already exist.  Then overwrite the copy.
-        echo "$0: cp -f $cp_src $cp_dst" &&
+        echo "$me: cp -f $cp_src $cp_dst" &&
         rm -f "$cp_dst" &&
         cp "$cp_src" "$cp_dst-t" &&
         sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst-t" &&
@@ -691,7 +709,7 @@ cp_mark_as_generated()
       if cmp -s "$cp_dst-t" "$cp_dst"; then
         rm -f "$cp_dst-t"
       else
-        echo "$0: cp $cp_src $cp_dst # with edits" &&
+        echo "$me: cp $cp_src $cp_dst # with edits" &&
         mv -f "$cp_dst-t" "$cp_dst"
       fi
     fi
@@ -710,7 +728,7 @@ version_controlled_file() {
   elif test -d .svn; then
     svn log -r HEAD "$dir/$file" > /dev/null 2>&1 && found=yes
   else
-    echo "$0: no version control for $dir/$file?" >&2
+    echo "$me: no version control for $dir/$file?" >&2
   fi
   test $found = yes
 }
@@ -734,18 +752,18 @@ slurp() {
         remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
         sed "$remove_intl" $1/$dir/$file |
         cmp - $dir/$gnulib_mk > /dev/null || {
-          echo "$0: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
+          echo "$me: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
           rm -f $dir/$gnulib_mk &&
           sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk &&
           gnulib_mk_hook $dir/$gnulib_mk
         }
       elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
            version_controlled_file $dir $file; then
-        echo "$0: $dir/$file overrides $1/$dir/$file"
+        echo "$me: $dir/$file overrides $1/$dir/$file"
       else
         copied=$copied$sep$file; sep=$nl
         if test $file = gettext.m4; then
-          echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
+          echo "$me: patching m4/gettext.m4 to remove need for intl/* ..."
           rm -f $dir/$file
           sed '
             /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
@@ -856,7 +874,7 @@ grep -E '^[	 ]*AC_CONFIG_HEADERS?\>' configure.ac >/dev/null ||
 
 for command in \
   libtool \
-  "${ACLOCAL-aclocal} --force -I m4 $ACLOCAL_FLAGS" \
+  "${ACLOCAL-aclocal} --force -I '$m4_base' $ACLOCAL_FLAGS" \
   "${AUTOCONF-autoconf} --force" \
   "${AUTOHEADER-autoheader} --force" \
   "${AUTOMAKE-automake} --add-missing --copy --force-missing"
@@ -867,7 +885,7 @@ do
     command="${LIBTOOLIZE-libtoolize} -c -f"
   fi
   echo "$0: $command ..."
-  $command || exit
+  eval "$command" || exit
 done
 
 

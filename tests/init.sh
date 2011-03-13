@@ -74,10 +74,10 @@ Exit () { set +e; (exit $1); exit $1; }
 # the reason for skip/failure to console, rather than to the .log files.
 : ${stderr_fileno_=2}
 
-warn_() { echo "$@" 1>&$stderr_fileno_; }
-fail_() { warn_ "$ME_: failed test: $@"; Exit 1; }
-skip_() { warn_ "$ME_: skipped test: $@"; Exit 77; }
-framework_failure_() { warn_ "$ME_: set-up failure: $@"; Exit 99; }
+warn_ () { echo "$@" 1>&$stderr_fileno_; }
+fail_ () { warn_ "$ME_: failed test: $@"; Exit 1; }
+skip_ () { warn_ "$ME_: skipped test: $@"; Exit 77; }
+framework_failure_ () { warn_ "$ME_: set-up failure: $@"; Exit 99; }
 
 # Sanitize this shell to POSIX mode, if possible.
 DUALCASE=1; export DUALCASE
@@ -193,7 +193,7 @@ fi
 test -n "$EXEEXT" && shopt -s expand_aliases
 
 # Enable glibc's malloc-perturbing option.
-# This is cheap and useful for exposing code that depends on the fact that
+# This is useful for exposing code that depends on the fact that
 # malloc-related functions often return memory that is mostly zeroed.
 # If you have the time and cycles, use valgrind to do an even better job.
 : ${MALLOC_PERTURB_=87}
@@ -202,22 +202,22 @@ export MALLOC_PERTURB_
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount
 # a partition, or to undo any other global state changes.
-cleanup_() { :; }
+cleanup_ () { :; }
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
-  compare() { diff -u "$@"; }
+  compare () { diff -u "$@"; }
 elif ( cmp --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
-  compare() { cmp -s "$@"; }
+  compare () { cmp -s "$@"; }
 else
-  compare() { cmp "$@"; }
+  compare () { cmp "$@"; }
 fi
 
 # An arbitrary prefix to help distinguish test directories.
-testdir_prefix_() { printf gt; }
+testdir_prefix_ () { printf gt; }
 
 # Run the user-overridable cleanup_ function, remove the temporary
 # directory and exit with the incoming value of $?.
-remove_tmp_()
+remove_tmp_ ()
 {
   __st=$?
   cleanup_
@@ -233,7 +233,7 @@ remove_tmp_()
 # contains only the specified bytes (see the case stmt below), then print
 # a space-separated list of those names and return 0.  Otherwise, don't
 # print anything and return 1.  Naming constraints apply also to DIR.
-find_exe_basenames_()
+find_exe_basenames_ ()
 {
   feb_dir_=$1
   feb_fail_=0
@@ -266,7 +266,7 @@ find_exe_basenames_()
 # PROG that simply invokes PROG.exe, then return 0.  If any selected
 # file name or the directory name, $1, contains an unexpected character,
 # define no alias and return 1.
-create_exe_shims_()
+create_exe_shims_ ()
 {
   case $EXEEXT in
     '') return 0 ;;
@@ -288,7 +288,7 @@ create_exe_shims_()
 
 # Use this function to prepend to PATH an absolute name for each
 # specified, possibly-$initial_cwd_-relative, directory.
-path_prepend_()
+path_prepend_ ()
 {
   while test $# != 0; do
     path_dir_=$1
@@ -311,7 +311,7 @@ path_prepend_()
   export PATH
 }
 
-setup_()
+setup_ ()
 {
   if test "$VERBOSE" = yes; then
     # Test whether set -x may cause the selected shell to corrupt an
@@ -364,7 +364,7 @@ setup_()
 #  - make only $MAX_TRIES_ attempts
 
 # Helper function.  Print $N pseudo-random bytes from a-zA-Z0-9.
-rand_bytes_()
+rand_bytes_ ()
 {
   n_=$1
 
@@ -396,7 +396,7 @@ rand_bytes_()
     | LC_ALL=C tr -c $chars_ 01234567$chars_$chars_$chars_
 }
 
-mktempd_()
+mktempd_ ()
 {
   case $# in
   2);;
