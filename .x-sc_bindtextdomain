@@ -1,7 +1,0 @@
-^gl/lib/randint\.c$
-^gl/tests/test-di-set\.c$
-^gl/tests/test-fadvise\.c$
-^gl/tests/test-ino-map\.c$
-^gl/tests/test-mbsalign\.c$
-^gl/tests/test-rand-isaac\.c$
-^lib/euidaccess-stat\.c$

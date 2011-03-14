@@ -39,35 +39,8 @@ changelog_etc =				\
   old/textutils/NEWS			\
   po/ChangeLog-2007
 
-syntax_check_exceptions =		\
-  .x-sc_GPL_version			\
-  .x-sc_bindtextdomain			\
-  .x-sc_error_message_uppercase		\
-  .x-sc_file_system			\
-  .x-sc_obsolete_symbols		\
-  .x-sc_po_check			\
-  .x-sc_program_name			\
-  .x-sc_prohibit_always-defined_macros	\
-  .x-sc_prohibit_atoi_atof		\
-  .x-sc_prohibit_empty_lines_at_EOF	\
-  .x-sc_prohibit_fail_0			\
-  .x-sc_prohibit_magic_number_exit	\
-  .x-sc_prohibit_stat_st_blocks		\
-  .x-sc_prohibit_strcmp			\
-  .x-sc_prohibit_tab_based_indentation	\
-  .x-sc_require_config_h		\
-  .x-sc_require_config_h_first		\
-  .x-sc_space_tab			\
-  .x-sc_sun_os_names			\
-  .x-sc_system_h_headers		\
-  .x-sc_trailing_blank			\
-  .x-sc_prohibit_always_true_header_tests \
-  .x-sc_unmarked_diagnostics		\
-  .x-sc_useless_cpp_parens
-
 EXTRA_DIST =				\
   $(changelog_etc)			\
-  $(syntax_check_exceptions)		\
   .mailmap				\
   .prev-version				\
   .version				\

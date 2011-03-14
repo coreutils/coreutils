@@ -93,19 +93,6 @@ sc_root_tests:
 	       exit 1; } || :;						\
 	fi
 
-# Ensure that the syntax_check_exceptions file list in Makefile.am
-# stays in sync with corresponding files in the repository.
-sce = syntax_check_exceptions
-sc_x_sc_dist_check:
-	@test "$$( ($(VC_LIST) | sed -n '/\.x-sc_/p'			\
-		     | sed 's|^$(_dot_escaped_srcdir)/||';		\
-		   sed -n '/^$(sce) =[	 ]*\\$$/,/[^\]$$/p'		\
-		     $(srcdir)/Makefile.am				\
-		       | sed 's/^  *//;/^$(sce) =/d'			\
-		       | tr -s '\012\\' '  ' | fmt -1			\
-		   ) | sort | uniq -u)"					\
-	  && { echo 'Makefile.am: $(sce) mismatch' >&2; exit 1; } || :;
-
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:
@@ -337,3 +324,35 @@ include $(srcdir)/dist-check.mk
 update-copyright-env = \
   UPDATE_COPYRIGHT_USE_INTERVALS=1 \
   UPDATE_COPYRIGHT_MAX_LINE_LENGTH=79
+
+# List syntax-check exemptions.
+exclude_file_name_regexp--sc_space_tab = \
+  ^(tests/pr/|tests/misc/nl$$|gl/.*\.diff$$)
+exclude_file_name_regexp--sc_bindtextdomain = ^(gl/.*|lib/euidaccess-stat)\.c$$
+exclude_file_name_regexp--sc_unmarked_diagnostics =    ^build-aux/cvsu$$
+exclude_file_name_regexp--sc_error_message_uppercase = ^build-aux/cvsu$$
+exclude_file_name_regexp--sc_trailing_blank = ^tests/pr/
+exclude_file_name_regexp--sc_system_h_headers = \
+  ^src/((system|copy)\.h|libstdbuf\.c)$$
+
+_src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
+exclude_file_name_regexp--sc_require_config_h_first = \
+  (^lib/buffer-lcm\.c|src/$(_src)\.c)$$
+exclude_file_name_regexp--sc_require_config_h = \
+  $(exclude_file_name_regexp--sc_require_config_h_first)
+
+exclude_file_name_regexp--sc_po_check = ^gl/
+exclude_file_name_regexp--sc_prohibit_always-defined_macros = ^src/seq\.c$$
+exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = ^tests/pr/
+exclude_file_name_regexp--sc_program_name = ^(gl/.*|lib/euidaccess-stat)\.c$$
+exclude_file_name_regexp--sc_file_system = NEWS|^(src/df\.c|tests/misc/df-P)$$
+exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
+  ^m4/stat-prog\.m4$$
+exclude_file_name_regexp--sc_prohibit_fail_0 = \
+  (^tests/init\.sh|Makefile\.am|\.mk)$$
+exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
+exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
+  ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
+
+exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
+  ^(src/system\.h|tests/du/2g)$$

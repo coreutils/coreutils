@@ -162,18 +162,18 @@ int main()
   time_t now = time ((time_t *) 0);
   int hour_GMT0, hour_unset;
   if (putenv ("TZ=GMT0") != 0)
-    exit (1);
+    return 1;
   hour_GMT0 = localtime (&now)->tm_hour;
   unset_TZ ();
   hour_unset = localtime (&now)->tm_hour;
   if (putenv ("TZ=PST8") != 0)
-    exit (1);
+    return 1;
   if (localtime (&now)->tm_hour == hour_GMT0)
-    exit (1);
+    return 1;
   unset_TZ ();
   if (localtime (&now)->tm_hour != hour_unset)
-    exit (1);
-  exit (0);
+    return 1;
+  return 0;
 }]])],
 [utils_cv_localtime_cache=no],
 [utils_cv_localtime_cache=yes],
