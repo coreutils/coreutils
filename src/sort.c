@@ -319,8 +319,12 @@ static size_t merge_buffer_size = MAX (MIN_MERGE_BUFFER_SIZE, 256 * 1024);
    specified by the user.  Zero if the user has not specified a size.  */
 static size_t sort_size;
 
-/* The guessed size for non-regular files.  */
-#define INPUT_FILE_SIZE_GUESS (1024 * 1024)
+/* The initial allocation factor for non-regular files.
+   This is used, e.g., when reading from a pipe.
+   Don't make it too big, since it is multiplied by ~130 to
+   obtain the size of the actual buffer sort will allocate.
+   Also, there may be 8 threads all doing this at the same time.  */
+#define INPUT_FILE_SIZE_GUESS (128 * 1024)
 
 /* Array of directory names in which any temporary files are to be created. */
 static char const **temp_dirs;
