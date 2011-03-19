@@ -28,30 +28,39 @@ my @b;
 foreach my $i (0..@A/2-1) { $a[$i] = { L_BLK => $A[2*$i], LEN => $A[2*$i+1] } };
 foreach my $i (0..@B/2-1) { $b[$i] = { L_BLK => $B[2*$i], LEN => $B[2*$i+1] } };
 
+# Merge adjacent extents in array E.
+sub merge_extents($)
+{
+  my ($e) = @_;
+
+  my $i = 0;
+  while (1)
+    {
+      !defined $e->[$i+1]
+        and last;
+      $e->[$i]->{L_BLK} + $e->[$i]->{LEN} != $e->[$i+1]->{L_BLK}
+        and ++$i, next;
+
+      $e->[$i]->{LEN} += $e->[$i+1]->{LEN};
+      # Remove $e->[$i+1]
+      splice @$e, $i+1, 1;
+    }
+}
+
+merge_extents \@a;
+merge_extents \@b;
+
+@a == @b
+  or die "$ME: extent counts differ, even after adjustment\n";
+
 my $i = 0;
-my $j = 0;
-while (1)
+while (defined $a[$i])
   {
-    !defined $a[$i] && !defined $b[$j]
-      and exit 0;
-    defined $a[$i] && defined $b[$j]
-      or die "\@a and \@b have different lengths, even after adjustment\n";
-    ($a[$i]->{L_BLK} == $b[$j]->{L_BLK}
-     && $a[$i]->{LEN} == $b[$j]->{LEN})
-      and next;
-    ($a[$i]->{LEN} < $b[$j]->{LEN}
-     && exists $a[$i+1] && $a[$i]->{LEN} + $a[$i+1]->{LEN} == $b[$j]->{LEN})
-      and ++$i, next;
-    exists $b[$j+1] && $a[$i]->{LEN} == $b[$i]->{LEN} + $b[$i+1]->{LEN}
-      and ++$j, next;
-    die "differing extent:\n"
-      . "  [$i]=$a[$i]->{L_BLK} $a[$i]->{LEN}\n"
-      . "  [$j]=$b[$j]->{L_BLK} $b[$j]->{LEN}\n"
-  }
-continue
-  {
-    ++$i;
-    ++$j;
+    $a[$i]->{L_BLK} == $b[$i]->{L_BLK} && $a[$i]->{LEN} == $b[$i]->{LEN}
+      or die "$ME: differing extent:\n"
+        . "  [$i]=$a[$i]->{L_BLK} $a[$i]->{LEN}\n"
+          . "  [$i]=$b[$i]->{L_BLK} $b[$i]->{LEN}\n";
+    $i++;
   }
 
 ### Setup "GNU" style for perl-mode and cperl-mode.

@@ -69,15 +69,14 @@ for i in $(seq 1 2 21); do
           -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
           -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
 
-    # Note the explicit fdatasync is used here as
-    # it was seen that `filefrag -s` (FIEMAP_FLAG_SYNC) was
-    # ineffective on ext4 loopback on Linux 2.6.35.10-72.fc14.i686
-    dd if=/dev/null of=j1 conv=notrunc,fdatasync
+    # Note there is an implicit sync performed by cp to
+    # work around bugs in EXT4 and BTRFS before Linux 2.6.38
+    # Note also the -s parameter to the filefrag commands below
+    # for the same reasons.
     cp --sparse=always j1 j2 || fail=1
-    dd if=/dev/null of=j2 conv=notrunc,fdatasync
 
     cmp j1 j2 || fail=1
-    if ! filefrag -v j1 | grep -F extent >/dev/null; then
+    if ! filefrag -vs j1 | grep -F extent >/dev/null; then
       test $skip != 1 && warn_ 'skipping part; you lack filefrag'
       skip=1
     else
@@ -98,7 +97,7 @@ for i in $(seq 1 2 21); do
 
       # exclude the physical block numbers; they always differ
       filefrag -v j1 > ff1 || framework_failure
-      filefrag -v j2 > ff2 || framework_failure
+      filefrag -vs j2 > ff2 || framework_failure
       { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare ||
         fail=1
     fi
