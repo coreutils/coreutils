@@ -52,14 +52,6 @@ t0() {
   fi
 }
 
-t1() {
-  f=$1; shift
-  u=$1; shift
-  g=$1; shift
-  t0 "$f" "$u" "$g" setuidgid -g "$nameless_gid1,$nameless_gid2" \
-      "$nameless_uid" "$@"
-}
-
 nameless_uid=`$PERL -le '
   foreach my $i (1000..16*1024-1)
     {
@@ -104,6 +96,25 @@ t0 b0 "$nameless_uid" "$nameless_gid1" cp -p
 t0 b1 "$nameless_uid" "$nameless_gid2" cp -p
 t0 c0 0 "$nameless_gid1" cp -p
 t0 c1 0 "$nameless_gid2" cp -p
+
+# For the remaining tests, we need a cp binary that is accessible to a user
+# with UID of $nameless_uid.  The build directory may not be accessible,
+# so create a temporary directory and copy cp into it, ensure that
+# $nameless_uid can access it and then make that directory the search path.
+tmp_path=
+cleanup_() { rm -rf "$tmp_path"; }
+tmp_path=$(mktemp -d) || fail_ "failed to create temporary directory"
+cp "$abs_path_dir_/cp" "$tmp_path"
+chown -R $nameless_uid "$tmp_path"
+
+t1() {
+  f=$1; shift
+  u=$1; shift
+  g=$1; shift
+  t0 "$f" "$u" "$g" env \
+      setuidgid -g "$nameless_gid1,$nameless_gid2" \
+      "$nameless_uid" env PATH="$tmp_path" "$@"
+}
 
 t1 a0 "$nameless_uid" "$nameless_gid1" cp
 t1 b0 "$nameless_uid" "$nameless_gid1" cp
