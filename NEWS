@@ -26,6 +26,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   which will discard any cache associated with the files, or
   processed portion thereof.
 
+** Changes in behavior
+
+  test now accepts "==" as a synonym for "="
+
 
 * Noteworthy changes in release 8.10 (2011-02-04) [stable]
 

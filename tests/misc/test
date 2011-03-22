@@ -132,6 +132,8 @@ my @Tests =
 
   ['streq-1', qw(t = t)],
   ['streq-2', qw(t = f), {EXIT=>1}],
+  ['streqeq-1', qw(t == t)],
+  ['streqeq-2', qw(t == f), {EXIT=>1}],
   ['streq-3', qw(! = !)],
   ['streq-4', qw(= = =)],
   ['streq-5', "'(' = '('"],
