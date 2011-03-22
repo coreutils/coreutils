@@ -11535,7 +11535,7 @@ Exit status:
 * File type tests::             -[bcdfhLpSt]
 * Access permission tests::     -[gkruwxOG]
 * File characteristic tests::   -e -s -nt -ot -ef
-* String tests::                -z -n = !=
+* String tests::                -z -n = == !=
 * Numeric tests::               -eq -ne -lt -le -gt -ge
 * Connectives for test::        ! -a -o
 @end menu
@@ -11725,6 +11725,11 @@ True if the length of @var{string} is nonzero.
 @opindex =
 @cindex equal string check
 True if the strings are equal.
+
+@item @var{string1} == @var{string2}
+@opindex ==
+@cindex equal string check
+True if the strings are equal (synonym for =).
 
 @item @var{string1} != @var{string2}
 @opindex !=

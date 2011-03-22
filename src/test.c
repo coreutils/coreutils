@@ -173,7 +173,8 @@ get_mtime (char const *filename, struct timespec *mtime)
 static bool
 binop (char const *s)
 {
-  return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
+  return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "==")) ||
+          (STREQ (s,   "-nt")) ||
           (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
           (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
           (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
@@ -360,7 +361,8 @@ binary_operator (bool l_is_l)
       test_syntax_error (_("unknown binary operator"), argv[op]);
     }
 
-  if (argv[op][0] == '=' && !argv[op][1])
+  if (argv[op][0] == '=' && (!argv[op][1] ||
+       ((argv[op][1] == '=') && !argv[op][2])))
     {
       bool value = STREQ (argv[pos], argv[pos + 2]);
       pos += 3;
