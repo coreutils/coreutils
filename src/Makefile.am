@@ -727,7 +727,8 @@ sc_tight_scope: $(bin_PROGRAMS)
 	( printf 'main\nusage\n_.*\n';					\
 	  grep -h -A1 '^extern .*[^;]$$' $$src				\
 	    | grep -vE '^(extern |--)' | sed 's/ .*//';			\
-	  perl -ne '/^extern (?:enum )?\S+ (\S*) \(/ and print "$$1\n"' $$hdr; \
+	  perl -lne '/^extern (?:enum )?\S+ \**(\S*) \(/ and print $$1' \
+		$$hdr;							\
 	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* T //p'					\
@@ -736,7 +737,7 @@ sc_tight_scope: $(bin_PROGRAMS)
 	  { echo 'the above functions should have static scope' 1>&2;	\
 	    exit 1; } || : ;						\
 	( printf '^program_name$$\n';					\
-	  perl -ne '/^extern .*?\**(\w+);/ and print "^$$1\$$\n"'	\
+	  perl -lne '/^extern .*?\**(\w+);/ and print "^$$1\$$"'	\
 	    $$hdr *.h ) | $(ASSORT) -u > $$t;				\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* [BD] //p'					\
