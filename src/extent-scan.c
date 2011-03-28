@@ -122,7 +122,7 @@ extent_scan_read (struct extent_scan *scan)
 
   for (i = 0; i < scan->ei_count; i++)
     {
-      assert (fm_extents[i].fe_logical <= OFF_T_MAX);
+      assert (fm_extents[i].fe_logical <= OFF_T_MAX - fm_extents[i].fe_length);
 
       if (si && last_ei->ext_flags ==
           (fm_extents[i].fe_flags & ~FIEMAP_EXTENT_LAST)
@@ -133,6 +133,38 @@ extent_scan_read (struct extent_scan *scan)
           last_ei->ext_length += fm_extents[i].fe_length;
           /* Copy flags in case different.  */
           last_ei->ext_flags = fm_extents[i].fe_flags;
+        }
+      else if ((si == 0 && scan->scan_start > fm_extents[i].fe_logical)
+               || (si && last_ei->ext_logical + last_ei->ext_length >
+                   fm_extents[i].fe_logical))
+        {
+          /* BTRFS before 2.6.38 could return overlapping extents
+             for sparse files.  We adjust the returned extents
+             rather than failing, as otherwise it would be inefficient
+             to detect this on the initial scan.  */
+          uint64_t new_logical;
+          uint64_t length_adjust;
+          if (si == 0)
+            new_logical = scan->scan_start;
+          else
+            {
+              /* We could return here if scan->scan_start == 0
+                 but don't so as to minimize special cases.  */
+              new_logical = last_ei->ext_logical + last_ei->ext_length;
+            }
+          length_adjust = new_logical - fm_extents[i].fe_logical;
+          /* If an extent is contained within the previous one, just fail.  */
+          if (length_adjust < fm_extents[i].fe_length)
+            {
+              if (scan->scan_start == 0)
+                scan->initial_scan_failed = true;
+              return false;
+            }
+          fm_extents[i].fe_logical = new_logical;
+          fm_extents[i].fe_length -= length_adjust;
+          /* Process the adjusted extent again.  */
+          i--;
+          continue;
         }
       else
         {
