@@ -566,8 +566,11 @@ copy_attr (char const *src_path ATTRIBUTE_UNUSED,
    DST_NAME_IN is a directory that was created previously in the
    recursion.   SRC_SB and ANCESTORS describe SRC_NAME_IN.
    Set *COPY_INTO_SELF if SRC_NAME_IN is a parent of
-   FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG  FIXME
    (or the same as) DST_NAME_IN; otherwise, clear it.
+   Propagate *FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG from
+   caller to each invocation of copy_internal.  Be careful to
+   pass the address of a temporary, and to update
+   *FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG only upon completion.
    Return true if successful.  */
 
 static bool
@@ -596,16 +599,18 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
   if (x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
     non_command_line_options.dereference = DEREF_NEVER;
 
+  bool new_first_dir_created = false;
   namep = name_space;
   while (*namep != '\0')
     {
       bool local_copy_into_self;
       char *src_name = file_name_concat (src_name_in, namep, NULL);
       char *dst_name = file_name_concat (dst_name_in, namep, NULL);
+      bool first_dir_created = *first_dir_created_per_command_line_arg;
 
       ok &= copy_internal (src_name, dst_name, new_dst, src_sb->st_dev,
                            ancestors, &non_command_line_options, false,
-                           first_dir_created_per_command_line_arg,
+                           &first_dir_created,
                            &local_copy_into_self, NULL);
       *copy_into_self |= local_copy_into_self;
 
@@ -618,9 +623,12 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
       if (local_copy_into_self)
         break;
 
+      new_first_dir_created |= first_dir_created;
       namep += strlen (namep) + 1;
     }
   free (name_space);
+  *first_dir_created_per_command_line_arg = new_first_dir_created;
+
   return ok;
 }
 
