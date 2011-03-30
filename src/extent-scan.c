@@ -20,14 +20,45 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <sys/utsname.h>
 #include <assert.h>
 
 #include "system.h"
 #include "extent-scan.h"
+#include "xstrtol.h"
 
 #ifndef HAVE_FIEMAP
 # include "fiemap.h"
 #endif
+
+/* Work around Linux kernel issues on BTRFS and EXT4 before 2.6.38.
+   FIXME: remove in 2013, or whenever we're pretty confident
+   that the offending, unpatched kernels are no longer in use.  */
+static bool
+extent_need_sync (void)
+{
+  static int need_sync = -1;
+
+  if (need_sync == -1)
+    {
+      struct utsname name;
+      need_sync = 0; /* No workaround by default.  */
+
+#ifdef __linux__
+      if (uname (&name) != -1 && strncmp (name.release, "2.6.", 4) == 0)
+        {
+           unsigned long val;
+           if (xstrtoul (name.release + 4, NULL, 10, &val, NULL) == LONGINT_OK)
+             {
+               if (val < 38)
+                 need_sync = 1;
+             }
+        }
+#endif
+    }
+
+  return need_sync;
+}
 
 /* Allocate space for struct extent_scan, initialize the entries if
    necessary and return it as the input argument of extent_scan_read().  */
@@ -39,6 +70,7 @@ extent_scan_init (int src_fd, struct extent_scan *scan)
   scan->scan_start = 0;
   scan->initial_scan_failed = false;
   scan->hit_final_extent = false;
+  scan->fm_flags = extent_need_sync () ? FIEMAP_FLAG_SYNC : 0;
 }
 
 #ifdef __linux__
@@ -62,7 +94,7 @@ extent_scan_read (struct extent_scan *scan)
   memset (&fiemap_buf, 0, sizeof fiemap_buf);
 
   fiemap->fm_start = scan->scan_start;
-  fiemap->fm_flags = FIEMAP_FLAG_SYNC;
+  fiemap->fm_flags = scan->fm_flags;
   fiemap->fm_extent_count = count;
   fiemap->fm_length = FIEMAP_MAX_OFFSET - scan->scan_start;
 

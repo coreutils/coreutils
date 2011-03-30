@@ -69,8 +69,8 @@ for i in $(seq 1 2 21); do
           -e 'for (1..'$j') { sysseek (*F, $n, 1)' \
           -e '&& syswrite (*F, chr($_)x$n) or die "$!"}' > j1 || fail=1
 
-    # Note there is an implicit sync performed by cp to
-    # work around bugs in EXT4 and BTRFS before Linux 2.6.38
+    # Note there is an implicit sync performed by cp on Linux kernels
+    # before 2.6.38 to work around bugs in EXT4 and BTRFS.
     # Note also the -s parameter to the filefrag commands below
     # for the same reasons.
     cp --sparse=always j1 j2 || fail=1
