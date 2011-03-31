@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp -a --link would not create a hardlink to a symlink, instead
+  copying the symlink and then not preserving its timestamp.
+  [bug introduced in coreutils-8.0]
+
   cut could segfault when invoked with a user-specified output
   delimiter and an unbounded range like "-f1234567890-".
   [bug introduced in coreutils-5.3.0]

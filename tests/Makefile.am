@@ -328,6 +328,7 @@ TESTS =						\
   cp/link					\
   cp/link-no-deref				\
   cp/link-preserve				\
+  cp/link-symlink				\
   cp/no-deref-link1				\
   cp/no-deref-link2				\
   cp/no-deref-link3				\
