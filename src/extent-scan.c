@@ -45,7 +45,7 @@ extent_need_sync (void)
       need_sync = 0; /* No workaround by default.  */
 
 #ifdef __linux__
-      if (uname (&name) != -1 && strncmp (name.release, "2.6.", 4) == 0)
+      if (uname (&name) != -1 && STRNCMP_LIT (name.release, "2.6.") == 0)
         {
            unsigned long val;
            if (xstrtoul (name.release + 4, NULL, 10, &val, NULL) == LONGINT_OK)

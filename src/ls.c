@@ -1131,8 +1131,8 @@ is_colored (enum indicator_no type)
   size_t len = color_indicator[type].len;
   char const *s = color_indicator[type].string;
   return ! (len == 0
-            || (len == 1 && strncmp (s, "0", 1) == 0)
-            || (len == 2 && strncmp (s, "00", 2) == 0));
+            || (len == 1 && STRNCMP_LIT (s, "0") == 0)
+            || (len == 2 && STRNCMP_LIT (s, "00") == 0));
 }
 
 static void
@@ -1996,7 +1996,7 @@ decode_switches (int argc, char **argv)
         if (! (style = getenv ("TIME_STYLE")))
           style = bad_cast ("locale");
 
-      while (strncmp (style, posix_prefix, sizeof posix_prefix - 1) == 0)
+      while (STREQ_LEN (style, posix_prefix, sizeof posix_prefix - 1))
         {
           if (! hard_locale (LC_TIME))
             return optind;
@@ -2388,7 +2388,7 @@ parse_ls_color (void)
     }
 
   if (color_indicator[C_LINK].len == 6
-      && !strncmp (color_indicator[C_LINK].string, "target", 6))
+      && !STRNCMP_LIT (color_indicator[C_LINK].string, "target"))
     color_symlink_as_referent = true;
 }
 
@@ -4178,7 +4178,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
         }
       else if (S_ISLNK (mode))
         type = ((!linkok
-                 && (!strncmp (color_indicator[C_LINK].string, "target", 6)
+                 && (!STRNCMP_LIT (color_indicator[C_LINK].string, "target")
                      || color_indicator[C_ORPHAN].string))
                 ? C_ORPHAN : C_LINK);
       else if (S_ISFIFO (mode))
@@ -4209,8 +4209,8 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
       for (ext = color_ext_list; ext != NULL; ext = ext->next)
         {
           if (ext->ext.len <= len
-              && strncmp (name - ext->ext.len, ext->ext.string,
-                          ext->ext.len) == 0)
+              && STREQ_LEN (name - ext->ext.len, ext->ext.string,
+                            ext->ext.len))
             break;
         }
     }

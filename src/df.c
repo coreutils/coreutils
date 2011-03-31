@@ -611,9 +611,9 @@ get_dev (char const *disk, char const *mount_point,
               /* Don't print the first directory name in MOUNT_POINT if it's an
                  artifact of an automounter.  This is a bit too aggressive to be
                  the default.  */
-              if (strncmp ("/auto/", mount_point, 6) == 0)
+              if (STRNCMP_LIT (mount_point, "/auto/") == 0)
                 mount_point += 5;
-              else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
+              else if (STRNCMP_LIT (mount_point, "/tmp_mnt/") == 0)
                 mount_point += 8;
 #endif
               cell = xstrdup (mount_point);
@@ -682,7 +682,7 @@ get_point (const char *point, const struct stat *statp)
           if (best_match_len <= len && len <= resolved_len
               && (len == 1 /* root file system */
                   || ((len == resolved_len || resolved[len] == '/')
-                      && strncmp (me->me_mountdir, resolved, len) == 0)))
+                      && STREQ_LEN (me->me_mountdir, resolved, len))))
             {
               best_match = me;
               best_match_len = len;

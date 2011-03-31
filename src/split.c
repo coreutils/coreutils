@@ -895,12 +895,12 @@ main (int argc, char **argv)
           /* skip any whitespace */
           while (isspace (to_uchar (*optarg)))
             optarg++;
-          if (strncmp (optarg, "r/", 2) == 0)
+          if (STRNCMP_LIT (optarg, "r/") == 0)
             {
               split_type = type_rr;
               optarg += 2;
             }
-          else if (strncmp (optarg, "l/", 2) == 0)
+          else if (STRNCMP_LIT (optarg, "l/") == 0)
             {
               split_type = type_chunk_lines;
               optarg += 2;

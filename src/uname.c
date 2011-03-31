@@ -333,7 +333,7 @@ main (int argc, char **argv)
 
               /* Hack "safely" around the ppc vs. powerpc return value. */
               if (cputype == CPU_TYPE_POWERPC
-                  && strncmp (element, "ppc", 3) == 0)
+                  && STRNCMP_LIT (element, "ppc") == 0)
                 element = "powerpc";
             }
 # endif

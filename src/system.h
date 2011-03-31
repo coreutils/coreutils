@@ -257,6 +257,13 @@ select_plural (uintmax_t n)
 }
 
 #define STREQ(a, b) (strcmp (a, b) == 0)
+#define STREQ_LEN(a, b, n) (strncmp (a, b, n) == 0)
+#define STRPREFIX(a, b) (strncmp(a, b, strlen (b)) == 0)
+
+/* Just like strncmp, but the first argument must be a literal string
+   and you don't specify the length.  */
+#define STRNCMP_LIT(s, literal) \
+  strncmp (s, "" literal "", sizeof (literal) - 1)
 
 #if !HAVE_DECL_GETLOGIN
 char *getlogin ();
@@ -607,7 +614,7 @@ emit_ancillary_info (void)
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
   const char *lc_messages = setlocale (LC_MESSAGES, NULL);
-  if (lc_messages && strncmp (lc_messages, "en_", 3))
+  if (lc_messages && STRNCMP_LIT (lc_messages, "en_"))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
          <http://translationproject.org/team/LANG_CODE.html> to form one of

@@ -315,6 +315,15 @@ sc_space_before_open_paren:
 	else :;								\
 	fi
 
+# Similar to the gnulib maint.mk rule for sc_prohibit_strcmp
+# Use STREQ_LEN or STRPREFIX rather than comparing strncmp == 0, or != 0.
+sc_prohibit_strncmp:
+	@grep -nE '! *str''ncmp *\(|\<str''ncmp *\(.+\) *[!=]='		\
+	    $$($(VC_LIST_EXCEPT))					\
+	  | grep -vE ':# *define STR(N?EQ_LEN|PREFIX)\(' &&		\
+	  { echo '$(ME): use STREQ_LEN or STRPREFIX instead of str''ncmp' \
+		1>&2; exit 1; } || :
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org

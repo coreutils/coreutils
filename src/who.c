@@ -584,7 +584,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
       ttyname_b = ttyname (STDIN_FILENO);
       if (!ttyname_b)
         return;
-      if (strncmp (ttyname_b, DEV_DIR_WITH_TRAILING_SLASH, DEV_DIR_LEN) == 0)
+      if (STRNCMP_LIT (ttyname_b, DEV_DIR_WITH_TRAILING_SLASH) == 0)
         ttyname_b += DEV_DIR_LEN;	/* Discard /dev/ prefix.  */
     }
 

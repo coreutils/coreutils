@@ -262,7 +262,7 @@ split_3 (char *s, size_t s_len,
 
   /* Check for BSD-style checksum line. */
   algo_name_len = strlen (DIGEST_TYPE_STRING);
-  if (strncmp (s + i, DIGEST_TYPE_STRING, algo_name_len) == 0)
+  if (STREQ_LEN (s + i, DIGEST_TYPE_STRING, algo_name_len))
     {
       if (s[i + algo_name_len] == ' ')
         ++i;

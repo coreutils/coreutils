@@ -548,7 +548,7 @@ look_up_char_class (char const *class_str, size_t len)
   enum Char_class i;
 
   for (i = 0; i < ARRAY_CARDINALITY (char_class_name); i++)
-    if (strncmp (class_str, char_class_name[i], len) == 0
+    if (STREQ_LEN (class_str, char_class_name[i], len)
         && strlen (char_class_name[i]) == len)
       return i;
   return CC_NO_CLASS;
