@@ -1455,10 +1455,11 @@ The @sc{gnu} utilities normally conform to the version of @acronym{POSIX}
 that is standard for your system.  To cause them to conform to a
 different version of @acronym{POSIX}, define the @env{_POSIX2_VERSION}
 environment variable to a value of the form @var{yyyymm} specifying
-the year and month the standard was adopted.  Two values are currently
+the year and month the standard was adopted.  Three values are currently
 supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
-@acronym{POSIX} 1003.2-1992, and @samp{200112} stands for @acronym{POSIX}
-1003.1-2001.  For example, if you have a newer system but are running software
+@acronym{POSIX} 1003.2-1992, @samp{200112} stands for @acronym{POSIX}
+1003.1-2001, and @samp{200809} stands for @acronym{POSIX} 1003.1-2008.
+For example, if you have a newer system but are running software
 that assumes an older version of @acronym{POSIX} and uses @samp{sort +1}
 or @samp{tail +10}, you can work around any compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
