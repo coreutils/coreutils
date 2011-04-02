@@ -31,7 +31,7 @@
 # include "fiemap.h"
 #endif
 
-/* Work around Linux kernel issues on BTRFS and EXT4 before 2.6.38.
+/* Work around Linux kernel issues on BTRFS and EXT4 before 2.6.39.
    FIXME: remove in 2013, or whenever we're pretty confident
    that the offending, unpatched kernels are no longer in use.  */
 static bool
@@ -50,7 +50,7 @@ extent_need_sync (void)
            unsigned long val;
            if (xstrtoul (name.release + 4, NULL, 10, &val, NULL) == LONGINT_OK)
              {
-               if (val < 38)
+               if (val < 39)
                  need_sync = 1;
              }
         }
