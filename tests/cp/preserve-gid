@@ -103,9 +103,14 @@ t0 c1 0 "$nameless_gid2" cp -p
 # $nameless_uid can access it and then make that directory the search path.
 tmp_path=
 cleanup_() { rm -rf "$tmp_path"; }
+
+# Cause mktemp to create a directory directly under /tmp.
+# Setting TMPDIR explicitly is required here, in case $TMPDIR
+# is not readable by our nameless IDs.
+test -d /tmp && TMPDIR=/tmp
 tmp_path=$(mktemp -d) || fail_ "failed to create temporary directory"
 cp "$abs_path_dir_/cp" "$tmp_path"
-chown -R $nameless_uid "$tmp_path"
+chmod -R a+rx "$tmp_path"
 
 t1() {
   f=$1; shift
