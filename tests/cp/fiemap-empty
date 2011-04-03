@@ -31,6 +31,13 @@ fallocate -l 1 -n falloc.test ||
   skip_test_ 'this file system lacks FALLOCATE support'
 rm falloc.test
 
+# Require more space than we'll actually use, so that
+# tests run in parallel do not run out of space.
+# Otherwise, with inadequate space, simply running the following
+# fallocate command would induce a temporary disk-full condition,
+# which would cause failure of unrelated tests run in parallel.
+require_file_system_bytes_free_ 800000000
+
 fallocate -l 600000000 space.test ||
   skip_test_ 'this test needs at least 600MB free space'
 
