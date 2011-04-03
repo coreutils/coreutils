@@ -111,7 +111,7 @@ t1() {
   f=$1; shift
   u=$1; shift
   g=$1; shift
-  t0 "$f" "$u" "$g" env \
+  t0 "$f" "$u" "$g" \
       setuidgid -g "$nameless_gid1,$nameless_gid2" \
       "$nameless_uid" env PATH="$tmp_path" "$@"
 }
