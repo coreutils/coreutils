@@ -47,8 +47,7 @@ version=`
 `
 case $version in
   $PACKAGE_VERSION) ;;
-  *) echo "$0: cannot access just-built mv as user $NON_ROOT_USERNAME" 1>&2
-     fail=1 ;;
+  *) skip_ "cannot access just-built mv as user $NON_ROOT_USERNAME";;
 esac
 
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" \
