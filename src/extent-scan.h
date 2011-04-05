@@ -66,6 +66,8 @@ static inline void
 extent_scan_free (struct extent_scan *scan)
 {
   free (scan->ext_info);
+  scan->ext_info = NULL;
+  scan->ei_count = 0;
 }
 
 #endif /* EXTENT_SCAN_H */
