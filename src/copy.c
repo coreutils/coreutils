@@ -415,7 +415,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                                   sparse_mode == SPARSE_ALWAYS,
                                   src_name, dst_name, ext_len, &n_read,
                                   &wrote_hole_at_eof))
-                return false;
+                goto fail;
 
               dest_pos = ext_start + n_read;
             }
