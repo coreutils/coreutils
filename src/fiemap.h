@@ -75,7 +75,7 @@ struct fiemap
 /* Location still pending, Sets EXTENT_UNKNOWN.  */
 # define FIEMAP_EXTENT_DELALLOC          0x00000004
 
-/* Data can not be read while fs is unmounted.  */
+/* Data cannot be read while fs is unmounted.  */
 # define FIEMAP_EXTENT_ENCODED           0x00000008
 
 /* Data is encrypted by fs.  Sets EXTENT_NO_BYPASS.  */

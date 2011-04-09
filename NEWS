@@ -37,7 +37,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   cp now avoids syncing files when possible, when doing a FIEMAP copy.
-  The sync in only needed on Linux kernels before 2.6.39.
+  The sync is only needed on Linux kernels before 2.6.39.
   [The sync was introduced in coreutils-8.10]
 
   cp now copies empty extents efficiently, when doing a FIEMAP copy.

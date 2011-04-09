@@ -8071,8 +8071,8 @@ zero bytes.
 
 @end table
 
-The following ''conversions'' are really file flags
-and don't effect and internal processing:
+The following ``conversions'' are really file flags
+and don't affect internal processing:
 
 @table @samp
 @item excl
