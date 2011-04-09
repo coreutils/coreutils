@@ -22,7 +22,7 @@
 #include "system.h"
 #include "verify.h"
 
-/* Note currently for glibc (2.3.5) the following call does not change the
+/* Note currently for glibc (2.3.5) the following call does not change
    the buffer size, and more problematically does not give any indication
    that the new size request was ignored:
 

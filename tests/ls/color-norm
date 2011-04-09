@@ -27,7 +27,7 @@ umask 22
 # Output time as something constant
 export TIME_STYLE="+norm"
 
-# helper to to strip ls columns up to "norm" time
+# helper to strip ls columns up to "norm" time
 qls() { sed 's/-r.*norm/norm/'; }
 
 touch exe || framework_failure

@@ -104,7 +104,7 @@ retry_delay_ stdbuf_unbuffer .1 6 || fail=1
 
 # Ensure block buffering stdout takes effect
 # We don't currently test block buffering failures as
-# this doesn't work on on GLIBC-2.7 or GLIBC-2.9 at least.
+# this doesn't work on GLIBC-2.7 or GLIBC-2.9 at least.
    # stdbuf_blockbuffer()
    # {
    #   local delay="$1"

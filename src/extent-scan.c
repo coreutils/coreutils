@@ -104,7 +104,7 @@ extent_scan_read (struct extent_scan *scan)
       fiemap->fm_extent_count = count;
       fiemap->fm_length = FIEMAP_MAX_OFFSET - scan->scan_start;
 
-      /* Fall back to the standard copy if call ioctl(2) failed for the
+      /* Fall back to the standard copy if call ioctl(2) failed for
          the first time.  */
       if (ioctl (scan->fd, FS_IOC_FIEMAP, fiemap) < 0)
         {

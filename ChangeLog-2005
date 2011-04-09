@@ -9086,7 +9086,7 @@
 
 	split's --verbose option did nothing [broken in 4.5.10 and 5.0]
 	* src/split.c (longopts): Use `1', not `0' as the value for
-	for &verbose.  Reported by Keith Thompson.
+	&verbose.  Reported by Keith Thompson.
 
 	Test for the above fix.
 	* tests/misc/split-a: Also use --verbose and compare stderr
