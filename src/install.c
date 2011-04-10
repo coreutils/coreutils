@@ -114,7 +114,6 @@ static char const *strip_program = "strip";
 enum
 {
   PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1,
-  PRESERVE_CONTEXT_OPTION_DEPRECATED,
   STRIP_PROGRAM_OPTION
 };
 
@@ -130,9 +129,6 @@ static struct option const long_options[] =
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"preserve-context", no_argument, NULL, PRESERVE_CONTEXT_OPTION},
-  /* --preserve_context was silently supported until Apr 2009.
-     FIXME: disable altogether in a year or so.  */
-  {"preserve_context", no_argument, NULL, PRESERVE_CONTEXT_OPTION_DEPRECATED},
   {"strip", no_argument, NULL, 's'},
   {"strip-program", required_argument, NULL, STRIP_PROGRAM_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -839,10 +835,6 @@ main (int argc, char **argv)
           no_target_directory = true;
           break;
 
-        case PRESERVE_CONTEXT_OPTION_DEPRECATED:
-          error (0, 0, _("WARNING: --preserve_context is deprecated; "
-                         "use --preserve-context instead"));
-          /* fall through */
         case PRESERVE_CONTEXT_OPTION:
           if ( ! selinux_enabled)
             {

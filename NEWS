@@ -47,6 +47,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now aligns columns consistently, and no longer wraps entries
   with longer device identifiers, over two lines.
 
+  install now rejects its long-deprecated --preserve_context option.
+  Use --preserve-context instead.
+
   test now accepts "==" as a synonym for "="
 
 
