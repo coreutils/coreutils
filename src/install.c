@@ -813,19 +813,19 @@ change_attributes (char const *name)
   return ok;
 }
 
-/* Set the timestamps of file TO to match those of file FROM.
+/* Set the timestamps of file DEST to match those of SRC_SB.
    Return true if successful.  */
 
 static bool
-change_timestamps (struct stat const *from_sb, char const *to)
+change_timestamps (struct stat const *src_sb, char const *dest)
 {
   struct timespec timespec[2];
-  timespec[0] = get_stat_atime (from_sb);
-  timespec[1] = get_stat_mtime (from_sb);
+  timespec[0] = get_stat_atime (src_sb);
+  timespec[1] = get_stat_mtime (src_sb);
 
-  if (utimens (to, timespec))
+  if (utimens (dest, timespec))
     {
-      error (0, errno, _("cannot set time stamps for %s"), quote (to));
+      error (0, errno, _("cannot set time stamps for %s"), quote (dest));
       return false;
     }
   return true;
