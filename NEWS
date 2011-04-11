@@ -420,7 +420,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   if it uses helper processes for compression and its parent
   ignores CHLD signals. [bug introduced in coreutils-6.9]
 
-  tail without -f no longer access uninitialized memory
+  tail without -f no longer accesses uninitialized memory
   [bug introduced in coreutils-7.6]
 
   timeout is now immune to the signal handling of its parent.
@@ -549,7 +549,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls -LR exits with status 2, not 0, when it encounters a cycle
 
-  ls -is is now consistent with ls -lis in ignoring values returned
+  "ls -is" is now consistent with ls -lis in ignoring values returned
   from a failed stat/lstat.  For example ls -Lis now prints "?", not "0",
   for the inode number and allocated size of a dereferenced dangling symlink.
 
