@@ -17,7 +17,6 @@
    Written by Jie Liu (jeff.liu@oracle.com).  */
 
 #include <config.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/utsname.h>
