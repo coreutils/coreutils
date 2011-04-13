@@ -56,10 +56,18 @@ merge_extents \@b;
 my $i = 0;
 while (defined $a[$i])
   {
-    $a[$i]->{L_BLK} == $b[$i]->{L_BLK} && $a[$i]->{LEN} == $b[$i]->{LEN}
-      or die "$ME: differing extent:\n"
-        . "  [$i]=$a[$i]->{L_BLK} $a[$i]->{LEN}\n"
-          . "  [$i]=$b[$i]->{L_BLK} $b[$i]->{LEN}\n";
+    my $start_match = $a[$i]->{L_BLK} == $b[$i]->{L_BLK};
+    my $len_match = $a[$i]->{LEN} == $b[$i]->{LEN};
+    if ( ! ($start_match && ($len_match || $i == (@a - 1))))
+      {
+        # On XFS on Linux kernel 2.6.38, it was seen that the size of the
+        # last extent can vary, and can extend beyond the length of the file.
+        # So we ignore the length of the last extent, because if the
+        # file is the wrong length we'll get failures elsewhere.
+        die "$ME: differing extent:\n"
+          . "  [$i]=$a[$i]->{L_BLK} $a[$i]->{LEN}\n"
+            . "  [$i]=$b[$i]->{L_BLK} $b[$i]->{LEN}\n";
+      }
     $i++;
   }
 
