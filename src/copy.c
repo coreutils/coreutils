@@ -764,6 +764,23 @@ fchmod_or_lchmod (int desc, char const *name, mode_t mode)
   return lchmod (name, mode);
 }
 
+#ifndef HAVE_STRUCT_STAT_ST_BLOCKS
+# define HAVE_STRUCT_STAT_ST_BLOCKS 0
+#endif
+
+/* Use a heuristic to determine whether stat buffer SB comes from a file
+   with sparse blocks.  If the file has fewer blocks than would normally
+   be needed for a file of its size, then at least one of the blocks in
+   the file is a hole.  In that case, return true.  */
+static bool
+is_probably_sparse (struct stat const *sb)
+{
+  return (HAVE_STRUCT_STAT_ST_BLOCKS
+          && S_ISREG (sb->st_mode)
+          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE);
+}
+
+
 /* Copy a regular file from SRC_NAME to DST_NAME.
    If the source file contains holes, copies holes and blocks of zeros
    in the source file as holes in the destination file.
@@ -984,15 +1001,13 @@ copy_reg (char const *src_name, char const *dst_name,
           if (x->sparse_mode == SPARSE_ALWAYS)
             make_holes = true;
 
-#if HAVE_STRUCT_STAT_ST_BLOCKS
           /* Use a heuristic to determine whether SRC_NAME contains any sparse
              blocks.  If the file has fewer blocks than would normally be
              needed for a file of its size, then at least one of the blocks in
              the file is a hole.  */
-          if (x->sparse_mode == SPARSE_AUTO && S_ISREG (src_open_sb.st_mode)
-              && ST_NBLOCKS (src_open_sb) < src_open_sb.st_size / ST_NBLOCKSIZE)
+          if (x->sparse_mode == SPARSE_AUTO
+              && is_probably_sparse (&src_open_sb))
             make_holes = true;
-#endif
         }
 
       /* If not making a sparse file, try to use a more-efficient
