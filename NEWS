@@ -2,6 +2,19 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  cp's extent-based (FIEMAP) copying code is more reliable in the face
+  of varying and undocumented file system semantics:
+  - it no longer treats unwritten extents specially
+  - a FIEMAP-based extent copy always uses the FIEMAP_FLAG_SYNC flag.
+      Before, it would incur the performance penalty of that sync only
+      for 2.6.38 and older kernels.  We thought all problems would be
+      resolved for 2.6.39.
+  - it now attempts a FIEMAP copy only on a file that appears sparse.
+      Sparse files are relatively unusual, and the copying code incurs
+      the performance penalty of the now-mandatory sync only for them.
+
 
 * Noteworthy changes in release 8.11 (2011-04-13) [stable]
 
