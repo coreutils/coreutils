@@ -398,7 +398,10 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           /* Treat an unwritten but allocated extent much like a hole.
              I.E. don't read, but don't convert to a hole in the destination,
              unless SPARSE_ALWAYS.  */
-          if (scan.ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN)
+          /* For now, do not treat FIEMAP_EXTENT_UNWRITTEN specially,
+             because that (in combination with no sync) would lead to data
+             loss at least on XFS and ext4 when using 2.6.39-rc3 kernels.  */
+          if (0 && (scan.ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN))
             {
               empty_extent = true;
               last_ext_len = 0;

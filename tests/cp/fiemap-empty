@@ -19,6 +19,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
+# FIXME: enable any part of this test that is still relevant,
+# or, if none are relevant (now that cp does not handle unwritten
+# extents), just remove the test altogether.
+skip_test_ 'disabled for now'
+
 touch fiemap_chk
 fiemap_capable_ fiemap_chk ||
   skip_test_ 'this file system lacks FIEMAP support'
