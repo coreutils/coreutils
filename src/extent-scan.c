@@ -36,6 +36,13 @@
 static bool
 extent_need_sync (void)
 {
+  /* For now always return true, to be on the safe side.
+     If/when FIEMAP semantics are well defined (before SEEK_HOLE support
+     is usable) and kernels implementing them are in use, we may relax
+     this once again.  */
+  return true;
+
+#if FIEMAP_BEHAVIOR_IS_DEFINED_AND_USABLE
   static int need_sync = -1;
 
   if (need_sync == -1)
@@ -57,6 +64,7 @@ extent_need_sync (void)
     }
 
   return need_sync;
+#endif
 }
 
 /* Allocate space for struct extent_scan, initialize the entries if
