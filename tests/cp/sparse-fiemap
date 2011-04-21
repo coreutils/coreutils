@@ -75,7 +75,7 @@ for i in $(seq 1 2 21); do
     # for the same reasons.
     cp --sparse=always j1 j2 || fail=1
 
-    cmp j1 j2 || fail=1
+    cmp j1 j2 || fail_ "data loss i=$i j=$j"
     if ! filefrag -vs j1 | grep -F extent >/dev/null; then
       test $skip != 1 && warn_ 'skipping part; you lack filefrag'
       skip=1
@@ -98,8 +98,12 @@ for i in $(seq 1 2 21); do
       # exclude the physical block numbers; they always differ
       filefrag -v j1 > ff1 || framework_failure
       filefrag -vs j2 > ff2 || framework_failure
-      { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare ||
-        fail=1
+      { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
+        || {
+             warn_ ignoring filefrag-reported extent map differences
+             # Show the differing extent maps.
+             head -99 ff1 ff2
+           }
     fi
     test $fail = 1 && break 2
   done
