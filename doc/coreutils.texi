@@ -2852,7 +2852,10 @@ changed size.
 Historical implementations of @command{tail} have required that
 @var{number} be an integer.  However, GNU @command{tail} accepts
 an arbitrary floating point number.  @xref{Floating point}.
-When @command{tail} uses inotify, this polling-related option is ignored.
+When @command{tail} uses inotify, this polling-related option
+is usually ignored.  However, if you also specify @option{--pid=@var{p}},
+@command{tail} checks whether process @var{p} is alive at least
+every @var{number} seconds.
 
 @itemx --pid=@var{pid}
 @opindex --pid
