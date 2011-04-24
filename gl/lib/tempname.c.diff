@@ -22,7 +22,7 @@ index 2da5afe..562955a 100644
  }
  #endif /* _LIBC */
 
-+static inline bool
++static inline bool _GL_ATTRIBUTE_PURE
 +check_x_suffix (char const *s, size_t len)
 +{
 +  return len <= strspn (s, "X");

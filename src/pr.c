@@ -773,7 +773,7 @@ static struct option const long_options[] =
 /* Return the number of columns that have either an open file or
    stored lines. */
 
-static int
+static int _GL_ATTRIBUTE_PURE
 cols_ready_to_print (void)
 {
   COLUMN *q;

@@ -355,7 +355,7 @@ split_3 (char *s, size_t s_len,
 
 /* Return true if S is a NUL-terminated string of DIGEST_HEX_BYTES hex digits.
    Otherwise, return false.  */
-static bool
+static bool _GL_ATTRIBUTE_PURE
 hex_digits (unsigned char const *s)
 {
   unsigned int i;

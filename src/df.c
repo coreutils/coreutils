@@ -321,7 +321,7 @@ get_header (void)
 
 /* Is FSTYPE a type of file system that should be listed?  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 selected_fstype (const char *fstype)
 {
   const struct fs_type_list *fsp;
@@ -336,7 +336,7 @@ selected_fstype (const char *fstype)
 
 /* Is FSTYPE a type of file system that should be omitted?  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 excluded_fstype (const char *fstype)
 {
   const struct fs_type_list *fsp;

@@ -68,13 +68,13 @@ struct Chown_option
 void
 chopt_init (struct Chown_option *);
 
-void
+void _GL_ATTRIBUTE_PURE _GL_ATTRIBUTE_CONST
 chopt_free (struct Chown_option *);
 
 char *
 gid_to_name (gid_t);
 
-char *
+char * _GL_ATTRIBUTE_PURE
 uid_to_name (uid_t);
 
 bool

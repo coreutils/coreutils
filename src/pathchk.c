@@ -211,7 +211,7 @@ portable_chars_only (char const *file, size_t filelen)
 
 /* Return the address of the start of the next file name component in F.  */
 
-static char *
+static char * _GL_ATTRIBUTE_PURE
 component_start (char *f)
 {
   while (*f == '/')
@@ -221,7 +221,7 @@ component_start (char *f)
 
 /* Return the size of the file name component F.  F must be nonempty.  */
 
-static size_t
+static size_t _GL_ATTRIBUTE_PURE
 component_len (char const *f)
 {
   size_t len;

@@ -439,7 +439,7 @@ enum
 /* Compute the greatest common divisor of U and V using Euclid's
    algorithm.  U and V must be nonzero.  */
 
-static inline size_t
+static inline size_t _GL_ATTRIBUTE_CONST
 gcd (size_t u, size_t v)
 {
   do
@@ -457,7 +457,7 @@ gcd (size_t u, size_t v)
    nonzero.  There is no overflow checking, so callers should not
    specify outlandish sizes.  */
 
-static inline size_t
+static inline size_t _GL_ATTRIBUTE_CONST
 lcm (size_t u, size_t v)
 {
   return u * (v / gcd (u, v));

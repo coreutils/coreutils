@@ -30,7 +30,7 @@
 /* Return the ceiling of the log base 2 of N.  If N is zero, return
    an unspecified value.  */
 
-static size_t
+static size_t _GL_ATTRIBUTE_CONST
 ceil_lg (size_t n)
 {
   size_t b = 0;

@@ -101,6 +101,9 @@ if test "$gl_gcc_warnings" = yes; then
   done
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
+  gl_WARN_ADD([-Wsuggest-attribute=const])
+  gl_WARN_ADD([-Wsuggest-attribute=pure])
+  gl_WARN_ADD([-Wsuggest-attribute=noreturn])
 
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
@@ -124,6 +127,9 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wunused-macros"
   nw="$nw -Wmissing-prototypes"
   nw="$nw -Wold-style-definition"
+  # FIXME: remove/reenable the following two, once gnulib is adjusted.
+  nw="$nw -Wsuggest-attribute=const"
+  nw="$nw -Wsuggest-attribute=pure"
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_WARN_CFLAGS])
 

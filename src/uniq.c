@@ -206,7 +206,7 @@ size_opt (char const *opt, char const *msgid)
 /* Given a linebuffer LINE,
    return a pointer to the beginning of the line's field to be compared. */
 
-static char *
+static char * _GL_ATTRIBUTE_PURE
 find_field (struct linebuffer const *line)
 {
   size_t count;

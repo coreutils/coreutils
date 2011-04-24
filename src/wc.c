@@ -556,7 +556,7 @@ get_input_fstatus (int nfiles, char *const *file)
    recorded in FSTATUS.  Optimize the same special case that
    get_input_fstatus optimizes.  */
 
-static int
+static int _GL_ATTRIBUTE_PURE
 compute_number_width (int nfiles, struct fstatus const *fstatus)
 {
   int width = 1;

@@ -71,7 +71,7 @@
      if digit return -1, else 0
    return 0 */
 
-static inline int
+static inline int _GL_ATTRIBUTE_PURE
 fraccompare (char const *a, char const *b, char decimal_point)
 {
   if (*a == decimal_point && *b == decimal_point)
@@ -111,7 +111,7 @@ fraccompare (char const *a, char const *b, char decimal_point)
    causes comparisons to act as if there is no decimal point
    character, and likewise for THOUSANDS_SEP.  */
 
-static inline int
+static inline int _GL_ATTRIBUTE_PURE
 numcompare (char const *a, char const *b,
             int decimal_point, int thousands_sep)
 {

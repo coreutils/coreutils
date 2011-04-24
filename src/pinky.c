@@ -82,7 +82,7 @@ static struct option const longopts[] =
 
 /* Count and return the number of ampersands in STR.  */
 
-static size_t
+static size_t _GL_ATTRIBUTE_PURE
 count_ampersands (const char *str)
 {
   size_t count = 0;

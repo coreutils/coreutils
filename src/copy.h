@@ -282,7 +282,7 @@ void dest_info_init (struct cp_options *);
 void src_info_init (struct cp_options *);
 
 void cp_options_default (struct cp_options *);
-bool chown_failure_ok (struct cp_options const *);
+bool chown_failure_ok (struct cp_options const *) _GL_ATTRIBUTE_PURE;
 mode_t cached_umask (void);
 
 #endif

@@ -1846,7 +1846,7 @@ static char const unit_order[UCHAR_LIM] =
    separators and a decimal point, but it may not contain leading blanks.
    Negative numbers get negative orders; zero numbers have a zero order.  */
 
-static int
+static int _GL_ATTRIBUTE_PURE
 find_unit_order (char const *number)
 {
   bool minus_sign = (*number == '-');

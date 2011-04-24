@@ -1028,7 +1028,7 @@ write_output (void)
 
 /* Return true if STR is of the form "PATTERN" or "PATTERNDELIM...".  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 operand_matches (char const *str, char const *pattern, char delim)
 {
   while (*pattern)
@@ -1108,7 +1108,7 @@ parse_integer (const char *str, bool *invalid)
 
 /* OPERAND is of the form "X=...".  Return true if X is NAME.  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 operand_is (char const *operand, char const *name)
 {
   return operand_matches (operand, name, '=');

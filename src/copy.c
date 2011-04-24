@@ -468,7 +468,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
    performance hit that's probably noticeable only on trees deeper
    than a few hundred levels.  See use of active_dir_map in remove.c  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 {
   while (ancestors != 0)
@@ -2535,7 +2535,7 @@ un_backup:
   return false;
 }
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 valid_options (const struct cp_options *co)
 {
   assert (co != NULL);

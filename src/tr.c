@@ -364,7 +364,7 @@ is_equiv_class_member (unsigned char equiv_class, unsigned char c)
 /* Return true if the character C is a member of the
    character class CHAR_CLASS.  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 is_char_class_member (enum Char_class char_class, unsigned char c)
 {
   int result;
@@ -542,7 +542,7 @@ unquote (char const *s, struct E_string *es)
 /* If CLASS_STR is a valid character class string, return its index
    in the global char_class_name array.  Otherwise, return CC_NO_CLASS.  */
 
-static enum Char_class
+static enum Char_class _GL_ATTRIBUTE_PURE
 look_up_char_class (char const *class_str, size_t len)
 {
   enum Char_class i;
@@ -844,7 +844,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
    expression `\*[0-9]*\]', false otherwise.  The string does not
    match if any of its characters are escaped.  */
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 star_digits_closebracket (const struct E_string *es, size_t idx)
 {
   size_t i;
