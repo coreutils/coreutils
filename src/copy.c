@@ -974,7 +974,8 @@ copy_reg (char const *src_name, char const *dst_name,
         {
           if (!clone_ok)
             {
-              error (0, errno, _("failed to clone %s"), quote (dst_name));
+              error (0, errno, _("failed to clone %s from %s"),
+                     quote (dst_name), quote (src_name));
               return_val = false;
               goto close_src_and_dst_desc;
             }
