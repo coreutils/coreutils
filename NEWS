@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  tail's --follow=name option no longer implies --retry on systems
+  with inotify support.  [bug introduced in coreutils-7.5]
+
 ** Changes in behavior
 
   cp's extent-based (FIEMAP) copying code is more reliable in the face

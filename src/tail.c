@@ -1432,6 +1432,16 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       struct File_spec *fspec;
       struct inotify_event *ev;
 
+      /* When following by name without --retry, and the last file has
+         been unlinked or renamed-away, diagnose it and return.  */
+      if (follow_mode == Follow_name
+          && ! reopen_inaccessible_files
+          && hash_get_n_entries (wd_to_name) == 0)
+        {
+          error (0, 0, _("no files remaining"));
+          return false;
+        }
+
       /* When watching a PID, ensure that a read from WD will not block
          indefinitely.  */
       if (pid)

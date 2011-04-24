@@ -489,6 +489,7 @@ TESTS =						\
   tail-2/assert-2				\
   tail-2/big-4gb				\
   tail-2/flush-initial				\
+  tail-2/follow-name				\
   tail-2/follow-stdin				\
   tail-2/pipe-f					\
   tail-2/pipe-f2				\
