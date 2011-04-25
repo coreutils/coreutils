@@ -268,6 +268,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "devfs";
     case S_MAGIC_DEVPTS: /* 0x1CD1 */
       return "devpts";
+    case S_MAGIC_ECRYPTFS: /* 0xF15F */
+      return "ecryptfs";
     case S_MAGIC_EFS: /* 0x00414A53 */
       return "efs";
     case S_MAGIC_EXT: /* 0x137D */
@@ -374,6 +376,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ufs";
     case S_MAGIC_USBDEVFS: /* 0x9FA2 */
       return "usbdevfs";
+    case S_MAGIC_V9FS: /* 0x01021997 */
+      return "v9fs";
     case S_MAGIC_VXFS: /* 0xA501FCF5 */
       return "vxfs";
     case S_MAGIC_XENFS: /* 0xABBA1974 */
