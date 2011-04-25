@@ -579,21 +579,21 @@ fs_normalize_perl_subst =			\
 CLEANFILES += fs-magic
 fs-magic: Makefile
 	man statfs \
-          |perl -ne '/File system types:/.../Nobody kno/ and print'	\
-          |grep 0x | perl -p						\
-            $(fs_normalize_perl_subst)					\
-          | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
-          | LC_ALL=C sort						\
-          > $@-t && mv $@-t $@
+	  |perl -ne '/File system types:/.../Nobody kno/ and print'	\
+	  |grep 0x | perl -p						\
+	    $(fs_normalize_perl_subst)					\
+	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
+	  | LC_ALL=C sort						\
+	  > $@-t && mv $@-t $@
 
 CLEANFILES += fs-kernel-magic
 fs-kernel-magic: Makefile
 	perl -ne '/^#define.*0x/ and print' /usr/include/linux/magic.h	\
-          | perl -p							\
-            $(fs_normalize_perl_subst)					\
-          | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
-          | LC_ALL=C sort						\
-          > $@-t && mv $@-t $@
+	  | perl -p							\
+	    $(fs_normalize_perl_subst)					\
+	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
+	  | LC_ALL=C sort						\
+	  > $@-t && mv $@-t $@
 
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic
