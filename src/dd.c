@@ -37,8 +37,6 @@
 #include "xstrtol.h"
 #include "xtime.h"
 
-static void process_signals (void);
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
 
@@ -674,30 +672,6 @@ print_stats (void)
   fprintf (stderr, _(", %g s, %s/s\n"), delta_s, bytes_per_second);
 }
 
-static void
-cleanup (void)
-{
-  if (close (STDIN_FILENO) < 0)
-    error (EXIT_FAILURE, errno,
-           _("closing input file %s"), quote (input_file));
-
-  /* Don't remove this call to close, even though close_stdout
-     closes standard output.  This close is necessary when cleanup
-     is called as part of a signal handler.  */
-  if (close (STDOUT_FILENO) < 0)
-    error (EXIT_FAILURE, errno,
-           _("closing output file %s"), quote (output_file));
-}
-
-static void ATTRIBUTE_NORETURN
-quit (int code)
-{
-  cleanup ();
-  print_stats ();
-  process_signals ();
-  exit (code);
-}
-
 /* An ordinary signal was received; arrange for the program to exit.  */
 
 static void
@@ -772,6 +746,21 @@ install_signal_handlers (void)
 #endif
 }
 
+static void
+cleanup (void)
+{
+  if (close (STDIN_FILENO) < 0)
+    error (EXIT_FAILURE, errno,
+           _("closing input file %s"), quote (input_file));
+
+  /* Don't remove this call to close, even though close_stdout
+     closes standard output.  This close is necessary when cleanup
+     is called as part of a signal handler.  */
+  if (close (STDOUT_FILENO) < 0)
+    error (EXIT_FAILURE, errno,
+           _("closing output file %s"), quote (output_file));
+}
+
 /* Process any pending signals.  If signals are caught, this function
    should be called periodically.  Ideally there should never be an
    unbounded amount of time when signals are not being processed.  */
@@ -803,6 +792,15 @@ process_signals (void)
       if (interrupt)
         raise (interrupt);
     }
+}
+
+static void ATTRIBUTE_NORETURN
+quit (int code)
+{
+  cleanup ();
+  print_stats ();
+  process_signals ();
+  exit (code);
 }
 
 /* Return LEN rounded down to a multiple of PAGE_SIZE
