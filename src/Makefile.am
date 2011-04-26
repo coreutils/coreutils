@@ -730,21 +730,17 @@ sc_tight_scope: $(bin_PROGRAMS)
 	  perl -lne '/^extern (?:enum )?\S+ \**(\S*) \(/ and print $$1' \
 		$$hdr;							\
 	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
-	nm -e *.$(OBJEXT)						\
-	    | sed -n 's/.* T //p'					\
-	    | sed 's/^_//'						\
-	    | grep -Ev -f $$t &&					\
-	  { echo 'the above functions should have static scope' 1>&2;	\
-	    exit 1; } || : ;						\
+	nm -e *.$(OBJEXT) | sed -n 's/.* T //p'				\
+	    | sed 's/^_//' | grep -Ev -f $$t				\
+	  && { echo the above functions should have static scope >&2;	\
+	       exit 1; } || : ;						\
 	( printf '^program_name$$\n';					\
 	  perl -lne '/^extern .*?\**(\w+);/ and print "^$$1\$$"'	\
 	    $$hdr *.h ) | $(ASSORT) -u > $$t;				\
-	nm -e *.$(OBJEXT)						\
-	    | sed -n 's/.* [BD] //p'					\
-	    | sed 's/^_//'						\
-	    | grep -Ev -f $$t &&					\
-	  { echo 'the above variables should have static scope' 1>&2;	\
-	    exit 1; } || :
+	nm -e *.$(OBJEXT) | sed -n 's/.* [BD] //p'			\
+	    | sed 's/^_//' | grep -Ev -f $$t				\
+	  && { echo the above variables should have static scope >&2;	\
+	       exit 1; } || :
 
 # Use the just-built ./ginstall, when not cross-compiling.
 if CROSS_COMPILING
