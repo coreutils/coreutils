@@ -196,7 +196,7 @@ portable_chars_only (char const *file, size_t filelen)
 
   if (*invalid)
     {
-      DECLARE_ZEROED_AGGREGATE (mbstate_t, mbstate);
+      mbstate_t mbstate = { 0, };
       size_t charlen = mbrlen (invalid, filelen - validlen, &mbstate);
       error (0, 0,
              _("nonportable character %s in file name %s"),

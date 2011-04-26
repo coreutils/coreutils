@@ -467,19 +467,6 @@ enum
 # define IF_LINT(Code) /* empty */
 #endif
 
-/* With -Dlint, avoid warnings from gcc about code like mbstate_t m = {0,};
-   by wasting space on a static variable of the same type, that is thus
-   guaranteed to be initialized to 0, and use that on the RHS.  */
-#define DZA_CONCAT0(x,y) x ## y
-#define DZA_CONCAT(x,y) DZA_CONCAT0 (x, y)
-#ifdef lint
-# define DECLARE_ZEROED_AGGREGATE(Type, Var) \
-   static Type DZA_CONCAT (s0_, __LINE__); Type Var = DZA_CONCAT (s0_, __LINE__)
-#else
-# define DECLARE_ZEROED_AGGREGATE(Type, Var) \
-  Type Var = { 0, }
-#endif
-
 #ifndef __attribute__
 # if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
 #  define __attribute__(x) /* empty */

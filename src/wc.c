@@ -285,7 +285,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
     {
       bool in_word = false;
       uintmax_t linepos = 0;
-      DECLARE_ZEROED_AGGREGATE (mbstate_t, state);
+      mbstate_t state = { 0, };
       bool in_shift = false;
 # if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
