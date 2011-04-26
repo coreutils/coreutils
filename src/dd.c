@@ -66,6 +66,10 @@
 # define O_CIO 0
 #endif
 
+/* On AIX 5.1 and AIX 5.2, O_NOCACHE is defined via <fcntl.h>
+   and would interfere with our use of that name, below.  */
+#undef O_NOCACHE
+
 #if ! HAVE_FDATASYNC
 # define fdatasync(fd) (errno = ENOSYS, -1)
 #endif

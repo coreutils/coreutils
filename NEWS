@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
       Sparse files are relatively unusual, and the copying code incurs
       the performance penalty of the now-mandatory sync only for them.
 
+** Portability
+
+  dd once again compiles on AIX 5.1 and 5.2
+
 
 * Noteworthy changes in release 8.11 (2011-04-13) [stable]
 
