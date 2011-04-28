@@ -82,11 +82,8 @@ sub add_z_variants($)
 
 # I've only ever triggered the problem in a non-C locale.
 my $locale = $ENV{LOCALE_FR};
-if (! defined $locale || $locale eq 'none')
-  {
-    warn "$prog: skipping this test -- no appropriate locale\n";
-    exit 77;
-  }
+! defined $locale || $locale eq 'none'
+  and CuSkip::skip "$prog: skipping this test -- no appropriate locale\n";
 
 # See if isblank returns true for nbsp.
 my $x = `env printf '\xa0'| LC_ALL=$locale tr '[:blank:]' x`;

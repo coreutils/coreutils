@@ -30,7 +30,7 @@ export ARGV_0
 
 # Don't use CuTmpdir here, since File::Temp's use of rmtree can't
 # remove the deep tree we create.
-$PERL -Tw -- - <<\EOF
+$PERL -Tw -I"$abs_srcdir" -MCuSkip -- - <<\EOF
 
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.
@@ -77,12 +77,9 @@ substr ($expected, 0, 1) = '';
 my $i = 0;
 do
   {
-    if (!mkdir $z, 0700)
-      {
-        warn "$ME: skipping this test; cannot create long directory name "
-          . "at depth $i: $!\n";
-        exit 77;
-      }
+    mkdir $z, 0700
+      or CuSkip::skip "$ME: skipping this test; cannot create long "
+        . "directory name at depth $i: $!\n";
     chdir $z
   }
 until (++$i == $n);
@@ -91,12 +88,9 @@ my $abs_top_builddir = $ENV{abs_top_builddir};
 $abs_top_builddir
   or die "$ME: envvar abs_top_builddir not defined\n";
 my $build_src_dir = "$abs_top_builddir/src";
-if ($build_src_dir !~ m!^([-+.:/\w]+)$!)
-  {
-    warn "$ME: skipping this test; odd build source directory name:\n"
-      . "$build_src_dir\n";
-    exit 77;
-  }
+$build_src_dir =~ m!^([-+.:/\w]+)$!
+  or CuSkip::skip "$ME: skipping this test; odd build source directory name:\n"
+    . "$build_src_dir\n";
 $build_src_dir = $1;
 
 my $pwd_binary = "$build_src_dir/pwd";

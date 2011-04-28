@@ -18,7 +18,7 @@
 
 use strict;
 
-(my $program_name = $0) =~ s|.*/||;
+(my $ME = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -26,7 +26,7 @@ use strict;
 # See if we can create a file name that contains a newline.
 # Use system, since Perl doesn't let you do this with "open".
 system ('touch', "a\nb") == 0
-  or (warn "$0: failed to create newline-containing file name\n"), exit 77;
+  or CuSkip::skip "$ME: failed to create newline-containing file name\n";
 
 my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
 my $t = '--text';
@@ -40,5 +40,5 @@ my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
 my $prog = 'md5sum';
-my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

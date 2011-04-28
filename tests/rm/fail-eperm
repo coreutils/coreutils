@@ -24,7 +24,7 @@ use strict;
 my $uid = $<;
 # skip if root
 $uid == 0
-  and (warn "$ME: can't run this test as root: skipping this test"), exit 77;
+  and CuSkip::skip "$ME: can't run this test as root: skipping this test";
 
 my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 
@@ -45,8 +45,7 @@ my $rm = "$ENV{abs_top_builddir}/src/rm";
 
 # Untaint for upcoming popen.
 $rm =~ m!^([-+\@\w./]+)$!
-  or (warn "$ME: unusual absolute builddir name; skipping this test\n"),
-    exit 77;
+  or CuSkip::skip "$ME: unusual absolute builddir name; skipping this test\n";
 $rm = $1;
 
 # Find a directory with the sticky bit set.
@@ -142,17 +141,11 @@ foreach my $dir (@dir_list)
       }
   }
 
-if ( ! $found_dir)
-  {
-    warn "$ME: couldn't find a directory with the sticky bit set;"
-      . " skipping this test\n";
-    exit 77;
-  }
+$found_dir
+  or CuSkip::skip "$ME: couldn't find a directory with the sticky bit set;"
+    . " skipping this test\n";
 
-if ( ! $found_file)
-  {
-    warn "$ME: couldn't find a file not owned by you\n"
-      . " in any of the following directories:\n  @dir_list\n"
-      . "...so, skipping this test\n";
-    exit 77;
-  }
+$found_file
+  or CuSkip::skip "$ME: couldn't find a file not owned by you\n"
+    . " in any of the following directories:\n  @dir_list\n"
+    . "...so, skipping this test\n";

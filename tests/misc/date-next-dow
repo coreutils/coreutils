@@ -73,6 +73,6 @@ my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 # Skip the test if the starting and stopping day numbers differ.
 my @d_post = localtime (time);
 $d_post[7] == $d[7]
-  or (warn "$ME: test straddled a day boundary; skipped"), exit 77;
+  or CuSkip::skip "$ME: test straddled a day boundary; skipped";
 
 exit $fail;

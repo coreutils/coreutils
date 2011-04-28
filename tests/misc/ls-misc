@@ -17,7 +17,7 @@
 
 use strict;
 
-(my $program_name = $0) =~ s|.*/||;
+(my $ME = $0) =~ s|.*/||;
 my $prog = 'ls';
 
 # Turn off localization of executable's output.
@@ -61,8 +61,8 @@ sub setuid_setup()
            mkdir sticky && chmod +t sticky  && $test -k sticky &&
            mkdir owt    && chmod +t,o+w owt && $test -k owt &&
            mkdir owr    && chmod o+w owr)) == 0
-             or (warn "$program_name: cannot create setuid/setgid/sticky files,"
-                 . "so can't run this test\n"), exit 77;
+             or CuSkip::skip "$ME: cannot create setuid/setgid/sticky files,"
+                 . "so can't run this test\n";
 }
 
 sub mk_file(@)
@@ -285,7 +285,7 @@ my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
 
 setuid_setup;
-my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 $fail
   and exit 1;
 
@@ -296,5 +296,5 @@ $env =~ s/\';.*//sm;
 $ENV{LS_COLORS} = $env;
 
 setuid_setup;
-$fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+$fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

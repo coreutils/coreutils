@@ -63,7 +63,7 @@ TESTS_ENVIRONMENT =				\
     if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
       if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
 	grep '^\#!/usr/bin/perl -T' "$$1" > /dev/null && T_=T || T_=;	\
-        $(PERL) -w$$T_ -I$(srcdir) -MCoreutils				\
+        $(PERL) -w$$T_ -I$(srcdir) -MCoreutils -MCuSkip			\
 	      -M"CuTmpdir qw($$f)" -- "$$1";	\
       else					\
 	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
