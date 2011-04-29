@@ -247,6 +247,7 @@ TESTS =						\
   misc/sort-unique				\
   misc/sort-unique-segv				\
   misc/sort-version				\
+  split/filter					\
   misc/split-a					\
   misc/split-bchunk				\
   misc/split-fail				\
