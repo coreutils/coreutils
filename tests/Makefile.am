@@ -7,6 +7,7 @@ ASSORT = LC_ALL=C sort
 
 EXTRA_DIST =		\
   Coreutils.pm		\
+  CuSkip.pm		\
   CuTmpdir.pm		\
   check.mk		\
   envvar-check		\
