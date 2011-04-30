@@ -2992,8 +2992,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 Put @var{lines} lines of @var{input} into each output file.
 
 For compatibility @command{split} also supports an obsolete
-option syntax @option{-@var{lines}}.  New scripts should use @option{-l
-@var{lines}} instead.
+option syntax @option{-@var{lines}}.  New scripts should use
+@option{-l @var{lines}} instead.
 
 @item -b @var{size}
 @itemx --bytes=@var{size}
@@ -3010,6 +3010,25 @@ Put into each output file as many complete lines of @var{input} as
 possible without exceeding @var{size} bytes.  Individual lines longer than
 @var{size} bytes are broken into multiple files.
 @var{size} has the same format as for the @option{--bytes} option.
+
+@itemx --filter=@var{command}
+@opindex --filter
+With this option, rather than simply writing to each output file,
+write through a pipe to the specified shell @var{command} for each output file.
+@var{command} should use the $FILE environment variable, which is set
+to a different output file name for each invocation of the command.
+For example, imagine that you have a 1TiB compressed file
+that, if uncompressed, would be too large to reside on disk,
+yet you must split it into individually-compressed pieces
+of a more manageable size.
+To do that, you might run this command:
+
+@example
+xz -dc BIG.xz | split -b200G --filter='xz > $FILE.xz' - big-
+@end example
+
+Assuming a 10:1 compression ratio, that would create about fifty 20GiB files
+with names @file{big-xaa.xz}, @file{big-xab.xz}, @file{big-xac.xz}, etc.
 
 @item -n @var{chunks}
 @itemx --number=@var{chunks}

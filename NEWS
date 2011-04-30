@@ -2,6 +2,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  split accepts a new --filter=CMD option.  With it, split filters output
+  through CMD.  CMD may use the $FILE environment variable, which is set to
+  the nominal output file name for each invocation of CMD.  For example, to
+  split a file into 3 approximately equal parts, which are then compressed:
+    split -n3 --filter='xz > $FILE.xz' big
+  Note the use of single quotes, not double quotes.
+  That creates files named xaa.xz, xab.xz and xac.xz.
+
 
 * Noteworthy changes in release 8.12 (2011-04-26) [stable]
 
