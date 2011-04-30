@@ -105,7 +105,7 @@ static struct option const longopts[] =
   {"numeric-suffixes", no_argument, NULL, 'd'},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
   {"-io-blksize", required_argument, NULL,
-    IO_BLKSIZE_OPTION}, /* do not document */
+   IO_BLKSIZE_OPTION}, /* do not document */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -155,7 +155,7 @@ usage (int status)
 Usage: %s [OPTION]... [INPUT [PREFIX]]\n\
 "),
               program_name);
-    fputs (_("\
+      fputs (_("\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 size is 1000 lines, and default PREFIX is `x'.  With no INPUT, or when INPUT\n\
 is -, read standard input.\n\
@@ -181,7 +181,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_size_note ();
-fputs (_("\n\
+      fputs (_("\n\
 CHUNKS may be:\n\
 N       split into N files based on size of input\n\
 K/N     output Kth of N to stdout\n\
@@ -254,7 +254,7 @@ next_file_name (void)
 /* Create or truncate a file.  */
 
 static int
-create (const char* name)
+create (const char *name)
 {
   if (verbose)
     fprintf (stdout, _("creating file %s\n"), quote (name));
@@ -574,7 +574,7 @@ typedef struct of_info
 {
   char *of_name;
   int ofd;
-  FILE* ofile;
+  FILE *ofile;
 } of_t;
 
 enum
@@ -616,9 +616,9 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                  from the fifo, terminating on conditions in the data
                  itself, or perhaps never in the case of `tail -f`.
                  I.E. for fifos it is valid to attempt this reopen.  */
-               fd = open (files[i_check].of_name,
-                          O_WRONLY | O_BINARY | O_APPEND | O_NONBLOCK);
-             }
+              fd = open (files[i_check].of_name,
+                         O_WRONLY | O_BINARY | O_APPEND | O_NONBLOCK);
+            }
 
           if (-1 < fd)
             break;
@@ -779,9 +779,9 @@ static void
 parse_chunk (uintmax_t *k_units, uintmax_t *n_units, char *slash)
 {
   *slash = '\0';
-  if (xstrtoumax (slash+1, NULL, 10, n_units, "") != LONGINT_OK
+  if (xstrtoumax (slash + 1, NULL, 10, n_units, "") != LONGINT_OK
       || *n_units == 0)
-    error (EXIT_FAILURE, 0, _("%s: invalid number of chunks"), slash+1);
+    error (EXIT_FAILURE, 0, _("%s: invalid number of chunks"), slash + 1);
   if (slash != optarg           /* a leading number is specified.  */
       && (xstrtoumax (optarg, NULL, 10, k_units, "") != LONGINT_OK
           || *k_units == 0 || *n_units < *k_units))
