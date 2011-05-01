@@ -25,7 +25,6 @@ changelog_etc =				\
   ChangeLog-2007			\
   ChangeLog-2008			\
   build-aux/ChangeLog-2007		\
-  build-aux/update-copyright		\
   doc/ChangeLog-2007			\
   lib/ChangeLog-2007			\
   m4/ChangeLog-2007			\
