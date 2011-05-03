@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-03-03.12; # UTC
+scriptversion=2011-05-03.08; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -405,7 +405,10 @@ check_versions() {
     # Honor $APP variables ($TAR, $AUTOCONF, etc.)
     appvar=`echo $app | tr '[a-z]-' '[A-Z]_'`
     test "$appvar" = TAR && appvar=AMTAR
-    eval "app=\${$appvar-$app}"
+    case $appvar in
+        GZIP) ;; # Do not use $GZIP:  it contains gzip options.
+        *) eval "app=\${$appvar-$app}" ;;
+    esac
     inst_ver=$(get_version $app)
     if [ ! "$inst_ver" ]; then
       echo "$me: Error: '$app' not found" >&2
