@@ -215,7 +215,7 @@ print_table (void)
         {
           size_t width = widths[field];
           char *cell = table[row][field];
-          if (!cell)
+          if (!cell) /* Missing type column, or mount point etc. */
             continue;
 
           /* Note the DEV_FIELD used to be displayed on it's own line
@@ -227,9 +227,9 @@ print_table (void)
             fputs (cell, stdout);
           else
             {
-              cell = ambsalign (table[row][field], &width,
-                                alignments[field], MBA_UNIBYTE_FALLBACK);
-              fputs (cell, stdout);
+              cell = ambsalign (cell, &width, alignments[field], 0);
+              /* When ambsalign fails, output unaligned data.  */
+              fputs (cell ? cell : table[row][field], stdout);
               free (cell);
             }
           IF_LINT (free (table[row][field]));
