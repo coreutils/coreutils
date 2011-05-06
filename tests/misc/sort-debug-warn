@@ -23,6 +23,10 @@ cat <<\EOF > exp
 sort: using simple byte comparison
 sort: key 1 has zero width and will be ignored
 sort: using simple byte comparison
+sort: key 1 has zero width and will be ignored
+sort: using simple byte comparison
+sort: key 1 is numeric and spans multiple fields
+sort: using simple byte comparison
 sort: options `-bghMRrV' are ignored
 sort: using simple byte comparison
 sort: options `-bghMRV' are ignored
@@ -50,6 +54,8 @@ sort: using simple byte comparison
 EOF
 
 sort -s -k2,1 --debug /dev/null 2>>out
+sort -s -k2,1n --debug /dev/null 2>>out
+sort -s -k1,2n --debug /dev/null 2>>out
 sort -s -rRVMhgb -k1,1n --debug /dev/null 2>>out
 sort -rRVMhgb -k1,1n --debug /dev/null 2>>out
 sort -r -k1,1n --debug /dev/null 2>>out

@@ -2385,7 +2385,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
           size_t eword = key->eword + 1;
           if (!sword)
             sword++;
-          if (sword != eword)
+          if (!eword || sword < eword)
             error (0, 0, _("key %lu is numeric and spans multiple fields"),
                    keynum);
         }
