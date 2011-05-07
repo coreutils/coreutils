@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ split
+xz --version || skip_ "xz (better than gzip/bzip2) required"
 
 for total_n_lines in 5 3000 20000; do
   seq $total_n_lines > in || framework_failure_
