@@ -159,8 +159,8 @@ struct File_spec
 #if HAVE_INOTIFY
 /* The events mask used with inotify on files.  This mask is not used on
    directories.  */
-const uint32_t inotify_wd_mask = (IN_MODIFY | IN_ATTRIB | IN_DELETE_SELF
-                                  | IN_MOVE_SELF);
+static const uint32_t inotify_wd_mask = (IN_MODIFY | IN_ATTRIB
+                                         | IN_DELETE_SELF | IN_MOVE_SELF);
 #endif
 
 /* Keep trying to open a file even if it is inaccessible when tail starts
