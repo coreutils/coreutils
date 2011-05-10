@@ -29,8 +29,7 @@ chmod g+s d 2>/dev/null # The cp test is valid either way.
 
 for attr in mode ownership
 do
-  mkfifo $attr/fifo ||
-    skip_test_ "fifos not supported"
+  mkfifo_or_skip_ $attr/fifo
 
   # Copy a fifo's contents.  That way, we can examine d/$attr's
   # state while cp is running.

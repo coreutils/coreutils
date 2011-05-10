@@ -31,7 +31,7 @@ mknod block b 20 20 2> /dev/null && block="block
 "
 mknod char c 10 10 2> /dev/null && char="char
 "
-mkfifo fifo
+mkfifo_or_skip_ fifo
 cd ..
 
 

@@ -53,7 +53,7 @@ seq 5 > in
 
 # Give tac a fifo command line argument.
 # This makes it try to create a temporary file in $TMPDIR.
-mkfifo fifo
+mkfifo_or_skip fifo
 seq 1000 > fifo &
 TMPDIR=$FULL_PARTITION_TMPDIR tac fifo in >out 2>err && fail=1
 

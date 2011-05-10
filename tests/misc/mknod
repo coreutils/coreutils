@@ -19,6 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mknod
 
+# Ensure fifos are supported
+mkfifo_or_skip_ fifo
 
 umask 777
 

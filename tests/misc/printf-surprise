@@ -48,7 +48,7 @@ require_ulimit_
 # and to make an N-byte-allocating-printf require more than that, thus
 # triggering the printf(3) misbehavior -- which, btw, is required by ISO C99.
 
-mkfifo fifo || framework_failure
+mkfifo_or_skip_ fifo
 
 # Disable MALLOC_PERTURB_, to avoid triggering this bug
 # http://bugs.debian.org/481543#77

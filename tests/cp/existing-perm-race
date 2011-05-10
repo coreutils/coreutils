@@ -30,8 +30,7 @@ g2=$2
 
 
 umask 077
-mkfifo fifo ||
-  skip_test_ "fifos not supported"
+mkfifo_or_skip_ fifo
 
 touch fifo-copy &&
 chgrp $g1 fifo &&
