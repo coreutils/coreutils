@@ -128,10 +128,6 @@ sc_sun_os_names:
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
-ALL_RECURSIVE_TARGETS += sc_tight_scope
-sc_tight_scope:
-	@$(MAKE) -s -C src $@
-
 ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
 	@$(MAKE) -s -C src $@

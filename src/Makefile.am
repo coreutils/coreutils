@@ -702,46 +702,6 @@ sc_check-AUTHORS: $(all_programs)
 	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot) && \
 	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
-# The following rule is not designed to be portable,
-# and relies on tools that not everyone has.
-
-# Most functions in src/*.c should have static scope.
-# Any that don't must be marked with `extern', but `main'
-# and `usage' are exceptions: they're always extern, but
-# do not need to be marked.  Also functions starting with __
-# are exempted due to possibly being added by the compiler
-# (when compiled as a shared library for example).
-#
-# The second nm|grep checks for file-scope variables with `extern' scope.
-.PHONY: sc_tight_scope
-sc_tight_scope: $(bin_PROGRAMS)
-	@t=exceptions-$$$$;						\
-	trap 's=$$?; rm -f $$t; exit $$s' 0;				\
-	for sig in 1 2 3 13 15; do					\
-	  eval "trap 'v=`expr $$sig + 128`; (exit $$v); exit $$v' $$sig"; \
-	done;								\
-	src=`for f in $(SOURCES); do					\
-	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
-	hdr=`for f in $(noinst_HEADERS); do				\
-	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
-	( printf 'main\nusage\n_.*\n';					\
-	  grep -h -A1 '^extern .*[^;]$$' $$src				\
-	    | grep -vE '^(extern |--)' | sed 's/ .*//';			\
-	  perl -lne '/^extern (?:enum )?\S+ \**(\S*) \(/ and print $$1' \
-		$$hdr;							\
-	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
-	nm -e *.$(OBJEXT) | sed -n 's/.* T //p'				\
-	    | sed 's/^_//' | grep -Ev -f $$t				\
-	  && { echo the above functions should have static scope >&2;	\
-	       exit 1; } || : ;						\
-	( printf '^program_name$$\n';					\
-	  perl -lne '/^extern .*?\**(\w+);/ and print "^$$1\$$"'	\
-	    $$hdr *.h ) | $(ASSORT) -u > $$t;				\
-	nm -e *.$(OBJEXT) | sed -n 's/.* [BD] //p'			\
-	    | sed 's/^_//' | grep -Ev -f $$t				\
-	  && { echo the above variables should have static scope >&2;	\
-	       exit 1; } || :
-
 # Use the just-built ./ginstall, when not cross-compiling.
 if CROSS_COMPILING
 cu_install_program = @INSTALL_PROGRAM@
