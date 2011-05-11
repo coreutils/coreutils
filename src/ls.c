@@ -2740,7 +2740,10 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       /* When coloring a directory (we may know the type from
          direct.d_type), we have to stat it in order to indicate
          sticky and/or other-writable attributes.  */
-      || (type == directory && print_with_color)
+      || (type == directory && print_with_color
+          && (is_colored (C_OTHER_WRITABLE)
+              || is_colored (C_STICKY)
+              || is_colored (C_STICKY_OTHER_WRITABLE)))
       /* When dereferencing symlinks, the inode and type must come from
          stat, but readdir provides the inode and type of lstat.  */
       || ((print_inode || format_needs_type)

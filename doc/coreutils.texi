@@ -7042,6 +7042,23 @@ Piping a colorized listing through a pager like @command{more} or
 @command{less} usually produces unreadable results.  However, using
 @code{more -f} does seem to work.
 
+@vindex LS_COLORS
+@vindex SHELL @r{environment variable, and color}
+Note that using the @option{--color} option may incur a noticeable
+performance penalty when run in a directory with very many entries,
+because the default settings require that @command{ls} @code{stat} every
+single file it lists.
+However, if you would like most of the file-type coloring
+but can live without the other coloring options (e.g.,
+executable, orphan, sticky, other-writable, capability), use
+@command{dircolors} to set the @env{LS_COLORS} environment variable like this,
+@example
+eval $(dircolors -p | perl -pe \
+  's/^((CAP|S[ET]|O[TR]|M|E)\w+).*/$1 00/' | dircolors -)
+@end example
+and on a @code{dirent.d_type}-capable file system, @command{ls}
+will perform only one @code{stat} call per command line argument.
+
 @item -F
 @itemx --classify
 @itemx --indicator-style=classify

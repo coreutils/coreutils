@@ -10,6 +10,7 @@ EXTRA_DIST =		\
   CuSkip.pm		\
   CuTmpdir.pm		\
   check.mk		\
+  d_type-check		\
   envvar-check		\
   filefrag-extent-compare \
   fiemap-capable	\
@@ -426,6 +427,7 @@ TESTS =						\
   ls/rt-1					\
   ls/stat-dtype					\
   ls/stat-failed				\
+  ls/stat-free-color				\
   ls/stat-free-symlinks				\
   ls/stat-vs-dirent				\
   ls/symlink-slash				\
