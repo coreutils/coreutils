@@ -25,7 +25,6 @@
 
 #include <unistd.h>
 
-#include "group-member.h"
 #include "stat-macros.h"
 
 /* Return true if the current user has permission of type MODE
