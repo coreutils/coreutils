@@ -221,6 +221,12 @@ sc_prohibit_emacs__indent_tabs_mode__setting:
 	halt='use of emacs indent-tabs-mode: setting'			\
 	  $(_sc_search_regexp)
 
+# Use skip_test_ rather than init.sh's "skip_" function.
+sc_prohibit_skip_:
+	@prohibit=' skip[_] '						\
+	halt="use init.cfg's skip_test_, not init.sh's skip_"		\
+	  $(_sc_search_regexp)
+
 # Ensure that each file that contains fail=1 also contains fail=0.
 # Otherwise, setting file=1 in the environment would make tests fail
 # unexpectedly.
