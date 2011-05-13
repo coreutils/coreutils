@@ -8,6 +8,7 @@ lib/randperm.h
 Depends-on:
 randint
 xalloc
+hash
 
 configure.ac:
 

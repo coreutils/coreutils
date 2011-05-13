@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Note the use of single quotes, not double quotes.
   That creates files named xaa.xz, xab.xz and xac.xz.
 
+** Improvements
+
+  shuf outputs small subsets of large permutations much more efficiently.
+  For example `shuf -i1-$((2**32-1)) -n2` no longer exhausts memory.
+
 
 * Noteworthy changes in release 8.12 (2011-04-26) [stable]
 
