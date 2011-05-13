@@ -22,12 +22,12 @@ print_ver_ cp
 # Require a fiemap-enabled FS.
 touch fiemap_chk
 fiemap_capable_ fiemap_chk ||
-  skip_ "this file system lacks FIEMAP support"
+  skip_test_ "this file system lacks FIEMAP support"
 
 # Exclude ext3 (or unknown fs types)
 # as the emulated extent scanning is slow
 df -t ext3 . >/dev/null &&
-  skip_ "ext3 has known slow FIEMAP scanning"
+  skip_test_ "ext3 has known slow FIEMAP scanning"
 
 # Create a large-but-sparse file.
 timeout 10 truncate -s1T f || framework_failure_

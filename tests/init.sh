@@ -32,7 +32,7 @@
 #   or perhaps export PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH"
 #   to all tests via automake's TESTS_ENVIRONMENT.
 #   Set the exit code 0 for success, 77 for skipped, or 1 or other for failure.
-#   Use the skip_ and fail_ functions to print a diagnostic and then exit
+#   Use the skip_test_ and fail_ functions to print a diagnostic and then exit
 #   with the corresponding exit code.
 #   Exit $?
 
@@ -148,7 +148,7 @@ else
     # If we've made it all the way to the sentinel, "fail" without
     # finding even a marginal shell, skip this test.
     if test "$re_shell_" = fail; then
-      test -z "$marginal_" && skip_ failed to find an adequate shell
+      test -z "$marginal_" && skip_test_ failed to find an adequate shell
       re_shell_=$marginal_
       break
     fi

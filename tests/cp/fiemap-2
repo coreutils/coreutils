@@ -22,7 +22,7 @@ print_ver_ cp
 # Require a fiemap-enabled FS.
 touch fiemap_chk # check a file rather than current dir for best coverage
 fiemap_capable_ fiemap_chk \
-  || skip_ "this file system lacks FIEMAP support"
+  || skip_test_ "this file system lacks FIEMAP support"
 
 # Exercise the code that handles a file ending in a hole.
 printf x > k || framework_failure_
