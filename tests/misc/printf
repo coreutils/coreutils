@@ -96,4 +96,27 @@ EOF
 
 compare out exp || fail=1
 
+# Verify handling of single quote chars (\' or \")
+
+"$prog" '%d\n' '"a'  >out 2>err   # valid
+"$prog" '%d\n' '"a"' >>out 2>>err # invalid
+"$prog" '%d\n' '"'   >>out 2>>err # invalid
+"$prog" '%d\n' 'a'   >>out 2>>err # invalid
+
+cat <<EOF > exp
+97
+97
+0
+0
+EOF
+
+cat <<EOF > exp_err
+$prog: warning: ": character(s) following character constant have been ignored
+$prog: ": expected a numeric value
+$prog: a: expected a numeric value
+EOF
+
+compare out exp || fail=1
+compare err exp_err || fail=1
+
 Exit $fail

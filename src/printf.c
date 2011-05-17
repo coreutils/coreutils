@@ -160,7 +160,7 @@ FUNC_NAME (char const *s)						 \
   char *end;								 \
   TYPE val;								 \
                                                                          \
-  if (*s == '\"' || *s == '\'')						 \
+  if ((*s == '\"' || *s == '\'') && *(s + 1))				 \
     {									 \
       unsigned char ch = *++s;						 \
       val = ch;								 \
