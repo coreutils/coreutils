@@ -4593,7 +4593,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information)\n\
                                with -l: show ctime and sort by name\n\
-                               otherwise: sort by ctime\n\
+                               otherwise: sort by ctime, newest first\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
@@ -4696,7 +4696,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              takes effect only outside the POSIX locale\n\
 "), stdout);
       fputs (_("\
-  -t                         sort by modification time\n\
+  -t                         sort by modification time, newest first\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);
       fputs (_("\
