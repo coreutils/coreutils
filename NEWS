@@ -1488,7 +1488,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "rm --interactive=never F" no longer prompts for an unwritable F
 
-  "rm -rf D" would emit an misleading diagnostic when failing to
+  "rm -rf D" would emit a misleading diagnostic when failing to
   remove a symbolic link within the unwritable directory, D.
   Introduced in coreutils-6.0.  Similarly, when a cross-partition
   "mv" fails because the source directory is unwritable, it now gives

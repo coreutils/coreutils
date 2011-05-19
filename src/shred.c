@@ -781,7 +781,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
     }
 
   /* If we know that we can't possibly shred the file, give up now.
-     Otherwise, we may go into a infinite loop writing data before we
+     Otherwise, we may go into an infinite loop writing data before we
      find that we can't rewind the device.  */
   if ((S_ISCHR (st.st_mode) && isatty (fd))
       || S_ISFIFO (st.st_mode)

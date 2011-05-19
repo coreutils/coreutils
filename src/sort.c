@@ -112,7 +112,7 @@ struct rlimit { size_t rlim_cur; };
 /* Heuristic value for the number of lines for which it is worth creating
    a subthread, during an internal merge sort.  I.e., it is a small number
    of "average" lines for which sorting via two threads is faster than
-   sorting via one on an "average" system.  On an dual-core 2.0 GHz i686
+   sorting via one on an "average" system.  On a dual-core 2.0 GHz i686
    system with 3GB of RAM and 2MB of L2 cache, a file containing 128K
    lines of gensort -a output is sorted slightly faster with --parallel=2
    than with --parallel=1.  By contrast, using --parallel=1 is about 10%
@@ -2029,7 +2029,7 @@ compare_random (char *restrict texta, size_t lena,
                 char *restrict textb, size_t lenb)
 {
   /* XFRM_DIFF records the equivalent of memcmp on the transformed
-     data.  This is used to break ties if there is an checksum
+     data.  This is used to break ties if there is a checksum
      collision, and this is good enough given the astronomically low
      probability of a collision.  */
   int xfrm_diff = 0;

@@ -483,7 +483,7 @@ toarith (VALUE *v)
     }
 }
 
-/* Extract a size_t value from a integer value I.
+/* Extract a size_t value from an integer value I.
    If the value is negative, return SIZE_MAX.
    If the value is too large, return SIZE_MAX - 1.  */
 static size_t
