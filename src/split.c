@@ -1230,15 +1230,15 @@ main (int argc, char **argv)
 
   /* When filtering, closure of one pipe must not terminate the process,
      as there may still be other streams expecting input from us.  */
-  sigemptyset (&newblocked);
   if (filter_command)
     {
       struct sigaction act;
+      sigemptyset (&newblocked);
       sigaction (SIGPIPE, NULL, &act);
       if (act.sa_handler != SIG_IGN)
         sigaddset (&newblocked, SIGPIPE);
+      sigprocmask (SIG_BLOCK, &newblocked, &oldblocked);
     }
-  sigprocmask (SIG_BLOCK, &newblocked, &oldblocked);
 
   switch (split_type)
     {
@@ -1275,8 +1275,6 @@ main (int argc, char **argv)
     default:
       abort ();
     }
-
-  sigprocmask (SIG_SETMASK, &oldblocked, NULL);
 
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
