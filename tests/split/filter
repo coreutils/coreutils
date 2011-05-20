@@ -47,4 +47,8 @@ stat x?? 2>/dev/null && fail=1
 # where they would result in a non zero exit from split.
 yes | head -n200K | split -b1G --filter='head -c1 >/dev/null' || fail=1
 
+# Ensure that endless input is ignored when all filters finish
+timeout 10 yes | split --filter="head -c1 >/dev/null" -n r/1 || fail=1
+timeout 10 split --filter="head -c1 >/dev/null" -n 1 /dev/zero || fail=1
+
 Exit $fail

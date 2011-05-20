@@ -462,6 +462,12 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
               cwrite (new_file_flag, bp_out, w);
               opened += new_file_flag;
               new_file_flag = !max_files || (opened < max_files);
+              if (!new_file_flag && ignorable (errno))
+                {
+                  /* If filter no longer accepting input, stop reading.  */
+                  n_read = 0;
+                  break;
+                }
               bp_out += w;
               to_read -= w;
               to_write = n_bytes;
@@ -817,6 +823,7 @@ static void
 lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
 {
   bool wrapped = false;
+  bool wrote = false;
   bool file_limit;
   size_t i_file;
   of_t *files IF_LINT (= NULL);
@@ -903,6 +910,9 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
               else if (fwrite (bp, to_write, 1, files[i_file].ofile) != 1
                        && ! ignorable (errno))
                 error (EXIT_FAILURE, errno, "%s", files[i_file].of_name);
+              if (! ignorable (errno))
+                wrote = true;
+
               if (file_limit)
                 {
                   if (fclose (files[i_file].ofile) != 0 && ! ignorable (errno))
@@ -913,6 +923,10 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
               if (next && ++i_file == n)
                 {
                   wrapped = true;
+                  /* If no filters are accepting input, stop reading.  */
+                  if (! wrote)
+                    goto no_filters;
+                  wrote = false;
                   i_file = 0;
                 }
             }
@@ -921,6 +935,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
         }
     }
 
+no_filters:
   /* Ensure all files created, so that any existing files are truncated,
      and to signal any waiting fifo consumers.
      Also, close any open file descriptors.
