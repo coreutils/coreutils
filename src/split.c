@@ -649,8 +649,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
               /* We don't use the stdout buffer here since we're writing
                  large chunks from an existing file, so it's more efficient
                  to write out directly.  */
-              if (full_write (STDOUT_FILENO, bp, to_write) != to_write
-                  && ! ignorable (errno))
+              if (full_write (STDOUT_FILENO, bp, to_write) != to_write)
                 error (EXIT_FAILURE, errno, "%s", _("write error"));
             }
           else if (! k)
@@ -776,7 +775,12 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                  In specialised cases the consumer can keep reading
                  from the fifo, terminating on conditions in the data
                  itself, or perhaps never in the case of `tail -f`.
-                 I.E. for fifos it is valid to attempt this reopen.  */
+                 I.E. for fifos it is valid to attempt this reopen.
+
+                 We don't handle the filter_command case here, as create()
+                 will exit if there are not enough files in that case.
+                 I.E. we don't support restarting filters, as that would
+                 put too much burden on users specifying --filter commands.  */
               fd = open (files[i_check].of_name,
                          O_WRONLY | O_BINARY | O_APPEND | O_NONBLOCK);
             }
@@ -798,7 +802,7 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                 error (EXIT_FAILURE, errno, "%s", files[i_check].of_name);
             }
 
-          if (fclose (files[i_reopen].ofile) != 0 && ! ignorable (errno))
+          if (fclose (files[i_reopen].ofile) != 0)
             error (EXIT_FAILURE, errno, "%s", files[i_reopen].of_name);
           files[i_reopen].ofile = NULL;
           files[i_reopen].ofd = OFD_APPEND;
@@ -882,12 +886,10 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
             {
               if (line_no == k && unbuffered)
                 {
-                  if (full_write (STDOUT_FILENO, bp, to_write) != to_write
-                      && ! ignorable (errno))
+                  if (full_write (STDOUT_FILENO, bp, to_write) != to_write)
                     error (EXIT_FAILURE, errno, "%s", _("write error"));
                 }
-              else if (line_no == k && fwrite (bp, to_write, 1, stdout) != 1
-                       && ! ignorable (errno))
+              else if (line_no == k && fwrite (bp, to_write, 1, stdout) != 1)
                 {
                   clearerr (stdout); /* To silence close_stdout().  */
                   error (EXIT_FAILURE, errno, "%s", _("write error"));
@@ -915,7 +917,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
 
               if (file_limit)
                 {
-                  if (fclose (files[i_file].ofile) != 0 && ! ignorable (errno))
+                  if (fclose (files[i_file].ofile) != 0)
                     error (EXIT_FAILURE, errno, "%s", files[i_file].of_name);
                   files[i_file].ofile = NULL;
                   files[i_file].ofd = OFD_APPEND;
