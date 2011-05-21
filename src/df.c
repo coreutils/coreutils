@@ -241,7 +241,7 @@ print_table (void)
   IF_LINT (free (table));
 }
 
-/* Optain the appropriate header entries.  */
+/* Obtain the appropriate header entries.  */
 
 static void
 get_header (void)
@@ -417,7 +417,7 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
     *dest = -*dest;
 }
 
-/* Optain a space listing for the disk device with absolute file name DISK.
+/* Obtain a space listing for the disk device with absolute file name DISK.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
    If STAT_FILE is non-null, it is the name of a file within the file
