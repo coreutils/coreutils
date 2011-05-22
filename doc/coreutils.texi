@@ -1883,7 +1883,7 @@ Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 Instead of the normal output, output only @dfn{string constants}: at
 least @var{bytes} consecutive @acronym{ASCII} graphic characters,
 followed by a zero byte (@acronym{ASCII} @sc{nul}).
-Prefixes and suffixes on @code{bytes} are interpreted as for the
+Prefixes and suffixes on @var{bytes} are interpreted as for the
 @option{-j} option.
 
 If @var{n} is omitted with @option{--strings}, the default is 3.
