@@ -78,11 +78,14 @@ each program.  One way to do this is to use vc-dwim
   "git-changelog-symlink-init" function into your shell, and then run
   this function at the top-level directory of the package.
 
-  Edit the ChangeLog file that this command creates, creating a
+  Edit the (empty) ChangeLog file that this command creates, creating a
   properly-formatted entry according to the GNU coding standards
   <http://www.gnu.org/prep/standards/html_node/Change-Logs.html>.
 
-  Run the command "vc-dwim" and make sure its output looks good.
+  Make your changes.
+
+  Run the command "vc-dwim" and make sure its output (the diff of all
+  your changes) looks good.
 
   Run "vc-dwim --commit".
 
