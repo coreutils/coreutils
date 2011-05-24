@@ -130,7 +130,7 @@ sc_sun_os_names:
 
 ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
-	@$(MAKE) -s -C src $@
+	@$(MAKE) -s -C src _sc_check-AUTHORS
 
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
@@ -330,7 +330,7 @@ sc_prohibit_strncmp:
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
 
-include $(srcdir)/dist-check.mk
+-include $(srcdir)/dist-check.mk
 
 update-copyright-env = \
   UPDATE_COPYRIGHT_USE_INTERVALS=1 \

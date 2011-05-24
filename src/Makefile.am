@@ -164,7 +164,7 @@ BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
 # Also remove these sometimes-built programs.
-# For example, even when excluded, they're built via sc_check-AUTHORS.
+# For example, even when excluded, they're built via _sc_check-AUTHORS.
 CLEANFILES += $(no_install__progs)
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
@@ -677,10 +677,10 @@ check-duplicate-no-install: tr
 # translation inhibits printing of UTF-8 names, just skip this test.
 au_dotdot = authors-dotdot
 au_actual = authors-actual
-.PHONY: sc_check-AUTHORS
-sc_check-AUTHORS: $(all_programs)
+.PHONY: _sc_check-AUTHORS
+_sc_check-AUTHORS: $(all_programs)
 	@locale=en_US.UTF-8;				\
-	LC_ALL=$$locale ./cat --version		\
+	LC_ALL=$$locale ./cat --version			\
 	    | grep ' Torbjorn '	> /dev/null		\
 	  && { echo "$@: skipping this check"; exit 0; }; \
 	rm -f $(au_actual) $(au_dotdot);		\
