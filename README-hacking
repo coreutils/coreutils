@@ -2,7 +2,7 @@
 
 These notes intend to help people working on the checked-out sources.
 These requirements do not apply when building from a distribution tarball.
-See also HACKING for more detailed coreutils contribution guidelines.
+See also HACKING for more detailed contribution guidelines.
 
 * Requirements
 
