@@ -405,12 +405,18 @@ main (int argc, char **argv)
       if (! getenv ("POSIXLY_CORRECT"))
         {
           struct tm const *tm = localtime (&newtime[0].tv_sec);
-          error (0, 0,
-                 _("warning: `touch %s' is obsolete; use "
-                   "`touch -t %04ld%02d%02d%02d%02d.%02d'"),
-                 argv[optind],
-                 tm->tm_year + 1900L, tm->tm_mon + 1, tm->tm_mday,
-                 tm->tm_hour, tm->tm_min, tm->tm_sec);
+
+          /* Technically, it appears that even a deliberate attempt to cause
+             the above localtime to return NULL will always fail because our
+             posixtime implementation rejects all dates for which localtime
+             would fail.  However, skip the warning if it ever fails.  */
+          if (tm)
+            error (0, 0,
+                   _("warning: `touch %s' is obsolete; use "
+                     "`touch -t %04ld%02d%02d%02d%02d.%02d'"),
+                   argv[optind],
+                   tm->tm_year + 1900L, tm->tm_mon + 1, tm->tm_mday,
+                   tm->tm_hour, tm->tm_min, tm->tm_sec);
         }
 
       optind++;
