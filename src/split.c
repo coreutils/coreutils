@@ -645,7 +645,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
                   && ! ignorable (errno))
                 error (EXIT_FAILURE, errno, "%s", _("write error"));
             }
-          else
+          else if (! k)
             cwrite (new_file_flag, bp, to_write);
           n_written += to_write;
           bp += to_write;
@@ -657,7 +657,15 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
           while (next || chunk_end <= n_written - 1)
             {
               if (!next && bp == eob)
-                break; /* replenish buf, before going to next chunk.  */
+                {
+                  /* replenish buf, before going to next chunk.  */
+
+                  /* If we're going to stop reading,
+                     then count the current chunk.  */
+                  if (n_written >= file_size)
+                    chunk_no++;
+                  break;
+                }
               chunk_no++;
               if (k && chunk_no > k)
                 return;
@@ -666,7 +674,10 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
               else
                 chunk_end += chunk_size;
               if (chunk_end <= n_written - 1)
-                cwrite (true, NULL, 0);
+                {
+                  if (! k)
+                    cwrite (true, NULL, 0);
+                }
               else
                 next = false;
             }

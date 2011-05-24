@@ -34,6 +34,12 @@ split -n l/10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
 rm x??
 
+# Ensure the correct number of files written
+# even if there is more data than the reported file size
+split -n l/2 /dev/zero
+test "$(stat -c %s x* | wc -l)" = '2' || fail=1
+rm x??
+
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
 stat x?? 2>/dev/null && fail=1
@@ -66,8 +72,18 @@ for ELIDE_EMPTY in '' '-e'; do
     test "$DEBUGGING" && printf "\n---io-blk-size=$IO_BLKSIZE $ELIDE_EMPTY\n"
     for N in 6 8 12 15 22; do
       rm -f x*
+
+      if test -z "$ELIDE_EMPTY"; then
+        split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/2/$N in > chunk.k
+        stat x* >/dev/null 2>/dev/null && fail=1
+      fi
+
       split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/$N in
       echo $(stat -c "%02s" x*) >> out
+
+      if test -z "$ELIDE_EMPTY"; then
+        compare chunk.k xab || fail=1
+      fi
 
       if test "$DEBUGGING"; then
         # Output partition pattern
