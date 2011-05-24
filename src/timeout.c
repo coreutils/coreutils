@@ -148,8 +148,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 
       fputs (_("\n\
 DURATION is an integer with an optional suffix:\n\
-`s' for seconds(the default), `m' for minutes, `h' for hours or `d' for days.\n\
-"), stdout);
+`s' for seconds (the default), `m' for minutes, `h' for hours \
+or `d' for days.\n"), stdout);
 
       fputs (_("\n\
 If the command times out, then exit with status 124.  Otherwise, exit\n\
