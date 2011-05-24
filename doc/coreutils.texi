@@ -2830,10 +2830,17 @@ no @var{file} operand is specified and standard input is a FIFO or a pipe.
 Likewise, the @option{-f} option has no effect for any
 operand specified as @samp{-}, when standard input is a FIFO or a pipe.
 
-With kernel inotify support, output is asynchronous and generally very prompt.
+With kernel inotify support, output is triggered by file changes
+and is generally very prompt.
 Otherwise, @command{tail} sleeps for one second between checks---
 use @option{--sleep-interval=@var{n}} to change that default---which can
 make the output appear slightly less responsive or bursty.
+When using tail without inotify support, you can make it more responsive
+by using a sub-second sleep interval, e.g., via an alias like this:
+
+@example
+alias tail='tail -s.1'
+@end example
 
 @item -F
 @opindex -F
