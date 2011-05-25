@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   split --number l/... no longer creates extraneous files in certain cases.
   [bug introduced in coreutils-8.8]
 
+** Changes in behavior
+
+  chmod -v and -c now output the original mode in the messages.
+
 ** New features
 
   split accepts a new --filter=CMD option.  With it, split filters output
