@@ -599,6 +599,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   off_t chunk_end = chunk_size - 1;
   off_t n_written = 0;
   bool new_file_flag = true;
+  bool chunk_truncated = false;
 
   if (k > 1)
     {
@@ -620,6 +621,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         error (EXIT_FAILURE, errno, "%s", infile);
       else if (n_read == 0)
         break; /* eof.  */
+      chunk_truncated = false;
       eob = buf + n_read;
 
       while (bp != eob)
@@ -659,11 +661,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
               if (!next && bp == eob)
                 {
                   /* replenish buf, before going to next chunk.  */
-
-                  /* If we're going to stop reading,
-                     then count the current chunk.  */
-                  if (n_written >= file_size)
-                    chunk_no++;
+                  chunk_truncated = true;
                   break;
                 }
               chunk_no++;
@@ -683,6 +681,9 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
             }
         }
     }
+
+  if (chunk_truncated)
+    chunk_no++;
 
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.

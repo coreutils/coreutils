@@ -74,8 +74,8 @@ for ELIDE_EMPTY in '' '-e'; do
       rm -f x*
 
       if test -z "$ELIDE_EMPTY"; then
-        split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/2/$N in > chunk.k
-        stat x* >/dev/null 2>/dev/null && fail=1
+        split ---io-blksize=$IO_BLKSIZE -n l/2/$N in > chunk.k
+        stat x* 2>/dev/null && fail=1
       fi
 
       split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/$N in
