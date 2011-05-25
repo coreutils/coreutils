@@ -907,9 +907,9 @@ static char const nameset[] =
 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.";
 
 /* Increment NAME (with LEN bytes).  NAME must be a big-endian base N
-   number with the digits taken from nameset.  Return true if
-   successful if not (because NAME already has the greatest possible
-   value.  */
+   number with the digits taken from nameset.  Return true if successful.
+   Otherwise, (because NAME already has the greatest possible value)
+   return false.  */
 
 static bool
 incname (char *name, size_t len)
@@ -917,6 +917,10 @@ incname (char *name, size_t len)
   while (len--)
     {
       char const *p = strchr (nameset, name[len]);
+
+      /* Given that NAME is composed of bytes from NAMESET,
+         P will never be NULL here.  */
+      assert (p);
 
       /* If this character has a successor, use it.  */
       if (p[1])
