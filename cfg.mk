@@ -326,6 +326,16 @@ sc_prohibit_strncmp:
 	  { echo '$(ME): use STREQ_LEN or STRPREFIX instead of str''ncmp' \
 		1>&2; exit 1; } || :
 
+# Enforce recommended preprocessor indentation style.
+sc_preprocessor_indentation:
+	@if cppi --version >/dev/null 2>&1; then			\
+	  $(VC_LIST_EXCEPT) | grep '\.[ch]$$' | xargs cppi -a -c	\
+	    || { echo '$(ME): incorrect preprocessor indentation' 1>&2;	\
+		exit 1; };						\
+	else								\
+	  echo '$(ME): skipping test $@: cppi not installed' 1>&2;	\
+	fi
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
@@ -365,6 +375,9 @@ exclude_file_name_regexp--sc_prohibit_fail_0 = \
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
   ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
+exclude_file_name_regexp--sc_preprocessor_indentation = \
+  ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
+
 
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g)$$

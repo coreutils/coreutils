@@ -64,7 +64,7 @@
 #endif
 
 #ifndef NAME_OF_NONCE_DEVICE
-#define NAME_OF_NONCE_DEVICE "/dev/urandom"
+# define NAME_OF_NONCE_DEVICE "/dev/urandom"
 #endif
 
 /* The maximum buffer size used for reads of random data.  Using the
@@ -162,7 +162,7 @@ get_nonce (void *buffer, size_t bufsize, size_t bytes_bound)
 
   /* If there's no nonce device, use a poor approximation
      by getting the time of day, etc.  */
-# define ISAAC_SEED(type, initialize_v)                     \
+#define ISAAC_SEED(type, initialize_v)                      \
   if (seeded < bufsize)                                     \
     {                                                       \
       type v;                                               \
