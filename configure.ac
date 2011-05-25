@@ -88,8 +88,11 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wmissing-format-attribute" # copy.c
   nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
   nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
-  nw="$nw -Wstrict-overflow"        # expr.c, pr.c, tr.c, factor.c
-  # ?? -Wstrict-overflow
+
+  # Using -Wstrict-overflow is a pain, but the alternative is worse.
+  # For an example, see the code that provoked this report:
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=33498
+  # Code like that still infloops with gcc-4.6.0 and -O2.  Scary indeed.
 
   gl_MANYWARN_ALL_GCC([ws])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
@@ -116,6 +119,7 @@ if test "$gl_gcc_warnings" = yes; then
   # We use a slightly smaller set of warning options for lib/.
   # Remove the following and save the result in GNULIB_WARN_CFLAGS.
   nw=
+  nw="$nw -Wstrict-overflow"
   nw="$nw -Wuninitialized"
   nw="$nw -Wunused-macros"
   nw="$nw -Wmissing-prototypes"
