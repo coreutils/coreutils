@@ -1165,7 +1165,7 @@ main (int argc, char **argv)
         print_files (n_files, file_names);
       else
         {
-          int i;
+          unsigned int i;
           for (i = 0; i < n_files; i++)
             print_files (1, &file_names[i]);
         }

@@ -160,7 +160,7 @@ factor_using_pollard_rho (mpz_t n, int a_int)
   mpz_t a;
   mpz_t g;
   mpz_t t1, t2;
-  int k, l, c, i;
+  int k, l, c;
 
   debug ("[pollard-rho (%d)] ", a_int);
 
@@ -204,6 +204,7 @@ S2:
       mpz_set (x1, x);
       k = l;
       l = 2 * l;
+      unsigned int i;
       for (i = 0; i < k; i++)
         {
           mpz_mul (x, x, x); mpz_add (x, x, a); mpz_mod (x, x, n);

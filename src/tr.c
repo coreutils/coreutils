@@ -1555,7 +1555,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 {
   /* A value distinct from any character that may have been stored in a
      buffer as the result of a block-read in the function squeeze_filter.  */
-  enum { NOT_A_CHAR = CHAR_MAX + 1 };
+  const int NOT_A_CHAR = INT_MAX;
 
   int char_to_squeeze = NOT_A_CHAR;
   size_t i = 0;

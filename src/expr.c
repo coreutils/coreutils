@@ -312,15 +312,17 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
                       usage, AUTHORS, (char const *) NULL);
+
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
-  if (argc > 1 && STREQ (argv[1], "--"))
+  unsigned int u_argc = argc;
+  if (1 < u_argc && STREQ (argv[1], "--"))
     {
-      --argc;
+      --u_argc;
       ++argv;
     }
 
-  if (argc <= 1)
+  if (u_argc <= 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXPR_INVALID);

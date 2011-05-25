@@ -456,7 +456,7 @@ to select a shell syntax are mutually exclusive"));
   if (print_database)
     {
       char const *p = G_line;
-      while (p < G_line + sizeof G_line)
+      while (p - G_line < sizeof G_line)
         {
           puts (p);
           p += strlen (p) + 1;
