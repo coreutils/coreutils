@@ -47,7 +47,7 @@ MULTIHARDLINK 00
 EOF
 eval $(dircolors -b color-without-stat)
 
-strace -o log -e stat,lstat ls --color=always . || fail=1
+strace -o log -e stat,lstat,stat64,lstat64 ls --color=always . || fail=1
 n_lines=$(wc -l < log)
 test $n_lines = 1 || fail=1
 
