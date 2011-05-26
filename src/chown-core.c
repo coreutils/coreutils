@@ -102,17 +102,44 @@ uid_to_name (uid_t uid)
                   : umaxtostr (uid, buf));
 }
 
+/* Allocate a string representing USER and GROUP.  */
+
+static char *
+user_group_str (char const *user, char const *group)
+{
+  char *spec;
+
+  if (user)
+    {
+      if (group)
+        {
+          spec = xmalloc (strlen (user) + 1 + strlen (group) + 1);
+          stpcpy (stpcpy (stpcpy (spec, user), ":"), group);
+        }
+      else
+        {
+          spec = xstrdup (user);
+        }
+    }
+  else
+    {
+      spec = xstrdup (group);
+    }
+
+  return spec;
+}
+
 /* Tell the user how/if the user and group of FILE have been changed.
    If USER is NULL, give the group-oriented messages.
    CHANGED describes what (if anything) has happened. */
 
 static void
 describe_change (const char *file, enum Change_status changed,
+                 char const *old_user, char const *old_group,
                  char const *user, char const *group)
 {
   const char *fmt;
-  char const *spec;
-  char *spec_allocated = NULL;
+  char *spec;
 
   if (changed == CH_NOT_APPLIED)
     {
@@ -121,40 +148,25 @@ describe_change (const char *file, enum Change_status changed,
       return;
     }
 
-  if (user)
-    {
-      if (group)
-        {
-          spec_allocated = xmalloc (strlen (user) + 1 + strlen (group) + 1);
-          stpcpy (stpcpy (stpcpy (spec_allocated, user), ":"), group);
-          spec = spec_allocated;
-        }
-      else
-        {
-          spec = user;
-        }
-    }
-  else
-    {
-      spec = group;
-    }
-
   switch (changed)
     {
     case CH_SUCCEEDED:
       fmt = (user ? _("changed ownership of %s to %s\n")
              : group ? _("changed group of %s to %s\n")
              : _("no change to ownership of %s\n"));
+      spec = user_group_str (user, group);
       break;
     case CH_FAILED:
       fmt = (user ? _("failed to change ownership of %s to %s\n")
              : group ? _("failed to change group of %s to %s\n")
              : _("failed to change ownership of %s\n"));
+      spec = user_group_str (user, group);
       break;
     case CH_NO_CHANGE_REQUESTED:
       fmt = (user ? _("ownership of %s retained as %s\n")
              : group ? _("group of %s retained as %s\n")
              : _("ownership of %s retained\n"));
+      spec = user_group_str (user ? old_user : NULL, group ? old_group : NULL);
       break;
     default:
       abort ();
@@ -162,7 +174,7 @@ describe_change (const char *file, enum Change_status changed,
 
   printf (fmt, quote (file), spec);
 
-  free (spec_allocated);
+  free (spec);
 }
 
 /* Change the owner and/or group of the FILE to UID and/or GID (safely)
@@ -459,8 +471,13 @@ change_file_owner (FTS *fts, FTSENT *ent,
              : !symlink_changed ? CH_NOT_APPLIED
              : !changed ? CH_NO_CHANGE_REQUESTED
              : CH_SUCCEEDED);
+          char *old_usr = file_stats ? uid_to_name (file_stats->st_uid) : NULL;
+          char *old_grp = file_stats ? gid_to_name (file_stats->st_gid) : NULL;
           describe_change (file_full_name, ch_status,
+                           old_usr, old_grp,
                            chopt->user_name, chopt->group_name);
+          free (old_usr);
+          free (old_grp);
         }
     }
 

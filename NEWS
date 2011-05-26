@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chown and chgrp with the -v --from= options, now output the correct owner.
+  I.E. for skipped files, the original ownership is output, not the new one.
+  [bug introduced in sh-utils-2.0g]
+
   printf '%d' '"' no longer accesses out-of-bounds memory in the diagnostic.
   [bug introduced in sh-utils-1.16]
 
