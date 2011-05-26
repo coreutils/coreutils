@@ -249,12 +249,12 @@ TESTS =						\
   misc/sort-unique-segv				\
   misc/sort-version				\
   split/filter					\
-  misc/split-a					\
-  misc/split-bchunk				\
-  misc/split-fail				\
-  misc/split-l					\
-  misc/split-lchunk				\
-  misc/split-rchunk				\
+  split/suffix-length				\
+  split/b-chunk					\
+  split/fail					\
+  split/lines					\
+  split/l-chunk					\
+  split/r-chunk					\
   misc/stat-birthtime				\
   misc/stat-fmt					\
   misc/stat-hyphen				\
