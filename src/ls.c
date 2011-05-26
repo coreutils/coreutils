@@ -4132,7 +4132,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
     {
       name = f->linkname;
       mode = f->linkmode;
-      linkok = f->linkok - 1;
+      linkok = f->linkok ? 0 : -1;
     }
   else
     {
