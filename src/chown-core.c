@@ -107,7 +107,7 @@ uid_to_name (uid_t uid)
 static char *
 user_group_str (char const *user, char const *group)
 {
-  char *spec;
+  char *spec = NULL;
 
   if (user)
     {
@@ -121,7 +121,7 @@ user_group_str (char const *user, char const *group)
           spec = xstrdup (user);
         }
     }
-  else
+  else if (group)
     {
       spec = xstrdup (group);
     }
@@ -139,6 +139,7 @@ describe_change (const char *file, enum Change_status changed,
                  char const *user, char const *group)
 {
   const char *fmt;
+  char *old_spec;
   char *spec;
 
   if (changed == CH_NOT_APPLIED)
@@ -148,32 +149,45 @@ describe_change (const char *file, enum Change_status changed,
       return;
     }
 
+  spec = user_group_str (user, group);
+  old_spec = user_group_str (user ? old_user : NULL, group ? old_group : NULL);
+
   switch (changed)
     {
     case CH_SUCCEEDED:
-      fmt = (user ? _("changed ownership of %s to %s\n")
-             : group ? _("changed group of %s to %s\n")
+      fmt = (user ? _("changed ownership of %s from %s to %s\n")
+             : group ? _("changed group of %s from %s to %s\n")
              : _("no change to ownership of %s\n"));
-      spec = user_group_str (user, group);
       break;
     case CH_FAILED:
-      fmt = (user ? _("failed to change ownership of %s to %s\n")
-             : group ? _("failed to change group of %s to %s\n")
-             : _("failed to change ownership of %s\n"));
-      spec = user_group_str (user, group);
+      if (old_spec)
+        {
+          fmt = (user ? _("failed to change ownership of %s from %s to %s\n")
+                 : group ? _("failed to change group of %s from %s to %s\n")
+                 : _("failed to change ownership of %s\n"));
+        }
+      else
+        {
+          fmt = (user ? _("failed to change ownership of %s to %s\n")
+                 : group ? _("failed to change group of %s to %s\n")
+                 : _("failed to change ownership of %s\n"));
+          free (old_spec);
+          old_spec = spec;
+          spec = NULL;
+        }
       break;
     case CH_NO_CHANGE_REQUESTED:
       fmt = (user ? _("ownership of %s retained as %s\n")
              : group ? _("group of %s retained as %s\n")
              : _("ownership of %s retained\n"));
-      spec = user_group_str (user ? old_user : NULL, group ? old_group : NULL);
       break;
     default:
       abort ();
     }
 
-  printf (fmt, quote (file), spec);
+  printf (fmt, quote (file), old_spec, spec);
 
+  free (old_spec);
   free (spec);
 }
 

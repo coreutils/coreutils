@@ -16,7 +16,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  chmod -v and -c now output the original mode in the messages.
+  chmod, chown and chgrp now output the original attributes in messages,
+  when -v or -c specified.
 
 ** New features
 
