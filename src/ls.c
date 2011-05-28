@@ -2265,12 +2265,21 @@ get_funky_string (char **dest, const char **src, bool equals_end,
   return state != ST_ERROR;
 }
 
+enum parse_state
+  {
+    PS_START = 1,
+    PS_2,
+    PS_3,
+    PS_4,
+    PS_DONE,
+    PS_FAIL
+  };
+
 static void
 parse_ls_color (void)
 {
   const char *p;		/* Pointer to character being parsed */
   char *buf;			/* color_buf buffer pointer */
-  int state;			/* State of parser */
   int ind_no;			/* Indicator number */
   char label[3];		/* Indicator label */
   struct color_ext_type *ext;	/* Extension we are working on */
@@ -2287,12 +2296,12 @@ parse_ls_color (void)
      advance.  */
   buf = color_buf = xstrdup (p);
 
-  state = 1;
-  while (state > 0)
+  enum parse_state state = PS_START;
+  while (true)
     {
       switch (state)
         {
-        case 1:		/* First label character */
+        case PS_START:		/* First label character */
           switch (*p)
             {
             case ':':
@@ -2313,32 +2322,32 @@ parse_ls_color (void)
               ext->ext.string = buf;
 
               state = (get_funky_string (&buf, &p, true, &ext->ext.len)
-                       ? 4 : -1);
+                       ? PS_4 : PS_FAIL);
               break;
 
             case '\0':
-              state = 0;	/* Done! */
-              break;
+              state = PS_DONE;	/* Done! */
+              goto done;
 
             default:	/* Assume it is file type label */
               label[0] = *(p++);
-              state = 2;
+              state = PS_2;
               break;
             }
           break;
 
-        case 2:		/* Second label character */
+        case PS_2:		/* Second label character */
           if (*p)
             {
               label[1] = *(p++);
-              state = 3;
+              state = PS_3;
             }
           else
-            state = -1;	/* Error */
+            state = PS_FAIL;	/* Error */
           break;
 
-        case 3:		/* Equal sign after indicator label */
-          state = -1;	/* Assume failure...  */
+        case PS_3:		/* Equal sign after indicator label */
+          state = PS_FAIL;	/* Assume failure...  */
           if (*(p++) == '=')/* It *should* be...  */
             {
               for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
@@ -2348,29 +2357,36 @@ parse_ls_color (void)
                       color_indicator[ind_no].string = buf;
                       state = (get_funky_string (&buf, &p, false,
                                                  &color_indicator[ind_no].len)
-                               ? 1 : -1);
+                               ? PS_START : PS_FAIL);
                       break;
                     }
                 }
-              if (state == -1)
+              if (state == PS_FAIL)
                 error (0, 0, _("unrecognized prefix: %s"), quotearg (label));
             }
           break;
 
-        case 4:		/* Equal sign after *.ext */
+        case PS_4:		/* Equal sign after *.ext */
           if (*(p++) == '=')
             {
               ext->seq.string = buf;
               state = (get_funky_string (&buf, &p, false, &ext->seq.len)
-                       ? 1 : -1);
+                       ? PS_START : PS_FAIL);
             }
           else
-            state = -1;
+            state = PS_FAIL;
           break;
+
+        case PS_FAIL:
+          goto done;
+
+        default:
+          abort ();
         }
     }
+ done:
 
-  if (state < 0)
+  if (state == PS_FAIL)
     {
       struct color_ext_type *e;
       struct color_ext_type *e2;
