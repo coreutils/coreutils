@@ -234,8 +234,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
         fstatus->failed = fstat (fd, &fstatus->st);
 
       if (! fstatus->failed && S_ISREG (fstatus->st.st_mode)
-          && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
-          && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
+          && (current_pos = lseek (fd, 0, SEEK_CUR)) != -1
+          && (end_pos = lseek (fd, 0, SEEK_END)) != -1)
         {
           /* Be careful here.  The current position may actually be
              beyond the end of the file.  As in the example above.  */

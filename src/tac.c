@@ -215,7 +215,7 @@ tac_seekable (int input_fd, const char *file)
   size_t match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
 
   /* Find the size of the input file. */
-  file_pos = lseek (input_fd, (off_t) 0, SEEK_END);
+  file_pos = lseek (input_fd, 0, SEEK_END);
   if (file_pos < 1)
     return true;			/* It's an empty file. */
 
@@ -546,7 +546,7 @@ tac_file (const char *filename)
         }
     }
 
-  file_size = lseek (fd, (off_t) 0, SEEK_END);
+  file_size = lseek (fd, 0, SEEK_END);
 
   ok = (file_size < 0 || isatty (fd)
         ? tac_nonseekable (fd, filename)
