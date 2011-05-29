@@ -257,7 +257,7 @@ set_LD_PRELOAD (void)
 static void
 set_libstdbuf_options (void)
 {
-  int i;
+  unsigned int i;
 
   for (i = 0; i < ARRAY_CARDINALITY (stdbuf); i++)
     {
