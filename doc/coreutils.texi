@@ -4140,8 +4140,8 @@ a temporary file, which is then used as an input in a subsequent merge.
 
 A large value of @var{nmerge} may improve merge performance and decrease
 temporary storage utilization at the expense of increased memory usage
-and I/0.  Conversely a small value of @var{nmerge} may reduce memory
-requirements and I/0 at the expense of temporary storage consumption and
+and I/O.  Conversely a small value of @var{nmerge} may reduce memory
+requirements and I/O at the expense of temporary storage consumption and
 merge performance.
 
 The value of @var{nmerge} must be at least 2.  The default value is
