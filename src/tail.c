@@ -818,7 +818,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
           error (0, errno, _("error reading %s"), quote (pretty_filename));
           return 1;
         }
-      read_pos += bytes_read;
+      *read_pos += bytes_read;
       if (bytes_read <= n_bytes)
         n_bytes -= bytes_read;
       else
