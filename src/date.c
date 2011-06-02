@@ -236,6 +236,18 @@ then an optional modifier, which is either\n\
 E to use the locale's alternate representations if available, or\n\
 O to use the locale's alternate numeric symbols if available.\n\
 "), stdout);
+      fputs (_("\
+\n\
+Examples:\n\
+Convert seconds since the epoch (1970-01-01 UTC) to a date\n\
+  $ date --date='@2147483647'\n\
+\n\
+Show the time on the west coast of the US (use tzselect(1) to find TZ)\n\
+  $ TZ='America/Los_Angeles' date\n\
+\n\
+Show the local time for 9AM next Friday on the west coast of the US\n\
+  $ date --date='TZ=\"America/Los_Angeles\" 09:00 next Fri'\n\
+"), stdout);
       emit_ancillary_info ();
     }
   exit (status);
