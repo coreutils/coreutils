@@ -53,7 +53,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <setjmp.h>
-#include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
 #include <signal.h>
@@ -95,7 +94,6 @@
 #include "obstack.h"
 #include "quote.h"
 #include "quotearg.h"
-#include "same.h"
 #include "stat-time.h"
 #include "strftime.h"
 #include "xstrtol.h"

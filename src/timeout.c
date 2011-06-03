@@ -55,7 +55,6 @@
 #include "xstrtol.h"
 #include "sig2str.h"
 #include "operand2sig.h"
-#include "cloexec.h"
 #include "error.h"
 #include "quote.h"
 

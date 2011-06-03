@@ -25,7 +25,6 @@
 #include "system.h"
 #include "error.h"
 #include "filenamecat.h"
-#include "posixver.h"
 #include "quote.h"
 #include "xreadlink.h"
 #include "xstrtol.h"

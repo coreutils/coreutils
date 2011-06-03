@@ -22,7 +22,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "same.h"
 #include "hash.h"
 #include "cp-hash.h"
 

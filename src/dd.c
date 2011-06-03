@@ -27,7 +27,6 @@
 #include "system.h"
 #include "close-stream.h"
 #include "error.h"
-#include "fadvise.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "human.h"

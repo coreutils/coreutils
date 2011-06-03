@@ -21,7 +21,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <sys/wait.h>
 
 #include "system.h"
 #include "error.h"

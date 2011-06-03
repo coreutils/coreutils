@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "posixver.h"
 #include "quote.h"
 #include "xstrtol.h"
 
