@@ -256,12 +256,10 @@ restricted_chown (int cwd_fd, char const *file,
         }
     }
 
-  { /* FIXME: remove these curly braces when we assume C99.  */
-    int saved_errno = errno;
-    close (fd);
-    errno = saved_errno;
-    return status;
-  }
+  int saved_errno = errno;
+  close (fd);
+  errno = saved_errno;
+  return status;
 }
 
 /* Change the owner and/or group of the file specified by FTS and ENT
