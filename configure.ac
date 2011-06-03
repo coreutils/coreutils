@@ -18,7 +18,7 @@
 
 dnl Written by Jim Meyering.
 
-AC_PREREQ([2.62])
+AC_PREREQ([2.64])
 
 # Make inter-release version strings look like, e.g., v6.9-219-g58ddd, which
 # indicates that it is built from the 219th delta (in _some_ repository)
