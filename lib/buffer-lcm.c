@@ -17,6 +17,7 @@
 
 /* Written by Paul Eggert.  */
 
+#include <config.h>
 #include "buffer-lcm.h"
 
 /* Return a buffer size suitable for doing I/O with files whose block
