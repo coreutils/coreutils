@@ -33,6 +33,7 @@
 #include <sys/ioctl.h>
 
 #include "system.h"
+#include "ioblksize.h"
 #include "error.h"
 #include "fadvise.h"
 #include "full-write.h"

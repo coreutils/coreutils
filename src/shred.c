@@ -100,6 +100,7 @@
 #include "quotearg.h"		/* For quotearg_colon */
 #include "randint.h"
 #include "randread.h"
+#include "stat-size.h"
 
 /* Default number of times to overwrite.  */
 enum { DEFAULT_PASSES = 3 };

@@ -149,6 +149,7 @@ noinst_HEADERS =	\
   find-mount-point.h	\
   fs.h			\
   group-list.h		\
+  ioblksize.h		\
   ls.h			\
   operand2sig.h		\
   prog-fprintf.h	\

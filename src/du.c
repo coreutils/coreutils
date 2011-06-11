@@ -37,6 +37,7 @@
 #include "human.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "stat-size.h"
 #include "stat-time.h"
 #include "stdio--.h"
 #include "xfts.h"

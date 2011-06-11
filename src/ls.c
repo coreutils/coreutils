@@ -94,6 +94,7 @@
 #include "obstack.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
 #include "xstrtol.h"
