@@ -44,7 +44,10 @@ grep_timeout()
 for i in $(seq 50); do
     echo $i
     rm -rf k x out
-    :>k && :>x && timeout 10 tail -F k > out 2>&1 &
+    # Normally less than a second is required here, but with heavy load
+    # and a lot of disk activity, even 20 seconds is insufficient, which
+    # leads to this timeout killing tail before the "ok" is written below.
+    :>k && :>x && timeout 40 tail -F k > out 2>&1 &
     pid=$!
     sleep .1
     echo b > k;
@@ -53,13 +56,13 @@ for i in $(seq 50); do
     while :; do grep b out > /dev/null && break; done
     mv x k
     # wait for tail to detect the rename
-    grep_timeout tail: out || fail_ failed to detect rename
+    grep_timeout tail: out || { cat out; fail_ failed to detect rename; }
     echo ok >> k
     found=0
     # wait up to 10 seconds for "ok" to appear in out
     grep_timeout ok out && found=1
     kill $pid
-    test $found = 0 && { fail=1; cat out; break; }
+    test $found = 0 && { cat out; fail_ failed to detect echoed '"ok"'; }
 done
 
 Exit $fail
