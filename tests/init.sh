@@ -74,7 +74,7 @@ Exit () { set +e; (exit $1); exit $1; }
 # the reason for skip/failure to console, rather than to the .log files.
 : ${stderr_fileno_=2}
 
-warn_ () { echo "$@" 1>&$stderr_fileno_; }
+warn_ () { eval 'echo "$@" 1>&'"$stderr_fileno_"; }
 fail_ () { warn_ "$ME_: failed test: $@"; Exit 1; }
 skip_ () { warn_ "$ME_: skipped test: $@"; Exit 77; }
 framework_failure_ () { warn_ "$ME_: set-up failure: $@"; Exit 99; }
