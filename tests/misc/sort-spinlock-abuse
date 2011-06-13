@@ -26,13 +26,14 @@ grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
 seq 100000 > in || framework_failure_
 mkfifo_or_skip_ fifo
 
-# Arrange for sort to require 5.0+ seconds of wall-clock time,
+# Arrange for sort to require 8.0+ seconds of wall-clock time,
 # while actually using far less than 1 second of CPU time.
-(for i in $(seq 50); do read line; echo $i; sleep .1; done
+(for i in $(seq 80); do read line; echo $i; sleep .1; done
   cat > /dev/null) < fifo &
 
-# Limit CPU time to 1 second
-ulimit -t 1
+# However, under heavy load, it can easily take more than
+# one second of CPU time, so set a permissive limit:
+ulimit -t 7
 sort --parallel=2 in > fifo || fail=1
 
 Exit $fail
