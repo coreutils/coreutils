@@ -34,6 +34,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   shuf outputs small subsets of large permutations much more efficiently.
   For example `shuf -i1-$((2**32-1)) -n2` no longer exhausts memory.
 
+  cp and ls now support HP-UX 11.11's ACLs, thanks to improved support
+  in gnulib.
+
+** Build-related
+
+  Changes inherited from gnulib address a build failure on HP-UX 11.11
+  when using /opt/ansic/bin/cc.
+
 
 * Noteworthy changes in release 8.12 (2011-04-26) [stable]
 
