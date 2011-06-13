@@ -36,12 +36,12 @@ done
 
 # Advise to drop cache for whole file
 if ! dd if=ifile iflag=nocache count=0 2>err; then
-  if grep -F 'Operation not supported' err >/dev/null; then
-     warn_ 'skipping part; this file system lacks support for posix_fadvise()'
-     skip=1
-  else
-    fail=1
-  fi
+  # We could check for 'Operation not supported' in err here,
+  # but that was seen to be brittle. HPUX returns ENOTTY for example.
+  # So assume that if this basic operation fails, it's due to lack
+  # of support by the system.
+  warn_ 'skipping part; this file system lacks support for posix_fadvise()'
+  skip=1
 fi
 
 if test "$skip" != 1; then
