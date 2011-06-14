@@ -37,7 +37,7 @@ rm_version=`
 `
 case $rm_version in
   $PACKAGE_VERSION) ;;
-  *) skip_test_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;
+  *) skip_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;
 esac
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf a 2> out-t && fail=1
 

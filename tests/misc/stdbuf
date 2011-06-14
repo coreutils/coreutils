@@ -28,7 +28,7 @@ lf='
 '
 case $abs_top_builddir in
   *[\\\"\#\$\&\'\`$lf\ \	]*)
-    skip_test_ "unsafe absolute build directory name: $abs_top_builddir";;
+    skip_ "unsafe absolute build directory name: $abs_top_builddir";;
 esac
 
 # Use a fifo rather than a pipe in the tests below

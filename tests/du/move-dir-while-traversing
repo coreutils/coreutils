@@ -21,7 +21,7 @@ print_ver_ du
 
 # We use a python-inotify script, so...
 python -m pyinotify -h > /dev/null \
-  || skip_test_ 'python inotify package not installed'
+  || skip_ 'python inotify package not installed'
 
 # Move a directory "up" while du is processing its sub-directories.
 # While du is processing a hierarchy .../B/C/D/... this script

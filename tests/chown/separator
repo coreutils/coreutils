@@ -37,7 +37,7 @@ test -n "$id_gn" || framework_failure
 case $host_triplet in
   *-freebsd6.*)
     case $id_gn in
-      *[^a-zA-Z0-9._-]*) skip_test_ "invalid group name: $id_gn";;
+      *[^a-zA-Z0-9._-]*) skip_ "invalid group name: $id_gn";;
     esac;;
   *) ;;
 esac

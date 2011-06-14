@@ -57,7 +57,7 @@ test $? = 127 || fail=1
 # For these reasons, it is more portable to grep that our desired changes
 # took place, rather than comparing output of env over an entire environment.
 if env | grep '^ENV_TEST' >/dev/null ; then
-  skip_test_ "environment has potential interference from ENV_TEST*"
+  skip_ "environment has potential interference from ENV_TEST*"
 fi
 
 ENV_TEST1=a

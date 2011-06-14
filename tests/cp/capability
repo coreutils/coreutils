@@ -23,21 +23,21 @@ working_umask_or_skip_
 
 
 grep '^#define HAVE_CAP 1' $CONFIG_HEADER > /dev/null \
-  || skip_test_ "configured without libcap support"
+  || skip_ "configured without libcap support"
 
 (setcap --help) 2>&1 |grep 'usage: setcap' > /dev/null \
-  || skip_test_ "setcap utility not found"
+  || skip_ "setcap utility not found"
 (getcap --help) 2>&1 |grep 'usage: getcap' > /dev/null \
-  || skip_test_ "getcap utility not found"
+  || skip_ "getcap utility not found"
 
 
 touch file || framework_failure
 chown $NON_ROOT_USERNAME file || framework_failure
 
 setcap 'cap_net_bind_service=ep' file ||
-  skip_test_ "setcap doesn't work"
+  skip_ "setcap doesn't work"
 getcap file | grep cap_net_bind_service >/dev/null ||
-  skip_test_ "getcap doesn't work"
+  skip_ "getcap doesn't work"
 
 cp --preserve=xattr file copy1 || fail=1
 

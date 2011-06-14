@@ -38,7 +38,7 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
 
 # "chmod g+s d" does nothing on some NFS file systems.
 env -- test -g d ||
-  skip_test_ 'cannot create setgid directories'
+  skip_ 'cannot create setgid directories'
 
 
 chmod 755 d

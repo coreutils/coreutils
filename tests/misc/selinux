@@ -33,7 +33,7 @@ mkfifo_or_skip_ p
 ctx=root:object_r:tmp_t:s0
 
 chcon $ctx f d p ||
-  skip_test_ '"chcon '$ctx' ..." failed'
+  skip_ '"chcon '$ctx' ..." failed'
 
 # inspect that context with both ls -Z and stat.
 for i in d f p; do

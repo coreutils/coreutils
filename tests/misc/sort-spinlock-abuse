@@ -21,7 +21,7 @@
 print_ver_ sort
 
 grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
-  skip_test_ 'requires pthreads'
+  skip_ 'requires pthreads'
 
 seq 100000 > in || framework_failure_
 mkfifo_or_skip_ fifo

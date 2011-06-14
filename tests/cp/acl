@@ -24,7 +24,7 @@ require_acl_
 
 # Skip this test if cp was built without ACL support:
 grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
-  skip_test_ "insufficient ACL support"
+  skip_ "insufficient ACL support"
 
 mkdir -p a b || framework_failure
 touch a/file || framework_failure
@@ -34,7 +34,7 @@ skip=no
 acl1=`cd a && getfacl file` || skip=yes
 setfacl -m user:bin:rw a/file 2> /dev/null || skip=yes
 test $skip = yes &&
-  skip_test_ "'.' is not on a suitable file system for this test"
+  skip_ "'.' is not on a suitable file system for this test"
 
 # copy a file without preserving permissions
 cp a/file b/ || fail=1

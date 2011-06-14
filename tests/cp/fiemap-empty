@@ -22,18 +22,18 @@ print_ver_ cp
 # FIXME: enable any part of this test that is still relevant,
 # or, if none are relevant (now that cp does not handle unwritten
 # extents), just remove the test altogether.
-skip_test_ 'disabled for now'
+skip_ 'disabled for now'
 
 touch fiemap_chk
 fiemap_capable_ fiemap_chk ||
-  skip_test_ 'this file system lacks FIEMAP support'
+  skip_ 'this file system lacks FIEMAP support'
 rm fiemap_chk
 
 # TODO: rather than requiring `fallocate`, possible add
 # this functionality to truncate --alloc
-fallocate --help >/dev/null || skip_test_ 'The fallocate utility is required'
+fallocate --help >/dev/null || skip_ 'The fallocate utility is required'
 fallocate -l 1 -n falloc.test ||
-  skip_test_ 'this file system lacks FALLOCATE support'
+  skip_ 'this file system lacks FALLOCATE support'
 rm falloc.test
 
 # Require more space than we'll actually use, so that
@@ -44,13 +44,13 @@ rm falloc.test
 require_file_system_bytes_free_ 800000000
 
 fallocate -l 600MiB space.test ||
-  skip_test_ 'this test needs at least 600MiB free space'
+  skip_ 'this test needs at least 600MiB free space'
 
 # Disable this test on old BTRFS (e.g. Fedora 14)
 # which reports ordinary extents for unwritten ones.
-filefrag space.test || skip_test_ 'the `filefrag` utility is missing'
+filefrag space.test || skip_ 'the `filefrag` utility is missing'
 filefrag -v space.test | grep -F 'unwritten' > /dev/null ||
-  skip_test_ 'this file system does not report empty extents as "unwritten"'
+  skip_ 'this file system does not report empty extents as "unwritten"'
 
 rm space.test
 

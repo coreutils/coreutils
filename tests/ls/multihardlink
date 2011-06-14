@@ -21,7 +21,7 @@ print_ver_ ls
 working_umask_or_skip_
 
 touch file file1 || framework_failure
-ln file1 file2 || skip_test_ "can't create hard link"
+ln file1 file2 || skip_ "can't create hard link"
 code_mh='44;37'
 code_ex='01;32'
 code_png='01;35'

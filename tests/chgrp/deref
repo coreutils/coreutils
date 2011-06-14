@@ -31,7 +31,7 @@ chgrp -h $g2 symlink 2> /dev/null
 set _ `ls -ln symlink`
 g=$5
 test "$g" = $g2 ||
-  skip_test_ "your system doesn't support changing the owner or group" \
+  skip_ "your system doesn't support changing the owner or group" \
       "of a symbolic link."
 
 

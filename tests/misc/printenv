@@ -31,7 +31,7 @@ compare exp out || fail=1
 # Environment variable values may contain newlines, which cannot be
 # observed by merely inspecting output from printenv.
 if env -- printenv | grep '^ENV_TEST' >/dev/null ; then
-  skip_test_ "environment has potential interference from ENV_TEST*"
+  skip_ "environment has potential interference from ENV_TEST*"
 fi
 
 # Printing a single variable's value.

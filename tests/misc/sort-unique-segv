@@ -20,7 +20,7 @@
 print_ver_ sort
 
 grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
-  skip_test_ 'requires pthreads'
+  skip_ 'requires pthreads'
 
 cat <<\EOF > in || framework_failure_
 

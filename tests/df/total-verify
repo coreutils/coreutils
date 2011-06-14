@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ df
 
-df || skip_test_ "df fails"
+df || skip_ "df fails"
 
 cat <<\EOF > check-df || framework_failure
 my ($total, $used, $avail) = (0, 0, 0);

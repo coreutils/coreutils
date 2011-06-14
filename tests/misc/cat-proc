@@ -23,7 +23,7 @@ print_ver_ cat
 
 f=/proc/cpuinfo
 test -f $f \
-  || skip_test_ "no $f"
+  || skip_ "no $f"
 
 
 # Yes, parts of /proc/cpuinfo might change between cat runs.

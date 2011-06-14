@@ -23,7 +23,7 @@ print_ver_ tac
 
 # See if the envvar is defined.
 if test x = "x$FULL_PARTITION_TMPDIR"; then
-  skip_test_ "FULL_PARTITION_TMPDIR not defined"
+  skip_ "FULL_PARTITION_TMPDIR not defined"
 fi
 
 if ! test -d "$FULL_PARTITION_TMPDIR"; then

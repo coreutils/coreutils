@@ -23,7 +23,7 @@ require_sparse_support_
 
 dd bs=1 seek=8G of=big < /dev/null 2> /dev/null
 if test $? != 0; then
-  skip_test_ 'cannot create a file large enough for this test; possibly
+  skip_ 'cannot create a file large enough for this test; possibly
 because file offsets are only 32 bits on this file system'
 fi
 
@@ -35,7 +35,7 @@ fi
 set x `ls -gG big`
 size=$4
 if test "$size" = 0; then
-  skip_test_ "cannot create a file large enough for this test
+  skip_ "cannot create a file large enough for this test
 possibly because this system's NFS support is buggy
 Consider rerunning this test on a different file system."
 fi

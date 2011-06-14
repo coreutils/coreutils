@@ -25,7 +25,7 @@ mkdir dir
 # In that case, using --files0-from=dir would yield garbage,
 # interpreting the directory entry as a sequence of
 # NUL-separated file names.
-cat dir > /dev/null && skip_test_ "cat dir/ succeeds"
+cat dir > /dev/null && skip_ "cat dir/ succeeds"
 
 for prog in du wc; do
   $prog --files0-from=dir > /dev/null 2>err && fail=1

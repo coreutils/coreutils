@@ -46,11 +46,11 @@ skip=0
 dd if=/dev/zero of=blob bs=8192 count=200    || skip=1
 mkdir mnt                                    || skip=1
 mkfs -t ext2 -F blob ||
-  skip_test_ "failed to create an ext2 file system"
+  skip_ "failed to create an ext2 file system"
 
 mount -oloop,context=$ctx blob mnt           || skip=1
 test $skip = 1 \
-  && skip_test_ "insufficient mount/ext2 support"
+  && skip_ "insufficient mount/ext2 support"
 
 cd mnt                                       || framework_failure
 

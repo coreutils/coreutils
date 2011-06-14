@@ -24,7 +24,7 @@ print_ver_ cp
 : > file
 ts='2009-08-28 19:00'
 touch -d "$ts" file || framework_failure
-test time_check -nt file || skip_test_ "The system clock is wrong"
+test time_check -nt file || skip_ "The system clock is wrong"
 
 chmod a=rwx file || framework_failure
 umask 077

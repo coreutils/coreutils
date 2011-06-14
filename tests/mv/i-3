@@ -23,21 +23,21 @@ require_controlling_input_terminal_
 skip_if_root_
 trap '' TTIN # Ignore SIGTTIN
 
-test "$(uname -s)" = FreeBSD && skip_test_ "known spurious failure on FreeBSD"
+test "$(uname -s)" = FreeBSD && skip_ "known spurious failure on FreeBSD"
 
 touch f g h i || framework_failure
 chmod 0 g i || framework_failure
 
 
 ls /dev/stdin >/dev/null 2>&1 \
-  || skip_test_ 'there is no /dev/stdin file'
+  || skip_ 'there is no /dev/stdin file'
 
 # work around a dash bug when redirecting
 # from symlinked ttys in the background
 tty=$(readlink -f /dev/stdin)
 
 test -r "$tty" 2>&1 \
-  || skip_test_ '/dev/stdin is not readable'
+  || skip_ '/dev/stdin is not readable'
 
 mv f g < $tty > out 2>&1 & pid=$!
 

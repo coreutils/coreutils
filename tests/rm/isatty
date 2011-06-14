@@ -23,7 +23,7 @@ skip_if_root_
 
 # Skip this test if there is no /dev/stdin file.
 ls /dev/stdin >/dev/null 2>&1 \
-  || skip_test_ 'there is no /dev/stdin file'
+  || skip_ 'there is no /dev/stdin file'
 
 touch f
 chmod 0 f

@@ -40,7 +40,7 @@ for inotify in ---disable-inotify ''; do
   # Use an unlikely-to-be-live PID
   timeout 10 tail -f -s.1 --pid=$PID_T_MAX $inotify empty
   ret=$?
-  test $ret = 124 && skip_test_ "pid $PID_T_MAX present or tail too slow"
+  test $ret = 124 && skip_ "pid $PID_T_MAX present or tail too slow"
   test $ret = 0 || fail=1
 
   # Ensure tail doesn't wait for data when PID is dead

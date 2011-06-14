@@ -33,7 +33,7 @@ print_ver_ du
 
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then
-  skip_test_ 'This test would fail, since your system lacks /proc support.'
+  skip_ 'This test would fail, since your system lacks /proc support.'
 fi
 
 dir=`printf '%200s\n' ' '|tr ' ' x`

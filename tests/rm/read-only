@@ -29,7 +29,7 @@ dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
                                              || skip=1
 mkdir mnt                                    || skip=1
 mkfs -t ext2 -F blob \
-  || skip_test_ "failed to create ext2 file system"
+  || skip_ "failed to create ext2 file system"
 
 mount -oloop blob mnt                        || skip=1
 echo test > mnt/f                            || skip=1
@@ -37,7 +37,7 @@ test -s mnt/f                                || skip=1
 mount -o remount,loop,ro mnt                 || skip=1
 
 test $skip = 1 \
-  && skip_test_ "insufficient mount/ext2 support"
+  && skip_ "insufficient mount/ext2 support"
 
 # Applying rm -f to a nonexistent file on a read-only file system must succeed.
 rm -f mnt/no-such > out 2>&1 || fail=1

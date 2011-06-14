@@ -27,7 +27,7 @@ touch f || framework_failure
 mkdir a b b/a || framework_failure
 
 mv a b ||
-  skip_test_ "your kernel's rename syscall is buggy"
+  skip_ "your kernel's rename syscall is buggy"
 
 
 # This should succeed, since both src and dest are directories,

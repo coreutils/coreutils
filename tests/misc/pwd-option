@@ -29,7 +29,7 @@ test "x$PWD" = "x$base" || framework_failure
 
 # Enter a logical directory.
 cd c || framework_failure
-test "x$PWD" = "x$base/c" || skip_test_ "cd does not properly update \$PWD"
+test "x$PWD" = "x$base/c" || skip_ "cd does not properly update \$PWD"
 
 env -- pwd -L > out || fail=1
 printf %s\\n "$base/c" > exp || fail=1

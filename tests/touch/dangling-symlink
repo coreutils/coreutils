@@ -34,7 +34,7 @@ if test $fail = 1; then
     *linux-gnu*)
       case "`uname -r`" in
         2.3.9[0-9]*)
-          skip_test_ \
+          skip_ \
 '****************************************************
 WARNING!!!
 This version of the Linux kernel causes touch to fail

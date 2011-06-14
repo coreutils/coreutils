@@ -54,7 +54,7 @@ echo foo > $i
 # name traversal exceeds MAXSYMLINKS'.
 
 cat $file > /dev/null 2> err &&
-    skip_test_ 'Your system appears to be able to handle more than $n symlinks
+    skip_ 'Your system appears to be able to handle more than $n symlinks
 in file name resolution'
 too_many=`sed 's/.*: //' err`
 

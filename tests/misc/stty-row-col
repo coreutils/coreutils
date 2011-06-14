@@ -52,7 +52,7 @@ NA LAST NA
 set $tests
 
 saved_size=`stty size` && test -n "$saved_size" \
-  || skip_test_ "can't get window size"
+  || skip_ "can't get window size"
 
 # Linux virtual consoles issue an error if you
 # try to increase their size.  So skip in that case.
@@ -60,7 +60,7 @@ if test "x$saved_size" != "x0 0"; then
   srow=$(echo $saved_size | cut -d ' ' -f1)
   scol=$(echo $saved_size | cut -d ' ' -f2)
   stty rows $(expr $srow + 1) cols $(expr $scol + 1) ||
-    skip_test_ "can't increase window size"
+    skip_ "can't increase window size"
 fi
 
 while :; do

@@ -33,7 +33,7 @@ cleanup_()
 t=$other_partition_tmpdir
 mkdir -p a/b $t/y
 mount --bind $t a/b \
-  || skip_test_ "This test requires mount with a working --bind option."
+  || skip_ "This test requires mount with a working --bind option."
 
 cat <<\EOF > exp || framework_failure
 rm: skipping `a/b', since it's on a different device

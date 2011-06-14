@@ -20,7 +20,7 @@
 print_ver_ sort
 
 locale --version >/dev/null 2>&1 ||
-  skip_test_ 'The locale utility is not present'
+  skip_ 'The locale utility is not present'
 
 # C will be used if the locale is not present
 for LOC in "$LOCALE_FR" "$LOCALE_FR_UTF8" "ja_JP.utf8"; do

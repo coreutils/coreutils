@@ -21,11 +21,11 @@
 print_ver_ touch
 
 if env -- test -w /; then
-  skip_test_ you have write access to /.
+  skip_ you have write access to /.
 fi
 
 if env -- test -O / || env -- test -G /; then
-  skip_test_ "you own /."
+  skip_ "you own /."
 fi
 
 skip_if_root_

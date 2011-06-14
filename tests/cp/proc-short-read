@@ -21,7 +21,7 @@ print_ver_ cp
 
 kall=/proc/kallsyms
 
-test -r $kall || skip_test_ "your system lacks $kall"
+test -r $kall || skip_ "your system lacks $kall"
 
 # Before coreutils-7.3, cp would copy less than 4KiB of this 1MB+ file.
 cp $kall 1    || fail=1

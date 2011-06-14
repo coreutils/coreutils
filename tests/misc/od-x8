@@ -21,7 +21,7 @@
 print_ver_ od
 
 od -t x8 /dev/null >/dev/null ||
-  skip_test_ "od lacks support for 8-byte quantities"
+  skip_ "od lacks support for 8-byte quantities"
 
 echo abcdefgh |tr -d '\n' > in || framework_failure
 

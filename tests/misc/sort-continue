@@ -21,7 +21,7 @@ print_ver_ sort
 
 # Skip the test when running under valgrind.
 ( ulimit -n 6; sort < /dev/null ) \
-  || skip_test_ 'fd-limited sort failed; are you running under valgrind?'
+  || skip_ 'fd-limited sort failed; are you running under valgrind?'
 
 for i in $(seq 31); do
   echo $i | tee -a in > __test.$i || framework_failure

@@ -41,13 +41,13 @@ n=400000
 # FIXME-maybe: try to find a suitable file system or allow
 # the user to specify it via an envvar.
 df -T -t ext3 -t ext4dev -t ext4 . \
-  || skip_test_ 'this test runs only on an ext3 or ext4 file system'
+  || skip_ 'this test runs only on an ext3 or ext4 file system'
 
 # Skip if there are too few inodes free.  Require some slack.
 free_inodes=$(stat -f --format=%d .) || framework_failure
 min_free_inodes=$(expr 12 \* $n / 10)
 test $min_free_inodes -lt $free_inodes \
-  || skip_test_ "too few free inodes on '.': $free_inodes;" \
+  || skip_ "too few free inodes on '.': $free_inodes;" \
       "this test requires at least $min_free_inodes"
 
 ok=0

@@ -74,7 +74,7 @@ nameless_gid2=`$PERL -le '
 if test -z "$nameless_uid" \
     || test -z "$nameless_gid1" \
     || test -z "$nameless_gid2"; then
-  skip_test_ "couldn't find a nameless UID or GID"
+  skip_ "couldn't find a nameless UID or GID"
 fi
 
 chown "+$nameless_uid:+0" .

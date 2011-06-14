@@ -21,10 +21,10 @@ print_ver_ ls
 require_root_
 
 grep '^#define HAVE_CAP 1' $CONFIG_HEADER > /dev/null \
-  || skip_test_ "configured without libcap support"
+  || skip_ "configured without libcap support"
 
 (setcap --help) 2>&1 |grep 'usage: setcap' > /dev/null \
-  || skip_test_ "setcap utility not found"
+  || skip_ "setcap utility not found"
 
 # Don't let a different umask perturb the results.
 umask 22
@@ -38,7 +38,7 @@ cd test
 touch cap_pos dir/cap_pos dir/cap_neg
 for file in cap_pos dir/cap_neg; do
   setcap 'cap_net_bind_service=ep' $file ||
-    skip_test_ "setcap doesn't work"
+    skip_ "setcap doesn't work"
 done
 
 code='30;41'

@@ -34,7 +34,7 @@ int foo[sizeof (long double) - sizeof (double) - 1];
 #endif
 EOF
 $CC -c long.c \
-  || skip_test_ \
+  || skip_ \
      'this test runs only on systems with glibc and long double != double'
 
 a=$INTMAX_MAX

@@ -29,7 +29,7 @@ nameless_uid=`$PERL -e '
 '`
 
 if test x$nameless_uid = x; then
-  skip_test_ "couldn't find a nameless UID"
+  skip_ "couldn't find a nameless UID"
 fi
 
 touch f || framework_failure

@@ -23,7 +23,7 @@ print_ver_ ls
 # potentially very many remote mounts.
 mount_points=$(df --local -P 2>&1 | sed -n 's,.*[0-9]% \(/.\),\1,p')
 test -z "$mount_points" &&
-   skip_test_ "this test requires a non-root mount point"
+   skip_ "this test requires a non-root mount point"
 
 # Given e.g., /dev/shm, produce the list of GNU ls options that
 # let us list just that entry using readdir data from its parent:
@@ -50,8 +50,8 @@ inode_via_readdir()
   mount_point=$1
   base=$(basename $mount_point)
   case $base in
-    .*) skip_test_ 'mount point component starts with "."' ;;
-    *[*?]*) skip_test_ 'mount point component contains "?" or "*"' ;;
+    .*) skip_ 'mount point component starts with "."' ;;
+    *[*?]*) skip_ 'mount point component contains "?" or "*"' ;;
   esac
   opts=$(ls_ignore_options "$base")
   parent_dir=$(dirname $mount_point)

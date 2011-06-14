@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
-$PERL -e 1 || skip_test_ 'you lack perl'
+$PERL -e 1 || skip_ 'you lack perl'
 
 # The test was seen to fail on ext3 so exclude that type
 # (or any file system where the type can't be determined)
@@ -28,7 +28,7 @@ if fiemap_capable_ fiemap_chk && ! df -t ext3 . >/dev/null; then
 else
   # FIXME: temporarily(?) skip this variant, at least until after this bug
   # is fixed: http://thread.gmane.org/gmane.comp.file-systems.ext4/24495
-  skip_test_ "current file system has insufficient FIEMAP support"
+  skip_ "current file system has insufficient FIEMAP support"
 
   # It's not;  we need to create one, hence we need root access.
   require_root_
@@ -41,14 +41,14 @@ else
   dd if=/dev/zero of=blob bs=32k count=1000 || skip=1
   mkdir mnt
   mkfs -t ext4 -F blob ||
-    skip_test_ "failed to create ext4 file system"
+    skip_ "failed to create ext4 file system"
   mount -oloop blob mnt   || skip=1
   cd mnt                  || skip=1
   echo test > f           || skip=1
   test -s f               || skip=1
 
   test $skip = 1 &&
-    skip_test_ "insufficient mount/ext4 support"
+    skip_ "insufficient mount/ext4 support"
 fi
 
 # =================================================

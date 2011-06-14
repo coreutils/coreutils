@@ -33,14 +33,14 @@ very_expensive_
 free_kb=`df -kP .|tail -1|sed 's/ [0-9][0-9]*%.*//;s/ *$//;s/.* //'`
 case "$free_kb" in
   [0-9]*) ;;
-  *) skip_test_ "invalid size from df: $free_kb";;
+  *) skip_ "invalid size from df: $free_kb";;
 esac
 
 # Require about 3GB free.
 min_kb=3000000
 test $min_kb -lt $free_kb ||
 {
-  skip_test_ \
+  skip_ \
     "too little free space on current partition: $free_kb (need $min_kb KB)"
 }
 

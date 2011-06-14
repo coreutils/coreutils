@@ -34,7 +34,7 @@ touch tail.out || framework_failure
 ( timeout 10s gdb --version ) > gdb.out 2>&1
 case $(cat gdb.out) in
     *'GNU gdb'*) ;;
-    *) skip_test_ "can't run gdb";;
+    *) skip_ "can't run gdb";;
 esac
 
 # See if gdb works and
@@ -48,7 +48,7 @@ timeout 10s gdb -nx --batch-silent                 \
 # FIXME: The above is seen to _intermittently_ fail with:
 # warning: .dynamic section for "/lib/libc.so.6" is not at the expected address
 # warning: difference appears to be caused by prelink, adjusting expectations
-test -s gdb.out && { cat gdb.out; skip_test_ "can't set breakpoints in tail"; }
+test -s gdb.out && { cat gdb.out; skip_ "can't set breakpoints in tail"; }
 
 # Run "tail -f file", stopping to append a line just before
 # inotify initialization, and then continue.  Before the fix,

@@ -45,7 +45,7 @@ for d in $CANDIDATE_TMP_DIRS; do
 done
 
 if test -z "$other_partition_tmpdir"; then
-  skip_test_ \
+  skip_ \
 "requires a writable directory on a different disk partition,
 and I couldn't find one.  I tried these:
   $CANDIDATE_TMP_DIRS

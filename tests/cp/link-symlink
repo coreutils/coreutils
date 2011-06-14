@@ -24,10 +24,10 @@ print_ver_ cp
 touch file
 ln -s file link || framework_failure
 touch -m -h -d 2011-01-01 link ||
-  skip_test_ "Your system doesn't support updating symlink timestamps"
+  skip_ "Your system doesn't support updating symlink timestamps"
 case `stat --format=%y link` in
   2011-01-01*) ;;
-  *) skip_test_ "Your system doesn't support updating symlink timestamps" ;;
+  *) skip_ "Your system doesn't support updating symlink timestamps" ;;
 esac
 
 # link.cp is probably a hardlink, but may also be a symlink

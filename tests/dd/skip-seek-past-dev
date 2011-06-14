@@ -36,7 +36,7 @@ get_device_size() {
 device=$(df -P . | tail -n1 | cut -d' ' -f1) || framework_failure
 
 dev_size=$(get_device_size "$device") ||
-  skip_test_ "failed to determine size of $device"
+  skip_ "failed to determine size of $device"
 
 # Don't use shell arithmetic as older versions of dash use longs
 DEV_OFLOW=$(expr $dev_size + 1)
