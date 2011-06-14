@@ -58,7 +58,6 @@ TESTS_ENVIRONMENT =				\
   test -d "$$tmp__" && test -w "$$tmp__" || tmp__=.;	\
   . $(srcdir)/envvar-check;			\
   TMPDIR=$$tmp__; export TMPDIR;		\
-  exec 9>&2;					\
   shell_or_perl_() {				\
     if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
       if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
@@ -100,6 +99,6 @@ TESTS_ENVIRONMENT =				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   ; test -d /usr/xpg4/bin && PATH='/usr/xpg4/bin$(PATH_SEPARATOR)'"$$PATH"; \
   PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH" \
-  ; shell_or_perl_
+  ; shell_or_perl_ 9>&2
 
 VERBOSE = yes

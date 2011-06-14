@@ -68,8 +68,8 @@ Exit () { set +e; (exit $1); exit $1; }
 
 # Print warnings (e.g., about skipped and failed tests) to this file number.
 # Override by defining to say, 9, in init.cfg, and putting say,
-# "export ...ENVVAR_SETTINGS...; exec 9>&2; $(SHELL)" in the definition
-# of TESTS_ENVIRONMENT in your tests/Makefile.am file.
+#   export ...ENVVAR_SETTINGS...; $(SHELL) 9>&2
+# in the definition of TESTS_ENVIRONMENT in your tests/Makefile.am file.
 # This is useful when using automake's parallel tests mode, to print
 # the reason for skip/failure to console, rather than to the .log files.
 : ${stderr_fileno_=2}
