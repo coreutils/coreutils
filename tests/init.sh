@@ -74,7 +74,17 @@ Exit () { set +e; (exit $1); exit $1; }
 # the reason for skip/failure to console, rather than to the .log files.
 : ${stderr_fileno_=2}
 
-warn_ () { echo "$@" 1>&$stderr_fileno_; }
+# Call w2_ only via warn_, since correct expansion of "$*" depends on
+# IFS starting with ' '.
+w2_ () { printf '%s\n' "$*" 1>&$stderr_fileno_ ; }
+warn_ ()
+{
+  # If IFS does not start with ' ', set it and emit the warning in a subshell.
+  case $IFS in
+    ' '*) w2_ "$@";;
+    *) (IFS=' '; w2_ "$@");;
+  esac
+}
 fail_ () { warn_ "$ME_: failed test: $@"; Exit 1; }
 skip_ () { warn_ "$ME_: skipped test: $@"; Exit 77; }
 fatal_ () { warn_ "$ME_: hard error: $@"; Exit 99; }
