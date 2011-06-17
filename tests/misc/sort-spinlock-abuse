@@ -20,6 +20,12 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
 
+# This isn't terribly expensive, but it must not be run under heavy load.
+# Since the "very expensive" are already run only with -j1, adding this
+# test to the list ensures it still gets _some_ (albeit minimal) coverage
+# while not causing false-positive failures in day to day runs.
+very_expensive_
+
 grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
   skip_ 'requires pthreads'
 
