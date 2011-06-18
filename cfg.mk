@@ -205,7 +205,11 @@ sc_strftime_check:
 	  { echo N;							\
 	    info libc date calendar format 2>/dev/null|grep '^    `%.'\'\
 	      | $(extract_char); } | sort > $@-info;			\
-	  diff -u $@-src $@-info || exit 1;				\
+	  if test $$(stat --format %s $@-info) != 2; then		\
+	    diff -u $@-src $@-info || exit 1;				\
+	  else								\
+	    echo '$(ME): skipping $@: libc info not installed' 1>&2;	\
+	  fi;								\
 	  rm -f $@-src $@-info;						\
 	fi
 
