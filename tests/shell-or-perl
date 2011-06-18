@@ -84,12 +84,19 @@ test -z "$test_name" && test_name=$test_script
 #  Run the test script  #
 # --------------------- #
 
-if grep '^#!/usr/bin/perl' "$test_script" >/dev/null; then
+test -f "$test_script" && test -r "$test_script" \
+  || error_ "test script '$test_script' does not exist, or isn't readable"
+
+read shebang_line < "$test_script" \
+  || error_ "cannot read from the test script '$test_script'"
+
+case $shebang_line in
+'#!/usr/bin/perl'*)
   # The test is a perl script.
   if $cu_PERL -e 'use warnings' > /dev/null 2>&1; then
     # Perl is available, see if we must run the test with taint
     # mode on or not.
-    grep '^#!/usr/bin/perl -T' "$test_script" >/dev/null && T_=T || T_=
+    case $shebang_line in *\ -T*) T_=T;; *) T_=;; esac
     # Now run it.
     exec $cu_PERL -w$T_ -I"$srcdir" -MCoreutils -MCuSkip \
                   -M"CuTmpdir qw($test_name)" \
@@ -99,10 +106,11 @@ if grep '^#!/usr/bin/perl' "$test_script" >/dev/null; then
     echo "$test_name: skip: no usable version of Perl found"
     exit 77
   fi
-else
+  ;;
+*)
   # Assume the test is a shell script.
   exec $cu_SHELL "$test_script" ${1+"$@"}
-fi
+esac
 
 # ------------- #
 #  Not reached  #
