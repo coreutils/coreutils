@@ -419,7 +419,7 @@ esac
 
 MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'|tr -d '\\015\\012'`
 
-# Change ginstall.1 to "install.h" in $MAN.
+# Change "ginstall.1" to "install.1" in $MAN.
 MAN=`for m in $MAN; do test $m = ginstall.1 && m=install.1; echo $m; done \
   | tr '\015\012' '  '; echo`
 
