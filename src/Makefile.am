@@ -138,7 +138,7 @@ bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
 
 noinst_PROGRAMS = setuidgid getlimits
 
-pkglib_PROGRAMS = $(OPTIONAL_PKGLIB_PROGS)
+pkglibexec_PROGRAMS = $(OPTIONAL_PKGLIB_PROGS)
 
 noinst_HEADERS =	\
   chown-core.h		\

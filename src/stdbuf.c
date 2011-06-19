@@ -193,15 +193,14 @@ set_LD_PRELOAD (void)
   char *LD_PRELOAD;
 
   /* Note this would auto add the appropriate search path for "libstdbuf.so":
-     gcc stdbuf.c -Wl,-rpath,'$ORIGIN' -Wl,-rpath,$PKGLIBDIR
+     gcc stdbuf.c -Wl,-rpath,'$ORIGIN' -Wl,-rpath,$PKGLIBEXECDIR
      However we want the lookup done for the exec'd command not stdbuf.
 
-     Since we don't link against libstdbuf.so add it to LIBDIR rather than
-     LIBEXECDIR, as we'll search for it in the "sys default" case below.  */
+     Since we don't link against libstdbuf.so add it to PKGLIBEXECDIR
+     rather than to LIBDIR.  */
   char const *const search_path[] = {
     program_path,
-    PKGLIBDIR,
-    "",                         /* sys default */
+    PKGLIBEXECDIR,
     NULL
   };
 
