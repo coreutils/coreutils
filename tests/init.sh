@@ -84,7 +84,7 @@ warn_ ()
   case $IFS in
     ' '*) printf '%s\n' "$*" >&2
           test $stderr_fileno_ = 2 \
-            || { printf '%s\n' "$*" | head -1 >&$stderr_fileno_ ; } ;;
+            || { printf '%s\n' "$*" | sed 1q >&$stderr_fileno_ ; } ;;
     *) (IFS=' '; warn_ "$@");;
   esac
 }
