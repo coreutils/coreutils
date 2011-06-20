@@ -74,19 +74,18 @@ Exit () { set +e; (exit $1); exit $1; }
 # the reason for skip/failure to console, rather than to the .log files.
 : ${stderr_fileno_=2}
 
-# Call w2_ only via warn_, since correct expansion of "$*" depends on
-# IFS starting with ' '.  Always write the full diagnostic to stderr.
+# Note that correct expansion of "$*" depends on IFS starting with ' '.
+# Always write the full diagnostic to stderr.
 # When stderr_fileno_ is not 2, also emit the first line of the
 # diagnostic to that file descriptor.
-w2_ () { printf '%s\n' "$*" >&2
-         test $stderr_fileno_ = 2 \
-           || { printf '%s\n' "$*" | head -1 >&$stderr_fileno_ ; } ; }
 warn_ ()
 {
   # If IFS does not start with ' ', set it and emit the warning in a subshell.
   case $IFS in
-    ' '*) w2_ "$@";;
-    *) (IFS=' '; w2_ "$@");;
+    ' '*) printf '%s\n' "$*" >&2
+          test $stderr_fileno_ = 2 \
+            || { printf '%s\n' "$*" | head -1 >&$stderr_fileno_ ; } ;;
+    *) (IFS=' '; warn_ "$@");;
   esac
 }
 fail_ () { warn_ "$ME_: failed test: $@"; Exit 1; }
