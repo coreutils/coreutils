@@ -106,7 +106,7 @@ for i in $(seq 1 2 21); do
         || {
              warn_ ignoring filefrag-reported extent map differences
              # Show the differing extent maps.
-             head -99 ff1 ff2
+             head -n99 ff1 ff2
            }
     fi
     test $fail = 1 && break 2
