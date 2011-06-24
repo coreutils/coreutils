@@ -323,6 +323,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "minix v2 (30 char.)";
     case S_MAGIC_MINIX_V3: /* 0x4D5A */
       return "minix3";
+    case S_MAGIC_MQUEUE: /* 0x19800202 */
+      return "mqueue";
     case S_MAGIC_MSDOS: /* 0x4D44 */
       return "msdos";
     case S_MAGIC_NCP: /* 0x564C */
@@ -341,6 +343,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ocfs2";
     case S_MAGIC_PROC: /* 0x9FA0 */
       return "proc";
+    case S_MAGIC_PSTOREFS: /* 0x6165676C */
+      return "pstorefs";
     case S_MAGIC_QNX4: /* 0x002F */
       return "qnx4";
     case S_MAGIC_RAMFS: /* 0x858458F6 */
