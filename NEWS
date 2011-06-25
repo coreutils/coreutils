@@ -1082,7 +1082,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   join has significantly better performance due to better memory management
 
   ls now uses constant memory when not sorting and using one_per_line format,
-  no matter how many files are in a given directory
+  no matter how many files are in a given directory.  I.e., to list a directory
+  with very many files, ls -1U is much more efficient.
 
   od now aligns fields across lines when printing multiple -t
   specifiers, and no longer prints fields that resulted entirely from
