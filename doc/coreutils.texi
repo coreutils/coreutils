@@ -15398,6 +15398,17 @@ three standard I/O streams associated with a program.  Synopsis:
 stdbuf @var{option}@dots{} @var{command}
 @end example
 
+@var{command} must start with the name of a program that
+@enumerate
+@item
+uses the ISO C @code{FILE} streams for input/output (note the
+programs @command{dd} and @command{cat} don't do that),
+
+@item
+does not adjust the buffering of its standard streams (note the
+program @command{tee} is not in this category).
+@end enumerate
+
 Any additional @var{arg}s are passed as additional arguments to the
 @var{command}.
 
@@ -15445,12 +15456,6 @@ Specify the size of the buffer to use in fully buffered mode.
 @multiplierSuffixesNoBlocks{size}
 
 @end table
-
-NOTE: If @var{command} adjusts the buffering of its standard streams
-(@command{tee} does for e.g.) then that will override corresponding settings
-changed by @command{stdbuf}.  Also some filters (like @command{dd} and
-@command{cat} etc.) don't use streams for I/O, and are thus unaffected
-by @command{stdbuf} settings.
 
 @cindex exit status of @command{stdbuf}
 Exit status:
