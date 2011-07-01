@@ -15448,8 +15448,13 @@ This option is invalid with standard input.
 
 @item 0
 Disable buffering of the selected stream.
-In this mode data is output immediately and only the
+In this mode, data is output immediately and only the
 amount of data requested is read from input.
+Note the difference in function for input and output.
+Disabling buffering for input will not influence the responsiveness
+or blocking behavior of the stream input functions.
+For example @code{fread} will still block until @code{EOF} or error,
+even if the underlying @code{read} returns less data than requested.
 
 @item @var{size}
 Specify the size of the buffer to use in fully buffered mode.
