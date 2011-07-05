@@ -289,6 +289,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "futexfs";
     case S_MAGIC_GFS: /* 0x1161970 */
       return "gfs/gfs2";
+    case S_MAGIC_GPFS: /* 0x47504653 */
+      return "gpfs";
     case S_MAGIC_HFS: /* 0x4244 */
       return "hfs";
     case S_MAGIC_HPFS: /* 0xF995E849 */
