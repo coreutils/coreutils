@@ -67,11 +67,19 @@ static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
 static unsigned long kill_after;
+static bool foreground;            /* whether to use another program group.  */
+
+/* for long options with no corresponding short option, use enum */
+enum
+{
+      FOREGROUND_OPTION = CHAR_MAX + 1
+};
 
 static struct option const long_options[] =
 {
   {"kill-after", required_argument, NULL, 'k'},
   {"signal", required_argument, NULL, 's'},
+  {"foreground", no_argument, NULL, FOREGROUND_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -96,6 +104,8 @@ cleanup (int sig)
     }
   if (monitored_pid)
     {
+      int where = foreground ? monitored_pid : 0;
+
       if (sigs_to_ignore[sig])
         {
           sigs_to_ignore[sig] = 0;
@@ -108,9 +118,10 @@ cleanup (int sig)
           alarm (kill_after);
           kill_after = 0; /* Don't let later signals reset kill alarm.  */
         }
-      send_sig (0, sig);
+
+      send_sig (where, sig);
       if (sig != SIGKILL && sig != SIGCONT)
-        send_sig (0, SIGCONT);
+        send_sig (where, SIGCONT);
     }
   else /* we're the child or the child is not exec'd yet.  */
     _exit (128 + sig);
@@ -134,13 +145,17 @@ Start COMMAND, and kill it if still running after DURATION.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
+      --foreground\n\
+                 When not running timeout directly from a shell prompt,\n\
+                 allow COMMAND to read from the TTY and receive TTY signals.\n\
+                 In this mode, children of COMMAND will not be timed out.\n\
   -k, --kill-after=DURATION\n\
-                   also send a KILL signal if COMMAND is still running\n\
-                   this long after the initial signal was sent.\n\
+                 also send a KILL signal if COMMAND is still running\n\
+                 this long after the initial signal was sent.\n\
   -s, --signal=SIGNAL\n\
-                   specify the signal to be sent on timeout.\n\
-                   SIGNAL may be a name like `HUP' or a number.\n\
-                   See `kill -l` for a list of signals\n"), stdout);
+                 specify the signal to be sent on timeout.\n\
+                 SIGNAL may be a name like `HUP' or a number.\n\
+                 See `kill -l` for a list of signals\n"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -266,6 +281,10 @@ main (int argc, char **argv)
             usage (EXIT_CANCELED);
           break;
 
+        case FOREGROUND_OPTION:
+          foreground = true;
+          break;
+
         case_GETOPT_HELP_CHAR;
 
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -287,7 +306,8 @@ main (int argc, char **argv)
      Note we don't just put the child in a separate group as
      then we would need to worry about foreground and background groups
      and propagating signals between them.  */
-  setpgid (0, 0);
+  if (!foreground)
+    setpgid (0, 0);
 
   /* Setup handlers before fork() so that we
      handle any signals caused by child, without races.  */

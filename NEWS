@@ -33,6 +33,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   tool exit non-zero for any invalid input line, rather than just warning.
   This also affects sha1sum, sha224sum, sha384sum and sha512sum.
 
+  timeout accepts a new --foreground option, to support commands not started
+  directly from a shell prompt, where the command is interactive or needs to
+  receive signals initiated from the terminal.
+
 ** Improvements
 
   shuf outputs small subsets of large permutations much more efficiently.

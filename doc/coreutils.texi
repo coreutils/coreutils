@@ -15658,6 +15658,23 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
+@itemx --foreground
+@opindex --foreground
+Don't create a separate background program group, so that
+the managed @var{command} can use the foreground TTY normally.
+This is needed to support timing out commands not started
+directly from an interactive shell, in two situations.
+@enumerate
+@item
+@var{command} is interactive and needs to read from the terminal for example
+@item
+the user wants to support sending signals directly to @var{command}
+from the terminal (like Ctrl-C for example)
+@end enumerate
+
+Note in this mode of operation, any children of @var{command}
+will not be timed out.
+
 @item -k @var{duration}
 @itemx --kill-after=@var{duration}
 @opindex -k

@@ -277,6 +277,7 @@ TESTS =						\
   misc/tee-dash					\
   misc/test-diag				\
   misc/timeout					\
+  misc/timeout-group				\
   misc/timeout-parameters			\
   misc/tr					\
   misc/tr-case-class				\
