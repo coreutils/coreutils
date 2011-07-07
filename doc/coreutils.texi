@@ -13921,10 +13921,10 @@ hour (@samp{00}@dots{}@samp{23})
 @item %I
 hour (@samp{01}@dots{}@samp{12})
 @item %k
-hour (@samp{ 0}@dots{}@samp{23}).
+hour, space padded (@samp{ 0}@dots{}@samp{23}); equivalent to @samp{%_H}.
 This is a @acronym{GNU} extension.
 @item %l
-hour (@samp{ 1}@dots{}@samp{12}).
+hour, space padded (@samp{ 1}@dots{}@samp{12}); equivalent to @samp{%_I}.
 This is a @acronym{GNU} extension.
 @item %M
 minute (@samp{00}@dots{}@samp{59})

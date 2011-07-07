@@ -179,8 +179,8 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %j   day of year (001..366)\n\
 "), stdout);
       fputs (_("\
-  %k   hour ( 0..23)\n\
-  %l   hour ( 1..12)\n\
+  %k   hour, space padded ( 0..23); same as %_H\n\
+  %l   hour, space padded ( 1..12); same as %_I\n\
   %m   month (01..12)\n\
   %M   minute (00..59)\n\
 "), stdout);
