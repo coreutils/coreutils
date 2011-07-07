@@ -29,6 +29,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Note the use of single quotes, not double quotes.
   That creates files named xaa.xz, xab.xz and xac.xz.
 
+  md5sum accepts the new --strict option.  With --check, it makes the
+  tool exit non-zero for any invalid input line, rather than just warning.
+  This also affects sha1sum, sha224sum, sha384sum and sha512sum.
+
 ** Improvements
 
   shuf outputs small subsets of large permutations much more efficiently.

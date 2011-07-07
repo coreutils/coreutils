@@ -122,12 +122,17 @@ static bool warn = false;
 /* With --check, suppress the "OK" printed for each verified file.  */
 static bool quiet = false;
 
+/* With --check, exit with a non-zero return code if any line is
+   improperly formatted. */
+static bool strict = false;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
   STATUS_OPTION = CHAR_MAX + 1,
-  QUIET_OPTION
+  QUIET_OPTION,
+  STRICT_OPTION
 };
 
 static struct option const long_options[] =
@@ -138,6 +143,7 @@ static struct option const long_options[] =
   { "status", no_argument, NULL, STATUS_OPTION },
   { "text", no_argument, NULL, 't' },
   { "warn", no_argument, NULL, 'w' },
+  { "strict", no_argument, NULL, STRICT_OPTION },
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
@@ -186,6 +192,9 @@ The following three options are useful only when verifying checksums:\n\
       --status         don't output anything, status code shows success\n\
   -w, --warn           warn about improperly formatted checksum lines\n\
 \n\
+"), stdout);
+      fputs (_("\
+      --strict         with --check, exit non-zero for any invalid input\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -434,6 +443,7 @@ digest_check (const char *checkfile_name)
   FILE *checkfile_stream;
   uintmax_t n_misformatted_lines = 0;
   uintmax_t n_properly_formatted_lines = 0;
+  uintmax_t n_improperly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
   unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES + DIGEST_ALIGN];
@@ -501,6 +511,8 @@ digest_check (const char *checkfile_name)
                      checkfile_name, line_number,
                      DIGEST_TYPE_STRING);
             }
+
+          ++n_improperly_formatted_lines;
         }
       else
         {
@@ -603,7 +615,8 @@ digest_check (const char *checkfile_name)
 
   return (n_properly_formatted_lines != 0
           && n_mismatched_checksums == 0
-          && n_open_or_read_failures == 0);
+          && n_open_or_read_failures == 0
+          && (!strict || n_improperly_formatted_lines == 0));
 }
 
 int
@@ -657,6 +670,9 @@ main (int argc, char **argv)
         warn = false;
         quiet = true;
         break;
+      case STRICT_OPTION:
+        strict = true;
+        break;
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
@@ -693,6 +709,13 @@ main (int argc, char **argv)
        _("the --quiet option is meaningful only when verifying checksums"));
       usage (EXIT_FAILURE);
     }
+
+  if (strict & !do_check)
+   {
+     error (0, 0,
+        _("the --strict option is meaningful only when verifying checksums"));
+     usage (EXIT_FAILURE);
+   }
 
   if (!O_BINARY && binary < 0)
     binary = 0;

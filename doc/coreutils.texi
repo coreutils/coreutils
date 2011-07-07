@@ -3702,6 +3702,13 @@ When verifying checksums, warn about improperly formatted MD5 checksum lines.
 This option is useful only if all but a few lines in the checked input
 are valid.
 
+@itemx --strict
+@opindex --strict
+@cindex verifying MD5 checksums
+When verifying checksums,
+if one or more input line is invalid,
+exit nonzero after all warnings have been issued.
+
 @end table
 
 @exitstatus
