@@ -43,6 +43,23 @@ my @Tests =
      ['check-1', '--check', {AUX=> {f=> ''}},
                                 {IN=> {'f.md5' => "$degenerate  f\n"}},
                                 {OUT=>"f: OK\n"}],
+
+     # Same as above, but with an added empty line, to provoke --strict.
+     ['ck-strict-1', '--check --strict', {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  f\n\n"}},
+                                {OUT=>"f: OK\n"},
+                                {ERR=>"md5sum: "
+                                 . "WARNING: 1 line is improperly formatted\n"},
+                                {EXIT=> 1}],
+
+     # As above, but with the invalid line first, to ensure that following
+     # lines are processed in spite of the preceding invalid input line.
+     ['ck-strict-2', '--check --strict', {AUX=> {f=> ''}},
+                                {IN=> {'in.md5' => "\n$degenerate  f\n"}},
+                                {OUT=>"f: OK\n"},
+                                {ERR=>"md5sum: "
+                                 . "WARNING: 1 line is improperly formatted\n"},
+                                {EXIT=> 1}],
      ['check-2', '--check', '--status', {IN=>{'f.md5' => "$degenerate  f\n"}},
                                 {AUX=> {f=> 'foo'}}, {EXIT=> 1}],
      ['check-quiet1', '--check', '--quiet', {AUX=> {f=> ''}},
