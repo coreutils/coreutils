@@ -65,6 +65,8 @@ AC_DEFUN([coreutils_MACROS],
 
   # Used by sort.c.
   AC_CHECK_FUNCS_ONCE([nl_langinfo])
+  # Used by timeout.c
+  AC_CHECK_FUNCS_ONCE([setrlimit])
 
   # Used by tail.c.
   AC_CHECK_FUNCS([inotify_init],

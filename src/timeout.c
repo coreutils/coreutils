@@ -58,6 +58,12 @@
 #include "error.h"
 #include "quote.h"
 
+#if HAVE_SETRLIMIT
+/* FreeBSD 5.0 at least needs <sys/types.h> and <sys/time.h> included
+   before <sys/resource.h>.  Currently "system.h" includes <sys/time.h>.  */
+# include <sys/resource.h>
+#endif
+
 #define PROGRAM_NAME "timeout"
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
@@ -370,7 +376,23 @@ main (int argc, char **argv)
           if (WIFEXITED (status))
             status = WEXITSTATUS (status);
           else if (WIFSIGNALED (status))
-            status = WTERMSIG (status) + 128; /* what sh does at least.  */
+            {
+              int sig = WTERMSIG (status);
+#if HAVE_SETRLIMIT && defined RLIMIT_CORE
+              if (!timed_out)
+                {
+                  /* exit with the signal flag set, but avoid core files.  */
+                  if (setrlimit (RLIMIT_CORE, &(struct rlimit) {0,0}) == 0)
+                    {
+                      signal (sig, SIG_DFL);
+                      raise (sig);
+                    }
+                  else
+                    error (0, errno, _("warning: disabling core dumps failed"));
+                }
+#endif
+              status = sig + 128; /* what sh returns for signaled processes.  */
+            }
           else
             {
               /* shouldn't happen.  */
