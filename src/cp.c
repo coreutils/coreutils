@@ -187,7 +187,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -H                           follow command-line symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -l, --link                   link files instead of copying\n\
+  -l, --link                   hard link files instead of copying\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
