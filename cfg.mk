@@ -219,6 +219,14 @@ sc_prohibit_tab_based_indentation:
 	halt='TAB in indentation; use only spaces'			\
 	  $(_sc_search_regexp)
 
+# The SEE ALSO section of a man page should not be terminated with
+# a period.  Check the first line after each "SEE ALSO" line in man/*.x:
+sc_prohibit_man_see_also_period:
+	@grep -nB1 '\.$$' $$($(VC_LIST_EXCEPT) | grep 'man/.*\.x$$')	\
+	    | grep -A1 -e '-\[SEE ALSO\]' | grep '\.$$' &&		\
+	  { echo '$(ME): do not end "SEE ALSO" section with a period'	\
+	      1>&2; exit 1; } || :
+
 # Don't use "indent-tabs-mode: nil" anymore.  No longer needed.
 sc_prohibit_emacs__indent_tabs_mode__setting:
 	@prohibit='^( *[*#] *)?indent-tabs-mode:'			\
