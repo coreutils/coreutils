@@ -34,13 +34,13 @@ cat > timeout.cmd <<\EOF
 #!/bin/sh
 trap 'touch int.received; exit' INT
 touch timeout.running
-sleep 10
+sleep $1
 EOF
 chmod a+x timeout.cmd
 
 cat > group.sh <<\EOF
 #!/bin/sh
-timeout --foreground 5 ./timeout.cmd&
+timeout --foreground 5 ./timeout.cmd 10&
 wait
 EOF
 chmod a+x group.sh
@@ -52,6 +52,23 @@ until test -e timeout.running; do sleep .1; done
 # Simulate a Ctrl-C to the group to test timely exit
 # Note dash doesn't support signalling groups (a leading -)
 env kill -INT -- -$!
+wait
+test -e int.received || fail=1
+
+rm -f int.received timeout.running
+
+
+# Ensure cascaded timeouts work
+# or more generally, ensure we timeout
+# commands that create their own group
+# This didn't work before 8.13.
+
+# Note the first timeout must send a signal that
+# the second is handling for it to be propagated to the command.
+# SIGINT, SIGTERM, SIGALRM etc. are implicit.
+timeout -sALRM 2 timeout -sINT 10 ./timeout.cmd 5&
+until test -e timeout.running; do sleep .1; done
+kill -ALRM $!
 wait
 test -e int.received || fail=1
 

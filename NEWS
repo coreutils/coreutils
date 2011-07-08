@@ -14,6 +14,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split --number l/... no longer creates extraneous files in certain cases.
   [bug introduced in coreutils-8.8]
 
+  timeout now sends signals to commands that create their own process group.
+  [bug introduced in coreutils-7.0]
+
 ** Changes in behavior
 
   chmod, chown and chgrp now output the original attributes in messages,

@@ -104,8 +104,6 @@ cleanup (int sig)
     }
   if (monitored_pid)
     {
-      int where = foreground ? monitored_pid : 0;
-
       if (sigs_to_ignore[sig])
         {
           sigs_to_ignore[sig] = 0;
@@ -119,9 +117,20 @@ cleanup (int sig)
           kill_after = 0; /* Don't let later signals reset kill alarm.  */
         }
 
-      send_sig (where, sig);
+      /* Send the signal directly to the monitored child,
+         in case it has itself become group leader,
+         or is not running in a separate group.  */
+      send_sig (monitored_pid, sig);
+      /* The normal case is the job has remained in our
+         newly created process group, so send to all processes in that.  */
+      if (!foreground)
+        send_sig (0, sig);
       if (sig != SIGKILL && sig != SIGCONT)
-        send_sig (where, SIGCONT);
+        {
+          send_sig (monitored_pid, SIGCONT);
+          if (!foreground)
+            send_sig (0, SIGCONT);
+        }
     }
   else /* we're the child or the child is not exec'd yet.  */
     _exit (128 + sig);
