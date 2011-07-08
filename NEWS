@@ -48,7 +48,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp and ls now support HP-UX 11.11's ACLs, thanks to improved support
   in gnulib.
 
-  stat -f now also recognizes the GPFS file system type.
+  stat -f now recognizes the GPFS, MQUEUE and PSTOREFS file system types.
 
 ** Build-related
 
