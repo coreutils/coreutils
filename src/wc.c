@@ -120,6 +120,8 @@ Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.  A word is a non-zero-length sequence of characters\n\
 delimited by white space.\n\
+The options below may be used to select which counts are printed, always in\n\
+the following order: newline, word, character, byte, maximum line length.\n\
   -c, --bytes            print the byte counts\n\
   -m, --chars            print the character counts\n\
   -l, --lines            print the newline counts\n\
