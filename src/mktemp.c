@@ -72,6 +72,9 @@ Create a temporary file or directory, safely, and print its name.\n\
 TEMPLATE must contain at least 3 consecutive `X's in last component.\n\
 If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
 "), stdout);
+      fputs (_("\
+Files are created u+rw, and directories u+rwx, minus umask restrictions.\n\
+"), stdout);
       fputs ("\n", stdout);
       fputs (_("\
   -d, --directory     create a directory, not a file\n\
