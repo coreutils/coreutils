@@ -225,6 +225,7 @@ static void
 interrupt_handler (int sig)
 {
   delete_all_files (true);
+  signal (sig, SIG_DFL);
   /* The signal has been reset to SIG_DFL, but blocked during this
      handler.  Force the default action of this signal once the
      handler returns and the block is removed.  */
@@ -1421,7 +1422,7 @@ main (int argc, char **argv)
 
     act.sa_handler = interrupt_handler;
     act.sa_mask = caught_signals;
-    act.sa_flags = SA_NODEFER | SA_RESETHAND;
+    act.sa_flags = 0;
 
     for (i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
