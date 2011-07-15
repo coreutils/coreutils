@@ -24,11 +24,9 @@
 
 #include "system.h"
 #include "extent-scan.h"
+#include "fiemap.h"
 #include "xstrtol.h"
 
-#ifndef HAVE_FIEMAP
-# include "fiemap.h"
-#endif
 
 /* Work around Linux kernel issues on BTRFS and EXT4 before 2.6.39.
    FIXME: remove in 2013, or whenever we're pretty confident
