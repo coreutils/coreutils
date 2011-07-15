@@ -951,7 +951,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_uint (pformat, prefix_len, ST_NBLOCKS (*statbuf));
       break;
     case 'o':
-      out_uint (pformat, prefix_len, statbuf->st_blksize);
+      out_uint (pformat, prefix_len, ST_BLKSIZE (*statbuf));
       break;
     case 'w':
       {
