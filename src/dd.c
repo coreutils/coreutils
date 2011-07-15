@@ -45,7 +45,7 @@
   proper_name ("Stuart Kemp")
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
-   present.  SA_NODEFER and SA_RESETHAND are XSI extensions.  */
+   present.  */
 #ifndef SA_NOCLDSTOP
 # define SA_NOCLDSTOP 0
 # define sigprocmask(How, Set, Oset) /* empty */
@@ -726,9 +726,6 @@ install_signal_handlers (void)
 
   if (sigismember (&caught_signals, SIGINT))
     {
-      /* POSIX 1003.1-2001 says SA_RESETHAND implies SA_NODEFER,
-         but this is not true on Solaris 8 at least.  It doesn't
-         hurt to use SA_NODEFER here, so leave it in.  */
       act.sa_handler = interrupt_handler;
       act.sa_flags = SA_NODEFER | SA_RESETHAND;
       sigaction (SIGINT, &act, NULL);
