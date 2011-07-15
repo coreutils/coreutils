@@ -51,8 +51,9 @@ struct fiemap
 
   uint32_t fm_reserved;
 
-  /* Array of mapped extents(out).  */
-  struct fiemap_extent fm_extents[0];
+  /* Array of mapped extents(out).
+     The actual size is given by fm_extent_count.  */
+  struct fiemap_extent fm_extents[1];
 };
 
 /* The maximum offset can be mapped for a file.  */
