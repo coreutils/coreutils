@@ -55,6 +55,11 @@
 # endif
 #endif
 
+/* NonStop circa 2011 lacks SA_RESETHAND; see Bug#9076.  */
+#ifndef SA_RESETHAND
+# define SA_RESETHAND 0
+#endif
+
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
 #endif
