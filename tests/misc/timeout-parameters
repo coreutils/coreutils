@@ -37,11 +37,23 @@ test $? = 125 || fail=1
 
 # timeout overflow
 timeout $UINT_OFLOW sleep 0
-test $? = 125 || fail=1
+test $? = 0 || fail=1
 
 # timeout overflow
 timeout $(expr $UINT_MAX / 86400 + 1)d sleep 0
-test $? = 125 || fail=1
+test $? = 0 || fail=1
+
+# timeout overflow
+timeout 999999999999999999999999999999999999999999999999999999999999d sleep 0
+test $? = 0 || fail=1
+
+# floating point notation
+timeout 2.34 sleep 0
+test $? = 0 || fail=1
+
+# floating point notation
+timeout 2.34e+5d sleep 0
+test $? = 0 || fail=1
 
 # invalid signal spec
 timeout --signal=invalid 1 sleep 0

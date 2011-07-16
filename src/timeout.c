@@ -52,7 +52,8 @@
 #include <sys/wait.h>
 
 #include "system.h"
-#include "xstrtol.h"
+#include "c-strtod.h"
+#include "xstrtod.h"
 #include "sig2str.h"
 #include "operand2sig.h"
 #include "error.h"
@@ -196,54 +197,51 @@ use the KILL (9) signal, since this signal cannot be caught.\n"), stdout);
   exit (status);
 }
 
-/* Given a long integer value *X, and a suffix character, SUFFIX_CHAR,
+/* Given a floating point value *X, and a suffix character, SUFFIX_CHAR,
    scale *X by the multiplier implied by SUFFIX_CHAR.  SUFFIX_CHAR may
    be the NUL byte or `s' to denote seconds, `m' for minutes, `h' for
    hours, or `d' for days.  If SUFFIX_CHAR is invalid, don't modify *X
-   and return false.  If *X would overflow an integer, don't modify *X
-   and return false. Otherwise return true.  */
+   and return false.  Otherwise return true.  */
 
 static bool
-apply_time_suffix (unsigned long *x, char suffix_char)
+apply_time_suffix (double *x, char suffix_char)
 {
-  unsigned int multiplier = 1;
+  int multiplier;
 
   switch (suffix_char)
     {
     case 0:
     case 's':
-      return true;
-    case 'd':
-      multiplier *= 24;
-    case 'h':
-      multiplier *= 60;
+      multiplier = 1;
+      break;
     case 'm':
-      if (multiplier > UINT_MAX / 60) /* 16 bit overflow */
-        return false;
-      multiplier *= 60;
+      multiplier = 60;
+      break;
+    case 'h':
+      multiplier = 60 * 60;
+      break;
+    case 'd':
+      multiplier = 60 * 60 * 24;
       break;
     default:
       return false;
     }
-
-  if (*x > UINT_MAX / multiplier)
-    return false;
 
   *x *= multiplier;
 
   return true;
 }
 
-static unsigned long
+static unsigned int
 parse_duration (const char* str)
 {
-  unsigned long duration;
-  char *ep;
+  double duration;
+  const char *ep;
 
-  if (xstrtoul (str, &ep, 10, &duration, NULL)
-      /* Invalid interval. Note 0 disables timeout  */
-      || (duration > UINT_MAX)
-      /* Extra chars after the number and an optional s,m,h,d char.  */
+  if (!xstrtod (str, &ep, &duration, c_strtod)
+      /* Nonnegative interval.  */
+      || ! (0 <= duration)
+      /* No extra chars after the number and an optional s,m,h,d char.  */
       || (*ep && *(ep + 1))
       /* Check any suffix char and update timeout based on the suffix.  */
       || !apply_time_suffix (&duration, *ep))
@@ -252,7 +250,19 @@ parse_duration (const char* str)
       usage (EXIT_CANCELED);
     }
 
-  return duration;
+  /* Return the requested duration, rounded up to the next representable value.
+     Treat out-of-range values as if they were maximal,
+     as that's more useful in practice than reporting an error.
+
+     FIXME: Use dtotimespec + setitimer if setitimer is available,
+     as that has higher resolution.  */
+  if (UINT_MAX <= duration)
+    return UINT_MAX;
+  else
+    {
+      unsigned int duration_floor = duration;
+      return duration_floor + (duration_floor < duration);
+    }
 }
 
 static void
