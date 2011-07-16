@@ -74,6 +74,14 @@
 # endif
 #endif
 
+/* NonStop circa 2011 lacks both SA_RESTART and siginterrupt, so don't
+   restart syscalls after a signal handler fires.  This may cause
+   colors to get messed up on the screen if 'ls' is interrupted, but
+   that's the best we can do on such a platform.  */
+#ifndef SA_RESTART
+# define SA_RESTART 0
+#endif
+
 #include "system.h"
 #include <fnmatch.h>
 
