@@ -35,7 +35,7 @@
      This can be seen with `timeout 10 dd&` for example.
      However if one brings this group to the foreground with the `fg`
      command before the timer expires, the command will remain
-     in the sTop state as the shell doesn't send a SIGCONT
+     in the stop state as the shell doesn't send a SIGCONT
      because the timeout process (group leader) is already running.
      To get the command running again one can Ctrl-Z, and do fg again.
      Note one can Ctrl-C the whole job when in this state.
@@ -333,9 +333,9 @@ main (int argc, char **argv)
   /* Setup handlers before fork() so that we
      handle any signals caused by child, without races.  */
   install_signal_handlers (term_signal);
-  signal (SIGTTIN, SIG_IGN);    /* don't sTop if background child needs tty.  */
-  signal (SIGTTOU, SIG_IGN);    /* don't sTop if background child needs tty.  */
-  signal (SIGCHLD, SIG_DFL);    /* Don't inherit CHLD handling from parent.   */
+  signal (SIGTTIN, SIG_IGN);   /* Don't stop if background child needs tty.  */
+  signal (SIGTTOU, SIG_IGN);   /* Don't stop if background child needs tty.  */
+  signal (SIGCHLD, SIG_DFL);   /* Don't inherit CHLD handling from parent.   */
 
   monitored_pid = fork ();
   if (monitored_pid == -1)
