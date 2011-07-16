@@ -64,6 +64,11 @@
 # include <sys/resource.h>
 #endif
 
+/* NonStop circa 2011 lacks both SA_RESTART and siginterrupt.  */
+#ifndef SA_RESTART
+# define SA_RESTART 0
+#endif
+
 #define PROGRAM_NAME "timeout"
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
@@ -256,7 +261,8 @@ install_signal_handlers (int sigterm)
   struct sigaction sa;
   sigemptyset (&sa.sa_mask);  /* Allow concurrent calls to handler */
   sa.sa_handler = cleanup;
-  sa.sa_flags = SA_RESTART;  /* restart syscalls (like wait() below) */
+  sa.sa_flags = SA_RESTART;   /* Restart syscalls if possible, as that's
+                                 more likely to work cleanly.  */
 
   sigaction (SIGALRM, &sa, NULL); /* our timeout.  */
   sigaction (SIGINT, &sa, NULL);  /* Ctrl-C at terminal for example.  */
@@ -354,18 +360,15 @@ main (int argc, char **argv)
     }
   else
     {
+      pid_t wait_result;
       int status;
 
       alarm (timeout);
 
-      /* We're just waiting for a single process here, so wait() suffices.
-         Note the signal() calls above on GNU/Linux and BSD at least,
-         essentially call the lower level sigaction() with the SA_RESTART flag
-         set, which ensures the following wait call will only return if the
-         child exits, not on this process receiving a signal. Also we're not
-         passing WUNTRACED | WCONTINUED to a waitpid() call and so will not get
-         indication that the child has stopped or continued.  */
-      if (wait (&status) == -1)
+      while ((wait_result = wait (&status)) < 0 && errno == EINTR)
+        continue;
+
+      if (wait_result < 0)
         {
           /* shouldn't happen.  */
           error (0, errno, _("error waiting for command"));
