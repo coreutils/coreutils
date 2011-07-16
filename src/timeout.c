@@ -365,7 +365,8 @@ main (int argc, char **argv)
 
       alarm (timeout);
 
-      while ((wait_result = wait (&status)) < 0 && errno == EINTR)
+      while ((wait_result = waitpid (monitored_pid, &status, 0)) < 0
+             && errno == EINTR)
         continue;
 
       if (wait_result < 0)
