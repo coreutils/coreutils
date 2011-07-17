@@ -15,7 +15,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-8.8]
 
   timeout now sends signals to commands that create their own process group.
-  [bug introduced in coreutils-7.0]
+  timeout is no longer confused when starting off with a child process.
+  [bugs introduced in coreutils-7.0]
 
 ** Changes in behavior
 
