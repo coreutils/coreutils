@@ -51,4 +51,9 @@ test $? = 124 && fail=1
   exec timeout 10 true
 ) || fail=1
 
+# Don't be confused when starting off with a child (Bug#9098).
+out=$(sleep 1 & exec timeout 2 sh -c 'sleep 3; echo foo')
+status=$?
+test "$out" = "" && test $status = 124 || fail=1
+
 Exit $fail
