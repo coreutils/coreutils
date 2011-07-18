@@ -55,6 +55,9 @@ test $? = 0 || fail=1
 timeout 2.34e+5d sleep 0
 test $? = 0 || fail=1
 
+# nanoseconds potentially supported
+timeout .999999999 sleep 0 || fail=1
+
 # invalid signal spec
 timeout --signal=invalid 1 sleep 0
 test $? = 125 || fail=1

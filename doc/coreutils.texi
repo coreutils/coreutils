@@ -15694,7 +15694,7 @@ or a number. Also see @xref{Signal specifications}.
 @end table
 
 @cindex time units
-@var{duration} is an integer followed by an optional unit:
+@var{duration} is a floating point number followed by an optional unit:
 @display
 @samp{s} for seconds (the default)
 @samp{m} for minutes
@@ -15702,6 +15702,8 @@ or a number. Also see @xref{Signal specifications}.
 @samp{d} for days
 @end display
 A duration of 0 disables the associated timeout.
+Note that the actual timeout duration is dependent on system conditions,
+which should be especially considered when specifying sub-second timeouts.
 
 @cindex exit status of @command{timeout}
 Exit status:

@@ -78,7 +78,7 @@ static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
-static unsigned long kill_after;
+static double kill_after;
 static bool foreground;            /* whether to use another program group.  */
 
 /* for long options with no corresponding short option, use enum */
@@ -96,6 +96,50 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* Start the timeout after which we'll receive a SIGALRM.
+   Round DURATION up to the next representable value.
+   Treat out-of-range values as if they were maximal,
+   as that's more useful in practice than reporting an error.
+   '0' means don't timeout.  */
+static void
+settimeout (double duration)
+{
+/* timer_settime() provides potentially nanosecond resolution.
+   setitimer() is more portable (to Darwin for example),
+   but only provides microsecond resolution and thus is
+   a little more awkward to use with timespecs, as well as being
+   deprecated by POSIX.  Instead we fallback to single second
+   resolution provided by alarm().  */
+
+#if HAVE_TIMER_SETTIME
+  struct timespec ts = dtotimespec (duration);
+  struct itimerspec its = { {0, 0}, ts };
+  timer_t timerid;
+  if (timer_create (CLOCK_REALTIME, NULL, &timerid) == 0)
+    {
+      if (timer_settime (timerid, 0, &its, NULL) == 0)
+        return;
+      else
+        {
+          error (0, errno, _("warning: timer_settime"));
+          timer_delete (timerid);
+        }
+    }
+  else
+    error (0, errno, _("warning: timer_create"));
+#endif
+
+  unsigned int timeint;
+  if (UINT_MAX <= duration)
+    timeint = UINT_MAX;
+  else
+    {
+      unsigned int duration_floor = duration;
+      timeint = duration_floor + (duration_floor < duration);
+    }
+  alarm (timeint);
+}
 
 /* send sig to group but not ourselves.
  * FIXME: Is there a better way to achieve this?  */
@@ -125,7 +169,7 @@ cleanup (int sig)
         {
           /* Start a new timeout after which we'll send SIGKILL.  */
           term_signal = SIGKILL;
-          alarm (kill_after);
+          settimeout (kill_after);
           kill_after = 0; /* Don't let later signals reset kill alarm.  */
         }
 
@@ -182,7 +226,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
       fputs (_("\n\
-DURATION is an integer with an optional suffix:\n\
+DURATION is a floating point number with an optional suffix:\n\
 `s' for seconds (the default), `m' for minutes, `h' for hours \
 or `d' for days.\n"), stdout);
 
@@ -232,7 +276,7 @@ apply_time_suffix (double *x, char suffix_char)
   return true;
 }
 
-static unsigned int
+static double
 parse_duration (const char* str)
 {
   double duration;
@@ -250,19 +294,7 @@ parse_duration (const char* str)
       usage (EXIT_CANCELED);
     }
 
-  /* Return the requested duration, rounded up to the next representable value.
-     Treat out-of-range values as if they were maximal,
-     as that's more useful in practice than reporting an error.
-
-     FIXME: Use dtotimespec + setitimer if setitimer is available,
-     as that has higher resolution.  */
-  if (UINT_MAX <= duration)
-    return UINT_MAX;
-  else
-    {
-      unsigned int duration_floor = duration;
-      return duration_floor + (duration_floor < duration);
-    }
+  return duration;
 }
 
 static void
@@ -285,7 +317,7 @@ install_signal_handlers (int sigterm)
 int
 main (int argc, char **argv)
 {
-  unsigned long timeout;
+  double timeout;
   char signame[SIG2STR_MAX];
   int c;
 
@@ -373,7 +405,7 @@ main (int argc, char **argv)
       pid_t wait_result;
       int status;
 
-      alarm (timeout);
+      settimeout (timeout);
 
       while ((wait_result = waitpid (monitored_pid, &status, 0)) < 0
              && errno == EINTR)

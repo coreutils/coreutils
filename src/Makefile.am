@@ -329,6 +329,7 @@ date_LDADD += $(LIB_CLOCK_GETTIME)
 ginstall_LDADD += $(LIB_CLOCK_GETTIME)
 ls_LDADD += $(LIB_CLOCK_GETTIME)
 pr_LDADD += $(LIB_CLOCK_GETTIME)
+timeout_LDADD += $(LIB_TIMER_TIME)
 touch_LDADD += $(LIB_CLOCK_GETTIME)
 
 # for gethrxtime

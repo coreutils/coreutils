@@ -59,6 +59,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat -f now recognizes the GPFS, MQUEUE and PSTOREFS file system types.
 
+  timeout now supports sub-second timeouts.
+
 ** Build-related
 
   Changes inherited from gnulib address a build failure on HP-UX 11.11
