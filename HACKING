@@ -349,10 +349,25 @@ this code enables the right mode:
              (not (string-equal mode-name "Makefile")))
         (setq indent-tabs-mode nil))))
 
-[*] Makefile and ChangeLog files are exempt, of course.
+If you use vim (7+ compiled with autocommands), and coreutils working
+directory name also matches, add the following in ~/.vimrc:
 
-[FIXME: suggest vim syntax to do same thing, if it can be done safely.
- Most distros now "set nomodeline" by default for a good reason. ]
+  " Set GNU style indentation, spaces instead of TABs
+  function! CoreutilsIndent()
+      " Check if 'coreutils' is part of the current working directory
+      if match(getcwd(), "coreutils") > 0
+          " The next 3 lines below set the GNU indentation
+          setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
+          setlocal shiftwidth=2
+          setlocal tabstop=8
+          " Coreutils specific, expand TABs with spaces
+          setlocal expandtab
+      endif
+  endfunction
+
+  autocmd BufEnter *.c,*.h call CoreutilsIndent()
+
+[*] Makefile and ChangeLog files are exempt, of course.
 
 
 Send patches to the address listed in --help output
