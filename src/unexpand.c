@@ -379,13 +379,8 @@ unexpand (void)
                         {
                           column = next_tab_column;
 
-                          /* Discard pending blanks, unless it was a single
-                             blank just before the previous tab stop.  */
-                          if (! (pending == 1 && one_blank_before_tab_stop))
-                            {
-                              pending = 0;
-                              one_blank_before_tab_stop = false;
-                            }
+                          if (pending)
+                            pending_blank[0] = '\t';
                         }
                       else
                         {
@@ -404,8 +399,11 @@ unexpand (void)
 
                           /* Replace the pending blanks by a tab or two.  */
                           pending_blank[0] = c = '\t';
-                          pending = one_blank_before_tab_stop;
                         }
+
+                      /* Discard pending blanks, unless it was a single
+                         blank just before the previous tab stop.  */
+                      pending = one_blank_before_tab_stop;
                     }
                 }
               else if (c == '\b')
@@ -425,6 +423,8 @@ unexpand (void)
 
               if (pending)
                 {
+                  if (pending > 1 && one_blank_before_tab_stop)
+                    pending_blank[0] = '\t';
                   if (fwrite (pending_blank, 1, pending, stdout) != pending)
                     error (EXIT_FAILURE, errno, _("write error"));
                   pending = 0;

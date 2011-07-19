@@ -52,7 +52,7 @@ my @Tests =
 
      ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>"\t\t\t .\n"}],
      ['infloop-2', '-t', '4,5', {IN=> ' 'x4 . "\t\t \n"}, {OUT=>"\t\t\t \n"}],
-     ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x \t\t \n"}],
+     ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x\t\t\t \n"}],
      ['infloop-4', '-t', '1,2', {IN=> " \t\t   \n"}, {OUT=>"\t\t\t   \n"}],
      ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
 
@@ -70,11 +70,21 @@ my @Tests =
      ['blanks-6', qw(-t 1), {IN=> "a  "}, {OUT=> "a\t\t"}],
      ['blanks-7', qw(-t 1), {IN=> "a   "}, {OUT=> "a\t\t\t"}],
      ['blanks-8', qw(-t 1), {IN=> " a a  a\n"}, {OUT=> "\ta a\t\ta\n"}],
-     ['blanks-9', qw(-t 2), {IN=> "   a  a  a\n"}, {OUT=> "\t a\ta  a\n"}],
+     ['blanks-9', qw(-t 2), {IN=> "   a  a  a\n"}, {OUT=> "\t a\ta\t a\n"}],
      ['blanks-10', '-t', '3,4', {IN=> "0 2 4 6\t8\n"}, {OUT=> "0 2 4 6\t8\n"}],
      ['blanks-11', '-t', '3,4', {IN=> "    4\n"}, {OUT=> "\t\t4\n"}],
      ['blanks-12', '-t', '3,4', {IN=> "01  4\n"}, {OUT=> "01\t\t4\n"}],
      ['blanks-13', '-t', '3,4', {IN=> "0   4\n"}, {OUT=> "0\t\t4\n"}],
+
+     # POSIX says spaces should only follow tabs. Also a single
+     # trailing space is not converted to a tab, when before
+     # a field starting with non blanks
+     ['posix-1', '-a', {IN=> "1234567   \t1\n"}, {OUT=>"1234567\t\t1\n"}],
+     ['posix-2', '-a', {IN=> "1234567  \t1\n"},  {OUT=>"1234567\t\t1\n"}],
+     ['posix-3', '-a', {IN=> "1234567 \t1\n"},   {OUT=>"1234567\t\t1\n"}],
+     ['posix-4', '-a', {IN=> "1234567\t1\n"},    {OUT=>"1234567\t1\n"}],
+     ['posix-5', '-a', {IN=> "1234567  1\n"},    {OUT=>"1234567\t 1\n"}],
+     ['posix-6', '-a', {IN=> "1234567 1\n"},     {OUT=>"1234567 1\n"}],
 
      # It is debatable whether this test should require an environment
      # setting of e.g., _POSIX2_VERSION=1.
