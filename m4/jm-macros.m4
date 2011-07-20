@@ -41,8 +41,6 @@ AC_DEFUN([coreutils_MACROS],
   AC_DEFINE([ARGMATCH_DIE_DECL], [void usage (int _e)],
             [Define to the declaration of the xargmatch failure function.])
 
-  # used by ls
-  AC_REQUIRE([gl_CLOCK_TIME])
   # used by shred
   AC_CHECK_FUNCS_ONCE([directio])
 
