@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cp,mv,install,cat,split: now read and write a minimum of 64KiB at a time.
+  This was previously 32KiB and increasing to 64KiB was seen to increase
+  throughput by about 10% when reading cached files on 64 bit GNU/Linux.
+
   cp --attributes-only no longer truncates any existing destination file,
   allowing for more general copying of attributes from one file to another.
 
