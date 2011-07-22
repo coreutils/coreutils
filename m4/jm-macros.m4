@@ -93,14 +93,20 @@ AC_DEFUN([coreutils_MACROS],
   cu_PREREQ_STAT_PROG
 
   # for dd.c and shred.c
-  coreutils_saved_libs=$LIBS
-    LIB_FDATASYNC=
+  #
+  # Use fdatasync only if declared.  On MacOS X 10.7, fdatasync exists but
+  # is not declared, and is ineffective.
+  LIB_FDATASYNC=
+  AC_SUBST([LIB_FDATASYNC])
+  AC_CHECK_DECLS_ONCE([fdatasync])
+  if test $ac_cv_have_decl_fdatasync = yes; then
+    coreutils_saved_libs=$LIBS
     AC_SEARCH_LIBS([fdatasync], [rt posix4],
                    [test "$ac_cv_search_fdatasync" = "none required" ||
                     LIB_FDATASYNC=$ac_cv_search_fdatasync])
-    AC_SUBST([LIB_FDATASYNC])
     AC_CHECK_FUNCS([fdatasync])
-  LIBS=$coreutils_saved_libs
+    LIBS=$coreutils_saved_libs
+  fi
 
   # Check whether libcap is usable -- for ls --color support
   LIB_CAP=
