@@ -30,6 +30,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  md5sum accepts the new --strict option.  With --check, it makes the
+  tool exit non-zero for any invalid input line, rather than just warning.
+  This also affects sha1sum, sha224sum, sha384sum and sha512sum.
+
   split accepts a new --filter=CMD option.  With it, split filters output
   through CMD.  CMD may use the $FILE environment variable, which is set to
   the nominal output file name for each invocation of CMD.  For example, to
@@ -38,21 +42,20 @@ GNU coreutils NEWS                                    -*- outline -*-
   Note the use of single quotes, not double quotes.
   That creates files named xaa.xz, xab.xz and xac.xz.
 
-  md5sum accepts the new --strict option.  With --check, it makes the
-  tool exit non-zero for any invalid input line, rather than just warning.
-  This also affects sha1sum, sha224sum, sha384sum and sha512sum.
-
   timeout accepts a new --foreground option, to support commands not started
   directly from a shell prompt, where the command is interactive or needs to
   receive signals initiated from the terminal.
 
 ** Improvements
 
-  shuf outputs small subsets of large permutations much more efficiently.
-  For example `shuf -i1-$((2**32-1)) -n2` no longer exhausts memory.
-
   cp and ls now support HP-UX 11.11's ACLs, thanks to improved support
   in gnulib.
+
+  df now supports disk partitions larger than 4 TiB on MacOS X 10.5
+  or newer and on AIX 5.2 or newer.
+
+  shuf outputs small subsets of large permutations much more efficiently.
+  For example `shuf -i1-$((2**32-1)) -n2` no longer exhausts memory.
 
   stat -f now recognizes the GPFS, MQUEUE and PSTOREFS file system types.
 
