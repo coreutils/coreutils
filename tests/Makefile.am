@@ -323,6 +323,7 @@ TESTS =						\
   cp/dir-rm-dest				\
   cp/dir-slash					\
   cp/dir-vs-file				\
+  cp/existing-perm-dir				\
   cp/existing-perm-race				\
   cp/fail-perm					\
   cp/fiemap-empty                               \

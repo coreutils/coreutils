@@ -2211,6 +2211,8 @@ copy_internal (char const *src_name, char const *dst_name,
           if (x->verbose)
             emit_verbose (src_name, dst_name, NULL);
         }
+      else
+        omitted_permissions = 0;
 
       /* Decide whether to copy the contents of the directory.  */
       if (x->one_file_system && device != 0 && device != src_sb.st_dev)
