@@ -341,6 +341,7 @@ TESTS =						\
   cp/parent-perm-race				\
   cp/perm					\
   cp/preserve-2					\
+  cp/preserve-link				\
   cp/preserve-slink-time			\
   cp/proc-short-read				\
   cp/proc-zero-len				\

@@ -8,6 +8,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   I.E. for skipped files, the original ownership is output, not the new one.
   [bug introduced in sh-utils-2.0g]
 
+  cp -u -p would fail to preserve one hard link for each up-to-date copy
+  of a src-hard-linked name in the destination tree.  I.e., if s/a and s/b
+  are hard-linked and dst/s/a is up to date, "cp -up s dst" would copy s/b
+  to dst/s/b rather than simply linking dst/s/b to dst/s/a.
+  [This bug appears to have been present in "the beginning".]
+
   printf '%d' '"' no longer accesses out-of-bounds memory in the diagnostic.
   [bug introduced in sh-utils-1.16]
 

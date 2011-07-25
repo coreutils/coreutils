@@ -1628,6 +1628,17 @@ copy_internal (char const *src_name, char const *dst_name,
                      end up removing the source file.  */
                   if (rename_succeeded)
                     *rename_succeeded = true;
+
+                  /* However, we still must record that we've processed
+                     this src/dest pair, in case this source file is
+                     hard-linked to another one.  In that case, we'll use
+                     the mapping information to link the corresponding
+                     destination names.  */
+                  earlier_file = remember_copied (dst_name, src_sb.st_ino,
+                                                  src_sb.st_dev);
+                  if (earlier_file)
+                    goto create_hard_link;
+
                   return true;
                 }
             }
@@ -1948,6 +1959,7 @@ copy_internal (char const *src_name, char const *dst_name,
         }
       else
         {
+        create_hard_link:;
           /* We want to guarantee that symlinks are not followed.  */
           bool link_failed = (linkat (AT_FDCWD, earlier_file, AT_FDCWD,
                                       dst_name, 0) != 0);
