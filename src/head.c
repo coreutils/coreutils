@@ -389,7 +389,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
             }
         }
 
-    free_mem:;
+    free_mem:
       for (i = 0; i < n_bufs; i++)
         free (b[i]);
       free (b);

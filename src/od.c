@@ -1905,7 +1905,7 @@ it must be one character from [doxn]"),
 
   ok &= (flag_dump_strings ? dump_strings () : dump ());
 
-cleanup:;
+cleanup:
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

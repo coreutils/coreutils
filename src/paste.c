@@ -145,7 +145,7 @@ collapse_escapes (char const *strptr)
         }
     }
 
- done:;
+ done:
 
   delim_end = strout;
   return backslash_at_end ? 1 : 0;

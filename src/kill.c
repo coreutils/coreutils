@@ -292,7 +292,7 @@ main (int argc, char **argv)
       default:
         usage (EXIT_FAILURE);
       }
- no_more_options:;
+ no_more_options:
 
   if (signum < 0)
     signum = SIGTERM;

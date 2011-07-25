@@ -533,7 +533,7 @@ print_formatted (const char *format, int argc, char **argv)
               default:
                 goto no_more_flag_characters;
               }
-        no_more_flag_characters:;
+        no_more_flag_characters:
 
           if (*f == '*')
             {
