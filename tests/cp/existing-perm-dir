@@ -25,7 +25,7 @@ mkdir -p -m ug-s,u=rwx,g=,o= dst/dir || fail=1
 
 cp -r src/. dst/ || fail=1
 
-mode=`ls -ld dst/dir | cut -b-10`
+mode=$(stat --p=%A dst/dir)
 test "$mode" = drwx------ || fail=1
 
 Exit $fail

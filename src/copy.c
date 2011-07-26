@@ -951,7 +951,9 @@ copy_reg (char const *src_name, char const *dst_name,
         dest_errno = ENOTDIR;
     }
   else
-    omitted_permissions = 0;
+    {
+      omitted_permissions = 0;
+    }
 
   if (dest_desc < 0)
     {
@@ -2212,7 +2214,9 @@ copy_internal (char const *src_name, char const *dst_name,
             emit_verbose (src_name, dst_name, NULL);
         }
       else
-        omitted_permissions = 0;
+        {
+          omitted_permissions = 0;
+        }
 
       /* Decide whether to copy the contents of the directory.  */
       if (x->one_file_system && device != 0 && device != src_sb.st_dev)
