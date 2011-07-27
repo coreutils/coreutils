@@ -1490,6 +1490,43 @@ restore_default_fscreatecon_or_die (void)
            _("failed to restore the default file creation context"));
 }
 
+/* Create a hard link DST_NAME to SRC_NAME, honoring the REPLACE and
+   VERBOSE settings.  Return true upon success.  Otherwise, diagnose
+   the failure and return false.
+   If SRC_NAME is a symbolic link it will not be followed.  If the system
+   doesn't support hard links to symbolic links, then DST_NAME will
+   be created as a symbolic link to SRC_NAME.  */
+static bool
+create_hard_link (char const *src_name, char const *dst_name,
+                  bool replace, bool verbose)
+{
+  /* We want to guarantee that symlinks are not followed.  */
+  bool link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0) != 0);
+
+  /* If the link failed because of an existing destination,
+     remove that file and then call link again.  */
+  if (link_failed && replace && errno == EEXIST)
+    {
+      if (unlink (dst_name) != 0)
+        {
+          error (0, errno, _("cannot remove %s"), quote (dst_name));
+          return false;
+        }
+      if (verbose)
+        printf (_("removed %s\n"), quote (dst_name));
+      link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0) != 0);
+    }
+
+  if (link_failed)
+    {
+      error (0, errno, _("cannot create hard link %s to %s"),
+             quote_n (0, dst_name), quote_n (1, src_name));
+      return false;
+    }
+
+  return true;
+}
+
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
@@ -1639,7 +1676,15 @@ copy_internal (char const *src_name, char const *dst_name,
                   earlier_file = remember_copied (dst_name, src_sb.st_ino,
                                                   src_sb.st_dev);
                   if (earlier_file)
-                    goto create_hard_link;
+                    {
+                      /* Note we currently replace DST_NAME unconditionally,
+                         even if it was a newer separate file.  */
+                      if (! create_hard_link (earlier_file, dst_name, true,
+                                              x->verbose))
+                        {
+                          goto un_backup;
+                        }
+                    }
 
                   return true;
                 }
@@ -1961,32 +2006,8 @@ copy_internal (char const *src_name, char const *dst_name,
         }
       else
         {
-        create_hard_link:;
-          /* We want to guarantee that symlinks are not followed.  */
-          bool link_failed = (linkat (AT_FDCWD, earlier_file, AT_FDCWD,
-                                      dst_name, 0) != 0);
-
-          /* If the link failed because of an existing destination,
-             remove that file and then call link again.  */
-          if (link_failed && errno == EEXIST)
-            {
-              if (unlink (dst_name) != 0)
-                {
-                  error (0, errno, _("cannot remove %s"), quote (dst_name));
-                  goto un_backup;
-                }
-              if (x->verbose)
-                printf (_("removed %s\n"), quote (dst_name));
-              link_failed = (linkat (AT_FDCWD, earlier_file, AT_FDCWD,
-                                     dst_name, 0) != 0);
-            }
-
-          if (link_failed)
-            {
-              error (0, errno, _("cannot create hard link %s to %s"),
-                     quote_n (0, dst_name), quote_n (1, earlier_file));
-              goto un_backup;
-            }
+          if (! create_hard_link (earlier_file, dst_name, true, x->verbose))
+            goto un_backup;
 
           return true;
         }
@@ -2292,11 +2313,8 @@ copy_internal (char const *src_name, char const *dst_name,
            && !(LINK_FOLLOWS_SYMLINKS && S_ISLNK (src_mode)
                 && x->dereference == DEREF_NEVER))
     {
-       if (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0))
-        {
-          error (0, errno, _("cannot create link %s"), quote (dst_name));
-          goto un_backup;
-        }
+      if (! create_hard_link (src_name, dst_name, false, false))
+        goto un_backup;
     }
   else if (S_ISREG (src_mode)
            || (x->copy_as_regular && !S_ISLNK (src_mode)))
