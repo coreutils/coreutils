@@ -1130,6 +1130,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.12 (2008-05-31) [stable]
 
+** New features
+
+  cp, install, mv, and touch now preserve nanosecond resolution on
+  file timestamps, on platforms that have the 'utimensat' and
+  'futimens' system calls.
+
 ** Bug fixes
 
   chcon, runcon: --help output now includes the bug-reporting address
