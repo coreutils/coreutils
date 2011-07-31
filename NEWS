@@ -37,6 +37,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   chmod, chown and chgrp now output the original attributes in messages,
   when -v or -c specified.
 
+  cp -au (where --preserve=links is implicit) may now replace newer
+  files in the destination, to mirror hard links from the source.
+
 ** New features
 
   md5sum accepts the new --strict option.  With --check, it makes the

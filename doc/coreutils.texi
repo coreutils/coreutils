@@ -7954,8 +7954,11 @@ same or newer modification time.  If time stamps are being preserved,
 the comparison is to the source time stamp truncated to the
 resolutions of the destination file system and of the system calls
 used to update time stamps; this avoids duplicate work if several
-@samp{cp -pu} commands are executed with the same source and
-destination.
+@samp{cp -pu} commands are executed with the same source and destination.
+If @option{--preserve=links} is also specified (like with @samp{cp -au}
+for example), that will take precedence.  Consequently, depending on the
+order that files are processed from the source, newer files in the destination
+may be replaced, to mirror hard links in the source.
 
 @item -v
 @itemx --verbose
