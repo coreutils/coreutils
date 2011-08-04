@@ -26,8 +26,8 @@ print_ver_ tail
 
 require_proc_pid_status_
 
-touch empty || framework_failure
-echo anything > nonempty || framework_failure
+touch empty || framework_failure_
+echo anything > nonempty || framework_failure_
 
 
 for inotify in ---disable-inotify ''; do

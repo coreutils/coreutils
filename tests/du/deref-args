@@ -20,10 +20,10 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-mkdir -p dir/a || framework_failure
-ln -s dir slink || framework_failure
-printf %65536s x > 64k || framework_failure
-ln -s 64k slink-to-64k || framework_failure
+mkdir -p dir/a || framework_failure_
+ln -s dir slink || framework_failure_
+printf %65536s x > 64k || framework_failure_
+ln -s 64k slink-to-64k || framework_failure_
 
 
 du -D slink | sed 's/^[0-9][0-9]*	//' > out

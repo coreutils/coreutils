@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ od
 
-echo abcdefg > in || framework_failure
+echo abcdefg > in || framework_failure_
 
 
 (od -An -N3 -c; od -An -N3 -c) < in > out

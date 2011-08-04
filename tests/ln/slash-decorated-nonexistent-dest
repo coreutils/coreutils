@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ln
 
-touch f || framework_failure
+touch f || framework_failure_
 
 
 # Before coreutils-7.6, this would succeed on Solaris 10

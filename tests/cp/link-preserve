@@ -20,12 +20,12 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-touch a || framework_failure
-ln a b || framework_failure
-mkdir c || framework_failure
-cp -d a b c || framework_failure
-test -f c/a || framework_failure
-test -f c/b || framework_failure
+touch a || framework_failure_
+ln a b || framework_failure_
+mkdir c || framework_failure_
+cp -d a b c || framework_failure_
+test -f c/a || framework_failure_
+test -f c/b || framework_failure_
 
 
 a_inode=`ls -i c/a|sed 's,c/.*,,'`

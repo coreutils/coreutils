@@ -25,11 +25,11 @@ mode2=0755
 mode3=2755
 
 
-echo test > a || framework_failure
-echo "\`a' -> \`b'" > out_installed_first || framework_failure
+echo test > a || framework_failure_
+echo "\`a' -> \`b'" > out_installed_first || framework_failure_
 echo "removed \`b'
-\`a' -> \`b'" > out_installed_second || framework_failure
-: > out_empty || framework_failure
+\`a' -> \`b'" > out_installed_second || framework_failure_
+: > out_empty || framework_failure_
 
 # destination file does not exist
 ginstall -Cv -m$mode1 a b > out || fail=1
@@ -54,22 +54,22 @@ ginstall -Cv -m$mode3 a b > out || fail=1
 compare out out_installed_second || fail=1
 
 # files are not regular files
-ln -s a c || framework_failure
-ln -s b d || framework_failure
+ln -s a c || framework_failure_
+ln -s b d || framework_failure_
 ginstall -Cv -m$mode1 c d > out || fail=1
 echo "removed \`d'
 \`c' -> \`d'" > out_installed_second_cd
 compare out out_installed_second_cd || fail=1
 
 # destination file exists but content differs
-echo test1 > a || framework_failure
+echo test1 > a || framework_failure_
 ginstall -Cv -m$mode1 a b > out || fail=1
 compare out out_installed_second || fail=1
 ginstall -Cv -m$mode1 a b > out || fail=1
 compare out out_empty || fail=1
 
 # destination file exists but content differs (same size)
-echo test2 > a || framework_failure
+echo test2 > a || framework_failure_
 ginstall -Cv -m$mode1 a b > out || fail=1
 compare out out_installed_second || fail=1
 ginstall -Cv -m$mode1 a b > out || fail=1

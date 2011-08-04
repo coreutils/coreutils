@@ -21,7 +21,7 @@ test=f-1
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir -p d || framework_failure
+mkdir -p d || framework_failure_
 
 rm -f d/no-such-file || fail=1
 

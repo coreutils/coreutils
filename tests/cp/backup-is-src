@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-echo a > a || framework_failure
-echo a-tilde > a~ || framework_failure
+echo a > a || framework_failure_
+echo a-tilde > a~ || framework_failure_
 
 # This cp command should exit nonzero.
 cp --b=simple a~ a > out 2>&1 && fail=1

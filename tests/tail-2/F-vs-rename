@@ -21,7 +21,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ tail
 
-touch a b || framework_failure
+touch a b || framework_failure_
 
 debug='---disable-inotify'
 debug=

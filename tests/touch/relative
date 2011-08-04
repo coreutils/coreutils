@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ touch
 
-TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure
+TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure_
 
 
 # Set times back by 5 days.

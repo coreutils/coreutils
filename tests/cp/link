@@ -20,9 +20,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-touch src || framework_failure
-touch dest || framework_failure
-touch dest2 || framework_failure
+touch src || framework_failure_
+touch dest || framework_failure_
+touch dest2 || framework_failure_
 
 
 cp -f --link src dest || fail=1

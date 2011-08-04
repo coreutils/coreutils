@@ -19,10 +19,10 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ readlink
 
-mkdir subdir || framework_failure
-touch regfile || framework_failure
-ln -s regfile link1 || framework_failure
-ln -s missing link2 || framework_failure
+mkdir subdir || framework_failure_
+touch regfile || framework_failure_
+ln -s regfile link1 || framework_failure_
+ln -s missing link2 || framework_failure_
 
 
 v=`readlink link1` || fail=1

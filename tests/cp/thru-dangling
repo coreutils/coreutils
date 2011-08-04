@@ -19,11 +19,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-ln -s no-such dangle || framework_failure
-echo hi > f || framework_failure
-echo hi > exp || framework_failure
+ln -s no-such dangle || framework_failure_
+echo hi > f || framework_failure_
+echo hi > exp || framework_failure_
 echo "cp: not writing through dangling symlink \`dangle'" \
-    > exp-err || framework_failure
+    > exp-err || framework_failure_
 
 
 # Starting with 6.9.90, this usage fails, by default:

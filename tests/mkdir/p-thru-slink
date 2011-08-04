@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mkdir
 
-ln -s . slink || framework_failure
+ln -s . slink || framework_failure_
 
 mkdir -p slink/x || fail=1
 test -d x || fail=1

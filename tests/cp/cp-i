@@ -19,15 +19,15 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir -p a b/a/c || framework_failure
-touch a/c || framework_failure
+mkdir -p a b/a/c || framework_failure_
+touch a/c || framework_failure_
 
 
 # coreutils 6.2 cp would neglect to prompt in this case.
 echo n | cp -iR a b 2>/dev/null || fail=1
 
 # test miscellaneous combinations of -f -i -n parameters
-touch c d || framework_failure
+touch c d || framework_failure_
 echo "\`c' -> \`d'" > out_copy
 > out_empty
 

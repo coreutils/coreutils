@@ -41,10 +41,10 @@ dir=`printf '%200s\n' ' '|tr ' ' x`
 # Construct a hierarchy containing a relative file with a name
 # longer than PATH_MAX.
 # for i in `seq 52`; do
-#   mkdir $dir || framework_failure
-#   cd $dir || framework_failure
+#   mkdir $dir || framework_failure_
+#   cd $dir || framework_failure_
 # done
-# cd $tmp || framework_failure
+# cd $tmp || framework_failure_
 
 # Sheesh.  Bash 3.1.5 can't create this hierarchy.  I get
 #   cd: error retrieving current directory: getcwd:
@@ -57,11 +57,11 @@ cwd=`pwd`
 $PERL \
     -e 'my $d = '$dir'; foreach my $i (1..52)' \
     -e '  { mkdir ($d, 0700) && chdir $d or die "$!" }' \
-  || framework_failure
+  || framework_failure_
 
-mkdir inaccessible || framework_failure
-cd inaccessible || framework_failure
-chmod 0 . || framework_failure
+mkdir inaccessible || framework_failure_
+cd inaccessible || framework_failure_
+chmod 0 . || framework_failure_
 
 du -s "$cwd/$dir" > /dev/null || fail=1
 

@@ -19,9 +19,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp mv
 
-echo old > old || framework_failure
-touch -d yesterday old || framework_failure
-echo new > new || framework_failure
+echo old > old || framework_failure_
+touch -d yesterday old || framework_failure_
+echo new > new || framework_failure_
 
 
 for interactive in '' -i; do

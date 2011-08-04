@@ -27,7 +27,7 @@ echo "$0: creating 78 trees, each of depth 153; this will take a while..." >&2
 y=`seq 1 150|tr -sc '\n' y|tr '\n' /`
 for i in 1 2 3; do
   for j in a b c d e f g h i j k l m n o p q r s t u v w x y z; do
-    mkdir -p t/$i/$j/$y || framework_failure
+    mkdir -p t/$i/$j/$y || framework_failure_
   done
 done
 

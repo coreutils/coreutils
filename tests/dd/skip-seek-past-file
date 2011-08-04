@@ -22,12 +22,12 @@ require_sparse_support_ # for `truncate --size=$OFF_T_MAX`
 eval $(getlimits) # for OFF_T limits
 
 
-printf "1234" > file || framework_failure
+printf "1234" > file || framework_failure_
 
 echo "\
 dd: \`standard input': cannot skip to specified offset
 0+0 records in
-0+0 records out" > skip_err || framework_failure
+0+0 records out" > skip_err || framework_failure_
 
 # skipping beyond number of blocks in file should issue a warning
 dd bs=1 skip=5 count=0 status=noxfer < file 2> err || fail=1
@@ -60,7 +60,7 @@ compare skip_err err || fail=1
 # seeking beyond end of file is OK
 dd bs=1 seek=5 count=0 status=noxfer > file 2> err || fail=1
 echo "0+0 records in
-0+0 records out" > err_ok || framework_failure
+0+0 records out" > err_ok || framework_failure_
 compare err_ok err || fail=1
 
 # skipping > OFF_T_MAX should fail immediately

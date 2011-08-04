@@ -34,7 +34,7 @@ for (my $i=0; $i < $num_lines; $i++)
       printf "%c", 32 + rand(94);
     }
     print "\n";
-}' > in || framework_failure
+}' > in || framework_failure_
 
 # We need to generate a lot of data for sort to show a noticeable
 # improvement in performance. Sorting it in PERL may take awhile.
@@ -44,7 +44,7 @@ open (FILE, "<in");
 my @list = <FILE>;
 print sort(@list);
 close (FILE);
-' > exp || framework_failure
+' > exp || framework_failure_
 
 time sort in > out || fail=1
 

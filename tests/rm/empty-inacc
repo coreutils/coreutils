@@ -20,7 +20,7 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir -m0 inacc || framework_failure
+mkdir -m0 inacc || framework_failure_
 
 # Also exercise the different code path that's taken for a directory
 # that is empty (hence removable) and unreadable.

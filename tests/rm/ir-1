@@ -22,10 +22,10 @@ test=ir-1
 print_ver_ rm
 
 t=t
-mkdir -p $t $t/a $t/b $t/c || framework_failure
-> $t/a/a || framework_failure
-> $t/b/bb || framework_failure
-> $t/c/cc || framework_failure
+mkdir -p $t $t/a $t/b $t/c || framework_failure_
+> $t/a/a || framework_failure_
+> $t/b/bb || framework_failure_
+> $t/c/cc || framework_failure_
 
 cat <<EOF > $test.I
 y

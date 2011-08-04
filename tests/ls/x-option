@@ -19,9 +19,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-mkdir subdir || framework_failure
-touch subdir/b || framework_failure
-touch subdir/a || framework_failure
+mkdir subdir || framework_failure_
+touch subdir/b || framework_failure_
+touch subdir/a || framework_failure_
 
 
 # Coreutils 6.8 and 6.9 would output this in the wrong order.

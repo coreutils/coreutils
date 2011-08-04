@@ -26,9 +26,9 @@ tmp_sym=dd-sym
 tmp_out=dd-out
 
 warn=0
-echo data > $tmp_in || framework_failure
-ln $tmp_in $tmp_in2 || framework_failure
-ln -s $tmp_in $tmp_sym || framework_failure
+echo data > $tmp_in || framework_failure_
+ln $tmp_in $tmp_in2 || framework_failure_
+ln -s $tmp_in $tmp_sym || framework_failure_
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 compare $tmp_in $tmp_out || fail=1
@@ -87,9 +87,9 @@ test "$outbytes" -eq 3 || fail=1
 # There might be some missed failures but it's unlikely.
 (echo a; sleep .1; echo b) \
   | env LC_ALL=C dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
-printf 'a\nb\n' > out_ok || framework_failure
+printf 'a\nb\n' > out_ok || framework_failure_
 echo "1+0 records in
-1+0 records out" > err_ok || framework_failure
+1+0 records out" > err_ok || framework_failure_
 compare out_ok out || fail=1
 compare err_ok err || fail=1
 

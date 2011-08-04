@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ chown
 
-ln -s no-such dangle || framework_failure
+ln -s no-such dangle || framework_failure_
 
 
 set _ `ls -ldo dangle`; shift; user=$3

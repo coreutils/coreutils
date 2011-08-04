@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ tail
 
-echo line > exp || framework_failure
-echo line > in || framework_failure
+echo line > exp || framework_failure_
+echo line > in || framework_failure_
 
 timeout 1 tail -f < in > out 2> err
 

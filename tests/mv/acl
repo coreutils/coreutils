@@ -29,9 +29,9 @@ grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 
-touch file || framework_failure
+touch file || framework_failure_
 t1=$other_partition_tmpdir/t1
-touch $t1 || framework_failure
+touch $t1 || framework_failure_
 
 skip_partition=none
 # Ensure that setfacl and getfacl work on this file system.
@@ -45,23 +45,23 @@ test $skip_partition != none &&
 
 # move the access acl of a file
 mv file "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl file` || framework_failure
+acl2=`cd "$other_partition_tmpdir" && getfacl file` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # move the access acl of a directory
-mkdir dir || framework_failure
-setfacl -m user:bin:rw dir || framework_failure
-acl1=`getfacl dir` || framework_failure
+mkdir dir || framework_failure_
+setfacl -m user:bin:rw dir || framework_failure_
+acl1=`getfacl dir` || framework_failure_
 mv dir "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl dir` || framework_failure
+acl2=`cd "$other_partition_tmpdir" && getfacl dir` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # move the default acl of a directory
-mkdir dir2 || framework_failure
-setfacl -d -m user:bin:rw dir2 || framework_failure
-acl1=`getfacl dir2` || framework_failure
+mkdir dir2 || framework_failure_
+setfacl -d -m user:bin:rw dir2 || framework_failure_
+acl1=`getfacl dir2` || framework_failure_
 mv dir2 "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl dir2` || framework_failure
+acl2=`cd "$other_partition_tmpdir" && getfacl dir2` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 Exit $fail

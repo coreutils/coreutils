@@ -20,7 +20,7 @@
 print_ver_ runcon
 
 diag='runcon: runcon may be used only on a SELinux kernel'
-echo "$diag" > exp || framework_failure
+echo "$diag" > exp || framework_failure_
 
 
 # This test works even on systems without SELinux.

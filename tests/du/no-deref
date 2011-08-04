@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-mkdir -p dir/a/b || framework_failure
-ln -s dir slink || framework_failure
+mkdir -p dir/a/b || framework_failure_
+ln -s dir slink || framework_failure_
 
 
 du slink | sed 's/^[0-9][0-9]*	//' > out

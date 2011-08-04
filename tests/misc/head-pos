@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ head
 
-(echo a; echo b) > in || framework_failure
+(echo a; echo b) > in || framework_failure_
 
 (head -n 1 >/dev/null; cat) < in > out || fail=1
 cat <<EOF > exp

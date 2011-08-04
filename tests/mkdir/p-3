@@ -22,9 +22,9 @@
 print_ver_ mkdir
 skip_if_root_
 
-mkdir no-access || framework_failure
-mkdir no-acce2s || framework_failure
-mkdir -p no-acce3s/d || framework_failure
+mkdir no-access || framework_failure_
+mkdir no-acce2s || framework_failure_
+mkdir -p no-acce3s/d || framework_failure_
 
 p=`pwd`
 (cd no-access && chmod 0 . && mkdir -p "$p/a/b" u/v) 2> /dev/null && fail=1

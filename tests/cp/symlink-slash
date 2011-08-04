@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir dir || framework_failure
-ln -s dir symlink || framework_failure
+mkdir dir || framework_failure_
+ln -s dir symlink || framework_failure_
 
 cp -dR symlink/ s || fail=1
 set `ls -l s`

@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-ln -s no-such-file dangling-slink || framework_failure
+ln -s no-such-file dangling-slink || framework_failure_
 
 
 # Prior to coreutils-6.0, this would fail on non-Linux kernels,

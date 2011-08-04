@@ -22,8 +22,8 @@ require_root_
 require_selinux_
 skip_if_mcstransd_is_running_
 
-mkdir -p d/sub/s2 || framework_failure
-touch f g d/sub/1 d/sub/2 || framework_failure
+mkdir -p d/sub/s2 || framework_failure_
+touch f g d/sub/1 d/sub/2 || framework_failure_
 
 
 # Set to a specified context.

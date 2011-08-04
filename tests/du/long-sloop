@@ -30,14 +30,14 @@ print_ver_ du
 n=400
 
 dir_list=`seq $n`
-mkdir $dir_list || framework_failure
+mkdir $dir_list || framework_failure_
 file=1
 i_minus_1=0
 for i in $dir_list `expr $n + 1`; do
   case $i_minus_1 in
   0) ;;
   *)
-    ln -s ../$i $i_minus_1/s || framework_failure
+    ln -s ../$i $i_minus_1/s || framework_failure_
     file=$file/s;;
   esac
   i_minus_1=$i

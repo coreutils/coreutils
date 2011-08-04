@@ -21,7 +21,7 @@ print_ver_ ginstall
 require_selinux_
 
 
-echo test > a || framework_failure
+echo test > a || framework_failure_
 chcon -u system_u a || skip_ "chcon doesn't work"
 
 echo "\`a' -> \`b'" > out_installed_first

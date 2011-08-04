@@ -22,7 +22,7 @@ print_ver_ du
 skip_if_root_
 
 mkdir f && cd f && mkdir a b c d e && touch c/j && chmod a-x c \
-    || framework_failure
+    || framework_failure_
 
 du > ../t 2>&1 && fail=1
 

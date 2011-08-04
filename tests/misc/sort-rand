@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
 
-seq 100 > in || framework_failure
+seq 100 > in || framework_failure_
 
 
 sort --random-sort in > out || fail=1

@@ -20,7 +20,7 @@
 print_ver_ chmod
 
 file=f
-touch $file || framework_failure
+touch $file || framework_failure_
 
 umask 005
 for mode in =x =xX =Xx =x,=X =X,=x; do

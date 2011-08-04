@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir --mode=0500 unwritable-dir || framework_failure
+mkdir --mode=0500 unwritable-dir || framework_failure_
 
 
 # For rm from coreutils-5.0.1, this would prompt.

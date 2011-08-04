@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-mkdir -p b/c y/z || framework_failure
+mkdir -p b/c y/z || framework_failure_
 
 
 # Due to a used-uninitialized variable, the "du -x" from coreutils-6.6

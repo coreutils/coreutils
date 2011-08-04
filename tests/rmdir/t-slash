@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rmdir
 
-mkdir dir || framework_failure
+mkdir dir || framework_failure_
 
 
 # Prior to coreutils-4.5.2, this would fail with the following:

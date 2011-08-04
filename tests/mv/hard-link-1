@@ -24,9 +24,9 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 
 dir=hlink
 
-mkdir $dir || framework_failure
-> $dir/a || framework_failure
-ln $dir/a $dir/b || framework_failure
+mkdir $dir || framework_failure_
+> $dir/a || framework_failure_
+ln $dir/a $dir/b || framework_failure_
 
 mv $dir "$other_partition_tmpdir" || fail=1
 

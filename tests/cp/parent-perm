@@ -23,14 +23,14 @@ working_umask_or_skip_
 # cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
 require_local_dir_
 
-mkdir -p a/b/c a/b/d e || framework_failure
-touch a/b/c/foo a/b/d/foo || framework_failure
-cp -p --parent a/b/c/foo e || framework_failure
+mkdir -p a/b/c a/b/d e || framework_failure_
+touch a/b/c/foo a/b/d/foo || framework_failure_
+cp -p --parent a/b/c/foo e || framework_failure_
 
 # Make permissions of e/a different, so that we exercise the
 # code in cp -p --parents that propagates permissions even
 # to a destination directory that it doesn't create.
-chmod g-rx e/a e/a/b || framework_failure
+chmod g-rx e/a e/a/b || framework_failure_
 
 cp -p --parent a/b/d/foo e || fail=1
 

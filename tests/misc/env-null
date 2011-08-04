@@ -43,12 +43,12 @@ test $? = 125 || fail=1
 test -s out && fail=1
 
 # Test env -0 on a one-variable environment.
-printf 'a=b\nc=\0' > exp || framework_failure
+printf 'a=b\nc=\0' > exp || framework_failure_
 env -i -0 "$(printf 'a=b\nc=')" > out || fail=1
 compare exp out || fail=1
 
 # Test printenv -0 on particular values.
-printf 'b\nc=\0' > exp || framework_failure
+printf 'b\nc=\0' > exp || framework_failure_
 env "$(printf 'a=b\nc=')" printenv -0 a > out || fail=1
 compare exp out || fail=1
 env -u a printenv -0 a > out

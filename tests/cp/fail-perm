@@ -19,11 +19,11 @@
 print_ver_ cp
 skip_if_root_
 
-chmod g-s . || framework_failure
-mkdir D D/D || framework_failure
-touch D/a || framework_failure
-chmod 0 D/a || framework_failure
-chmod u=rx,go=,-st D || framework_failure
+chmod g-s . || framework_failure_
+mkdir D D/D || framework_failure_
+touch D/a || framework_failure_
+chmod 0 D/a || framework_failure_
+chmod u=rx,go=,-st D || framework_failure_
 
 
 # This is expected to exit non-zero, because it can't read D/a.

@@ -24,7 +24,7 @@ print_ver_ sort
   || skip_ 'fd-limited sort failed; are you running under valgrind?'
 
 for i in $(seq 31); do
-  echo $i | tee -a in > __test.$i || framework_failure
+  echo $i | tee -a in > __test.$i || framework_failure_
 done
 
 

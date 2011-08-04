@@ -22,11 +22,11 @@ print_ver_ cp mv
 
 skip_if_root_
 
-mkdir dst || framework_failure
-(cd dst && touch a b c) || framework_failure
-touch a || framework_failure
-ln a b || framework_failure
-ln a c || framework_failure
+mkdir dst || framework_failure_
+(cd dst && touch a b c) || framework_failure_
+touch a || framework_failure_
+ln a b || framework_failure_
+ln a c || framework_failure_
 
 
 # ======================================

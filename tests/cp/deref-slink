@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-touch f slink-target || framework_failure
-ln -s slink-target slink || framework_failure
+touch f slink-target || framework_failure_
+ln -s slink-target slink || framework_failure_
 
 cp -d f slink || fail=1
 

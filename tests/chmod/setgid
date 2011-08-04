@@ -21,7 +21,7 @@
 print_ver_ chmod
 
 umask 0
-mkdir d || framework_failure
+mkdir d || framework_failure_
 
 chmod g+s d 2> /dev/null && env -- test -g d ||
   {
@@ -33,7 +33,7 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
     id_g=`id -g` &&
     test -n "$id_g" &&
     chgrp "$id_g" d &&
-    chmod g+s d || framework_failure
+    chmod g+s d || framework_failure_
   }
 
 # "chmod g+s d" does nothing on some NFS file systems.

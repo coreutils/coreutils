@@ -26,8 +26,8 @@ require_acl_
 grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
   skip_ "insufficient ACL support"
 
-mkdir -p a b || framework_failure
-touch a/file || framework_failure
+mkdir -p a b || framework_failure_
+touch a/file || framework_failure_
 
 # Ensure that setfacl and getfacl work on this file system.
 skip=no
@@ -38,23 +38,23 @@ test $skip = yes &&
 
 # copy a file without preserving permissions
 cp a/file b/ || fail=1
-acl2=`cd b && getfacl file` || framework_failure
+acl2=`cd b && getfacl file` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # Update with acl set above
-acl1=`cd a && getfacl file` || framework_failure
+acl1=`cd a && getfacl file` || framework_failure_
 
 # copy a file, preserving permissions
 cp -p a/file b/ || fail=1
-acl2=`cd b && getfacl file` || framework_failure
+acl2=`cd b && getfacl file` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # copy a file, preserving permissions, with --attributes-only
-echo > a/file || framework_failure # add some data
-test -s a/file || framework_failure
+echo > a/file || framework_failure_ # add some data
+test -s a/file || framework_failure_
 cp -p --attributes-only a/file b/ || fail=1
 test -s b/file && fail=1
-acl2=`cd b && getfacl file` || framework_failure
+acl2=`cd b && getfacl file` || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 Exit $fail

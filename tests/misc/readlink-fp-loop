@@ -25,11 +25,11 @@ cwd=$("$abs_top_builddir/src/pwd")
 # two different times with no actual loop.  In addition, arrange
 # so that the second and fourth calls to readlink operate on S.
 
-ln -s s p        || framework_failure
-ln -s d s        || framework_failure
-mkdir d          || framework_failure
-echo 2 > d/2     || framework_failure
-ln -s ../s/2 d/1 || framework_failure
+ln -s s p        || framework_failure_
+ln -s d s        || framework_failure_
+mkdir d          || framework_failure_
+echo 2 > d/2     || framework_failure_
+ln -s ../s/2 d/1 || framework_failure_
 
 # With coreutils-6.9, this would fail with ELOOP.
 readlink -v -e p/1 > out || fail=1
@@ -38,7 +38,7 @@ echo "$cwd/d/2" > exp || fail=1
 compare out exp || fail=1
 
 # Construct a real loop and make sure readlink still detects it.
-ln -sf ../s/1 d/2 || framework_failure
+ln -sf ../s/1 d/2 || framework_failure_
 readlink -v -e p/1 2> out && fail=1
 readlink_msg=$(cat out)
 case $readlink_msg in
@@ -48,13 +48,13 @@ esac
 symlink_loop_msg=${readlink_msg#'readlink: p/1: '}
 
 # Exercise the hash table code.
-ln -nsf ../s/3 d/2 || framework_failure
-ln -nsf ../p/4 d/3 || framework_failure
-ln -nsf ../p/5 d/4 || framework_failure
-ln -nsf ../p/6 d/5 || framework_failure
-ln -nsf ../p/7 d/6 || framework_failure
-ln -nsf ../p/8 d/7 || framework_failure
-echo x > d/8       || framework_failure
+ln -nsf ../s/3 d/2 || framework_failure_
+ln -nsf ../p/4 d/3 || framework_failure_
+ln -nsf ../p/5 d/4 || framework_failure_
+ln -nsf ../p/6 d/5 || framework_failure_
+ln -nsf ../p/7 d/6 || framework_failure_
+ln -nsf ../p/8 d/7 || framework_failure_
+echo x > d/8       || framework_failure_
 readlink -v -e p/1 > out || fail=1
 echo "$cwd/d/8" > exp || fail=1
 compare out exp || fail=1
@@ -62,7 +62,7 @@ compare out exp || fail=1
 # A trivial loop
 ln -s loop loop
 readlink -v -e loop 2> out && fail=1
-echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure
+echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure_
 compare out exp || fail=1
 
 Exit $fail

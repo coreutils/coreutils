@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir -p a/t b/t || framework_failure
-touch a/t/f || framework_failure
+mkdir -p a/t b/t || framework_failure_
+touch a/t/f || framework_failure_
 
 
 # Expect this to fail with the expected diagnostic.

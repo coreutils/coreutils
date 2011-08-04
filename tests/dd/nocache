@@ -31,7 +31,7 @@ dd iflag=nocache,direct if=/dev/null && fail=1
 # The rest ensure that the documented uses cases
 # proceed without error
 for f in ifile ofile; do
-  dd if=/dev/zero of=$f conv=fdatasync count=100 || framework_failure
+  dd if=/dev/zero of=$f conv=fdatasync count=100 || framework_failure_
 done
 
 # Advise to drop cache for whole file

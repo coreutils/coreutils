@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ stat
 
-printf -- '-\n' > exp || framework_failure
-touch f || framework_failure
+printf -- '-\n' > exp || framework_failure_
+touch f || framework_failure_
 
 stat --format=%n - < f > out || fail=1
 stat -f - < f && fail=1

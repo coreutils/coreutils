@@ -23,7 +23,7 @@ grep '^#define HAVE_UTIMENSAT 1' "$CONFIG_HEADER" > /dev/null ||
 grep '^#define HAVE_LUTIMES 1' "$CONFIG_HEADER" > /dev/null ||
   skip_ 'this system lacks the utimensat function'
 
-ln -s no-such dangle || framework_failure
+ln -s no-such dangle || framework_failure_
 
 # If the current file system lacks sub-second resolution, sleep for 2s to
 # ensure that the times on the copy are different from those of the original.
@@ -32,9 +32,9 @@ case $(stat --format=%y dangle) in
 esac
 
 # Can't use --format=%x, as lstat() modifies atime on some platforms.
-cp -Pp dangle d2 || framework_failure
-stat --format=%y dangle > t1 || framework_failure
-stat --format=%y d2 > t2 || framework_failure
+cp -Pp dangle d2 || framework_failure_
+stat --format=%y dangle > t1 || framework_failure_
+stat --format=%y d2 > t2 || framework_failure_
 
 compare t1 t2 || fail=1
 

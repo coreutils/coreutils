@@ -59,7 +59,7 @@ EOF
 chmod a+x inotify-watch-for-dir-access.py
 
 t=T/U
-mkdir d2 || framework_failure
+mkdir d2 || framework_failure_
 long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 # One iteration of this loop creates a tree with which
 # du sometimes completes its traversal before the above rename.
@@ -68,7 +68,7 @@ long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 # Using 10 iterations was not enough, either.
 # Using 30, I saw no failure in 200 trials.
 for i in $(seq 30); do
-  mkdir -p $t/3/a/b/c/$i/$long || framework_failure
+  mkdir -p $t/3/a/b/c/$i/$long || framework_failure_
 done
 
 # Prohibit suspension, which could otherwise cause a timeout-induced FP failure.

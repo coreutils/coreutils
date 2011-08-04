@@ -19,12 +19,12 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir a b c || framework_failure
-ln -s ../t a/1 || framework_failure
-echo payload > b/1 || framework_failure
+mkdir a b c || framework_failure_
+ln -s ../t a/1 || framework_failure_
+echo payload > b/1 || framework_failure_
 
 echo "cp: will not copy \`b/1' through just-created symlink \`c/1'" \
-  > exp || framework_failure
+  > exp || framework_failure_
 
 # Check both cases: a dangling symlink, and one pointing to a writable file.
 

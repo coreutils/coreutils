@@ -26,60 +26,60 @@ f=tln-file
 
 # Create a simple symlink with both source and destination files
 # in current directory.
-touch $f || framework_failure
-rm -f $t || framework_failure
+touch $f || framework_failure_
+rm -f $t || framework_failure_
 ln -s $f $t || fail=1
 test -f $t || fail=1
 rm $t $f
 
 # Create a symlink with source file and explicit destination directory/file.
-touch $f || framework_failure
-rm -rf $d || framework_failure
-mkdir $d || framework_failure
+touch $f || framework_failure_
+rm -rf $d || framework_failure_
+mkdir $d || framework_failure_
 ln -s ../$f $d/$t || fail=1
 test -f $d/$t || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination directory.
-touch $f || framework_failure
-rm -rf $d || framework_failure
-mkdir $d || framework_failure
+touch $f || framework_failure_
+rm -rf $d || framework_failure_
+mkdir $d || framework_failure_
 ln -s ../$f $d || fail=1
 test -f $d/$f || fail=1
 rm -rf $d $f
 
 # See whether a trailing slash is followed too far.
-touch $f || framework_failure
-rm -rf $d || framework_failure
-mkdir $d $d/$f || framework_failure
+touch $f || framework_failure_
+rm -rf $d || framework_failure_
+mkdir $d $d/$f || framework_failure_
 ln $f $d/ 2> /dev/null && fail=1
 ln -s $f $d/ 2> /dev/null && fail=1
 rm -rf $d $f
 
 # Make sure we get a failure with existing dest without -f option
-touch $t || framework_failure
+touch $t || framework_failure_
 # FIXME: don't ignore the error message but rather test
 # it to make sure it's the right one.
 ln -s $t $t 2> /dev/null && fail=1
 rm $t
 
 # Make sure -sf fails when src and dest are the same
-touch $t || framework_failure
+touch $t || framework_failure_
 ln -sf $t $t 2> /dev/null && fail=1
 rm $t
 
 # Create a symlink with source file and no explicit directory
-rm -rf $d || framework_failure
-mkdir $d || framework_failure
-touch $d/$f || framework_failure
+rm -rf $d || framework_failure_
+mkdir $d || framework_failure_
+touch $d/$f || framework_failure_
 ln -s $d/$f || fail=1
 test -f $f || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination symlink-to-directory.
-rm -rf $d $f $ld || framework_failure
-touch $f || framework_failure
-mkdir $d || framework_failure
+rm -rf $d $f $ld || framework_failure_
+touch $f || framework_failure_
+mkdir $d || framework_failure_
 ln -s $d $ld
 ln -s ../$f $ld || fail=1
 test -f $d/$f || fail=1
@@ -87,9 +87,9 @@ rm -rf $d $f $ld
 
 # Create a symlink with source file and destination symlink-to-directory.
 # BUT use the new --no-dereference option.
-rm -rf $d $f $ld || framework_failure
-touch $f || framework_failure
-mkdir $d || framework_failure
+rm -rf $d $f $ld || framework_failure_
+touch $f || framework_failure_
+mkdir $d || framework_failure_
 ln -s $d $ld
 af=`pwd`/$f
 ln --no-dereference -fs "$af" $ld || fail=1
@@ -98,8 +98,8 @@ rm -rf $d $f $ld
 
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
-touch a b || framework_failure
-ln b b~ || framework_failure
+touch a b || framework_failure_
+ln b b~ || framework_failure_
 ln -f --b=simple a b || fail=1
 
 # ===================================================
@@ -108,7 +108,7 @@ ln -f --b=simple a b || fail=1
 # This was fixed in 4.0.34.  Broken in 4.0r.
 for cmd in ln cp mv ginstall; do
   rm -rf a x a.orig
-  touch a x || framework_failure
+  touch a x || framework_failure_
   $cmd --backup=simple --suffix=.orig x a || fail=1
   test -f a.orig || fail=1
 done

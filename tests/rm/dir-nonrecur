@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir d || framework_failure
+mkdir d || framework_failure_
 
 
 rm d 2> out && fail=1

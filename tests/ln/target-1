@@ -24,7 +24,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ln
 
-mkdir d || framework_failure
+mkdir d || framework_failure_
 ln -s --target-dir=d ../f || fail=1
 
 Exit $fail

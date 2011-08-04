@@ -22,11 +22,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-mkdir -p a/sub || framework_failure
-ln -s a/sub slink || framework_failure
-touch b || framework_failure
-ln -s .. a/sub/dotdot || framework_failure
-ln -s nowhere dangle || framework_failure
+mkdir -p a/sub || framework_failure_
+ln -s a/sub slink || framework_failure_
+touch b || framework_failure_
+ln -s .. a/sub/dotdot || framework_failure_
+ln -s nowhere dangle || framework_failure_
 
 
 # This used to fail with the following diagnostic:

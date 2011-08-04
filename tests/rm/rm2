@@ -20,10 +20,10 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir -p a/0 || framework_failure
-mkdir -p a/1/2 b/3 || framework_failure
-mkdir a/2 a/3 || framework_failure
-chmod u-x a/1 b || framework_failure
+mkdir -p a/0 || framework_failure_
+mkdir -p a/1/2 b/3 || framework_failure_
+mkdir a/2 a/3 || framework_failure_
+chmod u-x a/1 b || framework_failure_
 
 
 # Exercise two separate code paths -- though both result

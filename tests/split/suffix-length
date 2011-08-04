@@ -22,7 +22,7 @@ print_ver_ split
 a_z='a b c d e f g h i j k l m n o p q r s t u v w x y z'
 
 # Generate a 27-byte file
-printf %s $a_z 0 |tr -d ' ' > in || framework_failure
+printf %s $a_z 0 |tr -d ' ' > in || framework_failure_
 
 files=
 for i in $a_z; do
@@ -32,10 +32,10 @@ files="${files}xba"
 
 for f in $files; do
   printf 'creating file `%s'\''\n' $f
-done > exp || framework_failure
+done > exp || framework_failure_
 
 echo split: output file suffixes exhausted \
-  > exp-too-short || framework_failure
+  > exp-too-short || framework_failure_
 
 
 # This should fail.

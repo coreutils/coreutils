@@ -28,8 +28,8 @@ print_ver_ tail
 # cleanup and exit correctly when it receives a SIGTERM, thus hanging the test.
 very_expensive_
 
-touch file || framework_failure
-touch tail.out || framework_failure
+touch file || framework_failure_
+touch tail.out || framework_failure_
 
 ( timeout 10s gdb --version ) > gdb.out 2>&1
 case $(cat gdb.out) in

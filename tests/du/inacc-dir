@@ -19,7 +19,7 @@
 print_ver_ du
 skip_if_root_
 
-mkdir -p a/sub || framework_failure
+mkdir -p a/sub || framework_failure_
 
 
 du -s a > exp || fail=1

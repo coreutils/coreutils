@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rmdir
 
-mkdir d d/e d/e/f || framework_failure
-chmod a-w d || framework_failure
+mkdir d d/e d/e/f || framework_failure_
+chmod a-w d || framework_failure_
 
 
 # This rmdir command outputs two diagnostics.

@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ touch
 
-echo 60.000000000 > exp || framework_failure
+echo 60.000000000 > exp || framework_failure_
 
 
 # Before coreutils-7.7, this would fail, complaining of

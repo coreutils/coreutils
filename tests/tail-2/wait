@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ tail
 
-touch here || framework_failure
-{ touch unreadable && chmod a-r unreadable; } || framework_failure
+touch here || framework_failure_
+{ touch unreadable && chmod a-r unreadable; } || framework_failure_
 
 
 for inotify in ---disable-inotify ''; do
@@ -58,7 +58,7 @@ for inotify in ---disable-inotify ''; do
   {
     local delay="$1"
 
-    touch k || framework_failure
+    touch k || framework_failure_
     tail -s.1 --max-unchanged-stats=2 -F $inotify k > tail.out &
     pid=$!
     sleep $delay

@@ -22,9 +22,9 @@ test=i-1
 print_ver_ rm
 
 t=t
-mkdir -p $t || framework_failure
-echo > $t/a || framework_failure
-test -f $t/a || framework_failure
+mkdir -p $t || framework_failure_
+echo > $t/a || framework_failure_
+test -f $t/a || framework_failure_
 
 echo y > $t/$test.Iy
 echo n > $t/$test.In

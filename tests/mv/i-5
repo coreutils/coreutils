@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir a || framework_failure
-touch b || framework_failure
+mkdir a || framework_failure_
+touch b || framework_failure_
 
 
 # coreutils 6.2 mv would neglect to prompt in this case.

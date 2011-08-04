@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-touch file || framework_failure
-ln -s file s || framework_failure
+touch file || framework_failure_
+ln -s file s || framework_failure_
 
 
 # This must fail.

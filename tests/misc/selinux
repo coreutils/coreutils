@@ -24,8 +24,8 @@ require_selinux_
 skip_if_mcstransd_is_running_
 
 # Create a regular file, dir, fifo.
-touch f || framework_failure
-mkdir d s1 s2 || framework_failure
+touch f || framework_failure_
+mkdir d s1 s2 || framework_failure_
 mkfifo_or_skip_ p
 
 

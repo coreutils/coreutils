@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ tail
 
-(echo 1; echo 2) > k || framework_failure
+(echo 1; echo 2) > k || framework_failure_
 
 
 sh -c 'read x; tail' < k > out || fail=1

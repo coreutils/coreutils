@@ -20,9 +20,9 @@
 print_ver_ mv
 
 for i in a b; do
-  echo $i > $i || framework_failure
+  echo $i > $i || framework_failure_
 done
-echo y > y || framework_failure
+echo y > y || framework_failure_
 
 mv -i a b < y >/dev/null 2>&1 || fail=1
 

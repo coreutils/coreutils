@@ -22,10 +22,10 @@ test=r-1
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir a a/a || framework_failure
-> b || framework_failure
+mkdir a a/a || framework_failure_
+> b || framework_failure_
 
-cat <<\EOF > $test.E || framework_failure
+cat <<\EOF > $test.E || framework_failure_
 removed directory: `a/a'
 removed directory: `a'
 removed `b'

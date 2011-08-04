@@ -20,14 +20,14 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir -p z || framework_failure
-cd z || framework_failure
-touch empty empty-u || framework_failure
+mkdir -p z || framework_failure_
+cd z || framework_failure_
+touch empty empty-u || framework_failure_
 echo not-empty > fu
 ln -s empty-f slink
 ln -s . slinkdot
-mkdir d du || framework_failure
-chmod u-w fu du empty-u || framework_failure
+mkdir d du || framework_failure_
+chmod u-w fu du empty-u || framework_failure_
 cd ..
 
 

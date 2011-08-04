@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir a b || framework_failure
-touch a/f b/f || framework_failure
+mkdir a b || framework_failure_
+touch a/f b/f || framework_failure_
 
 
 rm -r a b || fail=1

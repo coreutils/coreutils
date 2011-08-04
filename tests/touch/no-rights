@@ -21,11 +21,11 @@
 print_ver_ touch
 
 # Make sure t2 is newer than t1.
-touch -d '2000-01-01 00:00' t1 || framework_failure
-touch -d '2000-01-02 00:00' t2 || framework_failure
+touch -d '2000-01-01 00:00' t1 || framework_failure_
+touch -d '2000-01-02 00:00' t2 || framework_failure_
 
 set x `ls -t t1 t2`
-test "$*" = "x t2 t1" || framework_failure
+test "$*" = "x t2 t1" || framework_failure_
 
 
 chmod 0 t1

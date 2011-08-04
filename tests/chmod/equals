@@ -21,7 +21,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ chmod
 
-touch f || framework_failure
+touch f || framework_failure_
 
 
 expected_u=-rwx------

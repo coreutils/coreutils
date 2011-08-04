@@ -22,9 +22,9 @@ print_ver_ mv
 dir=toself-dir
 file=toself-file
 
-rm -rf $dir $file || framework_failure
-mkdir -p $dir/a/b || framework_failure
-touch $file || framework_failure
+rm -rf $dir $file || framework_failure_
+mkdir -p $dir/a/b || framework_failure_
+touch $file || framework_failure_
 
 
 # This mv command should fail.

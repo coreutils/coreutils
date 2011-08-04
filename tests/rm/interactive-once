@@ -21,12 +21,12 @@ test=interactive-once
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure
+mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure_
 touch file1-1 file2-1 file2-2 file2-3 file3-1 file3-2 file3-3 file3-4 \
-  || framework_failure
-echo y > $test.Iy || framework_failure
-echo n > $test.In || framework_failure
-rm -f out err || framework_failure
+  || framework_failure_
+echo y > $test.Iy || framework_failure_
+echo n > $test.In || framework_failure_
+rm -f out err || framework_failure_
 
 
 # The prompt has a trailing space, and no newline, so an extra

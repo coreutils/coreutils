@@ -21,9 +21,9 @@ print_ver_ ls touch
 
 date=1998-01-15
 
-touch -d "$date" c || framework_failure
-touch -d "$date" a || framework_failure
-touch -d "$date" b || framework_failure
+touch -d "$date" c || framework_failure_
+touch -d "$date" a || framework_failure_
+touch -d "$date" b || framework_failure_
 
 
 ls -1t a b c > out || fail=1

@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ chmod
 
-mkdir -p d/e || framework_failure
-chmod 0 d/e d || framework_failure
+mkdir -p d/e || framework_failure_
+chmod 0 d/e d || framework_failure_
 
 
 chmod u+rwx d d/e || fail=1

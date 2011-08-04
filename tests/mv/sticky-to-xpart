@@ -30,14 +30,14 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 # file from a sticky tmpdir to a directory owned by that user on
 # a different partition.
 
-mkdir t || framework_failure
-chmod a=rwx,o+t t || framework_failure
-echo > t/root-owned || framework_failure
-chmod a+r t/root-owned || framework_failure
-chown "$NON_ROOT_USERNAME" "$other_partition_tmpdir" || framework_failure
+mkdir t || framework_failure_
+chmod a=rwx,o+t t || framework_failure_
+echo > t/root-owned || framework_failure_
+chmod a+r t/root-owned || framework_failure_
+chown "$NON_ROOT_USERNAME" "$other_partition_tmpdir" || framework_failure_
 
 # We have to allow $NON_ROOT_USERNAME access to ".".
-chmod go+x . || framework_failure
+chmod go+x . || framework_failure_
 
 
 # Ensure that $NON_ROOT_USERNAME can access the required version of mv.

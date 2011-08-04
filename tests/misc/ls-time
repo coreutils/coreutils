@@ -32,15 +32,15 @@ u1='1998-01-14 11:00'
 u2='1998-01-14 12:00'
 u3='1998-01-14 13:00'
 
-touch -m -d "$t3" a || framework_failure
-touch -m -d "$t2" b || framework_failure
-touch -m -d "$t1" c || framework_failure
+touch -m -d "$t3" a || framework_failure_
+touch -m -d "$t2" b || framework_failure_
+touch -m -d "$t1" c || framework_failure_
 
-touch -a -d "$u3" c || framework_failure
-touch -a -d "$u2" b || framework_failure
+touch -a -d "$u3" c || framework_failure_
+touch -a -d "$u2" b || framework_failure_
 # Make sure A has ctime at least 1 second more recent than C's.
 sleep 2
-touch -a -d "$u1" a || framework_failure
+touch -a -d "$u1" a || framework_failure_
 
 
 # A has ctime more recent than C.
@@ -52,7 +52,7 @@ test "$*" = 'a c' || fail=1
 sleep 2
 
 # Create a link, updating c's ctime.
-ln c d || framework_failure
+ln c d || framework_failure_
 
 # Before we go any further, verify that touch's -m option works.
 set -- `ls --full -l a`
@@ -69,7 +69,7 @@ have been $t3.
 EOF
   #`
   ls --full -l a
-  framework_failure
+  framework_failure_
   ;;
 esac
 

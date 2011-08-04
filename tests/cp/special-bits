@@ -24,12 +24,12 @@
 print_ver_ cp
 require_root_
 
-touch a b c || framework_failure
-chmod u+sx,go= a || framework_failure
-chmod u=rwx,g=sx,o= b || framework_failure
-chmod a=r,ug+sx c || framework_failure
-chown $NON_ROOT_USERNAME . || framework_failure
-chmod u=rwx,g=rx,o=rx . || framework_failure
+touch a b c || framework_failure_
+chmod u+sx,go= a || framework_failure_
+chmod u=rwx,g=sx,o= b || framework_failure_
+chmod a=r,ug+sx c || framework_failure_
+chown $NON_ROOT_USERNAME . || framework_failure_
+chmod u=rwx,g=rx,o=rx . || framework_failure_
 
 
 cp -p a a2 || fail=1

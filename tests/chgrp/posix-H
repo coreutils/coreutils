@@ -24,11 +24,11 @@ set _ $groups; shift
 g1=$1
 g2=$2
 
-mkdir 1 2 3 || framework_failure
-touch 1/1F 2/2F 3/3F || framework_failure
-ln -s 1 1s || framework_failure
-ln -s ../3 2/2s || framework_failure
-chgrp -R $g1 1 2 3 || framework_failure
+mkdir 1 2 3 || framework_failure_
+touch 1/1F 2/2F 3/3F || framework_failure_
+ln -s 1 1s || framework_failure_
+ln -s ../3 2/2s || framework_failure_
+chgrp -R $g1 1 2 3 || framework_failure_
 
 
 chgrp --preserve-root -H -R $g2 1s 2 || fail=1

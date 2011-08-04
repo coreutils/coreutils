@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-touch f || framework_failure
-ln -s f slink || framework_failure
+touch f || framework_failure_
+ln -s f slink || framework_failure_
 
 
 # When listed explicitly:

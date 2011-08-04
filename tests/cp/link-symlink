@@ -22,7 +22,7 @@ print_ver_ cp
 # Check that the timestamps of the symlink are copied
 # if we're using hardlink to symlink emulation.
 touch file
-ln -s file link || framework_failure
+ln -s file link || framework_failure_
 touch -m -h -d 2011-01-01 link ||
   skip_ "Your system doesn't support updating symlink timestamps"
 case `stat --format=%y link` in

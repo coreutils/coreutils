@@ -20,7 +20,7 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir -p a/b || framework_failure
+mkdir -p a/b || framework_failure_
 chmod u-r a
 
 

@@ -23,7 +23,7 @@ print_ver_ mv
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 
-mkdir foo || framework_failure
+mkdir foo || framework_failure_
 
 
 mv foo/ "$other_partition_tmpdir/bar" || fail=1

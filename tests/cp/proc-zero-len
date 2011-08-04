@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-touch empty || framework_failure
+touch empty || framework_failure_
 
 f=/proc/cpuinfo
 test -r $f || f=empty

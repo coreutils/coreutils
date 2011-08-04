@@ -21,8 +21,8 @@ print_ver_ chmod
 
 umask 0
 file=f
-touch $file || framework_failure
-chmod 444 $file || framework_failure
+touch $file || framework_failure_
+chmod 444 $file || framework_failure_
 
 skip_if_setgid_
 

@@ -26,10 +26,10 @@ b=$(printf %031d 1)
 (mkdir $a \
    && cd $a \
    && seq --format=%031g 10000 |xargs touch \
-   && seq --format=d%030g 10000 |xargs mkdir ) || framework_failure
-cp -al $a $b || framework_failure
-mkdir e || framework_failure
-mv $a $b e || framework_failure
+   && seq --format=d%030g 10000 |xargs mkdir ) || framework_failure_
+cp -al $a $b || framework_failure_
+mkdir e || framework_failure_
+mv $a $b e || framework_failure_
 
 (ulimit -v 20000; cp -al e f) || fail=1
 

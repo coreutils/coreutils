@@ -19,11 +19,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-mkdir -p dir/subdir || framework_failure
-touch dir/subdir/file2 || framework_failure
-ln -s f symlink || framework_failure
+mkdir -p dir/subdir || framework_failure_
+touch dir/subdir/file2 || framework_failure_
+ln -s f symlink || framework_failure_
 
-cat > exp <<\EOF || framework_failure
+cat > exp <<\EOF || framework_failure_
 dir
 exp
 out

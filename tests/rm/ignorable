@@ -20,7 +20,7 @@
 print_ver_ rm
 skip_if_root_
 
-touch existing-non-dir || framework_failure
+touch existing-non-dir || framework_failure_
 
 
 # With coreutils-6.3, this would exit nonzero.  It should not.

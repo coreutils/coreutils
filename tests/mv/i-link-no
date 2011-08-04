@@ -19,13 +19,13 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir a b || framework_failure
-echo foo > a/foo || framework_failure
-ln a/foo a/bar || framework_failure
-echo FUBAR > b/FUBAR || framework_failure
-ln b/FUBAR b/bar || framework_failure
-chmod a-w b/bar || framework_failure
-echo n > no || framework_failure
+mkdir a b || framework_failure_
+echo foo > a/foo || framework_failure_
+ln a/foo a/bar || framework_failure_
+echo FUBAR > b/FUBAR || framework_failure_
+ln b/FUBAR b/bar || framework_failure_
+chmod a-w b/bar || framework_failure_
+echo n > no || framework_failure_
 
 
 mv a/bar a/foo b < no > out 2> err || fail=1

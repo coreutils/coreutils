@@ -25,7 +25,7 @@ require_sparse_support_
 # Make its size one larger than 128K, in order to tickle the
 # bug in coreutils-6.0.
 size=`expr 128 \* 1024 + 1`
-dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure
+dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure_
 
 
 cp --sparse=always sparse copy || fail=1

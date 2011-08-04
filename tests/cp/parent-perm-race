@@ -23,7 +23,7 @@ print_ver_ cp
 require_local_dir_
 
 umask 002
-mkdir mode ownership d || framework_failure
+mkdir mode ownership d || framework_failure_
 chmod g+s d 2>/dev/null # The cp test is valid either way.
 
 

@@ -25,8 +25,8 @@ skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
 . "$abs_srcdir/other-fs-tmpdir"
 
-touch k "$other_partition_tmpdir/k" || framework_failure
-chmod u-w "$other_partition_tmpdir" || framework_failure
+touch k "$other_partition_tmpdir/k" || framework_failure_
+chmod u-w "$other_partition_tmpdir" || framework_failure_
 
 
 mv -f k "$other_partition_tmpdir" 2> out && fail=1

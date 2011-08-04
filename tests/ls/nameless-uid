@@ -32,8 +32,8 @@ if test x$nameless_uid = x; then
   skip_ "couldn't find a nameless UID"
 fi
 
-touch f || framework_failure
-chown $nameless_uid f || framework_failure
+touch f || framework_failure_
+chown $nameless_uid f || framework_failure_
 
 
 set -- `ls -o f` || fail=1

@@ -19,12 +19,12 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ stat
 
-touch file || framework_failure
-mkdir dir || framework_failure
-ln -s file link1 || framework_failure
-ln -s dir link2 || framework_failure
+touch file || framework_failure_
+mkdir dir || framework_failure_
+ln -s file link1 || framework_failure_
+ln -s dir link2 || framework_failure_
 
-cat <<EOF > exp || framework_failure
+cat <<EOF > exp || framework_failure_
 link1
 symbolic link
 directory

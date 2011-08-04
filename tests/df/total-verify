@@ -21,7 +21,7 @@ print_ver_ df
 
 df || skip_ "df fails"
 
-cat <<\EOF > check-df || framework_failure
+cat <<\EOF > check-df || framework_failure_
 my ($total, $used, $avail) = (0, 0, 0);
 while (<>)
   {
@@ -52,9 +52,9 @@ EOF
 
 # Use --block-size=512 to keep df from printing rounded-to-kilobyte
 # numbers which wouldn't necessarily add up to the displayed total.
-df --total -P --block-size=512 > space || framework_failure
+df --total -P --block-size=512 > space || framework_failure_
 cat space  # this helps when debugging any test failure
-df --total -i -P               > inode || framework_failure
+df --total -i -P               > inode || framework_failure_
 cat inode
 
 $PERL check-df space || fail=1

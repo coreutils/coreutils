@@ -36,12 +36,12 @@ SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
 
 for d in $TOUCH_DIR_LIST; do
   rm -rf $d/a $d/b $d/c
-  > $d/a || framework_failure
-  test -f $d/a || framework_failure
-  > $d/b || framework_failure
-  test -f $d/b || framework_failure
-  > $d/c || framework_failure
-  test -f $d/c || framework_failure
+  > $d/a || framework_failure_
+  test -f $d/a || framework_failure_
+  > $d/b || framework_failure_
+  test -f $d/b || framework_failure_
+  > $d/c || framework_failure_
+  test -f $d/c || framework_failure_
 done
 
 echo sleeping for $SLEEP_SECONDS seconds...

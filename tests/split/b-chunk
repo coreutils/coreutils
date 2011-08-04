@@ -29,7 +29,7 @@ rm x??
 split -e -n 10 /dev/null || fail=1
 stat x?? 2>/dev/null && fail=1
 
-printf '1\n2\n3\n4\n5\n' > in || framework_failure
+printf '1\n2\n3\n4\n5\n' > in || framework_failure_
 
 split -n 3 in > out || fail=1
 split -n 1/3 in > b1 || fail=1

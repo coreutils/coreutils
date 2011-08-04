@@ -23,9 +23,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-echo abc > foo || framework_failure
-ln -s foo slink || framework_failure
-ln -s no-such-file no-file || framework_failure
+echo abc > foo || framework_failure_
+ln -s foo slink || framework_failure_
+ln -s no-such-file no-file || framework_failure_
 
 
 # This would fail in 4.1.5, not in 4.1.6.

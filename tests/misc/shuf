@@ -20,7 +20,7 @@
 print_ver_ shuf
 getlimits_
 
-seq 100 > in || framework_failure
+seq 100 > in || framework_failure_
 
 shuf in >out || fail=1
 
@@ -49,7 +49,7 @@ seq 1860 | shuf > /dev/null || fail=1
 
 # coreutils-6.12 and earlier would output a newline terminator, not \0.
 shuf --zero-terminated -i 1-1 > out || fail=1
-printf '1\0' > exp || framework_failure
+printf '1\0' > exp || framework_failure_
 cmp out exp || { fail=1; echo "missing NUL terminator?" 1>&2; }
 
 # Ensure shuf -n operates efficiently for small n. Before coreutils-8.13

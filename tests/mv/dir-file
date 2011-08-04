@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir -p dir/file || framework_failure
-> file || framework_failure
+mkdir -p dir/file || framework_failure_
+> file || framework_failure_
 
 
 # These should both fail, but until fileutils-4.0q only the second one did.

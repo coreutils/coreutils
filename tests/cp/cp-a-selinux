@@ -31,11 +31,11 @@ cleanup_() { cd /; umount "$cwd/mnt"; }
 ctx=root:object_r:tmp_t:s0
 
 # Check basic functionality - before check on fixed context mount
-touch c || framework_failure
-chcon $ctx c || framework_failure
-cp -a c d 2>err || framework_failure
-cp --preserve=context c e || framework_failure
-cp --preserve=all c f || framework_failure
+touch c || framework_failure_
+chcon $ctx c || framework_failure_
+cp -a c d 2>err || framework_failure_
+cp --preserve=context c e || framework_failure_
+cp --preserve=all c f || framework_failure_
 ls -Z d | grep $ctx || fail=1
 test -s err && fail=1   #there must be no stderr output for -a
 ls -Z e | grep $ctx || fail=1
@@ -52,11 +52,11 @@ mount -oloop,context=$ctx blob mnt           || skip=1
 test $skip = 1 \
   && skip_ "insufficient mount/ext2 support"
 
-cd mnt                                       || framework_failure
+cd mnt                                       || framework_failure_
 
-echo > f                                     || framework_failure
+echo > f                                     || framework_failure_
 
-echo > g                                     || framework_failure
+echo > g                                     || framework_failure_
 # /bin/cp from coreutils-6.7-3.fc7 would fail this test by letting cp
 # succeed (giving no diagnostics), yet leaving the destination file empty.
 cp -a f g 2>err || fail=1
@@ -85,7 +85,7 @@ grep "Operation not supported" err && fail=1
 # NFS mounted directory.  When doing that, I get this diagnostic:
 # cp: failed to set the security context of `g' to `system_u:object_r:nfs_t': \
 #   Operation not supported
-cat <<\EOF > exp || framework_failure=1
+cat <<\EOF > exp || framework_failure_
 cp: failed to set the security context of
 EOF
 

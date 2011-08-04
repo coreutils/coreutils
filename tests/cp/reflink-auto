@@ -22,9 +22,9 @@ print_ver_ cp
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 a_other="$other_partition_tmpdir/a"
-rm -f "$a_other" || framework_failure
+rm -f "$a_other" || framework_failure_
 
-echo non_zero_size > "$a_other" || framework_failure
+echo non_zero_size > "$a_other" || framework_failure_
 
 # we shouldn't be able to reflink() files on separate partitions
 cp --reflink      "$a_other" b && fail=1

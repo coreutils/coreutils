@@ -24,8 +24,8 @@ skip_if_root_
 # In this case, shred would try to rename the file 256^10 times
 # before terminating.
 file=0123456789
-touch $file || framework_failure
-chmod u-w $file || framework_failure
+touch $file || framework_failure_
+chmod u-w $file || framework_failure_
 
 
 # This would take so long that it appears to infloop

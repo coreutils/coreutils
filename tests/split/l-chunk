@@ -48,7 +48,7 @@ stat x?? 2>/dev/null && fail=1
 lines=\
 12345~1~12345~1~12345~1~12345~1~12345~~~12345~1~12345~1~12345~1~12345~1~12345~1~
 
-printf "%s" "$lines" | tr '~' '\n' > in || framework_failure
+printf "%s" "$lines" | tr '~' '\n' > in || framework_failure_
 
 echo 'split: 16: invalid chunk number' > exp
 split -n l/16/15 in 2>err && fail=1
@@ -60,9 +60,9 @@ printf '%s' "\
 06 08 08 02 06 08 08 02 06 08 08 10
 06 08 02 06 08 00 08 02 06 08 02 06 08 00 10
 06 00 08 00 02 06 00 02 06 00 08 00 01 07 00 02 06 00 08 00 02 16
-" > exp || framework_failure
+" > exp || framework_failure_
 
-sed 's/00 *//g' exp > exp.elide_empty || framework_failure
+sed 's/00 *//g' exp > exp.elide_empty || framework_failure_
 
 DEBUGGING=
 test "$DEBUGGING" && test "$VERBOSE" && set +x

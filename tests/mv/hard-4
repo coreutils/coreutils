@@ -18,8 +18,8 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
-touch a || framework_failure
-ln a b || framework_failure
+touch a || framework_failure_
+ln a b || framework_failure_
 
 
 mv a b || fail=1

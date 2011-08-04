@@ -27,18 +27,18 @@ print_ver_ ls
 # Skip this test unless "." is on a file system with useful d_type info.
 # FIXME: This uses "ls -p" to decide whether to test "ls" with other options,
 # but if ls's d_type code is buggy then "ls -p" might be buggy too.
-mkdir -p c/d || framework_failure
-chmod a-x c || framework_failure
+mkdir -p c/d || framework_failure_
+chmod a-x c || framework_failure_
 if test "X`ls -p c 2>&1`" != Xd/; then
   skip_ "'.' is not on a suitable file system for this test"
 fi
 
-mkdir d || framework_failure
-ln -s / d/s || framework_failure
-chmod 600 d || framework_failure
+mkdir d || framework_failure_
+ln -s / d/s || framework_failure_
+chmod 600 d || framework_failure_
 
-mkdir -p e/a2345 e/b || framework_failure
-chmod 600 e || framework_failure
+mkdir -p e/a2345 e/b || framework_failure_
+chmod 600 e || framework_failure_
 
 
 ls --file-type d > out || fail=1

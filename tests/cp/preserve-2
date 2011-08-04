@@ -22,7 +22,7 @@ print_ver_ cp
 # cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
 require_local_dir_
 
-touch f || framework_failure
+touch f || framework_failure_
 
 cp --preserve=mode,links f g || fail=1
 

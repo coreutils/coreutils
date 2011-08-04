@@ -25,8 +25,8 @@ expensive_
 # at the beginning and another set of 8 bytes at the end.
 # The rest will be NUL bytes.  On most modern systems, the following
 # creates a file that takes up only a few KB.  Here, du -sh says 16K.
-echo abcdefgh | tr -d '\n' > big || framework_failure
-echo 87654321 | tr -d '\n' > tmp || framework_failure
+echo abcdefgh | tr -d '\n' > big || framework_failure_
+echo 87654321 | tr -d '\n' > tmp || framework_failure_
 # Seek 4GB - 8
 dd bs=1 seek=4294967288 if=tmp of=big 2> err || dd_failed=1
 if test "$dd_failed" = 1; then

@@ -20,7 +20,7 @@
 print_ver_ ls
 
 for mon in $(seq -w 12); do
-    touch -d"+$mon month" $mon.ts || framework_failure
+    touch -d"+$mon month" $mon.ts || framework_failure_
 done
 
 

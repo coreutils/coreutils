@@ -23,7 +23,7 @@ print_ver_ printenv
 # printenv as a builtin, so we must invoke it via "env".
 # But beware of $_, set by many shells to the last command run.
 # Also, filter out LD_PRELOAD, which is set when running under valgrind.
-env | grep -Ev '^(_|LD_PRELOAD=)' > exp || framework_failure
+env | grep -Ev '^(_|LD_PRELOAD=)' > exp || framework_failure_
 env -- printenv | grep -Ev '^(_|LD_PRELOAD=)' > out || fail=1
 compare exp out || fail=1
 
@@ -38,7 +38,7 @@ fi
 env -- printenv ENV_TEST > out
 test $? = 1 || fail=1
 test -s out && fail=1
-echo a > exp || framework_failure
+echo a > exp || framework_failure_
 ENV_TEST=a env -- printenv ENV_TEST > out || fail=1
 compare exp out || fail=1
 
@@ -46,7 +46,7 @@ compare exp out || fail=1
 ENV_TEST1=a ENV_TEST2=b env -- printenv ENV_TEST2 ENV_TEST1 ENV_TEST2 > out \
   || fail=1
 ENV_TEST1=a ENV_TEST2=b env -- printenv ENV_TEST1 ENV_TEST2 >> out || fail=1
-cat <<EOF > exp || framework_failure
+cat <<EOF > exp || framework_failure_
 b
 a
 b
@@ -60,7 +60,7 @@ ENV_TEST1=a env -- printenv ENV_TEST2 ENV_TEST1 > out
 test $? = 1 || fail=1
 ENV_TEST1=a env -- printenv ENV_TEST1 ENV_TEST2 >> out
 test $? = 1 || fail=1
-cat <<EOF > exp || framework_failure
+cat <<EOF > exp || framework_failure_
 a
 a
 EOF
@@ -68,7 +68,7 @@ compare exp out || fail=1
 
 # Non-standard environment variable name.  Shells won't create it, but
 # env can, and printenv must be able to deal with it.
-echo b > exp || framework_failure
+echo b > exp || framework_failure_
 env -- -a=b printenv -- -a > out || fail=1
 compare exp out || fail=1
 

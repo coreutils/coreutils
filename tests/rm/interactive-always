@@ -22,11 +22,11 @@ test=interactive-always
 print_ver_ rm
 
 touch file1-1 file1-2 file2-1 file2-2 file3-1 file3-2 file4-1 file4-2 \
-  || framework_failure
+  || framework_failure_
 # If asked, answer no to first question, then yes to second.
 echo 'n
-y' > $test.I || framework_failure
-rm -f out err || framework_failure
+y' > $test.I || framework_failure_
+rm -f out err || framework_failure_
 
 
 # The prompt has a trailing space, and no newline, so an extra

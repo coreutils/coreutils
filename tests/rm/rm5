@@ -20,14 +20,14 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir -p d/e || framework_failure
-cat <<EOF > in || framework_failure
+mkdir -p d/e || framework_failure_
+cat <<EOF > in || framework_failure_
 y
 y
 y
 EOF
 
-cat <<\EOF > exp || framework_failure
+cat <<\EOF > exp || framework_failure_
 rm: descend into directory `d'
 rm: remove directory `d/e'
 rm: remove directory `d'

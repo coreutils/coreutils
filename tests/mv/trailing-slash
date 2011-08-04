@@ -22,7 +22,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir foo || framework_failure
+mkdir foo || framework_failure_
 
 
 mv foo/ bar || fail=1
@@ -30,8 +30,8 @@ mv foo/ bar || fail=1
 # mv and cp would misbehave for coreutils versions [5.3.0..5.97], 6.0 and 6.1
 for cmd in mv 'cp -r'; do
   for opt in '' -T -u; do
-    rm -rf d e || framework_failure
-    mkdir d    || framework_failure
+    rm -rf d e || framework_failure_
+    mkdir d    || framework_failure_
 
     $cmd $opt d e/ || fail=1
     if test "$cmd" = mv; then

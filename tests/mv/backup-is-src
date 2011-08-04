@@ -24,9 +24,9 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 a="$other_partition_tmpdir/a"
 a2="$other_partition_tmpdir/a~"
 
-rm -f "$a" "$a2" || framework_failure
-echo a > "$a" || framework_failure
-echo a2 > "$a2" || framework_failure
+rm -f "$a" "$a2" || framework_failure_
+echo a > "$a" || framework_failure_
+echo a2 > "$a2" || framework_failure_
 
 # This mv command should exit nonzero.
 mv --b=simple "$a2" "$a" > out 2>&1 && fail=1

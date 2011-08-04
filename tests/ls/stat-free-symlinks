@@ -20,9 +20,9 @@
 print_ver_ ls
 require_strace_ stat
 
-touch x || framework_failure
-chmod a+x x || framework_failure
-ln -s x link-to-x || framework_failure
+touch x || framework_failure_
+chmod a+x x || framework_failure_
+ln -s x link-to-x || framework_failure_
 
 
 # ls from coreutils 6.9 would unnecessarily stat a symlink in an unusual case:

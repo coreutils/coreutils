@@ -20,7 +20,7 @@
 print_ver_ mkdir
 skip_if_setgid_
 
-mkdir -m 700 e-dir || framework_failure
+mkdir -m 700 e-dir || framework_failure_
 
 
 # Make sure `mkdir -p existing-dir' succeeds

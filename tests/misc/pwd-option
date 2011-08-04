@@ -19,16 +19,16 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ pwd
 
-mkdir -p a/b || framework_failure
-ln -s a/b c || framework_failure
+mkdir -p a/b || framework_failure_
+ln -s a/b c || framework_failure_
 base=$(env -- pwd)
 
 # Remove any logical paths from $PWD.
-cd "$base" || framework_failure
-test "x$PWD" = "x$base" || framework_failure
+cd "$base" || framework_failure_
+test "x$PWD" = "x$base" || framework_failure_
 
 # Enter a logical directory.
-cd c || framework_failure
+cd c || framework_failure_
 test "x$PWD" = "x$base/c" || skip_ "cd does not properly update \$PWD"
 
 env -- pwd -L > out || fail=1

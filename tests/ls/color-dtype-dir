@@ -25,9 +25,9 @@ print_ver_ ls
 # Don't let a different umask perturb the results.
 umask 22
 
-mkdir d other-writable sticky || framework_failure
-chmod o+w other-writable || framework_failure
-chmod o+t sticky || framework_failure
+mkdir d other-writable sticky || framework_failure_
+chmod o+w other-writable || framework_failure_
+chmod o+t sticky || framework_failure_
 
 
 ls --color=always > out || fail=1

@@ -56,9 +56,9 @@ xattr_name="user.foo"
 xattr_value="bar"
 xattr_pair="$xattr_name=\"$xattr_value\""
 
-echo test > xattr/a || framework_failure
+echo test > xattr/a || framework_failure_
 getfattr -d xattr/a >out_a || skip_ "failed to get xattr of file"
-grep -F "$xattr_pair" out_a >/dev/null && framework_failure
+grep -F "$xattr_pair" out_a >/dev/null && framework_failure_
 setfattr -n "$xattr_name" -v "$xattr_value" xattr/a >out_a \
   || skip_ "failed to set xattr of file"
 getfattr -d xattr/a >out_a || skip_ "failed to get xattr of file"

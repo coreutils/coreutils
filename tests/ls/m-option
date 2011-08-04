@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-seq 2000 > b || framework_failure
-touch a || framework_failure
+seq 2000 > b || framework_failure_
+touch a || framework_failure_
 
 
 # Before coreutils-5.1.1, the following would output a space after the comma.

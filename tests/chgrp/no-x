@@ -26,8 +26,8 @@ set _ $groups; shift
 g1=$1
 g2=$2
 
-mkdir -p d/no-x/y || framework_failure
-chmod u=rw d/no-x || framework_failure
+mkdir -p d/no-x/y || framework_failure_
+chmod u=rw d/no-x || framework_failure_
 
 
 # This must exit nonzero.

@@ -21,8 +21,8 @@
 print_ver_ chmod
 skip_if_root_
 
-mkdir -p d/no-x/y a/b || framework_failure
-chmod u=rw d/no-x || framework_failure
+mkdir -p d/no-x/y a/b || framework_failure_
+chmod u=rw d/no-x || framework_failure_
 
 
 # This must exit nonzero.

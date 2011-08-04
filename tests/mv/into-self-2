@@ -27,8 +27,8 @@ file="$other_partition_tmpdir/file"
 symlink=symlink
 
 
-echo whatever > $file || framework_failure
-ln -s $file $symlink || framework_failure
+echo whatever > $file || framework_failure_
+ln -s $file $symlink || framework_failure_
 
 # This mv command should exit nonzero.
 mv $symlink $file > out 2>&1 && fail=1

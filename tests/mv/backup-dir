@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir A B || framework_failure
-touch X Y || framework_failure
+mkdir A B || framework_failure_
+touch X Y || framework_failure_
 
 
 # Before coreutils-6.2, the " (backup: `B.~1~')" suffix was not printed.

@@ -28,8 +28,8 @@ require_strace_ unlink
 #   $ rm -f a b b2; touch a b; ln b b2; strace -e unlink ./mv a b
 #   $
 
-touch a b || framework_failure
-ln b b2 || framework_failure
+touch a b || framework_failure_
+ln b b2 || framework_failure_
 
 
 strace -qe unlink mv a b > out 2>&1 || fail=1

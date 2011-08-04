@@ -23,9 +23,9 @@ skip_if_root_
 dir=dir
 file=file
 
-rm -rf $dir $file || framework_failure
-mkdir -p $dir || framework_failure
-echo foo > $file || framework_failure
+rm -rf $dir $file || framework_failure_
+mkdir -p $dir || framework_failure_
+echo foo > $file || framework_failure_
 
 ginstall $file $dir || fail=1
 # Make sure the source file still exists.

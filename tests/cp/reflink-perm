@@ -23,10 +23,10 @@ print_ver_ cp
 : > time_check
 : > file
 ts='2009-08-28 19:00'
-touch -d "$ts" file || framework_failure
+touch -d "$ts" file || framework_failure_
 test time_check -nt file || skip_ "The system clock is wrong"
 
-chmod a=rwx file || framework_failure
+chmod a=rwx file || framework_failure_
 umask 077
 cp --reflink=auto --preserve file copy || fail=1
 

@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir dir || framework_failure
-touch file || framework_failure
+mkdir dir || framework_failure_
+touch file || framework_failure_
 
 
 # In 4.0.35, this cp invocation silently succeeded.

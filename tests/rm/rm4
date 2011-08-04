@@ -20,7 +20,7 @@
 print_ver_ rm
 skip_if_root_
 
-mkdir dir || framework_failure
+mkdir dir || framework_failure_
 
 
 # This should fail.

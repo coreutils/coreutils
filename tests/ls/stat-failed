@@ -21,9 +21,9 @@
 print_ver_ ls
 skip_if_root_
 
-mkdir d || framework_failure
-ln -s / d/s || framework_failure
-chmod 600 d || framework_failure
+mkdir d || framework_failure_
+ln -s / d/s || framework_failure_
+chmod 600 d || framework_failure_
 
 
 ls -Log d > out

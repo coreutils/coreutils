@@ -55,7 +55,7 @@ for ex in '' ex=:; do
 dir:
 \e[${code}mcap_neg\e[0m
 cap_pos
-" > out_ok || framework_failure
+" > out_ok || framework_failure_
 
   compare out out_ok || fail=1
 done

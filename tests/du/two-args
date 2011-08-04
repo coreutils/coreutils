@@ -23,11 +23,11 @@ print_ver_ du
 # Run this test from a sub-directory one level deeper than normal,
 # so that the "du .." below doesn't traverse sibling directories
 # that may be inaccessible due concurrently-running tests.
-mkdir sub || framework_failure
-cd sub || framework_failure
+mkdir sub || framework_failure_
+cd sub || framework_failure_
 
 t=t
-mkdir -p $t/1 $t/2 || framework_failure
+mkdir -p $t/1 $t/2 || framework_failure_
 
 test -d $t || fail=1
 du $t/1 $t/2 > /dev/null || fail=1

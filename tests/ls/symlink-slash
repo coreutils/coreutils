@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-mkdir dir || framework_failure
-ln -s dir symlink || framework_failure
+mkdir dir || framework_failure_
+ln -s dir symlink || framework_failure_
 
 set `ls -l symlink/`
 

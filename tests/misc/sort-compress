@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
 
-seq -w 2000 > exp || framework_failure
-tac exp > in || framework_failure
+seq -w 2000 > exp || framework_failure_
+tac exp > in || framework_failure_
 
 # This should force the use of temp files
 sort -S 1k in > out || fail=1

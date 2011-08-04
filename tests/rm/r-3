@@ -26,8 +26,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir t || framework_failure
-cd t || framework_failure
+mkdir t || framework_failure_
+cd t || framework_failure_
 
 # Create 500 files (20 * 25).
 for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j; do
@@ -35,12 +35,12 @@ for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j; do
   for j in a b c d e f g h i j k l m n o p q r s t u v w x y; do
     files="$files $i$j"
   done
-  touch $files || framework_failure
+  touch $files || framework_failure_
 done
 
-test -f 0a || framework_failure
-test -f by || framework_failure
-cd .. || framework_failure
+test -f 0a || framework_failure_
+test -f by || framework_failure_
+cd .. || framework_failure_
 
 rm -rf t || fail=1
 test -d t && fail=1

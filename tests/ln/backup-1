@@ -22,7 +22,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ln
 
-touch a b || framework_failure
+touch a b || framework_failure_
 
 ln b b~ || fail=1
 ln -f --b=simple a b || fail=1

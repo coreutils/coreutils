@@ -29,13 +29,13 @@ mkdir d           &&
   ln -s f d/slink &&
   chmod a-w d     &&
   ok=1
-test $ok = 1 || framework_failure
+test $ok = 1 || framework_failure_
 
 mkdir e           &&
   ln -s f e/slink &&
   chmod a-w e     &&
   ok=1
-test $ok = 1 || framework_failure
+test $ok = 1 || framework_failure_
 
 
 rm -rf d/f 2> out && fail=1

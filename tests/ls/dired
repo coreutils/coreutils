@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-mkdir dir || framework_failure
+mkdir dir || framework_failure_
 
 
 LC_MESSAGES=C ls -lR --dired dir > out || fail=1

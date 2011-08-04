@@ -44,7 +44,7 @@ df -T -t ext3 -t ext4dev -t ext4 . \
   || skip_ 'this test runs only on an ext3 or ext4 file system'
 
 # Skip if there are too few inodes free.  Require some slack.
-free_inodes=$(stat -f --format=%d .) || framework_failure
+free_inodes=$(stat -f --format=%d .) || framework_failure_
 min_free_inodes=$(expr 12 \* $n / 10)
 test $min_free_inodes -lt $free_inodes \
   || skip_ "too few free inodes on '.': $free_inodes;" \
@@ -59,7 +59,7 @@ mkdir d &&
     test -f $n &&
   cd .. &&
   ok=1
-test $ok = 1 || framework_failure
+test $ok = 1 || framework_failure_
 setup_duration=$(expr $(date +%s) - $start)
 echo creating a $n-entry directory took $setup_duration seconds
 

@@ -24,7 +24,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir a dir || framework_failure
+mkdir a dir || framework_failure_
 
 
 # This command should exit nonzero.

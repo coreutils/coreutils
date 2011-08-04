@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ split
 
-printf '1\n2\n3\n4\n5\n' > in || framework_failure
+printf '1\n2\n3\n4\n5\n' > in || framework_failure_
 
 split --lines=2 in > out || fail=1
 cat <<\EOF > exp-1

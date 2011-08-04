@@ -23,7 +23,7 @@ require_membership_in_two_groups_
 set _ $groups; shift
 g2=$2
 
-mkdir d && touch f && ln -s ../f d/s || framework_failure
+mkdir d && touch f && ln -s ../f d/s || framework_failure_
 
 
 g_init=`stat --printf=%g f`

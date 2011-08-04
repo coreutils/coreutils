@@ -100,8 +100,8 @@ for i in $(seq 1 2 21); do
       #   j: 6 extents found
 
       # exclude the physical block numbers; they always differ
-      filefrag -v j1 > ff1 || framework_failure
-      filefrag -vs j2 > ff2 || framework_failure
+      filefrag -v j1 > ff1 || framework_failure_
+      filefrag -vs j2 > ff2 || framework_failure_
       { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
         || {
              warn_ ignoring filefrag-reported extent map differences

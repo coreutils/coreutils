@@ -34,12 +34,12 @@
 print_ver_ cp
 skip_if_root_
 
-mkdir -p x dst/x || framework_failure
-touch dst/x/b || framework_failure
+mkdir -p x dst/x || framework_failure_
+touch dst/x/b || framework_failure_
 chmod a-w dst/x
-touch a || framework_failure
-ln a x/b || framework_failure
-ln a c || framework_failure
+touch a || framework_failure_
+ln a x/b || framework_failure_
+ln a c || framework_failure_
 
 
 # ======================================

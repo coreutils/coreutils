@@ -19,9 +19,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ wc
 
-echo 2 > 2b || framework_failure
-echo 2 words > 2w || framework_failure
-printf '2b\n2w\n' |tr '\n' '\0' > names || framework_failure
+echo 2 > 2b || framework_failure_
+echo 2 words > 2w || framework_failure_
+printf '2b\n2w\n' |tr '\n' '\0' > names || framework_failure_
 
 
 wc --files0-from=names > out || fail=1

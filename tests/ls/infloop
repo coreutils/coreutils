@@ -20,15 +20,15 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ls
 
-mkdir loop || framework_failure
-ln -s ../loop loop/sub || framework_failure
+mkdir loop || framework_failure_
+ln -s ../loop loop/sub || framework_failure_
 
-cat <<\EOF > exp-out || framework_failure
+cat <<\EOF > exp-out || framework_failure_
 loop:
 sub
 EOF
 
-cat <<\EOF > exp-err || framework_failure
+cat <<\EOF > exp-err || framework_failure_
 ls: loop/sub: not listing already-listed directory
 EOF
 

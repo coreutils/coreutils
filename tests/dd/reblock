@@ -20,14 +20,14 @@
 print_ver_ dd
 
 # 2 short reads -> 1 full write + 1 partial write
-cat <<\EOF > exp-reblock || framework_failure
+cat <<\EOF > exp-reblock || framework_failure_
 0+2 records in
 1+1 records out
 4 bytes (4 B) copied
 EOF
 
 # 2 short reads -> 2 partial writes
-cat <<\EOF > exp-no-reblock || framework_failure
+cat <<\EOF > exp-no-reblock || framework_failure_
 0+2 records in
 0+2 records out
 4 bytes (4 B) copied

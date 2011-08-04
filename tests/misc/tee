@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ tee
 
-echo line >sample || framework_failure
-nums=`seq 9` || framework_failure
+echo line >sample || framework_failure_
+nums=`seq 9` || framework_failure_
 
 for n in 0 $nums; do
         files=`seq $n`

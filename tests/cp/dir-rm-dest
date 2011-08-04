@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir d e || framework_failure
+mkdir d e || framework_failure_
 
 # Do it once with no destination...
 cp -R --remove-destination d e || fail=1

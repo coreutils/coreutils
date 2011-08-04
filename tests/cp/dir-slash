@@ -20,8 +20,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir dir1 dir2 || framework_failure
-touch dir1/file || framework_failure
+mkdir dir1 dir2 || framework_failure_
+touch dir1/file || framework_failure_
 
 cp -R dir1/ dir2 || fail=1
 

@@ -23,10 +23,10 @@ print_ver_ cp mv
 skip_if_root_
 
 for i in a b c d e f g h; do
-  echo $i > $i || framework_failure
+  echo $i > $i || framework_failure_
 done
-chmod 0 b d f h || framework_failure
-echo y > y || framework_failure
+chmod 0 b d f h || framework_failure_
+echo y > y || framework_failure_
 
 mv -if a b || fail=1
 mv -fi c d < y >/dev/null 2>&1 || fail=1

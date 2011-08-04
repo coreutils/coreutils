@@ -20,11 +20,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-mkdir -p d/sub empty src d2/sub e2 || framework_failure
-touch f || framework_failure
+mkdir -p d/sub empty src d2/sub e2 || framework_failure_
+touch f || framework_failure_
 
 # Skip this test if there's an underlying kernel bug.
-mkdir a b b/a || framework_failure
+mkdir a b b/a || framework_failure_
 
 mv a b ||
   skip_ "your kernel's rename syscall is buggy"

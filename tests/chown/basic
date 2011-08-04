@@ -20,7 +20,7 @@
 print_ver_ chgrp
 require_root_
 
-touch f || framework_failure
+touch f || framework_failure_
 
 chown -R --preserve-root 0:1 f
 

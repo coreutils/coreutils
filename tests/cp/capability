@@ -31,8 +31,8 @@ grep '^#define HAVE_CAP 1' $CONFIG_HEADER > /dev/null \
   || skip_ "getcap utility not found"
 
 
-touch file || framework_failure
-chown $NON_ROOT_USERNAME file || framework_failure
+touch file || framework_failure_
+chown $NON_ROOT_USERNAME file || framework_failure_
 
 setcap 'cap_net_bind_service=ep' file ||
   skip_ "setcap doesn't work"

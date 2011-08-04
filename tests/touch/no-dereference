@@ -19,9 +19,9 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ touch
 
-ln -s nowhere dangling || framework_failure
-touch file || framework_failure
-ln -s file link || framework_failure
+ln -s nowhere dangling || framework_failure_
+touch file || framework_failure_
+ln -s file link || framework_failure_
 
 
 # These first tests should work on every platform.

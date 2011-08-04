@@ -22,7 +22,7 @@ print_ver_ ptx
 # Using a long file name makes an abort more likely.
 # Even with no file name, valgrind detects the buffer overrun.
 f=01234567890123456789012345678901234567890123456789
-touch $f empty || framework_failure
+touch $f empty || framework_failure_
 
 
 # Specifying a regular expression ending in a lone backslash

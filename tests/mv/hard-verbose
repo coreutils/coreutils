@@ -19,8 +19,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mv
 
-touch x || framework_failure
-ln x y || framework_failure
+touch x || framework_failure_
+ln x y || framework_failure_
 
 
 mv --verbose x y > out || fail=1

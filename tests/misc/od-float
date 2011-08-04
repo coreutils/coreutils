@@ -29,7 +29,7 @@ export LC_ALL=C
 # on x86: sometimes there was no space between the columns.
 
 set x $(echo aaaabaaa | tr ab '\376\377' | od -t fF) ||
-  framework_failure
+  framework_failure_
 case "$*" in
 *0-*) fail=1;;
 esac
@@ -38,7 +38,7 @@ case $3,$4 in
 esac
 
 set x $(echo aaaaaaaabaaaaaaa | tr ab '\376\377' | od -t fD) ||
-  framework_failure
+  framework_failure_
 case "$*" in
 *0-*) fail=1;;
 esac
@@ -47,7 +47,7 @@ case $3,$4 in
 esac
 
 set x $(echo aaaaaaaaaaaaaaaabaaaaaaaaaaaaaaa | tr ab '\376\377' | od -t fL) ||
-  framework_failure
+  framework_failure_
 case "$*" in
 *0-*) fail=1;;
 esac

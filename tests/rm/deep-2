@@ -24,18 +24,18 @@ print_ver_ rm
 # the offending euidaccess_stat call.
 skip_if_root_
 
-mkdir x || framework_failure
-cd x || framework_failure
+mkdir x || framework_failure_
+cd x || framework_failure_
 
 # Construct a hierarchy containing a relative file with a name
 : ${PERL=perl}
 $PERL \
     -e 'my $d = "x" x 200; foreach my $i (1..52)' \
     -e '  { mkdir ($d, 0700) && chdir $d or die "$!" }' \
-  || framework_failure
+  || framework_failure_
 
-cd .. || framework_failure
-echo n > no || framework_failure
+cd .. || framework_failure_
+echo n > no || framework_failure_
 
 rm ---presume-input-tty -r x < no > out || fail=1
 

@@ -20,7 +20,7 @@
 print_ver_ pathchk
 skip_if_root_
 
-touch file || framework_failure
+touch file || framework_failure_
 
 
 # This should exit nonzero.  Before 2.0.13, it gave a diagnostic,

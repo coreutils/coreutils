@@ -21,12 +21,12 @@
 print_ver_ rm
 require_root_
 
-mkdir d || framework_failure
-touch d/f || framework_failure
-chown -R $NON_ROOT_USERNAME d || framework_failure
+mkdir d || framework_failure_
+touch d/f || framework_failure_
+chown -R $NON_ROOT_USERNAME d || framework_failure_
 
 # Ensure that non-root can access files in root-owned ".".
-chmod go=x . || framework_failure
+chmod go=x . || framework_failure_
 
 
 # This must fail, since `.' is not writable by $NON_ROOT_USERNAME.

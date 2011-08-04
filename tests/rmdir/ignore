@@ -20,7 +20,7 @@
 print_ver_ rmdir
 
 cwd=`pwd`
-mkdir -p "$cwd/a/b/c" "$cwd/a/x" || framework_failure
+mkdir -p "$cwd/a/b/c" "$cwd/a/x" || framework_failure_
 
 rmdir -p --ignore-fail-on-non-empty "$cwd/a/b/c" || fail=1
 # $cwd/a/x should remain

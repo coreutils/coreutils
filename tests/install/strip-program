@@ -21,11 +21,11 @@ print_ver_ ginstall
 
 working_umask_or_skip_
 
-cat <<EOF > b || framework_failure
+cat <<EOF > b || framework_failure_
 #!$PREFERABLY_POSIX_SHELL
 sed s/b/B/ \$1 > \$1.t && mv \$1.t \$1
 EOF
-chmod a+x b || framework_failure
+chmod a+x b || framework_failure_
 
 
 echo abc > src || fail=1

@@ -20,11 +20,11 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-touch file || framework_failure
-ln -s file a || framework_failure
-ln -s file b || framework_failure
-ln -s no-such-file c || framework_failure
-ln -s no-such-file d || framework_failure
+touch file || framework_failure_
+ln -s file a || framework_failure_
+ln -s file b || framework_failure_
+ln -s no-such-file c || framework_failure_
+ln -s no-such-file d || framework_failure_
 
 cp --update --no-dereference a b || fail=1
 cp --update --no-dereference c d || fail=1

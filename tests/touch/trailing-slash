@@ -19,12 +19,12 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ touch
 
-ln -s nowhere dangling || framework_failure
-ln -s loop loop || framework_failure
-touch file || framework_failure
-ln -s file link1 || framework_failure
-mkdir dir || framework_failure
-ln -s dir link2 || framework_failure
+ln -s nowhere dangling || framework_failure_
+ln -s loop loop || framework_failure_
+touch file || framework_failure_
+ln -s file link1 || framework_failure_
+mkdir dir || framework_failure_
+ln -s dir link2 || framework_failure_
 
 
 # Trailing slash can only appear on directory or symlink-to-directory.

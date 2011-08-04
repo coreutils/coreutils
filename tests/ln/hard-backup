@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ ln
 
-touch f || framework_failure
+touch f || framework_failure_
 
 
 ln --backup f f 2> out && fail=1

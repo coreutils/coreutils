@@ -19,10 +19,10 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir src-dir dest-dir || framework_failure
-echo f > f || framework_failure
-ln -s f slink || framework_failure
-ln -s no-such-file src-dir/slink || framework_failure
+mkdir src-dir dest-dir || framework_failure_
+echo f > f || framework_failure_
+ln -s f slink || framework_failure_
+ln -s no-such-file src-dir/slink || framework_failure_
 
 
 cp -H -R slink src-dir dest-dir || fail=1

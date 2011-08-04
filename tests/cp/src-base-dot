@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-mkdir x y || framework_failure
+mkdir x y || framework_failure_
 
 
 cd y

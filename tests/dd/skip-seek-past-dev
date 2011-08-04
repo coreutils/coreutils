@@ -33,7 +33,7 @@ get_device_size() {
 
 # Get path to device the current dir is on.
 # Note df can only get fs size, not device size.
-device=$(df -P . | tail -n1 | cut -d' ' -f1) || framework_failure
+device=$(df -P . | tail -n1 | cut -d' ' -f1) || framework_failure_
 
 dev_size=$(get_device_size "$device") ||
   skip_ "failed to determine size of $device"
@@ -45,14 +45,14 @@ timeout 10 dd bs=1 skip=$DEV_OFLOW count=0 status=noxfer < "$device" 2> err
 test "$?" = "1" || fail=1
 echo "dd: \`standard input': cannot skip: Invalid argument
 0+0 records in
-0+0 records out" > err_ok || framework_failure
+0+0 records out" > err_ok || framework_failure_
 compare err_ok err || fail=1
 
 timeout 10 dd bs=1 seek=$DEV_OFLOW count=0 status=noxfer > "$device" 2> err
 test "$?" = "1" || fail=1
 echo "dd: \`standard output': cannot seek: Invalid argument
 0+0 records in
-0+0 records out" > err_ok || framework_failure
+0+0 records out" > err_ok || framework_failure_
 compare err_ok err || fail=1
 
 Exit $fail

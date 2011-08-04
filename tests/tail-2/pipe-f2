@@ -22,7 +22,7 @@ print_ver_ tail
 mkfifo_or_skip_ fifo
 
 echo 1 > fifo &
-echo 1 > exp || framework_failure
+echo 1 > exp || framework_failure_
 
 timeout 10 tail -f fifo > out
 test $? = 124 || fail=1

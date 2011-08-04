@@ -21,8 +21,8 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
-mkdir dir || framework_failure
-echo y > y || framework_failure
+mkdir dir || framework_failure_
+echo y > y || framework_failure_
 
 
 # This must fail.

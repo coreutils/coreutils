@@ -66,17 +66,17 @@ for case in $cases; do
 
   case $files in
   '')
-    touch -- $all_files || framework_failure
+    touch -- $all_files || framework_failure_
     chmod $args 2>/dev/null && fail=1
     ;;
   ?*)
-    touch -- $files || framework_failure
+    touch -- $files || framework_failure_
     chmod $args || fail=1
     for file in $files; do
       # Test for misparsing args by creating all $files but $file.
       # chmod has a bug if it succeeds even though $file is absent.
       rm -f -- $all_files && touch -- $files && rm -- $file \
-          || framework_failure
+          || framework_failure_
       chmod $args 2>/dev/null && fail=1
     done
     ;;

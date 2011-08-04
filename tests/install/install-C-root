@@ -27,7 +27,7 @@ g1=1
 g2=2
 
 
-echo test > a || framework_failure
+echo test > a || framework_failure_
 echo "\`a' -> \`b'" > out_installed_first
 echo "removed \`b'
 \`a' -> \`b'" > out_installed_second
