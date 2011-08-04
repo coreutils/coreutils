@@ -86,8 +86,14 @@ struct seq
     struct line **lines;
   };
 
-/* The previous line read from each file. */
+/* The previous line read from each file.  */
 static struct line *prevline[2] = {NULL, NULL};
+
+/* The number of lines read from each file.  */
+static uintmax_t line_no[2] = {0, 0};
+
+/* The input file names.  */
+static char *g_names[2];
 
 /* This provides an extra line buffer for each file.  We need these if we
    try to read two consecutive lines into the same buffer, since we don't
@@ -384,12 +390,23 @@ check_order (const struct line *prev,
           size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
           if (keycmp (prev, current, join_field, join_field) > 0)
             {
+              /* Exclude any trailing newline. */
+              size_t len = current->buf.length;
+              if (0 < len && current->buf.buffer[len - 1] == '\n')
+                --len;
+
+              /* If the offending line is longer than INT_MAX, output
+                 only the first INT_MAX bytes in this diagnostic.  */
+              len = MIN (INT_MAX, len);
+
               error ((check_input_order == CHECK_ORDER_ENABLED
                       ? EXIT_FAILURE : 0),
-                     0, _("file %d is not in sorted order"), whatfile);
+                     0, _("%s:%ju: is not sorted: %.*s"),
+                     g_names[whatfile - 1], line_no[whatfile - 1],
+                     (int) len, current->buf.buffer);
 
-              /* If we get to here, the message was just a warning, but we
-                 want only to issue it once. */
+              /* If we get to here, the message was merely a warning.
+                 Arrange to issue it only once per file.  */
               issued_disorder_warning[whatfile-1] = true;
             }
         }
@@ -436,6 +453,7 @@ get_line (FILE *fp, struct line **linep, int which)
       freeline (line);
       return false;
     }
+  ++line_no[which - 1];
 
   xfields (line);
 
@@ -980,7 +998,6 @@ main (int argc, char **argv)
   int prev_optc_status = MUST_BE_OPERAND;
   int operand_status[2];
   int joption_count[2] = { 0, 0 };
-  char *names[2];
   FILE *fp1, *fp2;
   int optc;
   int nfiles = 0;
@@ -1100,7 +1117,7 @@ main (int argc, char **argv)
           break;
 
         case 1:		/* Non-option argument.  */
-          add_file_name (optarg, names, operand_status, joption_count,
+          add_file_name (optarg, g_names, operand_status, joption_count,
                          &nfiles, &prev_optc_status, &optc_status);
           break;
 
@@ -1122,7 +1139,7 @@ main (int argc, char **argv)
   /* Process any operands after "--".  */
   prev_optc_status = MUST_BE_OPERAND;
   while (optind < argc)
-    add_file_name (argv[optind++], names, operand_status, joption_count,
+    add_file_name (argv[optind++], g_names, operand_status, joption_count,
                    &nfiles, &prev_optc_status, &optc_status);
 
   if (nfiles != 2)
@@ -1148,20 +1165,20 @@ main (int argc, char **argv)
   if (join_field_2 == SIZE_MAX)
     join_field_2 = 0;
 
-  fp1 = STREQ (names[0], "-") ? stdin : fopen (names[0], "r");
+  fp1 = STREQ (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
   if (!fp1)
-    error (EXIT_FAILURE, errno, "%s", names[0]);
-  fp2 = STREQ (names[1], "-") ? stdin : fopen (names[1], "r");
+    error (EXIT_FAILURE, errno, "%s", g_names[0]);
+  fp2 = STREQ (g_names[1], "-") ? stdin : fopen (g_names[1], "r");
   if (!fp2)
-    error (EXIT_FAILURE, errno, "%s", names[1]);
+    error (EXIT_FAILURE, errno, "%s", g_names[1]);
   if (fp1 == fp2)
     error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
   if (fclose (fp1) != 0)
-    error (EXIT_FAILURE, errno, "%s", names[0]);
+    error (EXIT_FAILURE, errno, "%s", g_names[0]);
   if (fclose (fp2) != 0)
-    error (EXIT_FAILURE, errno, "%s", names[1]);
+    error (EXIT_FAILURE, errno, "%s", g_names[1]);
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
     exit (EXIT_FAILURE);

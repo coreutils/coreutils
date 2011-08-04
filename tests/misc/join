@@ -196,7 +196,29 @@ my @tv = (
 # With check, both inputs out of order (in fact, in reverse order)
 ['chkodr-5', '--check-order',
  [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1,
- "$prog: file 1 is not in sorted order\n"],
+ "$prog: chkodr-5.1:2: is not sorted:  a 2\n"],
+
+# Similar, but with only file 2 not sorted.
+['chkodr-5b', '--check-order',
+ [" a 2\n b 1\n", " b Y\n a Z\n"], "", 1,
+ "$prog: chkodr-5b.2:2: is not sorted:  a Z\n"],
+
+# Similar, but with the offending line having length 0 (excluding newline).
+['chkodr-5c', '--check-order',
+ [" a 2\n b 1\n", " b Y\n\n"], "", 1,
+ "$prog: chkodr-5c.2:2: is not sorted: \n"],
+
+# Similar, but elicit a warning for each input file (without --check-order).
+['chkodr-5d', '',
+ ["a\nx\n\n", "b\ny\n\n"], "", 1,
+ "$prog: chkodr-5d.1:3: is not sorted: \n" .
+ "$prog: chkodr-5d.2:3: is not sorted: \n"],
+
+# Similar, but make it so each offending line has no newline.
+['chkodr-5e', '',
+ ["a\nx\no", "b\ny\np"], "", 1,
+ "$prog: chkodr-5e.1:3: is not sorted: o\n" .
+ "$prog: chkodr-5e.2:3: is not sorted: p\n"],
 
 # Without order check, both inputs out of order and some lines
 # unpairable.  This is NOT supported by the GNU extension.  All that
@@ -229,7 +251,7 @@ my @tv = (
 # actual data out-of-order. This join should fail.
 ['header-3', '--header --check-order',
  ["ID Name\n2 B\n1 A\n", "ID Color\n2 blue\n"], "ID Name Color\n", 1,
- "$prog: file 1 is not in sorted order\n"],
+ "$prog: header-3.1:3: is not sorted: 1 A\n"],
 
 # '--header' with specific output format '-o'.
 # output header line should respect the requested format
