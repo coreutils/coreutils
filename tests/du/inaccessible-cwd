@@ -22,6 +22,11 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
+
+# Skip this test if your system has neither the openat-style functions
+# nor /proc/self/fd support with which to emulate them.
+require_openat_support_
+
 skip_if_root_
 
 cwd=`pwd`
