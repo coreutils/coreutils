@@ -270,6 +270,12 @@ sc_prohibit_verbose_version:
 	halt='use the print_ver_ function instead...'			\
 	  $(_sc_search_regexp)
 
+# Use framework_failure_, not the old name without the trailing underscore.
+sc_prohibit_framework_failure:
+	@prohibit='\<framework_''failure\>'				\
+	halt='use framework_failure_ instead'				\
+	  $(_sc_search_regexp)
+
 ###########################################################
 _p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
 _pre = $(_p0)\|[/][^"'/*]\|[/]"\([^\"]\|[\].\)*"\|[/]'\([^\']\|[\].\)*'\)*
