@@ -100,7 +100,7 @@ index 2da5afe..562955a 100644
 -  }
 -#endif
 -  value += random_time_bits ^ __getpid ();
-+  rand_src = randint_all_new (NULL, 8);
++  rand_src = randint_all_new (NULL, x_suffix_len);
 +  if (! rand_src)
 +    return -1;
 
