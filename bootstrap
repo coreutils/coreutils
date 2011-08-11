@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-05-03.08; # UTC
+scriptversion=2011-08-11.17; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -130,18 +130,7 @@ source_base=lib
 m4_base=m4
 doc_base=doc
 tests_base=tests
-
-# Extra files from gnulib, which override files from other sources.
-gnulib_extra_files="
-        $build_aux/install-sh
-        $build_aux/missing
-        $build_aux/mdate-sh
-        $build_aux/texinfo.tex
-        $build_aux/depcomp
-        $build_aux/config.guess
-        $build_aux/config.sub
-        doc/INSTALL
-"
+gnulib_extra_files=''
 
 # Additional gnulib-tool options to use.  Use "\newline" to break lines.
 gnulib_tool_option_extras=
@@ -229,6 +218,18 @@ case "$0" in
   *) test -r "$0.conf" && . ./"$0.conf" ;;
 esac
 
+# Extra files from gnulib, which override files from other sources.
+test -z "${gnulib_extra_files}" && \
+  gnulib_extra_files="
+        $build_aux/install-sh
+        $build_aux/missing
+        $build_aux/mdate-sh
+        $build_aux/texinfo.tex
+        $build_aux/depcomp
+        $build_aux/config.guess
+        $build_aux/config.sub
+        doc/INSTALL
+"
 
 if test "$vc_ignore" = auto; then
   vc_ignore=
@@ -278,14 +279,29 @@ if test -n "$checkout_only_file" && test ! -r "$checkout_only_file"; then
   exit 1
 fi
 
+# Ensure that lines starting with ! sort last, per gitignore conventions
+# for whitelisting exceptions after a more generic blacklist pattern.
+sort_patterns() {
+  sort -u "$@" | sed '/^!/ {
+    H
+    d
+  }
+  $ {
+    P
+    x
+    s/^\n//
+  }' | sed '/^$/d'
+}
+
 # If $STR is not already on a line by itself in $FILE, insert it,
 # sorting the new contents of the file and replacing $FILE with the result.
 insert_sorted_if_absent() {
   file=$1
   str=$2
   test -f $file || touch $file
-  echo "$str" | sort -u - $file | cmp - $file > /dev/null \
-    || echo "$str" | sort -u - $file -o $file \
+  echo "$str" | sort_patterns - $file | cmp - $file > /dev/null \
+    || { echo "$str" | sort_patterns - $file > $file.bak \
+      && mv $file.bak $file; } \
     || exit 1
 }
 
@@ -409,16 +425,27 @@ check_versions() {
         GZIP) ;; # Do not use $GZIP:  it contains gzip options.
         *) eval "app=\${$appvar-$app}" ;;
     esac
-    inst_ver=$(get_version $app)
-    if [ ! "$inst_ver" ]; then
-      echo "$me: Error: '$app' not found" >&2
-      ret=1
-    elif [ ! "$req_ver" = "-" ]; then
-      latest_ver=$(sort_ver $req_ver $inst_ver | cut -d' ' -f2)
-      if [ ! "$latest_ver" = "$inst_ver" ]; then
-        echo "$me: Error: '$app' version == $inst_ver is too old" >&2
-        echo "       '$app' version >= $req_ver is required" >&2
+    if [ "$req_ver" = "-" ]; then
+      # Merely require app to exist; not all prereq apps are well-behaved
+      # so we have to rely on $? rather than get_version.
+      $app --version >/dev/null 2>&1
+      if [ 126 -le $? ]; then
+        echo "$me: Error: '$app' not found" >&2
         ret=1
+      fi
+    else
+      # Require app to produce a new enough version string.
+      inst_ver=$(get_version $app)
+      if [ ! "$inst_ver" ]; then
+        echo "$me: Error: '$app' not found" >&2
+        ret=1
+      else
+        latest_ver=$(sort_ver $req_ver $inst_ver | cut -d' ' -f2)
+        if [ ! "$latest_ver" = "$inst_ver" ]; then
+          echo "$me: Error: '$app' version == $inst_ver is too old" >&2
+          echo "       '$app' version >= $req_ver is required" >&2
+          ret=1
+        fi
       fi
     fi
   done
@@ -643,10 +670,18 @@ symlink_to_dir()
         cp -fp "$src" "$dst"
       }
     else
+      # Leave any existing symlink alone, if it already points to the source,
+      # so that broken build tools that care about symlink times
+      # aren't confused into doing unnecessary builds.  Conversely, if the
+      # existing symlink's time stamp is older than the source, make it afresh,
+      # so that broken tools aren't confused into skipping needed builds.  See
+      # <http://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
       test -h "$dst" &&
       src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
       dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
-      test "$src_i" = "$dst_i" || {
+      test "$src_i" = "$dst_i" &&
+      both_ls=`ls -dt "$src" "$dst"` &&
+      test "X$both_ls" = "X$dst$nl$src" || {
         dot_dots=
         case $src in
         /*) ;;
@@ -765,20 +800,7 @@ slurp() {
         echo "$me: $dir/$file overrides $1/$dir/$file"
       else
         copied=$copied$sep$file; sep=$nl
-        if test $file = gettext.m4; then
-          echo "$me: patching m4/gettext.m4 to remove need for intl/* ..."
-          rm -f $dir/$file
-          sed '
-            /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
-              AC_DEFUN([AM_INTL_SUBDIR], [])
-            /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
-              AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
-            $a\
-              AC_DEFUN([gl_LOCK_EARLY], [])
-          ' $1/$dir/$file >$dir/$file
-        else
-          cp_mark_as_generated $1/$dir/$file $dir/$file
-        fi
+        cp_mark_as_generated $1/$dir/$file $dir/$file
       fi || exit
     done
 
