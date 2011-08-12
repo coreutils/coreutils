@@ -25,11 +25,6 @@
 #include "quote.h"
 #include "quotearg.h"
 
-#if ! (HAVE_MBRLEN && HAVE_MBSTATE_T)
-# define mbrlen(s, n, ps) 1
-# define mbstate_t int
-#endif
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"
 
