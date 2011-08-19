@@ -17,6 +17,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   to dst/s/b rather than simply linking dst/s/b to dst/s/a.
   [This bug appears to have been present in "the beginning".]
 
+  fts-using tools (rm, du, chmod, chgrp, chown, chcon) no longer use memory
+  proportional to the number of entries in each directory they process.
+  Before, rm -rf 4-million-entry-directory would consume about 1GiB of memory.
+  Now, it uses less than 30GB, no matter how many entries there are.
+  [this bug was inherent in the use of fts: thus, for rm the bug was
+  introduced in coreutils-8.0.  The prior implementation of rm did not use
+  as much memory.  du, chmod, chgrp and chown started using fts in 6.0.
+  chcon was added in coreutils-6.9.91 with fts support.  ]
+
   printf '%d' '"' no longer accesses out-of-bounds memory in the diagnostic.
   [bug introduced in sh-utils-1.16]
 
