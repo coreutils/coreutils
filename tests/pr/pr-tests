@@ -403,6 +403,10 @@ my @tv = (
 # This would clobber so much of the heap, it'd segfault or abort every time.
 ['smash-heap', '-t -e300', "a".("\b"x50)."\t", "a\b".(" "x300)."\n", 0],
 ['smash-heap8', '-t -e',   "a".("\b"x50)."\t", "a\b".(" "x  8)."\n", 0],
+
+# Before coreutils-8.13 page numbers were not handled correctly when
+# headers were not printed (when -l <= 10 or -t or -T specified)
+['page-range', '+1:1 -2 -l1 -s" "',  "a\nb\nc\n", "a b\n", 0],
 );
 
 # Convert the above old-style test vectors to the newer

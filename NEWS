@@ -26,6 +26,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   as much memory.  du, chmod, chgrp and chown started using fts in 6.0.
   chcon was added in coreutils-6.9.91 with fts support.  ]
 
+  pr -T no longer ignores a specified LAST_PAGE to stop at.
+  [bug introduced in textutils-1.19q]
+
   printf '%d' '"' no longer accesses out-of-bounds memory in the diagnostic.
   [bug introduced in sh-utils-1.16]
 

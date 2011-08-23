@@ -1887,7 +1887,7 @@ print_page (void)
       print_a_FF = false;
     }
 
-  if (last_page_number < page_number)
+  if (last_page_number < ++page_number)
     return false;		/* Stop printing with LAST_PAGE */
 
   reset_status ();		/* Change ON_HOLD to OPEN. */
@@ -2399,7 +2399,7 @@ print_header (void)
   /* The translator must ensure that formatting the translation of
      "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)
      bytes.  */
-  sprintf (page_text, _("Page %"PRIuMAX), page_number++);
+  sprintf (page_text, _("Page %"PRIuMAX), page_number);
   available_width = header_width_available - mbswidth (page_text, 0);
   available_width = MAX (0, available_width);
   lhs_spaces = available_width >> 1;
