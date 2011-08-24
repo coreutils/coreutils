@@ -1,5 +1,6 @@
 #!/bin/sh
-# in coreutils-8.12, this would have required ~1GB of memory
+# In coreutils-8.12, rm,du,chmod, etc. would use too much memory
+# when processing a directory with many entries (as in > 100,000).
 
 # Copyright (C) 2011 Free Software Foundation, Inc.
 
@@ -17,19 +18,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-print_ver_ rm
+print_ver_ rm du
 
-very_expensive_
+expensive_
 
-# Put 4M files in a directory.
+# With many files in a single directory...
 mkdir d && cd d || framework_failure_
-seq 4000000|xargs touch || framework_failure_
+seq 200000|xargs touch || framework_failure_
 
 cd ..
 
-# Restricted to 50MB, rm from coreutils-8.12 would fail with a
-# diagnostic like "rm: fts_read failed: Cannot allocate memory".
-ulimit -v 50000
+# Restricted to 40MB, rm from coreutils-8.12 each of these would fail
+# with a diagnostic like "rm: fts_read failed: Cannot allocate memory".
+ulimit -v 40000
+du -sh d || fail=1
+chmod -R 700 d || fail=1
 rm -rf d || fail=1
 
 Exit $fail
