@@ -135,7 +135,7 @@ TESTS =						\
   rm/unread3					\
   rm/unreadable					\
   rm/v-slash					\
-  rm/4-million-entry-dir			\
+  rm/many-dir-entries-vs-OOM			\
   chgrp/default-no-deref			\
   chgrp/deref					\
   chgrp/no-x					\
