@@ -424,7 +424,9 @@ main (int argc, char **argv)
           else if (WIFSIGNALED (status))
             {
               int sig = WTERMSIG (status);
-#if HAVE_SETRLIMIT && defined RLIMIT_CORE
+/* The following is not used as one cannot disable processing
+   by a filter in /proc/sys/kernel/core_pattern on Linux.  */
+#if 0 && HAVE_SETRLIMIT && defined RLIMIT_CORE
               if (!timed_out)
                 {
                   /* exit with the signal flag set, but avoid core files.  */
