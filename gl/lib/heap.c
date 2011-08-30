@@ -93,10 +93,12 @@ heap_insert (struct heap *heap, void *item)
 void *
 heap_remove_top (struct heap *heap)
 {
+  void *top;
+
   if (heap->count == 0)
     return NULL;
 
-  void *top = heap->array[1];
+  top = heap->array[1];
   heap->array[1] = heap->array[heap->count--];
   heapify_down (heap->array, heap->count, 1, heap->compare);
 
