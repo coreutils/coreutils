@@ -54,6 +54,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  date now accepts ISO 8601 date-time strings with "T" as the
+  separator.  It has long parsed dates like "2004-02-29 16:21:42"
+  with a space between the date and time strings.  Now it also parses
+  "2004-02-29T16:21:42" and fractional-second and time-zone-annotated
+  variants like "2004-02-29T16:21:42.333-07:00"
+
   md5sum accepts the new --strict option.  With --check, it makes the
   tool exit non-zero for any invalid input line, rather than just warning.
   This also affects sha1sum, sha224sum, sha384sum and sha512sum.
