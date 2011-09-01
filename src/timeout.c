@@ -116,7 +116,8 @@ settimeout (double duration)
   struct timespec ts = dtotimespec (duration);
   struct itimerspec its = { {0, 0}, ts };
   timer_t timerid;
-  if (timer_create (CLOCK_REALTIME, NULL, &timerid) == 0)
+  int timer_ret = timer_create (CLOCK_REALTIME, NULL, &timerid);
+  if (timer_ret == 0)
     {
       if (timer_settime (timerid, 0, &its, NULL) == 0)
         return;
@@ -126,7 +127,7 @@ settimeout (double duration)
           timer_delete (timerid);
         }
     }
-  else
+  else if (timer_ret != ENOSYS)
     error (0, errno, _("warning: timer_create"));
 #endif
 
