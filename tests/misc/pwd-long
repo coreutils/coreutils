@@ -50,6 +50,8 @@ sub normalize_to_cwd_relative ($$$)
         and die "$ME: $dir does not contain old CWD\n";
       my $dir_prefix = $slash ? substr ($dir, 0, $slash) : '/';
       my ($d, $i) = (stat $dir_prefix)[0, 1];
+      defined $d && defined $i
+        or die "$ME: $dir_prefix: stat failed: $!\n";
       $d eq $dev && $i eq $ino
         and return substr $dir, $slash + 1;
     }
