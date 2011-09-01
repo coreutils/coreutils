@@ -67,7 +67,7 @@ err_msg=$(cat err-msg|tr '\n' :)
 # containing '1> fifo:printf: write error:'.  Recognize that, too.
 
 case $err_msg in
-  "$prog: write error:") diagnostic=y ;;
+  "$prog: write error:"*) diagnostic=y ;;
   "1> fifo:$prog: write error:") diagnostic=y ;;
   '') diagnostic=n ;;
   *) diagnostic=unexpected ;;
