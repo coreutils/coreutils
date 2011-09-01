@@ -17,13 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $srcdir/require-perl
-
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ pwd
 
 require_readable_root_
+require_perl_
 
 ARGV_0=$0
 export ARGV_0

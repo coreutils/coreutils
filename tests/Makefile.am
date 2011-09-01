@@ -18,7 +18,6 @@ EXTRA_DIST =		\
   init.sh		\
   lang-default		\
   other-fs-tmpdir	\
-  require-perl		\
   sample-test		\
   shell-or-perl		\
   $(pr_data)
