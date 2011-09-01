@@ -354,7 +354,7 @@ main (int argc, char **argv)
 
   /* Try to preload libstdbuf first from the same path as
      stdbuf is running from.  */
-  set_program_path (argv[0]);
+  set_program_path (program_name);
   if (!program_path)
     program_path = xstrdup (PKGLIBDIR);  /* Need to init to non NULL.  */
   set_LD_PRELOAD ();
