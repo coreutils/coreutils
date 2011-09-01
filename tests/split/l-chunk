@@ -108,7 +108,7 @@ for ELIDE_EMPTY in '' '-e'; do
         echo "$lines"
       fi
     done
-    test "$ELIDE_EMPTY" && EXP=exp.elide_empty || EXP=exp
+    test -z "$ELIDE_EMPTY" && EXP=exp || EXP=exp.elide_empty
     compare out $EXP || fail=1
   done
 done
