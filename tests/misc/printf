@@ -110,6 +110,11 @@ cat <<EOF > exp
 0
 EOF
 
+# POSIX says strtoimax *may* set errno to EINVAL in the latter
+# two cases.  So far, that happens at least on MacOS X 10.5.
+# Map that output to the more common expected output.
+sed 's/: Invalid.*/: expected a numeric value/' err > k && mv k err
+
 cat <<EOF > exp_err
 printf: warning: ": character(s) following character constant have been ignored
 printf: ": expected a numeric value
