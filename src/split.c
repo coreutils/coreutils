@@ -384,8 +384,8 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
               if (sig2str (sig, signame) != 0)
                 sprintf (signame, "%d", sig);
               error (sig + 128, 0,
-                     _("with FILE=%s, signal %s (%s) from command: %s"),
-                     name, signame, strsignal (sig), filter_command);
+                     _("with FILE=%s, signal %s from command: %s"),
+                     name, signame, filter_command);
             }
         }
       else if (WIFEXITED (wstatus))
