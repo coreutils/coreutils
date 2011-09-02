@@ -221,7 +221,7 @@ export MALLOC_PERTURB_
 # a partition, or to undo any other global state changes.
 cleanup_ () { :; }
 
-if ( diff --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
+if ( diff -u "$0" "$0" < /dev/null ) > /dev/null 2>&1; then
   compare () { diff -u "$@"; }
 elif ( cmp --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
   compare () { cmp -s "$@"; }
