@@ -430,6 +430,16 @@ as possible. Note to run tests/misc/new-test in isolation you can do:
 
   (cd tests && make check TESTS=misc/new-test VERBOSE=yes)
 
+Variables that are significant for tests with their default values are:
+
+  VERBOSE=yes
+  RUN_EXPENSIVE_TESTS=no
+  RUN_VERY_EXPENSIVE_TESTS=no
+  SHELL=/bin/sh
+  NON_ROOT_USERNAME=nobody
+  NON_ROOT_GROUP=$(id -g $NON_ROOT_USERNAME)
+  COREUTILS_GROUPS=$(id -G)
+
 There are hundreds of tests in the tests/ directories.  You can use
 tests/sample-test as a template, or one of the various Perl-based ones
 in tests/misc.
