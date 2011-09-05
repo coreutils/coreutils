@@ -105,6 +105,11 @@ po_download_command_format=\
 "rsync --delete --exclude '*.s1' -Lrtvz \
  'translationproject.org::tp/latest/%s/' '%s'"
 
+# Fallback for downloading .po files (if rsync fails).
+po_download_command_format2=\
+"wget --mirror -nd -q -np -A.po -P '%s' \
+ http://translationproject.org/latest/%s/"
+
 extract_package_name='
   /^AC_INIT(/{
      /.*,.*,.*, */{
@@ -583,6 +588,9 @@ download_po_files() {
   domain=$2
   echo "$me: getting translations into $subdir for $domain..."
   cmd=`printf "$po_download_command_format" "$domain" "$subdir"`
+  eval "$cmd" && return
+  # Fallback to HTTP.
+  cmd=`printf "$po_download_command_format2" "$subdir" "$domain"`
   eval "$cmd"
 }
 
