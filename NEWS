@@ -78,6 +78,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp -p now copies trivial NSFv4 ACLs on Solaris 10.  Before, it would
+  mistakenly apply a non-trivial ACL to the destination file.
+
   cp and ls now support HP-UX 11.11's ACLs, thanks to improved support
   in gnulib.
 
@@ -98,6 +101,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Changes inherited from gnulib address a build failure on HP-UX 11.11
   when using /opt/ansic/bin/cc.
+
+  Numerous portability and build improvements inherited via gnulib.
 
 
 * Noteworthy changes in release 8.12 (2011-04-26) [stable]
