@@ -128,7 +128,7 @@ find_upper_case_var =		\
      }				\
    END {$$m and (warn "$(ME): do not use upper case in \@var{...}\n"), exit 1}'
 sc-lower-case-var:
-	$(AM_V_GEN)$(PERL) -e 1 \
-	  && $(PERL) -lne $(find_upper_case_var) $(srcdir)/*.texi
+	$(AM_V_GEN)$(PERL) -e 1 || { echo $@: skipping test; exit 0; }; \
+	  $(PERL) -lne $(find_upper_case_var) $(srcdir)/*.texi
 
 check: check-texinfo
