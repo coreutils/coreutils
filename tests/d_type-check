@@ -19,7 +19,7 @@ try:
 
   direntp = ctypes.POINTER(dirent)
 
-  # FIXME: find a way to hard-coding libc's so-name.
+  # FIXME: find a way to avoid hard-coding libc's so-name.
   libc = ctypes.cdll.LoadLibrary("libc.so.6")
   libc.readdir.restype = direntp
 
