@@ -1,4 +1,4 @@
-# stat-prog.m4 serial 6
+# stat-prog.m4 serial 7
 # Record the prerequisites of src/stat.c from the coreutils package.
 
 # Copyright (C) 2002-2004, 2006, 2008-2011 Free Software Foundation, Inc.
@@ -53,7 +53,8 @@ AC_INCLUDES_DEFAULT
 "
   dnl Keep this long conditional in sync with the USE_STATVFS conditional
   dnl in ../src/stat.c.
-  if test "$fu_cv_sys_stat_statvfs" = yes &&
+  if case "$fu_cv_sys_stat_statvfs$fu_cv_sys_stat_statvfs64" in
+       *yes*) ;; *) false;; esac &&
      { AC_CHECK_MEMBERS([struct statvfs.f_basetype],,, [$statvfs_includes])
        test $ac_cv_member_struct_statvfs_f_basetype = yes ||
        { AC_CHECK_MEMBERS([struct statvfs.f_fstypename],,, [$statvfs_includes])

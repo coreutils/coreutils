@@ -20,7 +20,7 @@
 
 /* Keep this conditional in sync with the similar conditional in
    ../m4/stat-prog.m4.  */
-#if (STAT_STATVFS \
+#if ((STAT_STATVFS || STAT_STATVFS64)                                       \
      && (HAVE_STRUCT_STATVFS_F_BASETYPE || HAVE_STRUCT_STATVFS_F_FSTYPENAME \
          || (! HAVE_STRUCT_STATFS_F_FSTYPENAME && HAVE_STRUCT_STATVFS_F_TYPE)))
 # define USE_STATVFS 1
@@ -80,7 +80,11 @@
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((S)->f_namemax)
 # endif
-# define STATFS statvfs
+# if ! STAT_STATVFS && STAT_STATVFS64
+#  define STATFS statvfs64
+# else
+#  define STATFS statvfs
+# endif
 # define STATFS_FRSIZE(S) ((S)->f_frsize)
 #else
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS_F_TYPE
