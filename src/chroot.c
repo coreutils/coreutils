@@ -52,6 +52,17 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
+#if ! HAVE_SETGROUPS
+/* At least Interix lacks supplemental group support.  Define an
+   always-successful replacement to avoid checking for setgroups
+   availability everywhere, just to support broken platforms. */
+static int
+setgroups (size_t size ATTRIBUTE_UNUSED, gid_t const *list ATTRIBUTE_UNUSED)
+{
+  return 0;
+}
+#endif
+
 /* Call setgroups to set the supplementary groups to those listed in GROUPS.
    GROUPS is a comma separated list of supplementary groups (names or numbers).
    Parse that list, converting any names to numbers, and call setgroups on the
