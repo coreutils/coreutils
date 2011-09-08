@@ -213,6 +213,24 @@ struct passwd *getpwuid ();
 struct group *getgrgid ();
 #endif
 
+/* Interix has replacements for getgr{gid,nam,ent}, that don't
+   query the domain controller for group members when not required.
+   This speeds up the calls tremendously (<1 ms vs. >3 s). */
+/* To protect any system that could provide _nomembers functions
+   other than interix, check for HAVE_SETGROUPS, as interix is
+   one of the very few (the only?) platform that lacks it */
+#if ! HAVE_SETGROUPS
+# if HAVE_GETGRGID_NOMEMBERS
+#  define getgrgid(gid) getgrgid_nomembers(gid)
+# endif
+# if HAVE_GETGRNAM_NOMEMBERS
+#  define getgrnam(nam) getgrnam_nomembers(nam)
+# endif
+# if HAVE_GETGRENT_NOMEMBERS
+#  define getgrent() getgrent_nomembers()
+# endif
+#endif
+
 #if !HAVE_DECL_GETUID
 uid_t getuid ();
 #endif

@@ -89,6 +89,16 @@ AC_DEFUN([coreutils_MACROS],
     tcgetpgrp \
   )
 
+  # These checks are for Interix, to avoid its getgr* functions, in favor
+  # of these replacements.  The replacement functions are much more efficient
+  # because they do not query the domain controller for user information
+  # when it is not needed.
+  AC_CHECK_FUNCS_ONCE([
+    getgrgid_nomembers
+    getgrnam_nomembers
+    getgrent_nomembers
+  ])
+
   dnl This can't use AC_REQUIRE; I'm not quite sure why.
   cu_PREREQ_STAT_PROG
 
