@@ -56,6 +56,24 @@ AC_ARG_ENABLE([gcc-warnings],
   [gl_gcc_warnings=no]
 )
 
+# gl_GCC_VERSION_IFELSE([major], [minor], [run-if-found], [run-if-not-found])
+# ------------------------------------------------
+# If $CPP is gcc-MAJOR.MINOR or newer, then run RUN-IF-FOUND.
+# Otherwise, run RUN-IF-NOT-FOUND.
+AC_DEFUN([gl_GCC_VERSION_IFELSE],
+  [AC_PREPROC_IFELSE(
+    [AC_LANG_PROGRAM(
+      [[
+#if ($1) < __GNUC__ || (($1) == __GNUC__ && ($2) <= __GNUC_MINOR__)
+/* ok */
+#else
+# error "your version of gcc is older than $1.$2"
+#endif
+      ]]),
+    ], [$3], [$4])
+  ]
+)
+
 if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
   AC_SUBST([WERROR_CFLAGS])
@@ -102,8 +120,14 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
   gl_WARN_ADD([-Wsuggest-attribute=const])
-  gl_WARN_ADD([-Wsuggest-attribute=pure])
   gl_WARN_ADD([-Wsuggest-attribute=noreturn])
+
+  # Enable this warning only with gcc-4.7 and newer.  With 4.6.1 20110824,
+  # it suggests test.c's advance function may be pure, even though it
+  # increments a global variable.  Oops.
+  # Normally we'd write code to test for the precise failure, but that
+  # requires a relatively large input to make gcc exhibit the failure.
+  gl_GCC_VERSION_IFELSE([4], [7], [gl_WARN_ADD([-Wsuggest-attribute=pure])])
 
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
