@@ -194,7 +194,7 @@ For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
 by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
-  -a FILENUM        print unpairable lines coming from file FILENUM, where\n\
+  -a FILENUM        also print unpairable lines from file FILENUM, where\n\
                       FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
   -e EMPTY          replace missing input fields with EMPTY\n\
 "), stdout);
