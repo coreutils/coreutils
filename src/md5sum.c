@@ -99,7 +99,7 @@
    not include any newline character at the end of a line.  */
 #define MIN_DIGEST_LINE_LENGTH \
   (DIGEST_HEX_BYTES /* length of hexadecimal message digest */ \
-   + 2 /* blank and binary indicator */ \
+   + 1 /* blank */ \
    + 1 /* minimum filename length */ )
 
 /* True if any of the files read were the standard input. */
@@ -125,6 +125,9 @@ static bool quiet = false;
 /* With --check, exit with a non-zero return code if any line is
    improperly formatted. */
 static bool strict = false;
+
+/* Whether a BSD reversed format checksum is detected.  */
+static int bsd_reversed = -1;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -307,9 +310,24 @@ split_3 (char *s, size_t s_len,
 
   s[i++] = '\0';
 
-  if (s[i] != ' ' && s[i] != '*')
-    return false;
-  *binary = (s[i++] == '*');
+  /* If "bsd reversed" format detected.  */
+  if ((s_len - i == 1) || (s[i] != ' ' && s[i] != '*'))
+    {
+      /* Don't allow mixing bsd and standard formats,
+         to minimize security issues with attackers
+         renaming files with leading spaces.
+         This assumes that with bsd format checksums
+         that the first file name does not have
+         a leading ' ' or '*'.  */
+      if (bsd_reversed == 0)
+        return false;
+      bsd_reversed = 1;
+    }
+  else if (bsd_reversed != 1)
+    {
+      bsd_reversed = 0;
+      *binary = (s[i++] == '*');
+    }
 
   /* All characters between the type indicator and end of line are
      significant -- that includes leading and trailing white space.  */
