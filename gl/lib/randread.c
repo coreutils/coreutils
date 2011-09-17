@@ -17,6 +17,9 @@
 
 /* Written by Paul Eggert.  */
 
+/* FIXME: Improve performance by adding support for the RDRAND machine
+   instruction if available (e.g., Ivy Bridge processors).  */
+
 #include <config.h>
 
 #include "randread.h"
