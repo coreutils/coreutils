@@ -3612,7 +3612,7 @@ md5sum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
-indicating a binary or text input file, and the file name.
+indicating binary or text input mode, and the file name.
 If @var{file} contains a backslash or newline, the
 line is started with a backslash, and each problematic character in
 the file name is escaped with a backslash, making the output
@@ -3631,7 +3631,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 Treat each input file as binary, by reading it in binary mode and
 outputting a @samp{*} flag.  This is the inverse of @option{--text}.
 On systems like @acronym{GNU} that do not distinguish between binary
-and text files, this option merely flags each input file as binary:
+and text files, this option merely flags each input mode as binary:
 the MD5 checksum is unaffected.  This option is the default on systems
 like MS-DOS that distinguish between binary and text files, except
 for reading standard input when standard input is a terminal.
@@ -3645,7 +3645,7 @@ The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
 Each valid line of input consists of an MD5 checksum, a binary/text
 flag, and then a file name.
-Binary files are marked with @samp{*}, text with @samp{ }.
+Binary mode is indicated with @samp{*}, text with @samp{ } (space).
 For each such line, @command{md5sum} reads the named file and computes its
 MD5 checksum.  Then, if the computed message digest does not match the
 one on the line with the file name, the file is noted as having
