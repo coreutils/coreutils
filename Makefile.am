@@ -66,6 +66,12 @@ ALL_RECURSIVE_TARGETS += check-root
 check-root:
 	cd tests && $(MAKE) $@ SUBDIRS=
 
+# Shortcut targets to make it easier to run (very) expensive tests.
+check-expensive:
+	$(MAKE) check RUN_EXPENSIVE_TESTS=yes
+check-very-expensive:
+	$(MAKE) check-expensive RUN_VERY_EXPENSIVE_TESTS=yes
+
 # Just prior to distribution, ...
 # transform the automake-generated rule that runs `rm -f rm'.
 # On some systems, that command would fail with a diagnostic like
