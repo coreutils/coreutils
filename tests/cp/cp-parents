@@ -46,7 +46,7 @@ cp --parents f/g d 2>/dev/null && fail=1
 test -d d/f && fail=1
 
 # Check that re_protect works.
-chmod go=w d/a
+chmod go=w d/a || framework_failure_
 cp -a --parents d/a/b/c e || fail=1
 cp -a --parents sym/b/c g || fail=1
 p=`ls -ld e/d|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
