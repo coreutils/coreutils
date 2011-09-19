@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   md5sum --check now supports the -r format from the corresponding BSD tool.
   This also affects sha1sum, sha224sum, sha384sum and sha512sum.
 
+  pwd now works also on systems without openat.  On such systems, pwd
+  would fail when run from a directory whose absolute name contained
+  more than PATH_MAX / 3 components.  Also affected due to their use
+  of canonicalize_* functions: df, stat, readlink.
+
 
 * Noteworthy changes in release 8.13 (2011-09-08) [stable]
 
