@@ -375,7 +375,8 @@ exclude_file_name_regexp--sc_require_config_h = \
   $(exclude_file_name_regexp--sc_require_config_h_first)
 
 exclude_file_name_regexp--sc_po_check = ^gl/
-exclude_file_name_regexp--sc_prohibit_always-defined_macros = ^src/seq\.c$$
+exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
+  ^src/(seq|remove)\.c$$
 exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = ^tests/pr/
 exclude_file_name_regexp--sc_program_name = ^(gl/.*|lib/euidaccess-stat)\.c$$
 exclude_file_name_regexp--sc_file_system = \
