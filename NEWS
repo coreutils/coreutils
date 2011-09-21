@@ -12,6 +12,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   more than PATH_MAX / 3 components.  Also affected due to their use
   of canonicalize_* functions: df, stat, readlink.
 
+** Changes in behavior
+
+  timeout now only processes the first signal received from the set
+  it is handling (SIGTERM, SIGINT, ...).  This is to support systems that
+  implicitly create threads for some timer functions (like GNU/kFreeBSD).
+
 
 * Noteworthy changes in release 8.13 (2011-09-08) [stable]
 

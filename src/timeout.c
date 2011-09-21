@@ -77,7 +77,6 @@
 static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
-static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
 static double kill_after;
 static bool foreground;            /* whether to use another program group.  */
 
@@ -141,12 +140,20 @@ settimeout (double duration)
   alarm (timeint);
 }
 
-/* send sig to group but not ourselves.
- * FIXME: Is there a better way to achieve this?  */
+/* send SIG avoiding the current process.  */
+
 static int
 send_sig (int where, int sig)
 {
-  sigs_to_ignore[sig] = 1;
+  /* If sending to the group, then ignore the signal,
+     so we don't go into a signal loop.  Note that this will ignore any of the
+     signals registered in install_signal_handlers(), that are sent after we
+     propagate the first one, which hopefully won't be an issue.  Note this
+     process can be implicitly multithreaded due to some timer_settime()
+     implementations, therefore a signal sent to the group, can be sent
+     multiple times to this process.  */
+  if (where == 0)
+    signal (sig, SIG_IGN);
   return kill (where, sig);
 }
 
@@ -160,11 +167,6 @@ cleanup (int sig)
     }
   if (monitored_pid)
     {
-      if (sigs_to_ignore[sig])
-        {
-          sigs_to_ignore[sig] = 0;
-          return;
-        }
       if (kill_after)
         {
           /* Start a new timeout after which we'll send SIGKILL.  */
