@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  sort -g no longer infloops for certain inputs containing NaNs
+
 ** Improvements
 
   md5sum --check now supports the -r format from the corresponding BSD tool.

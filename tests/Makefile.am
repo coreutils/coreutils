@@ -250,6 +250,7 @@ TESTS =						\
   misc/sort-unique				\
   misc/sort-unique-segv				\
   misc/sort-version				\
+  misc/sort-NaN-infloop				\
   split/filter					\
   split/suffix-length				\
   split/b-chunk					\
