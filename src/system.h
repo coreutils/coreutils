@@ -188,7 +188,7 @@ select_plural (uintmax_t n)
 #define STREQ_LEN(a, b, n) (strncmp (a, b, n) == 0)
 #define STRPREFIX(a, b) (strncmp(a, b, strlen (b)) == 0)
 
-/* Just like strncmp, but the first argument must be a literal string
+/* Just like strncmp, but the second argument must be a literal string
    and you don't specify the length.  */
 #define STRNCMP_LIT(s, literal) \
   strncmp (s, "" literal "", sizeof (literal) - 1)

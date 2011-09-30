@@ -4204,7 +4204,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
         }
       else if (S_ISLNK (mode))
         type = ((!linkok
-                 && (!STRNCMP_LIT (color_indicator[C_LINK].string, "target")
+                 && (color_symlink_as_referent
                      || color_indicator[C_ORPHAN].string))
                 ? C_ORPHAN : C_LINK);
       else if (S_ISFIFO (mode))
