@@ -26,6 +26,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   it is handling (SIGTERM, SIGINT, ...).  This is to support systems that
   implicitly create threads for some timer functions (like GNU/kFreeBSD).
 
+** Build-related
+
+  "make dist" no longer builds .tar.gz files.
+  xz is portable enough and in wide-enough use that distributing
+  only .tar.xz files is enough.
+
 
 * Noteworthy changes in release 8.13 (2011-09-08) [stable]
 
