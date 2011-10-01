@@ -71,23 +71,23 @@ AC_DEFUN([coreutils_MACROS],
     [AC_DEFINE([HAVE_INOTIFY], [1],
      [Define to 1 if you have usable inotify support.])])
 
-  AC_CHECK_FUNCS_ONCE( \
-    endgrent \
-    endpwent \
-    fchown \
-    fchmod \
-    ftruncate \
-    iswspace \
-    mkfifo \
-    mbrlen \
-    setgroups \
-    sethostname \
-    siginterrupt \
-    sync \
-    sysctl \
-    sysinfo \
-    tcgetpgrp \
-  )
+  AC_CHECK_FUNCS_ONCE([
+    endgrent
+    endpwent
+    fchown
+    fchmod
+    ftruncate
+    iswspace
+    mkfifo
+    mbrlen
+    setgroups
+    sethostname
+    siginterrupt
+    sync
+    sysctl
+    sysinfo
+    tcgetpgrp
+  ])
 
   # These checks are for Interix, to avoid its getgr* functions, in favor
   # of these replacements.  The replacement functions are much more efficient
@@ -183,16 +183,16 @@ AC_DEFUN([coreutils_MACROS],
 
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
-  AC_CHECK_HEADERS_ONCE( \
-    hurd.h \
-    paths.h \
-    priv.h \
-    stropts.h \
-    sys/param.h \
-    sys/resource.h \
-    sys/systeminfo.h \
-    syslog.h \
-  )
+  AC_CHECK_HEADERS_ONCE([
+    hurd.h
+    paths.h
+    priv.h
+    stropts.h
+    sys/param.h
+    sys/resource.h
+    sys/systeminfo.h
+    syslog.h
+  ])
   AC_CHECK_HEADERS([sys/sysctl.h], [], [],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
