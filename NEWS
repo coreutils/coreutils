@@ -6,6 +6,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort -g no longer infloops for certain inputs containing NaNs
 
+  ls --dereference no longer outputs erroneous "argetm" strings for
+  dangling symlinks when an 'ln=target' entry is in $LS_COLORS.
+  [bug introduced in fileutils-4.0]
+
 ** Improvements
 
   md5sum --check now supports the -r format from the corresponding BSD tool.
