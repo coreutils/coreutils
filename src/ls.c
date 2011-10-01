@@ -4203,10 +4203,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
             type = C_STICKY;
         }
       else if (S_ISLNK (mode))
-        type = ((!linkok
-                 && (color_symlink_as_referent
-                     || color_indicator[C_ORPHAN].string))
-                ? C_ORPHAN : C_LINK);
+        type = C_LINK;
       else if (S_ISFIFO (mode))
         type = C_FIFO;
       else if (S_ISSOCK (mode))
@@ -4239,6 +4236,14 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
                             ext->ext.len))
             break;
         }
+    }
+
+  /* Adjust the color for orphaned symlinks.  */
+  if (type == C_LINK && !linkok)
+    {
+      if (color_symlink_as_referent
+          || color_indicator[C_ORPHAN].string)
+        type = C_ORPHAN;
     }
 
   {

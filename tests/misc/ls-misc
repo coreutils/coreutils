@@ -223,6 +223,47 @@ my @Tests =
                     restore_ls_colors; }},
      ],
 
+     # Test for a bug fixed after coreutils-8.13
+     # where 'argetm' was errenously printed for dangling links
+     # when ln=target was used in LS_COLORS
+     ['sl-dangle6', '-L --color=always d',
+      {OUT => "s\n"},
+      {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
+                   symlink 'dangle', 'd/s' or die "d/s: $!\n";
+                   push_ls_colors('ln=target')
+       }},
+      {POST => sub {unlink 'd/s' or die "d/s: $!\n";
+                    rmdir 'd' or die "d: $!\n";
+                    restore_ls_colors; }},
+      {ERR => "ls: cannot access d/s: No such file or directory\n"},
+      {EXIT => 1}
+     ],
+     # Related to the above fix, is this case where
+     # the code simulates "linkok".  In this case "linkmode"
+     # should always be zero, and hence not trigger any
+     # issues with type being set to C_LINK
+     ['sl-dangle7', '--color=always d',
+      {OUT => "$e\e[ms$e\n"},
+      {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
+                   symlink 'dangle', 'd/s' or die "d/s: $!\n";
+                   push_ls_colors('ln=target:or=:ex=:')
+       }},
+      {POST => sub {unlink 'd/s' or die "d/s: $!\n";
+                    rmdir 'd' or die "d: $!\n";
+                    restore_ls_colors; }},
+     ],
+     # Another case with simulated "linkok", that does
+     # actually use the value of 'ln' from $LS_COLORS.
+     # This path is not taken though when 'ln=target'.
+     ['sl-dangle8', '--color=always s',
+      {OUT => "$e\e[1;36ms$e\n"},
+      {PRE => sub {symlink 'dangle', 's' or die "s: $!\n";
+                   push_ls_colors('ln=1;36:or=:')
+       }},
+      {POST => sub {unlink 's' or die "s: $!\n";
+                    restore_ls_colors; }},
+     ],
+
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.
