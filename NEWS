@@ -10,6 +10,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dangling symlinks when an 'ln=target' entry is in $LS_COLORS.
   [bug introduced in fileutils-4.0]
 
+  ls -lL symlink once again properly prints "+" when the referent has an ACL.
+  [bug introduced in coreutils-8.13]
+
 ** Improvements
 
   md5sum --check now supports the -r format from the corresponding BSD tool.

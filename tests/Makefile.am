@@ -431,6 +431,7 @@ TESTS =						\
   ls/readdir-mountpoint-inode			\
   ls/recursive					\
   ls/rt-1					\
+  ls/slink-acl					\
   ls/stat-dtype					\
   ls/stat-failed				\
   ls/stat-free-color				\
