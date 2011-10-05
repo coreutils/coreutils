@@ -4,14 +4,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  sort -g no longer infloops for certain inputs containing NaNs
-
   ls --dereference no longer outputs erroneous "argetm" strings for
   dangling symlinks when an 'ln=target' entry is in $LS_COLORS.
   [bug introduced in fileutils-4.0]
 
   ls -lL symlink once again properly prints "+" when the referent has an ACL.
   [bug introduced in coreutils-8.13]
+
+  sort -g no longer infloops for certain inputs containing NaNs
+  [bug introduced in coreutils-8.5]
 
 ** Improvements
 
@@ -20,8 +21,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   pwd now works also on systems without openat.  On such systems, pwd
   would fail when run from a directory whose absolute name contained
-  more than PATH_MAX / 3 components.  Also affected due to their use
-  of canonicalize_* functions: df, stat, readlink.
+  more than PATH_MAX / 3 components.  The df, stat and readlink programs
+  are also affected due to their use of the canonicalize_* functions.
 
 ** Changes in behavior
 
