@@ -46,4 +46,19 @@ tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
 
 kill -HUP $pid
 
+cleanup()
+{
+  local delay="$1"
+  rm -rf missing ||
+    { sleep $delay; return 1; }
+}
+
+# Try repeatedly to remove the temporary directory.
+# This is normally unnecessary, because the containing directory will
+# be removed by code from init.sh.  However, when this particular test
+# is run on an NFS-mounted volume, sometimes init.sh's cleanup code
+# fails because the directory is not yet really empty, perhaps because
+# the tail process (reading missing/file) is not yet killed.
+retry_delay_ cleanup .1 6
+
 Exit $fail
