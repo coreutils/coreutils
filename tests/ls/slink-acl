@@ -22,7 +22,7 @@ print_ver_ ls
 require_setfacl_
 
 touch k || framework_failure_
-setfacl -m m::r k || framework_failure_
+setfacl -m user::r k || framework_failure_
 ln -s k s || framework_failure_
 
 set _ $(ls -Log s); shift; link=$1
