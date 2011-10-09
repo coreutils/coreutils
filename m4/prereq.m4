@@ -1,4 +1,4 @@
-#serial 77
+#serial 78
 
 dnl We use gl_ for non Autoconf macros.
 m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -36,7 +36,6 @@ AC_DEFUN([gl_PREREQ],
   # Invoke macros of modules that may migrate into gnulib.
   # There's no need to list gnulib modules here, since gnulib-tool
   # handles that; see ../bootstrap.conf.
-  AC_REQUIRE([gl_EUIDACCESS_STAT])
   AC_REQUIRE([gl_FD_REOPEN])
   AC_REQUIRE([gl_FUNC_XATTR])
   AC_REQUIRE([gl_FUNC_XFTS])

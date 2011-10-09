@@ -23,7 +23,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "euidaccess-stat.h"
 #include "file-type.h"
 #include "ignore-value.h"
 #include "quote.h"
@@ -106,13 +105,10 @@ cache_stat_ok (struct stat *st)
 /* Return 1 if FILE is an unwritable non-symlink,
    0 if it is writable or some other type of file,
    -1 and set errno if there is some problem in determining the answer.
-   Use FULL_NAME only if necessary.
-   Set *BUF to the file status.
-   This is to avoid calling euidaccess when FILE is a symlink.  */
+   Set *BUF to the file status.  */
 static int
 write_protected_non_symlink (int fd_cwd,
                              char const *file,
-                             char const *full_name,
                              struct stat *buf)
 {
   if (can_write_any_file ())
@@ -170,32 +166,10 @@ write_protected_non_symlink (int fd_cwd,
         mess up with long file names). */
 
   {
-    /* This implements #1: on decent systems, either faccessat is
-       native or /proc/self/fd allows us to skip a chdir.  */
-    if (!openat_needs_fchdir ())
-      {
-        if (faccessat (fd_cwd, file, W_OK, AT_EACCESS) == 0)
-          return 0;
-
-        return errno == EACCES ? 1 : -1;
-      }
-
-    /* This implements #5: */
-    size_t file_name_len = strlen (full_name);
-
-    if (MIN (PATH_MAX, 8192) <= file_name_len)
-      return ! euidaccess_stat (buf, W_OK);
-    if (euidaccess (full_name, W_OK) == 0)
+    if (faccessat (fd_cwd, file, W_OK, AT_EACCESS) == 0)
       return 0;
-    if (errno == EACCES)
-      {
-        errno = 0;
-        return 1;
-      }
 
-    /* Perhaps some other process has removed the file, or perhaps this
-       is a buggy NFS client.  */
-    return -1;
+    return errno == EACCES ? 1 : -1;
   }
 }
 
@@ -244,8 +218,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
       && ((x->interactive == RMI_ALWAYS) || x->stdin_tty)
       && dirent_type != DT_LNK)
     {
-      write_protected = write_protected_non_symlink (fd_cwd, filename,
-                                                     full_name, sbuf);
+      write_protected = write_protected_non_symlink (fd_cwd, filename, sbuf);
       wp_errno = errno;
     }
 
