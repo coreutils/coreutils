@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ df
+require_perl_
 
 df || skip_ "df fails"
 

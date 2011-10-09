@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
+require_perl_
 
 # Root can run this test, but it always succeeds, since for root, all
 # files are writable, and write_protected_non_symlink never reaches
@@ -27,7 +28,7 @@ skip_if_root_
 mkdir x || framework_failure_
 cd x || framework_failure_
 
-# Construct a hierarchy containing a relative file with a name
+# Construct a hierarchy containing a relative file with a long name
 : ${PERL=perl}
 $PERL \
     -e 'my $d = "x" x 200; foreach my $i (1..52)' \
