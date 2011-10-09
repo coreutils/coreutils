@@ -27,6 +27,10 @@ EOF
 timeout 10 tail --follow=name no-such > out 2> err
 test $? = 1 || fail=1
 
+# Remove an inconsequential inotify warning so
+# we can compare against the above error
+sed '/inotify cannot be used/d' err > k && mv k err
+
 compare err exp || fail=1
 
 Exit $fail
