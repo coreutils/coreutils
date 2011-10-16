@@ -44,6 +44,7 @@ tac -r -s '.\|
 #include <regex.h>
 
 #include "error.h"
+#include "filenamecat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "safe-read.h"
@@ -426,20 +427,15 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
   static char *template = NULL;
   static char const *tempdir;
-  char *tempfile;
-  FILE *tmp;
-  int fd;
 
   if (template == NULL)
     {
-      char const * const Template = "%s/tacXXXXXX";
+      char const * const Template = "tacXXXXXX";
       tempdir = getenv ("TMPDIR");
       if (tempdir == NULL)
         tempdir = DEFAULT_TMPDIR;
 
-      /* Subtract 2 for `%s' and add 1 for the trailing NUL byte.  */
-      template = xmalloc (strlen (tempdir) + strlen (Template) - 2 + 1);
-      sprintf (template, Template, tempdir);
+      template = file_name_concat (tempdir, Template, NULL);
     }
 
   /* FIXME: there's a small window between a successful mkstemp call
@@ -451,8 +447,8 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
      FIXME: clean up upon fatal signal.  Don't block them, in case
      $TMPFILE is a remote file system.  */
 
-  tempfile = template;
-  fd = mkstemp (template);
+  char *tempfile = template;
+  int fd = mkstemp (template);
   if (fd < 0)
     {
       error (0, errno, _("cannot create temporary file in %s"),
@@ -460,7 +456,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       return false;
     }
 
-  tmp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
+  FILE *tmp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
   if (! tmp)
     {
       error (0, errno, _("cannot open %s for writing"), quote (tempfile));
