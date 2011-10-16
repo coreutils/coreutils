@@ -274,6 +274,7 @@ TESTS =						\
   misc/sum-sysv					\
   misc/tac					\
   misc/tac-continue				\
+  misc/tac-2-nonseekable			\
   misc/tail					\
   misc/tee					\
   misc/tee-dash					\

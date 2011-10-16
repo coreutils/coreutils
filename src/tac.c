@@ -447,12 +447,13 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
      FIXME: clean up upon fatal signal.  Don't block them, in case
      $TMPFILE is a remote file system.  */
 
-  char *tempfile = template;
-  int fd = mkstemp (template);
+  char *tempfile = xstrdup (template);
+  int fd = mkstemp (tempfile);
   if (fd < 0)
     {
       error (0, errno, _("cannot create temporary file in %s"),
              quote (tempdir));
+      free (tempfile);
       return false;
     }
 
@@ -462,6 +463,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       error (0, errno, _("cannot open %s for writing"), quote (tempfile));
       close (fd);
       unlink (tempfile);
+      free (tempfile);
       return false;
     }
 
@@ -497,6 +499,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
  Fail:
   fclose (tmp);
+  free (tempfile);
   return false;
 }
 
@@ -508,8 +511,16 @@ tac_nonseekable (int input_fd, const char *file)
 {
   FILE *tmp_stream;
   char *tmp_file;
-  return (copy_to_temp (&tmp_stream, &tmp_file, input_fd, file)
-          && tac_seekable (fileno (tmp_stream), tmp_file));
+  if (copy_to_temp (&tmp_stream, &tmp_file, input_fd, file))
+    {
+      if (tac_seekable (fileno (tmp_stream), tmp_file))
+        {
+          free (tmp_file);
+          return true;
+        }
+    }
+
+  return false;
 }
 
 /* Print FILE in reverse, copying it to a temporary
