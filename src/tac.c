@@ -418,6 +418,67 @@ record_or_unlink_tempfile (char const *fn, FILE *fp ATTRIBUTE_UNUSED)
 
 #endif
 
+/* A wrapper around mkstemp that gives us both an open stream pointer,
+   FP, and the corresponding FILE_NAME.  Always return the same FP/name
+   pair, rewinding/truncating it upon each reuse.  */
+static bool
+temp_stream (FILE **fp, char **file_name)
+{
+  static char *tempfile = NULL;
+  static FILE *tmp_fp;
+  if (tempfile == NULL)
+    {
+      char const *t = getenv ("TMPDIR");
+      char const *tempdir = t ? t : DEFAULT_TMPDIR;
+      tempfile = file_name_concat (tempdir, "tacXXXXXX", NULL);
+
+      /* FIXME: there's a small window between a successful mkstemp call
+         and the unlink that's performed by record_or_unlink_tempfile.
+         If we're interrupted in that interval, this code fails to remove
+         the temporary file.  On systems that define DONT_UNLINK_WHILE_OPEN,
+         the window is much larger -- it extends to the atexit-called
+         unlink_tempfile.
+         FIXME: clean up upon fatal signal.  Don't block them, in case
+         $TMPFILE is a remote file system.  */
+
+      int fd = mkstemp (tempfile);
+      if (fd < 0)
+        {
+          error (0, errno, _("cannot create temporary file in %s"),
+                 quote (tempdir));
+          goto Reset;
+        }
+
+      tmp_fp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
+      if (! tmp_fp)
+        {
+          error (0, errno, _("cannot open %s for writing"), quote (tempfile));
+          close (fd);
+          unlink (tempfile);
+        Reset:
+          free (tempfile);
+          tempfile = NULL;
+          return false;
+        }
+
+      record_or_unlink_tempfile (tempfile, tmp_fp);
+    }
+  else
+    {
+      if (fseek (tmp_fp, 0, SEEK_SET) < 0
+          || ftruncate (fileno (tmp_fp), 0) < 0)
+        {
+          error (0, errno, _("failed to rewind stream for %s"),
+                 quote (tempfile));
+          return false;
+        }
+    }
+
+  *fp = tmp_fp;
+  *file_name = tempfile;
+  return true;
+}
+
 /* Copy from file descriptor INPUT_FD (corresponding to the named FILE) to
    a temporary file, and set *G_TMP and *G_TEMPFILE to the resulting stream
    and file name.  Return true if successful.  */
@@ -425,46 +486,10 @@ record_or_unlink_tempfile (char const *fn, FILE *fp ATTRIBUTE_UNUSED)
 static bool
 copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
-  static char *template = NULL;
-  static char const *tempdir;
-
-  if (template == NULL)
-    {
-      char *t = getenv ("TMPDIR");
-      tempdir = t ? t : DEFAULT_TMPDIR;
-      template = file_name_concat (tempdir, "tacXXXXXX", NULL);
-    }
-
-  /* FIXME: there's a small window between a successful mkstemp call
-     and the unlink that's performed by record_or_unlink_tempfile.
-     If we're interrupted in that interval, this code fails to remove
-     the temporary file.  On systems that define DONT_UNLINK_WHILE_OPEN,
-     the window is much larger -- it extends to the atexit-called
-     unlink_tempfile.
-     FIXME: clean up upon fatal signal.  Don't block them, in case
-     $TMPFILE is a remote file system.  */
-
-  char *tempfile = xstrdup (template);
-  int fd = mkstemp (tempfile);
-  if (fd < 0)
-    {
-      error (0, errno, _("cannot create temporary file in %s"),
-             quote (tempdir));
-      free (tempfile);
-      return false;
-    }
-
-  FILE *tmp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
-  if (! tmp)
-    {
-      error (0, errno, _("cannot open %s for writing"), quote (tempfile));
-      close (fd);
-      unlink (tempfile);
-      free (tempfile);
-      return false;
-    }
-
-  record_or_unlink_tempfile (tempfile, tmp);
+  FILE *fp;
+  char *file_name;
+  if (!temp_stream (&fp, &file_name))
+    return false;
 
   while (1)
     {
@@ -477,26 +502,25 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
           goto Fail;
         }
 
-      if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
+      if (fwrite (G_buffer, 1, bytes_read, fp) != bytes_read)
         {
-          error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
+          error (0, errno, _("%s: write error"), quotearg_colon (file_name));
           goto Fail;
         }
     }
 
-  if (fflush (tmp) != 0)
+  if (fflush (fp) != 0)
     {
-      error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
+      error (0, errno, _("%s: write error"), quotearg_colon (file_name));
       goto Fail;
     }
 
-  *g_tmp = tmp;
-  *g_tempfile = tempfile;
+  *g_tmp = fp;
+  *g_tempfile = file_name;
   return true;
 
  Fail:
-  fclose (tmp);
-  free (tempfile);
+  fclose (fp);
   return false;
 }
 
@@ -512,8 +536,6 @@ tac_nonseekable (int input_fd, const char *file)
     return false;
 
   bool ok = tac_seekable (fileno (tmp_stream), tmp_file);
-  fclose (tmp_stream);
-  free (tmp_file);
   return ok;
 }
 
