@@ -430,7 +430,12 @@ temp_stream (FILE **fp, char **file_name)
     {
       char const *t = getenv ("TMPDIR");
       char const *tempdir = t ? t : DEFAULT_TMPDIR;
-      tempfile = file_name_concat (tempdir, "tacXXXXXX", NULL);
+      tempfile = mfile_name_concat (tempdir, "tacXXXXXX", NULL);
+      if (tempdir == NULL)
+        {
+          error (0, 0, _("memory exhausted"));
+          return false;
+        }
 
       /* FIXME: there's a small window between a successful mkstemp call
          and the unlink that's performed by record_or_unlink_tempfile.
