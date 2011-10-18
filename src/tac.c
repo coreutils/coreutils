@@ -430,12 +430,9 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
   if (template == NULL)
     {
-      char const * const Template = "tacXXXXXX";
-      tempdir = getenv ("TMPDIR");
-      if (tempdir == NULL)
-        tempdir = DEFAULT_TMPDIR;
-
-      template = file_name_concat (tempdir, Template, NULL);
+      char *t = getenv ("TMPDIR");
+      tempdir = t ? t : DEFAULT_TMPDIR;
+      template = file_name_concat (tempdir, "tacXXXXXX", NULL);
     }
 
   /* FIXME: there's a small window between a successful mkstemp call
