@@ -449,7 +449,7 @@ temp_stream (FILE **fp, char **file_name)
       int fd = mkstemp (tempfile);
       if (fd < 0)
         {
-          error (0, errno, _("cannot create temporary file in %s"),
+          error (0, errno, _("failed to create temporary file in %s"),
                  quote (tempdir));
           goto Reset;
         }
@@ -457,7 +457,8 @@ temp_stream (FILE **fp, char **file_name)
       tmp_fp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
       if (! tmp_fp)
         {
-          error (0, errno, _("cannot open %s for writing"), quote (tempfile));
+          error (0, errno, _("failed to open %s for writing"),
+                 quote (tempfile));
           close (fd);
           unlink (tempfile);
         Reset:
@@ -569,7 +570,8 @@ tac_file (const char *filename)
       fd = open (filename, O_RDONLY | O_BINARY);
       if (fd < 0)
         {
-          error (0, errno, _("cannot open %s for reading"), quote (filename));
+          error (0, errno, _("failed to open %s for reading"),
+                 quote (filename));
           return false;
         }
     }
