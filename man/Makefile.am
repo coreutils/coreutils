@@ -19,7 +19,8 @@ dist_man1_MANS = $(MAN)
 
 man_aux = $(dist_man1_MANS:.1=.x)
 
-EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man
+EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man \
+	$(NO_INSTALL_PROGS_DEFAULT:%=%.1)
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
 
 # Depend on ../.version to get version number changes.
