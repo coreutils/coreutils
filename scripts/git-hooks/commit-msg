@@ -1,0 +1,74 @@
+#!/bin/sh
+# A hook script to check the commit log message.
+
+log_file=$1
+export log_file
+
+re_edit()
+{
+  read -p "Hit return to edit. Ctrl-C to abort..." v 1>&2
+  ${EDITOR:-vi} "$log_file"
+}
+
+get_msg()
+{
+  sed '/^#/d' "$log_file" #filter comments
+}
+
+check_msg()
+{
+  # First line must contain a colon, e.g., "keyword: ...".
+  line_1=$(get_msg | sed 1q)
+  case $line_1 in
+    *:*) ;;
+    [Vv]ersion' '[0-9]*) return 0;;
+    *) echo "missing colon on first line of log message"; return 1;;
+  esac
+
+  # The token(s) before the colon on the first line must be one of
+  # the following.  Tokens may be space- or comma-separated.
+  fail=0
+  for w in $(echo "$line_1"|sed 's/:.*//'|tr -s ' ,' '  '); do
+    case $w in
+      # program names
+      \[|arch|base64|basename|cat|chcon|chgrp|chmod|chown|chroot) ;;
+      cksum|comm|cp|csplit|cut|date|dd|df|dir|dircolors|dirname|du) ;;
+      echo|env|expand|expr|factor|false|fmt|fold|groups|head|hostid) ;;
+      hostname|id|install|join|kill|link|ln|logname|ls|md5sum|mkdir) ;;
+      mkfifo|mknod|mktemp|mv|nice|nl|nohup|nproc|od|paste|pathchk) ;;
+      pinky|pr|printenv|printf|ptx|pwd|readlink|rm|rmdir|runcon) ;;
+      seq|sha1sum|sha224sum|sha256sum|sha384sum|sha512sum|shred|shuf) ;;
+      sleep|sort|split|stat|stdbuf|stty|su|sum|sync|tac|tail|tee) ;;
+      test|timeout|touch|tr|true|truncate|tsort|tty|uname|unexpand) ;;
+      uniq|unlink|uptime|users|vdir|wc|who|whoami|yes) ;;
+      # other tags
+      gnulib|tests|maint|doc|build|scripts) ;;
+      *) echo "invalid first word of summary line: $w"; fail=1;;
+    esac
+  done
+  test $fail = 1 && return 1
+
+  # Limit line length to allow for tab in changelog
+  test $(get_msg | wc -L | cut -f1 -d' ') -gt 72 \
+    && { echo "line > 72 chars"; return 1; }
+
+  # Second line should be blank or not present
+  test "$(get_msg | sed -n 2p)" \
+    && { echo "second line should be blank"; return 1; }
+
+  # Flag redundant use of "issue"
+  get_msg | grep -Fi "issue reported by" >&2 \
+    && { echo "just say: Reported by ..."; return 1; }
+
+  return 0;
+}
+
+while :; do
+  err=$(check_msg) && break
+  ME=${0##*/}
+  err="$ME: $err"
+  # Insert the diagnostic as a comment on the first line of $log_file.
+  perl -ni -e '$. == 1 and print "# '"$err"'\n"; print' $log_file
+  printf '%s\n' "$err" 1>&2
+  re_edit
+done

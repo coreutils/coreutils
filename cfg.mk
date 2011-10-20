@@ -384,13 +384,15 @@ exclude_file_name_regexp--sc_file_system = \
 exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
-  (^tests/init\.sh|Makefile\.am|\.mk)$$
+  (^scripts/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk)$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
+
+tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
+tbi_2 = ^scripts/git-hooks/(pre-commit|applypatch-msg)$$
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
-  ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
+  $(tbi_1)|$(tbi_2)
+
 exclude_file_name_regexp--sc_preprocessor_indentation = \
   ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
-
-
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g)$$
