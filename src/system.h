@@ -74,19 +74,8 @@ you must include <sys/types.h> before including this file
 # define makedev(maj, min)  mkdev (maj, min)
 #endif
 
-/* Don't use bcopy!  Use memmove if source and destination may overlap,
-   memcpy otherwise.  */
-
 #include <string.h>
-
 #include <errno.h>
-
-/* Some systems don't define this; POSIX mentions it but says it is
-   obsolete, so gnulib does not provide it either.  */
-#ifndef ENODATA
-# define ENODATA (-1)
-#endif
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include "version.h"
