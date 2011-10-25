@@ -76,6 +76,14 @@ you must include <sys/types.h> before including this file
 
 #include <string.h>
 #include <errno.h>
+
+/* Some systems don't define this; POSIX mentions it but says it is
+   obsolete.  gnulib defines it, but only on native Windows systems,
+   and there only because MSVC 10 does.  */
+#ifndef ENODATA
+# define ENODATA (-1)
+#endif
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include "version.h"
