@@ -87,7 +87,7 @@ static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
-  {"iso-8601", optional_argument, NULL, 'I'}, /* Deprecated.  */
+  {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"rfc-2822", no_argument, NULL, 'R'},
@@ -131,6 +131,10 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
+  -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
+                            TIMESPEC=`date' for date only (the default),\n\
+                            `hours', `minutes', `seconds', or `ns' for date\n\
+                            and time to the indicated precision.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
