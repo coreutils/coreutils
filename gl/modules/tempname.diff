@@ -1,14 +1,14 @@
---- /gnulib/modules/tempname	2011-06-17 11:41:46.070787376 +0200
-+++ gl/modules/tempname	2011-06-17 11:43:49.571154551 +0200
-@@ -1,2 +1,2 @@
+--- tempname	2011-10-27 18:55:14.672722002 +0200
++++ tempname	2011-10-27 18:55:25.200999149 +0200
+@@ -1,5 +1,5 @@
  Description:
 -gen_tempname() function: create a private temporary file or directory.
 +gen_tempname, gen_tempname_len: create a private temporary file or directory.
 
  Files:
  lib/tempname.c
-@@ -10,6 +10,8 @@ Depends-on:
- extensions
+@@ -11,6 +11,8 @@ extensions
+ fcntl-h
  gettimeofday
  lstat
 +randint
