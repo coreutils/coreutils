@@ -24,9 +24,20 @@ mkfifo_or_skip_ fifo
 echo 1 > fifo &
 echo 1 > exp || framework_failure_
 
-timeout 10 tail -f fifo > out
-test $? = 124 || fail=1
+timeout 10 tail -f fifo > out & pid=$!
+
+check_tail_output()
+{
+  local n_sec="$1"
+  test -s out || { sleep $n_sec; return 1; }
+}
+
+# Wait 6.3s for tail to write something.
+retry_delay_ check_tail_output .1 7 || fail=1
 
 compare out exp || fail=1
+
+# Kill the still-running tail, or fail if it's gone.
+kill $pid || fail=1
 
 Exit $fail
