@@ -14,6 +14,7 @@ inline
 fopen-safer
 gettimeofday
 quotearg
+stdalign
 stdbool
 stdint
 unlocked-io

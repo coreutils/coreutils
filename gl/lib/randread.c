@@ -29,6 +29,7 @@
 #include <exitfail.h>
 #include <fcntl.h>
 #include <quotearg.h>
+#include <stdalign.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -62,7 +63,6 @@
 #if _STRING_ARCH_unaligned
 # define ALIGNED_POINTER(ptr, type) true
 #else
-# define alignof(type) offsetof (struct { char c; type x; }, x)
 # define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
 #endif
 
