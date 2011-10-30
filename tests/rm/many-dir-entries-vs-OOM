@@ -28,7 +28,7 @@ seq 200000|xargs touch || framework_failure_
 
 cd ..
 
-# Restricted to 40MB, rm from coreutils-8.12 each of these would fail
+# Restricted to 40MB, each of these coreutils-8.12 programs would fail
 # with a diagnostic like "rm: fts_read failed: Cannot allocate memory".
 ulimit -v 40000
 du -sh d || fail=1
