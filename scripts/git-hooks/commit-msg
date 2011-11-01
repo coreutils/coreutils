@@ -56,6 +56,12 @@ check_msg()
   test "$(get_msg | sed -n 2p)" \
     && { echo "second line should be blank"; return 1; }
 
+  get_msg | grep -E 'https?://bugzilla\.redhat\.com/show_bug\.cgi' >&2 \
+    && { echo 'use shorter http://bugzilla.redhat.com/NNNNNN'; return 1; }
+
+  get_msg | grep -E 'https?://debbugs\.gnu\.org/cgi/bugreport\.cgi?bug=' >&2 \
+    && { echo 'use shorter http://bugs.gnu.org/NNNNN'; return 1; }
+
   # Flag redundant use of "issue"
   get_msg | grep -Fi "issue reported by" >&2 \
     && { echo "just say: Reported by ..."; return 1; }
