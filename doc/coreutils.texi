@@ -14188,11 +14188,9 @@ is available, it is ignored.
 If given an argument that does not start with @samp{+}, @command{date} sets
 the system clock to the date and time specified by that argument (as
 described below).  You must have appropriate privileges to set the
-system clock.  The @option{--date} and @option{--set} options may not be
-used with such an argument.  The @option{--universal} option may be used
-with such an argument to indicate that the specified date and time are
-relative to Coordinated Universal Time rather than to the local time
-zone.
+system clock.  Note for changes to persist across a reboot, the
+hardware clock may need to be updated from the system clock, which
+might not happen automatically on your system.
 
 The argument must consist entirely of digits, which have the following
 meaning:
@@ -14214,7 +14212,10 @@ last two digits of year (optional)
 second (optional)
 @end table
 
-The @option{--set} option also sets the system clock; see the next section.
+Note, the @option{--date} and @option{--set} options may not be used with an
+argument in the above format.  The @option{--universal} option may be used
+with such an argument to indicate that the specified date and time are
+relative to Coordinated Universal Time rather than to the local time zone.
 
 
 @node Options for date
@@ -14355,6 +14356,7 @@ This is equivalent to the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
 @opindex -s
 @opindex --set
 Set the date and time to @var{datestr}.  See @option{-d} above.
+See also @ref{Setting the time}.
 
 @item -u
 @itemx --utc
