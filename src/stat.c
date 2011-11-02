@@ -30,6 +30,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <stdalign.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
@@ -57,7 +58,6 @@
 
 #include "system.h"
 
-#include "alignof.h"
 #include "areadlink.h"
 #include "error.h"
 #include "file-type.h"
