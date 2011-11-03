@@ -73,14 +73,25 @@ rm -f int.received timeout.running
 # commands that create their own group
 # This didn't work before 8.13.
 
+start=$(date +%s)
+
 # Note the first timeout must send a signal that
 # the second is handling for it to be propagated to the command.
 # SIGINT, SIGTERM, SIGALRM etc. are implicit.
 timeout -sALRM 30 timeout -sINT 25 ./timeout.cmd 20&
+pid=$!
 # Wait 6.3s for timeout.cmd to start
 retry_delay_ check_timeout_cmd_running .1 6 || fail=1
-kill -ALRM $! # trigger the alarm of the first timeout command
-wait
+kill -ALRM $pid # trigger the alarm of the first timeout command
+wait $pid
+ret=$?
+test $ret -eq 124 ||
+  skip_ "timeout returned $ret. SIGALRM not handled?"
 test -e int.received || fail=1
+
+end=$(date +%s)
+
+test $(expr $end - $start) -lt 20 ||
+  skip_ "timeout.cmd didn't receive a signal until after sleep?"
 
 Exit $fail
