@@ -2715,8 +2715,16 @@ has_capability (char const *name ATTRIBUTE_UNUSED)
 
 /* Enter and remove entries in the table `cwd_file'.  */
 
-/* Empty the table of files.  */
+static void
+free_ent (struct fileinfo *f)
+{
+  free (f->name);
+  free (f->linkname);
+  if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
+    freecon (f->scontext);
+}
 
+/* Empty the table of files.  */
 static void
 clear_files (void)
 {
@@ -2725,10 +2733,7 @@ clear_files (void)
   for (i = 0; i < cwd_n_used; i++)
     {
       struct fileinfo *f = sorted_file[i];
-      free (f->name);
-      free (f->linkname);
-      if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
-        freecon (f->scontext);
+      free_ent (f);
     }
 
   cwd_n_used = 0;
@@ -3164,7 +3169,7 @@ extract_dirs_from_files (char const *dirname, bool command_line_arg)
               free (name);
             }
           if (f->filetype == arg_directory)
-            free (f->name);
+            free_ent (f);
         }
     }
 
