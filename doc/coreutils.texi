@@ -4362,7 +4362,7 @@ sort -n -r
 @end example
 
 @item
-Run no more that 4 sorts concurrently, using a buffer size of 10M.
+Run no more than 4 sorts concurrently, using a buffer size of 10M.
 
 @example
 sort --parallel=4 -S 10M
