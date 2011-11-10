@@ -17,6 +17,10 @@
 # Used in maint.mk's web-manual rule
 manual_title = Core GNU utilities
 
+# Use the direct link.  This is guaranteed to work immediately, while
+# it can take a while for the faster mirror links to become usable.
+url_dir_list = http://ftp.gnu.org/gnu/$(PACKAGE)
+
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip = \
   sc_texinfo_acronym
