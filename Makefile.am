@@ -155,3 +155,17 @@ THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version
 	  echo;								\
 	  printf ';; %s\n' 'Local Variables:' 'coding: utf-8' End:;	\
 	} > $@-t && mv $@-t $@
+
+# Some of our git hook scripts are supposed to be identical to git's samples.
+# See if they are still in sync.
+.PHONY: check-git-hook-script-sync
+check-git-hook-script-sync:
+	@fail=0;							\
+	t=$$(mktemp -d)							\
+	  && cd $$t && git init -q && cd .git/hooks			\
+	  && for i in pre-commit pre-applypatch applypatch-msg; do	\
+	       diff $(abs_top_srcdir)/scripts/git-hooks/$$i $$i.sample	\
+		 || fail=1;						\
+	     done;							\
+	rm -rf $$t;							\
+	test $$fail = 0
