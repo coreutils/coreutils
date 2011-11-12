@@ -415,6 +415,7 @@ TESTS =						\
   ln/slash-decorated-nonexistent-dest		\
   ln/target-1					\
   ls/abmon-align				\
+  ls/block-size					\
   ls/color-clear-to-eol				\
   ls/color-dtype-dir				\
   ls/color-norm					\

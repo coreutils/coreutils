@@ -7127,10 +7127,19 @@ Append @samp{*} for executable regular files, otherwise behave as for
 @end table
 
 @item -k
+@itemx --kibibytes
 @opindex -k
-Print file sizes in 1024-byte blocks, overriding the default block
-size (@pxref{Block size}).
-This option is equivalent to @option{--block-size=1K}.
+@opindex --kibibytes
+Set the default block size to its normal value of 1024 bytes,
+overriding any contrary specification in environment variables
+(@pxref{Block size}).  This option is in turn overridden by the
+@option{--block-size}, @option{-h} or @option{--human-readable}, and
+@option{--si} options.
+
+The @option{-k} or @option{--kibibytes} option affects the
+per-directory block count written by the @option{-l} and similar
+options, and the size written by the @option{-s} or @option{--size}
+option.  It does not affect the file size written by @option{-l}.
 
 @item -m
 @itemx --format=commas

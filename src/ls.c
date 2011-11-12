@@ -479,13 +479,14 @@ static bool numeric_ids;
 
 static bool print_block_size;
 
-/* Human-readable options for output.  */
+/* Human-readable options for output, when printing block counts.  */
 static int human_output_opts;
 
-/* The units to use when printing sizes other than file sizes.  */
+/* The units to use when printing block counts.  */
 static uintmax_t output_block_size;
 
 /* Likewise, but for file sizes.  */
+static int file_human_output_opts;
 static uintmax_t file_output_block_size = 1;
 
 /* Follow the output with a special string.  Using this format,
@@ -809,6 +810,7 @@ static struct option const long_options[] =
    GROUP_DIRECTORIES_FIRST_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
+  {"kibibytes", no_argument, NULL, 'k'},
   {"numeric-uid-gid", no_argument, NULL, 'n'},
   {"no-group", no_argument, NULL, 'G'},
   {"hide-control-chars", no_argument, NULL, 'q'},
@@ -1512,8 +1514,8 @@ decode_switches (int argc, char **argv)
 {
   char *time_style_option = NULL;
 
-  /* Record whether there is an option specifying sort type.  */
   bool sort_type_specified = false;
+  bool kibibytes_specified = false;
 
   qmark_funny_chars = false;
 
@@ -1580,14 +1582,6 @@ decode_switches (int argc, char **argv)
          _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
                  quotearg (q_style));
       }
-  }
-
-  {
-    char const *ls_block_size = getenv ("LS_BLOCK_SIZE");
-    human_options (ls_block_size,
-                   &human_output_opts, &output_block_size);
-    if (ls_block_size || getenv ("BLOCK_SIZE"))
-      file_output_block_size = output_block_size;
   }
 
   line_length = 80;
@@ -1689,7 +1683,8 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'h':
-          human_output_opts = human_autoscale | human_SI | human_base_1024;
+          file_human_output_opts = human_output_opts =
+            human_autoscale | human_SI | human_base_1024;
           file_output_block_size = output_block_size = 1;
           break;
 
@@ -1698,8 +1693,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'k':
-          human_output_opts = 0;
-          file_output_block_size = output_block_size = 1024;
+          kibibytes_specified = true;
           break;
 
         case 'l':
@@ -1937,12 +1931,14 @@ decode_switches (int argc, char **argv)
                                                  &output_block_size);
             if (e != LONGINT_OK)
               xstrtol_fatal (e, oi, 0, long_options, optarg);
+            file_human_output_opts = human_output_opts;
             file_output_block_size = output_block_size;
           }
           break;
 
         case SI_OPTION:
-          human_output_opts = human_autoscale | human_SI;
+          file_human_output_opts = human_output_opts =
+            human_autoscale | human_SI;
           file_output_block_size = output_block_size = 1;
           break;
 
@@ -1956,6 +1952,23 @@ decode_switches (int argc, char **argv)
 
         default:
           usage (LS_FAILURE);
+        }
+    }
+
+  if (! output_block_size)
+    {
+      char const *ls_block_size = getenv ("LS_BLOCK_SIZE");
+      human_options (ls_block_size,
+                     &human_output_opts, &output_block_size);
+      if (ls_block_size || getenv ("BLOCK_SIZE"))
+        {
+          file_human_output_opts = human_output_opts;
+          file_output_block_size = output_block_size;
+        }
+      if (kibibytes_specified)
+        {
+          human_output_opts = 0;
+          output_block_size = 1024;
         }
     }
 
@@ -3025,7 +3038,8 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
             {
               char buf[LONGEST_HUMAN_READABLE + 1];
               uintmax_t size = unsigned_file_size (f->stat.st_size);
-              int len = mbswidth (human_readable (size, buf, human_output_opts,
+              int len = mbswidth (human_readable (size, buf,
+                                                  file_human_output_opts,
                                                   1, file_output_block_size),
                                   0);
               if (file_size_width < len)
@@ -3767,7 +3781,8 @@ print_long_format (const struct fileinfo *f)
         (! f->stat_ok
          ? "?"
          : human_readable (unsigned_file_size (f->stat.st_size),
-                           hbuf, human_output_opts, 1, file_output_block_size));
+                           hbuf, file_human_output_opts, 1,
+                           file_output_block_size));
       int pad;
       for (pad = file_size_width - mbswidth (size, 0); 0 < pad; pad--)
         *p++ = ' ';
@@ -4672,7 +4687,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --inode                print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
 \n\
-  -k                         like --block-size=1K\n\
+  -k, --kibibytes            use 1024-byte blocks\n\
 "), stdout);
       fputs (_("\
   -l                         use a long listing format\n\
