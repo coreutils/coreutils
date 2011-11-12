@@ -399,6 +399,7 @@ TESTS =						\
   du/slink					\
   du/trailing-slash				\
   du/two-args					\
+  id/gnu-zero-uids				\
   id/no-context					\
   install/basic-1				\
   install/create-leading			\

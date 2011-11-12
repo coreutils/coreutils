@@ -38,6 +38,13 @@
   proper_name ("Arnold Robbins"), \
   proper_name ("David MacKenzie")
 
+/* Whether the functions getuid, geteuid, getgid and getegid may fail.  */
+#ifdef __GNU__
+# define GETID_MAY_FAIL 1
+#else
+# define GETID_MAY_FAIL 0
+#endif
+
 /* If nonzero, output only the SELinux context. -Z */
 static int just_context = 0;
 
@@ -202,9 +209,22 @@ main (int argc, char **argv)
   else
     {
       euid = geteuid ();
+      if (GETID_MAY_FAIL && euid == -1 && !use_real
+          && !just_group && !just_group_list && !just_context)
+        error (EXIT_FAILURE, errno, _("cannot get effective UID"));
+
       ruid = getuid ();
+      if (GETID_MAY_FAIL && ruid == -1 && use_real
+          && !just_group && !just_group_list && !just_context)
+        error (EXIT_FAILURE, errno, _("cannot get real UID"));
+
       egid = getegid ();
+      if (GETID_MAY_FAIL && egid == -1 && !use_real && !just_user)
+        error (EXIT_FAILURE, errno, _("cannot get effective GID"));
+
       rgid = getgid ();
+      if (GETID_MAY_FAIL && rgid == -1 && use_real && !just_user)
+        error (EXIT_FAILURE, errno, _("cannot get real GID"));
     }
 
   if (just_user)
