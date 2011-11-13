@@ -195,7 +195,7 @@ main (int argc, char **argv)
     {
       struct passwd *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
-        error (EXIT_FAILURE, 0, _("%s: No such user"), argv[optind]);
+        error (EXIT_FAILURE, 0, _("%s: no such user"), argv[optind]);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }
