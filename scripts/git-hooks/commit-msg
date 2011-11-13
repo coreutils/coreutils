@@ -42,7 +42,7 @@ check_msg()
       test|timeout|touch|tr|true|truncate|tsort|tty|uname|unexpand) ;;
       uniq|unlink|uptime|users|vdir|wc|who|whoami|yes) ;;
       # other tags
-      gnulib|tests|maint|doc|build|scripts) ;;
+      copy|gnulib|tests|maint|doc|build|scripts) ;;
       *) echo "invalid first word of summary line: $w"; fail=1;;
     esac
   done
