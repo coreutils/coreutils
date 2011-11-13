@@ -66,8 +66,8 @@ long=d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z
 # Five iterations was not enough in 2 of 7 "make -j20 check" runs on a
 # 6/12-core system.  However, using "10", I saw no failure in 20 trials.
 # Using 10 iterations was not enough, either.
-# Using 30, I saw no failure in 200 trials.
-for i in $(seq 30); do
+# Using 50, I saw no failure in 200 trials.
+for i in $(seq 50); do
   mkdir -p $t/3/a/b/c/$i/$long || framework_failure_
 done
 
