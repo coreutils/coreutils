@@ -392,7 +392,7 @@ exclude_file_name_regexp--sc_prohibit_fail_0 = \
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
 tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
-tbi_2 = ^scripts/git-hooks/(pre-commit|applypatch-msg)$$
+tbi_2 = ^scripts/git-hooks/(pre-commit|pre-applypatch|applypatch-msg)$$
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
   $(tbi_1)|$(tbi_2)
 
