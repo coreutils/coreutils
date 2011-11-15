@@ -38,13 +38,6 @@
   proper_name ("Arnold Robbins"), \
   proper_name ("David MacKenzie")
 
-/* Whether the functions getuid, geteuid, getgid and getegid may fail.  */
-#ifdef __GNU__
-# define GETID_MAY_FAIL 1
-#else
-# define GETID_MAY_FAIL 0
-#endif
-
 /* If nonzero, output only the SELinux context. -Z */
 static int just_context = 0;
 
@@ -208,22 +201,32 @@ main (int argc, char **argv)
     }
   else
     {
+      /* POSIX says getuid etc. cannot fail, but they can fail under
+         GNU/Hurd and a few other systems.  Test for failure by
+         checking errno.  */
+      uid_t NO_UID = -1;
+      gid_t NO_GID = -1;
+
+      errno = 0;
       euid = geteuid ();
-      if (GETID_MAY_FAIL && euid == -1 && !use_real
+      if (euid == NO_UID && errno && !use_real
           && !just_group && !just_group_list && !just_context)
         error (EXIT_FAILURE, errno, _("cannot get effective UID"));
 
+      errno = 0;
       ruid = getuid ();
-      if (GETID_MAY_FAIL && ruid == -1 && use_real
+      if (ruid == NO_UID && errno && use_real
           && !just_group && !just_group_list && !just_context)
         error (EXIT_FAILURE, errno, _("cannot get real UID"));
 
+      errno = 0;
       egid = getegid ();
-      if (GETID_MAY_FAIL && egid == -1 && !use_real && !just_user)
+      if (egid == NO_GID && errno && !use_real && !just_user)
         error (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
+      errno = 0;
       rgid = getgid ();
-      if (GETID_MAY_FAIL && rgid == -1 && use_real && !just_user)
+      if (rgid == NO_GID && errno && use_real && !just_user)
         error (EXIT_FAILURE, errno, _("cannot get real GID"));
     }
 
@@ -316,7 +319,7 @@ print_full_info (const char *username)
     gid_t *groups;
     int i;
 
-    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : -1),
                                &groups);
     if (n_groups < 0)
       {
