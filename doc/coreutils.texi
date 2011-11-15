@@ -901,10 +901,10 @@ A block size specification can be a positive integer specifying the number
 of bytes per block, or it can be @code{human-readable} or @code{si} to
 select a human-readable format.  Integers may be followed by suffixes
 that are upward compatible with the
-@uref{http://www.bipm.fr/enus/3_SI/si-prefixes.html, SI prefixes}
+@uref{http://www.bipm.org/en/si/si_brochure/chapter3/prefixes.html, SI prefixes}
 for decimal multiples and with the
-@uref{http://physics.nist.gov/cuu/Units/binary.html, IEC 60027-2
-prefixes for binary multiples}.
+@uref{http://physics.nist.gov/cuu/Units/binary.html, ISO/IEC 80000-13
+(formerly IEC 60027-2) prefixes} for binary multiples.
 
 With human-readable formats, output sizes are followed by a size letter
 such as @samp{M} for megabytes.  @code{BLOCK_SIZE=human-readable} uses
@@ -946,7 +946,7 @@ kilobyte: @math{10^3 = 1000}.
 @itemx KiB
 @cindex kibibyte, definition of
 kibibyte: @math{2^{10} = 1024}.  @samp{K} is special: the SI prefix is
-@samp{k} and the IEC 60027-2 prefix is @samp{Ki}, but tradition and
+@samp{k} and the ISO/IEC 80000-13 prefix is @samp{Ki}, but tradition and
 @acronym{POSIX} use @samp{k} to mean @samp{KiB}.
 @item MB
 @cindex megabyte, definition of
@@ -989,14 +989,12 @@ zettabyte: @math{10^{21} = 1,000,000,000,000,000,000,000}
 @item Z
 @itemx ZiB
 @math{2^{70} = 1,180,591,620,717,411,303,424}.
-(@samp{Zi} is a @acronym{GNU} extension to IEC 60027-2.)
 @item YB
 @cindex yottabyte, definition of
 yottabyte: @math{10^{24} = 1,000,000,000,000,000,000,000,000}.
 @item Y
 @itemx YiB
 @math{2^{80} = 1,208,925,819,614,629,174,706,176}.
-(@samp{Yi} is a @acronym{GNU} extension to IEC 60027-2.)
 @end table
 
 @opindex -k

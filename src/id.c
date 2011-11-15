@@ -38,13 +38,6 @@
   proper_name ("Arnold Robbins"), \
   proper_name ("David MacKenzie")
 
-/* Whether the functions getuid, geteuid, getgid and getegid may fail.  */
-#ifdef __GNU__
-# define GETID_MAY_FAIL 1
-#else
-# define GETID_MAY_FAIL 0
-#endif
-
 /* If nonzero, output only the SELinux context. -Z */
 static int just_context = 0;
 
@@ -208,22 +201,36 @@ main (int argc, char **argv)
     }
   else
     {
+      /* On GNU/Hurd hosts, getuid etc. can fail and return -1.
+         However, on GNU/Linux hosts, uid_t is an unsigned value and
+         getuid etc. can return the positive value (uid_t) -1.  To
+         handle both cases correctly, consider getuid etc. to fail if
+         it returns a negative value (a value that is impossible on
+         GNU/Linux hosts).
+
+         GNU/Linux sysadmins should not give users the UID (uid_t) -1
+         even though uid_t is unsigned, as system calls like chown would
+         not have the desired behavior with such a UID, and other
+         coreutils applications therefore do not support such a UID.
+         However, 'id' makes a special attempt to handle this UID, to
+         help people diagnose the problem.  */
+
       euid = geteuid ();
-      if (GETID_MAY_FAIL && euid == -1 && !use_real
+      if (euid < 0 && !use_real
           && !just_group && !just_group_list && !just_context)
         error (EXIT_FAILURE, errno, _("cannot get effective UID"));
 
       ruid = getuid ();
-      if (GETID_MAY_FAIL && ruid == -1 && use_real
+      if (ruid < 0 && use_real
           && !just_group && !just_group_list && !just_context)
         error (EXIT_FAILURE, errno, _("cannot get real UID"));
 
       egid = getegid ();
-      if (GETID_MAY_FAIL && egid == -1 && !use_real && !just_user)
+      if (egid < 0 && !use_real && !just_user)
         error (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
       rgid = getgid ();
-      if (GETID_MAY_FAIL && rgid == -1 && use_real && !just_user)
+      if (rgid < 0 && use_real && !just_user)
         error (EXIT_FAILURE, errno, _("cannot get real GID"));
     }
 
@@ -316,7 +323,7 @@ print_full_info (const char *username)
     gid_t *groups;
     int i;
 
-    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : -1),
                                &groups);
     if (n_groups < 0)
       {
