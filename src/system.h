@@ -516,8 +516,8 @@ static inline void
 emit_size_note (void)
 {
   fputs (_("\n\
-SIZE is an integer with an optional suffix (example: 10MB).  Suffixes are:\n\
-KB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
+SIZE is an integer and optional unit (example: 10M is 10*1024*1024).  Units\n\
+are K, M, G, T, P, E, Z, Y (powers of 1024) or KB, MB, ... (powers of 1000).\n\
 "), stdout);
 }
 
