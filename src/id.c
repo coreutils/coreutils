@@ -201,9 +201,9 @@ main (int argc, char **argv)
     }
   else
     {
-      /* POSIX says getuid etc. cannot fail, but they can fail under
-         GNU/Hurd and a few other systems.  Test for failure by
-         checking errno.  */
+      /* POSIX says identification functions (getuid, getgid, and
+         others) cannot fail, but they can fail under GNU/Hurd and a
+         few other systems.  Test for failure by checking errno.  */
       uid_t NO_UID = -1;
       gid_t NO_GID = -1;
 
