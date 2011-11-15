@@ -207,27 +207,36 @@ main (int argc, char **argv)
       uid_t NO_UID = -1;
       gid_t NO_GID = -1;
 
-      errno = 0;
-      euid = geteuid ();
-      if (euid == NO_UID && errno && !use_real
-          && !just_group && !just_group_list && !just_context)
-        error (EXIT_FAILURE, errno, _("cannot get effective UID"));
+      if (just_user ? !use_real
+          : !just_group && !just_group_list && !just_context)
+        {
+          errno = 0;
+          euid = geteuid ();
+          if (euid == NO_UID && errno)
+            error (EXIT_FAILURE, errno, _("cannot get effective UID"));
+        }
 
-      errno = 0;
-      ruid = getuid ();
-      if (ruid == NO_UID && errno && use_real
-          && !just_group && !just_group_list && !just_context)
-        error (EXIT_FAILURE, errno, _("cannot get real UID"));
+      if (just_user ? use_real
+          : !just_group && (just_group_list || !just_context))
+        {
+          errno = 0;
+          ruid = getuid ();
+          if (ruid == NO_UID && errno)
+            error (EXIT_FAILURE, errno, _("cannot get real UID"));
+        }
 
-      errno = 0;
-      egid = getegid ();
-      if (egid == NO_GID && errno && !use_real && !just_user)
-        error (EXIT_FAILURE, errno, _("cannot get effective GID"));
+      if (!just_user && (just_group || just_group_list || !just_context))
+        {
+          errno = 0;
+          egid = getegid ();
+          if (egid == NO_GID && errno)
+            error (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
-      errno = 0;
-      rgid = getgid ();
-      if (rgid == NO_GID && errno && use_real && !just_user)
-        error (EXIT_FAILURE, errno, _("cannot get real GID"));
+          errno = 0;
+          rgid = getgid ();
+          if (rgid == NO_GID && errno)
+            error (EXIT_FAILURE, errno, _("cannot get real GID"));
+        }
     }
 
   if (just_user)
