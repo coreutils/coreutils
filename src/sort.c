@@ -457,8 +457,7 @@ Other options:\n\
                             If F is - then read names from standard input\n\
 "), stdout);
       fputs (_("\
-  -k, --key=POS1[,POS2]     start a key at POS1 (origin 1), end it at POS2\n\
-                            (default end of line).  See POS syntax below\n\
+  -k, --key=KEYDEF          sort via a key; KEYDEF gives location and type\n\
   -m, --merge               merge already sorted files; do not sort\n\
 "), stdout);
       fputs (_("\
@@ -483,13 +482,14 @@ Other options:\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-POS is F[.C][OPTS], where F is the field number and C the character position\n\
-in the field; both are origin 1.  If neither -t nor -b is in effect, characters\
+KEYDEF is F[.C][OPTS][,F[.C][OPTS]] for start and stop position, where F is a\n\
+field number and C a character position in the field; both are origin 1, and\n\
+the stop position defaults to the line's end.  If neither -t nor -b is in\n\
+effect, characters in a field are counted from the beginning of the preceding\n\
+whitespace.  OPTS is one or more single-letter ordering options [bdfgiMhnRrV],\
 \n\
-in a field are counted from the beginning of the preceding whitespace.  OPTS is\
-\n\
-one or more single-letter ordering options, which override global ordering\n\
-options for that key.  If no key is given, use the entire line as the key.\n\
+which override global ordering options for that key.  If no key is given, use\n\
+the entire line as the key.\n\
 \n\
 SIZE may be followed by the following multiplicative suffixes:\n\
 "), stdout);
