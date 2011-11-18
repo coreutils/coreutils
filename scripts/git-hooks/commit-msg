@@ -1,80 +1,140 @@
-#!/bin/sh
-# A hook script to check the commit log message.
+eval '(exit $?0)' && eval 'exec perl -w "$0" ${1+"$@"}'
+  & eval 'exec perl -w "$0" $argv:q'
+    if 0;
 
-log_file=$1
-export log_file
+use strict;
+use warnings;
+(my $ME = $0) =~ s|.*/||;
 
-re_edit()
+my $editor = $ENV{EDITOR} || 'vi';
+$ENV{PATH} = '/bin:/usr/bin';
+
+# Keywords allowed before the colon on the first line of a commit message:
+# program names and a few general category names.
+my @valid = qw(
+    arch base64 basename cat chcon chgrp chmod chown chroot cksum comm
+    cp csplit cut date dd df dir dircolors dirname du echo env expand
+    expr factor false fmt fold groups head hostid hostname id install
+    join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp
+    mv nice nl nohup nproc od paste pathchk pinky pr printenv printf
+    ptx pwd readlink rm rmdir runcon seq sha1sum sha224sum sha256sum
+    sha384sum sha512sum shred shuf sleep sort split stat stdbuf stty
+    su sum sync tac tail tee test timeout touch tr true truncate tsort
+    tty uname unexpand uniq unlink uptime users vdir wc who whoami yes
+
+    copy gnulib tests maint doc build scripts
+    );
+my $v_or = join '|', @valid;
+my $valid_regex = qr/^(?:$v_or)$/;
+
+# Rewrite the $LOG_FILE (old contents in @$LINE_REF) with an additional
+# a commented diagnostic "# $ERR" line at the top.
+sub rewrite($$$)
 {
-  read -p "Hit return to edit. Ctrl-C to abort..." v 1>&2
-  ${EDITOR:-vi} "$log_file"
+  my ($log_file, $err, $line_ref) = @_;
+  local *LOG;
+  open LOG, '>', $log_file
+    or die "$ME: $log_file: failed to open for writing: $!";
+  print LOG "# $err";
+  print LOG @$line_ref;
+  close LOG
+    or die "$ME: $log_file: failed to rewrite: $!\n";
 }
 
-get_msg()
+sub re_edit($)
 {
-  sed '/^#/d' "$log_file" #filter comments
+  my ($log_file) = @_;
+
+  warn "Interrupt (Ctrl-C) to abort...\n";
+
+  system 'sh', '-c', "$editor $log_file";
+  ($? & 127) || ($? >> 8)
+    and die "$ME: $log_file: the editor ($editor) failed, aborting\n";
 }
 
-check_msg()
+# Given a $LOG_FILE name and a \@LINE buffer,
+# read the contents of the file into the buffer and analyze it.
+# If the log message passes muster, return the empty string.
+# If not, return a diagnostic.
+sub check_msg($$)
 {
-  # First line must contain a colon, e.g., "keyword: ...".
-  line_1=$(get_msg | sed 1q)
-  case $line_1 in
-    *:*) ;;
-    [Vv]ersion' '[0-9]*) return 0;;
-    *) echo "missing colon on first line of log message"; return 1;;
-  esac
+  my ($log_file, $line_ref) = @_;
 
-  # The token(s) before the colon on the first line must be one of
-  # the following.  Tokens may be space- or comma-separated.
-  fail=0
-  for w in $(echo "$line_1"|sed 's/:.*//'|tr -s ' ,' '  '); do
-    case $w in
-      # program names
-      \[|arch|base64|basename|cat|chcon|chgrp|chmod|chown|chroot) ;;
-      cksum|comm|cp|csplit|cut|date|dd|df|dir|dircolors|dirname|du) ;;
-      echo|env|expand|expr|factor|false|fmt|fold|groups|head|hostid) ;;
-      hostname|id|install|join|kill|link|ln|logname|ls|md5sum|mkdir) ;;
-      mkfifo|mknod|mktemp|mv|nice|nl|nohup|nproc|od|paste|pathchk) ;;
-      pinky|pr|printenv|printf|ptx|pwd|readlink|rm|rmdir|runcon) ;;
-      seq|sha1sum|sha224sum|sha256sum|sha384sum|sha512sum|shred|shuf) ;;
-      sleep|sort|split|stat|stdbuf|stty|su|sum|sync|tac|tail|tee) ;;
-      test|timeout|touch|tr|true|truncate|tsort|tty|uname|unexpand) ;;
-      uniq|unlink|uptime|users|vdir|wc|who|whoami|yes) ;;
-      # other tags
-      copy|gnulib|tests|maint|doc|build|scripts) ;;
-      *) echo "invalid first word of summary line: $w"; fail=1;;
-    esac
-  done
-  test $fail = 1 && return 1
+  local *LOG;
+  open LOG, '<', $log_file
+    or return "failed to open for reading: $!";
+  @$line_ref = <LOG>;
+  close LOG;
 
-  # Limit line length to allow for tab in changelog
-  test $(get_msg | wc -L | cut -f1 -d' ') -gt 72 \
-    && { echo "line > 72 chars"; return 1; }
+  my @line = @$line_ref;
+  chomp @line;
 
-  # Second line should be blank or not present
-  test "$(get_msg | sed -n 2p)" \
-    && { echo "second line should be blank"; return 1; }
+  # Don't filter out blank or comment lines; git does that already,
+  # and if we were to ignore them here, it could lead to committing
+  # with lines that start with "#" in the log.
 
-  get_msg | grep -E 'https?://bugzilla\.redhat\.com/show_bug\.cgi' >&2 \
-    && { echo 'use shorter http://bugzilla.redhat.com/NNNNNN'; return 1; }
+  # Filter out leading blank and comment lines.
+  # while (@line && $line[0] =~ /^(?:#.*|[ \t]*)$/) { shift @line; }
 
-  get_msg | grep -E 'https?://debbugs\.gnu\.org/cgi/bugreport\.cgi?bug=' >&2 \
-    && { echo 'use shorter http://bugs.gnu.org/NNNNN'; return 1; }
+  # Filter out blank and comment lines at EOF.
+  # while (@line && $line[$#line] =~ /^(?:#.*|[ \t]*)$/) { pop @line; }
 
-  # Flag redundant use of "issue"
-  get_msg | grep -Fi "issue reported by" >&2 \
-    && { echo "just say: Reported by ..."; return 1; }
+  @line == 0
+    and return 'no log message';
 
-  return 0;
+  # The first line must have a colon or must give a version number.
+  $line[0] =~ /(?::|^[Vv]ersion [0-9])/
+    or return 'missing colon on first line of log message';
+
+  # The token(s) before the colon on the first line must be on our list
+  # Tokens may be space- or comma-separated.
+  (my $pre_colon = $line[0]) =~ s/:.*//;
+  my @word = split (/[ ,]/, $pre_colon);
+  my @bad = grep !/$valid_regex/, @word;
+  @bad
+    and return 'invalid first word(s) of summary line: ' . join (', ', @bad);
+
+  # Second line should be blank or not present.
+  2 <= @line && length $line[1]
+    and return 'second line must be empty';
+
+  # Limit line length to allow for the ChangeLog's leading TAB.
+  foreach my $line (@line)
+    {
+      72 < length $line
+        and return 'line longer than 72';
+    }
+
+  my $buf = join ("\n", @line) . "\n";
+  $buf =~ m!https?://bugzilla\.redhat\.com/show_bug\.cgi\?id=(\d+)!s
+    and return "use shorter http://bugzilla.redhat.com/$1";
+
+  $buf =~ m!https?://debbugs\.gnu\.org/cgi/bugreport\.cgi\?bug=(\d+)!s
+    and return "use shorter http://bugs.gnu.org/$1";
+
+  return '';
 }
 
-while :; do
-  err=$(check_msg) && break
-  ME=${0##*/}
-  err="$ME: $err"
-  # Insert the diagnostic as a comment on the first line of $log_file.
-  perl -ni -e '$. == 1 and print "# '"$err"'\n"; print' $log_file
-  printf '%s\n' "$err" 1>&2
-  re_edit
-done
+{
+  @ARGV == 1
+    or die;
+
+  my $log_file = $ARGV[0];
+
+  while (1)
+    {
+      my @line;
+      my $err = check_msg $log_file, \@line;
+      $err eq ''
+        and last;
+      $err = "$ME: $err\n";
+      warn $err;
+      # Insert the diagnostic as a comment on the first line of $log_file.
+      rewrite $log_file, $err, \@line;
+      re_edit $log_file;
+
+      # Stop if our parent is killed.
+      getppid() == 1
+        and last;
+    }
+}
