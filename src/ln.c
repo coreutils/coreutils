@@ -385,17 +385,17 @@ The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
 "), stdout);
-      printf (_("\
-Using -s ignores -L and -P.  Otherwise, the last option specified controls\n\
-behavior when the source is a symbolic link, defaulting to %s.\n\
-\n\
-"), LINK_FOLLOWS_SYMLINKS ? "-L" : "-P");
       fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
+\n\
 "), stdout);
+      printf (_("\
+Using -s ignores -L and -P.  Otherwise, the last option specified controls\n\
+behavior when the source is a symbolic link, defaulting to %s.\n\
+"), LINK_FOLLOWS_SYMLINKS ? "-L" : "-P");
       emit_ancillary_info ();
     }
   exit (status);
