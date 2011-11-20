@@ -14,16 +14,20 @@ s,seq:,factor:,
 # correct the URL
 s,<http.+?>,<http://bugs.debian.org/412688>,
 
-ed5c4e770a27862813c0182be8680abeb005d15b
-# Wrong bug ID:
-s,/363011,/350541,
-# in this:
-# Suggested by Josselin Mouette in <http://bugs.debian.org/363011>
+# This is wrong now only in the git log.  The ChangeLog-2008
+# entry was also erroneous, but has been corrected.
+# ed5c4e770a27862813c0182be8680abeb005d15b
+# # Wrong bug ID:
+# s,/363011,/350541,
+# # in this:
+# # Suggested by Josselin Mouette in <http://bugs.debian.org/363011>
 
-1379ed974f1fa39b12e2ffab18b3f7a607082202
-# Due to a bug in vc-dwim, I mis-attributed a patch by Paul to myself.
-# Change the author to be Paul.  Note the escaped "@":
-s,Jim .*>,Paul Eggert <eggert\@cs.ucla.edu>,
+# This was wrong only in the git log.  The ChangeLog entry was
+# is from 2007, and so was recorded (correctly) in ChangeLog-2007.
+# 1379ed974f1fa39b12e2ffab18b3f7a607082202
+# # Due to a bug in vc-dwim, I mis-attributed a patch by Paul to myself.
+# # Change the author to be Paul.  Note the escaped "@":
+# s,Jim .*>,Paul Eggert <eggert\@cs.ucla.edu>,
 
 209850fd7e1e89cf8937310878bd22d70e3588a5
 s/isspace/isblank/

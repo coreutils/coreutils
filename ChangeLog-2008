@@ -104,7 +104,7 @@
 	(errno_may_be_empty, ignorable_failure): New functions.
 	* src/remove.c (is_empty_dir): Move function to ...
 	* src/system.h (is_empty_dir): ...here, and make it inline.
-	Suggested by Josselin Mouette in <http://bugs.debian.org/363011>
+	Suggested by Josselin Mouette in <http://bugs.debian.org/350541>
 	via Bob Proulx.
 	* NEWS: Mention the improvement.
 
