@@ -143,7 +143,7 @@ ASSORT = LC_ALL=C sort
 prologue = perl -ne '/^\#\#/ and exit; print' $(srcdir)/THANKS.in
 
 THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version
-	$(AM_V_GEN)							\
+	$(AM_V_GEN)rm -f $@-t $@;					\
 	{								\
 	  $(prologue); echo;						\
 	  { perl -ne '/^$$/.../^$$/ and print' $(srcdir)/THANKS.in	\
@@ -154,7 +154,7 @@ THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version
 	    | LC_ALL=en_US.UTF-8 sort -f;				\
 	  echo;								\
 	  printf ';; %s\n' 'Local Variables:' 'coding: utf-8' End:;	\
-	} > $@-t && mv $@-t $@
+	} > $@-t && chmod a-w $@-t && mv $@-t $@
 
 # Some of our git hook scripts are supposed to be identical to git's samples.
 # See if they are still in sync.
