@@ -192,9 +192,27 @@ need_copy (const char *src_name, const char *dest_name,
     return true;
 
   if (src_sb.st_size != dest_sb.st_size
-      || (dest_sb.st_mode & CHMOD_MODE_BITS) != mode
-      || dest_sb.st_uid != (owner_id == (uid_t) -1 ? getuid () : owner_id)
-      || dest_sb.st_gid != (group_id == (gid_t) -1 ? getgid () : group_id))
+      || (dest_sb.st_mode & CHMOD_MODE_BITS) != mode)
+    return true;
+
+  if (owner_id == (uid_t) -1)
+    {
+      errno = 0;
+      uid_t ruid = getuid ();
+      if ((ruid == (uid_t) -1 && errno) || dest_sb.st_uid != ruid)
+        return true;
+    }
+  else if (dest_sb.st_uid != owner_id)
+    return true;
+
+  if (group_id == (uid_t) -1)
+    {
+      errno = 0;
+      gid_t rgid = getgid ();
+      if ((rgid == (uid_t) -1 && errno) || dest_sb.st_gid != rgid)
+        return true;
+    }
+  else if (dest_sb.st_gid != group_id)
     return true;
 
   /* compare SELinux context if preserving */

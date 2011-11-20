@@ -97,9 +97,23 @@ main (int argc, char **argv)
   if (optind == argc)
     {
       /* No arguments.  Divulge the details of the current process. */
+      uid_t NO_UID = -1;
+      gid_t NO_GID = -1;
+
+      errno = 0;
       ruid = getuid ();
+      if (ruid == NO_UID && errno)
+        error (EXIT_FAILURE, errno, _("cannot get real UID"));
+
+      errno = 0;
       egid = getegid ();
+      if (egid == NO_GID && errno)
+        error (EXIT_FAILURE, errno, _("cannot get effective GID"));
+
+      errno = 0;
       rgid = getgid ();
+      if (rgid == NO_GID && errno)
+        error (EXIT_FAILURE, errno, _("cannot get real GID"));
 
       if (!print_group_list (NULL, ruid, rgid, egid, true))
         ok = false;
