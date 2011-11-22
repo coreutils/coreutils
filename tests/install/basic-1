@@ -104,7 +104,7 @@ fi
 
 touch file || fail=1
 ginstall -Dv file sub3/a/b/c/file >out 2>&1 || fail=1
-diff - out <<\EOF || fail=1
+compare - out <<\EOF || fail=1
 ginstall: creating directory `sub3'
 ginstall: creating directory `sub3/a'
 ginstall: creating directory `sub3/a/b'

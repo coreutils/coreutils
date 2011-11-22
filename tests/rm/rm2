@@ -42,7 +42,7 @@ EOF
 
 cmp out exp > /dev/null 2>&1 \
     || { cmp out exp-solaris > /dev/null 2>&1 || fail=1; }
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && compare out exp
 
 test -d a/0 && fail=1
 test -d a/1 || fail=1

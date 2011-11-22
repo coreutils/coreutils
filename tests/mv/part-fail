@@ -50,6 +50,6 @@ else
     fail=1
   fi
 fi
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && compare out exp
 
 Exit $fail
