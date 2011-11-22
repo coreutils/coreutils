@@ -27,6 +27,6 @@ cat <<EOF > exp || fail=1
    a   b   c
    d   e   f
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

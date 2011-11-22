@@ -36,6 +36,6 @@ echo >> out || fail=1
 
 sed 's/.*T //' out > k && mv k out
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

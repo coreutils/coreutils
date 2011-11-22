@@ -35,7 +35,7 @@ check_tail_output()
 # Wait 6.3s for tail to write something.
 retry_delay_ check_tail_output .1 7 || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Kill the still-running tail, or fail if it's gone.
 kill $pid || fail=1

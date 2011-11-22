@@ -29,6 +29,6 @@ rm: cannot remove `d': Is a directory
 EOF
 
 # Before coreutils-5.93 this test would fail on Solaris 9 and newer.
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

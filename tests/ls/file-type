@@ -53,13 +53,13 @@ ls --indicator-style=file-type sub > out2 || fail=1
 sed 's/[@|]$//' exp2 > exp3
 ls -p sub > out3 || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
-compare out2 exp2 || fail=1
+compare exp2 out2 || fail=1
 
-compare out3 exp3 || fail=1
+compare exp3 out3 || fail=1
 
 ls --color=auto -F sub > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -39,12 +39,12 @@ printf '1\n2' > exp-1
 printf '\n3\n' > exp-2
 printf '4\n5\n' > exp-3
 
-compare xaa exp-1 || fail=1
-compare xab exp-2 || fail=1
-compare xac exp-3 || fail=1
-compare b1 exp-1 || fail=1
-compare b2 exp-2 || fail=1
-compare b3 exp-3 || fail=1
+compare exp-1 xaa || fail=1
+compare exp-2 xab || fail=1
+compare exp-3 xac || fail=1
+compare exp-1 b1 || fail=1
+compare exp-2 b2 || fail=1
+compare exp-3 b3 || fail=1
 test -f xad && fail=1
 
 Exit $fail

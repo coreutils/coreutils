@@ -32,7 +32,7 @@ truncate -s0 $dir > out 2>&1 && fail=1
 cat <<EOF > exp
 truncate: cannot open \`$dir' for writing: No such file or directory
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 dir=$d1/
 truncate -s0 $dir > out 2>&1 && fail=1

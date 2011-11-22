@@ -35,7 +35,7 @@ ln -s ../s/2 d/1 || framework_failure_
 readlink -v -e p/1 > out || fail=1
 # readlink -e d/2 > exp || fail=1
 echo "$cwd/d/2" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Construct a real loop and make sure readlink still detects it.
 ln -sf ../s/1 d/2 || framework_failure_
@@ -57,12 +57,12 @@ ln -nsf ../p/8 d/7 || framework_failure_
 echo x > d/8       || framework_failure_
 readlink -v -e p/1 > out || fail=1
 echo "$cwd/d/8" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # A trivial loop
 ln -s loop loop
 readlink -v -e loop 2> out && fail=1
 echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure_
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

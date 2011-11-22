@@ -23,10 +23,10 @@ print_ver_ tr
 echo '01234567899999999999999999' > exp
 echo 'abcdefghijklmnopqrstuvwxyz' |
 tr '[:lower:]' '0-9' > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 echo 'abcdefghijklmnopqrstuvwxyz' |
 tr '[:lower:][:lower:]' '[:upper:]0-9' > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Validate the alignment of case classes
 tr 'A-Z[:lower:]' 'a-y[:upper:]' < /dev/null && fail=1
@@ -44,21 +44,21 @@ tr '[:upper:][:lower:]' '[:upper:]a-z' < /dev/null || fail=1
 tr '[:upper:] ' '[:lower:]' < /dev/null 2>out && fail=1
 echo 'tr: when translating with string1 longer than string2,
 the latter string must not end with a character class' > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Up to coreutils-6.9, tr rejected an unmatched [:lower:] or [:upper:] in SET1.
 echo '#$%123abcABC' | tr '[:lower:]' '[.*]' > out || fail=1
 echo '#$%123...ABC' > exp
-compare out exp || fail=1
+compare exp out || fail=1
 echo '#$%123abcABC' | tr '[:upper:]' '[.*]' > out || fail=1
 echo '#$%123abc...' > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 # When doing a case-converting translation with something after the
 # [:upper:] and [:lower:] elements, ensure that tr honors the following byte.
 echo 'abc.' | tr '[:lower:].' '[:upper:]x' > out || fail=1
 echo 'ABCx' > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Before coreutils 8.6 the disparate number of upper and lower
 # characters in some locales, triggered abort()s and invalid behavior
@@ -73,41 +73,41 @@ if test "$(locale charmap 2>/dev/null)" = ISO-8859-1; then
   tr '[:upper:] ' '[:lower:]' < /dev/null 2>out && fail=1
   echo 'tr: when translating with string1 longer than string2,
 the latter string must not end with a character class' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   # Ensure when there are a different number of elements
   # in each string, we validate the case mapping correctly
   echo 'abc.xyz' |
   tr 'ab[:lower:]' '0-1[:upper:]' > out || fail=1
   echo 'ABC.XYZ' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   # Ensure we extend string2 appropriately
   echo 'ABC- XYZ' |
   tr '[:upper:]- ' '[:lower:]_' > out || fail=1
   echo 'abc__xyz' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   # Ensure the size of the case classes are accounted
   # for as a unit.
   echo 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' |
   tr '[:upper:]A-B' '[:lower:]0' >out || fail=1
   echo '00cdefghijklmnopqrstuvwxyz' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   # Ensure the size of the case classes are accounted
   # for as a unit.
   echo 'a' |
   tr -t '[:lower:]a' '[:upper:]0' >out || fail=1
   echo '0' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   # Ensure the size of the case classes are accounted
   # for as a unit.
   echo 'a' |
   tr -t '[:lower:][:lower:]a' '[:lower:][:upper:]0' >out || fail=1
   echo '0' > exp
-  compare out exp || fail=1
+  compare exp out || fail=1
 fi
 
 Exit $fail

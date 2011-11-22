@@ -30,6 +30,6 @@ cat <<\EOF > exp
 rm: cannot remove `a': Permission denied
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

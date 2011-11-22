@@ -40,7 +40,7 @@ cat > exp <<\EOF
 XXX: cannot move `SRC' to a subdirectory of itself, `DEST'
 EOF
 
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 # Make sure the file is gone.
 test -f $file && fail=1

@@ -34,7 +34,7 @@ cat <<\EOF > exp
 foo
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm -f out exp
 # Until coreutils-4.5.10, this would elicit a segfault.
@@ -94,7 +94,7 @@ cat <<\EOF > exp
 11  x
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Verify handling of single quote chars (\' or \")
 
@@ -121,7 +121,7 @@ printf: ": expected a numeric value
 printf: a: expected a numeric value
 EOF
 
-compare out exp || fail=1
-compare err exp_err || fail=1
+compare exp out || fail=1
+compare exp_err err || fail=1
 
 Exit $fail

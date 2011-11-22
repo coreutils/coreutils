@@ -51,6 +51,6 @@ EOF
 sed "s,/c/j': ,/c': ," out > t && mv t out
 sed 's,cannot access,cannot read directory,' out > t && mv t out
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

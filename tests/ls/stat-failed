@@ -34,7 +34,7 @@ total 0
 ?????????? ? ?            ? s
 EOF
 
-sed 's/^l/?/' out | compare - exp || fail=1
+sed 's/^l/?/' out | compare exp - || fail=1
 
 # Ensure that the offsets in --dired output are accurate.
 rm -f out exp
@@ -47,6 +47,6 @@ cat <<\EOF > exp || fail=1
 //DIRED-OPTIONS// --quoting-style=literal
 EOF
 
-sed 's/^  l/  ?/' out | compare - exp || fail=1
+sed 's/^  l/  ?/' out | compare exp - || fail=1
 
 Exit $fail

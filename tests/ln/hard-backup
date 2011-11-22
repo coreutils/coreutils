@@ -27,6 +27,6 @@ cat <<\EOF > exp || fail=1
 ln: `f' and `f' are the same file
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -34,9 +34,9 @@ cat <<\EOF > exp-3
 5
 EOF
 
-compare xaa exp-1 || fail=1
-compare xab exp-2 || fail=1
-compare xac exp-3 || fail=1
+compare exp-1 xaa || fail=1
+compare exp-2 xab || fail=1
+compare exp-3 xac || fail=1
 test -f xad && fail=1
 
 Exit $fail

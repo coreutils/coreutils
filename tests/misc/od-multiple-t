@@ -37,6 +37,6 @@ for format1 in $list; do
   done
 done
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -45,7 +45,7 @@ du --time future >out 2>err || fail=1
 # Map the number of blocks to 0.
 sed 's/^[0-9][0-9]*/0/' out > k && mv k out
 
-compare out exp || fail=1
+compare exp out || fail=1
 compare err err_ok || fail=1
 
 Exit $fail

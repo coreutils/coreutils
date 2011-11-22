@@ -43,6 +43,6 @@ mv: target `f1' is not a directory
 mv: target `f2' is not a directory
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

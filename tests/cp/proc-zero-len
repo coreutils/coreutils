@@ -35,6 +35,6 @@ cp $f exp || fail=1
 test -s out && { rm -f out; echo nonempty > out; }
 test -s exp && { rm -f exp; echo nonempty > exp; }
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

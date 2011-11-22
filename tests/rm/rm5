@@ -47,6 +47,6 @@ mv o2 out
 # Make sure it's been removed.
 test -d d && fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

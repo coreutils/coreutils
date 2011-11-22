@@ -42,6 +42,6 @@ b=$INTMAX_OFLOW
 
 seq $a $b > out || fail=1
 printf "$a\n$b\n" > exp || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

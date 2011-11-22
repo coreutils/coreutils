@@ -31,6 +31,6 @@ test $? = 124 || fail=1
 test -s err && fail=1
 
 # Ensure there was
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

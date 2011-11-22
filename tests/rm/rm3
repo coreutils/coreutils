@@ -66,7 +66,7 @@ rm: remove write-protected directory \`z/du'
 rm: remove directory \`z'
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 test -d z && fail=1
 

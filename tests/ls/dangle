@@ -47,7 +47,7 @@ sub
 sub
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Ensure that ls -Li prints "?" as the inode of a dangling symlink.
 rm -f out

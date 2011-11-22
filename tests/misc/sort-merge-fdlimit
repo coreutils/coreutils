@@ -68,6 +68,6 @@ echo 6 >out || fail=1
  ulimit -n 10 &&
  sort -n -m --batch-size=7 -o out out in/1 in/2 in/3 in/4 in/5 out
 ) &&
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

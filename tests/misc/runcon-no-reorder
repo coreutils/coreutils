@@ -37,6 +37,6 @@ case `cat out` in
   'runcon: invalid context: '*) echo "$diag" > out;;
 esac
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

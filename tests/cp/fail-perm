@@ -47,11 +47,11 @@ cp F symlink 2> out && fail=1
 #   ...: The file access permissions do not allow the specified action.
 # to the expected one:
 sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
-compare out exp || fail=1
+compare exp out || fail=1
 
 cp --target-directory=symlink F 2> out && fail=1
 sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
-compare out exp || fail=1
+compare exp out || fail=1
 
 chmod 700 D
 

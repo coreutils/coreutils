@@ -37,6 +37,6 @@ cat <<\EOF > exp || fail=1
 mv: cannot move `b/t' to `a/t': Directory not empty
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

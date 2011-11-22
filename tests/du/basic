@@ -55,7 +55,7 @@ $a	a       # size of dir entry, a
 $tot	a
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Perform this test only if "." is on a local file system.
 # Otherwise, it would fail e.g., on an NFS-mounted Solaris ZFS file system.
@@ -83,7 +83,7 @@ $s2	d/sub
 $d1	d           # d + d/1; don't count the dir. entry for d/sub
 EOF
 
-  compare out exp || fail=1
+  compare exp out || fail=1
 fi
 
 Exit $fail

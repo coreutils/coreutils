@@ -36,7 +36,7 @@ timeout 10 ls -RL loop >out 2>err
 # Ensure that ls exits with status 2 upon detecting a cycle
 test $? = 2 || fail=1
 
-compare err exp-err || fail=1
-compare out exp-out || fail=1
+compare exp-err err || fail=1
+compare exp-out out || fail=1
 
 Exit $fail

@@ -32,7 +32,7 @@ a
 b
 c
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm -rf out exp
 ls -1rt a b c > out || fail=1
@@ -41,6 +41,6 @@ c
 b
 a
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

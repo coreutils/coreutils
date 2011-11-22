@@ -47,6 +47,6 @@ grep '^stat("x"' err && fail=1
   printf '\033[01;32mx\033[0m*\n'
 } > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

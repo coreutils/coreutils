@@ -59,6 +59,6 @@ dir/f_
 dir
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

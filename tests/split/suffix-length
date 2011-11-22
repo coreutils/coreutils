@@ -45,11 +45,11 @@ test -f xz || fail=1
 test -f xaa && fail=1
 test -f xaz && fail=1
 rm -f x*
-compare err exp-too-short || fail=1
+compare exp-too-short err || fail=1
 
 # With a longer suffix, it must succeed.
 split --verbose -b 1 -a 2 in > err || fail=1
-compare err exp || fail=1
+compare exp err || fail=1
 
 # Ensure that xbb is *not* created.
 test -f xbb && fail=1

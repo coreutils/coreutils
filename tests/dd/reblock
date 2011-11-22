@@ -50,7 +50,7 @@ dd_reblock_1()
   (printf 'ab'; sleep $delay; printf 'cd') > dd.fifo
   wait #for dd to complete
   sed 's/,.*//' err > k && mv k err
-  compare err exp-reblock
+  compare exp-reblock err
 }
 
 retry_delay_ dd_reblock_1 .1 6 || fail=1
@@ -64,7 +64,7 @@ dd_reblock_2()
   (printf 'ab'; sleep $delay; printf 'cd') > dd.fifo
   wait #for dd to complete
   sed 's/,.*//' err > k && mv k err
-  compare err exp-no-reblock
+  compare exp-no-reblock err
 }
 
 retry_delay_ dd_reblock_2 .1 6 || fail=1

@@ -65,7 +65,7 @@ stdbuf_linebuffer()
   dd count=1 if=fifo > out 2> err &
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -oL uniq > fifo
   wait # for dd to complete
-  compare out exp
+  compare exp out
 }
 
 retry_delay_ stdbuf_linebuffer .1 6 || fail=1
@@ -79,7 +79,7 @@ stdbuf_unbuffer()
   dd count=1 if=fifo > out 2> err &
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -o0 uniq > fifo
   wait # for dd to complete
-  compare out exp
+  compare exp out
 }
 
 retry_delay_ stdbuf_unbuffer .1 6 || fail=1
@@ -92,7 +92,7 @@ retry_delay_ stdbuf_unbuffer .1 6 || fail=1
     # dd count=1 if=fifo > /dev/null 2> err &
     # printf '1\n\2\n3\n' | (stdbuf -i0 -oL uniq > fifo; cat) > out
     # wait # for dd to complete
-    # compare out exp || fail=1
+    # compare exp out || fail=1
 #  One could remove the need for dd (used to close the fifo to get uniq to quit
 #  early), if head -n1 read stdin char by char. Note uniq | head -c2 doesn't
 #  suffice due to the buffering implicit in the pipe.  sed currently does read
@@ -100,7 +100,7 @@ retry_delay_ stdbuf_unbuffer .1 6 || fail=1
 #  adding this dependency on a program outside of coreutils.
     # printf '2\n' > exp
     # printf '1\n2\n' | (stdbuf -i0 sed 1q >/dev/null; cat) > out
-    # compare out exp || fail=1
+    # compare exp out || fail=1
 
 # Ensure block buffering stdout takes effect
 # We don't currently test block buffering failures as
@@ -113,7 +113,7 @@ retry_delay_ stdbuf_unbuffer .1 6 || fail=1
    #   dd count=1 if=fifo > out 2> err &
    #   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -o4 uniq > fifo
    #   wait # for dd to complete
-   #   compare out exp
+   #   compare exp out
    # }
    #
    # retry_delay_ stdbuf_blockbuffer .1 6 || fail=1

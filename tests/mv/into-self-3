@@ -36,6 +36,6 @@ cat > exp <<\EOF
 XXX: cannot move `ZZZ' to a subdirectory of itself, `ZZZ/ZZZ'
 EOF
 
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 Exit $fail

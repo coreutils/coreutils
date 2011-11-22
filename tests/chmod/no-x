@@ -44,7 +44,7 @@ cat <<EOF > exp
 $prog: \`d/no-x': Permission denied
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 cd a
 # This will fail with ``chmod: fts_read failed: Permission denied''

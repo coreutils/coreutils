@@ -32,8 +32,8 @@ mv a/bar a/foo b < no > out 2> err || fail=1
 touch exp
 touch exp_err
 
-compare out exp || fail=1
-compare err exp_err || fail=1
+compare exp out || fail=1
+compare exp_err err || fail=1
 
 case "`cat b/foo`" in
   foo) ;;

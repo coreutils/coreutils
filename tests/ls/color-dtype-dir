@@ -41,7 +41,7 @@ out$
 ^[[37;44msticky^[[0m$
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm exp
 
@@ -59,6 +59,6 @@ out$
 ^[[37;44msticky^[[0m$
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

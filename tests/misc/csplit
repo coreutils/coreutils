@@ -28,14 +28,14 @@ cat <<EOF > exp
 0
 2
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 rm -f in out exp
 
 # Ensure that xx02 contains just two newlines.
 # This would fail due to reading from freed buffer with coreutils-5.0.91.
 printf '\n\n' > exp
 cp xx02 out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 rm -f in out exp
 
 # csplit would infloop
@@ -45,7 +45,7 @@ cat <<EOF > exp
 0
 3
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 rm -f in out exp
 
 # `echo |csplit - 1 1' used to abort.
@@ -56,11 +56,11 @@ cat <<EOF > exp
 0
 1
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 cat <<\EOF > experr
 csplit: warning: line number `1' is the same as preceding line number
 EOF
-compare err experr || fail=1
+compare experr err || fail=1
 rm -f in out exp err experr
 
 # `echo | csplit -b '%0#6.3x' - 1' incorrectly warned about the format
@@ -71,9 +71,9 @@ cat <<EOF > exp
 0
 1
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 touch experr
-compare err experr || fail=1
+compare experr err || fail=1
 compare 'xx   000' experr || fail=1
 compare 'xx 0x001' in || fail=1
 rm -f in out exp err experr xx*
@@ -89,7 +89,7 @@ csplit: line number `1' is smaller than preceding line number, 2
 csplit: warning: line number `3' is the same as preceding line number
 csplit: `3': line number out of range
 EOF
-compare err experr || fail=1
+compare experr err || fail=1
 
 # Ensure that lines longer than the initial buffer length don't cause
 # trouble (e.g. reading from freed memory, resulting in corrupt output).

@@ -33,6 +33,6 @@ test -f $f \
 cat -E $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > out || fail=1
 cat    $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

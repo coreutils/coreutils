@@ -103,7 +103,7 @@ multiple files, recursion, answer yes
 rm: remove all arguments recursively? .
 EOF
 
-compare out expout || fail=1
-compare err experr || fail=1
+compare expout out || fail=1
+compare experr err || fail=1
 
 Exit $fail

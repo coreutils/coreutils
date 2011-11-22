@@ -45,7 +45,7 @@ $i: warning: source file \`a' specified more than once
 $i: warning: source file \`a' specified more than once
 $i: will not overwrite just-created \`d/a' with \`a'
 EOF
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 for i in mv; do
@@ -59,7 +59,7 @@ for i in mv; do
 $i: cannot stat \`a': No such file or directory
 $i: cannot stat \`a': No such file or directory
 EOF
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 Exit $fail

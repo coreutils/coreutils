@@ -67,6 +67,6 @@ sed "s, .1/s/s/s/[/s]*',," out1 > out || fail=1
 
 echo "du: cannot access: $too_many" > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

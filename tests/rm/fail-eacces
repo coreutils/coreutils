@@ -42,13 +42,13 @@ rm -rf d/f 2> out && fail=1
 cat <<\EOF > exp
 rm: cannot remove `d/f': Permission denied
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 # This used to fail with ELOOP.
 rm -rf e 2> out && fail=1
 cat <<\EOF > exp
 rm: cannot remove `e/slink': Permission denied
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

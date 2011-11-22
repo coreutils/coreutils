@@ -24,6 +24,6 @@ chgrp -f 0   no-such 2>> out && fail=1
 chown -f 0:0 no-such 2>> out && fail=1
 touch exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

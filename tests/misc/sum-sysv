@@ -35,7 +35,7 @@ $PERL -e '$s = chr(255) x 65537; foreach (1..257) {print $s}' \
 cat > exp <<\EOF
 65535 32897
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm -f out exp
 
@@ -45,6 +45,6 @@ $PERL -e '$s = chr(255) x 65537; foreach (1..257) {print $s}; print chr(255)' \
 cat > exp <<\EOF
 254 32897
 EOF
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -31,13 +31,13 @@ cat <<\EOF > exp || fail=1
  2  3 10 total
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 if test "$fail" = ''; then
   # Repeat the above test, but read the file name list from stdin.
   rm -f out
   wc --files0-from=- < names > out || fail=1
-  compare out exp || fail=1
+  compare exp out || fail=1
 fi
 
 Exit $fail

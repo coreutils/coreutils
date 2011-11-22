@@ -46,7 +46,7 @@ cat <<\EOF > exp || fail=1
 s@
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm -f out exp
 # Check for the ls -CF misaligned-columns bug:
@@ -56,6 +56,6 @@ ls -CF e > out || fail=1
 # rather than the appropriate TAB.
 printf 'a2345/\tb/\n' > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

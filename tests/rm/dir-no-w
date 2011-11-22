@@ -37,6 +37,6 @@ EOF
 sed 's/remove directory/remove/' out-t > out
 rm -f out-t
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

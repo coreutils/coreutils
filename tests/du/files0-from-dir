@@ -33,7 +33,7 @@ for prog in du wc; do
   # The diagnostic string is usually "Is a directory" (ENOTDIR),
   # but accept a different string or errno value.
   sed 's/dir:.*/dir:/' err > k; mv k err
-  compare err exp || fail=1
+  compare exp err || fail=1
 done
 
 Exit $fail

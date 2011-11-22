@@ -284,7 +284,7 @@ printf '\0\ta\n' | sort -s -k2b,2 --debug | tr -d '\0'
 printf 'A\tchr10\nB\tchr1\n' | sort -s -k2.4b,2.3n --debug
 ) > out
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 cat <<\EOF > exp
    1²---++3   1,234  Mi
@@ -324,7 +324,7 @@ if test "$LOCALE_FR_UTF8" != "none"; then
       sort --debug -k1,1n -k1,1g \
         -k1,1h -k2,2n -k2,2g -k2,2h -k3,3n -k3,3g -k3,3h
   ) > out
-  compare out exp || fail=1
+  compare exp out || fail=1
 fi
 
 Exit $fail

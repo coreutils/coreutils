@@ -43,6 +43,6 @@ EOF
 rm --one-file-system -rf a 2> out && fail=1
 test -d $t/y || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

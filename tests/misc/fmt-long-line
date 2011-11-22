@@ -56,6 +56,6 @@ EOF
 
 fmt -s in > out || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

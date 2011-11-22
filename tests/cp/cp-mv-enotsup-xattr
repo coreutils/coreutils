@@ -98,7 +98,7 @@ cp: cannot preserve extended attributes, cp is built without xattr support
 EOF
 fi
 
-compare err exp     || fail=1
+compare exp err     || fail=1
 
 rm -f err noxattr/a
 

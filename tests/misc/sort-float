@@ -88,7 +88,7 @@ $LDBL_MAX
 
   tac exp | LC_ALL=$LOC sort -sg > out || fail=1
 
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 Exit $fail

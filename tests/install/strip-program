@@ -31,6 +31,6 @@ chmod a+x b || framework_failure_
 echo abc > src || fail=1
 echo aBc > exp || fail=1
 ginstall src dest -s --strip-program=./b || fail=1
-compare dest exp || fail=1
+compare exp dest || fail=1
 
 Exit $fail

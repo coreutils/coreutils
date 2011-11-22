@@ -64,7 +64,7 @@ cat <<EOF | sort > exp
 \`$dir/d/e/f/file2' -> \`XXX/$dir/d/e/f/file2'
 EOF
 
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 # cd "$other_partition_tmpdir"
 # ls -l -A -R "$other_partition_tmpdir"

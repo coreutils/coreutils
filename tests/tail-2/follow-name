@@ -31,6 +31,6 @@ test $? = 1 || fail=1
 # we can compare against the above error
 sed '/inotify cannot be used/d' err > k && mv k err
 
-compare err exp || fail=1
+compare exp err || fail=1
 
 Exit $fail

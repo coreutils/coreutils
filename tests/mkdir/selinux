@@ -50,7 +50,7 @@ for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
     -e 's/ Unknown error .*$//'	\
     -e 's/ No such file or directory$//' out > k || fail=1
   mv k out || fail=1
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 Exit $fail

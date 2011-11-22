@@ -22,6 +22,6 @@ print_ver_ tail
 echo foo | timeout 10 tail -f -c3 > out || fail=1
 echo oo > exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

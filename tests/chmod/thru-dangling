@@ -26,6 +26,6 @@ ln -s non-existent dangle || framework_failure_
 chmod 644 dangle 2> out && fail=1
 
 echo "chmod: cannot operate on dangling symlink \`dangle'" > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

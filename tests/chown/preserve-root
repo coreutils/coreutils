@@ -61,6 +61,6 @@ chgrp: it is dangerous to operate recursively on `d/slink-to-root' (same as `/')
 chgrp: use --no-preserve-root to override this failsafe
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

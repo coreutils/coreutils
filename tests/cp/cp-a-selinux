@@ -100,7 +100,7 @@ cp --preserve=context f g 2> out && fail=1
 test -s g && fail=1
 sed "s/ .g' to .*//" out > k
 mv k out
-compare out exp || fail=1
+compare exp out || fail=1
 
 rm -f g
 echo > g
@@ -110,6 +110,6 @@ cp -a --preserve=context f g 2> out2 && fail=1
 test -s g && fail=1
 sed "s/ .g' to .*//" out2 > k
 mv k out2
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 Exit $fail

@@ -52,6 +52,6 @@ cp: cannot copy a directory, `dir', into itself, `dir/dir'
 EOF
 #'
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

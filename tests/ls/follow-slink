@@ -55,7 +55,7 @@ link-to-dir/
 sub/link-to-dir:
 EOF
 
-compare out-L exp-L || fail=1
-compare out-FLR-sub exp-FLR-sub || fail=1
+compare exp-L out-L || fail=1
+compare exp-FLR-sub out-FLR-sub || fail=1
 
 Exit $fail

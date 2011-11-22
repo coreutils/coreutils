@@ -168,6 +168,6 @@ cat >exp <<'EOF'
 4 Jan  1  2001 file4096
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

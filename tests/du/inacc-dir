@@ -27,7 +27,7 @@ chmod 0 a/sub || fail=1
 # Expect failure, ignore diagnostics.
 du -s a > out 2> /dev/null && fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Same as above, but don't use -s, so we print
 # an entry for the unreadable "sub", too.
@@ -37,6 +37,6 @@ chmod 0 a/sub || fail=1
 # Expect failure, ignore diagnostics.
 du -k a > out 2> /dev/null && fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

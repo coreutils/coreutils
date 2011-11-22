@@ -35,6 +35,6 @@ b
 0 a, 12 b
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

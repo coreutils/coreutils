@@ -36,7 +36,7 @@ cat_buf_1()
   dd count=1 if=fifo > out &
   (echo 1; sleep $delay; echo 2) | cat -v > fifo
   wait # for dd to complete
-  compare out exp
+  compare exp out
 }
 
 retry_delay_ cat_buf_1 .1 6 || fail=1

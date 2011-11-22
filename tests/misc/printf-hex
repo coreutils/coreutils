@@ -24,6 +24,6 @@ cat <<\EOF > exp
 ~3
 EOF
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

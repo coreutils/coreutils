@@ -32,6 +32,6 @@ BLOCK_SIZE=1M df -P . > t2 || fail=1
 head -n1 t1 > exp || fail=1
 head -n1 t2 > out || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

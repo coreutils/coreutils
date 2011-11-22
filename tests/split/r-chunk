@@ -44,18 +44,18 @@ printf '1\n4\n' > exp-1
 printf '2\n5\n' > exp-2
 printf '3\n' > exp-3
 
-compare xaa exp-1 || fail=1
-compare xab exp-2 || fail=1
-compare xac exp-3 || fail=1
-compare r1 exp-1 || fail=1
-compare r2 exp-2 || fail=1
-compare r3 exp-3 || fail=1
+compare exp-1 xaa || fail=1
+compare exp-2 xab || fail=1
+compare exp-3 xac || fail=1
+compare exp-1 r1 || fail=1
+compare exp-2 r2 || fail=1
+compare exp-3 r3 || fail=1
 test -f xad && fail=1
 
 # Test input without trailing \n
 printf '1\n2\n3\n4\n5' | split -n r/2/3 > out
 printf '2\n5' > exp
-compare out exp || fail=1
+compare exp out || fail=1
 
 # Ensure we fall back to appending to a file at a time
 # if we hit the limit for the number of open files.

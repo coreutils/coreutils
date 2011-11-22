@@ -39,6 +39,6 @@ stat --format=%F link2 >> out || fail=1
 stat -L --format=%F link2 >> out || fail=1
 stat --format=%F link2/ >> out || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

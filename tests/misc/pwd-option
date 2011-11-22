@@ -57,6 +57,6 @@ printf %s\\n "$base/a/b" >> exp || fail=1
 env -- PWD="$base/a/../c" pwd -L >> out || fail=1
 printf %s\\n "$base/a/b" >> exp || fail=1
 
-compare out exp || fail=1
+compare exp out || fail=1
 
 Exit $fail

@@ -47,6 +47,6 @@ XXX: `ZZZ' and `YYY' are the same file
 EOF
 #'
 
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 Exit $fail

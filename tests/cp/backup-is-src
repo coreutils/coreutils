@@ -31,6 +31,6 @@ cat > exp <<\EOF
 XXX: backing up `a' would destroy source;  `a~' not copied
 EOF
 
-compare out2 exp || fail=1
+compare exp out2 || fail=1
 
 Exit $fail
