@@ -101,7 +101,7 @@ sub check_msg($$)
   # Limit line length to allow for the ChangeLog's leading TAB.
   foreach my $line (@line)
     {
-      72 < length $line
+      72 < length $line && $line =~ /^[^#]/
         and return 'line longer than 72';
     }
 
