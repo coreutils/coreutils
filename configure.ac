@@ -124,7 +124,7 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Wno-format-nonliteral])
   gl_WARN_ADD([-Wno-unsuffixed-float-constants])
 
-  # Enable this warning only with gcc-4.7 and newer.  With 4.6.1 20110824,
+  # Enable this warning only with gcc-4.7 and newer.  With 4.6.2 20111027,
   # it suggests test.c's advance function may be pure, even though it
   # increments a global variable.  Oops.
   # Normally we'd write code to test for the precise failure, but that
