@@ -156,15 +156,15 @@ if test "$gl_gcc_warnings" = yes; then
   # FIXME: it may be easy to remove this, since it affects only one file:
   # the snprintf call at ftoastr.c:132.
   nw="$nw -Wdouble-promotion"
-  # FIXME: remove/reenable the following two, once gnulib is adjusted.
-  nw="$nw -Wsuggest-attribute=const"
-  nw="$nw -Wsuggest-attribute=pure"
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_WARN_CFLAGS])
 
   # For gnulib-tests, the set is slightly smaller still.
   nw=
   nw="$nw -Wstrict-prototypes"
+  # It's not worth being this picky about test programs.
+  nw="$nw -Wsuggest-attribute=const"
+  nw="$nw -Wsuggest-attribute=pure"
   gl_MANYWARN_COMPLEMENT([GNULIB_TEST_WARN_CFLAGS],
                          [$GNULIB_WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_TEST_WARN_CFLAGS])
