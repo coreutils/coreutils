@@ -280,12 +280,6 @@ sc_prohibit_framework_failure:
 	halt='use framework_failure_ instead'				\
 	  $(_sc_search_regexp)
 
-# In tests, use "compare expected actual", not the reverse.
-sc_prohibit_reversed_compare_failure:
-	@prohibit='\<compare [^ ]+ (exp|/dev/null)'			\
-	halt='reversed compare arguments'				\
-	  $(_sc_search_regexp)
-
 ###########################################################
 _p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
 _pre = $(_p0)\|[/][^"'/*]\|[/]"\([^\"]\|[\].\)*"\|[/]'\([^\']\|[\].\)*'\)*
