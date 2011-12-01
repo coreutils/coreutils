@@ -32,7 +32,6 @@ else
 
   # It's not;  we need to create one, hence we need root access.
   require_root_
-  require_mkfs_PATH_
 
   cwd=$PWD
   cleanup_() { cd /; umount "$cwd/mnt"; }

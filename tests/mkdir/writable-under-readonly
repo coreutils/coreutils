@@ -27,7 +27,6 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mkdir
 require_root_
-require_mkfs_PATH_
 
 # FIXME: for now, skip it unconditionally
 skip_ temporarily disabled

@@ -19,7 +19,6 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 require_root_
-require_mkfs_PATH_
 
 cwd=`pwd`
 cleanup_() { cd /; umount "$cwd/mnt"; }
