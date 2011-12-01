@@ -13959,7 +13959,6 @@ This is a @acronym{GNU} extension.
 locale's 12-hour clock time (e.g., @samp{11:11:04 PM})
 @item %R
 24-hour hour and minute.  Same as @samp{%H:%M}.
-This is a @acronym{GNU} extension.
 @item %s
 @cindex epoch, seconds since
 @cindex seconds since the epoch
@@ -13983,7 +13982,6 @@ appropriate for the current time, using the time zone rules specified
 by the @env{TZ} environment variable.
 The time (and optionally, the time zone rules) can be overridden
 by the @option{--date} option.
-This is a @acronym{GNU} extension.
 @item %:z
 @w{@acronym{RFC} 3339/@acronym{ISO} 8601} style numeric time zone with
 @samp{:} (e.g., @samp{-06:00} or @samp{+05:30}), or nothing if no time
@@ -14040,14 +14038,12 @@ full date in @acronym{ISO} 8601 format; same as @samp{%Y-%m-%d}.
 This is a good choice for a date format, as it is standard and
 is easy to sort in the usual case where years are in the range
 0000@dots{}9999.
-This is a @acronym{GNU} extension.
 @item %g
 year corresponding to the @acronym{ISO} week number, but without the century
 (range @samp{00} through @samp{99}).  This has the same format and value
 as @samp{%y}, except that if the @acronym{ISO} week number (see
 @samp{%V}) belongs
 to the previous or next year, that year is used instead.
-This is a @acronym{GNU} extension.
 @item %G
 year corresponding to the @acronym{ISO} week number.  This has the
 same format and value as @samp{%Y}, except that if the @acronym{ISO}
@@ -14057,7 +14053,6 @@ instead.
 It is normally useful only if @samp{%V} is also used;
 for example, the format @samp{%G-%m-%d} is probably a mistake,
 since it combines the ISO week number year with the conventional month and day.
-This is a @acronym{GNU} extension.
 @item %h
 same as @samp{%b}
 @item %j
