@@ -28,7 +28,7 @@ lib_SOURCES += randread.c randread.h rand-isaac.c rand-isaac.h
 Include:
 "randread.h"
 
-License
+License:
 GPL
 
 Maintainer:

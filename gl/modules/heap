@@ -17,7 +17,7 @@ lib_SOURCES += heap.c heap.h
 Include:
 "heap.h"
 
-License
+License:
 GPL
 
 Maintainer:

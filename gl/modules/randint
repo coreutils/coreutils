@@ -17,7 +17,7 @@ lib_SOURCES += randint.c randint.h
 Include:
 "randint.h"
 
-License
+License:
 GPL
 
 Maintainer:

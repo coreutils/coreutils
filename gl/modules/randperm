@@ -18,7 +18,7 @@ lib_SOURCES += randperm.c randperm.h
 Include:
 "randperm.h"
 
-License
+License:
 GPL
 
 Maintainer:
