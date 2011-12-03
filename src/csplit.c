@@ -111,7 +111,6 @@ static void close_output_file (void);
 static void create_output_file (void);
 static void delete_all_files (bool);
 static void save_line_to_file (const struct cstring *line);
-void usage (int status);
 
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;

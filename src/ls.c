@@ -282,7 +282,6 @@ static void queue_directory (char const *name, char const *realname,
                              bool command_line_arg);
 static void sort_files (void);
 static void parse_ls_color (void);
-void usage (int status);
 
 /* Initial size of hash table.
    Most hierarchies are likely to be shallower than this.  */
