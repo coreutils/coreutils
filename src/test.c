@@ -413,22 +413,26 @@ unary_operator (void)
       return euidaccess (argv[pos - 1], X_OK) == 0;
 
     case 'O':			/* File is owned by you? */
-      unary_advance ();
-      if (stat (argv[pos - 1], &stat_buf) != 0)
-        return false;
-      errno = 0;
-      uid_t euid = geteuid ();
-      uid_t NO_UID = -1;
-      return ! (euid == NO_UID && errno) && euid == stat_buf.st_uid;
+      {
+        unary_advance ();
+        if (stat (argv[pos - 1], &stat_buf) != 0)
+          return false;
+        errno = 0;
+        uid_t euid = geteuid ();
+        uid_t NO_UID = -1;
+        return ! (euid == NO_UID && errno) && euid == stat_buf.st_uid;
+      }
 
     case 'G':			/* File is owned by your group? */
-      unary_advance ();
-      if (stat (argv[pos - 1], &stat_buf) != 0)
-        return false;
-      errno = 0;
-      gid_t egid = getegid ();
-      gid_t NO_GID = -1;
-      return ! (egid == NO_GID && errno) && egid == stat_buf.st_gid;
+      {
+        unary_advance ();
+        if (stat (argv[pos - 1], &stat_buf) != 0)
+          return false;
+        errno = 0;
+        gid_t egid = getegid ();
+        gid_t NO_GID = -1;
+        return ! (egid == NO_GID && errno) && egid == stat_buf.st_gid;
+      }
 
     case 'f':			/* File is a file? */
       unary_advance ();
