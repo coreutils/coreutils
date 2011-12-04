@@ -550,7 +550,8 @@ out_minus_zero (char *pformat, size_t prefix_len)
 /* Output the number of seconds since the Epoch, using a format that
    acts like printf's %f format.  */
 static void
-out_epoch_sec (char *pformat, size_t prefix_len, struct stat const *statbuf,
+out_epoch_sec (char *pformat, size_t prefix_len,
+               struct stat const *statbuf ATTRIBUTE_UNUSED,
                struct timespec arg)
 {
   char *dot = memchr (pformat, '.', prefix_len);
@@ -1159,7 +1160,7 @@ print_it (char const *format, char const *filename,
 
 /* Stat the file system and print what we find.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-do_statfs (char const *filename, bool terse, char const *format)
+do_statfs (char const *filename, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
 
@@ -1183,7 +1184,7 @@ do_statfs (char const *filename, bool terse, char const *format)
 
 /* stat the file and print what we find */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-do_stat (char const *filename, bool terse, char const *format,
+do_stat (char const *filename, char const *format,
          char const *format2)
 {
   struct stat statbuf;
@@ -1479,8 +1480,8 @@ main (int argc, char *argv[])
 
   for (i = optind; i < argc; i++)
     ok &= (fs
-           ? do_statfs (argv[i], terse, format)
-           : do_stat (argv[i], terse, format, format2));
+           ? do_statfs (argv[i], format)
+           : do_stat (argv[i], format, format2));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
