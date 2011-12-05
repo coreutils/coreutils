@@ -345,6 +345,7 @@ In the 1st form, create a link to TARGET with the name LINK_NAME.\n\
 In the 2nd form, create a link to TARGET in the current directory.\n\
 In the 3rd and 4th forms, create links to each TARGET in DIRECTORY.\n\
 Create hard links by default, symbolic links with --symbolic.\n\
+By default, each destination (name of new link) should not already exist.\n\
 When creating hard links, each TARGET must exist.  Symbolic links\n\
 can hold arbitrary text; if later resolved, a relative link is\n\
 interpreted in relation to its parent directory.\n\
@@ -363,9 +364,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -i, --interactive           prompt whether to remove destinations\n\
-  -L, --logical               make hard links to symbolic link references\n\
-  -n, --no-dereference        treat destination that is a symlink to a\n\
-                                directory as if it were a normal file\n\
+  -L, --logical               dereference TARGETs that are symbolic links\n\
+  -n, --no-dereference        treat LINK_NAME as a normal file if\n\
+                                it is a symbolic link to a directory\n\
   -P, --physical              make hard links directly to symbolic links\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
 "), stdout);
@@ -373,7 +374,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
   -t, --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
-  -T, --no-target-directory   treat LINK_NAME as a normal file\n\
+  -T, --no-target-directory   treat LINK_NAME as a normal file always\n\
   -v, --verbose               print name of each linked file\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
