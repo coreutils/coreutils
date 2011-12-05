@@ -575,7 +575,6 @@ fs_normalize_perl_subst =			\
   -e 's/^_(XIAFS)/$$1/;'			\
   -e 's/^USBDEVICE/USBDEVFS/;'			\
   -e 's/NTFS_SB/NTFS/;'				\
-  -e 's/^/\# define S_MAGIC_/;'			\
   -e 's,\s*/\* .*? \*/,,;'
 
 CLEANFILES += fs-magic
@@ -583,7 +582,7 @@ fs-magic: Makefile
 	man statfs \
 	  |perl -ne '/File system types:/.../Nobody kno/ and print'	\
 	  |grep 0x | perl -p						\
-	    $(fs_normalize_perl_subst)					\
+	    $(fs_normalize_perl_subst) -e 's/^/# define S_MAGIC_/;'	\
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
 	  | LC_ALL=C sort						\
 	  > $@-t && mv $@-t $@
@@ -592,7 +591,7 @@ CLEANFILES += fs-kernel-magic
 fs-kernel-magic: Makefile
 	perl -ne '/^#define.*0x/ and print' /usr/include/linux/magic.h	\
 	  | perl -p							\
-	    $(fs_normalize_perl_subst)					\
+	    $(fs_normalize_perl_subst) -e 's/^/# define S_MAGIC_/;'	\
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
 	  | LC_ALL=C sort						\
 	  > $@-t && mv $@-t $@
