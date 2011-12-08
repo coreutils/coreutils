@@ -2595,6 +2595,11 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
         }
       else
         break;
+
+      /* When processing a very large directory, and since we've inhibited
+         interrupts, this loop would take so long that ls would be annoyingly
+         uninterruptible.  This ensures that it handles signals promptly.  */
+      process_signals ();
     }
 
   if (closedir (dirp) != 0)
@@ -4060,9 +4065,9 @@ print_name_with_quoting (const struct fileinfo *f,
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
+  process_signals ();
   if (used_color_this_time)
     {
-      process_signals ();
       prep_non_filename_text ();
       if (start_col / line_length != (start_col + width - 1) / line_length)
         put_indicator (&color_indicator[C_CLR_TO_EOL]);

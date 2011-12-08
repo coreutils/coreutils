@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  ls --color many-entry-directory was uninterruptible for too long
+  [bug introduced in coreutils-5.2.1]
+
   ls's -k option no longer affects how ls -l outputs file sizes.
   It now affects only the per-directory block counts written by -l,
   and the sizes written by -s.  This is for compatibility with BSD
