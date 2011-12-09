@@ -18,17 +18,6 @@
 
    Written by Colin Plumb.  */
 
-/* TODO:
-   - use consistent non-capitalization in error messages
-   - add standard GNU copyleft comment
-
-  - Add -r/-R/--recursive
-  - Add -i/--interactive
-  - Reserve -d
-  - Add -L
-  - Add an unlink-all option to emulate rm.
- */
-
 /*
  * Do a more secure overwrite of given files or devices, to make it harder
  * for even very expensive hardware probing to recover the data.
