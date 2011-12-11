@@ -441,6 +441,7 @@ TESTS =						\
   ls/stat-free-symlinks				\
   ls/stat-vs-dirent				\
   ls/symlink-slash				\
+  ls/time-style-diag				\
   ls/x-option					\
   mkdir/p-1					\
   mkdir/p-2					\

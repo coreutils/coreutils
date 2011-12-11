@@ -2039,33 +2039,57 @@ decode_switches (int argc, char **argv)
           long_time_format[1] = p1;
         }
       else
-        switch (XARGMATCH ("time style", style,
-                           time_style_args,
-                           time_style_types))
-          {
-          case full_iso_time_style:
-            long_time_format[0] = long_time_format[1] =
-              "%Y-%m-%d %H:%M:%S.%N %z";
-            break;
+        {
+          ptrdiff_t res = argmatch (style, time_style_args,
+                                    (char const *) time_style_types,
+                                    sizeof (*time_style_types));
+          if (res < 0)
+            {
+              /* This whole block used to be a simple use of XARGMATCH.
+                 but that didn't print the "posix-"-prefixed variants or
+                 the "+"-prefixed format string option upon failure.  */
+              argmatch_invalid ("time style", style, res);
 
-          case long_iso_time_style:
-            long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
-            break;
+              /* The following is a manual expansion of argmatch_valid,
+                 but with the added "+ ..." description and the [posix-]
+                 prefixes prepended.  Note that this simplification works
+                 only because all four existing time_style_types values
+                 are distinct.  */
+              fputs (_("Valid arguments are:\n"), stderr);
+              char const *const *p = time_style_args;
+              while (*p)
+                fprintf (stderr, "  - [posix-]%s\n", *p++);
+              fputs (_("  - +FORMAT (e.g., +%H:%M) for a `date'-style"
+                       " format\n"), stderr);
+              usage (LS_FAILURE);
+            }
+          switch (res)
+            {
+            case full_iso_time_style:
+              long_time_format[0] = long_time_format[1] =
+                "%Y-%m-%d %H:%M:%S.%N %z";
+              break;
 
-          case iso_time_style:
-            long_time_format[0] = "%Y-%m-%d ";
-            long_time_format[1] = "%m-%d %H:%M";
-            break;
+            case long_iso_time_style:
+              long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
+              break;
 
-          case locale_time_style:
-            if (hard_locale (LC_TIME))
-              {
-                int i;
-                for (i = 0; i < 2; i++)
-                  long_time_format[i] =
-                    dcgettext (NULL, long_time_format[i], LC_TIME);
-              }
-          }
+            case iso_time_style:
+              long_time_format[0] = "%Y-%m-%d ";
+              long_time_format[1] = "%m-%d %H:%M";
+              break;
+
+            case locale_time_style:
+              if (hard_locale (LC_TIME))
+                {
+                  int i;
+                  for (i = 0; i < 2; i++)
+                    long_time_format[i] =
+                      dcgettext (NULL, long_time_format[i], LC_TIME);
+                }
+            }
+        }
+
       /* Note we leave %5b etc. alone so user widths/flags are honored.  */
       if (strstr (long_time_format[0], "%b")
           || strstr (long_time_format[1], "%b"))
