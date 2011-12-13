@@ -7199,6 +7199,7 @@ a date like @samp{Mar 30@ @ 2002} for non-recent timestamps, and a
 date-without-year and time like @samp{Mar 30 23:45} for recent timestamps.
 This format can change depending on the current locale as detailed below.
 
+@cindex clock skew
 A timestamp is considered to be @dfn{recent} if it is less than six
 months old, and is not dated in the future.  If a timestamp dated
 today is not listed in recent form, the timestamp is in the future,
@@ -10261,11 +10262,39 @@ A @var{file} argument string of @samp{-} is handled specially and
 causes @command{touch} to change the times of the file associated with
 standard output.
 
+@cindex clock skew
+By default, @command{touch} sets file timestamps to the current time.
+Because @command{touch} acts on its operands left to right, the
+resulting timestamps of earlier and later operands may disagree.
+Also, the determination of what time is ``current'' depends on the
+platform.  Platforms with network file systems often use different
+clocks for the operating system and for file systems; because
+@command{touch} typically uses file systems' clocks by default, clock
+skew can cause the resulting file timestamps to appear to be in a
+program's ``future'' or ``past''.
+
+@cindex file timestamp resolution
+The @command{touch} command sets the file's timestamp to the greatest
+representable value that is not greater than the requested time.  This
+can differ from the requested time for several reasons.  First, the
+requested time may have a higher resolution than supported.  Second, a
+file system may use different resolutions for different types of
+times.  Third, file timestamps may use a different resolution than
+operating system timestamps.  Fourth, the operating system primitives
+used to update timestamps may employ yet a different resolution.  For
+example, in theory a file system might use 10-microsecond resolution
+for access time and 100-nanosecond resolution for modification time,
+and the operating system might use nanosecond resolution for the
+current time and microsecond resolution for the primitive that
+@command{touch} uses to set a file's timestamp to an arbitrary value.
+
 @cindex permissions, for changing file timestamps
-If changing both the access and modification times to the current
-time, @command{touch} can change the timestamps for files that the user
-running it does not own but has write permission for.  Otherwise, the
-user must own the files.
+When setting file timestamps to the current time, @command{touch} can
+change the timestamps for files that the user does not own but has
+write permission for.  Otherwise, the user must own the files.  Some
+older systems have a further restriction: the user must own the files
+unless both the access and modification times are being set to the
+current time.
 
 Although @command{touch} provides options for changing two of the times---the
 times of last access and modification---of a file, there is actually
