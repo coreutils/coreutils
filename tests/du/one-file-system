@@ -1,6 +1,5 @@
 #!/bin/sh
-# Test for a bug in fts's handling of FTS_XDEV, the flag behind
-# du's --one-file-system (-x) option.
+# Test for bugs in du's --one-file-system (-x) option.
 
 # Copyright (C) 2006-2011 Free Software Foundation, Inc.
 
@@ -19,9 +18,11 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_srcdir/other-fs-tmpdir"
 
-mkdir -p b/c y/z || framework_failure_
-
+mkdir -p b/c y/z d "$other_partition_tmpdir/x" || framework_failure_
+ln -s "$other_partition_tmpdir/x" d || framework_failure_
 
 # Due to a used-uninitialized variable, the "du -x" from coreutils-6.6
 # would not traverse into second and subsequent directories listed
@@ -36,5 +37,13 @@ y
 EOF
 
 compare exp out || fail=1
+
+# "du -xL" reported a zero count for a file in a different file system,
+# instead of ignoring it.
+du -xL d > u || fail=1
+sed 's/^[0-9][0-9]*	//' u > out1
+echo d > exp1 || fail=1
+
+compare exp1 out1 || fail=1
 
 Exit $fail

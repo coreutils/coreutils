@@ -443,6 +443,9 @@ process_file (FTS *fts, FTSENT *ent)
               error (0, ent->fts_errno, _("cannot access %s"), quote (file));
               return false;
             }
+
+          if (fts->fts_options & FTS_XDEV && fts->fts_dev != sb->st_dev)
+            excluded = true;
         }
 
       if (excluded

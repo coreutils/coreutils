@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  du -x no longer counts root directories of other file systems.
+  [bug introduced in coreutils-5.1.0]
+
   ls --color many-entry-directory was uninterruptible for too long
   [bug introduced in coreutils-5.2.1]
 
