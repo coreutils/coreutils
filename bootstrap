@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-11-24.20; # UTC
+scriptversion=2011-12-17.15; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -475,6 +475,32 @@ grep '^[	 ]*LT_INIT' configure.ac >/dev/null \
   && use_libtool=1
 if test $use_libtool = 1; then
   find_tool LIBTOOLIZE glibtoolize libtoolize
+fi
+
+# gnulib-tool requires at least automake and autoconf.
+# If either is not listed, add it (with minimum version) as a prerequisite.
+case $buildreq in
+  *automake*) ;;
+  *) buildreq="automake 1.9
+$buildreq" ;;
+esac
+case $buildreq in
+  *autoconf*) ;;
+  *) buildreq="autoconf 2.59
+$buildreq" ;;
+esac
+
+# When we can deduce that gnulib-tool will require patch,
+# and when patch is not already listed as a prerequisite, add it, too.
+if test ! -d "$local_gl_dir" \
+    || find "$local_gl_dir" -name '*.diff' -exec false {} +; then
+  :
+else
+  case $buildreq in
+    *patch*) ;;
+    *) buildreq="patch -
+$buildreq" ;;
+  esac
 fi
 
 if ! printf "$buildreq" | check_versions; then
