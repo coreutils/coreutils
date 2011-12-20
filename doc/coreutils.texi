@@ -15964,8 +15964,10 @@ Factoring the product of the eighth and ninth Mersenne primes
 takes about 30 milliseconds of CPU time on a 2.2 GHz Athlon.
 
 @example
-M8=`echo 2^31-1|bc` ; M9=`echo 2^61-1|bc`
-/usr/bin/time -f '%U' factor $(echo "$M8 * $M9" | bc)
+M8=$(echo 2^31-1|bc)
+M9=$(echo 2^61-1|bc)
+n=$(echo "$M8 * $M9" | bc)
+/usr/bin/time -f %U factor $n
 4951760154835678088235319297: 2147483647 2305843009213693951
 0.03
 @end example
