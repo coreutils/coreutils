@@ -24,6 +24,16 @@ Here are most of the steps we (maintainers) follow when making a release.
 
 FIXME: enable excluded programs like arch? to get their manual pages?
 
+* Check for new file system types by running the following command on
+  a system with the most recent kernel possible (e.g., Fedora rawhide):
+
+    make -C src fs-magic-compare
+
+  If it finds a new file system magic number, add it to src/stat.c.
+  If it is a remote file system, add the new S_MAGIC_* name you created
+  in stat.c to the list of remote file system types in src/tail.c's
+  fremote function.
+
 * Pre-release testing:
 
   Run the following on at least one SELinux-enabled (enforcing) and
