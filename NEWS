@@ -32,6 +32,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   [you might say this was introduced in coreutils-7.5, along with inotify
    support, but the new magic numbers weren't in the usual places then.]
 
+** Changes in behavior
+
+  tail -f now uses polling (not inotify) when any of its file arguments
+  resides on a file system of unknown type.  In addition, for each such
+  argument, tail -f prints a warning with the FS type magic number and a
+  request to report it to the bug-reporting address.
+
 
 * Noteworthy changes in release 8.14 (2011-10-12) [stable]
 

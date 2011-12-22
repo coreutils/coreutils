@@ -54,6 +54,7 @@
 
 /* inotify needs to know if a file is local.  */
 # include "fs.h"
+# include "fs-is-local.h"
 # if HAVE_SYS_STATFS_H
 #  include <sys/statfs.h>
 # elif HAVE_SYS_VFS_H
@@ -896,26 +897,21 @@ fremote (int fd, const char *name)
     }
   else
     {
-      switch (buf.f_type)
+      switch (is_local_fs_type (buf.f_type))
         {
-        case S_MAGIC_AFS:
-        case S_MAGIC_CIFS:
-        case S_MAGIC_CODA:
-        case S_MAGIC_FUSEBLK:
-        case S_MAGIC_FUSECTL:
-        case S_MAGIC_GFS:
-        case S_MAGIC_GPFS:
-        case S_MAGIC_FHGFS:
-        case S_MAGIC_KAFS:
-        case S_MAGIC_LUSTRE:
-        case S_MAGIC_NCP:
-        case S_MAGIC_NFS:
-        case S_MAGIC_NFSD:
-        case S_MAGIC_OCFS2:
-        case S_MAGIC_SMB:
+        case 0:
+          break;
+        case -1:
+          error (0, 0, _("unrecognized file system type 0x%08lx for %s. "
+                         "please report this to %s. reverting to polling"),
+                 buf.f_type, quote (name), PACKAGE_BUGREPORT);
+          /* Treat as "remote", so caller polls.  */
+          break;
+        case 1:
+          remote = false;
           break;
         default:
-          remote = false;
+          assert (!"unexpected return value from is_local_fs_type");
         }
     }
 # endif

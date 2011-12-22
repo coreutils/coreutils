@@ -148,6 +148,7 @@ noinst_HEADERS =	\
   fiemap.h		\
   find-mount-point.h	\
   fs.h			\
+  fs-is-local.h		\
   group-list.h		\
   ioblksize.h		\
   ls.h			\
@@ -596,6 +597,14 @@ fs-kernel-magic: Makefile
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
 	  | LC_ALL=C sort						\
 	  > $@-t && mv $@-t $@
+
+BUILT_SOURCES += fs-is-local.h
+fs-is-local.h: stat.c extract-magic
+	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)$(PERL) $(srcdir)/extract-magic --local $(srcdir)/stat.c \
+	  > $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
 
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic

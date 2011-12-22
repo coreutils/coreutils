@@ -237,169 +237,169 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
          a comment.  The S_MAGIC_... name and constant are automatically
          combined to produce the #define directives in fs.h.  */
 
-    case S_MAGIC_ADFS: /* 0xADF5 */
+    case S_MAGIC_ADFS: /* 0xADF5 local */
       return "adfs";
-    case S_MAGIC_AFFS: /* 0xADFF */
+    case S_MAGIC_AFFS: /* 0xADFF local */
       return "affs";
-    case S_MAGIC_AFS: /* 0x5346414F */
+    case S_MAGIC_AFS: /* 0x5346414F remote */
       return "afs";
-    case S_MAGIC_ANON_INODE_FS: /* 0x09041934 */
+    case S_MAGIC_ANON_INODE_FS: /* 0x09041934 local */
       return "anon-inode FS";
-    case S_MAGIC_AUTOFS: /* 0x0187 */
+    case S_MAGIC_AUTOFS: /* 0x0187 local */
       return "autofs";
-    case S_MAGIC_BEFS: /* 0x42465331 */
+    case S_MAGIC_BEFS: /* 0x42465331 local */
       return "befs";
-    case S_MAGIC_BFS: /* 0x1BADFACE */
+    case S_MAGIC_BFS: /* 0x1BADFACE local */
       return "bfs";
-    case S_MAGIC_BINFMT_MISC: /* 0x42494E4D */
+    case S_MAGIC_BINFMT_MISC: /* 0x42494E4D local */
       return "binfmt_misc";
-    case S_MAGIC_BTRFS: /* 0x9123683E */
+    case S_MAGIC_BTRFS: /* 0x9123683E local */
       return "btrfs";
-    case S_MAGIC_CGROUP: /* 0x0027E0EB */
+    case S_MAGIC_CGROUP: /* 0x0027E0EB local */
       return "cgroupfs";
-    case S_MAGIC_CIFS: /* 0xFF534D42 */
+    case S_MAGIC_CIFS: /* 0xFF534D42 remote */
       return "cifs";
-    case S_MAGIC_CODA: /* 0x73757245 */
+    case S_MAGIC_CODA: /* 0x73757245 remote */
       return "coda";
-    case S_MAGIC_COH: /* 0x012FF7B7 */
+    case S_MAGIC_COH: /* 0x012FF7B7 local */
       return "coh";
-    case S_MAGIC_CRAMFS: /* 0x28CD3D45 */
+    case S_MAGIC_CRAMFS: /* 0x28CD3D45 local */
       return "cramfs";
-    case S_MAGIC_CRAMFS_WEND: /* 0x453DCD28 */
+    case S_MAGIC_CRAMFS_WEND: /* 0x453DCD28 local */
       return "cramfs-wend";
-    case S_MAGIC_DEBUGFS: /* 0x64626720 */
+    case S_MAGIC_DEBUGFS: /* 0x64626720 local */
       return "debugfs";
-    case S_MAGIC_DEVFS: /* 0x1373 */
+    case S_MAGIC_DEVFS: /* 0x1373 local */
       return "devfs";
-    case S_MAGIC_DEVPTS: /* 0x1CD1 */
+    case S_MAGIC_DEVPTS: /* 0x1CD1 local */
       return "devpts";
-    case S_MAGIC_ECRYPTFS: /* 0xF15F */
+    case S_MAGIC_ECRYPTFS: /* 0xF15F local */
       return "ecryptfs";
-    case S_MAGIC_EFS: /* 0x00414A53 */
+    case S_MAGIC_EFS: /* 0x00414A53 local */
       return "efs";
-    case S_MAGIC_EXT: /* 0x137D */
+    case S_MAGIC_EXT: /* 0x137D local */
       return "ext";
-    case S_MAGIC_EXT2: /* 0xEF53 */
+    case S_MAGIC_EXT2: /* 0xEF53 local */
       return "ext2/ext3";
-    case S_MAGIC_EXT2_OLD: /* 0xEF51 */
+    case S_MAGIC_EXT2_OLD: /* 0xEF51 local */
       return "ext2";
-    case S_MAGIC_FAT: /* 0x4006 */
+    case S_MAGIC_FAT: /* 0x4006 local */
       return "fat";
-    case S_MAGIC_FHGFS: /* 0x19830326 */
+    case S_MAGIC_FHGFS: /* 0x19830326 remote */
       return "fhgfs";
-    case S_MAGIC_FUSEBLK: /* 0x65735546 */
+    case S_MAGIC_FUSEBLK: /* 0x65735546 remote */
       return "fuseblk";
-    case S_MAGIC_FUSECTL: /* 0x65735543 */
+    case S_MAGIC_FUSECTL: /* 0x65735543 remote */
       return "fusectl";
-    case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA */
+    case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA local */
       return "futexfs";
-    case S_MAGIC_GFS: /* 0x1161970 */
+    case S_MAGIC_GFS: /* 0x1161970 remote */
       return "gfs/gfs2";
-    case S_MAGIC_GPFS: /* 0x47504653 */
+    case S_MAGIC_GPFS: /* 0x47504653 remote */
       return "gpfs";
-    case S_MAGIC_HFS: /* 0x4244 */
+    case S_MAGIC_HFS: /* 0x4244 local */
       return "hfs";
-    case S_MAGIC_HPFS: /* 0xF995E849 */
+    case S_MAGIC_HPFS: /* 0xF995E849 local */
       return "hpfs";
-    case S_MAGIC_HUGETLBFS: /* 0x958458F6 */
+    case S_MAGIC_HUGETLBFS: /* 0x958458F6 local */
       return "hugetlbfs";
-    case S_MAGIC_INOTIFYFS: /* 0x2BAD1DEA */
+    case S_MAGIC_INOTIFYFS: /* 0x2BAD1DEA local */
       return "inotifyfs";
-    case S_MAGIC_ISOFS: /* 0x9660 */
+    case S_MAGIC_ISOFS: /* 0x9660 local */
       return "isofs";
-    case S_MAGIC_ISOFS_R_WIN: /* 0x4004 */
+    case S_MAGIC_ISOFS_R_WIN: /* 0x4004 local */
       return "isofs";
-    case S_MAGIC_ISOFS_WIN: /* 0x4000 */
+    case S_MAGIC_ISOFS_WIN: /* 0x4000 local */
       return "isofs";
-    case S_MAGIC_JFFS: /* 0x07C0 */
+    case S_MAGIC_JFFS: /* 0x07C0 local */
       return "jffs";
-    case S_MAGIC_JFFS2: /* 0x72B6 */
+    case S_MAGIC_JFFS2: /* 0x72B6 local */
       return "jffs2";
-    case S_MAGIC_JFS: /* 0x3153464A */
+    case S_MAGIC_JFS: /* 0x3153464A local */
       return "jfs";
-    case S_MAGIC_KAFS: /* 0x6B414653 */
+    case S_MAGIC_KAFS: /* 0x6B414653 remote */
       return "k-afs";
-    case S_MAGIC_LUSTRE: /* 0x0BD00BD0 */
+    case S_MAGIC_LUSTRE: /* 0x0BD00BD0 remote */
       return "lustre";
-    case S_MAGIC_MINIX: /* 0x137F */
+    case S_MAGIC_MINIX: /* 0x137F local */
       return "minix";
-    case S_MAGIC_MINIX_30: /* 0x138F */
+    case S_MAGIC_MINIX_30: /* 0x138F local */
       return "minix (30 char.)";
-    case S_MAGIC_MINIX_V2: /* 0x2468 */
+    case S_MAGIC_MINIX_V2: /* 0x2468 local */
       return "minix v2";
-    case S_MAGIC_MINIX_V2_30: /* 0x2478 */
+    case S_MAGIC_MINIX_V2_30: /* 0x2478 local */
       return "minix v2 (30 char.)";
-    case S_MAGIC_MINIX_V3: /* 0x4D5A */
+    case S_MAGIC_MINIX_V3: /* 0x4D5A local */
       return "minix3";
-    case S_MAGIC_MQUEUE: /* 0x19800202 */
+    case S_MAGIC_MQUEUE: /* 0x19800202 local */
       return "mqueue";
-    case S_MAGIC_MSDOS: /* 0x4D44 */
+    case S_MAGIC_MSDOS: /* 0x4D44 local */
       return "msdos";
-    case S_MAGIC_NCP: /* 0x564C */
+    case S_MAGIC_NCP: /* 0x564C remote */
       return "novell";
-    case S_MAGIC_NFS: /* 0x6969 */
+    case S_MAGIC_NFS: /* 0x6969 remote */
       return "nfs";
-    case S_MAGIC_NFSD: /* 0x6E667364 */
+    case S_MAGIC_NFSD: /* 0x6E667364 remote */
       return "nfsd";
-    case S_MAGIC_NILFS: /* 0x3434 */
+    case S_MAGIC_NILFS: /* 0x3434 local */
       return "nilfs";
-    case S_MAGIC_NTFS: /* 0x5346544E */
+    case S_MAGIC_NTFS: /* 0x5346544E local */
       return "ntfs";
-    case S_MAGIC_OPENPROM: /* 0x9FA1 */
+    case S_MAGIC_OPENPROM: /* 0x9FA1 local */
       return "openprom";
-    case S_MAGIC_OCFS2: /* 0x7461636f */
+    case S_MAGIC_OCFS2: /* 0x7461636f remote */
       return "ocfs2";
-    case S_MAGIC_PROC: /* 0x9FA0 */
+    case S_MAGIC_PROC: /* 0x9FA0 local */
       return "proc";
-    case S_MAGIC_PSTOREFS: /* 0x6165676C */
+    case S_MAGIC_PSTOREFS: /* 0x6165676C local */
       return "pstorefs";
-    case S_MAGIC_QNX4: /* 0x002F */
+    case S_MAGIC_QNX4: /* 0x002F local */
       return "qnx4";
-    case S_MAGIC_RAMFS: /* 0x858458F6 */
+    case S_MAGIC_RAMFS: /* 0x858458F6 local */
       return "ramfs";
-    case S_MAGIC_REISERFS: /* 0x52654973 */
+    case S_MAGIC_REISERFS: /* 0x52654973 local */
       return "reiserfs";
-    case S_MAGIC_ROMFS: /* 0x7275 */
+    case S_MAGIC_ROMFS: /* 0x7275 local */
       return "romfs";
-    case S_MAGIC_RPC_PIPEFS: /* 0x67596969 */
+    case S_MAGIC_RPC_PIPEFS: /* 0x67596969 local */
       return "rpc_pipefs";
-    case S_MAGIC_SECURITYFS: /* 0x73636673 */
+    case S_MAGIC_SECURITYFS: /* 0x73636673 local */
       return "securityfs";
-    case S_MAGIC_SELINUX: /* 0xF97CFF8C */
+    case S_MAGIC_SELINUX: /* 0xF97CFF8C local */
       return "selinux";
-    case S_MAGIC_SMB: /* 0x517B */
+    case S_MAGIC_SMB: /* 0x517B remote */
       return "smb";
-    case S_MAGIC_SOCKFS: /* 0x534F434B */
+    case S_MAGIC_SOCKFS: /* 0x534F434B local */
       return "sockfs";
-    case S_MAGIC_SQUASHFS: /* 0x73717368 */
+    case S_MAGIC_SQUASHFS: /* 0x73717368 local */
       return "squashfs";
-    case S_MAGIC_SYSFS: /* 0x62656572 */
+    case S_MAGIC_SYSFS: /* 0x62656572 local */
       return "sysfs";
-    case S_MAGIC_SYSV2: /* 0x012FF7B6 */
+    case S_MAGIC_SYSV2: /* 0x012FF7B6 local */
       return "sysv2";
-    case S_MAGIC_SYSV4: /* 0x012FF7B5 */
+    case S_MAGIC_SYSV4: /* 0x012FF7B5 local */
       return "sysv4";
-    case S_MAGIC_TMPFS: /* 0x01021994 */
+    case S_MAGIC_TMPFS: /* 0x01021994 local */
       return "tmpfs";
-    case S_MAGIC_UDF: /* 0x15013346 */
+    case S_MAGIC_UDF: /* 0x15013346 local */
       return "udf";
-    case S_MAGIC_UFS: /* 0x00011954 */
+    case S_MAGIC_UFS: /* 0x00011954 local */
       return "ufs";
-    case S_MAGIC_UFS_BYTESWAPPED: /* 0x54190100 */
+    case S_MAGIC_UFS_BYTESWAPPED: /* 0x54190100 local */
       return "ufs";
-    case S_MAGIC_USBDEVFS: /* 0x9FA2 */
+    case S_MAGIC_USBDEVFS: /* 0x9FA2 local */
       return "usbdevfs";
-    case S_MAGIC_V9FS: /* 0x01021997 */
+    case S_MAGIC_V9FS: /* 0x01021997 local */
       return "v9fs";
-    case S_MAGIC_VXFS: /* 0xA501FCF5 */
+    case S_MAGIC_VXFS: /* 0xA501FCF5 local */
       return "vxfs";
-    case S_MAGIC_XENFS: /* 0xABBA1974 */
+    case S_MAGIC_XENFS: /* 0xABBA1974 local */
       return "xenfs";
-    case S_MAGIC_XENIX: /* 0x012FF7B4 */
+    case S_MAGIC_XENIX: /* 0x012FF7B4 local */
       return "xenix";
-    case S_MAGIC_XFS: /* 0x58465342 */
+    case S_MAGIC_XFS: /* 0x58465342 local */
       return "xfs";
-    case S_MAGIC_XIAFS: /* 0x012FD16D */
+    case S_MAGIC_XIAFS: /* 0x012FD16D local */
       return "xia";
 
 # elif __GNU__
