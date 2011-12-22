@@ -285,6 +285,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ext2";
     case S_MAGIC_FAT: /* 0x4006 */
       return "fat";
+    case S_MAGIC_FHGFS: /* 0x19830326 */
+      return "fhgfs";
     case S_MAGIC_FUSEBLK: /* 0x65735546 */
       return "fuseblk";
     case S_MAGIC_FUSECTL: /* 0x65735543 */

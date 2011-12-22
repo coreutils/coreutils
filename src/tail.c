@@ -905,6 +905,7 @@ fremote (int fd, const char *name)
         case S_MAGIC_FUSECTL:
         case S_MAGIC_GFS:
         case S_MAGIC_GPFS:
+        case S_MAGIC_FHGFS:
         case S_MAGIC_KAFS:
         case S_MAGIC_LUSTRE:
         case S_MAGIC_NCP:
