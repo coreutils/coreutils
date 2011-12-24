@@ -1343,62 +1343,62 @@ Display file or file system status.\n\
       fputs (_("\n\
 The valid format sequences for files (without --file-system):\n\
 \n\
-  %a   Access rights in octal\n\
-  %A   Access rights in human readable form\n\
-  %b   Number of blocks allocated (see %B)\n\
-  %B   The size in bytes of each block reported by %b\n\
+  %a   access rights in octal\n\
+  %A   access rights in human readable form\n\
+  %b   number of blocks allocated (see %B)\n\
+  %B   the size in bytes of each block reported by %b\n\
   %C   SELinux security context string\n\
 "), stdout);
       fputs (_("\
-  %d   Device number in decimal\n\
-  %D   Device number in hex\n\
-  %f   Raw mode in hex\n\
-  %F   File type\n\
-  %g   Group ID of owner\n\
-  %G   Group name of owner\n\
+  %d   device number in decimal\n\
+  %D   device number in hex\n\
+  %f   raw mode in hex\n\
+  %F   file type\n\
+  %g   group ID of owner\n\
+  %G   group name of owner\n\
 "), stdout);
       fputs (_("\
-  %h   Number of hard links\n\
-  %i   Inode number\n\
-  %m   Mount point\n\
-  %n   File name\n\
-  %N   Quoted file name with dereference if symbolic link\n\
+  %h   number of hard links\n\
+  %i   inode number\n\
+  %m   mount point\n\
+  %n   file name\n\
+  %N   quoted file name with dereference if symbolic link\n\
   %o   I/O block size\n\
-  %s   Total size, in bytes\n\
-  %t   Major device type in hex\n\
-  %T   Minor device type in hex\n\
+  %s   total size, in bytes\n\
+  %t   major device type in hex\n\
+  %T   minor device type in hex\n\
 "), stdout);
       fputs (_("\
-  %u   User ID of owner\n\
-  %U   User name of owner\n\
-  %w   Time of file birth, human-readable; - if unknown\n\
-  %W   Time of file birth, seconds since Epoch; 0 if unknown\n\
-  %x   Time of last access, human-readable\n\
-  %X   Time of last access, seconds since Epoch\n\
-  %y   Time of last modification, human-readable\n\
-  %Y   Time of last modification, seconds since Epoch\n\
-  %z   Time of last change, human-readable\n\
-  %Z   Time of last change, seconds since Epoch\n\
+  %u   user ID of owner\n\
+  %U   user name of owner\n\
+  %w   time of file birth, human-readable; - if unknown\n\
+  %W   time of file birth, seconds since Epoch; 0 if unknown\n\
+  %x   time of last access, human-readable\n\
+  %X   time of last access, seconds since Epoch\n\
+  %y   time of last modification, human-readable\n\
+  %Y   time of last modification, seconds since Epoch\n\
+  %z   time of last change, human-readable\n\
+  %Z   time of last change, seconds since Epoch\n\
 \n\
 "), stdout);
 
       fputs (_("\
 Valid format sequences for file systems:\n\
 \n\
-  %a   Free blocks available to non-superuser\n\
-  %b   Total data blocks in file system\n\
-  %c   Total file nodes in file system\n\
-  %d   Free file nodes in file system\n\
-  %f   Free blocks in file system\n\
+  %a   free blocks available to non-superuser\n\
+  %b   total data blocks in file system\n\
+  %c   total file nodes in file system\n\
+  %d   free file nodes in file system\n\
+  %f   free blocks in file system\n\
 "), stdout);
       fputs (_("\
-  %i   File System ID in hex\n\
-  %l   Maximum length of filenames\n\
-  %n   File name\n\
-  %s   Block size (for faster transfers)\n\
-  %S   Fundamental block size (for block counts)\n\
-  %t   Type in hex\n\
-  %T   Type in human readable form\n\
+  %i   file system ID in hex\n\
+  %l   maximum length of filenames\n\
+  %n   file name\n\
+  %s   block size (for faster transfers)\n\
+  %S   fundamental block size (for block counts)\n\
+  %t   file system type in hex\n\
+  %T   file system type in human readable form\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_ancillary_info ();
