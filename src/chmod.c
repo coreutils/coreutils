@@ -377,18 +377,23 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
               program_name, program_name, program_name);
       fputs (_("\
 Change the mode of each FILE to MODE.\n\
+With --reference, change the mode of each FILE to that of RFILE.\n\
 \n\
-  -c, --changes           like verbose but report only when a change is made\n\
+"), stdout);
+      fputs (_("\
+  -c, --changes          like verbose but report only when a change is made\n\
+  -f, --silent, --quiet  suppress most error messages\n\
+  -v, --verbose          output a diagnostic for every file processed\n\
 "), stdout);
       fputs (_("\
       --no-preserve-root  do not treat `/' specially (the default)\n\
-      --preserve-root     fail to operate recursively on `/'\n\
+      --preserve-root    fail to operate recursively on `/'\n\
 "), stdout);
       fputs (_("\
-  -f, --silent, --quiet   suppress most error messages\n\
-  -v, --verbose           output a diagnostic for every file processed\n\
-      --reference=RFILE   use RFILE's mode instead of MODE values\n\
-  -R, --recursive         change files and directories recursively\n\
+      --reference=RFILE  use RFILE's mode instead of MODE values\n\
+"), stdout);
+      fputs (_("\
+  -R, --recursive        change files and directories recursively\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

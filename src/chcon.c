@@ -359,22 +359,30 @@ Usage: %s [OPTION]... CONTEXT FILE...\n\
 Change the security context of each FILE to CONTEXT.\n\
 With --reference, change the security context of each FILE to that of RFILE.\n\
 \n\
-  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
 "), stdout);
       fputs (_("\
-      --reference=RFILE  use RFILE's security context rather than specifying\n\
-                         a CONTEXT value\n\
-  -R, --recursive        operate on files and directories recursively\n\
-  -v, --verbose          output a diagnostic for every file processed\n\
+      --dereference      affect the referent of each symbolic link (this is\n\
+                         the default), rather than the symbolic link itself\n\
+  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
 "), stdout);
       fputs (_("\
   -u, --user=USER        set user USER in the target security context\n\
   -r, --role=ROLE        set role ROLE in the target security context\n\
   -t, --type=TYPE        set type TYPE in the target security context\n\
   -l, --range=RANGE      set range RANGE in the target security context\n\
-\n\
 "), stdout);
       fputs (_("\
+      --reference=RFILE  use RFILE's security context rather than specifying\n\
+                         a CONTEXT value\n\
+"), stdout);
+      fputs (_("\
+  -R, --recursive        operate on files and directories recursively\n\
+"), stdout);
+      fputs (_("\
+  -v, --verbose          output a diagnostic for every file processed\n\
+"), stdout);
+      fputs (_("\
+\n\
 The following options modify how a hierarchy is traversed when the -R\n\
 option is also specified.  If more than one is specified, only the final\n\
 one takes effect.\n\
