@@ -25,6 +25,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   and NcFsd file systems.  This did not affect Unix/Linux-based kernels.
   [bug introduced in coreutils-8.0, when rm began using fts]
 
+  stat -f now recognizes the FhGFS and PipeFS file system types.
+
   tac no longer fails to handle two or more non-seekable inputs
   [bug introduced in coreutils-5.3.0]
 

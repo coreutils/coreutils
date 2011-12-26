@@ -349,6 +349,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "openprom";
     case S_MAGIC_OCFS2: /* 0x7461636f remote */
       return "ocfs2";
+    case S_MAGIC_PIPEFS: /* 0x50495045 remote */
+      /* FIXME: change syntax or add an optional attribute like "inotify:no".
+         The above is labeled as "remote" so that tail always uses polling,
+         but this isn't really a remote file system type.  */
+      return "pipefs";
     case S_MAGIC_PROC: /* 0x9FA0 local */
       return "proc";
     case S_MAGIC_PSTOREFS: /* 0x6165676C local */
