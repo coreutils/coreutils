@@ -41,6 +41,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   argument, tail -f prints a warning with the FS type magic number and a
   request to report it to the bug-reporting address.
 
+** New programs
+
+  realpath: print resolved file names.
+
 
 * Noteworthy changes in release 8.14 (2011-10-12) [stable]
 

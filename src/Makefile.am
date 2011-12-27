@@ -97,6 +97,7 @@ EXTRA_PROGRAMS = \
   ptx		\
   pwd		\
   readlink	\
+  realpath	\
   rm		\
   rmdir		\
   runcon	\
@@ -248,6 +249,7 @@ printf_LDADD = $(LDADD)
 ptx_LDADD = $(LDADD)
 pwd_LDADD = $(LDADD)
 readlink_LDADD = $(LDADD)
+realpath_LDADD = $(LDADD)
 rm_LDADD = $(LDADD)
 rmdir_LDADD = $(LDADD)
 runcon_LDADD = $(LDADD)
@@ -373,6 +375,7 @@ du_LDADD += $(LIBICONV)
 getlimits_LDADD += $(LIBICONV)
 printf_LDADD += $(LIBICONV)
 ptx_LDADD += $(LIBICONV)
+realpath_LDADD += $(LIBICONV)
 split_LDADD += $(LIBICONV)
 stdbuf_LDADD += $(LIBICONV)
 timeout_LDADD += $(LIBICONV)

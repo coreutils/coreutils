@@ -1,0 +1,53 @@
+#!/bin/sh
+# Validate realpath operation
+
+# Copyright (C) 2011-2012 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+print_ver_ realpath
+
+# Setup dir, file, symlink structure
+
+mkdir -p dir1/dir2
+ln -s dir1/dir2 ldir2
+touch dir1/f dir1/dir2/f
+
+# Basic operaion
+realpath -Pqz . >/dev/null || fail=1
+# --relative-base and --relative-to require params
+realpath --relative-base --relative-to . && fail=1
+# --relative-base requires --relative-to
+realpath --relative-base=dir1 . && fail=1
+
+# -e --relative-* require directories
+realpath -e --relative-to=dir1/f --relative-base=. . && fail=1
+realpath -e --relative-to=dir1/  --relative-base=. . || fail=1
+
+# Note NUL params are unconditionally rejected by canonicalize_filename_mode
+realpath -m '' && fail=1
+
+# symlink resolution
+this=$(realpath .)
+test $(realpath $relative ldir2/..) = "$this/dir1" || fail=1
+test $(realpath -L $relative ldir2/..) = "$this" || fail=1
+test $(realpath -s $relative ldir2) = "$this/ldir2" || fail=1
+
+# relative string handling
+test $(realpath -m --relative-to=prefix prefixed/1) = '../prefixed/1' || fail=1
+test $(realpath -m --relative-to=prefixed prefix/1) = '../prefix/1' || fail=1
+test $(realpath -m --relative-to=prefixed prefixed/1) = '1' || fail=1
+
+Exit $fail

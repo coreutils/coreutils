@@ -62,6 +62,7 @@ printf: David MacKenzie
 ptx: François Pinard
 pwd: Jim Meyering
 readlink: Dmitry V. Levin
+realpath: Pádraig Brady
 rm: Paul Rubin, David MacKenzie, Richard M. Stallman, Jim Meyering
 rmdir: David MacKenzie
 runcon: Russell Coker

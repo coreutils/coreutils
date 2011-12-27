@@ -59,6 +59,7 @@ printf.1
 ptx.1
 pwd.1
 readlink.1
+realpath.1
 rm.1
 rmdir.1
 seq.1

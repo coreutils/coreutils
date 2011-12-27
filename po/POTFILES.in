@@ -99,6 +99,7 @@ src/printf.c
 src/ptx.c
 src/pwd.c
 src/readlink.c
+src/realpath.c
 src/remove.c
 src/rm.c
 src/rmdir.c

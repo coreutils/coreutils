@@ -177,6 +177,7 @@ ln_setup () { args="$tmp_in ln-target"; }
 ginstall_setup () { args="$tmp_in $tmp_in2"; }
 mv_setup () { args="$tmp_in $tmp_in2"; }
 mkdir_setup () { args=$tmp_dir/subdir; }
+realpath_setup () { args=$tmp_in; }
 rmdir_setup () { args=$tmp_dir; }
 rm_setup () { args=$tmp_in; }
 shred_setup () { args=$tmp_in; }

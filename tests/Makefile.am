@@ -220,6 +220,7 @@ TESTS =						\
   misc/printf-surprise				\
   misc/pwd-long					\
   misc/readlink-fp-loop				\
+  misc/realpath					\
   misc/runcon-no-reorder			\
   misc/sha1sum					\
   misc/sha1sum-vec				\

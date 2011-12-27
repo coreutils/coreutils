@@ -92,6 +92,7 @@ printf.1:	$(common_dep)	$(srcdir)/printf.x	../src/printf.c
 ptx.1:		$(common_dep)	$(srcdir)/ptx.x		../src/ptx.c
 pwd.1:		$(common_dep)	$(srcdir)/pwd.x		../src/pwd.c
 readlink.1:	$(common_dep)	$(srcdir)/readlink.x	../src/readlink.c
+realpath.1:	$(common_dep)	$(srcdir)/realpath.x	../src/realpath.c
 rm.1:		$(common_dep)	$(srcdir)/rm.x		../src/rm.c
 rmdir.1:	$(common_dep)	$(srcdir)/rmdir.x	../src/rmdir.c
 runcon.1:	$(common_dep)	$(srcdir)/runcon.x	../src/runcon.c

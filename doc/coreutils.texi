@@ -94,6 +94,7 @@
 * ptx: (coreutils)ptx invocation.               Produce permuted indexes.
 * pwd: (coreutils)pwd invocation.               Print working directory.
 * readlink: (coreutils)readlink invocation.     Print referent of a symlink.
+* realpath: (coreutils)readpath invocation.     Print resolved file names.
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
 * runcon: (coreutils)runcon invocation.         Run in specified SELinux CTX.
@@ -194,7 +195,7 @@ Free Documentation License''.
 * Printing text::                echo printf yes
 * Conditions::                   false true test expr
 * Redirection::                  tee
-* File name manipulation::       dirname basename pathchk mktemp
+* File name manipulation::       dirname basename pathchk mktemp realpath
 * Working context::              pwd stty printenv tty
 * User information::             id logname whoami groups users who
 * System context::               date arch nproc uname hostname hostid uptime
@@ -381,6 +382,7 @@ File name manipulation
 * dirname invocation::           Strip last file name component
 * pathchk invocation::           Check file name validity and portability
 * mktemp invocation::            Create temporary file or directory
+* realpath invocation::          Print resolved file names
 
 Working context
 
@@ -9603,7 +9605,6 @@ Set the default SELinux security context to be used for created files.
 @cindex displaying value of a symbolic link
 @cindex canonical file name
 @cindex canonicalize a file name
-@pindex realpath
 @findex realpath
 
 @command{readlink} may work in one of two supported modes:
@@ -9686,8 +9687,8 @@ Report error messages.
 
 The @command{readlink} utility first appeared in OpenBSD 2.1.
 
-There is a @command{realpath} command on some systems
-which operates like @command{readlink} in canonicalize mode.
+The @command{realpath} command without options, operates like
+@command{readlink} in canonicalize mode.
 
 @exitstatus
 
@@ -12354,6 +12355,7 @@ This section describes commands that manipulate file names.
 * dirname invocation::          Strip last file name component.
 * pathchk invocation::          Check file name validity and portability.
 * mktemp invocation::           Create temporary file or directory.
+* realpath invocation::         Print resolved file names.
 @end menu
 
 
@@ -12703,6 +12705,119 @@ Exit status:
 
 @display
 0 if the file was created,
+1 otherwise.
+@end display
+
+
+@node realpath invocation
+@section @command{realpath}: Print the resolved file name.
+
+@pindex realpath
+@cindex file names, canonicalization
+@cindex symlinks, resolution
+@cindex canonical file name
+@cindex canonicalize a file name
+@pindex realpath
+@findex realpath
+
+@command{realpath} expands all symbolic links and resolves references to
+@samp{/./}, @samp{/../} and extra @samp{/} characters.  By default,
+all but the last component of the specified files must exist.  Synopsis:
+
+@example
+realpath [@var{option}]@dots{} @var{file}@dots{}
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -e
+@itemx --canonicalize-existing
+@opindex -e
+@opindex --canonicalize-existing
+Ensure that all components of the specified file names exist.
+If any component is missing or unavailable, @command{realpath} will output
+a diagnostic unless the @option{-q} option is specified, and exit with a
+nonzero exit code.  A trailing slash requires that the name resolve to a
+directory.
+
+@item -m
+@itemx --canonicalize-missing
+@opindex -m
+@opindex --canonicalize-missing
+If any component of a specified file name is missing or unavailable,
+treat it as a directory.
+
+@item -L
+@itemx --logical
+@opindex -L
+@opindex --logical
+Symbolic links are resolved in the specified file names,
+but they are resolved after any subsequent @samp{..} components are processed.
+
+@item -P
+@itemx --physical
+@opindex -P
+@opindex --physical
+Symbolic links are resolved in the specified file names,
+and they are resolved before any subsequent @samp{..} components are processed.
+This is the default mode of operation.
+
+@item -q
+@itemx --quiet
+@opindex -q
+@opindex --quiet
+Suppress diagnostic messages for specified file names.
+
+@item -s
+@itemx --strip
+@itemx --no-symlinks
+@opindex -s
+@opindex --strip
+@opindex --no-symlinks
+Do not resolve symbolic links.  Only resolve references to
+@samp{/./}, @samp{/../} and remove extra @samp{/} characters.
+When combined with the @option{-m} option, realpath operates
+only on the file name, and does not touch any actual file.
+
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+Separate output items with @sc{nul} characters.
+
+@itemx --relative-to=@var{file}
+@opindex --relative-to
+@cindex relpath
+Print the resolved file names relative to the specified file.
+Note this option honors the @option{-m} and @option{-e} options
+pertaining to file existence.
+
+@itemx --relative-base=@var{base}
+@opindex --relative-base
+This option is valid when used with @option{--relative-to}, and will restrict
+the output of @option{--relative-to} so that relative names are output,
+only when @var{file}s are descendants of @var{base}.  Otherwise output the
+absolute file name.  Note: this option honors the @option{-m} and @option{-e}
+options pertaining to file existence.  For example:
+
+@example
+realpath --relative-to=/usr /tmp /usr/bin
+@result{} ../tmp
+@result{} bin
+realpath --relative-base=/usr --relative-to=/usr /tmp /usr/bin
+@result{} /tmp
+@result{} bin
+@end example
+
+@end table
+
+@cindex exit status of @command{realpath}
+Exit status:
+
+@display
+0 if all file names were printed without issue.
 1 otherwise.
 @end display
 

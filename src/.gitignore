@@ -68,6 +68,7 @@ printf
 ptx
 pwd
 readlink
+realpath
 rm
 rmdir
 runcon
