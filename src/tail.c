@@ -848,9 +848,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   while (1)
     {
       char buffer[BUFSIZ];
-      char *p = buffer;
       size_t bytes_read = safe_read (fd, buffer, BUFSIZ);
-      char *buffer_end = buffer + bytes_read;
       if (bytes_read == 0) /* EOF */
         return -1;
       if (bytes_read == SAFE_READ_ERROR) /* error */
@@ -859,8 +857,11 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
           return 1;
         }
 
+      char *buffer_end = buffer + bytes_read;
+
       *read_pos += bytes_read;
 
+      char *p = buffer;
       while ((p = memchr (p, '\n', buffer_end - p)))
         {
           ++p;
