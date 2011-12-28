@@ -25,6 +25,9 @@ fi
 envvar_check_fail=0
 vars='
   _POSIX2_VERSION
+  _STDBUF_E
+  _STDBUF_I
+  _STDBUF_O
   BLOCKSIZE
   BLOCK_SIZE
   CDPATH
