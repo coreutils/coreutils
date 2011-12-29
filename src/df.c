@@ -25,6 +25,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "canonicalize.h"
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
@@ -417,6 +418,17 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
     *dest = -*dest;
 }
 
+/* Return true if S ends in a string that may be a 36-byte UUID,
+   i.e., of the form HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH, where
+   each H is an upper or lower case hexadecimal digit.  */
+static bool _GL_ATTRIBUTE_PURE
+has_uuid_suffix (char const *s)
+{
+  size_t len = strlen (s);
+  return (36 < len
+          && strspn (s + len - 36, "-0123456789abcdefABCDEF") == 36);
+}
+
 /* Obtain a space listing for the disk device with absolute file name DISK.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
@@ -428,13 +440,16 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
    If FSTYPE is non-NULL, it is the type of the file system on DISK.
    If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
    not be able to produce statistics in this case.
-   ME_DUMMY and ME_REMOTE are the mount entry flags.  */
+   ME_DUMMY and ME_REMOTE are the mount entry flags.
+   Caller must set PROCESS_ALL to true when iterating over all entries, as
+   when df is invoked with no non-option argument.  See below for details.  */
 
 static void
 get_dev (char const *disk, char const *mount_point,
          char const *stat_file, char const *fstype,
          bool me_dummy, bool me_remote,
-         const struct fs_usage *force_fsu)
+         const struct fs_usage *force_fsu,
+         bool process_all)
 {
   struct fs_usage fsu;
   char buf[LONGEST_HUMAN_READABLE + 2];
@@ -488,6 +503,24 @@ get_dev (char const *disk, char const *mount_point,
 
   if (! disk)
     disk = "-";			/* unknown */
+
+  char *dev_name = xstrdup (disk);
+  char *resolved_dev;
+
+  /* On some systems, dev_name is a long-named symlink like
+     /dev/disk/by-uuid/828fc648-9f30-43d8-a0b1-f7196a2edb66 pointing to a
+     much shorter and more useful name like /dev/sda1.  It may also look
+     like /dev/mapper/luks-828fc648-9f30-43d8-a0b1-f7196a2edb66 and point to
+     /dev/dm-0.  When process_all is true and dev_name is a symlink whose
+     name ends with a UUID use the resolved name instead.  */
+  if (process_all
+      && has_uuid_suffix (dev_name)
+      && (resolved_dev = canonicalize_filename_mode (dev_name, CAN_EXISTING)))
+    {
+      free (dev_name);
+      dev_name = resolved_dev;
+    }
+
   if (! fstype)
     fstype = "-";		/* unknown */
 
@@ -537,7 +570,7 @@ get_dev (char const *disk, char const *mount_point,
       switch (field)
         {
         case DEV_FIELD:
-          cell = xstrdup (disk);
+          cell = dev_name;
           break;
 
         case TYPE_FIELD:
@@ -648,7 +681,7 @@ get_disk (char const *disk)
     {
       get_dev (best_match->me_devname, best_match->me_mountdir, NULL,
                best_match->me_type, best_match->me_dummy,
-               best_match->me_remote, NULL);
+               best_match->me_remote, NULL, false);
       return true;
     }
 
@@ -734,7 +767,7 @@ get_point (const char *point, const struct stat *statp)
   if (best_match)
     get_dev (best_match->me_devname, best_match->me_mountdir, point,
              best_match->me_type, best_match->me_dummy, best_match->me_remote,
-             NULL);
+             NULL, false);
   else
     {
       /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
@@ -745,7 +778,7 @@ get_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
         {
-          get_dev (NULL, mp, NULL, NULL, false, false, NULL);
+          get_dev (NULL, mp, NULL, NULL, false, false, NULL, false);
           free (mp);
         }
     }
@@ -774,7 +807,7 @@ get_all_entries (void)
 
   for (me = mount_list; me; me = me->me_next)
     get_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
-              me->me_dummy, me->me_remote, NULL);
+             me->me_dummy, me->me_remote, NULL, true);
 }
 
 /* Add FSTYPE to the list of file system types to display. */
@@ -1066,7 +1099,7 @@ main (int argc, char **argv)
     {
       if (inode_format)
         grand_fsu.fsu_blocks = 1;
-      get_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu);
+      get_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu, false);
     }
 
   print_table ();
