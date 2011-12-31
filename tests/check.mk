@@ -39,7 +39,7 @@ check: vc_exe_in_TESTS
 CLEANFILES =
 CLEANFILES += .built-programs
 check-am: .built-programs
-.built-programs:
+.built-programs: $(top_srcdir)/src/Makefile.am
 	$(AM_V_GEN)(cd $(top_builddir)/src				\
             && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
           > $@-t && mv $@-t $@
