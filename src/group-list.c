@@ -88,6 +88,16 @@ print_group_list (const char *username,
   return ok;
 }
 
+/* Convert a gid_t to string.  Do not use this function directly.
+   Instead, use it via the gidtostr macro.
+   Beware that it returns a pointer to static storage.  */
+static char *
+gidtostr_ptr (gid_t const *gid)
+{
+  static char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  return umaxtostr (*gid, buf);
+}
+#define gidtostr(g) gidtostr_ptr (&(g))
 
 /* Print the name or value of group ID GID. */
 extern bool
@@ -107,9 +117,7 @@ print_group (gid_t gid, bool use_name)
         }
     }
 
-  if (grp == NULL)
-    printf ("%lu", (unsigned long int) gid);
-  else
-    printf ("%s", grp->gr_name);
+  char *s = grp ? grp->gr_name : gidtostr (gid);
+  fputs (s, stdout);
   return ok;
 }

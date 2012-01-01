@@ -274,6 +274,28 @@ main (int argc, char **argv)
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+/* Convert a gid_t to string.  Do not use this function directly.
+   Instead, use it via the gidtostr macro.
+   Beware that it returns a pointer to static storage.  */
+static char *
+gidtostr_ptr (gid_t const *gid)
+{
+  static char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  return umaxtostr (*gid, buf);
+}
+#define gidtostr(g) gidtostr_ptr (&(g))
+
+/* Convert a uid_t to string.  Do not use this function directly.
+   Instead, use it via the uidtostr macro.
+   Beware that it returns a pointer to static storage.  */
+static char *
+uidtostr_ptr (uid_t const *uid)
+{
+  static char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  return umaxtostr (*uid, buf);
+}
+#define uidtostr(u) uidtostr_ptr (&(u))
+
 /* Print the name or value of user ID UID. */
 
 static void
@@ -286,16 +308,14 @@ print_user (uid_t uid)
       pwd = getpwuid (uid);
       if (pwd == NULL)
         {
-          error (0, 0, _("cannot find name for user ID %lu"),
-                 (unsigned long int) uid);
+          error (0, 0, _("cannot find name for user ID %s"),
+                 uidtostr (uid));
           ok = false;
         }
     }
 
-  if (pwd == NULL)
-    printf ("%lu", (unsigned long int) uid);
-  else
-    printf ("%s", pwd->pw_name);
+  char *s = pwd ? pwd->pw_name : uidtostr (uid);
+  fputs (s, stdout);
 }
 
 /* Print all of the info about the user's user and group IDs. */
@@ -306,19 +326,19 @@ print_full_info (const char *username)
   struct passwd *pwd;
   struct group *grp;
 
-  printf (_("uid=%lu"), (unsigned long int) ruid);
+  printf (_("uid=%s"), uidtostr (ruid));
   pwd = getpwuid (ruid);
   if (pwd)
     printf ("(%s)", pwd->pw_name);
 
-  printf (_(" gid=%lu"), (unsigned long int) rgid);
+  printf (_(" gid=%s"), gidtostr (rgid));
   grp = getgrgid (rgid);
   if (grp)
     printf ("(%s)", grp->gr_name);
 
   if (euid != ruid)
     {
-      printf (_(" euid=%lu"), (unsigned long int) euid);
+      printf (_(" euid=%s"), uidtostr (euid));
       pwd = getpwuid (euid);
       if (pwd)
         printf ("(%s)", pwd->pw_name);
@@ -326,7 +346,7 @@ print_full_info (const char *username)
 
   if (egid != rgid)
     {
-      printf (_(" egid=%lu"), (unsigned long int) egid);
+      printf (_(" egid=%s"), gidtostr (egid));
       grp = getgrgid (egid);
       if (grp)
         printf ("(%s)", grp->gr_name);
@@ -359,7 +379,7 @@ print_full_info (const char *username)
       {
         if (i > 0)
           putchar (',');
-        printf ("%lu", (unsigned long int) groups[i]);
+        fputs (gidtostr (groups[i]), stdout);
         grp = getgrgid (groups[i]);
         if (grp)
           printf ("(%s)", grp->gr_name);
