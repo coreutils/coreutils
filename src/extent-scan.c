@@ -133,11 +133,11 @@ extent_scan_read (struct extent_scan *scan)
       unsigned int i = 0;
       for (i = 0; i < fiemap->fm_mapped_extents; i++)
         {
-          assert (fm_extents[i].fe_logical <=
-                  OFF_T_MAX - fm_extents[i].fe_length);
+          assert (fm_extents[i].fe_logical
+                  <= OFF_T_MAX - fm_extents[i].fe_length);
 
-          if (si && last_ei->ext_flags ==
-              (fm_extents[i].fe_flags & ~FIEMAP_EXTENT_LAST)
+          if (si && last_ei->ext_flags
+              == (fm_extents[i].fe_flags & ~FIEMAP_EXTENT_LAST)
               && (last_ei->ext_logical + last_ei->ext_length
                   == fm_extents[i].fe_logical))
             {
@@ -147,8 +147,8 @@ extent_scan_read (struct extent_scan *scan)
               last_ei->ext_flags = fm_extents[i].fe_flags;
             }
           else if ((si == 0 && scan->scan_start > fm_extents[i].fe_logical)
-                   || (si && last_ei->ext_logical + last_ei->ext_length >
-                       fm_extents[i].fe_logical))
+                   || (si && (last_ei->ext_logical + last_ei->ext_length
+                              > fm_extents[i].fe_logical)))
             {
               /* BTRFS before 2.6.38 could return overlapping extents
                  for sparse files.  We adjust the returned extents

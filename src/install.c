@@ -359,8 +359,8 @@ setdefaultfilecon (char const *file)
 
   /* If there's an error determining the context, or it has none,
      return to allow default context */
-  if ((matchpathcon (file, st.st_mode, &scontext) != 0) ||
-      STREQ (scontext, "<<none>>"))
+  if ((matchpathcon (file, st.st_mode, &scontext) != 0)
+      || STREQ (scontext, "<<none>>"))
     {
       if (scontext != NULL)
         freecon (scontext);

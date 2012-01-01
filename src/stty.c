@@ -1344,8 +1344,8 @@ set_window_size (int rows, int cols, char const *device_name)
      it's almost certainly a "struct winsize" instead.
 
      At any rate, the bug manifests itself when ws_row == 0; the symptom is
-     that ws_row is set to ws_col, and ws_col is set to (ws_xpixel<<16) +
-     ws_ypixel.  Since GNU stty sets rows and columns separately, this bug
+     that ws_row is set to ws_col, and ws_col is set to (ws_xpixel<<16)
+     + ws_ypixel.  Since GNU stty sets rows and columns separately, this bug
      caused "stty rows 0 cols 0" to set rows to cols and cols to 0, while
      "stty cols 0 rows 0" would do the right thing.  On a little-endian
      machine like the sun386i, the problem is the same, but for ws_col == 0.

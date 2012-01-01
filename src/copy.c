@@ -1055,8 +1055,8 @@ copy_reg (char const *src_name, char const *dst_name,
                           make_holes, src_name, dst_name,
                           UINTMAX_MAX, &n_read,
                           &wrote_hole_at_eof)
-           || (wrote_hole_at_eof &&
-               ftruncate (dest_desc, n_read) < 0))
+           || (wrote_hole_at_eof
+               && ftruncate (dest_desc, n_read) < 0))
         {
           error (0, errno, _("failed to extend %s"), quote (dst_name));
           return_val = false;

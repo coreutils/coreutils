@@ -781,9 +781,9 @@ cols_ready_to_print (void)
 
   n = 0;
   for (q = column_vector, i = 0; i < columns; ++q, ++i)
-    if (q->status == OPEN ||
-        q->status == FF_FOUND ||	/* With -b: To print a header only */
-        (storing_columns && q->lines_stored > 0 && q->lines_to_print > 0))
+    if (q->status == OPEN
+        || q->status == FF_FOUND	/* With -b: To print a header only */
+        || (storing_columns && q->lines_stored > 0 && q->lines_to_print > 0))
       ++n;
   return n;
 }
@@ -1275,13 +1275,13 @@ init_parameters (int number_of_files)
 
       /* To allow input tab-expansion (-e sensitive) use:
          if (number_separator == input_tab_char)
-           number_width = chars_per_number +
-             TAB_WIDTH (chars_per_input_tab, chars_per_number);   */
+           number_width = chars_per_number
+             + TAB_WIDTH (chars_per_input_tab, chars_per_number);   */
 
       /* Estimate chars_per_text without any margin and keep it constant. */
       if (number_separator == '\t')
-        number_width = chars_per_number +
-          TAB_WIDTH (chars_per_default_tab, chars_per_number);
+        number_width = (chars_per_number
+                        + TAB_WIDTH (chars_per_default_tab, chars_per_number));
       else
         number_width = chars_per_number + 1;
 
@@ -1297,8 +1297,8 @@ init_parameters (int number_of_files)
         power_10 = 10 * power_10;
     }
 
-  chars_per_column = (chars_per_line - chars_used_by_number -
-                     (columns - 1) * col_sep_length) / columns;
+  chars_per_column = (chars_per_line - chars_used_by_number
+                      - (columns - 1) * col_sep_length) / columns;
 
   if (chars_per_column < 1)
     error (EXIT_FAILURE, 0, _("page width too narrow"));
@@ -1836,8 +1836,8 @@ print_page (void)
                 {
                   if (empty_line)
                     align_empty_cols = true;
-                  else if (p->status == CLOSED ||
-                           (p->status == ON_HOLD && FF_only))
+                  else if (p->status == CLOSED
+                           || (p->status == ON_HOLD && FF_only))
                     align_column (p);
                 }
             }

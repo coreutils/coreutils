@@ -590,9 +590,9 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 
   while (n--)
     {
-      if (!my_line_only ||
-          strncmp (ttyname_b, utmp_buf->ut_line,
-                   sizeof (utmp_buf->ut_line)) == 0)
+      if (!my_line_only
+          || strncmp (ttyname_b, utmp_buf->ut_line,
+                      sizeof (utmp_buf->ut_line)) == 0)
         {
           if (need_users && IS_USER_PROCESS (utmp_buf))
             print_user (utmp_buf, boottime);

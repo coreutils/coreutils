@@ -173,7 +173,7 @@ static struct line uni_blank;
 /* If nonzero, ignore case when comparing join fields.  */
 static bool ignore_case;
 
-/* If nonzero, treat the first line of each file as column headers -
+/* If nonzero, treat the first line of each file as column headers --
    join them without checking for ordering */
 static bool join_header_lines;
 

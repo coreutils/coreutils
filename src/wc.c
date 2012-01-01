@@ -292,7 +292,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       /* Back-up the state before each multibyte character conversion and
          move the last incomplete character of the buffer to the front
          of the buffer.  This is needed because we don't know whether
-         the 'mbrtowc' function updates the state when it returns -2, -
+         the 'mbrtowc' function updates the state when it returns -2, --
          this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
          ANSI C, glibc-2.1 and Solaris 5.7 behaviour.  We don't have an
          autoconf test for this, yet.  */

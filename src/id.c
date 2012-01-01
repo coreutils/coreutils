@@ -191,8 +191,8 @@ main (int argc, char **argv)
      invalid value that will be not displayed in print_full_info().  */
   if (selinux_enabled
       && n_ids == 0
-      && (just_context ||
-          (default_format && ! getenv ("POSIXLY_CORRECT"))))
+      && (just_context
+          || (default_format && ! getenv ("POSIXLY_CORRECT"))))
     {
       /* Report failure only if --context (-Z) was explicitly requested.  */
       if (getcon (&context) && just_context)

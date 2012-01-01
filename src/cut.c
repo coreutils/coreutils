@@ -372,8 +372,8 @@ set_fields (const char *fieldstr)
           initial = (lhs_specified ? value : 1);
           value = 0;
         }
-      else if (*fieldstr == ',' ||
-               isblank (to_uchar (*fieldstr)) || *fieldstr == '\0')
+      else if (*fieldstr == ','
+               || isblank (to_uchar (*fieldstr)) || *fieldstr == '\0')
         {
           in_digits = false;
           /* Ending the string, or this field/byte sublist. */
