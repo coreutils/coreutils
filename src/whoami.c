@@ -1,6 +1,6 @@
 /* whoami -- print effective userid
 
-   Copyright (C) 1989-1997, 1999-2002, 2004-2005, 2007-2011 Free Software
+   Copyright (C) 1989-1997, 1999-2002, 2004-2005, 2007-2012 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify

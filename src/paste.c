@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1997-2005, 2008-2011 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005, 2008-2012 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software: you can redistribute it and/or modify
