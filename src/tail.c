@@ -903,10 +903,13 @@ fremote (int fd, const char *name)
         case 0:
           break;
         case -1:
-          error (0, 0, _("unrecognized file system type 0x%08lx for %s. "
-                         "please report this to %s. reverting to polling"),
-                 buf.f_type, quote (name), PACKAGE_BUGREPORT);
-          /* Treat as "remote", so caller polls.  */
+          {
+            unsigned long int fs_type = buf.f_type;
+            error (0, 0, _("unrecognized file system type 0x%08lx for %s. "
+                           "please report this to %s. reverting to polling"),
+                   fs_type, quote (name), PACKAGE_BUGREPORT);
+            /* Treat as "remote", so caller polls.  */
+          }
           break;
         case 1:
           remote = false;
