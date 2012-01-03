@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New programs
+
+  realpath: print resolved file names.
+
 ** Bug fixes
 
   du -x no longer counts root directories of other file systems.
@@ -36,19 +40,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-  df, with no non-option argument and recent enough kernel/tools, would
-  print a long UUID-including file system name, pushing second and subsequent
-  columns far to the right.  Now, when that long name refers to a symlink,
-  df prints the usually-short referent instead.
+  df avoids long UUID-including file system names in the default listing.
+  With recent enough kernel/tools, these long names would be used, pushing
+  second and subsequent columns far to the right.  Now, when a long name
+  refers to a symlink, and no file systems are specified, df prints the
+  usually-short referent instead.
 
   tail -f now uses polling (not inotify) when any of its file arguments
   resides on a file system of unknown type.  In addition, for each such
   argument, tail -f prints a warning with the FS type magic number and a
   request to report it to the bug-reporting address.
-
-** New programs
-
-  realpath: print resolved file names.
 
 
 * Noteworthy changes in release 8.14 (2011-10-12) [stable]
