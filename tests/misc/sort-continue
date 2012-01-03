@@ -27,10 +27,12 @@ for i in $(seq 31); do
   echo $i | tee -a in > __test.$i || framework_failure_
 done
 
+# glob before ulimit to avoid issues on bash 3.2 on OS X 10.6.8 at least
+test_files=$(echo __test.*)
 
 (
  ulimit -n 6
- sort -n -m __test.* 3<&- 4<&- 5<&- < /dev/null > out
+ sort -n -m $test_files 3<&- 4<&- 5<&- < /dev/null > out
 ) &&
 compare in out ||
   { fail=1; echo 'file descriptor exhaustion not handled' 1>&2; }
@@ -38,7 +40,7 @@ compare in out ||
 echo 32 | tee -a in > in1
 (
  ulimit -n 6
- sort -n -m __test.* - 3<&- 4<&- 5<&- < in1 > out
+ sort -n -m $test_files - 3<&- 4<&- 5<&- < in1 > out
 ) &&
 compare in out || { fail=1; echo 'stdin not handled properly' 1>&2; }
 
