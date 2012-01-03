@@ -41,9 +41,9 @@ realpath -m '' && fail=1
 
 # symlink resolution
 this=$(realpath .)
-test $(realpath $relative ldir2/..) = "$this/dir1" || fail=1
-test $(realpath -L $relative ldir2/..) = "$this" || fail=1
-test $(realpath -s $relative ldir2) = "$this/ldir2" || fail=1
+test "$(realpath $relative ldir2/..)" = "$this/dir1" || fail=1
+test "$(realpath -L $relative ldir2/..)" = "$this" || fail=1
+test "$(realpath -s $relative ldir2)" = "$this/ldir2" || fail=1
 
 # relative string handling
 test $(realpath -m --relative-to=prefix prefixed/1) = '../prefixed/1' || fail=1
