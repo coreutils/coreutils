@@ -2,6 +2,7 @@
 *.[EIOX]
 *.bak
 *.o
+*.trs
 */.deps
 *~
 ._bootmp
@@ -25,6 +26,7 @@
 /build-aux/mdate-sh
 /build-aux/missing
 /build-aux/snippet/
+/build-aux/test-driver
 /build-aux/texinfo.tex
 /build-aux/ylwrap
 /config.cache
@@ -50,6 +52,7 @@
 /lib/ctype.h
 /lib/dirent.h
 /lib/fcntl.h
+/lib/getopt.h
 /lib/glthread
 /lib/iconv.h
 /lib/iconv_open-aix.h
