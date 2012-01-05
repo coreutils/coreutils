@@ -32,7 +32,7 @@ touch a/file || framework_failure_
 # Ensure that setfacl and getfacl work on this file system.
 skip=no
 acl1=`cd a && getfacl file` || skip=yes
-setfacl -m user:bin:rw a/file 2> /dev/null || skip=yes
+setfacl -m user:bin:rw- a/file 2> /dev/null || skip=yes
 test $skip = yes &&
   skip_ "'.' is not on a suitable file system for this test"
 

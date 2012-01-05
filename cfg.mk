@@ -245,6 +245,15 @@ sc_prohibit_fail_0:
 	halt='fail=0 initialization'					\
 	  $(_sc_search_regexp)
 
+# The mode part of a setfacl -m option argument must be three bytes long.
+# I.e., an argument of user:bin:rw or user:bin:r will make Solaris 10's
+# setfacl reject it with: "Unrecognized character found in mode field".
+# Use hyphens to give it a length of 3: "...:rw-" or "...:r--".
+sc_prohibit_short_facl_mode_spec:
+	@prohibit='\<setfacl .*-m.*:.*:[rwx-]{1,2} '			\
+	halt='setfacl mode string length < 3; extend with hyphen(s)'	\
+	  $(_sc_search_regexp)
+
 # Ensure that "stdio--.h" is used where appropriate.
 sc_require_stdio_safer:
 	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
