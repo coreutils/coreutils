@@ -134,6 +134,14 @@ the best solution is to use GNU make.  Otherwise, simply remove
 all mention of "[$(EXEEXT)" from src/Makefile.
 
 
+*************************************************
+"make check" failure on IRIX 6.5 and Solaris <= 9
+-------------------------------------------------
+
+Using the vendor make program to run "make check" fails on these two systems.
+If you want to run all of the tests there, use GNU make.
+
+
 
 **********************
 Running tests as root:
