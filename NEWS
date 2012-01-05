@@ -2,6 +2,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  mv now lets you move a symlink onto a same-inode destination file that
+  has two or more hard links.  Before, it would reject that, saying that
+  they are the same, implicitly warning you that the move would result in
+  data loss.  In this unusual case, when not moving the symlink onto its
+  referent, there is no risk of data loss, since the symlink will
+  typically still point to one of the hard links.
+
 
 * Noteworthy changes in release 8.15 (2012-01-06) [stable]
 

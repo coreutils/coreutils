@@ -34,6 +34,7 @@
 #include "acl.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
+#include "canonicalize.h"
 #include "copy.h"
 #include "cp-hash.h"
 #include "extent-scan.h"
@@ -1349,6 +1350,39 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
         }
     }
 
+  /* At this point, it is normally an error (data loss) to move a symlink
+     onto its referent, but in at least one narrow case, it is not:
+     In move mode, when
+     1) src is a symlink,
+     2) dest has a link count of 2 or more and
+     3) dest and the referent of src are not the same directory entry,
+     then it's ok, since while we'll lose one of those hard links,
+     src will still point to a remaining link.
+     Note that technically, condition #3 obviates condition #2, but we
+     retain the 1 < st_nlink condition because that means fewer invocations
+     of the more expensive #3.
+
+     Given this,
+       $ touch f && ln f l && ln -s f s
+       $ ls -og f l s
+       -rw-------. 2  0 Jan  4 22:46 f
+       -rw-------. 2  0 Jan  4 22:46 l
+       lrwxrwxrwx. 1  1 Jan  4 22:46 s -> f
+     this must fail: mv s f
+     this must succeed: mv s l */
+  if (x->move_mode
+      && S_ISLNK (src_sb->st_mode)
+      && 1 < dst_sb_link->st_nlink)
+    {
+      char *abs_src = canonicalize_file_name (src_name);
+      if (abs_src)
+        {
+          bool result = ! same_name (abs_src, dst_name);
+          free (abs_src);
+          return result;
+        }
+    }
+
   /* It's ok to remove a destination symlink.  But that works only when we
      unlink before opening the destination and when the source and destination
      files are on the same partition.  */
@@ -1837,6 +1871,10 @@ copy_internal (char const *src_name, char const *dst_name,
                  to use fts, so using alloca here will be less of a problem.  */
               ASSIGN_STRDUPA (dst_backup, tmp_backup);
               free (tmp_backup);
+              /* In move mode, when src_name and dst_name are on the
+                 same partition (FIXME, and when they are non-directories),
+                 make the operation atomic: link dest
+                 to backup, then rename src to dest.  */
               if (rename (dst_name, dst_backup) != 0)
                 {
                   if (errno != ENOENT)
