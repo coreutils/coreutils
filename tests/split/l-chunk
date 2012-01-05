@@ -40,6 +40,9 @@ split -n l/2 /dev/zero
 test "$(stat -c %s x* | wc -l)" = '2' || fail=1
 rm x??
 
+# Repeat the above,  but with 1/2, not l/2:
+split -n 1/2 /dev/zero || fail=1
+
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
 stat x?? 2>/dev/null && fail=1

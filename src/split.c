@@ -623,11 +623,11 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
     {
       char *bp = buf, *eob;
       size_t n_read = full_read (STDIN_FILENO, buf, bufsize);
-      n_read = MIN (n_read, file_size - n_written);
       if (n_read < bufsize && errno)
         error (EXIT_FAILURE, errno, "%s", infile);
       else if (n_read == 0)
         break; /* eof.  */
+      n_read = MIN (n_read, file_size - n_written);
       chunk_truncated = false;
       eob = buf + n_read;
 
@@ -718,11 +718,11 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   while (start < end)
     {
       size_t n_read = full_read (STDIN_FILENO, buf, bufsize);
-      n_read = MIN (n_read, end - start);
       if (n_read < bufsize && errno)
         error (EXIT_FAILURE, errno, "%s", infile);
       else if (n_read == 0)
         break; /* eof.  */
+      n_read = MIN (n_read, end - start);
       if (full_write (STDOUT_FILENO, buf, n_read) != n_read
           && ! ignorable (errno))
         error (EXIT_FAILURE, errno, "%s", quote ("-"));

@@ -29,6 +29,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   and NcFsd file systems.  This did not affect Unix/Linux-based kernels.
   [bug introduced in coreutils-8.0, when rm began using fts]
 
+  split -n 1/2 FILE no longer fails when operating on a growing file, or
+  (on some systems) when operating on a non-regular file like /dev/zero.
+  It would report "/dev/zero: No such file or directory" even though
+  the file obviously exists.  Same for -n l/2.
+  [bug introduced in coreutils-8.8, with the addition of the -n option]
+
   stat -f now recognizes the FhGFS and PipeFS file system types.
 
   tac no longer fails to handle two or more non-seekable inputs
