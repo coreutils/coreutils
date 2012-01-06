@@ -46,3 +46,7 @@ s!(elicits.*)\.!first $1, and the second works properly.!
 #   Without this, `truncate -s '> -1' F` would truncate F to length 0,
 #   and `truncate -s " +1" F` would truncate F to 1 byte.  Now, the
 #   first elicits a diagnostic, and the second works properly.
+
+# Credit initial reporter of a related issue, now that the BZ is public.
+1e18d8416f9ef43bf08982cabe54220587061a08
+s,by ,by Nao Nishijima in http://bugzilla.redhat.com/766461\nand by ,
