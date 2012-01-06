@@ -52,6 +52,27 @@ sub re_edit($)
     and die "$ME: $log_file: the editor ($editor) failed, aborting\n";
 }
 
+sub bad_first_line($)
+{
+  my ($line) = @_;
+
+  $line =~ /^[Vv]ersion \d/
+    and return '';
+
+  $line =~ /:/
+    or return 'missing colon on first line of log message';
+
+  # The token(s) before the colon on the first line must be on our list
+  # Tokens may be space- or comma-separated.
+  (my $pre_colon = $line) =~ s/:.*//;
+  my @word = split (/[ ,]/, $pre_colon);
+  my @bad = grep !/$valid_regex/, @word;
+  @bad
+    and return 'invalid first word(s) of summary line: ' . join (', ', @bad);
+
+  return '';
+}
+
 # Given a $LOG_FILE name and a \@LINE buffer,
 # read the contents of the file into the buffer and analyze it.
 # If the log message passes muster, return the empty string.
@@ -82,17 +103,9 @@ sub check_msg($$)
   @line == 0
     and return 'no log message';
 
-  # The first line must have a colon or must give a version number.
-  $line[0] =~ /(?::|^[Vv]ersion [0-9])/
-    or return 'missing colon on first line of log message';
-
-  # The token(s) before the colon on the first line must be on our list
-  # Tokens may be space- or comma-separated.
-  (my $pre_colon = $line[0]) =~ s/:.*//;
-  my @word = split (/[ ,]/, $pre_colon);
-  my @bad = grep !/$valid_regex/, @word;
-  @bad
-    and return 'invalid first word(s) of summary line: ' . join (', ', @bad);
+  my $bad = bad_first_line $line[0];
+  $bad
+    and return $bad;
 
   # Second line should be blank or not present.
   2 <= @line && length $line[1]
