@@ -392,7 +392,7 @@ my @tv = (
 # Before coreutils-5.3.1, --pages=1:-1 would be treated like
 # --pages=1:18446744073709551615.
 ['neg-page', '--pages=1:-1', '', '', 1,
- "$prog: invalid --pages argument `1:-1'\n"],
+ "$prog: invalid --pages argument '1:-1'\n"],
 
 # Up to coreutils-6.10, this would cause pr to decrement its
 # internal "input_position" below zero and sometimes segfault.

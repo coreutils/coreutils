@@ -50,10 +50,10 @@ my @Tests =
               "$prog: minimum --batch-size argument is `2'\n"}, {EXIT=>2}],
 
      ['nmerge-neg', "-m --batch-size=-1", @inputs,
-        {ERR=>"$prog: invalid --batch-size argument `-1'\n"}, {EXIT=>2}],
+        {ERR=>"$prog: invalid --batch-size argument '-1'\n"}, {EXIT=>2}],
 
      ['nmerge-nan', "-m --batch-size=a", @inputs,
-        {ERR=>"$prog: invalid --batch-size argument `a'\n"}, {EXIT=>2}],
+        {ERR=>"$prog: invalid --batch-size argument 'a'\n"}, {EXIT=>2}],
 
      ['nmerge-big', "-m --batch-size=$bigint", @inputs,
         {ERR_SUBST=>'s/(current rlimit is) \d+/$1/'},

@@ -30,13 +30,13 @@ my @Tests =
    # test-name, [option, option, ...] {OUT=>"expected-output"}
 
    ['inval-suffix', "--pages=${too_big}h", {EXIT => 1},
-    {ERR=>"$prog: invalid suffix in --pages argument `${too_big}h'\n"}],
+    {ERR=>"$prog: invalid suffix in --pages argument '${too_big}h'\n"}],
 
    ['too-big', "--pages=$too_big", {EXIT => 1},
-    {ERR=>"$prog: --pages argument `$too_big' too large\n"}],
+    {ERR=>"$prog: --pages argument '$too_big' too large\n"}],
 
    ['simply-inval', "--pages=x", {EXIT => 1},
-    {ERR=>"$prog: invalid --pages argument `x'\n"}],
+    {ERR=>"$prog: invalid --pages argument 'x'\n"}],
 
    ['inv-pg-range', "--pages=9x", {EXIT => 1},
     {ERR=>"$prog: invalid page range `9x'\n"}],
