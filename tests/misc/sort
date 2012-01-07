@@ -71,7 +71,7 @@ my @Tests =
 ["h6", '-h', {IN=>"1GiB\n1030MiB\n"}, {OUT=>"1030MiB\n1GiB\n"}],
 # check option incompatibility
 ["h7", '-hn', {IN=>""}, {OUT=>""}, {EXIT=>2},
- {ERR=>"$prog: options `-hn' are incompatible\n"}],
+ {ERR=>"$prog: options '-hn' are incompatible\n"}],
 # check key processing
 ["h8", '-n -k2,2h', {IN=>"1 1E\n2 2M\n"}, {OUT=>"2 2M\n1 1E\n"}],
 # SI and IEC prefixes on separate keys allowed
@@ -105,13 +105,13 @@ my @Tests =
 ["03c", '-k1 -k2', {IN=>"A b\nA a\n"}, {OUT=>"A a\nA b\n"}],
 # Fail with a diagnostic when -k specifies field == 0.
 ["03d", '-k0', {EXIT=>2},
- {ERR=>"$prog: -: invalid field specification `0'\n"},
+ {ERR=>"$prog: -: invalid field specification '0'\n"},
   $normalize_filename],
 # Fail with a diagnostic when -k specifies character == 0.
 ["03e", '-k1.0', {EXIT=>2},
- {ERR=>"$prog: character offset is zero: invalid field specification `1.0'\n"}],
+ {ERR=>"$prog: character offset is zero: invalid field specification '1.0'\n"}],
 ["03f", '-k1.1,-k0', {EXIT=>2},
- {ERR=>"$prog: invalid number after `,': invalid count at start of `-k0'\n"}],
+ {ERR=>"$prog: invalid number after ',': invalid count at start of '-k0'\n"}],
 # This is ok.
 ["03g", '-k1.1,1.0', {IN=>''}],
 # This is equivalent to 3f.
@@ -158,10 +158,10 @@ my @Tests =
 #
 # report an error for '.' without following char spec
 ["08a", '-k 2.,3', {EXIT=>2},
- {ERR=>"$prog: invalid number after `.': invalid count at start of `,3'\n"}],
+ {ERR=>"$prog: invalid number after '.': invalid count at start of ',3'\n"}],
 # report an error for ',' without following POS2
 ["08b", '-k 2,', {EXIT=>2},
- {ERR=>"$prog: invalid number after `,': invalid count at start of `'\n"}],
+ {ERR=>"$prog: invalid number after ',': invalid count at start of ''\n"}],
 #
 # Test new -g option.
 ["09a", '-g', {IN=>"1e2\n2e1\n"}, {OUT=>"2e1\n1e2\n"}],
@@ -334,19 +334,19 @@ my @Tests =
 
 # Specifying incompatible options should evoke a failure.
 ["incompat1", '-in', {EXIT=>2},
- {ERR=>"$prog: options `-in' are incompatible\n"}],
+ {ERR=>"$prog: options '-in' are incompatible\n"}],
 ["incompat2", '-nR', {EXIT=>2},
- {ERR=>"$prog: options `-nR' are incompatible\n"}],
+ {ERR=>"$prog: options '-nR' are incompatible\n"}],
 ["incompat3", '-dfgiMnR', {EXIT=>2},
- {ERR=>"$prog: options `-dfgMnR' are incompatible\n"}],
+ {ERR=>"$prog: options '-dfgMnR' are incompatible\n"}],
 ["incompat4", qw(-c -o /dev/null), {EXIT=>2},
- {ERR=>"$prog: options `-co' are incompatible\n"}],
+ {ERR=>"$prog: options '-co' are incompatible\n"}],
 ["incompat5", qw(-C -o /dev/null), {EXIT=>2},
- {ERR=>"$prog: options `-Co' are incompatible\n"}],
+ {ERR=>"$prog: options '-Co' are incompatible\n"}],
 ["incompat6", '-cC', {EXIT=>2},
- {ERR=>"$prog: options `-cC' are incompatible\n"}],
+ {ERR=>"$prog: options '-cC' are incompatible\n"}],
 ["incompat7", qw(--sort=random -n), {EXIT=>2},
- {ERR=>"$prog: options `-nR' are incompatible\n"}],
+ {ERR=>"$prog: options '-nR' are incompatible\n"}],
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'",

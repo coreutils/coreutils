@@ -27,7 +27,7 @@ my $prog = "$ENV{abs_top_builddir}/src/test";
 my @Tests =
     (
      # In coreutils-5.93, this diagnostic lacked the newline.
-     ['o', '-o arg', {ERR => "test: extra argument `-o'\n"},
+     ['o', '-o arg', {ERR => "test: extra argument '-o'\n"},
       {ERR_SUBST => 's!^.*:!test:!'},
       {EXIT => 2}],
     );

@@ -63,7 +63,7 @@ my @Tests =
       {EXIT => 1}],
      ['cont', 'a 4',
       {OUT => "4: 2 2\n"},
-      {ERR => "$prog: `a' is not a valid positive integer\n"},
+      {ERR => "$prog: 'a' is not a valid positive integer\n"},
       {EXIT => 1}],
     );
 

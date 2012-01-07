@@ -26,7 +26,7 @@ print_ver_ ginstall
 file=file
 echo foo > $file
 
-# Before 4.0q, this would mistakenly create $file, not `dest'
+# Before 4.0q, this would mistakenly create $file, not 'dest'
 # in no-dir1/no-dir2/.
 ginstall -D $file no-dir1/no-dir2/dest || fail=1
 test -d no-dir1/no-dir2 || fail=1

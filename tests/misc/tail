@@ -56,13 +56,13 @@ my @tv = (
 ['obs-b', '-b', "x\n" x (512 * 10 / 2 + 1), "x\n" x (512 * 10 / 2), 0],
 
 ['err-1', '+cl', '', '', 1,
- "$prog: cannot open `+cl' for reading: No such file or directory\n"],
+ "$prog: cannot open '+cl' for reading: No such file or directory\n"],
 
 ['err-2', '-cl', '', '', 1,
  "$prog: l: invalid number of bytes\n"],
 
 ['err-3', '+2cz', '', '', 1,
- "$prog: cannot open `+2cz' for reading: No such file or directory\n"],
+ "$prog: cannot open '+2cz' for reading: No such file or directory\n"],
 
 # This should get 'tail: invalid option -- 2'
 ['err-4', '-2cX', '', '', 1,

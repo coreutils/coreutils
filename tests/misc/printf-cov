@@ -83,7 +83,7 @@ my @Tests =
     {OUT=>"inaccurate"}, {OUT_SUBST => 's/\d+/inaccurate/'},
     {ERR=>"$prog: 9...9\n"}, {ERR_SUBST => 's/9+.*/9...9/'}],
   ['excess', 'B 1', {OUT=>'B'},
-    {ERR=>"$prog: warning: ignoring excess arguments, starting with `1'\n"}],
+    {ERR=>"$prog: warning: ignoring excess arguments, starting with '1'\n"}],
   ['percent', '%%', {OUT=>'%'}],
   ['d-sp',    q('% d' 33), {OUT=>' 33'}],
   ['d-plus',  q('%+d' 33), {OUT=>'+33'}],

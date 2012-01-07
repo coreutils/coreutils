@@ -38,7 +38,7 @@ k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
 k_deep=$k200$k200
 
 t=t
-# Create a directory in $t with lots of `k' components.
+# Create a directory in $t with lots of 'k' components.
 deep=$t$k_deep
 mkdir -p $deep || fail=1
 

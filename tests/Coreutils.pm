@@ -61,7 +61,7 @@ defined $ENV{DJDIR}
 #           stdout from cmd
 # {OUT => {'filename'=>[$CTOR, $DTOR]}} $CTOR and $DTOR are references to
 #           functions, each which is passed the single argument 'filename'.
-#           $CTOR must create `filename'.
+#           $CTOR must create 'filename'.
 #           DTOR may be omitted in which case 'sub{unlink @_[0]}' is used.
 #           FIXME: implement this
 # {ERR => ...}
@@ -78,7 +78,7 @@ defined $ENV{DJDIR}
 #   diagnostics: Operation not permitted, Not owner, and Permission denied.
 # {EXIT => N} expect exit status of cmd to be N
 # {ENV => 'VAR=val ...'}
-#   Prepend 'VAR=val ...' to the command that we execute via `system'.
+#   Prepend 'VAR=val ...' to the command that we execute via 'system'.
 # {ENV_DEL => 'VAR'}
 #   Remove VAR from the environment just before running the corresponding
 #   command, and restore any value just afterwards.
@@ -114,7 +114,7 @@ sub _create_file ($$$$)
       ++$Global_count;
     }
 
-  warn "creating file `$file' with contents `$data'\n" if $debug;
+  warn "creating file '$file' with contents '$data'\n" if $debug;
 
   # The test spec gave a string.
   # Write it to a temp file and return tempfile name.
@@ -183,7 +183,7 @@ sub _process_file_spec ($$$$$)
   else
     {
       # FIXME: put $srcdir in here somewhere
-      warn "$program_name: $test_name: specified file `$file' does"
+      warn "$program_name: $test_name: specified file '$file' does"
         . " not exist\n"
           if ! -f "$srcdir/$file";
     }
@@ -314,7 +314,7 @@ sub run_tests ($$$$$)
             . " expected 1\n"
               if $n != 1;
           my ($type, $val) = each %$io_spec;
-          die "$program_name: $test_name: invalid key `$type' in test spec\n"
+          die "$program_name: $test_name: invalid key '$type' in test spec\n"
             if ! $Types{$type};
 
           # Make sure there's no more than one of OUT, ERR, EXIT, etc.
@@ -350,7 +350,7 @@ sub run_tests ($$$$$)
                         or die "$program_name: $test_name: CMP spec has $n "
                           . "elements -- expected 1\n";
 
-                      # Replace any `@AUX@' in the key of %$e.
+                      # Replace any '@AUX@' in the key of %$e.
                       my ($ff, $val) = each %$e;
                       my $new_ff = _at_replace $expect, $ff;
                       if ($new_ff ne $ff)
@@ -474,7 +474,7 @@ sub run_tests ($$$$$)
             and $pushed_env{$env_sym} = $val;
         }
 
-      warn "Running command: `$cmd_str'\n" if $debug;
+      warn "Running command: '$cmd_str'\n" if $debug;
       my $rc = 0xffff & system $cmd_str;
 
       # Restore any environment setting we changed via a deletion.
@@ -486,7 +486,7 @@ sub run_tests ($$$$$)
       if ($rc == 0xff00)
         {
           warn "$program_name: test $test_name failed: command failed:\n"
-            . "  `$cmd_str': $!\n";
+            . "  '$cmd_str': $!\n";
           $fail = 1;
           goto cleanup;
         }

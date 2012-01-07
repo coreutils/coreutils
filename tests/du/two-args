@@ -32,7 +32,7 @@ mkdir -p $t/1 $t/2 || framework_failure_
 test -d $t || fail=1
 du $t/1 $t/2 > /dev/null || fail=1
 
-# Make sure `du . $t' and `du .. $t' work.
+# Make sure 'du . $t' and 'du .. $t' work.
 # These would fail prior to fileutils-4.0y.
 du . $t > /dev/null || fail=1
 du .. $t > /dev/null || fail=1

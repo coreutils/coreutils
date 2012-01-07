@@ -112,7 +112,7 @@ my @Tests =
   ['rep-3', qw('a[b*513]c' '1[x*]2'), {IN=>'abc'}, {OUT=>'1x2'}],
   # Another couple octal repeat count tests.
   ['o-rep-1', qw('[b*08]' '[x*]'), {IN=>''}, {OUT=>''}, {EXIT=>1},
-   {ERR=>"$prog: invalid repeat count `08' in [c*n] construct\n"}],
+   {ERR=>"$prog: invalid repeat count '08' in [c*n] construct\n"}],
   ['o-rep-2', qw('[b*010]cd' '[a*7]BC[x*]'), {IN=>'bcd'}, {OUT=>'BCx'}],
 
   ['esc', qw('a\-z' A-Z), {IN=>'abc-z'}, {OUT=>'AbcBC'}],
@@ -141,9 +141,9 @@ my @Tests =
   # Ensure that these fail.
   # Prior to 2.0.20, each would evoke a failed assertion.
   ['empty-eq', qw('[==]' x), {IN=>''}, {OUT=>''}, {EXIT=>1},
-   {ERR=>"$prog: missing equivalence class character `[==]'\n"}],
+   {ERR=>"$prog: missing equivalence class character '[==]'\n"}],
   ['empty-cc', qw('[::]' x), {IN=>''}, {OUT=>''}, {EXIT=>1},
-   {ERR=>"$prog: missing character class name `[::]'\n"}],
+   {ERR=>"$prog: missing character class name '[::]'\n"}],
 
   # Weird repeat counts.
   ['repeat-bs-9', qw(abc '[b*\9]'), {IN=>'abcd'}, {OUT=>'[b*d'}],

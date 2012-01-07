@@ -50,9 +50,9 @@ rm -f nohup.out err exp
 # change depending on whether stderr is redirected.
 nohup sh -c 'echo stdout; echo stderr 1>&2' >out || fail=1
 if test -t 2; then
-  test "`cat out|tr '\n' -`" = stdout-stderr- || fail=1
+  test "'cat out|tr '\n' -`" = stdout-stderr- || fail=1
 else
-  test "`cat out|tr '\n' -`" = stdout- || fail=1
+  test "'cat out|tr '\n' -`" = stdout- || fail=1
 fi
 # It must *not* exist.
 test -f nohup.out && fail=1

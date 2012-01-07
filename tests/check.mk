@@ -44,11 +44,11 @@ check-am: .built-programs
             && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
           > $@-t && mv $@-t $@
 
-## `$f' is set by the Automake-generated test harness to the path of the
+## '$f' is set by the Automake-generated test harness to the path of the
 ## current test script stripped of VPATH components, and is used by the
 ## shell-or-perl script to determine the name of the temporary files to be
 ## used.  Note that $f is a shell variable, not a make macro, so the use of
-## `$$f' below is correct, and not a typo.
+## '$$f' below is correct, and not a typo.
 LOG_COMPILER = \
   $(SHELL) $(srcdir)/shell-or-perl \
   --test-name "$$f" --srcdir '$(srcdir)' \

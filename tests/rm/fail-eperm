@@ -85,7 +85,7 @@ foreach my $dir (@dir_list)
             # expected exit code and diagnostic.
             my $cmd = "$rm -f -- $target_file";
             open RM, "$cmd 2>&1 |"
-              or die "$ME: cannot execute `$cmd'\n";
+              or die "$ME: cannot execute '$cmd'\n";
 
             my $line = <RM>;
 
@@ -99,27 +99,27 @@ foreach my $dir (@dir_list)
             if ($rc == 0)
               {
                 next if ! -e $target_file;
-                die "$ME: unexpected exit status from `$cmd';\n"
+                die "$ME: unexpected exit status from '$cmd';\n"
                   . "  got 0, expected 1\n";
               }
             if (0x80 < $rc)
               {
                 my $status = $rc >> 8;
                 $status == 1
-                  or die "$ME: unexpected exit status from `$cmd';\n"
+                  or die "$ME: unexpected exit status from '$cmd';\n"
                     . "  got $status, expected 1\n";
               }
             else
               {
                 # Terminated by a signal.
                 my $sig_num = $rc & 0x7F;
-                die "$ME: command `$cmd' died with signal $sig_num\n";
+                die "$ME: command '$cmd' died with signal $sig_num\n";
               }
 
-            my $exp = "rm: cannot remove `$target_file':";
+            my $exp = "rm: cannot remove '$target_file':";
             $line
-              or die "$ME: no output from `$cmd';\n"
-                . "expected something like `$exp ...'\n";
+              or die "$ME: no output from '$cmd';\n"
+                . "expected something like '$exp ...'\n";
 
             # Transform the actual diagnostic so that it starts with "rm:".
             # Depending on your system, it might be "rm:" already, or
@@ -128,7 +128,7 @@ foreach my $dir (@dir_list)
 
             my $regex = quotemeta $exp;
             $line =~ /^$regex/
-              or die "$ME: unexpected diagnostic from `$cmd';\n"
+              or die "$ME: unexpected diagnostic from '$cmd';\n"
                 . "  got      $line"
                 . "  expected $exp ...\n";
 

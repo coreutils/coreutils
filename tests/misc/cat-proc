@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that cat -E produces same output as cat, module `$'s,
+# Ensure that cat -E produces same output as cat, module '$'s,
 # even when applied to a file in /proc.
 
 # Copyright (C) 2006-2012 Free Software Foundation, Inc.

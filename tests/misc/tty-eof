@@ -67,7 +67,7 @@ $@
       my $exp = new Expect;
       $exp->log_user(0);
       $exp->spawn("$cmd 2> $stderr")
-        or (warn "$ME: cannot run `$cmd': $!\n"), $fail=1, next;
+        or (warn "$ME: cannot run '$cmd': $!\n"), $fail=1, next;
       # No input for cut -f2.
       $cmd =~ /^cut/
         or $exp->send("a b\n");

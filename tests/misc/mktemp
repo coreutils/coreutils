@@ -61,7 +61,7 @@ my @Tests =
      ['too-many-q', '-q a b', {EXIT => 1} ],
 
      ['too-few-x', 'foo.XX', {EXIT => 1},
-      {ERR=>"$prog: too few X's in template `foo.XX'\n"}],
+      {ERR=>"$prog: too few X's in template 'foo.XX'\n"}],
      ['too-few-xq', '-q foo.XX', {EXIT => 1} ],
 
      ['1f', 'bar.XXXX', {OUT => "bar.ZZZZ\n"},
@@ -103,11 +103,11 @@ my @Tests =
 
      # Test bad templates
      ['invalid-tl', '-t a/bXXXX',
-      {ERR=>"$prog: invalid template, `a/bXXXX', "
+      {ERR=>"$prog: invalid template, 'a/bXXXX', "
        . "contains directory separator\n"}, {EXIT => 1} ],
 
      ['invalid-t2', '--tmpdir=a /bXXXX',
-      {ERR=>"$prog: invalid template, `/bXXXX'; "
+      {ERR=>"$prog: invalid template, '/bXXXX'; "
        . "with --tmpdir, it may not be absolute\n"}, {EXIT => 1} ],
 
      # Suffix after X.
@@ -144,17 +144,17 @@ my @Tests =
        check_tmp $f, 'F'; }}],
 
      ['suffix5f', '--suffix /b aXXXX', {EXIT=>1},
-      {ERR=>"$prog: invalid suffix `/b', contains directory separator\n"}],
+      {ERR=>"$prog: invalid suffix '/b', contains directory separator\n"}],
 
      ['suffix6f', 'aXXXX/b', {EXIT=>1},
-      {ERR=>"$prog: invalid suffix `/b', contains directory separator\n"}],
+      {ERR=>"$prog: invalid suffix '/b', contains directory separator\n"}],
      ['suffix6f-q', '-q aXXXX/b', {EXIT=>1}],
 
      ['suffix7f', '--suffix= aXXXXb', {EXIT=>1},
-      {ERR=>"$prog: with --suffix, template `aXXXXb' must end in X\n"}],
+      {ERR=>"$prog: with --suffix, template 'aXXXXb' must end in X\n"}],
      ['suffix7f-q', '-q --suffix= aXXXXb', {EXIT=>1}],
      ['suffix7d', '-d --suffix=aXXXXb ""', {EXIT=>1},
-      {ERR=>"$prog: with --suffix, template `' must end in X\n"}],
+      {ERR=>"$prog: with --suffix, template '' must end in X\n"}],
 
      ['suffix8f', 'aXXXX --suffix=b', {OUT=>"aZZZZb\n"},
       {OUT_SUBST=>'s,^a....,aZZZZ,'},
@@ -167,9 +167,9 @@ my @Tests =
        . "Try '$prog --help' for more information.\n"}],
 
      ['suffix10f', 'aXXb', {EXIT => 1},
-      {ERR=>"$prog: too few X's in template `aXXb'\n"}],
+      {ERR=>"$prog: too few X's in template 'aXXb'\n"}],
      ['suffix10d', '-d --suffix=X aXX', {EXIT => 1},
-      {ERR=>"$prog: too few X's in template `aXXX'\n"}],
+      {ERR=>"$prog: too few X's in template 'aXXX'\n"}],
 
      ['suffix11f', '--suffix=.txt', {OUT=>"./tmp.ZZZZZZZZZZ.txt\n"},
       {ENV=>"TMPDIR=."},

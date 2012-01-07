@@ -1,5 +1,5 @@
 #!/bin/sh
-# show that `split --lines=2' works.
+# show that 'split --lines=2' works.
 
 # Copyright (C) 2002, 2006-2012 Free Software Foundation, Inc.
 

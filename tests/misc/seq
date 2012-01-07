@@ -82,20 +82,20 @@ my @Tests =
 
    # In coreutils-[6.0..6.9], this would mistakenly succeed and print "%Lg".
    ['fmt-c',	qw(-f %%g 1), {EXIT => 1},
-    {ERR => "seq: format `%%g' has no % directive\n"}],
+    {ERR => "seq: format '%%g' has no % directive\n"}],
 
    # In coreutils-6.9..6.10, this would fail with an erroneous diagnostic:
    # "seq: memory exhausted".  In coreutils-6.0..6.8, it would mistakenly
    # succeed and print a blank line.
    ['fmt-eos1', qw(-f % 1), {EXIT => 1},
-    {ERR => "seq: format `%' ends in %\n"}],
+    {ERR => "seq: format '%' ends in %\n"}],
    ['fmt-eos2', qw(-f %g% 1), {EXIT => 1},
-    {ERR => "seq: format `%g%' has too many % directives\n"}],
+    {ERR => "seq: format '%g%' has too many % directives\n"}],
 
    ['fmt-d',	qw(-f "" 1), {EXIT => 1},
-    {ERR => "seq: format `' has no % directive\n"}],
+    {ERR => "seq: format '' has no % directive\n"}],
    ['fmt-e',	qw(-f %g%g 1), {EXIT => 1},
-    {ERR => "seq: format `%g%g' has too many % directives\n"}],
+    {ERR => "seq: format '%g%g' has too many % directives\n"}],
 
    # With coreutils-6.12 and earlier, with a UTF8 numeric locale that uses
    # something other than "." as the decimal point, this use of seq would

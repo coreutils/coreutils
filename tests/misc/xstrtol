@@ -39,7 +39,7 @@ my @Tests =
     {ERR=>"$prog: invalid --pages argument 'x'\n"}],
 
    ['inv-pg-range', "--pages=9x", {EXIT => 1},
-    {ERR=>"$prog: invalid page range `9x'\n"}],
+    {ERR=>"$prog: invalid page range '9x'\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};

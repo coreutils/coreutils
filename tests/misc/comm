@@ -57,7 +57,7 @@ my @Tests =
 
    # invalid missing command line argument (1)
    ['missing-arg1', $inputs[0], {EXIT=>1},
-    {ERR => "$prog: missing operand after `a'\n"
+    {ERR => "$prog: missing operand after 'a'\n"
         . "Try '$prog --help' for more information.\n"}],
 
    # invalid missing command line argument (both)
@@ -67,7 +67,7 @@ my @Tests =
 
    # invalid extra command line argument
    ['extra-arg', @inputs, 'no-such', {EXIT=>1},
-    {ERR => "$prog: extra operand `no-such'\n"
+    {ERR => "$prog: extra operand 'no-such'\n"
         . "Try '$prog --help' for more information.\n"}],
 
    # out-of-order input
@@ -133,7 +133,7 @@ my @Tests =
 
    # invalid empty delimiter
    ['delim-empty', '--output-delimiter=', @inputs, {EXIT=>1},
-    {ERR => "$prog: empty `--output-delimiter' not allowed\n"}],
+    {ERR => "$prog: empty '--output-delimiter' not allowed\n"}],
 
    # invalid dual delimiter
    ['delim-dual', '--output-delimiter=,', '--output-delimiter=+',

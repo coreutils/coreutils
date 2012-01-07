@@ -334,7 +334,7 @@ my @tv = (
 ['14g', '-2 -S -f', [\'t_notab'], [\'2-Sf-t_notab'], 0],
 # full lines, no truncation /  separator = TAB :  (Input: -S"<TAB>")
 ['14h', '-2 -S"	" -J -f', [\'t_notab'], [\'2sf-t_notab'], 0],
-# columns, truncated = 72   /  separator `:' :
+# columns, truncated = 72   /  separator ':' :
 ['14i', '-2 -S: -f', [\'t_notab'], [\'2-S_f-t_notab'], 0],
 # full lines, no truncation /  separator = `:' :
 ['14j', '-2 -S: -J -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
@@ -385,7 +385,7 @@ my @tv = (
 ['col-long', '-W3 -t -1 --columns=2',     "a\nb\nc\n", "a c\nb\n", 0],
 # Make sure these fail.
 ['col-0', '-0', '', '', 1,
- "$prog: invalid number of columns: `0'\n"],
+ "$prog: invalid number of columns: '0'\n"],
 ['col-inval', '-'.'9'x100, '', '', 1,
  "$prog: invalid number of columns: `". ('9'x100) ."'\n"],
 

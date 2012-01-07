@@ -52,7 +52,7 @@ set _ `ls -ln f`; g=$5; test "$g" = $g2 || fail=1
 
 # This *should* change the group of f.
 # Though note that the diagnostic you'd get with -c is misleading in that
-# it says the 'group of `symlink'' has been changed.
+# it says the 'group of 'symlink'' has been changed.
 chgrp --dereference $g1 symlink
 set _ `ls -ln f`; g=$5; test "$g" = $g1 || fail=1
 set _ `ls -ln symlink`; g=$5; test "$g" = $g2 || fail=1

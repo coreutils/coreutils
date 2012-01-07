@@ -173,7 +173,7 @@ my @tv = (
 
 # FIXME: change this to ensure the diagnostic makes sense
 ['invalid-j', '-j x', {}, "", 1,
- "$prog: invalid field number: `x'\n"],
+ "$prog: invalid field number: 'x'\n"],
 
 # With ordering check, inputs in order
 ['chkodr-1', '--check-order',

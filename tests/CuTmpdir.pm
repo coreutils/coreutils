@@ -28,7 +28,7 @@ my $dir;
 
 sub skip_test($)
 {
-  warn "$ME: skipping test: unsafe working directory name: `$_[0]'\n";
+  warn "$ME: skipping test: unsafe working directory name: '$_[0]'\n";
   exit 77;
 }
 

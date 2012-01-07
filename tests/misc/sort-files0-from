@@ -30,14 +30,14 @@ my @Tests =
   (
    # invalid extra command line argument
    ['f-extra-arg', '--files0-from=- no-such', {IN=>"a"}, {EXIT=>2},
-    {ERR => "$prog: extra operand `no-such'\n"
+    {ERR => "$prog: extra operand 'no-such'\n"
         . "file operands cannot be combined with --files0-from\n"
         . "Try '$prog --help' for more information.\n"}
     ],
 
    # missing input file
    ['missing', '--files0-from=missing', {EXIT=>2},
-    {ERR => "$prog: cannot open `missing' for reading: "
+    {ERR => "$prog: cannot open 'missing' for reading: "
      . "No such file or directory\n"}],
 
    # input file name of '-'
@@ -51,7 +51,7 @@ my @Tests =
 
    # empty input, from non-regular file
    ['empty-nonreg', '--files0-from=/dev/null', {EXIT=>2},
-    {ERR => "$prog: no input from `/dev/null'\n"}],
+    {ERR => "$prog: no input from '/dev/null'\n"}],
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>2},

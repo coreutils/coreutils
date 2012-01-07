@@ -35,7 +35,7 @@ my @Tests =
     (
      ['fail-1', {ERR => "$prog: missing operand\n"
        . "Try '$prog --help' for more information.\n"}, {EXIT => '1'}],
-     ['fail-2', qw(a b), {ERR => "$prog: extra operand `b'\n"
+     ['fail-2', qw(a b), {ERR => "$prog: extra operand 'b'\n"
        . "Try '$prog --help' for more information.\n"}, {EXIT => '1'}],
 
      ['a', qw(d/f),        {OUT => 'd'}],

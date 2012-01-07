@@ -495,8 +495,8 @@ sub binary_expand ($$)
   defined $n && defined $b or die "$test_name: too few args\n";
   my @a = split ' ', $rest, $n + 1;
   my $caret = pop @a;
-  $caret eq '^' or die "test $test_name: @a missing `^'\n";
-  $b eq '1' || $b eq '0' or die "test $test_name: bad `b'=$b\n";
+  $caret eq '^' or die "test $test_name: @a missing '^'\n";
+  $b eq '1' || $b eq '0' or die "test $test_name: bad 'b'=$b\n";
   my $n_bad = @a;
   @a == $n or
     die "test $test_name: wrong number of args (expected $n, found $n_bad)\n";

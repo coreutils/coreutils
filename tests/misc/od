@@ -32,7 +32,7 @@ my $proc_file = '/proc/version';
 # Count the bytes in $proc_file, _by reading_.
 my $len = 0;
 open FH, '<', $proc_file
-  or die "$program_name: can't open `$proc_file' for reading: $!\n";
+  or die "$program_name: can't open '$proc_file' for reading: $!\n";
 while (defined (my $line = <FH>))
   {
     $len += length $line;

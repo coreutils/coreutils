@@ -35,7 +35,7 @@ EOF
 
 chmod +x gzip
 
-# Ensure 'sort` is immune to parent's SIGCHLD handler
+# Ensure 'sort' is immune to parent's SIGCHLD handler
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.

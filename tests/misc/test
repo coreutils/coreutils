@@ -175,7 +175,7 @@ my @Tests =
   ['lt-5', "$limits->{INTMAX_UFLOW} -lt $limits->{UINTMAX_OFLOW}"],
 
   ['inv-1', qw(0x0 -eq 00), {EXIT=>2},
-   {ERR=>"$prog: invalid integer `0x0'\n"}],
+   {ERR=>"$prog: invalid integer '0x0'\n"}],
 
   ['t1', "-t"],
   ['t2', qw(-t 1), {EXIT=>1}],

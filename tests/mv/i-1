@@ -30,7 +30,7 @@ my @Tests =
      # Make sure a 'n' reply to 'mv -i...' aborts the move operation.
      [$test_a, '-i',
       {IN => {src => "a\n"}}, {IN => {dst => "b\n"}}, '<', {IN => "n\n"},
-      {ERR => "mv: overwrite `dst'? "},
+      {ERR => "mv: overwrite 'dst'? "},
       {POST => sub { -r 'src' or die "test $test_a failed\n"}},
       {EXIT => 0},
      ],
