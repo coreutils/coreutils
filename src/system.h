@@ -556,6 +556,12 @@ emit_ancillary_info (void)
             "info coreutils '%s invocation'\n"), last_component (program_name));
 }
 
+static inline void
+emit_try_help (void)
+{
+  fprintf (stderr, _("Try `%s --help' for more information.\n"), program_name);
+}
+
 #include "inttostr.h"
 
 static inline char *
