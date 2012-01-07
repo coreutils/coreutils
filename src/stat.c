@@ -1041,7 +1041,7 @@ print_esc_char (char c)
     case '\\':
       break;
     default:
-      error (0, 0, _("warning: unrecognized escape `\\%c'"), c);
+      error (0, 0, _("warning: unrecognized escape '\\%c'"), c);
       break;
     }
   putchar (c);

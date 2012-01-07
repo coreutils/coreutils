@@ -855,7 +855,7 @@ main (int margc, char **margv)
             }
         }
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
-        test_syntax_error (_("missing `]'"), NULL);
+        test_syntax_error (_("missing ']'"), NULL);
 
       --margc;
     }

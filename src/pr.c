@@ -909,7 +909,7 @@ main (int argc, char **argv)
           {			/* dominates old opt +... */
             if (! optarg)
               error (EXIT_FAILURE, 0,
-                     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
+                     _("'--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
             else if (! first_last_page (oi, 0, optarg))
               error (EXIT_FAILURE, 0, _("invalid page range %s"),
                      quote (optarg));
@@ -976,7 +976,7 @@ main (int argc, char **argv)
                 || tmp_long <= 0 || tmp_long > INT_MAX)
               {
                 error (EXIT_FAILURE, 0,
-                       _("`-l PAGE_LENGTH' invalid number of lines: %s"),
+                       _("'-l PAGE_LENGTH' invalid number of lines: %s"),
                        quote (optarg));
               }
             lines_per_page = tmp_long;
@@ -1000,7 +1000,7 @@ main (int argc, char **argv)
                 || tmp_long > INT_MAX)
               {
                 error (EXIT_FAILURE, 0,
-                       _("`-N NUMBER' invalid starting line number: %s"),
+                       _("'-N NUMBER' invalid starting line number: %s"),
                        quote (optarg));
               }
             start_line_num = tmp_long;
@@ -1012,7 +1012,7 @@ main (int argc, char **argv)
             if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
                 || tmp_long < 0 || tmp_long > INT_MAX)
               error (EXIT_FAILURE, 0,
-                     _("`-o MARGIN' invalid line offset: %s"), quote (optarg));
+                     _("'-o MARGIN' invalid line offset: %s"), quote (optarg));
             chars_per_margin = tmp_long;
             break;
           }
@@ -1053,7 +1053,7 @@ main (int argc, char **argv)
             if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
                 || tmp_long <= 0 || tmp_long > INT_MAX)
               error (EXIT_FAILURE, 0,
-                     _("`-w PAGE_WIDTH' invalid number of characters: %s"),
+                     _("'-w PAGE_WIDTH' invalid number of characters: %s"),
                      quote (optarg));
             if (!truncate_lines)
               chars_per_line = tmp_long;
@@ -1067,7 +1067,7 @@ main (int argc, char **argv)
             if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
                 || tmp_long <= 0 || tmp_long > INT_MAX)
               error (EXIT_FAILURE, 0,
-                     _("`-W PAGE_WIDTH' invalid number of characters: %s"),
+                     _("'-W PAGE_WIDTH' invalid number of characters: %s"),
                      quote (optarg));
             chars_per_line = tmp_long;
             break;
@@ -1197,7 +1197,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
           || tmp_long <= 0 || tmp_long > INT_MAX)
         {
           error (0, 0,
-             _("`-%c' extra characters or invalid number in the argument: %s"),
+             _("'-%c' extra characters or invalid number in the argument: %s"),
                  switch_char, quote (arg));
           usage (EXIT_FAILURE);
         }

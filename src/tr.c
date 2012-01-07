@@ -670,7 +670,7 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
       char *tmp2 = make_printable_char (last);
 
       error (0, 0,
-       _("range-endpoints of `%s-%s' are in reverse collating sequence order"),
+       _("range-endpoints of '%s-%s' are in reverse collating sequence order"),
              tmp1, tmp2);
       free (tmp1);
       free (tmp2);
@@ -907,10 +907,10 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
                   if (opnd_str_len == 0)
                     {
                       if (p[i + 1] == ':')
-                        error (0, 0, _("missing character class name `[::]'"));
+                        error (0, 0, _("missing character class name '[::]'"));
                       else
                         error (0, 0,
-                               _("missing equivalence class character `[==]'"));
+                               _("missing equivalence class character '[==]'"));
                       return false;
                     }
 
@@ -1503,7 +1503,7 @@ when translating"));
             {
               error (EXIT_FAILURE, 0,
                      _("when translating, the only character classes that may \
-appear in\nstring2 are `upper' and `lower'"));
+appear in\nstring2 are 'upper' and 'lower'"));
             }
 
           validate_case_classes (s1, s2);

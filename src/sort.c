@@ -2373,7 +2373,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
                       umaxtostr (eword + 1
                                  + (key->echar == SIZE_MAX), tmp));
             }
-          error (0, 0, _("obsolescent key `%s' used; consider `%s' instead"),
+          error (0, 0, _("obsolescent key '%s' used; consider '%s' instead"),
                  obuf, nbuf);
         }
 
@@ -2391,7 +2391,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
               || (!key->skipsblanks && key->schar)
               || (!key->skipeblanks && key->echar)))
         error (0, 0, _("leading blanks are significant in key %lu; "
-                       "consider also specifying `b'"), keynum);
+                       "consider also specifying 'b'"), keynum);
 
       /* Warn about numeric comparisons spanning fields,
          as field delimiters could be interpreted as part
@@ -2435,13 +2435,13 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
       char opts[sizeof short_options];
       key_to_opts (&ugkey, opts);
       error (0, 0,
-             ngettext ("option `-%s' is ignored",
-                       "options `-%s' are ignored",
+             ngettext ("option '-%s' is ignored",
+                       "options '-%s' are ignored",
                        select_plural (strlen (opts))), opts);
       ugkey.reverse = ugkey_reverse;
     }
   if (ugkey.reverse && !(stable || unique) && keylist)
-    error (0, 0, _("option `-r' only applies to last-resort comparison"));
+    error (0, 0, _("option '-r' only applies to last-resort comparison"));
 }
 
 /* Compare two lines A and B trying every key in sequence until there
@@ -3936,7 +3936,7 @@ static void incompatible_options (char const *) ATTRIBUTE_NORETURN;
 static void
 incompatible_options (char const *opts)
 {
-  error (SORT_FAILURE, 0, _("options `-%s' are incompatible"), opts);
+  error (SORT_FAILURE, 0, _("options '-%s' are incompatible"), opts);
   abort ();
 }
 
@@ -4244,10 +4244,10 @@ main (int argc, char **argv)
                         {
                           char const *optarg1 = argv[optind++];
                           s = parse_field_count (optarg1 + 1, &key->eword,
-                                             N_("invalid number after `-'"));
+                                             N_("invalid number after '-'"));
                           if (*s == '.')
                             s = parse_field_count (s + 1, &key->echar,
-                                               N_("invalid number after `.'"));
+                                               N_("invalid number after '.'"));
                           if (!key->echar && key->eword)
                             {
                               /* obsolescent syntax +A.x -B.y is equivalent to:
@@ -4333,7 +4333,7 @@ main (int argc, char **argv)
           if (*s == '.')
             {
               s = parse_field_count (s + 1, &key->schar,
-                                     N_("invalid number after `.'"));
+                                     N_("invalid number after '.'"));
               if (! key->schar--)
                 {
                   /* Provoke with `sort -k1.0' */
@@ -4352,7 +4352,7 @@ main (int argc, char **argv)
             {
               /* Get POS2. */
               s = parse_field_count (s + 1, &key->eword,
-                                     N_("invalid number after `,'"));
+                                     N_("invalid number after ','"));
               if (! key->eword--)
                 {
                   /* Provoke with `sort -k1,0' */
@@ -4361,7 +4361,7 @@ main (int argc, char **argv)
               if (*s == '.')
                 {
                   s = parse_field_count (s + 1, &key->echar,
-                                         N_("invalid number after `.'"));
+                                         N_("invalid number after '.'"));
                 }
               s = set_ordering (s, key, bl_end);
             }

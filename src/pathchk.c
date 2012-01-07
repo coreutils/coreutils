@@ -167,7 +167,7 @@ no_leading_hyphen (char const *file)
   for (p = file;  (p = strchr (p, '-'));  p++)
     if (p == file || p[-1] == '/')
       {
-        error (0, 0, _("leading `-' in a component of file name %s"),
+        error (0, 0, _("leading '-' in a component of file name %s"),
                quote (file));
         return false;
       }

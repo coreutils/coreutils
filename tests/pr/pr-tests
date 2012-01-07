@@ -387,7 +387,7 @@ my @tv = (
 ['col-0', '-0', '', '', 1,
  "$prog: invalid number of columns: '0'\n"],
 ['col-inval', '-'.'9'x100, '', '', 1,
- "$prog: invalid number of columns: `". ('9'x100) ."'\n"],
+ "$prog: invalid number of columns: '". ('9'x100) ."'\n"],
 
 # Before coreutils-5.3.1, --pages=1:-1 would be treated like
 # --pages=1:18446744073709551615.

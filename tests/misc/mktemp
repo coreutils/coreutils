@@ -190,7 +190,7 @@ my @Tests =
      ['pipe-bad-tmpdir',
       {ENV => "TMPDIR=$bad_dir"},
       {ERR_SUBST => "s,($bad_dir/)[^']+': .*,\$1...,"},
-      {ERR => "$prog: failed to create file via template `$bad_dir/...\n"},
+      {ERR => "$prog: failed to create file via template '$bad_dir/...\n"},
       {EXIT => 1}],
      ['pipe-bad-tmpdir-u', '-u', {OUT => "$bad_dir/tmp.ZZZZZZZZZZ\n"},
       {ENV => "TMPDIR=$bad_dir"},

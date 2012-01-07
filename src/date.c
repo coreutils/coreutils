@@ -451,9 +451,9 @@ main (int argc, char **argv)
       else if (set_date || option_specified_date)
         {
           error (0, 0,
-                 _("the argument %s lacks a leading `+';\n"
+                 _("the argument %s lacks a leading '+';\n"
                    "when using an option to specify date(s), any non-option\n"
-                   "argument must be a format string beginning with `+'"),
+                   "argument must be a format string beginning with '+'"),
                  quote (argv[optind]));
           usage (EXIT_FAILURE);
         }

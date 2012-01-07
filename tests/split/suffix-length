@@ -31,7 +31,7 @@ done
 files="${files}xba"
 
 for f in $files; do
-  printf 'creating file `%s'\''\n' $f
+  printf "creating file '%s'"'\n' $f
 done > exp || framework_failure_
 
 echo split: output file suffixes exhausted \

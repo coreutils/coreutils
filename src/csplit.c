@@ -1070,7 +1070,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
 
   end = str + strlen (str) - 1;
   if (*end != '}')
-    error (EXIT_FAILURE, 0, _("%s: `}' is required in repeat count"), str);
+    error (EXIT_FAILURE, 0, _("%s: '}' is required in repeat count"), str);
   *end = '\0';
 
   if (str+1 == end-1 && *(str+1) == '*')
@@ -1080,7 +1080,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
       if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK)
         {
           error (EXIT_FAILURE, 0,
-                 _("%s}: integer required between `{' and `}'"),
+                 _("%s}: integer required between '{' and '}'"),
                  global_argv[argnum]);
         }
       p->repeat = val;
@@ -1107,7 +1107,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
     error (EXIT_FAILURE, 0,
-           _("%s: closing delimiter `%c' missing"), str, delim);
+           _("%s: closing delimiter '%c' missing"), str, delim);
 
   len = closing_delim - str - 1;
   p = new_control_record ();

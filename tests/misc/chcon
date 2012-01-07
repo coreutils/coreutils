@@ -71,7 +71,7 @@ EOF
 compare exp out || fail=1
 
 chcon --verbose -u$u1 f > out || fail=1
-echo 'changing security context of 'f'\' > exp
+echo "changing security context of 'f'" > exp
 compare exp out || fail=1
 
 Exit $fail

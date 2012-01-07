@@ -2059,7 +2059,7 @@ decode_switches (int argc, char **argv)
               char const *const *p = time_style_args;
               while (*p)
                 fprintf (stderr, "  - [posix-]%s\n", *p++);
-              fputs (_("  - +FORMAT (e.g., +%H:%M) for a `date'-style"
+              fputs (_("  - +FORMAT (e.g., +%H:%M) for a 'date'-style"
                        " format\n"), stderr);
               usage (LS_FAILURE);
             }

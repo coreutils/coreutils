@@ -816,7 +816,7 @@ this system doesn't provide a %lu-byte floating point type"),
       break;
 
     default:
-      error (0, 0, _("invalid character `%c' in type string %s"),
+      error (0, 0, _("invalid character '%c' in type string %s"),
              *s, quote (s_orig));
       return false;
     }
@@ -1598,7 +1598,7 @@ main (int argc, char **argv)
               break;
             default:
               error (EXIT_FAILURE, 0,
-                     _("invalid output address radix `%c'; \
+                     _("invalid output address radix '%c'; \
 it must be one character from [doxn]"),
                      optarg[0]);
               break;
