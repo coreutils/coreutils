@@ -36,9 +36,9 @@ mv --target=f2 f1 >> out 2>&1 && fail=1
 
 cat > exp <<\EOF
 mv: missing file operand
-Try `mv --help' for more information.
+Try 'mv --help' for more information.
 mv: missing destination file operand after `no-file'
-Try `mv --help' for more information.
+Try 'mv --help' for more information.
 mv: target `f1' is not a directory
 mv: target `f2' is not a directory
 EOF

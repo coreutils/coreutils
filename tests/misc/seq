@@ -24,7 +24,7 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'seq';
-my $try_help = "Try `$prog --help' for more information.\n";
+my $try_help = "Try '$prog --help' for more information.\n";
 
 my $locale = $ENV{LOCALE_FR_UTF8};
 ! defined $locale || $locale eq 'none'

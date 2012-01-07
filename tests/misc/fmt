@@ -37,7 +37,7 @@ my @Tests =
      ['obs-1', '-c -72',
       {ERR => "fmt: invalid option -- 7; -WIDTH is recognized only when it"
        . " is the first\noption; use -w N instead\n"
-       . "Try `fmt --help' for more information.\n" }, {EXIT => 1}],
+       . "Try 'fmt --help' for more information.\n" }, {EXIT => 1}],
 
      # With --prefix=P, do not remove leading space on lines without the prefix.
      ['pfx-1', qw (-p '>'),

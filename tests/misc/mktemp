@@ -57,7 +57,7 @@ my @Tests =
      #
      ['too-many', 'a b',
       {ERR=>"$prog: too many templates\n"
-       . "Try `$prog --help' for more information.\n"}, {EXIT => 1} ],
+       . "Try '$prog --help' for more information.\n"}, {EXIT => 1} ],
      ['too-many-q', '-q a b', {EXIT => 1} ],
 
      ['too-few-x', 'foo.XX', {EXIT => 1},
@@ -164,7 +164,7 @@ my @Tests =
      ['suffix9f', 'aXXXX --suffix=b', {EXIT=>1},
       {ENV=>"POSIXLY_CORRECT=1"},
       {ERR=>"$prog: too many templates\n"
-       . "Try `$prog --help' for more information.\n"}],
+       . "Try '$prog --help' for more information.\n"}],
 
      ['suffix10f', 'aXXb', {EXIT => 1},
       {ERR=>"$prog: too few X's in template `aXXb'\n"}],

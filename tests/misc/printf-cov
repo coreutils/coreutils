@@ -19,7 +19,7 @@
 use strict;
 
 my $prog = 'printf';
-my $try = "Try \`$prog --help' for more information.\n";
+my $try = "Try '$prog --help' for more information.\n";
 my $pow_2_31 = 2**31;
 
 # Turn off localization of executable's output.

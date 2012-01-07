@@ -30,7 +30,7 @@ Valid arguments are:
   - [posix-]iso
   - [posix-]locale
   - +FORMAT (e.g., +%H:%M) for a `date'-style format
-Try `ls --help' for more information.
+Try 'ls --help' for more information.
 EOF
 
 compare exp err || fail=1

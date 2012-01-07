@@ -65,7 +65,7 @@ foreach my $prog (@built_programs)
     $prog eq '['
       and next;
 
-    my $try = "Try \`$prog --help' for more information.\n";
+    my $try = "Try '$prog --help' for more information.\n";
     my $x = $exit_status{$prog};
     defined $x
       or $x = 1;

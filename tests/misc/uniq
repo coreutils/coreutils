@@ -21,7 +21,7 @@ use strict;
 my $limits = getlimits ();
 
 my $prog = 'uniq';
-my $try = "Try \`$prog --help' for more information.\n";
+my $try = "Try '$prog --help' for more information.\n";
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;

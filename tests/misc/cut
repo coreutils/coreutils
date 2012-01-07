@@ -28,7 +28,7 @@ my $mb_locale = $ENV{LOCALE_FR_UTF8};
   and $mb_locale = 'C';
 
 my $prog = 'cut';
-my $try = "Try \`$prog --help' for more information.\n";
+my $try = "Try '$prog --help' for more information.\n";
 my $from_1 = "$prog: fields and positions are numbered from 1\n$try";
 my $inval = "$prog: invalid byte or field list\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
