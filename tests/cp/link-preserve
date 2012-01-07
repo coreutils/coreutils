@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that `cp -d' preserves hard-links between command line arguments
+# ensure that 'cp -d' preserves hard-links between command line arguments
 # ensure that --preserve=links works with -RH and -RL
 
 # Copyright (C) 2001-2002, 2004, 2006-2012 Free Software Foundation, Inc.

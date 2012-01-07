@@ -24,7 +24,7 @@ very_expensive_
 umask 037
 
 
-# Now, try it with `mv', with combinations of --force, no-f and
+# Now, try it with 'mv', with combinations of --force, no-f and
 # existing-destination and not.
 for u in 31 37 2; do
   echo umask: $u

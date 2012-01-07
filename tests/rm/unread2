@@ -27,7 +27,7 @@ chmod u-r a
 # This should fail.
 rm -rf a > out 2>&1 && fail=1
 cat <<\EOF > exp
-rm: cannot remove `a': Permission denied
+rm: cannot remove 'a': Permission denied
 EOF
 
 compare exp out || fail=1

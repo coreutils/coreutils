@@ -40,7 +40,7 @@ my @Tests =
                         {OUT=>"9d0e1809716474cb086e834e310a4a1ced149e9c00f248527972cec5704c2a5b07b8b3dc38ecc4ebae97ddd87f3d8985  f\n"}],
     );
 
-# Insert the `--text' argument for each test.
+# Insert the '--text' argument for each test.
 my $t;
 foreach $t (@Tests)
   {

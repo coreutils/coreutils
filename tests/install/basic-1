@@ -83,7 +83,7 @@ chmod 755 sub
 # Ensure that the first argument-dir has been created.
 test -d xx/yy || fail=1
 
-# Make sure that the `rel' directory was not created...
+# Make sure that the 'rel' directory was not created...
 test -d sub/rel && fail=1
 # and make sure it was not created in the wrong place.
 test -d xx/rel && fail=1
@@ -105,11 +105,11 @@ fi
 touch file || fail=1
 ginstall -Dv file sub3/a/b/c/file >out 2>&1 || fail=1
 compare - out <<\EOF || fail=1
-ginstall: creating directory `sub3'
-ginstall: creating directory `sub3/a'
-ginstall: creating directory `sub3/a/b'
-ginstall: creating directory `sub3/a/b/c'
-`file' -> `sub3/a/b/c/file'
+ginstall: creating directory 'sub3'
+ginstall: creating directory 'sub3/a'
+ginstall: creating directory 'sub3/a/b'
+ginstall: creating directory 'sub3/a/b/c'
+'file' -> 'sub3/a/b/c/file'
 EOF
 
 Exit $fail

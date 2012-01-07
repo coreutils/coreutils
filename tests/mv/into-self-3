@@ -33,7 +33,7 @@ sed \
   out > out2
 
 cat > exp <<\EOF
-XXX: cannot move `ZZZ' to a subdirectory of itself, `ZZZ/ZZZ'
+XXX: cannot move 'ZZZ' to a subdirectory of itself, 'ZZZ/ZZZ'
 EOF
 
 compare exp out2 || fail=1

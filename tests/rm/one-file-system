@@ -36,7 +36,7 @@ mount --bind $t a/b \
   || skip_ "This test requires mount with a working --bind option."
 
 cat <<\EOF > exp || framework_failure_
-rm: skipping `a/b', since it's on a different device
+rm: skipping 'a/b', since it's on a different device
 EOF
 
 

@@ -61,7 +61,7 @@ ME_=`expr "./$0" : '.*/\(.*\)$'`
 
 # We use a trap below for cleanup.  This requires us to go through
 # hoops to get the right exit status transported through the handler.
-# So use `Exit STATUS' instead of `exit STATUS' inside of the tests.
+# So use 'Exit STATUS' instead of 'exit STATUS' inside of the tests.
 # Turn off errexit here so that we don't trip the bug with OSF1/Tru64
 # sh inside this function.
 Exit () { set +e; (exit $1); exit $1; }
@@ -172,7 +172,7 @@ else
     if test "$re_shell_" = __current__; then
       # 'eval'ing this code makes Solaris 10's /bin/sh exit with
       # $? set to 2.  It does not evaluate any of the code after the
-      # "unexpected" first `('.  Thus, we must run it in a subshell.
+      # "unexpected" first '('.  Thus, we must run it in a subshell.
       ( eval "$gl_shell_test_script_" ) > /dev/null 2>&1
     else
       "$re_shell_" -c "$gl_shell_test_script_" 2>/dev/null

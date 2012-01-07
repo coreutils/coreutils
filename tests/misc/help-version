@@ -74,7 +74,7 @@ test "x$v" = "x$VERSION" \
 for lang in C fr da; do
   for i in $built_programs; do
 
-    # Skip `test'; it doesn't accept --help or --version.
+    # Skip 'test'; it doesn't accept --help or --version.
     test $i = test && continue;
 
     # false fails even when invoked with --help or --version.
@@ -84,7 +84,7 @@ for lang in C fr da; do
       continue
     fi
 
-    # The just-built install executable is always named `ginstall'.
+    # The just-built install executable is always named 'ginstall'.
     test $i = install && i=ginstall
 
     # Make sure they exit successfully, under normal conditions.
@@ -95,7 +95,7 @@ for lang in C fr da; do
     grep "$PACKAGE_BUGREPORT" h-$i > /dev/null || fail=1
     rm -f h-$i
 
-    # Make sure they fail upon `disk full' error.
+    # Make sure they fail upon 'disk full' error.
     if test -w /dev/full && test -c /dev/full; then
       env $i --help    >/dev/full 2>/dev/null && fail=1
       env $i --version >/dev/full 2>/dev/null && fail=1
@@ -139,7 +139,7 @@ chown_setup () { args=--version; }
 mkfifo_setup () { args=--version; }
 mknod_setup () { args=--version; }
 # Punt on uptime, since it fails (e.g., failing to get boot time)
-# on some systems, and we shouldn't let that stop `make check'.
+# on some systems, and we shouldn't let that stop 'make check'.
 uptime_setup () { args=--version; }
 
 # Create a file in the current directory, not in $TMPDIR.
@@ -198,7 +198,7 @@ basename_setup () { args=$tmp_in; }
 dirname_setup () { args=$tmp_in; }
 expr_setup () { args=foo; }
 
-# Punt, in case GNU `id' hasn't been installed yet.
+# Punt, in case GNU 'id' hasn't been installed yet.
 groups_setup () { args=--version; }
 
 pathchk_setup () { args=$tmp_in; }

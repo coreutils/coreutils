@@ -32,14 +32,14 @@ skip_if_root_
 
 
 # Before fileutils-4.1, we'd get the following misleading
-# diagnostic instead of `...: Permission denied'.
-# touch: creating `/': Is a directory
+# diagnostic instead of '...: Permission denied'.
+# touch: creating '/': Is a directory
 touch / > out 2>&1 && fail=1
 
-# On SunOS4, EPERM is `Not owner'.
-# On some *BSD systems it's `Operation not permitted'.
+# On SunOS4, EPERM is 'Not owner'.
+# On some *BSD systems it's 'Operation not permitted'.
 # On a system where root file system is mounted read-only
-# it's `Read-only file system'.
+# it's 'Read-only file system'.
 for msg in 'Not owner' 'Operation not permitted' 'Permission denied' \
            'Read-only file system'; do
   cat > exp <<EOF

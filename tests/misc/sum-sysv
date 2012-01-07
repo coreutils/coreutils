@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure `sum -s' works for input whose sum of bytes is larger than 2^32
+# make sure 'sum -s' works for input whose sum of bytes is larger than 2^32
 
 # Copyright (C) 2001-2004, 2006-2012 Free Software Foundation, Inc.
 

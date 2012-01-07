@@ -43,7 +43,7 @@ sed \
   out > out2
 
 cat > exp <<\EOF
-XXX: `ZZZ' and `YYY' are the same file
+XXX: 'ZZZ' and 'YYY' are the same file
 EOF
 #'
 

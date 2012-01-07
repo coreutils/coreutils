@@ -19,14 +19,14 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-# Determine if `.' is on a local (would non-NFS be sufficient?) file system.
+# Determine if '.' is on a local (would non-NFS be sufficient?) file system.
 # At least on OSF/1 4.0d, when using an nfsv3 file system,
 # each created symlink can end up having a size of 0.
 require_local_dir_
 
 if df --type=xfs . >/dev/null 2>&1; then
   # At least on Irix-6.5.19, when using an xfs file system,
-  # each created symlink (name lengths up to 255) would have a size of `0'.
+  # each created symlink (name lengths up to 255) would have a size of '0'.
   skip_ "'.' is on an XFS file system"
 fi
 

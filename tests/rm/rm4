@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that `rm dir' fails without --recursive
+# ensure that 'rm dir' fails without --recursive
 
 # Copyright (C) 2002, 2004, 2006-2012 Free Software Foundation, Inc.
 

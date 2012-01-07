@@ -129,7 +129,7 @@ my @Tests =
       {ERR=> "$prog: h: no properly formatted MD5 checksum lines found\n"}],
     );
 
-# Insert the `--text' argument for each test.
+# Insert the '--text' argument for each test.
 my $t;
 foreach $t (@Tests)
   {

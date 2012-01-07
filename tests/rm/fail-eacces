@@ -40,14 +40,14 @@ test $ok = 1 || framework_failure_
 
 rm -rf d/f 2> out && fail=1
 cat <<\EOF > exp
-rm: cannot remove `d/f': Permission denied
+rm: cannot remove 'd/f': Permission denied
 EOF
 compare exp out || fail=1
 
 # This used to fail with ELOOP.
 rm -rf e 2> out && fail=1
 cat <<\EOF > exp
-rm: cannot remove `e/slink': Permission denied
+rm: cannot remove 'e/slink': Permission denied
 EOF
 compare exp out || fail=1
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Verify that `od -N N' reads no more than N bytes of input.
+# Verify that 'od -N N' reads no more than N bytes of input.
 
 # Copyright (C) 2001, 2004-2012 Free Software Foundation, Inc.
 

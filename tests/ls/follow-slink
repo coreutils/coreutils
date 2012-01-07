@@ -26,7 +26,7 @@ ln -s link link || framework_failure_
 ln -s ../../dir1 sub/link-to-dir || framework_failure_
 
 # Make sure the symlink was created.
-# `ln -s link link' succeeds, but creates no file on
+# 'ln -s link link' succeeds, but creates no file on
 # systems running some DJGPP-2.03 libc.
 ls -F link > /dev/null || framework_failure_
 

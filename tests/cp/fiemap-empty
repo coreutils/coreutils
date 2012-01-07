@@ -48,7 +48,7 @@ fallocate -l 600MiB space.test ||
 
 # Disable this test on old BTRFS (e.g. Fedora 14)
 # which reports ordinary extents for unwritten ones.
-filefrag space.test || skip_ 'the `filefrag` utility is missing'
+filefrag space.test || skip_ 'the 'filefrag` utility is missing'
 filefrag -v space.test | grep -F 'unwritten' > /dev/null ||
   skip_ 'this file system does not report empty extents as "unwritten"'
 

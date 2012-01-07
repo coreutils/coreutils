@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Setting this envvar to a very small value used to cause e.g., `stty size'
+# Setting this envvar to a very small value used to cause e.g., 'stty size'
 # to generate slightly different output on certain systems.
 COLUMNS=80
 export COLUMNS

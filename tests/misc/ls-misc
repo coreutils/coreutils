@@ -145,7 +145,7 @@ my @Tests =
      ['emptydir-x2', 'd d',  {OUT => "d:\n\nd:\n"}, $mkdir, $rmdir],
      ['emptydir-R', '-R d',  {OUT => "d:\n"}, $mkdir, $rmdir],
 
-     # test `ls -R .' ............................................
+     # test 'ls -R .' ............................................
      ['R-dot', '--ignore="[a-ce-zA-Z]*" -R .',  {OUT => ".:\nd\n\n\./d:\n"},
       $mkdir, $rmdir],
 

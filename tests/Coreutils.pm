@@ -48,7 +48,7 @@ defined $ENV{DJDIR}
 # {filename => 'contents'} filename and contents
 # {filename => undef}      filename only -- $(srcdir)/filename must exist
 #
-# FIXME: If there is more than one input file, then you can't specify `REDIR'.
+# FIXME: If there is more than one input file, then you can't specify 'REDIR'.
 # PIPE is still ok.
 #
 # I/O spec: a hash ref with the following properties
@@ -60,9 +60,9 @@ defined $ENV{DJDIR}
 # {OUT => {'filename'=>undef}} compare contents of existing filename to
 #           stdout from cmd
 # {OUT => {'filename'=>[$CTOR, $DTOR]}} $CTOR and $DTOR are references to
-#           functions, each which is passed the single argument `filename'.
+#           functions, each which is passed the single argument 'filename'.
 #           $CTOR must create `filename'.
-#           DTOR may be omitted in which case `sub{unlink @_[0]}' is used.
+#           DTOR may be omitted in which case 'sub{unlink @_[0]}' is used.
 #           FIXME: implement this
 # {ERR => ...}
 #           Same as for OUT, but compare with stderr, not stdout.
@@ -213,10 +213,10 @@ sub getlimits()
 }
 
 # FIXME: cleanup on interrupt
-# FIXME: extract `do_1_test' function
+# FIXME: extract 'do_1_test' function
 
 # FIXME: having to include $program_name here is an expedient kludge.
-# Library code doesn't `die'.
+# Library code doesn't 'die'.
 sub run_tests ($$$$$)
 {
   my ($program_name, $prog, $t_spec, $save_temps, $verbose) = @_;

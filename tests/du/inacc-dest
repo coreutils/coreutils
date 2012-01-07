@@ -40,13 +40,13 @@ cat <<\EOF > exp || fail=1
 ./c
 ./d
 ./e
-du: cannot read directory `./c': Permission denied
+du: cannot read directory './c': Permission denied
 EOF
 
 # Map a diagnostic like this
-#   du: cannot access `./c/j': Permission denied
+#   du: cannot access './c/j': Permission denied
 # to this:
-#   du: cannot access `./c': Permission denied
+#   du: cannot access './c': Permission denied
 # And accept "cannot read directory" in place of "cannot access"
 sed "s,/c/j': ,/c': ," out > t && mv t out
 sed 's,cannot access,cannot read directory,' out > t && mv t out

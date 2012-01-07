@@ -46,8 +46,8 @@ EOF
 # Both of these should fail.
 rm -ir z < in > out 2>&1 || fail=1
 
-# Given input like `rm: ...? rm: ...? ' (no trailing newline),
-# the `head...' part of the pipeline below removes the trailing space, so
+# Given input like 'rm: ...? rm: ...? ' (no trailing newline),
+# the 'head...' part of the pipeline below removes the trailing space, so
 # that sed doesn't have to deal with a line lacking a terminating newline.
 # This avoids a bug whereby some vendor-provided (Tru64) versions of sed
 # would mistakenly tack a newline onto the end of the output.

@@ -20,7 +20,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
 
-# Unset CDPATH.  Otherwise, output from the `cd dir' command
+# Unset CDPATH.  Otherwise, output from the 'cd dir' command
 # can make this test fail.
 (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
@@ -128,16 +128,16 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 done
 
 cat <<\EOF | sed "$remove_these_sed" > expected
-1 [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
-1 -d [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
-1 -f [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
-1 -df [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
+1 [cp: 'foo' and 'symlink' are the same file] (foo symlink -> foo)
+1 -d [cp: 'foo' and 'symlink' are the same file] (foo symlink -> foo)
+1 -f [cp: 'foo' and 'symlink' are the same file] (foo symlink -> foo)
+1 -df [cp: 'foo' and 'symlink' are the same file] (foo symlink -> foo)
 0 --rem (foo symlink)
 0 -b (foo symlink symlink.~1~ -> foo)
 0 -bd (foo symlink symlink.~1~ -> foo)
 0 -bf (foo symlink symlink.~1~ -> foo)
 0 -bdf (foo symlink symlink.~1~ -> foo)
-1 -l [cp: cannot create hard link `symlink' to `foo'] (foo symlink -> foo)
+1 -l [cp: cannot create hard link 'symlink' to 'foo'] (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink)
 0 -dfl (foo symlink)
@@ -146,14 +146,14 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bfl (foo symlink symlink.~1~ -> foo)
 0 -bdfl (foo symlink symlink.~1~ -> foo)
 
-1 [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -d [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -f [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -df [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 --rem [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -b [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
+1 [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 -d [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 -f [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 -df [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 --rem [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 -b [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
 0 -bd (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
-1 -bf [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
+1 -bf [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
 0 -bdf (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
 0 -l (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
@@ -161,13 +161,13 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bl (foo symlink -> foo)
 0 -bfl (foo symlink -> foo)
 
-1 [cp: `foo' and `foo' are the same file] (foo)
-1 -d [cp: `foo' and `foo' are the same file] (foo)
-1 -f [cp: `foo' and `foo' are the same file] (foo)
-1 -df [cp: `foo' and `foo' are the same file] (foo)
-1 --rem [cp: `foo' and `foo' are the same file] (foo)
-1 -b [cp: `foo' and `foo' are the same file] (foo)
-1 -bd [cp: `foo' and `foo' are the same file] (foo)
+1 [cp: 'foo' and 'foo' are the same file] (foo)
+1 -d [cp: 'foo' and 'foo' are the same file] (foo)
+1 -f [cp: 'foo' and 'foo' are the same file] (foo)
+1 -df [cp: 'foo' and 'foo' are the same file] (foo)
+1 --rem [cp: 'foo' and 'foo' are the same file] (foo)
+1 -b [cp: 'foo' and 'foo' are the same file] (foo)
+1 -bd [cp: 'foo' and 'foo' are the same file] (foo)
 0 -bf (foo foo.~1~)
 0 -bdf (foo foo.~1~)
 0 -l (foo)
@@ -179,24 +179,24 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bfl (foo foo.~1~)
 0 -bdfl (foo foo.~1~)
 
-1 [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
+1 [cp: 'sl1' and 'sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
 0 -d (foo sl1 -> foo sl2 -> foo)
-1 -f [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
+1 -f [cp: 'sl1' and 'sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
 0 -df (foo sl1 -> foo sl2 -> foo)
 0 --rem (foo sl1 -> foo sl2)
 0 -b (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bd (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bdf (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
-1 -l [cp: cannot create hard link `sl2' to `sl1'] (foo sl1 -> foo sl2 -> foo)
+1 -l [cp: cannot create hard link 'sl2' to 'sl1'] (foo sl1 -> foo sl2 -> foo)
 0 -fl (foo sl1 -> foo sl2 -> foo)
 0 -bl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -bfl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 
-1 [cp: `foo' and `hardlink' are the same file] (foo hardlink)
-1 -d [cp: `foo' and `hardlink' are the same file] (foo hardlink)
-1 -f [cp: `foo' and `hardlink' are the same file] (foo hardlink)
-1 -df [cp: `foo' and `hardlink' are the same file] (foo hardlink)
+1 [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
+1 -d [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
+1 -f [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
+1 -df [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
 0 --rem (foo hardlink)
 0 -b (foo hardlink hardlink.~1~)
 0 -bd (foo hardlink hardlink.~1~)

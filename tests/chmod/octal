@@ -21,7 +21,7 @@ print_ver_ chmod
 
 
 # Before coreutils-5.92, this would mistakenly succeed,
-# and act like `chmod 0 .'.
+# and act like 'chmod 0 .'.
 chmod 0-followed-by-anything . 2> /dev/null && fail=1
 chmod 7-followed-by-anything . 2> /dev/null && fail=1
 chmod 8                      . 2> /dev/null && fail=1

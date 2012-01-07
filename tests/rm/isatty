@@ -1,5 +1,5 @@
 #!/bin/sh
-# Make sure `chown 0 f; rm f' prompts before removing f.
+# Make sure 'chown 0 f; rm f' prompts before removing f.
 
 # Copyright (C) 2001-2012 Free Software Foundation, Inc.
 
@@ -39,14 +39,14 @@ test -f f || fail=1
 
 kill $pid > /dev/null 2>&1
 
-# Note the trailing `x' -- so I don't have to have a trailing
+# Note the trailing 'x' -- so I don't have to have a trailing
 # blank in this file :-)
 cat > exp <<\EOF
-rm: remove write-protected regular empty file `f'? x
+rm: remove write-protected regular empty file 'f'? x
 EOF
 #`
 
-# Append an `x' and a newline.
+# Append an 'x' and a newline.
 echo x >> out
 
 compare exp out || fail=1

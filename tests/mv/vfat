@@ -24,7 +24,7 @@ cat <<\EOF
 Prior to 5.0.91, ...
 
 The problem:
-  On a VFAT file system with coreutils-5.0.90, `mv FOO foo' removes the
+  On a VFAT file system with coreutils-5.0.90, 'mv FOO foo' removes the
   sole copy of the file named by both the source and destination arguments.
 
 Demonstrate the problem, as root:
@@ -45,9 +45,9 @@ And in case you actually do the above, you can do this to clean up:
   cd /tmp && umount /tmp/mnt && rm -r 1 mnt
 
 Hey!  Can't create hard links on vfat.
-The above `ln' evokes an `operation not permitted' failure.
+The above 'ln' evokes an 'operation not permitted' failure.
 
-This demonstrates the same thing with file system type `umsdos'
+This demonstrates the same thing with file system type 'umsdos'
 No hard links:
 
 cd /tmp                                    \

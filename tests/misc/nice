@@ -44,7 +44,7 @@ NA LAST NA
 '
 set $tests
 
-# Require that this test be run at `nice' level 0.
+# Require that this test be run at 'nice' level 0.
 niceness=`nice`
 if test "$niceness" = 0; then
     : ok

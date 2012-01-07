@@ -21,15 +21,15 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ du
 
-# Creating a 2GB file counts as `very expensive'.
+# Creating a 2GB file counts as 'very expensive'.
 very_expensive_
 
 
 # Get number of free kilobytes on current partition, so we can
 # skip this test if there is insufficient free space.
 
-# This technique relies on the fact that the `Available' kilobyte
-# count is the number just before the one with a trailing `%'.
+# This technique relies on the fact that the 'Available' kilobyte
+# count is the number just before the one with a trailing '%'.
 free_kb=`df -kP .|tail -1|sed 's/ [0-9][0-9]*%.*//;s/ *$//;s/.* //'`
 case "$free_kb" in
   [0-9]*) ;;

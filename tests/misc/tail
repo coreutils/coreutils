@@ -39,7 +39,7 @@ my @tv = (
 ['obs-plus-l4', '+1l', "x\ny\n", "x\ny\n", 0],
 ['obs-plus-l5', '+2l', "x\ny\n", "y\n", 0],
 
-# Same as -l tests, but without the `l'.
+# Same as -l tests, but without the 'l'.
 ['obs-1', '-1', 'x', 'x', 0],
 ['obs-2', '-1', "x\ny\n", "y\n", 0],
 ['obs-3', '-1', "x\ny", "y", 0],
@@ -64,12 +64,12 @@ my @tv = (
 ['err-3', '+2cz', '', '', 1,
  "$prog: cannot open `+2cz' for reading: No such file or directory\n"],
 
-# This should get `tail: invalid option -- 2'
+# This should get 'tail: invalid option -- 2'
 ['err-4', '-2cX', '', '', 1,
  "$prog: option used in invalid context -- 2\n"],
 
 # Since the number is larger than 2^64, this should provoke
-# the diagnostic: `tail: 99999999999999999999: invalid number of bytes'
+# the diagnostic: 'tail: 99999999999999999999: invalid number of bytes'
 # on all systems... probably, for now, maybe.
 ['err-5', '-c99999999999999999999', '', '', 1,
  "$prog: 99999999999999999999: invalid number of bytes\n"],

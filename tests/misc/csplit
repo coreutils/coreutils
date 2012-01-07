@@ -48,7 +48,7 @@ EOF
 compare exp out || fail=1
 rm -f in out exp
 
-# `echo |csplit - 1 1' used to abort.
+# 'echo |csplit - 1 1' used to abort.
 echo > in
 csplit in 1 1 > out 2> err || fail=1
 cat <<EOF > exp
@@ -58,12 +58,12 @@ cat <<EOF > exp
 EOF
 compare exp out || fail=1
 cat <<\EOF > experr
-csplit: warning: line number `1' is the same as preceding line number
+csplit: warning: line number '1' is the same as preceding line number
 EOF
 compare experr err || fail=1
 rm -f in out exp err experr
 
-# `echo | csplit -b '%0#6.3x' - 1' incorrectly warned about the format
+# 'echo | csplit -b '%0#6.3x' - 1' incorrectly warned about the format
 # up through coreutils 8.6.
 echo > in
 csplit -b '%0#6.3x' in 1 > out 2> err || fail=1
@@ -78,16 +78,16 @@ compare 'xx   000' experr || fail=1
 compare 'xx 0x001' in || fail=1
 rm -f in out exp err experr xx*
 
-# make sure `csplit FILE 0' fails.
+# make sure 'csplit FILE 0' fails.
 echo > in
 csplit in 0 > out 2> err && fail=1
 csplit in 2 1 > out 2>> err && fail=1
 csplit in 3 3 > out 2>> err && fail=1
 cat <<\EOF > experr
 csplit: 0: line number must be greater than zero
-csplit: line number `1' is smaller than preceding line number, 2
-csplit: warning: line number `3' is the same as preceding line number
-csplit: `3': line number out of range
+csplit: line number '1' is smaller than preceding line number, 2
+csplit: warning: line number '3' is the same as preceding line number
+csplit: '3': line number out of range
 EOF
 compare experr err || fail=1
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure dd treats `--' properly.
+# Ensure dd treats '--' properly.
 # Also test some flag values.
 
 # Copyright (C) 1999, 2004-2012 Free Software Foundation, Inc.

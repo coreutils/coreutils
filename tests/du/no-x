@@ -32,9 +32,9 @@ prog=du
 # NOTE: this code is the same for all tests/*/no-x tests.
 # Depending on whether fts is using native fdopendir, we see one
 # of the following diagnostics (note also the /y suffix in one case):
-#   prog: `d/no-x': Permission denied
-#   prog: cannot access `d/no-x/y': Permission denied
-#   prog: cannot read directory `d/no-x': Permission denied
+#   prog: 'd/no-x': Permission denied
+#   prog: cannot access 'd/no-x/y': Permission denied
+#   prog: cannot read directory 'd/no-x': Permission denied
 # Convert either of the latter two to the first one.
 sed "s/^$prog: cannot access /$prog: /" out > t && mv t out
 sed "s/^$prog: cannot read directory /$prog: /" out > t && mv t out

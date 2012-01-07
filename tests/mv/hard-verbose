@@ -25,7 +25,7 @@ ln x y || framework_failure_
 
 mv --verbose x y > out || fail=1
 cat <<\EOF > exp || fail=1
-removed `x'
+removed 'x'
 EOF
 
 compare exp out || fail=1

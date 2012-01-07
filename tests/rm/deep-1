@@ -34,7 +34,7 @@ k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
 
 # Be careful not to exceed max file name length (usu 512?).
 # Doing so wouldn't affect GNU mkdir or GNU rm, but any tool that
-# operates on the full pathname (like `test') would choke.
+# operates on the full pathname (like 'test') would choke.
 k_deep=$k200$k200
 
 t=t

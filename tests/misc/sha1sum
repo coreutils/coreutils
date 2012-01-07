@@ -76,7 +76,7 @@ my @Tests =
       {ERR=> "$prog: z: no properly formatted SHA1 checksum lines found\n"}],
     );
 
-# Insert the `--text' argument for each test.
+# Insert the '--text' argument for each test.
 my $t;
 foreach $t (@Tests)
   {

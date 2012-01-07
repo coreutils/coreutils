@@ -19,7 +19,7 @@
 
 # This test fails with tail from textutils-2.0.
 # It would get something like this:
-#   tail: tail.c:718: recheck: Assertion `valid_file_spec (f)' failed.
+#   tail: tail.c:718: recheck: Assertion 'valid_file_spec (f)' failed.
 #   Aborted
 # due to a race condition in which a dev/inode pair is reused.
 
@@ -39,8 +39,8 @@ tail_pid=$!
 
 echo sleeping for 7 seconds...
 
-# Give the backgrounded `tail' a chance to start before removing foo.
-# Otherwise, without --retry, tail wouldn't try to open `foo' again.
+# Give the backgrounded 'tail' a chance to start before removing foo.
+# Otherwise, without --retry, tail wouldn't try to open 'foo' again.
 sleep 1
 
 rm -f foo

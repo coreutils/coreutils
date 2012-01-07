@@ -37,7 +37,7 @@ for i in cp; do
   rm -fr a d; touch a; mkdir d
   $i --backup=numbered a a d/ 2>> out || fail=1
 
-  # But not with plain `--backup'
+  # But not with plain '--backup'
   rm -fr a d; touch a; mkdir d
   $i --backup a a d/ 2>> out && fail=1
   cat <<EOF > exp

@@ -43,7 +43,7 @@ changed='
 3
 '
 for i in $changed; do
-  # Filter out symlinks (entries that end in `s'), since it's not
+  # Filter out symlinks (entries that end in 's'), since it's not
   # possible to change their group/owner information on some systems.
   case $i in *s) continue;; esac
   set _ `ls -dgn $i`; shift
@@ -59,7 +59,7 @@ not_changed='
 3/3F
 '
 for i in $not_changed; do
-  # Filter out symlinks (entries that end in `s'), since it's not
+  # Filter out symlinks (entries that end in 's'), since it's not
   # possible to change their group/owner information on some systems.
   case $i in *s) continue;; esac
   set _ `ls -dgn $i`; shift

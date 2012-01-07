@@ -156,10 +156,10 @@ my @Tests =
 ["07l", '-s +0 -1.2', {IN=>"a c\na b\n"}, {OUT=>"a b\na c\n"}],
 ["07m", '-s +0 -1.1b', {IN=>"a c\na b\n"}, {OUT=>"a b\na c\n"}],
 #
-# report an error for `.' without following char spec
+# report an error for '.' without following char spec
 ["08a", '-k 2.,3', {EXIT=>2},
  {ERR=>"$prog: invalid number after `.': invalid count at start of `,3'\n"}],
-# report an error for `,' without following POS2
+# report an error for ',' without following POS2
 ["08b", '-k 2,', {EXIT=>2},
  {ERR=>"$prog: invalid number after `,': invalid count at start of `'\n"}],
 #
@@ -172,12 +172,12 @@ my @Tests =
 #
 # Bug reported by Roger Peel <R.Peel@ee.surrey.ac.uk>
 ["10a", '-t : -k 2.2,2.2', {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
-# Equivalent to above, but using obsolescent `+pos -pos' option syntax.
+# Equivalent to above, but using obsolescent '+pos -pos' option syntax.
 ["10b", '-t : +1.1 -1.2', {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
 #
 # The same as the preceding two, but with input lines reversed.
 ["10c", '-t : -k 2.2,2.2', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
-# Equivalent to above, but using obsolescent `+pos -pos' option syntax.
+# Equivalent to above, but using obsolescent '+pos -pos' option syntax.
 ["10d", '-t : +1.1 -1.2', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
 # Try without -t...
 # But note that we have to count the delimiting space at the beginning
@@ -205,10 +205,10 @@ my @Tests =
 # and the second key spec isn't even used.
 ["11d", '-t: -k2,2b -k3,3', {IN=>"z:a :b\na\t:a\n"}, {OUT=>"a\t:a\nz:a :b\n"}],
 #
-# Exercise bug re comparing `-' and integers.
+# Exercise bug re comparing '-' and integers.
 ["12a", '-n -t: +1', {IN=>"a:1\nb:-\n"}, {OUT=>"b:-\na:1\n"}],
 ["12b", '-n -t: +1', {IN=>"b:-\na:1\n"}, {OUT=>"b:-\na:1\n"}],
-# Try some other (e.g. `X') invalid character.
+# Try some other (e.g. 'X') invalid character.
 ["12c", '-n -t: +1', {IN=>"a:1\nb:X\n"}, {OUT=>"b:X\na:1\n"}],
 ["12d", '-n -t: +1', {IN=>"b:X\na:1\n"}, {OUT=>"b:X\na:1\n"}],
 # From Karl Heuer
@@ -236,22 +236,22 @@ my @Tests =
 # of sort from textutils-1.19p and before.
 ["17", '-c', {IN=>"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"}],
 
-# POSIX says -n no longer implies -b, so here we're comparing ` 9' and `10'.
+# POSIX says -n no longer implies -b, so here we're comparing ' 9' and '10'.
 ["18a", '-k1.1,1.2n', {IN=>" 901\n100\n"}, {OUT=>" 901\n100\n"}],
 
-# Just like above, because the global `-b' has no effect on the
-# key specifier when a key-specific option (`n' in this case) is used.
+# Just like above, because the global '-b' has no effect on the
+# key specifier when a key-specific option ('n' in this case) is used.
 ["18b", '-b -k1.1,1.2n', {IN=>" 901\n100\n"}, {OUT=>" 901\n100\n"}],
 
-# Here we're comparing ` 90' and `10', because the `b' on the key-end specifier
+# Here we're comparing ' 90' and '10', because the 'b' on the key-end specifier
 # makes sort ignore leading blanks when determining that key's *end*.
 ["18c", '-k1.1,1.2nb', {IN=>" 901\n100\n"}, {OUT=>"100\n 901\n"}],
 
-# Here we're comparing `9' and `10', because the `b' on the key-start specifier
+# Here we're comparing '9' and '10', because the 'b' on the key-start specifier
 # makes sort ignore leading blanks when determining that key's *start*.
 ["18d", '-k1.1b,1.2n', {IN=>" 901\n100\n"}, {OUT=>" 901\n100\n"}],
 
-# This compares `90' and `10', as it ignores leading blanks for both
+# This compares '90' and '10', as it ignores leading blanks for both
 # key start and key end.
 ["18e", '-nb -k1.1,1.2', {IN=>" 901\n100\n"}, {OUT=>"100\n 901\n"}],
 
@@ -289,7 +289,7 @@ my @Tests =
 
 # Demonstrate that folding changes the ordering of e.g. A, a, and _
 # because while they normally (in the C locale) collate like A, _, a,
-# when using -f, `a' is compared as if it were `A'.
+# when using -f, 'a' is compared as if it were 'A'.
 ["21a", '', {IN=>"A\na\n_\n"}, {OUT=>"A\n_\na\n"}],
 ["21b", '-f', {IN=>"A\na\n_\n"}, {OUT=>"A\na\n_\n"}],
 ["21c", '-f', {IN=>"a\nA\n_\n"}, {OUT=>"A\na\n_\n"}],

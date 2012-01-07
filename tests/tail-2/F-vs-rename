@@ -41,12 +41,12 @@ tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
 mv a b || fail=1
 
 # Wait 6.3s for this diagnostic:
-# tail: `a' has become inaccessible: No such file or directory
+# tail: 'a' has become inaccessible: No such file or directory
 tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
 
 echo x > a
 # Wait up to 6.3s for this to appear in the output:
-# "tail: `...' has appeared;  following end of new file"
+# "tail: '...' has appeared;  following end of new file"
 tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
   { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 

@@ -27,7 +27,7 @@ getlimits_
 # Verify the 3 methods of specifying "Escape":
 test $($prog "\x1b\n\33\n\e\n" | uniq -u) && fail=1
 
-# This would fail (by printing the `--') for printf in sh-utils
+# This would fail (by printing the '--') for printf in sh-utils
 # and in coreutils 4.5.1.
 $prog -- 'foo\n' > out || fail=1
 cat <<\EOF > exp
@@ -53,13 +53,13 @@ POSIXLY_CORRECT=1 \
 $prog '4 \x40\n'      >> out || fail=1
 $prog '5 % +d\n' 234  >> out || fail=1
 
-# This should print "6 !\n", but don't rely on `!' being the
+# This should print "6 !\n", but don't rely on '!' being the
 # one-byte representation of octal 041.  With printf prior to
 # coreutils-5.0.1, it would print six bytes: "6 \41\n".
 $prog '6 \41\n' | tr '\41' '!' >> out
 
 # Note that as of coreutils-5.0.1, printf with a format of '\0002x'
-# prints a NUL byte followed by the digit `2' and an `x'.
+# prints a NUL byte followed by the digit '2' and an 'x'.
 # By contrast bash's printf outputs the same thing as $(printf '\2x') does.
 $prog '7 \2y \02y \002y \0002y\n' |tr '\0\2' '*=' >> out
 

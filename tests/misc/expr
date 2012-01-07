@@ -54,7 +54,7 @@ my @Tests =
      ['paren4', '9 / \( \( 100 % 6 \) - 8 \)', {OUT => '-2'}],
      ['paren5', '9 + \( 100 % 6 \)', {OUT => '13'}],
 
-     # Before 2.0.12, this would output `1'.
+     # Before 2.0.12, this would output '1'.
      ['0bang', '00 \< 0!', {OUT => '0'}, {EXIT => 1}],
 
      # In 5.1.3 and earlier, these would exit with status 0.
@@ -69,7 +69,7 @@ my @Tests =
      ['orempty', '"" \| ""', {OUT => '0'}, {EXIT => 1}],
 
 
-     # This erroneously succeeded and output `3' before 2.0.12.
+     # This erroneously succeeded and output '3' before 2.0.12.
      ['fail-a', '3 + -', {ERR => "$prog: non-integer argument\n"},
       {EXIT => 2}],
 
@@ -174,7 +174,7 @@ my @Tests =
 `expr $big_prod '*' $big_prod '*' $big_prod`
   or @Tests = grep {$_->[0] !~ /^bignum-/} @Tests;
 
-# Append a newline to end of each expected `OUT' string.
+# Append a newline to end of each expected 'OUT' string.
 my $t;
 foreach $t (@Tests)
   {

@@ -27,9 +27,9 @@ nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
 if test -t 1; then
   test "`cat nohup.out`" = stdout || fail=1
   if test -t 0; then
-    echo 'nohup: ignoring input and appending output to `nohup.out'\'
+    echo 'nohup: ignoring input and appending output to 'nohup.out'\'
   else
-    echo 'nohup: appending output to `nohup.out'\'
+    echo 'nohup: appending output to 'nohup.out'\'
   fi >exp || fail=1
 else
   # Here it should not even exist.
@@ -85,8 +85,8 @@ if test -t 1; then
 fi
 
 cat <<\EOF > exp || fail=1
-nohup: appending output to `nohup.out'
-nohup: cannot run command `no-such-command': No such file or directory
+nohup: appending output to 'nohup.out'
+nohup: cannot run command 'no-such-command': No such file or directory
 EOF
 # Disable these comparisons.  Too much variation in 2nd line.
 # compare exp err || fail=1
@@ -105,8 +105,8 @@ if test -t 1; then
 fi
 
 cat <<\EOF > exp || fail=1
-nohup: appending output to `nohup.out'
-nohup: cannot run command `./k': Permission denied
+nohup: appending output to 'nohup.out'
+nohup: cannot run command './k': Permission denied
 EOF
 # Disable these comparisons.  Too much variation in 2nd line.
 # compare exp err || fail=1

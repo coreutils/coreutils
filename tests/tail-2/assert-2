@@ -1,6 +1,6 @@
 #!/bin/sh
-# This variant of `assert' would get a UMR reliably in 2.0.9.
-# Due to a race condition in the test, the `assert' script would get
+# This variant of 'assert' would get a UMR reliably in 2.0.9.
+# Due to a race condition in the test, the 'assert' script would get
 # the UMR on Solaris only some of the time, and not at all on Linux/GNU.
 
 # Copyright (C) 2000, 2006-2012 Free Software Foundation, Inc.

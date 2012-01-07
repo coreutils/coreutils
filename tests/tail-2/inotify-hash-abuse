@@ -41,14 +41,14 @@ tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
 mv 1 f || fail=1
 
 # Wait 6.3s for this diagnostic:
-# tail: `1' has become inaccessible: No such file or directory
+# tail: '1' has become inaccessible: No such file or directory
 tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
 
 # Trigger the bug.  Before the fix, this would provoke the abort.
 echo a > 1 || fail=1
 
 # Wait up to 2s for the buggy tail to die,
-# or for the "tail: `1' has appeared;  following end of new file" output
+# or for the "tail: '1' has appeared;  following end of new file" output
 for i in $(seq 10); do
   kill -0 $pid || break
   grep 'has appeared;' out > /dev/null && break

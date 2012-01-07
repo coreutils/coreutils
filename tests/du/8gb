@@ -29,7 +29,7 @@ fi
 
 # FIXME: this should be a test of dd.
 # On some systems (at least linux-2.4.18 + NFS to disks on a Solaris system)
-# the `dd' command above mistakenly creates a file of length `0', yet
+# the 'dd' command above mistakenly creates a file of length '0', yet
 # doesn't fail.  The root of that failure is that the ftruncate call
 # returns zero but doesn't do its job.  Detect this failure.
 set x `ls -gG big`
@@ -41,7 +41,7 @@ Consider rerunning this test on a different file system."
 fi
 
 
-# This would print `0	big' with coreutils-4.5.8.
+# This would print '0	big' with coreutils-4.5.8.
 du -ab big > out || fail=1
 
 cat <<\EOF > exp

@@ -308,9 +308,9 @@ my @tv = (
 ['13bb', '-t -n: -2 -e8', [\'t_tab'], [\'tn_2e8-t_tab'], 0],
 ['13bc', '-t -n: -2 -e8 -S----', [\'t_tab'], [\'tn_2e8S-t_tab'], 0],
 ['13bd', '-t -n -2 -e8 -o3', [\'t_tab'], [\'tn2e8o3-t_tab'], 0],
-# number-separator TAB not treated as input text-tab, no `-e' expansion
+# number-separator TAB not treated as input text-tab, no '-e' expansion
 ['13be', '-t -n -2 -e5 -o3', [\'t_tab'], [\'tn2e5o3-t_tab'], 0],
-# input-tab-char `:' not equal default (text) TABs
+# input-tab-char ':' not equal default (text) TABs
 ['13bf', '-t -n -2 -e:8', [\'t_tab_'], [\'tn2e8-t_tab'], 0],
 #
 # options -w/-s: POSIX-compliant, means adapting the interference of -w/-s
@@ -326,10 +326,10 @@ my @tv = (
 # columns, truncated = 60   /  no separator   (SunOS-BUG: line width to small):
 ['14e', '-2 -s -w60 -f', [\'t_notab'], [\'2sw60f-t_notab'], 0],
 # columns, truncated = 60   /  separator = `:'  (HP-UX.10.20-2-BUG:
-# `:' missing with -m option):
+# ':' missing with -m option):
 ['14f', '-2 -s: -w60 -f', [\'t_notab'], [\'2s_w60f-t_nota'], 0],
 #
-# new long-options -W/-S/-J disentangle those options (see also No.`10*')
+# new long-options -W/-S/-J disentangle those options (see also No.'10*')
 # columns, truncated = 72   /  no separator :
 ['14g', '-2 -S -f', [\'t_notab'], [\'2-Sf-t_notab'], 0],
 # full lines, no truncation /  separator = TAB :  (Input: -S"<TAB>")

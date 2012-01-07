@@ -24,12 +24,12 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/other-fs-tmpdir"
 
 # On NFS on Linux 2.6.9 at least we get:
-# mv: preserving permissions for `rem_sl': Operation not supported
+# mv: preserving permissions for 'rem_sl': Operation not supported
 require_local_dir_
 
 pwd_tmp=`pwd`
 
-# Unset CDPATH.  Otherwise, output from the `cd dir' command
+# Unset CDPATH.  Otherwise, output from the 'cd dir' command
 # can make this test fail.
 (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
@@ -152,7 +152,7 @@ test $fail = 1 &&
 
 cat <<\EOF > expected
 1 cp loc_reg rem_sl
- [cp: `loc_reg' and `rem_sl' are the same file]
+ [cp: 'loc_reg' and 'rem_sl' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 0 cp --rem loc_reg rem_sl
  (loc_reg) (rem_sl)
@@ -165,57 +165,57 @@ cat <<\EOF > expected
 0 cp -bd loc_reg rem_sl
  (loc_reg) (rem_sl rem_sl~ -> dir/loc_reg)
 1 cp -d loc_reg rem_sl
- [cp: `loc_reg' and `rem_sl' are the same file]
+ [cp: 'loc_reg' and 'rem_sl' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 
 1 cp rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 1 cp --rem rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 1 cp --rem -d rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 1 cp --rem -b rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 1 cp -b rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 0 cp -bd rem_sl loc_reg
  (loc_reg -> dir/loc_reg loc_reg~) (rem_sl -> dir/loc_reg)
  symlink-loop
  symlink-loop
 1 cp -d rem_sl loc_reg
- [cp: `rem_sl' and `loc_reg' are the same file]
+ [cp: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 
 1 cp loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 1 cp --rem loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 1 cp --rem -d loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 1 cp --rem -b loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 1 cp -b loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 0 cp -bd loc_sl rem_reg
  (loc_sl -> rem_reg) (rem_reg -> rem_reg rem_reg~)
  symlink-loop
  symlink-loop
 1 cp -d loc_sl rem_reg
- [cp: `loc_sl' and `rem_reg' are the same file]
+ [cp: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 
 1 cp rem_reg loc_sl
- [cp: `rem_reg' and `loc_sl' are the same file]
+ [cp: 'rem_reg' and 'loc_sl' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 0 cp --rem rem_reg loc_sl
  (loc_sl) (rem_reg)
@@ -228,7 +228,7 @@ cat <<\EOF > expected
 0 cp -bd rem_reg loc_sl
  (loc_sl loc_sl~ -> rem_reg) (rem_reg)
 1 cp -d rem_reg loc_sl
- [cp: `rem_reg' and `loc_sl' are the same file]
+ [cp: 'rem_reg' and 'loc_sl' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 
 0 mv loc_reg rem_sl
@@ -237,13 +237,13 @@ cat <<\EOF > expected
  () (rem_sl rem_sl~ -> dir/loc_reg)
 
 1 mv rem_sl loc_reg
- [mv: `rem_sl' and `loc_reg' are the same file]
+ [mv: 'rem_sl' and 'loc_reg' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)
 0 mv -b rem_sl loc_reg
  (loc_reg -> dir/loc_reg loc_reg~) ()
 
 1 mv loc_sl rem_reg
- [mv: `loc_sl' and `rem_reg' are the same file]
+ [mv: 'loc_sl' and 'rem_reg' are the same file]
  (loc_sl -> rem_reg) (rem_reg)
 0 mv -b loc_sl rem_reg
  () (rem_reg -> rem_reg rem_reg~)

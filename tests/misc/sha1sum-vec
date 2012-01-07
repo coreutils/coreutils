@@ -522,7 +522,7 @@ foreach $t (@Tests)
     my $h = $t->[2];
     $h->{OUT} = lc $h->{OUT} . "  f\n";
 
-    # Insert the `--text' argument for each test.
+    # Insert the '--text' argument for each test.
     splice @$t, 1, 0, '--text';
   }
 

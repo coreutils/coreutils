@@ -1,6 +1,6 @@
 #!/bin/sh
-# Make sure that `mv file unwritable-file' prompts the user
-# and that `mv -f file unwritable-file' doesn't.
+# Make sure that 'mv file unwritable-file' prompts the user
+# and that 'mv -f file unwritable-file' doesn't.
 
 # Copyright (C) 2001, 2004, 2006-2012 Free Software Foundation, Inc.
 

@@ -18,10 +18,10 @@
 
 # Show that fts (hence du, chmod, chgrp, chown) fails when all of the
 # following are true:
-#   - `.' is not readable
+#   - '.' is not readable
 #   - operating on a hierarchy containing a relative name longer than PATH_MAX
 #   - run on a system where gnulib's openat emulation must resort to using
-#       save_cwd and restore_cwd (which fail if `.' is not readable).
+#       save_cwd and restore_cwd (which fail if '.' is not readable).
 # Thus, the following du invocation should succeed on newer Linux and
 # Solaris systems, yet it must fail on systems lacking both openat and
 # /proc support.  However, before coreutils-6.0 this test would fail even

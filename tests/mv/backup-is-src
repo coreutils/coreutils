@@ -38,7 +38,7 @@ sed \
   out > out2
 
 cat > exp <<\EOF
-XXX: backing up `YYY' would destroy source;  `ZZZ' not moved
+XXX: backing up 'YYY' would destroy source;  'ZZZ' not moved
 EOF
 
 compare exp out2 || fail=1

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Verify that mkdir's `-m MODE' option works properly
+# Verify that mkdir's '-m MODE' option works properly
 # with various umask settings.
 
 # Copyright (C) 2000, 2002-2012 Free Software Foundation, Inc.

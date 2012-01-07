@@ -1,5 +1,5 @@
 #!/bin/sh
-# Make sure `mv -i dir file' prompts before failing.
+# Make sure 'mv -i dir file' prompts before failing.
 
 # Copyright (C) 2006-2012 Free Software Foundation, Inc.
 

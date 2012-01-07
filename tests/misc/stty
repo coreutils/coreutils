@@ -56,9 +56,9 @@ stty -raw -a 2>/dev/null && fail=1
 sed_del='/^speed/d;/^rows/d;/^columns/d;/ = /d'
 options=`stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g"`
 
-# Take them one at a time, with and without the leading `-'.
+# Take them one at a time, with and without the leading '-'.
 for opt in $options; do
-  # `stty parenb' and `stty -parenb' fail with this message
+  # 'stty parenb' and 'stty -parenb' fail with this message
   # stty: standard input: unable to perform all requested operations
   # on Linux 2.2.0-pre4 kernels.  Also since around Linux 2.6.30
   # other serial control settings give the same error. So skip them.
@@ -68,7 +68,7 @@ for opt in $options; do
 
   stty $opt || fail=1
 
-  # Likewise, `stty -cread' would fail, so skip that, too.
+  # Likewise, 'stty -cread' would fail, so skip that, too.
   test $opt = cread && continue
   rev=`eval echo "\\\$REV_$opt"`
   if test -n "$rev"; then

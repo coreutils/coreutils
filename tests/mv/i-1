@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Make sure a `n' reply to `mv -i...' aborts the move operation.
+# Make sure a 'n' reply to 'mv -i...' aborts the move operation.
 
 # Copyright (C) 2001, 2003, 2005-2012 Free Software Foundation, Inc.
 
@@ -27,7 +27,7 @@ my $test_a = 'a';
 
 my @Tests =
     (
-     # Make sure a `n' reply to `mv -i...' aborts the move operation.
+     # Make sure a 'n' reply to 'mv -i...' aborts the move operation.
      [$test_a, '-i',
       {IN => {src => "a\n"}}, {IN => {dst => "b\n"}}, '<', {IN => "n\n"},
       {ERR => "mv: overwrite `dst'? "},

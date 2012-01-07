@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that `install -s' doesn't infloop when its parent
+# Ensure that 'install -s' doesn't infloop when its parent
 # process traps CHLD signal.
 
 # Copyright (C) 2004-2012 Free Software Foundation, Inc.
@@ -26,7 +26,7 @@ print_ver_ ginstall
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
   sig=`"$abs_top_builddir/src/kill" -l CHLD 2>/dev/null` && trap '' $sig
 
-  # Before 2004-04-21, install would infloop, in the `while (wait...' loop:
+  # Before 2004-04-21, install would infloop, in the 'while (wait...' loop:
   exec ginstall -s "$abs_top_builddir/src/ginstall$EXEEXT" .
 )
 

@@ -1,7 +1,7 @@
 #! /bin/sh
 # Run a test script of the coreutils test scripts, picking up the right
 # interpreter (i.e., perl or the shell) and the right flags for it (e.g.,
-# perl `-T' flag for perl scripts that must run in tainted mode).
+# perl '-T' flag for perl scripts that must run in tainted mode).
 #
 # Copyright (C) 2011-2012 Free Software Foundation, Inc.
 #
@@ -31,7 +31,7 @@ me=shell-or-perl
 fatal_ ()
 {
   echo "$me: $*" >&2
-  # Exit with status `99' to inform the testsuite harness that an
+  # Exit with status '99' to inform the testsuite harness that an
   # hard error occurred.
   exit 99
 }

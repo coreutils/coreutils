@@ -43,7 +43,7 @@ my @Tests =
    # input file name of '-'
    ['minus-in-stdin', '--files0-from=-', '<', {IN=>{f=>'-'}}, {EXIT=>1},
     {ERR => "$prog: when reading file names from stdin, no file name of"
-     . " `-' allowed\n"}],
+     . " '-' allowed\n"}],
 
    # empty input, regular file
    ['empty', '--files0-from=@AUX@', {AUX=>''}],

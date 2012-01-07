@@ -1,6 +1,6 @@
 #!/bin/sh
-# Make sure that `tail -f' returns immediately if a file doesn't exist
-# while `tail -F' waits for it to appear.
+# Make sure that 'tail -f' returns immediately if a file doesn't exist
+# while 'tail -F' waits for it to appear.
 
 # Copyright (C) 2003, 2006-2012 Free Software Foundation, Inc.
 
@@ -36,7 +36,7 @@ for inotify in ---disable-inotify ''; do
   timeout 1 tail -s0.1 -f $inotify here 2>tail.err
   test $? = 124 || fail=1
 
-  # `tail -F' must wait in any case.
+  # 'tail -F' must wait in any case.
 
   timeout 1 tail -s0.1 -F $inotify here 2>>tail.err
   test $? = 124 || fail=1

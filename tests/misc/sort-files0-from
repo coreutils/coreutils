@@ -43,7 +43,7 @@ my @Tests =
    # input file name of '-'
    ['minus-in-stdin', '--files0-from=-', '<', {IN=>{f=>'-'}}, {EXIT=>2},
     {ERR => "$prog: when reading file names from stdin, no file name of"
-     . " `-' allowed\n"}],
+     . " '-' allowed\n"}],
 
    # empty input, regular file
    ['empty', '--files0-from=@AUX@', {AUX=>''}, {EXIT=>2},
@@ -58,7 +58,7 @@ my @Tests =
     {ERR => "$prog: -:1: invalid zero-length file name\n"}],
 
    # two NULs
-   # Note that the behavior here differs from `wc' in that the
+   # Note that the behavior here differs from 'wc' in that the
    # first zero-length file name is treated as fatal, so there
    # is only one line of diagnostic output.
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>2},
@@ -81,7 +81,7 @@ my @Tests =
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>'a'}}, {OUT=>"a\na\n"} ],
 
    # Ensure that $prog does nothing when there is a zero-length filename.
-   # Note that the behavior here differs from `wc' in that the
+   # Note that the behavior here differs from 'wc' in that the
    # first zero-length file name is treated as fatal, so there
    # should be no output on STDOUT.
    ['zero-len', '--files0-from=-', '<',

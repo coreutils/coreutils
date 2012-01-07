@@ -22,7 +22,7 @@ print_ver_ cp
 umask 022
 
 # Be careful to close $actual before removing the containing directory.
-# Use `1>&2' rather than `1<&-' since the latter appears not to work
+# Use '1>&2' rather than '1<&-' since the latter appears not to work
 # with /bin/sh from powerpc-ibm-aix4.2.0.0.
 
 actual=actual

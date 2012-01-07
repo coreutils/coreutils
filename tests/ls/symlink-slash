@@ -24,7 +24,7 @@ ln -s dir symlink || framework_failure_
 
 set `ls -l symlink/`
 
-# Prior to fileutils-4.0k, the following would have output `... symlink -> dir'.
+# Prior to fileutils-4.0k, the following would have output '... symlink -> dir'.
 test "$*" = 'total 0' && : || fail=1
 
 Exit $fail

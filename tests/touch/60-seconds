@@ -23,7 +23,7 @@ echo 60.000000000 > exp || framework_failure_
 
 
 # Before coreutils-7.7, this would fail, complaining of
-# an `invalid date format'.  Specifying 60 seconds *is* valid.
+# an 'invalid date format'.  Specifying 60 seconds *is* valid.
 TZ=UTC0 touch -t 197001010000.60 f || fail=1
 
 stat --p='%.9Y\n' f > out || fail=1

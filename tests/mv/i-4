@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure `mv -i a b' does its job with a positive response
+# make sure 'mv -i a b' does its job with a positive response
 
 # Copyright (C) 2001, 2005-2012 Free Software Foundation, Inc.
 
@@ -32,9 +32,9 @@ case "`cat b`" in
   *) fail=1 ;;
 esac
 
-# Ensure that mv -i a b works properly with `n' and `y'
+# Ensure that mv -i a b works properly with 'n' and 'y'
 # responses, even when a and b are hard links to the same file.
-# This `n' test would fail (no prompt) for coreutils-5.0.1 through 5.3.0.
+# This 'n' test would fail (no prompt) for coreutils-5.0.1 through 5.3.0.
 echo n > n
 rm -f a b
 echo a > a

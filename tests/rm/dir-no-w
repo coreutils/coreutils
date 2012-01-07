@@ -26,13 +26,13 @@ mkdir --mode=0500 unwritable-dir || framework_failure_
 # For rm from coreutils-5.0.1, this would prompt.
 rm ---presume-input-tty unwritable-dir < /dev/null > out-t 2>&1 && fail=1
 cat <<\EOF > exp || fail=1
-rm: cannot remove `unwritable-dir': Is a directory
+rm: cannot remove 'unwritable-dir': Is a directory
 EOF
 
 # When run by a non-privileged user we get this:
-# rm: cannot remove directory `unwritable-dir': Is a directory
+# rm: cannot remove directory 'unwritable-dir': Is a directory
 # When run by root we get this:
-# rm: cannot remove `unwritable-dir': Is a directory
+# rm: cannot remove 'unwritable-dir': Is a directory
 # Normalize the message.
 sed 's/remove directory/remove/' out-t > out
 rm -f out-t

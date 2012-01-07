@@ -96,7 +96,7 @@ retry_delay_ stdbuf_unbuffer .1 6 || fail=1
 #  One could remove the need for dd (used to close the fifo to get uniq to quit
 #  early), if head -n1 read stdin char by char. Note uniq | head -c2 doesn't
 #  suffice due to the buffering implicit in the pipe.  sed currently does read
-#  stdin char by char, so we can test with `sed 1q`.  However I'm wary about
+#  stdin char by char, so we can test with 'sed 1q`.  However I'm wary about
 #  adding this dependency on a program outside of coreutils.
     # printf '2\n' > exp
     # printf '1\n2\n' | (stdbuf -i0 sed 1q >/dev/null; cat) > out

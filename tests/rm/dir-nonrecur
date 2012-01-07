@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that `rm dir' (i.e., without --recursive) gives a reasonable
+# Ensure that 'rm dir' (i.e., without --recursive) gives a reasonable
 # diagnostic when failing.
 
 # Copyright (C) 2005-2012 Free Software Foundation, Inc.
@@ -25,7 +25,7 @@ mkdir d || framework_failure_
 
 rm d 2> out && fail=1
 cat <<\EOF > exp || fail=1
-rm: cannot remove `d': Is a directory
+rm: cannot remove 'd': Is a directory
 EOF
 
 # Before coreutils-5.93 this test would fail on Solaris 9 and newer.

@@ -1,5 +1,5 @@
 #!/bin/sh
-# For unwritable directory `d', `rmdir -p d d/e/f' would emit
+# For unwritable directory 'd', 'rmdir -p d d/e/f' would emit
 # diagnostics but would not fail.  Fixed in 5.1.2.
 
 # Copyright (C) 2004, 2006-2012 Free Software Foundation, Inc.

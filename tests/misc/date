@@ -227,9 +227,9 @@ my @Tests =
 
      ['tz-5', '+%:z', {OUT=>"-00:01"}, {ENV=>'TZ=XXX0:01'}],
 
-     # Accept %:z with a field width before the `:'.
+     # Accept %:z with a field width before the ':'.
      ['tz-5w','+%8:z', {OUT=>"-0000:01"}, {ENV=>'TZ=XXX0:01'}],
-     # Don't recognize %:z with a field width between the `:' and the `z'.
+     # Don't recognize %:z with a field width between the ':' and the 'z'.
      ['tz-5wf', '+%:8z', {OUT=>"%:8z"}, {ENV=>'TZ=XXX0:01'}],
 
      ['ns-relative',
@@ -242,7 +242,7 @@ my @Tests =
 
      # Since coreutils/lib/getdate.y revision 1.96 (post-coreutils-5.3.0),
      # a command like the following would mistakenly exit nonzero with an
-     # `invalid date ...' diagnostic, but when run in a time zone for
+     # 'invalid date ...' diagnostic, but when run in a time zone for
      # which daylight savings time is in effect for the starting date.
      # Unfortunately (for ease of testing), if you set TZ at all, this
      # failure is not triggered, hence the removal of TZ from the environment.
@@ -266,7 +266,7 @@ my @Tests =
       # you get on a system with 32-bit time_t is not the same as
       # the one you get for a system where it's 64 bits wide:
       # - date: time 72057594037927935 is out of range
-      # + date: invalid date `@72057594037927935'
+      # + date: invalid date '@72057594037927935'
       {ERR_SUBST => 's/.*//'},
       {ERR => "\n"},
       {EXIT => 1},

@@ -27,8 +27,8 @@ chmod u-w a/b
 
 rm -rf a a 2>&1 | sed 's/:[^:]*$//' > out || fail=1
 cat <<\EOF > exp
-rm: cannot remove `a/b/file'
-rm: cannot remove `a/b/file'
+rm: cannot remove 'a/b/file'
+rm: cannot remove 'a/b/file'
 EOF
 
 compare exp out || fail=1

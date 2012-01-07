@@ -35,7 +35,7 @@ test -d "$p/abs1" && fail=1
 test -d "$p/abs2" && fail=1
 
 cat <<\EOF > exp || fail=1
-rm: cannot remove `rel': Permission denied
+rm: cannot remove 'rel': Permission denied
 EOF
 
 # AIX 4.3.3 fails with a different diagnostic.

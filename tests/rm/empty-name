@@ -18,7 +18,7 @@
 
 # On SunOS 4.1.3, running rm -r '' in a nonempty directory may
 # actually remove files with names of entries in the current directory
-# but relative to `/' rather than relative to the current directory.
+# but relative to '/' rather than relative to the current directory.
 
 use strict;
 

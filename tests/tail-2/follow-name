@@ -20,7 +20,7 @@
 print_ver_ tail
 
 cat <<\EOF > exp || framework_failure_
-tail: cannot open `no-such' for reading: No such file or directory
+tail: cannot open 'no-such' for reading: No such file or directory
 tail: no files remaining
 EOF
 

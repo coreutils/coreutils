@@ -28,7 +28,7 @@ cp --b=simple a~ a > out 2>&1 && fail=1
 sed "s,cp:,XXX:," out > out2
 
 cat > exp <<\EOF
-XXX: backing up `a' would destroy source;  `a~' not copied
+XXX: backing up 'a' would destroy source;  'a~' not copied
 EOF
 
 compare exp out2 || fail=1

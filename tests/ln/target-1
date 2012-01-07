@@ -18,7 +18,7 @@
 
 # Before coreutils-4.5.3, --target-dir didn't work with one file.
 # It would create the desired link, but would fail with a diagnosis like this:
-# ln: `d/.': cannot overwrite directory
+# ln: 'd/.': cannot overwrite directory
 # Based on a test case from Dmitry V. Levin.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src

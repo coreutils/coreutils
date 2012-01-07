@@ -68,7 +68,7 @@ my @Tests =
     );
 
 # Prepend the command line argument and append a newline to end
-# of each expected `OUT' string.
+# of each expected 'OUT' string.
 my $t;
 
 Test:

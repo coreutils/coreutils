@@ -1,5 +1,5 @@
 #!/bin/sh
-# Since the rewrite for fileutils-4.1.9, `rm -i DIR' would mistakenly
+# Since the rewrite for fileutils-4.1.9, 'rm -i DIR' would mistakenly
 # recurse into directory DIR.  rm -i (without -r) must fail in that case.
 # Fixed in coreutils-4.5.2.
 

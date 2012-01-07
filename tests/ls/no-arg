@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure ls and `ls -R' do the right thing when invoked with no arguments.
+# make sure ls and 'ls -R' do the right thing when invoked with no arguments.
 
 # Copyright (C) 2001, 2003-2004, 2006-2012 Free Software Foundation, Inc.
 

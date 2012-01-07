@@ -31,13 +31,13 @@ chmod u-x a/1 b || framework_failure_
 # Both of these should fail.
 rm -rf a b > out 2>&1 && fail=1
 cat <<\EOF > exp
-rm: cannot remove `a/1': Permission denied
-rm: cannot remove `b': Permission denied
+rm: cannot remove 'a/1': Permission denied
+rm: cannot remove 'b': Permission denied
 EOF
 
 cat <<\EOF > exp-solaris
-rm: cannot remove `a/1/2': Permission denied
-rm: cannot remove `b/3': Permission denied
+rm: cannot remove 'a/1/2': Permission denied
+rm: cannot remove 'b/3': Permission denied
 EOF
 
 cmp out exp > /dev/null 2>&1 \

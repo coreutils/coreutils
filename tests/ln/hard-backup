@@ -24,7 +24,7 @@ touch f || framework_failure_
 
 ln --backup f f 2> out && fail=1
 cat <<\EOF > exp || fail=1
-ln: `f' and `f' are the same file
+ln: 'f' and 'f' are the same file
 EOF
 
 compare exp out || fail=1

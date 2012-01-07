@@ -53,7 +53,7 @@ check-root:
 
 check-recursive: root-hint
 
-# Advertise `check-root' target.
+# Advertise 'check-root' target.
 .PHONY: root-hint
 root-hint:
 	@echo '***********************************************************'

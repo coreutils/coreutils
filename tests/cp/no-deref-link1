@@ -29,7 +29,7 @@ cd ..
 
 
 # It should fail with a message something like this:
-#   ./cp: `a/foo' and `b/foo' are the same file
+#   ./cp: 'a/foo' and 'b/foo' are the same file
 cp -d a/foo b 2>/dev/null
 
 # Fail this test if the exit status is not 1

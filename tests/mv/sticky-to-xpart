@@ -1,7 +1,7 @@
 #!/bin/sh
 # A cross-partition move of a file in a sticky tmpdir and owned by
 # someone else would evoke an invalid diagnostic:
-# mv: cannot remove `x': Operation not permitted
+# mv: cannot remove 'x': Operation not permitted
 # Affects coreutils-6.0-6.9.
 
 # Copyright (C) 2007-2012 Free Software Foundation, Inc.
@@ -53,13 +53,13 @@ esac
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" \
   mv t/root-owned "$other_partition_tmpdir" 2> out-t && fail=1
 
-# On some systems, we get `Not owner'.  Convert it.
-# On other systems (HPUX), we get `Permission denied'.  Convert it, too.
+# On some systems, we get 'Not owner'.  Convert it.
+# On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
 onp='Operation not permitted'
 sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
 
 cat <<\EOF > exp
-mv: cannot remove `t/root-owned': Operation not permitted
+mv: cannot remove 't/root-owned': Operation not permitted
 EOF
 
 compare exp out || fail=1

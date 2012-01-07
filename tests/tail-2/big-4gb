@@ -1,5 +1,5 @@
 #!/bin/sh
-# Demonstrate a bug in `tail -cN' when operating on files of size 4G and larger
+# Demonstrate a bug in 'tail -cN' when operating on files of size 4G and larger
 # Fixed in coreutils-4.5.2.
 
 # Copyright (C) 2002-2003, 2006-2012 Free Software Foundation, Inc.

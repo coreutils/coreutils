@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# In 4.0.35 and earlier, `mkdir dir && cp -R dir dir' would produce this:
-#   cp: won't create hard link `dir/dir/dir' to directory `'
+# In 4.0.35 and earlier, 'mkdir dir && cp -R dir dir' would produce this:
+#   cp: won't create hard link 'dir/dir/dir' to directory ''
 # Now it gives this:
-#   cp: can't copy a directory `dir' into itself `dir/dir'
+#   cp: can't copy a directory 'dir' into itself 'dir/dir'
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
@@ -41,13 +41,13 @@ cp -rl a dir dir 2>> out && fail=1
 echo 4 >> out
 
 cat > exp <<\EOF
-cp: cannot copy a directory, `dir', into itself, `dir/dir'
+cp: cannot copy a directory, 'dir', into itself, 'dir/dir'
 1
-cp: cannot copy a directory, `dir', into itself, `dir/dir'
+cp: cannot copy a directory, 'dir', into itself, 'dir/dir'
 2
-cp: cannot copy a directory, `dir', into itself, `dir/dir'
+cp: cannot copy a directory, 'dir', into itself, 'dir/dir'
 3
-cp: cannot copy a directory, `dir', into itself, `dir/dir'
+cp: cannot copy a directory, 'dir', into itself, 'dir/dir'
 4
 EOF
 #'

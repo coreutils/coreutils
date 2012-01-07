@@ -70,13 +70,13 @@ cat <<\EOF > expout || fail=1
 EOF
 sed 's/@remove_empty/rm: remove regular empty file/g' <<\EOF > experr || fail=1
 no WHEN
-@remove_empty `file1-1'? @remove_empty `file1-2'? .
+@remove_empty 'file1-1'? @remove_empty 'file1-2'? .
 WHEN=never
 .
 WHEN=once
 rm: remove all arguments recursively? .
 WHEN=always
-@remove_empty `file4-1'? @remove_empty `file4-2'? .
+@remove_empty 'file4-1'? @remove_empty 'file4-2'? .
 -f overrides --interactive
 .
 --interactive overrides -f

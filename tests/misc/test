@@ -68,7 +68,7 @@ sub add_inverse_op_tests($)
       my ($flags, $ret, $LoH) = digest_test $t;
 
       # Generate corresponding tests of inverse ops.
-      # E.g. generate tests of `-ge' from those of `-lt'.
+      # E.g. generate tests of '-ge' from those of '-lt'.
       foreach my $op (qw(gt lt eq))
         {
           if ($test_name =~ /$op-/ && $flags =~ / -$op /)

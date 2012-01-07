@@ -18,7 +18,7 @@
 
 # Restored old behavior (whereby cp -r preserves symlinks) in 4.1.6,
 # though now such usage evokes a warning:
-# cp: `slink': WARNING: using -r to copy symbolic links is not portable
+# cp: 'slink': WARNING: using -r to copy symbolic links is not portable
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp

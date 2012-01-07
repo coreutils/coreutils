@@ -47,17 +47,17 @@ chown -RLh --preserve-root `id -u` d >> out 2>&1 && fail=1
 chgrp -RLh --preserve-root `id -g` d >> out 2>&1 && fail=1
 
 cat <<\EOF > exp || fail=1
-chown: it is dangerous to operate recursively on `/'
+chown: it is dangerous to operate recursively on '/'
 chown: use --no-preserve-root to override this failsafe
-chgrp: it is dangerous to operate recursively on `/'
+chgrp: it is dangerous to operate recursively on '/'
 chgrp: use --no-preserve-root to override this failsafe
-chmod: it is dangerous to operate recursively on `/'
+chmod: it is dangerous to operate recursively on '/'
 chmod: use --no-preserve-root to override this failsafe
 ==== test -RHh
 ==== test -RLh
-chown: it is dangerous to operate recursively on `d/slink-to-root' (same as `/')
+chown: it is dangerous to operate recursively on 'd/slink-to-root' (same as '/')
 chown: use --no-preserve-root to override this failsafe
-chgrp: it is dangerous to operate recursively on `d/slink-to-root' (same as `/')
+chgrp: it is dangerous to operate recursively on 'd/slink-to-root' (same as '/')
 chgrp: use --no-preserve-root to override this failsafe
 EOF
 

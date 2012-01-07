@@ -83,7 +83,7 @@ grep "Operation not supported" err && fail=1
 # to the file type.
 # Note: this test could also be run by a regular (non-root) user in an
 # NFS mounted directory.  When doing that, I get this diagnostic:
-# cp: failed to set the security context of `g' to `system_u:object_r:nfs_t': \
+# cp: failed to set the security context of 'g' to 'system_u:object_r:nfs_t': \
 #   Operation not supported
 cat <<\EOF > exp || framework_failure_
 cp: failed to set the security context of

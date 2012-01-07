@@ -1,5 +1,5 @@
 #!/bin/sh
-# Make sure `du d/1 d/2' works.
+# Make sure 'du d/1 d/2' works.
 # That command failed with du from fileutils-4.0q.
 
 # Copyright (C) 2000, 2004-2012 Free Software Foundation, Inc.

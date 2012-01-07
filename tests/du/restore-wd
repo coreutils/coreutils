@@ -24,7 +24,7 @@ mkdir a b || framework_failure_
 
 
 # With du from coreutils-4.5.5 and 4.5.6, this would fail with
-# du: `b': No such file or directory
+# du: 'b': No such file or directory
 
 du a b > out || fail=1
 

@@ -41,13 +41,13 @@ case $rm_version in
 esac
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf a 2> out-t && fail=1
 
-# On some systems, we get `Not owner'.  Convert it.
-# On other systems (HPUX), we get `Permission denied'.  Convert it, too.
+# On some systems, we get 'Not owner'.  Convert it.
+# On other systems (HPUX), we get 'Permission denied'.  Convert it, too.
 onp='Operation not permitted'
 sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
 
 cat <<\EOF > exp
-rm: cannot remove `a/b': Operation not permitted
+rm: cannot remove 'a/b': Operation not permitted
 EOF
 
 compare exp out || fail=1

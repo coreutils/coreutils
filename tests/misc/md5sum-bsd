@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure `md5sum -c' works for alternate BSD format (md5 -r)
+# make sure 'md5sum -c' works for alternate BSD format (md5 -r)
 
 # Copyright (C) 2011-2012 Free Software Foundation, Inc.
 

@@ -18,7 +18,7 @@
 
 
 # Volker Borchert reported that touch 3.16r (and presumably all before that)
-# fails to work on SunOS 4.1.3 with `most of the recommended patches' when
+# fails to work on SunOS 4.1.3 with 'most of the recommended patches' when
 # the empty file is on an NFS-mounted 4.2 volume.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
