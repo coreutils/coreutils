@@ -30,12 +30,12 @@ set _ `ls -n f`; shift; test "$3:$4" = 0:1 || fail=1
 # Make sure the correct diagnostic is output
 # Note we output a name even though an id was specified.
 chown -v --from=42 43 f > out || fail=1
-printf "ownership of \`f' retained as `id -nu`\n" > exp
+printf "ownership of 'f' retained as `id -nu`\n" > exp
 compare exp out || fail=1
 
 # Ensure diagnostics work for non existent files.
 chown -v 0 nf > out && fail=1
-printf "failed to change ownership of \`nf' to 0\n" > exp
+printf "failed to change ownership of 'nf' to 0\n" > exp
 compare exp out || fail=1
 
 chown --from=0:1 2:010 f || fail=1

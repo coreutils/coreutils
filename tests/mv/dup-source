@@ -41,9 +41,9 @@ for i in cp; do
   rm -fr a d; touch a; mkdir d
   $i --backup a a d/ 2>> out && fail=1
   cat <<EOF > exp
-$i: warning: source file \`a' specified more than once
-$i: warning: source file \`a' specified more than once
-$i: will not overwrite just-created \`d/a' with \`a'
+$i: warning: source file 'a' specified more than once
+$i: warning: source file 'a' specified more than once
+$i: will not overwrite just-created 'd/a' with 'a'
 EOF
   compare exp out || fail=1
 done
@@ -56,8 +56,8 @@ for i in mv; do
   rm -fr a d; touch a; mkdir d
   $i ./a a d/ 2>> out && fail=1
   cat <<EOF > exp
-$i: cannot stat \`a': No such file or directory
-$i: cannot stat \`a': No such file or directory
+$i: cannot stat 'a': No such file or directory
+$i: cannot stat 'a': No such file or directory
 EOF
   compare exp out || fail=1
 done

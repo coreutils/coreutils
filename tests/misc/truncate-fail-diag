@@ -30,14 +30,14 @@ d1=no
 dir=$d1/such-dir
 truncate -s0 $dir > out 2>&1 && fail=1
 cat <<EOF > exp
-truncate: cannot open \`$dir' for writing: No such file or directory
+truncate: cannot open '$dir' for writing: No such file or directory
 EOF
 compare exp out || fail=1
 
 dir=$d1/
 truncate -s0 $dir > out 2>&1 && fail=1
 #The following can be returned at least
-#truncate: cannot open \`$dir' for writing: Not a directory
-#truncate: cannot open \`$dir' for writing: Is a directory
+#truncate: cannot open '$dir' for writing: Not a directory
+#truncate: cannot open '$dir' for writing: Is a directory
 
 Exit $fail

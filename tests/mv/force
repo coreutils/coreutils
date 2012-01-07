@@ -29,7 +29,7 @@ ln $ff $ff2 || framework_failure_
 mv $ff $ff > out 2>&1 && fail=1
 
 cat > exp <<EOF
-mv: \`$ff' and \`$ff' are the same file
+mv: '$ff' and '$ff' are the same file
 EOF
 
 compare exp out || fail=1

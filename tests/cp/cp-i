@@ -28,7 +28,7 @@ echo n | cp -iR a b 2>/dev/null || fail=1
 
 # test miscellaneous combinations of -f -i -n parameters
 touch c d || framework_failure_
-echo "\`c' -> \`d'" > out_copy
+echo "'c' -> 'd'" > out_copy
 > out_empty
 
 # ask for overwrite, answer no

@@ -38,7 +38,7 @@ printf \
 # On some (less-compliant) systems, we get EPERM in this case.
 # Accept either diagnostic.
 cat <<EOF > exp2
-mv: cannot move \`k' to \`$other_partition_tmpdir/k': Permission denied
+mv: cannot move 'k' to '$other_partition_tmpdir/k': Permission denied
 EOF
 
 if cmp out exp >/dev/null 2>&1; then

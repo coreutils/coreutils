@@ -22,7 +22,7 @@ print_ver_ mv
 
 # test miscellaneous combinations of -f -i -n parameters
 touch a b || framework_failure_
-echo "\`a' -> \`b'" > out_move
+echo "'a' -> 'b'" > out_move
 > out_empty
 
 # ask for overwrite, answer no

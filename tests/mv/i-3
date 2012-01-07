@@ -46,7 +46,7 @@ check_overwrite_prompt()
 {
   local delay="$1"
   case "`cat out`" in
-    "mv: try to overwrite \`g', overriding mode 0000"*) ;;
+    "mv: try to overwrite 'g', overriding mode 0000"*) ;;
     *) sleep $delay; return 1;;
   esac
 }

@@ -21,7 +21,7 @@ print_ver_ id
 
 require_gnu_
 
-sush - true || skip_ "the \`sush' command does not work"
+sush - true || skip_ "the 'sush' command does not work"
 
 # Run `id' with zero UIDs.  It should exit with a non-zero status.
 sush - id > out && fail=1

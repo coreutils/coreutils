@@ -52,7 +52,7 @@ done
 
 # Test for a cp-specific diagnostic introduced after coreutils-8.7:
 printf '%s\n' \
-  "cp: cannot create regular file \`no-such/': Not a directory" \
+  "cp: cannot create regular file 'no-such/': Not a directory" \
 > expected-err
 touch b
 cp b no-such/ 2> err && fail=1

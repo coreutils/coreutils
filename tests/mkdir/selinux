@@ -25,7 +25,7 @@ print_ver_ mkdir mkfifo mknod
 require_selinux_enforcing_
 
 c=invalid-selinux-context
-msg="failed to set default file creation context to \`$c':"
+msg="failed to set default file creation context to '$c':"
 
 # Test each of mkdir, mknod, mkfifo with "-Z invalid-context".
 

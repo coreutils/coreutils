@@ -186,11 +186,11 @@ my @Tests =
   {IN=>"a\na\nb\nc\nc\n"}, {OUT=>"\na\na\n\nc\nc\n"}],
  ['118', '--all-repeated=prepend', {IN=>"a\nb\n"}, {OUT=>""}],
  ['119', '--all-repeated=badoption', {IN=>"a\n"}, {OUT=>""}, {EXIT=>1},
-  {ERR=>"$prog: invalid argument \`badoption' for \`--all-repeated'\n"
+  {ERR=>"$prog: invalid argument 'badoption' for '--all-repeated'\n"
         . "Valid arguments are:\n"
-        . "  - \`none'\n"
-        . "  - \`prepend'\n"
-        . "  - \`separate'\n"
+        . "  - 'none'\n"
+        . "  - 'prepend'\n"
+        . "  - 'separate'\n"
         . $try}],
  # Check that -d and -u suppress all output, as POSIX requires.
  ['120', qw(-d -u), {IN=>"a\na\n\b"}, {OUT=>""}],

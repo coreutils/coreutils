@@ -64,7 +64,7 @@ case "$*" in
 A basic test of touch -m has just failed, so the subsequent
 tests in this file will not be run.
 
-In the output below, the date of last modification for \`a' should
+In the output below, the date of last modification for 'a' should
 have been $t3.
 EOF
   #`
@@ -83,7 +83,7 @@ case "$*" in
 A fundamental touch -a test has just failed, so the subsequent
 tests in this file will not be run.
 
-In the output below, the date of last access for \`a' should
+In the output below, the date of last access for 'a' should
 have been $u1.
 EOF
   ls --full -lu a

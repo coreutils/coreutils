@@ -43,7 +43,7 @@ touch / > out 2>&1 && fail=1
 for msg in 'Not owner' 'Operation not permitted' 'Permission denied' \
            'Read-only file system'; do
   cat > exp <<EOF
-touch: setting times of \`/': $msg
+touch: setting times of '/': $msg
 EOF
 
   cmp out exp > /dev/null 2>&1 && { match=1; break; }

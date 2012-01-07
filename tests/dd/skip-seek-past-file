@@ -25,7 +25,7 @@ eval $(getlimits) # for OFF_T limits
 printf "1234" > file || framework_failure_
 
 echo "\
-dd: \`standard input': cannot skip to specified offset
+dd: 'standard input': cannot skip to specified offset
 0+0 records in
 0+0 records out" > skip_err || framework_failure_
 

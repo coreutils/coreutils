@@ -107,7 +107,7 @@ for lang in C fr da; do
         : # ok
       else
         fail=1
-        echo "*** $i: bad exit status \`$status' (expected $expected)," 1>&2
+        echo "*** $i: bad exit status '$status' (expected $expected)," 1>&2
         echo "  with --help or --version output redirected to /dev/full" 1>&2
       fi
     fi
