@@ -181,7 +181,7 @@ write_protected_non_symlink (int fd_cwd,
 
    IS_DIR is true if ENT designates a directory, false otherwise.
 
-   Depending on MODE, ask whether to `descend into' or to 'remove' the
+   Depending on MODE, ask whether to 'descend into' or to 'remove' the
    directory FILENAME.  MODE is ignored when FILENAME is not a directory.
    Set *IS_EMPTY_P to T_YES if FILENAME is an empty directory, and it is
    appropriate to try to remove it with rmdir (e.g. recursive mode).
@@ -236,7 +236,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
             }
           else
             {
-              /* This happens, e.g., with `rm '''.  */
+              /* This happens, e.g., with 'rm '''.  */
               write_protected = -1;
               wp_errno = errno;
             }

@@ -178,13 +178,13 @@ enum output_type
     changed, all, recoverable	/* Default, -a, -g.  */
   };
 
-/* Which member(s) of `struct termios' a mode uses.  */
+/* Which member(s) of 'struct termios' a mode uses.  */
 enum mode_type
   {
     control, input, output, local, combination
   };
 
-/* Flags for `struct mode_info'. */
+/* Flags for 'struct mode_info'. */
 #define SANE_SET 1		/* Set in 'sane' mode. */
 #define SANE_UNSET 2		/* Unset in 'sane' mode. */
 #define REV 4			/* Can be turned off by prepending '-'. */
@@ -366,7 +366,7 @@ static struct mode_info const mode_info[] =
 struct control_info
   {
     const char *name;		/* Name given on command line.  */
-    cc_t saneval;		/* Value to set for `stty sane'.  */
+    cc_t saneval;		/* Value to set for 'stty sane'.  */
     size_t offset;		/* Offset in c_cc.  */
   };
 

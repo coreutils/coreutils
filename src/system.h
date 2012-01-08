@@ -50,7 +50,7 @@ you must include <sys/types.h> before including this file
 #include <sys/time.h>
 #include <time.h>
 
-/* Since major is a function on SVR4, we can't use `ifndef major'.  */
+/* Since major is a function on SVR4, we can't use 'ifndef major'.  */
 #if MAJOR_IN_MKDEV
 # include <sys/mkdev.h>
 # define HAVE_MAJOR
@@ -147,7 +147,7 @@ enum
    - It's typically faster.
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    isdigit unless it's important to use the locale's definition
-   of `digit' even when the host does not conform to POSIX.  */
+   of 'digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
 /* Convert a possibly-signed character to an unsigned character.  This is
@@ -236,7 +236,7 @@ uid_t getuid ();
 #include "verify.h"
 
 /* This is simply a shorthand for the common case in which
-   the third argument to x2nrealloc would be `sizeof *(P)'.
+   the third argument to x2nrealloc would be 'sizeof *(P)'.
    Ensure that sizeof *(P) is *not* 1.  In that case, it'd be
    better to use X2REALLOC, although not strictly necessary.  */
 #define X2NREALLOC(P, PN) ((void) verify_true (sizeof *(P) != 1), \
@@ -267,7 +267,7 @@ dot_or_dotdot (char const *file_name)
     return false;
 }
 
-/* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
+/* A wrapper for readdir so that callers don't see entries for '.' or '..'.  */
 static inline struct dirent const *
 readdir_ignoring_dot_and_dotdot (DIR *dirp)
 {
@@ -403,7 +403,7 @@ enum
 # define PID_T_MAX TYPE_MAXIMUM (pid_t)
 #endif
 
-/* Use this to suppress gcc's `...may be used before initialized' warnings. */
+/* Use this to suppress gcc's '...may be used before initialized' warnings. */
 #ifdef lint
 # define IF_LINT(Code) Code
 #else

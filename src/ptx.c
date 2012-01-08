@@ -86,9 +86,9 @@ static enum Format output_format = UNKNOWN_FORMAT;
                                 /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static const char *break_file = NULL;	/* name of the `Break chars' file */
-static const char *only_file = NULL;	/* name of the `Only words' file */
-static const char *ignore_file = NULL;	/* name of the `Ignore words' file */
+static const char *break_file = NULL;	/* name of the 'Break chars' file */
+static const char *only_file = NULL;	/* name of the 'Only words' file */
+static const char *ignore_file = NULL;	/* name of the 'Ignore words' file */
 
 /* Options that use regular expressions.  */
 struct regex_data
@@ -760,7 +760,7 @@ find_occurs_in_text (void)
   char *word_end;		/* end of word */
   char *next_context_start;	/* next start of left context */
 
-  /* reference_length is always used within `if (input_reference)'.
+  /* reference_length is always used within 'if (input_reference)'.
      However, GNU C diagnoses that it may be used uninitialized.  The
      following assignment is merely to shut it up.  */
 
@@ -924,8 +924,8 @@ find_occurs_in_text (void)
                 continue;
             }
 
-          /* Ignore the word if an `Ignore words' table exists and if it is
-             part of it.  Also ignore the word if an `Only words' table and
+          /* Ignore the word if an 'Ignore words' table exists and if it is
+             part of it.  Also ignore the word if an 'Only words' table and
              if it is *not* part of it.
 
              It is allowed that both tables be used at once, even if this
@@ -2093,12 +2093,12 @@ main (int argc, char **argv)
 
   initialize_regex ();
 
-  /* Read `Break character' file, if any.  */
+  /* Read 'Break character' file, if any.  */
 
   if (break_file)
     digest_break_file (break_file);
 
-  /* Read `Ignore words' file and `Only words' files, if any.  If any of
+  /* Read 'Ignore words' file and 'Only words' files, if any.  If any of
      these files is empty, reset the name of the file to NULL, to avoid
      unnecessary calls to search_table. */
 

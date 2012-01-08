@@ -168,7 +168,7 @@ main (int argc, char **argv)
            quote (scontext));
 
   /* Only check the first character, to allow mnemonic usage like
-     `mknod /dev/rst0 character 18 0'. */
+     'mknod /dev/rst0 character 18 0'. */
 
   switch (argv[optind + 1][0])
     {

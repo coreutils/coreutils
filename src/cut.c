@@ -801,7 +801,7 @@ main (int argc, char **argv)
 
         case 'd':
           /* New delimiter. */
-          /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
+          /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
           if (optarg[0] != '\0' && optarg[1] != '\0')
             FATAL_ERROR (_("the delimiter must be a single character"));
           delim = optarg[0];
@@ -811,7 +811,7 @@ main (int argc, char **argv)
         case OUTPUT_DELIMITER_OPTION:
           output_delimiter_specified = true;
           /* Interpret --output-delimiter='' to mean
-             `use the NUL byte as the delimiter.'  */
+             'use the NUL byte as the delimiter.'  */
           output_delimiter_length = (optarg[0] == '\0'
                                      ? 1 : strlen (optarg));
           output_delimiter_string = xstrdup (optarg);

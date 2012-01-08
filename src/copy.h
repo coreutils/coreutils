@@ -124,8 +124,8 @@ struct cp_options
 
   /* If true, first try to open each existing destination nondirectory,
      then, if the open fails, unlink and try again.
-     This option must be set for `cp -f', in case the destination file
-     exists when the open is attempted.  It is irrelevant to `mv' since
+     This option must be set for 'cp -f', in case the destination file
+     exists when the open is attempted.  It is irrelevant to 'mv' since
      any destination is sure to be removed before the open.  */
   bool unlink_dest_after_failed_open;
 

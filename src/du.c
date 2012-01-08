@@ -138,7 +138,7 @@ static bool opt_separate_dirs = false;
 
 /* Show the total for each directory (and file if --all) that is at
    most MAX_DEPTH levels down from the root of the hierarchy.  The root
-   is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
+   is at level 0, so 'du --max-depth=0' is equivalent to 'du -s'.  */
 static size_t max_depth = SIZE_MAX;
 
 /* Human-readable options for output.  */

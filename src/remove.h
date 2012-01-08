@@ -49,8 +49,8 @@ struct rm_options
   /* If true, recursively remove directories.  */
   bool recursive;
 
-  /* Pointer to the device and inode numbers of `/', when --recursive
-     and preserving `/'.  Otherwise NULL.  */
+  /* Pointer to the device and inode numbers of '/', when --recursive
+     and preserving '/'.  Otherwise NULL.  */
   struct dev_ino *root_dev_ino;
 
   /* If nonzero, stdin is a tty.  */

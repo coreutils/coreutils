@@ -554,7 +554,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
       total_lines -= tmp->nlines;
     }
 
-  /* Print the first `total_lines - n_elide' lines of tmp->buffer.  */
+  /* Print the first 'total_lines - n_elide' lines of tmp->buffer.  */
   if (n_elide < total_lines)
     {
       size_t n = total_lines - n_elide;

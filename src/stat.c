@@ -232,7 +232,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       /* Also compare with the list in "man 2 statfs" using the
          fs-magic-compare make target.  */
 
-      /* IMPORTANT NOTE: Each of the following `case S_MAGIC_...:'
+      /* IMPORTANT NOTE: Each of the following 'case S_MAGIC_...:'
          statements must be followed by a hexadecimal constant in
          a comment.  The S_MAGIC_... name and constant are automatically
          combined to produce the #define directives in fs.h.  */

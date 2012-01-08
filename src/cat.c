@@ -651,7 +651,7 @@ main (int argc, char **argv)
   else
     {
       check_redirection = false;
-#ifdef lint  /* Suppress `used before initialized' warning.  */
+#ifdef lint  /* Suppress 'used before initialized' warning.  */
       out_dev = 0;
       out_ino = 0;
 #endif

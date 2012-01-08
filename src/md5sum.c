@@ -287,7 +287,7 @@ split_3 (char *s, size_t s_len,
     }
 
   /* Ignore this line if it is too short.
-     Each line must have at least `min_digest_line_length - 1' (or one more, if
+     Each line must have at least 'min_digest_line_length - 1' (or one more, if
      the first is a backslash) more characters to contain correct message digest
      information.  */
   if (s_len - i < min_digest_line_length + (s[i] == '\\'))

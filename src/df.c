@@ -617,7 +617,7 @@ get_dev (char const *disk, char const *mount_point,
                   long int lipct = pct = u * 100 / nonroot_total;
                   double ipct = lipct;
 
-                  /* Like `pct = ceil (dpct);', but avoid ceil so that
+                  /* Like 'pct = ceil (dpct);', but avoid ceil so that
                      the math library needn't be linked.  */
                   if (ipct - 1 < pct && pct <= ipct + 1)
                     pct = ipct + (ipct < pct);
@@ -690,7 +690,7 @@ get_disk (char const *disk)
 
 /* Figure out which device file or directory POINT is mounted on
    and show its disk usage.
-   STATP must be the result of `stat (POINT, STATP)'.  */
+   STATP must be the result of 'stat (POINT, STATP)'.  */
 static void
 get_point (const char *point, const struct stat *statp)
 {

@@ -139,7 +139,7 @@ touch (const char *file)
                       default_permissions);
 
       /* Don't save a copy of errno if it's EISDIR, since that would lead
-         touch to give a bogus diagnostic for e.g., `touch /' (assuming
+         touch to give a bogus diagnostic for e.g., 'touch /' (assuming
          we don't own / or have write access to it).  On Solaris 5.6,
          and probably other systems, it is EINVAL.  On SunOS4, it's EPERM.  */
       if (fd == -1 && errno != EISDIR && errno != EINVAL && errno != EPERM)

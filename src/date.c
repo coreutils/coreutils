@@ -395,7 +395,7 @@ main (int argc, char **argv)
           set_date = true;
           break;
         case 'u':
-          /* POSIX says that `date -u' is equivalent to setting the TZ
+          /* POSIX says that 'date -u' is equivalent to setting the TZ
              environment variable, so this option should do nothing other
              than setting TZ.  */
           if (putenv (bad_cast ("TZ=UTC0")) != 0)

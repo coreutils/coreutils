@@ -51,9 +51,9 @@
    utilities, e.g. sort or cut. - Same as SunOS does.
    -  With multicolumn output
       two conflicting POSIX requirements exist:
-   First `default n-separator is TAB', second `output text columns shall
+   First 'default n-separator is TAB', second `output text columns shall
    be of equal width'. Moreover POSIX specifies the number+separator a
-   part of the column, together with '-COLUMN' and `-a -COLUMN'.
+   part of the column, together with '-COLUMN' and '-a -COLUMN'.
    (With -m output the number shall occupy each line only once. Exactly
    the same situation as single column output exists.)
       GNU pr gives priority to the 2nd requirement and observes POSIX
@@ -125,7 +125,7 @@
                 two
                 three
                 four
-                will be printed with `-a -3' as
+                will be printed with '-a -3' as
                 one	two	three
                 four
 
@@ -899,7 +899,7 @@ main (int argc, char **argv)
       switch (c)
         {
         case 1:			/* Non-option argument. */
-          /* long option --page dominates old `+FIRST_PAGE ...'.  */
+          /* long option --page dominates old '+FIRST_PAGE ...'.  */
           if (! (first_page_number == 0
                  && *optarg == '+' && first_last_page (-2, '+', optarg + 1)))
             file_names[n_files++] = optarg;
@@ -2048,7 +2048,7 @@ add_line_number (COLUMN *p)
   if (columns > 1)
     {
       /* Tabification is assumed for multiple columns, also for n-separators,
-         but `default n-separator = TAB' hasn't been given priority over
+         but 'default n-separator = TAB' hasn't been given priority over
          equal column_width also specified by POSIX. */
       if (number_separator == '\t')
         {

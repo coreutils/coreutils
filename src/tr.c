@@ -1181,7 +1181,7 @@ card_of_complement (struct Spec_list *s)
    is problematic when they don't match in some locales.
    Also ensure the case conversion classes in string2 are
    aligned correctly with those in string1.
-   Note POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
+   Note POSIX says the behavior of 'tr "[:upper:]" "[:upper:]"'
    is undefined.  Therefore we allow it (unlike Solaris)
    and treat it as a no-op.  */
 

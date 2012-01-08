@@ -300,7 +300,7 @@ static Hash_table *active_dir_set;
 
 /* The table of files in the current directory:
 
-   'cwd_file' points to a vector of `struct fileinfo', one per file.
+   'cwd_file' points to a vector of 'struct fileinfo', one per file.
    'cwd_n_alloc' is the number of elements space has been allocated for.
    'cwd_n_used' is the number actually in use.  */
 
@@ -3146,7 +3146,7 @@ make_link_name (char const *name, char const *linkname)
 }
 
 /* Return true if the last component of NAME is '.' or '..'
-   This is so we don't try to recurse on `././././. ...' */
+   This is so we don't try to recurse on '././././. ...' */
 
 static bool
 basename_is_dot_or_dotdot (const char *name)

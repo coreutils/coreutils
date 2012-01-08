@@ -92,7 +92,7 @@ enum
 /* Ensure that our choice for FMT_BYTES_ALLOCATED is reasonable.  */
 verify (MAX_INTEGRAL_TYPE_SIZE * CHAR_BIT / 3 <= 99);
 
-/* Each output format specification (from `-t spec' or from
+/* Each output format specification (from '-t spec' or from
    old-style options) is represented by one of these structures.  */
 struct tspec
   {
@@ -156,7 +156,7 @@ static const int width_bytes[] =
   sizeof (long double)
 };
 
-/* Ensure that for each member of `enum size_spec' there is an
+/* Ensure that for each member of 'enum size_spec' there is an
    initializer in the width_bytes array.  */
 verify (ARRAY_CARDINALITY (width_bytes) == N_SIZE_SPECS);
 
@@ -1518,7 +1518,7 @@ main (int argc, char **argv)
   size_t width_per_block = 0;
   static char const multipliers[] = "bEGKkMmPTYZ0";
 
-  /* The old-style `pseudo starting address' to be printed in parentheses
+  /* The old-style 'pseudo starting address' to be printed in parentheses
      after any true address.  */
   uintmax_t pseudo_start IF_LINT ( = 0);
 
@@ -1538,7 +1538,7 @@ main (int argc, char **argv)
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
 #if HAVE_UNSIGNED_LONG_LONG_INT
-  /* If `long int' and `long long int' have the same size, it's fine
+  /* If 'long int' and 'long long int' have the same size, it's fine
      to overwrite the entry for 'long' with this one.  */
   integral_type_size[sizeof (unsigned_long_long_int)] = LONG_LONG;
 #endif
@@ -1547,7 +1547,7 @@ main (int argc, char **argv)
     fp_type_size[i] = NO_SIZE;
 
   fp_type_size[sizeof (float)] = FLOAT_SINGLE;
-  /* The array entry for 'double' is filled in after that for `long double'
+  /* The array entry for 'double' is filled in after that for 'long double'
      so that if they are the same size, we avoid any overhead of
      long double computation in libc.  */
   fp_type_size[sizeof (long double)] = FLOAT_LONG_DOUBLE;

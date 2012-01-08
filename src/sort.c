@@ -4327,7 +4327,7 @@ main (int argc, char **argv)
                                  N_("invalid number at field start"));
           if (! key->sword--)
             {
-              /* Provoke with `sort -k0' */
+              /* Provoke with 'sort -k0' */
               badfieldspec (optarg, N_("field number is zero"));
             }
           if (*s == '.')
@@ -4336,7 +4336,7 @@ main (int argc, char **argv)
                                      N_("invalid number after '.'"));
               if (! key->schar--)
                 {
-                  /* Provoke with `sort -k1.0' */
+                  /* Provoke with 'sort -k1.0' */
                   badfieldspec (optarg, N_("character offset is zero"));
                 }
             }
@@ -4355,7 +4355,7 @@ main (int argc, char **argv)
                                      N_("invalid number after ','"));
               if (! key->eword--)
                 {
-                  /* Provoke with `sort -k1,0' */
+                  /* Provoke with 'sort -k1,0' */
                   badfieldspec (optarg, N_("field number is zero"));
                 }
               if (*s == '.')
@@ -4409,7 +4409,7 @@ main (int argc, char **argv)
                   newtab = '\0';
                 else
                   {
-                    /* Provoke with `sort -txx'.  Complain about
+                    /* Provoke with 'sort -txx'.  Complain about
                        "multi-character tab" instead of "multibyte tab", so
                        that the diagnostic's wording does not need to be
                        changed once multibyte characters are supported.  */

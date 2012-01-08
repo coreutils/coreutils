@@ -48,7 +48,7 @@ struct Chown_option
   /* If nonzero, change the ownership of directories recursively. */
   bool recurse;
 
-  /* Pointer to the device and inode numbers of `/', when --recursive.
+  /* Pointer to the device and inode numbers of '/', when --recursive.
      Need not be freed.  Otherwise NULL.  */
   struct dev_ino *root_dev_ino;
 

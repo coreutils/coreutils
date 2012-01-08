@@ -103,7 +103,7 @@ static bool do_lookup;
 
 /* If true, display only a list of usernames and count of
    the users logged on.
-   Ignored for `who am i'.  */
+   Ignored for 'who am i'.  */
 static bool short_list;
 
 /* If true, display only name, line, and time fields.  */

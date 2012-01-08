@@ -279,7 +279,7 @@ regular file.\n\
    ATTR_LIST is a null-terminated linked list of structures that
    indicates the end of the filename of each intermediate directory
    in CONST_DST_NAME that may need to have its attributes changed.
-   The command `cp --parents --preserve a/b/c d/e_dir' changes the
+   The command 'cp --parents --preserve a/b/c d/e_dir' changes the
    attributes of the directories d/e_dir/a and d/e_dir/a/b to match
    the corresponding source directories regardless of whether they
    existed before the 'cp' command was given.
@@ -451,7 +451,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
               /* This component does not exist.  We must set
                  *new_dst and new->st.st_mode inside this loop because,
-                 for example, in the command `cp --parents ../a/../b/c e_dir',
+                 for example, in the command 'cp --parents ../a/../b/c e_dir',
                  make_dir_parents_private creates only e_dir/../a if
                  ./b already exists. */
               *new_dst = true;
@@ -655,7 +655,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 
               /* Use 'arg' without trailing slashes in constructing destination
                  file names.  Otherwise, we can end up trying to create a
-                 directory via `mkdir ("dst/foo/"...', which is not portable.
+                 directory via 'mkdir ("dst/foo/"...', which is not portable.
                  It fails, due to the trailing slash, on at least
                  NetBSD 1.[34] systems.  */
               ASSIGN_STRDUPA (arg_no_trailing_slash, arg);
@@ -681,7 +681,7 @@ do_copy (int n_files, char **file, const char *target_directory,
               /* Append the last component of 'arg' to 'target_directory'.  */
 
               ASSIGN_BASENAME_STRDUPA (arg_base, arg);
-              /* For `cp -R source/.. dest', don't copy into 'dest/..'. */
+              /* For 'cp -R source/.. dest', don't copy into 'dest/..'. */
               dst_name = (STREQ (arg_base, "..")
                           ? xstrdup (target_directory)
                           : file_name_concat (target_directory, arg_base,
@@ -734,7 +734,7 @@ do_copy (int n_files, char **file, const char *target_directory,
       /* When the force and backup options have been specified and
          the source and destination are the same name for an existing
          regular file, convert the user's command, e.g.,
-         `cp --force --backup foo foo' to `cp --force foo fooSUFFIX'
+         'cp --force --backup foo foo' to 'cp --force foo fooSUFFIX'
          where SUFFIX is determined by any version control options used.  */
 
       if (x->unlink_dest_after_failed_open

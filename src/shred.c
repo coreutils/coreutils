@@ -810,7 +810,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
             }
         }
 
-      /* Allow `rounding up' only for regular files.  */
+      /* Allow 'rounding up' only for regular files.  */
       if (0 <= size && !(flags->exact) && S_ISREG (st.st_mode))
         {
           size += ST_BLKSIZE (st) - 1 - (size - 1) % ST_BLKSIZE (st);

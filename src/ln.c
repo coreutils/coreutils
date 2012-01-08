@@ -65,7 +65,7 @@ static bool hard_dir_link;
 
 /* If nonzero, and the specified destination is a symbolic link to a
    directory, treat it just as if it were a directory.  Otherwise, the
-   command `ln --force --no-dereference file symlink-to-dir' deletes
+   command 'ln --force --no-dereference file symlink-to-dir' deletes
    symlink-to-dir before creating the new link.  */
 static bool dereference_dest_dir_symlinks = true;
 
@@ -195,9 +195,9 @@ do_link (const char *source, const char *dest)
           the command in question doesn't use --force.  */
        || (!symbolic_link && backup_type != no_backups))
       && dest_lstat_ok
-      /* Allow `ln -sf --backup k k' to succeed in creating the
+      /* Allow 'ln -sf --backup k k' to succeed in creating the
          self-referential symlink, but don't allow the hard-linking
-         equivalent: `ln -f k k' (with or without --backup) to get
+         equivalent: 'ln -f k k' (with or without --backup) to get
          beyond this point, because the error message you'd get is
          misleading.  */
       && (backup_type == no_backups || !symbolic_link)

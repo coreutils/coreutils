@@ -1688,7 +1688,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
         {
           /* Under very unlikely circumstances, it is possible to reach
              this point after positioning the file pointer to end of file
-             via the `lseek (...SEEK_END)' above.  In that case, reposition
+             via the 'lseek (...SEEK_END)' above.  In that case, reposition
              the file pointer back to start_pos before calling pipe_lines.  */
           if (start_pos != -1)
             xlseek (fd, start_pos, SEEK_SET, pretty_filename);
@@ -2110,8 +2110,8 @@ main (int argc, char **argv)
   parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
 
   /* To start printing with item N_UNITS from the start of the file, skip
-     N_UNITS - 1 items.  `tail -n +0' is actually meaningless, but for Unix
-     compatibility it's treated the same as `tail -n +1'.  */
+     N_UNITS - 1 items.  'tail -n +0' is actually meaningless, but for Unix
+     compatibility it's treated the same as 'tail -n +1'.  */
   if (from_start)
     {
       if (n_units)

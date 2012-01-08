@@ -105,7 +105,7 @@ PID is an integer; if negative it identifies a process group.\n\
   exit (status);
 }
 
-/* Print a row of `kill -t' output.  NUM_WIDTH is the maximum signal
+/* Print a row of 'kill -t' output.  NUM_WIDTH is the maximum signal
    number width, and SIGNUM is the signal number to print.  The
    maximum name width is NAME_WIDTH, and SIGNAME is the name to print.  */
 

@@ -227,7 +227,7 @@ append_quoted (const char *str)
 }
 
 /* Read the file open on FP (with name FILENAME).  First, look for a
-   `TERM name' directive where name matches the current terminal type.
+   'TERM name' directive where name matches the current terminal type.
    Once found, translate and accumulate the associated directives onto
    the global obstack LSC_OBSTACK.  Give a diagnostic
    upon failure (unrecognized keyword is the only way to fail here).

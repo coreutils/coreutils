@@ -1186,7 +1186,7 @@ close_src_desc:
    work to do and should return successfully, right away.
 
    Set *UNLINK_SRC if we've determined that the caller wants to do
-   `rename (a, b)' where 'a' and 'b' are distinct hard links to the same
+   'rename (a, b)' where 'a' and 'b' are distinct hard links to the same
    file. In that case, the caller should try to unlink 'a' and then return
    successfully.  Ideally, we wouldn't have to do that, and we'd be
    able to rely on rename to remove the source file.  However, POSIX
@@ -1314,7 +1314,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
   /* They may refer to the same file if we're in move mode and the
      target is a symlink.  That is ok, since we remove any existing
      destination file before opening it -- via 'rename' if they're on
-     the same file system, via `unlink (DST_NAME)' otherwise.
+     the same file system, via 'unlink (DST_NAME)' otherwise.
      It's also ok if they're distinct hard links to the same file.  */
   if (x->move_mode || x->unlink_dest_before_opening)
     {
@@ -1939,7 +1939,7 @@ copy_internal (char const *src_name, char const *dst_name,
         been copied.
      - when using -H and processing a command line argument;
         that command line argument could be a symlink pointing to another
-        command line argument.  With `cp -H --preserve=link', we hard-link
+        command line argument.  With 'cp -H --preserve=link', we hard-link
         those two destination files.
      - likewise for -L except that it applies to all files, not just
         command line arguments.
@@ -2298,7 +2298,7 @@ copy_internal (char const *src_name, char const *dst_name,
      link() on a symlink creates a hard-link to the symlink, or only
      to the referent (effectively dereferencing the symlink) (POSIX
      2001 required the latter behavior, although many systems provided
-     the former).  Yet cp, invoked with `--link --no-dereference',
+     the former).  Yet cp, invoked with '--link --no-dereference',
      should not follow the link.  We can approximate the desired
      behavior by skipping this hard-link creating block and instead
      copying the symlink, via the 'S_ISLNK'- copying code below.
@@ -2439,7 +2439,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (copied_as_regular)
     return delayed_ok;
 
-  /* POSIX says that `cp -p' must restore the following:
+  /* POSIX says that 'cp -p' must restore the following:
      - permission bits
      - setuid, setgid bits
      - owner and group

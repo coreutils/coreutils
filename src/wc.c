@@ -224,7 +224,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
      that wc reports is smaller than stats.st_size when the file is not
      positioned at its beginning.  That's why the lseek calls below are
      necessary.  For example the command
-     `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
+     '(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report '0' bytes.  */
 
   if (count_bytes && !count_chars && !print_lines && !count_complicated)
