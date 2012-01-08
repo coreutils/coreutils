@@ -34,7 +34,7 @@
 #include "stdio--.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
 #define AUTHORS \
@@ -51,7 +51,7 @@ struct control
   uintmax_t lines_required;	/* Number of lines required. */
   uintmax_t repeat;		/* Repeat count. */
   int argnum;			/* ARGV index. */
-  bool repeat_forever;		/* True if `*' used as a repeat count. */
+  bool repeat_forever;		/* True if '*' used as a repeat count. */
   bool ignore;			/* If true, produce no output (for regexp). */
   bool regexpr;			/* True if regular expression was used. */
   struct re_pattern_buffer re_compiled;	/* Compiled regular expression. */
@@ -118,7 +118,7 @@ static struct buffer_record *head = NULL;
 /* Partially read line. */
 static char *hold_area = NULL;
 
-/* Number of bytes in `hold_area'. */
+/* Number of bytes in 'hold_area'. */
 static size_t hold_count = 0;
 
 /* Number of the last line in the buffers. */
@@ -170,7 +170,7 @@ static bool elide_empty_files;
    the input file. */
 static struct control *controls;
 
-/* Number of elements in `controls'. */
+/* Number of elements in 'controls'. */
 static size_t control_used;
 
 /* The set of signals that are caught.  */
@@ -486,7 +486,7 @@ load_buffer (void)
       bytes_avail = b->bytes_alloc; /* Size of buffer returned. */
       p = b->buffer;
 
-      /* First check the `holding' area for a partial line. */
+      /* First check the 'holding' area for a partial line. */
       if (hold_count)
         {
           memcpy (p, hold_area, hold_count);

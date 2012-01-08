@@ -36,7 +36,7 @@
 # define LBRACKET 0
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #if LBRACKET
 # define PROGRAM_NAME "["
 #else
@@ -210,7 +210,7 @@ term (void)
   bool value;
   bool negated = false;
 
-  /* Deal with leading `not's.  */
+  /* Deal with leading 'not's.  */
   while (pos < argc && argv[pos][0] == '!' && argv[pos][1] == '\0')
     {
       advance (true);

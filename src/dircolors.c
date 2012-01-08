@@ -29,7 +29,7 @@
 #include "stdio--.h"
 #include "xstrndup.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "dircolors"
 
 #define AUTHORS proper_name ("H. Peter Anvin")
@@ -117,7 +117,7 @@ For details on the format of these files, run 'dircolors --print-database'.\n\
   exit (status);
 }
 
-/* If the SHELL environment variable is set to `csh' or `tcsh,'
+/* If the SHELL environment variable is set to 'csh' or 'tcsh,'
    assume C shell.  Else Bourne shell.  */
 
 static enum Shell_syntax

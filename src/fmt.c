@@ -31,7 +31,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "fmt"
 
 #define AUTHORS proper_name ("Ross Paterson")
@@ -474,7 +474,7 @@ fmt (FILE *f)
     }
 }
 
-/* Set the global variable `other_indent' according to SAME_PARAGRAPH
+/* Set the global variable 'other_indent' according to SAME_PARAGRAPH
    and other global variables.  */
 
 static void
@@ -864,7 +864,7 @@ fmt_paragraph (void)
               start->line_length = len;
             }
 
-          /* This is a kludge to keep us from computing `len' as the
+          /* This is a kludge to keep us from computing 'len' as the
              sum of the sentinel length and some non-zero number.
              Since the sentinel w->length may be INT_MAX, adding
              to that would give a negative result.  */

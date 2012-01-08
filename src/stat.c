@@ -1058,8 +1058,8 @@ print_it (char const *format, char const *filename,
 {
   bool fail = false;
 
-  /* Add 2 to accommodate our conversion of the stat `%s' format string
-     to the longer printf `%llu' one.  */
+  /* Add 2 to accommodate our conversion of the stat '%s' format string
+     to the longer printf '%llu' one.  */
   enum
     {
       MAX_ADDITIONAL_BYTES =

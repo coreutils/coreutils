@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include "system.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "echo"
 
 #define AUTHORS \
@@ -102,7 +102,7 @@ hextobin (unsigned char c)
 }
 
 /* Print the words in LIST to standard output.  If the first word is
-   `-n', then don't print a trailing newline.  We also support the
+   '-n', then don't print a trailing newline.  We also support the
    echo syntax from Version 9 unix systems. */
 
 int

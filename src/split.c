@@ -42,7 +42,7 @@
 #include "xfreopen.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "split"
 
 #define AUTHORS \
@@ -224,7 +224,7 @@ r/K/N   likewise but only output Kth of N to stdout\n\
 }
 
 /* Compute the next sequential output file name and store it into the
-   string `outfile'.  */
+   string 'outfile'.  */
 
 static void
 next_file_name (void)
@@ -249,7 +249,7 @@ next_file_name (void)
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       /* POSIX requires that if the output file name is too long for
-         its directory, `split' must fail without creating any files.
+         its directory, 'split' must fail without creating any files.
          This must be checked for explicitly on operating systems that
          silently truncate file names.  */
       {

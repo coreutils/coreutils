@@ -28,7 +28,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "mknod"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -134,7 +134,7 @@ main (int argc, char **argv)
     }
 
   /* If the number of arguments is 0 or 1,
-     or (if it's 2 or more and the second one starts with `p'), then there
+     or (if it's 2 or more and the second one starts with 'p'), then there
      must be exactly two operands.  Otherwise, there must be four.  */
   expected_operands = (argc <= optind
                        || (optind + 1 < argc && argv[optind + 1][0] == 'p')
@@ -172,7 +172,7 @@ main (int argc, char **argv)
 
   switch (argv[optind + 1][0])
     {
-    case 'b':			/* `block' or `buffered' */
+    case 'b':			/* 'block' or 'buffered' */
 #ifndef S_IFBLK
       error (EXIT_FAILURE, 0, _("block special files not supported"));
 #else
@@ -180,8 +180,8 @@ main (int argc, char **argv)
 #endif
       goto block_or_character;
 
-    case 'c':			/* `character' */
-    case 'u':			/* `unbuffered' */
+    case 'c':			/* 'character' */
+    case 'u':			/* 'unbuffered' */
 #ifndef S_IFCHR
       error (EXIT_FAILURE, 0, _("character special files not supported"));
 #else
@@ -217,7 +217,7 @@ main (int argc, char **argv)
       }
       break;
 
-    case 'p':			/* `pipe' */
+    case 'p':			/* 'pipe' */
       if (mkfifo (argv[optind], newmode) != 0)
         error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       break;

@@ -28,13 +28,13 @@
       crctab > crctab.h
 
   This software is compatible with neither the System V nor the BSD
-  `sum' program.  It is supposed to conform to POSIX, except perhaps
+  'sum' program.  It is supposed to conform to POSIX, except perhaps
   for foreign language support.  Any inconsistency with the standard
   (other than foreign language support) is a bug.  */
 
 #include <config.h>
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cksum"
 
 #define AUTHORS proper_name ("Q. Frank Xia")

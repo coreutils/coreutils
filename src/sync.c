@@ -25,7 +25,7 @@
 #include "error.h"
 #include "long-options.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sync"
 
 #define AUTHORS proper_name ("Jim Meyering")

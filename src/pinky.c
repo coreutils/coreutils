@@ -29,7 +29,7 @@
 #include "hard-locale.h"
 #include "readutmp.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pinky"
 
 #define AUTHORS \
@@ -97,7 +97,7 @@ count_ampersands (const char *str)
 /* Create a string (via xmalloc) which contains a full name by substituting
    for each ampersand in GECOS_NAME the USER_NAME string with its first
    character capitalized.  The caller must ensure that GECOS_NAME contains
-   no `,'s.  The caller also is responsible for free'ing the return value of
+   no ','s.  The caller also is responsible for free'ing the return value of
    this function.  */
 
 static char *
@@ -209,7 +209,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
 
-  /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
+  /* Copy ut_line into LINE, prepending '/dev/' if ut_line is not
      already an absolute file name.  Some system may put the full,
      absolute file name in ut_line.  */
   if (utmp_ent->ut_line[0] == '/')

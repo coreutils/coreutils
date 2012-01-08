@@ -41,7 +41,7 @@
    %b = print an argument string, interpreting backslash escapes,
      except that octal escapes are of the form \0 or \0ooo.
 
-   The `format' argument is re-used as many times as necessary
+   The 'format' argument is re-used as many times as necessary
    to convert all of the given arguments.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
@@ -57,7 +57,7 @@
 #include "unicodeio.h"
 #include "xprintf.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "printf"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -464,14 +464,14 @@ print_direc (const char *start, size_t length, char conversion,
 }
 
 /* Print the text in FORMAT, using ARGV (with ARGC elements) for
-   arguments to any `%' directives.
+   arguments to any '%' directives.
    Return the number of elements of ARGV used.  */
 
 static int
 print_formatted (const char *format, int argc, char **argv)
 {
   int save_argc = argc;		/* Preserve original value.  */
-  const char *f;		/* Pointer into `format'.  */
+  const char *f;		/* Pointer into 'format'.  */
   const char *direc_start;	/* Start of % directive.  */
   size_t direc_length;		/* Length of % directive.  */
   bool have_field_width;	/* True if FIELD_WIDTH is valid.  */
@@ -662,7 +662,7 @@ main (int argc, char **argv)
     }
 
   /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
+     Since there is no other invocation of getopt, handle '--' here.  */
   if (1 < argc && STREQ (argv[1], "--"))
     {
       --argc;

@@ -27,7 +27,7 @@
 #include "quote.h"
 #include "xgethostname.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "hostname"
 
 #define AUTHORS proper_name ("Jim Meyering")

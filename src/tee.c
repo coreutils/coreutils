@@ -27,7 +27,7 @@
 #include "stdio--.h"
 #include "xfreopen.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tee"
 
 #define AUTHORS \
@@ -147,7 +147,7 @@ tee_files (int nfiles, const char **files)
 
   descriptors = xnmalloc (nfiles + 1, sizeof *descriptors);
 
-  /* Move all the names `up' one in the argv array to make room for
+  /* Move all the names 'up' one in the argv array to make room for
      the entry for standard output.  This writes into argv[argc].  */
   for (i = nfiles; i >= 1; i--)
     files[i] = files[i - 1];

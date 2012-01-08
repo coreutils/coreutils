@@ -51,7 +51,7 @@ tac -r -s '.\|
 #include "stdlib--.h"
 #include "xfreopen.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tac"
 
 #define AUTHORS \
@@ -83,32 +83,32 @@ static char const *separator;
 /* True if we have ever read standard input.  */
 static bool have_read_stdin = false;
 
-/* If true, print `separator' along with the record preceding it
+/* If true, print 'separator' along with the record preceding it
    in the file; otherwise with the record following it. */
 static bool separator_ends_record;
 
-/* 0 if `separator' is to be matched as a regular expression;
-   otherwise, the length of `separator', used as a sentinel to
+/* 0 if 'separator' is to be matched as a regular expression;
+   otherwise, the length of 'separator', used as a sentinel to
    stop the search. */
 static size_t sentinel_length;
 
-/* The length of a match with `separator'.  If `sentinel_length' is 0,
-   `match_length' is computed every time a match succeeds;
-   otherwise, it is simply the length of `separator'. */
+/* The length of a match with 'separator'.  If 'sentinel_length' is 0,
+   'match_length' is computed every time a match succeeds;
+   otherwise, it is simply the length of 'separator'. */
 static size_t match_length;
 
 /* The input buffer. */
 static char *G_buffer;
 
-/* The number of bytes to read at once into `buffer'. */
+/* The number of bytes to read at once into 'buffer'. */
 static size_t read_size;
 
-/* The size of `buffer'.  This is read_size * 2 + sentinel_length + 2.
-   The extra 2 bytes allow `past_end' to have a value beyond the
-   end of `G_buffer' and `match_start' to run off the front of `G_buffer'. */
+/* The size of 'buffer'.  This is read_size * 2 + sentinel_length + 2.
+   The extra 2 bytes allow 'past_end' to have a value beyond the
+   end of 'G_buffer' and 'match_start' to run off the front of 'G_buffer'. */
 static size_t G_buffer_size;
 
-/* The compiled regular expression representing `separator'. */
+/* The compiled regular expression representing 'separator'. */
 static struct re_pattern_buffer compiled_separator;
 static char compiled_separator_fastmap[UCHAR_MAX + 1];
 static struct re_registers regs;
@@ -193,21 +193,21 @@ output (const char *start, const char *past_end)
 static bool
 tac_seekable (int input_fd, const char *file)
 {
-  /* Pointer to the location in `G_buffer' where the search for
+  /* Pointer to the location in 'G_buffer' where the search for
      the next separator will begin. */
   char *match_start;
 
-  /* Pointer to one past the rightmost character in `G_buffer' that
+  /* Pointer to one past the rightmost character in 'G_buffer' that
      has not been printed yet. */
   char *past_end;
 
-  /* Length of the record growing in `G_buffer'. */
+  /* Length of the record growing in 'G_buffer'. */
   size_t saved_record_size;
 
   /* Offset in the file of the next read. */
   off_t file_pos;
 
-  /* True if `output' has not been called yet for any file.
+  /* True if 'output' has not been called yet for any file.
      Only used when the separator is attached to the preceding record. */
   bool first_time = true;
   char first_char = *separator;	/* Speed optimization, non-regexp. */
@@ -220,7 +220,7 @@ tac_seekable (int input_fd, const char *file)
     return true;			/* It's an empty file. */
 
   /* Arrange for the first read to lop off enough to leave the rest of the
-     file a multiple of `read_size'.  Since `read_size' can change, this may
+     file a multiple of 'read_size'.  Since 'read_size' can change, this may
      not always hold during the program run, but since it usually will, leave
      it here for i/o efficiency (page/sector boundaries and all that).
      Note: the efficiency gain has not been verified. */
@@ -228,7 +228,7 @@ tac_seekable (int input_fd, const char *file)
   if (saved_record_size == 0)
     saved_record_size = read_size;
   file_pos -= saved_record_size;
-  /* `file_pos' now points to the start of the last (probably partial) block
+  /* 'file_pos' now points to the start of the last (probably partial) block
      in the input file. */
 
   if (lseek (input_fd, file_pos, SEEK_SET) < 0)
@@ -247,12 +247,12 @@ tac_seekable (int input_fd, const char *file)
 
   while (true)
     {
-      /* Search backward from `match_start' - 1 to `G_buffer' for a match
-         with `separator'; for speed, use strncmp if `separator' contains no
+      /* Search backward from 'match_start' - 1 to 'G_buffer' for a match
+         with 'separator'; for speed, use strncmp if 'separator' contains no
          metacharacters.
-         If the match succeeds, set `match_start' to point to the start of
-         the match and `match_length' to the length of the match.
-         Otherwise, make `match_start' < `G_buffer'. */
+         If the match succeeds, set 'match_start' to point to the start of
+         the match and 'match_length' to the length of the match.
+         Otherwise, make 'match_start' < 'G_buffer'. */
       if (sentinel_length == 0)
         {
           size_t i = match_start - G_buffer;
@@ -281,15 +281,15 @@ tac_seekable (int input_fd, const char *file)
         }
       else
         {
-          /* `match_length' is constant for non-regexp boundaries. */
+          /* 'match_length' is constant for non-regexp boundaries. */
           while (*--match_start != first_char
                  || (match_length1 && strncmp (match_start + 1, separator1,
                                                match_length1)))
             /* Do nothing. */ ;
         }
 
-      /* Check whether we backed off the front of `G_buffer' without finding
-         a match for `separator'. */
+      /* Check whether we backed off the front of 'G_buffer' without finding
+         a match for 'separator'. */
       if (match_start < G_buffer)
         {
           if (file_pos == 0)
@@ -302,10 +302,10 @@ tac_seekable (int input_fd, const char *file)
           saved_record_size = past_end - G_buffer;
           if (saved_record_size > read_size)
             {
-              /* `G_buffer_size' is about twice `read_size', so since
-                 we want to read in another `read_size' bytes before
-                 the data already in `G_buffer', we need to increase
-                 `G_buffer_size'. */
+              /* 'G_buffer_size' is about twice 'read_size', so since
+                 we want to read in another 'read_size' bytes before
+                 the data already in 'G_buffer', we need to increase
+                 'G_buffer_size'. */
               char *newbuffer;
               size_t offset = sentinel_length ? sentinel_length : 1;
               ptrdiff_t match_start_offset = match_start - G_buffer;
@@ -353,12 +353,12 @@ tac_seekable (int input_fd, const char *file)
         }
       else
         {
-          /* Found a match of `separator'. */
+          /* Found a match of 'separator'. */
           if (separator_ends_record)
             {
               char *match_end = match_start + match_length;
 
-              /* If this match of `separator' isn't at the end of the
+              /* If this match of 'separator' isn't at the end of the
                  file, print the record. */
               if (!first_time || match_end != past_end)
                 output (match_end, past_end);

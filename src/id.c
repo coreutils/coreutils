@@ -31,7 +31,7 @@
 #include "quote.h"
 #include "group-list.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "id"
 
 #define AUTHORS \
@@ -55,7 +55,7 @@ static gid_t rgid, egid;
 static bool ok = true;
 
 /* The SELinux context.  Start with a known invalid value so print_full_info
-   knows when `context' has not been set to a meaningful value.  */
+   knows when 'context' has not been set to a meaningful value.  */
 static security_context_t context = NULL;
 
 static struct option const longopts[] =

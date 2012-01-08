@@ -55,13 +55,13 @@
 #include "quote.h"
 #include "uname.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME (uname_mode == UNAME_UNAME ? "uname" : "arch")
 
 #define AUTHORS proper_name ("David MacKenzie")
 #define ARCH_AUTHORS "David MacKenzie", "Karel Zak"
 
-/* Values that are bitwise or'd into `toprint'. */
+/* Values that are bitwise or'd into 'toprint'. */
 /* Kernel name. */
 #define PRINT_KERNEL_NAME 1
 

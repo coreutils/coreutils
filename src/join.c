@@ -34,7 +34,7 @@
 #include "xstrtol.h"
 #include "argmatch.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "join"
 
 #define AUTHORS proper_name ("Mike Haertel")
@@ -72,8 +72,8 @@ struct field
 struct line
   {
     struct linebuffer buf;	/* The line itself.  */
-    size_t nfields;		/* Number of elements in `fields'.  */
-    size_t nfields_allocated;	/* Number of elements allocated for `fields'. */
+    size_t nfields;		/* Number of elements in 'fields'.  */
+    size_t nfields_allocated;	/* Number of elements allocated for 'fields'. */
     struct field *fields;
   };
 
@@ -81,8 +81,8 @@ struct line
    same join field value.  */
 struct seq
   {
-    size_t count;			/* Elements used in `lines'.  */
-    size_t alloc;			/* Elements allocated in `lines'.  */
+    size_t count;			/* Elements used in 'lines'.  */
+    size_t alloc;			/* Elements allocated in 'lines'.  */
     struct line **lines;
   };
 
@@ -132,7 +132,7 @@ static size_t join_field_2 = SIZE_MAX;
 /* List of fields to print.  */
 static struct outlist outlist_head;
 
-/* Last element in `outlist', where a new element can be added.  */
+/* Last element in 'outlist', where a new element can be added.  */
 static struct outlist *outlist_end = &outlist_head;
 
 /* Tab character separating fields.  If negative, fields are separated
@@ -251,7 +251,7 @@ extract_field (struct line *line, char *field, size_t len)
   ++(line->nfields);
 }
 
-/* Fill in the `fields' structure in LINE.  */
+/* Fill in the 'fields' structure in LINE.  */
 
 static void
 xfields (struct line *line)
@@ -532,7 +532,7 @@ delseq (struct seq *seq)
 
 
 /* Print field N of LINE if it exists and is nonempty, otherwise
-   `empty_filler' if it is nonempty.  */
+   'empty_filler' if it is nonempty.  */
 
 static void
 prfield (size_t n, struct line const *line)
@@ -800,7 +800,7 @@ join (FILE *fp1, FILE *fp2)
   delseq (&seq2);
 }
 
-/* Add a field spec for field FIELD of file FILE to `outlist'.  */
+/* Add a field spec for field FIELD of file FILE to 'outlist'.  */
 
 static void
 add_field (int file, size_t field)
@@ -857,7 +857,7 @@ decode_field_spec (const char *s, int *file_index, size_t *field_index)
     case '0':
       if (s[1])
         {
-          /* `0' must be all alone -- no `.FIELD'.  */
+          /* '0' must be all alone -- no '.FIELD'.  */
           error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
         }
       *file_index = 0;
@@ -885,7 +885,7 @@ decode_field_spec (const char *s, int *file_index, size_t *field_index)
     }
 }
 
-/* Add the comma or blank separated field spec(s) in STR to `outlist'.  */
+/* Add the comma or blank separated field spec(s) in STR to 'outlist'.  */
 
 static void
 add_field_list (char *str)

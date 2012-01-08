@@ -15,15 +15,15 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Run a shell with the real and effective UID and GID and groups
-   of USER, default `root'.
+   of USER, default 'root'.
 
    The shell run is taken from USER's password entry, /bin/sh if
    none is specified there.  If the account has a password, su
    prompts for a password unless run by a user with real UID 0.
 
    Does not change the current directory.
-   Sets `HOME' and `SHELL' from the password entry for USER, and if
-   USER is not root, sets `USER' and `LOGNAME' to USER.
+   Sets 'HOME' and 'SHELL' from the password entry for USER, and if
+   USER is not root, sets 'USER' and 'LOGNAME' to USER.
    The subshell is not a login shell.
 
    If one or more ARGs are given, they are passed as additional
@@ -82,7 +82,7 @@
 
 #include "error.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "su"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -116,7 +116,7 @@ char *crypt (char const *key, char const *salt);
 static void run_shell (char const *, char const *, char **, size_t)
      ATTRIBUTE_NORETURN;
 
-/* If true, pass the `-f' option to the subshell.  */
+/* If true, pass the '-f' option to the subshell.  */
 static bool fast_startup;
 
 /* If true, simulate a login instead of just starting a shell.  */
@@ -237,7 +237,7 @@ correct_password (const struct passwd *pw)
   return STREQ (encrypted, correct);
 }
 
-/* Update `environ' for the new shell based on PW, with SHELL being
+/* Update 'environ' for the new shell based on PW, with SHELL being
    the value for the SHELL environment variable.  */
 
 static void

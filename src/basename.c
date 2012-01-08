@@ -34,7 +34,7 @@
 #include "error.h"
 #include "quote.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "basename"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -122,9 +122,9 @@ main (int argc, char **argv)
   name = base_name (argv[optind]);
   strip_trailing_slashes (name);
 
-  /* Per POSIX, `basename // /' must return `//' on platforms with
+  /* Per POSIX, `basename // /' must return '//' on platforms with
      distinct //.  On platforms with drive letters, this generalizes
-     to making `basename c: :' return `c:'.  This rule is captured by
+     to making `basename c: :' return 'c:'.  This rule is captured by
      skipping suffix stripping if base_name returned an absolute path
      or a drive letter (only possible if name is a file-system
      root).  */

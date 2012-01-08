@@ -30,7 +30,7 @@
 #include "xprintf.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "od"
 
 #define AUTHORS proper_name ("Jim Meyering")
@@ -41,7 +41,7 @@
 #if HAVE_UNSIGNED_LONG_LONG_INT
 typedef unsigned long long int unsigned_long_long_int;
 #else
-/* This is just a place-holder to avoid a few `#if' directives.
+/* This is just a place-holder to avoid a few '#if' directives.
    In this case, the type isn't actually used.  */
 typedef unsigned long int unsigned_long_long_int;
 #endif
@@ -192,7 +192,7 @@ static bool flag_dump_strings;
    offset and pseudo-start address.  */
 static bool traditional;
 
-/* True if an old-style `pseudo-address' was specified.  */
+/* True if an old-style 'pseudo-address' was specified.  */
 static bool flag_pseudo_start;
 
 /* The difference between the old-style pseudo starting address and
@@ -1284,8 +1284,8 @@ parse_old_offset (const char *s, uintmax_t *offset)
   if (s[0] == '+')
     ++s;
 
-  /* Determine the radix we'll use to interpret S.  If there is a `.',
-     it's decimal, otherwise, if the string begins with `0X'or `0x',
+  /* Determine the radix we'll use to interpret S.  If there is a '.',
+     it's decimal, otherwise, if the string begins with '0X'or '0x',
      it's hexadecimal, else octal.  */
   if (strchr (s, '.') != NULL)
     radix = 10;
@@ -1390,7 +1390,7 @@ dump (void)
 }
 
 /* STRINGS mode.  Find each "string constant" in the input.
-   A string constant is a run of at least `string_min' ASCII
+   A string constant is a run of at least 'string_min' ASCII
    graphic (or formatting) characters terminated by a null.
    Based on a function written by Richard Stallman for a
    traditional version of od.  Return true if successful.  */
@@ -1408,7 +1408,7 @@ dump_strings (void)
       size_t i;
       int c;
 
-      /* See if the next `string_min' chars are all printing chars.  */
+      /* See if the next 'string_min' chars are all printing chars.  */
     tryline:
 
       if (limit_bytes_to_format
@@ -1430,7 +1430,7 @@ dump_strings (void)
           buf[i] = c;
         }
 
-      /* We found a run of `string_min' printable characters.
+      /* We found a run of 'string_min' printable characters.
          Now see if it is terminated with a null byte.  */
       while (!limit_bytes_to_format || address < end_offset)
         {
@@ -1453,7 +1453,7 @@ dump_strings (void)
         }
 
       /* If we get here, the string is all printable and null-terminated,
-         so print it.  It is all in `buf' and `i' is its length.  */
+         so print it.  It is all in 'buf' and 'i' is its length.  */
       buf[i] = 0;
       format_address (address - i - 1, ' ');
 
@@ -1539,7 +1539,7 @@ main (int argc, char **argv)
   integral_type_size[sizeof (long int)] = LONG;
 #if HAVE_UNSIGNED_LONG_LONG_INT
   /* If `long int' and `long long int' have the same size, it's fine
-     to overwrite the entry for `long' with this one.  */
+     to overwrite the entry for 'long' with this one.  */
   integral_type_size[sizeof (unsigned_long_long_int)] = LONG_LONG;
 #endif
 
@@ -1547,7 +1547,7 @@ main (int argc, char **argv)
     fp_type_size[i] = NO_SIZE;
 
   fp_type_size[sizeof (float)] = FLOAT_SINGLE;
-  /* The array entry for `double' is filled in after that for `long double'
+  /* The array entry for 'double' is filled in after that for `long double'
      so that if they are the same size, we avoid any overhead of
      long double computation in libc.  */
   fp_type_size[sizeof (long double)] = FLOAT_LONG_DOUBLE;

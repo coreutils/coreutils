@@ -129,7 +129,7 @@ write_protected_non_symlink (int fd_cwd,
      the implementation choices [#4 and #5 were suggested by Paul Eggert]:
      1) call openat with O_WRONLY|O_NOCTTY
         Disadvantage: may create the file and doesn't work for directory,
-        may mistakenly report `unwritable' for EROFS or ACLs even though
+        may mistakenly report 'unwritable' for EROFS or ACLs even though
         perm bits say the file is writable.
 
      2) fake eaccessat (save_cwd, fchdir, call euidaccess, restore_cwd)
@@ -181,7 +181,7 @@ write_protected_non_symlink (int fd_cwd,
 
    IS_DIR is true if ENT designates a directory, false otherwise.
 
-   Depending on MODE, ask whether to `descend into' or to `remove' the
+   Depending on MODE, ask whether to `descend into' or to 'remove' the
    directory FILENAME.  MODE is ignored when FILENAME is not a directory.
    Set *IS_EMPTY_P to T_YES if FILENAME is an empty directory, and it is
    appropriate to try to remove it with rmdir (e.g. recursive mode).

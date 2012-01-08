@@ -29,7 +29,7 @@
 #include "selinux-at.h"
 #include "xfts.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "chcon"
 
 #define AUTHORS \
@@ -46,7 +46,7 @@ static bool recurse;
 /* Level of verbosity. */
 static bool verbose;
 
-/* Pointer to the device and inode numbers of `/', when --recursive.
+/* Pointer to the device and inode numbers of '/', when --recursive.
    Otherwise NULL.  */
 static struct dev_ino *root_dev_ino;
 

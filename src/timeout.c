@@ -244,8 +244,8 @@ use the KILL (9) signal, since this signal cannot be caught.\n"), stdout);
 
 /* Given a floating point value *X, and a suffix character, SUFFIX_CHAR,
    scale *X by the multiplier implied by SUFFIX_CHAR.  SUFFIX_CHAR may
-   be the NUL byte or `s' to denote seconds, `m' for minutes, `h' for
-   hours, or `d' for days.  If SUFFIX_CHAR is invalid, don't modify *X
+   be the NUL byte or 's' to denote seconds, 'm' for minutes, 'h' for
+   hours, or 'd' for days.  If SUFFIX_CHAR is invalid, don't modify *X
    and return false.  Otherwise return true.  */
 
 static bool

@@ -32,7 +32,7 @@
 #include "root-dev-ino.h"
 #include "xfts.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "chmod"
 
 #define AUTHORS \
@@ -79,7 +79,7 @@ static bool diagnose_surprises;
 /* Level of verbosity.  */
 static enum Verbosity verbosity = V_off;
 
-/* Pointer to the device and inode numbers of `/', when --recursive.
+/* Pointer to the device and inode numbers of '/', when --recursive.
    Otherwise NULL.  */
 static struct dev_ino *root_dev_ino;
 

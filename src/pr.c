@@ -34,13 +34,13 @@
    Concept:
 
    If the input_tab_char differs from the default value TAB
-   (`-e[CHAR[...]]' is used), any input text tab is expanded to the
+   ('-e[CHAR[...]]' is used), any input text tab is expanded to the
    default width of 8 spaces (compare char_to_clump). - Same as SunOS
    does.
 
    The treatment of the number_separator (compare add_line_number):
-   The default value TAB of the number_separator (`-n[SEP[...]]') doesn't
-   be thought to be an input character. An optional `-e'-input has no
+   The default value TAB of the number_separator ('-n[SEP[...]]') doesn't
+   be thought to be an input character. An optional '-e'-input has no
    effect.
    -  With single column output
       only one POSIX requirement has to be met:
@@ -53,7 +53,7 @@
       two conflicting POSIX requirements exist:
    First `default n-separator is TAB', second `output text columns shall
    be of equal width'. Moreover POSIX specifies the number+separator a
-   part of the column, together with `-COLUMN' and `-a -COLUMN'.
+   part of the column, together with '-COLUMN' and `-a -COLUMN'.
    (With -m output the number shall occupy each line only once. Exactly
    the same situation as single column output exists.)
       GNU pr gives priority to the 2nd requirement and observes POSIX
@@ -72,7 +72,7 @@
    PAGE_WIDTH may occur.
 
    The interference of the POSIX-compliant small letter options -w and -s:
-   (`interference' means `setting a _separator_ with -s switches off the
+   ('interference' means `setting a _separator_ with -s switches off the
    column structure and the default - not generally - page_width,
    acts on -w option')
        options:       text form  / separator:     equivalent new options:
@@ -244,7 +244,7 @@
    -s[CHAR], --separator[=CHAR]
                 Separate columns by a single character CHAR, default for
                 CHAR is the TAB character without -w and 'no char' with -w.
-                Without `-s' default separator `space' is set.
+                Without '-s' default separator 'space' is set.
                 -s[CHAR] turns off line truncation of all 3 column options
                 (-COLUMN|-a -COLUMN|-m) except -w is set. That is a POSIX
                 compliant formulation. The source code translates -s into
@@ -255,7 +255,7 @@
                 doesn't react upon the -W/-w option (unlike -s option
                 does). It defines a separator nothing else.
                 Without -S: Default separator TAB is used with -J and
-                `space' otherwise (same as -S" ").
+                'space' otherwise (same as -S" ").
                 With -S "": No separator is used.
                 Quotes should be used with blanks and some shell active
                 characters.
@@ -323,7 +323,7 @@
 #include "strftime.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pr"
 
 #define AUTHORS \
@@ -688,7 +688,7 @@ static bool use_col_separator = false;
 
 /* String used to separate columns if the -S option has been specified.
    Default without -S but together with one of the column options
-   -a|COLUMN|-m is a `space' and with the -J option a `tab'. */
+   -a|COLUMN|-m is a 'space' and with the -J option a 'tab'. */
 static char *col_sep_string = (char *) "";
 static int col_sep_length = 0;
 static char *column_separator = (char *) " ";
@@ -823,7 +823,7 @@ first_last_page (int oi, char c, char const *pages)
 }
 
 /* Parse column count string S, and if it's valid (1 or larger and
-   within range of the type of `columns') set the global variables
+   within range of the type of 'columns') set the global variables
    columns and explicit_columns and return true.
    Otherwise, exit with a diagnostic.  */
 static void
@@ -2743,7 +2743,7 @@ char_to_clump (char c)
 /* We've just printed some files and need to clean up things before
    looking for more options and printing the next batch of files.
 
-   Free everything we've xmalloc'ed, except `header'. */
+   Free everything we've xmalloc'ed, except 'header'. */
 
 static void
 cleanup (void)

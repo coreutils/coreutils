@@ -31,7 +31,7 @@
 #include "memcmp2.h"
 #include "xmemcoll.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "comm"
 
 #define AUTHORS \
@@ -194,7 +194,7 @@ writeline (struct linebuffer const *line, FILE *stream, int class)
 
    A message is printed at most once per input file.
 
-   This funtion was copied (nearly) verbatim from `src/join.c'. */
+   This funtion was copied (nearly) verbatim from 'src/join.c'. */
 
 static void
 check_order (struct linebuffer const *prev,

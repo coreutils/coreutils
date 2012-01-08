@@ -36,7 +36,7 @@
 #include "xstrtol.h"
 #include "xtime.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "dd"
 
 #define AUTHORS \
@@ -153,10 +153,10 @@ static size_t output_blocksize = 0;
 /* Conversion buffer size, in bytes.  0 prevents conversions. */
 static size_t conversion_blocksize = 0;
 
-/* Skip this many records of `input_blocksize' bytes before input. */
+/* Skip this many records of 'input_blocksize' bytes before input. */
 static uintmax_t skip_records = 0;
 
-/* Skip this many records of `output_blocksize' bytes before output. */
+/* Skip this many records of 'output_blocksize' bytes before output. */
 static uintmax_t seek_records = 0;
 
 /* Copy only this many records.  The default is effectively infinity.  */
@@ -219,10 +219,10 @@ static char space_character = ' ';
 /* Output buffer. */
 static char *obuf;
 
-/* Current index into `obuf'. */
+/* Current index into 'obuf'. */
 static size_t oc = 0;
 
-/* Index into current line, for `conv=block' and `conv=unblock'.  */
+/* Index into current line, for 'conv=block' and 'conv=unblock'.  */
 static size_t col = 0;
 
 /* The set of signals that are caught.  */
@@ -1008,7 +1008,7 @@ iwrite (int fd, char const *buf, size_t size)
   return total_written;
 }
 
-/* Write, then empty, the output buffer `obuf'. */
+/* Write, then empty, the output buffer 'obuf'. */
 
 static void
 write_output (void)
@@ -1305,8 +1305,8 @@ translate_buffer (char *buf, size_t nread)
     *cp = trans_table[to_uchar (*cp)];
 }
 
-/* If true, the last char from the previous call to `swab_buffer'
-   is saved in `saved_char'.  */
+/* If true, the last char from the previous call to 'swab_buffer'
+   is saved in 'saved_char'.  */
 static bool char_is_saved = false;
 
 /* Odd char from previous call.  */
@@ -1588,7 +1588,7 @@ copy_simple (char const *buf, size_t nread)
 }
 
 /* Copy NREAD bytes of BUF, doing conv=block
-   (pad newline-terminated records to `conversion_blocksize',
+   (pad newline-terminated records to 'conversion_blocksize',
    replacing the newline with trailing spaces).  */
 
 static void
@@ -1620,7 +1620,7 @@ copy_with_block (char const *buf, size_t nread)
 }
 
 /* Copy NREAD bytes of BUF, doing conv=unblock
-   (replace trailing spaces in `conversion_blocksize'-sized records
+   (replace trailing spaces in 'conversion_blocksize'-sized records
    with a newline).  */
 
 static void
@@ -1644,7 +1644,7 @@ copy_with_unblock (char const *buf, size_t nread)
         pending_spaces++;
       else
         {
-          /* `c' is the character after a run of spaces that were not
+          /* 'c' is the character after a run of spaces that were not
              at the end of the conversion buffer.  Output them.  */
           while (pending_spaces)
             {
@@ -1733,7 +1733,7 @@ dd_copy (void)
   int exit_status = EXIT_SUCCESS;
   size_t n_bytes_read;
 
-  /* Leave at least one extra byte at the beginning and end of `ibuf'
+  /* Leave at least one extra byte at the beginning and end of 'ibuf'
      for conv=swab, but keep the buffer address even.  But some peculiar
      device drivers work only with word-aligned buffers, so leave an
      extra two bytes.  */
@@ -1948,7 +1948,7 @@ dd_copy (void)
   if ((conversions_mask & C_BLOCK) && col > 0)
     {
       /* If the final input line didn't end with a '\n', pad
-         the output block to `conversion_blocksize' chars.  */
+         the output block to 'conversion_blocksize' chars.  */
       size_t i;
       for (i = col; i < conversion_blocksize; i++)
         output_char (space_character);
@@ -2062,7 +2062,7 @@ main (int argc, char **argv)
            | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       /* Open the output file with *read* access only if we might
-         need to read to satisfy a `seek=' request.  If we can't read
+         need to read to satisfy a 'seek=' request.  If we can't read
          the file, go ahead with write-only access; it might work.  */
       if ((! seek_records
            || fd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)

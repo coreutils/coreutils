@@ -1,4 +1,4 @@
-/* `ln' program to create links between files.
+/* 'ln' program to create links between files.
    Copyright (C) 1986, 1989-1991, 1995-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 #include "same.h"
 #include "yesno.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "ln"
 
 #define AUTHORS \

@@ -144,7 +144,7 @@ mpz_out_str (FILE *stream, int base, mpz_t z)
 }
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "expr"
 
 #define AUTHORS \
@@ -313,7 +313,7 @@ main (int argc, char **argv)
                       usage, AUTHORS, (char const *) NULL);
 
   /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
+     Since there is no other invocation of getopt, handle '--' here.  */
   unsigned int u_argc = argc;
   if (1 < u_argc && STREQ (argv[1], "--"))
     {

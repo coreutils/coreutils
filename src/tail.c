@@ -49,7 +49,7 @@
 #if HAVE_INOTIFY
 # include "hash.h"
 # include <sys/inotify.h>
-/* `select' is used by tail_forever_inotify.  */
+/* 'select' is used by tail_forever_inotify.  */
 # include <sys/select.h>
 
 /* inotify needs to know if a file is local.  */
@@ -62,7 +62,7 @@
 # endif
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tail"
 
 #define AUTHORS \
@@ -466,7 +466,7 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
 }
 
 /* Print the last N_LINES lines from the end of file FD.
-   Go backward through the file, reading `BUFSIZ' bytes at a time (except
+   Go backward through the file, reading 'BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
    read NUMBER newlines.
    START_POS is the starting position of the read pointer for the file
@@ -485,12 +485,12 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   if (n_lines == 0)
     return true;
 
-  /* Set `bytes_read' to the size of the last, probably partial, buffer;
-     0 < `bytes_read' <= `BUFSIZ'.  */
+  /* Set 'bytes_read' to the size of the last, probably partial, buffer;
+     0 < 'bytes_read' <= 'BUFSIZ'.  */
   bytes_read = (pos - start_pos) % BUFSIZ;
   if (bytes_read == 0)
     bytes_read = BUFSIZ;
-  /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
+  /* Make 'pos' a multiple of 'BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
   xlseek (fd, pos, SEEK_SET, pretty_filename);
@@ -608,7 +608,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       total_lines += tmp->nlines;
 
       /* If there is enough room in the last buffer read, just append the new
-         one to it.  This is because when reading from a pipe, `n_read' can
+         one to it.  This is because when reading from a pipe, 'n_read' can
          often be very small.  */
       if (tmp->nbytes + last->nbytes < BUFSIZ)
         {
@@ -670,8 +670,8 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     char const *buffer_end = tmp->buffer + tmp->nbytes;
     if (total_lines > n_lines)
       {
-        /* Skip `total_lines' - `n_lines' newlines.  We made sure that
-           `total_lines' - `n_lines' <= `tmp->nlines'.  */
+        /* Skip 'total_lines' - 'n_lines' newlines.  We made sure that
+           'total_lines' - 'n_lines' <= 'tmp->nlines'.  */
         size_t j;
         for (j = total_lines - n_lines; j; --j)
           {
@@ -735,7 +735,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 
       total_bytes += tmp->nbytes;
       /* If there is enough room in the last buffer read, just append the new
-         one to it.  This is because when reading from a pipe, `nbytes' can
+         one to it.  This is because when reading from a pipe, 'nbytes' can
          often be very small.  */
       if (tmp->nbytes + last->nbytes < BUFSIZ)
         {
@@ -778,7 +778,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
     total_bytes -= tmp->nbytes;
 
   /* Find the correct beginning, then print the rest of the file.
-     We made sure that `total_bytes' - `n_bytes' <= `tmp->nbytes'.  */
+     We made sure that 'total_bytes' - 'n_bytes' <= 'tmp->nbytes'.  */
   if (total_bytes > n_bytes)
     i = total_bytes - n_bytes;
   else
@@ -1267,7 +1267,7 @@ wd_comparator (const void *e1, const void *e2)
   return spec1->wd == spec2->wd;
 }
 
-/* Helper function used by `tail_forever_inotify'.  */
+/* Helper function used by 'tail_forever_inotify'.  */
 static void
 check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
 {
@@ -1426,7 +1426,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
   /* Wait for inotify events and handle them.  Events on directories
      ensure that watched files can be re-added when following by name.
-     This loop blocks on the `safe_read' call until a new event is notified.
+     This loop blocks on the 'safe_read' call until a new event is notified.
      But when --pid=P is specified, tail usually waits via the select.  */
   while (1)
     {
@@ -1522,7 +1522,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           fspec = &(f[j]);
 
-          /* Remove `fspec' and re-add it using `new_fd' as its key.  */
+          /* Remove 'fspec' and re-add it using 'new_fd' as its key.  */
           hash_delete (wd_to_name, fspec);
           fspec->wd = new_wd;
 
@@ -1769,7 +1769,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
           struct stat stats;
 
 #if TEST_RACE_BETWEEN_FINAL_READ_AND_INITIAL_FSTAT
-          /* Before the tail function provided `read_pos', there was
+          /* Before the tail function provided 'read_pos', there was
              a race condition described in the URL below.  This sleep
              call made the window big enough to exercise the problem.  */
           xnanosleep (1);
@@ -2141,7 +2141,7 @@ main (int argc, char **argv)
     if (found_hyphen && follow_mode == Follow_name)
       error (EXIT_FAILURE, 0, _("cannot follow %s by name"), quote ("-"));
 
-    /* When following forever, warn if any file is `-'.
+    /* When following forever, warn if any file is '-'.
        This is only a warning, since tail's output (before a failing seek,
        and that from any non-stdin files) might still be useful.  */
     if (forever && found_hyphen && isatty (STDIN_FILENO))

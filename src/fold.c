@@ -30,7 +30,7 @@
 
 #define TAB_WIDTH 8
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "fold"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -123,7 +123,7 @@ fold_file (char const *filename, size_t width)
   FILE *istream;
   int c;
   size_t column = 0;		/* Screen column where next char will go. */
-  size_t offset_out = 0;	/* Index in `line_out' for next char. */
+  size_t offset_out = 0;	/* Index in 'line_out' for next char. */
   static char *line_out = NULL;
   static size_t allocated_out = 0;
   int saved_errno;

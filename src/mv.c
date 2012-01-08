@@ -34,7 +34,7 @@
 #include "root-dev-ino.h"
 #include "priv-set.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "mv"
 
 #define AUTHORS \
@@ -76,7 +76,7 @@ rm_option_init (struct rm_options *x)
   x->recursive = true;
   x->one_file_system = false;
 
-  /* Should we prompt for removal, too?  No.  Prompting for the `move'
+  /* Should we prompt for removal, too?  No.  Prompting for the 'move'
      part is enough.  It implies removal.  */
   x->interactive = RMI_NEVER;
   x->stdin_tty = false;
@@ -84,9 +84,9 @@ rm_option_init (struct rm_options *x)
   x->verbose = false;
 
   /* Since this program may well have to process additional command
-     line arguments after any call to `rm', that function must preserve
+     line arguments after any call to 'rm', that function must preserve
      the initial working directory, in case one of those is a
-     `.'-relative name.  */
+     '.'-relative name.  */
   x->require_restore_cwd = true;
 
   {
@@ -175,9 +175,9 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
              besides in some situations doing so would give highly nonintuitive
              results.  Run this `mkdir b; touch a c; mv * b' in an empty
              directory.  Here's the result of running echo `find b -print`:
-             b b/a b/b b/b/a b/c.  Notice that only file `a' was copied
+             b b/a b/b b/b/a b/c.  Notice that only file 'a' was copied
              into b/b.  Handle this by giving a diagnostic, removing the
-             copied-into-self directory, DEST (`b/b' in the example),
+             copied-into-self directory, DEST ('b/b' in the example),
              and failing.  */
 
           dir_to_remove = NULL;
@@ -202,7 +202,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
              supports uploading, downloading and deleting, but not renaming.
 
              Also, note that comparing device numbers is not a reliable
-             check for `can-rename'.  Some systems can be set up so that
+             check for 'can-rename'.  Some systems can be set up so that
              files from many different physical devices all have the same
              st_dev field.  This is a feature of some NFS mounting
              configurations.

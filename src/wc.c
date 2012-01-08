@@ -43,7 +43,7 @@
     ((wc) == to_uchar (wc) && isspace (to_uchar (wc)))
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "wc"
 
 #define AUTHORS \
@@ -218,14 +218,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
     fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
 
   /* When counting only bytes, save some line- and word-counting
-     overhead.  If FD is a `regular' Unix file, using lseek is enough
-     to get its `size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
-     bytes at a time until EOF.  Note that the `size' (number of bytes)
+     overhead.  If FD is a 'regular' Unix file, using lseek is enough
+     to get its 'size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
+     bytes at a time until EOF.  Note that the 'size' (number of bytes)
      that wc reports is smaller than stats.st_size when the file is not
      positioned at its beginning.  That's why the lseek calls below are
      necessary.  For example the command
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
-     should make wc report `0' bytes.  */
+     should make wc report '0' bytes.  */
 
   if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
@@ -292,7 +292,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       /* Back-up the state before each multibyte character conversion and
          move the last incomplete character of the buffer to the front
          of the buffer.  This is needed because we don't know whether
-         the `mbrtowc' function updates the state when it returns -2, -
+         the 'mbrtowc' function updates the state when it returns -2, -
          this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
          ANSI C, glibc-2.1 and Solaris 5.7 behaviour.  We don't have an
          autoconf test for this, yet.  */
@@ -760,7 +760,7 @@ main (int argc, char **argv)
             error (0, 0, "%s", _("invalid zero-length file name"));
           else
             {
-              /* Using the standard `filename:line-number:' prefix here is
+              /* Using the standard 'filename:line-number:' prefix here is
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
               unsigned long int file_number = argv_iter_n_args (ai);

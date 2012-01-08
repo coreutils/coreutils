@@ -60,7 +60,7 @@ struct rlimit { size_t rlim_cur; };
 # define getrlimit(Resource, Rlp) (-1)
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sort"
 
 #define AUTHORS \
@@ -265,7 +265,7 @@ struct merge_node_queue
 
 /* FIXME: None of these tables work with multibyte character sets.
    Also, there are many other bugs when handling multibyte characters.
-   One way to fix this is to rewrite `sort' to use wide characters
+   One way to fix this is to rewrite 'sort' to use wide characters
    internally, but doing this with good performance is a bit
    tricky.  */
 
@@ -1605,8 +1605,8 @@ limfield (struct line const *line, struct keyfield const *key)
      whichever comes first.  If there are more than EWORD fields, leave
      PTR pointing at the beginning of the field having zero-based index,
      EWORD.  If a delimiter character was specified (via -t), then that
-     `beginning' is the first character following the delimiting TAB.
-     Otherwise, leave PTR pointing at the first `blank' character after
+     'beginning' is the first character following the delimiting TAB.
+     Otherwise, leave PTR pointing at the first 'blank' character after
      the preceding field.  */
   if (tab != TAB_DEFAULT)
     while (ptr < lim && eword--)
@@ -1635,7 +1635,7 @@ limfield (struct line const *line, struct keyfield const *key)
      Date: Thu, 30 May 96 12:20:41 -0400
      [Translated to POSIX 1003.1-2001 terminology by Paul Eggert.]
 
-     [...]I believe I've found another bug in `sort'.
+     [...]I believe I've found another bug in 'sort'.
 
      $ cat /tmp/sort.in
      a b c 2 d
@@ -3119,7 +3119,7 @@ sequential_sort (struct line *restrict lines, size_t nlines,
 {
   if (nlines == 2)
     {
-      /* Declare `swap' as int, not bool, to work around a bug
+      /* Declare 'swap' as int, not bool, to work around a bug
          <http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html>
          in the IBM xlc 6.0.0.0 compiler in 64-bit mode.  */
       int swap = (0 < compare (&lines[-1], &lines[-2]));
@@ -4512,7 +4512,7 @@ main (int argc, char **argv)
                        quote (files[i]));
               else if (files[i][0] == '\0')
                 {
-                  /* Using the standard `filename:line-number:' prefix here is
+                  /* Using the standard 'filename:line-number:' prefix here is
                      not totally appropriate, since NUL is the separator,
                      not NL, but it might be better than nothing.  */
                   unsigned long int file_number = i + 1;

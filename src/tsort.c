@@ -34,7 +34,7 @@
 #include "readtokens.h"
 #include "stdio--.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tsort"
 
 #define AUTHORS proper_name ("Mark Kettenis")
@@ -63,7 +63,7 @@ struct item
 /* The head of the sorted list.  */
 static struct item *head = NULL;
 
-/* The tail of the list of `zeros', strings that have no predecessors.  */
+/* The tail of the list of 'zeros', strings that have no predecessors.  */
 static struct item *zeros = NULL;
 
 /* Used for loop detection.  */

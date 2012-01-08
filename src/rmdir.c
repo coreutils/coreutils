@@ -32,7 +32,7 @@
 #include "prog-fprintf.h"
 #include "quote.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "rmdir"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -56,7 +56,7 @@ enum
 
 static struct option const longopts[] =
 {
-  /* Don't name this `--force' because it's not close enough in meaning
+  /* Don't name this '--force' because it's not close enough in meaning
      to e.g. rm's -f option.  */
   {"ignore-fail-on-non-empty", no_argument, NULL,
    IGNORE_FAIL_ON_NON_EMPTY_OPTION},

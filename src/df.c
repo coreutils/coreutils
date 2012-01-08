@@ -35,7 +35,7 @@
 #include "quote.h"
 #include "find-mount-point.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "df"
 
 #define AUTHORS \
@@ -69,7 +69,7 @@ static bool posix_format;
 /* True if a file system has been processed for output.  */
 static bool file_systems_processed;
 
-/* If true, invoke the `sync' system call before getting any usage data.
+/* If true, invoke the 'sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
    busy disks.  Note that this may make a difference on some systems --
    SunOS 4.1.3, for one.  It is *not* necessary on GNU/Linux.  */
@@ -87,7 +87,7 @@ struct fs_type_list
 };
 
 /* Linked list of file system types to display.
-   If `fs_select_list' is NULL, list all types.
+   If 'fs_select_list' is NULL, list all types.
    This table is generated dynamically from command-line options,
    rather than hardcoding into the program what it thinks are the
    valid file system types; let the user specify any file system type
@@ -785,7 +785,7 @@ get_point (const char *point, const struct stat *statp)
 }
 
 /* Determine what kind of node NAME is and show the disk usage
-   for it.  STATP is the results of `stat' on NAME.  */
+   for it.  STATP is the results of 'stat' on NAME.  */
 
 static void
 get_entry (char const *name, struct stat const *statp)

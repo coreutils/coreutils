@@ -45,7 +45,7 @@
 
 extern bool fts_debug;
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
@@ -229,8 +229,8 @@ static enum time_type const time_types[] =
 };
 ARGMATCH_VERIFY (time_args, time_types);
 
-/* `full-iso' uses full ISO-style dates and times.  `long-iso' uses longer
-   ISO-style time stamps, though shorter than `full-iso'.  `iso' uses shorter
+/* 'full-iso' uses full ISO-style dates and times.  'long-iso' uses longer
+   ISO-style time stamps, though shorter than 'full-iso'.  'iso' uses shorter
    ISO-style time stamps.  */
 enum time_style
   {
@@ -969,7 +969,7 @@ main (int argc, char **argv)
             error (0, 0, "%s", _("invalid zero-length file name"));
           else
             {
-              /* Using the standard `filename:line-number:' prefix here is
+              /* Using the standard 'filename:line-number:' prefix here is
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
               unsigned long int file_number = argv_iter_n_args (ai);

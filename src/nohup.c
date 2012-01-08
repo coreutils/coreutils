@@ -39,7 +39,7 @@
 /* Exit statuses.  */
 enum
   {
-    /* `nohup' itself failed.  */
+    /* 'nohup' itself failed.  */
     POSIX_NOHUP_FAILURE = 127
   };
 

@@ -30,7 +30,7 @@
 #include "long-options.h"
 #include "quote.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "unlink"
 
 #define AUTHORS proper_name ("Michael Stone")

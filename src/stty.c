@@ -59,7 +59,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "stty"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -116,8 +116,8 @@
 # define CSWTCH _POSIX_VDISABLE
 #endif
 
-/* SunOS 5.3 loses (^Z doesn't work) if `swtch' is the same as `susp'.
-   So the default is to disable `swtch.'  */
+/* SunOS 5.3 loses (^Z doesn't work) if 'swtch' is the same as 'susp'.
+   So the default is to disable 'swtch.'  */
 #if defined __sparc__ && defined __svr4__
 # undef CSWTCH
 # define CSWTCH _POSIX_VDISABLE
@@ -185,9 +185,9 @@ enum mode_type
   };
 
 /* Flags for `struct mode_info'. */
-#define SANE_SET 1		/* Set in `sane' mode. */
-#define SANE_UNSET 2		/* Unset in `sane' mode. */
-#define REV 4			/* Can be turned off by prepending `-'. */
+#define SANE_SET 1		/* Set in 'sane' mode. */
+#define SANE_UNSET 2		/* Unset in 'sane' mode. */
+#define REV 4			/* Can be turned off by prepending '-'. */
 #define OMIT 8			/* Don't display value. */
 
 /* Each mode.  */
@@ -1009,7 +1009,7 @@ main (int argc, char **argv)
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
          it performs *any* of the requested operations.  This means it
-         can report `success' when it has actually failed to perform
+         can report 'success' when it has actually failed to perform
          some proper subset of the requested operations.  To detect
          this partial failure, get the current terminal attributes and
          compare them to the requested ones.  */
@@ -1018,7 +1018,7 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, errno, "%s", device_name);
 
       /* Normally, one shouldn't use memcmp to compare structures that
-         may have `holes' containing uninitialized data, but we have been
+         may have 'holes' containing uninitialized data, but we have been
          careful to initialize the storage of these two variables to all
          zeroes.  One might think it more efficient simply to compare the
          modified fields, but that would require enumerating those fields --
@@ -1841,7 +1841,7 @@ sane_mode (struct termios *mode)
 }
 
 /* Return a string that is the printable representation of character CH.  */
-/* Adapted from `cat' by Torbjorn Granlund.  */
+/* Adapted from 'cat' by Torbjorn Granlund.  */
 
 static const char *
 visible (cc_t ch)

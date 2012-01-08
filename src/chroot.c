@@ -28,7 +28,7 @@
 #include "userspec.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "chroot"
 
 #define AUTHORS proper_name ("Roland McGrath")

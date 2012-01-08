@@ -34,7 +34,7 @@
 #include "xstrtol.h"
 #include "memcasecmp.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "uniq"
 
 #define AUTHORS \
@@ -293,7 +293,7 @@ check_file (const char *infile, const char *outfile, char delimiter)
   initbuffer (thisline);
   initbuffer (prevline);
 
-  /* The duplication in the following `if' and `else' blocks is an
+  /* The duplication in the following 'if' and 'else' blocks is an
      optimization to distinguish the common case (in which none of
      the following options has been specified: --count, -repeated,
      --all-repeated, --unique) from the others.  In the common case,

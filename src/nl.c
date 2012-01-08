@@ -33,7 +33,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "nl"
 
 #define AUTHORS \
@@ -237,7 +237,7 @@ FORMAT is one of:\n\
 }
 
 /* Set the command line flag TYPEP and possibly the regex pointer REGEXP,
-   according to `optarg'.  */
+   according to 'optarg'.  */
 
 static bool
 build_type_arg (char const **typep,
@@ -319,7 +319,7 @@ proc_footer (void)
   putchar ('\n');
 }
 
-/* Process a regular text line in `line_buf'. */
+/* Process a regular text line in 'line_buf'. */
 
 static void
 proc_text (void)
@@ -370,7 +370,7 @@ proc_text (void)
   fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
 }
 
-/* Return the type of line in `line_buf'. */
+/* Return the type of line in 'line_buf'. */
 
 static enum section
 check_section (void)

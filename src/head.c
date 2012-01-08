@@ -16,7 +16,7 @@
 
 /* Options: (see usage)
    Reads from standard input if no files are given or when a filename of
-   ``-'' is encountered.
+   ''-'' is encountered.
    By default, filename headers are printed only if more than one file
    is given.
    By default, prints the first 10 lines (head -n 10).
@@ -38,7 +38,7 @@
 #include "xfreopen.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "head"
 
 #define AUTHORS \
@@ -434,7 +434,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
       if (bytes_remaining <= n_elide)
         return true;
 
-      /* Seek back to `current' position, then copy the required
+      /* Seek back to 'current' position, then copy the required
          number of bytes from fd.  */
       if (lseek (fd, 0, current_pos) == -1)
         {
@@ -503,7 +503,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
       total_lines += tmp->nlines;
 
       /* If there is enough room in the last buffer read, just append the new
-         one to it.  This is because when reading from a pipe, `n_read' can
+         one to it.  This is because when reading from a pipe, 'n_read' can
          often be very small.  */
       if (tmp->nbytes + last->nbytes < BUFSIZ)
         {
@@ -599,12 +599,12 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
   size_t bytes_read;
   off_t pos = end_pos;
 
-  /* Set `bytes_read' to the size of the last, probably partial, buffer;
-     0 < `bytes_read' <= `BUFSIZ'.  */
+  /* Set 'bytes_read' to the size of the last, probably partial, buffer;
+     0 < 'bytes_read' <= 'BUFSIZ'.  */
   bytes_read = (pos - start_pos) % BUFSIZ;
   if (bytes_read == 0)
     bytes_read = BUFSIZ;
-  /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
+  /* Make 'pos' a multiple of 'BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
   if (lseek (fd, pos, SEEK_SET) < 0)

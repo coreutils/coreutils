@@ -38,7 +38,7 @@
 #include "readutmp.h"
 #include "fprintftime.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "uptime"
 
 #define AUTHORS \

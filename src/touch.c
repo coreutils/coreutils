@@ -35,7 +35,7 @@
 #include "stat-time.h"
 #include "utimens.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "touch"
 
 #define AUTHORS \
@@ -45,7 +45,7 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Randy Smith")
 
-/* Bitmasks for `change_times'. */
+/* Bitmasks for 'change_times'. */
 #define CH_ATIME 1
 #define CH_MTIME 2
 
@@ -93,13 +93,13 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Valid arguments to the `--time' option. */
+/* Valid arguments to the '--time' option. */
 static char const* const time_args[] =
 {
   "atime", "access", "use", "mtime", "modify", NULL
 };
 
-/* The bits in `change_times' that those arguments set. */
+/* The bits in 'change_times' that those arguments set. */
 static int const time_masks[] =
 {
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
@@ -391,7 +391,7 @@ main (int argc, char **argv)
         }
     }
 
-  /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
+  /* The obsolete 'MMDDhhmm[YY]' form is valid IFF there are
      two or more non-option arguments.  */
   if (!date_set && 2 <= argc - optind && posix2_version () < 200112
       && posixtime (&newtime[0].tv_sec, argv[optind],

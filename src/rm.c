@@ -1,4 +1,4 @@
-/* `rm' file deletion utility for GNU.
+/* 'rm' file deletion utility for GNU.
    Copyright (C) 1988, 1990-1991, 1994-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@
 #include "yesno.h"
 #include "priv-set.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "rm"
 
 #define AUTHORS \
@@ -98,7 +98,7 @@ static enum interactive_type const interactive_types[] =
 ARGMATCH_VERIFY (interactive_args, interactive_types);
 
 /* Advise the user about invalid usages like "rm -foo" if the file
-   "-foo" exists, assuming ARGC and ARGV are as with `main'.  */
+   "-foo" exists, assuming ARGC and ARGV are as with 'main'.  */
 
 static void
 diagnose_leading_hyphen (int argc, char **argv)
@@ -194,7 +194,7 @@ rm_option_init (struct rm_options *x)
   x->stdin_tty = isatty (STDIN_FILENO);
   x->verbose = false;
 
-  /* Since this program exits immediately after calling `rm', rm need not
+  /* Since this program exits immediately after calling 'rm', rm need not
      expend unnecessary effort to preserve the initial working directory.  */
   x->require_restore_cwd = false;
 }

@@ -193,9 +193,9 @@ describe_change (const char *file, enum Change_status changed,
 
 /* Change the owner and/or group of the FILE to UID and/or GID (safely)
    only if REQUIRED_UID and REQUIRED_GID match the owner and group IDs
-   of FILE.  ORIG_ST must be the result of `stat'ing FILE.
+   of FILE.  ORIG_ST must be the result of 'stat'ing FILE.
 
-   The `safely' part above means that we can't simply use chown(2),
+   The 'safely' part above means that we can't simply use chown(2),
    since FILE might be replaced with some other file between the time
    of the preceding stat/lstat and this chown call.  So here we open
    FILE and do everything else via the resulting file descriptor.
@@ -456,7 +456,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
         }
 
       /* On some systems (e.g., GNU/Linux 2.4.x),
-         the chown function resets the `special' permission bits.
+         the chown function resets the 'special' permission bits.
          Do *not* restore those bits;  doing so would open a window in
          which a malicious user, M, could subvert a chown command run
          by some other user and operating on files in a directory

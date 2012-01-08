@@ -33,7 +33,7 @@
 #include "stdio--.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "shuf"
 
 #define AUTHORS proper_name ("Paul Eggert")

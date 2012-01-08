@@ -37,7 +37,7 @@
 #include "quote.h"
 #include "xstrndup.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cut"
 
 #define AUTHORS \
@@ -93,7 +93,7 @@ static size_t field_1_bufsize;
 /* The largest field or byte index used as an endpoint of a closed
    or degenerate range specification;  this doesn't include the starting
    index of right-open-ended ranges.  For example, with either range spec
-   `2-5,9-', `2-3,5,9-' this variable would be set to 5.  */
+   '2-5,9-', '2-3,5,9-' this variable would be set to 5.  */
 static size_t max_range_endpoint;
 
 /* If nonzero, this is the index of the first field in a range that goes
@@ -151,9 +151,9 @@ static bool have_read_stdin;
 #define HT_RANGE_START_INDEX_INITIAL_CAPACITY 31
 
 /* The set of range-start indices.  For example, given a range-spec list like
-   `-b1,3-5,4-9,15-', the following indices will be recorded here: 1, 3, 15.
-   Note that although `4' looks like a range-start index, it is in the middle
-   of the `3-5' range, so it doesn't count.
+   '-b1,3-5,4-9,15-', the following indices will be recorded here: 1, 3, 15.
+   Note that although '4' looks like a range-start index, it is in the middle
+   of the '3-5' range, so it doesn't count.
    This table is created/used IFF output_delimiter_specified is set.  */
 static Hash_table *range_start_ht;
 
@@ -243,7 +243,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 static inline void
 mark_range_start (size_t i)
 {
-  /* Record the fact that `i' is a range-start index.  */
+  /* Record the fact that 'i' is a range-start index.  */
   void *ent_from_table = hash_insert (range_start_ht, (void*) i);
   if (ent_from_table == NULL)
     {
@@ -324,7 +324,7 @@ compare_ranges (const void *a, const void *b)
    array.  If there is a right-open-ended range, set EOL_RANGE_START
    to its starting index.  FIELDSTR should be composed of one or more
    numbers or ranges of numbers, separated by blanks or commas.
-   Incomplete ranges may be given: `-m' means `1-m'; `n-' means `n'
+   Incomplete ranges may be given: '-m' means '1-m'; 'n-' means 'n'
    through end of line.  Return true if FIELDSTR contains at least
    one field specification, false otherwise.  */
 
@@ -336,7 +336,7 @@ compare_ranges (const void *a, const void *b)
    but only a few fields/byte-offsets are actually selected, use a
    hash table.  If the range of selected fields is too large, and
    too many are selected, then resort to using the range-pairs (the
-   `rp' array) directly.  */
+   'rp' array) directly.  */
 
 static bool
 set_fields (const char *fieldstr)
@@ -385,16 +385,16 @@ set_fields (const char *fieldstr)
                 FATAL_ERROR (_("invalid range with no endpoint: -"));
 
               /* A range.  Possibilities: -n, m-n, n-.
-                 In any case, `initial' contains the start of the range. */
+                 In any case, 'initial' contains the start of the range. */
               if (!rhs_specified)
                 {
-                  /* `n-'.  From `initial' to end of line. */
+                  /* 'n-'.  From 'initial' to end of line. */
                   eol_range_start = initial;
                   field_found = true;
                 }
               else
                 {
-                  /* `m-n' or `-n' (1-n). */
+                  /* 'm-n' or '-n' (1-n). */
                   if (value < initial)
                     FATAL_ERROR (_("invalid decreasing range"));
 
@@ -500,7 +500,7 @@ set_fields (const char *fieldstr)
 
   /* Allocate an array large enough so that it may be indexed by
      the field numbers corresponding to all finite ranges
-     (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
+     (i.e. '2-6' or '-4', but not '5-') in FIELDSTR.  */
 
   printable_field = xzalloc (max_range_endpoint / CHAR_BIT + 1);
 
@@ -598,7 +598,7 @@ cut_fields (FILE *stream)
   ungetc (c, stream);
 
   /* To support the semantics of the -s flag, we may have to buffer
-     all of the first field to determine whether it is `delimited.'
+     all of the first field to determine whether it is 'delimited.'
      But that is unnecessary if all non-delimited lines must be printed
      and the first field has been selected, or if non-delimited lines
      must be suppressed and the first field has *not* been selected.

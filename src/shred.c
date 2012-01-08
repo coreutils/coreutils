@@ -68,7 +68,7 @@
  *   drastically bad if told to attack a named pipe or socket?
  */
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "shred"
 
 #define AUTHORS proper_name ("Colin Plumb")

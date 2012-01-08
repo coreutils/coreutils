@@ -44,7 +44,7 @@
 #include "utimens.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "install"
 
 #define AUTHORS proper_name ("David MacKenzie")
@@ -72,14 +72,14 @@ static bool use_default_selinux_context = true;
    the current user ID. */
 static char *owner_name;
 
-/* The user ID corresponding to `owner_name'. */
+/* The user ID corresponding to 'owner_name'. */
 static uid_t owner_id;
 
 /* The group name that will own the files, or NULL to make the group
    the current group ID. */
 static char *group_name;
 
-/* The group ID corresponding to `group_name'. */
+/* The group ID corresponding to 'group_name'. */
 static gid_t group_id;
 
 #define DEFAULT_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)

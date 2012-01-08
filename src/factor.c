@@ -37,7 +37,7 @@
 #include "readtokens.h"
 #include "xstrtol.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "factor"
 
 #define AUTHORS proper_name ("Paul Rubin")

@@ -25,7 +25,7 @@
 #include "root-dev-ino.h"
 #include "xgetcwd.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pwd"
 
 #define AUTHORS proper_name ("Jim Meyering")
@@ -118,7 +118,7 @@ file_name_prepend (struct file_name *p, char const *s, size_t s_len)
   memcpy (p->start + 1, s, s_len);
 }
 
-/* Return a string (malloc'd) consisting of N `/'-separated ".." components.  */
+/* Return a string (malloc'd) consisting of N '/'-separated ".." components.  */
 static char *
 nth_parent (size_t n)
 {
@@ -137,11 +137,11 @@ nth_parent (size_t n)
 
 /* Determine the basename of the current directory, where DOT_SB is the
    result of lstat'ing "." and prepend that to the file name in *FILE_NAME.
-   Find the directory entry in `..' that matches the dev/i-node of DOT_SB.
-   Upon success, update *DOT_SB with stat information of `..', chdir to `..',
+   Find the directory entry in '..' that matches the dev/i-node of DOT_SB.
+   Upon success, update *DOT_SB with stat information of '..', chdir to '..',
    and prepend "/basename" to FILE_NAME.
    Otherwise, exit with a diagnostic.
-   PARENT_HEIGHT is the number of levels `..' is above the starting directory.
+   PARENT_HEIGHT is the number of levels '..' is above the starting directory.
    The first time this function is called (from the initial directory),
    PARENT_HEIGHT is 1.  This is solely for diagnostics.
    Exit nonzero upon error.  */
@@ -254,7 +254,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
    the information the caller would require in order to produce good
    diagnostics, it doesn't seem worth the added complexity.
    In any case, any getcwd replacement must *not* exceed the PATH_MAX
-   limitation.  Otherwise, functions like `chdir' would fail with
+   limitation.  Otherwise, functions like 'chdir' would fail with
    ENAMETOOLONG.
 
    FIXME-maybe: if find_dir_entry fails due to permissions, try getcwd,

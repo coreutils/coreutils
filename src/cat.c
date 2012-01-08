@@ -41,7 +41,7 @@
 #include "safe-read.h"
 #include "xfreopen.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cat"
 
 #define AUTHORS \
@@ -65,17 +65,17 @@ static char line_buf[LINE_COUNTER_BUF_LEN] =
     '\t', '\0'
   };
 
-/* Position in `line_buf' where printing starts.  This will not change
+/* Position in 'line_buf' where printing starts.  This will not change
    unless the number of lines is larger than 999999.  */
 static char *line_num_print = line_buf + LINE_COUNTER_BUF_LEN - 8;
 
-/* Position of the first digit in `line_buf'.  */
+/* Position of the first digit in 'line_buf'.  */
 static char *line_num_start = line_buf + LINE_COUNTER_BUF_LEN - 3;
 
-/* Position of the last digit in `line_buf'.  */
+/* Position of the last digit in 'line_buf'.  */
 static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 
-/* Preserves the `cat' function's local `newlines' between invocations.  */
+/* Preserves the 'cat' function's local 'newlines' between invocations.  */
 static int newlines2 = 0;
 
 void
@@ -144,7 +144,7 @@ next_line_num (void)
     line_num_print--;
 }
 
-/* Plain cat.  Copies the file behind `input_desc' to STDOUT_FILENO.
+/* Plain cat.  Copies the file behind 'input_desc' to STDOUT_FILENO.
    Return true if successful.  */
 
 static bool
@@ -718,8 +718,8 @@ main (int argc, char **argv)
           goto contin;
         }
 
-      /* Select which version of `cat' to use.  If any format-oriented
-         options were given use `cat'; otherwise use `simple_cat'.  */
+      /* Select which version of 'cat' to use.  If any format-oriented
+         options were given use 'cat'; otherwise use 'simple_cat'.  */
 
       if (! (number || show_ends || show_nonprinting
              || show_tabs || squeeze_blank))

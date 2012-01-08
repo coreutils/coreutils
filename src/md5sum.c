@@ -40,7 +40,7 @@
 #include "stdio--.h"
 #include "xfreopen.h"
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #if HASH_ALGO_MD5
 # define PROGRAM_NAME "md5sum"
 # define DIGEST_TYPE_STRING "MD5"
@@ -334,8 +334,8 @@ split_3 (char *s, size_t s_len,
 
   if (escaped_filename)
     {
-      /* Translate each `\n' string in the file name to a NEWLINE,
-         and each `\\' string to a backslash.  */
+      /* Translate each '\n' string in the file name to a NEWLINE,
+         and each '\\' string to a backslash.  */
 
       char *dst = &s[i];
 
@@ -359,7 +359,7 @@ split_3 (char *s, size_t s_len,
                   *dst++ = '\\';
                   break;
                 default:
-                  /* Only `\' or `n' may follow a backslash.  */
+                  /* Only '\' or 'n' may follow a backslash.  */
                   return false;
                 }
               break;

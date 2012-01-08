@@ -786,7 +786,7 @@ is_probably_sparse (struct stat const *sb)
 /* Copy a regular file from SRC_NAME to DST_NAME.
    If the source file contains holes, copies holes and blocks of zeros
    in the source file as holes in the destination file.
-   (Holes are read as zeroes by the `read' system call.)
+   (Holes are read as zeroes by the 'read' system call.)
    When creating the destination, use DST_MODE & ~OMITTED_PERMISSIONS
    as the third argument in the call to open, adding
    OMITTED_PERMISSIONS after copying as needed.
@@ -1177,8 +1177,8 @@ close_src_desc:
 }
 
 /* Return true if it's ok that the source and destination
-   files are the `same' by some measure.  The goal is to avoid
-   making the `copy' operation remove both copies of the file
+   files are the 'same' by some measure.  The goal is to avoid
+   making the 'copy' operation remove both copies of the file
    in that case, while still allowing the user to e.g., move or
    copy a regular file onto a symlink that points to it.
    Try to minimize the cost of this function in the common case.
@@ -1186,8 +1186,8 @@ close_src_desc:
    work to do and should return successfully, right away.
 
    Set *UNLINK_SRC if we've determined that the caller wants to do
-   `rename (a, b)' where `a' and `b' are distinct hard links to the same
-   file. In that case, the caller should try to unlink `a' and then return
+   `rename (a, b)' where 'a' and 'b' are distinct hard links to the same
+   file. In that case, the caller should try to unlink 'a' and then return
    successfully.  Ideally, we wouldn't have to do that, and we'd be
    able to rely on rename to remove the source file.  However, POSIX
    mistakenly requires that such a rename call do *nothing* and return
@@ -1277,8 +1277,8 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
           /* FIXME-note: even with the following kludge, we can still provoke
              the offending diagnostic.  It's just a little harder to do :-)
              $ rm -f a b c; touch c; ln -s c b; ln -s b a; cp -b a b
-             cp: cannot open `a' for reading: No such file or directory
-             That's misleading, since a subsequent `ls' shows that `a'
+             cp: cannot open 'a' for reading: No such file or directory
+             That's misleading, since a subsequent 'ls' shows that 'a'
              is still there.
              One solution would be to open the source file *before* moving
              aside the destination, but that'd involve a big rewrite. */
@@ -1313,7 +1313,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
 
   /* They may refer to the same file if we're in move mode and the
      target is a symlink.  That is ok, since we remove any existing
-     destination file before opening it -- via `rename' if they're on
+     destination file before opening it -- via 'rename' if they're on
      the same file system, via `unlink (DST_NAME)' otherwise.
      It's also ok if they're distinct hard links to the same file.  */
   if (x->move_mode || x->unlink_dest_before_opening)
@@ -1450,7 +1450,7 @@ src_info_init (struct cp_options *x)
 
 /* When effecting a move (e.g., for mv(1)), and given the name DST_NAME
    of the destination and a corresponding stat buffer, DST_SB, return
-   true if the logical `move' operation should _not_ proceed.
+   true if the logical 'move' operation should _not_ proceed.
    Otherwise, return false.
    Depending on options specified in X, this code may issue an
    interactive prompt asking whether it's ok to overwrite DST_NAME.  */
@@ -1469,7 +1469,7 @@ abandon_move (const struct cp_options *x,
               && ! yesno ()));
 }
 
-/* Print --verbose output on standard output, e.g. `new' -> `old'.
+/* Print --verbose output on standard output, e.g. 'new' -> 'old'.
    If BACKUP_DST_NAME is non-NULL, then also indicate that it is
    the name of a backup file.  */
 static void
@@ -1692,7 +1692,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
           /* When there is an existing destination file, we may end up
              returning early, and hence not copying/moving the file.
-             This may be due to an interactive `negative' reply to the
+             This may be due to an interactive 'negative' reply to the
              prompt about the existing file.  It may also be due to the
              use of the --reply=no option.
 
@@ -1751,7 +1751,7 @@ copy_internal (char const *src_name, char const *dst_name,
                  This mv command must fail (likewise for cp):
                    rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
                  Otherwise, the contents of b/f would be lost.
-                 In the case of `cp', b/f would be lost if the user simulated
+                 In the case of 'cp', b/f would be lost if the user simulated
                  a move using cp and rm.
                  Note that it works fine if you use --backup=numbered.  */
               if (command_line_arg
@@ -1815,7 +1815,7 @@ copy_internal (char const *src_name, char const *dst_name,
                  destroy the source file.  Before, running the commands
                  cd /tmp; rm -f a a~; : > a; echo A > a~; cp --b=simple a~ a
                  would leave two zero-length files: a and a~.  */
-              /* FIXME: but simply change e.g., the final a~ to `./a~'
+              /* FIXME: but simply change e.g., the final a~ to './a~'
                  and the source will still be destroyed.  */
               if (STREQ (tmp_backup, src_name))
                 {
@@ -2030,7 +2030,7 @@ copy_internal (char const *src_name, char const *dst_name,
                  to overwrite that file again, we can detect it and fail.  */
               /* It's fine to use the _source_ stat buffer (src_sb) to get the
                  _destination_ dev/ino, since the rename above can't have
-                 changed those, and `mv' always uses lstat.
+                 changed those, and 'mv' always uses lstat.
                  We could limit it further by operating
                  only on non-directories.  */
               record_file (x->dest_info, dst_name, &src_sb);
@@ -2076,9 +2076,9 @@ copy_internal (char const *src_name, char const *dst_name,
          e-mail.  One way to do that is to run a command like this
            find /usr/include/. -type f \
              | xargs grep 'define.*\<E[A-Z]*\>.*\<18\>' /dev/null
-         where you'd replace `18' with the integer in parentheses that
+         where you'd replace '18' with the integer in parentheses that
          was output from the perl one-liner above.
-         If necessary, of course, change `/tmp' to some other directory.  */
+         If necessary, of course, change '/tmp' to some other directory.  */
       if (errno != EXDEV)
         {
           /* There are many ways this can happen due to a race condition.
@@ -2086,7 +2086,7 @@ copy_internal (char const *src_name, char const *dst_name,
              subsequent rename, we can get many different types of errors.
              For example, if the destination is initially a non-directory
              or non-existent, but it is created as a directory, the rename
-             fails.  If two `mv' commands try to rename the same file at
+             fails.  If two 'mv' commands try to rename the same file at
              about the same time, one will succeed and the other will fail.
              If the permissions on the directory containing the source or
              destination file are made too restrictive, the rename will
@@ -2099,7 +2099,7 @@ copy_internal (char const *src_name, char const *dst_name,
         }
 
       /* The rename attempt has failed.  Remove any existing destination
-         file so that a cross-device `mv' acts as if it were really using
+         file so that a cross-device 'mv' acts as if it were really using
          the rename syscall.  */
       if (unlink (dst_name) != 0 && errno != ENOENT)
         {
@@ -2301,7 +2301,7 @@ copy_internal (char const *src_name, char const *dst_name,
      the former).  Yet cp, invoked with `--link --no-dereference',
      should not follow the link.  We can approximate the desired
      behavior by skipping this hard-link creating block and instead
-     copying the symlink, via the `S_ISLNK'- copying code below.
+     copying the symlink, via the 'S_ISLNK'- copying code below.
      LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
      how link() behaves, so we use the fallback case for safety.
 
@@ -2395,7 +2395,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       if (x->preserve_ownership)
         {
-          /* Preserve the owner and group of the just-`copied'
+          /* Preserve the owner and group of the just-'copied'
              symbolic link, if possible.  */
           if (HAVE_LCHOWN
               && lchown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
@@ -2552,7 +2552,7 @@ un_backup:
      If we've just added a dev/ino entry via the remember_copied
      call above (i.e., unless we've just failed to create a hard link),
      remove the entry associating the source dev/ino with the
-     destination file name, so we don't try to `preserve' a link
+     destination file name, so we don't try to 'preserve' a link
      to a file we didn't create.  */
   if (earlier_file == NULL)
     forget_created (src_sb.st_ino, src_sb.st_dev);

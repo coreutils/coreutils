@@ -41,7 +41,7 @@
 # include <grp.h>
 #endif
 
-/* The official name of this program (e.g., no `g' prefix).  */
+/* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "who"
 
 #define AUTHORS \
@@ -117,8 +117,8 @@ static bool include_idle;
 /* If true, display a line at the top describing each field.  */
 static bool include_heading;
 
-/* If true, display a `+' for each user if mesg y, a `-' if mesg n,
-   or a `?' if their tty cannot be statted. */
+/* If true, display a '+' for each user if mesg y, a '-' if mesg n,
+   or a '?' if their tty cannot be statted. */
 static bool include_mesg;
 
 /* If true, display process termination & exit status.  */
@@ -344,7 +344,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
-  /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
+  /* Copy ut_line into LINE, prepending '/dev/' if ut_line is not
      already an absolute file name.  Some systems may put the full,
      absolute file name in ut_line.  */
   if (utmp_ent->ut_line[0] == '/')
