@@ -250,7 +250,7 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
 "), stdout);
       fputs (_("\
   + TOKEN                    interpret TOKEN as a string, even if it is a\n\
-                               keyword like `match' or an operator like `/'\n\
+                               keyword like 'match' or an operator like '/'\n\
 \n\
   ( EXPRESSION )             value of EXPRESSION\n\
 "), stdout);

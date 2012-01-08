@@ -117,10 +117,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -c, --bytes=[-]K         print the first K bytes of each file;\n\
-                             with the leading `-', print all but the last\n\
+                             with the leading '-', print all but the last\n\
                              K bytes of each file\n\
   -n, --lines=[-]K         print the first K lines instead of the first 10;\n\
-                             with the leading `-', print all but the last\n\
+                             with the leading '-', print all but the last\n\
                              K lines of each file\n\
 "), stdout);
       fputs (_("\

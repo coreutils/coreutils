@@ -4662,7 +4662,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --block-size=SIZE      scale sizes by SIZE before printing them.  E.g.,\n\
-                               `--block-size=M' prints sizes in units of\n\
+                               '--block-size=M' prints sizes in units of\n\
                                1,048,576 bytes.  See SIZE format below.\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
@@ -4672,8 +4672,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         colorize the output.  WHEN defaults to `always'\n\
-                               or can be `never' or `auto'.  More info below\n\
+      --color[=WHEN]         colorize the output.  WHEN defaults to 'always'\n\
+                               or can be 'never' or 'auto'.  More info below\n\
   -d, --directory            list directory entries instead of contents,\n\
                                and do not dereference symbolic links\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
@@ -4681,7 +4681,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -f                         do not sort, enable -aU, disable -ls --color\n\
   -F, --classify             append indicator (one of */=>@|) to entries\n\
-      --file-type            likewise, except do not append `*'\n\
+      --file-type            likewise, except do not append '*'\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
       --full-time            like -l --time-style=full-iso\n\
@@ -4740,7 +4740,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
       --show-control-chars   show non graphic characters as-is (default\n\
-                             unless program is `ls' and output is a terminal)\n\
+                             unless program is 'ls' and output is a terminal)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
                                literal, locale, shell, shell-always, c, escape\
@@ -4764,10 +4764,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
       --time-style=STYLE     with -l, show times using style STYLE:\n\
                              full-iso, long-iso, iso, locale, +FORMAT.\n\
-                             FORMAT is interpreted like `date'; if FORMAT is\n\
+                             FORMAT is interpreted like 'date'; if FORMAT is\n\
                              FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
                              non-recent files and FORMAT2 to recent files;\n\
-                             if STYLE is prefixed with `posix-', STYLE\n\
+                             if STYLE is prefixed with 'posix-', STYLE\n\
                              takes effect only outside the POSIX locale\n\
 "), stdout);
       fputs (_("\

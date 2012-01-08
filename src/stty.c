@@ -579,11 +579,11 @@ Control settings:\n\
    csN           set character size to N bits, N in [5..8]\n\
 "), stdout);
       fputs (_("\
-   [-]cstopb     use two stop bits per character (one with `-')\n\
+   [-]cstopb     use two stop bits per character (one with '-')\n\
    [-]hup        send a hangup signal when the last process closes the tty\n\
    [-]hupcl      same as [-]hup\n\
    [-]parenb     generate parity bit in output and expect parity bit in input\n\
-   [-]parodd     set odd parity (even with `-')\n\
+   [-]parodd     set odd parity (even with '-')\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -643,7 +643,7 @@ Local settings:\n\
  * -crtkill      kill all line by obeying the echoctl and echok settings\n\
 "), stdout);
       fputs (_("\
- * [-]ctlecho    echo control characters in hat notation (`^c')\n\
+ * [-]ctlecho    echo control characters in hat notation ('^c')\n\
    [-]echo       echo input characters\n\
  * [-]echoctl    same as [-]ctlecho\n\
    [-]echoe      same as [-]crterase\n\
@@ -652,7 +652,7 @@ Local settings:\n\
       fputs (_("\
  * [-]echoke     same as [-]crtkill\n\
    [-]echonl     echo newline even if not echoing other characters\n\
- * [-]echoprt    echo erased characters backward, between `\\' and '/'\n\
+ * [-]echoprt    echo erased characters backward, between '\\' and '/'\n\
    [-]icanon     enable erase, kill, werase, and rprnt special characters\n\
    [-]iexten     enable non-POSIX special characters\n\
 "), stdout);
@@ -661,7 +661,7 @@ Local settings:\n\
    [-]noflsh     disable flushing after interrupt and quit special characters\n\
  * [-]prterase   same as [-]echoprt\n\
  * [-]tostop     stop background jobs that try to write to the terminal\n\
- * [-]xcase      with icanon, escape with `\\' for uppercase characters\n\
+ * [-]xcase      with icanon, escape with '\\' for uppercase characters\n\
 "), stdout);
       fputs (_("\
 \n\

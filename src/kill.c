@@ -95,7 +95,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\n\
-SIGNAL may be a signal name like `HUP', or a signal number like `1',\n\
+SIGNAL may be a signal name like 'HUP', or a signal number like '1',\n\
 or the exit status of a process terminated by a signal.\n\
 PID is an integer; if negative it identifies a process group.\n\
 "), stdout);

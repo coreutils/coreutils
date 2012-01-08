@@ -220,7 +220,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                  this long after the initial signal was sent.\n\
   -s, --signal=SIGNAL\n\
                  specify the signal to be sent on timeout.\n\
-                 SIGNAL may be a name like `HUP' or a number.\n\
+                 SIGNAL may be a name like 'HUP' or a number.\n\
                  See `kill -l` for a list of signals\n"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -228,8 +228,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 
       fputs (_("\n\
 DURATION is a floating point number with an optional suffix:\n\
-`s' for seconds (the default), `m' for minutes, `h' for hours \
-or `d' for days.\n"), stdout);
+'s' for seconds (the default), 'm' for minutes, 'h' for hours \
+or 'd' for days.\n"), stdout);
 
       fputs (_("\n\
 If the command times out, then exit with status 124.  Otherwise, exit\n\

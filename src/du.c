@@ -272,14 +272,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --apparent-size   print apparent sizes, rather than disk usage; although\
 \n\
                           the apparent size is usually smaller, it may be\n\
-                          larger due to holes in (`sparse') files, internal\n\
+                          larger due to holes in ('sparse') files, internal\n\
                           fragmentation, indirect blocks, and the like\n\
 "), stdout);
       fputs (_("\
   -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\
-                           `-BM' prints sizes in units of 1,048,576 bytes.\n\
+                           '-BM' prints sizes in units of 1,048,576 bytes.\n\
                            See SIZE format below.\n\
-  -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
+  -b, --bytes           equivalent to '--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference only symlinks that are listed on the\n\
                           command line\n\
@@ -321,7 +321,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           atime, access, use, ctime or status\n\
       --time-style=STYLE  show times using style STYLE:\n\
                           full-iso, long-iso, iso, +FORMAT\n\
-                          FORMAT is interpreted like `date'\n\
+                          FORMAT is interpreted like 'date'\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

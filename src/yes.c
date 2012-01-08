@@ -45,7 +45,7 @@ Usage: %s [STRING]...\n\
               program_name, program_name);
 
       fputs (_("\
-Repeatedly output a line with all specified STRING(s), or `y'.\n\
+Repeatedly output a line with all specified STRING(s), or 'y'.\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

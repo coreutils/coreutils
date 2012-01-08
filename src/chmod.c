@@ -385,8 +385,8 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
   -v, --verbose          output a diagnostic for every file processed\n\
 "), stdout);
       fputs (_("\
-      --no-preserve-root  do not treat `/' specially (the default)\n\
-      --preserve-root    fail to operate recursively on `/'\n\
+      --no-preserve-root  do not treat '/' specially (the default)\n\
+      --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
       fputs (_("\
       --reference=RFILE  use RFILE's mode instead of MODE values\n\
@@ -398,7 +398,7 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
+Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
 "), stdout);
       emit_ancillary_info ();
     }

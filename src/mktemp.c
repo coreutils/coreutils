@@ -68,7 +68,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [TEMPLATE]\n"), program_name);
       fputs (_("\
 Create a temporary file or directory, safely, and print its name.\n\
-TEMPLATE must contain at least 3 consecutive `X's in last component.\n\
+TEMPLATE must contain at least 3 consecutive 'X's in last component.\n\
 If TEMPLATE is not specified, use tmp.XXXXXXXXXX, and --tmpdir is implied.\n\
 "), stdout);
       fputs (_("\

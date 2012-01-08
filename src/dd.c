@@ -573,7 +573,7 @@ Each FLAG symbol may be:\n\
         char const *siginfo_name = (SIGINFO == SIGUSR1 ? "USR1" : "INFO");
         printf (_("\
 \n\
-Sending a %s signal to a running `dd' process makes it\n\
+Sending a %s signal to a running 'dd' process makes it\n\
 print I/O statistics to standard error and then resume copying.\n\
 \n\
   $ dd if=/dev/zero of=/dev/null& pid=$!\n\

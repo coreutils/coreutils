@@ -519,7 +519,7 @@ usage (int status)
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\
 \n\
-A lightweight `finger' program;  print user information.\n\
+A lightweight 'finger' program;  print user information.\n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
       emit_ancillary_info ();

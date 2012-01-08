@@ -151,8 +151,8 @@ Remove (unlink) the FILE(s).\n\
                           that of the corresponding command line argument\n\
 "), stdout);
       fputs (_("\
-      --no-preserve-root  do not treat `/' specially\n\
-      --preserve-root   do not remove `/' (default)\n\
+      --no-preserve-root  do not treat '/' specially\n\
+      --preserve-root   do not remove '/' (default)\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
@@ -165,7 +165,7 @@ option to remove each listed directory, too, along with all of its contents.\n\
 "), stdout);
       printf (_("\
 \n\
-To remove a file whose name starts with a `-', for example `-foo',\n\
+To remove a file whose name starts with a '-', for example '-foo',\n\
 use one of these commands:\n\
   %s -- -foo\n\
 \n\

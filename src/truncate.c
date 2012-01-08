@@ -121,8 +121,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       emit_size_note ();
       fputs (_("\n\
 SIZE may also be prefixed by one of the following modifying characters:\n\
-`+' extend by, `-' reduce by, `<' at most, `>' at least,\n\
-`/' round down to multiple of, `%' round up to multiple of.\n"), stdout);
+'+' extend by, '-' reduce by, '<' at most, '>' at least,\n\
+'/' round down to multiple of, '%' round up to multiple of.\n"), stdout);
       emit_ancillary_info ();
     }
   exit (status);

@@ -414,7 +414,7 @@ Ordering options:\n\
       fputs (_("\
   -g, --general-numeric-sort  compare according to general numerical value\n\
   -i, --ignore-nonprinting    consider only printable characters\n\
-  -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
+  -M, --month-sort            compare (unknown) < 'JAN' < ... < 'DEC'\n\
 "), stdout);
       fputs (_("\
   -h, --human-numeric-sort    compare human readable numbers (e.g., 2K 1G)\n\

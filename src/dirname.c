@@ -48,7 +48,7 @@ Usage: %s NAME\n\
               program_name, program_name);
       fputs (_("\
 Output NAME with its last non-slash component and trailing slashes removed;\n\
-if NAME contains no /'s, output `.' (meaning the current directory).\n\
+if NAME contains no /'s, output '.' (meaning the current directory).\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

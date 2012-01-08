@@ -1451,7 +1451,7 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 "),
               program_name);
       fputs (_("\
-Output pieces of FILE separated by PATTERN(s) to files `xx00', `xx01', ...,\n\
+Output pieces of FILE separated by PATTERN(s) to files 'xx00', 'xx01', ...,\n\
 and output byte counts of each piece to standard output.\n\
 \n\
 "), stdout);
@@ -1460,7 +1460,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -b, --suffix-format=FORMAT  use sprintf FORMAT instead of %02d\n\
-  -f, --prefix=PREFIX        use PREFIX instead of `xx'\n\
+  -f, --prefix=PREFIX        use PREFIX instead of 'xx'\n\
   -k, --keep-files           do not remove output files on errors\n\
 "), stdout);
       fputs (_("\
@@ -1482,7 +1482,7 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
   {INTEGER}          repeat the previous pattern specified number of times\n\
   {*}                repeat the previous pattern as many times as possible\n\
 \n\
-A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
+A line OFFSET is a required '+' or '-' followed by a positive integer.\n\
 "), stdout);
       emit_ancillary_info ();
     }

@@ -682,7 +682,7 @@ Print information about users who are currently logged in.\n\
       printf (_("\
 \n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
-If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
+If ARG1 ARG2 given, -m presumed: 'am i' or 'mom likes' are usual.\n\
 "), UTMP_FILE, WTMP_FILE);
       emit_ancillary_info ();
     }

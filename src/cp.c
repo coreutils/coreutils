@@ -246,7 +246,7 @@ fails, or if --reflink=auto is specified, fall back to a standard copy.\n\
 "), stdout);
       fputs (_("\
 \n\
-The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\

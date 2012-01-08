@@ -88,7 +88,7 @@ INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
 INCREMENT is usually negative if FIRST is greater than LAST.\n\
 "), stdout);
       fputs (_("\
-FORMAT must be suitable for printing one argument of type `double';\n\
+FORMAT must be suitable for printing one argument of type 'double';\n\
 it defaults to %.PRECf if FIRST, INCREMENT, and LAST are all fixed point\n\
 decimal numbers with maximum precision PREC, and to %g otherwise.\n\
 "), stdout);

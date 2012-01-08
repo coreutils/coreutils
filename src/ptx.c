@@ -1089,7 +1089,7 @@ print_field (BLOCK field)
                   break;
 
                 case 3:		/* Grave accent */
-                  printf ("\\`%s%c", (base == 'i' ? "\\" : ""), base);
+                  printf ("\\'%s%c", (base == 'i' ? "\\" : ""), base);
                   break;
 
                 case 4:		/* Circumflex accent */
@@ -1827,11 +1827,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -A, --auto-reference           output automatically generated references\n\
-  -G, --traditional              behave more like System V `ptx'\n\
+  -G, --traditional              behave more like System V 'ptx'\n\
   -F, --flag-truncation=STRING   use STRING for flagging line truncations\n\
 "), stdout);
       fputs (_("\
-  -M, --macro-name=STRING        macro name to use instead of `xx'\n\
+  -M, --macro-name=STRING        macro name to use instead of 'xx'\n\
   -O, --format=roff              generate output as roff directives\n\
   -R, --right-side-refs          put references at right, not counted in -w\n\
   -S, --sentence-regexp=REGEXP   for end of lines or end of sentences\n\
@@ -1854,7 +1854,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\
+With no FILE or if FILE is -, read Standard Input.  '-F /' by default.\n\
 "), stdout);
       emit_ancillary_info ();
     }

@@ -76,7 +76,7 @@ all but the last component must exist\n\
       fputs (_("\
   -e, --canonicalize-existing  all components of the path must exist\n\
   -m, --canonicalize-missing   no components of the path need exist\n\
-  -L, --logical                resolve `..' components before symlinks\n\
+  -L, --logical                resolve '..' components before symlinks\n\
   -P, --physical               resolve symlinks as encountered (default)\n\
   -q, --quiet                  suppress most error messages\n\
       --relative-to=FILE       print the resolved path relative to FILE\n\

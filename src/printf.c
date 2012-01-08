@@ -122,7 +122,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   %%      a single %\n\
-  %b      ARGUMENT as a string with `\\' escapes interpreted,\n\
+  %b      ARGUMENT as a string with '\\' escapes interpreted,\n\
           except that octal escapes are of the form \\0 or \\0NNN\n\
 \n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\

@@ -54,7 +54,7 @@ sub usage ($)
   my $STREAM = ($exit_code == 0 ? *STDOUT : *STDERR);
   if ($exit_code != 0)
     {
-      print $STREAM "Try `$ME --help' for more information.\n";
+      print $STREAM "Try '$ME --help' for more information.\n";
     }
   else
     {
@@ -103,7 +103,7 @@ EOF
   my $file = $ARGV[0];
 
   open FH, $file
-    or die "$ME: can't open `$file' for reading: $!\n";
+    or die "$ME: can't open '$file' for reading: $!\n";
 
   # For each line like this:
   #   case S_MAGIC_ROMFS: /* 0x7275 */

@@ -310,7 +310,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
      fputs (_("\
 \n\
-If the first character of K (the number of bytes or lines) is a `+',\n\
+If the first character of K (the number of bytes or lines) is a '+',\n\
 print beginning with the Kth item from the start of each file, otherwise,\n\
 print the last K items in the file.  K may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
