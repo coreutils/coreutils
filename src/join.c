@@ -226,8 +226,8 @@ separated by CHAR.  If FORMAT is the keyword 'auto', then the first\n\
 line of each file determines the number of fields output for each line.\n\
 \n\
 Important: FILE1 and FILE2 must be sorted on the join fields.\n\
-E.g., use ` sort -k 1b,1 ' if `join' has no options,\n\
-or use ` join -t '' ' if `sort' has no options.\n\
+E.g., use \"sort -k 1b,1\" if `join' has no options,\n\
+or use \"join -t ''\" if `sort' has no options.\n\
 Note, comparisons honor the rules specified by `LC_COLLATE'.\n\
 If the input is not sorted and some lines cannot be joined, a\n\
 warning message will be given.\n\

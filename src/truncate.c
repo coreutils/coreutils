@@ -366,10 +366,10 @@ main (int argc, char **argv)
     {
       if ((fd = open (fname, oflags, omode)) == -1)
         {
-          /* `truncate -s0 -c no-such-file`  shouldn't gen error
-             `truncate -s0 no-such-dir/file` should gen ENOENT error
-             `truncate -s0 no-such-dir/` should gen EISDIR error
-             `truncate -s0 .` should gen EISDIR error */
+          /* 'truncate -s0 -c no-such-file'  shouldn't gen error
+             'truncate -s0 no-such-dir/file' should gen ENOENT error
+             'truncate -s0 no-such-dir/' should gen EISDIR error
+             'truncate -s0 .' should gen EISDIR error */
           if (!(no_create && errno == ENOENT))
             {
               error (0, errno, _("cannot open %s for writing"),

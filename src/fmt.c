@@ -116,7 +116,7 @@ typedef long int COST;
 
 /* Extra ctype(3)-style macros.  */
 
-#define isopen(c)	(strchr ("([`'\"", c) != NULL)
+#define isopen(c)	(strchr ("(['`\"", c) != NULL)
 #define isclose(c)	(strchr (")]'\"", c) != NULL)
 #define isperiod(c)	(strchr (".?!", c) != NULL)
 
