@@ -428,8 +428,8 @@ main (int argc, char **argv)
 
   if (format_str != NULL && equal_width)
     {
-      error (0, 0, _("\
-format string may not be specified when printing equal width strings"));
+      error (0, 0, _("format string may not be specified"
+                     " when printing equal width strings"));
       usage (EXIT_FAILURE);
     }
 

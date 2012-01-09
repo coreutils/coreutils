@@ -640,8 +640,9 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
               if (MAX_INTEGRAL_TYPE_SIZE < size
                   || integral_type_size[size] == NO_SIZE)
                 {
-                  error (0, 0, _("invalid type string %s;\n\
-this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
+                  error (0, 0, _("invalid type string %s;\nthis system"
+                                 " doesn't provide a %lu-byte integral type"),
+                         quote (s_orig), size);
                   return false;
                 }
               s = p;
@@ -759,8 +760,10 @@ this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
               if (size > MAX_FP_TYPE_SIZE
                   || fp_type_size[size] == NO_SIZE)
                 {
-                  error (0, 0, _("invalid type string %s;\n\
-this system doesn't provide a %lu-byte floating point type"),
+                  error (0, 0,
+                         _("invalid type string %s;\n"
+                           "this system doesn't provide a %lu-byte"
+                           " floating point type"),
                          quote (s_orig), size);
                   return false;
                 }
@@ -1598,8 +1601,8 @@ main (int argc, char **argv)
               break;
             default:
               error (EXIT_FAILURE, 0,
-                     _("invalid output address radix '%c'; \
-it must be one character from [doxn]"),
+                     _("invalid output address radix '%c';\
+ it must be one character from [doxn]"),
                      optarg[0]);
               break;
             }

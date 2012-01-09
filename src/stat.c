@@ -1236,13 +1236,11 @@ default_format (bool fs, bool terse, bool device)
         {
           /* TRANSLATORS: This string uses format specifiers from
              'stat --help' with --file-system, and NOT from printf.  */
-          format = xstrdup (_("\
-  File: \"%n\"\n\
-    ID: %-8i Namelen: %-7l Type: %T\n\
-Block size: %-10s Fundamental block size: %S\n\
-Blocks: Total: %-10b Free: %-10f Available: %a\n\
-Inodes: Total: %-10c Free: %d\n\
-"));
+          format = xstrdup (_("  File: \"%n\"\n"
+                              "    ID: %-8i Namelen: %-7l Type: %T\n"
+                              "Block size: %-10s Fundamental block size: %S\n"
+                              "Blocks: Total: %-10b Free: %-10f Available: %a\n"
+                              "Inodes: Total: %-10c Free: %d\n"));
         }
     }
   else /* ! fs */
@@ -1272,7 +1270,7 @@ Inodes: Total: %-10c Free: %d\n\
               /* TRANSLATORS: This string uses format specifiers from
                  'stat --help' without --file-system, and NOT from printf.  */
               format = xasprintf ("%s%s", format, _("\
-Device: %Dh/%dd\tInode: %-10i  Links: %-5h Device type: %t,%T\n\
+" "Device: %Dh/%dd\tInode: %-10i  Links: %-5h Device type: %t,%T\n\
 "));
             }
           else
@@ -1280,7 +1278,7 @@ Device: %Dh/%dd\tInode: %-10i  Links: %-5h Device type: %t,%T\n\
               /* TRANSLATORS: This string uses format specifiers from
                  'stat --help' without --file-system, and NOT from printf.  */
               format = xasprintf ("%s%s", format, _("\
-Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
+" "Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
 "));
             }
           free (temp);
@@ -1289,7 +1287,7 @@ Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
           /* TRANSLATORS: This string uses format specifiers from
              'stat --help' without --file-system, and NOT from printf.  */
           format = xasprintf ("%s%s", format, _("\
-Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n\
+" "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n\
 "));
           free (temp);
 
@@ -1298,21 +1296,18 @@ Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n\
               temp = format;
               /* TRANSLATORS: This string uses format specifiers from
                  'stat --help' without --file-system, and NOT from printf.  */
-              format = xasprintf ("%s%s", format, _("\
-Context: %C\n\
-"));
+              format = xasprintf ("%s%s", format, _("Context: %C\n"));
               free (temp);
             }
 
           temp = format;
           /* TRANSLATORS: This string uses format specifiers from
              'stat --help' without --file-system, and NOT from printf.  */
-          format = xasprintf ("%s%s", format, _("\
-Access: %x\n\
-Modify: %y\n\
-Change: %z\n\
- Birth: %w\n\
-"));
+          format = xasprintf ("%s%s", format,
+                              _("Access: %x\n"
+                                "Modify: %y\n"
+                                "Change: %z\n"
+                                "Birth: %w\n"));
           free (temp);
         }
     }

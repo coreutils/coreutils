@@ -437,8 +437,8 @@ main (int argc, char **argv)
   if (print_database && syntax != SHELL_SYNTAX_UNKNOWN)
     {
       error (0, 0,
-             _("the options to output dircolors' internal database and\n\
-to select a shell syntax are mutually exclusive"));
+             _("the options to output dircolors' internal database and\n"
+               "to select a shell syntax are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
 

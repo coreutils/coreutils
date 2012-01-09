@@ -506,8 +506,8 @@ unquote (char const *s, struct E_string *es)
                              lack of clarity as meaning the resulting behavior
                              is undefined, which means we're allowed to issue
                              a warning.  */
-                          error (0, 0, _("warning: the ambiguous octal escape \
-\\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, %c"),
+                          error (0, 0, _("warning: the ambiguous octal escape\
+ \\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, %c"),
                                  s[i], s[i + 1], s[i + 2],
                                  s[i], s[i + 1], s[i + 2]);
                         }
@@ -1417,8 +1417,8 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
          That's not portable however, contradicts POSIX and is dependent
          on your collating sequence.  */
       error (EXIT_FAILURE, 0,
-             _("when translating with string1 longer than string2,\n\
-the latter string must not end with a character class"));
+             _("when translating with string1 longer than string2,\nthe \
+ latter string must not end with a character class"));
       abort (); /* inform gcc that the above use of error never returns. */
       break;
 
@@ -1495,15 +1495,15 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
           if (s2->has_equiv_class)
             {
               error (EXIT_FAILURE, 0,
-                     _("[=c=] expressions may not appear in string2 \
-when translating"));
+                     _("[=c=] expressions may not appear in string2\
+ when translating"));
             }
 
           if (s2->has_restricted_char_class)
             {
               error (EXIT_FAILURE, 0,
-                     _("when translating, the only character classes that may \
-appear in\nstring2 are 'upper' and 'lower'"));
+                     _("when translating, the only character classes that may\
+ appear in\nstring2 are 'upper' and 'lower'"));
             }
 
           validate_case_classes (s1, s2);
@@ -1535,8 +1535,8 @@ appear in\nstring2 are 'upper' and 'lower'"));
         {
           if (s2->n_indefinite_repeats > 0)
             error (EXIT_FAILURE, 0,
-                   _("the [c*] construct may appear in string2 only \
-when translating"));
+                   _("the [c*] construct may appear in string2 only\
+ when translating"));
         }
     }
 }

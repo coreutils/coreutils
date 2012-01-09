@@ -289,6 +289,26 @@ sc_prohibit_framework_failure:
 	halt='use framework_failure_ instead'				\
 	  $(_sc_search_regexp)
 
+# Exempt the contents of any usage function from the following.
+_continued_string_col_1 = \
+s/^usage .*?\n}//ms;/\\\n\w/ and print ("$$ARGV\n"),$$e=1;END{$$e||=0;exit $$e}
+# Ding any source file that has a continued string with an alphabetic in the
+# first column of the following line.  We prohibit them because they usually
+# trigger false positives in tools that try to map an arbitrary line number
+# to the enclosing function name.  Of course, very many strings do precisely
+# this, *when they are part of the usage function*.  That is why we exempt
+# the contents of any function named "usage".
+sc_prohibit_continued_string_alpha_in_column_1:
+	@perl -0777 -ne '$(_continued_string_col_1)' \
+	    $$($(VC_LIST_EXCEPT) | grep '\.[ch]$$') \
+	  || { echo '$(ME): continued string with word in first column' \
+		1>&2; exit 1; } || :
+# Use this to list offending lines:
+# git ls-files |grep '\.[ch]$' | xargs \
+#   perl -n -0777 -e 's/^usage.*?\n}//ms;/\\\n\w/ and print "$ARGV\n"' \
+#     | xargs grep -A1 '\\$'|grep '\.[ch][:-][_a-zA-Z]'
+
+
 ###########################################################
 _p0 = \([^"'/]\|"\([^\"]\|[\].\)*"\|'\([^\']\|[\].\)*'
 _pre = $(_p0)\|[/][^"'/*]\|[/]"\([^\"]\|[\].\)*"\|[/]'\([^\']\|[\].\)*'\)*
@@ -409,3 +429,6 @@ exclude_file_name_regexp--sc_preprocessor_indentation = \
   ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g)$$
+
+exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
+  ^src/(system\.h|od\.c|printf\.c)$$
