@@ -34,7 +34,7 @@
    - It's typically faster.
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    isdigit unless it's important to use the locale's definition
-   of `digit' even when the host does not conform to POSIX.  */
+   of 'digit' even when the host does not conform to POSIX.  */
 # define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
 

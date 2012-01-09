@@ -26,7 +26,7 @@
 #include <unistd.h>
 
 /* Open a file to a particular file descriptor.  This is like standard
-   `open', except it always returns DESIRED_FD if successful.  */
+   'open', except it always returns DESIRED_FD if successful.  */
 
 int
 fd_reopen (int desired_fd, char const *file, int flags, mode_t mode)
