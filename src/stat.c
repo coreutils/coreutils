@@ -1307,7 +1307,7 @@ default_format (bool fs, bool terse, bool device)
                               _("Access: %x\n"
                                 "Modify: %y\n"
                                 "Change: %z\n"
-                                "Birth: %w\n"));
+                                " Birth: %w\n"));
           free (temp);
         }
     }

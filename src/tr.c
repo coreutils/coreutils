@@ -1417,7 +1417,7 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
          That's not portable however, contradicts POSIX and is dependent
          on your collating sequence.  */
       error (EXIT_FAILURE, 0,
-             _("when translating with string1 longer than string2,\nthe \
+             _("when translating with string1 longer than string2,\nthe\
  latter string must not end with a character class"));
       abort (); /* inform gcc that the above use of error never returns. */
       break;
