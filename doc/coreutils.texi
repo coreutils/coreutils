@@ -16242,7 +16242,7 @@ outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 
 An earlier version of this chapter appeared in
 @uref{http://www.linuxjournal.com/article.php?sid=2762, the
-@cite{What's GNU?} column of @cite{Linux Journal}, 2 (June, 1994)}.
+@cite{What's GNU?} column of the June 1994 @cite{Linux Journal}}.
 It was written by Arnold Robbins.
 
 @menu
