@@ -1362,7 +1362,7 @@ The valid format sequences for files (without --file-system):\n\
   %m   mount point\n\
   %n   file name\n\
   %N   quoted file name with dereference if symbolic link\n\
-  %o   I/O block size\n\
+  %o   optimal I/O transfer size hint\n\
   %s   total size, in bytes\n\
   %t   major device type in hex\n\
   %T   minor device type in hex\n\

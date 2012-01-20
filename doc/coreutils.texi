@@ -11031,7 +11031,7 @@ The valid @var{format} directives for files with @option{--format} and
 @item %m - Mount point (See note below)
 @item %n - File name
 @item %N - Quoted file name with dereference if symbolic link
-@item %o - I/O block size
+@item %o - Optimal I/O transfer size hint
 @item %s - Total size, in bytes
 @item %t - Major device type in hex
 @item %T - Minor device type in hex
