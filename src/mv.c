@@ -73,6 +73,7 @@ static void
 rm_option_init (struct rm_options *x)
 {
   x->ignore_missing_files = false;
+  x->remove_empty_directories = true;
   x->recursive = true;
   x->one_file_system = false;
 

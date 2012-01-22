@@ -98,6 +98,8 @@ TESTS =						\
   chgrp/basic					\
   rm/dangling-symlink				\
   misc/ls-time					\
+  rm/d-1					\
+  rm/d-2					\
   rm/deep-1					\
   rm/deep-2					\
   rm/dir-no-w					\

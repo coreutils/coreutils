@@ -8807,6 +8807,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
+@item -d
+@itemx --dir
+@opindex -d
+@opindex --dir
+@cindex directories, removing
+Remove the listed directories if they are empty.
+
 @item -f
 @itemx --force
 @opindex -f

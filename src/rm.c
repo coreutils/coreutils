@@ -77,6 +77,7 @@ static struct option const long_opts[] =
   {"-presume-input-tty", no_argument, NULL, PRESUME_INPUT_TTY_OPTION},
 
   {"recursive", no_argument, NULL, 'r'},
+  {"dir", no_argument, NULL, 'd'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -154,6 +155,7 @@ Remove (unlink) the FILE(s).\n\
       --no-preserve-root  do not treat '/' specially\n\
       --preserve-root   do not remove '/' (default)\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
+  -d, --dir             remove empty directories\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -189,6 +191,7 @@ rm_option_init (struct rm_options *x)
   x->ignore_missing_files = false;
   x->interactive = RMI_SOMETIMES;
   x->one_file_system = false;
+  x->remove_empty_directories = false;
   x->recursive = false;
   x->root_dev_ino = NULL;
   x->stdin_tty = isatty (STDIN_FILENO);
@@ -220,10 +223,14 @@ main (int argc, char **argv)
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
 
-  while ((c = getopt_long (argc, argv, "firvIR", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
     {
       switch (c)
         {
+        case 'd':
+          x.remove_empty_directories = true;
+          break;
+
         case 'f':
           x.interactive = RMI_NEVER;
           x.ignore_missing_files = true;
