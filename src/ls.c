@@ -2910,7 +2910,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       f->stat_ok = true;
 
-      /* Note has_capability() adds around 30% runtime to `ls --color`  */
+      /* Note has_capability() adds around 30% runtime to 'ls --color'  */
       if ((type == normal || S_ISREG (f->stat.st_mode))
           && print_with_color && is_colored (C_CAP))
         f->has_capability = has_capability (absolute_name);
@@ -3523,7 +3523,7 @@ print_current_files (void)
 }
 
 /* Replace the first %b with precomputed aligned month names.
-   Note on glibc-2.7 at least, this speeds up the whole `ls -lU`
+   Note on glibc-2.7 at least, this speeds up the whole 'ls -lU'
    process by around 17%, compared to letting strftime() handle the %b.  */
 
 static size_t

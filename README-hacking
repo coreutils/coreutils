@@ -19,7 +19,7 @@ Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture. See also README-valgrind.
 
 While building from a just-cloned source tree may require installing a
-few prerequisites, later, a plain `git pull && make' should be sufficient.
+few prerequisites, later, a plain 'git pull && make' should be sufficient.
 
 * First GIT checkout
 

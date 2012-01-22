@@ -73,10 +73,10 @@ check-very-expensive:
 	$(MAKE) check-expensive RUN_VERY_EXPENSIVE_TESTS=yes
 
 # Just prior to distribution, ...
-# transform the automake-generated rule that runs `rm -f rm'.
+# transform the automake-generated rule that runs 'rm -f rm'.
 # On some systems, that command would fail with a diagnostic like
-# `rm: cannot unlink `rm': Text file busy' when `.' appears so early
-# in the shell's search path that running `rm' would run the `rm'
+# "rm: cannot unlink 'rm': Text file busy" when '.' appears so early
+# in the shell's search path that running 'rm' would run the 'rm'
 # executable in the current directory.
 # Similarly, adjust the clean-binPROGRAMS rule.
 rm_subst = \

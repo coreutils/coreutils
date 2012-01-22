@@ -319,13 +319,13 @@ my @tv = (
 ['14a', '-2 -f', [\'t_notab'], [\'2f-t_notab'], 0],
 # full lines, no truncation /  separator = TAB :
 ['14b', '-2 -s -f', [\'t_notab'], [\'2sf-t_notab'], 0],
-# full lines, no truncation /  separator = `:' :
+# full lines, no truncation /  separator = ':' :
 ['14c', '-2 -s: -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
 # columns, truncated = 60   /  separator = space :
 ['14d', '-2 -w60 -f', [\'t_notab'], [\'2w60f-t_notab'], 0],
 # columns, truncated = 60   /  no separator   (SunOS-BUG: line width to small):
 ['14e', '-2 -s -w60 -f', [\'t_notab'], [\'2sw60f-t_notab'], 0],
-# columns, truncated = 60   /  separator = `:'  (HP-UX.10.20-2-BUG:
+# columns, truncated = 60   /  separator = ':'  (HP-UX.10.20-2-BUG:
 # ':' missing with -m option):
 ['14f', '-2 -s: -w60 -f', [\'t_notab'], [\'2s_w60f-t_nota'], 0],
 #
@@ -336,13 +336,13 @@ my @tv = (
 ['14h', '-2 -S"	" -J -f', [\'t_notab'], [\'2sf-t_notab'], 0],
 # columns, truncated = 72   /  separator ':' :
 ['14i', '-2 -S: -f', [\'t_notab'], [\'2-S_f-t_notab'], 0],
-# full lines, no truncation /  separator = `:' :
+# full lines, no truncation /  separator = ':' :
 ['14j', '-2 -S: -J -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
 # columns, truncated = 60   /  separator = space:
 ['14k', '-2 -W60 -f', [\'t_notab'], [\'2w60f-t_notab'], 0],
 # columns, truncated = 60   /  no separator :
 ['14l', '-2 -S -W60 -f', [\'t_notab'], [\'2sw60f-t_notab'], 0],
-# columns, truncated = 60   /  separator = `:' :
+# columns, truncated = 60   /  separator = ':' :
 ['14m', '-2 -S: -W60 -f', [\'t_notab'], [\'2s_w60f-t_nota'], 0],
 #
 # Tabify multiple spaces, -i option

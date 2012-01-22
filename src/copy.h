@@ -189,8 +189,8 @@ struct cp_options
      propagates failure "out" to the caller, along with full diagnostics.
      If false, a failure to preserve file's security context does not
      change the invoking application's exit status, but may output diagnostics.
-     For example, with `cp --preserve=context` this flag is "true",
-     while with `cp --preserve=all` or `cp -a`, it is "false". */
+     For example, with 'cp --preserve=context' this flag is "true",
+     while with 'cp --preserve=all' or 'cp -a', it is "false". */
   bool require_preserve_context;
 
   /* If true, attempt to preserve extended attributes using libattr.
@@ -202,8 +202,8 @@ struct cp_options
      propagates failure "out" to the caller, along with full diagnostics.
      If false, a failure to preserve file's extended attributes does not
      change the invoking application's exit status, but may output diagnostics.
-     For example, with `cp --preserve=xattr` this flag is "true",
-     while with `cp --preserve=all` or `cp -a`, it is "false". */
+     For example, with 'cp --preserve=xattr' this flag is "true",
+     while with 'cp --preserve=all' or 'cp -a', it is "false". */
   bool require_preserve_xattr;
 
   /* This allows us to output warnings in cases 2 and 4 below,

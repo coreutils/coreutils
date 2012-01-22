@@ -179,10 +179,10 @@ time_string (const STRUCT_UTMP *utmp_ent)
 
   /* Don't take the address of UT_TIME_MEMBER directly.
      Ulrich Drepper wrote:
-     ``... GNU libc (and perhaps other libcs as well) have extended
+     "... GNU libc (and perhaps other libcs as well) have extended
      utmp file formats which do not use a simple time_t ut_time field.
      In glibc, ut_time is a macro which selects for backward compatibility
-     the tv_sec member of a struct timeval value.''  */
+     the tv_sec member of a struct timeval value."  */
   time_t t = UT_TIME_MEMBER (utmp_ent);
   struct tm *tmp = localtime (&t);
 

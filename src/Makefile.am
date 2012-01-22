@@ -179,7 +179,7 @@ nodist_libver_a_SOURCES = version.c version.h
 AM_LDFLAGS = $(IGNORE_UNUSED_LIBRARIES_CFLAGS)
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
-# include modules defining variables like `optind', so libcoreutils.a
+# include modules defining variables like 'optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
 # But libcoreutils.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libcoreutils.a.
@@ -458,8 +458,8 @@ uninstall-local:
 
 copy_sources = copy.c cp-hash.c extent-scan.c extent-scan.h
 
-# Use `ginstall' in the definition of PROGRAMS and in dependencies to avoid
-# confusion with the `install' target.  The install rule transforms `ginstall'
+# Use 'ginstall' in the definition of PROGRAMS and in dependencies to avoid
+# confusion with the 'install' target.  The install rule transforms 'ginstall'
 # to install before applying any user-specified name transformations.
 
 transform = s/ginstall/install/; $(program_transform_name)

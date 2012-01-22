@@ -148,11 +148,11 @@ Running tests as root:
 ----------------------
 
 If you run the tests as root, note that a few of them create files
-and/or run programs as a non-root user, `nobody' by default.
+and/or run programs as a non-root user, 'nobody' by default.
 If you want to use some other non-root username, specify it via
 the NON_ROOT_USERNAME environment variable.  Depending on the
 permissions with which the working directories have been created,
-using `nobody' may fail, because that user won't have the required
+using 'nobody' may fail, because that user won't have the required
 read and write access to the build and test directories.
 I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
@@ -171,7 +171,7 @@ Reporting bugs:
 ---------------
 
 IMPORTANT: if you take the time to report a test failure,
-please be sure to include the output of running `make check'
+please be sure to include the output of running 'make check'
 in verbose mode for each failing test.  For example,
 if the test that fails is tests/misc/df, then you would
 run this command:
@@ -179,7 +179,7 @@ run this command:
   (cd tests && make check TESTS=misc/df VERBOSE=yes) >> log 2>&1
 
 For some tests, you can get even more detail by adding DEBUG=yes.
-Then include the contents of the file `log' in your bug report.
+Then include the contents of the file 'log' in your bug report.
 
 Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
 If you would like to suggest a patch, see the files README-hacking
@@ -223,7 +223,7 @@ or any Makefile.am, then don't be surprised if what gets regenerated no
 longer works.  To make things work, you'll have to be using appropriate
 versions of the tools listed in bootstrap.conf's buildreq string.
 
-All of these programs except `test' recognize the `--version' option.
+All of these programs except 'test' recognize the '--version' option.
 When reporting bugs, please include in the subject line both the package
 name/version and the name of the program for which you found a problem.
 
@@ -246,5 +246,5 @@ Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
-Texts.  A copy of the license is included in the ``GNU Free
-Documentation License'' file as part of this distribution.
+Texts.  A copy of the license is included in the "GNU Free
+Documentation License" file as part of this distribution.

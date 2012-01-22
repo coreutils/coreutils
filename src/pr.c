@@ -51,8 +51,8 @@
    utilities, e.g. sort or cut. - Same as SunOS does.
    -  With multicolumn output
       two conflicting POSIX requirements exist:
-   First 'default n-separator is TAB', second `output text columns shall
-   be of equal width'. Moreover POSIX specifies the number+separator a
+   First "default n-separator is TAB", second "output text columns shall
+   be of equal width". Moreover POSIX specifies the number+separator a
    part of the column, together with '-COLUMN' and '-a -COLUMN'.
    (With -m output the number shall occupy each line only once. Exactly
    the same situation as single column output exists.)
@@ -72,9 +72,9 @@
    PAGE_WIDTH may occur.
 
    The interference of the POSIX-compliant small letter options -w and -s:
-   ('interference' means `setting a _separator_ with -s switches off the
+   ("interference" means "setting a _separator_ with -s switches off the
    column structure and the default - not generally - page_width,
-   acts on -w option')
+   acts on -w option")
        options:       text form  / separator:     equivalent new options:
        -w l   -s[x]
     --------------------------------------------------------------------
@@ -216,8 +216,8 @@
                 is always printed with single column output only. The
                 TAB-width varies with the TAB-position, e.g. with the
                 left margin specified by -o option.
-                With multicolumn output priority is given to `equal width
-                of output columns' (a POSIX specification). The TAB-width
+                With multicolumn output priority is given to "equal width
+                of output columns" (a POSIX specification). The TAB-width
                 is fixed to the value of the 1st column and does not
                 change with different values of left margin. That means a
                 fixed number of spaces is always printed in the place of

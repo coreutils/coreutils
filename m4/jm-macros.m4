@@ -141,7 +141,7 @@ AC_DEFUN([coreutils_MACROS],
   fi
   AC_SUBST([LIB_CAP])
 
-  # See if linking `seq' requires -lm.
+  # See if linking 'seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
   # BeOS which has all the math functions in the normal runtime library
   # and doesn't have a separate math library.

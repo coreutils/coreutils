@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# Derive #define directives from specially formatted `case ...:' statements.
+# Derive #define directives from specially formatted 'case ...:' statements.
 
 # Copyright (C) 2003, 2005, 2009-2012 Free Software Foundation, Inc.
 
@@ -66,7 +66,7 @@ FIXME: describe
 OPTIONS:
 
   There are two modes of operation, the default, which is to emit
-  #define directives derived from specially formatted `case' statements,
+  #define directives derived from specially formatted 'case' statements,
   and that with --local, which is to emit a static inline function
   mapping S_MAGIC_* values to 1, 0, -1, corresponding to known-local,
   known-remote/distributed/network and unknown, respectively.
@@ -109,7 +109,7 @@ EOF
   #   case S_MAGIC_ROMFS: /* 0x7275 */
   # emit one like this:
   #   # define S_MAGIC_ROMFS 0x7275
-  # Fail if there is a `case S_MAGIC_.*' line without
+  # Fail if there is a 'case S_MAGIC_.*' line without
   # a properly formed comment.
 
   my $map_comment = <<EOF;

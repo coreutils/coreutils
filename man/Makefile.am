@@ -143,12 +143,12 @@ $(MAN): $(top_srcdir)/src/system.h
 SUFFIXES = .x .1
 
 # Ensure that help2man runs the ../src/ginstall binary as
-# `install' when creating install.1.
+# 'install' when creating install.1.
 # Similarly, ensure that it uses the ../src/[ binary to create test.1.
 t = $*.td
 mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 
-# Note the use of $t/$*, rather than just `$*' as in other packages.
+# Note the use of $t/$*, rather than just '$*' as in other packages.
 # That is necessary to avoid failures for programs that are also shell built-in
 # functions like echo, false, printf, pwd.
 .x.1:

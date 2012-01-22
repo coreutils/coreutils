@@ -1327,7 +1327,7 @@ other parts of that standard.
 @cindex symbolic link to directory, controlling traversal of
 
 The following options modify how @command{chown} and @command{chgrp}
-@c FIXME: note that `du' has these options, too, but they have slightly
+@c FIXME: note that 'du' has these options, too, but they have slightly
 @c different meaning.
 traverse a hierarchy when the @option{--recursive} (@option{-R})
 option is also specified.
@@ -2299,8 +2299,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @item +@var{first_page}[:@var{last_page}]
 @itemx --pages=@var{first_page}[:@var{last_page}]
-@c The two following @opindex lines evoke warnings because they contain `:'
-@c The `info' spec does not permit that.  If we use those lines, we end
+@c The two following @opindex lines evoke warnings because they contain ':'
+@c The 'info' spec does not permit that.  If we use those lines, we end
 @c up with truncated index entries that don't work.
 @c @opindex +@var{first_page}[:@var{last_page}]
 @c @opindex --pages=@var{first_page}[:@var{last_page}]
@@ -4813,7 +4813,7 @@ contains lines unique to @var{file1}, column two contains lines unique
 to @var{file2}, and column three contains lines common to both files.
 Columns are separated by a single TAB character.
 @c FIXME: when there's an option to supply an alternative separator
-@c string, append `by default' to the above sentence.
+@c string, append "by default" to the above sentence.
 
 @opindex -1
 @opindex -2
@@ -7401,7 +7401,7 @@ locale.
 @c Use @t instead of @samp to avoid duplicate quoting in some output styles.
 Quote strings as for C character string literals, except use
 surrounding quotation marks appropriate for the locale, and quote
-@t{`like this'} instead of @t{"like
+@t{'like this'} instead of @t{"like
 this"} in the default C locale.  This looks nicer on many displays.
 @end table
 
@@ -9557,7 +9557,7 @@ for a FIFO
 for a block special file
 
 @item c
-@c Don't document the `u' option -- it's just a synonym for `c'.
+@c Don't document the 'u' option -- it's just a synonym for 'c'.
 @c Do *any* versions of mknod still use it?
 @c @itemx u
 @opindex c @r{for character special file}

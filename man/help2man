@@ -72,7 +72,7 @@ Written by Brendan O'Dea <bod@debian.org>
 EOT
 
 my $help_info = sprintf _(<<'EOT'), $this_program, $this_program;
-`%s' generates a man page out of `--help' and `--version' output.
+'%s' generates a man page out of '--help' and '--version' output.
 
 Usage: %s [OPTION]... EXECUTABLE
 
@@ -81,15 +81,15 @@ Usage: %s [OPTION]... EXECUTABLE
  -m, --manual=TEXT       name of manual (User Commands, ...)
  -S, --source=TEXT       source of program (FSF, Debian, ...)
  -L, --locale=STRING     select locale (default "C")
- -i, --include=FILE      include material from `FILE'
- -I, --opt-include=FILE  include material from `FILE' if it exists
- -o, --output=FILE       send output to `FILE'
+ -i, --include=FILE      include material from 'FILE'
+ -I, --opt-include=FILE  include material from 'FILE' if it exists
+ -o, --output=FILE       send output to 'FILE'
  -p, --info-page=TEXT    name of Texinfo manual
  -N, --no-info           suppress pointer to Texinfo manual
      --help              print this help, then exit
      --version           print version number, then exit
 
-EXECUTABLE should accept `--help' and `--version' options although
+EXECUTABLE should accept '--help' and '--version' options although
 alternatives may be specified using:
 
  -h, --help-option=STRING     help option string
@@ -157,7 +157,7 @@ while (@opt_include)
     my ($inc, $required) = @{shift @opt_include};
 
     next unless -f $inc or $required;
-    kark N_("%s: can't open `%s' (%s)"), $this_program, $inc, $!
+    kark N_("%s: can't open '%s' (%s)"), $this_program, $inc, $!
 	unless open INC, $inc;
 
     my $key;
@@ -214,7 +214,7 @@ while (@opt_include)
 
     close INC;
 
-    kark N_("%s: no valid information found in `%s'"), $this_program, $inc
+    kark N_("%s: no valid information found in '%s'"), $this_program, $inc
 	unless $key;
 }
 
@@ -227,7 +227,7 @@ for my $hash (\(%include, %append))
 # Grab help and version info from executable.
 my ($help_text, $version_text) = map {
     join '', map { s/ +$//; expand $_ } `$ARGV[0] $_ 2>/dev/null`
-	or kark N_("%s: can't get `%s' info from %s"), $this_program,
+	or kark N_("%s: can't get '%s' info from %s"), $this_program,
 	    $_, $ARGV[0]
 } $help_option, $version_option;
 
@@ -278,7 +278,7 @@ else
 
 $program =~ s!.*/!!;
 
-# No info for `info' itself.
+# No info for 'info' itself.
 $opt_no_info = 1 if $program eq 'info';
 
 for ($include{_('NAME')})

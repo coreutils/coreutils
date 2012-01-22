@@ -894,7 +894,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    Note this option was seen to shorten the runtime for sort
    on a multicore system with lots of RAM and other processes
    competing for CPU.  It could be argued that more explicit
-   scheduling hints with `nice` et. al. are more appropriate
+   scheduling hints with 'nice' et. al. are more appropriate
    for this situation.
 
    POSIX_FADV_NOREUSE is a possibility as it could lower

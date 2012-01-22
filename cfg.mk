@@ -31,7 +31,7 @@ bootstrap-tools = autoconf,automake,gnulib,bison
 # Now that we have better tests, make this the default.
 export VERBOSE = yes
 
-old_NEWS_hash = f2fae8556f651da99e503a1d1a841f83
+old_NEWS_hash = c2d954b7c19745272321cc4c4b676993
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_program =/'
@@ -70,7 +70,7 @@ ifneq ($(wildcard $(dd_c)),)
 	fi
 endif
 
-# Many m4 macros names once began with `jm_'.
+# Many m4 macros names once began with 'jm_'.
 # On 2004-04-13, they were all changed to start with gl_ instead.
 # Make sure that none are inadvertently reintroduced.
 sc_prohibit_jm_in_m4:

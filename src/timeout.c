@@ -32,8 +32,8 @@
      If you start a command in the background, which reads from the tty
      and so is immediately sent SIGTTIN to stop, then the timeout
      process will ignore this so it can timeout the command as expected.
-     This can be seen with `timeout 10 dd&` for example.
-     However if one brings this group to the foreground with the `fg`
+     This can be seen with 'timeout 10 dd&' for example.
+     However if one brings this group to the foreground with the 'fg'
      command before the timer expires, the command will remain
      in the stop state as the shell doesn't send a SIGCONT
      because the timeout process (group leader) is already running.
@@ -221,7 +221,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --signal=SIGNAL\n\
                  specify the signal to be sent on timeout.\n\
                  SIGNAL may be a name like 'HUP' or a number.\n\
-                 See `kill -l` for a list of signals\n"), stdout);
+                 See 'kill -l' for a list of signals\n"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

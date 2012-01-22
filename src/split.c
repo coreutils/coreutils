@@ -774,7 +774,7 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                  get an error, rather than waiting indefinitely.
                  In specialised cases the consumer can keep reading
                  from the fifo, terminating on conditions in the data
-                 itself, or perhaps never in the case of `tail -f`.
+                 itself, or perhaps never in the case of 'tail -f'.
                  I.E. for fifos it is valid to attempt this reopen.
 
                  We don't handle the filter_command case here, as create()
@@ -1290,7 +1290,7 @@ main (int argc, char **argv)
       break;
 
     case type_rr:
-      /* Note, this is like `sed -n ${k}~${n}p` when k > 0,
+      /* Note, this is like 'sed -n ${k}~${n}p' when k > 0,
          but the functionality is provided for symmetry.  */
       lines_rr (k_units, n_units, buf, in_blk_size);
       break;
