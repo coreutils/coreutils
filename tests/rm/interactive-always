@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test=interactive-always
-
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
@@ -25,7 +23,7 @@ touch file1-1 file1-2 file2-1 file2-2 file3-1 file3-2 file4-1 file4-2 \
   || framework_failure_
 # If asked, answer no to first question, then yes to second.
 echo 'n
-y' > $test.I || framework_failure_
+y' > in || framework_failure_
 rm -f out err || framework_failure_
 
 
@@ -33,36 +31,36 @@ rm -f out err || framework_failure_
 # 'echo .' is inserted after each rm to make it obvious what was asked.
 
 echo 'no WHEN' > err || fail=1
-rm -R --interactive file1-* < $test.I >> out 2>> err || fail=1
+rm -R --interactive file1-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file1-1 || fail=1
 test -f file1-2 && fail=1
 
 echo 'WHEN=never' >> err || fail=1
-rm -R --interactive=never file2-* < $test.I >> out 2>> err || fail=1
+rm -R --interactive=never file2-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file2-1 && fail=1
 test -f file2-2 && fail=1
 
 echo 'WHEN=once' >> err || fail=1
-rm -R --interactive=once file3-* < $test.I >> out 2>> err || fail=1
+rm -R --interactive=once file3-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file3-1 || fail=1
 test -f file3-2 || fail=1
 
 echo 'WHEN=always' >> err || fail=1
-rm -R --interactive=always file4-* < $test.I >> out 2>> err || fail=1
+rm -R --interactive=always file4-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file4-1 || fail=1
 test -f file4-2 && fail=1
 
 echo '-f overrides --interactive' >> err || fail=1
-rm -R --interactive=once -f file1-* < $test.I >> out 2>> err || fail=1
+rm -R --interactive=once -f file1-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file1-1 && fail=1
 
 echo '--interactive overrides -f' >> err || fail=1
-rm -R -f --interactive=once file4-* < $test.I >> out 2>> err || fail=1
+rm -R -f --interactive=once file4-* < in >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file4-1 || fail=1
 

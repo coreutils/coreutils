@@ -16,16 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test=interactive-once
-
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
 mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure_
 touch file1-1 file2-1 file2-2 file2-3 file3-1 file3-2 file3-3 file3-4 \
   || framework_failure_
-echo y > $test.Iy || framework_failure_
-echo n > $test.In || framework_failure_
+echo y > in-y || framework_failure_
+echo n > in-n || framework_failure_
 rm -f out err || framework_failure_
 
 
@@ -33,19 +31,19 @@ rm -f out err || framework_failure_
 # 'echo .' is inserted after each rm to make it obvious what was asked.
 
 echo 'one file, no recursion' > err || fail=1
-rm -I file1-* < $test.In >> out 2>> err || fail=1
+rm -I file1-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file1-1 && fail=1
 
 echo 'three files, no recursion' >> err || fail=1
-rm -I file2-* < $test.In >> out 2>> err || fail=1
+rm -I file2-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file2-1 && fail=1
 test -f file2-2 && fail=1
 test -f file2-3 && fail=1
 
 echo 'four files, no recursion, answer no' >> err || fail=1
-rm -I file3-* < $test.In >> out 2>> err || fail=1
+rm -I file3-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file3-1 || fail=1
 test -f file3-2 || fail=1
@@ -53,7 +51,7 @@ test -f file3-3 || fail=1
 test -f file3-4 || fail=1
 
 echo 'four files, no recursion, answer yes' >> err || fail=1
-rm -I file3-* < $test.Iy >> out 2>> err || fail=1
+rm -I file3-* < in-y >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file3-1 && fail=1
 test -f file3-2 && fail=1
@@ -61,23 +59,23 @@ test -f file3-3 && fail=1
 test -f file3-4 && fail=1
 
 echo 'one file, recursion, answer no' >> err || fail=1
-rm -I -R dir1-* < $test.In >> out 2>> err || fail=1
+rm -I -R dir1-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -d dir1-1 || fail=1
 
 echo 'one file, recursion, answer yes' >> err || fail=1
-rm -I -R dir1-* < $test.Iy >> out 2>> err || fail=1
+rm -I -R dir1-* < in-y >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -d dir1-1 && fail=1
 
 echo 'multiple files, recursion, answer no' >> err || fail=1
-rm -I -R dir2-* < $test.In >> out 2>> err || fail=1
+rm -I -R dir2-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -d dir2-1 || fail=1
 test -d dir2-2 || fail=1
 
 echo 'multiple files, recursion, answer yes' >> err || fail=1
-rm -I -R dir2-* < $test.Iy >> out 2>> err || fail=1
+rm -I -R dir2-* < in-y >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -d dir2-1 && fail=1
 test -d dir2-2 && fail=1

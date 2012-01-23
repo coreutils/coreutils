@@ -17,29 +17,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test=r-1
-
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rm
 
 mkdir a a/a || framework_failure_
 > b || framework_failure_
 
-cat <<\EOF > $test.E || framework_failure_
+cat <<\EOF > exp || framework_failure_
 removed directory: 'a/a'
 removed directory: 'a'
 removed 'b'
 EOF
 
-rm --verbose -r a b > $test.O || fail=1
+rm --verbose -r a b > out || fail=1
 
 for d in $dirs; do
-  if test -d $d; then
-    fail=1
-  fi
+  test -d $d && fail=1
 done
 
 # Compare expected and actual output.
-compare $test.E $test.O || fail=1
+compare exp out || fail=1
 
 Exit $fail
