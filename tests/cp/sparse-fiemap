@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ cp
-$PERL -e 1 || skip_ 'you lack perl'
+require_perl_
 
 # The test was seen to fail on ext3 so exclude that type
 # (or any file system where the type can't be determined)
