@@ -181,25 +181,26 @@ relpath (const char *can_fname)
          to a common directory.  Then output the remainder of fname.  */
       if (*relto_suffix)
         {
-          printf ("%s", "..");
+          fputs ("..", stdout);
           for (; *relto_suffix; ++relto_suffix)
             {
               if (*relto_suffix == '/')
-                printf ("%s", "/..");
+                fputs ("/..", stdout);
             }
 
           if (*fname_suffix)
-            printf ("/%s", fname_suffix);
+            {
+              putchar ('/');
+              fputs (fname_suffix, stdout);
+            }
         }
       else
         {
           if (*fname_suffix)
-            printf ("%s", fname_suffix);
+            fputs (fname_suffix, stdout);
           else
-            printf ("%c", '.');
+            putchar ('.');
         }
-
-      putchar (use_nuls ? '\0' : '\n');
 
       return true;
     }
@@ -228,7 +229,9 @@ process_path (const char *fname, int can_mode)
     }
 
   if (!relpath (can_fname))
-    printf ("%s%c", can_fname, (use_nuls ? '\0' : '\n'));
+    fputs (can_fname, stdout);
+
+  putchar (use_nuls ? '\0' : '\n');
 
   free (can_fname);
 
