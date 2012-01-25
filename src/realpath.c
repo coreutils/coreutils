@@ -136,7 +136,7 @@ path_common_prefix (const char *path1, const char *path2)
       if (*path1 != *path2)
         break;
       if (*path1 == '/')
-        ret = i;
+        ret = i + 1;
       path1++;
       path2++;
       i++;
@@ -171,11 +171,16 @@ relpath (const char *can_fname)
       const char *relto_suffix = can_relative_to + common_index;
       const char *fname_suffix = can_fname + common_index;
 
+      /* skip over extraneous '/'.  */
+      if (*relto_suffix == '/')
+        relto_suffix++;
+      if (*fname_suffix == '/')
+        fname_suffix++;
+
       /* Replace remaining components of --relative-to with '..', to get
          to a common directory.  Then output the remainder of fname.  */
       if (*relto_suffix)
         {
-          ++relto_suffix;
           printf ("%s", "..");
           for (; *relto_suffix; ++relto_suffix)
             {
@@ -183,12 +188,13 @@ relpath (const char *can_fname)
                 printf ("%s", "/..");
             }
 
-          printf ("%s", fname_suffix);
+          if (*fname_suffix)
+            printf ("/%s", fname_suffix);
         }
       else
         {
           if (*fname_suffix)
-            printf ("%s", ++fname_suffix);
+            printf ("%s", fname_suffix);
           else
             printf ("%c", '.');
         }
