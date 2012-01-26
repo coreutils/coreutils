@@ -473,7 +473,6 @@ dir_SOURCES = ls.c ls-dir.c
 vdir_SOURCES = ls.c ls-vdir.c
 id_SOURCES = id.c group-list.c
 groups_SOURCES = groups.c group-list.c
-ln_SOURCES = ln.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
@@ -491,9 +490,7 @@ stat_SOURCES = stat.c find-mount-point.c
 
 uname_SOURCES = uname.c uname-uname.c
 arch_SOURCES = uname.c uname-arch.c
-nproc_SOURCES = nproc.c
 
-md5sum_SOURCES = md5sum.c
 md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
 sha1sum_SOURCES = md5sum.c
 sha1sum_CPPFLAGS = -DHASH_ALGO_SHA1=1 $(AM_CPPFLAGS)
