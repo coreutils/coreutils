@@ -388,7 +388,8 @@ announcement_Cc_ = $(translation_project_), \
 -include $(srcdir)/dist-check.mk
 
 update-copyright-env = \
-  UPDATE_COPYRIGHT_USE_INTERVALS=1 \
+  UPDATE_COPYRIGHT_FORCE=1 \
+  UPDATE_COPYRIGHT_USE_INTERVALS=2 \
   UPDATE_COPYRIGHT_MAX_LINE_LENGTH=79
 
 # List syntax-check exemptions.
