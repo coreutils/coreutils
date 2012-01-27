@@ -1,6 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 1989, 1991, 1995-2006, 2008-2012 Free Software Foundation,
-   Inc.
+   Copyright (C) 1989-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

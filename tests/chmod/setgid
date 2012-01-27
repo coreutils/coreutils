@@ -2,7 +2,7 @@
 # Make sure GNU chmod works the same way as those of Solaris, HPUX, AIX
 # wrt directories with the setgid bit set.
 
-# Copyright (C) 2001, 2004-2012 Free Software Foundation, Inc.
+# Copyright (C) 2001-2012 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
