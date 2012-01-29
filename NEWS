@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd now accepts the count_bytes, skip_bytes iflags and the seek_bytes
   oflag, to more easily allow processing portions of a file.
 
+  split now accepts an optional "from" argument to --numeric-suffixes,
+  which changes the start number from the default of 0.
+
 ** Bug fixes
 
   mv now lets you move a symlink onto a same-inode destination file that

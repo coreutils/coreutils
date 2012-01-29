@@ -80,6 +80,9 @@ static size_t suffix_length;
 /* Alphabet of characters to use in suffix.  */
 static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
 
+/* Numerical suffix start value.  */
+static const char *numeric_suffix_start;
+
 /* Name of input file.  May be "-".  */
 static char *infile;
 
@@ -122,7 +125,7 @@ static struct option const longopts[] =
   {"elide-empty-files", no_argument, NULL, 'e'},
   {"unbuffered", no_argument, NULL, 'u'},
   {"suffix-length", required_argument, NULL, 'a'},
-  {"numeric-suffixes", no_argument, NULL, 'd'},
+  {"numeric-suffixes", optional_argument, NULL, 'd'},
   {"filter", required_argument, NULL, FILTER_OPTION},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
   {"-io-blksize", required_argument, NULL,
@@ -195,7 +198,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -a, --suffix-length=N   use suffixes of length N (default %d)\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
-  -d, --numeric-suffixes  use numeric suffixes instead of alphabetic\n\
+  -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic.\n\
+                                   FROM changes the start value (default 0).\n\
   -e, --elide-empty-files  do not generate empty output files with '-n'\n\
       --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
@@ -246,6 +250,18 @@ next_file_name (void)
       memset (outfile_mid, suffix_alphabet[0], suffix_length);
       outfile[outfile_length] = 0;
       sufindex = xcalloc (suffix_length, sizeof *sufindex);
+
+      if (numeric_suffix_start)
+        {
+          /* Update the output file name.  */
+          size_t i = strlen (numeric_suffix_start);
+          memcpy (outfile_mid + suffix_length - i, numeric_suffix_start, i);
+
+          /* Update the suffix index.  */
+          size_t *sufindex_end = sufindex + suffix_length;
+          while (i-- != 0)
+            *--sufindex_end = numeric_suffix_start[i] - '0';
+        }
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       /* POSIX requires that if the output file name is too long for
@@ -1142,6 +1158,23 @@ main (int argc, char **argv)
 
         case 'd':
           suffix_alphabet = "0123456789";
+          if (optarg)
+            {
+              if (strlen (optarg) != strspn (optarg, suffix_alphabet))
+                {
+                  error (0, 0,
+                         _("%s: invalid start value for numerical suffix"),
+                         optarg);
+                  usage (EXIT_FAILURE);
+                }
+              else
+                {
+                  /* Skip any leading zero.  */
+                  while (*optarg == '0' && *(optarg + 1) != '\0')
+                    optarg++;
+                  numeric_suffix_start = optarg;
+                }
+            }
           break;
 
         case 'e':
@@ -1209,6 +1242,15 @@ main (int argc, char **argv)
   if (optind < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
+    }
+
+  /* Check that the suffix length is large enough for the numerical
+     suffix start value.  */
+  if (numeric_suffix_start && strlen (numeric_suffix_start) > suffix_length)
+    {
+      error (0, 0, _("numerical suffix start value is too large "
+                     "for the suffix length"));
       usage (EXIT_FAILURE);
     }
 

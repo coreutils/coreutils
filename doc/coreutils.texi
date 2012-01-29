@@ -3084,10 +3084,11 @@ and so can be a pipe for example.
 Use suffixes of length @var{length}.  The default @var{length} is 2.
 
 @item -d
-@itemx --numeric-suffixes
+@itemx --numeric-suffixes[=@var{from}]
 @opindex -d
 @opindex --numeric-suffixes
-Use digits in suffixes rather than lower-case letters.
+Use digits in suffixes rather than lower-case letters.  The numerical
+suffix counts from @var{from} if specified, 0 otherwise.
 
 @item -e
 @itemx --elide-empty-files
