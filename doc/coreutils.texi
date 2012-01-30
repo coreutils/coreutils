@@ -2518,7 +2518,7 @@ three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
 @option{-w} is set.  This is a @acronym{POSIX}-compliant formulation.
 
 
-@item -S@var{string}
+@item -S[@var{string}]
 @itemx --sep-string[=@var{string}]
 @opindex -S
 @opindex --sep-string
@@ -2528,8 +2528,8 @@ does not affect line truncation or column alignment.
 Without @option{-S}, and with @option{-J}, @command{pr} uses the default output
 separator, TAB@.
 Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
-(same as @option{-S"@w{ }"}).  @option{--sep-string} with no
-@samp{=@var{string}} is equivalent to @option{--sep-string=""}.
+(same as @option{-S"@w{ }"}).
+If no @samp{@var{string}} argument is specified, @samp{""} is assumed.
 
 @item -t
 @itemx --omit-header

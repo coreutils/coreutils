@@ -313,10 +313,10 @@ All arguments to long options are mandatory for short options.\n\
 "), stdout);
       fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -S, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
+  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
-  -w, --width[=BYTES]         output BYTES bytes per output line\n\
+  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line\n\
       --traditional           accept arguments in traditional form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

@@ -250,7 +250,7 @@
                 compliant formulation. The source code translates -s into
                 the new options -S and -J, also -W if required.
 
-   -S STRING, --sep-string[=STRING]
+   -S[STRING], --sep-string[=STRING]
                 Separate columns by any string STRING. The -S option
                 doesn't react upon the -W/-w option (unlike -s option
                 does). It defines a separator nothing else.
@@ -2842,7 +2842,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
 "), stdout);
       fputs (_("\
-  -SSTRING, --sep-string[=STRING]\n\
+  -S[STRING], --sep-string[=STRING]\n\
                     separate columns by STRING,\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
