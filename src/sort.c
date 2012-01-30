@@ -2373,8 +2373,8 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
                       umaxtostr (eword + 1
                                  + (key->echar == SIZE_MAX), tmp));
             }
-          error (0, 0, _("obsolescent key '%s' used; consider '%s' instead"),
-                 obuf, nbuf);
+          error (0, 0, _("obsolescent key %s used; consider %s instead"),
+                 quote_n (0, obuf), quote_n (1, nbuf));
         }
 
       /* Warn about field specs that will never match.  */
