@@ -492,6 +492,7 @@ TESTS =						\
   mv/partition-perm				\
   mv/perm-1					\
   mv/symlink-onto-hardlink			\
+  mv/symlink-onto-hardlink-to-self		\
   mv/to-symlink					\
   mv/trailing-slash				\
   mv/update					\

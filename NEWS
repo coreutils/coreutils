@@ -11,6 +11,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   referent, there is no risk of data loss, since the symlink will
   typically still point to one of the hard links.
 
+  "mv A B" could succeed, yet A would remain.  This would happen only when
+  both A and B were hard links to the same symlink, and with a kernel for
+  which rename("A","B") does nothing and returns 0 (POSIX mandates this
+  surprising rename no-op behavior).  Now, mv handles this case by skipping
+  the usually-useless rename and simply unlinking A.
+
 
 * Noteworthy changes in release 8.15 (2012-01-06) [stable]
 

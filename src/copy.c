@@ -1226,10 +1226,33 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       same_link = same;
 
       /* If both the source and destination files are symlinks (and we'll
-         know this here IFF preserving symlinks), then it's ok -- as long
-         as they are distinct.  */
+         know this here IFF preserving symlinks), then it's usually ok
+         when they are distinct.  */
       if (S_ISLNK (src_sb->st_mode) && S_ISLNK (dst_sb->st_mode))
-        return ! same_name (src_name, dst_name);
+        {
+          bool sn = same_name (src_name, dst_name);
+          if ( ! sn)
+            {
+              /* It's fine when we're making any type of backup.  */
+              if (x->backup_type != no_backups)
+                return true;
+
+              /* Here we have two symlinks that are hard-linked together,
+                 and we're not making backups.  In this unusual case, simply
+                 returning true would lead to mv calling "rename(A,B)",
+                 which would do nothing and return 0.  I.e., A would
+                 not be removed.  Hence, the solution is to tell the
+                 caller that all it must do is unlink A and return.  */
+              if (same_link)
+                {
+                  *unlink_src = true;
+                  *return_now = true;
+                  return true;
+                }
+            }
+
+          return ! sn;
+        }
 
       src_sb_link = src_sb;
       dst_sb_link = dst_sb;
