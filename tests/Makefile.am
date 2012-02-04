@@ -369,6 +369,7 @@ TESTS =						\
   dd/reblock					\
   dd/skip-seek					\
   dd/skip-seek2					\
+  dd/bytes					\
   dd/skip-seek-past-file			\
   dd/stderr					\
   dd/unblock					\

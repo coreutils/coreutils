@@ -8057,18 +8057,24 @@ When converting variable-length records to fixed-length ones
 (@option{conv=block}) or the reverse (@option{conv=unblock}),
 use @var{bytes} as the fixed record length.
 
-@item skip=@var{blocks}
+@item skip=@var{n}
 @opindex skip
-Skip @var{blocks} @samp{ibs}-byte blocks in the input file before copying.
+Skip @var{n} @samp{ibs}-byte blocks in the input file before copying.
+If @samp{iflag=skip_bytes} is specified, @var{n} is interpreted
+as a byte count rather than a block count.
 
-@item seek=@var{blocks}
+@item seek=@var{n}
 @opindex seek
-Skip @var{blocks} @samp{obs}-byte blocks in the output file before copying.
+Skip @var{n} @samp{obs}-byte blocks in the output file before copying.
+if @samp{oflag=seek_bytes} is specified, @var{n} is interpreted
+as a byte count rather than a block count.
 
-@item count=@var{blocks}
+@item count=@var{n}
 @opindex count
-Copy @var{blocks} @samp{ibs}-byte blocks from the input file, instead
+Copy @var{n} @samp{ibs}-byte blocks from the input file, instead
 of everything until the end of the file.
+if @samp{iflag=count_bytes} is specified, @var{n} is interpreted
+as a byte count rather than a block count.
 
 @item status=noxfer
 @opindex status
@@ -8321,6 +8327,27 @@ When that happens, continue calling @code{read} to fill the remainder
 of the block.
 This flag can be used only with @code{iflag}.
 
+@item count_bytes
+@opindex count_bytes
+Interpret the @samp{count=} operand as a byte count,
+rather than a block count, which allows specifying
+a length that is not a multiple of the I/O block size.
+This flag can be used only with @code{iflag}.
+
+@item skip_bytes
+@opindex skip_bytes
+Interpret the @samp{skip=} operand as a byte count,
+rather than a block count, which allows specifying
+an offset that is not a multiple of the I/O block size.
+This flag can be used only with @code{iflag}.
+
+@item seek_bytes
+@opindex seek_bytes
+Interpret the @samp{seek=} operand as a byte count,
+rather than a block count, which allows specifying
+an offset that is not a multiple of the I/O block size.
+This flag can be used only with @code{oflag}.
+
 @end table
 
 These flags are not supported on all systems, and @samp{dd} rejects
@@ -8343,10 +8370,13 @@ should not be too large---values larger than a few megabytes
 are generally wasteful or (as in the gigabyte..exabyte case) downright
 counterproductive or error-inducing.
 
-Use different @command{dd} invocations to use different block sizes for
-skipping and I/O@.  For example, the following shell commands copy data
-in 512 KiB blocks between a disk and a tape, but do not save or restore a
-4 KiB label at the start of the disk:
+To process data that is at an offset or size that is not a
+multiple of the I/O@ block size, you can use the @samp{skip_bytes},
+@samp{seek_bytes} and @samp{count_bytes} flags.  Alternatively
+the traditional method of separate @command{dd} invocations can be used.
+For example, the following shell commands copy data
+in 512 KiB blocks between a disk and a tape, but do not save
+or restore a 4 KiB label at the start of the disk:
 
 @example
 disk=/dev/rdsk/c0t1d0s2
