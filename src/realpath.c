@@ -108,10 +108,24 @@ realpath_canon (const char *fname, int can_mode)
   return can_fname;
 }
 
-/* Test whether prefix is parent or match of path.  */
+/* Test whether canonical prefix is parent or match of path.  */
 static bool _GL_ATTRIBUTE_PURE
 path_prefix (const char *prefix, const char *path)
 {
+  /* We already know prefix[0] and path[0] are '/'.  */
+  prefix++;
+  path++;
+
+  /* '/' is the prefix of everything except '//' (since we know '//'
+     is only present after canonicalization if it is distinct).  */
+  if (!*prefix)
+    return *path != '/';
+
+  /* Likewise, '//' is a prefix of any double-slash path.  */
+  if (*prefix == '/' && !prefix[1])
+    return *path == '/';
+
+  /* Any other prefix has a non-slash portion.  */
   while (*prefix && *path)
     {
       if (*prefix != *path)
@@ -123,13 +137,19 @@ path_prefix (const char *prefix, const char *path)
 }
 
 /* Return the length of the longest common prefix
-   of PATH1 and PATH2, ensuring only full path components
+   of canonical PATH1 and PATH2, ensuring only full path components
    are matched.  Return 0 on no match.  */
 static int _GL_ATTRIBUTE_PURE
 path_common_prefix (const char *path1, const char *path2)
 {
   int i = 0;
   int ret = 0;
+
+  /* We already know path1[0] and path2[0] are '/'.  Special case
+     '//', which is only present in a canonical name on platforms
+     where it is distinct.  */
+  if ((path1[1] == '/') != (path2[1] == '/'))
+    return 0;
 
   while (*path1 && *path2)
     {
@@ -168,6 +188,9 @@ relpath (const char *can_fname)
 
       /* Skip the prefix common to --relative-to and path.  */
       int common_index = path_common_prefix (can_relative_to, can_fname);
+      if (!common_index)
+        return false;
+
       const char *relto_suffix = can_relative_to + common_index;
       const char *fname_suffix = can_fname + common_index;
 

@@ -57,6 +57,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   surprising rename no-op behavior).  Now, mv handles this case by skipping
   the usually-useless rename and simply unlinking A.
 
+  realpath no longer mishandles a root directory.  This was most
+  noticeable on platforms where // is a different directory than /,
+  but could also be observed with --relative-base=/ or
+  --relative-to=/.  [bug since the beginning, in 8.15]
+
 ** Improvements
 
   ls can be much more efficient, especially with large directories on file
