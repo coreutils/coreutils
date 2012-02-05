@@ -1807,12 +1807,14 @@ dd_copy (void)
           memset (obuf, 0, output_blocksize);
 
           do
-            if (iwrite (STDOUT_FILENO, obuf, output_blocksize)
-                != output_blocksize)
-              {
-                error (0, errno, _("writing to %s"), quote (output_file));
-                quit (EXIT_FAILURE);
-              }
+            {
+              if (iwrite (STDOUT_FILENO, obuf, output_blocksize)
+                  != output_blocksize)
+                {
+                  error (0, errno, _("writing to %s"), quote (output_file));
+                  quit (EXIT_FAILURE);
+                }
+            }
           while (--write_records != 0);
         }
     }
