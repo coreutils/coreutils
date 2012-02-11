@@ -2777,10 +2777,40 @@ clear_files (void)
   file_size_width = 0;
 }
 
+/* Return true if ERR implies lack-of-support failure by a
+   getxattr-calling function like getfilecon.  */
+static bool
+errno_unsupported (int err)
+{
+  return err == ENOTSUP || err == EOPNOTSUPP;
+}
+
+/* Cache *getfilecon failure, when it's trivial to do so.
+   Like getfilecon/lgetfilecon, but when F's st_dev says it's on a known-
+   SELinux-challenged file system, fail with ENOTSUP immediately.  */
+static int
+getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
+{
+  /* st_dev of the most recently processed device for which we've
+     found that [l]getfilecon fails indicating lack of support.  */
+  static dev_t unsupported_device;
+
+  if (f->stat.st_dev == unsupported_device)
+    {
+      errno = ENOTSUP;
+      return -1;
+    }
+  int r = (deref
+           ? getfilecon (file, &f->scontext)
+           : lgetfilecon (file, &f->scontext));
+  if (r < 0 && errno_unsupported (errno))
+    unsupported_device = f->stat.st_dev;
+  return r;
+}
+
 /* Add a file to the current table of files.
    Verify that the file exists, and print an error message if it does not.
    Return the number of blocks that the file occupies.  */
-
 static uintmax_t
 gobble_file (char const *name, enum filetype type, ino_t inode,
              bool command_line_arg, char const *dirname)
@@ -2918,9 +2948,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
         {
           bool have_selinux = false;
           bool have_acl = false;
-          int attr_len = (do_deref
-                          ?  getfilecon (absolute_name, &f->scontext)
-                          : lgetfilecon (absolute_name, &f->scontext));
+          int attr_len = getfilecon_cache (absolute_name, f, do_deref);
           err = (attr_len < 0);
 
           if (err == 0)
