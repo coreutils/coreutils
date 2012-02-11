@@ -11,7 +11,7 @@ index d5968bd..4926676 100644
  	  char *_Restrict_ errbuf, size_t errbuf_size)
  #endif
  {
-@@ -1383,7 +1383,7 @@ calc_first (void *extra, bin_tree_t *node)
+@@ -1415,7 +1415,7 @@ calc_first (void *extra, bin_tree_t *node)
 
  /* Pass 2: compute NEXT on the tree.  Preorder visit.  */
  static reg_errcode_t
@@ -20,17 +20,20 @@ index d5968bd..4926676 100644
  {
    switch (node->token.type)
      {
-@@ -2744,7 +2744,8 @@ static reg_errcode_t
+@@ -2792,8 +2792,10 @@ build_range_exp (const reg_syntax_t synt
+ static reg_errcode_t
  internal_function
- build_collating_symbol (bitset_t sbcset,
  # ifdef RE_ENABLE_I18N
--			re_charset_t *mbcset, Idx *coll_sym_alloc,
-+			re_charset_t *mbcset _UNUSED_PARAMETER_,
+-build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
+-			Idx *coll_sym_alloc, const unsigned char *name)
++build_collating_symbol (bitset_t sbcset,
++                        re_charset_t *mbcset _UNUSED_PARAMETER_,
 +			Idx *coll_sym_alloc _UNUSED_PARAMETER_,
- # endif
- 			const unsigned char *name)
- {
-@@ -3323,7 +3324,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
++                        const unsigned char *name)
+ # else /* not RE_ENABLE_I18N */
+ build_collating_symbol (bitset_t sbcset, const unsigned char *name)
+ # endif /* not RE_ENABLE_I18N */
+@@ -3377,7 +3379,8 @@ parse_bracket_exp (re_string_t *regexp,
 
  static reg_errcode_t
  parse_bracket_element (bracket_elem_t *elem, re_string_t *regexp,
@@ -40,19 +43,20 @@ index d5968bd..4926676 100644
  		       reg_syntax_t syntax, bool accept_hyphen)
  {
  #ifdef RE_ENABLE_I18N
-@@ -3410,8 +3412,9 @@ parse_bracket_symbol (bracket_elem_t *elem, re_string_t *regexp,
+@@ -3464,8 +3467,10 @@ parse_bracket_symbol (bracket_elem_t *elem, re_string_t *regexp,
 
  static reg_errcode_t
  #ifdef RE_ENABLE_I18N
 -build_equiv_class (bitset_t sbcset, re_charset_t *mbcset,
 -		   Idx *equiv_class_alloc, const unsigned char *name)
-+build_equiv_class (bitset_t sbcset, re_charset_t *mbcset _UNUSED_PARAMETER_,
++build_equiv_class (bitset_t sbcset,
++                   re_charset_t *mbcset _UNUSED_PARAMETER_,
 +		   Idx *equiv_class_alloc _UNUSED_PARAMETER_,
 +		   const unsigned char *name)
  #else /* not RE_ENABLE_I18N */
  build_equiv_class (bitset_t sbcset, const unsigned char *name)
  #endif /* not RE_ENABLE_I18N */
-@@ -3816,7 +3819,7 @@ free_token (re_token_t *node)
+@@ -3869,1 +3874,1 @@ free_token (re_token_t *node)
     and its children. */
 
  static reg_errcode_t

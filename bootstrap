@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2011-12-17.15; # UTC
+scriptversion=2012-02-11.09; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -87,9 +87,9 @@ gnulib_files=
 : ${AUTOPOINT=autopoint}
 : ${AUTORECONF=autoreconf}
 
-# A function to be called to edit gnulib.mk right after it's created.
+# A function to be called right after gnulib-tool is run.
 # Override it via your own definition in bootstrap.conf.
-gnulib_mk_hook() { :; }
+bootstrap_post_import_hook() { :; }
 
 # A function to be called after everything else in this script.
 # Override it via your own definition in bootstrap.conf.
@@ -316,8 +316,8 @@ insert_vc_ignore() {
   pattern="$2"
   case $vc_ignore_file in
   *.gitignore)
-    # A .gitignore entry that does not start with `/' applies
-    # recursively to subdirectories, so prepend `/' to every
+    # A .gitignore entry that does not start with '/' applies
+    # recursively to subdirectories, so prepend '/' to every
     # .gitignore entry.
     pattern=`echo "$pattern" | sed s,^,/,`;;
   esac
@@ -604,7 +604,7 @@ if $bootstrap_sync; then
 fi
 
 gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
-<$gnulib_tool || exit
+<$gnulib_tool || exit $?
 
 # Get translations.
 
@@ -758,7 +758,7 @@ fi
 # Autoreconf runs aclocal before libtoolize, which causes spurious
 # warnings if the initial aclocal is confused by the libtoolized
 # (or worse out-of-date) macro directory.
-if grep '^[    ]*LT_INIT' configure.ac >/dev/null; then
+if test $use_libtool = 1; then
   echo "running: $LIBTOOLIZE --copy --install"
   $LIBTOOLIZE --copy --install
 fi
@@ -807,6 +807,9 @@ for file in $gnulib_files; do
   symlink_to_dir "$GNULIB_SRCDIR" $file || exit
 done
 
+bootstrap_post_import_hook \
+  || { echo >&2 "$me: bootstrap_post_import_hook failed"; exit 1; }
+
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
 # The following requires GNU find 4.2.3 or newer.  Considering the usual
@@ -819,11 +822,20 @@ find "$m4_base" "$source_base" \
   -depth \( -name '*.m4' -o -name '*.[ch]' \) \
   -type l -xtype l -delete > /dev/null 2>&1
 
+# Some systems (RHEL 5) are using ancient autotools, for which the
+# --no-recursive option had not been invented.  Detect that lack and
+# omit the option when it's not supported.  FIXME in 2017: remove this
+# hack when RHEL 5 autotools are updated, or when they become irrelevant.
+no_recursive=
+case $($AUTORECONF --help) in
+  *--no-recursive*) no_recursive=--no-recursive;;
+esac
+
 # Tell autoreconf not to invoke autopoint or libtoolize; they were run above.
 echo "running: AUTOPOINT=true LIBTOOLIZE=true " \
-    "$AUTORECONF --verbose --install --no-recursive -I $m4_base"
+    "$AUTORECONF --verbose --install $no_recursive -I $m4_base $ACLOCAL_FLAGS"
 AUTOPOINT=true LIBTOOLIZE=true \
-    $AUTORECONF --verbose --install --no-recursive -I $m4_base \
+    $AUTORECONF --verbose --install $no_recursive -I $m4_base $ACLOCAL_FLAGS \
   || exit 1
 
 # Get some extra files from gnulib, overriding existing files.
