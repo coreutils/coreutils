@@ -56,7 +56,7 @@ index d5968bd..4926676 100644
  #else /* not RE_ENABLE_I18N */
  build_equiv_class (bitset_t sbcset, const unsigned char *name)
  #endif /* not RE_ENABLE_I18N */
-@@ -3869,1 +3874,1 @@ free_token (re_token_t *node)
+@@ -3869,7 +3874,7 @@ free_token (re_token_t *node)
     and its children. */
 
  static reg_errcode_t
