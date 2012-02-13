@@ -45,13 +45,12 @@ esac
 # seek bytes
 echo abcdefghijklm |
  dd bs=5 seek=8 oflag=seek_bytes > out 2> /dev/null || fail=1
-echo abcdefghijklm |
- dd bs=4 seek=2 > expected 2> /dev/null || fail=1
+printf '\0\0\0\0\0\0\0\0abcdefghijklm\n' > expected
 compare expected out || fail=1
 
-# seek bytes on empty file
-echo abcdefghijklm |
- dd bs=5 seek=8 oflag=seek_bytes > out2 2> /dev/null || fail=1
-compare expected out2 || fail=1
+# Just truncation, no I/O
+dd bs=5 seek=8 oflag=seek_bytes of=out2 count=0 2> /dev/null || fail=1
+truncate -s8 expected2
+compare expected2 out2 || fail=1
 
 Exit $fail

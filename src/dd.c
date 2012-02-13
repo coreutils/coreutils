@@ -1917,7 +1917,7 @@ dd_copy (void)
 
   while (1)
     {
-      if (r_partial + r_full >= max_records + (max_bytes ? 1 : 0))
+      if (r_partial + r_full >= max_records + !!max_bytes)
         break;
 
       /* Zero the buffer before reading, so that if we get a read error,
@@ -2170,7 +2170,7 @@ main (int argc, char **argv)
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {
-          uintmax_t size = seek_records * output_blocksize;
+          uintmax_t size = seek_records * output_blocksize + seek_bytes;
           unsigned long int obs = output_blocksize;
 
           if (OFF_T_MAX / output_blocksize < seek_records)
@@ -2207,7 +2207,7 @@ main (int argc, char **argv)
 
   exit_status = dd_copy ();
 
-  if (max_records == 0)
+  if (max_records == 0 && max_bytes == 0)
     {
       /* Special case to invalidate cache to end of file.  */
       if (i_nocache && !invalidate_cache (STDIN_FILENO, 0))
@@ -2225,7 +2225,7 @@ main (int argc, char **argv)
     }
   else if (max_records != (uintmax_t) -1)
     {
-      /* Invalidate any pending region less that page size,
+      /* Invalidate any pending region less than page size,
          in case the kernel might round up.  */
       if (i_nocache)
         invalidate_cache (STDIN_FILENO, 0);
