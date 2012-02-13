@@ -2736,6 +2736,7 @@ has_capability (char const *name)
 static bool
 has_capability (char const *name ATTRIBUTE_UNUSED)
 {
+  errno = ENOTSUP;
   return false;
 }
 #endif
@@ -2778,11 +2779,16 @@ clear_files (void)
 }
 
 /* Return true if ERR implies lack-of-support failure by a
-   getxattr-calling function like getfilecon.  */
+   getxattr-calling function like getfilecon or file_has_acl.  */
 static bool
 errno_unsupported (int err)
 {
-  return err == ENOTSUP || err == EOPNOTSUPP;
+  return (err == EBUSY
+          || err == EINVAL
+          || err == ENOENT
+          || err == ENOSYS
+          || err == ENOTSUP
+          || err == EOPNOTSUPP);
 }
 
 /* Cache *getfilecon failure, when it's trivial to do so.
@@ -2806,6 +2812,53 @@ getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
   if (r < 0 && errno_unsupported (errno))
     unsupported_device = f->stat.st_dev;
   return r;
+}
+
+/* Cache file_has_acl failure, when it's trivial to do.
+   Like file_has_acl, but when F's st_dev says it's on a file
+   system lacking ACL support, return 0 with ENOTSUP immediately.  */
+static int
+file_has_acl_cache (char const *file, struct fileinfo *f)
+{
+  /* st_dev of the most recently processed device for which we've
+     found that file_has_acl fails indicating lack of support.  */
+  static dev_t unsupported_device;
+
+  if (f->stat.st_dev == unsupported_device)
+    {
+      errno = ENOTSUP;
+      return 0;
+    }
+
+  /* Zero errno so that we can distinguish between two 0-returning cases:
+     "has-ACL-support, but only a default ACL" and "no ACL support". */
+  errno = 0;
+  int n = file_has_acl (file, &f->stat);
+  if (n <= 0 && errno_unsupported (errno))
+    unsupported_device = f->stat.st_dev;
+  return n;
+}
+
+/* Cache has_capability failure, when it's trivial to do.
+   Like has_capability, but when F's st_dev says it's on a file
+   system lacking capability support, return 0 with ENOTSUP immediately.  */
+static bool
+has_capability_cache (char const *file, struct fileinfo *f)
+{
+  /* st_dev of the most recently processed device for which we've
+     found that has_capability fails indicating lack of support.  */
+  static dev_t unsupported_device;
+
+  if (f->stat.st_dev == unsupported_device)
+    {
+      errno = ENOTSUP;
+      return 0;
+    }
+
+  bool b = has_capability (file);
+  if ( !b && errno_unsupported (errno))
+    unsupported_device = f->stat.st_dev;
+  return b;
 }
 
 /* Add a file to the current table of files.
@@ -2942,7 +2995,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       /* Note has_capability() adds around 30% runtime to 'ls --color'  */
       if ((type == normal || S_ISREG (f->stat.st_mode))
           && print_with_color && is_colored (C_CAP))
-        f->has_capability = has_capability (absolute_name);
+        f->has_capability = has_capability_cache (absolute_name, f);
 
       if (format == long_format || print_scontext)
         {
@@ -2967,7 +3020,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
           if (err == 0 && format == long_format)
             {
-              int n = file_has_acl (absolute_name, &f->stat);
+              int n = file_has_acl_cache (absolute_name, f);
               err = (n < 0);
               have_acl = (0 < n);
             }

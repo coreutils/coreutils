@@ -25,6 +25,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   surprising rename no-op behavior).  Now, mv handles this case by skipping
   the usually-useless rename and simply unlinking A.
 
+** Improvements
+
+  ls can be much more efficient, especially with large directories on file
+  systems for which getfilecon-, ACL-check- and XATTR-check-induced syscalls
+  fail with ENOTSUP or similar.
+
 
 * Noteworthy changes in release 8.15 (2012-01-06) [stable]
 
