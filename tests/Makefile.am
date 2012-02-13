@@ -427,6 +427,7 @@ TESTS =						\
   ls/dired					\
   ls/file-type					\
   ls/follow-slink				\
+  ls/getxattr-speedup				\
   ls/infloop					\
   ls/inode					\
   ls/m-option					\
