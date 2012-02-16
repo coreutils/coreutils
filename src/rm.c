@@ -135,7 +135,7 @@ usage (int status)
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
-  -f, --force           ignore nonexistent files, never prompt\n\
+  -f, --force           ignore nonexistent files and arguments, never prompt\n\
   -i                    prompt before every removal\n\
 "), stdout);
       fputs (_("\

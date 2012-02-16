@@ -8769,7 +8769,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --force
 @opindex -f
 @opindex --force
-Ignore nonexistent files and never prompt the user.
+Ignore nonexistent files and missing operands, and never prompt the user.
 Ignore any previous @option{--interactive} (@option{-i}) option.
 
 @item -i
