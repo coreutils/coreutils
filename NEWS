@@ -4,7 +4,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  dd now accepts the count_bytes, skip_bytes iflags and the count_bytes
+  dd now accepts the count_bytes, skip_bytes iflags and the seek_bytes
   oflag, to more easily allow processing portions of a file.
 
 ** Bug fixes
