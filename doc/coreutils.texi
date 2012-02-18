@@ -3040,7 +3040,7 @@ xz -dc BIG.xz | split -b200G --filter='xz > $FILE.xz' - big-
 @end example
 
 Assuming a 10:1 compression ratio, that would create about fifty 20GiB files
-with names @file{big-xaa.xz}, @file{big-xab.xz}, @file{big-xac.xz}, etc.
+with names @file{big-aa.xz}, @file{big-ab.xz}, @file{big-ac.xz}, etc.
 
 @item -n @var{chunks}
 @itemx --number=@var{chunks}
