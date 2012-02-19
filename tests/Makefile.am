@@ -254,6 +254,7 @@ TESTS =						\
   misc/sort-NaN-infloop				\
   split/filter					\
   split/suffix-length				\
+  split/additional-suffix			\
   split/b-chunk					\
   split/fail					\
   split/lines					\

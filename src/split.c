@@ -83,6 +83,9 @@ static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
 /* Numerical suffix start value.  */
 static const char *numeric_suffix_start;
 
+/* Additional suffix to append to output file names.  */
+static char const *additional_suffix;
+
 /* Name of input file.  May be "-".  */
 static char *infile;
 
@@ -113,7 +116,8 @@ enum
 {
   VERBOSE_OPTION = CHAR_MAX + 1,
   FILTER_OPTION,
-  IO_BLKSIZE_OPTION
+  IO_BLKSIZE_OPTION,
+  ADDITIONAL_SUFFIX_OPTION
 };
 
 static struct option const longopts[] =
@@ -125,6 +129,8 @@ static struct option const longopts[] =
   {"elide-empty-files", no_argument, NULL, 'e'},
   {"unbuffered", no_argument, NULL, 'u'},
   {"suffix-length", required_argument, NULL, 'a'},
+  {"additional-suffix", required_argument, NULL,
+   ADDITIONAL_SUFFIX_OPTION},
   {"numeric-suffixes", optional_argument, NULL, 'd'},
   {"filter", required_argument, NULL, FILTER_OPTION},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
@@ -195,7 +201,8 @@ is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fprintf (stdout, _("\
-  -a, --suffix-length=N   use suffixes of length N (default %d)\n\
+  -a, --suffix-length=N   generate suffixes of length N (default %d)\n\
+      --additional-suffix=SUFFIX  append an additional SUFFIX to file names.\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic.\n\
@@ -241,13 +248,16 @@ next_file_name (void)
       /* Allocate and initialize the first file name.  */
 
       size_t outbase_length = strlen (outbase);
-      size_t outfile_length = outbase_length + suffix_length;
+      size_t addsuf_length = additional_suffix ? strlen (additional_suffix) : 0;
+      size_t outfile_length = outbase_length + suffix_length + addsuf_length;
       if (outfile_length + 1 < outbase_length)
         xalloc_die ();
       outfile = xmalloc (outfile_length + 1);
       outfile_mid = outfile + outbase_length;
       memcpy (outfile, outbase, outbase_length);
       memset (outfile_mid, suffix_alphabet[0], suffix_length);
+      if (additional_suffix)
+        memcpy (outfile_mid + suffix_length, additional_suffix, addsuf_length);
       outfile[outfile_length] = 0;
       sufindex = xcalloc (suffix_length, sizeof *sufindex);
 
@@ -1050,6 +1060,17 @@ main (int argc, char **argv)
               }
             suffix_length = tmp;
           }
+          break;
+
+        case ADDITIONAL_SUFFIX_OPTION:
+          if (last_component (optarg) != optarg)
+            {
+              error (0, 0,
+                     _("invalid suffix %s, contains directory separator"),
+                     quote (optarg));
+              usage (EXIT_FAILURE);
+            }
+          additional_suffix = optarg;
           break;
 
         case 'b':

@@ -3090,6 +3090,11 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 Use digits in suffixes rather than lower-case letters.  The numerical
 suffix counts from @var{from} if specified, 0 otherwise.
 
+@itemx --additional-suffix=@var{suffix}
+@opindex --additional-suffix
+Append an additional @var{suffix} to output file names. @var{suffix}
+must not contain slash.
+
 @item -e
 @itemx --elide-empty-files
 @opindex -e

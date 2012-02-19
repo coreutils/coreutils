@@ -10,6 +10,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now accepts an optional "from" argument to --numeric-suffixes,
   which changes the start number from the default of 0.
 
+  split now accepts the --additional-suffix option, to append an
+  additional static suffix to output file names.
+
 ** Bug fixes
 
   mv now lets you move a symlink onto a same-inode destination file that
