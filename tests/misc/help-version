@@ -100,7 +100,7 @@ for lang in C fr da; do
       env $i --help    >/dev/full 2>/dev/null && fail=1
       env $i --version >/dev/full 2>/dev/null && fail=1
       status=$?
-      test $i = [ && prog=lbracket || prog=$i
+      test $i = [ && prog=lbracket || prog=$(echo $i|sed "s/$EXEEXT$//")
       eval "expected=\$expected_failure_status_$prog"
       test x$expected = x && expected=1
       if test $status = $expected; then
@@ -265,7 +265,7 @@ for i in $built_programs; do
   cp $tmp_in $tmp_in2
   mkdir $tmp_dir
   # echo ================== $i
-  test $i = [ && prog=lbracket || prog=$i
+  test $i = [ && prog=lbracket || prog=$(echo $i|sed "s/$EXEEXT$//")
   if type ${prog}_setup > /dev/null 2>&1; then
     ${prog}_setup
   else
