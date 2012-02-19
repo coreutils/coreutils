@@ -28,6 +28,7 @@ print_ver_ ls
 cat > k.c <<'EOF' || framework_failure_
 #include <errno.h>
 #include <stdio.h>
+#include <sys/types.h>
 
 static unsigned long int n_calls;
 
