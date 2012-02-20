@@ -2783,9 +2783,7 @@ clear_files (void)
 static bool
 errno_unsupported (int err)
 {
-  return (err == EBUSY
-          || err == EINVAL
-          || err == ENOENT
+  return (err == EINVAL
           || err == ENOSYS
           || err == ENOTSUP
           || err == EOPNOTSUPP);
