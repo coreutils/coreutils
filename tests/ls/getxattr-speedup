@@ -48,7 +48,7 @@ EOF
 
 # Then compile/link it:
 $CC -fPIC -O2 -c k.c || framework_failure_ 'failed to compile with -fPIC'
-ld -G k.o -lc -o k.so || framework_failure_ 'failed to invoke ld -G ...'
+ld -G k.o -o k.so || framework_failure_ 'failed to invoke ld -G ...'
 
 # Create a few files:
 seq 20 | xargs touch || framework_failure_
