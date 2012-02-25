@@ -1414,13 +1414,9 @@ default_sort_size (void)
   struct rlimit rlimit;
 
   /* Let SIZE be MEM, but no more than the maximum object size or
-     system resource limits.  Avoid the MIN macro here, as it is not
-     quite right when only one argument is floating point.  Don't
-     bother to check for values like RLIM_INFINITY since in practice
-     they are not much less than SIZE_MAX.  */
+     system resource limits.  Don't bother to check for values like
+     RLIM_INFINITY since in practice they are not much less than SIZE_MAX.  */
   size_t size = SIZE_MAX;
-  if (mem < size)
-    size = mem;
   if (getrlimit (RLIMIT_DATA, &rlimit) == 0 && rlimit.rlim_cur < size)
     size = rlimit.rlim_cur;
 #ifdef RLIMIT_AS
@@ -1439,7 +1435,11 @@ default_sort_size (void)
     size = rlimit.rlim_cur / 16 * 15;
 #endif
 
-  /* Use no less than the minimum.  */
+  /* Return the minimum of MEM and SIZE, but no less than
+     MIN_SORT_SIZE.  Avoid the MIN macro here, as it is not quite
+     right when only one argument is floating point.  */
+  if (mem < size)
+    size = mem;
   return MAX (size, MIN_SORT_SIZE);
 }
 
