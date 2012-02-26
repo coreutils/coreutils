@@ -2990,8 +2990,9 @@ The output files' names consist of @var{prefix} (@samp{x} by default)
 followed by a group of characters (@samp{aa}, @samp{ab}, @dots{} by
 default), such that concatenating the output files in traditional
 sorted order by file name produces the original input file (except
-@option{-r}).  If the output file names are exhausted, @command{split}
-reports an error without deleting the output files that it did create.
+@option{-nr/@var{n}}).  If the output file names are exhausted,
+@command{split} reports an error without deleting the output files
+that it did create.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
