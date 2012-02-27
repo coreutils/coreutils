@@ -20,6 +20,7 @@
 
 #define SWAB_ALIGN_OFFSET 2
 
+#include <assert.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
@@ -126,7 +127,9 @@ enum
     C_NOCREAT = 010000,
     C_EXCL = 020000,
     C_FDATASYNC = 040000,
-    C_FSYNC = 0100000
+    C_FSYNC = 0100000,
+
+    C_SPARSE = 0200000
   };
 
 /* Status bit masks.  */
@@ -166,6 +169,9 @@ static uintmax_t seek_records = 0;
 /* Skip this many bytes in addition to 'seek_records' records before
    output.  */
 static uintmax_t seek_bytes = 0;
+
+/* Whether the final output was done with a seek (rather than a write).  */
+static bool final_op_was_seek;
 
 /* Copy only this many records.  The default is effectively infinity.  */
 static uintmax_t max_records = (uintmax_t) -1;
@@ -271,6 +277,7 @@ static struct symbol_value const conversions[] =
   {"unblock", C_UNBLOCK | C_TWOBUFS},	/* Fixed to variable length records. */
   {"lcase", C_LCASE | C_TWOBUFS},	/* Translate upper to lower case. */
   {"ucase", C_UCASE | C_TWOBUFS},	/* Translate lower to upper case. */
+  {"sparse", C_SPARSE},		/* Try to sparsely write output. */
   {"swab", C_SWAB | C_TWOBUFS},	/* Swap bytes of input. */
   {"noerror", C_NOERROR},	/* Ignore i/o errors. */
   {"nocreat", C_NOCREAT},	/* Do not create output file.  */
@@ -548,6 +555,7 @@ Each CONV symbol may be:\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
   ucase     change lower case to upper case\n\
+  sparse    try to seek rather than write the output for NUL input blocks\n\
   swab      swap every pair of input bytes\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
             with block or unblock, pad with spaces rather than NULs\n\
@@ -989,6 +997,27 @@ iread_fullblock (int fd, char *buf, size_t size)
   return nread;
 }
 
+/* Return whether the buffer consists entirely of NULs.
+   Note the word after the buffer must be non NUL. */
+
+static bool _GL_ATTRIBUTE_PURE
+is_nul (const char *buf, size_t bufsize)
+{
+  typedef uintptr_t word;
+
+  /* Find first nonzero *word*, or the word with the sentinel.  */
+  word *wp = (word *) buf;
+  while (*wp++ == 0)
+    continue;
+
+  /* Find the first nonzero *byte*, or the sentinel.  */
+  char *cp = (char *) (wp - 1);
+  while (*cp++ == 0)
+    continue;
+
+  return cp > buf + bufsize;
+}
+
 /* Write to FD the buffer BUF of size SIZE, processing any signals
    that arrive.  Return the number of bytes written, setting errno if
    this is less than SIZE.  Keep trying if there are partial
@@ -1020,9 +1049,28 @@ iwrite (int fd, char const *buf, size_t size)
 
   while (total_written < size)
     {
-      ssize_t nwritten;
+      ssize_t nwritten = 0;
       process_signals ();
-      nwritten = write (fd, buf + total_written, size - total_written);
+
+      /* Perform a seek for a NUL block if sparse output is enabled.  */
+      final_op_was_seek = false;
+      if ((conversions_mask & C_SPARSE) && is_nul (buf, size))
+        {
+          if (lseek (fd, size, SEEK_CUR) < 0)
+            {
+              conversions_mask &= ~C_SPARSE;
+              /* Don't warn about the advisory sparse request.  */
+            }
+          else
+            {
+              final_op_was_seek = true;
+              nwritten = size;
+            }
+        }
+
+      if (!nwritten)
+        nwritten = write (fd, buf + total_written, size - total_written);
+
       if (nwritten < 0)
         {
           if (errno != EINTR)
@@ -1861,6 +1909,11 @@ dd_copy (void)
       obuf = ibuf;
     }
 
+  /* Write a sentinel to the slop after the buffer,
+     to allow efficient checking for NUL blocks.  */
+  assert (sizeof (uintptr_t) <= OUTPUT_BLOCK_SLOP);
+  memset (obuf + output_blocksize, 1, sizeof (uintptr_t));
+
   if (skip_records != 0 || skip_bytes != 0)
     {
       uintmax_t us_bytes = input_offset + (skip_records * input_blocksize)
@@ -2069,6 +2122,33 @@ dd_copy (void)
         {
           error (0, errno, _("writing %s"), quote (output_file));
           return EXIT_FAILURE;
+        }
+    }
+
+  /* If the last write was converted to a seek, then for a regular file,
+     ftruncate to extend the size.  */
+  if (final_op_was_seek)
+    {
+      struct stat stdout_stat;
+      if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
+        {
+          error (0, errno, _("cannot fstat %s"), quote (output_file));
+          return EXIT_FAILURE;
+        }
+      if (S_ISREG (stdout_stat.st_mode))
+        {
+          off_t output_offset = lseek (STDOUT_FILENO, 0, SEEK_CUR);
+          if (output_offset > stdout_stat.st_size)
+            {
+              if (ftruncate (STDOUT_FILENO, output_offset) != 0)
+                {
+                  error (0, errno,
+                         _("failed to truncate to %"PRIuMAX" bytes"
+                           " in output file %s"),
+                         output_offset, quote (output_file));
+                  return EXIT_FAILURE;
+                }
+            }
         }
     }
 

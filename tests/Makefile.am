@@ -373,6 +373,7 @@ TESTS =						\
   dd/skip-seek2					\
   dd/bytes					\
   dd/skip-seek-past-file			\
+  dd/sparse					\
   dd/stderr					\
   dd/unblock					\
   dd/unblock-sync				\

@@ -8140,6 +8140,17 @@ Change lowercase letters to uppercase.
 
 The @samp{lcase} and @samp{ucase} conversions are mutually exclusive.
 
+@item sparse
+@opindex sparse
+Try to seek rather than write @sc{nul} output blocks.
+On a file system that supports sparse files, this will create
+sparse output when extending the output file.
+Be careful when using this option in conjunction with
+@samp{conv=notrunc} or @samp{oflag=append}.
+With @samp{conv=notrunc}, existing data in the output
+corresponding to @sc{nul} blocks from the input, will be untouched.
+With @samp{oflag=append} the seeks performed will be ineffective.
+
 @item swab
 @opindex swab @r{(byte-swapping)}
 @cindex byte-swapping

@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# Copyright (C) 2012 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/init.sh"; path_prepend_ ../src
+print_ver_ dd
+require_sparse_support_
+
+# Ensure basic sparse generation works
+truncate -s1M sparse
+dd bs=32K if=sparse of=sparse.dd conv=sparse
+test $(stat -c %s sparse) = $(stat -c %s sparse.dd) || fail=1
+
+# Demonstrate that conv=sparse with oflag=append,
+# will do ineffective seeks in the output
+printf 'a\000\000b' > file.in
+printf 'ab' > exp
+dd if=file.in bs=1 conv=sparse oflag=append > out
+compare exp out || fail=1
+
+# Demonstrate conv=sparse with conv=notrunc,
+# where data in file.out is not overwritten with NULs
+printf '____' > out
+printf 'a__b' > exp
+dd if=file.in bs=1 conv=sparse,notrunc of=out
+compare exp out || fail=1
+
+# Ensure we fall back to write if seek fails
+dd if=file.in bs=1 conv=sparse | cat > file.out
+cmp file.in file.out || fail=1
+
+# Setup for block size tests
+dd if=/dev/urandom of=file.in bs=1M count=1
+truncate -s+1M file.in
+dd if=/dev/urandom of=file.in bs=1M count=1 conv=notrunc oflag=append
+
+# Ensure NUL blocks smaller than the block size are not made sparse
+dd if=file.in of=file.out bs=2M conv=sparse
+test $(stat -c %s file.in) = $(stat -c %s file.out) || fail=1
+test $(stat -c %b file.in) = $(stat -c %b file.out) && fail=1
+
+# Ensure NUL blocks >= block size are made sparse
+dd if=file.in of=file.out bs=1M conv=sparse
+test $(stat -c %s file.in) = $(stat -c %s file.out) || fail=1
+test $(stat -c %b file.in) = $(stat -c %b file.out) || fail=1
+
+Exit $fail
