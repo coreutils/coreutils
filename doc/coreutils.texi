@@ -15940,6 +15940,7 @@ Exit status:
 125 if @command{timeout} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
+137 if @var{command} is sent the KILL(9) signal (128+9)
 the exit status of @var{command} otherwise
 @end display
 

@@ -236,7 +236,8 @@ If the command times out, then exit with status 124.  Otherwise, exit\n\
 with the status of COMMAND.  If no signal is specified, send the TERM\n\
 signal upon timeout.  The TERM signal kills any process that does not\n\
 block or catch that signal.  For other processes, it may be necessary to\n\
-use the KILL (9) signal, since this signal cannot be caught.\n"), stdout);
+use the KILL (9) signal, since this signal cannot be caught.  If the\n\
+KILL (9) signal is sent, the exit status is 128+9 rather than 124.\n"), stdout);
       emit_ancillary_info ();
     }
   exit (status);
