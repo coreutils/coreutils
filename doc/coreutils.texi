@@ -2990,9 +2990,15 @@ The output files' names consist of @var{prefix} (@samp{x} by default)
 followed by a group of characters (@samp{aa}, @samp{ab}, @dots{} by
 default), such that concatenating the output files in traditional
 sorted order by file name produces the original input file (except
-@option{-nr/@var{n}}).  If the output file names are exhausted,
-@command{split} reports an error without deleting the output files
-that it did create.
+@option{-nr/@var{n}}).  By default split will initially create files
+with two generated suffix characters, and will increase this width by two
+when the next most significant position reaches the last character.
+(@samp{yz}, @samp{zaaa}, @samp{zaab}, @dots{}).  In this way an arbitrary
+number of output files are supported, which sort as described above,
+even in the presence of an @option{--additional-suffix} option.
+If the @option{-a} option is specified and the output file names are
+exhausted, @command{split} reports an error without deleting the
+output files that it did create.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -3082,7 +3088,11 @@ and so can be a pipe for example.
 @itemx --suffix-length=@var{length}
 @opindex -a
 @opindex --suffix-length
-Use suffixes of length @var{length}.  The default @var{length} is 2.
+Use suffixes of length @var{length}.  If a @var{length} of 0 is specified,
+this is the same as if (any previous) @option{-a} was not specified, and
+thus enables the default behavior, which starts the suffix length at 2,
+and unless @option{-n} or @option{--numeric-suffixes=@var{from}} are
+specified, will auto increase the length by 2 as required.
 
 @item -d
 @itemx --numeric-suffixes[=@var{from}]
@@ -3090,6 +3100,9 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 @opindex --numeric-suffixes
 Use digits in suffixes rather than lower-case letters.  The numerical
 suffix counts from @var{from} if specified, 0 otherwise.
+Note specifying a @var{from} value also disables the default
+auto suffix length expansion described above, and so you may also
+want to specify @option{-a} to allow suffixes beyond @samp{99}.
 
 @itemx --additional-suffix=@var{suffix}
 @opindex --additional-suffix

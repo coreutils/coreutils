@@ -74,6 +74,9 @@ static char *outfile;
    Suffixes are inserted here.  */
 static char *outfile_mid;
 
+/* Generate new suffix when suffixes are exhausted.  */
+static bool suffix_auto = true;
+
 /* Length of OUTFILE's suffix.  */
 static size_t suffix_length;
 
@@ -155,6 +158,12 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
 
   size_t suffix_needed = 0;
 
+  /* The suffix auto length feature is incompatible with
+     a user specified start value as the generated suffixes
+     are not all consecutive.  */
+  if (numeric_suffix_start)
+    suffix_auto = false;
+
   /* Auto-calculate the suffix length if the number of files is given.  */
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines
       || split_type == type_rr)
@@ -164,6 +173,7 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
       while (n_units /= alphabet_len)
         suffix_needed++;
       suffix_needed += alphabet_slop;
+      suffix_auto = false;
     }
 
   if (suffix_length)            /* set by user */
@@ -174,6 +184,7 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
                  _("the suffix length needs to be at least %zu"),
                  suffix_needed);
         }
+      suffix_auto = false;
       return;
     }
   else
@@ -242,27 +253,62 @@ next_file_name (void)
 {
   /* Index in suffix_alphabet of each character in the suffix.  */
   static size_t *sufindex;
+  static size_t outbase_length;
+  static size_t outfile_length;
+  static size_t addsuf_length;
 
   if (! outfile)
     {
-      /* Allocate and initialize the first file name.  */
+      bool widen;
 
-      size_t outbase_length = strlen (outbase);
-      size_t addsuf_length = additional_suffix ? strlen (additional_suffix) : 0;
-      size_t outfile_length = outbase_length + suffix_length + addsuf_length;
+new_name:
+      widen = !! outfile_length;
+
+      if (! widen)
+        {
+          /* Allocate and initialize the first file name.  */
+
+          outbase_length = strlen (outbase);
+          addsuf_length = additional_suffix ? strlen (additional_suffix) : 0;
+          outfile_length = outbase_length + suffix_length + addsuf_length;
+        }
+      else
+        {
+          /* Reallocate and initialize a new wider file name.
+             We do this by subsuming the unchanging part of
+             the generated suffix into the prefix (base), and
+             reinitializing the now one longer suffix.  */
+
+          outfile_length += 2;
+          suffix_length++;
+        }
+
       if (outfile_length + 1 < outbase_length)
         xalloc_die ();
-      outfile = xmalloc (outfile_length + 1);
+      outfile = xrealloc (outfile, outfile_length + 1);
+
+      if (! widen)
+        memcpy (outfile, outbase, outbase_length);
+      else
+        {
+          /* Append the last alphabet character to the file name prefix.  */
+          outfile[outbase_length] = suffix_alphabet[sufindex[0]];
+          outbase_length++;
+        }
+
       outfile_mid = outfile + outbase_length;
-      memcpy (outfile, outbase, outbase_length);
       memset (outfile_mid, suffix_alphabet[0], suffix_length);
       if (additional_suffix)
         memcpy (outfile_mid + suffix_length, additional_suffix, addsuf_length);
       outfile[outfile_length] = 0;
+
+      free (sufindex);
       sufindex = xcalloc (suffix_length, sizeof *sufindex);
 
       if (numeric_suffix_start)
         {
+          assert (! widen);
+
           /* Update the output file name.  */
           size_t i = strlen (numeric_suffix_start);
           memcpy (outfile_mid + suffix_length - i, numeric_suffix_start, i);
@@ -295,6 +341,8 @@ next_file_name (void)
       while (i-- != 0)
         {
           sufindex[i]++;
+          if (suffix_auto && i == 0 && ! suffix_alphabet[sufindex[0] + 1])
+            goto new_name;
           outfile_mid[i] = suffix_alphabet[sufindex[i]];
           if (outfile_mid[i])
             return;

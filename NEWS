@@ -60,6 +60,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   systems for which getfilecon-, ACL-check- and XATTR-check-induced syscalls
   fail with ENOTSUP or similar.
 
+  split now supports an unlimited number of split files as default behavior.
+
 
 * Noteworthy changes in release 8.15 (2012-01-06) [stable]
 

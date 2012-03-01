@@ -253,6 +253,7 @@ TESTS =						\
   misc/sort-version				\
   misc/sort-NaN-infloop				\
   split/filter					\
+  split/suffix-auto-length			\
   split/suffix-length				\
   split/additional-suffix			\
   split/b-chunk					\
