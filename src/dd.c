@@ -997,27 +997,6 @@ iread_fullblock (int fd, char *buf, size_t size)
   return nread;
 }
 
-/* Return whether the buffer consists entirely of NULs.
-   Note the word after the buffer must be non NUL. */
-
-static bool _GL_ATTRIBUTE_PURE
-is_nul (const char *buf, size_t bufsize)
-{
-  typedef uintptr_t word;
-
-  /* Find first nonzero *word*, or the word with the sentinel.  */
-  word *wp = (word *) buf;
-  while (*wp++ == 0)
-    continue;
-
-  /* Find the first nonzero *byte*, or the sentinel.  */
-  char *cp = (char *) (wp - 1);
-  while (*cp++ == 0)
-    continue;
-
-  return cp > buf + bufsize;
-}
-
 /* Write to FD the buffer BUF of size SIZE, processing any signals
    that arrive.  Return the number of bytes written, setting errno if
    this is less than SIZE.  Keep trying if there are partial

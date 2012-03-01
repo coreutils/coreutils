@@ -491,6 +491,27 @@ ptr_align (void const *ptr, size_t alignment)
   return (void *) (p1 - (size_t) p1 % alignment);
 }
 
+/* Return whether the buffer consists entirely of NULs.
+   Note the word after the buffer must be non NUL. */
+
+static inline bool _GL_ATTRIBUTE_PURE
+is_nul (const char *buf, size_t bufsize)
+{
+  typedef uintptr_t word;
+
+  /* Find first nonzero *word*, or the word with the sentinel.  */
+  word *wp = (word *) buf;
+  while (*wp++ == 0)
+    continue;
+
+  /* Find the first nonzero *byte*, or the sentinel.  */
+  char *cp = (char *) (wp - 1);
+  while (*cp++ == 0)
+    continue;
+
+  return cp > buf + bufsize;
+}
+
 /* If 10*Accum + Digit_val is larger than the maximum value for Type,
    then don't update Accum and return false to indicate it would
    overflow.  Otherwise, set Accum to that new value and return true.
