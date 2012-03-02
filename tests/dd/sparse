@@ -47,14 +47,24 @@ dd if=/dev/urandom of=file.in bs=1M count=1
 truncate -s+1M file.in
 dd if=/dev/urandom of=file.in bs=1M count=1 conv=notrunc oflag=append
 
+# Note the block allocations below are usually equal,
+# but can vary by a file system block due to alignment,
+# which was seen on XFS at least.
+alloc_equal() {
+  : ${sectors_per_block:=$(expr $(stat -f -c "%S" .) / 512)}
+  alloc_diff=$(expr $(stat -c %b "$1") - $(stat -c %b "$2"))
+  alloc_diff=$(echo $alloc_diff | tr -d -- -) # abs()
+  test $alloc_diff -le $sectors_per_block
+}
+
 # Ensure NUL blocks smaller than the block size are not made sparse
 dd if=file.in of=file.out bs=2M conv=sparse
 test $(stat -c %s file.in) = $(stat -c %s file.out) || fail=1
-test $(stat -c %b file.in) = $(stat -c %b file.out) && fail=1
+alloc_equal file.in file.out && fail=1
 
 # Ensure NUL blocks >= block size are made sparse
 dd if=file.in of=file.out bs=1M conv=sparse
 test $(stat -c %s file.in) = $(stat -c %s file.out) || fail=1
-test $(stat -c %b file.in) = $(stat -c %b file.out) || fail=1
+alloc_equal file.in file.out || fail=1
 
 Exit $fail
