@@ -31,6 +31,20 @@ bootstrap-tools = autoconf,automake,gnulib,bison
 # Now that we have better tests, make this the default.
 export VERBOSE = yes
 
+# Comparing tarball sizes compressed using different xz presets, we see that
+# an -8e-compressed tarball is only 9KiB larger than the -9e-compressed one.
+# Using -8e is preferred, since that lets the decompression process use half
+# the memory (32MiB rather than 64MiB).
+# $ for i in {7,8,9}{e,}; do \
+#     (n=$(xz -$i < coreutils-8.15*.tar|wc -c);echo $n $i) & done |sort -nr
+# 5129388 7
+# 5036524 7e
+# 5017476 8
+# 5010604 9
+# 4923016 8e
+# 4914152 9e
+export XZ_OPT = -8e
+
 old_NEWS_hash = c2d954b7c19745272321cc4c4b676993
 
 # Add an exemption for sc_makefile_at_at_check.
