@@ -16,6 +16,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now accepts the --additional-suffix option, to append an
   additional static suffix to output file names.
 
+  basename now supports the -a and -s options, which allow processing
+  of more than one argument at a time.  Also the complementary
+  -z option was added to delimit output items with the NUL character.
+
 ** Bug fixes
 
   mv now lets you move a symlink onto a same-inode destination file that

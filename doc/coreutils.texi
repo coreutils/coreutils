@@ -12422,6 +12422,7 @@ This section describes commands that manipulate file names.
 
 @example
 basename @var{name} [@var{suffix}]
+basename @var{option}... @var{name}...
 @end example
 
 If @var{suffix} is specified and is identical to the end of @var{name},
@@ -12445,8 +12446,27 @@ for everything except file names containing a trailing newline.
 result is @samp{//} on platforms where @var{//} is distinct from
 @var{/}, and @samp{/} on platforms where there is no difference.
 
-The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.  Options must precede operands.
+The program accepts the following options.  Also see @ref{Common options}.
+Options must precede operands.
+
+@table @samp
+
+@item -a
+@itemx --multiple
+@opindex -a
+@opindex --multiple
+Support more than one argument.  Treat every argument as a @var{name}.
+With this, an optional @var{suffix} must be specified using the
+@option{-s} option.
+
+@item -s @var{suffix}
+@itemx --suffix=@var{suffix}
+@opindex -s
+@opindex --suffix
+Remove a trailing @var{suffix}.
+This option implies the @option{-a} option.
+
+@end table
 
 @exitstatus
 
@@ -12458,6 +12478,12 @@ basename /usr/bin/sort
 
 # Output "stdio".
 basename include/stdio.h .h
+
+# Output "stdio".
+basename -s .h include/stdio.h
+
+# Output "stdio" followed by "stdlib"
+basename -a -s .h include/stdio.h include/stdlib.h
 @end smallexample
 
 
