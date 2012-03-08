@@ -43,7 +43,15 @@ compare exp out || fail=1
 du -xL d > u || fail=1
 sed 's/^[0-9][0-9]*	//' u > out1
 echo d > exp1 || fail=1
-
 compare exp1 out1 || fail=1
+
+# With coreutils-8.15, "du -xs FILE" would print no output.
+touch f
+for opt in -x -xs; do
+  du $opt f > u || fail=1
+  sed 's/^[0-9][0-9]*	//' u > out2
+  echo f > exp2 || fail=1
+  compare exp2 out2 || fail=1
+done
 
 Exit $fail

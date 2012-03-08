@@ -443,7 +443,14 @@ process_file (FTS *fts, FTSENT *ent)
               return false;
             }
 
-          if (fts->fts_options & FTS_XDEV && fts->fts_dev != sb->st_dev)
+          /* The --one-file-system (-x) option cannot exclude anything
+             specified on the command-line.  By definition, it can exclude
+             a file or directory only when its device number is different
+             from that of its just-processed parent directory, and du does
+             not process the parent of a command-line argument.  */
+          if (fts->fts_options & FTS_XDEV
+              && FTS_ROOTLEVEL < ent->fts_level
+              && fts->fts_dev != sb->st_dev)
             excluded = true;
         }
 
