@@ -39,7 +39,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   du --one-file-system (-x) would ignore any non-directory specified on
   the command line.  For example, "touch f; du -x f" would print nothing.
-  [bug introduced in coreutils-8.14]
+  [bug introduced in coreutils-8.15]
 
   mv now lets you move a symlink onto a same-inode destination file that
   has two or more hard links.  Before, it would reject that, saying that
