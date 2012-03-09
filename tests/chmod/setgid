@@ -1,6 +1,7 @@
 #!/bin/sh
 # Make sure GNU chmod works the same way as those of Solaris, HPUX, AIX
-# wrt directories with the setgid bit set.
+# on directories with the setgid bit set.  Also, check that the GNU octal
+# notations work.
 
 # Copyright (C) 2001-2012 Free Software Foundation, Inc.
 
@@ -21,7 +22,7 @@
 print_ver_ chmod
 
 umask 0
-mkdir d || framework_failure_
+mkdir -m 755 d || framework_failure_
 
 chmod g+s d 2> /dev/null && env -- test -g d ||
   {
@@ -40,9 +41,24 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
 env -- test -g d ||
   skip_ 'cannot create setgid directories'
 
+for mode in \
+  + - g-s 00755 000755 =755 -2000 -7022 755 0755 \
+  +2000 -5022 =7777,-5022
+do
+  chmod $mode d || fail=1
 
-chmod 755 d
+  case $mode in
+    g-s | 00*755 | =755 | -2000 | -7022)
+       expected_mode=drwxr-xr-x ;;
+    *) expected_mode=drwxr-sr-x ;;
+  esac
+  ls_output=`ls -ld d`
+  case $ls_output in
+    $expected_mode*) ;;
+    *) fail=1 ;;
+  esac
 
-case `ls -ld d` in drwxr-sr-x*);; *) fail=1;; esac
+  chmod =2755 d || fail=1
+done
 
 Exit $fail

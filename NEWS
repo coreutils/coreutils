@@ -4,6 +4,21 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  As a GNU extension, 'chmod', 'mkdir', and 'install' now accept operators
+  '-', '+', '=' followed by octal modes; for example, 'chmod +40 FOO' enables
+  and 'chmod -40 FOO' disables FOO's group-read permissions.  Operator
+  numeric modes can be combined with symbolic modes by separating them with
+  commas; for example, =0,u+r clears all permissions except for enabling
+  user-read permissions.  Unlike ordinary numeric modes, operator numeric
+  modes do not preserve directory setuid and setgid bits; for example,
+  'chmod =0 FOO' clears all of FOO's permissions, including setuid and setgid.
+
+  Also, ordinary numeric modes with five or more digits no longer preserve
+  setuid and setgid bits, so that 'chmod 00755 FOO' now clears FOO's setuid
+  and setgid bits.  This allows scripts to be portable to other systems which
+  lack the GNU extension mentioned previously, and where ordinary numeric
+  modes do not preserve directory setuid and setgid bits.
+
   dd now accepts the count_bytes, skip_bytes iflags and the seek_bytes
   oflag, to more easily allow processing portions of a file.
 

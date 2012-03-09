@@ -398,7 +398,7 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
+Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+|[-+=][0-7]+'.\n\
 "), stdout);
       emit_ancillary_info ();
     }
@@ -430,7 +430,8 @@ main (int argc, char **argv)
   recurse = force_silent = diagnose_surprises = false;
 
   while ((c = getopt_long (argc, argv,
-                           "Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::",
+                           ("Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::"
+                            "0::1::2::3::4::5::6::7::"),
                            long_options, NULL))
          != -1)
     {
@@ -449,6 +450,8 @@ main (int argc, char **argv)
         case ',':
         case '+':
         case '=':
+        case '0': case '1': case '2': case '3':
+        case '4': case '5': case '6': case '7':
           /* Support nonportable uses like "chmod -w", but diagnose
              surprises due to umask confusion.  Even though "--", "--r",
              etc., are valid modes, there is no "case '-'" here since

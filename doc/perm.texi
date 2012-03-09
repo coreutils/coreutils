@@ -17,6 +17,7 @@ symbolic form or as an octal number.
 * Mode Structure::              Structure of file mode bits.
 * Symbolic Modes::              Mnemonic representation of file mode bits.
 * Numeric Modes::               File mode bits as octal numbers.
+* Operator Numeric Modes::      ANDing, ORing, and setting modes octally.
 * Directory Setuid and Setgid:: Set-user-ID and set-group-ID on directories.
 @end menu
 
@@ -495,13 +496,16 @@ alternative to giving a symbolic mode, you can give an octal (base 8)
 number that represents the mode.
 This number is always interpreted in octal; you do not have to add a
 leading @samp{0}, as you do in C.  Mode @samp{0055} is the same as
-mode @samp{55}.
+mode @samp{55}.  (However, modes of five digits or more, such as
+@samp{00055}, are sometimes special.  @xref{Directory Setuid and Setgid}.)
 
 A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that normally it cannot take into account the
 previous file mode bits; it can only set them absolutely.
-(As discussed in the next section, the set-user-ID and set-group-ID
-bits of directories are an exception to this general limitation.)
+The set-user-ID and set-group-ID bits of directories are an exception
+to this general limitation; @xref{Directory Setuid and Setgid}.
+Also, operator numeric modes can take previous file mode bits into
+account; @xref{Operator Numeric Modes}.
 
 The permissions granted to the user,
 to other users in the file's group,
@@ -541,6 +545,26 @@ For example, numeric mode @samp{4755} corresponds to symbolic mode
 @samp{ug=rw,o=r}.  Numeric mode @samp{0} corresponds to symbolic mode
 @samp{a=}.
 
+@node Operator Numeric Modes
+@section Operator Numeric Modes
+
+An operator numeric mode is a numeric mode that is prefixed by a
+@samp{-}, @samp{+}, or @samp{=} operator, which has the same
+interpretation as in symbolic modes.  For example, @samp{+440} enables
+read permission for the file's owner and group, @samp{-1} disables
+execute permission for other users, and @samp{=600} clears all
+permissions except for enabling read-write permissions for the file's
+owner.  Operator numeric modes can be combined with symbolic modes by
+separating them with a comma; for example, @samp{=0,u+r} clears all
+permissions except for enabling read permission for the file's owner.
+
+The commands @samp{chmod =755 @var{dir}} and @samp{chmod 755
+@var{dir}} differ in that the former clears the directory @var{dir}'s
+setuid and setgid bits, whereas the latter preserves them.
+@xref{Directory Setuid and Setgid}.
+
+Operator numeric modes are a @acronym{GNU} extension.
+
 @node Directory Setuid and Setgid
 @section Directories and the Set-User-ID and Set-Group-ID Bits
 
@@ -559,8 +583,10 @@ bits of directories.  If commands like @command{chmod} and
 mechanisms would be less convenient and it would be harder to share
 files.  Therefore, a command like @command{chmod} does not affect the
 set-user-ID or set-group-ID bits of a directory unless the user
-specifically mentions them in a symbolic mode, or sets them in
-a numeric mode.  For example, on systems that support
+specifically mentions them in a symbolic mode, or uses an operator
+numeric mode such as @samp{=755}, or sets them in a numeric mode, or
+clears them in a numeric mode that has five or more octal digits.
+For example, on systems that support
 set-group-ID inheritance:
 
 @example
@@ -582,22 +608,32 @@ explicitly in the symbolic or numeric modes, e.g.:
 @example
 # These commands try to set the set-user-ID
 # and set-group-ID bits of the subdirectories.
-mkdir G H
+mkdir G
 chmod 6755 G
-chmod u=rwx,go=rx,a+s H
-mkdir -m 6755 I
+chmod +6000 G
+chmod u=rwx,go=rx,a+s G
+mkdir -m 6755 H
+mkdir -m +6000 I
 mkdir -m u=rwx,go=rx,a+s J
 @end example
 
 If you want to try to clear these bits, you must mention them
-explicitly in a symbolic mode, e.g.:
+explicitly in a symbolic mode, or use an operator numeric mode, or
+specify a numeric mode with five or more octal digits, e.g.:
 
 @example
-# This command tries to clear the set-user-ID
+# These commands try to clear the set-user-ID
 # and set-group-ID bits of the directory D.
 chmod a-s D
+chmod -6000 D
+chmod =755 D
+chmod 00755 D
 @end example
 
 This behavior is a @acronym{GNU} extension.  Portable scripts should
 not rely on requests to set or clear these bits on directories, as
 @acronym{POSIX} allows implementations to ignore these requests.
+The @acronym{GNU} behavior with numeric modes of four or fewer digits
+is intended for scripts portable to systems that preserve these bits;
+the behavior with numeric modes of five or more digits is for scripts
+portable to systems that do not preserve the bits.
