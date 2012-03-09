@@ -35,6 +35,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   of more than one argument at a time.  Also the complementary
   -z option was added to delimit output items with the NUL character.
 
+  dirname now supports more than one argument.  Also the complementary
+  -z option was added to delimit output items with the NUL character.
+
 ** Bug fixes
 
   du --one-file-system (-x) would ignore any non-directory specified on

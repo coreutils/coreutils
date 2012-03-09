@@ -12514,13 +12514,13 @@ basename -a -s .h include/stdio.h include/stdlib.h
 @cindex stripping non-directory suffix
 @cindex non-directory suffix, stripping
 
-@command{dirname} prints all but the final slash-delimited component of
-@var{name}.  Slashes on either side of the final component are also
-removed.  If the string contains no slash, @command{dirname} prints
-@samp{.} (meaning the current directory).  Synopsis:
+@command{dirname} prints all but the final slash-delimited component
+of each @var{name}.  Slashes on either side of the final component are
+also removed.  If the string contains no slash, @command{dirname}
+prints @samp{.} (meaning the current directory).  Synopsis:
 
 @example
-dirname @var{name}
+dirname [@var{option}] @var{name}...
 @end example
 
 @var{name} need not be a file name, but if it is, this operation
@@ -12534,8 +12534,17 @@ including the case when the final component is itself a directory.
 result is @samp{//} on platforms where @var{//} is distinct from
 @var{/}, and @samp{/} on platforms where there is no difference.
 
-The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+The program accepts the following option.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+Separate output items with @sc{nul} characters.
+
+@end table
 
 @exitstatus
 
@@ -12545,6 +12554,9 @@ Examples:
 # Output "/usr/bin".
 dirname /usr/bin/sort
 dirname /usr/bin//.//
+
+# Output "dir1" followed by "dir2"
+dirname dir1/str dir2/str
 
 # Output ".".
 dirname stdio.h

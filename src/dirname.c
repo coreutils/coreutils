@@ -23,9 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "long-options.h"
 #include "error.h"
-#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "dirname"
@@ -33,6 +31,14 @@
 #define AUTHORS \
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
+
+static struct option const longopts[] =
+{
+  {"zero", no_argument, NULL, 'z'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {NULL, 0, NULL, 0}
+};
 
 void
 usage (int status)
@@ -42,24 +48,27 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s NAME\n\
-  or:  %s OPTION\n\
+Usage: %s [OPTION] NAME...\n\
 "),
-              program_name, program_name);
+              program_name);
       fputs (_("\
-Output NAME with its last non-slash component and trailing slashes removed;\n\
-if NAME contains no /'s, output '.' (meaning the current directory).\n\
+Output each NAME with its last non-slash component and trailing slashes\n\
+removed; if NAME contains no /'s, output '.' (meaning the current directory).\n\
 \n\
+"), stdout);
+      fputs (_("\
+  -z, --zero     separate output with NUL rather than newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\
 \n\
 Examples:\n\
-  %s /usr/bin/      Output \"/usr\".\n\
-  %s stdio.h        Output \".\".\n\
+  %s /usr/bin/          -> \"/usr\"\n\
+  %s dir1/str dir2/str  -> \"dir1\" followed by \"dir2\"\n\
+  %s stdio.h            -> \".\"\n\
 "),
-              program_name, program_name);
+              program_name, program_name, program_name);
       emit_ancillary_info ();
     }
   exit (status);
@@ -69,6 +78,7 @@ int
 main (int argc, char **argv)
 {
   static char const dot = '.';
+  bool use_nuls = false;
   char const *result;
   size_t len;
 
@@ -80,10 +90,26 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-                      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (EXIT_FAILURE);
+  while (true)
+    {
+      int c = getopt_long (argc, argv, "z", longopts, NULL);
+
+      if (c == -1)
+        break;
+
+      switch (c)
+        {
+        case 'z':
+          use_nuls = true;
+          break;
+
+        case_GETOPT_HELP_CHAR;
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+        default:
+          usage (EXIT_FAILURE);
+        }
+    }
 
   if (argc < optind + 1)
     {
@@ -91,23 +117,20 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (optind + 1 < argc)
+  for (; optind < argc; optind++)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-      usage (EXIT_FAILURE);
+      result = argv[optind];
+      len = dir_len (result);
+
+      if (! len)
+        {
+          result = &dot;
+          len = 1;
+        }
+
+      fwrite (result, 1, len, stdout);
+      putchar (use_nuls ? '\0' :'\n');
     }
-
-  result = argv[optind];
-  len = dir_len (result);
-
-  if (! len)
-    {
-      result = &dot;
-      len = 1;
-    }
-
-  fwrite (result, 1, len, stdout);
-  putchar ('\n');
 
   exit (EXIT_SUCCESS);
 }
