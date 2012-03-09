@@ -12466,6 +12466,12 @@ With this, an optional @var{suffix} must be specified using the
 Remove a trailing @var{suffix}.
 This option implies the @option{-a} option.
 
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+Separate output items with @sc{nul} characters.
+
 @end table
 
 @exitstatus
