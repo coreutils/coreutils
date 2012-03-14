@@ -179,12 +179,8 @@ relpath (const char *can_fname)
   if (can_relative_to)
     {
       /* Enforce --relative-base.  */
-      if (can_relative_base)
-        {
-          if (!path_prefix (can_relative_base, can_fname)
-              || !path_prefix (can_relative_base, can_relative_to))
-            return false;
-        }
+      if (can_relative_base && !path_prefix (can_relative_base, can_fname))
+        return false;
 
       /* Skip the prefix common to --relative-to and path.  */
       int common_index = path_common_prefix (can_relative_to, can_fname);
@@ -341,13 +337,25 @@ main (int argc, char **argv)
       if (need_dir && !isdir (can_relative_to))
         error (EXIT_FAILURE, ENOTDIR, "%s", quote (relative_to));
     }
-  if (relative_base)
+  if (relative_base == relative_to)
+    can_relative_base = can_relative_to;
+  else if (relative_base)
     {
-      can_relative_base = realpath_canon (relative_base, can_mode);
-      if (!can_relative_base)
+      char *base = realpath_canon (relative_base, can_mode);
+      if (!base)
         error (EXIT_FAILURE, errno, "%s", quote (relative_base));
-      if (need_dir && !isdir (can_relative_base))
+      if (need_dir && !isdir (base))
         error (EXIT_FAILURE, ENOTDIR, "%s", quote (relative_base));
+      /* --relative-to is a no-op if it does not have --relative-base
+           as a prefix */
+      if (path_prefix (base, can_relative_to))
+        can_relative_base = base;
+      else
+        {
+          free (base);
+          can_relative_base = can_relative_to;
+          can_relative_to = NULL;
+        }
     }
 
   for (; optind < argc; ++optind)
