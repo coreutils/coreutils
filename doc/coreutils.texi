@@ -12905,7 +12905,9 @@ This option is valid when used with @option{--relative-to}, and will restrict
 the output of @option{--relative-to} so that relative names are output,
 only when @var{file}s are descendants of @var{base}.  Otherwise output the
 absolute file name.  If @option{--relative-to} was not specified, then
-the descendants of @var{base} are printed relative to @var{base}.
+the descendants of @var{base} are printed relative to @var{base}.  If
+@option{--relative-to} is specified, then that directory must be a
+descendant of @var{base} for this option to have an effect.
 Note: this option honors the @option{-m} and @option{-e}
 options pertaining to file existence.  For example:
 
