@@ -330,10 +330,7 @@ main (int argc, char **argv)
     }
 
   if (relative_base && !relative_to)
-    {
-      error (0, 0, _("--relative-base requires --relative-to"));
-      usage (EXIT_FAILURE);
-    }
+    relative_to = relative_base;
 
   bool need_dir = (can_mode & CAN_MODE_MASK) == CAN_EXISTING;
   if (relative_to)

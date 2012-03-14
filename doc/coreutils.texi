@@ -12904,14 +12904,16 @@ pertaining to file existence.
 This option is valid when used with @option{--relative-to}, and will restrict
 the output of @option{--relative-to} so that relative names are output,
 only when @var{file}s are descendants of @var{base}.  Otherwise output the
-absolute file name.  Note: this option honors the @option{-m} and @option{-e}
+absolute file name.  If @option{--relative-to} was not specified, then
+the descendants of @var{base} are printed relative to @var{base}.
+Note: this option honors the @option{-m} and @option{-e}
 options pertaining to file existence.  For example:
 
 @example
 realpath --relative-to=/usr /tmp /usr/bin
 @result{} ../tmp
 @result{} bin
-realpath --relative-base=/usr --relative-to=/usr /tmp /usr/bin
+realpath --relative-base=/usr /tmp /usr/bin
 @result{} /tmp
 @result{} bin
 @end example

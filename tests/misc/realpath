@@ -43,11 +43,8 @@ ln -s /// three || framework_failure_
 realpath -Pqz . >/dev/null || fail=1
 # Operand is required
 realpath >/dev/null && fail=1
-# --relative-base and --relative-to require params
 realpath --relative-base . --relative-to . && fail=1
-# --relative-base requires --relative-to
-realpath --relative-base=dir1 . && fail=1
-realpath --relative-base --relative-to=dir1 . && fail=1
+realpath --relative-base . && fail=1
 
 # -e --relative-* require directories
 realpath -e --relative-to=dir1/f --relative-base=. . && fail=1
@@ -77,6 +74,11 @@ test $(realpath -sm --relative-to=/ /usr) = 'usr' || fail=1
 out=$(realpath -sm --relative-base=/usr --relative-to=/usr /tmp /usr) || fail=1
 test "$out" = "/tmp$nl." || fail=1
 out=$(realpath -sm --relative-base=/ --relative-to=/ / /usr) || fail=1
+test "$out" = ".${nl}usr" || fail=1
+# --relative-to defaults to the value of --relative-base
+out=$(realpath -sm --relative-base=/usr /tmp /usr) || fail=1
+test "$out" = "/tmp$nl." || fail=1
+out=$(realpath -sm --relative-base=/ / /usr) || fail=1
 test "$out" = ".${nl}usr" || fail=1
 # For now, --relative-base must be a prefix of --relative-to, or all output
 # will be absolute (compare to MacOS 'relpath -d dir start end').

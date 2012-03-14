@@ -68,6 +68,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   systems for which getfilecon-, ACL-check- and XATTR-check-induced syscalls
   fail with ENOTSUP or similar.
 
+  'realpath --relative-base=dir' in isolation now implies '--relative-to=dir'
+  instead of causing a usage failure.
+
   split now supports an unlimited number of split files as default behavior.
 
 
