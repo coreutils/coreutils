@@ -19,18 +19,35 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ realpath
 
+stat_single=$(stat -c %d:%i /) || framework_failure_
+stat_double=$(stat -c %d:%i //) || framework_failure_
+double_slash=//
+if test x"$stat_single" = x"$stat_double"; then
+  double_slash=/
+fi
+nl='
+'
+
+test -d /dev || framework_failure_
+
 # Setup dir, file, symlink structure
 
-mkdir -p dir1/dir2
-ln -s dir1/dir2 ldir2
-touch dir1/f dir1/dir2/f
+mkdir -p dir1/dir2 || framework_failure_
+ln -s dir1/dir2 ldir2 || framework_failure_
+touch dir1/f dir1/dir2/f || framework_failure_
+ln -s / one || framework_failure_
+ln -s // two || framework_failure_
+ln -s /// three || framework_failure_
 
-# Basic operaion
+# Basic operation
 realpath -Pqz . >/dev/null || fail=1
+# Operand is required
+realpath >/dev/null && fail=1
 # --relative-base and --relative-to require params
-realpath --relative-base --relative-to . && fail=1
+realpath --relative-base . --relative-to . && fail=1
 # --relative-base requires --relative-to
 realpath --relative-base=dir1 . && fail=1
+realpath --relative-base --relative-to=dir1 . && fail=1
 
 # -e --relative-* require directories
 realpath -e --relative-to=dir1/f --relative-base=. . && fail=1
@@ -38,6 +55,7 @@ realpath -e --relative-to=dir1/  --relative-base=. . || fail=1
 
 # Note NUL params are unconditionally rejected by canonicalize_filename_mode
 realpath -m '' && fail=1
+realpath --relative-base= --relative-to=. . && fail=1
 
 # symlink resolution
 this=$(realpath .)
@@ -54,5 +72,38 @@ test $(realpath -m --relative-to=prefixed prefixed/1) = '1' || fail=1
 test $(realpath -sm --relative-to=/usr /) = '..' || fail=1
 # Ensure no redundant leading '../' present, as was the case in v8.15
 test $(realpath -sm --relative-to=/ /usr) = 'usr' || fail=1
+
+# Ensure --relative-base works
+out=$(realpath -sm --relative-base=/usr --relative-to=/usr /tmp /usr) || fail=1
+test "$out" = "/tmp$nl." || fail=1
+out=$(realpath -sm --relative-base=/ --relative-to=/ / /usr) || fail=1
+test "$out" = ".${nl}usr" || fail=1
+# For now, --relative-base must be a prefix of --relative-to, or all output
+# will be absolute (compare to MacOS 'relpath -d dir start end').
+out=$(realpath -sm --relative-base=/usr/local --relative-to=/usr \
+    /usr /usr/local) || fail=1
+test "$out" = "/usr${nl}/usr/local" || fail=1
+
+# Ensure // is handled correctly.
+test "$(realpath / // ///)" = "/$nl$double_slash$nl/" || fail=1
+test "$(realpath one two three)" = "/$nl$double_slash$nl/" || fail=1
+out=$(realpath -sm --relative-to=/ / // /dev //dev) || fail=1
+if test $double_slash = //; then
+  test "$out" = ".$nl//${nl}dev$nl//dev" || fail=1
+else
+  test "$out" = ".$nl.${nl}dev${nl}dev" || fail=1
+fi
+out=$(realpath -sm --relative-to=// / // /dev //dev) || fail=1
+if test $double_slash = //; then
+  test "$out" = "/$nl.$nl/dev${nl}dev" || fail=1
+else
+  test "$out" = ".$nl.${nl}dev${nl}dev" || fail=1
+fi
+out=$(realpath --relative-base=/ --relative-to=// / //) || fail=1
+if test $double_slash = //; then
+  test "$out" = "/$nl//" || fail=1
+else
+  test "$out" = ".$nl." || fail=1
+fi
 
 Exit $fail
