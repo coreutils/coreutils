@@ -3097,7 +3097,7 @@ and so can be a pipe for example.
 Use suffixes of length @var{length}.  If a @var{length} of 0 is specified,
 this is the same as if (any previous) @option{-a} was not specified, and
 thus enables the default behavior, which starts the suffix length at 2,
-and unless @option{-n} or @option{--numeric-suffixes=@var{from}} are
+and unless @option{-n} or @option{--numeric-suffixes=@var{from}} is
 specified, will auto increase the length by 2 as required.
 
 @item -d
