@@ -41,6 +41,9 @@ touch -a -d "$u2" b || framework_failure_
 # Make sure A has ctime at least 1 second more recent than C's.
 sleep 2
 touch -a -d "$u1" a || framework_failure_
+# Updating the atime is usually enough to update the ctime, but on
+# Solaris 10's tmpfs, ctime is not updated, so force an update here:
+{ ln a a-ctime && rm a-ctime; } || framework_failure_
 
 
 # A has ctime more recent than C.
