@@ -42,38 +42,40 @@ compare out exp || fail=1
 # looks at the number plus two decimal digits, but if -h is
 # used it looks at one decimal place plus a 4-bit SI prefix value.
 # In both cases, there's an extra factor of 2 for the sign.
-max_int200=$(expr $UINTMAX_MAX / 200) &&
-max_frac200=$(printf '%.2d' $(expr $UINTMAX_MAX / 2 % 100)) &&
-max_int320=$(expr $UINTMAX_MAX / 320) &&
-max_frac320=$(expr $UINTMAX_MAX / 32 % 10) &&
+# Note INTMAX_MAX is used below as that's that largest number
+# expr can handle on all systems (without GMP).
+max_int100=$(expr $INTMAX_MAX / 100) &&
+max_frac100=$(printf '%.2d' $(expr $INTMAX_MAX % 100)) &&
+max_int160=$(expr $INTMAX_MAX / 160) &&
+max_frac160=$(expr $INTMAX_MAX / 16 % 10) &&
 { printf -- "\
     -$UINTMAX_OFLOW
     -$UINTMAX_MAX
-    -${max_int200}0.1
-    -${max_int200}0
-    -${max_int200}0.0
-    -${max_int320}0.1
-    -${max_int320}0
-    -${max_int320}0.0
-    -$max_int200.${max_frac200}1
-    -$max_int200.$max_frac200
-    -$max_int320.${max_frac320}1
-    -$max_int320.$max_frac320
+    -${max_int100}0.1
+    -${max_int100}0
+    -${max_int100}0.0
+    -${max_int160}0.1
+    -${max_int160}0
+    -${max_int160}0.0
+    -$max_int100.${max_frac100}1
+    -$max_int100.$max_frac100
+    -$max_int160.${max_frac160}1
+    -$max_int160.$max_frac160
 " &&
   seq -- -10 .001 10 &&
   printf "\
-    $max_int320
-    $max_int320.$max_frac320
-    $max_int320.${max_frac320}1
-    $max_int200
-    $max_int200.$max_frac200
-    $max_int200.${max_frac200}1
-    ${max_int320}0
-    ${max_int320}0.0
-    ${max_int320}0.1
-    ${max_int200}0
-    ${max_int200}0.0
-    ${max_int200}0.1
+    $max_int160
+    $max_int160.$max_frac160
+    $max_int160.${max_frac160}1
+    $max_int100
+    $max_int100.$max_frac100
+    $max_int100.${max_frac100}1
+    ${max_int160}0
+    ${max_int160}0.0
+    ${max_int160}0.1
+    ${max_int100}0
+    ${max_int100}0.0
+    ${max_int100}0.1
     $UINTMAX_MAX
     $UINTMAX_OFLOW
 "
