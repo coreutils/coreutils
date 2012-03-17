@@ -49,12 +49,18 @@ dd if=/dev/urandom of=file.in bs=1M count=1 conv=notrunc oflag=append
 
 # Note the block allocations below are usually equal,
 # but can vary by a file system block due to alignment,
-# which was seen on XFS at least.
+# which was seen on XFS at least.  Also on various BSDs
+# the sparse granularity was up to 8 file system blocks
+# (16KiB for the tested systems), causing this to be the
+# minimum accuracy we can support.
 alloc_equal() {
-  : ${sectors_per_block:=$(expr $(stat -f -c "%S" .) / 512)}
+  # 8 and 512 below are related, so hardcode sector_size for now
+  # : ${sector_size:=$(stat -c "%B" "$1")}
+  : ${sectors_per_block:=$(expr $(stat -f -c '%S' "$1") / 512)}
+  : ${min_sectors_per_sparse_block:=$(expr $sectors_per_block '*' 8)}
   alloc_diff=$(expr $(stat -c %b "$1") - $(stat -c %b "$2"))
   alloc_diff=$(echo $alloc_diff | tr -d -- -) # abs()
-  test $alloc_diff -le $sectors_per_block
+  test $alloc_diff -le $min_sectors_per_sparse_block
 }
 
 # Ensure NUL blocks smaller than the block size are not made sparse
