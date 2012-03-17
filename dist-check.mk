@@ -96,43 +96,6 @@ define my-instcheck
     }
 endef
 
-# The hard-linking for-loop below ensures that there is a bin/ directory
-# full of all of the programs under test (except the ones that are required
-# for basic Makefile rules), all symlinked to the just-built "false" program.
-# This is to ensure that if ever a test neglects to make PATH include
-# the build srcdir, these always-failing programs will run.
-# Otherwise, it is too easy to test the wrong programs.
-# Note that "false" itself is a symlink to true, so it too will malfunction.
-define coreutils-path-check
-  {							\
-    echo running coreutils-path-check;			\
-    if test -f $(srcdir)/src/true.c; then		\
-      fail=1;						\
-      mkdir $(bin)					\
-	&& ($(write_loser)) > $(bin)/loser		\
-	&& chmod a+x $(bin)/loser			\
-	&& for i in $(built_programs); do		\
-	       case $$i in				\
-		 rm|expr|basename|echo|sort|ls|tr);;	\
-		 cat|dirname|mv|wc);;			\
-		 *) ln $(bin)/loser $(bin)/$$i;;	\
-	       esac;					\
-	     done					\
-	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin)$(PATH_SEPARATOR)$$PATH	\
-		$(MAKE) -C tests check			\
-	  && { test -d gnulib-tests			\
-		 && $(MAKE) -C gnulib-tests check	\
-		 || :; }				\
-	  && rm -rf $(bin)				\
-	  && fail=0;					\
-    else						\
-      fail=0;						\
-    fi;							\
-    test $$fail = 1 && exit 1 || :;			\
-  }
-endef
-
 # Use this to make sure we don't run these programs when building
 # from a virgin compressed tarball file, below.
 null_AM_MAKEFLAGS ?= \
@@ -156,7 +119,6 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  $(MAKE) dvi;					\
 	  $(install-transform-check);			\
 	  $(my-instcheck);				\
-	  $(coreutils-path-check);			\
 	  $(MAKE) distclean				\
 	)
 	(cd $(t) && mv $(distdir) $(distdir).old	\
