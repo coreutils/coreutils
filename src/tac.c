@@ -470,7 +470,7 @@ temp_stream (FILE **fp, char **file_name)
     }
   else
     {
-      if (fseek (tmp_fp, 0, SEEK_SET) < 0
+      if (fseeko (tmp_fp, 0, SEEK_SET) < 0
           || ftruncate (fileno (tmp_fp), 0) < 0)
         {
           error (0, errno, _("failed to rewind stream for %s"),
