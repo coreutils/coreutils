@@ -9403,7 +9403,7 @@ ln -srv /a/file /tmp
 @end smallexample
 
 @xref{realpath invocation}, which gives greater control
-over relative path generation.
+over relative file name generation.
 
 @item -s
 @itemx --symbolic
