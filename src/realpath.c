@@ -25,6 +25,7 @@
 #include "canonicalize.h"
 #include "error.h"
 #include "quote.h"
+#include "relpath.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "realpath"
@@ -136,97 +137,6 @@ path_prefix (const char *prefix, const char *path)
   return (!*prefix && (*path == '/' || !*path));
 }
 
-/* Return the length of the longest common prefix
-   of canonical PATH1 and PATH2, ensuring only full path components
-   are matched.  Return 0 on no match.  */
-static int _GL_ATTRIBUTE_PURE
-path_common_prefix (const char *path1, const char *path2)
-{
-  int i = 0;
-  int ret = 0;
-
-  /* We already know path1[0] and path2[0] are '/'.  Special case
-     '//', which is only present in a canonical name on platforms
-     where it is distinct.  */
-  if ((path1[1] == '/') != (path2[1] == '/'))
-    return 0;
-
-  while (*path1 && *path2)
-    {
-      if (*path1 != *path2)
-        break;
-      if (*path1 == '/')
-        ret = i + 1;
-      path1++;
-      path2++;
-      i++;
-    }
-
-  if (!*path1 && !*path2)
-    ret = i;
-  if (!*path1 && *path2 == '/')
-    ret = i;
-  if (!*path2 && *path1 == '/')
-    ret = i;
-
-  return ret;
-}
-
-/* Output the relative representation if requested.  */
-static bool
-relpath (const char *can_fname)
-{
-  if (can_relative_to)
-    {
-      /* Enforce --relative-base.  */
-      if (can_relative_base && !path_prefix (can_relative_base, can_fname))
-        return false;
-
-      /* Skip the prefix common to --relative-to and path.  */
-      int common_index = path_common_prefix (can_relative_to, can_fname);
-      if (!common_index)
-        return false;
-
-      const char *relto_suffix = can_relative_to + common_index;
-      const char *fname_suffix = can_fname + common_index;
-
-      /* skip over extraneous '/'.  */
-      if (*relto_suffix == '/')
-        relto_suffix++;
-      if (*fname_suffix == '/')
-        fname_suffix++;
-
-      /* Replace remaining components of --relative-to with '..', to get
-         to a common directory.  Then output the remainder of fname.  */
-      if (*relto_suffix)
-        {
-          fputs ("..", stdout);
-          for (; *relto_suffix; ++relto_suffix)
-            {
-              if (*relto_suffix == '/')
-                fputs ("/..", stdout);
-            }
-
-          if (*fname_suffix)
-            {
-              putchar ('/');
-              fputs (fname_suffix, stdout);
-            }
-        }
-      else
-        {
-          if (*fname_suffix)
-            fputs (fname_suffix, stdout);
-          else
-            putchar ('.');
-        }
-
-      return true;
-    }
-
-  return false;
-}
-
 static bool
 isdir (const char *path)
 {
@@ -247,7 +157,9 @@ process_path (const char *fname, int can_mode)
       return false;
     }
 
-  if (!relpath (can_fname))
+  if (!can_relative_to
+      || (can_relative_base && !path_prefix (can_relative_base, can_fname))
+      || (can_relative_to && !relpath (can_fname, can_relative_to, NULL, 0)))
     fputs (can_fname, stdout);
 
   putchar (use_nuls ? '\0' : '\n');

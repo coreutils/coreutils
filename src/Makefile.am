@@ -477,6 +477,7 @@ ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
 kill_SOURCES = kill.c operand2sig.c
+realpath_SOURCES = realpath.c relpath.c relpath.h
 timeout_SOURCES = timeout.c operand2sig.c
 
 mv_SOURCES = mv.c remove.c $(copy_sources)
