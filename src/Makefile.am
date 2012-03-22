@@ -474,6 +474,7 @@ vdir_SOURCES = ls.c ls-vdir.c
 id_SOURCES = id.c group-list.c
 groups_SOURCES = groups.c group-list.c
 ls_SOURCES = ls.c ls-ls.c
+ln_SOURCES = ln.c relpath.c relpath.h
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
 kill_SOURCES = kill.c operand2sig.c

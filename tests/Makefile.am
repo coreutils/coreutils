@@ -420,6 +420,7 @@ TESTS =						\
   ln/hard-backup				\
   ln/hard-to-sym				\
   ln/misc					\
+  ln/relative					\
   ln/sf-1					\
   ln/slash-decorated-nonexistent-dest		\
   ln/target-1					\
