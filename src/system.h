@@ -41,6 +41,8 @@ you must include <sys/types.h> before including this file
 #include <unistd.h>
 
 #include <limits.h>
+
+#include "pathmax.h"
 #ifndef PATH_MAX
 # define PATH_MAX 8192
 #endif
