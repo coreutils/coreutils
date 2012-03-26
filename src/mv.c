@@ -174,7 +174,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
              parent.  It doesn't make sense to move a directory into itself, and
              besides in some situations doing so would give highly nonintuitive
              results.  Run this 'mkdir b; touch a c; mv * b' in an empty
-             directory.  Here's the result of running echo `find b -print`:
+             directory.  Here's the result of running echo $(find b -print):
              b b/a b/b b/b/a b/c.  Notice that only file 'a' was copied
              into b/b.  Handle this by giving a diagnostic, removing the
              copied-into-self directory, DEST ('b/b' in the example),

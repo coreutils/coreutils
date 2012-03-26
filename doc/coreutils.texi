@@ -7474,7 +7474,7 @@ terminal for color output from @command{ls} (and @command{dir}, etc.).
 Typical usage:
 
 @example
-eval "`dircolors [@var{option}]@dots{} [@var{file}]`"
+eval "$(dircolors [@var{option}]@dots{} [@var{file}])"
 @end example
 
 If @var{file} is specified, @command{dircolors} reads it to determine which
@@ -9131,7 +9131,7 @@ The intended use of this is to shred a removed temporary file.
 For example:
 
 @example
-i=`mktemp`
+i=$(mktemp)
 exec 3<>"$i"
 rm -- "$i"
 echo "Hello, world" >&3
@@ -12222,7 +12222,7 @@ Here are a few examples, including quoting for shell metacharacters.
 To add 1 to the shell variable @code{foo}, in Bourne-compatible shells:
 
 @example
-foo=`expr $foo + 1`
+foo=$(expr $foo + 1)
 @end example
 
 To print the non-directory part of the file name stored in
@@ -16308,7 +16308,7 @@ If you want hexadecimal integer output, you can use @command{printf}
 to perform the conversion:
 
 @example
-$ printf '%x\n' `seq 1048575 1024 1050623`
+$ printf '%x\n' $(seq 1048575 1024 1050623)
 fffff
 1003ff
 1007ff
