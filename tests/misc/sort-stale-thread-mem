@@ -36,9 +36,8 @@ grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
 # On Fedora-17-beta (valgrind-3.7.0-2.fc17.x86_64), this evokes two
 # "Conditional jump or move depends on uninitialised value(s)" errors,
 # each originating from _dl_start.
-# FIXME: change this to a framework_failure_ after release.
 valgrind --quiet --error-exitcode=3 sort --version > /dev/null ||
-  skip_ 'valgrind fails for trivial sort invocation'
+  framework_failure_ 'valgrind fails for trivial sort invocation'
 
 # With the bug, 'sort' would fail under valgrind about half the time,
 # on some circa-2010 multicore Linux platforms.  Run the test 100 times
