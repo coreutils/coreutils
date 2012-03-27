@@ -268,7 +268,15 @@ process_file (FTS *fts, FTSENT *ent)
 
       if (! S_ISLNK (old_mode))
         {
-          if (chmodat (fts->fts_cwd_fd, file, new_mode) == 0)
+          /* Use any native support for AT_SYMLINK_NOFOLLOW, to avoid
+             following a symlink if there is a race.  */
+          #if HAVE_FCHMODAT || HAVE_LCHMOD
+          int follow_flag = AT_SYMLINK_NOFOLLOW;
+          #else
+          int follow_flag = 0;
+          #endif
+
+          if (fchmodat (fts->fts_cwd_fd, file, new_mode, follow_flag) == 0)
             chmod_succeeded = true;
           else
             {
