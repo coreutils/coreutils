@@ -11337,6 +11337,24 @@ Recursively change permissions of directories and their contents.
 
 @exitstatus
 
+Examples:
+
+@smallexample
+# Change file permissions of FOO to be world readable
+# and user writable, with no other permissions.
+chmod 644 foo
+chmod a=r,u+w foo
+
+# Add user and group execute permissions to FOO.
+chmod +110 file
+chmod ug+x file
+
+# Set file permissions of DIR and subsidiary files to
+# be the umask default, assuming execute permissions for
+# directories and for files already executable.
+chmod -R a=,+rwX dir
+@end smallexample
+
 
 @node touch invocation
 @section @command{touch}: Change file timestamps
