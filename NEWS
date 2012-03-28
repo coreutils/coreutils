@@ -2,12 +2,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
-** Bug fixes
-
-  When recursing, chmod -R no longer gets confused into following a symlink
-  if some other process simultaneously replaces a non-symlink with a symlink.
-  The fix is effective on modern hosts with the fchmodat or lchmod syscalls.
-  [bug introduced in the beginning]
 
 * Noteworthy changes in release 8.16 (2012-03-26) [stable]
 
