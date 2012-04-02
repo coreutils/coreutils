@@ -140,7 +140,11 @@ my @Tests =
      ['bre48', '_ : "a\\{1,x"',
       {ERR => "$prog: Unmatched \\{\n"}, {EXIT => 2}],
      ['bre49', '_ : "a\\{32768\\}"',
-      {ERR => "$prog: Invalid content of \\{\\}\n"}, {EXIT => 2}],
+      {ERR => "$prog: Invalid content of \\{\\}\n"}, {EXIT => 2},
+      # Map AIX-6's different diagnostic to the one we expect:
+      {ERR_SUBST =>
+       's,Regular expression too big,Invalid content of \\\\{\\\\},'},
+      ],
      ['bre50', '_ : "a\\{1,0\\}"',
       {ERR => "$prog: Invalid content of \\{\\}\n"}, {EXIT => 2}],
      ['bre51', '"acabc" : ".*ab\\{0,0\\}c"', {OUT => '2'}],
