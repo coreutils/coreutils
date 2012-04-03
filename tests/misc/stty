@@ -40,7 +40,7 @@ REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 saved_state=.saved-state
 stty --save > $saved_state || fail=1
-stty `cat $saved_state` || fail=1
+stty $(cat $saved_state) || fail=1
 
 # This would segfault prior to sh-utils-2.0j.
 stty erase - || fail=1
@@ -54,7 +54,7 @@ stty -raw -a 2>/dev/null && fail=1
 # Don't depend on terminal width.  Put each option on its own line,
 # remove all non-boolean ones, then remove any leading hyphens.
 sed_del='/^speed/d;/^rows/d;/^columns/d;/ = /d'
-options=`stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g"`
+options=$(stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g")
 
 # Take them one at a time, with and without the leading '-'.
 for opt in $options; do
@@ -70,7 +70,7 @@ for opt in $options; do
 
   # Likewise, 'stty -cread' would fail, so skip that, too.
   test $opt = cread && continue
-  rev=`eval echo "\\\$REV_$opt"`
+  rev=$(eval echo "\$REV_$opt")
   if test -n "$rev"; then
     stty -$opt || { fail=1; echo -$opt; }
   fi
@@ -84,8 +84,8 @@ if test -n "$RUN_LONG_TESTS"; then
 
       stty $opt1 $opt2 || fail=1
 
-      rev1=`eval echo "\\\$REV_$opt1"`
-      rev2=`eval echo "\\\$REV_$opt2"`
+      rev1=$(eval echo "\$REV_$opt1")
+      rev2=$(eval echo "\$REV_$opt2")
       if test -n "$rev1"; then
         stty -$opt1 $opt2 || fail=1
       fi
@@ -99,6 +99,6 @@ if test -n "$RUN_LONG_TESTS"; then
   done
 fi
 
-stty `cat $saved_state`
+stty $(cat $saved_state)
 
 Exit $fail

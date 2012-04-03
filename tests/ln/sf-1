@@ -23,7 +23,7 @@ echo foo > a || framework_failure_
 ln -s . b || framework_failure_
 
 ln -sf a b > err 2>&1 && fail=1
-case `cat err` in
+case $(cat err) in
   *'are the same file') ;;
   *) fail=1 ;;
 esac

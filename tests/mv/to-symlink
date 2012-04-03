@@ -38,6 +38,6 @@ mv $file $rem_symlink || fail=1
 test -f $file && fail=1
 
 # Make sure $rem_file is unmodified.
-test `cat $rem_file` = remote || fail=1
+test $(cat $rem_file) = remote || fail=1
 
 Exit $fail

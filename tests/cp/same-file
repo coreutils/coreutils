@@ -111,7 +111,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
         # the destination is a copy.
         for f in $args; do
           if test -f $f; then
-            case "`cat $f`" in
+            case "$(cat $f)" in
               "$contents") ;;
               *) echo cp FAILED;;
             esac

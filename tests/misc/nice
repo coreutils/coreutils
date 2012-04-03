@@ -45,7 +45,7 @@ NA LAST NA
 set $tests
 
 # Require that this test be run at 'nice' level 0.
-niceness=`nice`
+niceness=$(nice)
 if test "$niceness" = 0; then
     : ok
 else
@@ -58,19 +58,19 @@ while :; do
   expected_result=$3
   test $args = empty && args=''
   test x$args = xLAST && break
-  args=`echo x$args|tr : ' '|sed 's/^x//'`
+  args=$(echo x$args|tr : ' '|sed 's/^x//')
   if test "$VERBOSE" = yes; then
-    #echo "testing \`nice $args nice\` = $expected_result ..."
+    #echo "testing \$(nice $args nice\) = $expected_result ..."
     echo "test $test_name... " | tr -d '\n'
   fi
-  test x`nice $args nice 2> /dev/null` = x$expected_result \
+  test x$(nice $args nice 2> /dev/null) = x$expected_result \
     && ok=ok || ok=FAIL fail=1
   test "$VERBOSE" = yes && echo $ok
   shift; shift; shift
 done
 
 # Test negative niceness - command must be run whether or not change happens.
-if test x`nice -n -1 nice 2> /dev/null` = x0 ; then
+if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
   # unprivileged user - warn about failure to change
   nice -n -1 true 2> err || fail=1
   test -s err || fail=1
@@ -87,8 +87,8 @@ else
   # superuser - change succeeds
   nice -n -1 nice 2> err || fail=1
   test -s err && fail=1
-  test x`nice -n -1 nice` = x-1 || fail=1
-  test x`nice --1 nice` = x-1 || fail=1
+  test x$(nice -n -1 nice) = x-1 || fail=1
+  test x$(nice --1 nice) = x-1 || fail=1
 fi
 
 Exit $fail

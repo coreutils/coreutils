@@ -29,7 +29,7 @@ printf %4096s x > d/1
 cp d/1 d/sub/2
 
 
-B=`stat --format=%B a/b/F`
+B=$(stat --format=%B a/b/F)
 
 du --block-size=$B -a a > out || fail=1
 echo === >> out
@@ -37,11 +37,11 @@ du --block-size=$B -a -S a >> out || fail=1
 echo === >> out
 du --block-size=$B -s a >> out || fail=1
 
-f=`stat --format=%b a/b/F`
-b=`stat --format=%b a/b`
-a=`stat --format=%b a`
-bf=`expr $b + $f`
-tot=`expr $bf + $a`
+f=$(stat --format=%b a/b/F)
+b=$(stat --format=%b a/b)
+a=$(stat --format=%b a)
+bf=$(expr $b + $f)
+tot=$(expr $bf + $a)
 
 cat <<EOF | sed 's/ *#.*//' > exp
 $f	a/b/F
@@ -65,13 +65,13 @@ if is_local_dir_ .; then
   echo === >> out
   du --block-size=$B -S d | sort -r -k2,2 >> out || fail=1
 
-  t2=`stat --format=%b d/sub/2`
-  ts=`stat --format=%b d/sub`
-  t1=`stat --format=%b d/1`
-  td=`stat --format=%b d`
-  tot=`expr $t1 + $t2 + $ts + $td`
-  d1=`expr $td + $t1`
-  s2=`expr $ts + $t2`
+  t2=$(stat --format=%b d/sub/2)
+  ts=$(stat --format=%b d/sub)
+  t1=$(stat --format=%b d/1)
+  td=$(stat --format=%b d)
+  tot=$(expr $t1 + $t2 + $ts + $td)
+  d1=$(expr $td + $t1)
+  s2=$(expr $ts + $t2)
 
   cat <<EOF | sed 's/ *#.*//' > exp
 $t2	d/sub/2

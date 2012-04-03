@@ -24,7 +24,7 @@ print_ver_ cp
 require_root_
 require_selinux_
 
-cwd=`pwd`
+cwd=$(pwd)
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
 # This context is special: it works even when mcstransd isn't running.

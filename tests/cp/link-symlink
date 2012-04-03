@@ -25,7 +25,7 @@ touch file
 ln -s file link || framework_failure_
 touch -m -h -d 2011-01-01 link ||
   skip_ "Your system doesn't support updating symlink timestamps"
-case `stat --format=%y link` in
+case $(stat --format=%y link) in
   2011-01-01*) ;;
   *) skip_ "Your system doesn't support updating symlink timestamps" ;;
 esac
@@ -33,7 +33,7 @@ esac
 # link.cp is probably a hardlink, but may also be a symlink
 # In either case the timestamp should match the original.
 cp -al link link.cp
-case `stat --format=%y link.cp` in
+case $(stat --format=%y link.cp) in
   2011-01-01*) ;;
   *) fail=1 ;;
 esac

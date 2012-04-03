@@ -51,14 +51,14 @@ test -f nowhere && fail=1
 # symlinks and directories under Cygwin 1.5).
 touch -d 2009-10-10 -h link2/ || fail=1
 touch -h -r link2/ file || fail=1
-case `stat --format=%y dir` in
+case $(stat --format=%y dir) in
   2009-10-10*) ;;
   *) fail=1 ;;
 esac
-case `stat --format=%y link2` in
+case $(stat --format=%y link2) in
   2009-10-10*) fail=1 ;;
 esac
-case `stat --format=%y file` in
+case $(stat --format=%y file) in
   2009-10-10*) ;;
   *) fail=1 ;;
 esac

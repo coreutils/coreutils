@@ -24,13 +24,13 @@ test "${CANDIDATE_TMP_DIRS+set}" = set \
 
 other_partition_tmpdir=
 
-dot_mount_point=`stat -c %d .`
+dot_mount_point=$(stat -c %d .)
 for d in $CANDIDATE_TMP_DIRS; do
 
   # Skip nonexistent directories.
   test -d "$d" || continue
 
-  d_mount_point=`stat -L -c %d "$d"`
+  d_mount_point=$(stat -L -c %d "$d")
 
   # Same partition?  Skip it.
   test "x$d_mount_point" = "x$dot_mount_point" && continue

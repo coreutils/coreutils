@@ -24,14 +24,14 @@ require_sparse_support_
 # It has to be at least 128K in order to be sparse on some systems.
 # Make its size one larger than 128K, in order to tickle the
 # bug in coreutils-6.0.
-size=`expr 128 \* 1024 + 1`
+size=$(expr 128 \* 1024 + 1)
 dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure_
 
 
 cp --sparse=always sparse copy || fail=1
 
 # Ensure that the copy has the same block count as the original.
-test `stat --printf %b copy` -le `stat --printf %b sparse` || fail=1
+test $(stat --printf %b copy) -le $(stat --printf %b sparse) || fail=1
 
 # Ensure that --sparse={always,never} with --reflink fail.
 cp --sparse=always --reflink sparse copy && fail=1

@@ -25,7 +25,7 @@ print_ver_ rm
 require_openat_support_
 skip_if_root_
 
-p=`pwd`
+p=$(pwd)
 mkdir abs1 abs2 no-access || framework_failure_
 
 

@@ -68,7 +68,7 @@ create_target_tree()
 
 # Note we repeat this, creating either one of
 # two hard linked files from source in the dest, so as to
-# test both paths in `cp` for creating the hard links.
+# test both paths in $(cp) for creating the hard links.
 # The path taken by cp is dependent on which cp encounters
 # first in the source, which is non deterministic currently
 # (I'm guessing that results are sorted by inode and

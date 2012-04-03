@@ -23,7 +23,7 @@ skip_if_root_
 mkdir -p a/1 b c d/2 e/3 || framework_failure_
 
 
-t=`pwd`
+t=$(pwd)
 cd c
 chmod u=x,go= .
 

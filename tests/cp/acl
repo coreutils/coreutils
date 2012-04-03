@@ -31,22 +31,22 @@ touch a/file || framework_failure_
 
 # Ensure that setfacl and getfacl work on this file system.
 skip=no
-acl1=`cd a && getfacl file` || skip=yes
+acl1=$(cd a && getfacl file) || skip=yes
 setfacl -m user:bin:rw- a/file 2> /dev/null || skip=yes
 test $skip = yes &&
   skip_ "'.' is not on a suitable file system for this test"
 
 # copy a file without preserving permissions
 cp a/file b/ || fail=1
-acl2=`cd b && getfacl file` || framework_failure_
+acl2=$(cd b && getfacl file) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # Update with acl set above
-acl1=`cd a && getfacl file` || framework_failure_
+acl1=$(cd a && getfacl file) || framework_failure_
 
 # copy a file, preserving permissions
 cp -p a/file b/ || fail=1
-acl2=`cd b && getfacl file` || framework_failure_
+acl2=$(cd b && getfacl file) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # copy a file, preserving permissions, with --attributes-only
@@ -54,7 +54,7 @@ echo > a/file || framework_failure_ # add some data
 test -s a/file || framework_failure_
 cp -p --attributes-only a/file b/ || fail=1
 test -s b/file && fail=1
-acl2=`cd b && getfacl file` || framework_failure_
+acl2=$(cd b && getfacl file) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 Exit $fail

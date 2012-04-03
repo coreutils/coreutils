@@ -25,19 +25,19 @@ ln -s regfile link1 || framework_failure_
 ln -s missing link2 || framework_failure_
 
 
-v=`readlink link1` || fail=1
+v=$(readlink link1) || fail=1
 test "$v" = regfile || fail=1
 
-v=`readlink link2` || fail=1
+v=$(readlink link2) || fail=1
 test "$v" = missing || fail=1
 
-v=`readlink subdir` && fail=1
+v=$(readlink subdir) && fail=1
 test -z "$v" || fail=1
 
-v=`readlink regfile` && fail=1
+v=$(readlink regfile) && fail=1
 test -z "$v" || fail=1
 
-v=`readlink missing` && fail=1
+v=$(readlink missing) && fail=1
 test -z "$v" || fail=1
 
 Exit $fail

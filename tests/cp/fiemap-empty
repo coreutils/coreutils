@@ -29,7 +29,7 @@ fiemap_capable_ fiemap_chk ||
   skip_ 'this file system lacks FIEMAP support'
 rm fiemap_chk
 
-# TODO: rather than requiring `fallocate`, possible add
+# TODO: rather than requiring $(fallocate), possible add
 # this functionality to truncate --alloc
 fallocate --help >/dev/null || skip_ 'The fallocate utility is required'
 fallocate -l 1 -n falloc.test ||

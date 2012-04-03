@@ -38,13 +38,13 @@ chmod -R --preserve-root u+r / >> out 2>&1 && fail=1
 # since the symlink in question is not a command line argument.
 # Contrary to the above commands, these two should succeed.
 echo '==== test -RHh' >> out
-chown -RHh --preserve-root `id -u` d >> out 2>&1 || fail=1
-chgrp -RHh --preserve-root `id -g` d >> out 2>&1 || fail=1
+chown -RHh --preserve-root $(id -u) d >> out 2>&1 || fail=1
+chgrp -RHh --preserve-root $(id -g) d >> out 2>&1 || fail=1
 
 # These must fail.
 echo '==== test -RLh' >> out
-chown -RLh --preserve-root `id -u` d >> out 2>&1 && fail=1
-chgrp -RLh --preserve-root `id -g` d >> out 2>&1 && fail=1
+chown -RLh --preserve-root $(id -u) d >> out 2>&1 && fail=1
+chgrp -RLh --preserve-root $(id -g) d >> out 2>&1 && fail=1
 
 cat <<\EOF > exp || fail=1
 chown: it is dangerous to operate recursively on '/'

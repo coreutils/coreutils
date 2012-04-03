@@ -57,7 +57,7 @@ ginstall -s -c -m 555 $dd $dir || fail=1
 test -f $dd || fail=1
 
 # Make sure that the destination file has the requested permissions.
-mode=`ls -l $dir/$dd|cut -b-10`
+mode=$(ls -l $dir/$dd|cut -b-10)
 test "$mode" = -r-xr-xr-x || fail=1
 
 # These failed in coreutils CVS from 2004-06-25 to 2004-08-11.
@@ -72,7 +72,7 @@ test -d newdir3 || fail=1
 # This fails because mkdir-p.c's make_dir_parents fails to return to its
 # initial working directory ($iwd) after creating the first argument, and
 # hence cannot do anything meaningful with the following relative-named dirs.
-iwd=`pwd`
+iwd=$(pwd)
 mkdir sub || fail=1
 (cd sub &&
  chmod 0 . &&

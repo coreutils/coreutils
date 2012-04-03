@@ -46,7 +46,7 @@ cp_pid=$!
   echo foo
 ) >fifo
 
-case `cat ls.out` in
+case $(cat ls.out) in
 -???------*) ;;
 *) fail=1;;
 esac

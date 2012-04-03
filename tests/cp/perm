@@ -49,8 +49,8 @@ for u in 31 37 2; do
 
             case "$cmd:$force:$existing_dest" in
               cp:*:yes)
-                _g_perm=`echo rwx|sed 's/[^'$g_perm']/-/g'`
-                _o_perm=`echo rwx|sed 's/[^'$o_perm']/-/g'`
+                _g_perm=$(echo rwx|sed 's/[^'$g_perm']/-/g')
+                _o_perm=$(echo rwx|sed 's/[^'$o_perm']/-/g')
                 expected_perms=-rw-$_g_perm$_o_perm
                 ;;
               cp:*:no)

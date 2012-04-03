@@ -24,7 +24,7 @@ require_ulimit_
 mkdir in err || framework_failure_
 
 
-for i in `seq 17`; do
+for i in $(seq 17); do
   echo $i >in/$i
 done
 seq 17 >some-data

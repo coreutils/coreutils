@@ -26,7 +26,7 @@ mkdir no-access || framework_failure_
 mkdir no-acce2s || framework_failure_
 mkdir -p no-acce3s/d || framework_failure_
 
-p=`pwd`
+p=$(pwd)
 (cd no-access && chmod 0 . && mkdir -p "$p/a/b" u/v) 2> /dev/null && fail=1
 test -d "$p/a/b" || fail=1
 
@@ -44,7 +44,7 @@ if is_local_dir_ .; then
   test -d "$p/b/c" || fail=1
 fi
 
-b=`ls "$p/a" | tr -d '\n'`
+b=$(ls "$p/a" | tr -d '\n')
 # With coreutils-5.3.0, this would fail with $b=bu.
 test "x$b" = xb || fail=1
 

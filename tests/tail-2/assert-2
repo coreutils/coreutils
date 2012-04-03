@@ -39,7 +39,7 @@ mv f foo
 # echo waiting....
 wait
 
-case "`cat err`" in
+case "$(cat err)" in
   *$ok) ;;
   *) fail=1;;
 esac

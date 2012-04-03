@@ -28,8 +28,8 @@ test -f c/a || framework_failure_
 test -f c/b || framework_failure_
 
 
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
 # --------------------------------------
 
@@ -38,8 +38,8 @@ touch a
 ln -s a b
 mkdir c
 cp --preserve=links -R -H a b c
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
 # --------------------------------------
 
@@ -47,24 +47,24 @@ test "$a_inode" = "$b_inode" || fail=1
 # and translates to hard-linked a and b in the destination dir.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln -s a b)
 cp --preserve=links -R -L d c
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
 # --------------------------------------
 
 # Same as above, but starting with a/b hard linked.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln a b)
 cp --preserve=links -R -L d c
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
 # --------------------------------------
 
 # Ensure that --no-preserve=links works.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln a b)
 cp -dR --no-preserve=links d c
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" && fail=1
 # --------------------------------------
 
@@ -73,8 +73,8 @@ rm -rf a b c d
 touch a; ln a b
 mkdir c
 cp -d a b c
-a_inode=`ls -i c/a|sed 's,c/.*,,'`
-b_inode=`ls -i c/b|sed 's,c/.*,,'`
+a_inode=$(ls -i c/a|sed 's,c/.*,,')
+b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
 # --------------------------------------
 
@@ -83,7 +83,7 @@ rm -rf a b c d
 touch a; chmod 731 a
 umask 077
 cp -a --no-preserve=mode a b
-mode=`ls -l b|cut -b-10`
+mode=$(ls -l b|cut -b-10)
 test "$mode" = "-rwx------" || fail=1
 umask 022
 # --------------------------------------

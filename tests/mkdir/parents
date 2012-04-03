@@ -31,21 +31,21 @@ mkdir e-dir > /dev/null 2>&1 && fail=1
 # Create an existing directory.
 umask 077
 mode_str=drwxr-x-wx
-mode_arg=`rwx_to_mode_ $mode_str`
+mode_arg=$(rwx_to_mode_ $mode_str)
 mkdir -m $mode_arg a || fail=1
 
 # this 'mkdir -p ...' shouldn't change perms of existing dir 'a'.
 d_mode_str=drwx-w--wx
-d_mode_arg=`rwx_to_mode_ $d_mode_str`
+d_mode_arg=$(rwx_to_mode_ $d_mode_str)
 mkdir -p -m $d_mode_arg a/b/c/d
 
 # Make sure the permissions of 'a' haven't been changed.
-p=`ls -ld a|cut -b-10`; case $p in $mode_str);; *) fail=1;; esac
+p=$(ls -ld a|cut -b-10); case $p in $mode_str);; *) fail=1;; esac
 # 'b's and 'c's should reflect the umask
-p=`ls -ld a/b|cut -b-10`; case $p in drwx------);; *) fail=1;; esac
-p=`ls -ld a/b/c|cut -b-10`; case $p in drwx------);; *) fail=1;; esac
+p=$(ls -ld a/b|cut -b-10); case $p in drwx------);; *) fail=1;; esac
+p=$(ls -ld a/b/c|cut -b-10); case $p in drwx------);; *) fail=1;; esac
 
 # 'd's perms are determined by the -m argument.
-p=`ls -ld a/b/c/d|cut -b-10`; case $p in $d_mode_str);; *) fail=1;; esac
+p=$(ls -ld a/b/c/d|cut -b-10); case $p in $d_mode_str);; *) fail=1;; esac
 
 Exit $fail

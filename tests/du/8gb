@@ -32,7 +32,7 @@ fi
 # the 'dd' command above mistakenly creates a file of length '0', yet
 # doesn't fail.  The root of that failure is that the ftruncate call
 # returns zero but doesn't do its job.  Detect this failure.
-set x `ls -gG big`
+set x $(ls -gG big)
 size=$4
 if test "$size" = 0; then
   skip_ "cannot create a file large enough for this test

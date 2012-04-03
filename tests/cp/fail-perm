@@ -31,7 +31,7 @@ cp -pR D DD > /dev/null 2>&1 && fail=1
 
 # Permissions on DD must be 'dr-x------'
 
-mode=`ls -ld DD|cut -b-10`
+mode=$(ls -ld DD|cut -b-10)
 test "$mode" = dr-x------ || fail=1
 
 chmod 0 D

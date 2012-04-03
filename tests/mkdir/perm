@@ -38,7 +38,7 @@ tests='
     027  :   -m =+X   : drwxr-x--- : d--x--x--- :
     -    :   -        : last       : last       :
     '
-colon_tests=`echo $tests | sed 's/^ *//; s/ *: */:/g'`
+colon_tests=$(echo $tests | sed 's/^ *//; s/ *: */:/g')
 
 for p in empty -p; do
   test _$p = _empty && p=

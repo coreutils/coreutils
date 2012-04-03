@@ -51,7 +51,7 @@ NA LAST NA
 '
 set $tests
 
-saved_size=`stty size` && test -n "$saved_size" \
+saved_size=$(stty size) && test -n "$saved_size" \
   || skip_ "can't get window size"
 
 # Linux virtual consoles issue an error if you
@@ -66,16 +66,16 @@ fi
 while :; do
   test_name=$1
   args=$2
-  expected_result="`echo $3|tr _ ' '`"
+  expected_result="$(echo $3|tr _ ' ')"
   test "$args" = empty && args=''
   test "x$args" = xLAST && break
-  args=`echo x$args|tr _ ' '|sed 's/^x//'`
+  args=$(echo x$args|tr _ ' '|sed 's/^x//')
   if test "$VERBOSE" = yes; then
-    # echo "testing \`stty $args; stty size\` = $expected_result ..."
+    # echo "testing \$(stty $args; stty size\) = $expected_result ..."
     echo "test $test_name... " | tr -d '\n'
   fi
   stty $args || exit 1
-  test x"`stty size 2> /dev/null`" = "x$expected_result" \
+  test x"$(stty size 2> /dev/null)" = "x$expected_result" \
     && ok=ok || ok=FAIL fail=1
   test "$VERBOSE" = yes && echo $ok
   shift; shift; shift

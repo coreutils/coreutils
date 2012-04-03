@@ -27,7 +27,7 @@ echo y > y || framework_failure_
 mv -i a b < y >/dev/null 2>&1 || fail=1
 
 # Make sure out contains the prompt.
-case "`cat b`" in
+case "$(cat b)" in
   a) ;;
   *) fail=1 ;;
 esac

@@ -20,7 +20,7 @@
 print_ver_ rm
 require_root_
 
-cwd=`pwd`
+cwd=$(pwd)
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
 skip=0

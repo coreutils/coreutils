@@ -33,18 +33,18 @@ chmod u=rwx,g=rx,o=rx . || framework_failure_
 
 
 cp -p a a2 || fail=1
-set _ `ls -l a`; shift; p1=$1
-set _ `ls -l a2`; shift; p2=$1
+set _ $(ls -l a); shift; p1=$1
+set _ $(ls -l a2); shift; p2=$1
 test $p1 = $p2 || fail=1
 
 cp -p b b2 || fail=1
-set _ `ls -l b`; shift; p1=$1
-set _ `ls -l b2`; shift; p2=$1
+set _ $(ls -l b); shift; p1=$1
+set _ $(ls -l b2); shift; p2=$1
 test $p1 = $p2 || fail=1
 
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" cp -p c c2 || fail=1
-set _ `ls -l c`; shift; p1=$1
-set _ `ls -l c2`; shift; p2=$1
+set _ $(ls -l c); shift; p1=$1
+set _ $(ls -l c2); shift; p2=$1
 test $p1 = $p2 && fail=1
 
 Exit $fail

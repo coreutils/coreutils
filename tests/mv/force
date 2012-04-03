@@ -33,7 +33,7 @@ mv: '$ff' and '$ff' are the same file
 EOF
 
 compare exp out || fail=1
-test `cat $ff` = force-contents || fail=1
+test $(cat $ff) = force-contents || fail=1
 
 # This should succeed, even though the source and destination
 # device and inodes are the same.

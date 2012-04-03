@@ -43,9 +43,9 @@ test -f b || fail=1
 test -f c || fail=1
 
 # The three i-node numbers must be the same.
-ia=`ls -i a|sed 's/ a//'`
-ib=`ls -i b|sed 's/ b//'`
-ic=`ls -i c|sed 's/ c//'`
+ia=$(ls -i a|sed 's/ a//')
+ib=$(ls -i b|sed 's/ b//')
+ic=$(ls -i c|sed 's/ c//')
 test $ia = $ib || fail=1
 test $ia = $ic || fail=1
 
@@ -68,9 +68,9 @@ test -f b || fail=1
 test -f c || fail=1
 
 # The three i-node numbers must be the same.
-ia=`ls -i a|sed 's/ a//'`
-ib=`ls -i b|sed 's/ b//'`
-ic=`ls -i c|sed 's/ c//'`
+ia=$(ls -i a|sed 's/ a//')
+ib=$(ls -i b|sed 's/ b//')
+ic=$(ls -i c|sed 's/ c//')
 test $ia = $ib || fail=1
 test $ia = $ic || fail=1
 

@@ -47,7 +47,7 @@ touch -a -d "$u1" a || framework_failure_
 
 
 # A has ctime more recent than C.
-set `ls -c a c`
+set $(ls -c a c)
 test "$*" = 'a c' || fail=1
 
 # Sleep so long in an attempt to avoid spurious failures
@@ -58,7 +58,7 @@ sleep 2
 ln c d || framework_failure_
 
 # Before we go any further, verify that touch's -m option works.
-set -- `ls --full -l a`
+set -- $(ls --full -l a)
 case "$*" in
   *" $t3:00.000000000 +0000 a") ;;
   *)
@@ -77,7 +77,7 @@ EOF
 esac
 
 # Ensure that touch's -a option works.
-set -- `ls --full -lu a`
+set -- $(ls --full -lu a)
 case "$*" in
   *" $u1:00.000000000 +0000 a") ;;
   *)
@@ -94,16 +94,16 @@ EOF
   ;;
 esac
 
-set `ls -ut a b c`
+set $(ls -ut a b c)
 test "$*" = 'c b a' && : || fail=1
 test $fail = 1 && ls -l --full-time --time=access a b c
 
-set `ls -t a b c`
+set $(ls -t a b c)
 test "$*" = 'a b c' && : || fail=1
 test $fail = 1 && ls -l --full-time a b c
 
 # Now, C should have ctime more recent than A.
-set `ls -ct a c`
+set $(ls -ct a c)
 if test "$*" = 'c a'; then
   : ok
 else

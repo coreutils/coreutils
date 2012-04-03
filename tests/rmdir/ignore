@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ rmdir
 
-cwd=`pwd`
+cwd=$(pwd)
 mkdir -p "$cwd/a/b/c" "$cwd/a/x" || framework_failure_
 
 rmdir -p --ignore-fail-on-non-empty "$cwd/a/b/c" || fail=1

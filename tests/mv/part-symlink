@@ -27,7 +27,7 @@ cleanup_() { rm -rf "$other_partition_tmpdir"; }
 # mv: preserving permissions for 'rem_sl': Operation not supported
 require_local_dir_
 
-pwd_tmp=`pwd`
+pwd_tmp=$(pwd)
 
 # Unset CDPATH.  Otherwise, output from the 'cd dir' command
 # can make this test fail.
@@ -68,15 +68,15 @@ for copy in cp mv; do
       rm -f "$other_partition_tmpdir"/* || fail=1
       mkdir dir || fail=1
       cd dir || fail=1
-      case "$args" in *loc_reg*) reg_abs="`pwd`/$loc_reg" ;; esac
+      case "$args" in *loc_reg*) reg_abs="$(pwd)/$loc_reg" ;; esac
       case "$args" in *rem_reg*) reg_abs=$rem_reg ;; esac
       case "$args" in *loc_sl*) slink=$loc_sl ;; esac
       case "$args" in *rem_sl*) slink=$rem_sl ;; esac
 
       echo $contents > "$reg_abs" || fail=1
       ln -nsf "$reg_abs" $slink || fail=1
-      actual_args=`echo $args|sed 's,^,$,;s/ / $/'`
-      actual_args=`eval echo $actual_args`
+      actual_args=$(echo $args|sed 's,^,$,;s/ / $/')
+      actual_args=$(eval echo $actual_args)
 
       (
         (
@@ -115,7 +115,7 @@ for copy in cp mv; do
             for f in $actual_args; do
               test -f $f ||
                 { echo " $copy FAILED but removed $f"; continue; }
-              case "`cat $f`" in
+              case "$(cat $f)" in
                 "$contents") ;;
                 *) echo " $copy FAILED but modified $f";;
               esac
@@ -130,7 +130,7 @@ for copy in cp mv; do
                 if test $copy_status != 0; then
                   test
                 fi
-                case "`cat $f`" in
+                case "$(cat $f)" in
                   "$contents") ;;
                   *) echo " $copy FAILED";;
                 esac

@@ -29,11 +29,11 @@ print_ver_ du
 # in a single directory.
 n=400
 
-dir_list=`seq $n`
+dir_list=$(seq $n)
 mkdir $dir_list || framework_failure_
 file=1
 i_minus_1=0
-for i in $dir_list `expr $n + 1`; do
+for i in $dir_list $(expr $n + 1); do
   case $i_minus_1 in
   0) ;;
   *)
@@ -56,7 +56,7 @@ echo foo > $i
 cat $file > /dev/null 2> err &&
     skip_ 'Your system appears to be able to handle more than $n symlinks
 in file name resolution'
-too_many=`sed 's/.*: //' err`
+too_many=$(sed 's/.*: //' err)
 
 
 # With coreutils-5.93 there was no failure.

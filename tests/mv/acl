@@ -38,30 +38,30 @@ skip_partition=none
 setfacl -m user:bin:rw- file 2> /dev/null || skip_partition=.
 # And on the destination file system.
 setfacl -m user:bin:rw- $t1 || skip_partition=$other_partition_tmpdir
-acl1=`getfacl file` || skip_partition=.
+acl1=$(getfacl file) || skip_partition=.
 
 test $skip_partition != none &&
   skip_ "'$skip_partition' is not on a suitable file system for this test"
 
 # move the access acl of a file
 mv file "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl file` || framework_failure_
+acl2=$(cd "$other_partition_tmpdir" && getfacl file) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # move the access acl of a directory
 mkdir dir || framework_failure_
 setfacl -m user:bin:rw- dir || framework_failure_
-acl1=`getfacl dir` || framework_failure_
+acl1=$(getfacl dir) || framework_failure_
 mv dir "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl dir` || framework_failure_
+acl2=$(cd "$other_partition_tmpdir" && getfacl dir) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 # move the default acl of a directory
 mkdir dir2 || framework_failure_
 setfacl -d -m user:bin:rw- dir2 || framework_failure_
-acl1=`getfacl dir2` || framework_failure_
+acl1=$(getfacl dir2) || framework_failure_
 mv dir2 "$other_partition_tmpdir" || fail=1
-acl2=`cd "$other_partition_tmpdir" && getfacl dir2` || framework_failure_
+acl2=$(cd "$other_partition_tmpdir" && getfacl dir2) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 
 Exit $fail

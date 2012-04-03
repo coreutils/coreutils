@@ -95,8 +95,8 @@ echo pass
 EOF
 chmod +x unlikely_name/also_unlikely || framework_failure_
 env also_unlikely && fail=1
-test x`PATH=$PATH:unlikely_name env also_unlikely` = xpass || fail=1
-test x`env PATH="$PATH":unlikely_name also_unlikely` = xpass || fail=1
+test x$(PATH=$PATH:unlikely_name env also_unlikely) = xpass || fail=1
+test x$(env PATH="$PATH":unlikely_name also_unlikely) = xpass || fail=1
 
 # Explicitly put . on the PATH for the rest of this test.
 PATH=$PATH:
@@ -108,15 +108,15 @@ export PATH
 # Avoid the issue by using an executable rather than a script.
 # Test -u, rather than -i, to minimize PATH problems.
 ln -s "$abs_top_builddir/src/echo" ./-u || framework_failure_
-case `env -u echo echo good` in
+case $(env -u echo echo good) in
   good) ;;
   *) fail=1 ;;
 esac
-case `env -u echo -- echo good` in
+case $(env -u echo -- echo good) in
   good) ;;
   *) fail=1 ;;
 esac
-case `env -- -u pass` in
+case $(env -- -u pass) in
   pass) ;;
   *) fail=1 ;;
 esac
@@ -125,7 +125,7 @@ esac
 env a=b -- true
 test $? = 127 || fail=1
 ln -s "$abs_top_builddir/src/echo" ./-- || framework_failure_
-case `env a=b -- true || echo fail` in
+case $(env a=b -- true || echo fail) in
   true) ;;
   *) fail=1 ;;
 esac
@@ -136,9 +136,9 @@ cat <<EOF >./c=d || framework_failure_
 echo pass
 EOF
 chmod +x c=d || framework_failure_
-test "x`env c=d echo fail`" = xfail || fail=1
-test "x`env -- c=d echo fail`" = xfail || fail=1
-test "x`env ./c=d echo fail`" = xfail || fail=1
+test "x$(env c=d echo fail)" = xfail || fail=1
+test "x$(env -- c=d echo fail)" = xfail || fail=1
+test "x$(env ./c=d echo fail)" = xfail || fail=1
 test "x$(env sh -c 'exec "$@"' sh c=d echo fail)" = xpass || fail=1
 test "x$(sh -c '\c=d echo fail')" = xpass && #dash 0.5.4 fails so check first
   { test "x$(env sh -c '\c=d echo fail')" = xpass || fail=1; }

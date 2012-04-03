@@ -26,7 +26,7 @@ tmp=t
 mkdir -m$set_mode_string $tmp || fail=1
 
 test -d $tmp || fail=1
-mode=`ls -ld $tmp|cut -b-10`
+mode=$(ls -ld $tmp|cut -b-10)
 case "$mode" in
   $output_mode_string) ;;
   *) fail=1 ;;
@@ -42,7 +42,7 @@ mkdir -m$set_mode_string $tmp2 2> /dev/null && fail=1
 mkdir --parents -m$set_mode_string $tmp2 || fail=1
 
 test -d $tmp2 || fail=1
-mode=`ls -ld $tmp2|cut -b-10`
+mode=$(ls -ld $tmp2|cut -b-10)
 case "$mode" in
   $output_mode_string) ;;
   *) fail=1 ;;

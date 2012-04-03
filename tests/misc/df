@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ df
 
-case `df .` in
+case $(df .) in
 *'
 '*) ;;
 *) fail=1;;

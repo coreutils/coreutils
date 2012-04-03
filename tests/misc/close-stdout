@@ -49,7 +49,7 @@ if "$p/src/test" -w /dev/stdout >/dev/null &&
   rm -Rf tmpfile-?????? || fail=1
   mktemp tmpfile-XXXXXX >&- 2>/dev/null && fail=1
   mktemp tmpfile-XXXXXX -q >&- 2>/dev/null && fail=1
-  case `echo tmpfile-??????` in 'tmpfile-??????') ;; *) fail=1 ;; esac
+  case $(echo tmpfile-??????) in 'tmpfile-??????') ;; *) fail=1 ;; esac
 fi
 
 # Likewise for /dev/full, if /dev/full works.
@@ -59,7 +59,7 @@ if test -w /dev/full && test -c /dev/full; then
   rm -Rf tmpdir-?????? || fail=1
   mktemp -d tmpdir-XXXXXX >/dev/full 2>/dev/null && fail=1
   mktemp -d -q tmpdir-XXXXXX >/dev/full 2>/dev/null && fail=1
-  case `echo tmpfile-??????` in 'tmpfile-??????') ;; *) fail=1 ;; esac
+  case $(echo tmpfile-??????) in 'tmpfile-??????') ;; *) fail=1 ;; esac
 fi
 
 Exit $fail

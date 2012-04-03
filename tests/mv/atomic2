@@ -39,7 +39,7 @@ $EGREP 'unlink.*"b"' out && fail=1
 ls -dl a > /dev/null 2>&1 && fail=1
 
 # Ensure that the destination, "b", has link count 1.
-n_links=`stat --printf=%h b` || fail=1
+n_links=$(stat --printf=%h b) || fail=1
 test "$n_links" = 1 || fail=1
 
 Exit $fail

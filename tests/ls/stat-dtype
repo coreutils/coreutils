@@ -29,7 +29,7 @@ print_ver_ ls
 # but if ls's d_type code is buggy then "ls -p" might be buggy too.
 mkdir -p c/d || framework_failure_
 chmod a-x c || framework_failure_
-if test "X`ls -p c 2>&1`" != Xd/; then
+if test "X$(ls -p c 2>&1)" != Xd/; then
   skip_ "'.' is not on a suitable file system for this test"
 fi
 

@@ -46,7 +46,7 @@ for i in $changed; do
   # Filter out symlinks (entries that end in 's'), since it's not
   # possible to change their group/owner information on some systems.
   case $i in *s) continue;; esac
-  set _ `ls -dgn $i`; shift
+  set _ $(ls -dgn $i); shift
   group=$3
   test $group = $g2 || fail=1
 done
@@ -62,7 +62,7 @@ for i in $not_changed; do
   # Filter out symlinks (entries that end in 's'), since it's not
   # possible to change their group/owner information on some systems.
   case $i in *s) continue;; esac
-  set _ `ls -dgn $i`; shift
+  set _ $(ls -dgn $i); shift
   group=$3
   test $group = $g1 || fail=1
 done

@@ -24,13 +24,13 @@ print_ver_ date
 
 
 # It would be easier simply to sleep for two seconds between two runs
-# of `date --date="21:04 +0100" +%S` and ensure that both outputs
+# of $(date --date="21:04 +0100" +%S) and ensure that both outputs
 # are '00', but I prefer not to sleep unconditionally.  'make check'
 # takes long enough as it is.
 
 n=0
 # See if the current number of seconds is '00' or just before.
-s=`date +%S`
+s=$(date +%S)
 case "$s" in
   58) n=3;;
   59) n=2;;
@@ -40,7 +40,7 @@ esac
 # If necessary, wait for the system clock to pass the minute mark.
 test $n = 0 || sleep $n
 
-s=`date --date="21:04 +0100" +%S`
+s=$(date --date="21:04 +0100" +%S)
 case "$s" in
   00) ;;
   *) fail=1;;

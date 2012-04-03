@@ -34,8 +34,8 @@ mv $dir "$other_partition_tmpdir" || fail=1
 ls -1i "$other_partition_tmpdir/$dir" > out || fail=1
 
 # Make sure the inode numbers are the same.
-a=`sed -n 's/ a$//p' out`
-b=`sed -n 's/ b$//p' out`
+a=$(sed -n 's/ a$//p' out)
+b=$(sed -n 's/ b$//p' out)
 test "$a" = "$b" || fail=1
 
 Exit $fail

@@ -48,7 +48,7 @@ echo sleeping for $SLEEP_SECONDS seconds...
 sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   touch $d/a || fail=1
-  set x `ls -t $d/a $d/b`
+  set x $(ls -t $d/a $d/b)
   test "$*" = "x $d/a $d/b" || fail=1
 done
 
@@ -56,11 +56,11 @@ echo sleeping for $SLEEP_SECONDS seconds...
 sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   touch $d/b
-  set x `ls -t $d/a $d/b`
+  set x $(ls -t $d/a $d/b)
   test "$*" = "x $d/b $d/a" || fail=1
 
   if touch - 1< $d/c 2> /dev/null; then
-    set x `ls -t $d/a $d/c`
+    set x $(ls -t $d/a $d/c)
     test "$*" = "x $d/c $d/a" || fail=1
   fi
 

@@ -57,10 +57,10 @@ if dd iflag=directory if=. count=0 2> /dev/null; then
   dd iflag=directory count=0 <$tmp_in 2> /dev/null && fail=1
 fi
 
-old_ls=`ls -u --full-time $tmp_in`
+old_ls=$(ls -u --full-time $tmp_in)
 sleep 1
 if dd iflag=noatime if=$tmp_in of=$tmp_out 2> /dev/null; then
-  new_ls=`ls -u --full-time $tmp_in`
+  new_ls=$(ls -u --full-time $tmp_in)
   if test "x$old_ls" != "x$new_ls"; then
     cat >&2 <<EOF
 =================================================================
@@ -80,7 +80,7 @@ if dd oflag=nolinks if=$tmp_in of=$tmp_out 2> /dev/null; then
   dd oflag=nolinks < $tmp_in > $tmp_out 2>&1 || fail=1
 fi
 
-outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
+outbytes=$(echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c)
 test "$outbytes" -eq 3 || fail=1
 
 # A delay is required to trigger a failure.

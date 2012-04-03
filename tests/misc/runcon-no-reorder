@@ -33,7 +33,7 @@ runcon $(id -Z) true -j 2> out && : > exp
 # it chcon fails with this: "runcon: invalid context: \
 # root:system_r:unconfined_t:s0-s0:c0.c1023: No such file or directory"
 # That diagnostic is ok, too, so map it to the more common one.
-case `cat out` in
+case $(cat out) in
   'runcon: invalid context: '*) echo "$diag" > out;;
 esac
 

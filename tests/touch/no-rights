@@ -24,14 +24,14 @@ print_ver_ touch
 touch -d '2000-01-01 00:00' t1 || framework_failure_
 touch -d '2000-01-02 00:00' t2 || framework_failure_
 
-set x `ls -t t1 t2`
+set x $(ls -t t1 t2)
 test "$*" = "x t2 t1" || framework_failure_
 
 
 chmod 0 t1
 touch -d '2000-01-03 00:00' -c t1 || fail=1
 
-set x `ls -t t1 t2`
+set x $(ls -t t1 t2)
 test "$*" = "x t1 t2" || fail=1
 
 # Also test the combination of --no-create and -a.

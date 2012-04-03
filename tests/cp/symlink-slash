@@ -24,7 +24,7 @@ mkdir dir || framework_failure_
 ln -s dir symlink || framework_failure_
 
 cp -dR symlink/ s || fail=1
-set `ls -l s`
+set $(ls -l s)
 
 # Prior to fileutils-4.0q, the following would have output ...'s -> dir'
 # because the trailing slash was removed unconditionally (now you have to

@@ -40,7 +40,7 @@ sort -n out > out1
 compare in out1 || { fail=1; echo "not a permutation" 1>&2; }
 
 # Exercise shuf's -e option.
-t=`shuf -e a b c d e | sort | fmt`
+t=$(shuf -e a b c d e | sort | fmt)
 test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }
 
 # Before coreutils-6.3, this would infloop.

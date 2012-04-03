@@ -45,7 +45,7 @@ mv f g < $tty > out 2>&1 & pid=$!
 check_overwrite_prompt()
 {
   local delay="$1"
-  case "`cat out`" in
+  case "$(cat out)" in
     "mv: try to overwrite 'g', overriding mode 0000"*) ;;
     *) sleep $delay; return 1;;
   esac
@@ -61,7 +61,7 @@ test -f i || fail=1
 test -f h && fail=1
 
 # Make sure there was no prompt.
-case "`cat out`" in
+case "$(cat out)" in
   '') ;;
   *) fail=1 ;;
 esac

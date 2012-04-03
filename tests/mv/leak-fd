@@ -32,16 +32,16 @@ b="0 1 2 3 4 5 6 7 8 9
 a b c d e f g h i j k l m n o p q r s t u v w x y z
 _A _B _C _D _E _F _G _H _I _J _K _L _M _N _O _P _Q _R _S _T _U _V _W _X _Y _Z"
 
-for i in `echo $b`; do
+for i in $(echo $b); do
   echo $i
   for j in $b; do
     echo $i$j
   done
 done > .dirs
-mkdir `cat .dirs` || framework_failure_
+mkdir $(cat .dirs) || framework_failure_
 sed 's,$,/f,' .dirs | xargs touch
 
-last_file=`tail -n1 .dirs`/f
+last_file=$(tail -n1 .dirs)/f
 test -f $last_file || framework_failure_
 
 

@@ -31,7 +31,7 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
     # to which you belong.  When that happens, the above chmod fails.  So
     # here, upon failure, we try to set the group, then rerun the chmod command.
 
-    id_g=`id -g` &&
+    id_g=$(id -g) &&
     test -n "$id_g" &&
     chgrp "$id_g" d &&
     chmod g+s d || framework_failure_
@@ -52,7 +52,7 @@ do
        expected_mode=drwxr-xr-x ;;
     *) expected_mode=drwxr-sr-x ;;
   esac
-  ls_output=`ls -ld d`
+  ls_output=$(ls -ld d)
   case $ls_output in
     $expected_mode*) ;;
     *) fail=1 ;;

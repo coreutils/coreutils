@@ -25,15 +25,15 @@ mkfifo_or_skip_ fifo
 umask 777
 
 mknod  -m 734 f1 p || fail=1
-mode=`ls -dgo f1|cut -b-10`
+mode=$(ls -dgo f1|cut -b-10)
 test $mode = prwx-wxr-- || fail=1
 
 mkfifo -m 734 f2   || fail=1
-mode=`ls -dgo f2|cut -b-10`
+mode=$(ls -dgo f2|cut -b-10)
 test $mode = prwx-wxr-- || fail=1
 
 mkdir -m 734 f3   || fail=1
-mode=`ls -dgo f3|cut -b-10`
+mode=$(ls -dgo f3|cut -b-10)
 test $mode = drwx-wxr-- || test $mode = drwx-wsr-- || fail=1
 
 Exit $fail

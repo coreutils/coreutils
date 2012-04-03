@@ -35,7 +35,7 @@ for prog in cp mv; do
     for opt in none off  numbered t  existing nil  simple never; do
       touch $initial_files
         $prog --backup=$opt x y || fail=1
-      echo $initial_files $opt: `ls [xy]*`; rm -f x y y~ y.~?~
+      echo $initial_files $opt: $(ls [xy]*); rm -f x y y~ y.~?~
     done
   done
 done

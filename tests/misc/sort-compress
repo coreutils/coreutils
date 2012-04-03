@@ -39,7 +39,7 @@ chmod +x gzip
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
-  sig=`"$abs_top_builddir/src/kill" -l CHLD 2>/dev/null` && trap '' $sig
+  sig=$("$abs_top_builddir/src/kill" -l CHLD 2>/dev/null) && trap '' $sig
 
   # This should force the use of child processes for "compression"
   PATH=.:$PATH exec sort -S 1k --compress-program=gzip in > /dev/null

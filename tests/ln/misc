@@ -91,7 +91,7 @@ rm -rf $d $f $ld || framework_failure_
 touch $f || framework_failure_
 mkdir $d || framework_failure_
 ln -s $d $ld
-af=`pwd`/$f
+af=$(pwd)/$f
 ln --no-dereference -fs "$af" $ld || fail=1
 test -f $ld || fail=1
 rm -rf $d $f $ld

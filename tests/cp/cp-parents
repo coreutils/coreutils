@@ -49,10 +49,10 @@ test -d d/f && fail=1
 chmod go=w d/a || framework_failure_
 cp -a --parents d/a/b/c e || fail=1
 cp -a --parents sym/b/c g || fail=1
-p=`ls -ld e/d|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
-p=`ls -ld e/d/a|cut -b-10`; case $p in drwx-w--w-);; *) fail=1;; esac
-p=`ls -ld g/sym|cut -b-10`; case $p in drwx-w--w-);; *) fail=1;; esac
-p=`ls -ld e/d/a/b/c|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
-p=`ls -ld g/sym/b/c|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
+p=$(ls -ld e/d|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
+p=$(ls -ld e/d/a|cut -b-10); case $p in drwx-w--w-);; *) fail=1;; esac
+p=$(ls -ld g/sym|cut -b-10); case $p in drwx-w--w-);; *) fail=1;; esac
+p=$(ls -ld e/d/a/b/c|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
+p=$(ls -ld g/sym/b/c|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
 
 Exit $fail

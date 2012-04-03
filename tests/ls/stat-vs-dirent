@@ -20,20 +20,20 @@
 print_ver_ ls
 
 
-root_dev_ino=`stat --format=%d-%i /`
-t=`pwd`
+root_dev_ino=$(stat --format=%d-%i /)
+t=$(pwd)
 while :; do
   ls -i1 "$t" > tmp
   if test $? = 0; then
     # Extract the inode number from the first line of output from ls -i1.
     # This value comes from dirent.d_ino, on systems with d_ino support.
-    d_ino=`sed -n '1s/^ *\([0-9][0-9]*\) .*/\1/p;q' tmp`
+    d_ino=$(sed -n '1s/^ *\([0-9][0-9]*\) .*/\1/p;q' tmp)
 
     # Extract the name of the corresponding directory entry.
-    file=`sed -n '1s/^ *[0-9][0-9]*  *//p;q' tmp`
+    file=$(sed -n '1s/^ *[0-9][0-9]*  *//p;q' tmp)
 
     # Get its inode number (stat.st_ino) via stat(1)'s call to lstat.
-    st_ino=`stat --format=%i "$t/$file"`
+    st_ino=$(stat --format=%i "$t/$file")
 
     # Make sure that they are the same.
     # We know from experience that there may be mismatches on some
@@ -53,7 +53,7 @@ while :; do
   fi
 
   t=$(cd "$t/.."; pwd)
-  dev_ino=`stat --format=%d-%i "$t"`
+  dev_ino=$(stat --format=%d-%i "$t")
   test $dev_ino = $root_dev_ino && break
 done
 

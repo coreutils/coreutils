@@ -25,7 +25,7 @@ nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
 # Be careful.  The results of the above nohup command
 # change depending on whether stdin and stdout are redirected.
 if test -t 1; then
-  test "`cat nohup.out`" = stdout || fail=1
+  test "$(cat nohup.out)" = stdout || fail=1
   if test -t 0; then
     echo 'nohup: ignoring input and appending output to 'nohup.out'\'
   else

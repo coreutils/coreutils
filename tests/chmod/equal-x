@@ -25,7 +25,7 @@ touch $file || framework_failure_
 umask 005
 for mode in =x =xX =Xx =x,=X =X,=x; do
   chmod a=r,$mode $file || fail=1
-  case "`ls -l $file`" in
+  case "$(ls -l $file)" in
     ---x--x---*) ;;
     *) fail=1; echo "after 'chmod $mode $file':"; ls -l $file ;;
   esac

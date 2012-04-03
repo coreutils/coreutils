@@ -26,8 +26,8 @@ g2=$2
 mkdir d && touch f && ln -s ../f d/s || framework_failure_
 
 
-g_init=`stat --printf=%g f`
+g_init=$(stat --printf=%g f)
 chgrp -R $g2 d || fail=1
-test `stat --printf=%g f` = $g_init || fail=1
+test $(stat --printf=%g f) = $g_init || fail=1
 
 Exit $fail

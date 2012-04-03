@@ -58,11 +58,11 @@ esac
 
 # Change the mtime of a symlink.
 touch -m -h -d 2009-10-10 link || fail=1
-case `stat --format=%y link` in
+case $(stat --format=%y link) in
   2009-10-10*) ;;
   *) fail=1 ;;
 esac
-case `stat --format=%y file` in
+case $(stat --format=%y file) in
   2009-10-10*) fail=1;;
 esac
 

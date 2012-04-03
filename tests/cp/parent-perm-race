@@ -48,7 +48,7 @@ do
     echo foo
   ) >$attr/fifo
 
-  ls_output=`cat d/$attr.ls` || fail=1
+  ls_output=$(cat d/$attr.ls) || fail=1
   case $attr,$ls_output in
   ownership,d???--[-S]--[-S]* | \
   mode,d????-??-?* | \

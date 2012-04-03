@@ -41,6 +41,6 @@ $EGREP 'unlink.*"s1"' out && fail=1
 ls -dl s1 > /dev/null 2>&1 && fail=1
 
 # Ensure that the destination, s2, contains the link from s1.
-test "`readlink s2`" = t1 || fail=1
+test "$(readlink s2)" = t1 || fail=1
 
 Exit $fail

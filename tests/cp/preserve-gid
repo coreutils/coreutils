@@ -39,7 +39,7 @@ t0() {
   g=$1; shift
   rm -f b || exit 1
   "$@" "$f" b || exit 1
-  s=`stat -c '%u %g' b`
+  s=$(stat -c '%u %g' b)
   if test "x$s" != "x$u $g"; then
     # Allow the actual group to match that of the parent directory
     # (it was set to 0 above).

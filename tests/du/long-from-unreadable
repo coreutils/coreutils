@@ -36,11 +36,11 @@ if test ! -d $proc_file; then
   skip_ 'This test would fail, since your system lacks /proc support.'
 fi
 
-dir=`printf '%200s\n' ' '|tr ' ' x`
+dir=$(printf '%200s\n' ' '|tr ' ' x)
 
 # Construct a hierarchy containing a relative file with a name
 # longer than PATH_MAX.
-# for i in `seq 52`; do
+# for i in $(seq 52); do
 #   mkdir $dir || framework_failure_
 #   cd $dir || framework_failure_
 # done
@@ -51,7 +51,7 @@ dir=`printf '%200s\n' ' '|tr ' ' x`
 #     cannot access parent directories:
 # (all on one line).
 
-cwd=`pwd`
+cwd=$(pwd)
 # Use perl instead:
 : ${PERL=perl}
 $PERL \

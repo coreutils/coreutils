@@ -39,9 +39,9 @@ du -L dangle > /dev/null 2>&1 && fail=1
 # du -L used to mess up, either by counting the symlink's disk space itself
 # (-L should follow symlinks, not count their space)
 # or (briefly in July 2010) by omitting the entry for "a".
-du_L_output=`du -L a` || fail=1
-du_lL_output=`du -lL a` || fail=1
-du_x_output=`du --exclude=dotdot a` || fail=1
+du_L_output=$(du -L a) || fail=1
+du_lL_output=$(du -lL a) || fail=1
+du_x_output=$(du --exclude=dotdot a) || fail=1
 test "X$du_L_output" = "X$du_x_output" || fail=1
 test "X$du_lL_output" = "X$du_x_output" || fail=1
 

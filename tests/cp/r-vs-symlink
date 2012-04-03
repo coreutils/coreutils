@@ -32,7 +32,7 @@ ln -s no-such-file no-file || framework_failure_
 cp -r no-file junk 2>/dev/null || fail=1
 
 cp -r slink bar 2>/dev/null || fail=1
-set x `ls -l bar`; shift; mode=$1
+set x $(ls -l bar); shift; mode=$1
 case $mode in
   l*) ;;
   *) fail=1;;

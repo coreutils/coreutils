@@ -54,15 +54,15 @@ cases='
   ug,+x f    :
 '
 
-all_files=`echo "$cases" | sed 's/.*://'|sort -u`
+all_files=$(echo "$cases" | sed 's/.*://'|sort -u)
 
 old_IFS=$IFS
 IFS='
 '
 for case in $cases; do
   IFS=$old_IFS
-  args=`expr "$case" : ' *\(.*[^ ]\) *:'`
-  files=`expr "$case" : '.*: *\(.*\)'`
+  args=$(expr "$case" : ' *\(.*[^ ]\) *:')
+  files=$(expr "$case" : '.*: *\(.*\)')
 
   case $files in
   '')

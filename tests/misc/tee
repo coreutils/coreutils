@@ -20,10 +20,10 @@
 print_ver_ tee
 
 echo line >sample || framework_failure_
-nums=`seq 9` || framework_failure_
+nums=$(seq 9) || framework_failure_
 
 for n in 0 $nums; do
-        files=`seq $n`
+        files=$(seq $n)
         rm -f $files
         tee $files <sample >out || fail=1
         for f in out $files; do

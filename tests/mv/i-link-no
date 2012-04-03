@@ -35,7 +35,7 @@ touch exp_err
 compare exp out || fail=1
 compare exp_err err || fail=1
 
-case "`cat b/foo`" in
+case "$(cat b/foo)" in
   foo) ;;
   *) fail=1;;
 esac

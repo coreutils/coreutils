@@ -34,7 +34,7 @@ touch f || framework_failure_
 chown $nameless_uid f || framework_failure_
 
 
-set -- `ls -o f` || fail=1
+set -- $(ls -o f) || fail=1
 test $3 = $nameless_uid || fail=1
 
 Exit $fail

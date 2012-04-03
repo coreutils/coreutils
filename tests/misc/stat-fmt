@@ -21,9 +21,9 @@ print_ver_ stat
 
 
 
-for i in `seq 50`; do
-  fmt=`printf "%${i}s" %`
-  out=`stat --form="$fmt" .`
+for i in $(seq 50); do
+  fmt=$(printf "%${i}s" %)
+  out=$(stat --form="$fmt" .)
   test "$out" = "$fmt" || fail=1
 done
 

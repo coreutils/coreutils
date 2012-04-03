@@ -19,16 +19,16 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ chown
 
-id_u=`id -u` || framework_failure_
+id_u=$(id -u) || framework_failure_
 test -n "$id_u" || framework_failure_
 
-id_un=`id -un` || framework_failure_
+id_un=$(id -un) || framework_failure_
 test -n "$id_un" || framework_failure_
 
-id_g=`id -g` || framework_failure_
+id_g=$(id -g) || framework_failure_
 test -n "$id_g" || framework_failure_
 
-id_gn=`id -gn` || framework_failure_
+id_gn=$(id -gn) || framework_failure_
 test -n "$id_gn" || framework_failure_
 
 # FreeBSD 6.x's getgrnam fails to look up a group name containing

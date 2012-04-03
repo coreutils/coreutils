@@ -19,7 +19,7 @@
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ mkdir
 
-mkdir --parents "`pwd`/t" || fail=1
+mkdir --parents "$(pwd)/t" || fail=1
 test -d t || fail=1
 
 Exit $fail
