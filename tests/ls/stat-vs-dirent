@@ -52,7 +52,7 @@ while :; do
     fi
   fi
 
-  t=`(cd "$t/.."; pwd)`
+  t=$(cd "$t/.."; pwd)
   dev_ino=`stat --format=%d-%i "$t"`
   test $dev_ino = $root_dev_ino && break
 done
