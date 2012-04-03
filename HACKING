@@ -232,6 +232,17 @@ Try to make the summary line fit one of the following forms:
   build: change-description
   maint: change-description
 
+If your commit fixes a bug, try to find the commit that introduced that
+bug.  If you do that, add a note in your new commit log saying something
+like "Introduced by commit v8.12-103-g54cbe6e." and add something like
+[bug introduced in coreutils-8.13] in the corresponding NEWS blurb.
+Assuming you found the bug in commit 54cbe6e6, "git describe 54cbe6e6"
+will print the longer tag-relative string that you'll need.
+Note that we used to use an 8-byte SHA1 prefix like "54cbe6e6", because
+that was automatically rendered as a clickable link by "gitk", but with
+git-1.7.10, the more descriptive version-containing "git describe" format
+that we now require is also highlighted.
+
 
 Curly braces: use judiciously
 =============================
