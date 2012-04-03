@@ -44,7 +44,6 @@ kill $pid > /dev/null 2>&1
 cat > exp <<\EOF
 rm: remove write-protected regular empty file 'f'? x
 EOF
-#`
 
 # Append an 'x' and a newline.
 echo x >> out

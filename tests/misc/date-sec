@@ -1,6 +1,6 @@
 #!/bin/sh
 # Ensure that a command like
-# `date --date="21:04 +0100" +%S' always prints '00'.
+# date --date="21:04 +0100" +%S' always prints '00'.
 # Before coreutils-5.2.1, it would print the seconds from the current time.
 
 # Copyright (C) 2004-2012 Free Software Foundation, Inc.

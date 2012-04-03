@@ -22,9 +22,9 @@ print_ver_ ls
 require_root_
 require_perl_
 
-nameless_uid=`$PERL -e '
+nameless_uid=$($PERL -e '
   foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }
-'`
+')
 
 if test x$nameless_uid = x; then
   skip_ "couldn't find a nameless UID"

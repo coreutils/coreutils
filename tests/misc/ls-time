@@ -70,7 +70,6 @@ tests in this file will not be run.
 In the output below, the date of last modification for 'a' should
 have been $t3.
 EOF
-  #`
   ls --full -l a
   framework_failure_
   ;;

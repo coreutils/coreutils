@@ -50,8 +50,8 @@ echo foo > $i
 # The following also serves to record in 'err' the string
 # corresponding to strerror (ELOOP).  This is necessary because while
 # Linux/libc gives 'Too many levels of symbolic links', Solaris
-# renders it as `Number of symbolic links encountered during path
-# name traversal exceeds MAXSYMLINKS'.
+# renders it as "Number of symbolic links encountered during path
+# name traversal exceeds MAXSYMLINKS".
 
 cat $file > /dev/null 2> err &&
     skip_ 'Your system appears to be able to handle more than $n symlinks
