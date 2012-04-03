@@ -331,7 +331,7 @@ $fail
   and exit 1;
 
 # Be careful to use the just-build dircolors.
-my $env = `$ENV{abs_top_builddir}/src/dircolors -b`;
+my $env = qx/dircolors -b/;
 $env =~ s/^LS_COLORS=\'//;
 $env =~ s/\';.*//sm;
 $ENV{LS_COLORS} = $env;

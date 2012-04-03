@@ -97,7 +97,7 @@ my $pwd_binary = "$build_src_dir/pwd";
 
 -x $pwd_binary
   or die "$ME: $pwd_binary is not an executable file\n";
-chomp (my $actual = `$pwd_binary`);
+chomp (my $actual = qx!$pwd_binary!);
 
 # Convert the absolute name from pwd into a $CWD-relative name.
 # This is necessary in order to avoid a spurious failure when run

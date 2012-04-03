@@ -175,7 +175,7 @@ my @Tests =
     );
 
 # If using big numbers fails, remove all /^bignum-/ tests
-`expr $big_prod '*' $big_prod '*' $big_prod`
+qx!expr $big_prod '*' $big_prod '*' $big_prod!
   or @Tests = grep {$_->[0] !~ /^bignum-/} @Tests;
 
 # Append a newline to end of each expected 'OUT' string.

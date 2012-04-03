@@ -86,7 +86,7 @@ my $locale = $ENV{LOCALE_FR};
   and CuSkip::skip "$prog: skipping this test -- no appropriate locale\n";
 
 # See if isblank returns true for nbsp.
-my $x = `env printf '\xa0'| LC_ALL=$locale tr '[:blank:]' x`;
+my $x = qx!env printf '\xa0'| LC_ALL=$locale tr '[:blank:]' x!;
 # If so, expect just one line of output in the schar test.
 # Otherwise, expect two.
 my $in = " y z\n\xa0 y z\n";
