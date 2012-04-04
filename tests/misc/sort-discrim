@@ -33,7 +33,7 @@ getlimits_
 long_prefix='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 seq -f "$long_prefix%5.0f" 10000 > exp || fail=1
 sort -R exp | LC_ALL=C sort > out || fail=1
-compare out exp || fail=1
+compare exp out || fail=1
 
 
 # Test numeric sorting.
@@ -83,7 +83,7 @@ max_frac160=$(expr $INTMAX_MAX / 16 % 10) &&
 
 for opts in -n -h; do
   sort -R exp | LC_ALL=C sort $opts > out || fail=1
-  compare out exp || fail=1
+  compare exp out || fail=1
 done
 
 Exit $fail
