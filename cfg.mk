@@ -303,6 +303,12 @@ sc_prohibit_framework_failure:
 	halt='use framework_failure_ instead'				\
 	  $(_sc_search_regexp)
 
+# Prohibit the use of `...` in tests/.  Use $(...) instead.
+sc_prohibit_test_backticks:
+	@prohibit='`' in_vc_files='^tests/'				\
+	halt='use $$(...), not `...` in tests/'				\
+	  $(_sc_search_regexp)
+
 # Exempt the contents of any usage function from the following.
 _continued_string_col_1 = \
 s/^usage .*?\n}//ms;/\\\n\w/ and print ("$$ARGV\n"),$$e=1;END{$$e||=0;exit $$e}
@@ -447,3 +453,6 @@ exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
 
 exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c)$$
+
+exclude_file_name_regexp--sc_prohibit_test_backticks = \
+  ^tests/(init\.sh|check\.mk|misc/stdbuf)$$
