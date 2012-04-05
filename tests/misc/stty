@@ -29,13 +29,13 @@ REV_parenb=1 REV_parodd=1 REV_hupcl=1 REV_hup=1 REV_cstopb=1 REV_cread=1
 REV_clocal=1 REV_crtscts=1 REV_ignbrk=1 REV_brkint=1 REV_ignpar=1
 REV_parmrk=1 REV_inpck=1 REV_istrip=1 REV_inlcr=1 REV_igncr=1 REV_icrnl=1
 REV_ixon=1 REV_ixoff=1 REV_tandem=1 REV_iuclc=1 REV_ixany=1 REV_imaxbel=1
-REV_opost=1 REV_olcuc=1 REV_ocrnl=1 REV_onlcr=1 REV_onocr=1 REV_onlret=1
-REV_ofill=1 REV_ofdel=1 REV_isig=1 REV_icanon=1 REV_iexten=1 REV_echo=1
-REV_echoe=1 REV_crterase=1 REV_echok=1 REV_echonl=1 REV_noflsh=1
-REV_xcase=1 REV_tostop=1 REV_echoprt=1 REV_prterase=1 REV_echoctl=1
-REV_ctlecho=1 REV_echoke=1 REV_crtkill=1 REV_evenp=1 REV_parity=1
-REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1 REV_litout=1
-REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
+REV_iutf8=1 REV_opost=1 REV_olcuc=1 REV_ocrnl=1 REV_onlcr=1 REV_onocr=1
+REV_onlret=1 REV_ofill=1 REV_ofdel=1 REV_isig=1 REV_icanon=1 REV_iexten=1
+REV_echo=1 REV_echoe=1 REV_crterase=1 REV_echok=1 REV_echonl=1
+REV_noflsh=1 REV_xcase=1 REV_tostop=1 REV_echoprt=1 REV_prterase=1
+REV_echoctl=1 REV_ctlecho=1 REV_echoke=1 REV_crtkill=1 REV_evenp=1
+REV_parity=1 REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1
+REV_litout=1 REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 
 saved_state=.saved-state
