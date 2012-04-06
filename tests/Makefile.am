@@ -140,6 +140,9 @@ TESTS =						\
   chgrp/no-x					\
   chgrp/posix-H					\
   chgrp/recurse					\
+  fmt/base					\
+  fmt/long-line					\
+  fmt/goal-option				\
   misc/env					\
   misc/ptx					\
   misc/test					\
@@ -188,8 +191,6 @@ TESTS =						\
   misc/expr					\
   misc/factor					\
   misc/false-status				\
-  misc/fmt					\
-  misc/fmt-long-line				\
   misc/fold					\
   misc/groups-dash				\
   misc/groups-version				\

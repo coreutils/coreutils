@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  fmt now accepts the --goal=WIDTH (-g) option.
+
 ** Changes in behavior
 
   cp --attributes-only no longer truncates any existing destination file,

@@ -68,7 +68,7 @@ typedef long int COST;
 #define SQR(n)		((n) * (n))
 #define EQUIV(n)	SQR ((COST) (n))
 
-/* Cost of a filled line n chars longer or shorter than best_width.  */
+/* Cost of a filled line n chars longer or shorter than goal_width.  */
 #define SHORT_COST(n)	EQUIV ((n) * 10)
 
 /* Cost of the difference between adjacent filled lines.  */
@@ -201,7 +201,7 @@ static int prefix_lead_space;
 static int prefix_length;
 
 /* The preferred width of text lines, set to LEEWAY % less than max_width.  */
-static int best_width;
+static int goal_width;
 
 /* Dynamic variables.  */
 
@@ -286,6 +286,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
   -w, --width=WIDTH         maximum line width (default of 75 columns)\n\
+  -g, --goal=WIDTH          goal width (default of 93% of width)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -308,6 +309,7 @@ static struct option const long_options[] =
   {"tagged-paragraph", no_argument, NULL, 't'},
   {"uniform-spacing", no_argument, NULL, 'u'},
   {"width", required_argument, NULL, 'w'},
+  {"goal", required_argument, NULL, 'g'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0},
@@ -319,6 +321,7 @@ main (int argc, char **argv)
   int optchar;
   bool ok = true;
   char const *max_width_option = NULL;
+  char const *goal_width_option = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -344,7 +347,7 @@ main (int argc, char **argv)
       argc--;
     }
 
-  while ((optchar = getopt_long (argc, argv, "0123456789cstuw:p:",
+  while ((optchar = getopt_long (argc, argv, "0123456789cstuw:p:g:",
                                  long_options, NULL))
          != -1)
     switch (optchar)
@@ -376,6 +379,10 @@ main (int argc, char **argv)
         max_width_option = optarg;
         break;
 
+      case 'g':
+        goal_width_option = optarg;
+        break;
+
       case 'p':
         set_prefix (optarg);
         break;
@@ -398,7 +405,22 @@ main (int argc, char **argv)
       max_width = tmp;
     }
 
-  best_width = max_width * (2 * (100 - LEEWAY) + 1) / 200;
+  if (goal_width_option)
+    {
+      /* Limit goal_width to max_width.  */
+      unsigned long int tmp;
+      if (! (xstrtoul (goal_width_option, NULL, 10, &tmp, "") == LONGINT_OK
+             && tmp <= max_width))
+        error (EXIT_FAILURE, 0, _("invalid width: %s"),
+               quote (goal_width_option));
+      goal_width = tmp;
+      if (max_width_option == NULL)
+        max_width = goal_width + 10;
+    }
+  else
+    {
+      goal_width = max_width * (2 * (100 - LEEWAY) + 1) / 200;
+    }
 
   if (optind == argc)
     fmt (stdin);
@@ -924,7 +946,7 @@ line_cost (WORD *next, int len)
 
   if (next == word_limit)
     return 0;
-  n = best_width - len;
+  n = goal_width - len;
   cost = SHORT_COST (n);
   if (next->next_break != word_limit)
     {

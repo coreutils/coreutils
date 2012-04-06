@@ -2203,9 +2203,15 @@ between sentences to two spaces.
 @opindex -@var{width}
 @opindex -w
 @opindex --width
-Fill output lines up to @var{width} characters (default 75).  @command{fmt}
-initially tries to make lines about 7% shorter than this, to give it
-room to balance line lengths.
+Fill output lines up to @var{width} characters (default 75 or @var{goal}
+plus 10, if @var{goal} is provided).
+
+@itemx -g @var{goal}
+@itemx --goal=@var{goal}
+@opindex -g
+@opindex --goal
+@command{fmt} initially tries to make lines @var{goal} characters wide.
+By default, this is 7% shorter than @var{width}.
 
 @item -p @var{prefix}
 @itemx --prefix=@var{prefix}
