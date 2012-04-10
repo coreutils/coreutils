@@ -275,6 +275,7 @@ TESTS =						\
   misc/stdbuf					\
   misc/stty					\
   misc/stty-invalid				\
+  misc/stty-pairs				\
   misc/stty-row-col				\
   misc/su-fail					\
   misc/sum					\

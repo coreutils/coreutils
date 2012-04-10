@@ -1,5 +1,5 @@
-#! /bin/sh
-# Make sure stty can parse most of its options.
+#!/bin/sh
+# Make sure stty can parse most of its options - in pairs [expensive].
 
 # Copyright (C) 1998-2012 Free Software Foundation, Inc.
 
@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Make sure there's a tty on stdin.
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ stty
 
+expensive_
+
+# Make sure there's a tty on stdin.
 require_controlling_input_terminal_
 trap '' TTOU # Ignore SIGTTOU
 
@@ -30,37 +32,30 @@ saved_state=.saved-state
 stty --save > $saved_state || fail=1
 stty $(cat $saved_state) || fail=1
 
-# This would segfault prior to sh-utils-2.0j.
-stty erase - || fail=1
-
-# These would improperly ignore invalid options through coreutils 5.2.1.
-stty -F 2>/dev/null && fail=1
-stty -raw -F no/such/file 2>/dev/null && fail=1
-stty -raw -a 2>/dev/null && fail=1
-
 # Build a list of all boolean options stty accepts on this system.
 # Don't depend on terminal width.  Put each option on its own line,
-# remove all non-boolean ones, then remove any leading hyphens.
-sed_del='/^speed/d;/^rows/d;/^columns/d;/ = /d'
+# remove all non-boolean ones, remove 'parenb' and 'cread' explicitly,
+# then remove any leading hyphens.
+sed_del='/^speed/d;/^rows/d;/^columns/d;/ = /d;s/parenb//;s/cread//'
 options=$(stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g")
 
-# Take them one at a time, with and without the leading '-'.
-for opt in $options; do
-  # 'stty parenb' and 'stty -parenb' fail with this message
-  # stty: standard input: unable to perform all requested operations
-  # on Linux 2.2.0-pre4 kernels.  Also since around Linux 2.6.30
-  # other serial control settings give the same error. So skip them.
-  # Also on ppc*|sparc* glibc platforms 'icanon' gives the same error.
-  # See: http://debbugs.gnu.org/7228#14
-  case $opt in parenb|parodd|cstopb|crtscts|icanon) continue;; esac
+# Take them in pairs, with and without the leading '-'.
+for opt1 in $options; do
+  for opt2 in $options; do
 
-  stty $opt || fail=1
+    stty $opt1 $opt2 || fail=1
 
-  # Likewise, 'stty -cread' would fail, so skip that, too.
-  test $opt = cread && continue
-  if stty_reversible_query_ "$opt" ; then
-    stty -$opt || { fail=1; echo -$opt; }
-  fi
+    if stty_reversible_query_ "$opt1" ; then
+      stty -$opt1 $opt2 || fail=1
+    fi
+    if stty_reversible_query_ "$opt2" ; then
+      stty $opt1 -$opt2 || fail=1
+    fi
+    if stty_reversible_query_ "$opt1" \
+        && stty_reversible_query_ "$opt2" ; then
+      stty -$opt1 -$opt2 || fail=1
+    fi
+  done
 done
 
 stty $(cat $saved_state)
