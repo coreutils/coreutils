@@ -826,7 +826,9 @@ copy_reg (char const *src_name, char const *dst_name,
      by the specs for both cp and mv.  */
   if (! *new_dst)
     {
-      dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY);
+      int open_flags =
+        O_WRONLY | O_BINARY | (x->data_copy_required ? O_TRUNC : 0);
+      dest_desc = open (dst_name, open_flags);
       dest_errno = errno;
 
       /* When using cp --preserve=context to copy to an existing destination,

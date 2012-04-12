@@ -320,6 +320,7 @@ TESTS =						\
   chown/separator				\
   cp/abuse					\
   cp/acl					\
+  cp/attr-existing				\
   cp/backup-1					\
   cp/backup-dir					\
   cp/backup-is-src				\

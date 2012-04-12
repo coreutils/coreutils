@@ -7649,9 +7649,9 @@ Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
 
 @itemx --attributes-only
 @opindex --attributes-only
-Preserve the specified attributes of the original files in the copy,
-but do not copy any data.  See the @option{--preserve} option for
-controlling which attributes to copy.
+Copy only the specified attributes of the source file to the destination.
+If the destination already exists, do not alter its contents.
+See the @option{--preserve} option for controlling which attributes to copy.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
