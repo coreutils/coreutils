@@ -2366,7 +2366,7 @@ Double space the output.
 @cindex time formats
 @cindex formatting times
 Format header dates using @var{format}, using the same conventions as
-for the command @samp{date +@var{format}}; @xref{date invocation}.
+for the command @samp{date +@var{format}}.  @xref{date invocation}.
 Except for directives, which start with
 @samp{%}, characters in @var{format} are printed unchanged.  You can use
 this option to specify an arbitrary string in place of the header date,
@@ -4910,7 +4910,7 @@ all @sc{gnu} extensions and reverts to traditional mode, thus introducing some
 limitations and changing several of the program's default option values.
 When @option{-G} is not specified, @sc{gnu} extensions are always enabled.
 @sc{gnu} extensions to @command{ptx} are documented wherever appropriate in this
-document.  For the full list, see @xref{Compatibility in ptx}.
+document.  @xref{Compatibility in ptx}, for the full list.
 
 Individual options are explained in the following sections.
 
@@ -5047,8 +5047,9 @@ if it is listed in the Only file and not in the Ignore file.
 
 On each input line, the leading sequence of non-white space characters will be
 taken to be a reference that has the purpose of identifying this input
-line in the resulting permuted index.  For more information about reference
-production, see @xref{Output formatting in ptx}.
+line in the resulting permuted index.
+@xref{Output formatting in ptx},
+for more information about reference production.
 Using this option changes the default value for option @option{-S}.
 
 Using this option, the program does not try very hard to remove
@@ -16000,7 +16001,7 @@ the @var{command}.
 @opindex --signal
 Send this @var{signal} to @var{command} on timeout, rather than the
 default @samp{TERM} signal. @var{signal} may be a name like @samp{HUP}
-or a number. Also see @xref{Signal specifications}.
+or a number. @xref{Signal specifications}.
 @end table
 
 @cindex time units
@@ -16108,8 +16109,9 @@ number like @samp{1}, or an exit status of a process terminated by the
 signal.  A signal name can be given in canonical form or prefixed by
 @samp{SIG}.  The case of the letters is ignored, except for the
 @option{-@var{signal}} option which must use upper case to avoid
-ambiguity with lower case option letters.  For a list of supported
-signal names and numbers see @xref{Signal specifications}.
+ambiguity with lower case option letters.
+@xref{Signal specifications}, for a list of supported
+signal names and numbers.
 
 @node Delaying
 @chapter Delaying

@@ -503,9 +503,9 @@ A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that normally it cannot take into account the
 previous file mode bits; it can only set them absolutely.
 The set-user-ID and set-group-ID bits of directories are an exception
-to this general limitation; @xref{Directory Setuid and Setgid}.
+to this general limitation.  @xref{Directory Setuid and Setgid}.
 Also, operator numeric modes can take previous file mode bits into
-account; @xref{Operator Numeric Modes}.
+account.  @xref{Operator Numeric Modes}.
 
 The permissions granted to the user,
 to other users in the file's group,
