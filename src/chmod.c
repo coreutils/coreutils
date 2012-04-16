@@ -472,7 +472,7 @@ main (int argc, char **argv)
                 mode = X2REALLOC (mode, &mode_alloc);
               }
             mode[mode_len] = ',';
-            strcpy (mode + mode_comma_len, arg);
+            memcpy (mode + mode_comma_len, arg, arg_len + 1);
             mode_len = new_mode_len;
 
             diagnose_surprises = true;
