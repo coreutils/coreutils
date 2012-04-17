@@ -901,7 +901,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   On Solaris 9, many commands would mistakenly treat file/ the same as
   file.  Now, even on such a system, path resolution obeys the POSIX
-  rules that a trailing slash ensures that the preceeding name is a
+  rules that a trailing slash ensures that the preceding name is a
   directory or a symlink to a directory.
 
 ** Changes in behavior
@@ -1122,7 +1122,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   shred, sort, shuf: now use an internal pseudorandom generator by default.
-  This is mainly noticable in shred where the 3 random passes it does by
+  This is mainly noticeable in shred where the 3 random passes it does by
   default should proceed at the speed of the disk.  Previously /dev/urandom
   was used if available, which is relatively slow on GNU/Linux systems.
 
@@ -3368,7 +3368,7 @@ point at which the packages merged to form the coreutils:
 * Any time style can be preceded by "posix-"; this causes "ls" to
   use traditional timestamp format when in the POSIX locale.
 * The default time style is now posix-long-iso instead of posix-iso.
-  Set TIME_STYLE="posix-iso" to revert to the behavior of 4.1.1 thru 4.1.9.
+  Set TIME_STYLE="posix-iso" to revert to the behavior of 4.1.1 through 4.1.9.
 * 'rm dangling-symlink' doesn't prompt [introduced in 4.1.9]
 * stat: remove support for --secure/-s option and related %S and %C format specs
 * stat: rename --link/-l to --dereference/-L.

@@ -14891,7 +14891,7 @@ parsed reliably.  In the following example, @var{release} is
 
 @smallexample
 uname -a
-@result{} Linux dum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686@c
+@result{} Linux dumdum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686@c
  unknown unknown GNU/Linux
 @end smallexample
 

@@ -25,7 +25,7 @@ touch a/t/f || framework_failure_
 
 
 # Expect this to fail with the expected diagnostic.
-# For an interrim (pre-6.0) release, it would give an erroneous
+# For an interim (pre-6.0) release, it would give an erroneous
 # diagnostic about moving one directory to a subdirectory of itself.
 mv b/t a 2> out && fail=1
 

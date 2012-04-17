@@ -2542,7 +2542,7 @@ Thu Feb 15 23:08:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Mon Feb 12 23:23:25 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (LIBOBJS): Split assignment into two statements to
-	accomodate automake-0.29 buglet.
+	accommodate automake-0.29 buglet.
 
 	Update for automake-0.29.
 	* Makefile.am (CONFIG_HEADER): Don't define.  Automake now does it.

@@ -1206,7 +1206,7 @@
 	* tests/Coreutils.pm: New keywords, ENV and ENV_DEL, to support
 	tests/misc/date.
 
-	With todays additions, the generated shell script,
+	With today's additions, the generated shell script,
 	tests/date/date-tests had becoming far too large (over 350KB),
 	so use the superior-but-perl-requiring framework instead.
 	* tests/date/Test.pm: Move all tests from here...

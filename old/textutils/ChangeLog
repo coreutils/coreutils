@@ -4869,7 +4869,7 @@ Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	this time with duplicates removed.
 
 	* src/pr.c (usage): Break long string literal into two separate
-	printf statements to accomodate default maximum of 2048 characters
+	printf statements to accommodate default maximum of 2048 characters
 	for Irix-4.0.5.  Reported by Kaveh Ghazi.
 
 	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
@@ -5203,7 +5203,7 @@ Fri Oct  4 07:20:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(PACKAGE_VERSION): Remove now-unused variable.
 
 	* lib/long-options.c (parse_long_options): Separate package name
-	and version number to accomodate new --version output requirement.
+	and version number to accommodate new --version output requirement.
 	* lib/long-options.h: Update prototype.
 
 Thu Oct  3 23:27:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
@@ -5245,7 +5245,7 @@ Thu Sep 26 21:02:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	removed soon.  Using this option can provoke a memory access
 	violation on some systems because of (unavoidable in an efficient
 	implementation) alignment assumptions made by functions in md5.c.
-	md5sum.c could leave the option in and accomodate the alignment
+	md5sum.c could leave the option in and accommodate the alignment
 	restriction, but this option was intended solely for testing, and
 	the tests are now all file-oriented, so it's not necessary.
 
@@ -8697,7 +8697,7 @@ Tue Feb 20 17:09:19 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Sat Feb 10 02:16:40 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* cmp.c (cmp): Rename `r' to `first_diff', and `x' to `smaller'.
-	Remove unneccessary variable `c1'.  If -l was given, increase
+	Remove unnecessary variable `c1'.  If -l was given, increase
 	`char_number' by the number of bytes read, after producing output,
 	rather than by the offset of the first differing bytes, before
 	producing output.

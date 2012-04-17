@@ -2729,7 +2729,7 @@
 	(local_zone): Accumulate dsts_seen rather than relying on tm_isdst
 	not being INT_MAX.
 	(get_date): Initialize dsts_seen, and check that it doesn't go over 1.
-	Use pc_rels_seen to decide whther a date is absolute.
+	Use pc_rels_seen to decide whether a date is absolute.
 
 	* getdate.y (number): Don't overwrite year.
 	(get_date): Initialize pc.year.digits to 0, not 4, to enable above

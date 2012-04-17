@@ -34,25 +34,25 @@ my @Tests =
    # basic operation
    ['basic', @inputs, {OUT=>"1\n\t2\n\t\t3\n"} ],
 
-   # supress lines unique to file 1
+   # suppress lines unique to file 1
    ['opt-1', '-1', @inputs, {OUT=>"2\n\t3\n"} ],
 
-   # supress lines unique to file 2
+   # suppress lines unique to file 2
    ['opt-2', '-2', @inputs, {OUT=>"1\n\t3\n"} ],
 
-   # supress lines that appear in both files
+   # suppress lines that appear in both files
    ['opt-3', '-3', @inputs, {OUT=>"1\n\t2\n"} ],
 
-   # supress lines unique to file 1 and lines unique to file 2
+   # suppress lines unique to file 1 and lines unique to file 2
    ['opt-12', '-1', '-2', @inputs, {OUT=>"3\n"} ],
 
-   # supress lines unique to file 1 and those that appear in both files
+   # suppress lines unique to file 1 and those that appear in both files
    ['opt-13', '-1', '-3', @inputs, {OUT=>"2\n"} ],
 
-   # supress lines unique to file 2 and those that appear in both files
+   # suppress lines unique to file 2 and those that appear in both files
    ['opt-23', '-2', '-3', @inputs, {OUT=>"1\n"} ],
 
-   # supress all output (really?)
+   # suppress all output (really?)
    ['opt-123', '-1', '-2', '-3', @inputs, {OUT=>""} ],
 
    # invalid missing command line argument (1)

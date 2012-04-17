@@ -94,7 +94,7 @@ test_syntax_error (char const *format, char const *arg)
 }
 
 /* Increment our position in the argument list.  Check that we're not
-   past the end of the argument list.  This check is supressed if the
+   past the end of the argument list.  This check is suppressed if the
    argument is false.  */
 
 static void

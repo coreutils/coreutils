@@ -1413,7 +1413,7 @@ init_funcs (void)
   else
     {
       /* When numbering lines of parallel files, we enlarge the
-         first column to accomodate the number.  Looks better than
+         first column to accommodate the number.  Looks better than
          the Sys V approach. */
       if (parallel_files && numbered_lines)
         h_next = h + chars_per_column + number_width;

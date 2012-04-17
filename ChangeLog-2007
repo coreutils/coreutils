@@ -3262,7 +3262,7 @@
 
 	rm without -f: give a better diagnostic when euidaccess fails.
 	* src/remove.c (write_protected_non_symlink): Return int, not bool,
-	so that we can indicate failure too (as a postive error number).
+	so that we can indicate failure too (as a positive error number).
 	(prompt): If write_protected_non_symlink fails, report that error
 	number and fail rather than charging ahead and removing the dubious
 	entry.  Redo the logic of printing a diagnostic so that we need to

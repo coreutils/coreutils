@@ -751,8 +751,8 @@ main (int argc, char **argv)
              A line number requires seldom more than LINE_COUNTER_BUF_LEN
              positions.
 
-             Align the output buffer to a page size boundary, for efficency on
-             some paging implementations, so add PAGE_SIZE - 1 bytes to the
+             Align the output buffer to a page size boundary, for efficiency
+             on some paging implementations, so add PAGE_SIZE - 1 bytes to the
              request to make room for the alignment.  */
 
           outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN

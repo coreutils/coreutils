@@ -269,7 +269,7 @@ Mon Aug 01 21:58:14 1994  Jim Meyering  (meyering@comco.com)
 	* date.1: Correct the documentation, too.
 
 	* date.c (main, show_date): For -u, use gmtime instead of relying on
-	localtime's ability to interpret the TZ enviroment variable.
+	localtime's ability to interpret the TZ environment variable.
 	`date -u' failed (by reporting local time) on romp-ibm-bsd and PCs
 	(DOS and OS/2) running emx 0.8h.  From R. Bernstein
 	<rocky@watson.ibm.com>.
@@ -1362,7 +1362,7 @@ Mon Jul 22 15:21:21 1991  David J. MacKenzie  (djm at wookumz.gnu.ai.mit.edu)
 
 	* stty.c: Use tcflag_t for termios bitmasks.
 	Use speed_t for speeds.  Use unsigned long for baud rates to
-	accomodate large values, and support 57600 and 115200 if available.
+	accommodate large values, and support 57600 and 115200 if available.
 
 	* date.c, configure: Instead of SIZE_T_MISSING,
 	define size_t if it's missing.

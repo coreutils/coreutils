@@ -254,7 +254,7 @@ if ($opt_output)
 #   <program> ({GNU,Free} <package>) <version>
 #   <program> - {GNU,Free} <package> <version>
 #
-# and seperated from any copyright/author details by a blank line.
+# and separated from any copyright/author details by a blank line.
 
 ($_, $version_text) = split /\n+/, $version_text, 2;
 

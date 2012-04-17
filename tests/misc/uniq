@@ -162,7 +162,7 @@ my @Tests =
  ['65', qw(-f 1 -w 3), {IN=>"a a a\nb a c\n"}, {OUT=>"a a a\n"}],
  # Make sure we don't break if the file contains \0
  ['90', '', {IN=>"a\0a\na\n"}, {OUT=>"a\0a\na\n"}],
- # Check fields seperated by tabs and by spaces
+ # Check fields separated by tabs and by spaces
  ['91', '', {IN=>"a\ta\na a\n"}, {OUT=>"a\ta\na a\n"}],
  ['92', qw(-f 1), {IN=>"a\ta\na a\n"}, {OUT=>"a\ta\na a\n"}],
  ['93', qw(-f 2), {IN=>"a\ta a\na a a\n"}, {OUT=>"a\ta a\n"}],

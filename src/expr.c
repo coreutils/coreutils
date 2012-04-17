@@ -18,7 +18,7 @@
    Modified for arbitrary-precision calculation by James Youngman.
 
    This program evaluates expressions.  Each token (operator, operand,
-   parenthesis) of the expression must be a seperate argument.  The
+   parenthesis) of the expression must be a separate argument.  The
    parser used is a reasonably general one, though any incarnation of
    it is language-specific.  It is especially nice for expressions.
 
