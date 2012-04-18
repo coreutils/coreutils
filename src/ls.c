@@ -3193,17 +3193,14 @@ get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
                   filename);
 }
 
-/* If 'linkname' is a relative name and 'name' contains one or more
-   leading directories, return 'linkname' with those directories
-   prepended; otherwise, return a copy of 'linkname'.
-   If 'linkname' is zero, return zero.  */
+/* If LINKNAME is a relative name and NAME contains one or more
+   leading directories, return LINKNAME with those directories
+   prepended; otherwise, return a copy of LINKNAME.
+   If LINKNAME is NULL, return NULL.  */
 
 static char *
 make_link_name (char const *name, char const *linkname)
 {
-  char *linkbuf;
-  size_t bufsiz;
-
   if (!linkname)
     return NULL;
 
@@ -3212,15 +3209,15 @@ make_link_name (char const *name, char const *linkname)
 
   /* The link is to a relative name.  Prepend any leading directory
      in 'name' to the link name.  */
-  linkbuf = strrchr (name, '/');
-  if (linkbuf == 0)
+  char const *linkbuf = strrchr (name, '/');
+  if (linkbuf == NULL)
     return xstrdup (linkname);
 
-  bufsiz = linkbuf - name + 1;
-  linkbuf = xmalloc (bufsiz + strlen (linkname) + 1);
-  strncpy (linkbuf, name, bufsiz);
-  strcpy (linkbuf + bufsiz, linkname);
-  return linkbuf;
+  size_t bufsiz = linkbuf - name + 1;
+  char *p = xmalloc (bufsiz + strlen (linkname) + 1);
+  strncpy (p, name, bufsiz);
+  strcpy (p + bufsiz, linkname);
+  return p;
 }
 
 /* Return true if the last component of NAME is '.' or '..'
