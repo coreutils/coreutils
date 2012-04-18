@@ -3037,11 +3037,10 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       if (S_ISLNK (f->stat.st_mode)
           && (format == long_format || check_symlink_color))
         {
-          char *linkname;
           struct stat linkstats;
 
           get_link_name (absolute_name, f, command_line_arg);
-          linkname = make_link_name (absolute_name, f->linkname);
+          char *linkname = make_link_name (absolute_name, f->linkname);
 
           /* Avoid following symbolic links when possible, ie, when
              they won't be traced and when no indicator is needed.  */
@@ -3204,19 +3203,17 @@ make_link_name (char const *name, char const *linkname)
   if (!linkname)
     return NULL;
 
-  if (*linkname == '/')
+  if (IS_ABSOLUTE_FILE_NAME (linkname))
     return xstrdup (linkname);
 
   /* The link is to a relative name.  Prepend any leading directory
      in 'name' to the link name.  */
-  char const *linkbuf = strrchr (name, '/');
-  if (linkbuf == NULL)
+  size_t prefix_len = dir_len (name);
+  if (prefix_len == 0)
     return xstrdup (linkname);
 
-  size_t bufsiz = linkbuf - name + 1;
-  char *p = xmalloc (bufsiz + strlen (linkname) + 1);
-  strncpy (p, name, bufsiz);
-  strcpy (p + bufsiz, linkname);
+  char *p = xmalloc (prefix_len + 1 + strlen (linkname) + 1);
+  stpcpy (stpncpy (p, name, prefix_len + 1), linkname);
   return p;
 }
 
