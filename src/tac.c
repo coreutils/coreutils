@@ -664,7 +664,7 @@ main (int argc, char **argv)
   G_buffer = xmalloc (G_buffer_size);
   if (sentinel_length)
     {
-      strcpy (G_buffer, separator);
+      memcpy (G_buffer, separator, sentinel_length + 1);
       G_buffer += sentinel_length;
     }
   else
