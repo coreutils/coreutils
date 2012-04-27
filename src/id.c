@@ -177,16 +177,23 @@ main (int argc, char **argv)
   if (just_user + just_group + just_group_list + just_context > 1)
     error (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
 
-  if (just_user + just_group + just_group_list == 0 && (use_real || use_name))
+  bool default_format = (just_user + just_group + just_group_list == 0);
+
+  if (default_format && (use_real || use_name))
     error (EXIT_FAILURE, 0,
            _("cannot print only names or real IDs in default format"));
 
-  /* If we are on a selinux-enabled kernel and no user is specified,
-     get our context. Otherwise, leave the context variable alone -
-     it has been initialized known invalid value and will be not
-     displayed in print_full_info() */
-  if (selinux_enabled && n_ids == 0)
+  /* If we are on a selinux-enabled kernel, no user is specified, and
+     either --context is specified or none of (-u,-g,-G) is specified,
+     and we're not in POSIXLY_CORRECT mode, get our context.  Otherwise,
+     leave the context variable alone - it has been initialized to an
+     invalid value that will be not displayed in print_full_info().  */
+  if (selinux_enabled
+      && n_ids == 0
+      && (just_context ||
+          (default_format && ! getenv ("POSIXLY_CORRECT"))))
     {
+      /* Report failure only if --context (-Z) was explicitly requested.  */
       if (getcon (&context) && just_context)
         error (EXIT_FAILURE, 0, _("can't get process context"));
     }
@@ -361,6 +368,6 @@ print_full_info (const char *username)
 
   /* POSIX mandates the precise output format, and that it not include
      any context=... part, so skip that if POSIXLY_CORRECT is set.  */
-  if (context != NULL && ! getenv ("POSIXLY_CORRECT"))
+  if (context)
     printf (_(" context=%s"), context);
 }
