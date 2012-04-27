@@ -163,25 +163,16 @@ main (int argc, char **argv)
         }
     }
 
-  if (1 < argc - optind)
+  size_t n_ids = argc - optind;
+  if (1 < n_ids)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 
-  if (argc - optind == 1 && just_context)
+  if (n_ids && just_context)
     error (EXIT_FAILURE, 0,
            _("cannot print security context when user specified"));
-
-  /* If we are on a selinux-enabled kernel and no user is specified,
-     get our context. Otherwise, leave the context variable alone -
-     it has been initialized known invalid value and will be not
-     displayed in print_full_info() */
-  if (selinux_enabled && argc == optind)
-    {
-      if (getcon (&context) && just_context)
-        error (EXIT_FAILURE, 0, _("can't get process context"));
-    }
 
   if (just_user + just_group + just_group_list + just_context > 1)
     error (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
@@ -190,7 +181,17 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
            _("cannot print only names or real IDs in default format"));
 
-  if (argc - optind == 1)
+  /* If we are on a selinux-enabled kernel and no user is specified,
+     get our context. Otherwise, leave the context variable alone -
+     it has been initialized known invalid value and will be not
+     displayed in print_full_info() */
+  if (selinux_enabled && n_ids == 0)
+    {
+      if (getcon (&context) && just_context)
+        error (EXIT_FAILURE, 0, _("can't get process context"));
+    }
+
+  if (n_ids == 1)
     {
       struct passwd *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
