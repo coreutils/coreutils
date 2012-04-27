@@ -36,6 +36,7 @@ root_tests =					\
   ls/nameless-uid				\
   misc/chcon					\
   misc/chroot-credentials			\
+  misc/id-setgid				\
   misc/selinux					\
   misc/truncate-owned-by-other			\
   mkdir/writable-under-readonly			\
@@ -198,6 +199,7 @@ TESTS =						\
   misc/head-pos					\
   misc/id-context				\
   misc/id-groups				\
+  misc/id-setgid				\
   misc/md5sum					\
   misc/md5sum-bsd				\
   misc/md5sum-newline				\

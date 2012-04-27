@@ -2,6 +2,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  id and groups, when invoked with no user name argument, would print
+  the default group ID listed in the password database, and sometimes
+  that ID would be neither real nor effective.  For example, when run
+  set-GID, or in a session for which the default group has just been
+  changed, the new group ID would be listed, even though it is not
+  yet effective.
+
 ** New features
 
   fmt now accepts the --goal=WIDTH (-g) option.

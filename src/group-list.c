@@ -38,11 +38,14 @@ print_group_list (const char *username,
                   bool use_names)
 {
   bool ok = true;
-  struct passwd *pwd;
+  struct passwd *pwd = NULL;
 
-  pwd = getpwuid (ruid);
-  if (pwd == NULL)
-    ok = false;
+  if (username)
+    {
+      pwd = getpwuid (ruid);
+      if (pwd == NULL)
+        ok = false;
+    }
 
   if (!print_group (rgid, use_names))
     ok = false;
@@ -58,8 +61,7 @@ print_group_list (const char *username,
     gid_t *groups;
     int i;
 
-    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-                               &groups);
+    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : egid), &groups);
     if (n_groups < 0)
       {
         if (username)
