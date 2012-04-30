@@ -200,6 +200,18 @@ sc_no_exec_perl_coreutils:
 	      exit 1; } || :;						\
 	fi
 
+# With split lines, don't leave an operator at end of line.
+# Instead, put it on the following line, where it is more apparent.
+# Don't bother checking for "*" at end of line, since it provokes
+# far too many false positives, matching constructs like "TYPE *".
+# Similarly, omit "=" (initializers).
+binop_re_ ?= [-/+^!<>]|[-/+*^!<>=]=|&&?|\|\|?|<<=?|>>=?
+sc_prohibit_operator_at_end_of_line:
+	@prohibit='. ($(binop_re_))$$'					\
+	in_vc_files='\.[chly]$$'					\
+	halt='found operator at end of line'				\
+	  $(_sc_search_regexp)
+
 # Don't use "readlink" or "readlinkat" directly
 sc_prohibit_readlink:
 	@prohibit='\<readlink(at)? \('					\
@@ -456,3 +468,7 @@ exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
 
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
   ^tests/(init\.sh|check\.mk|misc/stdbuf)$$
+
+# Exempt test.c, since it's nominally shared, and relatively static.
+exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
+  ^src/(ptx|test|head)\.c$$
