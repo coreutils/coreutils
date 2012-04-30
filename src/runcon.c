@@ -15,9 +15,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /*
- * runcon [ context |
- *         ( [ -c ] [ -r role ] [-t type] [ -u user ] [ -l levelrange ] )
- *         command [arg1 [arg2 ...] ]
+ * runcon [ context
+ *          | ( [ -c ] [ -r role ] [-t type] [ -u user ] [ -l levelrange ] )
+ *          command [arg1 [arg2 ...] ]
  *
  * attempt to run the specified command with the specified context.
  *

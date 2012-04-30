@@ -28,8 +28,8 @@
      bs=$((1024*2**$i))
      printf "%7s=" $bs
      timeout --foreground -sINT 2 \
-       dd bs=$bs if=/dev/zero of=/dev/null 2>&1 |
-        sed -n 's/.* \([0-9.]* [GM]B\/s\)/\1/p'
+       dd bs=$bs if=/dev/zero of=/dev/null 2>&1 \
+         | sed -n 's/.* \([0-9.]* [GM]B\/s\)/\1/p'
    done
 
    With the results shown for these systems:
