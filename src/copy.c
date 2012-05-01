@@ -39,6 +39,7 @@
 #include "cp-hash.h"
 #include "extent-scan.h"
 #include "error.h"
+#include "fadvise.h"
 #include "fcntl--.h"
 #include "fiemap.h"
 #include "file-set.h"
@@ -979,6 +980,8 @@ copy_reg (char const *src_name, char const *dst_name,
       size_t buf_alignment = lcm (getpagesize (), sizeof (word));
       size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
       size_t buf_size = io_blksize (sb);
+
+      fdadvise (source_desc, 0, 0, FADVISE_SEQUENTIAL);
 
       /* Deal with sparse files.  */
       bool make_holes = false;
