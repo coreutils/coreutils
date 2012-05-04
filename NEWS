@@ -11,6 +11,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   changed, the new group ID would be listed, even though it is not
   yet effective. [bug introduced in coreutils-8.1]
 
+  cp S D is no longer subject to a race: if an existing D were removed
+  between the initial stat and subsequent open-without-O_CREATE, cp would
+  fail with a confusing diagnostic saying that the destination, D, was not
+  found.  Now, in this unusual case, it retries the open (but with O_CREATE),
+  and hence usually succeeds.  With NFS attribute caching, the condition
+  was particularly easy to trigger, since there, the removal of D could
+  precede the initial stat.  [This bug was present in "the beginning".]
+
 ** New features
 
   fmt now accepts the --goal=WIDTH (-g) option.

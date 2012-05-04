@@ -349,6 +349,7 @@ TESTS =						\
   cp/link-no-deref				\
   cp/link-preserve				\
   cp/link-symlink				\
+  cp/nfs-removal-race				\
   cp/no-deref-link1				\
   cp/no-deref-link2				\
   cp/no-deref-link3				\

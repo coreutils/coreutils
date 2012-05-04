@@ -892,6 +892,8 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (*new_dst)
     {
+    open_with_O_CREAT:;
+
       int open_flags = O_WRONLY | O_CREAT | O_BINARY;
       dest_desc = open (dst_name, open_flags | O_EXCL,
                         dst_mode & ~omitted_permissions);
@@ -942,6 +944,23 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (dest_desc < 0)
     {
+      /* If we've just failed due to ENOENT for an ostensibly preexisting
+         destination (*new_dst was 0), that's a bit of a contradiction/race:
+         the prior stat/lstat said the file existed (*new_dst was 0), yet
+         the subsequent open-existing-file failed with ENOENT.  With NFS,
+         the race window is wider still, since its meta-data caching tends
+         to make the stat succeed for a just-removed remote file, while the
+         more-definitive initial open call will fail with ENOENT.  When this
+         situation arises, we attempt to open again, but this time with
+         O_CREAT.  Do this only when not in move-mode, since when handling
+         a cross-device move, we must never open an existing destination.  */
+      if (dest_errno == ENOENT && ! *new_dst && ! x->move_mode)
+        {
+          *new_dst = 1;
+          goto open_with_O_CREAT;
+        }
+
+      /* Otherwise, it's an error.  */
       error (0, dest_errno, _("cannot create regular file %s"),
              quote (dst_name));
       return_val = false;
