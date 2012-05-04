@@ -189,7 +189,6 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     priv.h
     stropts.h
     sys/param.h
-    sys/resource.h
     sys/systeminfo.h
     syslog.h
   ])

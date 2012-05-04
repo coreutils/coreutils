@@ -24,6 +24,7 @@
 
 #include <getopt.h>
 #include <pthread.h>
+#include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
@@ -52,9 +53,6 @@
 #include "xnanosleep.h"
 #include "xstrtol.h"
 
-#if HAVE_SYS_RESOURCE_H
-# include <sys/resource.h>
-#endif
 #ifndef RLIMIT_DATA
 struct rlimit { size_t rlim_cur; };
 # define getrlimit(Resource, Rlp) (-1)
