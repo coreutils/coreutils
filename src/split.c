@@ -1339,7 +1339,9 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", infile);
   if (in_blk_size == 0)
     in_blk_size = io_blksize (stat_buf);
-  file_size = stat_buf.st_size;
+
+  /* stat.st_size is valid only for regular files.  For others, use 0.  */
+  file_size = S_ISREG (stat_buf.st_mode) ? stat_buf.st_size : 0;
 
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
     {

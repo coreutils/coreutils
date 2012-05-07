@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   was particularly easy to trigger, since there, the removal of D could
   precede the initial stat.  [This bug was present in "the beginning".]
 
+  split --number=C /dev/null no longer appears to infloop on GNU/Hurd
+  [bug introduced in coreutils-8.8]
+
 ** New features
 
   fmt now accepts the --goal=WIDTH (-g) option.
