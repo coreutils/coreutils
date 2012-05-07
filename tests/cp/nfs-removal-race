@@ -57,7 +57,7 @@ __xstat (int ver, const char *path, struct stat *st)
 EOF
 
 # Then compile/link it:
-$CC -shared -fPIC -O2 k.c -o k.so \
+$CC -shared -fPIC -O2 k.c -o k.so -ldl \
   || framework_failure_ 'failed to compile with -shared -fPIC'
 
 touch d2 || framework_failure_
