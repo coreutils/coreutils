@@ -601,6 +601,13 @@ bad_cast (char const *s)
   return (char *) s;
 }
 
+/* Return a boolean indicating whether SB->st_size is defined.  */
+static inline bool
+usable_st_size (struct stat const *sb)
+{
+  return S_ISREG (sb->st_mode) || S_TYPEISSHM (sb) || S_TYPEISTMO (sb);
+}
+
 void usage (int status) ATTRIBUTE_NORETURN;
 
 #define emit_cycle_warning(file_name)	\
