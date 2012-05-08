@@ -8167,9 +8167,12 @@ On a file system that supports sparse files, this will create
 sparse output when extending the output file.
 Be careful when using this option in conjunction with
 @samp{conv=notrunc} or @samp{oflag=append}.
-With @samp{conv=notrunc}, existing data in the output
+With @samp{conv=notrunc}, existing data in the output file
 corresponding to @sc{nul} blocks from the input, will be untouched.
 With @samp{oflag=append} the seeks performed will be ineffective.
+Similarly, when the output is a device rather than a file,
+@sc{nul} input blocks are not copied, and therefore this option
+is most useful with virtual or pre zeroed devices.
 
 @item swab
 @opindex swab @r{(byte-swapping)}
