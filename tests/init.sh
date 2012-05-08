@@ -207,6 +207,14 @@ else
   fi
 fi
 
+# If this is bash, turn off all aliases.
+test -n "$BASH_VERSION" && unalias -a
+
+# Note that when supporting $EXEEXT (transparently mapping from PROG_NAME to
+# PROG_NAME.exe), we want to support hyphen-containing names like test-acos.
+# That is part of the shell-selection test above.  Why use aliases rather
+# than functions?  Because support for hyphen-containing aliases is more
+# widespread than that for hyphen-containing function names.
 test -n "$EXEEXT" && shopt -s expand_aliases
 
 # Enable glibc's malloc-perturbing option.
@@ -242,20 +250,23 @@ compare_dev_null_ ()
 
   if test "x$1" = x/dev/null; then
     test -s "$2" || return 0
-    { emit_diff_u_header_ "$@"; sed 's/^/+/' -- "$2"; } >&2
+    emit_diff_u_header_ "$@"; sed 's/^/+/' "$2"
     return 1
   fi
 
   if test "x$2" = x/dev/null; then
     test -s "$1" || return 0
-    { emit_diff_u_header_ "$@"; sed 's/^/-/' -- "$1"; } >&2
+    emit_diff_u_header_ "$@"; sed 's/^/-/' "$1"
     return 1
   fi
 
   return 2
 }
 
-if diff_out_=`( diff -u "$0" "$0" < /dev/null ) 2>/dev/null`; then
+if diff_out_=`exec 2>/dev/null; diff -u "$0" "$0" < /dev/null` \
+   && diff -u Makefile "$0" 2>/dev/null | grep '^[+]#!' >/dev/null; then
+  # diff accepts the -u option and does not (like AIX 7 'diff') produce an
+  # extra space on column 1 of every content line.
   if test -z "$diff_out_"; then
     compare_ () { diff -u "$@"; }
   else
@@ -273,7 +284,7 @@ if diff_out_=`( diff -u "$0" "$0" < /dev/null ) 2>/dev/null`; then
       fi
     }
   fi
-elif diff_out_=`( diff -c "$0" "$0" < /dev/null ) 2>/dev/null`; then
+elif diff_out_=`exec 2>/dev/null; diff -c "$0" "$0" < /dev/null`; then
   if test -z "$diff_out_"; then
     compare_ () { diff -c "$@"; }
   else
@@ -304,11 +315,17 @@ fi
 # Otherwise, propagate $? to caller: any diffs have already been printed.
 compare ()
 {
-  compare_dev_null_ "$@"
-  case $? in
-    0|1) return $?;;
-    *) compare_ "$@";;
-  esac
+  # This looks like it can be factored to use a simple "case $?"
+  # after unchecked compare_dev_null_ invocation, but that would
+  # fail in a "set -e" environment.
+  if compare_dev_null_ "$@"; then
+    return 0
+  else
+    case $? in
+      1) return 1;;
+      *) compare_ "$@";;
+    esac
+  fi
 }
 
 # An arbitrary prefix to help distinguish test directories.
@@ -521,7 +538,7 @@ mktempd_ ()
   esac
 
   # First, try to use mktemp.
-  d=`unset TMPDIR; mktemp -d -t -p "$destdir_" "$template_" 2>/dev/null` \
+  d=`unset TMPDIR; { mktemp -d -t -p "$destdir_" "$template_"; } 2>/dev/null` \
     || fail=1
 
   # The resulting name must be in the specified directory.
