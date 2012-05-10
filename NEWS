@@ -32,6 +32,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   fmt now accepts the --goal=WIDTH (-g) option.
 
+  stat -f recognizes new file system types: bdevfs, inodefs, qnx6
+
 ** Changes in behavior
 
   cp,mv,install,cat,split: now read and write a minimum of 64KiB at a time.

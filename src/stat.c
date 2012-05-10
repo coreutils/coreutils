@@ -249,9 +249,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "autofs";
     case S_MAGIC_BEFS: /* 0x42465331 local */
       return "befs";
+    case S_MAGIC_BDEVFS: /* 0x62646576 local */
+      return "bdevfs";
     case S_MAGIC_BFS: /* 0x1BADFACE local */
       return "bfs";
-    case S_MAGIC_BINFMT_MISC: /* 0x42494E4D local */
+    case S_MAGIC_BINFMTFS: /* 0x42494E4D local */
       return "binfmt_misc";
     case S_MAGIC_BTRFS: /* 0x9123683E local */
       return "btrfs";
@@ -303,6 +305,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "hpfs";
     case S_MAGIC_HUGETLBFS: /* 0x958458F6 local */
       return "hugetlbfs";
+    case S_MAGIC_MTD_INODE_FS: /* 0x11307854 local */
+      return "inodefs";
     case S_MAGIC_INOTIFYFS: /* 0x2BAD1DEA local */
       return "inotifyfs";
     case S_MAGIC_ISOFS: /* 0x9660 local */
@@ -360,6 +364,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "pstorefs";
     case S_MAGIC_QNX4: /* 0x002F local */
       return "qnx4";
+    case S_MAGIC_QNX6: /* 0x68191122 local */
+      return "qnx6";
     case S_MAGIC_RAMFS: /* 0x858458F6 local */
       return "ramfs";
     case S_MAGIC_REISERFS: /* 0x52654973 local */
