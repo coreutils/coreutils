@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split --number=C /dev/null no longer appears to infloop on GNU/Hurd
   [bug introduced in coreutils-8.8]
 
+  stat no longer reports a negative file size as a huge positive number.
+  [bug present since 'stat' was introduced in fileutils-4.1.9]
+
 ** New features
 
   fmt now accepts the --goal=WIDTH (-g) option.

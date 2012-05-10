@@ -954,7 +954,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_uint_x (pformat, prefix_len, minor (statbuf->st_rdev));
       break;
     case 's':
-      out_uint (pformat, prefix_len, statbuf->st_size);
+      out_int (pformat, prefix_len, statbuf->st_size);
       break;
     case 'B':
       out_uint (pformat, prefix_len, ST_NBLOCKSIZE);
