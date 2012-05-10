@@ -983,8 +983,7 @@ skip (uintmax_t n_skip)
 
       if (fstat (fileno (in_stream), &file_stats) == 0)
         {
-          /* The st_size field is valid only for regular files
-             (and for symbolic links, which cannot occur here).
+          /* The st_size field is valid for regular files.
              If the number of bytes left to skip is larger than
              the size of the current file, we can decrement n_skip
              and go on to the next file.  Skip this optimization also

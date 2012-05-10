@@ -99,7 +99,8 @@ duinfo_set (struct duinfo *a, uintmax_t size, struct timespec tmax)
 static inline void
 duinfo_add (struct duinfo *a, struct duinfo const *b)
 {
-  a->size += b->size;
+  uintmax_t sum = a->size + b->size;
+  a->size = a->size <= sum ? sum : UINTMAX_MAX;
   if (timespec_cmp (a->tmax, b->tmax) < 0)
     a->tmax = b->tmax;
 }
@@ -370,8 +371,11 @@ static void
 print_only_size (uintmax_t n_bytes)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
-  fputs (human_readable (n_bytes, buf, human_output_opts,
-                         1, output_block_size), stdout);
+  fputs ((n_bytes == UINTMAX_MAX
+          ? _("Infinity")
+          : human_readable (n_bytes, buf, human_output_opts,
+                            1, output_block_size)),
+         stdout);
 }
 
 /* Print size (and optionally time) indicated by *PDUI, followed by STRING.  */
@@ -495,7 +499,7 @@ process_file (FTS *fts, FTSENT *ent)
 
   duinfo_set (&dui,
               (apparent_size
-               ? sb->st_size
+               ? MAX (0, sb->st_size)
                : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
               (time_type == time_mtime ? get_stat_mtime (sb)
                : time_type == time_atime ? get_stat_atime (sb)

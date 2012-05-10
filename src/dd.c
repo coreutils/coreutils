@@ -1544,7 +1544,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
            struct stat st;
            if (fstat (STDIN_FILENO, &st) != 0)
              error (EXIT_FAILURE, errno, _("cannot fstat %s"), quote (file));
-           if (S_ISREG (st.st_mode) && st.st_size < (input_offset + offset))
+           if (usable_st_size (&st) && st.st_size < input_offset + offset)
              {
                /* When skipping past EOF, return the number of _full_ blocks
                 * that are not skipped, and set offset to EOF, so the caller
@@ -2104,8 +2104,8 @@ dd_copy (void)
         }
     }
 
-  /* If the last write was converted to a seek, then for a regular file,
-     ftruncate to extend the size.  */
+  /* If the last write was converted to a seek, then for a regular file
+     or shared memory object, ftruncate to extend the size.  */
   if (final_op_was_seek)
     {
       struct stat stdout_stat;
@@ -2114,7 +2114,7 @@ dd_copy (void)
           error (0, errno, _("cannot fstat %s"), quote (output_file));
           return EXIT_FAILURE;
         }
-      if (S_ISREG (stdout_stat.st_mode))
+      if (S_ISREG (stdout_stat.st_mode) || S_TYPEISSHM (&stdout_stat))
         {
           off_t output_offset = lseek (STDOUT_FILENO, 0, SEEK_CUR);
           if (output_offset > stdout_stat.st_size)

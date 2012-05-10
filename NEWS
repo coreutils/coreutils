@@ -27,6 +27,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  split and truncate now allow any seekable files in situations where
+  the file size is needed, instead of insisting on regular files.
+
   fmt now accepts the --goal=WIDTH (-g) option.
 
 ** Changes in behavior

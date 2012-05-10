@@ -605,7 +605,8 @@ bad_cast (char const *s)
 static inline bool
 usable_st_size (struct stat const *sb)
 {
-  return S_ISREG (sb->st_mode) || S_TYPEISSHM (sb) || S_TYPEISTMO (sb);
+  return (S_ISREG (sb->st_mode) || S_ISLNK (sb->st_mode)
+          || S_TYPEISSHM (sb) || S_TYPEISTMO (sb));
 }
 
 void usage (int status) ATTRIBUTE_NORETURN;

@@ -1069,7 +1069,7 @@ main (int argc, char **argv)
   static char const multipliers[] = "bEGKkMmPTYZ0";
   int c;
   int digits_optind = 0;
-  off_t file_size;
+  off_t file_size IF_LINT (= 0);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1340,12 +1340,18 @@ main (int argc, char **argv)
   if (in_blk_size == 0)
     in_blk_size = io_blksize (stat_buf);
 
-  /* stat.st_size is valid only for regular files.  For others, use 0.  */
-  file_size = S_ISREG (stat_buf.st_mode) ? stat_buf.st_size : 0;
-
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
     {
       off_t input_offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
+      if (usable_st_size (&stat_buf))
+        file_size = stat_buf.st_size;
+      else if (0 <= input_offset)
+        {
+          file_size = lseek (STDIN_FILENO, 0, SEEK_END);
+          input_offset = (file_size < 0
+                          ? file_size
+                          : lseek (STDIN_FILENO, input_offset, SEEK_SET));
+        }
       if (input_offset < 0)
         error (EXIT_FAILURE, 0, _("%s: cannot determine file size"),
                quote (infile));

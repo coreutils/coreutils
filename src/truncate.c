@@ -157,23 +157,36 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
     }
   if (rel_mode)
     {
-      uintmax_t const fsize = rsize < 0 ? sb.st_size : rsize;
+      uintmax_t fsize;
 
-      if (rsize < 0) /* fstat used above to get size.  */
+      if (0 <= rsize)
+        fsize = rsize;
+      else
         {
-          if (!S_ISREG (sb.st_mode) && !S_TYPEISSHM (&sb))
+          off_t file_size;
+          if (usable_st_size (&sb))
             {
-              error (0, 0, _("cannot get the size of %s"), quote (fname));
-              return false;
+              file_size = sb.st_size;
+              if (file_size < 0)
+                {
+                  /* Sanity check.  Overflow is the only reason I can think
+                     this would ever go negative. */
+                  error (0, 0, _("%s has unusable, apparently negative size"),
+                         quote (fname));
+                  return false;
+                }
             }
-          if (sb.st_size < 0)
+          else
             {
-              /* Sanity check. Overflow is the only reason I can think
-                 this would ever go negative. */
-              error (0, 0, _("%s has unusable, apparently negative size"),
-                     quote (fname));
-              return false;
+              file_size = lseek (fd, 0, SEEK_END);
+              if (file_size < 0)
+                {
+                  error (0, errno, _("cannot get the size of %s"),
+                         quote (fname));
+                  return false;
+                }
             }
+          fsize = file_size;
         }
 
       if (rel_mode == rm_min)
@@ -346,17 +359,29 @@ main (int argc, char **argv)
 
   if (ref_file)
     {
-      /* FIXME: Maybe support getting size of block devices.  */
       struct stat sb;
+      off_t file_size = -1;
       if (stat (ref_file, &sb) != 0)
         error (EXIT_FAILURE, errno, _("cannot stat %s"), quote (ref_file));
-      if (!S_ISREG (sb.st_mode) && !S_TYPEISSHM (&sb))
-        error (EXIT_FAILURE, 0, _("cannot get the size of %s"),
+      if (usable_st_size (&sb))
+        file_size = sb.st_size;
+      else
+        {
+          int ref_fd = open (ref_file, O_RDONLY);
+          if (0 <= ref_fd)
+            {
+              off_t file_end = lseek (ref_fd, 0, SEEK_END);
+              if (0 <= file_end && close (ref_fd) == 0)
+                file_size = file_end;
+            }
+        }
+      if (file_size < 0)
+        error (EXIT_FAILURE, errno, _("cannot get the size of %s"),
                quote (ref_file));
       if (!got_size)
-        size = sb.st_size;
+        size = file_size;
       else
-        rsize = sb.st_size;
+        rsize = file_size;
     }
 
   oflags = O_WRONLY | (no_create ? 0 : O_CREAT) | O_NONBLOCK;
