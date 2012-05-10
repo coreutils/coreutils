@@ -75,7 +75,7 @@ $@
       $exp->expect (0, '-re', "^a b\\r?\$");
       my $found = $exp->expect (1, '-re', "^.+\$");
       $found and warn "F: $found: " . $exp->exp_match () . "\n";
-      $exp->expect(1, 'eof');
+      $exp->expect(10, 'eof');
       # Expect no output from cut, since we gave it no input.
       defined $found || $cmd =~ /^cut/
         or (warn "$ME: $cmd didn't produce expected output\n"),

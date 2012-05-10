@@ -87,6 +87,7 @@ TESTS =						\
   rm/ext3-perf					\
   rm/cycle					\
   cp/link-heap					\
+  misc/tty-eof					\
   tail-2/inotify-hash-abuse			\
   tail-2/inotify-hash-abuse2			\
   tail-2/F-vs-missing				\
@@ -303,7 +304,6 @@ TESTS =						\
   misc/truncate-parameters			\
   misc/truncate-relative			\
   misc/tsort					\
-  misc/tty-eof					\
   misc/unexpand					\
   misc/uniq					\
   misc/uniq-perf				\
