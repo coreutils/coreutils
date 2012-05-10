@@ -449,6 +449,7 @@ TESTS =						\
   ls/proc-selinux-segfault			\
   ls/readdir-mountpoint-inode			\
   ls/recursive					\
+  ls/root-rel-symlink-color			\
   ls/rt-1					\
   ls/slink-acl					\
   ls/stat-dtype					\

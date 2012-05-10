@@ -3213,7 +3213,14 @@ make_link_name (char const *name, char const *linkname)
     return xstrdup (linkname);
 
   char *p = xmalloc (prefix_len + 1 + strlen (linkname) + 1);
-  stpcpy (stpncpy (p, name, prefix_len + 1), linkname);
+
+  /* PREFIX_LEN usually specifies a string not ending in slash.
+     In that case, extend it by one, since the next byte *is* a slash.
+     Otherwise, the prefix is "/", so leave the length unchanged.  */
+  if ( ! ISSLASH (name[prefix_len - 1]))
+    ++prefix_len;
+
+  stpcpy (stpncpy (p, name, prefix_len), linkname);
   return p;
 }
 
