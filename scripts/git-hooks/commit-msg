@@ -122,7 +122,7 @@ sub check_msg($$)
   $buf =~ m!https?://bugzilla\.redhat\.com/show_bug\.cgi\?id=(\d+)!s
     and return "use shorter http://bugzilla.redhat.com/$1";
 
-  $buf =~ m!https?://debbugs\.gnu\.org/cgi/bugreport\.cgi\?bug=(\d+)!s
+  $buf =~ m!https?://debbugs\.gnu\.org/(?:cgi/bugreport\.cgi\?bug=)?(\d+)!s
     and return "use shorter http://bugs.gnu.org/$1";
 
   return '';
