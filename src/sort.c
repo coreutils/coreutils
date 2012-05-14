@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <assert.h>
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
@@ -4243,6 +4244,10 @@ main (int argc, char **argv)
                           char const *optarg1 = argv[optind++];
                           s = parse_field_count (optarg1 + 1, &key->eword,
                                              N_("invalid number after '-'"));
+                          /* When called with a non-NULL message ID,
+                             parse_field_count cannot return NULL.  Tell static
+                             analysis tools that dereferencing S is safe.  */
+                          assert (s);
                           if (*s == '.')
                             s = parse_field_count (s + 1, &key->echar,
                                                N_("invalid number after '.'"));

@@ -52,6 +52,7 @@
 #endif
 #include <getopt.h>
 #include <stdarg.h>
+#include <assert.h>
 
 #include "system.h"
 #include "error.h"
@@ -1538,6 +1539,12 @@ display_changed (struct termios *mode)
 
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
+
+      /* bitsp would be NULL only for "combination" modes, yet those
+         are filtered out above via the OMIT flag.  Tell static analysis
+         tools that it's ok to dereference bitsp here.  */
+      assert (bitsp);
+
       if ((*bitsp & mask) == mode_info[i].bits)
         {
           if (mode_info[i].flags & SANE_UNSET)
@@ -1615,6 +1622,7 @@ display_all (struct termios *mode, char const *device_name)
 
       bitsp = mode_type_flag (mode_info[i].type, mode);
       mask = mode_info[i].mask ? mode_info[i].mask : mode_info[i].bits;
+      assert (bitsp); /* See the identical assertion and comment above.  */
       if ((*bitsp & mask) == mode_info[i].bits)
         wrapf ("%s", mode_info[i].name);
       else if (mode_info[i].flags & REV)
