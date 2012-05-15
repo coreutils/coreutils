@@ -72,8 +72,8 @@ AC_INCLUDES_DEFAULT
       [AC_DEFINE([STRUCT_STATVFS_F_FSID_IS_INTEGER], [1],
          [Define to 1 if the f_fsid member of struct statvfs is an integer.])])
   else
-    AC_CHECK_MEMBERS([struct statfs.f_namelen, struct statfs.f_type],,,
-      [$statfs_includes])
+    AC_CHECK_MEMBERS([struct statfs.f_namelen, struct statfs.f_type,
+                     struct statfs.f_frsize],,, [$statfs_includes])
     if test $ac_cv_header_OS_h != yes; then
       AC_COMPILE_IFELSE(
         [AC_LANG_PROGRAM(

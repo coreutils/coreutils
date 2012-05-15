@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --color would mis-color relative-named symlinks in /
   [bug introduced in coreutils-8.17]
 
+  stat and df now report the correct file system usage,
+  in all situations on GNU/Linux, by correctly determining the block size.
+  [df bug since coreutils-5.0.91, stat bug since the initial implementation]
+
 
 * Noteworthy changes in release 8.17 (2012-05-10) [stable]
 

@@ -126,7 +126,11 @@ statfs (char const *filename, struct fs_info *buf)
 # else
 #  define STRUCT_STATVFS struct statfs
 #  define STRUCT_STATXFS_F_FSID_IS_INTEGER STRUCT_STATFS_F_FSID_IS_INTEGER
-#  define STATFS_FRSIZE(S) 0
+#  if HAVE_STRUCT_STATFS_F_FRSIZE
+#   define STATFS_FRSIZE(S) ((S)->f_frsize)
+#  else
+#   define STATFS_FRSIZE(S) 0
+#  endif
 # endif
 #endif
 
