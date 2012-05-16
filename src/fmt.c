@@ -283,6 +283,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --split-only          split long lines, but do not refill\n\
 "),
              stdout);
+      /* Tell xgettext that the "% o" below is not a printf-style
+         format string:  xgettext:no-c-format */
       fputs (_("\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
