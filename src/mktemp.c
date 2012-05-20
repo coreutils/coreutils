@@ -206,7 +206,8 @@ main (int argc, char **argv)
 
         case_GETOPT_HELP_CHAR;
 
-        case 'V': /* Undocumented alias.  FIXME: remove in 2011.  */
+        case 'V': /* Undocumented alias, for compatibility with the original
+                     mktemp program.  */
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
           usage (EXIT_FAILURE);
