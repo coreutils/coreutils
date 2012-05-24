@@ -1,5 +1,5 @@
 #! /bin/sh
-# Make sure all these programs work properly
+# Make sure all of these programs work properly
 # when invoked with --help or --version.
 
 # Copyright (C) 2000-2012 Free Software Foundation, Inc.
