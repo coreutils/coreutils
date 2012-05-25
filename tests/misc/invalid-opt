@@ -36,7 +36,6 @@ my %exit_status =
     nohup => 125,
     sort => 2,
     stdbuf => 125,
-    su => 125,
     test => 0,
     timeout => 125,
     true => 0,

@@ -78,9 +78,6 @@ unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
   printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
   printf 'x\t \t y\n'|unexpand -t 5,8 should print "x\ty\n"
 
-Let GNU su use the 'wheel' group if appropriate.
-  (there are a couple patches, already)
-
 sort: Investigate better sorting algorithms; see Knuth vol. 3.
 
   We tried list merge sort, but it was about 50% slower than the

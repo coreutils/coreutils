@@ -30,6 +30,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat -f recognizes the new remote file system type, panfs.
 
+** Changes in behavior
+
+  su: this program has been removed.  We stopped installing "su" by
+  default with the release of coreutils-6.9.90 on 2007-12-01.  Now,
+  that the util-linux package has the union of the Suse and Fedora
+  patches as well as enough support to build on the Hurd, we no longer
+  have any reason to include it here.
+
 
 * Noteworthy changes in release 8.17 (2012-05-10) [stable]
 

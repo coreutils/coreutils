@@ -109,7 +109,6 @@
 * stat: (coreutils)stat invocation.             Report file(system) status.
 * stdbuf: (coreutils)stdbuf invocation.         Modify stdio buffering.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
-* su: (coreutils)su invocation.                 Modify user and group ID.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
 * sync: (coreutils)sync invocation.             Synchronize memory and disk.
 * tac: (coreutils)tac invocation.               Reverse files.
@@ -200,7 +199,7 @@ Free Documentation License''.
 * User information::             id logname whoami groups users who
 * System context::               date arch nproc uname hostname hostid uptime
 * SELinux context::              chcon runcon
-* Modified command invocation::  chroot env nice nohup stdbuf su timeout
+* Modified command invocation::  chroot env nice nohup stdbuf timeout
 * Process control::              kill
 * Delaying::                     sleep
 * Numeric operations::           factor seq
@@ -443,7 +442,6 @@ Modified command invocation
 * nice invocation::              Run a command with modified niceness
 * nohup invocation::             Run a command immune to hangups
 * stdbuf invocation::            Run a command with modified I/O buffering
-* su invocation::                Run a command with substitute user and group ID
 * timeout invocation::           Run a command with a time limit
 
 Process control
@@ -766,7 +764,7 @@ meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
 @command{chroot}, @command{env}, @command{expr}, @command{nice},
 @command{nohup}, @command{printenv}, @command{sort}, @command{stdbuf},
-@command{su}, @command{test}, @command{timeout}, @command{tty}.
+@command{test}, @command{timeout}, @command{tty}.
 
 
 @node Backup options
@@ -15266,7 +15264,6 @@ user, etc.
 * nice invocation::             Modify niceness.
 * nohup invocation::            Immunize to hangups.
 * stdbuf invocation::           Modify buffering of standard streams.
-* su invocation::               Modify user and group ID.
 * timeout invocation::          Run with time limit.
 @end menu
 
@@ -15792,163 +15789,6 @@ Exit status:
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
-
-
-@node su invocation
-@section @command{su}: Run a command with substitute user and group ID
-
-@pindex su
-@cindex substitute user and group IDs
-@cindex user ID, switching
-@cindex super-user, becoming
-@cindex root, becoming
-
-@command{su} allows one user to temporarily become another user.  It runs a
-command (often an interactive shell) with the real and effective user
-ID, group ID, and supplemental groups of a given @var{user}.  Synopsis:
-
-@example
-su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
-@end example
-
-@cindex passwd entry, and @command{su} shell
-@flindex /bin/sh
-@flindex /etc/passwd
-If no @var{user} is given, the default is @code{root}, the super-user.
-The shell to use is taken from @var{user}'s @code{passwd} entry, or
-@file{/bin/sh} if none is specified there.  If @var{user} has a
-password, @command{su} prompts for the password unless run by a user with
-effective user ID of zero (the super-user).
-
-@vindex HOME
-@vindex SHELL
-@vindex USER
-@vindex LOGNAME
-@cindex login shell
-By default, @command{su} does not change the current directory.
-It sets the environment variables @env{HOME} and @env{SHELL}
-from the password entry for @var{user}, and if @var{user} is not
-the super-user, sets @env{USER} and @env{LOGNAME} to @var{user}.
-By default, the shell is not a login shell.
-
-Any additional @var{arg}s are passed as additional arguments to the
-shell.
-
-@cindex @option{-su}
-GNU @command{su} does not treat @file{/bin/sh} or any other shells specially
-(e.g., by setting @code{argv[0]} to @option{-su}, passing @option{-c} only
-to certain shells, etc.).
-
-@findex syslog
-@command{su} can optionally be compiled to use @code{syslog} to report
-failed, and optionally successful, @command{su} attempts.  (If the system
-supports @code{syslog}.)  However, GNU @command{su} does not check if the
-user is a member of the @code{wheel} group; see below.
-
-The program accepts the following options.  Also see @ref{Common options}.
-
-@table @samp
-@item -c @var{command}
-@itemx --command=@var{command}
-@opindex -c
-@opindex --command
-Pass @var{command}, a single command line to run, to the shell with
-a @option{-c} option instead of starting an interactive shell.
-
-@item -f
-@itemx --fast
-@opindex -f
-@opindex --fast
-@flindex .cshrc
-@cindex file name pattern expansion, disabled
-@cindex globbing, disabled
-Pass the @option{-f} option to the shell.  This probably only makes sense
-if the shell run is @command{csh} or @command{tcsh}, for which the @option{-f}
-option prevents reading the startup file (@file{.cshrc}).  With
-Bourne-like shells, the @option{-f} option disables file name pattern
-expansion (globbing), which is not likely to be useful.
-
-@item -
-@itemx -l
-@itemx --login
-@opindex -
-@opindex -l
-@opindex --login
-@c other variables already indexed above
-@vindex TERM
-@vindex PATH
-@cindex login shell, creating
-Make the shell a login shell.  This means the following.  Unset all
-environment variables except @env{TERM}, @env{HOME}, and @env{SHELL}
-(which are set as described above), and @env{USER} and @env{LOGNAME}
-(which are set, even for the super-user, as described above), and set
-@env{PATH} to a compiled-in default value.  Change to @var{user}'s home
-directory.  Prepend @samp{-} to the shell's name, intended to make it
-read its login startup file(s).
-
-@item -m
-@itemx -p
-@itemx --preserve-environment
-@opindex -m
-@opindex -p
-@opindex --preserve-environment
-@cindex environment, preserving
-@flindex /etc/shells
-@cindex restricted shell
-Do not change the environment variables @env{HOME}, @env{USER},
-@env{LOGNAME}, or @env{SHELL}.  Run the shell given in the environment
-variable @env{SHELL} instead of the shell from @var{user}'s passwd
-entry, unless the user running @command{su} is not the super-user and
-@var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
-is not listed in the file @file{/etc/shells}, or in a compiled-in list
-if that file does not exist.  Parts of what this option does can be
-overridden by @option{--login} and @option{--shell}.
-
-@item -s @var{shell}
-@itemx --shell=@var{shell}
-@opindex -s
-@opindex --shell
-Run @var{shell} instead of the shell from @var{user}'s passwd entry,
-unless the user running @command{su} is not the super-user and @var{user}'s
-shell is restricted (see @option{-m} just above).
-
-@end table
-
-@cindex exit status of @command{su}
-Exit status:
-
-@display
-125 if @command{su} itself fails
-126 if subshell is found but cannot be invoked
-127 if subshell cannot be found
-the exit status of the subshell otherwise
-@end display
-
-@cindex wheel group, not supported
-@cindex group wheel, not supported
-@cindex fascism
-@subsection Why GNU @command{su} does not support the @samp{wheel} group
-
-(This section is by Richard Stallman.)
-
-@cindex Twenex
-@cindex MIT AI lab
-Sometimes a few of the users try to hold total power over all the
-rest.  For example, in 1984, a few users at the MIT AI lab decided to
-seize power by changing the operator password on the Twenex system and
-keeping it secret from everyone else.  (I was able to thwart this coup
-and give power back to the users by patching the kernel, but I
-wouldn't know how to do that in Unix.)
-
-However, occasionally the rulers do tell someone.  Under the usual
-@command{su} mechanism, once someone learns the root password who
-sympathizes with the ordinary users, he or she can tell the rest.  The
-``wheel group'' feature would make this impossible, and thus cement the
-power of the rulers.
-
-I'm on the side of the masses, not that of the rulers.  If you are
-used to supporting the bosses and sysadmins in whatever they do, you
-might find this idea strange at first.
 
 
 @node timeout invocation

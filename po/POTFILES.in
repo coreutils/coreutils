@@ -118,7 +118,6 @@ src/split.c
 src/stat.c
 src/stdbuf.c
 src/stty.c
-src/su.c
 src/sum.c
 src/sync.c
 src/system.h

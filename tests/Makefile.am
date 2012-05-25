@@ -280,7 +280,6 @@ TESTS =						\
   misc/stty-invalid				\
   misc/stty-pairs				\
   misc/stty-row-col				\
-  misc/su-fail					\
   misc/sum					\
   misc/sum-sysv					\
   misc/tac					\

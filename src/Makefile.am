@@ -21,7 +21,7 @@
 # Hence, if you want to install programs from this list anyway, say A and B,
 # use --enable-install-program=A,B
 no_install__progs = \
-  arch hostname su
+  arch hostname
 
 build_if_possible__progs = \
   chroot	\
@@ -32,7 +32,6 @@ build_if_possible__progs = \
   pinky		\
   stdbuf	\
   stty		\
-  su		\
   uptime	\
   users		\
   who
@@ -164,7 +163,7 @@ noinst_HEADERS =	\
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   wheel-gen.pl extract-magic c99-to-c89.diff
 BUILT_SOURCES =
-CLEANFILES = $(SCRIPTS) su
+CLEANFILES = $(SCRIPTS)
 
 # Also remove these sometimes-built programs.
 # For example, even when excluded, they're built via _sc_check-AUTHORS.
@@ -268,7 +267,6 @@ split_LDADD = $(LDADD)
 stat_LDADD = $(LDADD)
 stdbuf_LDADD = $(LDADD)
 stty_LDADD = $(LDADD)
-su_LDADD = $(LDADD)
 sum_LDADD = $(LDADD)
 sync_LDADD = $(LDADD)
 tac_LDADD = $(LDADD)
@@ -357,9 +355,6 @@ factor_LDADD += $(LIB_GMP)
 # for getloadavg
 uptime_LDADD += $(GETLOADAVG_LIBS)
 
-# for crypt
-su_LDADD += $(LIB_CRYPT)
-
 # for various ACL functions
 copy_LDADD += $(LIB_ACL)
 ls_LDADD += $(LIB_ACL)
@@ -401,60 +396,6 @@ $(PROGRAMS): ../lib/libcoreutils.a
 RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
     $(top_srcdir)/lib/version-etc.c`
-
-all-local: su$(EXEEXT)
-
-installed_su = $(DESTDIR)$(bindir)/`echo su|sed '$(transform)'`
-
-setuid_root_mode = a=rx,u+s
-
-install_su =						\
-  if test "$(INSTALL_SU)" = yes; then			\
-    p=su;						\
-    echo " $(INSTALL_PROGRAM) $$p $(installed_su)";	\
-    $(INSTALL_PROGRAM) $$p $(installed_su);		\
-    echo " chown root $(installed_su)";			\
-    chown root $(installed_su);				\
-    echo " chmod $(setuid_root_mode) $(installed_su)";	\
-    chmod $(setuid_root_mode) $(installed_su);		\
-  else							\
-    :;							\
-  fi
-
-install-root: su$(EXEEXT)
-	@$(install_su)
-
-install-exec-hook: su$(EXEEXT)
-	@if test "$(INSTALL_SU)" = yes; then			\
-	  TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$;			\
-	  rm -f $$TMPFILE;					\
-	  echo > $$TMPFILE;					\
-## See if we can create a setuid root executable in $(bindir).
-## If not, then don't even try to install su.
-	  can_create_suid_root_executable=no;			\
-	  chown root $$TMPFILE > /dev/null 2>&1			\
-	    && chmod $(setuid_root_mode) $$TMPFILE > /dev/null 2>&1 \
-	    && can_create_suid_root_executable=yes;		\
-	  rm -f $$TMPFILE;					\
-	  if test $$can_create_suid_root_executable = yes; then \
-	    $(install_su);					\
-	  else							\
-	    echo "WARNING: insufficient access; not installing su"; \
-	    echo "NOTE: to install su, run 'make install-root' as root"; \
-	    rm -f $(installed_su);				\
-	  fi;							\
-	else :;							\
-	fi
-
-uninstall-local:
-# Remove su only if it's one we installed.
-	@if test "$(INSTALL_SU)" = yes; then			\
-	  if grep '$(PACKAGE_NAME)' $(installed_su) > /dev/null 2>&1; then \
-	    echo "  rm -f $(installed_su)"; \
-	    rm -f $(installed_su); \
-	  else :; \
-	  fi; \
-	fi
 
 copy_sources = copy.c cp-hash.c extent-scan.c extent-scan.h
 

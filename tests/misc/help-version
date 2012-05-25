@@ -208,7 +208,6 @@ nohup_setup () { args=--version; }
 printf_setup () { args=foo; }
 seq_setup () { args=10; }
 sleep_setup () { args=0; }
-su_setup () { args=--version; }
 stdbuf_setup () { args="-oL true"; }
 timeout_setup () { args=--version; }
 

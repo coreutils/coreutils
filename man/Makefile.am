@@ -110,7 +110,6 @@ split.1:	$(common_dep)	$(srcdir)/split.x	../src/split.c
 stat.1:		$(common_dep)	$(srcdir)/stat.x	../src/stat.c
 stdbuf.1:	$(common_dep)	$(srcdir)/stdbuf.x	../src/stdbuf.c
 stty.1:		$(common_dep)	$(srcdir)/stty.x	../src/stty.c
-su.1:		$(common_dep)	$(srcdir)/su.x		../src/su.c
 sum.1:		$(common_dep)	$(srcdir)/sum.x		../src/sum.c
 sync.1:		$(common_dep)	$(srcdir)/sync.x	../src/sync.c
 tac.1:		$(common_dep)	$(srcdir)/tac.x		../src/tac.c
@@ -192,7 +191,7 @@ ASSORT = LC_ALL=C sort
 
 # Ensure that for each .x file in this directory, there is a
 # corresponding .1 file in the definition of $(dist_man1_MANS) above.
-# But since that expansion usually lacks programs like su and arch,
+# But since that expansion usually lacks programs like arch and hostname,
 # add them here manually.
 .PHONY: check-x-vs-1
 check-x-vs-1:

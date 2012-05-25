@@ -380,7 +380,6 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
 #include <signal.h>])
 
-cu_LIB_CHECK
 cu_GMP
 
 # Build df only if there's a point to it.
@@ -421,7 +420,7 @@ t=`sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
 no_install_progs_default=`echo "$t"|sed 's/ $//'`
 
 # Unfortunately, due to the way autoconf's AS_HELP_STRING works, the list
-# of default-not-installed programs, "arch hostname su", must appear in two
+# of default-not-installed programs, "arch hostname", must appear in two
 # places: in this file below, and in $mk.  Using "$no_install_progs_default"
 # below cannot work.  And we can't substitute the names into $mk because
 # automake needs the literals, too.
@@ -448,21 +447,13 @@ esac
 # Note how the second argument below is a literal, with "," separators.
 # That is required due to the way the macro works, and since the
 # corresponding ./configure option argument is comma-separated on input.
-gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch,hostname,su])
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch,hostname])
 
 # Now that we know which programs will actually be built up, figure out
 # which optional helper progs should be compiled.
 optional_pkglib_progs=
 case " $optional_bin_progs " in
   *' stdbuf '*) gl_ADD_PROG([optional_pkglib_progs], [libstdbuf.so]) ;;
-esac
-
-# Set INSTALL_SU if su installation has been requested via
-# --enable-install-program=su.
-AC_SUBST([INSTALL_SU])
-case " $optional_bin_progs " in
-  *' su '*) INSTALL_SU=yes ;;
-  *)        INSTALL_SU=no ;;
 esac
 
 MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'|tr -d '\\015\\012'`

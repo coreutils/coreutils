@@ -87,7 +87,6 @@ split
 stat
 stdbuf
 stty
-su
 sum
 sync
 tac

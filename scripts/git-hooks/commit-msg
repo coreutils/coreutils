@@ -19,7 +19,7 @@ my @valid = qw(
     mv nice nl nohup nproc od paste pathchk pinky pr printenv printf
     ptx pwd readlink realpath rm rmdir runcon seq sha1sum sha224sum sha256sum
     sha384sum sha512sum shred shuf sleep sort split stat stdbuf stty
-    su sum sync tac tail tee test timeout touch tr true truncate tsort
+    sum sync tac tail tee test timeout touch tr true truncate tsort
     tty uname unexpand uniq unlink uptime users vdir wc who whoami yes
 
     copy gnulib tests maint doc build scripts
