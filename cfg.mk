@@ -403,12 +403,6 @@ sc_prohibit_strncmp:
 	  { echo '$(ME): use STREQ_LEN or STRPREFIX instead of str''ncmp' \
 		1>&2; exit 1; } || :
 
-# Really.  You don't want to use this function.
-sc_prohibit_strncpy:
-	@prohibit='\<str''ncpy *\('					\
-	halt='do not use str''ncpy, period'				\
-	  $(_sc_search_regexp)
-
 # Enforce recommended preprocessor indentation style.
 sc_preprocessor_indentation:
 	@if cppi --version >/dev/null 2>&1; then			\
