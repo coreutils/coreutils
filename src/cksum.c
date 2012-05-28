@@ -290,6 +290,10 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  /* Line buffer stdout to ensure lines are written atomically and immediately
+     so that processes running in parallel do not intersperse their output.  */
+  setvbuf (stdout, NULL, _IOLBF, 0);
+
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
                       usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
