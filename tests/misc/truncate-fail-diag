@@ -1,6 +1,6 @@
 #!/bin/sh
 # make sure truncate gives reasonable diagnostics
-# Note open() checks for trailing '/' before checking for existance
+# Note open() checks for trailing '/' before checking for existence
 # open (".", O_CREAT & (O_WRONLY | O_RDWR), ...) -> EISDIR
 # open ("missing/", O_CREAT & (O_WRONLY | O_RDWR), ...) -> EISDIR
 # open ("missing/file", O_CREAT & (O_WRONLY | O_RDWR), ...) -> ENOENT

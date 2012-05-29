@@ -4420,7 +4420,7 @@
 
 2000-02-26  Jim Meyering  <meyering@lucent.com>
 
-	Tranform the generated src/Makefile.in file so it falls back on
+	Transform the generated src/Makefile.in file so it falls back on
 	using /bin/rm when necessary.  The old rule didn't always work.
 	This is necessary only on certain losing systems, and because this
 	package builds an `rm' executable and some people put `.' too

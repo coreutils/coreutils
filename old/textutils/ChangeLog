@@ -5496,7 +5496,7 @@ Thu Jul  4 07:24:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 Wed Jul  3 23:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/md5sum.c (split_3): Correct test for 35-byte line to accomodate
+	* src/md5sum.c (split_3): Correct test for 35-byte line to accommodate
 	fact that leading blanks may be stripped.
 
 Tue Jul  2 21:51:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
@@ -8550,7 +8550,7 @@ Tue Jul 17 12:36:11 EDT 1990  Jay Fenlason (hack@ai.mit.edu)
 	* pr.c  Deleted excess whitespace from ends of lines.
 		Modified to work with current version of getopt, which
 		returns 1 instead of 0 for non-options.
-		Reversed the meaning of the -f option, to be compatable
+		Reversed the meaning of the -f option, to be compatible
 		with real pr.
 
 Sun Jul  8 00:39:31 1990  David J. MacKenzie  (djm at apple-gunkies)
