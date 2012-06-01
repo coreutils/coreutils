@@ -357,6 +357,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "openprom";
     case S_MAGIC_OCFS2: /* 0x7461636f remote */
       return "ocfs2";
+    case S_MAGIC_PANFS: /* 0xAAD7AAEA remote */
+      return "panfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */
       /* FIXME: change syntax or add an optional attribute like "inotify:no".
          The above is labeled as "remote" so that tail always uses polling,
