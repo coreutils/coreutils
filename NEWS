@@ -8,6 +8,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   processes will not intersperse their output.
   [the bug dates back to the initial implementation]
 
+  head --lines=-N (-n-N) now resets the read pointer of a seekable input file.
+  This means that "head -n-3" no longer consumes all of its input, and lines
+  not output by head may be processed by other programs.  For example, this
+  command now prints the final line, 2, while before it would print nothing:
+    seq 2 > k; (head -n-1 > /dev/null; cat) < k
+  [This bug was present in "the beginning".]
+
   ls --color would mis-color relative-named symlinks in /
   [bug introduced in coreutils-8.17]
 

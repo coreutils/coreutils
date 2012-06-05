@@ -26,7 +26,7 @@ $ENV{PROG} = 'head';
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 # This should match the definition in head.c.
-my $READ_BUFSIZE = 4096;
+my $READ_BUFSIZE = 8192;
 
 my @Tests =
   (

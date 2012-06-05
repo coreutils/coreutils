@@ -667,6 +667,14 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
                  Don't bother testing for failure for such a small amount.
                  Any failure will be detected upon close.  */
               fwrite (buffer, 1, n + 1, stdout);
+
+              /* Set file pointer to the byte after what we've output.  */
+              if (lseek (fd, pos + n + 1, SEEK_SET) < 0)
+                {
+                  error (0, errno, "%s: failed to reset file pointer",
+                         quote (pretty_filename));
+                  return false;
+                }
               return true;
             }
         }

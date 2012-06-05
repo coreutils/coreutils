@@ -21,12 +21,24 @@
 print_ver_ head
 
 (echo a; echo b) > in || framework_failure_
+echo b > exp || framework_failure_
 
-(head -n 1 >/dev/null; cat) < in > out || fail=1
-cat <<EOF > exp
-b
-EOF
+for i in -1 1; do
+  (head -n $i >/dev/null; cat) < in > out || fail=1
+  compare exp out || fail=1
+done
 
-compare exp out || fail=1
+# Exercise the (start_pos < pos) block in elide_tail_lines_seekable.
+# So far, this is the only test to do that.
+# Do that by creating a file larger than BUFSIZ (I've seen 128K) and
+# elide a suffix of it (by line count) that is also larger than BUFSIZ.
+# 50000 lines times 6 bytes per line gives us enough leeway even on a
+# system with a BUFSIZ of 256K.
+n_lines=50000
+seq 70000 > in2 || framework_failure_
+echo $n_lines > exp-n || framework_failure_
+
+(head -n-$n_lines>/dev/null; wc -l) < in2 > n
+compare exp-n n || fail=1
 
 Exit $fail
