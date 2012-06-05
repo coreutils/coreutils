@@ -671,7 +671,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
               /* Set file pointer to the byte after what we've output.  */
               if (lseek (fd, pos + n + 1, SEEK_SET) < 0)
                 {
-                  error (0, errno, "%s: failed to reset file pointer",
+                  error (0, errno, _("%s: failed to reset file pointer"),
                          quote (pretty_filename));
                   return false;
                 }
