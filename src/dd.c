@@ -540,7 +540,7 @@ Copy a file, converting and formatting according to the operands.\n\
 "), stdout);
       fputs (_("\
 \n\
-BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
+N, BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
 c =1, w =2, b =512, kB =1000, K =1024, MB =1000*1000, M =1024*1024, xM =M\n\
 GB =1000*1000*1000, G =1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 \n\

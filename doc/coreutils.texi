@@ -8399,8 +8399,8 @@ affected file descriptors, even after @command{dd} exits.
 @end table
 
 @cindex multipliers after numbers
-The numeric-valued strings above (@var{bytes} and @var{blocks}) can be
-followed by a multiplier: @samp{b}=512, @samp{c}=1,
+The numeric-valued strings above (@var{n}, @var{bytes} and @var{blocks})
+can be followed by a multiplier: @samp{b}=512, @samp{c}=1,
 @samp{w}=2, @samp{x@var{m}}=@var{m}, or any of the
 standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
 
