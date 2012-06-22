@@ -420,7 +420,7 @@ sc_preprocessor_indentation:
 # someone who was initially listed only in THANKS.in later authors a commit,
 # this rule detects that their pair may now be removed from THANKS.in.
 sc_THANKS_in_duplicates:
-	{ git log --pretty=format:%aN | sort -u;			\
+	@{ git log --pretty=format:%aN | sort -u;			\
 	    cut -b-36 THANKS.in | sed '/^$$/d;s/  *$$//'; }		\
 	  | sort | uniq -d | grep .					\
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
