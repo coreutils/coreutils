@@ -18,6 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --color would mis-color relative-named symlinks in /
   [bug introduced in coreutils-8.17]
 
+  split now ensures it doesn't overwrite the input file with generated output.
+  [the bug dates back to the initial implementation]
+
   stat and df now report the correct file system usage,
   in all situations on GNU/Linux, by correctly determining the block size.
   [df bug since coreutils-5.0.91, stat bug since the initial implementation]

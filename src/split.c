@@ -92,6 +92,9 @@ static char const *additional_suffix;
 /* Name of input file.  May be "-".  */
 static char *infile;
 
+/* stat buf for input file.  */
+static struct stat in_stat_buf;
+
 /* Descriptor on which output file is open.  */
 static int output_desc = -1;
 
@@ -362,7 +365,20 @@ create (const char *name)
     {
       if (verbose)
         fprintf (stdout, _("creating file %s\n"), quote (name));
-      return open (name, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, MODE_RW_UGO);
+
+      int fd = open (name, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
+      if (fd < 0)
+        return fd;
+      struct stat out_stat_buf;
+      if (fstat (fd, &out_stat_buf) != 0)
+        error (EXIT_FAILURE, errno, _("failed to stat %s"), quote (name));
+      if (SAME_INODE (in_stat_buf, out_stat_buf))
+        error (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
+               quote (name));
+      if (ftruncate (fd, 0) != 0)
+        error (EXIT_FAILURE, errno, _("%s: error truncating"), quote (name));
+
+      return fd;
     }
   else
     {
@@ -1057,7 +1073,6 @@ parse_chunk (uintmax_t *k_units, uintmax_t *n_units, char *slash)
 int
 main (int argc, char **argv)
 {
-  struct stat stat_buf;
   enum Split_type split_type = type_undef;
   size_t in_blk_size = 0;	/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
@@ -1334,16 +1349,16 @@ main (int argc, char **argv)
 
   /* Get the optimal block size of input device and make a buffer.  */
 
-  if (fstat (STDIN_FILENO, &stat_buf) != 0)
+  if (fstat (STDIN_FILENO, &in_stat_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
   if (in_blk_size == 0)
-    in_blk_size = io_blksize (stat_buf);
+    in_blk_size = io_blksize (in_stat_buf);
 
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
     {
       off_t input_offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
-      if (usable_st_size (&stat_buf))
-        file_size = stat_buf.st_size;
+      if (usable_st_size (&in_stat_buf))
+        file_size = in_stat_buf.st_size;
       else if (0 <= input_offset)
         {
           file_size = lseek (STDIN_FILENO, 0, SEEK_END);

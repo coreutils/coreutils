@@ -268,6 +268,7 @@ TESTS =						\
   split/l-chunk					\
   split/r-chunk					\
   split/numeric					\
+  split/guard-input				\
   misc/stat-birthtime				\
   misc/stat-fmt					\
   misc/stat-hyphen				\
