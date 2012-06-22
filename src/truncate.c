@@ -244,7 +244,6 @@ main (int argc, char **argv)
   off_t size IF_LINT ( = 0);
   off_t rsize = -1;
   rel_mode_t rel_mode = rm_abs;
-  mode_t omode;
   int c, fd = -1, oflags;
   char const *fname;
 
@@ -385,11 +384,10 @@ main (int argc, char **argv)
     }
 
   oflags = O_WRONLY | (no_create ? 0 : O_CREAT) | O_NONBLOCK;
-  omode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 
   while ((fname = *argv++) != NULL)
     {
-      if ((fd = open (fname, oflags, omode)) == -1)
+      if ((fd = open (fname, oflags, MODE_RW_UGO)) == -1)
         {
           /* 'truncate -s0 -c no-such-file'  shouldn't gen error
              'truncate -s0 no-such-dir/file' should gen ENOENT error

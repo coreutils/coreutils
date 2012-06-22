@@ -2211,7 +2211,7 @@ main (int argc, char **argv)
     }
   else
     {
-      mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+      mode_t perms = MODE_RW_UGO;
       int opts
         = (output_flags
            | (conversions_mask & C_NOCREAT ? 0 : O_CREAT)

@@ -30,6 +30,9 @@ you must include <sys/types.h> before including this file
 
 #include <sys/stat.h>
 
+/* Commonly used file permission combination.  */
+#define MODE_RW_UGO (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
+
 #if !defined HAVE_MKFIFO
 # define mkfifo(name, mode) mknod (name, (mode) | S_IFIFO, 0)
 #endif

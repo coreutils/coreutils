@@ -120,7 +120,7 @@ main (int argc, char **argv)
         }
     }
 
-  newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+  newmode = MODE_RW_UGO;
   if (specified_mode)
     {
       struct mode_change *change = mode_compile (specified_mode);

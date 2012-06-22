@@ -131,11 +131,8 @@ touch (const char *file)
   else if (! (no_create || no_dereference))
     {
       /* Try to open FILE, creating it if necessary.  */
-      int default_permissions =
-        S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
       fd = fd_reopen (STDIN_FILENO, file,
-                      O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY,
-                      default_permissions);
+                      O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY, MODE_RW_UGO);
 
       /* Don't save a copy of errno if it's EISDIR, since that would lead
          touch to give a bogus diagnostic for e.g., 'touch /' (assuming
