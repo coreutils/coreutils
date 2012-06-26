@@ -425,6 +425,7 @@ free_buffer (struct buffer_record *buf)
       free (l);
       l = n;
     }
+  buf->line_start = NULL;
   free (buf->buffer);
   buf->buffer = NULL;
 }
@@ -499,8 +500,6 @@ load_buffer (void)
       b->bytes_used += read_input (p, bytes_avail);
 
       lines_found = record_line_starts (b);
-      if (!lines_found)
-        free_buffer (b);
 
       if (lines_found || have_read_eof)
         break;
@@ -515,7 +514,10 @@ load_buffer (void)
   if (lines_found)
     save_buffer (b);
   else
-    free (b);
+    {
+      free_buffer (b);
+      free (b);
+    }
 
   return lines_found != 0;
 }
