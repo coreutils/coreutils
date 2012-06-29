@@ -7675,9 +7675,11 @@ combination of options is this tiny Bourne shell script:
 #!/bin/sh
 # Usage: backup FILE...
 # Create a @sc{gnu}-style backup of each listed FILE.
+fail=0
 for i; do
-  cp --backup --force -- "$i" "$i"
+  cp --backup --force --preserve=all -- "$i" "$i" || fail=1
 done
+exit $fail
 @end example
 
 @item --copy-contents
