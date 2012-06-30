@@ -249,6 +249,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "afs";
     case S_MAGIC_ANON_INODE_FS: /* 0x09041934 local */
       return "anon-inode FS";
+    case S_MAGIC_AUFS: /* 0x61756673 remote */
+      /* FIXME: change syntax or add an optional attribute like "inotify:no".
+         The above is labeled as "remote" so that tail always uses polling,
+         but this isn't really a remote file system type.  */
+      return "aufs";
     case S_MAGIC_AUTOFS: /* 0x0187 local */
       return "autofs";
     case S_MAGIC_BEFS: /* 0x42465331 local */
