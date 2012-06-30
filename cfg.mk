@@ -463,7 +463,7 @@ exclude_file_name_regexp--sc_file_system = \
 exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
-  (^scripts/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk)$$
+  (^.*/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk|.*\.texi)$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
 tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
