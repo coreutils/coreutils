@@ -251,6 +251,7 @@ TESTS =						\
   misc/sort-merge				\
   misc/sort-merge-fdlimit			\
   misc/sort-month				\
+  misc/sort-exit-early				\
   misc/sort-rand				\
   misc/sort-spinlock-abuse			\
   misc/sort-stale-thread-mem			\

@@ -33,7 +33,7 @@ my $mb_locale = $ENV{LOCALE_FR_UTF8};
 # Normalize each diagnostic to use '-'.
 my $normalize_filename = {ERR_SUBST => 's/^$prog: .*?:/$prog: -:/'};
 
-my $no_file = "$prog: open failed: no-file: No such file or directory\n";
+my $no_file = "$prog: cannot read: no-file: No such file or directory\n";
 
 my @Tests =
 (

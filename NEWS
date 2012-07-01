@@ -41,6 +41,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   patches as well as enough support to build on the Hurd, we no longer
   have any reason to include it here.
 
+** Improvements
+
+  sort avoids redundant processing in the presence of inaccessible inputs,
+  or unwritable output.  Sort now diagnoses certain errors at start-up,
+  rather than after potentially expensive processing.
+
 
 * Noteworthy changes in release 8.17 (2012-05-10) [stable]
 

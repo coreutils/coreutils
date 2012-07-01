@@ -357,6 +357,9 @@ static bool unique;
 /* Nonzero if any of the input files are the standard input. */
 static bool have_read_stdin;
 
+/* File descriptor associated with -o.  */
+static int outfd = -1;
+
 /* List of key field comparisons to be tried.  */
 static struct keyfield *keylist;
 
@@ -911,11 +914,12 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
 static FILE *
 stream_open (char const *file, char const *how)
 {
+  FILE *fp;
+
   if (!file)
     return stdout;
   if (*how == 'r')
     {
-      FILE *fp;
       if (STREQ (file, "-"))
         {
           have_read_stdin = true;
@@ -924,9 +928,18 @@ stream_open (char const *file, char const *how)
       else
         fp = fopen (file, how);
       fadvise (fp, FADVISE_SEQUENTIAL);
-      return fp;
     }
-  return fopen (file, how);
+  else if (*how == 'w')
+    {
+      assert (outfd != -1);
+      if (ftruncate (outfd, 0) != 0)
+        error (EXIT_FAILURE, errno, _("%s: error truncating"), quote (file));
+      fp = fdopen (outfd, how);
+    }
+  else
+    assert (!"unexpected mode passed to stream_open");
+
+  return fp;
 }
 
 /* Same as stream_open, except always return a non-null value; die on
@@ -3637,7 +3650,7 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
           if (! got_outstat)
             {
               if ((outfile
-                   ? stat (outfile, &outstat)
+                   ? fstat (outfd, &outstat)
                    : fstat (STDOUT_FILENO, &outstat))
                   != 0)
                 break;
@@ -3663,6 +3676,44 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
           files[i].name = tempcopy->name;
           files[i].temp = tempcopy;
         }
+    }
+}
+
+/* Scan the input files to ensure all are accessible.
+   Otherwise exit with a diagnostic.
+
+   Note this will catch common issues with permissions etc.
+   but will fail to notice issues where you can open() but not read(),
+   like when a directory is specified on some systems.
+   Catching these obscure cases could slow down performance in
+   common cases.  */
+
+static void
+check_inputs (char *const *files, size_t nfiles)
+{
+  size_t i;
+  for (i = 0; i < nfiles; i++)
+    {
+      if (STREQ (files[i], "-"))
+        continue;
+
+      if (euidaccess (files[i], R_OK) != 0)
+        die (_("cannot read"), files[i]);
+    }
+}
+
+/* Ensure a specified output file can be created or written to,
+   and cache the returned descriptor in the global OUTFD variable.
+   Otherwise exit with a diagnostic.  */
+
+static void
+check_output (char const *outfile)
+{
+  if (outfile)
+    {
+      outfd = open (outfile, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
+      if (outfd < 0)
+        die (_("open failed"), outfile);
     }
 }
 
@@ -4619,6 +4670,12 @@ main (int argc, char **argv)
          input is not properly sorted.  */
       exit (check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
+
+  /* Check all inputs are accessible, or exit immediately.  */
+  check_inputs (files, nfiles);
+
+  /* Check output is writable, or exit immediately.  */
+  check_output (outfile);
 
   if (mergeonly)
     {
