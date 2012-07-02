@@ -263,9 +263,7 @@ sc_prohibit_emacs__indent_tabs_mode__setting:
 	halt='use of emacs indent-tabs-mode: setting'			\
 	  $(_sc_search_regexp)
 
-# Ensure that each file that contains fail=1 also contains fail=0.
-# Otherwise, setting file=1 in the environment would make tests fail
-# unexpectedly.
+# Ensure that tests don't include a redundant fail=0.
 sc_prohibit_fail_0:
 	@prohibit='\<fail=0\>'						\
 	halt='fail=0 initialization'					\
