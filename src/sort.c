@@ -927,7 +927,7 @@ stream_open (char const *file, char const *how)
   else if (*how == 'w')
     {
       if (file && ftruncate (STDOUT_FILENO, 0) != 0)
-        error (EXIT_FAILURE, errno, _("%s: error truncating"),
+        error (SORT_FAILURE, errno, _("%s: error truncating"),
                quote (file));
       fp = stdout;
     }
