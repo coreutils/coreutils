@@ -357,9 +357,6 @@ static bool unique;
 /* Nonzero if any of the input files are the standard input. */
 static bool have_read_stdin;
 
-/* File descriptor associated with -o.  */
-static int outfd = -1;
-
 /* List of key field comparisons to be tried.  */
 static struct keyfield *keylist;
 
@@ -916,8 +913,6 @@ stream_open (char const *file, char const *how)
 {
   FILE *fp;
 
-  if (!file)
-    return stdout;
   if (*how == 'r')
     {
       if (STREQ (file, "-"))
@@ -931,10 +926,10 @@ stream_open (char const *file, char const *how)
     }
   else if (*how == 'w')
     {
-      assert (outfd != -1);
-      if (ftruncate (outfd, 0) != 0)
-        error (EXIT_FAILURE, errno, _("%s: error truncating"), quote (file));
-      fp = fdopen (outfd, how);
+      if (file && ftruncate (STDOUT_FILENO, 0) != 0)
+        error (EXIT_FAILURE, errno, _("%s: error truncating"),
+               quote (file));
+      fp = stdout;
     }
   else
     assert (!"unexpected mode passed to stream_open");
@@ -981,10 +976,14 @@ xfclose (FILE *fp, char const *file)
 }
 
 static void
-dup2_or_die (int oldfd, int newfd)
+move_fd_or_die (int oldfd, int newfd)
 {
-  if (dup2 (oldfd, newfd) < 0)
-    error (SORT_FAILURE, errno, _("dup2 failed"));
+  if (oldfd != newfd)
+    {
+      if (dup2 (oldfd, newfd) < 0)
+        error (SORT_FAILURE, errno, _("dup2 failed"));
+      close (oldfd);
+    }
 }
 
 /* Fork a child process for piping to and do common cleanup.  The
@@ -1095,10 +1094,8 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
       else if (node->pid == 0)
         {
           close (pipefds[1]);
-          dup2_or_die (tempfd, STDOUT_FILENO);
-          close (tempfd);
-          dup2_or_die (pipefds[0], STDIN_FILENO);
-          close (pipefds[0]);
+          move_fd_or_die (tempfd, STDOUT_FILENO);
+          move_fd_or_die (pipefds[0], STDIN_FILENO);
 
           if (execlp (compress_program, compress_program, (char *) NULL) < 0)
             error (SORT_FAILURE, errno, _("couldn't execute %s"),
@@ -1155,10 +1152,8 @@ open_temp (struct tempnode *temp)
 
     case 0:
       close (pipefds[0]);
-      dup2_or_die (tempfd, STDIN_FILENO);
-      close (tempfd);
-      dup2_or_die (pipefds[1], STDOUT_FILENO);
-      close (pipefds[1]);
+      move_fd_or_die (tempfd, STDIN_FILENO);
+      move_fd_or_die (pipefds[1], STDOUT_FILENO);
 
       execlp (compress_program, compress_program, "-d", (char *) NULL);
       error (SORT_FAILURE, errno, _("couldn't execute %s -d"),
@@ -3649,10 +3644,7 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
         {
           if (! got_outstat)
             {
-              if ((outfile
-                   ? fstat (outfd, &outstat)
-                   : fstat (STDOUT_FILENO, &outstat))
-                  != 0)
+              if (fstat (STDOUT_FILENO, &outstat) != 0)
                 break;
               got_outstat = true;
             }
@@ -3703,17 +3695,18 @@ check_inputs (char *const *files, size_t nfiles)
 }
 
 /* Ensure a specified output file can be created or written to,
-   and cache the returned descriptor in the global OUTFD variable.
-   Otherwise exit with a diagnostic.  */
+   and point stdout to it.  Do not truncate the file.
+   Exit with a diagnostic on failure.  */
 
 static void
 check_output (char const *outfile)
 {
   if (outfile)
     {
-      outfd = open (outfile, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
+      int outfd = open (outfile, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
       if (outfd < 0)
         die (_("open failed"), outfile);
+      move_fd_or_die (outfd, STDOUT_FILENO);
     }
 }
 
