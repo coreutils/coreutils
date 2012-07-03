@@ -319,6 +319,16 @@ sc_prohibit_test_backticks:
 	halt='use $$(...), not `...` in tests/'				\
 	  $(_sc_search_regexp)
 
+# Programs like sort, ls, expr use PROG_FAILURE in place of EXIT_FAILURE.
+# Others, use the EXIT_CANCELED, EXIT_ENOENT, etc. macros defined in system.h.
+# In those programs, ensure that EXIT_FAILURE is not used by mistake.
+sc_some_programs_must_avoid_exit_failure:
+	@grep -nw EXIT_FAILURE						\
+	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' src)		\
+	  | grep -vE '= EXIT_FAILURE|exit \(.* \?' | grep .		\
+	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
+		  1>&2; exit 1; } || :
+
 # Exempt the contents of any usage function from the following.
 _continued_string_col_1 = \
 s/^usage .*?\n}//ms;/\\\n\w/ and print ("$$ARGV\n"),$$e=1;END{$$e||=0;exit $$e}
