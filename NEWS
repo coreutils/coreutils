@@ -8,6 +8,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   processes will not intersperse their output.
   [the bug dates back to the initial implementation]
 
+  date -d "$(printf '\xb0')" would print 00:00:00 with today's date
+  rather than diagnosing the invalid input.  Now it reports this:
+  date: invalid date '\260'
+  [This bug was present in "the beginning".]
+
   head --lines=-N (-n-N) now resets the read pointer of a seekable input file.
   This means that "head -n-3" no longer consumes all of its input, and lines
   not output by head may be processed by other programs.  For example, this

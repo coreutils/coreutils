@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2012-04-26.13; # UTC
+scriptversion=2012-07-03.20; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -130,7 +130,7 @@ extract_package_name='
      p
   }
 '
-package=`sed -n "$extract_package_name" configure.ac` || exit
+package=$(sed -n "$extract_package_name" configure.ac) || exit
 gnulib_name=lib$package
 
 build_aux=build-aux
@@ -215,7 +215,7 @@ find_tool ()
   eval "export $find_tool_envvar"
 }
 
-# Find sha1sum, named gsha1sum on MacPorts, and shasum on MacOS 10.6.
+# Find sha1sum, named gsha1sum on MacPorts, and shasum on Mac OS X 10.6.
 find_tool SHA1SUM sha1sum gsha1sum shasum
 
 # Override the default configuration, if necessary.
@@ -230,7 +230,6 @@ esac
 test -z "${gnulib_extra_files}" && \
   gnulib_extra_files="
         $build_aux/install-sh
-        $build_aux/missing
         $build_aux/mdate-sh
         $build_aux/texinfo.tex
         $build_aux/depcomp
@@ -256,7 +255,7 @@ do
     usage
     exit;;
   --gnulib-srcdir=*)
-    GNULIB_SRCDIR=`expr "X$option" : 'X--gnulib-srcdir=\(.*\)'`;;
+    GNULIB_SRCDIR=${option#--gnulib-srcdir=};;
   --skip-po)
     SKIP_PO=t;;
   --force)
@@ -307,7 +306,7 @@ insert_sorted_if_absent() {
   file=$1
   str=$2
   test -f $file || touch $file
-  echo "$str" | sort_patterns - $file | cmp - $file > /dev/null \
+  echo "$str" | sort_patterns - $file | cmp -s - $file > /dev/null \
     || { echo "$str" | sort_patterns - $file > $file.bak \
       && mv $file.bak $file; } \
     || exit 1
@@ -323,7 +322,7 @@ insert_vc_ignore() {
     # A .gitignore entry that does not start with '/' applies
     # recursively to subdirectories, so prepend '/' to every
     # .gitignore entry.
-    pattern=`echo "$pattern" | sed s,^,/,`;;
+    pattern=$(echo "$pattern" | sed s,^,/,);;
   esac
   insert_sorted_if_absent "$vc_ignore_file" "$pattern"
 }
@@ -427,7 +426,7 @@ check_versions() {
       $use_git || continue
     fi
     # Honor $APP variables ($TAR, $AUTOCONF, etc.)
-    appvar=`echo $app | LC_ALL=C tr '[a-z]-' '[A-Z]_'`
+    appvar=$(echo $app | LC_ALL=C tr '[a-z]-' '[A-Z]_')
     test "$appvar" = TAR && appvar=AMTAR
     case $appvar in
         GZIP) ;; # Do not use $GZIP:  it contains gzip options.
@@ -442,7 +441,7 @@ check_versions() {
     # "GNU automake-ng") when asked their version.
     case $app in
       automake-ng|aclocal-ng)
-        app=`echo "$app" | sed 's/-ng$//'`
+        app=${app%-ng}
         ($app --version | grep '(GNU automake-ng)') >/dev/null 2>&1 || {
           echo "$me: Error: '$app' not found or not from Automake-NG" >&2
           ret=1
@@ -512,10 +511,8 @@ esac
 
 # When we can deduce that gnulib-tool will require patch,
 # and when patch is not already listed as a prerequisite, add it, too.
-if test ! -d "$local_gl_dir" \
-    || find "$local_gl_dir" -name '*.diff' -exec false {} +; then
-  :
-else
+if test -d "$local_gl_dir" \
+    && ! find "$local_gl_dir" -name '*.diff' -exec false {} +; then
   case $buildreq in
     *patch*) ;;
     *) buildreq="patch -
@@ -559,7 +556,7 @@ git_modules_config () {
   test -f .gitmodules && git config --file .gitmodules "$@"
 }
 
-gnulib_path=`git_modules_config submodule.gnulib.path`
+gnulib_path=$(git_modules_config submodule.gnulib.path)
 test -z "$gnulib_path" && gnulib_path=gnulib
 
 # Get gnulib files.
@@ -632,10 +629,10 @@ download_po_files() {
   subdir=$1
   domain=$2
   echo "$me: getting translations into $subdir for $domain..."
-  cmd=`printf "$po_download_command_format" "$domain" "$subdir"`
+  cmd=$(printf "$po_download_command_format" "$domain" "$subdir")
   eval "$cmd" && return
   # Fallback to HTTP.
-  cmd=`printf "$po_download_command_format2" "$subdir" "$domain"`
+  cmd=$(printf "$po_download_command_format2" "$subdir" "$domain")
   eval "$cmd"
 }
 
@@ -658,7 +655,7 @@ update_po_files() {
     && ls "$ref_po_dir"/*.po 2>/dev/null |
       sed 's|.*/||; s|\.po$||' > "$po_dir/LINGUAS" || return
 
-  langs=`cd $ref_po_dir && echo *.po|sed 's/\.po//g'`
+  langs=$(cd $ref_po_dir && echo *.po | sed 's/\.po//g')
   test "$langs" = '*' && langs=x
   for po in $langs; do
     case $po in x) continue;; esac
@@ -695,18 +692,18 @@ symlink_to_dir()
 
     # If the destination directory doesn't exist, create it.
     # This is required at least for "lib/uniwidth/cjk.h".
-    dst_dir=`dirname "$dst"`
+    dst_dir=$(dirname "$dst")
     if ! test -d "$dst_dir"; then
       mkdir -p "$dst_dir"
 
       # If we've just created a directory like lib/uniwidth,
       # tell version control system(s) it's ignorable.
       # FIXME: for now, this does only one level
-      parent=`dirname "$dst_dir"`
+      parent=$(dirname "$dst_dir")
       for dot_ig in x $vc_ignore; do
         test $dot_ig = x && continue
         ig=$parent/$dot_ig
-        insert_vc_ignore $ig `echo "$dst_dir"|sed 's,.*/,,'`
+        insert_vc_ignore $ig "${dst_dir##*/}"
       done
     fi
 
@@ -730,10 +727,10 @@ symlink_to_dir()
       # so that broken tools aren't confused into skipping needed builds.  See
       # <http://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
       test -h "$dst" &&
-      src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
-      dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
+      src_ls=$(ls -diL "$src" 2>/dev/null) && set $src_ls && src_i=$1 &&
+      dst_ls=$(ls -diL "$dst" 2>/dev/null) && set $dst_ls && dst_i=$1 &&
       test "$src_i" = "$dst_i" &&
-      both_ls=`ls -dt "$src" "$dst"` &&
+      both_ls=$(ls -dt "$src" "$dst") &&
       test "X$both_ls" = "X$dst$nl$src" || {
         dot_dots=
         case $src in
@@ -756,6 +753,22 @@ symlink_to_dir()
   }
 }
 
+version_controlled_file() {
+  parent=$1
+  file=$2
+  if test -d .git; then
+    git rm -n "$file" > /dev/null 2>&1
+  elif test -d .svn; then
+    svn log -r HEAD "$file" > /dev/null 2>&1
+  elif test -d CVS; then
+    grep -F "/${file##*/}/" "$parent/CVS/Entries" 2>/dev/null |
+             grep '^/[^/]*/[0-9]' > /dev/null
+  else
+    echo "$me: no version control for $file?" >&2
+    false
+  fi
+}
+
 # NOTE: we have to be careful to run both autopoint and libtoolize
 # before gnulib-tool, since gnulib-tool is likely to provide newer
 # versions of files "installed" by these two programs.
@@ -768,43 +781,54 @@ with_gettext=yes
 grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
     with_gettext=no
 
-if test $with_gettext = yes; then
-  # Released autopoint has the tendency to install macros that have been
-  # obsoleted in current gnulib, so run this before gnulib-tool.
-  echo "$0: $AUTOPOINT --force"
-  $AUTOPOINT --force || exit
-fi
+if test $with_gettext = yes || test $use_libtool = 1; then
 
-# Autoreconf runs aclocal before libtoolize, which causes spurious
-# warnings if the initial aclocal is confused by the libtoolized
-# (or worse out-of-date) macro directory.
-# libtoolize 1.9b added the --install option; but we support back
-# to libtoolize 1.5.22, where the install action was default.
-if test $use_libtool = 1; then
-  install=
-  case $($LIBTOOLIZE --help) in
-    *--install*) install=--install ;;
-  esac
-  echo "running: $LIBTOOLIZE $install --copy"
-  $LIBTOOLIZE $install --copy
-fi
+  tempbase=.bootstrap$$
+  trap "rm -f $tempbase.0 $tempbase.1" 1 2 13 15
 
-version_controlled_file() {
-  dir=$1
-  file=$2
-  found=no
-  if test -d CVS; then
-    grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
-             grep '^/[^/]*/[0-9]' > /dev/null && found=yes
-  elif test -d .git; then
-    git rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
-  elif test -d .svn; then
-    svn log -r HEAD "$dir/$file" > /dev/null 2>&1 && found=yes
-  else
-    echo "$me: no version control for $dir/$file?" >&2
+  > $tempbase.0 > $tempbase.1 &&
+  find . ! -type d -print | sort > $tempbase.0 || exit
+
+  if test $with_gettext = yes; then
+    # Released autopoint has the tendency to install macros that have been
+    # obsoleted in current gnulib, so run this before gnulib-tool.
+    echo "$0: $AUTOPOINT --force"
+    $AUTOPOINT --force || exit
   fi
-  test $found = yes
-}
+
+  # Autoreconf runs aclocal before libtoolize, which causes spurious
+  # warnings if the initial aclocal is confused by the libtoolized
+  # (or worse out-of-date) macro directory.
+  # libtoolize 1.9b added the --install option; but we support back
+  # to libtoolize 1.5.22, where the install action was default.
+  if test $use_libtool = 1; then
+    install=
+    case $($LIBTOOLIZE --help) in
+      *--install*) install=--install ;;
+    esac
+    echo "running: $LIBTOOLIZE $install --copy"
+    $LIBTOOLIZE $install --copy
+  fi
+
+  find . ! -type d -print | sort >$tempbase.1
+  old_IFS=$IFS
+  IFS=$nl
+  for file in $(comm -13 $tempbase.0 $tempbase.1); do
+    IFS=$old_IFS
+    parent=${file%/*}
+    version_controlled_file "$parent" "$file" || {
+      for dot_ig in x $vc_ignore; do
+        test $dot_ig = x && continue
+        ig=$parent/$dot_ig
+        insert_vc_ignore "$ig" "${file##*/}"
+      done
+    }
+  done
+  IFS=$old_IFS
+
+  rm -f $tempbase.0 $tempbase.1
+  trap - 1 2 13 15
+fi
 
 # Import from gnulib.
 
@@ -830,7 +854,8 @@ echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
 
 for file in $gnulib_files; do
-  symlink_to_dir "$GNULIB_SRCDIR" $file || exit
+  symlink_to_dir "$GNULIB_SRCDIR" $file \
+    || { echo "$0: failed to symlink $file" 1>&2; exit 1; }
 done
 
 bootstrap_post_import_hook \
@@ -868,10 +893,11 @@ AUTOPOINT=true LIBTOOLIZE=true \
 for file in $gnulib_extra_files; do
   case $file in
   */INSTALL) dst=INSTALL;;
-  build-aux/*) dst=$build_aux/`expr "$file" : 'build-aux/\(.*\)'`;;
+  build-aux/*) dst=$build_aux/${file#build-aux/};;
   *) dst=$file;;
   esac
-  symlink_to_dir "$GNULIB_SRCDIR" $file $dst || exit
+  symlink_to_dir "$GNULIB_SRCDIR" $file $dst \
+    || { echo "$0: failed to symlink $file" 1>&2; exit 1; }
 done
 
 if test $with_gettext = yes; then
