@@ -585,7 +585,7 @@ symbolic link to a directory.  @xref{Target directory}.
 @opindex --null
 @cindex output @sc{nul}-byte-terminated lines
 Output a zero byte (@acronym{ASCII} @sc{nul}) at the end of each line,
-rather than a newline. This option enables other programs to parse the
+rather than a newline.  This option enables other programs to parse the
 output of @command{\cmd\} even when that output would contain data
 with embedded newlines.
 @end macro
@@ -1046,7 +1046,7 @@ floating point numbers such as @code{-0x.ep-3}, which stands for
 A @var{signal} may be a signal name like @samp{HUP}, or a signal
 number like @samp{1}, or an exit status of a process terminated by the
 signal.  A signal name can be given in canonical form or prefixed by
-@samp{SIG}.  The case of the letters is ignored. The following signal names
+@samp{SIG}@.  The case of the letters is ignored.  The following signal names
 and numbers are supported on all @acronym{POSIX} compliant systems:
 
 @table @samp
@@ -1141,10 +1141,10 @@ Since the @var{owner} and @var{group} arguments to @command{chown} and
 apparent ambiguity.
 What if a user or group @emph{name} is a string of digits?
 @footnote{Using a number as a user name is common in some environments.}
-Should the command interpret it as a user name or as an ID?
+Should the command interpret it as a user name or as an ID@?
 @acronym{POSIX} requires that @command{chown} and @command{chgrp}
 first attempt to resolve the specified string as a name, and
-only once that fails, then try to interpret it as an ID.
+only once that fails, then try to interpret it as an ID@.
 This is troublesome when you want to specify a numeric ID, say 42,
 and it must work even in a pathological situation where
 @samp{42} is a user name that maps to some other user ID, say 1000.
@@ -2482,7 +2482,7 @@ by @option{-o} option.  With multicolumn output priority is given to
 The TAB width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
 fixed number of spaces is always printed in the place of the
-@var{number-separator} TAB.  The tabification depends upon the output
+@var{number-separator} TAB@.  The tabification depends upon the output
 position.
 
 @item -N @var{line_number}
@@ -2583,7 +2583,7 @@ alignment is always used.  The separator options @option{-S} or @option{-s}
 don't affect the @option{-W} option.  Default is 72 characters.  Without
 @option{-W @var{page_width}} and without any of the column options NO line
 truncation is used (defined to keep downward compatibility and to meet
-most frequent tasks).  That's equivalent to @option{-W 72 -J}.  The header
+most frequent tasks).  That's equivalent to @option{-W 72 -J}@.  The header
 line is never truncated.
 
 @end table
@@ -3110,7 +3110,7 @@ want to specify @option{-a} to allow suffixes beyond @samp{99}.
 
 @itemx --additional-suffix=@var{suffix}
 @opindex --additional-suffix
-Append an additional @var{suffix} to output file names. @var{suffix}
+Append an additional @var{suffix} to output file names.  @var{suffix}
 must not contain slash.
 
 @item -e
@@ -3892,7 +3892,7 @@ sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
 use a non-@acronym{POSIX} locale (e.g., by setting @env{LC_ALL}
 to @samp{en_US}), then @command{sort} may produce output that is sorted
 differently than you're accustomed to.  In that case, set the @env{LC_ALL}
-environment variable to @samp{C}.  Note that setting only @env{LC_COLLATE}
+environment variable to @samp{C}@.  Note that setting only @env{LC_COLLATE}
 has two problems.  First, it is ineffective if @env{LC_ALL} is also set.
 Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
 @env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
@@ -3966,8 +3966,8 @@ Fold lowercase characters into the equivalent uppercase characters when
 comparing so that, for example, @samp{b} and @samp{B} sort as equal.
 The @env{LC_CTYPE} locale determines character types.
 When used with @option{--unique} those lower case equivalent lines are
-thrown away. (There is currently no way to throw away the upper case
-equivalent instead. (Any @option{--reverse} given would only affect
+thrown away.  (There is currently no way to throw away the upper case
+equivalent instead.  (Any @option{--reverse} given would only affect
 the final result, after the throwing away.))
 
 @item -g
@@ -4044,7 +4044,7 @@ This option has no effect if the stronger @option{--dictionary-order}
 @vindex LC_TIME
 An initial string, consisting of any amount of blanks, followed
 by a month name abbreviation, is folded to UPPER case and
-compared in the order @samp{JAN} < @samp{FEB} < @dots{} < @samp{DEC}.
+compared in the order @samp{JAN} < @samp{FEB} < @dots{} < @samp{DEC}@.
 Invalid names compare low to valid names.  The @env{LC_TIME} locale
 category determines the month spellings.
 By default a blank is a space or a tab, but the @env{LC_CTYPE} locale
@@ -4171,7 +4171,7 @@ a temporary file, which is then used as an input in a subsequent merge.
 
 A large value of @var{nmerge} may improve merge performance and decrease
 temporary storage utilization at the expense of increased memory usage
-and I/O.  Conversely a small value of @var{nmerge} may reduce memory
+and I/O@.  Conversely a small value of @var{nmerge} may reduce memory
 requirements and I/O at the expense of temporary storage consumption and
 merge performance.
 
@@ -4195,7 +4195,7 @@ silently uses a smaller value.
 Write output to @var{output-file} instead of standard output.
 Normally, @command{sort} reads all input before opening
 @var{output-file}, so you can safely sort a file in place by using
-commands like @code{sort -o F F} and @code{cat F | sort -o F}.
+commands like @code{sort -o F F} and @code{cat F | sort -o F}@.
 However, @command{sort} with @option{--merge} (@option{-m}) can open
 the output file before reading all input, so a command like @code{cat
 F | sort -m -o F - G} is not safe as @command{sort} might start
@@ -4203,7 +4203,7 @@ writing @file{F} before @command{cat} is done reading it.
 
 @vindex POSIXLY_CORRECT
 On newer systems, @option{-o} cannot appear after an input file if
-@env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o F}.  Portable
+@env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o F}@.  Portable
 scripts should specify @option{-o @var{output-file}} before any input
 files.
 
@@ -4235,7 +4235,7 @@ Use a main-memory sort buffer of the given @var{size}.  By default,
 @var{size} to be interpreted as a percentage of physical memory.
 Appending @samp{K} multiplies @var{size} by 1024 (the default),
 @samp{M} by 1,048,576, @samp{G} by 1,073,741,824, and so on for
-@samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.  Appending
+@samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}@.  Appending
 @samp{b} causes @var{size} to be interpreted as a byte count, with no
 multiplication.
 
@@ -4315,7 +4315,7 @@ uniq} inspects the entire line.  @xref{uniq invocation}.
 @opindex --zero-terminated
 @cindex process zero-terminated items
 Delimit items with a zero byte rather than a newline (@acronym{ASCII} @sc{lf}).
-I.E. treat input as items separated by @acronym{ASCII} @sc{nul}
+I.e., treat input as items separated by @acronym{ASCII} @sc{nul}
 and terminate output items with @acronym{ASCII} @sc{nul}.
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
@@ -5155,7 +5155,7 @@ output line.
 
 Select the maximum output width of each final line.  If references are
 used, they are included or excluded from the maximum output width
-depending on the value of option @option{-R}.  If this option is not
+depending on the value of option @option{-R}@.  If this option is not
 selected, that is, when references are output before the left context,
 the maximum output width takes into account the maximum length of all
 references.  If this option is selected, that is, when references are
@@ -5194,7 +5194,7 @@ disabled.
 This option will request that any truncation in the output be reported
 using the string @var{string}.  Most output fields theoretically extend
 towards the beginning or the end of the current line, or current
-sentence, as selected with option @option{-S}.  But there is a maximum
+sentence, as selected with option @option{-S}@.  But there is a maximum
 allowed output line width, changeable through option @option{-w}, which is
 further divided into space for various output fields.  When a field has
 to be truncated because it cannot extend beyond the beginning or the end of
@@ -5321,8 +5321,9 @@ line width computations.
 @item
 All 256 bytes, even @acronym{ASCII} @sc{nul} bytes, are always read and
 processed from input file with no adverse effect, even if @sc{gnu} extensions
-are disabled. However, System V @command{ptx} does not accept 8-bit characters,
-a few control characters are rejected, and the tilde @kbd{~} is also rejected.
+are disabled.  However, System V @command{ptx} does not accept 8-bit
+characters, a few control characters are rejected, and the tilde
+@kbd{~} is also rejected.
 
 @item
 Input line length is only limited by available memory, even if @sc{gnu}
@@ -5792,12 +5793,12 @@ Do not check that both input files are in sorted order.  This is the default.
 @item -e @var{string}
 @opindex -e
 Replace those output fields that are missing in the input with @var{string}.
-I.E. missing fields specified with the @option{-12jo} options.
+I.e., missing fields specified with the @option{-12jo} options.
 
 @item --header
 @opindex --header
-Treat the first line of each input file as a header line. The header lines will
-be joined and printed as the first output line.  If @option{-o} is used to
+Treat the first line of each input file as a header line.  The header lines
+will be joined and printed as the first output line.  If @option{-o} is used to
 specify output format, the header line will be printed according to the
 specified format.  The header lines will not be checked for ordering even if
 @option{--check-order} is specified.  Also if the header lines from each file
@@ -6003,7 +6004,7 @@ as well as digits.
 Many historically common and even accepted uses of ranges are not
 portable.  For example, on @acronym{EBCDIC} hosts using the @samp{A-Z}
 range will not do what most would expect because @samp{A} through @samp{Z}
-are not contiguous as they are in @acronym{ASCII}.
+are not contiguous as they are in @acronym{ASCII}@.
 If you can rely on a @acronym{POSIX} compliant version of @command{tr}, then
 the best way to work around this is to use character classes (see below).
 Otherwise, it is most portable (and most ugly) to enumerate the members
@@ -6687,7 +6688,7 @@ $ ls -blog --dired 'a b'
 If you use a quoting style that adds quote marks
 (e.g., @option{--quoting-style=c}), then the offsets include the quote marks.
 So beware that the user may select the quoting style via the environment
-variable @env{QUOTING_STYLE}.  Hence, applications using @option{--dired}
+variable @env{QUOTING_STYLE}@.  Hence, applications using @option{--dired}
 should either specify an explicit @option{--quoting-style=literal} option
 (aka @option{-N} or @option{--literal}) on the command line, or else be
 prepared to parse the escaped names.
@@ -7021,7 +7022,7 @@ which has some caveats worth noting.
 @itemize @bullet
 @item @env{LC_COLLATE} is ignored, which means @samp{ls -v} and @samp{sort -V}
 will sort non-numeric prefixes as if the @env{LC_COLLATE} locale category
-was set to @samp{C}.
+was set to @samp{C}@.
 @item Some suffixes will not be matched by the regular
 expression mentioned above.  Consequently these examples may
 not sort as you expect:
@@ -7431,7 +7432,7 @@ this"} in the default C locale.  This looks nicer on many displays.
 @end table
 
 You can specify the default value of the @option{--quoting-style} option
-with the environment variable @env{QUOTING_STYLE}.  If that environment
+with the environment variable @env{QUOTING_STYLE}@.  If that environment
 variable is not set, the default value is @samp{literal}, but this
 default may change to @samp{shell} in a future version of this package.
 
@@ -7616,7 +7617,7 @@ link only when it refers to an existing regular file.
 However, when copying to a dangling symbolic link, @command{cp}
 refuses by default, and fails with a diagnostic, since the operation
 is inherently dangerous.  This behavior is contrary to historical
-practice and to @acronym{POSIX}.
+practice and to @acronym{POSIX}@.
 Set @env{POSIXLY_CORRECT} to make @command{cp} attempt to create
 the target of a dangling destination symlink, in spite of the possible risk.
 Also, when an option like
@@ -7737,7 +7738,7 @@ via recursive traversal.
 @opindex -i
 @opindex --interactive
 When copying a file other than a directory, prompt whether to
-overwrite an existing destination file. The @option{-i} option overrides
+overwrite an existing destination file.  The @option{-i} option overrides
 a previous @option{-n} option.
 
 @item -l
@@ -7759,8 +7760,8 @@ a regular file in the destination tree.
 @itemx --no-clobber
 @opindex -n
 @opindex --no-clobber
-Do not overwrite an existing file. The @option{-n} option overrides a previous
-@option{-i} option. This option is mutually exclusive with @option{-b} or
+Do not overwrite an existing file.  The @option{-n} option overrides a previous
+@option{-i} option.  This option is mutually exclusive with @option{-b} or
 @option{--backup} option.
 
 @item -P
@@ -7893,7 +7894,7 @@ implementations that dereference symbolic links by default.
 @cindex clone
 @cindex copy on write
 Perform a lightweight, copy-on-write (COW) copy, if supported by the
-file system. Once it has succeeded, beware that the source and destination
+file system.  Once it has succeeded, beware that the source and destination
 files share the same disk data blocks as long as they remain unmodified.
 Thus, if a disk I/O error affects data blocks of one of the files,
 the other suffers the same fate.
@@ -8120,18 +8121,18 @@ Conversions:
 @item ascii
 @opindex ascii@r{, converting to}
 Convert @acronym{EBCDIC} to @acronym{ASCII},
-using the conversion table specified by @acronym{POSIX}.
+using the conversion table specified by @acronym{POSIX}@.
 This provides a 1:1 translation for all 256 bytes.
 
 @item ebcdic
 @opindex ebcdic@r{, converting to}
-Convert @acronym{ASCII} to @acronym{EBCDIC}.
+Convert @acronym{ASCII} to @acronym{EBCDIC}@.
 This is the inverse of the @samp{ascii} conversion.
 
 @item ibm
 @opindex alternate ebcdic@r{, converting to}
 Convert @acronym{ASCII} to alternate @acronym{EBCDIC},
-using the alternate conversion table specified by @acronym{POSIX}.
+using the alternate conversion table specified by @acronym{POSIX}@.
 This is not a 1:1 translation, but reflects common historical practice
 for @samp{~}, @samp{[}, and @samp{]}.
 
@@ -8351,13 +8352,13 @@ Fail if the file has multiple hard links.
 @item binary
 @opindex binary
 @cindex binary I/O
-Use binary I/O.  This option has an effect only on nonstandard
+Use binary I/O@.  This option has an effect only on nonstandard
 platforms that distinguish binary from text I/O.
 
 @item text
 @opindex text
 @cindex text I/O
-Use text I/O.  Like @samp{binary}, this option has no effect on
+Use text I/O@.  Like @samp{binary}, this option has no effect on
 standard platforms.
 
 @item fullblock
@@ -8695,7 +8696,7 @@ when it might be a symlink to a directory.
 Otherwise, @command{mv} may do something very surprising, since
 its behavior depends on the underlying rename system call.
 On a system with a modern Linux-based kernel, it fails with
-@code{errno=ENOTDIR}.
+@code{errno=ENOTDIR}@.
 However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
 renames not the symlink but rather the directory referenced by the symlink.
 @xref{Trailing slashes}.
@@ -8976,7 +8977,7 @@ assumption.  Exceptions include:
 @item
 Log-structured or journaled file systems, such as those supplied with
 AIX and Solaris, and JFS, ReiserFS, XFS, Ext3 (in @code{data=journal} mode),
-BFS, NTFS, etc.@: when they are configured to journal @emph{data}.
+BFS, NTFS, etc., when they are configured to journal @emph{data}.
 
 @item
 File systems that write redundant data and carry on even if some writes
@@ -8995,7 +8996,7 @@ Compressed file systems.
 
 In the particular case of ext3 file systems, the above disclaimer applies (and
 @command{shred} is thus of limited effectiveness) only in @code{data=journal}
-mode, which journals file data in addition to just metadata. In both
+mode, which journals file data in addition to just metadata.  In both
 the @code{data=ordered} (default) and @code{data=writeback} modes,
 @command{shred} works as usual.  Ext3 journaling modes can be changed
 by adding the @code{data=something} option to the mount options for a
@@ -9048,8 +9049,8 @@ Override file permissions if necessary to allow overwriting.
 @opindex --iterations=@var{number}
 @cindex iterations, selecting the number of
 By default, @command{shred} uses @value{SHRED_DEFAULT_PASSES} passes of
-overwrite. You can reduce this to save time, or increase it if you think it's
-appropriate. After 25 passes all of the internal overwrite patterns will have
+overwrite.  You can reduce this to save time, or increase it if you think it's
+appropriate.  After 25 passes all of the internal overwrite patterns will have
 been used at least once.
 
 @item --random-source=@var{file}
@@ -10442,7 +10443,7 @@ time zones, @samp{am} and @samp{pm}, @samp{yesterday}, etc.  For
 example, @option{--date="2004-02-27 14:19:13.489392193 +0530"}
 specifies the instant of time that is 489,392,193 nanoseconds after
 February 27, 2004 at 2:19:13 PM in a time zone that is 5 hours and 30
-minutes east of @acronym{UTC}.  @xref{Date input formats}.
+minutes east of @acronym{UTC}@.  @xref{Date input formats}.
 File systems that do not support high-resolution time stamps
 silently ignore any excess precision here.
 
@@ -11139,7 +11140,7 @@ precision preceded by a period to specify the number of digits to
 print after the decimal point.  For example, @samp{%.3X} outputs the
 last access time to millisecond precision.  If a period is given but no
 precision, @command{stat} uses 9 digits, so @samp{%.X} is equivalent to
-@samp{%.9X}.  When discarding excess precision, time stamps are truncated
+@samp{%.9X}@.  When discarding excess precision, time stamps are truncated
 toward minus infinity.
 
 @example
@@ -11236,7 +11237,7 @@ Any arguments are ignored, except for a lone @option{--help} or
 @cindex truncating, file sizes
 
 @command{truncate} shrinks or extends the size of each @var{file} to the
-specified size. Synopsis:
+specified size.  Synopsis:
 
 @example
 truncate @var{option}@dots{} @var{file}@dots{}
@@ -13160,7 +13161,7 @@ Disable modem control signals.  May be negated.
 @cindex hardware flow control
 @cindex flow control, hardware
 @cindex RTS/CTS flow control
-Enable RTS/CTS flow control.  Non-@acronym{POSIX}.  May be negated.
+Enable RTS/CTS flow control.  Non-@acronym{POSIX}@.  May be negated.
 @end table
 
 
@@ -13240,20 +13241,20 @@ empty again.  May be negated.
 @item iuclc
 @opindex iuclc
 @cindex uppercase, translating to lowercase
-Translate uppercase characters to lowercase.  Non-@acronym{POSIX}.  May be
-negated. Note ilcuc is not implemented, as one would not be able to issue
+Translate uppercase characters to lowercase.  Non-@acronym{POSIX}@.  May be
+negated.  Note ilcuc is not implemented, as one would not be able to issue
 almost any (lowercase) Unix command, after invoking it.
 
 @item ixany
 @opindex ixany
 Allow any character to restart output (only the start character
-if negated).  Non-@acronym{POSIX}.  May be negated.
+if negated).  Non-@acronym{POSIX}@.  May be negated.
 
 @item imaxbel
 @opindex imaxbel
 @cindex beeping at input buffer full
 Enable beeping and not flushing input buffer if a character arrives
-when the input buffer is full.  Non-@acronym{POSIX}.  May be negated.
+when the input buffer is full.  Non-@acronym{POSIX}@.  May be negated.
 @end table
 
 
@@ -13271,41 +13272,41 @@ Postprocess output.  May be negated.
 @item olcuc
 @opindex olcuc
 @cindex lowercase, translating to output
-Translate lowercase characters to uppercase.  Non-@acronym{POSIX}.  May be
-negated. (Note ouclc is not currently implemented.)
+Translate lowercase characters to uppercase.  Non-@acronym{POSIX}@.  May be
+negated.  (Note ouclc is not currently implemented.)
 
 @item ocrnl
 @opindex ocrnl
 @cindex return, translating to newline
-Translate carriage return to newline.  Non-@acronym{POSIX}.  May be negated.
+Translate carriage return to newline.  Non-@acronym{POSIX}@.  May be negated.
 
 @item onlcr
 @opindex onlcr
 @cindex newline, translating to crlf
-Translate newline to carriage return-newline.  Non-@acronym{POSIX}.  May be
+Translate newline to carriage return-newline.  Non-@acronym{POSIX}@.  May be
 negated.
 
 @item onocr
 @opindex onocr
-Do not print carriage returns in the first column.  Non-@acronym{POSIX}.
+Do not print carriage returns in the first column.  Non-@acronym{POSIX}@.
 May be negated.
 
 @item onlret
 @opindex onlret
-Newline performs a carriage return.  Non-@acronym{POSIX}.  May be negated.
+Newline performs a carriage return.  Non-@acronym{POSIX}@.  May be negated.
 
 @item ofill
 @opindex ofill
 @cindex pad instead of timing for delaying
 Use fill (padding) characters instead of timing for delays.
-Non-@acronym{POSIX}.
+Non-@acronym{POSIX}@.
 May be negated.
 
 @item ofdel
 @opindex ofdel
 @cindex pad character
 Use @acronym{ASCII} @sc{del} characters for fill instead of
-@acronym{ASCII} @sc{nul} characters.  Non-@acronym{POSIX}.
+@acronym{ASCII} @sc{nul} characters.  Non-@acronym{POSIX}@.
 May be negated.
 
 @item nl1
@@ -13396,12 +13397,12 @@ characters.  May be negated.
 @cindex case translation
 Enable input and output of uppercase characters by preceding their
 lowercase equivalents with @samp{\}, when @code{icanon} is set.
-Non-@acronym{POSIX}.  May be negated.
+Non-@acronym{POSIX}@.  May be negated.
 
 @item tostop
 @opindex tostop
 @cindex background jobs, stopping at terminal write
-Stop background jobs that try to write to the terminal.  Non-@acronym{POSIX}.
+Stop background jobs that try to write to the terminal.  Non-@acronym{POSIX}@.
 May be negated.
 
 @item echoprt
@@ -13409,7 +13410,7 @@ May be negated.
 @opindex echoprt
 @opindex prterase
 Echo erased characters backward, between @samp{\} and @samp{/}.
-Non-@acronym{POSIX}.  May be negated.
+Non-@acronym{POSIX}@.  May be negated.
 
 @item echoctl
 @itemx ctlecho
@@ -13418,7 +13419,7 @@ Non-@acronym{POSIX}.  May be negated.
 @cindex control characters, using @samp{^@var{c}}
 @cindex hat notation for control characters
 Echo control characters in hat notation (@samp{^@var{c}}) instead
-of literally.  Non-@acronym{POSIX}.  May be negated.
+of literally.  Non-@acronym{POSIX}@.  May be negated.
 
 @item echoke
 @itemx crtkill
@@ -13427,7 +13428,7 @@ of literally.  Non-@acronym{POSIX}.  May be negated.
 Echo the @code{kill} special character by erasing each character on
 the line as indicated by the @code{echoprt} and @code{echoe} settings,
 instead of by the @code{echoctl} and @code{echok} settings.
-Non-@acronym{POSIX}.
+Non-@acronym{POSIX}@.
 May be negated.
 @end table
 
@@ -13515,18 +13516,18 @@ If negated, same as @code{parenb istrip opost cs7}.
 
 @item decctlq
 @opindex decctlq
-Same as @option{-ixany}.  Non-@acronym{POSIX}.  May be negated.
+Same as @option{-ixany}.  Non-@acronym{POSIX}@.  May be negated.
 
 @item tabs
 @opindex tabs
-Same as @code{tab0}.  Non-@acronym{POSIX}.  May be negated.  If negated, same
+Same as @code{tab0}.  Non-@acronym{POSIX}@.  May be negated.  If negated, same
 as @code{tab3}.
 
 @item lcase
 @itemx LCASE
 @opindex lcase
 @opindex LCASE
-Same as @code{xcase iuclc olcuc}.  Non-@acronym{POSIX}.  May be negated.
+Same as @code{xcase iuclc olcuc}.  Non-@acronym{POSIX}@.  May be negated.
 (Used for terminals with uppercase characters only.)
 
 @item crt
@@ -13853,7 +13854,7 @@ Print the user or group name instead of the ID number.  Requires
 @itemx --real
 @opindex -r
 @opindex --real
-Print the real, instead of effective, user or group ID.  Requires
+Print the real, instead of effective, user or group ID@.  Requires
 @option{-u}, @option{-g}, or @option{-G}.
 
 @item -u
@@ -13915,7 +13916,7 @@ options}.
 @cindex printing the effective user ID
 
 @command{whoami} prints the user name associated with the current
-effective user ID.  It is equivalent to the command @samp{id -un}.
+effective user ID@.  It is equivalent to the command @samp{id -un}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -14217,10 +14218,10 @@ hour (@samp{00}@dots{}@samp{23})
 @item %I
 hour (@samp{01}@dots{}@samp{12})
 @item %k
-hour, space padded (@samp{ 0}@dots{}@samp{23}); equivalent to @samp{%_H}.
+hour, space padded (@samp{ 0}@dots{}@samp{23}); equivalent to @samp{%_H}@.
 This is a @acronym{GNU} extension.
 @item %l
-hour, space padded (@samp{ 1}@dots{}@samp{12}); equivalent to @samp{%_I}.
+hour, space padded (@samp{ 1}@dots{}@samp{12}); equivalent to @samp{%_I}@.
 This is a @acronym{GNU} extension.
 @item %M
 minute (@samp{00}@dots{}@samp{59})
@@ -14242,7 +14243,7 @@ locale's 12-hour clock time (e.g., @samp{11:11:04 PM})
 @cindex epoch, seconds since
 @cindex seconds since the epoch
 @cindex beginning of time
-seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC.
+seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC@.
 Leap seconds are not counted unless leap second support is available.
 @xref{%s-examples}, for examples.
 This is a @acronym{GNU} extension.
@@ -14527,7 +14528,7 @@ format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 14:19:13.489392193 +0530"} specifies the instant of time that is
 489,392,193 nanoseconds after February 27, 2004 at 2:19:13 PM in a
 time zone that is 5 hours and 30 minutes east of @acronym{UTC}.@*
-Note: input currently must be in locale independent format. E.g., the
+Note: input currently must be in locale independent format.  E.g., the
 LC_TIME=C below is needed to print back the correct date in many locales:
 @example
 date -d "$(LC_TIME=C date)"
@@ -14622,7 +14623,7 @@ This is equivalent to the format @samp{%Y-%m-%d}.
 Print the full-date and full-time separated by a space, e.g.,
 @samp{2005-09-14 00:56:06+05:30}.  The output ends with a numeric
 time-offset; here the @samp{+05:30} means that local time is five
-hours and thirty minutes east of @acronym{UTC}.  This is equivalent to
+hours and thirty minutes east of @acronym{UTC}@.  This is equivalent to
 the format @samp{%Y-%m-%d %H:%M:%S%:z}.
 
 @item ns
@@ -15845,8 +15846,8 @@ the @var{command}.
 @opindex -s
 @opindex --signal
 Send this @var{signal} to @var{command} on timeout, rather than the
-default @samp{TERM} signal. @var{signal} may be a name like @samp{HUP}
-or a number. @xref{Signal specifications}.
+default @samp{TERM} signal.  @var{signal} may be a name like @samp{HUP}
+or a number.  @xref{Signal specifications}.
 @end table
 
 @cindex time units
@@ -15904,7 +15905,7 @@ kill [-l | --list | -t | --table] [@var{signal}]@dots{}
 
 The first form of the @command{kill} command sends a signal to all
 @var{pid} arguments.  The default signal to send if none is specified
-is @samp{TERM}.  The special signal number @samp{0} does not denote a
+is @samp{TERM}@.  The special signal number @samp{0} does not denote a
 valid signal, but can be used to test whether the @var{pid} arguments
 specify processes to which a signal could be sent.
 
@@ -15952,7 +15953,7 @@ The @command{kill} command also supports the @option{--help} and
 A @var{signal} may be a signal name like @samp{HUP}, or a signal
 number like @samp{1}, or an exit status of a process terminated by the
 signal.  A signal name can be given in canonical form or prefixed by
-@samp{SIG}.  The case of the letters is ignored, except for the
+@samp{SIG}@.  The case of the letters is ignored, except for the
 @option{-@var{signal}} option which must use upper case to avoid
 ambiguity with lower case option letters.
 @xref{Signal specifications}, for a list of supported
@@ -16119,7 +16120,7 @@ Options must precede operands.
 Print all numbers using @var{format}.
 @var{format} must contain exactly one of the @samp{printf}-style
 floating point conversion specifications @samp{%a}, @samp{%e},
-@samp{%f}, @samp{%g}, @samp{%A}, @samp{%E}, @samp{%F}, @samp{%G}.
+@samp{%f}, @samp{%g}, @samp{%A}, @samp{%E}, @samp{%F}, @samp{%G}@.
 The @samp{%} may be followed by zero or more flags taken from the set
 @samp{-+#0 '}, then an optional width containing one or more digits,
 then an optional precision consisting of a @samp{.} followed by zero
@@ -16221,7 +16222,7 @@ outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 
 An earlier version of this chapter appeared in
 @uref{http://www.linuxjournal.com/article.php?sid=2762, the
-@cite{What's GNU?} column of the June 1994 @cite{Linux Journal}}.
+@cite{What's GNU@?} column of the June 1994 @cite{Linux Journal}}.
 It was written by Arnold Robbins.
 
 @menu
