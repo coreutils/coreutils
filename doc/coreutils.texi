@@ -10493,13 +10493,15 @@ If @var{file} is a symbolic link, the reference timestamp is taken
 from the target of the symlink, unless @option{-h} was also in effect.
 
 @item -t [[@var{cc}]@var{yy}]@var{mmddhhmm}[.@var{ss}]
+@cindex leap seconds
 Use the argument (optional four-digit or two-digit years, months,
 days, hours, minutes, optional seconds) instead of the current time.
 If the year is specified with only two digits, then @var{cc}
 is 20 for years in the range 0 @dots{} 68, and 19 for years in
 69 @dots{} 99.  If no digits of the year are specified,
 the argument is interpreted as a date in the current year.
-Note that @var{ss} may be @samp{60}, to accommodate leap seconds.
+On the atypical systems that support leap seconds, @var{ss} may be
+@samp{60}.
 
 @end table
 
@@ -14243,11 +14245,13 @@ locale's 12-hour clock time (e.g., @samp{11:11:04 PM})
 @cindex epoch, seconds since
 @cindex seconds since the epoch
 @cindex beginning of time
+@cindex leap seconds
 seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC@.
 Leap seconds are not counted unless leap second support is available.
 @xref{%s-examples}, for examples.
 This is a @acronym{GNU} extension.
 @item %S
+@cindex leap seconds
 second (@samp{00}@dots{}@samp{60}).
 This may be @samp{60} if leap seconds are supported.
 @item %T
@@ -14650,12 +14654,15 @@ See also @ref{Setting the time}.
 @cindex UTC
 @cindex Greenwich Mean Time
 @cindex GMT
+@cindex leap seconds
 @vindex TZ
 Use Coordinated Universal Time (@acronym{UTC}) by operating as if the
 @env{TZ} environment variable were set to the string @samp{UTC0}.
 Coordinated
 Universal Time is often called ``Greenwich Mean Time'' (@sc{gmt}) for
 historical reasons.
+Typically, systems ignore leap seconds and thus implement an
+approximation to UTC rather than true UTC.
 @end table
 
 
@@ -14805,6 +14812,36 @@ Often it is better to output UTC-relative date and time:
 date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
 2000-01-01 00:00:00 +0000
 @end smallexample
+
+@item
+@cindex leap seconds
+Typically the seconds count omits leap seconds, but some systems are
+exceptions.  Because leap seconds are not predictable, the mapping
+between the seconds count and a future timestamp is not reliable on
+the atypical systems that include leap seconds in their counts.
+
+Here is how the two kinds of systems handle the leap second at
+2012-06-30 23:59:60 UTC:
+
+@example
+# Typical systems ignore leap seconds:
+date --date='2012-06-30 23:59:59 +0000' +%s
+1341100799
+date --date='2012-06-30 23:59:60 +0000' +%s
+date: invalid date '2012-06-30 23:59:60 +0000'
+date --date='2012-07-01 00:00:00 +0000' +%s
+1341100800
+@end example
+
+@example
+# Atypical systems count leap seconds:
+date --date='2012-06-30 23:59:59 +0000' +%s
+1341100823
+date --date='2012-06-30 23:59:60 +0000' +%s
+1341100824
+date --date='2012-07-01 00:00:00 +0000' +%s
+1341100825
+@end example
 
 @end itemize
 
