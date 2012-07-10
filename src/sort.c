@@ -1412,9 +1412,10 @@ specify_nthreads (int oi, char c, char const *s)
 static size_t
 default_sort_size (void)
 {
-  /* Let SIZE be MEM, but no more than the maximum object size or
-     system resource limits.  Don't bother to check for values like
-     RLIM_INFINITY since in practice they are not much less than SIZE_MAX.  */
+  /* Let SIZE be MEM, but no more than the maximum object size,
+     total memory, or system resource limits.  Don't bother to check
+     for values like RLIM_INFINITY since in practice they are not much
+     less than SIZE_MAX.  */
   size_t size = SIZE_MAX;
   struct rlimit rlimit;
   if (getrlimit (RLIMIT_DATA, &rlimit) == 0 && rlimit.rlim_cur < size)
@@ -1440,6 +1441,10 @@ default_sort_size (void)
   double avail = physmem_available ();
   double total = physmem_total ();
   double mem = MAX (avail, total / 8);
+
+  /* Leave a 1/4 margin for physical memory.  */
+  if (total * 0.75 < size)
+    size = total * 0.75;
 
   /* Return the minimum of MEM and SIZE, but no less than
      MIN_SORT_SIZE.  Avoid the MIN macro here, as it is not quite
