@@ -167,7 +167,8 @@ static size_t nrows;
 enum
 {
   NO_SYNC_OPTION = CHAR_MAX + 1,
-  SYNC_OPTION
+  SYNC_OPTION,
+  MEGABYTES_OPTION  /* FIXME: remove long opt in Aug 2013 */
 };
 
 static struct option const long_options[] =
@@ -178,7 +179,7 @@ static struct option const long_options[] =
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
   {"local", no_argument, NULL, 'l'},
-  {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
+  {"megabytes", no_argument, NULL, MEGABYTES_OPTION}, /* obsolescent,  */
   {"portability", no_argument, NULL, 'P'},
   {"print-type", no_argument, NULL, 'T'},
   {"sync", no_argument, NULL, SYNC_OPTION},
@@ -951,7 +952,14 @@ main (int argc, char **argv)
         case 'l':
           show_local_fs = true;
           break;
-        case 'm': /* obsolescent */
+        case MEGABYTES_OPTION:
+          /* Distinguish between the long and the short option.
+             As we want to remove the long option soon,
+             give a warning when the long form is used.  */
+          error (0, 0, "%s%s", _("warning: "),
+            _("long option '--megabytes' is deprecated"
+              " and will soon be removed"));
+        case 'm': /* obsolescent, exists for BSD compatibility */
           human_output_opts = 0;
           output_block_size = 1024 * 1024;
           break;
