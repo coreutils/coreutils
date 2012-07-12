@@ -52,6 +52,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   or unwritable output.  Sort now diagnoses certain errors at start-up,
   rather than after potentially expensive processing.
 
+  sort now allocates no more than 75% of physical memory by default,
+  to better share system resources, and thus operate more efficiently.
+  [The default max memory usage changed from 50% to 100% in coreutils-8.16]
+
 
 * Noteworthy changes in release 8.17 (2012-05-10) [stable]
 
