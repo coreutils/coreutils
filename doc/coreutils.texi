@@ -40,8 +40,8 @@
 * cat: (coreutils)cat invocation.               Concatenate and write files.
 * chcon: (coreutils)chcon invocation.           Change SELinux CTX of files.
 * chgrp: (coreutils)chgrp invocation.           Change file groups.
-* chmod: (coreutils)chmod invocation.           Change file permissions.
-* chown: (coreutils)chown invocation.           Change file owners/groups.
+* chmod: (coreutils)chmod invocation.           Change access permissions.
+* chown: (coreutils)chown invocation.           Change file owners and groups.
 * chroot: (coreutils)chroot invocation.         Specify the root directory.
 * cksum: (coreutils)cksum invocation.           Print POSIX CRC checksum.
 * comm: (coreutils)comm invocation.             Compare sorted files by line.
@@ -591,7 +591,7 @@ with embedded newlines.
 @end macro
 
 @macro optSi
-@itemx --si
+@item --si
 @opindex --si
 @cindex SI output
 Append an SI-style abbreviation to each size, such as @samp{M} for
@@ -615,7 +615,7 @@ Use the @option{--si} option if you prefer powers of 1000.
 @end macro
 
 @macro optStripTrailingSlashes
-@itemx @w{@kbd{--strip-trailing-slashes}}
+@item @w{@kbd{--strip-trailing-slashes}}
 @opindex --strip-trailing-slashes
 @cindex stripping trailing slashes
 Remove any trailing slashes from each @var{source} argument.
@@ -2204,7 +2204,7 @@ between sentences to two spaces.
 Fill output lines up to @var{width} characters (default 75 or @var{goal}
 plus 10, if @var{goal} is provided).
 
-@itemx -g @var{goal}
+@item -g @var{goal}
 @itemx --goal=@var{goal}
 @opindex -g
 @opindex --goal
@@ -2702,7 +2702,7 @@ However, if @var{k} starts with a @samp{-},
 print all but the last @var{k} bytes of each file.
 @multiplierSuffixes{k}
 
-@itemx -n @var{k}
+@item -n @var{k}
 @itemx --lines=@var{k}
 @opindex -n
 @opindex --lines
@@ -2852,7 +2852,7 @@ This option is the same as @option{--follow=name --retry}.  That is, tail
 will attempt to reopen a file when it is removed.  Should this fail, tail
 will keep trying until it becomes accessible again.
 
-@itemx --retry
+@item --retry
 @opindex --retry
 This option is useful mainly when following by name (i.e., with
 @option{--follow=name}).
@@ -2860,7 +2860,7 @@ Without this option, when tail encounters a file that doesn't
 exist or is otherwise inaccessible, it reports that fact and
 never checks it again.
 
-@itemx --sleep-interval=@var{number}
+@item --sleep-interval=@var{number}
 @opindex --sleep-interval
 Change the number of seconds to wait between iterations (the default is 1.0).
 During one iteration, every specified file is checked to see if it has
@@ -2873,7 +2873,7 @@ is usually ignored.  However, if you also specify @option{--pid=@var{p}},
 @command{tail} checks whether process @var{p} is alive at least
 every @var{number} seconds.
 
-@itemx --pid=@var{pid}
+@item --pid=@var{pid}
 @opindex --pid
 When following by name or by descriptor, you may specify the process ID,
 @var{pid}, of the sole writer of all @var{file} arguments.  Then, shortly
@@ -2896,7 +2896,7 @@ terminate until long after the real writer has terminated.
 Note that @option{--pid} cannot be supported on some systems; @command{tail}
 will print a warning if this is the case.
 
-@itemx --max-unchanged-stats=@var{n}
+@item --max-unchanged-stats=@var{n}
 @opindex --max-unchanged-stats
 When tailing a file by name, if there have been @var{n} (default
 n=@value{DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS}) consecutive
@@ -2909,7 +2909,7 @@ and when it prints the lines that have accumulated in the new log file.
 This option is meaningful only when polling (i.e., without inotify)
 and when following by name.
 
-@itemx -n @var{k}
+@item -n @var{k}
 @itemx --lines=@var{k}
 @opindex -n
 @opindex --lines
@@ -3034,7 +3034,7 @@ possible without exceeding @var{size} bytes.  Individual lines longer than
 @var{size} bytes are broken into multiple files.
 @var{size} has the same format as for the @option{--bytes} option.
 
-@itemx --filter=@var{command}
+@item --filter=@var{command}
 @opindex --filter
 With this option, rather than simply writing to each output file,
 write through a pipe to the specified shell @var{command} for each output file.
@@ -3108,7 +3108,7 @@ Note specifying a @var{from} value also disables the default
 auto suffix length expansion described above, and so you may also
 want to specify @option{-a} to allow suffixes beyond @samp{99}.
 
-@itemx --additional-suffix=@var{suffix}
+@item --additional-suffix=@var{suffix}
 @opindex --additional-suffix
 Append an additional @var{suffix} to output file names.  @var{suffix}
 must not contain slash.
@@ -3130,7 +3130,7 @@ even when this option is specified.
 Immediately copy input to output in @option{--number r/...} mode,
 which is a much slower mode of operation.
 
-@itemx --verbose
+@item --verbose
 @opindex --verbose
 Write a diagnostic just before each output file is opened.
 
@@ -3483,7 +3483,7 @@ Print only the newline counts.
 Print only the maximum line lengths.
 
 @macro filesZeroFromOption{cmd,withTotalOption,subListOutput}
-@itemx --files0-from=@var{file}
+@item --files0-from=@var{file}
 @opindex --files0-from=@var{file}
 @c This is commented out to avoid a texi2dvi failure.
 @c texi2dvi (GNU Texinfo 4.11) 1.104
@@ -3684,7 +3684,7 @@ an MD5 checksum inconsistent with the associated file, or if no valid
 line is found, @command{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
-@itemx --quiet
+@item --quiet
 @opindex --quiet
 @cindex verifying MD5 checksums
 This option is useful only when verifying checksums.
@@ -3693,7 +3693,7 @@ checked file.  Files that fail the verification are reported in the
 default one-line-per-file format.  If there is any checksum mismatch,
 print a warning summarizing the failures to standard error.
 
-@itemx --status
+@item --status
 @opindex --status
 @cindex verifying MD5 checksums
 This option is useful only when verifying checksums.
@@ -3726,7 +3726,7 @@ When verifying checksums, warn about improperly formatted MD5 checksum lines.
 This option is useful only if all but a few lines in the checked input
 are valid.
 
-@itemx --strict
+@item --strict
 @opindex --strict
 @cindex verifying MD5 checksums
 When verifying checksums,
@@ -6500,7 +6500,7 @@ command line unless the @option{--dereference-command-line} (@option{-H}),
 If a command line argument specifies a symbolic link, show information
 for the file the link references rather than for the link itself.
 
-@itemx --dereference-command-line-symlink-to-dir
+@item --dereference-command-line-symlink-to-dir
 @opindex --dereference-command-line-symlink-to-dir
 @cindex symbolic links, dereferencing
 Do not dereference symbolic links, with one exception:
@@ -7653,7 +7653,7 @@ Try to preserve SELinux security context and extended attributes (xattr),
 but ignore any failure to do that and print no corresponding diagnostic.
 Equivalent to @option{-dR --preserve=all} with the reduced diagnostics.
 
-@itemx --attributes-only
+@item --attributes-only
 @opindex --attributes-only
 Copy only the specified attributes of the source file to the destination.
 If the destination already exists, do not alter its contents.
@@ -7783,21 +7783,21 @@ If specified, the @var{attribute_list} must be a comma-separated list
 of one or more of the following strings:
 
 @table @samp
-@itemx mode
+@item mode
 Preserve the file mode bits and access control lists.
-@itemx ownership
+@item ownership
 Preserve the owner and group.  On most modern systems,
 only users with appropriate privileges may change the owner of a file,
 and ordinary users
 may preserve the group ownership of a file only if they happen to be
 a member of the desired group.
-@itemx timestamps
+@item timestamps
 Preserve the times of last access and last modification, when possible.
 On older systems, it is not possible to preserve these attributes
 when the affected file is a symbolic link.
 However, many systems now provide the @code{utimensat} function,
 which makes it possible even for symbolic links.
-@itemx links
+@item links
 Preserve in the destination files
 any links between corresponding source files.
 Note that with @option{-L} or @option{-H}, this option can convert
@@ -7821,14 +7821,14 @@ $ mkdir b c; (cd b; : > a; ln -s a b); cp -aL b c; ls -i1 c/b
 74163295 b
 @end smallexample
 
-@itemx context
+@item context
 Preserve SELinux security context of the file, or fail with full diagnostics.
-@itemx xattr
+@item xattr
 Preserve extended attributes of the file, or fail with full diagnostics.
 If @command{cp} is built without xattr support, ignore this option.
 If SELinux context, ACLs or Capabilities are implemented using xattrs,
 they are preserved by this option as well.
-@itemx all
+@item all
 Preserve all file attributes.
 Equivalent to specifying all of the above, but with the difference
 that failure to preserve SELinux security context or extended attributes
@@ -7844,12 +7844,12 @@ mode bits of the corresponding source file, minus the bits set in the
 umask and minus the set-user-ID and set-group-ID bits.
 @xref{File permissions}.
 
-@itemx @w{@kbd{--no-preserve}=@var{attribute_list}}
+@item @w{@kbd{--no-preserve}=@var{attribute_list}}
 @cindex file information, preserving
 Do not preserve the specified attributes.  The @var{attribute_list}
 has the same form as for @option{--preserve}.
 
-@itemx --parents
+@item --parents
 @opindex --parents
 @cindex parent directories and @command{cp}
 Form the name of each destination file by appending to the target
@@ -8607,7 +8607,7 @@ to when they were last installed.
 @cindex stripping symbol table information
 Strip the symbol tables from installed binary executables.
 
-@itemx --strip-program=@var{program}
+@item --strip-program=@var{program}
 @opindex --strip-program
 @cindex symbol table information, stripping, program
 Program used to strip binaries.
@@ -8828,7 +8828,7 @@ files are named or if a recursive removal is requested.  Ignore any
 previous @option{--force} (@option{-f}) option.  Equivalent to
 @option{--interactive=once}.
 
-@itemx --interactive [=@var{when}]
+@item --interactive [=@var{when}]
 @opindex --interactive
 Specify when to issue an interactive prompt.  @var{when} may be
 omitted, or one of:
@@ -8847,7 +8847,7 @@ removal is requested.  Equivalent to @option{-I}.
 @option{--interactive} with no @var{when} is equivalent to
 @option{--interactive=always}.
 
-@itemx --one-file-system
+@item --one-file-system
 @opindex --one-file-system
 @cindex one file system, restricting @command{rm} to
 When removing a hierarchy recursively, skip any directory that is on a
@@ -8866,7 +8866,7 @@ warn about and skip directories on other file systems.
 Of course, this will not save your @file{/home} if it and your
 chroot happen to be on the same file system.
 
-@itemx --preserve-root
+@item --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive destruction
 Fail upon any attempt to remove the root directory, @file{/},
@@ -8874,7 +8874,7 @@ when used with the @option{--recursive} option.
 This is the default behavior.
 @xref{Treating / specially}.
 
-@itemx --no-preserve-root
+@item --no-preserve-root
 @opindex --no-preserve-root
 @cindex root directory, allow recursive destruction
 Do not treat @file{/} specially when removing recursively.
@@ -9879,9 +9879,9 @@ timestamps, and other information.  Collectively, we call these a file's
 These commands change file attributes.
 
 @menu
+* chown invocation::            Change file owners and groups.
 * chgrp invocation::            Change file groups.
 * chmod invocation::            Change access permissions.
-* chown invocation::            Change file owners and groups.
 * touch invocation::            Change file timestamps.
 @end menu
 
@@ -9986,7 +9986,7 @@ actually changes.
 Do not print error messages about files whose ownership cannot be
 changed.
 
-@itemx @w{@kbd{--from}=@var{old-owner}}
+@item @w{@kbd{--from}=@var{old-owner}}
 @opindex --from
 @cindex symbolic links, changing owner
 Change a @var{file}'s ownership only if it has current attributes specified
@@ -10040,14 +10040,14 @@ is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
 
-@itemx --preserve-root
+@item --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@itemx --no-preserve-root
+@item --no-preserve-root
 @opindex --no-preserve-root
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
@@ -10167,14 +10167,14 @@ is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
 
-@itemx --preserve-root
+@item --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@itemx --no-preserve-root
+@item --no-preserve-root
 @opindex --no-preserve-root
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
@@ -10289,14 +10289,14 @@ actually changes.
 Do not print error messages about files whose permissions cannot be
 changed.
 
-@itemx --preserve-root
+@item --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
 Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
-@itemx --no-preserve-root
+@item --no-preserve-root
 @opindex --no-preserve-root
 @cindex root directory, allow recursive modification
 Cancel the effect of any preceding @option{--preserve-root} option.
@@ -10597,7 +10597,7 @@ pseudo-file-systems, such as automounter entries.
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
-@itemx --total
+@item --total
 @opindex --total
 @cindex grand total of disk size, usage and available space
 Print a grand total of all arguments after all arguments have
@@ -10789,7 +10789,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 Show counts for all files, not just directories.
 
-@itemx --apparent-size
+@item --apparent-size
 @opindex --apparent-size
 Print apparent sizes, rather than disk usage.  The apparent size of a
 file is the number of bytes reported by @code{wc -c} on regular files,
@@ -10918,13 +10918,13 @@ With @option{--separate-dirs}, the size reported for a directory name,
 @var{d}, is merely the @code{stat.st_size}-derived size of the directory
 entry, @var{d}.
 
-@itemx --time
+@item --time
 @opindex --time
 @cindex last modified dates, displaying in @command{du}
 Show time of the most recent modification of any file in the directory,
 or any of its subdirectories.
 
-@itemx --time=ctime
+@item --time=ctime
 @itemx --time=status
 @itemx --time=use
 @opindex --time
@@ -10934,7 +10934,7 @@ or any of its subdirectories.
 Show the most recent status change time (the @samp{ctime} in the inode) of
 any file in the directory, instead of the modification time.
 
-@itemx --time=atime
+@item --time=atime
 @itemx --time=access
 @opindex --time
 @opindex atime@r{, show the most recent}
@@ -11077,7 +11077,7 @@ $ stat --format=%d:%i / /usr
 2057:2
 @end example
 
-@itemx --printf=@var{format}
+@item --printf=@var{format}
 @opindex --printf=@var{format}
 @cindex output format
 Use @var{format} rather than the default format.
@@ -12921,14 +12921,14 @@ only on the file name, and does not touch any actual file.
 @opindex --zero
 Separate output items with @sc{nul} characters.
 
-@itemx --relative-to=@var{file}
+@item --relative-to=@var{file}
 @opindex --relative-to
 @cindex relpath
 Print the resolved file names relative to the specified file.
 Note this option honors the @option{-m} and @option{-e} options
 pertaining to file existence.
 
-@itemx --relative-base=@var{base}
+@item --relative-base=@var{base}
 @opindex --relative-base
 This option is valid when used with @option{--relative-to}, and will restrict
 the output of @option{--relative-to} so that relative names are output,
@@ -14062,7 +14062,7 @@ Print a line of column headings.
 List only the entries that correspond to processes via which the
 system is waiting for a user to login.  The user name is always @samp{LOGIN}.
 
-@itemx --lookup
+@item --lookup
 @opindex --lookup
 Attempt to canonicalize hostnames found in utmp through a DNS lookup.  This
 is not the default because it can cause significant delays on systems with
@@ -14101,7 +14101,7 @@ Ignored; for compatibility with other versions of @command{who}.
 @opindex --time
 Print last system clock change.
 
-@itemx -u
+@item -u
 @opindex -u
 @cindex idle time
 After the login time, print the number of hours and minutes that the
@@ -15342,14 +15342,14 @@ Options must precede operands.
 
 @table @samp
 
-@itemx --userspec=@var{user}[:@var{group}]
+@item --userspec=@var{user}[:@var{group}]
 @opindex --userspec
 By default, @var{command} is run with the same credentials
 as the invoking process.
 Use this option to run it as a different @var{user} and/or with a
 different primary @var{group}.
 
-@itemx --groups=@var{groups}
+@item --groups=@var{groups}
 @opindex --groups
 Use this option to specify the supplementary @var{groups} to be
 used by the new process.
@@ -15852,7 +15852,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
-@itemx --foreground
+@item --foreground
 @opindex --foreground
 Don't create a separate background program group, so that
 the managed @var{command} can use the foreground TTY normally.
