@@ -192,6 +192,23 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Replace problematic chars with '?'.
+   Since only control characters are currently considered,
+   this should work in all encodings.  */
+
+static char*
+hide_problematic_chars (char *cell)
+{
+  char *p = cell;
+  while (*p)
+    {
+      if (iscntrl (to_uchar (*p)))
+        *p = '?';
+      p++;
+    }
+  return cell;
+}
+
 /* Dynamically allocate a row of pointers in TABLE, which
    can then be accessed with standard 2D array notation.  */
 
@@ -314,6 +331,8 @@ get_header (void)
 
       if (!cell)
         xalloc_die ();
+
+      hide_problematic_chars (cell);
 
       table[nrows-1][field] = cell;
 
@@ -661,7 +680,10 @@ get_dev (char const *disk, char const *mount_point,
         }
 
       if (cell)
-        widths[field] = MAX (widths[field], mbswidth (cell, 0));
+        {
+          hide_problematic_chars (cell);
+          widths[field] = MAX (widths[field], mbswidth (cell, 0));
+        }
       table[nrows-1][field] = cell;
     }
 }
