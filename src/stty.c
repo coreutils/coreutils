@@ -584,7 +584,7 @@ Control settings:\n\
    [-]hup        send a hangup signal when the last process closes the tty\n\
    [-]hupcl      same as [-]hup\n\
    [-]parenb     generate parity bit in output and expect parity bit in input\n\
-   [-]parodd     set odd parity (even with '-')\n\
+   [-]parodd     set odd parity (or even parity with '-')\n\
 "), stdout);
       fputs (_("\
 \n\
