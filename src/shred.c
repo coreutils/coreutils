@@ -485,10 +485,11 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
       offset += soff;
 
+      bool done = offset == size;
+
       /* Time to print progress? */
-      if (n
-          && ((offset == size && *previous_human_offset)
-              || thresh <= (now = time (NULL))))
+      if (n && ((done && *previous_human_offset)
+                || thresh <= (now = time (NULL))))
         {
           char offset_buf[LONGEST_HUMAN_READABLE + 1];
           char size_buf[LONGEST_HUMAN_READABLE + 1];
@@ -498,8 +499,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
             = human_readable (offset, offset_buf,
                               human_floor | human_progress_opts, 1, 1);
 
-          if (offset == size
-              || !STREQ (previous_human_offset, human_offset))
+          if (done || !STREQ (previous_human_offset, human_offset))
             {
               if (size < 0)
                 error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
@@ -516,7 +516,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                     = human_readable (size, size_buf,
                                       human_ceiling | human_progress_opts,
                                       1, 1);
-                  if (offset == size)
+                  if (done)
                     human_offset = human_size;
                   error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
                          qname, k, n, pass_string, human_offset, human_size,
