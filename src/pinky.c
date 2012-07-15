@@ -208,21 +208,14 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
+  char *p = line;
 
   /* Copy ut_line into LINE, prepending '/dev/' if ut_line is not
      already an absolute file name.  Some system may put the full,
      absolute file name in ut_line.  */
-  if (utmp_ent->ut_line[0] == '/')
-    {
-      strncpy (line, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
-      line[sizeof (utmp_ent->ut_line)] = '\0';
-    }
-  else
-    {
-      strcpy (line, DEV_DIR_WITH_TRAILING_SLASH);
-      strncpy (line + DEV_DIR_LEN, utmp_ent->ut_line, sizeof utmp_ent->ut_line);
-      line[DEV_DIR_LEN + sizeof (utmp_ent->ut_line)] = '\0';
-    }
+  if ( ! IS_ABSOLUTE_FILE_NAME (utmp_ent->ut_line))
+    p = stpcpy (p, DEV_DIR_WITH_TRAILING_SLASH);
+  stpncpy (p, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
 
   if (stat (line, &stats) == 0)
     {
@@ -242,8 +235,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       struct passwd *pw;
       char name[UT_USER_SIZE + 1];
 
-      strncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
-      name[UT_USER_SIZE] = '\0';
+      stpncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
       pw = getpwnam (name);
       if (pw == NULL)
         /* TRANSLATORS: Real name is unknown; at most 19 characters. */
@@ -284,8 +276,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       char *display = NULL;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      strncpy (ut_host, utmp_ent->ut_host, (int) sizeof (utmp_ent->ut_host));
-      ut_host[sizeof (utmp_ent->ut_host)] = '\0';
+      stpncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');

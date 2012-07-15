@@ -493,6 +493,3 @@ exclude_file_name_regexp--sc_prohibit_test_backticks = \
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
   ^src/(ptx|test|head)\.c$$
-
-# Exempt pinky and who: their uses of this function appear to be correct.
-exclude_file_name_regexp--sc_prohibit_strncpy = ^src/(pinky|who)\.c$$
