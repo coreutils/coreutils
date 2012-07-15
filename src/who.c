@@ -350,7 +350,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
      absolute file name in ut_line.  */
   if ( ! IS_ABSOLUTE_FILE_NAME (utmp_ent->ut_line))
     p = stpcpy (p, DEV_DIR_WITH_TRAILING_SLASH);
-  stpncpy (p, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
+  stzncpy (p, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
 
   if (stat (line, &stats) == 0)
     {
@@ -376,7 +376,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
       char *display = NULL;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      stpncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
+      stzncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
 
       /* Look for an X display.  */
       display = strchr (ut_host, ':');
