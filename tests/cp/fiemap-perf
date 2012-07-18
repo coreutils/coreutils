@@ -24,13 +24,14 @@ touch fiemap_chk
 fiemap_capable_ fiemap_chk ||
   skip_ "this file system lacks FIEMAP support"
 
-# Exclude ext3 (or unknown fs types)
-# as the emulated extent scanning is slow
-df -t ext3 . >/dev/null &&
-  skip_ "ext3 has known slow FIEMAP scanning"
+# Exclude ext[23] (or unknown fs types)
+# as the emulated extent scanning can be slow
+df -t ext2 -t ext3 . >/dev/null &&
+  skip_ "ext[23] can have slow FIEMAP scanning"
 
 # Create a large-but-sparse file.
-timeout 10 truncate -s1T f || framework_failure_
+timeout 10 truncate -s1T f ||
+  skip_ "unable to create a 1 TiB sparse file"
 
 # Disable this test on old BTRFS (e.g. Fedora 14)
 # which reports (unwritten) extents for holes.
