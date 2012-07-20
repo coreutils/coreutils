@@ -88,13 +88,6 @@ cache_stat_init (struct stat *st)
   return st;
 }
 
-/* Return true if *ST has been statted.  */
-static inline bool
-cache_statted (struct stat *st)
-{
-  return (st->st_size != -1);
-}
-
 /* Return true if *ST has been statted successfully.  */
 static inline bool
 cache_stat_ok (struct stat *st)
@@ -309,21 +302,6 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
         return RM_USER_DECLINED;
     }
   return RM_OK;
-}
-
-/* Return true if FILENAME is a directory (and not a symlink to a directory).
-   Otherwise, including the case in which lstat fails, return false.
-   *ST is FILENAME's tstatus.
-   Do not modify errno.  */
-static inline bool
-is_dir_lstat (int fd_cwd, char const *filename, struct stat *st)
-{
-  int saved_errno = errno;
-  bool is_dir =
-    (cache_fstatat (fd_cwd, filename, st, AT_SYMLINK_NOFOLLOW) == 0
-     && S_ISDIR (st->st_mode));
-  errno = saved_errno;
-  return is_dir;
 }
 
 /* Return true if FILENAME is a non-directory.
