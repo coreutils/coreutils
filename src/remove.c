@@ -88,13 +88,6 @@ cache_stat_init (struct stat *st)
   return st;
 }
 
-/* Return true if *ST has been statted successfully.  */
-static inline bool
-cache_stat_ok (struct stat *st)
-{
-  return (0 <= st->st_size);
-}
-
 /* Return 1 if FILE is an unwritable non-symlink,
    0 if it is writable or some other type of file,
    -1 and set errno if there is some problem in determining the answer.
@@ -302,21 +295,6 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
         return RM_USER_DECLINED;
     }
   return RM_OK;
-}
-
-/* Return true if FILENAME is a non-directory.
-   Otherwise, including the case in which lstat fails, return false.
-   *ST is FILENAME's tstatus.
-   Do not modify errno.  */
-static inline bool
-is_nondir_lstat (int fd_cwd, char const *filename, struct stat *st)
-{
-  int saved_errno = errno;
-  bool is_non_dir =
-    (cache_fstatat (fd_cwd, filename, st, AT_SYMLINK_NOFOLLOW) == 0
-     && !S_ISDIR (st->st_mode));
-  errno = saved_errno;
-  return is_non_dir;
 }
 
 /* When a function like unlink, rmdir, or fstatat fails with an errno
