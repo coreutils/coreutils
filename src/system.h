@@ -628,10 +628,11 @@ The following directory is part of the cycle:\n  %s\n"), \
 
 /* Like stpncpy, but do ensure that the result is NUL-terminated,
    and do not NUL-pad out to LEN.  I.e., when strnlen (src, len) == len,
-   this function writes a NUL byte into dest[len].  Thus, the destination
-   buffer must be at least LEN+1 bytes long.  */
+   this function writes a NUL byte into dest[len].  Thus, the length
+   of the destination buffer must be at least LEN + 1.
+   The DEST and SRC buffers must not overlap.  */
 static inline char *
-stzncpy (char *dest, char const *src, size_t len)
+stzncpy (char *restrict dest, char const *restrict src, size_t len)
 {
   char const *src_end = src + len;
   while (src < src_end && *src)
