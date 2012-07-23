@@ -147,6 +147,10 @@ my @tv = (
  ["a,1,,2\nb,1,2\n", "a,3,4\nb,3,4\n"],
  "a,1,,2,3,4\nb,1,2,,3,4\n"],
 
+# For -v2, print the match field correctly with the default output format,
+# when that match field is different between file 1 and file 2.  Fixed in 8.10
+['v2-order', '-v2 -2 2', ["", "2 1\n"], "1 2\n", 0],
+
 # From Tim Smithers: fixed in 1.22l
 ['trailing-sp', '-t: -1 1 -2 1', ["a:x \n", "a:y \n"], "a:x :y \n", 0],
 
