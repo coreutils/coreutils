@@ -1,5 +1,7 @@
---- tempname	2011-10-27 18:55:14.672722002 +0200
-+++ tempname	2011-10-27 18:55:25.200999149 +0200
+diff --git a/modules/tempname b/modules/tempname
+index b4708d9..e003c41 100644
+--- a/modules/tempname
++++ b/modules/tempname
 @@ -1,5 +1,5 @@
  Description:
 -gen_tempname() function: create a private temporary file or directory.
