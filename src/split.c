@@ -1044,6 +1044,7 @@ no_filters:
           files[i_file].ofd = OFD_APPEND;
         }
     }
+  IF_LINT (free (files));
 }
 
 #define FAIL_ONLY_ONE_WAY()					\
@@ -1075,7 +1076,6 @@ main (int argc, char **argv)
 {
   enum Split_type split_type = type_undef;
   size_t in_blk_size = 0;	/* optimal block size of input file device */
-  char *buf;			/* file i/o buffer */
   size_t page_size = getpagesize ();
   uintmax_t k_units = 0;
   uintmax_t n_units;
@@ -1382,7 +1382,8 @@ main (int argc, char **argv)
       file_size = MAX (file_size, n_units);
     }
 
-  buf = ptr_align (xmalloc (in_blk_size + 1 + page_size - 1), page_size);
+  void *b = xmalloc (in_blk_size + 1 + page_size - 1);
+  char *buf = ptr_align (b, page_size);
 
   /* When filtering, closure of one pipe must not terminate the process,
      as there may still be other streams expecting input from us.  */
@@ -1431,6 +1432,8 @@ main (int argc, char **argv)
     default:
       abort ();
     }
+
+  IF_LINT (free (b));
 
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
