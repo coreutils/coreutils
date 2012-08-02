@@ -3705,6 +3705,17 @@ If all listed files are readable and are consistent with the associated
 MD5 checksums, exit successfully.  Otherwise exit with a status code
 indicating there was a failure.
 
+@item --tag
+@opindex --tag
+@cindex BSD output
+Output BSD style checksums, which indicate the checksum algorithm used.
+As a @acronym{GNU} extension, file names with problematic characters
+are escaped as described above, with the same escaping indicator of @samp{\}
+at the start of the line, being used.
+The @option{--tag} option implies binary mode, and is disallowed with
+@option{--text} mode as supporting that would unnecessarily complicate
+the output format, while providing little benefit.
+
 @item -t
 @itemx --text
 @opindex -t
@@ -3715,7 +3726,7 @@ outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
 This option is the default on systems like @acronym{GNU} that do not
 distinguish between binary and text files.  On other systems, it is
 the default for reading standard input when standard input is a
-terminal.
+terminal.  This mode is never defaulted to if @option{--tag} is used.
 
 @item -w
 @itemx --warn

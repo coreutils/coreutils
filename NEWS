@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  md5sum now accepts the --tag option to print BSD-style output with GNU
+  file name escaping.  This also affects sha1sum, sha224sum, sha256sum,
+  sha384sum and sha512sum.
+
 ** Bug fixes
 
   du no longer emits a "disk-corrupted"-style diagnostic when it detects
