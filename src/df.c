@@ -515,7 +515,8 @@ get_dev (char const *disk, char const *mount_point,
 
   if (! file_systems_processed)
     {
-      file_systems_processed = true;
+      if (! force_fsu)
+        file_systems_processed = true;
       get_header ();
     }
 
@@ -1124,7 +1125,7 @@ main (int argc, char **argv)
   else
     get_all_entries ();
 
-  if (print_grand_total)
+  if (print_grand_total && file_systems_processed)
     {
       if (inode_format)
         grand_fsu.fsu_blocks = 1;
@@ -1133,7 +1134,9 @@ main (int argc, char **argv)
 
   print_table ();
 
-  if (! file_systems_processed)
+  /* Print the "no FS processed" diagnostic only if there was no preceding
+     diagnostic, e.g., if all have been excluded.  */
+  if (exit_status == EXIT_SUCCESS && ! file_systems_processed)
     error (EXIT_FAILURE, 0, _("no file systems processed"));
 
   exit (exit_status);

@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   lines output by df, can work reliably.
   [This bug was present in "the beginning".]
 
+  df --total now exits with an appropriate diagnostic and error code, when
+  file system --type options do not lead to a processed file system.
+  [This bug dates back to when --total was added in coreutils-7.0]
+
   head --lines=-N (-n-N) now resets the read pointer of a seekable input file.
   This means that "head -n-3" no longer consumes all of its input, and lines
   not output by head may be processed by other programs.  For example, this

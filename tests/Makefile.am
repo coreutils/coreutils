@@ -375,6 +375,7 @@ TESTS =						\
   df/header					\
   df/df-P					\
   df/unreadable					\
+  df/total-unprocessed				\
   dd/direct					\
   dd/misc					\
   dd/nocache					\
