@@ -370,8 +370,15 @@ main (int argc, char **argv)
           if (0 <= ref_fd)
             {
               off_t file_end = lseek (ref_fd, 0, SEEK_END);
-              if (0 <= file_end && close (ref_fd) == 0)
+              int saved_errno = errno;
+              close (ref_fd); /* ignore failure */
+              if (0 <= file_end)
                 file_size = file_end;
+              else
+                {
+                  /* restore, in case close clobbered it. */
+                  errno = saved_errno;
+                }
             }
         }
       if (file_size < 0)
