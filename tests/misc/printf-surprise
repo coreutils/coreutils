@@ -55,7 +55,10 @@ mkfifo_or_skip_ fifo
 export MALLOC_PERTURB_=0
 
 head -c 10 fifo > out &
-( ulimit -v 10000; env $prog %20000000f 0 2>err-msg > fifo )
+
+# Choosing the virtual memory limit, 11000 is enough, but 10000 is too
+# little and provokes a "memory exhausted" diagnostic on FreeBSD 9.0-p3.
+( ulimit -v 15000; env $prog %20000000f 0 2>err-msg > fifo )
 exit=$?
 
 # Map this longer, and rarer, diagnostic to the common one.
