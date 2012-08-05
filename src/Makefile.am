@@ -310,6 +310,7 @@ rm_LDADD += $(remove_LDADD)
 # for eaccess, euidaccess
 copy_LDADD += $(LIB_EACCESS)
 remove_LDADD += $(LIB_EACCESS)
+sort_LDADD += $(LIB_EACCESS)
 test_LDADD += $(LIB_EACCESS)
 
 # for selinux use
