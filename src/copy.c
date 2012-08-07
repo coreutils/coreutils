@@ -1151,6 +1151,11 @@ preserve_metadata:
       if (set_acl (dst_name, dest_desc, x->mode) != 0)
         return_val = false;
     }
+  else if (x->explicit_no_preserve_mode)
+    {
+      set_acl (dst_name, dest_desc, 0666 & ~cached_umask ());
+      return_val = false;
+    }
   else if (omitted_permissions)
     {
       omitted_permissions &= ~ cached_umask ();
@@ -2568,6 +2573,11 @@ copy_internal (char const *src_name, char const *dst_name,
   else if (x->set_mode)
     {
       if (set_acl (dst_name, -1, x->mode) != 0)
+        return false;
+    }
+  else if (x->explicit_no_preserve_mode)
+    {
+      if (set_acl (dst_name, -1, 0777 & ~cached_umask ()) != 0)
         return false;
     }
   else

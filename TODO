@@ -47,9 +47,6 @@ doc/coreutils.texi:
 
 ls: add --format=FORMAT option that controls how each line is printed.
 
-cp --no-preserve=X should not attempt to preserve attribute X
-  reported by Andreas Schwab
-
 copy.c: Address the FIXME-maybe comment in copy_internal.
 And once that's done, add an exclusion so that 'cp --link'
 no longer incurs the overhead of saving src. dev/ino and dest. filename

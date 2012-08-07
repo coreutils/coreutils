@@ -434,6 +434,7 @@ all_tests =					\
   tests/cp/perm.sh				\
   tests/cp/preserve-2.sh			\
   tests/cp/preserve-link.sh			\
+  tests/cp/preserve-mode.sh			\
   tests/cp/preserve-slink-time.sh		\
   tests/cp/proc-short-read.sh			\
   tests/cp/proc-zero-len.sh			\

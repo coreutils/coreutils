@@ -157,6 +157,7 @@ struct cp_options
   bool preserve_ownership;
   bool preserve_mode;
   bool preserve_timestamps;
+  bool explicit_no_preserve_mode;
 
   /* Enabled for mv, and for cp by the --preserve=links option.
      If true, attempt to preserve in the destination files any

@@ -783,6 +783,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = false;
   x->preserve_mode = false;
   x->preserve_timestamps = false;
+  x->explicit_no_preserve_mode = false;
   x->preserve_security_context = false;
   x->require_preserve_context = false;
   x->preserve_xattr = false;
@@ -860,6 +861,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
         {
         case PRESERVE_MODE:
           x->preserve_mode = on_off;
+          x->explicit_no_preserve_mode = !on_off;
           break;
 
         case PRESERVE_TIMESTAMPS:
@@ -889,6 +891,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
           x->preserve_timestamps = on_off;
           x->preserve_ownership = on_off;
           x->preserve_links = on_off;
+          x->explicit_no_preserve_mode = !on_off;
           if (selinux_enabled)
             x->preserve_security_context = on_off;
           x->preserve_xattr = on_off;

@@ -84,7 +84,7 @@ touch a; chmod 731 a
 umask 077
 cp -a --no-preserve=mode a b
 mode=$(ls -l b|cut -b-10)
-test "$mode" = "-rwx------" || fail=1
+test "$mode" = "-rw-------" || fail=1
 umask 022
 # --------------------------------------
 

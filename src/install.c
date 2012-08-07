@@ -275,6 +275,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = false;
   x->preserve_mode = false;
   x->preserve_timestamps = false;
+  x->explicit_no_preserve_mode = false;
   x->reduce_diagnostics=false;
   x->data_copy_required = true;
   x->require_preserve = false;

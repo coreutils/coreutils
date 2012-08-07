@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp --no-preserve=mode now no longer preserves the original file's
+  permissions but correctly sets mode specified by 0666 & ~umask
+
   du no longer emits a "disk-corrupted"-style diagnostic when it detects
   a directory cycle that is due to a bind-mounted directory.  Instead,
   it detects this precise type of cycle, diagnoses it as such and

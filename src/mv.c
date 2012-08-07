@@ -118,6 +118,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = true;
   x->preserve_mode = true;
   x->preserve_timestamps = true;
+  x->explicit_no_preserve_mode= false;
   x->preserve_security_context = selinux_enabled;
   x->reduce_diagnostics = false;
   x->data_copy_required = true;
