@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ df
+require_mount_list_
 
 cat <<\EOF > exp || framework_failure_
 df: no file systems processed
@@ -27,7 +28,7 @@ EOF
 # The following simply finds no match for the combination
 # of the options --local and FS-type nfs together with the
 # argument ".". It must exit non-Zero nonetheless.
-df --local -t nfs --total "." 2>out && fail=1
+df --local -t nfs --total '.' 2>out && fail=1
 compare exp out || fail=1
 
 cat <<\EOF > exp || framework_failure_
