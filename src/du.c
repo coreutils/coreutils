@@ -35,6 +35,7 @@
 #include "exclude.h"
 #include "fprintftime.h"
 #include "human.h"
+#include "mountlist.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "stat-size.h"
@@ -60,8 +61,12 @@ extern bool fts_debug;
 # define FTS_CROSS_CHECK(Fts)
 #endif
 
-/* A set of dev/ino pairs.  */
-static struct di_set *di_set;
+/* A set of dev/ino pairs to help identify files and directories
+   whose sizes have already been counted.  */
+static struct di_set *di_files;
+
+/* A set containing a dev/ino pair for each local mount point directory.  */
+static struct di_set *di_mnt;
 
 /* Keep track of the preceding "level" (depth in hierarchy)
    from one call of process_file to the next.  */
@@ -333,11 +338,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
-/* Try to insert the INO/DEV pair into the global table, HTAB.
+/* Try to insert the INO/DEV pair into DI_SET.
    Return true if the pair is successfully inserted,
-   false if the pair is already in the table.  */
+   false if the pair was already there.  */
 static bool
-hash_ins (ino_t ino, dev_t dev)
+hash_ins (struct di_set *di_set, ino_t ino, dev_t dev)
 {
   int inserted = di_set_insert (di_set, dev, ino);
   if (inserted < 0)
@@ -461,7 +466,7 @@ process_file (FTS *fts, FTSENT *ent)
       if (excluded
           || (! opt_count_all
               && (hash_all || (! S_ISDIR (sb->st_mode) && 1 < sb->st_nlink))
-              && ! hash_ins (sb->st_ino, sb->st_dev)))
+              && ! hash_ins (di_files, sb->st_ino, sb->st_dev)))
         {
           /* If ignoring a directory in preorder, skip its children.
              Ignore the next fts_read output too, as it's a postorder
@@ -490,7 +495,13 @@ process_file (FTS *fts, FTSENT *ent)
         case FTS_DC:
           if (cycle_warning_required (fts, ent))
             {
-              emit_cycle_warning (file);
+              /* If this is a mount point, then diagnose it and avoid
+                 the cycle.  */
+              if (di_set_lookup (di_mnt, sb->st_dev, sb->st_ino))
+                error (0, 0, _("mount point %s already traversed"),
+                       quote (file));
+              else
+                emit_cycle_warning (file);
               return false;
             }
           return true;
@@ -621,6 +632,37 @@ du_files (char **files, int bit_flags)
     }
 
   return ok;
+}
+
+/* Fill the di_mnt set with local mount point dev/ino pairs.  */
+
+static void
+fill_mount_table (void)
+{
+  struct mount_entry *mnt_ent = read_file_system_list (false);
+  while (mnt_ent)
+    {
+      struct mount_entry *mnt_free;
+      if (!mnt_ent->me_remote && !mnt_ent->me_dummy)
+        {
+          struct stat buf;
+          if (!stat (mnt_ent->me_mountdir, &buf))
+            hash_ins (di_mnt, buf.st_ino, buf.st_dev);
+          else
+            {
+              /* Ignore stat failure.  False positives are too common.
+                 E.g., "Permission denied" on /run/user/<name>/gvfs.  */
+            }
+        }
+
+      mnt_free = mnt_ent;
+      mnt_ent = mnt_ent->me_next;
+
+      free (mnt_free->me_devname);
+      free (mnt_free->me_mountdir);
+      free (mnt_free->me_type);
+      free (mnt_free);
+    }
 }
 
 int
@@ -922,8 +964,15 @@ main (int argc, char **argv)
     xalloc_die ();
 
   /* Initialize the set of dev,inode pairs.  */
-  di_set = di_set_alloc ();
-  if (!di_set)
+
+  di_mnt = di_set_alloc ();
+  if (!di_mnt)
+    xalloc_die ();
+
+  fill_mount_table ();
+
+  di_files = di_set_alloc ();
+  if (!di_files)
     xalloc_die ();
 
   /* If not hashing everything, process_file won't find cycles on its
@@ -1001,7 +1050,8 @@ main (int argc, char **argv)
  argv_iter_done:
 
   argv_iter_free (ai);
-  di_set_free (di_set);
+  di_set_free (di_files);
+  di_set_free (di_mnt);
 
   if (files_from && (ferror (stdin) || fclose (stdin) != 0) && ok)
     error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));

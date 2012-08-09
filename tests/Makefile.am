@@ -32,6 +32,7 @@ root_tests =					\
   cp/sparse-fiemap				\
   dd/skip-seek-past-dev				\
   df/problematic-chars				\
+  du/bind-mount-dir-cycle			\
   install/install-C-root			\
   ls/capability					\
   ls/nameless-uid				\

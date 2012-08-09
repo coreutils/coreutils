@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  du no longer emits a "disk-corrupted"-style diagnostic when it detects
+  a directory cycle that is due to a bind-mounted directory.  Instead,
+  it detects this precise type of cycle, diagnoses it as such and
+  eventually exits nonzero.
+
 
 * Noteworthy changes in release 8.19 (2012-08-20) [stable]
 
