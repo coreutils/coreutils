@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+  df now fails when the list of mounted file systems (/etc/mtab) cannot
+  be read, yet the file system type information is needed to process
+  certain options like -a, -l, -t and -x.
+  [This bug was present in "the beginning".]
+
 
 * Noteworthy changes in release 8.18 (2012-08-12) [stable]
 

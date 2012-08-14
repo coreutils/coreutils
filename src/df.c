@@ -1100,10 +1100,19 @@ main (int argc, char **argv)
   if (mount_list == NULL)
     {
       /* Couldn't read the table of mounted file systems.
-         Fail if df was invoked with no file name arguments;
-         Otherwise, merely give a warning and proceed.  */
-      int status =          (optind < argc ? 0 : EXIT_FAILURE);
-      const char *warning = (optind < argc ? _("Warning: ") : "");
+         Fail if df was invoked with no file name arguments,
+         or when either of -a, -l, -t or -x is used with file name
+         arguments. Otherwise, merely give a warning and proceed.  */
+      int status = 0;
+      if ( ! (optind < argc)
+           || (show_all_fs
+               || show_local_fs
+               || fs_select_list != NULL
+               || fs_exclude_list != NULL))
+        {
+          status = EXIT_FAILURE;
+        }
+      const char *warning = (status == 0 ? _("Warning: ") : "");
       error (status, errno, "%s%s", warning,
              _("cannot read table of mounted file systems"));
     }

@@ -10754,6 +10754,11 @@ inspect the exit status of a command like @samp{df -t ext3 -t reiserfs
 @var{dir}} to test whether @var{dir} is on a file system of type
 @samp{ext3} or @samp{reiserfs}.
 
+Since the list of file systems (@var{mtab}) is needed to determine the
+file system type, failure includes the cases when that list cannot
+be read and one or more of the options @option{-a}, @option{-l}, @option{-t}
+or @option{-x} is used together with a file name argument.
+
 
 @node du invocation
 @section @command{du}: Estimate file space usage

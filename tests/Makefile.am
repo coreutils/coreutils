@@ -376,6 +376,7 @@ TESTS =						\
   df/df-P					\
   df/unreadable					\
   df/total-unprocessed				\
+  df/no-mtab-status				\
   dd/direct					\
   dd/misc					\
   dd/nocache					\
