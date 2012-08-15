@@ -1813,7 +1813,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
 
       {
         /* The current input line is too long to fit in the buffer.
-           Double the buffer size and try again, keeping it properly
+           Increase the buffer size and try again, keeping it properly
            aligned.  */
         size_t line_alloc = buf->alloc / sizeof (struct line);
         buf->buf = x2nrealloc (buf->buf, &line_alloc, sizeof (struct line));
