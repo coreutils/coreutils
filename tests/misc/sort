@@ -227,6 +227,17 @@ my @Tests =
 ["15d", '-i -u', {IN=>"\1a\na\n"}, {OUT=>"\1a\n"}],
 ["15e", '-i -u', {IN=>"a\n\1\1\1\1\1a\1\1\1\1\n"}, {OUT=>"a\n"}],
 
+# This would fail (printing only the 7) for 8.6..8.18.
+# Use --parallel=1 for reproducibility, and a small buffer size
+# to let us trigger the problem with a smaller input.
+["unique-1", '--p=1 -S32b -u', {IN=>"7\n"x11 . "1\n"}, {OUT=>"1\n7\n"}],
+# Demonstrate that 8.19's key-spec-adjusting code is required.
+# These are more finicky in that they are arch-dependent.
+["unique-key-i686",   '-u -k2,2 --p=1 -S32b',
+  {IN=>"a 7\n"x10 . "b 1\n"}, {OUT=>"b 1\na 7\n"}],
+["unique-key-x86_64", '-u -k2,2 --p=1 -S32b',
+  {IN=>"a 7\n"x11 . "b 1\n"}, {OUT=>"b 1\na 7\n"}],
+
 # From Erick Branderhorst -- fixed around 1.19e
 ["16a", '-f',
  {IN=>"éminence\nüberhaupt\n's-Gravenhage\naëroclub\nAag\naagtappels\n"},

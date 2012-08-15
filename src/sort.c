@@ -262,6 +262,9 @@ struct merge_node_queue
                                    when popping. */
 };
 
+/* Used to implement --unique (-u).  */
+static struct line saved_line;
+
 /* FIXME: None of these tables work with multibyte character sets.
    Also, there are many other bugs when handling multibyte characters.
    One way to fix this is to rewrite 'sort' to use wide characters
@@ -1702,6 +1705,14 @@ limfield (struct line const *line, struct keyfield const *key)
   return ptr;
 }
 
+/* Return true if LINE and the buffer BUF of length LEN overlap.  */
+static inline bool
+overlap (char const *buf, size_t len, struct line const *line)
+{
+  char const *line_end = line->text + line->length;
+  return !(line_end <= buf || buf + len <= line->text);
+}
+
 /* Fill BUF reading from FP, moving buf->left bytes from the end
    of buf->buf to the beginning first.  If EOF is reached and the
    file wasn't terminated by a newline, supply one.  Set up BUF's line
@@ -1742,6 +1753,33 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
              rest of the input file consists entirely of newlines,
              except that the last byte is not a newline.  */
           size_t readsize = (avail - 1) / (line_bytes + 1);
+
+          /* With --unique, when we're about to read into a buffer that
+             overlaps the saved "preceding" line (saved_line), copy the line's
+             .text member to a realloc'd-as-needed temporary buffer and adjust
+             the line's key-defining members if they're set.  */
+          if (unique && overlap (ptr, readsize, &saved_line))
+            {
+              /* Copy saved_line.text into a buffer where it won't be clobbered
+                 and if KEY is non-NULL, adjust saved_line.key* to match.  */
+              static char *safe_text;
+              static size_t safe_text_n_alloc;
+              if (safe_text_n_alloc < saved_line.length)
+                {
+                  safe_text_n_alloc = saved_line.length;
+                  safe_text = x2nrealloc (safe_text, &safe_text_n_alloc, 1);
+                }
+              memcpy (safe_text, saved_line.text, saved_line.length);
+              if (key)
+                {
+                  #define s saved_line
+                  s.keybeg = safe_text + (s.keybeg - s.text);
+                  s.keylim = safe_text + (s.keylim - s.text);
+                  #undef s
+                }
+              saved_line.text = safe_text;
+            }
+
           size_t bytes_read = fread (ptr, 1, readsize, fp);
           char *ptrlim = ptr + bytes_read;
           char *p;
@@ -3348,13 +3386,11 @@ queue_pop (struct merge_node_queue *queue)
 static void
 write_unique (struct line const *line, FILE *tfp, char const *temp_output)
 {
-  static struct line saved;
-
   if (unique)
     {
-      if (saved.text && ! compare (line, &saved))
+      if (saved_line.text && ! compare (line, &saved_line))
         return;
-      saved = *line;
+      saved_line = *line;
     }
 
   write_line (line, tfp, temp_output);
