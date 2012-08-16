@@ -419,7 +419,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
                && is_empty_dir (fts->fts_cwd_fd, ent->fts_accpath)))
         {
           /* This is the first (pre-order) encounter with a directory
-             that we can not delete.
+             that we cannot delete.
              Not recursive, so arrange to skip contents.  */
           int err = x->remove_empty_directories ? ENOTEMPTY : EISDIR;
           error (0, err, _("cannot remove %s"), quote (ent->fts_path));
