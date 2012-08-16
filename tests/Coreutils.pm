@@ -130,14 +130,14 @@ sub _compare_files ($$$$$)
 {
   my ($program_name, $test_name, $in_or_out, $actual, $expected) = @_;
 
-  my $differ = compare ($expected, $actual);
+  my $differ = compare ($actual, $expected);
   if ($differ)
     {
       my $info = (defined $in_or_out ? "std$in_or_out " : '');
       warn "$program_name: test $test_name: ${info}mismatch, comparing "
-        . "$actual (actual) and $expected (expected)\n";
+        . "$expected (expected) and $actual (actual)\n";
       # Ignore any failure, discard stderr.
-      system "diff -c $actual $expected 2>/dev/null";
+      system "diff -c $expected $actual 2>/dev/null";
     }
 
   return $differ;
