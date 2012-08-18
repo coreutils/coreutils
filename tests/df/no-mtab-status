@@ -26,6 +26,7 @@ df || skip_ "df fails"
 cat > k.c <<'EOF' || framework_failure_
 #include <stdio.h>
 #include <errno.h>
+#include <mntent.h>
 
 struct mntent *getmntent (FILE *fp)
 {
@@ -44,7 +45,7 @@ EOF
 
 # Then compile/link it:
 $CC -shared -fPIC -ldl -O2 k.c -o k.so \
-  || framework_failure_ 'failed to compile with -shared -fPIC'
+  || skip_ "getmntent hack does not work on this platform"
 
 # Test if LD_PRELOAD works:
 LD_PRELOAD=./k.so df
