@@ -238,7 +238,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -r, --reference=FILE   use this file's times instead of current time\n\
   -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n\
-  --time=WORD            change the specified time:\n\
+      --time=WORD        change the specified time:\n\
                            WORD is access, atime, or use: equivalent to -a\n\
                            WORD is modify or mtime: equivalent to -m\n\
 "), stdout);
