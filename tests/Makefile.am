@@ -260,6 +260,7 @@ TESTS =						\
   misc/sort-unique-segv				\
   misc/sort-version				\
   misc/sort-NaN-infloop				\
+  misc/sort-u-FMR				\
   split/filter					\
   split/suffix-auto-length			\
   split/suffix-length				\

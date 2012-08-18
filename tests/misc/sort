@@ -237,6 +237,10 @@ my @Tests =
   {IN=>"a 7\n"x10 . "b 1\n"}, {OUT=>"b 1\na 7\n"}],
 ["unique-key-x86_64", '-u -k2,2 --p=1 -S32b',
   {IN=>"a 7\n"x11 . "b 1\n"}, {OUT=>"b 1\na 7\n"}],
+# Before 8.19, this would trigger a free-memory read.
+["unique-free-mem-read", '-u --p=1 -S32b',
+  {IN=>"a\n"."b"x900 ."\n"},
+ {OUT=>"a\n"."b"x900 ."\n"}],
 
 # From Erick Branderhorst -- fixed around 1.19e
 ["16a", '-f',
