@@ -29,7 +29,7 @@ for total_n_lines in 5 3000 20000; do
     # and would provide little added benefit.
     case $i:$total_n_lines in 2:5);; *) continue;; esac
 
-    split -l$i --filter='xz > $FILE.xz' in out- || fail=1
+    split -l$i --filter='xz -1 > $FILE.xz' in out- || fail=1
     xz -dc out-* > out || fail=1
     compare in out || fail=1
     rm -f out*
