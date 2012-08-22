@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
-print_ver_ mv
+print_ver_ cp
 
 working_umask_or_skip_
 

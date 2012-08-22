@@ -329,6 +329,24 @@ sc_some_programs_must_avoid_exit_failure:
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :
 
+# Ensure that tests call the print_ver_ function for programs which are
+# actually used in that test.
+sc_prohibit_test_calls_print_ver_with_irrelevant_argument:
+	@git grep -w print_ver_ tests					\
+	  | sed 's#:print_ver_##'					\
+	  | { fail=0;							\
+	      while read file name; do					\
+		for i in $$name; do					\
+		  case "$$i" in install) i=ginstall;; esac;		\
+		  grep -w "$$i" $$file|grep -vw print_ver_|grep -q .	\
+		    || { fail=1;					\
+			 echo "*** Test: $$file, offending: $$i." 1>&2; };\
+		done;							\
+	      done;							\
+	      test $$fail = 0 || exit 1;				\
+	    } || { echo "$(ME): the above test(s) call print_ver_ for"	\
+		    "program(s) they don't use" 1>&2; exit 1; }
+
 # Exempt the contents of any usage function from the following.
 _continued_string_col_1 = \
 s/^usage .*?\n}//ms;/\\\n\w/ and print ("$$ARGV\n"),$$e=1;END{$$e||=0;exit $$e}
