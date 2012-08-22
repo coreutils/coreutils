@@ -9,6 +9,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   it detects this precise type of cycle, diagnoses it as such and
   eventually exits nonzero.
 
+  rm -i -d now prompts the user then removes an empty directory, rather
+  than ignoring the -d option and failing with an 'Is a directory' error.
+  [bug introduced in coreutils-8.19, with the addition of --dir (-d)]
+
 
 * Noteworthy changes in release 8.19 (2012-08-20) [stable]
 
