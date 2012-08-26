@@ -315,7 +315,8 @@ get_header (void)
 
           char *num = human_readable (output_block_size, buf, opts, 1, 1);
 
-          if (asprintf (&cell, "%s-%s", num, header) == -1)
+          /* TRANSLATORS: this is the "1K-blocks" header in "df" output.  */
+          if (asprintf (&cell, _("%s-%s"), num, header) == -1)
             cell = NULL;
         }
       else if (header_mode == POSIX_MODE && field == TOTAL_FIELD)
@@ -323,7 +324,8 @@ get_header (void)
           char buf[INT_BUFSIZE_BOUND (uintmax_t)];
           char *num = umaxtostr (output_block_size, buf);
 
-          if (asprintf (&cell, "%s-%s", num, header) == -1)
+          /* TRANSLATORS: this is the "1024-blocks" header in "df -P".  */
+          if (asprintf (&cell, _("%s-%s"), num, header) == -1)
             cell = NULL;
         }
       else
