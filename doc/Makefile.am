@@ -61,7 +61,6 @@ syntax_checks =		\
 .PHONY: $(syntax_checks) check-texinfo
 
 # List words/regexps here that should not appear in the texinfo documentation.
-BAD_POSIX_PERL = /\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/
 check-texinfo: $(syntax_checks)
 	$(AM_V_GEN)fail=0;						\
 	grep '@url{' $(srcdir)/*.texi && fail=1;			\
@@ -70,9 +69,6 @@ check-texinfo: $(syntax_checks)
 	grep -n filename $(srcdir)/*.texi				\
 	    | $(EGREP) -v 'setfilename|[{]filename[}]'			\
 	  && fail=1;							\
-	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne			\
-	  '$(BAD_POSIX_PERL) and print,exit 1'				\
-	  $(srcdir)/*.texi 2> /dev/null || fail=1; };			\
 	exit $$fail
 
 sc-avoid-builtin:
