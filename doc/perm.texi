@@ -112,7 +112,7 @@ specific to the file system.  For example:
 
 @table @asis
 @item ext2
-On @acronym{GNU} and @acronym{GNU}/Linux the file attributes specific to
+On GNU and GNU/Linux the file attributes specific to
 the ext2 file system are set using @command{chattr}.
 
 @item FFS
@@ -345,7 +345,7 @@ the mode:
 +t
 @end example
 
-The combination @samp{o+s} has no effect.  On @acronym{GNU} systems
+The combination @samp{o+s} has no effect.  On GNU systems
 the combinations @samp{u+t} and @samp{g+t} have no effect, and
 @samp{o+t} acts like plain @samp{+t}.
 
@@ -563,7 +563,7 @@ The commands @samp{chmod =755 @var{dir}} and @samp{chmod 755
 setuid and setgid bits, whereas the latter preserves them.
 @xref{Directory Setuid and Setgid}.
 
-Operator numeric modes are a @acronym{GNU} extension.
+Operator numeric modes are a GNU extension.
 
 @node Directory Setuid and Setgid
 @section Directories and the Set-User-ID and Set-Group-ID Bits
@@ -630,10 +630,10 @@ chmod =755 D
 chmod 00755 D
 @end example
 
-This behavior is a @acronym{GNU} extension.  Portable scripts should
+This behavior is a GNU extension.  Portable scripts should
 not rely on requests to set or clear these bits on directories, as
-@acronym{POSIX} allows implementations to ignore these requests.
-The @acronym{GNU} behavior with numeric modes of four or fewer digits
+POSIX allows implementations to ignore these requests.
+The GNU behavior with numeric modes of four or fewer digits
 is intended for scripts portable to systems that preserve these bits;
 the behavior with numeric modes of five or more digits is for scripts
 portable to systems that do not preserve the bits.
