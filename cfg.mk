@@ -195,7 +195,8 @@ check-x-vs-1:
 	t=$@-t;								\
 	(cd $(srcdir)/man && ls -1 *.x)					\
 	  | sed 's/\.x$$//' | $(ASSORT) > $$t;				\
-	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
+	(echo $(patsubst man/%,%,$(dist_man1_MANS))			\
+	      $(NO_INSTALL_PROGS_DEFAULT)				\
 	  | tr -s ' ' '\n' | sed 's/\.1$$//')				\
 	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t
