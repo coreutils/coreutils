@@ -17,7 +17,7 @@
 
 ALL_RECURSIVE_TARGETS =
 
-SUBDIRS = lib src man po tests gnulib-tests
+SUBDIRS = lib src po tests gnulib-tests
 
 changelog_etc =				\
   ChangeLog-2005			\
@@ -175,3 +175,4 @@ all_programs:
 	@cd ./src && $(MAKE) -s $@
 
 include $(top_srcdir)/doc/local.mk
+include $(top_srcdir)/man/local.mk

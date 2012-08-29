@@ -465,7 +465,7 @@ MAN=`
     dnl Use the autoconf-provided quadrigraph to represent "[",
     dnl otherwise we will incur in dreadful quoting issues.
     test x$p = x'@<:@' && continue
-    echo "$p.1"
+    echo "man/$p.1"
   done`
 # Normalize whitespace.
 MAN=`echo $MAN`
@@ -496,7 +496,6 @@ gt_LOCALE_FR
 AC_CONFIG_FILES(
   Makefile
   lib/Makefile
-  man/Makefile
   po/Makefile.in
   src/Makefile
   tests/Makefile

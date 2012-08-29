@@ -172,12 +172,10 @@ sc_long_lines:
 # but that would miss descriptions not on the same line as the -option.
 ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
 sc_option_desc_uppercase: all_programs
-	@$(MAKE) -s -C man $@
 
 # Ensure all man/*.[1x] files are present
 ALL_RECURSIVE_TARGETS += sc_man_file_correlation
 sc_man_file_correlation: all_programs
-	@$(MAKE) -s -C man $@
 
 # Ensure that the end of each release's section is marked by two empty lines.
 sc_NEWS_two_empty_lines:
