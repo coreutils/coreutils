@@ -148,38 +148,38 @@ yes.1:		$(mandep)	../src/yes.c
 # provoke regeneration of all $(MAN) files.
 $(MAN): $(top_srcdir)/src/system.h
 
-# Ensure that help2man runs the ../src/ginstall binary as
-# 'install' when creating install.1.
-# Similarly, ensure that it uses the ../src/[ binary to create test.1.
-t = $*.td
-mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
-
-# Note the use of $t/$*, rather than just '$*' as in other packages.
-# That is necessary to avoid failures for programs that are also shell built-in
-# functions like echo, false, printf, pwd.
 .x.1:
 	$(AM_V_GEN)case '$(PERL)' in				\
 	  *"/missing "*)					\
 	    echo 'WARNING: cannot update man page $@ since perl is missing' \
 	      'or inadequate' 1>&2				\
-	    ;;							\
-	  *)							\
-	    rm -f $@ $@-t					\
-	    && {						\
-		 rm -rf $t;					\
-		 mkdir $t;					\
-		 (cd $t && $(LN_S) $(abs_top_builddir)/src/$(mapped_name) $*); \
-		    $(PERL) -- $(srcdir)/help2man		\
-		     --source='$(PACKAGE_STRING)'		\
-		     --include=$(srcdir)/$*.x			\
-		     --output=$t/$@ $t/$*;			\
-	       }						\
-	    && sed 's|$*\.td/||g' $t/$@ > $@-t			\
-	    && rm -rf $t					\
-	    && chmod -w $@-t					\
-	    && mv $@-t $@					\
-	    ;;							\
-	esac
+	    exit 0;;						\
+	esac; \
+	name=`echo $@ | sed -e 's|.*/||' -e 's|\.1$$||'` || exit 1;	\
+## Ensure that help2man runs the 'src/ginstall' binary as 'install' when
+## creating 'install.1'.  Similarly, ensure that it uses the 'src/[' binary
+## to create 'test.1'.
+	case $$name in							\
+	  install) prog='ginstall';;					\
+	     test) prog='[';;						\
+	        *) prog=$$name;;					\
+	esac;								\
+## Note the use of $$t/$*, rather than just '$*' as in other packages.
+## That is necessary to avoid failures for programs that are also shell
+## built-in functions like echo, false, printf, pwd.
+	rm -f $@ $@-t							\
+	  && t=$*.td							\
+	  && rm -rf $$t							\
+	  && mkdir $$t							\
+	  && (cd $$t && $(LN_S) $(abs_top_builddir)/src/$$prog $$name)	\
+	  && $(PERL) -- $(srcdir)/help2man				\
+		     --source='$(PACKAGE_STRING)'			\
+		     --include=$(srcdir)/$$name.x			\
+		     --output=$$t/$$name.1 $$t/$$name			\
+	  && sed 's|$*\.td/||g' $$t/$$name.1 > $@-t			\
+	  && rm -rf $$t							\
+	  && chmod -w $@-t						\
+	  && mv $@-t $@
 
 # Option descriptions should not start with a capital letter
 .PHONY: sc_option_desc_uppercase
