@@ -423,6 +423,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "xfs";
     case S_MAGIC_XIAFS: /* 0x012FD16D local */
       return "xia";
+    case S_MAGIC_ZFS: /* 0x2FC12FC1 local */
+      return "zfs";
 
 # elif __GNU__
     case FSTYPE_UFS:

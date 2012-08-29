@@ -19,6 +19,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   than ignoring the -d option and failing with an 'Is a directory' error.
   [bug introduced in coreutils-8.19, with the addition of --dir (-d)]
 
+** Improvements
+
+  stat and tail work better with ZFS.  stat -f --format=%T now reports the
+  file system type, "zfs", and tail -f now uses inotify for files on ZFS
+  file systems, rather than the default (for unknown file system types)
+  of polling.
+
 
 * Noteworthy changes in release 8.19 (2012-08-20) [stable]
 
