@@ -177,7 +177,7 @@ sc_option_desc_uppercase:
 	    { echo 1>&2 '$@: found initial capitals in --help';   \
 	      exit 1; } || :;
 sc_option_desc_uppercase: $(dist_man1_MANS) \
-                          $(NO_INSTALL_PROGS_DEFAULT:%=%.1) \
+                          $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT)) \
                           all_programs
 
 # Ensure all man/*.[1x] files are present.
