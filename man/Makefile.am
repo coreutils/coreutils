@@ -55,7 +55,7 @@ date.1:		$(mandep)	$(srcdir)/date.x	../src/date.c
 dd.1:		$(mandep)	$(srcdir)/dd.x		../src/dd.c
 df.1:		$(mandep)	$(srcdir)/df.x		../src/df.c
 
-# Note that dir depends on ls.c, since that's where it's --help text is.
+# Note that dir depends on ls.c, since that's where its --help text is.
 dir.1:		$(mandep)	$(srcdir)/dir.x		../src/ls.c
 
 dircolors.1:	$(mandep)	$(srcdir)/dircolors.x	../src/dircolors.c
