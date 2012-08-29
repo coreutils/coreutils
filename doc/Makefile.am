@@ -17,7 +17,7 @@
 
 info_TEXINFOS = coreutils.texi
 
-EXTRA_DIST = perm.texi parse-datetime.texi constants.texi fdl.texi
+coreutils_TEXINFOS = perm.texi parse-datetime.texi constants.texi fdl.texi
 
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,
@@ -39,9 +39,6 @@ constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	  && mv t-$@ $@
 
 MAINTAINERCLEANFILES = constants.texi
-
-$(DVIS): $(EXTRA_DIST)
-$(INFO_DEPS): $(EXTRA_DIST)
 
 # Extended regular expressions to match word starts and ends.
 _W = (^|[^A-Za-z0-9_])
