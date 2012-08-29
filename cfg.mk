@@ -166,16 +166,56 @@ sc_long_lines:
 	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
 	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
 
-# Option descriptions should not start with a capital letter
+# Option descriptions should not start with a capital letter.
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
 # but that would miss descriptions not on the same line as the -option.
 ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
-sc_option_desc_uppercase: all_programs
+.PHONY: sc_option_desc_uppercase
+sc_option_desc_uppercase:
+	@grep '^\\fB\\-' -A1 *.1 | LC_ALL=C grep '\.1.[A-Z][a-z]' && \
+	    { echo 1>&2 '$@: found initial capitals in --help';   \
+	      exit 1; } || :;
+sc_option_desc_uppercase: $(dist_man1_MANS) \
+                          $(NO_INSTALL_PROGS_DEFAULT:%=%.1) \
+                          all_programs
 
-# Ensure all man/*.[1x] files are present
+# Ensure all man/*.[1x] files are present.
 ALL_RECURSIVE_TARGETS += sc_man_file_correlation
-sc_man_file_correlation: all_programs
+.PHONY: sc_man_file_correlation
+sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
+
+# Ensure that for each .x file in the 'man/' subdirectory, there is a
+# corresponding .1 file in the definition of $(dist_man1_MANS).
+# But since that expansion usually lacks programs like arch and hostname,
+# add them here manually.
+.PHONY: check-x-vs-1
+check-x-vs-1:
+	@PATH=./src$(PATH_SEPARATOR)$$PATH; export PATH;		\
+	t=$@-t;								\
+	(cd $(srcdir)/man && ls -1 *.x)					\
+	  | sed 's/\.x$$//' | $(ASSORT) > $$t;				\
+	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
+	  | tr -s ' ' '\n' | sed 's/\.1$$//')				\
+	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
+	rm $$t
+
+all_programs =								\
+      (cd ./src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
+       | grep -v '\['
+
+# Ensure that for each .x file in the 'man/' subdirectory, there is a
+# corresponding coreutils program.
+.PHONY: check-programs-vs-x
+check-programs-vs-x: all_programs
+	@status=0;					\
+	for p in dummy `$(all_programs)`; do		\
+	  test $$p = dummy && continue;			\
+	  test $$p = ginstall && p=install || : ;	\
+	  test -f $(srcdir)/man/$$p.x			\
+	    || { echo missing $$p.x 1>&2; status=1; };	\
+	done;						\
+	exit $$status
 
 # Ensure that the end of each release's section is marked by two empty lines.
 sc_NEWS_two_empty_lines:
