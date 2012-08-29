@@ -2,8 +2,7 @@
 *.[EIOX]
 *.bak
 *.o
-*.trs
-*/.deps
+*/.deps/
 *~
 ._bootmp
 .gdb-history
@@ -155,6 +154,7 @@
 /src/version.h
 /stamp-h1
 /tests/*/*.log
+/tests/*/*.trs
 /tests/.built-programs
 /tests/t?
 /tests/test-suite.log
