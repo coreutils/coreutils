@@ -171,14 +171,12 @@ sc_long_lines:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
 # but that would miss descriptions not on the same line as the -option.
 ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
-sc_option_desc_uppercase:
-	@$(MAKE) -s -C src all_programs
+sc_option_desc_uppercase: all_programs
 	@$(MAKE) -s -C man $@
 
 # Ensure all man/*.[1x] files are present
 ALL_RECURSIVE_TARGETS += sc_man_file_correlation
-sc_man_file_correlation:
-	@$(MAKE) -s -C src all_programs
+sc_man_file_correlation: all_programs
 	@$(MAKE) -s -C man $@
 
 # Ensure that the end of each release's section is marked by two empty lines.
