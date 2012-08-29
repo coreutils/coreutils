@@ -185,7 +185,7 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 .PHONY: sc_option_desc_uppercase
 sc_option_desc_uppercase: $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT:%=%.1)
 	@grep '^\\fB\\-' -A1 *.1 | LC_ALL=C grep '\.1.[A-Z][a-z]' && \
-	    { echo 1>&2 '$(ME): found initial capitals in --help';   \
+	    { echo 1>&2 '$@: found initial capitals in --help';   \
 	      exit 1; } || :;
 
 .PHONY: sc_man_file_correlation
