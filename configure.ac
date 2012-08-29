@@ -456,16 +456,19 @@ case " $optional_bin_progs " in
   *' stdbuf '*) gl_ADD_PROG([optional_pkglib_progs], [libstdbuf.so]) ;;
 esac
 
-MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'|tr -d '\\015\\012'`
-
-# Change "ginstall.1" to "install.1" in $MAN.
-MAN=`for m in $MAN; do test $m = ginstall.1 && m=install.1; echo $m; done \
-  | tr '\015\012' '  '; echo`
-
-# Remove [.1, since writing a portable rule for it in man/Makefile.am
-# is not practical.  The sed LHS below uses the autoconf quadrigraph
-# representing '['.
-MAN=`echo "$MAN"|sed 's/\@<:@\.1//'`
+MAN=`
+  for p in $optional_bin_progs; do
+    # Change "ginstall.1" to "install.1" in $MAN.
+    test $p = ginstall && p=install
+    # Ignore the "[" program, since writing a portable make rule to
+    # generate its manpage is not practical.
+    dnl Use the autoconf-provided quadrigraph to represent "[",
+    dnl otherwise we will incur in dreadful quoting issues.
+    test x$p = x'@<:@' && continue
+    echo "$p.1"
+  done`
+# Normalize whitespace.
+MAN=`echo $MAN`
 
 OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
 AC_SUBST([OPTIONAL_BIN_PROGS])
