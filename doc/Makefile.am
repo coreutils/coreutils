@@ -126,4 +126,4 @@ sc-lower-case-var:
 	$(AM_V_GEN)$(PERL) -e 1 || { echo $@: skipping test; exit 0; }; \
 	  $(PERL) -lne $(find_upper_case_var) $(doc_srcdir)/*.texi
 
-check: check-texinfo
+check-local: check-texinfo
