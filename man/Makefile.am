@@ -19,9 +19,18 @@ dist_man1_MANS = $(MAN)
 
 man_aux = $(dist_man1_MANS:.1=.x)
 
-EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man \
-	$(NO_INSTALL_PROGS_DEFAULT:%=%.1)
+EXTRA_DIST = $(man_aux) help2man
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
+
+# The "$(VAR:%=%.x)" idiom is not portable according to POSIX, but in
+# practice it works with several make implementation (GNU, BSD, CCS make
+# from Solaris 10, Sun distributed make).  In addition, since only
+# maintainers are expected to build release tarballs (and they should
+# use GNU make when doing so), it's not big deal if this won't work with
+# some dumber make implementation.
+EXTRA_DIST += \
+  $(NO_INSTALL_PROGS_DEFAULT:%=%.x) \
+  $(NO_INSTALL_PROGS_DEFAULT:%=%.1)
 
 # Depend on ../.version to get version number changes.
 common_dep = ../.version
