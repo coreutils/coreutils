@@ -168,7 +168,7 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	    && {						\
 		 rm -rf $t;					\
 		 mkdir $t;					\
-		 (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
+		 (cd $t && $(LN_S) $(abs_top_builddir)/src/$(mapped_name) $*); \
 		    $(PERL) -- $(srcdir)/help2man		\
 		     --source='$(PACKAGE_STRING)'		\
 		     --include=$(srcdir)/$*.x			\
