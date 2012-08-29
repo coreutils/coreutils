@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/init.sh"; path_prepend_ ../src
 print_ver_ sort
+skip_if_root_
 
 # Check output is writable before starting to sort
 touch input
