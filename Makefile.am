@@ -17,7 +17,7 @@
 
 ALL_RECURSIVE_TARGETS =
 
-SUBDIRS = lib src doc man po tests gnulib-tests
+SUBDIRS = lib src man po tests gnulib-tests
 
 changelog_etc =				\
   ChangeLog-2005			\
@@ -169,3 +169,5 @@ check-git-hook-script-sync:
 	     done;							\
 	rm -rf $$t;							\
 	test $$fail = 0
+
+include $(top_srcdir)/doc/local.mk

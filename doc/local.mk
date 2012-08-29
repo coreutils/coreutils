@@ -1,4 +1,5 @@
 # Make coreutils documentation.				-*-Makefile-*-
+# This is included by the top-level Makefile.am.
 
 # Copyright (C) 1995-2012 Free Software Foundation, Inc.
 
@@ -15,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-info_TEXINFOS = coreutils.texi
+info_TEXINFOS = doc/coreutils.texi
 
-coreutils_TEXINFOS = perm.texi parse-datetime.texi constants.texi fdl.texi
+doc_coreutils_TEXINFOS = \
+  doc/perm.texi \
+  doc/parse-datetime.texi \
+  doc/constants.texi \
+  doc/fdl.texi
 
 doc_srcdir = $(top_srcdir)/doc
 
@@ -31,16 +36,16 @@ doc_srcdir = $(top_srcdir)/doc
 # old systems.
 AM_MAKEINFOFLAGS = --no-split
 
-constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
+doc/constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	$(AM_V_GEN)LC_ALL=C; export LC_ALL; \
 	{ sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
 	    $(top_srcdir)/src/tail.c && \
 	  sed -n -e \
 	      's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
-	    $(top_srcdir)/src/shred.c; } > t-$@ \
-	  && mv t-$@ $@
+	    $(top_srcdir)/src/shred.c; } > $@-t \
+	  && mv $@-t $@
 
-MAINTAINERCLEANFILES = constants.texi
+MAINTAINERCLEANFILES += doc/constants.texi
 
 # Extended regular expressions to match word starts and ends.
 _W = (^|[^A-Za-z0-9_])
@@ -108,9 +113,6 @@ sc-avoid-zeroes:
 	$(AM_V_GEN)$(EGREP) -i '$(_W)zeroes$(W_)' $(doc_srcdir)/*.texi \
 	  && exit 1 || :
 
-# ME = $(subdir)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
-ME = doc/Makefile
-
 # The quantity inside @var{...} should not contain upper case letters.
 # The leading backslash exemption is to permit in-macro uses like
 # @var{\varName\} where the upper case letter is part of a parameter name.
@@ -121,7 +123,7 @@ find_upper_case_var =		\
        $$v = $$1;		\
        $$v =~ /[A-Z]/ && $$v !~ /^\\/ and (print "$$ARGV:$$.:$$_"), $$m = 1 \
      }				\
-   END {$$m and (warn "$(ME): do not use upper case in \@var{...}\n"), exit 1}'
+   END {$$m and (warn "$@: do not use upper case in \@var{...}\n"), exit 1}'
 sc-lower-case-var:
 	$(AM_V_GEN)$(PERL) -e 1 || { echo $@: skipping test; exit 0; }; \
 	  $(PERL) -lne $(find_upper_case_var) $(doc_srcdir)/*.texi

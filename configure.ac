@@ -492,7 +492,6 @@ gt_LOCALE_FR
 
 AC_CONFIG_FILES(
   Makefile
-  doc/Makefile
   lib/Makefile
   man/Makefile
   po/Makefile.in
