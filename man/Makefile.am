@@ -139,8 +139,6 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 # provoke regeneration of all $(MAN) files.
 $(MAN): $(top_srcdir)/src/system.h
 
-SUFFIXES = .x .1
-
 # Ensure that help2man runs the ../src/ginstall binary as
 # 'install' when creating install.1.
 # Similarly, ensure that it uses the ../src/[ binary to create test.1.
