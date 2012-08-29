@@ -36,113 +36,113 @@ EXTRA_DIST += \
 mandep = ../.version
 
 # Note that arch depends on uname.c
-arch.1:		$(mandep)	$(srcdir)/arch.x	../src/uname.c
+arch.1:		$(mandep)	../src/uname.c
 
-base64.1:	$(mandep)	$(srcdir)/base64.x	../src/base64.c
-basename.1:	$(mandep)	$(srcdir)/basename.x	../src/basename.c
-cat.1:		$(mandep)	$(srcdir)/cat.x		../src/cat.c
-chcon.1:	$(mandep)	$(srcdir)/chcon.x	../src/chcon.c
-chgrp.1:	$(mandep)	$(srcdir)/chgrp.x	../src/chgrp.c
-chmod.1:	$(mandep)	$(srcdir)/chmod.x	../src/chmod.c
-chown.1:	$(mandep)	$(srcdir)/chown.x	../src/chown.c
-chroot.1:	$(mandep)	$(srcdir)/chroot.x	../src/chroot.c
-cksum.1:	$(mandep)	$(srcdir)/cksum.x	../src/cksum.c
-comm.1:		$(mandep)	$(srcdir)/comm.x	../src/comm.c
-cp.1:		$(mandep)	$(srcdir)/cp.x		../src/cp.c
-csplit.1:	$(mandep)	$(srcdir)/csplit.x	../src/csplit.c
-cut.1:		$(mandep)	$(srcdir)/cut.x		../src/cut.c
-date.1:		$(mandep)	$(srcdir)/date.x	../src/date.c
-dd.1:		$(mandep)	$(srcdir)/dd.x		../src/dd.c
-df.1:		$(mandep)	$(srcdir)/df.x		../src/df.c
+base64.1:	$(mandep)	../src/base64.c
+basename.1:	$(mandep)	../src/basename.c
+cat.1:		$(mandep)	../src/cat.c
+chcon.1:	$(mandep)	../src/chcon.c
+chgrp.1:	$(mandep)	../src/chgrp.c
+chmod.1:	$(mandep)	../src/chmod.c
+chown.1:	$(mandep)	../src/chown.c
+chroot.1:	$(mandep)	../src/chroot.c
+cksum.1:	$(mandep)	../src/cksum.c
+comm.1:		$(mandep)	../src/comm.c
+cp.1:		$(mandep)	../src/cp.c
+csplit.1:	$(mandep)	../src/csplit.c
+cut.1:		$(mandep)	../src/cut.c
+date.1:		$(mandep)	../src/date.c
+dd.1:		$(mandep)	../src/dd.c
+df.1:		$(mandep)	../src/df.c
 
 # Note that dir depends on ls.c, since that's where its --help text is.
-dir.1:		$(mandep)	$(srcdir)/dir.x		../src/ls.c
+dir.1:		$(mandep)	../src/ls.c
 
-dircolors.1:	$(mandep)	$(srcdir)/dircolors.x	../src/dircolors.c
-dirname.1:	$(mandep)	$(srcdir)/dirname.x	../src/dirname.c
-du.1:		$(mandep)	$(srcdir)/du.x		../src/du.c
-echo.1:		$(mandep)	$(srcdir)/echo.x	../src/echo.c
-env.1:		$(mandep)	$(srcdir)/env.x		../src/env.c
-expand.1:	$(mandep)	$(srcdir)/expand.x	../src/expand.c
-expr.1:		$(mandep)	$(srcdir)/expr.x	../src/expr.c
-factor.1:	$(mandep)	$(srcdir)/factor.x	../src/factor.c
-false.1:	$(mandep)	$(srcdir)/false.x	../src/false.c
-fmt.1:		$(mandep)	$(srcdir)/fmt.x		../src/fmt.c
-fold.1:		$(mandep)	$(srcdir)/fold.x	../src/fold.c
-groups.1:	$(mandep)	$(srcdir)/groups.x	../src/groups.c
-head.1:		$(mandep)	$(srcdir)/head.x	../src/head.c
-hostid.1:	$(mandep)	$(srcdir)/hostid.x	../src/hostid.c
-hostname.1:	$(mandep)	$(srcdir)/hostname.x	../src/hostname.c
-id.1:		$(mandep)	$(srcdir)/id.x		../src/id.c
-install.1:	$(mandep)	$(srcdir)/install.x	../src/install.c
-join.1:		$(mandep)	$(srcdir)/join.x	../src/join.c
-kill.1:		$(mandep)	$(srcdir)/kill.x	../src/kill.c
-link.1:		$(mandep)	$(srcdir)/link.x	../src/link.c
-ln.1:		$(mandep)	$(srcdir)/ln.x		../src/ln.c
-logname.1:	$(mandep)	$(srcdir)/logname.x	../src/logname.c
-ls.1:		$(mandep)	$(srcdir)/ls.x		../src/ls.c
-md5sum.1:	$(mandep)	$(srcdir)/md5sum.x	../src/md5sum.c
-mkdir.1:	$(mandep)	$(srcdir)/mkdir.x	../src/mkdir.c
-mkfifo.1:	$(mandep)	$(srcdir)/mkfifo.x	../src/mkfifo.c
-mknod.1:	$(mandep)	$(srcdir)/mknod.x	../src/mknod.c
-mktemp.1:	$(mandep)	$(srcdir)/mktemp.x	../src/mktemp.c
-mv.1:		$(mandep)	$(srcdir)/mv.x		../src/mv.c
-nice.1:		$(mandep)	$(srcdir)/nice.x	../src/nice.c
-nl.1:		$(mandep)	$(srcdir)/nl.x		../src/nl.c
-nohup.1:	$(mandep)	$(srcdir)/nohup.x	../src/nohup.c
-nproc.1:	$(mandep)	$(srcdir)/nproc.x	../src/nproc.c
-od.1:		$(mandep)	$(srcdir)/od.x		../src/od.c
-paste.1:	$(mandep)	$(srcdir)/paste.x	../src/paste.c
-pathchk.1:	$(mandep)	$(srcdir)/pathchk.x	../src/pathchk.c
-pinky.1:	$(mandep)	$(srcdir)/pinky.x	../src/pinky.c
-pr.1:		$(mandep)	$(srcdir)/pr.x		../src/pr.c
-printenv.1:	$(mandep)	$(srcdir)/printenv.x	../src/printenv.c
-printf.1:	$(mandep)	$(srcdir)/printf.x	../src/printf.c
-ptx.1:		$(mandep)	$(srcdir)/ptx.x		../src/ptx.c
-pwd.1:		$(mandep)	$(srcdir)/pwd.x		../src/pwd.c
-readlink.1:	$(mandep)	$(srcdir)/readlink.x	../src/readlink.c
-realpath.1:	$(mandep)	$(srcdir)/realpath.x	../src/realpath.c
-rm.1:		$(mandep)	$(srcdir)/rm.x		../src/rm.c
-rmdir.1:	$(mandep)	$(srcdir)/rmdir.x	../src/rmdir.c
-runcon.1:	$(mandep)	$(srcdir)/runcon.x	../src/runcon.c
-seq.1:		$(mandep)	$(srcdir)/seq.x		../src/seq.c
-sha1sum.1:	$(mandep)	$(srcdir)/sha1sum.x	../src/md5sum.c
-sha224sum.1:	$(mandep)	$(srcdir)/sha224sum.x	../src/md5sum.c
-sha256sum.1:	$(mandep)	$(srcdir)/sha256sum.x	../src/md5sum.c
-sha384sum.1:	$(mandep)	$(srcdir)/sha384sum.x	../src/md5sum.c
-sha512sum.1:	$(mandep)	$(srcdir)/sha512sum.x	../src/md5sum.c
-shred.1:	$(mandep)	$(srcdir)/shred.x	../src/shred.c
-shuf.1:		$(mandep)	$(srcdir)/shuf.x	../src/shuf.c
-sleep.1:	$(mandep)	$(srcdir)/sleep.x	../src/sleep.c
-sort.1:		$(mandep)	$(srcdir)/sort.x	../src/sort.c
-split.1:	$(mandep)	$(srcdir)/split.x	../src/split.c
-stat.1:		$(mandep)	$(srcdir)/stat.x	../src/stat.c
-stdbuf.1:	$(mandep)	$(srcdir)/stdbuf.x	../src/stdbuf.c
-stty.1:		$(mandep)	$(srcdir)/stty.x	../src/stty.c
-sum.1:		$(mandep)	$(srcdir)/sum.x		../src/sum.c
-sync.1:		$(mandep)	$(srcdir)/sync.x	../src/sync.c
-tac.1:		$(mandep)	$(srcdir)/tac.x		../src/tac.c
-tail.1:		$(mandep)	$(srcdir)/tail.x	../src/tail.c
-tee.1:		$(mandep)	$(srcdir)/tee.x		../src/tee.c
-test.1:		$(mandep)	$(srcdir)/test.x	../src/test.c
-timeout.1:	$(mandep)	$(srcdir)/timeout.x	../src/timeout.c
-touch.1:	$(mandep)	$(srcdir)/touch.x	../src/touch.c
-tr.1:		$(mandep)	$(srcdir)/tr.x		../src/tr.c
-true.1:		$(mandep)	$(srcdir)/true.x	../src/true.c
-truncate.1:	$(mandep)	$(srcdir)/truncate.x	../src/truncate.c
-tsort.1:	$(mandep)	$(srcdir)/tsort.x	../src/tsort.c
-tty.1:		$(mandep)	$(srcdir)/tty.x		../src/tty.c
-uname.1:	$(mandep)	$(srcdir)/uname.x	../src/uname.c
-unexpand.1:	$(mandep)	$(srcdir)/unexpand.x	../src/unexpand.c
-uniq.1:		$(mandep)	$(srcdir)/uniq.x	../src/uniq.c
-unlink.1:	$(mandep)	$(srcdir)/unlink.x	../src/unlink.c
-uptime.1:	$(mandep)	$(srcdir)/uptime.x	../src/uptime.c
-users.1:	$(mandep)	$(srcdir)/users.x	../src/users.c
-vdir.1:		$(mandep)	$(srcdir)/vdir.x	../src/ls.c
-wc.1:		$(mandep)	$(srcdir)/wc.x		../src/wc.c
-who.1:		$(mandep)	$(srcdir)/who.x		../src/who.c
-whoami.1:	$(mandep)	$(srcdir)/whoami.x	../src/whoami.c
-yes.1:		$(mandep)	$(srcdir)/yes.x		../src/yes.c
+dircolors.1:	$(mandep)	../src/dircolors.c
+dirname.1:	$(mandep)	../src/dirname.c
+du.1:		$(mandep)	../src/du.c
+echo.1:		$(mandep)	../src/echo.c
+env.1:		$(mandep)	../src/env.c
+expand.1:	$(mandep)	../src/expand.c
+expr.1:		$(mandep)	../src/expr.c
+factor.1:	$(mandep)	../src/factor.c
+false.1:	$(mandep)	../src/false.c
+fmt.1:		$(mandep)	../src/fmt.c
+fold.1:		$(mandep)	../src/fold.c
+groups.1:	$(mandep)	../src/groups.c
+head.1:		$(mandep)	../src/head.c
+hostid.1:	$(mandep)	../src/hostid.c
+hostname.1:	$(mandep)	../src/hostname.c
+id.1:		$(mandep)	../src/id.c
+install.1:	$(mandep)	../src/install.c
+join.1:		$(mandep)	../src/join.c
+kill.1:		$(mandep)	../src/kill.c
+link.1:		$(mandep)	../src/link.c
+ln.1:		$(mandep)	../src/ln.c
+logname.1:	$(mandep)	../src/logname.c
+ls.1:		$(mandep)	../src/ls.c
+md5sum.1:	$(mandep)	../src/md5sum.c
+mkdir.1:	$(mandep)	../src/mkdir.c
+mkfifo.1:	$(mandep)	../src/mkfifo.c
+mknod.1:	$(mandep)	../src/mknod.c
+mktemp.1:	$(mandep)	../src/mktemp.c
+mv.1:		$(mandep)	../src/mv.c
+nice.1:		$(mandep)	../src/nice.c
+nl.1:		$(mandep)	../src/nl.c
+nohup.1:	$(mandep)	../src/nohup.c
+nproc.1:	$(mandep)	../src/nproc.c
+od.1:		$(mandep)	../src/od.c
+paste.1:	$(mandep)	../src/paste.c
+pathchk.1:	$(mandep)	../src/pathchk.c
+pinky.1:	$(mandep)	../src/pinky.c
+pr.1:		$(mandep)	../src/pr.c
+printenv.1:	$(mandep)	../src/printenv.c
+printf.1:	$(mandep)	../src/printf.c
+ptx.1:		$(mandep)	../src/ptx.c
+pwd.1:		$(mandep)	../src/pwd.c
+readlink.1:	$(mandep)	../src/readlink.c
+realpath.1:	$(mandep)	../src/realpath.c
+rm.1:		$(mandep)	../src/rm.c
+rmdir.1:	$(mandep)	../src/rmdir.c
+runcon.1:	$(mandep)	../src/runcon.c
+seq.1:		$(mandep)	../src/seq.c
+sha1sum.1:	$(mandep)	../src/md5sum.c
+sha224sum.1:	$(mandep)	../src/md5sum.c
+sha256sum.1:	$(mandep)	../src/md5sum.c
+sha384sum.1:	$(mandep)	../src/md5sum.c
+sha512sum.1:	$(mandep)	../src/md5sum.c
+shred.1:	$(mandep)	../src/shred.c
+shuf.1:		$(mandep)	../src/shuf.c
+sleep.1:	$(mandep)	../src/sleep.c
+sort.1:		$(mandep)	../src/sort.c
+split.1:	$(mandep)	../src/split.c
+stat.1:		$(mandep)	../src/stat.c
+stdbuf.1:	$(mandep)	../src/stdbuf.c
+stty.1:		$(mandep)	../src/stty.c
+sum.1:		$(mandep)	../src/sum.c
+sync.1:		$(mandep)	../src/sync.c
+tac.1:		$(mandep)	../src/tac.c
+tail.1:		$(mandep)	../src/tail.c
+tee.1:		$(mandep)	../src/tee.c
+test.1:		$(mandep)	../src/test.c
+timeout.1:	$(mandep)	../src/timeout.c
+touch.1:	$(mandep)	../src/touch.c
+tr.1:		$(mandep)	../src/tr.c
+true.1:		$(mandep)	../src/true.c
+truncate.1:	$(mandep)	../src/truncate.c
+tsort.1:	$(mandep)	../src/tsort.c
+tty.1:		$(mandep)	../src/tty.c
+uname.1:	$(mandep)	../src/uname.c
+unexpand.1:	$(mandep)	../src/unexpand.c
+uniq.1:		$(mandep)	../src/uniq.c
+unlink.1:	$(mandep)	../src/unlink.c
+uptime.1:	$(mandep)	../src/uptime.c
+users.1:	$(mandep)	../src/users.c
+vdir.1:		$(mandep)	../src/ls.c
+wc.1:		$(mandep)	../src/wc.c
+who.1:		$(mandep)	../src/who.c
+whoami.1:	$(mandep)	../src/whoami.c
+yes.1:		$(mandep)	../src/yes.c
 
 # This is required so that changes to e.g., emit_bug_reporting_address
 # provoke regeneration of all $(MAN) files.
