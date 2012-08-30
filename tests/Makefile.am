@@ -59,7 +59,7 @@ LOG_COMPILER = \
 # variables that can perturb tests are unset or set to expected values.
 # The rest are envvar settings that propagate build-related Makefile
 # variables to test scripts.
-TESTS_ENVIRONMENT =				\
+AM_TESTS_ENVIRONMENT =				\
   . $(srcdir)/lang-default;			\
   tmp__=$${TMPDIR-/tmp};			\
   test -d "$$tmp__" && test -w "$$tmp__" || tmp__=.;	\
