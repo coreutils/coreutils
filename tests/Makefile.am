@@ -53,22 +53,19 @@ else
 TESTSUITE_PERL = $(SHELL) $(srcdir)/no-perl
 endif
 
+# Options passed to the perl invocations running the perl test scripts.
+TESTSUITE_PERL_OPTIONS = -w -I$(srcdir) -MCoreutils -MCuSkip
 # '$f' is set by the Automake-generated test harness to the path of the
 # current test script stripped of VPATH components, and is used by the
-# shell-or-perl script to determine the name of the temporary files to be
-# used.  Note that $f is a shell variable, not a make macro, so the use of
-# '$$f' below is correct, and not a typo.
-LOG_COMPILER = \
-  $(SHELL) $(srcdir)/shell-or-perl \
-  --test-name "$$f" --srcdir '$(srcdir)' \
-  --shell '$(SHELL)' --perl '$(TESTSUITE_PERL)' --
+# CuTmpdir module to determine the name of the temporary files to be
+# used.  Note that $f is a shell variable, not a make macro, so the use
+# of '$$f' below is correct, and not a typo.
+TESTSUITE_PERL_OPTIONS += -M"CuTmpdir qw($$f)"
 
-PL_LOG_COMPILER = $(LOG_COMPILER)
-SH_LOG_COMPILER = $(LOG_COMPILER)
-
+SH_LOG_COMPILER = $(SHELL)
+PL_LOG_COMPILER = $(TESTSUITE_PERL) $(TESTSUITE_PERL_OPTIONS)
 # Perl scripts that must be run in tainted mode.
-XPL_LOG_COMPILER = \
-  $(TESTSUITE_PERL) -wT -I$(srcdir) -MCoreutils -MCuSkip -M"CuTmpdir qw($$f)"
+XPL_LOG_COMPILER = $(TESTSUITE_PERL) -T $(TESTSUITE_PERL_OPTIONS)
 
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
@@ -130,7 +127,6 @@ EXTRA_DIST =		\
   no-perl		\
   other-fs-tmpdir	\
   sample-test		\
-  shell-or-perl		\
   $(pr_data)
 
 root_tests =					\
