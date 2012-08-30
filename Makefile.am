@@ -170,9 +170,5 @@ check-git-hook-script-sync:
 	rm -rf $$t;							\
 	test $$fail = 0
 
-.PHONY: all_programs
-all_programs:
-	@cd ./src && $(MAKE) -s $@
-
 include $(top_srcdir)/doc/local.mk
 include $(top_srcdir)/man/local.mk

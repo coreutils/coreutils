@@ -166,6 +166,12 @@ sc_long_lines:
 	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
 	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
 
+# TODO: remove once the build system in 'src/' is merged with the
+# top-level one.
+.PHONY: all_programs
+all_programs:
+	@cd ./src && $(MAKE) -s $@
+
 # Option descriptions should not start with a capital letter.
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
