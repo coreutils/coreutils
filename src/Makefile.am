@@ -498,7 +498,7 @@ fs-magic-compare: fs-magic fs-kernel-magic fs-def
 
 CLEANFILES += fs-def
 fs-def: fs.h
-	grep '^# *define ' $< | $(ASSORT) > $@-t && mv $@-t $@
+	grep '^# *define ' fs.h | $(ASSORT) > $@-t && mv $@-t $@
 
 # Massage bits of the statfs man page and definitions from
 # /usr/include/linux/magic.h to be in a form consistent with what's in fs.h.
