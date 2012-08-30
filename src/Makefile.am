@@ -177,6 +177,10 @@ nodist_libver_a_SOURCES = version.c version.h
 # Tell the linker to omit references to unused shared libraries.
 AM_LDFLAGS = $(IGNORE_UNUSED_LIBRARIES_CFLAGS)
 
+# Extra libraries needed by more than one program.  Will be updated later.
+copy_ldadd =
+remove_ldadd =
+
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like 'optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
@@ -297,25 +301,22 @@ __LDADD = $(test_LDADD)
 dir_LDADD = $(ls_LDADD)
 vdir_LDADD = $(ls_LDADD)
 
-# Shared files
-copy_LDADD =
-cp_LDADD += $(copy_LDADD)
-ginstall_LDADD += $(copy_LDADD)
-mv_LDADD += $(copy_LDADD)
+cp_LDADD += $(copy_ldadd)
+ginstall_LDADD += $(copy_ldadd)
+mv_LDADD += $(copy_ldadd)
 
-remove_LDADD =
-mv_LDADD += $(remove_LDADD)
-rm_LDADD += $(remove_LDADD)
+mv_LDADD += $(remove_ldadd)
+rm_LDADD += $(remove_ldadd)
 
 # for eaccess, euidaccess
-copy_LDADD += $(LIB_EACCESS)
-remove_LDADD += $(LIB_EACCESS)
+copy_ldadd += $(LIB_EACCESS)
+remove_ldadd += $(LIB_EACCESS)
 sort_LDADD += $(LIB_EACCESS)
 test_LDADD += $(LIB_EACCESS)
 
 # for selinux use
+copy_ldadd += $(LIB_SELINUX)
 chcon_LDADD += $(LIB_SELINUX)
-copy_LDADD += $(LIB_SELINUX)
 ginstall_LDADD += $(LIB_SELINUX)
 id_LDADD += $(LIB_SELINUX)
 ls_LDADD += $(LIB_SELINUX)
@@ -326,7 +327,7 @@ runcon_LDADD += $(LIB_SELINUX)
 stat_LDADD += $(LIB_SELINUX)
 
 # for gettime, settime, utimecmp, utimens
-copy_LDADD += $(LIB_CLOCK_GETTIME)
+copy_ldadd += $(LIB_CLOCK_GETTIME)
 date_LDADD += $(LIB_CLOCK_GETTIME)
 ginstall_LDADD += $(LIB_CLOCK_GETTIME)
 ls_LDADD += $(LIB_CLOCK_GETTIME)
@@ -357,11 +358,11 @@ factor_LDADD += $(LIB_GMP)
 uptime_LDADD += $(GETLOADAVG_LIBS)
 
 # for various ACL functions
-copy_LDADD += $(LIB_ACL)
+copy_ldadd += $(LIB_ACL)
 ls_LDADD += $(LIB_ACL)
 
 # for various xattr functions
-copy_LDADD += $(LIB_XATTR)
+copy_ldadd += $(LIB_XATTR)
 
 # for print_unicode_char, proper_name_utf8
 cat_LDADD += $(LIBICONV)
