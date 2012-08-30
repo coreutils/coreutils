@@ -529,7 +529,7 @@ fs-magic: Makefile
 	  |grep 0x | perl -p						\
 	    $(fs_normalize_perl_subst)					\
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
-	  | LC_ALL=C sort						\
+	  | $(ASSORT)							\
 	  > $@-t && mv $@-t $@
 
 CLEANFILES += fs-kernel-magic
@@ -538,7 +538,7 @@ fs-kernel-magic: Makefile
 	  | perl -p							\
 	    $(fs_normalize_perl_subst)					\
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
-	  | LC_ALL=C sort						\
+	  | $(ASSORT)							\
 	  > $@-t && mv $@-t $@
 
 BUILT_SOURCES += fs-is-local.h
