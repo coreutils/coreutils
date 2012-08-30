@@ -206,16 +206,17 @@ check-x-vs-1:
 	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t
 
-all_programs =								\
-      (cd ./src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
-       | grep -v '\['
+# Writing a portable rule to generate a manpage like '[.1' would be
+# a nightmare.
+all-progs-but-lbracket = $(filter-out [, $(shell \
+      (cd ./src && MAKEFLAGS= ${MAKE} -s all_programs.list)))
 
 # Ensure that for each .x file in the 'man/' subdirectory, there is a
 # corresponding coreutils program.
 .PHONY: check-programs-vs-x
 check-programs-vs-x: all_programs
 	@status=0;					\
-	for p in dummy `$(all_programs)`; do		\
+	for p in dummy $(all-progs-but-lbracket); do	\
 	  test $$p = dummy && continue;			\
 	  test $$p = ginstall && p=install || : ;	\
 	  test -f $(srcdir)/man/$$p.x			\
