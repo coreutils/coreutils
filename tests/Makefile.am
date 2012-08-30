@@ -45,6 +45,8 @@ check_DATA = .built-programs
             && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
           > $@-t && mv $@-t $@
 
+TEST_EXTENSIONS = .xpl
+
 # '$f' is set by the Automake-generated test harness to the path of the
 # current test script stripped of VPATH components, and is used by the
 # shell-or-perl script to determine the name of the temporary files to be
@@ -54,6 +56,10 @@ LOG_COMPILER = \
   $(SHELL) $(srcdir)/shell-or-perl \
   --test-name "$$f" --srcdir '$(srcdir)' \
   --shell '$(SHELL)' --perl '$(PERL)' --
+
+# Perl scripts that must be run in tainted mode.
+XPL_LOG_COMPILER = \
+  $(PERL) -wT -I$(srcdir) -MCoreutils -MCuSkip -M"CuTmpdir qw($$f)"
 
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
@@ -207,7 +213,7 @@ TESTS =						\
   rm/empty-name					\
   rm/f-1					\
   rm/fail-eacces				\
-  rm/fail-eperm					\
+  rm/fail-eperm.xpl				\
   tail-2/assert					\
   rm/hash					\
   rm/i-1					\

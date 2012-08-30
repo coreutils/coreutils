@@ -1,7 +1,6 @@
 #! /bin/sh
 # Run a test script of the coreutils test scripts, picking up the right
-# interpreter (i.e., perl or the shell) and the right flags for it (e.g.,
-# perl '-T' flag for perl scripts that must run in tainted mode).
+# interpreter (i.e., perl or the shell) and the right flags for it.
 #
 # Copyright (C) 2011-2012 Free Software Foundation, Inc.
 #
@@ -96,11 +95,7 @@ case $shebang_line in
 '#!/usr/bin/perl'*)
   # The test is a perl script.
   if $cu_PERL -e 'use warnings' > /dev/null 2>&1; then
-    # Perl is available, see if we must run the test with taint
-    # mode on or not.
-    case $shebang_line in *\ -T*) T_=T;; *) T_=;; esac
-    # Now run it.
-    exec $cu_PERL -w$T_ -I"$srcdir" -MCoreutils -MCuSkip \
+    exec $cu_PERL -w -I"$srcdir" -MCoreutils -MCuSkip \
                   -M"CuTmpdir qw($test_name)" \
                   -- "$test_script" ${1+"$@"}
   else
