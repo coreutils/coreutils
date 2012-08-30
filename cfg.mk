@@ -509,8 +509,6 @@ update-copyright-env = \
 exclude_file_name_regexp--sc_space_tab = \
   ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$)
 exclude_file_name_regexp--sc_bindtextdomain = ^(gl/.*|lib/euidaccess-stat)\.c$$
-exclude_file_name_regexp--sc_unmarked_diagnostics =    ^build-aux/cvsu$$
-exclude_file_name_regexp--sc_error_message_uppercase = ^build-aux/cvsu$$
 exclude_file_name_regexp--sc_trailing_blank = ^tests/pr/
 exclude_file_name_regexp--sc_system_h_headers = \
   ^src/((system|copy)\.h|libstdbuf\.c)$$

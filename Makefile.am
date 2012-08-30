@@ -49,7 +49,6 @@ EXTRA_DIST =				\
   THANKStt.in				\
   bootstrap				\
   bootstrap.conf			\
-  build-aux/cvsu			\
   cfg.mk				\
   dist-check.mk				\
   maint.mk				\
