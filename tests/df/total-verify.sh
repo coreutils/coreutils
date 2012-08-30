@@ -31,10 +31,10 @@ while (<>)
     # Recognize df output lines like these:
     # /dev/sdc1                  0       0       0    -  /c
     # tmpfs                1536000   12965 1523035    1% /tmp
-    # total                5285932  787409 4498523   15%
-    /^(.*?) +(-?\d+|-) +(-?\d+|-) +(-?\d+|-) +(?:- |[0-9]+%)(.*)$/
+    # total                5285932  787409 4498523   15% -
+    /^(.*?) +(-?\d+|-) +(-?\d+|-) +(-?\d+|-) +(?:- |[0-9]+%) (.*)$/
       or die "$0: invalid input line\n: $_";
-    if ($1 eq 'total' && $5 eq '')
+    if ($1 eq 'total' && $5 eq '-')
       {
         $total == $2 or die "$total != $2";
         $used  == $3 or die "$used  != $3";
