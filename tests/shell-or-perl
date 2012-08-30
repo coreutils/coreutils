@@ -94,15 +94,8 @@ read shebang_line < "$test_script" \
 case $shebang_line in
 '#!/usr/bin/perl'*)
   # The test is a perl script.
-  if $cu_PERL -e 'use warnings' > /dev/null 2>&1; then
-    exec $cu_PERL -w -I"$srcdir" -MCoreutils -MCuSkip \
-                  -M"CuTmpdir qw($test_name)" \
-                  -- "$test_script" ${1+"$@"}
-  else
-    # Perl is not available, skip the test.
-    echo "$test_name: skip: no usable version of Perl found"
-    exit 77
-  fi
+  exec $cu_PERL -w -I"$srcdir" -MCoreutils -MCuSkip \
+                -M"CuTmpdir qw($test_name)" -- "$test_script" ${1+"$@"}
   ;;
 *)
   # Assume the test is a shell script.

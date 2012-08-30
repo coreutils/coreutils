@@ -47,6 +47,12 @@ check_DATA = .built-programs
 
 TEST_EXTENSIONS = .xpl
 
+if HAVE_PERL
+TESTSUITE_PERL = $(PERL)
+else
+TESTSUITE_PERL = $(SHELL) $(srcdir)/no-perl
+endif
+
 # '$f' is set by the Automake-generated test harness to the path of the
 # current test script stripped of VPATH components, and is used by the
 # shell-or-perl script to determine the name of the temporary files to be
@@ -55,11 +61,11 @@ TEST_EXTENSIONS = .xpl
 LOG_COMPILER = \
   $(SHELL) $(srcdir)/shell-or-perl \
   --test-name "$$f" --srcdir '$(srcdir)' \
-  --shell '$(SHELL)' --perl '$(PERL)' --
+  --shell '$(SHELL)' --perl '$(TESTSUITE_PERL)' --
 
 # Perl scripts that must be run in tainted mode.
 XPL_LOG_COMPILER = \
-  $(PERL) -wT -I$(srcdir) -MCoreutils -MCuSkip -M"CuTmpdir qw($$f)"
+  $(TESTSUITE_PERL) -wT -I$(srcdir) -MCoreutils -MCuSkip -M"CuTmpdir qw($$f)"
 
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
@@ -118,6 +124,7 @@ EXTRA_DIST =		\
   init.cfg		\
   init.sh		\
   lang-default		\
+  no-perl		\
   other-fs-tmpdir	\
   sample-test		\
   shell-or-perl		\

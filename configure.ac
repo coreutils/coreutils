@@ -60,6 +60,13 @@ gl_EARLY
 gl_INIT
 coreutils_MACROS
 
+# The test suite needs to know if we have a working perl.
+# FIXME: this is suboptimal.  Ideally, we would be able to call gl_PERL
+# with an ACTION-IF-NOT-FOUND argument ...
+cu_have_perl=yes
+case $PERL in *"/missing ") cu_have_perl=no;; esac
+AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
+
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings],
                   [turn on lots of GCC warnings (for developers)])],
