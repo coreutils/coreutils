@@ -460,8 +460,6 @@ libstdbuf_so_LDADD =
 libstdbuf_so_LDFLAGS = -shared
 libstdbuf_so_CFLAGS = -fPIC $(AM_CFLAGS)
 
-editpl = sed -e 's,@''PERL''@,$(PERL),g'
-
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
 	$(AM_V_GEN)rm -f $@ $@-t
