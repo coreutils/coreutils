@@ -35,6 +35,11 @@ MAINTAINERCLEANFILES += $(ALL_MANS)
 # the manpages must be generated before the distdir is created and filled.
 $(EXTRA_MANS): $(all_programs)
 
+# This is a kludge to remove generated 'man/*.1' from a non-srcdir build.
+# Without this, "make distcheck" might fail.
+distclean-local:
+	test x$(srcdir) = x$(builddir) || rm -f $(ALL_MANS)
+
 # Dependencies common to all man pages.  Updated below.
 mandeps =
 
