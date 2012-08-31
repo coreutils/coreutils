@@ -438,14 +438,23 @@ MAN=`
     test x$p = x'@<:@' && continue
     echo "man/$p.1"
   done`
-# Normalize whitespace.
-MAN=`echo $MAN`
 
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
+OPTIONAL_PKGLIB_PROGS=`
+  for p in $optional_pkglib_progs; do echo src/$p; done`
+# Since this is AC_SUBST'd, Automake won't be able to perform rewrite
+# with $(EXEEXT) appending on it, so we have to do it ourselves.
+OPTIONAL_BIN_PROGS=`
+  for p in $optional_bin_progs; do echo "src/$p\$(EXEEXT)"; done`
+
+# Normalize whitespace.
+MAN=`echo $MAN`
+NO_INSTALL_PROGS_DEFAULT=`echo $NO_INSTALL_PROGS_DEFAULT`
+OPTIONAL_BIN_PROGS=`echo $OPTIONAL_BIN_PROGS`
+OPTIONAL_PKGLIB_PROGS=`echo $OPTIONAL_PKGLIB_PROGS`
+
 AC_SUBST([NO_INSTALL_PROGS_DEFAULT])
-OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
 AC_SUBST([OPTIONAL_BIN_PROGS])
-OPTIONAL_PKGLIB_PROGS=`echo "$optional_pkglib_progs " | sed 's/ $//'`
 AC_SUBST([OPTIONAL_PKGLIB_PROGS])
 
 AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
@@ -464,7 +473,6 @@ AC_CONFIG_FILES(
   Makefile
   lib/Makefile
   po/Makefile.in
-  src/Makefile
   tests/Makefile
   gnulib-tests/Makefile
   )

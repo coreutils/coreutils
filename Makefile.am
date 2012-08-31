@@ -17,7 +17,7 @@
 
 ALL_RECURSIVE_TARGETS =
 
-SUBDIRS = lib src po tests gnulib-tests
+SUBDIRS = lib po . tests gnulib-tests
 
 changelog_etc =				\
   ChangeLog-2005			\
@@ -92,7 +92,7 @@ BUILT_SOURCES = .version
 # See the rm_subst comment for details.
 dist-hook: gen-ChangeLog
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
-	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
+	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
 
 gen_start_date = 2008-02-08
 .PHONY: gen-ChangeLog
@@ -170,5 +170,6 @@ check-git-hook-script-sync:
 	rm -rf $$t;							\
 	test $$fail = 0
 
+include $(top_srcdir)/src/local.mk
 include $(top_srcdir)/doc/local.mk
 include $(top_srcdir)/man/local.mk

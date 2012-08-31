@@ -40,10 +40,10 @@ check: vc_exe_in_TESTS
 CLEANFILES =
 CLEANFILES += .built-programs
 check_DATA = .built-programs
-.built-programs: $(top_srcdir)/src/Makefile.am
-	$(AM_V_GEN)(cd $(top_builddir)/src				\
+.built-programs: $(top_srcdir)/Makefile.am
+	$(AM_V_GEN)(cd $(top_builddir)					\
             && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
-          > $@-t && mv $@-t $@
+          | sed s,^src/,, > $@-t && mv $@-t $@
 
 TEST_EXTENSIONS = .sh .pl .xpl
 

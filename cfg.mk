@@ -166,12 +166,6 @@ sc_long_lines:
 	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
 	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
 
-# TODO: remove once the build system in 'src/' is merged with the
-# top-level one.
-.PHONY: all_programs
-all_programs:
-	@cd ./src && $(MAKE) -s $@
-
 # Option descriptions should not start with a capital letter.
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
@@ -183,7 +177,7 @@ sc_option_desc_uppercase:
 	  && { echo 1>&2 '$@: found initial capitals in --help'; exit 1; } || :
 sc_option_desc_uppercase: $(dist_man1_MANS) \
                           $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT)) \
-                          all_programs
+                          $(all_programs)
 
 # Ensure all man/*.[1x] files are present.
 ALL_RECURSIVE_TARGETS += sc_man_file_correlation
@@ -208,13 +202,12 @@ check-x-vs-1:
 
 # Writing a portable rule to generate a manpage like '[.1' would be
 # a nightmare.
-all-progs-but-lbracket = $(filter-out [, $(shell \
-      (cd ./src && MAKEFLAGS= ${MAKE} -s all_programs.list)))
+all-progs-but-lbracket = $(filter-out [,$(all_programs))
 
 # Ensure that for each .x file in the 'man/' subdirectory, there is a
 # corresponding coreutils program.
 .PHONY: check-programs-vs-x
-check-programs-vs-x: all_programs
+check-programs-vs-x: $(all_programs)
 	@status=0;					\
 	for p in dummy $(all-progs-but-lbracket); do	\
 	  test $$p = dummy && continue;			\

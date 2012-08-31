@@ -164,17 +164,18 @@ END
     ;;
   1,--automake|1,--for-automake)
     echo "## $msg"
+    progsdir=src
     echo no_install__progs =
     for p in $disabled_by_default_progs; do
-      echo no_install__progs += $p
+      echo no_install__progs += $progsdir/$p
     done
     echo build_if_possible__progs =
     for p in $build_if_possible_progs; do
-      echo build_if_possible__progs += $p
+      echo build_if_possible__progs += $progsdir/$p
     done
     echo default__progs =
     for p in $normal_progs; do
-      echo default__progs += $p
+      echo default__progs += $progsdir/$p
     done
     ;;
   *)
