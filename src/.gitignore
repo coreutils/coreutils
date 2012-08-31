@@ -1,4 +1,5 @@
 *.exe
+/.dirstamp
 \[
 arch
 base64
