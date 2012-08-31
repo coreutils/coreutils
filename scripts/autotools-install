@@ -32,7 +32,7 @@ Download, build, and install some tools.
 
 Options:
  --prefix=PREFIX    install tools under specified directory
- --skip-check       do not run "make check" (this can save 50+ min)
+ --skip-check       do not run \"make check\" (this can save 50+ min)
  --help             display this help and exit
 
 For example, to install programs into \$HOME/autotools/bin, run this command:
@@ -41,7 +41,7 @@ For example, to install programs into \$HOME/autotools/bin, run this command:
 
 If you've already verified that your system/environment can build working
 versions of these tools, you can make this script complete in just a
-minute or two (rather than about an hour if you let all "make check"
+minute or two (rather than about an hour if you let all \"make check\"
 tests run) by invoking it like this:
 
   $prog_name --prefix=\$HOME/autotools --skip-check
