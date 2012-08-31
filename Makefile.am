@@ -70,10 +70,6 @@ $(srcdir)/src/cu-progs.mk: $(gen_progs_lists)
 	  && $(SHELL) $(gen_progs_lists) --automake >$@-t \
 	  && chmod a-w $@-t && mv -f $@-t $@
 
-ALL_RECURSIVE_TARGETS += install-root
-install-root:
-	cd src && $(MAKE) $@
-
 ACLOCAL_AMFLAGS = -I m4
 
 # Some tests always need root privileges, others need them only sometimes.
