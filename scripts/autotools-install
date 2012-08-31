@@ -3,8 +3,8 @@
 # tools like autoconf, automake, gettext, etc. that are newer than the ones
 # provided by the distribution on which you want to build.  In that case,
 # you can use this script to bootstrap the "autotools" tool chain, starting
-# with m4 (prereq of autoconf), then autoconf, which a prereq of automake,
-# etc.  It also builds a few others, including gettext and pkg-config.
+# with m4 (prereq of autoconf), then autoconf (prereq of automake), etc.
+# It also builds a few others, including gettext and pkg-config.
 # The results are installed in a directory whose --prefix you specify, and
 # it tells you how to update envvars like PATH and (if you use pkg-config)
 # PKG_CONFIG_PATH.
@@ -69,10 +69,10 @@ get_sources()
 
   # Download the each tar-ball along with its signature, if there is one.
   pkgs=
-  for t in $(echo $tarballs); do
-    base=$(basename $t)
+  for t in $tarballs; do
+    base=`basename $t`
     pkgs="$pkgs $base"
-    test -f $base     || $WGET_COMMAND $t
+    test -f $base || $WGET_COMMAND $t
 
     # No signatures for some :-(
     case $base in pkg-config*) continue;; esac
@@ -120,12 +120,8 @@ esac
 
 # Don't run as root.
 # Make sure id -u succeeds.
-my_uid=`id -u`
-test $? = 0 || {
-  echo "$0: cannot run \`id -u'" 1>&2
-  (exit 1); exit 1
-}
-test $my_uid = 0 && die "please don't run this program as root"
+my_uid=`id -u` && test -n "$my_uid" || die "'id -u' failed"
+test $my_uid -ne 0 || die "please don't run this program as root"
 
 # Ensure that prefix is not /usr/bin or /bin, /sbin, etc.
 case $prefix in
@@ -139,31 +135,33 @@ tmpdir=.build-auto-tools
 mkdir -p $tmpdir
 cd $tmpdir
 
-pkgs=$(get_sources)
+pkgs=`get_sources`
 
 export PATH=$prefix/bin:$PATH
 for pkg in $pkgs; do
   echo building/installing $pkg...
-  dir=$(basename $pkg .tar.gz)
-  rm -rf dir
-  gzip -dc $pkg|tar xf -
+  dir=`basename $pkg .tar.gz`
+  rm -rf $dir
+  gzip -dc $pkg | tar xf -
   cd $dir
-  ./configure CFLAGS=-O2 LDFLAGS=-s --prefix=$prefix    > makerr-config  2>&1
-  make                                                  > makerr-build   2>&1
-  if test "$make_check" = yes; then
+  ./configure CFLAGS=-O2 LDFLAGS=-s --prefix=$prefix >makerr-config 2>&1
+  make >makerr-build 2>&1
+  if test $make_check = yes; then
     case $pkg in
+      # FIXME: these are out of date and very system-sensitive
       automake*) expected_duration_minutes=40;;
       autoconf*) expected_duration_minutes=15;;
       libtool*) expected_duration_minutes=3;;
       *);;
     esac
-    test -n "$expected_duration_minutes" \
-      && echo "running 'make check' for $pkg; NB: this can take over" \
-              "$expected_duration_minutes minutes"
-    make check                                      > makerr-check   2>&1
+    if test -n "$expected_duration_minutes"; then
+      echo "running 'make check' for $pkg; NB: this can take over" \
+           "$expected_duration_minutes minutes"
+    fi
+    make check >makerr-check 2>&1
   fi
-  make install                                      > makerr-install 2>&1
-  echo done at $(date +%Y-%m-%d.%T)
+  make install >makerr-install 2>&1
+  echo "done at `date +%Y-%m-%d.%T`"
   cd ..
 done
 
@@ -176,7 +174,7 @@ case $PKG_CONFIG_PATH in
   *) cat <<EOF;;
 **************************************************************************
 Be sure that PKG_CONFIG_PATH is set in your environment, e.g.,
-PKG_CONFIG_PATH=$prefix/lib/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig
+PKG_CONFIG_PATH=$prefix/lib/pkgconfig:/usr/lib/pkgconfig
 **************************************************************************
 EOF
 esac
