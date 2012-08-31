@@ -198,11 +198,9 @@ sc_long_lines:
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
 # but that would miss descriptions not on the same line as the -option.
-sc_option_desc_uppercase:
+sc_option_desc_uppercase: $(ALL_MANS)
 	@grep '^\\fB\\-' -A1 man/*.1 | LC_ALL=C grep '\.1.[A-Z][a-z]'	\
 	  && { echo 1>&2 '$@: found initial capitals in --help'; exit 1; } || :
-sc_option_desc_uppercase: $(dist_man1_MANS) \
-                          $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT))
 
 # Ensure all man/*.[1x] files are present.
 sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
@@ -217,8 +215,7 @@ check-x-vs-1:
 	t=$@-t;								\
 	(cd $(srcdir)/man && ls -1 *.x)					\
 	  | sed 's/\.x$$//' | $(ASSORT) > $$t;				\
-	(echo $(patsubst man/%,%,$(dist_man1_MANS))			\
-	      $(NO_INSTALL_PROGS_DEFAULT)				\
+	(echo $(patsubst man/%,%,$(ALL_MANS))				\
 	  | tr -s ' ' '\n' | sed 's/\.1$$//')				\
 	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t

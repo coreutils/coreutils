@@ -23,20 +23,18 @@ man_aux = $(dist_man1_MANS:.1=.x)
 EXTRA_DIST += $(man_aux) man/help2man
 MAINTAINERCLEANFILES += $(dist_man1_MANS)
 
-# The "$(VAR:%=dir/%.x)" idiom is not portable according to POSIX, but in
-# practice it works with several make implementation (GNU, BSD, CCS make
-# from Solaris 10, Sun distributed make).
-extra_man_x = $(NO_INSTALL_PROGS_DEFAULT:%=man/%.x)
-extra_man_1 = $(NO_INSTALL_PROGS_DEFAULT:%=man/%.1)
+EXTRA_MANS = @EXTRA_MANS@
 
-EXTRA_DIST += $(extra_man_1) $(extra_man_x)
+EXTRA_DIST += $(EXTRA_MANS) $(EXTRA_MANS:.1=.x)
+
+ALL_MANS = $(dist_man1_MANS) $(EXTRA_MANS)
 
 # This is required because we have subtle inter-directory dependencies:
 # in order to generate all man pages, even those for which we don't
 # install a binary, require that all programs be built at distribution
 # time.  We can't use 'dist-hook' for this, since it would run too late:
 # the manpages must be generated before the distdir is created and filled.
-$(extra_man_1): $(all_programs)
+$(EXTRA_MANS): $(all_programs)
 
 # Depend on this to get version number changes.
 mandep = .version
