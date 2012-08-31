@@ -3,7 +3,7 @@
 # and Automake, and with further distinctions about how and when these
 # programs should be built.  This is useful to avoid duplicating the
 # definitions of these list among several files ('configure.ac' and
-# 'src/Makefile.am' at least); such duplication had proved a source of
+# 'src/local.mk' at least); such duplication had proved a source of
 # inconsistencies and bugs in the past.
 
 set -u
