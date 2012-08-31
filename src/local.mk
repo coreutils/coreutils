@@ -71,7 +71,7 @@ CLEANFILES = $(SCRIPTS)
 # or 'dist'.
 CLEANFILES += $(no_install__progs)
 
-AM_CPPFLAGS = -I$(top_srcdir)/lib
+AM_CPPFLAGS = -I$(top_srcdir)/lib -Isrc
 
 noinst_LIBRARIES = src/libver.a
 nodist_src_libver_a_SOURCES = src/version.c src/version.h
