@@ -145,9 +145,37 @@ sc_sun_os_names:
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
-ALL_RECURSIVE_TARGETS += sc_check-AUTHORS
 sc_check-AUTHORS:
-	@$(MAKE) -s -C src _sc_check-AUTHORS
+# Ensure that the list of programs and author names is accurate.
+# We need a UTF8 locale.  If a lack of locale support or a missing
+# translation inhibits printing of UTF-8 names, just skip this test.
+au_dotdot = authors-dotdot
+au_actual = authors-actual
+sc_check-AUTHORS: $(all_programs)
+	@locale=en_US.UTF-8;				\
+	LC_ALL=$$locale ./src/cat --version		\
+	    | grep ' Torbjorn '	> /dev/null		\
+	  && { echo "$@: skipping this check"; exit 0; }; \
+	rm -f $(au_actual) $(au_dotdot);		\
+	for i in `ls $(all_programs)			\
+	    | sed -e 's,^src/,,' -e 's,$(EXEEXT)$$,,'	\
+	    | sed /libstdbuf/d				\
+	    | $(ASSORT) -u`; do				\
+	  test "$$i" = '[' && continue;			\
+	  exe=$$i;					\
+	  if test "$$i" = install; then			\
+	    exe=ginstall;				\
+	  elif test "$$i" = test; then			\
+	    exe='[';					\
+	  fi;						\
+	  LC_ALL=$$locale ./src/$$exe --version		\
+	    | perl -0 -pi -e 's/,\n/, /gm'		\
+	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
+		  -e 's/,* and /, /; s/\.$$//; p; }';	\
+	done > $(au_actual) &&				\
+	sed -n '/^[^ ][^ ]*:/p' $(srcdir)/AUTHORS > $(au_dotdot) \
+	  && diff $(au_actual) $(au_dotdot) \
+	  && rm -f $(au_actual) $(au_dotdot)
 
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
@@ -170,18 +198,13 @@ sc_long_lines:
 # One could grep source directly as follows:
 # grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
 # but that would miss descriptions not on the same line as the -option.
-ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
-.PHONY: sc_option_desc_uppercase
 sc_option_desc_uppercase:
 	@grep '^\\fB\\-' -A1 man/*.1 | LC_ALL=C grep '\.1.[A-Z][a-z]'	\
 	  && { echo 1>&2 '$@: found initial capitals in --help'; exit 1; } || :
 sc_option_desc_uppercase: $(dist_man1_MANS) \
-                          $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT)) \
-                          $(all_programs)
+                          $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT))
 
 # Ensure all man/*.[1x] files are present.
-ALL_RECURSIVE_TARGETS += sc_man_file_correlation
-.PHONY: sc_man_file_correlation
 sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
 
 # Ensure that for each .x file in the 'man/' subdirectory, there is a
@@ -201,13 +224,13 @@ check-x-vs-1:
 	rm $$t
 
 # Writing a portable rule to generate a manpage like '[.1' would be
-# a nightmare.
-all-progs-but-lbracket = $(filter-out [,$(all_programs))
+# a nightmare, so filter that out.
+all-progs-but-lbracket = $(filter-out [,$(patsubst src/%,%,$(all_programs)))
 
-# Ensure that for each .x file in the 'man/' subdirectory, there is a
-# corresponding coreutils program.
+# Ensure that for each coreutils program there is a corresponding
+# '.x' file in the 'man/' subdirectory.
 .PHONY: check-programs-vs-x
-check-programs-vs-x: $(all_programs)
+check-programs-vs-x:
 	@status=0;					\
 	for p in dummy $(all-progs-but-lbracket); do	\
 	  test $$p = dummy && continue;			\

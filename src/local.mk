@@ -55,8 +55,8 @@ noinst_HEADERS =		\
   src/wheel.h			\
   src/uname.h
 
-EXTRA_DIST += 		\
-  src/dcgen 		\
+EXTRA_DIST +=		\
+  src/dcgen		\
   src/dircolors.hin	\
   src/tac-pipe.c	\
   src/wheel-gen.pl	\
@@ -66,7 +66,8 @@ EXTRA_DIST += 		\
 CLEANFILES = $(SCRIPTS)
 
 # Also remove these sometimes-built programs.
-# For example, even when excluded, they're built via _sc_check-AUTHORS.
+# For example, even when excluded, they're built via 'sc_check-AUTHORS'
+# or 'dist'.
 CLEANFILES += $(no_install__progs)
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
@@ -368,7 +369,7 @@ BUILT_SOURCES += src/dircolors.h
 src/dircolors.h: src/dcgen src/dircolors.hin
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)$(PERL) -w -- $(srcdir)/src/dcgen \
-	                        $(srcdir)/src/dircolors.hin > $@-t
+				$(srcdir)/src/dircolors.hin > $@-t
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
 
@@ -450,7 +451,7 @@ BUILT_SOURCES += src/fs-is-local.h
 src/fs-is-local.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
-	                  --local $(srcdir)/src/stat.c > $@t
+			  --local $(srcdir)/src/stat.c > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
@@ -458,7 +459,7 @@ BUILT_SOURCES += src/fs.h
 src/fs.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
-	                  $(srcdir)/src/stat.c > $@t
+			  $(srcdir)/src/stat.c > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 
@@ -521,37 +522,6 @@ check-README:
 .PHONY: check-duplicate-no-install
 check-duplicate-no-install: src/tr
 	$(AM_V_GEN)test -z "`echo '$(EXTRA_PROGRAMS)' | tr ' ' '\n' | uniq -d`"
-
-# Ensure that the list of programs and author names is accurate.
-# We need a UTF8 locale.  If a lack of locale support or a missing
-# translation inhibits printing of UTF-8 names, just skip this test.
-au_dotdot = authors-dotdot
-au_actual = authors-actual
-.PHONY: _sc_check-AUTHORS
-_sc_check-AUTHORS: $(all_programs)
-	@locale=en_US.UTF-8;				\
-	LC_ALL=$$locale ./cat --version			\
-	    | grep ' Torbjorn '	> /dev/null		\
-	  && { echo "$@: skipping this check"; exit 0; }; \
-	rm -f $(au_actual) $(au_dotdot);		\
-	for i in `ls $(all_programs)			\
-	    | sed -e 's,^src/,,' -e 's,$(EXEEXT)$$,,'	\
-	    | sed /libstdbuf/d				\
-	    | $(ASSORT) -u`; do				\
-	  test "$$i" = '[' && continue;			\
-	  exe=$$i;					\
-	  if test "$$i" = install; then			\
-	    exe=ginstall;				\
-	  elif test "$$i" = test; then			\
-	    exe='[';					\
-	  fi;						\
-	  LC_ALL=$$locale ./$$exe --version		\
-	    | perl -0 -pi -e 's/,\n/, /gm'		\
-	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
-		  -e 's/,* and /, /; s/\.$$//; p; }';	\
-	done > $(au_actual) &&				\
-	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot) && \
-	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
 # Use the just-built 'ginstall', when not cross-compiling.
 if CROSS_COMPILING
