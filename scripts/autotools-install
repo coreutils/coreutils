@@ -1,0 +1,206 @@
+#!/bin/sh
+# Building coreutils from a git-cloned directory may require versions of
+# tools like autoconf, automake, gettext, etc. that are newer than the ones
+# provided by the distribution on which you want to build.  In that case,
+# you can use this script to bootstrap the "autotools" tool chain, starting
+# with m4 (prereq of autoconf), then autoconf, which a prereq of automake,
+# etc.  It also builds a few others, including gettext and pkg-config.
+# The results are installed in a directory whose --prefix you specify, and
+# it tells you how to update envvars like PATH and (if you use pkg-config)
+# PKG_CONFIG_PATH.
+
+# Written by Jim Meyering
+
+VERSION='2012-08-31 07:40' # UTC
+
+prog_name=`basename $0`
+die () { echo "$prog_name: $*" >&2; exit 1; }
+
+tarballs='
+  http://pkgconfig.freedesktop.org/releases/pkg-config-0.27.1.tar.gz
+  ftp://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.gz
+  ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+  http://ftp.gnu.org/gnu/automake/automake-1.12.3.tar.gz
+  ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
+  ftp://ftp.gnu.org/gnu/gettext/gettext-0.18.1.tar.gz
+'
+
+usage() {
+  echo >&2 "\
+Usage: $0 [OPTION]...
+Download, build, and install some tools.
+
+Options:
+ --prefix=PREFIX    install tools under specified directory
+ --skip-check       do not run "make check" (this can save 50+ min)
+ --help             display this help and exit
+
+For example, to install programs into \$HOME/autotools/bin, run this command:
+
+  $prog_name --prefix=\$HOME/autotools
+
+If you've already verified that your system/environment can build working
+versions of these tools, you can make this script complete in just a
+minute or two (rather than about an hour if you let all "make check"
+tests run) by invoking it like this:
+
+  $prog_name --prefix=\$HOME/autotools --skip-check
+
+"
+}
+
+# Get the public keys associated with each .sig file.
+# for i in *.sig; do k=$(gpgv $i 2>&1 | sed -n 's/.*key ID //p'); \
+# gpg --keyserver pgp.mit.edu --recv-key $k; done
+
+# Get the listed tarballs into the current directory.
+get_sources()
+{
+  case `wget --help` in
+    *'--no-cache'*)
+      WGET_COMMAND='wget -nv --no-cache';;
+    *'--cache=on/off'*)
+      WGET_COMMAND='wget -nv --cache=off';;
+    *'--non-verbose'*)
+      WGET_COMMAND='wget -nv';;
+    *)
+      die 'no wget program found; please install it and try again';;
+  esac
+
+  # Download the each tar-ball along with its signature, if there is one.
+  pkgs=
+  for t in $(echo $tarballs); do
+    base=$(basename $t)
+    pkgs="$pkgs $base"
+    test -f $base     || $WGET_COMMAND $t
+
+    # No signatures for some :-(
+    case $base in pkg-config*) continue;; esac
+
+    test -f $base.sig || $WGET_COMMAND $t.sig
+    # Verify each signature.
+    gpg --quiet --verify --trust-model=always   \
+        --trusted-key=32419B785D0CDCFC          \
+        --trusted-key=3859C03B2E236E47          \
+        --trusted-key=B93F60C6B5C4CE13          \
+        --trusted-key=F382AE19F4850180          \
+        --trusted-key=FC818E17429F96EA          \
+        $base.sig > /dev/null 2>&1              \
+      || echo "info: not verifying GPG signature for $base" 1>&2
+  done
+  printf 'ok\n' 1>&2
+  echo $pkgs
+}
+
+#################################################################
+set -e
+
+# Parse options.
+
+make_check=yes
+prefix=
+
+for option
+do
+  case $option in
+    --help) usage; exit;;
+    --skip-check) make_check=no;;
+    --prefix=*) prefix=`expr "$option" : '--prefix=\(.*\)'`;;
+    *) die "$option: unknown option";;
+  esac
+done
+
+test -n "$prefix" \
+  || die "you must specify a --prefix"
+
+case $prefix in
+  /*) ;;
+  *) die 'invalid prefix: '"$prefix"': it must be an absolute name';;
+esac
+
+# Don't run as root.
+# Make sure id -u succeeds.
+my_uid=`id -u`
+test $? = 0 || {
+  echo "$0: cannot run \`id -u'" 1>&2
+  (exit 1); exit 1
+}
+test $my_uid = 0 && die "please don't run this program as root"
+
+# Ensure that prefix is not /usr/bin or /bin, /sbin, etc.
+case $prefix in
+  /bin|/sbin|/usr/bin|/usr/sbin)
+    die "don't set PREFIX to a system directory";;
+  *) ;;
+esac
+
+# Create a build directory, then cd into it for the rest....
+tmpdir=.build-auto-tools
+mkdir -p $tmpdir
+cd $tmpdir
+
+pkgs=$(get_sources)
+
+export PATH=$prefix/bin:$PATH
+for pkg in $pkgs; do
+  echo building/installing $pkg...
+  dir=$(basename $pkg .tar.gz)
+  rm -rf dir
+  gzip -dc $pkg|tar xf -
+  cd $dir
+  ./configure CFLAGS=-O2 LDFLAGS=-s --prefix=$prefix    > makerr-config  2>&1
+  make                                                  > makerr-build   2>&1
+  if test "$make_check" = yes; then
+    case $pkg in
+      automake*) expected_duration_minutes=40;;
+      autoconf*) expected_duration_minutes=15;;
+      libtool*) expected_duration_minutes=3;;
+      *);;
+    esac
+    test -n "$expected_duration_minutes" \
+      && echo "running 'make check' for $pkg; NB: this can take over" \
+              "$expected_duration_minutes minutes"
+    make check                                      > makerr-check   2>&1
+  fi
+  make install                                      > makerr-install 2>&1
+  echo done at $(date +%Y-%m-%d.%T)
+  cd ..
+done
+
+# Without checks (and with existing tarballs), it takes just one minute.
+# Including all checks, it takes nearly an hour on an AMD64/3400+
+
+case $PKG_CONFIG_PATH in
+  $prefix/lib/pkgconfig:/usr/lib/pkgconfig)
+    echo 'Good! your PKG_CONFIG_PATH envvar is already set';;
+  *) cat <<EOF;;
+**************************************************************************
+Be sure that PKG_CONFIG_PATH is set in your environment, e.g.,
+PKG_CONFIG_PATH=$prefix/lib/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig
+**************************************************************************
+EOF
+esac
+
+case $PATH in
+  "$prefix/bin:"*) echo 'Good! your PATH is fine';;
+  *) cat <<EOF;;
+**************************************************************************
+Be sure that "$prefix/bin" is earlier in your PATH than /bin, /usr/bin, etc.
+**************************************************************************
+EOF
+esac
+
+cat <<EOF
+**************************************************************************
+You may want to remove the tool build directory:
+rm -rf $tmpdir
+**************************************************************************
+EOF
+
+## Local Variables:
+## eval: (add-hook 'write-file-hooks 'time-stamp)
+## time-stamp-start: "VERSION='"
+## time-stamp-format: "%:y-%02m-%02d %02H:%02M"
+## time-stamp-time-zone: "UTC"
+## time-stamp-end: "' # UTC"
+## End:
