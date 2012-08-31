@@ -173,9 +173,8 @@ sc_long_lines:
 ALL_RECURSIVE_TARGETS += sc_option_desc_uppercase
 .PHONY: sc_option_desc_uppercase
 sc_option_desc_uppercase:
-	@grep '^\\fB\\-' -A1 *.1 | LC_ALL=C grep '\.1.[A-Z][a-z]' && \
-	    { echo 1>&2 '$@: found initial capitals in --help';   \
-	      exit 1; } || :;
+	@grep '^\\fB\\-' -A1 man/*.1 | LC_ALL=C grep '\.1.[A-Z][a-z]'	\
+	  && { echo 1>&2 '$@: found initial capitals in --help'; exit 1; } || :
 sc_option_desc_uppercase: $(dist_man1_MANS) \
                           $(patsubst %,man/%.1,$(NO_INSTALL_PROGS_DEFAULT)) \
                           all_programs
