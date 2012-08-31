@@ -230,6 +230,7 @@ all-progs-but-lbracket = $(filter-out [,$(patsubst src/%,%,$(all_programs)))
 check-programs-vs-x:
 	@status=0;					\
 	for p in dummy $(all-progs-but-lbracket); do	\
+	  case $$p in *.so) continue;; esac;		\
 	  test $$p = dummy && continue;			\
 	  test $$p = ginstall && p=install || : ;	\
 	  test -f $(srcdir)/man/$$p.x			\
