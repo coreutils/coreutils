@@ -440,22 +440,25 @@ MAN=`
   done`
 
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
-OPTIONAL_PKGLIB_PROGS=`
-  for p in $optional_pkglib_progs; do echo src/$p; done`
+
+# The programs built and installed by "make && make install".
 # Since this is AC_SUBST'd, Automake won't be able to perform rewrite
-# with $(EXEEXT) appending on it, so we have to do it ourselves.
-OPTIONAL_BIN_PROGS=`
+# with $(EXEEXT) appending on it, so we have to do it ourselves -- in
+# this case, only for $(bin_PROGRAMS).
+bin_PROGRAMS=`
   for p in $optional_bin_progs; do echo "src/$p\$(EXEEXT)"; done`
+pkglibexec_PROGRAMS=`
+  for p in $optional_pkglib_progs; do echo src/$p; done`
 
 # Normalize whitespace.
 MAN=`echo $MAN`
 NO_INSTALL_PROGS_DEFAULT=`echo $NO_INSTALL_PROGS_DEFAULT`
-OPTIONAL_BIN_PROGS=`echo $OPTIONAL_BIN_PROGS`
-OPTIONAL_PKGLIB_PROGS=`echo $OPTIONAL_PKGLIB_PROGS`
+bin_PROGRAMS=`echo $bin_PROGRAMS`
+pkglibexec_PROGS=`echo $pkglibexec_PROGRAMS`
 
 AC_SUBST([NO_INSTALL_PROGS_DEFAULT])
-AC_SUBST([OPTIONAL_BIN_PROGS])
-AC_SUBST([OPTIONAL_PKGLIB_PROGS])
+AC_SUBST([bin_PROGRAMS])        AM_SUBST_NOTMAKE([bin_PROGRAMS])
+AC_SUBST([pkglibexec_PROGRAMS]) AM_SUBST_NOTMAKE([pkglibexec_PROGRAMS])
 
 AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
 

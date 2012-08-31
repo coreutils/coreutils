@@ -29,11 +29,12 @@ EXTRA_PROGRAMS = \
    $(build_if_possible__progs) \
    $(default__progs)
 
-bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
+# The user can tweak these lists at configure time.
+bin_PROGRAMS = @bin_PROGRAMS@
+pkglibexec_PROGRAMS = @pkglibexec_PROGRAMS@
 
+# Needed by the testsuite.
 noinst_PROGRAMS = src/setuidgid src/getlimits
-
-pkglibexec_PROGRAMS = $(OPTIONAL_PKGLIB_PROGS)
 
 noinst_HEADERS =		\
   src/chown-core.h		\
