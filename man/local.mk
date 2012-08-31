@@ -18,9 +18,7 @@
 
 dist_man1_MANS = $(MAN)
 
-man_aux = $(dist_man1_MANS:.1=.x)
-
-EXTRA_DIST += $(man_aux) man/help2man
+EXTRA_DIST += $(dist_man1_MANS:.1=.x) man/help2man
 MAINTAINERCLEANFILES += $(dist_man1_MANS)
 
 EXTRA_MANS = @EXTRA_MANS@
