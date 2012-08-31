@@ -156,7 +156,7 @@ sc_check-AUTHORS:
 LINE_LEN_MAX = 80
 FILTER_LONG_LINES =						\
   /^[^:]*\.diff:[^:]*:@@ / d;					\
-  \|^[^:]*tests/misc/sha[0-9]*sum[-:]| d;			\
+  \|^[^:]*tests/misc/sha[0-9]*sum.*\.pl[-:]| d;			\
   \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
 sc_long_lines:
 	@files=$$($(VC_LIST_EXCEPT))					\
@@ -501,7 +501,7 @@ update-copyright-env = \
 
 # List syntax-check exemptions.
 exclude_file_name_regexp--sc_space_tab = \
-  ^(tests/pr/|tests/misc/nl$$|gl/.*\.diff$$)
+  ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$)
 exclude_file_name_regexp--sc_bindtextdomain = ^(gl/.*|lib/euidaccess-stat)\.c$$
 exclude_file_name_regexp--sc_unmarked_diagnostics =    ^build-aux/cvsu$$
 exclude_file_name_regexp--sc_error_message_uppercase = ^build-aux/cvsu$$
@@ -521,7 +521,7 @@ exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
 exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = ^tests/pr/
 exclude_file_name_regexp--sc_program_name = ^(gl/.*|lib/euidaccess-stat)\.c$$
 exclude_file_name_regexp--sc_file_system = \
-  NEWS|^(tests/init\.cfg|src/df\.c|tests/df/df-P)$$
+  NEWS|^(tests/init\.cfg|src/df\.c|tests/df/df-P\.sh)$$
 exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
@@ -536,13 +536,13 @@ exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
 exclude_file_name_regexp--sc_preprocessor_indentation = \
   ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
-  ^(src/system\.h|tests/du/2g)$$
+  ^(src/system\.h|tests/du/2g\.sh)$$
 
 exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c)$$
 
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
-  ^tests/(init\.sh|check\.mk|misc/stdbuf)$$
+  ^tests/(init\.sh|Makefile\.am|misc/stdbuf\.sh)$$
 
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
