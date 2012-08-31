@@ -116,7 +116,6 @@ EXTRA_DIST =		\
   Coreutils.pm		\
   CuSkip.pm		\
   CuTmpdir.pm		\
-  check.mk		\
   d_type-check		\
   envvar-check		\
   filefrag-extent-compare \
