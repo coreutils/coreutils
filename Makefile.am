@@ -55,6 +55,21 @@ EXTRA_DIST =				\
   maint.mk				\
   thanks-gen
 
+gen_progs_lists = $(top_srcdir)/build-aux/gen-lists-of-programs.sh
+
+# Keep these in sync with bootstrap.conf:bootstrap_post_import_hook().
+# Use '$(top_srcdir)/m4' and '$(srcdir)/src' for the benefit of non-GNU
+# makes: it is with those directories that 'cu-progs.m4' and 'cu-progs.mk'
+# appear in our dependencies.
+$(top_srcdir)/m4/cu-progs.m4: $(gen_progs_lists)
+	$(AM_V_GEN)rm -f $@ $@-t \
+	  && $(SHELL) $(gen_progs_lists) --autoconf >$@-t \
+	  && chmod a-w $@-t && mv -f $@-t $@
+$(srcdir)/src/cu-progs.mk: $(gen_progs_lists)
+	$(AM_V_GEN)rm -f $@ $@-t \
+	  && $(SHELL) $(gen_progs_lists) --automake >$@-t \
+	  && chmod a-w $@-t && mv -f $@-t $@
+
 ALL_RECURSIVE_TARGETS += install-root
 install-root:
 	cd src && $(MAKE) $@
