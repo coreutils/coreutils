@@ -495,11 +495,6 @@ all_programs.list:
 	  | sed /libstdbuf/d \
 	  | $(ASSORT) -u
 
-# This is required because we have broken inter-directory dependencies:
-# in order to generate all man pages, even those for which we don't
-# install a binary, require that all programs be built at distribution time.
-dist-hook: $(all_programs)
-
 pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
