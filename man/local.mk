@@ -35,121 +35,126 @@ MAINTAINERCLEANFILES += $(ALL_MANS)
 # the manpages must be generated before the distdir is created and filled.
 $(EXTRA_MANS): $(all_programs)
 
+# Dependencies common to all man pages.  Updated below.
+mandeps =
+
 # Depend on this to get version number changes.
-mandep = .version
-
-# Note that arch depends on uname.c
-man/arch.1:      $(mandep)  src/uname.c
-
-man/base64.1:    $(mandep)  src/base64.c
-man/basename.1:  $(mandep)  src/basename.c
-man/cat.1:       $(mandep)  src/cat.c
-man/chcon.1:     $(mandep)  src/chcon.c
-man/chgrp.1:     $(mandep)  src/chgrp.c
-man/chmod.1:     $(mandep)  src/chmod.c
-man/chown.1:     $(mandep)  src/chown.c
-man/chroot.1:    $(mandep)  src/chroot.c
-man/cksum.1:     $(mandep)  src/cksum.c
-man/comm.1:      $(mandep)  src/comm.c
-man/cp.1:        $(mandep)  src/cp.c
-man/csplit.1:    $(mandep)  src/csplit.c
-man/cut.1:       $(mandep)  src/cut.c
-man/date.1:      $(mandep)  src/date.c
-man/dd.1:        $(mandep)  src/dd.c
-man/df.1:        $(mandep)  src/df.c
-
-# Note that dir depends on ls.c, since that's where its --help text is.
-man/dir.1:       $(mandep)  src/ls.c
-
-man/dircolors.1: $(mandep)  src/dircolors.c
-man/dirname.1:   $(mandep)  src/dirname.c
-man/du.1:        $(mandep)  src/du.c
-man/echo.1:      $(mandep)  src/echo.c
-man/env.1:       $(mandep)  src/env.c
-man/expand.1:    $(mandep)  src/expand.c
-man/expr.1:      $(mandep)  src/expr.c
-man/factor.1:    $(mandep)  src/factor.c
-man/false.1:     $(mandep)  src/false.c
-man/fmt.1:       $(mandep)  src/fmt.c
-man/fold.1:      $(mandep)  src/fold.c
-man/groups.1:    $(mandep)  src/groups.c
-man/head.1:      $(mandep)  src/head.c
-man/hostid.1:    $(mandep)  src/hostid.c
-man/hostname.1:  $(mandep)  src/hostname.c
-man/id.1:        $(mandep)  src/id.c
-man/install.1:   $(mandep)  src/install.c
-man/join.1:      $(mandep)  src/join.c
-man/kill.1:      $(mandep)  src/kill.c
-man/link.1:      $(mandep)  src/link.c
-man/ln.1:        $(mandep)  src/ln.c
-man/logname.1:   $(mandep)  src/logname.c
-man/ls.1:        $(mandep)  src/ls.c
-man/md5sum.1:    $(mandep)  src/md5sum.c
-man/mkdir.1:     $(mandep)  src/mkdir.c
-man/mkfifo.1:    $(mandep)  src/mkfifo.c
-man/mknod.1:     $(mandep)  src/mknod.c
-man/mktemp.1:    $(mandep)  src/mktemp.c
-man/mv.1:        $(mandep)  src/mv.c
-man/nice.1:      $(mandep)  src/nice.c
-man/nl.1:        $(mandep)  src/nl.c
-man/nohup.1:     $(mandep)  src/nohup.c
-man/nproc.1:     $(mandep)  src/nproc.c
-man/od.1:        $(mandep)  src/od.c
-man/paste.1:     $(mandep)  src/paste.c
-man/pathchk.1:   $(mandep)  src/pathchk.c
-man/pinky.1:     $(mandep)  src/pinky.c
-man/pr.1:        $(mandep)  src/pr.c
-man/printenv.1:  $(mandep)  src/printenv.c
-man/printf.1:    $(mandep)  src/printf.c
-man/ptx.1:       $(mandep)  src/ptx.c
-man/pwd.1:       $(mandep)  src/pwd.c
-man/readlink.1:  $(mandep)  src/readlink.c
-man/realpath.1:  $(mandep)  src/realpath.c
-man/rm.1:        $(mandep)  src/rm.c
-man/rmdir.1:     $(mandep)  src/rmdir.c
-man/runcon.1:    $(mandep)  src/runcon.c
-man/seq.1:       $(mandep)  src/seq.c
-man/sha1sum.1:   $(mandep)  src/md5sum.c
-man/sha224sum.1: $(mandep)  src/md5sum.c
-man/sha256sum.1: $(mandep)  src/md5sum.c
-man/sha384sum.1: $(mandep)  src/md5sum.c
-man/sha512sum.1: $(mandep)  src/md5sum.c
-man/shred.1:     $(mandep)  src/shred.c
-man/shuf.1:      $(mandep)  src/shuf.c
-man/sleep.1:     $(mandep)  src/sleep.c
-man/sort.1:      $(mandep)  src/sort.c
-man/split.1:     $(mandep)  src/split.c
-man/stat.1:      $(mandep)  src/stat.c
-man/stdbuf.1:    $(mandep)  src/stdbuf.c
-man/stty.1:      $(mandep)  src/stty.c
-man/sum.1:       $(mandep)  src/sum.c
-man/sync.1:      $(mandep)  src/sync.c
-man/tac.1:       $(mandep)  src/tac.c
-man/tail.1:      $(mandep)  src/tail.c
-man/tee.1:       $(mandep)  src/tee.c
-man/test.1:      $(mandep)  src/test.c
-man/timeout.1:   $(mandep)  src/timeout.c
-man/touch.1:     $(mandep)  src/touch.c
-man/tr.1:        $(mandep)  src/tr.c
-man/true.1:      $(mandep)  src/true.c
-man/truncate.1:  $(mandep)  src/truncate.c
-man/tsort.1:     $(mandep)  src/tsort.c
-man/tty.1:       $(mandep)  src/tty.c
-man/uname.1:     $(mandep)  src/uname.c
-man/unexpand.1:  $(mandep)  src/unexpand.c
-man/uniq.1:      $(mandep)  src/uniq.c
-man/unlink.1:    $(mandep)  src/unlink.c
-man/uptime.1:    $(mandep)  src/uptime.c
-man/users.1:     $(mandep)  src/users.c
-man/vdir.1:      $(mandep)  src/ls.c
-man/wc.1:        $(mandep)  src/wc.c
-man/who.1:       $(mandep)  src/who.c
-man/whoami.1:    $(mandep)  src/whoami.c
-man/yes.1:       $(mandep)  src/yes.c
+mandeps += .version
 
 # This is required so that changes to e.g., emit_bug_reporting_address
 # provoke regeneration of all the manpages.
-$(ALL_MANS): $(top_srcdir)/src/system.h
+mandeps += $(top_srcdir)/src/system.h
+
+$(ALL_MANS): $(mandeps)
+
+# Note that arch depends on uname.c
+man/arch.1:      src/uname.c
+
+man/base64.1:    src/base64.c
+man/basename.1:  src/basename.c
+man/cat.1:       src/cat.c
+man/chcon.1:     src/chcon.c
+man/chgrp.1:     src/chgrp.c
+man/chmod.1:     src/chmod.c
+man/chown.1:     src/chown.c
+man/chroot.1:    src/chroot.c
+man/cksum.1:     src/cksum.c
+man/comm.1:      src/comm.c
+man/cp.1:        src/cp.c
+man/csplit.1:    src/csplit.c
+man/cut.1:       src/cut.c
+man/date.1:      src/date.c
+man/dd.1:        src/dd.c
+man/df.1:        src/df.c
+
+# Note that dir depends on ls.c, since that's where its --help text is.
+man/dir.1:       src/ls.c
+
+man/dircolors.1: src/dircolors.c
+man/dirname.1:   src/dirname.c
+man/du.1:        src/du.c
+man/echo.1:      src/echo.c
+man/env.1:       src/env.c
+man/expand.1:    src/expand.c
+man/expr.1:      src/expr.c
+man/factor.1:    src/factor.c
+man/false.1:     src/false.c
+man/fmt.1:       src/fmt.c
+man/fold.1:      src/fold.c
+man/groups.1:    src/groups.c
+man/head.1:      src/head.c
+man/hostid.1:    src/hostid.c
+man/hostname.1:  src/hostname.c
+man/id.1:        src/id.c
+man/install.1:   src/install.c
+man/join.1:      src/join.c
+man/kill.1:      src/kill.c
+man/link.1:      src/link.c
+man/ln.1:        src/ln.c
+man/logname.1:   src/logname.c
+man/ls.1:        src/ls.c
+man/md5sum.1:    src/md5sum.c
+man/mkdir.1:     src/mkdir.c
+man/mkfifo.1:    src/mkfifo.c
+man/mknod.1:     src/mknod.c
+man/mktemp.1:    src/mktemp.c
+man/mv.1:        src/mv.c
+man/nice.1:      src/nice.c
+man/nl.1:        src/nl.c
+man/nohup.1:     src/nohup.c
+man/nproc.1:     src/nproc.c
+man/od.1:        src/od.c
+man/paste.1:     src/paste.c
+man/pathchk.1:   src/pathchk.c
+man/pinky.1:     src/pinky.c
+man/pr.1:        src/pr.c
+man/printenv.1:  src/printenv.c
+man/printf.1:    src/printf.c
+man/ptx.1:       src/ptx.c
+man/pwd.1:       src/pwd.c
+man/readlink.1:  src/readlink.c
+man/realpath.1:  src/realpath.c
+man/rm.1:        src/rm.c
+man/rmdir.1:     src/rmdir.c
+man/runcon.1:    src/runcon.c
+man/seq.1:       src/seq.c
+man/sha1sum.1:   src/md5sum.c
+man/sha224sum.1: src/md5sum.c
+man/sha256sum.1: src/md5sum.c
+man/sha384sum.1: src/md5sum.c
+man/sha512sum.1: src/md5sum.c
+man/shred.1:     src/shred.c
+man/shuf.1:      src/shuf.c
+man/sleep.1:     src/sleep.c
+man/sort.1:      src/sort.c
+man/split.1:     src/split.c
+man/stat.1:      src/stat.c
+man/stdbuf.1:    src/stdbuf.c
+man/stty.1:      src/stty.c
+man/sum.1:       src/sum.c
+man/sync.1:      src/sync.c
+man/tac.1:       src/tac.c
+man/tail.1:      src/tail.c
+man/tee.1:       src/tee.c
+man/test.1:      src/test.c
+man/timeout.1:   src/timeout.c
+man/touch.1:     src/touch.c
+man/tr.1:        src/tr.c
+man/true.1:      src/true.c
+man/truncate.1:  src/truncate.c
+man/tsort.1:     src/tsort.c
+man/tty.1:       src/tty.c
+man/uname.1:     src/uname.c
+man/unexpand.1:  src/unexpand.c
+man/uniq.1:      src/uniq.c
+man/unlink.1:    src/unlink.c
+man/uptime.1:    src/uptime.c
+man/users.1:     src/users.c
+man/vdir.1:      src/ls.c
+man/wc.1:        src/wc.c
+man/who.1:       src/who.c
+man/whoami.1:    src/whoami.c
+man/yes.1:       src/yes.c
 
 .x.1:
 	$(AM_V_GEN)case '$(PERL)' in				\
