@@ -18,7 +18,7 @@
 
 EXTRA_DIST += man/help2man
 
-man1_MANS = $(MAN)
+man1_MANS = @man1_MANS@
 
 EXTRA_DIST += $(man1_MANS) $(man1_MANS:.1=.x)
 MAINTAINERCLEANFILES += $(man1_MANS)
@@ -149,8 +149,8 @@ man/whoami.1:    $(mandep)  src/whoami.c
 man/yes.1:       $(mandep)  src/yes.c
 
 # This is required so that changes to e.g., emit_bug_reporting_address
-# provoke regeneration of all $(MAN) files.
-$(MAN): $(top_srcdir)/src/system.h
+# provoke regeneration of all the manpages.
+$(man1_MANS): $(top_srcdir)/src/system.h
 
 .x.1:
 	$(AM_V_GEN)case '$(PERL)' in				\

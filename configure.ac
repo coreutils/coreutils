@@ -427,9 +427,9 @@ case " $optional_bin_progs " in
   *' stdbuf '*) gl_ADD_PROG([optional_pkglib_progs], [libstdbuf.so]) ;;
 esac
 
-MAN=`
+man1_MANS=`
   for p in $optional_bin_progs; do
-    # Change "ginstall.1" to "install.1" in $MAN.
+    # Change "ginstall.1" to "install.1".
     test $p = ginstall && p=install
     # Ignore the "[" program, since writing a portable make rule to
     # generate its manpage is not practical.
@@ -453,14 +453,15 @@ pkglibexec_PROGRAMS=`
   for p in $optional_pkglib_progs; do echo src/$p; done`
 
 # Normalize whitespace.
-MAN=`echo $MAN`
+man1_MANS=`echo $man1_MANS`
 EXTRA_MANS=`echo $EXTRA_MANS`
 bin_PROGRAMS=`echo $bin_PROGRAMS`
 pkglibexec_PROGS=`echo $pkglibexec_PROGRAMS`
 
 AC_SUBST([bin_PROGRAMS])        AM_SUBST_NOTMAKE([bin_PROGRAMS])
 AC_SUBST([pkglibexec_PROGRAMS]) AM_SUBST_NOTMAKE([pkglibexec_PROGRAMS])
-AC_SUBST([EXTRA_MANS])
+AC_SUBST([man1_MANS])           AM_SUBST_NOTMAKE([man1_MANS])
+AC_SUBST([EXTRA_MANS])          AM_SUBST_NOTMAKE([EXTRA_MANS])
 
 AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
 
