@@ -13,6 +13,10 @@
 
 VERSION='2012-08-31 07:40' # UTC
 
+# For systems with limited/botched make (the case of most vendor makes!),
+# allow the user to override it.
+MAKE=${MAKE-make}
+
 prog_name=`basename $0`
 die () { echo "$prog_name: $*" >&2; exit 1; }
 
@@ -145,7 +149,7 @@ for pkg in $pkgs; do
   gzip -dc $pkg | tar xf -
   cd $dir
   ./configure CFLAGS=-O2 LDFLAGS=-s --prefix=$prefix >makerr-config 2>&1
-  make >makerr-build 2>&1
+  $MAKE >makerr-build 2>&1
   if test $make_check = yes; then
     case $pkg in
       # FIXME: these are out of date and very system-sensitive
@@ -158,9 +162,9 @@ for pkg in $pkgs; do
       echo "running 'make check' for $pkg; NB: this can take over" \
            "$expected_duration_minutes minutes"
     fi
-    make check >makerr-check 2>&1
+    $MAKE check >makerr-check 2>&1
   fi
-  make install >makerr-install 2>&1
+  $MAKE install >makerr-install 2>&1
   echo "done at `date +%Y-%m-%d.%T`"
   cd ..
 done
