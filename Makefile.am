@@ -49,6 +49,7 @@ EXTRA_DIST =				\
   THANKStt.in				\
   bootstrap				\
   bootstrap.conf			\
+  build-aux/gen-lists-of-programs.sh	\
   cfg.mk				\
   dist-check.mk				\
   maint.mk				\

@@ -96,6 +96,7 @@
 /m4/.cvsignore
 /m4/.gitignore
 /m4/codeset.m4
+/m4/cu-progs.m4
 /m4/fcntl-o.m4
 /m4/gettext.m4
 /m4/glibc2.m4
@@ -150,6 +151,7 @@
 /po/remove-potcdate.sed
 /po/remove-potcdate.sin
 /po/stamp-po
+/src/cu-progs.mk
 /src/version.c
 /src/version.h
 /stamp-h1
