@@ -206,7 +206,7 @@ sc_option_desc_uppercase: $(ALL_MANS)
 sc_man_file_correlation: check-x-vs-1 check-programs-vs-x
 
 # Ensure that for each .x file in the 'man/' subdirectory, there is a
-# corresponding .1 file in the definition of $(dist_man1_MANS).
+# corresponding .1 file in the definition of $(EXTRA_MANS).
 # But since that expansion usually lacks programs like arch and hostname,
 # add them here manually.
 .PHONY: check-x-vs-1

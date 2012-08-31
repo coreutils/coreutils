@@ -16,16 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-dist_man1_MANS = $(MAN)
+EXTRA_DIST += man/help2man
 
-EXTRA_DIST += $(dist_man1_MANS:.1=.x) man/help2man
-MAINTAINERCLEANFILES += $(dist_man1_MANS)
+man1_MANS = $(MAN)
+
+EXTRA_DIST += $(man1_MANS) $(man1_MANS:.1=.x)
+MAINTAINERCLEANFILES += $(man1_MANS)
 
 EXTRA_MANS = @EXTRA_MANS@
 
 EXTRA_DIST += $(EXTRA_MANS) $(EXTRA_MANS:.1=.x)
 
-ALL_MANS = $(dist_man1_MANS) $(EXTRA_MANS)
+ALL_MANS = $(man1_MANS) $(EXTRA_MANS)
 
 # This is required because we have subtle inter-directory dependencies:
 # in order to generate all man pages, even those for which we don't
