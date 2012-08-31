@@ -178,7 +178,7 @@ man/yes.1:       src/yes.c
 	rm -f $@ $@-t							\
 	  && t=$*.td							\
 	  && rm -rf $$t							\
-	  && mkdir $$t							\
+	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) $(abs_top_builddir)/src/$$prog $$name)	\
 	  && $(PERL) -- $(srcdir)/man/help2man				\
 		     --source='$(PACKAGE_STRING)'			\
