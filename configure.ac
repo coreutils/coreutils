@@ -420,11 +420,11 @@ dnl of coreutils programs to be built only upon explicit user request,
 dnl saving that list in the $no_install_progs_default shell variable.
 m4_include([m4/cu-progs.m4])
 
-# Now that we know which programs will actually be built up, figure out
+# Now that we know which programs will actually be built, determine
 # which optional helper progs should be compiled.
-optional_pkglib_progs=
 case " $optional_bin_progs " in
-  *' stdbuf '*) gl_ADD_PROG([optional_pkglib_progs], [libstdbuf.so]) ;;
+  *' stdbuf '*) pkglibexec_PROGRAMS='src/libstdbuf.so';;
+  *) pkglibexec_PROGRAMS='';;
 esac
 
 man1_MANS=`
@@ -448,9 +448,7 @@ EXTRA_MANS=`for p in $no_install_progs_default; do echo man/$p.1; done`
 # with $(EXEEXT) appending on it, so we have to do it ourselves -- in
 # this case, only for $(bin_PROGRAMS).
 bin_PROGRAMS=`
-  for p in $optional_bin_progs; do echo "src/$p\$(EXEEXT)"; done`
-pkglibexec_PROGRAMS=`
-  for p in $optional_pkglib_progs; do echo src/$p; done`
+  for p in $optional_bin_progs; do echo src/"$p"'$(EXEEXT)'; done`
 
 # Normalize whitespace.
 man1_MANS=`echo $man1_MANS`
