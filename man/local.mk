@@ -181,7 +181,7 @@ man/yes.1:       src/yes
 	  && t=$*.td							\
 	  && rm -rf $$t							\
 	  && $(MKDIR_P) $$t						\
-	  && (cd $$t && $(LN_S) $(abs_top_builddir)/src/$$prog $$name)	\
+	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog $$name) \
 	  && $(PERL) -- $(srcdir)/man/help2man				\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
