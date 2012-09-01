@@ -9,10 +9,7 @@ tmpdir = $(abs_top_builddir)/tests/torture
 t=$(tmpdir)/$(PACKAGE)/test
 pfx=$(t)/i
 
-built_programs =						\
-  $$(echo 'spy:;@echo $$(bin_PROGRAMS)'				\
-    | MAKEFLAGS= $(MAKE) -s -C src -f Makefile -f - spy		\
-    | fmt -1 | sed 's,$(EXEEXT)$$,,' | sort -u)
+built_programs := $(sort $(patsubst src/%$(EXEEXT),%,$(bin_PROGRAMS)))
 
 # More than once, tainted build and source directory names would
 # have caused at least one "make check" test to apply "chmod 700"
