@@ -162,16 +162,6 @@ all_root_tests =				\
 check-root:
 	$(MAKE) check TESTS='$(root_tests)'
 
-check-recursive: root-hint
-
-# Advertise 'check-root' target.
-.PHONY: root-hint
-root-hint:
-	@echo '***********************************************************'
-	@echo "NOTICE: Some tests may be run only as root."
-	@echo "  See the 'Running tests as root' section in README."
-	@echo '***********************************************************'
-
 EXTRA_DIST += $(all_tests)
 
 # Do not choose a name that is a shell keyword like 'if', or a
