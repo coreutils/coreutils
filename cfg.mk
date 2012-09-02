@@ -111,6 +111,19 @@ sc_root_tests:
 	       exit 1; } || :;						\
 	fi
 
+# Ensure that all version-controlled test cases are listed in $(all_tests).
+sc_tests_list_consistency:
+	@bs="\\";							\
+	test_extensions_rx=`echo $(TEST_EXTENSIONS)			\
+	  | sed -e "s/ /|/g" -e "s/$$bs./$$bs$$bs./g"`;			\
+	{								\
+	  for t in $(all_tests); do echo $$t; done;			\
+	  cd $(top_srcdir);						\
+	  $(SHELL) build-aux/vc-list-files tests			\
+	    | grep -v '^tests/init\.sh$$'				\
+	    | $(EGREP) "$$test_extensions_rx\$$";			\
+	} | sort | uniq -u | grep . && exit 1; :
+
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:

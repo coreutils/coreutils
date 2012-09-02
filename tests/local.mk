@@ -23,24 +23,6 @@ root_tests = $(all_root_tests)
 
 EXTRA_DIST += $(all_tests)
 
-# Ensure that each version-controlled file in 'tests/' with a suffix
-# specified in $(TEST_EXTENSIONS) is listed in $(all_tests).
-vc_exe_in_TESTS:
-	$(AM_V_GEN)test -d $(top_srcdir)/.git || exit 1;		\
-	bs="\\";							\
-	test_extensions_rx=`echo $(TEST_EXTENSIONS)			\
-	  | sed -e "s/ /|/g" -e "s/$$bs./$$bs$$bs./g"`;			\
-	{								\
-	  for t in $(all_tests); do echo $$t; done; 			\
-	  cd $(top_srcdir);						\
-	  $(SHELL) build-aux/vc-list-files $(subdir)			\
-	    | grep -v '^tests/init\.sh$$'				\
-	    | $(EGREP) "$$test_extensions_rx\$$";			\
-	} | sort | uniq -u | grep . && exit 1; :
-
-check-local: vc_exe_in_TESTS
-.PHONY: vc_exe_in_TESTS
-
 TEST_EXTENSIONS = .sh .pl .xpl
 
 if HAVE_PERL
