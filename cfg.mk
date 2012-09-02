@@ -146,7 +146,6 @@ sc_sun_os_names:
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
-sc_check-AUTHORS:
 # Ensure that the list of programs and author names is accurate.
 # We need a UTF8 locale.  If a lack of locale support or a missing
 # translation inhibits printing of UTF-8 names, just skip this test.
