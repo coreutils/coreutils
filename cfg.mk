@@ -22,7 +22,8 @@ manual_title = Core GNU utilities
 url_dir_list = http://ftp.gnu.org/gnu/$(PACKAGE)
 
 # Tests not to run as part of "make distcheck".
-local-checks-to-skip =
+local-checks-to-skip = \
+  sc_proper_name_utf8_requires_ICONV
 
 # Tools used to bootstrap this package, used for "announcement".
 bootstrap-tools = autoconf,automake,gnulib,bison
