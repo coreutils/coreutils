@@ -501,7 +501,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-duplicate-no-install
+check-local: check-README check-duplicate-no-install
 .PHONY: check-README
 check-README:
 	$(AM_V_GEN)rm -rf $(pr) $(pm)

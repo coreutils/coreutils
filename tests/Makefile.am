@@ -34,7 +34,7 @@ vc_exe_in_TESTS: Makefile
 	 } | sort | uniq -u | grep . && exit 1 ||:;			\
 	else :; fi
 
-check: vc_exe_in_TESTS
+check-local: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
 
 CLEANFILES =
