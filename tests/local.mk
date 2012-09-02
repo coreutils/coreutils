@@ -63,6 +63,9 @@ PL_LOG_COMPILER = $(TESTSUITE_PERL) $(TESTSUITE_PERL_OPTIONS)
 # Perl scripts that must be run in tainted mode.
 XPL_LOG_COMPILER = $(TESTSUITE_PERL) -T $(TESTSUITE_PERL_OPTIONS)
 
+# We don't want this to go in the top-level directory.
+TEST_SUITE_LOG = tests/test-suite.log
+
 # Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
 # The rest are envvar settings that propagate build-related Makefile
