@@ -487,16 +487,6 @@ all_programs = \
     $(bin_SCRIPTS) \
     $(EXTRA_PROGRAMS)
 
-built_programs.list:
-	@echo $(bin_PROGRAMS) $(bin_SCRIPTS) | tr ' ' '\n' \
-	  | sed -e 's,$(EXEEXT)$$,,' -e 's,^src/,,' \
-	  | $(ASSORT) -u | tr '\n' ' '
-
-all_programs.list:
-	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
-	  | sed /libstdbuf/d \
-	  | $(ASSORT) -u
-
 pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
