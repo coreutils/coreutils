@@ -95,21 +95,12 @@ sc_prohibit_jm_in_m4:
 
 # Ensure that each root-requiring test is run via the "check-root" rule.
 sc_root_tests:
-	@if test -d tests \
-	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
-	t1=sc-root.expected; t2=sc-root.actual;				\
-	grep -nl '^ *require_root_$$'					\
-	  $$($(VC_LIST) tests) |sed s,tests/,, |sort > $$t1;		\
-	sed -n '/^root_tests =[	 ]*\\$$/,/[^\]$$/p'			\
-	  $(srcdir)/tests/Makefile.am					\
-	    | sed 's/^  *//;/^root_tests =/d'				\
-	    | tr -s '\012\\' '  ' | fmt -1 | sort > $$t2;		\
-	diff -u $$t1 $$t2 || diff=1 || diff=;				\
+	@t1=sc-root.expected; t2=sc-root.actual;			\
+	grep -nl '^ *require_root_$$' `$(VC_LIST) tests` | sort > $$t1;	\
+	for t in $(all_root_tests); do echo $$t; done | sort > $$t2;	\
+	st=0; diff -u $$t1 $$t2 || st=1;				\
 	rm -f $$t1 $$t2;						\
-	test "$$diff"							\
-	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
-	       exit 1; } || :;						\
-	fi
+	exit $$st
 
 # Ensure that all version-controlled test cases are listed in $(all_tests).
 sc_tests_list_consistency:
