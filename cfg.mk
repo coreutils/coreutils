@@ -245,17 +245,6 @@ sc_NEWS_two_empty_lines:
 	  || { echo '$(ME): use two empty lines to separate NEWS sections' \
 		 1>&2; exit 1; } || :
 
-# Perl-based tests used to exec perl from a #!/bin/sh script.
-# Now they all start with #!/usr/bin/perl and the portability
-# infrastructure is in tests/Makefile.am.  Make sure no old-style
-# script sneaks back in.
-sc_no_exec_perl_coreutils:
-	@if test -f $(srcdir)/tests/Coreutils.pm; then			\
-	  grep '^exec  *\$$PERL.*MCoreutils' $$($(VC_LIST) tests) &&	\
-	    { echo 1>&2 '$(ME): found anachronistic Perl-based tests';	\
-	      exit 1; } || :;						\
-	fi
-
 # With split lines, don't leave an operator at end of line.
 # Instead, put it on the following line, where it is more apparent.
 # Don't bother checking for "*" at end of line, since it provokes
