@@ -562,7 +562,7 @@ exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c)$$
 
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
-  ^tests/(init\.sh|Makefile\.am|misc/stdbuf\.sh)$$
+  ^tests/(init\.sh|local.mk|misc/stdbuf\.sh)$$
 
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
