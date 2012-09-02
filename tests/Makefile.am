@@ -15,18 +15,18 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Ensure that all version-controlled executable files are listed in TESTS.
-# Collect test names from the line matching /^TESTS = \\$$/ to the following
-# one that does not end in '\'.
-_v = TESTS
-_w = root_tests
+# Indirections required so that we'll still be able to know the
+# complete list of our tests even if the user override TESTS from the
+# command line (which he's allowed to do by the test harness API).
+TESTS = $(all_tests)
+root_tests = $(all_root_tests)
+
+# Ensure that all version-controlled executable files are listed
+# in $(all_tests).
 vc_exe_in_TESTS: Makefile
 	$(AM_V_GEN)if test -d $(top_srcdir)/.git && test $(srcdir) = .; then \
 	 {								\
-	  for list in $(_v) $(_w); do					\
-	    sed -n "/^$$list =[	 ]*\\\\$$/,/[^\]$$/p" Makefile.am |	\
-	    sed -n 's/^  *\([^$$	 ]\{1,\}\).*/\1/p';		\
-	  done;								\
+	  for t in $(all_tests); do echo $$t; done;			\
 	  for f in `cd $(top_srcdir) &&					\
 	   build-aux/vc-list-files $(subdir) | sed 's!^$(subdir)/!!'`; do \
 	    test -f "$$f" && test -x "$$f" && echo "$$f";		\
@@ -128,7 +128,7 @@ EXTRA_DIST =		\
   sample-test		\
   $(pr_data)
 
-root_tests =					\
+all_root_tests =				\
   chown/basic.sh				\
   cp/cp-a-selinux.sh				\
   cp/preserve-gid.sh				\
@@ -170,7 +170,7 @@ root-hint:
 	@echo "  See the 'Running tests as root' section in README."
 	@echo '***********************************************************'
 
-EXTRA_DIST += $(TESTS)
+EXTRA_DIST += $(all_tests)
 
 # Do not choose a name that is a shell keyword like 'if', or a
 # commonly-used utility like 'cat' or 'test', as the name of a test.
@@ -188,7 +188,7 @@ EXTRA_DIST += $(TESTS)
 # they share time with tests that burn CPU, not with others that sleep.
 # Put head-elide-tail early, because it's long-running.
 
-TESTS =						\
+all_tests =					\
   misc/help-version.sh				\
   tail-2/inotify-race.sh			\
   misc/invalid-opt.pl				\
@@ -656,7 +656,7 @@ TESTS =						\
   touch/read-only.sh				\
   touch/relative.sh				\
   touch/trailing-slash.sh			\
-  $(root_tests)
+  $(all_root_tests)
 
 pr_data =					\
   pr/0F						\
