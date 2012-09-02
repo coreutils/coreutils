@@ -462,6 +462,8 @@ AC_SUBST([pkglibexec_PROGRAMS]) AM_SUBST_NOTMAKE([pkglibexec_PROGRAMS])
 AC_SUBST([man1_MANS])           AM_SUBST_NOTMAKE([man1_MANS])
 AC_SUBST([EXTRA_MANS])          AM_SUBST_NOTMAKE([EXTRA_MANS])
 
+AC_SUBST([built_programs], [$optional_bin_progs])
+
 AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
 
 ############################################################################

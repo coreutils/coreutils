@@ -39,14 +39,6 @@ vc_exe_in_TESTS:
 check-local: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
 
-CLEANFILES =
-CLEANFILES += .built-programs
-check_DATA = .built-programs
-.built-programs: $(top_srcdir)/Makefile.am
-	$(AM_V_GEN)(cd $(top_builddir)					\
-            && MAKEFLAGS= $(MAKE) -s built_programs.list)		\
-          | sed s,^src/,, > $@-t && mv $@-t $@
-
 TEST_EXTENSIONS = .sh .pl .xpl
 
 if HAVE_PERL
@@ -86,7 +78,7 @@ AM_TESTS_ENVIRONMENT =				\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   abs_srcdir='$(abs_srcdir)'			\
-  built_programs="`cat .built-programs`"	\
+  built_programs='$(built_programs)'		\
   host_os=$(host_os)				\
   host_triplet='$(host_triplet)'		\
   srcdir='$(srcdir)'				\
