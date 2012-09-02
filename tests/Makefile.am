@@ -24,15 +24,15 @@ root_tests = $(all_root_tests)
 # Ensure that all version-controlled executable files are listed
 # in $(all_tests).
 vc_exe_in_TESTS:
-	$(AM_V_GEN)if test -d $(top_srcdir)/.git && test $(srcdir) = .; then \
+	$(AM_V_GEN)test -d $(top_srcdir)/.git || exit 1;		\
 	 {								\
-	  for t in $(all_tests); do echo $$t; done;			\
-	  for f in `cd $(top_srcdir) &&					\
-	   build-aux/vc-list-files $(subdir) | sed 's!^$(subdir)/!!'`; do \
-	    test -f "$$f" && test -x "$$f" && echo "$$f";		\
+	  for t in $(all_tests); do echo $$t; done; 			\
+	  cd $(top_srcdir);						\
+	  for f in `$(SHELL) build-aux/vc-list-files $(subdir)		\
+	              | sed 's!^$(subdir)/!!'`; do			\
+	    test -f "tests/$$f" && test -x "tests/$$f" && echo "$$f";	\
 	  done;								\
-	 } | sort | uniq -u | grep . && exit 1 ||:;			\
-	else :; fi
+	 } | sort | uniq -u | grep . && exit 1; :
 
 check-local: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
