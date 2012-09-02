@@ -23,7 +23,7 @@ root_tests = $(all_root_tests)
 
 # Ensure that all version-controlled executable files are listed
 # in $(all_tests).
-vc_exe_in_TESTS: Makefile
+vc_exe_in_TESTS:
 	$(AM_V_GEN)if test -d $(top_srcdir)/.git && test $(srcdir) = .; then \
 	 {								\
 	  for t in $(all_tests); do echo $$t; done;			\
