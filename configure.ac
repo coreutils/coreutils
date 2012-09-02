@@ -480,7 +480,6 @@ AC_CONFIG_FILES(
   Makefile
   lib/Makefile
   po/Makefile.in
-  tests/Makefile
   gnulib-tests/Makefile
   )
 AC_OUTPUT

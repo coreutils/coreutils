@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
 # 9 is a magic number, related to internal details of tail.c and hash.c

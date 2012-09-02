@@ -21,7 +21,7 @@
 # ln: 'd/.': cannot overwrite directory
 # Based on a test case from Dmitry V. Levin.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ln
 
 mkdir d || framework_failure_

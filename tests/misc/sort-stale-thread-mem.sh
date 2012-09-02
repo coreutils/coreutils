@@ -18,7 +18,7 @@
 
 # written by Jim Meyering and Paul Eggert
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
 
 very_expensive_

@@ -21,7 +21,7 @@
 # actually remove files with names of entries in the current directory
 # but relative to '/' rather than relative to the current directory.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 
 rm -r '' > /dev/null 2>&1 && fail=1

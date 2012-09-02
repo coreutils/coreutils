@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 
 touch file1-1 file1-2 file2-1 file2-2 file3-1 file3-2 file4-1 file4-2 \

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 require_perl_
 
@@ -102,7 +102,7 @@ for i in $(seq 1 2 21); do
       # exclude the physical block numbers; they always differ
       filefrag -v j1 > ff1 || framework_failure_
       filefrag -vs j2 > ff2 || framework_failure_
-      { f ff1; f ff2; } | $PERL $abs_top_srcdir/tests/filefrag-extent-compare \
+      { f ff1; f ff2; } | $PERL $abs_srcdir/tests/filefrag-extent-compare \
         || {
              warn_ ignoring filefrag-reported extent map differences
              # Show the differing extent maps.

@@ -17,7 +17,7 @@
 
 ALL_RECURSIVE_TARGETS =
 
-SUBDIRS = lib po . tests gnulib-tests
+SUBDIRS = lib po . gnulib-tests
 
 changelog_etc =				\
   ChangeLog-2005			\
@@ -71,11 +71,6 @@ $(srcdir)/src/cu-progs.mk: $(gen_progs_lists)
 	  && chmod a-w $@-t && mv -f $@-t $@
 
 ACLOCAL_AMFLAGS = -I m4
-
-# Some tests always need root privileges, others need them only sometimes.
-ALL_RECURSIVE_TARGETS += check-root
-check-root:
-	cd tests && $(MAKE) $@ SUBDIRS=
 
 # Shortcut targets to make it easier to run (very) expensive tests.
 check-expensive:
@@ -184,3 +179,4 @@ check-git-hook-script-sync:
 include $(top_srcdir)/src/local.mk
 include $(top_srcdir)/doc/local.mk
 include $(top_srcdir)/man/local.mk
+include $(top_srcdir)/tests/local.mk

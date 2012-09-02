@@ -28,7 +28,7 @@
 # on Linux+PROC_FS systems because its fts implementation would revert
 # unnecessarily to using FTS_NOCHDIR mode in this corner case.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
 
 proc_file=/proc/self/fd

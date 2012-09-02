@@ -20,7 +20,7 @@
 # though now such usage evokes a warning:
 # cp: 'slink': WARNING: using -r to copy symbolic links is not portable
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
 echo abc > foo || framework_failure_

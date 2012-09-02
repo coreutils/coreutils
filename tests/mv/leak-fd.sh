@@ -18,11 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # limit so don't run it by default.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 skip_if_root_
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
 # This test is relatively expensive, and might well evoke a
 # framework-failure on systems with a smaller command-line length

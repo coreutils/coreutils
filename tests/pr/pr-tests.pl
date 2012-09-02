@@ -412,7 +412,7 @@ my @tv = (
 # Convert the above old-style test vectors to the newer
 # format used by Coreutils.pm.
 
-my $pfx = "$ENV{abs_srcdir}/pr";
+my $pfx = "$ENV{abs_srcdir}/tests/pr";
 
 # Normalize otherwise-variable output page headers.
 my $common_option_prefix = '--date-format="-- Date/Time --" -h x';

@@ -19,7 +19,7 @@
 
 # Based on a problem report from Jamie Lokier.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ln
 
 touch a b || framework_failure_

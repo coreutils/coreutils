@@ -21,7 +21,7 @@
 # It skips the test if your system lacks a /proc/$pid/status
 # file, or if its contents don't look right.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
 require_proc_pid_status_

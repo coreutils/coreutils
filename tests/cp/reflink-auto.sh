@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 a_other="$other_partition_tmpdir/a"
 rm -f "$a_other" || framework_failure_
 

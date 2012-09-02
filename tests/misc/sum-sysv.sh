@@ -22,7 +22,7 @@
 LC_ALL=C
 export LC_ALL
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sum
 
 require_perl_

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ pwd
 
 require_readable_root_
@@ -28,7 +28,7 @@ export ARGV_0
 
 # Don't use CuTmpdir here, since File::Temp's use of rmtree can't
 # remove the deep tree we create.
-$PERL -Tw -I"$abs_srcdir" -MCuSkip -- - <<\EOF
+$PERL -Tw -I"$abs_srcdir/tests" -MCuSkip -- - <<\EOF
 
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.

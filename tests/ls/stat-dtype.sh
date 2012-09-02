@@ -21,7 +21,7 @@
 # The trick is to create an un-stat'able symlink and to see if ls
 # can report its type nonetheless, using dirent.d_type.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
 # Skip this test unless "." is on a file system with useful d_type info.

@@ -33,7 +33,7 @@ my @Types = qw (IN IN_PIPE OUT ERR AUX CMP EXIT PRE POST OUT_SUBST
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1}
    qw (OUT ERR EXIT PRE POST OUT_SUBST ERR_SUBST ENV);
-my $srcdir = $ENV{srcdir};
+my $srcdir = "$ENV{srcdir}";
 my $Global_count = 1;
 
 # When running in a DJGPP environment, make $ENV{SHELL} point to bash.
@@ -46,7 +46,7 @@ defined $ENV{DJDIR}
 # ================
 # 'contents'               contents only (file name is derived from test name)
 # {filename => 'contents'} filename and contents
-# {filename => undef}      filename only -- $(srcdir)/filename must exist
+# {filename => undef}      filename only -- $(srcdir)/tests/filename must exist
 #
 # FIXME: If there is more than one input file, then you can't specify 'REDIR'.
 # PIPE is still ok.
@@ -185,7 +185,7 @@ sub _process_file_spec ($$$$$)
       # FIXME: put $srcdir in here somewhere
       warn "$program_name: $test_name: specified file '$file' does"
         . " not exist\n"
-          if ! -f "$srcdir/$file";
+          if ! -f "$srcdir/tests/$file";
     }
 
   return $file;

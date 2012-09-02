@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 require_root_
 
@@ -28,7 +28,7 @@ cleanup_()
   umount a/b
   rm -rf "$other_partition_tmpdir"
 }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
 t=$other_partition_tmpdir
 mkdir -p a/b $t/y

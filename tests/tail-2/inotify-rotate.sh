@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 expensive_
 
 # Wait several seconds for grep REGEXP FILE to succeed.

@@ -23,7 +23,7 @@
 #   Aborted
 # due to a race condition in which a dev/inode pair is reused.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
 # Not "expensive" per se, but sleeping for so long is annoying.

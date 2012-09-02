@@ -19,11 +19,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
 touch k "$other_partition_tmpdir/k" || framework_failure_
 chmod u-w "$other_partition_tmpdir" || framework_failure_

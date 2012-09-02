@@ -21,7 +21,7 @@
 # Now it gives this:
 #   cp: can't copy a directory 'dir' into itself 'dir/dir'
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
 mkdir a dir || framework_failure_

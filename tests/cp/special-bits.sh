@@ -20,7 +20,7 @@
 # This test would fail due to a bug introduced in 4.0y.
 # The bug was fixed in 4.0z.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 require_root_
 

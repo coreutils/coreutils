@@ -23,7 +23,7 @@
 # And the rm from coreutils-5.0 exposes the same problem when there
 # are 338 or more files in a directory on a Darwin-6.5 system
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 
 mkdir t || framework_failure_

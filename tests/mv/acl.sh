@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv getfacl setfacl
 
 require_acl_
@@ -27,7 +27,7 @@ grep '^#define USE_ACL 1' $CONFIG_HEADER > /dev/null ||
   skip_ "insufficient ACL support"
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
 touch file || framework_failure_
 t1=$other_partition_tmpdir/t1

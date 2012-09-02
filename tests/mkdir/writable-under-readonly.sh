@@ -24,7 +24,7 @@
 #
 # Demonstrate the problem, as root:
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mkdir
 require_root_
 

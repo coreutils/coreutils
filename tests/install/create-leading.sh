@@ -19,7 +19,7 @@
 # Note that the tests below use 'ginstall', not install, because
 # that's the name of the binary in ../../src.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ginstall
 
 

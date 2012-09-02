@@ -20,7 +20,7 @@
 # Before the switch to an fts-based implementation in coreutils 5.0.92,
 # this test would fail.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
 
 # Skip this test if your system has neither the openat-style functions

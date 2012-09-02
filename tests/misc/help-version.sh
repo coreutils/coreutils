@@ -23,7 +23,7 @@
 test "x$SHELL" = x && SHELL=/bin/sh
 export SHELL
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
 expected_failure_status_chroot=125
 expected_failure_status_env=125

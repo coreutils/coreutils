@@ -19,12 +19,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. "${srcdir=.}/init.sh"; path_prepend_ ../src
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 require_root_
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_srcdir/other-fs-tmpdir"
+. "$abs_srcdir/tests/other-fs-tmpdir"
 
 # Set up to run a test where non-root user tries to move a root-owned
 # file from a sticky tmpdir to a directory owned by that user on
