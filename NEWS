@@ -19,6 +19,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   than ignoring the -d option and failing with an 'Is a directory' error.
   [bug introduced in coreutils-8.19, with the addition of --dir (-d)]
 
+  rm -r S/ (where S is a symlink-to-directory) no longer gives the invalid
+  "Too many levels of symbolic links" diagnostic.
+  [bug introduced in coreutils-8.6]
+
 ** Improvements
 
   stat and tail work better with ZFS.  stat -f --format=%T now reports the

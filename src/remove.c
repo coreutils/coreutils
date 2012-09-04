@@ -433,9 +433,6 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
       /* Perform checks that can apply only for command-line arguments.  */
       if (ent->fts_level == FTS_ROOTLEVEL)
         {
-          if (strip_trailing_slashes (ent->fts_path))
-            ent->fts_pathlen = strlen (ent->fts_path);
-
           /* If the basename of a command line argument is "." or "..",
              diagnose it and do nothing more with that argument.  */
           if (dot_or_dotdot (last_component (ent->fts_accpath)))
