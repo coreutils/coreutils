@@ -15,6 +15,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   it detects this precise type of cycle, diagnoses it as such and
   eventually exits nonzero.
 
+  factor (when using gmp) would mistakenly declare some composite numbers
+  to be prime, e.g., 465658903, 2242724851, 6635692801 and many more.
+  The fix makes factor somewhat slower (~25%) for ranges of consecutive
+  numbers, and up to 8 times slower for some worst-case individual numbers.
+  [bug introduced in coreutils-7.0, with GNU MP support]
+
   rm -i -d now prompts the user then removes an empty directory, rather
   than ignoring the -d option and failing with an 'Is a directory' error.
   [bug introduced in coreutils-8.19, with the addition of --dir (-d)]

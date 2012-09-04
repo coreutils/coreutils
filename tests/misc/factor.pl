@@ -67,6 +67,11 @@ my @Tests =
       {OUT => "4: 2 2\n"},
       {ERR => "$prog: 'a' is not a valid positive integer\n"},
       {EXIT => 1}],
+     ['bug-2012-a', '465658903', {OUT => '15259 30517'}],
+     ['bug-2012-b', '2242724851', {OUT => '33487 66973'}],
+     ['bug-2012-c', '6635692801', {OUT => '57601 115201'}],
+     ['bug-2012-d', '17709149503', {OUT => '94099 188197'}],
+     ['bug-2012-e', '17754345703', {OUT => '94219 188437'}],
     );
 
 # Prepend the command line argument and append a newline to end
