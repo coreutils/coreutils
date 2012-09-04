@@ -784,3 +784,5 @@ pr_data =					\
   tests/pr/ttb3-0FF				\
   tests/pr/ttb3-FF				\
   tests/pr/w72l24f-ll
+
+$(TEST_LOGS): $(PROGRAMS)
