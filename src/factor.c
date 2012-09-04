@@ -153,6 +153,9 @@ factor_using_division (mpz_t t, unsigned int limit)
   mpz_clear (r);
 }
 
+/* The number of Miller-Rabin tests we require.  */
+enum { MR_REPS = 25 };
+
 static void
 factor_using_pollard_rho (mpz_t n, int a_int)
 {
@@ -222,7 +225,7 @@ S4:
 
       mpz_div (n, n, g);	/* divide by g, before g is overwritten */
 
-      if (!mpz_probab_prime_p (g, 3))
+      if (!mpz_probab_prime_p (g, MR_REPS))
         {
           do
             {
@@ -242,7 +245,7 @@ S4:
       mpz_mod (x, x, n);
       mpz_mod (x1, x1, n);
       mpz_mod (y, y, n);
-      if (mpz_probab_prime_p (n, 3))
+      if (mpz_probab_prime_p (n, MR_REPS))
         {
           emit_factor (n);
           break;
@@ -411,7 +414,7 @@ print_factors_multi (mpz_t t)
       if (mpz_cmp_ui (t, 1) != 0)
         {
           debug ("[is number prime?] ");
-          if (mpz_probab_prime_p (t, 3))
+          if (mpz_probab_prime_p (t, MR_REPS))
             emit_factor (t);
           else
             factor_using_pollard_rho (t, 1);
