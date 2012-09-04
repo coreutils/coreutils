@@ -38,6 +38,35 @@ main (void)
   width = 4;
   n = mbsalign ("es", dest, sizeof dest, &width, MBS_ALIGN_CENTER, 0);
   ASSERT (*dest == ' ' && *(dest + n - 1) == ' ');
+  ASSERT (n == 4);
+
+  /* Test center alignment, with no trailing padding.  */
+  width = 4;
+  n = mbsalign ("es", dest, sizeof dest, &width, MBS_ALIGN_CENTER,
+                MBA_NO_RIGHT_PAD);
+  ASSERT (n == 3);
+  ASSERT (*dest == ' ' && *(dest + n - 1) == 's');
+
+  /* Test left alignment, with no trailing padding. (truncate only).  */
+  width = 4;
+  n = mbsalign ("es", dest, sizeof dest, &width, MBS_ALIGN_LEFT,
+                MBA_NO_RIGHT_PAD);
+  ASSERT (n == 2);
+  ASSERT (*dest == 'e' && *(dest + n - 1) == 's');
+
+  /* Test center alignment, with no padding. (truncate only).  */
+  width = 4;
+  n = mbsalign ("es", dest, sizeof dest, &width, MBS_ALIGN_CENTER,
+                MBA_NO_LEFT_PAD | MBA_NO_RIGHT_PAD);
+  ASSERT (n == 2);
+  ASSERT (*dest == 'e' && *(dest + n - 1) == 's');
+
+  /* Test center alignment, with no left padding. (may be useful for RTL?)  */
+  width = 4;
+  n = mbsalign ("es", dest, sizeof dest, &width, MBS_ALIGN_CENTER,
+                MBA_NO_LEFT_PAD);
+  ASSERT (n == 3);
+  ASSERT (*dest == 'e' && *(dest + n - 1) == ' ');
 
   if (setlocale (LC_ALL, "en_US.UTF8"))
     {
@@ -55,16 +84,19 @@ main (void)
       /* Test multibyte center alignment.  */
       width = 4;
       n = mbsalign ("és", dest, sizeof dest, &width, MBS_ALIGN_CENTER, 0);
+      ASSERT (n == 5);
       ASSERT (*dest == ' ' && *(dest + n - 1) == ' ');
 
       /* Test multibyte left alignment.  */
       width = 4;
       n = mbsalign ("és", dest, sizeof dest, &width, MBS_ALIGN_LEFT, 0);
+      ASSERT (n == 5);
       ASSERT (*(dest + n - 1) == ' ' && *(dest + n - 2) == ' ');
 
       /* Test multibyte right alignment.  */
       width = 4;
       n = mbsalign ("és", dest, sizeof dest, &width, MBS_ALIGN_RIGHT, 0);
+      ASSERT (n == 5);
       ASSERT (*(dest) == ' ' && *(dest + 1) == ' ');
 
       /* multibyte multicell truncation.  */
@@ -94,6 +126,12 @@ main (void)
       n = mbsalign ("t\tés" /* 6 including NUL */ , dest, sizeof dest,
                     &width, MBS_ALIGN_LEFT, 0);
       ASSERT (n == 7);
+
+      /* Test forced unibyte truncation.  */
+      width = 4;
+      n = mbsalign ("t\tés", dest, sizeof dest, &width, MBS_ALIGN_LEFT,
+                    MBA_UNIBYTE_ONLY);
+      ASSERT (n == 4);
     }
 
   return 0;

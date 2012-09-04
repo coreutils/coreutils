@@ -126,7 +126,7 @@ mbsalign (const char *src, char *dest, size_t dest_size,
   /* In multi-byte locales convert to wide characters
      to allow easy truncation. Also determine number
      of screen columns used.  */
-  if (MB_CUR_MAX > 1)
+  if (!(flags & MBA_UNIBYTE_ONLY) && MB_CUR_MAX > 1)
     {
       size_t src_chars = mbstowcs (NULL, src, 0);
       if (src_chars == SIZE_MAX)
@@ -191,37 +191,46 @@ mbsalign_unibyte:
   /* indicate to caller how many cells needed (not including padding).  */
   *width = n_cols;
 
-  /* indicate to caller how many bytes needed (not including NUL).  */
-  ret = n_used_bytes + (n_spaces * 1);
+  {
+    size_t start_spaces, end_spaces;
 
-  /* Write as much NUL terminated output to DEST as possible.  */
-  if (dest_size != 0)
-    {
-      size_t start_spaces, end_spaces, space_left;
-      char *dest_end = dest + dest_size - 1;
+    switch (align)
+      {
+      case MBS_ALIGN_LEFT:
+        start_spaces = 0;
+        end_spaces = n_spaces;
+        break;
+      case MBS_ALIGN_RIGHT:
+        start_spaces = n_spaces;
+        end_spaces = 0;
+        break;
+      case MBS_ALIGN_CENTER:
+      default:
+        start_spaces = n_spaces / 2 + n_spaces % 2;
+        end_spaces = n_spaces / 2;
+        break;
+      }
 
-      switch (align)
+      if (flags & MBA_NO_LEFT_PAD)
+        start_spaces = 0;
+      if (flags & MBA_NO_RIGHT_PAD)
+        end_spaces = 0;
+
+      /* Write as much NUL terminated output to DEST as possible.  */
+      if (dest_size != 0)
         {
-        case MBS_ALIGN_LEFT:
-          start_spaces = 0;
-          end_spaces = n_spaces;
-          break;
-        case MBS_ALIGN_RIGHT:
-          start_spaces = n_spaces;
-          end_spaces = 0;
-          break;
-        case MBS_ALIGN_CENTER:
-        default:
-          start_spaces = n_spaces / 2 + n_spaces % 2;
-          end_spaces = n_spaces / 2;
-          break;
+          size_t space_left;
+          char *dest_end = dest + dest_size - 1;
+
+          dest = mbs_align_pad (dest, dest_end, start_spaces);
+          space_left = dest_end - dest;
+          dest = mempcpy (dest, str_to_print, MIN (n_used_bytes, space_left));
+          mbs_align_pad (dest, dest_end, end_spaces);
         }
 
-      dest = mbs_align_pad (dest, dest_end, start_spaces);
-      space_left = dest_end - dest;
-      dest = mempcpy (dest, str_to_print, MIN (n_used_bytes, space_left));
-      mbs_align_pad (dest, dest_end, end_spaces);
-    }
+    /* indicate to caller how many bytes needed (not including NUL).  */
+    ret = n_used_bytes + ((start_spaces + end_spaces) * 1);
+  }
 
 mbsalign_cleanup:
 
