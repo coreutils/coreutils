@@ -392,11 +392,13 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
   if (ignorable_missing (x, errno))
     return RM_OK;
 
-  /* When failing to rmdir an unreadable directory, the typical
-     errno value is EISDIR, but that is not as useful to the user
-     as the errno value from the failed open (probably EPERM).
-     Use the earlier, more descriptive errno value.  */
-  if (ent->fts_info == FTS_DNR)
+  /* When failing to rmdir an unreadable directory, we see errno values
+     like EISDIR or ENOTDIR, but they would be meaningless in a diagnostic.
+     When that happens and the errno value from the failed open is EPERM
+     or EACCES, use the earlier, more descriptive errno value.  */
+  if (ent->fts_info == FTS_DNR
+      && (errno == ENOTEMPTY || errno == EISDIR || errno == ENOTDIR)
+      && (ent->fts_errno == EPERM || ent->fts_errno == EACCES))
     errno = ent->fts_errno;
   error (0, errno, _("cannot remove %s"), quote (ent->fts_path));
   mark_ancestor_dirs (ent);
