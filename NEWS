@@ -25,10 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  stat and tail work better with ZFS.  stat -f --format=%T now reports the
-  file system type, "zfs", and tail -f now uses inotify for files on ZFS
-  file systems, rather than the default (for unknown file system types)
-  of polling.
+  stat and tail work better with ZFS and VZFS.  stat -f --format=%T now
+  reports the file system type, and tail -f now uses inotify for files
+  on those file systems, rather than the default (for unknown file system
+  types) of issuing a warning and reverting to polling.
 
 
 * Noteworthy changes in release 8.19 (2012-08-20) [stable]

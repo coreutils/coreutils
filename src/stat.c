@@ -415,6 +415,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "v9fs";
     case S_MAGIC_VXFS: /* 0xA501FCF5 local */
       return "vxfs";
+    case S_MAGIC_VZFS: /* 0x565A4653 local */
+      return "vzfs";
     case S_MAGIC_XENFS: /* 0xABBA1974 local */
       return "xenfs";
     case S_MAGIC_XENIX: /* 0x012FF7B4 local */
