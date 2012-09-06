@@ -24,6 +24,7 @@
 #include "system.h"
 #include "error.h"
 #include "nproc.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -111,6 +112,12 @@ main (int argc, char **argv)
         default:
           usage (EXIT_FAILURE);
         }
+    }
+
+  if (argc != optind)
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
     }
 
   nproc = num_processors (mode);

@@ -23,6 +23,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   "Too many levels of symbolic links" diagnostic.
   [bug introduced in coreutils-8.6]
 
+** Changes in behavior
+
+  nproc now diagnoses with an error, non option command line parameters.
+
 ** Improvements
 
   stat and tail work better with ZFS and VZFS.  stat -f --format=%T now
