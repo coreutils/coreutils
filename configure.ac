@@ -75,7 +75,11 @@ AC_ARG_ENABLE([gcc-warnings],
      *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
    esac
    gl_gcc_warnings=$enableval],
-  [gl_gcc_warnings=no]
+  [if test -d "$srcdir"/.git; then
+     gl_gcc_warnings=yes
+   else
+     gl_gcc_warnings=no
+   fi]
 )
 
 # gl_GCC_VERSION_IFELSE([major], [minor], [run-if-found], [run-if-not-found])
