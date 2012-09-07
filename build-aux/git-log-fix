@@ -50,3 +50,8 @@ s!(elicits.*)\.!first $1, and the second works properly.!
 # Credit initial reporter of a related issue, now that the BZ is public.
 1e18d8416f9ef43bf08982cabe54220587061a08
 s,by ,by Nao Nishijima in http://bugzilla.redhat.com/766461\nand by ,
+
+# I was unable to apply the c-set using normal methods, so
+# applied it with patch and then forgot to reset the Author.
+51a4b04954ad5ad12de1d1b82a3603fc350a3bfa
+s,Jim .*>,Ondrej Oprala <ooprala\@redhat.com>,
