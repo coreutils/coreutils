@@ -1,0 +1,26 @@
+Description:
+Compare numeric strings.
+
+Files:
+lib/strintcmp.c
+lib/strnumcmp.c
+lib/strnumcmp.h
+lib/strnumcmp-in.h
+
+Depends-on:
+inline
+stddef
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += strintcmp.c strnumcmp.c strnumcmp.h
+
+Include:
+"strnumcmp.h"
+
+License:
+GPL
+
+Maintainer:
+Paul Eggert

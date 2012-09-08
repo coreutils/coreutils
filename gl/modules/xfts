@@ -1,0 +1,23 @@
+Description:
+a wrapper for fts_open
+
+Files:
+lib/xfts.c
+lib/xfts.h
+
+Depends-on:
+stddef
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += xfts.c xfts.h
+
+Include:
+"xfts.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering
