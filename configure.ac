@@ -69,7 +69,7 @@ AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
 
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings],
-                  [turn on lots of GCC warnings (for developers)])],
+     [turn on many GCC warnings (for developers; best with GNU make)])],
   [case $enableval in
      yes|no) ;;
      *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;

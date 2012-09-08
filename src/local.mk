@@ -16,7 +16,8 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AM_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+# FIXME: once lib/ and gnulib-tests/ are also converted, hoist to Makefile.am
+AM_CFLAGS = $(WERROR_CFLAGS)
 
 # The list of all programs (separated in different variables to express
 # the how and when they should be installed) is defined in this makefile

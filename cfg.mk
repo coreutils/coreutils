@@ -558,3 +558,10 @@ exclude_file_name_regexp--sc_prohibit_test_backticks = \
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
   ^src/(ptx|test|head)\.c$$
+
+# Augment AM_CFLAGS to include our per-directory options:
+AM_CFLAGS += $($(@D)_CFLAGS)
+
+src_CFLAGS = $(WARN_CFLAGS)
+lib_CFLAGS = $(GNULIB_WARN_CFLAGS)
+gnulib-tests_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS)
