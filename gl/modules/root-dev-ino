@@ -4,16 +4,16 @@ Root device and inode number checking.
 Files:
 lib/root-dev-ino.h
 lib/root-dev-ino.c
-m4/root-dev-ino.m4
 
 Depends-on:
 dev-ino
+lstat
 same-inode
 
 configure.ac:
-gl_ROOT_DEV_INO
 
 Makefile.am:
+lib_SOURCES += root-dev-ino.c root-dev-ino.h
 
 Include:
 "root-dev-ino.h"
