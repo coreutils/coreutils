@@ -65,16 +65,14 @@ EXTRA_DIST +=		\
   src/extract-magic	\
   src/c99-to-c89.diff
 
-CLEANFILES = $(SCRIPTS)
+CLEANFILES += $(SCRIPTS)
 
 # Also remove these sometimes-built programs.
 # For example, even when excluded, they're built via 'sc_check-AUTHORS'
 # or 'dist'.
 CLEANFILES += $(no_install__progs)
 
-AM_CPPFLAGS = -I$(top_srcdir)/lib -Isrc
-
-noinst_LIBRARIES = src/libver.a
+noinst_LIBRARIES += src/libver.a
 nodist_src_libver_a_SOURCES = src/version.c src/version.h
 
 # Tell the linker to omit references to unused shared libraries.

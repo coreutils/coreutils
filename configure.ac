@@ -482,7 +482,6 @@ gt_LOCALE_FR
 
 AC_CONFIG_FILES(
   Makefile
-  lib/Makefile
   po/Makefile.in
   gnulib-tests/Makefile
   )

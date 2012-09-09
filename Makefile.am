@@ -17,7 +17,7 @@
 
 ALL_RECURSIVE_TARGETS =
 
-SUBDIRS = lib po . gnulib-tests
+SUBDIRS = po . gnulib-tests
 
 changelog_etc =				\
   ChangeLog-2005			\
@@ -194,6 +194,14 @@ check-git-hook-script-sync:
 	rm -rf $$t;							\
 	test $$fail = 0
 
+noinst_LIBRARIES =
+MOSTLYCLEANFILES =
+CLEANFILES =
+MOSTLYCLEANDIRS =
+
+AM_CPPFLAGS = -Ilib -I$(top_srcdir)/lib -Isrc -I$(top_srcdir)/src
+
+include $(top_srcdir)/lib/local.mk
 include $(top_srcdir)/src/local.mk
 include $(top_srcdir)/doc/local.mk
 include $(top_srcdir)/man/local.mk
