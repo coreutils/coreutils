@@ -9,6 +9,9 @@ dnl with a value ending in ".h" to reflect that these files are located
 dnl in the directory specified by LIB_DIR.
 AC_DEFUN([gl_NON_RECURSIVE_GNULIB_PREFIX_HACK],
 [
+  # Tell AC_LIBSOURCES where to find source files like alloca.c.
+  AC_CONFIG_LIBOBJ_DIR([lib])
+
   # This hack originated in bison.  It is required when using non-recursive
   # automake rules to build from gnulib-provided lib/ sources.  Hence, LIB_DIR
   # is usually simply "lib".  Those rules use the list of names like "fchdir.o"
@@ -26,4 +29,7 @@ AC_DEFUN([gl_NON_RECURSIVE_GNULIB_PREFIX_HACK],
       (*_H:*.h) eval "$ac_var=$1/\$$ac_var";;
     esac
   done
+
+  # If $ALLOCA is not empty, prefix its value with "lib/".
+  test -n "$ALLOCA" && ALLOCA="lib/$ALLOCA"
 ])
