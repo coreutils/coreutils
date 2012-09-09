@@ -53,8 +53,10 @@ mandeps += $(top_srcdir)/src/system.h
 $(ALL_MANS): $(mandeps)
 
 # Most prog.1 man pages depend on src/prog.  List the exceptions:
+# Note that dir and vdir are exceptions only if you consider the name
+# of the .c file upon which they depend: ls.c.
 man/arch.1:      src/uname
-man/dir.1:       src/ls
+man/dir.1:       src/dir
 man/install.1:   src/ginstall
 man/vdir.1:      src/vdir
 
