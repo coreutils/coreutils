@@ -1,8 +1,8 @@
 #!/bin/sh
 # Generate lists of all coreutils programs, to be fed both to Autoconf
 # and Automake, and with further distinctions about how and when these
-# programs should be built.  This is useful to avoid duplicating the
-# definitions of these list among several files ('configure.ac' and
+# programs should be built.  This is useful to avoid duplicating these
+# list definitions list among several files ('configure.ac' and
 # 'src/local.mk' at least); such duplication had proved a source of
 # inconsistencies and bugs in the past.
 
@@ -21,8 +21,7 @@ disabled_by_default_progs='
 '
 
 # Programs that can be built only when certain requisite system
-# features are detected.  These prerequisites will be looked for
-# at configure runtime.
+# features are detected at configure time.
 build_if_possible_progs='
     chroot
     df
@@ -148,7 +147,7 @@ case $#,$1 in
     echo "no_install_progs_default='`echo $disabled_by_default_progs`'"
     sed 's/^ *//' <<END
         # Given the name of a variable containing a space-separated
-        # list of install-by-default programs and the actual list
+        # list of install-by-default programs and the actual list of
         # do-not-install-by-default programs, modify the former variable
         # to reflect any "do-install" and "don't-install" requests.
         # That is, add any program specified via --enable-install-program,
