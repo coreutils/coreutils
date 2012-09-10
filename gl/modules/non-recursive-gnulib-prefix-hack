@@ -1,0 +1,25 @@
+Description:
+Compute a good buffer size for dealing with two files.
+
+Files:
+build-aux/prefix-gnulib-mk
+m4/non-recursive-gnulib-prefix-hack.m4
+
+Depends-on:
+
+configure.ac:
+dnl Run our hack near the end, just before config.status creation.
+dnl It must happen late, i.e., after gl_LIBOBJS has been finalized.
+AC_CONFIG_COMMANDS_PRE([
+  gl_NON_RECURSIVE_GNULIB_PREFIX_HACK([lib])
+  ])
+
+Makefile.am:
+
+Include:
+
+License:
+unlimited
+
+Maintainer:
+Jim Meyering
