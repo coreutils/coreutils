@@ -64,7 +64,7 @@ coreutils_MACROS
 # FIXME: this is suboptimal.  Ideally, we would be able to call gl_PERL
 # with an ACTION-IF-NOT-FOUND argument ...
 cu_have_perl=yes
-case $PERL in *"/missing ") cu_have_perl=no;; esac
+case $PERL in *"/missing "*) cu_have_perl=no;; esac
 AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
 
 AC_ARG_ENABLE([gcc-warnings],
