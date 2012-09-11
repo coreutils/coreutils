@@ -2,7 +2,7 @@
 # Generate lists of all coreutils programs, to be fed both to Autoconf
 # and Automake, and with further distinctions about how and when these
 # programs should be built.  This is useful to avoid duplicating these
-# list definitions list among several files ('configure.ac' and
+# list definitions among several files ('configure.ac' and
 # 'src/local.mk' at least); such duplication had proved a source of
 # inconsistencies and bugs in the past.
 
