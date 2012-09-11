@@ -8,6 +8,19 @@ GNU coreutils NEWS                                    -*- outline -*-
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]
 
+** Build-related
+
+  Perl is now more of a prerequisite.  It has long been required in order
+  to run (not skip) a significant percentage of the tests.  Now, it is
+  also required in order to generate proper man pages, via help2man. The
+  generated man/*.1 man pages are no longer distributed.  Building without
+  perl, you would create stub man pages.  Thus, while perl is not an
+  official prerequisite (build and "make check" will still succeed), any
+  resulting man pages would be inferior.  In addition, this fixes a bug
+  in distributed (not from clone) Makefile.in that could cause parallel
+  build failure when building from modified sources, as is common practice
+  for a patched distribution package.
+
 
 * Noteworthy changes in release 8.20 (2012-10-23) [stable]
 

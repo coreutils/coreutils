@@ -16,17 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-EXTRA_DIST += man/help2man
+EXTRA_DIST += man/help2man man/dummy-man
+
+## Graceful degradation for systems lacking perl.
+if HAVE_PERL
+run_help2man = $(PERL) -- $(srcdir)/man/help2man
+else
+run_help2man = $(SHELL) $(srcdir)/man/dummy-man
+endif
 
 man1_MANS = @man1_MANS@
-EXTRA_DIST += $(man1_MANS) $(man1_MANS:.1=.x)
+EXTRA_DIST += $(man1_MANS:.1=.x)
 
 EXTRA_MANS = @EXTRA_MANS@
-EXTRA_DIST += $(EXTRA_MANS) $(EXTRA_MANS:.1=.x)
+EXTRA_DIST += $(EXTRA_MANS:.1=.x)
 
 ALL_MANS = $(man1_MANS) $(EXTRA_MANS)
 
-MAINTAINERCLEANFILES += $(ALL_MANS)
+CLEANFILES += $(ALL_MANS)
 
 # This is required because we have subtle inter-directory dependencies:
 # in order to generate all man pages, even those for which we don't
@@ -161,13 +168,7 @@ man/whoami.1:    src/whoami
 man/yes.1:       src/yes
 
 .x.1:
-	$(AM_V_GEN)case '$(PERL)' in				\
-	  *"/missing "*)					\
-	    echo 'WARNING: cannot update man page $@ since perl is missing' \
-	      'or inadequate' 1>&2				\
-	    exit 0;;						\
-	esac; \
-	name=`echo $@ | sed -e 's|.*/||' -e 's|\.1$$||'` || exit 1;	\
+	$(AM_V_GEN)name=`echo $@ | sed 's|.*/||; s|\.1$$||'` || exit 1;	\
 ## Ensure that help2man runs the 'src/ginstall' binary as 'install' when
 ## creating 'install.1'.  Similarly, ensure that it uses the 'src/[' binary
 ## to create 'test.1'.
@@ -184,7 +185,7 @@ man/yes.1:       src/yes
 	  && rm -rf $$t							\
 	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog $$name) \
-	  && $(PERL) -- $(srcdir)/man/help2man				\
+	  && $(run_help2man)						\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
 		     --output=$$t/$$name.1 $$t/$$name			\

@@ -93,29 +93,11 @@ BUILT_SOURCES = .version
 .version:
 	$(AM_V_GEN)echo $(VERSION) > $@-t && mv $@-t $@
 
-# In general, we run help2man to build a man page from the binary's --help
-# output, but when building from a just-unpacked distribution tarball, we
-# must not do that, since help2man uses perl.  We don't want to depend on
-# perl in that case.  In general, the .1 file does indeed depend on the
-# binary.  I.e., for cat, we have this Makefile dependency:
-#   man/cat.1: src/cat
-# That means that once we build src/cat, we would trigger the .x.1
-# rule which runs help2man.  The trick is simply to change the RHS to
-# "src/cat.c" in the $(distdir) that we're about to tar and compress.
-# Also handle the three exceptions corresponding to the three binaries
-# for which there is no like-named .c file: dir, vdir, ginstall.
-.PHONY: do-not-require-help2man
-do-not-require-help2man:
-	perl -pi -e 's,^(man/.+?\.1:\s*src/.+?)$$,$$1.c,;'		\
-	    -e  's,^(man/.+?\.1:\s*src)/ginstall\.c$$,$$1/install.c,;'	\
-	    -e  's,^(man/.+?\.1:\s*src)/v?dir\.c$$,$$1/ls.c,;'		\
-          $(distdir)/Makefile.in
-
 # Arrange so that .tarball-version appears only in the distribution
 # tarball, and never in a checked-out repository.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
-dist-hook: gen-ChangeLog do-not-require-help2man
+dist-hook: gen-ChangeLog
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
 	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
 
