@@ -43,10 +43,10 @@ enum {
   /* Don't truncate.  */
   MBA_NO_TRUNCATE
 
-  /* Ensure no leading whitepsace.  */
+  /* Ensure no leading whitespace.  */
   MBA_LSTRIP
 
-  /* Ensure no trailing whitepsace.  */
+  /* Ensure no trailing whitespace.  */
   MBA_RSTRIP
 #endif
 };
