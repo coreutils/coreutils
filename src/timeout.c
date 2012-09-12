@@ -49,6 +49,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
+#if HAVE_PRCTL
+# include <sys/prctl.h>
+#endif
 #include <sys/wait.h>
 
 #include "system.h"
@@ -316,6 +319,29 @@ install_signal_handlers (int sigterm)
   sigaction (sigterm, &sa, NULL); /* user specified termination signal.  */
 }
 
+/* Try to disable core dumps for this process.
+   Return TRUE if successful, FALSE otherwise.  */
+static bool
+disable_core_dumps (void)
+{
+#if HAVE_PRCTL && defined PR_SET_DUMPABLE
+  if (prctl (PR_SET_DUMPABLE, 0) == 0)
+    return true;
+
+#elif HAVE_SETRLIMIT && defined RLIMIT_CORE
+  /* Note this doesn't disable processing by a filter in
+     /proc/sys/kernel/core_pattern on Linux.  */
+  if (setrlimit (RLIMIT_CORE, &(struct rlimit) {0,0}) == 0)
+    return true;
+
+#else
+  return false;
+#endif
+
+  error (0, errno, _("warning: disabling core dumps failed"));
+  return false;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -426,21 +452,14 @@ main (int argc, char **argv)
           else if (WIFSIGNALED (status))
             {
               int sig = WTERMSIG (status);
-/* The following is not used as one cannot disable processing
-   by a filter in /proc/sys/kernel/core_pattern on Linux.  */
-#if 0 && HAVE_SETRLIMIT && defined RLIMIT_CORE
-              if (!timed_out)
+              if (WCOREDUMP (status))
+                error (0, 0, _("the monitored command dumped core"));
+              if (!timed_out && disable_core_dumps ())
                 {
-                  /* exit with the signal flag set, but avoid core files.  */
-                  if (setrlimit (RLIMIT_CORE, &(struct rlimit) {0,0}) == 0)
-                    {
-                      signal (sig, SIG_DFL);
-                      raise (sig);
-                    }
-                  else
-                    error (0, errno, _("warning: disabling core dumps failed"));
+                  /* exit with the signal flag set.  */
+                  signal (sig, SIG_DFL);
+                  raise (sig);
                 }
-#endif
               status = sig + 128; /* what sh returns for signaled processes.  */
             }
           else
