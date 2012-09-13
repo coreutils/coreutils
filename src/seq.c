@@ -335,6 +335,116 @@ get_default_format (operand first, operand step, operand last)
   return "%Lg";
 }
 
+/* The NUL-terminated string S0 of length S_LEN represents a valid
+   non-negative decimal integer.  Adjust the string and length so
+   that the pair describe the next-larger value.  */
+static void
+incr (char **s0, size_t *s_len)
+{
+  char *s = *s0;
+  char *endp = s + *s_len - 1;
+
+  do
+    {
+      if ((*endp)++ < '9')
+        return;
+      *endp-- = '0';
+    }
+  while (endp >= s);
+  *--(*s0) = '1';
+  ++*s_len;
+}
+
+/* Compare A and B (each a NUL-terminated digit string), with lengths
+   given by A_LEN and B_LEN.  Return +1 if A < B, -1 if B < A, else 0.  */
+static int
+cmp (char const *a, size_t a_len, char const *b, size_t b_len)
+{
+  if (a_len < b_len)
+    return -1;
+  if (b_len < a_len)
+    return 1;
+  return (strcmp (a, b));
+}
+
+/* Trim leading 0's from S, but if S is all 0's, leave one.
+   Return a pointer to the trimmed string.  */
+static char const * _GL_ATTRIBUTE_PURE
+trim_leading_zeros (char const *s)
+{
+  char const *p = s;
+  while (*s == '0')
+    ++s;
+
+  /* If there were only 0's, back up, to leave one.  */
+  if (!*s && s != p)
+    --s;
+  return s;
+}
+
+/* Print all whole numbers from A to B, inclusive -- to stdout, each
+   followed by a newline.  If B < A, return false and print nothing.
+   Otherwise, return true.  */
+static bool
+seq_fast (char const *a, char const *b)
+{
+  /* Skip past any leading 0's.  Without this, our naive cmp
+     function would declare 000 to be larger than 99.  */
+  a = trim_leading_zeros (a);
+  b = trim_leading_zeros (b);
+
+  size_t p_len = strlen (a);
+  size_t q_len = strlen (b);
+  size_t n = MAX (p_len, q_len);
+  char *p0 = xmalloc (n + 1);
+  char *p = memcpy (p0 + n - p_len, a, p_len + 1);
+  char *q0 = xmalloc (n + 1);
+  char *q = memcpy (q0 + n - q_len, b, q_len + 1);
+
+  bool ok = cmp (p, p_len, q, q_len) <= 0;
+  if (ok)
+    {
+      /* Buffer at least this many output lines per fwrite call.
+         This gives a speed-up of more than 2x over the unbuffered code
+         when printing the first 10^9 integers.  */
+      enum {N = 40};
+      char *buf = xmalloc (N * (n + 1));
+      char const *buf_end = buf + N * (n + 1);
+
+      puts (p);
+      char *z = buf;
+      while (cmp (p, p_len, q, q_len) < 0)
+        {
+          incr (&p, &p_len);
+          z = mempcpy (z, p, p_len);
+          *z++ = '\n';
+          if (buf_end - n - 1 < z)
+            {
+              fwrite (buf, z - buf, 1, stdout);
+              z = buf;
+            }
+        }
+
+      /* Write any remaining, buffered output.  */
+      if (buf < z)
+        fwrite (buf, z - buf, 1, stdout);
+
+      IF_LINT (free (buf));
+    }
+
+  free (p0);
+  free (q0);
+  return ok;
+}
+
+/* Return true if S consists of at least one digit and no non-digits.  */
+static bool _GL_ATTRIBUTE_PURE
+all_digits_p (char const *s)
+{
+  size_t n = strlen (s);
+  return ISDIGIT (s[0]) && n == strspn (s, "0123456789");
+}
+
 int
 main (int argc, char **argv)
 {
@@ -397,13 +507,14 @@ main (int argc, char **argv)
         }
     }
 
-  if (argc - optind < 1)
+  unsigned int n_args = argc - optind;
+  if (n_args < 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
 
-  if (3 < argc - optind)
+  if (3 < n_args)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind + 3]));
       usage (EXIT_FAILURE);
@@ -411,6 +522,32 @@ main (int argc, char **argv)
 
   if (format_str)
     format_str = long_double_format (format_str, &layout);
+
+  if (format_str != NULL && equal_width)
+    {
+      error (0, 0, _("format string may not be specified"
+                     " when printing equal width strings"));
+      usage (EXIT_FAILURE);
+    }
+
+  /* If the following hold:
+     - no format string, [FIXME: relax this, eventually]
+     - integer start (or no start)
+     - integer end
+     - increment == 1 or not specified [FIXME: relax this, eventually]
+     then use the much more efficient integer-only code.  */
+  if (format_str == NULL
+      && all_digits_p (argv[1])
+      && (n_args == 1 || all_digits_p (argv[2]))
+      && (n_args < 3 || STREQ ("1", argv[3])))
+    {
+      char const *s1 = n_args == 1 ? "1" : argv[1];
+      char const *s2 = n_args == 1 ? argv[1] : argv[2];
+      if (seq_fast (s1, s2))
+        exit (EXIT_SUCCESS);
+
+      /* Upon any failure, let the more general code deal with it.  */
+    }
 
   last = scan_arg (argv[optind++]);
 
@@ -424,13 +561,6 @@ main (int argc, char **argv)
           step = last;
           last = scan_arg (argv[optind++]);
         }
-    }
-
-  if (format_str != NULL && equal_width)
-    {
-      error (0, 0, _("format string may not be specified"
-                     " when printing equal width strings"));
-      usage (EXIT_FAILURE);
     }
 
   if (format_str == NULL)

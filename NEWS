@@ -29,11 +29,21 @@ GNU coreutils NEWS                                    -*- outline -*-
   "Too many levels of symbolic links" diagnostic.
   [bug introduced in coreutils-8.6]
 
+  seq now handles arbitrarily long non-negative whole numbers when the
+  increment is 1 and when no format-changing option is specified.
+  Before, this would infloop:
+    b=100000000000000000000; seq $b $b
+  [the bug dates back to the initial implementation]
+
 ** Changes in behavior
 
   nproc now diagnoses with an error, non option command line parameters.
 
 ** Improvements
+
+  seq is now up to 70 times faster than it was in coreutils-8.19 and prior,
+  but only with non-negative whole numbers, an increment of 1, and no
+  format-changing options.
 
   stat and tail work better with ZFS and VZFS.  stat -f --format=%T now
   reports the file system type, and tail -f now uses inotify for files

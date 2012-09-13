@@ -30,6 +30,11 @@ my $locale = $ENV{LOCALE_FR_UTF8};
 ! defined $locale || $locale eq 'none'
   and $locale = 'C';
 
+my $p = '9' x 81;
+(my $q = $p) =~ s/9/0/g;
+$q = "1$q";
+(my $r = $q) =~ s/0$/1/;
+
 my @Tests =
   (
    ['onearg-1',	qw(10),		{OUT => [(1..10)]}],
@@ -107,6 +112,15 @@ my @Tests =
     {ENV => "LC_ALL=$locale"},
     {OUT_SUBST => 's/,/./g'},
     ],
+
+   # With coreutils-8.19 and prior, this would infloop.
+   ['long-1', "$p $r", {OUT => [$p, $q, $r]}],
+
+   # Exercise the code that trims leading zeros.
+   ['long-leading-zeros1', qw(000 2), {OUT => [qw(0 1 2)]}],
+   ['long-leading-zeros2', qw(000 02), {OUT => [qw(0 1 2)]}],
+   ['long-leading-zeros3', qw(00 02), {OUT => [qw(0 1 2)]}],
+   ['long-leading-zeros4', qw(0 02), {OUT => [qw(0 1 2)]}],
   );
 
 # Append a newline to each entry in the OUT array.
