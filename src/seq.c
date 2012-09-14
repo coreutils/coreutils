@@ -417,7 +417,7 @@ seq_fast (char const *a, char const *b)
         {
           incr (&p, &p_len);
           z = mempcpy (z, p, p_len);
-          *z++ = '\n';
+          *z++ = *separator;
           if (buf_end - n - 1 < z)
             {
               fwrite (buf, z - buf, 1, stdout);
@@ -536,13 +536,13 @@ main (int argc, char **argv)
      - integer end
      - increment == 1 or not specified [FIXME: relax this, eventually]
      then use the much more efficient integer-only code.  */
-  if (format_str == NULL
-      && all_digits_p (argv[1])
-      && (n_args == 1 || all_digits_p (argv[2]))
-      && (n_args < 3 || STREQ ("1", argv[3])))
+  if (all_digits_p (argv[optind])
+      && (n_args == 1 || all_digits_p (argv[optind + 1]))
+      && (n_args < 3 || STREQ ("1", argv[optind + 2]))
+      && !equal_width && !format_str && strlen (separator) == 1)
     {
-      char const *s1 = n_args == 1 ? "1" : argv[1];
-      char const *s2 = n_args == 1 ? argv[1] : argv[2];
+      char const *s1 = n_args == 1 ? "1" : argv[optind];
+      char const *s2 = n_args == 1 ? argv[optind] : argv[optind + 1];
       if (seq_fast (s1, s2))
         exit (EXIT_SUCCESS);
 
@@ -561,6 +561,29 @@ main (int argc, char **argv)
           step = last;
           last = scan_arg (argv[optind++]);
         }
+    }
+
+  if (first.precision == 0 && step.precision == 0 && last.precision == 0
+      && 0 <= first.value && step.value == 1 && 0 <= last.value
+      && !equal_width && !format_str && strlen (separator) == 1)
+    {
+      char *s1;
+      char *s2;
+      if (asprintf (&s1, "%0.Lf", first.value) < 0)
+        xalloc_die ();
+      if (asprintf (&s2, "%0.Lf", last.value) < 0)
+        xalloc_die ();
+
+      if (seq_fast (s1, s2))
+        {
+          IF_LINT (free (s1));
+          IF_LINT (free (s2));
+          exit (EXIT_SUCCESS);
+        }
+
+      free (s1);
+      free (s2);
+      /* Upon any failure, let the more general code deal with it.  */
     }
 
   if (format_str == NULL)
