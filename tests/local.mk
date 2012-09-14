@@ -52,7 +52,7 @@ TEST_SUITE_LOG = tests/test-suite.log
 # variables that can perturb tests are unset or set to expected values.
 # The rest are envvar settings that propagate build-related Makefile
 # variables to test scripts.
-AM_TESTS_ENVIRONMENT =				\
+TESTS_ENVIRONMENT =				\
   . $(srcdir)/tests/lang-default;		\
   tmp__=$${TMPDIR-/tmp};			\
   test -d "$$tmp__" && test -w "$$tmp__" || tmp__=.;	\
