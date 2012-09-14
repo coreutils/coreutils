@@ -53,6 +53,7 @@ EXTRA_DIST =				\
   cfg.mk				\
   dist-check.mk				\
   maint.mk				\
+  tests/GNUmakefile			\
   thanks-gen
 
 gen_progs_lists = $(top_srcdir)/build-aux/gen-lists-of-programs.sh

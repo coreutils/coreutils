@@ -539,10 +539,11 @@ exclude_file_name_regexp--sc_prohibit_fail_0 = \
   (^.*/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk|.*\.texi)$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
-tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|Makefile(\.am)?|\.mk|^man/help2man)$$
+tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|\.mk|^man/help2man)$$
 tbi_2 = ^scripts/git-hooks/(pre-commit|pre-applypatch|applypatch-msg)$$
+tbi_3 = (GNU)?[Mm]akefile(\.am)?$$
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
-  $(tbi_1)|$(tbi_2)
+  $(tbi_1)|$(tbi_2)|$(tbi_3)
 
 exclude_file_name_regexp--sc_preprocessor_indentation = \
   ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
