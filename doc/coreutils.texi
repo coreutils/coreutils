@@ -16249,11 +16249,15 @@ case is that @command{seq} works with integers through @math{2^{64}},
 and larger integers may not be numerically correct:
 
 @example
-$ seq 18446744073709551616 1 18446744073709551618
-18446744073709551616
-18446744073709551616
-18446744073709551618
+$ seq 50000000000000000000 2 50000000000000000004
+50000000000000000000
+50000000000000000000
+50000000000000000004
 @end example
+
+However, note that when limited to non-negative whole numbers,
+an increment of 1 and no format-specifying option, seq can print
+arbitrarily large numbers.
 
 Be careful when using @command{seq} with outlandish values: otherwise
 you may see surprising results, as @command{seq} uses floating point
