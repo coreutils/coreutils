@@ -1,7 +1,7 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
 
 Copyright 1991, 1992, 1993, 1994, 1996, 1997, 1999, 2000, 2001, 2002, 2003,
-2004, 2005, 2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+2004, 2005, 2007, 2008, 2009, 2011, 2012 Free Software Foundation, Inc.
 
 This file is free software; you can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as published by the Free
@@ -2053,6 +2053,10 @@ extern UWtype mpn_udiv_qrnnd_r (UWtype, UWtype, UWtype, UWtype *);
     (r) = __r;								\
   } while (0)
 __GMP_DECLSPEC UWtype __MPN(udiv_w_sdiv) (UWtype *, UWtype, UWtype, UWtype);
+#endif
+
+#ifndef __GMP_DECLSPEC
+#define __GMP_DECLSPEC /* empty */
 #endif
 
 /* If udiv_qrnnd was not defined for this processor, use __udiv_qrnnd_c.  */

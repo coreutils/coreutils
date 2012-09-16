@@ -37,7 +37,7 @@
 /coreutils-*.tar.xz
 /coreutils-*.tar.xz.sig
 /gnulib-tests
-/lib/.cvsignore
+/lib/.dirstamp
 /lib/.gitignore
 /lib/alloca.h
 /lib/arg-nonnull.h
@@ -74,6 +74,7 @@
 /lib/ref-del.sed
 /lib/selinux
 /lib/signal.h
+/lib/spawn.h
 /lib/stamp-h1
 /lib/stdalign.h
 /lib/stdio.h
@@ -152,12 +153,15 @@
 /po/remove-potcdate.sin
 /po/stamp-po
 /src/cu-progs.mk
+/src/make-prime-list
+/src/primes.h
 /src/version.c
 /src/version.h
 /stamp-h1
 /tests/*/*.log
 /tests/*/*.trs
 /tests/.built-programs
+/tests/factor/[0-9]*.sh
 /tests/t?
 /tests/test-suite.log
 ID

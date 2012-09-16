@@ -111,7 +111,7 @@ sc_tests_list_consistency:
 	  for t in $(all_tests); do echo $$t; done;			\
 	  cd $(top_srcdir);						\
 	  $(SHELL) build-aux/vc-list-files tests			\
-	    | grep -v '^tests/init\.sh$$'				\
+	    | grep -Ev '^tests/(factor/run|init)\.sh$$'			\
 	    | $(EGREP) "$$test_extensions_rx\$$";			\
 	} | sort | uniq -u | grep . && exit 1; :
 
@@ -515,10 +515,11 @@ update-copyright-env = \
 # List syntax-check exemptions.
 exclude_file_name_regexp--sc_space_tab = \
   ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$)
-exclude_file_name_regexp--sc_bindtextdomain = ^(gl/.*|lib/euidaccess-stat)\.c$$
+exclude_file_name_regexp--sc_bindtextdomain = \
+  ^(gl/.*|lib/euidaccess-stat|src/make-prime-list)\.c$$
 exclude_file_name_regexp--sc_trailing_blank = ^tests/pr/
 exclude_file_name_regexp--sc_system_h_headers = \
-  ^src/((system|copy)\.h|libstdbuf\.c)$$
+  ^src/((system|copy)\.h|libstdbuf\.c|make-prime-list\.c)$$
 
 _src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
 exclude_file_name_regexp--sc_require_config_h_first = \
@@ -530,7 +531,8 @@ exclude_file_name_regexp--sc_po_check = ^gl/
 exclude_file_name_regexp--sc_prohibit_always-defined_macros = \
   ^src/(seq|remove)\.c$$
 exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = ^tests/pr/
-exclude_file_name_regexp--sc_program_name = ^(gl/.*|lib/euidaccess-stat)\.c$$
+exclude_file_name_regexp--sc_program_name = \
+  ^(gl/.*|lib/euidaccess-stat|src/make-prime-list)\.c$$
 exclude_file_name_regexp--sc_file_system = \
   NEWS|^(init\.cfg|src/df\.c|tests/df/df-P\.sh)$$
 exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
@@ -539,14 +541,20 @@ exclude_file_name_regexp--sc_prohibit_fail_0 = \
   (^.*/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk|.*\.texi)$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
+# longlong.h is maintained elsewhere.
+_ll = ^src/longlong\.h$$
+exclude_file_name_regexp--sc_useless_cpp_parens = $(_ll)
+exclude_file_name_regexp--sc_long_lines = $(_ll)
+exclude_file_name_regexp--sc_space_before_open_paren = $(_ll)
+
 tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|\.mk|^man/help2man)$$
 tbi_2 = ^scripts/git-hooks/(pre-commit|pre-applypatch|applypatch-msg)$$
-tbi_3 = (GNU)?[Mm]akefile(\.am)?$$
+tbi_3 = (GNU)?[Mm]akefile(\.am)?$$|$(_ll)
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
   $(tbi_1)|$(tbi_2)|$(tbi_3)
 
 exclude_file_name_regexp--sc_preprocessor_indentation = \
-  ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$
+  ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$|$(__ll)
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g\.sh)$$
 
@@ -559,6 +567,9 @@ exclude_file_name_regexp--sc_prohibit_test_backticks = \
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
   ^src/(ptx|test|head)\.c$$
+
+exclude_file_name_regexp--sc_error_message_uppercase = ^src/factor\.c$$
+exclude_file_name_regexp--sc_prohibit_atoi_atof = ^src/make-prime-list\.c$$
 
 # Augment AM_CFLAGS to include our per-directory options:
 AM_CFLAGS += $($(@D)_CFLAGS)

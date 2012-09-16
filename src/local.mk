@@ -35,7 +35,10 @@ bin_PROGRAMS = @bin_PROGRAMS@
 pkglibexec_PROGRAMS = @pkglibexec_PROGRAMS@
 
 # Needed by the testsuite.
-noinst_PROGRAMS = src/setuidgid src/getlimits
+noinst_PROGRAMS =		\
+  src/getlimits			\
+  src/make-prime-list		\
+  src/setuidgid
 
 noinst_HEADERS =		\
   src/chown-core.h		\
@@ -48,20 +51,18 @@ noinst_HEADERS =		\
   src/fs-is-local.h		\
   src/group-list.h		\
   src/ioblksize.h		\
+  src/longlong.h		\
   src/ls.h			\
   src/operand2sig.h		\
   src/prog-fprintf.h		\
   src/remove.h			\
   src/system.h			\
-  src/wheel-size.h		\
-  src/wheel.h			\
   src/uname.h
 
 EXTRA_DIST +=		\
   src/dcgen		\
   src/dircolors.hin	\
   src/tac-pipe.c	\
-  src/wheel-gen.pl	\
   src/extract-magic	\
   src/c99-to-c89.diff
 
@@ -134,6 +135,12 @@ src_link_LDADD = $(LDADD)
 src_ln_LDADD = $(LDADD)
 src_logname_LDADD = $(LDADD)
 src_ls_LDADD = $(LDADD)
+
+# This must *not* depend on anything in lib/, since it is used to generate
+# src/primes.h.  If it depended on libcoreutils.a, that would pull all lib/*.c
+# into BUILT_SOURCES.
+src_make_prime_list_LDADD =
+
 src_md5sum_LDADD = $(LDADD)
 src_mkdir_LDADD = $(LDADD)
 src_mkfifo_LDADD = $(LDADD)
@@ -371,19 +378,11 @@ src/dircolors.h: src/dcgen src/dircolors.hin
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
 
-wheel_size = 5
-
-BUILT_SOURCES += src/wheel-size.h
-src/wheel-size.h: Makefile.am
+BUILT_SOURCES += src/primes.h
+CLEANFILES += src/primes.h
+src/primes.h: src/make-prime-list
 	$(AM_V_GEN)rm -f $@ $@-t
-	$(AM_V_at)echo '#define WHEEL_SIZE $(wheel_size)' > $@-t
-	$(AM_V_at)chmod a-w $@-t
-	$(AM_V_at)mv $@-t $@
-
-BUILT_SOURCES += src/wheel.h
-src/wheel.h: src/wheel-gen.pl Makefile.am
-	$(AM_V_GEN)rm -f $@ $@-t
-	$(AM_V_at)$(srcdir)/src/wheel-gen.pl $(wheel_size) > $@-t
+	$(AM_V_at)src/make-prime-list 5000 > $@-t
 	$(AM_V_at)chmod a-w $@-t
 	$(AM_V_at)mv $@-t $@
 

@@ -26,7 +26,7 @@ echo: Brian Fox, Chet Ramey
 env: Richard Mlynarik, David MacKenzie
 expand: David MacKenzie
 expr: Mike Parker, James Youngman, Paul Eggert
-factor: Paul Rubin
+factor: Paul Rubin, Torbjörn Granlund, Niels Möller
 false: Jim Meyering
 fmt: Ross Paterson
 fold: David MacKenzie
