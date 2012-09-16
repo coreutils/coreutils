@@ -50,6 +50,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  factor's core has been rewritten for speed and increased range.
+  It can now factor numbers up to 2^128, even without GMP support.
+  Its speed is from a few times better (for small numbers) to over
+  10,000 times better (just below 2^64).  The new code also runs a
+  deterministic primality test for each prime factor, not just a
+  probabilistic test.
+
   seq is now up to 70 times faster than it was in coreutils-8.19 and prior,
   but only with non-negative whole numbers, an increment of 1, and no
   format-changing options.
