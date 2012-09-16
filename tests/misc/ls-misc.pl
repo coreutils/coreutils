@@ -263,6 +263,21 @@ my @Tests =
       {POST => sub {unlink 's' or die "s: $!\n";
                     restore_ls_colors; }},
      ],
+     # The patch associated with sl-dangle[678] introduced a regression
+     # that was fixed after coreutils-8.19.  This edge case triggers when
+     # listing a dir containing dangling symlinks, but with orphans uncolored.
+     # I.E. the same as the previous test, but listing the directory
+     # rather than the symlink directly.
+     ['sl-dangle9', '--color=always d',
+      {OUT => "$e\e[1;36ms$e\n"},
+      {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
+                   symlink 'dangle', 'd/s' or die "d/s: $!\n";
+                   push_ls_colors('ln=1;36:or=:')
+       }},
+      {POST => sub {unlink 'd/s' or die "d/s: $!\n";
+                    rmdir 'd' or die "d: $!\n";
+                    restore_ls_colors; }},
+     ],
 
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)

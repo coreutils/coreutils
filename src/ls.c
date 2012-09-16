@@ -3064,12 +3064,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           free (linkname);
         }
 
-      /* When not distinguishing types of symlinks, pretend we know that
-         it is stat'able, so that it will be colored as a regular symlink,
-         and not as an orphan.  */
-      if (S_ISLNK (f->stat.st_mode) && !check_symlink_color)
-        f->linkok = true;
-
       if (S_ISLNK (f->stat.st_mode))
         f->filetype = symbolic_link;
       else if (S_ISDIR (f->stat.st_mode))
@@ -4293,7 +4287,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
 
   /* Is this a nonexistent file?  If so, linkok == -1.  */
 
-  if (linkok == -1 && color_indicator[C_MISSING].string != NULL)
+  if (linkok == -1 && is_colored (C_MISSING))
     type = C_MISSING;
   else if (!f->stat_ok)
     {
@@ -4368,8 +4362,7 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
   /* Adjust the color for orphaned symlinks.  */
   if (type == C_LINK && !linkok)
     {
-      if (color_symlink_as_referent
-          || color_indicator[C_ORPHAN].string)
+      if (color_symlink_as_referent || is_colored (C_ORPHAN))
         type = C_ORPHAN;
     }
 
