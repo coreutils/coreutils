@@ -2272,7 +2272,11 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
 
   for (unsigned int j = 0; j < factors.nfactors; j++)
     for (unsigned int k = 0; k < factors.e[j]; k++)
-      printf (" %ju", factors.p[j]);
+      {
+        char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+        putchar (' ');
+        fputs (umaxtostr (factors.p[j], buf), stdout);
+      }
 
   if (factors.plarge[1])
     {
