@@ -293,8 +293,6 @@ src_kill_LDADD += $(LIBTHREAD)
 # for pthread
 src_sort_LDADD += $(LIB_PTHREAD)
 
-$(PROGRAMS): lib/libcoreutils.a
-
 # Get the release year from lib/version-etc.c.
 RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
