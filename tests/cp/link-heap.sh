@@ -31,6 +31,7 @@ cp -al $a $b || framework_failure_
 mkdir e || framework_failure_
 mv $a $b e || framework_failure_
 
-(ulimit -v 20000; cp -al e f) || fail=1
+# Increased from 20000 to 22000 in 2012, for pre-F18 rawhide.
+(ulimit -v 22000; cp -al e f) || fail=1
 
 Exit $fail
