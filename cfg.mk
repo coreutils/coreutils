@@ -566,3 +566,10 @@ AM_CFLAGS += $($(@D)_CFLAGS)
 src_CFLAGS = $(WARN_CFLAGS)
 lib_CFLAGS = $(GNULIB_WARN_CFLAGS)
 gnulib-tests_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS)
+
+# Configuration to make the tight-scope syntax-check rule work with
+# recursive make.
+export _gl_TS_headers = $(srcdir)/cfg.mk
+_gl_TS_dir = .
+_gl_TS_obj_files = src/*.$(OBJEXT)
+_gl_TS_other_headers = src/*.h
