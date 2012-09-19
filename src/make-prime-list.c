@@ -17,6 +17,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see http://www.gnu.org/licenses/.  */
 
+#include <config.h>
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -29,7 +31,7 @@ struct prime
   uintmax_t lim; /* floor(UINTMAX_MAX / p) */
 };
 
-static uintmax_t
+static uintmax_t _GL_ATTRIBUTE_CONST
 binvert (uintmax_t a)
 {
   uintmax_t x = 0xf5397db1 >> (4*((a/2) & 0x7));
