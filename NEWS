@@ -49,10 +49,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   but only with non-negative whole numbers, an increment of 1, and no
   format-changing options.
 
-  stat and tail work better with ZFS and VZFS.  stat -f --format=%T now
-  reports the file system type, and tail -f now uses inotify for files
-  on those file systems, rather than the default (for unknown file system
-  types) of issuing a warning and reverting to polling.
+  stat and tail know about ZFS, VZFS and VMHGFS.  stat -f --format=%T now
+  reports the file system type, and tail -f now uses inotify for files on
+  ZFS and VZFS file systems, rather than the default (for unknown file
+  system types) of issuing a warning and reverting to polling.  tail -f
+  still uses polling for files on VMHGFS file systems.
 
 ** Build-related
 
