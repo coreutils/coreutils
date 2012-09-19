@@ -393,11 +393,13 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
     return RM_OK;
 
   /* When failing to rmdir an unreadable directory, we see errno values
-     like EISDIR or ENOTDIR, but they would be meaningless in a diagnostic.
-     When that happens and the errno value from the failed open is EPERM
-     or EACCES, use the earlier, more descriptive errno value.  */
+     like EISDIR or ENOTDIR (or, on Solaris 10, EEXIST), but they would be
+     meaningless in a diagnostic.  When that happens and the errno value
+     from the failed open is EPERM or EACCES, use the earlier, more
+     descriptive errno value.  */
   if (ent->fts_info == FTS_DNR
-      && (errno == ENOTEMPTY || errno == EISDIR || errno == ENOTDIR)
+      && (errno == ENOTEMPTY || errno == EISDIR || errno == ENOTDIR
+          || errno == EEXIST)
       && (ent->fts_errno == EPERM || ent->fts_errno == EACCES))
     errno = ent->fts_errno;
   error (0, errno, _("cannot remove %s"), quote (ent->fts_path));
