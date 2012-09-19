@@ -1743,8 +1743,10 @@ is_square (uintmax_t x)
   return 0;
 }
 
-static const unsigned short invtab[] =
+/* invtab[i] = floor(0x10000 / (0x100 + i) */
+static const unsigned short invtab[0x81] =
   {
+    0x200,
     0x1fc, 0x1f8, 0x1f4, 0x1f0, 0x1ec, 0x1e9, 0x1e5, 0x1e1,
     0x1de, 0x1da, 0x1d7, 0x1d4, 0x1d0, 0x1cd, 0x1ca, 0x1c7,
     0x1c3, 0x1c0, 0x1bd, 0x1ba, 0x1b7, 0x1b4, 0x1b2, 0x1af,
@@ -1767,17 +1769,22 @@ static const unsigned short invtab[] =
    that q < 0x40; here it instead uses a table of (Euclidian) inverses.  */
 #define div_smallq(q, r, u, d)                                          \
   do {                                                                  \
-    if (0 && (u) / 0x40 < (d))                                          \
+    if ((u) / 0x40 < (d))                                               \
       {                                                                 \
         int _cnt;                                                       \
         uintmax_t _dinv, _mask, _q, _r;                                 \
         count_leading_zeros (_cnt, (d));                                \
-                                                                        \
-        _dinv = invtab[((d) >> (W_TYPE_SIZE - 8 - _cnt))                \
-                       - (1 << (8 - 1))];                               \
-                                                                        \
         _r = (u);                                                       \
-        _q = _r * _dinv >> (W_TYPE_SIZE + 8 - _cnt);                    \
+        if (UNLIKELY (_cnt > (W_TYPE_SIZE - 8)))                        \
+          {                                                             \
+            _dinv = invtab[((d) << (_cnt + 8 - W_TYPE_SIZE)) - 0x80];   \
+            _q = _dinv * _r >> (8 + W_TYPE_SIZE - _cnt);                \
+          }                                                             \
+        else                                                            \
+          {                                                             \
+            _dinv = invtab[((d) >> (W_TYPE_SIZE - 8 - _cnt)) - 0x7f];   \
+            _q = _dinv * (_r >> (W_TYPE_SIZE - 3 - _cnt)) >> 11;        \
+          }                                                             \
         _r -= _q*(d);                                                   \
                                                                         \
         _mask = -(uintmax_t) (_r >= (d));                               \
@@ -1837,8 +1844,9 @@ static unsigned int q_freq[Q_FREQ_SIZE + 1];
 # define MIN(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-
-static void
+/* Return true on success.  Expected to fail only for numbers
+   >= 2^{2*W_TYPE_SIZE - 2}, or close to that limit. */
+static bool
 factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 {
   /* Uses algorithm and notation from
@@ -1858,35 +1866,41 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
       1155, 15, 231, 35, 3, 55, 7, 11, 0
     };
 
-  uintmax_t S;
   const unsigned int *m;
 
   struct { uintmax_t Q; uintmax_t P; } queue[QUEUE_SIZE];
 
-  S = isqrt2 (n1, n0);
+  if (n1 >= ((uintmax_t) 1 << (W_TYPE_SIZE - 2)))
+    return false;
 
-  if (n0 == S * S)
+  uintmax_t sqrt_n = isqrt2 (n1, n0);
+
+  if (n0 == sqrt_n * sqrt_n)
     {
       uintmax_t p1, p0;
 
-      umul_ppmm (p1, p0, S, S);
+      umul_ppmm (p1, p0, sqrt_n, sqrt_n);
       assert (p0 == n0);
 
       if (n1 == p1)
         {
-          if (prime_p (S))
-            factor_insert_multiplicity (factors, S, 2);
+          if (prime_p (sqrt_n))
+            factor_insert_multiplicity (factors, sqrt_n, 2);
           else
             {
               struct factors f;
 
               f.nfactors = 0;
-              factor_using_squfof (0, S, &f);
+              if (!factor_using_squfof (0, sqrt_n, &f))
+                {
+                  /* Try pollard rho instead */
+                  factor_using_pollard_rho (sqrt_n, 1, &f);
+                }
               /* Duplicate the new factors */
               for (unsigned int i = 0; i < f.nfactors; i++)
                 factor_insert_multiplicity (factors, f.p[i], 2*f.e[i]);
             }
-          return;
+          return true;
         }
     }
 
@@ -1925,6 +1939,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
       Dh += n1 * mu;
 
       assert (Dl % 4 != 1);
+      assert (Dh < (uintmax_t) 1 << (W_TYPE_SIZE - 2));
 
       S = isqrt2 (Dh, Dl);
 
@@ -1943,10 +1958,10 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
       for (i = 0; i <= B; i++)
         {
-          uintmax_t q, P1, t, r;
+          uintmax_t q, P1, t, rem;
 
-          div_smallq (q, r, S+P, Q);
-          P1 = S - r;   /* P1 = q*Q - P */
+          div_smallq (q, rem, S+P, Q);
+          P1 = S - rem; /* P1 = q*Q - P */
 
 #if STAT_SQUFOF
           assert (q > 0);
@@ -2025,29 +2040,25 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                      for the case D = 2N. */
                   /* Compute Q = (D - P*P) / Q1, but we need double
                      precision. */
-                  {
-                    uintmax_t hi, lo, rem;
-                    umul_ppmm (hi, lo, P, P);
-                    sub_ddmmss (hi, lo, Dh, Dl, hi, lo);
-                    udiv_qrnnd (Q, rem, hi, lo, Q1);
-                    assert (rem == 0);
-                  }
+                  uintmax_t hi, lo;
+                  umul_ppmm (hi, lo, P, P);
+                  sub_ddmmss (hi, lo, Dh, Dl, hi, lo);
+                  udiv_qrnnd (Q, rem, hi, lo, Q1);
+                  assert (rem == 0);
 
                   for (;;)
                     {
-                      uintmax_t r;
-
                       /* Note: There appears to by a typo in the paper,
                          Step 4a in the algorithm description says q <--
                          floor([S+P]/\hat Q), but looking at the equations
                          in Sec. 3.1, it should be q <-- floor([S+P] / Q).
                          (In this code, \hat Q is Q1). */
-                      div_smallq (q, r, S+P, Q);
-                      P1 = S - r;       /* P1 = q*Q - P */
+                      div_smallq (q, rem, S+P, Q);
+                      P1 = S - rem;     /* P1 = q*Q - P */
 
 #if STAT_SQUFOF
                       q_freq[0]++;
-                      q_freq[MIN(q, Q_FREQ_SIZE)]++;
+                      q_freq[MIN (q, Q_FREQ_SIZE)]++;
 #endif
                       if (P == P1)
                         break;
@@ -2065,8 +2076,8 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
                   if (prime_p (Q))
                     factor_insert (factors, Q);
-                  else
-                    factor_using_squfof (0, Q, factors);
+                  else if (!factor_using_squfof (0, Q, factors))
+                    factor_using_pollard_rho (Q, 2, factors);
 
                   divexact_21 (n1, n0, n1, n0, Q);
 
@@ -2074,13 +2085,16 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                     factor_insert_large (factors, n1, n0);
                   else
                     {
-                      if (n1 == 0)
-                        factor_using_pollard_rho (n0, 1, factors);
-                      else
-                        factor_using_squfof (n1, n0, factors);
+                      if (!factor_using_squfof (n1, n0, factors))
+                        {
+                          if (n1 == 0)
+                            factor_using_pollard_rho (n0, 1, factors);
+                          else
+                            factor_using_pollard_rho2 (n1, n0, 1, factors);
+                        }
                     }
 
-                  return;
+                  return true;
                 }
             }
         next_i:
@@ -2089,8 +2103,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
     next_multiplier:
       ;
     }
-  fprintf (stderr, "squfof failed.\n");
-  exit (EXIT_FAILURE);
+  return false;
 }
 
 static void
@@ -2104,26 +2117,21 @@ factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
 
   t0 = factor_using_division (&t1, t1, t0, factors);
 
-  if (t1 == 0)
-    {
-      if (t0 != 1)
-        {
-          if (prime_p (t0))
-            factor_insert (factors, t0);
-          else if (alg == ALG_POLLARD_RHO)
-            factor_using_pollard_rho (t0, 1, factors);
-          else
-            factor_using_squfof (0, t0, factors);
-        }
-    }
+  if (t1 == 0 && t0 < 2)
+    return;
+
+  if (prime2_p (t1, t0))
+    factor_insert_large (factors, t1, t0);
   else
     {
-      if (prime2_p (t1, t0))
-        factor_insert_large (factors, t1, t0);
-      else if (alg == ALG_POLLARD_RHO)
-        factor_using_pollard_rho2 (t1, t0, 1, factors);
+      if (alg == ALG_SQUFOF)
+        if (factor_using_squfof (t1, t0, factors))
+          return;
+
+      if (t1 == 0)
+        factor_using_pollard_rho (t0, 1, factors);
       else
-        factor_using_squfof (t1, t0, factors);
+        factor_using_pollard_rho2 (t1, t0, 1, factors);
     }
 }
 
