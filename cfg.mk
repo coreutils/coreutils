@@ -554,7 +554,7 @@ exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = ^tests/pr/
 exclude_file_name_regexp--sc_program_name = \
   ^(gl/.*|lib/euidaccess-stat|src/make-prime-list)\.c$$
 exclude_file_name_regexp--sc_file_system = \
-  NEWS|^(init\.cfg|src/df\.c|tests/df/df-P\.sh)$$
+  NEWS|^(init\.cfg|src/df\.c|tests/df/df-P\.sh|tests/df/df-output\.sh)$$
 exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
