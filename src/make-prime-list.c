@@ -23,6 +23,8 @@ this program.  If not, see http://www.gnu.org/licenses/.  */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
+#undef fclose
 
 struct prime
 {
@@ -165,6 +167,12 @@ main (int argc, char **argv)
     }
 
   output_primes (prime_list, nprimes);
+
+  if (ferror (stdout) + fclose (stdout))
+    {
+      fprintf (stderr, "write error: %s\n", strerror (errno));
+      return EXIT_FAILURE;
+    }
 
   return EXIT_SUCCESS;
 }
