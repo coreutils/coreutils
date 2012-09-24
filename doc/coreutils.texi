@@ -8115,10 +8115,25 @@ of everything until the end of the file.
 if @samp{iflag=count_bytes} is specified, @var{n} is interpreted
 as a byte count rather than a block count.
 
-@item status=noxfer
+@item status=@var{which}
 @opindex status
-Do not print the overall transfer rate and volume statistics
-that normally make up the third status line when @command{dd} exits.
+Transfer information is normally output to stderr upon
+receipt of the @samp{INFO} signal or when @command{dd} exits.
+Specifying @var{which} will identify which information to suppress.
+
+@table @samp
+
+@item noxfer
+@opindex noxfer @r{dd status=}
+Do not print the transfer rate and volume statistics
+that normally make up the last status line.
+
+@item none
+@opindex none @r{dd status=}
+Do not print any informational messages to stderr.
+Error messages are output as normal.
+
+@end table
 
 @item conv=@var{conversion}[,@var{conversion}]@dots{}
 @opindex conv
