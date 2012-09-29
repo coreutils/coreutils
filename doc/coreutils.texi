@@ -10637,6 +10637,12 @@ Print a grand total of all arguments after all arguments have
 been processed.  This can be used to find out the total disk size, usage
 and available space of all listed devices.
 
+For the grand total line, @command{df} prints @samp{"total"} into the
+@var{source} column, and @samp{"-"} into the @var{target} column.
+If there is no @var{source} column (see @option{--output}), then
+@command{df} prints @samp{"total"} into the @var{target} column,
+if present.
+
 @optHumanReadable
 
 @item -H
@@ -10674,6 +10680,66 @@ Do not invoke the @code{sync} system call before getting any usage data.
 This may make @command{df} run significantly faster on systems with many
 disks, but on some systems (notably SunOS) the results may be slightly
 out of date.  This is the default.
+
+@item --output
+@itemx @w{@kbd{--output}[=@var{field_list}]}
+@opindex --output
+Use the output format defined by @var{field_list}, or print all fields if
+@var{field_list} is omitted.
+
+The use of the @option{--output} together with each of the options @option{-i},
+@option{-P}, and @option{-T} is mutually exclusive.
+
+FIELD_LIST is a comma-separated list of columns to be included in @command{df}'s
+output and therefore effectively controls the order of output columns.
+Each field can thus be used at the place of choice, but yet must only be
+used once.
+
+Valid field names in the @var{field_list} are:
+@table @samp
+@item source
+The source of the mount point, usually a device.
+@item fstype
+File system type.
+
+@item size
+Total number of blocks.
+@item used
+Number of used blocks.
+@item avail
+Number of available blocks.
+@item pcent
+Percentage of @var{used} divided by @var{size}.
+
+@item itotal
+Total number of inodes.
+@item iused
+Number of used inodes.
+@item iavail
+Number of available inodes.
+@item ipcent
+Percentage of @var{iused} divided by @var{itotal}.
+
+@item target
+The mount point.
+@end table
+
+The fields for block and inodes statistics are affected by the scaling
+options like @option{-h} as usual.
+
+The definition of the @var{field_list} can even be splitted among several
+@option{--output} uses.
+
+@example
+#!/bin/sh
+# Print the TARGET (i.e., the mount point) along with their percentage
+# statistic regarding the blocks and the inodes.
+df --out=target --output=pcent,ipcent
+
+# Print all available fields.
+df --o
+@end example
+
 
 @item -P
 @itemx --portability

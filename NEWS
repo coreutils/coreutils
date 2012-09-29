@@ -2,11 +2,24 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  df now accepts the --output[=FIELD_LIST] option to define the list of columns
+  to include in the output, or all available columns if the FIELD_LIST is
+  omitted.  Note this enables df to output both block and inode fields together.
+
 ** Bug fixes
 
   pr -n no longer crashes when passed values >= 32.  Also line numbers are
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]
+
+** Changes in behavior
+
+  df --total now prints '-' into the target column (mount point) of the
+  summary line, accommodating to the --output option where the target
+  field can be in any column.  If there is no source column, then df
+  prints 'total' into the target column.
 
 ** Build-related
 

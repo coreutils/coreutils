@@ -1149,6 +1149,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 "), stdout);
       fputs (_("\
+      --output[=FIELD_LIST]  use the output format defined by FIELD_LIST,\n\
+                               or print all fields if FIELD_LIST is omitted.\n\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
   -t, --type=TYPE       limit listing to file systems of type TYPE\n\
@@ -1160,6 +1162,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_blocksize_note ("DF");
       emit_size_note ();
+      fputs (_("\n\
+FIELD_LIST is a comma-separated list of columns to be included.  Valid\n\
+field names are: 'source', 'fstype', 'size', 'used', 'avail', 'pcent',\n\
+'itotal', 'iused', 'iavail', 'ipcent' and 'target' (see info page).\n\
+"), stdout);
       emit_ancillary_info ();
     }
   exit (status);
