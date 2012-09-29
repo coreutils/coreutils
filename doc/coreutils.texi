@@ -15608,7 +15608,7 @@ Niceness values range at least from @minus{}20 (process has high priority
 and gets more resources, thus slowing down other processes) through 19
 (process has lower priority and runs slowly itself, but has less impact
 on the speed of other running processes).  Some systems
-may have a wider range of nicenesses; conversely, other systems may
+may have a wider range of niceness values; conversely, other systems may
 enforce more restrictive limits.  An attempt to set the niceness
 outside the supported range is treated as an attempt to use the
 minimum or maximum supported value.
