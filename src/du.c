@@ -660,7 +660,8 @@ fill_mount_table (void)
 
       free (mnt_free->me_devname);
       free (mnt_free->me_mountdir);
-      free (mnt_free->me_type);
+      if (mnt_free->me_type_malloced)
+        free (mnt_free->me_type);
       free (mnt_free);
     }
 }
