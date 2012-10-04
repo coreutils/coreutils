@@ -64,9 +64,9 @@ output_primes (const struct prime *primes, unsigned nprimes)
 
   puts ("/* Generated file -- DO NOT EDIT */\n");
 
-  if (sizeof(uintmax_t) <= sizeof(unsigned long))
+  if (sizeof (uintmax_t) <= sizeof (unsigned long))
     suffix = "UL";
-  else if (sizeof(uintmax_t) <= sizeof(unsigned long long))
+  else if (sizeof (uintmax_t) <= sizeof (unsigned long long))
     suffix = "ULL";
   else
     {
@@ -74,13 +74,15 @@ output_primes (const struct prime *primes, unsigned nprimes)
       exit (EXIT_FAILURE);
     }
 
-#define SZ (int)(2*sizeof(uintmax_t))
+#define SZ (int)(2*sizeof (uintmax_t))
 
   for (i = 0, p = 2; i < nprimes; i++)
     {
-      printf ("P(%2u, %3u, 0x%0*jx%s, 0x%0*jx%s) /* %d */\n",
-              primes[i].p - p,
-              (i + 8 < nprimes) ? primes[i + 8].p - primes[i].p : 0xff,
+      unsigned int d8 = i + 8 < nprimes ? primes[i + 8].p - primes[i].p : 0xff;
+      if (255 < d8) /* this happens at 668221 */
+        abort ();
+      printf ("P (%2u, %3u, 0x%0*jx%s, 0x%0*jx%s) /* %d */\n",
+              primes[i].p - p, d8,
               SZ, primes[i].pinv, suffix,
               SZ, primes[i].lim, suffix, primes[i].p);
       p = primes[i].p;
@@ -111,7 +113,7 @@ output_primes (const struct prime *primes, unsigned nprimes)
 static void *
 xalloc (size_t s)
 {
-  void *p = malloc(s);
+  void *p = malloc (s);
   if (p)
     return p;
 
@@ -136,7 +138,7 @@ main (int argc, char **argv)
                "Produces a list of odd primes <= LIMIT\n", argv[0]);
       return EXIT_FAILURE;
     }
-  limit = atoi(argv[1]);
+  limit = atoi (argv[1]);
   if (limit < 3)
     exit (EXIT_SUCCESS);
 
