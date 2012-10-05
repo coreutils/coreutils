@@ -24,7 +24,10 @@ this program.  If not, see http://www.gnu.org/licenses/.  */
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+
+/* Deactivate config.h's "rpl_"-prefixed definitions of these symbols.  */
 #undef fclose
+#undef strerror
 
 struct prime
 {
