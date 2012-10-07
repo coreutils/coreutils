@@ -173,6 +173,12 @@ const unsigned char factor_clz_tab[129] =
 
 #endif
 
+#if !defined __clz_tab && !defined UHWtype
+/* Without this seemingly useless conditional, gcc -Wunused-macros
+   warns that each of the two tested macros is unused on Fedora 18.
+   FIXME: this is just an ugly band-aid.  Fix it properly.  */
+#endif
+
 enum alg_type { ALG_POLLARD_RHO = 1, ALG_SQUFOF = 2 };
 
 static enum alg_type alg;
