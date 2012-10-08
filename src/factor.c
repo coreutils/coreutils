@@ -2222,14 +2222,30 @@ static strtol_error
 strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
 {
   unsigned int lo_carry;
-  uintmax_t hi, lo;
+  uintmax_t hi = 0, lo = 0;
 
-  strtol_error err;
+  strtol_error err = LONGINT_INVALID;
 
-  hi = lo = 0;
+  /* Skip initial spaces and '+'.  */
   for (;;)
     {
-      unsigned int c = *s++;
+      char c = *s;
+      if (c == ' ')
+        s++;
+      else if (c == '+')
+        {
+          s++;
+          break;
+        }
+      else
+        break;
+    }
+
+  /* Initial scan for invalid digits.  */
+  const char *p = s;
+  for (;;)
+    {
+      unsigned int c = *p++;
       if (c == 0)
         break;
 
@@ -2238,9 +2254,17 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
           err = LONGINT_INVALID;
           break;
         }
-      c -= '0';
 
       err = LONGINT_OK;           /* we've seen at least one valid digit */
+    }
+
+  for (;err == LONGINT_OK;)
+    {
+      unsigned int c = *s++;
+      if (c == 0)
+        break;
+
+      c -= '0';
 
       if (UNLIKELY (hi > ~(uintmax_t)0 / 10))
         {
@@ -2341,6 +2365,10 @@ print_factors (const char *input)
           print_factors_single (t1, t0);
           return true;
         }
+      break;
+
+    case LONGINT_OVERFLOW:
+      /* Try GMP.  */
       break;
 
     default:

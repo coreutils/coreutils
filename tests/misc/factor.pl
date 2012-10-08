@@ -28,6 +28,7 @@ my @Tests =
     (
      ['1', '9',          {OUT => '3 3'}],
      ['1a', '7',         {OUT => '7'}],
+     ['1b', '  +7',      {OUT => '7'}],
      ['2', '4294967291', {OUT => '4294967291'}],
      ['3', '4294967292', {OUT => '2 2 3 3 7 11 31 151 331'}],
      ['4', '4294967293', {OUT => '9241 464773'}],
@@ -74,6 +75,16 @@ my @Tests =
      ['bug-2012-e', '17754345703', {OUT => '94219 188437'}],
     );
 
+# If we have GMP support, append tests to exercise it.
+system "grep -w HAVE_GMP $ENV{CONFIG_HEADER} > /dev/null" == 0
+  and push (@Tests,
+            ['bug-gmp-2_sup_128', '340282366920938463463374607431768211456',
+             {OUT => '2 'x127 . '2'}],
+            ['bug-gmp-2_sup_256',
+             '115792089237316195423570985008687907853'
+             . '269984665640564039457584007913129639936',
+             {OUT => '2 'x255 . '2'}]);
+
 # Prepend the command line argument and append a newline to end
 # of each expected 'OUT' string.
 my $t;
@@ -81,7 +92,7 @@ my $t;
 Test:
 foreach $t (@Tests)
   {
-    my $arg1 = $t->[1];
+    (my $arg1 = $t->[1]) =~ s| *\+?||;
 
     # Don't fiddle with expected OUT string if there's a nonzero exit status.
     foreach my $e (@$t)
