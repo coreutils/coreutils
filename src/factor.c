@@ -89,6 +89,9 @@
 #include <stdio.h>
 #if HAVE_GMP
 # include <gmp.h>
+# if !HAVE_DECL_MPZ_INITS
+#  include <stdarg.h>
+# endif
 #endif
 
 #include <assert.h>
@@ -526,6 +529,27 @@ factor_insert_large (struct factors *factors,
 }
 
 #if HAVE_GMP
+
+# if !HAVE_DECL_MPZ_INITS
+
+#  define mpz_inits(...) mpz_va_init (mpz_init, __VA_ARGS__)
+#  define mpz_clears(...) mpz_va_init (mpz_clear, __VA_ARGS__)
+
+static void
+mpz_va_init (void (*mpz_single_init)(mpz_t), ...)
+{
+  va_list ap;
+
+  va_start (ap, mpz_single_init);
+
+  mpz_t *mpz;
+  while ((mpz = va_arg (ap, mpz_t *)))
+    mpz_single_init (*mpz);
+
+  va_end (ap);
+}
+# endif
+
 static void mp_factor (mpz_t, struct mp_factors *);
 
 static void

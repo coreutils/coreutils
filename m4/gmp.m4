@@ -30,6 +30,8 @@ AC_DEFUN([cu_GMP],
         LIB_GMP=$ac_cv_search___gmpz_init
         AC_DEFINE([HAVE_GMP], [1],
           [Define if you have GNU libgmp (or replacement)])
+        # This only available in GMP >= 5
+        AC_CHECK_DECLS([mpz_inits], [], [], [[#include <gmp.h>]])
        }],
       [AC_MSG_WARN([libgmp development library was not found or not usable.])
        AC_MSG_WARN([AC_PACKAGE_NAME will be built without GMP support.])])
