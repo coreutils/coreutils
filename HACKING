@@ -21,6 +21,7 @@ Base any changes you make on the latest upstream sources.
 You can get a copy of the latest with this command:
 
     git clone git://git.sv.gnu.org/coreutils
+    cd coreutils
 
 That downloads the entire repository, including revision control history
 dating back to 1991.  The repository (the part you download, and which
