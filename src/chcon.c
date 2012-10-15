@@ -371,6 +371,10 @@ With --reference, change the security context of each FILE to that of RFILE.\n\
   -l, --range=RANGE      set range RANGE in the target security context\n\
 "), stdout);
       fputs (_("\
+      --no-preserve-root  do not treat '/' specially (the default)\n\
+      --preserve-root    fail to operate recursively on '/'\n\
+"), stdout);
+      fputs (_("\
       --reference=RFILE  use RFILE's security context rather than specifying\n\
                          a CONTEXT value\n\
 "), stdout);

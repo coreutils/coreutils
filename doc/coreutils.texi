@@ -1384,7 +1384,7 @@ legitimate uses for such a command,
 that resolves to @file{/}.  If you really want to try to remove all
 the files on your system, you can use the @option{--no-preserve-root}
 option, but the default behavior, specified by the
-@option{--preserve-option}, is safer for most purposes.
+@option{--preserve-root} option, is safer for most purposes.
 
 The commands @command{chgrp}, @command{chmod} and @command{chown}
 can also operate destructively on entire hierarchies, so they too
@@ -15256,12 +15256,16 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
+@item --dereference
+@opindex --dereference
+Do not affect symbolic links but what they refer to; this is the default.
+
 @item -h
 @itemx --no-dereference
 @opindex -h
 @opindex --no-dereference
 @cindex no dereference
-Affect symbolic links instead of any referenced file.
+Affect the symbolic links themselves instead of any referenced file.
 
 @item --reference=@var{rfile}
 @opindex --reference
@@ -15273,6 +15277,18 @@ Use @var{rfile}'s security context rather than specifying a @var{context} value.
 @opindex -R
 @opindex --recursive
 Operate on files and directories recursively.
+
+@item --preserve-root
+@opindex --preserve-root
+Refuse to operate recursively on the root directory, @file{/},
+when used together with the @option{--recursive} option.
+@xref{Treating / specially}.
+
+@item --no-preserve-root
+@opindex --no-preserve-root
+Do not treat the root directory, @file{/}, specially when operating
+recursively; this is the default.
+@xref{Treating / specially}.
 
 @choptH
 @xref{Traversing symlinks}.
