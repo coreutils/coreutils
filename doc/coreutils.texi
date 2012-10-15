@@ -7734,8 +7734,8 @@ description of @option{--remove-destination}.
 This option is independent of the @option{--interactive} or
 @option{-i} option: neither cancels the effect of the other.
 
-This option is redundant if the @option{--no-clobber} or @option{-n} option is
-used.
+This option is ignored when the @option{--no-clobber} or @option{-n} option
+is also used.
 
 @item -H
 @opindex -H

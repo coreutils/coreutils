@@ -177,9 +177,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -f, --force                  if an existing destination file cannot be\n\
-                                 opened, remove it and try again (redundant if\
-\n\
-                                 the -n option is used)\n\
+                                 opened, remove it and try again (this option\n\
+                                 is ignored when the -n option is also used)\n\
   -i, --interactive            prompt before overwrite (overrides a previous -n\
 \n\
                                   option)\n\
