@@ -7724,7 +7724,7 @@ Equivalent to @option{--no-dereference --preserve=links}.
 @opindex -f
 @opindex --force
 When copying without this option and an existing destination file cannot
-be opened for writing, the copy fails.  However, with @option{--force}),
+be opened for writing, the copy fails.  However, with @option{--force},
 when a destination file cannot be opened, @command{cp} then removes it and
 tries to open it again.  Contrast this behavior with that enabled by
 @option{--link} and @option{--symbolic-link}, whereby the destination file
