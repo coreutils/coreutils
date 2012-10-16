@@ -89,7 +89,7 @@ extern bool
 extent_scan_read (struct extent_scan *scan)
 {
   unsigned int si = 0;
-  struct extent_info *last_ei IF_LINT ( = scan->ext_info);
+  struct extent_info *last_ei = scan->ext_info;
 
   while (true)
     {
@@ -127,8 +127,14 @@ extent_scan_read (struct extent_scan *scan)
 
       assert (scan->ei_count <= SIZE_MAX - fiemap->fm_mapped_extents);
       scan->ei_count += fiemap->fm_mapped_extents;
-      scan->ext_info = xnrealloc (scan->ext_info, scan->ei_count,
-                                  sizeof (struct extent_info));
+      {
+        /* last_ei points into a buffer that may be freed via xnrealloc.
+           Record its offset and adjust after allocation.  */
+        size_t prev_idx = last_ei - scan->ext_info;
+        scan->ext_info = xnrealloc (scan->ext_info, scan->ei_count,
+                                    sizeof (struct extent_info));
+        last_ei = scan->ext_info + prev_idx;
+      }
 
       unsigned int i = 0;
       for (i = 0; i < fiemap->fm_mapped_extents; i++)
