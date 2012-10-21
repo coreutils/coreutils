@@ -15,6 +15,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp could read from freed memory and could even make corrupt copies.
   This could happen with a very fragmented and sparse input file,
   on GNU/Linux file systems supporting fiemap extent scanning.
+  This bug also affects mv when it resorts to copying, and install.
   [bug introduced in coreutils-8.11]
 
   cp --no-preserve=mode now no longer preserves the original file's
