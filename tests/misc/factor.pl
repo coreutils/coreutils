@@ -76,7 +76,7 @@ my @Tests =
     );
 
 # If we have GMP support, append tests to exercise it.
-system "grep -w HAVE_GMP $ENV{CONFIG_HEADER} > /dev/null" == 0
+(system "grep '^#define HAVE_GMP 1' $ENV{CONFIG_HEADER} > /dev/null") == 0
   and push (@Tests,
             ['bug-gmp-2_sup_128', '340282366920938463463374607431768211456',
              {OUT => '2 'x127 . '2'}],
