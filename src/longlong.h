@@ -2055,10 +2055,6 @@ extern UWtype mpn_udiv_qrnnd_r (UWtype, UWtype, UWtype, UWtype *);
 __GMP_DECLSPEC UWtype __MPN(udiv_w_sdiv) (UWtype *, UWtype, UWtype, UWtype);
 #endif
 
-#ifndef __GMP_DECLSPEC
-#define __GMP_DECLSPEC /* empty */
-#endif
-
 /* If udiv_qrnnd was not defined for this processor, use __udiv_qrnnd_c.  */
 #if !defined (udiv_qrnnd)
 #define UDIV_NEEDS_NORMALIZATION 1

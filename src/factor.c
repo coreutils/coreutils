@@ -148,10 +148,19 @@ typedef unsigned long int UDItype;
 # endif
 # define LONGLONG_STANDALONE     /* Don't require GMP's longlong.h mdep files */
 # define ASSERT(x)               /* FIXME make longlong.h really standalone */
+# define __GMP_DECLSPEC          /* FIXME make longlong.h really standalone */
 # define __clz_tab factor_clz_tab /* Rename to avoid glibc collision */
 # ifndef __GMP_GNUC_PREREQ
 #  define __GMP_GNUC_PREREQ(a,b) 1
 # endif
+
+/* These stub macros are only used in longlong.h in certain system compiler
+   combinations, so ensure usage to avoid -Wunused-macros warnings.  */
+# if __GMP_GNUC_PREREQ (1,1) && defined __clz_tab
+ASSERT (1)
+__GMP_DECLSPEC
+# endif
+
 # if _ARCH_PPC
 #  define HAVE_HOST_CPU_FAMILY_powerpc 1
 # endif
@@ -751,7 +760,7 @@ factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
     {
       for (;;)
         {
-          uintmax_t q1, q0, hi, lo;
+          uintmax_t q1, q0, hi, lo ATTRIBUTE_UNUSED;
 
           q0 = t0 * primes_dtab[i].binv;
           umul_ppmm (hi, lo, q0, p);
@@ -893,7 +902,7 @@ static const unsigned char  binvert_table[128] =
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
-        uintmax_t _p1, _p0;                                             \
+        uintmax_t _p1, _p0 ATTRIBUTE_UNUSED;                            \
         umul_ppmm (_p1, _p0, _q0, d);                                   \
         (q1) = ((u1) - _p1) * _di;                                      \
         (q0) = _q0;                                                     \
@@ -941,7 +950,7 @@ static const unsigned char  binvert_table[128] =
 static inline uintmax_t
 mulredc (uintmax_t a, uintmax_t b, uintmax_t m, uintmax_t mi)
 {
-  uintmax_t rh, rl, q, th, tl, xh;
+  uintmax_t rh, rl, q, th, tl ATTRIBUTE_UNUSED, xh;
 
   umul_ppmm (rh, rl, a, b);
   q = rl * mi;
@@ -961,7 +970,7 @@ mulredc2 (uintmax_t *r1p,
           uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0,
           uintmax_t m1, uintmax_t m0, uintmax_t mi)
 {
-  uintmax_t r1, r0, q, p1, p0, t1, t0, s1, s0;
+  uintmax_t r1, r0, q, p1, p0 ATTRIBUTE_UNUSED, t1, t0, s1, s0;
   mi = -mi;
   assert ( (a1 >> (W_TYPE_SIZE - 1)) == 0);
   assert ( (b1 >> (W_TYPE_SIZE - 1)) == 0);
