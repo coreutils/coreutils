@@ -1745,7 +1745,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif /* udiv_qrnnd */
 #endif /* __sparc__ */
 
-#if defined (__sparc__) && W_TYPE_SIZE == 64
+#if (defined (__sparc_v9) || defined (__sparc_v9__)) && W_TYPE_SIZE == 64
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ (								\
        "addcc	%r4,%5,%1\n"						\
