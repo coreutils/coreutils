@@ -1801,7 +1801,7 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 #define MAGIC65 ((uint64_t) 0x218a019866014613ULL)
 #define MAGIC11 0x23b
 
-/* Returns the square root if the input is a square, otherwise 0. */
+/* Return the square root if the input is a square, otherwise 0. */
 static uintmax_t _GL_ATTRIBUTE_CONST
 is_square (uintmax_t x)
 {
@@ -2176,6 +2176,8 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
   return false;
 }
 
+/* Compute the prime factors of the 128-bit number (T1,T0), and put the
+   results in FACTORS.  Use the algorithm selected by the global ALG.  */
 static void
 factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
 {
@@ -2206,6 +2208,8 @@ factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
 }
 
 #if HAVE_GMP
+/* Use Pollard-rho to compute the prime factors of
+   arbitrary-precision T, and put the results in FACTORS.  */
 static void
 mp_factor (mpz_t t, struct mp_factors *factors)
 {
