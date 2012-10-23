@@ -1532,7 +1532,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (uintmax_t) a, n1, n0);
 
               submod2 (t1, t0, z1, z0, x1, x0, n1, n0);
               P0 = mulredc2 (&r1m, P1, P0, t1, t0, n1, n0, ni);
@@ -1555,7 +1555,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
             {
               x0 = mulredc2 (&r1m, x1, x0, x1, x0, n1, n0, ni);
               x1 = r1m;
-              addmod2 (x1, x0, x1, x0, 0, a, n1, n0);
+              addmod2 (x1, x0, x1, x0, 0, (uintmax_t) a, n1, n0);
             }
           y1 = x1; y0 = x0;
         }
@@ -1565,7 +1565,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
         {
           y0 = mulredc2 (&r1m, y1, y0, y1, y0, n1, n0, ni);
           y1 = r1m;
-          addmod2 (y1, y0, y1, y0, 0, a, n1, n0);
+          addmod2 (y1, y0, y1, y0, 0, (uintmax_t) a, n1, n0);
 
           submod2 (t1, t0, z1, z0, y1, y0, n1, n0);
           g0 = gcd2_odd (&g1, t1, t0, n1, n0);
