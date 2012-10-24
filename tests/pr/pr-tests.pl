@@ -451,6 +451,14 @@ foreach my $t (@tv)
     push @Tests, $new_ent;
   }
 
+# Exercise a bug with pr -m -s (commit 553d347)
+push @Tests,
+   ['merge-w-tabs', '-m -s -t',
+    {IN=>{1=>"a\tb\tc\n"}},
+    {IN=>{2=>"m\tn\to\n"}},
+    {IN=>{3=>"x\ty\tz\n"}},
+     {OUT=>join("\t", qw(a b c m n o x y z)) . "\n"} ];
+
 @Tests = triple_test \@Tests;
 
 my $save_temps = $ENV{DEBUG};

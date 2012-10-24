@@ -240,7 +240,6 @@ all_tests =					\
   tests/misc/od-float.sh			\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
-  tests/misc/pr.pl				\
   tests/misc/join.pl				\
   tests/pr/pr-tests.pl				\
   tests/misc/pwd-option.sh			\
