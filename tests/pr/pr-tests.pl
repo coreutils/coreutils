@@ -407,6 +407,13 @@ my @tv = (
 # Before coreutils-8.13 page numbers were not handled correctly when
 # headers were not printed (when -l <= 10 or -t or -T specified)
 ['page-range', '+1:1 -2 -l1 -s" "',  "a\nb\nc\n", "a b\n", 0],
+
+# This padded with zeros before coreutils-8.21
+['padding1', '-t -n,15', "1\n", (" "x 14)."1,1\n", 0],
+# This crashed with divide by zero before coreutils-8.21
+['padding2', '-t -n,64', "1\n", (" "x 63)."1,1\n", 0],
+# Ensure we handle buffer truncation correctly
+['padding3', '-t -N1000000 -n,1', "1\n", "0,1\n", 0],
 );
 
 # Convert the above old-style test vectors to the newer

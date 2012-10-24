@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  pr -n no longer crashes when passed values >= 32.  Also line numbers are
+  consistently padded with spaces, rather than with zeros for certain widths.
+  [bug introduced in TEXTUTILS-1_22i]
+
 
 * Noteworthy changes in release 8.20 (2012-10-23) [stable]
 

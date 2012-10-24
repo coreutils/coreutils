@@ -630,10 +630,6 @@ static uintmax_t page_number;
    2    moo     4       hoo     6       zoo */
 static int line_number;
 
-/* With line_number overflow, we use power_10 to cut off the higher-order
-   digits of the line_number */
-static int power_10;
-
 /* (-n) True means lines should be preceded by numbers. */
 static bool numbered_lines = false;
 
@@ -1268,7 +1264,6 @@ init_parameters (int number_of_files)
 
   if (numbered_lines)
     {
-      int tmp_i;
       int chars_per_default_tab = 8;
 
       line_count = start_line_num;
@@ -1289,12 +1284,6 @@ init_parameters (int number_of_files)
          printing files in parallel. */
       if (parallel_files)
         chars_used_by_number = number_width;
-
-      /* We use power_10 to cut off the higher-order digits of the
-         line_number in function add_line_number */
-      tmp_i = chars_per_number;
-      for (power_10 = 1; tmp_i > 0; --tmp_i)
-        power_10 = 10 * power_10;
     }
 
   chars_per_column = (chars_per_line - chars_used_by_number
@@ -1306,7 +1295,8 @@ init_parameters (int number_of_files)
   if (numbered_lines)
     {
       free (number_buff);
-      number_buff = xmalloc (2 * chars_per_number);
+      number_buff = xmalloc (MAX (chars_per_number,
+                                  INT_STRLEN_BOUND (line_number)) + 1);
     }
 
   /* Pick the maximum between the tab width and the width of an
@@ -2029,19 +2019,13 @@ add_line_number (COLUMN *p)
 {
   int i;
   char *s;
-  int left_cut;
+  int num_width;
 
   /* Cutting off the higher-order digits is more informative than
-     lower-order cut off*/
-  if (line_number < power_10)
-    sprintf (number_buff, "%*d", chars_per_number, line_number);
-  else
-    {
-      left_cut = line_number % power_10;
-      sprintf (number_buff, "%0*d", chars_per_number, left_cut);
-    }
+     lower-order cut off. */
+  num_width = sprintf (number_buff, "%*d", chars_per_number, line_number);
   line_number++;
-  s = number_buff;
+  s = number_buff + (num_width - chars_per_number);
   for (i = chars_per_number; i > 0; i--)
     (p->char_func) (*s++);
 
