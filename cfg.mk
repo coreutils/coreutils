@@ -181,6 +181,14 @@ sc_check-AUTHORS: $(all_programs)
 	  && diff $(au_actual) $(au_dotdot) \
 	  && rm -f $(au_actual) $(au_dotdot)
 
+# Ensure programs with authors with non ASCII names link with LIBICONV
+sc_check-I18N-AUTHORS:
+	@(cd $(srcdir)/src &&                           \
+	  for i in $$(git grep -l -w proper_name_utf8 *.c|sed 's/\.c//'); do \
+	    grep -E "^src_$${i}_LDADD"' .?= .*\$$\(LIBICONV\)' local.mk > \
+	      /dev/null || { echo FAIL $$i; exit 1; };            \
+	  done)
+
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
 # - tests involving long checksum lines, and
