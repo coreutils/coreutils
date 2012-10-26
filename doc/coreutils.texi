@@ -12461,7 +12461,7 @@ checksum in a file named @file{dvd.sha1}.
 Note, however, that this example relies on a feature of modern shells
 called @dfn{process substitution}
 (the @samp{>(command)} syntax, above;
-@xref{Process Substitution,,Process Substitution, bashref,
+@xref{Process Substitution,,Process Substitution, bash,
 The Bash Reference Manual}.),
 so it works with @command{zsh}, @command{bash}, and @command{ksh},
 but not with @command{/bin/sh}.  So if you write code like this
