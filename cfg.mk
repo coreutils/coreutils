@@ -111,7 +111,7 @@ sc_tests_list_consistency:
 	  for t in $(all_tests); do echo $$t; done;			\
 	  cd $(top_srcdir);						\
 	  $(SHELL) build-aux/vc-list-files tests			\
-	    | grep -Ev '^tests/(factor/run|init)\.sh$$'			\
+	    | grep -Ev '^tests/(factor/(run|create-test)|init)\.sh$$'	\
 	    | $(EGREP) "$$test_extensions_rx\$$";			\
 	} | sort | uniq -u | grep . && exit 1; :
 
@@ -572,7 +572,7 @@ exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c)$$
 
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
-  ^tests/(init\.sh|local.mk|misc/stdbuf\.sh)$$
+  ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$
 
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \

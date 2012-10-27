@@ -1,11 +1,14 @@
 #!/bin/sh
+
+# === THIS IS A __TEMPLATE__ ===
+
 # Test the factor rewrite.
-# Expect to be invoked via a file whose basename matches
-# /^(\d+)\-(\d+)\-([\da-f]{40})\.sh$/
 # The test is to run this command
-# seq $1 $2 | factor | shasum -c --status <(echo $3  -)
+# seq $START $END | factor | shasum -c --status <(echo $CKSUM  -)
 # I.e., to ensure that the factorizations of integers $1..$2
 # match what we expect.
+#
+# See: tests/factor/create-test.sh
 
 # Copyright (C) 2012 Free Software Foundation, Inc.
 
@@ -16,15 +19,14 @@ very_expensive_
 
 print_ver_ factor seq
 
-# Remove the ".sh" suffix:
-t=${ME_%.sh}
+# Template variables.
+START=__START__
+  END=__END__
+CKSUM=__CKSUM__
 
-# Make IFS include "-", so that a simple "set" will separate the args:
-IFS=-$IFS
-set $t
-echo "$3  -" > exp
+echo "$CKSUM  -" > exp
 
 f=1
-seq $1 $2 | factor | shasum -c --status exp && f=0
+seq $START $END | factor | shasum -c --status exp && f=0
 
 Exit $f
