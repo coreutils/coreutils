@@ -20,6 +20,7 @@ this program.  If not, see http://www.gnu.org/licenses/.  */
 #include <config.h>
 
 #include <stdint.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -77,17 +78,15 @@ output_primes (const struct prime *primes, unsigned nprimes)
       exit (EXIT_FAILURE);
     }
 
-#define SZ (int)(2*sizeof (uintmax_t))
-
   for (i = 0, p = 2; i < nprimes; i++)
     {
       unsigned int d8 = i + 8 < nprimes ? primes[i + 8].p - primes[i].p : 0xff;
       if (255 < d8) /* this happens at 668221 */
         abort ();
-      printf ("P (%2u, %3u, 0x%0*jx%s, 0x%0*jx%s) /* %d */\n",
+      printf ("P (%2u, %3u, 0x%016"PRIxMAX"%s, 0x%016"PRIxMAX"%s) /* %d */\n",
               primes[i].p - p, d8,
-              SZ, primes[i].pinv, suffix,
-              SZ, primes[i].lim, suffix, primes[i].p);
+              primes[i].pinv, suffix,
+              primes[i].lim, suffix, primes[i].p);
       p = primes[i].p;
     }
 
