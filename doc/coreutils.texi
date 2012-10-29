@@ -15890,6 +15890,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
+@item --preserve-status
+@opindex --preserve-status
+Return the exit status of the managed @var{command} on timeout, rather than
+a specific exit status indicating a timeout.  This is useful if the
+managed @var{command} supports running for an indeterminite amount of time.
+
 @item --foreground
 @opindex --foreground
 Don't create a separate background program group, so that

@@ -36,6 +36,11 @@ test $? = 2 || fail=1
 timeout 1 sleep 10
 test $? = 124 || fail=1
 
+# exit status propagation even on timeout
+timeout --preserve-status 1 sleep 10
+# exit status should be 128+TERM
+test $? = 124 && fail=1
+
 # kill delay. Note once the initial timeout triggers,
 # the exit status will be 124 even if the command
 # exits on its own accord.
