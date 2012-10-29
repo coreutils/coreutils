@@ -33,18 +33,18 @@ timeout 10 sh -c 'exit 2'
 test $? = 2 || fail=1
 
 # timeout
-timeout 1 sleep 10
+timeout .1 sleep 10
 test $? = 124 || fail=1
 
 # exit status propagation even on timeout
-timeout --preserve-status 1 sleep 10
+timeout --preserve-status .1 sleep 10
 # exit status should be 128+TERM
 test $? = 124 && fail=1
 
 # kill delay. Note once the initial timeout triggers,
 # the exit status will be 124 even if the command
 # exits on its own accord.
-timeout -s0 -k1 1 sleep 10
+timeout -s0 -k1 .1 sleep 10
 test $? = 124 && fail=1
 
 # Ensure 'timeout' is immune to parent's SIGCHLD handler
@@ -57,7 +57,7 @@ test $? = 124 && fail=1
 ) || fail=1
 
 # Don't be confused when starting off with a child (Bug#9098).
-out=$(sleep 1 & exec timeout 2 sh -c 'sleep 3; echo foo')
+out=$(sleep .1 & exec timeout .5 sh -c 'sleep 2; echo foo')
 status=$?
 test "$out" = "" && test $status = 124 || fail=1
 
