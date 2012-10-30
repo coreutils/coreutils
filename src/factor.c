@@ -124,7 +124,16 @@
 #if USE_LONGLONG_H
 
 /* Make definitions for longlong.h to make it do what it can do for us */
-# define W_TYPE_SIZE 64          /* bitcount for uintmax_t */
+
+/* bitcount for uintmax_t */
+#if UINTMAX_MAX == UINT32_MAX
+# define W_TYPE_SIZE 32
+#elif UINTMAX_MAX == UINT64_MAX
+# define W_TYPE_SIZE 64
+#elif UINTMAX_MAX == UINT128_MAX
+# define W_TYPE_SIZE 128
+#endif
+
 # define UWtype  uintmax_t
 # define UHWtype unsigned long int
 # undef UDWtype

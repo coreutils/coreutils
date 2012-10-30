@@ -78,12 +78,20 @@ output_primes (const struct prime *primes, unsigned nprimes)
       exit (EXIT_FAILURE);
     }
 
+#if UINTMAX_MAX == UINT32_MAX
+# define SZ "8" /* 8 hex digits.  */
+#elif UINTMAX_MAX == UINT64_MAX
+# define SZ "16" /* 16 hex digits.  */
+#elif UINTMAX_MAX == UINT128_MAX
+# define SZ "32" /* 32 hex digits.  */
+#endif
+
   for (i = 0, p = 2; i < nprimes; i++)
     {
       unsigned int d8 = i + 8 < nprimes ? primes[i + 8].p - primes[i].p : 0xff;
       if (255 < d8) /* this happens at 668221 */
         abort ();
-      printf ("P (%2u, %3u, 0x%016"PRIxMAX"%s, 0x%016"PRIxMAX"%s) /* %d */\n",
+      printf ("P (%2u, %3u, 0x%0"SZ PRIxMAX"%s, 0x%0"SZ PRIxMAX"%s) /* %d */\n",
               primes[i].p - p, d8,
               primes[i].pinv, suffix,
               primes[i].lim, suffix, primes[i].p);
