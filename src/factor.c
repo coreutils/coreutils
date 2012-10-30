@@ -2313,7 +2313,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
   uintmax_t q, r;
 
   if (t1 == 0)
-    printf ("%ju", t0);
+    printf ("%"PRIuMAX, t0);
   else
     {
       /* Use very plain code here since it seems hard to write fast code

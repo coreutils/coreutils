@@ -191,6 +191,16 @@ sc_check-I18N-AUTHORS:
 		    '$$(LIBICONV)' 1>&2; exit 1; };			\
 	  done
 
+# Ensure %j is not used for intmax_t as it's not universally supported.
+# There are issues on HPUX for example.  But note that %ju was used between
+# coreutils 8.13 (2011-10) and 8.20 (2012-10) without any reported issue,
+# and the particular issue this check is associated with was for %*jx.
+# So we may be able to relax this restriction soon.
+sc_prohibit-j-printf-format:
+	@cd $(srcdir)/src && GIT_PAGER= git grep -n '%[0*]*j[udx]' *.c	\
+	  && { echo '$(ME): Use PRI*MAX instead of %j' 1>&2; exit 1; }  \
+	  || :
+
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
 # - tests involving long checksum lines, and
