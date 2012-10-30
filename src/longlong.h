@@ -679,7 +679,13 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 /* These macros are for ABI=2.0w.  In ABI=2.0n they can't be used, since GCC
    (3.2) puts longlong into two adjacent 32-bit registers.  Presumably this
    is just a case of no direct support for 2.0n but treating it like 1.0. */
-#if defined (__hppa) && W_TYPE_SIZE == 64 && ! defined (_LONG_LONG_LIMB)
+#if defined (__hppa) && W_TYPE_SIZE == 64 && ! defined (_LONG_LONG_LIMB) \
+  && defined (_PA_RISC2_0) && defined (_LP64)
+/* Note the _PA_RISC2_0 above is to exclude this code from GCC with
+   default -march options which doesn't support these instructions.
+   Also the width check for 'long' is to avoid ilp32 runtimes where
+   GNU/Linux and narrow HP-UX kernels are known to have issues with
+   clobbering of context between the add and add,dc instructions.  */
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("add%I5 %5,%r4,%1\n\tadd,dc %r2,%r3,%0"			\
 	   : "=r" (sh), "=&r" (sl)					\
