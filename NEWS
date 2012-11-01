@@ -21,6 +21,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   build failure when building from modified sources, as is common practice
   for a patched distribution package.
 
+  The check in the root-only tests to test whether our dummy user,
+  $NON_ROOT_USERNAME, is able to run binaries from the build directory
+  failed.  As a result, these tests have been skipped unnecessarily.
+  [bug introduced in coreutils-8.20]
+
 
 * Noteworthy changes in release 8.20 (2012-10-23) [stable]
 
