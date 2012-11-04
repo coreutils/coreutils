@@ -187,7 +187,7 @@ sc_check-I18N-AUTHORS:
 	  for i in $$(git grep -l -w proper_name_utf8 *.c|sed 's/\.c//'); do \
 	    grep -E "^src_$${i}_LDADD"' .?= .*\$$\(LIBICONV\)' local.mk	\
 		> /dev/null						\
-	      || { "echo $(ME): link rules for $$i do not include"	\
+	      || { echo "$(ME): link rules for $$i do not include"	\
 		    '$$(LIBICONV)' 1>&2; exit 1; };			\
 	  done
 
