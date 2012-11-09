@@ -72,11 +72,17 @@ EOF
 
 df -h --o=source,fstype,size,used,avail,pcent \
  --o=itotal,iused,iavail,ipcent,target '.' >out || fail=1
-sed -e '1 {s/ [ ]*/ /g;q}' out > out2
+sed -e '1 {
+          s/ [ ]*/ /g
+          q
+        }' out > out2
 compare exp out2 || fail=1
 
 df -h --output '.' >out || fail=1
-sed -e '1 {s/ [ ]*/ /g;q}' out > out2
+sed -e '1 {
+          s/ [ ]*/ /g
+          q
+        }' out > out2
 compare exp out2 || fail=1
 
 # Ensure that --output indicates the block size
@@ -86,7 +92,11 @@ cat <<\EOF > exp || framework_failure_
 EOF
 
 df -B1K --output=size '.' >out || fail=1
-sed -e '1 {s/ [ ]*/ /g;q}' out > out2
+sed -e '1 {
+          s/ [ ]*/ /g
+          s/^ //
+          q
+        }' out > out2
 compare exp out2 || fail=1
 
 # Ensure that the grand total line now contains a "-" in the TARGET field ...
@@ -95,7 +105,11 @@ cat <<\EOF > exp || framework_failure_
 EOF
 
 df --output=source,target --total '.' >out || fail=1
-sed -n -e '3 {s/^total[ ]*//;p;q}' out > out2
+sed -n -e '3 {
+             s/^total[ ]*//
+             p
+             q
+           }' out > out2
 compare exp out2 || fail=1
 
 # ... but it should read "total" if there is no SOURCE field.
@@ -104,7 +118,10 @@ total
 EOF
 
 df --output=target --total '.' >out || fail=1
-sed -n -e '3 {p;q}' out > out2
+sed -n -e '3 {
+             p
+             q
+           }' out > out2
 compare exp out2 || fail=1
 
 # Ensure that --output is mentioned in the usage.
