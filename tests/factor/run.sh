@@ -17,7 +17,7 @@
 # Don't run these tests by default.
 very_expensive_
 
-print_ver_ factor seq
+print_ver_ factor seq sha1sum
 
 # Template variables.
 START=__START__
@@ -27,6 +27,6 @@ CKSUM=__CKSUM__
 echo "$CKSUM  -" > exp
 
 f=1
-seq $START $END | factor | shasum -c --status exp && f=0
+seq $START $END | factor | sha1sum -c --status exp && f=0
 
 Exit $f
