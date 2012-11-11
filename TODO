@@ -37,10 +37,6 @@ printf:
 consider adding some implementation of the "col" utility
   Suggested by Karl Berry.
 
-renice: POSIX utility, needs implementing.
-  suggestion from Karl Berry (among others).
-  Bob Proulx is working on this.
-
 doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
   Better still: fix the code so it's *not* system-dependent.
@@ -118,10 +114,6 @@ Changes expected to go in, someday.
   dereference command line symlinks to directories.  Since -l has
   an implicit --NO-dereference-command-line-symlink-to-dir meaning.
   Pointed out by Karl Berry.
-
-  dd: consider adding an option to suppress 'bytes/block read/written'
-  output to stderr.  Suggested here:
-    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045
 
   Pending copyright papers:
   ------------------------
