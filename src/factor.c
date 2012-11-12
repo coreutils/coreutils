@@ -101,6 +101,7 @@
 #include "quote.h"
 #include "readtokens.h"
 #include "xstrtol.h"
+#include "verify.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "factor"
@@ -639,6 +640,12 @@ mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime)
 #endif /* HAVE_GMP */
 
 
+/* Number of bits in an uintmax_t.  */
+enum { W = sizeof (uintmax_t) * CHAR_BIT };
+
+/* Verify that uintmax_t does not have holes in its representation.  */
+verify (UINTMAX_MAX >> (W - 1) == 1);
+
 #define P(a,b,c,d) a,
 static const unsigned char primes_diff[] = {
 #include "primes.h"
@@ -667,6 +674,10 @@ static const struct primes_dtab primes_dtab[] = {
 {1,0},{1,0},{1,0},{1,0},{1,0},{1,0},{1,0} /* 7 sentinels for 8-way loop */
 };
 #undef P
+
+/* Verify that uintmax_t is not wider than
+   the integers used to generate primes.h.  */
+verify (W <= WIDE_UINT_BITS);
 
 /* This flag is honored only in the GMP code. */
 static int verbose = 0;
