@@ -28,6 +28,7 @@ this program.  If not, see http://www.gnu.org/licenses/.  */
 
 /* Deactivate config.h's "rpl_"-prefixed definitions of these symbols.  */
 #undef fclose
+#undef malloc
 #undef strerror
 
 struct prime
