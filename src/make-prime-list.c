@@ -76,7 +76,7 @@ process_prime (struct prime *info, unsigned p)
 }
 
 static void
-print_wide_uint (wide_uint n, int nested, unsigned wide_uint_bits)
+print_wide_uint (wide_uint n, int nesting, unsigned wide_uint_bits)
 {
   /* Number of bits per integer literal.  8 is too many, because
      uintmax_t is 32 bits on some machines so we cannot shift by 32 bits.
@@ -91,10 +91,12 @@ print_wide_uint (wide_uint n, int nested, unsigned wide_uint_bits)
       int needs_parentheses = n >> bits_per_literal >> bits_per_literal != 0;
       if (needs_parentheses)
         printf ("(");
-      print_wide_uint (n >> bits_per_literal, 1, wide_uint_bits);
-      printf (") << %d | " + !needs_parentheses, bits_per_literal);
+      print_wide_uint (n >> bits_per_literal, nesting + 1, wide_uint_bits);
+      if (needs_parentheses)
+        printf (")\n%*s", nesting + 3, "");
+      printf (" << %d | ", bits_per_literal);
     }
-  else if (nested)
+  else if (nesting)
     {
       printf ("(uintmax_t) ");
       hex_digits_per_literal
@@ -127,9 +129,9 @@ output_primes (const struct prime *primes, unsigned nprimes)
       unsigned int d8 = i + 8 < nprimes ? primes[i + 8].p - primes[i].p : 0xff;
       if (255 < d8) /* this happens at 668221 */
         abort ();
-      printf ("P (%u, %u,\n   ", primes[i].p - p, d8);
+      printf ("P (%u, %u,\n   (", primes[i].p - p, d8);
       print_wide_uint (primes[i].pinv, 0, wide_uint_bits);
-      printf (",\n   UINTMAX_MAX / %d)\n", primes[i].p);
+      printf ("),\n   UINTMAX_MAX / %d)\n", primes[i].p);
       p = primes[i].p;
     }
 
