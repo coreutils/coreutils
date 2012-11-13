@@ -154,6 +154,7 @@
 /po/stamp-po
 /src/cu-progs.mk
 /src/make-prime-list
+/src/primes.h
 /src/version.c
 /src/version.h
 /stamp-h1
