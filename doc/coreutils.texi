@@ -8045,7 +8045,9 @@ dd @var{option}
 @end example
 
 The only options are @option{--help} and @option{--version}.
-@xref{Common options}.  @command{dd} accepts the following operands.
+@xref{Common options}.  @command{dd} accepts the following operands,
+whose syntax was inspired by the DD (data definition) statement of
+OS/360 JCL.
 
 @table @samp
 
