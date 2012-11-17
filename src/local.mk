@@ -385,7 +385,7 @@ src/dircolors.h: src/dcgen src/dircolors.hin
 # built only if absent.  It is not cleaned because we don't want to
 # insist that maintainers must build on hosts that support the widest
 # known ints (currently 128-bit).
-MAINTAINERCLEANFILES += $(top_srcdir)/src/primes.h
+BUILT_SOURCES += $(top_srcdir)/src/primes.h
 $(top_srcdir)/src/primes.h:
 	$(MAKE) src/make-prime-list
 	$(AM_V_GEN)rm -f $@ $@-t
