@@ -604,3 +604,8 @@ export _gl_TS_headers = $(srcdir)/cfg.mk
 _gl_TS_dir = .
 _gl_TS_obj_files = src/*.$(OBJEXT)
 _gl_TS_other_headers = src/*.h
+
+# Tell the tight_scope rule about an exceptional "extern" variable.
+# Normally, the rule would detect its declaration, but that uses a
+# different name, __clz_tab.
+_gl_TS_unmarked_extern_vars = factor_clz_tab
