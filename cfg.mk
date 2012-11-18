@@ -574,7 +574,7 @@ exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \
   $(tbi_1)|$(tbi_2)|$(tbi_3)
 
 exclude_file_name_regexp--sc_preprocessor_indentation = \
-  ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$|$(__ll)
+  ^(gl/lib/rand-isaac\.[ch]|gl/tests/test-rand-isaac\.c)$$|$(_ll)
 exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g\.sh)$$
 
