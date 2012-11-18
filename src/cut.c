@@ -369,6 +369,9 @@ set_fields (const char *fieldstr)
           dash_found = true;
           fieldstr++;
 
+          if (lhs_specified && !value)
+            FATAL_ERROR (_("fields and positions are numbered from 1"));
+
           initial = (lhs_specified ? value : 1);
           value = 0;
         }

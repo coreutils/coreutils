@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cut no longer accepts the invalid range 0-, which made it print empty lines.
+  Instead, cut now fails and emits an appropriate diagnostic.
+  [This bug was present in "the beginning".]
+
   pr -n no longer crashes when passed values >= 32.  Also line numbers are
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]

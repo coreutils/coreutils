@@ -46,6 +46,11 @@ my @Tests =
   # It was treated just like "-2".
   ['zero-2', '-f0-2', {ERR=>$from_1}, {EXIT => 1} ],
 
+  # Up to coreutils-8.20, specifying a range of 0- was not an error.
+  ['zero-3b', '-b0-', {ERR=>$from_1}, {EXIT => 1} ],
+  ['zero-3c', '-c0-', {ERR=>$from_1}, {EXIT => 1} ],
+  ['zero-3f', '-f0-', {ERR=>$from_1}, {EXIT => 1} ],
+
   ['1', '-d:', '-f1,3-', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
   ['2', '-d:', '-f1,3-', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
   ['3', qw(-d: -f2-), {IN=>"a:b:c\n"}, {OUT=>"b:c\n"}],
