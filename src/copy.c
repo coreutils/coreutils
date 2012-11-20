@@ -2394,8 +2394,13 @@ copy_internal (char const *src_name, char const *dst_name,
       /* POSIX says the permission bits of the source file must be
          used as the 3rd argument in the open call.  Historical
          practice passed all the source mode bits to 'open', but the extra
-         bits were ignored, so it should be the same either way.  */
-      if (! copy_reg (src_name, dst_name, x, src_mode & S_IRWXUGO,
+         bits were ignored, so it should be the same either way.
+
+         This call uses DST_MODE_BITS, not SRC_MODE.  These are
+         normally the same, and the exception (where x->set_mode) is
+         used only by 'install', which POSIX does not specify and
+         where DST_MODE_BITS is what's wanted.  */
+      if (! copy_reg (src_name, dst_name, x, dst_mode_bits & S_IRWXUGO,
                       omitted_permissions, &new_dst, &src_sb))
         goto un_backup;
     }
