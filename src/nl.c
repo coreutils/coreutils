@@ -145,11 +145,6 @@ static intmax_t line_no;
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
-enum
-{
-  PAGE_INCREMENT_OPTION_DEPRECATED = CHAR_MAX + 1
-};
-
 static struct option const longopts[] =
 {
   {"header-numbering", required_argument, NULL, 'h'},
@@ -157,8 +152,6 @@ static struct option const longopts[] =
   {"footer-numbering", required_argument, NULL, 'f'},
   {"starting-line-number", required_argument, NULL, 'v'},
   {"line-increment", required_argument, NULL, 'i'},
-  /* FIXME: page-increment is deprecated, remove in dec-2011.  */
-  {"page-increment", required_argument, NULL, PAGE_INCREMENT_OPTION_DEPRECATED},
   {"no-renumber", no_argument, NULL, 'p'},
   {"join-blank-lines", required_argument, NULL, 'l'},
   {"number-separator", required_argument, NULL, 's'},
@@ -513,10 +506,6 @@ main (int argc, char **argv)
               ok = false;
             }
           break;
-  case PAGE_INCREMENT_OPTION_DEPRECATED:
-    error (0, 0, _("WARNING: --page-increment is deprecated; "
-                   "use --line-increment instead"));
-    /* fall through */
         case 'i':
           if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
                  && 0 < page_incr))
