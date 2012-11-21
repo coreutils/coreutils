@@ -14,6 +14,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Instead, cut now fails and emits an appropriate diagnostic.
   [This bug was present in "the beginning".]
 
+  install -m M SOURCE DEST no longer has a race condition where DEST's
+  permissions are temporarily derived from SOURCE instead of from M.
+
   pr -n no longer crashes when passed values >= 32.  Also line numbers are
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]
