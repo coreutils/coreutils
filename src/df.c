@@ -193,8 +193,8 @@ static struct field_data_t field_data[] = {
     "target", OTHER_FLD, N_("Mounted on"),  0, MBS_ALIGN_LEFT,  false }
 };
 
-static char const *all_args_string = "source,fstype,size,used,avail,pcent,"
-  "itotal,iused,iavail,ipcent,target";
+static char const *all_args_string =
+  "source,fstype,itotal,iused,iavail,ipcent,size,used,avail,pcent,target";
 
 /* Storage for the definition of output columns.  */
 static struct field_data_t **columns;
@@ -1164,8 +1164,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       emit_size_note ();
       fputs (_("\n\
 FIELD_LIST is a comma-separated list of columns to be included.  Valid\n\
-field names are: 'source', 'fstype', 'size', 'used', 'avail', 'pcent',\n\
-'itotal', 'iused', 'iavail', 'ipcent' and 'target' (see info page).\n\
+field names are: 'source', 'fstype', 'itotal', 'iused', 'iavail', 'ipcent',\n\
+'size', 'used', 'avail', 'pcent' and 'target' (see info page).\n\
 "), stdout);
       emit_ancillary_info ();
     }

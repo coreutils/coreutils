@@ -67,11 +67,11 @@ compare exp out || fail=1
 # that --o (without argument) is identical to the full list.
 
 cat <<\EOF > exp || framework_failure_
-Filesystem Type Size Used Avail Use% Inodes IUsed IFree IUse% Mounted on
+Filesystem Type Inodes IUsed IFree IUse% Size Used Avail Use% Mounted on
 EOF
 
-df -h --o=source,fstype,size,used,avail,pcent \
- --o=itotal,iused,iavail,ipcent,target '.' >out || fail=1
+df -h --o=source,fstype,itotal,iused,iavail,ipcent \
+ --o=size,used,avail,pcent,target '.' >out || fail=1
 sed -e '1 {
           s/ [ ]*/ /g
           q

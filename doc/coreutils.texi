@@ -10687,7 +10687,8 @@ out of date.  This is the default.
 @itemx @w{@kbd{--output}[=@var{field_list}]}
 @opindex --output
 Use the output format defined by @var{field_list}, or print all fields if
-@var{field_list} is omitted.
+@var{field_list} is omitted.  In the latter case, the order of the columns
+conforms to the order of the field descriptions below.
 
 The use of the @option{--output} together with each of the options @option{-i},
 @option{-P}, and @option{-T} is mutually exclusive.
@@ -10704,15 +10705,6 @@ The source of the mount point, usually a device.
 @item fstype
 File system type.
 
-@item size
-Total number of blocks.
-@item used
-Number of used blocks.
-@item avail
-Number of available blocks.
-@item pcent
-Percentage of @var{used} divided by @var{size}.
-
 @item itotal
 Total number of inodes.
 @item iused
@@ -10721,6 +10713,15 @@ Number of used inodes.
 Number of available inodes.
 @item ipcent
 Percentage of @var{iused} divided by @var{itotal}.
+
+@item size
+Total number of blocks.
+@item used
+Number of used blocks.
+@item avail
+Number of available blocks.
+@item pcent
+Percentage of @var{used} divided by @var{size}.
 
 @item target
 The mount point.
