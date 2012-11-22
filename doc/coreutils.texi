@@ -15677,8 +15677,9 @@ the exit status of @var{command} otherwise
 @cindex scheduling, affecting
 @cindex appropriate privileges
 
-@command{nice} prints or modifies a process's @dfn{niceness},
-a parameter that affects whether the process is scheduled favorably.
+@command{nice} prints a process's @dfn{niceness}, or runs
+a command with modified niceness.  @dfn{niceness} affects how
+favorably the process is scheduled in the system.
 Synopsis:
 
 @example
@@ -15712,6 +15713,9 @@ term ``niceness'' for compatibility with historical practice.
 built-in utilities}).
 
 @mayConflictWithShellBuiltIn{nice}
+
+Note to change the @dfn{niceness} of an existing process,
+one needs to use the @command{renice} command.
 
 The program accepts the following option.  Also see @ref{Common options}.
 Options must precede operands.
