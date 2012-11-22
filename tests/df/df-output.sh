@@ -27,28 +27,28 @@ Try 'df --help' for more information.
 EOF
 
 df -i --output '.' 2>out && fail=1
-sed -i 's/ -i / OPT /' out
-compare exp out || fail=1
+sed 's/ -i / OPT /' out > out2
+compare exp out2 || fail=1
 
 df --output -i '.' 2>out && fail=1
-sed -i 's/ -i / OPT /' out
-compare exp out || fail=1
+sed 's/ -i / OPT /' out > out2
+compare exp out2 || fail=1
 
 df -P --output '.' 2>out && fail=1
-sed -i 's/ -P / OPT /' out
-compare exp out || fail=1
+sed 's/ -P / OPT /' out > out2
+compare exp out2 || fail=1
 
 df --output -P '.' 2>out && fail=1
-sed -i 's/ -P / OPT /' out
-compare exp out || fail=1
+sed 's/ -P / OPT /' out > out2
+compare exp out2 || fail=1
 
 df -T --output '.' 2>out && fail=1
-sed -i 's/ -T / OPT /' out
-compare exp out || fail=1
+sed 's/ -T / OPT /' out > out2
+compare exp out2 || fail=1
 
 df --output -T '.' 2>out && fail=1
-sed -i 's/ -T / OPT /' out
-compare exp out || fail=1
+sed 's/ -T / OPT /' out > out2
+compare exp out2 || fail=1
 
 # Ensure that each field is only used once for the --output argument.
 cat <<\EOF > exp || framework_failure_
@@ -93,8 +93,7 @@ EOF
 
 df -B1K --output=size '.' >out || fail=1
 sed -e '1 {
-          s/ [ ]*/ /g
-          s/^ //
+          s/ //
           q
         }' out > out2
 compare exp out2 || fail=1
@@ -125,12 +124,7 @@ sed -n -e '3 {
 compare exp out2 || fail=1
 
 # Ensure that --output is mentioned in the usage.
-cat <<\EOF > exp || framework_failure_
---output
-EOF
-
 df --help > out || fail=1
-grep ' --output' out | sed 's/^.*\(--output\).*$/\1/;q' > out2
-compare exp out2 || fail=1
+grep ' --output' out >/dev/null || { fail=1; cat out; }
 
 Exit $fail
