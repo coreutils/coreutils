@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]
 
+  seq -w ensures that for numbers input in scientific notation,
+  the output numbers are properly aligned and of the correct width.
+  [This bug was present in "the beginning".]
+
 ** Changes in behavior
 
   df --total now prints '-' into the target column (mount point) of the

@@ -70,6 +70,13 @@ my @Tests =
    ['eq-wid-6',	qw(-w +1 2),  {OUT => [qw(1 2)]}],
    ['eq-wid-7',	qw(-w "    .1"  "    .1"),  {OUT => [qw(0.1)]}],
    ['eq-wid-8',	qw(-w 9 0.5 10),  {OUT => [qw(09.0 09.5 10.0)]}],
+   # Prior to 8.21, these tests involving numbers in scentific notation
+   # would fail with misalignment or wrong widths.
+   ['eq-wid-9',	qw(-w -1e-3 1),  {OUT => [qw(-0.001 00.999)]}],
+   ['eq-wid-10',qw(-w -1e-003 1),  {OUT => [qw(-0.001 00.999)]}],
+   ['eq-wid-11',qw(-w -1.e-3 1),  {OUT => [qw(-0.001 00.999)]}],
+   ['eq-wid-12',qw(-w -1.0e-4 1),  {OUT => [qw(-0.00010 00.99990)]}],
+   ['eq-wid-13',qw(-w 999 1e3),  {OUT => [qw(0999 1000)]}],
 
    # Prior to coreutils-4.5.11, some of these were not accepted.
    ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],

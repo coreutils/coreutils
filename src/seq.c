@@ -166,6 +166,21 @@ scan_arg (const char *arg)
         {
           long exponent = strtol (e + 1, NULL, 10);
           ret.precision += exponent < 0 ? -exponent : 0;
+          /* Don't account for e.... in the width since this is not output.  */
+          ret.width -= strlen (arg) - (e - arg);
+          /* Adjust the width as per the exponent.  */
+          if (exponent < 0)
+            {
+              if (decimal_point)
+                {
+                  if (e == decimal_point + 1) /* undo #. -> # above  */
+                    ret.width++;
+                }
+              else
+                ret.width++;
+              exponent = -exponent;
+            }
+          ret.width += exponent;
         }
     }
 
