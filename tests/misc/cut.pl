@@ -163,6 +163,9 @@ my @Tests =
   ['big-unbounded-b', '--output-d=:', '-b1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-c', '--output-d=:', '-c1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-f', '--output-d=:', '-f1234567890-', {IN=>''}, {OUT=>''}],
+
+  ['overlapping-unbounded-1', '-b3-,2-', {IN=>"1234\n"}, {OUT=>"234\n"}],
+  ['overlapping-unbounded-2', '-b2-,3-', {IN=>"1234\n"}, {OUT=>"234\n"}],
  );
 
 if ($mb_locale ne 'C')

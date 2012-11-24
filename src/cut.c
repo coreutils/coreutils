@@ -391,8 +391,10 @@ set_fields (const char *fieldstr)
                  In any case, 'initial' contains the start of the range. */
               if (!rhs_specified)
                 {
-                  /* 'n-'.  From 'initial' to end of line. */
-                  eol_range_start = initial;
+                  /* 'n-'.  From 'initial' to end of line.  If we've already
+                     seen an M- range, ignore subsequent N- unless N < M.  */
+                  if (eol_range_start == 0 || initial < eol_range_start)
+                    eol_range_start = initial;
                   field_found = true;
                 }
               else

@@ -14,6 +14,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Instead, cut now fails and emits an appropriate diagnostic.
   [This bug was present in "the beginning".]
 
+  cut now handles overlapping to-EOL ranges properly.  Before, it would
+  interpret "-b2-,3-" like "-b3-".  Now it's treated like "-b2-".
+  [This bug was present in "the beginning".]
+
   install -m M SOURCE DEST no longer has a race condition where DEST's
   permissions are temporarily derived from SOURCE instead of from M.
 
