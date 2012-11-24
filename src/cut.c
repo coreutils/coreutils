@@ -514,17 +514,18 @@ set_fields (const char *fieldstr)
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
     {
-      size_t j;
-      size_t rsi_candidate;
+      /* Ignore any range that is subsumed by the to-EOL range.  */
+      if (eol_range_start && eol_range_start <= rp[i].lo)
+        continue;
 
       /* Record the range-start indices, i.e., record each start
          index that is not part of any other (lo..hi] range.  */
-      rsi_candidate = complement ? rp[i].hi + 1 : rp[i].lo;
+      size_t rsi_candidate = complement ? rp[i].hi + 1 : rp[i].lo;
       if (output_delimiter_specified
           && !is_printable_field (rsi_candidate))
         mark_range_start (rsi_candidate);
 
-      for (j = rp[i].lo; j <= rp[i].hi; j++)
+      for (size_t j = rp[i].lo; j <= rp[i].hi; j++)
         mark_printable_field (j);
     }
 

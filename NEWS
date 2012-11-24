@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   interpret "-b2-,3-" like "-b3-".  Now it's treated like "-b2-".
   [This bug was present in "the beginning".]
 
+  cut no longer prints extraneous delimiters when a to-EOL range subsumes
+  another range.  Before, "echo 123|cut --output-delim=: -b2-,3" would print
+  "2:3".  Now it prints "23".  [bug introduced in 5.3.0]
+
   install -m M SOURCE DEST no longer has a race condition where DEST's
   permissions are temporarily derived from SOURCE instead of from M.
 

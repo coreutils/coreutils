@@ -166,6 +166,15 @@ my @Tests =
 
   ['overlapping-unbounded-1', '-b3-,2-', {IN=>"1234\n"}, {OUT=>"234\n"}],
   ['overlapping-unbounded-2', '-b2-,3-', {IN=>"1234\n"}, {OUT=>"234\n"}],
+
+  # When printing output delimiters, and with one or more ranges subsumed
+  # by a to-EOL range, cut 8.20 and earlier would print extraneous delimiters.
+  ['EOL-subsumed-1', '--output-d=: -b2-,3,4-4,5',
+                                         {IN=>"123456\n"}, {OUT=>"23456\n"}],
+  ['EOL-subsumed-2', '--output-d=: -b3,4-4,5,2-',
+                                         {IN=>"123456\n"}, {OUT=>"23456\n"}],
+  ['EOL-subsumed-3', '--complement -b3,4-4,5,2-',
+                                         {IN=>"123456\n"}, {OUT=>"1\n"}],
  );
 
 if ($mb_locale ne 'C')
