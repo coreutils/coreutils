@@ -7838,7 +7838,8 @@ Preserve SELinux security context of the file, or fail with full diagnostics.
 Preserve extended attributes of the file, or fail with full diagnostics.
 If @command{cp} is built without xattr support, ignore this option.
 If SELinux context, ACLs or Capabilities are implemented using xattrs,
-they are preserved by this option as well.
+they are preserved implicitly by this option as well, i.e., even without
+specifying @option{--preserve=mode} or @option{--preserve=context}.
 @item all
 Preserve all file attributes.
 Equivalent to specifying all of the above, but with the difference
