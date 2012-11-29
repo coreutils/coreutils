@@ -1398,7 +1398,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 
 /* We should test _IBMR2 here when we add assembly support for the system
    vendor compilers.  */
-#if HAVE_HOST_CPU_FAMILY_powerpc && W_TYPE_SIZE == 64
+#if HAVE_HOST_CPU_FAMILY_powerpc && W_TYPE_SIZE == 64 && defined (_LP64)
 #if !defined (_LONG_LONG_LIMB)
 /* _LONG_LONG_LIMB is ABI=mode32 where adde operates on 32-bit values.  So
    use adde etc only when not _LONG_LONG_LIMB.  */
