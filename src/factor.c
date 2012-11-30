@@ -573,8 +573,8 @@ static void mp_factor (mpz_t, struct mp_factors *);
 static void
 mp_factor_init (struct mp_factors *factors)
 {
-  factors->p = xmalloc (1);
-  factors->e = xmalloc (1);
+  factors->p = NULL;
+  factors->e = NULL;
   factors->nfactors = 0;
 }
 
