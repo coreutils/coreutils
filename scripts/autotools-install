@@ -21,12 +21,12 @@ prog_name=`basename $0`
 die () { echo "$prog_name: $*" >&2; exit 1; }
 
 tarballs='
-  http://pkgconfig.freedesktop.org/releases/pkg-config-0.27.1.tar.gz
-  ftp://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.gz
-  ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-  http://ftp.gnu.org/gnu/automake/automake-1.12.3.tar.gz
-  ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
-  ftp://ftp.gnu.org/gnu/gettext/gettext-0.18.1.tar.gz
+  http://pkgconfig.freedesktop.org/releases/pkg-config-0.28.tar.gz
+  http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.gz
+  http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+  http://ftp.gnu.org/gnu/automake/automake-1.12.6.tar.gz
+  http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
+  http://ftp.gnu.org/gnu/gettext/gettext-0.18.2.tar.gz
 '
 
 usage() {
