@@ -30,7 +30,7 @@ my $mb_locale = $ENV{LOCALE_FR_UTF8};
 my $prog = 'cut';
 my $try = "Try '$prog --help' for more information.\n";
 my $from_1 = "$prog: fields and positions are numbered from 1\n$try";
-my $inval = "$prog: invalid byte or field list\n$try";
+my $inval = "$prog: invalid byte, character or field list\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
 my $nofield = "$prog: an input delimiter may be specified only when " .
               "operating on fields\n$try";
@@ -195,18 +195,6 @@ if ($mb_locale ne 'C')
         my @new_t = @$t;
         my $test_name = shift @new_t;
 
-        # Depending on whether cut is multi-byte-patched,
-        # it emits different diagnostics:
-        #   non-MB: invalid byte or field list
-        #   MB:     invalid byte, character or field list
-        # Adjust the expected error output accordingly.
-        if (grep {ref $_ eq 'HASH' && exists $_->{ERR} && $_->{ERR} eq $inval}
-            (@new_t))
-          {
-            my $sub = {ERR_SUBST => 's/, character//'};
-            push @new_t, $sub;
-            push @$t, $sub;
-          }
         push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
       }
     push @Tests, @new;
