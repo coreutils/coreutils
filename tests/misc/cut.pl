@@ -32,6 +32,8 @@ my $try = "Try '$prog --help' for more information.\n";
 my $from_1 = "$prog: fields and positions are numbered from 1\n$try";
 my $inval = "$prog: invalid byte or field list\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
+my $nofield = "$prog: an input delimiter may be specified only when " .
+              "operating on fields\n$try";
 
 my @Tests =
  (
@@ -117,6 +119,11 @@ my @Tests =
   ['nul-odelim', qw(-d: --out=), '-f2,3', {IN=>"a:b:c\n"}, {OUT=>"b\0c\n"}],
   ['multichar-od', qw(-d: --out=_._), '-f2,3', {IN=>"a:b:c\n"},
    {OUT=>"b_._c\n"}],
+
+  # Ensure delim is not allowed without a field
+  # Prior to 8.21, a NUL delim was allowed without a field
+  ['delim-no-field1', qw(-d ''), '-b1', {EXIT=>1}, {ERR=>$nofield}],
+  ['delim-no-field2', qw(-d:), '-b1', {EXIT=>1}, {ERR=>$nofield}],
 
   # Prior to 1.22i, you couldn't use a delimiter that would sign-extend.
   ['8bit-delim', '-d', "\255", '--out=_', '-f2,3', {IN=>"a\255b\255c\n"},

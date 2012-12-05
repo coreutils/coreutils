@@ -365,7 +365,7 @@ set_fields (const char *fieldstr)
           in_digits = false;
           /* Starting a range. */
           if (dash_found)
-            FATAL_ERROR (_("invalid byte or field list"));
+            FATAL_ERROR (_("invalid byte, character or field list"));
           dash_found = true;
           fieldstr++;
 
@@ -491,7 +491,7 @@ set_fields (const char *fieldstr)
           fieldstr++;
         }
       else
-        FATAL_ERROR (_("invalid byte or field list"));
+        FATAL_ERROR (_("invalid byte, character or field list"));
     }
 
   max_range_endpoint = 0;
@@ -846,7 +846,7 @@ main (int argc, char **argv)
   if (operating_mode == undefined_mode)
     FATAL_ERROR (_("you must specify a list of bytes, characters, or fields"));
 
-  if (delim != '\0' && operating_mode != field_mode)
+  if (delim_specified && operating_mode != field_mode)
     FATAL_ERROR (_("an input delimiter may be specified only\
  when operating on fields"));
 
