@@ -438,9 +438,11 @@ Nearly every significant change must be accompanied by a test suite
 addition that exercises it.  If you fix a bug, add at least one test that
 fails without the patch, but that succeeds once your patch is applied.
 If you add a feature, add tests to exercise as much of the new code
-as possible. Note to run tests/misc/new-test in isolation you can do:
+as possible.  If you add a new test file (as opposed to adding a test to
+an existing test file) add the new test file to 'tests/local.mk'.
+Note to run tests/misc/new-test in isolation you can do:
 
-  (cd tests && make check TESTS=misc/new-test VERBOSE=yes)
+  make TESTS=tests/misc/new-test SUBDIRS=. VERBOSE=yes
 
 Variables that are significant for tests with their default values are:
 
