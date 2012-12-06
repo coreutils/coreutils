@@ -500,14 +500,13 @@ set_fields (const char *fieldstr)
       if (rp[i].hi > max_range_endpoint)
         max_range_endpoint = rp[i].hi;
     }
-  if (max_range_endpoint < eol_range_start)
-    max_range_endpoint = eol_range_start;
 
   /* Allocate an array large enough so that it may be indexed by
      the field numbers corresponding to all finite ranges
      (i.e. '2-6' or '-4', but not '5-') in FIELDSTR.  */
 
-  printable_field = xzalloc (max_range_endpoint / CHAR_BIT + 1);
+  if (max_range_endpoint)
+    printable_field = xzalloc (max_range_endpoint / CHAR_BIT + 1);
 
   qsort (rp, n_rp, sizeof (rp[0]), compare_ranges);
 
@@ -531,7 +530,8 @@ set_fields (const char *fieldstr)
 
   if (output_delimiter_specified
       && !complement
-      && eol_range_start && !is_printable_field (eol_range_start))
+      && eol_range_start
+      && max_range_endpoint && !is_printable_field (eol_range_start))
     mark_range_start (eol_range_start);
 
   free (rp);
