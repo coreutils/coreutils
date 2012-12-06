@@ -288,6 +288,7 @@ all_tests =					\
   tests/misc/nohup.sh				\
   tests/misc/nproc-avail.sh			\
   tests/misc/nproc-positive.sh			\
+  tests/misc/numfmt.pl				\
   tests/misc/od-N.sh				\
   tests/misc/od-multiple-t.sh			\
   tests/misc/od-x8.sh				\

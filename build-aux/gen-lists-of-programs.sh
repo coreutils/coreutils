@@ -85,6 +85,7 @@ normal_progs='
     nl
     nproc
     nohup
+    numfmt
     od
     paste
     pathchk

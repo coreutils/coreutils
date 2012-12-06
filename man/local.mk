@@ -115,6 +115,7 @@ man/nice.1:      src/nice
 man/nl.1:        src/nl
 man/nohup.1:     src/nohup
 man/nproc.1:     src/nproc
+man/numfmt.1:    src/numfmt
 man/od.1:        src/od
 man/paste.1:     src/paste
 man/pathchk.1:   src/pathchk

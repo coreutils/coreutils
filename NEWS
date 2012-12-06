@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New programs
+
+  numfmt: reformat numbers
+
 ** New features
 
   df now accepts the --output[=FIELD_LIST] option to define the list of columns
