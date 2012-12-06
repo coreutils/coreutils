@@ -173,10 +173,10 @@ Reporting bugs:
 IMPORTANT: if you take the time to report a test failure,
 please be sure to include the output of running 'make check'
 in verbose mode for each failing test.  For example,
-if the test that fails is tests/misc/df, then you would
+if the test that fails is tests/df/df-P.sh, then you would
 run this command:
 
-  (cd tests && make check TESTS=misc/df VERBOSE=yes) >> log 2>&1
+  make check TESTS=tests/df/df-P.sh VERBOSE=yes SUBDIRS=. >> log 2>&1
 
 For some tests, you can get even more detail by adding DEBUG=yes.
 Then include the contents of the file 'log' in your bug report.
