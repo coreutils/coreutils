@@ -166,7 +166,7 @@ my @Tests =
    {ERR=>$no_endpoint}],
   ['inval5', '-f', '1-,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
   ['inval6', '-f', '-1,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
-  # This would evoke a segfault from 5.3.0..6.10
+  # This would evoke a segfault from 5.3.0..8.10
   ['big-unbounded-b', '--output-d=:', '-b1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-c', '--output-d=:', '-c1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-f', '--output-d=:', '-f1234567890-', {IN=>''}, {OUT=>''}],
