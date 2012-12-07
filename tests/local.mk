@@ -457,6 +457,8 @@ all_tests =					\
   tests/df/unreadable.sh			\
   tests/df/total-unprocessed.sh			\
   tests/df/no-mtab-status.sh			\
+  tests/df/skip-duplicates.sh			\
+  tests/df/skip-rootfs.sh			\
   tests/dd/direct.sh				\
   tests/dd/misc.sh				\
   tests/dd/nocache.sh				\

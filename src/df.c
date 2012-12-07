@@ -43,6 +43,17 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Paul Eggert")
 
+/* Filled with device numbers of examined file systems to avoid
+   duplicities in output.  */
+struct devlist
+{
+  dev_t dev_num;
+  struct devlist *next;
+};
+
+/* Store of already-processed device numbers.  */
+static struct devlist *devlist_head;
+
 /* If true, show even file systems with zero size or
    uninteresting types.  */
 static bool show_all_fs;
@@ -53,6 +64,12 @@ static bool show_local_fs;
 /* If true, output data for each file system corresponding to a
    command line argument -- even if it's a dummy (automounter) entry.  */
 static bool show_listed_fs;
+
+/* If true, include rootfs in the output.  */
+static bool show_rootfs;
+
+/* The literal name of the initial root file system.  */
+static char const *ROOTFS = "rootfs";
 
 /* Human-readable options for output.  */
 static int human_output_opts;
@@ -589,6 +606,29 @@ excluded_fstype (const char *fstype)
   return false;
 }
 
+/* Check if the device was already examined.  */
+
+static bool
+dev_examined (char const *mount_dir, char const *devname)
+{
+  struct stat buf;
+  if (-1 == stat (mount_dir, &buf))
+    return false;
+
+  struct devlist *devlist = devlist_head;
+  for ( ; devlist; devlist = devlist->next)
+    if (devlist->dev_num == buf.st_dev)
+      return true;
+
+  /* Add the device number to the global list devlist.  */
+  devlist = xmalloc (sizeof *devlist);
+  devlist->dev_num = buf.st_dev;
+  devlist->next = devlist_head;
+  devlist_head = devlist;
+
+  return false;
+}
+
 /* Return true if N is a known integer value.  On many file systems,
    UINTMAX_MAX represents an unknown value; on AIX, UINTMAX_MAX - 1
    represents unknown.  Use a rule that works on AIX file systems, and
@@ -757,6 +797,15 @@ get_dev (char const *disk, char const *mount_point,
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
+
+  if (process_all && !show_all_fs && !show_listed_fs)
+    {
+      /* No arguments nor "df -a", then check if df has to ...  */
+      if (!show_rootfs && STREQ (disk, ROOTFS))
+        return; /* ... skip rootfs: (unless -trootfs is given.  */
+      if (dev_examined (mount_point, disk))
+        return; /* ... skip duplicate entries (bind mounts).  */
+    }
 
   /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
      program reports on the file system that the special file is on.
@@ -1283,6 +1332,7 @@ main (int argc, char **argv)
           /* Accept -F as a synonym for -t for compatibility with Solaris.  */
         case 't':
           add_fs_type (optarg);
+          show_rootfs = selected_fstype (ROOTFS);
           break;
 
         case 'v':		/* For SysV compatibility.  */
@@ -1457,6 +1507,14 @@ main (int argc, char **argv)
     }
 
   IF_LINT (free (columns));
+  IF_LINT (
+    while (devlist_head)
+      {
+        struct devlist *devlist = devlist_head->next;
+        free (devlist_head);
+        devlist_head = devlist;
+      }
+    );
 
   exit (exit_status);
 }
