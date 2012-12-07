@@ -683,7 +683,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   && defined (_PA_RISC2_0) && defined (_LP64)
 /* Note the _PA_RISC2_0 above is to exclude this code from GCC with
    default -march options which doesn't support these instructions.
-   Also the width check for 'long' is to avoid ilp32 runtimes where
+   Also the width check for 'long' is to avoid ILP32 runtimes where
    GNU/Linux and narrow HP-UX kernels are known to have issues with
    clobbering of context between the add and add,dc instructions.  */
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
@@ -1006,7 +1006,9 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif
 #endif /* 80x86 */
 
-#if defined (__amd64__) && W_TYPE_SIZE == 64
+#if defined (__amd64__) && W_TYPE_SIZE == 64 && defined (_LP64)
+/* Note the width check for 'long' is to avoid ILP32 runtimes (x32)
+   where the ABI is known to be incompatible with the following.  */
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("addq %5,%q1\n\tadcq %3,%q0"					\
 	   : "=r" (sh), "=&r" (sl)					\
