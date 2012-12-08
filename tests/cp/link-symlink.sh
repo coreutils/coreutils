@@ -32,7 +32,7 @@ esac
 
 # link.cp is probably a hardlink, but may also be a symlink
 # In either case the timestamp should match the original.
-cp -al link link.cp
+cp -al link link.cp || fail=1
 case $(stat --format=%y link.cp) in
   2011-01-01*) ;;
   *) fail=1 ;;

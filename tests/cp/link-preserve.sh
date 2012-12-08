@@ -37,7 +37,7 @@ rm -rf a b c
 touch a
 ln -s a b
 mkdir c
-cp --preserve=links -R -H a b c
+cp --preserve=links -R -H a b c || fail=1
 a_inode=$(ls -i c/a|sed 's,c/.*,,')
 b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
@@ -46,7 +46,7 @@ test "$a_inode" = "$b_inode" || fail=1
 # Ensure that -L makes cp follow the b->a symlink
 # and translates to hard-linked a and b in the destination dir.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln -s a b)
-cp --preserve=links -R -L d c
+cp --preserve=links -R -L d c || fail=1
 a_inode=$(ls -i c/a|sed 's,c/.*,,')
 b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
@@ -54,7 +54,7 @@ test "$a_inode" = "$b_inode" || fail=1
 
 # Same as above, but starting with a/b hard linked.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln a b)
-cp --preserve=links -R -L d c
+cp --preserve=links -R -L d c || fail=1
 a_inode=$(ls -i c/a|sed 's,c/.*,,')
 b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
@@ -62,7 +62,7 @@ test "$a_inode" = "$b_inode" || fail=1
 
 # Ensure that --no-preserve=links works.
 rm -rf a b c d; mkdir d; (cd d; touch a; ln a b)
-cp -dR --no-preserve=links d c
+cp -dR --no-preserve=links d c || fail=1
 a_inode=$(ls -i c/a|sed 's,c/.*,,')
 b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" && fail=1
@@ -72,7 +72,7 @@ test "$a_inode" = "$b_inode" && fail=1
 rm -rf a b c d
 touch a; ln a b
 mkdir c
-cp -d a b c
+cp -d a b c || fail=1
 a_inode=$(ls -i c/a|sed 's,c/.*,,')
 b_inode=$(ls -i c/b|sed 's,c/.*,,')
 test "$a_inode" = "$b_inode" || fail=1
@@ -82,7 +82,7 @@ test "$a_inode" = "$b_inode" || fail=1
 rm -rf a b c d
 touch a; chmod 731 a
 umask 077
-cp -a --no-preserve=mode a b
+cp -a --no-preserve=mode a b || fail=1
 mode=$(ls -l b|cut -b-10)
 test "$mode" = "-rw-------" || fail=1
 umask 022

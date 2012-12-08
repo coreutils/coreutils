@@ -1153,8 +1153,8 @@ preserve_metadata:
     }
   else if (x->explicit_no_preserve_mode)
     {
-      set_acl (dst_name, dest_desc, 0666 & ~cached_umask ());
-      return_val = false;
+      if (set_acl (dst_name, dest_desc, 0666 & ~cached_umask ()) != 0)
+        return_val = false;
     }
   else if (omitted_permissions)
     {
