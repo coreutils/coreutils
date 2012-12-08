@@ -13,6 +13,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp --no-preserve=mode now no longer exits non-zero.
   [bug introduced in coreutils-8.20]
 
+  cut with a range like "N-" no longer allocates N/8 bytes.  That buffer
+  would never be used, and allocation failure could cause cut to fail.
+  [bug introduced in coreutils-8.10]
+
   cut no longer accepts the invalid range 0-, which made it print empty lines.
   Instead, cut now fails and emits an appropriate diagnostic.
   [This bug was present in "the beginning".]
