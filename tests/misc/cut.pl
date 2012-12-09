@@ -210,6 +210,8 @@ my @Tests =
                                          {IN=>"123456\n"}, {OUT=>"23456\n"}],
   ['EOL-subsumed-3', '--complement -b3,4-4,5,2-',
                                          {IN=>"123456\n"}, {OUT=>"1\n"}],
+  ['EOL-subsumed-4', '--output-d=: -b1-2,2-3,3-',
+                                        {IN=>"1234\n"}, {OUT=>"1234\n"}],
  );
 
 if ($mb_locale ne 'C')

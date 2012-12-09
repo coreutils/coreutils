@@ -245,7 +245,7 @@ all_tests =					\
   tests/misc/pwd-option.sh			\
   tests/misc/chcon-fail.sh			\
   tests/misc/cut.pl				\
-  tests/misc/cut-huge-to-eol-range.sh		\
+  tests/misc/cut-huge-range.sh			\
   tests/misc/wc.pl				\
   tests/misc/wc-files0-from.pl			\
   tests/misc/wc-files0.sh			\

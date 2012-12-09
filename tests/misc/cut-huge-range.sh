@@ -25,6 +25,10 @@ getlimits_
 # a 256MiB bit vector.  With a 20MB limit on VM, the following would fail.
 (ulimit -v 20000; : | cut -b$INT_MAX- > err 2>&1) || fail=1
 
+# Up to and including coreutils-8.21, cut would allocate possibly needed
+# memory upfront.  Subsequently memory is allocated as required.
+(ulimit -v 20000; : | cut -b1-$INT_MAX > err 2>&1) || fail=1
+
 compare /dev/null err || fail=1
 
 Exit $fail
