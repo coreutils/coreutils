@@ -9737,20 +9737,20 @@ Set the default SELinux security context to be used for created files.
 
 @item Readlink mode
 
-@command{readlink} outputs the value of the given symbolic link.
+@command{readlink} outputs the value of the given symbolic links.
 If @command{readlink} is invoked with an argument other than the name
 of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @item Canonicalize mode
 
-@command{readlink} outputs the absolute name of the given file which contains
+@command{readlink} outputs the absolute name of the given files which contain
 no @file{.}, @file{..} components nor any repeated separators
 (@file{/}) or symbolic links.
 
 @end table
 
 @example
-readlink [@var{option}] @var{file}
+readlink [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
 By default, @command{readlink} operates in readlink mode.
@@ -9789,7 +9789,8 @@ as a directory.
 @itemx --no-newline
 @opindex -n
 @opindex --no-newline
-Do not output the trailing newline.
+Do not print the output delimiter, when a single @var{file} is specified.
+Print a warning if specified along with multiple @var{file}s.
 
 @item -s
 @itemx -q
@@ -9806,6 +9807,12 @@ Suppress most error messages.
 @opindex -v
 @opindex --verbose
 Report error messages.
+
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+Separate output items with @sc{nul} characters.
 
 @end table
 

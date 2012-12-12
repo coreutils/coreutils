@@ -61,6 +61,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  readlink now supports multiple arguments, and a complementary
+  -z, --zero option to delimit output items with the NUL character.
+
   stat and tail now know about CEPH.  stat -f --format=%T now reports the file
   system type, and tail -f uses polling for files on CEPH file systems.
 

@@ -25,7 +25,6 @@
 #include "canonicalize.h"
 #include "error.h"
 #include "areadlink.h"
-#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "readlink"
@@ -47,6 +46,7 @@ static struct option const longopts[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -59,7 +59,7 @@ usage (int status)
     emit_try_help ();
   else
     {
-      printf (_("Usage: %s [OPTION]... FILE\n"), program_name);
+      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("Print value of a symbolic link or canonical file name\n\n"),
              stdout);
       fputs (_("\
@@ -77,10 +77,11 @@ usage (int status)
                                 every component of the given name recursively,\
 \n\
                                 without requirements on components existence\n\
-  -n, --no-newline              do not output the trailing newline\n\
+  -n, --no-newline              do not output the trailing delimiter\n\
   -q, --quiet,\n\
   -s, --silent                  suppress most error messages\n\
   -v, --verbose                 report error messages\n\
+  -z, --zero                    separate output with NUL rather than newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -94,14 +95,9 @@ main (int argc, char **argv)
 {
   /* If not -1, use this method to canonicalize.  */
   int can_mode = -1;
-
-  /* File name to canonicalize.  */
-  const char *fname;
-
-  /* Result of canonicalize.  */
-  char *value;
-
+  int status = EXIT_SUCCESS;
   int optc;
+  bool use_nuls = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -111,7 +107,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "efmnqsv", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "efmnqsvz", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -134,6 +130,9 @@ main (int argc, char **argv)
         case 'v':
           verbose = true;
           break;
+        case 'z':
+          use_nuls = true;
+          break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
@@ -147,26 +146,33 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  fname = argv[optind++];
-
-  if (optind < argc)
+  if (argc - optind > 1)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind]));
-      usage (EXIT_FAILURE);
+      if (no_newline)
+        error (0, 0, _("ignoring --no-newline with multiple arguments"));
+      no_newline = false;
     }
 
-  value = (can_mode != -1
-           ? canonicalize_filename_mode (fname, can_mode)
-           : areadlink_with_size (fname, 63));
-  if (value)
+  for (; optind < argc; ++optind)
     {
-      printf ("%s%s", value, (no_newline ? "" : "\n"));
-      free (value);
-      return EXIT_SUCCESS;
+      const char *fname = argv[optind];
+      char *value = (can_mode != -1
+                     ? canonicalize_filename_mode (fname, can_mode)
+                     : areadlink_with_size (fname, 63));
+      if (value)
+        {
+          fputs (value, stdout);
+          if (! no_newline)
+            putchar (use_nuls ? '\0' : '\n');
+          free (value);
+        }
+      else
+        {
+          status = EXIT_FAILURE;
+          if (verbose)
+            error (0, errno, "%s", fname);
+        }
     }
 
-  if (verbose)
-    error (EXIT_FAILURE, errno, "%s", fname);
-
-  return EXIT_FAILURE;
+  return status;
 }

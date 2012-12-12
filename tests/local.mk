@@ -602,6 +602,7 @@ all_tests =					\
   tests/readlink/can-e.sh			\
   tests/readlink/can-f.sh			\
   tests/readlink/can-m.sh			\
+  tests/readlink/multi.sh			\
   tests/readlink/rl-1.sh			\
   tests/rmdir/fail-perm.sh			\
   tests/rmdir/ignore.sh				\

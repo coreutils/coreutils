@@ -1,6 +1,6 @@
 [NAME]
-readlink \- print value of a symbolic link or canonical file name
+readlink \- print resolved symbolic links or canonical file names
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]
-readlink(2)
+readlink(2), realpath(1), realpath(3)
