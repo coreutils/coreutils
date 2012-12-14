@@ -120,6 +120,8 @@ Note 2:
     sometimes the checkout will fail, telling you that your local
     modifications conflict with changes required to switch branches.
     However, in any case, you will *not* lose your uncommitted changes.
+    Run "git stash" to temporarily hide uncommitted changes in your
+    local directory, restoring a clean working directory.
 
 Anyhow, get back onto your just-created branch:
 
