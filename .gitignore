@@ -1,6 +1,8 @@
 *.I[12]
 *.[EIOX]
 *.bak
+*.gcno
+*.gcda
 *.o
 */.deps/
 *~
