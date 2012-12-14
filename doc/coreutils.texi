@@ -10601,8 +10601,9 @@ Normally the disk space is printed in units of
 Non-integer quantities are rounded up to the next higher unit.
 
 For bind mounts and without arguments, @command{df} only outputs the statistics
-for the first occurence of that device in the list of file systems (@var{mtab}),
-i.e., it hides duplicate entries, unless the @option{-a} option is specified.
+for the first occurrence of that device in the list of file systems
+(@var{mtab}), i.e., it hides duplicate entries, unless the @option{-a} option is
+specified.
 
 By default, @command{df} omits the early-boot pseudo file system type
 @samp{rootfs}, unless the @option{-a} option is specified or that file system

@@ -25,7 +25,7 @@ df || skip_ "df fails"
 df -a >out || fail=1
 grep '^rootfs' out || skip_ "no rootfs in mtab"
 
-# Ensure that rootfs is supressed when no options is specified.
+# Ensure that rootfs is suppressed when no options is specified.
 df >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
 
