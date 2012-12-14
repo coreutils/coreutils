@@ -266,6 +266,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "binfmt_misc";
     case S_MAGIC_BTRFS: /* 0x9123683E local */
       return "btrfs";
+    case S_MAGIC_CEPH: /* 0x00C36400 remote */
+      return "ceph";
     case S_MAGIC_CGROUP: /* 0x0027E0EB local */
       return "cgroupfs";
     case S_MAGIC_CIFS: /* 0xFF534D42 remote */
