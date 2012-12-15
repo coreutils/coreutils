@@ -8117,6 +8117,11 @@ Copy @var{n} @samp{ibs}-byte blocks from the input file, instead
 of everything until the end of the file.
 if @samp{iflag=count_bytes} is specified, @var{n} is interpreted
 as a byte count rather than a block count.
+Note if the input may return short reads as could be the case
+when reading from a pipe for example, @samp{iflag=fullblock}
+will ensure that @samp{count=} corresponds to complete input blocks
+rather than the traditional POSIX specified behavior of counting
+input read operations.
 
 @item status=@var{which}
 @opindex status
@@ -8397,6 +8402,10 @@ may return early if a full block is not available.
 When that happens, continue calling @code{read} to fill the remainder
 of the block.
 This flag can be used only with @code{iflag}.
+This flag is useful with pipes for example
+as they may return short reads. In that case,
+this flag is needed to ensure that a @samp{count=} argument is
+interpreted as a block count rather than a count of read operations.
 
 @item count_bytes
 @opindex count_bytes
