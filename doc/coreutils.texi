@@ -3127,7 +3127,7 @@ even when this option is specified.
 @itemx --unbuffered
 @opindex -u
 @opindex --unbuffered
-Immediately copy input to output in @option{--number r/...} mode,
+Immediately copy input to output in @option{--number r/@dots{}} mode,
 which is a much slower mode of operation.
 
 @item --verbose
@@ -5212,7 +5212,7 @@ to be truncated because it cannot extend beyond the beginning or the end of
 the current line to fit in, then a truncation occurs.  By default,
 the string used is a single slash, as in @option{-F /}.
 
-@var{string} may have more than one character, as in @option{-F ...}.
+@var{string} may have more than one character, as in @option{-F @dots{}}.
 Also, in the particular case when @var{string} is empty (@option{-F ""}),
 truncation flagging is disabled, and no truncation marks are appended in
 this case.
@@ -11634,8 +11634,8 @@ four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
 characters, specified as eight hexadecimal digits @var{hhhhhhhh}.
 @command{printf} outputs the Unicode characters
 according to the @env{LC_CTYPE} locale.  Unicode characters in the ranges
-U+0000...U+009F, U+D800...U+DFFF cannot be specified by this syntax, except
-for U+0024 ($), U+0040 (@@), and U+0060 (@`).
+U+0000@dots{}U+009F, U+D800@dots{}U+DFFF cannot be specified by this syntax,
+except for U+0024 ($), U+0040 (@@), and U+0060 (@`).
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),
@@ -12588,7 +12588,7 @@ This section describes commands that manipulate file names.
 
 @example
 basename @var{name} [@var{suffix}]
-basename @var{option}... @var{name}...
+basename @var{option}@dots{} @var{name}@dots{}
 @end example
 
 If @var{suffix} is specified and is identical to the end of @var{name},
@@ -12673,7 +12673,7 @@ also removed.  If the string contains no slash, @command{dirname}
 prints @samp{.} (meaning the current directory).  Synopsis:
 
 @example
-dirname [@var{option}] @var{name}...
+dirname [@var{option}] @var{name}@dots{}
 @end example
 
 @var{name} need not be a file name, but if it is, this operation
