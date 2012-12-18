@@ -36,6 +36,7 @@ AM_MAKEINFOFLAGS = --no-split
 
 doc/constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	$(AM_V_GEN)LC_ALL=C; export LC_ALL; \
+	$(MKDIR_P) doc && \
 	{ sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
 	    $(top_srcdir)/src/tail.c && \
 	  sed -n -e \
