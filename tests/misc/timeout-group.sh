@@ -34,7 +34,11 @@ cat > timeout.cmd <<\EOF
 #!/bin/sh
 trap 'touch int.received; exit' INT
 touch timeout.running
-sleep $1
+count=$1
+until test -e int.received || test $count = 0; do
+  sleep 1
+  count=$(expr $count - 1)
+done
 EOF
 chmod a+x timeout.cmd
 
