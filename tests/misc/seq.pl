@@ -128,6 +128,11 @@ my @Tests =
    ['long-leading-zeros2', qw(000 02), {OUT => [qw(0 1 2)]}],
    ['long-leading-zeros3', qw(00 02), {OUT => [qw(0 1 2)]}],
    ['long-leading-zeros4', qw(0 02), {OUT => [qw(0 1 2)]}],
+
+   # Exercise the -s option, which was broken in 8.20
+   ['sep-1', qw(-s, 1 3), {OUT => [qw(1,2,3)]}],
+   ['sep-2', qw(-s, 1 1), {OUT => [qw(1)]}],
+   ['sep-3', qw(-s,, 1 3), {OUT => [qw(1,,2,,3)]}],
   );
 
 # Append a newline to each entry in the OUT array.

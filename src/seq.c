@@ -419,30 +419,36 @@ seq_fast (char const *a, char const *b)
   bool ok = cmp (p, p_len, q, q_len) <= 0;
   if (ok)
     {
-      /* Buffer at least this many output lines per fwrite call.
+      /* Buffer at least this many numbers per fwrite call.
          This gives a speed-up of more than 2x over the unbuffered code
          when printing the first 10^9 integers.  */
       enum {N = 40};
       char *buf = xmalloc (N * (n + 1));
       char const *buf_end = buf + N * (n + 1);
 
-      puts (p);
       char *z = buf;
+
+      /* Write first number to buffer.  */
+      z = mempcpy (z, p, p_len);
+
+      /* Append separator then number.  */
       while (cmp (p, p_len, q, q_len) < 0)
         {
+          *z++ = *separator;
           incr (&p, &p_len);
           z = mempcpy (z, p, p_len);
-          *z++ = *separator;
-          if (buf_end - n - 1 < z)
+          /* If no place for another separator + number then
+             output buffer so far, and reset to start of buffer.  */
+          if (buf_end - (n + 1) < z)
             {
               fwrite (buf, z - buf, 1, stdout);
               z = buf;
             }
         }
 
-      /* Write any remaining, buffered output.  */
-      if (buf < z)
-        fwrite (buf, z - buf, 1, stdout);
+      /* Write any remaining buffered output, and the terminator.  */
+      *z++ = *terminator;
+      fwrite (buf, z - buf, 1, stdout);
 
       IF_LINT (free (buf));
     }
