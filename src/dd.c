@@ -2130,9 +2130,9 @@ dd_copy (void)
               if (ftruncate (STDOUT_FILENO, output_offset) != 0)
                 {
                   error (0, errno,
-                         _("failed to truncate to %"PRIuMAX" bytes"
+                         _("failed to truncate to %" PRIdMAX " bytes"
                            " in output file %s"),
-                         output_offset, quote (output_file));
+                         (intmax_t) output_offset, quote (output_file));
                   return EXIT_FAILURE;
                 }
             }
