@@ -67,21 +67,6 @@ cu_have_perl=yes
 case $PERL in *"/missing "*) cu_have_perl=no;; esac
 AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
 
-AC_ARG_ENABLE([gcc-warnings],
-  [AS_HELP_STRING([--enable-gcc-warnings],
-     [turn on many GCC warnings (for developers; best with GNU make)])],
-  [case $enableval in
-     yes|no) ;;
-     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
-   esac
-   gl_gcc_warnings=$enableval],
-  [if test -d "$srcdir"/.git; then
-     gl_gcc_warnings=yes
-   else
-     gl_gcc_warnings=no
-   fi]
-)
-
 # gl_GCC_VERSION_IFELSE([major], [minor], [run-if-found], [run-if-not-found])
 # ------------------------------------------------
 # If $CPP is gcc-MAJOR.MINOR or newer, then run RUN-IF-FOUND.
@@ -98,6 +83,23 @@ AC_DEFUN([gl_GCC_VERSION_IFELSE],
       ]]),
     ], [$3], [$4])
   ]
+)
+
+AC_ARG_ENABLE([gcc-warnings],
+  [AS_HELP_STRING([--enable-gcc-warnings],
+     [turn on many GCC warnings (for developers; best with GNU make)])],
+  [case $enableval in
+     yes|no) ;;
+     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
+   esac
+   gl_gcc_warnings=$enableval],
+  [
+   # GCC provides fine-grained control over diagnostics which
+   # is used in gnulib for example to suppress warnings from
+   # certain sections of code.  So if this is available and
+   # we're running from a git repo, then auto enable the warnings.
+   gl_gcc_warnings=no
+   gl_GCC_VERSION_IFELSE([4], [6], [test -d "$srcdir"/.git && gl_gcc_warnings=yes])]
 )
 
 if test "$gl_gcc_warnings" = yes; then
