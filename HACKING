@@ -610,8 +610,8 @@ to generate HTML coverage reports.  Follow these steps:
   # run whatever tests you want, i.e.:
   make check
   # run lcov
-  lcov -t coreutils -q -d lib -b lib -o lib.lcov -c
-  lcov -t coreutils -q -d src -b src -o src.lcov -c
+  lcov -t coreutils -q -d lib -b `pwd` -o lib.lcov -c
+  lcov -t coreutils -q -d src -b `pwd` -o src.lcov -c
   # generate HTML from the output
   genhtml -p `pwd` -t coreutils -q --output-directory lcov-html *.lcov
 
