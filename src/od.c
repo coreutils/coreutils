@@ -305,23 +305,37 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "), stdout);
       fputs (_("\
-All arguments to long options are mandatory for short options.\n\
+If first and second call formats both apply, the second format is assumed\n\
+if the last operand begins with + or (if there are 2 operands) a digit.\n\
+An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\
+at first byte printed, incremented when dump is progressing.\n\
+For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal;\n\
+suffixes may be . for octal and b for multiply by 512.\n\
+\n\
 "), stdout);
       fputs (_("\
-  -A, --address-radix=RADIX   decide how file offsets are printed\n\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
+  -A, --address-radix=RADIX   output format for file offsets.  RADIX is one\n\
+                                of [doxn], for Decimal, Octal, Hex or None\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
 "), stdout);
       fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars\n\
+  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars.\
+\n\
+                                3 is implied when BYTES is not specified\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
-  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line\n\
-      --traditional           accept arguments in traditional form\n\
+  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line.\n\
+                                32 is implied when BYTES is not specified\n\
+      --traditional           accept arguments in third form above\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
+\n\
 \n\
 Traditional format specifications may be intermixed; they accumulate:\n\
   -a   same as -t a,  select named characters, ignoring high-order bit\n\
@@ -339,17 +353,8 @@ Traditional format specifications may be intermixed; they accumulate:\n\
 "), stdout);
       fputs (_("\
 \n\
-If first and second call formats both apply, the second format is assumed\n\
-if the last operand begins with + or (if there are 2 operands) a digit.\n\
-An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\
-at first byte printed, incremented when dump is progressing.\n\
-For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal;\n\
-suffixes may be . for octal and b for multiply by 512.\n\
-"), stdout);
-      fputs (_("\
 \n\
 TYPE is made up of one or more of these specifications:\n\
-\n\
   a          named character, ignoring high-order bit\n\
   c          ASCII character or backslash escape\n\
 "), stdout);
@@ -362,24 +367,26 @@ TYPE is made up of one or more of these specifications:\n\
 "), stdout);
       fputs (_("\
 \n\
-SIZE is a number.  For TYPE in doux, SIZE may also be C for\n\
+SIZE is a number.  For TYPE in [doux], SIZE may also be C for\n\
 sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n\
 sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n\
 for sizeof(double) or L for sizeof(long double).\n\
 "), stdout);
       fputs (_("\
 \n\
-RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
-BYTES is hexadecimal with 0x or 0X prefix, and may have a multiplier suffix:\n\
-b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
-GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
-Adding a z suffix to any type displays printable characters at the end of each\
-\n\
-output line.\n\
+Adding a z suffix to any type displays printable characters at the end of\n\
+each output line.\n\
 "), stdout);
       fputs (_("\
-Option --string without a number implies 3; option --width without a number\n\
-implies 32.  By default, od uses -A o -t oS -w16.\n\
+\n\
+\n\
+BYTES is hex with 0x or 0X prefix, and may have a multiplier suffix:\n\
+  b    512\n\
+  KB   1000\n\
+  K    1024\n\
+  MB   1000*1000\n\
+  M    1024*1024\n\
+and so on for G, T, P, E, Z, Y.\n\
 "), stdout);
       emit_ancillary_info ();
     }

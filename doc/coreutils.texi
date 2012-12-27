@@ -1884,7 +1884,7 @@ followed by a zero byte (ASCII @sc{nul}).
 Prefixes and suffixes on @var{bytes} are interpreted as for the
 @option{-j} option.
 
-If @var{n} is omitted with @option{--strings}, the default is 3.
+If @var{bytes} is omitted with @option{--strings}, the default is 3.
 
 @item -t @var{type}
 @itemx --format=@var{type}
