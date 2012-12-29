@@ -35,7 +35,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   install -m M SOURCE DEST no longer has a race condition where DEST's
   permissions are temporarily derived from SOURCE instead of from M.
 
-  pr -n no longer crashes when passed values >= 32.  Also line numbers are
+  pr -n no longer crashes when passed values >= 32.  Also, line numbers are
   consistently padded with spaces, rather than with zeros for certain widths.
   [bug introduced in TEXTUTILS-1_22i]
 
@@ -43,25 +43,25 @@ GNU coreutils NEWS                                    -*- outline -*-
   the output numbers are properly aligned and of the correct width.
   [This bug was present in "the beginning".]
 
-  seq -s now doesn't output an erroneous newline after the first number, and
+  seq -s no longer prints an erroneous newline after the first number, and
   outputs a newline after the last number rather than a trailing separator.
   [bug introduced in coreutils-8.20]
 
 ** Changes in behavior
 
   df --total now prints '-' into the target column (mount point) of the
-  summary line, accommodating to the --output option where the target
-  field can be in any column.  If there is no source column, then df
-  prints 'total' into the target column.
+  summary line, accommodating the --output option where the target field
+  can be in any column.  If there is no source column, then df prints
+  'total' in the target column.
 
   df now properly outputs file system information with bind mounts present on
   the system by skipping duplicate entries (identified by the device number).
 
-  df now skips the early-boot pseudo file system type "rootfs" unless either
-  the -a option or "-t rootfs" is specified.
+  df now elides any entry with the early-boot pseudo file system type
+  "rootfs" unless either the -a option or "-t rootfs" is specified.
 
-  nl no longer supports the --page-increment option which was deprecated
-  since coreutils-7.5.  Use --line-increment instead.
+  nl no longer supports the --page-increment option, which has been
+  deprecated since coreutils-7.5.  Use --line-increment instead.
 
 ** Improvements
 
@@ -76,7 +76,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Perl is now more of a prerequisite.  It has long been required in order
   to run (not skip) a significant percentage of the tests.  Now, it is
-  also required in order to generate proper man pages, via help2man. The
+  also required in order to generate proper man pages, via help2man.  The
   generated man/*.1 man pages are no longer distributed.  Building without
   perl, you would create stub man pages.  Thus, while perl is not an
   official prerequisite (build and "make check" will still succeed), any
@@ -88,10 +88,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   factor now builds on x86_64 with x32 ABI, by avoiding incompatible asm.
   [bug introduced in coreutils-8.20]
 
-  The check in the root-only tests to test whether our dummy user,
-  $NON_ROOT_USERNAME, is able to run binaries from the build directory
-  failed.  As a result, these tests have been skipped unnecessarily.
-  [bug introduced in coreutils-8.20]
+  A root-only test predicate would always fail.  Its job was to determine
+  whether our dummy user, $NON_ROOT_USERNAME, was able to run binaries from
+  the build directory.  As a result, all dependent tests were always skipped.
+  Now, those tests may be run once again.  [bug introduced in coreutils-8.20]
 
 
 * Noteworthy changes in release 8.20 (2012-10-23) [stable]
