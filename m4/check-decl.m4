@@ -1,7 +1,7 @@
 #serial 26
 # Check declarations for this package.
 
-dnl Copyright (C) 1997-2012 Free Software Foundation, Inc.
+dnl Copyright (C) 1997-2013 Free Software Foundation, Inc.
 
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,

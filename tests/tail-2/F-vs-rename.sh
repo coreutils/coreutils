@@ -3,7 +3,7 @@
 # Before coreutils-8.3, tail -F a b would stop tracking additions to b
 # after "mv a b".
 
-# Copyright (C) 2009-2012 Free Software Foundation, Inc.
+# Copyright (C) 2009-2013 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -3,7 +3,7 @@
 # another, and giving it a different name at the destination would cause mv
 # to get a failed assertion.
 
-# Copyright (C) 2000-2012 Free Software Foundation, Inc.
+# Copyright (C) 2000-2013 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
