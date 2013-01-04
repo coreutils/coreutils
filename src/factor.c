@@ -118,7 +118,14 @@
 #endif
 
 #ifndef USE_LONGLONG_H
-# define USE_LONGLONG_H 1
+/* With the way we use longlong.h, it's only safe to use
+   when UWtype = UHWtype, as there were various cases
+   (as can be seen in the history for longlong.h) where
+   for example, _LP64 was required to enable W_TYPE_SIZE==64 code,
+   to avoid compile time or run time issues.  */
+# if LONG_MAX == INTMAX_MAX
+#  define USE_LONGLONG_H 1
+# endif
 #endif
 
 #if USE_LONGLONG_H

@@ -678,13 +678,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 /* These macros are for ABI=2.0w.  In ABI=2.0n they can't be used, since GCC
    (3.2) puts longlong into two adjacent 32-bit registers.  Presumably this
    is just a case of no direct support for 2.0n but treating it like 1.0. */
-#if defined (__hppa) && W_TYPE_SIZE == 64 && ! defined (_LONG_LONG_LIMB) \
-  && defined (_PA_RISC2_0) && defined (_LP64)
-/* Note the _PA_RISC2_0 above is to exclude this code from GCC with
-   default -march options which doesn't support these instructions.
-   Also the width check for 'long' is to avoid ILP32 runtimes where
-   GNU/Linux and narrow HP-UX kernels are known to have issues with
-   clobbering of context between the add and add,dc instructions.  */
+#if defined (__hppa) && W_TYPE_SIZE == 64 && ! defined (_LONG_LONG_LIMB)
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("add%I5 %5,%r4,%1\n\tadd,dc %r2,%r3,%0"			\
 	   : "=r" (sh), "=&r" (sl)					\
@@ -1005,9 +999,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif
 #endif /* 80x86 */
 
-#if defined (__amd64__) && W_TYPE_SIZE == 64 && defined (_LP64)
-/* Note the width check for 'long' is to avoid ILP32 runtimes (x32)
-   where the ABI is known to be incompatible with the following.  */
+#if defined (__amd64__) && W_TYPE_SIZE == 64
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ ("addq %5,%q1\n\tadcq %3,%q0"					\
 	   : "=r" (sh), "=&r" (sl)					\
@@ -1399,7 +1391,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 
 /* We should test _IBMR2 here when we add assembly support for the system
    vendor compilers.  */
-#if HAVE_HOST_CPU_FAMILY_powerpc && W_TYPE_SIZE == 64 && defined (_LP64)
+#if HAVE_HOST_CPU_FAMILY_powerpc && W_TYPE_SIZE == 64
 #if !defined (_LONG_LONG_LIMB)
 /* _LONG_LONG_LIMB is ABI=mode32 where adde operates on 32-bit values.  So
    use adde etc only when not _LONG_LONG_LIMB.  */
@@ -1752,7 +1744,7 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif /* udiv_qrnnd */
 #endif /* __sparc__ */
 
-#if (defined (__sparc_v9) || defined (__sparc_v9__)) && W_TYPE_SIZE == 64
+#if defined (__sparc__) && W_TYPE_SIZE == 64
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \
   __asm__ (								\
        "addcc	%r4,%5,%1\n"						\
