@@ -859,7 +859,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
   ok = head (filename, fd, n_units, count_lines, elide_from_end);
   if (!is_stdin && close (fd) != 0)
     {
-      error (0, errno, _("closing %s"), quote (filename));
+      error (0, errno, _("failed to close %s"), quote (filename));
       return false;
     }
   return ok;

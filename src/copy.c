@@ -165,7 +165,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         {
           if (errno == EINTR)
             continue;
-          error (0, errno, _("reading %s"), quote (src_name));
+          error (0, errno, _("error reading %s"), quote (src_name));
           return false;
         }
       if (n_read == 0)
@@ -203,7 +203,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           size_t n = n_read;
           if (full_write (dest_fd, buf, n) != n)
             {
-              error (0, errno, _("writing %s"), quote (dst_name));
+              error (0, errno, _("error writing %s"), quote (dst_name));
               return false;
             }
 
@@ -1172,13 +1172,13 @@ preserve_metadata:
 close_src_and_dst_desc:
   if (close (dest_desc) < 0)
     {
-      error (0, errno, _("closing %s"), quote (dst_name));
+      error (0, errno, _("failed to close %s"), quote (dst_name));
       return_val = false;
     }
 close_src_desc:
   if (close (source_desc) < 0)
     {
-      error (0, errno, _("closing %s"), quote (src_name));
+      error (0, errno, _("failed to close %s"), quote (src_name));
       return_val = false;
     }
 

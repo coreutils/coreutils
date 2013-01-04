@@ -169,7 +169,7 @@ touch (const char *file)
     {
       if (close (STDIN_FILENO) != 0)
         {
-          error (0, errno, _("closing %s"), quote (file));
+          error (0, errno, _("failed to close %s"), quote (file));
           return false;
         }
     }

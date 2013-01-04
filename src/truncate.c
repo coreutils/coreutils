@@ -414,7 +414,7 @@ main (int argc, char **argv)
           errors |= !do_ftruncate (fd, fname, size, rsize, rel_mode);
           if (close (fd) != 0)
             {
-              error (0, errno, _("closing %s"), quote (fname));
+              error (0, errno, _("failed to close %s"), quote (fname));
               errors = true;
             }
         }

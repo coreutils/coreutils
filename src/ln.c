@@ -120,7 +120,7 @@ target_directory_operand (char const *file)
   int err = (stat_result == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && err != ENOENT)
-    error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+    error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
   if (is_a_dir < looks_like_a_dir)
     error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
   return is_a_dir;
@@ -178,7 +178,7 @@ do_link (const char *source, const char *dest)
            : lstat (source, &source_stats))
           != 0)
         {
-          error (0, errno, _("accessing %s"), quote (source));
+          error (0, errno, _("failed to access %s"), quote (source));
           return false;
         }
 
@@ -199,7 +199,7 @@ do_link (const char *source, const char *dest)
       dest_lstat_ok = (lstat (dest, &dest_stats) == 0);
       if (!dest_lstat_ok && errno != ENOENT)
         {
-          error (0, errno, _("accessing %s"), quote (dest));
+          error (0, errno, _("failed to access %s"), quote (dest));
           return false;
         }
     }
@@ -512,7 +512,8 @@ main (int argc, char **argv)
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+                error (EXIT_FAILURE, errno, _("failed to access %s"),
+                       quote (optarg));
               if (! S_ISDIR (st.st_mode))
                 error (EXIT_FAILURE, 0, _("target %s is not a directory"),
                        quote (optarg));

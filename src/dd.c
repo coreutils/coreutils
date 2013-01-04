@@ -1614,7 +1614,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
             {
               if (fdesc == STDIN_FILENO)
                 {
-                  error (0, errno, _("reading %s"), quote (file));
+                  error (0, errno, _("error reading %s"), quote (file));
                   if (conversions_mask & C_NOERROR)
                     print_stats ();
                 }
@@ -1981,7 +1981,7 @@ dd_copy (void)
 
       if (nread < 0)
         {
-          error (0, errno, _("reading %s"), quote (input_file));
+          error (0, errno, _("error reading %s"), quote (input_file));
           if (conversions_mask & C_NOERROR)
             {
               print_stats ();
@@ -2044,7 +2044,7 @@ dd_copy (void)
           w_bytes += nwritten;
           if (nwritten != n_bytes_read)
             {
-              error (0, errno, _("writing %s"), quote (output_file));
+              error (0, errno, _("error writing %s"), quote (output_file));
               return EXIT_FAILURE;
             }
           else if (n_bytes_read == input_blocksize)
@@ -2107,7 +2107,7 @@ dd_copy (void)
         w_partial++;
       if (nwritten != oc)
         {
-          error (0, errno, _("writing %s"), quote (output_file));
+          error (0, errno, _("error writing %s"), quote (output_file));
           return EXIT_FAILURE;
         }
     }
@@ -2204,7 +2204,7 @@ main (int argc, char **argv)
   else
     {
       if (fd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
-        error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
+        error (EXIT_FAILURE, errno, _("failed to open %s"), quote (input_file));
     }
 
   offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
@@ -2233,7 +2233,8 @@ main (int argc, char **argv)
            || fd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
           && (fd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
               < 0))
-        error (EXIT_FAILURE, errno, _("opening %s"), quote (output_file));
+        error (EXIT_FAILURE, errno, _("failed to open %s"),
+               quote (output_file));
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {

@@ -567,7 +567,7 @@ target_directory_operand (char const *file, struct stat *st, bool *new_dst)
   if (err)
     {
       if (err != ENOENT)
-        error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+        error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
       *new_dst = true;
     }
   return is_a_dir;
@@ -1066,7 +1066,8 @@ main (int argc, char **argv)
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+                error (EXIT_FAILURE, errno, _("failed to access %s"),
+                       quote (optarg));
               if (! S_ISDIR (st.st_mode))
                 error (EXIT_FAILURE, 0, _("target %s is not a directory"),
                        quote (optarg));
