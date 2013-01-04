@@ -430,9 +430,9 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
-\n\
 "), stdout);
       printf (_("\
+\n\
 Using -s ignores -L and -P.  Otherwise, the last option specified controls\n\
 behavior when a TARGET is a symbolic link, defaulting to %s.\n\
 "), LINK_FOLLOWS_SYMLINKS ? "-L" : "-P");
