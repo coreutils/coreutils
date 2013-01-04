@@ -2267,36 +2267,6 @@ For single
 column output no line truncation occurs by default.  Use @option{-W} option to
 truncate lines in that case.
 
-The following changes were made in version 1.22i and apply to later
-versions of @command{pr}:
-@c FIXME: this whole section here sounds very awkward to me. I
-@c made a few small changes, but really it all needs to be redone. - Brian
-@c OK, I fixed another sentence or two, but some of it I just don't understand.
-@ - Brian
-@itemize @bullet
-
-@item
-Some small @var{letter options} (@option{-s}, @option{-w}) have been
-redefined for better POSIX compliance.  The output of some further
-cases has been adapted to other Unix systems.  These changes are not
-compatible with earlier versions of the program.
-
-@item
-Some @var{new capital letter} options (@option{-J}, @option{-S}, @option{-W})
-have been introduced to turn off unexpected interferences of small letter
-options.  The @option{-N} option and the second argument @var{last_page}
-of @samp{+FIRST_PAGE} offer more flexibility.  The detailed handling of
-form feeds set in the input files requires the @option{-T} option.
-
-@item
-Capital letter options override small letter ones.
-
-@item
-Some of the option-arguments (compare @option{-s}, @option{-e},
-@option{-i}, @option{-n}) cannot be specified as separate arguments from the
-preceding option letter (already stated in the POSIX specification).
-@end itemize
-
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
