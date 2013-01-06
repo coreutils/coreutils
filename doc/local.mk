@@ -58,8 +58,7 @@ syntax_checks =		\
   sc-avoid-timezone	\
   sc-avoid-zeroes	\
   sc-exponent-grouping	\
-  sc-lower-case-var	\
-  sc-use-small-caps-NUL
+  sc-lower-case-var
 
 texi_files = $(srcdir)/doc/*.texi
 
@@ -96,10 +95,6 @@ sc-avoid-timezone:
 # @math{2^64} should be @math{2^{64}}.
 sc-exponent-grouping:
 	$(AM_V_GEN)$(EGREP) '\{.*\^[0-9][0-9]' $(texi_files) && exit 1 || :
-
-# E.g., use @sc{nul}, not NUL.
-sc-use-small-caps-NUL:
-	$(AM_V_GEN)$(EGREP) '$(_W)NUL$(W_)' $(texi_files) && exit 1 || :
 
 # Say I/O, not IO.
 sc-avoid-io:

@@ -1,7 +1,7 @@
 \input texinfo
 @c %**start of header
 @setfilename coreutils.info
-@settitle @sc{gnu} Coreutils
+@settitle GNU Coreutils
 
 @c %**end of header
 
@@ -136,7 +136,7 @@
 @end direntry
 
 @copying
-This manual documents version @value{VERSION} of the @sc{gnu} core
+This manual documents version @value{VERSION} of the GNU core
 utilities, including the standard programs for text and file manipulation.
 
 Copyright @copyright{} 1994-2013 Free Software Foundation, Inc.
@@ -152,7 +152,7 @@ Free Documentation License''.
 @end copying
 
 @titlepage
-@title @sc{gnu} @code{Coreutils}
+@title GNU @code{Coreutils}
 @subtitle Core GNU utilities
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
@@ -469,7 +469,7 @@ Date input formats
 * General date syntax::          Common rules
 * Calendar date items::          19 Dec 1994
 * Time of day items::            9:20pm
-* Time zone items::              @sc{est}, @sc{pdt}, @sc{gmt}
+* Time zone items::              EST, PDT, GMT, @dots{}
 * Day of week items::            Monday and others
 * Relative items in date strings:: next tuesday, 2 years ago
 * Pure numbers in date strings:: 19931219, 1440
@@ -500,11 +500,11 @@ Copying This Manual
 
 This manual is a work in progress: many sections make no attempt to explain
 basic concepts in a way suitable for novices.  Thus, if you are interested,
-please get involved in improving this manual.  The entire @sc{gnu} community
+please get involved in improving this manual.  The entire GNU community
 will benefit.
 
 @cindex POSIX
-The @sc{gnu} utilities documented here are mostly compatible with the
+The GNU utilities documented here are mostly compatible with the
 POSIX standard.
 @cindex bugs, reporting
 Please report bugs to @email{bug-coreutils@@gnu.org}.  Remember
@@ -583,8 +583,8 @@ symbolic link to a directory.  @xref{Target directory}.
 @opindex -0
 @itemx --null
 @opindex --null
-@cindex output @sc{nul}-byte-terminated lines
-Output a zero byte (ASCII @sc{nul}) at the end of each line,
+@cindex output NUL-byte-terminated lines
+Output a zero byte (ASCII NUL) at the end of each line,
 rather than a newline.  This option enables other programs to parse the
 output of @command{\cmd\} even when that output would contain data
 with embedded newlines.
@@ -667,7 +667,7 @@ and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 Certain options are available in all of these programs.  Rather than
 writing identical descriptions for each of the programs, they are
-described here.  (In fact, every @sc{gnu} program accepts (or should accept)
+described here.  (In fact, every GNU program accepts (or should accept)
 these options.)
 
 @vindex POSIXLY_CORRECT
@@ -772,7 +772,7 @@ Here are some of the exceptions:
 
 @cindex backup options
 
-Some @sc{gnu} programs (at least @command{cp}, @command{install},
+Some GNU programs (at least @command{cp}, @command{install},
 @command{ln}, and @command{mv}) optionally make backups of files
 before writing new versions.
 These options control the details of these backups.  The options are also
@@ -846,7 +846,7 @@ set, the default is @samp{~}, just as in Emacs.
 
 @cindex block size
 
-Some @sc{gnu} programs (at least @command{df}, @command{du}, and
+Some GNU programs (at least @command{df}, @command{du}, and
 @command{ls}) display sizes in ``blocks''.  You can adjust the block size
 and method of display to make sizes easier to read.  The block size
 used for display is independent of any file system block size.
@@ -1270,7 +1270,7 @@ ls | xargs mv -t ../d --
 @end smallexample
 
 However, this doesn't move files whose names begin with @samp{.}.
-If you use the @sc{gnu} @command{find} program, you can move those
+If you use the GNU @command{find} program, you can move those
 files too, with this command:
 
 @example
@@ -1282,7 +1282,7 @@ But both of the above approaches fail if there are no files in the
 current directory, or if any file has a name containing a blank or
 some other special characters.
 The following example removes those limitations and requires both
-@sc{gnu} @command{find} and @sc{gnu} @command{xargs}:
+GNU @command{find} and GNU @command{xargs}:
 
 @example
 find . -mindepth 1 -maxdepth 1 -print0 \
@@ -1302,7 +1302,7 @@ options cannot be combined.
 
 @cindex trailing slashes
 
-Some @sc{gnu} programs (at least @command{cp} and @command{mv}) allow you to
+Some GNU programs (at least @command{cp} and @command{mv}) allow you to
 remove any trailing slashes from each @var{source} argument before
 operating on it.  The @w{@kbd{--strip-trailing-slashes}} option enables
 this behavior.
@@ -1380,7 +1380,7 @@ For example, if a user with appropriate privileges mistakenly runs
 @samp{rm -rf / tmp/junk}, that may remove
 all files on the entire system.  Since there are so few
 legitimate uses for such a command,
-@sc{gnu} @command{rm} normally declines to operate on any directory
+GNU @command{rm} normally declines to operate on any directory
 that resolves to @file{/}.  If you really want to try to remove all
 the files on your system, you can use the @option{--no-preserve-root}
 option, but the default behavior, specified by the
@@ -1434,7 +1434,7 @@ generates an error message instead of suspending.
 @section Standards conformance
 
 @vindex POSIXLY_CORRECT
-In a few cases, the @sc{gnu} utilities' default behavior is
+In a few cases, the GNU utilities' default behavior is
 incompatible with the POSIX standard.  To suppress these
 incompatibilities, define the @env{POSIXLY_CORRECT} environment
 variable.  Unless you are checking for POSIX conformance, you
@@ -1449,7 +1449,7 @@ must instead use the command @samp{sort -k 2} to get the field-based
 sort.
 
 @vindex _POSIX2_VERSION
-The @sc{gnu} utilities normally conform to the version of POSIX
+The GNU utilities normally conform to the version of POSIX
 that is standard for your system.  To cause them to conform to a
 different version of POSIX, define the @env{_POSIX2_VERSION}
 environment variable to a value of the form @var{yyyymm} specifying
@@ -1880,7 +1880,7 @@ Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
 least @var{bytes} consecutive ASCII graphic characters,
-followed by a zero byte (ASCII @sc{nul}).
+followed by a zero byte (ASCII NUL).
 Prefixes and suffixes on @var{bytes} are interpreted as for the
 @option{-j} option.
 
@@ -1978,7 +1978,7 @@ omitted, the default is 32.
 @end table
 
 The next several options are shorthands for format specifications.
-@sc{gnu} @command{od} accepts any combination of shorthands and format
+GNU @command{od} accepts any combination of shorthands and format
 specification options.  These options accumulate.
 
 @table @samp
@@ -2736,13 +2736,13 @@ one-line header consisting of:
 before the output for each @var{file}.
 
 @cindex BSD @command{tail}
-@sc{gnu} @command{tail} can output any amount of data (some other versions of
+GNU @command{tail} can output any amount of data (some other versions of
 @command{tail} cannot).  It also has no @option{-r} option (print in
 reverse), since reversing a file is really a different job from printing
 the end of a file; BSD @command{tail} (which is the one with @option{-r}) can
 only reverse files that are at most as large as its buffer, which is
 typically 32 KiB@.  A more reliable and versatile way to reverse files is
-the @sc{gnu} @command{tac} command.
+the GNU @command{tac} command.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -3460,17 +3460,17 @@ Print only the maximum line lengths.
 @c @cindex including files from @command{\cmd\}
 Disallow processing files named on the command line, and instead process
 those named in file @var{file}; each name being terminated by a zero byte
-(ASCII @sc{nul}).
+(ASCII NUL).
 This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
-One way to produce a list of ASCII @sc{nul} terminated file
-names is with @sc{gnu}
+One way to produce a list of ASCII NUL terminated file
+names is with GNU
 @command{find}, using its @option{-print0} predicate.
-If @var{file} is @samp{-} then the ASCII @sc{nul} terminated
+If @var{file} is @samp{-} then the ASCII NUL terminated
 file names are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
@@ -3508,7 +3508,7 @@ is given, file names are also printed (by default).  (With the
 @option{--sysv} option, corresponding file names are printed when there is
 at least one file argument.)
 
-By default, @sc{gnu} @command{sum} computes checksums using an algorithm
+By default, GNU @command{sum} computes checksums using an algorithm
 compatible with BSD @command{sum} and prints file sizes in units of
 1024-byte blocks.
 
@@ -3880,9 +3880,9 @@ Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
 you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
 @env{LC_COLLATE} is @code{en_US.UTF-8}.}
 
-@sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no
+GNU @command{sort} (as specified for all GNU utilities) has no
 limit on input line length or restrictions on bytes allowed within lines.
-In addition, if the final byte of an input file is not a newline, @sc{gnu}
+In addition, if the final byte of an input file is not a newline, GNU
 @command{sort} silently supplies one.  A line's trailing newline is not
 part of the line for comparison purposes.
 
@@ -4246,7 +4246,7 @@ However, fields that extend to the end of the line,
 as @option{-k 2}, or fields consisting of a range, as @option{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
-To specify ASCII @sc{nul} as the field separator,
+To specify ASCII NUL as the field separator,
 use the two-character string @samp{\0}, e.g., @samp{sort -t '\0'}.
 
 @item -T @var{tempdir}
@@ -4295,9 +4295,9 @@ uniq} inspects the entire line.  @xref{uniq invocation}.
 @opindex -z
 @opindex --zero-terminated
 @cindex process zero-terminated items
-Delimit items with a zero byte rather than a newline (ASCII @sc{lf}).
-I.e., treat input as items separated by ASCII @sc{nul}
-and terminate output items with ASCII @sc{nul}.
+Delimit items with a zero byte rather than a newline (ASCII LF).
+I.e., treat input as items separated by ASCII NUL
+and terminate output items with ASCII NUL.
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary file names (even those containing blanks
@@ -4310,7 +4310,7 @@ or other special characters).
 Historical (BSD and System V) implementations of @command{sort} have
 differed in their interpretation of some options, particularly
 @option{-b}, @option{-f}, and @option{-n}.
-@sc{gnu} sort follows the POSIX
+GNU sort follows the POSIX
 behavior, which is usually (but not always!) like the System V behavior.
 According to POSIX, @option{-n} no longer implies @option{-b}.  For
 consistency, @option{-M} has been changed in the same way.  This may
@@ -4747,12 +4747,12 @@ This is equivalent to @option{--all-repeated} (@option{-D}).
 @item prepend
 Output a newline before each group of repeated lines.
 With @option{--zero-terminated} (@option{-z}), use a zero
-byte (ASCII @sc{nul}) instead of a newline.
+byte (ASCII NUL) instead of a newline.
 
 @item separate
 Separate groups of repeated lines with a single newline.
 With @option{--zero-terminated} (@option{-z}), use a zero
-byte (ASCII @sc{nul}) instead of a newline.
+byte (ASCII NUL) instead of a newline.
 This is the same as using @samp{prepend}, except that
 no delimiter is inserted before the first group, and hence
 may be better suited for output direct to users.
@@ -4763,7 +4763,7 @@ two or more consecutive blank lines, then the output is ambiguous.
 To avoid that, filter the input through @samp{tr -s '\n'} to replace
 each sequence of consecutive newlines with a single newline.
 
-This is a @sc{gnu} extension.
+This is a GNU extension.
 @c FIXME: give an example showing *how* it's useful
 
 @item -u
@@ -4885,15 +4885,15 @@ ptx -G [@var{option} @dots{}] [@var{input} [@var{output}]]
 @end example
 
 The @option{-G} (or its equivalent: @option{--traditional}) option disables
-all @sc{gnu} extensions and reverts to traditional mode, thus introducing some
+all GNU extensions and reverts to traditional mode, thus introducing some
 limitations and changing several of the program's default option values.
-When @option{-G} is not specified, @sc{gnu} extensions are always enabled.
-@sc{gnu} extensions to @command{ptx} are documented wherever appropriate in this
+When @option{-G} is not specified, GNU extensions are always enabled.
+GNU extensions to @command{ptx} are documented wherever appropriate in this
 document.  @xref{Compatibility in ptx}, for the full list.
 
 Individual options are explained in the following sections.
 
-When @sc{gnu} extensions are enabled, there may be zero, one or several
+When GNU extensions are enabled, there may be zero, one or several
 @var{file}s after the options.  If there is no @var{file}, the program
 reads the standard input.  If there is one or several @var{file}s, they
 give the name of input files which are all read in turn, as if all the
@@ -4903,7 +4903,7 @@ file names and line numbers refer to individual text input files.  In
 all cases, the program outputs the permuted index to the standard
 output.
 
-When @sc{gnu} extensions are @emph{not} enabled, that is, when the program
+When GNU extensions are @emph{not} enabled, that is, when the program
 operates in traditional mode, there may be zero, one or two parameters
 besides the options.  If there are no parameters, the program reads the
 standard input and outputs the permuted index to the standard output.
@@ -4913,7 +4913,7 @@ respectively the name of the @var{input} file to read and the name of
 the @var{output} file to produce.  @emph{Be very careful} to note that,
 in this case, the contents of file given by the second parameter is
 destroyed.  This behavior is dictated by System V @command{ptx}
-compatibility; @sc{gnu} Standards normally discourage output parameters not
+compatibility; GNU Standards normally discourage output parameters not
 introduced by an option.
 
 Note that for @emph{any} file named as the value of an option or as an
@@ -4937,7 +4937,7 @@ convention more than once per program invocation.
 
 @item -G
 @itemx --traditional
-As already explained, this option disables all @sc{gnu} extensions to
+As already explained, this option disables all GNU extensions to
 @command{ptx} and switches to traditional mode.
 
 @item --help
@@ -4960,7 +4960,7 @@ processing.
 As it is set up now, the program assumes that the input file is coded
 using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
 @emph{unless} it is compiled for MS-DOS, in which case it uses the
-character set of the IBM-PC@.  (@sc{gnu} @command{ptx} is not known to work on
+character set of the IBM-PC@.  (GNU @command{ptx} is not known to work on
 smaller MS-DOS machines anymore.)  Compared to 7-bit ASCII, the set
 of characters which are letters is different; this alters the behavior
 of regular expression matching.  Thus, the default regular expression
@@ -4993,9 +4993,9 @@ is not part of the Break file is a word constituent.  If both options
 @option{-b} and @option{-W} are specified, then @option{-W} has precedence and
 @option{-b} is ignored.
 
-When @sc{gnu} extensions are enabled, the only way to avoid newline as a
+When GNU extensions are enabled, the only way to avoid newline as a
 break character is to write all the break characters in the file with no
-newline at all, not even at the end of the file.  When @sc{gnu} extensions
+newline at all, not even at the end of the file.  When GNU extensions
 are disabled, spaces, tabs and newlines are always considered as break
 characters even if not included in the Break file.
 
@@ -5034,7 +5034,7 @@ Using this option changes the default value for option @option{-S}.
 Using this option, the program does not try very hard to remove
 references from contexts in output, but it succeeds in doing so
 @emph{when} the context ends exactly at the newline.  If option
-@option{-r} is used with @option{-S} default value, or when @sc{gnu} extensions
+@option{-r} is used with @option{-S} default value, or when GNU extensions
 are disabled, this condition is always met and references are completely
 excluded from the output contexts.
 
@@ -5045,15 +5045,15 @@ This option selects which regular expression will describe the end of a
 line or the end of a sentence.  In fact, this regular expression is not
 the only distinction between end of lines or end of sentences, and input
 line boundaries have no special significance outside this option.  By
-default, when @sc{gnu} extensions are enabled and if @option{-r} option is not
+default, when GNU extensions are enabled and if @option{-r} option is not
 used, end of sentences are used.  In this case, this @var{regex} is
-imported from @sc{gnu} Emacs:
+imported from GNU Emacs:
 
 @example
 [.?!][]\"')@}]*\\($\\|\t\\|  \\)[ \t\n]*
 @end example
 
-Whenever @sc{gnu} extensions are disabled or if @option{-r} option is used, end
+Whenever GNU extensions are disabled or if @option{-r} option is used, end
 of lines are used; in this case, the default @var{regexp} is just:
 
 @example
@@ -5085,8 +5085,8 @@ corresponding characters by @command{ptx} itself.
 @itemx --word-regexp=@var{regexp}
 
 This option selects which regular expression will describe each keyword.
-By default, if @sc{gnu} extensions are enabled, a word is a sequence of
-letters; the @var{regexp} used is @samp{\w+}.  When @sc{gnu} extensions are
+By default, if GNU extensions are enabled, a word is a sequence of
+letters; the @var{regexp} used is @samp{\w+}.  When GNU extensions are
 disabled, a word is by default anything which ends with a space, a tab
 or a newline; the @var{regexp} used is @samp{[^ \t\n]+}.
 
@@ -5106,14 +5106,14 @@ the corresponding characters by @command{ptx} itself.
 
 Output format is mainly controlled by the @option{-O} and @option{-T} options
 described in the table below.  When neither @option{-O} nor @option{-T} are
-selected, and if @sc{gnu} extensions are enabled, the program chooses an
+selected, and if GNU extensions are enabled, the program chooses an
 output format suitable for a dumb terminal.  Each keyword occurrence is
 output to the center of one line, surrounded by its left and right
 contexts.  Each field is properly justified, so the concordance output
 can be readily observed.  As a special feature, if automatic
 references are selected by option @option{-A} and are output before the
 left context, that is, if option @option{-R} is @emph{not} selected, then
-a colon is added after the reference; this nicely interfaces with @sc{gnu}
+a colon is added after the reference; this nicely interfaces with GNU
 Emacs @code{next-error} processing.  In this default output format, each
 white space character, like newline and tab, is merely changed to
 exactly one space, with no special attempt to compress consecutive
@@ -5166,7 +5166,7 @@ context.  For any other output format, option @option{-R} is
 ignored, with one exception:  with @option{-R} the width of references
 is @emph{not} taken into account in total output width given by @option{-w}.
 
-This option is automatically selected whenever @sc{gnu} extensions are
+This option is automatically selected whenever GNU extensions are
 disabled.
 
 @item -F @var{string}
@@ -5209,7 +5209,7 @@ processing.  Each output line will look like:
 @end smallexample
 
 so it will be possible to write a @samp{.xx} roff macro to take care of
-the output typesetting.  This is the default output format when @sc{gnu}
+the output typesetting.  This is the default output format when GNU
 extensions are disabled.  Option @option{-M} can be used to change
 @samp{xx} to another macro name.
 
@@ -5255,13 +5255,13 @@ processing for @TeX{}.
 
 
 @node Compatibility in ptx
-@subsection The @sc{gnu} extensions to @command{ptx}
+@subsection The GNU extensions to @command{ptx}
 
 This version of @command{ptx} contains a few features which do not exist in
 System V @command{ptx}.  These extra features are suppressed by using the
 @option{-G} command line option, unless overridden by other command line
-options.  Some @sc{gnu} extensions cannot be recovered by overriding, so the
-simple rule is to avoid @option{-G} if you care about @sc{gnu} extensions.
+options.  Some GNU extensions cannot be recovered by overriding, so the
+simple rule is to avoid @option{-G} if you care about GNU extensions.
 Here are the differences between this program and System V @command{ptx}.
 
 @itemize @bullet
@@ -5274,8 +5274,8 @@ or, if a second @var{file} parameter is given on the command, to that
 @var{file}.
 
 Having output parameters not introduced by options is a dangerous
-practice which @sc{gnu} avoids as far as possible.  So, for using @command{ptx}
-portably between @sc{gnu} and System V, you should always use it with a
+practice which GNU avoids as far as possible.  So, for using @command{ptx}
+portably between GNU and System V, you should always use it with a
 single input file, and always expect the result on standard output.  You
 might also want to automatically configure in a @option{-G} option to
 @command{ptx} calls in products using @command{ptx}, if the configurator finds
@@ -5284,9 +5284,9 @@ that the installed @command{ptx} accepts @option{-G}.
 @item
 The only options available in System V @command{ptx} are options @option{-b},
 @option{-f}, @option{-g}, @option{-i}, @option{-o}, @option{-r}, @option{-t} and
-@option{-w}.  All other options are @sc{gnu} extensions and are not repeated in
+@option{-w}.  All other options are GNU extensions and are not repeated in
 this enumeration.  Moreover, some options have a slightly different
-meaning when @sc{gnu} extensions are enabled, as explained below.
+meaning when GNU extensions are enabled, as explained below.
 
 @item
 By default, concordance output is not formatted for @command{troff} or
@@ -5295,30 +5295,30 @@ or @command{nroff} output may still be selected through option @option{-O}.
 
 @item
 Unless @option{-R} option is used, the maximum reference width is
-subtracted from the total output line width.  With @sc{gnu} extensions
+subtracted from the total output line width.  With GNU extensions
 disabled, width of references is not taken into account in the output
 line width computations.
 
 @item
-All 256 bytes, even ASCII @sc{nul} bytes, are always read and
-processed from input file with no adverse effect, even if @sc{gnu} extensions
+All 256 bytes, even ASCII NUL bytes, are always read and
+processed from input file with no adverse effect, even if GNU extensions
 are disabled.  However, System V @command{ptx} does not accept 8-bit
 characters, a few control characters are rejected, and the tilde
 @kbd{~} is also rejected.
 
 @item
-Input line length is only limited by available memory, even if @sc{gnu}
+Input line length is only limited by available memory, even if GNU
 extensions are disabled.  However, System V @command{ptx} processes only
 the first 200 characters in each line.
 
 @item
 The break (non-word) characters default to be every character except all
-letters of the underlying character set, diacriticized or not.  When @sc{gnu}
+letters of the underlying character set, diacriticized or not.  When GNU
 extensions are disabled, the break characters default to space, tab and
 newline only.
 
 @item
-The program makes better use of output line width.  If @sc{gnu} extensions
+The program makes better use of output line width.  If GNU extensions
 are disabled, the program rather tries to imitate System V @command{ptx},
 but still, there are some slight disposition glitches this program does
 not completely reproduce.
@@ -5842,7 +5842,7 @@ Treat as significant each occurrence of @var{char} in the input file.
 Use @samp{sort -t @var{char}}, without the @option{-b} option of
 @samp{sort}, to produce this ordering.  If @samp{join -t ''} is specified,
 the whole line is considered, matching the default operation of sort.
-If @samp{-t '\0'} is specified then the ASCII @sc{nul}
+If @samp{-t '\0'} is specified then the ASCII NUL
 character is used to delimit the fields.
 
 @item -v @var{file-number}
@@ -5975,7 +5975,7 @@ from @var{m} through @var{n}, in ascending order.  @var{m} should
 collate before @var{n}; if it doesn't, an error results.  As an example,
 @samp{0-9} is the same as @samp{0123456789}.
 
-@sc{gnu} @command{tr} does not support the System V syntax that uses square
+GNU @command{tr} does not support the System V syntax that uses square
 brackets to enclose ranges.  Translations specified in that format
 sometimes work as expected, since the brackets are often transliterated
 to themselves.  However, they should be avoided because they sometimes
@@ -6063,7 +6063,7 @@ The syntax @samp{[=@var{c}=]} expands to all of the characters that are
 equivalent to @var{c}, in no particular order.  Equivalence classes are
 a relatively recent invention intended to support non-English alphabets.
 But there seems to be no standard way to define them or determine their
-contents.  Therefore, they are not fully implemented in @sc{gnu} @command{tr};
+contents.  Therefore, they are not fully implemented in GNU @command{tr};
 each character's equivalence class consists only of that character,
 which is of no particular use.
 
@@ -6111,9 +6111,9 @@ BSD @command{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
 @command{tr} truncates @var{set1} to the length of @var{set2}.
 
-By default, @sc{gnu} @command{tr} handles this case like BSD @command{tr}.
+By default, GNU @command{tr} handles this case like BSD @command{tr}.
 When the @option{--truncate-set1} (@option{-t}) option is given,
-@sc{gnu} @command{tr} handles this case like the System V @command{tr}
+GNU @command{tr} handles this case like the System V @command{tr}
 instead.  This option is ignored for operations other than translation.
 
 Acting like System V @command{tr} in this case breaks the relatively common
@@ -6689,7 +6689,7 @@ Produce long format directory listings, but don't display owner information.
 @opindex -G
 @opindex --no-group
 Inhibit display of group information in a long format directory listing.
-(This is the default in some non-@sc{gnu} versions of @command{ls}, so we
+(This is the default in some non-GNU versions of @command{ls}, so we
 provide this option for compatibility.)
 
 @optHumanReadable
@@ -7042,7 +7042,7 @@ output is not a terminal.
 List files in columns, sorted vertically.  This is the default for
 @command{ls} if standard output is a terminal.  It is always the default
 for the @command{dir} program.
-@sc{gnu} @command{ls} uses variable width columns to display as many files as
+GNU @command{ls} uses variable width columns to display as many files as
 possible in the fewest lines.
 
 @item --color [=@var{when}]
@@ -7656,7 +7656,7 @@ combination of options is this tiny Bourne shell script:
 @example
 #!/bin/sh
 # Usage: backup FILE...
-# Create a @sc{gnu}-style backup of each listed FILE.
+# Create a GNU-style backup of each listed FILE.
 fail=0
 for i; do
   cp --backup --force --preserve=all -- "$i" "$i" || fail=1
@@ -7864,7 +7864,7 @@ links in the source; see the @option{--archive} (@option{-a}), @option{-d},
 creating a destination file of the same type as the source; see the
 @option{--copy-contents} option.  It is not portable to use
 @option{-r} to copy symbolic links or special files.  On some
-non-@sc{gnu} systems, @option{-r} implies the equivalent of
+non-GNU systems, @option{-r} implies the equivalent of
 @option{-L} and @option{--copy-contents} for historical reasons.
 Also, it is not portable to use @option{-R} to copy symbolic links
 unless you also specify @option{-P}, as POSIX allows
@@ -8167,27 +8167,27 @@ The @samp{lcase} and @samp{ucase} conversions are mutually exclusive.
 
 @item sparse
 @opindex sparse
-Try to seek rather than write @sc{nul} output blocks.
+Try to seek rather than write NUL output blocks.
 On a file system that supports sparse files, this will create
 sparse output when extending the output file.
 Be careful when using this option in conjunction with
 @samp{conv=notrunc} or @samp{oflag=append}.
 With @samp{conv=notrunc}, existing data in the output file
-corresponding to @sc{nul} blocks from the input, will be untouched.
+corresponding to NUL blocks from the input, will be untouched.
 With @samp{oflag=append} the seeks performed will be ineffective.
 Similarly, when the output is a device rather than a file,
-@sc{nul} input blocks are not copied, and therefore this option
+NUL input blocks are not copied, and therefore this option
 is most useful with virtual or pre zeroed devices.
 
 @item swab
 @opindex swab @r{(byte-swapping)}
 @cindex byte-swapping
-Swap every pair of input bytes.  @sc{gnu} @command{dd}, unlike others, works
+Swap every pair of input bytes.  GNU @command{dd}, unlike others, works
 when an odd number of bytes are read---the last byte is simply copied
 (since there is nothing to swap it with).
 
 @item sync
-@opindex sync @r{(padding with ASCII @sc{nul}s)}
+@opindex sync @r{(padding with ASCII NULs)}
 Pad every input block to size of @samp{ibs} with trailing zero bytes.
 When used with @samp{block} or @samp{unblock}, pad with spaces instead of
 zero bytes.
@@ -8917,7 +8917,7 @@ Print the name of each file before removing it.
 @cindex files beginning with @samp{-}, removing
 @cindex @samp{-}, removing files beginning with
 One common question is how to remove files whose names begin with a
-@samp{-}.  @sc{gnu} @command{rm}, like every program that uses the @code{getopt}
+@samp{-}.  GNU @command{rm}, like every program that uses the @code{getopt}
 function to parse its arguments, lets you use the @samp{--} option to
 indicate that all following arguments are non-options.  To remove a file
 called @file{-f} in the current directory, you could type either:
@@ -9791,7 +9791,7 @@ Report error messages.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Separate output items with @sc{nul} characters.
+Separate output items with NUL characters.
 
 @end table
 
@@ -10432,7 +10432,7 @@ environment variable, or by the system default rules if @env{TZ} is
 not set.  @xref{TZ Variable,, Specifying the Time Zone with @env{TZ},
 libc, The GNU C Library Reference Manual}.
 You can avoid ambiguities during
-daylight saving transitions by using @sc{utc} time stamps.
+daylight saving transitions by using UTC time stamps.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10600,7 +10600,7 @@ type is explicitly to be included by using the @option{-t} option.
 If an argument @var{file} is a disk device file containing a mounted
 file system, @command{df} shows the space available on that file system
 rather than on the file system containing the device node (i.e., the root
-file system).  @sc{gnu} @command{df} does not attempt to determine the
+file system).  GNU @command{df} does not attempt to determine the
 disk usage
 on unmounted file systems, because on most kinds of systems doing so
 requires extremely nonportable intimate knowledge of file system
@@ -12124,7 +12124,7 @@ e.g., spaces.  However, regardless of whether it is quoted, a string
 operand should not be a parenthesis or any of @command{expr}'s
 operators like @code{+}, so you cannot safely pass an arbitrary string
 @code{$str} to expr merely by quoting it to the shell.  One way to
-work around this is to use the @sc{gnu} extension @code{+},
+work around this is to use the GNU extension @code{+},
 (e.g., @code{+ "$str" = foo}); a more portable way is to use
 @code{@w{" $str"}} and to adjust the rest of the expression to take
 the leading space into account (e.g., @code{@w{" $str" = " foo"}}).
@@ -12615,7 +12615,7 @@ This option implies the @option{-a} option.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Separate output items with @sc{nul} characters.
+Separate output items with NUL characters.
 
 @end table
 
@@ -12674,7 +12674,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Separate output items with @sc{nul} characters.
+Separate output items with NUL characters.
 
 @end table
 
@@ -13022,7 +13022,7 @@ only on the file name, and does not touch any actual file.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Separate output items with @sc{nul} characters.
+Separate output items with NUL characters.
 
 @item --relative-to=@var{file}
 @opindex --relative-to
@@ -13410,8 +13410,8 @@ May be negated.
 @item ofdel
 @opindex ofdel
 @cindex pad character
-Use ASCII @sc{del} characters for fill instead of
-ASCII @sc{nul} characters.  Non-POSIX@.
+Use ASCII DEL characters for fill instead of
+ASCII NUL characters.  Non-POSIX@.
 May be negated.
 
 @item nl1
@@ -14762,7 +14762,7 @@ See also @ref{Setting the time}.
 Use Coordinated Universal Time (UTC) by operating as if the
 @env{TZ} environment variable were set to the string @samp{UTC0}.
 Coordinated
-Universal Time is often called ``Greenwich Mean Time'' (@sc{gmt}) for
+Universal Time is often called ``Greenwich Mean Time'' (GMT) for
 historical reasons.
 Typically, systems ignore leap seconds and thus implement an
 approximation to UTC rather than true UTC.
@@ -15539,7 +15539,7 @@ These operands are evaluated left-to-right, so if two operands
 mention the same variable the earlier is ignored.
 
 Environment variable names can be empty, and can contain any
-characters other than @samp{=} and ASCII @sc{nul}.
+characters other than @samp{=} and ASCII NUL.
 However, it is wise to limit yourself to names that
 consist solely of underscores, digits, and ASCII letters,
 and that begin with a non-digit, as applications like the shell do not
@@ -16502,7 +16502,7 @@ redirected standard output of your program away from your screen.
 For filter programs to work together, the format of the data has to be
 agreed upon.  The most straightforward and easiest format to use is simply
 lines of text.  Unix data files are generally just streams of bytes, with
-lines delimited by the ASCII @sc{lf} (Line Feed) character,
+lines delimited by the ASCII LF (Line Feed) character,
 conventionally called a ``newline'' in the Unix literature.  (This is
 @code{'\n'} if you're a C programmer.)  This is the format used by all
 the traditional filtering programs.  (Many earlier operating systems
