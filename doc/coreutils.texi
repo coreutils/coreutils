@@ -469,13 +469,14 @@ Date input formats
 * General date syntax::          Common rules
 * Calendar date items::          19 Dec 1994
 * Time of day items::            9:20pm
-* Time zone items::              EST, PDT, GMT, @dots{}
+* Time zone items::              EST, PDT, UTC, @dots{}
+* Combined date and time of day items:: 1972-09-24T20:02:00,000000-0500
 * Day of week items::            Monday and others
 * Relative items in date strings:: next tuesday, 2 years ago
 * Pure numbers in date strings:: 19931219, 1440
 * Seconds since the Epoch::      @@1078100502
 * Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
-* Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al
+* Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al.
 
 Opening the software toolbox
 
