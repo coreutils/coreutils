@@ -77,6 +77,10 @@ my @Tests =
    ['eq-wid-11',qw(-w -1.e-3 1),  {OUT => [qw(-0.001 00.999)]}],
    ['eq-wid-12',qw(-w -1.0e-4 1),  {OUT => [qw(-0.00010 00.99990)]}],
    ['eq-wid-13',qw(-w 999 1e3),  {OUT => [qw(0999 1000)]}],
+   # Prior to 8.21, if the start value hadn't a precision, while step did,
+   # then misalignment would occur if the sequence narrowed.
+   ['eq-wid-14',qw(-w -1 1.0 0),  {OUT => [qw(-1.0 00.0)]}],
+   ['eq-wid-15',qw(-w 10 -.1 9.9),  {OUT => [qw(10.0 09.9)]}],
 
    # Prior to coreutils-4.5.11, some of these were not accepted.
    ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],

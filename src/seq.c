@@ -336,6 +336,8 @@ get_default_format (operand first, operand step, operand last)
             last_width--;  /* don't include space for '.' */
           if (last.precision == 0 && prec)
             last_width++;  /* include space for '.' */
+          if (first.precision == 0 && prec)
+            first_width++;  /* include space for '.' */
           size_t width = MAX (first_width, last_width);
           if (width <= INT_MAX)
             {
