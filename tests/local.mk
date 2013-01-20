@@ -497,7 +497,6 @@ all_tests =					\
   tests/du/one-file-system.sh			\
   tests/du/restore-wd.sh			\
   tests/du/slash.sh				\
-  tests/du/slink.sh				\
   tests/du/trailing-slash.sh			\
   tests/du/two-args.sh				\
   tests/id/gnu-zero-uids.sh			\
