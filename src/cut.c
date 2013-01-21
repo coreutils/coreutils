@@ -601,6 +601,7 @@ cut_fields (FILE *stream)
     return;
 
   ungetc (c, stream);
+  c = 0;
 
   /* To support the semantics of the -s flag, we may have to buffer
      all of the first field to determine whether it is 'delimited.'
@@ -631,6 +632,8 @@ cut_fields (FILE *stream)
           n_bytes = len;
           assert (n_bytes != 0);
 
+          c = 0;
+
           /* If the first field extends to the end of line (it is not
              delimited) and we are printing all non-delimited lines,
              print this one.  */
@@ -646,6 +649,7 @@ cut_fields (FILE *stream)
                   /* Make sure the output line is newline terminated.  */
                   if (field_1_buffer[n_bytes - 1] != '\n')
                     putchar ('\n');
+                  c = '\n';
                 }
               continue;
             }
@@ -658,38 +662,28 @@ cut_fields (FILE *stream)
           ++field_idx;
         }
 
-      if (c != EOF)
-        {
-          if (print_kth (field_idx, NULL))
-            {
-              if (found_any_selected_field)
-                {
-                  fwrite (output_delimiter_string, sizeof (char),
-                          output_delimiter_length, stdout);
-                }
-              found_any_selected_field = true;
+      int prev_c = c;
 
-              while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
-                {
-                  putchar (c);
-                }
-            }
-          else
+      if (print_kth (field_idx, NULL))
+        {
+          if (found_any_selected_field)
             {
-              while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
-                {
-                  /* Empty.  */
-                }
+              fwrite (output_delimiter_string, sizeof (char),
+                      output_delimiter_length, stdout);
+            }
+          found_any_selected_field = true;
+
+          while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+            {
+              putchar (c);
+              prev_c = c;
             }
         }
-
-      if (c == '\n')
+      else
         {
-          c = getc (stream);
-          if (c != EOF)
+          while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
             {
-              ungetc (c, stream);
-              c = '\n';
+              prev_c = c;
             }
         }
 
@@ -699,7 +693,10 @@ cut_fields (FILE *stream)
         {
           if (found_any_selected_field
               || !(suppress_non_delimited && field_idx == 1))
-            putchar ('\n');
+            {
+              if (c == '\n' || prev_c != '\n')
+                putchar ('\n');
+            }
           if (c == EOF)
             break;
           field_idx = 1;

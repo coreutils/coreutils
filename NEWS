@@ -33,6 +33,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   another range.  Before, "echo 123|cut --output-delim=: -b2-,3" would print
   "2:3".  Now it prints "23".  [bug introduced in 5.3.0]
 
+  cut -f no longer inspects input line N+1 before fully outputting line N,
+  which avoids delayed output for intermittent input.
+  [bug introduced in TEXTUTILS-1_8b]
+
   factor no longer loops infinitely on 32 bit powerpc or sparc systems.
   [bug introduced in coreutils-8.20]
 

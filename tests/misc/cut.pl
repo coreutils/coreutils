@@ -129,6 +129,21 @@ my @Tests =
   ['8bit-delim', '-d', "\255", '--out=_', '-f2,3', {IN=>"a\255b\255c\n"},
    {OUT=>"b_c\n"}],
 
+  # newline processing for fields
+  ['newline-1', '-f1-', {IN=>"a\nb"}, {OUT=>"a\nb\n"}],
+  ['newline-2', '-f1-', {IN=>""}, {OUT=>""}],
+  ['newline-3', '-d:', '-f1', {IN=>"a:1\nb:2\n"}, {OUT=>"a\nb\n"}],
+  ['newline-4', '-d:', '-f1', {IN=>"a:1\nb:2"}, {OUT=>"a\nb\n"}],
+  ['newline-5', '-d:', '-f2', {IN=>"a:1\nb:2\n"}, {OUT=>"1\n2\n"}],
+  ['newline-6', '-d:', '-f2', {IN=>"a:1\nb:2"}, {OUT=>"1\n2\n"}],
+  ['newline-7', '-s', '-d:', '-f1', {IN=>"a:1\nb:2"}, {OUT=>"a\nb\n"}],
+  ['newline-8', '-s', '-d:', '-f1', {IN=>"a:1\nb:2\n"}, {OUT=>"a\nb\n"}],
+  ['newline-9', '-s', '-d:', '-f1', {IN=>"a1\nb2"}, {OUT=>""}],
+  ['newline-10', '-s', '-d:', '-f1,2', {IN=>"a:1\nb:2"}, {OUT=>"a:1\nb:2\n"}],
+  ['newline-11', '-s', '-d:', '-f1,2', {IN=>"a:1\nb:2\n"}, {OUT=>"a:1\nb:2\n"}],
+  ['newline-12', '-s', '-d:', '-f1', {IN=>"a:1\nb:"}, {OUT=>"a\nb\n"}],
+  ['newline-13', '-d:', '-f1-', {IN=>"a1:\n:"}, {OUT=>"a1:\n:\n"}],
+
   # New functionality:
   ['out-delim1', '-c1-3,5-', '--output-d=:', {IN=>"abcdefg\n"},
    {OUT=>"abc:efg\n"}],
