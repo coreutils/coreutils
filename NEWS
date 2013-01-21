@@ -8,6 +8,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   to include in the output, or all available columns if the FIELD_LIST is
   omitted.  Note this enables df to output both block and inode fields together.
 
+  du now accepts the --threshold=SIZE option to restrict the output to entries
+  with such a minimum SIZE (or a maximum SIZE if it is negative).
+  du recognizes -t SIZE as equivalent, for compatibility with FreeBSD.
+
 ** Bug fixes
 
   cp --no-preserve=mode now no longer exits non-zero.

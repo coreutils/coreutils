@@ -147,6 +147,10 @@ static bool opt_separate_dirs = false;
    is at level 0, so 'du --max-depth=0' is equivalent to 'du -s'.  */
 static size_t max_depth = SIZE_MAX;
 
+/* Only output entries with at least this SIZE if positive,
+   or at most if negative.  See --threshold option.  */
+static intmax_t opt_threshold = 0;
+
 /* Human-readable options for output.  */
 static int human_output_opts;
 
@@ -218,6 +222,7 @@ static struct option const long_options[] =
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
   {"total", no_argument, NULL, 'c'},
+  {"threshold", required_argument, NULL, 't'},
   {"time", optional_argument, NULL, TIME_OPTION},
   {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
@@ -319,6 +324,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           only if it is N or fewer levels below the command\n\
                           line argument;  --max-depth=0 is the same as\n\
                           --summarize\n\
+  -t, --threshold=SIZE  exclude entries smaller than SIZE if positive,\n\
+                          or entries greater than SIZE if negative\n\
 "), stdout);
       fputs (_("\
       --time            show time of the last modification of any file in the\n\
@@ -579,8 +586,15 @@ process_file (FTS *fts, FTSENT *ent)
   duinfo_add (&tot_dui, &dui);
 
   if ((IS_DIR_TYPE (info) && level <= max_depth)
-      || ((opt_all && level <= max_depth) || level == 0))
-    print_size (&dui_to_print, file);
+      || (opt_all && level <= max_depth)
+      || level == 0)
+    {
+      /* Print or elide this entry according to the --threshold option.  */
+      if (opt_threshold < 0
+          ? dui_to_print.size <= -opt_threshold
+          : dui_to_print.size >= opt_threshold)
+        print_size (&dui_to_print, file);
+    }
 
   return ok;
 }
@@ -703,7 +717,7 @@ main (int argc, char **argv)
   while (true)
     {
       int oi = -1;
-      int c = getopt_long (argc, argv, "0abd:chHklmsxB:DLPSX:",
+      int c = getopt_long (argc, argv, "0abd:chHklmst:xB:DLPSX:",
                            long_options, &oi);
       if (c == -1)
         break;
@@ -782,6 +796,20 @@ main (int argc, char **argv)
 
         case 's':
           opt_summarize_only = true;
+          break;
+
+        case 't':
+          {
+            enum strtol_error e;
+            e = xstrtoimax (optarg, NULL, 0, &opt_threshold, "kKmMGTPEZY0");
+            if (e != LONGINT_OK)
+              xstrtol_fatal (e, oi, c, long_options, optarg);
+            if (opt_threshold == 0 && *optarg == '-')
+              {
+                /* Do not allow -0, as this wouldn't make sense anyway.  */
+                error (EXIT_FAILURE, 0, _("invalid --threshold argument '-0'"));
+              }
+          }
           break;
 
         case 'x':

@@ -11022,6 +11022,41 @@ With @option{--separate-dirs}, the size reported for a directory name,
 @var{d}, is merely the @code{stat.st_size}-derived size of the directory
 entry, @var{d}.
 
+@item -t @var{size}
+@item --threshold=@var{size}
+@opindex -t
+@opindex --threshold
+Exclude entries based on a given @var{size} (@pxref{Block size}).
+
+If @var{size} is positive, then @command{du} will only print entries with a size
+greater than or equal to that.
+
+If @var{size} is negative, then @command{du} will only print entries with a size
+smaller than or equal to that.
+
+Although GNU @command{find} can be used to find files of a certain size,
+@command{du}'s @option{--threshold} option can be used to also filter
+directories based on a given size.
+
+Please note that the @option{--threshold} option can be combined with the
+@option{--apparent-size} option, and in this case would elide entries based on
+its apparent size.
+
+Here's how you would use @option{--threshold} to find directories with a size
+greater than or equal to 200 megabytes:
+
+@example
+du --threshold=200MB
+@end example
+
+Here's how you would use @option{--threshold} to find directories and files -
+note the @option{-a} - with an apparent size smaller than or equal to 500 bytes:
+
+@example
+du -a -t -500 --apparent-size
+@end example
+
+
 @item --time
 @opindex --time
 @cindex last modified dates, displaying in @command{du}
