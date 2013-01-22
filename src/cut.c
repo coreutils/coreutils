@@ -617,6 +617,7 @@ cut_fields (FILE *stream)
         {
           ssize_t len;
           size_t n_bytes;
+          bool got_line;
 
           len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
                             GETNLINE_NO_LIMIT, delim, '\n', stream);
@@ -633,13 +634,14 @@ cut_fields (FILE *stream)
           assert (n_bytes != 0);
 
           c = 0;
+          got_line = field_1_buffer[n_bytes - 1] == '\n';
 
           /* If the first field extends to the end of line (it is not
              delimited) and we are printing all non-delimited lines,
              print this one.  */
-          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
+          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim || got_line)
             {
-              if (suppress_non_delimited)
+              if (suppress_non_delimited && !(got_line && delim == '\n'))
                 {
                   /* Empty.  */
                 }
@@ -647,7 +649,7 @@ cut_fields (FILE *stream)
                 {
                   fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
                   /* Make sure the output line is newline terminated.  */
-                  if (field_1_buffer[n_bytes - 1] != '\n')
+                  if (! got_line)
                     putchar ('\n');
                   c = '\n';
                 }
@@ -687,9 +689,7 @@ cut_fields (FILE *stream)
             }
         }
 
-      if (c == delim)
-        ++field_idx;
-      else if (c == '\n' || c == EOF)
+      if (c == '\n' || c == EOF)
         {
           if (found_any_selected_field
               || !(suppress_non_delimited && field_idx == 1))
@@ -702,6 +702,8 @@ cut_fields (FILE *stream)
           field_idx = 1;
           found_any_selected_field = false;
         }
+      else if (c == delim)
+        field_idx++;
     }
 }
 
