@@ -236,6 +236,9 @@ static uintmax_t r_truncate = 0;
 static char newline_character = '\n';
 static char space_character = ' ';
 
+/* Input buffer. */
+static char *ibuf;
+
 /* Output buffer. */
 static char *obuf;
 
@@ -644,6 +647,65 @@ Options are:\n\
       emit_ancillary_info ();
     }
   exit (status);
+}
+
+static char *
+human_size (size_t n)
+{
+  static char hbuf[LONGEST_HUMAN_READABLE + 1];
+  int human_opts =
+    (human_autoscale | human_round_to_nearest | human_base_1024
+     | human_space_before_unit | human_SI | human_B);
+  return human_readable (n, hbuf, human_opts, 1, 1);
+}
+
+/* Ensure input buffer IBUF is allocated.  */
+
+static void
+alloc_ibuf (void)
+{
+  if (ibuf)
+    return;
+
+  char *real_buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
+  if (!real_buf)
+    error (EXIT_FAILURE, 0,
+           _("memory exhausted by input buffer of size %zu bytes (%s)"),
+           input_blocksize, human_size (input_blocksize));
+
+  real_buf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
+
+  ibuf = ptr_align (real_buf, page_size);
+}
+
+/* Ensure output buffer OBUF is allocated/initialized.  */
+
+static void
+alloc_obuf (void)
+{
+  if (obuf)
+    return;
+
+  if (conversions_mask & C_TWOBUFS)
+    {
+      /* Page-align the output buffer, too.  */
+      char *real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
+      if (!real_obuf)
+        error (EXIT_FAILURE, 0,
+               _("memory exhausted by output buffer of size %zu bytes (%s)"),
+               output_blocksize, human_size (output_blocksize));
+      obuf = ptr_align (real_obuf, page_size);
+    }
+  else
+    {
+      alloc_ibuf ();
+      obuf = ibuf;
+    }
+
+  /* Write a sentinel to the slop after the buffer,
+   to allow efficient checking for NUL blocks.  */
+  assert (sizeof (uintptr_t) <= OUTPUT_BLOCK_SLOP);
+  memset (obuf + output_blocksize, 1, sizeof (uintptr_t));
 }
 
 static void
@@ -1526,7 +1588,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
 
 /* Throw away RECORDS blocks of BLOCKSIZE bytes plus BYTES bytes on
    file descriptor FDESC, which is open with read permission for FILE.
-   Store up to BLOCKSIZE bytes of the data at a time in BUF, if
+   Store up to BLOCKSIZE bytes of the data at a time in IBUF or OBUF, if
    necessary. RECORDS or BYTES must be nonzero. If FDESC is
    STDIN_FILENO, advance the input offset. Return the number of
    records remaining, i.e., that were not skipped because EOF was
@@ -1535,7 +1597,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
 
 static uintmax_t
 skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
-      size_t *bytes, char *buf)
+      size_t *bytes)
 {
   uintmax_t offset = records * blocksize + *bytes;
 
@@ -1606,6 +1668,18 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
           quit (EXIT_FAILURE);
         }
       /* else file_size && offset > OFF_T_MAX or file ! seekable */
+
+      char *buf;
+      if (fdesc == STDIN_FILENO)
+        {
+          alloc_ibuf ();
+          buf = ibuf;
+        }
+      else
+        {
+          alloc_obuf ();
+          buf = obuf;
+        }
 
       do
         {
@@ -1823,26 +1897,12 @@ set_fd_flags (int fd, int add_flags, char const *name)
     }
 }
 
-static char *
-human_size (size_t n)
-{
-  static char hbuf[LONGEST_HUMAN_READABLE + 1];
-  int human_opts =
-    (human_autoscale | human_round_to_nearest | human_base_1024
-     | human_space_before_unit | human_SI | human_B);
-  return human_readable (n, hbuf, human_opts, 1, 1);
-}
-
 /* The main loop.  */
 
 static int
 dd_copy (void)
 {
-  char *ibuf, *bufstart;	/* Input buffer. */
-  /* These are declared static so that even though we don't free the
-     buffers, valgrind will recognize that there is no "real" leak.  */
-  static char *real_buf;	/* real buffer address before alignment */
-  static char *real_obuf;
+  char *bufstart;		/* Input buffer. */
   ssize_t nread;		/* Bytes read in the current block.  */
 
   /* If nonzero, then the previously read block was partial and
@@ -1869,45 +1929,12 @@ dd_copy (void)
      It is necessary when accessing raw (i.e. character special) disk
      devices on Unixware or other SVR4-derived system.  */
 
-  real_buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
-  if (!real_buf)
-    error (EXIT_FAILURE, 0,
-           _("memory exhausted by input buffer of size %zu bytes (%s)"),
-           input_blocksize, human_size (input_blocksize));
-
-  ibuf = real_buf;
-  ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
-
-  ibuf = ptr_align (ibuf, page_size);
-
-  if (conversions_mask & C_TWOBUFS)
-    {
-      /* Page-align the output buffer, too.  */
-      real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
-      if (!real_obuf)
-        error (EXIT_FAILURE, 0,
-               _("memory exhausted by output buffer of size %zu bytes (%s)"),
-               output_blocksize, human_size (output_blocksize));
-      obuf = ptr_align (real_obuf, page_size);
-    }
-  else
-    {
-      real_obuf = NULL;
-      obuf = ibuf;
-    }
-
-  /* Write a sentinel to the slop after the buffer,
-     to allow efficient checking for NUL blocks.  */
-  assert (sizeof (uintptr_t) <= OUTPUT_BLOCK_SLOP);
-  memset (obuf + output_blocksize, 1, sizeof (uintptr_t));
-
   if (skip_records != 0 || skip_bytes != 0)
     {
       uintmax_t us_bytes = input_offset + (skip_records * input_blocksize)
                            + skip_bytes;
       uintmax_t us_blocks = skip (STDIN_FILENO, input_file,
-                                  skip_records, input_blocksize, &skip_bytes,
-                                  ibuf);
+                                  skip_records, input_blocksize, &skip_bytes);
       us_bytes -= input_offset;
 
       /* POSIX doesn't say what to do when dd detects it has been
@@ -1927,8 +1954,7 @@ dd_copy (void)
     {
       size_t bytes = seek_bytes;
       uintmax_t write_records = skip (STDOUT_FILENO, output_file,
-                                      seek_records, output_blocksize, &bytes,
-                                      obuf);
+                                      seek_records, output_blocksize, &bytes);
 
       if (write_records != 0 || bytes != 0)
         {
@@ -1954,6 +1980,9 @@ dd_copy (void)
 
   if (max_records == 0 && max_bytes == 0)
     return exit_status;
+
+  alloc_ibuf ();
+  alloc_obuf ();
 
   while (1)
     {

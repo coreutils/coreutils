@@ -465,6 +465,7 @@ all_tests =					\
   tests/df/skip-rootfs.sh			\
   tests/dd/direct.sh				\
   tests/dd/misc.sh				\
+  tests/dd/no-allocate.sh				\
   tests/dd/nocache.sh				\
   tests/dd/not-rewound.sh			\
   tests/dd/reblock.sh				\
