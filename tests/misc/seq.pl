@@ -137,6 +137,17 @@ my @Tests =
    ['sep-1', qw(-s, 1 3), {OUT => [qw(1,2,3)]}],
    ['sep-2', qw(-s, 1 1), {OUT => [qw(1)]}],
    ['sep-3', qw(-s,, 1 3), {OUT => [qw(1,,2,,3)]}],
+
+   # Exercise fast path avoidance logic.
+   # In 8.20 a step value != 1, with positive integer start and end was broken
+   ['not-fast-1', qw(1 3 1), {OUT => [qw(1)]}],
+   ['not-fast-2', qw(1 1 4.2), {OUT => [qw(1 2 3 4)]}],
+   ['not-fast-3', qw(1 1 0)],
+
+   # Ensure the correct parameters are passed to the fast path
+   ['fast-1', qw(4), {OUT => [qw(1 2 3 4)]}],
+   ['fast-2', qw(1 4), {OUT => [qw(1 2 3 4)]}],
+   ['fast-3', qw(1 1 4), {OUT => [qw(1 2 3 4)]}],
   );
 
 # Append a newline to each entry in the OUT array.

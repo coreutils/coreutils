@@ -57,7 +57,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   seq -s no longer prints an erroneous newline after the first number, and
   outputs a newline after the last number rather than a trailing separator.
-  [bug introduced in coreutils-8.20]
+  Also seq no longer ignores a specified step value when the end value is 1.
+  [bugs introduced in coreutils-8.20]
 
 ** Changes in behavior
 

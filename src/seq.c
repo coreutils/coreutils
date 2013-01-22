@@ -565,11 +565,12 @@ main (int argc, char **argv)
      then use the much more efficient integer-only code.  */
   if (all_digits_p (argv[optind])
       && (n_args == 1 || all_digits_p (argv[optind + 1]))
-      && (n_args < 3 || STREQ ("1", argv[optind + 2]))
+      && (n_args < 3 || (STREQ ("1", argv[optind + 1])
+                         && all_digits_p (argv[optind + 2])))
       && !equal_width && !format_str && strlen (separator) == 1)
     {
       char const *s1 = n_args == 1 ? "1" : argv[optind];
-      char const *s2 = n_args == 1 ? argv[optind] : argv[optind + 1];
+      char const *s2 = argv[optind + (n_args - 1)];
       if (seq_fast (s1, s2))
         exit (EXIT_SUCCESS);
 
