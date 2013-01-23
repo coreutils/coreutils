@@ -10887,6 +10887,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
+@optNull{du}
+
 @item -a
 @itemx --all
 @opindex -a
@@ -10912,12 +10914,6 @@ dd bs=1 seek=2GiB if=/dev/null of=big
 has an apparent size of 2 GiB, yet on most modern
 systems, it actually uses almost no disk space.
 
-@item -b
-@itemx --bytes
-@opindex -b
-@opindex --bytes
-Equivalent to @code{--apparent-size --block-size=1}.
-
 @item -B @var{size}
 @itemx --block-size=@var{size}
 @opindex -B
@@ -10925,6 +10921,12 @@ Equivalent to @code{--apparent-size --block-size=1}.
 @cindex file sizes
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
+
+@item -b
+@itemx --bytes
+@opindex -b
+@opindex --bytes
+Equivalent to @code{--apparent-size --block-size=1}.
 
 @item -c
 @itemx --total
@@ -10944,14 +10946,23 @@ Does not affect other symbolic links.  This is helpful for finding
 out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
+@item -d @var{depth}
+@itemx --max-depth=@var{depth}
+@opindex -d @var{depth}
+@opindex --max-depth=@var{depth}
+@cindex limiting output of @command{du}
+Show the total for each directory (and file if --all) that is at
+most MAX_DEPTH levels down from the root of the hierarchy.  The root
+is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
+
 @c --files0-from=FILE
 @filesZeroFromOption{du,, with the @option{--total} (@option{-c}) option}
-
-@optHumanReadable
 
 @item -H
 @opindex -H
 Equivalent to @option{--dereference-args} (@option{-D}).
+
+@optHumanReadable
 
 @item -k
 @opindex -k
@@ -10959,14 +10970,6 @@ Equivalent to @option{--dereference-args} (@option{-D}).
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
 This option is equivalent to @option{--block-size=1K}.
-
-@item -l
-@itemx --count-links
-@opindex -l
-@opindex --count-links
-@cindex hard links, counting in @command{du}
-Count the size of all files, even if they have appeared already (as a
-hard link).
 
 @item -L
 @itemx --dereference
@@ -10976,6 +10979,14 @@ hard link).
 Dereference symbolic links (show the disk space used by the file
 or directory that the link points to instead of the space used by
 the link).
+
+@item -l
+@itemx --count-links
+@opindex -l
+@opindex --count-links
+@cindex hard links, counting in @command{du}
+Count the size of all files, even if they have appeared already (as a
+hard link).
 
 @item -m
 @opindex -m
@@ -10992,25 +11003,6 @@ This option is equivalent to @option{--block-size=1M}.
 For each symbolic links encountered by @command{du},
 consider the disk space used by the symbolic link.
 
-@item -d @var{depth}
-@item --max-depth=@var{depth}
-@opindex -d @var{depth}
-@opindex --max-depth=@var{depth}
-@cindex limiting output of @command{du}
-Show the total for each directory (and file if --all) that is at
-most MAX_DEPTH levels down from the root of the hierarchy.  The root
-is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
-
-@optNull{du}
-
-@optSi
-
-@item -s
-@itemx --summarize
-@opindex -s
-@opindex --summarize
-Display only a total for each argument.
-
 @item -S
 @itemx --separate-dirs
 @opindex -S
@@ -11022,8 +11014,16 @@ With @option{--separate-dirs}, the size reported for a directory name,
 @var{d}, is merely the @code{stat.st_size}-derived size of the directory
 entry, @var{d}.
 
+@optSi
+
+@item -s
+@itemx --summarize
+@opindex -s
+@opindex --summarize
+Display only a total for each argument.
+
 @item -t @var{size}
-@item --threshold=@var{size}
+@itemx --threshold=@var{size}
 @opindex -t
 @opindex --threshold
 Exclude entries based on a given @var{size} (@pxref{Block size}).
@@ -11124,21 +11124,6 @@ the newline and any later characters are ignored; if @env{TIME_STYLE}
 begins with @samp{posix-} the @samp{posix-} is ignored; and if
 @env{TIME_STYLE} is @samp{locale} it is ignored.
 
-@item -x
-@itemx --one-file-system
-@opindex -x
-@opindex --one-file-system
-@cindex one file system, restricting @command{du} to
-Skip directories that are on different file systems from the one that
-the argument being processed is on.
-
-@item --exclude=@var{pattern}
-@opindex --exclude=@var{pattern}
-@cindex excluding files from @command{du}
-When recursing, skip subdirectories or files matching @var{pattern}.
-For example, @code{du --exclude='*.o'} excludes files whose names
-end in @samp{.o}.
-
 @item -X @var{file}
 @itemx --exclude-from=@var{file}
 @opindex -X @var{file}
@@ -11147,6 +11132,21 @@ end in @samp{.o}.
 Like @option{--exclude}, except take the patterns to exclude from @var{file},
 one per line.  If @var{file} is @samp{-}, take the patterns from standard
 input.
+
+@item --exclude=@var{pattern}
+@opindex --exclude=@var{pattern}
+@cindex excluding files from @command{du}
+When recursing, skip subdirectories or files matching @var{pattern}.
+For example, @code{du --exclude='*.o'} excludes files whose names
+end in @samp{.o}.
+
+@item -x
+@itemx --one-file-system
+@opindex -x
+@opindex --one-file-system
+@cindex one file system, restricting @command{du} to
+Skip directories that are on different file systems from the one that
+the argument being processed is on.
 
 @end table
 

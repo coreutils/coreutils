@@ -278,6 +278,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       emit_mandatory_arg_note ();
 
       fputs (_("\
+  -0, --null            end each output line with 0 byte rather than newline\n\
   -a, --all             write counts for all files, not just directories\n\
       --apparent-size   print apparent sizes, rather than disk usage; although\
 \n\
@@ -293,6 +294,10 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference only symlinks that are listed on the\n\
                           command line\n\
+  -d, --max-depth=N     print the total for a directory (or file, with --all)\n\
+                          only if it is N or fewer levels below the command\n\
+                          line argument;  --max-depth=0 is the same as\n\
+                          --summarize\n\
 "), stdout);
       fputs (_("\
       --files0-from=F   summarize disk usage of the NUL-terminated file\n\
@@ -301,32 +306,22 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -H                    equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
 \n\
-      --si              like -h, but use powers of 1000 not 1024\n\
 "), stdout);
       fputs (_("\
   -k                    like --block-size=1K\n\
+  -L, --dereference     dereference all symbolic links\n\
   -l, --count-links     count sizes many times if hard linked\n\
   -m                    like --block-size=1M\n\
 "), stdout);
       fputs (_("\
-  -L, --dereference     dereference all symbolic links\n\
   -P, --no-dereference  don't follow any symbolic links (this is the default)\n\
-  -0, --null            end each output line with 0 byte rather than newline\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
+      --si              like -h, but use powers of 1000 not 1024\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
       fputs (_("\
-  -x, --one-file-system    skip directories on different file systems\n\
-  -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\
-      --exclude=PATTERN    exclude files that match PATTERN\n\
-  -d, --max-depth=N     print the total for a directory (or file, with --all)\n\
-                          only if it is N or fewer levels below the command\n\
-                          line argument;  --max-depth=0 is the same as\n\
-                          --summarize\n\
   -t, --threshold=SIZE  exclude entries smaller than SIZE if positive,\n\
                           or entries greater than SIZE if negative\n\
-"), stdout);
-      fputs (_("\
       --time            show time of the last modification of any file in the\n\
                           directory, or any of its subdirectories\n\
       --time=WORD       show time as WORD instead of modification time:\n\
@@ -334,6 +329,11 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       --time-style=STYLE  show times using style STYLE:\n\
                           full-iso, long-iso, iso, +FORMAT\n\
                           FORMAT is interpreted like 'date'\n\
+"), stdout);
+      fputs (_("\
+  -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\
+      --exclude=PATTERN    exclude files that match PATTERN\n\
+  -x, --one-file-system    skip directories on different file systems\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
