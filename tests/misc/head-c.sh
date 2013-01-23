@@ -1,5 +1,5 @@
 #!/bin/sh
-# exercise the fix of 2001-08-18, based on test case from Ian Bruce
+# exercise head -c
 
 # Copyright (C) 2001-2013 Free Software Foundation, Inc.
 
@@ -19,12 +19,17 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ head
 
+# exercise the fix of 2001-08-18, based on test case from Ian Bruce
 echo abc > in || framework_failure_
-
 (head -c1; head -c1) < in > out || fail=1
 case "$(cat out)" in
   ab) ;;
   *) fail=1 ;;
 esac
+
+# Only allocate memory as needed.
+# Coreutils <= 8.21 would allocate memory up front
+# based on the value passed to -c
+(ulimit -v 20000; head --bytes=-E < /dev/null) || fail=1
 
 Exit $fail
