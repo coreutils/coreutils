@@ -218,11 +218,10 @@ is supplied.\n\
 \n\
 A FILE argument string of - is handled specially and causes touch to\n\
 change the times of the file associated with standard output.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -a                     change only the access time\n\
   -c, --no-create        do not create any files\n\

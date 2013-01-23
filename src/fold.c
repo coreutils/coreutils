@@ -70,11 +70,10 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at spaces\n\

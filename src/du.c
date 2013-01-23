@@ -273,11 +273,10 @@ Usage: %s [OPTION]... [FILE]...\n\
 "), program_name, program_name);
       fputs (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -a, --all             write counts for all files, not just directories\n\
       --apparent-size   print apparent sizes, rather than disk usage; although\

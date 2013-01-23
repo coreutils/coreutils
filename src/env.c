@@ -54,7 +54,11 @@ Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
               program_name);
       fputs (_("\
 Set each NAME to VALUE in the environment and run COMMAND.\n\
-\n\
+"), stdout);
+
+      emit_mandatory_arg_note ();
+
+      fputs (_("\
   -i, --ignore-environment  start with an empty environment\n\
   -0, --null           end each output line with 0 byte rather than newline\n\
   -u, --unset=NAME     remove variable from the environment\n\

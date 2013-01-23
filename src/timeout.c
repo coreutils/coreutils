@@ -213,9 +213,10 @@ Usage: %s [OPTION] DURATION COMMAND [ARG]...\n\
 
       fputs (_("\
 Start COMMAND, and kill it if still running after DURATION.\n\
-\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
       --preserve-status\n\
                  exit with the same status as COMMAND, even when the\n\

@@ -102,11 +102,10 @@ A FILE argument that does not exist is created.\n\
 If a FILE is larger than the specified size, the extra data is lost.\n\
 If a FILE is shorter, it is extended and the extended part (hole)\n\
 reads as zero bytes.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -c, --no-create        do not create any files\n\
 "), stdout);

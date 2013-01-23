@@ -398,11 +398,10 @@ Usage: %s [OPTION]... [FILE]...\n\
               program_name, program_name);
       fputs (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
 Ordering options:\n\
 \n\

@@ -1175,11 +1175,10 @@ usage (int status)
       fputs (_("\
 Show information about the file system on which each FILE resides,\n\
 or all file systems by default.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -a, --all             include dummy file systems\n\
   -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\

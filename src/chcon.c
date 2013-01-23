@@ -357,8 +357,10 @@ Usage: %s [OPTION]... CONTEXT FILE...\n\
       fputs (_("\
 Change the security context of each FILE to CONTEXT.\n\
 With --reference, change the security context of each FILE to that of RFILE.\n\
-\n\
 "), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
       --dereference      affect the referent of each symbolic link (this is\n\
                          the default), rather than the symbolic link itself\n\

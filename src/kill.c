@@ -81,11 +81,10 @@ Usage: %s [-s SIGNAL | -SIGNAL] PID...\n\
               program_name, program_name, program_name);
       fputs (_("\
 Send signals to processes, or list signals.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -s, --signal=SIGNAL, -SIGNAL\n\
                    specify the name or number of the signal to be sent\n\

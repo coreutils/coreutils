@@ -1455,11 +1455,10 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
       fputs (_("\
 Output pieces of FILE separated by PATTERN(s) to files 'xx00', 'xx01', ...,\n\
 and output byte counts of each piece to standard output.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -b, --suffix-format=FORMAT  use sprintf FORMAT instead of %02d\n\
   -f, --prefix=PREFIX        use PREFIX instead of 'xx'\n\

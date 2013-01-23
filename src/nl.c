@@ -179,11 +179,10 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
   -d, --section-delimiter=CC      use CC for separating logical pages\n\

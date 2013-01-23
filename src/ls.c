@@ -4721,11 +4721,10 @@ usage (int status)
       fputs (_("\
 List information about the FILEs (the current directory by default).\n\
 Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -a, --all                  do not ignore entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\

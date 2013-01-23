@@ -1820,11 +1820,10 @@ Usage: %s [OPTION]... [INPUT]...   (without -G)\n\
               program_name, program_name);
       fputs (_("\
 Output a permuted index, including context, of the words in the input files.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -A, --auto-reference           output automatically generated references\n\
   -G, --traditional              behave more like System V 'ptx'\n\

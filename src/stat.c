@@ -1349,7 +1349,11 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
 Display file or file system status.\n\
-\n\
+"), stdout);
+
+      emit_mandatory_arg_note ();
+
+      fputs (_("\
   -L, --dereference     follow links\n\
   -f, --file-system     display file system status instead of file status\n\
 "), stdout);

@@ -107,11 +107,10 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Convert tabs in each FILE to spaces, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -i, --initial       do not convert tabs after non blanks\n\
   -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n\

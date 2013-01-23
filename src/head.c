@@ -110,11 +110,10 @@ Usage: %s [OPTION]... [FILE]...\n\
 Print the first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -c, --bytes=[-]K         print the first K bytes of each file;\n\
                              with the leading '-', print all but the last\n\

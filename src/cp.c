@@ -161,11 +161,10 @@ Usage: %s [OPTION]... [-T] SOURCE DEST\n\
               program_name, program_name, program_name);
       fputs (_("\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -a, --archive                same as -dR --preserve=all\n\
       --attributes-only        don't copy the file data, just the attributes\n\

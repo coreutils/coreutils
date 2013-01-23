@@ -311,11 +311,10 @@ An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\
 at first byte printed, incremented when dump is progressing.\n\
 For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal;\n\
 suffixes may be . for octal and b for multiply by 512.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -A, --address-radix=RADIX   output format for file offsets.  RADIX is one\n\
                                 of [doxn], for Decimal, Octal, Hex or None\n\

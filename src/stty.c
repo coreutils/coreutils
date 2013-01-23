@@ -515,7 +515,11 @@ Usage: %s [-F DEVICE | --file=DEVICE] [SETTING]...\n\
               program_name, program_name, program_name);
       fputs (_("\
 Print or change terminal characteristics.\n\
-\n\
+"), stdout);
+
+      emit_mandatory_arg_note ();
+
+      fputs (_("\
   -a, --all          print all current settings in human-readable form\n\
   -g, --save         print all current settings in a stty-readable form\n\
   -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n\

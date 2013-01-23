@@ -53,8 +53,9 @@ Usage: %s NAME [SUFFIX]\n\
       fputs (_("\
 Print NAME with any leading directory components removed.\n\
 If specified, also remove a trailing SUFFIX.\n\
-\n\
 "), stdout);
+
+      emit_mandatory_arg_note ();
 
       fputs (_("\
   -a, --multiple       support multiple arguments and treat each as a NAME\n\

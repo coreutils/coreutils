@@ -148,11 +148,10 @@ usage (int status)
       fputs (_("\
 Overwrite the specified FILE(s) repeatedly, in order to make it harder\n\
 for even very expensive hardware probing to recover the data.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       printf (_("\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  overwrite N times instead of the default (%d)\n\

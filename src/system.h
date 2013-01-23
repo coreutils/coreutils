@@ -539,6 +539,14 @@ is_nul (const char *buf, size_t bufsize)
   )
 
 static inline void
+emit_mandatory_arg_note (void)
+{
+  fputs (_("\n\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+}
+
+static inline void
 emit_size_note (void)
 {
   fputs (_("\n\

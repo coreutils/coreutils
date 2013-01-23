@@ -72,7 +72,11 @@ Usage: %s [OPTION]... LAST\n\
 "), program_name, program_name, program_name);
       fputs (_("\
 Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
-\n\
+"), stdout);
+
+      emit_mandatory_arg_note ();
+
+      fputs (_("\
   -f, --format=FORMAT      use printf style floating-point FORMAT\n\
   -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\

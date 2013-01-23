@@ -140,11 +140,10 @@ Filter adjacent matching lines from INPUT (or standard input),\n\
 writing to OUTPUT (or standard output).\n\
 \n\
 With no options, matching lines are merged to the first occurrence.\n\
-\n\
 "), stdout);
-     fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
      fputs (_("\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\

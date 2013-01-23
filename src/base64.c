@@ -60,7 +60,10 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... [FILE]\n\
 Base64 encode or decode FILE, or standard input, to standard output.\n\
-\n"), program_name);
+"), program_name);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -d, --decode          decode data\n\
   -i, --ignore-garbage  when decoding, ignore non-alphabet characters\n\

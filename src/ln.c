@@ -387,11 +387,10 @@ By default, each destination (name of new link) should not already exist.\n\
 When creating hard links, each TARGET must exist.  Symbolic links\n\
 can hold arbitrary text; if later resolved, a relative link is\n\
 interpreted in relation to its parent directory.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
       --backup[=CONTROL]      make a backup of each existing destination file\n\
   -b                          like --backup but does not accept an argument\n\

@@ -209,11 +209,10 @@ Usage: %s [OPTION]... [INPUT [PREFIX]]\n\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 size is 1000 lines, and default PREFIX is 'x'.  With no INPUT, or when INPUT\n\
 is -, read standard input.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fprintf (stdout, _("\
   -a, --suffix-length=N   generate suffixes of length N (default %d)\n\
       --additional-suffix=SUFFIX  append an additional SUFFIX to file names.\n\

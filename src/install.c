@@ -608,11 +608,10 @@ like yum(1) or apt-get(1).\n\
 In the first three forms, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
 In the 4th form, create all components of the given DIRECTORY(ies).\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
       --backup[=CONTROL]  make a backup of each existing destination file\n\
   -b                  like --backup but does not accept an argument\n\

@@ -127,7 +127,11 @@ Usage: %s [OPTION]... [+FORMAT]\n\
               program_name, program_name);
       fputs (_("\
 Display the current time in the given FORMAT, or set the system date.\n\
-\n\
+"), stdout);
+
+      emit_mandatory_arg_note ();
+
+      fputs (_("\
   -d, --date=STRING         display time described by STRING, not 'now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
   -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\

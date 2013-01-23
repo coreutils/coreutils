@@ -90,11 +90,10 @@ usage (int status)
       printf (_("Usage: %s OPTION... COMMAND\n"), program_name);
       fputs (_("\
 Run COMMAND, with modified buffering operations for its standard streams.\n\
-\n\
 "), stdout);
-      fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
+
+      emit_mandatory_arg_note ();
+
       fputs (_("\
   -i, --input=MODE   adjust standard input stream buffering\n\
   -o, --output=MODE  adjust standard output stream buffering\n\
