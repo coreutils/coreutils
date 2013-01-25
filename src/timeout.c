@@ -102,6 +102,16 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+static void
+unblock_signal (int sig)
+{
+  sigset_t unblock_set;
+  sigemptyset (&unblock_set);
+  sigaddset (&unblock_set, sig);
+  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
+    error (0, errno, _("warning: sigprocmask"));
+}
+
 /* Start the timeout after which we'll receive a SIGALRM.
    Round DURATION up to the next representable value.
    Treat out-of-range values as if they were maximal,
@@ -110,6 +120,11 @@ static struct option const long_options[] =
 static void
 settimeout (double duration)
 {
+
+  /* We configure timers below so that SIGALRM is sent on expiry.
+     Therefore ensure we don't inherit a mask blocking SIGALRM.  */
+  unblock_signal (SIGALRM);
+
 /* timer_settime() provides potentially nanosecond resolution.
    setitimer() is more portable (to Darwin for example),
    but only provides microsecond resolution and thus is

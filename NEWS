@@ -60,6 +60,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Also seq no longer ignores a specified step value when the end value is 1.
   [bugs introduced in coreutils-8.20]
 
+  timeout now ensures that blocking of ALRM signals is not inherited from
+  its parent, which would cause timeouts to be ignored.
+  [the bug dates back to the initial implementation]
+
 ** Changes in behavior
 
   df --total now prints '-' into the target column (mount point) of the

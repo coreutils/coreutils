@@ -369,6 +369,7 @@ all_tests =					\
   tests/misc/tee-dash.sh			\
   tests/misc/test-diag.pl			\
   tests/misc/timeout.sh				\
+  tests/misc/timeout-blocked.pl			\
   tests/misc/timeout-group.sh			\
   tests/misc/timeout-parameters.sh		\
   tests/misc/tr.pl				\
