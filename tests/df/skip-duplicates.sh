@@ -39,10 +39,15 @@ struct mntent *getmntent (FILE *fp)
 
   static struct mntent mntent;
 
-  while (done++ < 3)
+  while (done++ < 4)
     {
-      mntent.mnt_fsname = "fsname";
-      mntent.mnt_dir = "/";
+      /* File system - Mounted on
+         fsname       /
+         /fsname      /root
+         /fsname      /
+      */
+      mntent.mnt_fsname = (done == 2) ? "fsname" : "/fsname";
+      mntent.mnt_dir = (done == 3) ? "/root" : "/";
       mntent.mnt_type = "-";
 
       return &mntent;
@@ -65,11 +70,16 @@ test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 LD_PRELOAD=./k.so df >out || fail=1
 test $(wc -l <out) -eq 2 || { fail=1; cat out; }
 
+# df should also prefer "/fsname" over "fsname"
+test $(grep -c '/fsname' <out) -eq 1 || { fail=1; cat out; }
+# ... and "/fsname" with '/' as Mounted on over '/root'
+test $(grep -c '/root' <out) -eq 0 || { fail=1; cat out; }
+
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1
-test $(wc -l <out) -eq 3 || { fail=1; cat out; }
+test $(wc -l <out) -eq 4 || { fail=1; cat out; }
 
-# Ensure that filtering duplcates does not affect
+# Ensure that filtering duplicates does not affect
 # argument processing (now without the fake getmntent()).
 df '.' '.' >out || fail=1
 test $(wc -l <out) -eq 3 || { fail=1; cat out; }

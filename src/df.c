@@ -48,11 +48,9 @@
 struct devlist
 {
   dev_t dev_num;
+  struct mount_entry *me;
   struct devlist *next;
 };
-
-/* Store of already-processed device numbers.  */
-static struct devlist *devlist_head;
 
 /* If true, show even file systems with zero size or
    uninteresting types.  */
@@ -606,27 +604,87 @@ excluded_fstype (const char *fstype)
   return false;
 }
 
-/* Check if the device was already examined.  */
+/* Filter mount list by skipping duplicate entries.
+   In the case of duplicities - based on to the device number - the mount entry
+   with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
+   If both have a real devname (e.g. bind mounts), then that with the shorter
+   me_mountdir wins.
+   Finally, do not filter out a rootfs entry if -trootfs is specified.  */
 
-static bool
-dev_examined (char const *mount_dir, char const *devname)
+static void
+filter_mount_list (void)
 {
-  struct stat buf;
-  if (-1 == stat (mount_dir, &buf))
-    return false;
+  struct mount_entry *me;
 
-  struct devlist *devlist = devlist_head;
-  for ( ; devlist; devlist = devlist->next)
-    if (devlist->dev_num == buf.st_dev)
-      return true;
+  /* Store of already-processed device numbers.  */
+  struct devlist *devlist_head = NULL;
 
-  /* Add the device number to the global list devlist.  */
-  devlist = xmalloc (sizeof *devlist);
-  devlist->dev_num = buf.st_dev;
-  devlist->next = devlist_head;
-  devlist_head = devlist;
+  /* Sort all 'wanted' entries into the list devlist_head.  */
+  for (me = mount_list; me; me = me->me_next)
+    {
+      struct stat buf;
+      struct devlist *devlist;
 
-  return false;
+      if (-1 == stat (me->me_mountdir, &buf))
+        {
+          ;  /* Stat failed - add ME to be able to complain about it later.  */
+        }
+      else
+      if (show_rootfs
+          && (   STREQ (me->me_mountdir, "/")
+              || STREQ (me->me_type, ROOTFS)))
+        {
+          /* Df should show rootfs (due to -trootfs).
+             Add this ME both if it is the rootfs entry itself or "/"
+             (as that must not replace the rootfs entry in the devlist).  */
+          ;
+        }
+      else
+        {
+          /* If the device name is a real path name ...  */
+          if (strchr (me->me_devname, '/'))
+            {
+              /* ... try to find its device number in the devlist.  */
+              for (devlist = devlist_head; devlist; devlist = devlist->next)
+                if (devlist->dev_num == buf.st_dev)
+                  break;
+
+              if (devlist)
+                {
+                  /* Let the shorter mountdir win.  */
+                  if (   !strchr (devlist->me->me_devname, '/')
+                      || ( strlen (devlist->me->me_mountdir)
+                         > strlen (me->me_mountdir)))
+                    {
+                       /* FIXME: free ME - the others are also not free()d.  */
+                      devlist->me = me;
+                    }
+                  continue; /* ... with the loop over the mount_list.  */
+                }
+            }
+        }
+
+      /* Add the device number to the global list devlist.  */
+      devlist = xmalloc (sizeof *devlist);
+      devlist->me = me;
+      devlist->dev_num = buf.st_dev;
+      devlist->next = devlist_head;
+      devlist_head = devlist;
+    }
+
+  /* Finally rebuild the mount_list from the devlist.  */
+  mount_list = NULL;
+  while (devlist_head)
+    {
+      /* Add the mount entry.  */
+      me = devlist_head->me;
+      me->me_next = mount_list;
+      mount_list = me;
+      /* Free devlist entry and advance.  */
+      struct devlist *devlist = devlist_head->next;
+      free (devlist_head);
+      devlist_head = devlist;
+    }
 }
 
 /* Return true if N is a known integer value.  On many file systems,
@@ -797,15 +855,6 @@ get_dev (char const *disk, char const *mount_point,
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
-
-  if (process_all && !show_all_fs && !show_listed_fs)
-    {
-      /* No arguments nor "df -a", then check if df has to ...  */
-      if (!show_rootfs && STREQ (disk, ROOTFS))
-        return; /* ... skip rootfs: (unless -trootfs is given.  */
-      if (dev_examined (mount_point, disk))
-        return; /* ... skip duplicate entries (bind mounts).  */
-    }
 
   /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
      program reports on the file system that the special file is on.
@@ -1132,6 +1181,9 @@ static void
 get_all_entries (void)
 {
   struct mount_entry *me;
+
+  if (!show_all_fs)
+    filter_mount_list ();
 
   for (me = mount_list; me; me = me->me_next)
     get_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
@@ -1506,14 +1558,6 @@ main (int argc, char **argv)
     }
 
   IF_LINT (free (columns));
-  IF_LINT (
-    while (devlist_head)
-      {
-        struct devlist *devlist = devlist_head->next;
-        free (devlist_head);
-        devlist_head = devlist;
-      }
-    );
 
   exit (exit_status);
 }
