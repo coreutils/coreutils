@@ -10588,13 +10588,14 @@ Normally the disk space is printed in units of
 Non-integer quantities are rounded up to the next higher unit.
 
 For bind mounts and without arguments, @command{df} only outputs the statistics
-for the first occurrence of that device in the list of file systems
+for that device with the shortest mount point name in the list of file systems
 (@var{mtab}), i.e., it hides duplicate entries, unless the @option{-a} option is
 specified.
 
-By default, @command{df} omits the early-boot pseudo file system type
-@samp{rootfs}, unless the @option{-a} option is specified or that file system
-type is explicitly to be included by using the @option{-t} option.
+With the same logic, @command{df} elides a mount entry of a dummy pseude device
+if there is another mount entry of a real block device for that mount point with
+the same device number, e.g. the early-boot pseudo file system @samp{rootfs} is
+not shown per default when already the real root device has been mounted.
 
 @cindex disk device file
 @cindex device file, disk

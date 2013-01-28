@@ -73,9 +73,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   df now properly outputs file system information with bind mounts present on
   the system by skipping duplicate entries (identified by the device number).
-
-  df now elides any entry with the early-boot pseudo file system type
-  "rootfs" unless either the -a option or "-t rootfs" is specified.
+  Consequently, df also elides the early-boot pseudo file system type "rootfs".
 
   nl no longer supports the --page-increment option, which has been
   deprecated since coreutils-7.5.  Use --line-increment instead.

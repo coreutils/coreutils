@@ -63,12 +63,6 @@ static bool show_local_fs;
    command line argument -- even if it's a dummy (automounter) entry.  */
 static bool show_listed_fs;
 
-/* If true, include rootfs in the output.  */
-static bool show_rootfs;
-
-/* The literal name of the initial root file system.  */
-static char const *ROOTFS = "rootfs";
-
 /* Human-readable options for output.  */
 static int human_output_opts;
 
@@ -608,8 +602,7 @@ excluded_fstype (const char *fstype)
    In the case of duplicities - based on to the device number - the mount entry
    with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
-   me_mountdir wins.
-   Finally, do not filter out a rootfs entry if -trootfs is specified.  */
+   me_mountdir wins.  */
 
 static void
 filter_mount_list (void)
@@ -628,16 +621,6 @@ filter_mount_list (void)
       if (-1 == stat (me->me_mountdir, &buf))
         {
           ;  /* Stat failed - add ME to be able to complain about it later.  */
-        }
-      else
-      if (show_rootfs
-          && (   STREQ (me->me_mountdir, "/")
-              || STREQ (me->me_type, ROOTFS)))
-        {
-          /* Df should show rootfs (due to -trootfs).
-             Add this ME both if it is the rootfs entry itself or "/"
-             (as that must not replace the rootfs entry in the devlist).  */
-          ;
         }
       else
         {
@@ -1383,7 +1366,6 @@ main (int argc, char **argv)
           /* Accept -F as a synonym for -t for compatibility with Solaris.  */
         case 't':
           add_fs_type (optarg);
-          show_rootfs = selected_fstype (ROOTFS);
           break;
 
         case 'v':		/* For SysV compatibility.  */

@@ -29,12 +29,14 @@ grep '^rootfs' out || skip_ "no rootfs in mtab"
 df >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
 
-# Ensure that the rootfs is shown when explicitly specifying "-t rootfs".
-df -t rootfs >out || fail=1
-grep '^rootfs' out || { fail=1; cat out; }
+# Ensure that rootfs is yet skipped when explicitly specifying "-t rootfs".
+# As df emits "no file systems processed" in this case, it would be a failure
+# if df exited with status Zero.
+df -t rootfs >out && fail=1
+grep '^rootfs' out && { fail=1; cat out; }
 
-# Ensure that the rootfs is shown when explicitly specifying "-t rootfs",
-# even when the -a option is specified.
+# Ensure that the rootfs is shown when explicitly both specifying "-t rootfs"
+# and the -a option.
 df -t rootfs -a >out || fail=1
 grep '^rootfs' out || { fail=1; cat out; }
 
