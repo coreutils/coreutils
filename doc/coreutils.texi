@@ -1613,10 +1613,7 @@ precedes in the file.
 @itemx --regex
 @opindex -r
 @opindex --regex
-Treat the separator string as a regular expression.  Users of @command{tac}
-on MS-DOS/MS-Windows should note that, since @command{tac} reads files in
-binary mode, each line of a text file might end with a CR/LF pair
-instead of the Unix-style LF.
+Treat the separator string as a regular expression.
 
 @item -s @var{separator}
 @itemx --separator=@var{separator}
@@ -1626,7 +1623,17 @@ Use @var{separator} as the record separator, instead of newline.
 
 @end table
 
+On systems like MS-DOS that distinguish between text and binary files,
+@command{tac} reads and writes in binary mode.
+
 @exitstatus
+
+Example:
+
+@example
+# Reverse a file character by character.
+tac -r -s 'x\|[^x]'
+@end example
 
 
 @node nl invocation
