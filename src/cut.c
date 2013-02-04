@@ -530,7 +530,9 @@ set_fields (const char *fieldstr)
   if (output_delimiter_specified
       && !complement
       && eol_range_start
-      && max_range_endpoint && !is_printable_field (eol_range_start))
+      && max_range_endpoint
+      && (max_range_endpoint < eol_range_start
+          || !is_printable_field (eol_range_start)))
     mark_range_start (eol_range_start);
 
   free (rp);

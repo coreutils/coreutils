@@ -193,6 +193,9 @@ my @Tests =
   ['inval6', '-f', '-1,-', {IN=>''}, {OUT=>''}, {EXIT=>1}, {ERR=>$no_endpoint}],
   # This would evoke a segfault from 5.3.0..8.10
   ['big-unbounded-b', '--output-d=:', '-b1234567890-', {IN=>''}, {OUT=>''}],
+  ['big-unbounded-b2a', '--output-d=:', '-b1,9-',      {IN=>'123456789'},
+    {OUT=>"1:9\n"}],
+  ['big-unbounded-b2b', '--output-d=:', '-b1,1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-c', '--output-d=:', '-c1234567890-', {IN=>''}, {OUT=>''}],
   ['big-unbounded-f', '--output-d=:', '-f1234567890-', {IN=>''}, {OUT=>''}],
 
