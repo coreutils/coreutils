@@ -90,6 +90,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat and tail now know about CEPH.  stat -f --format=%T now reports the file
   system type, and tail -f uses polling for files on CEPH file systems.
 
+  stty now supports configuring DTR/DSR hardware flow control where available.
 
 ** Build-related
 

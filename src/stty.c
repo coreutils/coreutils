@@ -217,6 +217,9 @@ static struct mode_info const mode_info[] =
 #ifdef CRTSCTS
   {"crtscts", control, REV, CRTSCTS, 0},
 #endif
+#ifdef CDTRDSR
+  {"cdtrdsr", control, REV, CDTRDSR, 0},
+#endif
 
   {"ignbrk", input, SANE_UNSET | REV, IGNBRK, 0},
   {"brkint", input, SANE_SET | REV, BRKINT, 0},
@@ -581,6 +584,7 @@ Control settings:\n\
    [-]clocal     disable modem control signals\n\
    [-]cread      allow input to be received\n\
  * [-]crtscts    enable RTS/CTS handshaking\n\
+ * [-]cdtrdsr    enable DTR/DSR handshaking\n\
    csN           set character size to N bits, N in [5..8]\n\
 "), stdout);
       fputs (_("\

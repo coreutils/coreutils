@@ -13635,6 +13635,13 @@ Disable modem control signals.  May be negated.
 @cindex flow control, hardware
 @cindex RTS/CTS flow control
 Enable RTS/CTS flow control.  Non-POSIX@.  May be negated.
+
+@item cdtrdsr
+@opindex cdtrdsr
+@cindex hardware flow control
+@cindex flow control, hardware
+@cindex DTR/DSR flow control
+Enable DTR/DSR flow control. Non-POSIX@.  May be negated.
 @end table
 
 

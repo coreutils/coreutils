@@ -52,7 +52,7 @@ for opt in $options; do
   # other serial control settings give the same error. So skip them.
   # Also on ppc*|sparc* glibc platforms 'icanon' gives the same error.
   # See: http://debbugs.gnu.org/7228#14
-  case $opt in parenb|parodd|cstopb|crtscts|icanon) continue;; esac
+  case $opt in parenb|parodd|cstopb|crtscts|cdtrdsr|icanon) continue;; esac
 
   stty $opt || fail=1
 
