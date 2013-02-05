@@ -856,19 +856,19 @@ UNIT options:\n\
   auto       Accept optional single-letter/two-letter suffix:\n\
              1K  = 1000\n\
              1Ki = 1024\n\
-             1G  = 1000000\n\
-             1Gi = 1048576\n\
+             1M  = 1000000\n\
+             1Mi = 1048576\n\
   si         Accept optional single letter suffix:\n\
              1K = 1000\n\
-             1G  = 1000000\n\
+             1M = 1000000\n\
              ...\n\
   iec        Accept optional single letter suffix:\n\
              1K = 1024\n\
-             1G = 1048576\n\
+             1M = 1048576\n\
              ...\n\
   iec-i      Accept optional two-letter suffix:\n\
              1Ki = 1024\n\
-             1Gi = 1048576\n\
+             1Mi = 1048576\n\
              ...\n\
 \n\
 "), stdout);
