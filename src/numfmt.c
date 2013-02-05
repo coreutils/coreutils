@@ -1014,7 +1014,7 @@ parse_format_string (char const *fmt)
 
   if (dev_debug)
     error (0, 0, _("format String:\n  input: %s\n  grouping: %s\n"
-                   "  padding width: %zu\n  alignment: %s\n"
+                   "  padding width: %ld\n  alignment: %s\n"
                    "  prefix: '%s'\n  suffix: '%s'\n"),
            quote (fmt), (grouping) ? "yes" : "no",
            padding_width,
