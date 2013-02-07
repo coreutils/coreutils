@@ -38,7 +38,7 @@ chmod 0 D
 ln -s D/D symlink
 touch F
 cat > exp <<\EOF
-cp: accessing 'symlink': Permission denied
+cp: failed to access 'symlink': Permission denied
 EOF
 
 cp F symlink 2> out && fail=1

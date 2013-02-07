@@ -53,7 +53,7 @@ esac
 ln -s /no-such-dir || framework_failure_
 ln -L no-such-dir hard-to-dangle 2>err && fail=1
 case $(cat err) in
-  *" accessing 'no-such-dir'":*) ;;
+  *" failed to access 'no-such-dir'":*) ;;
   *) fail=1 ;;
 esac
 ln -P no-such-dir hard-to-dangle || fail=1
