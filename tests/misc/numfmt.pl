@@ -883,7 +883,21 @@ my @Locale_Tests =
              {ENV=>"LC_ALL=$locale"}],
 
   );
-push @Tests, @Locale_Tests if $locale ne "C";
+if ($locale ne 'C')
+  {
+    # Reset locale to 'C' if LOCALE_FR_UTF8 doesn't output as expected
+    # as determined by the separate printf program.
+    open(LOC_NUM, "LC_ALL=$locale printf \"%'d\" 1234|")
+      or die "Can't fork command: $!";
+    my $loc_num = <LOC_NUM>;
+    close(LOC_NUM) || die "Failed to read grouped number from printf";
+    if ($loc_num ne '1 234')
+      {
+        warn "skipping locale grouping tests as 1234 groups like $loc_num\n";
+        $locale = 'C';
+      }
+  }
+push @Tests, @Locale_Tests if $locale ne 'C';
 
 ## Check all valid/invalid suffixes
 foreach my $suf ( 'A' .. 'Z', 'a' .. 'z' ) {
