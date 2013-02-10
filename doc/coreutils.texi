@@ -2242,7 +2242,7 @@ leaving the code unchanged.
 @pindex numfmt
 
 @command{numfmt} reads numbers in various representations and reformats them
-as requested. The most common usage is converting numbers to/from @emph{human}
+as requested.  The most common usage is converting numbers to/from @emph{human}
 representation (e.g. @samp{4G} @expansion{} @samp{4,000,000,000}).
 
 @example
@@ -2250,8 +2250,8 @@ numfmt [@var{option}]@dots{} [@var{number}]
 @end example
 
 @command{numfmt} converts each @var{number} on the command-line according to the
-specified options (see below). If no @var{number}s are given, it reads numbers
-from standard input. @command{numfmt} can optionally extract numbers from
+specified options (see below).  If no @var{number}s are given, it reads numbers
+from standard input.  @command{numfmt} can optionally extract numbers from
 specific columns, maintaining proper line padding and alignment.
 
 @exitstatus
@@ -2264,28 +2264,67 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
+@item --debug
+@opindex --debug
+Print (to standard error) warning messages about possible erroneous usage.
+
+@item -d @var{d}
+@itemx --delimiter=@var{d}
+@opindex -d
+@opindex --delimiter
+Use the character @var{d} as input field separator (default: whitespace).
+@emph{Note}: Using non-default delimiter turns off automatic padding.
+
+@item --field=@var{n}
+@opindex --field
+Convert the number in input field @var{n} (default: 1).
+
+@item --format=@var{format}
+@opindex --format
+Use printf-style floating FORMAT string.  The @var{format} string must contain
+one @samp{%f} directive, optionally with @samp{'}, @samp{-}, or width
+modifiers.  The @samp{'} modifier will enable @option{--grouping}, the @samp{-}
+modifier will enable left-aligned @option{--padding} and the width modifier will
+enable right-aligned @option{--padding}.
+
 @item --from=@var{unit}
 @opindex --from
-Auto-scales input numbers according to @var{unit}. See @emph{Units} below.
+Auto-scales input numbers according to @var{unit}.  See UNITS below.
 The default is no scaling, meaning suffixes (e.g. @samp{M}, @samp{G}) will
 trigger an error.
 
 @item --from-unit=@var{n}
 @opindex --from-unit
-Specify the input unit size (instead of the default 1). Use this option when the
-input numbers represent other units (e.g. if the input number @samp{10}
+Specify the input unit size (instead of the default 1).  Use this option when
+the input numbers represent other units (e.g. if the input number @samp{10}
 represents 10 units of 512 bytes, use @samp{--from=unit=512}).
 
-@item --to=@var{unit}
-@opindex --to
-Auto-scales output numbers according to @var{unit}. See @emph{Units} below.
-The default is no scaling, meaning all the digits of the number are printed.
+@item --grouping
+@opindex --grouping
+Group digits in output numbers according to the current locale's grouping rules
+(e.g @emph{Thousands Separator} character, commonly @samp{.} (dot) or @samp{,}
+comma).  This option has no effect in @samp{POSIX/C} locale.
 
-@item --to-unit=@var{n}
-@opindex --to-unit
-Specify the output unit size (instead of the default 1). Use this option when
-the output numbers represent other units (e.g. to represent @samp{4,000,000}
-bytes in blocks of 1KB, use @samp{--to=si --to=units=1000}).
+@item --header[=@var{n}]
+@opindex --header
+@opindex --header=N
+Print the first @var{n} (default: 1) lines without any conversion.
+
+@item --invalid=@var{mode}
+@opindex --invalid
+The default action on input errors is to exit immediately with status code 2.
+@option{--invalid=@samp{abort}} explicitly specifies this default mode.
+With a @var{mode} of @samp{fail}, print a warning for @emph{each} conversion
+error, and exit with status 2.  With a @var{mode} of @samp{warn}, exit with
+status 0, even in the presence of conversion errors, and with a @var{mode} of
+@samp{ignore} do not even print diagnostics.
+
+@item --padding=@var{n}
+@opindex --padding
+Pad the output numbers to @var{n} characters, by adding spaces.  If @var{n} is
+a positive number, numbers will be right-aligned.  If @var{n} is a negative
+number, numbers will be left-aligned.  By default, numbers are automatically
+aligned based on the input line's width (only with the default delimiter).
 
 @item --round=@var{method}
 @opindex --round
@@ -2303,55 +2342,16 @@ When converting number representations, round the number according to
 Add @samp{SUFFIX} to the output numbers, and accept optional @samp{SUFFIX} in
 input numbers.
 
-@item --padding=@var{n}
-@opindex --padding
-Pad the output numbers to @var{n} characters, by adding spaces. If @var{n} is
-a positive number, numbers will be right-aligned. If @var{n} is a negative
-number, numbers will be left-aligned. By default, numbers are automatically
-aligned based on the input line's width (only with the default delimiter).
+@item --to=@var{unit}
+@opindex --to
+Auto-scales output numbers according to @var{unit}.  See @emph{Units} below.
+The default is no scaling, meaning all the digits of the number are printed.
 
-@item --grouping
-@opindex --grouping
-Group digits in output numbers according to the current locale's grouping rules
-(e.g @emph{Thousands Separator} character, commonly @samp{.} (dot) or @samp{,}
-comma). This option has no effect in @samp{POSIX/C} locale.
-
-@item --header[=@var{n}]
-@opindex --header
-@opindex --header=N
-Print the first @var{n} (default: 1) lines without any conversion.
-
-@item --field=@var{n}
-@opindex --field
-Convert the number in input field @var{n} (default: 1).
-
-@item --format=@var{format}
-@opindex --format
-Use printf-style floating FORMAT string. The @var{format} string must contain
-one @samp{%f} directive, optionally with @samp{'}, @samp{-}, or width
-modifiers. @samp{'} modified will enable @option{--grouping}. @samp{-} modifier
-will enable left-aligned @option{--padding}. Width modifier will enable
-right-aligned @option{--padding}.
-
-@item --invalid=@var{mode}
-@opindex --invalid
-The default action on input errors is to exit immediately with status code 2.
-@option{--invalid=@samp{abort}} explicitly specifies this default mode.
-With a @var{mode} of @samp{fail}, print a warning for @emph{each} conversion
-error, and exit with status 2.  With a @var{mode} of @samp{warn}, exit with
-status 0, even in the presence of conversion errors, and with a @var{mode} of
-@samp{ignore} do not even print diagnostics.
-
-@item -d @var{d}
-@itemx --delimiter=@var{d}
-@opindex -d
-@opindex --delimiter
-Use the character @var{d} as input field separator (default: whitespace).
-@emph{Note}: Using non-default delimiter turns off automatic padding.
-
-@item --debug
-@opindex --debug
-Print (to standard error) warning messages about possible erroneous usage.
+@item --to-unit=@var{n}
+@opindex --to-unit
+Specify the output unit size (instead of the default 1).  Use this option when
+the output numbers represent other units (e.g. to represent @samp{4,000,000}
+bytes in blocks of 1KB, use @samp{--to=si --to=units=1000}).
 
 @end table
 
@@ -2363,8 +2363,8 @@ The following are the possible @var{unit} options with @option{--from=UNITS} and
 @table @var
 
 @item none
-No scaling is performed. For input numbers, no suffixes are accepted, and any
-trailing characters following the number will trigger an error. For output
+No scaling is performed.  For input numbers, no suffixes are accepted, and any
+trailing characters following the number will trigger an error.  For output
 numbers, all digits of the numbers will be printed.
 
 @item si
@@ -2405,7 +2405,7 @@ one of the following suffixes:
 
 The @option{iec} option uses a single letter suffix (e.g. @samp{G}), which is
 not fully standard, as the @emph{iec} standard recommends a two-letter symbol
-(e.g @samp{Gi}) - but in practice, this method common. Compare with
+(e.g @samp{Gi}) - but in practice, this method common.  Compare with
 the @option{iec-i} option.
 
 @item iec-i
@@ -2428,10 +2428,10 @@ one of the following suffixes:
 
 The @option{iec-i} option uses a two-letter suffix symbol (e.g. @samp{Gi}),
 as the @emph{iec} standard recommends, but this is not always common in
-practice. Compare with the @option{iec} option.
+practice.  Compare with the @option{iec} option.
 
 @item auto
-@samp{auto} can only be used with @option{--from}. With this method, numbers
+@samp{auto} can only be used with @option{--from}.  With this method, numbers
 with @samp{K},@samp{M},@samp{G},@samp{T},@samp{P},@samp{E},@samp{Z},@samp{Y}
 suffixes are interpreted as @emph{SI} values, and numbers with @samp{Ki},
 @samp{Mi},@samp{Gi},@samp{Ti},@samp{Pi},@samp{Ei},@samp{Zi},@samp{Yi} suffixes
@@ -2530,8 +2530,8 @@ $ du -s * | numfmt --to=si --padding="%-10f"
 @end example
 
 With locales that support grouping digits, using @option{--grouping} or
-@option{--format} enables grouping. In @samp{POSIX} locale, grouping is silently
-ignored:
+@option{--format} enables grouping.  In @samp{POSIX} locale, grouping is
+silently ignored:
 
 @example
 $ LC_ALL=C numfmt --from=iec --grouping 2G

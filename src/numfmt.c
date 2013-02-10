@@ -796,93 +796,114 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTIONS] [NUMBER]\n\
+Usage: %s [OPTION]... [NUMBER]...\n\
 "), program_name);
       fputs (_("\
-Reformat NUMBER(s) from stdin or command arguments.\n\
+Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
 "), stdout);
       emit_mandatory_arg_note ();
       fputs (_("\
-  --from=UNIT     auto-scale input numbers to UNITs. Default is 'none'.\n\
-                  See UNIT below.\n\
-  --from-unit=N   specify the input unit size (instead of the default 1).\n\
-  --to=UNIT       auto-scale output numbers to UNITs.\n\
-                  See UNIT below.\n\
-  --to-unit=N     the output unit size (instead of the default 1).\n\
-  --round=METHOD  the rounding method to use when scaling. METHOD can be:\n\
-                  up, down, from-zero (default), towards-zero, nearest\n\
-  --suffix=SUFFIX add SUFFIX to output numbers, and accept optional SUFFIX\n\
-                  in input numbers.\n\
-  --padding=N     pad the output to N characters.\n\
-                  Positive N will right-aligned. Negative N will left-align.\n\
-                  Note: if the output is wider than N, padding is ignored.\n\
-                  Default is to automatically pad if whitespace is found.\n\
-  --grouping      group digits together (e.g. 1,000,000).\n\
-                  Uses the locale-defined grouping (i.e. have no effect\n\
-                  in C/POSIX locales).\n\
-  --header[=N]    print (without converting) the first N header lines.\n\
-                  N defaults to 1 if not specified.\n\
-  --field N       replace the number in input field N (default is 1)\n\
-  -d, --delimiter=X  use X instead of whitespace for field delimiter\n\
-  --format=FORMAT use printf style floating-point FORMAT.\n\
-                  See FORMAT below for details.\n\
-  --invalid=MODE  failure mode for invalid numbers: MODE can be:\n\
-                  abort (the default), fail, warn, ignore.\n\
-  --debug         print warnings about invalid input.\n\
-  \n\
+      --debug          print warnings about invalid input\n\
 "), stdout);
+      fputs (_("\
+  -d, --delimiter=X    use X instead of whitespace for field delimiter\n\
+"), stdout);
+      fputs (_("\
+      --field=N        replace the number in input field N (default is 1)\n\
+"), stdout);
+      fputs (_("\
+      --format=FORMAT  use printf style floating-point FORMAT;\n\
+                         see FORMAT below for details\n\
+"), stdout);
+      fputs (_("\
+      --from=UNIT      auto-scale input numbers to UNITs; default is 'none';\n\
+                         see UNIT below\n\
+"), stdout);
+      fputs (_("\
+      --from-unit=N    specify the input unit size (instead of the default 1)\n\
+"), stdout);
+      fputs (_("\
+      --grouping       use locale-defined grouping of digits, e.g. 1,000,000\n\
+                         (which means it has no effect in the C/POSIX locale)\n\
+"), stdout);
+      fputs (_("\
+      --header[=N]     print (without converting) the first N header lines;\n\
+                         N defaults to 1 if not specified\n\
+"), stdout);
+      fputs (_("\
+      --invalid=MODE   failure mode for invalid numbers: MODE can be:\n\
+                         abort (default), fail, warn, ignore\n\
+"), stdout);
+      fputs (_("\
+      --padding=N      pad the output to N characters; positive N will\n\
+                         right-align; negative N will left-align;\n\
+                         padding is ignored if the output is wider than N;\n\
+                         the default is to automatically pad if a whitespace\n\
+                         is found\n\
+"), stdout);
+      fputs (_("\
+      --round=METHOD   use METHOD for rounding when scaling; METHOD can be:\n\
+                         up, down, from-zero (default), towards-zero, nearest\n\
+"), stdout);
+      fputs (_("\
+      --suffix=SUFFIX  add SUFFIX to output numbers, and accept optional\n\
+                         SUFFIX in input numbers\n\
+"), stdout);
+      fputs (_("\
+      --to=UNIT        auto-scale output numbers to UNITs; see UNIT below\n\
+"), stdout);
+      fputs (_("\
+      --to-unit=N      the output unit size (instead of the default 1)\n\
+"), stdout);
+
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
-
       fputs (_("\
 \n\
-UNIT options:\n\
-  none       No auto-scaling is done. Suffixes will trigger an error.\n\
-  auto       Accept optional single-letter/two-letter suffix:\n\
-             1K  = 1000\n\
-             1Ki = 1024\n\
-             1M  = 1000000\n\
-             1Mi = 1048576\n\
-  si         Accept optional single letter suffix:\n\
-             1K = 1000\n\
-             1M = 1000000\n\
-             ...\n\
-  iec        Accept optional single letter suffix:\n\
-             1K = 1024\n\
-             1M = 1048576\n\
-             ...\n\
-  iec-i      Accept optional two-letter suffix:\n\
-             1Ki = 1024\n\
-             1Mi = 1048576\n\
-             ...\n\
-\n\
+UNIT options:\n"), stdout);
+      fputs (_("\
+  none       no auto-scaling is done; suffixes will trigger an error\n\
 "), stdout);
-
       fputs (_("\
-\n\
+  auto       accept optional single-letter/two-letter suffix:\n\
+               1K  = 1000\n\
+               1Ki = 1024\n\
+               1M  = 1000000\n\
+               1Mi = 1048576\n"), stdout);
+      fputs (_("\
+  si         accept optional single letter suffix:\n\
+               1K = 1000\n\
+               1M = 1000000\n\
+               ...\n"), stdout);
+      fputs (_("\
+  iec        accept optional single letter suffix:\n\
+               1K = 1024\n\
+               1M = 1048576\n\
+               ...\n"), stdout);
+      fputs (_("\
+  iec-i      accept optional two-letter suffix:\n\
+               1Ki = 1024\n\
+               1Mi = 1048576\n\
+               ...\n"), stdout);
+
+      fputs (_("\n\
 FORMAT must be suitable for printing one floating-point argument '%f'.\n\
 Optional quote (%'f) will enable --grouping (if supported by current locale).\n\
 Optional width value (%10f) will pad output. Optional negative width values\n\
 (%-10f) will left-pad output.\n\
-\n\
 "), stdout);
 
-      printf (_("\
-\n\
+      printf (_("\n\
 Exit status is 0 if all input numbers were successfully converted.\n\
 By default, %s will stop at the first conversion error with exit status 2.\n\
 With --invalid='fail' a warning is printed for each conversion error\n\
 and the exit status is 2.  With --invalid='warn' each conversion error is\n\
 diagnosed, but the exit status is 0.  With --invalid='ignore' conversion\n\
 errors are not diagnosed and the exit status is 0.\n\
-\n\
 "), program_name);
 
-
-
-      printf (_("\
-\n\
+      printf (_("\n\
 Examples:\n\
   $ %s --to=si 1000\n\
             -> \"1.0K\"\n\
@@ -897,8 +918,7 @@ Examples:\n\
   $ df | %s --header --field 2 --to=si\n\
   $ ls -l | %s --header --field 5 --to=iec\n\
   $ ls -lh | %s --header --field 5 --from=iec --padding=10\n\
-  $ ls -lh | %s --header --field 5 --from=iec --format %%10f\n\
-"),
+  $ ls -lh | %s --header --field 5 --from=iec --format %%10f\n"),
               program_name, program_name, program_name,
               program_name, program_name, program_name,
               program_name, program_name, program_name);
