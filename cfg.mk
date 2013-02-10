@@ -521,6 +521,13 @@ sc_THANKS_in_duplicates:
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
 		  1>&2; exit 1; } || :
 
+# Look for developer diagnostics that are marked for translation.
+# This won't find any for which devmsg's format string is on a separate line.
+sc_marked_devdiagnostics:
+	@prohibit='\<devmsg *\(.*_\('                                   \
+	halt='found marked developer diagnostic(s)'                     \
+	  $(_sc_search_regexp)
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org

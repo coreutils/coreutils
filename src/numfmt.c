@@ -136,7 +136,7 @@ static struct option const longopts[] =
   {"delimiter", required_argument, NULL, 'd'},
   {"field", required_argument, NULL, FIELD_OPTION},
   {"debug", no_argument, NULL, DEBUG_OPTION},
-  {"-devdebug", no_argument, NULL, DEV_DEBUG_OPTION},
+  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
   {"header", optional_argument, NULL, HEADER_OPTION},
   {"format", required_argument, NULL, FORMAT_OPTION},
   {"invalid", required_argument, NULL, INVALID_OPTION},
@@ -188,10 +188,10 @@ static uintmax_t header = 0;
 
 /* Debug for users: print warnings to STDERR about possible
    error (similar to sort's debug).  */
-static int debug = 0;
+static bool debug;
 
-/* debugging for developers - to be removed in final version?  */
-static int dev_debug = 0;
+/* debugging for developers.  Enables devmsg().  */
+bool dev_debug = false;
 
 /* will be set according to the current locale.  */
 static const char *decimal_point;
@@ -583,18 +583,16 @@ simple_strtod_human (const char *input_str,
   /* 'scale_auto' is checked below.  */
   int scale_base = default_scale_base (allowed_scaling);
 
-  if (dev_debug)
-    error (0, 0, _("simple_strtod_human:\n  input string: '%s'\n  "
-                   "locale decimal-point: '%s'\n"), input_str, decimal_point);
+  devmsg ("simple_strtod_human:\n  input string: '%s'\n  "
+          "locale decimal-point: '%s'\n", input_str, decimal_point);
 
   enum simple_strtod_error e =
     simple_strtod_float (input_str, endptr, value, precision);
   if (e != SSE_OK && e != SSE_OK_PRECISION_LOSS)
     return e;
 
-  if (dev_debug)
-    error (0, 0, _("  parsed numeric value: %Lf\n"
-                   "  input precision = %d\n"), *value, (int)*precision);
+  devmsg ("  parsed numeric value: %Lf\n"
+          "  input precision = %d\n", *value, (int)*precision);
 
   if (**endptr != '\0')
     {
@@ -619,9 +617,8 @@ simple_strtod_human (const char *input_str,
               is followed by an 'i' (e.g. Ki, Mi, Gi).  */
           scale_base = 1024;
           (*endptr)++;              /* skip second  ('i') suffix character.  */
-          if (dev_debug)
-            error (0, 0, _("  Auto-scaling, found 'i', switching to base %d\n"),
-                    scale_base);
+          devmsg ("  Auto-scaling, found 'i', switching to base %d\n",
+                  scale_base);
         }
 
       *precision = 0;  /* Reset, to select precision based on scale.  */
@@ -637,15 +634,12 @@ simple_strtod_human (const char *input_str,
 
   long double multiplier = powerld (scale_base, power);
 
-  if (dev_debug)
-    error (0, 0, _("  suffix power=%d^%d = %Lf\n"),
-           scale_base, power, multiplier);
+  devmsg ("  suffix power=%d^%d = %Lf\n", scale_base, power, multiplier);
 
   /* TODO: detect loss of precision and overflows.  */
   (*value) = (*value) * multiplier;
 
-  if (dev_debug)
-    error (0, 0, _("  returning value: %Lf (%LG)\n"), *value, *value);
+  devmsg ("  returning value: %Lf (%LG)\n", *value, *value);
 
   return e;
 }
@@ -695,8 +689,7 @@ double_to_human (long double val, int precision,
                  char *buf, size_t buf_size,
                  enum scale_type scale, int group, enum round_type round)
 {
-  if (dev_debug)
-    error (0, 0, _("double_to_human:\n"));
+  devmsg ("double_to_human:\n");
 
   if (scale == scale_none)
     {
@@ -704,11 +697,9 @@ double_to_human (long double val, int precision,
       val = simple_round (val, round);
       val /= powerld (10, precision);
 
-      if (dev_debug)
-        error (0, 0,
-               (group) ?
-               _("  no scaling, returning (grouped) value: %'.*Lf\n") :
-               _("  no scaling, returning value: %.*Lf\n"), precision, val);
+      devmsg ((group) ?
+              "  no scaling, returning (grouped) value: %'.*Lf\n" :
+              "  no scaling, returning value: %.*Lf\n", precision, val);
 
       int i = snprintf (buf, buf_size, (group) ? "%'.*Lf" : "%.*Lf",
                         precision, val);
@@ -724,9 +715,7 @@ double_to_human (long double val, int precision,
   /* Normalize val to scale. */
   unsigned int power = 0;
   val = expld (val, scale_base, &power);
-  if (dev_debug)
-    error (0, 0, _("  scaled value to %Lf * %0.f ^ %d\n"),
-           val, scale_base, power);
+  devmsg ("  scaled value to %Lf * %0.f ^ %d\n", val, scale_base, power);
 
   /* Perform rounding. */
   int ten_or_less = 0;
@@ -754,9 +743,7 @@ double_to_human (long double val, int precision,
   int show_decimal_point = (val != 0) && (absld (val) < 10) && (power > 0);
   /* && (absld (val) > simple_round_floor (val))) */
 
-  if (dev_debug)
-    error (0, 0, _("  after rounding, value=%Lf * %0.f ^ %d\n"),
-           val, scale_base, power);
+  devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
 
   snprintf (buf, buf_size, (show_decimal_point) ? "%.1Lf%s" : "%.0Lf%s",
             val, suffix_power_character (power));
@@ -764,8 +751,7 @@ double_to_human (long double val, int precision,
   if (scale == scale_IEC_I && power > 0)
     strncat (buf, "i", buf_size - strlen (buf) - 1);
 
-  if (dev_debug)
-    error (0, 0, _("  returning value: '%s'\n"), buf);
+  devmsg ("  returning value: '%s'\n", buf);
 
   return;
 }
@@ -1012,14 +998,13 @@ parse_format_string (char const *fmt)
                strlen (fmt + suffix_pos));
     }
 
-  if (dev_debug)
-    error (0, 0, _("format String:\n  input: %s\n  grouping: %s\n"
+  devmsg ("format String:\n  input: %s\n  grouping: %s\n"
                    "  padding width: %ld\n  alignment: %s\n"
-                   "  prefix: '%s'\n  suffix: '%s'\n"),
-           quote (fmt), (grouping) ? "yes" : "no",
-           padding_width,
-           (padding_alignment == MBS_ALIGN_LEFT) ? "Left" : "Right",
-           format_str_prefix, format_str_suffix);
+                   "  prefix: '%s'\n  suffix: '%s'\n",
+          quote (fmt), (grouping) ? "yes" : "no",
+          padding_width,
+          (padding_alignment == MBS_ALIGN_LEFT) ? "Left" : "Right",
+          format_str_prefix, format_str_suffix);
 }
 
 /* Parse a numeric value (with optional suffix) from a string.
@@ -1087,10 +1072,7 @@ prepare_padded_number (const long double val, size_t precision)
   if (suffix)
     strncat (buf, suffix, sizeof (buf) - strlen (buf) -1);
 
-  if (dev_debug)
-    error (0, 0, _("formatting output:\n  value: %Lf\n  humanized: '%s'\n"),
-           val, buf);
-
+  devmsg ("formatting output:\n  value: %Lf\n  humanized: '%s'\n", val, buf);
 
   if (padding_width && strlen (buf) < padding_width)
     {
@@ -1098,9 +1080,7 @@ prepare_padded_number (const long double val, size_t precision)
       mbsalign (buf, padding_buffer, padding_buffer_size, &w,
                 padding_alignment, MBA_UNIBYTE_ONLY);
 
-      if (dev_debug)
-        error (0, 0, _("  After padding: '%s'\n"), padding_buffer);
-
+      devmsg ("  After padding: '%s'\n", padding_buffer);
     }
   else
     {
@@ -1136,14 +1116,10 @@ process_suffixed_number (char *text, long double *result, size_t *precision)
         {
           /* trim suffix, ONLY if it's at the end of the text.  */
           *possible_suffix = '\0';
-          if (dev_debug)
-            error (0, 0, _("trimming suffix '%s'\n"), suffix);
+          devmsg ("trimming suffix '%s'\n", suffix);
         }
       else
-        {
-          if (dev_debug)
-            error (0, 0, _("no valid suffix found\n"));
-        }
+        devmsg ("no valid suffix found\n");
     }
 
   /* Skip white space - always.  */
@@ -1164,9 +1140,7 @@ process_suffixed_number (char *text, long double *result, size_t *precision)
         {
           padding_width = 0;
         }
-      if (dev_debug)
-        error (0, 0, _("setting Auto-Padding to %ld characters\n"),
-               padding_width);
+     devmsg ("setting Auto-Padding to %ld characters\n", padding_width);
     }
 
   long double val = 0;
@@ -1233,9 +1207,7 @@ extract_fields (char *line, int _field,
   *_data = NULL;
   *_suffix = NULL;
 
-  if (dev_debug)
-    error (0, 0, _("extracting Fields:\n  input: '%s'\n  field: %d\n"),
-           line, _field);
+  devmsg ("extracting Fields:\n  input: '%s'\n  field: %d\n", line, _field);
 
   if (field > 1)
     {
@@ -1245,8 +1217,7 @@ extract_fields (char *line, int _field,
       if (*ptr == '\0')
         {
           /* not enough fields in the input - print warning?  */
-          if (dev_debug)
-            error (0, 0, _("  TOO FEW FIELDS!\n  prefix: '%s'\n"), *_prefix);
+          devmsg ("  TOO FEW FIELDS!\n  prefix: '%s'\n", *_prefix);
           return;
         }
 
@@ -1266,9 +1237,8 @@ extract_fields (char *line, int _field,
   else
     *_suffix = NULL;
 
-  if (dev_debug)
-    error (0, 0, _("  prefix: '%s'\n  number: '%s'\n  suffix: '%s'\n"),
-           *_prefix, *_data, *_suffix);
+  devmsg ("  prefix: '%s'\n  number: '%s'\n  suffix: '%s'\n",
+          *_prefix, *_data, *_suffix);
 }
 
 
@@ -1409,12 +1379,12 @@ main (int argc, char **argv)
           break;
 
         case DEBUG_OPTION:
-          debug = 1;
+          debug = true;
           break;
 
         case DEV_DEBUG_OPTION:
-          dev_debug = 1;
-          debug = 1;
+          dev_debug = true;
+          debug = true;
           break;
 
         case HEADER_OPTION:

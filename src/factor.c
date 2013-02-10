@@ -216,12 +216,12 @@ static enum alg_type alg;
 
 enum
 {
-  VERBOSE_OPTION = CHAR_MAX + 1
+  DEV_DEBUG_OPTION = CHAR_MAX + 1
 };
 
 static struct option const long_options[] =
 {
-  {"verbose", no_argument, NULL, VERBOSE_OPTION},
+  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -685,8 +685,9 @@ static const struct primes_dtab primes_dtab[] = {
    the integers used to generate primes.h.  */
 verify (W <= WIDE_UINT_BITS);
 
-/* This flag is honored only in the GMP code. */
-static int verbose = 0;
+/* debugging for developers.  Enables devmsg().
+   This flag is used only in the GMP code.  */
+bool dev_debug = false;
 
 /* Prove primality or run probabilistic tests.  */
 static bool flag_prove_primality = true;
@@ -701,18 +702,6 @@ static bool flag_prove_primality = true;
 # define LIKELY(cond)    (cond)
 # define UNLIKELY(cond)  (cond)
 #endif
-
-static void
-debug (char const *fmt, ...)
-{
-  if (verbose)
-    {
-      va_list ap;
-      va_start (ap, fmt);
-      vfprintf (stderr, fmt, ap);
-      va_end (ap);
-    }
-}
 
 static void
 factor_insert_refind (struct factors *factors, uintmax_t p, unsigned int i,
@@ -844,7 +833,7 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
   mpz_t q;
   unsigned long int p;
 
-  debug ("[trial division] ");
+  devmsg ("[trial division] ");
 
   mpz_init (q);
 
@@ -1665,7 +1654,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
   mpz_t x, z, y, P;
   mpz_t t, t2;
 
-  debug ("[pollard-rho (%lu)] ", a);
+  devmsg ("[pollard-rho (%lu)] ", a);
 
   mpz_inits (t, t2, NULL);
   mpz_init_set_si (y, 2);
@@ -1728,7 +1717,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 
       if (!mp_prime_p (t))
         {
-          debug ("[composite factor--restarting pollard-rho] ");
+          devmsg ("[composite factor--restarting pollard-rho] ");
           mp_factor_using_pollard_rho (t, a + 1, factors);
         }
       else
@@ -2247,7 +2236,7 @@ mp_factor (mpz_t t, struct mp_factors *factors)
 
       if (mpz_cmp_ui (t, 1) != 0)
         {
-          debug ("[is number prime?] ");
+          devmsg ("[is number prime?] ");
           if (mp_prime_p (t))
             mp_factor_insert (factors, t);
           else
@@ -2400,7 +2389,7 @@ print_factors (const char *input)
     case LONGINT_OK:
       if (((t1 << 1) >> 1) == t1)
         {
-          debug ("[%s]", _("using single-precision arithmetic"));
+          devmsg ("[using single-precision arithmetic] ");
           print_factors_single (t1, t0);
           return true;
         }
@@ -2416,7 +2405,7 @@ print_factors (const char *input)
     }
 
 #if HAVE_GMP
-  debug ("[%s]", _("using arbitrary-precision arithmetic"));
+  devmsg ("[using arbitrary-precision arithmetic] ");
   mpz_t t;
   struct mp_factors factors;
 
@@ -2502,8 +2491,8 @@ main (int argc, char **argv)
     {
       switch (c)
         {
-        case VERBOSE_OPTION:
-          verbose = 1;
+        case DEV_DEBUG_OPTION:
+          dev_debug = true;
           break;
 
         case 's':

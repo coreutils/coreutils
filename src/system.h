@@ -649,6 +649,21 @@ stzncpy (char *restrict dest, char const *restrict src, size_t len)
   return dest;
 }
 
+/* Like error(0, 0, ...), but without an implicit newline.
+   Also a noop unless the global DEV_DEBUG is set.  */
+extern bool dev_debug;
+static inline void
+devmsg (char const *fmt, ...)
+{
+  if (dev_debug)
+    {
+      va_list ap;
+      va_start (ap, fmt);
+      vfprintf (stderr, fmt, ap);
+      va_end (ap);
+    }
+}
+
 #ifndef ARRAY_CARDINALITY
 # define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
 #endif
