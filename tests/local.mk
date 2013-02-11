@@ -137,7 +137,7 @@ all_root_tests =				\
 ALL_RECURSIVE_TARGETS += check-root
 .PHONY: check-root
 check-root:
-	$(MAKE) check TESTS='$(root_tests)'
+	$(MAKE) check TESTS='$(root_tests)' SUBDIRS=.
 
 # Do not choose a name that is a shell keyword like 'if', or a
 # commonly-used utility like 'cat' or 'test', as the name of a test.
