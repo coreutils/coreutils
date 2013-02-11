@@ -866,25 +866,25 @@ UNIT options:\n"), stdout);
   none       no auto-scaling is done; suffixes will trigger an error\n\
 "), stdout);
       fputs (_("\
-  auto       accept optional single-letter/two-letter suffix:\n\
-               1K  = 1000\n\
-               1Ki = 1024\n\
-               1M  = 1000000\n\
-               1Mi = 1048576\n"), stdout);
+  auto       accept optional single/two letter suffix:\n\
+               1K = 1000,\n\
+               1Ki = 1024,\n\
+               1M = 1000000,\n\
+               1Mi = 1048576,\n"), stdout);
       fputs (_("\
   si         accept optional single letter suffix:\n\
-               1K = 1000\n\
-               1M = 1000000\n\
+               1K = 1000,\n\
+               1M = 1000000,\n\
                ...\n"), stdout);
       fputs (_("\
   iec        accept optional single letter suffix:\n\
-               1K = 1024\n\
-               1M = 1048576\n\
+               1K = 1024,\n\
+               1M = 1048576,\n\
                ...\n"), stdout);
       fputs (_("\
   iec-i      accept optional two-letter suffix:\n\
-               1Ki = 1024\n\
-               1Mi = 1048576\n\
+               1Ki = 1024,\n\
+               1Mi = 1048576,\n\
                ...\n"), stdout);
 
       fputs (_("\n\
