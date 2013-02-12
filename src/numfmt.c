@@ -970,7 +970,7 @@ parse_format_string (char const *fmt)
   i += strspn (fmt + i, " ");
   errno = 0;
   pad = strtol (fmt + i, &endptr, 10);
-  if (errno != 0)
+  if (errno == ERANGE)
     error (EXIT_FAILURE, 0,
            _("invalid format %s (width overflow)"), quote (fmt));
 
