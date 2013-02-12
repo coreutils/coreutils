@@ -199,6 +199,10 @@ my @Tests =
  # Check that --zero-terminated is synonymous with -z.
  ['123', '--zero-terminated', {IN=>"a\na\nb"}, {OUT=>"a\na\nb\0"}],
  ['124', '--zero-terminated', {IN=>"a\0a\0b"}, {OUT=>"a\0b\0"}],
+ # Check ignore-case
+ ['125', '',              {IN=>"A\na\n"}, {OUT=>"A\na\n"}],
+ ['126', '-i',            {IN=>"A\na\n"}, {OUT=>"A\n"}],
+ ['127', '--ignore-case', {IN=>"A\na\n"}, {OUT=>"A\n"}],
 );
 
 # Set _POSIX2_VERSION=199209 in the environment of each obs-plus* test.
