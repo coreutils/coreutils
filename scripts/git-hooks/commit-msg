@@ -62,6 +62,9 @@ sub bad_first_line($)
   $line =~ /:/
     or return 'missing colon on first line of log message';
 
+  $line =~ /\.$/
+    and return 'do not use a period "." at the end of the first line';
+
   # The token(s) before the colon on the first line must be on our list
   # Tokens may be space- or comma-separated.
   (my $pre_colon = $line) =~ s/:.*//;
