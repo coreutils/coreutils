@@ -121,14 +121,14 @@ dutest ()
   if [ "$exp" = "" ] ; then
     touch exp
   else
-    printf "%s " $exp | tr ' ' "\n" > exp
+    printf "%s\n" $exp > exp
   fi
 
   rc=0
   du -B1 $args a > out1 2>&1 || { cat out1 ; rc=1 ; }
 
   # Remove the size column and sort the output.
-  sed 's/^[0-9]*\t//' < out1 | LANG=C sort -o out || framework_failure_
+  cut -f2- out1 | sort > out || framework_failure_
 
   compare exp out || { cat out1 ; rc=1 ; }
   return $rc
