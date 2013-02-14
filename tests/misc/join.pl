@@ -275,6 +275,26 @@ my @tv = (
  [ "ID1 Name\n1 A\n", ""],
    "ID1 Name\n1 A\n", 0],
 
+# Zero-terminated lines
+['z1', '-z',
+ ["a\0c\0e\0", "a\0b\0c\0"], "a\0c\0", 0],
+
+# not zero-terminated, but related to the code change:
+#  the old readlinebuffer() auto-added '\n' to the last line.
+#  the new readlinebuffer_delim() does not.
+#  Ensure it doesn't matter.
+['z2', '',
+ ["a\nc\ne\n", "a\nb\nc"], "a\nc\n", 0],
+['z3', '',
+ ["a\nc\ne", "a\nb\nc"], "a\nc\n", 0],
+# missing last NUL at the end of the last line (=end of file)
+['z4', '-z',
+ ["a\0c\0e", "a\0b\0c"], "a\0c\0", 0],
+# edge-case: the embedded newlines should treated as
+# part of the nul-terminated line
+['z5', '-z -a1 -a2',
+ ["a\n1\0c 3\0","b\n8\0c 9\0"], "a\n1\0b\n8\0c 3 9\0"],
+
 );
 
 # Convert the above old-style test vectors to the newer

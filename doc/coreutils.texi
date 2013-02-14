@@ -6181,6 +6181,8 @@ character is used to delimit the fields.
 Print a line for each unpairable line in file @var{file-number}
 (either @samp{1} or @samp{2}), instead of the normal output.
 
+@zeroTerminatedOption
+
 @end table
 
 @exitstatus

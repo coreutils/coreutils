@@ -161,6 +161,7 @@ static struct option const longopts[] =
   {"ignore-case", no_argument, NULL, 'i'},
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {"header", no_argument, NULL, HEADER_LINE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -176,6 +177,9 @@ static bool ignore_case;
 /* If nonzero, treat the first line of each file as column headers --
    join them without checking for ordering */
 static bool join_header_lines;
+
+/* The character marking end of line. Default to \n. */
+static char eolchar = '\n';
 
 void
 usage (int status)
@@ -212,6 +216,9 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   --nocheck-order   do not check that the input is correctly sorted\n\
   --header          treat the first line in each file as field headers,\n\
                       print them without trying to pair them\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated     end lines with 0 byte, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -445,7 +452,7 @@ get_line (FILE *fp, struct line **linep, int which)
   else
     line = init_linep (linep);
 
-  if (! readlinebuffer (&line->buf, fp))
+  if (! readlinebuffer_delim (&line->buf, fp, eolchar))
     {
       if (ferror (fp))
         error (EXIT_FAILURE, errno, _("read error"));
@@ -614,7 +621,7 @@ prjoin (struct line const *line1, struct line const *line2)
             break;
           putchar (output_separator);
         }
-      putchar ('\n');
+      putchar (eolchar);
     }
   else
     {
@@ -636,7 +643,7 @@ prjoin (struct line const *line1, struct line const *line2)
       prfields (line1, join_field_1, autocount_1);
       prfields (line2, join_field_2, autocount_2);
 
-      putchar ('\n');
+      putchar (eolchar);
     }
 }
 
@@ -1017,7 +1024,7 @@ main (int argc, char **argv)
   issued_disorder_warning[0] = issued_disorder_warning[1] = false;
   check_input_order = CHECK_ORDER_DEFAULT;
 
-  while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:",
+  while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:z",
                               longopts, NULL))
          != -1)
     {
@@ -1105,6 +1112,10 @@ main (int argc, char **argv)
               error (EXIT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
           }
+          break;
+
+        case 'z':
+          eolchar = 0;
           break;
 
         case NOCHECK_ORDER_OPTION:
