@@ -687,7 +687,23 @@ verify (W <= WIDE_UINT_BITS);
 
 /* debugging for developers.  Enables devmsg().
    This flag is used only in the GMP code.  */
-bool dev_debug = false;
+static bool dev_debug = false;
+
+/* Like error(0, 0, ...), but without an implicit newline.
+   Also a noop unless the global DEV_DEBUG is set.
+   TODO: Replace with variadic macro in system.h or
+   move to a separate module.  */
+static inline void
+devmsg (char const *fmt, ...)
+{
+  if (dev_debug)
+    {
+      va_list ap;
+      va_start (ap, fmt);
+      vfprintf (stderr, fmt, ap);
+      va_end (ap);
+    }
+}
 
 /* Prove primality or run probabilistic tests.  */
 static bool flag_prove_primality = true;
