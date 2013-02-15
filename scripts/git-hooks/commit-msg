@@ -6,7 +6,10 @@ use strict;
 use warnings;
 (my $ME = $0) =~ s|.*/||;
 
-my $editor = $ENV{EDITOR} || 'vi';
+# Emulate Git's choice of the editor for the commit message.
+chomp (my $editor = `git var GIT_EDITOR`);
+# And have a sane, minimal fallback in case of weird failures.
+$editor = "vi" if $? != 0 or $editor =~ /^\s*\z/;
 
 # Keywords allowed before the colon on the first line of a commit message:
 # program names and a few general category names.
