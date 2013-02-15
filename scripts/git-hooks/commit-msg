@@ -7,7 +7,6 @@ use warnings;
 (my $ME = $0) =~ s|.*/||;
 
 my $editor = $ENV{EDITOR} || 'vi';
-$ENV{PATH} = '/bin:/usr/bin';
 
 # Keywords allowed before the colon on the first line of a commit message:
 # program names and a few general category names.
