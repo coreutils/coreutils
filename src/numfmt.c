@@ -1194,8 +1194,7 @@ process_suffixed_number (char *text, long double *result, size_t *precision)
 /* Skip the requested number of fields in the input string.
    Returns a pointer to the *delimiter* of the requested field,
    or a pointer to NUL (if reached the end of the string).  */
-static inline char *
-__attribute ((pure))
+static inline char * _GL_ATTRIBUTE_PURE
 skip_fields (char *buf, int fields)
 {
   char *ptr = buf;
