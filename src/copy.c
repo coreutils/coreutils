@@ -51,6 +51,7 @@
 #include "ignore-value.h"
 #include "ioblksize.h"
 #include "quote.h"
+#include "root-uid.h"
 #include "same.h"
 #include "savedir.h"
 #include "stat-size.h"
@@ -1127,7 +1128,7 @@ preserve_metadata:
     {
       bool access_changed = false;
 
-      if (!(sb.st_mode & S_IWUSR) && geteuid () != 0)
+      if (!(sb.st_mode & S_IWUSR) && geteuid () != ROOT_UID)
         access_changed = fchmod_or_lchmod (dest_desc, dst_name, 0600) == 0;
 
       if (!copy_attr (src_name, source_desc, dst_name, dest_desc, x)
@@ -2718,7 +2719,7 @@ cp_options_default (struct cp_options *x)
     priv_freeset (pset);
   }
 #else
-  x->chown_privileges = x->owner_privileges = (geteuid () == 0);
+  x->chown_privileges = x->owner_privileges = (geteuid () == ROOT_UID);
 #endif
 }
 
