@@ -201,6 +201,16 @@ sc_prohibit-j-printf-format:
 	  && { echo '$(ME): Use PRI*MAX instead of %j' 1>&2; exit 1; }  \
 	  || :
 
+# Ensure the alternative __attribute (keyword) form isn't used as
+# that form is not elided where required.  Also ensure that we don't
+# directly use attributes already defined by gnulib.
+# TODO: move the check for _GL... attributes to gnulib.
+sc_prohibit-gl-attributes:
+	@cd $(srcdir) && GIT_PAGER= git grep -En			\
+	    "__attribute |__(unused|pure|const)__" src gl/lib/*.[ch]	\
+	  && { echo '$(ME): Use _GL... attribute macros' 1>&2; exit 1; }  \
+	  || :
+
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
 # - tests involving long checksum lines, and

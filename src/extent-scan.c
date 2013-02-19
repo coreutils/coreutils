@@ -218,7 +218,7 @@ extent_scan_read (struct extent_scan *scan)
 }
 #else
 extern bool
-extent_scan_read (struct extent_scan *scan ATTRIBUTE_UNUSED)
+extent_scan_read (struct extent_scan *scan _GL_UNUSED)
 {
   scan->initial_scan_failed = true;
   errno = ENOTSUP;

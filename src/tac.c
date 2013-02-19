@@ -409,7 +409,7 @@ record_or_unlink_tempfile (char const *fn, FILE *fp)
 #else
 
 static void
-record_or_unlink_tempfile (char const *fn, FILE *fp ATTRIBUTE_UNUSED)
+record_or_unlink_tempfile (char const *fn, FILE *fp _GL_UNUSED)
 {
   unlink (fn);
 }

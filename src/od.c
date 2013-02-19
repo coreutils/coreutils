@@ -416,7 +416,7 @@ N (size_t fields, size_t blank, void const *block,                      \
   PRINT_FIELDS (N, T, fmt_string, xprintf (fmt_string, adjusted_width, x))
 
 #define PRINT_FLOATTYPE(N, T, FTOASTR, BUFSIZE)                         \
-  PRINT_FIELDS (N, T, fmt_string ATTRIBUTE_UNUSED,                      \
+  PRINT_FIELDS (N, T, fmt_string _GL_UNUSED,                      \
                 char buf[BUFSIZE];                                      \
                 FTOASTR (buf, sizeof buf, 0, 0, x);                     \
                 xprintf ("%*s", adjusted_width, buf))
@@ -452,7 +452,7 @@ dump_hexl_mode_trailer (size_t n_bytes, const char *block)
 
 static void
 print_named_ascii (size_t fields, size_t blank, void const *block,
-                   const char *unused_fmt_string ATTRIBUTE_UNUSED,
+                   const char *unused_fmt_string _GL_UNUSED,
                    int width, int pad)
 {
   unsigned char const *p = block;
@@ -483,7 +483,7 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
 
 static void
 print_ascii (size_t fields, size_t blank, void const *block,
-             const char *unused_fmt_string ATTRIBUTE_UNUSED, int width,
+             const char *unused_fmt_string _GL_UNUSED, int width,
              int pad)
 {
   unsigned char const *p = block;
@@ -1056,8 +1056,8 @@ skip (uintmax_t n_skip)
 }
 
 static void
-format_address_none (uintmax_t address ATTRIBUTE_UNUSED,
-                     char c ATTRIBUTE_UNUSED)
+format_address_none (uintmax_t address _GL_UNUSED,
+                     char c _GL_UNUSED)
 {
 }
 

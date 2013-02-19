@@ -2734,7 +2734,7 @@ has_capability (char const *name)
 }
 #else
 static bool
-has_capability (char const *name ATTRIBUTE_UNUSED)
+has_capability (char const *name _GL_UNUSED)
 {
   errno = ENOTSUP;
   return false;

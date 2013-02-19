@@ -68,7 +68,7 @@ chopt_init (struct Chown_option *chopt)
 }
 
 extern void
-chopt_free (struct Chown_option *chopt ATTRIBUTE_UNUSED)
+chopt_free (struct Chown_option *chopt _GL_UNUSED)
 {
   /* Deliberately do not free chopt->user_name or ->group_name.
      They're not always allocated.  */

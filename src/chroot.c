@@ -57,7 +57,7 @@ static struct option const long_opts[] =
    always-successful replacement to avoid checking for setgroups
    availability everywhere, just to support broken platforms. */
 static int
-setgroups (size_t size ATTRIBUTE_UNUSED, gid_t const *list ATTRIBUTE_UNUSED)
+setgroups (size_t size _GL_UNUSED, gid_t const *list _GL_UNUSED)
 {
   return 0;
 }
