@@ -25,6 +25,11 @@ require_perl_
 # the offending euidaccess_stat call.
 skip_if_root_
 
+# ecryptfs for example uses some of the file name space
+# for encrypting filenames, so we must check dynamically.
+name_max=$(stat -f -c %l .)
+test "$name_max" -ge '200' || skip_ "NAME_MAX=$name_max is not sufficient"
+
 mkdir x || framework_failure_
 cd x || framework_failure_
 

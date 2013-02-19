@@ -31,6 +31,11 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
 
+# ecryptfs for example uses some of the file name space
+# for encrypting filenames, so we must check dynamically.
+name_max=$(stat -f -c %l .)
+test "$name_max" -ge '200' || skip_ "NAME_MAX=$name_max is not sufficient"
+
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then
   skip_ 'This test would fail, since your system lacks /proc support.'
