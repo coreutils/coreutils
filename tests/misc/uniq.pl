@@ -203,6 +203,45 @@ my @Tests =
  ['125', '',              {IN=>"A\na\n"}, {OUT=>"A\na\n"}],
  ['126', '-i',            {IN=>"A\na\n"}, {OUT=>"A\n"}],
  ['127', '--ignore-case', {IN=>"A\na\n"}, {OUT=>"A\n"}],
+ # Check grouping
+ ['128', '--group=prepend', {IN=>"a\na\nb\n"}, {OUT=>"\na\na\n\nb\n"}],
+ ['129', '--group=append',  {IN=>"a\na\nb\n"}, {OUT=>"a\na\n\nb\n\n"}],
+ ['130', '--group=separate',{IN=>"a\na\nb\n"}, {OUT=>"a\na\n\nb\n"}],
+ # no explicit grouping = separate
+ ['131', '--group',         {IN=>"a\na\nb\n"}, {OUT=>"a\na\n\nb\n"}],
+ ['132', '--group=both',    {IN=>"a\na\nb\n"}, {OUT=>"\na\na\n\nb\n\n"}],
+ # Grouping in the special case of a single group
+ ['133', '--group=prepend', {IN=>"a\na\n"}, {OUT=>"\na\na\n"}],
+ ['134', '--group=append',  {IN=>"a\na\n"}, {OUT=>"a\na\n\n"}],
+ ['135', '--group=separate',{IN=>"a\na\n"}, {OUT=>"a\na\n"}],
+ ['136', '--group',         {IN=>"a\na\n"}, {OUT=>"a\na\n"}],
+ # Grouping with empty input - should never print anything
+ ['137', '--group=prepend',  {IN=>""}, {OUT=>""}],
+ ['138', '--group=append',   {IN=>""}, {OUT=>""}],
+ ['139', '--group=separate', {IN=>""}, {OUT=>""}],
+ ['140', '--group=both',     {IN=>""}, {OUT=>""}],
+ # Grouping with other options - must fail
+ ['141', '--group -c',       {IN=>""}, {OUT=>""}, {EXIT=>1},
+  {ERR=>"$prog: --group is mutually exclusive with -c/-d/-D/-u\n" .
+        "Try 'uniq --help' for more information.\n"}],
+ ['142', '--group -d',       {IN=>""}, {OUT=>""}, {EXIT=>1},
+  {ERR=>"$prog: --group is mutually exclusive with -c/-d/-D/-u\n" .
+        "Try 'uniq --help' for more information.\n"}],
+ ['143', '--group -u',       {IN=>""}, {OUT=>""}, {EXIT=>1},
+  {ERR=>"$prog: --group is mutually exclusive with -c/-d/-D/-u\n" .
+        "Try 'uniq --help' for more information.\n"}],
+ ['144', '--group -D',       {IN=>""}, {OUT=>""}, {EXIT=>1},
+  {ERR=>"$prog: --group is mutually exclusive with -c/-d/-D/-u\n" .
+        "Try 'uniq --help' for more information.\n"}],
+ # Grouping with badoption
+ ['145', '--group=badoption',{IN=>""}, {OUT=>""}, {EXIT=>1},
+  {ERR=>"$prog: invalid argument 'badoption' for '--group'\n" .
+        "Valid arguments are:\n" .
+        "  - 'prepend'\n" .
+        "  - 'append'\n" .
+        "  - 'separate'\n" .
+        "  - 'both'\n" .
+        "Try '$prog --help' for more information.\n"}],
 );
 
 # Set _POSIX2_VERSION=199209 in the environment of each obs-plus* test.

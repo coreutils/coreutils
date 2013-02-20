@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   option of the same name, this makes join consume and produce NUL-terminated
   lines rather than newline-terminated lines.
 
+  uniq accepts a new option: --group to print all items, while separating
+  unique groups with empty lines.
+
 
 * Noteworthy changes in release 8.21 (2013-02-14) [stable]
 

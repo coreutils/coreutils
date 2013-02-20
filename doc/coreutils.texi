@@ -5067,7 +5067,7 @@ Do not discard the second and subsequent repeated input lines,
 but discard lines that are not repeated.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
-The optional @var{delimit-method} tells how to delimit
+The optional @var{delimit-method} specifies how to delimit
 groups of repeated lines, and must be one of the following:
 
 @table @samp
@@ -5078,25 +5078,59 @@ This is equivalent to @option{--all-repeated} (@option{-D}).
 
 @item prepend
 Output a newline before each group of repeated lines.
+@macro nulOutputNote
 With @option{--zero-terminated} (@option{-z}), use a zero
-byte (ASCII NUL) instead of a newline.
+byte (ASCII NUL) instead of a newline as the delimiter.
+@end macro
+@nulOutputNote
 
 @item separate
 Separate groups of repeated lines with a single newline.
-With @option{--zero-terminated} (@option{-z}), use a zero
-byte (ASCII NUL) instead of a newline.
 This is the same as using @samp{prepend}, except that
 no delimiter is inserted before the first group, and hence
 may be better suited for output direct to users.
+@nulOutputNote
 @end table
 
+@macro ambiguousGroupNote
 Note that when groups are delimited and the input stream contains
 two or more consecutive blank lines, then the output is ambiguous.
 To avoid that, filter the input through @samp{tr -s '\n'} to replace
 each sequence of consecutive newlines with a single newline.
+@end macro
+@ambiguousGroupNote
 
 This is a GNU extension.
 @c FIXME: give an example showing *how* it's useful
+
+@item --group[=@var{delimit-method}]
+@opindex --group
+@cindex all lines, grouping
+Output all lines, and delimit each unique group.
+@nulOutputNote
+The optional @var{delimit-method} specifies how to delimit
+groups, and must be one of the following:
+
+@table @samp
+
+@item separate
+Separate unique groups with a single delimiter.
+This is the default delimiting method if none is specified,
+and better suited for output direct to users.
+
+@item prepend
+Output a delimiter before each group of unique items.
+
+@item append
+Output a delimiter after each group of unique items.
+
+@item both
+Output a delimiter around each group of unique items.
+@end table
+
+@ambiguousGroupNote
+
+This is a GNU extension.
 
 @item -u
 @itemx --unique
