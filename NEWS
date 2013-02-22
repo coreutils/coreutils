@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  install now removes the target file if the strip program failed for any
+  reason.  Before, that file was left behind, sometimes even with wrong
+  permissions.
+  [This bug was present in "the beginning".]
+
 
 * Noteworthy changes in release 8.21 (2013-02-14) [stable]
 

@@ -515,16 +515,17 @@ change_timestamps (struct stat const *src_sb, char const *dest)
    magic numbers vary so much from system to system that making
    it portable would be very difficult.  Not worth the effort. */
 
-static void
+static bool
 strip (char const *name)
 {
   int status;
+  bool ok = false;
   pid_t pid = fork ();
 
   switch (pid)
     {
     case -1:
-      error (EXIT_FAILURE, errno, _("fork system call failed"));
+      error (0, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
       execlp (strip_program, strip_program, name, NULL);
@@ -532,11 +533,14 @@ strip (char const *name)
       break;
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
-        error (EXIT_FAILURE, errno, _("waiting for strip"));
+        error (0, errno, _("waiting for strip"));
       else if (! WIFEXITED (status) || WEXITSTATUS (status))
-        error (EXIT_FAILURE, 0, _("strip process terminated abnormally"));
+        error (0, 0, _("strip process terminated abnormally"));
+      else
+        ok = true;      /* strip succeeded */
       break;
     }
+  return ok;
 }
 
 /* Initialize the user and group ownership of the files to install. */
@@ -681,7 +685,12 @@ install_file_in_file (const char *from, const char *to,
   if (! copy_file (from, to, x))
     return false;
   if (strip_files)
-    strip (to);
+    if (! strip (to))
+      {
+        if (unlink (to) != 0)  /* Cleanup.  */
+          error (EXIT_FAILURE, errno, _("cannot unlink %s"), to);
+        return false;
+      }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
       && ! change_timestamps (&from_sb, to))
     return false;
