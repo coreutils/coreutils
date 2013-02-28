@@ -112,6 +112,7 @@ EXEC 01;32
  # archives or compressed (bright red)
 .tar 01;31
 .tgz 01;31
+.arc 01;31
 .arj 01;31
 .taz 01;31
 .lha 01;31
