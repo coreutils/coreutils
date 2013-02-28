@@ -87,12 +87,8 @@ for lang in C fr da; do
     test $i = install && i=ginstall
 
     # Make sure they exit successfully, under normal conditions.
-    env $i --help    > h-$i     || fail=1
+    env $i --help    >/dev/null || fail=1
     env $i --version >/dev/null || fail=1
-
-    # Make sure they mention the bug-reporting address in --help output.
-    grep "$PACKAGE_BUGREPORT" h-$i > /dev/null || fail=1
-    rm -f h-$i
 
     # Make sure they fail upon 'disk full' error.
     if test -w /dev/full && test -c /dev/full; then

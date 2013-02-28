@@ -564,11 +564,7 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 static inline void
 emit_ancillary_info (void)
 {
-  printf (_("\nReport %s bugs to %s\n"), last_component (program_name),
-          PACKAGE_BUGREPORT);
-  printf (_("%s home page: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
-  fputs (_("General help using GNU software: <http://www.gnu.org/gethelp/>\n"),
-         stdout);
+  printf (_("\n%s online help: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
   const char *lc_messages = setlocale (LC_MESSAGES, NULL);
