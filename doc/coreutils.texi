@@ -5095,7 +5095,7 @@ may be better suited for output direct to users.
 @macro ambiguousGroupNote
 Note that when groups are delimited and the input stream contains
 two or more consecutive blank lines, then the output is ambiguous.
-To avoid that, filter the input through @samp{tr -s '\n'} to replace
+To avoid that, filter the input through @samp{tr -s '\\n'} to replace
 each sequence of consecutive newlines with a single newline.
 @end macro
 @ambiguousGroupNote
