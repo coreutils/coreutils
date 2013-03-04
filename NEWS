@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   uniq accepts a new option: --group to print all items, while separating
   unique groups with empty lines.
 
+** Build-related
+
+  factor now builds on aarch64 based systems [bug introduced in coreutils-8.20]
+
 
 * Noteworthy changes in release 8.21 (2013-02-14) [stable]
 
