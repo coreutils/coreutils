@@ -243,8 +243,6 @@ Formatting file contents
 * pr invocation::                Paginate or columnate files for printing
 * fold invocation::              Wrap input lines to fit in specified width
 
-@command{numfmt}: General Options, Units
-
 Output of parts of files
 
 * head invocation::              Output the first part of files
