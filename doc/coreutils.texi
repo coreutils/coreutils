@@ -4332,6 +4332,9 @@ the @command{df}, @command{du}, or @command{ls} commands that are
 invoked with their @option{--human-readable} or @option{--si} options.
 The syntax for numbers is the same as for the @option{--numeric-sort}
 option; the SI suffix must immediately follow the number.
+Note also the @command{numfmt} command, which can be used to reformat
+numbers to human format @emph{after} the sort, thus often allowing
+sort to operate on more accurate numbers.
 
 @item -i
 @itemx --ignore-nonprinting
