@@ -313,6 +313,7 @@ all_tests =					\
   tests/misc/shred-passes.sh			\
   tests/misc/shred-remove.sh			\
   tests/misc/shuf.sh				\
+  tests/misc/shuf-reservoir.sh			\
   tests/misc/sort.pl				\
   tests/misc/sort-benchmark-random.sh		\
   tests/misc/sort-compress.sh			\

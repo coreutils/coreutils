@@ -25,6 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   inotify for files on those file systems, rather than the default (for unknown
   file system types) of issuing a warning and reverting to polling.
 
+  shuf outputs subsets of large inputs much more efficiently.
+  Reservoir sampling is used to limit memory usage based on the number of
+  outputs, rather than the number of inputs.
+
 ** Build-related
 
   factor now builds on aarch64 based systems [bug introduced in coreutils-8.20]
