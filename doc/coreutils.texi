@@ -3607,6 +3607,12 @@ long instead of the default 2.
 @opindex --keep-files
 Do not remove output files when errors are encountered.
 
+@item --suppress-matched
+@opindex --suppress-matched
+Do not output lines matching the specified @var{pattern}.
+I.E. suppress the boundary line from the start of the second
+and subsequent splits.
+
 @item -z
 @itemx --elide-empty-files
 @opindex -z
@@ -3682,6 +3688,25 @@ $ head xx*
 13
 14
 @end example
+
+Example of splitting input by empty lines:
+
+@example
+$ csplit --suppress-matched @var{input.txt} '/^$/' '@{*@}'
+@end example
+
+@c
+@c TODO: "uniq" already supports "--group".
+@c        when it gets the "--key" option, uncomment this example.
+@c
+@c Example of splitting input file, based on the value of column 2:
+@c
+@c @example
+@c $ cat @var{input.txt} |
+@c       sort -k2,2 |
+@c       uniq --group -k2,2 |
+@c       csplit -m '/^$/' '@{*@}'
+@c @end example
 
 @node Summarizing files
 @chapter Summarizing files

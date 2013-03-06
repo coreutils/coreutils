@@ -166,6 +166,9 @@ static bool volatile remove_files;
 /* If true, remove all output files which have a zero length. */
 static bool elide_empty_files;
 
+/* If true, suppress the lines that match the PATTERN */
+static bool suppress_matched;
+
 /* The compiled pattern arguments, which determine how to split
    the input file. */
 static struct control *controls;
@@ -176,6 +179,13 @@ static size_t control_used;
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  SUPPRESS_MATCHED_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
   {"digits", required_argument, NULL, 'n'},
@@ -185,6 +195,7 @@ static struct option const longopts[] =
   {"elide-empty-files", no_argument, NULL, 'z'},
   {"prefix", required_argument, NULL, 'f'},
   {"suffix-format", required_argument, NULL, 'b'},
+  {"suppress-matched", no_argument, NULL, SUPPRESS_MATCHED_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -721,8 +732,13 @@ process_line_count (const struct control *p, uintmax_t repetition)
 
   create_output_file ();
 
-  linenum = get_first_line_in_buffer ();
+  /* Ensure that the line number specified is not 1 greater than
+     the number of lines in the file.
+     When suppressing matched lines, check before the loop. */
+  if (no_more_lines () && suppress_matched)
+    handle_line_error (p, repetition);
 
+  linenum = get_first_line_in_buffer ();
   while (linenum++ < last_line_to_save)
     {
       line = remove_line ();
@@ -733,9 +749,12 @@ process_line_count (const struct control *p, uintmax_t repetition)
 
   close_output_file ();
 
+  if (suppress_matched)
+    line = remove_line ();
+
   /* Ensure that the line number specified is not 1 greater than
      the number of lines in the file. */
-  if (no_more_lines ())
+  if (no_more_lines () && !suppress_matched)
     handle_line_error (p, repetition);
 }
 
@@ -777,6 +796,9 @@ process_regexp (struct control *p, uintmax_t repetition)
 
   if (!ignore)
     create_output_file ();
+
+  if (suppress_matched && current_line > 0)
+    line = remove_line ();
 
   /* If there is no offset for the regular expression, or
      it is positive, then it is not necessary to buffer the lines. */
@@ -1324,6 +1346,7 @@ main (int argc, char **argv)
   control_used = 0;
   suppress_count = false;
   remove_files = true;
+  suppress_matched = false;
   prefix = DEFAULT_PREFIX;
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
@@ -1355,6 +1378,10 @@ main (int argc, char **argv)
 
       case 'z':
         elide_empty_files = true;
+        break;
+
+      case SUPPRESS_MATCHED_OPTION:
+        suppress_matched = true;
         break;
 
       case_GETOPT_HELP_CHAR;
@@ -1463,6 +1490,9 @@ and output byte counts of each piece to standard output.\n\
   -b, --suffix-format=FORMAT  use sprintf FORMAT instead of %02d\n\
   -f, --prefix=PREFIX        use PREFIX instead of 'xx'\n\
   -k, --keep-files           do not remove output files on errors\n\
+"), stdout);
+      fputs (_("\
+  -m, --suppress-matched     suppress the lines matching PATTERN\n\
 "), stdout);
       fputs (_("\
   -n, --digits=DIGITS        use specified number of digits instead of 2\n\

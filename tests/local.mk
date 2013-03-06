@@ -260,6 +260,7 @@ all_tests =					\
   tests/misc/csplit.sh				\
   tests/misc/csplit-1000.sh			\
   tests/misc/csplit-heap.sh			\
+  tests/misc/csplit-suppress-matched.pl		\
   tests/misc/date-sec.sh			\
   tests/misc/dircolors.pl			\
   tests/misc/dirname.pl				\

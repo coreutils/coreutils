@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   uniq accepts a new option: --group to print all items, while separating
   unique groups with empty lines.
 
+  csplit accepts a new option: --suppressed-matched, to elide the lines
+  used to identify the split points.
+
 ** Improvements
 
   stat and tail work better with EFIVARFS, EXOFS, F2FS and UBIFS.
