@@ -11631,8 +11631,8 @@ The valid @var{format} directives for files with @option{--format} and
 @item %N - Quoted file name with dereference if symbolic link
 @item %o - Optimal I/O transfer size hint
 @item %s - Total size, in bytes
-@item %t - Major device type in hex
-@item %T - Minor device type in hex
+@item %t - Major device type in hex (see below)
+@item %T - Minor device type in hex (see below)
 @item %u - User ID of owner
 @item %U - User name of owner
 @item %w - Time of file birth, or @samp{-} if unknown
@@ -11644,6 +11644,11 @@ The valid @var{format} directives for files with @option{--format} and
 @item %z - Time of last change
 @item %Z - Time of last change as seconds since Epoch
 @end itemize
+
+The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
+the stat(2) structure, and are only defined for character and block
+special files.  On some systems or file types, st_rdev may be used to
+represent other quantities.
 
 The @samp{%W}, @samp{%X}, @samp{%Y}, and @samp{%Z} formats accept a
 precision preceded by a period to specify the number of digits to

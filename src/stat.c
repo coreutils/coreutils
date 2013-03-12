@@ -1393,8 +1393,8 @@ The valid format sequences for files (without --file-system):\n\
   %N   quoted file name with dereference if symbolic link\n\
   %o   optimal I/O transfer size hint\n\
   %s   total size, in bytes\n\
-  %t   major device type in hex\n\
-  %T   minor device type in hex\n\
+  %t   major device type in hex, for character/block device special files\n\
+  %T   minor device type in hex, for character/block device special files\n\
 "), stdout);
       fputs (_("\
   %u   user ID of owner\n\
