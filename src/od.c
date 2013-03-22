@@ -339,7 +339,7 @@ suffixes may be . for octal and b for multiply by 512.\n\
 Traditional format specifications may be intermixed; they accumulate:\n\
   -a   same as -t a,  select named characters, ignoring high-order bit\n\
   -b   same as -t o1, select octal bytes\n\
-  -c   same as -t c,  select ASCII characters or backslash escapes\n\
+  -c   same as -t c,  select printable characters or backslash escapes\n\
   -d   same as -t u2, select unsigned decimal 2-byte units\n\
 "), stdout);
       fputs (_("\
@@ -355,7 +355,7 @@ Traditional format specifications may be intermixed; they accumulate:\n\
 \n\
 TYPE is made up of one or more of these specifications:\n\
   a          named character, ignoring high-order bit\n\
-  c          ASCII character or backslash escape\n\
+  c          printable character or backslash escape\n\
 "), stdout);
       fputs (_("\
   d[SIZE]    signed decimal, SIZE bytes per integer\n\
