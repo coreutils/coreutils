@@ -288,14 +288,20 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "devpts";
     case S_MAGIC_ECRYPTFS: /* 0xF15F local */
       return "ecryptfs";
+    case S_MAGIC_EFIVARFS: /* 0xDE5E81E4 local */
+      return "efivarfs";
     case S_MAGIC_EFS: /* 0x00414A53 local */
       return "efs";
+    case S_MAGIC_EXOFS: /* 0x5DF5 local */
+      return "exofs";
     case S_MAGIC_EXT: /* 0x137D local */
       return "ext";
     case S_MAGIC_EXT2: /* 0xEF53 local */
       return "ext2/ext3";
     case S_MAGIC_EXT2_OLD: /* 0xEF51 local */
       return "ext2";
+    case S_MAGIC_F2FS: /* 0xF2F52010 local */
+      return "f2fs";
     case S_MAGIC_FAT: /* 0x4006 local */
       return "fat";
     case S_MAGIC_FHGFS: /* 0x19830326 remote */
@@ -405,6 +411,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "sysv4";
     case S_MAGIC_TMPFS: /* 0x01021994 local */
       return "tmpfs";
+    case S_MAGIC_UBIFS: /* 0x24051905 local */
+      return "ubifs";
     case S_MAGIC_UDF: /* 0x15013346 local */
       return "udf";
     case S_MAGIC_UFS: /* 0x00011954 local */

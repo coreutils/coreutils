@@ -18,6 +18,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   uniq accepts a new option: --group to print all items, while separating
   unique groups with empty lines.
 
+** Improvements
+
+  stat and tail work better with EFIVARFS, EXOFS, F2FS and UBIFS.
+  stat -f --format=%T now reports the file system type, and tail -f now uses
+  inotify for files on those file systems, rather than the default (for unknown
+  file system types) of issuing a warning and reverting to polling.
+
 ** Build-related
 
   factor now builds on aarch64 based systems [bug introduced in coreutils-8.20]
