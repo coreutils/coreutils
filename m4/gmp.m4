@@ -23,18 +23,26 @@ AC_DEFUN([cu_GMP],
     [cu_use_gmp=auto])
 
   if test $cu_use_gmp != no; then
-    cu_saved_libs=$LIBS
-    AC_SEARCH_LIBS([__gmpz_init], [gmp],
-      [test "$ac_cv_search___gmpz_init" = "none required" ||
-       {
-        LIB_GMP=$ac_cv_search___gmpz_init
-        AC_DEFINE([HAVE_GMP], [1],
-          [Define if you have GNU libgmp (or replacement)])
-        # This only available in GMP >= 5
-        AC_CHECK_DECLS([mpz_inits], [], [], [[#include <gmp.h>]])
-       }],
-      [AC_MSG_WARN([libgmp development library was not found or not usable.])
-       AC_MSG_WARN([AC_PACKAGE_NAME will be built without GMP support.])])
-    LIBS=$cu_saved_libs
+    dnl It was noticed on one MacOS X 10.5.8 system at least
+    dnl that the libs were available but the header wasn't
+    HAVE_GMP=0
+    AC_CHECK_HEADERS_ONCE([gmp.h])
+    if test $ac_cv_header_gmp_h = yes; then
+      cu_saved_libs=$LIBS
+      AC_SEARCH_LIBS([__gmpz_init], [gmp],
+        [test "$ac_cv_search___gmpz_init" = "none required" ||
+           LIB_GMP=$ac_cv_search___gmpz_init
+         AC_DEFINE([HAVE_GMP], [1],
+           [Define if you have GNU libgmp (or replacement)])
+         HAVE_GMP=1
+         # This only available in GMP >= 5
+         AC_CHECK_DECLS([mpz_inits], [], [], [[#include <gmp.h>]])
+        ])
+      LIBS=$cu_saved_libs
+    fi
+    if test $HAVE_GMP != 1; then
+     AC_MSG_WARN([libgmp development library was not found or not usable.])
+     AC_MSG_WARN([AC_PACKAGE_NAME will be built without GMP support.])
+    fi
   fi
 ])
