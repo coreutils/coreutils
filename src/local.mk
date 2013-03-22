@@ -403,8 +403,8 @@ AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = src/false src/test
 # Also compare against /usr/include/linux/magic.h
 .PHONY: src/fs-magic-compare
 src/fs-magic-compare: src/fs-magic src/fs-kernel-magic src/fs-def
-	join -v1 -t@ src/fs-magic src/fs-def
-	join -v1 -t@ src/fs-kernel-magic src/fs-def
+	@join -v1 -t@ src/fs-magic src/fs-def
+	@join -v1 -t@ src/fs-kernel-magic src/fs-def
 
 CLEANFILES += src/fs-def
 src/fs-def: src/fs.h
@@ -434,7 +434,7 @@ fs_normalize_perl_subst =			\
 
 CLEANFILES += src/fs-magic
 src/fs-magic: Makefile
-	man statfs \
+	@MANPAGER= man statfs \
 	  |perl -ne '/File system types:/.../Nobody kno/ and print'	\
 	  |grep 0x | perl -p						\
 	    $(fs_normalize_perl_subst)					\
@@ -442,13 +442,23 @@ src/fs-magic: Makefile
 	  | $(ASSORT)							\
 	  > $@-t && mv $@-t $@
 
+DISTCLEANFILES += src/fs-latest-magic.h
+# This rule currently gets the latest header, but probably isn't general
+# enough to enable by default.
+#	@kgit='https://git.kernel.org/cgit/linux/kernel/git'; \
+#	wget -q $$kgit/torvalds/linux.git/plain/include/uapi/linux/magic.h \
+#	  -O $@
+src/fs-latest-magic.h:
+	@touch $@
+
 CLEANFILES += src/fs-kernel-magic
-src/fs-kernel-magic: Makefile
-	perl -ne '/^#define.*0x/ and print' /usr/include/linux/magic.h	\
+src/fs-kernel-magic: Makefile src/fs-latest-magic.h
+	@perl -ne '/^#define.*0x/ and print'				\
+	  /usr/include/linux/magic.h src/fs-latest-magic.h		\
 	  | perl -p							\
 	    $(fs_normalize_perl_subst)					\
 	  | grep -Ev 'S_MAGIC_EXT[34]|STACK_END'			\
-	  | $(ASSORT)							\
+	  | $(ASSORT) -u						\
 	  > $@-t && mv $@-t $@
 
 BUILT_SOURCES += src/fs-is-local.h
