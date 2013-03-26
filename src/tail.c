@@ -2149,6 +2149,10 @@ main (int argc, char **argv)
                      " indefinitely is ineffective"));
   }
 
+  /* Don't read anything if we'll never output anything.  */
+  if (! n_units && ! forever && ! from_start)
+    exit (EXIT_SUCCESS);
+
   F = xnmalloc (n_files, sizeof *F);
   for (i = 0; i < n_files; i++)
     F[i].name = file[i];

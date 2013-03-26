@@ -29,6 +29,11 @@ require_proc_pid_status_
 touch empty || framework_failure_
 echo anything > nonempty || framework_failure_
 
+# First verify that -[nc]0 without -f, exit without reading
+touch unreadable || framework_failure_
+chmod 0 unreadable || framework_failure_
+tail -c0 unreadable || fail=1
+tail -n0 unreadable || fail=1
 
 for inotify in ---disable-inotify ''; do
   for file in empty nonempty; do
