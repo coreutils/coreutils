@@ -30,6 +30,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
+require_gcc_shared_
 
 # Replace each stat call with a call to this wrapper.
 cat > k.c <<'EOF' || framework_failure_
@@ -58,7 +59,7 @@ EOF
 
 # Then compile/link it:
 $CC -shared -fPIC -O2 k.c -o k.so -ldl \
-  || framework_failure_ 'failed to compile with -shared -fPIC'
+  || framework_failure_ 'failed to build shared library'
 
 touch d2 || framework_failure_
 echo xyz > src || framework_failure_

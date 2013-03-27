@@ -21,6 +21,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
+require_gcc_shared_
 
 # Replace each getxattr and lgetxattr call with a call to these stubs.
 # Count those and write the total number of calls to the file "x"
@@ -48,7 +49,7 @@ EOF
 
 # Then compile/link it:
 $CC -shared -fPIC -O2 k.c -o k.so \
-  || framework_failure_ 'failed to compile with -shared -fPIC'
+  || framework_failure_ 'failed to build shared library'
 
 # Create a few files:
 seq 20 | xargs touch || framework_failure_

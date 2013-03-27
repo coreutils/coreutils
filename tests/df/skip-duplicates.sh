@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ df
+require_gcc_shared_
 
 df || skip_ "df fails"
 
@@ -58,7 +59,7 @@ EOF
 
 # Then compile/link it:
 gcc --std=gnu99 -shared -fPIC -ldl -O2 k.c -o k.so \
-  || skip_ "getmntent hack does not work on this platform"
+  || framework_failure_ 'failed to build shared library'
 
 # Test if LD_PRELOAD works:
 LD_PRELOAD=./k.so df
