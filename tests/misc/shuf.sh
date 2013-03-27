@@ -57,4 +57,10 @@ cmp out exp || { fail=1; echo "missing NUL terminator?" 1>&2; }
 timeout 10 shuf -i1-$SIZE_MAX -n2 >/dev/null ||
   { fail=1; echo "couldn't get a small subset" >&2; }
 
+# Ensure shuf -n0 doesn't read any input or open specified files
+touch unreadable || framework_failure_
+chmod 0 unreadable || framework_failure_
+shuf -n0 unreadable || fail=1
+shuf -n1 unreadable && fail=1
+
 Exit $fail

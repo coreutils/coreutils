@@ -463,7 +463,8 @@ main (int argc, char **argv)
           break;
 
         case 1:
-          if (! (STREQ (operand[0], "-") || freopen (operand[0], "r", stdin)))
+          if (! (STREQ (operand[0], "-") || ! head_lines
+                 || freopen (operand[0], "r", stdin)))
             error (EXIT_FAILURE, errno, "%s", operand[0]);
           break;
 
@@ -474,7 +475,8 @@ main (int argc, char **argv)
 
       fadvise (stdin, FADVISE_SEQUENTIAL);
 
-      if (head_lines != SIZE_MAX && input_size () > RESERVOIR_MIN_INPUT)
+      if (head_lines != SIZE_MAX && (! head_lines
+                                     || input_size () > RESERVOIR_MIN_INPUT))
         {
           use_reservoir_sampling = true;
           n_lines = SIZE_MAX;   /* unknown number of input lines, for now.  */
