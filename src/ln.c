@@ -132,22 +132,24 @@ target_directory_operand (char const *file)
 static char *
 convert_abs_rel (const char *from, const char *target)
 {
-  char *realtarget = canonicalize_filename_mode (target, CAN_MISSING);
+  /* Get dirname to generate paths relative to.  We don't resolve
+     the full TARGET as the last component could be an existing symlink.  */
+  char *targetdir = dir_name (target);
+
+  char *realdest = canonicalize_filename_mode (targetdir, CAN_MISSING);
   char *realfrom = canonicalize_filename_mode (from, CAN_MISSING);
 
   /* Write to a PATH_MAX buffer.  */
   char *relative_from = xmalloc (PATH_MAX);
 
-  /* Get dirname to generate paths relative to.  */
-  realtarget[dir_len (realtarget)] = '\0';
-
-  if (!relpath (realfrom, realtarget, relative_from, PATH_MAX))
+  if (!relpath (realfrom, realdest, relative_from, PATH_MAX))
     {
       free (relative_from);
       relative_from = NULL;
     }
 
-  free (realtarget);
+  free (targetdir);
+  free (realdest);
   free (realfrom);
 
   return relative_from ? relative_from : xstrdup (from);

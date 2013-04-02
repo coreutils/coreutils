@@ -9,6 +9,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   permissions.
   [This bug was present in "the beginning".]
 
+  ln --relative now updates existing symlinks correctly.  Previously it based
+  the relative link on the dereferenced path of an existing link.
+  [This bug was introduced when --relative was added in coreutils-8.16.]
+
 ** New features
 
   join accepts a new option: --zero-terminated (-z). As with the sort,uniq

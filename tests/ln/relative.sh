@@ -29,4 +29,9 @@ test $(readlink usr/bin/foo) = '../lib/foo/foo' || fail=1
 ln -sr usr/bin/foo usr/lib/foo/link-to-foo
 test $(readlink usr/lib/foo/link-to-foo) = 'foo' || fail=1
 
+# Correctly update an existing link, which was broken in <= 8.21
+ln -s dir1/dir2/f existing_link
+ln -srf here existing_link
+test $(readlink existing_link) = 'here' || fail=1
+
 Exit $fail
