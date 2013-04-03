@@ -34,4 +34,15 @@ ln -s dir1/dir2/f existing_link
 ln -srf here existing_link
 test $(readlink existing_link) = 'here' || fail=1
 
+# Demonstrate resolved symlinks used to generate relative links
+# so here, 'web/latest' will not be linked to the intermediate 'latest' link.
+# You'd probably want to use realpath(1) in conjunction
+# with ln(1) without --relative to give greater control.
+ln -s release1 alpha
+ln -s release2 beta
+ln -s beta latest
+mkdir web
+ln -sr latest web/latest
+test $(readlink web/latest) = '../release2' || fail=1
+
 Exit $fail

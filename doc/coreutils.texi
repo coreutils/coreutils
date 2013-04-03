@@ -9798,8 +9798,24 @@ ln -srv /a/file /tmp
 '/tmp/file' -> '../a/file'
 @end smallexample
 
+Relative symbolic links are generated based on their canonicalized
+containing directory, and canonicalized targets.  I.E. all symbolic
+links in these file names will be resolved.
 @xref{realpath invocation}, which gives greater control
-over relative file name generation.
+over relative file name generation, as demonstrated in the following example:
+
+@example
+@verbatim
+ln--relative() {
+  test "$1" = --no-symlinks && { nosym=$1; shift; }
+  target="$1";
+  test -d "$2" && link="$2/." || link="$2"
+  rtarget="$(realpath $nosym -m "$target" \
+              --relative-to "$(dirname "$link")")"
+  ln -s -v "$rtarget" "$link"
+}
+@end verbatim
+@end example
 
 @item -s
 @itemx --symbolic
