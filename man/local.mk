@@ -192,5 +192,5 @@ man/yes.1:       src/yes
 		     --output=$$t/$$name.1 $$t/$$name			\
 	  && sed 's|$*\.td/||g' $$t/$$name.1 > $@-t			\
 	  && rm -rf $$t							\
-	  && chmod -w $@-t						\
+	  && chmod a-w $@-t						\
 	  && mv $@-t $@
