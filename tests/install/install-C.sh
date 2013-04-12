@@ -19,6 +19,31 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ginstall
 skip_if_setgid_
+skip_if_nondefault_group_
+
+# Note if a group is not specified, install(1) will assume that a file
+# would be installed with the current user's group ID, and thus if the
+# file is the same except that it does have a different group due to
+# its parent directory being g+s for example, then the copy will be
+# done again redundantly in a futile attempt to reset the group ID to
+# that of the current user.
+#
+#  install -d -g wheel -m 2775 test  # Create setgid dir
+#  touch test/a                      # Create source
+#  install -Cv -m664 test/a test/i1  # install source with mode
+#  install -Cv -m664 test/i1 test/i2 # install dest
+#  install -Cv -m664 test/i1 test/i2 # again to see redundant install
+#
+# Similarly if an existing file exists that is the same and has the
+# current users group ID, but when an actual install of the file would
+# reset to a different group ID due to the directory being g+s for example,
+# then the install will not be done when it should.
+#
+#  install -Cv -m664 -g "$(id -nrg)" test/i1 test/i2 # set i2 to uesr's gid
+#  install -Cv -m664 test/i1 test/i2 # this should install but doesn't
+#
+# Therefore we skip the test in the presence of setgid dirs
+# An additional complication on HFS is that it...
 
 mode1=0644
 mode2=0755

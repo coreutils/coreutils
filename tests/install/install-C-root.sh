@@ -20,6 +20,7 @@
 print_ver_ ginstall
 require_root_
 skip_if_setgid_
+skip_if_nondefault_group_
 
 u1=1
 u2=2

@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ginstall
 require_selinux_
-
+skip_if_nondefault_group_
 
 echo test > a || framework_failure_
 chcon -u system_u a || skip_ "chcon doesn't work"
