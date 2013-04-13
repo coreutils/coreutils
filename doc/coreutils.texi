@@ -8920,6 +8920,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 Compare each pair of source and destination files, and if the destination has
 identical content and any specified owner, group, permissions, and possibly
 SELinux context, then do not modify the destination at all.
+Note this option is best used in conjunction with @option{--user},
+@option{--group} and @option{--mode} options, lest @command{install}
+incorrectly determines the default attributes that installed files would have
+(as it doesn't consider setgid directories and POSIX default ACLs for example).
+This could result in redundant copies or attributes that are not reset to the
+correct defaults.
 
 @item -c
 @opindex -c
