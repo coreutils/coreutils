@@ -1052,16 +1052,32 @@ recheck (struct File_spec *f, bool blocking)
 }
 
 /* Return true if any of the N_FILES files in F are live, i.e., have
-   open file descriptors.  */
+   open file descriptors, or should be checked again (see --retry).
+   When following descriptors, checking should only continue when any
+   of the files is not yet ignored.  */
 
 static bool
 any_live_files (const struct File_spec *f, size_t n_files)
 {
   size_t i;
 
+  if (reopen_inaccessible_files && follow_mode == Follow_name)
+    return true;  /* continue following for -F option */
+
   for (i = 0; i < n_files; i++)
-    if (0 <= f[i].fd)
-      return true;
+    {
+      if (0 <= f[i].fd)
+        {
+          return true;
+        }
+      else
+        {
+          if (reopen_inaccessible_files && follow_mode == Follow_descriptor)
+            if (! f[i].ignore)
+              return true;
+        }
+    }
+
   return false;
 }
 
@@ -1189,7 +1205,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           f[i].size += bytes_read;
         }
 
-      if (! any_live_files (f, n_files) && ! reopen_inaccessible_files)
+      if (! any_live_files (f, n_files))
         {
           error (0, 0, _("no files remaining"));
           break;
@@ -2031,8 +2047,11 @@ parse_options (int argc, char **argv,
   if (reopen_inaccessible_files)
     {
       if (!forever)
-        error (0, 0, _("warning: --retry ignored; --retry is useful"
-                       " only when following"));
+        {
+          reopen_inaccessible_files = false;
+          error (0, 0, _("warning: --retry ignored; --retry is useful"
+                         " only when following"));
+        }
       else if (follow_mode == Follow_descriptor)
         error (0, 0, _("warning: --retry only effective for the initial open"));
     }
