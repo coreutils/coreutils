@@ -345,6 +345,7 @@ all_tests =					\
   tests/split/b-chunk.sh			\
   tests/split/fail.sh				\
   tests/split/lines.sh				\
+  tests/split/line-bytes.sh			\
   tests/split/l-chunk.sh			\
   tests/split/r-chunk.sh			\
   tests/split/numeric.sh			\

@@ -48,6 +48,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Reservoir sampling is used to limit memory usage based on the number of
   outputs, rather than the number of inputs.
 
+  split --line-bytes=SIZE, now only allocates memory as needed rather
+  than allocating SIZE bytes at program start.
+
 ** Build-related
 
   factor now builds on aarch64 based systems [bug introduced in coreutils-8.20]
