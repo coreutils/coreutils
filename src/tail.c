@@ -294,9 +294,7 @@ With no FILE, or when FILE is -, read standard input.\n\
      fputs (_("\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
-      --retry              keep trying to open a file even when it is or\n\
-                             becomes inaccessible; useful when following by\n\
-                             name, i.e., with --follow=name\n\
+      --retry              keep trying to open a file if it is inaccessible\n\
 "), stdout);
      fputs (_("\
   -s, --sleep-interval=N   with -f, sleep for approximately N seconds\n\
@@ -2030,8 +2028,14 @@ parse_options (int argc, char **argv,
         }
     }
 
-  if (reopen_inaccessible_files && follow_mode != Follow_name)
-    error (0, 0, _("warning: --retry is useful mainly when following by name"));
+  if (reopen_inaccessible_files)
+    {
+      if (!forever)
+        error (0, 0, _("warning: --retry ignored; --retry is useful"
+                       " only when following"));
+      else if (follow_mode == Follow_descriptor)
+        error (0, 0, _("warning: --retry only effective for the initial open"));
+    }
 
   if (pid && !forever)
     error (0, 0,
@@ -2182,6 +2186,10 @@ main (int argc, char **argv)
          in this case because it would miss any updates to the file
          that were not initiated from the local system.
 
+         ok is false when one of the files specified could not be opened for
+         reading.  In this case and when following by descriptor,
+         tail_forever_inotify() cannot be used (in its current implementation).
+
          FIXME: inotify doesn't give any notification when a new
          (remote) file or directory is mounted on top a watched file.
          When follow_mode == Follow_name we would ideally like to detect that.
@@ -2193,7 +2201,8 @@ main (int argc, char **argv)
          is recreated, then we don't recheck any new file when
          follow_mode == Follow_name  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
-                               || any_remote_file (F, n_files)))
+                               || any_remote_file (F, n_files)
+                               || (!ok && follow_mode == Follow_descriptor)))
         disable_inotify = true;
 
       if (!disable_inotify)

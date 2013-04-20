@@ -3155,9 +3155,17 @@ will keep trying until it becomes accessible again.
 
 @item --retry
 @opindex --retry
-This option is useful mainly when following by name (i.e., with
-@option{--follow=name}).
-Without this option, when tail encounters a file that doesn't
+Indefinitely try to open the specified file.
+This option is useful mainly when following (and otherwise issues a warning).
+
+When following by file descriptor (i.e., with @option{--follow=descriptor}),
+this option only affects the initial open of the file, as after a successful
+open, @command{tail} will start following the file descriptor.
+
+When following by name (i.e., with @option{--follow=name}), @command{tail}
+infinitely retries to re-open the given files until killed.
+
+Without this option, when @command{tail} encounters a file that doesn't
 exist or is otherwise inaccessible, it reports that fact and
 never checks it again.
 

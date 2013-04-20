@@ -13,6 +13,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   the relative link on the dereferenced path of an existing link.
   [This bug was introduced when --relative was added in coreutils-8.16.]
 
+  tail --retry -f now waits for the files specified to appear.  Before, tail
+  would immediately exit when such a file is inaccessible during the initial
+  open.
+  [This bug was introduced when inotify support was added in coreutils-7.5]
+
 ** New features
 
   join accepts a new option: --zero-terminated (-z). As with the sort,uniq

@@ -390,6 +390,7 @@ all_tests =					\
   tests/misc/uniq-perf.sh			\
   tests/misc/xattr.sh				\
   tests/tail-2/wait.sh				\
+  tests/tail-2/retry.sh			\
   tests/chmod/c-option.sh			\
   tests/chmod/equal-x.sh			\
   tests/chmod/equals.sh				\
