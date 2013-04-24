@@ -32,7 +32,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  stat and tail work better with EFIVARFS, EXOFS, F2FS and UBIFS.
+  stat and tail work better with EFIVARFS, EXOFS, F2FS, SNFS and UBIFS.
   stat -f --format=%T now reports the file system type, and tail -f now uses
   inotify for files on those file systems, rather than the default (for unknown
   file system types) of issuing a warning and reverting to polling.
