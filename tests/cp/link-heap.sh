@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 expensive_
-require_ulimit_
+require_ulimit_v_
 
 a=$(printf %031d 0)
 b=$(printf %031d 1)

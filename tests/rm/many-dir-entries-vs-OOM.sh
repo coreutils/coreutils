@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm du chmod
+require_ulimit_v_
 
 expensive_
 

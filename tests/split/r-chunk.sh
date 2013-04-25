@@ -19,8 +19,6 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
 
-require_ulimit_
-
 # N can be greater than the file size
 # in which case no data is extracted, or empty files are written
 split -n r/10 /dev/null || fail=1

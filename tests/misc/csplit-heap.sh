@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ csplit
 
-require_ulimit_
+require_ulimit_v_
 
 (
  ulimit -v 20000

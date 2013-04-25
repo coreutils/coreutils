@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
-require_ulimit_
+require_ulimit_v_
 
 # count and skip is zero, we don't need to allocate memory
 (ulimit -v 20000; dd  bs=30M count=0) || fail=1

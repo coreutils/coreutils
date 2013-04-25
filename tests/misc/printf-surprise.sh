@@ -20,8 +20,7 @@ prog=printf
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ printf
-
-require_ulimit_
+require_ulimit_v_
 
 
 # Up to coreutils-6.9, "printf %.Nf 0" would encounter an ENOMEM internal

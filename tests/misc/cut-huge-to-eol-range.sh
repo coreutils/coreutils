@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cut
-require_ulimit_
+require_ulimit_v_
 getlimits_
 
 # From coreutils-8.10 through 8.20, this would make cut try to allocate

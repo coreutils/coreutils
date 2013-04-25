@@ -408,6 +408,13 @@ sc_some_programs_must_avoid_exit_failure:
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :
 
+# Ensure that tests call the require_ulimit_v_ function if using ulimit -v
+sc_prohibit_test_ulimit_without_require_:
+	@(git grep -l require_ulimit_v_ tests;				\
+	  git grep -l 'ulimit -v' tests)				\
+	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
+	  " should match require_ulimit_v_ with ulimit -v" 1>&2; exit 1; } || :
+
 # Ensure that tests call the print_ver_ function for programs which are
 # actually used in that test.
 sc_prohibit_test_calls_print_ver_with_irrelevant_argument:

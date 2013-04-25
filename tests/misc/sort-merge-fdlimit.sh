@@ -19,7 +19,6 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
-require_ulimit_
 
 mkdir in err || framework_failure_
 
