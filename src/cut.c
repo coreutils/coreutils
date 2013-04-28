@@ -233,6 +233,20 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
+/* Return nonzero if the K'th field or byte is printable. */
+
+static bool
+print_kth (size_t k)
+{
+  bool k_selected = false;
+  if (0 < eol_range_start && eol_range_start <= k)
+    k_selected = true;
+  else if (current_rp->lo <= k && k <= current_rp->hi)
+    k_selected = true;
+
+  return k_selected ^ complement;
+}
+
 /* Return nonzero if K'th byte is the beginning of a range. */
 
 static inline bool
@@ -246,24 +260,6 @@ is_range_start_index (size_t k)
     is_start = (k == (current_rp - 1)->hi + 1);
 
   return is_start;
-}
-
-/* Return nonzero if the K'th field or byte is printable. */
-
-static bool
-print_kth (size_t k, bool *range_start)
-{
-  bool k_selected = false;
-  if (0 < eol_range_start && eol_range_start <= k)
-    k_selected = true;
-  else if (current_rp->lo <= k && k <= current_rp->hi)
-    k_selected = true;
-
-  bool is_selected = k_selected ^ complement;
-  if (range_start && is_selected)
-    *range_start = is_range_start_index (k);
-
-  return k_selected ^ complement;
 }
 
 /* Comparison function for qsort to order the list of
@@ -491,16 +487,18 @@ cut_bytes (FILE *stream)
       else
         {
           next_item (&byte_idx);
-          bool range_start;
-          bool *rs = output_delimiter_specified ? &range_start : NULL;
-          if (print_kth (byte_idx, rs))
+          if (print_kth (byte_idx))
             {
-              if (rs && *rs && print_delimiter)
+              if (output_delimiter_specified)
                 {
-                  fwrite (output_delimiter_string, sizeof (char),
-                          output_delimiter_length, stdout);
+                  if (print_delimiter && is_range_start_index (byte_idx))
+                    {
+                      fwrite (output_delimiter_string, sizeof (char),
+                              output_delimiter_length, stdout);
+                    }
+                  print_delimiter = true;
                 }
-              print_delimiter = true;
+
               putchar (c);
             }
         }
@@ -532,7 +530,7 @@ cut_fields (FILE *stream)
      and the first field has been selected, or if non-delimited lines
      must be suppressed and the first field has *not* been selected.
      That is because a non-delimited line has exactly one field.  */
-  buffer_first_field = (suppress_non_delimited ^ !print_kth (1, NULL));
+  buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
 
   while (1)
     {
@@ -578,7 +576,7 @@ cut_fields (FILE *stream)
                 }
               continue;
             }
-          if (print_kth (1, NULL))
+          if (print_kth (1))
             {
               /* Print the field, but not the trailing delimiter.  */
               fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
@@ -589,7 +587,7 @@ cut_fields (FILE *stream)
 
       int prev_c = c;
 
-      if (print_kth (field_idx, NULL))
+      if (print_kth (field_idx))
         {
           if (found_any_selected_field)
             {

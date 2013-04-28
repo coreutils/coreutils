@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that cut does not allocate mem for a range like -b9999999999999-
+# Ensure that cut does not allocate mem for large ranges
 
 # Copyright (C) 2012-2013 Free Software Foundation, Inc.
 
