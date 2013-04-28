@@ -108,10 +108,30 @@ static char *field_1_buffer;
 /* The number of bytes allocated for FIELD_1_BUFFER.  */
 static size_t field_1_bufsize;
 
+/* The largest field or byte index used as an endpoint of a closed
+   or degenerate range specification;  this doesn't include the starting
+   index of right-open-ended ranges.  For example, with either range spec
+   '2-5,9-', '2-3,5,9-' this variable would be set to 5.  */
+static size_t max_range_endpoint;
 
 /* If nonzero, this is the index of the first field in a range that goes
    to end of line. */
 static size_t eol_range_start;
+
+/* This is a bit vector.
+   In byte mode, which bytes to output.
+   In field mode, which DELIM-separated fields to output.
+   Both bytes and fields are numbered starting with 1,
+   so the zeroth bit of this array is unused.
+   A field or byte K has been selected if
+   (K <= MAX_RANGE_ENDPOINT && is_printable_field (K))
+    || (EOL_RANGE_START > 0 && K >= EOL_RANGE_START).  */
+static unsigned char *printable_field;
+
+/* The maximum size the printable_field array to allocate.
+   For ranges requiring more than this, we revert to the slightly
+   slower mechanism of inspecting the current range pair limits.  */
+enum { PRINTABLE_ARRAY_MAX = 65536 };
 
 enum operating_mode
   {
@@ -233,14 +253,35 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
-/* Return nonzero if the K'th field or byte is printable. */
+static inline void
+mark_printable_field (size_t i)
+{
+  size_t n = i / CHAR_BIT;
+  printable_field[n] |= (1 << (i % CHAR_BIT));
+}
 
-static bool
+static inline bool
+is_printable_field (size_t i)
+{
+  size_t n = i / CHAR_BIT;
+  return (printable_field[n] >> (i % CHAR_BIT)) & 1;
+}
+
+/* Return nonzero if the K'th field or byte is printable.
+   Note this is a "hot" function.  Please profile when changing.  */
+
+static inline bool
 print_kth (size_t k)
 {
   bool k_selected = false;
+
   if (0 < eol_range_start && eol_range_start <= k)
     k_selected = true;
+  else if (printable_field) /* faster path for smaller ranges.  */
+    {
+      if (k <= max_range_endpoint && is_printable_field (k))
+        k_selected = true;
+    }
   else if (current_rp->lo <= k && k <= current_rp->hi)
     k_selected = true;
 
@@ -275,12 +316,14 @@ compare_ranges (const void *a, const void *b)
 /* Increment *ITEM_IDX (i.e. a field or byte index),
    and if required CURRENT_RP.  */
 
-static void
+static inline void
 next_item (size_t *item_idx)
 {
   (*item_idx)++;
-  if ((*item_idx > current_rp->hi) && (current_rp < rp + n_rp - 1))
-    current_rp++;
+  /* avoid extra processing associated with current_rp unless needed.  */
+  if (!printable_field)
+    if ((*item_idx > current_rp->hi) && (current_rp < rp + n_rp - 1))
+      current_rp++;
 }
 
 /* Given the list of field or byte range specifications FIELDSTR,
@@ -412,6 +455,24 @@ set_fields (const char *fieldstr)
         FATAL_ERROR (_("invalid byte, character or field list"));
     }
 
+  max_range_endpoint = 0;
+  for (i = 0; i < n_rp; i++)
+    {
+      if (rp[i].hi > max_range_endpoint)
+        max_range_endpoint = rp[i].hi;
+    }
+
+  /* For performance, allocate an array large enough so that it may be
+     indexed by the field numbers corresponding to all finite ranges
+     (i.e. '2-6' or '-4', but not '5-') in FIELDSTR.
+     Note this enhancement is not possible with very large ranges,
+     or when --output-delimiter is specified.  */
+
+  if (!output_delimiter_specified
+      && max_range_endpoint
+      && max_range_endpoint / CHAR_BIT < PRINTABLE_ARRAY_MAX)
+    printable_field = xzalloc (max_range_endpoint / CHAR_BIT + 1);
+
   qsort (rp, n_rp, sizeof (rp[0]), compare_ranges);
 
   /* Omit finite ranges subsumed by a to-EOL range. */
@@ -426,7 +487,8 @@ set_fields (const char *fieldstr)
         }
     }
 
-  /* Merge finite range pairs (e.g. `2-5,3-4' becomes `2-5'). */
+  /* Merge finite range pairs (e.g. `2-5,3-4' becomes `2-5').
+     Also for small enough ranges, mark items as printable.  */
   for (i = 0; i < n_rp; ++i)
     {
       for (size_t j = i + 1; j < n_rp; ++j)
@@ -440,6 +502,12 @@ set_fields (const char *fieldstr)
             }
           else
             break;
+        }
+
+      if (printable_field)
+        {
+          for (size_t k = rp[i].lo; k <= rp[i].hi; k++)
+            mark_printable_field (k);
         }
     }
 
