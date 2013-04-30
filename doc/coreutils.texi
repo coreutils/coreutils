@@ -17393,10 +17393,10 @@ Know your toolbox!  Use each program appropriately.  If you don't have an
 appropriate tool, build one.
 @end enumerate
 
-As of this writing, all the programs we've discussed are available via
-anonymous @command{ftp} from: @*
-@uref{ftp://gnudist.gnu.org/textutils/textutils-1.22.tar.gz}.  (There may
-be more recent versions available now.)
+As of this writing, all the programs discussed are available from
+@uref{http://ftp.gnu.org/old-gnu/textutils/textutils-1.22.tar.gz},
+with more recent versions available from
+@uref{http://ftp.gnu.org/gnu/coreutils}.
 
 None of what I have presented in this column is new.  The Software Tools
 philosophy was first introduced in the book @cite{Software Tools}, by
