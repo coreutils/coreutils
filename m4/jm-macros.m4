@@ -141,6 +141,26 @@ AC_DEFUN([coreutils_MACROS],
   fi
   AC_SUBST([LIB_CAP])
 
+  # Check whether libsmack is available
+  LIB_SMACK=
+  AC_ARG_ENABLE([libsmack],
+    AC_HELP_STRING([--disable-libsmack], [disable libsmack support]))
+  if test "X$enable_libsmack" != "Xno"; then
+    AC_CHECK_LIB([smack], [smack_smackfs_path],
+      [AC_CHECK_HEADER([sys/smack.h],
+        [LIB_SMACK=-lsmack
+         AC_DEFINE([HAVE_SMACK], [1], [libsmack usability])]
+      )])
+    if test "X$LIB_SMACK" = "X"; then
+      if test "X$enable_libsmack" = "Xyes"; then
+        AC_MSG_ERROR([libsmack library was not found or not usable])
+      fi
+    fi
+  else
+    AC_MSG_WARN([libsmack support disabled by user])
+  fi
+  AC_SUBST([LIB_SMACK])
+
   # See if linking 'seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
   # BeOS which has all the math functions in the normal runtime library

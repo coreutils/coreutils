@@ -24,6 +24,9 @@
 #include <grp.h>
 #include <getopt.h>
 #include <selinux/selinux.h>
+#ifdef HAVE_SMACK
+# include <sys/smack.h>
+#endif
 
 #include "system.h"
 #include "error.h"
@@ -107,6 +110,9 @@ main (int argc, char **argv)
 {
   int optc;
   int selinux_enabled = (is_selinux_enabled () > 0);
+#ifdef HAVE_SMACK
+  int smack_enabled = (smack_smackfs_path () != NULL);
+#endif
 
   /* If true, output the list of all group IDs. -G */
   bool just_group_list = false;
@@ -134,10 +140,17 @@ main (int argc, char **argv)
           break;
 
         case 'Z':
-          /* politely decline if we're not on a selinux-enabled kernel. */
+          /* politely decline if we're not on a SELinux/SMACK-enabled kernel. */
+#ifdef HAVE_SMACK
+          if (!selinux_enabled && !smack_enabled)
+            error (EXIT_FAILURE, 0,
+                   _("--context (-Z) works only on "
+                     "an SELinux/SMACK-enabled kernel"));
+#else
           if (!selinux_enabled)
             error (EXIT_FAILURE, 0,
                    _("--context (-Z) works only on an SELinux-enabled kernel"));
+#endif
           just_context = 1;
           break;
 
@@ -189,14 +202,17 @@ main (int argc, char **argv)
      and we're not in POSIXLY_CORRECT mode, get our context.  Otherwise,
      leave the context variable alone - it has been initialized to an
      invalid value that will be not displayed in print_full_info().  */
-  if (selinux_enabled
-      && n_ids == 0
+  if (n_ids == 0
       && (just_context
           || (default_format && ! getenv ("POSIXLY_CORRECT"))))
     {
       /* Report failure only if --context (-Z) was explicitly requested.  */
-      if (getcon (&context) && just_context)
+      if (selinux_enabled && getcon (&context) && just_context)
         error (EXIT_FAILURE, 0, _("can't get process context"));
+#ifdef HAVE_SMACK
+      else if (smack_enabled && smack_new_label_from_self ((char **) &context))
+        error (EXIT_FAILURE, 0, _("can't get process context"));
+#endif
     }
 
   if (n_ids == 1)

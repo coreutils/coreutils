@@ -20,6 +20,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  id -Z reports the SMACK security context where available.
+
   join accepts a new option: --zero-terminated (-z). As with the sort,uniq
   option of the same name, this makes join consume and produce NUL-terminated
   lines rather than newline-terminated lines.
