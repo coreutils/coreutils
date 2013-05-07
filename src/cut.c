@@ -80,21 +80,15 @@ static size_t n_rp_allocated;
    space if necessary.  Update global variable N_RP.  When allocating,
    update global variable N_RP_ALLOCATED.  */
 
-#define ADD_RANGE_PAIR(rp, low, high)			\
-  do							\
-    {							\
-      if (low == 0 || high == 0)			\
-        FATAL_ERROR (_("fields and positions are numbered from 1")); \
-      if (n_rp >= n_rp_allocated)			\
-        {						\
-          (rp) = X2NREALLOC (rp, &n_rp_allocated);	\
-        }						\
-      rp[n_rp].lo = (low);				\
-      rp[n_rp].hi = (high);				\
-      ++n_rp;						\
-    }							\
-  while (0)
-
+static void
+add_range_pair (size_t lo, size_t hi)
+{
+  if (n_rp == n_rp_allocated)
+    rp = X2NREALLOC (rp, &n_rp_allocated);
+  rp[n_rp].lo = lo;
+  rp[n_rp].hi = hi;
+  ++n_rp;
+}
 
 /* This buffer is used to support the semantics of the -s option
    (or lack of same) when the specified field list includes (does
@@ -107,31 +101,6 @@ static char *field_1_buffer;
 
 /* The number of bytes allocated for FIELD_1_BUFFER.  */
 static size_t field_1_bufsize;
-
-/* The largest field or byte index used as an endpoint of a closed
-   or degenerate range specification;  this doesn't include the starting
-   index of right-open-ended ranges.  For example, with either range spec
-   '2-5,9-', '2-3,5,9-' this variable would be set to 5.  */
-static size_t max_range_endpoint;
-
-/* If nonzero, this is the index of the first field in a range that goes
-   to end of line. */
-static size_t eol_range_start;
-
-/* This is a bit vector.
-   In byte mode, which bytes to output.
-   In field mode, which DELIM-separated fields to output.
-   Both bytes and fields are numbered starting with 1,
-   so the zeroth bit of this array is unused.
-   A field or byte K has been selected if
-   (K <= MAX_RANGE_ENDPOINT && is_printable_field (K))
-    || (EOL_RANGE_START > 0 && K >= EOL_RANGE_START).  */
-static unsigned char *printable_field;
-
-/* The maximum size the printable_field array to allocate.
-   For ranges requiring more than this, we revert to the slightly
-   slower mechanism of inspecting the current range pair limits.  */
-enum { PRINTABLE_ARRAY_MAX = 65536 };
 
 enum operating_mode
   {
@@ -151,7 +120,7 @@ static enum operating_mode operating_mode;
    with field mode.  */
 static bool suppress_non_delimited;
 
-/* If nonzero, print all bytes, characters, or fields _except_
+/* If true, print all bytes, characters, or fields _except_
    those that were specified.  */
 static bool complement;
 
@@ -253,56 +222,6 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
-static inline void
-mark_printable_field (size_t i)
-{
-  size_t n = i / CHAR_BIT;
-  printable_field[n] |= (1 << (i % CHAR_BIT));
-}
-
-static inline bool
-is_printable_field (size_t i)
-{
-  size_t n = i / CHAR_BIT;
-  return (printable_field[n] >> (i % CHAR_BIT)) & 1;
-}
-
-/* Return nonzero if the K'th field or byte is printable.
-   Note this is a "hot" function.  Please profile when changing.  */
-
-static inline bool
-print_kth (size_t k)
-{
-  bool k_selected = false;
-
-  if (0 < eol_range_start && eol_range_start <= k)
-    k_selected = true;
-  else if (printable_field) /* faster path for smaller ranges.  */
-    {
-      if (k <= max_range_endpoint && is_printable_field (k))
-        k_selected = true;
-    }
-  else if (current_rp->lo <= k && k <= current_rp->hi)
-    k_selected = true;
-
-  return k_selected ^ complement;
-}
-
-/* Return nonzero if K'th byte is the beginning of a range. */
-
-static inline bool
-is_range_start_index (size_t k)
-{
-  bool is_start = false;
-
-  if (!complement)
-    is_start = (k == eol_range_start || k == current_rp->lo);
-  else
-    is_start = (k == (current_rp - 1)->hi + 1);
-
-  return is_start;
-}
-
 /* Comparison function for qsort to order the list of
    struct range_pairs.  */
 static int
@@ -313,22 +232,42 @@ compare_ranges (const void *a, const void *b)
   return a_start < b_start ? -1 : a_start > b_start;
 }
 
-/* Increment *ITEM_IDX (i.e. a field or byte index),
-   and if required CURRENT_RP.  */
+/* Reallocate Range Pair entries, with corresponding
+   entries outside the range of each specified entry.  */
 
-static inline void
-next_item (size_t *item_idx)
+static void
+complement_rp (void)
 {
-  (*item_idx)++;
-  /* avoid extra processing associated with current_rp unless needed.  */
-  if (!printable_field)
-    if ((*item_idx > current_rp->hi) && (current_rp < rp + n_rp - 1))
-      current_rp++;
+  if (complement)
+    {
+      struct range_pair *c = rp;
+      size_t n = n_rp;
+      size_t i;
+
+      rp = NULL;
+      n_rp = 0;
+      n_rp_allocated = 0;
+
+      if (c[0].lo > 1)
+        add_range_pair (1, c[0].lo - 1);
+
+      for (i = 1; i < n; ++i)
+        {
+          if (c[i-1].hi + 1 == c[i].lo)
+            continue;
+
+          add_range_pair (c[i-1].hi + 1, c[i].lo - 1);
+        }
+
+      if (c[n-1].hi < SIZE_MAX)
+        add_range_pair (c[n-1].hi + 1, SIZE_MAX);
+
+      free (c);
+    }
 }
 
 /* Given the list of field or byte range specifications FIELDSTR,
-   allocate and initialize the RP array.  If there is a right-open-ended
-   range, set EOL_RANGE_START to its starting index. FIELDSTR should
+   allocate and initialize the RP array. FIELDSTR should
    be composed of one or more numbers or ranges of numbers, separated
    by blanks or commas.  Incomplete ranges may be given: '-m' means '1-m';
    'n-' means 'n' through end of line.
@@ -349,8 +288,7 @@ set_fields (const char *fieldstr)
   size_t i;
   bool in_digits = false;
 
-  /* Collect and store in RP the range end points.
-     It also sets EOL_RANGE_START if appropriate.  */
+  /* Collect and store in RP the range end points. */
 
   while (true)
     {
@@ -385,10 +323,8 @@ set_fields (const char *fieldstr)
                  In any case, 'initial' contains the start of the range. */
               if (!rhs_specified)
                 {
-                  /* 'n-'.  From 'initial' to end of line.  If we've already
-                     seen an M- range, ignore subsequent N- unless N < M.  */
-                  if (eol_range_start == 0 || initial < eol_range_start)
-                    eol_range_start = initial;
+                  /* 'n-'.  From 'initial' to end of line. */
+                  add_range_pair (initial, SIZE_MAX);
                   field_found = true;
                 }
               else
@@ -397,7 +333,7 @@ set_fields (const char *fieldstr)
                   if (value < initial)
                     FATAL_ERROR (_("invalid decreasing range"));
 
-                  ADD_RANGE_PAIR (rp, initial, value);
+                  add_range_pair (initial, value);
                   field_found = true;
                 }
               value = 0;
@@ -405,7 +341,9 @@ set_fields (const char *fieldstr)
           else
             {
               /* A simple field number, not a range. */
-              ADD_RANGE_PAIR (rp, value, value);
+              if (value == 0)
+                FATAL_ERROR (_("fields and positions are numbered from 1"));
+              add_range_pair (value, value);
               value = 0;
               field_found = true;
             }
@@ -432,7 +370,8 @@ set_fields (const char *fieldstr)
             lhs_specified = 1;
 
           /* Detect overflow.  */
-          if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t))
+          if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t)
+              || value == SIZE_MAX)
             {
               /* In case the user specified -c$(echo 2^64|bc),22,
                  complain only about the first number.  */
@@ -455,40 +394,9 @@ set_fields (const char *fieldstr)
         FATAL_ERROR (_("invalid byte, character or field list"));
     }
 
-  max_range_endpoint = 0;
-  for (i = 0; i < n_rp; i++)
-    {
-      if (rp[i].hi > max_range_endpoint)
-        max_range_endpoint = rp[i].hi;
-    }
-
-  /* For performance, allocate an array large enough so that it may be
-     indexed by the field numbers corresponding to all finite ranges
-     (i.e. '2-6' or '-4', but not '5-') in FIELDSTR.
-     Note this enhancement is not possible with very large ranges,
-     or when --output-delimiter is specified.  */
-
-  if (!output_delimiter_specified
-      && max_range_endpoint
-      && max_range_endpoint / CHAR_BIT < PRINTABLE_ARRAY_MAX)
-    printable_field = xzalloc (max_range_endpoint / CHAR_BIT + 1);
-
   qsort (rp, n_rp, sizeof (rp[0]), compare_ranges);
 
-  /* Omit finite ranges subsumed by a to-EOL range. */
-  if (eol_range_start && n_rp)
-    {
-      i = n_rp;
-      while (i && eol_range_start <= rp[i - 1].hi)
-        {
-          eol_range_start = MIN (rp[i - 1].lo, eol_range_start);
-          --n_rp;
-          --i;
-        }
-    }
-
-  /* Merge finite range pairs (e.g. `2-5,3-4' becomes `2-5').
-     Also for small enough ranges, mark items as printable.  */
+  /* Merge range pairs (e.g. `2-5,3-4' becomes `2-5'). */
   for (i = 0; i < n_rp; ++i)
     {
       for (size_t j = i + 1; j < n_rp; ++j)
@@ -503,21 +411,45 @@ set_fields (const char *fieldstr)
           else
             break;
         }
-
-      if (printable_field)
-        {
-          for (size_t k = rp[i].lo; k <= rp[i].hi; k++)
-            mark_printable_field (k);
-        }
     }
 
+  complement_rp ();
+
   /* After merging, reallocate RP so we release memory to the system.
-     Also add a sentinel at the end of RP, to avoid out of bounds access.  */
+     Also add a sentinel at the end of RP, to avoid out of bounds access
+     and for perfomance reasons.  */
   ++n_rp;
   rp = xrealloc (rp, n_rp * sizeof (struct range_pair));
-  rp[n_rp - 1].lo = rp[n_rp - 1].hi = 0;
+  rp[n_rp - 1].lo = rp[n_rp - 1].hi = SIZE_MAX;
 
   return field_found;
+}
+
+/* Increment *ITEM_IDX (i.e. a field or byte index),
+   and if required CURRENT_RP.  */
+
+static inline void
+next_item (size_t *item_idx)
+{
+  (*item_idx)++;
+  if ((*item_idx) > current_rp->hi)
+    current_rp++;
+}
+
+/* Return nonzero if the K'th field or byte is printable. */
+
+static inline bool
+print_kth (size_t k)
+{
+  return current_rp->lo <= k;
+}
+
+/* Return nonzero if K'th byte is the beginning of a range. */
+
+static inline bool
+is_range_start_index (size_t k)
+{
+  return k == current_rp->lo;
 }
 
 /* Read from stream STREAM, printing to standard output any selected bytes.  */
