@@ -27,7 +27,13 @@ getlimits_
 
 # Up to and including coreutils-8.21, cut would allocate possibly needed
 # memory upfront.  Subsequently memory is allocated as required.
-(ulimit -v 20000; : | cut -b1-$INT_MAX > err 2>&1) || fail=1
+(ulimit -v 20000; : | cut -b1-$INT_MAX >> err 2>&1) || fail=1
+
+# Ensure ranges are merged correctly when large range logic is in effect
+echo 1 > exp
+(dd bs=1MB if=/dev/zero count=1; echo '1') |
+cut -b1-1000000,2-3,4-5,1000001 2>>err | tail -c2 > out || fail=1
+compare exp out || fail=1
 
 compare /dev/null err || fail=1
 

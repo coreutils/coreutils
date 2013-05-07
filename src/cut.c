@@ -496,9 +496,9 @@ set_fields (const char *fieldstr)
           if (rp[j].lo <= rp[i].hi)
             {
               rp[i].hi = MAX (rp[j].hi, rp[i].hi);
-              memmove (rp + j, rp + j + 1,
-                       (n_rp - j - 1) * sizeof (struct range_pair));
-              --n_rp;
+              memmove (rp + j, rp + j + 1, (n_rp - j - 1) * sizeof *rp);
+              n_rp--;
+              j--;
             }
           else
             break;
