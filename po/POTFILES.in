@@ -18,7 +18,7 @@ lib/randread.c
 lib/regcomp.c
 lib/root-dev-ino.h
 lib/rpmatch.c
-lib/set-mode-acl.c
+lib/set-acl.c
 lib/siglist.h
 lib/spawn-pipe.c
 lib/strsignal.c
