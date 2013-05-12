@@ -122,10 +122,13 @@ main (int argc, char **argv)
   newmode = MODE_RW_UGO;
   if (specified_mode)
     {
+      mode_t umask_value;
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
         error (EXIT_FAILURE, 0, _("invalid mode"));
-      newmode = mode_adjust (newmode, false, umask (0), change, NULL);
+      umask_value = umask (0);
+      umask (umask_value);
+      newmode = mode_adjust (newmode, false, umask_value, change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
         error (EXIT_FAILURE, 0,
@@ -225,6 +228,10 @@ main (int argc, char **argv)
       error (0, 0, _("invalid device type %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
+
+  if (specified_mode && lchmod (argv[optind], newmode) != 0)
+    error (EXIT_FAILURE, errno, _("cannot set permissions of `%s'"),
+           quote (argv[optind]));
 
   exit (EXIT_SUCCESS);
 }

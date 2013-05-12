@@ -555,6 +555,7 @@ all_tests =					\
   tests/mkdir/p-1.sh				\
   tests/mkdir/p-2.sh				\
   tests/mkdir/p-3.sh				\
+  tests/mkdir/p-acl.sh				\
   tests/mkdir/p-slashdot.sh			\
   tests/mkdir/p-thru-slink.sh			\
   tests/mkdir/p-v.sh				\

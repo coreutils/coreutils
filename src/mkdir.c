@@ -81,8 +81,8 @@ struct mkdir_options
      made.  */
   int (*make_ancestor_function) (char const *, char const *, void *);
 
-  /* Mode for ancestor directory.  */
-  mode_t ancestor_mode;
+  /* Umask value in effect.  */
+  mode_t umask_value;
 
   /* Mode for directory itself.  */
   mode_t mode;
@@ -112,10 +112,21 @@ static int
 make_ancestor (char const *dir, char const *component, void *options)
 {
   struct mkdir_options const *o = options;
-  int r = mkdir (component, o->ancestor_mode);
+  int r;
+  mode_t user_wx = S_IWUSR | S_IXUSR;
+  bool self_denying_umask = (o->umask_value & user_wx) != 0;
+  if (self_denying_umask)
+    umask (o->umask_value & ~user_wx);
+  r = mkdir (component, S_IRWXUGO);
+  if (self_denying_umask)
+    {
+      int mkdir_errno = errno;
+      umask (o->umask_value);
+      errno = mkdir_errno;
+    }
   if (r == 0)
     {
-      r = ! (o->ancestor_mode & S_IRUSR);
+      r = (o->umask_value & S_IRUSR) != 0;
       announce_mkdir (dir, options);
     }
   return r;
@@ -191,8 +202,8 @@ main (int argc, char **argv)
   if (options.make_ancestor_function || specified_mode)
     {
       mode_t umask_value = umask (0);
-
-      options.ancestor_mode = (S_IRWXUGO & ~umask_value) | (S_IWUSR | S_IXUSR);
+      umask (umask_value);
+      options.umask_value = umask_value;
 
       if (specified_mode)
         {
@@ -205,7 +216,7 @@ main (int argc, char **argv)
           free (change);
         }
       else
-        options.mode = S_IRWXUGO & ~umask_value;
+        options.mode = S_IRWXUGO;
     }
 
   exit (savewd_process_files (argc - optind, argv + optind,
