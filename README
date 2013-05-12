@@ -207,9 +207,11 @@ Here are instructions for checking out the latest development sources:
 
 If your patch adds a new feature, please try to get some sort of consensus
 that it is a worthwhile change.  One way to do that is to send mail to
-bug-coreutils@gnu.org including as much description and justification
+coreutils@gnu.org including as much description and justification
 as you can.  Based on the feedback that generates, you may be able to
-convince us that it's worth adding.
+convince us that it's worth adding.  Please also consult the list of
+previously discussed but ultimately rejected feature requests at:
+http://www.gnu.org/software/coreutils/rejected_requests.html
 
 
 WARNING:  Now that we use the ./bootstrap script, you should not run
