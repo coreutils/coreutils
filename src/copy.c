@@ -2747,8 +2747,12 @@ owner_failure_ok (struct cp_options const *x)
   return ((errno == EPERM || errno == EINVAL) && !x->owner_privileges);
 }
 
-/* Return the user's umask, caching the result.  */
+/* Return the user's umask, caching the result.
 
+   FIXME: If the destination's parent directory has has a default ACL,
+   some operating systems (e.g., GNU/Linux's "POSIX" ACLs) use that
+   ACL's mask rather than the process umask.  Currently, the callers
+   of cached_umask incorrectly assume that this situation cannot occur.  */
 extern mode_t
 cached_umask (void)
 {
