@@ -1,19 +1,20 @@
 diff --git a/modules/tempname b/modules/tempname
-index b4708d9..e003c41 100644
+index 7fafd72..4703517 100644
 --- a/modules/tempname
 +++ b/modules/tempname
-@@ -1,5 +1,5 @@
+@@ -1,2 +1,2 @@
  Description:
 -gen_tempname() function: create a private temporary file or directory.
 +gen_tempname, gen_tempname_len: create a private temporary file or directory.
 
  Files:
  lib/tempname.c
-@@ -11,6 +11,8 @@ extensions
+@@ -11,7 +11,9 @@ extensions
  fcntl-h
  gettimeofday
  lstat
 +randint
+ secure_getenv
 +stdbool
  stdint
  sys_stat

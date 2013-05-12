@@ -1,11 +1,11 @@
 diff --git a/lib/regex_internal.h b/lib/regex_internal.h
-index 2b9f697..7f4e349 100644
+index 439444c..7242084 100644
 --- a/lib/regex_internal.h
 +++ b/lib/regex_internal.h
-@@ -823,7 +823,8 @@ re_string_wchar_at (const re_string_t *pstr, Idx idx)
+@@ -827,7 +827,8 @@ re_string_wchar_at (const re_string_t *pstr, Idx idx)
  # ifndef NOT_IN_libc
  static int
- internal_function __attribute ((pure))
+ internal_function __attribute__ ((pure, unused))
 -re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 +re_string_elem_size_at (const re_string_t *pstr _UNUSED_PARAMETER_,
 +			Idx idx _UNUSED_PARAMETER_)
