@@ -21,10 +21,31 @@ print_ver_ cut
 require_ulimit_v_
 getlimits_
 
+# sed script to subtract one from the input.
+# Each input line should consist of a positive decimal number.
+# Each output line's number is one less than the input's.
+# There's no limit (other than line length) on the number's magnitude.
+subtract_one='
+  s/$/@/
+  : again
+  s/0@/@9/
+  s/1@/0/
+  s/2@/1/
+  s/3@/2/
+  s/4@/3/
+  s/5@/4/
+  s/6@/5/
+  s/7@/6/
+  s/8@/7/
+  s/9@/8/
+  t again
+'
+
 # Ensure we can cut up to our sentinel value.
 # This is currently SIZE_MAX, but could be raised to UINTMAX_MAX
 # if we didn't allocate memory for each line as a unit.
-CUT_MAX=$(expr $SIZE_MAX - 1)
+# Don't use expr to subtract one, since SIZE_MAX may exceed its maximum value.
+CUT_MAX=$(echo $SIZE_MAX | sed "$subtract_one")
 
 # From coreutils-8.10 through 8.20, this would make cut try to allocate
 # a 256MiB bit vector.  With a 20MB limit on VM, the following would fail.
