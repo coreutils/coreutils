@@ -496,21 +496,24 @@ ptr_align (void const *ptr, size_t alignment)
    Note the word after the buffer must be non NUL. */
 
 static inline bool _GL_ATTRIBUTE_PURE
-is_nul (const char *buf, size_t bufsize)
+is_nul (void const *buf, size_t bufsize)
 {
   typedef uintptr_t word;
+  void const *vp;
+  char const *cbuf = buf;
+  word const *wp = buf;
 
   /* Find first nonzero *word*, or the word with the sentinel.  */
-  word *wp = (word *) buf;
   while (*wp++ == 0)
     continue;
 
   /* Find the first nonzero *byte*, or the sentinel.  */
-  char *cp = (char *) (wp - 1);
+  vp = wp - 1;
+  char const *cp = vp;
   while (*cp++ == 0)
     continue;
 
-  return cp > buf + bufsize;
+  return cbuf + bufsize < cp;
 }
 
 /* If 10*Accum + Digit_val is larger than the maximum value for Type,

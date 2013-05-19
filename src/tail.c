@@ -1446,6 +1446,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
     {
       struct File_spec *fspec;
       struct inotify_event *ev;
+      void *void_ev;
 
       /* When following by name without --retry, and the last file has
          been unlinked or renamed-away, diagnose it and return.  */
@@ -1507,7 +1508,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             error (EXIT_FAILURE, errno, _("error reading inotify event"));
         }
 
-      ev = (struct inotify_event *) (evbuf + evbuf_off);
+      void_ev = evbuf + evbuf_off;
+      ev = void_ev;
       evbuf_off += sizeof (*ev) + ev->len;
 
       if (ev->len) /* event on ev->name in watched directory  */

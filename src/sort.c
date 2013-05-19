@@ -1557,7 +1557,8 @@ initbuf (struct buffer *buf, size_t line_bytes, size_t alloc)
 static inline struct line *
 buffer_linelim (struct buffer const *buf)
 {
-  return (struct line *) (buf->buf + buf->alloc);
+  void *linelim = buf->buf + buf->alloc;
+  return linelim;
 }
 
 /* Return a pointer to the first character of the field specified

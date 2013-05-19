@@ -164,6 +164,21 @@ if test "$gl_gcc_warnings" = yes; then
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
   gl_WARN_ADD([-Wno-logical-op])
 
+  # clang is unduly picky about some things.
+  AC_CACHE_CHECK([whether the compiler is clang], [utils_cv_clang],
+    [AC_COMPILE_IFELSE(
+       [AC_LANG_PROGRAM([[
+            #ifndef __clang__
+              #error "not clang"
+            #endif
+          ]])],
+       [utils_cv_clang=yes],
+       [utils_cv_clang=no])])
+  if test $utils_cv_clang = yes; then
+    gl_WARN_ADD([-Wno-format-extra-args])
+    gl_WARN_ADD([-Wno-tautological-constant-out-of-range-compare])
+  fi
+
   gl_WARN_ADD([-fdiagnostics-show-option])
   gl_WARN_ADD([-funit-at-a-time])
 

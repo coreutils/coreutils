@@ -58,16 +58,26 @@ just (isaac_word a)
   return a & desired_bits;
 }
 
-/* The index operation.  On typical machines whose words are exactly
-   the right size, this is optimized to a mask, an addition, and an
-   indirect load.  Atypical machines need more work.  */
+/* The index operation.  */
 static inline isaac_word
 ind (isaac_word const *m, isaac_word x)
 {
-  return (sizeof *m * CHAR_BIT == ISAAC_BITS
-          ? (* (isaac_word *) ((char *) m
-                               + (x & ((ISAAC_WORDS - 1) * sizeof *m))))
-          : m[(x / (ISAAC_BITS / CHAR_BIT)) & (ISAAC_WORDS - 1)]);
+  if (sizeof *m * CHAR_BIT == ISAAC_BITS)
+    {
+      /* The typical case, where words are exactly the right size.
+         Optimize this to a mask, an addition, and an indirect
+         load.  */
+      void const *void_m = m;
+      char const *base_p = void_m;
+      void const *word_p = base_p + (x & ((ISAAC_WORDS - 1) * sizeof *m));
+      isaac_word const *p = word_p;
+      return *p;
+    }
+  else
+    {
+      /* Atypical machines need more work.  */
+      return m[(x / (ISAAC_BITS / CHAR_BIT)) & (ISAAC_WORDS - 1)];
+    }
 }
 
 /* Use and update *S to generate random data to fill RESULT.  */

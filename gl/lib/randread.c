@@ -275,12 +275,14 @@ readsource (struct randread_source *s, unsigned char *p, size_t size)
    the buffered ISAAC generator in ISAAC.  */
 
 static void
-readisaac (struct isaac *isaac, unsigned char *p, size_t size)
+readisaac (struct isaac *isaac, void *p, size_t size)
 {
   size_t inbytes = isaac->buffered;
 
   while (true)
     {
+      char *char_p = p;
+
       if (size <= inbytes)
         {
           memcpy (p, isaac->data.b + ISAAC_BYTES - inbytes, size);
@@ -289,14 +291,14 @@ readisaac (struct isaac *isaac, unsigned char *p, size_t size)
         }
 
       memcpy (p, isaac->data.b + ISAAC_BYTES - inbytes, inbytes);
-      p += inbytes;
+      p = char_p + inbytes;
       size -= inbytes;
 
       /* If P is aligned, write to *P directly to avoid the overhead
          of copying from the buffer.  */
       if (ALIGNED_POINTER (p, isaac_word))
         {
-          isaac_word *wp = (isaac_word *) p;
+          isaac_word *wp = p;
           while (ISAAC_BYTES <= size)
             {
               isaac_refill (&isaac->state, wp);
@@ -308,7 +310,7 @@ readisaac (struct isaac *isaac, unsigned char *p, size_t size)
                   return;
                 }
             }
-          p = (unsigned char *) wp;
+          p = wp;
         }
 
       isaac_refill (&isaac->state, isaac->data.w);

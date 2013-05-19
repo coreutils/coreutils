@@ -44,8 +44,6 @@
    int, the widest unsigned type that GMP supports.  */
 verify (SIZE_MAX <= ULONG_MAX);
 
-static void integer_overflow (char) ATTRIBUTE_NORETURN;
-
 #ifndef HAVE_GMP
 # define HAVE_GMP 0
 #endif
@@ -53,6 +51,7 @@ static void integer_overflow (char) ATTRIBUTE_NORETURN;
 #if HAVE_GMP
 # include <gmp.h>
 #else
+static void integer_overflow (char) ATTRIBUTE_NORETURN;
 /* Approximate gmp.h well enough for expr.c's purposes.  */
 typedef intmax_t mpz_t[1];
 static void mpz_clear (mpz_t z) { (void) z; }
@@ -278,6 +277,7 @@ syntax_error (void)
   error (EXPR_INVALID, 0, _("syntax error"));
 }
 
+#if ! HAVE_GMP
 /* Report an integer overflow for operation OP and exit.  */
 static void
 integer_overflow (char op)
@@ -285,15 +285,7 @@ integer_overflow (char op)
   error (EXPR_FAILURE, ERANGE, "%c", op);
   abort (); /* notreached */
 }
-
-static void die (int errno_val, char const *msg)
-  ATTRIBUTE_NORETURN;
-static void
-die (int errno_val, char const *msg)
-{
-  error (EXPR_FAILURE, errno_val, "%s", msg);
-  abort (); /* notreached */
-}
+#endif
 
 int
 main (int argc, char **argv)

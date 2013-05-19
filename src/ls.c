@@ -962,25 +962,33 @@ static struct obstack subdired_obstack;
 static struct obstack dev_ino_obstack;
 
 /* Push a pair onto the device/inode stack.  */
-#define DEV_INO_PUSH(Dev, Ino)						\
-  do									\
-    {									\
-      struct dev_ino *di;						\
-      obstack_blank (&dev_ino_obstack, sizeof (struct dev_ino));	\
-      di = -1 + (struct dev_ino *) obstack_next_free (&dev_ino_obstack); \
-      di->st_dev = (Dev);						\
-      di->st_ino = (Ino);						\
-    }									\
-  while (0)
+static void
+dev_ino_push (dev_t dev, ino_t ino)
+{
+  void *vdi;
+  struct dev_ino *di;
+  int dev_ino_size = sizeof *di;
+  obstack_blank (&dev_ino_obstack, dev_ino_size);
+  vdi = obstack_next_free (&dev_ino_obstack);
+  di = vdi;
+  di--;
+  di->st_dev = dev;
+  di->st_ino = ino;
+}
 
 /* Pop a dev/ino struct off the global dev_ino_obstack
    and return that struct.  */
 static struct dev_ino
 dev_ino_pop (void)
 {
-  assert (sizeof (struct dev_ino) <= obstack_object_size (&dev_ino_obstack));
-  obstack_blank (&dev_ino_obstack, -(int) (sizeof (struct dev_ino)));
-  return *(struct dev_ino *) obstack_next_free (&dev_ino_obstack);
+  void *vdi;
+  struct dev_ino *di;
+  int dev_ino_size = sizeof *di;
+  assert (dev_ino_size <= obstack_object_size (&dev_ino_obstack));
+  obstack_blank (&dev_ino_obstack, -dev_ino_size);
+  vdi = obstack_next_free (&dev_ino_obstack);
+  di = vdi;
+  return *di;
 }
 
 /* Note the use commented out below:
@@ -1978,7 +1986,7 @@ decode_switches (int argc, char **argv)
   if (file_type <= indicator_style)
     {
       char const *p;
-      for (p = "*=>@|" + indicator_style - file_type; *p; p++)
+      for (p = &"*=>@|"[indicator_style - file_type]; *p; p++)
         set_char_quoting (filename_quoting_options, *p, 1);
     }
 
@@ -2542,7 +2550,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
           return;
         }
 
-      DEV_INO_PUSH (dir_stat.st_dev, dir_stat.st_ino);
+      dev_ino_push (dir_stat.st_dev, dir_stat.st_ino);
     }
 
   if (recursive || print_dir_name)
