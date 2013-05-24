@@ -965,7 +965,6 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_uint (pformat, prefix_len, statbuf->st_uid);
       break;
     case 'U':
-      setpwent ();
       pw_ent = getpwuid (statbuf->st_uid);
       out_string (pformat, prefix_len,
                   pw_ent ? pw_ent->pw_name : "UNKNOWN");
@@ -974,7 +973,6 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_uint (pformat, prefix_len, statbuf->st_gid);
       break;
     case 'G':
-      setgrent ();
       gw_ent = getgrgid (statbuf->st_gid);
       out_string (pformat, prefix_len,
                   gw_ent ? gw_ent->gr_name : "UNKNOWN");
