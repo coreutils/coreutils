@@ -30,18 +30,18 @@ for size in 1024 4096 262144; do
 done
 touch -d '2001-01-01 00:00' file* || fail=1
 
-size_etc='s/[^ ]* *[^ ]* *[^ ]* *[^ ]* *//'
+size_etc='s/[^ ]* *[^ ]* *//'
 
-ls -l * | sed "$size_etc" >../out || fail=1
-POSIXLY_CORRECT=1 ls -l * | sed "$size_etc" >>../out || fail=1
-POSIXLY_CORRECT=1 ls -k -l * | sed "$size_etc" >>../out || fail=1
+ls -og * | sed "$size_etc" >../out || fail=1
+POSIXLY_CORRECT=1 ls -og * | sed "$size_etc" >>../out || fail=1
+POSIXLY_CORRECT=1 ls -k -og * | sed "$size_etc" >>../out || fail=1
 
 for var in BLOCKSIZE BLOCK_SIZE LS_BLOCK_SIZE; do
   for blocksize in 1 512 1K 1KiB; do
     (eval $var=$blocksize && export $var &&
-     ls -l * &&
-     ls -l -k * &&
-     ls -l -k --block-size=$blocksize *
+     ls -og * &&
+     ls -og -k * &&
+     ls -og -k --block-size=$blocksize *
     ) | sed "$size_etc" >>../out || fail=1
   done
 done
