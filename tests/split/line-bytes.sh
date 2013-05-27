@@ -22,7 +22,7 @@ require_ulimit_v_
 
 
 # Ensure memory is not allocated up front
-(ulimit -v 20000; split -C 'E' /dev/null) || fail=1
+(ulimit -v 20000; split -C 'G' /dev/null) || fail=1
 
 
 # Ensure correct operation with various split and buffer size combinations
