@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ head
 require_ulimit_v_
+getlimits_
 
 # exercise the fix of 2001-08-18, based on test case from Ian Bruce
 echo abc > in || framework_failure_
@@ -31,6 +32,6 @@ esac
 # Only allocate memory as needed.
 # Coreutils <= 8.21 would allocate memory up front
 # based on the value passed to -c
-(ulimit -v 20000; head --bytes=-E < /dev/null) || fail=1
+(ulimit -v 20000; head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
 
 Exit $fail
