@@ -151,7 +151,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
                             Date and time components are separated by\n\
                             a single space: 2006-08-07 12:34:56-06:00\n\
   -s, --set=STRING          set time described by STRING\n\
-  -u, --utc, --universal    print or set Coordinated Universal Time\n\
+  -u, --utc, --universal    print or set Coordinated Universal Time (UTC)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
