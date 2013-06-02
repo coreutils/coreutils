@@ -57,6 +57,13 @@ my @Tests =
      # even if the kernel reports that the file has stat.st_size = 0.
      ['j-proc', "-An -c -j $proc_file_byte_count $proc_file",
                                {IN=>{f2=>'e'}}, {OUT=>"   e\n"}],
+
+     # Ensure that a large width does not cause trouble.
+     # From coreutils-7.0 through coreutils-8.21, these would print
+     # approximately 128KiB of padding.
+     ['wide-a',   '-a -w65537 -An', {IN=>{g=>'x'}}, {OUT=>"   x\n"}],
+     ['wide-c',   '-c -w65537 -An', {IN=>{g=>'x'}}, {OUT=>"   x\n"}],
+     ['wide-x', '-tx1 -w65537 -An', {IN=>{g=>'B'}}, {OUT=>" 42\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};

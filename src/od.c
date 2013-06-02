@@ -400,7 +400,7 @@ N (size_t fields, size_t blank, void const *block,                      \
    char const *FMT_STRING, int width, int pad)                          \
 {                                                                       \
   T const *p = block;                                                   \
-  size_t i;                                                             \
+  uintmax_t i;                                                             \
   int pad_remaining = pad;                                              \
   for (i = fields; blank < i; i--)                                      \
     {                                                                   \
@@ -456,7 +456,7 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
                    int width, int pad)
 {
   unsigned char const *p = block;
-  size_t i;
+  uintmax_t i;
   int pad_remaining = pad;
   for (i = fields; blank < i; i--)
     {
@@ -487,7 +487,7 @@ print_ascii (size_t fields, size_t blank, void const *block,
              int pad)
 {
   unsigned char const *p = block;
-  size_t i;
+  uintmax_t i;
   int pad_remaining = pad;
   for (i = fields; blank < i; i--)
     {
