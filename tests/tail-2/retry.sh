@@ -26,7 +26,7 @@ wait4lines_ ()
 {
   local delay=$1
   local elc=$2   # Expected line count.
-  [ $( wc -l < out ) -ge $elc ] || { sleep $delay; return 1; }
+  [ "$( wc -l < out )" -ge "$elc" ] || { sleep $delay; return 1; }
 }
 
 # === Test:
@@ -44,9 +44,11 @@ grep -F 'tail: warning: --retry ignored' out || fail=1
 
 # === Test:
 # Ensure that "tail --retry --follow=name" waits for the file to appear.
+# Clear 'out' so that we can check its contents without races
+:>out                           || framework_failure_
 timeout 10 tail -s.1 --follow=name --retry missing >out 2>&1 & pid=$!
 retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for "cannot open" error.
-echo "X" > missing              || fail=1  # Write "X" into 'missing'.
+echo "X" > missing              || fail=1
 retry_delay_ wait4lines_ .1 6 3 || fail=1  # Wait for the expected output.
 kill $pid
 wait $pid
@@ -55,14 +57,14 @@ wait $pid
 grep -F 'cannot open' out           || { fail=1; cat out; }
 grep -F 'has become accessible' out || { fail=1; cat out; }
 grep '^X$' out                      || { fail=1; cat out; }
-rm -f missing out                   || fail=1
+rm -f missing out                   || framework_failure_
 
 # === Test:
 # Ensure that "tail --retry --follow=descriptor" waits for the file to appear.
 # tail-8.21 failed at this (since the implementation of the inotify support).
 timeout 10 tail -s.1 --follow=descriptor --retry missing >out 2>&1 & pid=$!
 retry_delay_ wait4lines_ .1 6 2 || fail=1  # Wait for "cannot open" error.
-echo "X" > missing              || fail=1  # Write "X" into 'missing'.
+echo "X" > missing              || fail=1
 retry_delay_ wait4lines_ .1 6 4 || fail=1  # Wait for the expected output.
 kill $pid
 wait $pid
@@ -73,7 +75,7 @@ grep -F 'retry only effective for the initial open' out \
 grep -F 'cannot open' out  || { fail=1; cat out; }
 grep -F 'has appeared' out || { fail=1; cat out; }
 grep '^X$' out             || { fail=1; cat out; }
-rm -f missing out          || fail=1
+rm -f missing out          || framework_failure_
 
 # === Test:
 # Ensure that tail --follow=descriptor --retry exits when the file appears
@@ -91,7 +93,7 @@ grep -F 'cannot open' out                      || { fail=1; cat out; }
 grep -F 'replaced with an untailable file' out || { fail=1; cat out; }
 grep -F 'no files remaining' out               || { fail=1; cat out; }
 [ $rc = 1 ]                                    || { fail=1; cat out; }
-rm -fd missing out                             || fail=1
+rm -fd missing out                             || framework_failure_
 
 # === Test:
 # Ensure that --follow=descriptor (without --retry) does *not wait* for the
