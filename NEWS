@@ -883,6 +883,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   However, with the above change to %X, %Y and %Z, we've made %W work
   the same way as the others.
 
+  stat gained support for several printf-style flags, such as %'s for
+  listing sizes with the current locale's thousands separator.
+
 
 * Noteworthy changes in release 8.6 (2010-10-15) [stable]
 
