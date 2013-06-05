@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2013-01-20.16; # UTC
+scriptversion=2013-05-08.20; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -140,20 +140,21 @@ po_download_command_format2=\
 "wget --mirror -nd -q -np -A.po -P '%s' \
  http://translationproject.org/latest/%s/"
 
+# Prefer a non-empty tarname (4th argument of AC_INIT if given), else
+# fall back to the package name (1st argument with munging)
 extract_package_name='
-  /^AC_INIT(/{
-     /.*,.*,.*, */{
-       s///
-       s/[][]//g
-       s/)$//
+  /^AC_INIT(\[*/{
+     s///
+     /^[^,]*,[^,]*,[^,]*,[ []*\([^][ ,)]\)/{
+       s//\1/
+       s/[],)].*//
        p
        q
      }
-     s/AC_INIT(\[*//
-     s/]*,.*//
+     s/[],)].*//
      s/^GNU //
      y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/
-     s/[^A-Za-z0-9_]/-/g
+     s/[^abcdefghijklmnopqrstuvwxyz0123456789_]/-/g
      p
   }
 '
@@ -630,9 +631,13 @@ esac
 if $bootstrap_sync; then
   cmp -s "$0" "$GNULIB_SRCDIR/build-aux/bootstrap" || {
     echo "$0: updating bootstrap and restarting..."
+    case $(sh -c 'echo "$1"' -- a) in
+      a) ignored=--;;
+      *) ignored=ignored;;
+    esac
     exec sh -c \
       'cp "$1" "$2" && shift && exec "${CONFIG_SHELL-/bin/sh}" "$@"' \
-      -- "$GNULIB_SRCDIR/build-aux/bootstrap" \
+      $ignored "$GNULIB_SRCDIR/build-aux/bootstrap" \
       "$0" "$@" --no-bootstrap-sync
   }
 fi
