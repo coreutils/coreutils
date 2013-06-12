@@ -11436,8 +11436,7 @@ Normally, in the output of @command{du} (when not using @option{--summarize}),
 the size listed next to a directory name, @var{d}, represents the sum
 of sizes of all entries beneath @var{d} as well as the size of @var{d} itself.
 With @option{--separate-dirs}, the size reported for a directory name,
-@var{d}, is merely the @code{stat.st_size}-derived size of the directory
-entry, @var{d}.
+@var{d}, will exclude the size of any subdirectories.
 
 @optSi
 

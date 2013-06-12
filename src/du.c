@@ -315,7 +315,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
 "), stdout);
       fputs (_("\
   -P, --no-dereference  don't follow any symbolic links (this is the default)\n\
-  -S, --separate-dirs   do not include size of subdirectories\n\
+  -S, --separate-dirs   for directories do not include size of subdirectories\n\
       --si              like -h, but use powers of 1000 not 1024\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
