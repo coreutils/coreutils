@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <float.h>
 
+#include "ftoastr.h"
 #include "system.h"
 #include "long-options.h"
 
@@ -97,6 +98,19 @@ decimal_absval_add_one (char *buf)
   return result;
 }
 
+#define PRINT_FLOATTYPE(N, T, FTOASTR, BUFSIZE)                         \
+static void                                                             \
+N (T x)                                                                 \
+{                                                                       \
+  char buf[BUFSIZE];                                                    \
+  FTOASTR (buf, sizeof buf, FTOASTR_LEFT_JUSTIFY, 0, x);                \
+  puts (buf);                                                           \
+}
+
+PRINT_FLOATTYPE (print_FLT, float, ftoastr, FLT_BUFSIZE_BOUND)
+PRINT_FLOATTYPE (print_DBL, double, dtoastr, DBL_BUFSIZE_BOUND)
+PRINT_FLOATTYPE (print_LDBL, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
+
 int
 main (int argc, char **argv)
 {
@@ -127,8 +141,8 @@ main (int argc, char **argv)
     }
 
 #define print_float(TYPE)                                                \
-  printf (#TYPE"_MIN=%Le\n", (long double)TYPE##_MIN);                   \
-  printf (#TYPE"_MAX=%Le\n", (long double)TYPE##_MAX);
+  printf (#TYPE"_MIN="); print_##TYPE (TYPE##_MIN);                      \
+  printf (#TYPE"_MAX="); print_##TYPE (TYPE##_MAX);
 
   /* Variable sized ints */
   print_int (CHAR);

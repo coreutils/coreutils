@@ -603,7 +603,7 @@ exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
   ^(src/system\.h|tests/du/2g\.sh)$$
 
 exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
-  ^src/(system\.h|od\.c|printf\.c)$$
+  ^src/(system\.h|od\.c|printf\.c|getlimits\.c)$$
 
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
   ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$
