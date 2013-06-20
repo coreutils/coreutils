@@ -146,11 +146,12 @@ AC_DEFUN([coreutils_MACROS],
   AC_ARG_ENABLE([libsmack],
     AC_HELP_STRING([--disable-libsmack], [disable libsmack support]))
   if test "X$enable_libsmack" != "Xno"; then
-    AC_CHECK_LIB([smack], [smack_smackfs_path],
-      [AC_CHECK_HEADER([sys/smack.h],
-        [LIB_SMACK=-lsmack
-         AC_DEFINE([HAVE_SMACK], [1], [libsmack usability])]
-      )])
+    AC_CHECK_LIB([smack], [smack_new_label_from_self],
+      [AC_CHECK_LIB([smack], [smack_new_label_from_path],
+        [AC_CHECK_HEADER([sys/smack.h],
+          [LIB_SMACK=-lsmack
+           AC_DEFINE([HAVE_SMACK], [1], [libsmack usability])]
+        )])])
     if test "X$LIB_SMACK" = "X"; then
       if test "X$enable_libsmack" = "Xyes"; then
         AC_MSG_ERROR([libsmack library was not found or not usable])

@@ -210,7 +210,8 @@ main (int argc, char **argv)
       if (selinux_enabled && getcon (&context) && just_context)
         error (EXIT_FAILURE, 0, _("can't get process context"));
 #ifdef HAVE_SMACK
-      else if (smack_enabled && smack_new_label_from_self ((char **) &context))
+      else if (smack_enabled
+               && smack_new_label_from_self ((char **) &context) < 0)
         error (EXIT_FAILURE, 0, _("can't get process context"));
 #endif
     }
