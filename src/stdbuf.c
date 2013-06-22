@@ -248,12 +248,14 @@ set_LD_PRELOAD (void)
     }
 }
 
-/* Populate environ with _STDBUF_I=$MODE _STDBUF_O=$MODE _STDBUF_E=$MODE  */
+/* Populate environ with _STDBUF_I=$MODE _STDBUF_O=$MODE _STDBUF_E=$MODE.
+   Return TRUE if any environment variables set.   */
 
-static void
+static bool
 set_libstdbuf_options (void)
 {
-  unsigned int i;
+  bool env_set = false;
+  size_t i;
 
   for (i = 0; i < ARRAY_CARDINALITY (stdbuf); i++)
     {
@@ -278,8 +280,12 @@ set_libstdbuf_options (void)
                      _("failed to update the environment with %s"),
                      quote (var));
             }
+
+          env_set = true;
         }
     }
+
+  return env_set;
 }
 
 int
@@ -346,9 +352,11 @@ main (int argc, char **argv)
       usage (EXIT_CANCELED);
     }
 
-  /* FIXME: Should we mandate at least one option?  */
-
-  set_libstdbuf_options ();
+  if (! set_libstdbuf_options ())
+    {
+      error (0, 0, _("you must specify a buffering mode option"));
+      usage (EXIT_CANCELED);
+    }
 
   /* Try to preload libstdbuf first from the same path as
      stdbuf is running from.  */

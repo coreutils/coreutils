@@ -41,6 +41,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   csplit accepts a new option: --suppressed-matched, to elide the lines
   used to identify the split points.
 
+** Changes in behavior
+
+  stdbuf now requires at least one buffering mode option to be specified,
+  as per the documented interface.
+
 ** Improvements
 
   stat and tail work better with EFIVARFS, EXOFS, F2FS, SNFS and UBIFS.

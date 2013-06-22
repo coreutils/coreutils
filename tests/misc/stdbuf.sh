@@ -50,6 +50,8 @@ stdbuf -o$SIZE_OFLOW true # size too large
 test $? = 125 || fail=1
 stdbuf -iL true # line buffering stdin disallowed
 test $? = 125 || fail=1
+stdbuf true # a buffering mode must be specified
+test $? = 125 || fail=1
 stdbuf -i0 -o0 -e0 true || fail=1 #check all files
 stdbuf -o1 . # invalid command
 test $? = 126 || fail=1
