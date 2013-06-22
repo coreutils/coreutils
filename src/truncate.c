@@ -114,7 +114,7 @@ reads as zero bytes.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=RFILE  base size on RFILE\n\
-  -s, --size=SIZE        set or adjust the file size by SIZE\n"), stdout);
+  -s, --size=SIZE        set or adjust the file size by SIZE bytes\n"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_size_note ();

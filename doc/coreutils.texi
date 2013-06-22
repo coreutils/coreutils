@@ -11849,6 +11849,7 @@ Base the size of each @var{file} on the size of @var{rfile}.
 @opindex -s
 @opindex --size
 Set or adjust the size of each @var{file} according to @var{size}.
+@var{size} is in bytes unless @option{--io-blocks} is specified.
 @multiplierSuffixesNoBlocks{size}
 
 @var{size} may also be prefixed by one of the following to adjust
