@@ -115,6 +115,10 @@
 # include <sys/capability.h>
 #endif
 
+#ifdef HAVE_SMACK
+# include <sys/smack.h>
+#endif
+
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
                       : (ls_mode == LS_MULTI_COL \
                          ? "dir" : "vdir"))
@@ -2757,7 +2761,14 @@ free_ent (struct fileinfo *f)
   free (f->name);
   free (f->linkname);
   if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
-    freecon (f->scontext);
+    {
+#ifdef HAVE_SMACK
+      if (smack_smackfs_path ())
+        free (f->scontext);
+      else
+#endif
+        freecon (f->scontext);
+    }
 }
 
 /* Empty the table of files.  */
@@ -2812,9 +2823,16 @@ getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
       errno = ENOTSUP;
       return -1;
     }
-  int r = (deref
-           ? getfilecon (file, &f->scontext)
-           : lgetfilecon (file, &f->scontext));
+  int r = 0;
+#ifdef HAVE_SMACK
+  if (smack_smackfs_path ())
+    r = smack_new_label_from_path (file, "security.SMACK64", deref,
+                                   &f->scontext);
+  else
+#endif
+    r = (deref
+         ? getfilecon (file, &f->scontext)
+         : lgetfilecon (file, &f->scontext));
   if (r < 0 && errno_unsupported (errno))
     unsupported_device = f->stat.st_dev;
   return r;
@@ -3005,13 +3023,20 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (format == long_format || print_scontext)
         {
-          bool have_selinux = false;
+          bool have_scontext = false;
           bool have_acl = false;
           int attr_len = getfilecon_cache (absolute_name, f, do_deref);
           err = (attr_len < 0);
 
           if (err == 0)
-            have_selinux = ! STREQ ("unlabeled", f->scontext);
+            {
+#ifdef HAVE_SMACK
+              if (smack_smackfs_path ())
+                have_scontext = ! STREQ ("_", f->scontext);
+              else
+#endif
+                have_scontext = ! STREQ ("unlabeled", f->scontext);
+            }
           else
             {
               f->scontext = UNKNOWN_SECURITY_CONTEXT;
@@ -3031,9 +3056,9 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
               have_acl = (0 < n);
             }
 
-          f->acl_type = (!have_selinux && !have_acl
+          f->acl_type = (!have_scontext && !have_acl
                          ? ACL_T_NONE
-                         : (have_selinux && !have_acl
+                         : (have_scontext && !have_acl
                             ? ACL_T_SELINUX_ONLY
                             : ACL_T_YES));
           any_has_acl |= f->acl_type != ACL_T_NONE;
