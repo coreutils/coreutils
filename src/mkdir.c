@@ -22,6 +22,10 @@
 #include <sys/types.h>
 #include <selinux/selinux.h>
 
+#ifdef HAVE_SMACK
+# include <sys/smack.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "mkdir-p.h"
@@ -151,6 +155,7 @@ main (int argc, char **argv)
   int optc;
   security_context_t scontext = NULL;
   struct mkdir_options options;
+  int ret = 0;
 
   options.make_ancestor_function = NULL;
   options.mode = S_IRWXUGO;
@@ -194,7 +199,17 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (scontext && setfscreatecon (scontext) < 0)
+  if (scontext)
+    {
+#ifdef HAVE_SMACK
+      if (smack_smackfs_path ())
+        ret = smack_set_label_for_self (scontext);
+      else
+#endif
+        ret = setfscreatecon (scontext);
+    }
+
+  if (ret < 0)
     error (EXIT_FAILURE, errno,
            _("failed to set default file creation context to %s"),
            quote (scontext));

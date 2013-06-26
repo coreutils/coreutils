@@ -22,6 +22,10 @@
 #include <sys/types.h>
 #include <selinux/selinux.h>
 
+#ifdef HAVE_SMACK
+# include <sys/smack.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "modechange.h"
@@ -93,6 +97,7 @@ main (int argc, char **argv)
   int expected_operands;
   mode_t node_type;
   security_context_t scontext = NULL;
+  int ret = 0;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -164,7 +169,17 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (scontext && setfscreatecon (scontext) < 0)
+  if (scontext)
+    {
+#ifdef HAVE_SMACK
+      if (smack_smackfs_path ())
+        ret = smack_set_label_for_self (scontext);
+      else
+#endif
+        ret = setfscreatecon (scontext);
+    }
+
+  if (ret < 0)
     error (EXIT_FAILURE, errno,
            _("failed to set default file creation context to %s"),
            quote (scontext));
