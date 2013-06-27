@@ -21,8 +21,7 @@ If an argument is the absolute file name of a disk device node containing a
 mounted file system,
 .B df
 shows the space available on that file system rather than on the
-file system containing the device node (which is always the root
-file system).  This version of
+file system containing the device node.  This version of
 .B df
 cannot show the space available on unmounted file systems, because on
 most kinds of systems doing so requires very nonportable intimate
