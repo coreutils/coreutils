@@ -24,15 +24,13 @@
 #include <grp.h>
 #include <getopt.h>
 #include <selinux/selinux.h>
-#ifdef HAVE_SMACK
-# include <sys/smack.h>
-#endif
 
 #include "system.h"
 #include "error.h"
 #include "mgetgroups.h"
 #include "quote.h"
 #include "group-list.h"
+#include "smack.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "id"
@@ -110,9 +108,7 @@ main (int argc, char **argv)
 {
   int optc;
   int selinux_enabled = (is_selinux_enabled () > 0);
-#ifdef HAVE_SMACK
-  int smack_enabled = (smack_smackfs_path () != NULL);
-#endif
+  bool smack_enabled = is_smack_enabled ();
 
   /* If true, output the list of all group IDs. -G */
   bool just_group_list = false;
@@ -207,14 +203,11 @@ main (int argc, char **argv)
           || (default_format && ! getenv ("POSIXLY_CORRECT"))))
     {
       /* Report failure only if --context (-Z) was explicitly requested.  */
-      if (selinux_enabled && getcon (&context) && just_context)
+      if ((selinux_enabled && getcon (&context) && just_context)
+          || (smack_enabled
+              && smack_new_label_from_self ((char **) &context) < 0
+              && just_context))
         error (EXIT_FAILURE, 0, _("can't get process context"));
-#ifdef HAVE_SMACK
-      else if (smack_enabled
-               && smack_new_label_from_self ((char **) &context) < 0
-               && just_context)
-        error (EXIT_FAILURE, 0, _("can't get process context"));
-#endif
     }
 
   if (n_ids == 1)

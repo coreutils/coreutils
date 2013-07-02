@@ -22,14 +22,11 @@
 #include <sys/types.h>
 #include <selinux/selinux.h>
 
-#ifdef HAVE_SMACK
-# include <sys/smack.h>
-#endif
-
 #include "system.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
+#include "smack.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "mkfifo"
@@ -115,11 +112,9 @@ main (int argc, char **argv)
 
   if (scontext)
     {
-#ifdef HAVE_SMACK
-      if (smack_smackfs_path ())
+      if (is_smack_enabled ())
         ret = smack_set_label_for_self (scontext);
       else
-#endif
         ret = setfscreatecon (scontext);
     }
 

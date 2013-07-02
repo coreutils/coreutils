@@ -101,6 +101,7 @@
 #include "obstack.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "smack.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
@@ -113,10 +114,6 @@
    For more details, see <http://bugzilla.redhat.com/483548>.  */
 #ifdef HAVE_CAP
 # include <sys/capability.h>
-#endif
-
-#ifdef HAVE_SMACK
-# include <sys/smack.h>
 #endif
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
@@ -2762,11 +2759,9 @@ free_ent (struct fileinfo *f)
   free (f->linkname);
   if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
     {
-#ifdef HAVE_SMACK
-      if (smack_smackfs_path ())
+      if (is_smack_enabled ())
         free (f->scontext);
       else
-#endif
         freecon (f->scontext);
     }
 }
@@ -2825,7 +2820,7 @@ getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
     }
   int r = 0;
 #ifdef HAVE_SMACK
-  if (smack_smackfs_path ())
+  if (is_smack_enabled ())
     r = smack_new_label_from_path (file, "security.SMACK64", deref,
                                    &f->scontext);
   else
@@ -3030,11 +3025,9 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
           if (err == 0)
             {
-#ifdef HAVE_SMACK
-              if (smack_smackfs_path ())
+              if (is_smack_enabled ())
                 have_scontext = ! STREQ ("_", f->scontext);
               else
-#endif
                 have_scontext = ! STREQ ("unlabeled", f->scontext);
             }
           else
