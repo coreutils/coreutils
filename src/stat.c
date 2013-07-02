@@ -179,7 +179,6 @@ enum
 
 static struct option const long_options[] =
 {
-  {"context", no_argument, 0, 'Z'},
   {"dereference", no_argument, NULL, 'L'},
   {"file-system", no_argument, NULL, 'f'},
   {"format", required_argument, NULL, 'c'},
