@@ -197,7 +197,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
            _("cannot print only names or real IDs in default format"));
 
-  /* If we are on a selinux-enabled kernel, no user is specified, and
+  /* If we are on a SELinux/SMACK-enabled kernel, no user is specified, and
      either --context is specified or none of (-u,-g,-G) is specified,
      and we're not in POSIXLY_CORRECT mode, get our context.  Otherwise,
      leave the context variable alone - it has been initialized to an
@@ -211,7 +211,8 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, 0, _("can't get process context"));
 #ifdef HAVE_SMACK
       else if (smack_enabled
-               && smack_new_label_from_self ((char **) &context) < 0)
+               && smack_new_label_from_self ((char **) &context) < 0
+               && just_context)
         error (EXIT_FAILURE, 0, _("can't get process context"));
 #endif
     }
