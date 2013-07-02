@@ -2172,8 +2172,12 @@ copy_internal (char const *src_name, char const *dst_name,
 
       /* The rename attempt has failed.  Remove any existing destination
          file so that a cross-device 'mv' acts as if it were really using
-         the rename syscall.  */
-      if (unlink (dst_name) != 0 && errno != ENOENT)
+         the rename syscall.  Note both src and dst must both be directories
+         or not, and this is enforced above.  Therefore we check the src_mode
+         and operate on dst_name here as a tighter constraint and also because
+         src_mode is readily available here.  */
+      if ((S_ISDIR (src_mode) ? rmdir (dst_name) : unlink (dst_name)) != 0
+          && errno != ENOENT)
         {
           error (0, errno,
              _("inter-device move failed: %s to %s; unable to remove target"),
