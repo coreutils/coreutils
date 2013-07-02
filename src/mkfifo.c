@@ -77,7 +77,6 @@ main (int argc, char **argv)
   int exit_status = EXIT_SUCCESS;
   int optc;
   security_context_t scontext = NULL;
-  int ret = 0;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -112,16 +111,17 @@ main (int argc, char **argv)
 
   if (scontext)
     {
+      int ret = 0;
       if (is_smack_enabled ())
         ret = smack_set_label_for_self (scontext);
       else
         ret = setfscreatecon (scontext);
-    }
 
-  if (ret < 0)
-    error (EXIT_FAILURE, errno,
-           _("failed to set default file creation context to %s"),
-           quote (scontext));
+      if (ret < 0)
+        error (EXIT_FAILURE, errno,
+               _("failed to set default file creation context to %s"),
+               quote (scontext));
+    }
 
   newmode = MODE_RW_UGO;
   if (specified_mode)
