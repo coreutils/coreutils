@@ -4945,6 +4945,16 @@ commands like @code{shuf -o F <F} and @code{cat F | shuf -o F}.
 Use @var{file} as a source of random data used to determine which
 permutation to generate.  @xref{Random sources}.
 
+@item -r
+@itemx --repetitions
+@opindex -r
+@opindex --repetitions
+@cindex allowing repetitions in output values
+Changes the default behaviour of @command{shuf}, allowing repetition in
+output values (in which case, @option{--head-count} can be larger
+than the number of input values).  If @option{--head-count} is not
+specified, output a single random value.
+
 @zeroTerminatedOption
 
 @end table
@@ -5003,6 +5013,33 @@ produce any of the twenty-four possible permutations of the input.  In
 general, if there are @var{n} input lines, there are @var{n}! (i.e.,
 @var{n} factorial, or @var{n} * (@var{n} - 1) * @dots{} * 1) possible
 output permutations.
+
+@noindent
+To output 50 random numbers between 0 and 9, use:
+
+@example
+shuf --repetitions --input-range 0-9 --head-count 50
+@end example
+
+@noindent
+or (using short options):
+
+@example
+shuf -r -i0-9 -n50
+@end example
+
+@noindent
+To simulate 100 coin flips, use:
+
+@example
+shuf -r -n100 -e Head Tail
+@end example
+
+@noindent
+or
+@example
+printf '%s\n' Head Tail | shuf -r -n100
+@end example
 
 @exitstatus
 

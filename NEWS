@@ -46,6 +46,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   csplit accepts a new option: --suppressed-matched, to elide the lines
   used to identify the split points.
 
+  shuf accepts a new option: --repetitions (-r), to allow repetitions
+  of input items in the permuted output.
+
 ** Changes in behavior
 
   stdbuf now requires at least one buffering mode option to be specified,
