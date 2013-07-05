@@ -65,4 +65,33 @@ if ! test -r unreadable; then
   shuf -n1 unreadable && fail=1
 fi
 
+# Multiple -n is accepted, should use the smallest value
+shuf -n10 -i0-9 -n3 -n20 > exp || framework_failure_
+c=$(wc -l < exp) || framework_failure_
+test "$c" -eq 3 || { fail=1; echo "Multiple -n failed">&2 ; }
+
+# Test error conditions
+
+# -i and -e must not be used together
+: | shuf -i -e A B &&
+  { fail=1; echo "shuf did not detect erroneous -e and -i usage.">&2 ; }
+# Test invalid value for -n
+: | shuf -nA &&
+  { fail=1; echo "shuf did not detect erroneous -n usage.">&2 ; }
+# Test multiple -i
+shuf -i0-9 -n10 -i8-90 &&
+  { fail=1; echo "shuf did not detect multiple -i usage.">&2 ; }
+# Test invalid range
+for ARG in '1' 'A' '1-' '1-A'; do
+  shuf -i$ARG &&
+    { fail=1; echo "shuf did not detect erroneous -i$ARG usage.">&2 ; }
+done
+
+# multiple -o are forbidden
+shuf -i0-9 -o A -o B &&
+  { fail=1; echo "shuf did not detect erroneous multiple -o usage.">&2 ; }
+# multiple random-sources are forbidden
+shuf -i0-9 --random-source A --random-source B &&
+  { fail=1; echo "shuf did not detect multiple --random-source usage.">&2 ; }
+
 Exit $fail
