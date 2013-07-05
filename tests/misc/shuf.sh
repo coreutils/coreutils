@@ -60,7 +60,9 @@ timeout 10 shuf -i1-$SIZE_MAX -n2 >/dev/null ||
 # Ensure shuf -n0 doesn't read any input or open specified files
 touch unreadable || framework_failure_
 chmod 0 unreadable || framework_failure_
-shuf -n0 unreadable || fail=1
-shuf -n1 unreadable && fail=1
+if ! test -r unreadable; then
+  shuf -n0 unreadable || fail=1
+  shuf -n1 unreadable && fail=1
+fi
 
 Exit $fail
