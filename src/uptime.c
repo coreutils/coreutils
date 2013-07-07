@@ -176,7 +176,7 @@ static void
 uptime (const char *filename, int options)
 {
   size_t n_users;
-  STRUCT_UTMP *utmp_buf;
+  STRUCT_UTMP *utmp_buf = NULL;
 
 #if HAVE_UTMPX_H || HAVE_UTMP_H
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
@@ -184,6 +184,8 @@ uptime (const char *filename, int options)
 #endif
 
   print_uptime (n_users, utmp_buf);
+
+  IF_LINT (free (utmp_buf));
 }
 
 void
