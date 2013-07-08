@@ -620,7 +620,8 @@ filter_mount_list (void)
 
       if (-1 == stat (me->me_mountdir, &buf))
         {
-          ;  /* Stat failed - add ME to be able to complain about it later.  */
+          /* Stat failed - add ME to be able to complain about it later.  */
+          buf.st_dev = me->me_dev;
         }
       else
         {

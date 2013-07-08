@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  df now processes the mount list correctly in the presence of unstatable
+  mount points.  Previously it may have failed to output some mount points.
+  [bug introduced in coreutils-8.21]
+
   install now removes the target file if the strip program failed for any
   reason.  Before, that file was left behind, sometimes even with wrong
   permissions.

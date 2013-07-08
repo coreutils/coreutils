@@ -24,8 +24,10 @@ require_gcc_shared_
 df || skip_ "df fails"
 
 # Simulate an mtab file with two entries of the same device number.
+# Also add entries with unstatable mount dirs to ensure that's handled.
 cat > k.c <<'EOF' || framework_failure_
 #include <stdio.h>
+#include <stdlib.h>
 #include <mntent.h>
 
 struct mntent *getmntent (FILE *fp)
@@ -38,20 +40,20 @@ struct mntent *getmntent (FILE *fp)
       ++done;
     }
 
-  static struct mntent mntent;
+  static struct mntent mntents[] = {
+    {.mnt_fsname="/short",  .mnt_dir="/invalid/mount/dir"},
+    {.mnt_fsname="fsname",  .mnt_dir="/",},
+    {.mnt_fsname="/fsname", .mnt_dir="/root"},
+    {.mnt_fsname="/fsname", .mnt_dir="/"},
+  };
 
-  while (done++ < 4)
+  if (!getenv ("CU_TEST_DUPE_INVALID") && done == 1)
+    done++;  /* skip the first entry.  */
+
+  while (done++ <= 4)
     {
-      /* File system - Mounted on
-         fsname       /
-         /fsname      /root
-         /fsname      /
-      */
-      mntent.mnt_fsname = (done == 2) ? "fsname" : "/fsname";
-      mntent.mnt_dir = (done == 3) ? "/root" : "/";
-      mntent.mnt_type = "-";
-
-      return &mntent;
+      mntents[done-2].mnt_type = "-";
+      return &mntents[done-2];
     }
   return NULL;
 }
@@ -65,10 +67,14 @@ gcc --std=gnu99 -shared -fPIC -ldl -O2 k.c -o k.so \
 LD_PRELOAD=./k.so df
 test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 
-# The fake mtab file should only contain 2 entries, both
+# The fake mtab file should only contain entries
 # having the same device number; thus the output should
 # consist of a header and one entry.
 LD_PRELOAD=./k.so df >out || fail=1
+test $(wc -l <out) -eq 2 || { fail=1; cat out; }
+
+# Ensure we fail when unable to stat invalid entries
+LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df >out && fail=1
 test $(wc -l <out) -eq 2 || { fail=1; cat out; }
 
 # df should also prefer "/fsname" over "fsname"
