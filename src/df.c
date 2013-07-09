@@ -636,8 +636,8 @@ filter_mount_list (void)
               if (devlist)
                 {
                   /* Let the shorter mountdir win.  */
-                  if (   !strchr (devlist->me->me_devname, '/')
-                      || ( strlen (devlist->me->me_mountdir)
+                  if (! strchr (devlist->me->me_devname, '/')
+                      || (strlen (devlist->me->me_mountdir)
                          > strlen (me->me_mountdir)))
                     {
                        /* FIXME: free ME - the others are also not free()d.  */
@@ -1035,8 +1035,10 @@ get_disk (char const *disk)
   struct mount_entry const *best_match = NULL;
 
   for (me = mount_list; me; me = me->me_next)
-    if (STREQ (disk, me->me_devname))
-      best_match = me;
+    {
+      if (STREQ (disk, me->me_devname))
+        best_match = me;
+    }
 
   if (best_match)
     {
@@ -1069,17 +1071,19 @@ get_point (const char *point, const struct stat *statp)
       size_t best_match_len = 0;
 
       for (me = mount_list; me; me = me->me_next)
-      if (!STREQ (me->me_type, "lofs")
-          && (!best_match || best_match->me_dummy || !me->me_dummy))
         {
-          size_t len = strlen (me->me_mountdir);
-          if (best_match_len <= len && len <= resolved_len
-              && (len == 1 /* root file system */
-                  || ((len == resolved_len || resolved[len] == '/')
-                      && STREQ_LEN (me->me_mountdir, resolved, len))))
+          if (!STREQ (me->me_type, "lofs")
+              && (!best_match || best_match->me_dummy || !me->me_dummy))
             {
-              best_match = me;
-              best_match_len = len;
+              size_t len = strlen (me->me_mountdir);
+              if (best_match_len <= len && len <= resolved_len
+                  && (len == 1 /* root file system */
+                      || ((len == resolved_len || resolved[len] == '/')
+                          && STREQ_LEN (me->me_mountdir, resolved, len))))
+                {
+                  best_match = me;
+                  best_match_len = len;
+                }
             }
         }
     }
