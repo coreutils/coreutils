@@ -739,18 +739,17 @@ elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
 
       off_t start_pos = lseek (fd, 0, SEEK_CUR);
       off_t end_pos = lseek (fd, 0, SEEK_END);
-      if (0 <= start_pos && start_pos < end_pos)
+      if (0 <= start_pos && 0 <= end_pos)
         {
-          /* If the file is empty, we're done.  */
-          if (end_pos == 0)
+          /* If no data to read we're done.  */
+          if (start_pos >= end_pos)
             return true;
 
           return elide_tail_lines_seekable (filename, fd, n_elide,
                                             start_pos, end_pos);
         }
 
-      /* lseek failed or the end offset precedes start.
-         Fall through.  */
+      /* lseek failed, Fall through...  */
     }
 
   return elide_tail_lines_pipe (filename, fd, n_elide);
