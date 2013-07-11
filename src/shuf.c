@@ -350,7 +350,7 @@ write_random_numbers (struct randint_source *s, size_t count,
 
   for (i = 0; i < count; i++)
     {
-      randint j = lo_input + randint_choose (s, range);
+      unsigned long int j = lo_input + randint_choose (s, range);
       if (printf ("%lu%c", j, eolbyte) < 0)
         return -1;
     }
