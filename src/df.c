@@ -613,10 +613,11 @@ filter_mount_list (void)
   struct devlist *devlist_head = NULL;
 
   /* Sort all 'wanted' entries into the list devlist_head.  */
-  for (me = mount_list; me; me = me->me_next)
+  for (me = mount_list; me;)
     {
       struct stat buf;
       struct devlist *devlist;
+      struct mount_entry *discard_me = NULL;
 
       if (-1 == stat (me->me_mountdir, &buf))
         {
@@ -635,25 +636,36 @@ filter_mount_list (void)
 
               if (devlist)
                 {
+                  discard_me = me;
+
                   /* Let the shorter mountdir win.  */
                   if (! strchr (devlist->me->me_devname, '/')
                       || (strlen (devlist->me->me_mountdir)
                          > strlen (me->me_mountdir)))
                     {
-                       /* FIXME: free ME - the others are also not free()d.  */
+                      discard_me = devlist->me;
                       devlist->me = me;
                     }
-                  continue; /* ... with the loop over the mount_list.  */
                 }
             }
         }
 
-      /* Add the device number to the global list devlist.  */
-      devlist = xmalloc (sizeof *devlist);
-      devlist->me = me;
-      devlist->dev_num = buf.st_dev;
-      devlist->next = devlist_head;
-      devlist_head = devlist;
+      if (discard_me)
+        {
+           me = me->me_next;
+           free_mount_entry (discard_me);
+        }
+      else
+        {
+          /* Add the device number to the global list devlist.  */
+          devlist = xmalloc (sizeof *devlist);
+          devlist->me = me;
+          devlist->dev_num = buf.st_dev;
+          devlist->next = devlist_head;
+          devlist_head = devlist;
+
+          me = me->me_next;
+        }
     }
 
   /* Finally rebuild the mount_list from the devlist.  */
