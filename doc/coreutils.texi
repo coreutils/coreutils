@@ -8548,7 +8548,7 @@ that normally make up the last status line.
 
 @item none
 @opindex none @r{dd status=}
-Do not print any informational messages to stderr.
+Do not print any informational or warning messages to stderr.
 Error messages are output as normal.
 
 @end table

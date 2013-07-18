@@ -51,6 +51,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  dd status=none now suppresses all non fatal diagnostic messages,
+  not just the transfer counts.
+
   stdbuf now requires at least one buffering mode option to be specified,
   as per the documented interface.
 

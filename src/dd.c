@@ -136,9 +136,7 @@ enum
 enum
   {
     STATUS_NOXFER = 01,
-    STATUS_NOCOUNTS = 02,
-    STATUS_LAST = STATUS_NOCOUNTS,
-    STATUS_NONE = STATUS_LAST | (STATUS_LAST - 1)
+    STATUS_NONE = 02
   };
 
 /* The name of the input file, or NULL for the standard input. */
@@ -738,7 +736,7 @@ print_stats (void)
   double delta_s;
   char const *bytes_per_second;
 
-  if ((status_flags & STATUS_NONE) == STATUS_NONE)
+  if (status_flags & STATUS_NONE)
     return;
 
   fprintf (stderr,
@@ -1031,12 +1029,13 @@ iread (int fd, char *buf, size_t size)
       if (0 < prev_nread && prev_nread < size)
         {
           uintmax_t prev = prev_nread;
-          error (0, 0, ngettext (("warning: partial read (%"PRIuMAX" byte); "
-                                  "suggest iflag=fullblock"),
-                                 ("warning: partial read (%"PRIuMAX" bytes); "
-                                  "suggest iflag=fullblock"),
-                                 select_plural (prev)),
-                 prev);
+          if (!(status_flags & STATUS_NONE))
+            error (0, 0, ngettext (("warning: partial read (%"PRIuMAX" byte); "
+                                    "suggest iflag=fullblock"),
+                                   ("warning: partial read (%"PRIuMAX" bytes); "
+                                    "suggest iflag=fullblock"),
+                                   select_plural (prev)),
+                   prev);
           warn_partial_read = false;
         }
 
@@ -1080,7 +1079,8 @@ iwrite (int fd, char const *buf, size_t size)
   if ((output_flags & O_DIRECT) && size < output_blocksize)
     {
       int old_flags = fcntl (STDOUT_FILENO, F_GETFL);
-      if (fcntl (STDOUT_FILENO, F_SETFL, old_flags & ~O_DIRECT) != 0)
+      if (fcntl (STDOUT_FILENO, F_SETFL, old_flags & ~O_DIRECT) != 0
+          && !(status_flags & STATUS_NONE))
         error (0, errno, _("failed to turn off O_DIRECT: %s"),
                quote (output_file));
 
@@ -1573,9 +1573,11 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
       && ioctl (fdesc, MTIOCGET, &s2) == 0
       && MT_SAME_POSITION (s1, s2))
     {
-      error (0, 0, _("warning: working around lseek kernel bug for file (%s)\n\
-  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"),
-             filename, s2.mt_type);
+      if (!(status_flags & STATUS_NONE))
+        error (0, 0, _("warning: working around lseek kernel bug for file "
+                       "(%s)\n  of mt_type=0x%0lx -- "
+                       "see <sys/mtio.h> for the list of types"),
+               filename, s2.mt_type);
       errno = 0;
       new_position = -1;
     }
@@ -1745,7 +1747,7 @@ advance_input_after_read_error (size_t nbytes)
           if (offset == input_offset)
             return true;
           diff = input_offset - offset;
-          if (! (0 <= diff && diff <= nbytes))
+          if (! (0 <= diff && diff <= nbytes) && !(status_flags & STATUS_NONE))
             error (0, 0, _("warning: invalid file offset after failed read"));
           if (0 <= skip_via_lseek (input_file, STDIN_FILENO, diff, SEEK_CUR))
             return true;
@@ -1943,7 +1945,8 @@ dd_copy (void)
              1. file is too small
              2. pipe has not enough data
              3. partial reads  */
-      if (us_blocks || (!input_offset_overflow && us_bytes))
+      if ((us_blocks || (!input_offset_overflow && us_bytes))
+          && !(status_flags & STATUS_NONE))
         {
           error (0, 0,
                  _("%s: cannot skip to specified offset"), quote (input_file));
@@ -2010,7 +2013,9 @@ dd_copy (void)
 
       if (nread < 0)
         {
-          error (0, errno, _("error reading %s"), quote (input_file));
+          if (!(conversions_mask & C_NOERROR) || !(status_flags & STATUS_NONE))
+            error (0, errno, _("error reading %s"), quote (input_file));
+
           if (conversions_mask & C_NOERROR)
             {
               print_stats ();
