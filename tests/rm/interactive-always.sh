@@ -72,13 +72,13 @@ no WHEN
 WHEN=never
 .
 WHEN=once
-rm: remove all arguments recursively? .
+rm: remove 2 arguments recursively? .
 WHEN=always
 @remove_empty 'file4-1'? @remove_empty 'file4-2'? .
 -f overrides --interactive
 .
 --interactive overrides -f
-rm: remove all arguments recursively? .
+rm: remove 1 argument recursively? .
 EOF
 
 compare expout out || fail=1

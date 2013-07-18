@@ -88,17 +88,17 @@ one file, no recursion
 three files, no recursion
 .
 four files, no recursion, answer no
-rm: remove all arguments? .
+rm: remove 4 arguments? .
 four files, no recursion, answer yes
-rm: remove all arguments? .
+rm: remove 4 arguments? .
 one file, recursion, answer no
-rm: remove all arguments recursively? .
+rm: remove 1 argument recursively? .
 one file, recursion, answer yes
-rm: remove all arguments recursively? .
+rm: remove 1 argument recursively? .
 multiple files, recursion, answer no
-rm: remove all arguments recursively? .
+rm: remove 2 arguments recursively? .
 multiple files, recursion, answer yes
-rm: remove all arguments recursively? .
+rm: remove 2 arguments recursively? .
 EOF
 
 compare expout out || fail=1

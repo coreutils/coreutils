@@ -339,9 +339,13 @@ main (int argc, char **argv)
     {
       fprintf (stderr,
                (x.recursive
-                ? _("%s: remove all arguments recursively? ")
-                : _("%s: remove all arguments? ")),
-               program_name);
+                ? ngettext ("%s: remove %zu argument recursively? ",
+                            "%s: remove %zu arguments recursively? ",
+                            select_plural (n_files))
+                : ngettext ("%s: remove %zu argument? ",
+                            "%s: remove %zu arguments? ",
+                            select_plural (n_files))),
+               program_name, n_files);
       if (!yesno ())
         exit (EXIT_SUCCESS);
     }
