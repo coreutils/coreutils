@@ -115,6 +115,14 @@ sc_tests_list_consistency:
 	    | $(EGREP) "$$test_extensions_rx\$$";			\
 	} | sort | uniq -u | grep . && exit 1; :
 
+# Ensure that all version-controlled test scripts are executable.
+sc_tests_executable:
+	@test_extensions_rx=`echo $(TEST_EXTENSIONS)			\
+	  | sed -e "s/ / -o -name */g" -e "s/^/-name */"`; \
+	find tests/ \( $$test_extensions_rx \) \! -perm -111 -print \
+	  | sed -e "s/^/$(ME): Please make test executable: /" | grep . \
+	    && exit 1; :
+
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:
