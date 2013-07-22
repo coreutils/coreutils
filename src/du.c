@@ -670,12 +670,7 @@ fill_mount_table (void)
 
       mnt_free = mnt_ent;
       mnt_ent = mnt_ent->me_next;
-
-      free (mnt_free->me_devname);
-      free (mnt_free->me_mountdir);
-      if (mnt_free->me_type_malloced)
-        free (mnt_free->me_type);
-      free (mnt_free);
+      free_mount_entry (mnt_free);
     }
 }
 
