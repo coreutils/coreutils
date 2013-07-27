@@ -494,6 +494,7 @@ all_tests =					\
   tests/du/inacc-dest.sh			\
   tests/du/inacc-dir.sh				\
   tests/du/inaccessible-cwd.sh			\
+  tests/du/inodes.sh				\
   tests/du/long-from-unreadable.sh		\
   tests/du/long-sloop.sh			\
   tests/du/max-depth.sh				\

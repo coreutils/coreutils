@@ -11424,6 +11424,18 @@ Equivalent to @option{--dereference-args} (@option{-D}).
 
 @optHumanReadable
 
+@itemx --inodes
+@opindex --inodes
+@cindex inode usage, dereferencing in @command{du}
+List inode usage information instead of block usage.
+This option is useful for finding directories which contain many files, and
+therefore eat up most of the inodes space of a file system (see @command{df},
+option @option{--inodes}).
+It can well be combined with the options @option{-a}, @option{-c},
+@option{-h}, @option{-l}, @option{-s}, @option{-S}, @option{-t} and
+@option{-x}; however, passing other options regarding the block size, for
+example @option{-b}, @option{-m} and @option{--apparent-size}, is ignored.
+
 @item -k
 @opindex -k
 @cindex kibibytes for file sizes
@@ -11485,7 +11497,9 @@ Display only a total for each argument.
 @itemx --threshold=@var{size}
 @opindex -t
 @opindex --threshold
-Exclude entries based on a given @var{size} (@pxref{Block size}).
+Exclude entries based on a given @var{size}.  The @var{size} refers to used
+blocks in normal mode (@pxref{Block size}), or inodes count in conjunction
+with the @option{--inodes} option.
 
 If @var{size} is positive, then @command{du} will only print entries with a size
 greater than or equal to that.
@@ -11501,6 +11515,10 @@ Please note that the @option{--threshold} option can be combined with the
 @option{--apparent-size} option, and in this case would elide entries based on
 its apparent size.
 
+Please note that the @option{--threshold} option can be combined with the
+@option{--inodes} option, and in this case would elide entries based on
+its inodes count.
+
 Here's how you would use @option{--threshold} to find directories with a size
 greater than or equal to 200 megabytes:
 
@@ -11513,6 +11531,13 @@ note the @option{-a} - with an apparent size smaller than or equal to 500 bytes:
 
 @example
 du -a -t -500 --apparent-size
+@end example
+
+Here's how you would use @option{--threshold} to find directories on the root
+file system with more than 20000 inodes used in the directory tree below:
+
+@example
+du --inodes -x --threshold=20000 /
 @end example
 
 

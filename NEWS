@@ -37,6 +37,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  du accepts a new option: --inodes to show the number of inodes instead
+  of the blocks used.
+
   id and ls with -Z report the SMACK security context where available.
   mkdir, mkfifo and mknod with -Z set the SMACK context where available.
 
