@@ -19,6 +19,7 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -612,6 +613,7 @@ find_line (uintmax_t linenum)
 
   for (b = head;;)
     {
+      assert (b);
       if (linenum < b->start_line + b->num_lines)
         {
           /* The line is in this buffer. */
@@ -728,7 +730,6 @@ process_line_count (const struct control *p, uintmax_t repetition)
 {
   uintmax_t linenum;
   uintmax_t last_line_to_save = p->lines_required * (repetition + 1);
-  struct cstring *line;
 
   create_output_file ();
 
@@ -741,7 +742,7 @@ process_line_count (const struct control *p, uintmax_t repetition)
   linenum = get_first_line_in_buffer ();
   while (linenum++ < last_line_to_save)
     {
-      line = remove_line ();
+      struct cstring *line = remove_line ();
       if (line == NULL)
         handle_line_error (p, repetition);
       save_line_to_file (line);
@@ -750,7 +751,7 @@ process_line_count (const struct control *p, uintmax_t repetition)
   close_output_file ();
 
   if (suppress_matched)
-    line = remove_line ();
+    remove_line ();
 
   /* Ensure that the line number specified is not 1 greater than
      the number of lines in the file. */
@@ -798,7 +799,7 @@ process_regexp (struct control *p, uintmax_t repetition)
     create_output_file ();
 
   if (suppress_matched && current_line > 0)
-    line = remove_line ();
+    remove_line ();
 
   /* If there is no offset for the regular expression, or
      it is positive, then it is not necessary to buffer the lines. */
