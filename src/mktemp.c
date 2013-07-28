@@ -81,14 +81,14 @@ Files are created u+rw, and directories u+rwx, minus umask restrictions.\n\
   -q, --quiet         suppress diagnostics about file/dir-creation failure\n\
 "), stdout);
       fputs (_("\
-      --suffix=SUFF   append SUFF to TEMPLATE.  SUFF must not contain slash.\n\
-                        This option is implied if TEMPLATE does not end in X.\n\
+      --suffix=SUFF   append SUFF to TEMPLATE; SUFF must not contain a slash.\n\
+                        This option is implied if TEMPLATE does not end in X\n\
 "), stdout);
       fputs (_("\
-      --tmpdir[=DIR]  interpret TEMPLATE relative to DIR.  If DIR is not\n\
+      --tmpdir[=DIR]  interpret TEMPLATE relative to DIR; if DIR is not\n\
                         specified, use $TMPDIR if set, else /tmp.  With\n\
-                        this option, TEMPLATE must not be an absolute name.\n\
-                        Unlike with -t, TEMPLATE may contain slashes, but\n\
+                        this option, TEMPLATE must not be an absolute name;\n\
+                        unlike with -t, TEMPLATE may contain slashes, but\n\
                         mktemp creates only the final component\n\
 "), stdout);
       fputs ("\n", stdout);

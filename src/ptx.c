@@ -1853,7 +1853,7 @@ Output a permuted index, including context, of the words in the input files.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-With no FILE or if FILE is -, read Standard Input.  '-F /' by default.\n\
+With no FILE, or when FILE is -, read standard input.  Default is '-F /'.\n\
 "), stdout);
       emit_ancillary_info ();
     }

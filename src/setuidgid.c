@@ -63,7 +63,7 @@ This program is useful only when run by root (user ID zero).\n\
 "), stdout);
       fputs (_("\
   -g GID[,GID1...]  also set the primary group-ID to the numeric GID, and\n\
-                    (if specified) supplemental group IDs to GID1, ...\n\
+                      (if specified) supplemental group IDs to GID1, ...\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

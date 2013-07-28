@@ -235,18 +235,18 @@ Start COMMAND, and kill it if still running after DURATION.\n\
       fputs (_("\
       --preserve-status\n\
                  exit with the same status as COMMAND, even when the\n\
-                 command times out\n\
+                   command times out\n\
       --foreground\n\
-                 When not running timeout directly from a shell prompt,\n\
-                 allow COMMAND to read from the TTY and receive TTY signals.\n\
-                 In this mode, children of COMMAND will not be timed out.\n\
+                 when not running timeout directly from a shell prompt,\n\
+                   allow COMMAND to read from the TTY and get TTY signals;\n\
+                   in this mode, children of COMMAND will not be timed out\n\
   -k, --kill-after=DURATION\n\
                  also send a KILL signal if COMMAND is still running\n\
-                 this long after the initial signal was sent.\n\
+                   this long after the initial signal was sent\n\
   -s, --signal=SIGNAL\n\
-                 specify the signal to be sent on timeout.\n\
-                 SIGNAL may be a name like 'HUP' or a number.\n\
-                 See 'kill -l' for a list of signals\n"), stdout);
+                 specify the signal to be sent on timeout;\n\
+                   SIGNAL may be a name like 'HUP' or a number;\n\
+                   see 'kill -l' for a list of signals\n"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

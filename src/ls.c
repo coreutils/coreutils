@@ -4758,19 +4758,19 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -b, --escape               print C-style escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
-      --block-size=SIZE      scale sizes by SIZE before printing them.  E.g.,\n\
+      --block-size=SIZE      scale sizes by SIZE before printing them; e.g.,\n\
                                '--block-size=M' prints sizes in units of\n\
-                               1,048,576 bytes.  See SIZE format below.\n\
+                               1,048,576 bytes; see SIZE format below\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
-                               modification of file status information)\n\
-                               with -l: show ctime and sort by name\n\
+                               modification of file status information);\n\
+                               with -l: show ctime and sort by name;\n\
                                otherwise: sort by ctime, newest first\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
       --color[=WHEN]         colorize the output.  WHEN defaults to 'always'\n\
-                               or can be 'never' or 'auto'.  More info below\n\
+                               or can be 'never' or 'auto'; more info below\n\
   -d, --directory            list directory entries instead of contents,\n\
                                and do not dereference symbolic links\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
@@ -4788,8 +4788,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
       --group-directories-first\n\
-                             group directories before files.\n\
-                               augment with a --sort option, but any\n\
+                             group directories before files;\n\
+                               can be augmented with a --sort option, but any\n\
                                use of --sort=none (-U) disables grouping\n\
 "), stdout);
       fputs (_("\
@@ -4803,7 +4803,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                              follow symbolic links listed on the command line\n\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
-                             that points to a directory\n\
+                               that points to a directory\n\
       --hide=PATTERN         do not list implied entries matching shell PATTERN\
 \n\
                                (overridden by -a or -A)\n\
@@ -4835,7 +4835,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                              append / indicator to directories\n\
 "), stdout);
       fputs (_("\
-  -q, --hide-control-chars   print ? instead of non graphic characters\n\
+  -q, --hide-control-chars   print ? instead of non-graphic characters\n\
       --show-control-chars   show non graphic characters as-is (default\n\
                              unless program is 'ls' and output is a terminal)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
@@ -4860,9 +4860,9 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
       --time-style=STYLE     with -l, show times using style STYLE:\n\
-                             full-iso, long-iso, iso, locale, +FORMAT.\n\
+                             full-iso, long-iso, iso, locale, +FORMAT;\n\
                              FORMAT is interpreted like 'date'; if FORMAT is\n\
-                             FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
+                             FORMAT1<newline>FORMAT2, then FORMAT1 applies to\n\
                              non-recent files and FORMAT2 to recent files;\n\
                              if STYLE is prefixed with 'posix-', STYLE\n\
                              takes effect only outside the POSIX locale\n\
@@ -4872,8 +4872,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);
       fputs (_("\
-  -u                         with -lt: sort by, and show, access time\n\
-                               with -l: show access time and sort by name\n\
+  -u                         with -lt: sort by, and show, access time;\n\
+                               with -l: show access time and sort by name;\n\
                                otherwise: sort by access time\n\
   -U                         do not sort; list entries in directory order\n\
   -v                         natural sort of (version) numbers within text\n\

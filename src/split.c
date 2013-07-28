@@ -215,15 +215,15 @@ is -, read standard input.\n\
 
       fprintf (stdout, _("\
   -a, --suffix-length=N   generate suffixes of length N (default %d)\n\
-      --additional-suffix=SUFFIX  append an additional SUFFIX to file names.\n\
+      --additional-suffix=SUFFIX  append an additional SUFFIX to file names\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
-  -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic.\n\
-                                   FROM changes the start value (default 0).\n\
+  -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic;\n\
+                                   FROM changes the start value (default 0)\n\
   -e, --elide-empty-files  do not generate empty output files with '-n'\n\
       --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
-  -n, --number=CHUNKS     generate CHUNKS output files.  See below\n\
+  -n, --number=CHUNKS     generate CHUNKS output files; see explanation below\n\
   -u, --unbuffered        immediately copy input to output with '-n r/...'\n\
 "), DEFAULT_SUFFIX_LENGTH);
       fputs (_("\

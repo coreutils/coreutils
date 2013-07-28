@@ -268,25 +268,24 @@ With no FILE, or when FILE is -, read standard input.\n\
       emit_mandatory_arg_note ();
 
      fputs (_("\
-  -c, --bytes=K            output the last K bytes; alternatively, use -c +K\n\
-                           to output bytes starting with the Kth of each file\n\
+  -c, --bytes=K            output the last K bytes; or use -c +K to output\n\
+                             bytes starting with the Kth of each file\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
                            output appended data as the file grows;\n\
-                           -f, --follow, and --follow=descriptor are\n\
-                           equivalent\n\
+                             -f and --follow[=descriptor] are equivalent\n\
   -F                       same as --follow=name --retry\n\
 "), stdout);
      printf (_("\
   -n, --lines=K            output the last K lines, instead of the last %d;\n\
-                           or use -n +K to output lines starting with the Kth\n\
+                             or use -n +K to output starting with the Kth\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
-                           changed size after N (default %d) iterations\n\
-                           to see if it has been unlinked or renamed\n\
-                           (this is the usual case of rotated log files).\n\
-                           With inotify, this option is rarely useful.\n\
+                             changed size after N (default %d) iterations\n\
+                             to see if it has been unlinked or renamed\n\
+                             (this is the usual case of rotated log files);\n\
+                             with inotify, this option is rarely useful\n\
 "),
              DEFAULT_N_LINES,
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
@@ -298,9 +297,9 @@ With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
      fputs (_("\
   -s, --sleep-interval=N   with -f, sleep for approximately N seconds\n\
-                             (default 1.0) between iterations.\n\
-                             With inotify and --pid=P, check process P at\n\
-                             least once every N seconds.\n\
+                             (default 1.0) between iterations;\n\
+                             with inotify and --pid=P, check process P at\n\
+                             least once every N seconds\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);

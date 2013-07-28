@@ -311,9 +311,9 @@ Summarize disk usage of each FILE, recursively for directories.\n\
                           --summarize\n\
 "), stdout);
       fputs (_("\
-      --files0-from=F   summarize disk usage of the NUL-terminated file\n\
-                          names specified in file F;\n\
-                          If F is - then read names from standard input\n\
+      --files0-from=F   summarize disk usage of the\n\
+                          NUL-terminated file names specified in file F;\n\
+                          if F is -, then read names from standard input\n\
   -H                    equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
 \n\

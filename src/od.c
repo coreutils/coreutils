@@ -316,18 +316,18 @@ suffixes may be . for octal and b for multiply by 512.\n\
       emit_mandatory_arg_note ();
 
       fputs (_("\
-  -A, --address-radix=RADIX   output format for file offsets.  RADIX is one\n\
+  -A, --address-radix=RADIX   output format for file offsets; RADIX is one\n\
                                 of [doxn], for Decimal, Octal, Hex or None\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
 "), stdout);
       fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars.\
+  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars;\
 \n\
                                 3 is implied when BYTES is not specified\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
-  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line.\n\
+  -w[BYTES], --width[=BYTES]  output BYTES bytes per output line;\n\
                                 32 is implied when BYTES is not specified\n\
       --traditional           accept arguments in third form above\n\
 "), stdout);

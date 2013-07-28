@@ -1368,8 +1368,8 @@ Display file or file system status.\n\
   -c  --format=FORMAT   use the specified FORMAT instead of the default;\n\
                           output a newline after each use of FORMAT\n\
       --printf=FORMAT   like --format, but interpret backslash escapes,\n\
-                          and do not output a mandatory trailing newline.\n\
-                          If you want a newline, include \\n in FORMAT\n\
+                          and do not output a mandatory trailing newline;\n\
+                          if you want a newline, include \\n in FORMAT\n\
   -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
