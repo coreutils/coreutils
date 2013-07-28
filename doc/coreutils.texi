@@ -11424,7 +11424,7 @@ Equivalent to @option{--dereference-args} (@option{-D}).
 
 @optHumanReadable
 
-@itemx --inodes
+@item --inodes
 @opindex --inodes
 @cindex inode usage, dereferencing in @command{du}
 List inode usage information instead of block usage.
