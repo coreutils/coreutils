@@ -67,9 +67,12 @@ compare /dev/null err || fail=1
 
 # Count all items: 1-1-3.
 # Sort output because the directory entry order is not defined.
-printf '1\td/d\n1\td/h\n3\td\n' | sort > exp || framework_failure_
+# Also replace the hardlink with the original file name because
+# the system may either return 'd/f' or 'd/h' first, and du(1)
+# will ignore the other one.
+printf '1\td/d\n1\td/f\n3\td\n' | sort > exp || framework_failure_
 du --inodes -a d > out.tmp 2>err || fail=1
-sort <out.tmp >out || framework_failure_
+sed 's/h$/f/' out.tmp | sort >out || framework_failure_
 compare exp out || fail=1
 compare /dev/null err || fail=1
 
