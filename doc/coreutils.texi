@@ -8261,7 +8261,8 @@ all but @samp{Operation not supported} warnings are output.
 Using @option{--preserve} with no @var{attribute_list} is equivalent
 to @option{--preserve=mode,ownership,timestamps}.
 
-In the absence of this option, each destination file is created with the
+In the absence of this option, the permissions of existing destination
+files are unchanged, while each new file is created with the
 mode bits of the corresponding source file, minus the bits set in the
 umask and minus the set-user-ID and set-group-ID bits.
 @xref{File permissions}.
