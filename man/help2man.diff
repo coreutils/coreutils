@@ -1,0 +1,32 @@
+--- man/help2man-orig
++++ man/help2man	2013-08-01 02:37:57.771389937 +0200
+@@ -435,6 +435,7 @@
+ my $PAT_FILES         = _('Files');
+ my $PAT_EXAMPLES      = _('Examples');
+ my $PAT_FREE_SOFTWARE = _('This +is +free +software');
++my $PAT_INFO          = _('For +complete +documentation');
+ 
+ # Start a new paragraph (if required) for these.
+ s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR) /$1\n\n$2 /og;
+@@ -467,6 +468,12 @@
+ 	next;
+     }
+ 
++    # Skip any texinfo reference as that's handled separately
++    if (s/($PAT_INFO).*\n//o)
++    {
++        next;
++    }
++
+     # Copyright section
+     if (/^Copyright /)
+     {
+@@ -645,7 +652,7 @@
+ .B %s
+ programs are properly installed at your site, the command
+ .IP
+-.B info %s
++.B info coreutils \(aq%s invocation\(aq
+ .PP
+ should give you access to the complete manual.
+ EOT

@@ -50,6 +50,9 @@ distclean-local:
 # Dependencies common to all man pages.  Updated below.
 mandeps =
 
+# Depend on the help2man script.
+mandeps += man/help2man
+
 # Depend on this to get version number changes.
 mandeps += .version
 
@@ -58,6 +61,13 @@ mandeps += .version
 mandeps += $(top_srcdir)/src/system.h
 
 $(ALL_MANS): $(mandeps)
+
+# Create help2man from the upstream version and out patch.
+man/help2man:    man/help2man.in man/help2man.diff
+	$(AM_V_GEN)cp man/help2man.in man/help2man.tmp \
+	  && VERSION_CONTROL=none patch man/help2man.tmp < man/help2man.diff \
+	  && chmod a+x man/help2man.tmp \
+	  && mv man/help2man.tmp man/help2man
 
 # Most prog.1 man pages depend on src/prog.  List the exceptions:
 # Note that dir and vdir are exceptions only if you consider the name
