@@ -1233,9 +1233,9 @@ or all file systems by default.\n\
 
       fputs (_("\
   -a, --all             include dummy file systems\n\
-  -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\
-                           '-BM' prints sizes in units of 1,048,576 bytes.\n\
-                           See SIZE format below.\n\
+  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
+                           '-BM' prints sizes in units of 1,048,576 bytes;\n\
+                           see SIZE format below\n\
       --total           produce a grand total\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
 \n\

@@ -141,10 +141,10 @@ Remove (unlink) the FILE(s).\n\
 "), stdout);
       fputs (_("\
   -I                    prompt once before removing more than three files, or\n\
-                          when removing recursively.  Less intrusive than -i,\n\
+                          when removing recursively; less intrusive than -i,\n\
                           while still giving protection against most mistakes\n\
       --interactive[=WHEN]  prompt according to WHEN: never, once (-I), or\n\
-                          always (-i).  Without WHEN, prompt always\n\
+                          always (-i); without WHEN, prompt always\n\
 "), stdout);
       fputs (_("\
       --one-file-system  when removing a hierarchy recursively, skip any\n\

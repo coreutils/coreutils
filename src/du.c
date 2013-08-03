@@ -298,9 +298,9 @@ Summarize disk usage of each FILE, recursively for directories.\n\
                           fragmentation, indirect blocks, and the like\n\
 "), stdout);
       fputs (_("\
-  -B, --block-size=SIZE  scale sizes by SIZE before printing them.  E.g.,\n\
-                           '-BM' prints sizes in units of 1,048,576 bytes.\n\
-                           See SIZE format below.\n\
+  -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
+                           '-BM' prints sizes in units of 1,048,576 bytes;\n\
+                           see SIZE format below\n\
   -b, --bytes           equivalent to '--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference only symlinks that are listed on the\n\
@@ -338,9 +338,9 @@ Summarize disk usage of each FILE, recursively for directories.\n\
                           directory, or any of its subdirectories\n\
       --time=WORD       show time as WORD instead of modification time:\n\
                           atime, access, use, ctime or status\n\
-      --time-style=STYLE  show times using style STYLE:\n\
-                          full-iso, long-iso, iso, +FORMAT\n\
-                          FORMAT is interpreted like 'date'\n\
+      --time-style=STYLE  show times using STYLE, which can be:\n\
+                            full-iso, long-iso, iso, or +FORMAT;\n\
+                            FORMAT is interpreted like in 'date'\n\
 "), stdout);
       fputs (_("\
   -X, --exclude-from=FILE  exclude files that match any pattern in FILE\n\

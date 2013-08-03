@@ -274,7 +274,7 @@ With no FILE, or when FILE is -, read standard input.\n\
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
                            output appended data as the file grows;\n\
-                             -f and --follow[=descriptor] are equivalent\n\
+                             an absent option argument means 'descriptor'\n\
   -F                       same as --follow=name --retry\n\
 "), stdout);
      printf (_("\

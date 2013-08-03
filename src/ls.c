@@ -4769,10 +4769,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         colorize the output.  WHEN defaults to 'always'\n\
-                               or can be 'never' or 'auto'; more info below\n\
-  -d, --directory            list directory entries instead of contents,\n\
-                               and do not dereference symbolic links\n\
+      --color[=WHEN]         colorize the output; WHEN can be 'never', 'auto',\
+\n\
+                               or 'always' (the default); more info below\n\
+  -d, --directory            list directories themselves, not their contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
@@ -4835,9 +4835,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                              append / indicator to directories\n\
 "), stdout);
       fputs (_("\
-  -q, --hide-control-chars   print ? instead of non-graphic characters\n\
-      --show-control-chars   show non graphic characters as-is (default\n\
-                             unless program is 'ls' and output is a terminal)\n\
+  -q, --hide-control-chars   print ? instead of nongraphic characters\n\
+      --show-control-chars   show nongraphic characters as-is (the default,\n\
+                               unless program is 'ls' and output is a terminal)\
+\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
                                literal, locale, shell, shell-always, c, escape\
@@ -4850,22 +4851,25 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size\n\
-      --sort=WORD            sort by WORD instead of name: none -U,\n\
-                             extension -X, size -S, time -t, version -v\n\
-      --time=WORD            with -l, show time as WORD instead of modification\
-\n\
-                             time: atime -u, access -u, use -u, ctime -c,\n\
-                             or status -c; use specified time as sort key\n\
-                             if --sort=time\n\
+      --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
+,\n\
+                               time (-t), version (-v), extension (-X)\n\
+      --time=WORD            with -l, show time as WORD instead of default\n\
+                               modification time: atime or access or use (-u)\n\
+                               ctime or status (-c); also use specified time\n\
+                               as sort key if --sort=time\n\
 "), stdout);
       fputs (_("\
       --time-style=STYLE     with -l, show times using style STYLE:\n\
-                             full-iso, long-iso, iso, locale, +FORMAT;\n\
-                             FORMAT is interpreted like 'date'; if FORMAT is\n\
-                             FORMAT1<newline>FORMAT2, then FORMAT1 applies to\n\
-                             non-recent files and FORMAT2 to recent files;\n\
-                             if STYLE is prefixed with 'posix-', STYLE\n\
-                             takes effect only outside the POSIX locale\n\
+                               full-iso, long-iso, iso, locale, or +FORMAT;\n\
+                               FORMAT is interpreted like in 'date'; if FORMAT\
+\n\
+                               is FORMAT1<newline>FORMAT2, then FORMAT1 applies\
+\n\
+                               to non-recent files and FORMAT2 to recent files;\
+\n\
+                               if STYLE is prefixed with 'posix-', STYLE\n\
+                               takes effect only outside the POSIX locale\n\
 "), stdout);
       fputs (_("\
   -t                         sort by modification time, newest first\n\
