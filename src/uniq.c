@@ -182,7 +182,7 @@ With no options, matching lines are merged to the first occurrence.\n\
 
      fputs (_("\
   -c, --count           prefix lines by the number of occurrences\n\
-  -d, --repeated        only print duplicate lines\n\
+  -d, --repeated        only print duplicate lines, one for each group\n\
 "), stdout);
      fputs (_("\
   -D, --all-repeated[=METHOD]  print all duplicate lines\n\
