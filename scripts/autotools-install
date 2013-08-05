@@ -24,9 +24,9 @@ tarballs='
   http://pkgconfig.freedesktop.org/releases/pkg-config-0.28.tar.gz
   http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.gz
   http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-  http://ftp.gnu.org/gnu/automake/automake-1.12.6.tar.gz
+  http://ftp.gnu.org/gnu/automake/automake-1.14.tar.gz
   http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
-  http://ftp.gnu.org/gnu/gettext/gettext-0.18.2.tar.gz
+  http://ftp.gnu.org/gnu/gettext/gettext-0.18.3.tar.gz
 '
 
 usage() {
