@@ -11268,30 +11268,34 @@ An NFS file system, i.e., one mounted over a network from another
 machine.  This is the one type name which seems to be used uniformly by
 all systems.
 
-@item 4.2@r{, }ufs@r{, }efs@dots{}
+@item ext2@r{, }ext3@r{, }ext4@r{, }xfs@r{, }btrfs@dots{}
 @cindex Linux file system types
 @cindex local file system types
-@opindex 4.2 @r{file system type}
-@opindex ufs @r{file system type}
-@opindex efs @r{file system type}
+@opindex ext2 @r{file system type}
+@opindex ext3 @r{file system type}
+@opindex ext4 @r{file system type}
+@opindex xfs @r{file system type}
+@opindex btrfs @r{file system type}
 A file system on a locally-mounted hard disk.  (The system might even
 support more than one type here; Linux does.)
 
-@item hsfs@r{, }cdfs
+@item iso9660@r{, }cdfs
 @cindex CD-ROM file system type
-@cindex High Sierra file system
-@opindex hsfs @r{file system type}
+@cindex DVD file system type
+@cindex ISO9660 file system type
+@opindex iso9660 @r{file system type}
 @opindex cdfs @r{file system type}
-A file system on a CD-ROM drive.  HP-UX uses @samp{cdfs}, most other
-systems use @samp{hsfs} (@samp{hs} for ``High Sierra'').
+A file system on a CD or DVD drive.  HP-UX uses @samp{cdfs}, most other
+systems use @samp{iso9660}.
 
-@item pcfs
-@cindex PC file system
+@item ntfs@r{,}fat
+@cindex NTFS file system
 @cindex DOS file system
 @cindex MS-DOS file system
-@cindex diskette file system
-@opindex pcfs
-An MS-DOS file system, usually on a diskette.
+@cindex MS-Windows file system
+@opindex ntfs @r{file system file}
+@opindex fat @r{file system file}
+File systems used by MS-Windows / MS-DOS.
 
 @end table
 
