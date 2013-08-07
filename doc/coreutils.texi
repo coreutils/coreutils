@@ -11054,7 +11054,7 @@ for that device with the shortest mount point name in the list of file systems
 (@var{mtab}), i.e., it hides duplicate entries, unless the @option{-a} option is
 specified.
 
-With the same logic, @command{df} elides a mount entry of a dummy pseude device
+With the same logic, @command{df} elides a mount entry of a dummy pseudo device
 if there is another mount entry of a real block device for that mount point with
 the same device number, e.g. the early-boot pseudo file system @samp{rootfs} is
 not shown per default when already the real root device has been mounted.
