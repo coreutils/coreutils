@@ -539,7 +539,7 @@ get_header (void)
           char *num = human_readable (output_block_size, buf, opts, 1, 1);
 
           /* Reset the header back to the default in OUTPUT_MODE.  */
-          header = N_("blocks");
+          header = _("blocks");
 
           /* TRANSLATORS: this is the "1K-blocks" header in "df" output.  */
           if (asprintf (&cell, _("%s-%s"), num, header) == -1)
