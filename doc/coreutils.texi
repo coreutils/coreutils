@@ -16810,6 +16810,9 @@ When @var{increment} is not specified, it defaults to @samp{1},
 even when @var{first} is larger than @var{last}.
 @var{first} also defaults to @samp{1}.  So @code{seq 1} prints
 @samp{1}, but @code{seq 0} and @code{seq 10 5} produce no output.
+The sequence of numbers ends when the sum of the current number and
+@var{increment} would become greater than @var{last},
+so @code{seq 1 10 10} only produces @samp{1}.
 Floating-point numbers may be specified.  @xref{Floating point}.
 
 The program accepts the following options.  Also see @ref{Common options}.
