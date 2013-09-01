@@ -221,7 +221,7 @@ struct keyfield
   bool general_numeric;		/* Flag for general, numeric comparison.
                                    Handle numbers in exponential notation. */
   bool human_numeric;		/* Flag for sorting by human readable
-                                   units with either SI xor IEC prefixes. */
+                                   units with either SI or IEC prefixes. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */

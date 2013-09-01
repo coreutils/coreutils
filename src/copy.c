@@ -1762,7 +1762,7 @@ copy_internal (char const *src_name, char const *dst_name,
              returning early, and hence not copying/moving the file.
              This may be due to an interactive 'negative' reply to the
              prompt about the existing file.  It may also be due to the
-             use of the --reply=no option.
+             use of the --no-clobber option.
 
              cp and mv treat -i and -f differently.  */
           if (x->move_mode)
