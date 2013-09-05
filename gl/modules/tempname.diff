@@ -2,7 +2,7 @@ diff --git a/modules/tempname b/modules/tempname
 index 7fafd72..4703517 100644
 --- a/modules/tempname
 +++ b/modules/tempname
-@@ -1,2 +1,2 @@
+@@ -1,5 +1,5 @@
  Description:
 -gen_tempname() function: create a private temporary file or directory.
 +gen_tempname, gen_tempname_len: create a private temporary file or directory.
