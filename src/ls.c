@@ -2647,7 +2647,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
      contents listed rather than being mentioned here as files.  */
 
   if (recursive)
-    extract_dirs_from_files (name, command_line_arg);
+    extract_dirs_from_files (name, false);
 
   if (format == long_format || print_block_size)
     {
