@@ -1,6 +1,6 @@
 --- man/help2man-orig
-+++ man/help2man	2013-08-01 02:37:57.771389937 +0200
-@@ -435,6 +435,7 @@
++++ man/help2man	2013-09-10 07:31:28.352365301 +0200
+@@ -412,6 +412,7 @@
  my $PAT_FILES         = _('Files');
  my $PAT_EXAMPLES      = _('Examples');
  my $PAT_FREE_SOFTWARE = _('This +is +free +software');
@@ -8,7 +8,7 @@
  
  # Start a new paragraph (if required) for these.
  s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR) /$1\n\n$2 /og;
-@@ -467,6 +468,12 @@
+@@ -444,6 +445,12 @@
  	next;
      }
  
@@ -21,7 +21,7 @@
      # Copyright section
      if (/^Copyright /)
      {
-@@ -645,7 +652,7 @@
+@@ -622,7 +629,7 @@
  .B %s
  programs are properly installed at your site, the command
  .IP

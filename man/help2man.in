@@ -25,43 +25,22 @@ use strict;
 use Getopt::Long;
 use Text::Tabs qw(expand);
 use POSIX qw(strftime setlocale LC_ALL);
-use Locale::gettext;
-use Encode qw(decode encode);
-use I18N::Langinfo qw(langinfo CODESET);
 
 my $this_program = 'help2man';
 my $this_version = '1.43.3';
-my $encoding;
 
+sub _ { $_[0] }
+sub configure_locale
 {
-    my $gettext = Locale::gettext->domain($this_program);
-    sub _ { $gettext->get($_[0]) }
-
-    my ($user_locale) = grep defined && length,
-	(map $ENV{$_}, qw(LANGUAGE LC_ALL LC_MESSAGES LANG)), 'C';
-
-    my $user_encoding = langinfo CODESET;
-
-    # Set localisation of date and executable's output.
-    sub configure_locale
-    {
-	delete @ENV{qw(LANGUAGE LC_MESSAGES LANG)};
-	setlocale LC_ALL, $ENV{LC_ALL} = shift || 'C';
-	$encoding = langinfo CODESET;
-    }
-
-    sub dec { $encoding ? decode $encoding, $_[0] : $_[0] }
-    sub enc { $encoding ? encode $encoding, $_[0] : $_[0] }
-    sub enc_user { encode $user_encoding, $_[0] }
-    sub kark # die with message formatted in the invoking user's locale
-    {
-	setlocale LC_ALL, $user_locale;
-	my $fmt = $gettext->get(shift);
-	my $errmsg = enc_user sprintf $fmt, @_;
-	die $errmsg, "\n";
-    }
+    my $locale = shift;
+    die "$this_program: no locale support (Locale::gettext required)\n"
+	unless $locale eq 'C';
 }
 
+sub dec { $_[0] }
+sub enc { $_[0] }
+sub enc_user { $_[0] }
+sub kark { die +(sprintf shift, @_), "\n" }
 sub N_ { $_[0] }
 
 sub program_basename;
@@ -141,8 +120,6 @@ my %opt_def = (
 # Parse options.
 Getopt::Long::config('bundling');
 die $help_info unless GetOptions %opt_def and @ARGV == 1;
-
-configure_locale unless $encoding;
 
 my %include = ();
 my %replace = ();
