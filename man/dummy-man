@@ -30,6 +30,7 @@ while test $# -gt 0; do
     # in the makefile.
     --include=*);;
     --include) shift;;
+    --info-page=*);;
     -*) fatal_ "invalid or unrecognized help2man option '$1'";;
     --) shift; break;;
      *) break;;

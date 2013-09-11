@@ -134,7 +134,6 @@
 /m4/xsize.m4
 /maint.mk
 /man/*.1
-/man/help2man
 /po/*.gmo
 /po/*.po
 /po/.gitignore
