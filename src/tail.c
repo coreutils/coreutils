@@ -945,7 +945,20 @@ recheck (struct File_spec *f, bool blocking)
      then mark the file as not tailable.  */
   f->tailable = !(reopen_inaccessible_files && fd == -1);
 
-  if (fd == -1 || fstat (fd, &new_stats) < 0)
+  if (! disable_inotify && ! lstat (f->name, &new_stats)
+      && S_ISLNK (new_stats.st_mode))
+    {
+      /* Diagnose the edge case where a regular file is changed
+         to a symlink.  We avoid inotify with symlinks since
+         it's awkward to match between symlink name and target.  */
+      ok = false;
+      f->errnum = -1;
+      f->ignore = true;
+
+      error (0, 0, _("%s has been replaced with a symbolic link. "
+                     "giving up on this name"), quote (pretty_name (f)));
+    }
+  else if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
       ok = false;
       f->errnum = errno;
@@ -1251,6 +1264,23 @@ any_remote_file (const struct File_spec *f, size_t n_files)
   return false;
 }
 
+/* Return true if any of the N_FILES files in F is a symlink.
+   Note we don't worry about the edge case where "-" exists,
+   since that will have the same consequences for inotify,
+   which is the only context this function is currently used.  */
+
+static bool
+any_symlinks (const struct File_spec *f, size_t n_files)
+{
+  size_t i;
+
+  struct stat st;
+  for (i = 0; i < n_files; i++)
+    if (lstat (f[i].name, &st) == 0 && S_ISLNK (st.st_mode))
+      return true;
+  return false;
+}
+
 /* Return true if any of the N_FILES files in F represents
    stdin and is tailable.  */
 
@@ -1531,6 +1561,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           int new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
           if (new_wd < 0)
             {
+              /* Can get ENOENT for a dangling symlink for example.  */
               error (0, errno, _("cannot watch %s"), quote (f[j].name));
               continue;
             }
@@ -2206,6 +2237,11 @@ main (int argc, char **argv)
          in this case because it would miss any updates to the file
          that were not initiated from the local system.
 
+         any_symlinks() checks if the user has specified any symbolic links.
+         inotify is not used in this case because it returns updated _targets_
+         which would not match the specified names.  If we tried to always
+         use the target names, then we would miss changes to the symlink itself.
+
          ok is false when one of the files specified could not be opened for
          reading.  In this case and when following by descriptor,
          tail_forever_inotify() cannot be used (in its current implementation).
@@ -2222,6 +2258,7 @@ main (int argc, char **argv)
          follow_mode == Follow_name  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
                                || any_remote_file (F, n_files)
+                               || any_symlinks (F, n_files)
                                || (!ok && follow_mode == Follow_descriptor)))
         disable_inotify = true;
 
