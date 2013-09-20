@@ -1,6 +1,6 @@
 #!/bin/sh
-# Ensure that "id" outputs groups for a user
-# Copyright (C) 2009-2013 Free Software Foundation, Inc.
+# Ensure that "id" works with numeric user ids
+# Copyright (C) 2013 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,20 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ id
 
-id -G $(id -nu) || fail=1
+uid=$(id -u) || fail=1
+user=$(id -nu) || fail=1
+
+# Ensure the empty user spec is discarded
+id '' && fail=1
+
+for mode in '' '-G' '-g'; do
+  id $mode $user > user_out || fail=1 # lookup name for comparison
+
+  id $mode $uid > uid_out || fail=1   # lookup name "$uid" before id "$uid"
+  compare user_out uid_out || fail=1
+
+  id $mode +$uid > uid_out || fail=1  # lookup only id "$uid"
+  compare user_out uid_out || fail=1
+done
 
 Exit $fail

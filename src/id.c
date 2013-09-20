@@ -31,6 +31,7 @@
 #include "quote.h"
 #include "group-list.h"
 #include "smack.h"
+#include "userspec.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "id"
@@ -80,10 +81,10 @@ usage (int status)
     emit_try_help ();
   else
     {
-      printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [USER]\n"), program_name);
       fputs (_("\
-Print user and group information for the specified USERNAME,\n\
-or (when USERNAME omitted) for the current user.\n\
+Print user and group information for the specified USER,\n\
+or (when USER omitted) for the current user.\n\
 \n"),
              stdout);
       fputs (_("\
@@ -115,6 +116,7 @@ main (int argc, char **argv)
   int selinux_enabled = (is_selinux_enabled () > 0);
   bool smack_enabled = is_smack_enabled ();
   bool opt_zero = false;
+  char *pw_name = NULL;
 
   /* If true, output the list of all group IDs. -G */
   bool just_group_list = false;
@@ -225,9 +227,24 @@ main (int argc, char **argv)
 
   if (n_ids == 1)
     {
-      struct passwd *pwd = getpwnam (argv[optind]);
+      struct passwd *pwd = NULL;
+      const char *spec = argv[optind];
+      /* Disallow an empty spec here as parse_user_spec() doesn't
+         give an error for that as it seems it's a valid way to
+         specify a noop or "reset special bits" depending on the system.  */
+      if (*spec)
+        {
+          if (parse_user_spec (spec, &euid, NULL, NULL, NULL) == NULL)
+            {
+              /* parse_user_spec will only extract a numeric spec,
+                 so we lookup that here to verify and also retrieve
+                 the PW_NAME used subsequently in group lookup.  */
+              pwd = getpwuid (euid);
+            }
+        }
       if (pwd == NULL)
-        error (EXIT_FAILURE, 0, _("%s: no such user"), argv[optind]);
+        error (EXIT_FAILURE, 0, _("%s: no such user"), spec);
+      pw_name = xstrdup (pwd->pw_name);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }
@@ -282,7 +299,7 @@ main (int argc, char **argv)
     }
   else if (just_group_list)
     {
-      if (!print_group_list (argv[optind], ruid, rgid, egid, use_name,
+      if (!print_group_list (pw_name, ruid, rgid, egid, use_name,
                              opt_zero ? '\0' : ' '))
         ok = false;
     }
@@ -292,10 +309,11 @@ main (int argc, char **argv)
     }
   else
     {
-      print_full_info (argv[optind]);
+      print_full_info (pw_name);
     }
   putchar (opt_zero ? '\0' : '\n');
 
+  IF_LINT (free (pw_name));
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

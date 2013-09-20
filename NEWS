@@ -50,6 +50,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   id and ls with -Z report the SMACK security context where available.
   mkdir, mkfifo and mknod with -Z set the SMACK context where available.
 
+  id can now lookup by user ID, in addition to the existing name lookup.
+
   join accepts a new option: --zero-terminated (-z). As with the sort,uniq
   option of the same name, this makes join consume and produce NUL-terminated
   lines rather than newline-terminated lines.

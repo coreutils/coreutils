@@ -14456,8 +14456,11 @@ logins, groups, and so forth.
 running it if no user is specified.  Synopsis:
 
 @example
-id [@var{option}]@dots{} [@var{username}]
+id [@var{option}]@dots{} [@var{user}]
 @end example
+
+@var{user} can be either a user ID or a name, with name lookup
+taking precedence unless the ID is specified with a leading @samp{+}.
 
 @vindex POSIXLY_CORRECT
 By default, it prints the real user ID, real group ID, effective user ID
