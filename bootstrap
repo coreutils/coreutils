@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2013-05-08.20; # UTC
+scriptversion=2013-08-15.22; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -209,12 +209,16 @@ bootstrap_sync=false
 # Use git to update gnulib sources
 use_git=true
 
+check_exists() {
+  ($1 --version </dev/null) >/dev/null 2>&1
+  test $? -lt 126
+}
+
 # find_tool ENVVAR NAMES...
 # -------------------------
 # Search for a required program.  Use the value of ENVVAR, if set,
-# otherwise find the first of the NAMES that can be run (i.e.,
-# supports --version).  If found, set ENVVAR to the program name,
-# die otherwise.
+# otherwise find the first of the NAMES that can be run.
+# If found, set ENVVAR to the program name, die otherwise.
 #
 # FIXME: code duplication, see also gnu-web-doc-update.
 find_tool ()
@@ -224,26 +228,20 @@ find_tool ()
   find_tool_names=$@
   eval "find_tool_res=\$$find_tool_envvar"
   if test x"$find_tool_res" = x; then
-    for i
-    do
-      if ($i --version </dev/null) >/dev/null 2>&1; then
-       find_tool_res=$i
-       break
+    for i; do
+      if check_exists $i; then
+        find_tool_res=$i
+        break
       fi
     done
-  else
-    find_tool_error_prefix="\$$find_tool_envvar: "
   fi
-  test x"$find_tool_res" != x \
-    || die "one of these is required: $find_tool_names"
-  ($find_tool_res --version </dev/null) >/dev/null 2>&1 \
-    || die "${find_tool_error_prefix}cannot run $find_tool_res --version"
+  if test x"$find_tool_res" = x; then
+    warn_ "one of these is required: $find_tool_names;"
+    die   "alternatively set $find_tool_envvar to a compatible tool"
+  fi
   eval "$find_tool_envvar=\$find_tool_res"
   eval "export $find_tool_envvar"
 }
-
-# Find sha1sum, named gsha1sum on MacPorts, and shasum on Mac OS X 10.6.
-find_tool SHA1SUM sha1sum gsha1sum shasum
 
 # Override the default configuration, if necessary.
 # Make sure that bootstrap.conf is sourced from the current directory
@@ -256,12 +254,12 @@ esac
 # Extra files from gnulib, which override files from other sources.
 test -z "${gnulib_extra_files}" && \
   gnulib_extra_files="
-        $build_aux/install-sh
-        $build_aux/mdate-sh
-        $build_aux/texinfo.tex
-        $build_aux/depcomp
-        $build_aux/config.guess
-        $build_aux/config.sub
+        build-aux/install-sh
+        build-aux/mdate-sh
+        build-aux/texinfo.tex
+        build-aux/depcomp
+        build-aux/config.guess
+        build-aux/config.sub
         doc/INSTALL
 "
 
@@ -326,7 +324,7 @@ insert_if_absent() {
     die "Error: Duplicate entries in $file: " $duplicate_entries
   fi
   linesold=$(gitignore_entries $file | wc -l)
-  linesnew=$(echo "$str" | gitignore_entries - $file | sort -u | wc -l)
+  linesnew=$( { echo "$str"; cat $file; } | gitignore_entries | sort -u | wc -l)
   if [ $linesold != $linesnew ] ; then
     { echo "$str" | cat - $file > $file.bak && mv $file.bak $file; } \
       || die "insert_if_absent $file $str: failed"
@@ -469,8 +467,7 @@ check_versions() {
     if [ "$req_ver" = "-" ]; then
       # Merely require app to exist; not all prereq apps are well-behaved
       # so we have to rely on $? rather than get_version.
-      $app --version >/dev/null 2>&1
-      if [ 126 -le $? ]; then
+      if ! check_exists $app; then
         warn_ "Error: '$app' not found"
         ret=1
       fi
@@ -502,6 +499,12 @@ print_versions() {
   echo "----------------------"
   # can't depend on column -t
 }
+
+# Find sha1sum, named gsha1sum on MacPorts, shasum on Mac OS X 10.6.
+# Also find the compatible sha1 utility on the BSDs
+if test x"$SKIP_PO" = x; then
+  find_tool SHA1SUM sha1sum gsha1sum shasum sha1
+fi
 
 use_libtool=0
 # We'd like to use grep -E, to see if any of LT_INIT,
@@ -551,10 +554,10 @@ fi
 echo "$0: Bootstrapping from checked-out $package sources..."
 
 # See if we can use gnulib's git-merge-changelog merge driver.
-if test -d .git && (git --version) >/dev/null 2>/dev/null ; then
+if $use_git && test -d .git && check_exists git; then
   if git config merge.merge-changelog.driver >/dev/null ; then
     :
-  elif (git-merge-changelog --version) >/dev/null 2>/dev/null ; then
+  elif check_exists git-merge-changelog; then
     echo "$0: initializing git-merge-changelog driver"
     git config merge.merge-changelog.name 'GNU-style ChangeLog merge driver'
     git config merge.merge-changelog.driver 'git-merge-changelog %O %A %B'
@@ -574,13 +577,17 @@ git_modules_config () {
   test -f .gitmodules && git config --file .gitmodules "$@"
 }
 
-gnulib_path=$(git_modules_config submodule.gnulib.path)
-test -z "$gnulib_path" && gnulib_path=gnulib
+if $use_git; then
+  gnulib_path=$(git_modules_config submodule.gnulib.path)
+  test -z "$gnulib_path" && gnulib_path=gnulib
+fi
 
-# Get gnulib files.
+# Get gnulib files.  Populate $GNULIB_SRCDIR, possibly updating a
+# submodule, for use in the rest of the script.
 
 case ${GNULIB_SRCDIR--} in
 -)
+  # Note that $use_git is necessarily true in this case.
   if git_modules_config submodule.gnulib.url >/dev/null; then
     echo "$0: getting gnulib files..."
     git submodule init || exit $?
@@ -601,8 +608,8 @@ case ${GNULIB_SRCDIR--} in
   GNULIB_SRCDIR=$gnulib_path
   ;;
 *)
-  # Use GNULIB_SRCDIR as a reference.
-  if test -d "$GNULIB_SRCDIR"/.git && \
+  # Use GNULIB_SRCDIR directly or as a reference.
+  if $use_git && test -d "$GNULIB_SRCDIR"/.git && \
         git_modules_config submodule.gnulib.url >/dev/null; then
     echo "$0: getting gnulib files..."
     if git submodule -h|grep -- --reference > /dev/null; then
@@ -627,6 +634,9 @@ case ${GNULIB_SRCDIR--} in
   fi
   ;;
 esac
+
+# $GNULIB_SRCDIR now points to the version of gnulib to use, and
+# we no longer need to use git or $gnulib_path below here.
 
 if $bootstrap_sync; then
   cmp -s "$0" "$GNULIB_SRCDIR/build-aux/bootstrap" || {
@@ -685,11 +695,10 @@ update_po_files() {
     cksum_file="$ref_po_dir/$po.s1"
     if ! test -f "$cksum_file" ||
         ! test -f "$po_dir/$po.po" ||
-        ! $SHA1SUM -c --status "$cksum_file" \
-            < "$new_po" > /dev/null; then
+        ! $SHA1SUM -c "$cksum_file" < "$new_po" > /dev/null 2>&1; then
       echo "$me: updated $po_dir/$po.po..."
       cp "$new_po" "$po_dir/$po.po" \
-          && $SHA1SUM < "$new_po" > "$cksum_file"
+          && $SHA1SUM < "$new_po" > "$cksum_file" || return
     fi
   done
 }
