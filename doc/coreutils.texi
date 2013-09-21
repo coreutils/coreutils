@@ -14516,9 +14516,20 @@ Print only the security context of the current user.
 If SELinux is disabled then print a warning and
 set the exit status to 1.
 
-@end table
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+Delimit output items with NUL characters.
+This option is not permitted when using the default format.
 
-@exitstatus
+Example:
+@example
+$ id -Gn --zero
+users <NUL> devs <NUL>
+@end example
+
+@end table
 
 @macro primaryAndSupplementaryGroups{cmd,arg}
 Primary and supplementary groups for a process are normally inherited
@@ -14529,6 +14540,8 @@ Running @command{\cmd\} with a \arg\ causes the user and group
 database to be consulted afresh, and so will give a different result.
 @end macro
 @primaryAndSupplementaryGroups{id,user argument}
+
+@exitstatus
 
 @node logname invocation
 @section @command{logname}: Print current login name
@@ -14587,13 +14600,12 @@ groups [@var{username}]@dots{}
 
 The group lists are equivalent to the output of the command @samp{id -Gn}.
 
-@primaryAndSupplementaryGroups{groups,list of users}
-
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
-@exitstatus
+@primaryAndSupplementaryGroups{groups,list of users}
 
+@exitstatus
 
 @node users invocation
 @section @command{users}: Print login names of users currently logged in

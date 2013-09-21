@@ -277,6 +277,7 @@ all_tests =					\
   tests/misc/id-context.sh			\
   tests/misc/id-groups.sh			\
   tests/misc/id-setgid.sh			\
+  tests/misc/id-zero.sh			\
   tests/misc/md5sum.pl				\
   tests/misc/md5sum-bsd.sh			\
   tests/misc/md5sum-newline.pl			\

@@ -67,6 +67,7 @@ static struct option const longopts[] =
   {"name", no_argument, NULL, 'n'},
   {"real", no_argument, NULL, 'r'},
   {"user", no_argument, NULL, 'u'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -83,14 +84,18 @@ usage (int status)
       fputs (_("\
 Print user and group information for the specified USERNAME,\n\
 or (when USERNAME omitted) for the current user.\n\
-\n\
-  -a              ignore, for compatibility with other versions\n\
-  -Z, --context   print only the security context of the current user\n\
-  -g, --group     print only the effective group ID\n\
-  -G, --groups    print all group IDs\n\
-  -n, --name      print a name instead of a number, for -ugG\n\
-  -r, --real      print the real ID instead of the effective ID, with -ugG\n\
-  -u, --user      print only the effective user ID\n\
+\n"),
+             stdout);
+      fputs (_("\
+  -a             ignore, for compatibility with other versions\n\
+  -Z, --context  print only the security context of the current user\n\
+  -g, --group    print only the effective group ID\n\
+  -G, --groups   print all group IDs\n\
+  -n, --name     print a name instead of a number, for -ugG\n\
+  -r, --real     print the real ID instead of the effective ID, with -ugG\n\
+  -u, --user     print only the effective user ID\n\
+  -z, --zero     delimit entries with NUL characters, not whitespace;\n\
+                   not permitted in default format\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -109,6 +114,7 @@ main (int argc, char **argv)
   int optc;
   int selinux_enabled = (is_selinux_enabled () > 0);
   bool smack_enabled = is_smack_enabled ();
+  bool opt_zero = false;
 
   /* If true, output the list of all group IDs. -G */
   bool just_group_list = false;
@@ -127,7 +133,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "agnruGZ", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "agnruzGZ", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -162,6 +168,9 @@ main (int argc, char **argv)
         case 'u':
           just_user = true;
           break;
+        case 'z':
+          opt_zero = true;
+          break;
         case 'G':
           just_group_list = true;
           break;
@@ -192,6 +201,10 @@ main (int argc, char **argv)
   if (default_format && (use_real || use_name))
     error (EXIT_FAILURE, 0,
            _("cannot print only names or real IDs in default format"));
+
+  if (default_format && opt_zero)
+    error (EXIT_FAILURE, 0,
+           _("option --zero not permitted in default format"));
 
   /* If we are on a SELinux/SMACK-enabled kernel, no user is specified, and
      either --context is specified or none of (-u,-g,-G) is specified,
@@ -269,7 +282,8 @@ main (int argc, char **argv)
     }
   else if (just_group_list)
     {
-      if (!print_group_list (argv[optind], ruid, rgid, egid, use_name))
+      if (!print_group_list (argv[optind], ruid, rgid, egid, use_name,
+                             opt_zero ? '\0' : ' '))
         ok = false;
     }
   else if (just_context)
@@ -280,7 +294,7 @@ main (int argc, char **argv)
     {
       print_full_info (argv[optind]);
     }
-  putchar ('\n');
+  putchar (opt_zero ? '\0' : '\n');
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -44,6 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   du accepts a new option: --inodes to show the number of inodes instead
   of the blocks used.
 
+  id accepts a new option: --zero (-z) to delimit the output entries by
+  a NUL instead of a white space character.
+
   id and ls with -Z report the SMACK security context where available.
   mkdir, mkfifo and mknod with -Z set the SMACK context where available.
 

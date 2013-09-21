@@ -114,13 +114,13 @@ main (int argc, char **argv)
       if (rgid == NO_GID && errno)
         error (EXIT_FAILURE, errno, _("cannot get real GID"));
 
-      if (!print_group_list (NULL, ruid, rgid, egid, true))
+      if (!print_group_list (NULL, ruid, rgid, egid, true, ' '))
         ok = false;
       putchar ('\n');
     }
   else
     {
-      /* At least one argument.  Divulge the details of the specified users. */
+      /* At least one argument.  Divulge the details of the specified users.  */
       while (optind < argc)
         {
           struct passwd *pwd = getpwnam (argv[optind]);
@@ -130,7 +130,7 @@ main (int argc, char **argv)
           rgid = egid = pwd->pw_gid;
 
           printf ("%s : ", argv[optind]);
-          if (!print_group_list (argv[optind++], ruid, rgid, egid, true))
+          if (!print_group_list (argv[optind++], ruid, rgid, egid, true, ' '))
             ok = false;
           putchar ('\n');
         }
