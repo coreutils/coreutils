@@ -43,7 +43,6 @@ static const char *default_template = "tmp.XXXXXXXXXX";
 enum
 {
   SUFFIX_OPTION = CHAR_MAX + 1,
-  TMPDIR_OPTION
 };
 
 static struct option const longopts[] =
@@ -52,7 +51,7 @@ static struct option const longopts[] =
   {"quiet", no_argument, NULL, 'q'},
   {"dry-run", no_argument, NULL, 'u'},
   {"suffix", required_argument, NULL, SUFFIX_OPTION},
-  {"tmpdir", optional_argument, NULL, TMPDIR_OPTION},
+  {"tmpdir", optional_argument, NULL, 'p'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -85,20 +84,17 @@ Files are created u+rw, and directories u+rwx, minus umask restrictions.\n\
                         This option is implied if TEMPLATE does not end in X\n\
 "), stdout);
       fputs (_("\
-      --tmpdir[=DIR]  interpret TEMPLATE relative to DIR; if DIR is not\n\
+  -p DIR, --tmpdir[=DIR]  interpret TEMPLATE relative to DIR; if DIR is not\n\
                         specified, use $TMPDIR if set, else /tmp.  With\n\
                         this option, TEMPLATE must not be an absolute name;\n\
                         unlike with -t, TEMPLATE may contain slashes, but\n\
                         mktemp creates only the final component\n\
 "), stdout);
-      fputs ("\n", stdout);
       fputs (_("\
-  -p DIR              use DIR as a prefix; implies -t [deprecated]\n\
   -t                  interpret TEMPLATE as a single file name component,\n\
                         relative to a directory: $TMPDIR, if set; else the\n\
                         directory specified via -p; else /tmp [deprecated]\n\
 "), stdout);
-      fputs ("\n", stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_ancillary_info ();
@@ -195,11 +191,6 @@ main (int argc, char **argv)
           dry_run = true;
           break;
 
-        case TMPDIR_OPTION:
-          use_dest_dir = true;
-          dest_dir_arg = optarg;
-          break;
-
         case SUFFIX_OPTION:
           suffix = optarg;
           break;
@@ -283,9 +274,12 @@ main (int argc, char **argv)
       if (deprecated_t_option)
         {
           char *env = getenv ("TMPDIR");
-          dest_dir = (env && *env
-                      ? env
-                      : (dest_dir_arg ? dest_dir_arg : "/tmp"));
+          if (env && *env)
+            dest_dir = env;
+          else if (dest_dir_arg && *dest_dir_arg)
+            dest_dir = dest_dir_arg;
+          else
+            dest_dir = "/tmp";
 
           if (last_component (template) != template)
             error (EXIT_FAILURE, 0,
