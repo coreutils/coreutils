@@ -49,8 +49,10 @@ while read u ; do
     for n in '' n ; do
       printf   '%s: ' "id -${o}${n}[z] $u" >> exp || framework_failure_
       printf '\n%s: ' "id -${o}${n}[z] $u" >> out || framework_failure_
-      id -${o}${n}  $u >> exp || fail=1
-      id -${o}${n}z $u  > tmp || fail=1
+      # There may be no name corresponding to an id, so don't check
+      # exit status when in name lookup mode
+      id -${o}${n}  $u >> exp || { test -z "$n" && fail=1; }
+      id -${o}${n}z $u  > tmp || { test -z "$n" && fail=1; }
       head -c-1 < tmp >> out || framework_failure_
     done
   done
