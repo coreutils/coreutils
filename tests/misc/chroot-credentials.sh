@@ -22,16 +22,17 @@ print_ver_ chroot
 
 require_root_
 
+root=$(id -nu 0) || skip_ "Couldn't lookup root username"
 
 # Verify that root credentials are kept.
-test $(chroot / whoami) = root || fail=1
+test $(chroot / whoami) = "$root" || fail=1
 test "$(groups)" = "$(chroot / groups)" || fail=1
 
 # Verify that credentials are changed correctly.
 whoami_after_chroot=$(
   chroot --userspec=$NON_ROOT_USERNAME:$NON_ROOT_GROUP / whoami
 )
-test "$whoami_after_chroot" != root || fail=1
+test "$whoami_after_chroot" != "$root" || fail=1
 
 # Verify that there are no additional groups.
 id_G_after_chroot=$(
