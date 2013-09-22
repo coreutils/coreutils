@@ -226,10 +226,9 @@ main (int argc, char **argv)
 
         case FROM_OPTION:
           {
-            char *u_dummy, *g_dummy;
             const char *e = parse_user_spec (optarg,
                                              &required_uid, &required_gid,
-                                             &u_dummy, &g_dummy);
+                                             NULL, NULL);
             if (e)
               error (EXIT_FAILURE, 0, "%s: %s", e, quote (optarg));
             break;

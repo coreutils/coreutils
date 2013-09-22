@@ -229,15 +229,10 @@ main (int argc, char **argv)
     {
       uid_t uid = -1;
       gid_t gid = -1;
-      char *user;
-      char *group;
-      char const *err = parse_user_spec (userspec, &uid, &gid, &user, &group);
+      char const *err = parse_user_spec (userspec, &uid, &gid, NULL, NULL);
 
       if (err)
         error (EXIT_CANCELED, errno, "%s", err);
-
-      free (user);
-      free (group);
 
       if (groups && set_additional_groups (groups))
         fail = true;
