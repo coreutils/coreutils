@@ -116,12 +116,12 @@ all_root_tests =				\
   tests/dd/skip-seek-past-dev.sh		\
   tests/df/problematic-chars.sh			\
   tests/du/bind-mount-dir-cycle.sh		\
+  tests/id/setgid.sh				\
   tests/install/install-C-root.sh		\
   tests/ls/capability.sh			\
   tests/ls/nameless-uid.sh			\
   tests/misc/chcon.sh				\
   tests/misc/chroot-credentials.sh		\
-  tests/misc/id-setgid.sh			\
   tests/misc/selinux.sh				\
   tests/misc/truncate-owned-by-other.sh		\
   tests/mkdir/writable-under-readonly.sh	\
@@ -274,10 +274,6 @@ all_tests =					\
   tests/misc/groups-version.sh			\
   tests/misc/head-c.sh				\
   tests/misc/head-pos.sh			\
-  tests/misc/id-context.sh			\
-  tests/misc/id-uid.sh				\
-  tests/misc/id-setgid.sh			\
-  tests/misc/id-zero.sh			\
   tests/misc/md5sum.pl				\
   tests/misc/md5sum-bsd.sh			\
   tests/misc/md5sum-newline.pl			\
@@ -510,6 +506,10 @@ all_tests =					\
   tests/du/two-args.sh				\
   tests/id/gnu-zero-uids.sh			\
   tests/id/no-context.sh			\
+  tests/id/context.sh				\
+  tests/id/uid.sh				\
+  tests/id/setgid.sh				\
+  tests/id/zero.sh				\
   tests/install/basic-1.sh			\
   tests/install/create-leading.sh		\
   tests/install/d-slashdot.sh			\
