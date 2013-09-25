@@ -35,6 +35,15 @@ rm -I file1-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
 test -f file1-1 && fail=1
 
+if ls /dev/stdin >/dev/null 2>&1; then
+  echo 'one file, read only, answer no' >> err || fail=1
+  touch file1-1 || framework_failure_
+  chmod a-w file1-1 || framework_failure_
+  rm ---presume-input-tty -I file1-* < in-n >> out 2>> err || fail=1
+  echo . >> err || fail=1
+  test -f file1-1 || fail=1
+fi
+
 echo 'three files, no recursion' >> err || fail=1
 rm -I file2-* < in-n >> out 2>> err || fail=1
 echo . >> err || fail=1
@@ -57,6 +66,19 @@ test -f file3-1 && fail=1
 test -f file3-2 && fail=1
 test -f file3-3 && fail=1
 test -f file3-4 && fail=1
+
+if ls /dev/stdin >/dev/null 2>&1; then
+  echo 'four files, no recursion, 1 read only, answer yes no' >> err || fail=1
+  touch file3-1 file3-2 file3-3 file3-4 || framework_failure_
+  echo non_empty > file3-4 || framework_failure_ # to shorten diagnostic
+  chmod a-w file3-4 || framework_failure_
+  cat in-y in-n | rm ---presume-input-tty -I file3-* >> out 2>> err || fail=1
+  echo . >> err || fail=1
+  test -f file3-1 && fail=1
+  test -f file3-2 && fail=1
+  test -f file3-3 && fail=1
+  test -f file3-4 || fail=1
+fi
 
 echo 'one file, recursion, answer no' >> err || fail=1
 rm -I -R dir1-* < in-n >> out 2>> err || fail=1
@@ -85,12 +107,16 @@ EOF
 cat <<\EOF > experr || fail=1
 one file, no recursion
 .
+one file, read only, answer no
+rm: remove write-protected regular empty file 'file1-1'? .
 three files, no recursion
 .
 four files, no recursion, answer no
 rm: remove 4 arguments? .
 four files, no recursion, answer yes
 rm: remove 4 arguments? .
+four files, no recursion, 1 read only, answer yes no
+rm: remove 4 arguments? rm: remove write-protected regular file 'file3-4'? .
 one file, recursion, answer no
 rm: remove 1 argument recursively? .
 one file, recursion, answer yes

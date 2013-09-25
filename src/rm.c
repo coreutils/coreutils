@@ -244,7 +244,7 @@ main (int argc, char **argv)
           break;
 
         case 'I':
-          x.interactive = RMI_NEVER;
+          x.interactive = RMI_SOMETIMES;
           x.ignore_missing_files = false;
           prompt_once = true;
           break;

@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   print approximately 2*N bytes of extraneous padding.
   [Bug introduced in coreutils-7.0]
 
+  rm -I now prompts for confirmation before removing a write protected file.
+  [Bug introduced in coreutils-6.8]
+
   tail --retry -f now waits for the files specified to appear.  Before, tail
   would immediately exit when such a file is inaccessible during the initial
   open.
