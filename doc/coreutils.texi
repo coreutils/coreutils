@@ -6067,8 +6067,13 @@ corresponding lines of each given file, separated by a TAB character.
 Standard input is used for a file name of @samp{-} or if no input files
 are given.
 
-For example:
+Synopsis:
 
+@example
+paste [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+For example, with:
 @example
 $ cat num2
 1
@@ -6077,16 +6082,37 @@ $ cat let3
 a
 b
 c
+@end example
+
+Take lines sequentially from each file:
+@example
 $ paste num2 let3
 1       a
 2       b
        @ c
 @end example
 
-Synopsis:
-
+Duplicate lines from a file:
 @example
-paste [@var{option}]@dots{} [@var{file}]@dots{}
+$ paste num2 let3 num2
+1       a      1
+2       b      2
+       @ c
+@end example
+
+Intermix lines from stdin:
+@example
+$ paste - let3 - < num2
+1       a      2
+       @ b
+       @ c
+@end example
+
+Join consecutive lines with a space:
+@example
+$ seq 4 | paste -d ' ' - -
+1 2
+3 4
 @end example
 
 The program accepts the following options.  Also see @ref{Common options}.
