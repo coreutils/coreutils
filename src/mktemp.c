@@ -26,7 +26,6 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
-#include "stdio--.h"
 #include "tempname.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -147,7 +146,7 @@ main (int argc, char **argv)
 {
   char const *dest_dir;
   char const *dest_dir_arg = NULL;
-  bool suppress_stderr = false;
+  bool suppress_file_err = false;
   int c;
   unsigned int n_args;
   char *template;
@@ -181,7 +180,7 @@ main (int argc, char **argv)
           use_dest_dir = true;
           break;
         case 'q':
-          suppress_stderr = true;
+          suppress_file_err = true;
           break;
         case 't':
           use_dest_dir = true;
@@ -203,15 +202,6 @@ main (int argc, char **argv)
         default:
           usage (EXIT_FAILURE);
         }
-    }
-
-  if (suppress_stderr)
-    {
-      /* From here on, redirect stderr to /dev/null.
-         A diagnostic from getopt_long, above, would still go to stderr.  */
-      if (!freopen ("/dev/null", "wb", stderr))
-        error (EXIT_FAILURE, errno,
-               _("failed to redirect stderr to /dev/null"));
     }
 
   n_args = argc - optind;
@@ -317,8 +307,9 @@ main (int argc, char **argv)
       int err = mkdtemp_len (dest_name, suffix_len, x_count, dry_run);
       if (err != 0)
         {
-          error (0, errno, _("failed to create directory via template %s"),
-                 quote (template));
+          if (!suppress_file_err)
+            error (0, errno, _("failed to create directory via template %s"),
+                   quote (template));
           status = EXIT_FAILURE;
         }
     }
@@ -327,8 +318,9 @@ main (int argc, char **argv)
       int fd = mkstemp_len (dest_name, suffix_len, x_count, dry_run);
       if (fd < 0 || (!dry_run && close (fd) != 0))
         {
-          error (0, errno, _("failed to create file via template %s"),
-                 quote (template));
+          if (!suppress_file_err)
+            error (0, errno, _("failed to create file via template %s"),
+                   quote (template));
           status = EXIT_FAILURE;
         }
     }
@@ -342,7 +334,8 @@ main (int argc, char **argv)
         {
           int saved_errno = errno;
           remove (dest_name);
-          error (EXIT_FAILURE, saved_errno, _("write error"));
+          if (!suppress_file_err)
+            error (EXIT_FAILURE, saved_errno, _("write error"));
         }
     }
 

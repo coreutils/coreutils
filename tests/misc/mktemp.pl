@@ -55,14 +55,12 @@ my @Tests =
     (
      # test-name, [option, option, ...] {OUT=>"expected-output"}
      #
-     ['too-many', 'a b',
+     ['too-many', '-q a b',
       {ERR=>"$prog: too many templates\n"
        . "Try '$prog --help' for more information.\n"}, {EXIT => 1} ],
-     ['too-many-q', '-q a b', {EXIT => 1} ],
 
-     ['too-few-x', 'foo.XX', {EXIT => 1},
+     ['too-few-x', '-q foo.XX', {EXIT => 1},
       {ERR=>"$prog: too few X's in template 'foo.XX'\n"}],
-     ['too-few-xq', '-q foo.XX', {EXIT => 1} ],
 
      ['1f', 'bar.XXXX', {OUT => "bar.ZZZZ\n"},
       {OUT_SUBST => 's,\.....$,.ZZZZ,'},
@@ -148,11 +146,9 @@ my @Tests =
 
      ['suffix6f', 'aXXXX/b', {EXIT=>1},
       {ERR=>"$prog: invalid suffix '/b', contains directory separator\n"}],
-     ['suffix6f-q', '-q aXXXX/b', {EXIT=>1}],
 
      ['suffix7f', '--suffix= aXXXXb', {EXIT=>1},
       {ERR=>"$prog: with --suffix, template 'aXXXXb' must end in X\n"}],
-     ['suffix7f-q', '-q --suffix= aXXXXb', {EXIT=>1}],
      ['suffix7d', '-d --suffix=aXXXXb ""', {EXIT=>1},
       {ERR=>"$prog: with --suffix, template '' must end in X\n"}],
 
