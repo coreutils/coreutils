@@ -335,7 +335,8 @@ main (int argc, char **argv)
           int saved_errno = errno;
           remove (dest_name);
           if (!suppress_file_err)
-            error (EXIT_FAILURE, saved_errno, _("write error"));
+            error (0, saved_errno, _("write error"));
+          status = EXIT_FAILURE;
         }
     }
 
