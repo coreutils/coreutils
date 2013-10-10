@@ -8257,9 +8257,11 @@ $ mkdir c; : > a; ln -s a b; cp -aH a b c; ls -i1 c
 @noindent
 Note the inputs: @file{b} is a symlink to regular file @file{a},
 yet the files in destination directory, @file{c/}, are hard-linked.
-Since @option{-a} implies @option{--preserve=links}, and since @option{-H}
-tells @command{cp} to dereference command line arguments, it sees two files
-with the same inode number, and preserves the perceived hard link.
+Since @option{-a} implies @option{--no-dereference} it would copy the symlink,
+but the later @option{-H} tells @command{cp} to dereference the command line
+arguments where it then sees two files with the same inode number.
+Then the @option{--preserve=links} option also implied by @option{-a}
+will preserve the perceived hard link.
 
 Here is a similar example that exercises @command{cp}'s @option{-L} option:
 @smallexample
