@@ -854,7 +854,8 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
         *comma++ = 0;
 
       /* process S.  */
-      val = XARGMATCH ("--preserve", s, preserve_args, preserve_vals);
+      val = XARGMATCH (on_off ? "--preserve" : "--no-preserve",
+                       s, preserve_args, preserve_vals);
       switch (val)
         {
         case PRESERVE_MODE:
