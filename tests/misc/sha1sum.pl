@@ -44,7 +44,9 @@ my @Tests =
                         {OUT=>"50abf5706a150990a08b2c5ea40fa0e585554732  f\n"}],
      ['million-a', {IN=> {f=> 'a' x 1000000}},
                         {OUT=>"34aa973cd4c4daa4f61eeb2bdbad27316534016f  f\n"}],
-     ['bs-sha', {IN=> {".\\foo"=> ''}},
+     ['bs-sha-1', {IN=> {".\nfoo"=> ''}},
+                        {OUT=>"\\$sha_degenerate  .\\nfoo\n"}],
+     ['bs-sha-2', {IN=> {".\\foo"=> ''}},
                         {OUT=>"\\$sha_degenerate  .\\\\foo\n"}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that sha1sum does *not* share the part that makes
