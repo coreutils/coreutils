@@ -194,14 +194,12 @@ With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
       fputs (_("\
 \n\
-The following three options are useful only when verifying checksums:\n\
+The following four options are useful only when verifying checksums:\n\
       --quiet          don't print OK for each successfully verified file\n\
       --status         don't output anything, status code shows success\n\
+      --strict         exit non-zero for improperly formatted checksum lines\n\
   -w, --warn           warn about improperly formatted checksum lines\n\
 \n\
-"), stdout);
-      fputs (_("\
-      --strict         with --check, exit non-zero for any invalid input\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
