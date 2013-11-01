@@ -131,11 +131,11 @@ man/rm.1:        src/rm
 man/rmdir.1:     src/rmdir
 man/runcon.1:    src/runcon
 man/seq.1:       src/seq
-man/sha1sum.1:   src/md5sum
-man/sha224sum.1: src/md5sum
-man/sha256sum.1: src/md5sum
-man/sha384sum.1: src/md5sum
-man/sha512sum.1: src/md5sum
+man/sha1sum.1:   src/sha1sum
+man/sha224sum.1: src/sha224sum
+man/sha256sum.1: src/sha256sum
+man/sha384sum.1: src/sha384sum
+man/sha512sum.1: src/sha512sum
 man/shred.1:     src/shred
 man/shuf.1:      src/shuf
 man/sleep.1:     src/sleep
