@@ -359,19 +359,18 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
 
-  /* Fill pattern buffer.  Aligning it to a 32-bit boundary speeds up randread
-     in some cases.  */
-  typedef uint32_t fill_pattern_buffer[3 * 1024];
-  union
-  {
-    fill_pattern_buffer buffer;
-    char c[sizeof (fill_pattern_buffer)];
-    unsigned char u[sizeof (fill_pattern_buffer)];
-  } r;
+  /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
+  size_t page_size = getpagesize ();
+#define OUTPUT_SIZE (12 * 1024)
+#define PAGE_ALIGN_SLOP (page_size - 1)                /* So directio works */
+#define FILLPATTERN_SIZE (((OUTPUT_SIZE + 2) / 3) * 3) /* Multiple of 3 */
+#define PATTERNBUF_SIZE (PAGE_ALIGN_SLOP + FILLPATTERN_SIZE)
+  void *fill_pattern_mem = xmalloc (PATTERNBUF_SIZE);
+  unsigned char *pbuf = ptr_align (fill_pattern_mem, page_size);
 
-  off_t sizeof_r = sizeof r;
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
+  bool other_error = false;
   bool first_write = true;
 
   /* Printable previous offset into the file */
@@ -381,15 +380,16 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   if (lseek (fd, 0, SEEK_SET) == -1)
     {
       error (0, errno, _("%s: cannot rewind"), qname);
-      return -1;
+      other_error = true;
+      goto free_pattern_mem;
     }
 
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = (0 <= size && size < sizeof_r ? size : sizeof_r);
-      fillpattern (type, r.u, lim);
-      passname (r.u, pass_string);
+      lim = (0 <= size && size < FILLPATTERN_SIZE ? size : FILLPATTERN_SIZE);
+      fillpattern (type, pbuf, lim);
+      passname (pbuf, pass_string);
     }
   else
     {
@@ -408,8 +408,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   while (true)
     {
       /* How much to write this time? */
-      lim = sizeof r;
-      if (0 <= size && size - offset < sizeof_r)
+      lim = OUTPUT_SIZE;
+      if (0 <= size && size - offset < OUTPUT_SIZE)
         {
           if (size < offset)
             break;
@@ -418,11 +418,11 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
             break;
         }
       if (type < 0)
-        randread (s, &r, lim);
+        randread (s, pbuf, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize, first_write = false)
         {
-          ssize = write (fd, r.c + soff, lim - soff);
+          ssize = write (fd, pbuf + soff, lim - soff);
           if (ssize <= 0)
             {
               if (size < 0 && (ssize == 0 || errno == ENOSPC))
@@ -456,7 +456,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                      out.  Thus, it shouldn't give up on bad blocks.  This
                      code works because lim is always a multiple of
                      SECTOR_SIZE, except at the end.  */
-                  verify (sizeof r % SECTOR_SIZE == 0);
+                  verify (OUTPUT_SIZE % SECTOR_SIZE == 0);
                   if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
                     {
                       size_t soff1 = (soff | SECTOR_MASK) + 1;
@@ -469,7 +469,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                         }
                       error (0, errno, _("%s: lseek failed"), qname);
                     }
-                  return -1;
+                  other_error = true;
+                  goto free_pattern_mem;
                 }
             }
         }
@@ -479,7 +480,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       if (offset > OFF_T_MAX - (off_t) soff)
         {
           error (0, 0, _("%s: file too large"), qname);
-          return -1;
+          other_error = true;
+          goto free_pattern_mem;
         }
 
       offset += soff;
@@ -536,7 +538,10 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
               if (dosync (fd, qname) != 0)
                 {
                   if (errno != EIO)
-                    return -1;
+                    {
+                      other_error = true;
+                      goto free_pattern_mem;
+                    }
                   write_error = true;
                 }
             }
@@ -547,11 +552,18 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   if (dosync (fd, qname) != 0)
     {
       if (errno != EIO)
-        return -1;
+        {
+          other_error = true;
+          goto free_pattern_mem;
+        }
       write_error = true;
     }
 
-  return write_error;
+free_pattern_mem:
+  memset (pbuf, 0, FILLPATTERN_SIZE);
+  free (fill_pattern_mem);
+
+  return other_error ? -1 : write_error;
 }
 
 /*
