@@ -222,6 +222,25 @@ to be recovered later.\n\
   exit (status);
 }
 
+/*
+ * Determine if pattern type is periodic or not.
+ */
+static bool
+periodic_pattern (int type)
+{
+  if (type <= 0)
+    return false;
+
+  unsigned char r[3];
+  unsigned int bits = type & 0xfff;
+
+  bits |= bits << 12;
+  r[0] = (bits >> 4) & 255;
+  r[1] = (bits >> 8) & 255;
+  r[2] = bits & 255;
+
+  return (r[0] != r[1]) || (r[0] != r[2]);
+}
 
 /*
  * Fill a buffer with a fixed pattern.
@@ -361,9 +380,13 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
   /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
   size_t page_size = getpagesize ();
-#define OUTPUT_SIZE (12 * 1024)
+#define PERIODIC_OUTPUT_SIZE (12 * 1024)
+#define NONPERIODIC_OUTPUT_SIZE (64 * 1024)
+  verify (PERIODIC_OUTPUT_SIZE % 3 == 0);
+  size_t output_size = periodic_pattern (type)
+                       ? PERIODIC_OUTPUT_SIZE : NONPERIODIC_OUTPUT_SIZE;
 #define PAGE_ALIGN_SLOP (page_size - 1)                /* So directio works */
-#define FILLPATTERN_SIZE (((OUTPUT_SIZE + 2) / 3) * 3) /* Multiple of 3 */
+#define FILLPATTERN_SIZE (((output_size + 2) / 3) * 3) /* Multiple of 3 */
 #define PATTERNBUF_SIZE (PAGE_ALIGN_SLOP + FILLPATTERN_SIZE)
   void *fill_pattern_mem = xmalloc (PATTERNBUF_SIZE);
   unsigned char *pbuf = ptr_align (fill_pattern_mem, page_size);
@@ -408,8 +431,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   while (true)
     {
       /* How much to write this time? */
-      lim = OUTPUT_SIZE;
-      if (0 <= size && size - offset < OUTPUT_SIZE)
+      lim = output_size;
+      if (0 <= size && size - offset < output_size)
         {
           if (size < offset)
             break;
@@ -456,7 +479,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                      out.  Thus, it shouldn't give up on bad blocks.  This
                      code works because lim is always a multiple of
                      SECTOR_SIZE, except at the end.  */
-                  verify (OUTPUT_SIZE % SECTOR_SIZE == 0);
+                  verify (PERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
+                  verify (NONPERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
                   if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
                     {
                       size_t soff1 = (soff | SECTOR_MASK) + 1;
