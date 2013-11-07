@@ -9563,12 +9563,25 @@ the whole file.  @var{bytes} can be followed by a size specification like
 @samp{K}, @samp{M}, or @samp{G} to specify a multiple.  @xref{Block size}.
 
 @item -u
-@itemx --remove
+@itemx --remove[=@var{how}]
 @opindex -u
 @opindex --remove
+@opindex --remove=unlink
+@opindex --remove=wipe
+@opindex --remove=wipesync
 @cindex removing files after shredding
 After shredding a file, truncate it (if possible) and then remove it.
 If a file has multiple links, only the named links will be removed.
+Often the file name is less sensitive than the file data, in which case
+the optional @var{how} parameter gives control of how to more efficiently
+remove each directory entry.
+The @samp{unlink} parameter will just use a standard unlink call,
+@samp{wipe} will also first obfuscate bytes in the name, and
+@samp{wipesync} will also sync each obfuscated byte in the name to disk.
+Note @samp{wipesync} is the default method, but can be expensive,
+requiring a sync for every character in every file.  This can become
+significant with many files, or is redundant if your file system provides
+synchronous metadata updates.
 
 @item -v
 @itemx --verbose
