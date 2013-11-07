@@ -31,9 +31,21 @@ shred: f: removing
 shred: f: renamed to 0
 shred: f: removed" > exp || framework_failure_
 
-
 shred -v -u f 2>out || fail=1
 
 compare exp out || fail=1
+
+# Likewise but with --exact to bypass the
+# data passes for the zero length file
+touch f || framework_failure_
+echo "\
+shred: f: removing
+shred: f: renamed to 0
+shred: f: removed" > exp || framework_failure_
+
+shred -x -v -u f 2>out || fail=1
+
+compare exp out || fail=1
+
 
 Exit $fail

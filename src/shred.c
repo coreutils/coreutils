@@ -378,6 +378,10 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
 
+  /* Do nothing for --size=0 or regular empty files with --exact.  */
+  if (size == 0)
+    return 0;
+
   /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
   size_t page_size = getpagesize ();
 #define PERIODIC_OUTPUT_SIZE (60 * 1024)
