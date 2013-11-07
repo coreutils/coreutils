@@ -37,6 +37,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm -I now prompts for confirmation before removing a write protected file.
   [Bug introduced in coreutils-6.8]
 
+  shred once again uses direct I/O on systems requiring aligned buffers.
+  Also direct I/O failures for odd sized writes at end of file are now handled.
+  [The "last write" bug was introduced in coreutils-5.3.0 but masked
+   by the alignment bug introduced in coreutils-6.0]
+
   tail --retry -f now waits for the files specified to appear.  Before, tail
   would immediately exit when such a file is inaccessible during the initial
   open.
@@ -92,9 +97,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   Reservoir sampling is used to limit memory usage based on the number of
   outputs, rather than the number of inputs.
 
-  shred once again uses direct I/O where available, and increases write block
-  size from 12KiB to 64KiB when possible.
-  [Direct I/O regression introduced in coreutils-6.0]
+  shred increases write block size from 12KiB to 64KiB when possible,
+  to align with other utilities and reduce the system call overhead.
 
   split --line-bytes=SIZE, now only allocates memory as needed rather
   than allocating SIZE bytes at program start.

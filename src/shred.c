@@ -394,7 +394,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
   bool other_error = false;
-  bool first_write = true;
+  bool tried_without_directio = false;
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
@@ -443,7 +443,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       if (type < 0)
         randread (s, pbuf, lim);
       /* Loop to retry partial writes. */
-      for (soff = 0; soff < lim; soff += ssize, first_write = false)
+      for (soff = 0; soff < lim; soff += ssize)
         {
           ssize = write (fd, pbuf + soff, lim - soff);
           if (ssize <= 0)
@@ -459,17 +459,15 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                   int errnum = errno;
                   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
-                  /* If the first write of the first pass for a given file
-                     has just failed with EINVAL, turn off direct mode I/O
-                     and try again.  This works around a bug in Linux kernel
-                     2.4 whereby opening with O_DIRECT would succeed for some
-                     file system types (e.g., ext3), but any attempt to
-                     access a file through the resulting descriptor would
-                     fail with EINVAL.  */
-                  if (k == 1 && first_write && errno == EINVAL)
+                  /* Retry without direct I/O since this may not be supported
+                     at all on some (file) systems, or with the current size.
+                     I.E. a specified --size that is not aligned, or when
+                     dealing with slop at the end of a file with --exact.  */
+                  if (k == 1 && !tried_without_directio && errno == EINVAL)
                     {
                       direct_mode (fd, false);
                       ssize = 0;
+                      tried_without_directio = true;
                       continue;
                     }
                   error (0, errnum, _("%s: error writing at offset %s"),
@@ -478,7 +476,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
                   /* 'shred' is often used on bad media, before throwing it
                      out.  Thus, it shouldn't give up on bad blocks.  This
                      code works because lim is always a multiple of
-                     SECTOR_SIZE, except at the end.  */
+                     SECTOR_SIZE, except at the end.  This size constraint
+                     also enables direct I/O on some (file) systems.  */
                   verify (PERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
                   verify (NONPERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
                   if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
