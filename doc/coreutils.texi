@@ -8052,8 +8052,8 @@ copy recursively by descending into source directories and copying files
 to corresponding destination directories.
 
 When copying from a symbolic link, @command{cp} normally follows the
-link only when not copying
-recursively.  This default can be overridden with the
+link only when not copying recursively or when @option{--link}
+(@option{-l}) is used.  This default can be overridden with the
 @option{--archive} (@option{-a}), @option{-d}, @option{--dereference}
 (@option{-L}), @option{--no-dereference} (@option{-P}), and
 @option{-H} options.  If more than one of these options is specified,
@@ -8327,7 +8327,8 @@ any missing intermediate directories.
 @cindex recursively copying directories
 @cindex non-directories, copying as special files
 Copy directories recursively.  By default, do not follow symbolic
-links in the source; see the @option{--archive} (@option{-a}), @option{-d},
+links in the source unless used together with the @option{--link}
+(@option{-l}) option; see the @option{--archive} (@option{-a}), @option{-d},
 @option{--dereference} (@option{-L}), @option{--no-dereference}
 (@option{-P}), and @option{-H} options.  Special files are copied by
 creating a destination file of the same type as the source; see the

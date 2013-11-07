@@ -1558,18 +1558,23 @@ restore_default_fscreatecon_or_die (void)
            _("failed to restore the default file creation context"));
 }
 
-/* Create a hard link DST_NAME to SRC_NAME, honoring the REPLACE and
-   VERBOSE settings.  Return true upon success.  Otherwise, diagnose
-   the failure and return false.
-   If SRC_NAME is a symbolic link it will not be followed.  If the system
-   doesn't support hard links to symbolic links, then DST_NAME will
-   be created as a symbolic link to SRC_NAME.  */
+/* Create a hard link DST_NAME to SRC_NAME, honoring the REPLACE, VERBOSE and
+   DEREFERENCE settings.  Return true upon success.  Otherwise, diagnose the
+   failure and return false.  If SRC_NAME is a symbolic link, then it will not
+   be followed unless DEREFERENCE is true.
+   If the system doesn't support hard links to symbolic links, then DST_NAME
+   will be created as a symbolic link to SRC_NAME.  */
 static bool
 create_hard_link (char const *src_name, char const *dst_name,
-                  bool replace, bool verbose)
+                  bool replace, bool verbose, bool dereference)
 {
-  /* We want to guarantee that symlinks are not followed.  */
-  bool link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0) != 0);
+  /* We want to guarantee that symlinks are not followed, unless requested.  */
+  int flags = 0;
+  if (dereference)
+    flags = AT_SYMLINK_FOLLOW;
+
+  bool link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, flags)
+                      != 0);
 
   /* If the link failed because of an existing destination,
      remove that file and then call link again.  */
@@ -1582,7 +1587,8 @@ create_hard_link (char const *src_name, char const *dst_name,
         }
       if (verbose)
         printf (_("removed %s\n"), quote (dst_name));
-      link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, 0) != 0);
+      link_failed = (linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name, flags)
+                     != 0);
     }
 
   if (link_failed)
@@ -1593,6 +1599,17 @@ create_hard_link (char const *src_name, char const *dst_name,
     }
 
   return true;
+}
+
+/* Return true if the current file should be (tried to be) dereferenced:
+   either for DEREF_ALWAYS or for DEREF_COMMAND_LINE_ARGUMENTS in the case
+   where the current file is a COMMAND_LINE_ARG; otherwise return false.  */
+static inline bool _GL_ATTRIBUTE_PURE
+should_dereference (const struct cp_options *x, bool command_line_arg)
+{
+  return x->dereference == DEREF_ALWAYS
+         || (x->dereference == DEREF_COMMAND_LINE_ARGUMENTS
+             && command_line_arg);
 }
 
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
@@ -1669,6 +1686,8 @@ copy_internal (char const *src_name, char const *dst_name,
 
       record_file (x->src_info, src_name, &src_sb);
     }
+
+  bool dereference = should_dereference (x, command_line_arg);
 
   if (!new_dst)
     {
@@ -1748,7 +1767,7 @@ copy_internal (char const *src_name, char const *dst_name,
                       /* Note we currently replace DST_NAME unconditionally,
                          even if it was a newer separate file.  */
                       if (! create_hard_link (earlier_file, dst_name, true,
-                                              x->verbose))
+                                              x->verbose, dereference))
                         {
                           goto un_backup;
                         }
@@ -2078,7 +2097,8 @@ copy_internal (char const *src_name, char const *dst_name,
         }
       else
         {
-          if (! create_hard_link (earlier_file, dst_name, true, x->verbose))
+          if (! create_hard_link (earlier_file, dst_name, true, x->verbose,
+                                  dereference))
             goto un_backup;
 
           return true;
@@ -2389,7 +2409,7 @@ copy_internal (char const *src_name, char const *dst_name,
            && !(LINK_FOLLOWS_SYMLINKS && S_ISLNK (src_mode)
                 && x->dereference == DEREF_NEVER))
     {
-      if (! create_hard_link (src_name, dst_name, false, false))
+      if (! create_hard_link (src_name, dst_name, false, false, dereference))
         goto un_backup;
     }
   else if (S_ISREG (src_mode)

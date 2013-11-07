@@ -189,9 +189,9 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bdf (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 1 -l [cp: cannot create hard link 'sl2' to 'sl1'] (foo sl1 -> foo sl2 -> foo)
-0 -fl (foo sl1 -> foo sl2 -> foo)
-0 -bl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
-0 -bfl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
+0 -fl (foo sl1 -> foo sl2)
+0 -bl (foo sl1 -> foo sl2 sl2.~1~ -> foo)
+0 -bfl (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 
 1 [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
 1 -d [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)

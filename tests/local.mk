@@ -427,6 +427,7 @@ all_tests =					\
   tests/cp/file-perm-race.sh			\
   tests/cp/into-self.sh				\
   tests/cp/link.sh				\
+  tests/cp/link-deref.sh			\
   tests/cp/link-no-deref.sh			\
   tests/cp/link-preserve.sh			\
   tests/cp/link-symlink.sh			\

@@ -1135,7 +1135,7 @@ main (int argc, char **argv)
 
   if (x.dereference == DEREF_UNDEFINED)
     {
-      if (x.recursive)
+      if (x.recursive && ! x.hard_link)
         /* This is compatible with FreeBSD.  */
         x.dereference = DEREF_NEVER;
       else

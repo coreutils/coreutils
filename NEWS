@@ -70,6 +70,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cp --link now dereferences a symbolic link as source before creating the
+  hard link in the destination unless the -P,--no-deref option is specified.
+  Previously, it would create a hard link of the symbolic link, even when
+  the dereferencing options -L or -H were specified.
+
   dd status=none now suppresses all non fatal diagnostic messages,
   not just the transfer counts.
 
