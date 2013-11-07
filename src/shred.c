@@ -380,7 +380,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
   /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
   size_t page_size = getpagesize ();
-#define PERIODIC_OUTPUT_SIZE (12 * 1024)
+#define PERIODIC_OUTPUT_SIZE (60 * 1024)
 #define NONPERIODIC_OUTPUT_SIZE (64 * 1024)
   verify (PERIODIC_OUTPUT_SIZE % 3 == 0);
   size_t output_size = periodic_pattern (type)

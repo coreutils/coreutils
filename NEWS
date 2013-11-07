@@ -97,7 +97,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Reservoir sampling is used to limit memory usage based on the number of
   outputs, rather than the number of inputs.
 
-  shred increases write block size from 12KiB to 64KiB when possible,
+  shred increases the default write block size from 12KiB to 64KiB
   to align with other utilities and reduce the system call overhead.
 
   split --line-bytes=SIZE, now only allocates memory as needed rather
