@@ -13792,6 +13792,16 @@ May be negated.
 @cindex even parity
 Set odd parity (even if negated).  May be negated.
 
+@item cmspar
+@opindex cmspar
+@cindex constant parity
+@cindex stick parity
+@cindex mark parity
+@cindex space parity
+Use "stick" (mark/space) parity.  If parodd is set, the parity bit is
+always 1; if parodd is not set, the parity bit is always zero.
+Non-POSIX@.  May be negated.
+
 @item cs5
 @itemx cs6
 @itemx cs7

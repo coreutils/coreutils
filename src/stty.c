@@ -205,6 +205,9 @@ static struct mode_info const mode_info[] =
 {
   {"parenb", control, REV, PARENB, 0},
   {"parodd", control, REV, PARODD, 0},
+#ifdef CMSPAR
+  {"cmspar", control, REV, CMSPAR, 0},
+#endif
   {"cs5", control, 0, CS5, CSIZE},
   {"cs6", control, 0, CS6, CSIZE},
   {"cs7", control, 0, CS7, CSIZE},
@@ -593,6 +596,7 @@ Control settings:\n\
    [-]hupcl      same as [-]hup\n\
    [-]parenb     generate parity bit in output and expect parity bit in input\n\
    [-]parodd     set odd parity (or even parity with '-')\n\
+ * [-]cmspar     use \"stick\" (mark/space) parity\n\
 "), stdout);
       fputs (_("\
 \n\

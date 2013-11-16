@@ -105,6 +105,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   split --line-bytes=SIZE, now only allocates memory as needed rather
   than allocating SIZE bytes at program start.
 
+  stty now supports configuring "stick" (mark/space) parity where available.
+
 ** Build-related
 
   factor now builds on aarch64 based systems [bug introduced in coreutils-8.20]
