@@ -9281,7 +9281,8 @@ the @option{-f} or @option{--force} option is not given, or the
 If the response is not affirmative, the file is skipped.
 
 Any attempt to remove a file whose last file name component is
-@file{.} or @file{..} is rejected without any prompting.
+@file{.} or @file{..} is rejected without any prompting, as mandated
+by POSIX.
 
 @emph{Warning}: If you use @command{rm} to remove a file, it is usually
 possible to recover the contents of that file.  If you want more assurance

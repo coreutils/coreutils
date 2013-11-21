@@ -437,17 +437,21 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
       /* Perform checks that can apply only for command-line arguments.  */
       if (ent->fts_level == FTS_ROOTLEVEL)
         {
-          /* If the basename of a command line argument is "." or "..",
+          /* POSIX says:
+             If the basename of a command line argument is "." or "..",
              diagnose it and do nothing more with that argument.  */
           if (dot_or_dotdot (last_component (ent->fts_accpath)))
             {
-              error (0, 0, _("cannot remove directory: %s"),
-                     quote (ent->fts_path));
+              error (0, 0,
+                     _("refusing to remove %s or %s directory: skipping %s"),
+                     quote_n (0, "."), quote_n (1, ".."),
+                     quote_n (2, ent->fts_path));
               fts_skip_tree (fts, ent);
               return RM_ERROR;
             }
 
-          /* If a command line argument resolves to "/" (and --preserve-root
+          /* POSIX also says:
+             If a command line argument resolves to "/" (and --preserve-root
              is in effect -- default) diagnose and skip it.  */
           if (ROOT_DEV_INO_CHECK (x->root_dev_ino, ent->fts_statp))
             {
