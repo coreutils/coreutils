@@ -181,7 +181,7 @@ sc_check-AUTHORS: $(all_programs)
 	    exe='[';					\
 	  fi;						\
 	  LC_ALL=$$locale ./src/$$exe --version		\
-	    | perl -0 -pi -e 's/,\n/, /gm'		\
+	    | perl -0 -p -e 's/,\n/, /gm'		\
 	    | sed -n -e '/Written by /{ s//'"$$i"': /;'	\
 		  -e 's/,* and /, /; s/\.$$//; p; }';	\
 	done > $(au_actual) &&				\
