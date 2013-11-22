@@ -49,6 +49,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  df --output now accepts a 'file' field, to propagate a specified
+  command line argument through to the output.
+
   du accepts a new option: --inodes to show the number of inodes instead
   of the blocks used.
 

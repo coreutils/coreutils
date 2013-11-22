@@ -143,7 +143,8 @@ typedef enum
   IUSED_FIELD,  /* inodes used */
   IAVAIL_FIELD, /* inodes available */
   IPCENT_FIELD, /* inodes used in percent */
-  TARGET_FIELD  /* mount point */
+  TARGET_FIELD, /* mount point */
+  FILE_FIELD    /* specified file name */
 } display_field_t;
 
 /* Flag if a field contains a block, an inode or another value.  */
@@ -199,11 +200,15 @@ static struct field_data_t field_data[] = {
     "ipcent", INODE_FLD, N_("IUse%"),       4, MBS_ALIGN_RIGHT, false },
 
   [TARGET_FIELD] = { TARGET_FIELD,
-    "target", OTHER_FLD, N_("Mounted on"),  0, MBS_ALIGN_LEFT,  false }
+    "target", OTHER_FLD, N_("Mounted on"),  0, MBS_ALIGN_LEFT,  false },
+
+  [FILE_FIELD] = { FILE_FIELD,
+    "file",   OTHER_FLD, N_("File"),        0, MBS_ALIGN_LEFT,  false }
 };
 
 static char const *all_args_string =
-  "source,fstype,itotal,iused,iavail,ipcent,size,used,avail,pcent,target";
+  "source,fstype,itotal,iused,iavail,ipcent,size,"
+  "used,avail,pcent,file,target";
 
 /* Storage for the definition of output columns.  */
 static struct field_data_t **columns;
@@ -403,6 +408,7 @@ decode_output_arg (char const *arg)
         case IAVAIL_FIELD:
         case IPCENT_FIELD:
         case TARGET_FIELD:
+        case FILE_FIELD:
           alloc_field (field, NULL);
           break;
 
@@ -837,7 +843,7 @@ add_to_grand_total (struct field_values_t *bv, struct field_values_t *iv)
    when df is invoked with no non-option argument.  See below for details.  */
 
 static void
-get_dev (char const *disk, char const *mount_point,
+get_dev (char const *disk, char const *mount_point, char const* file,
          char const *stat_file, char const *fstype,
          bool me_dummy, bool me_remote,
          const struct fs_usage *force_fsu,
@@ -879,6 +885,9 @@ get_dev (char const *disk, char const *mount_point,
 
   if (! disk)
     disk = "-";			/* unknown */
+
+  if (! file)
+    file = "-";			/* unspecified */
 
   char *dev_name = xstrdup (disk);
   char *resolved_dev;
@@ -1011,6 +1020,10 @@ get_dev (char const *disk, char const *mount_point,
             break;
           }
 
+        case FILE_FIELD:
+          cell = xstrdup (file);
+          break;
+
         case TARGET_FIELD:
 #ifdef HIDE_AUTOMOUNT_PREFIX
           /* Don't print the first directory name in MOUNT_POINT if it's an
@@ -1054,7 +1067,7 @@ get_disk (char const *disk)
 
   if (best_match)
     {
-      get_dev (best_match->me_devname, best_match->me_mountdir, NULL,
+      get_dev (best_match->me_devname, best_match->me_mountdir, disk, NULL,
                best_match->me_type, best_match->me_dummy,
                best_match->me_remote, NULL, false);
       return true;
@@ -1142,7 +1155,7 @@ get_point (const char *point, const struct stat *statp)
       }
 
   if (best_match)
-    get_dev (best_match->me_devname, best_match->me_mountdir, point,
+    get_dev (best_match->me_devname, best_match->me_mountdir, point, point,
              best_match->me_type, best_match->me_dummy, best_match->me_remote,
              NULL, false);
   else
@@ -1155,7 +1168,7 @@ get_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
         {
-          get_dev (NULL, mp, NULL, NULL, false, false, NULL, false);
+          get_dev (NULL, mp, point, NULL, NULL, false, false, NULL, false);
           free (mp);
         }
     }
@@ -1186,7 +1199,7 @@ get_all_entries (void)
     filter_mount_list ();
 
   for (me = mount_list; me; me = me->me_next)
-    get_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
+    get_dev (me->me_devname, me->me_mountdir, NULL, NULL, me->me_type,
              me->me_dummy, me->me_remote, NULL, true);
 }
 
@@ -1265,7 +1278,7 @@ or all file systems by default.\n\
       fputs (_("\n\
 FIELD_LIST is a comma-separated list of columns to be included.  Valid\n\
 field names are: 'source', 'fstype', 'itotal', 'iused', 'iavail', 'ipcent',\n\
-'size', 'used', 'avail', 'pcent' and 'target' (see info page).\n\
+'size', 'used', 'avail', 'pcent', 'file' and 'target' (see info page).\n\
 "), stdout);
       emit_ancillary_info ();
     }
@@ -1544,7 +1557,7 @@ main (int argc, char **argv)
       if (print_grand_total)
         get_dev ("total",
                  (field_data[SOURCE_FIELD].used ? "-" : "total"),
-                 NULL, NULL, false, false, &grand_fsu, false);
+                 NULL, NULL, NULL, false, false, &grand_fsu, false);
 
       print_table ();
     }

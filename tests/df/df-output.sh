@@ -67,11 +67,11 @@ compare exp out || fail=1
 # that --o (without argument) is identical to the full list.
 
 cat <<\EOF > exp || framework_failure_
-Filesystem Type Inodes IUsed IFree IUse% Size Used Avail Use% Mounted on
+Filesystem Type Inodes IUsed IFree IUse% Size Used Avail Use% File Mounted on
 EOF
 
 df -h --o=source,fstype,itotal,iused,iavail,ipcent \
- --o=size,used,avail,pcent,target '.' >out || fail=1
+ --o=size,used,avail,pcent,file,target '.' >out || fail=1
 sed -e '1 {
           s/ [ ]*/ /g
           q
@@ -126,5 +126,15 @@ compare exp out2 || fail=1
 # Ensure that --output is mentioned in the usage.
 df --help > out || fail=1
 grep ' --output' out >/dev/null || { fail=1; cat out; }
+
+# Ensure that the FILE field contains the argument.
+cat <<\EOF > exp || framework_failure_
+.
+exp
+EOF
+
+df --output=file '.' exp >out || fail=1
+sed '1d' out > out2
+compare exp out2 || fail=1
 
 Exit $fail

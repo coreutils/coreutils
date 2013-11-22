@@ -11213,6 +11213,8 @@ Number of available blocks.
 @item pcent
 Percentage of @var{used} divided by @var{size}.
 
+@item file
+The file name if specified on the command line.
 @item target
 The mount point.
 @end table
