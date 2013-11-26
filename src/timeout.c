@@ -118,7 +118,7 @@ unblock_signal (int sig)
    as that's more useful in practice than reporting an error.
    '0' means don't timeout.  */
 static void
-settimeout (double duration)
+settimeout (double duration, bool warn)
 {
 
   /* We configure timers below so that SIGALRM is sent on expiry.
@@ -142,11 +142,12 @@ settimeout (double duration)
         return;
       else
         {
-          error (0, errno, _("warning: timer_settime"));
+          if (warn)
+            error (0, errno, _("warning: timer_settime"));
           timer_delete (timerid);
         }
     }
-  else if (errno != ENOSYS)
+  else if (warn && errno != ENOSYS)
     error (0, errno, _("warning: timer_create"));
 #endif
 
@@ -190,10 +191,12 @@ cleanup (int sig)
     {
       if (kill_after)
         {
+          int saved_errno = errno; /* settimeout may reset.  */
           /* Start a new timeout after which we'll send SIGKILL.  */
           term_signal = SIGKILL;
-          settimeout (kill_after);
+          settimeout (kill_after, false);
           kill_after = 0; /* Don't let later signals reset kill alarm.  */
+          errno = saved_errno;
         }
 
       /* Send the signal directly to the monitored child,
@@ -459,7 +462,7 @@ main (int argc, char **argv)
       pid_t wait_result;
       int status;
 
-      settimeout (timeout);
+      settimeout (timeout, true);
 
       while ((wait_result = waitpid (monitored_pid, &status, 0)) < 0
              && errno == EINTR)
