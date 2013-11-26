@@ -1012,7 +1012,9 @@ option is equivalent to @option{--block-size=1K}, which
 is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
-equivalent to @option{--block-size=si}.
+equivalent to @option{--block-size=si}.  Note for @command{ls}
+the @option{-k} option does not control the display of the
+apparent file sizes, whereas the @option{--block-size} option does.
 
 @node Floating point
 @section Floating point numbers

@@ -4816,7 +4816,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -i, --inode                print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
 \n\
-  -k, --kibibytes            use 1024-byte blocks\n\
+  -k, --kibibytes            default to 1024-byte blocks for disk usage\n\
 "), stdout);
       fputs (_("\
   -l                         use a long listing format\n\
