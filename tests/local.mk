@@ -658,7 +658,7 @@ $(factor_tests): $(tf)/run.sh $(tf)/create-test.sh
 	$(AM_V_at)$(SHELL) $(srcdir)/$(tf)/create-test.sh $@ \
 	  $(srcdir)/$(tf)/run.sh > $@-t
 	$(AM_V_at)chmod a+x $@-t
-	$(AM_V_at)mv $@-t $@
+	$(AM_V_at)mv -f $@-t $@
 
 CLEANFILES += $(factor_tests)
 
