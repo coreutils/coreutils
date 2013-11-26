@@ -373,6 +373,34 @@ static bool debug;
    number are present, temp files will be used. */
 static unsigned int nmerge = NMERGE_DEFAULT;
 
+/* Output an error to stderr using async-signal-safe routines, and _exit().
+   This can be used safely from signal handlers,
+   and between fork() and exec() of multithreaded processes.  */
+
+static void async_safe_die (int, const char *) ATTRIBUTE_NORETURN;
+static void
+async_safe_die (int errnum, const char *errstr)
+{
+  ignore_value (write (STDERR_FILENO, errstr, strlen (errstr)));
+
+  /* Even if defined HAVE_STRERROR_R, we can't use it,
+     as it may return a translated string etc. and even if not
+     may malloc() which is unsafe.  We might improve this
+     by testing for sys_errlist and using that if available.
+     For now just report the error number.  */
+  if (errnum)
+    {
+      char errbuf[INT_BUFSIZE_BOUND (errnum)];
+      char *p = inttostr (errnum, errbuf);
+      ignore_value (write (STDERR_FILENO, ": errno ", 8));
+      ignore_value (write (STDERR_FILENO, p, strlen (p)));
+    }
+
+  ignore_value (write (STDERR_FILENO, "\n", 1));
+
+  _exit (SORT_FAILURE);
+}
+
 /* Report MESSAGE for FILE, then clean up and exit.
    If FILE is null, it represents standard output.  */
 
@@ -982,8 +1010,8 @@ move_fd_or_die (int oldfd, int newfd)
 {
   if (oldfd != newfd)
     {
-      if (dup2 (oldfd, newfd) < 0)
-        error (SORT_FAILURE, errno, _("dup2 failed"));
+      /* This should never fail for our usage.  */
+      dup2 (oldfd, newfd);
       close (oldfd);
     }
 }
@@ -1095,13 +1123,15 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
         }
       else if (node->pid == 0)
         {
+          /* Being the child of a multithreaded program before exec(),
+             we're restricted to calling async-signal-safe routines here.  */
           close (pipefds[1]);
           move_fd_or_die (tempfd, STDOUT_FILENO);
           move_fd_or_die (pipefds[0], STDIN_FILENO);
 
-          if (execlp (compress_program, compress_program, (char *) NULL) < 0)
-            error (SORT_FAILURE, errno, _("couldn't execute %s"),
-                   compress_program);
+          execlp (compress_program, compress_program, (char *) NULL);
+
+          async_safe_die (errno, "couldn't execute compress program");
         }
     }
 
@@ -1153,13 +1183,15 @@ open_temp (struct tempnode *temp)
       break;
 
     case 0:
+      /* Being the child of a multithreaded program before exec(),
+         we're restricted to calling async-signal-safe routines here.  */
       close (pipefds[0]);
       move_fd_or_die (tempfd, STDIN_FILENO);
       move_fd_or_die (pipefds[1], STDOUT_FILENO);
 
       execlp (compress_program, compress_program, "-d", (char *) NULL);
-      error (SORT_FAILURE, errno, _("couldn't execute %s -d"),
-             compress_program);
+
+      async_safe_die (errno, "couldn't execute compress program (with -d)");
 
     default:
       temp->pid = child;
