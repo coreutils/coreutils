@@ -19,7 +19,21 @@
 #ifndef COREUTILS_SELINUX_H
 # define COREUTILS_SELINUX_H
 
+# if HAVE_SELINUX_SELINUX_H
+
 extern bool restorecon (char const *path, bool recurse, bool preserve);
 extern int defaultcon (char const *path, mode_t mode);
+
+# else
+
+static inline bool
+restorecon (char const *path, bool recurse, bool preserve)
+{ errno = ENOTSUP; return false; }
+
+static inline int
+defaultcon (char const *path, mode_t mode)
+{ errno = ENOTSUP; return -1; }
+
+# endif
 
 #endif

@@ -29,8 +29,11 @@
 #include "quote.h"
 #include "selinux.h"
 
+#if HAVE_SELINUX_SELINUX_H
+
+# if ! HAVE_MODE_TO_SECURITY_CLASS
 /*
-  This function has being added to libselinux-2.1.12-5, but is here
+  This function has been added to libselinux-2.1.12-5, but is here
   for support with older versions of SELinux
 
   Translates a mode into an Internal SELinux security_class definition.
@@ -58,6 +61,7 @@ mode_to_security_class (mode_t m)
   errno = EINVAL;
   return 0;
 }
+# endif
 
 /*
   This function takes a PATH and a MODE and then asks SELinux what the label
@@ -108,7 +112,7 @@ defaultcon (char const *path, mode_t mode)
 {
   int rc = -1;
   security_context_t scon = NULL, tcon = NULL;
-  context_t scontext = NULL, tcontext = NULL;
+  context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;
   char *newpath = NULL;
@@ -179,7 +183,7 @@ restorecon_private (char const *path, bool local)
   int rc = -1;
   struct stat sb;
   security_context_t scon = NULL, tcon = NULL;
-  context_t scontext = NULL, tcontext = NULL;
+  context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;
   int fd;
@@ -328,3 +332,4 @@ restorecon (char const *path, bool recurse, bool local)
   free (newpath);
   return ok;
 }
+#endif

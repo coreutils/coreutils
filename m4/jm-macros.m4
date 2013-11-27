@@ -44,9 +44,11 @@ AC_DEFUN([coreutils_MACROS],
   # used by shred
   AC_CHECK_FUNCS_ONCE([directio])
 
-  # Used by install.c.
   coreutils_saved_libs=$LIBS
     LIBS="$LIBS $LIB_SELINUX"
+    # Used by selinux.c.
+    AC_CHECK_FUNCS([mode_to_security_class], [], [])
+    # Used by install.c.
     AC_CHECK_FUNCS([matchpathcon_init_prefix], [],
     [
       case "$ac_cv_search_setfilecon:$ac_cv_header_selinux_selinux_h" in
