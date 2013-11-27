@@ -18,7 +18,6 @@
 
 #include <config.h>
 #include <selinux/selinux.h>
-#include <selinux/flask.h>
 #include <selinux/context.h>
 #include <sys/types.h>
 
