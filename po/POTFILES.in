@@ -109,6 +109,7 @@ src/remove.c
 src/rm.c
 src/rmdir.c
 src/runcon.c
+src/selinux.c
 src/seq.c
 src/setuidgid.c
 src/shred.c
