@@ -55,6 +55,7 @@ static bool remove_trailing_slashes;
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
+  {"context", no_argument, NULL, 'Z'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"no-clobber", no_argument, NULL, 'n'},
@@ -120,6 +121,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_timestamps = true;
   x->explicit_no_preserve_mode= false;
   x->preserve_security_context = selinux_enabled;
+  x->set_security_context = false;
   x->reduce_diagnostics = false;
   x->data_copy_required = true;
   x->require_preserve = false;  /* FIXME: maybe make this an option */
@@ -316,6 +318,8 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
   -v, --verbose                explain what is being done\n\
+  -Z, --context                set SELinux security context of destination\n\
+                                 file to default type\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -350,6 +354,7 @@ main (int argc, char **argv)
   bool no_target_directory = false;
   int n_files;
   char **file;
+  bool selinux_enabled = (0 < is_selinux_enabled ());
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -368,7 +373,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "bfint:uvS:T", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "bfint:uvS:TZ", long_options, NULL))
          != -1)
     {
       switch (c)
@@ -417,6 +422,14 @@ main (int argc, char **argv)
         case 'S':
           make_backups = true;
           backup_suffix_string = optarg;
+          break;
+        case 'Z':
+          /* politely decline if we're not on a selinux-enabled kernel. */
+          if (selinux_enabled)
+            {
+              x.preserve_security_context = false;
+              x.set_security_context = true;
+            }
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);

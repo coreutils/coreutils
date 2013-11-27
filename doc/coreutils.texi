@@ -8467,6 +8467,24 @@ Skip subdirectories that are on different file systems from the one that
 the copy started on.
 However, mount point directories @emph{are} copied.
 
+@macro optContext
+@item -Z
+@itemx --context[=@var{context}]
+@opindex -Z
+@opindex --context
+@cindex SELinux, setting/restoring security context
+@cindex security context
+Without a specified @var{context}, adjust the SELinux security context according
+to the system default type for destination files, similarly to the
+@command{restorecon} command.
+The long form of this option with a specific context specified,
+will set the context for newly created files only.
+With a specified context, if SELinux is disabled, a warning is issued.
+@end macro
+@optContext
+This option is mutually exclusive with the @option{--preserve=context}
+option, and overrides the @option{--preserve=all} and @option{-a} options.
+
 @end table
 
 @exitstatus
@@ -9110,15 +9128,9 @@ Program used to strip binaries.
 @opindex --verbose
 Print the name of each file before copying it.
 
-@item -Z @var{context}
-@itemx --context=@var{context}
-@opindex -Z
-@opindex --context
-@cindex SELinux
-@cindex security context
-Set the default SELinux security context to be used for any
-created files and directories.  If SELinux is disabled then
-print a warning and ignore the option.
+@optContext
+This option is mutually exclusive with the @option{--preserve-context} option.
+
 
 @end table
 
@@ -9250,6 +9262,16 @@ Print the name of each file before moving it.
 @optTargetDirectory
 
 @optNoTargetDirectory
+
+@item -Z
+@itemx --context
+@opindex -Z
+@opindex --context
+@cindex SELinux, restoring security context
+@cindex security context
+This option functions similarly to the @command{restorecon} command,
+by adjusting the SELinux security context according
+to the system default type for destination files.
 
 @end table
 
@@ -10066,13 +10088,7 @@ newly-created parent directories are inherited.
 Print a message for each created directory.  This is most useful with
 @option{--parents}.
 
-@item -Z @var{context}
-@itemx --context=@var{context}
-@opindex -Z
-@opindex --context
-@cindex SELinux
-@cindex security context
-Set the default SELinux security context to be used for created directories.
+@optContext
 
 @end table
 
@@ -10113,13 +10129,7 @@ Set the mode of created FIFOs to @var{mode}, which is symbolic as in
 for the point of departure.  @var{mode} should specify only file
 permission bits.  @xref{File permissions}.
 
-@item -Z @var{context}
-@itemx --context=@var{context}
-@opindex -Z
-@opindex --context
-@cindex SELinux
-@cindex security context
-Set the default SELinux security context to be used for created FIFOs.
+@optContext
 
 @end table
 
@@ -10196,13 +10206,7 @@ Set the mode of created files to @var{mode}, which is symbolic as in
 @var{mode} should specify only file permission bits.
 @xref{File permissions}.
 
-@item -Z @var{context}
-@itemx --context=@var{context}
-@opindex -Z
-@opindex --context
-@cindex SELinux
-@cindex security context
-Set the default SELinux security context to be used for created files.
+@optContext
 
 @end table
 

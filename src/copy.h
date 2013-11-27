@@ -159,6 +159,9 @@ struct cp_options
   bool preserve_timestamps;
   bool explicit_no_preserve_mode;
 
+  /* If true, attempt to set specified security context */
+  bool set_security_context;
+
   /* Enabled for mv, and for cp by the --preserve=links option.
      If true, attempt to preserve in the destination files any
      logical hard links between the source files.  If used with cp's

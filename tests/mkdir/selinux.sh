@@ -32,7 +32,7 @@ msg="failed to set default file creation context to '$c':"
 for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
   # In OpenBSD's /bin/sh, mknod is a shell built-in.
   # Running via "env" ensures we run our program and not the built-in.
-  env -- $cmd_w_arg -Z $c 2> out && fail=1
+  env -- $cmd_w_arg --context=$c 2> out && fail=1
   set $cmd_w_arg; cmd=$1
   echo "$cmd: $msg" > exp || fail=1
 

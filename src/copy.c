@@ -61,6 +61,7 @@
 #include "write-any-file.h"
 #include "areadlink.h"
 #include "yesno.h"
+#include "selinux.h"
 
 #if USE_XATTR
 # include <attr/error_context.h>
@@ -512,6 +513,18 @@ copy_attr_free (struct error_context *ctx _GL_UNUSED,
 {
 }
 
+/* Exclude SELinux extended attributes that are otherwise handled,
+   and are problematic to copy again.  Also honor attributes
+   configured for exclusion in /etc/xattr.conf.
+   FIXME: Should we handle POSIX ACLs similarly?
+   Return zero to skip.  */
+static int
+check_selinux_attr (const char *name, struct error_context *ctx)
+{
+  return STRNCMP_LIT (name, "security.selinux")
+         && attr_copy_check_permissions (name, ctx);
+}
+
 /* If positive SRC_FD and DST_FD descriptors are passed,
    then copy by fd, otherwise copy by name.  */
 
@@ -522,6 +535,7 @@ copy_attr (char const *src_path, int src_fd,
   int ret;
   bool all_errors = (!x->data_copy_required || x->require_preserve_xattr);
   bool some_errors = (!all_errors && !x->reduce_diagnostics);
+  bool selinux_done = (x->preserve_security_context || x->set_security_context);
   struct error_context ctx =
   {
     .error = all_errors ? copy_attr_allerror : copy_attr_error,
@@ -529,10 +543,12 @@ copy_attr (char const *src_path, int src_fd,
     .quote_free = copy_attr_free
   };
   if (0 <= src_fd && 0 <= dst_fd)
-    ret = attr_copy_fd (src_path, src_fd, dst_path, dst_fd, 0,
+    ret = attr_copy_fd (src_path, src_fd, dst_path, dst_fd,
+                        selinux_done ? check_selinux_attr : NULL,
                         (all_errors || some_errors ? &ctx : NULL));
   else
-    ret = attr_copy_file (src_path, dst_path, 0,
+    ret = attr_copy_file (src_path, dst_path,
+                          selinux_done ? check_selinux_attr : NULL,
                           (all_errors || some_errors ? &ctx : NULL));
 
   return ret == 0;
@@ -737,6 +753,96 @@ set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
 #endif
 }
 
+/* Set the default security context for the process.  New files will
+   have this security context set.  Also existing files can have their
+   context adjusted based on this process context, by
+   set_file_security_ctx() called with PROCESS_LOCAL=true.
+   This should be called before files are created so there is no race
+   where a file may be present without an appropriate security context.
+   Based on CP_OPTIONS, diagnose warnings and fail when appropriate.
+   Return FALSE on failure, TRUE on success.  */
+
+static bool
+set_process_security_ctx (char const *src_name, char const *dst_name,
+                          mode_t mode, bool new_dst, const struct cp_options *x)
+{
+  if (x->preserve_security_context)
+    {
+      /* Set the default context for the process to match the source.  */
+      bool all_errors = !x->data_copy_required || x->require_preserve_context;
+      bool some_errors = !all_errors && !x->reduce_diagnostics;
+      security_context_t con;
+
+      if (0 <= lgetfilecon (src_name, &con))
+        {
+          if (setfscreatecon (con) < 0)
+            {
+              if (all_errors || (some_errors && !errno_unsupported (errno)))
+                error (0, errno,
+                       _("failed to set default file creation context to %s"),
+                       quote (con));
+              if (x->require_preserve_context)
+                {
+                  freecon (con);
+                  return false;
+                }
+            }
+          freecon (con);
+        }
+      else
+        {
+          if (all_errors || (some_errors && !errno_unsupported (errno)))
+            {
+              error (0, errno,
+                     _("failed to get security context of %s"),
+                     quote (src_name));
+            }
+          if (x->require_preserve_context)
+            return false;
+        }
+    }
+  else if (x->set_security_context)
+    {
+      /* With -Z, adjust the default context for the process
+         to have the type component adjusted as per the destination path.  */
+      if (new_dst && defaultcon (dst_name, mode) < 0)
+        {
+          if (!errno_unsupported (errno))
+            error (0, errno,
+                   _("failed to set default file creation context for %s"),
+                   quote (dst_name));
+        }
+    }
+
+  return true;
+}
+
+/* Reset the security context of DST_NAME, to that already set
+   as the process default if PROCESS_LOCAL is true.  Otherwise
+   adjust the type component of DST_NAME's security context as
+   per the system default for that path.  Issue warnings upon
+   failure, when allowed by various settings in CP_OPTIONS.
+   Return FALSE on failure, TRUE on success.  */
+
+static bool
+set_file_security_ctx (char const *dst_name, bool process_local,
+                       bool recurse, const struct cp_options *x)
+{
+  bool all_errors = (!x->data_copy_required
+                     || x->require_preserve_context);
+  bool some_errors = !all_errors && !x->reduce_diagnostics;
+
+  if (! restorecon (dst_name, recurse, process_local))
+    {
+      if (all_errors || (some_errors && !errno_unsupported (errno)))
+        error (0, errno, _("failed to set the security context of %s"),
+               quote_n (0, dst_name));
+      return false;
+    }
+
+  return true;
+}
+
 /* Change the file mode bits of the file identified by DESC or NAME to MODE.
    Use DESC if DESC is valid and fchmod is available, NAME otherwise.  */
 
@@ -834,44 +940,23 @@ copy_reg (char const *src_name, char const *dst_name,
       dest_errno = errno;
 
       /* When using cp --preserve=context to copy to an existing destination,
-         use the default context rather than that of the source.  Why?
-         1) the src context may prohibit writing, and
-         2) because it's more consistent to use the same context
-         that is used when the destination file doesn't already exist.  */
-      if (x->preserve_security_context && 0 <= dest_desc)
+         reset the context as per the default context, which has already been
+         set according to the src.
+         When using the mutually exclusive -Z option, then adjust the type of
+         the existing context according to the system default for the dest.
+         Note we set the context here, _after_ the file is opened, lest the
+         new context disallow that.  */
+      if ((x->set_security_context || x->preserve_security_context)
+          && 0 <= dest_desc)
         {
-          bool all_errors = (!x->data_copy_required
-                             || x->require_preserve_context);
-          bool some_errors = !all_errors && !x->reduce_diagnostics;
-          security_context_t con = NULL;
-
-          if (getfscreatecon (&con) < 0)
+          if (! set_file_security_ctx (dst_name, x->preserve_security_context,
+                                       false, x))
             {
-              if (all_errors || (some_errors && !errno_unsupported (errno)))
-                error (0, errno, _("failed to get file system create context"));
               if (x->require_preserve_context)
                 {
                   return_val = false;
                   goto close_src_and_dst_desc;
                 }
-            }
-
-          if (con)
-            {
-              if (fsetfilecon (dest_desc, con) < 0)
-                {
-                  if (all_errors || (some_errors && !errno_unsupported (errno)))
-                    error (0, errno,
-                           _("failed to set the security context of %s to %s"),
-                           quote_n (0, dst_name), quote_n (1, con));
-                  if (x->require_preserve_context)
-                    {
-                      return_val = false;
-                      freecon (con);
-                      goto close_src_and_dst_desc;
-                    }
-                }
-              freecon (con);
             }
         }
 
@@ -888,6 +973,18 @@ copy_reg (char const *src_name, char const *dst_name,
 
           /* Tell caller that the destination file was unlinked.  */
           *new_dst = true;
+
+          /* Ensure there is no race where a file may be left without
+             an appropriate security context.  */
+          if (x->set_security_context)
+            {
+              if (! set_process_security_ctx (src_name, dst_name, dst_mode,
+                                              *new_dst, x))
+                {
+                  return_val = false;
+                  goto close_src_desc;
+                }
+            }
         }
     }
 
@@ -2113,6 +2210,12 @@ copy_internal (char const *src_name, char const *dst_name,
             emit_verbose (src_name, dst_name,
                           backup_succeeded ? dst_backup : NULL);
 
+          if (x->set_security_context)
+            {
+              /* -Z failures are only warnings currently.  */
+              (void) set_file_security_ctx (dst_name, false, true, x);
+            }
+
           if (rename_succeeded)
             *rename_succeeded = true;
 
@@ -2222,40 +2325,12 @@ copy_internal (char const *src_name, char const *dst_name,
 
   delayed_ok = true;
 
-  if (x->preserve_security_context)
-    {
-      bool all_errors = !x->data_copy_required || x->require_preserve_context;
-      bool some_errors = !all_errors && !x->reduce_diagnostics;
-      security_context_t con;
-
-      if (0 <= lgetfilecon (src_name, &con))
-        {
-          if (setfscreatecon (con) < 0)
-            {
-              if (all_errors || (some_errors && !errno_unsupported (errno)))
-                error (0, errno,
-                       _("failed to set default file creation context to %s"),
-                       quote (con));
-              if (x->require_preserve_context)
-                {
-                  freecon (con);
-                  return false;
-                }
-            }
-          freecon (con);
-        }
-      else
-        {
-          if (all_errors || (some_errors && !errno_unsupported (errno)))
-            {
-              error (0, errno,
-                     _("failed to get security context of %s"),
-                     quote (src_name));
-            }
-          if (x->require_preserve_context)
-            return false;
-        }
-    }
+  /* If required, set the default security context for new files.
+     Also for existing files this is used as a reference
+     when copying the context with --preserve=context.
+     FIXME: Do we need to consider dst_mode_bits here?  */
+  if (! set_process_security_ctx (src_name, dst_name, src_mode, new_dst, x))
+    return false;
 
   if (S_ISDIR (src_mode))
     {
@@ -2519,6 +2594,19 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       error (0, 0, _("%s has unknown file type"), quote (src_name));
       goto un_backup;
+    }
+
+  /* With -Z or --preserve=context, set the context for existing files.
+     Note this is done already for copy_reg() for reasons described therein.  */
+  if (!new_dst && !x->copy_as_regular
+      && (x->set_security_context || x->preserve_security_context))
+    {
+      if (! set_file_security_ctx (dst_name, x->preserve_security_context,
+                                   false, x))
+        {
+           if (x->require_preserve_context)
+             goto un_backup;
+        }
     }
 
   if (command_line_arg && x->dest_info)

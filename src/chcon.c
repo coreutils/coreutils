@@ -355,7 +355,7 @@ Usage: %s [OPTION]... CONTEXT FILE...\n\
 "),
         program_name, program_name, program_name);
       fputs (_("\
-Change the security context of each FILE to CONTEXT.\n\
+Change the SELinux security context of each FILE to CONTEXT.\n\
 With --reference, change the security context of each FILE to that of RFILE.\n\
 "), stdout);
 

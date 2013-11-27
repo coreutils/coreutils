@@ -330,7 +330,7 @@ enum
 #define GETOPT_VERSION_OPTION_DECL \
   "version", no_argument, NULL, GETOPT_VERSION_CHAR
 #define GETOPT_SELINUX_CONTEXT_OPTION_DECL \
-  "context", required_argument, NULL, 'Z'
+  "context", optional_argument, NULL, 'Z'
 
 #define case_GETOPT_HELP_CHAR			\
   case GETOPT_HELP_CHAR:			\

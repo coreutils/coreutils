@@ -40,8 +40,8 @@
   proper_name ("Arnold Robbins"), \
   proper_name ("David MacKenzie")
 
-/* If nonzero, output only the SELinux context. -Z */
-static int just_context = 0;
+/* If nonzero, output only the SELinux context.  */
+static bool just_context = 0;
 
 static void print_user (uid_t uid);
 static void print_full_info (const char *username);
@@ -155,7 +155,7 @@ main (int argc, char **argv)
             error (EXIT_FAILURE, 0,
                    _("--context (-Z) works only on an SELinux-enabled kernel"));
 #endif
-          just_context = 1;
+          just_context = true;
           break;
 
         case 'g':

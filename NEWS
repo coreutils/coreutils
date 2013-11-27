@@ -52,6 +52,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp, install, mkdir, mknod, mkfifo and mv now support "restorecon"
+  functionality through the -Z option, to set the SELinux context
+  appropriate for the new item location in the file system.
+
+  csplit accepts a new option: --suppressed-matched, to elide the lines
+  used to identify the split points.
+
   df --output now accepts a 'file' field, to propagate a specified
   command line argument through to the output.
 
@@ -73,9 +80,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   uniq accepts a new option: --group to print all items, while separating
   unique groups with empty lines.
 
-  csplit accepts a new option: --suppressed-matched, to elide the lines
-  used to identify the split points.
-
   shred accepts new parameters to the --remove option to give greater
   control over that operation, which can greatly reduce sync overhead.
 
@@ -88,6 +92,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   hard link in the destination unless the -P,--no-deref option is specified.
   Previously, it would create a hard link of the symbolic link, even when
   the dereferencing options -L or -H were specified.
+
+  cp, install, mkdir, mknod and mkfifo no longer accept an argument to the
+  short -Z option.  The --context equivalent still takes an optional argument.
 
   dd status=none now suppresses all non fatal diagnostic messages,
   not just the transfer counts.

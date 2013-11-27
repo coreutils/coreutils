@@ -26,6 +26,7 @@
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
+#include "selinux.h"
 #include "smack.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -60,7 +61,8 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
   -m, --mode=MODE    set file permission bits to MODE, not a=rw - umask\n\
 "), stdout);
       fputs (_("\
-  -Z, --context=CTX  set the SELinux security context of each NAME to CTX\n\
+  -Z, --context[=CTX]  set the SELinux security context of each NAME to\n\
+                         default type, or CTX if specified\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -77,6 +79,7 @@ main (int argc, char **argv)
   int exit_status = EXIT_SUCCESS;
   int optc;
   security_context_t scontext = NULL;
+  bool set_security_context = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -86,7 +89,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "m:Z:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "m:Z", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -94,7 +97,24 @@ main (int argc, char **argv)
           specified_mode = optarg;
           break;
         case 'Z':
-          scontext = optarg;
+          if (is_smack_enabled ())
+            {
+              /* We don't yet support -Z to restore context with SMACK.  */
+              scontext = optarg;
+            }
+          else if (is_selinux_enabled () > 0)
+            {
+              if (optarg)
+                scontext = optarg;
+              else
+                set_security_context = true;
+            }
+          else if (optarg)
+            {
+              error (0, 0,
+                     _("warning: ignoring --context; "
+                       "it requires an SELinux/SMACK-enabled kernel"));
+            }
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -140,17 +160,21 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    if (mkfifo (argv[optind], newmode) != 0)
-      {
-        error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
-        exit_status = EXIT_FAILURE;
-      }
-    else if (specified_mode && lchmod (argv[optind], newmode) != 0)
-      {
-        error (0, errno, _("cannot set permissions of `%s'"),
-               quote (argv[optind]));
-        exit_status = EXIT_FAILURE;
-      }
+    {
+      if (set_security_context)
+        defaultcon (argv[optind], S_IFIFO);
+      if (mkfifo (argv[optind], newmode) != 0)
+        {
+          error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
+          exit_status = EXIT_FAILURE;
+        }
+      else if (specified_mode && lchmod (argv[optind], newmode) != 0)
+        {
+          error (0, errno, _("cannot set permissions of `%s'"),
+                 quote (argv[optind]));
+          exit_status = EXIT_FAILURE;
+        }
+    }
 
   exit (exit_status);
 }

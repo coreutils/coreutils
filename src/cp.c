@@ -141,6 +141,7 @@ static struct option const long_opts[] =
   {"target-directory", required_argument, NULL, 't'},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
+  {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -227,6 +228,10 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  destination file is missing\n\
   -v, --verbose                explain what is being done\n\
   -x, --one-file-system        stay on this file system\n\
+"), stdout);
+      fputs (_("\
+  -Z, --context[=CTX]          set SELinux security context of destination\n\
+                                 file to default type, or to CTX if specified\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -782,8 +787,9 @@ cp_option_init (struct cp_options *x)
   x->preserve_mode = false;
   x->preserve_timestamps = false;
   x->explicit_no_preserve_mode = false;
-  x->preserve_security_context = false;
-  x->require_preserve_context = false;
+  x->preserve_security_context = false; /* -a or --preserve=context.  */
+  x->require_preserve_context = false;  /* --preserve=context.  */
+  x->set_security_context = false;      /* -Z, set sys default context. */
   x->preserve_xattr = false;
   x->reduce_diagnostics = false;
   x->require_preserve_xattr = false;
@@ -876,8 +882,8 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
           break;
 
         case PRESERVE_CONTEXT:
-          x->preserve_security_context = on_off;
           x->require_preserve_context = on_off;
+          x->preserve_security_context = on_off;
           break;
 
         case PRESERVE_XATTR:
@@ -918,6 +924,7 @@ main (int argc, char **argv)
   bool copy_contents = false;
   char *target_directory = NULL;
   bool no_target_directory = false;
+  security_context_t scontext = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -934,7 +941,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:T",
+  while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:TZ",
                            long_opts, NULL))
          != -1)
     {
@@ -1092,6 +1099,24 @@ main (int argc, char **argv)
           x.one_file_system = true;
           break;
 
+
+        case 'Z':
+          /* politely decline if we're not on a selinux-enabled kernel.  */
+          if (selinux_enabled)
+            {
+              if (optarg)
+                scontext = optarg;
+              else
+                x.set_security_context = true;
+            }
+          else if (optarg)
+            {
+              error (0, 0,
+                     _("warning: ignoring --context; "
+                       "it requires an SELinux-enabled kernel"));
+            }
+          break;
+
         case 'S':
           make_backups = true;
           backup_suffix_string = optarg;
@@ -1150,13 +1175,30 @@ main (int argc, char **argv)
   if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
     x.unlink_dest_before_opening = true;
 
-  if (x.preserve_security_context)
-    {
-      if (!selinux_enabled)
-        error (EXIT_FAILURE, 0,
-               _("cannot preserve security context "
-                 "without an SELinux-enabled kernel"));
-    }
+  /* Ensure -Z overrides -a.  */
+  if ((x.set_security_context || scontext)
+      && ! x.require_preserve_context)
+    x.preserve_security_context = false;
+
+  if (x.preserve_security_context && (x.set_security_context || scontext))
+    error (EXIT_FAILURE, 0,
+           _("cannot set target context and preserve it"));
+
+  if (x.require_preserve_context && ! selinux_enabled)
+    error (EXIT_FAILURE, 0,
+           _("cannot preserve security context "
+             "without an SELinux-enabled kernel"));
+
+  /* FIXME: This handles new files.  But what about existing files?
+     I.E. if updating a tree, new files would have the specified context,
+     but shouldn't existing files be updated for consistency like this?
+       if (scontext)
+         restorecon (dst_path, 0, true);
+   */
+  if (scontext && setfscreatecon (optarg) < 0)
+    error (EXIT_FAILURE, errno,
+           _("failed to set default file creation context to %s"),
+           quote (optarg));
 
 #if !USE_XATTR
   if (x.require_preserve_xattr)

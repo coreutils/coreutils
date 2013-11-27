@@ -312,6 +312,10 @@ RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
     $(top_srcdir)/lib/version-etc.c`
 
+selinux_sources = \
+  src/selinux.c \
+  src/selinux.h
+
 copy_sources = \
   src/copy.c \
   src/cp-hash.c \
@@ -323,12 +327,13 @@ copy_sources = \
 # to install before applying any user-specified name transformations.
 
 transform = s/ginstall/install/; $(program_transform_name)
-src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources)
+src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources) \
+		       $(selinux_sources)
 
 # This is for the '[' program.  Automake transliterates '[' and '/' to '_'.
 src___SOURCES = src/lbracket.c
 
-src_cp_SOURCES = src/cp.c $(copy_sources)
+src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_vdir_SOURCES = src/ls.c src/ls-vdir.c
 src_id_SOURCES = src/id.c src/group-list.c
@@ -341,11 +346,14 @@ src_kill_SOURCES = src/kill.c src/operand2sig.c
 src_realpath_SOURCES = src/realpath.c src/relpath.c src/relpath.h
 src_timeout_SOURCES = src/timeout.c src/operand2sig.c
 
-src_mv_SOURCES = src/mv.c src/remove.c $(copy_sources)
+src_mv_SOURCES = src/mv.c src/remove.c $(copy_sources) $(selinux_sources)
 src_rm_SOURCES = src/rm.c src/remove.c
 
-src_mkdir_SOURCES = src/mkdir.c src/prog-fprintf.c
+src_mkdir_SOURCES = src/mkdir.c src/prog-fprintf.c $(selinux_sources)
 src_rmdir_SOURCES = src/rmdir.c src/prog-fprintf.c
+
+src_mkfifo_SOURCES = src/mkfifo.c $(selinux_sources)
+src_mknod_SOURCES = src/mknod.c $(selinux_sources)
 
 src_df_SOURCES = src/df.c src/find-mount-point.c
 src_stat_SOURCES = src/stat.c src/find-mount-point.c
