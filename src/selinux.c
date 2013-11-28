@@ -25,7 +25,7 @@
 #include "system.h"
 #include "canonicalize.h"
 #include "dosname.h"
-#include "fts.h"
+#include "xfts.h"
 #include "quote.h"
 #include "selinux.h"
 
@@ -303,7 +303,7 @@ restorecon (char const *path, bool recurse, bool local)
       return ok;
     }
 
-  fts = fts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
+  fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
   while (1)
     {
       FTSENT *ent;
@@ -313,7 +313,6 @@ restorecon (char const *path, bool recurse, bool local)
         {
           if (errno != 0)
             {
-              /* FIXME: try to give a better message  */
               error (0, errno, _("fts_read failed"));
               ok = false;
             }
