@@ -99,6 +99,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd status=none now suppresses all non fatal diagnostic messages,
   not just the transfer counts.
 
+  df no longer accepts the long-obsolescent --megabytes option.
+
   stdbuf now requires at least one buffering mode option to be specified,
   as per the documented interface.
 
