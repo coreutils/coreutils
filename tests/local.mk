@@ -201,6 +201,7 @@ all_tests =					\
   tests/rm/r-2.sh				\
   tests/rm/r-3.sh				\
   tests/rm/r-4.sh				\
+  tests/rm/r-root.sh				\
   tests/rm/readdir-bug.sh			\
   tests/rm/rm1.sh				\
   tests/touch/empty-file.sh			\
