@@ -51,7 +51,7 @@ static struct option const longopts[] =
   {"relative-to", required_argument, NULL, RELATIVE_TO_OPTION},
   {"relative-base", required_argument, NULL, RELATIVE_BASE_OPTION},
   {"quiet", no_argument, NULL, 'q'},
-  {"strip", no_argument, NULL, 's' /* FIXME: deprecate in 2013 or so */},
+  {"strip", no_argument, NULL, 's'},
   {"no-symlinks", no_argument, NULL, 's'},
   {"zero", no_argument, NULL, 'z'},
   {"logical", no_argument, NULL, 'L'},

@@ -28,9 +28,7 @@
 #include "xstrtol.h"
 
 
-/* Work around Linux kernel issues on BTRFS and EXT4 before 2.6.39.
-   FIXME: remove in 2013, or whenever we're pretty confident
-   that the offending, unpatched kernels are no longer in use.  */
+/* Work around Linux kernel issues on BTRFS and EXT4.  */
 static bool
 extent_need_sync (void)
 {
