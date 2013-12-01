@@ -7648,11 +7648,9 @@ Assume that each tab stop is @var{cols} columns wide.  The default is 8.
 @command{ls} uses tabs where possible in the output, for efficiency.  If
 @var{cols} is zero, do not use tabs at all.
 
-@c FIXME: remove in 2009, if Apple Terminal has been fixed for long enough.
-Some terminal emulators (at least Apple Terminal 1.5 (133) from Mac OS X 10.4.8)
-do not properly align columns to the right of a TAB following a
-non-ASCII byte.  If you use such a terminal emulator, use the
-@option{-T0} option or put @code{TABSIZE=0} in your environment to tell
+Some terminal emulators might not properly align columns to the right of a
+TAB following a non-ASCII byte.  You can avoid that issue by using the
+@option{-T0} option or put @code{TABSIZE=0} in your environment, to tell
 @command{ls} to align using spaces, not tabs.
 
 @item -w
