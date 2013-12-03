@@ -1056,6 +1056,11 @@ get_disk (char const *disk)
 {
   struct mount_entry const *me;
   struct mount_entry const *best_match = NULL;
+  char const *file = disk;
+
+  char *resolved = canonicalize_file_name (disk);
+  if (resolved && resolved[0] == '/')
+    disk = resolved;
 
   for (me = mount_list; me; me = me->me_next)
     {
@@ -1063,9 +1068,11 @@ get_disk (char const *disk)
         best_match = me;
     }
 
+  free (resolved);
+
   if (best_match)
     {
-      get_dev (best_match->me_devname, best_match->me_mountdir, disk, NULL,
+      get_dev (best_match->me_devname, best_match->me_mountdir, file, NULL,
                best_match->me_type, best_match->me_dummy,
                best_match->me_remote, NULL, false);
       return true;
