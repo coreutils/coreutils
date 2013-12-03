@@ -383,15 +383,15 @@ decode_output_arg (char const *arg)
         }
       if (field == -1)
         {
-          error (0, 0, _("option --output: field '%s' unknown"), s);
+          error (0, 0, _("option --output: field %s unknown"), quote (s));
           usage (EXIT_FAILURE);
         }
 
       if (field_data[field].used)
         {
           /* Prevent the fields from being used more than once.  */
-          error (0, 0, _("option --output: field '%s' used more than once"),
-                 field_data[field].arg);
+          error (0, 0, _("option --output: field %s used more than once"),
+                 quote (field_data[field].arg));
           usage (EXIT_FAILURE);
         }
 

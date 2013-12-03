@@ -151,6 +151,14 @@ sc_system_h_headers: .re-list
 		  1>&2;  exit 1; } || :;				\
 	fi
 
+# Files in src/ should not use '%s' notation in format strings,
+# i.e., single quotes around %s (or similar) should be avoided.
+sc_prohibit_quotes_notation:
+	@cd $(srcdir)/src && GIT_PAGER= git grep -n "\".*[\`']%s'.*\"" *.c \
+	  && { echo '$(ME): '"Use quote() to avoid quoted '%s' notation" 1>&2; \
+	       exit 1; }  \
+	  || :
+
 sc_sun_os_names:
 	@grep -nEi \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \

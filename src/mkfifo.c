@@ -170,7 +170,7 @@ main (int argc, char **argv)
         }
       else if (specified_mode && lchmod (argv[optind], newmode) != 0)
         {
-          error (0, errno, _("cannot set permissions of `%s'"),
+          error (0, errno, _("cannot set permissions of %s"),
                  quote (argv[optind]));
           exit_status = EXIT_FAILURE;
         }

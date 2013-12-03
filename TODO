@@ -130,10 +130,6 @@ Add a distcheck-time test to ensure that every distributed
 file is either read-only(indicating generated) or is
 version-controlled and up to date.
 
-remove '%s' notation (now that they're all gone, add a maint.mk sc_
-    rule to ensure no new ones are added):
-  grep -E "\`%.{,4}s'" src/*.c
-
 remove all uses of the 'register' keyword: Done.  add a maint.mk rule
   for this, too.
 
