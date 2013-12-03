@@ -50,6 +50,17 @@ m4_syscmd([test "${GNULIB_POSIXCHECK+set}" = set])
 m4_if(m4_sysval, [0], [], [dnl
 gl_ASSERT_NO_GNULIB_POSIXCHECK])
 
+dnl Enable use of libcrypto if available.
+dnl Note we could do this as follows:
+dnl   AS_VAR_SET_IF([with_openssl], [], [with_openssl=optional])
+dnl However that would not document the coreutils adjusted default,
+dnl so we add another --with-openssl description just to document that
+AC_ARG_WITH([openssl],
+  [AC_HELP_STRING([--with-openssl],
+    [The coreutils default is: --with-openssl=optional])],
+  [],
+  [with_openssl=optional])
+
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
 AC_PROG_CPP

@@ -293,6 +293,15 @@ src_stdbuf_LDADD += $(LIBICONV)
 src_timeout_LDADD += $(LIBICONV)
 src_truncate_LDADD += $(LIBICONV)
 
+# for libcrypto hash routines
+src_md5sum_LDADD += $(LIB_CRYPTO)
+src_sort_LDADD += $(LIB_CRYPTO)
+src_sha1sum_LDADD += $(LIB_CRYPTO)
+src_sha224sum_LDADD += $(LIB_CRYPTO)
+src_sha256sum_LDADD += $(LIB_CRYPTO)
+src_sha384sum_LDADD += $(LIB_CRYPTO)
+src_sha512sum_LDADD += $(LIB_CRYPTO)
+
 # for canon_host
 src_pinky_LDADD += $(GETADDRINFO_LIB)
 src_who_LDADD += $(GETADDRINFO_LIB)
