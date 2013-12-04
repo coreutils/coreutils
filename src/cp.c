@@ -1099,7 +1099,6 @@ main (int argc, char **argv)
           x.one_file_system = true;
           break;
 
-
         case 'Z':
           /* politely decline if we're not on a selinux-enabled kernel.  */
           if (selinux_enabled)
@@ -1195,10 +1194,10 @@ main (int argc, char **argv)
        if (scontext)
          restorecon (dst_path, 0, true);
    */
-  if (scontext && setfscreatecon (optarg) < 0)
+  if (scontext && setfscreatecon (scontext) < 0)
     error (EXIT_FAILURE, errno,
            _("failed to set default file creation context to %s"),
-           quote (optarg));
+           quote (scontext));
 
 #if !USE_XATTR
   if (x.require_preserve_xattr)

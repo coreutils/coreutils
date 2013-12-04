@@ -19,6 +19,14 @@
 #ifndef COREUTILS_SELINUX_H
 # define COREUTILS_SELINUX_H
 
+/* Return true if ERR corresponds to an unsupported request,
+   or if there is no context or it's inaccessible.  */
+static inline bool
+ignorable_ctx_err (int err)
+{
+  return err == ENOTSUP || err == ENODATA;
+}
+
 # if HAVE_SELINUX_SELINUX_H
 
 extern bool restorecon (char const *path, bool recurse, bool preserve);

@@ -44,6 +44,12 @@ done
 # ensure that ls -l output includes the ".".
 c=$(ls -l f|cut -c11); test "$c" = . || fail=1
 
+# Copy with an invalid context and ensure it fails
+# Note this may succeed when root and selinux is in permissive mode
+if test "$(getenforce)" = Enforcing; then
+  cp --context='invalid-selinux-context' f f.cp && fail=1
+fi
+
 # Copy each to a new directory and ensure that context is preserved.
 cp -r --preserve=all d f p s1 || fail=1
 for i in d f p; do

@@ -424,7 +424,8 @@ main (int argc, char **argv)
           backup_suffix_string = optarg;
           break;
         case 'Z':
-          /* politely decline if we're not on a selinux-enabled kernel. */
+          /* As a performance enhancement, don't even bother trying
+             to "restorecon" when not on an selinux-enabled kernel.  */
           if (selinux_enabled)
             {
               x.preserve_security_context = false;

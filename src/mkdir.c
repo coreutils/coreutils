@@ -118,7 +118,8 @@ make_ancestor (char const *dir, char const *component, void *options)
 {
   struct mkdir_options const *o = options;
 
-  if (o->set_security_context && defaultcon (dir, S_IFDIR) < 0)
+  if (o->set_security_context && defaultcon (dir, S_IFDIR) < 0
+      && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
            quote (dir));
 
@@ -162,7 +163,8 @@ process_dir (char *dir, struct savewd *wd, void *options)
             set_defaultcon = true;
           free (pdir);
         }
-      if (set_defaultcon && defaultcon (dir, S_IFDIR) < 0)
+      if (set_defaultcon && defaultcon (dir, S_IFDIR) < 0
+          && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to set default creation context for %s"),
                quote (dir));
     }
@@ -180,8 +182,9 @@ process_dir (char *dir, struct savewd *wd, void *options)
      and here we set the context for the final component. */
   if (ret == EXIT_SUCCESS && o->set_security_context && ! set_defaultcon)
     {
-      if (restorecon (last_component (dir), false, false) < 0)
-        error (0, errno, _("failed to set restore context for %s"),
+      if (! restorecon (last_component (dir), false, false)
+          && ! ignorable_ctx_err (errno))
+        error (0, errno, _("failed to restore context for %s"),
                quote (dir));
     }
 

@@ -805,12 +805,12 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
     {
       /* With -Z, adjust the default context for the process
          to have the type component adjusted as per the destination path.  */
-      if (new_dst && defaultcon (dst_name, mode) < 0)
+      if (new_dst && defaultcon (dst_name, mode) < 0
+          && ! ignorable_ctx_err (errno))
         {
-          if (!errno_unsupported (errno))
-            error (0, errno,
-                   _("failed to set default file creation context for %s"),
-                   quote (dst_name));
+          error (0, errno,
+                 _("failed to set default file creation context for %s"),
+                 quote (dst_name));
         }
     }
 
