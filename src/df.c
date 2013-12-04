@@ -1062,10 +1062,21 @@ get_disk (char const *disk)
   if (resolved && resolved[0] == '/')
     disk = resolved;
 
+  size_t best_match_len = SIZE_MAX;
   for (me = mount_list; me; me = me->me_next)
     {
       if (STREQ (disk, me->me_devname))
-        best_match = me;
+        {
+          size_t len = strlen (me->me_mountdir);
+          if (len < best_match_len)
+            {
+              best_match = me;
+              if (len == 1) /* Traditional root.  */
+                break;
+              else
+                best_match_len = len;
+            }
+        }
     }
 
   free (resolved);

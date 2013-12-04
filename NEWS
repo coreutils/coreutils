@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   df displayed the symlink's device rather than that for the device node.
   [This bug was present in "the beginning".]
 
+  df now processes disk device nodes correctly in the presence of bind mounts.
+  Now df shows the base mounted file system rather than the last one mounted.
+  [This bug was present in "the beginning".]
+
   install now removes the target file if the strip program failed for any
   reason.  Before, that file was left behind, sometimes even with wrong
   permissions.
