@@ -8,8 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   mount points.  Previously it may have failed to output some mount points.
   [bug introduced in coreutils-8.21]
 
-  df now processes symbolic links to disk device nodes correctly.  Previously
-  df displayed the symlink's device rather than that for the device node.
+  df now processes symbolic links and relative paths to special files containing
+  a mounted file system correctly.  Previously df displayed the statistics about
+  the file system the file is stored on rather than the one inside.
   [This bug was present in "the beginning".]
 
   df now processes disk device nodes correctly in the presence of bind mounts.

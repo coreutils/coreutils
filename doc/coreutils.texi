@@ -11108,7 +11108,7 @@ not shown per default when already the real root device has been mounted.
 
 @cindex disk device file
 @cindex device file, disk
-If an argument @var{file} is an absolute name of a disk device node containing
+If an argument @var{file} resolves to a special file containing
 a mounted file system, @command{df} shows the space available on that
 file system rather than on the file system containing the device node.
 GNU @command{df} does not attempt to determine the disk usage
