@@ -4948,14 +4948,16 @@ Use @var{file} as a source of random data used to determine which
 permutation to generate.  @xref{Random sources}.
 
 @item -r
-@itemx --repetitions
+@itemx --repeat
 @opindex -r
-@opindex --repetitions
-@cindex allowing repetitions in output values
-Changes the default behaviour of @command{shuf}, allowing repetition in
-output values (in which case, @option{--head-count} can be larger
-than the number of input values).  If @option{--head-count} is not
-specified, output a single random value.
+@opindex --repeat
+@cindex repeat output values
+Repeat output values, that is, select with replacement.  With this
+option the output is not a permutation of the input; instead, each
+output line is randomly chosen from all the inputs.  This option is
+typically combined with @option{--head-count}; if
+@option{--head-count} is not given, @command{shuf} repeats
+indefinitely.
 
 @zeroTerminatedOption
 
@@ -5010,37 +5012,24 @@ and the command @samp{shuf -i 1-4} might output:
 @end example
 
 @noindent
-These examples all have four input lines, so @command{shuf} might
+The above examples all have four input lines, so @command{shuf} might
 produce any of the twenty-four possible permutations of the input.  In
 general, if there are @var{n} input lines, there are @var{n}! (i.e.,
 @var{n} factorial, or @var{n} * (@var{n} - 1) * @dots{} * 1) possible
 output permutations.
 
 @noindent
-To output 50 random numbers between 0 and 9, use:
+To output 50 random numbers each in the range 0 through 9, use:
 
 @example
-shuf --repetitions --input-range 0-9 --head-count 50
-@end example
-
-@noindent
-or (using short options):
-
-@example
-shuf -r -i0-9 -n50
+shuf -r -n 50 -i 0-9
 @end example
 
 @noindent
 To simulate 100 coin flips, use:
 
 @example
-shuf -r -n100 -e Head Tail
-@end example
-
-@noindent
-or
-@example
-printf '%s\n' Head Tail | shuf -r -n100
+shuf -r -n 100 -e Head Tail
 @end example
 
 @exitstatus

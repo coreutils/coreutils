@@ -94,66 +94,66 @@ shuf -i0-9 -o A -o B &&
 shuf -i0-9 --random-source A --random-source B &&
   { fail=1; echo "shuf did not detect multiple --random-source usage.">&2 ; }
 
-# Test --repetition option
+# Test --repeat option
 
-# --repetition without count should return one line
-shuf --rep -i0-10 > exp || framework_failure_
+# --repeat without count should return an indefinite number of lines
+shuf --rep -i 0-10 | head -n 1000 > exp || framework_failure_
 c=$(wc -l < exp) || framework_failure_
-test "$c" -eq 1 || { fail=1; echo "--repetition default count is not 1">&2 ; }
+test "$c" -eq 1000 || { fail=1; echo "--repeat does not repeat indefinitely">&2 ; }
 
-# --repetition can output more values than the input range
+# --repeat can output more values than the input range
 shuf --rep -i0-9 -n1000 > exp || framework_failure_
 c=$(wc -l < exp) || framework_failure_
-test "$c" -eq 1000 || { fail=1; echo "--repetition with --count failed">&2 ; }
+test "$c" -eq 1000 || { fail=1; echo "--repeat with --count failed">&2 ; }
 
 # Check output values (this is not bullet-proof, but drawing 1000 values
 # between 0 and 9 should produce all values, unless there's a bug in shuf
 # or a very poor random source, or extremely bad luck)
 c=$(sort -nu exp | paste -s -d ' ') || framework_failure_
 test "$c" = "0 1 2 3 4 5 6 7 8 9" ||
-  { fail=1; echo "--repetition produced bad output">&2 ; }
+  { fail=1; echo "--repeat produced bad output">&2 ; }
 
-# check --repetition with non-zero low value
+# check --repeat with non-zero low value
 shuf --rep -i222-233 -n2000 > exp || framework_failure_
 c=$(cat exp | sort -nu | paste -s -d ' ') || framework_failure_
 test "$c" = "222 223 224 225 226 227 228 229 230 231 232 233" ||
- { fail=1; echo "--repetition produced bad output with non-zero low">&2 ; }
+ { fail=1; echo "--repeat produced bad output with non-zero low">&2 ; }
 
-# --repetition,-i,count=0 should not fail and produce no output
+# --repeat,-i,count=0 should not fail and produce no output
 shuf --rep -i0-9 -n0 > exp || framework_failure_
 # file size should be zero (no output from shuf)
 test \! -s exp ||
-  { fail=1; echo "--repetition,-i0-9,-n0 produced bad output">&2 ; }
+  { fail=1; echo "--repeat,-i0-9,-n0 produced bad output">&2 ; }
 
-# --repetition with -e, without count, should return one line
-shuf --rep -e A B C D > exp || framework_failure_
-c=$(cat exp | wc -l) || framework_failure_
-test "$c" -eq 1 ||
-  { fail=1; echo "--repetition,-e default count is not 1">&2 ; }
-
-# --repetition with STDIN, without count, should return one line
-printf "A\nB\nC\nD\nE\n" | shuf --rep > exp || framework_failure_
+# --repeat with -e, without count, should repeat indefinitely
+shuf --rep -e A B C D | head -n 1000 > exp || framework_failure_
 c=$(wc -l < exp) || framework_failure_
-test "$c" -eq 1 ||
-  { fail=1; echo "--repetition,STDIN default count is not 1">&2 ; }
+test "$c" -eq 1000 ||
+  { fail=1; echo "--repeat,-e does not repeat indefinitely">&2 ; }
 
-# --repetition with STDIN,count - can return move values than input lines
+# --repeat with STDIN, without count, should repeat indefinitely
+printf "A\nB\nC\nD\nE\n" | shuf --rep | head -n 1000 > exp || framework_failure_
+c=$(wc -l < exp) || framework_failure_
+test "$c" -eq 1000 ||
+  { fail=1; echo "--repeat,STDIN does not repeat indefinitely">&2 ; }
+
+# --repeat with STDIN,count - can return move values than input lines
 printf "A\nB\nC\nD\nE\n" | shuf --rep -n2000 > exp || framework_failure_
 c=$(wc -l < exp) || framework_failure_
 test "$c" -eq 2000 ||
-  { fail=1; echo "--repetition,STDIN,count failed">&2 ; }
+  { fail=1; echo "--repeat,STDIN,count failed">&2 ; }
 
 # Check output values (this is not bullet-proof, but drawing 2000 values
 # between A and E should produce all values, unless there's a bug in shuf
 # or a very poor random source, or extremely bad luck)
 c=$(sort -u exp | paste -s -d ' ') || framework_failure_
 test "$c" = "A B C D E" ||
-  { fail=1; echo "--repetition,STDIN,count produced bad output">&2 ; }
+  { fail=1; echo "--repeat,STDIN,count produced bad output">&2 ; }
 
-# --repetition,stdin,count=0 should not fail and produce no output
+# --repeat,stdin,count=0 should not fail and produce no output
 printf "A\nB\nC\nD\nE\n" | shuf --rep -n0 > exp || framework_failure_
 # file size should be zero (no output from shuf)
 test \! -s exp ||
-  { fail=1; echo "--repetition,STDIN,-n0 produced bad output">&2 ; }
+  { fail=1; echo "--repeat,STDIN,-n0 produced bad output">&2 ; }
 
 Exit $fail

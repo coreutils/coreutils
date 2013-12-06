@@ -92,8 +92,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   shred accepts new parameters to the --remove option to give greater
   control over that operation, which can greatly reduce sync overhead.
 
-  shuf accepts a new option: --repetitions (-r), to allow repetitions
-  of input items in the permuted output.
+  shuf accepts a new option: --repeat (-r), which can repeat items in
+  the output.
 
 ** Changes in behavior
 

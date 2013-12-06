@@ -76,8 +76,7 @@ Write a random permutation of the input lines to standard output.\n\
   -n, --head-count=COUNT    output at most COUNT lines\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
       --random-source=FILE  get random bytes from FILE\n\
-  -r, --repetitions         output COUNT items, allowing repetition.\n\
-                              -n 1 is implied if not specified.\n\
+  -r, --repeat              output lines can be repeated\n\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -106,7 +105,7 @@ static struct option const long_opts[] =
   {"head-count", required_argument, NULL, 'n'},
   {"output", required_argument, NULL, 'o'},
   {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
-  {"repetitions", no_argument, NULL, 'r'},
+  {"repeat", no_argument, NULL, 'r'},
   {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -300,10 +299,10 @@ read_input (FILE *in, char eolbyte, char ***pline)
   return n_lines;
 }
 
-/* output 'n_lines' to stdout from 'line' array,
-   chosen by the indices in 'permutation'.
-   'permutation' and 'line' must have at least 'n_lines' elements.
-   strings in 'line' must include the line-terminator character.  */
+/* Output N_LINES lines to stdout from LINE array,
+   chosen by the indices in PERMUTATION.
+   PERMUTATION and LINE must have at least N_LINES elements.
+   Strings in LINE must include the line-terminator character.  */
 static int
 write_permuted_lines (size_t n_lines, char *const *line,
                       size_t const *permutation)
@@ -321,8 +320,8 @@ write_permuted_lines (size_t n_lines, char *const *line,
   return 0;
 }
 
-/* output 'n_lines' of numbers to stdout, from 'permutation' array.
-   'permutation' must have at least 'n_lines' elements.  */
+/* Output N_LINES of numbers to stdout, from PERMUTATION array.
+   PERMUTATION must have at least N_LINES elements.  */
 static int
 write_permuted_numbers (size_t n_lines, size_t lo_input,
                         size_t const *permutation, char eolbyte)
@@ -339,8 +338,8 @@ write_permuted_numbers (size_t n_lines, size_t lo_input,
   return 0;
 }
 
-/* output 'count' numbers to stdout, chosen randomly from range
-   lo_input to hi_input.  */
+/* Output COUNT numbers to stdout, chosen randomly from range
+   LO_INPUT through HI_INPUT.  */
 static int
 write_random_numbers (struct randint_source *s, size_t count,
                       size_t lo_input, size_t hi_input, char eolbyte)
@@ -358,9 +357,9 @@ write_random_numbers (struct randint_source *s, size_t count,
   return 0;
 }
 
-/* output 'count' lines to stdout from 'lines' array.
-   'lines' must have at least 'n_lines' element in it.
-   strings in 'line' must include the line-terminator character.  */
+/* Output COUNT lines to stdout from LINES array.
+   LINES must have at least N_LINES elements in it.
+   Strings in LINES_ must include the line-terminator character.  */
 static int
 write_random_lines (struct randint_source *s, size_t count,
                     char *const *lines, size_t n_lines)
@@ -392,7 +391,7 @@ main (int argc, char **argv)
   char eolbyte = '\n';
   char **input_lines = NULL;
   bool use_reservoir_sampling = false;
-  bool repetition = false;
+  bool repeat = false;
 
   int optc;
   int n_operands;
@@ -479,7 +478,7 @@ main (int argc, char **argv)
         break;
 
       case 'r':
-        repetition = true;
+        repeat = true;
         break;
 
       case 'z':
@@ -495,20 +494,19 @@ main (int argc, char **argv)
   n_operands = argc - optind;
   operand = argv + optind;
 
-  /* Check invalid usage */
+  /* Check invalid usage.  */
   if (echo && input_range)
     {
       error (0, 0, _("cannot combine -e and -i options"));
       usage (EXIT_FAILURE);
     }
-  if ((n_operands>0 && input_range)
-      || (!echo && !input_range && n_operands>=2))
+  if (input_range ? 0 < n_operands : !echo && 1 < n_operands)
     {
       error (0, 0, _("extra operand %s"), quote (operand[1]));
       usage (EXIT_FAILURE);
     }
 
-  /* Prepare input */
+  /* Prepare input.  */
   if (echo)
     {
       input_from_argv (operand, n_operands, eolbyte);
@@ -522,15 +520,15 @@ main (int argc, char **argv)
     }
   else
     {
-      /* Input file specified, re-open it as STDIN */
-      if (n_operands==1)
-          if (! (STREQ (operand[0], "-") || ! head_lines
-                 || freopen (operand[0], "r", stdin)))
-            error (EXIT_FAILURE, errno, "%s", operand[0]);
+      /* If an input file is specified, re-open it as stdin.  */
+      if (n_operands == 1)
+        if (! (STREQ (operand[0], "-") || ! head_lines
+               || freopen (operand[0], "r", stdin)))
+          error (EXIT_FAILURE, errno, "%s", operand[0]);
 
       fadvise (stdin, FADVISE_SEQUENTIAL);
 
-      if (! repetition && head_lines != SIZE_MAX
+      if (! repeat && head_lines != SIZE_MAX
           && (! head_lines || input_size () > RESERVOIR_MIN_INPUT))
         {
           use_reservoir_sampling = true;
@@ -543,18 +541,13 @@ main (int argc, char **argv)
         }
     }
 
-  /* When generating random numbers with repetitions,
-     the default count is one, unless specified by the user.  */
-  if (repetition && head_lines == SIZE_MAX)
-    head_lines = 1 ;
-
-  if (! repetition)
+  if (! repeat)
     head_lines = MIN (head_lines, n_lines);
 
   randint_source = randint_all_new (random_source,
-                                    (use_reservoir_sampling || repetition)?
-                                    SIZE_MAX:
-                                    randperm_bound (head_lines, n_lines));
+                                    (use_reservoir_sampling || repeat
+                                     ? SIZE_MAX
+                                     : randperm_bound (head_lines, n_lines)));
   if (! randint_source)
     error (EXIT_FAILURE, errno, "%s", quotearg_colon (random_source));
 
@@ -574,14 +567,14 @@ main (int argc, char **argv)
       && (fclose (stdin) != 0))
     error (EXIT_FAILURE, errno, _("read error"));
 
-  if (!repetition)
+  if (!repeat)
     permutation = randperm_new (randint_source, head_lines, n_lines);
 
   if (outfile && ! freopen (outfile, "w", stdout))
     error (EXIT_FAILURE, errno, "%s", quotearg_colon (outfile));
 
   /* Generate output according to requested method */
-  if (repetition)
+  if (repeat)
     {
       if (input_range)
         i = write_random_numbers (randint_source, head_lines,
