@@ -73,7 +73,7 @@ test "$c" -eq 3 || { fail=1; echo "Multiple -n failed">&2 ; }
 # Test error conditions
 
 # -i and -e must not be used together
-: | shuf -i -e A B &&
+: | shuf -i0-9 -e A B &&
   { fail=1; echo "shuf did not detect erroneous -e and -i usage.">&2 ; }
 # Test invalid value for -n
 : | shuf -nA &&
@@ -99,7 +99,8 @@ shuf -i0-9 --random-source A --random-source B &&
 # --repeat without count should return an indefinite number of lines
 shuf --rep -i 0-10 | head -n 1000 > exp || framework_failure_
 c=$(wc -l < exp) || framework_failure_
-test "$c" -eq 1000 || { fail=1; echo "--repeat does not repeat indefinitely">&2 ; }
+test "$c" -eq 1000 \
+  || { fail=1; echo "--repeat does not repeat indefinitely">&2 ; }
 
 # --repeat can output more values than the input range
 shuf --rep -i0-9 -n1000 > exp || framework_failure_
