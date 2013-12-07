@@ -55,7 +55,7 @@ for src in dirlink filelink danglink; do
         "$result"   \
         "$ino_dst"  \
         "$typ_dst"  \
-        "$(< err)"  \
+        "$(cat err)"  \
         > out
 
       # What was expected?
