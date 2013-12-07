@@ -24,6 +24,10 @@ print_ver_ shuf
 expensive_
 require_valgrind_
 
+# Only exit with error for leaks when in development mode
+# in which case we enable code to suppress inconsequential leaks.
+grep '^#define lint 1' "$CONFIG_HEADER" && leaklevel=full || leaklevel=summary
+
 # Run "shuf" with specific number of input lines and output lines
 # Check the output for expected number of lines.
 run_shuf_n()
@@ -32,8 +36,8 @@ run_shuf_n()
   OUTPUT_LINES="$2"
 
   # Critical memory-related bugs will cause a segfault here
-  # (with varying numbres of input/output lines)
-  seq "$INPUT_LINES" | valgrind --leak-check=full --error-exitcode=1 \
+  # (with varying numbers of input/output lines)
+  seq "$INPUT_LINES" | valgrind --leak-check=$leaklevel --error-exitcode=1 \
   shuf -n "$OUTPUT_LINES" -o "out_${INPUT_LINES}_${OUTPUT_LINES}" || return 1
 
   EXPECTED_LINES="$OUTPUT_LINES"
