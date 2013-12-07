@@ -18,12 +18,16 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
-require_strace_ stat
+
+# Note this list of _file name_ stat functions must be
+# as cross platform as possible and so doesn't include
+# fstatat64 as that's not available on aarch64 for example.
+stats='stat,lstat,stat64,lstat64,newfstatat'
+
+require_strace_ $stats
 require_dirent_d_type_
 
-for i in 1 2 3; do
-  ln -s nowhere dangle-$i || framework_failure_
-done
+ln -s nowhere dangle || framework_failure_
 
 # Disable enough features via LS_COLORS so that ls --color
 # can do its job without calling stat (other than the obligatory
@@ -53,17 +57,18 @@ eval $(dircolors -b color-without-stat)
 # To avoid counting those, first get a baseline count by running
 # ls with only the --help option.  Then, compare that with the
 # invocation under test.
-strace -o log-help -e stat,lstat,stat64,lstat64 ls --help >/dev/null || fail=1
+strace -o log-help -e $stats ls --help >/dev/null || fail=1
 n_lines_help=$(wc -l < log-help)
 
-strace -o log -e stat,lstat,stat64,lstat64 ls --color=always . || fail=1
+strace -o log -e $stats ls --color=always . || fail=1
 n_lines=$(wc -l < log)
 
 n_stat=$(expr $n_lines - $n_lines_help)
 
-# Expect one or two stat calls.
+# Expect one stat call.
 case $n_stat in
-  1) ;;
+  0) skip_ 'No stat calls recognized on this platform' ;;
+  1) ;; # Corresponding to stat(".")
   *) fail=1; head -n30 log* ;;
 esac
 
