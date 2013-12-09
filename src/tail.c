@@ -1315,7 +1315,12 @@ static void
 check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
 {
   struct stat stats;
-  char const *name = pretty_name (fspec);
+  char const *name;
+
+  if (fspec->fd == -1)
+    return;
+
+  name = pretty_name (fspec);
 
   if (fstat (fspec->fd, &stats) != 0)
     {

@@ -53,11 +53,11 @@ retry_delay_ wait4lines_ .1 6 3 || fail=1  # Wait for the expected output.
 kill $pid
 wait $pid
 # Expect 3 lines in the output file.
-[ $( wc -l < out ) = 3 ]            || { fail=1; cat out; }
-grep -F 'cannot open' out           || { fail=1; cat out; }
-grep -F 'has become accessible' out || { fail=1; cat out; }
-grep '^X$' out                      || { fail=1; cat out; }
-rm -f missing out                   || framework_failure_
+[ $( wc -l < out ) = 3 ]   || { fail=1; cat out; }
+grep -F 'cannot open' out  || { fail=1; cat out; }
+grep -F 'has appeared' out || { fail=1; cat out; }
+grep '^X$' out             || { fail=1; cat out; }
+rm -f missing out          || framework_failure_
 
 # === Test:
 # Ensure that "tail --retry --follow=descriptor" waits for the file to appear.
