@@ -40,7 +40,7 @@ compare exp out || fail=1
 # Note the edge case that the last xargs run may not have a delimiter
 rm out || framework_failure_
 printf '/1\0/1\0/1' > exp || framework_failure_
-printf '/1 /1 /1' | xargs -n2 readlink -n -m --zero >> out || fail=1
+printf '/1 /1 /1 ' | xargs -n2 readlink -n -m --zero >> out || fail=1
 compare exp out || fail=1
 
 Exit $fail
