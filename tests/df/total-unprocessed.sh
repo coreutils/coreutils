@@ -28,7 +28,7 @@ EOF
 # The following simply finds no match for the combination
 # of the options --local and FS-type nfs together with the
 # argument ".". It must exit non-Zero nonetheless.
-df --local -t nfs --total '.' 2>out && fail=1
+df -t _non_existent_fstype_ --total '.' 2>out && fail=1
 compare exp out || fail=1
 
 cat <<\EOF > exp || framework_failure_
