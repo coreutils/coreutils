@@ -20,34 +20,51 @@
 print_ver_ dd
 require_ulimit_v_
 
-# count and skip is zero, we don't need to allocate memory
+# count and skip are zero, we don't need to allocate memory
 (ulimit -v 20000; dd  bs=30M count=0) || fail=1
 (ulimit -v 20000; dd ibs=30M count=0) || fail=1
 (ulimit -v 20000; dd obs=30M count=0) || fail=1
 
+check_dd_seek_alloc() {
+  local file="$1"
+  local buf="$2"
+  test "$file" = 'in' && { dd_file=if; dd_op=skip; }
+  test "$file" = 'out' && { dd_file=of; dd_op=seek; }
+  test "$buf" = 'in' && { dd_buf=ibs; }
+  test "$buf" = 'out' && { dd_buf=obs; }
+  test "$buf" = 'both' && { dd_buf=bs; }
 
-# Use a fifo for which seek fails, but read does not
+  # Provide input to the "tape"
+  timeout 10 dd count=1 if=/dev/zero of=tape&
+
+  # Allocate buffer and read from the "tape"
+  (ulimit -v 20000; timeout 10 dd $dd_buf=30M $dd_op=1 count=0 $dd_file=tape)
+  local ret=$?
+
+  # Be defensive in case the tape reader is blocked for some reason
+  test $ret = 124 && framework_failure_
+
+  # This should happen without delay,
+  # and is used to ensure we've not multiple writers to the "tape"
+  wait
+
+  # We want the "tape" reader to fail iff allocating
+  # a large buffer corresponding to the file being read
+  case "$file$buf" in
+    inout|outin) test $ret = 0;;
+    *) test $ret != 0;;
+  esac
+}
+
+# Use a fifo for which seek fails, but read does not.
+# For non seekable output we need to allocate a buffer
+# when simulating seeking with a read.
 if mkfifo tape; then
-  # for non seekable output we need to allocate buffer when needed
-  echo 1 > tape&
-  (ulimit -v 20000; dd  bs=30M skip=1 count=0 if=tape) && fail=1
-
-  echo 1 > tape&
-  (ulimit -v 20000; dd ibs=30M skip=1 count=0 if=tape) && fail=1
-
-  echo 1 > tape&
-  (ulimit -v 20000; dd obs=30M skip=1 count=0 if=tape) || fail=1
-
-
-  # for non seekable output we need to allocate buffer when needed
-  echo 1 > tape&
-  (ulimit -v 20000; dd  bs=30M seek=1 count=0 of=tape) && fail=1
-
-  echo 1 > tape&
-  (ulimit -v 20000; dd obs=30M seek=1 count=0 of=tape) && fail=1
-
-  echo 1 > tape&
-  (ulimit -v 20000; dd ibs=30M seek=1 count=0 of=tape) || fail=1
+  for file in 'in' 'out'; do
+    for buf in 'both' 'in' 'out'; do
+      check_dd_seek_alloc "$file" "$buf" || fail=1
+    done
+  done
 fi
 
 Exit $fail
