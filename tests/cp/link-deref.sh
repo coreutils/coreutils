@@ -19,6 +19,18 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
+if grep '^#define HAVE_LINKAT 1' "$CONFIG_HEADER" > /dev/null \
+   && grep '^#define LINK_FOLLOWS_SYMLINKS 0' "$CONFIG_HEADER" > /dev/null; then
+  # With this config (which is the case on GNU/Linux) cp will attempt to
+  # linkat() to hardlink a symlink.  So now see if the current file system
+  # supports this operation.
+  ln -s testtarget test_sl || framework_failure_
+  ln -P test_sl test_hl_sl || framework_failure_
+  ino_sl="$(stat -c '%i' test_sl)" || framework_failure_
+  ino_hl="$(stat -c '%i' test_hl_sl)" || framework_failure_
+  test "$ino_sl" = "$ino_hl" && can_hardlink_to_symlink=1
+fi
+
 mkdir dir              || framework_failure_
 : > file               || framework_failure_
 ln -s dir     dirlink  || framework_failure_
@@ -39,6 +51,10 @@ for src in dirlink filelink danglink; do
   typ_tgt="$(stat -c '%F' $tgt 2>/dev/null)" || typ_tgt=
 
   for o in '' -L -H -P; do
+
+    # Skip the -P case where we don't or can't hardlink symlinks
+    ! test "$can_hardlink_to_symlink" && test "$o" = '-P' && continue
+
     for r in '' -R; do
 
       command="cp --link $o $r $src dst"
