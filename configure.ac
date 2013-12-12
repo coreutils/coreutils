@@ -50,9 +50,6 @@ m4_syscmd([test "${GNULIB_POSIXCHECK+set}" = set])
 m4_if(m4_sysval, [0], [], [dnl
 gl_ASSERT_NO_GNULIB_POSIXCHECK])
 
-dnl Enable use of libcrypto if available, and warn if not found
-gl_SET_CRYPTO_CHECK_DEFAULT([optional])
-
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
 AC_PROG_CPP

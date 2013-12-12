@@ -117,8 +117,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   base64 encoding throughput for bulk data is increased by about 60%.
 
-  md5sum uses libcrypto hash routines where available to potentially
-  get better performance through using more system specific code.
+  md5sum can use libcrypto hash routines where allowed to potentially
+  get better performance through using more system specific logic.
   sha1sum for example has improved throughput by 40% on an i3-2310M.
   This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
 
