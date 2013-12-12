@@ -20,10 +20,9 @@
 print_ver_ cp
 
 if grep '^#define HAVE_LINKAT 1' "$CONFIG_HEADER" > /dev/null \
-   && grep '^#define LINK_FOLLOWS_SYMLINKS 0' "$CONFIG_HEADER" > /dev/null; then
-  # With this config (which is the case on GNU/Linux) cp will attempt to
-  # linkat() to hardlink a symlink.  So now see if the current file system
-  # supports this operation.
+   || grep '^#define LINK_FOLLOWS_SYMLINKS 0' "$CONFIG_HEADER" > /dev/null; then
+  # With this config cp will attempt to linkat() to hardlink a symlink.
+  # So now double check the current file system supports this operation.
   ln -s testtarget test_sl || framework_failure_
   ln -P test_sl test_hl_sl || framework_failure_
   ino_sl="$(stat -c '%i' test_sl)" || framework_failure_

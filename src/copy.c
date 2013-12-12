@@ -98,6 +98,14 @@ rpl_mkfifo (char const *file, mode_t mode)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
 
+/* LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
+   how link() behaves, so assume we can't hardlink symlinks in that case.  */
+#if defined HAVE_LINKAT || ! LINK_FOLLOWS_SYMLINKS
+# define CAN_HARDLINK_SYMLINKS 1
+#else
+# define CAN_HARDLINK_SYMLINKS 0
+#endif
+
 struct dir_list
 {
   struct dir_list *parent;
@@ -2484,15 +2492,13 @@ copy_internal (char const *src_name, char const *dst_name,
      should not follow the link.  We can approximate the desired
      behavior by skipping this hard-link creating block and instead
      copying the symlink, via the 'S_ISLNK'- copying code below.
-     LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
-     how link() behaves, so we use the fallback case for safety.
 
      Note gnulib's linkat module, guarantees that the symlink is not
      dereferenced.  However its emulation currently doesn't maintain
      timestamps or ownership so we only call it when we know the
      emulation will not be needed.  */
   else if (x->hard_link
-           && !(LINK_FOLLOWS_SYMLINKS && S_ISLNK (src_mode)
+           && !(! CAN_HARDLINK_SYMLINKS && S_ISLNK (src_mode)
                 && x->dereference == DEREF_NEVER))
     {
       if (! create_hard_link (src_name, dst_name, false, false, dereference))
@@ -2632,7 +2638,7 @@ copy_internal (char const *src_name, char const *dst_name,
   /* If we've just created a hard-link due to cp's --link option,
      we're done.  */
   if (x->hard_link && ! S_ISDIR (src_mode)
-      && !(LINK_FOLLOWS_SYMLINKS && S_ISLNK (src_mode)
+      && !(! CAN_HARDLINK_SYMLINKS && S_ISLNK (src_mode)
            && x->dereference == DEREF_NEVER))
     return delayed_ok;
 
