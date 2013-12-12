@@ -2444,7 +2444,7 @@ are interpreted as @emph{IEC} values.
 
 Converting a single number from/to @emph{human} representation:
 @example
-$ nunfmt --to=si 500000
+$ numfmt --to=si 500000
 500K
 
 $ numfmt --to=iec 500000
