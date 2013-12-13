@@ -317,6 +317,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "gpfs";
     case S_MAGIC_HFS: /* 0x4244 local */
       return "hfs";
+    case S_MAGIC_HOSTFS: /* 0xC0FFEE local */
+      return "hostfs";
     case S_MAGIC_HPFS: /* 0xF995E849 local */
       return "hpfs";
     case S_MAGIC_HUGETLBFS: /* 0x958458F6 local */
@@ -396,6 +398,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "securityfs";
     case S_MAGIC_SELINUX: /* 0xF97CFF8C local */
       return "selinux";
+    case S_MAGIC_SMACK: /* 0x43415D53 local */
+      return "smackfs";
     case S_MAGIC_SMB: /* 0x517B remote */
       return "smb";
     case S_MAGIC_SNFS: /* 0xBEEFDEAD remote */

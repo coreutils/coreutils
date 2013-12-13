@@ -122,10 +122,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   sha1sum for example has improved throughput by 40% on an i3-2310M.
   This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
 
-  stat and tail work better with EFIVARFS, EXOFS, F2FS, SNFS and UBIFS.
-  stat -f --format=%T now reports the file system type, and tail -f now uses
-  inotify for files on those file systems, rather than the default (for unknown
-  file system types) of issuing a warning and reverting to polling.
+  stat and tail work better with EFIVARFS, EXOFS, F2FS, HOSTFS, SMACKFS, SNFS
+  and UBIFS.  stat -f --format=%T now reports the file system type, and tail -f
+  now uses inotify for files on all those except SNFS, rather than the default
+  (for unknown file system types) of issuing a warning and reverting to polling.
 
   shuf outputs subsets of large inputs much more efficiently.
   Reservoir sampling is used to limit memory usage based on the number of
