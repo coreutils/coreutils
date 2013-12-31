@@ -125,6 +125,7 @@ all_root_tests =				\
   tests/misc/selinux.sh				\
   tests/misc/truncate-owned-by-other.sh		\
   tests/mkdir/writable-under-readonly.sh	\
+  tests/mkdir/smack-root.sh			\
   tests/mv/sticky-to-xpart.sh			\
   tests/rm/fail-2eperm.sh			\
   tests/rm/no-give-up.sh			\
@@ -517,6 +518,7 @@ all_tests =					\
   tests/id/uid.sh				\
   tests/id/setgid.sh				\
   tests/id/zero.sh				\
+  tests/id/smack.sh				\
   tests/install/basic-1.sh			\
   tests/install/create-leading.sh		\
   tests/install/d-slashdot.sh			\
@@ -576,6 +578,8 @@ all_tests =					\
   tests/mkdir/restorecon.sh			\
   tests/mkdir/special-1.sh			\
   tests/mkdir/t-slash.sh			\
+  tests/mkdir/smack-no-root.sh			\
+  tests/mkdir/smack-root.sh			\
   tests/mv/acl.sh				\
   tests/mv/atomic.sh				\
   tests/mv/atomic2.sh				\
