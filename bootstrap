@@ -1,10 +1,10 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2013-08-15.22; # UTC
+scriptversion=2013-12-05.23; # UTC
 
 # Bootstrap this package from checked-out sources.
 
-# Copyright (C) 2003-2013 Free Software Foundation, Inc.
+# Copyright (C) 2003-2014 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -549,6 +549,14 @@ if ! printf "$buildreq" | check_versions; then
   else
     die "Please install the prerequisite programs"
   fi
+fi
+
+# Warn the user if autom4te appears to be broken; this causes known
+# issues with at least gettext 0.18.3.
+probe=$(echo 'm4_quote([hi])' | autom4te -l M4sugar -t 'm4_quote:$%' -)
+if test "x$probe" != xhi; then
+  warn_ "WARNING: your autom4te wrapper eats stdin;"
+  warn_ "if bootstrap fails, consider upgrading your autotools"
 fi
 
 echo "$0: Bootstrapping from checked-out $package sources..."
