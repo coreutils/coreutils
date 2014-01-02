@@ -1,2 +1,4 @@
 COPYING
+bootstrap
 man/help2man
+tests/init\.sh
