@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  cp -a, mv, and install --preserve-context, once again set the correct SELinux
+  context for existing directories in the destination.  Previously they set
+  the context of an existing directory to that of its last copied descendent.
+  [bug introduced in coreutils-8.22]
+
 
 * Noteworthy changes in release 8.22 (2013-12-13) [stable]
 

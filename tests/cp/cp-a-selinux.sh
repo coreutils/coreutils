@@ -41,6 +41,22 @@ test -s err && fail=1   #there must be no stderr output for -a
 ls -Z e | grep $ctx || fail=1
 ls -Z f | grep $ctx || fail=1
 
+# Check handling of existing dirs which requires specific handling
+# due to recursion, and was handled incorrectly in coreutils-8.22
+# Note standard permissions are updated for existing directories
+# in the destination, so SELinux contexts should be updated too.
+chmod o+rw restore/existing_dir
+mkdir -p backup/existing_dir/ || framework_failure_
+ls -Zd backup/existing_dir | grep $ctx && framework_failure_
+touch backup/existing_dir/file || framework_failure_
+chcon $ctx backup/existing_dir/file || framework_failure_
+# Set the dir context to ensure it is reset
+mkdir -p --context="$ctx" restore/existing_dir || framework_failure_
+# Copy and ensure existing directories updated
+cp -a backup/. restore/
+ls -Zd restore/existing_dir | grep $ctx &&
+  { ls -lZd restore/existing_dir; fail=1; }
+
 # Check restorecon (-Z) functionality for file and directory
 get_selinux_type() { ls -Zd "$1" | sed -n 's/.*:\(.*_t\):.*/\1/p'; }
 # Also make a dir with our known context

@@ -2408,6 +2408,17 @@ copy_internal (char const *src_name, char const *dst_name,
       else
         {
           omitted_permissions = 0;
+
+          /* For directories, the process global context could be reset for
+             descendents, so use it to set the context for existing dirs here.
+             This will also give earlier indication of failure to set ctx.  */
+          if (x->set_security_context || x->preserve_security_context)
+            if (! set_file_security_ctx (dst_name, x->preserve_security_context,
+                                         false, x))
+              {
+                if (x->require_preserve_context)
+                  goto un_backup;
+              }
         }
 
       /* Decide whether to copy the contents of the directory.  */
@@ -2598,7 +2609,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
   /* With -Z or --preserve=context, set the context for existing files.
      Note this is done already for copy_reg() for reasons described therein.  */
-  if (!new_dst && !x->copy_as_regular
+  if (!new_dst && !x->copy_as_regular && !S_ISDIR (src_mode)
       && (x->set_security_context || x->preserve_security_context))
     {
       if (! set_file_security_ctx (dst_name, x->preserve_security_context,
