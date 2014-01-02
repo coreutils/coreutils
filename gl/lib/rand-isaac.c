@@ -1,6 +1,6 @@
 /* Bob Jenkins's cryptographic random number generators, ISAAC and ISAAC64.
 
-   Copyright (C) 1999-2013 Free Software Foundation, Inc.
+   Copyright (C) 1999-2014 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software: you can redistribute it and/or modify

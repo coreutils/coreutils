@@ -1,7 +1,7 @@
 #!/bin/sh
 # Trigger a heap-clobbering bug in ptx from coreutils-6.10 and earlier.
 
-# Copyright (C) 2008-2013 Free Software Foundation, Inc.
+# Copyright (C) 2008-2014 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
