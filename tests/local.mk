@@ -161,6 +161,7 @@ all_tests =					\
   tests/rm/ext3-perf.sh				\
   tests/rm/cycle.sh				\
   tests/cp/link-heap.sh				\
+  tests/cp/no-ctx.sh				\
   tests/misc/tty-eof.pl				\
   tests/tail-2/inotify-hash-abuse.sh		\
   tests/tail-2/inotify-hash-abuse2.sh		\

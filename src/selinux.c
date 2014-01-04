@@ -192,6 +192,11 @@ restorecon_private (char const *path, bool local)
     {
       if (getfscreatecon (&tcon) < 0)
         return rc;
+      if (!tcon)
+        {
+          errno = ENODATA;
+          return rc;
+        }
       rc = lsetfilecon (path, tcon);
       freecon (tcon);
       return rc;

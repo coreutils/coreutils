@@ -9,6 +9,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   the context of an existing directory to that of its last copied descendent.
   [bug introduced in coreutils-8.22]
 
+  cp -a, mv, and install --preserve-context, no longer seg fault when running
+  with SELinux enabled, when copying from file systems that return an error
+  when reading the SELinux context for a file.
+  [bug introduced in coreutils-8.22]
+
 
 * Noteworthy changes in release 8.22 (2013-12-13) [stable]
 
