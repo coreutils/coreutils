@@ -27,7 +27,12 @@ test -r $f || f=empty
 cat $f > out || fail=1
 
 # With coreutils-6.9, this would create a zero-length "exp" file.
-cp $f exp || fail=1
+# Skip this test on architectures like aarch64 where the inode
+# number of the file changed during the cp run.
+cp $f exp 2>err \
+  || { fail=1;
+       grep 'replaced while being copied' \
+         && skip_ "File $f is being replaced while being copied"; }
 
 # Don't simply compare contents; they might differ,
 # e.g., if CPU freq changes between cat and cp invocations.
