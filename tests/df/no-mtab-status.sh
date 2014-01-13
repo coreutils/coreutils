@@ -45,7 +45,7 @@ struct mntent *getmntent (FILE *fp)
 EOF
 
 # Then compile/link it:
-$CC -shared -fPIC -ldl -O2 k.c -o k.so \
+gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
 # Test if LD_PRELOAD works:

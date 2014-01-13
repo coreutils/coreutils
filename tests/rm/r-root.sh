@@ -60,7 +60,7 @@ int unlinkat (int dirfd, const char *pathname, int flags)
 EOF
 
 # Then compile/link it:
-gcc -Wall --std=gnu99 -shared -fPIC -ldl -O2 k.c -o k.so \
+gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
 #-------------------------------------------------------------------------------

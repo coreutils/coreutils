@@ -48,7 +48,7 @@ ssize_t lgetxattr(const char *path, const char *name, void *value, size_t size)
 EOF
 
 # Then compile/link it:
-$CC -shared -fPIC -O2 k.c -o k.so \
+gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
 # Create a few files:
