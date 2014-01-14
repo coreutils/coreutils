@@ -22,6 +22,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 require_gcc_shared_
+require_selinux_
 
 # Replace each getfilecon and lgetfilecon call with a call to these stubs.
 cat > k.c <<'EOF' || framework_failure_
