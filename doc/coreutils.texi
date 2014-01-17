@@ -7268,7 +7268,7 @@ space, there is no alternate access method.  When it is a printing
 character, then there is such a method.
 
 GNU @command{ls} uses a @samp{.} character to indicate a file
-with an SELinux security context, but no other alternate access method.
+with a security context, but no other alternate access method.
 
 A file with any other combination of alternate access methods
 is marked with a @samp{+} character.
@@ -8466,7 +8466,8 @@ to the system default type for destination files, similarly to the
 @command{restorecon} command.
 The long form of this option with a specific context specified,
 will set the context for newly created files only.
-With a specified context, if SELinux is disabled, a warning is issued.
+With a specified context, if both SELinux and SMACK are disabled, a warning is
+issued.
 @end macro
 @optContext
 This option is mutually exclusive with the @option{--preserve=context}
@@ -14563,8 +14564,9 @@ Print only the user ID.
 @opindex --context
 @cindex SELinux
 @cindex security context
-Print only the security context of the current user.
-If SELinux is disabled then print a warning and
+Print only the security context of the process, which is generally
+the user's security context inherited from the parent process.
+If neither SELinux or SMACK is enabled then print a warning and
 set the exit status to 1.
 
 @item -z

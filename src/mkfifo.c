@@ -62,7 +62,8 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
 "), stdout);
       fputs (_("\
   -Z, --context[=CTX]  set the SELinux security context of each NAME to\n\
-                         default type, or CTX if specified\n\
+                         default type, or set the SELinux or SMACK\n\
+                         security context to CTX if specified\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

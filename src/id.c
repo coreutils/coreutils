@@ -89,7 +89,7 @@ or (when USER omitted) for the current user.\n\
              stdout);
       fputs (_("\
   -a             ignore, for compatibility with other versions\n\
-  -Z, --context  print only the security context of the current user\n\
+  -Z, --context  print only the security context of the process\n\
   -g, --group    print only the effective group ID\n\
   -G, --groups   print all group IDs\n\
   -n, --name     print a name instead of a number, for -ugG\n\

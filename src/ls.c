@@ -186,7 +186,7 @@ verify (sizeof filetype_letter - 1 == arg_directory + 1);
 enum acl_type
   {
     ACL_T_NONE,
-    ACL_T_SELINUX_ONLY,
+    ACL_T_LSM_CONTEXT_ONLY,
     ACL_T_YES
   };
 
@@ -206,7 +206,7 @@ struct fileinfo
        zero.  */
     mode_t linkmode;
 
-    /* SELinux security context.  */
+    /* security context.  */
     security_context_t scontext;
 
     bool stat_ok;
@@ -216,7 +216,7 @@ struct fileinfo
     bool linkok;
 
     /* For long listings, true if the file has an access control list,
-       or an SELinux security context.  */
+       or a security context.  */
     enum acl_type acl_type;
 
     /* For color listings, true if a regular file has capability info.  */
@@ -2804,8 +2804,8 @@ errno_unsupported (int err)
 }
 
 /* Cache *getfilecon failure, when it's trivial to do so.
-   Like getfilecon/lgetfilecon, but when F's st_dev says it's on a known-
-   SELinux-challenged file system, fail with ENOTSUP immediately.  */
+   Like getfilecon/lgetfilecon, but when F's st_dev says it's doesn't
+   support getting the security context, fail with ENOTSUP immediately.  */
 static int
 getfilecon_cache (char const *file, struct fileinfo *f, bool deref)
 {
@@ -3052,7 +3052,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           f->acl_type = (!have_scontext && !have_acl
                          ? ACL_T_NONE
                          : (have_scontext && !have_acl
-                            ? ACL_T_SELINUX_ONLY
+                            ? ACL_T_LSM_CONTEXT_ONLY
                             : ACL_T_YES));
           any_has_acl |= f->acl_type != ACL_T_NONE;
 
@@ -3799,7 +3799,7 @@ print_long_format (const struct fileinfo *f)
   struct tm *when_local;
 
   /* Compute the mode string, except remove the trailing space if no
-     file in this directory has an ACL or SELinux security context.  */
+     file in this directory has an ACL or security context.  */
   if (f->stat_ok)
     filemodestring (&f->stat, modebuf);
   else
@@ -3810,7 +3810,7 @@ print_long_format (const struct fileinfo *f)
     }
   if (! any_has_acl)
     modebuf[10] = '\0';
-  else if (f->acl_type == ACL_T_SELINUX_ONLY)
+  else if (f->acl_type == ACL_T_LSM_CONTEXT_ONLY)
     modebuf[10] = '.';
   else if (f->acl_type == ACL_T_YES)
     modebuf[10] = '+';
@@ -4886,7 +4886,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -w, --width=COLS           assume screen width instead of current value\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
-  -Z, --context              print any SELinux security context of each file\n\
+  -Z, --context              print any security context of each file\n\
   -1                         list one file per line\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

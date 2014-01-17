@@ -67,7 +67,8 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\
   -Z, --context[=CTX]  set the SELinux security context of each created\n\
-                         directory to default type or to CTX if specified\n\
+                         directory to default type or set the SELinux or\n\
+                         SMACK security context to CTX if specified\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
