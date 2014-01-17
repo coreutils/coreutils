@@ -103,8 +103,18 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Return true when the passed ERR implies
+   that a file does not or could not exist.  */
+
+static bool
+errno_nonexisting (int err)
+{
+  return err == ENOENT || err == ENAMETOOLONG || err == ENOTDIR || err == ELOOP;
+}
+
+
 /* FILE is the last operand of this command.  Return true if FILE is a
-   directory.  But report an error there is a problem accessing FILE,
+   directory.  But report an error if there is a problem accessing FILE,
    or if FILE does not exist but would have to refer to an existing
    directory if it referred to anything at all.  */
 
@@ -119,7 +129,7 @@ target_directory_operand (char const *file)
     (dereference_dest_dir_symlinks ? stat (file, &st) : lstat (file, &st));
   int err = (stat_result == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
-  if (err && err != ENOENT)
+  if (err && ! errno_nonexisting (errno))
     error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
   if (is_a_dir < looks_like_a_dir)
     error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
