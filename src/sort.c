@@ -3239,6 +3239,8 @@ merge_tree_init (size_t nthreads, size_t nlines, struct line *dest)
 static void
 merge_tree_destroy (struct merge_node *merge_tree)
 {
+  struct merge_node *root = merge_tree;
+  pthread_mutex_destroy (&root->lock);
   free (merge_tree);
 }
 
@@ -3354,8 +3356,8 @@ queue_insert (struct merge_node_queue *queue, struct merge_node *node)
   pthread_mutex_lock (&queue->mutex);
   heap_insert (queue->priority_queue, node);
   node->queued = true;
-  pthread_mutex_unlock (&queue->mutex);
   pthread_cond_signal (&queue->cond);
+  pthread_mutex_unlock (&queue->mutex);
 }
 
 /* Pop the top node off the priority QUEUE, lock the node, return it.  */
@@ -3950,7 +3952,6 @@ sort (char *const *files, size_t nfiles, char const *output_file,
               sortlines (line, nthreads, buf.nlines, root,
                          &queue, tfp, temp_output);
               queue_destroy (&queue);
-              pthread_mutex_destroy (&root->lock);
               merge_tree_destroy (merge_tree);
             }
           else
