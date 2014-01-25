@@ -44,6 +44,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   [These dd bugs were present in "the beginning".]
 
+  df now correctly elides duplicates for virtual file systems like tmpfs.
+
   head --bytes=-N and --lines=-N now handles devices more
   consistently, not ignoring data from virtual devices like /dev/zero,
   or on BSD systems data from tty devices.

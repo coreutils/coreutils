@@ -630,26 +630,23 @@ filter_mount_list (void)
         }
       else
         {
-          /* If the device name is a real path name ...  */
-          if (strchr (me->me_devname, '/'))
+          /* If we've already seen this device...  */
+          for (devlist = devlist_head; devlist; devlist = devlist->next)
+            if (devlist->dev_num == buf.st_dev)
+              break;
+
+          if (devlist)
             {
-              /* ... try to find its device number in the devlist.  */
-              for (devlist = devlist_head; devlist; devlist = devlist->next)
-                if (devlist->dev_num == buf.st_dev)
-                  break;
+              discard_me = me;
 
-              if (devlist)
+              /* ...let the shorter mountdir win.  */
+              if ((strchr (me->me_devname, '/')
+                   && ! strchr (devlist->me->me_devname, '/'))
+                  || (strlen (devlist->me->me_mountdir)
+                      > strlen (me->me_mountdir)))
                 {
-                  discard_me = me;
-
-                  /* Let the shorter mountdir win.  */
-                  if (! strchr (devlist->me->me_devname, '/')
-                      || (strlen (devlist->me->me_mountdir)
-                         > strlen (me->me_mountdir)))
-                    {
-                      discard_me = devlist->me;
-                      devlist->me = me;
-                    }
+                  discard_me = devlist->me;
+                  devlist->me = me;
                 }
             }
         }
