@@ -70,7 +70,6 @@ enum Copy_fd_status
   {
     COPY_FD_OK = 0,
     COPY_FD_READ_ERROR,
-    COPY_FD_WRITE_ERROR,
     COPY_FD_UNEXPECTED_EOF
   };
 
@@ -147,9 +146,6 @@ diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
     case COPY_FD_READ_ERROR:
       error (0, errno, _("error reading %s"), quote (filename));
       break;
-    case COPY_FD_WRITE_ERROR:
-      error (0, errno, _("error writing %s"), quote (filename));
-      break;
     case COPY_FD_UNEXPECTED_EOF:
       error (0, errno, _("%s: file has shrunk too much"), quote (filename));
       break;
@@ -167,11 +163,25 @@ write_header (const char *filename)
   first_file = false;
 }
 
-/* Copy no more than N_BYTES from file descriptor SRC_FD to O_STREAM.
-   Return an appropriate indication of success or failure. */
+/* Write N_BYTES from BUFFER to stdout.
+   Exit immediately on error with a single diagnostic.  */
+
+static void
+xwrite_stdout (char const *buffer, size_t n_bytes)
+{
+  if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) < n_bytes)
+    {
+      clearerr (stdout); /* To avoid redundant close_stdout diagnostic.  */
+      error (EXIT_FAILURE, errno, _("error writing %s"),
+             quote ("standard output"));
+    }
+}
+
+/* Copy no more than N_BYTES from file descriptor SRC_FD to stdout.
+   Return an appropriate indication of success or read failure.  */
 
 static enum Copy_fd_status
-copy_fd (int src_fd, FILE *o_stream, uintmax_t n_bytes)
+copy_fd (int src_fd, uintmax_t n_bytes)
 {
   char buf[BUFSIZ];
   const size_t buf_size = sizeof (buf);
@@ -189,8 +199,7 @@ copy_fd (int src_fd, FILE *o_stream, uintmax_t n_bytes)
       if (n_read == 0 && n_bytes != 0)
         return COPY_FD_UNEXPECTED_EOF;
 
-      if (fwrite (buf, 1, n_read, o_stream) < n_read)
-        return COPY_FD_WRITE_ERROR;
+      xwrite_stdout (buf, n_read);
     }
 
   return COPY_FD_OK;
@@ -282,22 +291,12 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 
           /* Output any (but maybe just part of the) elided data from
              the previous round.  */
-          if ( ! first)
-            {
-              /* Don't bother checking for errors here.
-                 If there's a failure, the test of the following
-                 fwrite or in close_stdout will catch it.  */
-              fwrite (b[!i] + READ_BUFSIZE, 1, n_elide - delta, stdout);
-            }
+          if (! first)
+            xwrite_stdout (b[!i] + READ_BUFSIZE, n_elide - delta);
           first = false;
 
-          if (n_elide < n_read
-              && fwrite (b[i], 1, n_read - n_elide, stdout) < n_read - n_elide)
-            {
-              error (0, errno, _("write error"));
-              ok = false;
-              break;
-            }
+          if (n_elide < n_read)
+            xwrite_stdout (b[i], n_read - n_elide);
         }
 
       free (b[0]);
@@ -357,14 +356,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
             buffered_enough = true;
 
           if (buffered_enough)
-            {
-              if (fwrite (b[i_next], 1, n_read, stdout) < n_read)
-                {
-                  error (0, errno, _("write error"));
-                  ok = false;
-                  goto free_mem;
-                }
-            }
+            xwrite_stdout (b[i_next], n_read);
         }
 
       /* Output any remainder: rem bytes from b[i] + n_read.  */
@@ -375,12 +367,12 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
               size_t n_bytes_left_in_b_i = READ_BUFSIZE - n_read;
               if (rem < n_bytes_left_in_b_i)
                 {
-                  fwrite (b[i] + n_read, 1, rem, stdout);
+                  xwrite_stdout (b[i] + n_read, rem);
                 }
               else
                 {
-                  fwrite (b[i] + n_read, 1, n_bytes_left_in_b_i, stdout);
-                  fwrite (b[i_next], 1, rem - n_bytes_left_in_b_i, stdout);
+                  xwrite_stdout (b[i] + n_read, n_bytes_left_in_b_i);
+                  xwrite_stdout (b[i_next], rem - n_bytes_left_in_b_i);
                 }
             }
           else if (i + 1 == n_bufs)
@@ -399,7 +391,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
                */
               size_t y = READ_BUFSIZE - rem;
               size_t x = n_read - y;
-              fwrite (b[i_next], 1, x, stdout);
+              xwrite_stdout (b[i_next], x);
             }
         }
 
@@ -458,7 +450,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
           return false;
         }
 
-      err = copy_fd (fd, stdout, bytes_remaining - n_elide);
+      err = copy_fd (fd, bytes_remaining - n_elide);
       if (err == COPY_FD_OK)
         return true;
 
@@ -504,7 +496,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 
       if (! n_elide)
         {
-          fwrite (tmp->buffer, 1, n_read, stdout);
+          xwrite_stdout (tmp->buffer, n_read);
           continue;
         }
 
@@ -543,7 +535,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
           last = last->next = tmp;
           if (n_elide < total_lines - first->nlines)
             {
-              fwrite (first->buffer, 1, first->nbytes, stdout);
+              xwrite_stdout (first->buffer, first->nbytes);
               tmp = first;
               total_lines -= first->nlines;
               first = first->next;
@@ -572,7 +564,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 
   for (tmp = first; n_elide < total_lines - tmp->nlines; tmp = tmp->next)
     {
-      fwrite (tmp->buffer, 1, tmp->nbytes, stdout);
+      xwrite_stdout (tmp->buffer, tmp->nbytes);
       total_lines -= tmp->nlines;
     }
 
@@ -588,7 +580,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
           ++tmp->nlines;
           --n;
         }
-      fwrite (tmp->buffer, 1, p - tmp->buffer, stdout);
+      xwrite_stdout (tmp->buffer, p - tmp->buffer);
     }
 
 free_lbuffers:
@@ -684,7 +676,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
                       return false;
                     }
 
-                  err = copy_fd (fd, stdout, pos - start_pos);
+                  err = copy_fd (fd, pos - start_pos);
                   if (err != COPY_FD_OK)
                     {
                       diagnose_copy_fd_failure (err, pretty_filename);
@@ -693,10 +685,8 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
                 }
 
               /* Output the initial portion of the buffer
-                 in which we found the desired newline byte.
-                 Don't bother testing for failure for such a small amount.
-                 Any failure will be detected upon close.  */
-              fwrite (buffer, 1, n + 1, stdout);
+                 in which we found the desired newline byte.  */
+              xwrite_stdout (buffer, n + 1);
 
               /* Set file pointer to the byte after what we've output.  */
               if (lseek (fd, pos + n + 1, SEEK_SET) < 0)
@@ -789,8 +779,7 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
         }
       if (bytes_read == 0)
         break;
-      if (fwrite (buffer, 1, bytes_read, stdout) < bytes_read)
-        error (EXIT_FAILURE, errno, _("write error"));
+      xwrite_stdout (buffer, bytes_read);
       bytes_to_write -= bytes_read;
     }
   return true;
@@ -830,8 +819,7 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
               }
             break;
           }
-      if (fwrite (buffer, 1, bytes_to_write, stdout) < bytes_to_write)
-        error (EXIT_FAILURE, errno, _("write error"));
+      xwrite_stdout (buffer, bytes_to_write);
     }
   return true;
 }
