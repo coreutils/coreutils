@@ -501,6 +501,13 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
         break;
+
+      if (! n_elide)
+        {
+          fwrite (tmp->buffer, 1, n_read, stdout);
+          continue;
+        }
+
       tmp->nbytes = n_read;
       tmp->nlines = 0;
       tmp->next = NULL;
@@ -636,8 +643,11 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
       return false;
     }
 
+  /* n_lines == 0 case needs special treatment. */
+  const bool all_lines = !n_lines;
+
   /* Count the incomplete line on files that don't end with a newline.  */
-  if (bytes_read && buffer[bytes_read - 1] != '\n')
+  if (n_lines && bytes_read && buffer[bytes_read - 1] != '\n')
     --n_lines;
 
   while (1)
@@ -647,11 +657,16 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
       size_t n = bytes_read;
       while (n)
         {
-          char const *nl;
-          nl = memrchr (buffer, '\n', n);
-          if (nl == NULL)
-            break;
-          n = nl - buffer;
+          if (all_lines)
+            n -= 1;
+          else
+            {
+              char const *nl;
+              nl = memrchr (buffer, '\n', n);
+              if (nl == NULL)
+                break;
+              n = nl - buffer;
+            }
           if (n_lines-- == 0)
             {
               /* Found it.  */

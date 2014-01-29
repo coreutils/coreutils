@@ -52,6 +52,8 @@ my @Tests =
    ['elide-l2', "--lines=-1", {IN=>"a"}, {OUT=>''}],
    ['elide-l3', "--lines=-1", {IN=>"a\nb"}, {OUT=>"a\n"}],
    ['elide-l4', "--lines=-1", {IN=>"a\nb\n"}, {OUT=>"a\n"}],
+   ['elide-l5', "--lines=-0", {IN=>"a\nb\n"}, {OUT=>"a\nb\n"}],
+   ['elide-l6', "--lines=-0", {IN=>"a\nb"}, {OUT=>"a\nb"}],
   );
 
 if ($ENV{RUN_EXPENSIVE_TESTS})
@@ -80,9 +82,10 @@ if ($ENV{RUN_EXPENSIVE_TESTS})
       }
 
     $s =~ s/(.)/$1\n/g;
-    for my $file_size (0..20)
+    $s .= 'u'; # test without trailing '\n'
+    for my $file_size (0..21)
       {
-        for my $n_elide (0..20)
+        for my $n_elide (0..21)
           {
             my $input = substr $s, 0, 2 * $file_size;
             my $out_len = $n_elide < $file_size ? $file_size - $n_elide : 0;
