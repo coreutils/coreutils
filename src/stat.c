@@ -317,6 +317,10 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "gpfs";
     case S_MAGIC_HFS: /* 0x4244 local */
       return "hfs";
+    case S_MAGIC_HFS_PLUS: /* 0x482B local */
+      return "hfs+";
+    case S_MAGIC_HFS_X: /* 0x4858 local */
+      return "hfsx";
     case S_MAGIC_HOSTFS: /* 0xC0FFEE local */
       return "hostfs";
     case S_MAGIC_HPFS: /* 0xF995E849 local */
