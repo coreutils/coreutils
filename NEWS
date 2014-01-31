@@ -18,6 +18,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would display an error, requiring --no-dereference to avoid the issue.
   [bug introduced in coreutils-5.3.0]
 
+** New features
+
+  od accepts a new option: --endian=TYPE to handle inputs with different byte
+  orders, or to provide consistent output on systems with disparate endianness.
+
 ** Improvements
 
   stat and tail work better with HFS+ and HFSX.  stat -f --format=%T now reports

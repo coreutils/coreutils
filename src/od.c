@@ -23,6 +23,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "argmatch.h"
 #include "error.h"
 #include "ftoastr.h"
 #include "quote.h"
@@ -259,13 +260,37 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof (long double)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
+#ifndef WORDS_BIGENDIAN
+# define WORDS_BIGENDIAN 0
+#endif
+
+/* Use native endianess by default.  */
+static bool input_swap;
+
 static char const short_options[] = "A:aBbcDdeFfHhIij:LlN:OoS:st:vw::Xx";
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TRADITIONAL_OPTION = CHAR_MAX + 1
+  TRADITIONAL_OPTION = CHAR_MAX + 1,
+  ENDIAN_OPTION,
+};
+
+enum endian_type
+{
+  endian_little,
+  endian_big
+};
+
+static char const *const endian_args[] =
+{
+  "little", "big", NULL
+};
+
+static enum endian_type const endian_types[] =
+{
+  endian_little, endian_big
 };
 
 static struct option const long_options[] =
@@ -278,6 +303,7 @@ static struct option const long_options[] =
   {"strings", optional_argument, NULL, 'S'},
   {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
   {"width", optional_argument, NULL, 'w'},
+  {"endian", required_argument, NULL, ENDIAN_OPTION },
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -318,6 +344,7 @@ suffixes may be . for octal and b for multiply by 512.\n\
       fputs (_("\
   -A, --address-radix=RADIX   output format for file offsets; RADIX is one\n\
                                 of [doxn], for Decimal, Octal, Hex or None\n\
+      --endian={big|little}   swap input bytes according the specified order\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
 "), stdout);
       fputs (_("\
@@ -400,13 +427,27 @@ N (size_t fields, size_t blank, void const *block,                      \
    char const *FMT_STRING, int width, int pad)                          \
 {                                                                       \
   T const *p = block;                                                   \
-  uintmax_t i;                                                             \
+  uintmax_t i;                                                          \
   int pad_remaining = pad;                                              \
   for (i = fields; blank < i; i--)                                      \
     {                                                                   \
       int next_pad = pad * (i - 1) / fields;                            \
       int adjusted_width = pad_remaining - next_pad + width;            \
-      T x = *p++;                                                       \
+      T x;                                                              \
+      if (input_swap && sizeof (T) > 1)                                 \
+        {                                                               \
+          size_t j;                                                     \
+          union {                                                       \
+            T x;                                                        \
+            char b[sizeof (T)];                                         \
+          } u;                                                          \
+          for (j = 0; j < sizeof (T); j++)                              \
+            u.b[j] = ((const char *) p)[sizeof (T) - 1 - j];            \
+          x = u.x;                                                      \
+        }                                                               \
+      else                                                              \
+        x = *p;                                                         \
+      p++;                                                              \
       ACTION;                                                           \
       pad_remaining = next_pad;                                         \
     }                                                                   \
@@ -1662,6 +1703,18 @@ main (int argc, char **argv)
 
         case TRADITIONAL_OPTION:
           traditional = true;
+          break;
+
+        case ENDIAN_OPTION:
+          switch (XARGMATCH ("--endian", optarg, endian_args, endian_types))
+            {
+              case endian_big:
+                  input_swap = ! WORDS_BIGENDIAN;
+                  break;
+              case endian_little:
+                  input_swap = WORDS_BIGENDIAN;
+                  break;
+            }
           break;
 
           /* The next several cases map the traditional format

@@ -1868,6 +1868,16 @@ none (do not print offsets).
 
 The default is octal.
 
+@item --endian=@var{order}
+@opindex --endian
+@cindex byte-swapping
+@cindex endianness
+Reorder input bytes, to handle inputs with differing byte orders,
+or to provide consistent output independent of the endian convention
+of the current system.  Swapping is performed according to the
+specified @option{--type} size and endian @var{order}, which can be
+@samp{little} or @samp{big}.
+
 @item -j @var{bytes}
 @itemx --skip-bytes=@var{bytes}
 @opindex -j

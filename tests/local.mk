@@ -239,6 +239,7 @@ all_tests =					\
   tests/misc/xstrtol.pl				\
   tests/tail-2/pid.sh				\
   tests/misc/od.pl				\
+  tests/misc/od-endian.sh			\
   tests/misc/od-float.sh			\
   tests/misc/mktemp.pl				\
   tests/misc/arch.sh				\
