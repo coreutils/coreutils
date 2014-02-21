@@ -2,6 +2,7 @@
 @c %**start of header
 @setfilename coreutils.info
 @settitle GNU Coreutils
+@allowcodebreaks false
 
 @c %**end of header
 
@@ -541,7 +542,7 @@ insights to the overall process.
 
 @macro optBackup
 @item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
+@itemx --backup[=@var{method}]
 @opindex -b
 @opindex --backup
 @vindex VERSION_CONTROL
@@ -561,7 +562,7 @@ Append @var{suffix} to each backup file made with @option{-b}.
 
 @macro optTargetDirectory
 @item -t @var{directory}
-@itemx @w{@kbd{--target-directory}=@var{directory}}
+@itemx --target-directory=@var{directory}
 @opindex -t
 @opindex --target-directory
 @cindex target directory
@@ -618,7 +619,7 @@ Use the @option{--si} option if you prefer powers of 1000.
 @end macro
 
 @macro optStripTrailingSlashes
-@item @w{@kbd{--strip-trailing-slashes}}
+@item --strip-trailing-slashes
 @opindex --strip-trailing-slashes
 @cindex stripping trailing slashes
 Remove any trailing slashes from each @var{source} argument.
@@ -784,7 +785,7 @@ briefly mentioned in the descriptions of the particular programs.
 @table @samp
 
 @item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
+@itemx --backup[=@var{method}]
 @opindex -b
 @opindex --backup
 @vindex VERSION_CONTROL
@@ -1242,7 +1243,7 @@ treated as a directory and want a diagnostic otherwise, you can use
 the @option{--target-directory} (@option{-t}) option.
 
 @item -t @var{directory}
-@itemx @w{@kbd{--target-directory}=@var{directory}}
+@itemx --target-directory=@var{directory}
 @opindex --target-directory
 @cindex target directory
 @cindex destination directory
@@ -1265,7 +1266,7 @@ invocation of the subject command.  (It can be done by going through a
 shell command, but that requires more human labor and brain power than
 it should.)
 
-The @w{@kbd{--target-directory}} (@option{-t}) option allows the @command{cp},
+The @option{--target-directory} (@option{-t}) option allows the @command{cp},
 @command{install}, @command{ln}, and @command{mv} programs to be used
 conveniently with @command{xargs}.  For example, you can move the files
 from the current directory to a sibling directory, @code{d} like this:
@@ -1309,7 +1310,7 @@ options cannot be combined.
 
 Some GNU programs (at least @command{cp} and @command{mv}) allow you to
 remove any trailing slashes from each @var{source} argument before
-operating on it.  The @w{@kbd{--strip-trailing-slashes}} option enables
+operating on it.  The @option{--strip-trailing-slashes} option enables
 this behavior.
 
 This is useful when a @var{source} argument may have a trailing slash and
@@ -5356,7 +5357,7 @@ compatibility; GNU Standards normally discourage output parameters not
 introduced by an option.
 
 Note that for @emph{any} file named as the value of an option or as an
-input text file, a single dash @kbd{-} may be used, in which case
+input text file, a single dash @samp{-} may be used, in which case
 standard input is assumed.  However, it would not make sense to use this
 convention more than once per program invocation.
 
@@ -5654,7 +5655,7 @@ extensions are disabled.  Option @option{-M} can be used to change
 
 In this output format, each non-graphical character, like newline and
 tab, is merely changed to exactly one space, with no special attempt to
-compress consecutive spaces.  Each quote character: @kbd{"} is doubled
+compress consecutive spaces.  Each quote character @samp{"} is doubled
 so it will be correctly processed by @command{nroff} or @command{troff}.
 
 @item -T
@@ -5676,9 +5677,9 @@ selected, the last parameter of each @code{\xx} call is inhibited.
 Option @option{-M} can be used to change @samp{xx} to another macro
 name.
 
-In this output format, some special characters, like @kbd{$}, @kbd{%},
-@kbd{&}, @kbd{#} and @kbd{_} are automatically protected with a
-backslash.  Curly brackets @kbd{@{}, @kbd{@}} are protected with a
+In this output format, some special characters, like @samp{$}, @samp{%},
+@samp{&}, @samp{#} and @samp{_} are automatically protected with a
+backslash.  Curly brackets @samp{@{}, @samp{@}} are protected with a
 backslash and a pair of dollar signs (to force mathematical mode).  The
 backslash itself produces the sequence @code{\backslash@{@}}.
 Circumflex and tilde diacritical marks produce the sequence @code{^\@{ @}} and
@@ -5743,7 +5744,7 @@ All 256 bytes, even ASCII NUL bytes, are always read and
 processed from input file with no adverse effect, even if GNU extensions
 are disabled.  However, System V @command{ptx} does not accept 8-bit
 characters, a few control characters are rejected, and the tilde
-@kbd{~} is also rejected.
+@samp{~} is also rejected.
 
 @item
 Input line length is only limited by available memory, even if GNU
@@ -8106,7 +8107,7 @@ If the destination already exists, do not alter its contents.
 See the @option{--preserve} option for controlling which attributes to copy.
 
 @item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
+@itemx --backup[=@var{method}]
 @opindex -b
 @opindex --backup
 @vindex VERSION_CONTROL
@@ -8220,7 +8221,7 @@ they point to.  This option affects only symbolic links in the source;
 symbolic links in the destination are always followed if possible.
 
 @item -p
-@itemx @w{@kbd{--preserve}[=@var{attribute_list}]}
+@itemx --preserve[=@var{attribute_list}]
 @opindex -p
 @opindex --preserve
 @cindex file information, preserving, extended attributes, xattr
@@ -8294,7 +8295,7 @@ mode bits of the corresponding source file, minus the bits set in the
 umask and minus the set-user-ID and set-group-ID bits.
 @xref{File permissions}.
 
-@item @w{@kbd{--no-preserve}=@var{attribute_list}}
+@item --no-preserve=@var{attribute_list}
 @cindex file information, preserving
 Do not preserve the specified attributes.  The @var{attribute_list}
 has the same form as for @option{--preserve}.
@@ -10518,7 +10519,7 @@ actually changes.
 Do not print error messages about files whose ownership cannot be
 changed.
 
-@item @w{@kbd{--from}=@var{old-owner}}
+@item --from=@var{old-owner}
 @opindex --from
 @cindex symbolic links, changing owner
 Change a @var{file}'s ownership only if it has current attributes specified
@@ -11189,7 +11190,7 @@ disks, but on some systems (notably SunOS) the results may be slightly
 out of date.  This is the default.
 
 @item --output
-@itemx @w{@kbd{--output}[=@var{field_list}]}
+@itemx --output[=@var{field_list}]
 @opindex --output
 Use the output format defined by @var{field_list}, or print all fields if
 @var{field_list} is omitted.  In the latter case, the order of the columns
@@ -13927,7 +13928,7 @@ Assume input characters are UTF-8 encoded.  May be negated.
 @opindex ixon
 @kindex C-s/C-q flow control
 @cindex XON/XOFF flow control
-Enable XON/XOFF flow control (that is, @kbd{CTRL-S}/@kbd{CTRL-Q}).  May
+Enable XON/XOFF flow control (that is, @kbd{Ctrl-S}/@kbd{Ctrl-Q}).  May
 be negated.
 
 @item ixoff
