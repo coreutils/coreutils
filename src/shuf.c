@@ -576,11 +576,18 @@ main (int argc, char **argv)
   /* Generate output according to requested method */
   if (repeat)
     {
-      if (input_range)
-        i = write_random_numbers (randint_source, head_lines,
-                                  lo_input, hi_input, eolbyte);
+      if (head_lines == 0)
+        i = 0;
       else
-        i = write_random_lines (randint_source, head_lines, line, n_lines);
+        {
+          if (n_lines == 0)
+            error (EXIT_FAILURE, 0, _("No lines to repeat"));
+          if (input_range)
+            i = write_random_numbers (randint_source, head_lines,
+                                      lo_input, hi_input, eolbyte);
+          else
+            i = write_random_lines (randint_source, head_lines, line, n_lines);
+        }
     }
   else
     {
