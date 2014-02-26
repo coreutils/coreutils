@@ -8928,6 +8928,25 @@ tape=/dev/rmt/0
 (dd bs=4k seek=1 count=0 && dd bs=512k) <$tape >$disk
 @end example
 
+@cindex ddrescue
+@cindex disks, failing
+For failing disks, other tools come with a great variety of extra
+functionality to ease the saving of as much data as possible before the
+disk finally dies, e.g.
+@uref{http://www.gnu.org/software/ddrescue/, GNU @command{ddrescue}}.
+However, in some cases such a tool is not available or the administrator
+feels more comfortable with the handling of @command{dd}.
+As a simple rescue method, call @command{dd} as shown in the following
+example: the options @samp{conv=noerror,sync} are used to continue
+after read errors and to pad out bad reads with NULs, while
+@samp{iflag=fullblock} caters for short reads (which traditionally never
+occur on disk based devices):
+
+@example
+# Rescue data from an (unmounted!) partition of a failing disk.
+dd conv=noerror,sync iflag=fullblock </dev/sda1 > /mnt/rescue.img
+@end example
+
 Sending an @samp{INFO} signal to a running @command{dd}
 process makes it print I/O statistics to standard error
 and then resume copying.  In the example below,
