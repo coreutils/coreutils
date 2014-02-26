@@ -581,7 +581,7 @@ main (int argc, char **argv)
       else
         {
           if (n_lines == 0)
-            error (EXIT_FAILURE, 0, _("No lines to repeat"));
+            error (EXIT_FAILURE, 0, _("no lines to repeat"));
           if (input_range)
             i = write_random_numbers (randint_source, head_lines,
                                       lo_input, hi_input, eolbyte);

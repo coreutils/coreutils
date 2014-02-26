@@ -22,8 +22,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would display an error, requiring --no-dereference to avoid the issue.
   [bug introduced in coreutils-5.3.0]
 
-  shuf -r no longer dumps core if the input is empty.
-  [bug introduced in coreutils-8.22]
+  shuf --repeat no longer dumps core if the input is empty.
+  [bug introduced with the --repeat feature in coreutils-8.22]
 
 ** New features
 
