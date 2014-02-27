@@ -287,6 +287,13 @@ my @Tests =
       {ERR => "date: invalid date '\\260'\n"},
       {EXIT => 1},
      ],
+
+     # From coreutils-5.3.0 to 8.22 inclusive
+     # this would either infinite loop or crash
+     ['invalid-TZ-crash', "-d 'TZ=\"\"\"'",
+      {ERR => "date: invalid date 'TZ=\"\"\"'\n"},
+      {EXIT => 1},
+     ],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
