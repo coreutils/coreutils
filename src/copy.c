@@ -598,7 +598,7 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
   struct cp_options non_command_line_options = *x;
   bool ok = true;
 
-  name_space = savedir (src_name_in, SAVEDIR_SORT_INODE);
+  name_space = savedir (src_name_in, SAVEDIR_SORT_FASTREAD);
   if (name_space == NULL)
     {
       /* This diagnostic is a bit vague because savedir can fail in
