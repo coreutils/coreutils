@@ -22,7 +22,10 @@ print_ver_ chroot
 
 require_root_
 
-root=$(id -nu 0) || skip_ "Couldn't lookup root username"
+grep '^#define HAVE_SETGROUPS 1' "$CONFIG_HEADER" >/dev/null \
+  && HAVE_SETGROUPS=1
+
+root=$(id -nu 0) || skip_ "Couldn't look up root username"
 
 # Verify that root credentials are kept.
 test $(chroot / whoami) = "$root" || fail=1
@@ -34,20 +37,41 @@ whoami_after_chroot=$(
 )
 test "$whoami_after_chroot" != "$root" || fail=1
 
-# Verify that there are no additional groups.
-id_G_after_chroot=$(
-  chroot --userspec=$NON_ROOT_USERNAME:$NON_ROOT_GROUP \
-    --groups=$NON_ROOT_GROUP / id -G
-)
-test "$id_G_after_chroot" = $NON_ROOT_GROUP || fail=1
+if test "$HAVE_SETGROUPS"; then
+  # Verify that there are no additional groups.
+  id_G_after_chroot=$(
+    chroot --userspec=$NON_ROOT_USERNAME:$NON_ROOT_GROUP \
+      --groups=$NON_ROOT_GROUP / id -G
+  )
+  test "$id_G_after_chroot" = $NON_ROOT_GROUP || fail=1
+fi
 
 # Verify that when specifying only the user name we get the current
 # primary group ID.
 test "$(chroot --userspec=$NON_ROOT_USERNAME / id -g)" = "$(id -g)" \
-    || fail=1
+  || fail=1
 
 # Verify that when specifying only a group we get the current user ID
 test "$(chroot --userspec=:$NON_ROOT_GROUP / id -u)" = "$(id -u)" \
+  || fail=1
+
+# verify that invalid groups are diagnosed
+for g in ' ' ',' '0trail'; do
+  test "$(chroot --groups="$g" / id -G)" && fail=1
+done
+
+if test "$HAVE_SETGROUPS"; then
+  # verify that arbitrary numeric IDs are supported
+  test "$(chroot --userspec=1234:+5678 --groups=' +8765,4321' / id -G)" \
     || fail=1
+
+  # demonstrate that extraneous commas are supported
+  test "$(chroot --userspec=1234:+5678 --groups=',8765,,4321,' / id -G)" \
+    || fail=1
+
+  # demonstrate that --groups is not cumlative
+  test "$(chroot --groups='invalid ignored' --groups='' / id -G)" \
+    || fail=1
+fi
 
 Exit $fail

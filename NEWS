@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  chroot has better --userspec and --group look-ups, with numeric IDs never
+  causing name look-up errors.  Also look-ups are first done outside the chroot,
+  in case the look-up within the chroot fails due to library conflicts etc.
+
   stat and tail work better with HFS+ and HFSX.  stat -f --format=%T now reports
   the file system type, and tail -f now uses inotify for files, rather than the
   default of issuing a warning and reverting to polling.

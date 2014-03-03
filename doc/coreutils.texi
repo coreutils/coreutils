@@ -221,7 +221,7 @@ Common Options
 * Block size::                   Block size
 * Floating point::               Floating point number representation
 * Signal specifications::        Specifying signals
-* Disambiguating names and IDs:: chgrp and chown owner and group syntax
+* Disambiguating names and IDs:: chgrp, chown, chroot, id: user and group syntax
 * Random sources::               Sources of random data
 * Target directory::             Target directory
 * Trailing slashes::             Trailing slashes
@@ -736,7 +736,7 @@ name.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Floating point::              Floating point number representation.
 * Signal specifications::       Specifying signals using the --signal option.
-* Disambiguating names and IDs:: chgrp and chown owner and group syntax
+* Disambiguating names and IDs:: chgrp, chown, chroot, id: user and group syntax
 * Random sources::              --random-source, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
@@ -1135,20 +1135,20 @@ also support at least eight real-time signals called @samp{RTMIN},
 @samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
 @node Disambiguating names and IDs
-@section chown and chgrp: Disambiguating user names and IDs
+@section chown, chgrp, chroot, id: Disambiguating user names and IDs
 @cindex user names, disambiguating
 @cindex user IDs, disambiguating
 @cindex group names, disambiguating
 @cindex group IDs, disambiguating
 @cindex disambiguating group names and IDs
 
-Since the @var{owner} and @var{group} arguments to @command{chown} and
-@command{chgrp} may be specified as names or numeric IDs, there is an
+Since the @var{user} and @var{group} arguments to these commands
+may be specified as names or numeric IDs, there is an
 apparent ambiguity.
 What if a user or group @emph{name} is a string of digits?
 @footnote{Using a number as a user name is common in some environments.}
 Should the command interpret it as a user name or as an ID@?
-POSIX requires that @command{chown} and @command{chgrp}
+POSIX requires that these commands
 first attempt to resolve the specified string as a name, and
 only once that fails, then try to interpret it as an ID@.
 This is troublesome when you want to specify a numeric ID, say 42,
@@ -1157,9 +1157,9 @@ and it must work even in a pathological situation where
 Simply invoking @code{chown 42 F}, will set @file{F}s owner ID to
 1000---not what you intended.
 
-GNU @command{chown} and @command{chgrp} provide a way to work around this,
-that at the same time may result in a significant performance improvement
-by eliminating a database look-up.
+GNU @command{chown}, @command{chgrp}, @command{chroot}, and @command{id}
+provide a way to work around this, that at the same time may result in a
+significant performance improvement by eliminating a database look-up.
 Simply precede each numeric user ID and/or group ID with a @samp{+},
 in order to force its interpretation as an integer:
 
@@ -1169,8 +1169,7 @@ chgrp +$numeric_group_id another-file
 chown +0:+0 /
 @end example
 
-GNU @command{chown} and @command{chgrp}
-skip the name look-up process for each @samp{+}-prefixed string,
+The name look-up process is skipped for each @samp{+}-prefixed string,
 because a string containing @samp{+} is never a valid user or group name.
 This syntax is accepted on most common Unix systems, but not on Solaris 10.
 
@@ -14538,8 +14537,9 @@ running it if no user is specified.  Synopsis:
 id [@var{option}]@dots{} [@var{user}]
 @end example
 
-@var{user} can be either a user ID or a name, with name lookup
+@var{user} can be either a user ID or a name, with name look-up
 taking precedence unless the ID is specified with a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
 
 @vindex POSIXLY_CORRECT
 By default, it prints the real user ID, real group ID, effective user ID
@@ -16108,6 +16108,13 @@ used by the new process.
 The items in the list (names or numeric IDs) must be separated by commas.
 
 @end table
+
+The user and group name look-up performed by the @option{--userspec}
+and @option{--groups} options, is done both outside and inside
+the chroot, with successful look-ups inside the chroot taking precedence.
+If the specified user or group items are intended to represent a numeric ID,
+then a name to ID resolving step is avoided by specifying a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
 
 Here are a few tips to help avoid common problems in using chroot.
 To start with a simple example, make @var{command} refer to a statically
