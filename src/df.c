@@ -1260,15 +1260,16 @@ or all file systems by default.\n\
 
       emit_mandatory_arg_note ();
 
+      /* TRANSLATORS: The thousands and decimal separators are best
+         adjusted to an appropriate default for your locale.  */
       fputs (_("\
   -a, --all             include dummy file systems\n\
   -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
                            '-BM' prints sizes in units of 1,048,576 bytes;\n\
                            see SIZE format below\n\
       --total           produce a grand total\n\
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
-\n\
-  -H, --si              likewise, but use powers of 1000 not 1024\n\
+  -h, --human-readable  print sizes in powers of 1024 (e.g., 1023M)\n\
+  -H, --si              print sizes in powers of 1000 (e.g., 1.1G)\n\
 "), stdout);
       fputs (_("\
   -i, --inodes          list inode information instead of block usage\n\
