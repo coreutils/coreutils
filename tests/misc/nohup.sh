@@ -63,6 +63,11 @@ rm -f nohup.out err
 # to stderr must be fatal.  Requires stdout to be terminal.
 if test -w /dev/full && test -c /dev/full; then
 (
+  # POSIX shells immediately exit the subshell on exec error.
+  # So check we can write to /dev/tty before the exec, which
+  # isn't possible if we've no controlling tty for example.
+  test -c /dev/tty && >/dev/tty || exit 0
+
   exec >/dev/tty
   test -t 1 || exit 0
   nohup echo hi 2> /dev/full
