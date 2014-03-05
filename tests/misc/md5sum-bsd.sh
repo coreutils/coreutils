@@ -70,7 +70,7 @@ nl='
 tab='	'
 rm check.md5
 for i in 'a\b' 'a\' "a${nl}b" "a${tab}b"; do
-  :> "$i"
+  > "$i"
   md5sum --tag "$i" >> check.md5
 done
 md5sum --strict -c check.md5 || fail=1

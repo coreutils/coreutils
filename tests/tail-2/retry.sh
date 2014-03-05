@@ -45,7 +45,7 @@ grep -F 'tail: warning: --retry ignored' out || fail=1
 # === Test:
 # Ensure that "tail --retry --follow=name" waits for the file to appear.
 # Clear 'out' so that we can check its contents without races
-:>out                           || framework_failure_
+>out                            || framework_failure_
 timeout 10 tail -s.1 --follow=name --retry missing >out 2>&1 & pid=$!
 retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for "cannot open" error.
 echo "X" > missing              || fail=1

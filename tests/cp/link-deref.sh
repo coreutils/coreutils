@@ -31,7 +31,7 @@ if grep '^#define HAVE_LINKAT 1' "$CONFIG_HEADER" > /dev/null \
 fi
 
 mkdir dir              || framework_failure_
-: > file               || framework_failure_
+> file                 || framework_failure_
 ln -s dir     dirlink  || framework_failure_
 ln -s file    filelink || framework_failure_
 ln -s nowhere danglink || framework_failure_

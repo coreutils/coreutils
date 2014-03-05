@@ -71,7 +71,7 @@ DEBUGGING=
 test "$DEBUGGING" && test "$VERBOSE" && set +x
 for ELIDE_EMPTY in '' '-e'; do
   for IO_BLKSIZE in 1 2 5 10 80 100; do
-    : > out
+    > out
     test "$DEBUGGING" && printf "\n---io-blk-size=$IO_BLKSIZE $ELIDE_EMPTY\n"
     for N in 6 8 12 15 22; do
       rm -f x*
@@ -119,15 +119,15 @@ test "$DEBUGGING" && test "$VERBOSE" && set -x
 
 
 # Check extraction of particular chunks
-: > out
+> out
 printf '1\n12345\n' > exp
 split -n l/13/15 in > out
 compare exp out || fail=1
-: > out
+> out
 printf '' > exp
 split -n l/14/15 in > out
 compare exp out || fail=1
-: > out
+> out
 printf '1\n12345\n1\n' > exp
 split -n l/15/15 in > out
 compare exp out || fail=1

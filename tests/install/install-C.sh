@@ -54,7 +54,7 @@ echo test > a || framework_failure_
 echo "'a' -> 'b'" > out_installed_first || framework_failure_
 echo "removed 'b'
 'a' -> 'b'" > out_installed_second || framework_failure_
-: > out_empty || framework_failure_
+> out_empty || framework_failure_
 
 # destination file does not exist
 ginstall -Cv -m$mode1 a b > out || fail=1

@@ -62,7 +62,7 @@ fi
 
 ENV_TEST1=a
 export ENV_TEST1
-: >out || framework_failure_
+>out || framework_failure_
 env ENV_TEST2= > all || fail=1
 grep '^ENV_TEST' all | LC_ALL=C sort >> out || framework_failure_
 env -u ENV_TEST1 ENV_TEST3=c > all || fail=1

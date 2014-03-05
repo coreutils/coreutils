@@ -63,8 +63,8 @@ cat <<\EOF > no_eol_splits_exp
 EOF
 
 for b in $(seq 10); do
-  : > splits
-  : > no_eol_splits
+  > splits
+  > no_eol_splits
   for s in $(seq 11); do
     rm x??
     split ---io=$b -C$s in || fail=1

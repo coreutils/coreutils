@@ -20,8 +20,8 @@
 print_ver_ cp
 
 
-: > time_check
-: > file
+> time_check
+> file
 ts='2009-08-28 19:00'
 touch -d "$ts" file || framework_failure_
 test time_check -nt file || skip_ "The system clock is wrong"

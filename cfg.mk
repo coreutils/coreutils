@@ -123,6 +123,13 @@ sc_tests_executable:
 	  | sed -e "s/^/$(ME): Please make test executable: /" | grep . \
 	    && exit 1; :
 
+# Avoid :>file which doesn't propagate errors
+sc_prohibit_colon_redirection:
+	@cd $(srcdir)/tests && GIT_PAGER= git grep -n ': *>.*||' \
+	  && { echo '$(ME): '"The leading colon in :> will hide errors" 1>&2; \
+	       exit 1; }  \
+	  || :
+
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:

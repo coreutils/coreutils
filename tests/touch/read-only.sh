@@ -20,7 +20,7 @@
 print_ver_ touch
 skip_if_root_
 
-: > read-only || framework_failure_
+> read-only || framework_failure_
 chmod 444 read-only || framework_failure_
 
 

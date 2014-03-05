@@ -32,7 +32,7 @@ wait4lines_ ()
 # Ensure changing targets of cli specified symlinks are handled.
 # Prior to v8.22, inotify would fail to recognize changes in the targets.
 # Clear 'out' so that we can check its contents without races.
-:>out                           || framework_failure_
+>out                            || framework_failure_
 ln -nsf target symlink          || framework_failure_
 timeout 10 tail -s.1 -F symlink >out 2>&1 & pid=$!
 retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for "cannot open..."
@@ -50,7 +50,7 @@ rm -f target out           || framework_failure_
 # Ensure we correctly handle the source symlink itself changing.
 # I.E. that we don't operate solely on the targets.
 # Clear 'out' so that we can check its contents without races.
-:>out                           || framework_failure_
+>out                            || framework_failure_
 echo "X1" > target1             || framework_failure_
 ln -nsf target1 symlink         || framework_failure_
 timeout 10 tail -s.1 -F symlink >out 2>&1 & pid=$!

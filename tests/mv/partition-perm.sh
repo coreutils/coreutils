@@ -21,11 +21,11 @@ print_ver_ mv
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_srcdir/tests/other-fs-tmpdir"
 
-: > file
-chmod a=rwx file
+> file || framework_failure_
+chmod a=rwx file || framework_failure_
 
 umask 077
-mv file "$other_partition_tmpdir"
+mv file "$other_partition_tmpdir" || framework_failure_
 
 test -f file && fail=1
 test -f "$other_partition_tmpdir/file" || fail=1

@@ -42,7 +42,7 @@ printf '%s\n' $users '' >> users || framework_failure_
 
 # Exercise "id -z" with various options.
 printf '\n' > exp || framework_failure_
-:> out || framework_failure_
+> out || framework_failure_
 
 while read u ; do
   for o in g gr G Gr u ur ; do

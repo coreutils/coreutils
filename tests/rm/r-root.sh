@@ -104,7 +104,7 @@ test -d dir && framework_failure_
 # rm(1) must succeed as before, but this time both the evidence file "x"
 # and the test file / directory must still exist afterward.
 mkdir dir || framework_failure_
-: > file  || framework_failure_
+> file    || framework_failure_
 
 skip=
 for file in dir file ; do
@@ -168,8 +168,8 @@ done
 # Exercise "rm -r file1 / file2".
 # Expect a non-Zero exit status representing failure to remove "/",
 # yet 'file1' and 'file2' should be removed.
-: > file1 || framework_failure_
-: > file2 || framework_failure_
+> file1 || framework_failure_
+> file2 || framework_failure_
 
 # Now that we know that 'rm' won't call the unlinkat() system function for "/",
 # we could probably execute it without the LD_PRELOAD'ed safety net.
