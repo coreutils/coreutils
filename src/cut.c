@@ -417,7 +417,7 @@ set_fields (const char *fieldstr)
 
   /* After merging, reallocate RP so we release memory to the system.
      Also add a sentinel at the end of RP, to avoid out of bounds access
-     and for perfomance reasons.  */
+     and for performance reasons.  */
   ++n_rp;
   rp = xrealloc (rp, n_rp * sizeof (struct range_pair));
   rp[n_rp - 1].lo = rp[n_rp - 1].hi = SIZE_MAX;

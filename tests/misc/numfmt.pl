@@ -260,7 +260,7 @@ my @Tests =
      #   so these are 40 of "M", not 40,000,000.
      ['mix-1', '--suffix=M --from=si 40M',     {OUT=>"40M"}],
 
-     # These are fourty-million Ms .
+     # These are forty-million Ms .
      ['mix-2', '--suffix=M --from=si 40MM',     {OUT=>"40000000M"}],
 
      ['mix-3', '--suffix=M --from=auto 40MM',     {OUT=>"40000000M"}],

@@ -347,8 +347,7 @@ detect_loop (struct item *k)
                         {
                           struct item *tmp = loop->qlink;
 
-                          fprintf (stderr, "%s: %s\n", program_name,
-                                   loop->str);
+                          error (0, 0, "%s", loop->str);
 
                           /* Until we encounter K again.  */
                           if (loop == k)
