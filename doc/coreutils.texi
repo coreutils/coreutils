@@ -96,7 +96,7 @@
 * ptx: (coreutils)ptx invocation.               Produce permuted indexes.
 * pwd: (coreutils)pwd invocation.               Print working directory.
 * readlink: (coreutils)readlink invocation.     Print referent of a symlink.
-* realpath: (coreutils)readpath invocation.     Print resolved file names.
+* realpath: (coreutils)realpath invocation.     Print resolved file names.
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
 * runcon: (coreutils)runcon invocation.         Run in specified SELinux CTX.
