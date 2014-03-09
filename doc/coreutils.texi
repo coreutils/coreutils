@@ -6327,7 +6327,7 @@ Print a line for each unpairable line in file @var{file-number}
 
 @cindex operating on characters
 
-This commands operate on individual characters.
+These commands operate on individual characters.
 
 @menu
 * tr invocation::               Translate, squeeze, and/or delete characters.
