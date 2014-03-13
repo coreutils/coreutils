@@ -54,13 +54,12 @@ static struct option const long_opts[] =
 };
 
 #if ! HAVE_SETGROUPS
-/* At least Interix lacks supplemental group support.  Define an
-   always-successful replacement to avoid checking for setgroups
-   availability everywhere, just to support broken platforms. */
+/* At least Interix lacks supplemental group support.  */
 static int
 setgroups (size_t size _GL_UNUSED, gid_t const *list _GL_UNUSED)
 {
-  return 0;
+  errno = ENOTSUP;
+  return -1;
 }
 #endif
 
