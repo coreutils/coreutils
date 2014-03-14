@@ -25,6 +25,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   it would display an error, requiring --no-dereference to avoid the issue.
   [bug introduced in coreutils-5.3.0]
 
+  ln -sr '' F no longer segfaults.  Now works as expected.
+  [bug introduced with the --relative feature in coreutils-8.16]
+
   shuf --repeat no longer dumps core if the input is empty.
   [bug introduced with the --repeat feature in coreutils-8.22]
 

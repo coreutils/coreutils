@@ -45,4 +45,9 @@ mkdir web
 ln -sr latest web/latest
 test $(readlink web/latest) = '../release2' || fail=1
 
+# Expect this to fail with exit status 1, or to succeed quietly (freebsd).
+# Prior to coreutils-8.23, it would segfault.
+ln -sr '' F
+case $? in [01]) ;; *) fail=1;; esac
+
 Exit $fail

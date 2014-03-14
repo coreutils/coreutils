@@ -149,13 +149,17 @@ convert_abs_rel (const char *from, const char *target)
   char *realdest = canonicalize_filename_mode (targetdir, CAN_MISSING);
   char *realfrom = canonicalize_filename_mode (from, CAN_MISSING);
 
-  /* Write to a PATH_MAX buffer.  */
-  char *relative_from = xmalloc (PATH_MAX);
-
-  if (!relpath (realfrom, realdest, relative_from, PATH_MAX))
+  char *relative_from = NULL;
+  if (realdest && realfrom)
     {
-      free (relative_from);
-      relative_from = NULL;
+      /* Write to a PATH_MAX buffer.  */
+      relative_from = xmalloc (PATH_MAX);
+
+      if (!relpath (realfrom, realdest, relative_from, PATH_MAX))
+        {
+          free (relative_from);
+          relative_from = NULL;
+        }
     }
 
   free (targetdir);
