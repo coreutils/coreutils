@@ -152,6 +152,11 @@ statfs (char const *filename, struct fs_info *buf)
 # endif
 #endif
 
+#if HAVE_GETATTRAT
+# include <attr.h>
+# include <sys/nvpair.h>
+#endif
+
 /* FIXME: these are used by printf.c, too */
 #define isodigit(c) ('0' <= (c) && (c) <= '7')
 #define octtobin(c) ((c) - '0')
@@ -731,7 +736,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
 print_statfs (char *pformat, size_t prefix_len, unsigned int m,
-              char const *filename,
+              int fd, char const *filename,
               void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
@@ -903,6 +908,38 @@ print_mount_point:
   return fail;
 }
 
+static struct timespec
+get_birthtime (int fd, char const *filename, struct stat const *st)
+{
+  struct timespec ts = get_stat_birthtime (st);
+
+#if HAVE_GETATTRAT
+  if (ts.tv_nsec < 0)
+    {
+      nvlist_t *response;
+      if ((fd < 0
+           ? getattrat (AT_FDCWD, XATTR_VIEW_READWRITE, filename, &response)
+           : fgetattr (fd, XATTR_VIEW_READWRITE, &response))
+          == 0)
+        {
+          uint64_t *val;
+          uint_t n;
+          if (nvlist_lookup_uint64_array (response, A_CRTIME, &val, &n) == 0
+              && 2 <= n
+              && val[0] <= TYPE_MAXIMUM (time_t)
+              && val[1] < 1000000000 * 2 /* for leap seconds */)
+            {
+              ts.tv_sec = val[0];
+              ts.tv_nsec = val[1];
+            }
+          nvlist_free (response);
+        }
+    }
+#endif
+
+  return ts;
+}
+
 /* Map a TS with negative TS.tv_nsec to {0,0}.  */
 static inline struct timespec
 neg_to_zero (struct timespec ts)
@@ -916,7 +953,7 @@ neg_to_zero (struct timespec ts)
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
 print_stat (char *pformat, size_t prefix_len, unsigned int m,
-            char const *filename, void const *data)
+            int fd, char const *filename, void const *data)
 {
   struct stat *statbuf = (struct stat *) data;
   struct passwd *pw_ent;
@@ -1007,7 +1044,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       break;
     case 'w':
       {
-        struct timespec t = get_stat_birthtime (statbuf);
+        struct timespec t = get_birthtime (fd, filename, statbuf);
         if (t.tv_nsec < 0)
           out_string (pformat, prefix_len, "-");
         else
@@ -1016,7 +1053,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       break;
     case 'W':
       out_epoch_sec (pformat, prefix_len, statbuf,
-                     neg_to_zero (get_stat_birthtime (statbuf)));
+                     neg_to_zero (get_birthtime (fd, filename, statbuf)));
       break;
     case 'x':
       out_string (pformat, prefix_len, human_time (get_stat_atime (statbuf)));
@@ -1091,9 +1128,9 @@ print_esc_char (char c)
    calling PRINT_FUNC for each %-directive encountered.
    Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-print_it (char const *format, char const *filename,
+print_it (char const *format, int fd, char const *filename,
           bool (*print_func) (char *, size_t, unsigned int,
-                              char const *, void const *),
+                              int, char const *, void const *),
           void const *data)
 {
   bool fail = false;
@@ -1142,7 +1179,8 @@ print_it (char const *format, char const *filename,
                 putchar ('%');
                 break;
               default:
-                fail |= print_func (dest, len + 1, fmt_code, filename, data);
+                fail |= print_func (dest, len + 1, fmt_code,
+                                    fd, filename, data);
                 break;
               }
             break;
@@ -1225,7 +1263,7 @@ do_statfs (char const *filename, char const *format)
       return false;
     }
 
-  bool fail = print_it (format, filename, print_statfs, &statfsbuf);
+  bool fail = print_it (format, -1, filename, print_statfs, &statfsbuf);
   return ! fail;
 }
 
@@ -1234,11 +1272,12 @@ static bool ATTRIBUTE_WARN_UNUSED_RESULT
 do_stat (char const *filename, char const *format,
          char const *format2)
 {
+  int fd = STREQ (filename, "-") ? 0 : -1;
   struct stat statbuf;
 
-  if (STREQ (filename, "-"))
+  if (0 <= fd)
     {
-      if (fstat (STDIN_FILENO, &statbuf) != 0)
+      if (fstat (fd, &statbuf) != 0)
         {
           error (0, errno, _("cannot stat standard input"));
           return false;
@@ -1258,7 +1297,7 @@ do_stat (char const *filename, char const *format,
   if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
     format = format2;
 
-  bool fail = print_it (format, filename, print_stat, &statbuf);
+  bool fail = print_it (format, fd, filename, print_stat, &statbuf);
   return ! fail;
 }
 

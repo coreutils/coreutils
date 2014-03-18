@@ -276,6 +276,13 @@ if test $utils_cv_localtime_cache = yes; then
   AC_DEFINE([LOCALTIME_CACHE], [1], [FIXME])
 fi
 
+# Assume that if getattrat exists, it's compatible with Solaris 11.
+AC_CHECK_FUNCS([getattrat])
+if test $ac_cv_func_getattrat = yes; then
+  LIB_NVPAIR=-lnvpair
+  AC_SUBST([LIB_NVPAIR])
+fi
+
 # SCO-ODT-3.0 is reported to need -los to link programs using initgroups
 AC_CHECK_FUNCS([initgroups])
 if test $ac_cv_func_initgroups = no; then

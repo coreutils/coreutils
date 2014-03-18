@@ -240,6 +240,9 @@ src_mknod_LDADD += $(LIB_SMACK)
 src_runcon_LDADD += $(LIB_SELINUX)
 src_stat_LDADD += $(LIB_SELINUX)
 
+# for nvlist_lookup_uint64_array
+src_stat_LDADD += $(LIB_NVPAIR)
+
 # for gettime, settime, utimecmp, utimens
 copy_ldadd += $(LIB_CLOCK_GETTIME)
 src_date_LDADD += $(LIB_CLOCK_GETTIME)
