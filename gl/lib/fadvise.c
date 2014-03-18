@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Without this pragma, gcc suggests that (given !HAVE_POSIX_FADVISE)
-   the the fdadvise function might be candidate for attribute 'const'.  */
+   the fdadvise function might be a candidate for attribute 'const'.  */
 #if (__GNUC__ == 4 && 6 <= __GNUC_MINOR__) || 4 < __GNUC__
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
 #endif
