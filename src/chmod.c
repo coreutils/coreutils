@@ -111,7 +111,8 @@ static struct option const long_options[] =
    The old mode was OLD_MODE, but it was changed to NEW_MODE.  */
 
 static bool
-mode_changed (char const *file, mode_t old_mode, mode_t new_mode)
+mode_changed (int dir_fd, char const *file, char const *file_full_name,
+              mode_t old_mode, mode_t new_mode)
 {
   if (new_mode & (S_ISUID | S_ISGID | S_ISVTX))
     {
@@ -120,10 +121,11 @@ mode_changed (char const *file, mode_t old_mode, mode_t new_mode)
 
       struct stat new_stats;
 
-      if (stat (file, &new_stats) != 0)
+      if (fstatat (dir_fd, file, &new_stats, 0) != 0)
         {
           if (! force_silent)
-            error (0, errno, _("getting new attributes of %s"), quote (file));
+            error (0, errno, _("getting new attributes of %s"),
+                   quote (file_full_name));
           return false;
         }
 
@@ -283,7 +285,8 @@ process_file (FTS *fts, FTSENT *ent)
   if (verbosity != V_off)
     {
       bool changed = (chmod_succeeded
-                      && mode_changed (file, old_mode, new_mode));
+                      && mode_changed (fts->fts_cwd_fd, file, file_full_name,
+                                       old_mode, new_mode));
 
       if (changed || verbosity == V_high)
         {

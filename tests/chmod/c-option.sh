@@ -37,4 +37,15 @@ case "$(cat out)" in
   *) cat out; fail=1 ;;
 esac
 
+# From V5.1.0 to 8.22 this would stat the wrong file and
+# give an erroneous ENOENT diagnostic
+mkdir -p a/b || framework_failure_
+# chmod g+s might fail as detailed in setgid.sh
+# but we don't care about those edge cases here
+chmod g+s a/b
+# This should never warn, but it did when special
+# bits are set on b (the common case under test)
+chmod -c -R g+w a 2>err
+compare /dev/null err || fail=1
+
 Exit $fail
