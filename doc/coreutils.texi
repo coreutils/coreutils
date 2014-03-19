@@ -5210,8 +5210,9 @@ This is a GNU extension.
 @opindex -u
 @opindex --unique
 @cindex unique lines, outputting
-Discard the first repeated line.  When used by itself, this option
-causes @command{uniq} to print unique lines, and nothing else.
+Discard the last line that would be output for a repeated input group.
+When used by itself, this option causes @command{uniq} to print unique
+lines, and nothing else.
 
 @item -w @var{n}
 @itemx --check-chars=@var{n}
