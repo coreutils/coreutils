@@ -148,7 +148,7 @@ their previous values, and perhaps on the current @code{umask} as well
 The format of symbolic modes is:
 
 @example
-@r{[}ugoa@dots{}@r{][}+-=@r{]}@var{perms}@dots{}@r{[},@dots{}@r{]}
+@r{[}ugoa@dots{}@r{][}-+=@r{]}@var{perms}@dots{}@r{[},@dots{}@r{]}
 @end example
 
 @noindent

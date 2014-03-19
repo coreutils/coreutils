@@ -16,7 +16,7 @@ which can be either a symbolic representation of changes to make, or
 an octal number representing the bit pattern for the new mode bits.
 .PP
 The format of a symbolic mode is [\c
-\fBugoa\fP.\|.\|.][[\fB+-=\fP][\fIperms\fP.\|.\|.].\|.\|.],
+\fBugoa\fP.\|.\|.][[\fB-+=\fP][\fIperms\fP.\|.\|.].\|.\|.],
 where
 .I "perms"
 is either zero or more letters from the set
