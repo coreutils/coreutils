@@ -33,7 +33,6 @@
 #include "error.h"
 #include "fd-reopen.h"
 #include "fcntl--.h"
-#include "full-read.h"
 #include "full-write.h"
 #include "ioblksize.h"
 #include "quote.h"
@@ -526,8 +525,8 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
 
   do
     {
-      n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read < bufsize && errno)
+      n_read = safe_read (STDIN_FILENO, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
       to_read = n_read;
@@ -562,7 +561,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
             }
         }
     }
-  while (n_read == bufsize);
+  while (n_read);
 
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.
@@ -584,8 +583,8 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 
   do
     {
-      n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read < bufsize && errno)
+      n_read = safe_read (STDIN_FILENO, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
@@ -614,7 +613,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
             }
         }
     }
-  while (n_read == bufsize);
+  while (n_read);
 }
 
 /* Split into pieces that are as large as possible while still not more
@@ -633,8 +632,8 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 
   do
     {
-      n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read < bufsize && errno)
+      n_read = safe_read (STDIN_FILENO, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       size_t n_left = n_read;
       char *sob = buf;
@@ -718,7 +717,7 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
             }
         }
     }
-  while (n_read == bufsize);
+  while (n_read);
 
   /* Handle no eol at end of file.  */
   if (n_hold)
@@ -762,8 +761,8 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   while (n_written < file_size)
     {
       char *bp = buf, *eob;
-      size_t n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read < bufsize && errno)
+      size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       else if (n_read == 0)
         break; /* eof.  */
@@ -857,8 +856,8 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
   while (start < end)
     {
-      size_t n_read = full_read (STDIN_FILENO, buf, bufsize);
-      if (n_read < bufsize && errno)
+      size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       else if (n_read == 0)
         break; /* eof.  */
@@ -998,8 +997,6 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
   while (true)
     {
       char *bp = buf, *eob;
-      /* Use safe_read() rather than full_read() here
-         so that we process available data immediately.  */
       size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
