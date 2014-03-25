@@ -1565,9 +1565,9 @@ writable_destination (char const *file, mode_t mode)
           || euidaccess (file, W_OK) == 0);
 }
 
-static void
-overwrite_prompt (struct cp_options const *x, char const *dst_name,
-                  struct stat const *dst_sb)
+static bool
+overwrite_ok (struct cp_options const *x, char const *dst_name,
+              struct stat const *dst_sb)
 {
   if (! writable_destination (dst_name, dst_sb->st_mode))
     {
@@ -1588,6 +1588,8 @@ overwrite_prompt (struct cp_options const *x, char const *dst_name,
       fprintf (stderr, _("%s: overwrite %s? "),
                program_name, quote (dst_name));
     }
+
+  return yesno ();
 }
 
 /* Initialize the hash table implementing a set of F_triple entries
@@ -1642,8 +1644,7 @@ abandon_move (const struct cp_options *x,
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
                    && ! writable_destination (dst_name, dst_sb->st_mode)))
-              && (overwrite_prompt (x, dst_name, dst_sb), 1)
-              && ! yesno ()));
+              && ! overwrite_ok (x, dst_name, dst_sb)));
 }
 
 /* Print --verbose output on standard output, e.g. 'new' -> 'old'.
@@ -1917,8 +1918,7 @@ copy_internal (char const *src_name, char const *dst_name,
               if (! S_ISDIR (src_mode)
                   && (x->interactive == I_ALWAYS_NO
                       || (x->interactive == I_ASK_USER
-                          && (overwrite_prompt (x, dst_name, &dst_sb), 1)
-                          && ! yesno ())))
+                          && ! overwrite_ok (x, dst_name, &dst_sb))))
                 return true;
             }
 
