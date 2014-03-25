@@ -1566,7 +1566,8 @@ writable_destination (char const *file, mode_t mode)
 }
 
 static void
-overwrite_prompt (char const *dst_name, struct stat const *dst_sb)
+overwrite_prompt (struct cp_options const *x, char const *dst_name,
+                  struct stat const *dst_sb)
 {
   if (! writable_destination (dst_name, dst_sb->st_mode))
     {
@@ -1574,7 +1575,10 @@ overwrite_prompt (char const *dst_name, struct stat const *dst_sb)
       strmode (dst_sb->st_mode, perms);
       perms[10] = '\0';
       fprintf (stderr,
-               _("%s: try to overwrite %s, overriding mode %04lo (%s)? "),
+               _((x->unlink_dest_before_opening
+                  || x->unlink_dest_after_failed_open)
+                 ? "%s: replace %s, overriding mode %04lo (%s)? "
+                 : "%s: unwritable %s (mode %04lo, %s); try anyway? "),
                program_name, quote (dst_name),
                (unsigned long int) (dst_sb->st_mode & CHMOD_MODE_BITS),
                &perms[1]);
@@ -1638,7 +1642,7 @@ abandon_move (const struct cp_options *x,
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
                    && ! writable_destination (dst_name, dst_sb->st_mode)))
-              && (overwrite_prompt (dst_name, dst_sb), 1)
+              && (overwrite_prompt (x, dst_name, dst_sb), 1)
               && ! yesno ()));
 }
 
@@ -1913,7 +1917,7 @@ copy_internal (char const *src_name, char const *dst_name,
               if (! S_ISDIR (src_mode)
                   && (x->interactive == I_ALWAYS_NO
                       || (x->interactive == I_ASK_USER
-                          && (overwrite_prompt (dst_name, &dst_sb), 1)
+                          && (overwrite_prompt (x, dst_name, &dst_sb), 1)
                           && ! yesno ())))
                 return true;
             }

@@ -36,7 +36,7 @@ cp -if e f < y > out 2>&1 || fail=1
 
 # Make sure out contains the prompt.
 case "$(cat out)" in
-  "cp: try to overwrite 'f', overriding mode 0000 (---------)?"*) ;;
+  "cp: replace 'f', overriding mode 0000 (---------)?"*) ;;
   *) fail=1 ;;
 esac
 
