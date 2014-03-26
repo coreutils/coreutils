@@ -2015,6 +2015,8 @@ main (int argc, char **argv)
         case 10:
           output_format = XARGMATCH ("--format", optarg,
                                      format_args, format_vals);
+          break;
+
         case_GETOPT_HELP_CHAR;
 
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);

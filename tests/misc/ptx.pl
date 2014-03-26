@@ -33,6 +33,13 @@ my @Tests =
 
 # with coreutils-6.12 and earlier, this would act like "ptx F1 F1"
 ["2files", '-g1 -w1', {IN=>{F1=>"a"}}, {IN=>{F2=>"b"}}, {OUT=>"  a\n  b\n"}],
+
+# with coreutils-8.22 and earlier, the --format long option would
+# fall through into the --help case.
+["format-r", '--format=roff', {IN=>"foo\n"},
+                              {OUT=>".xx \"\" \"\" \"foo\" \"\"\n"}],
+["format-t", '--format=tex',  {IN=>"foo\n"},
+                              {OUT=>"\\xx {}{}{foo}{}{}\n"}],
 );
 
 @Tests = triple_test \@Tests;

@@ -31,6 +31,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ln -sr '' F no longer segfaults.  Now works as expected.
   [bug introduced with the --relative feature in coreutils-8.16]
 
+  ptx --format long option parsing no longer falls through into the --help case.
+  [bug introduced in TEXTUTILS-1_22i]
+
   shuf --repeat no longer dumps core if the input is empty.
   [bug introduced with the --repeat feature in coreutils-8.22]
 
