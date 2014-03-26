@@ -52,7 +52,7 @@ check_overwrite_prompt()
 }
 
 # Wait for up to 12.7 seconds for the expected prompt.
-retry_delay_ check_overwrite_prompt .1 7 || fail=1
+retry_delay_ check_overwrite_prompt .1 7 || { fail=1; cat out; }
 
 kill $pid
 

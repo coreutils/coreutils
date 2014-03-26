@@ -1575,10 +1575,10 @@ overwrite_ok (struct cp_options const *x, char const *dst_name,
       strmode (dst_sb->st_mode, perms);
       perms[10] = '\0';
       fprintf (stderr,
-               _((x->unlink_dest_before_opening
-                  || x->unlink_dest_after_failed_open)
-                 ? "%s: replace %s, overriding mode %04lo (%s)? "
-                 : "%s: unwritable %s (mode %04lo, %s); try anyway? "),
+               (x->move_mode || x->unlink_dest_before_opening
+                || x->unlink_dest_after_failed_open)
+               ? _("%s: replace %s, overriding mode %04lo (%s)? ")
+               : _("%s: unwritable %s (mode %04lo, %s); try anyway? "),
                program_name, quote (dst_name),
                (unsigned long int) (dst_sb->st_mode & CHMOD_MODE_BITS),
                &perms[1]);
