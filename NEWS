@@ -20,6 +20,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   date could crash or go into an infinite loop when parsing a malformed TZ="".
   [bug introduced with the --date='TZ="" ..' parsing feature in coreutils-5.3.0]
 
+  head --bytes=-N and --lines=-N now handles devices more
+  consistently, not ignoring data from virtual devices like /dev/zero,
+  or on BSD systems data from tty devices.
+  [bug introduced in coreutils-5.0.1]
+
   head --bytes=-N - no longer fails with a bogus diagnostic when stdin's
   seek pointer is not at the beginning.
   [bug introduced with the --bytes=-N feature in coreutils-5.0.1]

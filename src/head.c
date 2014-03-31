@@ -34,6 +34,7 @@
 #include "error.h"
 #include "full-read.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "safe-read.h"
 #include "xfreopen.h"
 #include "xstrtol.h"
@@ -404,53 +405,53 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
     }
 }
 
-/* Print all but the last N_ELIDE lines from the input available
-   via file descriptor FD.  Return true upon success.
+/* Call lseek (FD, OFFSET, WHENCE), where file descriptor FD
+   corresponds to the file FILENAME.  WHENCE must be SEEK_SET or
+   SEEK_CUR.  Return the resulting offset.  Give a diagnostic and
+   return -1 if lseek fails.  */
+
+static off_t
+elseek (int fd, off_t offset, int whence, char const *filename)
+{
+  off_t new_offset = lseek (fd, offset, whence);
+  char buf[INT_BUFSIZE_BOUND (offset)];
+
+  if (new_offset < 0)
+    error (0, errno,
+           _(whence == SEEK_SET
+             ? N_("%s: cannot seek to offset %s")
+             : N_("%s: cannot seek to relative offset %s")),
+           quotearg_colon (filename),
+           offtostr (offset, buf));
+
+  return new_offset;
+}
+
+/* For the file FILENAME with descriptor FD, output all but the last N_ELIDE
+   bytes.  If SIZE is nonnegative, this is a regular file positioned
+   at START_POS with SIZE bytes.  Return true on success.
    Give a diagnostic and return false upon error.  */
 
 /* NOTE: if the input file shrinks by more than N_ELIDE bytes between
    the length determination and the actual reading, then head fails.  */
 
 static bool
-elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
+elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide,
+                       off_t current_pos, off_t size)
 {
-  struct stat stats;
-
-  if (presume_input_pipe || fstat (fd, &stats) || ! S_ISREG (stats.st_mode))
-    {
-      return elide_tail_bytes_pipe (filename, fd, n_elide);
-    }
+  if (size < 0)
+    return elide_tail_bytes_pipe (filename, fd, n_elide);
   else
     {
-      off_t current_pos, end_pos;
-      uintmax_t bytes_remaining;
-      off_t diff;
-      enum Copy_fd_status err;
-
-      if ((current_pos = lseek (fd, 0, SEEK_CUR)) == -1
-          || (end_pos = lseek (fd, 0, SEEK_END)) == -1)
-        {
-          error (0, errno, _("cannot lseek %s"), quote (filename));
-          return false;
-        }
-
       /* Be careful here.  The current position may actually be
          beyond the end of the file.  */
-      bytes_remaining = (diff = end_pos - current_pos) < 0 ? 0 : diff;
+      off_t diff = size - current_pos;
+      off_t bytes_remaining = diff < 0 ? 0 : diff;
 
       if (bytes_remaining <= n_elide)
         return true;
 
-      /* Seek back to 'current' position, then copy the required
-         number of bytes from fd.  */
-      if (lseek (fd, current_pos, SEEK_SET) < 0)
-        {
-          error (0, errno, _("%s: cannot lseek back to original position"),
-                 quote (filename));
-          return false;
-        }
-
-      err = copy_fd (fd, bytes_remaining - n_elide);
+      enum Copy_fd_status err = copy_fd (fd, bytes_remaining - n_elide);
       if (err == COPY_FD_OK)
         return true;
 
@@ -594,10 +595,10 @@ free_lbuffers:
 }
 
 /* Output all but the last N_LINES lines of the input stream defined by
-   FD, START_POS, and END_POS.
+   FD, START_POS, and SIZE.
    START_POS is the starting position of the read pointer for the file
    associated with FD (may be nonzero).
-   END_POS is the file offset of EOF (one larger than offset of last byte).
+   SIZE is the file size in bytes.
    Return true upon success.
    Give a diagnostic and return false upon error.
 
@@ -607,11 +608,11 @@ free_lbuffers:
 static bool
 elide_tail_lines_seekable (const char *pretty_filename, int fd,
                            uintmax_t n_lines,
-                           off_t start_pos, off_t end_pos)
+                           off_t start_pos, off_t size)
 {
   char buffer[BUFSIZ];
   size_t bytes_read;
-  off_t pos = end_pos;
+  off_t pos = size;
 
   /* Set 'bytes_read' to the size of the last, probably partial, buffer;
      0 < 'bytes_read' <= 'BUFSIZ'.  */
@@ -621,13 +622,8 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
   /* Make 'pos' a multiple of 'BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
-  if (lseek (fd, pos, SEEK_SET) < 0)
-    {
-      char offset_buf[INT_BUFSIZE_BOUND (pos)];
-      error (0, errno, _("%s: cannot seek to offset %s"),
-             pretty_filename, offtostr (pos, offset_buf));
-      return false;
-    }
+  if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
+    return false;
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == SAFE_READ_ERROR)
     {
@@ -667,14 +663,8 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
               if (start_pos < pos)
                 {
                   enum Copy_fd_status err;
-                  if (lseek (fd, start_pos, SEEK_SET) < 0)
-                    {
-                      /* Failed to reposition file pointer.  */
-                      error (0, errno,
-                         "%s: unable to restore file pointer to initial offset",
-                             quote (pretty_filename));
-                      return false;
-                    }
+                  if (elseek (fd, start_pos, SEEK_SET, pretty_filename) < 0)
+                    return false;
 
                   err = copy_fd (fd, pos - start_pos);
                   if (err != COPY_FD_OK)
@@ -689,13 +679,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
               xwrite_stdout (buffer, n + 1);
 
               /* Set file pointer to the byte after what we've output.  */
-              if (lseek (fd, pos + n + 1, SEEK_SET) < 0)
-                {
-                  error (0, errno, _("%s: failed to reset file pointer"),
-                         quote (pretty_filename));
-                  return false;
-                }
-              return true;
+              return 0 <= elseek (fd, pos + n + 1, SEEK_SET, pretty_filename);
             }
         }
 
@@ -706,13 +690,8 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
           return true;
         }
       pos -= BUFSIZ;
-      if (lseek (fd, pos, SEEK_SET) < 0)
-        {
-          char offset_buf[INT_BUFSIZE_BOUND (pos)];
-          error (0, errno, _("%s: cannot seek to offset %s"),
-                 pretty_filename, offtostr (pos, offset_buf));
-          return false;
-        }
+      if (elseek (fd, pos, SEEK_SET, pretty_filename) < 0)
+        return false;
 
       bytes_read = safe_read (fd, buffer, BUFSIZ);
       if (bytes_read == SAFE_READ_ERROR)
@@ -728,36 +707,28 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
     }
 }
 
-/* Print all but the last N_ELIDE lines from the input available
-   via file descriptor FD.  Return true upon success.
+/* For the file FILENAME with descriptor FD, output all but the last N_ELIDE
+   lines.  If SIZE is nonnegative, this is a regular file positioned
+   at START_POS with SIZE bytes.  Return true on success.
    Give a diagnostic and return nonzero upon error.  */
 
 static bool
-elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
+elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide,
+                       off_t current_pos, off_t size)
 {
-  if (!presume_input_pipe)
+  if (size < 0)
+    return elide_tail_lines_pipe (filename, fd, n_elide);
+  else
     {
       /* Find the offset, OFF, of the Nth newline from the end,
          but not counting the last byte of the file.
          If found, write from current position to OFF, inclusive.
          Otherwise, just return true.  */
 
-      off_t start_pos = lseek (fd, 0, SEEK_CUR);
-      off_t end_pos = lseek (fd, 0, SEEK_END);
-      if (0 <= start_pos && 0 <= end_pos)
-        {
-          /* If no data to read we're done.  */
-          if (start_pos >= end_pos)
-            return true;
-
-          return elide_tail_lines_seekable (filename, fd, n_elide,
-                                            start_pos, end_pos);
-        }
-
-      /* lseek failed, Fall through...  */
+      return (size <= current_pos
+              || elide_tail_lines_seekable (filename, fd, n_elide,
+                                            current_pos, size));
     }
-
-  return elide_tail_lines_pipe (filename, fd, n_elide);
 }
 
 static bool
@@ -811,11 +782,9 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
                gotten to had we been reading one byte at a time.  */
             if (lseek (fd, -n_bytes_past_EOL, SEEK_CUR) < 0)
               {
-                int e = errno;
                 struct stat st;
                 if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
-                  error (0, e, _("cannot reposition file pointer for %s"),
-                         quote (filename));
+                  elseek (fd, -n_bytes_past_EOL, SEEK_CUR, filename);
               }
             break;
           }
@@ -833,14 +802,28 @@ head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
 
   if (elide_from_end)
     {
+      off_t current_pos = -1, size = -1;
+      if (! presume_input_pipe)
+        {
+          struct stat st;
+          if (fstat (fd, &st) != 0)
+            {
+              error (0, errno, _("cannot fstat %s"),
+                     quotearg_colon (filename));
+              return false;
+            }
+          if (S_ISREG (st.st_mode))
+            {
+              size = st.st_size;
+              current_pos = elseek (fd, 0, SEEK_CUR, filename);
+              if (current_pos < 0)
+                return false;
+            }
+        }
       if (count_lines)
-        {
-          return elide_tail_lines_file (filename, fd, n_units);
-        }
+        return elide_tail_lines_file (filename, fd, n_units, current_pos, size);
       else
-        {
-          return elide_tail_bytes_file (filename, fd, n_units);
-        }
+        return elide_tail_bytes_file (filename, fd, n_units, current_pos, size);
     }
   if (count_lines)
     return head_lines (filename, fd, n_units);
