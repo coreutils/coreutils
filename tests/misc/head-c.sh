@@ -29,6 +29,14 @@ case "$(cat out)" in
   *) fail=1 ;;
 esac
 
+# Test for a bug in coreutils 5.0.1 through 8.22.
+printf 'abc\ndef\n' > in1 || framework_failure_
+(dd bs=1 skip=1 count=0 status=none && head -c-4) < in1 > out1 || fail=1
+case "$(cat out1)" in
+  bc) ;;
+  *) fail=1 ;;
+esac
+
 # Only allocate memory as needed.
 # Coreutils <= 8.21 would allocate memory up front
 # based on the value passed to -c

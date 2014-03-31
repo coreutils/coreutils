@@ -443,7 +443,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
 
       /* Seek back to 'current' position, then copy the required
          number of bytes from fd.  */
-      if (lseek (fd, 0, current_pos) == -1)
+      if (lseek (fd, current_pos, SEEK_SET) < 0)
         {
           error (0, errno, _("%s: cannot lseek back to original position"),
                  quote (filename));
