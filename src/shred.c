@@ -887,8 +887,11 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
 
           if (! flags->exact)
             {
+              /* Round up to the nearest blocksize.  If the file is
+                 empty output a block anyway, in case the file system
+                 stores small files in the inode.  */
               off_t remainder = size % ST_BLKSIZE (st);
-              if (remainder != 0)
+              if (remainder != 0 || size == 0)
                 {
                   off_t size_incr = ST_BLKSIZE (st) - remainder;
                   if (! INT_ADD_OVERFLOW (size, size_incr))
