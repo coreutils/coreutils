@@ -80,6 +80,9 @@
 #include <assert.h>
 #include <setjmp.h>
 #include <sys/types.h>
+#ifdef __linux__
+# include <sys/mtio.h>
+#endif
 
 #include "system.h"
 #include "argmatch.h"
@@ -379,6 +382,29 @@ direct_mode (int fd, bool enable)
 #endif
 }
 
+/* Rewind FD; its status is ST.  */
+static bool
+dorewind (int fd, struct stat const *st)
+{
+  if (S_ISCHR (st->st_mode))
+    {
+#ifdef __linux__
+      /* In the Linux kernel, lseek does not work on tape devices; it
+         returns a randomish value instead.  Try the low-level tape
+         rewind operation first.  */
+      struct mtop op;
+      op.mt_op = MTREW;
+      op.mt_count = 1;
+      if (ioctl (fd, MTIOCTOP, &op) == 0)
+        return true;
+#endif
+    }
+  off_t offset = lseek (fd, 0, SEEK_SET);
+  if (0 < offset)
+    errno = EINVAL;
+  return offset == 0;
+}
+
 /*
  * Do pass number k of n, writing "size" bytes of the given pattern "type"
  * to the file descriptor fd.   Qname, k and n are passed in only for verbose
@@ -390,8 +416,9 @@ direct_mode (int fd, bool enable)
  * Return 1 on write error, -1 on other error, 0 on success.
  */
 static int
-dopass (int fd, char const *qname, off_t *sizep, int type,
-        struct randread_source *s, unsigned long int k, unsigned long int n)
+dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
+        int type, struct randread_source *s,
+        unsigned long int k, unsigned long int n)
 {
   off_t size = *sizep;
   off_t offset;			/* Current file posiiton */
@@ -427,7 +454,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
   char const *previous_human_offset IF_LINT ( = 0);
 
-  if (lseek (fd, 0, SEEK_SET) == -1)
+  if (! dorewind (fd, st))
     {
       error (0, errno, _("%s: cannot rewind"), qname);
       other_error = true;
@@ -849,8 +876,6 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
   size = flags->size;
   if (size == -1)
     {
-      /* Accept a length of zero only if it's a regular file.
-         For any other type of file, try to get the size another way.  */
       if (S_ISREG (st.st_mode))
         {
           size = st.st_size;
@@ -859,9 +884,23 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
               error (0, 0, _("%s: file has negative size"), qname);
               return false;
             }
+
+          if (! flags->exact)
+            {
+              off_t remainder = size % ST_BLKSIZE (st);
+              if (remainder != 0)
+                {
+                  off_t size_incr = ST_BLKSIZE (st) - remainder;
+                  if (! INT_ADD_OVERFLOW (size, size_incr))
+                    size += size_incr;
+                }
+            }
         }
       else
         {
+          /* The behavior of lseek is unspecified, but in practice if
+             it returns a positive number that's the size of this
+             device.  */
           size = lseek (fd, 0, SEEK_END);
           if (size <= 0)
             {
@@ -869,16 +908,6 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
                  Let dopass do that as part of its first iteration.  */
               size = -1;
             }
-        }
-
-      /* Allow 'rounding up' only for regular files.  */
-      if (0 <= size && !(flags->exact) && S_ISREG (st.st_mode))
-        {
-          size += ST_BLKSIZE (st) - 1 - (size - 1) % ST_BLKSIZE (st);
-
-          /* If in rounding up, we've just overflowed, use the maximum.  */
-          if (size < 0)
-            size = TYPE_MAXIMUM (off_t);
         }
     }
 
@@ -890,7 +919,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
   /* Do the work */
   for (i = 0; i < flags->n_iterations; i++)
     {
-      int err = dopass (fd, qname, &size, passarray[i], rs, i + 1, n);
+      int err = dopass (fd, &st, qname, &size, passarray[i], rs, i + 1, n);
       if (err)
         {
           if (err < 0)
@@ -908,7 +937,8 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
 
   if (flags->zero_fill)
     {
-      int err = dopass (fd, qname, &size, 0, rs, flags->n_iterations + 1, n);
+      int err = dopass (fd, &st, qname, &size, 0, rs,
+                        flags->n_iterations + 1, n);
       if (err)
         {
           if (err < 0)
