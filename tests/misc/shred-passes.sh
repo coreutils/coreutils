@@ -20,9 +20,9 @@
 print_ver_ shred
 
 
-# shred a single letter, zero length file which should result in
+# shred a single letter, which should result in
 # 3 random passes and a single rename.
-touch f || framework_failure_
+printf 1 > f || framework_failure_
 echo "\
 shred: f: pass 1/3 (random)...
 shred: f: pass 2/3 (random)...
@@ -35,15 +35,15 @@ shred -v -u f 2>out || fail=1
 
 compare exp out || fail=1
 
-# Likewise but with --exact to bypass the
-# data passes for the zero length file
+# Likewise but for a zero length file
+# to bypass the data passes
 touch f || framework_failure_
 echo "\
 shred: f: removing
 shred: f: renamed to 0
 shred: f: removed" > exp || framework_failure_
 
-shred -x -v -u f 2>out || fail=1
+shred -v -u f 2>out || fail=1
 
 compare exp out || fail=1
 
