@@ -9634,8 +9634,9 @@ Display to standard error all status updates as sterilization proceeds.
 @opindex -x
 @opindex --exact
 By default, @command{shred} rounds the size of a regular file up to the next
-multiple of the file system block size to fully erase the last block
-of the file.
+multiple of the file system block size to fully erase the slack space in
+the last block of the file.  This space may contain portions of the current
+system memory on some systems for example.
 Use @option{--exact} to suppress that behavior.
 Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,

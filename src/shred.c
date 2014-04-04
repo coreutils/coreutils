@@ -406,12 +406,12 @@ dorewind (int fd, struct stat const *st)
 }
 
 /*
- * Do pass number k of n, writing "size" bytes of the given pattern "type"
- * to the file descriptor fd.   Qname, k and n are passed in only for verbose
- * progress message purposes.  If n == 0, no progress messages are printed.
+ * Do pass number K of N, writing *SIZEP bytes of the given pattern TYPE
+ * to the file descriptor FD.  K and N are passed in only for verbose
+ * progress message purposes.  If N == 0, no progress messages are printed.
  *
- * If *sizep == -1, the size is unknown, and it will be filled in as soon
- * as writing fails.
+ * If *SIZEP == -1, the size is unknown, and it will be filled in as soon
+ * as writing fails with ENOSPC.
  *
  * Return 1 on write error, -1 on other error, 0 on success.
  */
@@ -427,10 +427,6 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-
-  /* Do nothing for --size=0 or regular empty files.  */
-  if (size == 0)
-    return 0;
 
   /* Fill pattern buffer.  Aligning it to a page so we can do direct I/O.  */
   size_t page_size = getpagesize ();
@@ -448,11 +444,17 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
   bool other_error = false;
-  bool tried_without_directio = false;
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
   char const *previous_human_offset IF_LINT ( = 0);
+
+  /* As a performance tweak, avoid direct I/O for small sizes,
+     as it's just a performance rather then security consideration,
+     and direct I/O can often be unsupported for small non aligned sizes.  */
+  bool try_without_directio = 0 < size && size < output_size;
+  if (! try_without_directio)
+    direct_mode (fd, true);
 
   if (! dorewind (fd, st))
     {
@@ -517,11 +519,11 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                      at all on some (file) systems, or with the current size.
                      I.E. a specified --size that is not aligned, or when
                      dealing with slop at the end of a file with --exact.  */
-                  if (k == 1 && !tried_without_directio && errno == EINVAL)
+                  if (! try_without_directio && errno == EINVAL)
                     {
                       direct_mode (fd, false);
                       ssize = 0;
-                      tried_without_directio = true;
+                      try_without_directio = true;
                       continue;
                     }
                   error (0, errnum, _("%s: error writing at offset %s"),
@@ -841,13 +843,14 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
 {
   size_t i;
   struct stat st;
-  off_t size;			/* Size to write, size to read */
-  unsigned long int n;		/* Number of passes for printing purposes */
+  off_t size;		/* Size to write, size to read */
+  off_t i_size = 0;	/* For small files, initial size to overwrite inode */
+  unsigned long int n;	/* Number of passes for printing purposes */
   int *passarray;
   bool ok = true;
   struct randread_source *rs;
 
-  n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
+  n = 0;		/* dopass takes n == 0 to mean "don't print progress" */
   if (flags->verbose)
     n = flags->n_iterations + flags->zero_fill;
 
@@ -867,8 +870,11 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
       error (0, 0, _("%s: invalid file type"), qname);
       return false;
     }
-
-  direct_mode (fd, true);
+  else if (S_ISREG (st.st_mode) && st.st_size < 0)
+    {
+      error (0, 0, _("%s: file has negative size"), qname);
+      return false;
+    }
 
   /* Allocate pass array */
   passarray = xnmalloc (flags->n_iterations, sizeof *passarray);
@@ -879,23 +885,17 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
       if (S_ISREG (st.st_mode))
         {
           size = st.st_size;
-          if (size < 0)
-            {
-              error (0, 0, _("%s: file has negative size"), qname);
-              return false;
-            }
 
           if (! flags->exact)
             {
-              /* Round up to the nearest blocksize to clear slack space.  */
+              /* Round up to the nearest block size to clear slack space.  */
               off_t remainder = size % ST_BLKSIZE (st);
+              if (size && size < ST_BLKSIZE (st))
+                i_size = size;
               if (remainder != 0)
                 {
                   off_t size_incr = ST_BLKSIZE (st) - remainder;
-                  if (! INT_ADD_OVERFLOW (size, size_incr))
-                    size += size_incr;
-                  else
-                    size = OFF_T_MAX;
+                  size += MIN (size_incr, OFF_T_MAX - size);
                 }
             }
         }
@@ -913,53 +913,67 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
             }
         }
     }
+  else if (S_ISREG (st.st_mode)
+           && st.st_size < MIN (ST_BLKSIZE (st), size))
+    i_size = st.st_size;
 
   /* Schedule the passes in random order. */
   genpattern (passarray, flags->n_iterations, s);
 
   rs = randint_get_source (s);
 
-  /* Do the work */
-  for (i = 0; i < flags->n_iterations; i++)
+  while (true)
     {
-      int err = dopass (fd, &st, qname, &size, passarray[i], rs, i + 1, n);
-      if (err)
+      off_t pass_size;
+      unsigned long int pn = n;
+
+      if (i_size)
         {
-          if (err < 0)
+          pass_size = i_size;
+          i_size = 0;
+          pn = 0;
+        }
+      else if (size)
+        {
+          pass_size = size;
+          size = 0;
+        }
+      /* TODO: consider handling tail packing by
+         writing the tail padding as a separate pass,
+         (that would not rewind).  */
+      else
+        break;
+
+      for (i = 0; i < flags->n_iterations + flags->zero_fill; i++)
+        {
+          int err = 0;
+          int type = i < flags->n_iterations ? passarray[i] : 0;
+
+          err = dopass (fd, &st, qname, &pass_size, type, rs, i + 1, pn);
+
+          if (err)
             {
-              memset (passarray, 0, flags->n_iterations * sizeof (int));
-              free (passarray);
-              return false;
+              ok = false;
+              if (err < 0)
+                goto wipefd_out;
             }
-          ok = false;
         }
     }
 
-  memset (passarray, 0, flags->n_iterations * sizeof (int));
-  free (passarray);
-
-  if (flags->zero_fill)
-    {
-      int err = dopass (fd, &st, qname, &size, 0, rs,
-                        flags->n_iterations + 1, n);
-      if (err)
-        {
-          if (err < 0)
-            return false;
-          ok = false;
-        }
-    }
-
-  /* Okay, now deallocate the data.  The effect of ftruncate on
+  /* Now deallocate the data.  The effect of ftruncate on
      non-regular files is unspecified, so don't worry about any
      errors reported for them.  */
   if (flags->remove_file && ftruncate (fd, 0) != 0
       && S_ISREG (st.st_mode))
     {
       error (0, errno, _("%s: error truncating"), qname);
-      return false;
+      ok = false;
+      goto wipefd_out;
     }
 
+wipefd_out:
+  memset (passarray, 0, flags->n_iterations * sizeof (int));
+  free (passarray);
   return ok;
 }
 

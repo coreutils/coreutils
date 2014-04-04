@@ -58,7 +58,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   in case the look-up within the chroot fails due to library conflicts etc.
 
   shred now supports multiple passes on GNU/Linux tape devices by rewinding
-  the tape before each pass.  Also redundant writes to empty files are avoided.
+  the tape before each pass, avoids redundant writes to empty files,
+  uses direct I/O for all passes where possible, and attempts to clear
+  inode storage used for small files on some file systems.
 
   split avoids unnecessary input buffering, immediately writing input to output
   which is significant with --filter or when writing to fifos or stdout etc.
