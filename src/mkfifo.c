@@ -61,9 +61,9 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
   -m, --mode=MODE    set file permission bits to MODE, not a=rw - umask\n\
 "), stdout);
       fputs (_("\
-  -Z, --context[=CTX]  set the SELinux security context of each NAME to\n\
-                         default type, or set the SELinux or SMACK\n\
-                         security context to CTX if specified\n\
+  -Z                   set the SELinux security context to default type\n\
+      --context[=CTX]  like -Z, or if CTX is specified then set the SELinux\n\
+                         or SMACK security context to CTX\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

@@ -230,8 +230,10 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -x, --one-file-system        stay on this file system\n\
 "), stdout);
       fputs (_("\
-  -Z, --context[=CTX]          set SELinux security context of destination\n\
-                                 file to default type, or to CTX if specified\n\
+  -Z                           set SELinux security context of destination\n\
+                                 file to default type\n\
+      --context[=CTX]          like -Z, or if CTX is specified then set the\n\
+                                 SELinux or SMACK security context to CTX\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
