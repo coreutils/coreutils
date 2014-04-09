@@ -230,6 +230,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   with such a minimum SIZE (or a maximum SIZE if it is negative).
   du recognizes -t SIZE as equivalent, for compatibility with FreeBSD.
 
+  timeout now accepts the --preserve-status option to always propagate the exit
+  status, useful for commands that can run for an indeterminite amount of time.
+
 ** Bug fixes
 
   cp --no-preserve=mode now no longer exits non-zero.

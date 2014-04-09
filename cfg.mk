@@ -45,7 +45,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = 88cd502ce932ab23e636c63a73a48c29
+old_NEWS_hash = 68fc9b352e924d5e59e2f543f80f6a41
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_program =/'
