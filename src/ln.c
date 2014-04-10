@@ -343,7 +343,8 @@ do_link (const char *source, const char *dest)
     {
       /* Right after creating a hard link, do this: (note dest name and
          source_stats, which are also the just-linked-destinations stats) */
-      record_file (dest_set, dest, &source_stats);
+      if (! symbolic_link)
+        record_file (dest_set, dest, &source_stats);
 
       if (verbose)
         {
