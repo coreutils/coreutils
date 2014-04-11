@@ -61,8 +61,15 @@ if test $(kb_alloc file.in) -gt 3000; then
   dd if=file.in of=file.out bs=2M conv=sparse
   test 2500 -lt $(kb_alloc file.out) || fail=1
 
+  # Note we recreate a sparse file first to avoid
+  # speculative preallocation seen in XFS, where a write() that
+  # extends a file can preallocate some extra space that
+  # a subsequent seek will not convert to a hole.
+  rm -f file.out
+  truncate --size=3M file.out
+
   # Ensure that this 1MiB string of NULs *is* converted to a hole.
-  dd if=file.in of=file.out bs=1M conv=sparse
+  dd if=file.in of=file.out bs=1M conv=sparse,notrunc
   test $(kb_alloc file.out) -lt 2500 || fail=1
 
 fi
