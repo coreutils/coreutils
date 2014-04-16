@@ -51,6 +51,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   od accepts a new option: --endian=TYPE to handle inputs with different byte
   orders, or to provide consistent output on systems with disparate endianness.
 
+** Changes in behavior
+
+  ls with none of LS_COLORS or COLORTERM environment variables set,
+  will now honor an empty or unknown TERM environment variable,
+  and not output colors even with --colors=always.
+
 ** Improvements
 
   chroot has better --userspec and --group look-ups, with numeric IDs never

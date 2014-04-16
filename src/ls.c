@@ -108,6 +108,7 @@
 #include "xstrtol.h"
 #include "areadlink.h"
 #include "mbsalign.h"
+#include "dircolors.h"
 
 /* Include <sys/capability.h> last to avoid a clash of <sys/types.h>
    include guards with some premature versions of libcap.
@@ -2326,6 +2327,30 @@ enum parse_state
     PS_FAIL
   };
 
+
+/* Check if the content of TERM is a valid name in dircolors.  */
+
+static bool
+known_term_type (void)
+{
+  char const *term = getenv ("TERM");
+  if (! term || ! *term)
+    return false;
+
+  char const *line = G_line;
+  while (line - G_line < sizeof (G_line))
+    {
+      if (STRNCMP_LIT (line, "TERM ") == 0)
+        {
+          if (STREQ (term, line + 5))
+            return true;
+        }
+      line += strlen (line) + 1;
+    }
+
+  return false;
+}
+
 static void
 parse_ls_color (void)
 {
@@ -2336,7 +2361,16 @@ parse_ls_color (void)
   struct color_ext_type *ext;	/* Extension we are working on */
 
   if ((p = getenv ("LS_COLORS")) == NULL || *p == '\0')
-    return;
+    {
+      /* LS_COLORS takes precedence, but if that's not set then
+         honor the COLORTERM and TERM env variables so that
+         we only go with the internal ANSI color codes if the
+         former is non empty or the latter is set to a known value.  */
+      char const *colorterm = getenv ("COLORTERM");
+      if (! (colorterm && *colorterm) && ! known_term_type ())
+        print_with_color = false;
+      return;
+    }
 
   ext = NULL;
   strcpy (label, "??");

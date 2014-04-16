@@ -537,6 +537,7 @@ all_tests =					\
   tests/ls/color-clear-to-eol.sh		\
   tests/ls/color-dtype-dir.sh			\
   tests/ls/color-norm.sh			\
+  tests/ls/color-term.sh			\
   tests/ls/dangle.sh				\
   tests/ls/dired.sh				\
   tests/ls/file-type.sh				\
