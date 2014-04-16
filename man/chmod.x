@@ -28,7 +28,7 @@ A combination of the letters \fBugoa\fP controls which users' access
 to the file will be changed: the user who owns it (\fBu\fP), other
 users in the file's group (\fBg\fP), other users not in the file's
 group (\fBo\fP), or all users (\fBa\fP).  If none of these are given,
-the effect is as if \fBa\fP were
+the effect is as if (\fBa\fP) were
 given, but bits that are set in the umask are not affected.
 .PP
 The operator \fB+\fP causes the selected file mode bits to be added to
