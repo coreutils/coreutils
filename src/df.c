@@ -290,7 +290,7 @@ static void
 alloc_table_row (void)
 {
   nrows++;
-  table = xnrealloc (table, nrows, sizeof (char *));
+  table = xnrealloc (table, nrows, sizeof (char **));
   table[nrows - 1] = xnmalloc (ncolumns, sizeof (char *));
 }
 
