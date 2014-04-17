@@ -29,12 +29,14 @@ TERM dtterm
 TERM eterm-color
 TERM gnome
 TERM gnome-256color
+TERM hurd
 TERM jfbterm
 TERM konsole
 TERM kterm
 TERM linux
 TERM linux-c
 TERM mach-color
+TERM mach-gnu-color
 TERM mlterm
 TERM putty
 TERM putty-256color
