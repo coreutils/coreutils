@@ -303,9 +303,12 @@ my @Tests =
             . "\e[37;44msticky$e\n"
          },
 
+        {PRE => sub {
+         push_ls_colors('ow=34;42:tw=30;42:sg=30;43:su=37;41:st=37;44'); }},
         {POST => sub {
          unlink qw(setuid setgid);
-         foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
+         foreach my $dir (qw(owr owt sticky)) {rmdir $dir}
+         restore_ls_colors; }},
          ],
 
      # For 5.97 and earlier, --file-type acted like --indicator-style=slash.

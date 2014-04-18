@@ -30,7 +30,7 @@ chmod o+w other-writable || framework_failure_
 chmod o+t sticky || framework_failure_
 
 
-ls --color=always > out || fail=1
+TERM=xterm ls --color=always > out || fail=1
 cat -A out > o1 || fail=1
 mv o1 out || fail=1
 
