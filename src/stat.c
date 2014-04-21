@@ -1457,10 +1457,10 @@ The valid format sequences for files (without --file-system):\n\
   %W   time of file birth, seconds since Epoch; 0 if unknown\n\
   %x   time of last access, human-readable\n\
   %X   time of last access, seconds since Epoch\n\
-  %y   time of last modification, human-readable\n\
-  %Y   time of last modification, seconds since Epoch\n\
-  %z   time of last change, human-readable\n\
-  %Z   time of last change, seconds since Epoch\n\
+  %y   time of last data modification, human-readable\n\
+  %Y   time of last data modification, seconds since Epoch\n\
+  %z   time of last status change, human-readable\n\
+  %Z   time of last status change, seconds since Epoch\n\
 \n\
 "), stdout);
 

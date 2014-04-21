@@ -11829,10 +11829,10 @@ The valid @var{format} directives for files with @option{--format} and
 @item %W - Time of file birth as seconds since Epoch, or @samp{0}
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
-@item %y - Time of last modification
-@item %Y - Time of last modification as seconds since Epoch
-@item %z - Time of last change
-@item %Z - Time of last change as seconds since Epoch
+@item %y - Time of last data modification
+@item %Y - Time of last data modification as seconds since Epoch
+@item %z - Time of last status change
+@item %Z - Time of last status change as seconds since Epoch
 @end itemize
 
 The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
