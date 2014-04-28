@@ -43,6 +43,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx --format long option parsing no longer falls through into the --help case.
   [bug introduced in TEXTUTILS-1_22i]
 
+  ptx now consistently trims whitespace when processing multiple files.
+  [This bug was present in "the beginning".]
+
   shuf --repeat no longer dumps core if the input is empty.
   [bug introduced with the --repeat feature in coreutils-8.22]
 
