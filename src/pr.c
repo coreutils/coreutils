@@ -2820,7 +2820,8 @@ Paginate or columnate FILE(s) for printing.\n\
       fputs (_("\
   -s[CHAR], --separator[=CHAR]\n\
                     separate columns by a single character, default for CHAR\n\
-                    is the <TAB> character without -w and \'no char\' with -w\n\
+                    is the <TAB> character without -w and \'no char\' with -w.\
+\n\
                     -s[CHAR] turns off line truncation of all 3 column\n\
                     options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
 "), stdout);

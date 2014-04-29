@@ -2878,8 +2878,10 @@ Print nonprinting characters in octal backslash notation.
 @opindex -w
 @opindex --width
 Set page width to @var{page_width} characters for multiple text-column
-output only (default for @var{page_width} is 72).  @option{-s[CHAR]} turns
-off the default page width and any line truncation and column alignment.
+output only (default for @var{page_width} is 72).  The specified
+@var{page_width} is rounded down so that columns have equal width.
+@option{-s[CHAR]} turns off the default page width and any line truncation
+and column alignment.
 Lines of full length are merged, regardless of the column options
 set.  No @var{page_width} setting is possible with single column output.
 A POSIX-compliant formulation.
@@ -2888,12 +2890,13 @@ A POSIX-compliant formulation.
 @itemx --page_width=@var{page_width}
 @opindex -W
 @opindex --page_width
-Set the page width to @var{page_width} characters.  That's valid with and
-without a column option.  Text lines are truncated, unless @option{-J}
-is used.  Together with one of the three column options
+Set the page width to @var{page_width} characters, honored with and
+without a column option.  With a column option, the specified @var{page_width}
+is rounded down so that columns have equal width.  Text lines are truncated,
+unless @option{-J} is used. Together with one of the three column options
 (@option{-@var{column}}, @option{-a -@var{column}} or @option{-m}) column
 alignment is always used.  The separator options @option{-S} or @option{-s}
-don't affect the @option{-W} option.  Default is 72 characters.  Without
+don't disable the @option{-W} option.  Default is 72 characters.  Without
 @option{-W @var{page_width}} and without any of the column options NO line
 truncation is used (defined to keep downward compatibility and to meet
 most frequent tasks).  That's equivalent to @option{-W 72 -J}@.  The header
