@@ -66,6 +66,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   causing name look-up errors.  Also look-ups are first done outside the chroot,
   in case the look-up within the chroot fails due to library conflicts etc.
 
+  numfmt supports zero padding of numbers using the standard printf
+  syntax of a leading zero, for example --format="%010f".
+
   shred now supports multiple passes on GNU/Linux tape devices by rewinding
   the tape before each pass, avoids redundant writes to empty files,
   uses direct I/O for all passes where possible, and attempts to clear

@@ -169,6 +169,7 @@ static int grouping = 0;
 static char *padding_buffer = NULL;
 static size_t padding_buffer_size = 0;
 static long int padding_width = 0;
+static long int zero_padding_width = 0;
 static const char *format_str = NULL;
 static char *format_str_prefix = NULL;
 static char *format_str_suffix = NULL;
@@ -272,7 +273,7 @@ suffix_power (const char suf)
 }
 
 static inline const char *
-suffix_power_character (unsigned int power)
+suffix_power_char (unsigned int power)
 {
   switch (power)
     {
@@ -705,6 +706,21 @@ double_to_human (long double val, int precision,
                  char *buf, size_t buf_size,
                  enum scale_type scale, int group, enum round_type round)
 {
+  int num_size;
+  char fmt[64];
+  verify (sizeof (fmt) > (INT_BUFSIZE_BOUND (zero_padding_width)
+                          + INT_BUFSIZE_BOUND (precision)
+                          + 10 /* for %.Lf  etc.  */));
+
+  char *pfmt = fmt;
+  *pfmt++ = '%';
+
+  if (group)
+    *pfmt++ = '\'';
+
+  if (zero_padding_width)
+    pfmt += snprintf (pfmt, sizeof (fmt) - 1, "0%ld", zero_padding_width);
+
   devmsg ("double_to_human:\n");
 
   if (scale == scale_none)
@@ -717,9 +733,10 @@ double_to_human (long double val, int precision,
               "  no scaling, returning (grouped) value: %'.*Lf\n" :
               "  no scaling, returning value: %.*Lf\n", precision, val);
 
-      int i = snprintf (buf, buf_size, (group) ? "%'.*Lf" : "%.*Lf",
-                        precision, val);
-      if (i < 0 || i >= (int) buf_size)
+      stpcpy (pfmt, ".*Lf");
+
+      num_size = snprintf (buf, buf_size, fmt, precision, val);
+      if (num_size < 0 || num_size >= (int) buf_size)
         error (EXIT_FAILURE, 0,
                _("failed to prepare value '%Lf' for printing"), val);
       return;
@@ -761,11 +778,16 @@ double_to_human (long double val, int precision,
 
   devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
 
-  snprintf (buf, buf_size, (show_decimal_point) ? "%.1Lf%s" : "%.0Lf%s",
-            val, suffix_power_character (power));
+  stpcpy (pfmt, show_decimal_point ? ".1Lf%s" : ".0Lf%s");
+
+  /* buf_size - 1 used here to ensure place for possible scale_IEC_I suffix.  */
+  num_size = snprintf (buf, buf_size - 1, fmt, val, suffix_power_char (power));
+  if (num_size < 0 || num_size >= (int) buf_size - 1)
+    error (EXIT_FAILURE, 0,
+           _("failed to prepare value '%Lf' for printing"), val);
 
   if (scale == scale_IEC_I && power > 0)
-    strncat (buf, "i", buf_size - strlen (buf) - 1);
+    strncat (buf, "i", buf_size - num_size - 1);
 
   devmsg ("  returning value: %s\n", quote (buf));
 
@@ -798,10 +820,7 @@ setup_padding_buffer (size_t min_size)
     return;
 
   padding_buffer_size = min_size + 1;
-  padding_buffer = realloc (padding_buffer, padding_buffer_size);
-  if (!padding_buffer)
-    error (EXIT_FAILURE, 0, _("out of memory (requested %zu bytes)"),
-           padding_buffer_size);
+  padding_buffer = xrealloc (padding_buffer, padding_buffer_size);
 }
 
 void
@@ -906,8 +925,8 @@ UNIT options:\n"), stdout);
       fputs (_("\n\
 FORMAT must be suitable for printing one floating-point argument '%f'.\n\
 Optional quote (%'f) will enable --grouping (if supported by current locale).\n\
-Optional width value (%10f) will pad output. Optional negative width values\n\
-(%-10f) will left-pad output.\n\
+Optional width value (%10f) will pad output. Optional zero (%010f) width\n\
+will zero pad the number. Optional negative values (%-10f) will left align.\n\
 "), stdout);
 
       printf (_("\n\
@@ -967,6 +986,7 @@ parse_format_string (char const *fmt)
   size_t suffix_pos;
   long int pad = 0;
   char *endptr = NULL;
+  bool zero_padding = false;
 
   for (i = 0; !(fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
@@ -977,13 +997,24 @@ parse_format_string (char const *fmt)
     }
 
   i++;
-  i += strspn (fmt + i, " ");
-  if (fmt[i] == '\'')
+  while (true)
     {
-      grouping = 1;
-      i++;
+      size_t skip = strspn (fmt + i, " ");
+      i += skip;
+      if (fmt[i] == '\'')
+        {
+          grouping = 1;
+          i++;
+        }
+      else if (fmt[i] == '0')
+        {
+          zero_padding = true;
+          i++;
+        }
+      else if (! skip)
+        break;
     }
-  i += strspn (fmt + i, " ");
+
   errno = 0;
   pad = strtol (fmt + i, &endptr, 10);
   if (errno == ERANGE)
@@ -992,6 +1023,9 @@ parse_format_string (char const *fmt)
 
   if (endptr != (fmt + i) && pad != 0)
     {
+      if (debug && padding_width && !(zero_padding && pad > 0))
+        error (0, 0, _("--format padding overridding --padding"));
+
       if (pad < 0)
         {
           padding_alignment = MBS_ALIGN_LEFT;
@@ -999,8 +1033,12 @@ parse_format_string (char const *fmt)
         }
       else
         {
-          padding_width = pad;
+          if (zero_padding)
+            zero_padding_width = pad;
+          else
+            padding_width = pad;
         }
+
     }
   i = endptr - fmt;
 
@@ -1009,7 +1047,7 @@ parse_format_string (char const *fmt)
 
   if (fmt[i] != 'f')
     error (EXIT_FAILURE, 0, _("invalid format %s,"
-                              " directive must be %%['][-][N]f"),
+                              " directive must be %%[0]['][-][N]f"),
            quote (fmt));
   i++;
   suffix_pos = i;
@@ -1020,19 +1058,9 @@ parse_format_string (char const *fmt)
              quote (fmt));
 
   if (prefix_len)
-    {
-      format_str_prefix = xstrndup (fmt, prefix_len);
-      if (!format_str_prefix)
-        error (EXIT_FAILURE, 0, _("out of memory (requested %zu bytes)"),
-               prefix_len + 1);
-    }
+    format_str_prefix = xstrndup (fmt, prefix_len);
   if (fmt[suffix_pos] != '\0')
-    {
-      format_str_suffix = strdup (fmt + suffix_pos);
-      if (!format_str_suffix)
-        error (EXIT_FAILURE, 0, _("out of memory (requested %zu bytes)"),
-               strlen (fmt + suffix_pos));
-    }
+    format_str_suffix = xstrdup (fmt + suffix_pos);
 
   devmsg ("format String:\n  input: %s\n  grouping: %s\n"
                    "  padding width: %ld\n  alignment: %s\n"
@@ -1462,8 +1490,6 @@ main (int argc, char **argv)
 
   if (format_str != NULL && grouping)
     error (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
-  if (format_str != NULL && padding_width > 0)
-    error (EXIT_FAILURE, 0, _("--padding cannot be combined with --format"));
 
   /* Warn about no-op.  */
   if (debug && scale_from == scale_none && scale_to == scale_none

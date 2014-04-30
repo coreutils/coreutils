@@ -695,11 +695,11 @@ my @Tests =
              {EXIT=>1}],
      ['fmt-err-4', '--format "%d"',
              {ERR=>"$prog: invalid format '%d', " .
-                   "directive must be %['][-][N]f\n"},
+                   "directive must be %[0]['][-][N]f\n"},
              {EXIT=>1}],
      ['fmt-err-5', '--format "% -43 f"',
              {ERR=>"$prog: invalid format '% -43 f', " .
-                   "directive must be %['][-][N]f\n"},
+                   "directive must be %[0]['][-][N]f\n"},
              {EXIT=>1}],
      ['fmt-err-6', '--format "%f %f"',
              {ERR=>"$prog: format '%f %f' has too many % directives\n"},
@@ -707,9 +707,6 @@ my @Tests =
      ['fmt-err-7', '--format "%123456789012345678901234567890f"',
              {ERR=>"$prog: invalid format '%123456789012345678901234567890f'".
                    " (width overflow)\n"},
-             {EXIT=>1}],
-     ['fmt-err-8', '--format "%f" --padding 20',
-             {ERR=>"$prog: --padding cannot be combined with --format\n"},
              {EXIT=>1}],
      ['fmt-err-9', '--format "%f" --grouping',
              {ERR=>"$prog: --grouping cannot be combined with --format\n"},
@@ -747,6 +744,17 @@ my @Tests =
      # Very large format strings
      ['fmt-15', '--format "--%100000f--" --to=si 4200',
                   {OUT=>"--" . " " x 99996 . "4.2K--" }],
+
+     # --format padding overrides --padding
+     ['fmt-16', '--format="%6f" --padding=66 1234',{OUT=>"  1234"}],
+
+     # zero padding
+     ['fmt-17', '--format="%06f" 1234',{OUT=>"001234"}],
+     # also support spaces (which are ignored as spacing is handled separately)
+     ['fmt-18', '--format="%0 6f" 1234',{OUT=>"001234"}],
+     # handle generic padding in combination
+     ['fmt-22', '--format="%06f" --padding=7 1234',{OUT=>" 001234"}],
+     ['fmt-23', '--format="%06f" --padding=-7 1234',{OUT=>"001234 "}],
 
 
      ## Check all errors again, this time with --invalid=fail
@@ -880,6 +888,13 @@ my @Locale_Tests =
              {ENV=>"LC_ALL=$locale"}],
      ['lcl-fmt-4', '--format "--%-10f--" --to=si 5000000',
              {OUT=>"--5,0M      --"},
+             {ENV=>"LC_ALL=$locale"}],
+     # handle zero/grouping in combination
+     ['lcl-fmt-5', '--format="%\'06f" 1234',{OUT=>"01 234"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-fmt-6', '--format="%0\'6f" 1234',{OUT=>"01 234"},
+             {ENV=>"LC_ALL=$locale"}],
+     ['lcl-fmt-7', '--format="%0\'\'6f" 1234',{OUT=>"01 234"},
              {ENV=>"LC_ALL=$locale"}],
 
   );
