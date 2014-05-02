@@ -106,4 +106,24 @@ mv xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a         || fail=1  # destination file must not be empty
 test -s err               && fail=1  # there must be no stderr output
 
+# This should pass and copy xattrs of the symlink
+# since the xattrs used here are not in the 'user.' namespace.
+# Up to and including coreutils-8.22 xattrs of symlinks
+# were not copied across file systems.
+ln -s 'foo' xattr/symlink || framework_failure_
+# Note 'user.' namespace is only supported on regular files/dirs
+# so use the 'trusted.' namespace here
+txattr='trusted.overlay.whiteout'
+if setfattr -hn "$txattr" -v y xattr/symlink; then
+  # Note only root can read the 'trusted.' namespace
+  if getfattr -h -m- -d xattr/symlink | grep -F "$txattr"; then
+    mv xattr/symlink noxattr/ || fail=1
+    getfattr -h -m- -d noxattr/symlink | grep -F "$txattr" || fail=1
+  else
+    echo "failed to get '$txattr' xattr. skipping symlink check" >&2
+  fi
+else
+  echo "failed to set '$txattr' xattr. skipping symlink check" >&2
+fi
+
 Exit $fail

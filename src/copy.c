@@ -2677,12 +2677,8 @@ copy_internal (char const *src_name, char const *dst_name,
         }
     }
 
-  /* The operations beyond this point may dereference a symlink.  */
-  if (dest_is_symlink)
-    return delayed_ok;
-
   /* Avoid calling chown if we know it's not necessary.  */
-  if (x->preserve_ownership
+  if (!dest_is_symlink && x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
       switch (set_owner (x, dst_name, -1, &src_sb, new_dst, &dst_sb))
@@ -2696,11 +2692,16 @@ copy_internal (char const *src_name, char const *dst_name,
         }
     }
 
-  set_author (dst_name, -1, &src_sb);
-
+  /* Set xattrs after ownership as changing owners will clear capabilities.  */
   if (x->preserve_xattr && ! copy_attr (src_name, -1, dst_name, -1, x)
       && x->require_preserve_xattr)
     return false;
+
+  /* The operations beyond this point may dereference a symlink.  */
+  if (dest_is_symlink)
+    return delayed_ok;
+
+  set_author (dst_name, -1, &src_sb);
 
   if (x->preserve_mode || x->move_mode)
     {
