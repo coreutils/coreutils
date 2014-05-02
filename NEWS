@@ -68,6 +68,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   numfmt supports zero padding of numbers using the standard printf
   syntax of a leading zero, for example --format="%010f".
+  Also throughput was improved by up to 800% by avoiding redundant processing.
 
   shred now supports multiple passes on GNU/Linux tape devices by rewinding
   the tape before each pass, avoids redundant writes to empty files,

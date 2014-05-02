@@ -198,22 +198,6 @@ static int decimal_point_length;
 /* debugging for developers.  Enables devmsg().  */
 static bool dev_debug = false;
 
-/* Like error(0, 0, ...), but without an implicit newline.
-   Also a noop unless the global DEV_DEBUG is set.
-   TODO: Replace with variadic macro in system.h or
-   move to a separate module.  */
-static inline void
-devmsg (char const *fmt, ...)
-{
-  if (dev_debug)
-    {
-      va_list ap;
-      va_start (ap, fmt);
-      vfprintf (stderr, fmt, ap);
-      va_end (ap);
-    }
-}
-
 static inline int
 default_scale_base (enum scale_type scale)
 {
