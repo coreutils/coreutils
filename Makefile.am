@@ -106,7 +106,9 @@ gen_start_date = 2008-02-08
 gen-ChangeLog:
 	$(AM_V_GEN)if test -d .git; then				\
 	  log_fix="$(srcdir)/build-aux/git-log-fix";			\
-	  test -e "$$log_fix" && amend_git_log="--amend=$$log_fix";	\
+	  test -e "$$log_fix"						\
+	    && amend_git_log="--amend=$$log_fix"			\
+	    || amend_git_log=;						\
 	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
 	    $$amend_git_log --since=$(gen_start_date) > $(distdir)/cl-t && \
 	    { rm -f $(distdir)/ChangeLog &&				\
