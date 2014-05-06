@@ -31,7 +31,7 @@ chmod u=rwx $file || fail=1
 chmod -c g=rwx $file > out || fail=1
 chmod -c g=rwx $file > empty || fail=1
 
-test -s empty && fail=1
+compare /dev/null empty || fail=1
 case "$(cat out)" in
   "mode of 'f' changed from 0744 "?rwxr--r--?" to 0774 "?rwxrwxr--?) ;;
   *) cat out; fail=1 ;;

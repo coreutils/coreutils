@@ -22,7 +22,8 @@ print_ver_ tail
 yes > t &
 yes_pid=$!
 while :; do
-  test -s t && break
+  test -s t \
+    && break
   sleep .1
 done
 tail -n 1 t &

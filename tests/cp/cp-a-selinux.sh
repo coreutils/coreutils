@@ -37,7 +37,8 @@ cp -a c d 2>err || framework_failure_
 cp --preserve=context c e || framework_failure_
 cp --preserve=all c f || framework_failure_
 ls -Z d | grep $ctx || fail=1
-test -s err && fail=1   #there must be no stderr output for -a
+# there must be no stderr output for -a
+compare /dev/null err || fail=1
 ls -Z e | grep $ctx || fail=1
 ls -Z f | grep $ctx || fail=1
 
@@ -116,7 +117,7 @@ echo > g                                     || framework_failure_
 # succeed (giving no diagnostics), yet leaving the destination file empty.
 cp -a f g 2>err || fail=1
 test -s g       || fail=1     # The destination file must not be empty.
-test -s err     && fail=1     # There must be no stderr output.
+compare /dev/null err || fail=1
 
 # =====================================================
 # Here, we expect cp to succeed and not warn with "Operation not supported"
@@ -151,7 +152,7 @@ echo > g
 # security context through NFS or a mount with fixed context.
 cp --preserve=context f g 2> out && fail=1
 # Here, we *do* expect the destination to be empty.
-test -s g && fail=1
+compare /dev/null g || fail=1
 sed "s/ .g'.*//" out > k
 mv k out
 compare exp out || fail=1
@@ -161,7 +162,7 @@ echo > g
 # Check if -a option doesn't silence --preserve=context option diagnostics
 cp -a --preserve=context f g 2> out2 && fail=1
 # Here, we *do* expect the destination to be empty.
-test -s g && fail=1
+compare /dev/null g || fail=1
 sed "s/ .g'.*//" out2 > k
 mv k out2
 compare exp out2 || fail=1

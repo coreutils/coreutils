@@ -53,7 +53,7 @@ test "$acl1" = "$acl2" || fail=1
 echo > a/file || framework_failure_ # add some data
 test -s a/file || framework_failure_
 cp -p --attributes-only a/file b/ || fail=1
-test -s b/file && fail=1
+compare /dev/null b/file || fail=1
 acl2=$(cd b && getfacl file) || framework_failure_
 test "$acl1" = "$acl2" || fail=1
 

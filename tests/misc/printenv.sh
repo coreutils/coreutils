@@ -37,7 +37,7 @@ fi
 # Printing a single variable's value.
 env -- printenv ENV_TEST > out
 test $? = 1 || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 echo a > exp || framework_failure_
 ENV_TEST=a env -- printenv ENV_TEST > out || fail=1
 compare exp out || fail=1
@@ -76,6 +76,6 @@ compare exp out || fail=1
 # Bug present through coreutils 8.0.
 env a=b=c printenv a=b > out
 test $? = 1 || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 
 Exit $fail

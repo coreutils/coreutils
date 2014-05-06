@@ -42,7 +42,7 @@ test $skip = 1 \
 # Applying rm -f to a nonexistent file on a read-only file system must succeed.
 rm -f mnt/no-such > out 2>&1 || fail=1
 # It must produce no diagnostic.
-test -s out && fail=1
+compare /dev/null out || fail=1
 
 # However, trying to remove an existing file must fail.
 rm -f mnt/f > out 2>&1 && fail=1

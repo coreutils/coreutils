@@ -28,7 +28,7 @@ timeout 1 tail -f < in > out 2> err
 test $? = 124 || fail=1
 
 # Ensure there was no error output.
-test -s err && fail=1
+compare /dev/null err || fail=1
 
 # Ensure there was
 compare exp out || fail=1

@@ -37,8 +37,10 @@ cp $f exp 2>err \
 # Don't simply compare contents; they might differ,
 # e.g., if CPU freq changes between cat and cp invocations.
 # Instead, simply compare whether they're both nonempty.
-test -s out && { rm -f out; echo nonempty > out; }
-test -s exp && { rm -f exp; echo nonempty > exp; }
+test -s out \
+  && { rm -f out; echo nonempty > out; }
+test -s exp \
+  && { rm -f exp; echo nonempty > exp; }
 
 compare exp out || fail=1
 

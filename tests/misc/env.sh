@@ -25,11 +25,11 @@ print_ver_ env
 a=1
 export a
 env - > out || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 env -i > out || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 env -u a -i -u a -- > out || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 env -i -- a=b > out || fail=1
 echo a=b > exp || framework_failure_
 compare exp out || fail=1

@@ -51,7 +51,7 @@ for inotify in ---disable-inotify ''; do
 
   grep -Ev 'inotify (resources exhausted|cannot be used)' tail.err > x
   mv x tail.err
-  test -s tail.err && fail=1
+  compare /dev/null tail.err || fail=1
   >tail.err
 
   tail_F()

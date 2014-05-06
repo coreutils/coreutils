@@ -69,19 +69,19 @@ grep -F "$xattr_pair" out_a >/dev/null \
 # This should pass without diagnostics
 cp -a xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a   || fail=1  # destination file must not be empty
-test -s err         && fail=1  # there must be no stderr output
+compare /dev/null err || fail=1
 
 rm -f err noxattr/a
 
 # This should pass without diagnostics (new file)
 cp --preserve=all xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a   || fail=1  # destination file must not be empty
-test -s err         && fail=1  # there must be no stderr output
+compare /dev/null err || fail=1
 
 # This should pass without diagnostics (existing file)
 cp --preserve=all xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a   || fail=1  # destination file must not be empty
-test -s err         && fail=1  # there must be no stderr output
+compare /dev/null err || fail=1
 
 rm -f err noxattr/a
 
@@ -104,7 +104,7 @@ rm -f err noxattr/a
 # This should pass without diagnostics
 mv xattr/a noxattr/ 2>err || fail=1
 test -s noxattr/a         || fail=1  # destination file must not be empty
-test -s err               && fail=1  # there must be no stderr output
+compare /dev/null err || fail=1
 
 # This should pass and copy xattrs of the symlink
 # since the xattrs used here are not in the 'user.' namespace.

@@ -38,8 +38,8 @@ test copy -nt file && fail=1
 # Ensure that --attributes-only overrides --reflink completely
 echo > file2 # file with data
 cp --reflink=auto --preserve --attributes-only file2 empty_copy || fail=1
-test -s empty_copy && fail=1
+compare /dev/null empty_copy || fail=1
 cp --reflink=always --preserve --attributes-only file2 empty_copy || fail=1
-test -s empty_copy && fail=1
+compare /dev/null empty_copy || fail=1
 
 Exit $fail

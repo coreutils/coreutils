@@ -40,7 +40,7 @@ compare out1 out2 || fail=1
 # env -0 does not work if a command is specified.
 env -0 echo hi > out
 test $? = 125 || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 
 # Test env -0 on a one-variable environment.
 printf 'a=b\nc=\0' > exp || framework_failure_
@@ -53,7 +53,7 @@ env "$(printf 'a=b\nc=')" printenv -0 a > out || fail=1
 compare exp out || fail=1
 env -u a printenv -0 a > out
 test $? = 1 || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 env -u b "$(printf 'a=b\nc=')" printenv -0 b a > out
 test $? = 1 || fail=1
 compare exp out || fail=1

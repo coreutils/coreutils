@@ -423,6 +423,13 @@ sc_prohibit_test_backticks:
 	halt='use $$(...), not `...` in tests/'				\
 	  $(_sc_search_regexp)
 
+# Ensure that compare is used to check empty files
+# so that the unexpected contents are displayed
+sc_prohibit_test_empty:
+	@prohibit='test -s.*&&' in_vc_files='^tests/'			\
+	halt='use `compare /dev/null ...`, not `test -s ...` in tests/'	\
+	  $(_sc_search_regexp)
+
 # Programs like sort, ls, expr use PROG_FAILURE in place of EXIT_FAILURE.
 # Others, use the EXIT_CANCELED, EXIT_ENOENT, etc. macros defined in system.h.
 # In those programs, ensure that EXIT_FAILURE is not used by mistake.

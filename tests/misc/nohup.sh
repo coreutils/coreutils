@@ -73,7 +73,7 @@ if test -w /dev/full && test -c /dev/full; then
   nohup echo hi 2> /dev/full
   test $? = 125 || fail=1
   test -f nohup.out || fail=1
-  test -s nohup.out && fail=1
+  compare /dev/null nohup.out || fail=1
   rm -f nohup.out
   exit $fail
 ) || fail=1
@@ -86,7 +86,7 @@ if test -t 1; then
   # It must exist.
   test -f nohup.out || fail=1
   # It must be empty.
-  test -s nohup.out && fail=1
+  compare /dev/null nohup.out || fail=1
 fi
 
 cat <<\EOF > exp || fail=1
@@ -106,7 +106,7 @@ if test -t 1; then
   # It must exist.
   test -f nohup.out || fail=1
   # It must be empty.
-  test -s nohup.out && fail=1
+  compare /dev/null nohup.out || fail=1
 fi
 
 cat <<\EOF > exp || fail=1

@@ -29,7 +29,7 @@ ln -s file link || framework_failure_
 touch -h no-file 2> err && fail=1
 test -s err || fail=1
 touch -h -c no-file 2> err || fail=1
-test -s err && fail=1
+compare /dev/null err || fail=1
 
 # -h works on regular files
 touch -h file || fail=1
@@ -49,7 +49,7 @@ grep '^#define HAVE_LUTIMES 1' "$CONFIG_HEADER" > /dev/null ||
 touch -h dangling 2> err
 case $? in
   0) test -f nowhere && fail=1
-     test -s err && fail=1;;
+     compare /dev/null err || fail=1;;
   1) grep 'Function not implemented' err \
        && skip_ 'this system lacks the utimensat function'
      fail=1;;

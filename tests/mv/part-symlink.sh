@@ -88,7 +88,8 @@ for copy in cp mv; do
           # Normalize the program name in the error output,
           # remove any site-dependent part of other-partition file name,
           # and put brackets around the output.
-          test -s .err && {
+          test -s .err \
+            && {
             echo ' [' | tr -d '\n'
             sed 's/^[^:][^:]*\(..\):/\1:/;s,'"$other_partition_tmpdir/,," .err |
               tr -d '\n'

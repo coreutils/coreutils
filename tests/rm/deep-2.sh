@@ -46,7 +46,7 @@ echo n > no || framework_failure_
 rm ---presume-input-tty -r x < no > out || fail=1
 
 # expect empty output
-test -s out && fail=1
+compare /dev/null out || fail=1
 
 # the directory must have been removed
 test -d x && fail=1

@@ -32,7 +32,7 @@ stat x?? 2>/dev/null && fail=1
 printf '1\n2\n3\n4\n5\n' > in || framework_failure_
 
 split -n r/3 in > out || fail=1
-test -s out && fail=1
+compare /dev/null out || fail=1
 
 split -n r/1/3 in > r1 || fail=1
 split -n r/2/3 in > r2 || fail=1

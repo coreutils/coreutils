@@ -32,12 +32,12 @@ ln -s $tmp_in $tmp_sym || framework_failure_
 
 # check status=none suppresses all output to stderr
 dd status=none if=$tmp_in of=/dev/null 2> err || fail=1
-test -s err && { cat err; fail=1; }
+compare /dev/null err || fail=1
 dd status=none if=$tmp_in skip=2 of=/dev/null 2> err || fail=1
-test -s err && { cat err; fail=1; }
+compare /dev/null err || fail=1
 # check status=none is cumulative with status=noxfer
 dd status=none status=noxfer if=$tmp_in of=/dev/null 2> err || fail=1
-test -s err && { cat err; fail=1; }
+compare /dev/null err || fail=1
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 compare $tmp_in $tmp_out || fail=1
