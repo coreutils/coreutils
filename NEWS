@@ -23,6 +23,27 @@ GNU coreutils NEWS                                    -*- outline -*-
   date could crash or go into an infinite loop when parsing a malformed TZ="".
   [bug introduced with the --date='TZ="" ..' parsing feature in coreutils-5.3.0]
 
+  dd's ASCII and EBCDIC conversions were incompatible with common practice and
+  with POSIX, and have been corrected as follows.  First, conv=ascii now
+  implies conv=unblock, and conv=ebcdic and conv=ibm now imply conv=block.
+  Second, the translation tables for dd conv=ascii and conv=ebcdic have been
+  corrected as shown in the following table, where A is the ASCII value, W is
+  the old, wrong EBCDIC value, and E is the new, corrected EBCDIC value; all
+  values are in octal.
+
+      A   W   E
+     041 117 132
+     133 112 255
+     135 132 275
+     136 137 232
+     174 152 117
+     176 241 137
+     313 232 152
+     325 255 112
+     345 275 241
+
+  [These dd bugs were present in "the beginning".]
+
   head --bytes=-N and --lines=-N now handles devices more
   consistently, not ignoring data from virtual devices like /dev/zero,
   or on BSD systems data from tty devices.

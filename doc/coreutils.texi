@@ -8621,21 +8621,26 @@ Conversions:
 Convert EBCDIC to ASCII,
 using the conversion table specified by POSIX@.
 This provides a 1:1 translation for all 256 bytes.
+This option implies @samp{conv=unblock}; input is converted to
+ASCII before trailing spaces are deleted.
 
 @item ebcdic
 @opindex ebcdic@r{, converting to}
 Convert ASCII to EBCDIC@.
 This is the inverse of the @samp{ascii} conversion.
+This option implies @samp{conv=block}; trailing spaces are added
+before being converted to EBCDIC@.
 
 @item ibm
 @opindex alternate ebcdic@r{, converting to}
-Convert ASCII to alternate EBCDIC,
-using the alternate conversion table specified by POSIX@.
+This acts like @samp{conv=ebcdic}, except it
+uses the alternate conversion table specified by POSIX@.
 This is not a 1:1 translation, but reflects common historical practice
 for @samp{~}, @samp{[}, and @samp{]}.
 
 The @samp{ascii}, @samp{ebcdic}, and @samp{ibm} conversions are
-mutually exclusive.
+mutually exclusive.  If you use any of these options, you should also
+use the @samp{cbs=} option.
 
 @item block
 @opindex block @r{(space-padding)}
