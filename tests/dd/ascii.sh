@@ -19,13 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
 
-(
+{
   # Two lines, EBCDIC " A A" and " A  ", followed by all the bytes in order.
   printf '\100\301\100\301\100\301\100\100' &&
-  printf $(for i in $(seq 0 255); do printf '\\%03o' $i; done; echo '')
-) >in || framework_failure_
+  printf $(printf "\\%03o" $(seq 0 255 ));
+} >in || framework_failure_
 
-(
+{
   # The converted lines, with trailing spaces removed.
   printf ' A A\n A\n' &&
   printf '\000\001\002\003\n\234\011\206\177\n' &&
@@ -59,13 +59,15 @@ print_ver_ dd
   printf '\134\237\123\124\n\125\126\127\130\n' &&
   printf '\131\132\364\365\n\366\367\370\371\n' &&
   printf '\060\061\062\063\n\064\065\066\067\n' &&
-  printf '\070\071\372\373\n\374\375\376\377\n'
-) >exp || framework_failure_
+  printf '\070\071\372\373\n\374\375\376\377\n';
+} >exp || framework_failure_
 
-dd if=in of=out conv=ascii cbs=4
-cp ./in ./out ./exp /tmp
+dd if=in of=out conv=ascii cbs=4 || fail=1
 
-fail=0
-compare exp out || fail=1
+compare exp out \
+  || { od -v -to1 exp > exp2 || framework_failure_;
+       od -v -to1 out > out2 || framework_failure_;
+       compare exp2 out2;
+       fail=1; }
 
 Exit $fail
