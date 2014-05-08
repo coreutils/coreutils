@@ -20,7 +20,7 @@
 #include "stat-size.h"
 
 
-/* As of Jul 2011, 64KiB is determined to be the minimium
+/* As of May 2014, 128KiB is determined to be the minimium
    blksize to best minimize system call overhead.
    This can be tested with this script:
 
@@ -33,23 +33,29 @@
    done
 
    With the results shown for these systems:
-   system-1 = 1.7GHz pentium-m with 400MHz DDR2 RAM, arch=i686
-   system-2 = 2.1GHz i3-2310M with 1333MHz DDR3 RAM, arch=x86_64
-   system-3 = 3.2GHz i7-970 with 1333MHz DDR3, arch=x86_64
+   system #1: 1.7GHz pentium-m with 400MHz DDR2 RAM, arch=i686
+   system #2: 2.1GHz i3-2310M with 1333MHz DDR3 RAM, arch=x86_64
+   system #3: 3.2GHz i7-970 with 1333MHz DDR3, arch=x86_64
+   system #4: 2.20GHz Xeon E5-2660 with 1333MHz DDR3, arch=x86_64
+   system #5: 2.30GHz i7-3615QM with 1600MHz DDR3, arch=x86_64
+   system #6: 1.30GHz i5-4250U with 1-channel 1600MHz DDR3, arch=x86_64
+   system #7: 3.55GHz IBM,8231-E2B with 1066MHz DDR3, POWER7 revision 2.1
 
-   blksize  system-1   system-2   system-3
-   ---------------------------------------
-      1024  734 MB/s   1.7 GB/s   2.6 GB/s
-      2048  1.3 GB/s   3.0 GB/s   4.4 GB/s
-      4096  2.4 GB/s   5.1 GB/s   6.5 GB/s
-      8192  3.5 GB/s   7.3 GB/s   8.5 GB/s
-     16384  3.9 GB/s   9.4 GB/s  10.1 GB/s
-     32768  5.2 GB/s   9.9 GB/s  11.1 GB/s
-     65536  5.3 GB/s  11.2 GB/s  12.0 GB/s
-    131072  5.5 GB/s  11.8 GB/s  12.3 GB/s
-    262144  5.7 GB/s  11.6 GB/s  12.5 GB/s
-    524288  5.7 GB/s  11.4 GB/s  12.5 GB/s
-   1048576  5.8 GB/s  11.4 GB/s  12.6 GB/s
+                per-system transfer rate (GB/s)
+   blksize   #1    #2    #3    #4    #5    #6    #7
+   ------------------------------------------------------------------------
+      1024  .73   1.7   2.6   .64   1.0   2.5   1.3
+      2048  1.3   3.0   4.4   1.2   2.0   4.4   2.5
+      4096  2.4   5.1   6.5   2.3   3.7   7.4   4.8
+      8192  3.5   7.3   8.5   4.0   6.0  10.4   9.2
+     16384  3.9   9.4  10.1   6.3   8.3  13.3  16.8
+     32768  5.2   9.9  11.1   8.1  10.7  13.2  28.0
+     65536  5.3  11.2  12.0  10.6  12.8  16.1  41.4
+    131072  5.5  11.8  12.3  12.1  14.0  16.7  54.8
+    262144  5.7  11.6  12.5  12.3  14.7  16.4  40.0
+    524288  5.7  11.4  12.5  12.1  14.7  15.5  34.5
+   1048576  5.8  11.4  12.6  12.2  14.9  15.7  36.5
+
 
    Note that this is to minimize system call overhead.
    Other values may be appropriate to minimize file system
@@ -64,7 +70,7 @@
    In the future we could use the above method if available
    and default to io_blksize() if not.
  */
-enum { IO_BUFSIZE = 64*1024 };
+enum { IO_BUFSIZE = 128*1024 };
 static inline size_t
 io_blksize (struct stat sb)
 {
