@@ -1231,7 +1231,7 @@ main (int argc, char **argv)
           {
             uintmax_t tmp;
             if (xstrtoumax (optarg, NULL, 10, &tmp, NULL) != LONGINT_OK
-                || MIN (UINT32_MAX, SIZE_MAX / sizeof (int)) < tmp)
+                || MIN (ULONG_MAX, SIZE_MAX / sizeof (int)) <= tmp)
               {
                 error (EXIT_FAILURE, 0, _("%s: invalid number of passes"),
                        quotearg_colon (optarg));
@@ -1256,9 +1256,10 @@ main (int argc, char **argv)
 
         case 's':
           {
-            uintmax_t tmp;
-            if (xstrtoumax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
-                != LONGINT_OK)
+            intmax_t tmp;
+            if ((xstrtoimax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
+                 != LONGINT_OK)
+                || OFF_T_MAX < tmp)
               {
                 error (EXIT_FAILURE, 0, _("%s: invalid file size"),
                        quotearg_colon (optarg));
