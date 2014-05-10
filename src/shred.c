@@ -1256,8 +1256,8 @@ main (int argc, char **argv)
 
         case 's':
           {
-            intmax_t tmp;
-            if ((xstrtoimax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
+            uintmax_t tmp;
+            if ((xstrtoumax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
                  != LONGINT_OK)
                 || OFF_T_MAX < tmp)
               {

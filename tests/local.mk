@@ -313,6 +313,7 @@ all_tests =					\
   tests/misc/sha384sum.pl			\
   tests/misc/sha512sum.pl			\
   tests/misc/shred-exact.sh			\
+  tests/misc/shred-negative.sh			\
   tests/misc/shred-passes.sh			\
   tests/misc/shred-remove.sh			\
   tests/misc/shuf.sh				\
