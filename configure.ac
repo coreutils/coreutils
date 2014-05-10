@@ -430,14 +430,26 @@ if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])
 fi
 
-# Limit stdbuf to ELF systems with GCC
-AC_MSG_CHECKING([whether this is an ELF system])
-AC_EGREP_CPP([yes], [#if __ELF__
-yes
-#endif], [elf_sys=yes], [elf_sys=no])
-AC_MSG_RESULT([$elf_sys])
-if test "$elf_sys" = "yes" && \
-   test "$GCC" = "yes"; then
+AC_MSG_CHECKING([whether this is system supports stdbuf])
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([[
+    static int stdbuf = 0;
+
+    /* Restrict to ELF systems with compilers
+       that support the constructor attribute.  */
+    void __attribute__ ((constructor))
+    stdbuf_init (void)
+    {
+      #if __ELF__
+        stdbuf = 1;
+      #endif
+    }]],[[
+    return !(stdbuf == 1);]])
+  ],
+  [stdbuf_supported=yes],
+  [stdbuf_supported=no])
+AC_MSG_RESULT([$stdbuf_supported])
+if test "$stdbuf_supported" = "yes"; then
   gl_ADD_PROG([optional_bin_progs], [stdbuf])
 fi
 

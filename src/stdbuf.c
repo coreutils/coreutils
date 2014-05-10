@@ -195,7 +195,17 @@ set_LD_PRELOAD (void)
      However we want the lookup done for the exec'd command not stdbuf.
 
      Since we don't link against libstdbuf.so add it to PKGLIBEXECDIR
-     rather than to LIBDIR.  */
+     rather than to LIBDIR.
+
+     Note we could add "" as the penultimate item in the following list
+     to enable searching for libstdbuf.so in the default system lib paths.
+     However that would not indicate an error if libstdbuf.so was not found.
+     Also while this could support auto selecting the right arch in a multilib
+     environment, what we really want is to auto select based on the arch of the
+     command being run, rather than that of stdbuf itself.  This is currently
+     not supported due to the unusual need for controlling the stdio buffering
+     of programs that are a different architecture to the default on the
+     system (and that of stdbuf itself).  */
   char const *const search_path[] = {
     program_path,
     PKGLIBEXECDIR,

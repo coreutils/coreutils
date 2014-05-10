@@ -127,7 +127,8 @@ apply_mode (FILE *stream, const char *mode)
     }
 }
 
-__attribute__ ((constructor)) static void
+/* Use __attribute to avoid elision of __attribute__ on SUNPRO_C etc.  */
+static void __attribute ((constructor))
 stdbuf (void)
 {
   char *e_mode = getenv ("_STDBUF_E");

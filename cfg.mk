@@ -229,10 +229,10 @@ sc_prohibit-j-printf-format:
 # directly use attributes already defined by gnulib.
 # TODO: move the check for _GL... attributes to gnulib.
 sc_prohibit-gl-attributes:
-	@cd $(srcdir) && GIT_PAGER= git grep -En			\
-	    "__attribute |__(unused|pure|const)__" src gl/lib/*.[ch]	\
-	  && { echo '$(ME): Use _GL... attribute macros' 1>&2; exit 1; }  \
-	  || :
+	@prohibit='__attribute |__(unused|pure|const)__'	\
+	in_vc_files='\.[ch]$$'					\
+	halt='Use _GL... attribute macros'			\
+	  $(_sc_search_regexp)
 
 # Look for lines longer than 80 characters, except omit:
 # - program-generated long lines in diff headers,
@@ -646,6 +646,9 @@ exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
 
 exclude_file_name_regexp--sc_error_message_uppercase = ^src/factor\.c$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^src/make-prime-list\.c$$
+
+# Exception here as we don't want __attribute elided on non GCC
+exclude_file_name_regexp--sc_prohibit-gl-attributes = ^src/libstdbuf\.c$$
 
 # Augment AM_CFLAGS to include our per-directory options:
 AM_CFLAGS += $($(@D)_CFLAGS)
