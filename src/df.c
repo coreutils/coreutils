@@ -144,7 +144,8 @@ typedef enum
   IAVAIL_FIELD, /* inodes available */
   IPCENT_FIELD, /* inodes used in percent */
   TARGET_FIELD, /* mount point */
-  FILE_FIELD    /* specified file name */
+  FILE_FIELD,   /* specified file name */
+  INVALID_FIELD /* validation marker */
 } display_field_t;
 
 /* Flag if a field contains a block, an inode or another value.  */
@@ -372,7 +373,7 @@ decode_output_arg (char const *arg)
         *comma++ = 0;
 
       /* process S.  */
-      display_field_t field = -1;
+      display_field_t field = INVALID_FIELD;
       for (unsigned int i = 0; i < ARRAY_CARDINALITY (field_data); i++)
         {
           if (STREQ (field_data[i].arg, s))
@@ -381,7 +382,7 @@ decode_output_arg (char const *arg)
               break;
             }
         }
-      if (field == -1)
+      if (field == INVALID_FIELD)
         {
           error (0, 0, _("option --output: field %s unknown"), quote (s));
           usage (EXIT_FAILURE);
