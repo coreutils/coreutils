@@ -853,6 +853,11 @@ get_dev (char const *disk, char const *mount_point, char const* file,
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
 
+  /* Ignore relative MOUNT_POINTs, which are present for example
+     in /proc/mounts on Linux with network namespaces.  */
+  if (!force_fsu && mount_point && ! IS_ABSOLUTE_FILE_NAME (mount_point))
+    return;
+
   /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
      program reports on the file system that the special file is on.
      It would be better to report on the unmounted file system,

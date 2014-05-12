@@ -56,6 +56,7 @@ struct mntent *getmntent (FILE *fp)
     {.mnt_fsname="/fsname", .mnt_dir="/"},
     {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT"},
     {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT"},
+    {.mnt_fsname="netns",   .mnt_dir="net:[1234567]"},
   };
 
   if (done == 1)
@@ -68,7 +69,7 @@ struct mntent *getmntent (FILE *fp)
   if (done == 1 && !getenv ("CU_TEST_DUPE_INVALID"))
     done++;  /* skip the first entry.  */
 
-  while (done++ <= 6)
+  while (done++ <= 7)
     {
       mntents[done-2].mnt_type = "-";
       if (STREQ (mntents[done-2].mnt_dir, "/NONROOT"))
