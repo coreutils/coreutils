@@ -1056,13 +1056,19 @@ get_disk (char const *disk)
   char const *file = disk;
 
   char *resolved = canonicalize_file_name (disk);
-  if (resolved && resolved[0] == '/')
+  if (resolved && IS_ABSOLUTE_FILE_NAME (resolved))
     disk = resolved;
 
   size_t best_match_len = SIZE_MAX;
   for (me = mount_list; me; me = me->me_next)
     {
-      if (STREQ (disk, me->me_devname))
+      /* TODO: Should cache canon_dev in the mount_entry struct.  */
+      char *devname = me->me_devname;
+      char *canon_dev = canonicalize_file_name (me->me_devname);
+      if (canon_dev && IS_ABSOLUTE_FILE_NAME (canon_dev))
+        devname = canon_dev;
+
+      if (STREQ (disk, devname))
         {
           size_t len = strlen (me->me_mountdir);
           if (len < best_match_len)
@@ -1074,6 +1080,8 @@ get_disk (char const *disk)
                 best_match_len = len;
             }
         }
+
+      free (canon_dev);
     }
 
   free (resolved);
