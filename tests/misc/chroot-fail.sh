@@ -28,16 +28,18 @@ test $? = 125 || fail=1
 chroot --- / true # unknown option
 test $? = 125 || fail=1
 
-# chroot("/") succeeds for non-root users on some systems, but not all.
-if chroot / true ; then
-  chroot / sh -c 'exit 2' # exit status propagation
-  test $? = 2 || fail=1
-  chroot / . # invalid command
-  test $? = 126 || fail=1
-  chroot / no_such # no such command
-  test $? = 127 || fail=1
-else
-  test $? = 125 || fail=1
-fi
+# Note chroot("/") succeeds for non-root users on some systems, but not all,
+# however we avoid the chroot() with "/" to have common behvavior.
+chroot / sh -c 'exit 2' # exit status propagation
+test $? = 2 || fail=1
+chroot / . # invalid command
+test $? = 126 || fail=1
+chroot / no_such # no such command
+test $? = 127 || fail=1
+
+# Ensure we don't chdir("/") when not changing root
+# to allow only changing user ids for a command.
+curdir=$(chroot / env pwd) || fail=1
+test "$curdir" = '/' && fail=1
 
 Exit $fail

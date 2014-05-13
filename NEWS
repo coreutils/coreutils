@@ -82,6 +82,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  chroot with an argument of "/" no longer implicitly changes the current
+  directory to "/", allowing changing only user credentials for a command.
+
   ls with none of LS_COLORS or COLORTERM environment variables set,
   will now honor an empty or unknown TERM environment variable,
   and not output colors even with --colors=always.

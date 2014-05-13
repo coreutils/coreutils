@@ -225,21 +225,27 @@ main (int argc, char **argv)
       usage (EXIT_CANCELED);
     }
 
-  /* We have to look up users and groups twice.
-     - First, outside the chroot to load potentially necessary passwd/group
-       parsing plugins (e.g. NSS);
-     - Second, inside chroot to redo the parsing in case IDs are different.  */
-  if (userspec)
-    ignore_value (parse_user_spec (userspec, &uid, &gid, NULL, NULL));
-  if (groups && *groups)
-    ignore_value (parse_additional_groups (groups, &out_gids, &n_gids, false));
+  /* Only do chroot specific actions if actually changing root.
+     The main difference here is that we don't change working dir.  */
+  if (! STREQ (argv[optind], "/"))
+    {
+      /* We have to look up users and groups twice.
+        - First, outside the chroot to load potentially necessary passwd/group
+          parsing plugins (e.g. NSS);
+        - Second, inside chroot to redo parsing in case IDs are different.  */
+      if (userspec)
+        ignore_value (parse_user_spec (userspec, &uid, &gid, NULL, NULL));
+      if (groups && *groups)
+        ignore_value (parse_additional_groups (groups, &out_gids, &n_gids,
+                                               false));
 
-  if (chroot (argv[optind]) != 0)
-    error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-           argv[optind]);
+      if (chroot (argv[optind]) != 0)
+        error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
+               argv[optind]);
 
-  if (chdir ("/"))
-    error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
+      if (chdir ("/"))
+        error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
+    }
 
   if (argc == optind + 1)
     {
