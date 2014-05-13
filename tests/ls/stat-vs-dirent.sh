@@ -30,7 +30,7 @@ while :; do
     d_ino=$(sed -n '1s/^ *\([0-9][0-9]*\) .*/\1/p;q' tmp)
 
     # Extract the name of the corresponding directory entry.
-    file=$(sed -n '1s/^ *[0-9][0-9]*  *//p;q' tmp)
+    file=$(sed -n '1s/^ *[0-9][0-9]* //p;q' tmp)
 
     # Get its inode number (stat.st_ino) via stat(1)'s call to lstat.
     st_ino=$(stat --format=%i "$t/$file")
