@@ -16112,12 +16112,17 @@ By default, @var{command} is run with the same credentials
 as the invoking process.
 Use this option to run it as a different @var{user} and/or with a
 different primary @var{group}.
+If a @var{user} is specified then the supplementary groups
+are set according to the system defined list for that user,
+unless overridden with the @option{--groups} option.
 
 @item --groups=@var{groups}
 @opindex --groups
-Use this option to specify the supplementary @var{groups} to be
+Use this option to override the supplementary @var{groups} to be
 used by the new process.
 The items in the list (names or numeric IDs) must be separated by commas.
+Use @samp{--groups=''} to disable the supplementary group look-up
+implicit in the @option{--userspec} option.
 
 @end table
 

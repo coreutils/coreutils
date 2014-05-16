@@ -85,6 +85,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   chroot with an argument of "/" no longer implicitly changes the current
   directory to "/", allowing changing only user credentials for a command.
 
+  chroot --userspec will now unset supplemental groups associated with root,
+  and instead use the supplemental groups of the specified user.
+
   ls with none of LS_COLORS or COLORTERM environment variables set,
   will now honor an empty or unknown TERM environment variable,
   and not output colors even with --colors=always.
