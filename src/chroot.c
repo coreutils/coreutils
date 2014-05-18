@@ -313,8 +313,6 @@ main (int argc, char **argv)
       argv += optind + 1;
     }
 
-  bool fail = false;
-
   /* Attempt to set all three: supplementary groups, group ID, user ID.
      Diagnose any failures.  If any have failed, exit before execvp.  */
   if (userspec)
@@ -350,7 +348,7 @@ main (int argc, char **argv)
       if (parse_additional_groups (groups, &in_gids, &n_gids, !n_gids) != 0)
         {
           if (! n_gids)
-            fail = true;
+            exit (EXIT_CANCELED);
           /* else look-up outside the chroot worked, then go with those.  */
         }
       else
@@ -363,10 +361,8 @@ main (int argc, char **argv)
       if (ngroups <= 0)
         {
           if (! n_gids)
-            {
-              fail = true;
-              error (0, errno, _("failed to get supplemental groups"));
-            }
+            error (EXIT_CANCELED, errno,
+                   _("failed to get supplemental groups"));
           /* else look-up outside the chroot worked, then go with those.  */
         }
       else
@@ -378,29 +374,17 @@ main (int argc, char **argv)
 #endif
 
   if ((uid_set (uid) || groups) && setgroups (n_gids, gids) != 0)
-    {
-      error (0, errno, _("failed to %s supplemental groups"),
-             gids ? "set" : "clear");
-      fail = true;
-    }
+    error (EXIT_CANCELED, errno, _("failed to %s supplemental groups"),
+           gids ? "set" : "clear");
 
   free (in_gids);
   free (out_gids);
 
   if (gid_set (gid) && setgid (gid))
-    {
-      error (0, errno, _("failed to set group-ID"));
-      fail = true;
-    }
+    error (EXIT_CANCELED, errno, _("failed to set group-ID"));
 
   if (uid_set (uid) && setuid (uid))
-    {
-      error (0, errno, _("failed to set user-ID"));
-      fail = true;
-    }
-
-  if (fail)
-    exit (EXIT_CANCELED);
+    error (EXIT_CANCELED, errno, _("failed to set user-ID"));
 
   /* Execute the given command.  */
   execvp (argv[0], argv);
