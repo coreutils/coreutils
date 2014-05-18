@@ -28,6 +28,7 @@
 #include "ignore-value.h"
 #include "mgetgroups.h"
 #include "quote.h"
+#include "root-dev-ino.h"
 #include "userspec.h"
 #include "xstrtol.h"
 
@@ -158,6 +159,22 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
   return ret;
 }
 
+static bool
+is_root (const char* dir)
+{
+  struct dev_ino root_ino;
+  if (! get_root_dev_ino (&root_ino))
+    error (EXIT_CANCELED, errno, _("failed to get attributes of %s"),
+           quote ("/"));
+
+  struct stat arg_st;
+  if (stat (dir, &arg_st) == -1)
+    error (EXIT_CANCELED, errno, _("failed to get attributes of %s"),
+           quote (dir));
+
+  return SAME_INODE (root_ino, arg_st);
+}
+
 void
 usage (int status)
 {
@@ -253,7 +270,7 @@ main (int argc, char **argv)
 
   /* Only do chroot specific actions if actually changing root.
      The main difference here is that we don't change working dir.  */
-  if (! STREQ (argv[optind], "/"))
+  if (! is_root (argv[optind]))
     {
       /* We have to look up users and groups twice.
         - First, outside the chroot to load potentially necessary passwd/group

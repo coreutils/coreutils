@@ -39,7 +39,9 @@ test $? = 127 || fail=1
 
 # Ensure we don't chdir("/") when not changing root
 # to allow only changing user ids for a command.
-curdir=$(chroot / env pwd) || fail=1
-test "$curdir" = '/' && fail=1
+for dir in '/' '/.' '/../'; do
+  curdir=$(chroot "$dir" env pwd) || fail=1
+  test "$curdir" = '/' && fail=1
+done
 
 Exit $fail
