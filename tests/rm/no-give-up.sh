@@ -30,7 +30,8 @@ chmod go=x . || framework_failure_
 
 
 # This must fail, since '.' is not writable by $NON_ROOT_USERNAME.
-setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf d 2>/dev/null && fail=1
+chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
+  rm -rf d 2>/dev/null && fail=1
 
 # d must remain.
 test -d d || fail=1

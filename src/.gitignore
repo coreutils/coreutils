@@ -75,7 +75,6 @@ rm
 rmdir
 runcon
 seq
-setuidgid
 sha1sum
 sha224sum
 sha256sum

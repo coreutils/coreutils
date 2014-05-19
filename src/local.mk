@@ -37,8 +37,7 @@ pkglibexec_PROGRAMS = @pkglibexec_PROGRAMS@
 # Needed by the testsuite.
 noinst_PROGRAMS =		\
   src/getlimits			\
-  src/make-prime-list		\
-  src/setuidgid
+  src/make-prime-list
 
 noinst_HEADERS =		\
   src/chown-core.h		\
@@ -166,7 +165,6 @@ src_rm_LDADD = $(LDADD)
 src_rmdir_LDADD = $(LDADD)
 src_runcon_LDADD = $(LDADD)
 src_seq_LDADD = $(LDADD)
-src_setuidgid_LDADD = $(LDADD)
 src_sha1sum_LDADD = $(LDADD)
 src_sha224sum_LDADD = $(LDADD)
 src_sha256sum_LDADD = $(LDADD)

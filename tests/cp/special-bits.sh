@@ -42,7 +42,7 @@ set _ $(ls -l b); shift; p1=$1
 set _ $(ls -l b2); shift; p2=$1
 test $p1 = $p2 || fail=1
 
-setuidgid $NON_ROOT_USERNAME env PATH="$PATH" cp -p c c2 || fail=1
+chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" cp -p c c2 || fail=1
 set _ $(ls -l c); shift; p1=$1
 set _ $(ls -l c2); shift; p2=$1
 test $p1 = $p2 && fail=1

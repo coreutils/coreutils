@@ -42,7 +42,7 @@ chmod go+x . || framework_failure_
 
 # Ensure that $NON_ROOT_USERNAME can access the required version of mv.
 version=$(
-  setuidgid $NON_ROOT_USERNAME env PATH="$PATH" mv --version |
+  chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" mv --version |
   sed -n '1s/.* //p'
 )
 case $version in
@@ -50,7 +50,7 @@ case $version in
   *) skip_ "cannot access just-built mv as user $NON_ROOT_USERNAME";;
 esac
 
-setuidgid $NON_ROOT_USERNAME env PATH="$PATH" \
+chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
   mv t/root-owned "$other_partition_tmpdir" 2> out-t && fail=1
 
 # On some systems, we get 'Not owner'.  Convert it.

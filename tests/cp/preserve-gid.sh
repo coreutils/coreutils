@@ -117,8 +117,9 @@ t1() {
   u=$1; shift
   g=$1; shift
   t0 "$f" "$u" "$g" \
-      setuidgid -g "$nameless_gid1,$nameless_gid2" \
-      "$nameless_uid" env PATH="$tmp_path" "$@"
+      chroot --user=+$nameless_uid:+$nameless_gid1 \
+             --groups="+$nameless_gid1,+$nameless_gid2" \
+        / env PATH="$tmp_path" "$@"
 }
 
 t1 a0 "$nameless_uid" "$nameless_gid1" cp

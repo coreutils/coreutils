@@ -32,14 +32,14 @@ touch a/b || framework_failure_
 # Try to ensure that $NON_ROOT_USERNAME can access
 # the required version of rm.
 rm_version=$(
-  setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm --version |
+  chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" rm --version |
   sed -n '1s/.* //p'
 )
 case $rm_version in
   $PACKAGE_VERSION) ;;
   *) skip_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;
 esac
-setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf a 2> out-t && fail=1
+chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" rm -rf a 2> out-t && fail=1
 
 # On some systems, we get 'Not owner'.  Convert it.
 # On other systems (HPUX), we get 'Permission denied'.  Convert it, too.

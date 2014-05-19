@@ -27,7 +27,8 @@ gp1=$(expr $g + 1)
 
 echo $gp1 > exp || framework_failure_
 
-setuidgid -g $gp1 $NON_ROOT_USERNAME env PATH="$PATH" id -G > out || fail=1
+chroot --user=$NON_ROOT_USERNAME:$gp1 --groups='' / env PATH="$PATH" \
+  id -G > out || fail=1
 compare exp out || fail=1
 # With coreutils-8.16 and earlier, id -G would print both: $gp1 $g
 
