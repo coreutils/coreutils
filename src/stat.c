@@ -316,7 +316,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "fusectl";
     case S_MAGIC_FUTEXFS: /* 0x0BAD1DEA local */
       return "futexfs";
-    case S_MAGIC_GFS: /* 0x1161970 remote */
+    case S_MAGIC_GFS: /* 0x01161970 remote */
       return "gfs/gfs2";
     case S_MAGIC_GPFS: /* 0x47504653 remote */
       return "gpfs";
@@ -326,7 +326,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "hfs+";
     case S_MAGIC_HFS_X: /* 0x4858 local */
       return "hfsx";
-    case S_MAGIC_HOSTFS: /* 0xC0FFEE local */
+    case S_MAGIC_HOSTFS: /* 0x00C0FFEE local */
       return "hostfs";
     case S_MAGIC_HPFS: /* 0xF995E849 local */
       return "hpfs";
@@ -378,7 +378,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ntfs";
     case S_MAGIC_OPENPROM: /* 0x9FA1 local */
       return "openprom";
-    case S_MAGIC_OCFS2: /* 0x7461636f remote */
+    case S_MAGIC_OCFS2: /* 0x7461636F remote */
       return "ocfs2";
     case S_MAGIC_PANFS: /* 0xAAD7AAEA remote */
       return "panfs";

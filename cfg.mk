@@ -577,6 +577,14 @@ sc_marked_devdiagnostics:
 	halt='found marked developer diagnostic(s)'                     \
 	  $(_sc_search_regexp)
 
+# Ensure we keep hex constants as 4 or 8 bytes for consistency
+# and so that make src/fs-magic-compare works consistently
+sc_fs-magic-compare:
+	@sed -n 's|.*/\* \(0x[0-9A-Fa-f]\{1,\}\) .*\*/|\1|p'		\
+	  $(srcdir)/src/stat.c | grep -Ev '^0x([0-9A-F]{4}){1,2}$$'	\
+	    && { echo '$(ME): Constants in src/stat.c should be 4 or 8' \
+		      'upper-case chars' 1>&2; exit 1; } || :
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
