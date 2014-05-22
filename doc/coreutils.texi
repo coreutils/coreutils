@@ -583,16 +583,42 @@ Do not treat the last operand specially when it is a directory or a
 symbolic link to a directory.  @xref{Target directory}.
 @end macro
 
-@macro optNull{cmd}
-@item -0
-@opindex -0
-@itemx --null
-@opindex --null
+@macro outputNUL
 @cindex output NUL-byte-terminated lines
 Output a zero byte (ASCII NUL) at the end of each line,
 rather than a newline.  This option enables other programs to parse the
-output of @command{\cmd\} even when that output would contain data
-with embedded newlines.
+output even when that output would contain data with embedded newlines.
+@end macro
+
+@macro optNull
+@item -0
+@itemx --null
+@opindex -0
+@opindex --null
+@outputNUL
+@end macro
+
+@macro optZero
+@item -z
+@itemx --zero
+@opindex -z
+@opindex --zero
+@outputNUL
+@end macro
+
+@macro optZeroTerminated
+@item -z
+@itemx --zero-terminated
+@opindex -z
+@opindex --zero-terminated
+@cindex process zero-terminated items
+Delimit items with a zero byte rather than a newline (ASCII LF).
+I.e., treat input as items separated by ASCII NUL
+and terminate output items with ASCII NUL.
+This option can be useful in conjunction with @samp{perl -0} or
+@samp{find -print0} and @samp{xargs -0} which do the same in order to
+reliably handle arbitrary file names (even those containing blanks
+or other special characters).
 @end macro
 
 @macro optSi
@@ -4674,21 +4700,7 @@ For example, @code{sort -n -u} inspects only the value of the initial
 numeric string when checking for uniqueness, whereas @code{sort -n |
 uniq} inspects the entire line.  @xref{uniq invocation}.
 
-@macro zeroTerminatedOption
-@item -z
-@itemx --zero-terminated
-@opindex -z
-@opindex --zero-terminated
-@cindex process zero-terminated items
-Delimit items with a zero byte rather than a newline (ASCII LF).
-I.e., treat input as items separated by ASCII NUL
-and terminate output items with ASCII NUL.
-This option can be useful in conjunction with @samp{perl -0} or
-@samp{find -print0} and @samp{xargs -0} which do the same in order to
-reliably handle arbitrary file names (even those containing blanks
-or other special characters).
-@end macro
-@zeroTerminatedOption
+@optZeroTerminated
 
 @end table
 
@@ -4975,7 +4987,7 @@ typically combined with @option{--head-count}; if
 @option{--head-count} is not given, @command{shuf} repeats
 indefinitely.
 
-@zeroTerminatedOption
+@optZeroTerminated
 
 @end table
 
@@ -5228,7 +5240,7 @@ Compare at most @var{n} characters on each line (after skipping any specified
 fields and characters).  By default the entire rest of the lines are
 compared.
 
-@zeroTerminatedOption
+@optZeroTerminated
 
 @end table
 
@@ -6321,7 +6333,7 @@ character is used to delimit the fields.
 Print a line for each unpairable line in file @var{file-number}
 (either @samp{1} or @samp{2}), instead of the normal output.
 
-@zeroTerminatedOption
+@optZeroTerminated
 
 @end table
 
@@ -10329,11 +10341,7 @@ Suppress most error messages.
 @opindex --verbose
 Report error messages.
 
-@item -z
-@itemx --zero
-@opindex -z
-@opindex --zero
-Separate output items with NUL characters.
+@optZero
 
 @end table
 
@@ -11433,7 +11441,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@optNull{du}
+@optNull
 
 @item -a
 @itemx --all
@@ -13223,11 +13231,7 @@ With this, an optional @var{suffix} must be specified using the
 Remove a trailing @var{suffix}.
 This option implies the @option{-a} option.
 
-@item -z
-@itemx --zero
-@opindex -z
-@opindex --zero
-Separate output items with NUL characters.
+@optZero
 
 @end table
 
@@ -13282,11 +13286,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -z
-@itemx --zero
-@opindex -z
-@opindex --zero
-Separate output items with NUL characters.
+@optZero
 
 @end table
 
@@ -13619,23 +13619,6 @@ This is the default mode of operation.
 @opindex --quiet
 Suppress diagnostic messages for specified file names.
 
-@item -s
-@itemx --strip
-@itemx --no-symlinks
-@opindex -s
-@opindex --strip
-@opindex --no-symlinks
-Do not resolve symbolic links.  Only resolve references to
-@samp{/./}, @samp{/../} and remove extra @samp{/} characters.
-When combined with the @option{-m} option, realpath operates
-only on the file name, and does not touch any actual file.
-
-@item -z
-@itemx --zero
-@opindex -z
-@opindex --zero
-Separate output items with NUL characters.
-
 @item --relative-to=@var{file}
 @opindex --relative-to
 @cindex relpath
@@ -13663,6 +13646,19 @@ realpath --relative-base=/usr /tmp /usr/bin
 @result{} /tmp
 @result{} bin
 @end example
+
+@item -s
+@itemx --strip
+@itemx --no-symlinks
+@opindex -s
+@opindex --strip
+@opindex --no-symlinks
+Do not resolve symbolic links.  Only resolve references to
+@samp{/./}, @samp{/../} and remove extra @samp{/} characters.
+When combined with the @option{-m} option, realpath operates
+only on the file name, and does not touch any actual file.
+
+@optZero
 
 @end table
 
@@ -14462,7 +14458,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
-@optNull{printenv}
+@optNull
 
 @end table
 
@@ -16292,7 +16288,7 @@ Options must precede operands.
 
 @table @samp
 
-@optNull{env}
+@optNull
 
 @item -u @var{name}
 @itemx --unset=@var{name}

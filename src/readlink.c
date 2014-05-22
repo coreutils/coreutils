@@ -81,7 +81,7 @@ usage (int status)
   -q, --quiet,\n\
   -s, --silent                  suppress most error messages\n\
   -v, --verbose                 report error messages\n\
-  -z, --zero                    separate output with NUL rather than newline\n\
+  -z, --zero                    end each output line with NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

@@ -504,7 +504,7 @@ Other options:\n\
 \n\
 "), DEFAULT_TMPDIR);
       fputs (_("\
-  -z, --zero-terminated     end lines with 0 byte, not newline\n\
+  -z, --zero-terminated     line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

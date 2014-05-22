@@ -67,7 +67,7 @@ If no VARIABLE is specified, print name and value pairs for them all.\n\
 "),
               program_name);
       fputs (_("\
-  -0, --null     end each output line with 0 byte rather than newline\n\
+  -0, --null     end each output line with NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

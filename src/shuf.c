@@ -77,7 +77,9 @@ Write a random permutation of the input lines to standard output.\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
       --random-source=FILE  get random bytes from FILE\n\
   -r, --repeat              output lines can be repeated\n\
-  -z, --zero-terminated     end lines with 0 byte, not newline\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated     line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

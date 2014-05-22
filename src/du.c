@@ -289,7 +289,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       emit_mandatory_arg_note ();
 
       fputs (_("\
-  -0, --null            end each output line with 0 byte rather than newline\n\
+  -0, --null            end each output line with NUL, not newline\n\
   -a, --all             write counts for all files, not just directories\n\
       --apparent-size   print apparent sizes, rather than disk usage; although\
 \n\
