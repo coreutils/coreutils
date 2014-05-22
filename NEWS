@@ -110,9 +110,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split avoids unnecessary input buffering, immediately writing input to output
   which is significant with --filter or when writing to fifos or stdout etc.
 
-  stat and tail work better with HFS+ and HFSX.  stat -f --format=%T now reports
-  the file system type, and tail -f now uses inotify for files, rather than the
-  default of issuing a warning and reverting to polling.
+  stat and tail work better with HFS+, HFSX, LogFS and ConfigFS.  stat -f
+  --format=%T now reports the file system type, and tail -f now uses inotify,
+  rather than the default of issuing a warning and reverting to polling.
 
 
 * Noteworthy changes in release 8.22 (2013-12-13) [stable]

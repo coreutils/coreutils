@@ -280,6 +280,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "coda";
     case S_MAGIC_COH: /* 0x012FF7B7 local */
       return "coh";
+    case S_MAGIC_CONFIGFS: /* 0x62656570 local */
+      return "configfs";
     case S_MAGIC_CRAMFS: /* 0x28CD3D45 local */
       return "cramfs";
     case S_MAGIC_CRAMFS_WEND: /* 0x453DCD28 local */
@@ -350,6 +352,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "jfs";
     case S_MAGIC_KAFS: /* 0x6B414653 remote */
       return "k-afs";
+    case S_MAGIC_LOGFS: /* 0xC97E8168 local */
+      return "logfs";
     case S_MAGIC_LUSTRE: /* 0x0BD00BD0 remote */
       return "lustre";
     case S_MAGIC_MINIX: /* 0x137F local */
