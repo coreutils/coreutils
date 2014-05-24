@@ -2,6 +2,7 @@
 @c %**start of header
 @setfilename coreutils.info
 @settitle GNU Coreutils
+@documentencoding UTF-8
 @allowcodebreaks false
 
 @c %**end of header
