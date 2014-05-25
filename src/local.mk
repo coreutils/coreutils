@@ -387,7 +387,7 @@ src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
 
 # Ensure we don't link against libcoreutils.a as that lib is
 # not compiled with -fPIC which causes issues on 64 bit at least
-src_libstdbuf_so_LDADD =
+src_libstdbuf_so_LDADD = $(LIBINTL)
 
 # Note libstdbuf is only compiled if GCC is available
 # (as per the check in configure.ac), so these flags should be available.
