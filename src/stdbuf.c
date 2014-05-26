@@ -187,7 +187,12 @@ static void
 set_LD_PRELOAD (void)
 {
   int ret;
-  char *old_libs = getenv ("LD_PRELOAD");
+#ifdef __APPLE__
+  char const *preload_env = "DYLD_INSERT_LIBRARIES";
+#else
+  char const *preload_env = "LD_PRELOAD";
+#endif
+  char *old_libs = getenv (preload_env);
   char *LD_PRELOAD;
 
   /* Note this would auto add the appropriate search path for "libstdbuf.so":
@@ -239,9 +244,9 @@ set_LD_PRELOAD (void)
   /* FIXME: Do we need to support libstdbuf.dll, c:, '\' separators etc?  */
 
   if (old_libs)
-    ret = asprintf (&LD_PRELOAD, "LD_PRELOAD=%s:%s", old_libs, libstdbuf);
+    ret = asprintf (&LD_PRELOAD, "%s=%s:%s", preload_env, old_libs, libstdbuf);
   else
-    ret = asprintf (&LD_PRELOAD, "LD_PRELOAD=%s", libstdbuf);
+    ret = asprintf (&LD_PRELOAD, "%s=%s", preload_env, libstdbuf);
 
   if (ret < 0)
     xalloc_die ();
@@ -249,6 +254,10 @@ set_LD_PRELOAD (void)
   free (libstdbuf);
 
   ret = putenv (LD_PRELOAD);
+#ifdef __APPLE__
+  if (ret == 0)
+    ret = putenv ("DYLD_FORCE_FLAT_NAMESPACE=y");
+#endif
 
   if (ret != 0)
     {
