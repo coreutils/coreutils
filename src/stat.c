@@ -841,17 +841,19 @@ find_bind_mount (char const * name)
       tried_mount_list = true;
     }
 
+  struct stat name_stats;
+  if (stat (name, &name_stats) != 0)
+    return NULL;
+
   struct mount_entry *me;
   for (me = mount_list; me; me = me->me_next)
     {
       if (me->me_dummy && me->me_devname[0] == '/'
           && STREQ (me->me_mountdir, name))
         {
-          struct stat name_stats;
           struct stat dev_stats;
 
-          if (stat (name, &name_stats) == 0
-              && stat (me->me_devname, &dev_stats) == 0
+          if (stat (me->me_devname, &dev_stats) == 0
               && SAME_INODE (name_stats, dev_stats))
             {
               bind_mount = me->me_devname;
