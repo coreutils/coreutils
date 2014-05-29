@@ -55,7 +55,7 @@ struct mntent *getmntent (FILE *fp)
     {.mnt_fsname="/fsname", .mnt_dir="/."},
     {.mnt_fsname="/fsname", .mnt_dir="/"},
     {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT"},
-    {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT"},
+    {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT"},
     {.mnt_fsname="netns",   .mnt_dir="net:[1234567]"},
   };
 
@@ -100,9 +100,14 @@ LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df >out && fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # df should also prefer "/fsname" over "fsname"
-test $(grep -c '/fsname' <out) -eq 1 || { fail=1; cat out; }
-# ... and "/fsname" with '/' as Mounted on over '/.'
-test $(grep -cF '/.' <out) -eq 0 || { fail=1; cat out; }
+if test "$unique_entries" = 2; then
+  test $(grep -c '/fsname' <out) -eq 1 || { fail=1; cat out; }
+  # ... and "/fsname" with '/' as Mounted on over '/.'
+  test $(grep -cF '/.' <out) -eq 0 || { fail=1; cat out; }
+fi
+
+# df should use the last seen devname (mnt_fsname)
+test $(grep -c 'virtfs2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1

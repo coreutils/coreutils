@@ -604,7 +604,7 @@ excluded_fstype (const char *fstype)
 }
 
 /* Filter mount list by skipping duplicate entries.
-   In the case of duplicities - based on to the device number - the mount entry
+   In the case of duplicities - based on the device number - the mount entry
    with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
    me_mountdir wins.  */
@@ -638,17 +638,33 @@ filter_mount_list (void)
 
           if (devlist)
             {
-              discard_me = me;
-
               /* ...let the shorter mountdir win.  */
               if ((strchr (me->me_devname, '/')
                    && ! strchr (devlist->me->me_devname, '/'))
                   || (strlen (devlist->me->me_mountdir)
                       > strlen (me->me_mountdir)))
                 {
+                  /* Discard mount entry for existing device.  */
                   discard_me = devlist->me;
                   devlist->me = me;
                 }
+              else
+                {
+                  /* Discard mount entry currently being processed.  */
+                  discard_me = me;
+
+                  /* We might still want the devname from this mount entry as
+                     the dev_num might not correlate with st_dev if another
+                     device is subsequently overmounted at mountdir, so honor
+                     the order of the presented list and replace with the
+                     latest devname encountered.  */
+                  if (! STREQ (devlist->me->me_devname, me->me_devname))
+                    {
+                      free (devlist->me->me_devname);
+                      devlist->me->me_devname = xstrdup (me->me_devname);
+                    }
+                }
+
             }
         }
 
