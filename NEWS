@@ -90,6 +90,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   chroot --userspec will now unset supplemental groups associated with root,
   and instead use the supplemental groups of the specified user.
 
+  cut -d$'\n' again outputs lines identified in the --fields list, having
+  not done so in v8.21 and v8.22.  Note using this non portable functionality
+  will result in the delayed output of lines.
+
   ls with none of LS_COLORS or COLORTERM environment variables set,
   will now honor an empty or unknown TERM environment variable,
   and not output colors even with --colors=always.
@@ -342,6 +346,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now properly outputs file system information with bind mounts present on
   the system by skipping duplicate entries (identified by the device number).
   Consequently, df also elides the early-boot pseudo file system type "rootfs".
+
+  cut -d$'\n' no longer outputs lines identified in the --fields list,
+  to align with other implementations and to avoid delayed output of lines.
 
   nl no longer supports the --page-increment option, which has been
   deprecated since coreutils-7.5.  Use --line-increment instead.

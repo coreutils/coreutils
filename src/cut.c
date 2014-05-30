@@ -109,13 +109,13 @@ enum operating_mode
     /* Output characters that are in the given bytes. */
     byte_mode,
 
-    /* Output the given delimeter-separated fields. */
+    /* Output the given delimiter-separated fields. */
     field_mode
   };
 
 static enum operating_mode operating_mode;
 
-/* If true do not output lines containing no delimeter characters.
+/* If true do not output lines containing no delimiter characters.
    Otherwise, all such lines are printed.  This option is valid only
    with field mode.  */
 static bool suppress_non_delimited;
@@ -124,7 +124,7 @@ static bool suppress_non_delimited;
    those that were specified.  */
 static bool complement;
 
-/* The delimeter character for field mode. */
+/* The delimiter character for field mode. */
 static unsigned char delim;
 
 /* True if the --output-delimiter=STRING option was specified.  */
@@ -538,7 +538,6 @@ cut_fields (FILE *stream)
         {
           ssize_t len;
           size_t n_bytes;
-          bool got_line;
 
           len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
                             GETNLINE_NO_LIMIT, delim, '\n', stream);
@@ -555,14 +554,13 @@ cut_fields (FILE *stream)
           assert (n_bytes != 0);
 
           c = 0;
-          got_line = field_1_buffer[n_bytes - 1] == '\n';
 
           /* If the first field extends to the end of line (it is not
              delimited) and we are printing all non-delimited lines,
              print this one.  */
-          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim || got_line)
+          if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
             {
-              if (suppress_non_delimited && !(got_line && delim == '\n'))
+              if (suppress_non_delimited)
                 {
                   /* Empty.  */
                 }
@@ -570,7 +568,7 @@ cut_fields (FILE *stream)
                 {
                   fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
                   /* Make sure the output line is newline terminated.  */
-                  if (! got_line)
+                  if (field_1_buffer[n_bytes - 1] != '\n')
                     putchar ('\n');
                   c = '\n';
                 }
@@ -580,7 +578,19 @@ cut_fields (FILE *stream)
             {
               /* Print the field, but not the trailing delimiter.  */
               fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
-              found_any_selected_field = true;
+
+              /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
+              if (delim == '\n')
+                {
+                  int last_c = getc (stream);
+                  if (last_c != EOF)
+                    {
+                      ungetc (last_c, stream);
+                      found_any_selected_field = true;
+                    }
+                }
+              else
+                found_any_selected_field = true;
             }
           next_item (&field_idx);
         }
@@ -610,12 +620,24 @@ cut_fields (FILE *stream)
             }
         }
 
-      if (c == '\n' || c == EOF)
+      /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
+      if (delim == '\n' && c == delim)
+        {
+          int last_c = getc (stream);
+          if (last_c != EOF)
+            ungetc (last_c, stream);
+          else
+            c = last_c;
+        }
+
+      if (c == delim)
+        next_item (&field_idx);
+      else if (c == '\n' || c == EOF)
         {
           if (found_any_selected_field
               || !(suppress_non_delimited && field_idx == 1))
             {
-              if (c == '\n' || prev_c != '\n')
+              if (c == '\n' || prev_c != '\n' || delim == '\n')
                 putchar ('\n');
             }
           if (c == EOF)
@@ -624,8 +646,6 @@ cut_fields (FILE *stream)
           current_rp = rp;
           found_any_selected_field = false;
         }
-      else if (c == delim)
-        next_item (&field_idx);
     }
 }
 

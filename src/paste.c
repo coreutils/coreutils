@@ -62,7 +62,7 @@ static bool have_read_stdin;
    corresponding lines from each file in parallel. */
 static bool serial_merge;
 
-/* The delimeters between lines of input files (used cyclically). */
+/* The delimiters between lines of input files (used cyclically). */
 static char *delims;
 
 /* A pointer to the character after the end of 'delims'. */

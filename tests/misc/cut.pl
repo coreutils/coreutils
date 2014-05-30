@@ -144,15 +144,17 @@ my @Tests =
   ['newline-12', '-s', '-d:', '-f1', {IN=>"a:1\nb:"}, {OUT=>"a\nb\n"}],
   ['newline-13', '-d:', '-f1-', {IN=>"a1:\n:"}, {OUT=>"a1:\n:\n"}],
   # newline processing for fields when -d == '\n'
-  ['newline-14', "-d'\n'", '-f1', {IN=>"a:1\nb:"}, {OUT=>"a:1\nb:\n"}],
+  ['newline-14', "-d'\n'", '-f1', {IN=>"a:1\nb:"}, {OUT=>"a:1\n"}],
   ['newline-15', '-s', "-d'\n'", '-f1', {IN=>"a:1\nb:"}, {OUT=>"a:1\n"}],
-  ['newline-16', '-s', "-d'\n'", '-f2', {IN=>"\nb"}, {OUT=>""}],
+  ['newline-16', '-s', "-d'\n'", '-f2', {IN=>"\nb"}, {OUT=>"b\n"}],
   ['newline-17', '-s', "-d'\n'", '-f1', {IN=>"\nb"}, {OUT=>"\n"}],
-  ['newline-18', "-d'\n'", '-f2', {IN=>"\nb"}, {OUT=>"\nb\n"}],
-  ['newline-19', "-d'\n'", '-f1', {IN=>"\nb"}, {OUT=>"\nb\n"}],
+  ['newline-18', "-d'\n'", '-f2', {IN=>"\nb"}, {OUT=>"b\n"}],
+  ['newline-19', "-d'\n'", '-f1', {IN=>"\nb"}, {OUT=>"\n"}],
   ['newline-20', '-s', "-d'\n'", '-f1-', {IN=>"\n"}, {OUT=>"\n"}],
-  ['newline-21', '-s', "-d'\n'", '-f1-', {IN=>"\nb"}, {OUT=>"\n"}],
+  ['newline-21', '-s', "-d'\n'", '-f1-', {IN=>"\nb"}, {OUT=>"\nb\n"}],
   ['newline-22', "-d'\n'", '-f1-', {IN=>"\nb"}, {OUT=>"\nb\n"}],
+  ['newline-23', "-d'\n'", '-f1-', '--ou=:', {IN=>"a\nb\n"}, {OUT=>"a:b\n"}],
+  ['newline-24', "-d'\n'", '-f1,2', '--ou=:', {IN=>"a\nb\n"}, {OUT=>"a:b\n"}],
 
   # New functionality:
   ['out-delim1', '-c1-3,5-', '--output-d=:', {IN=>"abcdefg\n"},
