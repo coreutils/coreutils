@@ -953,6 +953,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
           v = NULL;
           break;
         default:
+          v = NULL; /* Avoid warnings where assert() is not __noreturn__.  */
           assert (!"bad field_type");
         }
 
