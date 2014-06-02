@@ -100,7 +100,9 @@ AC_ARG_ENABLE([gcc-warnings],
    # we're running from a git repo, then auto enable the warnings.
    gl_gcc_warnings=no
    gl_GCC_VERSION_IFELSE([4], [6],
-                         [test -d "$srcdir"/.git && gl_gcc_warnings=yes])]
+                         [test -d "$srcdir"/.git \
+                          && ! test -f "$srcdir"/.tarball-version \
+                          && gl_gcc_warnings=yes])]
 )
 
 if test "$gl_gcc_warnings" = yes; then
