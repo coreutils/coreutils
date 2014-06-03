@@ -45,12 +45,12 @@
 
 /* Filled with device numbers of examined file systems to avoid
    duplicities in output.  */
-struct devlist
+static struct devlist
 {
   dev_t dev_num;
   struct mount_entry *me;
   struct devlist *next;
-};
+} *device_list;
 
 /* If true, show even file systems with zero size or
    uninteresting types.  */
@@ -607,23 +607,25 @@ excluded_fstype (const char *fstype)
    In the case of duplicities - based on the device number - the mount entry
    with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
-   me_mountdir wins.  */
+   me_mountdir wins.  With DEVICES_ONLY == true (set with df -a), only update
+   the global device_list, rather than filtering the global mount_list.  */
 
 static void
-filter_mount_list (void)
+filter_mount_list (bool devices_only)
 {
   struct mount_entry *me;
 
-  /* Store of already-processed device numbers.  */
-  struct devlist *devlist_head = NULL;
-
-  /* Sort all 'wanted' entries into the list devlist_head.  */
+  /* Sort all 'wanted' entries into the list device_list.  */
   for (me = mount_list; me;)
     {
       struct stat buf;
       struct devlist *devlist;
       struct mount_entry *discard_me = NULL;
 
+      /* TODO: On Linux we might avoid this stat() and another in get_dev()
+         by using the device IDs available from /proc/self/mountinfo.
+         read_file_system_list() could populate me_dev from those
+         for efficiency and accuracy.  */
       if (-1 == stat (me->me_mountdir, &buf))
         {
           /* Stat failed - add ME to be able to complain about it later.  */
@@ -632,7 +634,7 @@ filter_mount_list (void)
       else
         {
           /* If we've already seen this device...  */
-          for (devlist = devlist_head; devlist; devlist = devlist->next)
+          for (devlist = device_list; devlist; devlist = devlist->next)
             if (devlist->dev_num == buf.st_dev)
               break;
 
@@ -661,8 +663,9 @@ filter_mount_list (void)
 
       if (discard_me)
         {
-           me = me->me_next;
-           free_mount_entry (discard_me);
+          me = me->me_next;
+          if (! devices_only)
+            free_mount_entry (discard_me);
         }
       else
         {
@@ -670,26 +673,46 @@ filter_mount_list (void)
           devlist = xmalloc (sizeof *devlist);
           devlist->me = me;
           devlist->dev_num = buf.st_dev;
-          devlist->next = devlist_head;
-          devlist_head = devlist;
+          devlist->next = device_list;
+          device_list = devlist;
 
           me = me->me_next;
         }
     }
 
   /* Finally rebuild the mount_list from the devlist.  */
-  mount_list = NULL;
-  while (devlist_head)
+  if (! devices_only) {
+    mount_list = NULL;
+    while (device_list)
+      {
+        /* Add the mount entry.  */
+        me = device_list->me;
+        me->me_next = mount_list;
+        mount_list = me;
+        /* Free devlist entry and advance.  */
+        struct devlist *devlist = device_list->next;
+        free (device_list);
+        device_list = devlist;
+      }
+  }
+}
+
+/* Search a mount entry list for device id DEV.
+   Return the corresponding device name if found or NULL if not.  */
+
+static char const * _GL_ATTRIBUTE_PURE
+devname_for_dev (dev_t dev)
+{
+  struct devlist *dl = device_list;
+
+  while (dl)
     {
-      /* Add the mount entry.  */
-      me = devlist_head->me;
-      me->me_next = mount_list;
-      mount_list = me;
-      /* Free devlist entry and advance.  */
-      struct devlist *devlist = devlist_head->next;
-      free (devlist_head);
-      devlist_head = devlist;
+      if (dl->dev_num == dev)
+        return dl->me->me_devname;
+      dl = dl->next;
     }
+
+  return NULL;
 }
 
 /* Return true if N is a known integer value.  On many file systems,
@@ -878,9 +901,40 @@ get_dev (char const *disk, char const *mount_point, char const* file,
     fsu = *force_fsu;
   else if (get_fs_usage (stat_file, disk, &fsu))
     {
-      error (0, errno, "%s", quote (stat_file));
-      exit_status = EXIT_FAILURE;
-      return;
+      /* If we can't access a system provided entry due
+         to it not being present (now), or due to permissions,
+         just output placeholder values rather than failing.  */
+      if (process_all && (errno == EACCES || errno == ENOENT))
+        {
+          if (! show_all_fs)
+            return;
+
+          fstype = "-";
+          fsu.fsu_blocksize = fsu.fsu_blocks = fsu.fsu_bfree =
+          fsu.fsu_bavail = fsu.fsu_files = fsu.fsu_ffree = UINTMAX_MAX;
+        }
+      else
+        {
+          error (0, errno, "%s", quote (stat_file));
+          exit_status = EXIT_FAILURE;
+          return;
+        }
+    }
+  else if (process_all && show_all_fs)
+    {
+      /* Ensure we don't output incorrect stats for over-mounted directories.
+         Discard stats when the device name doesn't match.  */
+      struct stat sb;
+      if (stat (stat_file, &sb) == 0)
+        {
+          char const * devname = devname_for_dev (sb.st_dev);
+          if (devname && ! STREQ (devname, disk))
+            {
+              fstype = "-";
+              fsu.fsu_blocksize = fsu.fsu_blocks = fsu.fsu_bfree =
+              fsu.fsu_bavail = fsu.fsu_files = fsu.fsu_ffree = UINTMAX_MAX;
+            }
+        }
     }
 
   if (fsu.fsu_blocks == 0 && !show_all_fs && !show_listed_fs)
@@ -1230,8 +1284,7 @@ get_all_entries (void)
 {
   struct mount_entry *me;
 
-  if (!show_all_fs)
-    filter_mount_list ();
+  filter_mount_list (show_all_fs);
 
   for (me = mount_list; me; me = me->me_next)
     get_dev (me->me_devname, me->me_mountdir, NULL, NULL, me->me_type,

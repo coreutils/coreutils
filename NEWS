@@ -44,8 +44,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   [These dd bugs were present in "the beginning".]
 
-  df now elides duplicates for virtual file systems like tmpfs, and will
-  display the correct device name for directories mounted multiple times.
+  df now elides duplicates for virtual file systems like tmpfs.
+  Displays the correct device details for points mounted multiple times.
+  Displays placeholder values for inaccessible file systems,
+  rather than error messages or values for the wrong file system.
   [These bugs were present in "the beginning".]
 
   du now silently ignores directory cycles introduced with bind mounts.

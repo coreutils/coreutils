@@ -96,8 +96,8 @@ test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 LD_PRELOAD=./k.so df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
-# Ensure we fail when unable to stat invalid entries
-LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df -T >out && fail=1
+# Ensure we don't fail when unable to stat (currently) unavailable entries
+LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # df should also prefer "/fsname" over "fsname"
@@ -113,6 +113,8 @@ test $(grep -c 'virtfs2.*fstype2' <out) -eq 1 || { fail=1; cat out; }
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1
 test $(wc -l <out) -eq 6 || { fail=1; cat out; }
+# Ensure placeholder "-" values used for the eclipsed "virtfs"
+test $(grep -c 'virtfs *-' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect
 # argument processing (now without the fake getmntent()).
