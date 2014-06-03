@@ -64,6 +64,8 @@ main (int argc, char **argv)
       bindtextdomain (PACKAGE, LOCALEDIR);
       textdomain (PACKAGE);
 
+      /* Note true(1) will return EXIT_FAILURE in the
+         edge case where writes fail with GNU specific options.  */
       atexit (close_stdout);
 
       if (STREQ (argv[1], "--help"))
