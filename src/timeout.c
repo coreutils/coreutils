@@ -440,7 +440,7 @@ main (int argc, char **argv)
   if (monitored_pid == -1)
     {
       error (0, errno, _("fork system call failed"));
-      return EXIT_CANCELED;
+      exit (EXIT_CANCELED);
     }
   else if (monitored_pid == 0)
     {                           /* child */
@@ -455,7 +455,7 @@ main (int argc, char **argv)
       /* exit like sh, env, nohup, ...  */
       exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
       error (0, errno, _("failed to run command %s"), quote (argv[0]));
-      return exit_status;
+      exit (exit_status);
     }
   else
     {
@@ -500,8 +500,8 @@ main (int argc, char **argv)
         }
 
       if (timed_out && !preserve_status)
-        return EXIT_TIMEDOUT;
+        exit (EXIT_TIMEDOUT);
       else
-        return status;
+        exit (status);
     }
 }

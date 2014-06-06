@@ -50,6 +50,7 @@ EXTRA_DIST =				\
   bootstrap				\
   bootstrap.conf			\
   build-aux/gen-lists-of-programs.sh	\
+  build-aux/gen-single-binary.sh	\
   cfg.mk				\
   dist-check.mk				\
   maint.mk				\
@@ -57,6 +58,7 @@ EXTRA_DIST =				\
   thanks-gen
 
 gen_progs_lists = $(top_srcdir)/build-aux/gen-lists-of-programs.sh
+gen_single_binary = $(top_srcdir)/build-aux/gen-single-binary.sh
 
 # Keep these in sync with bootstrap.conf:bootstrap_post_import_hook().
 # Use '$(top_srcdir)/m4' and '$(srcdir)/src' for the benefit of non-GNU
@@ -69,6 +71,10 @@ $(top_srcdir)/m4/cu-progs.m4: $(gen_progs_lists)
 $(srcdir)/src/cu-progs.mk: $(gen_progs_lists)
 	$(AM_V_GEN)rm -f $@ $@-t \
 	  && $(SHELL) $(gen_progs_lists) --automake >$@-t \
+	  && chmod a-w $@-t && mv -f $@-t $@
+$(srcdir)/src/single-binary.mk: $(gen_single_binary) $(srcdir)/src/local.mk
+	$(AM_V_GEN)rm -f $@ $@-t \
+	  && $(SHELL) $(gen_single_binary) $(srcdir)/src/local.mk >$@-t \
 	  && chmod a-w $@-t && mv -f $@-t $@
 
 ACLOCAL_AMFLAGS = -I m4
@@ -179,6 +185,24 @@ check-git-hook-script-sync:
 	     done;							\
 	rm -rf $$t;							\
 	test $$fail = 0
+
+# If we are building a single-binary, create symlinks or shebangs for
+# the selected tools when installing.
+install-exec-hook:
+	$(AM_V_at)ctrans=$$(printf coreutils | sed -e "$(transform)");	\
+	for p in $(single_binary_progs); do				\
+	  ptrans=$$(printf '%s' "$$p" | sed -e "$(transform)");		\
+	  rm -f $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
+	  if test "x$(single_binary_install_type)" = xshebangs; then	\
+	    printf '#!%s --coreutils-prog-shebang=%s\n'			\
+	      $(bindir)/$$ctrans$(EXEEXT) $$p				\
+	      >$(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
+	    chmod a+x,a-w $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;\
+	  else								\
+	    $(LN_S) -s $$ctrans$(EXEEXT)				\
+	      $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
+	  fi								\
+	done
 
 noinst_LIBRARIES =
 MOSTLYCLEANFILES =

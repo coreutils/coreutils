@@ -134,6 +134,7 @@
 /m4/xsize.m4
 /maint.mk
 /man/*.1
+/man/dynamic-deps.mk
 /po/*.gmo
 /po/*.po
 /po/.gitignore
@@ -155,10 +156,15 @@
 /po/remove-potcdate.sed
 /po/remove-potcdate.sin
 /po/stamp-po
+/src/coreutils.h
+/src/coreutils_symlinks
+/src/coreutils_shebangs
 /src/cu-progs.mk
 /src/fs-latest-magic.h
+/src/libsinglebin_*.a
 /src/make-prime-list
 /src/primes.h
+/src/single-binary.mk
 /src/version.c
 /src/version.h
 /stamp-h1

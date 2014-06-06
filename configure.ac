@@ -213,6 +213,36 @@ if test "$gl_gcc_warnings" = yes; then
   AC_SUBST([GNULIB_TEST_WARN_CFLAGS])
 fi
 
+AC_ARG_ENABLE([single-binary],
+  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks]],
+     [Compile all the tools in a single binary, reducing the overall size.
+      When compiled this way, shebangs (default when enabled) or symlinks are
+      installed for each tool that points to the single binary.])],
+  [gl_single_binary=no ;
+   case $enableval in
+     yes) gl_single_binary=shebangs ;;
+     no|shebangs|symlinks) gl_single_binary=$enableval ;;
+     *)      AC_MSG_ERROR([bad value $enableval for single-binary option.
+                           Options are: symlinks, shebangs, no.]) ;;
+   esac],
+  [gl_single_binary=no]
+)
+AC_ARG_ENABLE([single-binary-exceptions],
+  [AS_HELP_STRING([--enable-single-binary-exceptions=PROG_LIST],
+     [When used with --enable-single-binary, exclude the PROG_LIST from
+      it, so these programs are compiled as separated files
+      (comma-separated, default none))])],
+  [gl_single_binary_exceptions=$enableval],
+  [gl_single_binary_exceptions=]
+)
+if test "$gl_single_binary" = 'symlinks'; then
+  if ! test "`echo ls | sed \"$program_transform_name\"`" = 'ls'; then
+    AC_MSG_ERROR([program name transformations are not currently supported
+                  with --enable-single-binary=symlinks.])
+  fi
+fi
+AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
+
 AC_FUNC_FORK
 
 optional_bin_progs=
@@ -478,6 +508,52 @@ man1_MANS=`
 # Not installed by "make install", but must be built when creating
 # a distribution tarball.
 EXTRA_MANS=`for p in $no_install_progs_default; do echo man/$p.1; done`
+
+# Replace all the programs by the single binary and symlinks if specified.
+single_binary_progs=
+single_binary_libs=
+single_binary_deps=
+single_binary_install_type=
+if test "$gl_single_binary" != no; then
+  man1_MANS="$man1_MANS man/coreutils.1"
+  # Convert the list to a space separated list
+  gl_single_binary_exceptions=`echo $gl_single_binary_exceptions | tr ',' ' '`
+
+  single_binary_progs=`echo $optional_bin_progs`
+  optional_bin_progs="coreutils"
+  for prog in $gl_single_binary_exceptions; do
+    # Fail if requested to exclude a program than was not part of coreutils.
+    case " $single_binary_progs " in
+      *" $prog "*)
+        gl_REMOVE_PROG([single_binary_progs], [$prog]) ;
+        gl_ADD_PROG([optional_bin_progs], [$prog]) ;;
+      *) AC_MSG_ERROR(['$prog' is not being compiled.]) ;;
+    esac
+  done
+
+  # single_binary_libs holds the list of libs required by the selected
+  # programs, such as for example -lrt.
+  single_binary_libs=`
+    for p in $single_binary_progs; do
+      # Convert '[' to '_'
+      test x"$p" = x'@<:@' && p='_'
+      printf '$(src_libsinglebin_%s_a_ldadd) ' "$p"
+    done`
+  # single_binary_deps holds the list of libsinglebin_*.a files that have the
+  # compiled code of each selected program in a "library" format.
+  single_binary_deps=`
+    for p in $single_binary_progs; do
+      # Convert '[' to '_'
+      test x"$p" = x'@<:@' && p='_'
+      printf 'src/libsinglebin_%s.a ' "$p"
+    done`
+  single_binary_install_type="$gl_single_binary"
+fi
+AC_SUBST([single_binary_progs], [$single_binary_progs])
+AC_SUBST([single_binary_libs], [$single_binary_libs])
+AC_SUBST([single_binary_deps], [$single_binary_deps])
+AC_SUBST([single_binary_install_type], [$single_binary_install_type])
+
 
 # The programs built and installed by "make && make install".
 # Since this is AC_SUBST'd, Automake won't be able to perform rewrite

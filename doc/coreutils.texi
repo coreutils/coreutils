@@ -47,6 +47,7 @@
 * chroot: (coreutils)chroot invocation.         Specify the root directory.
 * cksum: (coreutils)cksum invocation.           Print POSIX CRC checksum.
 * comm: (coreutils)comm invocation.             Compare sorted files by line.
+* coreutils: (coreutils)coreutils invocation.   Multi-call program.
 * cp: (coreutils)cp invocation.                 Copy files.
 * csplit: (coreutils)csplit invocation.         Split by context.
 * cut: (coreutils)cut invocation.               Print selected parts of lines.
@@ -229,6 +230,7 @@ Common Options
 * Traversing symlinks::          Traversing symlinks to directories
 * Treating / specially::         Treating / specially
 * Standards conformance::        Standards conformance
+* coreutils invocation::         Multi-call binary invocation
 
 Output of entire files
 
@@ -771,6 +773,7 @@ name.
 * Treating / specially::        --preserve-root and --no-preserve-root.
 * Special built-in utilities::  @command{break}, @command{:}, @dots{}
 * Standards conformance::       Conformance to the POSIX standard.
+* coreutils invocation::        Multi-call binary invocation.
 @end menu
 
 
@@ -1493,6 +1496,22 @@ For example, if you have a newer system but are running software
 that assumes an older version of POSIX and uses @samp{sort +1}
 or @samp{tail +10}, you can work around any compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
+
+@node coreutils invocation
+@section @command{coreutils}: Multi-call binary
+
+@pindex multicall
+@cindex combined
+@cindex calling combined multi-call binary
+
+@command{coreutils} invokes an individual utility, either
+implicitly selected by the last component of @samp{argv[0]},
+or by explicitly calling @command{coreutils} with the
+@option{--coreutils-prog} option.  Synopsis:
+
+@example
+coreutils @option{--coreutils-prog=PROGRAM} @dots{}
+@end example
 
 @node Output of entire files
 @chapter Output of entire files

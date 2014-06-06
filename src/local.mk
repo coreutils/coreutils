@@ -42,6 +42,7 @@ noinst_PROGRAMS =		\
 noinst_HEADERS =		\
   src/chown-core.h		\
   src/copy.h			\
+  src/coreutils.h		\
   src/cp-hash.h			\
   src/dircolors.h		\
   src/fiemap.h			\
@@ -105,6 +106,9 @@ src_cksum_LDADD = $(LDADD)
 src_comm_LDADD = $(LDADD)
 src_nproc_LDADD = $(LDADD)
 src_cp_LDADD = $(LDADD)
+if !SINGLE_BINARY
+src_coreutils_LDADD = $(LDADD)
+endif
 src_csplit_LDADD = $(LDADD)
 src_cut_LDADD = $(LDADD)
 src_date_LDADD = $(LDADD)
@@ -150,6 +154,7 @@ src_mv_LDADD = $(LDADD)
 src_nice_LDADD = $(LDADD)
 src_nl_LDADD = $(LDADD)
 src_nohup_LDADD = $(LDADD)
+src_numfmt_LDADD = $(LDADD)
 src_od_LDADD = $(LDADD)
 src_paste_LDADD = $(LDADD)
 src_pathchk_LDADD = $(LDADD)
@@ -395,6 +400,46 @@ src_libstdbuf_so_LDADD = $(LIBINTL)
 src_libstdbuf_so_LDFLAGS = -shared
 src_libstdbuf_so_CFLAGS = -fPIC $(AM_CFLAGS)
 
+BUILT_SOURCES += src/coreutils.h
+if SINGLE_BINARY
+# Single binary dependencies
+src_coreutils_CFLAGS = -DSINGLE_BINARY $(AM_CFLAGS)
+#src_coreutils_LDFLAGS = $(AM_LDFLAGS)
+src_coreutils_LDADD = $(single_binary_deps) $(LDADD) $(single_binary_libs)
+src_coreutils_DEPENDENCIES = $(LDADD) $(single_binary_deps)
+
+include $(top_srcdir)/src/single-binary.mk
+
+# Creates symlinks or shebangs to the installed programs when building
+# coreutils single binary.
+EXTRA_src_coreutils_DEPENDENCIES = src/coreutils_$(single_binary_install_type)
+endif SINGLE_BINARY
+
+CLEANFILES += src/coreutils_symlinks
+src/coreutils_symlinks: Makefile
+	$(AM_V_GEN)touch $@
+	$(AM_V_at)for i in $(single_binary_progs); do \
+		rm -f src/$$i$(EXEEXT) || exit $$?; \
+		$(LN_S) -s coreutils$(EXEEXT) src/$$i$(EXEEXT) || exit $$?; \
+	done
+
+CLEANFILES += src/coreutils_shebangs
+src/coreutils_shebangs: Makefile
+	$(AM_V_GEN)touch $@
+	$(AM_V_at)for i in $(single_binary_progs); do \
+		rm -f src/$$i$(EXEEXT) || exit $$?; \
+		printf '#!%s --coreutils-prog-shebang=%s\n' \
+			$(abs_top_builddir)/src/coreutils$(EXEEXT) $$i \
+			>src/$$i$(EXEEXT) || exit $$?; \
+		chmod a+x,a-w src/$$i$(EXEEXT) || exit $$?; \
+	done
+
+clean-local:
+	$(AM_V_at)for i in $(single_binary_progs); do \
+		rm -f src/$$i$(EXEEXT) || exit $$?; \
+	done
+
+
 BUILT_SOURCES += src/dircolors.h
 src/dircolors.h: src/dcgen src/dircolors.hin
 	$(AM_V_GEN)rm -f $@ $@-t
@@ -512,6 +557,22 @@ BUILT_SOURCES += src/version.h
 src/version.h: Makefile
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)printf 'extern char const *Version;\n' > $@t
+	$(AM_V_at)chmod a-w $@t
+	$(AM_V_at)mv $@t $@
+
+# Generates a list of macro invocations like:
+#   SINGLE_BINARY_PROGRAM(program_name_str, main_name)
+# once for each program list on $(single_binary_progs). Note that
+# for [ the macro invocation is:
+#   SINGLE_BINARY_PROGRAM("[", _)
+CLEANFILES += src/coreutils.h
+src/coreutils.h: Makefile
+	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)for prog in $(single_binary_progs); do	\
+	  prog=`basename $$prog`;				\
+	  main=`echo $$prog | tr '[' '_'`;			\
+	  echo "SINGLE_BINARY_PROGRAM(\"$$prog\", $$main)";	\
+	done | sort > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
 

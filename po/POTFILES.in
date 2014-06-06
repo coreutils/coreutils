@@ -45,6 +45,7 @@ src/chroot.c
 src/cksum.c
 src/comm.c
 src/copy.c
+src/coreutils.c
 src/cp.c
 src/csplit.c
 src/cut.c

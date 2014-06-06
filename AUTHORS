@@ -12,6 +12,7 @@ chown: David MacKenzie, Jim Meyering
 chroot: Roland McGrath
 cksum: Q. Frank Xia
 comm: Richard M. Stallman, David MacKenzie
+coreutils: Alex Deymo
 cp: Torbjörn Granlund, David MacKenzie, Jim Meyering
 csplit: Stuart Kemp, David MacKenzie
 cut: David M. Ihnat, David MacKenzie, Jim Meyering

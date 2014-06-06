@@ -46,13 +46,17 @@ is not readable, so skipping the remaining tests in this file."
 cp "$just_built_dd" . || fail=1
 cp $dd $dd2 || fail=1
 
-strip $dd2 \
-  || warn_ "WARNING!!! Your strip command doesn't seem to work,
+strip=-s
+if ! strip $dd2; then
+  ! test -e $abs_top_builddir/src/coreutils \
+    && warn_ "WARNING!!! Your strip command doesn't seem to work,
 so skipping the test of install's --strip option."
+  strip=
+fi
 
 # This test would fail with 3.16s when using versions of strip that
 # don't work on read-only files (the one from binutils works fine).
-ginstall -s -c -m 555 $dd $dir || fail=1
+ginstall $strip -c -m 555 $dd $dir || fail=1
 # Make sure the source file is still around.
 test -f $dd || fail=1
 

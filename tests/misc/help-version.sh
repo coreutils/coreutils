@@ -239,7 +239,7 @@ parted_setup () { args="-s $tmp_in mklabel gpt"
 # something more than --help or --version.
 for i in $built_programs; do
   # Skip these.
-  case $i in chroot|stty|tty|false|chcon|runcon) continue;; esac
+  case $i in chroot|stty|tty|false|chcon|runcon|coreutils) continue;; esac
 
   rm -rf $tmp_in $tmp_in2 $tmp_dir $tmp_out $bigZ_in $zin $zin2
   echo z |gzip > $zin

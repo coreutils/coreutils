@@ -12,6 +12,7 @@ chown
 chroot
 cksum
 comm
+coreutils
 cp
 csplit
 cut

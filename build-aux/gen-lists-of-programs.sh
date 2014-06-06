@@ -17,6 +17,7 @@ set -e
 # use "--enable-install-program=A,B" when invoking configure.
 disabled_by_default_progs='
     arch
+    coreutils
     hostname
 '
 
@@ -176,6 +177,12 @@ END
     echo default__progs =
     for p in $normal_progs; do
       echo default__progs += $progsdir/$p
+    done
+    ;;
+  1,--list-progs)
+    for p in $disabled_by_default_progs $build_if_possible_progs \
+        $normal_progs; do
+      echo $p
     done
     ;;
   *)

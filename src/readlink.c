@@ -174,5 +174,5 @@ main (int argc, char **argv)
         }
     }
 
-  return status;
+  exit (status);
 }

@@ -65,7 +65,7 @@ TESTS_ENVIRONMENT =				\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   abs_srcdir='$(abs_srcdir)'			\
-  built_programs='$(built_programs)'		\
+  built_programs='$(built_programs) $(single_binary_progs)' \
   host_os=$(host_os)				\
   host_triplet='$(host_triplet)'		\
   srcdir='$(srcdir)'				\
@@ -249,6 +249,7 @@ all_tests =					\
   tests/pr/pr-tests.pl				\
   tests/misc/pwd-option.sh			\
   tests/misc/chcon-fail.sh			\
+  tests/misc/coreutils.sh			\
   tests/misc/cut.pl				\
   tests/misc/cut-huge-range.sh			\
   tests/misc/wc.pl				\

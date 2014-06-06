@@ -306,7 +306,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  return (list
-          ? list_signals (table, optind < argc ? argv + optind : NULL)
-          : send_signals (signum, argv + optind));
+  exit (list
+        ? list_signals (table, optind < argc ? argv + optind : NULL)
+        : send_signals (signum, argv + optind));
 }

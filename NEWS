@@ -101,6 +101,24 @@ GNU coreutils NEWS                                    -*- outline -*-
   od accepts a new option: --endian=TYPE to handle inputs with different byte
   orders, or to provide consistent output on systems with disparate endianness.
 
+  configure accepts the new option --enable-single-binary to build all the
+  selected programs in a single binary called "coreutils".  The selected
+  programs can still be called directly using symlinks to "coreutils" or
+  shebangs with the option --coreutils-prog= passed to this program.  The
+  install behavior is determined by the option --enable-single-binary=symlinks
+  or --enable-single-binary=shebangs (the default).  With the symlinks option,
+  you can't make a second symlink to any program because that will change the
+  name of the called program, which is used by coreutils to determine the
+  desired program.  The shebangs option doesn't suffer from this problem, but
+  the /proc/$pid/cmdline file might not be updated on all the platforms.  The
+  functionality of each program is not affected but this single binary will
+  depend on all the required dynamic libraries even to run simple programs.
+  If you desire to build some tools outside the single binary file, you can
+  pass the option --enable-single-binary-exceptions=PROG_LIST with the comma
+  separated list of programs you want to build separately.  This flag
+  considerably reduces the overall size of the installed binaries which makes
+  it suitable for embedded system.
+
 ** Changes in behavior
 
   chroot with an argument of "/" no longer implicitly changes the current
