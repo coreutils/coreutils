@@ -125,7 +125,7 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wunreachable-code"       # Too many warnings for now
   nw="$nw -Wpadded"                 # Our structs are not padded
   nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
-  nw="$nw -Wlogical-op"             # any use of fwrite provokes this
+  nw="$nw -Wlogical-op"             # Too many warnings until GCC 4.8.0
   nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
   nw="$nw -Wvla"                    # warnings in gettext.h
   nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
@@ -151,20 +151,12 @@ if test "$gl_gcc_warnings" = yes; then
   done
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
-  gl_WARN_ADD([-Wsuggest-attribute=const])
-  gl_WARN_ADD([-Wsuggest-attribute=noreturn])
   gl_WARN_ADD([-Wno-format-nonliteral])
 
-  # Enable this warning only with gcc-4.7 and newer.  With 4.6.2 20111027,
-  # it suggests test.c's advance function may be pure, even though it
-  # increments a global variable.  Oops.
-  # Normally we'd write code to test for the precise failure, but that
-  # requires a relatively large input to make gcc exhibit the failure.
-  gl_GCC_VERSION_IFELSE([4], [7], [gl_WARN_ADD([-Wsuggest-attribute=pure])])
-
-  # In spite of excluding -Wlogical-op above, it is enabled, as of
-  # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
-  gl_WARN_ADD([-Wno-logical-op])
+  # Enable this warning only with gcc-4.8 and newer.  Before that
+  # bounds checking as done in truncate.c was incorrectly flagged.
+  # See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43772
+  gl_GCC_VERSION_IFELSE([4], [8], [gl_WARN_ADD([-Wlogical-op])])
 
   # clang is unduly picky about some things.
   AC_CACHE_CHECK([whether the compiler is clang], [utils_cv_clang],
