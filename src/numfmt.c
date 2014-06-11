@@ -703,7 +703,7 @@ double_to_human (long double val, int precision,
     *pfmt++ = '\'';
 
   if (zero_padding_width)
-    pfmt += snprintf (pfmt, sizeof (fmt) - 1, "0%ld", zero_padding_width);
+    pfmt += snprintf (pfmt, sizeof (fmt) - 2, "0%ld", zero_padding_width);
 
   devmsg ("double_to_human:\n");
 
