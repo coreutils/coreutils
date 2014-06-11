@@ -112,4 +112,31 @@ ginstall: creating directory 'sub3/a/b/c'
 'file' -> 'sub3/a/b/c/file'
 EOF
 
+# Test -D together with -t (available since coreutils >= 8.23).
+# Let ginstall create a completely new destination hierarchy.
+ginstall -t sub4/a/b/c -Dv file >out 2>&1 || fail=1
+compare - out <<\EOF || fail=1
+ginstall: creating directory 'sub4'
+ginstall: creating directory 'sub4/a'
+ginstall: creating directory 'sub4/a/b'
+ginstall: creating directory 'sub4/a/b/c'
+'file' -> 'sub4/a/b/c/file'
+EOF
+
+# Ensure that -D with an already existing file as -t's option argument fails.
+touch sub4/file_exists || framework_failure_
+ginstall -t sub4/file_exists -Dv file >out 2>&1 && fail=1
+compare - out <<\EOF || fail=1
+ginstall: target 'sub4/file_exists' is not a directory
+EOF
+
+# Ensure that -D with an already existing directory for -t's option argument
+# succeeds.
+mkdir sub4/dir_exists || framework_failure_
+touch sub4/dir_exists || framework_failure_
+ginstall -t sub4/dir_exists -Dv file >out 2>&1 || fail=1
+compare - out <<\EOF || fail=1
+'file' -> 'sub4/dir_exists/file'
+EOF
+
 Exit $fail

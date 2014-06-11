@@ -104,6 +104,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   causing name look-up errors.  Also look-ups are first done outside the chroot,
   in case the look-up within the chroot fails due to library conflicts etc.
 
+  install now allows the combination of the -D and -t options.
+
   numfmt supports zero padding of numbers using the standard printf
   syntax of a leading zero, for example --format="%010f".
   Also throughput was improved by up to 800% by avoiding redundant processing.

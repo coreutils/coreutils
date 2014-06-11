@@ -70,7 +70,7 @@
 * hostid: (coreutils)hostid invocation.         Print numeric host identifier.
 * hostname: (coreutils)hostname invocation.     Print or set system name.
 * id: (coreutils)id invocation.                 Print user identity.
-* install: (coreutils)install invocation.       Copy and change attributes.
+* install: (coreutils)install invocation.       Copy files and set attributes.
 * join: (coreutils)join invocation.             Join lines on a common field.
 * kill: (coreutils)kill invocation.             Send a signal to processes.
 * link: (coreutils)link invocation.             Make hard links between files.
@@ -9071,8 +9071,8 @@ Ignored; for compatibility with old Unix versions of @command{install}.
 @opindex -D
 Create any missing parent directories of @var{dest},
 then copy @var{source} to @var{dest}.
-This option is ignored if a destination directory is specified
-via @option{--target-directory=DIR}.
+Explicitly specifying the @option{--target-directory=@var{dir}} will similarly
+ensure the presence of that hierarchy before copying @var{source} arguments.
 
 @item -d
 @itemx --directory
