@@ -77,6 +77,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   shuf --repeat no longer dumps core if the input is empty.
   [bug introduced with the --repeat feature in coreutils-8.22]
 
+  tail -f now uses polling mode for VXFS to cater for its clustered mode.
+  [bug introduced with inotify support added in coreutils-7.5]
+
 ** New features
 
   od accepts a new option: --endian=TYPE to handle inputs with different byte

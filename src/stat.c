@@ -443,7 +443,9 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "v9fs";
     case S_MAGIC_VMHGFS: /* 0xBACBACBC remote */
       return "vmhgfs";
-    case S_MAGIC_VXFS: /* 0xA501FCF5 local */
+    case S_MAGIC_VXFS: /* 0xA501FCF5 remote */
+      /* Veritas File System can run in single instance or clustered mode,
+         so mark as remote to cater for the latter case.  */
       return "vxfs";
     case S_MAGIC_VZFS: /* 0x565A4653 local */
       return "vzfs";
