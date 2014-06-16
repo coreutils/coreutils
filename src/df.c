@@ -642,7 +642,9 @@ filter_mount_list (void)
               if ((strchr (me->me_devname, '/')
                    && ! strchr (devlist->me->me_devname, '/'))
                   || (strlen (devlist->me->me_mountdir)
-                      > strlen (me->me_mountdir)))
+                      > strlen (me->me_mountdir))
+                  /* or one overmounted on a different device.  */
+                  || ! STREQ (devlist->me->me_devname, me->me_devname))
                 {
                   /* Discard mount entry for existing device.  */
                   discard_me = devlist->me;
@@ -652,17 +654,6 @@ filter_mount_list (void)
                 {
                   /* Discard mount entry currently being processed.  */
                   discard_me = me;
-
-                  /* We might still want the devname from this mount entry as
-                     the dev_num might not correlate with st_dev if another
-                     device is subsequently overmounted at mountdir, so honor
-                     the order of the presented list and replace with the
-                     latest devname encountered.  */
-                  if (! STREQ (devlist->me->me_devname, me->me_devname))
-                    {
-                      free (devlist->me->me_devname);
-                      devlist->me->me_devname = xstrdup (me->me_devname);
-                    }
                 }
 
             }

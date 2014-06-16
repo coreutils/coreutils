@@ -54,8 +54,8 @@ struct mntent *getmntent (FILE *fp)
     {.mnt_fsname="fsname",  .mnt_dir="/",},
     {.mnt_fsname="/fsname", .mnt_dir="/."},
     {.mnt_fsname="/fsname", .mnt_dir="/"},
-    {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT"},
-    {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT"},
+    {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT", .mnt_type="fstype1"},
+    {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT", .mnt_type="fstype2"},
     {.mnt_fsname="netns",   .mnt_dir="net:[1234567]"},
   };
 
@@ -71,7 +71,8 @@ struct mntent *getmntent (FILE *fp)
 
   while (done++ <= 7)
     {
-      mntents[done-2].mnt_type = "-";
+      if (!mntents[done-2].mnt_type)
+        mntents[done-2].mnt_type = "-";
       if (STREQ (mntents[done-2].mnt_dir, "/NONROOT"))
         mntents[done-2].mnt_dir = nonroot_fs;
       return &mntents[done-2];
@@ -92,11 +93,11 @@ test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 # The fake mtab file should only contain entries
 # having the same device number; thus the output should
 # consist of a header and unique entries.
-LD_PRELOAD=./k.so df >out || fail=1
+LD_PRELOAD=./k.so df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # Ensure we fail when unable to stat invalid entries
-LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df >out && fail=1
+LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df -T >out && fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # df should also prefer "/fsname" over "fsname"
@@ -106,8 +107,8 @@ if test "$unique_entries" = 2; then
   test $(grep -cF '/.' <out) -eq 0 || { fail=1; cat out; }
 fi
 
-# df should use the last seen devname (mnt_fsname)
-test $(grep -c 'virtfs2' <out) -eq 1 || { fail=1; cat out; }
+# df should use the last seen devname (mnt_fsname) and devtype (mnt_type)
+test $(grep -c 'virtfs2.*fstype2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1
