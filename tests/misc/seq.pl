@@ -143,6 +143,9 @@ my @Tests =
    ['not-fast-1', qw(1 3 1), {OUT => [qw(1)]}],
    ['not-fast-2', qw(1 1 4.2), {OUT => [qw(1 2 3 4)]}],
    ['not-fast-3', qw(1 1 0)],
+   # In 8.20..8.22 a start or end of -0 was broken
+   ['not-fast-4', qw(-0 10), {OUT => [qw(-0 1 2 3 4 5 6 7 8 9 10)]}],
+   ['not-fast-5', qw(1 -0)],
 
    # Ensure the correct parameters are passed to the fast path
    ['fast-1', qw(4), {OUT => [qw(1 2 3 4)]}],

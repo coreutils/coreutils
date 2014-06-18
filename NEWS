@@ -74,6 +74,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx now consistently trims whitespace when processing multiple files.
   [This bug was present in "the beginning".]
 
+  seq again generates correct output with start or end values = -0.
+  [bug introduced in coreutils-8.20.]
+
   shuf --repeat no longer dumps core if the input is empty.
   [bug introduced with the --repeat feature in coreutils-8.22]
 

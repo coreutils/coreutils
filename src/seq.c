@@ -604,7 +604,7 @@ main (int argc, char **argv)
       if (asprintf (&s2, "%0.Lf", last.value) < 0)
         xalloc_die ();
 
-      if (seq_fast (s1, s2))
+      if (*s1 != '-' && *s2 != '-' && seq_fast (s1, s2))
         {
           IF_LINT (free (s1));
           IF_LINT (free (s2));
