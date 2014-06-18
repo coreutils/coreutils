@@ -1121,6 +1121,7 @@ get_disk (char const *disk)
 {
   struct mount_entry const *me;
   struct mount_entry const *best_match = NULL;
+  bool best_match_accessible = false;
   char const *file = disk;
 
   char *resolved = canonicalize_file_name (disk);
@@ -1139,13 +1140,24 @@ get_disk (char const *disk)
       if (STREQ (disk, devname))
         {
           size_t len = strlen (me->me_mountdir);
-          if (len < best_match_len)
+
+          if (! best_match_accessible || len < best_match_len)
             {
-              best_match = me;
-              if (len == 1) /* Traditional root.  */
-                break;
-              else
-                best_match_len = len;
+              struct stat disk_stats;
+              bool this_match_accessible = false;
+
+              if (stat (me->me_mountdir, &disk_stats) == 0)
+                best_match_accessible = this_match_accessible = true;
+
+              if (this_match_accessible
+                  || (! best_match_accessible && len < best_match_len))
+                {
+                  best_match = me;
+                  if (len == 1) /* Traditional root.  */
+                    break;
+                  else
+                    best_match_len = len;
+                }
             }
         }
 
