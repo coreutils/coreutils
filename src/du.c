@@ -514,15 +514,11 @@ process_file (FTS *fts, FTSENT *ent)
           break;
 
         case FTS_DC:
-          if (cycle_warning_required (fts, ent))
+          /* If not following symlinks and not a (bind) mount point.  */
+          if (cycle_warning_required (fts, ent)
+              && ! di_set_lookup (di_mnt, sb->st_dev, sb->st_ino))
             {
-              /* If this is a mount point, then diagnose it and avoid
-                 the cycle.  */
-              if (di_set_lookup (di_mnt, sb->st_dev, sb->st_ino))
-                error (0, 0, _("mount point %s already traversed"),
-                       quote (file));
-              else
-                emit_cycle_warning (file);
+              emit_cycle_warning (file);
               return false;
             }
           return true;

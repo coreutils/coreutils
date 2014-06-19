@@ -48,6 +48,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   display the correct device name for directories mounted multiple times.
   [These bugs were present in "the beginning".]
 
+  du now silently ignores directory cycles introduced with bind mounts.
+  Previously it would issue a warning and exit with a failure status.
+
   head --bytes=-N and --lines=-N now handles devices more
   consistently, not ignoring data from virtual devices like /dev/zero,
   or on BSD systems data from tty devices.
