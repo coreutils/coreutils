@@ -10525,6 +10525,13 @@ portable, and because it has undesirable results if the entire
 @var{owner@samp{.}group} happens to identify a user whose name
 contains @samp{.}.
 
+@macro chownGroupRestrictions
+It is system dependent whether a user can change the group to an arbitrary one,
+or the more portable behavior of being restricted to setting a group of
+which the user is a member.
+@end macro
+@chownGroupRestrictions
+
 The @command{chown} command sometimes clears the set-user-ID or
 set-group-ID permission bits.  This behavior depends on the policy and
 functionality of the underlying @code{chown} system call, which may
@@ -10685,7 +10692,8 @@ chown -hR root /u
 
 @command{chgrp} changes the group ownership of each given @var{file}
 to @var{group} (which can be either a group name or a numeric group ID)
-or to the group of an existing reference file.  Synopsis:
+or to the group of an existing reference file.  @xref{chown invocation}.
+Synopsis:
 
 @example
 chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@}@c
@@ -10695,6 +10703,8 @@ chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@}@c
 If @var{group} is intended to represent a
 numeric group ID, then you may specify it with a leading @samp{+}.
 @xref{Disambiguating names and IDs}.
+
+@chownGroupRestrictions
 
 The program accepts the following options.  Also see @ref{Common options}.
 
