@@ -4828,7 +4828,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\
-  -h, --human-readable       with -l, print sizes in human readable format\n\
+  -h, --human-readable       with -l and/or -s, print human readable sizes\n\
                                (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
 "), stdout);
