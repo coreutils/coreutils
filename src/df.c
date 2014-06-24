@@ -1114,6 +1114,33 @@ get_dev (char const *disk, char const *mount_point, char const* file,
   free (dev_name);
 }
 
+/* Scan the mount list returning the _last_ device found for MOUNT.
+   NULL is returned if MOUNT not found.  The result is malloced.  */
+static char *
+last_device_for_mount (char const* mount)
+{
+  struct mount_entry const *me;
+  struct mount_entry const *le = NULL;
+
+  for (me = mount_list; me; me = me->me_next)
+    {
+      if (STREQ (me->me_mountdir, mount))
+        le = me;
+    }
+
+  if (le)
+    {
+      char *devname = le->me_devname;
+      char *canon_dev = canonicalize_file_name (devname);
+      if (canon_dev && IS_ABSOLUTE_FILE_NAME (canon_dev))
+        return canon_dev;
+      free (canon_dev);
+      return xstrdup (le->me_devname);
+    }
+  else
+    return NULL;
+}
+
 /* If DISK corresponds to a mount point, show its usage
    and return true.  Otherwise, return false.  */
 static bool
@@ -1122,6 +1149,7 @@ get_disk (char const *disk)
   struct mount_entry const *me;
   struct mount_entry const *best_match = NULL;
   bool best_match_accessible = false;
+  bool eclipsed_device = false;
   char const *file = disk;
 
   char *resolved = canonicalize_file_name (disk);
@@ -1139,9 +1167,12 @@ get_disk (char const *disk)
 
       if (STREQ (disk, devname))
         {
+          char *last_device = last_device_for_mount (me->me_mountdir);
+          eclipsed_device = last_device && ! STREQ (last_device, devname);
           size_t len = strlen (me->me_mountdir);
 
-          if (! best_match_accessible || len < best_match_len)
+          if (! eclipsed_device
+              && (! best_match_accessible || len < best_match_len))
             {
               struct stat disk_stats;
               bool this_match_accessible = false;
@@ -1159,6 +1190,8 @@ get_disk (char const *disk)
                     best_match_len = len;
                 }
             }
+
+          free (last_device);
         }
 
       free (canon_dev);
@@ -1171,6 +1204,13 @@ get_disk (char const *disk)
       get_dev (best_match->me_devname, best_match->me_mountdir, file, NULL,
                best_match->me_type, best_match->me_dummy,
                best_match->me_remote, NULL, false);
+      return true;
+    }
+  else if (eclipsed_device)
+    {
+      error (0, 0, _("cannot access %s: over-mounted by another device"),
+             quote (file));
+      exit_status = EXIT_FAILURE;
       return true;
     }
 

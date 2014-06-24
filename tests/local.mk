@@ -115,6 +115,7 @@ all_root_tests =				\
   tests/cp/sparse-fiemap.sh			\
   tests/dd/skip-seek-past-dev.sh		\
   tests/df/problematic-chars.sh			\
+  tests/df/over-mount-device.sh			\
   tests/du/bind-mount-dir-cycle.sh		\
   tests/id/setgid.sh				\
   tests/install/install-C-root.sh		\
