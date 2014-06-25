@@ -1,5 +1,5 @@
 #!/bin/sh
-# Verify that id -G prints the right group when run set-GID.
+# Verify that id [-G] prints the right group when run set-GID.
 
 # Copyright (C) 2012-2014 Free Software Foundation, Inc.
 
@@ -20,16 +20,22 @@
 print_ver_ id
 require_root_
 
-g=$(id -u $NON_ROOT_USERNAME) || framework_failure_
+u=$(id -u $NON_ROOT_USERNAME) || framework_failure_
+g=$u
 
 # Construct a different group number.
 gp1=$(expr $g + 1)
 
 echo $gp1 > exp || framework_failure_
 
-chroot --user=$NON_ROOT_USERNAME:$gp1 --groups='' / env PATH="$PATH" \
-  id -G > out || fail=1
-compare exp out || fail=1
 # With coreutils-8.16 and earlier, id -G would print both: $gp1 $g
+chroot --user=+$u:+$gp1 --groups='' / env PATH="$PATH" \
+  id -G > out || fail=1
+compare exp out || { cat out; fail=1; }
+
+# With coreutils-8.22 and earlier, id would erroneously print groups=$g
+chroot --user=+$u:+$gp1 --groups='' / env PATH="$PATH" \
+  id > out || fail=1
+grep -F "groups=$gp1" out || { cat out; fail=1; }
 
 Exit $fail

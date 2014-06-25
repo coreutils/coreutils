@@ -399,19 +399,20 @@ print_full_info (const char *username)
     gid_t *groups;
     int i;
 
-    int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : -1),
-                               &groups);
+    gid_t primary_group;
+    if (username)
+      primary_group = pwd ? pwd->pw_gid : -1;
+    else
+      primary_group = egid;
+
+    int n_groups = xgetgroups (username, primary_group, &groups);
     if (n_groups < 0)
       {
         if (username)
-          {
-            error (0, errno, _("failed to get groups for user %s"),
-                   quote (username));
-          }
+          error (0, errno, _("failed to get groups for user %s"),
+                 quote (username));
         else
-          {
-            error (0, errno, _("failed to get groups for the current process"));
-          }
+          error (0, errno, _("failed to get groups for the current process"));
         ok = false;
         return;
       }
