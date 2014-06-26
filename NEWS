@@ -53,6 +53,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   du now silently ignores directory cycles introduced with bind mounts.
   Previously it would issue a warning and exit with a failure status.
+  [bug introduced in coreutils-8.1]
 
   head --bytes=-N and --lines=-N now handles devices more
   consistently, not ignoring data from virtual devices like /dev/zero,
