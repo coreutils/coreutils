@@ -29,7 +29,7 @@ root=$(id -nu 0) || skip_ "Couldn't look up root username"
 
 # verify numeric IDs looked up similarly to names
 NON_ROOT_UID=$(id -u $NON_ROOT_USERNAME)
-NON_ROOT_GID=$(id -g $NON_ROOT_USERNAME)
+NON_ROOT_GROUP=$NON_ROOT_GID # Used where we want name lookups to occur
 
 # "uid:" is supported (unlike chown etc.) since we treat it like "uid"
 chroot --userspec=$NON_ROOT_UID: / true || fail=1
@@ -64,7 +64,7 @@ id_G_after_chroot=$(
   chroot --userspec=$NON_ROOT_USERNAME:$NON_ROOT_GROUP \
     --groups=$NON_ROOT_GROUP / id -G
 )
-test "$id_G_after_chroot" = $NON_ROOT_GROUP || fail=1
+test "$id_G_after_chroot" = $NON_ROOT_GID || fail=1
 
 # Verify that when specifying only the user name we get all their groups
 test "$(chroot --userspec=$NON_ROOT_USERNAME / id -G)" = \
@@ -77,7 +77,7 @@ test "$(chroot --userspec=$NON_ROOT_USERNAME: / id -G)" = \
 # Verify that when specifying only the user and clearing supplemental groups
 # that we only get the primary group
 test "$(chroot --userspec=$NON_ROOT_USERNAME --groups='' / id -G)" = \
-     "$(id -g $NON_ROOT_USERNAME)" || fail=1
+     $NON_ROOT_GID || fail=1
 
 # Verify that when specifying only the UID we get all their groups
 test "$(chroot --userspec=$NON_ROOT_UID / id -G)" = \
@@ -88,7 +88,7 @@ test "$(chroot --userspec=$NON_ROOT_UID / id -G)" = \
 # results in no lookups in the name database which could be useful depending
 # on your chroot setup.
 test "$(chroot --userspec=+$NON_ROOT_UID:+$NON_ROOT_GID --groups='' / id -G)" =\
-     "$(id -g $NON_ROOT_USERNAME)" || fail=1
+     $NON_ROOT_GID || fail=1
 
 # Verify that when specifying only a group we get the current user ID
 test "$(chroot --userspec=:$NON_ROOT_GROUP / id -u)" = "$(id -u)" \

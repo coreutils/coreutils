@@ -21,11 +21,9 @@ print_ver_ truncate
 
 require_root_
 
-group_num=$(id -g $NON_ROOT_USERNAME)
-
 # Create a file owned by root, and writable by $NON_ROOT_USERNAME.
 echo > root-owned || framework_failure_
-chgrp +$group_num . root-owned || framework_failure_
+chgrp +$NON_ROOT_GID . root-owned || framework_failure_
 chmod g+w root-owned
 
 # Ensure that the current directory is searchable by $NON_ROOT_USERNAME.
