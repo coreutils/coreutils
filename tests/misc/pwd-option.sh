@@ -40,11 +40,8 @@ printf %s\\n "$base/a/b" >> exp || fail=1
 env -- pwd --physical >> out || fail=1
 printf %s\\n "$base/a/b" >> exp || fail=1
 
-# By default, we use -P unless POSIXLY_CORRECT.
+# By default, we use -L like POSIX and various shells.
 env -- pwd >> out || fail=1
-printf %s\\n "$base/a/b" >> exp || fail=1
-
-env -- POSIXLY_CORRECT=1 pwd >> out || fail=1
 printf %s\\n "$base/c" >> exp || fail=1
 
 # Make sure we reject bogus values, and silently fall back to -P.
