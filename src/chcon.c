@@ -555,13 +555,10 @@ main (int argc, char **argv)
     }
   else
     {
-      context_t context;
       specified_context = argv[optind++];
-      context = context_new (specified_context);
-      if (!context)
-        error (EXIT_FAILURE, 0, _("invalid context: %s"),
+      if (security_check_context (specified_context) < 0)
+        error (EXIT_FAILURE, errno, _("invalid context: %s"),
                quotearg_colon (specified_context));
-      context_free (context);
     }
 
   if (reference_file && component_specified)
