@@ -141,7 +141,7 @@ static int
 change_file_context (int fd, char const *file)
 {
   security_context_t file_context = NULL;
-  context_t context;
+  context_t context IF_LINT (= NULL);
   security_context_t context_string;
   int errors = 0;
 
@@ -170,16 +170,13 @@ change_file_context (int fd, char const *file)
 
       if (compute_context_from_mask (file_context, &context))
         return 1;
+
+      context_string = context_str (context);
     }
   else
     {
-      /* FIXME: this should be done exactly once, in main.  */
-      context = context_new (specified_context);
-      if (!context)
-        abort ();
+      context_string = specified_context;
     }
-
-  context_string = context_str (context);
 
   if (file_context == NULL || ! STREQ (context_string, file_context))
     {
@@ -195,8 +192,11 @@ change_file_context (int fd, char const *file)
         }
     }
 
-  context_free (context);
-  freecon (file_context);
+  if (specified_context == NULL)
+    {
+      context_free (context);
+      freecon (file_context);
+    }
 
   return errors;
 }
