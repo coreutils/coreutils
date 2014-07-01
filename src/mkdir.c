@@ -200,7 +200,7 @@ main (int argc, char **argv)
 {
   const char *specified_mode = NULL;
   int optc;
-  security_context_t scontext = NULL;
+  char const *scontext = NULL;
   struct mkdir_options options;
 
   options.make_ancestor_function = NULL;
@@ -272,7 +272,7 @@ main (int argc, char **argv)
       if (is_smack_enabled ())
         ret = smack_set_label_for_self (scontext);
       else
-        ret = setfscreatecon (scontext);
+        ret = setfscreatecon (se_const (scontext));
 
       if (ret < 0)
         error (EXIT_FAILURE, errno,

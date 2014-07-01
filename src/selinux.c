@@ -72,10 +72,10 @@ mode_to_security_class (mode_t m)
 */
 
 static int
-computecon (char const *path, mode_t mode, security_context_t * con)
+computecon (char const *path, mode_t mode, char **con)
 {
-  security_context_t scon = NULL;
-  security_context_t tcon = NULL;
+  char *scon = NULL;
+  char *tcon = NULL;
   security_class_t tclass;
   int rc = -1;
 
@@ -111,7 +111,8 @@ int
 defaultcon (char const *path, mode_t mode)
 {
   int rc = -1;
-  security_context_t scon = NULL, tcon = NULL;
+  char *scon = NULL;
+  char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;
@@ -182,7 +183,8 @@ restorecon_private (char const *path, bool local)
 {
   int rc = -1;
   struct stat sb;
-  security_context_t scon = NULL, tcon = NULL;
+  char *scon = NULL;
+  char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;

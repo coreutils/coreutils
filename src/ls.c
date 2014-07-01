@@ -208,7 +208,7 @@ struct fileinfo
     mode_t linkmode;
 
     /* security context.  */
-    security_context_t scontext;
+    char *scontext;
 
     bool stat_ok;
 

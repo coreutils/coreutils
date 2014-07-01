@@ -218,8 +218,8 @@ need_copy (const char *src_name, const char *dest_name,
   /* compare SELinux context if preserving */
   if (selinux_enabled && x->preserve_security_context)
     {
-      security_context_t file_scontext = NULL;
-      security_context_t to_scontext = NULL;
+      char *file_scontext = NULL;
+      char *to_scontext = NULL;
       bool scontext_match;
 
       if (getfilecon (src_name, &file_scontext) == -1)
@@ -312,7 +312,7 @@ static void
 setdefaultfilecon (char const *file)
 {
   struct stat st;
-  security_context_t scontext = NULL;
+  char *scontext = NULL;
   static bool first_call = true;
 
   if (selinux_enabled != 1)
@@ -786,7 +786,7 @@ main (int argc, char **argv)
   int n_files;
   char **file;
   bool strip_program_specified = false;
-  security_context_t scontext = NULL;
+  char const *scontext = NULL;
   /* set iff kernel has extra selinux system calls */
   selinux_enabled = (0 < is_selinux_enabled ());
 
@@ -943,7 +943,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
            _("cannot set target context and preserve it"));
 
-  if (scontext && setfscreatecon (scontext) < 0)
+  if (scontext && setfscreatecon (se_const (scontext)) < 0)
     error (EXIT_FAILURE, errno,
            _("failed to set default file creation context to %s"),
            quote (scontext));

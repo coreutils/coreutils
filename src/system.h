@@ -657,3 +657,9 @@ stzncpy (char *restrict dest, char const *restrict src, size_t len)
 #ifndef ARRAY_CARDINALITY
 # define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
 #endif
+
+/* Avoid const warnings by casting to more portable type.
+   This is to cater for the incorrect const function declarations
+   in selinux.h before libselinux-2.3 (May 2014).
+   When version >= 2.3 is ubiquitous remove this function.  */
+static inline char * se_const (char const * sctx) { return (char *) sctx; }

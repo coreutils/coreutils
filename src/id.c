@@ -58,7 +58,7 @@ static bool ok = true;
 
 /* The SELinux context.  Start with a known invalid value so print_full_info
    knows when 'context' has not been set to a meaningful value.  */
-static security_context_t context = NULL;
+static char *context = NULL;
 
 static struct option const longopts[] =
 {
@@ -220,7 +220,7 @@ main (int argc, char **argv)
       /* Report failure only if --context (-Z) was explicitly requested.  */
       if ((selinux_enabled && getcon (&context) && just_context)
           || (smack_enabled
-              && smack_new_label_from_self ((char **) &context) < 0
+              && smack_new_label_from_self (&context) < 0
               && just_context))
         error (EXIT_FAILURE, 0, _("can't get process context"));
     }

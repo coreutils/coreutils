@@ -115,9 +115,9 @@ main (int argc, char **argv)
   char *user = NULL;
   char *type = NULL;
   char *context = NULL;
-  security_context_t cur_context = NULL;
-  security_context_t file_context = NULL;
-  security_context_t new_context = NULL;
+  char *cur_context = NULL;
+  char *file_context = NULL;
+  char *new_context = NULL;
   bool compute_trans = false;
 
   context_t con;

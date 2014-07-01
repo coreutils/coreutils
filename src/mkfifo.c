@@ -79,7 +79,7 @@ main (int argc, char **argv)
   char const *specified_mode = NULL;
   int exit_status = EXIT_SUCCESS;
   int optc;
-  security_context_t scontext = NULL;
+  char const *scontext = NULL;
   bool set_security_context = false;
 
   initialize_main (&argc, &argv);
@@ -136,7 +136,7 @@ main (int argc, char **argv)
       if (is_smack_enabled ())
         ret = smack_set_label_for_self (scontext);
       else
-        ret = setfscreatecon (scontext);
+        ret = setfscreatecon (se_const (scontext));
 
       if (ret < 0)
         error (EXIT_FAILURE, errno,

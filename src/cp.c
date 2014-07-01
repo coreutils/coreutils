@@ -926,7 +926,7 @@ main (int argc, char **argv)
   bool copy_contents = false;
   char *target_directory = NULL;
   bool no_target_directory = false;
-  security_context_t scontext = NULL;
+  char const *scontext = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1196,7 +1196,7 @@ main (int argc, char **argv)
        if (scontext)
          restorecon (dst_path, 0, true);
    */
-  if (scontext && setfscreatecon (scontext) < 0)
+  if (scontext && setfscreatecon (se_const (scontext)) < 0)
     error (EXIT_FAILURE, errno,
            _("failed to set default file creation context to %s"),
            quote (scontext));

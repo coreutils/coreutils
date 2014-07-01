@@ -779,7 +779,7 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
       /* Set the default context for the process to match the source.  */
       bool all_errors = !x->data_copy_required || x->require_preserve_context;
       bool some_errors = !all_errors && !x->reduce_diagnostics;
-      security_context_t con;
+      char *con;
 
       if (0 <= lgetfilecon (src_name, &con))
         {

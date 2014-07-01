@@ -30,7 +30,7 @@ cat > k.c <<'EOF' || framework_failure_
 #include <selinux/selinux.h>
 #include <errno.h>
 
-int getfilecon (const char *path, security_context_t *con)
+int getfilecon (const char *path, char **con)
 {
   /* Leave a marker so we can identify if the function was intercepted.  */
   fclose(fopen("preloaded", "w"));
@@ -39,7 +39,7 @@ int getfilecon (const char *path, security_context_t *con)
   return -1;
 }
 
-int lgetfilecon (const char *path, security_context_t *con)
+int lgetfilecon (const char *path, char **con)
 { return getfilecon (path, con); }
 EOF
 
