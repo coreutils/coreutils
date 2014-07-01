@@ -69,14 +69,12 @@ esac
 # Test interactions with -.
 touch -h - > file || fail=1
 
-test="$abs_top_builddir/src/test"
-
 # If >&- works, test "touch -ch -" etc.
 # >&- apparently does not work in HP-UX 11.23.
 # This test is ineffective unless /dev/stdout also works.
 # If stdout is open, it is not a symlink.
-if "$test" -w /dev/stdout >/dev/null &&
-   "$test" ! -w /dev/stdout >&-; then
+if env test -w /dev/stdout >/dev/null &&
+   env test ! -w /dev/stdout >&-; then
   touch -h - >&- && fail=1
   touch -h -c - >&- || fail=1
 fi

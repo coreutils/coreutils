@@ -51,7 +51,7 @@ test $? = 124 && fail=1
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
-  sig=$("$abs_top_builddir/src/kill" -l CHLD 2>/dev/null) && trap '' $sig
+  sig=$(env kill -l CHLD 2>/dev/null) && trap '' $sig
 
   exec timeout 10 true
 ) || fail=1

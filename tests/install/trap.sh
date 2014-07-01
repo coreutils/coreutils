@@ -24,7 +24,7 @@ print_ver_ ginstall
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (
   # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
-  sig=$("$abs_top_builddir/src/kill" -l CHLD 2>/dev/null) && trap '' $sig
+  sig=$(env kill -l CHLD 2>/dev/null) && trap '' $sig
 
   # Before 2004-04-21, install would infloop, in the 'while (wait...' loop:
   exec ginstall -s "$abs_top_builddir/src/ginstall$EXEEXT" .
