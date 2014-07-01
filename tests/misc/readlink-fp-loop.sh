@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ readlink
-cwd=$("$abs_top_builddir/src/pwd")
+cwd=$(env pwd -P)
 
 # To trigger this bug, we have to construct a name/situation during
 # the resolution of which the code dereferences the same symlink (S)

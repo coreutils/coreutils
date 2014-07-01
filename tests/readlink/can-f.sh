@@ -20,7 +20,7 @@
 print_ver_ readlink
 
 pwd=$(pwd)
-my_pwd=$("$abs_top_builddir/src/pwd")
+my_pwd=$(env pwd -P)
 tmp=d
 
 mkdir $tmp || framework_failure_

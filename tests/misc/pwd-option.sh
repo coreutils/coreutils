@@ -21,7 +21,7 @@ print_ver_ pwd
 
 mkdir -p a/b || framework_failure_
 ln -s a/b c || framework_failure_
-base=$(env -- pwd)
+base=$(env -- pwd -P)
 
 # Remove any logical paths from $PWD.
 cd "$base" || framework_failure_
