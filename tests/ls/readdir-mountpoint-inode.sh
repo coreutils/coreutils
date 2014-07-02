@@ -21,9 +21,9 @@ print_ver_ ls
 
 # We use --local here so as to not activate
 # potentially very many remote mounts.
-mount_points=$(df --local -P 2>&1 | sed -n 's,.*[0-9]% \(/.\),\1,p')
-test -z "$mount_points" &&
-   skip_ "this test requires a non-root mount point"
+df --local --out=target | sed -n '/^\/./p' > mount_points
+test -s mount_points ||
+  skip_ "this test requires a non-root mount point"
 
 # Given e.g., /dev/shm, produce the list of GNU ls options that
 # let us list just that entry using readdir data from its parent:
@@ -48,23 +48,23 @@ ls_ignore_options()
 inode_via_readdir()
 {
   mount_point=$1
-  base=$(basename $mount_point)
-  case $base in
+  base=$(basename "$mount_point")
+  case "$base" in
     .*) skip_ 'mount point component starts with "."' ;;
     *[*?]*) skip_ 'mount point component contains "?" or "*"' ;;
   esac
   opts=$(ls_ignore_options "$base")
-  parent_dir=$(dirname $mount_point)
-  eval "ls -i $opts $parent_dir" | sed 's/ .*//'
+  parent_dir=$(dirname "$mount_point")
+  eval "ls -i $opts '$parent_dir'" | sed 's/ .*//'
 }
 
-for dir in $mount_points; do
-  readdir_inode=$(inode_via_readdir $dir)
+while read dir; do
+  readdir_inode=$(inode_via_readdir "$dir")
   test $? = 77 && continue
-  stat_inode=$(timeout 1 stat --format=%i $dir)
+  stat_inode=$(timeout 1 stat --format=%i "$dir")
   # If stat fails or says the inode is 0, skip $dir.
   case $stat_inode in 0|'') continue;; esac
   test "$readdir_inode" = "$stat_inode" || fail=1
-done
+done < mount_points
 
 Exit $fail
