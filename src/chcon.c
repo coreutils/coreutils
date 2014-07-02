@@ -141,7 +141,7 @@ static int
 change_file_context (int fd, char const *file)
 {
   char *file_context = NULL;
-  context_t context IF_LINT (= NULL);
+  context_t context IF_LINT (= 0);
   char const * context_string;
   int errors = 0;
 
