@@ -28,6 +28,12 @@ df --local || skip_ "df fails"
 export CU_NONROOT_FS=$(df --local --output=target 2>&1 | grep /. | head -n1)
 test -z "$CU_NONROOT_FS" && unique_entries=1 || unique_entries=2
 
+grep '^#define HAVE_MNTENT_H 1' $CONFIG_HEADER > /dev/null \
+      || skip_ "no mntent.h available to confirm the interface"
+
+grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
+      || skip_ "getmntent is not used on this system"
+
 # Simulate an mtab file to test various cases.
 cat > k.c <<'EOF' || framework_failure_
 #include <stdio.h>
