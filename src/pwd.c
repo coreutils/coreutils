@@ -65,7 +65,7 @@ Print the full filename of the current working directory.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\n\
-If no option is specified, -L is assumed.\n\
+If no option is specified, -P is assumed.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_ancillary_info ();
@@ -327,8 +327,10 @@ int
 main (int argc, char **argv)
 {
   char *wd;
-  /* POSIX requires a default of -L.  */
-  bool logical = true;
+  /* POSIX requires a default of -L, but most scripts expect -P.
+     Currently shells default to -L, while stand-alone
+     pwd implementations default to -P.  */
+  bool logical = (getenv ("POSIXLY_CORRECT") != NULL);
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

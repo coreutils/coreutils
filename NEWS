@@ -117,9 +117,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   will now honor an empty or unknown TERM environment variable,
   and not output colors even with --colors=always.
 
-  pwd now conforms to POSIX and common practice with shell builtins
-  to assume -L by default, outputting $PWD from the environment if appropriate.
-
 ** Improvements
 
   chroot has better --userspec and --group look-ups, with numeric IDs never

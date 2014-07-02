@@ -13738,7 +13738,8 @@ will be symbolic links.
 @cindex symbolic links and @command{pwd}
 If @option{-L} and @option{-P} are both given, the last one takes
 precedence.  If neither option is given, then this implementation uses
-@option{-L} as the default.
+@option{-P} as the default unless the @env{POSIXLY_CORRECT}
+environment variable is set.
 
 @mayConflictWithShellBuiltIn{pwd}
 
