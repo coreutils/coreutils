@@ -63,7 +63,7 @@
    the readahead setting is 128KiB which was read using:
 
    file="."
-   device=$(df -P --local "$file" | tail -n1 | cut -d' ' -f1)
+   device=$(df --output=source --local "$file" | tail -n1)
    echo $(( $(blockdev --getra $device) * 512 ))
 
    However there isn't a portable way to get the above.

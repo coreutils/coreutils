@@ -33,7 +33,7 @@ get_device_size() {
 
 # Get path to device the current dir is on.
 # Note df can only get fs size, not device size.
-device=$(df -P . | tail -n1 | cut -d' ' -f1) || framework_failure_
+device=$(df --output=source . | tail -n1) || framework_failure_
 
 dev_size=$(get_device_size "$device") ||
   skip_ "failed to determine size of $device"

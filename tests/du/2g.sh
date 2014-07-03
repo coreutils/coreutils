@@ -27,10 +27,7 @@ very_expensive_
 
 # Get number of free kilobytes on current partition, so we can
 # skip this test if there is insufficient free space.
-
-# This technique relies on the fact that the 'Available' kilobyte
-# count is the number just before the one with a trailing '%'.
-free_kb=$(df -kP .|tail -1|sed 's/ [0-9][0-9]*%.*//;s/ *$//;s/.* //')
+free_kb=$(df -k --output=avail . | tail -n1)
 case "$free_kb" in
   [0-9]*) ;;
   *) skip_ "invalid size from df: $free_kb";;

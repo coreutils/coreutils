@@ -19,8 +19,10 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ stat
 
-df_mnt=$(df -P . | sed -n '2s/.* \([^ ]*$\)/\1/p')
 stat_mnt=$(stat -c%m .) || fail=1
-test "$stat_mnt" || fail=1
+case "$stat_mnt" in
+  /*) ;;
+  *) fail=1;;
+esac
 
 Exit $fail
