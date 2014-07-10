@@ -51,6 +51,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   than error messages or values for the wrong file system.
   [These bugs were present in "the beginning".]
 
+  df now outputs all appropriate entries in the presence of bind mounts.
+  On some systems, entries would have been incorrectly elided due to
+  them being considered "dummy" mounts.
+  [bug introduced in coreutils-8.22]
+
   du now silently ignores directory cycles introduced with bind mounts.
   Previously it would issue a warning and exit with a failure status.
   [bug introduced in coreutils-8.1]
