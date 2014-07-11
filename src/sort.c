@@ -3237,10 +3237,17 @@ merge_tree_init (size_t nthreads, size_t nlines, struct line *dest)
 
 /* Destroy the merge tree. */
 static void
-merge_tree_destroy (struct merge_node *merge_tree)
+merge_tree_destroy (size_t nthreads, struct merge_node *merge_tree)
 {
-  struct merge_node *root = merge_tree;
-  pthread_mutex_destroy (&root->lock);
+  size_t n_nodes = nthreads * 2;
+  struct merge_node *node = merge_tree;
+
+  while (n_nodes--)
+    {
+      pthread_mutex_destroy (&node->lock);
+      node++;
+    }
+
   free (merge_tree);
 }
 
@@ -3642,8 +3649,6 @@ sortlines (struct line *restrict lines, size_t nthreads,
       queue_insert (queue, node);
       merge_loop (queue, total_lines, tfp, temp_output);
     }
-
-  pthread_mutex_destroy (&node->lock);
 }
 
 /* Scan through FILES[NTEMPS .. NFILES-1] looking for files that are
@@ -3947,12 +3952,14 @@ sort (char *const *files, size_t nfiles, char const *output_file,
               queue_init (&queue, nthreads);
               struct merge_node *merge_tree =
                 merge_tree_init (nthreads, buf.nlines, line);
-              struct merge_node *root = merge_tree + 1;
 
-              sortlines (line, nthreads, buf.nlines, root,
+              sortlines (line, nthreads, buf.nlines, merge_tree + 1,
                          &queue, tfp, temp_output);
+
+#ifdef lint
+              merge_tree_destroy (nthreads, merge_tree);
               queue_destroy (&queue);
-              merge_tree_destroy (merge_tree);
+#endif
             }
           else
             write_unique (line - 1, tfp, temp_output);
