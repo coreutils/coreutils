@@ -61,7 +61,7 @@ CLEANFILES += man/dynamic-deps.mk
 man/dynamic-deps.mk: Makefile
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)for man in $(ALL_MANS); do				\
-		name=$${man:4: -2} ; # Space is important		\
+		name=`echo "$$man"|sed 's|.*/||; s|\.1$$||'` || exit 1;	\
 		case $$name in						\
 		     arch) prog='uname';;				\
 		  install) prog='ginstall';;				\
