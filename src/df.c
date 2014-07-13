@@ -44,7 +44,7 @@
   proper_name ("Paul Eggert")
 
 /* Filled with device numbers of examined file systems to avoid
-   duplicities in output.  */
+   duplicates in output.  */
 static struct devlist
 {
   dev_t dev_num;
@@ -604,7 +604,7 @@ excluded_fstype (const char *fstype)
 }
 
 /* Filter mount list by skipping duplicate entries.
-   In the case of duplicities - based on the device number - the mount entry
+   In the case of duplicates - based on the device number - the mount entry
    with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
    me_mountdir wins.  With DEVICES_ONLY == true (set with df -a), only update
@@ -1185,7 +1185,11 @@ get_disk (char const *disk)
                 {
                   best_match = me;
                   if (len == 1) /* Traditional root.  */
-                    break;
+                    {
+                      free (last_device);
+                      free (canon_dev);
+                      break;
+                    }
                   else
                     best_match_len = len;
                 }
