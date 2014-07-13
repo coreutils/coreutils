@@ -23,7 +23,7 @@ print_ver_ split
 # in which case no data is extracted, or empty files are written
 split -n 10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
-rm x??
+rm -f x??
 
 # Ensure --elide-empty-files is honored
 split -e -n 10 /dev/null || fail=1
