@@ -116,7 +116,8 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
               if (g != NULL)
                 value = g->gr_gid;
             }
-          g = (struct group *)! NULL;  /* We've got a group from the number.  */
+          /* Flag that we've got a group from the number.  */
+          g = (struct group *) (intptr_t) ! NULL;
         }
       else
         {
