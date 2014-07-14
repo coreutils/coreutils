@@ -22,7 +22,7 @@ print_ver_ dd
 {
   # Two lines, EBCDIC " A A" and " A  ", followed by all the bytes in order.
   printf '\100\301\100\301\100\301\100\100' &&
-  printf $(printf "\\%03o" $(seq 0 255 ));
+  printf $(printf '\\%03o' $(seq 0 255));
 } >in || framework_failure_
 
 {
