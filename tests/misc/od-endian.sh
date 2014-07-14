@@ -21,15 +21,18 @@ print_ver_ od
 
 in='0123456789abcdef'
 
+NL='
+'
+
 # rev(1) is not generally available, so here's a simplistic
 # implementation sufficient for our purposes.
 rev() {
   while read line; do
-    printf '%s' "$line" | sed 's/./&\n/g' | tac | paste -s -d ''
+    printf '%s' "$line" | sed "s/./&\\$NL/g" | tac | paste -s -d ''
   done
 }
 
-in_swapped() { printf '%s' "$in" | sed "s/.\{$1\}/&\\n/g" | rev | tr -d '\n'; }
+in_swapped() { printf '%s' "$in" | sed "s/.\{$1\}/&\\$NL/g" | rev |tr -d '\n'; }
 
 for e in little big; do
   test $e = little && eo=big || eo=little
