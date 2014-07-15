@@ -86,6 +86,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ln -sr '' F no longer segfaults.  Now works as expected.
   [bug introduced with the --relative feature in coreutils-8.16]
 
+  numfmt now handles blanks correctly in all unibyte locales.  Previously
+  in locales where character 0xA0 is a blank, numfmt would mishandle it.
+  [bug introduced when numfmt was added in coreutils-8.21]
+
   ptx --format long option parsing no longer falls through into the --help case.
   [bug introduced in TEXTUTILS-1_22i]
 

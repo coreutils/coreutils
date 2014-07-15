@@ -23,6 +23,7 @@
 
 #include "mbsalign.h"
 #include "argmatch.h"
+#include "c-ctype.h"
 #include "error.h"
 #include "quote.h"
 #include "system.h"
@@ -454,13 +455,9 @@ simple_strtod_int (const char *input_str,
     *negative = false;
 
   *endptr = (char *) input_str;
-  while (*endptr && isdigit (**endptr))
+  while (*endptr && c_isdigit (**endptr))
     {
       int digit = (**endptr) - '0';
-
-      /* can this happen in some strange locale?  */
-      if (digit < 0 || digit > 9)
-        return SSE_INVALID_NUMBER;
 
       if (digits > MAX_UNSCALED_DIGITS)
         e = SSE_OK_PRECISION_LOSS;
@@ -600,7 +597,7 @@ simple_strtod_human (const char *input_str,
       /* process suffix.  */
 
       /* Skip any blanks between the number and suffix.  */
-      while (isblank (**endptr))
+      while (isblank (to_uchar (**endptr)))
         (*endptr)++;
 
       if (!valid_suffix (**endptr))
@@ -1174,7 +1171,7 @@ process_suffixed_number (char *text, long double *result, size_t *precision)
 
   /* Skip white space - always.  */
   char *p = text;
-  while (*p && isblank (*p))
+  while (*p && isblank (to_uchar (*p)))
     ++p;
   const unsigned int skip_count = text - p;
 
@@ -1229,9 +1226,9 @@ skip_fields (char *buf, int fields)
   else
     while (*ptr && fields--)
       {
-        while (*ptr && isblank (*ptr))
+        while (*ptr && isblank (to_uchar (*ptr)))
           ++ptr;
-        while (*ptr && !isblank (*ptr))
+        while (*ptr && !isblank (to_uchar (*ptr)))
           ++ptr;
       }
   return ptr;
