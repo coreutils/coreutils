@@ -473,7 +473,7 @@ AC_COMPILE_IFELSE(
   [stdbuf_supported=yes],
   [stdbuf_supported=no])
 AC_MSG_RESULT([$stdbuf_supported])
-if test "$stdbuf_supported" = "yes"; then
+if test "$stdbuf_supported" = "yes" && test -z "$EXEEXT"; then
   gl_ADD_PROG([optional_bin_progs], [stdbuf])
 fi
 
