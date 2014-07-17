@@ -57,7 +57,7 @@ $(ALL_MANS): $(mandeps)
 # are handled by converting $name to $prog on the following code.
 # $(ALL_MANS) includes the $(EXTRA_MANS) so even the programs that are not
 # being installed will have the right dependency for the manpages.
-CLEANFILES += man/dynamic-deps.mk
+DISTCLEANFILES += man/dynamic-deps.mk
 man/dynamic-deps.mk: Makefile
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)for man in $(ALL_MANS); do				\
@@ -75,11 +75,10 @@ man/dynamic-deps.mk: Makefile
 				echo $$man: src/$$prog$(EXEEXT);;	\
 		esac							\
 	done > $@-t							\
-	&& chmod a-w $@-t						\
 	&& mv $@-t $@
 
 # Include the generated man dependencies.
--include man/dynamic-deps.mk
+@AMDEP_TRUE@@am__include@ man/dynamic-deps.mk
 
 .x.1:
 	$(AM_V_GEN)name=`echo $@ | sed 's|.*/||; s|\.1$$||'` || exit 1;	\

@@ -587,6 +587,15 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 # For a test of uniq: it uses the $LOCALE_FR envvar.
 gt_LOCALE_FR
 
+# If doing dynamic dependency checking, create man/dynamic-deps.mk so
+# that 'make' doesn't complain about its being absent.  Use an old
+# time stamp, so that 'make' thinks it is older than 'Makefile'.
+# Use time stamp 1, since some 'make' implementations treat 0 specially.
+# Use 'touch -t', since older 'touch' implementations don't grok -d.
+AC_CONFIG_COMMANDS([man/dynamic-deps.mk],
+  [test -n "$AMDEP_TRUE" ||
+   TZ=UTC0 touch -t 197001010000.01 man/dynamic-deps.mk])
+
 AC_CONFIG_FILES(
   Makefile
   po/Makefile.in
