@@ -25,6 +25,10 @@ echo "#!$abs_top_builddir/src/echo simple_echo" > simple_echo \
   || framework_failure_
 chmod a+x simple_echo || framework_failure_
 
+# Verify we can run the shebang which is not the case if
+# there are spaces in $abs_top_builddir.
+./simple_echo || skip_ "Error running simple_echo script"
+
 # Verify clearing the environment
 a=1
 export a
