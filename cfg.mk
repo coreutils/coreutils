@@ -48,7 +48,7 @@ export XZ_OPT = -8e
 old_NEWS_hash = adf13e9314300d0dff82fa37b247d7db
 
 # Add an exemption for sc_makefile_at_at_check.
-_makefile_at_at_check_exceptions = ' && !/^cu_install_program =/'
+_makefile_at_at_check_exceptions = ' && !/^cu_install_prog/ && !/dynamic-dep/'
 
 # Our help-version script is in a slightly different location.
 _hv_file ?= $(srcdir)/tests/misc/help-version
