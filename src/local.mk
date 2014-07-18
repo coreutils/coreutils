@@ -42,7 +42,6 @@ noinst_PROGRAMS =		\
 noinst_HEADERS =		\
   src/chown-core.h		\
   src/copy.h			\
-  src/coreutils.h		\
   src/cp-hash.h			\
   src/dircolors.h		\
   src/fiemap.h			\
@@ -348,6 +347,9 @@ src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources) \
 # This is for the '[' program.  Automake transliterates '[' and '/' to '_'.
 src___SOURCES = src/lbracket.c
 
+nodist_src_coreutils_SOURCES = src/coreutils.h
+src_coreutils_SOURCES = src/coreutils.c
+
 src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_vdir_SOURCES = src/ls.c src/ls-vdir.c
@@ -565,7 +567,7 @@ src/version.h: Makefile
 # once for each program list on $(single_binary_progs). Note that
 # for [ the macro invocation is:
 #   SINGLE_BINARY_PROGRAM("[", _)
-CLEANFILES += src/coreutils.h
+DISTCLEANFILES += src/coreutils.h
 src/coreutils.h: Makefile
 	$(AM_V_GEN)rm -f $@
 	$(AM_V_at)for prog in $(single_binary_progs); do	\
