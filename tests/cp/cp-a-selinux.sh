@@ -41,6 +41,7 @@ ls -Z d | grep $ctx || fail=1
 compare /dev/null err || fail=1
 ls -Z e | grep $ctx || fail=1
 ls -Z f | grep $ctx || fail=1
+rm -f f
 
 # Check handling of existing dirs which requires specific handling
 # due to recursion, and was handled incorrectly in coreutils-8.22
@@ -110,12 +111,15 @@ test $skip = 1 \
 
 cd mnt                                       || framework_failure_
 
-echo > f                                     || framework_failure_
-
+# Create files with hopefully different contexts
+echo > ../f                                  || framework_failure_
 echo > g                                     || framework_failure_
+test "$(stat -c%C ../f)" = "$(stat -c%C g)" &&
+  skip_ "files on separate file systems have the same security context"
+
 # /bin/cp from coreutils-6.7-3.fc7 would fail this test by letting cp
 # succeed (giving no diagnostics), yet leaving the destination file empty.
-cp -a f g 2>err || fail=1
+cp -a ../f g 2>err || fail=1
 test -s g       || fail=1     # The destination file must not be empty.
 compare /dev/null err || fail=1
 
@@ -123,14 +127,14 @@ compare /dev/null err || fail=1
 # Here, we expect cp to succeed and not warn with "Operation not supported"
 rm -f g
 echo > g
-cp --preserve=all f g 2>err || fail=1
+cp --preserve=all ../f g 2>err || fail=1
 test -s g || fail=1
 grep "Operation not supported" err && fail=1
 
 # =====================================================
 # The same as above except destination does not exist
 rm -f g
-cp --preserve=all f g 2>err || fail=1
+cp --preserve=all ../f g 2>err || fail=1
 test -s g || fail=1
 grep "Operation not supported" err && fail=1
 
@@ -150,7 +154,7 @@ echo > g
 # =====================================================
 # Here, we expect cp to fail, because it cannot set the SELinux
 # security context through NFS or a mount with fixed context.
-cp --preserve=context f g 2> out && fail=1
+cp --preserve=context ../f g 2> out && fail=1
 # Here, we *do* expect the destination to be empty.
 compare /dev/null g || fail=1
 sed "s/ .g'.*//" out > k
@@ -160,7 +164,7 @@ compare exp out || fail=1
 rm -f g
 echo > g
 # Check if -a option doesn't silence --preserve=context option diagnostics
-cp -a --preserve=context f g 2> out2 && fail=1
+cp -a --preserve=context ../f g 2> out2 && fail=1
 # Here, we *do* expect the destination to be empty.
 compare /dev/null g || fail=1
 sed "s/ .g'.*//" out2 > k
@@ -173,29 +177,29 @@ for no_g_cmd in '' 'rm -f g'; do
   # the resulting ENOTSUP warning will be suppressed.
    # With absolute path
   $no_g_cmd
-  cp -Z f $(realpath g) || fail=1
+  cp -Z ../f $(realpath g) || fail=1
    # With relative path
   $no_g_cmd
-  cp -Z f g || fail=1
+  cp -Z ../f g || fail=1
    # -Z overrides -a
   $no_g_cmd
-  cp -Z -a f g || fail=1
+  cp -Z -a ../f g || fail=1
    # -Z doesn't take an arg
   $no_g_cmd
-  cp -Z "$ctx" f g && fail=1
+  cp -Z "$ctx" ../f g && fail=1
 
   # Explicit context
   $no_g_cmd
    # Explicitly defaulting to the global $ctx should work
-  cp --context="$ctx" f g || fail=1
+  cp --context="$ctx" ../f g || fail=1
    # --context overrides -a
   $no_g_cmd
-  cp -a --context="$ctx" f g || fail=1
+  cp -a --context="$ctx" ../f g || fail=1
 done
 
 # Mutually exlusive options
-cp -Z --preserve=context f g && fail=1
-cp --preserve=context -Z f g && fail=1
-cp --preserve=context --context="$ctx" f g && fail=1
+cp -Z --preserve=context ../f g && fail=1
+cp --preserve=context -Z ../f g && fail=1
+cp --preserve=context --context="$ctx" ../f g && fail=1
 
 Exit $fail
