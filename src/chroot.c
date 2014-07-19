@@ -392,8 +392,7 @@ main (int argc, char **argv)
 #endif
 
   if ((uid_set (uid) || groups) && setgroups (n_gids, gids) != 0)
-    error (EXIT_CANCELED, errno, _("failed to %s supplemental groups"),
-           gids ? "set" : "clear");
+    error (EXIT_CANCELED, errno, _("failed to set supplemental groups"));
 
   free (in_gids);
   free (out_gids);

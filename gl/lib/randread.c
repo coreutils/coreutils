@@ -125,7 +125,7 @@ randread_error (void const *file_name)
 {
   if (file_name)
     error (exit_failure, errno,
-           _(errno == 0 ? "%s: end of file" : "%s: read error"),
+           errno == 0 ? _("%s: end of file") : _("%s: read error"),
            quotearg_colon (file_name));
   abort ();
 }
