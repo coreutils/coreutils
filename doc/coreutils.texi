@@ -1069,11 +1069,14 @@ Commands that accept floating point numbers as options, operands or
 input use the standard C functions @code{strtod} and @code{strtold} to
 convert from text to floating point numbers.  These floating point
 numbers therefore can use scientific notation like @code{1.0e-34} and
-@code{-10e100}.  Modern C implementations also accept hexadecimal
-floating point numbers such as @code{-0x.ep-3}, which stands for
-@minus{}14/16 times @math{2^-3}, which equals @minus{}0.109375.  The
-@env{LC_NUMERIC} locale determines the decimal-point character.
-@xref{Parsing of Floats,,, libc, The GNU C Library Reference Manual}.
+@code{-10e100}.  Commands that parse floating point also understand
+case-insensitive @code{inf}, @code{infinity}, and @code{NaN}, although
+whether such values are useful depends on the command in question.
+Modern C implementations also accept hexadecimal floating point
+numbers such as @code{-0x.ep-3}, which stands for @minus{}14/16 times
+@math{2^-3}, which equals @minus{}0.109375.  The @env{LC_NUMERIC}
+locale determines the decimal-point character.  @xref{Parsing of
+Floats,,, libc, The GNU C Library Reference Manual}.
 
 @node Signal specifications
 @section Signal specifications
