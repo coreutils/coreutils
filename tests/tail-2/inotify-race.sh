@@ -37,7 +37,7 @@ case $(cat gdb.out) in
     *) skip_ "can't run gdb";;
 esac
 
-break_src="$abs_top_builddir/src/tail.c"
+break_src="$abs_top_srcdir/src/tail.c"
 break_line=$(grep -n ^tail_forever_inotify "$break_src") || framework_failure_
 break_line=$(echo "$break_line" | cut -d: -f1) || framework_failure_
 
