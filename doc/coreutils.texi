@@ -16113,7 +16113,10 @@ On many systems, only the super-user can do this.@footnote{However,
 some systems (e.g., FreeBSD) can be configured to allow certain regular
 users to use the @code{chroot} system call, and hence to run this program.
 Also, on Cygwin, anyone can run the @command{chroot} command, because the
-underlying function is non-privileged due to lack of support in MS-Windows.}
+underlying function is non-privileged due to lack of support in MS-Windows.
+Furthermore, the @command{chroot} command avoids the @code{chroot} system call
+when @var{newroot} is identical to the old @file{/} directory for consistency
+with systems where this is allowed for non-privileged users.}.
 Synopses:
 
 @example
@@ -16123,10 +16126,11 @@ chroot @var{option}
 
 Ordinarily, file names are looked up starting at the root of the
 directory structure, i.e., @file{/}.  @command{chroot} changes the root to
-the directory @var{newroot} (which must exist) and then runs
-@var{command} with optional @var{args}.  If @var{command} is not
-specified, the default is the value of the @env{SHELL} environment
-variable or @command{/bin/sh} if not set, invoked with the @option{-i} option.
+the directory @var{newroot} (which must exist), then changes the working
+directory to @file{/}, and finally runs @var{command} with optional @var{args}.
+If @var{command} is not specified, the default is the value of the @env{SHELL}
+environment variable or @command{/bin/sh} if not set, invoked with the
+@option{-i} option.
 @var{command} must not be a special built-in utility
 (@pxref{Special built-in utilities}).
 
@@ -16134,6 +16138,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
+
+@item --groups=@var{groups}
+@opindex --groups
+Use this option to override the supplementary @var{groups} to be
+used by the new process.
+The items in the list (names or numeric IDs) must be separated by commas.
+Use @samp{--groups=''} to disable the supplementary group look-up
+implicit in the @option{--userspec} option.
 
 @item --userspec=@var{user}[:@var{group}]
 @opindex --userspec
@@ -16145,13 +16157,13 @@ If a @var{user} is specified then the supplementary groups
 are set according to the system defined list for that user,
 unless overridden with the @option{--groups} option.
 
-@item --groups=@var{groups}
-@opindex --groups
-Use this option to override the supplementary @var{groups} to be
-used by the new process.
-The items in the list (names or numeric IDs) must be separated by commas.
-Use @samp{--groups=''} to disable the supplementary group look-up
-implicit in the @option{--userspec} option.
+@item --skip-chdir
+@opindex --skip-chdir
+Use this option to not change the working directory to @file{/} after changing
+the root directory to @var{newroot}, i.e., inside the chroot.
+This option is only permitted when @var{newroot} is the old @file{/} directory,
+and therefore is mostly useful together with the @option{--groups} and
+@option{--userspec} options to retain the previous working directory.
 
 @end table
 

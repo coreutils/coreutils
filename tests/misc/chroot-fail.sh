@@ -30,7 +30,7 @@ chroot --- / true # unknown option
 test $? = 125 || fail=1
 
 # Note chroot("/") succeeds for non-root users on some systems, but not all,
-# however we avoid the chroot() with "/" to have common behvavior.
+# however we avoid the chroot() with "/" to have common behavior.
 chroot / sh -c 'exit 2' # exit status propagation
 test $? = 2 || fail=1
 chroot / . # invalid command
@@ -38,10 +38,25 @@ test $? = 126 || fail=1
 chroot / no_such # no such command
 test $? = 127 || fail=1
 
-# Ensure we don't chdir("/") when not changing root
-# to allow only changing user ids for a command.
-for dir in '/' '/.' '/../'; do
+# Ensure that --skip-chdir fails with a non-"/" argument.
+cat <<\EOF > exp || framework_failure_
+chroot: option --skip-chdir only permitted if NEWROOT is old '/'
+Try 'chroot --help' for more information.
+EOF
+chroot --skip-chdir . env pwd >out 2>err && fail=1
+compare /dev/null out || fail=1
+compare exp err || fail=1
+
+# Ensure we don't chroot("/") when NEWROOT is old "/".
+ln -s / isroot || framework_failure_
+for dir in '/' '/.' '/../' isroot; do
+  # Verify that chroot(1) succeeds and performs chdir("/")
+  # (chroot(1) of coreutils-8.23 failed to run the latter).
   curdir=$(chroot "$dir" env pwd) || fail=1
+  test "$curdir" = '/' || fail=1
+
+  # Test the "--skip-chdir" option.
+  curdir=$(chroot --skip-chdir "$dir" env pwd) || fail=1
   test "$curdir" = '/' && fail=1
 done
 

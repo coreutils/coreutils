@@ -28,7 +28,7 @@ chmod g+w root-owned
 # Ensure that the current directory is searchable by $NON_ROOT_USERNAME.
 chmod g+x .
 
-chroot --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
+chroot --skip-chdir --user=$NON_ROOT_USERNAME / env PATH="$PATH" \
   touch -d now root-owned || fail=1
 
 Exit $fail

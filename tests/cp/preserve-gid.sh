@@ -117,7 +117,8 @@ t1() {
   u=$1; shift
   g=$1; shift
   t0 "$f" "$u" "$g" \
-      chroot --user=+$nameless_uid:+$nameless_gid1 \
+      chroot --skip-chdir \
+             --user=+$nameless_uid:+$nameless_gid1 \
              --groups="+$nameless_gid1,+$nameless_gid2" \
         / env PATH="$tmp_path" "$@"
 }

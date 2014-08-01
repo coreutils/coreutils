@@ -2,6 +2,19 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  chroot accepts the new --skip-chdir option to not change the working directory
+  to "/" after changing into the chroot(2) jail, thus retaining the current wor-
+  king directory.  The new option is only permitted if the new root directory is
+  the old "/", and therefore is useful with the --group and --userspec options.
+
+** Changes in behavior
+
+  chroot changes the current directory to "/" in again - unless the above new
+  --skip-chdir option is specified.
+  [bug introduced in coreutils-8.23]
+
 
 * Noteworthy changes in release 8.23 (2014-07-18) [stable]
 
