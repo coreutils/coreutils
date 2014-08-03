@@ -1005,7 +1005,7 @@ parse_format_string (char const *fmt)
   if (endptr != (fmt + i) && pad != 0)
     {
       if (debug && padding_width && !(zero_padding && pad > 0))
-        error (0, 0, _("--format padding overridding --padding"));
+        error (0, 0, _("--format padding overriding --padding"));
 
       if (pad < 0)
         {
