@@ -132,7 +132,7 @@ usage (int status)
     emit_try_help ();
   else
     {
-      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
