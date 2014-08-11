@@ -1214,7 +1214,9 @@ main (int argc, char **argv)
   ok = do_copy (argc - optind, argv + optind,
                 target_directory, no_target_directory, &x);
 
+#ifdef lint
   forget_all ();
+#endif
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
