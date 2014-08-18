@@ -640,13 +640,18 @@ filter_mount_list (bool devices_only)
 
           if (devlist)
             {
-              /* ...let the shorter mountdir win.  */
+                  /* let "real" devices with '/' in the name win.  */
               if ((strchr (me->me_devname, '/')
                    && ! strchr (devlist->me->me_devname, '/'))
+                  /* let a shorter mountdir win.  */
                   || (strlen (devlist->me->me_mountdir)
                       > strlen (me->me_mountdir))
-                  /* or one overmounted on a different device.  */
-                  || ! STREQ (devlist->me->me_devname, me->me_devname))
+                  /* let an entry overmounted on a different device win...  */
+                  || (! STREQ (devlist->me->me_devname, me->me_devname)
+                      /* ... but only when matching an exsiting mount point, to
+                      avoid problematic replacement when given inaccurate mount
+                      lists, seen with some chroot environments for example.  */
+                      && STREQ (me->me_mountdir, devlist->me->me_mountdir)))
                 {
                   /* Discard mount entry for existing device.  */
                   discard_me = devlist->me;
