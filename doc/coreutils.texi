@@ -11171,7 +11171,8 @@ Non-integer quantities are rounded up to the next higher unit.
 For bind mounts and without arguments, @command{df} only outputs the statistics
 for that device with the shortest mount point name in the list of file systems
 (@var{mtab}), i.e., it hides duplicate entries, unless the @option{-a} option is
-specified.
+specified.  Remote file systems, such as NFS, are treated the same way as local
+ones; only one mount entry per remote file system is shown by default.
 
 With the same logic, @command{df} elides a mount entry of a dummy pseudo device
 if there is another mount entry of a real block device for that mount point with
