@@ -284,6 +284,8 @@ static void queue_directory (char const *name, char const *realname,
 static void sort_files (void);
 static void parse_ls_color (void);
 
+static void getenv_quoting_style (void);
+
 /* Initial size of hash table.
    Most hierarchies are likely to be shallower than this.  */
 #define INITIAL_TABLE_SIZE 30
@@ -1577,20 +1579,7 @@ decode_switches (int argc, char **argv)
   hide_patterns = NULL;
   print_scontext = false;
 
-  /* FIXME: put this in a function.  */
-  {
-    char const *q_style = getenv ("QUOTING_STYLE");
-    if (q_style)
-      {
-        int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-        if (0 <= i)
-          set_quoting_style (NULL, quoting_style_vals[i]);
-        else
-          error (0, 0,
-         _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
-                 quotearg (q_style));
-      }
-  }
+  getenv_quoting_style ();
 
   line_length = 80;
   {
@@ -2491,6 +2480,25 @@ parse_ls_color (void)
   if (color_indicator[C_LINK].len == 6
       && !STRNCMP_LIT (color_indicator[C_LINK].string, "target"))
     color_symlink_as_referent = true;
+}
+
+/* Set the quoting style default if the environment variable
+   QUOTING_STYLE is set.  */
+
+static void
+getenv_quoting_style (void)
+{
+  char const *q_style = getenv ("QUOTING_STYLE");
+  if (q_style)
+    {
+      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+      if (0 <= i)
+        set_quoting_style (NULL, quoting_style_vals[i]);
+      else
+        error (0, 0,
+       _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
+               quotearg (q_style));
+    }
 }
 
 /* Set the exit status to report a failure.  If SERIOUS, it is a
