@@ -1811,9 +1811,9 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 }
 
 /* MAGIC[N] has a bit i set iff i is a quadratic residue mod N. */
-#define MAGIC64 ((uint64_t) 0x0202021202030213ULL)
-#define MAGIC63 ((uint64_t) 0x0402483012450293ULL)
-#define MAGIC65 ((uint64_t) 0x218a019866014613ULL)
+#define MAGIC64 0x0202021202030213ULL
+#define MAGIC63 0x0402483012450293ULL
+#define MAGIC65 0x218a019866014613ULL
 #define MAGIC11 0x23b
 
 /* Return the square root if the input is a square, otherwise 0. */

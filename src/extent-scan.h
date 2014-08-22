@@ -26,10 +26,10 @@ struct extent_info
   off_t ext_logical;
 
   /* Extent length.  */
-  uint64_t ext_length;
+  off_t ext_length;
 
   /* Extent flags, use it for FIEMAP only, or set it to zero.  */
-  uint32_t ext_flags;
+  unsigned int ext_flags;
 };
 
 /* Structure used to reserve extent scan information per file.  */
@@ -42,10 +42,10 @@ struct extent_scan
   off_t scan_start;
 
   /* Flags to use for scan.  */
-  uint32_t fm_flags;
+  unsigned int fm_flags;
 
   /* How many extent info returned for a scan.  */
-  uint32_t ei_count;
+  size_t ei_count;
 
   /* If true, fall back to a normal copy, either set by the
      failure of ioctl(2) for FIEMAP or lseek(2) with SEEK_DATA.  */

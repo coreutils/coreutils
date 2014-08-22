@@ -251,7 +251,7 @@ clone_file (int dest_fd, int src_fd)
 /* Write N_BYTES zero bytes to file descriptor FD.  Return true if successful.
    Upon write failure, set errno and return false.  */
 static bool
-write_zeros (int fd, uint64_t n_bytes)
+write_zeros (int fd, off_t n_bytes)
 {
   static char *zeros;
   static size_t nz = IO_BUFSIZE;
@@ -272,7 +272,7 @@ write_zeros (int fd, uint64_t n_bytes)
 
   while (n_bytes)
     {
-      uint64_t n = MIN (nz, n_bytes);
+      size_t n = MIN (nz, n_bytes);
       if ((full_write (fd, zeros, n)) != n)
         return false;
       n_bytes -= n;
@@ -296,7 +296,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 {
   struct extent_scan scan;
   off_t last_ext_start = 0;
-  uint64_t last_ext_len = 0;
+  off_t last_ext_len = 0;
 
   /* Keep track of the output position.
      We may need this at the end, for a final ftruncate.  */
@@ -330,8 +330,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       for (i = 0; i < scan.ei_count || empty_extent; i++)
         {
           off_t ext_start;
-          uint64_t ext_len;
-          uint64_t hole_size;
+          off_t ext_len;
+          off_t hole_size;
 
           if (i < scan.ei_count)
             {
