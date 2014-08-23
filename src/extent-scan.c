@@ -140,6 +140,8 @@ extent_scan_read (struct extent_scan *scan)
           assert (fm_extents[i].fe_logical
                   <= OFF_T_MAX - fm_extents[i].fe_length);
 
+          verify (sizeof last_ei->ext_flags >= sizeof fm_extents->fe_flags);
+
           if (si && last_ei->ext_flags
               == (fm_extents[i].fe_flags & ~FIEMAP_EXTENT_LAST)
               && (last_ei->ext_logical + last_ei->ext_length
