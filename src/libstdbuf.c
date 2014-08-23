@@ -18,9 +18,7 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "system.h"
-#include "verify.h"
 
 /* Note currently for glibc (2.3.5) the following call does not change
    the buffer size, and more problematically does not give any indication
