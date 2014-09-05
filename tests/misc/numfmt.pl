@@ -194,21 +194,16 @@ my @Tests =
      ['delim-3', '--delimiter=" " --from=auto "40M Foo"',{OUT=>'40000000 Foo'}],
      ['delim-4', '--delimiter=: --from=auto 40M:60M',  {OUT=>'40000000:60M'}],
      ['delim-5', '-d: --field=2 --from=auto :40M:60M',  {OUT=>':40000000:60M'}],
-     ['delim-6', '--delimiter=: --field 3 --from=auto 40M:60M',
-             {EXIT=>2},
-             {ERR=>"$prog: input line is too short, no numbers found " .
-                   "to convert in field 3\n"}],
+     ['delim-6', '-d: --field 3 --from=auto 40M:60M', {OUT=>"40M:60M"}],
 
      #Fields
      ['field-1', '--field A',
              {ERR => "$prog: invalid field value 'A'\n"},
              {EXIT => '1'}],
-     ['field-1.1', '--field -5',
-             {ERR => "$prog: invalid field value '-5'\n"},
-             {EXIT => '1'}],
      ['field-2', '--field 2 --from=auto "Hello 40M World 90G"',
              {OUT=>'Hello 40000000 World 90G'}],
      ['field-3', '--field 3 --from=auto "Hello 40M World 90G"',
+             {OUT=>"Hello 40M "},
              {ERR=>"$prog: invalid number: 'World'\n"},
              {EXIT => 2},],
      # Last field - no text after number
@@ -223,10 +218,32 @@ my @Tests =
              {OUT=>"Hello:40000000:World:90G"}],
 
      # not enough fields
-     ['field-8', '--field 3 --to=si "Hello World"',
-             {EXIT=>2},
-             {ERR=>"$prog: input line is too short, no numbers found " .
-                   "to convert in field 3\n"}],
+     ['field-8', '--field 3 --to=si "Hello World"', {OUT=>"Hello World"}],
+
+     # Multiple fields
+     ['field-range-1', '--field 2,4 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1000 2.0K 3000 4.0K 5000"}],
+
+     ['field-range-2', '--field 2-4 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1000 2.0K 3.0K 4.0K 5000"}],
+
+     ['field-range-3', '--field 1,2,3-5 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5.0K"}],
+
+     ['field-range-4', '--field 1-5 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5.0K"}],
+
+     ['field-range-5', '--field 1-3,5 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4000 5.0K"}],
+
+     ['field-range-6', '--field 3- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1000 2000 3.0K 4.0K 5.0K"}],
+
+     ['field-range-7', '--field -3 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4000 5000"}],
+
+     ['all-fields-1', '--field=- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5.0K"}],
 
      # Auto-consume white-space, setup auto-padding
      ['whitespace-1', '--to=si --field 2 "A    500 B"', {OUT=>"A    500 B"}],
@@ -679,9 +696,6 @@ my @Tests =
      ['devdebug-11', '---debug --format "%\'-10f" 10000',{OUT=>"10000     "},
              {ERR=>""},
              {ERR_SUBST=>"s/.*//msg"}],
-     ['devdebug-12', '---debug --field 2 A',{OUT=>""},
-             {ERR=>""}, {EXIT=>2},
-             {ERR_SUBST=>"s/.*//msg"}],
 
      # Invalid parameters
      ['help-1', '--foobar',
@@ -787,11 +801,6 @@ my @Tests =
              {ERR => "$prog: invalid number: 'World'\n"},
              {OUT => "Hello 40M World 90G\n"},
              {EXIT => 2}],
-     ['ign-err-6', '--invalid=fail --field 3 --to=si "Hello World"',
-             {ERR => "$prog: input line is too short, no numbers found " .
-                     "to convert in field 3\n"},
-             {OUT => "Hello World\n"},
-             {EXIT => 2}],
      ['ign-err-7', '--invalid=fail --from=si "foo"',
              {ERR => "$prog: invalid number: 'foo'\n"},
              {OUT => "foo\n"},
@@ -854,13 +863,6 @@ my @Tests =
              {IN_PIPE => "A 1K x\nB Foo y\nC 3G z\n"},
              {OUT => "A 1000 x\nB Foo y\nC 2.8G z\n"},
              {ERR => "$prog: invalid number: 'Foo'\n"},
-             {EXIT => 2}],
-     # one of the lines is too short
-     ['ign-err-m3.2', '--invalid=fail --field 2 --from=si --to=iec',
-             {IN_PIPE => "A 1K x\nB\nC 3G z\n"},
-             {OUT => "A 1000 x\nB\nC 2.8G z\n"},
-             {ERR => "$prog: input line is too short, no numbers found " .
-                     "to convert in field 2\n"},
              {EXIT => 2}],
     );
 

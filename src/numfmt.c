@@ -29,6 +29,8 @@
 #include "system.h"
 #include "xstrtol.h"
 #include "xstrndup.h"
+#include "gl_linked_list.h"
+#include "gl_xlist.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "numfmt"
@@ -182,7 +184,10 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
 static mbs_align_t padding_alignment = MBS_ALIGN_RIGHT;
-static long int field = 1;
+static bool all_fields = false;
+static size_t all_fields_after = 0;
+static size_t all_fields_before = 0;
+static gl_list_t field_list;
 static int delimiter = DELIMITER_DEFAULT;
 
 /* if non-zero, the first 'header' lines from STDIN are skipped.  */
@@ -854,7 +859,8 @@ Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
   -d, --delimiter=X    use X instead of whitespace for field delimiter\n\
 "), stdout);
       fputs (_("\
-      --field=N        replace the number in input field N (default is 1)\n\
+      --field=FIELDS   replace the numbers in these input fields (default=1)\n\
+                         see FIELDS below\n\
 "), stdout);
       fputs (_("\
       --format=FORMAT  use printf style floating-point FORMAT;\n\
@@ -933,6 +939,16 @@ UNIT options:\n"), stdout);
                ...\n"), stdout);
 
       fputs (_("\n\
+FIELDS supports cut(1) style field ranges:\n\
+  N    N'th field, counted from 1\n\
+  N-   from N'th field, to end of line\n\
+  N-M  from N'th to M'th field (inclusive)\n\
+  -M   from first to M'th field (inclusive)\n\
+  -    all fields\n\
+Multiple fields/ranges can be separated with commas\n\
+"), stdout);
+
+      fputs (_("\n\
 FORMAT must be suitable for printing one floating-point argument '%f'.\n\
 Optional quote (%'f) will enable --grouping (if supported by current locale).\n\
 Optional width value (%10f) will pad output. Optional zero (%010f) width\n\
@@ -960,7 +976,7 @@ Examples:\n\
            -> \"1000\"\n\
   $ echo 1K | %s --from=iec\n\
            -> \"1024\"\n\
-  $ df -B1 | %s --header --field 2 --to=si\n\
+  $ df -B1 | %s --header --field 2-4 --to=si\n\
   $ ls -l  | %s --header --field 5 --to=iec\n\
   $ ls -lh | %s --header --field 5 --from=iec --padding=10\n\
   $ ls -lh | %s --header --field 5 --from=iec --format %%10f\n"),
@@ -1182,7 +1198,8 @@ print_padded_number (void)
 /* Converts the TEXT number string to the requested representation,
    and handles automatic suffix addition.  */
 static int
-process_suffixed_number (char *text, long double *result, size_t *precision)
+process_suffixed_number (char *text, long double *result,
+                         size_t *precision, long int field)
 {
   if (suffix && strlen (text) > strlen (suffix))
     {
@@ -1233,139 +1250,253 @@ process_suffixed_number (char *text, long double *result, size_t *precision)
   return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
 }
 
-/* Skip the requested number of fields in the input string.
-   Returns a pointer to the *delimiter* of the requested field,
-   or a pointer to NUL (if reached the end of the string).  */
-static inline char * _GL_ATTRIBUTE_PURE
-skip_fields (char *buf, int fields)
+typedef struct range_pair
 {
-  char *ptr = buf;
+  size_t lo;
+  size_t hi;
+} range_pair_t;
+
+static int
+sort_field (const void *elt1, const void *elt2)
+{
+  range_pair_t* rp1 = (range_pair_t*) elt1;
+  range_pair_t* rp2 = (range_pair_t*) elt2;
+
+  if (rp1->lo < rp2->lo)
+    return -1;
+
+  return rp1->lo > rp2->lo;
+}
+
+static int
+match_field (const void *elt1, const void *elt2)
+{
+  range_pair_t* rp = (range_pair_t*) elt1;
+  size_t field = *(size_t*) elt2;
+
+  if (rp->lo <= field && field <= rp->hi)
+    return 0;
+
+  if (rp->lo < field)
+    return -1;
+
+  return 1;
+}
+
+static void
+free_field (const void *elt)
+{
+  void *p = (void *)elt;
+  free (p);
+}
+
+/* Add the specified fields to field_list.
+   The format recognized is similar to cut.
+   TODO: Refactor the more performant cut implementation
+   for use by both utilities.  */
+static void
+parse_field_arg (char *optarg)
+{
+
+  char *start, *end;
+  range_pair_t *rp;
+  size_t field_val;
+  size_t range_val = 0;
+
+  start = end = optarg;
+
+  if (STREQ (optarg, "-"))
+    {
+      all_fields = true;
+
+      return;
+    }
+
+  if (*start == '-')
+    {
+      /* range -M */
+      ++start;
+
+      all_fields_before = strtol (start, &end, 10);
+
+      if (start == end || all_fields_before <=0)
+        error (EXIT_FAILURE, 0, _("invalid field value %s"),
+               quote (start));
+
+      return;
+    }
+
+  field_list = gl_list_create_empty (GL_LINKED_LIST,
+                                     NULL, NULL, free_field, false);
+
+  while (*end != '\0') {
+    field_val = strtol (start, &end, 10);
+
+    if (start == end || field_val <=0)
+      error (EXIT_FAILURE, 0, _("invalid field value %s"),
+             quote (start));
+
+    if (! range_val)
+      {
+        /* field N */
+        rp = xmalloc (sizeof (*rp));
+        rp->lo = rp->hi = field_val;
+        gl_sortedlist_add (field_list, sort_field, rp);
+      }
+    else
+      {
+        /* range N-M
+           The last field was the start of the field range. The current
+           field is the end of the field range.  We already added the
+           start field, so increment and add all the fields through
+           range end. */
+        if (field_val < range_val)
+          error (EXIT_FAILURE, 0, _("invalid decreasing range"));
+        rp = xmalloc (sizeof (*rp));
+        rp->lo = range_val + 1;
+        rp->hi = field_val;
+        gl_sortedlist_add (field_list, sort_field, rp);
+
+        range_val = 0;
+      }
+
+    switch (*end) {
+      case ',':
+        /* discrete field separator */
+        ++end;
+        start = end;
+        break;
+
+      case '-':
+        /* field range separator */
+        ++end;
+        start = end;
+        range_val = field_val;
+        break;
+    }
+  }
+
+  if (range_val)
+    {
+      /* range N-
+         range_val was not reset indicating optarg
+         ended with a trailing '-' */
+      all_fields_after = range_val;
+    }
+}
+
+/* Return a pointer to the beginning of the next field in line.
+   The line pointer is moved to the end of the next field. */
+static char*
+next_field (char **line)
+{
+  char *field_start = *line;
+  char *field_end   = field_start;
+
   if (delimiter != DELIMITER_DEFAULT)
     {
-      if (*ptr == delimiter)
-        fields--;
-      while (*ptr && fields--)
+      if (*field_start != delimiter)
         {
-          while (*ptr && *ptr == delimiter)
-            ++ptr;
-          while (*ptr && *ptr != delimiter)
-            ++ptr;
+          while (*field_end && *field_end != delimiter)
+            ++field_end;
         }
+      /* else empty field */
     }
   else
-    while (*ptr && fields--)
-      {
-        while (*ptr && isblank (to_uchar (*ptr)))
-          ++ptr;
-        while (*ptr && !isblank (to_uchar (*ptr)))
-          ++ptr;
-      }
-  return ptr;
+    {
+      /* keep any space prefix in the returned field */
+      while (*field_end && isblank (to_uchar (*field_end)))
+        ++field_end;
+
+      while (*field_end && !isblank (to_uchar (*field_end)))
+        ++field_end;
+    }
+
+  *line = field_end;
+  return field_start;
 }
 
-/* Parse a delimited string, and extracts the requested field.
-   NOTE: the input buffer is modified.
-
-   TODO:
-     Maybe support multiple fields, though can always pipe output
-     into another numfmt to process other fields.
-     Maybe default to processing all fields rather than just first?
-
-   Output:
-     _PREFIX, _DATA, _SUFFIX will point to the relevant positions
-     in the input string, or be NULL if such a part doesn't exist.  */
-static void
-extract_fields (char *line, int _field,
-                char ** _prefix, char ** _data, char ** _suffix)
+static bool
+include_field (size_t field)
 {
-  char *ptr = line;
-  *_prefix = NULL;
-  *_data = NULL;
-  *_suffix = NULL;
+  if (all_fields)
+    return true;
 
-  devmsg ("extracting Fields:\n  input: %s\n  field: %d\n",
-          quote (line), _field);
+  if (all_fields_after && all_fields_after <= field)
+    return true;
 
-  if (field > 1)
-    {
-      /* skip the requested number of fields.  */
-      *_prefix = line;
-      ptr = skip_fields (line, field - 1);
-      if (*ptr == '\0')
-        {
-          /* not enough fields in the input - print warning?  */
-          devmsg ("  TOO FEW FIELDS!\n  prefix: %s\n", quote (*_prefix));
-          return;
-        }
+  if (all_fields_before && field <= all_fields_before)
+    return true;
 
-      *ptr = '\0';
-      ++ptr;
-    }
+  /* default to field 1 */
+  if (! field_list)
+    return field == 1;
 
-  *_data = ptr;
-  *_suffix = skip_fields (*_data, 1);
-  if (**_suffix)
-    {
-      /* there is a suffix (i.e., the field is not the last on the line),
-         so null-terminate the _data before it.  */
-      **_suffix = '\0';
-      ++(*_suffix);
-    }
-  else
-    *_suffix = NULL;
-
-  devmsg ("  prefix: %s\n  number: %s\n  suffix: %s\n",
-          quote_n (0, *_prefix ? *_prefix : ""),
-          quote_n (1, *_data),
-          quote_n (2, *_suffix ? *_suffix : ""));
+  return gl_sortedlist_search (field_list, match_field, &field);
 }
 
+/* Convert and output the given field. If it is not included in the set
+   of fields to process just output the original */
+static bool
+process_field (char *text, size_t field)
+{
+  long double val = 0;
+  size_t precision = 0;
+  bool valid_number = true;
 
-/* Convert a number in a given line of text.
+  if (include_field (field))
+    {
+      valid_number =
+        process_suffixed_number (text, &val, &precision, field);
+
+      if (valid_number)
+        valid_number = prepare_padded_number (val, precision);
+
+      if (valid_number)
+        print_padded_number ();
+      else
+        fputs (text, stdout);
+    }
+  else
+    fputs (text, stdout);
+
+  return valid_number;
+}
+
+/* Convert number in a given line of text.
    NEWLINE specifies whether to output a '\n' for this "line".  */
 static int
 process_line (char *line, bool newline)
 {
-  char *pre, *num, *suf;
-  long double val = 0;
-  size_t precision = 0;
-  int valid_number = 0;
+  char *next;
+  size_t field = 0;
+  bool valid_number = true;
 
-  extract_fields (line, field, &pre, &num, &suf);
-  if (!num)
-    if (inval_style != inval_ignore)
-      error (conv_exit_code, 0, _("input line is too short, "
-                                  "no numbers found to convert in field %ld"),
-           field);
+  while (true) {
+    ++field;
+    next = next_field (&line);
 
-  if (num)
-    {
-      valid_number = process_suffixed_number (num, &val, &precision);
-      if (valid_number)
-        valid_number = prepare_padded_number (val, precision);
-    }
+    if (*line != '\0')
+      {
+        /* nul terminate the current field string and process */
+        *line = '\0';
 
-  if (pre)
-    fputs (pre, stdout);
+        if (! process_field (next, field))
+          valid_number = false;
 
-  if (pre && num)
-    fputc ((delimiter == DELIMITER_DEFAULT) ? ' ' : delimiter, stdout);
+        fputc ((delimiter == DELIMITER_DEFAULT) ?
+               ' ' : delimiter, stdout);
+        ++line;
+      }
+    else
+      {
+        /* end of the line, process the last field and finish */
+        if (! process_field (next, field))
+          valid_number = false;
 
-  if (valid_number)
-    {
-      print_padded_number ();
-    }
-  else
-    {
-      if (num)
-        fputs (num, stdout);
-    }
-
-  if (suf)
-    {
-      fputc ((delimiter == DELIMITER_DEFAULT) ? ' ' : delimiter, stdout);
-      fputs (suf, stdout);
-    }
+        break;
+      }
+  }
 
   if (newline)
     putchar ('\n');
@@ -1441,10 +1572,12 @@ main (int argc, char **argv)
           break;
 
         case FIELD_OPTION:
-          if (xstrtol (optarg, NULL, 10, &field, "") != LONGINT_OK
-              || field <= 0)
-            error (EXIT_FAILURE, 0, _("invalid field value %s"),
-                   quote (optarg));
+          if (all_fields || all_fields_before || all_fields_after || field_list)
+            {
+              error (EXIT_FAILURE, 0,
+                     _("multiple field specifications"));
+            }
+          parse_field_arg (optarg);
           break;
 
         case 'd':
@@ -1556,10 +1689,14 @@ main (int argc, char **argv)
         error (0, errno, _("error reading input"));
     }
 
+#ifdef lint
   free (padding_buffer);
   free (format_str_prefix);
   free (format_str_suffix);
 
+  if (field_list)
+    gl_list_free (field_list);
+#endif
 
   if (debug && !valid_numbers)
     error (0, 0, _("failed to convert some of the input numbers"));

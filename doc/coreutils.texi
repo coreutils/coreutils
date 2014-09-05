@@ -16892,9 +16892,19 @@ Print (to standard error) warning messages about possible erroneous usage.
 Use the character @var{d} as input field separator (default: whitespace).
 @emph{Note}: Using non-default delimiter turns off automatic padding.
 
-@item --field=@var{n}
+@item --field=@var{fields}
 @opindex --field
-Convert the number in input field @var{n} (default: 1).
+Convert the number in input field @var{fields} (default: 1).
+@var{fields} supports @command{cut} style field ranges:
+
+@example
+N    N'th field, counted from 1
+N-   from N'th field, to end of line
+N-M  from N'th to M'th field (inclusive)
+-M   from first to M'th field (inclusive)
+-    all fields
+@end example
+
 
 @item --format=@var{format}
 @opindex --format
