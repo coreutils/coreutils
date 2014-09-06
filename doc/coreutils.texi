@@ -1216,7 +1216,7 @@ sometimes need random data to do their work.  For example, @samp{sort
 -R} must choose a hash function at random, and it needs random data to
 make this selection.
 
-By default these commands use an internal pseudorandom generator
+By default these commands use an internal pseudo-random generator
 initialized by a small amount of entropy, but can be directed to use
 an external source with the @option{--random-source=@var{file}} option.
 An error is reported if @var{file} does not contain enough bytes.
@@ -1226,7 +1226,7 @@ source of random data.  Typically, this device gathers environmental
 noise from device drivers and other sources into an entropy pool, and
 uses the pool to generate random bits.  If the pool is short of data,
 the device reuses the internal pool to produce more bits, using a
-cryptographically secure pseudorandom number generator.  But be aware
+cryptographically secure pseudo-random number generator.  But be aware
 that this device is not designed for bulk random data generation
 and is relatively slow.
 
@@ -2448,7 +2448,7 @@ one of the following suffixes:
 @end example
 
 @item iec
-Auto-scale numbers according to the @emph{International Electronical
+Auto-scale numbers according to the @emph{International Electrotechnical
 Commission (IEC)} standard.
 For input numbers, accept one of the following suffixes.
 For output numbers, values larger than 1024 will be rounded, and printed with
@@ -2471,7 +2471,7 @@ not fully standard, as the @emph{iec} standard recommends a two-letter symbol
 the @option{iec-i} option.
 
 @item iec-i
-Auto-scale numbers according to the @emph{International Electronical
+Auto-scale numbers according to the @emph{International Electrotechnical
 Commission (IEC)} standard.
 For input numbers, accept one of the following suffixes.
 For output numbers, values larger than 1024 will be rounded, and printed with
@@ -8400,7 +8400,7 @@ then report the failure for each file and exit with a failure status.
 
 @item auto
 If the copy-on-write operation is not supported then fall back
-to the standard copy behaviour.
+to the standard copy behavior.
 @end table
 
 This option is overridden by the @option{--link}, @option{--symbolic-link}
@@ -8807,7 +8807,7 @@ same time.
 @cindex direct I/O
 Use direct I/O for data, avoiding the buffer cache.
 Note that the kernel may impose restrictions on read or write buffer sizes.
-For example, with an ext4 destination file system and a linux-based kernel,
+For example, with an ext4 destination file system and a Linux-based kernel,
 using @samp{oflag=direct} will cause writes to fail with @code{EINVAL} if the
 output buffer size is not a multiple of 512.
 
@@ -9499,7 +9499,7 @@ rm ./-f
 
 @opindex - @r{and Unix @command{rm}}
 The Unix @command{rm} program's use of a single @samp{-} for this purpose
-predates the development of the getopt standard syntax.
+predates the development of the @code{getopt} standard syntax.
 
 @exitstatus
 
@@ -11310,7 +11310,7 @@ The mount point.
 The fields for block and inodes statistics are affected by the scaling
 options like @option{-h} as usual.
 
-The definition of the @var{field_list} can even be splitted among several
+The definition of the @var{field_list} can even be split among several
 @option{--output} uses.
 
 @example
@@ -16399,7 +16399,7 @@ lets applications determine the order in which threads are scheduled
 to run.  Unlike a priority, a niceness is merely advice to the
 scheduler, which the scheduler is free to ignore.  Also, as a point of
 terminology, POSIX defines the behavior of @command{nice} in
-terms of a @dfn{nice value}, which is the nonnegative difference
+terms of a @dfn{nice value}, which is the non-negative difference
 between a niceness and the minimum niceness.  Though @command{nice}
 conforms to POSIX, its documentation and diagnostics use the
 term ``niceness'' for compatibility with historical practice.
