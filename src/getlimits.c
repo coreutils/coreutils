@@ -167,4 +167,6 @@ main (int argc, char **argv)
   print_float (FLT);
   print_float (DBL);
   print_float (LDBL);
+
+  return EXIT_SUCCESS;
 }

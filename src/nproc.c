@@ -129,5 +129,5 @@ main (int argc, char **argv)
 
   printf ("%lu\n", nproc);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

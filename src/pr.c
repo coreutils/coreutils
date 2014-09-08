@@ -1170,9 +1170,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
-  if (failed_opens)
-    exit (EXIT_FAILURE);
-  exit (EXIT_SUCCESS);
+  return failed_opens ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 /* Parse options of the form -scNNN.

@@ -371,5 +371,5 @@ main (int argc, char **argv)
 
   putchar ('\n');
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

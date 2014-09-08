@@ -91,8 +91,8 @@ for cmd in $ALL_PROGRAMS; do
   # CFLAGS
   # Hack any other program defining a main() replacing its main by
   # _single_binary_main_$PROGRAM_NAME.
-  echo "${base}_CFLAGS = \"-Dmain=_single_binary_main_${cmd}(int, char**) " \
-       "ATTRIBUTE_NORETURN; int _single_binary_main_${cmd}\" " \
+  echo "${base}_CFLAGS = \"-Dmain=_single_binary_main_${cmd} (int, char **);" \
+       " int _single_binary_main_${cmd}\" " \
        "-Dusage=_usage_${cmd} \$(src_coreutils_CFLAGS)"
   var=src_${cmd}_CFLAGS
   eval "value=\$$var"

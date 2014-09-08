@@ -2155,5 +2155,5 @@ main (int argc, char **argv)
 
   /* All done.  */
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

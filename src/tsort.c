@@ -557,5 +557,5 @@ main (int argc, char **argv)
 
   ok = tsort (optind == argc ? "-" : argv[optind]);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

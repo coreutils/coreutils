@@ -187,7 +187,7 @@ main (int argc, char **argv)
     }
   limit = atoi (argv[1]);
   if (limit < 3)
-    exit (EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 
   /* Make limit odd */
   if ( !(limit & 1))

@@ -1108,5 +1108,5 @@ main (int argc, char **argv)
   if (print_grand_total)
     print_size (&tot_dui, _("total"));
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

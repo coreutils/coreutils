@@ -321,5 +321,5 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, errno, "%s", infile);
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

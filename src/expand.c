@@ -426,5 +426,5 @@ main (int argc, char **argv)
   if (have_read_stdin && fclose (stdin) != 0)
     error (EXIT_FAILURE, errno, "-");
 
-  exit (exit_status);
+  return exit_status;
 }

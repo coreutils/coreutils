@@ -185,5 +185,5 @@ main (int argc, char **argv)
     perform_basename (argv[optind],
                       optind + 2 == argc ? argv[optind + 1] : NULL, use_nuls);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

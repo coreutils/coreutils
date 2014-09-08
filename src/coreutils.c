@@ -35,7 +35,7 @@
    needs to match the one passed as CFLAGS on single-binary.mk (generated
    by gen-single-binary.sh). */
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) \
-  int _single_binary_main_##main_name (int, char**) ATTRIBUTE_NORETURN;
+  int _single_binary_main_##main_name (int, char **);
 # include "coreutils.h"
 # undef SINGLE_BINARY_PROGRAM
 #endif
@@ -45,9 +45,6 @@
 
 #define AUTHORS \
   proper_name ("Alex Deymo")
-
-void
-launch_program (const char *prog_name, int prog_argc, char **prog_argv);
 
 static struct option const long_options[] =
 {
@@ -92,10 +89,10 @@ Use: '%s --coreutils-prog=PROGRAM_NAME --help' for individual program help.\n"),
   exit (status);
 }
 
-void
+static void
 launch_program (const char *prog_name, int prog_argc, char **prog_argv)
 {
-  int (*prog_main)(int, char **) = NULL;
+  int (*prog_main) (int, char **) = NULL;
 
   /* Ensure that at least one parameter was passed.  */
   if (!prog_argc || !prog_argv || !prog_argv[0] || !prog_name)
@@ -103,7 +100,7 @@ launch_program (const char *prog_name, int prog_argc, char **prog_argv)
 
 #ifdef SINGLE_BINARY
   if (false);
-  /* Lookup the right main program.  */
+  /* Look up the right main program.  */
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) \
   else if (STREQ (prog_name_str, prog_name)) \
     prog_main = _single_binary_main_##main_name;
@@ -124,7 +121,7 @@ launch_program (const char *prog_name, int prog_argc, char **prog_argv)
   prctl (PR_SET_MM_ARG_START, prog_argv[0]);
 #endif
 
-  exit ((*prog_main) (prog_argc, prog_argv));
+  exit (prog_main (prog_argc, prog_argv));
 }
 
 int

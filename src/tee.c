@@ -125,7 +125,7 @@ main (int argc, char **argv)
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* Copy the standard input into each of the NFILES files in FILES

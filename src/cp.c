@@ -1218,5 +1218,5 @@ main (int argc, char **argv)
   forget_all ();
 #endif
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

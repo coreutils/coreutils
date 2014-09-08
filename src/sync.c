@@ -69,5 +69,5 @@ main (int argc, char **argv)
     error (0, 0, _("ignoring all arguments"));
 
   sync ();
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

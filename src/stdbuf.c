@@ -387,9 +387,7 @@ main (int argc, char **argv)
 
   execvp (*argv, argv);
 
-  {
-    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-    error (0, errno, _("failed to run command %s"), quote (argv[0]));
-    exit (exit_status);
-  }
+  int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
+  error (0, errno, _("failed to run command %s"), quote (argv[0]));
+  return exit_status;
 }

@@ -622,5 +622,5 @@ main (int argc, char **argv)
     }
 #endif
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

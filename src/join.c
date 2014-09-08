@@ -1191,7 +1191,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", g_names[1]);
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
-    exit (EXIT_FAILURE);
+    return EXIT_FAILURE;
   else
-    exit (EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }

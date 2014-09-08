@@ -388,7 +388,7 @@ main (int argc, char **argv)
       if (parse_additional_groups (groups, &in_gids, &n_gids, !n_gids) != 0)
         {
           if (! n_gids)
-            exit (EXIT_CANCELED);
+            return EXIT_CANCELED;
           /* else look-up outside the chroot worked, then go with those.  */
         }
       else
@@ -428,9 +428,7 @@ main (int argc, char **argv)
   /* Execute the given command.  */
   execvp (argv[0], argv);
 
-  {
-    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-    error (0, errno, _("failed to run command %s"), quote (argv[0]));
-    exit (exit_status);
-  }
+  int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
+  error (0, errno, _("failed to run command %s"), quote (argv[0]));
+  return exit_status;
 }

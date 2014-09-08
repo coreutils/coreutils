@@ -1781,7 +1781,7 @@ main (int argc, char **argv)
     }
 
   if (!ok)
-    exit (EXIT_FAILURE);
+    return EXIT_FAILURE;
 
   if (flag_dump_strings && n_specs > 0)
     error (EXIT_FAILURE, 0,
@@ -1972,5 +1972,5 @@ cleanup:
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

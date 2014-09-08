@@ -150,5 +150,5 @@ main (int argc, char **argv)
       ok = (matches == argc - optind);
     }
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

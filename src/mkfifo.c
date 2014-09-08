@@ -177,5 +177,5 @@ main (int argc, char **argv)
         }
     }
 
-  exit (exit_status);
+  return exit_status;
 }

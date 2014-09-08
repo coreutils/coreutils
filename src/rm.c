@@ -315,7 +315,7 @@ main (int argc, char **argv)
   if (argc <= optind)
     {
       if (x.ignore_missing_files)
-        exit (EXIT_SUCCESS);
+        return EXIT_SUCCESS;
       else
         {
           error (0, 0, _("missing operand"));
@@ -347,10 +347,10 @@ main (int argc, char **argv)
                             select_plural (n_files))),
                program_name, n_files);
       if (!yesno ())
-        exit (EXIT_SUCCESS);
+        return EXIT_SUCCESS;
     }
 
   enum RM_status status = rm (file, &x);
   assert (VALID_STATUS (status));
-  exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
+  return status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS;
 }

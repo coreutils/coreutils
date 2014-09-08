@@ -177,7 +177,7 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, errno, _("failed to get current context"));
       fputs (cur_context, stdout);
       fputc ('\n', stdout);
-      exit (EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     }
 
   if (!(user || role || type || range || compute_trans))
@@ -258,9 +258,7 @@ main (int argc, char **argv)
 
   execvp (argv[optind], argv + optind);
 
-  {
-    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-    error (0, errno, "%s", argv[optind]);
-    exit (exit_status);
-  }
+  int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
+  error (0, errno, "%s", argv[optind]);
+  return exit_status;
 }

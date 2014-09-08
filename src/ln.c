@@ -647,5 +647,5 @@ main (int argc, char **argv)
   else
     ok = do_link (file[0], file[1]);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -144,7 +144,7 @@ main (int argc, char **argv)
       char *const *e = environ;
       while (*e)
         printf ("%s%c", *e++, opt_nul_terminate_output ? '\0' : '\n');
-      exit (EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     }
 
   if (opt_nul_terminate_output)
@@ -155,9 +155,7 @@ main (int argc, char **argv)
 
   execvp (argv[optind], &argv[optind]);
 
-  {
-    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-    error (0, errno, "%s", argv[optind]);
-    exit (exit_status);
-  }
+  int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
+  error (0, errno, "%s", argv[optind]);
+  return exit_status;
 }

@@ -443,7 +443,7 @@ main (int argc, char **argv)
   compare_files (argv + optind);
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
-    exit (EXIT_FAILURE);
+    return EXIT_FAILURE;
   else
-    exit (EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }

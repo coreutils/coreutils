@@ -699,5 +699,5 @@ main (int argc, char **argv)
   free (G_buffer - offset);
 #endif
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

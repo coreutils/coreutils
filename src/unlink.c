@@ -85,5 +85,5 @@ main (int argc, char **argv)
   if (unlink (argv[optind]) != 0)
     error (EXIT_FAILURE, errno, _("cannot unlink %s"), quote (argv[optind]));
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

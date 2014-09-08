@@ -102,7 +102,7 @@ main (void)
               crc_remainder (i * 5 + 5));
     }
   printf ("\n};\n");
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
 
 #else /* !CRCTAB */
@@ -312,7 +312,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 #endif /* !CRCTAB */

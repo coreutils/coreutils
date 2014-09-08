@@ -269,5 +269,5 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
            quote (argv[optind]));
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

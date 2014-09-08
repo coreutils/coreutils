@@ -574,7 +574,7 @@ main (int argc, char **argv)
       char const *s1 = n_args == 1 ? "1" : argv[optind];
       char const *s2 = argv[optind + (n_args - 1)];
       if (seq_fast (s1, s2))
-        exit (EXIT_SUCCESS);
+        return EXIT_SUCCESS;
 
       /* Upon any failure, let the more general code deal with it.  */
     }
@@ -608,7 +608,7 @@ main (int argc, char **argv)
         {
           IF_LINT (free (s1));
           IF_LINT (free (s2));
-          exit (EXIT_SUCCESS);
+          return EXIT_SUCCESS;
         }
 
       free (s1);
@@ -621,5 +621,5 @@ main (int argc, char **argv)
 
   print_numbers (format_str, layout, first.value, step.value, last.value);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

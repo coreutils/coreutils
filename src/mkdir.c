@@ -301,6 +301,6 @@ main (int argc, char **argv)
         options.mode = S_IRWXUGO;
     }
 
-  exit (savewd_process_files (argc - optind, argv + optind,
-                              process_dir, &options));
+  return savewd_process_files (argc - optind, argv + optind,
+                               process_dir, &options);
 }

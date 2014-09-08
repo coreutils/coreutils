@@ -314,7 +314,7 @@ main (int argc, char **argv)
   putchar (opt_zero ? '\0' : '\n');
 
   IF_LINT (free (pw_name));
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* Convert a gid_t to string.  Do not use this function directly.

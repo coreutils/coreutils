@@ -372,7 +372,7 @@ main (int argc, char **argv)
       if (wd)
         {
           puts (wd);
-          exit (EXIT_SUCCESS);
+          return EXIT_SUCCESS;
         }
     }
 
@@ -390,5 +390,5 @@ main (int argc, char **argv)
       file_name_free (file_name);
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

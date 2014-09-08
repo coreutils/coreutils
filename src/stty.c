@@ -862,7 +862,7 @@ main (int argc, char **argv)
       max_col = screen_columns ();
       current_col = 0;
       display_settings (output_type, &mode, device_name);
-      exit (EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     }
 
   speed_was_set = false;
@@ -1070,7 +1070,7 @@ main (int argc, char **argv)
         }
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
 
 /* Return false if not applied because not reversible; otherwise

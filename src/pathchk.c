@@ -153,7 +153,7 @@ main (int argc, char **argv)
     ok &= validate_file_name (argv[optind],
                               check_basic_portability, check_extra_portability);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* If FILE contains a component with a leading "-", report an error

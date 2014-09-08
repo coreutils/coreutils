@@ -1620,7 +1620,7 @@ main (int argc, char **argv)
           }
       }
     if (match)
-      exit (EXIT_FAILURE);
+      return EXIT_FAILURE;
   }
 
   if (optind < argc)
@@ -1714,5 +1714,5 @@ main (int argc, char **argv)
 
   IF_LINT (free (columns));
 
-  exit (exit_status);
+  return exit_status;
 }

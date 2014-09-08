@@ -83,12 +83,9 @@ main (int argc, char **argv)
   errno = 0;
   uid = geteuid ();
   pw = (uid == NO_UID && errno ? NULL : getpwuid (uid));
-  if (pw)
-    {
-      puts (pw->pw_name);
-      exit (EXIT_SUCCESS);
-    }
-  fprintf (stderr, _("%s: cannot find name for user ID %lu\n"),
-           program_name, (unsigned long int) uid);
-  exit (EXIT_FAILURE);
+  if (!pw)
+    error (EXIT_FAILURE, errno, "cannot find name for user ID %lu",
+           (unsigned long int) uid);
+  puts (pw->pw_name);
+  return EXIT_SUCCESS;
 }

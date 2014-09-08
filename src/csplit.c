@@ -1466,7 +1466,7 @@ main (int argc, char **argv)
       cleanup_fatal ();
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
 
 void

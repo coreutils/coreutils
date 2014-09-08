@@ -313,5 +313,5 @@ main (int argc, char **argv)
 
   chopt_free (&chopt);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

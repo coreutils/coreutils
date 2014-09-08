@@ -420,5 +420,5 @@ main (int argc, char **argv)
         }
     }
 
-  exit (errors ? EXIT_FAILURE : EXIT_SUCCESS);
+  return errors ? EXIT_FAILURE : EXIT_SUCCESS;
 }

@@ -132,5 +132,5 @@ main (int argc, char **argv)
       putchar (use_nuls ? '\0' :'\n');
     }
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

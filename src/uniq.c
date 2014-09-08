@@ -662,5 +662,5 @@ main (int argc, char **argv)
 
   check_file (file[0], file[1], delimiter);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

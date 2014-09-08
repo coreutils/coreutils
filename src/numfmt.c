@@ -1538,5 +1538,5 @@ main (int argc, char **argv)
   if (!valid_numbers && _invalid != inval_warn && _invalid != inval_ignore)
     exit_status = EXIT_CONVERSION_WARNINGS;
 
-  exit (exit_status);
+  return exit_status;
 }

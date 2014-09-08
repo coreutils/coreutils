@@ -345,5 +345,5 @@ main (int argc, char **argv)
   free (template);
 #endif
 
-  exit (status);
+  return status;
 }

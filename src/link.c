@@ -90,5 +90,5 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("cannot create link %s to %s"),
            quote_n (0, argv[optind + 1]), quote_n (1, argv[optind]));
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

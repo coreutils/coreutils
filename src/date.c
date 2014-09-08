@@ -540,7 +540,7 @@ main (int argc, char **argv)
       ok &= show_date (format, when);
     }
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* Display the date and/or time in WHEN according to the format specified

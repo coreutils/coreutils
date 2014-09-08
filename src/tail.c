@@ -2218,7 +2218,7 @@ main (int argc, char **argv)
 
   /* Don't read anything if we'll never output anything.  */
   if (! n_units && ! forever && ! from_start)
-    exit (EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 
   F = xnmalloc (n_files, sizeof *F);
   for (i = 0; i < n_files; i++)
@@ -2286,7 +2286,7 @@ main (int argc, char **argv)
                 error (EXIT_FAILURE, errno, _("write error"));
 
               if (!tail_forever_inotify (wd, F, n_files, sleep_interval))
-                exit (EXIT_FAILURE);
+                return EXIT_FAILURE;
             }
           error (0, errno, _("inotify cannot be used, reverting to polling"));
         }
@@ -2297,5 +2297,5 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

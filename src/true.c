@@ -76,5 +76,5 @@ main (int argc, char **argv)
                      (char *) NULL);
     }
 
-  exit (EXIT_STATUS);
+  return EXIT_STATUS;
 }

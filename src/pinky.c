@@ -604,5 +604,5 @@ main (int argc, char **argv)
   else
     long_pinky (n_users, argv + optind);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

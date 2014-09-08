@@ -917,12 +917,18 @@ process_signals (void)
     }
 }
 
-static void ATTRIBUTE_NORETURN
-quit (int code)
+static void
+finish_up (void)
 {
   cleanup ();
   print_stats ();
   process_signals ();
+}
+
+static void ATTRIBUTE_NORETURN
+quit (int code)
+{
+  finish_up ();
   exit (code);
 }
 
@@ -2340,5 +2346,6 @@ main (int argc, char **argv)
         invalidate_cache (STDOUT_FILENO, 0);
     }
 
-  quit (exit_status);
+  finish_up ();
+  return exit_status;
 }

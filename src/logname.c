@@ -72,15 +72,12 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  /* POSIX requires using getlogin (or equivalent code).  */
+  /* POSIX requires using getlogin (or equivalent code) and prohibits
+     using a fallback technique.  */
   cp = getlogin ();
-  if (cp)
-    {
-      puts (cp);
-      exit (EXIT_SUCCESS);
-    }
-  /* POSIX prohibits using a fallback technique.  */
+  if (! cp)
+    error (EXIT_FAILURE, 0, _("no login name"));
 
-  error (0, 0, _("no login name"));
-  exit (EXIT_FAILURE);
+  puts (cp);
+  return EXIT_SUCCESS;
 }

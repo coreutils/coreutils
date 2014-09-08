@@ -84,5 +84,5 @@ main (int argc, char **argv)
 
   printf ("%08x\n", id);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

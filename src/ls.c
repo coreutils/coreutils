@@ -1513,7 +1513,7 @@ main (int argc, char **argv)
       hash_free (active_dir_set);
     }
 
-  exit (exit_status);
+  return exit_status;
 }
 
 /* Set all the option flags according to the switches specified.

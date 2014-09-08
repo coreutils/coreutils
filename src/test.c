@@ -57,10 +57,12 @@ enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };
 
 #if defined TEST_STANDALONE
 # define test_exit(val) exit (val)
+# define test_main_return(val) return val
 #else
    static jmp_buf test_exit_buf;
    static int test_error_return = 0;
 # define test_exit(val) test_error_return = val, longjmp (test_exit_buf, 1)
+# define test_main_return(val) test_exit (val)
 #endif /* !TEST_STANDALONE */
 
 static int pos;		/* The offset of the current argument in ARGV. */
@@ -851,7 +853,7 @@ main (int margc, char **margv)
             {
               version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                            (char *) NULL);
-              test_exit (EXIT_SUCCESS);
+              test_main_return (EXIT_SUCCESS);
             }
         }
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
@@ -864,12 +866,12 @@ main (int margc, char **margv)
   pos = 1;
 
   if (pos >= argc)
-    test_exit (TEST_FALSE);
+    test_main_return (TEST_FALSE);
 
   value = posixtest (argc - 1);
 
   if (pos != argc)
     test_syntax_error (_("extra argument %s"), quote (argv[pos]));
 
-  test_exit (value ? TEST_TRUE : TEST_FALSE);
+  test_main_return (value ? TEST_TRUE : TEST_FALSE);
 }

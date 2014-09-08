@@ -657,7 +657,7 @@ main (int argc, char **argv)
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                        (char *) NULL);
-          exit (EXIT_SUCCESS);
+          return EXIT_SUCCESS;
         }
     }
 
@@ -692,5 +692,5 @@ main (int argc, char **argv)
            _("warning: ignoring excess arguments, starting with %s"),
            quote (argv[0]));
 
-  exit (exit_status);
+  return exit_status;
 }

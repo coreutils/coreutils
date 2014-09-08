@@ -136,7 +136,7 @@ main (int argc, char **argv)
         {
           version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
                        (char *) NULL);
-          exit (EXIT_SUCCESS);
+          return EXIT_SUCCESS;
         }
     }
 
@@ -204,7 +204,7 @@ just_echo:
                     {
                     case 'a': c = '\a'; break;
                     case 'b': c = '\b'; break;
-                    case 'c': exit (EXIT_SUCCESS);
+                    case 'c': return EXIT_SUCCESS;
                     case 'e': c = '\x1B'; break;
                     case 'f': c = '\f'; break;
                     case 'n': c = '\n'; break;
@@ -268,5 +268,5 @@ just_echo:
 
   if (display_return)
     putchar ('\n');
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

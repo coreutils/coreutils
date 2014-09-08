@@ -273,5 +273,5 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     ok &= process_path (argv[optind], can_mode);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

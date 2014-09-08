@@ -4708,7 +4708,7 @@ main (int argc, char **argv)
 
       /* POSIX requires that sort return 1 IFF invoked with -c or -C and the
          input is not properly sorted.  */
-      exit (check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
+      return check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER;
     }
 
   /* Check all inputs are accessible, or exit immediately.  */
@@ -4746,5 +4746,5 @@ main (int argc, char **argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     die (_("close failed"), "-");
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

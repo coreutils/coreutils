@@ -1488,5 +1488,5 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", infile);
   closeout (NULL, output_desc, filter_pid, outfile);
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

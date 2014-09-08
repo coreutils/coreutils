@@ -440,12 +440,10 @@ main (int argc, char **argv)
   if (monitored_pid == -1)
     {
       error (0, errno, _("fork system call failed"));
-      exit (EXIT_CANCELED);
+      return EXIT_CANCELED;
     }
   else if (monitored_pid == 0)
     {                           /* child */
-      int exit_status;
-
       /* exec doesn't reset SIG_IGN -> SIG_DFL.  */
       signal (SIGTTIN, SIG_DFL);
       signal (SIGTTOU, SIG_DFL);
@@ -453,9 +451,9 @@ main (int argc, char **argv)
       execvp (argv[0], argv);   /* FIXME: should we use "sh -c" ... here?  */
 
       /* exit like sh, env, nohup, ...  */
-      exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
+      int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
       error (0, errno, _("failed to run command %s"), quote (argv[0]));
-      exit (exit_status);
+      return exit_status;
     }
   else
     {
@@ -500,8 +498,7 @@ main (int argc, char **argv)
         }
 
       if (timed_out && !preserve_status)
-        exit (EXIT_TIMEDOUT);
-      else
-        exit (status);
+        status = EXIT_TIMEDOUT;
+      return status;
     }
 }

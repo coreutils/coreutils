@@ -1804,13 +1804,13 @@ main (int argc, char **argv)
 
   spec_init (s1);
   if (!parse_str (argv[optind], s1))
-    exit (EXIT_FAILURE);
+    return EXIT_FAILURE;
 
   if (non_option_args == 2)
     {
       spec_init (s2);
       if (!parse_str (argv[optind + 1], s2))
-        exit (EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
   else
     s2 = NULL;
@@ -1944,5 +1944,5 @@ main (int argc, char **argv)
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }

@@ -83,6 +83,9 @@ main (int argc, char **argv)
       for (i = optind; i < argc; i++)
         if (fputs (argv[i], stdout) == EOF
             || putchar (i == argc - 1 ? '\n' : ' ') == EOF)
-          error (EXIT_FAILURE, errno, _("standard output"));
+          {
+            error (0, errno, _("standard output"));
+            return EXIT_FAILURE;
+          }
     }
 }

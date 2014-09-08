@@ -326,7 +326,7 @@ main (int argc, char **argv)
     syntax_error ();
   printv (v);
 
-  exit (null (v));
+  return null (v);
 }
 
 /* Return a VALUE for I.  */

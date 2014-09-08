@@ -145,5 +145,5 @@ main (int argc, char **argv)
   if (xnanosleep (seconds))
     error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
-  exit (EXIT_SUCCESS);
+  return EXIT_SUCCESS;
 }
