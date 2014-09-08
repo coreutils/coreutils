@@ -1516,6 +1516,9 @@ or by explicitly calling @command{coreutils} with the
 coreutils @option{--coreutils-prog=PROGRAM} @dots{}
 @end example
 
+The @command{coreutils} command is not installed by default, so
+portable scripts should not rely on its existence.
+
 @node Output of entire files
 @chapter Output of entire files
 
@@ -11434,6 +11437,9 @@ Ignored; for compatibility with System V versions of @command{df}.
 
 @end table
 
+@command{df} is installed only on systems that have usable mount tables,
+so portable scripts should not rely on its existence.
+
 @exitstatus
 Failure includes the case where no output is generated, so you can
 inspect the exit status of a command like @samp{df -t ext3 -t reiserfs
@@ -13841,6 +13847,10 @@ systems, those or other settings also may not
 be available, but it's not feasible to document all the variations: just
 try it and see.
 
+@command{stty} is installed only on platforms with the POSIX terminal
+interface, so portable scripts should not rely on its existence on
+non-POSIX platforms.
+
 @exitstatus
 
 @menu
@@ -14760,6 +14770,10 @@ that file instead.  A common choice is @file{/var/log/wtmp}.
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+The @command{users} command is installed only on platforms with the
+POSIX @code{<utmpx.h>} include file or equivalent, so portable scripts
+should not rely on its existence on non-POSIX platforms.
+
 @exitstatus
 
 
@@ -14907,6 +14921,10 @@ After each login name print a character indicating the user's message status:
 @end display
 
 @end table
+
+The @command{who} command is installed only on platforms with the
+POSIX @code{<utmpx.h>} include file or equivalent, so portable scripts
+should not rely on its existence on non-POSIX platforms.
 
 @exitstatus
 
@@ -15641,6 +15659,9 @@ arch [@var{option}]
 
 The program accepts the @ref{Common options} only.
 
+@command{arch} is not installed by default, so portable scripts should
+not rely on its existence.
+
 @exitstatus
 
 
@@ -15832,6 +15853,10 @@ hostname [@var{name}]
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@command{hostname} is not installed by default, and other packages
+also supply a @command{hostname} command, so portable scripts should
+not rely on its existence or on the exact behavior documented above.
+
 @exitstatus
 
 
@@ -15856,6 +15881,10 @@ $ hostid
 On that system, the 32-bit quantity happens to be closely
 related to the system's Internet address, but that isn't always
 the case.
+
+@command{hostid} is installed only on systems that have the
+@code{gethostid} function, so portable scripts should not rely on its
+existence.
 
 @exitstatus
 
@@ -15889,6 +15918,13 @@ runnable processes over the last 1, 5 and 15 minutes, but some systems
 also include processes in the uninterruptible sleep state (that is,
 those processes which are waiting for disk I/O).  The Linux kernel
 includes uninterruptible processes.
+
+@command{uptime} is installed only on platforms with infrastructure
+for obtaining the boot time, and other packages also supply an
+@command{uptime} command, so portable scripts should not rely on its
+existence or on the exact behavior documented above.
+
+@exitstatus
 
 @node SELinux context
 @chapter SELinux context
@@ -16203,6 +16239,10 @@ files to the required positions under your intended new root directory.
 Finally, if the executable requires any other files (e.g., data, state,
 device files), copy them into place, too.
 
+@command{chroot} is installed only on systems that have the
+@code{chroot} function, so portable scripts should not rely on its
+existence.
+
 @cindex exit status of @command{chroot}
 Exit status:
 
@@ -16431,6 +16471,10 @@ option syntax @option{-@var{adjustment}}.  New scripts should use
 
 @end table
 
+@command{nice} is installed only on systems that have the POSIX
+@code{setpriority} function, so portable scripts should not rely on
+its existence on non-POSIX platforms.
+
 @cindex exit status of @command{nice}
 Exit status:
 
@@ -16641,6 +16685,11 @@ Specify the size of the buffer to use in fully buffered mode.
 @multiplierSuffixesNoBlocks{size}
 
 @end table
+
+@command{stdbuf} is installed only on platforms that use the
+Executable and Linkable Format (ELF) and support the
+@code{constructor} attribute, so portable scripts should not rely on
+its existence.
 
 @cindex exit status of @command{stdbuf}
 Exit status:
