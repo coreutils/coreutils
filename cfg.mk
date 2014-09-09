@@ -436,7 +436,7 @@ sc_prohibit_test_empty:
 sc_some_programs_must_avoid_exit_failure:
 	@grep -nw EXIT_FAILURE						\
 	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' src)		\
-	  | grep -vE '= EXIT_FAILURE|exit \(.* \?' | grep .		\
+	  | grep -vE '= EXIT_FAILURE|return .* \?' | grep .		\
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :
 
