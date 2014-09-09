@@ -102,7 +102,7 @@ man/dynamic-deps.mk: Makefile
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
 		     --output=$$t/$$name.1 $$t/$$argv			\
-		     --info-page='coreutils \(aq'$$name' invocation\(aq' \
+		     --info-page='\(aq(coreutils) '$$name' invocation\(aq' \
 	  && sed \
 	       -e 's|$*\.td/||g' \
 	       -e '/For complete documentation/d' \

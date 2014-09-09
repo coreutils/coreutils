@@ -582,7 +582,8 @@ emit_ancillary_info (void)
                 last_component (program_name));
     }
   printf (_("For complete documentation, run: "
-            "info coreutils '%s invocation'\n"), last_component (program_name));
+            "info '(coreutils) %s invocation'\n"),
+          last_component (program_name));
 }
 
 static inline void

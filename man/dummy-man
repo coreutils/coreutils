@@ -69,5 +69,5 @@ The full documentation for
 is maintained as a Texinfo manual, which should be accessible
 on your system via the command
 .IP
-.B info coreutils $bs(aq$progname invocation$bs(aq
+.B info $bs(aq(coreutils) $progname invocation$bs(aq
 END
