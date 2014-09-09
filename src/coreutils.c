@@ -35,7 +35,7 @@
    needs to match the one passed as CFLAGS on single-binary.mk (generated
    by gen-single-binary.sh). */
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) \
-  int _single_binary_main_##main_name (int, char **);
+  int single_binary_main_##main_name (int, char **);
 # include "coreutils.h"
 # undef SINGLE_BINARY_PROGRAM
 #endif
@@ -103,7 +103,7 @@ launch_program (const char *prog_name, int prog_argc, char **prog_argv)
   /* Look up the right main program.  */
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) \
   else if (STREQ (prog_name_str, prog_name)) \
-    prog_main = _single_binary_main_##main_name;
+    prog_main = single_binary_main_##main_name;
 # include "coreutils.h"
 # undef SINGLE_BINARY_PROGRAM
 #endif

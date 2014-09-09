@@ -161,8 +161,8 @@ enum { MAX_ACCEPTABLE_DIGITS = 27 };
 
 static enum scale_type scale_from = scale_none;
 static enum scale_type scale_to = scale_none;
-static enum round_type _round = round_from_zero;
-static enum inval_type _invalid = inval_abort;
+static enum round_type round_style = round_from_zero;
+static enum inval_type inval_style = inval_abort;
 static const char *suffix = NULL;
 static uintmax_t from_unit_size = 1;
 static uintmax_t to_unit_size = 1;
@@ -677,7 +677,7 @@ simple_strtod_fatal (enum simple_strtod_error err, char const *input_str)
 
     }
 
-  if (_invalid != inval_ignore)
+  if (inval_style != inval_ignore)
     error (conv_exit_code, 0, gettext (msgid), quote (input_str));
 }
 
@@ -1077,7 +1077,7 @@ parse_human_number (const char *str, long double /*output */ *value,
 
   if (ptr && *ptr != '\0')
     {
-      if (_invalid != inval_ignore)
+      if (inval_style != inval_ignore)
         error (conv_exit_code, 0, _("invalid suffix in input %s: %s"),
                quote_n (0, str), quote_n (1, ptr));
       e = SSE_INVALID_SUFFIX;
@@ -1099,7 +1099,7 @@ prepare_padded_number (const long double val, size_t precision)
   expld (val, 10, &x);
   if (scale_to == scale_none && x > MAX_UNSCALED_DIGITS)
     {
-      if (_invalid != inval_ignore)
+      if (inval_style != inval_ignore)
         error (conv_exit_code, 0, _("value too large to be printed: '%Lg'"
                                     " (consider using --to)"), val);
       return 0;
@@ -1107,14 +1107,14 @@ prepare_padded_number (const long double val, size_t precision)
 
   if (x > MAX_ACCEPTABLE_DIGITS - 1)
     {
-      if (_invalid != inval_ignore)
+      if (inval_style != inval_ignore)
         error (conv_exit_code, 0, _("value too large to be printed: '%Lg'"
                                     " (cannot handle values > 999Y)"), val);
       return 0;
     }
 
   double_to_human (val, precision, buf, sizeof (buf), scale_to, grouping,
-                   _round);
+                   round_style);
   if (suffix)
     strncat (buf, suffix, sizeof (buf) - strlen (buf) -1);
 
@@ -1304,7 +1304,7 @@ process_line (char *line, bool newline)
 
   extract_fields (line, field, &pre, &num, &suf);
   if (!num)
-    if (_invalid != inval_ignore)
+    if (inval_style != inval_ignore)
       error (conv_exit_code, 0, _("input line is too short, "
                                   "no numbers found to convert in field %ld"),
            field);
@@ -1390,7 +1390,7 @@ main (int argc, char **argv)
           break;
 
         case ROUND_OPTION:
-          _round = XARGMATCH ("--round", optarg, round_args, round_types);
+          round_style = XARGMATCH ("--round", optarg, round_args, round_types);
           break;
 
         case GROUPING_OPTION:
@@ -1458,7 +1458,8 @@ main (int argc, char **argv)
           break;
 
         case INVALID_OPTION:
-          _invalid = XARGMATCH ("--invalid", optarg, inval_args, inval_types);
+          inval_style = XARGMATCH ("--invalid", optarg,
+                                   inval_args, inval_types);
           break;
 
           case_GETOPT_HELP_CHAR;
@@ -1492,7 +1493,7 @@ main (int argc, char **argv)
   setup_padding_buffer (padding_width);
   auto_padding = (padding_width == 0 && delimiter == DELIMITER_DEFAULT);
 
-  if (_invalid != inval_abort)
+  if (inval_style != inval_abort)
     conv_exit_code = 0;
 
   if (argc > optind)
@@ -1535,7 +1536,8 @@ main (int argc, char **argv)
     error (0, 0, _("failed to convert some of the input numbers"));
 
   int exit_status = EXIT_SUCCESS;
-  if (!valid_numbers && _invalid != inval_warn && _invalid != inval_ignore)
+  if (!valid_numbers
+      && inval_style != inval_warn && inval_style != inval_ignore)
     exit_status = EXIT_CONVERSION_WARNINGS;
 
   return exit_status;
