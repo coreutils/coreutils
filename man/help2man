@@ -405,16 +405,19 @@ s/\\/\x82/g;
 # "(?:[\\w-]+ +)?" in the bug reporting pattern is used to indicate an
 # optional word, so that either "Report bugs" or "Report _program_ bugs" will
 # be matched.
-my $PAT_BUGS          = _('Report +(?:[\w-]+ +)?bugs|Email +bug +reports +to');
+my $PAT_BUGS          = _('Report +(?:[\w-]+ +)?bugs|' .
+                          'Email +bug +reports +to|' .
+                          '.* +online +help:');
 my $PAT_AUTHOR        = _('Written +by');
 my $PAT_OPTIONS       = _('Options');
 my $PAT_ENVIRONMENT   = _('Environment');
 my $PAT_FILES         = _('Files');
 my $PAT_EXAMPLES      = _('Examples');
 my $PAT_FREE_SOFTWARE = _('This +is +free +software');
+my $PAT_SEE_ALSO      = _('Full +documentation');
 
 # Start a new paragraph (if required) for these.
-s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR) /$1\n\n$2 /og;
+s/([^\n])\n($PAT_BUGS|$PAT_AUTHOR|$PAT_SEE_ALSO) /$1\n\n$2 /og;
 
 # Convert iso-8859-1 copyright symbol or (c) to nroff
 # character.
@@ -460,6 +463,12 @@ while (length)
     elsif (/^($PAT_AUTHOR)/o)
     {
 	$sect = _('AUTHOR');
+    }
+
+    elsif (/^($PAT_SEE_ALSO)/o)
+    {
+	$sect = _('SEE ALSO');
+	$opt_no_info = 1;
     }
 
     # Examples, indicated by an indented leading $, % or > are
@@ -587,6 +596,17 @@ while (length)
 	    #   GNU <package> home page: <url>
 	    #   ...
 	    s/\n([[:upper:]])/\n.br\n$1/g;
+	}
+	elsif ($sect eq _('SEE ALSO'))
+	{
+	    # Handle external references of the form:
+	    #
+	    #   GNU <package> online resources: <addr>
+	    #   Full documentation at: <addr>
+	    #   or available locally via: info ...
+	    #
+	    s/\'/\\(aq/g;			# shell quotes for info command
+	    s/\n(.)/\n.br\n$1/g;		# separate lines for each item
 	}
     }
 

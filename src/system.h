@@ -567,7 +567,10 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 static inline void
 emit_ancillary_info (void)
 {
+  char const * program = last_component (program_name);
+
   printf (_("\n%s online help: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
+
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
   const char *lc_messages = setlocale (LC_MESSAGES, NULL);
@@ -578,12 +581,12 @@ emit_ancillary_info (void)
          the URLs at http://translationproject.org/team/.  Otherwise, replace
          the entire URL with your translation team's email address.  */
       printf (_("Report %s translation bugs to "
-                "<http://translationproject.org/team/>\n"),
-                last_component (program_name));
+                "<http://translationproject.org/team/>\n"), program);
     }
-  printf (_("For complete documentation, run: "
-            "info '(coreutils) %s invocation'\n"),
-          last_component (program_name));
+  printf (_("Full documentation at: <%s%s>\n"),
+          PACKAGE_URL, program);
+  printf (_("or available locally via: info '(coreutils) %s invocation'\n"),
+          program);
 }
 
 static inline void
