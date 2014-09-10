@@ -336,17 +336,17 @@ copy_sources = \
   src/extent-scan.c \
   src/extent-scan.h
 
+# Use 'ginstall' in the definition of PROGRAMS and in dependencies to avoid
+# confusion with the 'install' target.  The install rule transforms 'ginstall'
+# to install before applying any user-specified name transformations.
+
 # Don't apply prefix transformations to libstdbuf shared lib
 # as that's not generally needed, and we need to reference the
 # name directly in LD_PRELOAD etc.  In general it's surprising
 # that $(transform) is applied to libexec at all given that is
 # for internal package naming, not privy to $(transform).
 
-# Use 'ginstall' in the definition of PROGRAMS and in dependencies to avoid
-# confusion with the 'install' target.  The install rule transforms 'ginstall'
-# to install before applying any user-specified name transformations.
-
-transform = /libstdbuf/q;s/ginstall/install/;$(program_transform_name)
+transform = s/ginstall/install/;/libstdbuf/!$(program_transform_name)
 
 src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources) \
 		       $(selinux_sources)
