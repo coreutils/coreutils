@@ -527,8 +527,8 @@ main (int argc, char **argv)
   /* I-node number of the output.  */
   ino_t out_ino;
 
-  /* True if the output file should not be the same as any input file.  */
-  bool check_redirection = true;
+  /* True if the output is a regular file.  */
+  bool out_isreg;
 
   /* Nonzero if we have ever read standard input.  */
   bool have_read_stdin = false;
@@ -637,25 +637,9 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("standard output"));
 
   outsize = io_blksize (stat_buf);
-  /* Input file can be output file for non-regular files.
-     fstat on pipes returns S_IFSOCK on some systems, S_IFIFO
-     on others, so the checking should not be done for those types,
-     and to allow things like cat < /dev/tty > /dev/tty, checking
-     is not done for device files either.  */
-
-  if (S_ISREG (stat_buf.st_mode))
-    {
-      out_dev = stat_buf.st_dev;
-      out_ino = stat_buf.st_ino;
-    }
-  else
-    {
-      check_redirection = false;
-#ifdef lint  /* Suppress 'used before initialized' warning.  */
-      out_dev = 0;
-      out_ino = 0;
-#endif
-    }
+  out_dev = stat_buf.st_dev;
+  out_ino = stat_buf.st_ino;
+  out_isreg = S_ISREG (stat_buf.st_mode) != 0;
 
   if (! (number || show_ends || squeeze_blank))
     {
@@ -704,14 +688,13 @@ main (int argc, char **argv)
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
-      /* Compare the device and i-node numbers of this input file with
-         the corresponding values of the (output file associated with)
-         stdout, and skip this input file if they coincide.  Input
-         files cannot be redirected to themselves.  */
+      /* Don't copy a nonempty regular file to itself, as that would
+         merely exhaust the output device.  It's better to catch this
+         error earlier rather than later.  */
 
-      if (check_redirection
+      if (out_isreg
           && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
-          && (input_desc != STDIN_FILENO))
+          && lseek (input_desc, 0, SEEK_CUR) < stat_buf.st_size)
         {
           error (0, 0, _("%s: input file is output file"), infile);
           ok = false;

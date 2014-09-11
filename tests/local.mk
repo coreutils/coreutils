@@ -258,6 +258,7 @@ all_tests =					\
   tests/misc/wc-parallel.sh			\
   tests/misc/cat-proc.sh			\
   tests/misc/cat-buf.sh				\
+  tests/misc/cat-self.sh			\
   tests/misc/base64.pl				\
   tests/misc/basename.pl			\
   tests/misc/close-stdout.sh			\
