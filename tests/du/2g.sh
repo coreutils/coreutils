@@ -43,15 +43,14 @@ test $min_kb -lt $free_kb ||
 
 big=big
 rm -f $big
-test -t 1 || printf 'creating a 2GB file...\n'
-for i in $(seq 100); do
-  # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
-  printf %21474836s x >> $big || fail=1
-  # On the final iteration, append the remaining 48 bytes.
-  test $i = 100 && { printf %48s x >> $big || fail=1; }
-  test -t 1 && printf 'creating a 2GB file: %d%% complete\r' $i
-done
-echo
+{
+  for i in $(seq 100); do
+    # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
+    printf %21474836s x || fail=1
+  done
+  # After the final iteration, append the remaining 48 bytes.
+  printf %48s x || fail=1
+} > $big || fail=1
 
 du -k $big > out1 || fail=1
 rm -f $big
