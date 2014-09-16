@@ -442,7 +442,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (!print_database < argc)
+  if ((!print_database) < argc)
     {
       error (0, 0, _("extra operand %s"), quote (argv[!print_database]));
       if (print_database)
