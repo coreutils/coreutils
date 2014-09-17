@@ -2187,6 +2187,17 @@ copy_internal (char const *src_name, char const *dst_name,
               *copy_into_self = true;
               goto un_backup;
             }
+          else if (same_name (dst_name, earlier_file))
+            {
+              error (0, 0, _("warning: source directory %s "
+                             "specified more than once"),
+                     quote (top_level_src_name));
+              /* We only do backups in move mode and for non dirs,
+                 and in move mode this won't be the issue as the source will
+                 be missing for subsequent attempts.
+                 There we just warn and return here.  */
+              return true;
+            }
           else if (x->dereference == DEREF_ALWAYS)
             {
               /* This happens when e.g., encountering a directory for the

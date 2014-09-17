@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  cp no longer issues an incorrect warning about directory hardlinks when a
+  source directory is specified multiple times.  Instead a warning is issued
+  and the duplicate source directory is skipped, as already the case for files.
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory

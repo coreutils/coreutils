@@ -427,6 +427,7 @@ all_tests =					\
   tests/cp/dir-rm-dest.sh			\
   tests/cp/dir-slash.sh				\
   tests/cp/dir-vs-file.sh			\
+  tests/cp/duplicate-sources.sh			\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
   tests/cp/fail-perm.sh				\
