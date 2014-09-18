@@ -5,8 +5,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Bug fixes
 
   cp no longer issues an incorrect warning about directory hardlinks when a
-  source directory is specified multiple times.  Instead a warning is issued
-  and the duplicate source directory is skipped, as already the case for files.
+  source directory is specified multiple times.  Now, consistent with other
+  file types, a warning is issued for source directories with duplicate names,
+  or with -H the directory is copied again using the symlink name.
 
 ** New features
 

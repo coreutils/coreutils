@@ -2198,7 +2198,9 @@ copy_internal (char const *src_name, char const *dst_name,
                  There we just warn and return here.  */
               return true;
             }
-          else if (x->dereference == DEREF_ALWAYS)
+          else if (x->dereference == DEREF_ALWAYS
+                   || (command_line_arg
+                       && x->dereference == DEREF_COMMAND_LINE_ARGUMENTS))
             {
               /* This happens when e.g., encountering a directory for the
                  second or subsequent time via symlinks when cp is invoked

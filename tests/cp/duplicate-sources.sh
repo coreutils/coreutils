@@ -20,10 +20,19 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-mkdir a b || framework_failure_
+mkdir a || framework_failure_
 touch f || framework_failure_
 
-cp -a a a f f b 2>err || fail=1
+# verify multiple files and dir sources only warned about
+mkdir dest || framework_failure_
+cp -a a a f f dest 2>err || fail=1
+rm -Rf dest || framework_failure_
+
+# verify multiple dirs and files with different names copied
+mkdir dest || framework_failure_
+ln -s a al || framework_failure_
+ln -s f fl || framework_failure_
+cp -aH a al f fl dest 2>>err || fail=1
 
 cat <<EOF >exp
 cp: warning: source directory 'a' specified more than once
