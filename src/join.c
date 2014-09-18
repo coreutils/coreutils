@@ -239,7 +239,7 @@ Note, comparisons honor the rules specified by 'LC_COLLATE'.\n\
 If the input is not sorted and some lines cannot be joined, a\n\
 warning message will be given.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

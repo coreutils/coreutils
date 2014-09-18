@@ -68,7 +68,7 @@ Print the full filename of the current working directory.\n\
 If no option is specified, -P is assumed.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -296,7 +296,7 @@ The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n"),
              stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -69,7 +69,7 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

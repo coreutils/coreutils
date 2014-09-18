@@ -47,7 +47,7 @@ Usage: %s [ignored command line arguments]\n\
   fputs (HELP_OPTION_DESCRIPTION, stdout);
   fputs (VERSION_OPTION_DESCRIPTION, stdout);
   printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-  emit_ancillary_info ();
+  emit_ancillary_info (PROGRAM_NAME);
   exit (status);
 }
 

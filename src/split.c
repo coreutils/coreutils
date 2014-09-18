@@ -241,7 +241,7 @@ l/K/N   output Kth of N to stdout without splitting lines\n\
 r/N     like 'l' but use round robin distribution\n\
 r/K/N   likewise but only output Kth of N to stdout\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -565,10 +565,8 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 }
 
 static inline void
-emit_ancillary_info (void)
+emit_ancillary_info (char const *program)
 {
-  char const *program = last_component (program_name);
-
   struct infomap { char const *program; char const *node; } const infomap[] = {
     { "[", "test invocation" },
     { "coreutils", "Multi-call invocation" },

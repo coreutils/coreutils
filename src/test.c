@@ -791,7 +791,7 @@ NOTE: [ honors the --help and --version options, but test does not.\n\
 test treats each of those as it treats any other nonempty STRING.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

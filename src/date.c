@@ -255,7 +255,7 @@ Show the time on the west coast of the US (use tzselect(1) to find TZ)\n\
 Show the local time for 9AM next Friday on the west coast of the US\n\
   $ date --date='TZ=\"America/Los_Angeles\" 09:00 next Fri'\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

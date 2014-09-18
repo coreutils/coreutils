@@ -70,7 +70,7 @@ If standard error is a terminal, redirect it to standard output.\n\
 To save output to FILE, use '%s COMMAND > FILE'.\n"),
               program_name);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

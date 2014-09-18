@@ -268,7 +268,7 @@ As a special case, cp makes a backup of SOURCE when the force and backup\n\
 options are given and SOURCE and DEST are the same name for an existing,\n\
 regular file.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

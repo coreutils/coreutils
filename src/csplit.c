@@ -1516,7 +1516,7 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
 \n\
 A line OFFSET is a required '+' or '-' followed by a positive integer.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

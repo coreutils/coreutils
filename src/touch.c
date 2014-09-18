@@ -247,7 +247,7 @@ change the times of the file associated with standard output.\n\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -452,7 +452,7 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
 Using -s ignores -L and -P.  Otherwise, the last option specified controls\n\
 behavior when a TARGET is a symbolic link, defaulting to %s.\n\
 "), LINK_FOLLOWS_SYMLINKS ? "-L" : "-P");
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -72,7 +72,7 @@ Copy standard input to each FILE, and also to standard output.\n\
 \n\
 If a FILE is -, copy again to standard output.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

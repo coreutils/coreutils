@@ -210,7 +210,7 @@ should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating input mode ('*' for binary,\n\
 space for text), and name for each FILE.\n"),
               DIGEST_REFERENCE);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
 
   exit (status);

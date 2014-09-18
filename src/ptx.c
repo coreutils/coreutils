@@ -1858,7 +1858,7 @@ Output a permuted index, including context, of the words in the input files.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.  Default is '-F /'.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

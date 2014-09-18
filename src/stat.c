@@ -1491,7 +1491,7 @@ Valid format sequences for file systems:\n\
   %T   file system type in human readable form\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

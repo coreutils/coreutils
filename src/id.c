@@ -104,7 +104,7 @@ or (when USER omitted) for the current user.\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

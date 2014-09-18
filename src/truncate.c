@@ -122,7 +122,7 @@ reads as zero bytes.\n\
 SIZE may also be prefixed by one of the following modifying characters:\n\
 '+' extend by, '-' reduce by, '<' at most, '>' at least,\n\
 '/' round down to multiple of, '%' round up to multiple of.\n"), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

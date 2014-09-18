@@ -83,7 +83,7 @@ When decoding, the input may contain newlines in addition to the bytes of\n\
 the formal base64 alphabet.  Use --ignore-garbage to attempt to recover\n\
 from any other non-alphabet bytes in the encoded stream.\n"),
              stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
 
   exit (status);

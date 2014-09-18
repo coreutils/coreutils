@@ -515,7 +515,7 @@ usage (int status)
 A lightweight 'finger' program;  print user information.\n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

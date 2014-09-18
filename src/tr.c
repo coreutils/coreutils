@@ -346,7 +346,7 @@ only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

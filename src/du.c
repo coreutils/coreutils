@@ -351,7 +351,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_blocksize_note ("DU");
       emit_size_note ();
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

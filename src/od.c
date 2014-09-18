@@ -414,7 +414,7 @@ BYTES is hex with 0x or 0X prefix, and may have a multiplier suffix:\n\
   M    1024*1024\n\
 and so on for G, T, P, E, Z, Y.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -1430,7 +1430,7 @@ FIELD_LIST is a comma-separated list of columns to be included.  Valid\n\
 field names are: 'source', 'fstype', 'itotal', 'iused', 'iavail', 'ipcent',\n\
 'size', 'used', 'avail', 'pcent', 'file' and 'target' (see info page).\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

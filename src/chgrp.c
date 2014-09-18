@@ -162,7 +162,7 @@ Examples:\n\
   %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n\
 "),
               program_name, program_name);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -220,7 +220,7 @@ Note: 'uniq' does not detect repeated lines unless they are adjacent.\n\
 You may want to sort the input first, or use 'sort -u' without 'uniq'.\n\
 Also, comparisons honor the rules specified by 'LC_COLLATE'.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

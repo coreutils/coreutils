@@ -69,7 +69,7 @@ Examples:\n\
   %s stdio.h            -> \".\"\n\
 "),
               program_name, program_name, program_name);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -141,7 +141,7 @@ Examples:\n\
   %s -3 file1 file2  Print lines in file1 not in file2, and vice versa.\n\
 "),
               program_name, program_name);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

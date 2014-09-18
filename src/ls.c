@@ -4948,7 +4948,7 @@ Exit status:\n\
  1  if minor problems (e.g., cannot access subdirectory),\n\
  2  if serious trouble (e.g., cannot access command-line argument).\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

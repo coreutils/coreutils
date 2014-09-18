@@ -2853,7 +2853,7 @@ Paginate or columnate FILE(s) for printing.\n\
 -t is implied if PAGE_LENGTH <= 10.  With no FILE, or when FILE is -, read\n\
 standard input.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -84,7 +84,7 @@ Built-in programs:\n"
 \n\
 Use: '%s --coreutils-prog=PROGRAM_NAME --help' for individual program help.\n"),
               program_name);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

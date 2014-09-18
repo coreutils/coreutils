@@ -119,7 +119,7 @@ for e.g.) then that will override corresponding settings changed by 'stdbuf'.\n\
 Also some filters (like 'dd' and 'cat' etc.) don't use streams for I/O,\n\
 and are thus unaffected by 'stdbuf' settings.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

@@ -451,7 +451,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       /* FIXME: add a couple of examples.  */
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

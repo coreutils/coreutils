@@ -217,7 +217,7 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
               UTMP_FILE, WTMP_FILE);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

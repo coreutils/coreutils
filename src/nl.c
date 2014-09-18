@@ -223,7 +223,7 @@ FORMAT is one of:\n\
   rz   right justified, leading zeros\n\
 \n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }

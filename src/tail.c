@@ -321,7 +321,7 @@ track the actual name of the file, not the file descriptor (e.g., log\n\
 rotation).  Use --follow=name in that case.  That causes tail to track the\n\
 named file in a way that accommodates renaming, removal and creation.\n\
 "), stdout);
-      emit_ancillary_info ();
+      emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
 }
