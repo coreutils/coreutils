@@ -4206,7 +4206,8 @@ The commands @command{sha224sum}, @command{sha256sum},
 @command{sha384sum} and @command{sha512sum} compute checksums of
 various lengths (respectively 224, 256, 384 and 512 bits),
 collectively known as the SHA-2 hashes.  The usage and options of
-these commands are precisely the same as for @command{md5sum}.
+these commands are precisely the same as for @command{md5sum}
+and @command{sha1sum}.
 @xref{md5sum invocation}.
 
 Note: The SHA384 and SHA512 digests are considerably slower to
@@ -7960,6 +7961,8 @@ and special characters are represented by backslash escape sequences.
 @command{vdir} is equivalent to @code{ls -l
 -b}; that is, by default files are listed in long format and special
 characters are represented by backslash escape sequences.
+
+@xref{ls invocation, @command{ls}}.
 
 @node dircolors invocation
 @section @command{dircolors}: Color setup for @command{ls}

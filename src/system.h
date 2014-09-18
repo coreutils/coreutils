@@ -567,7 +567,26 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 static inline void
 emit_ancillary_info (void)
 {
-  char const * program = last_component (program_name);
+  char const *program = last_component (program_name);
+
+  struct infomap { char const *program; char const *node; } const infomap[] = {
+    { "[", "test invocation" },
+    { "coreutils", "Multi-call invocation" },
+    { "sha224sum", "sha2 utilities" },
+    { "sha256sum", "sha2 utilities" },
+    { "sha384sum", "sha2 utilities" },
+    { "sha512sum", "sha2 utilities" },
+    { NULL, NULL }
+  };
+
+  char const *node = program;
+  struct infomap const *map_prog = infomap;
+
+  while (map_prog->program && ! STREQ (program, map_prog->program))
+    map_prog++;
+
+  if (map_prog->node)
+    node = map_prog->node;
 
   printf (_("\n%s online help: <%s>\n"), PACKAGE_NAME, PACKAGE_URL);
 
@@ -585,8 +604,8 @@ emit_ancillary_info (void)
     }
   printf (_("Full documentation at: <%s%s>\n"),
           PACKAGE_URL, program);
-  printf (_("or available locally via: info '(coreutils) %s invocation'\n"),
-          program);
+  printf (_("or available locally via: info '(coreutils) %s%s'\n"),
+          node, node == program ? " invocation" : "");
 }
 
 static inline void
