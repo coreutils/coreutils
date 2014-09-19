@@ -539,45 +539,84 @@ settings.  The underlying system defines which settings are available.\n\
 "), stdout);
       fputs (_("\
 \n\
-Special characters:\n\
+Special characters:\n"), stdout);
+#ifdef VDSUSP
+      fputs (_("\
  * dsusp CHAR    CHAR will send a terminal stop signal once input flushed\n\
+"), stdout);
+#endif
+      fputs (_("\
    eof CHAR      CHAR will send an end of file (terminate the input)\n\
    eol CHAR      CHAR will end the line\n\
 "), stdout);
+#ifdef VEOL2
       fputs (_("\
  * eol2 CHAR     alternate CHAR for ending the line\n\
+"), stdout);
+#endif
+      fputs (_("\
    erase CHAR    CHAR will erase the last character typed\n\
    intr CHAR     CHAR will send an interrupt signal\n\
    kill CHAR     CHAR will erase the current line\n\
 "), stdout);
+#ifdef VLNEXT
       fputs (_("\
  * lnext CHAR    CHAR will enter the next character quoted\n\
-   quit CHAR     CHAR will send a quit signal\n\
- * rprnt CHAR    CHAR will redraw the current line\n\
-   start CHAR    CHAR will restart the output after stopping it\n\
 "), stdout);
+#endif
       fputs (_("\
+   quit CHAR     CHAR will send a quit signal\n\
+"), stdout);
+#ifdef CREPRINT /* HPUX 10.20 needs this */
+      fputs (_("\
+ * rprnt CHAR    CHAR will redraw the current line\n\
+"), stdout);
+#endif
+      fputs (_("\
+   start CHAR    CHAR will restart the output after stopping it\n\
    stop CHAR     CHAR will stop the output\n\
    susp CHAR     CHAR will send a terminal stop signal\n\
+"), stdout);
+#ifdef VSWTCH
+      fputs (_("\
  * swtch CHAR    CHAR will switch to a different shell layer\n\
+"), stdout);
+#endif
+#ifdef VWERASE
+      fputs (_("\
  * werase CHAR   CHAR will erase the last word typed\n\
 "), stdout);
+#endif
       fputs (_("\
 \n\
 Special settings:\n\
    N             set the input and output speeds to N bauds\n\
+"), stdout);
+#ifdef TIOCGWINSZ
+      fputs (_("\
  * cols N        tell the kernel that the terminal has N columns\n\
  * columns N     same as cols N\n\
 "), stdout);
+#endif
       fputs (_("\
    ispeed N      set the input speed to N\n\
+"), stdout);
+#ifdef HAVE_C_LINE
+      fputs (_("\
  * line N        use line discipline N\n\
+"), stdout);
+#endif
+      fputs (_("\
    min N         with -icanon, set N characters minimum for a completed read\n\
    ospeed N      set the output speed to N\n\
 "), stdout);
+#ifdef TIOCGWINSZ
       fputs (_("\
  * rows N        tell the kernel that the terminal has N rows\n\
  * size          print the number of rows and columns according to the kernel\n\
+"), stdout);
+#endif
+      fputs (_("\
    speed         print the terminal speed\n\
    time N        with -icanon, set read timeout of N tenths of a second\n\
 "), stdout);
@@ -586,8 +625,18 @@ Special settings:\n\
 Control settings:\n\
    [-]clocal     disable modem control signals\n\
    [-]cread      allow input to be received\n\
+"), stdout);
+#ifdef CRTSCTS
+      fputs (_("\
  * [-]crtscts    enable RTS/CTS handshaking\n\
+"), stdout);
+#endif
+#ifdef CDTRDSR
+      fputs (_("\
  * [-]cdtrdsr    enable DTR/DSR handshaking\n\
+"), stdout);
+#endif
+      fputs (_("\
    csN           set character size to N bits, N in [5..8]\n\
 "), stdout);
       fputs (_("\
@@ -596,8 +645,12 @@ Control settings:\n\
    [-]hupcl      same as [-]hup\n\
    [-]parenb     generate parity bit in output and expect parity bit in input\n\
    [-]parodd     set odd parity (or even parity with '-')\n\
+"), stdout);
+#ifdef CMSPAR
+      fputs (_("\
  * [-]cmspar     use \"stick\" (mark/space) parity\n\
 "), stdout);
+#endif
       fputs (_("\
 \n\
 Input settings:\n\
@@ -605,20 +658,34 @@ Input settings:\n\
    [-]icrnl      translate carriage return to newline\n\
    [-]ignbrk     ignore break characters\n\
    [-]igncr      ignore carriage return\n\
-"), stdout);
-      fputs (_("\
    [-]ignpar     ignore characters with parity errors\n\
+"), stdout);
+#ifdef IMAXBEL
+      fputs (_("\
  * [-]imaxbel    beep and do not flush a full input buffer on a character\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]inlcr      translate newline to carriage return\n\
    [-]inpck      enable input parity checking\n\
    [-]istrip     clear high (8th) bit of input characters\n\
 "), stdout);
+#ifdef IUTF8
       fputs (_("\
  * [-]iutf8      assume input characters are UTF-8 encoded\n\
 "), stdout);
+#endif
+#ifdef IUCLC
       fputs (_("\
  * [-]iuclc      translate uppercase characters to lowercase\n\
+"), stdout);
+#endif
+#ifdef IXANY
+      fputs (_("\
  * [-]ixany      let any character restart output, not only start character\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]ixoff      enable sending of start/stop characters\n\
    [-]ixon       enable XON/XOFF flow control\n\
    [-]parmrk     mark parity errors (with a 255-0-character sequence)\n\
@@ -627,59 +694,151 @@ Input settings:\n\
       fputs (_("\
 \n\
 Output settings:\n\
+"), stdout);
+#ifdef BSDLY
+      fputs (_("\
  * bsN           backspace delay style, N in [0..1]\n\
+"), stdout);
+#endif
+#ifdef CRDLY
+      fputs (_("\
  * crN           carriage return delay style, N in [0..3]\n\
+"), stdout);
+#endif
+#ifdef FFDLY
+      fputs (_("\
  * ffN           form feed delay style, N in [0..1]\n\
+"), stdout);
+#endif
+#ifdef NLDLY
+      fputs (_("\
  * nlN           newline delay style, N in [0..1]\n\
 "), stdout);
+#endif
+#ifdef OCRNL
       fputs (_("\
  * [-]ocrnl      translate carriage return to newline\n\
+"), stdout);
+#endif
+#ifdef OFDEL
+      fputs (_("\
  * [-]ofdel      use delete characters for fill instead of NUL characters\n\
+"), stdout);
+#endif
+#ifdef OFILL
+      fputs (_("\
  * [-]ofill      use fill (padding) characters instead of timing for delays\n\
+"), stdout);
+#endif
+#ifdef OLCUC
+      fputs (_("\
  * [-]olcuc      translate lowercase characters to uppercase\n\
+"), stdout);
+#endif
+#ifdef ONLCR
+      fputs (_("\
  * [-]onlcr      translate newline to carriage return-newline\n\
+"), stdout);
+#endif
+#ifdef ONLRET
+      fputs (_("\
  * [-]onlret     newline performs a carriage return\n\
 "), stdout);
+#endif
+#ifdef ONOCR
       fputs (_("\
  * [-]onocr      do not print carriage returns in the first column\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]opost      postprocess output\n\
+"), stdout);
+#if defined TABDLY || defined OXTABS
+      fputs (_("\
  * tabN          horizontal tab delay style, N in [0..3]\n\
  * tabs          same as tab0\n\
  * -tabs         same as tab3\n\
+"), stdout);
+#endif
+#ifdef VTDLY
+      fputs (_("\
  * vtN           vertical tab delay style, N in [0..1]\n\
 "), stdout);
+#endif
       fputs (_("\
 \n\
 Local settings:\n\
    [-]crterase   echo erase characters as backspace-space-backspace\n\
+"), stdout);
+#ifdef ECHOKE
+      fputs (_("\
  * crtkill       kill all line by obeying the echoprt and echoe settings\n\
  * -crtkill      kill all line by obeying the echoctl and echok settings\n\
 "), stdout);
+#endif
+#ifdef ECHOCTL
       fputs (_("\
  * [-]ctlecho    echo control characters in hat notation ('^c')\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]echo       echo input characters\n\
+"), stdout);
+#ifdef ECHOCTL
+      fputs (_("\
  * [-]echoctl    same as [-]ctlecho\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]echoe      same as [-]crterase\n\
    [-]echok      echo a newline after a kill character\n\
 "), stdout);
+#ifdef ECHOKE
       fputs (_("\
  * [-]echoke     same as [-]crtkill\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]echonl     echo newline even if not echoing other characters\n\
+"), stdout);
+#ifdef ECHOPRT
+      fputs (_("\
  * [-]echoprt    echo erased characters backward, between '\\' and '/'\n\
+"), stdout);
+#endif
+      fputs (_("\
    [-]icanon     enable erase, kill, werase, and rprnt special characters\n\
    [-]iexten     enable non-POSIX special characters\n\
 "), stdout);
       fputs (_("\
    [-]isig       enable interrupt, quit, and suspend special characters\n\
    [-]noflsh     disable flushing after interrupt and quit special characters\n\
+"), stdout);
+#ifdef ECHOPRT
+      fputs (_("\
  * [-]prterase   same as [-]echoprt\n\
+"), stdout);
+#endif
+#ifdef TOSTOP
+      fputs (_("\
  * [-]tostop     stop background jobs that try to write to the terminal\n\
+"), stdout);
+#endif
+#ifdef XCASE
+      fputs (_("\
  * [-]xcase      with icanon, escape with '\\' for uppercase characters\n\
 "), stdout);
+#endif
       fputs (_("\
 \n\
 Combination settings:\n\
+"), stdout);
+#if defined XCASE && defined IUCLC && defined OLCUC
+      fputs (_("\
  * [-]LCASE      same as [-]lcase\n\
+"), stdout);
+#endif
+      fputs (_("\
    cbreak        same as -icanon\n\
    -cbreak       same as icanon\n\
 "), stdout);
@@ -692,13 +851,23 @@ Combination settings:\n\
       fputs (_("\
    dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n\
                  kill ^u\n\
+"), stdout);
+#ifdef IXANY
+      fputs (_("\
  * [-]decctlq    same as [-]ixany\n\
+"), stdout);
+#endif
+      fputs (_("\
    ek            erase and kill characters to their default values\n\
    evenp         same as parenb -parodd cs7\n\
-"), stdout);
-      fputs (_("\
    -evenp        same as -parenb cs8\n\
+"), stdout);
+#if defined XCASE && defined IUCLC && defined OLCUC
+      fputs (_("\
  * [-]lcase      same as xcase iuclc olcuc\n\
+"), stdout);
+#endif
+      fputs (_("\
    litout        same as -parenb -istrip -opost cs8\n\
    -litout       same as parenb istrip opost cs7\n\
    nl            same as -icrnl -onlcr\n\
