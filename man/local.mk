@@ -187,8 +187,9 @@ endif
 	  && $(run_help2man)						\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
-		     --output=$$t/$$name.1 $$t/$$argv			\
+		     --output=$$t/$$name.1				\
 		     --info-page='\(aq(coreutils) '$$name' invocation\(aq' \
+		     $$t/$$argv						\
 	  && sed \
 	       -e 's|$*\.td/||g' \
 	       -e '/For complete documentation/d' \
