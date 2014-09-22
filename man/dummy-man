@@ -39,7 +39,7 @@ while test $# -gt 0; do
 done
 
 test $# -gt 0 || fatal_ "missing argument"
-test $# -le 1 || fatal_ "too many non-option arguments"
+test $# -gt 1 || fatal_ "too many non-option arguments"
 
 baseout=`basename_ "$output"`
 sed 's/^/WARNING: /' >&2 <<END
