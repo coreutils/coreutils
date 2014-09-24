@@ -24,6 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  mv will try a reflink before falling back to a standard copy, which is
+  more efficient when moving files across BTRFS subvolume boundaries.
+
   References from --help and the man pages of utilities have been corrected
   in various cases, and more direct links to the corresponding online
   documentation are provided.
