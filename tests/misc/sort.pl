@@ -317,6 +317,10 @@ my @Tests =
 ["22a", '-k 2,2fd -k 1,1r', {IN=>"3 b\n4 B\n"}, {OUT=>"4 B\n3 b\n"}],
 ["22b", '-k 2,2d  -k 1,1r', {IN=>"3 b\n4 b\n"}, {OUT=>"4 b\n3 b\n"}],
 
+# This fails in Fedora 20, per Göran Uddeborg in: http://bugs.gnu.org/18540
+["23", '-s -k1,1 -t/', {IN=>"a b/x\na-b-c/x\n"}, {OUT=>"a b/x\na-b-c/x\n"},
+ {ENV => "LC_ALL=$mb_locale"}],
+
 ["no-file1", 'no-file', {EXIT=>2}, {ERR=>$no_file}],
 # This test failed until 1.22f.  Sort didn't give an error.
 # From Will Edgington.
