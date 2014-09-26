@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   king directory.  The new option is only permitted if the new root directory is
   the old "/", and therefore is useful with the --group and --userspec options.
 
+  dd accepts a new status=progress level to print data transfer statistics
+  on stderr approximately every second.
+
 ** Changes in behavior
 
   chroot changes the current directory to "/" in again - unless the above new

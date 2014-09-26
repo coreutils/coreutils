@@ -1,5 +1,5 @@
 #!/bin/sh
-# Check robust handling of SIG{INFO,USR1}
+# Check stats output for SIG{INFO,USR1} and status=progress
 
 # Copyright (C) 2014 Free Software Foundation, Inc.
 
@@ -53,5 +53,13 @@ for open in '' '1'; do
   # Ensure all data processed and at least last status written
   grep '500000000 bytes .* copied' err || { cat err; fail=1; }
 done
+
+progress_output()
+{
+  { sleep "$1"; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
+  # Progress output should be for "byte ... copied", while final is "bytes ..."
+  grep 'byte .* copied' err
+}
+retry_delay_ progress_output 1 4 || { cat err; fail=1; }
 
 Exit $fail

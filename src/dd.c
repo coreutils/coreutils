@@ -34,6 +34,7 @@
 #include "long-options.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "verror.h"
 #include "xstrtol.h"
 #include "xtime.h"
 
@@ -132,11 +133,13 @@ enum
     C_SPARSE = 0200000
   };
 
-/* Status bit masks.  */
+/* Status levels.  */
 enum
   {
-    STATUS_NOXFER = 01,
-    STATUS_NONE = 02
+    STATUS_NONE = 1,
+    STATUS_NOXFER = 2,
+    STATUS_DEFAULT = 3,
+    STATUS_PROGRESS = 4
   };
 
 /* The name of the input file, or NULL for the standard input. */
@@ -188,7 +191,7 @@ static int input_flags = 0;
 static int output_flags = 0;
 
 /* Status flags for what is printed to stderr.  */
-static int status_flags = 0;
+static int status_level = STATUS_DEFAULT;
 
 /* If nonzero, filter characters through the translation table.  */
 static bool translation_needed = false;
@@ -210,6 +213,12 @@ static uintmax_t w_bytes = 0;
 
 /* Time that dd started.  */
 static xtime_t start_time;
+
+/* Previous time for periodic progress.  */
+static xtime_t previous_time;
+
+/* Whether a '\n' is pending after writing progress.  */
+static bool newline_pending;
 
 /* True if input is seekable.  */
 static bool input_seekable;
@@ -373,8 +382,9 @@ static struct symbol_value const flags[] =
 /* Status, for status="...".  */
 static struct symbol_value const statuses[] =
 {
-  {"noxfer",	STATUS_NOXFER},
   {"none",	STATUS_NONE},
+  {"noxfer",	STATUS_NOXFER},
+  {"progress",	STATUS_PROGRESS},
   {"",		0}
 };
 
@@ -517,6 +527,25 @@ maybe_close_stdout (void)
     _exit (EXIT_FAILURE);
 }
 
+/* Like error() but handle any pending newline.  */
+
+static void _GL_ATTRIBUTE_FORMAT ((__printf__, 3, 4))
+nl_error (int status, int errnum, const char *fmt, ...)
+{
+  if (newline_pending)
+    {
+      fputc ('\n', stderr);
+      newline_pending = false;
+    }
+
+  va_list ap;
+  va_start (ap, fmt);
+  verror (status, errnum, fmt, ap);
+  va_end (ap);
+}
+
+#define error nl_error
+
 void
 usage (int status)
 {
@@ -546,8 +575,10 @@ Copy a file, converting and formatting according to the operands.\n\
   oflag=FLAGS     write as per the comma separated symbol list\n\
   seek=N          skip N obs-sized blocks at start of output\n\
   skip=N          skip N ibs-sized blocks at start of input\n\
-  status=WHICH    WHICH info to suppress outputting to stderr;\n\
-                  'noxfer' suppresses transfer stats, 'none' suppresses all\n\
+  status=LEVEL    The LEVEL of information to print to stderr;\n\
+                  'none' suppresses everything but error messages,\n\
+                  'noxfer' suppresses the final transfer statistics,\n\
+                  'progress' shows periodic transfer statistics\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -724,8 +755,7 @@ multiple_bits_set (int i)
 /* Print transfer statistics.  */
 
 static void
-print_stats (void)
-{
+print_xfer_stats (xtime_t progress_time) {
   char hbuf[LONGEST_HUMAN_READABLE + 1];
   int human_opts =
     (human_autoscale | human_round_to_nearest
@@ -733,23 +763,8 @@ print_stats (void)
   double delta_s;
   char const *bytes_per_second;
 
-  if (status_flags & STATUS_NONE)
-    return;
-
-  fprintf (stderr,
-           _("%"PRIuMAX"+%"PRIuMAX" records in\n"
-             "%"PRIuMAX"+%"PRIuMAX" records out\n"),
-           r_full, r_partial, w_full, w_partial);
-
-  if (r_truncate != 0)
-    fprintf (stderr,
-             ngettext ("%"PRIuMAX" truncated record\n",
-                       "%"PRIuMAX" truncated records\n",
-                       select_plural (r_truncate)),
-             r_truncate);
-
-  if (status_flags & STATUS_NOXFER)
-    return;
+  if (progress_time)
+    fputc ('\r', stderr);
 
   /* Use integer arithmetic to compute the transfer rate,
      since that makes it easy to use SI abbreviations.  */
@@ -761,7 +776,8 @@ print_stats (void)
            w_bytes,
            human_readable (w_bytes, hbuf, human_opts, 1, 1));
 
-  xtime_t now = gethrxtime ();
+  xtime_t now = progress_time ? progress_time : gethrxtime ();
+
   if (start_time < now)
     {
       double XTIME_PRECISIONe0 = XTIME_PRECISION;
@@ -787,7 +803,42 @@ print_stats (void)
      but that was incorrect for languages like Polish.  To fix this
      bug we now use SI symbols even though they're a bit more
      confusing in English.  */
-  fprintf (stderr, _(", %g s, %s/s\n"), delta_s, bytes_per_second);
+  char const *time_fmt = _(", %g s, %s/s\n");;
+  if (progress_time)
+    time_fmt = _(", %.6f s, %s/s");  /* OK with '\r' as increasing width.  */
+  fprintf (stderr, time_fmt, delta_s, bytes_per_second);
+
+  newline_pending = !!progress_time;
+}
+
+static void
+print_stats (void)
+{
+  if (status_level == STATUS_NONE)
+    return;
+
+  if (newline_pending)
+    {
+      fputc ('\n', stderr);
+      newline_pending = false;
+    }
+
+  fprintf (stderr,
+           _("%"PRIuMAX"+%"PRIuMAX" records in\n"
+             "%"PRIuMAX"+%"PRIuMAX" records out\n"),
+           r_full, r_partial, w_full, w_partial);
+
+  if (r_truncate != 0)
+    fprintf (stderr,
+             ngettext ("%"PRIuMAX" truncated record\n",
+                       "%"PRIuMAX" truncated records\n",
+                       select_plural (r_truncate)),
+             r_truncate);
+
+  if (status_level == STATUS_NOXFER)
+    return;
+
+  print_xfer_stats (0);
 }
 
 /* An ordinary signal was received; arrange for the program to exit.  */
@@ -1035,7 +1086,7 @@ iread (int fd, char *buf, size_t size)
       if (0 < prev_nread && prev_nread < size)
         {
           uintmax_t prev = prev_nread;
-          if (!(status_flags & STATUS_NONE))
+          if (status_level != STATUS_NONE)
             error (0, 0, ngettext (("warning: partial read (%"PRIuMAX" byte); "
                                     "suggest iflag=fullblock"),
                                    ("warning: partial read (%"PRIuMAX" bytes); "
@@ -1086,7 +1137,7 @@ iwrite (int fd, char const *buf, size_t size)
     {
       int old_flags = fcntl (STDOUT_FILENO, F_GETFL);
       if (fcntl (STDOUT_FILENO, F_SETFL, old_flags & ~O_DIRECT) != 0
-          && !(status_flags & STATUS_NONE))
+          && status_level != STATUS_NONE)
         error (0, errno, _("failed to turn off O_DIRECT: %s"),
                quote (output_file));
 
@@ -1219,7 +1270,7 @@ operand_matches (char const *str, char const *pattern, char delim)
 
 static int
 parse_symbols (char const *str, struct symbol_value const *table,
-               char const *error_msgid)
+               bool exclusive, char const *error_msgid)
 {
   int value = 0;
 
@@ -1241,7 +1292,10 @@ parse_symbols (char const *str, struct symbol_value const *table,
             }
         }
 
-      value |= entry->value;
+      if (exclusive)
+        value = entry->value;
+      else
+        value |= entry->value;
       if (!strcomma)
         break;
       str = strcomma + 1;
@@ -1316,17 +1370,17 @@ scanargs (int argc, char *const *argv)
       else if (operand_is (name, "of"))
         output_file = val;
       else if (operand_is (name, "conv"))
-        conversions_mask |= parse_symbols (val, conversions,
+        conversions_mask |= parse_symbols (val, conversions, false,
                                            N_("invalid conversion"));
       else if (operand_is (name, "iflag"))
-        input_flags |= parse_symbols (val, flags,
+        input_flags |= parse_symbols (val, flags, false,
                                       N_("invalid input flag"));
       else if (operand_is (name, "oflag"))
-        output_flags |= parse_symbols (val, flags,
+        output_flags |= parse_symbols (val, flags, false,
                                        N_("invalid output flag"));
       else if (operand_is (name, "status"))
-        status_flags |= parse_symbols (val, statuses,
-                                       N_("invalid status flag"));
+        status_level = parse_symbols (val, statuses, true,
+                                      N_("invalid status level"));
       else
         {
           bool invalid = false;
@@ -1613,7 +1667,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
       && ioctl (fdesc, MTIOCGET, &s2) == 0
       && MT_SAME_POSITION (s1, s2))
     {
-      if (!(status_flags & STATUS_NONE))
+      if (status_level != STATUS_NONE)
         error (0, 0, _("warning: working around lseek kernel bug for file "
                        "(%s)\n  of mt_type=0x%0lx -- "
                        "see <sys/mtio.h> for the list of types"),
@@ -1787,7 +1841,7 @@ advance_input_after_read_error (size_t nbytes)
           if (offset == input_offset)
             return true;
           diff = input_offset - offset;
-          if (! (0 <= diff && diff <= nbytes) && !(status_flags & STATUS_NONE))
+          if (! (0 <= diff && diff <= nbytes) && status_level != STATUS_NONE)
             error (0, 0, _("warning: invalid file offset after failed read"));
           if (0 <= skip_via_lseek (input_file, STDIN_FILENO, diff, SEEK_CUR))
             return true;
@@ -1986,7 +2040,7 @@ dd_copy (void)
              2. pipe has not enough data
              3. partial reads  */
       if ((us_blocks || (!input_offset_overflow && us_bytes))
-          && !(status_flags & STATUS_NONE))
+          && status_level != STATUS_NONE)
         {
           error (0, 0,
                  _("%s: cannot skip to specified offset"), quote (input_file));
@@ -2029,6 +2083,19 @@ dd_copy (void)
 
   while (1)
     {
+      if (status_level == STATUS_PROGRESS)
+        {
+          xtime_t progress_time = gethrxtime ();
+          uintmax_t delta_xtime = progress_time;
+          delta_xtime -= previous_time;
+          double XTIME_PRECISIONe0 = XTIME_PRECISION;
+          if (delta_xtime / XTIME_PRECISIONe0 > 1)
+            {
+              print_xfer_stats (progress_time);
+              previous_time = progress_time;
+            }
+        }
+
       if (r_partial + r_full >= max_records + !!max_bytes)
         break;
 
@@ -2053,7 +2120,7 @@ dd_copy (void)
 
       if (nread < 0)
         {
-          if (!(conversions_mask & C_NOERROR) || !(status_flags & STATUS_NONE))
+          if (!(conversions_mask & C_NOERROR) || status_level != STATUS_NONE)
             error (0, errno, _("error reading %s"), quote (input_file));
 
           if (conversions_mask & C_NOERROR)
@@ -2345,7 +2412,7 @@ main (int argc, char **argv)
         }
     }
 
-  start_time = gethrxtime ();
+  start_time = previous_time = gethrxtime ();
 
   exit_status = dd_copy ();
 

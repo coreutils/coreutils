@@ -8631,23 +8631,31 @@ will ensure that @samp{count=} corresponds to complete input blocks
 rather than the traditional POSIX specified behavior of counting
 input read operations.
 
-@item status=@var{which}
+@item status=@var{level}
 @opindex status
 Transfer information is normally output to stderr upon
 receipt of the @samp{INFO} signal or when @command{dd} exits.
-Specifying @var{which} will identify which information to suppress.
+Specifying @var{level} will adjust the amount of information printed,
+with the last @var{level} specified taking precedence.
 
 @table @samp
-
-@item noxfer
-@opindex noxfer @r{dd status=}
-Do not print the transfer rate and volume statistics
-that normally make up the last status line.
 
 @item none
 @opindex none @r{dd status=}
 Do not print any informational or warning messages to stderr.
 Error messages are output as normal.
+
+@item noxfer
+@opindex noxfer @r{dd status=}
+Do not print the final transfer rate and volume statistics
+that normally make up the last status line.
+
+@item progress
+@opindex progress @r{dd status=}
+Print the transfer rate and volume statistics on stderr,
+when processing each input block.  Statistics are output
+on a single line at most once every second, but updates
+can be delayed when waiting on I/O.
 
 @end table
 
@@ -9003,7 +9011,7 @@ dd conv=noerror,sync iflag=fullblock </dev/sda1 > /mnt/rescue.img
 
 Sending an @samp{INFO} signal (or @samp{USR1} signal where that is unavailable)
 to a running @command{dd} process makes it print I/O statistics to
-standard error and then resume copying.  In the example below,
+standard error and then resume copying.   In the example below,
 @command{dd} is run in the background to copy 5GB of data.
 The @command{kill} command makes it output intermediate I/O statistics,
 and when @command{dd} completes normally or is killed by the
@@ -9032,6 +9040,9 @@ The above script will output in the following format
 1000+0 records out
 5000000000 bytes (5.0 GB) copied, 0.630785 s, 7.9 GB/s
 @end example
+
+Note also the @samp{status=progress} option which periodically updates
+the last line of the transfer statistics above.
 
 @vindex POSIXLY_CORRECT
 On systems lacking the @samp{INFO} signal @command{dd} responds to the
