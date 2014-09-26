@@ -9001,23 +9001,36 @@ occur on disk based devices):
 dd conv=noerror,sync iflag=fullblock </dev/sda1 > /mnt/rescue.img
 @end example
 
-Sending an @samp{INFO} signal to a running @command{dd}
-process makes it print I/O statistics to standard error
-and then resume copying.  In the example below,
-@command{dd} is run in the background to copy 10 million blocks.
+Sending an @samp{INFO} signal (or @samp{USR1} signal where that is unavailable)
+to a running @command{dd} process makes it print I/O statistics to
+standard error and then resume copying.  In the example below,
+@command{dd} is run in the background to copy 5GB of data.
 The @command{kill} command makes it output intermediate I/O statistics,
 and when @command{dd} completes normally or is killed by the
 @code{SIGINT} signal, it outputs the final statistics.
 
 @example
-$ dd if=/dev/zero of=/dev/null count=10MB & pid=$!
-$ kill -s INFO $pid; wait $pid
-3385223+0 records in
-3385223+0 records out
-1733234176 bytes (1.7 GB) copied, 6.42173 seconds, 270 MB/s
-10000000+0 records in
-10000000+0 records out
-5120000000 bytes (5.1 GB) copied, 18.913 seconds, 271 MB/s
+# Ignore the signal so we never inadvertently terminate the dd child.
+# Note this is not needed when SIGINFO is available.
+trap '' USR1
+
+# Run dd with the fullblock iflag to avoid short reads
+# which can be triggered by reception of signals.
+dd iflag=fullblock if=/dev/zero of=/dev/null count=5000000 bs=1000 & pid=$!
+
+# Output stats every half second
+until ! kill -s USR1 $pid 2>/dev/null; do sleep .5; done
+@end example
+
+The above script will output in the following format
+
+@example
+859+0 records in
+859+0 records out
+4295000000 bytes (4.3 GB) copied, 0.539934 s, 8.0 GB/s
+1000+0 records in
+1000+0 records out
+5000000000 bytes (5.0 GB) copied, 0.630785 s, 7.9 GB/s
 @end example
 
 @vindex POSIXLY_CORRECT

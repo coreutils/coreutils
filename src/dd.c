@@ -627,22 +627,14 @@ Each FLAG symbol may be:\n\
 "), stdout);
 
       {
-        char const *siginfo_name = (SIGINFO == SIGUSR1 ? "USR1" : "INFO");
         printf (_("\
 \n\
 Sending a %s signal to a running 'dd' process makes it\n\
 print I/O statistics to standard error and then resume copying.\n\
 \n\
-  $ dd if=/dev/zero of=/dev/null& pid=$!\n\
-  $ kill -%s $pid; sleep 1; kill $pid\n\
-  18335302+0 records in\n\
-  18335302+0 records out\n\
-  9387674624 bytes (9.4 GB) copied, 34.6279 seconds, 271 MB/s\n\
-\n\
 Options are:\n\
 \n\
-"),
-                siginfo_name, siginfo_name);
+"), SIGINFO == SIGUSR1 ? "USR1" : "INFO");
       }
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -830,11 +822,7 @@ install_signal_handlers (void)
   struct sigaction act;
   sigemptyset (&caught_signals);
   if (catch_siginfo)
-    {
-      sigaction (SIGINFO, NULL, &act);
-      if (act.sa_handler != SIG_IGN)
-        sigaddset (&caught_signals, SIGINFO);
-    }
+    sigaddset (&caught_signals, SIGINFO);
   sigaction (SIGINT, NULL, &act);
   if (act.sa_handler != SIG_IGN)
     sigaddset (&caught_signals, SIGINT);
@@ -843,6 +831,9 @@ install_signal_handlers (void)
   if (sigismember (&caught_signals, SIGINFO))
     {
       act.sa_handler = siginfo_handler;
+      /* Note we don't use SA_RESTART here and instead
+         handle EINTR explicitly in iftruncate() etc.
+         to avoid blocking on noncommitted read()/write() calls.  */
       act.sa_flags = 0;
       sigaction (SIGINFO, &act, NULL);
     }
@@ -856,7 +847,7 @@ install_signal_handlers (void)
 
 #else
 
-  if (catch_siginfo && signal (SIGINFO, SIG_IGN) != SIG_IGN)
+  if (catch_siginfo)
     {
       signal (SIGINFO, siginfo_handler);
       siginterrupt (SIGINFO, 1);
@@ -1033,6 +1024,10 @@ iread (int fd, char *buf, size_t size)
     }
   while (nread < 0 && errno == EINTR);
 
+  /* Short read may be due to received signal.  */
+  if (0 < nread && nread < size)
+    process_signals ();
+
   if (0 < nread && warn_partial_read)
     {
       static ssize_t prev_nread;
@@ -1171,6 +1166,40 @@ write_output (void)
   else
     w_full++;
   oc = 0;
+}
+
+/* Restart on EINTR from fd_reopen().  */
+
+static int
+ifd_reopen (int desired_fd, char const *file, int flag, mode_t mode)
+{
+  int ret;
+
+  do
+    {
+      process_signals ();
+      ret = fd_reopen (desired_fd, file, flag, mode);
+    }
+  while (ret < 0 && errno == EINTR);
+
+  return ret;
+}
+
+/* Restart on EINTR from ftruncate().  */
+
+static int
+iftruncate (int fd, off_t length)
+{
+  int ret;
+
+  do
+    {
+      process_signals ();
+      ret = ftruncate (fd, length);
+    }
+  while (ret < 0 && errno == EINTR);
+
+  return ret;
 }
 
 /* Return true if STR is of the form "PATTERN" or "PATTERNDELIM...".  */
@@ -2172,7 +2201,7 @@ dd_copy (void)
           off_t output_offset = lseek (STDOUT_FILENO, 0, SEEK_CUR);
           if (output_offset > stdout_stat.st_size)
             {
-              if (ftruncate (STDOUT_FILENO, output_offset) != 0)
+              if (iftruncate (STDOUT_FILENO, output_offset) != 0)
                 {
                   error (0, errno,
                          _("failed to truncate to %" PRIdMAX " bytes"
@@ -2248,7 +2277,7 @@ main (int argc, char **argv)
     }
   else
     {
-      if (fd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
+      if (ifd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
         error (EXIT_FAILURE, errno, _("failed to open %s"), quote (input_file));
     }
 
@@ -2275,8 +2304,8 @@ main (int argc, char **argv)
          need to read to satisfy a 'seek=' request.  If we can't read
          the file, go ahead with write-only access; it might work.  */
       if ((! seek_records
-           || fd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
-          && (fd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
+           || ifd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
+          && (ifd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
               < 0))
         error (EXIT_FAILURE, errno, _("failed to open %s"),
                quote (output_file));
@@ -2293,7 +2322,7 @@ main (int argc, char **argv)
                      " (%lu-byte) blocks"),
                    seek_records, obs);
 
-          if (ftruncate (STDOUT_FILENO, size) != 0)
+          if (iftruncate (STDOUT_FILENO, size) != 0)
             {
               /* Complain only when ftruncate fails on a regular file, a
                  directory, or a shared memory object, as POSIX 1003.1-2004

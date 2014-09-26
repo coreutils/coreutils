@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  dd supports more robust SIGINFO/SIGUSR1 handling for outputting statistics.
+  Previously those signals may have inadvertently terminated the process.
+
   cp no longer issues an incorrect warning about directory hardlinks when a
   source directory is specified multiple times.  Now, consistent with other
   file types, a warning is issued for source directories with duplicate names,

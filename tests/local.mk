@@ -490,6 +490,7 @@ all_tests =					\
   tests/dd/stderr.sh				\
   tests/dd/unblock.pl				\
   tests/dd/unblock-sync.sh			\
+  tests/dd/stats.sh				\
   tests/df/total-verify.sh			\
   tests/du/2g.sh				\
   tests/du/8gb.sh				\
