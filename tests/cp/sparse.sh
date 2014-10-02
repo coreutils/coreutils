@@ -37,4 +37,37 @@ test $(stat --printf %b copy) -le $(stat --printf %b sparse) || fail=1
 cp --sparse=always --reflink sparse copy && fail=1
 cp --sparse=never --reflink sparse copy && fail=1
 
+
+# Ensure we handle sparse/non-sparse transitions correctly
+maxn=128 # how many $hole_size chunks per file
+hole_size=$(stat -c %o copy)
+dd if=/dev/zero bs=$hole_size count=$maxn of=zeros || framework_failure_
+tr '\0' 'U' < zeros > nonzero || framework_failure_
+
+for pattern in 1 0; do
+  test "$pattern" = 1 && pattern="$(printf '%s\n%s' nonzero zeros)"
+  test "$pattern" = 0 && pattern="$(printf '%s\n%s' zeros nonzero)"
+
+  for n in 1 2 4 11 32 $maxn; do
+    parts=$(expr $maxn / $n)
+
+    rm -f sparse.in
+
+    # Generate non sparse file for copying with alternating
+    # hole/data patterns of size n * $hole_size
+    for i in $(yes "$pattern" | head -n$parts); do
+      dd iflag=fullblock if=$i of=sparse.in conv=notrunc oflag=append \
+         bs=$hole_size count=$n status=none || framework_failure_
+    done
+
+    cp --sparse=always sparse.in sparse.out   || fail=1 # non sparse input
+    cp --sparse=always sparse.out sparse.out2 || fail=1 # sparse input
+
+    cmp sparse.in sparse.out || fail=1
+    cmp sparse.in sparse.out2 || fail=1
+
+    ls -lsh sparse.*
+  done
+done
+
 Exit $fail

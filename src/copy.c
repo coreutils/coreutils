@@ -145,6 +145,20 @@ utimens_symlink (char const *file, struct timespec const *timespec)
   return err;
 }
 
+/* Create a hole at the end of a file.  */
+
+static bool
+create_hole (int fd, char const *name, off_t size)
+{
+  if (lseek (fd, size, SEEK_CUR) < 0)
+    {
+      error (0, errno, _("cannot lseek %s"), quote (name));
+      return false;
+    }
+
+  return true;
+}
+
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
    BUF for temporary storage.  Copy no more than MAX_N_READ bytes.
@@ -158,18 +172,18 @@ utimens_symlink (char const *file, struct timespec const *timespec)
    bytes read.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             bool make_holes,
+             size_t hole_size, bool make_holes,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *total_n_read,
              bool *last_write_made_hole)
 {
   *last_write_made_hole = false;
   *total_n_read = 0;
+  bool make_hole = false;
+  off_t psize = 0;
 
   while (max_n_read)
     {
-      bool make_hole = false;
-
       ssize_t n_read = read (src_fd, buf, MIN (max_n_read, buf_size));
       if (n_read < 0)
         {
@@ -183,50 +197,94 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       max_n_read -= n_read;
       *total_n_read += n_read;
 
-      if (make_holes)
-        {
-          /* Sentinel required by is_nul().  */
-          buf[n_read] = '\1';
-#ifdef lint
-          typedef uintptr_t word;
-          /* Usually, buf[n_read] is not the byte just before a "word"
-             (aka uintptr_t) boundary.  In that case, the word-oriented
-             test below (*wp++ == 0) would read some uninitialized bytes
-             after the sentinel.  To avoid false-positive reports about
-             this condition (e.g., from a tool like valgrind), set the
-             remaining bytes -- to any value.  */
-          memset (buf + n_read + 1, 0, sizeof (word) - 1);
-#endif
+      /* Loop over the input buffer in chunks of hole_size.  */
+      size_t csize = make_holes ? hole_size : buf_size;
+      char *cbuf = buf;
+      char *pbuf = buf;
 
-          if ((make_hole = is_nul (buf, n_read)))
+      while (n_read)
+        {
+          bool prev_hole = make_hole;
+          csize = MIN (csize, n_read);
+
+          if (make_holes && csize)
             {
-              if (lseek (dest_fd, n_read, SEEK_CUR) < 0)
+              /* Setup sentinel required by is_nul().  */
+              typedef uintptr_t word;
+              word isnul_tmp;
+              memcpy (&isnul_tmp, cbuf + csize, sizeof (word));
+              memset (cbuf + csize, 1, sizeof (word));
+
+              make_hole = is_nul (cbuf, csize);
+
+              memcpy (cbuf + csize, &isnul_tmp, sizeof (word));
+            }
+
+          bool transition = (make_hole != prev_hole) && psize;
+          bool last_chunk = (n_read == csize && ! make_hole) || ! csize;
+
+          if (transition || last_chunk)
+            {
+              if (! transition)
+                psize += csize;
+
+              if (! prev_hole)
                 {
-                  error (0, errno, _("cannot lseek %s"), quote (dst_name));
+                  if (full_write (dest_fd, pbuf, psize) != psize)
+                    {
+                      error (0, errno, _("error writing %s"), quote (dst_name));
+                      return false;
+                    }
+                }
+              else
+                {
+                  if (! create_hole (dest_fd, dst_name, psize))
+                    return false;
+                }
+
+              pbuf = cbuf;
+              psize = csize;
+
+              if (last_chunk)
+                {
+                  if (! csize)
+                    n_read = 0; /* Finished processing buffer.  */
+
+                  if (transition)
+                    csize = 0;  /* Loop again to deal with last chunk.  */
+                  else
+                    psize = 0;  /* Reset for next read loop.  */
+                }
+            }
+          else  /* Coalesce writes/seeks.  */
+            {
+              if (psize <= OFF_T_MAX - csize)
+                psize += csize;
+              else
+                {
+                  error (0, 0, _("overflow reading %s"), quote (src_name));
                   return false;
                 }
             }
-        }
 
-      if (!make_hole)
-        {
-          size_t n = n_read;
-          if (full_write (dest_fd, buf, n) != n)
-            {
-              error (0, errno, _("error writing %s"), quote (dst_name));
-              return false;
-            }
-
-          /* It is tempting to return early here upon a short read from a
-             regular file.  That would save the final read syscall for each
-             file.  Unfortunately that doesn't work for certain files in
-             /proc with linux kernels from at least 2.6.9 .. 2.6.29.  */
+          n_read -= csize;
+          cbuf += csize;
         }
 
       *last_write_made_hole = make_hole;
+
+      /* It's tempting to break early here upon a short read from
+         a regular file.  That would save the final read syscall
+         for each file.  Unfortunately that doesn't work for
+         certain files in /proc or /sys with linux kernels.  */
     }
 
-  return true;
+  /* Ensure a trailing hole is created, so that subsequent
+     calls of sparse_copy() start at the correct offset.  */
+  if (make_hole && ! create_hole (dest_fd, dst_name, psize))
+    return false;
+  else
+    return true;
 }
 
 /* Perform the O(1) btrfs clone operation, if possible.
@@ -290,7 +348,8 @@ write_zeros (int fd, off_t n_bytes)
    return false.  */
 static bool
 extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             off_t src_total_size, enum Sparse_type sparse_mode,
+             size_t hole_size, off_t src_total_size,
+             enum Sparse_type sparse_mode,
              char const *src_name, char const *dst_name,
              bool *require_normal_copy)
 {
@@ -331,7 +390,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         {
           off_t ext_start;
           off_t ext_len;
-          off_t hole_size;
+          off_t ext_hole_size;
 
           if (i < scan.ei_count)
             {
@@ -345,11 +404,11 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               ext_len = 0;
             }
 
-          hole_size = ext_start - last_ext_start - last_ext_len;
+          ext_hole_size = ext_start - last_ext_start - last_ext_len;
 
           wrote_hole_at_eof = false;
 
-          if (hole_size)
+          if (ext_hole_size)
             {
               if (lseek (src_fd, ext_start, SEEK_SET) < 0)
                 {
@@ -362,11 +421,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               if ((empty_extent && sparse_mode == SPARSE_ALWAYS)
                   || (!empty_extent && sparse_mode != SPARSE_NEVER))
                 {
-                  if (lseek (dest_fd, ext_start, SEEK_SET) < 0)
-                    {
-                      error (0, errno, _("cannot lseek %s"), quote (dst_name));
-                      goto fail;
-                    }
+                  if (! create_hole (dest_fd, dst_name, ext_hole_size))
+                    goto fail;
                   wrote_hole_at_eof = true;
                 }
               else
@@ -374,9 +430,9 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                   /* When not inducing holes and when there is a hole between
                      the end of the previous extent and the beginning of the
                      current one, write zeros to the destination file.  */
-                  off_t nzeros = hole_size;
+                  off_t nzeros = ext_hole_size;
                   if (empty_extent)
-                    nzeros = MIN (src_total_size - dest_pos, hole_size);
+                    nzeros = MIN (src_total_size - dest_pos, ext_hole_size);
 
                   if (! write_zeros (dest_fd, nzeros))
                     {
@@ -409,7 +465,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               empty_extent = false;
               last_ext_len = ext_len;
 
-              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
+              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size, hole_size,
                                   sparse_mode == SPARSE_ALWAYS,
                                   src_name, dst_name, ext_len, &n_read,
                                   &wrote_hole_at_eof))
@@ -1105,6 +1161,7 @@ copy_reg (char const *src_name, char const *dst_name,
       size_t buf_alignment = lcm (getpagesize (), sizeof (word));
       size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
       size_t buf_size = io_blksize (sb);
+      size_t hole_size = ST_BLKSIZE (sb);
 
       fdadvise (source_desc, 0, 0, FADVISE_SEQUENTIAL);
 
@@ -1164,7 +1221,7 @@ copy_reg (char const *src_name, char const *dst_name,
              standard copy only if the initial extent scan fails.  If the
              '--sparse=never' option is specified, write all data but use
              any extents to read more efficiently.  */
-          if (extent_copy (source_desc, dest_desc, buf, buf_size,
+          if (extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                            src_open_sb.st_size,
                            S_ISREG (sb.st_mode) ? x->sparse_mode : SPARSE_NEVER,
                            src_name, dst_name, &normal_copy_required))
@@ -1179,7 +1236,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
       off_t n_read;
       bool wrote_hole_at_eof;
-      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size,
+      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                           make_holes, src_name, dst_name,
                           UINTMAX_MAX, &n_read,
                           &wrote_hole_at_eof)
