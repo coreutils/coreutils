@@ -803,7 +803,7 @@ print_xfer_stats (xtime_t progress_time) {
      but that was incorrect for languages like Polish.  To fix this
      bug we now use SI symbols even though they're a bit more
      confusing in English.  */
-  char const *time_fmt = _(", %g s, %s/s\n");;
+  char const *time_fmt = _(", %g s, %s/s\n");
   if (progress_time)
     time_fmt = _(", %.6f s, %s/s");  /* OK with '\r' as increasing width.  */
   fprintf (stderr, time_fmt, delta_s, bytes_per_second);
