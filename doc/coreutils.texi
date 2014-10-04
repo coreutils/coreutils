@@ -11885,6 +11885,20 @@ $ stat --printf='%d:%i\n' / /usr
 @cindex terse output
 Print the information in terse form, suitable for parsing by other programs.
 
+The output of the following commands are identical and the @option{--format}
+also identifies the items printed (in fuller form) in the default format.
+Note the format string would include another @samp{%C} at the end with an
+active SELinux security context.
+@example
+$ stat --format="%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %W %o" ...
+$ stat --terse ...
+@end example
+
+The same illustrating terse output in @option{--file-system} mode:
+@example
+$ stat -f --format="%n %i %l %t %s %S %b %f %a %c %d" ...
+$ stat -f --terse ...
+@end example
 @end table
 
 The valid @var{format} directives for files with @option{--format} and
