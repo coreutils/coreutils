@@ -36,6 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp,install,mv will convert smaller runs of NULs in the input to holes,
   and cp --sparse=always avoids speculative preallocation on XFS for example.
 
+  cp will read sparse files more efficiently when the destination is a
+  non regular file.  For example when copying a disk image to a device node.
+
   mv will try a reflink before falling back to a standard copy, which is
   more efficient when moving files across BTRFS subvolume boundaries.
 

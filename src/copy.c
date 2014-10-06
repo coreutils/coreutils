@@ -1214,7 +1214,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
       /* Deal with sparse files.  */
       bool make_holes = false;
-      bool sparse_src = false;
+      bool sparse_src = is_probably_sparse (&src_open_sb);
 
       if (S_ISREG (sb.st_mode))
         {
@@ -1227,7 +1227,6 @@ copy_reg (char const *src_name, char const *dst_name,
              blocks.  If the file has fewer blocks than would normally be
              needed for a file of its size, then at least one of the blocks in
              the file is a hole.  */
-          sparse_src = is_probably_sparse (&src_open_sb);
           if (x->sparse_mode == SPARSE_AUTO && sparse_src)
             make_holes = true;
         }
@@ -1270,7 +1269,7 @@ copy_reg (char const *src_name, char const *dst_name,
              any extents to read more efficiently.  */
           if (extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                            src_open_sb.st_size,
-                           S_ISREG (sb.st_mode) ? x->sparse_mode : SPARSE_NEVER,
+                           make_holes ? x->sparse_mode : SPARSE_NEVER,
                            src_name, dst_name, &normal_copy_required))
             goto preserve_metadata;
 
