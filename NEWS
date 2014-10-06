@@ -34,7 +34,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Improvements
 
   cp,install,mv will convert smaller runs of NULs in the input to holes,
-  to reduce allocation in the copy.
+  and cp --sparse=always avoids speculative preallocation on XFS for example.
 
   mv will try a reflink before falling back to a standard copy, which is
   more efficient when moving files across BTRFS subvolume boundaries.

@@ -70,6 +70,10 @@
 # include "verror.h"
 #endif
 
+#if HAVE_LINUX_FALLOC_H
+# include <linux/falloc.h>
+#endif
+
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
@@ -145,19 +149,53 @@ utimens_symlink (char const *file, struct timespec const *timespec)
   return err;
 }
 
-/* Create a hole at the end of a file.  */
+/* Attempt to punch a hole to avoid any permanent
+   speculative preallocation on file systems such as XFS.
+   Return values as per fallocate(2) except ENOSYS etc. are ignored.  */
+
+static int
+punch_hole (int fd, off_t offset, off_t length)
+{
+  int ret = 0;
+#if HAVE_FALLOCATE
+# if defined FALLOC_FL_PUNCH_HOLE && defined FALLOC_FL_KEEP_SIZE
+  ret = fallocate (fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+                   offset, length);
+  if (ret < 0
+      && (errno == EOPNOTSUPP || errno == ENOTSUP || errno == ENOSYS))
+    ret = 0;
+# endif
+#endif
+  return ret;
+}
+
+/* Create a hole at the end of a file,
+   avoiding preallocation if requested.  */
 
 static bool
-create_hole (int fd, char const *name, off_t size)
+create_hole (int fd, char const *name, bool punch_holes, off_t size)
 {
-  if (lseek (fd, size, SEEK_CUR) < 0)
+  off_t file_end = lseek (fd, size, SEEK_CUR);
+
+  if (file_end < 0)
     {
       error (0, errno, _("cannot lseek %s"), quote (name));
       return false;
     }
 
+  /* Some file systems (like XFS) preallocate when write extending a file.
+     I.E. a previous write() may have preallocated extra space
+     that the seek above will not discard.  A subsequent write() could
+     then make this allocation permanent.  */
+  if (punch_holes && punch_hole (fd, file_end - size, size) < 0)
+    {
+      error (0, errno, _("error deallocating %s"), quote (name));
+      return false;
+    }
+
   return true;
 }
+
 
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
@@ -172,7 +210,7 @@ create_hole (int fd, char const *name, off_t size)
    bytes read.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             size_t hole_size, bool make_holes,
+             size_t hole_size, bool punch_holes,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *total_n_read,
              bool *last_write_made_hole)
@@ -198,7 +236,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       *total_n_read += n_read;
 
       /* Loop over the input buffer in chunks of hole_size.  */
-      size_t csize = make_holes ? hole_size : buf_size;
+      size_t csize = hole_size ? hole_size : buf_size;
       char *cbuf = buf;
       char *pbuf = buf;
 
@@ -207,7 +245,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           bool prev_hole = make_hole;
           csize = MIN (csize, n_read);
 
-          if (make_holes && csize)
+          if (hole_size && csize)
             {
               /* Setup sentinel required by is_nul().  */
               typedef uintptr_t word;
@@ -238,7 +276,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                 }
               else
                 {
-                  if (! create_hole (dest_fd, dst_name, psize))
+                  if (! create_hole (dest_fd, dst_name, punch_holes, psize))
                     return false;
                 }
 
@@ -281,7 +319,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
   /* Ensure a trailing hole is created, so that subsequent
      calls of sparse_copy() start at the correct offset.  */
-  if (make_hole && ! create_hole (dest_fd, dst_name, psize))
+  if (make_hole && ! create_hole (dest_fd, dst_name, punch_holes, psize))
     return false;
   else
     return true;
@@ -421,7 +459,9 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               if ((empty_extent && sparse_mode == SPARSE_ALWAYS)
                   || (!empty_extent && sparse_mode != SPARSE_NEVER))
                 {
-                  if (! create_hole (dest_fd, dst_name, ext_hole_size))
+                  if (! create_hole (dest_fd, dst_name,
+                                     sparse_mode == SPARSE_ALWAYS,
+                                     ext_hole_size))
                     goto fail;
                   wrote_hole_at_eof = true;
                 }
@@ -465,9 +505,9 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               empty_extent = false;
               last_ext_len = ext_len;
 
-              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size, hole_size,
-                                  sparse_mode == SPARSE_ALWAYS,
-                                  src_name, dst_name, ext_len, &n_read,
+              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
+                                  sparse_mode == SPARSE_ALWAYS ? hole_size: 0,
+                                  true, src_name, dst_name, ext_len, &n_read,
                                   &wrote_hole_at_eof))
                 goto fail;
 
@@ -506,6 +546,13 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           : ! write_zeros (dest_fd, src_total_size - dest_pos)))
     {
       error (0, errno, _("failed to extend %s"), quote (dst_name));
+      return false;
+    }
+
+  if (sparse_mode == SPARSE_ALWAYS && dest_pos < src_total_size
+      && punch_hole (dest_fd, dest_pos, src_total_size - dest_pos) < 0)
+    {
+      error (0, errno, _("error deallocating %s"), quote (dst_name));
       return false;
     }
 
@@ -1236,8 +1283,9 @@ copy_reg (char const *src_name, char const *dst_name,
 
       off_t n_read;
       bool wrote_hole_at_eof;
-      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size, hole_size,
-                          make_holes, src_name, dst_name,
+      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size,
+                          make_holes ? hole_size : 0,
+                          x->sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
                           UINTMAX_MAX, &n_read,
                           &wrote_hole_at_eof)
            || (wrote_hole_at_eof

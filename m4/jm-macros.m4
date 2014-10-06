@@ -78,6 +78,7 @@ AC_DEFUN([coreutils_MACROS],
   AC_CHECK_FUNCS_ONCE([
     endgrent
     endpwent
+    fallocate
     fchown
     fchmod
     ftruncate
@@ -189,6 +190,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS_ONCE([
     hurd.h
+    linux/falloc.h
     paths.h
     priv.h
     stropts.h
