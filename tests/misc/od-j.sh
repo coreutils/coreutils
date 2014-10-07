@@ -1,7 +1,7 @@
 #!/bin/sh
-# ensure that tac works with non-seekable or quasi-seekable inputs
+# Verify that 'od -j N' skips N bytes of input.
 
-# Copyright (C) 2011-2014 Free Software Foundation, Inc.
+# Copyright 2014 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,23 +17,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ tac
+print_ver_ od
 
-echo x | tac - - > out 2> err || fail=1
-echo x > exp || fail=1
-compare exp out || fail=1
-compare /dev/null err || fail=1
+for file in ${srcdir=.}/tests/init.sh /proc/version /sys/kernel/profiling; do
+  test -r $file || continue
 
-# Make sure it works on funny files in /proc and /sys.
+  cp -f $file copy &&
+  bytes=$(wc -c < copy) || framework_failure_
 
-for file in /proc/version /sys/kernel/profiling; do
-  if test -r $file; then
-    cp -f $file copy &&
-    tac copy > exp1 || framework_failure_
+  od -An $file > exp || fail=1
+  od -An -j $bytes $file $file > out || fail=1
+  compare out exp || fail=1
 
-    tac $file > out1 || fail=1
-    compare exp1 out1 || fail=1
-  fi
+  od -An -j 4096 copy copy > exp1 2> experr1; expstatus=$?
+  od -An -j 4096 $file $file > out1 2> err1; status=$?
+  test $status -eq $expstatus || fail=1
+  compare out1 exp1 || fail=1
+  compare err1 experr1 || fail=1
 done
 
 Exit $fail

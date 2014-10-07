@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   file types, a warning is issued for source directories with duplicate names,
   or with -H the directory is copied again using the symlink name.
 
+  head, od, split, tac, tail, and wc no longer mishandle input from files in
+  /proc and /sys file systems that report somewhat-incorrect file sizes.
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory

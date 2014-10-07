@@ -256,6 +256,7 @@ all_tests =					\
   tests/misc/wc-files0-from.pl			\
   tests/misc/wc-files0.sh			\
   tests/misc/wc-parallel.sh			\
+  tests/misc/wc-proc.sh				\
   tests/misc/cat-proc.sh			\
   tests/misc/cat-buf.sh				\
   tests/misc/cat-self.sh			\
@@ -295,6 +296,7 @@ all_tests =					\
   tests/misc/nproc-positive.sh			\
   tests/misc/numfmt.pl				\
   tests/misc/od-N.sh				\
+  tests/misc/od-j.sh				\
   tests/misc/od-multiple-t.sh			\
   tests/misc/od-x8.sh				\
   tests/misc/paste.pl				\
@@ -399,6 +401,7 @@ all_tests =					\
   tests/tail-2/wait.sh				\
   tests/tail-2/retry.sh				\
   tests/tail-2/symlink.sh				\
+  tests/tail-2/tail-c.sh			\
   tests/chmod/c-option.sh			\
   tests/chmod/equal-x.sh			\
   tests/chmod/equals.sh				\

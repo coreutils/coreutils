@@ -36,6 +36,7 @@
 #include "quote.h"
 #include "quotearg.h"
 #include "safe-read.h"
+#include "stat-size.h"
 #include "xfreopen.h"
 #include "xstrtol.h"
 
@@ -206,13 +207,42 @@ copy_fd (int src_fd, uintmax_t n_bytes)
   return COPY_FD_OK;
 }
 
-/* Print all but the last N_ELIDE bytes from the input available via
-   the non-seekable file descriptor FD.  Return true upon success.
+/* Call lseek (FD, OFFSET, WHENCE), where file descriptor FD
+   corresponds to the file FILENAME.  WHENCE must be SEEK_SET or
+   SEEK_CUR.  Return the resulting offset.  Give a diagnostic and
+   return -1 if lseek fails.  */
+
+static off_t
+elseek (int fd, off_t offset, int whence, char const *filename)
+{
+  off_t new_offset = lseek (fd, offset, whence);
+  char buf[INT_BUFSIZE_BOUND (offset)];
+
+  if (new_offset < 0)
+    error (0, errno,
+           _(whence == SEEK_SET
+             ? N_("%s: cannot seek to offset %s")
+             : N_("%s: cannot seek to relative offset %s")),
+           quotearg_colon (filename),
+           offtostr (offset, buf));
+
+  return new_offset;
+}
+
+/* For an input file with name FILENAME and descriptor FD,
+   output all but the last N_ELIDE_0 bytes.
+   If CURRENT_POS is nonnegative, assume that the input file is
+   positioned at CURRENT_POS and that it should be repositioned to
+   just before the elided bytes before returning.
+   Return true upon success.
    Give a diagnostic and return false upon error.  */
 static bool
-elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
+elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0,
+                       off_t current_pos)
 {
   size_t n_elide = n_elide_0;
+  uintmax_t desired_pos = current_pos;
+  bool ok = true;
 
 #ifndef HEAD_TAIL_PIPE_READ_BUFSIZE
 # define HEAD_TAIL_PIPE_READ_BUFSIZE BUFSIZ
@@ -251,7 +281,6 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 
   if (n_elide <= HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD)
     {
-      bool ok = true;
       bool first = true;
       bool eof = false;
       size_t n_to_read = READ_BUFSIZE + n_elide;
@@ -293,22 +322,26 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
           /* Output any (but maybe just part of the) elided data from
              the previous round.  */
           if (! first)
-            xwrite_stdout (b[!i] + READ_BUFSIZE, n_elide - delta);
+            {
+              desired_pos += n_elide - delta;
+              xwrite_stdout (b[!i] + READ_BUFSIZE, n_elide - delta);
+            }
           first = false;
 
           if (n_elide < n_read)
-            xwrite_stdout (b[i], n_read - n_elide);
+            {
+              desired_pos += n_read - n_elide;
+              xwrite_stdout (b[i], n_read - n_elide);
+            }
         }
 
       free (b[0]);
-      return ok;
     }
   else
     {
       /* Read blocks of size READ_BUFSIZE, until we've read at least n_elide
          bytes.  Then, for each new buffer we read, also write an old one.  */
 
-      bool ok = true;
       bool eof = false;
       size_t n_read;
       bool buffered_enough;
@@ -357,7 +390,10 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
             buffered_enough = true;
 
           if (buffered_enough)
-            xwrite_stdout (b[i_next], n_read);
+            {
+              desired_pos += n_read;
+              xwrite_stdout (b[i_next], n_read);
+            }
         }
 
       /* Output any remainder: rem bytes from b[i] + n_read.  */
@@ -366,6 +402,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
           if (buffered_enough)
             {
               size_t n_bytes_left_in_b_i = READ_BUFSIZE - n_read;
+              desired_pos += rem;
               if (rem < n_bytes_left_in_b_i)
                 {
                   xwrite_stdout (b[i] + n_read, rem);
@@ -392,6 +429,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
                */
               size_t y = READ_BUFSIZE - rem;
               size_t x = n_read - y;
+              desired_pos += x;
               xwrite_stdout (b[i_next], x);
             }
         }
@@ -400,36 +438,16 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
       for (i = 0; i < n_alloc; i++)
         free (b[i]);
       free (b);
-
-      return ok;
     }
-}
 
-/* Call lseek (FD, OFFSET, WHENCE), where file descriptor FD
-   corresponds to the file FILENAME.  WHENCE must be SEEK_SET or
-   SEEK_CUR.  Return the resulting offset.  Give a diagnostic and
-   return -1 if lseek fails.  */
-
-static off_t
-elseek (int fd, off_t offset, int whence, char const *filename)
-{
-  off_t new_offset = lseek (fd, offset, whence);
-  char buf[INT_BUFSIZE_BOUND (offset)];
-
-  if (new_offset < 0)
-    error (0, errno,
-           _(whence == SEEK_SET
-             ? N_("%s: cannot seek to offset %s")
-             : N_("%s: cannot seek to relative offset %s")),
-           quotearg_colon (filename),
-           offtostr (offset, buf));
-
-  return new_offset;
+  if (0 <= current_pos && elseek (fd, desired_pos, SEEK_SET, filename) < 0)
+    ok = false;
+  return ok;
 }
 
 /* For the file FILENAME with descriptor FD, output all but the last N_ELIDE
    bytes.  If SIZE is nonnegative, this is a regular file positioned
-   at START_POS with SIZE bytes.  Return true on success.
+   at CURRENT_POS with SIZE bytes.  Return true on success.
    Give a diagnostic and return false upon error.  */
 
 /* NOTE: if the input file shrinks by more than N_ELIDE bytes between
@@ -437,10 +455,11 @@ elseek (int fd, off_t offset, int whence, char const *filename)
 
 static bool
 elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide,
-                       off_t current_pos, off_t size)
+                       struct stat const *st, off_t current_pos)
 {
-  if (size < 0)
-    return elide_tail_bytes_pipe (filename, fd, n_elide);
+  off_t size = st->st_size;
+  if (size <= ST_BLKSIZE (*st))
+    return elide_tail_bytes_pipe (filename, fd, n_elide, current_pos);
   else
     {
       /* Be careful here.  The current position may actually be
@@ -460,13 +479,16 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide,
     }
 }
 
-/* Print all but the last N_ELIDE lines from the input stream
-   open for reading via file descriptor FD.
+/* For an input file with name FILENAME and descriptor FD,
+   output all but the last N_ELIDE_0 bytes.
+   If CURRENT_POS is nonnegative, the input file is positioned there
+   and should be repositioned to just before the elided bytes.
    Buffer the specified number of lines as a linked list of LBUFFERs,
    adding them as needed.  Return true if successful.  */
 
 static bool
-elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
+elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
+                       off_t current_pos)
 {
   struct linebuffer
   {
@@ -475,6 +497,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
     size_t nlines;
     struct linebuffer *next;
   };
+  uintmax_t desired_pos = current_pos;
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
@@ -497,6 +520,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 
       if (! n_elide)
         {
+          desired_pos += n_read;
           xwrite_stdout (tmp->buffer, n_read);
           continue;
         }
@@ -536,6 +560,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
           last = last->next = tmp;
           if (n_elide < total_lines - first->nlines)
             {
+              desired_pos += first->nbytes;
               xwrite_stdout (first->buffer, first->nbytes);
               tmp = first;
               total_lines -= first->nlines;
@@ -565,6 +590,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 
   for (tmp = first; n_elide < total_lines - tmp->nlines; tmp = tmp->next)
     {
+      desired_pos += tmp->nbytes;
       xwrite_stdout (tmp->buffer, tmp->nbytes);
       total_lines -= tmp->nlines;
     }
@@ -581,6 +607,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
           ++tmp->nlines;
           --n;
         }
+      desired_pos += p - tmp->buffer;
       xwrite_stdout (tmp->buffer, p - tmp->buffer);
     }
 
@@ -591,6 +618,9 @@ free_lbuffers:
       free (first);
       first = tmp;
     }
+
+  if (0 <= current_pos && elseek (fd, desired_pos, SEEK_SET, filename) < 0)
+    ok = false;
   return ok;
 }
 
@@ -714,10 +744,11 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
 
 static bool
 elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide,
-                       off_t current_pos, off_t size)
+                       struct stat const *st, off_t current_pos)
 {
-  if (size < 0)
-    return elide_tail_lines_pipe (filename, fd, n_elide);
+  off_t size = st->st_size;
+  if (size <= ST_BLKSIZE (*st))
+    return elide_tail_lines_pipe (filename, fd, n_elide, current_pos);
   else
     {
       /* Find the offset, OFF, of the Nth newline from the end,
@@ -802,28 +833,24 @@ head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
 
   if (elide_from_end)
     {
-      off_t current_pos = -1, size = -1;
-      if (! presume_input_pipe)
+      off_t current_pos = -1;
+      struct stat st;
+      if (fstat (fd, &st) != 0)
         {
-          struct stat st;
-          if (fstat (fd, &st) != 0)
-            {
-              error (0, errno, _("cannot fstat %s"),
-                     quotearg_colon (filename));
-              return false;
-            }
-          if (S_ISREG (st.st_mode))
-            {
-              size = st.st_size;
-              current_pos = elseek (fd, 0, SEEK_CUR, filename);
-              if (current_pos < 0)
-                return false;
-            }
+          error (0, errno, _("cannot fstat %s"),
+                 quotearg_colon (filename));
+          return false;
+        }
+      if (! presume_input_pipe && usable_st_size (&st))
+        {
+          current_pos = elseek (fd, 0, SEEK_CUR, filename);
+          if (current_pos < 0)
+            return false;
         }
       if (count_lines)
-        return elide_tail_lines_file (filename, fd, n_units, current_pos, size);
+        return elide_tail_lines_file (filename, fd, n_units, &st, current_pos);
       else
-        return elide_tail_bytes_file (filename, fd, n_units, current_pos, size);
+        return elide_tail_bytes_file (filename, fd, n_units, &st, current_pos);
     }
   if (count_lines)
     return head_lines (filename, fd, n_units);

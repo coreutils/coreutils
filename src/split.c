@@ -246,6 +246,37 @@ r/K/N   likewise but only output Kth of N to stdout\n\
   exit (status);
 }
 
+/* Return the number of bytes that can be read from FD, a file with
+   apparent size SIZE.  Actually read the data into BUF (of size
+   BUFSIZE) if the file appears to be smaller than BUFSIZE, as this
+   works better on proc-like file systems.  If the returned value is
+   less than BUFSIZE, store all the file's data into BUF; otherwise,
+   restore the input file's position so that the file can be reread if
+   needed.  */
+
+static off_t
+input_file_size (int fd, off_t size, char *buf, size_t bufsize)
+{
+  if (size < bufsize)
+    {
+      size = 0;
+      while (true)
+        {
+          size_t save = size < bufsize ? size : 0;
+          size_t n_read = safe_read (fd, buf + save, bufsize - save);
+          if (n_read == 0)
+            break;
+          if (n_read == SAFE_READ_ERROR)
+            error (EXIT_FAILURE, errno, "%s", infile);
+          size += n_read;
+        }
+      if (bufsize <= size && lseek (fd, - size, SEEK_CUR) < 0)
+        error (EXIT_FAILURE, errno, "%s", infile);
+    }
+
+  return size;
+}
+
 /* Compute the next sequential output file name and store it into the
    string 'outfile'.  */
 
@@ -511,10 +542,13 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
 }
 
 /* Split into pieces of exactly N_BYTES bytes.
-   Use buffer BUF, whose size is BUFSIZE.  */
+   Use buffer BUF, whose size is BUFSIZE.
+   If INITIAL_READ != SIZE_MAX, the entire input file has already been
+   partly read into BUF and BUF contains INITIAL_READ input bytes.  */
 
 static void
-bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
+bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
+             uintmax_t max_files)
 {
   size_t n_read;
   bool new_file_flag = true;
@@ -525,9 +559,17 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, uintmax_t max_files)
 
   do
     {
-      n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", infile);
+      if (initial_read != SIZE_MAX)
+        {
+          n_read = initial_read;
+          initial_read = SIZE_MAX;
+        }
+      else
+        {
+          n_read = safe_read (STDIN_FILENO, buf, bufsize);
+          if (n_read == SAFE_READ_ERROR)
+            error (EXIT_FAILURE, errno, "%s", infile);
+        }
       bp_out = buf;
       to_read = n_read;
       while (true)
@@ -736,7 +778,7 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 
 static void
 lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
-                   off_t file_size)
+                   size_t initial_read, off_t file_size)
 {
   assert (n && k <= n && n <= file_size);
 
@@ -751,7 +793,12 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
     {
       /* Start reading 1 byte before kth chunk of file.  */
       off_t start = (k - 1) * chunk_size - 1;
-      if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
+      if (initial_read != SIZE_MAX)
+        {
+          memmove (buf, buf + start, initial_read - start);
+          initial_read -= start;
+        }
+      else if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
         error (EXIT_FAILURE, errno, "%s", infile);
       n_written = start;
       chunk_no = k - 1;
@@ -761,10 +808,19 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   while (n_written < file_size)
     {
       char *bp = buf, *eob;
-      size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", infile);
-      else if (n_read == 0)
+      size_t n_read;
+      if (initial_read != SIZE_MAX)
+        {
+          n_read = initial_read;
+          initial_read = SIZE_MAX;
+        }
+      else
+        {
+          n_read = safe_read (STDIN_FILENO, buf, bufsize);
+          if (n_read == SAFE_READ_ERROR)
+            error (EXIT_FAILURE, errno, "%s", infile);
+        }
+      if (n_read == 0)
         break; /* eof.  */
       n_read = MIN (n_read, file_size - n_written);
       chunk_truncated = false;
@@ -841,7 +897,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
 static void
 bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
-                     off_t file_size)
+                     size_t initial_read, off_t file_size)
 {
   off_t start;
   off_t end;
@@ -851,15 +907,29 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   start = (k - 1) * (file_size / n);
   end = (k == n) ? file_size : k * (file_size / n);
 
-  if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
+  if (initial_read != SIZE_MAX)
+    {
+      memmove (buf, buf + start, initial_read - start);
+      initial_read -= start;
+    }
+  else if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
     error (EXIT_FAILURE, errno, "%s", infile);
 
   while (start < end)
     {
-      size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", infile);
-      else if (n_read == 0)
+      size_t n_read;
+      if (initial_read != SIZE_MAX)
+        {
+          n_read = initial_read;
+          initial_read = SIZE_MAX;
+        }
+      else
+        {
+          n_read = safe_read (STDIN_FILENO, buf, bufsize);
+          if (n_read == SAFE_READ_ERROR)
+            error (EXIT_FAILURE, errno, "%s", infile);
+        }
+      if (n_read == 0)
         break; /* eof.  */
       n_read = MIN (n_read, end - start);
       if (full_write (STDOUT_FILENO, buf, n_read) != n_read
@@ -1403,22 +1473,34 @@ main (int argc, char **argv)
   if (in_blk_size == 0)
     in_blk_size = io_blksize (in_stat_buf);
 
+  void *b = xmalloc (in_blk_size + 1 + page_size - 1);
+  char *buf = ptr_align (b, page_size);
+  size_t initial_read = SIZE_MAX;
+
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
     {
       off_t input_offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
-      if (usable_st_size (&in_stat_buf))
-        file_size = in_stat_buf.st_size;
-      else if (0 <= input_offset)
+      if (0 <= input_offset)
         {
-          file_size = lseek (STDIN_FILENO, 0, SEEK_END);
-          input_offset = (file_size < 0
-                          ? file_size
-                          : lseek (STDIN_FILENO, input_offset, SEEK_SET));
+          if (usable_st_size (&in_stat_buf))
+            {
+              file_size = input_file_size (STDIN_FILENO, in_stat_buf.st_size,
+                                           buf, in_blk_size);
+              if (file_size < in_blk_size)
+                initial_read = file_size;
+            }
+          else
+            {
+              file_size = lseek (STDIN_FILENO, 0, SEEK_END);
+              input_offset = (file_size < 0
+                              ? file_size
+                              : lseek (STDIN_FILENO, input_offset, SEEK_SET));
+              file_size -= input_offset;
+            }
         }
       if (input_offset < 0)
         error (EXIT_FAILURE, 0, _("%s: cannot determine file size"),
                quote (infile));
-      file_size -= input_offset;
       /* Overflow, and sanity checking.  */
       if (OFF_T_MAX < n_units)
         {
@@ -1430,9 +1512,6 @@ main (int argc, char **argv)
          any input data, and create empty files for the rest.  */
       file_size = MAX (file_size, n_units);
     }
-
-  void *b = xmalloc (in_blk_size + 1 + page_size - 1);
-  char *buf = ptr_align (b, page_size);
 
   /* When filtering, closure of one pipe must not terminate the process,
      as there may still be other streams expecting input from us.  */
@@ -1454,7 +1533,7 @@ main (int argc, char **argv)
       break;
 
     case type_bytes:
-      bytes_split (n_units, buf, in_blk_size, 0);
+      bytes_split (n_units, buf, in_blk_size, SIZE_MAX, 0);
       break;
 
     case type_byteslines:
@@ -1463,13 +1542,16 @@ main (int argc, char **argv)
 
     case type_chunk_bytes:
       if (k_units == 0)
-        bytes_split (file_size / n_units, buf, in_blk_size, n_units);
+        bytes_split (file_size / n_units, buf, in_blk_size, initial_read,
+                     n_units);
       else
-        bytes_chunk_extract (k_units, n_units, buf, in_blk_size, file_size);
+        bytes_chunk_extract (k_units, n_units, buf, in_blk_size, initial_read,
+                             file_size);
       break;
 
     case type_chunk_lines:
-      lines_chunk_split (k_units, n_units, buf, in_blk_size, file_size);
+      lines_chunk_split (k_units, n_units, buf, in_blk_size, initial_read,
+                         file_size);
       break;
 
     case type_rr:

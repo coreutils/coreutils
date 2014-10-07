@@ -40,6 +40,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "stat-size.h"
 #include "stat-time.h"
 #include "xfreopen.h"
 #include "xnanosleep.h"
@@ -1665,40 +1666,30 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
           if (t)
             return t < 0;
         }
-      *read_pos += dump_remainder (pretty_filename, fd, COPY_TO_EOF);
+      n_bytes = COPY_TO_EOF;
     }
   else
     {
-      if ( ! presume_input_pipe
-           && S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
-        {
-          off_t current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
-          off_t end_pos = xlseek (fd, 0, SEEK_END, pretty_filename);
-          off_t diff = end_pos - current_pos;
-          /* Be careful here.  The current position may actually be
-             beyond the end of the file.  */
-          off_t bytes_remaining = diff < 0 ? 0 : diff;
-          off_t nb = n_bytes;
-
-          if (bytes_remaining <= nb)
-            {
-              /* From the current position to end of file, there are no
-                 more bytes than have been requested.  So reposition the
-                 file pointer to the incoming current position and print
-                 everything after that.  */
-              *read_pos = xlseek (fd, current_pos, SEEK_SET, pretty_filename);
-            }
-          else
-            {
-              /* There are more bytes remaining than were requested.
-                 Back up.  */
-              *read_pos = xlseek (fd, -nb, SEEK_END, pretty_filename);
-            }
-          *read_pos += dump_remainder (pretty_filename, fd, n_bytes);
-        }
-      else
+      off_t end_pos = ((! presume_input_pipe && usable_st_size (&stats)
+                        && n_bytes <= OFF_T_MAX)
+                       ? stats.st_size : -1);
+      if (end_pos <= ST_BLKSIZE (stats))
         return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
+      off_t current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
+      if (current_pos < end_pos)
+        {
+          off_t bytes_remaining = end_pos - current_pos;
+
+          if (n_bytes < bytes_remaining)
+            {
+              current_pos = end_pos - n_bytes;
+              xlseek (fd, current_pos, SEEK_SET, pretty_filename);
+            }
+        }
+      *read_pos = current_pos;
     }
+
+  *read_pos += dump_remainder (pretty_filename, fd, n_bytes);
   return true;
 }
 

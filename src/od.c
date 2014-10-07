@@ -27,6 +27,7 @@
 #include "error.h"
 #include "ftoastr.h"
 #include "quote.h"
+#include "stat-size.h"
 #include "xfreopen.h"
 #include "xprintf.h"
 #include "xstrtol.h"
@@ -1034,9 +1035,11 @@ skip (uintmax_t n_skip)
              If the number of bytes left to skip is larger than
              the size of the current file, we can decrement n_skip
              and go on to the next file.  Skip this optimization also
-             when st_size is 0, because some kernels report that
-             nonempty files in /proc have st_size == 0.  */
-          if (S_ISREG (file_stats.st_mode) && 0 < file_stats.st_size)
+             when st_size is no greater than the block size, because
+             some kernels report nonsense small file sizes for
+             proc-like file systems.  */
+          if (usable_st_size (&file_stats)
+              && ST_BLKSIZE (file_stats) < file_stats.st_size)
             {
               if ((uintmax_t) file_stats.st_size < n_skip)
                 n_skip -= file_stats.st_size;
@@ -1052,6 +1055,7 @@ skip (uintmax_t n_skip)
             }
 
           /* If it's not a regular file with nonnegative size,
+             or if it's so small that it might be in a proc-like file system,
              position the file pointer by reading.  */
 
           else
@@ -1067,10 +1071,15 @@ skip (uintmax_t n_skip)
                   n_skip -= n_bytes_read;
                   if (n_bytes_read != n_bytes_to_read)
                     {
-                      in_errno = errno;
-                      ok = false;
-                      n_skip = 0;
-                      break;
+                      if (ferror (in_stream))
+                        {
+                          in_errno = errno;
+                          ok = false;
+                          n_skip = 0;
+                          break;
+                        }
+                      if (feof (in_stream))
+                        break;
                     }
                 }
             }

@@ -184,9 +184,10 @@ write_counts (uintmax_t lines,
 
 /* Count words.  FILE_X is the name of the file (or NULL for standard
    input) that is open on descriptor FD.  *FSTATUS is its status.
+   CURRENT_POS is the current file offset if known, negative if unknown.
    Return true if successful.  */
 static bool
-wc (int fd, char const *file_x, struct fstatus *fstatus)
+wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 {
   bool ok = true;
   char buf[BUFFER_SIZE + 1];
@@ -229,32 +230,34 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 
   if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
-      off_t current_pos, end_pos;
-
       if (0 < fstatus->failed)
         fstatus->failed = fstat (fd, &fstatus->st);
 
-      if (! fstatus->failed && S_ISREG (fstatus->st.st_mode)
-          && (current_pos = lseek (fd, 0, SEEK_CUR)) != -1
-          && (end_pos = lseek (fd, 0, SEEK_END)) != -1)
+      /* For sized files, seek to one buffer before EOF rather than to EOF.
+         This works better for files in proc-like file systems where
+         the size is only approximate.  */
+      if (! fstatus->failed && usable_st_size (&fstatus->st)
+          && 0 <= fstatus->st.st_size)
         {
-          /* Be careful here.  The current position may actually be
-             beyond the end of the file.  As in the example above.  */
-          bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
+          size_t end_pos = fstatus->st.st_size;
+          off_t hi_pos = end_pos - end_pos % BUFFER_SIZE;
+          if (current_pos < 0)
+            current_pos = lseek (fd, 0, SEEK_CUR);
+          if (0 <= current_pos && current_pos < hi_pos
+              && 0 <= lseek (fd, hi_pos, SEEK_CUR))
+            bytes = hi_pos - current_pos;
         }
-      else
+
+      fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
+      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
         {
-          fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
-          while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+          if (bytes_read == SAFE_READ_ERROR)
             {
-              if (bytes_read == SAFE_READ_ERROR)
-                {
-                  error (0, errno, "%s", file);
-                  ok = false;
-                  break;
-                }
-              bytes += bytes_read;
+              error (0, errno, "%s", file);
+              ok = false;
+              break;
             }
+          bytes += bytes_read;
         }
     }
   else if (!count_chars && !count_complicated)
@@ -500,7 +503,7 @@ wc_file (char const *file, struct fstatus *fstatus)
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
         xfreopen (NULL, "rb", stdin);
-      return wc (STDIN_FILENO, file, fstatus);
+      return wc (STDIN_FILENO, file, fstatus, -1);
     }
   else
     {
@@ -512,7 +515,7 @@ wc_file (char const *file, struct fstatus *fstatus)
         }
       else
         {
-          bool ok = wc (fd, file, fstatus);
+          bool ok = wc (fd, file, fstatus, 0);
           if (close (fd) != 0)
             {
               error (0, errno, "%s", file);
