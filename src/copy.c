@@ -1282,13 +1282,16 @@ copy_reg (char const *src_name, char const *dst_name,
 
       off_t n_read;
       bool wrote_hole_at_eof;
-      if ( ! sparse_copy (source_desc, dest_desc, buf, buf_size,
-                          make_holes ? hole_size : 0,
-                          x->sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
-                          UINTMAX_MAX, &n_read,
-                          &wrote_hole_at_eof)
-           || (wrote_hole_at_eof
-               && ftruncate (dest_desc, n_read) < 0))
+      if (! sparse_copy (source_desc, dest_desc, buf, buf_size,
+                         make_holes ? hole_size : 0,
+                         x->sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
+                         UINTMAX_MAX, &n_read,
+                         &wrote_hole_at_eof))
+        {
+          return_val = false;
+          goto close_src_and_dst_desc;
+        }
+      else if (wrote_hole_at_eof && ftruncate (dest_desc, n_read) < 0)
         {
           error (0, errno, _("failed to extend %s"), quote (dst_name));
           return_val = false;
