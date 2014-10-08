@@ -506,7 +506,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
   FILE *fp;
   char *file_name;
-  off_t bytes_copied = 0;
+  uintmax_t bytes_copied = 0;
   if (!temp_stream (&fp, &file_name))
     return -1;
 
@@ -527,6 +527,9 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
           goto Fail;
         }
 
+      /* Implicitly <= OFF_T_MAX due to preceding fwrite(),
+         but unsigned type used to avoid compiler warnings
+         not aware of this fact.  */
       bytes_copied += bytes_read;
     }
 
