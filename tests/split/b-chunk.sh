@@ -32,6 +32,8 @@ stat x?? 2>/dev/null && fail=1
 printf '1\n2\n3\n4\n5\n' > input || framework_failure_
 
 for file in input /proc/version /sys/kernel/profiling; do
+  test -f $file || continue
+
   split -n 3 $file > out || fail=1
   split -n 1/3 $file > b1 || fail=1
   split -n 2/3 $file > b2 || fail=1
