@@ -29,16 +29,16 @@ rm -f x??
 split -e -n 10 /dev/null || fail=1
 stat x?? 2>/dev/null && fail=1
 
-printf '1\n2\n3\n4\n5\n' > in || framework_failure_
+printf '1\n2\n3\n4\n5\n' > input || framework_failure_
 
-for file in in /proc/version /sys/kernel/profiling; do
+for file in input /proc/version /sys/kernel/profiling; do
   split -n 3 $file > out || fail=1
   split -n 1/3 $file > b1 || fail=1
   split -n 2/3 $file > b2 || fail=1
   split -n 3/3 $file > b3 || fail=1
 
   case $file in
-    in)
+    input)
       printf '1\n2' > exp-1
       printf '\n3\n' > exp-2
       printf '4\n5\n' > exp-3

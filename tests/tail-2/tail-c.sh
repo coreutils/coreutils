@@ -18,7 +18,6 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
-require_ulimit_v_
 
 # Make sure it works on funny files in /proc and /sys.
 

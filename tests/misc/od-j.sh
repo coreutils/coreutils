@@ -27,13 +27,13 @@ for file in ${srcdir=.}/tests/init.sh /proc/version /sys/kernel/profiling; do
 
   od -An $file > exp || fail=1
   od -An -j $bytes $file $file > out || fail=1
-  compare out exp || fail=1
+  compare exp out || fail=1
 
   od -An -j 4096 copy copy > exp1 2> experr1; expstatus=$?
   od -An -j 4096 $file $file > out1 2> err1; status=$?
   test $status -eq $expstatus || fail=1
-  compare out1 exp1 || fail=1
-  compare err1 experr1 || fail=1
+  compare exp1 out1 || fail=1
+  compare experr1 err1 || fail=1
 done
 
 Exit $fail
