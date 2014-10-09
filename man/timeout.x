@@ -5,4 +5,4 @@ timeout \- run a command with a time limit
 [SEE ALSO]
 kill(1)
 [BUGS]
-Some platforms don't curently support timeouts beyond 2038
+Some platforms don't curently support timeouts beyond the year 2038.
