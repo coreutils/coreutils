@@ -411,52 +411,84 @@ trim_leading_zeros (char const *s)
 static bool
 seq_fast (char const *a, char const *b)
 {
+  bool inf = STREQ (b, "inf");
+
   /* Skip past any leading 0's.  Without this, our naive cmp
      function would declare 000 to be larger than 99.  */
   a = trim_leading_zeros (a);
   b = trim_leading_zeros (b);
 
   size_t p_len = strlen (a);
-  size_t q_len = strlen (b);
-  size_t n = MAX (p_len, q_len);
-  char *p0 = xmalloc (n + 1);
-  char *p = memcpy (p0 + n - p_len, a, p_len + 1);
-  char *q0 = xmalloc (n + 1);
-  char *q = memcpy (q0 + n - q_len, b, q_len + 1);
+  size_t q_len = inf ? 0 : strlen (b);
 
-  bool ok = cmp (p, p_len, q, q_len) <= 0;
+  /* Allow for at least 31 digits without realloc.
+     1 more than p_len is needed for the inf case.  */
+  size_t inc_size = MAX (MAX (p_len + 1, q_len), 31);
+
+  /* Copy input strings (incl NUL) to end of new buffers.  */
+  char *p0 = xmalloc (inc_size + 1);
+  char *p = memcpy (p0 + inc_size - p_len, a, p_len + 1);
+  char *q;
+  char *q0;
+  if (! inf)
+    {
+      q0 = xmalloc (inc_size + 1);
+      q = memcpy (q0 + inc_size - q_len, b, q_len + 1);
+    }
+  else
+    q = q0 = NULL;
+
+  bool ok = inf || cmp (p, p_len, q, q_len) <= 0;
   if (ok)
     {
-      /* Buffer at least this many numbers per fwrite call.
-         This gives a speed-up of more than 2x over the unbuffered code
+      /* Reduce number of fwrite calls which is seen to
+         give a speed-up of more than 2x over the unbuffered code
          when printing the first 10^9 integers.  */
-      enum {N = 40};
-      char *buf = xmalloc (N * (n + 1));
-      char const *buf_end = buf + N * (n + 1);
+      size_t buf_size = MAX (BUFSIZ, (inc_size + 1) * 2);
+      char *buf = xmalloc (buf_size);
+      char const *buf_end = buf + buf_size;
 
-      char *z = buf;
+      char *bufp = buf;
 
       /* Write first number to buffer.  */
-      z = mempcpy (z, p, p_len);
+      bufp = mempcpy (bufp, p, p_len);
 
       /* Append separator then number.  */
-      while (cmp (p, p_len, q, q_len) < 0)
+      while (inf || cmp (p, p_len, q, q_len) < 0)
         {
-          *z++ = *separator;
+          *bufp++ = *separator;
           incr (&p, &p_len);
-          z = mempcpy (z, p, p_len);
+
+          /* Double up the buffers when needed for the inf case.  */
+          if (p_len == inc_size)
+            {
+              inc_size *= 2;
+              p0 = xrealloc (p0, inc_size + 1);
+              p = memmove (p0 + p_len, p0, p_len + 1);
+
+              if (buf_size < (inc_size + 1) * 2)
+                {
+                  size_t buf_offset = bufp - buf;
+                  buf_size = (inc_size + 1) * 2;
+                  buf = xrealloc (buf, buf_size);
+                  buf_end = buf + buf_size;
+                  bufp = buf + buf_offset;
+                }
+            }
+
+          bufp = mempcpy (bufp, p, p_len);
           /* If no place for another separator + number then
              output buffer so far, and reset to start of buffer.  */
-          if (buf_end - (n + 1) < z)
+          if (buf_end - (p_len + 1) < bufp)
             {
-              fwrite (buf, z - buf, 1, stdout);
-              z = buf;
+              fwrite (buf, bufp - buf, 1, stdout);
+              bufp = buf;
             }
         }
 
       /* Write any remaining buffered output, and the terminator.  */
-      *z++ = *terminator;
-      fwrite (buf, z - buf, 1, stdout);
+      *bufp++ = *terminator;
+      fwrite (buf, bufp - buf, 1, stdout);
 
       IF_LINT (free (buf));
     }
@@ -593,7 +625,8 @@ main (int argc, char **argv)
         }
     }
 
-  if (first.precision == 0 && step.precision == 0 && last.precision == 0
+  if (first.precision == 0 && step.precision == 0
+      && (! isfinite (last.value) || last.precision == 0)
       && 0 <= first.value && step.value == 1 && 0 <= last.value
       && !equal_width && !format_str && strlen (separator) == 1)
     {
@@ -601,7 +634,9 @@ main (int argc, char **argv)
       char *s2;
       if (asprintf (&s1, "%0.Lf", first.value) < 0)
         xalloc_die ();
-      if (asprintf (&s2, "%0.Lf", last.value) < 0)
+      if (! isfinite (last.value))
+        s2 = xstrdup ("inf"); /* Ensure "inf" is used.  */
+      else if (asprintf (&s2, "%0.Lf", last.value) < 0)
         xalloc_die ();
 
       if (*s1 != '-' && *s2 != '-' && seq_fast (s1, s2))

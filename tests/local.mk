@@ -236,6 +236,7 @@ all_tests =					\
   tests/misc/test.pl				\
   tests/misc/seq.pl				\
   tests/misc/seq-long-double.sh			\
+  tests/misc/seq-precision.sh			\
   tests/misc/head.pl				\
   tests/misc/head-elide-tail.pl			\
   tests/tail-2/tail-n0f.sh			\
