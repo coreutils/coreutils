@@ -162,20 +162,17 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
   return ret;
 }
 
+/* Return whether the passed path is equivalent to "/".
+   Note we don't compare against get_root_dev_ino() as "/"
+   could be bind mounted to a separate location.  */
+
 static bool
 is_root (const char* dir)
 {
-  struct dev_ino root_ino;
-  if (! get_root_dev_ino (&root_ino))
-    error (EXIT_CANCELED, errno, _("failed to get attributes of %s"),
-           quote ("/"));
-
-  struct stat arg_st;
-  if (stat (dir, &arg_st) == -1)
-    error (EXIT_CANCELED, errno, _("failed to get attributes of %s"),
-           quote (dir));
-
-  return SAME_INODE (root_ino, arg_st);
+  char *resolved = canonicalize_file_name (dir);
+  bool is_res_root = resolved && STREQ ("/", resolved);
+  free (resolved);
+  return is_res_root;
 }
 
 void
@@ -291,8 +288,6 @@ main (int argc, char **argv)
       usage (EXIT_CANCELED);
     }
 
-  /* Only do chroot specific actions if actually changing root.
-     The main difference here is that we don't change working dir.  */
   if (! is_oldroot)
     {
       /* We have to look up users and groups twice.
@@ -328,11 +323,11 @@ main (int argc, char **argv)
             n_gids = ngroups;
         }
 #endif
-
-      if (chroot (newroot) != 0)
-        error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-               newroot);
     }
+
+  if (chroot (newroot) != 0)
+    error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
+            newroot);
 
   if (! skip_chdir && chdir ("/"))
     error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));

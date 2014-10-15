@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd supports more robust SIGINFO/SIGUSR1 handling for outputting statistics.
   Previously those signals may have inadvertently terminated the process.
 
+  chroot again calls chroot(DIR) and chdir("/"), even if DIR is "/".
+  This handles separate bind mounted "/" trees, and environments
+  depending on the implicit chdir("/").
+  [bugs introduced in coreutils-8.23]
+
   cp no longer issues an incorrect warning about directory hardlinks when a
   source directory is specified multiple times.  Now, consistent with other
   file types, a warning is issued for source directories with duplicate names,
@@ -24,12 +29,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   dd accepts a new status=progress level to print data transfer statistics
   on stderr approximately every second.
-
-** Changes in behavior
-
-  chroot changes the current directory to "/" in again - unless the above new
-  --skip-chdir option is specified.
-  [bug introduced in coreutils-8.23]
 
 ** Improvements
 
