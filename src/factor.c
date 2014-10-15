@@ -2323,13 +2323,15 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
   return err;
 }
 
+static size_t n_out; /* How much data we've written to stdout.  */
+
 static void
 print_uintmaxes (uintmax_t t1, uintmax_t t0)
 {
   uintmax_t q, r;
 
   if (t1 == 0)
-    printf ("%"PRIuMAX, t0);
+    n_out += printf ("%"PRIuMAX, t0);
   else
     {
       /* Use very plain code here since it seems hard to write fast code
@@ -2338,7 +2340,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
       r = t1 % 1000000000;
       udiv_qrnnd (t0, r, r, t0, 1000000000);
       print_uintmaxes (q, t0);
-      printf ("%09u", (unsigned int) r);
+      n_out += printf ("%09u", (unsigned int) r);
     }
 }
 
@@ -2350,6 +2352,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
 
   print_uintmaxes (t1, t0);
   putchar (':');
+  n_out++;
 
   factor (t1, t0, &factors);
 
@@ -2358,15 +2361,29 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
       {
         char buf[INT_BUFSIZE_BOUND (uintmax_t)];
         putchar (' ');
-        fputs (umaxtostr (factors.p[j], buf), stdout);
+        char *umaxstr = umaxtostr (factors.p[j], buf);
+        fputs (umaxstr, stdout);
+        n_out += strlen (umaxstr) + 1;
       }
 
   if (factors.plarge[1])
     {
       putchar (' ');
+      n_out++;
       print_uintmaxes (factors.plarge[1], factors.plarge[0]);
     }
   putchar ('\n');
+  n_out++;
+
+  /* Assume the stdout buffer is > this value.
+     Flush here to avoid partial lines being output.
+     Flushing every line has too much overhead.
+     TODO: Buffer internally and avoid stdio.  */
+  if (n_out >= 512)
+    {
+      fflush (stdout);
+      n_out = 0;
+    }
 }
 
 /* Emit the factors of the indicated number.  If we have the option of using
@@ -2422,6 +2439,7 @@ print_factors (const char *input)
   mp_factor_clear (&factors);
   mpz_clear (t);
   putchar ('\n');
+  fflush (stdout);
   return true;
 #else
   error (0, 0, _("%s is too large"), quote (input));

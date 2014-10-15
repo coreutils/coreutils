@@ -282,6 +282,7 @@ all_tests =					\
   tests/misc/expand.pl				\
   tests/misc/expr.pl				\
   tests/misc/factor.pl				\
+  tests/misc/factor-parallel.sh			\
   tests/misc/false-status.sh			\
   tests/misc/fold.pl				\
   tests/misc/groups-dash.sh			\

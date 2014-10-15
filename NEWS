@@ -24,6 +24,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   file types, a warning is issued for source directories with duplicate names,
   or with -H the directory is copied again using the symlink name.
 
+  factor avoids writing partial lines, thus supporting parallel operation.
+  [the bug dates back to the initial implementation]
+
   head, od, split, tac, tail, and wc no longer mishandle input from files in
   /proc and /sys file systems that report somewhat-incorrect file sizes.
 
