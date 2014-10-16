@@ -31,7 +31,7 @@ cat $f > out || fail=1
 # number of the file changed during the cp run.
 cp $f exp 2>err \
   || { fail=1;
-       grep 'replaced while being copied' \
+       grep 'replaced while being copied' err \
          && skip_ "File $f is being replaced while being copied"; }
 
 # Don't simply compare contents; they might differ,
