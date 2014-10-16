@@ -44,7 +44,7 @@ esac
 
 # Make sure it works on funny files in /proc and /sys.
 
-for file in /proc/cpuinfo /sys/kernel/profiling; do
+for file in /proc/version /sys/kernel/profiling; do
   if test -r $file; then
     cp -f $file copy &&
     head -c -1 copy > exp1 || framework_failure_
