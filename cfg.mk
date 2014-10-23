@@ -74,10 +74,9 @@ sc_dd_max_sym_length:
 ifneq ($(wildcard $(dd_c)),)
 	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
 		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
-		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
-	      | wc --max-line-length);				\
+		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'| wc -L);\
 	max=$$(sed -n '/^#define LONGEST_SYMBOL /s///p' $(dd_c)	\
-	      |tr -d '"' | wc --max-line-length);		\
+	      |tr -d '"' | wc -L);		\
 	if test "$$len" = "$$max"; then :; else			\
 	  echo 'dd.c: LONGEST_SYMBOL is not longest' 1>&2;	\
 	  exit 1;						\
@@ -239,17 +238,17 @@ sc_prohibit-gl-attributes:
 # - the help2man script copied from upstream,
 # - tests involving long checksum lines, and
 # - the 'pr' test cases.
-LINE_LEN_MAX = 80
 FILTER_LONG_LINES =						\
   /^[^:]*\.diff:[^:]*:@@ / d;					\
   \|^[^:]*man/help2man:| d;			\
   \|^[^:]*tests/misc/sha[0-9]*sum.*\.pl[-:]| d;			\
   \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
 sc_long_lines:
-	@files=$$($(VC_LIST_EXCEPT))					\
-	halt='line(s) with more than $(LINE_LEN_MAX) characters; reindent'; \
+	@files=$$($(VC_LIST_EXCEPT) | xargs wc -L | sed -rn '/ total$$/d;\
+		  s/^ *(8[1-9]|9[0-9]|[0-9]\{3,\}) //p');		\
+	halt='line(s) with more than 80 characters; reindent';		\
 	for file in $$files; do						\
-	  expand $$file | grep -nE '^.{$(LINE_LEN_MAX)}.' |		\
+	  expand $$file | grep -nE '^.{80}.' |				\
 	  sed -e "s|^|$$file:|" -e '$(FILTER_LONG_LINES)';		\
 	done | grep . && { msg="$$halt" $(_sc_say_and_exit) } || :
 
