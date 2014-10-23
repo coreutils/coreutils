@@ -5,7 +5,7 @@ import sys
 
 fail = 1
 try:
-  import ctypes
+  import ctypes.util
 
   (DT_UNKNOWN, DT_DIR,) = (0, 4,)
 
@@ -19,8 +19,7 @@ try:
 
   direntp = ctypes.POINTER(dirent)
 
-  # FIXME: find a way to avoid hard-coding libc's so-name.
-  libc = ctypes.cdll.LoadLibrary("libc.so.6")
+  libc = ctypes.CDLL(ctypes.util.find_library('c'), use_errno=True)
   libc.readdir.restype = direntp
 
   dirp = libc.opendir(".")
