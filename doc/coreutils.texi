@@ -11229,11 +11229,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --all
 @opindex -a
 @opindex --all
-@cindex automounter file systems
 @cindex ignore file systems
-Include in the listing dummy file systems, which
-are omitted by default.  Such file systems are typically special-purpose
-pseudo-file-systems, such as automounter entries.
+Include in the listing dummy, duplicate, or inaccessible file systems, which
+are omitted by default.  Dummy file systems are typically special purpose
+pseudo file systems such as @samp{/proc}, with no associated storage.
+Duplicate file systems are local or remote file systems that are mounted
+at separate locations in the local file hierarchy, or bind mounted locations.
+Inaccessible file systems are those which are mounted but subsequently
+over-mounted by another file system at that point, or otherwise inaccessible
+due to permissions of the mount point etc.
 
 @item -B @var{size}
 @itemx --block-size=@var{size}

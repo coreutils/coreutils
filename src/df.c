@@ -648,7 +648,7 @@ filter_mount_list (bool devices_only)
                       > strlen (me->me_mountdir))
                   /* let an entry overmounted on a different device win...  */
                   || (! STREQ (devlist->me->me_devname, me->me_devname)
-                      /* ... but only when matching an exsiting mount point, to
+                      /* ... but only when matching an existing mount point, to
                       avoid problematic replacement when given inaccurate mount
                       lists, seen with some chroot environments for example.  */
                       && STREQ (me->me_mountdir, devlist->me->me_mountdir)))
@@ -1396,7 +1396,7 @@ or all file systems by default.\n\
       /* TRANSLATORS: The thousands and decimal separators are best
          adjusted to an appropriate default for your locale.  */
       fputs (_("\
-  -a, --all             include dummy file systems\n\
+  -a, --all             include pseudo, duplicate, inaccessible file systems\n\
   -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
                            '-BM' prints sizes in units of 1,048,576 bytes;\n\
                            see SIZE format below\n\
