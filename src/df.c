@@ -703,17 +703,17 @@ filter_mount_list (bool devices_only)
 }
 
 /* Search a mount entry list for device id DEV.
-   Return the corresponding device name if found or NULL if not.  */
+   Return the corresponding mount entry if found or NULL if not.  */
 
-static char const * _GL_ATTRIBUTE_PURE
-devname_for_dev (dev_t dev)
+static struct mount_entry const * _GL_ATTRIBUTE_PURE
+me_for_dev (dev_t dev)
 {
   struct devlist *dl = device_list;
 
   while (dl)
     {
       if (dl->dev_num == dev)
-        return dl->me->me_devname;
+        return dl->me;
       dl = dl->next;
     }
 
@@ -928,12 +928,15 @@ get_dev (char const *disk, char const *mount_point, char const* file,
   else if (process_all && show_all_fs)
     {
       /* Ensure we don't output incorrect stats for over-mounted directories.
-         Discard stats when the device name doesn't match.  */
+         Discard stats when the device name doesn't match.  Though don't
+         discard when used and current mount entries are both remote due
+         to the possibility of aliased host names or exports.  */
       struct stat sb;
       if (stat (stat_file, &sb) == 0)
         {
-          char const * devname = devname_for_dev (sb.st_dev);
-          if (devname && ! STREQ (devname, disk))
+          struct mount_entry const * dev_me = me_for_dev (sb.st_dev);
+          if (dev_me && ! STREQ (dev_me->me_devname, disk)
+              && (! dev_me->me_remote || ! me_remote))
             {
               fstype = "-";
               fsu.fsu_blocksize = fsu.fsu_blocks = fsu.fsu_bfree =
