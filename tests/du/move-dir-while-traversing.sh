@@ -78,7 +78,7 @@ timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg &
 
 # Wait for the watcher to start...
 nonempty() { test -s start-msg || { sleep $1; return 1; }; }
-retry_delay_ nonempty .1 5
+retry_delay_ nonempty .1 5 || fail=1
 
 # The above watches for an IN_OPEN event on $t/3/a/b,
 # and when it triggers, moves the parent, $t/3/a, up one level
