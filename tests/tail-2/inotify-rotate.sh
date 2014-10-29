@@ -22,48 +22,53 @@ if test "$VERBOSE" = yes; then
 fi
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-expensive_
 
-# Wait several seconds for grep REGEXP FILE to succeed.
-# Usage: grep_timeout REGEXP FILE
-grep_timeout()
+check_tail_output()
 {
-    local j
-    for j in $(seq 150); do
-        grep $1 $2 > /dev/null && return 0
-        sleep 0.1
-    done
-    return 1
+  local delay="$1"
+  grep "$tail_re" out > /dev/null ||
+    { sleep $delay; return 1; }
 }
+
+# Wait up to 25.5 seconds for grep REGEXP 'out' to succeed.
+grep_timeout() { tail_re="$1" retry_delay_ check_tail_output .1 8; }
 
 # For details, see
 # http://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
+
+cleanup_fail()
+{
+  cat out
+  warn_ $1
+  kill $pid
+}
 
 # Perform at least this many iterations, because on multi-core systems
 # the offending sequence of events can be surprisingly uncommon.
 for i in $(seq 50); do
     echo $i
-    rm -rf k x out
+    rm -f k x out
+
     # Normally less than a second is required here, but with heavy load
     # and a lot of disk activity, even 20 seconds is insufficient, which
     # leads to this timeout killing tail before the "ok" is written below.
     >k && >x || framework_failure_ failed to initialize files
-    timeout 40 tail -F k > out 2>&1 &
+    timeout 60 tail -F k > out 2>&1 &
     pid=$!
-    sleep .1
+
     echo b > k;
     # wait for b to appear in out
-    grep_timeout b out || fail_ failed to find b in out
-    while :; do grep b out > /dev/null && break; done
+    grep_timeout 'b' || { cleanup_fail 'failed to find b in out'; break; }
+
     mv x k
     # wait for tail to detect the rename
-    grep_timeout tail: out || { cat out; fail_ failed to detect rename; }
+    grep_timeout 'tail:' || { cleanup_fail 'failed to detect rename'; break; }
+
     echo ok >> k
-    found=0
-    # wait up to 10 seconds for "ok" to appear in out
-    grep_timeout ok out && found=1
+    # wait for "ok" to appear in 'out'
+    grep_timeout 'ok' || { cleanup_fail 'failed to detect echoed ok'; break; }
+
     kill $pid
-    test $found = 0 && { cat out; fail_ failed to detect echoed '"ok"'; }
 done
 
 wait
