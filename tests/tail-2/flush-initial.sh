@@ -25,7 +25,7 @@ echo line > in || fail=1
 tail -f in > out &
 tail_pid=$!
 
-# Wait for 1.5s for the file to be flushed.
+# Wait for 3.1s for the file to be flushed.
 tail_flush()
 {
   local delay="$1"

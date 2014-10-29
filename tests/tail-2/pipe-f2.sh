@@ -32,7 +32,7 @@ check_tail_output()
   test -s out || { sleep $n_sec; return 1; }
 }
 
-# Wait 6.3s for tail to write something.
+# Wait 12.7s for tail to write something.
 retry_delay_ check_tail_output .1 7 || fail=1
 
 compare exp out || fail=1

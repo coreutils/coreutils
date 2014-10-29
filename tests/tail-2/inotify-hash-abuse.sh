@@ -34,13 +34,13 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-# Wait up to 6.3s for tail to start
+# Wait up to 12.7s for tail to start
 echo x > $n
 tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
 
 mv 1 f || fail=1
 
-# Wait 6.3s for this diagnostic:
+# Wait 12.7s for this diagnostic:
 # tail: '1' has become inaccessible: No such file or directory
 tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
 

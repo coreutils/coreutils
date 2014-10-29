@@ -32,14 +32,14 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-# Wait up to 6.3s for tail to start with diagnostic:
+# Wait up to 12.7s for tail to start with diagnostic:
 # tail: cannot open 'missing/file' for reading: No such file or directory
 tail_re='cannot open' retry_delay_ check_tail_output .1 7 || fail=1
 
 mkdir missing || fail=1
 (cd missing && echo x > file)
 
-# Wait up to 6.3s for this to appear in the output:
+# Wait up to 12.7s for this to appear in the output:
 # "tail: '...' has appeared;  following end of new file"
 tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
   { echo "$0: file: unexpected delay?"; cat out; fail=1; }

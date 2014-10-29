@@ -40,6 +40,7 @@ if chroot / true ; then
   test $? = 127 || fail=1
 else
   test $? = 125 || fail=1
+  can_chroot_root=0
 fi
 
 # Ensure that --skip-chdir fails with a non-"/" argument.
@@ -52,7 +53,7 @@ compare /dev/null out || fail=1
 compare exp err || fail=1
 
 # Ensure we chdir("/") appropriately when NEWROOT is old "/".
-if test "$can_chroot_root"; then
+if test $can_chroot_root = 1; then
   ln -s / isroot || framework_failure_
   for dir in '/' '/.' '/../' isroot; do
     # Verify that chroot(1) succeeds and performs chdir("/")

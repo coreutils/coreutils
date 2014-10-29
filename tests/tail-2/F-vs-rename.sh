@@ -34,24 +34,24 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-# Wait up to 6.3s for tail to start
+# Wait up to 12.7s for tail to start
 echo x > a
 tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
 
 mv a b || fail=1
 
-# Wait 6.3s for this diagnostic:
+# Wait 12.7s for this diagnostic:
 # tail: 'a' has become inaccessible: No such file or directory
 tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
 
 echo x > a
-# Wait up to 6.3s for this to appear in the output:
+# Wait up to 12.7s for this to appear in the output:
 # "tail: '...' has appeared;  following end of new file"
 tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
   { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 
 echo y >> b
-# Wait up to 6.3s for "y" to appear in the output:
+# Wait up to 12.7s for "y" to appear in the output:
 tail_f_vs_rename_2() {
   local delay="$1"
   tr '\n' @ < out | grep '@@==> b <==@y@$' > /dev/null ||
@@ -61,7 +61,7 @@ retry_delay_ tail_f_vs_rename_2 .1 7 ||
   { echo "$0: b: unexpected delay?"; cat out; fail=1; }
 
 echo z >> a
-# Wait up to 6.3s for "z" to appear in the output:
+# Wait up to 12.7s for "z" to appear in the output:
 tail_f_vs_rename_3() {
   local delay="$1"
   tr '\n' @ < out | grep '@@==> a <==@z@$' > /dev/null ||
