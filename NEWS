@@ -32,6 +32,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  df no longer suppresses separate exports of the same remote device, as
+  these are generally explicitly mounted.  The --total option does still
+  suppress duplicate remote file systems.
+  [suppression was introduced in coreutils-8.21]
+
   mv no longer supports moving a file to a hardlink, instead issuing an error.
   The implementation was susceptible to races in the presence of multiple mv
   instances, which could result in both hardlinks being deleted.  Also on case

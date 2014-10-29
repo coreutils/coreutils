@@ -640,18 +640,28 @@ filter_mount_list (bool devices_only)
 
           if (devlist)
             {
-                  /* let "real" devices with '/' in the name win.  */
-              if ((strchr (me->me_devname, '/')
-                   && ! strchr (devlist->me->me_devname, '/'))
-                  /* let a shorter mountdir win.  */
-                  || (strlen (devlist->me->me_mountdir)
-                      > strlen (me->me_mountdir))
-                  /* let an entry overmounted on a different device win...  */
-                  || (! STREQ (devlist->me->me_devname, me->me_devname)
-                      /* ... but only when matching an existing mount point, to
-                      avoid problematic replacement when given inaccurate mount
-                      lists, seen with some chroot environments for example.  */
-                      && STREQ (me->me_mountdir, devlist->me->me_mountdir)))
+              if (! print_grand_total && me->me_remote && devlist->me->me_remote
+                  && ! STREQ (devlist->me->me_devname, me->me_devname))
+                {
+                  /* Don't discard remote entries with different locations,
+                     as these are more likely to be explicitly mounted.
+                     However avoid this when producing a total to give
+                     a more accurate value in that case.  */
+                }
+              else if ((strchr (me->me_devname, '/')
+                       /* let "real" devices with '/' in the name win.  */
+                        && ! strchr (devlist->me->me_devname, '/'))
+                       /* let a shorter mountdir win.  */
+                       || (strlen (devlist->me->me_mountdir)
+                           > strlen (me->me_mountdir))
+                       /* let an entry overmounted on a new device win...  */
+                       || (! STREQ (devlist->me->me_devname, me->me_devname)
+                           /* ... but only when matching an existing mnt point,
+                              to avoid problematic replacement when given
+                              inaccurate mount lists, seen with some chroot
+                              environments for example.  */
+                           && STREQ (me->me_mountdir,
+                                     devlist->me->me_mountdir)))
                 {
                   /* Discard mount entry for existing device.  */
                   discard_me = devlist->me;
@@ -1403,7 +1413,6 @@ or all file systems by default.\n\
   -B, --block-size=SIZE  scale sizes by SIZE before printing them; e.g.,\n\
                            '-BM' prints sizes in units of 1,048,576 bytes;\n\
                            see SIZE format below\n\
-      --total           produce a grand total\n\
   -h, --human-readable  print sizes in powers of 1024 (e.g., 1023M)\n\
   -H, --si              print sizes in powers of 1000 (e.g., 1.1G)\n\
 "), stdout);
@@ -1419,6 +1428,12 @@ or all file systems by default.\n\
                                or print all fields if FIELD_LIST is omitted.\n\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
+"), stdout);
+      fputs (_("\
+      --total           elide all entries insignificant to available space,\n\
+                          and produce a grand total\n\
+"), stdout);
+      fputs (_("\
   -t, --type=TYPE       limit listing to file systems of type TYPE\n\
   -T, --print-type      print file system type\n\
   -x, --exclude-type=TYPE   limit listing to file systems not of type TYPE\n\

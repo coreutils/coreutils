@@ -26,7 +26,12 @@ require_gcc_shared_
 df --local || skip_ "df fails"
 
 export CU_NONROOT_FS=$(df --local --output=target 2>&1 | grep /. | head -n1)
-test -z "$CU_NONROOT_FS" && unique_entries=1 || unique_entries=2
+export CU_REMOTE_FS=$(df --local --output=target 2>&1 | grep /. |
+                      tail -n+2 | head -n1)
+
+unique_entries=1
+test -z "$CU_NONROOT_FS" || unique_entries=$(expr $unique_entries + 1)
+test -z "$CU_REMOTE_FS" || unique_entries=$(expr $unique_entries + 2)
 
 grep '^#define HAVE_MNTENT_H 1' $CONFIG_HEADER > /dev/null \
       || skip_ "no mntent.h available to confirm the interface"
@@ -46,6 +51,7 @@ cat > k.c <<'EOF' || framework_failure_
 struct mntent *getmntent (FILE *fp)
 {
   static char *nonroot_fs;
+  static char *remote_fs;
   static int done;
 
   /* Prove that LD_PRELOAD works. */
@@ -63,6 +69,9 @@ struct mntent *getmntent (FILE *fp)
     {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT", .mnt_type="fstype1"},
     {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT", .mnt_type="fstype2"},
     {.mnt_fsname="netns",   .mnt_dir="net:[1234567]"},
+    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE"},
+    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE"},
+    {.mnt_fsname="rem:ote2",.mnt_dir="/REMOTE"},
   };
 
   if (done == 1)
@@ -70,17 +79,26 @@ struct mntent *getmntent (FILE *fp)
       nonroot_fs = getenv ("CU_NONROOT_FS");
       if (!nonroot_fs || !*nonroot_fs)
         nonroot_fs = "/"; /* merge into / entries.  */
+
+      remote_fs = getenv ("CU_REMOTE_FS");
     }
 
   if (done == 1 && !getenv ("CU_TEST_DUPE_INVALID"))
     done++;  /* skip the first entry.  */
 
-  while (done++ <= 7)
+  while (done++ <= 10)
     {
       if (!mntents[done-2].mnt_type)
         mntents[done-2].mnt_type = "-";
       if (STREQ (mntents[done-2].mnt_dir, "/NONROOT"))
         mntents[done-2].mnt_dir = nonroot_fs;
+      if (STREQ (mntents[done-2].mnt_dir, "/REMOTE"))
+        {
+          if (!remote_fs || !*remote_fs)
+            continue;
+          else
+            mntents[done-2].mnt_dir = remote_fs;
+        }
       return &mntents[done-2];
     }
 
@@ -102,6 +120,12 @@ test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 LD_PRELOAD=./k.so df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
+# With --total we should suppress the duplicate but separate remote file system
+LD_PRELOAD=./k.so df --total >out || fail=1
+test "$CU_REMOTE_FS" && elide_remote=1 || elide_remote=0
+test $(wc -l <out) -eq $(expr 2 + $unique_entries - $elide_remote) ||
+  { fail=1; cat out; }
+
 # Ensure we don't fail when unable to stat (currently) unavailable entries
 LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
@@ -118,7 +142,8 @@ test $(grep -c 'virtfs2.*fstype2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1
-test $(wc -l <out) -eq 6 || { fail=1; cat out; }
+total_fs=6; test "$CU_REMOTE_FS" && total_fs=$(expr $total_fs + 3)
+test $(wc -l <out) -eq $total_fs || { fail=1; cat out; }
 # Ensure placeholder "-" values used for the eclipsed "virtfs"
 test $(grep -c 'virtfs *-' <out) -eq 1 || { fail=1; cat out; }
 

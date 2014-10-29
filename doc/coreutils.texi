@@ -11205,8 +11205,7 @@ Non-integer quantities are rounded up to the next higher unit.
 For bind mounts and without arguments, @command{df} only outputs the statistics
 for that device with the shortest mount point name in the list of file systems
 (@var{mtab}), i.e., it hides duplicate entries, unless the @option{-a} option is
-specified.  Remote file systems, such as NFS, are treated the same way as local
-ones; only one mount entry per remote file system is shown by default.
+specified.
 
 With the same logic, @command{df} elides a mount entry of a dummy pseudo device
 if there is another mount entry of a real block device for that mount point with
@@ -11247,19 +11246,6 @@ due to permissions of the mount point etc.
 @cindex file system sizes
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
-
-@item --total
-@opindex --total
-@cindex grand total of disk size, usage and available space
-Print a grand total of all arguments after all arguments have
-been processed.  This can be used to find out the total disk size, usage
-and available space of all listed devices.
-
-For the grand total line, @command{df} prints @samp{"total"} into the
-@var{source} column, and @samp{"-"} into the @var{target} column.
-If there is no @var{source} column (see @option{--output}), then
-@command{df} prints @samp{"total"} into the @var{target} column,
-if present.
 
 @optHumanReadable
 
@@ -11400,6 +11386,21 @@ Invoke the @code{sync} system call before getting any usage data.  On
 some systems (notably SunOS), doing this yields more up to date results,
 but in general this option makes @command{df} much slower, especially when
 there are many or very busy file systems.
+
+@item --total
+@opindex --total
+@cindex grand total of disk size, usage and available space
+Print a grand total of all arguments after all arguments have
+been processed.  This can be used to find out the total disk size, usage
+and available space of all listed devices.  If no arguments are specified
+df will try harder to elide file systems insignificant to the total
+available space, by suppressing duplicate remote file systems.
+
+For the grand total line, @command{df} prints @samp{"total"} into the
+@var{source} column, and @samp{"-"} into the @var{target} column.
+If there is no @var{source} column (see @option{--output}), then
+@command{df} prints @samp{"total"} into the @var{target} column,
+if present.
 
 @item -t @var{fstype}
 @itemx --type=@var{fstype}
