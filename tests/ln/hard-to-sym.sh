@@ -29,24 +29,30 @@ ln -s -L -P symlink2 symlink3 || fail=1
 
 # ===================================================
 # ensure that -L follows symlinks, and overrides -P
-ln -P -L symlink3 hard-to-a || fail=1
-ls=$(ls -lG hard-to-a)x
-case "$ls" in
-  *'hard-to-ax') ;;
-  *'hard-to-a -> '*x) fail=1 ;;
-  *) framework_failure_ ;;
-esac
+if ln -P -L symlink3 hard-to-a; then
+  ls=$(ls -lG hard-to-a)x
+  case "$ls" in
+    *'hard-to-ax') ;;
+    *'hard-to-a -> '*x) fail=1 ;;
+    *) framework_failure_ ;;
+  esac
+else
+  fail=1
+fi
 
 # ===================================================
 # ensure that -P links (or at least duplicates) symlinks, and overrides -L
-ln -L -P symlink3 hard-to-3 || fail=1
-ls=$(ls -lG hard-to-3)x
-case "$ls" in
-  *'hard-to-3 -> symlink2x') ;;
-  *'hard-to-3x') fail=1 ;;
-  *'hard-to-3 -> '*x) fail=1 ;;
-  *) framework_failure_ ;;
-esac
+if ln -L -P symlink3 hard-to-3; then
+  ls=$(ls -lG hard-to-3)x
+  case "$ls" in
+    *'hard-to-3 -> symlink2x') ;;
+    *'hard-to-3x') fail=1 ;;
+    *'hard-to-3 -> '*x) fail=1 ;;
+    *) framework_failure_ ;;
+  esac
+else
+  fail=1
+fi
 
 # ===================================================
 # Create a hard link to a dangling symlink.
