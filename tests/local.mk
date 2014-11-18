@@ -605,7 +605,6 @@ all_tests =					\
   tests/mv/hard-3.sh				\
   tests/mv/hard-4.sh				\
   tests/mv/hard-link-1.sh			\
-  tests/mv/hard-verbose.sh			\
   tests/mv/i-1.pl				\
   tests/mv/i-2.sh				\
   tests/mv/i-3.sh				\

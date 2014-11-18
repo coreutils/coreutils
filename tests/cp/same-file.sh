@@ -44,7 +44,8 @@ exec 3>&1 1> actual
 # FIXME: This should be bigger: like more than 8k
 contents=XYZ
 
-for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
+for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' \
+            'foo hardlink' 'hlsl sl2'; do
   for options in '' -d -f -df --rem -b -bd -bf -bdf \
                  -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
     case $args$options in
@@ -70,11 +71,11 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     # cont'd  Instead, skip them only on systems for which link does
     # dereference a symlink.  Detect and skip such tests here.
     case $hard_link_to_symlink_does_the_deref:$args:$options in
-      'yes:sl1 sl2:-fl')
+      yes:*sl2:-fl)
         continue ;;
-      'yes:sl1 sl2:-bl')
+      yes:*sl2:-bl)
         continue ;;
-      'yes:sl1 sl2:-bfl')
+      yes:*sl2:-bfl)
         continue ;;
     esac
 
@@ -86,6 +87,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     case "$args" in *hardlink*) ln foo hardlink ;; esac
     case "$args" in *sl1*) ln -s foo sl1;; esac
     case "$args" in *sl2*) ln -s foo sl2;; esac
+    case "$args" in *hlsl*) ln sl2 hlsl;; esac
     (
       (
         # echo 1>&2 cp $options $args
@@ -210,6 +212,24 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bdl (foo hardlink)
 0 -bfl (foo hardlink)
 0 -bdfl (foo hardlink)
+
+1 [cp: 'hlsl' and 'sl2' are the same file] (foo hlsl -> foo sl2 -> foo)
+0 -d (foo hlsl -> foo sl2 -> foo)
+1 -f [cp: 'hlsl' and 'sl2' are the same file] (foo hlsl -> foo sl2 -> foo)
+0 -df (foo hlsl -> foo sl2 -> foo)
+0 --rem (foo hlsl -> foo sl2)
+0 -b (foo hlsl -> foo sl2 sl2.~1~ -> foo)
+0 -bd (foo hlsl -> foo sl2 -> foo sl2.~1~ -> foo)
+0 -bf (foo hlsl -> foo sl2 sl2.~1~ -> foo)
+0 -bdf (foo hlsl -> foo sl2 -> foo sl2.~1~ -> foo)
+1 -l [cp: cannot create hard link 'sl2' to 'hlsl'] (foo hlsl -> foo sl2 -> foo)
+0 -dl (foo hlsl -> foo sl2 -> foo)
+0 -fl (foo hlsl -> foo sl2)
+0 -dfl (foo hlsl -> foo sl2 -> foo)
+0 -bl (foo hlsl -> foo sl2 sl2.~1~ -> foo)
+0 -bdl (foo hlsl -> foo sl2 -> foo)
+0 -bfl (foo hlsl -> foo sl2 sl2.~1~ -> foo)
+0 -bdfl (foo hlsl -> foo sl2 -> foo)
 
 EOF
 

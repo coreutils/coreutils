@@ -25,18 +25,19 @@ ff2=mvforce2
 echo force-contents > $ff || framework_failure_
 ln $ff $ff2 || framework_failure_
 
-# This mv command should exit nonzero.
-mv $ff $ff > out 2>&1 && fail=1
+# mv should fail for the same name, or separate hardlinks as in
+# both cases rename() will do nothing and return success.
+# One could unlink(src) in the hardlink case, but that would
+# introduce races with overlapping mv instances removing both hardlinks.
 
-cat > exp <<EOF
-mv: '$ff' and '$ff' are the same file
-EOF
+for dest in $ff $ff2; do
+  # This mv command should exit nonzero.
+  mv $ff $dest > out 2>&1 && fail=1
 
-compare exp out || fail=1
-test $(cat $ff) = force-contents || fail=1
+  printf "mv: '$ff' and '$dest' are the same file\n" > exp
+  compare exp out || fail=1
 
-# This should succeed, even though the source and destination
-# device and inodes are the same.
-mv $ff $ff2 || fail=1
+  test $(cat $ff) = force-contents || fail=1
+done
 
 Exit $fail

@@ -23,6 +23,7 @@ for i in a b; do
   echo $i > $i || framework_failure_
 done
 echo y > y || framework_failure_
+echo n > n || framework_failure_
 
 mv -i a b < y >/dev/null 2>&1 || fail=1
 
@@ -32,18 +33,15 @@ case "$(cat b)" in
   *) fail=1 ;;
 esac
 
-# Ensure that mv -i a b works properly with 'n' and 'y'
-# responses, even when a and b are hard links to the same file.
-# This 'n' test would fail (no prompt) for coreutils-5.0.1 through 5.3.0.
-echo n > n
+# Ensure that mv -i a b works properly with 'n' and 'y' responses,
+# when a and b are hard links to the same file.
 rm -f a b
 echo a > a
 ln a b
-mv -i a b < n >/dev/null 2>&1 || fail=1
+mv -i a b < y 2>err && fail=1
 test -r a || fail=1
 test -r b || fail=1
-mv -i a b < y >/dev/null 2>&1 || fail=1
-test -r a && fail=1
-test -r b || fail=1
+printf "mv: 'a' and 'b' are the same file\n" > exp
+compare exp err || fail=1
 
 Exit $fail

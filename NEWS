@@ -30,6 +30,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd accepts a new status=progress level to print data transfer statistics
   on stderr approximately every second.
 
+** Changes in behavior
+
+   mv no longer supports moving a file to a hardlink, as currently that
+   is only supported through unlinking the source file.  That's racy
+   in the presence of multiple mv instances, which could result in both
+   hardlinks being deleted.  This feature was added in coreutils-5.0.1.
+
 ** Improvements
 
   cp,install,mv will convert smaller runs of NULs in the input to holes,

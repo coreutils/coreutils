@@ -1407,20 +1407,12 @@ close_src_desc:
    copy a regular file onto a symlink that points to it.
    Try to minimize the cost of this function in the common case.
    Set *RETURN_NOW if we've determined that the caller has no more
-   work to do and should return successfully, right away.
-
-   Set *UNLINK_SRC if we've determined that the caller wants to do
-   'rename (a, b)' where 'a' and 'b' are distinct hard links to the same
-   file. In that case, the caller should try to unlink 'a' and then return
-   successfully.  Ideally, we wouldn't have to do that, and we'd be
-   able to rely on rename to remove the source file.  However, POSIX
-   mistakenly requires that such a rename call do *nothing* and return
-   successfully.  */
+   work to do and should return successfully, right away.  */
 
 static bool
 same_file_ok (char const *src_name, struct stat const *src_sb,
               char const *dst_name, struct stat const *dst_sb,
-              const struct cp_options *x, bool *return_now, bool *unlink_src)
+              const struct cp_options *x, bool *return_now)
 {
   const struct stat *src_sb_link;
   const struct stat *dst_sb_link;
@@ -1431,7 +1423,6 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
   bool same = SAME_INODE (*src_sb, *dst_sb);
 
   *return_now = false;
-  *unlink_src = false;
 
   /* FIXME: this should (at the very least) be moved into the following
      if-block.  More likely, it should be removed, because it inhibits
@@ -1463,14 +1454,11 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
               /* Here we have two symlinks that are hard-linked together,
                  and we're not making backups.  In this unusual case, simply
                  returning true would lead to mv calling "rename(A,B)",
-                 which would do nothing and return 0.  I.e., A would
-                 not be removed.  Hence, the solution is to tell the
-                 caller that all it must do is unlink A and return.  */
+                 which would do nothing and return 0.  */
               if (same_link)
                 {
-                  *unlink_src = true;
                   *return_now = true;
-                  return true;
+                  return ! x->move_mode;
                 }
             }
 
@@ -1558,27 +1546,21 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
     return true;
 #endif
 
-  /* They may refer to the same file if we're in move mode and the
-     target is a symlink.  That is ok, since we remove any existing
-     destination file before opening it -- via 'rename' if they're on
-     the same file system, via 'unlink (DST_NAME)' otherwise.
-     It's also ok if they're distinct hard links to the same file.  */
   if (x->move_mode || x->unlink_dest_before_opening)
     {
+      /* They may refer to the same file if we're in move mode and the
+         target is a symlink.  That is ok, since we remove any existing
+         destination file before opening it -- via 'rename' if they're on
+         the same file system, via 'unlink (DST_NAME)' otherwise.  */
       if (S_ISLNK (dst_sb_link->st_mode))
         return true;
 
+      /* It's not ok if they're distinct hard links to the same file as
+         this causes a race condition and we may lose data in this case.  */
       if (same_link
           && 1 < dst_sb_link->st_nlink
           && ! same_name (src_name, dst_name))
-        {
-          if (x->move_mode)
-            {
-              *unlink_src = true;
-              *return_now = true;
-            }
-          return true;
-        }
+        return ! x->move_mode;
     }
 
   /* If neither is a symlink, then it's ok as long as they aren't
@@ -1939,11 +1921,10 @@ copy_internal (char const *src_name, char const *dst_name,
         { /* Here, we know that dst_name exists, at least to the point
              that it is stat'able or lstat'able.  */
           bool return_now;
-          bool unlink_src;
 
           have_dst_lstat = !use_stat;
           if (! same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
-                              x, &return_now, &unlink_src))
+                              x, &return_now))
             {
               error (0, 0, _("%s and %s are the same file"),
                      quote_n (0, src_name), quote_n (1, dst_name));
@@ -2002,21 +1983,13 @@ copy_internal (char const *src_name, char const *dst_name,
              cp and mv treat -i and -f differently.  */
           if (x->move_mode)
             {
-              if (abandon_move (x, dst_name, &dst_sb)
-                  || (unlink_src && unlink (src_name) == 0))
+              if (abandon_move (x, dst_name, &dst_sb))
                 {
                   /* Pretend the rename succeeded, so the caller (mv)
                      doesn't end up removing the source file.  */
                   if (rename_succeeded)
                     *rename_succeeded = true;
-                  if (unlink_src && x->verbose)
-                    printf (_("removed %s\n"), quote (src_name));
                   return true;
-                }
-              if (unlink_src)
-                {
-                  error (0, errno, _("cannot remove %s"), quote (src_name));
-                  return false;
                 }
             }
           else

@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that mv removes a in this case: touch a; ln a b; mv a b
+# ensure that mv maintains a in this case: touch a; ln a b; mv a b
 
 # Copyright (C) 2003-2014 Free Software Foundation, Inc.
 
@@ -21,15 +21,18 @@ print_ver_ mv
 touch a || framework_failure_
 ln a b || framework_failure_
 
+# Between coreutils-5.0 and coreutils-8.24, 'a' would be removed.
+# Before coreutils-5.0.1 the issue would not have been diagnosed.
+# We don't emulate the rename(a,b) with unlink(a) as that would
+# introduce races with overlapping mv instances removing both links.
+mv a b 2>err && fail=1
+printf "mv: 'a' and 'b' are the same file\n" > exp
+compare exp err || fail=1
 
-mv a b || fail=1
-
-# In coreutils-5.0 and earlier, a would not be removed.
-test -r a && fail=1
+test -r a || fail=1
 test -r b || fail=1
 
-# Make sure it works also with --backup.
-ln b a
+# Make sure it works with --backup.
 mv --backup=simple a b || fail=1
 test -r a && fail=1
 test -r b || fail=1
