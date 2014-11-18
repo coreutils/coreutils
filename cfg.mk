@@ -336,8 +336,8 @@ sc_strftime_check:
 	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
 	  { echo N;							\
-	    info libc date calendar format 2>/dev/null|grep '^    `%.'\'\
-	      | $(extract_char); } | sort > $@-info;			\
+	    info libc date calendar format 2>/dev/null			\
+	      | grep "^ *['\`]%.'$$"| $(extract_char); }| sort >$@-info;\
 	  if test $$(stat --format %s $@-info) != 2; then		\
 	    diff -u $@-src $@-info || exit 1;				\
 	  else								\
