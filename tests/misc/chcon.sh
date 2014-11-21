@@ -44,7 +44,7 @@ stat --printf='g|%C\n' g >> out || fail=1
 # Change the individual parts of the context, one by one.
 u2=user_u
 r2=object_r
-t2=file_t
+t2=unlabeled_t
 for i in --user=$u2 --role=$r2 --type=$t2 --range=$range; do
   chcon $i f || fail=1
   stat --printf="f|$i|"'%C\n' f >> out || fail=1
@@ -63,8 +63,8 @@ f|--user=$u2|$u2:$r1:$t1:$range
 f|--role=$r2|$u2:$r2:$t1:$range
 f|--type=$t2|$u2:$r2:$t2:$range
 f|--range=$range|$u2:$r2:$t2:$range
-f|-uroot|root:object_r:file_t:$range
-f|-robject_r|root:object_r:file_t:$range
+f|-uroot|root:object_r:$t2:$range
+f|-robject_r|root:object_r:$t2:$range
 f|-ttmp_t|root:object_r:tmp_t:$range
 EOF
 
