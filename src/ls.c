@@ -4929,7 +4929,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -Z, --context              print any security context of each file\n\
-  -1                         list one file per line\n\
+  -1                         list one file per line.  Avoid '\\n' with -q or -b\
+\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
