@@ -32,10 +32,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-   mv no longer supports moving a file to a hardlink, as currently that
-   is only supported through unlinking the source file.  That's racy
-   in the presence of multiple mv instances, which could result in both
-   hardlinks being deleted.  This feature was added in coreutils-5.0.1.
+  mv no longer supports moving a file to a hardlink, instead issuing an error.
+  The implementation was susceptible to races in the presence of multiple mv
+  instances, which could result in both hardlinks being deleted.  Also on case
+  insensitive file systems like HFS, mv would just remove a hardlinked 'file'
+  if called like `mv file File`.  The feature was added in coreutils-5.0.1.
 
 ** Improvements
 

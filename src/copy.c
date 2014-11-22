@@ -1526,6 +1526,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
           return true;
         }
 
+      /* FIXME: What about case insensitive file systems ?  */
       return ! same_name (src_name, dst_name);
     }
 

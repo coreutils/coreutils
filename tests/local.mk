@@ -127,6 +127,7 @@ all_root_tests =				\
   tests/misc/truncate-owned-by-other.sh		\
   tests/mkdir/writable-under-readonly.sh	\
   tests/mkdir/smack-root.sh			\
+  tests/mv/hardlink-case.sh			\
   tests/mv/sticky-to-xpart.sh			\
   tests/rm/fail-2eperm.sh			\
   tests/rm/no-give-up.sh			\
