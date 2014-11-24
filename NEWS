@@ -20,6 +20,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   head, od, split, tac, tail, and wc no longer mishandle input from files in
   /proc and /sys file systems that report somewhat-incorrect file sizes.
 
+  paste no longer truncates output for large input files.  This would happen
+  for example with files larger than 4GiB on 32 bit systems with a '\n'
+  character at the 4GiB position.
+  [the bug dates back to the initial implementation]
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory

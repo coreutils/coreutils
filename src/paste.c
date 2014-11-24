@@ -235,7 +235,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
         {
           int chr IF_LINT ( = 0);	/* Input character. */
           int err IF_LINT ( = 0);	/* Input errno value.  */
-          size_t line_length = 0;	/* Number of chars in line. */
+          bool sometodo = false;	/* Input chars to process.  */
 
           if (fileptr[i])
             {
@@ -250,7 +250,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 
               while (chr != EOF)
                 {
-                  line_length++;
+                  sometodo = true;
                   if (chr == '\n')
                     break;
                   xputchar (chr);
@@ -259,7 +259,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
                 }
             }
 
-          if (line_length == 0)
+          if (! sometodo)
             {
               /* EOF, read error, or closed file.
                  If an EOF or error, close the file.  */
