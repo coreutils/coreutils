@@ -577,7 +577,8 @@ src/version.h: Makefile
 DISTCLEANFILES += src/coreutils.h
 src/coreutils.h: Makefile
 	$(AM_V_GEN)rm -f $@
-	$(AM_V_at)for prog in $(single_binary_progs); do	\
+	$(AM_V_at)for prog in x $(single_binary_progs); do	\
+	  test $$prog = x && continue;				\
 	  prog=`basename $$prog`;				\
 	  main=`echo $$prog | tr '[' '_'`;			\
 	  echo "SINGLE_BINARY_PROGRAM(\"$$prog\", $$main)";	\
