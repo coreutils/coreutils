@@ -332,18 +332,18 @@ main (int argc, char **argv)
                quote ("/"));
     }
 
-  size_t n_files = argc - optind;
+  uintmax_t n_files = argc - optind;
   char **file =  argv + optind;
 
   if (prompt_once && (x.recursive || 3 < n_files))
     {
       fprintf (stderr,
                (x.recursive
-                ? ngettext ("%s: remove %zu argument recursively? ",
-                            "%s: remove %zu arguments recursively? ",
+                ? ngettext ("%s: remove %"PRIuMAX" argument recursively? ",
+                            "%s: remove %"PRIuMAX" arguments recursively? ",
                             select_plural (n_files))
-                : ngettext ("%s: remove %zu argument? ",
-                            "%s: remove %zu arguments? ",
+                : ngettext ("%s: remove %"PRIuMAX" argument? ",
+                            "%s: remove %"PRIuMAX" arguments? ",
                             select_plural (n_files))),
                program_name, n_files);
       if (!yesno ())

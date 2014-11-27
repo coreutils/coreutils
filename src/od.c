@@ -1962,7 +1962,8 @@ main (int argc, char **argv)
     }
 
 #ifdef DEBUG
-  printf ("lcm=%d, width_per_block=%zu\n", l_c_m, width_per_block);
+  printf ("lcm=%d, width_per_block=%"PRIuMAX"\n", l_c_m,
+          (uintmax_t) width_per_block);
   for (i = 0; i < n_specs; i++)
     {
       int fields_per_block = bytes_per_block / width_bytes[spec[i].size];

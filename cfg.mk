@@ -213,14 +213,15 @@ sc_check-I18N-AUTHORS:
 		    '$$(LIBICONV)' 1>&2; exit 1; };			\
 	  done
 
-# Ensure %j is not used for intmax_t as it's not universally supported.
-# There are issues on HPUX for example.  But note that %ju was used between
-# coreutils 8.13 (2011-10) and 8.20 (2012-10) without any reported issue,
-# and the particular issue this check is associated with was for %*jx.
-# So we may be able to relax this restriction soon.
-sc_prohibit-j-printf-format:
-	@cd $(srcdir)/src && GIT_PAGER= git grep -n '%[0*]*j[udx]' *.c	\
-	  && { echo '$(ME): Use PRI*MAX instead of %j' 1>&2; exit 1; }  \
+# Disallow the C99 printf size specifiers %z and %j as they're not portable.
+# The gnulib printf replacement does support them, however the printf
+# replacement is not currently explicitly depended on by the gnulib error()
+# module for example.  Also we use fprintf() in a few places to output simple
+# formats but don't use the gnulib module as it is seen as overkill at present.
+# We'd have to adjust the above gnulib items before disabling this.
+sc_prohibit-c99-printf-format:
+	@cd $(srcdir)/src && GIT_PAGER= git grep -n '%[0*]*[jz][udx]' *.c    \
+	  && { echo '$(ME): Use PRI*MAX instead of %j or %z' 1>&2; exit 1; } \
 	  || :
 
 # Ensure the alternative __attribute (keyword) form isn't used as

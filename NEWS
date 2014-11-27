@@ -25,6 +25,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   character at the 4GiB position.
   [the bug dates back to the initial implementation]
 
+  rm indicates the correct number of arguments in its confirmation prompt,
+  on all platforms.  [bug introduced in coreutils-8.22]
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory

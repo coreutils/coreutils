@@ -158,7 +158,7 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
 {
 #define DEFAULT_SUFFIX_LENGTH 2
 
-  size_t suffix_needed = 0;
+  uintmax_t suffix_needed = 0;
 
   /* The suffix auto length feature is incompatible with
      a user specified start value as the generated suffixes
@@ -183,7 +183,7 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
       if (suffix_length < suffix_needed)
         {
           error (EXIT_FAILURE, 0,
-                 _("the suffix length needs to be at least %zu"),
+                 _("the suffix length needs to be at least %"PRIuMAX),
                  suffix_needed);
         }
       suffix_auto = false;
