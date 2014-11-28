@@ -697,7 +697,7 @@ alloc_ibuf (void)
   if (!real_buf)
     error (EXIT_FAILURE, 0,
            _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
-           input_blocksize, human_size (input_blocksize));
+           (uintmax_t) input_blocksize, human_size (input_blocksize));
 
   real_buf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
@@ -720,7 +720,7 @@ alloc_obuf (void)
         error (EXIT_FAILURE, 0,
                _("memory exhausted by output buffer of size %"PRIuMAX
                  " bytes (%s)"),
-               output_blocksize, human_size (output_blocksize));
+               (uintmax_t) output_blocksize, human_size (output_blocksize));
       obuf = ptr_align (real_obuf, page_size);
     }
   else
