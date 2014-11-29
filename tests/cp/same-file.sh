@@ -36,7 +36,7 @@ ln dangling-slink hard-link > /dev/null 2>&1 \
 rm -f no-such dangling-slink hard-link
 
 test $hard_link_to_symlink_does_the_deref = yes \
-    && remove_these_sed='/^0 -[bf]*l .*sl1 ->/d' \
+    && remove_these_sed='/^0 -[bf]*l .*sl1 ->/d; /hlsl/d' \
     || remove_these_sed='/^ELIDE NO TEST OUTPUT/d'
 
 exec 3>&1 1> actual
@@ -71,11 +71,13 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' \
     # cont'd  Instead, skip them only on systems for which link does
     # dereference a symlink.  Detect and skip such tests here.
     case $hard_link_to_symlink_does_the_deref:$args:$options in
-      yes:*sl2:-fl)
+      'yes:sl1 sl2:-fl')
         continue ;;
-      yes:*sl2:-bl)
+      'yes:sl1 sl2:-bl')
         continue ;;
-      yes:*sl2:-bfl)
+      'yes:sl1 sl2:-bfl')
+        continue ;;
+      yes:hlsl*)
         continue ;;
     esac
 
