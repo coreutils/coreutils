@@ -419,6 +419,27 @@ print_size (const struct duinfo *pdui, const char *string)
   fflush (stdout);
 }
 
+/* This function checks whether any of the directories in the cycle that
+   fts detected is a mount point.  */
+
+static bool
+mount_point_in_fts_cycle (FTSENT const *ent)
+{
+  FTSENT const *cycle_ent = ent->fts_cycle;
+
+  while (ent && ent != cycle_ent)
+    {
+      if (di_set_lookup (di_mnt, ent->fts_statp->st_dev,
+                         ent->fts_statp->st_ino) > 0)
+        {
+          return true;
+        }
+      ent = ent->fts_parent;
+    }
+
+  return false;
+}
+
 /* This function is called once for every file system object that fts
    encounters.  fts does a depth-first traversal.  This function knows
    that and accumulates per-directory totals based on changes in
@@ -516,7 +537,7 @@ process_file (FTS *fts, FTSENT *ent)
         case FTS_DC:
           /* If not following symlinks and not a (bind) mount point.  */
           if (cycle_warning_required (fts, ent)
-              && ! di_set_lookup (di_mnt, sb->st_dev, sb->st_ino))
+              && ! mount_point_in_fts_cycle (ent))
             {
               emit_cycle_warning (file);
               return false;
