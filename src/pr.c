@@ -768,12 +768,12 @@ static struct option const long_options[] =
 /* Return the number of columns that have either an open file or
    stored lines. */
 
-static int _GL_ATTRIBUTE_PURE
+static unsigned int _GL_ATTRIBUTE_PURE
 cols_ready_to_print (void)
 {
   COLUMN *q;
-  int i;
-  int n;
+  unsigned int i;
+  unsigned int n;
 
   n = 0;
   for (q = column_vector, i = 0; i < columns; ++q, ++i)
@@ -1815,7 +1815,7 @@ print_page (void)
               --p->lines_to_print;
               if (p->lines_to_print <= 0)
                 {
-                  if (cols_ready_to_print () <= 0)
+                  if (cols_ready_to_print () == 0)
                     break;
                 }
 
@@ -1849,7 +1849,7 @@ print_page (void)
           --lines_left_on_page;
         }
 
-      if (cols_ready_to_print () <= 0 && !extremities)
+      if (cols_ready_to_print () == 0 && !extremities)
         break;
 
       if (double_space && pv)
