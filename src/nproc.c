@@ -25,7 +25,7 @@
 #include "error.h"
 #include "nproc.h"
 #include "quote.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "nproc"
@@ -102,11 +102,7 @@ main (int argc, char **argv)
           break;
 
         case IGNORE_OPTION:
-          if (xstrtoul (optarg, NULL, 10, &ignore, "") != LONGINT_OK)
-            {
-              error (0, 0, _("%s: invalid number to ignore"), optarg);
-              usage (EXIT_FAILURE);
-            }
+          ignore = xdectoumax (optarg, 0, ULONG_MAX, "", _("invalid number"),0);
           break;
 
         default:

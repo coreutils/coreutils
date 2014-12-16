@@ -320,9 +320,9 @@ all_tests =					\
   tests/misc/sha384sum.pl			\
   tests/misc/sha512sum.pl			\
   tests/misc/shred-exact.sh			\
-  tests/misc/shred-negative.sh			\
   tests/misc/shred-passes.sh			\
   tests/misc/shred-remove.sh			\
+  tests/misc/shred-size.sh			\
   tests/misc/shuf.sh				\
   tests/misc/shuf-reservoir.sh			\
   tests/misc/sort.pl				\
@@ -557,6 +557,7 @@ all_tests =					\
   tests/ls/file-type.sh				\
   tests/ls/follow-slink.sh			\
   tests/ls/getxattr-speedup.sh			\
+  tests/ls/hex-option.sh			\
   tests/ls/infloop.sh				\
   tests/ls/inode.sh				\
   tests/ls/m-option.sh				\

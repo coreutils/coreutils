@@ -66,7 +66,7 @@ parse_size (char const *str, size_t *size)
 {
   uintmax_t tmp_size;
   enum strtol_error e = xstrtoumax (str, NULL, 10, &tmp_size, "EGkKMPTYZ0");
-  if (e == LONGINT_OK && tmp_size > SIZE_MAX)
+  if (e == LONGINT_OK && SIZE_MAX < tmp_size)
     e = LONGINT_OVERFLOW;
 
   if (e == LONGINT_OK)
@@ -76,7 +76,7 @@ parse_size (char const *str, size_t *size)
       return 0;
     }
 
-  errno = (e == LONGINT_OVERFLOW ? EOVERFLOW : 0);
+  errno = (e == LONGINT_OVERFLOW ? EOVERFLOW : errno);
   return -1;
 }
 

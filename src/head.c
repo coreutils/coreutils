@@ -38,7 +38,7 @@
 #include "safe-read.h"
 #include "stat-size.h"
 #include "xfreopen.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "head"
@@ -893,7 +893,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
   return ok;
 }
 
-/* Convert a string of decimal digits, N_STRING, with an optional suffinx
+/* Convert a string of decimal digits, N_STRING, with an optional suffix
    to an integral value.  Upon successful conversion,
    return that value.  If it cannot be converted, give a diagnostic and exit.
    COUNT_LINES indicates whether N_STRING is a number of bytes or a number
@@ -902,27 +902,9 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
 static uintmax_t
 string_to_integer (bool count_lines, const char *n_string)
 {
-  strtol_error s_err;
-  uintmax_t n;
-
-  s_err = xstrtoumax (n_string, NULL, 10, &n, "bkKmMGTPEZY0");
-
-  if (s_err == LONGINT_OVERFLOW)
-    {
-      error (EXIT_FAILURE, 0,
-             _("%s: %s is so large that it is not representable"), n_string,
-             count_lines ? _("number of lines") : _("number of bytes"));
-    }
-
-  if (s_err != LONGINT_OK)
-    {
-      error (EXIT_FAILURE, 0, "%s: %s", n_string,
-             (count_lines
-              ? _("invalid number of lines")
-              : _("invalid number of bytes")));
-    }
-
-  return n;
+  return xdectoumax (n_string, 0, UINTMAX_MAX, "bkKmMGTPEZY0",
+                     count_lines ? _("invalid number of lines")
+                                 : _("invalid number of bytes"), 0);
 }
 
 int
@@ -1076,8 +1058,8 @@ main (int argc, char **argv)
   if ( ! count_lines && elide_from_end && OFF_T_MAX < n_units)
     {
       char umax_buf[INT_BUFSIZE_BOUND (n_units)];
-      error (EXIT_FAILURE, 0, _("%s: number of bytes is too large"),
-             umaxtostr (n_units, umax_buf));
+      error (EXIT_FAILURE, EOVERFLOW, "%s: %s", _("invalid number of bytes"),
+             quote (umaxtostr (n_units, umax_buf)));
     }
 
   file_list = (optind < argc

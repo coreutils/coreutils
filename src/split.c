@@ -39,7 +39,7 @@
 #include "safe-read.h"
 #include "sig2str.h"
 #include "xfreopen.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "split"
@@ -1174,19 +1174,20 @@ no_filters:
     }								\
   while (0)
 
+
 /* Parse K/N syntax of chunk options.  */
 
 static void
 parse_chunk (uintmax_t *k_units, uintmax_t *n_units, char *slash)
 {
-  *slash = '\0';
-  if (xstrtoumax (slash + 1, NULL, 10, n_units, "") != LONGINT_OK
-      || *n_units == 0)
-    error (EXIT_FAILURE, 0, _("%s: invalid number of chunks"), slash + 1);
-  if (slash != optarg           /* a leading number is specified.  */
-      && (xstrtoumax (optarg, NULL, 10, k_units, "") != LONGINT_OK
-          || *k_units == 0 || *n_units < *k_units))
-    error (EXIT_FAILURE, 0, _("%s: invalid chunk number"), optarg);
+  *n_units = xdectoumax (slash + 1, 1, UINTMAX_MAX, "",
+                         _("invalid number of chunks"), 0);
+  if (slash != optarg)           /* a leading number is specified.  */
+    {
+      *slash = '\0';
+      *k_units = xdectoumax (optarg, 1, *n_units, "",
+                             _("invalid chunk number"), 0);
+    }
 }
 
 
@@ -1197,7 +1198,7 @@ main (int argc, char **argv)
   size_t in_blk_size = 0;	/* optimal block size of input file device */
   size_t page_size = getpagesize ();
   uintmax_t k_units = 0;
-  uintmax_t n_units;
+  uintmax_t n_units = 0;
 
   static char const multipliers[] = "bEGKkMmPTYZ0";
   int c;
@@ -1231,16 +1232,8 @@ main (int argc, char **argv)
       switch (c)
         {
         case 'a':
-          {
-            unsigned long tmp;
-            if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
-                || SIZE_MAX / sizeof (size_t) < tmp)
-              {
-                error (0, 0, _("%s: invalid suffix length"), optarg);
-                usage (EXIT_FAILURE);
-              }
-            suffix_length = tmp;
-          }
+          suffix_length = xdectoumax (optarg, 0, SIZE_MAX / sizeof (size_t),
+                                      "", _("invalid suffix length"), 0);
           break;
 
         case ADDITIONAL_SUFFIX_OPTION:
@@ -1258,46 +1251,27 @@ main (int argc, char **argv)
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_bytes;
-          if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
-              || n_units == 0)
-            {
-              error (0, 0, _("%s: invalid number of bytes"), optarg);
-              usage (EXIT_FAILURE);
-            }
-          /* If input is a pipe, we could get more data than is possible
-             to write to a single file, so indicate that immediately
-             rather than having possibly future invocations fail.  */
-          if (OFF_T_MAX < n_units)
-            error (EXIT_FAILURE, EFBIG,
-                   _("%s: invalid number of bytes"), optarg);
-
+          /* Limit to OFF_T_MAX, becaue if input is a pipe, we could get more
+             data than is possible to write to a single file, so indicate that
+             immediately rather than having possibly future invocations fail. */
+          n_units = xdectoumax (optarg, 1, OFF_T_MAX, multipliers,
+                                _("invalid number of bytes"), 0);
           break;
 
         case 'l':
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_lines;
-          if (xstrtoumax (optarg, NULL, 10, &n_units, "") != LONGINT_OK
-              || n_units == 0)
-            {
-              error (0, 0, _("%s: invalid number of lines"), optarg);
-              usage (EXIT_FAILURE);
-            }
+          n_units = xdectoumax (optarg, 1, UINTMAX_MAX, "",
+                                _("invalid number of lines"), 0);
           break;
 
         case 'C':
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_byteslines;
-          if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
-              || n_units == 0 || SIZE_MAX < n_units)
-            {
-              error (0, 0, _("%s: invalid number of bytes"), optarg);
-              usage (EXIT_FAILURE);
-            }
-          if (OFF_T_MAX < n_units)
-            error (EXIT_FAILURE, EFBIG,
-                   _("%s: invalid number of bytes"), optarg);
+          n_units = xdectoumax (optarg, 1, MIN (SIZE_MAX, OFF_T_MAX),
+                                multipliers, _("invalid number of bytes"), 0);
           break;
 
         case 'n':
@@ -1320,9 +1294,9 @@ main (int argc, char **argv)
             split_type = type_chunk_bytes;
           if ((slash = strchr (optarg, '/')))
             parse_chunk (&k_units, &n_units, slash);
-          else if (xstrtoumax (optarg, NULL, 10, &n_units, "") != LONGINT_OK
-                   || n_units == 0)
-            error (EXIT_FAILURE, 0, _("%s: invalid number of chunks"), optarg);
+          else
+            n_units = xdectoumax (optarg, 1, UINTMAX_MAX, "",
+                                  _("invalid number of chunks"), 0);
           break;
 
         case 'u':
@@ -1388,15 +1362,8 @@ main (int argc, char **argv)
           break;
 
         case IO_BLKSIZE_OPTION:
-          {
-            uintmax_t tmp_blk_size;
-            if (xstrtoumax (optarg, NULL, 10, &tmp_blk_size,
-                            multipliers) != LONGINT_OK
-                || tmp_blk_size == 0 || SIZE_MAX - page_size < tmp_blk_size)
-              error (0, 0, _("%s: invalid IO block size"), optarg);
-            else
-              in_blk_size = tmp_blk_size;
-          }
+          in_blk_size = xdectoumax (optarg, 1, SIZE_MAX - page_size,
+                                    multipliers, _("invalid IO block size"), 0);
           break;
 
         case VERBOSE_OPTION:
@@ -1427,7 +1394,7 @@ main (int argc, char **argv)
 
   if (n_units == 0)
     {
-      error (0, 0, _("%s: invalid number of lines"), "0");
+      error (0, 0, "%s: %s", _("invalid number of lines"), quote ("0"));
       usage (EXIT_FAILURE);
     }
 
@@ -1505,8 +1472,9 @@ main (int argc, char **argv)
       if (OFF_T_MAX < n_units)
         {
           char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
-          error (EXIT_FAILURE, EFBIG, _("%s: invalid number of chunks"),
-                 umaxtostr (n_units, buffer));
+          error (EXIT_FAILURE, EOVERFLOW, "%s: %s",
+                 _("invalid number of chunks"),
+                 quote (umaxtostr (n_units, buffer)));
         }
       /* increase file_size to n_units here, so that we still process
          any input data, and create empty files for the rest.  */

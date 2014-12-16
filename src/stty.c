@@ -58,6 +58,7 @@
 #include "error.h"
 #include "fd-reopen.h"
 #include "quote.h"
+#include "xdectoint.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -2087,11 +2088,5 @@ visible (cc_t ch)
 static unsigned long int
 integer_arg (const char *s, unsigned long int maxval)
 {
-  unsigned long int value;
-  if (xstrtoul (s, NULL, 0, &value, "bB") != LONGINT_OK || maxval < value)
-    {
-      error (0, 0, _("invalid integer argument %s"), quote (s));
-      usage (EXIT_FAILURE);
-    }
-  return value;
+  return xnumtoumax (s, 0, 0, maxval, "bB", _("invalid integer argument"), 0);
 }

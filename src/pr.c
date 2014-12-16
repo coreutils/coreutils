@@ -322,6 +322,7 @@
 #include "stdio--.h"
 #include "strftime.h"
 #include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pr"
@@ -424,6 +425,8 @@ static bool skip_to_page (uintmax_t page);
 static void print_header (void);
 static void pad_across_to (int position);
 static void add_line_number (COLUMN *p);
+static void getoptnum (const char *n_str, int min, int *num,
+                       const char *errfmt);
 static void getoptarg (char *arg, char switch_char, char *character,
                        int *number);
 static void print_files (int number_of_files, char **av);
@@ -820,18 +823,12 @@ first_last_page (int oi, char c, char const *pages)
 
 /* Parse column count string S, and if it's valid (1 or larger and
    within range of the type of 'columns') set the global variables
-   columns and explicit_columns and return true.
-   Otherwise, exit with a diagnostic.  */
+   columns and explicit_columns.  Otherwise, exit with a diagnostic.  */
+
 static void
 parse_column_count (char const *s)
 {
-  long int tmp_long;
-  if (xstrtol (s, NULL, 10, &tmp_long, "") != LONGINT_OK
-      || !(1 <= tmp_long && tmp_long <= INT_MAX))
-    error (EXIT_FAILURE, 0,
-           _("invalid number of columns: %s"), quote (s));
-
-  columns = tmp_long;
+  getoptnum (s, 1, &columns, _("invalid number of columns"));
   explicit_columns = true;
 }
 
@@ -966,18 +963,9 @@ main (int argc, char **argv)
           join_lines = true;
           break;
         case 'l':
-          {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long <= 0 || tmp_long > INT_MAX)
-              {
-                error (EXIT_FAILURE, 0,
-                       _("'-l PAGE_LENGTH' invalid number of lines: %s"),
-                       quote (optarg));
-              }
-            lines_per_page = tmp_long;
-            break;
-          }
+          getoptnum (optarg, 1, &lines_per_page,
+                     _("'-l PAGE_LENGTH' invalid number of lines"));
+          break;
         case 'm':
           parallel_files = true;
           storing_columns = false;
@@ -990,28 +978,13 @@ main (int argc, char **argv)
           break;
         case 'N':
           skip_count = false;
-          {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long > INT_MAX)
-              {
-                error (EXIT_FAILURE, 0,
-                       _("'-N NUMBER' invalid starting line number: %s"),
-                       quote (optarg));
-              }
-            start_line_num = tmp_long;
-            break;
-          }
+          getoptnum (optarg, INT_MIN, &start_line_num,
+                     _("'-N NUMBER' invalid starting line number"));
+          break;
         case 'o':
-          {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long < 0 || tmp_long > INT_MAX)
-              error (EXIT_FAILURE, 0,
-                     _("'-o MARGIN' invalid line offset: %s"), quote (optarg));
-            chars_per_margin = tmp_long;
-            break;
-          }
+          getoptnum (optarg, 0, &chars_per_margin,
+                     _("'-o MARGIN' invalid line offset"));
+          break;
         case 'r':
           ignore_failed_opens = true;
           break;
@@ -1045,29 +1018,19 @@ main (int argc, char **argv)
           old_options = true;
           old_w = true;
           {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long <= 0 || tmp_long > INT_MAX)
-              error (EXIT_FAILURE, 0,
-                     _("'-w PAGE_WIDTH' invalid number of characters: %s"),
-                     quote (optarg));
-            if (!truncate_lines)
-              chars_per_line = tmp_long;
-            break;
+            int tmp_cpl;
+            getoptnum (optarg, 1, &tmp_cpl,
+                       _("'-w PAGE_WIDTH' invalid number of characters"));
+            if (! truncate_lines)
+              chars_per_line = tmp_cpl;
           }
+          break;
         case 'W':
           old_w = false;			/* dominates -w */
           truncate_lines = true;
-          {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long <= 0 || tmp_long > INT_MAX)
-              error (EXIT_FAILURE, 0,
-                     _("'-W PAGE_WIDTH' invalid number of characters: %s"),
-                     quote (optarg));
-            chars_per_line = tmp_long;
-            break;
-          }
+          getoptnum (optarg, 1, &chars_per_line,
+                     _("'-W PAGE_WIDTH' invalid number of characters"));
+          break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
         default:
@@ -1173,6 +1136,15 @@ main (int argc, char **argv)
   return failed_opens ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
+/* Parse numeric arguments, ensuring MIN <= number <= INT_MAX.  */
+
+static void
+getoptnum (const char *n_str, int min, int *num, const char *err)
+{
+  intmax_t tnum = xdectoimax (n_str, min, INT_MAX, "", err, 0);
+  *num = tnum;
+}
+
 /* Parse options of the form -scNNN.
 
    Example: -nck, where 'n' is the option, c is the optional number
@@ -1188,9 +1160,9 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
     {
       long int tmp_long;
       if (xstrtol (arg, NULL, 10, &tmp_long, "") != LONGINT_OK
-          || tmp_long <= 0 || tmp_long > INT_MAX)
+          || tmp_long <= 0 || INT_MAX < tmp_long)
         {
-          error (0, 0,
+          error (0, INT_MAX < tmp_long ?  EOVERFLOW : errno,
              _("'-%c' extra characters or invalid number in the argument: %s"),
                  switch_char, quote (arg));
           usage (EXIT_FAILURE);

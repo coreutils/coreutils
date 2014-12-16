@@ -25,8 +25,7 @@
 #include "system.h"
 #include "error.h"
 #include "fadvise.h"
-#include "quote.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 #define TAB_WIDTH 8
 
@@ -280,14 +279,8 @@ main (int argc, char **argv)
             }
           /* Fall through.  */
         case 'w':		/* Line width. */
-          {
-            unsigned long int tmp_ulong;
-            if (! (xstrtoul (optarg, NULL, 10, &tmp_ulong, "") == LONGINT_OK
-                   && 0 < tmp_ulong && tmp_ulong < SIZE_MAX - TAB_WIDTH))
-              error (EXIT_FAILURE, 0,
-                     _("invalid number of columns: %s"), quote (optarg));
-            width = tmp_ulong;
-          }
+          width = xdectoumax (optarg, 1, SIZE_MAX - TAB_WIDTH - 1, "",
+                              _("invalid number of columns"), 0);
           break;
 
         case_GETOPT_HELP_CHAR;

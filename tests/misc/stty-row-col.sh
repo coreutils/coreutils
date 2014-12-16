@@ -47,6 +47,8 @@ tests='
 7 rows_1 1_1
 8 columns_80 1_80
 9 rows_30 30_80
+10 rows_0x1E 30_80
+11 rows_036 30_80
 NA LAST NA
 '
 set $tests

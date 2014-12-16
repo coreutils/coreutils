@@ -30,7 +30,7 @@
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "fmt"
@@ -399,23 +399,15 @@ main (int argc, char **argv)
     {
       /* Limit max_width to MAXCHARS / 2; otherwise, the resulting
          output can be quite ugly.  */
-      unsigned long int tmp;
-      if (! (xstrtoul (max_width_option, NULL, 10, &tmp, "") == LONGINT_OK
-             && tmp <= MAXCHARS / 2))
-        error (EXIT_FAILURE, 0, _("invalid width: %s"),
-               quote (max_width_option));
-      max_width = tmp;
+      max_width = xdectoumax (max_width_option, 0, MAXCHARS / 2, "",
+                              _("invalid width"), 0);
     }
 
   if (goal_width_option)
     {
       /* Limit goal_width to max_width.  */
-      unsigned long int tmp;
-      if (! (xstrtoul (goal_width_option, NULL, 10, &tmp, "") == LONGINT_OK
-             && tmp <= max_width))
-        error (EXIT_FAILURE, 0, _("invalid width: %s"),
-               quote (goal_width_option));
-      goal_width = tmp;
+      goal_width = xdectoumax (goal_width_option, 0, max_width, "",
+                               _("invalid width"), 0);
       if (max_width_option == NULL)
         max_width = goal_width + 10;
     }

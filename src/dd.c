@@ -1433,7 +1433,7 @@ scanargs (int argc, char *const *argv)
 
           if (invalid != LONGINT_OK)
             error (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
-                   _("invalid number %s"), quote (val));
+                   "%s: %s", _("invalid number"), quote (val));
         }
     }
 

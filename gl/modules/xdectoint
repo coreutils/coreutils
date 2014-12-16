@@ -1,0 +1,29 @@
+Description:
+Convert decimal string to '[u]intmax_t', with bounds checking and exit on error
+
+Files:
+lib/xdectoint.h
+lib/xdectoint.c
+lib/xdectoimax.c
+lib/xdectoumax.c
+
+Depends-on:
+error
+errno
+quote
+xstrtoimax
+xstrtoumax
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += xdectoimax.c xdectoumax.c
+
+Include:
+"xdectoint.h"
+
+License:
+GPL
+
+Maintainer:
+all

@@ -385,9 +385,11 @@ my @tv = (
 ['col-long', '-W3 -t -1 --columns=2',     "a\nb\nc\n", "a c\nb\n", 0],
 # Make sure these fail.
 ['col-0', '-0', '', '', 1,
- "$prog: invalid number of columns: '0'\n"],
+ "$prog: invalid number of columns: '0'",
+ 's/:[^:]*$//'],
 ['col-inval', '-'.'9'x100, '', '', 1,
- "$prog: invalid number of columns: '". ('9'x100) ."'\n"],
+ "$prog: invalid number of columns: '". ('9'x100) ."'",
+ 's/:[^:]*$//'],
 
 # Before coreutils-5.3.1, --pages=1:-1 would be treated like
 # --pages=1:18446744073709551615.
@@ -427,7 +429,7 @@ my $common_option_prefix = '--date-format="-- Date/Time --" -h x';
 my @Tests;
 foreach my $t (@tv)
   {
-    my ($test_name, $flags, $in, $exp, $ret, $err_msg) = @$t;
+    my ($test_name, $flags, $in, $exp, $ret, $err_msg, $err_sub) = @$t;
     my $new_ent = [$test_name, $common_option_prefix, $flags];
     if (!ref $in)
       {
@@ -454,7 +456,7 @@ foreach my $t (@tv)
           }
       }
     $ret
-      and push @$new_ent, {EXIT=>$ret}, {ERR=>$err_msg};
+      and push @$new_ent, {EXIT=>$ret}, {ERR=>$err_msg}, {ERR_SUBST=>$err_sub};
     push @Tests, $new_ent;
   }
 

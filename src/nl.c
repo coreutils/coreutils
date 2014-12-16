@@ -31,7 +31,7 @@
 #include "fadvise.h"
 #include "linebuffer.h"
 #include "quote.h"
-#include "xstrtol.h"
+#include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "nl"
@@ -497,53 +497,27 @@ main (int argc, char **argv)
             }
           break;
         case 'v':
-          if (xstrtoimax (optarg, NULL, 10, &starting_line_number, "")
-              != LONGINT_OK)
-            {
-              error (0, 0, _("invalid starting line number: %s"),
-                     quote (optarg));
-              ok = false;
-            }
+          starting_line_number = xdectoimax (optarg, INTMAX_MIN, INTMAX_MAX, "",
+                                             _("invalid starting line number"),
+                                             0);
           break;
         case 'i':
-          if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
-                 && 0 < page_incr))
-            {
-              error (0, 0, _("invalid line number increment: %s"),
-                     quote (optarg));
-              ok = false;
-            }
+          page_incr = xdectoimax (optarg, 1, INTMAX_MAX, "",
+                                  _("invalid line number increment"), 0);
           break;
         case 'p':
           reset_numbers = false;
           break;
         case 'l':
-          if (! (xstrtoimax (optarg, NULL, 10, &blank_join, "") == LONGINT_OK
-                 && 0 < blank_join))
-            {
-              error (0, 0, _("invalid number of blank lines: %s"),
-                     quote (optarg));
-              ok = false;
-            }
+          blank_join = xdectoimax (optarg, 1, INTMAX_MAX, "",
+                                   _("invalid line number of blank lines"), 0);
           break;
         case 's':
           separator_str = optarg;
           break;
         case 'w':
-          {
-            long int tmp_long;
-            if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-                || tmp_long <= 0 || tmp_long > INT_MAX)
-              {
-                error (0, 0, _("invalid line number field width: %s"),
-                       quote (optarg));
-                ok = false;
-              }
-            else
-              {
-                lineno_width = tmp_long;
-              }
-          }
+          lineno_width = xdectoimax (optarg, 1, INT_MAX, "",
+                                     _("invalid line number field width"), 0);
           break;
         case 'n':
           if (STREQ (optarg, "ln"))

@@ -33,6 +33,7 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "stdio--.h"
+#include "xdectoint.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -1332,7 +1333,6 @@ int
 main (int argc, char **argv)
 {
   int optc;
-  unsigned long int val;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1366,10 +1366,8 @@ main (int argc, char **argv)
         break;
 
       case 'n':
-        if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
-            || MIN (INT_MAX, SIZE_MAX) < val)
-          error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
-        digits = val;
+        digits = xdectoimax (optarg, 0, MIN (INT_MAX, SIZE_MAX), "",
+                             _("invalid number"), 0);
         break;
 
       case 's':

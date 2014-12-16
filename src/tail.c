@@ -44,6 +44,7 @@
 #include "stat-time.h"
 #include "xfreopen.h"
 #include "xnanosleep.h"
+#include "xdectoint.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
 
@@ -1949,7 +1950,10 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   else if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
             & ~LONGINT_INVALID_SUFFIX_CHAR)
            != LONGINT_OK)
-    error (EXIT_FAILURE, 0, _("number in %s is too large"), quote (argv[1]));
+    {
+      error (EXIT_FAILURE, errno, "%s: %s", _("invalid number"),
+             quote (argv[1]));
+    }
 
   /* Set globals.  */
   from_start = t_from_start;
@@ -1986,17 +1990,10 @@ parse_options (int argc, char **argv,
           else if (*optarg == '-')
             ++optarg;
 
-          {
-            strtol_error s_err;
-            s_err = xstrtoumax (optarg, NULL, 10, n_units, "bkKmMGTPEZY0");
-            if (s_err != LONGINT_OK)
-              {
-                error (EXIT_FAILURE, 0, "%s: %s", optarg,
-                       (c == 'n'
-                        ? _("invalid number of lines")
-                        : _("invalid number of bytes")));
-              }
-          }
+          *n_units = xdectoumax (optarg, 0, UINTMAX_MAX, "bkKmMGTPEZY0",
+                                 count_lines
+                                 ? _("invalid number of lines")
+                                 : _("invalid number of bytes"), 0);
           break;
 
         case 'f':
@@ -2015,15 +2012,9 @@ parse_options (int argc, char **argv,
 
         case MAX_UNCHANGED_STATS_OPTION:
           /* --max-unchanged-stats=N */
-          if (xstrtoumax (optarg, NULL, 10,
-                          &max_n_unchanged_stats_between_opens,
-                          "")
-              != LONGINT_OK)
-            {
-              error (EXIT_FAILURE, 0,
-               _("%s: invalid maximum number of unchanged stats between opens"),
-                     optarg);
-            }
+          max_n_unchanged_stats_between_opens =
+            xdectoumax (optarg, 0, UINTMAX_MAX, "",
+              _("invalid maximum number of unchanged stats between opens"), 0);
           break;
 
         case DISABLE_INOTIFY_OPTION:
@@ -2031,16 +2022,7 @@ parse_options (int argc, char **argv,
           break;
 
         case PID_OPTION:
-          {
-            strtol_error s_err;
-            unsigned long int tmp_ulong;
-            s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "");
-            if (s_err != LONGINT_OK || tmp_ulong > PID_T_MAX)
-              {
-                error (EXIT_FAILURE, 0, _("%s: invalid PID"), optarg);
-              }
-            pid = tmp_ulong;
-          }
+          pid = xdectoumax (optarg, 0, PID_T_MAX, "", _("invalid PID"), 0);
           break;
 
         case PRESUME_INPUT_PIPE_OPTION:
@@ -2056,7 +2038,7 @@ parse_options (int argc, char **argv,
             double s;
             if (! (xstrtod (optarg, NULL, &s, c_strtod) && 0 <= s))
               error (EXIT_FAILURE, 0,
-                     _("%s: invalid number of seconds"), optarg);
+                     _("invalid number of seconds: %s"), quote (optarg));
             *sleep_interval = s;
           }
           break;

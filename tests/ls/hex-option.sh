@@ -1,5 +1,5 @@
 #!/bin/sh
-# Exercise shred -s-3 FILE
+# accept hex/oct numbers to -w and -T
 
 # Copyright (C) 2014 Free Software Foundation, Inc.
 
@@ -17,12 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ shred
+print_ver_ ls
 
-echo 'shred: -2: invalid file size' > exp || framework_failure_
-echo 1234 > f || framework_failure_
-
-shred -s-2 f 2>err && fail=1
-compare exp err || fail=1
+ls -x -T0x10 -w010 || fail=1
 
 Exit $fail

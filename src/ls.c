@@ -105,6 +105,7 @@
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
+#include "xdectoint.h"
 #include "xstrtol.h"
 #include "areadlink.h"
 #include "mbsalign.h"
@@ -1742,15 +1743,9 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'w':
-          {
-            unsigned long int tmp_ulong;
-            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-                || ! (0 < tmp_ulong && tmp_ulong <= SIZE_MAX))
-              error (LS_FAILURE, 0, _("invalid line width: %s"),
-                     quotearg (optarg));
-            line_length = tmp_ulong;
-            break;
-          }
+          line_length = xnumtoumax (optarg, 0, 1, SIZE_MAX, "",
+                                    _("invalid line width"), LS_FAILURE);
+          break;
 
         case 'x':
           format = horizontal;
@@ -1816,15 +1811,9 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'T':
-          {
-            unsigned long int tmp_ulong;
-            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-                || SIZE_MAX < tmp_ulong)
-              error (LS_FAILURE, 0, _("invalid tab size: %s"),
-                     quotearg (optarg));
-            tabsize = tmp_ulong;
-            break;
-          }
+          tabsize = xnumtoumax (optarg, 0, 0, SIZE_MAX, "",
+                                _("invalid tab size"), LS_FAILURE);
+          break;
 
         case 'U':
           sort_type = sort_none;

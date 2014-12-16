@@ -32,6 +32,7 @@
 #include "randperm.h"
 #include "read-file.h"
 #include "stdio--.h"
+#include "xdectoint.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -422,7 +423,6 @@ main (int argc, char **argv)
 
       case 'i':
         {
-          unsigned long int argval = 0;
           char *p = strchr (optarg, '-');
           char const *hi_optarg = optarg;
           bool invalid = !p;
@@ -434,22 +434,19 @@ main (int argc, char **argv)
           if (p)
             {
               *p = '\0';
-              invalid = ((xstrtoul (optarg, NULL, 10, &argval, NULL)
-                          != LONGINT_OK)
-                         || SIZE_MAX < argval);
+              lo_input = xdectoumax (optarg, 0, SIZE_MAX, "",
+                                     _("invalid input range"), 0);
               *p = '-';
-              lo_input = argval;
               hi_optarg = p + 1;
             }
 
-          invalid |= ((xstrtoul (hi_optarg, NULL, 10, &argval, NULL)
-                       != LONGINT_OK)
-                      || SIZE_MAX < argval);
-          hi_input = argval;
+          hi_input = xdectoumax (hi_optarg, 0, SIZE_MAX, "",
+                                 _("invalid input range"), 0);
+
           n_lines = hi_input - lo_input + 1;
           invalid |= ((lo_input <= hi_input) == (n_lines == 0));
           if (invalid)
-            error (EXIT_FAILURE, 0, _("invalid input range %s"),
+            error (EXIT_FAILURE, errno, "%s: %s", _("invalid input range"),
                    quote (optarg));
         }
         break;
@@ -462,7 +459,7 @@ main (int argc, char **argv)
           if (e == LONGINT_OK)
             head_lines = MIN (head_lines, argval);
           else if (e != LONGINT_OVERFLOW)
-            error (EXIT_FAILURE, 0, _("invalid line count %s"),
+            error (EXIT_FAILURE, 0, _("invalid line count: %s"),
                    quote (optarg));
         }
         break;
