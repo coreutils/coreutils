@@ -1307,14 +1307,15 @@ parse_symbols (char const *str, struct symbol_value const *table,
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
-   Set *INVALID if STR does not represent a number in this format.  */
+   Set *INVALID to a nonzero error value if STR does not represent a
+   number in this format.  */
 
 static uintmax_t
-parse_integer (const char *str, bool *invalid)
+parse_integer (const char *str, strtol_error *invalid)
 {
   uintmax_t n;
   char *suffix;
-  enum strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
+  strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
 
   if (e == LONGINT_INVALID_SUFFIX_CHAR && *suffix == 'x')
     {
@@ -1322,7 +1323,7 @@ parse_integer (const char *str, bool *invalid)
 
       if (multiplier != 0 && n * multiplier / multiplier != n)
         {
-          *invalid = true;
+          *invalid = LONGINT_OVERFLOW;
           return 0;
         }
 
@@ -1330,7 +1331,7 @@ parse_integer (const char *str, bool *invalid)
     }
   else if (e != LONGINT_OK)
     {
-      *invalid = true;
+      *invalid = e;
       return 0;
     }
 
@@ -1384,27 +1385,33 @@ scanargs (int argc, char *const *argv)
                                       N_("invalid status level"));
       else
         {
-          bool invalid = false;
+          strtol_error invalid = LONGINT_OK;
           uintmax_t n = parse_integer (val, &invalid);
+          uintmax_t n_min = 0;
+          uintmax_t n_max = UINTMAX_MAX;
 
           if (operand_is (name, "ibs"))
             {
-              invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
+              n_min = 1;
+              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
               input_blocksize = n;
             }
           else if (operand_is (name, "obs"))
             {
-              invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP));
+              n_min = 1;
+              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
               output_blocksize = n;
             }
           else if (operand_is (name, "bs"))
             {
-              invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
+              n_min = 1;
+              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
               blocksize = n;
             }
           else if (operand_is (name, "cbs"))
             {
-              invalid |= ! (0 < n && n <= SIZE_MAX);
+              n_min = 1;
+              n_max = SIZE_MAX;
               conversion_blocksize = n;
             }
           else if (operand_is (name, "skip"))
@@ -1419,8 +1426,14 @@ scanargs (int argc, char *const *argv)
               usage (EXIT_FAILURE);
             }
 
-          if (invalid)
-            error (EXIT_FAILURE, 0, _("invalid number %s"), quote (val));
+          if (n < n_min)
+            invalid = LONGINT_INVALID;
+          else if (n_max < n)
+            invalid = LONGINT_OVERFLOW;
+
+          if (invalid != LONGINT_OK)
+            error (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
+                   _("invalid number %s"), quote (val));
         }
     }
 
