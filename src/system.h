@@ -135,9 +135,10 @@ enum
 #include <inttypes.h>
 
 /* Redirection and wildcarding when done by the utility itself.
-   Generally a noop, but used in particular for native VMS. */
+   Generally a noop, but used in particular for OS/2.  */
 #ifndef initialize_main
-# define initialize_main(ac, av)
+# define initialize_main(ac, av) \
+    do { _wildcard(ac, av); _response(ac, av); } while (0)
 #endif
 
 #include "stat-macros.h"
