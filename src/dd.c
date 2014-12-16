@@ -1399,7 +1399,7 @@ scanargs (int argc, char *const *argv)
           else if (operand_is (name, "obs"))
             {
               n_min = 1;
-              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
+              n_max = MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP);
               output_blocksize = n;
             }
           else if (operand_is (name, "bs"))
