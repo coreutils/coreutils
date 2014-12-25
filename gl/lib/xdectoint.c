@@ -65,7 +65,8 @@ __xnumtoint (const char *n_str, int base, __xdectoint_t min, __xdectoint_t max,
 
   if (s_err != LONGINT_OK)
     {
-      error (err_exit ? err_exit : EXIT_FAILURE, errno,
+      /* EINVAL error message is redundant in this context.  */
+      error (err_exit ? err_exit : EXIT_FAILURE, errno == EINVAL ? 0 : errno,
              "%s: %s", err, quote (n_str));
     }
 

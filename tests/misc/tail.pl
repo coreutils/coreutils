@@ -19,7 +19,7 @@
 use strict;
 
 my $prog = 'tail';
-my $normalize_strerror = 's/:[^:]*$//';
+my $normalize_strerror = "s/': .*/'/";
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -59,7 +59,7 @@ my @tv = (
  "$prog: cannot open '+cl' for reading: No such file or directory\n"],
 
 ['err-2', '-cl', '', '', 1,
- "$prog: invalid number of bytes: 'l'\n"],
+ "$prog: invalid number of bytes: 'l'\n", $normalize_strerror],
 
 ['err-3', '+2cz', '', '', 1,
  "$prog: cannot open '+2cz' for reading: No such file or directory\n"],
@@ -72,9 +72,10 @@ my @tv = (
 # the diagnostic: 'tail: 99999999999999999999: invalid number of bytes'
 # on all systems... probably, for now, maybe.
 ['err-5', '-c99999999999999999999', '', '', 1,
- "$prog: invalid number of bytes: '99999999999999999999'", $normalize_strerror],
+ "$prog: invalid number of bytes: '99999999999999999999'\n",
+ $normalize_strerror],
 ['err-6', '-c --', '', '', 1,
- "$prog: invalid number of bytes: '-'\n"],
+ "$prog: invalid number of bytes: '-'\n", $normalize_strerror],
 
 # Same as -n 10
 ['minus-1', '-', '', '', 0],

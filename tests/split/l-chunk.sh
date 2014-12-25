@@ -55,7 +55,7 @@ printf "%s" "$lines" | tr '~' '\n' > in || framework_failure_
 
 echo "split: invalid chunk number: '16'" > exp
 split -n l/16/15 in 2>err.t && fail=1
-sed 's/:[^:]*$//' < err.t > err || framework_failure_
+sed "s/': .*/'/" < err.t > err || framework_failure_
 compare exp err || fail=1
 
 printf '%s' "\
