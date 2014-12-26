@@ -935,7 +935,8 @@ A block size specification can be a positive integer specifying the number
 of bytes per block, or it can be @code{human-readable} or @code{si} to
 select a human-readable format.  Integers may be followed by suffixes
 that are upward compatible with the
-@uref{http://www.bipm.org/en/si/si_brochure/chapter3/prefixes.html, SI prefixes}
+@uref{http://www.bipm.org/en/publications/si-brochure/chapter3.html,
+SI prefixes}
 for decimal multiples and with the
 @uref{http://physics.nist.gov/cuu/Units/binary.html, ISO/IEC 80000-13
 (formerly IEC 60027-2) prefixes} for binary multiples.
