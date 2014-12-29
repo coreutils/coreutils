@@ -90,6 +90,8 @@ struct mntent *getmntent (FILE *fp)
     {
       if (!mntents[done-2].mnt_type)
         mntents[done-2].mnt_type = "-";
+      if (!mntents[done-2].mnt_opts)
+        mntents[done-2].mnt_opts = "-";
       if (STREQ (mntents[done-2].mnt_dir, "/NONROOT"))
         mntents[done-2].mnt_dir = nonroot_fs;
       if (STREQ (mntents[done-2].mnt_dir, "/REMOTE"))

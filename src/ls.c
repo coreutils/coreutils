@@ -990,7 +990,7 @@ dev_ino_pop (void)
   struct dev_ino *di;
   int dev_ino_size = sizeof *di;
   assert (dev_ino_size <= obstack_object_size (&dev_ino_obstack));
-  obstack_blank (&dev_ino_obstack, -dev_ino_size);
+  obstack_blank_fast (&dev_ino_obstack, -dev_ino_size);
   vdi = obstack_next_free (&dev_ino_obstack);
   di = vdi;
   return *di;
