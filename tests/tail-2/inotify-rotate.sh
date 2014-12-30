@@ -23,6 +23,9 @@ fi
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
+grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
+  || expensive_
+
 check_tail_output()
 {
   local delay="$1"
@@ -53,7 +56,7 @@ for i in $(seq 50); do
     # and a lot of disk activity, even 20 seconds is insufficient, which
     # leads to this timeout killing tail before the "ok" is written below.
     >k && >x || framework_failure_ failed to initialize files
-    timeout 60 tail -F k > out 2>&1 &
+    timeout 60 tail -s.1 --max-unchanged-stats=1 -F k > out 2>&1 &
     pid=$!
 
     echo b > k;
