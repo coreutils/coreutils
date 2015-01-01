@@ -1,7 +1,7 @@
 #!/bin/sh
 # This test would fail with tail from pre-1.22i textutils.
 
-# Copyright (C) 1999-2014 Free Software Foundation, Inc.
+# Copyright (C) 1999-2015 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

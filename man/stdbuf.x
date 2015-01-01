@@ -1,4 +1,4 @@
-'\" Copyright (C) 2009-2014 Free Software Foundation, Inc.
+'\" Copyright (C) 2009-2015 Free Software Foundation, Inc.
 '\"
 '\" This is free software.  You may redistribute copies of it under the terms
 '\" of the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
