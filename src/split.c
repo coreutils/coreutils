@@ -234,12 +234,12 @@ is -, read standard input.\n\
       emit_size_note ();
       fputs (_("\n\
 CHUNKS may be:\n\
-N       split into N files based on size of input\n\
-K/N     output Kth of N to stdout\n\
-l/N     split into N files without splitting lines\n\
-l/K/N   output Kth of N to stdout without splitting lines\n\
-r/N     like 'l' but use round robin distribution\n\
-r/K/N   likewise but only output Kth of N to stdout\n\
+  N       split into N files based on size of input\n\
+  K/N     output Kth of N to stdout\n\
+  l/N     split into N files without splitting lines\n\
+  l/K/N   output Kth of N to stdout without splitting lines\n\
+  r/N     like 'l' but use round robin distribution\n\
+  r/K/N   likewise but only output Kth of N to stdout\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
