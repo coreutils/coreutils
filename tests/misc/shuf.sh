@@ -47,6 +47,10 @@ test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }
 shuf -er
 test $? -eq 1 || fail=1
 
+# coreutils-8.23 dumps core.
+shuf -i0-0 1
+test $? -eq 1 || fail=1
+
 # Before coreutils-6.3, this would infloop.
 # "seq 1860" produces 8193 (8K + 1) bytes of output.
 seq 1860 | shuf > /dev/null || fail=1

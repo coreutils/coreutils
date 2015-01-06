@@ -501,7 +501,7 @@ main (int argc, char **argv)
     }
   if (input_range ? 0 < n_operands : !echo && 1 < n_operands)
     {
-      error (0, 0, _("extra operand %s"), quote (operand[1]));
+      error (0, 0, _("extra operand %s"), quote (operand[!input_range]));
       usage (EXIT_FAILURE);
     }
 
