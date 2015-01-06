@@ -47,7 +47,8 @@ test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }
 shuf -er
 test $? -eq 1 || fail=1
 
-# coreutils-8.23 dumps core.
+# coreutils-8.22 and 8.23 dump core
+# with a single redundant operand with --input-range
 shuf -i0-0 1
 test $? -eq 1 || fail=1
 
@@ -70,7 +71,7 @@ touch unreadable || framework_failure_
 chmod 0 unreadable || framework_failure_
 if ! test -r unreadable; then
   shuf -n0 unreadable || fail=1
-  shuf -n1 unreadable && fail=1
+  { shuf -n1 unreadable || test $? -ne 1; } && fail=1
 fi
 
 # Multiple -n is accepted, should use the smallest value
@@ -81,25 +82,25 @@ test "$c" -eq 3 || { fail=1; echo "Multiple -n failed">&2 ; }
 # Test error conditions
 
 # -i and -e must not be used together
-: | shuf -i0-9 -e A B &&
+: | { shuf -i0-9 -e A B || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect erroneous -e and -i usage.">&2 ; }
 # Test invalid value for -n
-: | shuf -nA &&
+: | { shuf -nA || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect erroneous -n usage.">&2 ; }
 # Test multiple -i
-shuf -i0-9 -n10 -i8-90 &&
+{ shuf -i0-9 -n10 -i8-90 || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect multiple -i usage.">&2 ; }
 # Test invalid range
 for ARG in '1' 'A' '1-' '1-A'; do
-  shuf -i$ARG &&
+    { shuf -i$ARG || test $? -ne 1; } &&
     { fail=1; echo "shuf did not detect erroneous -i$ARG usage.">&2 ; }
 done
 
 # multiple -o are forbidden
-shuf -i0-9 -o A -o B &&
+{ shuf -i0-9 -o A -o B || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect erroneous multiple -o usage.">&2 ; }
 # multiple random-sources are forbidden
-shuf -i0-9 --random-source A --random-source B &&
+{ shuf -i0-9 --random-source A --random-source B || test $? -ne 1; } &&
   { fail=1; echo "shuf did not detect multiple --random-source usage.">&2 ; }
 
 # Test --repeat option
