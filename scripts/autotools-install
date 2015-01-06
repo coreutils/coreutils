@@ -1,4 +1,6 @@
 #!/bin/sh
+VERSION='2015-01-25 15:45' # UTC
+
 # Building coreutils from a git-cloned directory may require versions of
 # tools like autoconf, automake, gettext, etc. that are newer than the ones
 # provided by the distribution on which you want to build.  In that case,
@@ -9,9 +11,12 @@
 # it tells you how to update envvars like PATH and (if you use pkg-config)
 # PKG_CONFIG_PATH.
 
-# Written by Jim Meyering
+# On principle, I find it best to ensure that packages I care about work
+# with the latest versions of all of these tools.  While these tools are
+# paragons of portability, you should ensure that recent distribution
+# versions work, too.
 
-VERSION='2012-08-31 07:40' # UTC
+# Written by Jim Meyering
 
 # For systems with limited/botched make (the case of most vendor makes!),
 # allow the user to override it.
@@ -24,9 +29,9 @@ tarballs='
   http://pkgconfig.freedesktop.org/releases/pkg-config-0.28.tar.gz
   http://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz
   http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-  http://ftp.gnu.org/gnu/automake/automake-1.14.1.tar.gz
+  http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz
   http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
-  http://ftp.gnu.org/gnu/gettext/gettext-0.18.3.2.tar.gz
+  http://ftp.gnu.org/gnu/gettext/gettext-0.19.4.tar.gz
 '
 
 usage() {
@@ -89,6 +94,8 @@ get_sources()
         --trusted-key=B93F60C6B5C4CE13          \
         --trusted-key=F382AE19F4850180          \
         --trusted-key=FC818E17429F96EA          \
+        --trusted-key=60F906016E407573          \
+        --trusted-key=D605848ED7E69871          \
         $base.sig > /dev/null 2>&1              \
       || echo "info: not verifying GPG signature for $base" 1>&2
   done
