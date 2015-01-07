@@ -16,10 +16,9 @@
 
 /* By tege@sics.se, with rms.
 
-   To do:
-   * Implement -t CHAR or -t REGEX to specify break characters other
-     than newline. */
-
+   TODO:
+   * support -p REGEX as in BSD's split.
+   * support --suppress-matched as in csplit.  */
 #include <config.h>
 
 #include <assert.h>
@@ -108,6 +107,9 @@ static bool elide_empty_files;
    input to output, which is much slower, so disabled by default.  */
 static bool unbuffered;
 
+/* The character marking end of line.  Defaults to \n below.  */
+static int eolchar = -1;
+
 /* The split mode to use.  */
 enum Split_type
 {
@@ -139,6 +141,7 @@ static struct option const longopts[] =
   {"numeric-suffixes", optional_argument, NULL, 'd'},
   {"filter", required_argument, NULL, FILTER_OPTION},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
+  {"separator", required_argument, NULL, 't'},
   {"-io-blksize", required_argument, NULL,
    IO_BLKSIZE_OPTION}, /* do not document */
   {GETOPT_HELP_OPTION_DECL},
@@ -216,13 +219,15 @@ is -, read standard input.\n\
   -a, --suffix-length=N   generate suffixes of length N (default %d)\n\
       --additional-suffix=SUFFIX  append an additional SUFFIX to file names\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
-  -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
+  -C, --line-bytes=SIZE   put at most SIZE bytes of records per output file\n\
   -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic;\n\
                                    FROM changes the start value (default 0)\n\
   -e, --elide-empty-files  do not generate empty output files with '-n'\n\
       --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
-  -l, --lines=NUMBER      put NUMBER lines per output file\n\
+  -l, --lines=NUMBER      put NUMBER lines/records per output file\n\
   -n, --number=CHUNKS     generate CHUNKS output files; see explanation below\n\
+  -t, --separator=SEP     use SEP instead of newline as the record separator;\n\
+                            '\\0' (zero) specifies the NUL character\n\
   -u, --unbuffered        immediately copy input to output with '-n r/...'\n\
 "), DEFAULT_SUFFIX_LENGTH);
       fputs (_("\
@@ -236,8 +241,8 @@ is -, read standard input.\n\
 CHUNKS may be:\n\
   N       split into N files based on size of input\n\
   K/N     output Kth of N to stdout\n\
-  l/N     split into N files without splitting lines\n\
-  l/K/N   output Kth of N to stdout without splitting lines\n\
+  l/N     split into N files without splitting lines/records\n\
+  l/K/N   output Kth of N to stdout without splitting lines/records\n\
   r/N     like 'l' but use round robin distribution\n\
   r/K/N   likewise but only output Kth of N to stdout\n\
 "), stdout);
@@ -630,10 +635,10 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
-      *eob = '\n';
+      *eob = eolchar;
       while (true)
         {
-          bp = memchr (bp, '\n', eob - bp + 1);
+          bp = memchr (bp, eolchar, eob - bp + 1);
           if (bp == eob)
             {
               if (eob != bp_out) /* do not write 0 bytes! */
@@ -692,10 +697,10 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
               /* Have enough for split.  */
               split_rest = n_bytes - n_out - n_hold;
               eoc = sob + split_rest - 1;
-              eol = memrchr (sob, '\n', split_rest);
+              eol = memrchr (sob, eolchar, split_rest);
             }
           else
-            eol = memrchr (sob, '\n', n_left);
+            eol = memrchr (sob, eolchar, n_left);
 
           /* Output hold space if possible.  */
           if (n_hold && !(!eol && n_out))
@@ -833,7 +838,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
           /* Begin looking for '\n' at last byte of chunk.  */
           off_t skip = MIN (n_read, MAX (0, chunk_end - n_written));
-          char *bp_out = memchr (bp + skip, '\n', n_read - skip);
+          char *bp_out = memchr (bp + skip, eolchar, n_read - skip);
           if (bp_out++)
             next = true;
           else
@@ -1080,7 +1085,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
           bool next = false;
 
           /* Find end of line. */
-          char *bp_out = memchr (bp, '\n', eob - bp);
+          char *bp_out = memchr (bp, eolchar, eob - bp);
           if (bp_out)
             {
               bp_out++;
@@ -1224,7 +1229,7 @@ main (int argc, char **argv)
       int this_optind = optind ? optind : 1;
       char *slash;
 
-      c = getopt_long (argc, argv, "0123456789C:a:b:del:n:u",
+      c = getopt_long (argc, argv, "0123456789C:a:b:del:n:t:u",
                        longopts, NULL);
       if (c == -1)
         break;
@@ -1301,6 +1306,36 @@ main (int argc, char **argv)
 
         case 'u':
           unbuffered = true;
+          break;
+
+        case 't':
+          {
+            char neweol = optarg[0];
+            if (! neweol)
+              error (EXIT_FAILURE, 0, _("empty record separator"));
+            if (optarg[1])
+              {
+                if (STREQ (optarg, "\\0"))
+                  neweol = '\0';
+                else
+                  {
+                    /* Provoke with 'split -txx'.  Complain about
+                       "multi-character tab" instead of "multibyte tab", so
+                       that the diagnostic's wording does not need to be
+                       changed once multibyte characters are supported.  */
+                    error (EXIT_FAILURE, 0, _("multi-character separator %s"),
+                           quote (optarg));
+                  }
+              }
+            /* Make it explicit we don't support multiple separators.  */
+            if (0 <= eolchar && neweol != eolchar)
+              {
+                error (EXIT_FAILURE, 0,
+                       _("multiple separator characters specified"));
+              }
+
+            eolchar = neweol;
+          }
           break;
 
         case '0':
@@ -1397,6 +1432,9 @@ main (int argc, char **argv)
       error (0, 0, "%s: %s", _("invalid number of lines"), quote ("0"));
       usage (EXIT_FAILURE);
     }
+
+  if (eolchar < 0)
+    eolchar = '\n';
 
   set_suffix_length (n_units, split_type);
 

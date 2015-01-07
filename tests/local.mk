@@ -358,6 +358,7 @@ all_tests =					\
   tests/split/line-bytes.sh			\
   tests/split/l-chunk.sh			\
   tests/split/r-chunk.sh			\
+  tests/split/record-sep.sh			\
   tests/split/numeric.sh			\
   tests/split/guard-input.sh			\
   tests/misc/stat-birthtime.sh			\
@@ -402,7 +403,7 @@ all_tests =					\
   tests/misc/xattr.sh				\
   tests/tail-2/wait.sh				\
   tests/tail-2/retry.sh				\
-  tests/tail-2/symlink.sh				\
+  tests/tail-2/symlink.sh			\
   tests/tail-2/tail-c.sh			\
   tests/chmod/c-option.sh			\
   tests/chmod/equal-x.sh			\
@@ -483,7 +484,7 @@ all_tests =					\
   tests/dd/ascii.sh				\
   tests/dd/direct.sh				\
   tests/dd/misc.sh				\
-  tests/dd/no-allocate.sh				\
+  tests/dd/no-allocate.sh			\
   tests/dd/nocache.sh				\
   tests/dd/not-rewound.sh			\
   tests/dd/reblock.sh				\

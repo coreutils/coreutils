@@ -3395,6 +3395,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -l
 @opindex --lines
 Put @var{lines} lines of @var{input} into each output file.
+If @option{--separator} is specified, then @var{lines} determines
+the number of records.
 
 For compatibility @command{split} also supports an obsolete
 option syntax @option{-@var{lines}}.  New scripts should use
@@ -3412,9 +3414,11 @@ Put @var{size} bytes of @var{input} into each output file.
 @opindex -C
 @opindex --line-bytes
 Put into each output file as many complete lines of @var{input} as
-possible without exceeding @var{size} bytes.  Individual lines longer than
-@var{size} bytes are broken into multiple files.
+possible without exceeding @var{size} bytes.  Individual lines or records
+longer than @var{size} bytes are broken into multiple files.
 @var{size} has the same format as for the @option{--bytes} option.
+If @option{--separator} is specified, then @var{lines} determines
+the number of records.
 
 @item --filter=@var{command}
 @opindex --filter
@@ -3445,7 +3449,7 @@ Split @var{input} to @var{chunks} output files where @var{chunks} may be:
 @example
 @var{n}      generate @var{n} files based on current size of @var{input}
 @var{k}/@var{n}    only output @var{k}th of @var{n} to stdout
-l/@var{n}    generate @var{n} files without splitting lines
+l/@var{n}    generate @var{n} files without splitting lines or records
 l/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
 r/@var{n}    like @samp{l} but use round robin distribution
 r/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
@@ -3462,10 +3466,10 @@ or the @var{input} is truncated.
 For @samp{l} mode, chunks are approximately @var{input} size / @var{n}.
 The @var{input} is partitioned into @var{n} equal sized portions, with
 the last assigned any excess.  If a line @emph{starts} within a partition
-it is written completely to the corresponding file.  Since lines
+it is written completely to the corresponding file.  Since lines or records
 are not split even if they overlap a partition, the files written
 can be larger or smaller than the partition size, and even empty
-if a line is so long as to completely overlap the partition.
+if a line/record is so long as to completely overlap the partition.
 
 For @samp{r} mode, the size of @var{input} is irrelevant,
 and so can be a pipe for example.
@@ -3504,6 +3508,17 @@ with the @option{--number} option if a file is (truncated to be) shorter
 than the number requested, or if a line is so long as to completely
 span a chunk.  The output file sequence numbers, always run consecutively
 even when this option is specified.
+
+@item -t @var{separator}
+@itemx --separator=@var{separator}
+@opindex -t
+@opindex --separator
+@cindex line separator character
+@cindex record separator character
+Use character @var{separator} as the record separator instead of the default
+newline character (ASCII LF).
+To specify ASCII NUL as the separator, use the two-character string @samp{\0},
+e.g., @samp{split -t '\0'}.
 
 @item -u
 @itemx --unbuffered
