@@ -35,7 +35,7 @@ timeout 10 truncate -s1T f ||
 
 # Disable this test on old BTRFS (e.g. Fedora 14)
 # which reports (unwritten) extents for holes.
-filefrag f || skip_ 'the 'filefrag' utility is missing'
+filefrag f || skip_ "the 'filefrag' utility is missing"
 filefrag f | grep -F ': 0 extents found' > /dev/null ||
   skip_ 'this file system reports extents for holes'
 

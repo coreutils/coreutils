@@ -63,7 +63,7 @@ exit=$?
 # Map this longer, and rarer, diagnostic to the common one.
 # printf: cannot perform formatted output: Cannot allocate memory" \
 sed 's/cannot perform .*/write error/' err-msg > k && mv k err-msg
-err_msg=$(cat err-msg|tr '\n' :)
+err_msg=$(tr '\n' : < err-msg)
 
 # By some bug, on Solaris 11 (5.11 snv_86), err_msg ends up
 # containing '1> fifo:printf: write error:'.  Recognize that, too.

@@ -125,7 +125,7 @@ test "$c" = "0 1 2 3 4 5 6 7 8 9" ||
 
 # check --repeat with non-zero low value
 shuf --rep -i222-233 -n2000 > exp || framework_failure_
-c=$(cat exp | sort -nu | paste -s -d ' ') || framework_failure_
+c=$(sort -nu exp | paste -s -d ' ') || framework_failure_
 test "$c" = "222 223 224 225 226 227 228 229 230 231 232 233" ||
  { fail=1; echo "--repeat produced bad output with non-zero low">&2 ; }
 

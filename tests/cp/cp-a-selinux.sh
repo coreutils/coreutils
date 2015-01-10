@@ -64,7 +64,7 @@ get_selinux_type() { ls -Zd "$1" | sed -n 's/.*:\(.*_t\):.*/\1/p'; }
 # Also make a dir with our known context
 mkdir c_d || framework_failure_
 chcon $ctx c_d || framework_failure_
-# Get the type of this known context for file and dir
+# Get the type of this known context for file and dir for tracing
 old_type_f=$(get_selinux_type c)
 old_type_d=$(get_selinux_type c_d)
 # Setup copies for manipulation with restorecon
@@ -80,7 +80,7 @@ if restorecon Z1 Z1_d 2>/dev/null; then
   cpZ_type_f=$(get_selinux_type Z2)
   test "$cpZ_type_f" = "$new_type_f" || fail=1
 
-  # Ensuze -Z overrides -a and that dirs are handled too
+  # Ensure -Z overrides -a and that dirs are handled too
   cp -aZ c Z3 || fail=1
   cp -aZ c_d Z3_d || fail=1
   cpaZ_type_f=$(get_selinux_type Z3)
@@ -197,7 +197,7 @@ for no_g_cmd in '' 'rm -f g'; do
   cp -a --context="$ctx" ../f g || fail=1
 done
 
-# Mutually exlusive options
+# Mutually exclusive options
 cp -Z --preserve=context ../f g && fail=1
 cp --preserve=context -Z ../f g && fail=1
 cp --preserve=context --context="$ctx" ../f g && fail=1
