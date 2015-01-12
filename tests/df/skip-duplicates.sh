@@ -23,7 +23,7 @@ require_gcc_shared_
 
 # We use --local here so as to not activate
 # potentially very many remote mounts.
-df --local || skip_ "df fails"
+df --local || skip_ 'df fails'
 
 export CU_NONROOT_FS=$(df --local --output=target 2>&1 | grep /. | head -n1)
 export CU_REMOTE_FS=$(df --local --output=target 2>&1 | grep /. |
@@ -40,11 +40,22 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
 # Simulate an mtab file to test various cases.
-cat > k.c <<'EOF' || framework_failure_
+cat > k.c <<EOF || framework_failure_
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <mntent.h>
+#include "$CONFIG_HEADER"
+
+#ifdef MOUNTED_PROC_MOUNTINFO
+# include <libmount/libmount.h>
+struct libmnt_table *mnt_new_table_from_file(const char *filename)
+{
+  /* Returning NULL here will get read_file_system_list()
+     to fall back to using getmntent() below.  */
+  return NULL;
+}
+#endif
 
 #define STREQ(a, b) (strcmp (a, b) == 0)
 

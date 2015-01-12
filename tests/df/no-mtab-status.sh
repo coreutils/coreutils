@@ -30,10 +30,21 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
       || skip_ "getmntent is not used on this system"
 
 # Simulate "mtab" failure.
-cat > k.c <<'EOF' || framework_failure_
+cat > k.c <<EOF || framework_failure_
 #include <stdio.h>
 #include <errno.h>
 #include <mntent.h>
+#include "$CONFIG_HEADER"
+
+#ifdef MOUNTED_PROC_MOUNTINFO
+# include <libmount/libmount.h>
+struct libmnt_table *mnt_new_table_from_file(const char *filename)
+{
+  /* Returning NULL here will get read_file_system_list()
+     to fall back to using getmntent() below.  */
+  return NULL;
+}
+#endif
 
 struct mntent *getmntent (FILE *fp)
 {

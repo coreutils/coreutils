@@ -22,8 +22,10 @@ print_ver_ df
 df || skip_ "df fails"
 
 # Verify that rootfs is in mtab (and shown when the -a option is specified).
+# Note this is the case when /proc/self/mountinfo is parsed
+# rather than /proc/mounts.  I.E. when libmount is being used.
 df -a >out || fail=1
-grep '^rootfs' out || skip_ "no rootfs in mtab"
+grep '^rootfs' out || skip_ 'no rootfs in mtab'
 
 # Ensure that rootfs is suppressed when no options is specified.
 df >out || fail=1
