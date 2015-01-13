@@ -34,8 +34,8 @@ cp --sparse=always sparse copy || fail=1
 test $(stat --printf %b copy) -le $(stat --printf %b sparse) || fail=1
 
 # Ensure that --sparse={always,never} with --reflink fail.
-cp --sparse=always --reflink sparse copy && fail=1
-cp --sparse=never --reflink sparse copy && fail=1
+returns_ 1 cp --sparse=always --reflink sparse copy || fail=1
+returns_ 1 cp --sparse=never --reflink sparse copy || fail=1
 
 
 # Ensure we handle sparse/non-sparse transitions correctly

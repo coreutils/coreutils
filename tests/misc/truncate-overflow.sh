@@ -27,13 +27,13 @@ truncate -s-1 create-zero-len-file || fail=1
 echo > non-empty-file
 
 # signed overflow
-truncate -s$OFF_T_OFLOW file && fail=1
+returns_ 1 truncate -s$OFF_T_OFLOW file || fail=1
 
 # += signed overflow
-truncate -s+$OFF_T_MAX non-empty-file && fail=1
+returns_ 1 truncate -s+$OFF_T_MAX non-empty-file || fail=1
 
 # *= signed overflow
 IO_BLOCK_OFLOW=$(expr $OFF_T_MAX / $(stat -f -c%s .) + 1)
-truncate --io-blocks --size=$IO_BLOCK_OFLOW file && fail=1
+returns_ 1 truncate --io-blocks --size=$IO_BLOCK_OFLOW file || fail=1
 
 Exit $fail

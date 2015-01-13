@@ -70,7 +70,7 @@ split -a2 -C1000 < /dev/null || fail=1
 
 # Ensure that -a fails early with a -n that is too large
 rm -f x*
-split -a2 -n1000 < /dev/null && fail=1
+returns_ 1 split -a2 -n1000 < /dev/null || fail=1
 test -f xaa && fail=1
 
 Exit $fail

@@ -23,7 +23,7 @@ touch f || framework_failure_
 
 
 # Before coreutils-7.6, this would succeed on Solaris 10
-ln -T f no-such-file/ && fail=1
+returns_ 1 ln -T f no-such-file/ || fail=1
 test -e no-such-file && fail=1
 
 Exit $fail

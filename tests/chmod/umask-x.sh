@@ -21,6 +21,6 @@ print_ver_ chmod
 
 touch file
 chmod 755 file
-(umask 77 && chmod -x file) 2>/dev/null && fail=1
+(umask 77 && returns_ 1 chmod -x file) 2>/dev/null || fail=1
 
 Exit $fail

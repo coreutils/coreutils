@@ -22,7 +22,7 @@ uid=$(id -u) || fail=1
 user=$(id -nu) || fail=1
 
 # Ensure the empty user spec is discarded
-id '' && fail=1
+returns_ 1 id '' || fail=1
 
 for mode in '' '-G' '-g'; do
   id $mode $user > user_out || fail=1 # lookup name for comparison

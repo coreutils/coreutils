@@ -21,15 +21,15 @@ print_ver_ truncate
 
 
 # mixture of relative modifiers not allowed
-truncate --size="+>0" file && fail=1
+returns_ 1 truncate --size="+>0" file || fail=1
 
 # mixture of relative modifiers not allowed
-truncate --size=">+0" file && fail=1
+returns_ 1 truncate --size=">+0" file || fail=1
 
 # division by zero
-truncate --size="/0" file && fail=1
+returns_ 1 truncate --size="/0" file || fail=1
 
 # division by zero
-truncate --size="%0" file && fail=1
+returns_ 1 truncate --size="%0" file || fail=1
 
 Exit $fail

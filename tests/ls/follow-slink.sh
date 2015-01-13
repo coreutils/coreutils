@@ -19,6 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+LS_FAILURE=2
+
 # Isolate output files from directory being listed
 mkdir dir dir/sub dir1 || framework_failure_
 cd dir || framework_failure_
@@ -32,7 +34,7 @@ ls -F link > /dev/null || framework_failure_
 
 
 # When explicitly listing a broken link, the command must fail.
-ls -L link 2> /dev/null && fail=1
+returns_ $LS_FAILURE ls -L link 2> /dev/null || fail=1
 
 # When encountering a broken link implicitly, Solaris 9 and OpenBSD 3.4
 # list the link, provided no further information about the link needed

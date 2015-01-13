@@ -38,7 +38,7 @@ cd "$pwd/$tmp/removed" || framework_failure_
 
 # Skip this test if the system doesn't let you remove the working directory.
 if rmdir ../removed 2>/dev/null; then
-  v=$(readlink -e .) && fail=1
+  v=$(returns_ 1 readlink -e .) || fail=1
   test -z "$v" || fail=1
 fi
 

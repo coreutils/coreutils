@@ -44,7 +44,7 @@ split -e -n 10 --filter='xz > $FILE.xz' /dev/null || fail=1
 stat x?? 2>/dev/null && fail=1
 
 # Ensure this invalid combination is flagged
-split -n 1/2 --filter='true' /dev/null 2>/dev/null && fail=1
+returns_ 1 split -n 1/2 --filter='true' /dev/null 2>&1 || fail=1
 
 # Ensure SIGPIPEs sent by the children don't propagate back
 # where they would result in a non zero exit from split.

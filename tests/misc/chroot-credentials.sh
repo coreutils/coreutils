@@ -22,6 +22,8 @@ print_ver_ chroot
 
 require_root_
 
+EXIT_CANCELED=125
+
 grep '^#define HAVE_SETGROUPS 1' "$CONFIG_HEADER" >/dev/null \
   && HAVE_SETGROUPS=1
 
@@ -36,7 +38,8 @@ chroot --userspec=$NON_ROOT_UID: / true || fail=1
 
 # verify that invalid groups are diagnosed
 for g in ' ' ',' '0trail'; do
-  test "$(chroot --groups="$g" / id -G)" && fail=1
+  returns_ $EXIT_CANCELED chroot --groups="$g" / id -G >invalid || fail=1
+  compare /dev/null invalid || fail=1
 done
 
 # Verify that root credentials are kept.
@@ -111,7 +114,7 @@ if ! id -u +12342; then
   test "$(chroot --userspec=+12342:+5678 / id -G)" = '5678' || fail=1
 
   # Ensure we fail when we don't know what groups to set for an unknown ID
-  chroot --userspec=+12342 / true && fail=1
+  returns_ $EXIT_CANCELED chroot --userspec=+12342 / true || fail=1
 fi
 
 Exit $fail

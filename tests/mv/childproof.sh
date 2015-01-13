@@ -28,7 +28,7 @@ echo a > a/f || framework_failure_
 echo b > b/f || framework_failure_
 
 
-cp a/f b/f c 2> /dev/null && fail=1
+returns_ 1 cp a/f b/f c 2> /dev/null || fail=1
 test -f a/f || fail=1
 test -f b/f || fail=1
 test -f c/f || fail=1
@@ -43,7 +43,7 @@ test -f c/f || fail=1
 test -f c/f.~1~ || fail=1
 rm -f c/f*
 
-mv a/f b/f c 2> /dev/null && fail=1
+returns_ 1 mv a/f b/f c 2> /dev/null || fail=1
 test -f a/f && fail=1
 test -f b/f || fail=1
 test -f c/f || fail=1
@@ -62,7 +62,7 @@ test -f c/f || fail=1
 test -f c/g || fail=1
 
 touch a/f b/f b/g
-mv a/f b/f b/g c 2> /dev/null && fail=1
+returns_ 1 mv a/f b/f b/g c 2> /dev/null || fail=1
 test -f a/f && fail=1  # a/f should have been moved
 test -f b/f || fail=1  # b/f should remain
 test -f b/g && fail=1  # b/g should have been moved
@@ -74,7 +74,7 @@ test -f c/g || fail=1
 rm -f a/f b/f c/f
 echo a > a/f || fail=1
 echo b > b/f || fail=1
-ln -f a/f b/f c 2> /dev/null && fail=1
+returns_ 1 ln -f a/f b/f c 2> /dev/null || fail=1
 # a/f and c/f must be linked
 test $(stat --format %i a/f) = $(stat --format %i c/f) || fail=1
 # b/f and c/f must not be linked

@@ -34,8 +34,10 @@ stty $saved_state || fail=1
 # For each of the following, with coreutils-6.9 and earlier,
 # stty would fail to diagnose the error on at least Solaris 10.
 hex_2_64=10000000000000000
-stty $(echo $saved_state |sed 's/^[^:]*:/'$hex_2_64:/)     2>/dev/null && fail=1
-stty $(echo $saved_state |sed 's/:[0-9a-f]*$/:'$hex_2_64/) 2>/dev/null && fail=1
+returns_ 1 stty $(echo $saved_state |sed 's/^[^:]*:/'$hex_2_64:/) \
+  2>/dev/null || fail=1
+returns_ 1 stty $(echo $saved_state |sed 's/:[0-9a-f]*$/:'$hex_2_64/) \
+  2>/dev/null || fail=1
 
 # Just in case either of the above mistakenly succeeds (and changes
 # the state of our tty), try to restore the initial state.

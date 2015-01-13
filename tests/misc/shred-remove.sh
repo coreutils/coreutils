@@ -30,7 +30,7 @@ chmod u-w $file || framework_failure_
 # This would take so long that it appears to infloop
 # when using version from fileutils-4.0k.
 # When the command completes, expect it to fail.
-shred -u $file > /dev/null 2>&1 && fail=1
+returns_ 1 shred -u $file > /dev/null 2>&1 || fail=1
 rm -f $file || framework_failure_
 
 # Ensure all --remove methods at least unlink the file
@@ -42,6 +42,6 @@ done
 
 # Ensure incorrect params are diagnosed
 touch $file || framework_failure_
-shred -n0 --remove=none $file 2>/dev/null && fail=1
+returns_ 1 shred -n0 --remove=none $file 2>/dev/null || fail=1
 
 Exit $fail

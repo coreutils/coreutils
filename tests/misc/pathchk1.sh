@@ -25,14 +25,14 @@ touch file || framework_failure_
 
 # This should exit nonzero.  Before 2.0.13, it gave a diagnostic,
 # but exited successfully.
-pathchk file/x > /dev/null 2>&1 && fail=1
+returns_ 1 pathchk file/x > /dev/null 2>&1 || fail=1
 
 # This should exit nonzero.  Through 5.3.0 it exited with status zero.
-pathchk -p '' > /dev/null 2>&1 && fail=1
+returns_ 1 pathchk -p '' > /dev/null 2>&1 || fail=1
 
 # This tests the new -P option.
-pathchk -P '' > /dev/null 2>&1 && fail=1
-pathchk -P -- - > /dev/null 2>&1 && fail=1
-pathchk -p -P x/- > /dev/null 2>&1 && fail=1
+returns_ 1 pathchk -P '' > /dev/null 2>&1 || fail=1
+returns_ 1 pathchk -P -- - > /dev/null 2>&1 || fail=1
+returns_ 1 pathchk -p -P x/- > /dev/null 2>&1 || fail=1
 
 Exit $fail

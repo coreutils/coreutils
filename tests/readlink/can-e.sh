@@ -38,7 +38,7 @@ cd "$pwd/$tmp/removed" || framework_failure_
 
 # Skip this test if the system doesn't let you remove the working directory.
 if rmdir ../removed 2>/dev/null; then
-  v=$(readlink -e .) && fail=1
+  v=$(returns_ 1 readlink -e .) || fail=1
   test -z "$v" || fail=1
 fi
 
@@ -49,7 +49,7 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -e "${p}regfile") || fail=1
   test "$v" = "$my_pwd/$tmp/regfile" || fail=1
 
-  v=$(readlink -e "${p}./regfile/") && fail=1
+  v=$(returns_ 1 readlink -e "${p}./regfile/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -e "${p}subdir") || fail=1
@@ -58,19 +58,19 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -e "${p}./subdir/") || fail=1
   test "$v" = "$my_pwd/$tmp/subdir" || fail=1
 
-  v=$(readlink -e "${p}missing") && fail=1
+  v=$(returns_ 1 readlink -e "${p}missing") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}./missing/") && fail=1
+  v=$(returns_ 1 readlink -e "${p}./missing/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -e "${p}link1") || fail=1
   test "$v" = "$my_pwd/$tmp/regfile" || fail=1
 
-  v=$(readlink -e "${p}./link1/") && fail=1
+  v=$(returns_ 1 readlink -e "${p}./link1/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}link1/more") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link1/more") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -e "${p}link2") || fail=1
@@ -79,25 +79,25 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -e "${p}./link2/") || fail=1
   test "$v" = "$my_pwd/$tmp/subdir" || fail=1
 
-  v=$(readlink -e "${p}link2/more") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link2/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}link3") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link3") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}./link3/") && fail=1
+  v=$(returns_ 1 readlink -e "${p}./link3/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}link3/more") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link3/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}link4") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link4") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}./link4/") && fail=1
+  v=$(returns_ 1 readlink -e "${p}./link4/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -e "${p}link4/more") && fail=1
+  v=$(returns_ 1 readlink -e "${p}link4/more") || fail=1
   test -z "$v" || fail=1
 done
 

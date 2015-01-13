@@ -25,7 +25,7 @@ ln -s file s || framework_failure_
 
 
 # This must fail.
-mv s s 2> /dev/null && fail=1
+returns_ 1 mv s s 2> /dev/null || fail=1
 
 # But the symlink, s, must not be removed.
 # Before 4.0.36, 's' would have been removed.

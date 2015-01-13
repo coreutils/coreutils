@@ -39,7 +39,7 @@ cd "$pwd/$tmp/removed" || framework_failure_
 
 # Skip this test if the system doesn't let you remove the working directory.
 if rmdir ../removed 2>/dev/null; then
-  v=$(readlink -e .) && fail=1
+  v=$(returns_ 1 readlink -e .) || fail=1
   test -z "$v" || fail=1
 fi
 
@@ -50,13 +50,13 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -f "${p}regfile") || fail=1
   test "$v" = "$my_pwd/$tmp/regfile" || fail=1
 
-  v=$(readlink -f "${p}./regfile/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./regfile/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}regfile/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}regfile/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./regfile/more/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./regfile/more/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -f "${p}subdir") || fail=1
@@ -77,22 +77,22 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -f "${p}./missing/") || fail=1
   test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
-  v=$(readlink -f "${p}missing/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}missing/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./missing/more/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./missing/more/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -f "${p}link1") || fail=1
   test "$v" = "$my_pwd/$tmp/regfile" || fail=1
 
-  v=$(readlink -f "${p}./link1/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link1/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}link1/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link1/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link1/more/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link1/more/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -f "${p}link2") || fail=1
@@ -107,10 +107,10 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -f "${p}./link2/more/") || fail=1
   test "$v" = "$my_pwd/$tmp/subdir/more" || fail=1
 
-  v=$(readlink -f "${p}link2/more/more2") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link2/more/more2") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link2/more/more2/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link2/more/more2/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -f "${p}link3") || fail=1
@@ -119,10 +119,10 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -f "${p}./link3/") || fail=1
   test "$v" = "$my_pwd/$tmp/missing" || fail=1
 
-  v=$(readlink -f "${p}link3/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link3/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link3/more/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link3/more/") || fail=1
   test -z "$v" || fail=1
 
   v=$(readlink -f "${p}link4") || fail=1
@@ -131,22 +131,22 @@ for p in "" "$pwd/$tmp/"; do
   v=$(readlink -f "${p}./link4/") || fail=1
   test "$v" = "$my_pwd/$tmp/subdir/missing" || fail=1
 
-  v=$(readlink -f "${p}link4/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link4/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link4/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link4/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}link5") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link5") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link5/") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link5/") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}link5/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}link5/more") || fail=1
   test -z "$v" || fail=1
 
-  v=$(readlink -f "${p}./link5/more") && fail=1
+  v=$(returns_ 1 readlink -f "${p}./link5/more") || fail=1
   test -z "$v" || fail=1
 done
 

@@ -43,8 +43,8 @@ rmtest 'd/..'    || fail=1
 rmtest 'd/../'   || fail=1
 
 
-# This test is too dangerous -- if there's a bug you're wiped out!
-# rm -fr / 2>/dev/null && fail=1
+# This test is handled more carefully in r-root.sh
+# returns_ 1 rm -fr / 2>/dev/null || fail=1
 
 test -f d/a || fail=1
 

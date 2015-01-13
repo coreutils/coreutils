@@ -80,8 +80,8 @@ iwd=$(pwd)
 mkdir sub || fail=1
 (cd sub &&
  chmod 0 . &&
- ginstall -d "$iwd/xx/yy" rel/sub1 rel/sub2 2> /dev/null
-) && fail=1
+ returns_ 1 ginstall -d "$iwd/xx/yy" rel/sub1 rel/sub2 2> /dev/null
+) || fail=1
 chmod 755 sub
 
 # Ensure that the first argument-dir has been created.

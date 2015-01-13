@@ -107,9 +107,9 @@ ginstall -Cv -m$mode2 a b > out || fail=1
 compare out out_empty || fail=1
 
 # options -C and --preserve-timestamps are mutually exclusive
-ginstall -C --preserve-timestamps a b && fail=1
+returns_ 1 ginstall -C --preserve-timestamps a b || fail=1
 
 # options -C and --strip are mutually exclusive
-ginstall -C --strip --strip-program=echo a b && fail=1
+returns_ 1 ginstall -C --strip --strip-program=echo a b || fail=1
 
 Exit $fail

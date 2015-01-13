@@ -34,9 +34,9 @@ stty $(cat $saved_state) || fail=1
 stty erase - || fail=1
 
 # These would improperly ignore invalid options through coreutils 5.2.1.
-stty -F 2>/dev/null && fail=1
-stty -raw -F no/such/file 2>/dev/null && fail=1
-stty -raw -a 2>/dev/null && fail=1
+returns_ 1 stty -F 2>/dev/null || fail=1
+returns_ 1 stty -raw -F no/such/file 2>/dev/null || fail=1
+returns_ 1 stty -raw -a 2>/dev/null || fail=1
 
 # Build a list of all boolean options stty accepts on this system.
 # Don't depend on terminal width.  Put each option on its own line,

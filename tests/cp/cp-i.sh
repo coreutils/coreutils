@@ -60,6 +60,6 @@ echo n | cp -vnf c d 2>/dev/null > out7 || fail=1
 compare out7 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive
-cp -bn c d 2>/dev/null && fail=1
+returns_ 1 cp -bn c d 2>/dev/null || fail=1
 
 Exit $fail

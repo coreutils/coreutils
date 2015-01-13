@@ -48,14 +48,14 @@ done
 # underlying rename syscall handles the trailing slash.
 # It does fail, as desired, on recent Linux and Solaris systems.
 #touch a a2
-#mv a a2/ && fail=1
+#returns_ 1 mv a a2/ || fail=1
 
 # Test for a cp-specific diagnostic introduced after coreutils-8.7:
 printf '%s\n' \
   "cp: cannot create regular file 'no-such/': Not a directory" \
 > expected-err
 touch b
-cp b no-such/ 2> err && fail=1
+cp b no-such/ 2> err
 
 # Map "No such file..." diagnostic to the expected "Not a directory"
 sed 's/No such file or directory/Not a directory/' err > k && mv k err

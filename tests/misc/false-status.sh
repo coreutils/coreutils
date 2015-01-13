@@ -20,12 +20,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ false true
 
-env false --version > /dev/null && fail=1
-env false --help > /dev/null && fail=1
+returns_ 1 env false --version > /dev/null || fail=1
+returns_ 1 env false --help > /dev/null || fail=1
 
 if test -w /dev/full && test -c /dev/full; then
-  env true --version > /dev/full && fail=1
-  env true --help > /dev/full && fail=1
+  returns_ 1 env true --version > /dev/full || fail=1
+  returns_ 1 env true --help > /dev/full || fail=1
 fi
 
 Exit $fail

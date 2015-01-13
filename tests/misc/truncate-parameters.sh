@@ -21,22 +21,22 @@ print_ver_ truncate
 
 
 # must specify at least 1 file
-truncate --size=0 && fail=1
+returns_ 1 truncate --size=0 || fail=1
 
 # must specify size. don't default to 0
-truncate file && fail=1
+returns_ 1 truncate file || fail=1
 
 # mixture of absolute size & reference not allowed
-truncate --size=0 --reference=file file && fail=1
+returns_ 1 truncate --size=0 --reference=file file || fail=1
 
 # blocks without size is not valid
-truncate --io-blocks --reference=file file && fail=1
+returns_ 1 truncate --io-blocks --reference=file file || fail=1
 
 # must specify valid numbers
-truncate --size="invalid" file && fail=1
+returns_ 1 truncate --size="invalid" file || fail=1
 
 # spaces not significant around size
-truncate --size="> -1" file && fail=1
+returns_ 1 truncate --size="> -1" file || fail=1
 truncate --size=" >1" file || fail=1 #file now 1
 truncate --size=" +1" file || fail=1 #file now 2
 test $(stat --format %s file) = 2 || fail=1

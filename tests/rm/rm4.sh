@@ -24,7 +24,7 @@ mkdir dir || framework_failure_
 
 
 # This should fail.
-rm dir > /dev/null 2>&1 && fail=1
+returns_ 1 rm dir > /dev/null 2>&1 || fail=1
 
 test -d dir || fail=1
 

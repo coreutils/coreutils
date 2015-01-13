@@ -32,12 +32,12 @@ dd --help >/dev/null 2>&- || fail=1
 # This exposes a failure present in 6.11 through 7.5.
 if "$p/src/test" -w /dev/stderr 2>/dev/null &&
    "$p/src/test" ! -w /dev/stderr 2>&-; then
-  : | dd 2>&- && fail=1
+  : | returns_ 1 dd 2>&- || fail=1
 fi
 
 # Likewise for /dev/full, if /dev/full works.
 if test -w /dev/full && test -c /dev/full; then
-  : | dd 2>/dev/full && fail=1
+  : | returns_ 1 dd 2>/dev/full || fail=1
 fi
 
 Exit $fail

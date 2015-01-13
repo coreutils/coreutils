@@ -29,22 +29,22 @@ ln -s dir link2 || framework_failure_
 
 # Trailing slash can only appear on directory or symlink-to-directory.
 # Up through coreutils 8.0, Solaris 9 failed these tests.
-touch no-file/ && fail=1
-touch file/ && fail=1
-touch dangling/ && fail=1
-touch loop/ && fail=1
-touch link1/ && fail=1
+returns_ 1 touch no-file/ || fail=1
+returns_ 1 touch file/ || fail=1
+returns_ 1 touch dangling/ || fail=1
+returns_ 1 touch loop/ || fail=1
+returns_ 1 touch link1/ || fail=1
 touch dir/ || fail=1
 
 # -c silences ENOENT, but not ENOTDIR or ELOOP
 touch -c no-file/ || fail=1
-touch -c file/ && fail=1
+returns_ 1 touch -c file/ || fail=1
 touch -c dangling/ || fail=1
-touch -c loop/ && fail=1
-touch -c link1/ && fail=1
+returns_ 1 touch -c loop/ || fail=1
+returns_ 1 touch -c link1/ || fail=1
 touch -c dir/ || fail=1
-test -f no-file && fail=1
-test -f nowhere && fail=1
+returns_ 1 test -f no-file || fail=1
+returns_ 1 test -f nowhere || fail=1
 
 # Trailing slash dereferences a symlink, even with -h.
 # mtime is sufficient to show pass (besides, lstat changes atime of

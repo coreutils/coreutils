@@ -59,7 +59,7 @@ for p in empty -p; do
 
     # If we're not using -p, then create the parent manually,
     # and adjust expectations accordingly.
-    test x$p = x && \
+    test x$p = x &&
       {
         mkdir -m =,u=rwx parent || fail=1
         parent_perms=drwx------

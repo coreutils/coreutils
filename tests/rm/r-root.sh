@@ -143,8 +143,7 @@ for opts in           \
   'rootlink2/'        \
   'rootlink3/'        ; do
 
-  exercise_rm_r_root $opts \
-    && fail=1
+  returns_ 1 exercise_rm_r_root $opts || fail=1
 
   # For some of the synonyms, the error diagnostic slightly differs from that
   # of the basic "/" case (see gnulib's fts_open' and ROOT_DEV_INO_WARN):
@@ -178,8 +177,7 @@ done
 # by setting the following variable.
 CU_TEST_SKIP_EXIT=1
 
-exercise_rm_r_root --preserve-root file1 '/' file2 \
-  && fail=1
+returns_ 1 exercise_rm_r_root --preserve-root file1 '/' file2 || fail=1
 
 unset CU_TEST_SKIP_EXIT
 
@@ -219,8 +217,7 @@ for file in      \
 
   test -d "$file" || continue   # if e.g. /etc does not exist.
 
-  exercise_rm_r_root --preserve-root "$file" \
-    && fail=1
+  returns_ 1 exercise_rm_r_root --preserve-root "$file" || fail=1
 
   grep "^rm: refusing to remove '\.' or '\.\.' directory: skipping" err \
     || fail=1
@@ -244,8 +241,7 @@ exercise_rm_r_root  --interactive=never --no-preserve-root '/' \
   || fail=1
 
 # The 'err' file should not contain the above error diagnostic.
-grep "^rm: it is dangerous to operate recursively on '/'" err \
-  && fail=1
+grep "^rm: it is dangerous to operate recursively on '/'" err && fail=1
 
 # Instead, rm(1) should have called the intercepted unlinkat() function,
 # i.e. the evidence file "x" should exist.

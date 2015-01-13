@@ -49,14 +49,16 @@ rm -f f
 # in the destination, so SELinux contexts should be updated too.
 chmod o+rw restore/existing_dir
 mkdir -p backup/existing_dir/ || framework_failure_
-ls -Zd backup/existing_dir | grep $ctx && framework_failure_
+ls -Zd backup/existing_dir > ed_ctx || fail=1
+grep $ctx ed_ctx && framework_failure_
 touch backup/existing_dir/file || framework_failure_
 chcon $ctx backup/existing_dir/file || framework_failure_
 # Set the dir context to ensure it is reset
 mkdir -p --context="$ctx" restore/existing_dir || framework_failure_
 # Copy and ensure existing directories updated
 cp -a backup/. restore/
-ls -Zd restore/existing_dir | grep $ctx &&
+ls -Zd restore/existing_dir > ed_ctx || fail=1
+grep $ctx ed_ctx &&
   { ls -lZd restore/existing_dir; fail=1; }
 
 # Check restorecon (-Z) functionality for file and directory
@@ -175,6 +177,7 @@ for no_g_cmd in '' 'rm -f g'; do
   # restorecon equivalent.  Note even though the context
   # returned from matchpathcon() will not match $ctx
   # the resulting ENOTSUP warning will be suppressed.
+
    # With absolute path
   $no_g_cmd
   cp -Z ../f $(realpath g) || fail=1
@@ -186,7 +189,7 @@ for no_g_cmd in '' 'rm -f g'; do
   cp -Z -a ../f g || fail=1
    # -Z doesn't take an arg
   $no_g_cmd
-  cp -Z "$ctx" ../f g && fail=1
+  returns_ 1 cp -Z "$ctx" ../f g || fail=1
 
   # Explicit context
   $no_g_cmd
@@ -198,8 +201,8 @@ for no_g_cmd in '' 'rm -f g'; do
 done
 
 # Mutually exclusive options
-cp -Z --preserve=context ../f g && fail=1
-cp --preserve=context -Z ../f g && fail=1
-cp --preserve=context --context="$ctx" ../f g && fail=1
+returns_ 1 cp -Z --preserve=context ../f g || fail=1
+returns_ 1 cp --preserve=context -Z ../f g || fail=1
+returns_ 1 cp --preserve=context --context="$ctx" ../f g || fail=1
 
 Exit $fail

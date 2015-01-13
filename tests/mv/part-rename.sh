@@ -31,13 +31,13 @@ mv foo/ "$other_partition_tmpdir/bar" || fail=1
 
 # Moving a non directory from source shouldn't replace empty dir in dest
 touch bar || framework_failure_
-mv bar "$other_partition_tmpdir/" && fail=1
+returns_ 1 mv bar "$other_partition_tmpdir/" || fail=1
 
 
 # Moving a directory from source shouldn't replace non directory in dest
 mkdir bar2
 touch "$other_partition_tmpdir/bar2"
-mv bar2 "$other_partition_tmpdir/" && fail=1
+returns_ 1 mv bar2 "$other_partition_tmpdir/" || fail=1
 
 
 # As per POSIX moving directory from source should replace empty dir in dest
@@ -51,7 +51,7 @@ test -e "$other_partition_tmpdir/bar3/file" || fail=1
 # As per POSIX moving directory from source shouldn't update dir in dest
 mkdir bar3
 touch bar3/file2
-mv bar3 "$other_partition_tmpdir/" && fail=1
+returns_ 1 mv bar3 "$other_partition_tmpdir/" || fail=1
 test -e "$other_partition_tmpdir/bar3/file2" && fail=1
 
 Exit $fail

@@ -24,7 +24,7 @@ touch file || framework_failure_
 
 
 # In 4.0.35, this cp invocation silently succeeded.
-cp -R dir file 2>/dev/null && fail=1
+returns_ 1 cp -R dir file 2>/dev/null || fail=1
 
 # Make sure file is not replaced with a directory.
 # In 4.0.35, it was.

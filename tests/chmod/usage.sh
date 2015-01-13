@@ -67,7 +67,7 @@ for case in $cases; do
   case $files in
   '')
     touch -- $all_files || framework_failure_
-    chmod $args 2>/dev/null && fail=1
+    returns_ 1 chmod $args 2>/dev/null || fail=1
     ;;
   ?*)
     touch -- $files || framework_failure_
@@ -77,7 +77,7 @@ for case in $cases; do
       # chmod has a bug if it succeeds even though $file is absent.
       rm -f -- $all_files && touch -- $files && rm -- $file \
           || framework_failure_
-      chmod $args 2>/dev/null && fail=1
+      returns_ 1 chmod $args 2>/dev/null || fail=1
     done
     ;;
   esac

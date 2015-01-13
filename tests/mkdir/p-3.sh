@@ -27,7 +27,8 @@ mkdir no-acce2s || framework_failure_
 mkdir -p no-acce3s/d || framework_failure_
 
 p=$(pwd)
-(cd no-access && chmod 0 . && mkdir -p "$p/a/b" u/v) 2> /dev/null && fail=1
+(cd no-access && chmod 0 . && mkdir -p "$p/a/b" u/v) 2> /dev/null
+test $? -eq 1 || fail=1
 test -d "$p/a/b" || fail=1
 
 # Same as above, but with a following *absolute* name, it should succeed

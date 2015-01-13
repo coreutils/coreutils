@@ -27,7 +27,7 @@ chmod u=rx,go=,-st D || framework_failure_
 
 
 # This is expected to exit non-zero, because it can't read D/a.
-cp -pR D DD > /dev/null 2>&1 && fail=1
+returns_ 1 cp -pR D DD > /dev/null 2>&1 || fail=1
 
 # Permissions on DD must be 'dr-x------'
 

@@ -59,7 +59,7 @@ for u in $id_u "$id_un" ''; do
     esac
     for sep in $seps; do
       case $u$sep$g in
-        [0-9]*$sep) chown "$u$sep$g" . 2> /dev/null && fail=1 ;;
+        [0-9]*$sep) returns_ 1 chown "$u$sep$g" . 2>/dev/null || fail=1 ;;
         *) chown "$u$sep$g" . || fail=1 ;;
       esac
     done

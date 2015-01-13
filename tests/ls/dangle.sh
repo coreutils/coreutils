@@ -19,6 +19,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+LS_MINOR_PROBLEM=1
+LS_FAILURE=2
+
 ln -s no-such-file dangle || framework_failure_
 mkdir -p dir/sub || framework_failure_
 ln -s dir slink-to-dir || framework_failure_
@@ -27,11 +30,10 @@ ln -s no-such d/dangle || framework_failure_
 printf '? dangle\n' > subdir_Li_exp || framework_failure_
 printf 'total 0\n? dangle\n' > subdir_Ls_exp || framework_failure_
 
-
 # This must exit nonzero.
-ls -L dangle > /dev/null 2>&1 && fail=1
+returns_ $LS_FAILURE ls -L dangle > /dev/null 2>&1 || fail=1
 # So must this.
-ls -H dangle > /dev/null 2>&1 && fail=1
+returns_ $LS_FAILURE ls -H dangle > /dev/null 2>&1 || fail=1
 
 # This must exit successfully.
 ls dangle >> out || fail=1
@@ -51,12 +53,12 @@ compare exp out || fail=1
 
 # Ensure that ls -Li prints "?" as the inode of a dangling symlink.
 rm -f out
-ls -Li d > out 2>/dev/null && fail=1
+returns_ $LS_MINOR_PROBLEM ls -Li d > out 2>/dev/null || fail=1
 compare subdir_Li_exp out || fail=1
 
 # Ensure that ls -Ls prints "?" as the allocation of a dangling symlink.
 rm -f out
-ls -Ls d > out 2>/dev/null && fail=1
+returns_ $LS_MINOR_PROBLEM ls -Ls d > out 2>/dev/null || fail=1
 compare subdir_Ls_exp out || fail=1
 
 Exit $fail

@@ -33,7 +33,7 @@ EOF
 
 # This failed on Solaris 9 for coreutils 8.0.
 stat --format=%n link1 > out || fail=1
-stat --format=%n link1/ >> out && fail=1
+returns_ 1 stat --format=%n link1/ >> out || fail=1
 
 stat --format=%F link2 >> out || fail=1
 stat -L --format=%F link2 >> out || fail=1

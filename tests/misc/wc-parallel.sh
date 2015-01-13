@@ -25,8 +25,9 @@ print_ver_ wc
 # This will output at least 16KiB per process
 # and start 3 processes, with 2 running concurrently,
 # which triggers often on Fedora 11 at least.
-(find tmp tmp tmp -type f | xargs -n2000 -P2 wc) |
+(find tmp tmp tmp -type f | xargs -n2000 -P2 wc 2>err) |
 sed -n '/0 0 0 /!p' |
 grep . > /dev/null && fail=1
+compare /dev/null err || fail=1
 
 Exit $fail

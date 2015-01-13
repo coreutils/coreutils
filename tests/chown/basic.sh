@@ -34,7 +34,7 @@ printf "ownership of 'f' retained as $(id -nu)\n" > exp
 compare exp out || fail=1
 
 # Ensure diagnostics work for non existent files.
-chown -v 0 nf > out && fail=1
+returns_ 1 chown -v 0 nf > out || fail=1
 printf "failed to change ownership of 'nf' to 0\n" > exp
 compare exp out || fail=1
 

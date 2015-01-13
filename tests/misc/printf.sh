@@ -25,7 +25,9 @@ getlimits_
 
 
 # Verify the 3 methods of specifying "Escape":
-test $($prog "\x1b\n\33\n\e\n" | uniq -u) && fail=1
+printf '%s\n' . . . | tr . '\033' > exp
+$prog '\x1b\n\33\n\e\n' > out || fail=1
+compare exp out || fail=1
 
 # This would fail (by printing the '--') for printf in sh-utils
 # and in coreutils 4.5.1.
@@ -68,17 +70,17 @@ $prog '8 %b %b %b %b\n' '\1y' '\01y' '\001y' '\0001y'|tr '\1' = >> out
 $prog '9 %*dx\n' -2 0 >>out || fail=1
 
 $prog '10 %.*dx\n' $INT_UFLOW 0 >>out || fail=1
-$prog '%.*dx\n' $INT_OFLOW 0 >>out 2> /dev/null && fail=1
+returns_ 1 $prog '%.*dx\n' $INT_OFLOW 0 >>out 2> /dev/null || fail=1
 
 $prog '11 %*c\n' 2 x >>out || fail=1
 
-$prog '%#d\n' 0 >>out 2> /dev/null && fail=1
+returns_ 1 $prog '%#d\n' 0 >>out 2> /dev/null || fail=1
 
-$prog '%0s\n' 0 >>out 2> /dev/null && fail=1
+returns_ 1 $prog '%0s\n' 0 >>out 2> /dev/null || fail=1
 
-$prog '%.9c\n' 0 >>out 2> /dev/null && fail=1
+returns_ 1 $prog '%.9c\n' 0 >>out 2> /dev/null || fail=1
 
-$prog '%'\''s\n' 0 >>out 2> /dev/null && fail=1
+returns_ 1 $prog '%'\''s\n' 0 >>out 2> /dev/null || fail=1
 
 cat <<\EOF > exp
 1 x  y

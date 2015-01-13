@@ -20,6 +20,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mv
 
+LS_FAILURE=2
+
 mkdir -p d/sub empty src d2/sub e2 || framework_failure_
 touch f || framework_failure_
 
@@ -35,15 +37,15 @@ mv a b ||
 mv -fT d empty || fail=1
 
 # Ensure that the source, d, is gone.
-ls -d d > /dev/null 2>&1 && fail=1
+returns_ $LS_FAILURE ls -d d > /dev/null 2>&1 || fail=1
 
 # Ensure that the dest dir now has a subdirectory.
 test -d empty/sub || fail=1
 
 # rename must fail, since the dest is non-empty.
-mv -fT src d2 2> /dev/null && fail=1
+returns_ 1 mv -fT src d2 2> /dev/null || fail=1
 
 # rename must fail, since the src is not a directory.
-mv -fT f e2 2> /dev/null && fail=1
+returns_ 1 mv -fT f e2 2> /dev/null || fail=1
 
 Exit $fail

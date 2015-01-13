@@ -31,13 +31,13 @@ test "$v" = regfile || fail=1
 v=$(readlink link2) || fail=1
 test "$v" = missing || fail=1
 
-v=$(readlink subdir) && fail=1
+v=$(returns_ 1 readlink subdir) || fail=1
 test -z "$v" || fail=1
 
-v=$(readlink regfile) && fail=1
+v=$(returns_ 1 readlink regfile) || fail=1
 test -z "$v" || fail=1
 
-v=$(readlink missing) && fail=1
+v=$(returns_ 1 readlink missing) || fail=1
 test -z "$v" || fail=1
 
 Exit $fail

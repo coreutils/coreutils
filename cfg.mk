@@ -377,6 +377,17 @@ sc_prohibit_fail_0:
 	halt='fail=0 initialization'					\
 	  $(_sc_search_regexp)
 
+# Ensure that tests don't use `cmd ... && fail=1` as that hides crashes.
+# The "exclude" expression allows common idioms like `test ... && fail=1`
+# and the 2>... portion allows commands that redirect stderr and so probably
+# independently check its contents and thus detect any crash messages.
+sc_prohibit_and_fail_1:
+	@prohibit='&& fail=1'						\
+	exclude='(stat|kill|test |EGREP|grep|env|2> *[^/])'		\
+	halt='&& fail=1 detected. Please use: returns_ 1 ... || fail=1'	\
+	in_vc_files='^tests/'						\
+	  $(_sc_search_regexp)
+
 # The mode part of a setfacl -m option argument must be three bytes long.
 # I.e., an argument of user:bin:rw or user:bin:r will make Solaris 10's
 # setfacl reject it with: "Unrecognized character found in mode field".

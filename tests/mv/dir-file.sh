@@ -24,7 +24,7 @@ mkdir -p dir/file || framework_failure_
 
 
 # These should both fail, but until fileutils-4.0q only the second one did.
-mv dir file > /dev/null 2>&1 && fail=1
-mv file dir > /dev/null 2>&1 && fail=1
+returns_ 1 mv dir file > /dev/null 2>&1 || fail=1
+returns_ 1 mv file dir > /dev/null 2>&1 || fail=1
 
 Exit $fail

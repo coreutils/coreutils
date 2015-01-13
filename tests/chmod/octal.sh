@@ -22,8 +22,8 @@ print_ver_ chmod
 
 # Before coreutils-5.92, this would mistakenly succeed,
 # and act like 'chmod 0 .'.
-chmod 0-followed-by-anything . 2> /dev/null && fail=1
-chmod 7-followed-by-anything . 2> /dev/null && fail=1
-chmod 8                      . 2> /dev/null && fail=1
+for mode in '0-anything' '7-anything' '8'; do
+  returns_ 1 chmod "$mode" . 2>/dev/null || fail=1
+done
 
 Exit $fail

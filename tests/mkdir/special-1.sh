@@ -36,7 +36,7 @@ rmdir $tmp || fail=1
 tmp2=$tmp/sub
 
 # This should fail.
-mkdir -m$set_mode_string $tmp2 2> /dev/null && fail=1
+returns_ 1 mkdir -m$set_mode_string $tmp2 2> /dev/null || fail=1
 
 # Now test the --parents option.
 mkdir --parents -m$set_mode_string $tmp2 || fail=1

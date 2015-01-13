@@ -22,16 +22,16 @@ print_ver_ chcon
 
 
 # neither context nor file
-chcon 2> /dev/null && fail=1
+returns_ 1 chcon 2> /dev/null || fail=1
 
 # No file
-chcon CON 2> /dev/null && fail=1
+returns_ 1 chcon CON 2> /dev/null || fail=1
 
 # No file
 touch f
-chcon --reference=f 2> /dev/null && fail=1
+returns_ 1 chcon --reference=f 2> /dev/null || fail=1
 
 # No file
-chcon -u anyone 2> /dev/null && fail=1
+returns_ 1 chcon -u anyone 2> /dev/null || fail=1
 
 Exit $fail

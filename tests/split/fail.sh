@@ -24,13 +24,13 @@ touch in || framework_failure_
 
 
 split -a 0 in 2> /dev/null || fail=1
-split -b 0 in 2> /dev/null && fail=1
-split -C 0 in 2> /dev/null && fail=1
-split -l 0 in 2> /dev/null && fail=1
-split -n 0 in 2> /dev/null && fail=1
-split -n 1/0 in 2> /dev/null && fail=1
-split -n 0/1 in 2> /dev/null && fail=1
-split -n 2/1 in 2> /dev/null && fail=1
+returns_ 1 split -b 0 in 2> /dev/null || fail=1
+returns_ 1 split -C 0 in 2> /dev/null || fail=1
+returns_ 1 split -l 0 in 2> /dev/null || fail=1
+returns_ 1 split -n 0 in 2> /dev/null || fail=1
+returns_ 1 split -n 1/0 in 2> /dev/null || fail=1
+returns_ 1 split -n 0/1 in 2> /dev/null || fail=1
+returns_ 1 split -n 2/1 in 2> /dev/null || fail=1
 
 # Make sure -C doesn't create empty files.
 rm -f x?? || fail=1
@@ -42,21 +42,21 @@ test -f xac && fail=1
 split -1 in 2> /dev/null || fail=1
 
 # Then make sure that -0 evokes a failure.
-split -0 in 2> /dev/null && fail=1
+returns_ 1 split -0 in 2> /dev/null || fail=1
 
 split --lines=$UINTMAX_MAX in || fail=1
 split --bytes=$OFF_T_MAX in || fail=1
-split --line-bytes=$OFF_T_OFLOW 2> /dev/null in && fail=1
-split --line-bytes=$SIZE_OFLOW 2> /dev/null in && fail=1
+returns_ 1 split --line-bytes=$OFF_T_OFLOW 2> /dev/null in || fail=1
+returns_ 1 split --line-bytes=$SIZE_OFLOW 2> /dev/null in || fail=1
 if truncate -s$SIZE_OFLOW large; then
   # Ensure we can split chunks of a large file on 32 bit hosts
   split --number=$SIZE_OFLOW/$SIZE_OFLOW large >/dev/null || fail=1
 fi
 split --number=r/$UINTMAX_MAX/$UINTMAX_MAX </dev/null >/dev/null || fail=1
-split --number=r/$UINTMAX_OFLOW </dev/null 2>/dev/null && fail=1
+returns_ 1 split --number=r/$UINTMAX_OFLOW </dev/null 2>/dev/null || fail=1
 
 # Make sure that a huge obsolete option evokes the right failure.
-split -99999999999999999991 2> out && fail=1
+split -99999999999999999991 2> out
 
 # On losing systems (x86 Solaris 5.9 c89), we get a message like this:
 #   split: line count option -9999999999... is too large
@@ -75,7 +75,7 @@ compare exp out || fail=1
 # (the current directory in this case)
 if ! cat . >/dev/null; then
   # can't read() directories
-  split . && fail=1
+  returns_ 1 split . || fail=1
 fi
 
 Exit $fail

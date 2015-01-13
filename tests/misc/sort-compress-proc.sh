@@ -20,6 +20,8 @@
 print_ver_ sort
 expensive_
 
+SORT_FAILURE=2
+
 seq -w 2000 > exp || fail=1
 tac exp > in || fail=1
 insize=$(stat -c %s - <in) || fail=1
@@ -52,7 +54,8 @@ do
       exec >/dev/null 2>&1 <&1 || exit
       expr $size "<" '"$insize"' / 2 || { sleep 1; exit 1; }
     }
-  ' sort --compress-program=./compress -S 1k --batch-size=2 in > out && fail=1
+  ' sort --compress-program=./compress -S 1k --batch-size=2 in > out
+  test $? -eq $SORT_FAILURE || fail=1
 done
 
 # "Pre-exec child" test

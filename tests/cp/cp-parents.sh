@@ -42,7 +42,7 @@ test -d d/a/b/c || fail=1
 
 # With 6.7 and earlier, cp --parents f/g d would mistakenly create a
 # directory d/f, even though f is a regular file.
-cp --parents f/g d 2>/dev/null && fail=1
+returns_ 1 cp --parents f/g d 2>/dev/null || fail=1
 test -d d/f && fail=1
 
 # Check that re_protect works.

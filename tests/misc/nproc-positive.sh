@@ -35,7 +35,7 @@ for i in 0 ' 1' 1000; do
 done
 
 for i in -1 N; do
-    nproc --ignore=$i && fail=1
+    returns_ 1 nproc --ignore=$i || fail=1
 done
 
 procs=$(OMP_NUM_THREADS=42 nproc --ignore=40)

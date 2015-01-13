@@ -77,22 +77,22 @@ LD_PRELOAD=./k.so df -Ti '.' || fail=1
 LD_PRELOAD=./k.so df --total '.' || fail=1
 
 # These tests are supposed to fail:
-LD_PRELOAD=./k.so df && fail=1
-LD_PRELOAD=./k.so df -i && fail=1
-LD_PRELOAD=./k.so df -T && fail=1
-LD_PRELOAD=./k.so df -Ti && fail=1
-LD_PRELOAD=./k.so df --total && fail=1
+LD_PRELOAD=./k.so returns_ 1 df || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -i || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -T || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -Ti || fail=1
+LD_PRELOAD=./k.so returns_ 1 df --total || fail=1
 
-LD_PRELOAD=./k.so df -a && fail=1
-LD_PRELOAD=./k.so df -a '.' && fail=1
+LD_PRELOAD=./k.so returns_ 1 df -a || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -a '.' || fail=1
 
-LD_PRELOAD=./k.so df -l && fail=1
-LD_PRELOAD=./k.so df -l '.' && fail=1
+LD_PRELOAD=./k.so returns_ 1 df -l || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -l '.' || fail=1
 
-LD_PRELOAD=./k.so df -t hello && fail=1
-LD_PRELOAD=./k.so df -t hello '.' && fail=1
+LD_PRELOAD=./k.so returns_ 1 df -t hello || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -t hello '.' || fail=1
 
-LD_PRELOAD=./k.so df -x hello && fail=1
-LD_PRELOAD=./k.so df -x hello '.' && fail=1
+LD_PRELOAD=./k.so returns_ 1 df -x hello || fail=1
+LD_PRELOAD=./k.so returns_ 1 df -x hello '.' || fail=1
 
 Exit $fail

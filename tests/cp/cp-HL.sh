@@ -33,7 +33,7 @@ test -d dest-dir/src-dir || fail=1
 cat dest-dir/slink > /dev/null 2>&1 || fail=1
 
 # Expect this to fail since *this* slink is a dangling symlink.
-cat dest-dir/src-dir/slink > /dev/null 2>&1 && fail=1
+returns_ 1 cat dest-dir/src-dir/slink >/dev/null 2>&1 || fail=1
 
 # FIXME: test -L, too.
 

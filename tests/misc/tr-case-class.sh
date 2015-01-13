@@ -29,11 +29,11 @@ tr '[:lower:][:lower:]' '[:upper:]0-9' > out || fail=1
 compare exp out || fail=1
 
 # Validate the alignment of case classes
-tr 'A-Z[:lower:]' 'a-y[:upper:]' < /dev/null && fail=1
-tr '[:upper:][:lower:]' 'a-y[:upper:]' < /dev/null && fail=1
-tr 'A-Y[:lower:]' 'a-z[:upper:]' < /dev/null && fail=1
-tr 'A-Z[:lower:]' '[:lower:][:upper:]' < /dev/null && fail=1
-tr 'A-Z[:lower:]' '[:lower:]A-Z' < /dev/null && fail=1
+returns_ 1 tr 'A-Z[:lower:]' 'a-y[:upper:]' </dev/null || fail=1
+returns_ 1 tr '[:upper:][:lower:]' 'a-y[:upper:]' </dev/null || fail=1
+returns_ 1 tr 'A-Y[:lower:]' 'a-z[:upper:]' </dev/null || fail=1
+returns_ 1 tr 'A-Z[:lower:]' '[:lower:][:upper:]' </dev/null || fail=1
+returns_ 1 tr 'A-Z[:lower:]' '[:lower:]A-Z' </dev/null || fail=1
 tr '[:upper:][:lower:]' 'a-z[:upper:]' < /dev/null || fail=1
 tr '[:upper:][:lower:]' '[:upper:]a-z' < /dev/null || fail=1
 

@@ -22,7 +22,7 @@ print_ver_ split
 
 # ensure this feature is off when start number specified
 truncate -s12 file.in
-split file.in -b1 --numeric=89 && fail=1
+returns_ 1 split file.in -b1 --numeric=89 || fail=1
 test "$(ls -1 x* | wc -l)" = 11 || fail=1
 rm -f x*
 

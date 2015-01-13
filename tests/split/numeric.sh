@@ -56,10 +56,10 @@ compare exp-3 x03 || fail=1
 
 # Check that split failed when suffix length is not large enough for
 # the numerical suffix start value
-split -a 3 --numeric-suffixes=1000 in 2> /dev/null && fail=1
+returns_ 1 split -a 3 --numeric-suffixes=1000 in 2>/dev/null || fail=1
 
 # check invalid --numeric-suffixes start values are flagged
-split --numeric-suffixes=-1 in 2> /dev/null && fail=1
-split --numeric-suffixes=one in 2> /dev/null && fail=1
+returns_ 1 split --numeric-suffixes=-1 in 2> /dev/null || fail=1
+returns_ 1 split --numeric-suffixes=one in 2> /dev/null || fail=1
 
 Exit $fail

@@ -21,7 +21,7 @@ print_ver_ cat
 
 echo x >out || framework_failure_
 echo x >out1 || framework_failure_
-cat out >>out && fail=1
+returns_ 1 cat out >>out || fail=1
 compare out out1 || fail=1
 
 # This example is taken from the POSIX spec for 'cat'.

@@ -44,21 +44,21 @@ sleep 0 >&- || fail=1
 # This test is ineffective unless /dev/stdout also works.
 if "$p/src/test" -w /dev/stdout >/dev/null &&
    "$p/src/test" ! -w /dev/stdout >&-; then
-  "$p/src/printf" 'foo' >&- 2>/dev/null && fail=1
-  cp --verbose a b >&- 2>/dev/null && fail=1
+  returns_ 1 "$p/src/printf" 'foo' >&- 2>/dev/null || fail=1
+  returns_ 1 cp --verbose a b >&- 2>/dev/null || fail=1
   rm -Rf tmpfile-?????? || fail=1
-  mktemp tmpfile-XXXXXX >&- 2>/dev/null && fail=1
-  mktemp tmpfile-XXXXXX -q >&- 2>/dev/null && fail=1
+  returns_ 1 mktemp tmpfile-XXXXXX >&- 2>/dev/null || fail=1
+  returns_ 1 mktemp tmpfile-XXXXXX -q >&- 2>/dev/null || fail=1
   case $(echo tmpfile-??????) in 'tmpfile-??????') ;; *) fail=1 ;; esac
 fi
 
 # Likewise for /dev/full, if /dev/full works.
 if test -w /dev/full && test -c /dev/full; then
-  "$p/src/printf" 'foo' >/dev/full 2>/dev/null && fail=1
-  cp --verbose a b >/dev/full 2>/dev/null && fail=1
+  returns_ 1 "$p/src/printf" 'foo' >/dev/full 2>/dev/null || fail=1
+  returns_ 1 cp --verbose a b >/dev/full 2>/dev/null || fail=1
   rm -Rf tmpdir-?????? || fail=1
-  mktemp -d tmpdir-XXXXXX >/dev/full 2>/dev/null && fail=1
-  mktemp -d -q tmpdir-XXXXXX >/dev/full 2>/dev/null && fail=1
+  returns_ 1 mktemp -d tmpdir-XXXXXX >/dev/full 2>/dev/null || fail=1
+  returns_ 1 mktemp -d -q tmpdir-XXXXXX >/dev/full 2>/dev/null || fail=1
   case $(echo tmpfile-??????) in 'tmpfile-??????') ;; *) fail=1 ;; esac
 fi
 

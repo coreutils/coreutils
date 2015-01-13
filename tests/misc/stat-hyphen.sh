@@ -23,7 +23,7 @@ printf -- '-\n' > exp || framework_failure_
 touch f || framework_failure_
 
 stat --format=%n - < f > out || fail=1
-stat -f - < f && fail=1
+returns_ 1 stat -f - < f || fail=1
 
 compare exp out || fail=1
 

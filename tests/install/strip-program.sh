@@ -34,7 +34,7 @@ ginstall src dest -s --strip-program=./b || fail=1
 compare exp dest || fail=1
 
 # Check that install cleans up properly if strip fails.
-ginstall src dest2 -s --strip-program=./FOO && fail=1
+returns_ 1 ginstall src dest2 -s --strip-program=./FOO || fail=1
 test -e dest2 && fail=1
 
 Exit $fail

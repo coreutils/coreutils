@@ -26,7 +26,7 @@ echo y > y || framework_failure_
 
 
 # This must fail.
-rm -i dir < y > /dev/null 2>&1 && fail=1
+returns_ 1 rm -i dir < y > /dev/null 2>&1 || fail=1
 
 # The directory must remain.
 test -d dir || fail=1

@@ -34,7 +34,7 @@ ln -s nowhere dangle || framework_failure_
 du -sD slink b > /dev/null 2>&1 || fail=1
 
 # This used to fail to report the dangling symlink.
-du -L dangle > /dev/null 2>&1 && fail=1
+returns_ 1 du -L dangle > /dev/null 2>&1 || fail=1
 
 # du -L used to mess up, either by counting the symlink's disk space itself
 # (-L should follow symlinks, not count their space)

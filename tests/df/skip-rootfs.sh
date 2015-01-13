@@ -34,7 +34,7 @@ grep '^rootfs' out && { fail=1; cat out; }
 # Ensure that rootfs is yet skipped when explicitly specifying "-t rootfs".
 # As df emits "no file systems processed" in this case, it would be a failure
 # if df exited with status Zero.
-df -t rootfs >out && fail=1
+returns_ 1 df -t rootfs >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
 
 # Ensure that the rootfs is shown when explicitly both specifying "-t rootfs"

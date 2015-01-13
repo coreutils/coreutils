@@ -42,17 +42,17 @@ ln -s /// three || framework_failure_
 # Basic operation
 realpath -Pqz . >/dev/null || fail=1
 # Operand is required
-realpath >/dev/null && fail=1
-realpath --relative-base . --relative-to . && fail=1
-realpath --relative-base . && fail=1
+returns_ 1 realpath >/dev/null || fail=1
+returns_ 1 realpath --relative-base . --relative-to . || fail=1
+returns_ 1 realpath --relative-base . || fail=1
 
 # -e --relative-* require directories
-realpath -e --relative-to=dir1/f --relative-base=. . && fail=1
+returns_ 1 realpath -e --relative-to=dir1/f --relative-base=. . || fail=1
 realpath -e --relative-to=dir1/  --relative-base=. . || fail=1
 
 # Note NUL params are unconditionally rejected by canonicalize_filename_mode
-realpath -m '' && fail=1
-realpath --relative-base= --relative-to=. . && fail=1
+returns_ 1 realpath -m '' || fail=1
+returns_ 1 realpath --relative-base= --relative-to=. . || fail=1
 
 # symlink resolution
 this=$(realpath .)

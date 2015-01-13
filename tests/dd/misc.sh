@@ -40,7 +40,7 @@ dd status=noxfer status=none if=$tmp_in of=/dev/null 2> err || fail=1
 compare /dev/null err || fail=1
 # check later status=noxfer overrides earlier status=none
 dd status=none status=noxfer if=$tmp_in of=/dev/null 2> err || fail=1
-compare /dev/null err && fail=1
+test -s err || fail=1
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 compare $tmp_in $tmp_out || fail=1
@@ -61,12 +61,12 @@ case $(cat /dev/stdin <$tmp_in 2>/dev/null) in
 esac
 
 if dd iflag=nofollow if=$tmp_in count=0 2> /dev/null; then
-  dd iflag=nofollow if=$tmp_sym count=0 2> /dev/null && fail=1
+  returns_ 1 dd iflag=nofollow if=$tmp_sym count=0 2> /dev/null || fail=1
 fi
 
 if dd iflag=directory if=. count=0 2> /dev/null; then
   dd iflag=directory count=0 <. 2> /dev/null || fail=1
-  dd iflag=directory count=0 <$tmp_in 2> /dev/null && fail=1
+  returns_ 1 dd iflag=directory count=0 <$tmp_in 2> /dev/null || fail=1
 fi
 
 old_ls=$(ls -u --full-time $tmp_in)
@@ -87,8 +87,8 @@ EOF
 fi
 
 if dd oflag=nolinks if=$tmp_in of=$tmp_out 2> /dev/null; then
-  dd iflag=nolinks if=$tmp_in > /dev/null 2>&1 && fail=1
-  dd iflag=nolinks < $tmp_in > /dev/null 2>&1 && fail=1
+  returns_ 1 dd iflag=nolinks if=$tmp_in > /dev/null 2>&1 || fail=1
+  returns_ 1 dd iflag=nolinks < $tmp_in > /dev/null 2>&1 || fail=1
   dd oflag=nolinks < $tmp_in > $tmp_out 2>&1 || fail=1
 fi
 

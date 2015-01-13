@@ -52,20 +52,20 @@ rm -rf $d $f
 touch $f || framework_failure_
 rm -rf $d || framework_failure_
 mkdir $d $d/$f || framework_failure_
-ln $f $d/ 2> /dev/null && fail=1
-ln -s $f $d/ 2> /dev/null && fail=1
+returns_ 1 ln $f $d/ 2> /dev/null || fail=1
+returns_ 1 ln -s $f $d/ 2> /dev/null || fail=1
 rm -rf $d $f
 
 # Make sure we get a failure with existing dest without -f option
 touch $t || framework_failure_
 # FIXME: don't ignore the error message but rather test
 # it to make sure it's the right one.
-ln -s $t $t 2> /dev/null && fail=1
+returns_ 1 ln -s $t $t 2> /dev/null || fail=1
 rm $t
 
 # Make sure -sf fails when src and dest are the same
 touch $t || framework_failure_
-ln -sf $t $t 2> /dev/null && fail=1
+returns_ 1 ln -sf $t $t 2> /dev/null || fail=1
 rm $t
 
 # Create a symlink with source file and no explicit directory

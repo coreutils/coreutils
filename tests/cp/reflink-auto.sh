@@ -27,7 +27,7 @@ rm -f "$a_other" || framework_failure_
 echo non_zero_size > "$a_other" || framework_failure_
 
 # we shouldn't be able to reflink() files on separate partitions
-cp --reflink      "$a_other" b && fail=1
+returns_ 1 cp --reflink "$a_other" b || fail=1
 
 # --reflink=auto should fall back to a normal copy
 cp --reflink=auto "$a_other" b || fail=1

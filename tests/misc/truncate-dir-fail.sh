@@ -20,6 +20,6 @@
 print_ver_ truncate
 
 # truncate on dir not allowed
-truncate -s+0 . && fail=1
+returns_ 1 truncate -s+0 . || fail=1
 
 Exit $fail

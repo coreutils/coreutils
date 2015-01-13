@@ -24,6 +24,6 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm
 
-rm -r '' > /dev/null 2>&1 && fail=1
+returns_ 1 rm -r '' > /dev/null 2>&1 || fail=1
 
 Exit $fail

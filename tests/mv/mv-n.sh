@@ -52,6 +52,6 @@ compare out5 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive
 touch a || framework_failure_
-mv -bn a b 2>/dev/null && fail=1
+returns_ 1 mv -bn a b 2>/dev/null || fail=1
 
 Exit $fail

@@ -31,7 +31,7 @@ mount hfs.img mnt       || skip_ 'failed to mount hfs file system'
 cd mnt
 touch foo
 ln foo whatever
-mv foo Foo && fail=1
+returns_ 1 mv foo Foo || fail=1
 test -r foo || fail=1
 
 Exit $fail

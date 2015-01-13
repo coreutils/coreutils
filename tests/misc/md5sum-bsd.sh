@@ -40,20 +40,20 @@ md5sum --strict -c check.md5 || fail=1
 # then it'll be detected as standard format and error.
 # This unlikely caveat was thought better than mandating
 # an option to avoid the ambiguity.
-tail -n+2 check.md5 | md5sum --strict -c && fail=1
+tail -n+2 check.md5 | returns_ 1 md5sum --strict -c || fail=1
 
 
 ## BSD traditional format tests (--tag option) ##
 
 # Ensure --tag and --check are mutually exclusive
-md5sum --tag --check /dev/null && fail=1
+returns_ 1 md5sum --tag --check /dev/null || fail=1
 
 # Ensure --tag and --text are mutually exclusive
 # We don't support --text with BSD tradition format,
 # as that would complicate the output format,
 # while providing little benefit over --text processing
 # available with the default md5sum output format.
-md5sum --tag --text /dev/null && fail=1
+returns_ 1 md5sum --tag --text /dev/null || fail=1
 
 # Ensure we can --check BSD traditional format we produce
 rm check.md5
