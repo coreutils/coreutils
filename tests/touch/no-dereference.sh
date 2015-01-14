@@ -27,7 +27,7 @@ ln -s file link || framework_failure_
 # These first tests should work on every platform.
 # -h does not create files, but it warns.  Use -c to silence warning.
 returns_ 1 touch -h no-file 2> err || fail=1
-test -s err || fail=1
+compare /dev/null err && fail=1
 touch -h -c no-file 2> err || fail=1
 compare /dev/null err || fail=1
 

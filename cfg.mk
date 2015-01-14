@@ -383,7 +383,7 @@ sc_prohibit_fail_0:
 # independently check its contents and thus detect any crash messages.
 sc_prohibit_and_fail_1:
 	@prohibit='&& fail=1'						\
-	exclude='(stat|kill|test |EGREP|grep|env|2> *[^/])'		\
+	exclude='(stat|kill|test |EGREP|grep|env|compare|2> *[^/])'	\
 	halt='&& fail=1 detected. Please use: returns_ 1 ... || fail=1'	\
 	in_vc_files='^tests/'						\
 	  $(_sc_search_regexp)

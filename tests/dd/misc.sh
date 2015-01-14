@@ -40,7 +40,7 @@ dd status=noxfer status=none if=$tmp_in of=/dev/null 2> err || fail=1
 compare /dev/null err || fail=1
 # check later status=noxfer overrides earlier status=none
 dd status=none status=noxfer if=$tmp_in of=/dev/null 2> err || fail=1
-test -s err || fail=1
+compare /dev/null err && fail=1
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 compare $tmp_in $tmp_out || fail=1

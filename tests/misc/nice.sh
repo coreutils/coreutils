@@ -73,7 +73,7 @@ done
 if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
   # unprivileged user - warn about failure to change
   nice -n -1 true 2> err || fail=1
-  test -s err || fail=1
+  compare /dev/null err && fail=1
   mv err exp || framework_failure_
   nice --1 true 2> err || fail=1
   compare exp err || fail=1

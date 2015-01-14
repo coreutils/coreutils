@@ -47,6 +47,6 @@ compare /dev/null out || fail=1
 # However, trying to remove an existing file must fail.
 rm -f mnt/f > out 2>&1 && fail=1
 # with a diagnostic.
-test -s out || fail=1
+compare /dev/null out && fail=1
 
 Exit $fail

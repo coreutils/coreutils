@@ -68,6 +68,6 @@ pid=$!
 
 tail --pid=$pid -f tail.out | (read; kill $pid)
 
-test -s tail.out || fail=1
+compare /dev/null tail.out && fail=1
 
 Exit $fail
