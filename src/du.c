@@ -283,7 +283,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   or:  %s [OPTION]... --files0-from=F\n\
 "), program_name, program_name);
       fputs (_("\
-Summarize disk usage of each FILE, recursively for directories.\n\
+Summarize disk usage of the set of FILEs, recursively for directories.\n\
 "), stdout);
 
       emit_mandatory_arg_note ();
