@@ -55,23 +55,23 @@ done
 #
 
 # Should fail: '-t' requires an argument
-{ split -t </dev/null >/dev/null 2>/dev/null || test $? -ne 1; } &&
+returns_ 1 split -t </dev/null ||
   { warn_ "-t without argument did not trigger an error" ; fail=1 ; }
 
 # should fail: multi-character separator
-{ split -txx </dev/null >/dev/null 2>&1 || test $? -ne 1; } &&
+returns_ 1 split -txx </dev/null ||
   { warn_ "-txx did not trigger an error" ; fail=1 ; }
 
 # should fail: different separators used
-{ split -ta -tb </dev/null >/dev/null 2>&1 || test $? -ne 1; } &&
+returns_ 1 split -ta -tb </dev/null ||
   { warn_ "-ta -tb did not trigger an error" ; fail=1 ; }
 
 # should fail: different separators used, including default
-{ split -t"$NL" -tb </dev/null >/dev/null 2>&1 || test $? -ne 1; } &&
+returns_ 1 split -t"$NL" -tb </dev/null ||
   { warn_ "-t\$NL -tb did not trigger an error" ; fail=1 ; }
 
 # should not fail: same separator used multiple times
-split -t: -t: </dev/null >/dev/null 2>&1 ||
+split -t: -t: </dev/null ||
   { warn_ "-t: -t: triggered an error" ; fail=1 ; }
 
 
