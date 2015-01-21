@@ -48,6 +48,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split accepts a new --separator option to select a record separator character
   other than the default newline character.
 
+  stty allows setting the "extproc" option where supported, which is
+  a useful setting with high latency links.
+
 ** Changes in behavior
 
   df no longer suppresses separate exports of the same remote device, as

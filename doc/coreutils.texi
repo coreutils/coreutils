@@ -14269,6 +14269,14 @@ the line as indicated by the @code{echoprt} and @code{echoe} settings,
 instead of by the @code{echoctl} and @code{echok} settings.
 Non-POSIX@.
 May be negated.
+
+@item extproc
+@opindex extproc
+Enable @samp{LINEMODE}, which is used to avoid echoing
+each character over high latency links.  See also
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc1116.txt, Internet RFC 1116}.
+Non-POSIX@.
+May be negated.
 @end table
 
 
@@ -14311,7 +14319,7 @@ cread -ignbrk brkint -inlcr -igncr icrnl -ixoff
 -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr
 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0
 ff0 isig icanon iexten echo echoe echok -echonl
--noflsh -xcase -tostop -echoprt echoctl echoke
+-noflsh -xcase -tostop -echoprt echoctl echoke -extproc
 @end example
 
 @noindent

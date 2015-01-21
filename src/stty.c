@@ -342,6 +342,9 @@ static struct mode_info const mode_info[] =
   {"echoke", local, SANE_SET | REV, ECHOKE, 0},
   {"crtkill", local, REV | OMIT, ECHOKE, 0},
 #endif
+#ifdef EXTPROC
+  {"extproc", local, SANE_UNSET | REV, EXTPROC, 0},
+#endif
 
   {"evenp", combination, REV | OMIT, 0, 0},
   {"parity", combination, REV | OMIT, 0, 0},
@@ -807,6 +810,11 @@ Local settings:\n\
  * [-]echoprt    echo erased characters backward, between '\\' and '/'\n\
 "), stdout);
 #endif
+#if defined EXTPROC || defined TIOCEXT
+      fputs (_("\
+ * [-]extproc    enable \"LINEMODE\"; useful with high latency links\n\
+"), stdout);
+#endif
       fputs (_("\
    [-]icanon     enable erase, kill, werase, and rprnt special characters\n\
    [-]iexten     enable non-POSIX special characters\n\
@@ -892,8 +900,8 @@ Combination settings:\n\
                  -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
                  -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
                  isig icanon iexten echo echoe echok -echonl -noflsh\n\
-                 -xcase -tostop -echoprt echoctl echoke, all special\n\
-                 characters to their default values\n\
+                 -xcase -tostop -echoprt echoctl echoke -extproc,\n\
+                 all special characters to their default values\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -1111,6 +1119,19 @@ main (int argc, char **argv)
               speed_was_set = true;
               require_set_attr = true;
             }
+#ifdef TIOCEXT
+          else if (STREQ (arg, "extproc") || STREQ (arg, "-extproc"))
+            {
+              /* This is the BSD interface to "extproc".  */
+              int val = *arg != '-';
+
+              if (ioctl (STDIN_FILENO, TIOCEXT, &val) != 0)
+                {
+                  error (EXIT_FAILURE, errno, _("%s: error setting %s"),
+                         device_name, quote (arg));
+                }
+            }
+#endif
 #ifdef TIOCGWINSZ
           else if (STREQ (arg, "rows"))
             {
