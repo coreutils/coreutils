@@ -14438,6 +14438,11 @@ End the line.
 @opindex eol2
 Alternate character to end the line.  Non-POSIX.
 
+@item discard
+@opindex discard
+@opindex flush
+Alternate character to toggle discarding of output.  Non-POSIX.
+
 @item swtch
 @opindex swtch
 Switch to a different shell layer.  Non-POSIX.

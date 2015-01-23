@@ -417,7 +417,8 @@ static struct control_info const control_info[] =
   {"lnext", CLNEXT, VLNEXT},
 #endif
 #ifdef VFLUSHO
-  {"flush", CFLUSHO, VFLUSHO},
+  {"flush", CFLUSHO, VFLUSHO},   /* deprecated compat option.  */
+  {"discard", CFLUSHO, VFLUSHO},
 #endif
 #ifdef VSTATUS
   {"status", CSTATUS, VSTATUS},
@@ -544,6 +545,11 @@ settings.  The underlying system defines which settings are available.\n\
       fputs (_("\
 \n\
 Special characters:\n"), stdout);
+#ifdef VFLUSHO
+      fputs (_("\
+ * discard CHAR  CHAR will toggle discarding of output\n\
+"), stdout);
+#endif
 #ifdef VDSUSP
       fputs (_("\
  * dsusp CHAR    CHAR will send a terminal stop signal once input flushed\n\
@@ -1697,6 +1703,12 @@ display_changed (struct termios *mode)
     {
       if (mode->c_cc[control_info[i].offset] == control_info[i].saneval)
         continue;
+
+#ifdef VFLUSHO
+      /* 'flush' is the deprecated equivalent of 'discard'.  */
+      if (STREQ (control_info[i].name, "flush"))
+        continue;
+#endif
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
       if (STREQ (control_info[i].name, "swtch"))
@@ -1787,6 +1799,11 @@ display_all (struct termios *mode, char const *device_name)
 
   for (i = 0; ! STREQ (control_info[i].name, "min"); ++i)
     {
+#ifdef VFLUSHO
+      /* 'flush' is the deprecated equivalent of 'discard'.  */
+      if (STREQ (control_info[i].name, "flush"))
+        continue;
+#endif
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
       if (STREQ (control_info[i].name, "swtch"))
