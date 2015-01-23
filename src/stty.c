@@ -582,7 +582,7 @@ Special characters:\n"), stdout);
       fputs (_("\
    quit CHAR     CHAR will send a quit signal\n\
 "), stdout);
-#ifdef CREPRINT /* HPUX 10.20 needs this */
+#if defined CREPRINT || defined VREPRINT
       fputs (_("\
  * rprnt CHAR    CHAR will redraw the current line\n\
 "), stdout);
@@ -826,10 +826,17 @@ Local settings:\n\
  * [-]extproc    enable \"LINEMODE\"; useful with high latency links\n\
 "), stdout);
 #endif
-      fputs (_("\
-   [-]icanon     enable erase, kill, werase, and rprnt special characters\n\
+      printf (_("\
+   [-]icanon     enable special characters: %s\n\
    [-]iexten     enable non-POSIX special characters\n\
-"), stdout);
+"), "erase, kill"
+#ifdef VWERASE
+    ", werase"
+#endif
+#if defined CREPRINT || defined VREPRINT
+    ", rprnt"
+#endif
+);
       fputs (_("\
    [-]isig       enable interrupt, quit, and suspend special characters\n\
    [-]noflsh     disable flushing after interrupt and quit special characters\n\
@@ -866,12 +873,31 @@ Combination settings:\n\
    cooked        same as brkint ignpar istrip icrnl ixon opost isig\n\
                  icanon, eof and eol characters to their default values\n\
    -cooked       same as raw\n\
-   crt           same as echoe echoctl echoke\n\
 "), stdout);
-      fputs (_("\
-   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n\
+      printf (_("\
+   crt           same as %s\n\
+"), "echoe"
+#ifdef ECHOCTL
+    " echoctl"
+#endif
+#ifdef ECHOKE
+    " echoke"
+#endif
+);
+      printf (_("\
+   dec           same as %s intr ^c erase 0177\n\
                  kill ^u\n\
-"), stdout);
+"), "echoe"
+#ifdef ECHOCTL
+    " echoctl"
+#endif
+#ifdef ECHOKE
+    " echoke"
+#endif
+#ifdef IXANY
+    " -ixany"
+#endif
+);
 #ifdef IXANY
       fputs (_("\
  * [-]decctlq    same as [-]ixany\n\
@@ -890,8 +916,26 @@ Combination settings:\n\
       fputs (_("\
    litout        same as -parenb -istrip -opost cs8\n\
    -litout       same as parenb istrip opost cs7\n\
-   nl            same as -icrnl -onlcr\n\
-   -nl           same as icrnl -inlcr -igncr onlcr -ocrnl -onlret\n\
+"), stdout);
+      printf (_("\
+   nl            same as %s\n\
+   -nl           same as %s\n\
+"), "-icrnl"
+#ifdef ONLCR
+   " -onlcr"
+#endif
+  , "icrnl -inlcr -igncr"
+#ifdef ONLCR
+   " onlcr"
+#endif
+#ifdef OCRNL
+   " -ocrnl"
+#endif
+#ifdef ONLRET
+   " -onlret"
+#endif
+);
+      fputs (_("\
 "), stdout);
       fputs (_("\
    oddp          same as parenb parodd cs7\n\
@@ -900,20 +944,108 @@ Combination settings:\n\
    pass8         same as -parenb -istrip cs8\n\
    -pass8        same as parenb istrip cs7\n\
 "), stdout);
-      fputs (_("\
+      printf (_("\
    raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n\
-                 -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n\
-                 -imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
+                 -inlcr -igncr -icrnl -ixon -ixoff -icanon -opost\n\
+                 -isig%s min 1 time 0\n\
    -raw          same as cooked\n\
-"), stdout);
-      fputs (_("\
-   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl -iutf8\n\
-                 -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
-                 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
-                 isig icanon iexten echo echoe echok -echonl -noflsh\n\
-                 -xcase -tostop -echoprt echoctl echoke -extproc,\n\
+"),
+#ifdef IUCLC
+   " -iuclc"
+#endif
+#ifdef IXANY
+   " -ixany"
+#endif
+#ifdef IMAXBEL
+   " -imaxbel"
+#endif
+#ifdef XCASE
+   " -xcase"
+#endif
+);
+      printf (_("\
+   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n\
+                 icanon iexten echo echoe echok -echonl -noflsh\n\
+                 %s\n\
+                 %s\n\
+                 %s,\n\
                  all special characters to their default values\n\
-"), stdout);
+"),
+   "-ixoff"
+#ifdef IUTF8
+   " -iutf8"
+#endif
+#ifdef IUCLC
+   " -iuclc"
+#endif
+#ifdef IXANY
+   " -ixany"
+#endif
+#ifdef IMAXBEL
+   " imaxbel"
+#endif
+#ifdef XCASE
+   " -xcase"
+#endif
+#ifdef OLCUC
+   " -olcuc"
+#endif
+#ifdef OCRNL
+   " -ocrnl"
+#endif
+
+ , "opost"
+#ifdef OFILL
+   " -ofill"
+#endif
+#ifdef ONLCR
+   " onlcr"
+#endif
+#ifdef ONOCR
+   " -onocr"
+#endif
+#ifdef ONLRET
+   " -onlret"
+#endif
+#ifdef NLDLY
+   " nl0"
+#endif
+#ifdef CRDLY
+   " cr0"
+#endif
+#ifdef TAB0
+   " tab0"
+#endif
+#ifdef BSDLY
+   " bs0"
+#endif
+#ifdef VTDLY
+   " vt0"
+#endif
+#ifdef FFDLY
+   " ff0"
+#endif
+
+ , "isig"
+#ifdef TOSTOP
+   " -tostop"
+#endif
+#ifdef OFDEL
+   " -ofdel"
+#endif
+#ifdef ECHOPRT
+   " -echoprt"
+#endif
+#ifdef ECHOCTL
+   " echoctl"
+#endif
+#ifdef ECHOKE
+   " echoke"
+#endif
+#ifdef EXTPROC
+   " -extproc"
+#endif
+);
       fputs (_("\
 \n\
 Handle the tty line connected to standard input.  Without arguments,\n\

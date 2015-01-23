@@ -14315,11 +14315,11 @@ Same as:
 
 @c This is too long to write inline.
 @example
-cread -ignbrk brkint -inlcr -igncr icrnl -ixoff
--iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr
--onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0
-ff0 isig icanon iexten echo echoe echok -echonl
--noflsh -xcase -tostop -echoprt echoctl echoke -extproc
+cread -ignbrk brkint -inlcr -igncr icrnl
+icanon iexten echo echoe echok -echonl -noflsh
+-ixoff -iutf8 -iuclc -ixany imaxbel -xcase -olcuc -ocrnl
+opost -ofill onlcr -onocr -onlret nl0 cr0 tab0 bs0 vt0 ff0
+isig -tostop -ofdel -echoprt echoctl echoke -extproc
 @end example
 
 @noindent
@@ -14338,8 +14338,8 @@ Same as:
 
 @example
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip
--inlcr -igncr -icrnl -ixon -ixoff -iuclc -ixany
--imaxbel -opost -isig -icanon -xcase min 1 time 0
+-inlcr -igncr -icrnl -ixon -ixoff -icanon -opost
+-isig -iuclc -ixany -imaxbel -xcase min 1 time 0
 @end example
 
 @noindent
