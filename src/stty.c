@@ -574,6 +574,11 @@ Special characters:\n"), stdout);
  * lnext CHAR    CHAR will enter the next character quoted\n\
 "), stdout);
 #endif
+#ifdef VSTATUS
+      fputs (_("\
+ * status CHAR   CHAR will send an info signal\n\
+"), stdout);
+#endif
       fputs (_("\
    quit CHAR     CHAR will send a quit signal\n\
 "), stdout);

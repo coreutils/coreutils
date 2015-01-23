@@ -14447,6 +14447,10 @@ Alternate character to toggle discarding of output.  Non-POSIX.
 @opindex swtch
 Switch to a different shell layer.  Non-POSIX.
 
+@item status
+@opindex status
+Send an info signal.  Not currently supported on Linux.  Non-POSIX.
+
 @item start
 @opindex start
 Restart the output after stopping it.
