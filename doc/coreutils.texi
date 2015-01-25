@@ -114,7 +114,7 @@
 * stdbuf: (coreutils)stdbuf invocation.         Modify stdio buffering.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
-* sync: (coreutils)sync invocation.             Synchronize memory and disk.
+* sync: (coreutils)sync invocation.             Synchronize memory to disk.
 * tac: (coreutils)tac invocation.               Reverse files.
 * tail: (coreutils)tail invocation.             Output the last part of files.
 * tee: (coreutils)tee invocation.               Redirect to multiple files.
@@ -346,7 +346,7 @@ Disk usage
 * df invocation::                Report file system disk space usage
 * du invocation::                Estimate file space usage
 * stat invocation::              Report file or file system status
-* sync invocation::              Synchronize data on disk with memory
+* sync invocation::              Synchronize cached writes to persistent storage
 * truncate invocation::          Shrink or extend the size of a file
 
 Printing text
@@ -11191,7 +11191,7 @@ file status information, and write buffers to disk.
 * df invocation::               Report file system disk space usage.
 * du invocation::               Estimate file space usage.
 * stat invocation::             Report file or file system status.
-* sync invocation::             Synchronize memory and disk.
+* sync invocation::             Synchronize cached writes to persistent storage.
 * truncate invocation::         Shrink or extend the size of a file.
 @end menu
 
@@ -12033,28 +12033,60 @@ with @env{TZ}, libc, The GNU C Library Reference Manual}.
 
 
 @node sync invocation
-@section @command{sync}: Synchronize data on disk with memory
+@section @command{sync}: Synchronize cached writes to persistent storage
 
 @pindex sync
 @cindex synchronize disk and memory
+@cindex Synchronize cached writes to persistent storage
+
+@command{sync} synchronizes in memory files or file systems to persistent
+storage.  Synopsis:
+
+@example
+sync [@var{option}] [@var{file}]@dots{}
+@end example
 
 @cindex superblock, writing
 @cindex inodes, written buffered
 @command{sync} writes any data buffered in memory out to disk.  This can
 include (but is not limited to) modified superblocks, modified inodes,
 and delayed reads and writes.  This must be implemented by the kernel;
-The @command{sync} program does nothing but exercise the @code{sync} system
-call.
+The @command{sync} program does nothing but exercise the @code{sync},
+@code{syncfs}, @code{fsync}, and @code{fdatasync} system calls.
 
 @cindex crashes and corruption
 The kernel keeps data in memory to avoid doing (relatively slow) disk
 reads and writes.  This improves performance, but if the computer
 crashes, data may be lost or the file system corrupted as a
-result.  The @command{sync} command ensures everything in memory
-is written to disk.
+result.  The @command{sync} command instructs the kernel to write
+data in memory to persistent storage.
 
-Any arguments are ignored, except for a lone @option{--help} or
-@option{--version} (@pxref{Common options}).
+If any argument is specified then only those files will be
+synchronized using the fsync(2) syscall by default.
+
+If at least one file is specified, it is possible to change the
+synchronization method with the following options.  Also see
+@ref{Common options}.
+
+@table @samp
+@item -d
+@itemx --data
+@opindex --data
+Use fdatasync(2) to sync only the data for the file,
+and any metadata required to maintain file system consistency.
+
+@item -f
+@itemx --file-system
+@opindex --file-system
+Synchronize all the I/O waiting for the file systems that contain the file,
+using the syscall syncfs(2).  Note you would usually @emph{not} specify
+this option if passing a device node like @samp{/dev/sda} for example,
+as that would sync the containing file system rather than the referenced one.
+Note also that depending on the system, passing individual device nodes or files
+may have different sync characteristics than using no arguments.
+I.E. arguments passed to fsync(2) may provide greater guarantees through
+write barriers, than a global sync(2) used when no arguments are provided.
+@end table
 
 @exitstatus
 

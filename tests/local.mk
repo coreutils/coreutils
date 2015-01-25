@@ -375,6 +375,7 @@ all_tests =					\
   tests/misc/stty-row-col.sh			\
   tests/misc/sum.pl				\
   tests/misc/sum-sysv.sh			\
+  tests/misc/sync.sh				\
   tests/misc/tac.pl				\
   tests/misc/tac-continue.sh			\
   tests/misc/tac-2-nonseekable.sh		\

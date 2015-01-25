@@ -83,7 +83,7 @@ stat: Michael Meskes
 stdbuf: Pádraig Brady
 stty: David MacKenzie
 sum: Kayvan Aghaiepour, David MacKenzie
-sync: Jim Meyering
+sync: Jim Meyering, Giuseppe Scrivano
 tac: Jay Lepreau, David MacKenzie
 tail: Paul Rubin, David MacKenzie, Ian Lance Taylor, Jim Meyering
 tee: Mike Parker, Richard M. Stallman, David MacKenzie

@@ -51,6 +51,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   stty allows setting the "extproc" option where supported, which is
   a useful setting with high latency links.
 
+  sync no longer ignores arguments, and syncs each specified file, or with the
+  --file-system option, the file systems associated with each specified file.
+
 ** Changes in behavior
 
   df no longer suppresses separate exports of the same remote device, as

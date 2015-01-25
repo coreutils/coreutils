@@ -89,6 +89,7 @@ AC_DEFUN([coreutils_MACROS],
     sethostname
     siginterrupt
     sync
+    syncfs
     sysctl
     sysinfo
     tcgetpgrp
