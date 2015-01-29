@@ -206,9 +206,9 @@ The following four options are useful only when verifying checksums:\n\
       printf (_("\
 \n\
 The sums are computed as described in %s.  When checking, the input\n\
-should be a former output of this program.  The default mode is to print\n\
-a line with checksum, a character indicating input mode ('*' for binary,\n\
-space for text), and name for each FILE.\n"),
+should be a former output of this program.  The default mode is to print a\n\
+line with checksum, a space, a character indicating input mode ('*' for binary,\
+\n' ' for text or where binary is insignificant), and name for each FILE.\n"),
               DIGEST_REFERENCE);
       emit_ancillary_info (PROGRAM_NAME);
     }
