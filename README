@@ -107,7 +107,7 @@ HPUX 11.x build failure
 -----------------------
 
 A known problem exists when compiling on HPUX on both hppa and ia64
-in 64-bit mode (i.e. +DD64) on HP-UX 11.0, 11.11, and 11.23.  This
+in 64-bit mode (i.e., +DD64) on HP-UX 11.0, 11.11, and 11.23.  This
 is not due to a bug in the package but instead due to a bug in the
 system header file which breaks things in 64-bit mode.  The default
 compilation mode is 32-bit and the software compiles fine using the

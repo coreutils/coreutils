@@ -990,11 +990,11 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                  In specialised cases the consumer can keep reading
                  from the fifo, terminating on conditions in the data
                  itself, or perhaps never in the case of 'tail -f'.
-                 I.E. for fifos it is valid to attempt this reopen.
+                 I.e., for fifos it is valid to attempt this reopen.
 
                  We don't handle the filter_command case here, as create()
                  will exit if there are not enough files in that case.
-                 I.E. we don't support restarting filters, as that would
+                 I.e., we don't support restarting filters, as that would
                  put too much burden on users specifying --filter commands.  */
               fd = open (files[i_check].of_name,
                          O_WRONLY | O_BINARY | O_APPEND | O_NONBLOCK);

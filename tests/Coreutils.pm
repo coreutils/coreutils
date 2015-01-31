@@ -91,7 +91,7 @@ defined $ENV{DJDIR}
 # If the EXIT-keyed one is omitted, then expect the exit status to be zero.
 
 # FIXME: Make sure that no junkfile is also listed as a
-# non-junkfile (i.e. with undef for contents)
+# non-junkfile (i.e., with undef for contents)
 
 sub _shell_quote ($)
 {
@@ -576,7 +576,7 @@ sub run_tests ($$$$$)
 }
 
 # For each test in @$TESTS, generate two additional tests,
-# one using stdin, the other using a pipe. I.e., given this one
+# one using stdin, the other using a pipe.  I.e., given this one
 # ['idem-0', {IN=>''}, {OUT=>''}],
 # generate these:
 # ['idem-0.r', '<', {IN=>''}, {OUT=>''}],

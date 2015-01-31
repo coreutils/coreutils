@@ -924,7 +924,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Bug fixes
 
   chown and chgrp with the -v --from= options, now output the correct owner.
-  I.E. for skipped files, the original ownership is output, not the new one.
+  I.e., for skipped files, the original ownership is output, not the new one.
   [bug introduced in sh-utils-2.0g]
 
   cp -r could mistakenly change the permissions of an existing destination
@@ -2447,7 +2447,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   the DF_BLOCK_SIZE, BLOCK_SIZE, and BLOCKSIZE environment variables.  It
   is still affected by POSIXLY_CORRECT, though.
 
-  Using pr -m -s (i.e. merging files, with TAB as the output separator)
+  Using pr -m -s (i.e., merging files, with TAB as the output separator)
   no longer inserts extraneous spaces between output columns.
 
 * Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]

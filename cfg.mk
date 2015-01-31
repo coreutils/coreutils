@@ -45,7 +45,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = 807de7c63283042c8506780fa28c5dce
+old_NEWS_hash = 41e5c3133f5d8947e2ff13aab58fc52b
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_prog/ && !/dynamic-dep/'
@@ -355,6 +355,24 @@ sc_strftime_check:
 sc_prohibit_tab_based_indentation:
 	@prohibit='^ *	'						\
 	halt='TAB in indentation; use only spaces'			\
+	  $(_sc_search_regexp)
+
+# Enforce lowercase 'e' in "I.e.".
+sc_prohibit_uppercase_id_est:
+	@prohibit='I\.E\.'						\
+	halt='Uppercase "Id Est" abbreviation; use "I.e.," instead'	\
+	  $(_sc_search_regexp)
+
+# Enforce double-space before "I.e." at the beginning of a sentence.
+sc_ensure_double_space_after_dot_before_id_est:
+	@prohibit='\. I\.e\.'				\
+	halt='Single space after dot before "i.e."; use ".  i.e." instead' \
+	  $(_sc_search_regexp)
+
+# Enforce comma after "i.e." (at least before a blank or at EOL).
+sc_ensure_comma_after_id_est:
+	@prohibit='[Ii]\.e\.( |$$)'				\
+	halt='Missing comma after "i.e."; use "i.e.," instead' \
 	  $(_sc_search_regexp)
 
 # The SEE ALSO section of a man page should not be terminated with

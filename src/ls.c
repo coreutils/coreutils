@@ -3552,8 +3552,8 @@ static qsortFunc const sort_functions[][2][2][2] =
   };
 
 /* The number of sort keys is calculated as the sum of
-     the number of elements in the sort_type enum (i.e. sort_numtypes)
-     the number of elements in the time_type enum (i.e. time_numtypes) - 1
+     the number of elements in the sort_type enum (i.e., sort_numtypes)
+     the number of elements in the time_type enum (i.e., time_numtypes) - 1
    This is because when sort_type==sort_time, we have up to
    time_numtypes possible sort keys.
 

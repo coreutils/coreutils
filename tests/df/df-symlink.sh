@@ -31,7 +31,7 @@ compare exp out || fail=1
 # Ensure we output the same values for device nodes and '.'
 # This was not the case in coreutil-8.22 on systems
 # where the device in the mount list was a symlink itself.
-# I.E. '.' => /dev/mapper/fedora-home -> /dev/dm-2
+# I.e., '.' => /dev/mapper/fedora-home -> /dev/dm-2
 df --out=source,target '.' > out || fail=1
 compare exp out || fail=1
 

@@ -87,7 +87,7 @@ stdbuf_unbuffer()
 retry_delay_ stdbuf_unbuffer .1 6 || fail=1
 
 # Ensure un buffering stdin takes effect
-#  The following works for me, but is racy. I.E. we're depending
+#  The following works for me, but is racy.  I.e., we're depending
 #  on dd to run and close the fifo before the second write by uniq.
 #  If we add a sleep, then we're just testing -oL
     # printf '3\n' > exp

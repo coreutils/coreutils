@@ -108,7 +108,7 @@ isaac_refill (struct isaac_state *s, isaac_word result[ISAAC_WORDS])
 
   /* The central step.  S->m is the whole state array, while M is a
      pointer to the current word.  OFF is the offset from M to the
-     word ISAAC_WORDS/2 words away in the SM array, i.e. +/-
+     word ISAAC_WORDS/2 words away in the SM array, i.e., +/-
      ISAAC_WORDS/2.  A and B are state variables, and R the result.
      This updates A, B, M[I], and R[I].  */
   #define ISAAC_STEP(i, off, mix)                             \

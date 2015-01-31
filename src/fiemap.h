@@ -95,7 +95,7 @@ struct fiemap
 /* Multiple files in block.  Set EXTENT_NOT_ALIGNED.  */
 # define FIEMAP_EXTENT_DATA_TAIL         0x00000400
 
-/* Space allocated, but not data (i.e. zero).  */
+/* Space allocated, but not data (i.e., zero).  */
 # define FIEMAP_EXTENT_UNWRITTEN         0x00000800
 
 /* File does not natively support extents.  Result merged for efficiency.  */

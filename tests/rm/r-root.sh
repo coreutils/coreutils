@@ -244,7 +244,7 @@ exercise_rm_r_root  --interactive=never --no-preserve-root '/' \
 grep "^rm: it is dangerous to operate recursively on '/'" err && fail=1
 
 # Instead, rm(1) should have called the intercepted unlinkat() function,
-# i.e. the evidence file "x" should exist.
+# i.e., the evidence file "x" should exist.
 test -f x || fail=1
 
 test $fail = 1 && { cat out; cat err; }

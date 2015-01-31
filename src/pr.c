@@ -46,7 +46,7 @@
       only one POSIX requirement has to be met:
    The default n-separator should be a TAB. The consequence is a
    different width between the number and the text if the output position
-   of the separator changes, i.e. it depends upon the left margin used.
+   of the separator changes, i.e., it depends upon the left margin used.
    That's not nice but easy-to-use together with the defaults of other
    utilities, e.g. sort or cut. - Same as SunOS does.
    -  With multicolumn output

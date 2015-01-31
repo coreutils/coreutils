@@ -239,7 +239,7 @@ cat (
   /* Pointer to the next character in the input buffer.  */
   char *bpin;
 
-  /* Pointer to the first non-valid byte in the input buffer, i.e. the
+  /* Pointer to the first non-valid byte in the input buffer, i.e., the
      current end of the buffer.  */
   char *eob;
 
@@ -365,7 +365,7 @@ cat (
               /* It was a real (not a sentinel) newline.  */
 
               /* Was the last line empty?
-                 (i.e. have two or more consecutive newlines been read?)  */
+                 (i.e., have two or more consecutive newlines been read?)  */
 
               if (++newlines > 0)
                 {
@@ -422,7 +422,7 @@ cat (
          which means that the buffer is empty or that a proper newline
          has been found.  */
 
-      /* If quoting, i.e. at least one of -v, -e, or -t specified,
+      /* If quoting, i.e., at least one of -v, -e, or -t specified,
          scan for chars that need conversion.  */
       if (show_nonprinting)
         {

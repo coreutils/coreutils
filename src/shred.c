@@ -517,7 +517,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
                   /* Retry without direct I/O since this may not be supported
                      at all on some (file) systems, or with the current size.
-                     I.E. a specified --size that is not aligned, or when
+                     I.e., a specified --size that is not aligned, or when
                      dealing with slop at the end of a file with --exact.  */
                   if (! try_without_directio && errno == EINVAL)
                     {

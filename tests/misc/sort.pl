@@ -271,11 +271,11 @@ my @Tests =
 ["18e", '-nb -k1.1,1.2', {IN=>" 901\n100\n"}, {OUT=>"100\n 901\n"}],
 
 # When ignoring leading blanks for end position, ensure blanks from
-# next field are not included in the sort. I.E. order should not change here.
+# next field are not included in the sort.  I.e., order should not change here.
 ["18f", '-k1,1b', {IN=>"a  y\na z\n"}, {OUT=>"a  y\na z\n"}],
 
 # When ignoring leading blanks for start position, ensure blanks from
-# next field are not included in the sort. I.E. order should not change here.
+# next field are not included in the sort.  I.e., order should not change here.
 # This was noticed as an issue on fedora 8 (only in multibyte locales).
 ["18g", '-k1b,1', {IN=>"a  y\na z\n"}, {OUT=>"a  y\na z\n"},
  {ENV => "LC_ALL=$mb_locale"}],

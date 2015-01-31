@@ -71,7 +71,7 @@ my @Tests =
    );
 
 # Append a newline to end of each expected 'OUT' string.
-# Skip -z tests, i.e. those whose 'OUT' string has a trailing '\0'.
+# Skip -z tests, i.e., those whose 'OUT' string has a trailing '\0'.
 my $t;
 foreach $t (@Tests)
   {

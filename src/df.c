@@ -605,7 +605,7 @@ excluded_fstype (const char *fstype)
 
 /* Filter mount list by skipping duplicate entries.
    In the case of duplicates - based on the device number - the mount entry
-   with a '/' in its me_devname (i.e. not pseudo name like tmpfs) wins.
+   with a '/' in its me_devname (i.e., not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
    me_mountdir wins.  With DEVICES_ONLY == true (set with df -a), only update
    the global device_list, rather than filtering the global mount_list.  */

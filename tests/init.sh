@@ -95,7 +95,7 @@ framework_failure_ () { warn_ "$ME_: set-up failure: $@"; Exit 99; }
 
 # This is used to simplify checking of the return value
 # which is useful when ensuring a command fails as desired.
-# I.E. just doing `command ... &&fail=1` will not catch
+# I.e., just doing `command ... &&fail=1` will not catch
 # a segfault in command for example.  With this helper you
 # instead check an explicit exit code like
 #   returns_ 1 command ... || fail

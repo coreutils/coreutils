@@ -1191,7 +1191,7 @@ main (int argc, char **argv)
              "without an SELinux-enabled kernel"));
 
   /* FIXME: This handles new files.  But what about existing files?
-     I.E. if updating a tree, new files would have the specified context,
+     I.e., if updating a tree, new files would have the specified context,
      but shouldn't existing files be updated for consistency like this?
        if (scontext)
          restorecon (dst_path, 0, true);

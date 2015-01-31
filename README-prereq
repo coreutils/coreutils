@@ -1,5 +1,5 @@
 This gives some notes on obtaining the tools required for development.
-I.E. the tools checked for by the bootstrap script and include:
+I.e., the tools checked for by the bootstrap script and include:
 
 - Autoconf  <http://www.gnu.org/software/autoconf/>
 - Automake  <http://www.gnu.org/software/automake/>

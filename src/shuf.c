@@ -273,7 +273,7 @@ read_input (FILE *in, char eolbyte, char ***pline)
   size_t n_lines;
 
   /* TODO: We should limit the amount of data read here,
-     to less than RESERVOIR_MIN_INPUT.  I.E. adjust fread_file() to support
+     to less than RESERVOIR_MIN_INPUT.  I.e., adjust fread_file() to support
      taking a byte limit.  We'd then need to ensure we handle a line spanning
      this boundary.  With that in place we could set use_reservoir_sampling
      when used==RESERVOIR_MIN_INPUT, and have read_input_reservoir_sampling()

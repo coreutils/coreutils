@@ -3706,7 +3706,7 @@ Do not remove output files when errors are encountered.
 @item --suppress-matched
 @opindex --suppress-matched
 Do not output lines matching the specified @var{pattern}.
-I.E. suppress the boundary line from the start of the second
+I.e., suppress the boundary line from the start of the second
 and subsequent splits.
 
 @item -z
@@ -10062,7 +10062,7 @@ ln -srv /a/file /tmp
 @end smallexample
 
 Relative symbolic links are generated based on their canonicalized
-containing directory, and canonicalized targets.  I.E. all symbolic
+containing directory, and canonicalized targets.  I.e., all symbolic
 links in these file names will be resolved.
 @xref{realpath invocation}, which gives greater control
 over relative file name generation, as demonstrated in the following example:
@@ -12089,7 +12089,7 @@ this option if passing a device node like @samp{/dev/sda} for example,
 as that would sync the containing file system rather than the referenced one.
 Note also that depending on the system, passing individual device nodes or files
 may have different sync characteristics than using no arguments.
-I.E. arguments passed to fsync(2) may provide greater guarantees through
+I.e., arguments passed to fsync(2) may provide greater guarantees through
 write barriers, than a global sync(2) used when no arguments are provided.
 @end table
 

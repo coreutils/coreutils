@@ -35,7 +35,7 @@ fi
 fp_tmp="$FULL_PARTITION_TMPDIR/tac-cont-$$"
 cleanup_() { rm -f "$fp_tmp"; }
 
-# Make sure we can create an empty file there (i.e. no shortage of inodes).
+# Make sure we can create an empty file there (i.e., no shortage of inodes).
 if ! touch $fp_tmp; then
   echo "$0: $fp_tmp: cannot create empty file" 1>&2
   Exit 1

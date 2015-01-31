@@ -425,7 +425,7 @@ set_fields (const char *fieldstr)
   return field_found;
 }
 
-/* Increment *ITEM_IDX (i.e. a field or byte index),
+/* Increment *ITEM_IDX (i.e., a field or byte index),
    and if required CURRENT_RP.  */
 
 static inline void

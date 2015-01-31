@@ -254,7 +254,7 @@ struct cp_options
      that was specified on the command line.  Use it to avoid clobbering
      source files in commands like this:
        rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
-     For now, it protects only regular files when copying (i.e. not renaming).
+     For now, it protects only regular files when copying (i.e., not renaming).
      When renaming, it protects all non-directories.
      Use dest_info_init to initialize it, or set it to NULL to disable
      this feature.  */

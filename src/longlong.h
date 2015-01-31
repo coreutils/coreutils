@@ -83,13 +83,13 @@ along with this file.  If not, see http://www.gnu.org/licenses/.  */
    high_addend_2, low_addend_2) adds two UWtype integers, composed by
    HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2
    respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow
-   (i.e. carry out) is not stored anywhere, and is lost.
+   (i.e., carry out) is not stored anywhere, and is lost.
 
    8) sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,
    high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,
    composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and
    LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE
-   and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,
+   and LOW_DIFFERENCE.  Overflow (i.e., carry out) is not stored anywhere,
    and is lost.
 
    If any of these macros are left undefined for a particular CPU,
@@ -2033,7 +2033,7 @@ extern UWtype mpn_udiv_qrnnd_r (UWtype, UWtype, UWtype, UWtype *);
     if (__r1 < __m)							\
       {									\
 	__q1--, __r1 += (d);						\
-	if (__r1 >= (d)) /* i.e. we didn't get carry when adding to __r1 */\
+	if (__r1 >= (d)) /* i.e., we didn't get carry when adding to __r1 */\
 	  if (__r1 < __m)						\
 	    __q1--, __r1 += (d);					\
       }									\

@@ -1277,7 +1277,7 @@ extract_fields (char *line, int _field,
   *_suffix = skip_fields (*_data, 1);
   if (**_suffix)
     {
-      /* there is a suffix (i.e. the field is not the last on the line),
+      /* there is a suffix (i.e., the field is not the last on the line),
          so null-terminate the _data before it.  */
       **_suffix = '\0';
       ++(*_suffix);

@@ -266,7 +266,7 @@ my @Tests =
      # The patch associated with sl-dangle[678] introduced a regression
      # that was fixed after coreutils-8.19.  This edge case triggers when
      # listing a dir containing dangling symlinks, but with orphans uncolored.
-     # I.E. the same as the previous test, but listing the directory
+     # I.e., the same as the previous test, but listing the directory
      # rather than the symlink directly.
      ['sl-dangle9', '--color=always d',
       {OUT => "$e\e[1;36ms$e\n"},

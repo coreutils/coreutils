@@ -25,7 +25,7 @@ print_ver_ md5sum
 # Ensure we can --check BSD alternate format.
 # Note we start this list with a name
 # that's unambiguous in BSD format.
-# I.E. one not starting with ' ' or '*'
+# I.e., one not starting with ' ' or '*'
 for i in 'a' ' b' '*c' 'dd' ' '; do
   echo "$i" > "$i"
   md5sum "$i" >> check.md5sum

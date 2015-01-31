@@ -2036,7 +2036,7 @@ dd_copy (void)
 
      The page alignment is necessary on any Linux kernel that supports
      either the SGI raw I/O patch or Steven Tweedies raw I/O patch.
-     It is necessary when accessing raw (i.e. character special) disk
+     It is necessary when accessing raw (i.e., character special) disk
      devices on Unixware or other SVR4-derived system.  */
 
   if (skip_records != 0 || skip_bytes != 0)

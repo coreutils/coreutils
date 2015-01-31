@@ -184,7 +184,7 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
     }
 
   /* Some file systems (like XFS) preallocate when write extending a file.
-     I.E. a previous write() may have preallocated extra space
+     I.e., a previous write() may have preallocated extra space
      that the seek above will not discard.  A subsequent write() could
      then make this allocation permanent.  */
   if (punch_holes && punch_hole (fd, file_end - size, size) < 0)
@@ -487,7 +487,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           last_ext_start = ext_start;
 
           /* Treat an unwritten but allocated extent much like a hole.
-             I.E. don't read, but don't convert to a hole in the destination,
+             I.e., don't read, but don't convert to a hole in the destination,
              unless SPARSE_ALWAYS.  */
           /* For now, do not treat FIEMAP_EXTENT_UNWRITTEN specially,
              because that (in combination with no sync) would lead to data

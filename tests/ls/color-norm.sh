@@ -1,6 +1,6 @@
 #!/bin/sh
 # Ensure "ls --color" properly colors "normal" text and files.
-# I.E. that it uses NORMAL to style non file name output and
+# I.e., that it uses NORMAL to style non file name output and
 # file names with no associated color (unless FILE is also set).
 
 # Copyright (C) 2010-2015 Free Software Foundation, Inc.

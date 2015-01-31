@@ -48,7 +48,7 @@ grep '^X$' out             || { fail=1; cat out; }
 rm -f target out           || framework_failure_
 
 # Ensure we correctly handle the source symlink itself changing.
-# I.E. that we don't operate solely on the targets.
+# I.e., that we don't operate solely on the targets.
 # Clear 'out' so that we can check its contents without races.
 >out                            || framework_failure_
 echo "X1" > target1             || framework_failure_
@@ -70,7 +70,7 @@ grep '^X2$' out             || { fail=1; cat out; }
 rm -f target1 target2 out   || framework_failure_
 
 # Note other symlink edge cases are currently just diagnosed
-# rather than being handled. I.E. if you specify a missing item,
+# rather than being handled.  I.e., if you specify a missing item,
 # or existing file that later change to a symlink, if inotify
 # is in use, you'll get a diagnostic saying that link will
 # no longer be tailed.
