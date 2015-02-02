@@ -203,8 +203,6 @@ EXEC 01;32
 .emf 01;35
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axv 01;35
-.anx 01;35
 .ogv 01;35
 .ogx 01;35
 
@@ -223,7 +221,7 @@ EXEC 01;32
 .wav 00;36
 
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axa 00;36
 .oga 00;36
+.opus 00;36
 .spx 00;36
 .xspf 00;36
