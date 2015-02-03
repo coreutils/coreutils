@@ -23,8 +23,12 @@ print_ver_ printenv
 # printenv as a builtin, so we must invoke it via "env".
 # But beware of $_, set by many shells to the last command run.
 # Also, filter out LD_PRELOAD, which is set when running under valgrind.
-env | grep -Ev '^(_|LD_PRELOAD=)' > exp || framework_failure_
-env -- printenv | grep -Ev '^(_|LD_PRELOAD=)' > out || fail=1
+# Note the apparently redundant "env env": this is to ensure to get
+# env's output the same way as that of printenv and works around a bug
+# on aarch64 at least where libc's execvp reverses the order of the
+# output.
+env -- env | grep -Ev '^(_|LD_PRELOAD)=' > exp || framework_failure_
+env -- printenv | grep -Ev '^(_|LD_PRELOAD)=' > out || fail=1
 compare exp out || fail=1
 
 # POSIX is clear that environ may, but need not be, sorted.
