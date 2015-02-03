@@ -159,13 +159,6 @@ struct File_spec
   uintmax_t n_unchanged_stats;
 };
 
-#if HAVE_INOTIFY
-/* The events mask used with inotify on files.  This mask is not used on
-   directories.  */
-static const uint32_t inotify_wd_mask = (IN_MODIFY | IN_ATTRIB
-                                         | IN_DELETE_SELF | IN_MOVE_SELF);
-#endif
-
 /* Keep trying to open a file even if it is inaccessible when tail starts
    or if it becomes inaccessible later -- useful only with -f.  */
 static bool reopen_inaccessible_files;
@@ -1390,6 +1383,13 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   if (! wd_to_name)
     xalloc_die ();
 
+  /* The events mask used with inotify on files (not directories).  */
+  uint32_t inotify_wd_mask = IN_MODIFY;
+  /* TODO: Perhaps monitor these events in Follow_descriptor mode also,
+     to tag reported file names with "deleted", "moved" etc.  */
+  if (follow_mode == Follow_name)
+    inotify_wd_mask |= (IN_ATTRIB | IN_DELETE_SELF | IN_MOVE_SELF);
+
   /* Add an inotify watch for each watched file.  If -F is specified then watch
      its parent directory too, in this way when they re-appear we can add them
      again to the watch list.  */
@@ -1641,20 +1641,17 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
       if (ev->mask & (IN_ATTRIB | IN_DELETE_SELF | IN_MOVE_SELF))
         {
-          /* For IN_DELETE_SELF, we always want to remove the watch.
-             However, for IN_MOVE_SELF (the file we're watching has
-             been clobbered via a rename), when tailing by NAME, we
-             must continue to watch the file.  It's only when following
-             by file descriptor that we must remove the watch.  */
-          if ((ev->mask & IN_DELETE_SELF)
-              || ((ev->mask & IN_MOVE_SELF)
-                  && follow_mode == Follow_descriptor))
+          /* Note for IN_MOVE_SELF (the file we're watching has
+             been clobbered via a rename) we leave the watch
+             in place since it may still be part of the set
+             of watched names.  */
+          if (ev->mask & IN_DELETE_SELF)
             {
               inotify_rm_watch (wd, fspec->wd);
               hash_delete (wd_to_name, fspec);
             }
-          if (follow_mode == Follow_name)
-            recheck (fspec, false);
+
+          recheck (fspec, false);
 
           continue;
         }

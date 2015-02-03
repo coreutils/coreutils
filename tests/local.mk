@@ -171,6 +171,7 @@ all_tests =					\
   tests/tail-2/inotify-hash-abuse2.sh		\
   tests/tail-2/F-vs-missing.sh			\
   tests/tail-2/F-vs-rename.sh			\
+  tests/tail-2/f-vs-rename.sh			\
   tests/tail-2/inotify-rotate.sh		\
   tests/tail-2/inotify-rotate-resources.sh	\
   tests/chmod/no-x.sh				\

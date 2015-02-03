@@ -39,6 +39,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   resources with many files, or with -F if files were replaced many times.
   [bug introduced in coreutils-7.5]
 
+  tail -f again follows changes to a file after it's renamed.
+  [bug introduced in coreutils-7.5]
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory
