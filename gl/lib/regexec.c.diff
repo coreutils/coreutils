@@ -1,17 +1,17 @@
 diff --git a/lib/regexec.c b/lib/regexec.c
-index 7d130a0..a58d454 100644
+index d3920c4..a8152b5 100644
 --- a/lib/regexec.c
 +++ b/lib/regexec.c
-@@ -16,6 +16,8 @@
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, see <http://www.gnu.org/licenses/>.  */
+@@ -17,6 +17,8 @@
+    License along with the GNU C Library; if not, see
+    <http://www.gnu.org/licenses/>.  */
 
 +#include "verify.h"
 +#include "intprops.h"
  static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
  				     Idx n) internal_function;
  static void match_ctx_clean (re_match_context_t *mctx) internal_function;
-@@ -374,8 +376,11 @@ re_search_2_stub (struct re_pattern_buffer *bufp,
+@@ -373,8 +375,11 @@ re_search_2_stub (struct re_pattern_buffer *bufp,
    Idx len = length1 + length2;
    char *s = NULL;
 
@@ -25,7 +25,7 @@ index 7d130a0..a58d454 100644
 
    /* Concatenate the strings.  */
    if (length2 > 0)
-@@ -426,11 +431,14 @@ re_search_stub (struct re_pattern_buffer *bufp,
+@@ -423,11 +428,14 @@ re_search_stub (struct re_pattern_buffer *bufp,
    Idx last_start = start + range;
 
    /* Check for out-of-range.  */
@@ -42,4 +42,4 @@ index 7d130a0..a58d454 100644
 +  else if (BE (/* last_start < 0 || */ (range < 0 && start <= last_start), 0))
      last_start = 0;
 
-   __libc_lock_lock (dfa->lock);
+   lock_lock (dfa->lock);

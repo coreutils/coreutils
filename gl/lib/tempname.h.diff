@@ -1,5 +1,5 @@
 diff --git a/lib/tempname.h b/lib/tempname.h
-index 7972562..7ced9a9 100644
+index b560ee5..6e162c3 100644
 --- a/lib/tempname.h
 +++ b/lib/tempname.h
 @@ -46,5 +46,7 @@

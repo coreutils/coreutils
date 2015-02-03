@@ -1,5 +1,5 @@
 diff --git a/lib/tempname.c b/lib/tempname.c
-index 26a38ce..5944ee0 100644
+index 088b224..e9a6c0c 100644
 --- a/lib/tempname.c
 +++ b/lib/tempname.c
 @@ -20,6 +20,7 @@
@@ -18,7 +18,7 @@ index 26a38ce..5944ee0 100644
  #include <stddef.h>
  #include <stdlib.h>
  #include <string.h>
-@@ -175,14 +177,21 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
+@@ -172,14 +174,21 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
  }
  #endif /* _LIBC */
 
@@ -33,7 +33,7 @@ index 26a38ce..5944ee0 100644
  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
  /* Generate a temporary file name based on TMPL.  TMPL must match the
--   rules for mk[s]temp (i.e., end in "XXXXXX", possibly with a suffix).
+-   rules for mk[s]temp (i.e. end in "XXXXXX", possibly with a suffix).
 +   rules for mk[s]temp (i.e., end in at least X_SUFFIX_LEN "X"s,
 +   possibly with a suffix).
     The name constructed does not exist at the time of the call to
@@ -42,7 +42,7 @@ index 26a38ce..5944ee0 100644
 
     KIND may be one of:
     __GT_NOCREATE:       simply verify that the name does not exist
-@@ -193,23 +202,24 @@ static const char letters[] =
+@@ -190,23 +199,24 @@ static const char letters[] =
 
     We use a clever algorithm to get hard-to-predict names. */
  int
@@ -72,7 +72,7 @@ index 26a38ce..5944ee0 100644
  #define ATTEMPTS_MIN (62 * 62 * 62)
 
    /* The number of times to attempt to generate a temporary file.  To
-@@ -221,43 +231,28 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+@@ -218,43 +228,28 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
  #endif
 
    len = strlen (tmpl);
@@ -128,7 +128,7 @@ index 26a38ce..5944ee0 100644
 
        switch (kind)
          {
-@@ -272,7 +267,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+@@ -269,7 +264,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
            break;
 
          case __GT_NOCREATE:
@@ -137,7 +137,7 @@ index 26a38ce..5944ee0 100644
               succeeds if __xstat fails because the name does not exist.
               Note the continue to bypass the common logic at the bottom
               of the loop.  */
-@@ -281,11 +276,15 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+@@ -278,11 +273,15 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
                if (errno == ENOENT)
                  {
                    __set_errno (save_errno);
@@ -156,7 +156,7 @@ index 26a38ce..5944ee0 100644
              }
            continue;
 
-@@ -297,13 +296,32 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+@@ -294,13 +293,32 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
        if (fd >= 0)
          {
            __set_errno (save_errno);

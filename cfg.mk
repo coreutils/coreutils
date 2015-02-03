@@ -122,6 +122,14 @@ sc_tests_executable:
 	  | sed -e "s/^/$(ME): Please make test executable: /" | grep . \
 	    && exit 1; :
 
+# Ensure all gnulib patches apply cleanly
+sc_ensure_gl_diffs_apply_cleanly:
+	@find gl/ -name '*.diff' | while read p; do			\
+	  patch --fuzz=0 -f -s -d gnulib/ -p1 --dry-run < "$$p" >&2	\
+	    || { echo "$$p" >&2; echo 'To refresh all gl patches run:'	\
+		 'make refresh-gnulib-patches' >&2; exit 1; }		\
+	done
+
 # Avoid :>file which doesn't propagate errors
 sc_prohibit_colon_redirection:
 	@cd $(srcdir)/tests && GIT_PAGER= git grep -n ': *>.*||' \
@@ -364,15 +372,15 @@ sc_prohibit_uppercase_id_est:
 	  $(_sc_search_regexp)
 
 # Enforce double-space before "I.e." at the beginning of a sentence.
-sc_ensure_double_space_after_dot_before_id_est:
-	@prohibit='\. I\.e\.'				\
+sc_ensure_dblspace_after_dot_before_id_est:
+	@prohibit='\. I\.e\.'						\
 	halt='Single space after dot before "i.e."; use ".  i.e." instead' \
 	  $(_sc_search_regexp)
 
 # Enforce comma after "i.e." (at least before a blank or at EOL).
 sc_ensure_comma_after_id_est:
-	@prohibit='[Ii]\.e\.( |$$)'				\
-	halt='Missing comma after "i.e."; use "i.e.," instead' \
+	@prohibit='[Ii]\.e\.( |$$)'					\
+	halt='Missing comma after "i.e."; use "i.e.," instead'		\
 	  $(_sc_search_regexp)
 
 # The SEE ALSO section of a man page should not be terminated with
@@ -690,6 +698,10 @@ exclude_file_name_regexp--sc_prohibit_atoi_atof = ^src/make-prime-list\.c$$
 
 # Exception here as we don't want __attribute elided on non GCC
 exclude_file_name_regexp--sc_prohibit-gl-attributes = ^src/libstdbuf\.c$$
+
+exclude_file_name_regexp--sc_prohibit_uppercase_id_est = \.diff$
+exclude_file_name_regexp--sc_ensure_dblspace_after_dot_before_id_est = \.diff$$
+exclude_file_name_regexp--sc_ensure_comma_after_id_est = \.diff$
 
 # Augment AM_CFLAGS to include our per-directory options:
 AM_CFLAGS += $($(@D)_CFLAGS)
