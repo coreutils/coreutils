@@ -1584,7 +1584,12 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           /* Remove 'fspec' and re-add it using 'new_fd' as its key.  */
           hash_delete (wd_to_name, fspec);
-          fspec->wd = new_wd;
+
+		  if (new_wd != fspec->wd)
+			{
+			  inotify_rm_watch(wd, f[j].wd);
+			  fspec->wd = new_wd;
+			}
 
           /* If the file was moved then inotify will use the source file wd for
              the destination file.  Make sure the key is not present in the
