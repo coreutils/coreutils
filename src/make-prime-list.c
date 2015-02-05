@@ -211,7 +211,7 @@ main (int argc, char **argv)
       for (j = (p*p - 3)/2; j < size; j+= p)
         sieve[j] = 0;
 
-      while (i < size && sieve[++i] == 0)
+      while (++i < size && sieve[i] == 0)
         ;
     }
 
