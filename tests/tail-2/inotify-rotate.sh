@@ -16,12 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if test "$VERBOSE" = yes; then
-  set -x
-  tail --version
-fi
-
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ tail
 
 grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
   || expensive_
@@ -44,6 +40,7 @@ cleanup_fail()
   cat out
   warn_ $1
   kill $pid
+  fail=1
 }
 
 # Perform at least this many iterations, because on multi-core systems
@@ -59,9 +56,9 @@ for i in $(seq 50); do
     timeout 60 tail -s.1 --max-unchanged-stats=1 -F k > out 2>&1 &
     pid=$!
 
-    echo b > k;
-    # wait for b to appear in out
-    grep_timeout 'b' || { cleanup_fail 'failed to find b in out'; break; }
+    echo 'tailed' > k;
+    # wait for 'tailed' to appear in out
+    grep_timeout 'tailed' || { cleanup_fail 'failed to find "tailed"'; break; }
 
     mv x k
     # wait for tail to detect the rename
