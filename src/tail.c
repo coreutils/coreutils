@@ -1438,10 +1438,11 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           if (f[i].wd < 0)
             {
-              if (errno == ENOSPC)
+              if (errno == ENOSPC || errno == ENOMEM)
                 {
                   no_inotify_resources = true;
                   error (0, 0, _("inotify resources exhausted"));
+                  break;
                 }
               else if (errno != f[i].errnum)
                 error (0, errno, _("cannot watch %s"), quote (f[i].name));
@@ -1461,7 +1462,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
      be currently present or accessible, so revert to polling.  */
   if (no_inotify_resources || found_unwatchable_dir)
     {
-      /* FIXME: release hash and inotify resources allocated above.  */
+      hash_free (wd_to_name);
+
       errno = 0;
       return true;
     }
@@ -1555,7 +1557,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       ev = void_ev;
       evbuf_off += sizeof (*ev) + ev->len;
 
-      if (ev->len) /* event on ev->name in watched directory  */
+      if (ev->len) /* event on ev->name in watched directory.  */
         {
           size_t j;
           for (j = 0; j < n_files; j++)
@@ -1571,35 +1573,58 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           if (j == n_files)
             continue;
 
-          /* It's fine to add the same file more than once.  */
+          fspec = &(f[j]);
+
+          /* Adding the same inode again will look up any existing wd.  */
           int new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
           if (new_wd < 0)
             {
-              /* Can get ENOENT for a dangling symlink for example.  */
-              error (0, errno, _("cannot watch %s"), quote (f[j].name));
-              continue;
+              if (errno == ENOSPC || errno == ENOMEM)
+                {
+                  error (0, 0, _("inotify resources exhausted"));
+                  hash_free (wd_to_name);
+                  errno = 0;
+                  return true; /* revert to polling.  */
+                }
+              else
+                {
+                  /* Can get ENOENT for a dangling symlink for example.  */
+                  error (0, errno, _("cannot watch %s"), quote (f[j].name));
+                }
+              /* We'll continue below after removing the existing watch.  */
             }
 
-          fspec = &(f[j]);
+          /* This will be false if only attributes of file change.  */
+          bool new_watch = fspec->wd < 0 || new_wd != fspec->wd;
 
-          /* Remove 'fspec' and re-add it using 'new_fd' as its key.  */
-          hash_delete (wd_to_name, fspec);
-          fspec->wd = new_wd;
-
-          /* If the file was moved then inotify will use the source file wd for
-             the destination file.  Make sure the key is not present in the
-             table.  */
-          struct File_spec *prev = hash_delete (wd_to_name, fspec);
-          if (prev && prev != fspec)
+          if (new_watch)
             {
-              if (follow_mode == Follow_name)
-                recheck (prev, false);
-              prev->wd = -1;
-              close_fd (prev->fd, pretty_name (prev));
-            }
+              if (0 <= fspec->wd)
+                {
+                  inotify_rm_watch (wd, fspec->wd);
+                  hash_delete (wd_to_name, fspec);
+                }
 
-          if (hash_insert (wd_to_name, fspec) == NULL)
-            xalloc_die ();
+              fspec->wd = new_wd;
+
+              if (new_wd == -1)
+                continue;
+
+              /* If the file was moved then inotify will use the source file wd
+                for the destination file.  Make sure the key is not present in
+                the table.  */
+              struct File_spec *prev = hash_delete (wd_to_name, fspec);
+              if (prev && prev != fspec)
+                {
+                  if (follow_mode == Follow_name)
+                    recheck (prev, false);
+                  prev->wd = -1;
+                  close_fd (prev->fd, pretty_name (prev));
+                }
+
+              if (hash_insert (wd_to_name, fspec) == NULL)
+                xalloc_die ();
+            }
 
           if (follow_mode == Follow_name)
             recheck (fspec, false);
@@ -2262,6 +2287,19 @@ main (int argc, char **argv)
                 return EXIT_FAILURE;
             }
           error (0, errno, _("inotify cannot be used, reverting to polling"));
+
+          /* Free resources as this process can be long lived,
+            and we may have exhausted system resources above.  */
+
+          for (i = 0; i < n_files; i++)
+            {
+              /* It's OK to remove the same watch multiple times,
+                ignoring the EINVAL from redundant calls.  */
+              if (F[i].wd != -1)
+                inotify_rm_watch (wd, F[i].wd);
+              if (F[i].parent_wd != -1)
+                inotify_rm_watch (wd, F[i].parent_wd);
+            }
         }
 #endif
       disable_inotify = true;

@@ -172,6 +172,7 @@ all_tests =					\
   tests/tail-2/F-vs-missing.sh			\
   tests/tail-2/F-vs-rename.sh			\
   tests/tail-2/inotify-rotate.sh		\
+  tests/tail-2/inotify-rotate-resources.sh	\
   tests/chmod/no-x.sh				\
   tests/chgrp/basic.sh				\
   tests/rm/dangling-symlink.sh			\

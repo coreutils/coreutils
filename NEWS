@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   shuf -i with a single redundant operand, would crash instead of issuing
   a diagnostic.  [bug introduced in coreutils-8.22]
 
+  tail releases inotify resources when unused.  Previously it could exhaust
+  resources with many files, or with -F if files were replaced many times.
+  [bug introduced in coreutils-7.5]
+
 ** New features
 
   chroot accepts the new --skip-chdir option to not change the working directory

@@ -19,6 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
+# Function to count number of lines from tail
+# while ignoring transient errors due to resource limits
+countlines_ ()
+{
+  grep -Ev 'inotify (resources exhausted|cannot be used)' out | wc -l
+}
+
 # Function to check the expected line count in 'out'.
 # Called via retry_delay_().  Sleep some time - see retry_delay_() - if the
 # line count is still smaller than expected.
@@ -26,7 +33,7 @@ wait4lines_ ()
 {
   local delay=$1
   local elc=$2   # Expected line count.
-  [ "$( wc -l < out )" -ge "$elc" ] || { sleep $delay; return 1; }
+  [ "$(countlines_)" -ge "$elc" ] || { sleep $delay; return 1; }
 }
 
 # Ensure changing targets of cli specified symlinks are handled.
@@ -41,7 +48,7 @@ retry_delay_ wait4lines_ .1 6 3 || fail=1  # Wait for the expected output.
 kill $pid
 wait $pid
 # Expect 3 lines in the output file.
-[ $( wc -l < out ) = 3 ]   || { fail=1; cat out; }
+[ "$(countlines_)" = 3 ]   || { fail=1; cat out; }
 grep -F 'cannot open' out  || { fail=1; cat out; }
 grep -F 'has appeared' out || { fail=1; cat out; }
 grep '^X$' out             || { fail=1; cat out; }
@@ -62,7 +69,7 @@ retry_delay_ wait4lines_ .1 6 4 || fail=1  # Wait for the expected output.
 kill $pid
 wait $pid
 # Expect 4 lines in the output file.
-[ $( wc -l < out ) = 4 ]    || { fail=1; cat out; }
+[ "$(countlines_)" = 4 ]    || { fail=1; cat out; }
 grep -F 'become inacce' out || { fail=1; cat out; }
 grep -F 'has appeared' out  || { fail=1; cat out; }
 grep '^X1$' out             || { fail=1; cat out; }

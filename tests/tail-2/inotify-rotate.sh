@@ -32,9 +32,6 @@ check_tail_output()
 # Wait up to 25.5 seconds for grep REGEXP 'out' to succeed.
 grep_timeout() { tail_re="$1" retry_delay_ check_tail_output .1 8; }
 
-# For details, see
-# http://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
-
 cleanup_fail()
 {
   cat out
@@ -45,6 +42,7 @@ cleanup_fail()
 
 # Perform at least this many iterations, because on multi-core systems
 # the offending sequence of events can be surprisingly uncommon.
+# See: http://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
 for i in $(seq 50); do
     echo $i
     rm -f k x out
