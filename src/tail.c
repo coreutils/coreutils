@@ -2265,7 +2265,11 @@ main (int argc, char **argv)
 
          FIXME: when using inotify, and a directory for a watched file
          is recreated, then we don't recheck any new file when
-         follow_mode == Follow_name  */
+         follow_mode == Follow_name.
+
+         FIXME-maybe: inotify has a watch descriptor per inode, and hence with
+         our current hash implementation will only --follow data for one
+         of the names when multiple hardlinked files are specified.  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
                                || any_remote_file (F, n_files)
                                || any_symlinks (F, n_files)
