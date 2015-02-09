@@ -3665,7 +3665,8 @@ align_nstrftime (char *buf, size_t size, char const *fmt, struct tm const *tm,
      the replacement is not done.  A malloc here slows ls down by 2%  */
   char rpl_fmt[sizeof (abmon[0]) + 100];
   const char *pb;
-  if (required_mon_width && (pb = strstr (fmt, "%b")))
+  if (required_mon_width && (pb = strstr (fmt, "%b"))
+      && 0 <= tm->tm_mon && tm->tm_mon <= 11)
     {
       if (strlen (fmt) < (sizeof (rpl_fmt) - sizeof (abmon[0]) + 2))
         {
