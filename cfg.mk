@@ -606,7 +606,8 @@ sc_preprocessor_indentation:
 # this rule detects that their pair may now be removed from THANKS.in.
 sc_THANKS_in_duplicates:
 	@{ git log --pretty=format:%aN | sort -u;			\
-	    cut -b-36 THANKS.in | sed '/^$$/d;s/  *$$//'; }		\
+	    cut -b-36 THANKS.in						\
+	      | sed '/^$$/,/^$$/!d;/^$$/d;s/  *$$//'; }			\
 	  | sort | uniq -d | grep .					\
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
 		  1>&2; exit 1; } || :
