@@ -611,6 +611,16 @@ sc_THANKS_in_duplicates:
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
 		  1>&2; exit 1; } || :
 
+# Ensure the contributor list stays sorted.  Use our sort as other
+# implementations may result in a different order.
+sc_THANKS_in_sorted:  $(srcdir)/src/sort
+	@sed '/^$$/,/^$$/!d;/^$$/d' THANKS.in > $@.1;			\
+	LC_ALL=en_US.UTF-8  $(srcdir)/src/sort -f -k1,1 $@.1 > $@.2
+	@diff -u $@.1 $@.2; diff=$$?;					\
+	rm -f $@.1 $@.2;						\
+	test "$$diff" = 0						\
+	  || { echo '$(ME): THANKS.in is unsorted' 1>&2; exit 1; }
+
 # Look for developer diagnostics that are marked for translation.
 # This won't find any for which devmsg's format string is on a separate line.
 sc_marked_devdiagnostics:
