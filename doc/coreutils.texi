@@ -1240,6 +1240,21 @@ operating system.
 To reproduce the results of an earlier invocation of a command, you
 can save some random data into a file and then use that file as the
 random source in earlier and later invocations of the command.
+@cindex random seed
+Rather than depending on a file, one can generate a reproducible
+arbitrary amount of pseudo-random data given a seed value, using
+for example:
+
+@example
+get_seeded_random()
+@{
+  seed="$1"
+  openssl enc -aes-256-ctr -pass pass:"$seed" -nosalt \
+    </dev/zero 2>/dev/null
+@}
+
+shuf -i1-100 --random-source=<(get_seeded_random 42)
+@end example
 
 @node Target directory
 @section Target directory
