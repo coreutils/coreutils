@@ -61,11 +61,11 @@ sc_dd_O_FLAGS:
 	  perl -nle '/^ +\| (O_\w*)$$/ and print $$1' $(dd); } | sort > $@.1
 	@{ echo O_NOFOLLOW; perl -nle '/{"[a-z]+",\s*(O_\w+)},/ and print $$1' \
 	  $(dd); } | sort > $@.2
-	@diff -u $@.1 $@.2 || diff=1 || diff=;				\
+	@diff -u $@.1 $@.2; diff=$$?;					\
 	rm -f $@.1 $@.2;						\
-	test "$$diff"							\
-	  && { echo '$(ME): $(dd) has inconsistent O_ flag lists'>&2;	\
-	       exit 1; } || :
+	test "$$diff" = 0						\
+	  || { echo '$(ME): $(dd) has inconsistent O_ flag lists'>&2;	\
+	       exit 1; }
 
 # Ensure that dd's definition of LONGEST_SYMBOL stays in sync
 # with the strings from the two affected variables.
