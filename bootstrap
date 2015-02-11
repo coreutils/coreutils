@@ -930,7 +930,8 @@ if test $use_libtool = 1; then
   esac
 fi
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
-$gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
+$gnulib_tool $gnulib_tool_options --import $gnulib_modules \
+  || die "gnulib-tool failed"
 
 for file in $gnulib_files; do
   symlink_to_dir "$GNULIB_SRCDIR" $file \

@@ -1,5 +1,5 @@
 diff --git a/lib/tempname.c b/lib/tempname.c
-index 088b224..e9a6c0c 100644
+index 49c7df1..84a45d4 100644
 --- a/lib/tempname.c
 +++ b/lib/tempname.c
 @@ -20,6 +20,7 @@
@@ -18,7 +18,7 @@ index 088b224..e9a6c0c 100644
  #include <stddef.h>
  #include <stdlib.h>
  #include <string.h>
-@@ -172,14 +174,21 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
+@@ -173,28 +175,34 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
  }
  #endif /* _LIBC */
 
@@ -32,23 +32,11 @@ index 088b224..e9a6c0c 100644
  static const char letters[] =
  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
- /* Generate a temporary file name based on TMPL.  TMPL must match the
--   rules for mk[s]temp (i.e. end in "XXXXXX", possibly with a suffix).
-+   rules for mk[s]temp (i.e., end in at least X_SUFFIX_LEN "X"s,
-+   possibly with a suffix).
-    The name constructed does not exist at the time of the call to
--   __gen_tempname.  TMPL is overwritten with the result.
-+   this function.  TMPL is overwritten with the result.
-
-    KIND may be one of:
-    __GT_NOCREATE:       simply verify that the name does not exist
-@@ -190,23 +199,24 @@ static const char letters[] =
-
-    We use a clever algorithm to get hard-to-predict names. */
  int
--__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
-+gen_tempname_len (char *tmpl, int suffixlen, int flags, int kind,
-+                  size_t x_suffix_len)
+-__try_tempname (char *tmpl, int suffixlen, void *args,
+-                int (*try) (char *, void *))
++try_tempname_len (char *tmpl, int suffixlen, void *args,
++                  int (*try) (char *, void *), size_t x_suffix_len)
  {
 -  int len;
 +  size_t len;
@@ -58,7 +46,6 @@ index 088b224..e9a6c0c 100644
    unsigned int count;
    int fd = -1;
    int save_errno = errno;
-   struct_stat64 st;
 +  struct randint_source *rand_src;
 
    /* A lower bound on the number of temporary files to attempt to
@@ -72,7 +59,7 @@ index 088b224..e9a6c0c 100644
  #define ATTEMPTS_MIN (62 * 62 * 62)
 
    /* The number of times to attempt to generate a temporary file.  To
-@@ -218,43 +228,28 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+@@ -206,57 +214,55 @@ __try_tempname (char *tmpl, int suffixlen, void *args,
  #endif
 
    len = strlen (tmpl);
@@ -126,37 +113,7 @@ index 088b224..e9a6c0c 100644
 +      for (i = 0; i < x_suffix_len; i++)
 +        XXXXXX[i] = letters[randint_genmax (rand_src, sizeof letters - 2)];
 
-       switch (kind)
-         {
-@@ -269,7 +264,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
-           break;
-
-         case __GT_NOCREATE:
--          /* This case is backward from the other three.  __gen_tempname
-+          /* This case is backward from the other three.  This function
-              succeeds if __xstat fails because the name does not exist.
-              Note the continue to bypass the common logic at the bottom
-              of the loop.  */
-@@ -278,11 +273,15 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
-               if (errno == ENOENT)
-                 {
-                   __set_errno (save_errno);
--                  return 0;
-+                  fd = 0;
-+                  goto done;
-                 }
-               else
--                /* Give up now. */
--                return -1;
-+                {
-+                  /* Give up now. */
-+                  fd = -1;
-+                  goto done;
-+                }
-             }
-           continue;
-
-@@ -294,13 +293,32 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+       fd = try (tmpl, args);
        if (fd >= 0)
          {
            __set_errno (save_errno);
@@ -184,10 +141,49 @@ index 088b224..e9a6c0c 100644
 +    __set_errno (saved_errno);
 +  }
 +  return fd;
+ }
+
+ static int
+@@ -285,9 +291,10 @@ try_nocreate (char *tmpl, void *flags)
+ }
+
+ /* Generate a temporary file name based on TMPL.  TMPL must match the
+-   rules for mk[s]temp (i.e. end in "XXXXXX", possibly with a suffix).
++   rules for mk[s]temp (i.e., end in at least X_SUFFIX_LEN "X"s,
++   possibly with a suffix).
+    The name constructed does not exist at the time of the call to
+-   __gen_tempname.  TMPL is overwritten with the result.
++   this function.  TMPL is overwritten with the result.
+
+    KIND may be one of:
+    __GT_NOCREATE:       simply verify that the name does not exist
+@@ -298,7 +305,8 @@ try_nocreate (char *tmpl, void *flags)
+
+    We use a clever algorithm to get hard-to-predict names. */
+ int
+-__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
++gen_tempname_len (char *tmpl, int suffixlen, int flags, int kind,
++                  size_t x_suffix_len)
+ {
+   int (*try) (char *, void *);
+
+@@ -320,5 +328,18 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+       assert (! "invalid KIND in __gen_tempname");
+       abort ();
+     }
+-  return __try_tempname (tmpl, suffixlen, &flags, try);
++  return try_tempname_len (tmpl, suffixlen, &flags, try, x_suffix_len);
 +}
 +
 +int
 +__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 +{
 +  return gen_tempname_len (tmpl, suffixlen, flags, kind, 6);
++}
++
++int
++__try_tempname (char *tmpl, int suffixlen, void *args,
++                int (*try) (char *, void *))
++{
++  return try_tempname_len (tmpl, suffixlen, args, try, 6);
  }

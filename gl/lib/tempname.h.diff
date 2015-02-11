@@ -1,12 +1,21 @@
 diff --git a/lib/tempname.h b/lib/tempname.h
-index b560ee5..6e162c3 100644
+index f7c98d0..793207f 100644
 --- a/lib/tempname.h
 +++ b/lib/tempname.h
-@@ -46,5 +46,7 @@
+@@ -46,6 +46,8 @@
 
     We use a clever algorithm to get hard-to-predict names. */
  extern int gen_tempname (char *tmpl, int suffixlen, int flags, int kind);
 +extern int gen_tempname_len (char *tmpl, int suffixlen, int flags, int kind,
 +                             size_t x_suffix_len);
+
+ /* Similar to gen_tempname, but TRY is called for each temporary
+    name to try.  If TRY returns a non-negative number, TRY_GEN_TEMPNAME
+@@ -53,5 +55,7 @@ extern int gen_tempname (char *tmpl, int suffixlen, int flags, int kind);
+    name is tried, or else TRY_GEN_TEMPNAME returns -1. */
+ extern int try_tempname (char *tmpl, int suffixlen, void *args,
+                          int (*try) (char *, void *));
++extern int try_tempname_len (char *tmpl, int suffixlen, void *args,
++                             int (*try) (char *, void *), size_t x_suffix_len);
 
  #endif /* GL_TEMPNAME_H */
