@@ -191,6 +191,7 @@ enum mode_type
 #define SANE_UNSET 2		/* Unset in 'sane' mode. */
 #define REV 4			/* Can be turned off by prepending '-'. */
 #define OMIT 8			/* Don't display value. */
+#define NO_SETATTR 16		/* tcsetattr not used to set mode bits.  */
 
 /* Each mode.  */
 struct mode_info
@@ -342,7 +343,9 @@ static struct mode_info const mode_info[] =
   {"echoke", local, SANE_SET | REV, ECHOKE, 0},
   {"crtkill", local, REV | OMIT, ECHOKE, 0},
 #endif
-#ifdef EXTPROC
+#if defined TIOCEXT
+  {"extproc", local, SANE_UNSET | REV | NO_SETATTR, EXTPROC, 0},
+#elif defined EXTPROC
   {"extproc", local, SANE_UNSET | REV, EXTPROC, 0},
 #endif
 
@@ -1192,6 +1195,7 @@ main (int argc, char **argv)
     {
       char const *arg = argv[k];
       bool match_found = false;
+      bool not_set_attr = false;
       bool reversed = false;
       int i;
 
@@ -1207,8 +1211,13 @@ main (int argc, char **argv)
         {
           if (STREQ (arg, mode_info[i].name))
             {
-              match_found = set_mode (&mode_info[i], reversed, &mode);
-              require_set_attr = true;
+              if ((mode_info[i].flags & NO_SETATTR) == 0)
+                {
+                  match_found = set_mode (&mode_info[i], reversed, &mode);
+                  require_set_attr = true;
+                }
+              else
+                match_found = not_set_attr = true;
               break;
             }
         }
@@ -1236,7 +1245,7 @@ main (int argc, char **argv)
                 }
             }
         }
-      if (!match_found)
+      if (!match_found || not_set_attr)
         {
           if (STREQ (arg, "ispeed"))
             {
@@ -1263,10 +1272,11 @@ main (int argc, char **argv)
               require_set_attr = true;
             }
 #ifdef TIOCEXT
-          else if (STREQ (arg, "extproc") || STREQ (arg, "-extproc"))
+          /* This is the BSD interface to "extproc".
+            Even though it's an lflag, an ioctl is used to set it.  */
+          else if (STREQ (arg, "extproc"))
             {
-              /* This is the BSD interface to "extproc".  */
-              int val = *arg != '-';
+              int val = ! reversed;
 
               if (ioctl (STDIN_FILENO, TIOCEXT, &val) != 0)
                 {
@@ -2192,6 +2202,9 @@ sane_mode (struct termios *mode)
 
   for (i = 0; mode_info[i].name != NULL; ++i)
     {
+      if (mode_info[i].flags & NO_SETATTR)
+        continue;
+
       if (mode_info[i].flags & SANE_SET)
         {
           bitsp = mode_type_flag (mode_info[i].type, mode);
