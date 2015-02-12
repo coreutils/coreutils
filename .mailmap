@@ -34,3 +34,10 @@ Arne Henrik Juul <arnej@imf.unit.no> Arne H. Juul <arnej@solan.unit.no>
 
 # Had email as name.
 Dan Jacobson <jidanni@jidanni.org> jidanni@jidanni.org <jidanni@jidanni.org>
+
+# Consolidate names of same email address.
+Jeff Liu <jeff.liu@oracle.com> jeff.liu <jeff.liu@oracle.com>
+Jeff Liu <jeff.liu@oracle.com> Jie Liu <jeff.liu@oracle.com>
+
+# Convert to latin1 for a better 'THANKS' sort order.
+Aleksej Shilin <rootlexx@mail.ru> Алексей Шилин <rootlexx@mail.ru>
