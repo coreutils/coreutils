@@ -158,16 +158,21 @@ ASSORT = LC_ALL=C sort
 # Extract all lines up to the first one starting with "##".
 prologue = perl -ne '/^\#\#/ and exit; print' $(srcdir)/THANKS.in
 
-THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version
+# FIXME: avoid dependency to build our own 'sort' for 'make dist' ...
+# when common platforms have a functional case-folding implementation:
+#   $ test 'abácad' = "$(printf '%s\n' 'ab' 'ác' 'ad' \
+#                          | LC_ALL=en_US.UTF-8 sort -f \
+#                          | tr -d '\n')" && echo GOOD || echo BAD
+THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version $(srcdir)/src/sort
 	$(AM_V_GEN)rm -f $@-t $@;					\
 	{								\
 	  $(prologue); echo;						\
-	  { perl -ne '/^$$/.../^$$/ and print' $(srcdir)/THANKS.in	\
-	      | grep -v '^$$' | perl -pe 's/  +/\0/';			\
+	  { perl -ne '/^$$/.../^$$/ and !/^$$/ and s/  +/\0/ and print'	\
+	      $(srcdir)/THANKS.in;					\
 	    git log --pretty=format:'%aN%x00%aE'			\
 	      | $(ASSORT) -u;						\
 	  } | $(srcdir)/thanks-gen					\
-	    | LC_ALL=en_US.UTF-8 sort -f;				\
+	    | LC_ALL=en_US.UTF-8  $(srcdir)/src/sort -f -k1,1;		\
 	  echo;								\
 	  printf ';; %s\n' 'Local Variables:' 'coding: utf-8' End:;	\
 	} > $@-t && chmod a-w $@-t && mv $@-t $@
