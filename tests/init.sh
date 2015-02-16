@@ -100,10 +100,18 @@ framework_failure_ () { warn_ "$ME_: set-up failure: $@"; Exit 99; }
 # instead check an explicit exit code like
 #   returns_ 1 command ... || fail
 returns_ () {
+  # Disable tracing so it doesn't interfere with stderr of the wrapped command
+  { set +x; } 2>/dev/null
+
   local exp_exit="$1"
   shift
   "$@"
-  test $? -eq $exp_exit
+  test $? -eq $exp_exit && ret_=0 || ret_=1
+
+  if test "$VERBOSE" = yes && test "$gl_set_x_corrupts_stderr_" = false; then
+    set -x
+  fi
+  { return $ret_; } 2>/dev/null
 }
 
 # Sanitize this shell to POSIX mode, if possible.
