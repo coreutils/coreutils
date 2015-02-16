@@ -58,6 +58,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sync no longer ignores arguments, and syncs each specified file, or with the
   --file-system option, the file systems associated with each specified file.
 
+  tee accepts a new --write-error option to control operation with pipes.
+
 ** Changes in behavior
 
   df no longer suppresses separate exports of the same remote device, as

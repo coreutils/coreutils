@@ -63,4 +63,41 @@ if test -w /dev/full && test -c /dev/full; then
   test $(wc -l < err) = 1 || { cat err; fail=1; }
 fi
 
+
+# Ensure tee honors --write-error modes
+mkfifo_or_skip_ fifo
+read_fifo() { timeout 10 dd count=1 if=fifo of=/dev/null status=none & }
+
+# Determine platform sigpipe exit status
+read_fifo
+yes >fifo
+pipe_status=$?
+
+# Default operation is to exit silently on SIGPIPE
+read_fifo
+yes | returns_ $pipe_status timeout 10 tee 2>err >fifo || fail=1
+test $(wc -l < err) = 0 || { cat err; fail=1; }
+
+# With -p, SIGPIPE is suppressed, exit 0 for EPIPE when all outputs finished
+read_fifo
+yes | timeout 10 tee -p 2>err >fifo || fail=1
+test $(wc -l < err) = 0 || { cat err; fail=1; }
+
+# With --write-error=warn, exit 1 for EPIPE when all outputs finished
+read_fifo
+yes | returns_ 1 timeout 10 tee --write-error=warn 2>err >fifo || fail=1
+test $(wc -l < err) = 1 || { cat err; fail=1; }
+
+# With --write-error=exit, exit 1 immediately for EPIPE
+read_fifo
+yes | returns_ 1 timeout 10 tee --write-error=exit /dev/null 2>err >fifo \
+  || fail=1
+test $(wc -l < err) = 1 || { cat err; fail=1; }
+
+# With --write-error=exit-nopipe, exit 0 for EPIPE
+read_fifo
+yes | timeout 10 tee --write-error=exit-nopipe 2>err >fifo || fail=1
+test $(wc -l < err) = 0 || { cat err; fail=1; }
+
+wait
 Exit $fail
