@@ -135,6 +135,7 @@ main (int argc, char **argv)
 static bool
 tee_files (int nfiles, const char **files)
 {
+  size_t n_outputs = 0;
   FILE **descriptors;
   char buffer[BUFSIZ];
   ssize_t bytes_read;
@@ -164,6 +165,7 @@ tee_files (int nfiles, const char **files)
   descriptors[0] = stdout;
   files[0] = _("standard output");
   setvbuf (stdout, NULL, _IONBF, 0);
+  n_outputs++;
 
   for (i = 1; i <= nfiles; i++)
     {
@@ -176,7 +178,10 @@ tee_files (int nfiles, const char **files)
           ok = false;
         }
       else
-        setvbuf (descriptors[i], NULL, _IONBF, 0);
+        {
+          setvbuf (descriptors[i], NULL, _IONBF, 0);
+          n_outputs++;
+        }
     }
 
   while (1)
@@ -194,9 +199,15 @@ tee_files (int nfiles, const char **files)
             && fwrite (buffer, bytes_read, 1, descriptors[i]) != 1)
           {
             error (0, errno, "%s", files[i]);
+            if (descriptors[i] == stdout)
+              clearerr (stdout); /* Avoid redundant close_stdout diagnostic.  */
             descriptors[i] = NULL;
             ok = false;
+            n_outputs--;
           }
+
+      if (n_outputs == 0)
+        break;
     }
 
   if (bytes_read == -1)

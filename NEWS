@@ -71,6 +71,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   insensitive file systems like HFS, mv would just remove a hardlinked 'file'
   if called like `mv file File`.  The feature was added in coreutils-5.0.1.
 
+  tee will exit early if there are no more writable outputs.
+
 ** Improvements
 
   cp,install,mv will convert smaller runs of NULs in the input to holes,
