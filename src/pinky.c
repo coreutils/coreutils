@@ -445,8 +445,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
               int i;
 
               for (i = 0; i < argc_names; i++)
-                if (strncmp (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE)
-                    == 0)
+                if (STREQ_LEN (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE))
                   {
                     print_entry (utmp_buf);
                     break;

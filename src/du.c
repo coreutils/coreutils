@@ -968,9 +968,9 @@ main (int argc, char **argv)
             {
               /* Ignore "posix-" prefix, for compatibility with ls.  */
               static char const posix_prefix[] = "posix-";
-              while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1)
-                     == 0)
-                time_style += sizeof posix_prefix - 1;
+              static const size_t prefix_len = sizeof posix_prefix - 1;
+              while (STREQ_LEN (time_style, posix_prefix, prefix_len))
+                time_style += prefix_len;
             }
         }
 

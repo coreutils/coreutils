@@ -296,8 +296,8 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
         {
           /* 'match_length' is constant for non-regexp boundaries. */
           while (*--match_start != first_char
-                 || (match_length1 && strncmp (match_start + 1, separator1,
-                                               match_length1)))
+                 || (match_length1 && !STREQ_LEN (match_start + 1, separator1,
+                                                  match_length1)))
             /* Do nothing. */ ;
         }
 
