@@ -20,17 +20,24 @@
 print_ver_ tee
 
 echo line >sample || framework_failure_
-nums=$(seq 9) || framework_failure_
 
-for n in 0 $nums; do
-        files=$(seq $n)
-        rm -f $files
-        tee $files <sample >out || fail=1
-        for f in out $files; do
-                compare sample $f || fail=1
-        done
+# POSIX says: "Processing of at least 13 file operands shall be supported."
+for n in 0 1 2 12 13; do
+  files=$(seq $n)
+  rm -f $files
+  tee $files <sample >out || fail=1
+  for f in out $files; do
+    compare sample $f || fail=1
+  done
 done
 
+# Ensure tee treats '-' as the name of a file, as mandated by POSIX.
+# Between v5.3.0 and v8.23, a '-' argument caused tee to send another
+# copy of input to standard output.
+tee - <sample >out 2>err || fail=1
+compare sample ./- || fail=1
+compare sample out || fail=1
+compare /dev/null err || fail
 
 # Ensure tee exits early if no more writable outputs
 if test -w /dev/full && test -c /dev/full; then

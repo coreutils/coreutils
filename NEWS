@@ -73,6 +73,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tee will exit early if there are no more writable outputs.
 
+  tee does not treat the file operand '-' as meaning standard output any longer,
+  for better conformance to POSIX.  This feature was added in coreutils-5.3.0.
+
+
 ** Improvements
 
   cp,install,mv will convert smaller runs of NULs in the input to holes,

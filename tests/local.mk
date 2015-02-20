@@ -382,7 +382,6 @@ all_tests =					\
   tests/misc/tac-2-nonseekable.sh		\
   tests/misc/tail.pl				\
   tests/misc/tee.sh				\
-  tests/misc/tee-dash.sh			\
   tests/misc/test-diag.pl			\
   tests/misc/timeout.sh				\
   tests/misc/timeout-blocked.pl			\

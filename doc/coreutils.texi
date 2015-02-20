@@ -752,11 +752,10 @@ operands even if they begin with @samp{-}.  For example, @samp{sort --
 @cindex standard input
 @cindex standard output
 A single @samp{-} operand is not really an option, though it looks like one.  It
-stands for standard input, or for standard output if that is clear from
-the context.  For example, @samp{sort -} reads from standard input,
-and is equivalent to plain @samp{sort}, and @samp{tee -} writes an
-extra copy of its input to standard output.  Unless otherwise
-specified, @samp{-} can appear as any operand that requires a file
+stands for a file operand, and some tools treat it as standard input, or as
+standard output if that is clear from the context.  For example, @samp{sort -}
+reads from standard input, and is equivalent to plain @samp{sort}.  Unless
+otherwise specified, a @samp{-} can appear as any operand that requires a file
 name.
 
 @menu
@@ -13180,9 +13179,11 @@ If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @option{-a} option is used.
 
-A @var{file} of @samp{-} causes @command{tee} to send another copy of
-input to standard output, but this is typically not that useful as the
-copies are interleaved.
+In previous versions of GNU coreutils (v5.3.0 - v8.23), a @var{file} of @samp{-}
+caused @command{tee} to send another copy of input to standard output.
+However, as the interleaved output was not very useful, @command{tee} now
+conforms to POSIX which explicitly mandates it to treat @samp{-} as a file
+with such name.
 
 The program accepts the following options.  Also see @ref{Common options}.
 

@@ -68,10 +68,6 @@ Copy standard input to each FILE, and also to standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-If a FILE is -, copy again to standard output.\n\
-"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
@@ -169,9 +165,8 @@ tee_files (int nfiles, const char **files)
 
   for (i = 1; i <= nfiles; i++)
     {
-      descriptors[i] = (STREQ (files[i], "-")
-                        ? stdout
-                        : fopen (files[i], mode_string));
+      /* Do not treat "-" specially - as mandated by POSIX.  */
+      descriptors[i] = fopen (files[i], mode_string);
       if (descriptors[i] == NULL)
         {
           error (0, errno, "%s", files[i]);
