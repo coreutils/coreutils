@@ -213,8 +213,7 @@ tee_files (int nfiles, const char **files)
 
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
-    if (!STREQ (files[i], "-")
-        && descriptors[i] && fclose (descriptors[i]) != 0)
+    if (descriptors[i] && fclose (descriptors[i]) != 0)
       {
         error (0, errno, "%s", files[i]);
         ok = false;
