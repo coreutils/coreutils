@@ -336,6 +336,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "hugetlbfs";
     case S_MAGIC_MTD_INODE_FS: /* 0x11307854 local */
       return "inodefs";
+    case S_MAGIC_IBRIX: /* 0x013111A8 remote */
+      return "ibrix";
     case S_MAGIC_INOTIFYFS: /* 0x2BAD1DEA local */
       return "inotifyfs";
     case S_MAGIC_ISOFS: /* 0x9660 local */
