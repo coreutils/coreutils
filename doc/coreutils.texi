@@ -13202,29 +13202,29 @@ them.
 Ignore interrupt signals.
 
 @item -p
-@itemx --write-error[=@var{mode}]
+@itemx --output-error[=@var{mode}]
 @opindex -p
-@opindex --write-error
-Select the behavior with write errors on the outputs,
+@opindex --output-error
+Select the behavior with errors on the outputs,
 where @var{mode} is one of the following:
 
 @table @samp
 @item warn
-Warn on error writing any output, including pipes.
+Warn on error opening or writing any output, including pipes.
 Writing is continued to still open files/pipes.
 Exit status indicates failure if any output has an error.
 
 @item warn-nopipe
-Warn on error writing any output, except pipes.
+Warn on error opening or writing any output, except pipes.
 Writing is continued to still open files/pipes.
 Exit status indicates failure if any non pipe output had an error.
 This is the default @var{mode} when not specified.
 
 @item exit
-Exit on error writing any output, including pipes.
+Exit on error opening or writing any output, including pipes.
 
 @item exit-nopipe
-Exit on error writing any output, except pipes.
+Exit on error opening or writing any output, except pipes.
 @end table
 
 @end table

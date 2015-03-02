@@ -44,37 +44,37 @@ static bool append;
 /* If true, ignore interrupts. */
 static bool ignore_interrupts;
 
-enum write_error
+enum output_error
   {
-    write_error_sigpipe,      /* traditional behavior, sigpipe enabled.  */
-    write_error_warn,         /* warn on EPIPE, but continue.  */
-    write_error_warn_nopipe,  /* ignore EPIPE, continue.  */
-    write_error_exit,         /* exit on any write error.  */
-    write_error_exit_nopipe   /* exit on any write error except EPIPE.  */
+    output_error_sigpipe,      /* traditional behavior, sigpipe enabled.  */
+    output_error_warn,         /* warn on EPIPE, but continue.  */
+    output_error_warn_nopipe,  /* ignore EPIPE, continue.  */
+    output_error_exit,         /* exit on any output error.  */
+    output_error_exit_nopipe   /* exit on any output error except EPIPE.  */
   };
 
-static enum write_error write_error;
+static enum output_error output_error;
 
 static struct option const long_options[] =
 {
   {"append", no_argument, NULL, 'a'},
   {"ignore-interrupts", no_argument, NULL, 'i'},
-  {"write-error", optional_argument, NULL, 'p'},
+  {"output-error", optional_argument, NULL, 'p'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
-static char const *const write_error_args[] =
+static char const *const output_error_args[] =
 {
   "warn", "warn-nopipe", "exit", "exit-nopipe", NULL
 };
-static enum write_error const write_error_types[] =
+static enum output_error const output_error_types[] =
 {
-  write_error_warn, write_error_warn_nopipe,
-  write_error_exit, write_error_exit_nopipe
+  output_error_warn, output_error_warn_nopipe,
+  output_error_exit, output_error_exit_nopipe
 };
-ARGMATCH_VERIFY (write_error_args, write_error_types);
+ARGMATCH_VERIFY (output_error_args, output_error_types);
 
 void
 usage (int status)
@@ -91,7 +91,7 @@ Copy standard input to each FILE, and also to standard output.\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\
 "), stdout);
       fputs (_("\
-  -p, --write-error[=MODE]  behavior on write error.  See MODE details below\n\
+  -p, --output-error[=MODE]  behavior on write error.  See MODE details below\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -103,7 +103,7 @@ MODE determines behavior with write errors on the outputs:\n\
   'exit'         exit on error writing to any output\n\
   'exit-nopipe'  exit on error writing to any output not a pipe\n\
 The default MODE for the -p option is 'warn-nopipe'.\n\
-The default operation when --write-error is not specified, is to\n\
+The default operation when --output-error is not specified, is to\n\
 exit immediately on error writing to a pipe, and diagnose errors\n\
 writing to non pipe outputs.\n\
 "), stdout);
@@ -143,10 +143,10 @@ main (int argc, char **argv)
 
         case 'p':
           if (optarg)
-            write_error = XARGMATCH ("--write-error", optarg, write_error_args,
-                                     write_error_types);
+            output_error = XARGMATCH ("--output-error", optarg,
+                                      output_error_args, output_error_types);
           else
-            write_error = write_error_warn_nopipe;
+            output_error = output_error_warn_nopipe;
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -161,7 +161,7 @@ main (int argc, char **argv)
   if (ignore_interrupts)
     signal (SIGINT, SIG_IGN);
 
-  if (write_error != write_error_sigpipe)
+  if (output_error != output_error_sigpipe)
     signal (SIGPIPE, SIG_IGN);
 
   /* Do *not* warn if tee is given no file arguments.
@@ -184,7 +184,7 @@ tee_files (int nfiles, const char **files)
   size_t n_outputs = 0;
   FILE **descriptors;
   char buffer[BUFSIZ];
-  ssize_t bytes_read;
+  ssize_t bytes_read = 0;
   int i;
   bool ok = true;
   char const *mode_string =
@@ -219,7 +219,9 @@ tee_files (int nfiles, const char **files)
       descriptors[i] = fopen (files[i], mode_string);
       if (descriptors[i] == NULL)
         {
-          error (0, errno, "%s", files[i]);
+          error (output_error == output_error_exit
+                 || output_error == output_error_exit_nopipe,
+                 errno, "%s", files[i]);
           ok = false;
         }
       else
@@ -229,7 +231,7 @@ tee_files (int nfiles, const char **files)
         }
     }
 
-  while (1)
+  while (n_outputs)
     {
       bytes_read = read (0, buffer, sizeof buffer);
       if (bytes_read < 0 && errno == EINTR)
@@ -244,14 +246,14 @@ tee_files (int nfiles, const char **files)
             && fwrite (buffer, bytes_read, 1, descriptors[i]) != 1)
           {
             int w_errno = errno;
-            bool fail = errno != EPIPE || (write_error == write_error_exit
-                                           || write_error == write_error_warn);
+            bool fail = errno != EPIPE || (output_error == output_error_exit
+                                          || output_error == output_error_warn);
             if (descriptors[i] == stdout)
               clearerr (stdout); /* Avoid redundant close_stdout diagnostic.  */
             if (fail)
               {
-                error (write_error == write_error_exit
-                       || write_error == write_error_exit_nopipe,
+                error (output_error == output_error_exit
+                       || output_error == output_error_exit_nopipe,
                        w_errno, "%s", files[i]);
               }
             descriptors[i] = NULL;
@@ -259,9 +261,6 @@ tee_files (int nfiles, const char **files)
               ok = false;
             n_outputs--;
           }
-
-      if (n_outputs == 0)
-        break;
     }
 
   if (bytes_read == -1)
