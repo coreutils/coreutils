@@ -118,7 +118,7 @@ sc_tests_list_consistency:
 sc_tests_executable:
 	@test_extensions_rx=`echo $(TEST_EXTENSIONS)			\
 	  | sed -e "s/ / -o -name */g" -e "s/^/-name */"`; \
-	find tests/ \( $$test_extensions_rx \) \! -perm -111 -print \
+	find tests/ \( $$test_extensions_rx \) \! -perm -u+x -print \
 	  | sed -e "s/^/$(ME): Please make test executable: /" | grep . \
 	    && exit 1; :
 
