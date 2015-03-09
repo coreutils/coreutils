@@ -58,6 +58,10 @@ Repeatedly output a line with all specified STRING(s), or 'y'.\n\
 int
 main (int argc, char **argv)
 {
+  char buf[BUFSIZ];
+  char *pbuf = buf;
+  int i;
+
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -77,9 +81,44 @@ main (int argc, char **argv)
       argv[argc++] = bad_cast ("y");
     }
 
-  while (true)
+  /* Buffer data locally once, rather than having the
+     large overhead of stdio buffering each item.   */
+  for (i = optind; i < argc; i++)
     {
-      int i;
+      size_t len = strlen (argv[i]);
+      if (BUFSIZ < len || BUFSIZ - len <= pbuf - buf)
+        break;
+      memcpy (pbuf, argv[i], len);
+      pbuf += len;
+      *pbuf++ = i == argc - 1 ? '\n' : ' ';
+    }
+  if (i < argc)
+    pbuf = NULL;
+  else
+    {
+      size_t line_len = pbuf - buf;
+      size_t lines = BUFSIZ / line_len;
+      while (--lines)
+        {
+          memcpy (pbuf, pbuf - line_len, line_len);
+          pbuf += line_len;
+        }
+    }
+
+  /* The normal case is to continuously output the local buffer.  */
+  while (pbuf)
+    {
+      if (write (STDOUT_FILENO, buf, pbuf - buf) == -1)
+        {
+          error (0, errno, _("standard output"));
+          return EXIT_FAILURE;
+        }
+    }
+
+  /* If the data doesn't fit in BUFSIZ then it's large
+     and not too inefficient to output through stdio.  */
+  while (! pbuf)
+    {
       for (i = optind; i < argc; i++)
         if (fputs (argv[i], stdout) == EOF
             || putchar (i == argc - 1 ? '\n' : ' ') == EOF)
