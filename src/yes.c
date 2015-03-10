@@ -82,7 +82,7 @@ main (int argc, char **argv)
     }
 
   /* Buffer data locally once, rather than having the
-     large overhead of stdio buffering each item.   */
+     large overhead of stdio buffering each item.  */
   for (i = optind; i < argc; i++)
     {
       size_t len = strlen (argv[i]);
@@ -92,9 +92,7 @@ main (int argc, char **argv)
       pbuf += len;
       *pbuf++ = i == argc - 1 ? '\n' : ' ';
     }
-  if (i < argc)
-    pbuf = NULL;
-  else
+  if (i == argc)
     {
       size_t line_len = pbuf - buf;
       size_t lines = BUFSIZ / line_len;
@@ -106,7 +104,7 @@ main (int argc, char **argv)
     }
 
   /* The normal case is to continuously output the local buffer.  */
-  while (pbuf)
+  while (i == argc)
     {
       if (write (STDOUT_FILENO, buf, pbuf - buf) == -1)
         {
@@ -115,13 +113,19 @@ main (int argc, char **argv)
         }
     }
 
-  /* If the data doesn't fit in BUFSIZ then it's large
-     and not too inefficient to output through stdio.  */
-  while (! pbuf)
+  /* If the data doesn't fit in BUFSIZ then output
+     what we've buffered, and iterate over the remaining items.  */
+  while (i != argc)
     {
-      for (i = optind; i < argc; i++)
-        if (fputs (argv[i], stdout) == EOF
-            || putchar (i == argc - 1 ? '\n' : ' ') == EOF)
+      int j;
+      if ((pbuf - buf) && fwrite (buf, pbuf - buf, 1, stdout) != 1)
+        {
+          error (0, errno, _("standard output"));
+          return EXIT_FAILURE;
+        }
+      for (j = i; j < argc; j++)
+        if (fputs (argv[j], stdout) == EOF
+            || putchar (j == argc - 1 ? '\n' : ' ') == EOF)
           {
             error (0, errno, _("standard output"));
             return EXIT_FAILURE;

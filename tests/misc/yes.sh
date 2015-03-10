@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ yes
 
-# Check various buffer sizes, with the most important
+# Check various single item sizes, with the most important
 # size being BUFSIZ used for the local buffer to yes(1).
 # Note a \n is added, so actual sizes required internally
 # are 1 more than the size used here.
@@ -28,5 +28,15 @@ for size in 1 1999 4095 4096 8191 8192 16383 16384; do
   yes "$(printf %${size}s '')" | head -n2 | uniq > out.2
   compare out.1 out.2 || fail=1
 done
+
+# Check the many small items case,
+# both fitting and overflowing the internal buffer
+if env true $(seq 4000); then
+  for i in 100 4000; do
+    seq $i | paste -s -d ' ' | sed p > out.1
+    yes $(seq $i) | head -n2 > out.2
+    compare out.1 out.2 || fail=1
+  done
+fi
 
 Exit $fail
