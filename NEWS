@@ -94,6 +94,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat and tail now know about IBRIX.  stat -f --format=%T now reports the file
   system type, and tail -f uses polling for files on IBRIX file systems.
 
+  wc -l processes short lines much more efficiently.
+
   References from --help and the man pages of utilities have been corrected
   in various cases, and more direct links to the corresponding online
   documentation are provided.

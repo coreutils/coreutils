@@ -264,6 +264,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
          but not chars or words.  */
+      bool long_lines = false;
+      bool check_len = true;
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
         {
           char *p = buf;
@@ -275,12 +277,41 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
               break;
             }
 
+          char *end = p + bytes_read;
+
+          /* Avoid function call overhead for shorter lines.  */
+          if (check_len)
+            while (p != end)
+              {
+                lines += *p++ == '\n';
+                /* If there are more than 150 chars in the first 10 lines,
+                   then use memchr, where system specific optimizations
+                   may outweigh function call overhead.
+                   FIXME: This line length was determined in 2015, on both
+                   x86_64 and ppc64, but it's worth re-evaluating in future with
+                   newer compilers, CPUs, or memchr() implementations etc.  */
+                if (lines <= 10)
+                  {
+                    if (p - buf > 150)
+                      {
+                        long_lines = true;
+                        break;
+                      }
+                  }
+              }
+          else if (! long_lines)
+            while (p != end)
+              lines += *p++ == '\n';
+
+          /* memchr is more efficient with longer lines.  */
           while ((p = memchr (p, '\n', (buf + bytes_read) - p)))
             {
               ++p;
               ++lines;
             }
+
           bytes += bytes_read;
+          check_len = false;
         }
     }
 #if MB_LEN_MAX > 1
