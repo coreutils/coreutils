@@ -116,9 +116,10 @@ sc_tests_list_consistency:
 
 # Ensure that all version-controlled test scripts are executable.
 sc_tests_executable:
-	@test_extensions_rx=`printf -- "-name '*%s' " $(TEST_EXTENSIONS)`;\
-	find tests/ \( $$test_extensions_rx \) \! -perm -u+x -print	  \
-	  | sed -e "s/^/$(ME): Please make test executable: /" | grep .	  \
+	@set -o noglob 2>/dev/null || set -f;				   \
+	find_ext="-name '' "`printf -- "-o -name *%s " $(TEST_EXTENSIONS)`;\
+	find tests/ \( $$find_ext \) \! -perm -u+x -print		   \
+	  | sed -e "s/^/$(ME): Please make test executable: /" | grep .	   \
 	    && exit 1; :
 
 # Ensure all gnulib patches apply cleanly
