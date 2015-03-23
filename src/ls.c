@@ -4882,7 +4882,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -s, --size                 print the allocated size of each file, in blocks\n\
 "), stdout);
       fputs (_("\
-  -S                         sort by file size\n\
+  -S                         sort by file size, largest first\n\
       --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
 ,\n\
                                time (-t), version (-v), extension (-X)\n\
