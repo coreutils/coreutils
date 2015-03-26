@@ -4801,9 +4801,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         colorize the output; WHEN can be 'never', 'auto',\
+      --color[=WHEN]         colorize the output; WHEN can be 'always' (default\
 \n\
-                               or 'always' (the default); more info below\n\
+                               if omitted), 'auto', or 'never'; more info below\
+\n\
   -d, --directory            list directories themselves, not their contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
