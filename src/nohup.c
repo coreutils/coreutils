@@ -63,7 +63,7 @@ Run COMMAND, ignoring hangup signals.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\n\
-If standard input is a terminal, redirect it from /dev/null.\n\
+If standard input is a terminal, redirect it from an unreadable file.\n\
 If standard output is a terminal, append output to 'nohup.out' if possible,\n\
 '$HOME/nohup.out' otherwise.\n\
 If standard error is a terminal, redirect it to standard output.\n\

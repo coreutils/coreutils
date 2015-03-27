@@ -16714,12 +16714,13 @@ out.  Synopsis:
 nohup @var{command} [@var{arg}]@dots{}
 @end example
 
-If standard input is a terminal, it is redirected from
-@file{/dev/null} so that terminal sessions do not mistakenly consider
-the terminal to be used by the command.  This is a GNU
-extension; programs intended to be portable to non-GNU hosts
-should use @samp{nohup @var{command} [@var{arg}]@dots{} </dev/null}
-instead.
+If standard input is a terminal, redirect it so that terminal sessions
+do not mistakenly consider the terminal to be used by the command.
+Make the substitute file descriptor unreadable, so that commands that
+mistakenly attempt to read from standard input can report an error.
+This redirection is a GNU extension; programs intended to be portable
+to non-GNU hosts can use @samp{nohup @var{command} [@var{arg}]@dots{}
+0>/dev/null} instead.
 
 @flindex nohup.out
 If standard output is a terminal, the command's standard output is appended
