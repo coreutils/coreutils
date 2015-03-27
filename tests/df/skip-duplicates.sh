@@ -73,16 +73,16 @@ struct mntent *getmntent (FILE *fp)
     }
 
   static struct mntent mntents[] = {
-    {.mnt_fsname="/short",  .mnt_dir="/invalid/mount/dir"},
-    {.mnt_fsname="fsname",  .mnt_dir="/",},
-    {.mnt_fsname="/fsname", .mnt_dir="/."},
-    {.mnt_fsname="/fsname", .mnt_dir="/"},
-    {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT", .mnt_type="fstype1"},
-    {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT", .mnt_type="fstype2"},
-    {.mnt_fsname="netns",   .mnt_dir="net:[1234567]"},
-    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE"},
-    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE"},
-    {.mnt_fsname="rem:ote2",.mnt_dir="/REMOTE"},
+    {.mnt_fsname="/short",  .mnt_dir="/invalid/mount/dir",       .mnt_opts=""},
+    {.mnt_fsname="fsname",  .mnt_dir="/",                        .mnt_opts=""},
+    {.mnt_fsname="/fsname", .mnt_dir="/.",                       .mnt_opts=""},
+    {.mnt_fsname="/fsname", .mnt_dir="/",                        .mnt_opts=""},
+    {.mnt_fsname="virtfs",  .mnt_dir="/NONROOT", .mnt_type="t1", .mnt_opts=""},
+    {.mnt_fsname="virtfs2", .mnt_dir="/NONROOT", .mnt_type="t2", .mnt_opts=""},
+    {.mnt_fsname="netns",   .mnt_dir="net:[1234567]",            .mnt_opts=""},
+    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE",                  .mnt_opts=""},
+    {.mnt_fsname="rem:ote1",.mnt_dir="/REMOTE",                  .mnt_opts=""},
+    {.mnt_fsname="rem:ote2",.mnt_dir="/REMOTE",                  .mnt_opts=""},
   };
 
   if (done == 1)
@@ -151,7 +151,7 @@ if test "$unique_entries" = 2; then
 fi
 
 # df should use the last seen devname (mnt_fsname) and devtype (mnt_type)
-test $(grep -c 'virtfs2.*fstype2' <out) -eq 1 || { fail=1; cat out; }
+test $(grep -c 'virtfs2.*t2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
 LD_PRELOAD=./k.so df -a >out || fail=1
