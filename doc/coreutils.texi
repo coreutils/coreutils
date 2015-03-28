@@ -243,7 +243,6 @@ Output of entire files
 Formatting file contents
 
 * fmt invocation::               Reformat paragraph text
-* numfmt invocation::            Reformat numbers
 * pr invocation::                Paginate or columnate files for printing
 * fold invocation::              Wrap input lines to fit in specified width
 
@@ -461,6 +460,7 @@ Delaying
 Numeric operations
 
 * factor invocation::            Print prime factors
+* numfmt invocation::            Reformat numbers
 * seq invocation::               Print numeric sequences
 
 File permissions
@@ -2207,7 +2207,6 @@ These commands reformat the contents of files.
 
 @menu
 * fmt invocation::              Reformat paragraph text.
-* numfmt invocation::           Reformat numbers.
 * pr invocation::               Paginate or columnate files for printing.
 * fold invocation::             Wrap input lines to fit in specified width.
 @end menu
@@ -2316,328 +2315,6 @@ leaving the code unchanged.
 @end table
 
 @exitstatus
-
-@node numfmt invocation
-@section @command{numfmt}: Reformat numbers
-
-@pindex numfmt
-
-@command{numfmt} reads numbers in various representations and reformats them
-as requested.  The most common usage is converting numbers to/from @emph{human}
-representation (e.g. @samp{4G} @expansion{} @samp{4,000,000,000}).
-
-@example
-numfmt [@var{option}]@dots{} [@var{number}]
-@end example
-
-@command{numfmt} converts each @var{number} on the command-line according to the
-specified options (see below).  If no @var{number}s are given, it reads numbers
-from standard input.  @command{numfmt} can optionally extract numbers from
-specific columns, maintaining proper line padding and alignment.
-
-@exitstatus
-
-See @option{--invalid} for additional information regarding exit status.
-
-@subsection General options
-
-The program accepts the following options.  Also see @ref{Common options}.
-
-@table @samp
-
-@item --debug
-@opindex --debug
-Print (to standard error) warning messages about possible erroneous usage.
-
-@item -d @var{d}
-@itemx --delimiter=@var{d}
-@opindex -d
-@opindex --delimiter
-Use the character @var{d} as input field separator (default: whitespace).
-@emph{Note}: Using non-default delimiter turns off automatic padding.
-
-@item --field=@var{n}
-@opindex --field
-Convert the number in input field @var{n} (default: 1).
-
-@item --format=@var{format}
-@opindex --format
-Use printf-style floating FORMAT string.  The @var{format} string must contain
-one @samp{%f} directive, optionally with @samp{'}, @samp{-}, @samp{0}, or width
-modifiers.  The @samp{'} modifier will enable @option{--grouping}, the @samp{-}
-modifier will enable left-aligned @option{--padding} and the width modifier will
-enable right-aligned @option{--padding}.  The @samp{0} width modifier
-(without the @samp{-} modifier) will generate leading zeros on the number,
-up to the specified width.
-
-@item --from=@var{unit}
-@opindex --from
-Auto-scales input numbers according to @var{unit}.  See UNITS below.
-The default is no scaling, meaning suffixes (e.g. @samp{M}, @samp{G}) will
-trigger an error.
-
-@item --from-unit=@var{n}
-@opindex --from-unit
-Specify the input unit size (instead of the default 1).  Use this option when
-the input numbers represent other units (e.g. if the input number @samp{10}
-represents 10 units of 512 bytes, use @samp{--from=unit=512}).
-
-@item --grouping
-@opindex --grouping
-Group digits in output numbers according to the current locale's grouping rules
-(e.g @emph{Thousands Separator} character, commonly @samp{.} (dot) or @samp{,}
-comma).  This option has no effect in @samp{POSIX/C} locale.
-
-@item --header[=@var{n}]
-@opindex --header
-@opindex --header=N
-Print the first @var{n} (default: 1) lines without any conversion.
-
-@item --invalid=@var{mode}
-@opindex --invalid
-The default action on input errors is to exit immediately with status code 2.
-@option{--invalid=@samp{abort}} explicitly specifies this default mode.
-With a @var{mode} of @samp{fail}, print a warning for @emph{each} conversion
-error, and exit with status 2.  With a @var{mode} of @samp{warn}, exit with
-status 0, even in the presence of conversion errors, and with a @var{mode} of
-@samp{ignore} do not even print diagnostics.
-
-@item --padding=@var{n}
-@opindex --padding
-Pad the output numbers to @var{n} characters, by adding spaces.  If @var{n} is
-a positive number, numbers will be right-aligned.  If @var{n} is a negative
-number, numbers will be left-aligned.  By default, numbers are automatically
-aligned based on the input line's width (only with the default delimiter).
-
-@item --round=@var{method}
-@opindex --round
-@opindex --round=up
-@opindex --round=down
-@opindex --round=from-zero
-@opindex --round=towards-zero
-@opindex --round=nearest
-When converting number representations, round the number according to
-@var{method}, which can be @samp{up}, @samp{down},
-@samp{from-zero} (the default), @samp{towards-zero}, @samp{nearest}.
-
-@item --suffix=@var{suffix}
-@opindex --suffix
-Add @samp{SUFFIX} to the output numbers, and accept optional @samp{SUFFIX} in
-input numbers.
-
-@item --to=@var{unit}
-@opindex --to
-Auto-scales output numbers according to @var{unit}.  See @emph{Units} below.
-The default is no scaling, meaning all the digits of the number are printed.
-
-@item --to-unit=@var{n}
-@opindex --to-unit
-Specify the output unit size (instead of the default 1).  Use this option when
-the output numbers represent other units (e.g. to represent @samp{4,000,000}
-bytes in blocks of 1KB, use @samp{--to=si --to=units=1000}).
-
-@end table
-
-@subsection Possible @var{unit}s:
-
-The following are the possible @var{unit} options with @option{--from=UNITS} and
-@option{--to=UNITS}:
-
-@table @var
-
-@item none
-No scaling is performed.  For input numbers, no suffixes are accepted, and any
-trailing characters following the number will trigger an error.  For output
-numbers, all digits of the numbers will be printed.
-
-@item si
-Auto-scale numbers according to the @emph{International System of Units (SI)}
-standard.
-For input numbers, accept one of the following suffixes.
-For output numbers, values larger than 1000 will be rounded, and printed with
-one of the following suffixes:
-
-@example
-@samp{K}  =>  @math{1000^1 = 10^3} (Kilo)
-@samp{M}  =>  @math{1000^2 = 10^6} (Mega)
-@samp{G}  =>  @math{1000^3 = 10^9} (Giga)
-@samp{T}  =>  @math{1000^4 = 10^{12}} (Tera)
-@samp{P}  =>  @math{1000^5 = 10^{15}} (Peta)
-@samp{E}  =>  @math{1000^6 = 10^{18}} (Exa)
-@samp{Z}  =>  @math{1000^7 = 10^{21}} (Zetta)
-@samp{Y}  =>  @math{1000^8 = 10^{24}} (Yotta)
-@end example
-
-@item iec
-Auto-scale numbers according to the @emph{International Electrotechnical
-Commission (IEC)} standard.
-For input numbers, accept one of the following suffixes.
-For output numbers, values larger than 1024 will be rounded, and printed with
-one of the following suffixes:
-
-@example
-@samp{K}  =>  @math{1024^1 = 2^{10}} (Kibi)
-@samp{M}  =>  @math{1024^2 = 2^{20}} (Mebi)
-@samp{G}  =>  @math{1024^3 = 2^{30}} (Gibi)
-@samp{T}  =>  @math{1024^4 = 2^{40}} (Tebi)
-@samp{P}  =>  @math{1024^5 = 2^{50}} (Pebi)
-@samp{E}  =>  @math{1024^6 = 2^{60}} (Exbi)
-@samp{Z}  =>  @math{1024^7 = 2^{70}} (Zebi)
-@samp{Y}  =>  @math{1024^8 = 2^{80}} (Yobi)
-@end example
-
-The @option{iec} option uses a single letter suffix (e.g. @samp{G}), which is
-not fully standard, as the @emph{iec} standard recommends a two-letter symbol
-(e.g @samp{Gi}) - but in practice, this method common.  Compare with
-the @option{iec-i} option.
-
-@item iec-i
-Auto-scale numbers according to the @emph{International Electrotechnical
-Commission (IEC)} standard.
-For input numbers, accept one of the following suffixes.
-For output numbers, values larger than 1024 will be rounded, and printed with
-one of the following suffixes:
-
-@example
-@samp{Ki}  =>  @math{1024^1 = 2^{10}} (Kibi)
-@samp{Mi}  =>  @math{1024^2 = 2^{20}} (Mebi)
-@samp{Gi}  =>  @math{1024^3 = 2^{30}} (Gibi)
-@samp{Ti}  =>  @math{1024^4 = 2^{40}} (Tebi)
-@samp{Pi}  =>  @math{1024^5 = 2^{50}} (Pebi)
-@samp{Ei}  =>  @math{1024^6 = 2^{60}} (Exbi)
-@samp{Zi}  =>  @math{1024^7 = 2^{70}} (Zebi)
-@samp{Yi}  =>  @math{1024^8 = 2^{80}} (Yobi)
-@end example
-
-The @option{iec-i} option uses a two-letter suffix symbol (e.g. @samp{Gi}),
-as the @emph{iec} standard recommends, but this is not always common in
-practice.  Compare with the @option{iec} option.
-
-@item auto
-@samp{auto} can only be used with @option{--from}.  With this method, numbers
-with @samp{K},@samp{M},@samp{G},@samp{T},@samp{P},@samp{E},@samp{Z},@samp{Y}
-suffixes are interpreted as @emph{SI} values, and numbers with @samp{Ki},
-@samp{Mi},@samp{Gi},@samp{Ti},@samp{Pi},@samp{Ei},@samp{Zi},@samp{Yi} suffixes
-are interpreted as @emph{IEC} values.
-
-@end table
-
-@subsection Examples of using @command{numfmt}
-
-Converting a single number from/to @emph{human} representation:
-@example
-$ numfmt --to=si 500000
-500K
-
-$ numfmt --to=iec 500000
-489K
-
-$ numfmt --to=iec-i 500000
-489Ki
-
-$ numfmt --from=si 1M
-1000000
-
-$ numfmt --from=iec 1M
-1048576
-
-# with '--from=auto', M=Mega, Mi=Mebi
-$ numfmt --from=auto 1M
-1000000
-$ numfmt --from=auto 1Mi
-1048576
-@end example
-
-Converting from @samp{SI} to @samp{IEC} scales (e.g. when a harddisk capacity is
-advertised as @samp{1TB}, while checking the drive's capacity gives lower
-values):
-
-@example
-$ numfmt --from=si --to=iec 1T
-932G
-@end example
-
-
-Converting a single field from an input file / piped input (these contrived
-examples are for demonstration purposes only, as both @command{ls} and
-@command{df} support the @option{--human-readable} option to
-output sizes in human-readable format):
-
-@example
-# Third field (file size) will be shown in SI representation
-$ ls -log | numfmt --field 3 --header --to=si | head -n4
--rw-r--r--  1     94K Aug 23  2011 ABOUT-NLS
--rw-r--r--  1    3.7K Jan  7 16:15 AUTHORS
--rw-r--r--  1     36K Jun  1  2011 COPYING
--rw-r--r--  1       0 Jan  7 15:15 ChangeLog
-
-# Second field (size) will be shown in IEC representation
-$ df --block-size=1 | numfmt --field 2 --header --to=iec | head -n4
-File system   1B-blocks        Used  Available Use% Mounted on
-rootfs             132G   104741408   26554036  80% /
-tmpfs              794M        7580     804960   1% /run/shm
-/dev/sdb1          694G   651424756   46074696  94% /home
-@end example
-
-
-Output can be tweaked using @option{--padding} or @option{--format}:
-
-@example
-# Pad to 10 characters, right-aligned
-$ du -s * | numfmt --to=si --padding=10
-      2.5K config.log
-       108 config.status
-      1.7K configure
-        20 configure.ac
-
-# Pad to 10 characters, left-aligned
-$ du -s * | numfmt --to=si --padding=-10
-2.5K       config.log
-108        config.status
-1.7K       configure
-20         configure.ac
-
-# Pad to 10 characters, left-aligned, using 'format'
-$ du -s * | numfmt --to=si --format="%10f"
-      2.5K config.log
-       108 config.status
-      1.7K configure
-        20 configure.ac
-
-# Pad to 10 characters, left-aligned, using 'format'
-$ du -s * | numfmt --to=si --padding="%-10f"
-2.5K       config.log
-108        config.status
-1.7K       configure
-20         configure.ac
-@end example
-
-With locales that support grouping digits, using @option{--grouping} or
-@option{--format} enables grouping.  In @samp{POSIX} locale, grouping is
-silently ignored:
-
-@example
-$ LC_ALL=C numfmt --from=iec --grouping 2G
-2147483648
-
-$ LC_ALL=en_US.utf8 numfmt --from=iec --grouping 2G
-2,147,483,648
-
-$ LC_ALL=ta_IN numfmt --from=iec --grouping 2G
-2,14,74,83,648
-
-$ LC_ALL=C ./src/numfmt --from=iec --format="==%'15f==" 2G
-==     2147483648==
-
-$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'15f==" 2G
-==  2,147,483,648==
-
-$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'-15f==" 2G
-==2,147,483,648  ==
-
-$ LC_ALL=ta_IN ./src/numfmt --from=iec --format="==%'15f==" 2G
-== 2,14,74,83,648==
-@end example
 
 @node pr invocation
 @section @command{pr}: Paginate or columnate files for printing
@@ -17100,6 +16777,7 @@ These programs do numerically-related operations.
 
 @menu
 * factor invocation::              Show factors of numbers.
+* numfmt invocation::              Reformat numbers.
 * seq invocation::                 Print sequences of numbers.
 @end menu
 
@@ -17160,6 +16838,329 @@ code uses an algorithm which is designed for factoring smaller
 numbers.
 
 @exitstatus
+
+
+@node numfmt invocation
+@section @command{numfmt}: Reformat numbers
+
+@pindex numfmt
+
+@command{numfmt} reads numbers in various representations and reformats them
+as requested.  The most common usage is converting numbers to/from @emph{human}
+representation (e.g. @samp{4G} @expansion{} @samp{4,000,000,000}).
+
+@example
+numfmt [@var{option}]@dots{} [@var{number}]
+@end example
+
+@command{numfmt} converts each @var{number} on the command-line according to the
+specified options (see below).  If no @var{number}s are given, it reads numbers
+from standard input.  @command{numfmt} can optionally extract numbers from
+specific columns, maintaining proper line padding and alignment.
+
+@exitstatus
+
+See @option{--invalid} for additional information regarding exit status.
+
+@subsection General options
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item --debug
+@opindex --debug
+Print (to standard error) warning messages about possible erroneous usage.
+
+@item -d @var{d}
+@itemx --delimiter=@var{d}
+@opindex -d
+@opindex --delimiter
+Use the character @var{d} as input field separator (default: whitespace).
+@emph{Note}: Using non-default delimiter turns off automatic padding.
+
+@item --field=@var{n}
+@opindex --field
+Convert the number in input field @var{n} (default: 1).
+
+@item --format=@var{format}
+@opindex --format
+Use printf-style floating FORMAT string.  The @var{format} string must contain
+one @samp{%f} directive, optionally with @samp{'}, @samp{-}, @samp{0}, or width
+modifiers.  The @samp{'} modifier will enable @option{--grouping}, the @samp{-}
+modifier will enable left-aligned @option{--padding} and the width modifier will
+enable right-aligned @option{--padding}.  The @samp{0} width modifier
+(without the @samp{-} modifier) will generate leading zeros on the number,
+up to the specified width.
+
+@item --from=@var{unit}
+@opindex --from
+Auto-scales input numbers according to @var{unit}.  See UNITS below.
+The default is no scaling, meaning suffixes (e.g. @samp{M}, @samp{G}) will
+trigger an error.
+
+@item --from-unit=@var{n}
+@opindex --from-unit
+Specify the input unit size (instead of the default 1).  Use this option when
+the input numbers represent other units (e.g. if the input number @samp{10}
+represents 10 units of 512 bytes, use @samp{--from=unit=512}).
+
+@item --grouping
+@opindex --grouping
+Group digits in output numbers according to the current locale's grouping rules
+(e.g @emph{Thousands Separator} character, commonly @samp{.} (dot) or @samp{,}
+comma).  This option has no effect in @samp{POSIX/C} locale.
+
+@item --header[=@var{n}]
+@opindex --header
+@opindex --header=N
+Print the first @var{n} (default: 1) lines without any conversion.
+
+@item --invalid=@var{mode}
+@opindex --invalid
+The default action on input errors is to exit immediately with status code 2.
+@option{--invalid=@samp{abort}} explicitly specifies this default mode.
+With a @var{mode} of @samp{fail}, print a warning for @emph{each} conversion
+error, and exit with status 2.  With a @var{mode} of @samp{warn}, exit with
+status 0, even in the presence of conversion errors, and with a @var{mode} of
+@samp{ignore} do not even print diagnostics.
+
+@item --padding=@var{n}
+@opindex --padding
+Pad the output numbers to @var{n} characters, by adding spaces.  If @var{n} is
+a positive number, numbers will be right-aligned.  If @var{n} is a negative
+number, numbers will be left-aligned.  By default, numbers are automatically
+aligned based on the input line's width (only with the default delimiter).
+
+@item --round=@var{method}
+@opindex --round
+@opindex --round=up
+@opindex --round=down
+@opindex --round=from-zero
+@opindex --round=towards-zero
+@opindex --round=nearest
+When converting number representations, round the number according to
+@var{method}, which can be @samp{up}, @samp{down},
+@samp{from-zero} (the default), @samp{towards-zero}, @samp{nearest}.
+
+@item --suffix=@var{suffix}
+@opindex --suffix
+Add @samp{SUFFIX} to the output numbers, and accept optional @samp{SUFFIX} in
+input numbers.
+
+@item --to=@var{unit}
+@opindex --to
+Auto-scales output numbers according to @var{unit}.  See @emph{Units} below.
+The default is no scaling, meaning all the digits of the number are printed.
+
+@item --to-unit=@var{n}
+@opindex --to-unit
+Specify the output unit size (instead of the default 1).  Use this option when
+the output numbers represent other units (e.g. to represent @samp{4,000,000}
+bytes in blocks of 1KB, use @samp{--to=si --to=units=1000}).
+
+@end table
+
+@subsection Possible @var{unit}s:
+
+The following are the possible @var{unit} options with @option{--from=UNITS} and
+@option{--to=UNITS}:
+
+@table @var
+
+@item none
+No scaling is performed.  For input numbers, no suffixes are accepted, and any
+trailing characters following the number will trigger an error.  For output
+numbers, all digits of the numbers will be printed.
+
+@item si
+Auto-scale numbers according to the @emph{International System of Units (SI)}
+standard.
+For input numbers, accept one of the following suffixes.
+For output numbers, values larger than 1000 will be rounded, and printed with
+one of the following suffixes:
+
+@example
+@samp{K}  =>  @math{1000^1 = 10^3} (Kilo)
+@samp{M}  =>  @math{1000^2 = 10^6} (Mega)
+@samp{G}  =>  @math{1000^3 = 10^9} (Giga)
+@samp{T}  =>  @math{1000^4 = 10^{12}} (Tera)
+@samp{P}  =>  @math{1000^5 = 10^{15}} (Peta)
+@samp{E}  =>  @math{1000^6 = 10^{18}} (Exa)
+@samp{Z}  =>  @math{1000^7 = 10^{21}} (Zetta)
+@samp{Y}  =>  @math{1000^8 = 10^{24}} (Yotta)
+@end example
+
+@item iec
+Auto-scale numbers according to the @emph{International Electrotechnical
+Commission (IEC)} standard.
+For input numbers, accept one of the following suffixes.
+For output numbers, values larger than 1024 will be rounded, and printed with
+one of the following suffixes:
+
+@example
+@samp{K}  =>  @math{1024^1 = 2^{10}} (Kibi)
+@samp{M}  =>  @math{1024^2 = 2^{20}} (Mebi)
+@samp{G}  =>  @math{1024^3 = 2^{30}} (Gibi)
+@samp{T}  =>  @math{1024^4 = 2^{40}} (Tebi)
+@samp{P}  =>  @math{1024^5 = 2^{50}} (Pebi)
+@samp{E}  =>  @math{1024^6 = 2^{60}} (Exbi)
+@samp{Z}  =>  @math{1024^7 = 2^{70}} (Zebi)
+@samp{Y}  =>  @math{1024^8 = 2^{80}} (Yobi)
+@end example
+
+The @option{iec} option uses a single letter suffix (e.g. @samp{G}), which is
+not fully standard, as the @emph{iec} standard recommends a two-letter symbol
+(e.g @samp{Gi}) - but in practice, this method common.  Compare with
+the @option{iec-i} option.
+
+@item iec-i
+Auto-scale numbers according to the @emph{International Electrotechnical
+Commission (IEC)} standard.
+For input numbers, accept one of the following suffixes.
+For output numbers, values larger than 1024 will be rounded, and printed with
+one of the following suffixes:
+
+@example
+@samp{Ki}  =>  @math{1024^1 = 2^{10}} (Kibi)
+@samp{Mi}  =>  @math{1024^2 = 2^{20}} (Mebi)
+@samp{Gi}  =>  @math{1024^3 = 2^{30}} (Gibi)
+@samp{Ti}  =>  @math{1024^4 = 2^{40}} (Tebi)
+@samp{Pi}  =>  @math{1024^5 = 2^{50}} (Pebi)
+@samp{Ei}  =>  @math{1024^6 = 2^{60}} (Exbi)
+@samp{Zi}  =>  @math{1024^7 = 2^{70}} (Zebi)
+@samp{Yi}  =>  @math{1024^8 = 2^{80}} (Yobi)
+@end example
+
+The @option{iec-i} option uses a two-letter suffix symbol (e.g. @samp{Gi}),
+as the @emph{iec} standard recommends, but this is not always common in
+practice.  Compare with the @option{iec} option.
+
+@item auto
+@samp{auto} can only be used with @option{--from}.  With this method, numbers
+with @samp{K},@samp{M},@samp{G},@samp{T},@samp{P},@samp{E},@samp{Z},@samp{Y}
+suffixes are interpreted as @emph{SI} values, and numbers with @samp{Ki},
+@samp{Mi},@samp{Gi},@samp{Ti},@samp{Pi},@samp{Ei},@samp{Zi},@samp{Yi} suffixes
+are interpreted as @emph{IEC} values.
+
+@end table
+
+@subsection Examples of using @command{numfmt}
+
+Converting a single number from/to @emph{human} representation:
+@example
+$ numfmt --to=si 500000
+500K
+
+$ numfmt --to=iec 500000
+489K
+
+$ numfmt --to=iec-i 500000
+489Ki
+
+$ numfmt --from=si 1M
+1000000
+
+$ numfmt --from=iec 1M
+1048576
+
+# with '--from=auto', M=Mega, Mi=Mebi
+$ numfmt --from=auto 1M
+1000000
+$ numfmt --from=auto 1Mi
+1048576
+@end example
+
+Converting from @samp{SI} to @samp{IEC} scales (e.g. when a harddisk capacity is
+advertised as @samp{1TB}, while checking the drive's capacity gives lower
+values):
+
+@example
+$ numfmt --from=si --to=iec 1T
+932G
+@end example
+
+
+Converting a single field from an input file / piped input (these contrived
+examples are for demonstration purposes only, as both @command{ls} and
+@command{df} support the @option{--human-readable} option to
+output sizes in human-readable format):
+
+@example
+# Third field (file size) will be shown in SI representation
+$ ls -log | numfmt --field 3 --header --to=si | head -n4
+-rw-r--r--  1     94K Aug 23  2011 ABOUT-NLS
+-rw-r--r--  1    3.7K Jan  7 16:15 AUTHORS
+-rw-r--r--  1     36K Jun  1  2011 COPYING
+-rw-r--r--  1       0 Jan  7 15:15 ChangeLog
+
+# Second field (size) will be shown in IEC representation
+$ df --block-size=1 | numfmt --field 2 --header --to=iec | head -n4
+File system   1B-blocks        Used  Available Use% Mounted on
+rootfs             132G   104741408   26554036  80% /
+tmpfs              794M        7580     804960   1% /run/shm
+/dev/sdb1          694G   651424756   46074696  94% /home
+@end example
+
+
+Output can be tweaked using @option{--padding} or @option{--format}:
+
+@example
+# Pad to 10 characters, right-aligned
+$ du -s * | numfmt --to=si --padding=10
+      2.5K config.log
+       108 config.status
+      1.7K configure
+        20 configure.ac
+
+# Pad to 10 characters, left-aligned
+$ du -s * | numfmt --to=si --padding=-10
+2.5K       config.log
+108        config.status
+1.7K       configure
+20         configure.ac
+
+# Pad to 10 characters, left-aligned, using 'format'
+$ du -s * | numfmt --to=si --format="%10f"
+      2.5K config.log
+       108 config.status
+      1.7K configure
+        20 configure.ac
+
+# Pad to 10 characters, left-aligned, using 'format'
+$ du -s * | numfmt --to=si --padding="%-10f"
+2.5K       config.log
+108        config.status
+1.7K       configure
+20         configure.ac
+@end example
+
+With locales that support grouping digits, using @option{--grouping} or
+@option{--format} enables grouping.  In @samp{POSIX} locale, grouping is
+silently ignored:
+
+@example
+$ LC_ALL=C numfmt --from=iec --grouping 2G
+2147483648
+
+$ LC_ALL=en_US.utf8 numfmt --from=iec --grouping 2G
+2,147,483,648
+
+$ LC_ALL=ta_IN numfmt --from=iec --grouping 2G
+2,14,74,83,648
+
+$ LC_ALL=C ./src/numfmt --from=iec --format="==%'15f==" 2G
+==     2147483648==
+
+$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'15f==" 2G
+==  2,147,483,648==
+
+$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'-15f==" 2G
+==2,147,483,648  ==
+
+$ LC_ALL=ta_IN ./src/numfmt --from=iec --format="==%'15f==" 2G
+== 2,14,74,83,648==
+@end example
 
 
 @node seq invocation
