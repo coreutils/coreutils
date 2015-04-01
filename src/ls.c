@@ -4888,9 +4888,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 ,\n\
                                time (-t), version (-v), extension (-X)\n\
       --time=WORD            with -l, show time as WORD instead of default\n\
-                               modification time: atime or access or use (-u)\n\
+                               modification time: atime or access or use (-u);\
+\n\
                                ctime or status (-c); also use specified time\n\
-                               as sort key if --sort=time\n\
+                               as sort key if --sort=time (newest first)\n\
 "), stdout);
       fputs (_("\
       --time-style=STYLE     with -l, show times using style STYLE:\n\
@@ -4911,7 +4912,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (_("\
   -u                         with -lt: sort by, and show, access time;\n\
                                with -l: show access time and sort by name;\n\
-                               otherwise: sort by access time\n\
+                               otherwise: sort by access time, newest first\n\
   -U                         do not sort; list entries in directory order\n\
   -v                         natural sort of (version) numbers within text\n\
 "), stdout);
