@@ -925,6 +925,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
             return;
 
           fstype = "-";
+          fsu.fsu_bavail_top_bit_set = false;
           fsu.fsu_blocksize = fsu.fsu_blocks = fsu.fsu_bfree =
           fsu.fsu_bavail = fsu.fsu_files = fsu.fsu_ffree = UINTMAX_MAX;
         }
@@ -949,6 +950,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
               && (! dev_me->me_remote || ! me_remote))
             {
               fstype = "-";
+              fsu.fsu_bavail_top_bit_set = false;
               fsu.fsu_blocksize = fsu.fsu_blocks = fsu.fsu_bfree =
               fsu.fsu_bavail = fsu.fsu_files = fsu.fsu_ffree = UINTMAX_MAX;
             }
@@ -1709,6 +1711,8 @@ main (int argc, char **argv)
       for (i = optind; i < argc; ++i)
         if (argv[i])
           get_entry (argv[i], &stats[i - optind]);
+
+      IF_LINT (free (stats));
     }
   else
     get_all_entries ();
