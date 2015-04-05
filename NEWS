@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd supports more robust SIGINFO/SIGUSR1 handling for outputting statistics.
   Previously those signals may have inadvertently terminated the process.
 
+  df --local no longer hangs with inaccessible remote mounts.
+  [bug introduced in coreutils-8.21]
+
   du now silently ignores all directory cycles due to bind mounts.
   Previously it would issue a warning and exit with a failure status.
   [bug introduced in coreutils-8.1 and partially fixed in coreutils-8.23]

@@ -19,7 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ df
 
-df || skip_ "df fails"
+# Protect against inaccessible remote mounts etc.
+timeout 10 df || skip_ "df fails"
 
 # Verify that rootfs is in mtab (and shown when the -a option is specified).
 # Note this is the case when /proc/self/mountinfo is parsed

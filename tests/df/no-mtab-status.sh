@@ -21,7 +21,8 @@
 print_ver_ df
 require_gcc_shared_
 
-df || skip_ "df fails"
+# Protect against inaccessible remote mounts etc.
+timeout 10 df || skip_ "df fails"
 
 grep '^#define HAVE_MNTENT_H 1' $CONFIG_HEADER > /dev/null \
       || skip_ "no mntent.h available to confirm the interface"

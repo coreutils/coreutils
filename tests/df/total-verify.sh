@@ -20,7 +20,8 @@
 print_ver_ df
 require_perl_
 
-df || skip_ "df fails"
+# Protect against inaccessible remote mounts etc.
+timeout 10 df || skip_ "df fails"
 
 cat <<\EOF > check-df || framework_failure_
 my ($total, $used, $avail) = (0, 0, 0);
