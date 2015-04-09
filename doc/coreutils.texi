@@ -9925,7 +9925,7 @@ to communicate.  One process opens the FIFO file for writing, and
 another for reading, after which data can flow as with the usual
 anonymous pipe in shells or elsewhere.
 
-The program accepts the following option.  Also see @ref{Common options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -10003,7 +10003,7 @@ If a major or minor device number begins with @samp{0x} or @samp{0X},
 it is interpreted as hexadecimal; otherwise, if it begins with @samp{0},
 as octal; otherwise, as decimal.
 
-The program accepts the following option.  Also see @ref{Common options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
