@@ -8052,9 +8052,11 @@ Using @option{--preserve} with no @var{attribute_list} is equivalent
 to @option{--preserve=mode,ownership,timestamps}.
 
 In the absence of this option, the permissions of existing destination
-files are unchanged, while each new file is created with the
-mode bits of the corresponding source file, minus the bits set in the
-umask and minus the set-user-ID and set-group-ID bits.
+files are unchanged.  Each new file is created with the mode of the
+corresponding source file minus the set-user-ID, set-group-ID, and
+sticky bits as the create mode; the operating system then applies either
+the umask or a default ACL, possibly resulting in a more restrictive
+file mode.
 @xref{File permissions}.
 
 @item --no-preserve=@var{attribute_list}
