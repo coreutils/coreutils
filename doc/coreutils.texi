@@ -11842,7 +11842,7 @@ Set or adjust the size of each @var{file} according to @var{size}.
 @multiplierSuffixesNoBlocks{size}
 
 @var{size} may also be prefixed by one of the following to adjust
-the size of each @var{file} based on their current size:
+the size of each @var{file} based on its current size:
 @example
 @samp{+}  => extend by
 @samp{-}  => reduce by
