@@ -2180,6 +2180,8 @@ main (int argc, char **argv)
         --n_units;
     }
 
+  IF_LINT (assert (0 <= argc));
+
   if (optind < argc)
     {
       n_files = argc - optind;

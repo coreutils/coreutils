@@ -558,7 +558,7 @@ wc_file (char const *file, struct fstatus *fstatus)
    that happens when we don't know how long the list of file names will be.  */
 
 static struct fstatus *
-get_input_fstatus (int nfiles, char *const *file)
+get_input_fstatus (size_t nfiles, char *const *file)
 {
   struct fstatus *fstatus = xnmalloc (nfiles ? nfiles : 1, sizeof *fstatus);
 
@@ -570,7 +570,7 @@ get_input_fstatus (int nfiles, char *const *file)
     fstatus[0].failed = 1;
   else
     {
-      int i;
+      size_t i;
 
       for (i = 0; i < nfiles; i++)
         fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
@@ -586,7 +586,7 @@ get_input_fstatus (int nfiles, char *const *file)
    get_input_fstatus optimizes.  */
 
 static int _GL_ATTRIBUTE_PURE
-compute_number_width (int nfiles, struct fstatus const *fstatus)
+compute_number_width (size_t nfiles, struct fstatus const *fstatus)
 {
   int width = 1;
 
@@ -594,7 +594,7 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
     {
       int minimum_width = 1;
       uintmax_t regular_total = 0;
-      int i;
+      size_t i;
 
       for (i = 0; i < nfiles; i++)
         if (! fstatus[i].failed)
@@ -620,7 +620,7 @@ main (int argc, char **argv)
 {
   bool ok;
   int optc;
-  int nfiles;
+  size_t nfiles;
   char **files;
   char *files_from = NULL;
   struct fstatus *fstatus;

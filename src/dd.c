@@ -987,7 +987,7 @@ cache_round (int fd, off_t len)
 
   if (len)
     {
-      off_t c_pending = *pending + len;
+      uintmax_t c_pending = *pending + len;
       *pending = c_pending % page_size;
       if (c_pending > *pending)
         len = c_pending - *pending;

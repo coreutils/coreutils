@@ -438,7 +438,7 @@ static void init_store_cols (void);
 static void store_columns (void);
 static void balance (int total_stored);
 static void store_char (char c);
-static void pad_down (int lines);
+static void pad_down (unsigned int lines);
 static void read_rest_of_line (COLUMN *p);
 static void skip_read (COLUMN *p, int column_number);
 static void print_char (char c);
@@ -2052,9 +2052,9 @@ pad_across_to (int position)
    Otherwise, use newlines. */
 
 static void
-pad_down (int lines)
+pad_down (unsigned int lines)
 {
-  int i;
+  unsigned int i;
 
   if (use_form_feed)
     putchar ('\f');

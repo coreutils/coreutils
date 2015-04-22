@@ -94,7 +94,7 @@ main (int argc, char **argv)
   mode_t newmode;
   char const *specified_mode = NULL;
   int optc;
-  int expected_operands;
+  size_t expected_operands;
   mode_t node_type;
   char const *scontext = NULL;
   bool set_security_context = false;
