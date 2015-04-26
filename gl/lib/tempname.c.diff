@@ -1,5 +1,5 @@
 diff --git a/lib/tempname.c b/lib/tempname.c
-index 49c7df1..84a45d4 100644
+index 69c572f..1920274 100644
 --- a/lib/tempname.c
 +++ b/lib/tempname.c
 @@ -20,6 +20,7 @@
@@ -34,9 +34,9 @@ index 49c7df1..84a45d4 100644
 
  int
 -__try_tempname (char *tmpl, int suffixlen, void *args,
--                int (*try) (char *, void *))
+-                int (*tryfunc) (char *, void *))
 +try_tempname_len (char *tmpl, int suffixlen, void *args,
-+                  int (*try) (char *, void *), size_t x_suffix_len)
++                  int (*tryfunc) (char *, void *), size_t x_suffix_len)
  {
 -  int len;
 +  size_t len;
@@ -113,7 +113,7 @@ index 49c7df1..84a45d4 100644
 +      for (i = 0; i < x_suffix_len; i++)
 +        XXXXXX[i] = letters[randint_genmax (rand_src, sizeof letters - 2)];
 
-       fd = try (tmpl, args);
+       fd = tryfunc (tmpl, args);
        if (fd >= 0)
          {
            __set_errno (save_errno);
@@ -144,7 +144,7 @@ index 49c7df1..84a45d4 100644
  }
 
  static int
-@@ -285,9 +291,10 @@ try_nocreate (char *tmpl, void *flags)
+@@ -285,9 +291,10 @@ try_nocreate (char *tmpl, void *flags _GL_UNUSED)
  }
 
  /* Generate a temporary file name based on TMPL.  TMPL must match the
@@ -157,7 +157,7 @@ index 49c7df1..84a45d4 100644
 
     KIND may be one of:
     __GT_NOCREATE:       simply verify that the name does not exist
-@@ -298,7 +305,8 @@ try_nocreate (char *tmpl, void *flags)
+@@ -298,7 +305,8 @@ try_nocreate (char *tmpl, void *flags _GL_UNUSED)
 
     We use a clever algorithm to get hard-to-predict names. */
  int
@@ -165,14 +165,14 @@ index 49c7df1..84a45d4 100644
 +gen_tempname_len (char *tmpl, int suffixlen, int flags, int kind,
 +                  size_t x_suffix_len)
  {
-   int (*try) (char *, void *);
+   int (*tryfunc) (char *, void *);
 
 @@ -320,5 +328,18 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
        assert (! "invalid KIND in __gen_tempname");
        abort ();
      }
--  return __try_tempname (tmpl, suffixlen, &flags, try);
-+  return try_tempname_len (tmpl, suffixlen, &flags, try, x_suffix_len);
+-  return __try_tempname (tmpl, suffixlen, &flags, tryfunc);
++  return try_tempname_len (tmpl, suffixlen, &flags, tryfunc, x_suffix_len);
 +}
 +
 +int
@@ -183,7 +183,7 @@ index 49c7df1..84a45d4 100644
 +
 +int
 +__try_tempname (char *tmpl, int suffixlen, void *args,
-+                int (*try) (char *, void *))
++                int (*tryfunc) (char *, void *))
 +{
-+  return try_tempname_len (tmpl, suffixlen, args, try, 6);
++  return try_tempname_len (tmpl, suffixlen, args, tryfunc, 6);
  }
