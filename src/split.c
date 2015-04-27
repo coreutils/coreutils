@@ -521,7 +521,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
         {
           /* shouldn't happen.  */
           error (EXIT_FAILURE, 0,
-                 _("unknown status from command (0x%X)"), wstatus);
+                 _("unknown status from command (0x%X)"), wstatus + 0u);
         }
     }
 }

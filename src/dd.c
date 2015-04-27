@@ -1685,7 +1685,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
         error (0, 0, _("warning: working around lseek kernel bug for file "
                        "(%s)\n  of mt_type=0x%0lx -- "
                        "see <sys/mtio.h> for the list of types"),
-               filename, s2.mt_type);
+               filename, s2.mt_type + 0Lu);
       errno = 0;
       new_position = -1;
     }

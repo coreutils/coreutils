@@ -729,7 +729,7 @@ double_to_human (long double val, int precision,
   /* Normalize val to scale. */
   unsigned int power = 0;
   val = expld (val, scale_base, &power);
-  devmsg ("  scaled value to %Lf * %0.f ^ %d\n", val, scale_base, power);
+  devmsg ("  scaled value to %Lf * %0.f ^ %u\n", val, scale_base, power);
 
   /* Perform rounding. */
   int ten_or_less = 0;
@@ -757,7 +757,7 @@ double_to_human (long double val, int precision,
   int show_decimal_point = (val != 0) && (absld (val) < 10) && (power > 0);
   /* && (absld (val) > simple_round_floor (val))) */
 
-  devmsg ("  after rounding, value=%Lf * %0.f ^ %d\n", val, scale_base, power);
+  devmsg ("  after rounding, value=%Lf * %0.f ^ %u\n", val, scale_base, power);
 
   stpcpy (pfmt, show_decimal_point ? ".1Lf%s" : ".0Lf%s");
 

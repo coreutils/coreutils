@@ -2337,7 +2337,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
       r = t1 % 1000000000;
       udiv_qrnnd (t0, r, r, t0, 1000000000);
       print_uintmaxes (q, t0);
-      printf ("%09u", (int) r);
+      printf ("%09u", (unsigned int) r);
     }
 }
 

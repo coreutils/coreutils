@@ -492,7 +492,7 @@ main (int argc, char **argv)
           else
             {
               /* shouldn't happen.  */
-              error (0, 0, _("unknown status from command (0x%X)"), status);
+              error (0, 0, _("unknown status from command (%d)"), status);
               status = EXIT_FAILURE;
             }
         }

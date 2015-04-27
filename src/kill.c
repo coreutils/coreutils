@@ -109,8 +109,8 @@ PID is an integer; if negative it identifies a process group.\n\
    maximum name width is NAME_WIDTH, and SIGNAME is the name to print.  */
 
 static void
-print_table_row (unsigned int num_width, int signum,
-                 unsigned int name_width, char const *signame)
+print_table_row (int num_width, int signum,
+                 int name_width, char const *signame)
 {
   char const *description = strsignal (signum);
   printf ("%*d %-*s %s\n", num_width, signum, name_width, signame,
