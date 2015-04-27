@@ -67,12 +67,6 @@ cu_have_perl=yes
 case $PERL in *"/missing "*) cu_have_perl=no;; esac
 AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
 
-# Disable the checks for handling certain invalid long double values
-# since this results in always replacing the printf() implementation
-# (see https://sourceware.org/bugzilla/show_bug.cgi?id=17661) and
-# od (ftoastr) doesn't use the replacement anyway.
-m4_divert_text([INIT_PREPARE], [gl_printf_safe=''])
-
 # gl_GCC_VERSION_IFELSE([major], [minor], [run-if-found], [run-if-not-found])
 # ------------------------------------------------
 # If $CPP is gcc-MAJOR.MINOR or newer, then run RUN-IF-FOUND.
