@@ -121,5 +121,4 @@ Once all the builds and tests have passed,
 
   by running this:
 
-    export gendocs_options_='--html "--css-ref=/software/coreutils/manual.css"'
     build-aux/gnu-web-doc-update
