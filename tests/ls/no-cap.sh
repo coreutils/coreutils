@@ -20,13 +20,14 @@
 print_ver_ ls
 require_strace_ capget
 
+LS_COLORS=ca=1; export LS_COLORS
 strace -e capget ls --color=always > /dev/null 2> out || fail=1
 $EGREP 'capget\(' out || skip_ "your ls doesn't call capget"
 
 rm -f out
-eval "$(TERM=xterm dircolors -b | sed 's/ca=[^:]*:/ca=:/')"
-strace -e capget ls --color=always > /dev/null 2> out || fail=1
 
+LS_COLORS=ca=:; export LS_COLORS
+strace -e capget ls --color=always > /dev/null 2> out || fail=1
 $EGREP 'capget\(' out && fail=1
 
 Exit $fail
