@@ -70,15 +70,17 @@ Execute the PROGRAM_NAME built-in program with the given PARAMETERS.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
-      printf ("\n\
-Built-in programs:\n"
 #ifdef SINGLE_BINARY
-/* XXX: Ideally we#d like to present "install" here, not "ginstall".  */
+/* XXX: Ideally we'd like to present "install" here, not "ginstall".  */
+      char const *prog_name_list =
 # define SINGLE_BINARY_PROGRAM(prog_name_str, main_name) " " prog_name_str
 # include "coreutils.h"
 # undef SINGLE_BINARY_PROGRAM
+      ;
+      printf ("\n\
+Built-in programs:\n\
+%s\n", prog_name_list);
 #endif
-  "\n");
 
       printf (_("\
 \n\
