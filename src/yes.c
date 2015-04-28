@@ -115,7 +115,7 @@ main (int argc, char **argv)
 
   /* If the data doesn't fit in BUFSIZ then output
      what we've buffered, and iterate over the remaining items.  */
-  while (i != argc)
+  while (true /* i != argc */)
     {
       int j;
       if ((pbuf - buf) && fwrite (buf, pbuf - buf, 1, stdout) != 1)
