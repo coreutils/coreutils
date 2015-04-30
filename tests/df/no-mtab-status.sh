@@ -32,20 +32,42 @@ grep '^#define HAVE_GETMNTENT 1' $CONFIG_HEADER > /dev/null \
 
 # Simulate "mtab" failure.
 cat > k.c <<EOF || framework_failure_
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <errno.h>
 #include <mntent.h>
-#include "$CONFIG_HEADER"
+#include <string.h>
+#include <dlfcn.h>
 
-#ifdef MOUNTED_PROC_MOUNTINFO
-# include <libmount/libmount.h>
-struct libmnt_table *mnt_new_table_from_file(const char *filename)
+#define STREQ(a, b) (strcmp (a, b) == 0)
+
+FILE* fopen(const char *path, const char *mode)
 {
-  /* Returning NULL here will get read_file_system_list()
+  static FILE* (*fopen_func)(char const *, char const *);
+
+  /* get reference to original (libc provided) fopen */
+  if (!fopen_func)
+    {
+      fopen_func = (FILE*(*)(char const *, char const *))
+                   dlsym(RTLD_NEXT, "fopen");
+      if (!fopen_func)
+        {
+          fprintf (stderr, "Failed to find fopen()\n");
+          errno = ESRCH;
+          return NULL;
+        }
+    }
+
+  /* Returning ENOENT here will get read_file_system_list()
      to fall back to using getmntent() below.  */
-  return NULL;
+  if (STREQ (path, "/proc/self/mountinfo"))
+    {
+      errno = ENOENT;
+      return NULL;
+    }
+  else
+    return fopen_func(path, mode);
 }
-#endif
 
 struct mntent *getmntent (FILE *fp)
 {
