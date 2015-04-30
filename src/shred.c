@@ -171,6 +171,10 @@ usage (int status)
 Overwrite the specified FILE(s) repeatedly, in order to make it harder\n\
 for even very expensive hardware probing to recover the data.\n\
 "), stdout);
+      fputs (_("\
+\n\
+If FILE is -, shred standard output.\n\
+"), stdout);
 
       emit_mandatory_arg_note ();
 
@@ -190,8 +194,6 @@ for even very expensive hardware probing to recover the data.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
-\n\
-If FILE is -, shred standard output.\n\
 \n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\

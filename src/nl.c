@@ -178,9 +178,9 @@ Usage: %s [OPTION]... [FILE]...\n\
               program_name);
       fputs (_("\
 Write each FILE to standard output, with line numbers added.\n\
-With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\

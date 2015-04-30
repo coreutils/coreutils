@@ -2728,6 +2728,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Paginate or columnate FILE(s) for printing.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -2768,7 +2769,10 @@ Paginate or columnate FILE(s) for printing.\n\
       fputs (_("\
   -l, --length=PAGE_LENGTH\n\
                     set the page length to PAGE_LENGTH (66) lines\n\
-                    (default number of lines of text 56, and with -F 63)\n\
+                    (default number of lines of text 56, and with -F 63).\n\
+                    implies -t if PAGE_LENGTH <= 10\n\
+"), stdout);
+      fputs (_("\
   -m, --merge       print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -J\n\
 "), stdout);
@@ -2800,7 +2804,10 @@ Paginate or columnate FILE(s) for printing.\n\
                     separate columns by STRING,\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
-  -t, --omit-header  omit page headers and trailers\n\
+"), stdout);
+      fputs (_("\
+  -t, --omit-header  omit page headers and trailers;\n\
+                     implied if PAGE_LENGTH <= 10\n\
 "), stdout);
       fputs (_("\
   -T, --omit-pagination\n\
@@ -2820,11 +2827,6 @@ Paginate or columnate FILE(s) for printing.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
--t is implied if PAGE_LENGTH <= 10.  With no FILE, or when FILE is -, read\n\
-standard input.\n\
-"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

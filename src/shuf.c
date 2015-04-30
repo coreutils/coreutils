@@ -69,6 +69,7 @@ Usage: %s [OPTION]... [FILE]\n\
 Write a random permutation of the input lines to standard output.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -84,10 +85,6 @@ Write a random permutation of the input lines to standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-With no FILE, or when FILE is -, read standard input.\n\
-"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
 

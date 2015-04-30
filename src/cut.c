@@ -177,6 +177,7 @@ Usage: %s OPTION... [FILE]...\n\
 Print selected parts of lines from each FILE to standard output.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -214,8 +215,6 @@ Each range is one of:\n\
   N-    from N'th byte, character or field, to end of line\n\
   N-M   from N'th to M'th (included) byte, character or field\n\
   -M    from first to M'th (included) byte, character or field\n\
-\n\
-With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }

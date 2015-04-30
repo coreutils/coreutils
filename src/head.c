@@ -110,9 +110,9 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Print the first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
-With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\

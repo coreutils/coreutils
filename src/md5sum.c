@@ -164,18 +164,21 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
 Print or check %s (%d-bit) checksums.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "),
               program_name,
               DIGEST_TYPE_STRING,
               DIGEST_BITS);
+
+      emit_stdin_note ();
+
       if (O_BINARY)
         fputs (_("\
+\n\
   -b, --binary         read in binary mode (default unless reading tty stdin)\n\
 "), stdout);
       else
         fputs (_("\
+\n\
   -b, --binary         read in binary mode\n\
 "), stdout);
       printf (_("\

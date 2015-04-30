@@ -67,10 +67,10 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
               program_name);
       fputs (_("\
-Wrap input lines in each FILE (standard input by default), writing to\n\
-standard output.\n\
+Wrap input lines in each FILE, writing to standard output.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\

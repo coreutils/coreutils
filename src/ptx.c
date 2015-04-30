@@ -1825,12 +1825,16 @@ Usage: %s [OPTION]... [INPUT]...   (without -G)\n\
 Output a permuted index, including context, of the words in the input files.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
   -A, --auto-reference           output automatically generated references\n\
   -G, --traditional              behave more like System V 'ptx'\n\
-  -F, --flag-truncation=STRING   use STRING for flagging line truncations\n\
+"), stdout);
+      fputs (_("\
+  -F, --flag-truncation=STRING   use STRING for flagging line truncations.\n\
+                                 The default is '/'\n\
 "), stdout);
       fputs (_("\
   -M, --macro-name=STRING        macro name to use instead of 'xx'\n\
@@ -1854,10 +1858,6 @@ Output a permuted index, including context, of the words in the input files.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-With no FILE, or when FILE is -, read standard input.  Default is '-F /'.\n\
-"), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

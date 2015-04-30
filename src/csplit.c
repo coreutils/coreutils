@@ -1482,6 +1482,10 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 Output pieces of FILE separated by PATTERN(s) to files 'xx00', 'xx01', ...,\n\
 and output byte counts of each piece to standard output.\n\
 "), stdout);
+       fputs (_("\
+\n\
+Read standard input if FILE is -\n\
+"), stdout);
 
       emit_mandatory_arg_note ();
 
@@ -1502,10 +1506,7 @@ and output byte counts of each piece to standard output.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Read standard input if FILE is -.  Each PATTERN may be:\n\
-"), stdout);
-      fputs (_("\
-\n\
+Each PATTERN may be:\n\
   INTEGER            copy up to but not including specified line number\n\
   /REGEXP/[OFFSET]   copy up to but not including a matching line\n\
   %REGEXP%[OFFSET]   skip to, but not including a matching line\n\

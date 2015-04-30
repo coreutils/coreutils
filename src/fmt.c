@@ -273,6 +273,7 @@ Reformat each paragraph in the FILE(s), writing to standard output.\n\
 The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -292,10 +293,6 @@ The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-With no FILE, or when FILE is -, read standard input.\n"),
-             stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

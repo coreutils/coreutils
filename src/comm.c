@@ -109,6 +109,10 @@ Compare sorted files FILE1 and FILE2 line by line.\n\
 "), stdout);
       fputs (_("\
 \n\
+When FILE1 or FILE2 (not both) is -, read standard input.\n\
+"), stdout);
+      fputs (_("\
+\n\
 With no options, produce three-column output.  Column one contains\n\
 lines unique to FILE1, column two contains lines unique to FILE2,\n\
 and column three contains lines common to both files.\n\

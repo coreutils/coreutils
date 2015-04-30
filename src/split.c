@@ -204,15 +204,15 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [INPUT [PREFIX]]\n\
+Usage: %s [OPTION]... [FILE [PREFIX]]\n\
 "),
               program_name);
       fputs (_("\
-Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
-size is 1000 lines, and default PREFIX is 'x'.  With no INPUT, or when INPUT\n\
-is -, read standard input.\n\
+Output pieces of FILE to PREFIXaa, PREFIXab, ...;\n\
+default size is 1000 lines, and default PREFIX is 'x'.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fprintf (stdout, _("\

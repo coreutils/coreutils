@@ -62,6 +62,7 @@ Usage: %s [OPTION]... [FILE]\n\
 Base64 encode or decode FILE, or standard input, to standard output.\n\
 "), program_name);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -73,9 +74,6 @@ Base64 encode or decode FILE, or standard input, to standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-With no FILE, or when FILE is -, read standard input.\n"), stdout);
       fputs (_("\
 \n\
 The data are encoded as described for the base64 alphabet in RFC 3548.\n\

@@ -428,6 +428,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\
@@ -523,8 +524,6 @@ SIZE may be followed by the following multiplicative suffixes:\n\
 "), stdout);
       fputs (_("\
 % 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n\
-\n\
-With no FILE, or when FILE is -, read standard input.\n\
 \n\
 *** WARNING ***\n\
 The locale specified by the environment affects sort order.\n\

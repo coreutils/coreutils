@@ -542,6 +542,13 @@ is_nul (void const *buf, size_t bufsize)
   )
 
 static inline void
+emit_stdin_note (void)
+{
+  fputs (_("\n\
+With no FILE, or when FILE is -, read standard input.\n\
+"), stdout);
+}
+static inline void
 emit_mandatory_arg_note (void)
 {
   fputs (_("\n\

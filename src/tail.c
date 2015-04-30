@@ -257,9 +257,9 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Print the last %d lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
-With no FILE, or when FILE is -, read standard input.\n\
 "), DEFAULT_N_LINES);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
      fputs (_("\

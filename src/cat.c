@@ -90,7 +90,12 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
               program_name);
       fputs (_("\
-Concatenate FILE(s), or standard input, to standard output.\n\
+Concatenate FILE(s) to standard output.\n\
+"), stdout);
+
+      emit_stdin_note ();
+
+      fputs (_("\
 \n\
   -A, --show-all           equivalent to -vET\n\
   -b, --number-nonblank    number nonempty output lines, overrides -n\n\
@@ -107,10 +112,6 @@ Concatenate FILE(s), or standard input, to standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-With no FILE, or when FILE is -, read standard input.\n\
-"), stdout);
       printf (_("\
 \n\
 Examples:\n\

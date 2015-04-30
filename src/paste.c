@@ -439,9 +439,9 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
-With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
 
+      emit_stdin_note ();
       emit_mandatory_arg_note ();
 
       fputs (_("\

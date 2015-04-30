@@ -328,10 +328,12 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write an unambiguous representation, octal bytes by default,\n\
 of FILE to standard output.  With more than one FILE argument,\n\
 concatenate them in the listed order to form the input.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "), stdout);
+
+      emit_stdin_note ();
+
       fputs (_("\
+\n\
 If first and second call formats both apply, the second format is assumed\n\
 if the last operand begins with + or (if there are 2 operands) a digit.\n\
 An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\

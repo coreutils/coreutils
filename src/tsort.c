@@ -82,9 +82,13 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION] [FILE]\n\
 Write totally ordered list consistent with the partial ordering in FILE.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
 "), program_name);
+
+      emit_stdin_note ();
+
+      fputs (_("\
+\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_ancillary_info (PROGRAM_NAME);
