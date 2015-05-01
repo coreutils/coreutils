@@ -71,10 +71,13 @@ for i in $(seq 50); do
   mkdir -p $t/3/a/b/c/$i/$long || framework_failure_
 done
 
+# Terminate any background cp process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Prohibit suspension, which could otherwise cause a timeout-induced FP failure.
 trap '' TSTP
 
-timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg &
+timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg & pid=$!
 
 # Wait for the watcher to start...
 nonempty() { test -s start-msg || { sleep $1; return 1; }; }

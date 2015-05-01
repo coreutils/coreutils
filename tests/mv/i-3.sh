@@ -39,6 +39,9 @@ tty=$(readlink -f /dev/stdin)
 test -r "$tty" 2>&1 \
   || skip_ '/dev/stdin is not readable'
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 mv f g < $tty > out 2>&1 & pid=$!
 
 # Test for the expected prompt; sleep upon non-match.
@@ -54,7 +57,7 @@ check_overwrite_prompt()
 # Wait for up to 12.7 seconds for the expected prompt.
 retry_delay_ check_overwrite_prompt .1 7 || { fail=1; cat out; }
 
-kill $pid
+cleanup_
 
 mv -f h i > out 2>&1 || fail=1
 test -f i || fail=1

@@ -28,6 +28,14 @@ trap '' $SIGINFO
 
 mkfifo_or_skip_ fifo
 
+# Terminate any background processes
+cleanup_()
+{
+  kill $pid  2>/dev/null
+  kill $pid2 2>/dev/null
+  wait
+}
+
 for open in '' '1'; do
   # Run dd with the fullblock iflag to avoid short reads
   # which can be triggered by reception of signals
@@ -39,7 +47,7 @@ for open in '' '1'; do
 
   # dd will block on open until fifo is opened for reading.
   # Timeout in case dd goes away erroneously which we check for below.
-  timeout 10 sh -c 'wc -c < fifo > nwritten' &
+  timeout 10 sh -c 'wc -c < fifo > nwritten' & pid2=$!
 
   # Send lots of signals immediately to ensure dd not killed due
   # to race setting handler, or blocking on open of fifo.

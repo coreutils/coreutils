@@ -57,15 +57,17 @@ check_timeout_cmd_running()
     { sleep $delay; return 1; }
 }
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 # Start above script in its own group.
 # We could use timeout for this, but that assumes an implementation.
-setsid ./group.sh &
+setsid ./group.sh & pid=$!
 # Wait 6.3s for timeout.cmd to start
 retry_delay_ check_timeout_cmd_running .1 6 || fail=1
 # Simulate a Ctrl-C to the group to test timely exit
 # Note dash doesn't support signalling groups (a leading -)
-env kill -INT -- -$!
+env kill -INT -- -$pid
 wait
 test -e int.received || fail=1
 
@@ -82,8 +84,7 @@ start=$(date +%s)
 # Note the first timeout must send a signal that
 # the second is handling for it to be propagated to the command.
 # SIGINT, SIGTERM, SIGALRM etc. are implicit.
-timeout -sALRM 30 timeout -sINT 25 ./timeout.cmd 20&
-pid=$!
+timeout -sALRM 30 timeout -sINT 25 ./timeout.cmd 20 & pid=$!
 # Wait 6.3s for timeout.cmd to start
 retry_delay_ check_timeout_cmd_running .1 6 || fail=1
 kill -ALRM $pid # trigger the alarm of the first timeout command

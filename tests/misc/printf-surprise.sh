@@ -53,7 +53,10 @@ mkfifo_or_skip_ fifo
 # http://bugs.debian.org/481543#77
 export MALLOC_PERTURB_=0
 
-head -c 10 fifo > out &
+# Terminate any background process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
+head -c 10 fifo > out & pid=$!
 
 # Choosing the virtual memory limit, 11000 is enough, but 10000 is too
 # little and provokes a "memory exhausted" diagnostic on FreeBSD 9.0-p3.

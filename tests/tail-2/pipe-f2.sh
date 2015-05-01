@@ -24,6 +24,9 @@ mkfifo_or_skip_ fifo
 echo 1 > fifo &
 echo 1 > exp || framework_failure_
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -40,9 +43,9 @@ retry_delay_ check_tail_output .1 7 || fail=1
 
 compare exp out || fail=1
 
-# Kill the still-running tail, or fail if it's gone.
-kill $pid || fail=1
+# Ensure tail is still running
+kill -0 $pid || fail=1
 
-wait $pid
+cleanup_
 
 Exit $fail

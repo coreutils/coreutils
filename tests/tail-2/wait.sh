@@ -23,6 +23,9 @@ print_ver_ tail
 touch here || framework_failure_
 { touch unreadable && chmod a-r unreadable; } || framework_failure_
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # speedup non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -72,8 +75,7 @@ for mode in '' '---disable-inotify'; do
     sleep $delay
     echo NO >> l
     sleep $delay
-    kill $pid
-    wait $pid
+    cleanup_
     rm -f k l
 
     test -s tail.out

@@ -487,6 +487,13 @@ sc_prohibit_test_ulimit_without_require_:
 	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
 	  " should match require_ulimit_v_ with ulimit -v" 1>&2; exit 1; } || :
 
+# Ensure that tests call the cleanup_ function if using background processes
+sc_prohibit_test_background_without_cleanup_:
+	@(git grep -El '( &$$|&[^&]*=\$$!)' tests;			\
+	  git grep -l 'cleanup_()' tests | sed p)			\
+	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
+	  " should use cleanup_ for background processes" 1>&2; exit 1; } || :
+
 # Ensure that tests call the print_ver_ function for programs which are
 # actually used in that test.
 sc_prohibit_test_calls_print_ver_with_irrelevant_argument:

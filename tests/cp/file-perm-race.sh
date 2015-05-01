@@ -25,10 +25,12 @@ require_local_dir_
 umask 022
 mkfifo_or_skip_ fifo
 
+# Terminate any background cp process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Copy a fifo's contents.  That way, we can examine the
 # destination permissions before they're finalized.
-cp -p --copy-contents fifo fifo-copy &
-cp_pid=$!
+cp -p --copy-contents fifo fifo-copy & pid=$!
 
 (
   # Now 'cp' is reading the fifo.  Wait for the destination file to
@@ -51,6 +53,6 @@ case $(cat ls.out) in
 *) fail=1;;
 esac
 
-wait $cp_pid || fail=1
+wait $pid || fail=1
 
 Exit $fail

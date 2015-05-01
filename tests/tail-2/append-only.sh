@@ -21,6 +21,9 @@
 print_ver_ tail
 require_root_
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 chattr_a_works=1
 touch f
 chattr +a f 2>/dev/null || chattr_a_works=0
@@ -35,6 +38,7 @@ fi
 for mode in '' '---disable-inotify'; do
   sleep 1 & pid=$!
   tail --pid=$pid -f $mode f || fail=1
+  cleanup_
 done
 
 chattr -a f 2>/dev/null

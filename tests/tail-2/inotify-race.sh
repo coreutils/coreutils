@@ -23,6 +23,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
+# Terminate any background gdb/tail process
+cleanup_() {
+  kill $pid 2>/dev/null && wait $pid
+  kill $sleep 2>/dev/null && wait $sleep
+}
+
 touch file || framework_failure_
 touch tail.out || framework_failure_
 
@@ -75,8 +81,7 @@ gdb -nx --batch-silent \
     --eval-command='shell echo never-seen-with-tail-7.5 >> file' \
     --eval-command='continue'                      \
     --eval-command='quit'                          \
-    tail < /dev/null > /dev/null 2>&1 &
-pid=$!
+    tail < /dev/null > /dev/null 2>&1 & pid=$!
 
 tail --pid=$pid -f tail.out | (read; kill $pid)
 

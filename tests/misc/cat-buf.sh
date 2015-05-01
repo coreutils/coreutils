@@ -26,6 +26,8 @@ print_ver_ cat
 # write separately.
 mkfifo_or_skip_ fifo
 
+# Terminate any background cp process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 echo 1 > exp
 
@@ -33,9 +35,9 @@ cat_buf_1()
 {
   local delay="$1"
 
-  dd count=1 if=fifo > out &
+  dd count=1 if=fifo > out & pid=$!
   (echo 1; sleep $delay; echo 2) | cat -v > fifo
-  wait # for dd to complete
+  wait $pid
   compare exp out
 }
 

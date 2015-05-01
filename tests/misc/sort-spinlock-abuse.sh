@@ -29,13 +29,16 @@ very_expensive_
 grep '^#define HAVE_PTHREAD_T 1' "$CONFIG_HEADER" > /dev/null ||
   skip_ 'requires pthreads'
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 seq 100000 > in || framework_failure_
 mkfifo_or_skip_ fifo
 
 # Arrange for sort to require 8.0+ seconds of wall-clock time,
 # while actually using far less than 1 second of CPU time.
 (for i in $(seq 80); do read line; echo $i; sleep .1; done
-  cat > /dev/null) < fifo &
+  cat > /dev/null) < fifo & pid=$!
 
 # However, under heavy load, it can easily take more than
 # one second of CPU time, so set a permissive limit:

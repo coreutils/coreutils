@@ -36,6 +36,9 @@ wait4lines_ ()
   [ "$(countlines_)" -ge "$elc" ] || { sleep $delay; return 1; }
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -62,8 +65,7 @@ retry_delay_ wait4lines_ .1 6 1 || { cat out; fail=1; }
 echo "X" > missing              || framework_failure_
 # Wait for the expected output.
 retry_delay_ wait4lines_ .1 6 3 || { cat out; fail=1; }
-kill $pid
-wait $pid
+cleanup_
 # Expect 3 lines in the output file.
 [ "$(countlines_)" = 3 ]   || { fail=1; cat out; }
 grep -F 'cannot open' out  || { fail=1; cat out; }
@@ -80,8 +82,7 @@ retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
 echo "X" > missing              || framework_failure_
 # Wait for the expected output.
 retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
-kill $pid
-wait $pid
+cleanup_
 # Expect 4 lines in the output file.
 [ "$(countlines_)" = 4 ]   || { fail=1; cat out; }
 grep -F 'retry only effective for the initial open' out \

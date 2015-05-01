@@ -22,6 +22,8 @@ getlimits_
 
 touch empty here || framework_failure_
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 for mode in '' '---disable-inotify'; do
   # Use tail itself to create a background process to monitor,
@@ -32,9 +34,7 @@ for mode in '' '---disable-inotify'; do
   timeout 1 tail -f -s.1 --pid=$pid $mode here
   test $? = 124 || fail=1
 
-  # Cleanup background process
-  kill $pid
-  wait $pid
+  cleanup_
 
   # Ensure that tail --pid=PID exits with success status when PID is dead.
   # Use an unlikely-to-be-live PID

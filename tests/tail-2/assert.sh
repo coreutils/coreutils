@@ -33,9 +33,11 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
-
 
 for mode in '' '---disable-inotify'; do
   rm -f a foo out
@@ -46,22 +48,21 @@ for mode in '' '---disable-inotify'; do
   # Wait up to 12.7s for tail to start.
   echo x > a || framework_failure_
   tail_re='^x$' retry_delay_ check_tail_output .1 7 ||
-    { cat out; fail=1; }
+    { cat out; fail=1; break; }
 
   # Wait 12.7s for this diagnostic:
   # tail: foo: No such file or directory
   rm foo || framework_failure_
   tail_re='No such file' retry_delay_ check_tail_output .1 7 ||
-    { cat out; fail=1; }
+    { cat out; fail=1; break; }
 
   # Wait up to 12.7s for tail to notice new foo file
   ok='ok ok ok'
   echo "$ok" > foo || framework_failure_
   tail_re="^$ok$" retry_delay_ check_tail_output .1 7 ||
-    { echo "$0: foo: unexpected delay?"; cat out; fail=1; }
+    { echo "$0: foo: unexpected delay?"; cat out; fail=1; break; }
 
-  kill $pid
-  wait $pid
+  cleanup_
 done
 
 Exit $fail

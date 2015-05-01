@@ -21,14 +21,17 @@ print_ver_ cp
 
 require_sparse_support_
 
+# Terminate any background cp process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 mkfifo_or_skip_ pipe
-timeout 10 cat pipe > copy &
+timeout 10 cat pipe > copy & pid=$!
 
 truncate -s1M sparse || framework_failure_
 cp sparse pipe || fail=1
 
 # Ensure that the cat has completed before comparing.
-wait
+wait $pid
 
 cmp sparse copy || fail=1
 

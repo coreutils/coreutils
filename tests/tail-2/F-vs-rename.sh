@@ -28,6 +28,9 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -74,9 +77,7 @@ for mode in '' '---disable-inotify'; do
   retry_delay_ tail_f_vs_rename_3 .1 7 ||
     { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 
-  kill $pid
-
-  wait $pid
+  cleanup_
 done
 
 Exit $fail

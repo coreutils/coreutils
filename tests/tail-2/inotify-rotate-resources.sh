@@ -48,13 +48,17 @@ cleanup_fail()
   fail=1
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 fastpoll='-s.1 --max-unchanged-stats=1'
 
-# Normally less than a second is required here, but with heavy load
-# and a lot of disk activity, even 20 seconds per grep_timeout is insufficient,
-# which leads to this timeout (used as a safety net for cleanup)
-# killing tail before processing is completed.
 touch k || framework_failure_
+
+# Note the timeout guard isn't strictly necessary here,
+# however without it strace will ignore SIGTERM.
+# strace does always honor SIGTERM with the -I2 option,
+# though that's not available on RHEL6 for example.
 timeout 180 strace -e inotify_rm_watch -o strace.out \
   tail -F $fastpoll k >> out 2>&1 & pid=$!
 
@@ -92,7 +96,7 @@ for i in $(seq 2); do
 done
 
 test "$reverted_to_polling_" = 1 && skip_ 'inotify resources already depleted'
-kill $pid
-wait $pid
+
+cleanup_
 
 Exit $fail

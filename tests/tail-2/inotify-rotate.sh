@@ -32,11 +32,14 @@ check_tail_output()
 # Wait up to 25.5 seconds for grep REGEXP 'out' to succeed.
 grep_timeout() { tail_re="$1" retry_delay_ check_tail_output .1 8; }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 cleanup_fail()
 {
   cat out
   warn_ $1
-  kill $pid
+  cleanup_
   fail=1
 }
 
@@ -68,8 +71,7 @@ for i in $(seq 50); do
     # wait for "ok" to appear in 'out'
     grep_timeout 'ok' || { cleanup_fail 'failed to detect echoed ok'; break; }
 
-    kill $pid
+    cleanup_
 done
 
-wait
 Exit $fail

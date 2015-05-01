@@ -25,6 +25,9 @@ export SHELL
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 expected_failure_status_chroot=125
 expected_failure_status_env=125
 expected_failure_status_nice=125
@@ -216,8 +219,8 @@ id_setup () { args=-u; }
 
 # Use env to avoid invoking built-in sleep of Solaris 11's /bin/sh.
 kill_setup () {
-  env sleep 31.5 &
-  args=$!
+  env sleep 10m & pid=$!
+  args=$pid
 }
 
 link_setup () { args="$tmp_in link-target"; }

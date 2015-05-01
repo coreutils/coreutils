@@ -58,15 +58,18 @@ test $? = 126 || fail=1
 stdbuf -o1 no_such # no such command
 test $? = 127 || fail=1
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Ensure line buffering stdout takes effect
 stdbuf_linebuffer()
 {
   local delay="$1"
 
   printf '1\n' > exp
-  dd count=1 if=fifo > out 2> err &
+  dd count=1 if=fifo > out 2> err & pid=$!
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -oL uniq > fifo
-  wait # for dd to complete
+  wait $pid
   compare exp out
 }
 
@@ -78,9 +81,9 @@ stdbuf_unbuffer()
 
   # Ensure un buffering stdout takes effect
   printf '1\n' > exp
-  dd count=1 if=fifo > out 2> err &
+  dd count=1 if=fifo > out 2> err & pid=$!
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -o0 uniq > fifo
-  wait # for dd to complete
+  wait $pid
   compare exp out
 }
 

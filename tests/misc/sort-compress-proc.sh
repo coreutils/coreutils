@@ -20,6 +20,9 @@
 print_ver_ sort
 expensive_
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 SORT_FAILURE=2
 
 seq -w 2000 > exp || fail=1
@@ -63,7 +66,7 @@ done
 # Ignore a random child process created before 'sort' was exec'ed.
 # This bug was also present in coreutils 8.7.
 #
-( (sleep 1; exec false) &
+( (sleep 1; exec false) & pid=$!
   PRE_COMPRESS='test -f ok || sleep 2'
   POST_COMPRESS='touch ok'
   exec sort --compress-program=./compress -S 1k in >out

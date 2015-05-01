@@ -26,6 +26,8 @@ umask 002
 mkdir mode ownership d || framework_failure_
 chmod g+s d 2>/dev/null # The cp test is valid either way.
 
+# Terminate any background cp process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 for attr in mode ownership
 do
@@ -33,8 +35,7 @@ do
 
   # Copy a fifo's contents.  That way, we can examine d/$attr's
   # state while cp is running.
-  cp --preserve=$attr -R --copy-contents --parents $attr d &
-  cp_pid=$!
+  cp --preserve=$attr -R --copy-contents --parents $attr d & pid=$!
 
   (
     # Now 'cp' is reading the fifo.
@@ -58,7 +59,7 @@ do
     fail=1;;
   esac
 
-  wait $cp_pid || fail=1
+  wait $pid || fail=1
 done
 
 Exit $fail

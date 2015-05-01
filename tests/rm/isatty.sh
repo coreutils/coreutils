@@ -25,10 +25,12 @@ skip_if_root_
 ls /dev/stdin >/dev/null 2>&1 \
   || skip_ 'there is no /dev/stdin file'
 
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 touch f
 chmod 0 f
-rm ---presume-input-tty f > out 2>&1 &
-pid=$!
+rm ---presume-input-tty f > out 2>&1 & pid=$!
 
 # Wait a second, to give a buggy rm (as in fileutils-4.0.40)
 # enough time to remove the file.
@@ -37,7 +39,7 @@ sleep 1
 # The file must still exist.
 test -f f || fail=1
 
-kill $pid > /dev/null 2>&1
+cleanup_
 
 # Note the trailing 'x' -- so I don't have to have a trailing
 # blank in this file :-)

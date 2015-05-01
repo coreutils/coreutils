@@ -20,6 +20,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -34,10 +37,10 @@ for mode in '' '---disable-inotify'; do
     touch f
   done
 
-  # Kill the working tail, or fail if it has already aborted
-  kill $pid || fail=1
+  # Ensure tail hasn't aborted
+  kill -0 $pid || fail=1
 
-  wait $pid
+  cleanup_
 done
 
 Exit $fail

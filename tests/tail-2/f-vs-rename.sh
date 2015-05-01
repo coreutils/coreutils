@@ -28,6 +28,9 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -47,9 +50,7 @@ for mode in '' '---disable-inotify'; do
   # Wait up to 12.7s for "y" to appear in the output:
   tail_re='^y$' retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
 
-  kill $pid
-
-  wait $pid
+  cleanup_
 done
 
 Exit $fail

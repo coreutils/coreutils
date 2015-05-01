@@ -35,6 +35,9 @@ chmod 0 unreadable || framework_failure_
 tail -c0 unreadable || fail=1
 tail -n0 unreadable || fail=1
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 for mode in '' '---disable-inotify'; do
   for file in empty nonempty; do
     for c_or_n in c n; do
@@ -51,8 +54,7 @@ for mode in '' '---disable-inotify'; do
       # Wait up to 1.5s for tail to sleep
       retry_delay_ tail_sleeping .1 4 ||
         { echo $0: process in unexpected state: $state >&2; fail=1; }
-      kill $pid
-      wait $pid
+      cleanup_
     done
   done
 done

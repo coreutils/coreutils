@@ -30,6 +30,9 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
 
@@ -58,10 +61,10 @@ for mode in '' '---disable-inotify'; do
   tail_re='has appeared' retry_delay_ check_tail_output .1 6 ||
     { cat out; fail=1; }
 
-  # Kill the working tail, or fail if it has already aborted
-  kill $pid || fail=1
+  # Double check that tail hasn't aborted
+  kill -0 $pid || fail=1
 
-  wait $pid
+  cleanup_
 done
 
 
