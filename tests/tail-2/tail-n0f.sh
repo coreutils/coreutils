@@ -35,11 +35,10 @@ chmod 0 unreadable || framework_failure_
 tail -c0 unreadable || fail=1
 tail -n0 unreadable || fail=1
 
-for inotify in ---disable-inotify ''; do
+for mode in '' '---disable-inotify'; do
   for file in empty nonempty; do
     for c_or_n in c n; do
-      tail --sleep=4 -${c_or_n} 0 -f $inotify $file &
-      pid=$!
+      tail --sleep=4 -${c_or_n} 0 -f $mode $file & pid=$!
       tail_sleeping()
       {
         local delay="$1"; sleep $delay
@@ -53,6 +52,7 @@ for inotify in ---disable-inotify ''; do
       retry_delay_ tail_sleeping .1 4 ||
         { echo $0: process in unexpected state: $state >&2; fail=1; }
       kill $pid
+      wait $pid
     done
   done
 done

@@ -19,11 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
-echo line > in || fail=1
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
+
+echo line > in || framework_failure_
 # Output should be buffered since we're writing to file
 # so we're depending on the flush to write out
-tail -f in > out &
-tail_pid=$!
+tail $fastpoll -f in > out & tail_pid=$!
 
 # Wait for 3.1s for the file to be flushed.
 tail_flush()
@@ -36,5 +38,7 @@ tail_flush()
 retry_delay_ tail_flush .1 5 || fail=1
 
 kill $tail_pid
+
+wait $tail_pid
 
 Exit $fail

@@ -24,7 +24,10 @@ mkfifo_or_skip_ fifo
 echo 1 > fifo &
 echo 1 > exp || framework_failure_
 
-timeout 10 tail -f fifo > out & pid=$!
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
+
+timeout 10 tail $fastpoll -f fifo > out & pid=$!
 
 check_tail_output()
 {
@@ -39,5 +42,7 @@ compare exp out || fail=1
 
 # Kill the still-running tail, or fail if it's gone.
 kill $pid || fail=1
+
+wait $pid
 
 Exit $fail

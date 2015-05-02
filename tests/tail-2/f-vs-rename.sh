@@ -28,20 +28,24 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-touch a || framework_failure_
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
 
 for mode in '' '---disable-inotify'; do
-  tail $mode -f -s.1 a > out 2>&1 & pid=$!
+  rm -f a out
+  touch a || framework_failure_
+
+  tail $mode $fastpoll -f a > out 2>&1 & pid=$!
 
   # Wait up to 12.7s for tail to start.
   echo x > a
-  tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
+  tail_re='^x$' retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
 
-  mv a b || fail=1
+  mv a b || framework_failure_
 
   echo y >> b
   # Wait up to 12.7s for "y" to appear in the output:
-  tail_re='^y$' retry_delay_ check_tail_output .1 7 || fail=1
+  tail_re='^y$' retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
 
   kill $pid
 

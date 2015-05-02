@@ -40,6 +40,9 @@ cleanup_fail()
   fail=1
 }
 
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
+
 # Perform at least this many iterations, because on multi-core systems
 # the offending sequence of events can be surprisingly uncommon.
 # See: http://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
@@ -51,8 +54,7 @@ for i in $(seq 50); do
     # and a lot of disk activity, even 20 seconds is insufficient, which
     # leads to this timeout killing tail before the "ok" is written below.
     >k && >x || framework_failure_ failed to initialize files
-    timeout 60 tail -s.1 --max-unchanged-stats=1 -F k > out 2>&1 &
-    pid=$!
+    timeout 60 tail $fastpoll -F k > out 2>&1 & pid=$!
 
     echo 'tailed' > k;
     # wait for 'tailed' to appear in out

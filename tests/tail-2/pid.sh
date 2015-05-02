@@ -23,28 +23,28 @@ getlimits_
 touch empty here || framework_failure_
 
 
-for inotify in ---disable-inotify ''; do
+for mode in '' '---disable-inotify'; do
   # Use tail itself to create a background process to monitor,
   # which will auto exit when "here" is removed.
-  tail -f $inotify here &
-  bg_pid=$!
+  tail -f $mode here & pid=$!
 
   # Ensure that tail --pid=PID does not exit when PID is alive.
-  timeout 1 tail -f -s.1 --pid=$bg_pid $inotify here
+  timeout 1 tail -f -s.1 --pid=$pid $mode here
   test $? = 124 || fail=1
 
   # Cleanup background process
-  kill $bg_pid
+  kill $pid
+  wait $pid
 
   # Ensure that tail --pid=PID exits with success status when PID is dead.
   # Use an unlikely-to-be-live PID
-  timeout 10 tail -f -s.1 --pid=$PID_T_MAX $inotify empty
+  timeout 10 tail -f -s.1 --pid=$PID_T_MAX $mode empty
   ret=$?
   test $ret = 124 && skip_ "pid $PID_T_MAX present or tail too slow"
   test $ret = 0 || fail=1
 
   # Ensure tail doesn't wait for data when PID is dead
-  timeout 10 tail -f -s10 --pid=$PID_T_MAX $inotify empty
+  timeout 10 tail -f -s10 --pid=$PID_T_MAX $mode empty
   test $? = 124 && fail=1
 done
 

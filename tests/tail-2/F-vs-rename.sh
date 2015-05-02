@@ -28,20 +28,25 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-touch a b || framework_failure_
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
 
 for mode in '' '---disable-inotify'; do
-  tail $mode -F -s.1 a b > out 2>&1 & pid=$!
+  rm -f a b out
+  touch a b || framework_failure_
+
+  tail $mode -F $fastpoll a b > out 2>&1 & pid=$!
 
   # Wait up to 12.7s for tail to start.
   echo x > a
-  tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
+  tail_re='^x$' retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
 
-  mv a b || fail=1
+  mv a b || framework_failure_
 
   # Wait 12.7s for this diagnostic:
   # tail: 'a' has become inaccessible: No such file or directory
-  tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
+  tail_re='inaccessible' retry_delay_ check_tail_output .1 7 ||
+    { cat out; fail=1; }
 
   echo x > a
   # Wait up to 12.7s for this to appear in the output:

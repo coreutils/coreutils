@@ -20,20 +20,24 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
-touch f || framework_failure_
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
 
-debug='---disable-inotify -s .001'
-debug=
-tail $debug -F f & pid=$!
-cleanup_() { kill $pid; }
+for mode in '' '---disable-inotify'; do
+  touch f || framework_failure_
 
-for i in $(seq 200); do
-  kill -0 $pid || break;
-  mv f g
-  touch f
+  tail $mode $fastpoll -F f & pid=$!
+
+  for i in $(seq 200); do
+    kill -0 $pid || break;
+    mv f g
+    touch f
+  done
+
+  # Kill the working tail, or fail if it has already aborted
+  kill $pid || fail=1
+
+  wait $pid
 done
-
-# Kill the working tail, or fail if it has already aborted
-kill $pid || fail=1
 
 Exit $fail

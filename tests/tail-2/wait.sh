@@ -23,30 +23,32 @@ print_ver_ tail
 touch here || framework_failure_
 { touch unreadable && chmod a-r unreadable; } || framework_failure_
 
+# speedup non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
 
-for inotify in ---disable-inotify ''; do
-  timeout 10 tail -s0.1 -f $inotify not_here
+for mode in '' '---disable-inotify'; do
+  timeout 10 tail $fastpoll -f $mode not_here
   test $? = 124 && fail=1
 
   if test ! -r unreadable; then # can't test this when root
-    timeout 10 tail -s0.1 -f $inotify unreadable
+    timeout 10 tail $fastpoll -f $mode unreadable
     test $? = 124 && fail=1
   fi
 
-  timeout 1 tail -s0.1 -f $inotify here 2>tail.err
+  timeout .1 tail $fastpoll -f $mode here 2>tail.err
   test $? = 124 || fail=1
 
   # 'tail -F' must wait in any case.
 
-  timeout 1 tail -s0.1 -F $inotify here 2>>tail.err
+  timeout .1 tail $fastpoll -F $mode here 2>>tail.err
   test $? = 124 || fail=1
 
   if test ! -r unreadable; then # can't test this when root
-    timeout 1 tail -s0.1 -F $inotify unreadable
+    timeout .1 tail $fastpoll -F $mode unreadable
     test $? = 124 || fail=1
   fi
 
-  timeout 1 tail -s0.1 -F $inotify not_here
+  timeout .1 tail $fastpoll -F $mode not_here
   test $? = 124 || fail=1
 
   grep -Ev 'inotify (resources exhausted|cannot be used)' tail.err > x
@@ -54,13 +56,14 @@ for inotify in ---disable-inotify ''; do
   compare /dev/null tail.err || fail=1
   >tail.err
 
+  # Ensure -F never follows a descriptor after rename
+  # either with tiny or significant delays between operations
   tail_F()
   {
     local delay="$1"
 
     touch k || framework_failure_
-    tail -s.1 --max-unchanged-stats=2 -F $inotify k > tail.out &
-    pid=$!
+    tail $fastpoll -F $mode k > tail.out & pid=$!
     sleep $delay
     mv k l
     sleep $delay
@@ -70,11 +73,13 @@ for inotify in ---disable-inotify ''; do
     echo NO >> l
     sleep $delay
     kill $pid
+    wait $pid
     rm -f k l
 
-    test ! -s tail.out
+    test -s tail.out
   }
-  retry_delay_ tail_F .1 4 || fail=1
+  retry_delay_ tail_F 0 1 && { cat tail.out; fail=1; }
+  retry_delay_ tail_F .2 1 && { cat tail.out; fail=1; }
 done
 
 Exit $fail

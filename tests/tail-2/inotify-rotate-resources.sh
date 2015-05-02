@@ -34,10 +34,10 @@ check_tail_output()
 # Wait up to 25.5 seconds for grep REGEXP 'out' to succeed.
 grep_timeout() { tail_re="$1" retry_delay_ check_tail_output .1 8; }
 
-strace_output()
+check_strace()
 {
   local delay="$1"
-  test -s strace.out ||
+  grep "$strace_re" strace.out > /dev/null ||
     { sleep $delay; return 1; }
 }
 
@@ -48,13 +48,15 @@ cleanup_fail()
   fail=1
 }
 
+fastpoll='-s.1 --max-unchanged-stats=1'
+
 # Normally less than a second is required here, but with heavy load
 # and a lot of disk activity, even 20 seconds per grep_timeout is insufficient,
 # which leads to this timeout (used as a safety net for cleanup)
 # killing tail before processing is completed.
 touch k || framework_failure_
-timeout 180 strace -e inotify_rm_watch -o strace.out tail -F k >> out 2>&1 &
-pid=$!
+timeout 180 strace -e inotify_rm_watch -o strace.out \
+  tail -F $fastpoll k >> out 2>&1 & pid=$!
 
 reverted_to_polling_=0
 for i in $(seq 2); do
@@ -82,7 +84,7 @@ for i in $(seq 2); do
     # may not be supported in future, instead being auto scaled to RAM
     # like the Linux epoll resources were.
     if test "$i" -gt 1; then
-      retry_delay_ strace_output .1 8 ||
+      strace_re='inotify_rm_watch' retry_delay_ check_strace .1 8 ||
         { cleanup_fail 'failed to find inotify_rm_watch syscall'; break; }
     fi
 
@@ -91,6 +93,6 @@ done
 
 test "$reverted_to_polling_" = 1 && skip_ 'inotify resources already depleted'
 kill $pid
-wait
+wait $pid
 
 Exit $fail

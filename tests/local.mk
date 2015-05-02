@@ -197,7 +197,6 @@ all_tests =					\
   tests/rm/i-1.sh				\
   tests/rm/i-never.sh				\
   tests/rm/i-no-r.sh				\
-  tests/tail-2/infloop-1.sh			\
   tests/rm/ignorable.sh				\
   tests/rm/inaccessible.sh			\
   tests/rm/interactive-always.sh		\

@@ -23,10 +23,6 @@ print_ver_ tail
 n=9
 seq $n | xargs touch || framework_failure_
 
-debug='---disable-inotify'
-debug=
-tail $debug -s.1 -qF $(seq $n) > out 2>&1 & pid=$!
-
 check_tail_output()
 {
   local delay="$1"
@@ -34,30 +30,39 @@ check_tail_output()
     { sleep $delay; return 1; }
 }
 
-# Wait up to 12.7s for tail to start
-echo x > $n
-tail_re='^x$' retry_delay_ check_tail_output .1 7 || fail=1
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
 
-mv 1 f || fail=1
+for mode in '' '---disable-inotify'; do
+  rm -f out
 
-# Wait 12.7s for this diagnostic:
-# tail: '1' has become inaccessible: No such file or directory
-tail_re='inaccessible' retry_delay_ check_tail_output .1 7 || fail=1
+  tail $mode $fastpoll -qF $(seq $n) > out 2>&1 & pid=$!
 
-# Trigger the bug.  Before the fix, this would provoke the abort.
-echo a > 1 || fail=1
+  # Wait up to 12.7s for tail to start
+  echo x > $n
+  tail_re='^x$' retry_delay_ check_tail_output .1 7 ||
+    { cat out; fail=1; }
 
-# Wait up to 2s for the buggy tail to die,
-# or for the "tail: '1' has appeared;  following end of new file" output
-for i in $(seq 10); do
-  kill -0 $pid || break
-  grep 'has appeared;' out > /dev/null && break
-  sleep .2
+  mv 1 f || framework_failure_
+
+  # Wait 12.7s for this diagnostic:
+  # tail: '1' has become inaccessible: No such file or directory
+  tail_re='inaccessible' retry_delay_ check_tail_output .1 7 ||
+    { cat out; fail=1; }
+
+  # Trigger the bug.  Before the fix, this would provoke the abort.
+  echo a > 1 || framework_failure_
+
+  # Wait up to 6.3s for the "tail: '1' has appeared; ..." message
+  # (or for the buggy tail to die)
+  tail_re='has appeared' retry_delay_ check_tail_output .1 6 ||
+    { cat out; fail=1; }
+
+  # Kill the working tail, or fail if it has already aborted
+  kill $pid || fail=1
+
+  wait $pid
 done
 
-# Kill the working tail, or fail if it has already aborted
-kill $pid || fail=1
-
-cat out
 
 Exit $fail

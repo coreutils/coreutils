@@ -32,10 +32,9 @@ if test $chattr_a_works = 0; then
 fi
 
 
-for inotify in ---disable-inotify ''; do
-  sleep 1 &
-  pid=$!
-  tail --pid=$pid -f $inotify f || fail=1
+for mode in '' '---disable-inotify'; do
+  sleep 1 & pid=$!
+  tail --pid=$pid -f $mode f || fail=1
 done
 
 chattr -a f 2>/dev/null

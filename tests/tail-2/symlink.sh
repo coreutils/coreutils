@@ -36,15 +36,20 @@ wait4lines_ ()
   [ "$(countlines_)" -ge "$elc" ] || { sleep $delay; return 1; }
 }
 
+# speedup non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
+
 # Ensure changing targets of cli specified symlinks are handled.
 # Prior to v8.22, inotify would fail to recognize changes in the targets.
 # Clear 'out' so that we can check its contents without races.
 >out                            || framework_failure_
 ln -nsf target symlink          || framework_failure_
-timeout 10 tail -s.1 -F symlink >out 2>&1 & pid=$!
-retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for "cannot open..."
-echo "X" > target               || fail=1
-retry_delay_ wait4lines_ .1 6 3 || fail=1  # Wait for the expected output.
+timeout 10 tail $fastpoll -F symlink >out 2>&1 & pid=$!
+# Wait for "cannot open..."
+retry_delay_ wait4lines_ .1 6 1 || { cat out; fail=1; }
+echo "X" > target               || framework_failure_
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 3 || { cat out; fail=1; }
 kill $pid
 wait $pid
 # Expect 3 lines in the output file.
@@ -60,12 +65,15 @@ rm -f target out           || framework_failure_
 >out                            || framework_failure_
 echo "X1" > target1             || framework_failure_
 ln -nsf target1 symlink         || framework_failure_
-timeout 10 tail -s.1 -F symlink >out 2>&1 & pid=$!
-retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for the expected output.
+timeout 10 tail $fastpoll -F symlink >out 2>&1 & pid=$!
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 1 || { cat out; fail=1; }
 ln -nsf target2 symlink         || framework_failure_
-retry_delay_ wait4lines_ .1 6 2 || fail=1  # Wait for "become inaccess..."
-echo "X2" > target2             || fail=1
-retry_delay_ wait4lines_ .1 6 4 || fail=1  # Wait for the expected output.
+# Wait for "become inaccess..."
+retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
+echo "X2" > target2             || framework_failure_
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
 kill $pid
 wait $pid
 # Expect 4 lines in the output file.

@@ -36,27 +36,32 @@ wait4lines_ ()
   [ "$(countlines_)" -ge "$elc" ] || { sleep $delay; return 1; }
 }
 
+# Speedup the non inotify case
+fastpoll='-s.1 --max-unchanged-stats=1'
+
 # === Test:
 # Retry without --follow results in a warning.
 touch file
 tail --retry file > out 2>&1 || fail=1
-[ "$(countlines_)" = 1 ]                     || fail=1
-grep -F 'tail: warning: --retry ignored' out || fail=1
+[ "$(countlines_)" = 1 ]                     || { cat out; fail=1; }
+grep -F 'tail: warning: --retry ignored' out || { cat out; fail=1; }
 
 # === Test:
 # The same with a missing file: expect error message and exit 1.
 tail --retry missing > out 2>&1 && fail=1
-[ "$(countlines_)" = 2 ]                     || fail=1
-grep -F 'tail: warning: --retry ignored' out || fail=1
+[ "$(countlines_)" = 2 ]                     || { cat out; fail=1; }
+grep -F 'tail: warning: --retry ignored' out || { cat out; fail=1; }
 
 # === Test:
 # Ensure that "tail --retry --follow=name" waits for the file to appear.
 # Clear 'out' so that we can check its contents without races
 >out                            || framework_failure_
-timeout 10 tail -s.1 --follow=name --retry missing >out 2>&1 & pid=$!
-retry_delay_ wait4lines_ .1 6 1 || fail=1  # Wait for "cannot open" error.
-echo "X" > missing              || fail=1
-retry_delay_ wait4lines_ .1 6 3 || fail=1  # Wait for the expected output.
+timeout 10 tail $fastpoll --follow=name --retry missing >out 2>&1 & pid=$!
+# Wait for "cannot open" error.
+retry_delay_ wait4lines_ .1 6 1 || { cat out; fail=1; }
+echo "X" > missing              || framework_failure_
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 3 || { cat out; fail=1; }
 kill $pid
 wait $pid
 # Expect 3 lines in the output file.
@@ -69,10 +74,12 @@ rm -f missing out          || framework_failure_
 # === Test:
 # Ensure that "tail --retry --follow=descriptor" waits for the file to appear.
 # tail-8.21 failed at this (since the implementation of the inotify support).
-timeout 10 tail -s.1 --follow=descriptor --retry missing >out 2>&1 & pid=$!
-retry_delay_ wait4lines_ .1 6 2 || fail=1  # Wait for "cannot open" error.
-echo "X" > missing              || fail=1
-retry_delay_ wait4lines_ .1 6 4 || fail=1  # Wait for the expected output.
+timeout 10 tail $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
+# Wait for "cannot open" error.
+retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
+echo "X" > missing              || framework_failure_
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
 kill $pid
 wait $pid
 # Expect 4 lines in the output file.
@@ -87,10 +94,12 @@ rm -f missing out          || framework_failure_
 # === Test:
 # Ensure that tail --follow=descriptor --retry exits when the file appears
 # untailable. Expect exit status 1.
-timeout 10 tail -s.1 --follow=descriptor --retry missing >out 2>&1 & pid=$!
-retry_delay_ wait4lines_ .1 6 2 || fail=1  # Wait for "cannot open" error.
-mkdir missing                   || fail=1  # Create untailable 'missing'.
-retry_delay_ wait4lines_ .1 6 4 || fail=1  # Wait for the expected output.
+timeout 10 tail $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
+# Wait for "cannot open" error.
+retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
+mkdir missing                   || framework_failure_  # Create untailable
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
 wait $pid
 rc=$?
 [ "$(countlines_)" = 4 ]                       || { fail=1; cat out; }
