@@ -22,7 +22,11 @@ print_ver_ tail
 grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
   || skip_ 'inotify required'
 
-require_strace_ inotify_rm_watch
+require_strace_ 'inotify_add_watch,inotify_rm_watch'
+
+# Quickly skip on remote file systems
+df --local . >/dev/null 2>&1 ||
+  skip_ 'inotify not used on remote file system'
 
 check_tail_output()
 {
@@ -59,7 +63,7 @@ touch k || framework_failure_
 # however without it strace will ignore SIGTERM.
 # strace does always honor SIGTERM with the -I2 option,
 # though that's not available on RHEL6 for example.
-timeout 180 strace -e inotify_rm_watch -o strace.out \
+timeout 180 strace -e inotify_add_watch,inotify_rm_watch -o strace.out \
   tail -F $fastpoll k >> out 2>&1 & pid=$!
 
 reverted_to_polling_=0
@@ -67,18 +71,23 @@ for i in $(seq 2); do
     echo $i
 
     echo 'tailed' > k;
-    # wait for 'tailed' in (after first iteration; new) file and then in 'out'
-    grep_timeout 'tailed' || { cleanup_fail 'failed to find "tailed"'; break; }
+
+    # Wait for watch on (new) file
+    strace_re='inotify_add_watch.*MODIFY' retry_delay_ check_strace .1 8 ||
+      no_watch_=1
+
+    # Assume this is not because we're leaking
+    # (resources may already be depleted)
+    # The explicit check for inotify_rm_watch should confirm that.
+    grep -F 'reverting to polling' out >/dev/null && skip_ 'inotify unused'
+
+    # Otherwise failure is unknown
+    test "$no_watch_" && { cat out; framework_failure_ 'no inotify_add_watch'; }
 
     mv k k.tmp
     # wait for tail to detect the rename
     grep_timeout 'inaccessible' ||
       { cleanup_fail 'failed to detect rename'; break; }
-
-    # Assume this is not because we're leaking.
-    # The explicit check for inotify_rm_watch should confirm that.
-    grep -F 'reverting to polling' out >/dev/null &&
-      { reverted_to_polling_=1; break; }
 
     # Note we strace here rather than consuming all available watches
     # to be more efficient, but more importantly avoid depleting resources.
@@ -94,8 +103,6 @@ for i in $(seq 2); do
 
     >out && >strace.out || framework_failure_ 'failed to reset output files'
 done
-
-test "$reverted_to_polling_" = 1 && skip_ 'inotify resources already depleted'
 
 cleanup_
 

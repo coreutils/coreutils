@@ -925,12 +925,10 @@ fremote (int fd, const char *name)
 # define fremote(fd, name) false
 #endif
 
-/* FIXME: describe */
-
+/* open/fstat F->name and handle changes.  */
 static void
 recheck (struct File_spec *f, bool blocking)
 {
-  /* open/fstat the file and announce if dev/ino have changed */
   struct stat new_stats;
   bool ok = true;
   bool is_stdin = (STREQ (f->name, "-"));
@@ -1312,7 +1310,7 @@ wd_comparator (const void *e1, const void *e2)
   return spec1->wd == spec2->wd;
 }
 
-/* Helper function used by 'tail_forever_inotify'.  */
+/* Output (new) data for FSPEC->fd.  */
 static void
 check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
 {
@@ -1364,12 +1362,18 @@ static bool
 tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                       double sleep_interval)
 {
+# if TAIL_TEST_SLEEP
+  /* Delay between open() and inotify_add_watch()
+     to help trigger different cases.  */
+  xnanosleep (1000000);
+# endif
   unsigned int max_realloc = 3;
 
   /* Map an inotify watch descriptor to the name of the file it's watching.  */
   Hash_table *wd_to_name;
 
   bool found_watchable_file = false;
+  bool tailed_but_unwatchable = false;
   bool found_unwatchable_dir = false;
   bool no_inotify_resources = false;
   bool writer_is_dead = false;
@@ -1438,6 +1442,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           if (f[i].wd < 0)
             {
+              if (f[i].fd != -1)  /* already tailed.  */
+                tailed_but_unwatchable = true;
               if (errno == ENOSPC || errno == ENOMEM)
                 {
                   no_inotify_resources = true;
@@ -1459,8 +1465,10 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   /* Linux kernel 2.6.24 at least has a bug where eventually, ENOSPC is always
      returned by inotify_add_watch.  In any case we should revert to polling
      when there are no inotify resources.  Also a specified directory may not
-     be currently present or accessible, so revert to polling.  */
-  if (no_inotify_resources || found_unwatchable_dir)
+     be currently present or accessible, so revert to polling.  Also an already
+     tailed but unwatchable due rename/unlink race, should also revert.  */
+  if (no_inotify_resources || found_unwatchable_dir
+      || (follow_mode == Follow_descriptor && tailed_but_unwatchable))
     {
       hash_free (wd_to_name);
 
@@ -1472,12 +1480,38 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
   prev_wd = f[n_files - 1].wd;
 
-  /* Check files again.  New data can be available since last time we checked
-     and before they are watched by inotify.  */
+  /* Check files again.  New files or data can be available since last time we
+     checked and before they are watched by inotify.  */
   for (i = 0; i < n_files; i++)
     {
-      if (!f[i].ignore)
-        check_fspec (&f[i], f[i].wd, &prev_wd);
+      if (! f[i].ignore)
+        {
+          /* check for new files.  */
+          if (follow_mode == Follow_name)
+            recheck (&(f[i]), false);
+          else if (f[i].fd != -1)
+            {
+              /* If the file was replaced in the small window since we tailed,
+                 then assume the watch is on the wrong item (different to
+                 that we've already produced output for), and so revert to
+                 polling the original descriptor.  */
+              struct stat stats;
+
+              if (stat (f[i].name, &stats) == 0
+                  && (f[i].dev != stats.st_dev || f[i].ino != stats.st_ino))
+                {
+                  error (0, errno, _("%s was replaced"),
+                         quote (pretty_name (&(f[i]))));
+                  hash_free (wd_to_name);
+
+                  errno = 0;
+                  return true;
+                }
+            }
+
+          /* check for new data.  */
+          check_fspec (&f[i], f[i].wd, &prev_wd);
+        }
     }
 
   evlen += sizeof (struct inotify_event) + 1;
@@ -1840,7 +1874,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
         {
           struct stat stats;
 
-#if TEST_RACE_BETWEEN_FINAL_READ_AND_INITIAL_FSTAT
+#if TAIL_TEST_SLEEP
           /* Before the tail function provided 'read_pos', there was
              a race condition described in the URL below.  This sleep
              call made the window big enough to exercise the problem.  */
@@ -2286,7 +2320,7 @@ main (int argc, char **argv)
               if (fflush (stdout) != 0)
                 error (EXIT_FAILURE, errno, _("write error"));
 
-              if (!tail_forever_inotify (wd, F, n_files, sleep_interval))
+              if (! tail_forever_inotify (wd, F, n_files, sleep_interval))
                 return EXIT_FAILURE;
             }
           error (0, errno, _("inotify cannot be used, reverting to polling"));
