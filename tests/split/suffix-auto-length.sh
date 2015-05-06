@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test the suffix auto widening functionality
+# Test the suffix auto width functionality
 
 # Copyright (C) 2012-2015 Free Software Foundation, Inc.
 
@@ -20,14 +20,14 @@
 print_ver_ split
 
 
-# ensure this feature is off when start number specified
-truncate -s12 file.in
+# ensure auto widening is off when start number specified
+truncate -s12 file.in || framework_failure_
 returns_ 1 split file.in -b1 --numeric=89 || fail=1
 test "$(ls -1 x* | wc -l)" = 11 || fail=1
 rm -f x*
 
-# ensure this feature works when no start num specified
-truncate -s91 file.in
+# ensure auto widening works when no start num specified
+truncate -s91 file.in || framework_failure_
 for prefix in 'x' 'xx' ''; do
     for add_suffix in '.txt' ''; do
       split file.in "$prefix" -b1 --numeric --additional-suffix="$add_suffix" \
@@ -38,5 +38,16 @@ for prefix in 'x' 'xx' ''; do
       rm -f $prefix*[0-9]*$add_suffix
     done
 done
+
+# ensure auto width with --number and start num < number of files
+# That's the single run use case which is valid to adjust suffix len
+truncate -s100 file.in || framework_failure_
+split --numeric-suffixes=1 --number=r/100 file.in || fail=1
+rm -f x*
+
+# ensure no auto width with --number and start num >= number of files
+# That's the multi run use case which is invalid to adjust suffix len
+# as that would result in an incorrect order for the total output file set
+returns_ 1 split --numeric-suffixes=100 --number=r/100 file.in || fail=1
 
 Exit $fail

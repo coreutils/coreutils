@@ -39,6 +39,7 @@
 #include "sig2str.h"
 #include "xfreopen.h"
 #include "xdectoint.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "split"
@@ -173,9 +174,26 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines
       || split_type == type_rr)
     {
+      uintmax_t n_units_end = n_units;
+      if (numeric_suffix_start)
+        {
+          uintmax_t n_start;
+          strtol_error e = xstrtoumax (numeric_suffix_start, NULL, 10,
+                                       &n_start, "");
+          if (e == LONGINT_OK && n_start <= UINTMAX_MAX - n_units)
+            {
+              /* Restrict auto adjustment so we don't keep
+                 incrementing a suffix size arbitrarily,
+                 as that would break sort order for files
+                 generated from multiple split runs.  */
+              if (n_start < n_units)
+                n_units_end += n_start;
+            }
+
+        }
       size_t alphabet_len = strlen (suffix_alphabet);
-      bool alphabet_slop = (n_units % alphabet_len) != 0;
-      while (n_units /= alphabet_len)
+      bool alphabet_slop = (n_units_end % alphabet_len) != 0;
+      while (n_units_end /= alphabet_len)
         suffix_needed++;
       suffix_needed += alphabet_slop;
       suffix_auto = false;

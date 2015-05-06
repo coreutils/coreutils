@@ -3181,9 +3181,14 @@ specified, will auto increase the length by 2 as required.
 @opindex --numeric-suffixes
 Use digits in suffixes rather than lower-case letters.  The numerical
 suffix counts from @var{from} if specified, 0 otherwise.
-Note specifying a @var{from} value also disables the default
-auto suffix length expansion described above, and so you may also
-want to specify @option{-a} to allow suffixes beyond @samp{99}.
+
+@var{from} is used to either set the initial suffix for a single run,
+or to set the suffix offset for independently split inputs, and consequently
+the auto suffix length expansion described above is disabled.  Therefore
+you may also want to use option @option{-a} to allow suffixes beyond @samp{99}.
+Note if option @option{--number} is specified and the number of files is less
+than @var{from}, a single run is assumed and the minimum suffix length
+required is automatically determined.
 
 @item --additional-suffix=@var{suffix}
 @opindex --additional-suffix
