@@ -2828,10 +2828,7 @@ clear_files (void)
 static bool
 errno_unsupported (int err)
 {
-  return (err == EINVAL
-          || err == ENOSYS
-          || err == ENOTSUP
-          || err == EOPNOTSUPP);
+  return (err == EINVAL || err == ENOSYS || is_ENOTSUP (err));
 }
 
 /* Cache *getfilecon failure, when it's trivial to do so.
@@ -3069,7 +3066,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                  ls fail just because the file (even a command line argument)
                  isn't on the right type of file system.  I.e., a getfilecon
                  failure isn't in the same class as a stat failure.  */
-              if (errno == ENOTSUP || errno == EOPNOTSUPP || errno == ENODATA)
+              if (is_ENOTSUP (errno) || errno == ENODATA)
                 err = 0;
             }
 

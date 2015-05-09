@@ -695,3 +695,17 @@ stzncpy (char *restrict dest, char const *restrict src, size_t len)
    in selinux.h before libselinux-2.3 (May 2014).
    When version >= 2.3 is ubiquitous remove this function.  */
 static inline char * se_const (char const * sctx) { return (char *) sctx; }
+
+/* Return true if ERR is ENOTSUP or EOPNOTSUPP, otherwise false.
+   This wrapper function avoids the redundant 'or'd comparison on
+   systems like Linux for which they have the same value.  It also
+   avoids the gcc warning to that effect.  */
+static inline bool
+is_ENOTSUP (int err)
+{
+  return err == EOPNOTSUPP
+#if ENOTSUP != EOPNOTSUPP
+    || err == ENOTSUP
+#endif
+    ;
+}

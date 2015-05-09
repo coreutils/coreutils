@@ -161,8 +161,7 @@ punch_hole (int fd, off_t offset, off_t length)
 # if defined FALLOC_FL_PUNCH_HOLE && defined FALLOC_FL_KEEP_SIZE
   ret = fallocate (fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
                    offset, length);
-  if (ret < 0
-      && (errno == EOPNOTSUPP || errno == ENOTSUP || errno == ENOSYS))
+  if (ret < 0 && (is_ENOTSUP (errno) || errno == ENOSYS))
     ret = 0;
 # endif
 #endif
