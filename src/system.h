@@ -703,9 +703,5 @@ static inline char * se_const (char const * sctx) { return (char *) sctx; }
 static inline bool
 is_ENOTSUP (int err)
 {
-  return err == EOPNOTSUPP
-#if ENOTSUP != EOPNOTSUPP
-    || err == ENOTSUP
-#endif
-    ;
+  return err == EOPNOTSUPP || (ENOTSUP != EOPNOTSUPP && err == ENOTSUP);
 }
