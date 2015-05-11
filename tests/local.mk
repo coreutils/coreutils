@@ -408,6 +408,7 @@ all_tests =					\
   tests/tail-2/retry.sh				\
   tests/tail-2/symlink.sh			\
   tests/tail-2/tail-c.sh			\
+  tests/tail-2/truncate.sh			\
   tests/chmod/c-option.sh			\
   tests/chmod/equal-x.sh			\
   tests/chmod/equals.sh				\

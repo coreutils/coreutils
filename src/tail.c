@@ -1025,7 +1025,7 @@ recheck (struct File_spec *f, bool blocking)
       if (f->fd == -1)
         {
           error (0, 0,
-                 _("%s has appeared;  following end of new file"),
+                 _("%s has appeared;  following new file"),
                  quote (pretty_name (f)));
         }
       else
@@ -1036,7 +1036,7 @@ recheck (struct File_spec *f, bool blocking)
           /* File has been replaced (e.g., via log rotation) --
              tail the new one.  */
           error (0, 0,
-                 _("%s has been replaced;  following end of new file"),
+                 _("%s has been replaced;  following new file"),
                  quote (pretty_name (f)));
         }
     }
@@ -1055,6 +1055,12 @@ recheck (struct File_spec *f, bool blocking)
         }
     }
 
+  /* FIXME: When a log is rotated, daemons tend to log to the
+     old file descriptor until the new file is present and
+     the daemon is sent a signal.  Therefore tail may miss entries
+     being written to the old file.  Perhaps we should keep
+     the older file open and continue to monitor it until
+     data is written to a new file.  */
   if (new_file)
     {
       /* Start at the beginning of the file.  */
@@ -1193,13 +1199,16 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
               /* reset counter */
               f[i].n_unchanged_stats = 0;
 
+              /* XXX: This is only a heuristic, as the file may have also
+                 been truncated and written to if st_size >= size
+                 (in which case we ignore new data <= size).  */
               if (S_ISREG (mode) && stats.st_size < f[i].size)
                 {
                   error (0, 0, _("%s: file truncated"), name);
-                  last = i;
-                  xlseek (fd, stats.st_size, SEEK_SET, name);
-                  f[i].size = stats.st_size;
-                  continue;
+                  /* Assume the file was truncated to 0,
+                     and therefore output all "new" data.  */
+                  xlseek (fd, 0, SEEK_SET, name);
+                  f[i].size = 0;
                 }
 
               if (i != last)
@@ -1330,12 +1339,17 @@ check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
       return;
     }
 
+  /* XXX: This is only a heuristic, as the file may have also
+     been truncated and written to if st_size >= size
+     (in which case we ignore new data <= size).
+     Though in the inotify case it's more likely we'll get
+     separate events for truncate() and write().  */
   if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
     {
       error (0, 0, _("%s: file truncated"), name);
       *prev_wd = wd;
-      xlseek (fspec->fd, stats.st_size, SEEK_SET, name);
-      fspec->size = stats.st_size;
+      xlseek (fspec->fd, 0, SEEK_SET, name);
+      fspec->size = 0;
     }
   else if (S_ISREG (fspec->mode) && stats.st_size == fspec->size
            && timespec_cmp (fspec->mtime, get_stat_mtime (&stats)) == 0)
