@@ -3593,7 +3593,10 @@ Print only the newline counts.
 @itemx --max-line-length
 @opindex -L
 @opindex --max-line-length
-Print only the maximum line lengths.
+Print only the maximum display widths.
+Tabs are set at every 8th column.
+Display widths of wide characters are considered.
+Non-printable characters are given 0 width.
 
 @macro filesZeroFromOption{cmd,withTotalOption,subListOutput}
 @item --files0-from=@var{file}
