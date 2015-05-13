@@ -92,6 +92,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   tee does not treat the file operand '-' as meaning standard output any longer,
   for better conformance to POSIX.  This feature was added in coreutils-5.3.0.
 
+  timeout --foreground no longer sends SIGCONT to the monitored process,
+  which was seen to cause intermittent issues with GDB for example.
 
 ** Improvements
 

@@ -203,15 +203,17 @@ cleanup (int sig)
          in case it has itself become group leader,
          or is not running in a separate group.  */
       send_sig (monitored_pid, sig);
+
       /* The normal case is the job has remained in our
          newly created process group, so send to all processes in that.  */
       if (!foreground)
-        send_sig (0, sig);
-      if (sig != SIGKILL && sig != SIGCONT)
         {
-          send_sig (monitored_pid, SIGCONT);
-          if (!foreground)
-            send_sig (0, SIGCONT);
+          send_sig (0, sig);
+          if (sig != SIGKILL && sig != SIGCONT)
+            {
+              send_sig (monitored_pid, SIGCONT);
+              send_sig (0, SIGCONT);
+            }
         }
     }
   else /* we're the child or the child is not exec'd yet.  */

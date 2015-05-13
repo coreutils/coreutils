@@ -16594,7 +16594,10 @@ from the terminal (like Ctrl-C for example)
 @end enumerate
 
 Note in this mode of operation, any children of @var{command}
-will not be timed out.
+will not be timed out.  Also SIGCONT will not be sent to @var{command},
+as it's generally not needed with foreground processes, and can
+cause intermittent signal delivery issues with programs that are monitors
+themselves (like GDB for example).
 
 @item -k @var{duration}
 @itemx --kill-after=@var{duration}
