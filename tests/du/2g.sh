@@ -24,7 +24,6 @@ print_ver_ du
 # Creating a 2GB file counts as 'very expensive'.
 very_expensive_
 
-
 # Get number of free kilobytes on current partition, so we can
 # skip this test if there is insufficient free space.
 free_kb=$(df -k --output=avail . | tail -n1)
@@ -42,15 +41,22 @@ test $min_kb -lt $free_kb ||
 }
 
 big=big
-rm -f $big
-{
-  for i in $(seq 100); do
-    # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
-    printf %21474836s x || fail=1
-  done
-  # After the final iteration, append the remaining 48 bytes.
-  printf %48s x || fail=1
-} > $big || fail=1
+
+if ! fallocate -l2G $big; then
+  rm -f $big
+  {
+    is_local_dir_ . || skip 'Not writing 2GB data to remote'
+    for i in $(seq 100); do
+      # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
+      printf %21474836s x || fail=1
+    done
+    # After the final iteration, append the remaining 48 bytes.
+    printf %48s x || fail=1
+  } > $big || fail=1
+fi
+
+# The allocation may be done asynchronously (BTRFS for example)
+sync $big || framework_failure_
 
 du -k $big > out1 || fail=1
 rm -f $big

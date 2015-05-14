@@ -17,6 +17,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
+is_local_dir_ . || very_expensive_
 require_sparse_support_
 
 # Ensure basic sparse generation works
@@ -50,6 +51,9 @@ dd if=/dev/zero    of=file.in bs=1M count=1 seek=1 conv=notrunc || fail=1
 
 kb_alloc() { du -k "$1"|cut -f1; }
 
+# sync out data for async allocators like NFS/BTRFS
+# sync file.in || fail=1
+
 # If our just-created input file appears to be too small,
 # skip the remaining tests.  On at least Solaris 10 with NFS,
 # file.in is reported to occupy <= 1KiB for about 50 seconds
@@ -58,7 +62,10 @@ if test $(kb_alloc file.in) -gt 3000; then
 
   # Ensure NUL blocks smaller than the block size are not made sparse.
   # Here, with a 2MiB block size, dd's conv=sparse must *not* introduce a hole.
-  dd if=file.in of=file.out bs=2M conv=sparse
+  dd if=file.in of=file.out bs=2M conv=sparse || fail=1
+
+  # Intermittently BTRFS returns 0 allocation for file.out unless synced
+  sync file.out || framework_failure_
   test 2500 -lt $(kb_alloc file.out) || fail=1
 
   # Note we recreate a sparse file first to avoid

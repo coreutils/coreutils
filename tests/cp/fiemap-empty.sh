@@ -22,6 +22,7 @@ print_ver_ cp
 # FIXME: enable any part of this test that is still relevant,
 # or, if none are relevant (now that cp does not handle unwritten
 # extents), just remove the test altogether.
+# Note also if checking allocations may need to sync first on BTRFS at least
 skip_ 'disabled for now'
 
 touch fiemap_chk

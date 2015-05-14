@@ -25,7 +25,7 @@ grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
 require_strace_ 'inotify_add_watch,inotify_rm_watch'
 
 # Quickly skip on remote file systems
-df --local . >/dev/null 2>&1 ||
+is_local_dir . >/dev/null 2>&1 ||
   skip_ 'inotify not used on remote file system'
 
 check_tail_output()
