@@ -95,7 +95,8 @@ sc_prohibit_jm_in_m4:
 # Ensure that each root-requiring test is run via the "check-root" rule.
 sc_root_tests:
 	@t1=sc-root.expected; t2=sc-root.actual;			\
-	grep -nl '^ *require_root_$$' `$(VC_LIST) tests` | sort > $$t1;	\
+	grep -nl '^ *require_root_$$' `$(VC_LIST) tests` |		\
+	  sed 's|.*/tests/|tests/|' | sort > $$t1;			\
 	for t in $(all_root_tests); do echo $$t; done | sort > $$t2;	\
 	st=0; diff -u $$t1 $$t2 || st=1;				\
 	rm -f $$t1 $$t2;						\
@@ -118,14 +119,14 @@ sc_tests_list_consistency:
 sc_tests_executable:
 	@set -o noglob 2>/dev/null || set -f;				   \
 	find_ext="-name '' "`printf -- "-o -name *%s " $(TEST_EXTENSIONS)`;\
-	find tests/ \( $$find_ext \) \! -perm -u+x -print		   \
+	find $(srcdir)/tests/ \( $$find_ext \) \! -perm -u+x -print	   \
 	  | sed -e "s/^/$(ME): Please make test executable: /" | grep .	   \
 	    && exit 1; :
 
 # Ensure all gnulib patches apply cleanly
 sc_ensure_gl_diffs_apply_cleanly:
-	@find gl/ -name '*.diff' | while read p; do			\
-	  patch --fuzz=0 -f -s -d gnulib/ -p1 --dry-run < "$$p" >&2	\
+	@find $(srcdir)/gl/ -name '*.diff' | while read p; do		\
+	  patch --fuzz=0 -f -s -d $(srcdir)/gnulib/ -p1 --dry-run < "$$p" >&2 \
 	    || { echo "$$p" >&2; echo 'To refresh all gl patches run:'	\
 		 'make refresh-gnulib-patches' >&2; exit 1; }		\
 	done
@@ -481,29 +482,29 @@ sc_prohibit_test_empty:
 # In those programs, ensure that EXIT_FAILURE is not used by mistake.
 sc_some_programs_must_avoid_exit_failure:
 	@grep -nw EXIT_FAILURE						\
-	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' src)		\
+	    $$(git grep -El '[^T]_FAILURE|EXIT_CANCELED' $(srcdir)/src)	\
 	  | grep -vE '= EXIT_FAILURE|return .* \?' | grep .		\
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :
 
 # Ensure that tests call the require_ulimit_v_ function if using ulimit -v
 sc_prohibit_test_ulimit_without_require_:
-	@(git grep -l require_ulimit_v_ tests;				\
-	  git grep -l 'ulimit -v' tests)				\
+	@(git grep -l require_ulimit_v_ $(srcdir)/tests;		\
+	  git grep -l 'ulimit -v' $(srcdir)/tests)			\
 	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
 	  " should match require_ulimit_v_ with ulimit -v" 1>&2; exit 1; } || :
 
 # Ensure that tests call the cleanup_ function if using background processes
 sc_prohibit_test_background_without_cleanup_:
-	@(git grep -El '( &$$|&[^&]*=\$$!)' tests;			\
-	  git grep -l 'cleanup_()' tests | sed p)			\
+	@(git grep -El '( &$$|&[^&]*=\$$!)' $(srcdir)/tests;		\
+	  git grep -l 'cleanup_()' $(srcdir)/tests | sed p)		\
 	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
 	  " should use cleanup_ for background processes" 1>&2; exit 1; } || :
 
 # Ensure that tests call the print_ver_ function for programs which are
 # actually used in that test.
 sc_prohibit_test_calls_print_ver_with_irrelevant_argument:
-	@git grep -w print_ver_ tests					\
+	@git grep -w print_ver_ $(srcdir)/tests				\
 	  | sed 's#:print_ver_##'					\
 	  | { fail=0;							\
 	      while read file name; do					\
@@ -616,7 +617,7 @@ sc_preprocessor_indentation:
 # this rule detects that their pair may now be removed from THANKS.in.
 sc_THANKS_in_duplicates:
 	@{ git log --pretty=format:%aN | sort -u;			\
-	    cut -b-36 THANKS.in						\
+	    cut -b-36 $(srcdir)/THANKS.in				\
 	      | sed '/^$$/,/^$$/!d;/^$$/d;s/  *$$//'; }			\
 	  | sort | uniq -d | grep .					\
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
@@ -624,9 +625,9 @@ sc_THANKS_in_duplicates:
 
 # Ensure the contributor list stays sorted.  Use our sort as other
 # implementations may result in a different order.
-sc_THANKS_in_sorted:  $(srcdir)/src/sort
-	@sed '/^$$/,/^$$/!d;/^$$/d' THANKS.in > $@.1;			\
-	LC_ALL=en_US.UTF-8  $(srcdir)/src/sort -f -k1,1 $@.1 > $@.2
+sc_THANKS_in_sorted:  src/sort
+	@sed '/^$$/,/^$$/!d;/^$$/d' $(srcdir)/THANKS.in > $@.1;		\
+	LC_ALL=en_US.UTF-8 src/sort -f -k1,1 $@.1 > $@.2
 	@diff -u $@.1 $@.2; diff=$$?;					\
 	rm -f $@.1 $@.2;						\
 	test "$$diff" = 0						\
@@ -736,7 +737,7 @@ gnulib-tests_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS)
 export _gl_TS_headers = $(srcdir)/cfg.mk
 _gl_TS_dir = .
 _gl_TS_obj_files = src/*.$(OBJEXT)
-_gl_TS_other_headers = src/*.h
+_gl_TS_other_headers = $(srcdir)/src/*.h src/*.h
 
 # Tell the tight_scope rule about an exceptional "extern" variable.
 # Normally, the rule would detect its declaration, but that uses a

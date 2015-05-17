@@ -163,7 +163,7 @@ prologue = perl -ne '/^\#\#/ and exit; print' $(srcdir)/THANKS.in
 #   $ test 'abácad' = "$(printf '%s\n' 'ab' 'ác' 'ad' \
 #                          | LC_ALL=en_US.UTF-8 sort -f \
 #                          | tr -d '\n')" && echo GOOD || echo BAD
-THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version $(srcdir)/src/sort
+THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version src/sort
 	$(AM_V_GEN)rm -f $@-t $@;					\
 	{								\
 	  $(prologue); echo;						\
@@ -172,7 +172,7 @@ THANKS: THANKS.in Makefile.am .mailmap thanks-gen .version $(srcdir)/src/sort
 	    git log --pretty=format:'%aN%x00%aE'			\
 	      | $(ASSORT) -u;						\
 	  } | $(srcdir)/thanks-gen					\
-	    | LC_ALL=en_US.UTF-8  $(srcdir)/src/sort -f -k1,1;		\
+	    | LC_ALL=en_US.UTF-8 src/sort -f -k1,1;			\
 	  echo;								\
 	  printf ';; %s\n' 'Local Variables:' 'coding: utf-8' End:;	\
 	} > $@-t && chmod a-w $@-t && mv $@-t $@
