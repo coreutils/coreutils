@@ -308,6 +308,12 @@ check-programs-vs-x:
 	done;						\
 	exit $$status
 
+# Ensure we can check out on case insensitive file systems
+sc_case_insensitive_file_names: src/uniq
+	@git ls-files | sort -f | src/uniq -Di | grep . && \
+	  { echo "$(ME): the above file(s) conflict on case insensitive" \
+	  " file systems" 1>&2; exit 1; } || :
+
 # Ensure that the end of each release's section is marked by two empty lines.
 sc_NEWS_two_empty_lines:
 	@sed -n 4,/Noteworthy/p $(srcdir)/NEWS				\
