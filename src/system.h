@@ -18,16 +18,6 @@
 
 #include <alloca.h>
 
-/* Include <sys/types.h> before this file.
-   Note this doesn't warn if we're included
-   before all system headers.  */
-
-#if 2 < __GLIBC__ || ( 2 == ___GLIBC__ && 2 <= __GLIBC_MINOR__ )
-# if ! defined _SYS_TYPES_H
-you must include <sys/types.h> before including this file
-# endif
-#endif
-
 #include <sys/stat.h>
 
 /* Commonly used file permission combination.  */
