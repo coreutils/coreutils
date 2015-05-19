@@ -88,7 +88,7 @@ gdb -nx --batch-silent \
 # anything between coreutils 7.5 and 8.23 inclusive as
 # The old file descriptor (still held open by tail) was being fstat().
 
-tail --pid=$pid -f tail.out | (read; kill $pid)
+tail --pid=$pid -f tail.out | (read REPLY; kill $pid)
 
 # gdb has a bug in Debian's gdb-6.8-3 at least that causes it to not
 # cleanup and exit correctly when it receives a SIGTERM, but

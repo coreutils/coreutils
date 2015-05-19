@@ -88,34 +88,38 @@ EOF
 gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
+cleanup_() { unset LD_PRELOAD; }
+
+export LD_PRELOAD=./k.so
+
 # Test if LD_PRELOAD works:
-LD_PRELOAD=./k.so df
+df 2>/dev/null
 test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 
 # These tests are supposed to succeed:
-LD_PRELOAD=./k.so df '.' || fail=1
-LD_PRELOAD=./k.so df -i '.' || fail=1
-LD_PRELOAD=./k.so df -T '.' || fail=1
-LD_PRELOAD=./k.so df -Ti '.' || fail=1
-LD_PRELOAD=./k.so df --total '.' || fail=1
+df '.' || fail=1
+df -i '.' || fail=1
+df -T '.' || fail=1
+df -Ti '.' || fail=1
+df --total '.' || fail=1
 
 # These tests are supposed to fail:
-LD_PRELOAD=./k.so returns_ 1 df || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -i || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -T || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -Ti || fail=1
-LD_PRELOAD=./k.so returns_ 1 df --total || fail=1
+returns_ 1 df || fail=1
+returns_ 1 df -i || fail=1
+returns_ 1 df -T || fail=1
+returns_ 1 df -Ti || fail=1
+returns_ 1 df --total || fail=1
 
-LD_PRELOAD=./k.so returns_ 1 df -a || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -a '.' || fail=1
+returns_ 1 df -a || fail=1
+returns_ 1 df -a '.' || fail=1
 
-LD_PRELOAD=./k.so returns_ 1 df -l || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -l '.' || fail=1
+returns_ 1 df -l || fail=1
+returns_ 1 df -l '.' || fail=1
 
-LD_PRELOAD=./k.so returns_ 1 df -t hello || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -t hello '.' || fail=1
+returns_ 1 df -t hello || fail=1
+returns_ 1 df -t hello '.' || fail=1
 
-LD_PRELOAD=./k.so returns_ 1 df -x hello || fail=1
-LD_PRELOAD=./k.so returns_ 1 df -x hello '.' || fail=1
+returns_ 1 df -x hello || fail=1
+returns_ 1 df -x hello '.' || fail=1
 
 Exit $fail

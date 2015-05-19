@@ -57,7 +57,8 @@ LD_PRELOAD=./k.so cp -a file_src file_dst || fail=1
 
 # ENODATA should give an immediate error when required to preserve ctx
 # This is debatable, and maybe we should not fail when no context available?
-LD_PRELOAD=./k.so returns_ 1 cp --preserve=context file_src file_dst || fail=1
+( export LD_PRELOAD=./k.so
+  returns_ 1 cp --preserve=context file_src file_dst ) || fail=1
 
 test -e preloaded || skip_ 'LD_PRELOAD interception failed'
 

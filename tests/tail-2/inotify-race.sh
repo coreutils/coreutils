@@ -83,7 +83,7 @@ gdb -nx --batch-silent \
     --eval-command='quit'                          \
     tail < /dev/null > /dev/null 2>&1 & pid=$!
 
-tail --pid=$pid -f tail.out | (read; kill $pid)
+tail --pid=$pid -f tail.out | (read REPLY; kill $pid)
 
 # gdb has a bug in Debian's gdb-6.8-3 at least that causes it to not
 # cleanup and exit correctly when it receives a SIGTERM, but
