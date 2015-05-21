@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ mkdir
+print_ver_ mkdir mknod mkfifo
 require_selinux_
 
 
@@ -38,6 +38,7 @@ if restorecon restored 2>/dev/null; then
   mkdir -Z single || fail=1
   # Run these as separate processes in case global context
   # set for an arg, impacts on another arg
+  # TODO: Have the defaultcon() vary over these directories
   for dir in single_p single_p/existing multi/ple; do
     mkdir -Zp "$dir" || fail=1
   done

@@ -151,23 +151,11 @@ static int
 process_dir (char *dir, struct savewd *wd, void *options)
 {
   struct mkdir_options const *o = options;
-  bool set_defaultcon = false;
 
   /* If possible set context before DIR created.  */
   if (o->set_security_context)
     {
-      if (! o->make_ancestor_function)
-        set_defaultcon = true;
-      else
-        {
-          char *pdir = dir_name (dir);
-          struct stat st;
-          if (STREQ (pdir, ".")
-              || (stat (pdir, &st) == 0 && S_ISDIR (st.st_mode)))
-            set_defaultcon = true;
-          free (pdir);
-        }
-      if (set_defaultcon && defaultcon (dir, S_IFDIR) < 0
+      if (! o->make_ancestor_function && defaultcon (dir, S_IFDIR) < 0
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to set default creation context for %s"),
                quote (dir));
@@ -184,7 +172,8 @@ process_dir (char *dir, struct savewd *wd, void *options)
      final component of DIR is created.  So for now, create the
      final component with the context from previous component
      and here we set the context for the final component. */
-  if (ret == EXIT_SUCCESS && o->set_security_context && ! set_defaultcon)
+  if (ret == EXIT_SUCCESS && o->set_security_context
+      && o->make_ancestor_function)
     {
       if (! restorecon (last_component (dir), false, false)
           && ! ignorable_ctx_err (errno))

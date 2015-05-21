@@ -27,6 +27,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   head, od, split, tac, tail, and wc no longer mishandle input from files in
   /proc and /sys file systems that report somewhat-incorrect file sizes.
 
+  mkdir --parents -Z now correctly sets the context for the last component,
+  even if the parent directory exists and has a different default context.
+  [bug introduced with the -Z restorecon functionality in coreutils-8.22]
+
   paste no longer truncates output for large input files.  This would happen
   for example with files larger than 4GiB on 32 bit systems with a '\n'
   character at the 4GiB position.
