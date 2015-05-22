@@ -93,7 +93,7 @@ EOF
 
 df -B1K --output=size '.' >out || fail=1
 sed -e '1 {
-          s/ //
+          s/ *//
           q
         }' out > out2
 compare exp out2 || fail=1
