@@ -833,21 +833,6 @@ version_controlled_file() {
   fi
 }
 
-# Avoid boostrap failure with gettext/autopoint bug in version 0.18.3.1
-# http://lists.gnu.org/archive/html/coreutils/2013-11/msg00038.html
-# Remove in 2015 when distros have upgraded to >= 0.18.3.2
-autopoint_version=$(get_version $AUTOPOINT)
-# Note autopoint returns version 0.18.3 for version 0.18.3.1
-if test "$autopoint_version" = '0.18.3' ; then
-  if test "$package" = 'coreutils' ; then
-    test -e 'm4/cu-progs.m4' || touch 'm4/cu-progs.m4'
-  fi
-  if ! test -e 'build-aux/git-version-gen' ; then
-    printf "#!/bin/sh\n" > 'build-aux/git-version-gen'
-    chmod a+x 'build-aux/git-version-gen'
-  fi
-fi
-
 # NOTE: we have to be careful to run both autopoint and libtoolize
 # before gnulib-tool, since gnulib-tool is likely to provide newer
 # versions of files "installed" by these two programs.
