@@ -19,7 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-if grep '^#define HAVE_LINKAT 1' "$CONFIG_HEADER" > /dev/null \
+if { grep '^#define HAVE_LINKAT 1' "$CONFIG_HEADER" > /dev/null \
+     && grep '#undef LINKAT_SYMLINK_NOTSUP' "$CONFIG_HEADER" > /dev/null; } \
    || grep '^#define LINK_FOLLOWS_SYMLINKS 0' "$CONFIG_HEADER" > /dev/null; then
   # With this config cp will attempt to linkat() to hardlink a symlink.
   # So now double check the current file system supports this operation.

@@ -104,7 +104,7 @@ rpl_mkfifo (char const *file, mode_t mode)
 
 /* LINK_FOLLOWS_SYMLINKS is tri-state; if it is -1, we don't know
    how link() behaves, so assume we can't hardlink symlinks in that case.  */
-#if defined HAVE_LINKAT || ! LINK_FOLLOWS_SYMLINKS
+#if (defined HAVE_LINKAT && ! LINKAT_SYMLINK_NOTSUP) || ! LINK_FOLLOWS_SYMLINKS
 # define CAN_HARDLINK_SYMLINKS 1
 #else
 # define CAN_HARDLINK_SYMLINKS 0
