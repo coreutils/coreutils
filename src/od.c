@@ -1291,9 +1291,6 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 
   *n_bytes_in_buffer = 0;
 
-  if (n == 0)
-    return true;
-
   while (in_stream != NULL)	/* EOF.  */
     {
       size_t n_needed;

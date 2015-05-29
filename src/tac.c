@@ -321,8 +321,6 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
                  'G_buffer_size'. */
               char *newbuffer;
               size_t offset = sentinel_length ? sentinel_length : 1;
-              ptrdiff_t match_start_offset = match_start - G_buffer;
-              ptrdiff_t past_end_offset = past_end - G_buffer;
               size_t old_G_buffer_size = G_buffer_size;
 
               read_size *= 2;
@@ -331,9 +329,6 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
                 xalloc_die ();
               newbuffer = xrealloc (G_buffer - offset, G_buffer_size);
               newbuffer += offset;
-              /* Adjust the pointers for the new buffer location.  */
-              match_start = newbuffer + match_start_offset;
-              past_end = newbuffer + past_end_offset;
               G_buffer = newbuffer;
             }
 

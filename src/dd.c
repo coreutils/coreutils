@@ -2280,7 +2280,7 @@ dd_copy (void)
       if (S_ISREG (stdout_stat.st_mode) || S_TYPEISSHM (&stdout_stat))
         {
           off_t output_offset = lseek (STDOUT_FILENO, 0, SEEK_CUR);
-          if (output_offset > stdout_stat.st_size)
+          if (0 <= output_offset && stdout_stat.st_size < output_offset)
             {
               if (iftruncate (STDOUT_FILENO, output_offset) != 0)
                 {

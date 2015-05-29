@@ -2947,7 +2947,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       || ((print_inode || format_needs_type)
           && (type == symbolic_link || type == unknown)
           && (dereference == DEREF_ALWAYS
-              || (command_line_arg && dereference != DEREF_NEVER)
               || color_symlink_as_referent || check_symlink_color))
       /* Command line dereferences are already taken care of by the above
          assertion that the inode number is not yet known.  */
