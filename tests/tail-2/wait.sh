@@ -20,6 +20,11 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
+grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null \
+  && HAVE_INOTIFY=1
+
+inotify_failed_re='inotify (resources exhausted|cannot be used)'
+
 touch here || framework_failure_
 { touch unreadable && chmod a-r unreadable; } || framework_failure_
 
@@ -54,11 +59,13 @@ for mode in '' '---disable-inotify'; do
   timeout .1 tail $fastpoll -F $mode not_here
   test $? = 124 || fail=1
 
-  grep -Ev 'inotify (resources exhausted|cannot be used)' tail.err > x
+  grep -Ev "$inotify_failed_re" tail.err > x
   mv x tail.err
   compare /dev/null tail.err || fail=1
   >tail.err
+done
 
+if test "$HAVE_INOTIFY"; then
   # Ensure -F never follows a descriptor after rename
   # either with tiny or significant delays between operations
   tail_F()
@@ -66,7 +73,7 @@ for mode in '' '---disable-inotify'; do
     local delay="$1"
 
     touch k || framework_failure_
-    tail $fastpoll -F $mode k > tail.out & pid=$!
+    tail $fastpoll -F $mode k >tail.out 2>tail.err & pid=$!
     sleep $delay
     mv k l
     sleep $delay
@@ -78,10 +85,12 @@ for mode in '' '---disable-inotify'; do
     cleanup_
     rm -f k l
 
-    test -s tail.out
+    test -s tail.out \
+      && ! grep -E "$inotify_failed_re" tail.err >/dev/null
   }
+
   retry_delay_ tail_F 0 1 && { cat tail.out; fail=1; }
   retry_delay_ tail_F .2 1 && { cat tail.out; fail=1; }
-done
+fi
 
 Exit $fail
