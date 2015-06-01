@@ -20,6 +20,6 @@
 print_ver_ uniq
 
 seq 100 > in || fail=1
-timeout 1 uniq -f 10000000000 in || fail=1
+timeout 10 uniq -f 10000000000 in || fail=1
 
 Exit $fail
