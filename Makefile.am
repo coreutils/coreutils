@@ -195,7 +195,8 @@ check-git-hook-script-sync:
 # the selected tools when installing.
 install-exec-hook:
 	$(AM_V_at)ctrans=$$(printf coreutils | sed -e "$(transform)");	\
-	for p in $(single_binary_progs); do				\
+	for p in x $(single_binary_progs); do				\
+	  test $$p = x && continue;					\
 	  ptrans=$$(printf '%s' "$$p" | sed -e "$(transform)");		\
 	  rm -f $(DESTDIR)$(bindir)/$$ptrans$(EXEEXT) || exit $$?;	\
 	  if test "x$(single_binary_install_type)" = xshebangs; then	\

@@ -427,7 +427,8 @@ endif SINGLE_BINARY
 CLEANFILES += src/coreutils_symlinks
 src/coreutils_symlinks: Makefile
 	$(AM_V_GEN)touch $@
-	$(AM_V_at)for i in $(single_binary_progs); do \
+	$(AM_V_at)for i in x $(single_binary_progs); do \
+		test $$i = x && continue; \
 		rm -f src/$$i$(EXEEXT) || exit $$?; \
 		$(LN_S) -s coreutils$(EXEEXT) src/$$i$(EXEEXT) || exit $$?; \
 	done
@@ -435,7 +436,8 @@ src/coreutils_symlinks: Makefile
 CLEANFILES += src/coreutils_shebangs
 src/coreutils_shebangs: Makefile
 	$(AM_V_GEN)touch $@
-	$(AM_V_at)for i in $(single_binary_progs); do \
+	$(AM_V_at)for i in x $(single_binary_progs); do \
+		test $$i = x && continue; \
 		rm -f src/$$i$(EXEEXT) || exit $$?; \
 		printf '#!%s --coreutils-prog-shebang=%s\n' \
 			$(abs_top_builddir)/src/coreutils$(EXEEXT) $$i \
@@ -444,7 +446,8 @@ src/coreutils_shebangs: Makefile
 	done
 
 clean-local:
-	$(AM_V_at)for i in $(single_binary_progs); do \
+	$(AM_V_at)for i in x $(single_binary_progs); do \
+		test $$i = x && continue; \
 		rm -f src/$$i$(EXEEXT) || exit $$?; \
 	done
 
