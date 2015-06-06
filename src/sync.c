@@ -91,24 +91,34 @@ static bool
 sync_arg (enum sync_mode mode, char const *file)
 {
   bool ret = true;
+  int open_flags = O_RDONLY | O_NONBLOCK;
   int fd;
+
+#ifdef _AIX
+  /* AIX 7.1 fsync requires write access to file.  */
+  if (mode == MODE_FILE)
+    open_flags = O_WRONLY | O_NONBLOCK;
+#endif
 
   /* Note O_PATH might be supported with syncfs(),
      though as of Linux 3.18 is not.  */
-  if ((fd = open (file, O_RDONLY | O_NONBLOCK)) < 0)
+  fd = open (file, open_flags);
+  if (fd < 0)
     {
       /* Use the O_RDONLY errno, which is significant
          with directories for example.  */
       int rd_errno = errno;
-      if ((fd = open (file, O_WRONLY | O_NONBLOCK)) < 0)
+      if (open_flags != (O_WRONLY | O_NONBLOCK))
+        fd = open (file, O_WRONLY | O_NONBLOCK);
+      if (fd < 0)
         error (0, rd_errno, _("error opening %s"), quote (file));
       return false;
     }
 
   /* We used O_NONBLOCK above to not hang with fifos,
      so reset that here.  */
-  int fdflags;
-  if ((fdflags = fcntl (fd, F_GETFL)) == -1
+  int fdflags = fcntl (fd, F_GETFL);
+  if (fdflags == -1
       || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
     {
       error (0, errno, _("couldn't reset non-blocking mode %s"), quote (file));

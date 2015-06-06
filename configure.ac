@@ -454,8 +454,17 @@ if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])
 fi
 
-AC_MSG_CHECKING([whether this is system supports stdbuf])
-AC_COMPILE_IFELSE(
+ac_save_CFLAGS=$CFLAGS
+ac_save_LDFLAGS=$LDFLAGS
+# Detect warnings about ignored "constructor" attributes.
+gl_WARN_ADD([-Werror], [CFLAGS])
+gl_WARN_ADD([-errwarn], [CFLAGS])
+# Put this message here, after gl_WARN_ADD's chatter.
+AC_MSG_CHECKING([whether this system supports stdbuf])
+CFLAGS="-fPIC $CFLAGS"
+LDFLAGS="-shared $LDFLAGS"
+stdbuf_supported=no
+AC_LINK_IFELSE(
   [AC_LANG_PROGRAM([[
     static int stdbuf = 0;
 
@@ -470,12 +479,13 @@ AC_COMPILE_IFELSE(
     }]],[[
     return !(stdbuf == 1);]])
   ],
-  [stdbuf_supported=yes],
-  [stdbuf_supported=no])
+  [stdbuf_supported=yes])
 AC_MSG_RESULT([$stdbuf_supported])
 if test "$stdbuf_supported" = "yes" && test -z "$EXEEXT"; then
   gl_ADD_PROG([optional_bin_progs], [stdbuf])
 fi
+CFLAGS=$ac_save_CFLAGS
+LDFLAGS=$ac_save_LDFLAGS
 
 ############################################################################
 

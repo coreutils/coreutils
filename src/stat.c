@@ -74,15 +74,16 @@
 #include "xvasprintf.h"
 
 #if USE_STATVFS
-# define STRUCT_STATVFS struct statvfs
 # define STRUCT_STATXFS_F_FSID_IS_INTEGER STRUCT_STATVFS_F_FSID_IS_INTEGER
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS_F_TYPE
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((S)->f_namemax)
 # endif
 # if ! STAT_STATVFS && STAT_STATVFS64
+#  define STRUCT_STATVFS struct statvfs64
 #  define STATFS statvfs64
 # else
+#  define STRUCT_STATVFS struct statvfs
 #  define STATFS statvfs
 # endif
 # define STATFS_FRSIZE(S) ((S)->f_frsize)
