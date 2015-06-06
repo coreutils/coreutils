@@ -454,6 +454,7 @@ if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])
 fi
 
+# Build stdbuf only if supported
 ac_save_CFLAGS=$CFLAGS
 ac_save_LDFLAGS=$LDFLAGS
 # Detect warnings about ignored "constructor" attributes.
@@ -464,18 +465,15 @@ AC_MSG_CHECKING([whether this system supports stdbuf])
 CFLAGS="-fPIC $CFLAGS"
 LDFLAGS="-shared $LDFLAGS"
 stdbuf_supported=no
+# Note we only LINK here rather than RUN to support cross compilation
 AC_LINK_IFELSE(
   [AC_LANG_PROGRAM([[
     static int stdbuf = 0;
 
-    /* Restrict to ELF systems with compilers
-       that support the constructor attribute.  */
     void __attribute__ ((constructor))
     stdbuf_init (void)
     {
-      #if __ELF__
-        stdbuf = 1;
-      #endif
+      stdbuf = 1;
     }]],[[
     return !(stdbuf == 1);]])
   ],

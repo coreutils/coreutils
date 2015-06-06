@@ -20,9 +20,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ wc
 
-if xargs -P2 </dev/null >/dev/null 2>&1
-  skip_ 'xargs -P is required'
-fi
+xargs -P2 </dev/null >/dev/null 2>&1 \
+  || skip_ 'xargs -P is required'
 
 (mkdir tmp && cd tmp && seq 2000 | xargs touch)
 
