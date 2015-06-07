@@ -648,6 +648,21 @@ sc_fs-magic-compare:
 	    && { echo '$(ME): Constants in src/stat.c should be 4 or 8' \
 		      'upper-case chars' 1>&2; exit 1; } || :
 
+# Ensure gnulib generated files are ignored
+# TODO: Perhaps augment gnulib-tool to do this in lib/.gitignore?
+sc_gitignore_missing:
+	@{ sed -n '/^\/lib\/.*\.h$$/{p;p}' .gitignore;			\
+	    find lib -name '*.in*' ! -name '*~' ! -name 'sys_*' |	\
+	      sed 's|^|/|; s|_\(.*in\.h\)|/\1|; s/\.in//'; } |		\
+	      sort | uniq -u | grep . && { echo '$(ME): Add above'	\
+		'entries to .gitignore' >&2; exit 1; } || :
+
+# Flag redundant entreis in .gitignore
+sc_gitignore_redundant:
+	@{ grep ^/lib .gitignore; sed 's|^|/lib|' lib/.gitignore; } |	\
+	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
+	      'entries from .gitignore' >&2; exit 1; } || :
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
