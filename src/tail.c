@@ -1046,7 +1046,9 @@ recheck (struct File_spec *f, bool blocking)
         {
           /* This happens when one iteration finds the file missing,
              then the preceding <dev,inode> pair is reused as the
-             file is recreated.  */
+             file is recreated.  Note this also means the file is redisplayed
+             in --follow=name mode if renamed away from and back to
+             a monitored name.  */
           new_file = true;
         }
       else
@@ -1321,7 +1323,7 @@ wd_comparator (const void *e1, const void *e2)
 
 /* Output (new) data for FSPEC->fd.  */
 static void
-check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
+check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 {
   struct stat stats;
   char const *name;
@@ -1347,7 +1349,6 @@ check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
   if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
     {
       error (0, 0, _("%s: file truncated"), name);
-      *prev_wd = wd;
       xlseek (fspec->fd, 0, SEEK_SET, name);
       fspec->size = 0;
     }
@@ -1355,11 +1356,11 @@ check_fspec (struct File_spec *fspec, int wd, int *prev_wd)
            && timespec_cmp (fspec->mtime, get_stat_mtime (&stats)) == 0)
     return;
 
-  if (wd != *prev_wd)
+  if (fspec != *prev_fspec)
     {
       if (print_headers)
         write_header (name);
-      *prev_wd = wd;
+      *prev_fspec = fspec;
     }
 
   uintmax_t bytes_read = dump_remainder (name, fspec->fd, COPY_TO_EOF);
@@ -1391,7 +1392,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   bool found_unwatchable_dir = false;
   bool no_inotify_resources = false;
   bool writer_is_dead = false;
-  int prev_wd;
+  struct File_spec *prev_fspec;
   size_t evlen = 0;
   char *evbuf;
   size_t evbuf_off = 0;
@@ -1492,7 +1493,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   if (follow_mode == Follow_descriptor && !found_watchable_file)
     return false;
 
-  prev_wd = f[n_files - 1].wd;
+  prev_fspec = &(f[n_files - 1]);
 
   /* Check files again.  New files or data can be available since last time we
      checked and before they are watched by inotify.  */
@@ -1524,7 +1525,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             }
 
           /* check for new data.  */
-          check_fspec (&f[i], f[i].wd, &prev_wd);
+          check_fspec (&f[i], &prev_fspec);
         }
     }
 
@@ -1703,7 +1704,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           continue;
         }
-      check_fspec (fspec, ev->wd, &prev_wd);
+      check_fspec (fspec, &prev_fspec);
     }
 }
 #endif
@@ -2316,7 +2317,8 @@ main (int argc, char **argv)
 
          FIXME-maybe: inotify has a watch descriptor per inode, and hence with
          our current hash implementation will only --follow data for one
-         of the names when multiple hardlinked files are specified.  */
+         of the names when multiple hardlinked files are specified, or
+         for one name when a name is specified multiple times.  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
                                || any_remote_file (F, n_files)
                                || any_symlinks (F, n_files)
