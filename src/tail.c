@@ -1019,42 +1019,37 @@ recheck (struct File_spec *f, bool blocking)
       assert (f->fd == -1);
       error (0, 0, _("%s has become accessible"), quote (pretty_name (f)));
     }
+  else if (f->fd == -1)
+    {
+      /* A new file even when inodes haven't changed as <dev,inode>
+         pairs can be reused, and we know the file was missing
+         on the previous iteration.  Note this also means the file
+         is redisplayed in --follow=name mode if renamed away from
+         and back to a monitored name.  */
+      new_file = true;
+
+      error (0, 0,
+             _("%s has appeared;  following new file"),
+             quote (pretty_name (f)));
+    }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
+      /* File has been replaced (e.g., via log rotation) --
+        tail the new one.  */
       new_file = true;
-      if (f->fd == -1)
-        {
-          error (0, 0,
-                 _("%s has appeared;  following new file"),
-                 quote (pretty_name (f)));
-        }
-      else
-        {
-          /* Close the old one.  */
-          close_fd (f->fd, pretty_name (f));
 
-          /* File has been replaced (e.g., via log rotation) --
-             tail the new one.  */
-          error (0, 0,
-                 _("%s has been replaced;  following new file"),
-                 quote (pretty_name (f)));
-        }
+      error (0, 0,
+             _("%s has been replaced;  following new file"),
+             quote (pretty_name (f)));
+
+      /* Close the old one.  */
+      close_fd (f->fd, pretty_name (f));
+
     }
   else
     {
-      if (f->fd == -1)
-        {
-          /* This happens when one iteration finds the file missing,
-             then the preceding <dev,inode> pair is reused as the
-             file is recreated.  Note this also means the file is redisplayed
-             in --follow=name mode if renamed away from and back to
-             a monitored name.  */
-          new_file = true;
-        }
-      else
-        {
-          close_fd (fd, pretty_name (f));
-        }
+      /* No changes detected, so close new fd.  */
+      close_fd (fd, pretty_name (f));
     }
 
   /* FIXME: When a log is rotated, daemons tend to log to the

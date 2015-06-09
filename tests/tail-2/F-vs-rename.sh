@@ -53,7 +53,7 @@ for mode in '' '---disable-inotify'; do
 
   echo x > a
   # Wait up to 12.7s for this to appear in the output:
-  # "tail: '...' has appeared;  following end of new file"
+  # "tail: '...' has appeared;  following new file"
   tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
     { echo "$0: a: unexpected delay?"; cat out; fail=1; }
 
