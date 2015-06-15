@@ -95,6 +95,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   insensitive file systems like HFS, mv would just remove a hardlinked 'file'
   if called like `mv file File`.  The feature was added in coreutils-5.0.1.
 
+  numfmt --from-unit and --to-unit options now interpret suffixes as SI units,
+  and IEC (power of 2) units are now specified by appending 'i'.
+
   tee will exit early if there are no more writable outputs.
 
   tee does not treat the file operand '-' as meaning standard output any longer,

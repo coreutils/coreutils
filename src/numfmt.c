@@ -776,19 +776,48 @@ double_to_human (long double val, int precision,
 }
 
 /* Convert a string of decimal digits, N_STRING, with an optional suffix
-   to an integral value.  Upon successful conversion, return that value.
+   to an integral value.  Suffixes are handled as with --from=auto.
+   Upon successful conversion, return that value.
    If it cannot be converted, give a diagnostic and exit.  */
 static uintmax_t
 unit_to_umax (const char *n_string)
 {
   strtol_error s_err;
+  const char *c_string = n_string;
+  char *t_string = NULL;
+  size_t n_len = strlen (n_string);
   char *end = NULL;
   uintmax_t n;
+  const char *suffixes = "KMGTPEZY";
 
-  s_err = xstrtoumax (n_string, &end, 10, &n, "KMGTPEZY");
+  /* Adjust suffixes so K=1000, Ki=1024, KiB=invalid.  */
+  if (n_len && ! c_isdigit (n_string[n_len - 1]))
+    {
+      t_string = xmalloc (n_len + 2);
+      end = t_string + n_len - 1;
+      memcpy (t_string, n_string, n_len);
+
+      if (*end == 'i' && 2 <= n_len && ! c_isdigit (*(end - 1)))
+        *end = '\0';
+      else
+        {
+          *++end = 'B';
+          *++end = '\0';
+          suffixes = "KMGTPEZY0";
+        }
+
+      c_string = t_string;
+    }
+
+  s_err = xstrtoumax (c_string, &end, 10, &n, suffixes);
 
   if (s_err != LONGINT_OK || *end || n == 0)
-    error (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
+    {
+      free (t_string);
+      error (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
+    }
+
+  free (t_string);
 
   return n;
 }

@@ -16916,7 +16916,8 @@ trigger an error.
 @opindex --from-unit
 Specify the input unit size (instead of the default 1).  Use this option when
 the input numbers represent other units (e.g. if the input number @samp{10}
-represents 10 units of 512 bytes, use @samp{--from=unit=512}).
+represents 10 units of 512 bytes, use @samp{--from-unit=512}).
+Suffixes are handled as with @samp{--from=auto}.
 
 @item --grouping
 @opindex --grouping
@@ -16970,7 +16971,8 @@ The default is no scaling, meaning all the digits of the number are printed.
 @opindex --to-unit
 Specify the output unit size (instead of the default 1).  Use this option when
 the output numbers represent other units (e.g. to represent @samp{4,000,000}
-bytes in blocks of 1KB, use @samp{--to=si --to=units=1000}).
+bytes in blocks of 1KB, use @samp{--to=si --to-unit=1000}).
+Suffixes are handled as with @samp{--from=auto}.
 
 @end table
 
