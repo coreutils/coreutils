@@ -25,12 +25,17 @@ Here are most of the steps we (maintainers) follow when making a release.
 FIXME: enable excluded programs like arch? to get their manual pages?
 
 * Check for new file system types by running the following command on
-  a system with the most recent kernel possible, or with the latest
-  upstream include/uapi/linux/magic.h made available at src/fs-latest-magic.h
+  a system with the most recent kernel possible (e.g., Fedora rawhide):
 
     make src/fs-magic-compare
 
-  If it reports new file system magic numbers, add them to src/stat.c.
+  Or download the latest header first like:
+
+    kgit='https://git.kernel.org/cgit/linux/kernel/git'
+    wget -q $kgit/torvalds/linux.git/plain/include/uapi/linux/magic.h \
+      -O src/fs-latest-magic.h
+
+  If it finds a new file system magic number, add it to src/stat.c.
   If it is a remote file system, add the new S_MAGIC_* name you created
   in stat.c to the list of remote file system types in src/tail.c's
   fremote function.
@@ -41,7 +46,8 @@ FIXME: enable excluded programs like arch? to get their manual pages?
   one non-SELinux system:
 
     n=$(( ($(nproc) + 1) / 2 ))
-    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k -j$(nproc) check-root\
+    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER \
+      make -k -j$(nproc) check-root SUBDIRS=. \
       && make distcheck \
       && make -j$n check RUN_VERY_EXPENSIVE_TESTS=yes RUN_EXPENSIVE_TESTS=yes
 
@@ -59,8 +65,8 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 
     make syntax-check
 
-* Set the date, version number, and release type [stable/alpha/beta] on
-  line 3 of NEWS, commit that, and tag the release by running e.g.,
+* To set the date, version number, and release type [stable/alpha/beta] on
+  line 3 of NEWS, commit that, and tag the release; run:
 
     build-aux/do-release-commit-and-tag X.Y stable
 
@@ -78,6 +84,16 @@ FIXME: enable excluded programs like arch? to get their manual pages?
 * While that's happening, write the release announcement that you will
   soon post.  Start with the template, $HOME/announce-coreutils-X.Y
   that was just created by that "make" command.
+
+  For generating counts use:
+   oldrel=$(cat .prev-version)
+   printf "There have been %d commits by %d people %s\n" \
+     $(($(git log --oneline v$oldrel.. | wc -l) - 3))    \
+     $(git shortlog v$oldrel.. | grep "^[^ ]" | wc -l)   \
+     "in the [X] weeks since $oldrel"
+
+   git shortlog v$oldrel.. | sed -n 's/:$//p' |
+   sed 's/^/  /' | column -c 70 | expand
 
 Once all the builds and tests have passed,
 
@@ -110,7 +126,7 @@ Once all the builds and tests have passed,
   Then go here to approve it:
     https://savannah.gnu.org/news/approve.php?group=coreutils
 
-* Send the announcement email message.
+* Send the announcement email message (signed with the release key)
 
 * Approve the announcement here:
   http://lists.gnu.org/mailman/admindb/coreutils-announce
@@ -121,4 +137,4 @@ Once all the builds and tests have passed,
 
   by running this:
 
-    build-aux/gnu-web-doc-update
+    build-aux/gnu-web-doc-update --mirror
