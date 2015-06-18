@@ -960,8 +960,8 @@ Examples:\n\
            -> \"1000\"\n\
   $ echo 1K | %s --from=iec\n\
            -> \"1024\"\n\
-  $ df | %s --header --field 2 --to=si\n\
-  $ ls -l | %s --header --field 5 --to=iec\n\
+  $ df -B1 | %s --header --field 2 --to=si\n\
+  $ ls -l  | %s --header --field 5 --to=iec\n\
   $ ls -lh | %s --header --field 5 --from=iec --padding=10\n\
   $ ls -lh | %s --header --field 5 --from=iec --format %%10f\n"),
               program_name, program_name, program_name,
