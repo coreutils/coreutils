@@ -16909,12 +16909,14 @@ N-M  from N'th to M'th field (inclusive)
 @item --format=@var{format}
 @opindex --format
 Use printf-style floating FORMAT string.  The @var{format} string must contain
-one @samp{%f} directive, optionally with @samp{'}, @samp{-}, @samp{0}, or width
-modifiers.  The @samp{'} modifier will enable @option{--grouping}, the @samp{-}
-modifier will enable left-aligned @option{--padding} and the width modifier will
-enable right-aligned @option{--padding}.  The @samp{0} width modifier
-(without the @samp{-} modifier) will generate leading zeros on the number,
-up to the specified width.
+one @samp{%f} directive, optionally with @samp{'}, @samp{-}, @samp{0}, width
+or precision modifiers.  The @samp{'} modifier will enable @option{--grouping},
+the @samp{-} modifier will enable left-aligned @option{--padding} and the width
+modifier will enable right-aligned @option{--padding}.  The @samp{0} width
+modifier (without the @samp{-} modifier) will generate leading zeros on the
+number, up to the specified width.  A precision specification like @samp{%.1f}
+will override the precision determined from the input data or set due to
+@option{--to} option auto scaling.
 
 @item --from=@var{unit}
 @opindex --from

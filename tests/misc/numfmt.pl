@@ -648,6 +648,23 @@ my @Tests =
                      "(cannot handle values > 999Y)\n"},
              {EXIT => 2}],
 
+     # precision override
+     ['precision-1','--format=%.4f 9991239123 --to=si', {OUT=>"9.9913G"}],
+     ['precision-2','--format=%.1f 9991239123 --to=si', {OUT=>"10.0G"}],
+     ['precision-3','--format=%.1f 1', {OUT=>"1.0"}],
+     ['precision-4','--format=%.1f 1.12', {OUT=>"1.2"}],
+     ['precision-5','--format=%.1f 9991239123 --to-unit=G', {OUT=>"10.0"}],
+     ['precision-6','--format="% .1f" 9991239123 --to-unit=G', {OUT=>"10.0"}],
+     ['precision-7','--format=%.-1f 1.1',
+             {ERR => "$prog: invalid precision in format '%.-1f'\n"},
+             {EXIT => 1}],
+     ['precision-8','--format=%.+1f 1.1',
+             {ERR => "$prog: invalid precision in format '%.+1f'\n"},
+             {EXIT => 1}],
+     ['precision-9','--format="%. 1f" 1.1',
+             {ERR => "$prog: invalid precision in format '%. 1f'\n"},
+             {EXIT => 1}],
+
      # debug warnings
      ['debug-1', '--debug 4096', {OUT=>"4096"},
              {ERR=>"$prog: no conversion option specified\n"}],
@@ -715,11 +732,11 @@ my @Tests =
              {EXIT=>1}],
      ['fmt-err-4', '--format "%d"',
              {ERR=>"$prog: invalid format '%d', " .
-                   "directive must be %[0]['][-][N]f\n"},
+                   "directive must be %[0]['][-][N][.][N]f\n"},
              {EXIT=>1}],
      ['fmt-err-5', '--format "% -43 f"',
              {ERR=>"$prog: invalid format '% -43 f', " .
-                   "directive must be %[0]['][-][N]f\n"},
+                   "directive must be %[0]['][-][N][.][N]f\n"},
              {EXIT=>1}],
      ['fmt-err-6', '--format "%f %f"',
              {ERR=>"$prog: format '%f %f' has too many % directives\n"},

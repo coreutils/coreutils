@@ -173,6 +173,7 @@ static char *padding_buffer = NULL;
 static size_t padding_buffer_size = 0;
 static long int padding_width = 0;
 static long int zero_padding_width = 0;
+static long int user_precision = -1;
 static const char *format_str = NULL;
 static char *format_str_prefix = NULL;
 static char *format_str_suffix = NULL;
@@ -737,15 +738,20 @@ double_to_human (long double val, int precision,
   devmsg ("  scaled value to %Lf * %0.f ^ %u\n", val, scale_base, power);
 
   /* Perform rounding. */
-  int ten_or_less = 0;
-  if (absld (val) < 10)
+  unsigned int power_adjust = 0;
+  if (user_precision != -1)
+    power_adjust = MIN (power * 3, user_precision);
+  else if (absld (val) < 10)
     {
       /* for values less than 10, we allow one decimal-point digit,
          so adjust before rounding. */
-      ten_or_less = 1;
-      val *= 10;
+      power_adjust = 1;
     }
+
+  val *= powerld (10, power_adjust);
   val = simple_round (val, round);
+  val /= powerld (10, power_adjust);
+
   /* two special cases after rounding:
      1. a "999.99" can turn into 1000 - so scale down
      2. a "9.99" can turn into 10 - so don't display decimal-point.  */
@@ -754,8 +760,6 @@ double_to_human (long double val, int precision,
       val /= scale_base;
       power++;
     }
-  if (ten_or_less)
-    val /= 10;
 
   /* should "7.0" be printed as "7" ?
      if removing the ".0" is preferred, enable the fourth condition.  */
@@ -764,10 +768,13 @@ double_to_human (long double val, int precision,
 
   devmsg ("  after rounding, value=%Lf * %0.f ^ %u\n", val, scale_base, power);
 
-  stpcpy (pfmt, show_decimal_point ? ".1Lf%s" : ".0Lf%s");
+  stpcpy (pfmt, ".*Lf%s");
+
+  int prec = user_precision == -1 ? show_decimal_point : user_precision;
 
   /* buf_size - 1 used here to ensure place for possible scale_IEC_I suffix.  */
-  num_size = snprintf (buf, buf_size - 1, fmt, val, suffix_power_char (power));
+  num_size = snprintf (buf, buf_size - 1, fmt, val, prec,
+                       suffix_power_char (power));
   if (num_size < 0 || num_size >= (int) buf_size - 1)
     error (EXIT_FAILURE, 0,
            _("failed to prepare value '%Lf' for printing"), val);
@@ -953,6 +960,7 @@ FORMAT must be suitable for printing one floating-point argument '%f'.\n\
 Optional quote (%'f) will enable --grouping (if supported by current locale).\n\
 Optional width value (%10f) will pad output. Optional zero (%010f) width\n\
 will zero pad the number. Optional negative values (%-10f) will left align.\n\
+Optional precision (%.1f) will override the input determined precision.\n\
 "), stdout);
 
       printf (_("\n\
@@ -996,7 +1004,6 @@ Examples:\n\
    Only a limited subset of printf(3) syntax is supported.
 
    TODO:
-     support .precision
      support %e %g etc. rather than just %f
 
    NOTES:
@@ -1071,9 +1078,28 @@ parse_format_string (char const *fmt)
   if (fmt[i] == '\0')
     error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
 
+  if (fmt[i] == '.')
+    {
+      i++;
+      errno = 0;
+      user_precision = strtol (fmt + i, &endptr, 10);
+      if (errno == ERANGE || user_precision < 0 || SIZE_MAX < user_precision
+          || isblank (fmt[i]) || fmt[i] == '+')
+        {
+          /* Note we disallow negative user_precision to be
+             consistent with printf(1).  POSIX states that
+             negative precision is only supported (and ignored)
+             when used with '.*f'.  glibc at least will malform
+             output when passed a direct negative precision.  */
+          error (EXIT_FAILURE, 0,
+                 _("invalid precision in format %s"), quote (fmt));
+        }
+      i = endptr - fmt;
+    }
+
   if (fmt[i] != 'f')
     error (EXIT_FAILURE, 0, _("invalid format %s,"
-                              " directive must be %%[0]['][-][N]f"),
+                              " directive must be %%[0]['][-][N][.][N]f"),
            quote (fmt));
   i++;
   suffix_pos = i;
@@ -1158,8 +1184,8 @@ prepare_padded_number (const long double val, size_t precision)
       return 0;
     }
 
-  double_to_human (val, precision, buf, sizeof (buf), scale_to, grouping,
-                   round_style);
+  double_to_human (val, user_precision == -1 ? precision : user_precision, buf,
+                   sizeof (buf), scale_to, grouping, round_style);
   if (suffix)
     strncat (buf, suffix, sizeof (buf) - strlen (buf) -1);
 

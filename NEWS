@@ -70,7 +70,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd accepts a new status=progress level to print data transfer statistics
   on stderr approximately every second.
 
-  numfmt can now process multiple fields using field ranges similar to cut.
+  numfmt can now process multiple fields with field range specifications similar
+  to cut, and supports setting the output precision with the --format option.
 
   split accepts a new --separator option to select a record separator character
   other than the default newline character.
