@@ -21,6 +21,8 @@ use strict;
 (my $program_name = $0) =~ s|.*/||;
 my $prog = 'numfmt';
 
+my $limits = getlimits ();
+
 # TODO: add localization tests with "grouping"
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -534,6 +536,11 @@ my @Tests =
              {ERR => "$prog: value too large to be printed: '1e+19' " .
                      "(consider using --to)\n"},
              {EXIT=>2}],
+     ['large-4','1000000000000000000.0',
+             {ERR => "$prog: value/precision too large to be printed: " .
+                     "'1e+18/1' (consider using --to)\n"},
+             {EXIT=>2}],
+
 
      # Test input:
      # Up to 27 digits is OK.
@@ -647,6 +654,10 @@ my @Tests =
              {ERR => "$prog: value too large to be printed: '1e+28' " .
                      "(cannot handle values > 999Y)\n"},
              {EXIT => 2}],
+
+     # intmax_t overflow when rounding caused this to fail before 8.24
+     ['large-15',$limits->{INTMAX_OFLOW}, {OUT=>$limits->{INTMAX_OFLOW}}],
+     ['large-16','9.300000000000000000', {OUT=>'9.300000000000000000'}],
 
      # precision override
      ['precision-1','--format=%.4f 9991239123 --to=si', {OUT=>"9.9913G"}],

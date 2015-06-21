@@ -31,6 +31,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   even if the parent directory exists and has a different default context.
   [bug introduced with the -Z restorecon functionality in coreutils-8.22]
 
+  numfmt no longer outputs incorrect overflowed values seen with certain
+  large numbers, or with numbers with increased precision.
+  [bug introduced when numfmt was added in coreutils-8.21]
+
   paste no longer truncates output for large input files.  This would happen
   for example with files larger than 4GiB on 32 bit systems with a '\n'
   character at the 4GiB position.

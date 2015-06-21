@@ -388,30 +388,41 @@ simple_round_nearest (long double val)
   return val < 0 ? val - 0.5 : val + 0.5;
 }
 
-static inline intmax_t
+static inline long double _GL_ATTRIBUTE_CONST
 simple_round (long double val, enum round_type t)
 {
+  intmax_t rval;
+  intmax_t intmax_mul = val / INTMAX_MAX;
+  val -= (long double) INTMAX_MAX * intmax_mul;
+
   switch (t)
     {
     case round_ceiling:
-      return simple_round_ceiling (val);
+      rval = simple_round_ceiling (val);
+      break;
 
     case round_floor:
-      return simple_round_floor (val);
+      rval = simple_round_floor (val);
+      break;
 
     case round_from_zero:
-      return simple_round_from_zero (val);
+      rval = simple_round_from_zero (val);
+      break;
 
     case round_to_zero:
-      return simple_round_to_zero (val);
+      rval = simple_round_to_zero (val);
+      break;
 
     case round_nearest:
-      return simple_round_nearest (val);
+      rval = simple_round_nearest (val);
+      break;
 
     default:
       /* to silence the compiler - this should never happen.  */
       return 0;
     }
+
+  return (long double) INTMAX_MAX * intmax_mul + rval;
 }
 
 enum simple_strtod_error
@@ -465,10 +476,11 @@ simple_strtod_int (const char *input_str,
     {
       int digit = (**endptr) - '0';
 
+      digits++;
+
       if (digits > MAX_UNSCALED_DIGITS)
         e = SSE_OK_PRECISION_LOSS;
 
-      ++digits;
       if (digits > MAX_ACCEPTABLE_DIGITS)
         return SSE_OVERFLOW;
 
@@ -519,7 +531,6 @@ simple_strtod_float (const char *input_str,
   if (e != SSE_OK && e != SSE_OK_PRECISION_LOSS)
     return e;
 
-
   /* optional decimal point + fraction.  */
   if (STREQ_LEN (*endptr, decimal_point, decimal_point_length))
     {
@@ -542,6 +553,8 @@ simple_strtod_float (const char *input_str,
 
       val_frac = ((long double) val_frac) / powerld (10, exponent);
 
+      /* TODO: detect loss of precision (only really 18 digits
+         of precision across all digits (before and after '.')).  */
       if (value)
         {
           if (negative)
@@ -1165,14 +1178,26 @@ prepare_padded_number (const long double val, size_t precision)
   /* Generate Output. */
   char buf[128];
 
+  size_t precision_used = user_precision == -1 ? precision : user_precision;
+
   /* Can't reliably print too-large values without auto-scaling. */
   unsigned int x;
   expld (val, 10, &x);
-  if (scale_to == scale_none && x > MAX_UNSCALED_DIGITS)
+
+  if (scale_to == scale_none
+      && x + precision_used > MAX_UNSCALED_DIGITS)
     {
       if (inval_style != inval_ignore)
-        error (conv_exit_code, 0, _("value too large to be printed: '%Lg'"
-                                    " (consider using --to)"), val);
+        {
+          if (precision_used)
+            error (conv_exit_code, 0,
+                   _("value/precision too large to be printed: '%Lg/%"PRIuMAX"'"
+                     " (consider using --to)"), val, (uintmax_t)precision_used);
+          else
+            error (conv_exit_code, 0,
+                   _("value too large to be printed: '%Lg'"
+                     " (consider using --to)"), val);
+        }
       return 0;
     }
 
@@ -1184,8 +1209,8 @@ prepare_padded_number (const long double val, size_t precision)
       return 0;
     }
 
-  double_to_human (val, user_precision == -1 ? precision : user_precision, buf,
-                   sizeof (buf), scale_to, grouping, round_style);
+  double_to_human (val, precision_used, buf, sizeof (buf),
+                   scale_to, grouping, round_style);
   if (suffix)
     strncat (buf, suffix, sizeof (buf) - strlen (buf) -1);
 
