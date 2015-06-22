@@ -206,7 +206,7 @@ Free Documentation License''.
 * Modified command invocation::  chroot env nice nohup stdbuf timeout
 * Process control::              kill
 * Delaying::                     sleep
-* Numeric operations::           factor seq
+* Numeric operations::           factor numfmt seq
 * File permissions::             Access modes
 * Date input formats::           Specifying date strings
 * Opening the software toolbox:: The software tools philosophy
