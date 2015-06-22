@@ -659,6 +659,19 @@ my @Tests =
      ['large-15',$limits->{INTMAX_OFLOW}, {OUT=>$limits->{INTMAX_OFLOW}}],
      ['large-16','9.300000000000000000', {OUT=>'9.300000000000000000'}],
 
+     # Leading zeros weren't handled appropriately before 8.24
+     ['leading-1','0000000000000000000000000001', {OUT=>"1"}],
+     ['leading-2','.1', {OUT=>"0.1"}],
+     ['leading-3','bad.1',
+             {ERR => "$prog: invalid number: 'bad.1'\n"},
+             {EXIT => 2}],
+     ['leading-4','..1',
+             {ERR => "$prog: invalid suffix in input: '..1'\n"},
+             {EXIT => 2}],
+     ['leading-5','1.',
+             {ERR => "$prog: invalid number: '1.'\n"},
+             {EXIT => 2}],
+
      # precision override
      ['precision-1','--format=%.4f 9991239123 --to=si', {OUT=>"9.9913G"}],
      ['precision-2','--format=%.1f 9991239123 --to=si', {OUT=>"10.0G"}],

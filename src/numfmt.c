@@ -462,6 +462,7 @@ simple_strtod_int (const char *input_str,
 
   long double val = 0;
   unsigned int digits = 0;
+  bool found_digit = false;
 
   if (*input_str == '-')
     {
@@ -476,7 +477,10 @@ simple_strtod_int (const char *input_str,
     {
       int digit = (**endptr) - '0';
 
-      digits++;
+      found_digit = true;
+
+      if (val || digit)
+        digits++;
 
       if (digits > MAX_UNSCALED_DIGITS)
         e = SSE_OK_PRECISION_LOSS;
@@ -489,7 +493,8 @@ simple_strtod_int (const char *input_str,
 
       ++(*endptr);
     }
-  if (digits == 0)
+  if (! found_digit
+      && ! STREQ_LEN (*endptr, decimal_point, decimal_point_length))
     return SSE_INVALID_NUMBER;
   if (*negative)
     val = -val;
