@@ -153,7 +153,7 @@ enum { DELIMITER_DEFAULT = CHAR_MAX + 1 };
 
 /* Maximum number of digits we can safely handle
    without precision loss, if scaling is 'none'.  */
-enum { MAX_UNSCALED_DIGITS = 18 };
+enum { MAX_UNSCALED_DIGITS = LDBL_DIG };
 
 /* Maximum number of digits we can work with.
    This is equivalent to 999Y.
@@ -589,7 +589,7 @@ simple_strtod_float (const char *input_str,
 
    Returns:
       SSE_OK - valid number.
-      SSE_OK_PRECISION_LOSS - if more than 18 digits were used.
+      SSE_OK_PRECISION_LOSS - if more than LDBL_DIG digits were used.
       SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
       SSE_INVALID_NUMBER    - if no digits were found.
       SSE_VALID_BUT_FORBIDDEN_SUFFIX
@@ -604,9 +604,12 @@ simple_strtod_human (const char *input_str,
   /* 'scale_auto' is checked below.  */
   int scale_base = default_scale_base (allowed_scaling);
 
-  devmsg ("simple_strtod_human:\n  input string: %s\n  "
-          "locale decimal-point: %s\n",
-          quote_n (0, input_str), quote_n (1, decimal_point));
+  devmsg ("simple_strtod_human:\n  input string: %s\n"
+          "  locale decimal-point: %s\n"
+          "  MAX_UNSCALED_DIGITS: %d\n",
+          quote_n (0, input_str),
+          quote_n (1, decimal_point),
+          MAX_UNSCALED_DIGITS);
 
   enum simple_strtod_error e =
     simple_strtod_float (input_str, endptr, value, precision);
