@@ -147,15 +147,18 @@ scan_arg (const char *arg)
   while (isspace (to_uchar (*arg)) || *arg == '+')
     arg++;
 
-  ret.width = strlen (arg);
+  ret.width = 0;
   ret.precision = INT_MAX;
+
+  char const *decimal_point = strchr (arg, '.');
+  if (! decimal_point && ! strchr (arg, 'p') /* not a hex float */)
+    ret.precision = 0;
 
   if (! arg[strcspn (arg, "xX")] && isfinite (ret.value))
     {
-      char const *decimal_point = strchr (arg, '.');
-      if (! decimal_point)
-        ret.precision = 0;
-      else
+      ret.width = strlen (arg);
+
+      if (decimal_point)
         {
           size_t fraction_len = strcspn (decimal_point + 1, "eE");
           if (fraction_len <= INT_MAX)
@@ -625,8 +628,8 @@ main (int argc, char **argv)
         }
     }
 
-  if (first.precision == 0 && step.precision == 0
-      && (! isfinite (last.value) || last.precision == 0)
+  if ((isfinite (first.value) && first.precision == 0)
+      && step.precision == 0 && last.precision == 0
       && 0 <= first.value && step.value == 1 && 0 <= last.value
       && !equal_width && !format_str && strlen (separator) == 1)
     {

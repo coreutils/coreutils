@@ -19,7 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ seq
 
-# Integer only.  Before v8.24 this would switch output format
+# Integer only.  Before v8.24 these would switch output format
+
 seq 999999 inf | head -n2 > out || fail=1
 printf "%s\n" 999999 1000000 > exp || framework_failure_
 compare exp out || fail=1
@@ -33,5 +34,28 @@ for i in $(seq 100); do
   printf "%s\n" "$n1" "$n2" > exp || framework_failure_
   compare exp out || fail=1
 done
+
+seq 0xF423F 0xF4240 > out || fail=1
+printf "%s\n" 999999 1000000 > exp || framework_failure_
+compare exp out || fail=1
+
+# Ensure consistent precision for inf
+seq 1 .1 inf | head -n2 > out || fail=1
+printf "%s\n" 1.0 1.1 > exp || framework_failure_
+compare exp out || fail=1
+
+# Ensure standard output methods with inf start
+seq inf inf | head -n2 | uniq > out || fail=1
+test "$(wc -l < out)" = 1 || fail=1
+
+# Ensure auto precision for hex float
+seq 1 0x1p-1 2 > out || fail=1
+printf "%s\n" 1 1.5 2 > exp || framework_failure_
+compare exp out || fail=1
+
+# Ensure consistent precision for hex
+seq 1 .1 0x2 | head -n2 > out || fail=1
+printf "%s\n" 1.0 1.1 > exp || framework_failure_
+compare exp out || fail=1
 
 Exit $fail
