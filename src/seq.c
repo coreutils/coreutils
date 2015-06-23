@@ -147,20 +147,24 @@ scan_arg (const char *arg)
   while (isspace (to_uchar (*arg)) || *arg == '+')
     arg++;
 
+  /* Default to auto width and precision.  */
   ret.width = 0;
   ret.precision = INT_MAX;
 
+  /* Use no precision (and possibly fast generation) for integers.  */
   char const *decimal_point = strchr (arg, '.');
   if (! decimal_point && ! strchr (arg, 'p') /* not a hex float */)
     ret.precision = 0;
 
+  /* auto set width and precision for decimal inputs.  */
   if (! arg[strcspn (arg, "xX")] && isfinite (ret.value))
     {
+      size_t fraction_len = 0;
       ret.width = strlen (arg);
 
       if (decimal_point)
         {
-          size_t fraction_len = strcspn (decimal_point + 1, "eE");
+          fraction_len = strcspn (decimal_point + 1, "eE");
           if (fraction_len <= INT_MAX)
             ret.precision = fraction_len;
           ret.width += (fraction_len == 0                      /* #.  -> #   */
@@ -174,7 +178,8 @@ scan_arg (const char *arg)
       if (e)
         {
           long exponent = strtol (e + 1, NULL, 10);
-          ret.precision += exponent < 0 ? -exponent : 0;
+          ret.precision += exponent < 0 ? -exponent
+                                        : - MIN (ret.precision, exponent);
           /* Don't account for e.... in the width since this is not output.  */
           ret.width -= strlen (arg) - (e - arg);
           /* Adjust the width as per the exponent.  */
@@ -188,6 +193,12 @@ scan_arg (const char *arg)
               else
                 ret.width++;
               exponent = -exponent;
+            }
+          else
+            {
+              if (decimal_point && ret.precision == 0 && fraction_len)
+                ret.width--; /* discount space for '.'  */
+              exponent -= MIN (fraction_len, exponent);
             }
           ret.width += exponent;
         }

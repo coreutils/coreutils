@@ -58,4 +58,22 @@ seq 1 .1 0x2 | head -n2 > out || fail=1
 printf "%s\n" 1.0 1.1 > exp || framework_failure_
 compare exp out || fail=1
 
+# Ensure consistent handling of precision/width for exponents
+
+seq 1.1e1 12 > out || fail=1
+printf "%s\n" 11 12 > exp || framework_failure_
+compare exp out || fail=1
+
+seq 11 1.2e1 > out || fail=1
+printf "%s\n" 11 12 > exp || framework_failure_
+compare exp out || fail=1
+
+seq -w 1.1e4 | head -n1 > out || fail=1
+printf "%s\n" 00001 > exp || framework_failure_
+compare exp out || fail=1
+
+seq -w 1.10000e5 1.10000e5 > out || fail=1
+printf "%s\n" 110000 > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail
