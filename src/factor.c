@@ -2331,7 +2331,10 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
   uintmax_t q, r;
 
   if (t1 == 0)
-    n_out += printf ("%"PRIuMAX, t0);
+    {
+      /* n_out's value is inconsequential on error.  */
+      n_out += (size_t) printf ("%"PRIuMAX, t0);
+    }
   else
     {
       /* Use very plain code here since it seems hard to write fast code
@@ -2340,7 +2343,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
       r = t1 % 1000000000;
       udiv_qrnnd (t0, r, r, t0, 1000000000);
       print_uintmaxes (q, t0);
-      n_out += printf ("%09u", (unsigned int) r);
+      n_out += (size_t) printf ("%09u", (unsigned int) r);
     }
 }
 
