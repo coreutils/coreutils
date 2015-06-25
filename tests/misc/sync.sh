@@ -36,9 +36,11 @@ returns_ 1 sync file nofile || fail=1
 # Ensure inaccessible dirs give an appropriate error
 mkdir norw || framework_failure_
 chmod 0 norw || framework_failure_
-sync norw 2>err
-printf "sync: error opening 'norw': Permission denied\n" >exp
-compare exp err || fail=1
+if ! test -r norw; then
+  sync norw 2>err
+  printf "sync: error opening 'norw': Permission denied\n" >exp
+  compare exp err || fail=1
+fi
 
 if test "$fail" != '1'; then
   # Ensure a fifo doesn't block
