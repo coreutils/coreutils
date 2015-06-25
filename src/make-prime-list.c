@@ -217,6 +217,9 @@ main (int argc, char **argv)
 
   output_primes (prime_list, nprimes);
 
+  free (sieve);
+  free (prime_list);
+
   if (ferror (stdout) + fclose (stdout))
     {
       fprintf (stderr, "write error: %s\n", strerror (errno));
