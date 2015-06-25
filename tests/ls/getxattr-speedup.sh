@@ -55,7 +55,7 @@ gcc_shared_ k.c k.so \
 seq 20 | xargs touch || framework_failure_
 
 # Finally, run the test:
-LD_PRELOAD=./k.so ls --color=always -l . || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so ls --color=always -l . || fail=1
 
 test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 

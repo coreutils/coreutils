@@ -89,7 +89,7 @@ exercise_rm_r_root ()
   fi
 
   timeout --signal=KILL 2 \
-    env LD_PRELOAD=./k.so $skip_exit \
+    env LD_PRELOAD=$LD_PRELOAD:./k.so $skip_exit \
       rm -rv --one-file-system "$@" > out 2> err
 
   return $?

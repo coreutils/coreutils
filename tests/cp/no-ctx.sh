@@ -50,14 +50,14 @@ gcc_shared_ k.c k.so \
 touch file_src
 
 # New file with SELinux context optionally included
-LD_PRELOAD=./k.so cp -a file_src file_dst || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so cp -a file_src file_dst || fail=1
 
 # Existing file with SELinux context optionally included
-LD_PRELOAD=./k.so cp -a file_src file_dst || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so cp -a file_src file_dst || fail=1
 
 # ENODATA should give an immediate error when required to preserve ctx
 # This is debatable, and maybe we should not fail when no context available?
-( export LD_PRELOAD=./k.so
+( export LD_PRELOAD=$LD_PRELOAD:./k.so
   returns_ 1 cp --preserve=context file_src file_dst ) || fail=1
 
 test -e preloaded || skip_ 'LD_PRELOAD interception failed'

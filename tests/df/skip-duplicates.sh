@@ -146,23 +146,23 @@ gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
 # Test if LD_PRELOAD works:
-LD_PRELOAD=./k.so df
+LD_PRELOAD=$LD_PRELOAD:./k.so df
 test -f x || skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 
 # The fake mtab file should only contain entries
 # having the same device number; thus the output should
 # consist of a header and unique entries.
-LD_PRELOAD=./k.so df -T >out || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # With --total we should suppress the duplicate but separate remote file system
-LD_PRELOAD=./k.so df --total >out || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so df --total >out || fail=1
 test "$CU_REMOTE_FS" && elide_remote=1 || elide_remote=0
 test $(wc -l <out) -eq $(expr 2 + $unique_entries - $elide_remote) ||
   { fail=1; cat out; }
 
 # Ensure we don't fail when unable to stat (currently) unavailable entries
-LD_PRELOAD=./k.so CU_TEST_DUPE_INVALID=1 df -T >out || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so CU_TEST_DUPE_INVALID=1 df -T >out || fail=1
 test $(wc -l <out) -eq $(expr 1 + $unique_entries) || { fail=1; cat out; }
 
 # df should also prefer "/fsname" over "fsname"
@@ -176,7 +176,7 @@ fi
 test $(grep -c 'virtfs2.*t2' <out) -eq 1 || { fail=1; cat out; }
 
 # Ensure that filtering duplicates does not affect -a processing.
-LD_PRELOAD=./k.so df -a >out || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so df -a >out || fail=1
 total_fs=6; test "$CU_REMOTE_FS" && total_fs=$(expr $total_fs + 3)
 test $(wc -l <out) -eq $total_fs || { fail=1; cat out; }
 # Ensure placeholder "-" values used for the eclipsed "virtfs"

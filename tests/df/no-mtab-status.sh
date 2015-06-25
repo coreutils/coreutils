@@ -90,7 +90,7 @@ gcc_shared_ k.c k.so \
 
 cleanup_() { unset LD_PRELOAD; }
 
-export LD_PRELOAD=./k.so
+export LD_PRELOAD=$LD_PRELOAD:./k.so
 
 # Test if LD_PRELOAD works:
 df 2>/dev/null

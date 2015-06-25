@@ -35,6 +35,7 @@ require_gcc_shared_
 # Replace each stat call with a call to this wrapper.
 cat > k.c <<'EOF' || framework_failure_
 #define _GNU_SOURCE
+#include <stdio.h>
 #include <sys/types.h>
 #include <dlfcn.h>
 
@@ -49,6 +50,7 @@ int
 __xstat (int ver, const char *path, struct stat *st)
 {
   static int (*real_stat)(int ver, const char *path, struct stat *st) = NULL;
+  fclose(fopen("preloaded", "w"));
   if (!real_stat)
     real_stat = dlsym (RTLD_NEXT, "__xstat");
   /* When asked to stat nonexistent "d",
@@ -65,7 +67,9 @@ touch d2 || framework_failure_
 echo xyz > src || framework_failure_
 
 # Finally, run the test:
-LD_PRELOAD=./k.so cp src d || fail=1
+LD_PRELOAD=$LD_PRELOAD:./k.so cp src d || fail=1
+
+test -f preloaded || skip_ 'LD_PRELOAD was ineffective?'
 
 compare src d || fail=1
 Exit $fail
