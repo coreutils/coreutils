@@ -327,7 +327,7 @@ main (int argc, char **argv)
 
   if (chroot (newroot) != 0)
     error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-            newroot);
+           quote (newroot));
 
   if (! skip_chdir && chdir ("/"))
     error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
