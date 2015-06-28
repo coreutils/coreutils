@@ -623,10 +623,8 @@ filter_mount_list (bool devices_only)
       struct mount_entry *discard_me = NULL;
 
       /* Avoid stating remote file systems as that may hang.
-         TODO: On Linux we might avoid this stat() and another in get_dev()
-         by using the device IDs available from /proc/self/mountinfo.
-         read_file_system_list() could populate me_dev from those
-         for efficiency and accuracy.  */
+         On Linux we probably have me_dev populated from /proc/self/mountinfo,
+         however we still stat() in case another device was mounted later.  */
       if ((me->me_remote && show_local_fs)
           || -1 == stat (me->me_mountdir, &buf))
         {
