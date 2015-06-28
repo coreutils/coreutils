@@ -256,7 +256,7 @@ set_LD_PRELOAD (void)
   ret = putenv (LD_PRELOAD);
 #ifdef __APPLE__
   if (ret == 0)
-    ret = putenv ("DYLD_FORCE_FLAT_NAMESPACE=y");
+    ret = setenv ("DYLD_FORCE_FLAT_NAMESPACE", "y", 1);
 #endif
 
   if (ret != 0)
