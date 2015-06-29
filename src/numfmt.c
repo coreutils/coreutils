@@ -794,7 +794,7 @@ double_to_human (long double val, int precision,
   int prec = user_precision == -1 ? show_decimal_point : user_precision;
 
   /* buf_size - 1 used here to ensure place for possible scale_IEC_I suffix.  */
-  num_size = snprintf (buf, buf_size - 1, fmt, val, prec,
+  num_size = snprintf (buf, buf_size - 1, fmt, prec, val,
                        suffix_power_char (power));
   if (num_size < 0 || num_size >= (int) buf_size - 1)
     error (EXIT_FAILURE, 0,
