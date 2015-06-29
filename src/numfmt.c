@@ -1354,7 +1354,7 @@ free_field (const void *elt)
    TODO: Refactor the more performant cut implementation
    for use by both utilities.  */
 static void
-parse_field_arg (char *optarg)
+parse_field_arg (char *arg)
 {
 
   char *start, *end;
@@ -1362,9 +1362,9 @@ parse_field_arg (char *optarg)
   size_t field_val;
   size_t range_val = 0;
 
-  start = end = optarg;
+  start = end = arg;
 
-  if (STREQ (optarg, "-"))
+  if (STREQ (arg, "-"))
     {
       all_fields = true;
 
@@ -1438,7 +1438,7 @@ parse_field_arg (char *optarg)
   if (range_val)
     {
       /* range N-
-         range_val was not reset indicating optarg
+         range_val was not reset indicating ARG
          ended with a trailing '-' */
       all_fields_after = range_val;
     }
