@@ -98,6 +98,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "full-write.h"
 #include "quote.h"
 #include "readtokens.h"
 #include "xstrtol.h"
@@ -2323,7 +2324,92 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
   return err;
 }
 
-static size_t n_out; /* How much data we've written to stdout.  */
+/* Structure and routines for buffering and outputting full lines,
+   to support parallel operation efficiently.  */
+static struct lbuf_
+{
+  char *buf;
+  char *end;
+} lbuf;
+
+/* 512 is chosen to give good performance,
+   and also is the max guaranteed size that
+   consumers can read atomically through pipes.
+   Also it's big enough to cater for max line length
+   even with 128 bit uintmax_t.  */
+#define FACTOR_PIPE_BUF 512
+
+static void
+lbuf_alloc (void)
+{
+  if (lbuf.buf)
+    return;
+
+  /* Double to ensure enough space for
+     previous numbers + next number.  */
+  lbuf.buf = xmalloc (FACTOR_PIPE_BUF * 2);
+  lbuf.end = lbuf.buf;
+}
+
+/* Write complete LBUF to standard output.  */
+static void
+lbuf_flush (void)
+{
+  size_t size = lbuf.end - lbuf.buf;
+  if (full_write (STDOUT_FILENO, lbuf.buf, size) != size)
+    error (EXIT_FAILURE, errno, "%s", _("write error"));
+  lbuf.end = lbuf.buf;
+}
+
+/* Add a character C to LBUF and if it's a newline
+   and enough bytes are already buffered,
+   then write atomically to standard output.  */
+static void
+lbuf_putc (char c)
+{
+  *lbuf.end++ = c;
+
+  if (c == '\n')
+    {
+      size_t buffered = lbuf.end - lbuf.buf;
+
+      if (buffered >= FACTOR_PIPE_BUF)
+        {
+          /* Write output in <= PIPE_BUF chunks
+             so consumers can read atomically.  */
+          char const *tend = lbuf.end;
+
+          /* Since a umaxint_t's factors must fit in 512
+             we're guaranteed to find a newline here.  */
+          char *tlend = lbuf.buf + FACTOR_PIPE_BUF;
+          while (*--tlend != '\n');
+          tlend++;
+
+          lbuf.end = tlend;
+          lbuf_flush ();
+
+          /* Buffer the remainder.  */
+          memcpy (lbuf.buf, tlend, tend - tlend);
+          lbuf.end = lbuf.buf + (tend - tlend);
+        }
+    }
+}
+
+/* Buffer an int to the internal LBUF.  */
+static void
+lbuf_putint (uintmax_t i, size_t min_width)
+{
+  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char const *umaxstr = umaxtostr (i, buf);
+  size_t width = sizeof (buf) - (umaxstr - buf) - 1;
+  size_t z = width;
+
+  for (; z < min_width; z++)
+    *lbuf.end++ = '0';
+
+  memcpy (lbuf.end, umaxstr, width);
+  lbuf.end += width;
+}
 
 static void
 print_uintmaxes (uintmax_t t1, uintmax_t t0)
@@ -2331,10 +2417,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
   uintmax_t q, r;
 
   if (t1 == 0)
-    {
-      /* n_out's value is inconsequential on error.  */
-      n_out += (size_t) printf ("%"PRIuMAX, t0);
-    }
+    lbuf_putint (t0, 0);
   else
     {
       /* Use very plain code here since it seems hard to write fast code
@@ -2343,7 +2426,7 @@ print_uintmaxes (uintmax_t t1, uintmax_t t0)
       r = t1 % 1000000000;
       udiv_qrnnd (t0, r, r, t0, 1000000000);
       print_uintmaxes (q, t0);
-      n_out += (size_t) printf ("%09u", (unsigned int) r);
+      lbuf_putint (r, 9);
     }
 }
 
@@ -2354,39 +2437,24 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
   struct factors factors;
 
   print_uintmaxes (t1, t0);
-  putchar (':');
-  n_out++;
+  lbuf_putc (':');
 
   factor (t1, t0, &factors);
 
   for (unsigned int j = 0; j < factors.nfactors; j++)
     for (unsigned int k = 0; k < factors.e[j]; k++)
       {
-        char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-        putchar (' ');
-        char *umaxstr = umaxtostr (factors.p[j], buf);
-        fputs (umaxstr, stdout);
-        n_out += strlen (umaxstr) + 1;
+        lbuf_putc (' ');
+        print_uintmaxes (0, factors.p[j]);
       }
 
   if (factors.plarge[1])
     {
-      putchar (' ');
-      n_out++;
+      lbuf_putc (' ');
       print_uintmaxes (factors.plarge[1], factors.plarge[0]);
     }
-  putchar ('\n');
-  n_out++;
 
-  /* Assume the stdout buffer is > this value.
-     Flush here to avoid partial lines being output.
-     Flushing every line has too much overhead.
-     TODO: Buffer internally and avoid stdio.  */
-  if (n_out >= 512)
-    {
-      fflush (stdout);
-      n_out = 0;
-    }
+  lbuf_putc ('\n');
 }
 
 /* Emit the factors of the indicated number.  If we have the option of using
@@ -2504,7 +2572,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  lbuf_alloc ();
   atexit (close_stdout);
+  atexit (lbuf_flush);
 
   alg = ALG_POLLARD_RHO;        /* Default to Pollard rho */
 
