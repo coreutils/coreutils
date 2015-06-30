@@ -57,6 +57,10 @@ for opt in $options; do
     cstopb|crtscts|cdtrdsr|icanon) continue;;
   esac
 
+  # This is listed as supported on FreeBSD
+  # but the ioctl returns ENOTTY.
+  test $opt = extproc && continue
+
   stty $opt || fail=1
 
   # Likewise, 'stty -cread' would fail, so skip that, too.
