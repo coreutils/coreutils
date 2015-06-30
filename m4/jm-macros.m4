@@ -165,6 +165,21 @@ AC_DEFUN([coreutils_MACROS],
      LIBS="$ac_seq_save_LIBS"
     ])
 
+
+  # See is fpsetprec() required to use extended double precision
+  # This is needed on 32 bit FreeBSD to give accurate conversion of:
+  # `numfmt 9223372036854775808`
+  AC_TRY_LINK([#include <ieeefp.h>],
+    [#ifdef __i386__
+      fpsetprec(FP_PE);
+     #else
+     # error not required on 64 bit
+     #endif
+    ], [ac_have_fpsetprec=yes], [ac_have_fpsetprec=no])
+  if test "$ac_have_fpsetprec" = "yes" ; then
+    AC_DEFINE([HAVE_FPSETPREC], 1, [whether fpsetprec is present and required])
+  fi
+
   AC_REQUIRE([AM_LANGINFO_CODESET])
 
   # Accept configure options: --with-tty-group[=GROUP], --without-tty-group

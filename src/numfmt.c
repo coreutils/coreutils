@@ -32,6 +32,10 @@
 #include "gl_linked_list.h"
 #include "gl_xlist.h"
 
+#if HAVE_FPSETPREC
+# include <ieeefp.h>
+#endif
+
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "numfmt"
 
@@ -1573,6 +1577,11 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+#if HAVE_FPSETPREC
+  /* Enabled extended precision if needed.  */
+  fpsetprec (FP_PE);
+#endif
 
   decimal_point = nl_langinfo (RADIXCHAR);
   if (decimal_point == NULL || strlen (decimal_point) == 0)
