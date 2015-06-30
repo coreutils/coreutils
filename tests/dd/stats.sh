@@ -39,7 +39,7 @@ cleanup_()
 for open in '' '1'; do
   # Run dd with the fullblock iflag to avoid short reads
   # which can be triggered by reception of signals
-  dd iflag=fullblock if=/dev/zero of=fifo count=100 bs=5000000 2>err & pid=$!
+  dd iflag=fullblock if=/dev/zero of=fifo count=50 bs=5000000 2>err & pid=$!
 
   # Note if we sleep here we give dd a chance to exec and block on open.
   # Otherwise we're probably testing SIG_IGN in the forked shell or early dd.
@@ -47,7 +47,7 @@ for open in '' '1'; do
 
   # dd will block on open until fifo is opened for reading.
   # Timeout in case dd goes away erroneously which we check for below.
-  timeout 10 sh -c 'wc -c < fifo > nwritten' & pid2=$!
+  timeout 20 sh -c 'wc -c < fifo > nwritten' & pid2=$!
 
   # Send lots of signals immediately to ensure dd not killed due
   # to race setting handler, or blocking on open of fifo.
@@ -59,7 +59,7 @@ for open in '' '1'; do
   wait
 
   # Ensure all data processed and at least last status written
-  grep '500000000 bytes .* copied' err || { cat err; fail=1; }
+  grep '250000000 bytes .* copied' err || { cat err; fail=1; }
 done
 
 progress_output()
