@@ -36,6 +36,7 @@
 #include "quotearg.h"
 #include "readtokens0.h"
 #include "safe-read.h"
+#include "stat-size.h"
 #include "xfreopen.h"
 
 #if !defined iswspace && !HAVE_ISWSPACE
@@ -238,14 +239,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       if (0 < fstatus->failed)
         fstatus->failed = fstat (fd, &fstatus->st);
 
-      /* For sized files, seek to one buffer before EOF rather than to EOF.
+      /* For sized files, seek to one st_blksize before EOF rather than to EOF.
          This works better for files in proc-like file systems where
          the size is only approximate.  */
       if (! fstatus->failed && usable_st_size (&fstatus->st)
           && 0 <= fstatus->st.st_size)
         {
           size_t end_pos = fstatus->st.st_size;
-          off_t hi_pos = end_pos - end_pos % BUFFER_SIZE;
+          off_t hi_pos = end_pos - end_pos % (ST_BLKSIZE (fstatus->st) + 1);
           if (current_pos < 0)
             current_pos = lseek (fd, 0, SEEK_CUR);
           if (0 <= current_pos && current_pos < hi_pos

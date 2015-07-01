@@ -1493,7 +1493,9 @@ main (int argc, char **argv)
 
   if (fstat (STDIN_FILENO, &in_stat_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
-  if (in_blk_size == 0)
+
+  bool specified_buf_size = !! in_blk_size;
+  if (! specified_buf_size)
     in_blk_size = io_blksize (in_stat_buf);
 
   void *b = xmalloc (in_blk_size + 1 + page_size - 1);
@@ -1505,8 +1507,9 @@ main (int argc, char **argv)
       off_t input_offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
       if (0 <= input_offset)
         {
-          if (usable_st_size (&in_stat_buf))
+          if (usable_st_size (&in_stat_buf) && ! specified_buf_size)
             {
+              assert (ST_BLKSIZE (in_stat_buf) <= in_blk_size);
               file_size = input_file_size (STDIN_FILENO, in_stat_buf.st_size,
                                            buf, in_blk_size);
               if (file_size < in_blk_size)
