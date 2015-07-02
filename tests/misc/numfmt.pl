@@ -582,8 +582,9 @@ my @Tests =
 
      # Invalid parameters
      ['help-1', '--foobar',
-             {ERR=>"$prog: unrecognized option '--foobar'\n" .
+             {ERR=>"$prog: unrecognized option\n" .
                    "Try '$prog --help' for more information.\n"},
+             {ERR_SUBST=>"s/option.*/option/; s/unknown/unrecognized/"},
              {EXIT=>1}],
 
      ## Format string - check error detection
