@@ -1429,8 +1429,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                /* It's fine to add the same directory more than once.
                   In that case the same watch descriptor is returned.  */
               f[i].parent_wd = inotify_add_watch (wd, dirlen ? f[i].name : ".",
-                                                  (IN_CREATE | IN_MOVED_TO
-                                                   | IN_ATTRIB));
+                                                  (IN_CREATE | IN_DELETE
+                                                   | IN_MOVED_TO | IN_ATTRIB));
 
               f[i].name[dirlen] = prev;
 
@@ -1619,9 +1619,16 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
           fspec = &(f[j]);
 
-          /* Adding the same inode again will look up any existing wd.  */
-          int new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
-          if (new_wd < 0)
+          int new_wd = -1;
+          bool deleting = !! (ev->mask & IN_DELETE);
+
+          if (! deleting)
+            {
+              /* Adding the same inode again will look up any existing wd.  */
+              new_wd = inotify_add_watch (wd, f[j].name, inotify_wd_mask);
+            }
+
+          if (! deleting && new_wd < 0)
             {
               if (errno == ENOSPC || errno == ENOMEM)
                 {
@@ -1639,7 +1646,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             }
 
           /* This will be false if only attributes of file change.  */
-          bool new_watch = fspec->wd < 0 || new_wd != fspec->wd;
+          bool new_watch;
+          new_watch = (! deleting) && (fspec->wd < 0 || new_wd != fspec->wd);
 
           if (new_watch)
             {
@@ -1683,7 +1691,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       if (! fspec)
         continue;
 
-      if (ev->mask & (IN_ATTRIB | IN_DELETE_SELF | IN_MOVE_SELF))
+      if (ev->mask & (IN_ATTRIB | IN_DELETE | IN_DELETE_SELF | IN_MOVE_SELF))
         {
           /* Note for IN_MOVE_SELF (the file we're watching has
              been clobbered via a rename) we leave the watch
@@ -1694,6 +1702,14 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               inotify_rm_watch (wd, fspec->wd);
               hash_delete (wd_to_name, fspec);
             }
+
+          /* Note we get IN_ATTRIB for unlink() as st_nlink decrements.
+             The usual path is a close() done in recheck() triggers
+             an IN_DELETE_SELF event as the inode is removed.
+             However sometimes open() will succeed as even though
+             st_nlink is decremented, the dentry (cache) is not updated.
+             Thus we depend on the IN_DELETE event on the directory
+             to trigger processing for the removed file.  */
 
           recheck (fspec, false);
 
