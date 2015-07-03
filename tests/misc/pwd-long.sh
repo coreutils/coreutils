@@ -56,7 +56,6 @@ sub normalize_to_cwd_relative ($$$)
 }
 
 # Set up a safe, well-known environment
-delete @ENV{qw(BASH_ENV CDPATH ENV)};
 $ENV{IFS}  = '';
 
 # Taint checking requires a sanitized $PATH.  This script performs no $PATH

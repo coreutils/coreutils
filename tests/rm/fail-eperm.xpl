@@ -32,7 +32,6 @@ my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 $ENV{LC_ALL} = 'C';
 
 # Set up a safe, well-known environment
-delete @ENV{qw(BASH_ENV CDPATH ENV)};
 $ENV{IFS}  = '';
 
 # Taint checking requires a sanitized $PATH.  This script performs no $PATH

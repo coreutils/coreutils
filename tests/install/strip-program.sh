@@ -22,7 +22,7 @@ print_ver_ ginstall
 working_umask_or_skip_
 
 cat <<EOF > b || framework_failure_
-#!$PREFERABLY_POSIX_SHELL
+#!$SHELL
 sed s/b/B/ \$1 > \$1.t && mv \$1.t \$1
 EOF
 chmod a+x b || framework_failure_

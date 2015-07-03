@@ -30,8 +30,8 @@ print_ver_ timeout
 
 setsid true || skip_ "setsid required to control groups"
 
-cat > timeout.cmd <<\EOF
-#!/bin/sh
+printf '%s\n' '#!'"$SHELL" > timeout.cmd || framework_failure_
+cat >> timeout.cmd <<\EOF
 trap 'touch int.received; exit' INT
 touch timeout.running
 count=$1
@@ -42,8 +42,8 @@ done
 EOF
 chmod a+x timeout.cmd
 
-cat > group.sh <<\EOF
-#!/bin/sh
+cat > group.sh <<EOF
+#!$SHELL
 trap '' INT
 timeout --foreground 25 ./timeout.cmd 20&
 wait

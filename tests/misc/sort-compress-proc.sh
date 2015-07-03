@@ -32,8 +32,9 @@ insize=$(stat -c %s - <in) || fail=1
 # This compressor's behavior is adjustable via environment variables.
 export PRE_COMPRESS=
 export POST_COMPRESS=
-cat <<\EOF >compress || framework_failure_
-#!/bin/sh
+
+printf '%s\n' '#!'"$SHELL" >compress || framework_failure_
+cat <<\EOF >>compress || framework_failure_
 eval "$PRE_COMPRESS"
 tr 41 14 || exit
 eval "$POST_COMPRESS"

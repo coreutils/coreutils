@@ -17,12 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Ensure that $SHELL is set to *some* value and exported.
-# This is required for dircolors, which would fail e.g., when
-# invoked via debuild (which removes SHELL from the environment).
-test "x$SHELL" = x && SHELL=/bin/sh
-export SHELL
-
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
 # Terminate any background processes

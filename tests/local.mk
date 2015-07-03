@@ -79,7 +79,7 @@ TESTS_ENVIRONMENT =				\
   MAKE=$(MAKE)					\
   PACKAGE_VERSION=$(PACKAGE_VERSION)		\
   PERL='$(PERL)'				\
-  PREFERABLY_POSIX_SHELL='$(PREFERABLY_POSIX_SHELL)' \
+  SHELL='$(PREFERABLY_POSIX_SHELL)'		\
   ; test -d /usr/xpg4/bin && PATH='/usr/xpg4/bin$(PATH_SEPARATOR)'"$$PATH"; \
   PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH" \
   ; 9>&2

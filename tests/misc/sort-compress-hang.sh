@@ -20,8 +20,8 @@
 print_ver_ sort
 very_expensive_
 
-cat <<\EOF >compress || framework_failure_
-#!/bin/sh
+cat <<EOF >compress || framework_failure_
+#!$SHELL
 tr 41 14 || exit
 touch ok
 EOF
