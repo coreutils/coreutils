@@ -150,6 +150,7 @@ fi
 #  ? - not ok
 gl_shell_test_script_='
 test $(echo y) = y || exit 1
+f_local_() { local v=1; }; f_local_ || exit 1
 score_=10
 if test "$VERBOSE" = yes; then
   test -n "$( (exec 3>&1; set -x; P=1 true 2>&3) 2> /dev/null)" && score_=9
