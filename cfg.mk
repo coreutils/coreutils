@@ -120,6 +120,8 @@ sc_tests_executable:
 	@set -o noglob 2>/dev/null || set -f;				   \
 	find_ext="-name '' "`printf -- "-o -name *%s " $(TEST_EXTENSIONS)`;\
 	find $(srcdir)/tests/ \( $$find_ext \) \! -perm -u+x -print	   \
+	  | { sed "s|^$(srcdir)/||"; git ls-files $(srcdir)/tests/; }	   \
+	  | sort | uniq -d						   \
 	  | sed -e "s/^/$(ME): Please make test executable: /" | grep .	   \
 	    && exit 1; :
 
