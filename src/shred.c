@@ -712,7 +712,7 @@ static int const
   12, 0x111, 0x222, 0x333, 0x444, 0x666, 0x777,
   0x888, 0x999, 0xBBB, 0xCCC, 0xDDD, 0xEEE,	/* 4-bit */
   -1,				/* 1 random pass */
-        /* The following patterns have the frst bit per block flipped */
+        /* The following patterns have the first bit per block flipped */
   8, 0x1000, 0x1249, 0x1492, 0x16DB, 0x1924, 0x1B6D, 0x1DB6, 0x1FFF,
   14, 0x1111, 0x1222, 0x1333, 0x1444, 0x1555, 0x1666, 0x1777,
   0x1888, 0x1999, 0x1AAA, 0x1BBB, 0x1CCC, 0x1DDD, 0x1EEE,
@@ -776,7 +776,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
           break;
         }
       else
-        {			/* Pad out with k of the n available */
+        {			/* Pad out with n of the k available */
           do
             {
               if (n == (size_t) k || randint_choose (s, k) < n)
@@ -785,6 +785,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
                   n--;
                 }
               p++;
+              k--;
             }
           while (n);
           break;
