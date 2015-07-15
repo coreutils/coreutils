@@ -113,8 +113,8 @@ sc-avoid-zeroes:
 # The leading backslash exemption is to permit in-macro uses like
 # @var{\varName\} where the upper case letter is part of a parameter name.
 find_upper_case_var =		\
-  '/\@var{/ or next;		\
-   while (/\@var{(.+?)}/g)	\
+  '/\@var\{/ or next;		\
+   while (/\@var\{(.+?)}/g)	\
      {				\
        $$v = $$1;		\
        $$v =~ /[A-Z]/ && $$v !~ /^\\/ and (print "$$ARGV:$$.:$$_"), $$m = 1 \
