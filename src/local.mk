@@ -263,6 +263,7 @@ src_ls_LDADD += $(LIB_CAP)
 # for fdatasync
 src_dd_LDADD += $(LIB_FDATASYNC)
 src_shred_LDADD += $(LIB_FDATASYNC)
+src_sync_LDADD += $(LIB_FDATASYNC)
 
 # for xnanosleep
 src_sleep_LDADD += $(LIB_NANOSLEEP)
