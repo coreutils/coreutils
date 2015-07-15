@@ -76,7 +76,8 @@ all but the last component must exist\n\
 "), stdout);
       fputs (_("\
   -e, --canonicalize-existing  all components of the path must exist\n\
-  -m, --canonicalize-missing   no components of the path need exist\n\
+  -m, --canonicalize-missing   no path components need exist or be a directory\
+\n\
   -L, --logical                resolve '..' components before symlinks\n\
   -P, --physical               resolve symlinks as encountered (default)\n\
   -q, --quiet                  suppress most error messages\n\
