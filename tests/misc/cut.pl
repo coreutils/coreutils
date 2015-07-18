@@ -29,8 +29,10 @@ my $mb_locale = $ENV{LOCALE_FR_UTF8};
 
 my $prog = 'cut';
 my $try = "Try '$prog --help' for more information.\n";
-my $from_1 = "$prog: fields and positions are numbered from 1\n$try";
-my $inval = "$prog: invalid byte, character or field list\n$try";
+my $from_field1 = "$prog: fields are numbered from 1\n$try";
+my $from_pos1 =   "$prog: byte/character positions are numbered from 1\n$try";
+my $inval_fld = "$prog: invalid field range\n$try";
+my $inval_pos = "$prog: invalid byte or character range\n$try";
 my $no_endpoint = "$prog: invalid range with no endpoint: -\n$try";
 my $nofield = "$prog: an input delimiter may be specified only when " .
               "operating on fields\n$try";
@@ -42,16 +44,16 @@ my @Tests =
 
   # This failed (as it should) even before coreutils-6.9.90,
   # but cut from 6.9.90 produces a more useful diagnostic.
-  ['zero-1', '-b0',   {ERR=>$from_1}, {EXIT => 1} ],
+  ['zero-1', '-b0',   {ERR=>$from_pos1}, {EXIT => 1} ],
 
   # Up to coreutils-6.9, specifying a range of 0-2 was not an error.
   # It was treated just like "-2".
-  ['zero-2', '-f0-2', {ERR=>$from_1}, {EXIT => 1} ],
+  ['zero-2', '-f0-2', {ERR=>$from_field1}, {EXIT => 1} ],
 
   # Up to coreutils-8.20, specifying a range of 0- was not an error.
-  ['zero-3b', '-b0-', {ERR=>$from_1}, {EXIT => 1} ],
-  ['zero-3c', '-c0-', {ERR=>$from_1}, {EXIT => 1} ],
-  ['zero-3f', '-f0-', {ERR=>$from_1}, {EXIT => 1} ],
+  ['zero-3b', '-b0-', {ERR=>$from_pos1}, {EXIT => 1} ],
+  ['zero-3c', '-c0-', {ERR=>$from_pos1}, {EXIT => 1} ],
+  ['zero-3f', '-f0-', {ERR=>$from_field1}, {EXIT => 1} ],
 
   ['1', '-d:', '-f1,3-', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
   ['2', '-d:', '-f1,3-', {IN=>"a:b:c\n"}, {OUT=>"a:c\n"}],
@@ -101,13 +103,16 @@ my @Tests =
    {ERR=>"$prog: you must specify a list of bytes, characters, or fields\n$try"}
   ],
   # Empty field list
-  ['empty-fl', qw(-f ''), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$from_1}],
+  ['empty-fl', qw(-f ''), {IN=>":\n"}, {OUT=>""}, {EXIT=>1},
+   {ERR=>$from_field1}],
   # Missing field list
-  ['missing-fl', qw(-f --), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$inval}],
+  ['missing-fl', qw(-f --), {IN=>":\n"}, {OUT=>""}, {EXIT=>1},
+   {ERR=>$inval_fld}],
   # Empty byte list
-  ['empty-bl', qw(-b ''), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$from_1}],
+  ['empty-bl', qw(-b ''), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$from_pos1}],
   # Missing byte list
-  ['missing-bl', qw(-b --), {IN=>":\n"}, {OUT=>""}, {EXIT=>1}, {ERR=>$inval}],
+  ['missing-bl', qw(-b --), {IN=>":\n"}, {OUT=>""}, {EXIT=>1},
+   {ERR=>$inval_pos}],
 
   # This test fails with cut from textutils-1.22.
   ['empty-f1', '-f1', {IN=>""}, {OUT=>""}],

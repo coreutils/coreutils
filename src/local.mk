@@ -55,6 +55,7 @@ noinst_HEADERS =		\
   src/operand2sig.h		\
   src/prog-fprintf.h		\
   src/remove.h			\
+  src/set-fields.h		\
   src/system.h			\
   src/uname.h
 
@@ -386,6 +387,8 @@ src_stat_SOURCES = src/stat.c src/find-mount-point.c
 
 src_uname_SOURCES = src/uname.c src/uname-uname.c
 src_arch_SOURCES = src/uname.c src/uname-arch.c
+
+src_cut_SOURCES = src/cut.c src/set-fields.c
 
 src_md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
 src_sha1sum_SOURCES = src/md5sum.c
