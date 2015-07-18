@@ -31,6 +31,8 @@ my $locale = $ENV{LOCALE_FR_UTF8};
 ! defined $locale || $locale eq 'none'
   and $locale = 'C';
 
+my $try = "Try '$prog --help' for more information.\n";
+
 my @Tests =
     (
      ['1', '1234',             {OUT => "1234"}],
@@ -197,10 +199,12 @@ my @Tests =
      ['delim-4', '--delimiter=: --from=auto 40M:60M',  {OUT=>'40000000:60M'}],
      ['delim-5', '-d: --field=2 --from=auto :40M:60M',  {OUT=>':40000000:60M'}],
      ['delim-6', '-d: --field 3 --from=auto 40M:60M', {OUT=>"40M:60M"}],
+     ['delim-err-1', '-d,, --to=si 1', {EXIT=>1},
+             {ERR => "$prog: the delimiter must be a single character\n"}],
 
      #Fields
      ['field-1', '--field A',
-             {ERR => "$prog: invalid field value 'A'\n"},
+             {ERR => "$prog: invalid field value 'A'\n$try"},
              {EXIT => '1'}],
      ['field-2', '--field 2 --from=auto "Hello 40M World 90G"',
              {OUT=>'Hello 40000000 World 90G'}],
@@ -244,8 +248,69 @@ my @Tests =
      ['field-range-7', '--field -3 --to=si "1000 2000 3000 4000 5000"',
              {OUT=>"1.0K 2.0K 3.0K 4000 5000"}],
 
+     ['field-range-8', '--field 1-2,4-5 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3000 4.0K 5.0K"}],
+     ['field-range-9', '--field 4-5,1-2 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3000 4.0K 5.0K"}],
+
+     ['field-range-10','--field 1-3,2-4 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5000"}],
+     ['field-range-11','--field 2-4,1-3 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5000"}],
+
+     ['field-range-12','--field 1-1,3-3 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2000 3.0K 4000 5000"}],
+
+     ['field-range-13', '--field 1,-2 --to=si "1000 2000 3000"',
+             {OUT=>"1.0K 2.0K 3000"}],
+
+     ['field-range-14', '--field -2,4- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3000 4.0K 5.0K"}],
+     ['field-range-15', '--field -2,-4 --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5000"}],
+     ['field-range-16', '--field 2-,4- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1000 2.0K 3.0K 4.0K 5.0K"}],
+     ['field-range-17', '--field 4-,2- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1000 2.0K 3.0K 4.0K 5.0K"}],
+
+     # white space are valid field separators
+     # (undocumented? but works in cut as well).
+     ['field-range-18', '--field "1,2 4" --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3000 4.0K 5000"}],
+
+     # Unlike 'cut', a lone '-' means 'all fields', even as part of a list
+     # of fields.
+     ['field-range-19','--field 3,- --to=si "1000 2000 3000 4000 5000"',
+             {OUT=>"1.0K 2.0K 3.0K 4.0K 5.0K"}],
+
      ['all-fields-1', '--field=- --to=si "1000 2000 3000 4000 5000"',
              {OUT=>"1.0K 2.0K 3.0K 4.0K 5.0K"}],
+
+     ['field-range-err-1', '--field -foo --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: invalid field value 'foo'\n$try"}],
+     ['field-range-err-2', '--field --3 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: invalid field range\n$try"}],
+     ['field-range-err-3', '--field 0 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: fields are numbered from 1\n$try"}],
+     ['field-range-err-4', '--field 3-2 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: invalid decreasing range\n$try"}],
+     ['field-range-err-6', '--field - --field 1- --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: multiple field specifications\n"}],
+     ['field-range-err-7', '--field -1 --field 1- --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: multiple field specifications\n"}],
+     ['field-range-err-8', '--field -1 --field 1,2,3 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: multiple field specifications\n"}],
+     ['field-range-err-9', '--field 1- --field 1,2,3 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: multiple field specifications\n"}],
+     ['field-range-err-10','--field 1,2,3 --field 1- --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: multiple field specifications\n"}],
+     ['field-range-err-11','--field 1-2-3 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: invalid field range\n$try"}],
+     ['field-range-err-12','--field 0-1 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: fields are numbered from 1\n$try"}],
+     ['field-range-err-13','--field '.$limits->{SIZE_MAX}.',22 --to=si 10',
+             {EXIT=>1}, {ERR=>"$prog: field number " .
+                              "'".$limits->{SIZE_MAX}."' is too large\n$try"}],
 
      # Auto-consume white-space, setup auto-padding
      ['whitespace-1', '--to=si --field 2 "A    500 B"', {OUT=>"A    500 B"}],
@@ -582,8 +647,7 @@ my @Tests =
 
      # Invalid parameters
      ['help-1', '--foobar',
-             {ERR=>"$prog: unrecognized option\n" .
-                   "Try '$prog --help' for more information.\n"},
+             {ERR=>"$prog: unrecognized option\n$try"},
              {ERR_SUBST=>"s/option.*/option/; s/unknown/unrecognized/"},
              {EXIT=>1}],
 

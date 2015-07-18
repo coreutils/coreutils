@@ -29,8 +29,8 @@
 #include "system.h"
 #include "xstrtol.h"
 #include "xstrndup.h"
-#include "gl_linked_list.h"
-#include "gl_xlist.h"
+
+#include "set-fields.h"
 
 #if HAVE_FPSETPREC
 # include <ieeefp.h>
@@ -189,10 +189,6 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
 static mbs_align_t padding_alignment = MBS_ALIGN_RIGHT;
-static bool all_fields = false;
-static size_t all_fields_after = 0;
-static size_t all_fields_before = 0;
-static gl_list_t field_list;
 static int delimiter = DELIMITER_DEFAULT;
 
 /* if non-zero, the first 'header' lines from STDIN are skipped.  */
@@ -1313,141 +1309,6 @@ process_suffixed_number (char *text, long double *result,
   return (e == SSE_OK || e == SSE_OK_PRECISION_LOSS);
 }
 
-typedef struct range_pair
-{
-  size_t lo;
-  size_t hi;
-} range_pair_t;
-
-static int
-sort_field (const void *elt1, const void *elt2)
-{
-  range_pair_t* rp1 = (range_pair_t*) elt1;
-  range_pair_t* rp2 = (range_pair_t*) elt2;
-
-  if (rp1->lo < rp2->lo)
-    return -1;
-
-  return rp1->lo > rp2->lo;
-}
-
-static int
-match_field (const void *elt1, const void *elt2)
-{
-  range_pair_t* rp = (range_pair_t*) elt1;
-  size_t field = *(size_t*) elt2;
-
-  if (rp->lo <= field && field <= rp->hi)
-    return 0;
-
-  if (rp->lo < field)
-    return -1;
-
-  return 1;
-}
-
-static void
-free_field (const void *elt)
-{
-  void *p = (void *)elt;
-  free (p);
-}
-
-/* Add the specified fields to field_list.
-   The format recognized is similar to cut.
-   TODO: Refactor the more performant cut implementation
-   for use by both utilities.  */
-static void
-parse_field_arg (char *arg)
-{
-
-  char *start, *end;
-  range_pair_t *rp;
-  size_t field_val;
-  size_t range_val = 0;
-
-  start = end = arg;
-
-  if (STREQ (arg, "-"))
-    {
-      all_fields = true;
-
-      return;
-    }
-
-  if (*start == '-')
-    {
-      /* range -M */
-      ++start;
-
-      all_fields_before = strtol (start, &end, 10);
-
-      if (start == end || all_fields_before <=0)
-        error (EXIT_FAILURE, 0, _("invalid field value %s"),
-               quote (start));
-
-      return;
-    }
-
-  field_list = gl_list_create_empty (GL_LINKED_LIST,
-                                     NULL, NULL, free_field, false);
-
-  while (*end != '\0') {
-    field_val = strtol (start, &end, 10);
-
-    if (start == end || field_val <=0)
-      error (EXIT_FAILURE, 0, _("invalid field value %s"),
-             quote (start));
-
-    if (! range_val)
-      {
-        /* field N */
-        rp = xmalloc (sizeof (*rp));
-        rp->lo = rp->hi = field_val;
-        gl_sortedlist_add (field_list, sort_field, rp);
-      }
-    else
-      {
-        /* range N-M
-           The last field was the start of the field range. The current
-           field is the end of the field range.  We already added the
-           start field, so increment and add all the fields through
-           range end. */
-        if (field_val < range_val)
-          error (EXIT_FAILURE, 0, _("invalid decreasing range"));
-        rp = xmalloc (sizeof (*rp));
-        rp->lo = range_val + 1;
-        rp->hi = field_val;
-        gl_sortedlist_add (field_list, sort_field, rp);
-
-        range_val = 0;
-      }
-
-    switch (*end) {
-      case ',':
-        /* discrete field separator */
-        ++end;
-        start = end;
-        break;
-
-      case '-':
-        /* field range separator */
-        ++end;
-        start = end;
-        range_val = field_val;
-        break;
-    }
-  }
-
-  if (range_val)
-    {
-      /* range N-
-         range_val was not reset indicating ARG
-         ended with a trailing '-' */
-      all_fields_after = range_val;
-    }
-}
-
 /* Return a pointer to the beginning of the next field in line.
    The line pointer is moved to the end of the next field. */
 static char*
@@ -1479,23 +1340,20 @@ next_field (char **line)
   return field_start;
 }
 
-static bool
+static bool _GL_ATTRIBUTE_PURE
 include_field (size_t field)
 {
-  if (all_fields)
-    return true;
-
-  if (all_fields_after && all_fields_after <= field)
-    return true;
-
-  if (all_fields_before && field <= all_fields_before)
-    return true;
-
-  /* default to field 1 */
-  if (! field_list)
+  struct field_range_pair *p = frp;
+  if (!p)
     return field == 1;
 
-  return gl_sortedlist_search (field_list, match_field, &field);
+  while (p->lo != SIZE_MAX)
+    {
+      if (p->lo <= field && p->hi >= field)
+        return true;
+      ++p;
+    }
+  return false;
 }
 
 /* Convert and output the given field. If it is not included in the set
@@ -1640,12 +1498,9 @@ main (int argc, char **argv)
           break;
 
         case FIELD_OPTION:
-          if (all_fields || all_fields_before || all_fields_after || field_list)
-            {
-              error (EXIT_FAILURE, 0,
-                     _("multiple field specifications"));
-            }
-          parse_field_arg (optarg);
+          if (n_frp)
+            error (EXIT_FAILURE, 0, _("multiple field specifications"));
+          set_fields (optarg, SETFLD_ALLOW_DASH);
           break;
 
         case 'd':
@@ -1761,9 +1616,7 @@ main (int argc, char **argv)
   free (padding_buffer);
   free (format_str_prefix);
   free (format_str_suffix);
-
-  if (field_list)
-    gl_list_free (field_list);
+  reset_fields ();
 #endif
 
   if (debug && !valid_numbers)
