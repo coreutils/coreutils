@@ -133,8 +133,8 @@ Print certain system information.  With no OPTION, same as -s.\n\
           fputs (_("\
   -v, --kernel-version     print the kernel version\n\
   -m, --machine            print the machine hardware name\n\
-  -p, --processor          print the processor type or \"unknown\"\n\
-  -i, --hardware-platform  print the hardware platform or \"unknown\"\n\
+  -p, --processor          print the processor type (non-portable)\n\
+  -i, --hardware-platform  print the hardware platform (non-portable)\n\
   -o, --operating-system   print the operating system\n\
 "), stdout);
         }

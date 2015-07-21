@@ -15605,8 +15605,8 @@ and the hardware platform name if they are unknown.
 @cindex platform, hardware
 Print the hardware platform name
 (sometimes called the hardware implementation).
-Print @samp{unknown} if the kernel does not make this information
-easily available, as is the case with Linux kernels.
+Print @samp{unknown} if this information is not available.
+Note this is non-portable (even across GNU/Linux distributions).
 
 @item -m
 @itemx --machine
@@ -15634,8 +15634,8 @@ Print the network node hostname.
 @cindex host processor type
 Print the processor type (sometimes called the instruction set
 architecture or ISA).
-Print @samp{unknown} if the kernel does not make this information
-easily available, as is the case with Linux kernels.
+Print @samp{unknown} if this information is not available.
+Note this is non-portable (even across GNU/Linux distributions).
 
 @item -o
 @itemx --operating-system
