@@ -699,6 +699,10 @@ static bool print_dir_name;
 
 static size_t line_length;
 
+/* The local time zone rules, as per the TZ environment variable.  */
+
+static timezone_t localtz;
+
 /* If true, the file listing format requires that stat be called on
    each file.  */
 
@@ -1373,6 +1377,8 @@ main (int argc, char **argv)
 
       obstack_init (&dev_ino_obstack);
     }
+
+  localtz = tzalloc (getenv ("TZ"));
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
@@ -3654,7 +3660,7 @@ print_current_files (void)
 
 static size_t
 align_nstrftime (char *buf, size_t size, char const *fmt, struct tm const *tm,
-                 int __utc, int __ns)
+                 timezone_t tz, int ns)
 {
   const char *nfmt = fmt;
   /* In the unlikely event that rpl_fmt below is not large enough,
@@ -3674,7 +3680,7 @@ align_nstrftime (char *buf, size_t size, char const *fmt, struct tm const *tm,
           strcpy (pfmt, pb + 2);
         }
     }
-  size_t ret = nstrftime (buf, size, nfmt, tm, __utc, __ns);
+  size_t ret = nstrftime (buf, size, nfmt, tm, tz, ns);
   return ret;
 }
 
@@ -3702,7 +3708,8 @@ long_time_expected_width (void)
       if (tm)
         {
           size_t len =
-            align_nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
+            align_nstrftime (buf, sizeof buf, long_time_format[0], tm,
+                             localtz, 0);
           if (len != 0)
             width = mbsnwidth (buf, len, 0);
         }
@@ -3987,7 +3994,7 @@ print_long_format (const struct fileinfo *f)
       /* We assume here that all time zones are offset from UTC by a
          whole number of seconds.  */
       s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
-                           when_local, 0, when_timespec.tv_nsec);
+                           when_local, localtz, when_timespec.tv_nsec);
     }
 
   if (s || !*p)

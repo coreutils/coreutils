@@ -38,7 +38,7 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static bool show_date (const char *format, struct timespec when);
+static bool show_date (const char *, struct timespec, timezone_t);
 
 enum Time_spec
 {
@@ -272,7 +272,7 @@ Show the local time for 9AM next Friday on the west coast of the US\n\
    Return true if successful.  */
 
 static bool
-batch_convert (const char *input_filename, const char *format)
+batch_convert (const char *input_filename, const char *format, timezone_t tz)
 {
   bool ok;
   FILE *in_stream;
@@ -315,7 +315,7 @@ batch_convert (const char *input_filename, const char *format)
         }
       else
         {
-          ok &= show_date (format, when);
+          ok &= show_date (format, when, tz);
         }
     }
 
@@ -485,8 +485,10 @@ main (int argc, char **argv)
         }
     }
 
+  timezone_t tz = tzalloc (getenv ("TZ"));
+
   if (batch_file != NULL)
-    ok = batch_convert (batch_file, format);
+    ok = batch_convert (batch_file, format, tz);
   else
     {
       bool valid_date = true;
@@ -543,7 +545,7 @@ main (int argc, char **argv)
             }
         }
 
-      ok &= show_date (format, when);
+      ok &= show_date (format, when, tz);
     }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -553,7 +555,7 @@ main (int argc, char **argv)
    in FORMAT, followed by a newline.  Return true if successful.  */
 
 static bool
-show_date (const char *format, struct timespec when)
+show_date (const char *format, struct timespec when, timezone_t tz)
 {
   struct tm *tm;
 
@@ -567,7 +569,7 @@ show_date (const char *format, struct timespec when)
 
   if (format == rfc_2822_format)
     setlocale (LC_TIME, "C");
-  fprintftime (stdout, format, tm, 0, when.tv_nsec);
+  fprintftime (stdout, format, tm, tz, when.tv_nsec);
   fputc ('\n', stdout);
   if (format == rfc_2822_format)
     setlocale (LC_TIME, "");
