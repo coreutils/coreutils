@@ -64,8 +64,7 @@ EXTRA_DIST +=		\
   src/dircolors.hin	\
   src/primes.h		\
   src/tac-pipe.c	\
-  src/extract-magic	\
-  src/c99-to-c89.diff
+  src/extract-magic
 
 CLEANFILES += $(SCRIPTS)
 

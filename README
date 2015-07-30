@@ -86,20 +86,15 @@ see <http://thread.gmane.org/gmane.comp.lib.gnulib.bugs/12015/>.
 Pre-C99 build failure
 -----------------------
 
-There is a new, implicit build requirement:
-To build the coreutils from source, you should have a C99-conforming
+In 2009 we added this requirement:
+To build the coreutils from source, you must have a C99-conforming
 compiler, due to the use of declarations after non-declaration statements
 in several files in src/.  There is code in configure to find and, if
 possible, enable an appropriate compiler.  However, if configure doesn't
 find a C99 compiler, it continues nonetheless, and your build will fail.
-If that happens, simply[*] apply the included patch using the following
-command, and then run make again:
-
-  cd src && patch < c99-to-c89.diff
-
-[*] however, as of coreutils-7.1, the "c99-to-c89.diff" file is no longer
-maintained, so even if the patches still apply, the result will be an
-incomplete conversion.  It's been 10 years.  Get a decent compiler! ;-)
+There used to be a "c99-to-c89.diff" patch you could apply to convert
+to code that even an old pre-c99 compiler can handle, but it was too
+tedious to maintain, so has been removed.
 
 
 ***********************
