@@ -31,6 +31,7 @@ $@
 {
   my $fail = 0;
   my @stdin_reading_commands = qw(
+    base32
     base64
     cat
     cksum

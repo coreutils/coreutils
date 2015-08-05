@@ -1,5 +1,6 @@
 Makefile
 Makefile.in
+base32.1
 base64.1
 basename.1
 cat.1

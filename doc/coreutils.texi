@@ -37,6 +37,7 @@
 @dircategory Individual utilities
 @direntry
 * arch: (coreutils)arch invocation.             Print machine hardware name.
+* base32: (coreutils)base32 invocation.         Base32 encode/decode data.
 * base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
@@ -183,7 +184,7 @@ Free Documentation License''.
 @menu
 * Introduction::                 Caveats, overview, and authors
 * Common options::               Common options
-* Output of entire files::       cat tac nl od base64
+* Output of entire files::       cat tac nl od base32 base64
 * Formatting file contents::     fmt pr fold
 * Output of parts of files::     head tail split csplit
 * Summarizing files::            wc sum cksum md5sum sha1sum sha2
@@ -238,6 +239,7 @@ Output of entire files
 * tac invocation::               Concatenate and write files in reverse
 * nl invocation::                Number lines and write files
 * od invocation::                Write files in octal or other formats
+* base32 invocation::            Transform data into printable data
 * base64 invocation::            Transform data into printable data
 
 Formatting file contents
@@ -1551,6 +1553,7 @@ in some way.
 * tac invocation::              Concatenate and write files in reverse.
 * nl invocation::               Number lines and write files.
 * od invocation::               Write files in octal or other formats.
+* base32 invocation::           Transform data into printable data.
 * base64 invocation::           Transform data into printable data.
 @end menu
 
@@ -2138,6 +2141,20 @@ address.
 
 @exitstatus
 
+
+@node base32 invocation
+@section @command{base32}: Transform data into printable data
+
+@pindex base32
+@cindex base32 encoding
+
+@command{base32} transforms data read from a file, or standard input,
+into (or from) base32 encoded form.  The base32 encoded form uses
+printable ASCII characters to represent binary data.
+The usage and options of this command are precisely the
+same as for @command{base64}.  @xref{base64 invocation}.
+
+
 @node base64 invocation
 @section @command{base64}: Transform data into printable data
 
@@ -2155,6 +2172,7 @@ base64 --decode [@var{option}]@dots{} [@var{file}]
 @end smallexample
 
 The base64 encoding expands data to roughly 133% of the original.
+The base32 encoding expands data to roughly 160% of the original.
 The format conforms to
 @uref{ftp://ftp.rfc-editor.org/in-notes/rfc4648.txt, RFC 4648}.
 

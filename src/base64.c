@@ -32,12 +32,16 @@
 #include "quotearg.h"
 #include "xfreopen.h"
 
-#include "base64.h"
-
-/* The official name of this program (e.g., no 'g' prefix).  */
-#define PROGRAM_NAME "base64"
-
 #define AUTHORS proper_name ("Simon Josefsson")
+
+#if BASE_TYPE == 32
+# include "base32.h"
+# define PROGRAM_NAME "base32"
+#else
+# include "base64.h"
+# define PROGRAM_NAME "base64"
+#endif
+
 
 static struct option const long_options[] =
 {
@@ -59,8 +63,8 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]\n\
-Base64 encode or decode FILE, or standard input, to standard output.\n\
-"), program_name);
+Base%d encode or decode FILE, or standard input, to standard output.\n\
+"), program_name, BASE_TYPE);
 
       emit_stdin_note ();
       emit_mandatory_arg_note ();
@@ -74,13 +78,13 @@ Base64 encode or decode FILE, or standard input, to standard output.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
+      printf (_("\
 \n\
-The data are encoded as described for the base64 alphabet in RFC 3548.\n\
+The data are encoded as described for the %s alphabet in RFC 4648.\n\
 When decoding, the input may contain newlines in addition to the bytes of\n\
-the formal base64 alphabet.  Use --ignore-garbage to attempt to recover\n\
+the formal %s alphabet.  Use --ignore-garbage to attempt to recover\n\
 from any other non-alphabet bytes in the encoded stream.\n"),
-             stdout);
+              PROGRAM_NAME, PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }
 
@@ -88,15 +92,38 @@ from any other non-alphabet bytes in the encoded stream.\n"),
 }
 
 #define ENC_BLOCKSIZE (1024*3*10)
-#define ENC_B64BLOCKSIZE BASE64_LENGTH (ENC_BLOCKSIZE)
+
+#if BASE_TYPE == 32
+# define BASE_LENGTH BASE32_LENGTH
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
-#define DEC_BLOCKSIZE (1024*3)
-#define DEC_B64BLOCKSIZE BASE64_LENGTH (DEC_BLOCKSIZE)
+# define DEC_BLOCKSIZE (1024*5)
+
+/* Ensure that BLOCKSIZE is a multiple of 5 and 8.  */
+verify (ENC_BLOCKSIZE % 40 == 0);  /* So padding chars only on last block.  */
+verify (DEC_BLOCKSIZE % 40 == 0);  /* So complete encoded blocks are used.  */
+
+# define base_encode base32_encode
+# define base_decode_context base32_decode_context
+# define base_decode_ctx_init base32_decode_ctx_init
+# define base_decode_ctx base32_decode_ctx
+# define isbase isbase32
+#else
+# define BASE_LENGTH BASE64_LENGTH
+/* Note that increasing this may decrease performance if --ignore-garbage
+   is used, because of the memmove operation below.  */
+# define DEC_BLOCKSIZE (1024*3)
 
 /* Ensure that BLOCKSIZE is a multiple of 3 and 4.  */
-verify (ENC_BLOCKSIZE % 12 == 0);
-verify (DEC_BLOCKSIZE % 12 == 0);
+verify (ENC_BLOCKSIZE % 12 == 0);  /* So padding chars only on last block.  */
+verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
+
+# define base_encode base64_encode
+# define base_decode_context base64_decode_context
+# define base_decode_ctx_init base64_decode_ctx_init
+# define base_decode_ctx base64_decode_ctx
+# define isbase isbase64
+#endif
 
 static void
 wrap_write (const char *buffer, size_t len,
@@ -138,7 +165,7 @@ do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 {
   size_t current_column = 0;
   char inbuf[ENC_BLOCKSIZE];
-  char outbuf[ENC_B64BLOCKSIZE];
+  char outbuf[BASE_LENGTH (ENC_BLOCKSIZE)];
   size_t sum;
 
   do
@@ -155,11 +182,11 @@ do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 
       if (sum > 0)
         {
-          /* Process input one block at a time.  Note that ENC_BLOCKSIZE %
-             3 == 0, so that no base64 pads will appear in output. */
-          base64_encode (inbuf, sum, outbuf, BASE64_LENGTH (sum));
+          /* Process input one block at a time.  Note that ENC_BLOCKSIZE
+             is sized so that no pad chars will appear in output. */
+          base_encode (inbuf, sum, outbuf, BASE_LENGTH (sum));
 
-          wrap_write (outbuf, BASE64_LENGTH (sum), wrap_column,
+          wrap_write (outbuf, BASE_LENGTH (sum), wrap_column,
                       &current_column, out);
         }
     }
@@ -176,12 +203,12 @@ do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 static void
 do_decode (FILE *in, FILE *out, bool ignore_garbage)
 {
-  char inbuf[DEC_B64BLOCKSIZE];
+  char inbuf[BASE_LENGTH (DEC_BLOCKSIZE)];
   char outbuf[DEC_BLOCKSIZE];
   size_t sum;
-  struct base64_decode_context ctx;
+  struct base_decode_context ctx;
 
-  base64_decode_ctx_init (&ctx);
+  base_decode_ctx_init (&ctx);
 
   do
     {
@@ -192,13 +219,13 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
       sum = 0;
       do
         {
-          n = fread (inbuf + sum, 1, DEC_B64BLOCKSIZE - sum, in);
+          n = fread (inbuf + sum, 1, BASE_LENGTH (DEC_BLOCKSIZE) - sum, in);
 
           if (ignore_garbage)
             {
               size_t i;
               for (i = 0; n > 0 && i < n;)
-                if (isbase64 (inbuf[sum + i]) || inbuf[sum + i] == '=')
+                if (isbase (inbuf[sum + i]) || inbuf[sum + i] == '=')
                   i++;
                 else
                   memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
@@ -209,7 +236,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
           if (ferror (in))
             error (EXIT_FAILURE, errno, _("read error"));
         }
-      while (sum < DEC_B64BLOCKSIZE && !feof (in));
+      while (sum < BASE_LENGTH (DEC_BLOCKSIZE) && !feof (in));
 
       /* The following "loop" is usually iterated just once.
          However, when it processes the final input buffer, we want
@@ -220,7 +247,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
           if (k == 1 && ctx.i == 0)
             break;
           n = DEC_BLOCKSIZE;
-          ok = base64_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
+          ok = base_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
             error (EXIT_FAILURE, errno, _("write error"));
@@ -241,9 +268,9 @@ main (int argc, char **argv)
 
   /* True if --decode has been given and we should decode data. */
   bool decode = false;
-  /* True if we should ignore non-base64-alphabetic characters. */
+  /* True if we should ignore non-base-alphabetic characters. */
   bool ignore_garbage = false;
-  /* Wrap encoded base64 data around the 76:th column, by default. */
+  /* Wrap encoded data around the 76:th column, by default. */
   uintmax_t wrap_column = 76;
 
   initialize_main (&argc, &argv);

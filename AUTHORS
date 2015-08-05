@@ -2,6 +2,7 @@ Here are the names of the programs in this package,
 each followed by the name(s) of its author(s).
 
 arch: David MacKenzie, Karel Zak
+base32: Simon Josefsson
 base64: Simon Josefsson
 basename: David MacKenzie
 cat: Torbjörn Granlund, Richard M. Stallman

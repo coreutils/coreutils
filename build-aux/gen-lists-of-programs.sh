@@ -42,6 +42,7 @@ build_if_possible_progs='
 normal_progs='
     [
     base64
+    base32
     basename
     cat
     chcon

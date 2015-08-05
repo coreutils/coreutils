@@ -2,6 +2,7 @@
 /.dirstamp
 \[
 arch
+base32
 base64
 basename
 cat

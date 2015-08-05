@@ -7,7 +7,7 @@ arbitrary limits.
 
 The programs that can be built with this package are:
 
-  [ arch base64 basename cat chcon chgrp chmod chown chroot cksum comm
+  [ arch base32 base64 basename cat chcon chgrp chmod chown chroot cksum comm
   coreutils cp csplit cut date dd df dir dircolors dirname du echo env
   expand expr factor false fmt fold groups head hostid hostname id install
   join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp mv nice nl

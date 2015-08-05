@@ -94,6 +94,7 @@ LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) lib/libcoreutils.a
 # See [ below.
 src_arch_LDADD = $(LDADD)
 src_base64_LDADD = $(LDADD)
+src_base32_LDADD = $(LDADD)
 src_basename_LDADD = $(LDADD)
 src_cat_LDADD = $(LDADD)
 src_chcon_LDADD = $(LDADD)
@@ -397,6 +398,10 @@ src_sha384sum_SOURCES = src/md5sum.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
 src_sha512sum_SOURCES = src/md5sum.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
+
+src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)
+src_base32_SOURCES = src/base64.c
+src_base32_CPPFLAGS = -DBASE_TYPE=32 $(AM_CPPFLAGS)
 
 src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
 

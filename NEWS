@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   shred again uses defined patterns for all iteration counts.
   [bug introduced in coreutils-5.93]
 
+** New commands
+
+  base32 is added to complement the existing base64 command,
+  and encodes and decodes printable text as per RFC 4648.
+
 
 * Noteworthy changes in release 8.24 (2015-07-03) [stable]
 
