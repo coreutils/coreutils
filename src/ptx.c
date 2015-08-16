@@ -28,7 +28,6 @@
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "read-file.h"
 #include "stdio--.h"
 #include "xstrtol.h"
@@ -1949,7 +1948,7 @@ main (int argc, char **argv)
             if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
                 || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
               error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
-                     quotearg (optarg));
+                     quote (optarg));
             gap_size = tmp_ulong;
             break;
           }
@@ -1976,7 +1975,7 @@ main (int argc, char **argv)
             if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
                 || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
               error (EXIT_FAILURE, 0, _("invalid line width: %s"),
-                     quotearg (optarg));
+                     quote (optarg));
             line_width = tmp_ulong;
             break;
           }

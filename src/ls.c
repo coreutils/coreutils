@@ -1619,7 +1619,7 @@ decode_switches (int argc, char **argv)
     if (p && *p && ! set_line_length (p))
       error (0, 0,
              _("ignoring invalid width in environment variable COLUMNS: %s"),
-             quotearg (p));
+             quote (p));
   }
 
 #ifdef TIOCGWINSZ
@@ -1647,7 +1647,7 @@ decode_switches (int argc, char **argv)
           {
             error (0, 0,
              _("ignoring invalid tab size in environment variable TABSIZE: %s"),
-                   quotearg (p));
+                   quote (p));
           }
       }
   }
@@ -2446,7 +2446,7 @@ parse_ls_color (void)
                     }
                 }
               if (state == PS_FAIL)
-                error (0, 0, _("unrecognized prefix: %s"), quotearg (label));
+                error (0, 0, _("unrecognized prefix: %s"), quote (label));
             }
           break;
 
@@ -2507,7 +2507,7 @@ getenv_quoting_style (void)
       else
         error (0, 0,
        _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
-               quotearg (q_style));
+               quote (q_style));
     }
 }
 
