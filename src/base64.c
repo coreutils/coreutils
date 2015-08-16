@@ -29,7 +29,7 @@
 #include "fadvise.h"
 #include "xstrtol.h"
 #include "quote.h"
-#include "quotearg.h"
+#include "xdectoint.h"
 #include "xfreopen.h"
 
 #define AUTHORS proper_name ("Simon Josefsson")
@@ -289,9 +289,8 @@ main (int argc, char **argv)
         break;
 
       case 'w':
-        if (xstrtoumax (optarg, NULL, 0, &wrap_column, NULL) != LONGINT_OK)
-          error (EXIT_FAILURE, 0, _("invalid wrap size: %s"),
-                 quotearg (optarg));
+        wrap_column = xnumtoumax (optarg, 0, 0, UINTMAX_MAX, "",
+                                  _("invalid wrap size"), 0);
         break;
 
       case 'i':
