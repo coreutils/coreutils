@@ -289,7 +289,7 @@ main (int argc, char **argv)
         break;
 
       case 'w':
-        wrap_column = xnumtoumax (optarg, 0, 0, UINTMAX_MAX, "",
+        wrap_column = xdectoumax (optarg, 0, UINTMAX_MAX, "",
                                   _("invalid wrap size"), 0);
         break;
 
