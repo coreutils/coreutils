@@ -293,6 +293,20 @@ check-x-vs-1:
 	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t
 
+# Ensure that non-trivial .x files in the 'man/' subdirectory,
+# i.e., files exceeding a line count of 20 or a byte count of 1000,
+# contain a Copyright notice.
+.PHONY: sc_man_check_x_copyright
+sc_man_check_x_copyright:
+	@status=0;							\
+	cd $(srcdir) && wc -cl man/*.x | head -n-1			\
+	  | awk '$$1 >= 20 || $$2 >= 1000 {print $$3}'			\
+	  | xargs grep -L 'Copyright .* Free Software Foundation'	\
+	  | grep .							\
+	  && { echo  1>&2 '$@: exceeding file size/line count limit'	\
+		  '- please add a copyright note'; status=1; };		\
+	exit $$status
+
 # Writing a portable rule to generate a manpage like '[.1' would be
 # a nightmare, so filter that out.
 all-progs-but-lbracket = $(filter-out [,$(patsubst src/%,%,$(all_programs)))
