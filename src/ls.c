@@ -1523,6 +1523,31 @@ main (int argc, char **argv)
   return exit_status;
 }
 
+/* Set the line length to the value given by SPEC.  Return true if
+   successful.  */
+
+static bool
+set_line_length (char const *spec)
+{
+  uintmax_t val;
+
+  /* Treat too-large values as if they were SIZE_MAX, which is
+     effectively infinity.  */
+  switch (xstrtoumax (spec, NULL, 0, &val, ""))
+    {
+    case LONGINT_OK:
+      line_length = MIN (val, SIZE_MAX);
+      return true;
+
+    case LONGINT_OVERFLOW:
+      line_length = SIZE_MAX;
+      return true;
+
+    default:
+      return false;
+    }
+}
+
 /* Set all the option flags according to the switches specified.
    Return the index of the first non-option argument.  */
 
@@ -1591,21 +1616,10 @@ decode_switches (int argc, char **argv)
   line_length = 80;
   {
     char const *p = getenv ("COLUMNS");
-    if (p && *p)
-      {
-        unsigned long int tmp_ulong;
-        if (xstrtoul (p, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
-            && 0 < tmp_ulong && tmp_ulong <= SIZE_MAX)
-          {
-            line_length = tmp_ulong;
-          }
-        else
-          {
-            error (0, 0,
-               _("ignoring invalid width in environment variable COLUMNS: %s"),
-                   quotearg (p));
-          }
-      }
+    if (p && *p && ! set_line_length (p))
+      error (0, 0,
+             _("ignoring invalid width in environment variable COLUMNS: %s"),
+             quotearg (p));
   }
 
 #ifdef TIOCGWINSZ
@@ -1749,8 +1763,9 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'w':
-          line_length = xnumtoumax (optarg, 0, 1, SIZE_MAX, "",
-                                    _("invalid line width"), LS_FAILURE);
+          if (! set_line_length (optarg))
+            error (LS_FAILURE, 0, "%s: %s", _("invalid line width"),
+                   quote (optarg));
           break;
 
         case 'x':
