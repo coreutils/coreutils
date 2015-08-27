@@ -3182,13 +3182,13 @@ specified, will auto increase the length by 2 as required.
 Use digits in suffixes rather than lower-case letters.  The numerical
 suffix counts from @var{from} if specified, 0 otherwise.
 
-@var{from} is used to either set the initial suffix for a single run,
-or to set the suffix offset for independently split inputs, and consequently
-the auto suffix length expansion described above is disabled.  Therefore
-you may also want to use option @option{-a} to allow suffixes beyond @samp{99}.
-Note if option @option{--number} is specified and the number of files is less
-than @var{from}, a single run is assumed and the minimum suffix length
-required is automatically determined.
+@var{from} is supported with the long form option, and is used to either set the
+initial suffix for a single run, or to set the suffix offset for independently
+split inputs, and consequently the auto suffix length expansion described above
+is disabled.  Therefore you may also want to use option @option{-a} to allow
+suffixes beyond @samp{99}.  Note if option @option{--number} is specified and
+the number of files is less than @var{from}, a single run is assumed and the
+minimum suffix length required is automatically determined.
 
 @item --additional-suffix=@var{suffix}
 @opindex --additional-suffix
@@ -4907,8 +4907,9 @@ Do not discard the second and subsequent repeated input lines,
 but discard lines that are not repeated.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
-The optional @var{delimit-method} specifies how to delimit
-groups of repeated lines, and must be one of the following:
+The optional @var{delimit-method}, supported with the long form option,
+specifies how to delimit groups of repeated lines, and must be one of the
+following:
 
 @table @samp
 
@@ -9414,8 +9415,8 @@ the whole file.  @var{bytes} can be followed by a size specification like
 After shredding a file, truncate it (if possible) and then remove it.
 If a file has multiple links, only the named links will be removed.
 Often the file name is less sensitive than the file data, in which case
-the optional @var{how} parameter gives control of how to more efficiently
-remove each directory entry.
+the optional @var{how} parameter, supported with the long form option,
+gives control of how to more efficiently remove each directory entry.
 The @samp{unlink} parameter will just use a standard unlink call,
 @samp{wipe} will also first obfuscate bytes in the name, and
 @samp{wipesync} will also sync each obfuscated byte in the name to disk.
@@ -12892,8 +12893,9 @@ Ignore interrupt signals.
 @itemx --output-error[=@var{mode}]
 @opindex -p
 @opindex --output-error
-Select the behavior with errors on the outputs,
-where @var{mode} is one of the following:
+Adjust the behavior with errors on the outputs,
+with the long form option supporting selection
+between the following @var{mode}s:
 
 @table @samp
 @item warn
@@ -12902,10 +12904,11 @@ Writing is continued to still open files/pipes.
 Exit status indicates failure if any output has an error.
 
 @item warn-nopipe
+This is the default @var{mode} when not specified,
+or when the short form @option{-p} is used.
 Warn on error opening or writing any output, except pipes.
 Writing is continued to still open files/pipes.
 Exit status indicates failure if any non pipe output had an error.
-This is the default @var{mode} when not specified.
 
 @item exit
 Exit on error opening or writing any output, including pipes.
