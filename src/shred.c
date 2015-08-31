@@ -185,7 +185,8 @@ If FILE is -, shred standard output.\n\
   -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
 "), DEFAULT_PASSES);
       fputs (_("\
-  -u, --remove[=HOW]  truncate and remove file after overwriting; See below\n\
+  -u             truncate and remove file after overwriting\n\
+      --remove[=HOW]  like -u but give control on HOW to delete;  See below\n\
   -v, --verbose  show progress\n\
   -x, --exact    do not round file sizes up to the next full block;\n\
                    this is the default for non-regular files\n\

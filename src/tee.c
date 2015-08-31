@@ -91,7 +91,8 @@ Copy standard input to each FILE, and also to standard output.\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\
 "), stdout);
       fputs (_("\
-  -p, --output-error[=MODE]  behavior on write error.  See MODE details below\n\
+  -p                        diagnose errors writing to non pipes\n\
+      --output-error[=MODE]   set behavior on write error.  See MODE below\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

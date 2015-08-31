@@ -238,8 +238,9 @@ default size is 1000 lines, and default PREFIX is 'x'.\n\
       --additional-suffix=SUFFIX  append an additional SUFFIX to file names\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of records per output file\n\
-  -d, --numeric-suffixes[=FROM]  use numeric suffixes instead of alphabetic;\n\
-                                   FROM changes the start value (default 0)\n\
+  -d                      use numeric suffixes starting at 0, not alphabetic\n\
+      --numeric-suffixes[=FROM]  same as -d, but allow setting the start value\
+\n\
   -e, --elide-empty-files  do not generate empty output files with '-n'\n\
       --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
   -l, --lines=NUMBER      put NUMBER lines/records per output file\n\
