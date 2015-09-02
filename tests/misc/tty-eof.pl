@@ -63,7 +63,8 @@ $@
     wc
   );
   my $stderr = 'tty-eof.err';
-  foreach my $cmd ((@stdin_reading_commands), 'cut -f2')
+  foreach my $cmd ((@stdin_reading_commands), 'cut -f2',
+                   'numfmt --invalid=ignore')
     {
       my $exp = new Expect;
       $exp->log_user(0);
