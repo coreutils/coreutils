@@ -1130,6 +1130,7 @@ main (int argc, char **argv)
     }
 
   cleanup ();
+  IF_LINT (free (file_names));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

@@ -528,6 +528,8 @@ tsort (const char *file)
         }
     }
 
+  IF_LINT (free (root));
+
   if (fclose (stdin) != 0)
     error (EXIT_FAILURE, errno, "%s",
            is_stdin ? _("standard input") : quote (file));

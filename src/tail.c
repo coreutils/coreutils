@@ -2354,6 +2354,8 @@ main (int argc, char **argv)
       tail_forever (F, n_files, sleep_interval);
     }
 
+  IF_LINT (free (F));
+
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;

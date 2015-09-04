@@ -4742,6 +4742,8 @@ main (int argc, char **argv)
       sort (files, nfiles, outfile, nthreads);
     }
 
+  IF_LINT (free (files));
+
   if (have_read_stdin && fclose (stdin) == EOF)
     die (_("close failed"), "-");
 
