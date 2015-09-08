@@ -4681,10 +4681,10 @@ main (int argc, char **argv)
 
   if (nfiles == 0)
     {
-      static char *minus = (char *) "-";
       nfiles = 1;
       free (files);
-      files = &minus;
+      files = xmalloc (sizeof *files);
+      *files = (char *) "-";
     }
 
   /* Need to re-check that we meet the minimum requirement for memory
@@ -4742,7 +4742,12 @@ main (int argc, char **argv)
       sort (files, nfiles, outfile, nthreads);
     }
 
-  IF_LINT (free (files));
+#ifdef lint
+  if (files_from)
+    readtokens0_free (&tok);
+  else
+    free (files);
+#endif
 
   if (have_read_stdin && fclose (stdin) == EOF)
     die (_("close failed"), "-");
