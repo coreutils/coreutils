@@ -9396,8 +9396,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex force deletion
 Override file permissions if necessary to allow overwriting.
 
-@item -@var{number}
-@itemx -n @var{number}
+@item -n @var{number}
 @itemx --iterations=@var{number}
 @opindex -n @var{number}
 @opindex --iterations=@var{number}
