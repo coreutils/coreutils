@@ -431,14 +431,13 @@ es_free (struct E_string *es)
 static bool
 unquote (char const *s, struct E_string *es)
 {
-  size_t i, j;
   size_t len = strlen (s);
 
   es->s = xmalloc (len);
   es->escaped = xcalloc (len, sizeof es->escaped[0]);
 
-  j = 0;
-  for (i = 0; s[i]; i++)
+  size_t j = 0;
+  for (int i = 0; s[i]; i++)
     {
       unsigned char c;
       int oct_digit;
@@ -586,9 +585,8 @@ make_printable_str (char const *s, size_t len)
      followed by a 3-character octal escape sequence.  */
   char *printable_buf = xnmalloc (len + 1, 4);
   char *p = printable_buf;
-  size_t i;
 
-  for (i = 0; i < len; i++)
+  for (size_t i = 0; i < len; i++)
     {
       char buf[5];
       char const *tmp = NULL;
@@ -642,9 +640,7 @@ make_printable_str (char const *s, size_t len)
 static void
 append_normal_char (struct Spec_list *list, unsigned char c)
 {
-  struct List_element *new;
-
-  new = xmalloc (sizeof *new);
+  struct List_element *new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_NORMAL_CHAR;
   new->u.normal_char = c;
@@ -661,8 +657,6 @@ append_normal_char (struct Spec_list *list, unsigned char c)
 static bool
 append_range (struct Spec_list *list, unsigned char first, unsigned char last)
 {
-  struct List_element *new;
-
   if (last < first)
     {
       char *tmp1 = make_printable_char (first);
@@ -675,7 +669,7 @@ append_range (struct Spec_list *list, unsigned char first, unsigned char last)
       free (tmp2);
       return false;
     }
-  new = xmalloc (sizeof *new);
+  struct List_element *new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_RANGE;
   new->u.range.first_char = first;
@@ -695,13 +689,10 @@ static bool
 append_char_class (struct Spec_list *list,
                    char const *char_class_str, size_t len)
 {
-  enum Char_class char_class;
-  struct List_element *new;
-
-  char_class = look_up_char_class (char_class_str, len);
+  enum Char_class char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
     return false;
-  new = xmalloc (sizeof *new);
+  struct List_element *new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_CHAR_CLASS;
   new->u.char_class = char_class;
@@ -720,9 +711,7 @@ static void
 append_repeated_char (struct Spec_list *list, unsigned char the_char,
                       count repeat_count)
 {
-  struct List_element *new;
-
-  new = xmalloc (sizeof *new);
+  struct List_element *new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_REPEATED_CHAR;
   new->u.repeated_char.the_repeated_char = the_char;
@@ -742,11 +731,10 @@ static bool
 append_equiv_class (struct Spec_list *list,
                     char const *equiv_class_str, size_t len)
 {
-  struct List_element *new;
-
   if (len != 1)
     return false;
-  new = xmalloc (sizeof *new);
+
+  struct List_element *new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_EQUIV_CLASS;
   new->u.equiv_code = *equiv_class_str;
@@ -766,9 +754,7 @@ static bool
 find_closing_delim (const struct E_string *es, size_t start_idx,
                     char pre_bracket_char, size_t *result_idx)
 {
-  size_t i;
-
-  for (i = start_idx; i < es->len - 1; i++)
+  for (size_t i = start_idx; i < es->len - 1; i++)
     if (es->s[i] == pre_bracket_char && es->s[i + 1] == ']'
         && !es->escaped[i] && !es->escaped[i + 1])
       {
@@ -793,13 +779,11 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
                        unsigned char *char_to_repeat, count *repeat_count,
                        size_t *closing_bracket_idx)
 {
-  size_t i;
-
   assert (start_idx + 1 < es->len);
   if (!es_match (es, start_idx + 1, '*'))
     return -1;
 
-  for (i = start_idx + 2; i < es->len && !es->escaped[i]; i++)
+  for (size_t i = start_idx + 2; i < es->len && !es->escaped[i]; i++)
     {
       if (es->s[i] == ']')
         {
@@ -845,12 +829,10 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 static bool _GL_ATTRIBUTE_PURE
 star_digits_closebracket (const struct E_string *es, size_t idx)
 {
-  size_t i;
-
   if (!es_match (es, idx, '*'))
     return false;
 
-  for (i = idx + 1; i < es->len; i++)
+  for (size_t i = idx + 1; i < es->len; i++)
     if (!ISDIGIT (to_uchar (es->s[i])) || es->escaped[i])
       return es_match (es, i, ']');
   return false;
@@ -871,10 +853,7 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
 static bool
 build_spec_list (const struct E_string *es, struct Spec_list *result)
 {
-  char const *p;
-  size_t i;
-
-  p = es->s;
+  char const *p = es->s;
 
   /* The main for-loop below recognizes the 4 multi-character constructs.
      A character that matches (in its context) none of the multi-character
@@ -882,7 +861,7 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
      constructs have at least 3 characters, any strings of length 2 or
      less are composed solely of normal characters.  Hence, the index of
      the outer for-loop runs only as far as LEN-2.  */
-
+  size_t i;
   for (i = 0; i + 2 < es->len; /* empty */)
     {
       if (es_match (es, i, '['))
@@ -1272,7 +1251,6 @@ get_spec_stats (struct Spec_list *s)
   s->has_char_class = false;
   for (p = s->head->next; p; p = p->next)
     {
-      int i;
       count len = 0;
       count new_length;
 
@@ -1289,7 +1267,7 @@ get_spec_stats (struct Spec_list *s)
 
         case RE_CHAR_CLASS:
           s->has_char_class = true;
-          for (i = 0; i < N_CHARS; i++)
+          for (int i = 0; i < N_CHARS; i++)
             if (is_char_class_member (p->u.char_class, i))
               ++len;
           switch (p->u.char_class)
@@ -1304,7 +1282,7 @@ get_spec_stats (struct Spec_list *s)
           break;
 
         case RE_EQUIV_CLASS:
-          for (i = 0; i < N_CHARS; i++)
+          for (int i = 0; i < N_CHARS; i++)
             if (is_equiv_class_member (p->u.equiv_code, i))
               ++len;
           s->has_equiv_class = true;
@@ -1389,7 +1367,6 @@ parse_str (char const *s, struct Spec_list *spec_list)
    way this function can fail to make S2 as long as S1 is when S2 has
    zero-length, since in that case, there is no last character to repeat.
    So S2->length is required to be at least 1.  */
-
 
 static void
 string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
@@ -1561,8 +1538,6 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 
   while (true)
     {
-      size_t begin;
-
       if (i >= nr)
         {
           nr = reader (buf, size);
@@ -1571,7 +1546,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
           i = 0;
         }
 
-      begin = i;
+      size_t begin = i;
 
       if (char_to_squeeze == NOT_A_CHAR)
         {
@@ -1660,7 +1635,6 @@ read_and_delete (char *buf, size_t size)
      just deleted all the characters in a buffer.  */
   do
     {
-      size_t i;
       size_t nr = plain_read (buf, size);
 
       if (nr == 0)
@@ -1671,6 +1645,7 @@ read_and_delete (char *buf, size_t size)
          the beginning of a buffer.  It just avoids the copying
          of buf[i] into buf[n_saved] when it would be a NOP.  */
 
+      size_t i;
       for (i = 0; i < nr && !in_delete_set[to_uchar (buf[i])]; i++)
         continue;
       n_saved = i;
@@ -1692,9 +1667,8 @@ static size_t
 read_and_xlate (char *buf, size_t size)
 {
   size_t bytes_read = plain_read (buf, size);
-  size_t i;
 
-  for (i = 0; i < bytes_read; i++)
+  for (size_t i = 0; i < bytes_read; i++)
     buf[i] = xlate[to_uchar (buf[i])];
 
   return bytes_read;
@@ -1710,13 +1684,12 @@ static void
 set_initialize (struct Spec_list *s, bool complement_this_set, bool *in_set)
 {
   int c;
-  size_t i;
 
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
     in_set[c] = true;
   if (complement_this_set)
-    for (i = 0; i < N_CHARS; i++)
+    for (size_t i = 0; i < N_CHARS; i++)
       in_set[i] = (!in_set[i]);
 }
 
@@ -1854,14 +1827,13 @@ main (int argc, char **argv)
     {
       if (complement)
         {
-          int i;
           bool *in_s1 = in_delete_set;
 
           set_initialize (s1, false, in_s1);
           s2->state = BEGIN_STATE;
-          for (i = 0; i < N_CHARS; i++)
+          for (int i = 0; i < N_CHARS; i++)
             xlate[i] = i;
-          for (i = 0; i < N_CHARS; i++)
+          for (int i = 0; i < N_CHARS; i++)
             {
               if (!in_s1[i])
                 {
@@ -1880,11 +1852,10 @@ main (int argc, char **argv)
       else
         {
           int c1, c2;
-          int i;
           enum Upper_Lower_class class_s1;
           enum Upper_Lower_class class_s2;
 
-          for (i = 0; i < N_CHARS; i++)
+          for (int i = 0; i < N_CHARS; i++)
             xlate[i] = i;
           s1->state = BEGIN_STATE;
           s2->state = BEGIN_STATE;
@@ -1895,13 +1866,13 @@ main (int argc, char **argv)
 
               if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
                 {
-                  for (i = 0; i < N_CHARS; i++)
+                  for (int i = 0; i < N_CHARS; i++)
                     if (islower (i))
                       xlate[i] = toupper (i);
                 }
               else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
                 {
-                  for (i = 0; i < N_CHARS; i++)
+                  for (int i = 0; i < N_CHARS; i++)
                     if (isupper (i))
                       xlate[i] = tolower (i);
                 }
