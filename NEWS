@@ -17,6 +17,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   base64 no longer supports hex or oct --wrap parameters,
   thus better supporting decimals with leading zeros.
 
+** Improvements
+
+  du no longer stats all mount points at startup, only doing so
+  upon detection of a directory cycle.
+  [issue introduced in coreutils-8.20]
+
 
 * Noteworthy changes in release 8.24 (2015-07-03) [stable]
 

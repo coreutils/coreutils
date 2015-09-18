@@ -419,6 +419,33 @@ print_size (const struct duinfo *pdui, const char *string)
   fflush (stdout);
 }
 
+/* Fill the di_mnt set with local mount point dev/ino pairs.  */
+
+static void
+fill_mount_table (void)
+{
+  struct mount_entry *mnt_ent = read_file_system_list (false);
+  while (mnt_ent)
+    {
+      struct mount_entry *mnt_free;
+      if (!mnt_ent->me_remote && !mnt_ent->me_dummy)
+        {
+          struct stat buf;
+          if (!stat (mnt_ent->me_mountdir, &buf))
+            hash_ins (di_mnt, buf.st_ino, buf.st_dev);
+          else
+            {
+              /* Ignore stat failure.  False positives are too common.
+                 E.g., "Permission denied" on /run/user/<name>/gvfs.  */
+            }
+        }
+
+      mnt_free = mnt_ent;
+      mnt_ent = mnt_ent->me_next;
+      free_mount_entry (mnt_free);
+    }
+}
+
 /* This function checks whether any of the directories in the cycle that
    fts detected is a mount point.  */
 
@@ -426,6 +453,16 @@ static bool
 mount_point_in_fts_cycle (FTSENT const *ent)
 {
   FTSENT const *cycle_ent = ent->fts_cycle;
+
+  if (!di_mnt)
+    {
+      /* Initialize the set of dev,inode pairs.  */
+      di_mnt = di_set_alloc ();
+      if (!di_mnt)
+        xalloc_die ();
+
+      fill_mount_table ();
+    }
 
   while (ent && ent != cycle_ent)
     {
@@ -678,33 +715,6 @@ du_files (char **files, int bit_flags)
     }
 
   return ok;
-}
-
-/* Fill the di_mnt set with local mount point dev/ino pairs.  */
-
-static void
-fill_mount_table (void)
-{
-  struct mount_entry *mnt_ent = read_file_system_list (false);
-  while (mnt_ent)
-    {
-      struct mount_entry *mnt_free;
-      if (!mnt_ent->me_remote && !mnt_ent->me_dummy)
-        {
-          struct stat buf;
-          if (!stat (mnt_ent->me_mountdir, &buf))
-            hash_ins (di_mnt, buf.st_ino, buf.st_dev);
-          else
-            {
-              /* Ignore stat failure.  False positives are too common.
-                 E.g., "Permission denied" on /run/user/<name>/gvfs.  */
-            }
-        }
-
-      mnt_free = mnt_ent;
-      mnt_ent = mnt_ent->me_next;
-      free_mount_entry (mnt_free);
-    }
 }
 
 int
@@ -1034,13 +1044,6 @@ main (int argc, char **argv)
     xalloc_die ();
 
   /* Initialize the set of dev,inode pairs.  */
-
-  di_mnt = di_set_alloc ();
-  if (!di_mnt)
-    xalloc_die ();
-
-  fill_mount_table ();
-
   di_files = di_set_alloc ();
   if (!di_files)
     xalloc_die ();
@@ -1121,7 +1124,8 @@ main (int argc, char **argv)
 
   argv_iter_free (ai);
   di_set_free (di_files);
-  di_set_free (di_mnt);
+  if (di_mnt)
+    di_set_free (di_mnt);
 
   if (files_from && (ferror (stdin) || fclose (stdin) != 0) && ok)
     error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));
