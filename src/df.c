@@ -641,6 +641,13 @@ filter_mount_list (bool devices_only)
 
           if (devlist)
             {
+              bool target_nearer_root = strlen (devlist->me->me_mountdir)
+                                        > strlen (me->me_mountdir);
+              /* With bind mounts, prefer items nearer the root of the source */
+              bool source_below_root = devlist->me->me_mntroot != NULL
+                                       && me->me_mntroot != NULL
+                                       && (strlen (devlist->me->me_mntroot)
+                                           < strlen (me->me_mntroot));
               if (! print_grand_total && me->me_remote && devlist->me->me_remote
                   && ! STREQ (devlist->me->me_devname, me->me_devname))
                 {
@@ -652,9 +659,8 @@ filter_mount_list (bool devices_only)
               else if ((strchr (me->me_devname, '/')
                        /* let "real" devices with '/' in the name win.  */
                         && ! strchr (devlist->me->me_devname, '/'))
-                       /* let a shorter mountdir win.  */
-                       || (strlen (devlist->me->me_mountdir)
-                           > strlen (me->me_mountdir))
+                       /* let points towards the root of the device win.  */
+                       || (target_nearer_root && ! source_below_root)
                        /* let an entry overmounted on a new device win...  */
                        || (! STREQ (devlist->me->me_devname, me->me_devname)
                            /* ... but only when matching an existing mnt point,

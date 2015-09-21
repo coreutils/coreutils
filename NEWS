@@ -17,6 +17,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   base64 no longer supports hex or oct --wrap parameters,
   thus better supporting decimals with leading zeros.
 
+  df now prefers sources towards the root of a device when
+  eliding duplicate bind mounted entries.
+
 ** Improvements
 
   du no longer stats all mount points at startup, only doing so
