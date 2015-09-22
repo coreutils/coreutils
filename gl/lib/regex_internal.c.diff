@@ -1,11 +1,11 @@
 diff --git a/lib/regex_internal.c b/lib/regex_internal.c
-index 36ae6ab..c11ff09 100644
+index 93d7ee9..9b86a07 100644
 --- a/lib/regex_internal.c
 +++ b/lib/regex_internal.c
 @@ -17,6 +17,8 @@
     License along with the GNU C Library; if not, see
     <http://www.gnu.org/licenses/>.  */
-
+ 
 +#include "verify.h"
 +#include "intprops.h"
  static void re_string_construct_common (const char *str, Idx len,

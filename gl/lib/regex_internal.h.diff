@@ -1,14 +1,14 @@
 diff --git a/lib/regex_internal.h b/lib/regex_internal.h
-index ff486bb..ff85ac8 100644
+index 0307a34..45c2d44 100644
 --- a/lib/regex_internal.h
 +++ b/lib/regex_internal.h
-@@ -863,7 +863,8 @@ re_string_wchar_at (const re_string_t *pstr, Idx idx)
- # ifndef NOT_IN_libc
+@@ -868,7 +868,8 @@ re_string_wchar_at (const re_string_t *pstr, Idx idx)
+ 
  static int
  internal_function __attribute__ ((pure, unused))
 -re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 +re_string_elem_size_at (const re_string_t *pstr _UNUSED_PARAMETER_,
 +			Idx idx _UNUSED_PARAMETER_)
  {
- #  ifdef _LIBC
+ # ifdef _LIBC
    const unsigned char *p, *extra;

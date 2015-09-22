@@ -673,7 +673,7 @@ sc_gitignore_missing:
 	      sort | uniq -u | grep . && { echo '$(ME): Add above'	\
 		'entries to .gitignore' >&2; exit 1; } || :
 
-# Flag redundant entreis in .gitignore
+# Flag redundant entries in .gitignore
 sc_gitignore_redundant:
 	@{ grep ^/lib .gitignore; sed 's|^|/lib|' lib/.gitignore; } |	\
 	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
@@ -695,7 +695,8 @@ exclude_file_name_regexp--sc_space_tab = \
   ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$|man/help2man$$)
 exclude_file_name_regexp--sc_bindtextdomain = \
   ^(gl/.*|lib/euidaccess-stat|src/make-prime-list)\.c$$
-exclude_file_name_regexp--sc_trailing_blank = ^(tests/pr/|man/help2man)
+exclude_file_name_regexp--sc_trailing_blank = \
+  ^(tests/pr/|gl/.*\.diff$$|man/help2man)
 exclude_file_name_regexp--sc_system_h_headers = \
   ^src/((system|copy)\.h|make-prime-list\.c)$$
 
