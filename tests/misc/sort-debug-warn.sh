@@ -51,6 +51,7 @@ sort: option '-i' is ignored
 sort: using simple byte comparison
 sort: using simple byte comparison
 sort: using simple byte comparison
+sort: failed to set locale; using simple byte comparison
 EOF
 
 sort -s -k2,1 --debug /dev/null 2>>out
@@ -70,6 +71,7 @@ sort -i -k1,1d --debug /dev/null 2>>out
 sort -r --debug /dev/null 2>>out #no warning
 sort -rM --debug /dev/null 2>>out #no warning
 sort -rM -k1,1 --debug /dev/null 2>>out #no warning
+LC_ALL=missing sort --debug /dev/null 2>>out
 
 compare exp out || fail=1
 

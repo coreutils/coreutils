@@ -1429,10 +1429,11 @@ int
 main (int argc, char **argv)
 {
   int valid_numbers = 1;
+  bool locale_ok;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
-  setlocale (LC_ALL, "");
+  locale_ok = setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
@@ -1557,6 +1558,9 @@ main (int argc, char **argv)
 
   if (format_str != NULL && grouping)
     error (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
+
+  if (debug && ! locale_ok)
+    error (0, 0, _("failed to set locale"));
 
   /* Warn about no-op.  */
   if (debug && scale_from == scale_none && scale_to == scale_none

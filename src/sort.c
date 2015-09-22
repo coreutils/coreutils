@@ -4187,10 +4187,11 @@ main (int argc, char **argv)
   char *files_from = NULL;
   struct Tokens tok;
   char const *outfile = NULL;
+  bool locale_ok;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
-  setlocale (LC_ALL, "");
+  locale_ok = setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
@@ -4664,7 +4665,10 @@ main (int argc, char **argv)
         error (0, 0, _("using %s sorting rules"),
                quote (setlocale (LC_COLLATE, NULL)));
       else
-        error (0, 0, _("using simple byte comparison"));
+        {
+          error (0, 0, "%s%s", locale_ok ? "" : _("failed to set locale; "),
+                 _("using simple byte comparison"));
+        }
       key_warnings (&gkey, gkey_only);
     }
 
