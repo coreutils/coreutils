@@ -45,11 +45,6 @@
 #include <getopt.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
-#ifdef HAVE_SELINUX_FLASK_H
-# include <selinux/flask.h>
-#else
-# define SECCLASS_PROCESS 0
-#endif
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
@@ -222,7 +217,8 @@ main (int argc, char **argv)
                    quote (argv[optind]));
           /* compute result of process transition */
           if (security_compute_create (cur_context, file_context,
-                                       SECCLASS_PROCESS, &new_context) != 0)
+                                       string_to_security_class ("process"),
+                                       &new_context) != 0)
             error (EXIT_FAILURE, errno, _("failed to compute a new context"));
           /* free contexts */
           freecon (file_context);
