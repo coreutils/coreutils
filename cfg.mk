@@ -503,12 +503,12 @@ sc_some_programs_must_avoid_exit_failure:
 	    && { echo '$(ME): do not use EXIT_FAILURE in the above'	\
 		  1>&2; exit 1; } || :
 
-# Ensure that tests call the require_ulimit_v_ function if using ulimit -v
+# Ensure that tests call the get_min_ulimit_v_ function if using ulimit -v
 sc_prohibit_test_ulimit_without_require_:
-	@(git grep -l require_ulimit_v_ $(srcdir)/tests;		\
+	@(git grep -l get_min_ulimit_v_ $(srcdir)/tests;		\
 	  git grep -l 'ulimit -v' $(srcdir)/tests)			\
 	  | sort | uniq -u | grep . && { echo "$(ME): the above test(s)"\
-	  " should match require_ulimit_v_ with ulimit -v" 1>&2; exit 1; } || :
+	  " should match get_min_ulimit_v_ with ulimit -v" 1>&2; exit 1; } || :
 
 # Ensure that tests call the cleanup_ function if using background processes
 sc_prohibit_test_background_without_cleanup_:

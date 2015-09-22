@@ -19,7 +19,12 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 expensive_
-require_ulimit_v_
+
+# Determine basic amount of memory needed for 'cp -al'.
+touch f || framework_failure_
+vm=$(get_min_ulimit_v_ cp -al f f2) \
+  || skip_ "this shell lacks ulimit support"
+rm f f2 || framework_failure_
 
 a=$(printf %031d 0)
 b=$(printf %031d 1)
@@ -31,7 +36,7 @@ cp -al $a $b || framework_failure_
 mkdir e || framework_failure_
 mv $a $b e || framework_failure_
 
-# Increased from 20000 to 22000 in 2012, for pre-F18 rawhide.
-(ulimit -v 22000; cp -al e f) || fail=1
+# Allow cp(1) to use 4MiB more virtual memory than for the above trivial case.
+(ulimit -v $(($vm+4000)) && cp -al e f) || fail=1
 
 Exit $fail

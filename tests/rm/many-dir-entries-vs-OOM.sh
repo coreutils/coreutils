@@ -19,21 +19,29 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ rm du chmod
-require_ulimit_v_
-
 expensive_
 
-# With many files in a single directory...
-mkdir d && cd d || framework_failure_
-seq 200000|xargs touch || framework_failure_
+mkdir d2 \
+  && touch d2/f || framework_failure_
 
-cd ..
-
-# Restricted to 40MB, each of these coreutils-8.12 programs would fail
+# Restrict memory.  Each of these coreutils-8.12 programs would fail
 # with a diagnostic like "rm: fts_read failed: Cannot allocate memory".
-ulimit -v 40000
-du -sh d || fail=1
-chmod -R 700 d || fail=1
-rm -rf d || fail=1
+vm=$(get_min_ulimit_v_ du -sh d2) \
+  || skip_ "this shell lacks ulimit support"
+
+# With many files in a single directory...
+mkdir d || framework_failure_
+seq --format="d/%06g" 200000 | xargs touch || framework_failure_
+
+# Allow 35MiB more memory as for the trivial case above.
+(ulimit -v $(($vm + 35000)) && du -sh d) || fail=1
+
+vm=$(get_min_ulimit_v_ chmod -R 700 d2) \
+  || skip_ "this shell lacks ulimit support"
+(ulimit -v $(($vm + 35000)) && chmod -R 700 d) || fail=1
+
+vm=$(get_min_ulimit_v_ rm -rf d2) \
+  || skip_ "this shell lacks ulimit support"
+(ulimit -v $(($vm + 35000)) && rm -rf d) || fail=1
 
 Exit $fail

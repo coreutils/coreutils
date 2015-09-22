@@ -18,11 +18,12 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
-require_ulimit_v_
 
+vm=$(get_min_ulimit_v_ split -C 'K' /dev/null) \
+  || skip_ "this shell lacks ulimit support"
 
 # Ensure memory is not allocated up front
-(ulimit -v 20000; split -C 'G' /dev/null) || fail=1
+(ulimit -v $vm && split -C 'G' /dev/null) || fail=1
 
 
 # Ensure correct operation with various split and buffer size combinations

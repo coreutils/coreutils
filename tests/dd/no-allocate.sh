@@ -18,12 +18,17 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
-require_ulimit_v_
+
+# Determine basic amount of memory needed.
+echo . > f || framework_failure_
+vm=$(get_min_ulimit_v_ dd if=f of=f2 status=none) \
+  || skip_ "this shell lacks ulimit support"
+rm -f f || framework_failure_
 
 # count and skip are zero, we don't need to allocate memory
-(ulimit -v 20000; dd  bs=30M count=0) || fail=1
-(ulimit -v 20000; dd ibs=30M count=0) || fail=1
-(ulimit -v 20000; dd obs=30M count=0) || fail=1
+(ulimit -v $vm && dd  bs=30M count=0) || fail=1
+(ulimit -v $vm && dd ibs=30M count=0) || fail=1
+(ulimit -v $vm && dd obs=30M count=0) || fail=1
 
 check_dd_seek_alloc() {
   local file="$1"
@@ -38,7 +43,8 @@ check_dd_seek_alloc() {
   timeout 10 dd count=1 if=/dev/zero of=tape&
 
   # Allocate buffer and read from the "tape"
-  (ulimit -v 20000; timeout 10 dd $dd_buf=30M $dd_op=1 count=0 $dd_file=tape)
+  (ulimit -v $(($vm+4000)) \
+    && timeout 10 dd $dd_buf=30M $dd_op=1 count=0 $dd_file=tape)
   local ret=$?
 
   # Be defensive in case the tape reader is blocked for some reason
