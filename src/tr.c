@@ -436,8 +436,8 @@ unquote (char const *s, struct E_string *es)
   es->s = xmalloc (len);
   es->escaped = xcalloc (len, sizeof es->escaped[0]);
 
-  size_t j = 0;
-  for (int i = 0; s[i]; i++)
+  unsigned int j = 0;
+  for (unsigned int i = 0; s[i]; i++)
     {
       unsigned char c;
       int oct_digit;
