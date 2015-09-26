@@ -39,6 +39,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Its status=progress output now uses the same format as ordinary status,
   perhaps with trailing spaces to erase previous progress output.
 
+  head, tail now have -z, --zero-terminated options to work with
+  NUL delimited items.
+
   md5sum now supports the --ignore-missing option to allow
   verifying a subset of files given a larger list of checksums.
   This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.

@@ -58,6 +58,9 @@ static bool presume_input_pipe;
 /* If true, print filename headers. */
 static bool print_headers;
 
+/* Character to split lines by. */
+static char line_end;
+
 /* When to print the filename banners. */
 enum header_mode
 {
@@ -90,6 +93,7 @@ static struct option const long_options[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"verbose", no_argument, NULL, 'v'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -125,6 +129,9 @@ With more than one FILE, precede each with a header giving the file name.\n\
       fputs (_("\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -532,7 +539,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
       {
         char const *buffer_end = tmp->buffer + n_read;
         char const *p = tmp->buffer;
-        while ((p = memchr (p, '\n', buffer_end - p)))
+        while ((p = memchr (p, line_end, buffer_end - p)))
           {
             ++p;
             ++tmp->nlines;
@@ -581,7 +588,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
 
   /* If we read any bytes at all, count the incomplete line
      on files that don't end with a newline.  */
-  if (last->nbytes && last->buffer[last->nbytes - 1] != '\n')
+  if (last->nbytes && last->buffer[last->nbytes - 1] != line_end)
     {
       ++last->nlines;
       ++total_lines;
@@ -600,7 +607,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
       size_t n = total_lines - n_elide;
       char const *buffer_end = tmp->buffer + tmp->nbytes;
       char const *p = tmp->buffer;
-      while (n && (p = memchr (p, '\n', buffer_end - p)))
+      while (n && (p = memchr (p, line_end, buffer_end - p)))
         {
           ++p;
           ++tmp->nlines;
@@ -664,7 +671,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
   const bool all_lines = !n_lines;
 
   /* Count the incomplete line on files that don't end with a newline.  */
-  if (n_lines && bytes_read && buffer[bytes_read - 1] != '\n')
+  if (n_lines && bytes_read && buffer[bytes_read - 1] != line_end)
     --n_lines;
 
   while (1)
@@ -679,7 +686,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
           else
             {
               char const *nl;
-              nl = memrchr (buffer, '\n', n);
+              nl = memrchr (buffer, line_end, n);
               if (nl == NULL)
                 break;
               n = nl - buffer;
@@ -804,7 +811,7 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
       if (bytes_read == 0)
         break;
       while (bytes_to_write < bytes_read)
-        if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
+        if (buffer[bytes_to_write++] == line_end && --lines_to_write == 0)
           {
             off_t n_bytes_past_EOL = bytes_read - bytes_to_write;
             /* If we have read more data than that on the specified number
@@ -942,6 +949,8 @@ main (int argc, char **argv)
 
   print_headers = false;
 
+  line_end = '\n';
+
   if (1 < argc && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
     {
       char *a = argv[1];
@@ -986,6 +995,10 @@ main (int argc, char **argv)
               header_mode = always;
               break;
 
+            case 'z':
+              line_end = '\0';
+              break;
+
             default:
               error (0, 0, _("invalid trailing option -- %c"), *a);
               usage (EXIT_FAILURE);
@@ -1006,7 +1019,7 @@ main (int argc, char **argv)
       argc--;
     }
 
-  while ((c = getopt_long (argc, argv, "c:n:qv0123456789", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "c:n:qvz0123456789", long_options, NULL))
          != -1)
     {
       switch (c)
@@ -1037,6 +1050,10 @@ main (int argc, char **argv)
 
         case 'v':
           header_mode = always;
+          break;
+
+        case 'z':
+          line_end = '\0';
           break;
 
         case_GETOPT_HELP_CHAR;

@@ -72,6 +72,10 @@ my @Tests =
   ['no-oct-2', '-010', {IN=>"\n"x12}, {OUT=>"\n"x10}],
   ['no-oct-3', '-n 08', {IN=>"\n"x12}, {OUT=>"\n"x8}],
   ['no-oct-4', '-c 08', {IN=>"\n"x12}, {OUT=>"\n"x8}],
+
+  # --zero-terminated
+  ['zero-1', '-z -n 1',  {IN=>"x\0y"}, {OUT=>"x\0"}],
+  ['zero-2', '-z -n 2',  {IN=>"x\0y"}, {OUT=>"x\0y"}],
 );
 
 @Tests = triple_test \@Tests;

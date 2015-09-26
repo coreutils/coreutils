@@ -2817,6 +2817,8 @@ Never print file name headers.
 @opindex --verbose
 Always print file name headers.
 
+@optZeroTerminated
+
 @end table
 
 For compatibility @command{head} also supports an obsolete option syntax
@@ -3041,6 +3043,8 @@ every @var{number} seconds.
 @opindex -v
 @opindex --verbose
 Always print file name headers.
+
+@optZeroTerminated
 
 @end table
 

@@ -101,6 +101,10 @@ my @tv = (
 
 # With textutils-1.22, this failed.
 ['f-pipe-1', '-f -n 1', "a\nb\n", "b\n", 0],
+
+# --zero-terminated
+['zero-1', '-z -n 1', "x\0y", "y", 0],
+['zero-2', '-z -n 2', "x\0y", "x\0y", 0],
 );
 
 my @Tests;
