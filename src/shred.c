@@ -423,8 +423,9 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
         int type, struct randread_source *s,
         unsigned long int k, unsigned long int n)
 {
-  off_t size = *sizep;
-  off_t offset;			/* Current file posiiton */
+  uintmax_t size = MAX (0, *sizep);
+  bool known_size = 0 <= *sizep;
+  uintmax_t offset;		/* Current file position */
   time_t thresh IF_LINT ( = 0);	/* Time to maybe print next status update */
   time_t now = 0;		/* Current time */
   size_t lim;			/* Amount of data to try writing */
@@ -469,7 +470,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = (0 <= size && size < FILLPATTERN_SIZE ? size : FILLPATTERN_SIZE);
+      lim = (known_size && size < FILLPATTERN_SIZE ? size : FILLPATTERN_SIZE);
       fillpattern (type, pbuf, lim);
       passname (pbuf, pass_string);
     }
@@ -491,7 +492,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
     {
       /* How much to write this time? */
       lim = output_size;
-      if (0 <= size && size - offset < output_size)
+      if (known_size && size - offset < output_size)
         {
           if (size < offset)
             break;
@@ -507,10 +508,11 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
           ssize = write (fd, pbuf + soff, lim - soff);
           if (ssize <= 0)
             {
-              if (size < 0 && (ssize == 0 || errno == ENOSPC))
+              if (! known_size && (ssize == 0 || errno == ENOSPC))
                 {
-                  /* Ah, we have found the end of the file */
+                  /* We have found the end of the file */
                   *sizep = size = offset + soff;
+                  known_size = true;
                   break;
                 }
               else
@@ -539,7 +541,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                      also enables direct I/O on some (file) systems.  */
                   verify (PERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
                   verify (NONPERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
-                  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
+                  if (errnum == EIO && known_size && (soff | SECTOR_MASK) < lim)
                     {
                       size_t soff1 = (soff | SECTOR_MASK) + 1;
                       if (lseek (fd, offset + soff1, SEEK_SET) != -1)
@@ -568,7 +570,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
       offset += soff;
 
-      bool done = offset == size;
+      bool done = (! known_size) || offset == size;
 
       /* Time to print progress? */
       if (n && ((done && *previous_human_offset)
@@ -584,7 +586,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
           if (done || !STREQ (previous_human_offset, human_offset))
             {
-              if (size < 0)
+              if (! known_size)
                 error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
                        qname, k, n, pass_string, human_offset);
               else
