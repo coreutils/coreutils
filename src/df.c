@@ -1650,6 +1650,8 @@ main (int argc, char **argv)
       return EXIT_FAILURE;
   }
 
+  assume (0 < optind);
+
   if (optind < argc)
     {
       int i;
