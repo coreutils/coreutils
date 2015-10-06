@@ -57,7 +57,7 @@ d
 d
 EOF
 
-# Standard Coreotils::run_tests() structure, except the addition of
+# Standard Coreutils::run_tests() structure, except the addition of
 # "OUTPUTS" array, containing the expected content of the output files.
 # See code below for conversion into PRE/CMP/POST checks.
 my @csplit_tests =

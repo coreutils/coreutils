@@ -1495,7 +1495,7 @@ Read standard input if FILE is -\n\
   -k, --keep-files           do not remove output files on errors\n\
 "), stdout);
       fputs (_("\
-  -m, --suppress-matched     suppress the lines matching PATTERN\n\
+      --suppress-matched     suppress the lines matching PATTERN\n\
 "), stdout);
       fputs (_("\
   -n, --digits=DIGITS        use specified number of digits instead of 2\n\
