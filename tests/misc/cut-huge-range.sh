@@ -50,7 +50,7 @@ subtract_one='
 CUT_MAX=$(echo $SIZE_MAX | sed "$subtract_one")
 
 # From coreutils-8.10 through 8.20, this would make cut try to allocate
-# a 256MiB bit vector.  With a 20MB limit on VM, the following would fail.
+# a 256MiB bit vector.
 (ulimit -v $vm && : | cut -b$CUT_MAX- > err 2>&1) || fail=1
 
 # Up to and including coreutils-8.21, cut would allocate possibly needed

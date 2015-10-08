@@ -59,8 +59,7 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 
 head -c 10 fifo > out & pid=$!
 
-# Choosing the virtual memory limit, 11000 is enough, but 10000 is too
-# little and provokes a "memory exhausted" diagnostic on FreeBSD 9.0-p3.
+# Trigger large mem allocation failure
 ( ulimit -v $vm && env $prog %20000000f 0 2>err-msg > fifo )
 exit=$?
 
