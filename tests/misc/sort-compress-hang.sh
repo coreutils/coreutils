@@ -35,7 +35,11 @@ tac exp > in || fail=1
 # 'sort' could be running slowly on an overburdened machine.
 # On a circa-2010 Linux server using NFS, a successful test completes
 # in about 170 seconds, so specify 1700 seconds as a safety margin.
-timeout 1700 sort --compress-program=./compress -S 1k in > out || fail=1
+# Note --foreground will not kill any of the "compress" sub processes,
+# assuming they're well behaved and exit in a timely manner, but will
+# allow this command to be responsive to Ctrl-C
+timeout --foreground 1700 sort --compress-program=./compress -S 1k in > out \
+  || fail=1
 
 compare exp out || fail=1
 test -f ok || fail=1
