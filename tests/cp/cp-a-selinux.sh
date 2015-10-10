@@ -73,7 +73,8 @@ old_type_d=$(get_selinux_type c_d)
 # and get the adjusted type for comparison
 cp -a c Z1 || fail=1
 cp -a c_d Z1_d || fail=1
-if restorecon Z1 Z1_d 2>/dev/null; then
+if restorecon Z1 Z1_d 2>restorecon.err \
+   && compare /dev/null restorecon.err; then
   new_type_f=$(get_selinux_type Z1)
   new_type_d=$(get_selinux_type Z1_d)
 
