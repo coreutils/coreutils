@@ -900,13 +900,9 @@ fremote (int fd, const char *name)
         case 0:
           break;
         case -1:
-          {
-            unsigned long int fs_type = buf.f_type;
-            error (0, 0, _("unrecognized file system type 0x%08lx for %s. "
-                           "please report this to %s. reverting to polling"),
-                   fs_type, quote (name), PACKAGE_BUGREPORT);
-            /* Treat as "remote", so caller polls.  */
-          }
+          /* Treat unrecognized file systems as "remote", so caller polls.
+             Note README-release has instructions for syncing the internal
+             list with the latest Linux kernel file system constants.  */
           break;
         case 1:
           remote = false;
