@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  dircolors now supports globbing of TERM entries in its database.
+  For example "TERM *256color*" is now supported.
+
   du no longer stats all mount points at startup, only doing so
   upon detection of a directory cycle.
   [issue introduced in coreutils-8.20]

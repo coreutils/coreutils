@@ -18,6 +18,7 @@
 #include <config.h>
 
 #include <sys/types.h>
+#include <fnmatch.h>
 #include <getopt.h>
 
 #include "system.h"
@@ -293,7 +294,7 @@ dc_parse_stream (FILE *fp, const char *filename)
       unrecognized = false;
       if (c_strcasecmp (keywd, "TERM") == 0)
         {
-          if (STREQ (arg, term))
+          if (fnmatch (arg, term, 0) == 0)
             state = ST_TERMSURE;
           else if (state != ST_TERMSURE)
             state = ST_TERMNO;
