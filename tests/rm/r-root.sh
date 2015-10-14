@@ -32,13 +32,19 @@ skip_if_root_
 # LD_PRELOAD environment variable.  This requires shared libraries to work.
 require_gcc_shared_
 
-# This isn't terribly expensive, but it must not be run under heavy load.
-# The reason is the conservative 'timeout' setting below to limit possible
-# damage in the worst case which yields a race under heavy load.
-# Marking this test as "expensive" therefore is a compromise, i.e., adding
-# this test to the list ensures it still gets _some_ (albeit minimal)
-# coverage while not causing false-positive failures in day to day runs.
-expensive_
+# Use gdb to provide further protection by limiting calls to unlinkat().
+( timeout 10s gdb --version ) > gdb.out 2>&1
+case $(cat gdb.out) in
+    *'GNU gdb'*) ;;
+    *) skip_ "can't run gdb";;
+esac
+
+# Break on a line rather than a symbol, to cater for inline functions
+break_src="$abs_top_srcdir/src/remove.c"
+break_line=$(grep -n ^excise "$break_src") || framework_failure_
+break_line=$(echo "$break_line" | cut -d: -f1) || framework_failure_
+break_line="$break_src:$break_line"
+
 
 cat > k.c <<'EOF' || framework_failure_
 #include <stdio.h>
@@ -63,6 +69,26 @@ EOF
 gcc_shared_ k.c k.so \
   || framework_failure_ 'failed to build shared library'
 
+# Note breakpoint commands don't work in batch mode
+# https://sourceware.org/bugzilla/show_bug.cgi?id=10079
+# So we use python to script behavior upon hitting the breakpoint
+cat > bp.py <<'EOF.py' || framework_failure_
+def breakpoint_handler (event):
+  if not isinstance(event, gdb.BreakpointEvent):
+    return
+  hit_count = event.breakpoints[0].hit_count
+  if hit_count == 1:
+    gdb.execute('shell touch excise.break')
+    gdb.execute('continue')
+  elif hit_count > 2:
+    gdb.write('breakpoint hit twice already')
+    gdb.execute('quit 1')
+  else:
+    gdb.execute('continue')
+
+gdb.events.stop.connect(breakpoint_handler)
+EOF.py
+
 #-------------------------------------------------------------------------------
 # exercise_rm_r_root: shell function to test "rm -r '/'"
 # The caller must provide the FILE to remove as well as any options
@@ -74,13 +100,13 @@ gcc_shared_ k.c k.so \
 # has been proven to work above), and the current non root user has
 # write access to "/", limit the damage to the current file system via
 # the --one-file-system option.
-# Furthermore, run rm(1) via timeout(1) that kills that process after
-# a maximum of 2 seconds.
+# Furthermore, run rm(1) via gdb that limits the number of unlinkat() calls.
 exercise_rm_r_root ()
 {
-  # Remove the evidence file "x"; verify that.
-  rm -f x   || framework_failure_
+  # Remove the evidence files; verify that.
+  rm -f x excise.break || framework_failure_
   test -f x && framework_failure_
+  test -f excise.break && framework_failure_
 
   local skip_exit=
   if [ "$CU_TEST_SKIP_EXIT" = 1 ]; then
@@ -88,9 +114,14 @@ exercise_rm_r_root ()
     skip_exit='CU_TEST_SKIP_EXIT=1'
   fi
 
-  timeout --signal=KILL 2 \
-    env LD_PRELOAD=$LD_PRELOAD:./k.so $skip_exit \
-      rm -rv --one-file-system "$@" > out 2> err
+  gdb -nx --batch-silent -return-child-result				\
+    --eval-command="set exec-wrapper					\
+                     env 'LD_PRELOAD=$LD_PRELOAD:./k.so' $skip_exit"	\
+    --eval-command="break '$break_line'"				\
+    --eval-command='source bp.py'					\
+    --eval-command="run -rv --one-file-system $*"			\
+    --eval-command='quit'						\
+    rm < /dev/null > out 2> err
 
   return $?
 }
@@ -111,10 +142,11 @@ for file in dir file ; do
   exercise_rm_r_root "$file" || skip=1
   test -e "$file"            || skip=1
   test -f x                  || skip=1
+  test -f excise.break       || skip=1  # gdb works and breakpoint hit
 
-  test $skip = 1 \
+  test "$skip" = 1 \
     && { cat out; cat err; \
-         skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"; }
+         skip_ "internal test failure: maybe LD_PRELOAD or gdb doesn't work?"; }
 done
 
 # "rm -r /" without --no-preserve-root should output the following
@@ -123,6 +155,19 @@ cat <<EOD > exp || framework_failure_
 rm: it is dangerous to operate recursively on '/'
 rm: use --no-preserve-root to override this failsafe
 EOD
+
+# In order of the sed expressions below, this cleans:
+#
+# 1. gdb uses the full path when running rm, so remove the leading dirs.
+# 2. For some of the "/" synonyms, the error diagnostic slightly differs from
+# that of the basic "/" case (see gnulib's fts_open' and ROOT_DEV_INO_WARN):
+#   rm: it is dangerous to operate recursively on 'FILE' (same as '/')
+# Strip that part off for the following comparison.
+clean_rm_err()
+{
+  sed "s/.*rm: /rm: /; \
+       s/\(rm: it is dangerous to operate recursively on\).*$/\1 '\/'/"
+}
 
 #-------------------------------------------------------------------------------
 # Exercise "rm -r /" without and with the --preserve-root option.
@@ -145,12 +190,7 @@ for opts in           \
 
   returns_ 1 exercise_rm_r_root $opts || fail=1
 
-  # For some of the synonyms, the error diagnostic slightly differs from that
-  # of the basic "/" case (see gnulib's fts_open' and ROOT_DEV_INO_WARN):
-  #   rm: it is dangerous to operate recursively on 'FILE' (same as '/')
-  # Strip that part off for the following comparison.
-  sed "s/\(rm: it is dangerous to operate recursively on\).*$/\1 '\/'/" err \
-    > err2 || framework_failure_
+  clean_rm_err < err > err2 || framework_failure_
 
   # Expect nothing in 'out' and the above error diagnostic in 'err2'.
   # As rm(1) should have skipped the "/" argument, it does not call unlinkat().
@@ -179,6 +219,8 @@ CU_TEST_SKIP_EXIT=1
 
 returns_ 1 exercise_rm_r_root --preserve-root file1 '/' file2 || fail=1
 
+clean_rm_err < err > err2 || framework_failure_
+
 unset CU_TEST_SKIP_EXIT
 
 cat <<EOD > out_removed
@@ -190,9 +232,9 @@ EOD
 # Both 'file1' and 'file2' should be removed.  Simply verify that in the
 # "out" file, as the replacement unlinkat() dummy did not remove them.
 # Expect the evidence file "x" to exist.
-compare out_removed out || fail=1
-compare exp         err || fail=1
-test -f x               || fail=1
+compare out_removed out  || fail=1
+compare exp         err2 || fail=1
+test -f x                || fail=1
 
 # Do nothing more if this test failed.
 test $fail = 1 && { cat out; cat err; Exit $fail; }
@@ -219,7 +261,7 @@ for file in      \
 
   returns_ 1 exercise_rm_r_root --preserve-root "$file" || fail=1
 
-  grep "^rm: refusing to remove '\.' or '\.\.' directory: skipping" err \
+  grep "rm: refusing to remove '\.' or '\.\.' directory: skipping" err \
     || fail=1
 
   compare /dev/null out  || fail=1
