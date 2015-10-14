@@ -24,6 +24,8 @@ require_membership_in_two_groups_
 # cp -p gives ENOTSUP on NFS on Linux 2.6.9 at least
 require_local_dir_
 
+require_no_default_acl_ .
+
 set _ $groups; shift
 g1=$1
 g2=$2

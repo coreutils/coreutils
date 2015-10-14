@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ mkdir
 skip_if_setgid_
+require_no_default_acl_ .
 
 mkdir -m 700 e-dir || framework_failure_
 
