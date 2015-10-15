@@ -483,7 +483,7 @@ main (int argc, char **argv)
   int optc = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   enum Skip_field_option_type skip_field_option_type = SFO_NONE;
-  int nfiles = 0;
+  unsigned int nfiles = 0;
   char const *file[2];
   char delimiter = '\n';	/* change with --zero-terminated, -z */
   bool output_option_used = false;   /* if true, one of -u/-d/-D/-c was used */
