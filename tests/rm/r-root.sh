@@ -32,6 +32,10 @@ skip_if_root_
 # LD_PRELOAD environment variable.  This requires shared libraries to work.
 require_gcc_shared_
 
+# Ensure this variable is unset as it's
+# used later in the unlinkat() wrapper.
+unset CU_TEST_SKIP_EXIT
+
 # Use gdb to provide further protection by limiting calls to unlinkat().
 ( timeout 10s gdb --version ) > gdb.out 2>&1
 case $(cat gdb.out) in
@@ -89,6 +93,19 @@ def breakpoint_handler (event):
 gdb.events.stop.connect(breakpoint_handler)
 EOF.py
 
+# In order of the sed expressions below, this cleans:
+#
+# 1. gdb uses the full path when running rm, so remove the leading dirs.
+# 2. For some of the "/" synonyms, the error diagnostic slightly differs from
+# that of the basic "/" case (see gnulib's fts_open' and ROOT_DEV_INO_WARN):
+#   rm: it is dangerous to operate recursively on 'FILE' (same as '/')
+# Strip that part off for the following comparison.
+clean_rm_err_()
+{
+  sed "s/.*rm: /rm: /; \
+       s/\(rm: it is dangerous to operate recursively on\).*$/\1 '\/'/"
+}
+
 #-------------------------------------------------------------------------------
 # exercise_rm_r_root: shell function to test "rm -r '/'"
 # The caller must provide the FILE to remove as well as any options
@@ -121,9 +138,13 @@ exercise_rm_r_root ()
     --eval-command='source bp.py'					\
     --eval-command="run -rv --one-file-system $*"			\
     --eval-command='quit'						\
-    rm < /dev/null > out 2> err
+    rm < /dev/null > out 2> err.t
 
-  return $?
+  ret=$?
+
+  clean_rm_err_ < err.t > err || framework_failure_
+
+  return $ret
 }
 
 # Verify that "rm -r dir" basically works.
@@ -143,6 +164,7 @@ for file in dir file ; do
   test -e "$file"            || skip=1
   test -f x                  || skip=1
   test -f excise.break       || skip=1  # gdb works and breakpoint hit
+  compare /dev/null err      || skip=1
 
   test "$skip" = 1 \
     && { cat out; cat err; \
@@ -155,19 +177,6 @@ cat <<EOD > exp || framework_failure_
 rm: it is dangerous to operate recursively on '/'
 rm: use --no-preserve-root to override this failsafe
 EOD
-
-# In order of the sed expressions below, this cleans:
-#
-# 1. gdb uses the full path when running rm, so remove the leading dirs.
-# 2. For some of the "/" synonyms, the error diagnostic slightly differs from
-# that of the basic "/" case (see gnulib's fts_open' and ROOT_DEV_INO_WARN):
-#   rm: it is dangerous to operate recursively on 'FILE' (same as '/')
-# Strip that part off for the following comparison.
-clean_rm_err()
-{
-  sed "s/.*rm: /rm: /; \
-       s/\(rm: it is dangerous to operate recursively on\).*$/\1 '\/'/"
-}
 
 #-------------------------------------------------------------------------------
 # Exercise "rm -r /" without and with the --preserve-root option.
@@ -190,14 +199,12 @@ for opts in           \
 
   returns_ 1 exercise_rm_r_root $opts || fail=1
 
-  clean_rm_err < err > err2 || framework_failure_
-
-  # Expect nothing in 'out' and the above error diagnostic in 'err2'.
+  # Expect nothing in 'out' and the above error diagnostic in 'err'.
   # As rm(1) should have skipped the "/" argument, it does not call unlinkat().
   # Therefore, the evidence file "x" should not exist.
-  compare /dev/null out  || fail=1
-  compare exp       err2 || fail=1
-  test -f x              && fail=1
+  compare /dev/null out || fail=1
+  compare exp       err || fail=1
+  test -f x             && fail=1
 
   # Do nothing more if this test failed.
   test $fail = 1 && { cat out; cat err; Exit $fail; }
@@ -219,8 +226,6 @@ CU_TEST_SKIP_EXIT=1
 
 returns_ 1 exercise_rm_r_root --preserve-root file1 '/' file2 || fail=1
 
-clean_rm_err < err > err2 || framework_failure_
-
 unset CU_TEST_SKIP_EXIT
 
 cat <<EOD > out_removed
@@ -232,9 +237,9 @@ EOD
 # Both 'file1' and 'file2' should be removed.  Simply verify that in the
 # "out" file, as the replacement unlinkat() dummy did not remove them.
 # Expect the evidence file "x" to exist.
-compare out_removed out  || fail=1
-compare exp         err2 || fail=1
-test -f x                || fail=1
+compare out_removed out || fail=1
+compare exp         err || fail=1
+test -f x               || fail=1
 
 # Do nothing more if this test failed.
 test $fail = 1 && { cat out; cat err; Exit $fail; }
@@ -283,7 +288,7 @@ exercise_rm_r_root  --interactive=never --no-preserve-root '/' \
   || fail=1
 
 # The 'err' file should not contain the above error diagnostic.
-grep "^rm: it is dangerous to operate recursively on '/'" err && fail=1
+grep "rm: it is dangerous to operate recursively on '/'" err && fail=1
 
 # Instead, rm(1) should have called the intercepted unlinkat() function,
 # i.e., the evidence file "x" should exist.
