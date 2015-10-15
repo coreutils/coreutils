@@ -468,7 +468,7 @@ static size_t buff_allocated;
    we do column balancing on the last page. */
 static int *line_vector;
 
-/* Array of horizonal positions.
+/* Array of horizontal positions.
    For each line in line_vector, end_vector[line] is the horizontal
    position we are in after printing that line.  We keep track of this
    so that we know how much we need to pad to prepare for the next

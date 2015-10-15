@@ -381,7 +381,7 @@ main (int argc, char **argv)
      stdbuf is running from.  */
   set_program_path (program_name);
   if (!program_path)
-    program_path = xstrdup (PKGLIBDIR);  /* Need to init to non NULL.  */
+    program_path = xstrdup (PKGLIBDIR);  /* Need to init to non-NULL.  */
   set_LD_PRELOAD ();
   free (program_path);
 

@@ -431,7 +431,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
         unsigned long int k, unsigned long int n)
 {
   off_t size = *sizep;
-  off_t offset;			/* Current file posiiton */
+  off_t offset;			/* Current file position */
   time_t thresh IF_LINT ( = 0);	/* Time to maybe print next status update */
   time_t now = 0;		/* Current time */
   size_t lim;			/* Amount of data to try writing */

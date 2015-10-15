@@ -238,7 +238,7 @@ struct month
 struct merge_node
 {
   struct line *lo;              /* Lines to merge from LO child node. */
-  struct line *hi;              /* Lines to merge from HI child ndoe. */
+  struct line *hi;              /* Lines to merge from HI child node. */
   struct line *end_lo;          /* End of available lines from LO. */
   struct line *end_hi;          /* End of available lines from HI. */
   struct line **dest;           /* Pointer to destination of merge. */
@@ -678,7 +678,7 @@ struct sortfile
   /* The file's name.  */
   char const *name;
 
-  /* Nonnull if this is a temporary file, in which case NAME == TEMP->name.  */
+  /* Non-null if this is a temporary file, in which case NAME == TEMP->name.  */
   struct tempnode *temp;
 };
 
@@ -2736,7 +2736,7 @@ compare (struct line const *a, struct line const *b)
 }
 
 /* Write LINE to output stream FP; the output file's name is
-   OUTPUT_FILE if OUTPUT_FILE is nonnull, and is the standard output
+   OUTPUT_FILE if OUTPUT_FILE is non-null, and is the standard output
    otherwise.  If debugging is enabled and FP is standard output,
    append some debugging information.  */
 

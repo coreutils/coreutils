@@ -25,7 +25,7 @@ seq 999999 inf | head -n2 > out || fail=1
 printf "%s\n" 999999 1000000 > exp || framework_failure_
 compare exp out || fail=1
 
-# Excercise buffer handling in non floating point output
+# Exercise buffer handling in non floating point output
 for i in $(seq 100); do
   n1="$(printf '%*s' $i '' | tr ' ' 9)"
   n2="1$(echo $n1 | tr 9 0)"

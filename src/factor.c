@@ -37,7 +37,7 @@
 
     Using GMP is optional.  Define HAVE_GMP to make this code include GMP
     factoring code.  The GMP factoring code is based on GMP's demos/factorize.c
-    (last synched 2012-09-07).  The GMP-based factoring code will stay in GMP
+    (last synced 2012-09-07).  The GMP-based factoring code will stay in GMP
     factoring code even if numbers get small enough for using the two-word
     code.
 

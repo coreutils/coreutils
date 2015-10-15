@@ -1819,7 +1819,7 @@ should_dereference (const struct cp_options *x, bool command_line_arg)
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
-   be false if DST_NAME might already exist.  A nonnull PARENT describes the
+   be false if DST_NAME might already exist.  A non-null PARENT describes the
    parent directory.  ANCESTORS points to a linked, null terminated list of
    devices and inodes of parent directories of SRC_NAME.  COMMAND_LINE_ARG
    is true iff SRC_NAME was specified on the command line.
@@ -2375,7 +2375,7 @@ copy_internal (char const *src_name, char const *dst_name,
          If this happens to you, please do the following and send the output
          to the bug-reporting address (e.g., in the output of cp --help):
            touch k; perl -e 'rename "k","/tmp/k" or print "$!(",$!+0,")\n"'
-         where your current directory is on one partion and /tmp is the other.
+         where your current directory is on one partition and /tmp is the other.
          Also, please try to find the E* errno macro name corresponding to
          the diagnostic and parenthesized integer, and include that in your
          e-mail.  One way to do that is to run a command like this

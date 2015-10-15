@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
-   --human-readable and --megabyte options added by lm@sgi.com.
+   --human-readable option added by lm@sgi.com.
    --si and large file support added by eggert@twinsun.com.  */
 
 #include <config.h>

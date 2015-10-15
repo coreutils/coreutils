@@ -945,7 +945,7 @@ static size_t dired_pos;
       }									\
     while (0)
 
-/* With --dired, store pairs of beginning and ending indices of filenames.  */
+/* With --dired, store pairs of beginning and ending indices of file names.  */
 static struct obstack dired_obstack;
 
 /* With --dired, store pairs of beginning and ending indices of any
@@ -2156,7 +2156,7 @@ get_funky_string (char **dest, const char **src, bool equals_end,
               state = ST_END;	/* End of string */
               break;
             case '\\':
-              state = ST_BACKSLASH; /* Backslash scape sequence */
+              state = ST_BACKSLASH; /* Backslash escape sequence */
               ++p;
               break;
             case '^':
@@ -3478,7 +3478,7 @@ cmp_name (struct fileinfo const *a, struct fileinfo const *b,
 }
 
 /* Compare file extensions.  Files with no extension are 'smallest'.
-   If extensions are the same, compare by filenames instead.  */
+   If extensions are the same, compare by file names instead.  */
 
 static inline int
 cmp_extension (struct fileinfo const *a, struct fileinfo const *b,

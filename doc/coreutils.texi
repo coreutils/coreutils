@@ -8667,7 +8667,7 @@ otherwise the cache is dropped for the processed
 portion of the file.  Also when count=0
 failure to discard the cache is diagnosed
 and reflected in the exit status.
-Here as some usage examples:
+Here are some usage examples:
 
 @example
 # Advise to drop cache for whole file

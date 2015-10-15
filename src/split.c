@@ -1285,7 +1285,7 @@ main (int argc, char **argv)
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_bytes;
-          /* Limit to OFF_T_MAX, becaue if input is a pipe, we could get more
+          /* Limit to OFF_T_MAX, because if input is a pipe, we could get more
              data than is possible to write to a single file, so indicate that
              immediately rather than having possibly future invocations fail. */
           n_units = xdectoumax (optarg, 1, OFF_T_MAX, multipliers,
