@@ -3948,9 +3948,6 @@ these commands are precisely the same as for @command{md5sum}
 and @command{sha1sum}.
 @xref{md5sum invocation}.
 
-Note: The SHA384 and SHA512 digests are considerably slower to
-compute, especially on 32-bit computers, than SHA224 or SHA256.
-
 
 @node Operating on sorted files
 @chapter Operating on sorted files
