@@ -16855,7 +16855,7 @@ n=$(echo "$M8 * $M9" | bc)
 Similarly, factoring the eighth Fermat number @math{2^{256}+1} takes
 about 20 seconds on the same machine.
 
-Factoring large numbers is, in general, hard.  The Pollard Rho
+Factoring large numbers is, in general, hard.  The Pollard-Brent rho
 algorithm used by @command{factor} is particularly effective for
 numbers with relatively small factors.  If you wish to factor large
 numbers which do not have small factors (for example, numbers which
@@ -16863,9 +16863,9 @@ are the product of two large primes), other methods are far better.
 
 If @command{factor} is built without using GNU MP, only
 single-precision arithmetic is available, and so large numbers
-(typically @math{2^{64}} and above) will not be supported.  The single-precision
-code uses an algorithm which is designed for factoring smaller
-numbers.
+(typically @math{2^{128}} and above) will not be supported.
+The single-precision code uses an algorithm which is designed
+for factoring smaller numbers.
 
 @exitstatus
 

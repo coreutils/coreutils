@@ -50,8 +50,8 @@
     (2) Check the nature of any non-factored part using Miller-Rabin for
         detecting composites, and Lucas for detecting primes.
     (3) Factor any remaining composite part using the Pollard-Brent rho
-        algorithm or the SQUFOF algorithm, checking status of found factors
-        again using Miller-Rabin and Lucas.
+        algorithm or if USE_SQUFOF is defined to 1, try that first.
+        Status of found factors are checked again using Miller-Rabin and Lucas.
 
     We prefer using Hensel norm in the divisions, not the more familiar
     Euclidian norm, since the former leads to much faster code.  In the
@@ -84,6 +84,23 @@
       the -w option.
 */
 
+/* Whether to recursively factor to prove primality,
+   or run faster probabilistic tests.  */
+#ifndef PROVE_PRIMALITY
+# define PROVE_PRIMALITY 1
+#endif
+
+/* Faster for certain ranges but less general.  */
+#ifndef USE_SQUFOF
+# define USE_SQUFOF 0
+#endif
+
+/* Output SQUFOF statistics.  */
+#ifndef STAT_SQUFOF
+# define STAT_SQUFOF 0
+#endif
+
+
 #include <config.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -113,10 +130,6 @@
 
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
-
-#ifndef STAT_SQUFOF
-# define STAT_SQUFOF 0
-#endif
 
 #ifndef USE_LONGLONG_H
 /* With the way we use longlong.h, it's only safe to use
@@ -207,10 +220,6 @@ const unsigned char factor_clz_tab[129] =
    warns that each of the two tested macros is unused on Fedora 18.
    FIXME: this is just an ugly band-aid.  Fix it properly.  */
 #endif
-
-enum alg_type { ALG_POLLARD_RHO = 1, ALG_SQUFOF = 2 };
-
-static enum alg_type alg;
 
 /* 2*3*5*7*11...*101 is 128 bits, and has 26 prime factors */
 #define MAX_NFACTS 26
@@ -691,7 +700,7 @@ verify (W <= WIDE_UINT_BITS);
 static bool dev_debug = false;
 
 /* Prove primality or run probabilistic tests.  */
-static bool flag_prove_primality = true;
+static bool flag_prove_primality = PROVE_PRIMALITY;
 
 /* Number of Miller-Rabin tests to run when not proving primality. */
 #define MR_REPS 25
@@ -1741,6 +1750,7 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 }
 #endif
 
+#if USE_SQUFOF
 /* FIXME: Maybe better to use an iteration converging to 1/sqrt(n)?  If
    algorithm is replaced, consider also returning the remainder. */
 static uintmax_t _GL_ATTRIBUTE_CONST
@@ -1812,10 +1822,10 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 }
 
 /* MAGIC[N] has a bit i set iff i is a quadratic residue mod N. */
-#define MAGIC64 0x0202021202030213ULL
-#define MAGIC63 0x0402483012450293ULL
-#define MAGIC65 0x218a019866014613ULL
-#define MAGIC11 0x23b
+# define MAGIC64 0x0202021202030213ULL
+# define MAGIC63 0x0402483012450293ULL
+# define MAGIC65 0x218a019866014613ULL
+# define MAGIC11 0x23b
 
 /* Return the square root if the input is a square, otherwise 0. */
 static uintmax_t _GL_ATTRIBUTE_CONST
@@ -1860,7 +1870,7 @@ static const unsigned short invtab[0x81] =
 
 /* Compute q = [u/d], r = u mod d.  Avoids slow hardware division for the case
    that q < 0x40; here it instead uses a table of (Euclidian) inverses.  */
-#define div_smallq(q, r, u, d)                                          \
+# define div_smallq(q, r, u, d)                                          \
   do {                                                                  \
     if ((u) / 0x40 < (d))                                               \
       {                                                                 \
@@ -1928,7 +1938,8 @@ static const unsigned short invtab[0x81] =
    0.9295  7        =    7 = 3
    0.9934  11       =   11 = 3
 */
-#define QUEUE_SIZE 50
+# define QUEUE_SIZE 50
+#endif
 
 #if STAT_SQUFOF
 # define Q_FREQ_SIZE 50
@@ -1937,6 +1948,7 @@ static unsigned int q_freq[Q_FREQ_SIZE + 1];
 # define MIN(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+#if USE_SQUFOF
 /* Return true on success.  Expected to fail only for numbers
    >= 2^{2*W_TYPE_SIZE - 2}, or close to that limit. */
 static bool
@@ -2058,10 +2070,10 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
 
           IF_LINT (assert (q > 0 && Q > 0));
 
-#if STAT_SQUFOF
+# if STAT_SQUFOF
           q_freq[0]++;
           q_freq[MIN (q, Q_FREQ_SIZE)]++;
-#endif
+# endif
 
           if (Q <= L1)
             {
@@ -2145,10 +2157,10 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                       div_smallq (q, rem, S+P, Q);
                       P1 = S - rem;     /* P1 = q*Q - P */
 
-#if STAT_SQUFOF
+# if STAT_SQUFOF
                       q_freq[0]++;
                       q_freq[MIN (q, Q_FREQ_SIZE)]++;
-#endif
+# endif
                       if (P == P1)
                         break;
                       t = Q1 + q * (P - P1);
@@ -2192,9 +2204,10 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
     }
   return false;
 }
+#endif
 
 /* Compute the prime factors of the 128-bit number (T1,T0), and put the
-   results in FACTORS.  Use the algorithm selected by the global ALG.  */
+   results in FACTORS.  */
 static void
 factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
 {
@@ -2213,9 +2226,10 @@ factor (uintmax_t t1, uintmax_t t0, struct factors *factors)
     factor_insert_large (factors, t1, t0);
   else
     {
-      if (alg == ALG_SQUFOF)
-        if (factor_using_squfof (t1, t0, factors))
-          return;
+#if USE_SQUFOF
+      if (factor_using_squfof (t1, t0, factors))
+        return;
+#endif
 
       if (t1 == 0)
         factor_using_pollard_rho (t0, 1, factors);
@@ -2576,8 +2590,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
   atexit (lbuf_flush);
 
-  alg = ALG_POLLARD_RHO;        /* Default to Pollard rho */
-
   int c;
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
@@ -2585,14 +2597,6 @@ main (int argc, char **argv)
         {
         case DEV_DEBUG_OPTION:
           dev_debug = true;
-          break;
-
-        case 's':
-          alg = ALG_SQUFOF;
-          break;
-
-        case 'w':
-          flag_prove_primality = false;
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -2605,8 +2609,7 @@ main (int argc, char **argv)
     }
 
 #if STAT_SQUFOF
-  if (alg == ALG_SQUFOF)
-    memset (q_freq, 0, sizeof (q_freq));
+  memset (q_freq, 0, sizeof (q_freq));
 #endif
 
   bool ok;
@@ -2621,7 +2624,7 @@ main (int argc, char **argv)
     }
 
 #if STAT_SQUFOF
-  if (alg == ALG_SQUFOF && q_freq[0] > 0)
+  if (q_freq[0] > 0)
     {
       double acc_f;
       printf ("q  freq.  cum. freq.(total: %d)\n", q_freq[0]);
