@@ -24,6 +24,8 @@ START=__START__
   END=__END__
 CKSUM=__CKSUM__
 
+test "$START" = '__ST''ART__' && skip_ 'ignoring factor test template'
+
 echo "$CKSUM  -" > exp
 
 f=1
