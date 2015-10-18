@@ -536,7 +536,6 @@ all_tests =					\
   tests/id/no-context.sh			\
   tests/id/context.sh				\
   tests/id/uid.sh				\
-  tests/id/setgid.sh				\
   tests/id/zero.sh				\
   tests/id/smack.sh				\
   tests/install/basic-1.sh			\
@@ -600,7 +599,6 @@ all_tests =					\
   tests/mkdir/special-1.sh			\
   tests/mkdir/t-slash.sh			\
   tests/mkdir/smack-no-root.sh			\
-  tests/mkdir/smack-root.sh			\
   tests/mv/acl.sh				\
   tests/mv/atomic.sh				\
   tests/mv/atomic2.sh				\
