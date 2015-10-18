@@ -766,12 +766,18 @@ gnulib-tests_CFLAGS = $(GNULIB_TEST_WARN_CFLAGS)
 
 # Configuration to make the tight-scope syntax-check rule work with
 # non-recursive make.
-export _gl_TS_headers = $(srcdir)/cfg.mk
-_gl_TS_dir = .
-_gl_TS_obj_files = src/*.$(OBJEXT)
+# Note _gl_TS_headers use _single line_ extern function declarations,
+# while *_SOURCES use the _two line_ form.
+export _gl_TS_headers = $(noinst_HEADERS)
+# Add exceptions for --enable-single-binary renamed functions.
+_gl_TS_unmarked_extern_functions = main usage
+_gl_TS_unmarked_extern_functions += single_binary_main_.* _usage_.*
+# Headers to search for single line extern _data_ declarations.
 _gl_TS_other_headers = $(srcdir)/src/*.h src/*.h
-
 # Tell the tight_scope rule about an exceptional "extern" variable.
 # Normally, the rule would detect its declaration, but that uses a
 # different name, __clz_tab.
 _gl_TS_unmarked_extern_vars = factor_clz_tab
+# Other tight_scope settings
+_gl_TS_dir = .
+_gl_TS_obj_files = src/*.$(OBJEXT)

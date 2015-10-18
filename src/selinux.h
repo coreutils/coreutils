@@ -29,8 +29,10 @@ ignorable_ctx_err (int err)
 
 # if HAVE_SELINUX_SELINUX_H
 
-extern bool restorecon (char const *path, bool recurse, bool preserve);
-extern int defaultcon (char const *path, mode_t mode);
+extern bool
+restorecon (char const *path, bool recurse, bool preserve);
+extern int
+defaultcon (char const *path, mode_t mode);
 
 # else
 
