@@ -451,7 +451,7 @@ Ordering options:\n\
 "), stdout);
       fputs (_("\
   -n, --numeric-sort          compare according to string numerical value\n\
-  -R, --random-sort           sort by random hash of keys\n\
+  -R, --random-sort           sort by random hash of keys.  See also shuf(1)\n\
       --random-source=FILE    get random bytes from FILE\n\
   -r, --reverse               reverse the result of comparisons\n\
 "), stdout);

@@ -3,4 +3,4 @@ sort \- sort lines of text files
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]
-uniq(1)
+shuf(1), uniq(1)
