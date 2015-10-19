@@ -2341,7 +2341,7 @@ known_term_type (void)
     {
       if (STRNCMP_LIT (line, "TERM ") == 0)
         {
-          if (STREQ (term, line + 5))
+          if (fnmatch (line + 5, term, 0) == 0)
             return true;
         }
       line += strlen (line) + 1;
