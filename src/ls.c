@@ -279,7 +279,7 @@ static size_t print_name_with_quoting (const struct fileinfo *f,
 static void prep_non_filename_text (void);
 static bool print_type_indicator (bool stat_ok, mode_t mode,
                                   enum filetype type);
-static void print_with_commas (void);
+static void print_with_separator (char sep);
 static void queue_directory (char const *name, char const *realname,
                              bool command_line_arg);
 static void sort_files (void);
@@ -1524,7 +1524,7 @@ main (int argc, char **argv)
 }
 
 /* Set the line length to the value given by SPEC.  Return true if
-   successful.  */
+   successful.  0 means no limit on line length.  */
 
 static bool
 set_line_length (char const *spec)
@@ -3647,15 +3647,21 @@ print_current_files (void)
       break;
 
     case many_per_line:
-      print_many_per_line ();
+      if (! line_length)
+        print_with_separator (' ');
+      else
+        print_many_per_line ();
       break;
 
     case horizontal:
-      print_horizontal ();
+      if (! line_length)
+        print_with_separator (' ');
+      else
+        print_horizontal ();
       break;
 
     case with_commas:
-      print_with_commas ();
+      print_with_separator (',');
       break;
 
     case long_format:
@@ -4242,7 +4248,8 @@ print_name_with_quoting (const struct fileinfo *f,
   if (used_color_this_time)
     {
       prep_non_filename_text ();
-      if (start_col / line_length != (start_col + width - 1) / line_length)
+      if (line_length
+          && (start_col / line_length != (start_col + width - 1) / line_length))
         put_indicator (&color_indicator[C_CLR_TO_EOL]);
     }
 
@@ -4583,8 +4590,10 @@ print_horizontal (void)
   putchar ('\n');
 }
 
+/* Output name + SEP + ' '.  */
+
 static void
-print_with_commas (void)
+print_with_separator (char sep)
 {
   size_t filesno;
   size_t pos = 0;
@@ -4592,13 +4601,15 @@ print_with_commas (void)
   for (filesno = 0; filesno < cwd_n_used; filesno++)
     {
       struct fileinfo const *f = sorted_file[filesno];
-      size_t len = length_of_file_name_and_frills (f);
+      size_t len = line_length ? length_of_file_name_and_frills (f) : 0;
 
       if (filesno != 0)
         {
           char separator;
 
-          if (pos + len + 2 < line_length)
+          if (! line_length
+              || ((pos + len + 2 < line_length)
+                  && (pos <= SIZE_MAX - len - 2)))
             {
               pos += 2;
               separator = ' ';
@@ -4609,7 +4620,7 @@ print_with_commas (void)
               separator = '\n';
             }
 
-          putchar (',');
+          putchar (sep);
           putchar (separator);
         }
 
@@ -4935,7 +4946,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -v                         natural sort of (version) numbers within text\n\
 "), stdout);
       fputs (_("\
-  -w, --width=COLS           assume screen width instead of current value\n\
+  -w, --width=COLS           set output width to COLS.  0 means no limit\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -Z, --context              print any security context of each file\n\

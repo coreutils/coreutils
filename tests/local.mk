@@ -568,6 +568,7 @@ all_tests =					\
   tests/ls/infloop.sh				\
   tests/ls/inode.sh				\
   tests/ls/m-option.sh				\
+  tests/ls/w-option.sh				\
   tests/ls/multihardlink.sh			\
   tests/ls/no-arg.sh				\
   tests/ls/no-cap.sh				\

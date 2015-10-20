@@ -7445,7 +7445,9 @@ TAB following a non-ASCII byte.  You can avoid that issue by using the
 Assume the screen is @var{cols} columns wide.  The default is taken
 from the terminal settings if possible; otherwise the environment
 variable @env{COLUMNS} is used if it is set; otherwise the default
-is 80.
+is 80.  With a @var{cols} value of @samp{0}, there is no limit on
+the length of the output line, and that single output line will
+be delimited with spaces, not tabs.
 
 @end table
 
