@@ -41,4 +41,8 @@ compare exp out || fail=1
 # Ensure that 0 line length doesn't cause division by zero
 TERM=xterm ls -w0 -x --color=always || fail=1
 
+# coreutils <= 8.24 could display 1 column too few
+ls -w4 -x -T0 a b > out || fail=1
+compare exp out || fail=1
+
 Exit $fail

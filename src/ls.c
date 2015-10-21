@@ -1979,7 +1979,11 @@ decode_switches (int argc, char **argv)
         }
     }
 
-  max_idx = MAX (1, line_length / MIN_COLUMN_WIDTH);
+  /* Determine the max possible number of display columns.  */
+  max_idx = line_length / MIN_COLUMN_WIDTH;
+  /* Account for first display column not having a separator,
+     or line_lengths shorter than MIN_COLUMN_WIDTH.  */
+  max_idx += line_length % MIN_COLUMN_WIDTH != 0;
 
   filename_quoting_options = clone_quoting_options (NULL);
   if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
