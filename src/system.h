@@ -427,6 +427,15 @@ enum
 # define ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
 #endif
 
+#ifdef __GNUC__
+# define LIKELY(cond)    __builtin_expect ((cond), 1)
+# define UNLIKELY(cond)  __builtin_expect ((cond), 0)
+#else
+# define LIKELY(cond)    (cond)
+# define UNLIKELY(cond)  (cond)
+#endif
+
+
 #if defined strdupa
 # define ASSIGN_STRDUPA(DEST, S)		\
   do { DEST = strdupa (S); } while (0)
@@ -487,27 +496,54 @@ ptr_align (void const *ptr, size_t alignment)
 }
 
 /* Return whether the buffer consists entirely of NULs.
-   Note the word after the buffer must be non NUL. */
+   Based on memeqzero in CCAN by Rusty Russell under CC0 (Public domain).  */
 
 static inline bool _GL_ATTRIBUTE_PURE
-is_nul (void const *buf, size_t bufsize)
+is_nul (void const *buf, size_t length)
 {
-  typedef uintptr_t word;
-  void const *vp;
-  char const *cbuf = buf;
-  word const *wp = buf;
+  const unsigned char *p = buf;
+/* Using possibly unaligned access for the first 16 bytes
+   saves about 30-40 cycles, though it is strictly undefined behavior
+   and so would need __attribute__ ((__no_sanitize_undefined__))
+   to avoid -fsanitize=undefined warnings.
+   Considering coreutils is mainly concerned with relatively
+   large buffers, we'll just use the defined behavior.  */
+#if 0 && _STRING_ARCH_unaligned
+  unsigned long word;
+#else
+  unsigned char word;
+#endif
 
-  /* Find first nonzero *word*, or the word with the sentinel.  */
-  while (*wp++ == 0)
-    continue;
+  if (! length)
+      return true;
 
-  /* Find the first nonzero *byte*, or the sentinel.  */
-  vp = wp - 1;
-  char const *cp = vp;
-  while (*cp++ == 0)
-    continue;
+  /* Check len bytes not aligned on a word.  */
+  while (UNLIKELY (length & (sizeof word - 1)))
+    {
+      if (*p)
+        return false;
+      p++;
+      length--;
+      if (! length)
+        return true;
+   }
 
-  return cbuf + bufsize < cp;
+  /* Check up to 16 bytes a word at a time.  */
+  for (;;)
+    {
+      memcpy (&word, p, sizeof word);
+      if (word)
+        return false;
+      p += sizeof word;
+      length -= sizeof word;
+      if (! length)
+        return true;
+      if (UNLIKELY (length & 15) == 0)
+        break;
+   }
+
+   /* Now we know first 16 bytes are NUL, memcmp with self.  */
+   return memcmp (buf, p, length) == 0;
 }
 
 /* If 10*Accum + Digit_val is larger than the maximum value for Type,

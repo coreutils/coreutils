@@ -705,14 +705,6 @@ static bool flag_prove_primality = PROVE_PRIMALITY;
 /* Number of Miller-Rabin tests to run when not proving primality. */
 #define MR_REPS 25
 
-#ifdef __GNUC__
-# define LIKELY(cond)    __builtin_expect ((cond), 1)
-# define UNLIKELY(cond)  __builtin_expect ((cond), 0)
-#else
-# define LIKELY(cond)    (cond)
-# define UNLIKELY(cond)  (cond)
-#endif
-
 static void
 factor_insert_refind (struct factors *factors, uintmax_t p, unsigned int i,
                       unsigned int off)

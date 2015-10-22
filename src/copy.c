@@ -245,17 +245,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           csize = MIN (csize, n_read);
 
           if (hole_size && csize)
-            {
-              /* Setup sentinel required by is_nul().  */
-              typedef uintptr_t word;
-              word isnul_tmp;
-              memcpy (&isnul_tmp, cbuf + csize, sizeof (word));
-              memset (cbuf + csize, 1, sizeof (word));
-
-              make_hole = is_nul (cbuf, csize);
-
-              memcpy (cbuf + csize, &isnul_tmp, sizeof (word));
-            }
+            make_hole = is_nul (cbuf, csize);
 
           bool transition = (make_hole != prev_hole) && psize;
           bool last_chunk = (n_read == csize && ! make_hole) || ! csize;
@@ -1201,11 +1191,8 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (data_copy_required)
     {
-      typedef uintptr_t word;
-
       /* Choose a suitable buffer size; it may be adjusted later.  */
-      size_t buf_alignment = lcm (getpagesize (), sizeof (word));
-      size_t buf_alignment_slop = sizeof (word) + buf_alignment - 1;
+      size_t buf_alignment = getpagesize ();
       size_t buf_size = io_blksize (sb);
       size_t hole_size = ST_BLKSIZE (sb);
 
@@ -1236,7 +1223,7 @@ copy_reg (char const *src_name, char const *dst_name,
         {
           /* Compute the least common multiple of the input and output
              buffer sizes, adjusting for outlandish values.  */
-          size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment_slop;
+          size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment;
           size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
                                     blcm_max);
 
@@ -1254,8 +1241,7 @@ copy_reg (char const *src_name, char const *dst_name,
             buf_size = blcm;
         }
 
-      /* Make a buffer with space for a sentinel at the end.  */
-      buf_alloc = xmalloc (buf_size + buf_alignment_slop);
+      buf_alloc = xmalloc (buf_size + buf_alignment);
       buf = ptr_align (buf_alloc, buf_alignment);
 
       if (sparse_src)

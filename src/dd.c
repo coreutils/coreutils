@@ -20,7 +20,6 @@
 
 #define SWAB_ALIGN_OFFSET 2
 
-#include <assert.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
@@ -728,11 +727,6 @@ alloc_obuf (void)
       alloc_ibuf ();
       obuf = ibuf;
     }
-
-  /* Write a sentinel to the slop after the buffer,
-   to allow efficient checking for NUL blocks.  */
-  assert (sizeof (uintptr_t) <= OUTPUT_BLOCK_SLOP);
-  memset (obuf + output_blocksize, 1, sizeof (uintptr_t));
 }
 
 static void
