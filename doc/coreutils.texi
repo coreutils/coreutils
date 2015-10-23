@@ -7498,8 +7498,8 @@ files; if you want output columns to line up, you may need to insert
 spaces in one of the two formats.
 
 @item full-iso
-List timestamps in full using ISO 8601 date, time, and time zone
-format with nanosecond precision, e.g., @samp{2002-03-30
+List timestamps in full using ISO 8601 like date, time, and time zone
+components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
@@ -7509,14 +7509,14 @@ explain @command{make}'s behavior, since GNU @command{make}
 uses the full timestamp to determine whether a file is out of date.
 
 @item long-iso
-List ISO 8601 date and time in minutes, e.g.,
+List ISO 8601 like date and time in minutes, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
 List ISO 8601 dates for non-recent timestamps (e.g.,
-@samp{2002-03-30@ }), and ISO 8601 month, day, hour, and
+@samp{2002-03-30@ }), and ISO 8601 like month, day, hour, and
 minute for recent timestamps (e.g., @samp{03-30 23:45}).  These
 timestamps are uglier than @samp{long-iso} timestamps, but they carry
 nearly the same information in a smaller space and their brevity helps
@@ -11491,13 +11491,13 @@ with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
 
 @item full-iso
-List timestamps in full using ISO 8601 date, time, and time zone
-format with nanosecond precision, e.g., @samp{2002-03-30
+List timestamps in full using ISO 8601 like date, time, and time zone
+components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
 @item long-iso
-List ISO 8601 date and time in minutes, e.g.,
+List ISO 8601 like date and time in minutes, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
@@ -15239,7 +15239,13 @@ Append the hours, minutes, seconds and nanoseconds.
 @end table
 
 If showing any time terms, then include the time zone using the format
-@samp{%z}.
+@samp{%:z}.
+@macro dateParseNote
+This format is always suitable as input
+for the @option{--date} (@option{-d}) and @option{--file}
+(@option{-f}) options, regardless of the current locale.
+@end macro
+@dateParseNote
 
 @item -r @var{file}
 @itemx --reference=@var{file}
@@ -15274,10 +15280,8 @@ Display the date using a format specified by
 @uref{ftp://ftp.rfc-editor.org/in-notes/rfc3339.txt, Internet
 RFC 3339}.  This is a subset of the ISO 8601
 format, except that it also permits applications to use a space rather
-than a @samp{T} to separate dates from times.  Unlike the other
-standard formats, RFC 3339 format is always suitable as
-input for the @option{--date} (@option{-d}) and @option{--file}
-(@option{-f}) options, regardless of the current locale.
+than a @samp{T} to separate dates from times.
+@dateParseNote
 
 The argument @var{timespec} specifies how much of the time to include.
 It can be one of the following:

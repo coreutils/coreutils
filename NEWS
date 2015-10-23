@@ -20,6 +20,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   base64 no longer supports hex or oct --wrap parameters,
   thus better supporting decimals with leading zeros.
 
+  date --iso-8601 now uses +00:00 timezone format rather than +0000.
+  The standard states to use this "extended" format throughout a timestamp.
+
   df now prefers sources towards the root of a device when
   eliding duplicate bind mounted entries.
 

@@ -382,10 +382,10 @@ main (int argc, char **argv)
             static char const iso_8601_format[][32] =
               {
                 "%Y-%m-%d",
-                "%Y-%m-%dT%H:%M:%S%z",
-                "%Y-%m-%dT%H:%M:%S,%N%z",
-                "%Y-%m-%dT%H%z",
-                "%Y-%m-%dT%H:%M%z"
+                "%Y-%m-%dT%H:%M:%S%:z",
+                "%Y-%m-%dT%H:%M:%S,%N%:z",
+                "%Y-%m-%dT%H%:z",
+                "%Y-%m-%dT%H:%M%:z"
               };
             enum Time_spec i =
               (optarg
