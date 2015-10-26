@@ -44,12 +44,12 @@ my @Tests =
                                 {OUT=>"\\$degenerate  .\\\\foo\n"}],
      ['check-1', '--check', {AUX=> {f=> ''}},
                                 {IN=> {'f.md5' => "$degenerate  f\n"}},
-                                {OUT=>"f: OK\n"}],
+                                {OUT=>"'f': OK\n"}],
 
      # Same as above, but with an added empty line, to provoke --strict.
      ['ck-strict-1', '--check --strict', {AUX=> {f=> ''}},
                                 {IN=> {'f.md5' => "$degenerate  f\n\n"}},
-                                {OUT=>"f: OK\n"},
+                                {OUT=>"'f': OK\n"},
                                 {ERR=>"md5sum: "
                                  . "WARNING: 1 line is improperly formatted\n"},
                                 {EXIT=> 1}],
@@ -58,7 +58,7 @@ my @Tests =
      # lines are processed in spite of the preceding invalid input line.
      ['ck-strict-2', '--check --strict', {AUX=> {f=> ''}},
                                 {IN=> {'in.md5' => "\n$degenerate  f\n"}},
-                                {OUT=>"f: OK\n"},
+                                {OUT=>"'f': OK\n"},
                                 {ERR=>"md5sum: "
                                  . "WARNING: 1 line is improperly formatted\n"},
                                 {EXIT=> 1}],
@@ -69,7 +69,7 @@ my @Tests =
                                 {OUT=>""}],
      ['check-quiet2', '--check', '--quiet',
                                 {IN=>{'f.md5' => "$degenerate  f\n"}},
-                                {AUX=> {f=> 'foo'}}, {OUT=>"f: FAILED\n"},
+                                {AUX=> {f=> 'foo'}}, {OUT=>"'f': FAILED\n"},
                                 {ERR=>"md5sum: WARNING: 1 computed"
                                        . " checksum did NOT match\n"},
                                 {EXIT=> 1}],
@@ -80,7 +80,7 @@ my @Tests =
                                       . "$degenerate  f\n"
                                       . "invalid\n" }},
                                 {AUX=> {f=> 'foo'}},
-                                {OUT=>"f: FAILED\nf: FAILED\n"},
+                                {OUT=>"'f': FAILED\n'f': FAILED\n"},
                 {ERR=>"md5sum: WARNING: 1 line is improperly formatted\n"
                     . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
                                 {EXIT=> 1}],
@@ -91,8 +91,9 @@ my @Tests =
                                       . "$degenerate  f\n"
                                       . "invalid\n" }},
                                 {AUX=> {f=> 'foo'}},
-                                {OUT=>"f: FAILED\nf: FAILED\n"},
-              {ERR=>"md5sum: f.md5: 3: improperly formatted MD5 checksum line\n"
+                                {OUT=>"'f': FAILED\n'f': FAILED\n"},
+              {ERR=>"md5sum: 'f.md5': 3: "
+                              . "improperly formatted MD5 checksum line\n"
                   . "md5sum: WARNING: 1 line is improperly formatted\n"
                   . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
                                 {EXIT=> 1}],
@@ -101,26 +102,26 @@ my @Tests =
      # sha1sum accept BSD format.
      ['check-bsd', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
                                 {AUX=> {f=> ''}},
-                                {ERR=>"md5sum: f.sha1: no properly formatted "
+                                {ERR=>"md5sum: 'f.sha1': no properly formatted "
                                        . "MD5 checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-bsd2', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
-                                {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+                                {AUX=> {f=> ''}}, {OUT=>"'f': OK\n"}],
      ['check-bsd3', '--check', '--status',
                                 {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['check-openssl', '--check', {IN=> {'f.sha1' => "SHA1(f)= $degenerate\n"}},
                                 {AUX=> {f=> ''}},
-                                {ERR=>"md5sum: f.sha1: no properly formatted "
+                                {ERR=>"md5sum: 'f.sha1': no properly formatted "
                                        . "MD5 checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-openssl2', '--check', {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
-                                {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+                                {AUX=> {f=> ''}}, {OUT=>"'f': OK\n"}],
      ['check-openssl3', '--check', '--status',
                                 {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
-      {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: 'z': no properly formatted MD5 checksum lines found\n"}],
 
      # Ensure that when there's a NUL byte among the checksum hex digits
      # we detect the invalid formatting and don't even open the file.
@@ -128,7 +129,7 @@ my @Tests =
      #   h: FAILED
      #   md5sum: WARNING: 1 of 1 computed checksum did NOT match
      ['nul-in-cksum', '--check', {IN=> {'h'=>("\0"x32)."  h\n"}}, {EXIT=> 1},
-      {ERR=> "$prog: h: no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: 'h': no properly formatted MD5 checksum lines found\n"}],
     );
 
 # Insert the '--text' argument for each test.

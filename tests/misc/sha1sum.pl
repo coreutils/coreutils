@@ -53,29 +53,29 @@ my @Tests =
      # md5sum accept BSD format.
      ['check-bsd', '--check', {IN=> {'f.md5' => "MD5 (f) = $sha_degenerate\n"}},
                         {AUX=> {f=> ''}},
-                        {ERR=>"sha1sum: f.md5: no properly formatted "
+                        {ERR=>"sha1sum: 'f.md5': no properly formatted "
                           . "SHA1 checksum lines found\n"},
                         {EXIT=> 1}],
      ['check-bsd2', '--check',
                         {IN=> {'f.sha1' => "SHA1 (f) = $sha_degenerate\n"}},
-                        {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+                        {AUX=> {f=> ''}}, {OUT=>"'f': OK\n"}],
      ['check-bsd3', '--check', '--status',
                         {IN=> {'f.sha1' => "SHA1 (f) = $sha_degenerate\n"}},
                         {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['check-openssl', '--check',
                         {IN=> {'f.md5' => "MD5(f)= $sha_degenerate\n"}},
                         {AUX=> {f=> ''}},
-                        {ERR=>"sha1sum: f.md5: no properly formatted "
+                        {ERR=>"sha1sum: 'f.md5': no properly formatted "
                           . "SHA1 checksum lines found\n"},
                         {EXIT=> 1}],
      ['check-openssl2', '--check',
                         {IN=> {'f.sha1' => "SHA1(f)= $sha_degenerate\n"}},
-                        {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+                        {AUX=> {f=> ''}}, {OUT=>"'f': OK\n"}],
      ['check-openssl3', '--check', '--status',
                         {IN=> {'f.sha1' => "SHA1(f)= $sha_degenerate\n"}},
                         {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "SHA1 ("}}, {EXIT=> 1},
-      {ERR=> "$prog: z: no properly formatted SHA1 checksum lines found\n"}],
+      {ERR=> "$prog: 'z': no properly formatted SHA1 checksum lines found\n"}],
     );
 
 # Insert the '--text' argument for each test.
