@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 #include "sig2str.h"
 #include "operand2sig.h"
 
@@ -66,7 +67,7 @@ operand2sig (char const *operand, char *signame)
 
   if (signum < 0 || sig2str (signum, signame) != 0)
     {
-      error (0, 0, _("%s: invalid signal"), operand);
+      error (0, 0, _("%s: invalid signal"), quote (operand));
       return -1;
     }
 

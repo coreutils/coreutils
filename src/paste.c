@@ -43,6 +43,7 @@
 #include "system.h"
 #include "error.h"
 #include "fadvise.h"
+#include "quote.h"
 #include "quotearg.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -209,7 +210,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
         {
           fileptr[files_open] = fopen (fnamptr[files_open], "r");
           if (fileptr[files_open] == NULL)
-            error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
+            error (EXIT_FAILURE, errno, "%s", quote (fnamptr[files_open]));
           else if (fileno (fileptr[files_open]) == STDIN_FILENO)
             opened_stdin = true;
           fadvise (fileptr[files_open], FADVISE_SEQUENTIAL);
@@ -267,14 +268,14 @@ paste_parallel (size_t nfiles, char **fnamptr)
                 {
                   if (ferror (fileptr[i]))
                     {
-                      error (0, err, "%s", fnamptr[i]);
+                      error (0, err, "%s", quote (fnamptr[i]));
                       ok = false;
                     }
                   if (fileptr[i] == stdin)
                     clearerr (fileptr[i]); /* Also clear EOF. */
                   else if (fclose (fileptr[i]) == EOF)
                     {
-                      error (0, errno, "%s", fnamptr[i]);
+                      error (0, errno, "%s", quote (fnamptr[i]));
                       ok = false;
                     }
 
@@ -365,7 +366,7 @@ paste_serial (size_t nfiles, char **fnamptr)
           fileptr = fopen (*fnamptr, "r");
           if (fileptr == NULL)
             {
-              error (0, errno, "%s", *fnamptr);
+              error (0, errno, "%s", quote (*fnamptr));
               ok = false;
               continue;
             }
@@ -411,14 +412,14 @@ paste_serial (size_t nfiles, char **fnamptr)
 
       if (ferror (fileptr))
         {
-          error (0, saved_errno, "%s", *fnamptr);
+          error (0, saved_errno, "%s", quote (*fnamptr));
           ok = false;
         }
       if (is_stdin)
         clearerr (fileptr);	/* Also clear EOF. */
       else if (fclose (fileptr) == EOF)
         {
-          error (0, errno, "%s", *fnamptr);
+          error (0, errno, "%s", quote (*fnamptr));
           ok = false;
         }
     }

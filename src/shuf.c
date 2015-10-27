@@ -520,7 +520,7 @@ main (int argc, char **argv)
       if (n_operands == 1)
         if (! (STREQ (operand[0], "-") || ! head_lines
                || freopen (operand[0], "r", stdin)))
-          error (EXIT_FAILURE, errno, "%s", operand[0]);
+          error (EXIT_FAILURE, errno, "%s", quote (operand[0]));
 
       fadvise (stdin, FADVISE_SEQUENTIAL);
 

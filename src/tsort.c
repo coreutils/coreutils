@@ -351,7 +351,7 @@ detect_loop (struct item *k)
                         {
                           struct item *tmp = loop->qlink;
 
-                          error (0, 0, "%s", loop->str);
+                          error (0, 0, "%s", (loop->str));
 
                           /* Until we encounter K again.  */
                           if (loop == k)
@@ -445,7 +445,7 @@ tsort (const char *file)
   root = new_item (NULL);
 
   if (!is_stdin && ! freopen (file, "r", stdin))
-    error (EXIT_FAILURE, errno, "%s", file);
+    error (EXIT_FAILURE, errno, "%s", quote (file));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -473,7 +473,7 @@ tsort (const char *file)
 
   if (k != NULL)
     error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
-           file);
+           quote (file));
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
@@ -518,7 +518,7 @@ tsort (const char *file)
       if (n_strings > 0)
         {
           /* The input contains a loop.  */
-          error (0, 0, _("%s: input contains a loop:"), file);
+          error (0, 0, _("%s: input contains a loop:"), quote (file));
           ok = false;
 
           /* Print the loop and remove a relation to break it.  */

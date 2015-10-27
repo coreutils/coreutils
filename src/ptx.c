@@ -2076,7 +2076,7 @@ main (int argc, char **argv)
       if (optind < argc)
         {
           if (! freopen (argv[optind], "w", stdout))
-            error (EXIT_FAILURE, errno, "%s", argv[optind]);
+            error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
           optind++;
         }
 

@@ -25,6 +25,7 @@
 #include "canonicalize.h"
 #include "error.h"
 #include "areadlink.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "readlink"
@@ -170,7 +171,7 @@ main (int argc, char **argv)
         {
           status = EXIT_FAILURE;
           if (verbose)
-            error (0, errno, "%s", fname);
+            error (0, errno, "%s", quote (fname));
         }
     }
 

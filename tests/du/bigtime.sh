@@ -37,7 +37,7 @@ case "$future_time" in
 esac || skip_ "file system cannot represent big time stamps"
 
 printf "0\t$bignum\tfuture\n" > exp || framework_failure_
-printf "du: time $bignum is out of range\n" > err_ok || framework_failure_
+printf "du: time '$bignum' is out of range\n" > err_ok || framework_failure_
 
 du --time future >out 2>err || fail=1
 

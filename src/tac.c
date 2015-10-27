@@ -660,7 +660,7 @@ main (int argc, char **argv)
       error_message = re_compile_pattern (separator, strlen (separator),
                                           &compiled_separator);
       if (error_message)
-        error (EXIT_FAILURE, 0, "%s", error_message);
+        error (EXIT_FAILURE, 0, "%s", (error_message));
     }
   else
     match_length = sentinel_length = strlen (separator);

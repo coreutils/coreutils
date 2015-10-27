@@ -408,7 +408,8 @@ static void die (char const *, char const *) ATTRIBUTE_NORETURN;
 static void
 die (char const *message, char const *file)
 {
-  error (0, errno, "%s: %s", message, file ? file : _("standard output"));
+  error (0, errno, "%s: %s", message,
+         quote (file ? file : _("standard output")));
   exit (SORT_FAILURE);
 }
 
@@ -722,12 +723,12 @@ reap (pid_t pid)
 
   if (cpid < 0)
     error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
-           compress_program);
+           quote (compress_program));
   else if (0 < cpid && (0 < pid || delete_proc (cpid)))
     {
       if (! WIFEXITED (status) || WEXITSTATUS (status))
         error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
-               compress_program);
+               quote (compress_program));
       --nprocs;
     }
 
@@ -1176,7 +1177,7 @@ open_temp (struct tempnode *temp)
     case -1:
       if (errno != EMFILE)
         error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
-               compress_program);
+               quote (compress_program));
       close (tempfd);
       errno = EMFILE;
       break;
@@ -1248,7 +1249,7 @@ zaptemp (char const *name)
   cs_leave (cs);
 
   if (unlink_status != 0)
-    error (0, unlink_errno, _("warning: cannot remove: %s"), name);
+    error (0, unlink_errno, _("warning: cannot remove: %s"), quote (name));
   if (! next)
     temptail = pnode;
   free (node);
@@ -4024,7 +4025,7 @@ static void incompatible_options (char const *) ATTRIBUTE_NORETURN;
 static void
 incompatible_options (char const *opts)
 {
-  error (SORT_FAILURE, 0, _("options '-%s' are incompatible"), opts);
+  error (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
   abort ();
 }
 

@@ -290,7 +290,7 @@ validate_file_name (char *file, bool check_basic_portability,
         file_exists = true;
       else if (errno != ENOENT || filelen == 0)
         {
-          error (0, errno, "%s", file);
+          error (0, errno, "%s", quote (file));
           return false;
         }
     }
@@ -393,7 +393,7 @@ validate_file_name (char *file, bool check_basic_portability,
 
                   default:
                     *start = '\0';
-                    error (0, errno, "%s", dir);
+                    error (0, errno, "%s", quote (dir));
                     *start = c;
                     return false;
                   }

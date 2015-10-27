@@ -355,7 +355,7 @@ main (int argc, char **argv)
       char const *err = parse_user_spec (userspec, &uid, &gid, NULL, NULL);
 
       if (err && uid_unset (uid) && gid_unset (gid))
-        error (EXIT_CANCELED, errno, "%s", err);
+        error (EXIT_CANCELED, errno, "%s", (err));
     }
 
   /* If no gid is supplied or looked up, do so now.

@@ -380,7 +380,7 @@ show_date (const char *format, struct timespec when)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       char *when_str = timetostr (when.tv_sec, buf);
-      error (0, 0, _("time %s is out of range"), when_str);
+      error (0, 0, _("time %s is out of range"), quote (when_str));
       fputs (when_str, stdout);
       return;
     }

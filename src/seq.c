@@ -139,7 +139,7 @@ scan_arg (const char *arg)
 
   if (! xstrtold (arg, NULL, &ret.value, c_strtold))
     {
-      error (0, 0, _("invalid floating point argument: %s"), arg);
+      error (0, 0, _("invalid floating point argument: %s"), quote (arg));
       usage (EXIT_FAILURE);
     }
 

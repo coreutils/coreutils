@@ -26,6 +26,7 @@
 #include "error.h"
 #include "sig2str.h"
 #include "operand2sig.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "kill"
@@ -202,12 +203,12 @@ send_signals (int signum, char *const *argv)
 
       if (errno == ERANGE || pid != n || arg == endp || *endp)
         {
-          error (0, 0, _("%s: invalid process id"), arg);
+          error (0, 0, _("%s: invalid process id"), quote (arg));
           status = EXIT_FAILURE;
         }
       else if (kill (pid, signum) != 0)
         {
-          error (0, errno, "%s", arg);
+          error (0, errno, "%s", quote (arg));
           status = EXIT_FAILURE;
         }
     }
@@ -265,7 +266,7 @@ main (int argc, char **argv)
       case 's':
         if (0 <= signum)
           {
-            error (0, 0, _("%s: multiple signals specified"), optarg);
+            error (0, 0, _("%s: multiple signals specified"), quote (optarg));
             usage (EXIT_FAILURE);
           }
         signum = operand2sig (optarg, signame);

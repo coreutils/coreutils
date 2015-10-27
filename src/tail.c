@@ -360,7 +360,7 @@ close_fd (int fd, const char *filename)
 {
   if (fd != -1 && fd != STDIN_FILENO && close (fd))
     {
-      error (0, errno, _("closing %s (fd=%d)"), filename, fd);
+      error (0, errno, _("closing %s (fd=%d)"), quote (filename), fd);
     }
 }
 
@@ -446,15 +446,15 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
     {
     case SEEK_SET:
       error (0, errno, _("%s: cannot seek to offset %s"),
-             filename, s);
+             quote (filename), s);
       break;
     case SEEK_CUR:
       error (0, errno, _("%s: cannot seek to relative offset %s"),
-             filename, s);
+             quote (filename), s);
       break;
     case SEEK_END:
       error (0, errno, _("%s: cannot seek to end-relative offset %s"),
-             filename, s);
+             quote (filename), s);
       break;
     default:
       abort ();
@@ -975,9 +975,7 @@ recheck (struct File_spec *f, bool blocking)
             }
         }
       else if (prev_errnum != errno)
-        {
-          error (0, errno, "%s", pretty_name (f));
-        }
+        error (0, errno, "%s", quote (pretty_name (f)));
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
@@ -1152,7 +1150,8 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                     }
                   else
                     error (EXIT_FAILURE, errno,
-                           _("%s: cannot change nonblocking mode"), name);
+                           _("%s: cannot change nonblocking mode"),
+                           quote (name));
                 }
               else
                 f[i].blocking = blocking;
@@ -1164,7 +1163,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                 {
                   f[i].fd = -1;
                   f[i].errnum = errno;
-                  error (0, errno, "%s", name);
+                  error (0, errno, "%s", quote (name));
                   close (fd); /* ignore failure */
                   continue;
                 }
@@ -1197,7 +1196,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                  (in which case we ignore new data <= size).  */
               if (S_ISREG (mode) && stats.st_size < f[i].size)
                 {
-                  error (0, 0, _("%s: file truncated"), name);
+                  error (0, 0, _("%s: file truncated"), quote (name));
                   /* Assume the file was truncated to 0,
                      and therefore output all "new" data.  */
                   xlseek (fd, 0, SEEK_SET, name);
@@ -1339,7 +1338,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
      separate events for truncate() and write().  */
   if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
     {
-      error (0, 0, _("%s: file truncated"), name);
+      error (0, 0, _("%s: file truncated"), quote (name));
       xlseek (fspec->fd, 0, SEEK_SET, name);
       fspec->size = 0;
     }
@@ -1913,7 +1912,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
             {
               error (0, 0, _("%s: cannot follow end of this type of file;\
  giving up on this name"),
-                     pretty_name (f));
+                     quote (pretty_name (f)));
               ok = false;
               f->errnum = -1;
               f->ignore = true;

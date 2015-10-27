@@ -169,7 +169,7 @@ simple_cat (
       n_read = safe_read (input_desc, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
         {
-          error (0, errno, "%s", infile);
+          error (0, errno, "%s", quote (infile));
           return false;
         }
 
@@ -342,7 +342,7 @@ cat (
               n_read = safe_read (input_desc, inbuf, insize);
               if (n_read == SAFE_READ_ERROR)
                 {
-                  error (0, errno, "%s", infile);
+                  error (0, errno, "%s", quote (infile));
                   write_pending (outbuf, &bpout);
                   newlines2 = newlines;
                   return false;
@@ -673,7 +673,7 @@ main (int argc, char **argv)
           input_desc = open (infile, file_open_mode);
           if (input_desc < 0)
             {
-              error (0, errno, "%s", infile);
+              error (0, errno, "%s", quote (infile));
               ok = false;
               continue;
             }
@@ -681,7 +681,7 @@ main (int argc, char **argv)
 
       if (fstat (input_desc, &stat_buf) < 0)
         {
-          error (0, errno, "%s", infile);
+          error (0, errno, "%s", quote (infile));
           ok = false;
           goto contin;
         }
@@ -697,7 +697,7 @@ main (int argc, char **argv)
           && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
           && lseek (input_desc, 0, SEEK_CUR) < stat_buf.st_size)
         {
-          error (0, 0, _("%s: input file is output file"), infile);
+          error (0, 0, _("%s: input file is output file"), quote (infile));
           ok = false;
           goto contin;
         }
@@ -755,7 +755,7 @@ main (int argc, char **argv)
     contin:
       if (!STREQ (infile, "-") && close (input_desc) < 0)
         {
-          error (0, errno, "%s", infile);
+          error (0, errno, "%s", quote (infile));
           ok = false;
         }
     }

@@ -176,6 +176,17 @@ sc_prohibit_quotes_notation:
 	       exit 1; }  \
 	  || :
 
+# Files in src/ should quote all strings in error() output, so that
+# unexpected input chars like \r etc. don't corrupt the error.
+# In edge cases this can be avoided by putting the format string
+# on a separate line to the following arguments.
+sc_error_quotes:
+	@cd $(srcdir)/src && GIT_PAGER= git grep -n 'error *(.*%s.*, [^(]*);$$'\
+	  *.c | grep -v quote \
+	  && { echo '$(ME): '"Use quote() for error string arguments" 1>&2; \
+	       exit 1; }  \
+	  || :
+
 sc_sun_os_names:
 	@grep -nEi \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \

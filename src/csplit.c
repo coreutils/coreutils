@@ -671,7 +671,8 @@ write_to_file (uintmax_t last_line, bool ignore, int argnum)
 
   if (first_line > last_line)
     {
-      error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
+      error (0, 0, _("%s: line number out of range"),
+             quote (global_argv[argnum]));
       cleanup_fatal ();
     }
 
@@ -682,7 +683,8 @@ write_to_file (uintmax_t last_line, bool ignore, int argnum)
       line = remove_line ();
       if (line == NULL)
         {
-          error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
+          error (0, 0, _("%s: line number out of range"),
+                 quote (global_argv[argnum]));
           cleanup_fatal ();
         }
       if (!ignore)
@@ -967,7 +969,7 @@ create_output_file (void)
 
   if (! fopen_ok)
     {
-      error (0, fopen_errno, "%s", output_filename);
+      error (0, fopen_errno, "%s", quote (output_filename));
       cleanup_fatal ();
     }
   bytes_written = 0;
@@ -988,7 +990,7 @@ delete_all_files (bool in_signal_handler)
     {
       const char *name = make_filename (i);
       if (unlink (name) != 0 && !in_signal_handler)
-        error (0, errno, "%s", name);
+        error (0, errno, "%s", quote (name));
     }
 
   files_created = 0;
@@ -1010,7 +1012,7 @@ close_output_file (void)
         }
       if (fclose (output_stream) != 0)
         {
-          error (0, errno, "%s", output_filename);
+          error (0, errno, "%s", quote (output_filename));
           output_stream = NULL;
           cleanup_fatal ();
         }
@@ -1028,7 +1030,7 @@ close_output_file (void)
           sigprocmask (SIG_SETMASK, &oldset, NULL);
 
           if (! unlink_ok)
-            error (0, unlink_errno, "%s", output_filename);
+            error (0, unlink_errno, "%s", quote (output_filename));
         }
       else
         {
@@ -1080,7 +1082,8 @@ static void
 check_for_offset (struct control *p, const char *str, const char *num)
 {
   if (xstrtoimax (num, NULL, 10, &p->offset, "") != LONGINT_OK)
-    error (EXIT_FAILURE, 0, _("%s: integer expected after delimiter"), str);
+    error (EXIT_FAILURE, 0, _("%s: integer expected after delimiter"),
+           quote (str));
 }
 
 /* Given that the first character of command line arg STR is '{',
@@ -1096,7 +1099,8 @@ parse_repeat_count (int argnum, struct control *p, char *str)
 
   end = str + strlen (str) - 1;
   if (*end != '}')
-    error (EXIT_FAILURE, 0, _("%s: '}' is required in repeat count"), str);
+    error (EXIT_FAILURE, 0, _("%s: '}' is required in repeat count"),
+           quote (str));
   *end = '\0';
 
   if (str+1 == end-1 && *(str+1) == '*')
@@ -1107,7 +1111,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
         {
           error (EXIT_FAILURE, 0,
                  _("%s}: integer required between '{' and '}'"),
-                 global_argv[argnum]);
+                 quote (global_argv[argnum]));
         }
       p->repeat = val;
     }
@@ -1150,7 +1154,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   err = re_compile_pattern (str + 1, len, &p->re_compiled);
   if (err)
     {
-      error (0, 0, _("%s: invalid regular expression: %s"), str, err);
+      error (0, 0, _("%s: invalid regular expression: %s"), quote (str), err);
       cleanup_fatal ();
     }
 
@@ -1183,7 +1187,7 @@ parse_patterns (int argc, int start, char **argv)
           p->argnum = i;
 
           if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK)
-            error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
+            error (EXIT_FAILURE, 0, _("%s: invalid pattern"), quote (argv[i]));
           if (val == 0)
             error (EXIT_FAILURE, 0,
                    _("%s: line number must be greater than zero"),

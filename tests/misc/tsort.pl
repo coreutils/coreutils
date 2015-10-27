@@ -27,10 +27,10 @@ my @Tests =
   (
    ['cycle-1', {IN => {f => "t b\nt s\ns t\n"}}, {OUT => "s\nt\nb\n"},
     {EXIT => 1},
-    {ERR => "tsort: f: input contains a loop:\ntsort: s\ntsort: t\n"} ],
+    {ERR => "tsort: 'f': input contains a loop:\ntsort: s\ntsort: t\n"} ],
    ['cycle-2', {IN => {f => "t x\nt s\ns t\n"}}, {OUT => "s\nt\nx\n"},
     {EXIT => 1},
-    {ERR => "tsort: f: input contains a loop:\ntsort: s\ntsort: t\n"} ],
+    {ERR => "tsort: 'f': input contains a loop:\ntsort: s\ntsort: t\n"} ],
 
    ['posix-1', {IN => "a b c c d e\ng g\nf g e f\nh h\n"},
     {OUT => "a\nc\nd\nh\nb\ne\nf\ng\n"}],
@@ -50,7 +50,7 @@ my @Tests =
    # copy of the final token were appended.
    ['odd', {IN => "a\n"},
     {EXIT => 1},
-    {ERR => "tsort: odd.1: input contains an odd number of tokens\n"}],
+    {ERR => "tsort: 'odd.1': input contains an odd number of tokens\n"}],
 
    ['only-one', {IN => {f => ""}}, {IN => {g => ""}},
     {EXIT => 1},

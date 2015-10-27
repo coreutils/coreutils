@@ -156,6 +156,6 @@ main (int argc, char **argv)
   execvp (argv[optind], &argv[optind]);
 
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-  error (0, errno, "%s", argv[optind]);
+  error (0, errno, "%s", quote (argv[optind]));
   return exit_status;
 }

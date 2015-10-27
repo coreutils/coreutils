@@ -200,7 +200,7 @@ main (int argc, char **argv)
       con = context_new (context);
       if (!con)
         error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
-               quotearg_colon (context));
+               quote (context));
     }
   else
     {
@@ -233,13 +233,17 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
                quotearg_colon (cur_context));
       if (user && context_user_set (con, user))
-        error (EXIT_FAILURE, errno, _("failed to set new user %s"), user);
+        error (EXIT_FAILURE, errno, _("failed to set new user: %s"),
+               quote (user));
       if (type && context_type_set (con, type))
-        error (EXIT_FAILURE, errno, _("failed to set new type %s"), type);
+        error (EXIT_FAILURE, errno, _("failed to set new type: %s"),
+               quote (type));
       if (range && context_range_set (con, range))
-        error (EXIT_FAILURE, errno, _("failed to set new range %s"), range);
+        error (EXIT_FAILURE, errno, _("failed to set new range: %s"),
+               quote (range));
       if (role && context_role_set (con, role))
-        error (EXIT_FAILURE, errno, _("failed to set new role %s"), role);
+        error (EXIT_FAILURE, errno, _("failed to set new role: %s"),
+               quote (role));
     }
 
   if (security_check_context (context_str (con)) < 0)
@@ -255,6 +259,6 @@ main (int argc, char **argv)
   execvp (argv[optind], argv + optind);
 
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-  error (0, errno, "%s", argv[optind]);
+  error (0, errno, "%s", quote (argv[optind]));
   return exit_status;
 }

@@ -46,9 +46,9 @@ my @Tests =
   ['d-vwvp', '%*.*d 3 2 15',  {OUT=>" 15"}],
   ['d-neg-prec', '%.*d -3 15',  {OUT=>"15"}],
   ['d-big-prec', "%.*d $pow_2_31 15",  # INT_MAX
-   {EXIT=>1}, {ERR=>"$prog: invalid precision: $pow_2_31\n"}],
+   {EXIT=>1}, {ERR=>"$prog: invalid precision: '$pow_2_31'\n"}],
   ['d-big-fwidth', "%*d $pow_2_31 15",  # INT_MAX
-   {EXIT=>1}, {ERR=>"$prog: invalid field width: $pow_2_31\n"}],
+   {EXIT=>1}, {ERR=>"$prog: invalid field width: '$pow_2_31'\n"}],
   ['F',  '%F  1',  {OUT=>"1.000000"}],
   ['LF', '%LF 1',  {OUT=>"1.000000"}],
   ['E',  '%E  2',  {OUT=>"2.000000E+00"}],
@@ -76,12 +76,12 @@ my @Tests =
     #   no-num: Invalid argument         (FreeBSD6)
     #   no-num: expected a numeric value (glibc, Solaris 10)
     {ERR_SUBST => 's/Invalid argument$/expected a numeric value/'},
-    {ERR=>"$prog: no-num: expected a numeric value\n"}],
+    {ERR=>"$prog: 'no-num': expected a numeric value\n"}],
   ['d-bad-suffix', '%d 9z', {OUT=>'9'}, {EXIT=>1},
-    {ERR=>"$prog: 9z: value not completely converted\n"}],
+    {ERR=>"$prog: '9z': value not completely converted\n"}],
   ['d-out-of-range', '%d '.('9'x30), {EXIT=>1},
     {OUT=>"inaccurate"}, {OUT_SUBST => 's/\d+/inaccurate/'},
-    {ERR=>"$prog: 9...9\n"}, {ERR_SUBST => 's/9+.*/9...9/'}],
+    {ERR=>"$prog: 9...9\n"}, {ERR_SUBST => "s/'9+.*/9...9/"}],
   ['excess', 'B 1', {OUT=>'B'},
     {ERR=>"$prog: warning: ignoring excess arguments, starting with '1'\n"}],
   ['percent', '%%', {OUT=>'%'}],

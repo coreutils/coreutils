@@ -921,7 +921,7 @@ open_next_file (void)
           in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
           if (in_stream == NULL)
             {
-              error (0, errno, "%s", input_filename);
+              error (0, errno, "%s", quote (input_filename));
               ok = false;
             }
         }
@@ -950,14 +950,14 @@ check_and_close (int in_errno)
     {
       if (ferror (in_stream))
         {
-          error (0, in_errno, _("%s: read error"), input_filename);
+          error (0, in_errno, _("%s: read error"), quote (input_filename));
           if (! STREQ (file_list[-1], "-"))
             fclose (in_stream);
           ok = false;
         }
       else if (! STREQ (file_list[-1], "-") && fclose (in_stream) != 0)
         {
-          error (0, errno, "%s", input_filename);
+          error (0, errno, "%s", quote (input_filename));
           ok = false;
         }
 
@@ -1092,7 +1092,7 @@ skip (uintmax_t n_skip)
 
       else   /* cannot fstat() file */
         {
-          error (0, errno, "%s", input_filename);
+          error (0, errno, "%s", quote (input_filename));
           ok = false;
         }
 
@@ -1692,7 +1692,7 @@ main (int argc, char **argv)
               /* The minimum string length may be no larger than SIZE_MAX,
                  since we may allocate a buffer of this size.  */
               if (SIZE_MAX < tmp)
-                error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
 
               string_min = tmp;
             }
@@ -1773,7 +1773,7 @@ main (int argc, char **argv)
               if (s_err != LONGINT_OK)
                 xstrtol_fatal (s_err, oi, c, long_options, optarg);
               if (SIZE_MAX < w_tmp)
-                error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+                error (EXIT_FAILURE, 0, _("%s is too large"), quote (optarg));
               desired_width = w_tmp;
             }
           break;

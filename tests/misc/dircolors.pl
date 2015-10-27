@@ -26,7 +26,7 @@ use strict;
 my @Tests =
     (
      ['a', '-b', {IN => {k => "exec\n"}},
-      {ERR => "dircolors: k:1: invalid line;  missing second token\n"},
+      {ERR => "dircolors: 'k':1: invalid line;  missing second token\n"},
       {EXIT => 1}],
      ['quote', '-b', {IN => "exec 'echo Hello;:'\n"},
       {OUT => "LS_COLORS='ex='\\''echo Hello;\\:'\\'':';\n"

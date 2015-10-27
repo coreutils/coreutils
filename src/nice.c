@@ -215,6 +215,6 @@ main (int argc, char **argv)
   execvp (argv[i], &argv[i]);
 
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-  error (0, errno, "%s", argv[i]);
+  error (0, errno, "%s", quote (argv[i]));
   return exit_status;
 }

@@ -327,7 +327,7 @@ main (int argc, char **argv)
     {
       input_fh = fopen (infile, "rb");
       if (input_fh == NULL)
-        error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", quote (infile));
     }
 
   fadvise (input_fh, FADVISE_SEQUENTIAL);
@@ -342,7 +342,7 @@ main (int argc, char **argv)
       if (STREQ (infile, "-"))
         error (EXIT_FAILURE, errno, _("closing standard input"));
       else
-        error (EXIT_FAILURE, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", quote (infile));
     }
 
   return EXIT_SUCCESS;

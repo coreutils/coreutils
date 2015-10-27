@@ -119,8 +119,8 @@ sed 's/: Invalid.*/: expected a numeric value/' err > k && mv k err
 
 cat <<EOF > exp_err
 printf: warning: ": character(s) following character constant have been ignored
-printf: ": expected a numeric value
-printf: a: expected a numeric value
+printf: '"': expected a numeric value
+printf: 'a': expected a numeric value
 EOF
 
 compare exp out || fail=1

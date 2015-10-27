@@ -28,6 +28,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  All utilities now quote user supplied arguments in error strings,
+  which avoids confusing error messages in the presence of '\r' chars etc.
+
   dircolors now supports globbing of TERM entries in its database.
   For example "TERM *256color*" is now supported.
 

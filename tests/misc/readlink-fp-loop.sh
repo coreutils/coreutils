@@ -42,10 +42,10 @@ ln -sf ../s/1 d/2 || framework_failure_
 readlink -v -e p/1 2> out && fail=1
 readlink_msg=$(cat out)
 case $readlink_msg in
-  'readlink: p/1: '*) ;;
+  "readlink: 'p/1': "*) ;;
   *) fail=1;;
 esac
-symlink_loop_msg=${readlink_msg#'readlink: p/1: '}
+symlink_loop_msg=${readlink_msg#"readlink: 'p/1': "}
 
 # Exercise the hash table code.
 ln -nsf ../s/3 d/2 || framework_failure_
@@ -62,7 +62,7 @@ compare exp out || fail=1
 # A trivial loop
 ln -s loop loop
 readlink -v -e loop 2> out && fail=1
-echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure_
+echo "readlink: 'loop': $symlink_loop_msg" > exp || framework_failure_
 compare exp out || fail=1
 
 Exit $fail

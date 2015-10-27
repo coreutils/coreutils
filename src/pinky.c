@@ -27,6 +27,7 @@
 #include "canon-host.h"
 #include "error.h"
 #include "hard-locale.h"
+#include "quote.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -468,7 +469,7 @@ short_pinky (const char *filename,
   STRUCT_UTMP *utmp_buf = NULL;
 
   if (read_utmp (filename, &n_users, &utmp_buf, 0) != 0)
-    error (EXIT_FAILURE, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", quote (filename));
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
 

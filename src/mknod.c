@@ -242,7 +242,8 @@ main (int argc, char **argv)
         device = makedev (i_major, i_minor);
 #ifdef NODEV
         if (device == NODEV)
-          error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
+          error (EXIT_FAILURE, 0, _("invalid device %s %s"),
+                 s_major, s_minor);
 #endif
 
         if (set_security_context)

@@ -33,7 +33,7 @@ my $mb_locale = $ENV{LOCALE_FR_UTF8};
 # Normalize each diagnostic to use '-'.
 my $normalize_filename = {ERR_SUBST => 's/^$prog: .*?:/$prog: -:/'};
 
-my $no_file = "$prog: cannot read: no-file: No such file or directory\n";
+my $no_file = "$prog: cannot read: 'no-file': No such file or directory\n";
 
 my @Tests =
 (
@@ -327,7 +327,7 @@ my @Tests =
 ["o-no-file1", qw(-o no-file no-file), {EXIT=>2}, {ERR=>$no_file}],
 
 ["create-empty", qw(-o no/such/file /dev/null), {EXIT=>2},
- {ERR=>"$prog: open failed: no/such/file: No such file or directory\n"}],
+ {ERR=>"$prog: open failed: 'no/such/file': No such file or directory\n"}],
 
 # From Paul Eggert.  This was fixed in textutils-1.22k.
 ["neg-nls", '-n', {IN=>"-1\n-9\n"}, {OUT=>"-9\n-1\n"}],

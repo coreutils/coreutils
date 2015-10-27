@@ -1465,7 +1465,7 @@ open_file (char *name, COLUMN *p)
     {
       failed_opens = true;
       if (!ignore_failed_opens)
-        error (0, errno, "%s", name);
+        error (0, errno, "%s", quote (name));
       return false;
     }
   fadvise (p->fp, FADVISE_SEQUENTIAL);
@@ -1489,9 +1489,9 @@ close_file (COLUMN *p)
   if (p->status == CLOSED)
     return;
   if (ferror (p->fp))
-    error (EXIT_FAILURE, errno, "%s", p->name);
+    error (EXIT_FAILURE, errno, "%s", quote (p->name));
   if (fileno (p->fp) != STDIN_FILENO && fclose (p->fp) != 0)
-    error (EXIT_FAILURE, errno, "%s", p->name);
+    error (EXIT_FAILURE, errno, "%s", quote (p->name));
 
   if (!parallel_files)
     {

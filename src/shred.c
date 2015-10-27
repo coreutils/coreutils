@@ -90,6 +90,7 @@
 #include "error.h"
 #include "fcntl--.h"
 #include "human.h"
+#include "quote.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "randint.h"
 #include "randread.h"
@@ -340,7 +341,7 @@ dosync (int fd, char const *qname)
   err = errno;
   if ( ! ignorable_sync_errno (err))
     {
-      error (0, err, _("%s: fdatasync failed"), qname);
+      error (0, err, _("%s: fdatasync failed"), quote (qname));
       errno = err;
       return -1;
     }
@@ -351,7 +352,7 @@ dosync (int fd, char const *qname)
   err = errno;
   if ( ! ignorable_sync_errno (err))
     {
-      error (0, err, _("%s: fsync failed"), qname);
+      error (0, err, _("%s: fsync failed"), quote (qname));
       errno = err;
       return -1;
     }
@@ -469,7 +470,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
   if (! dorewind (fd, st))
     {
-      error (0, errno, _("%s: cannot rewind"), qname);
+      error (0, errno, _("%s: cannot rewind"), quote (qname));
       other_error = true;
       goto free_pattern_mem;
     }
@@ -489,7 +490,8 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   /* Set position if first status update */
   if (n)
     {
-      error (0, 0, _("%s: pass %lu/%lu (%s)..."), qname, k, n, pass_string);
+      error (0, 0, _("%s: pass %lu/%lu (%s)..."),
+             quote (qname), k, n, pass_string);
       thresh = time (NULL) + VERBOSE_UPDATE;
       previous_human_offset = "";
     }
@@ -541,7 +543,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                       continue;
                     }
                   error (0, errnum, _("%s: error writing at offset %s"),
-                         qname, umaxtostr (offset + soff, buf));
+                         quote (qname), umaxtostr (offset + soff, buf));
 
                   /* 'shred' is often used on bad media, before throwing it
                      out.  Thus, it shouldn't give up on bad blocks.  This
@@ -561,7 +563,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                           write_error = true;
                           continue;
                         }
-                      error (0, errno, _("%s: lseek failed"), qname);
+                      error (0, errno, _("%s: lseek failed"), quote (qname));
                     }
                   other_error = true;
                   goto free_pattern_mem;
@@ -573,7 +575,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
       if (OFF_T_MAX - offset < soff)
         {
-          error (0, 0, _("%s: file too large"), qname);
+          error (0, 0, _("%s: file too large"), quote (qname));
           other_error = true;
           goto free_pattern_mem;
         }
@@ -598,7 +600,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
             {
               if (! known (size))
                 error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
-                       qname, k, n, pass_string, human_offset);
+                       quote (qname), k, n, pass_string, human_offset);
               else
                 {
                   uintmax_t off = offset;
@@ -614,8 +616,8 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                   if (done)
                     human_offset = human_size;
                   error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
-                         qname, k, n, pass_string, human_offset, human_size,
-                         percent);
+                         quote (qname), k, n, pass_string, human_offset,
+                         human_size, percent);
                 }
 
               strcpy (previous_offset_buf, human_offset);
@@ -872,7 +874,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
 
   if (fstat (fd, &st))
     {
-      error (0, errno, _("%s: fstat failed"), qname);
+      error (0, errno, _("%s: fstat failed"), quote (qname));
       return false;
     }
 
@@ -883,12 +885,12 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
       || S_ISFIFO (st.st_mode)
       || S_ISSOCK (st.st_mode))
     {
-      error (0, 0, _("%s: invalid file type"), qname);
+      error (0, 0, _("%s: invalid file type"), quote (qname));
       return false;
     }
   else if (S_ISREG (st.st_mode) && st.st_size < 0)
     {
-      error (0, 0, _("%s: file has negative size"), qname);
+      error (0, 0, _("%s: file has negative size"), quote (qname));
       return false;
     }
 
@@ -982,7 +984,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
   if (flags->remove_file && ftruncate (fd, 0) != 0
       && S_ISREG (st.st_mode))
     {
-      error (0, errno, _("%s: error truncating"), qname);
+      error (0, errno, _("%s: error truncating"), quote (qname));
       ok = false;
       goto wipefd_out;
     }
@@ -1002,12 +1004,13 @@ wipefd (int fd, char const *qname, struct randint_source *s,
 
   if (fd_flags < 0)
     {
-      error (0, errno, _("%s: fcntl failed"), qname);
+      error (0, errno, _("%s: fcntl failed"), quote (qname));
       return false;
     }
   if (fd_flags & O_APPEND)
     {
-      error (0, 0, _("%s: cannot shred append-only file descriptor"), qname);
+      error (0, 0, _("%s: cannot shred append-only file descriptor"),
+             quote (qname));
       return false;
     }
   return do_wipefd (fd, qname, s, flags);
@@ -1091,7 +1094,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
     dir_fd = open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
 
   if (flags->verbose)
-    error (0, 0, _("%s: removing"), qoldname);
+    error (0, 0, _("%s: removing"), quote (qoldname));
 
   while ((flags->remove_file != remove_unlink) && len)
     {
@@ -1115,7 +1118,8 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
                        * be quoted only the first time.
                        */
                       char const *old = (first ? qoldname : oldname);
-                      error (0, 0, _("%s: renamed to %s"), old, newname);
+                      error (0, 0, _("%s: renamed to %s"),
+                             quote_n (0, old), quote_n (1, newname));
                       first = false;
                     }
                   memcpy (oldname + (base - newname), base, len + 1);
@@ -1137,18 +1141,18 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
     }
   if (unlink (oldname) != 0)
     {
-      error (0, errno, _("%s: failed to remove"), qoldname);
+      error (0, errno, _("%s: failed to remove"), quote (qoldname));
       ok = false;
     }
   else if (flags->verbose)
-    error (0, 0, _("%s: removed"), qoldname);
+    error (0, 0, _("%s: removed"), quote (qoldname));
   if (0 <= dir_fd)
     {
       if (dosync (dir_fd, qdir) != 0)
         ok = false;
       if (close (dir_fd) != 0)
         {
-          error (0, errno, _("%s: failed to close"), qdir);
+          error (0, errno, _("%s: failed to close"), quote (qdir));
           ok = false;
         }
     }
@@ -1184,14 +1188,14 @@ wipefile (char *name, char const *qname,
     fd = open (name, O_WRONLY | O_NOCTTY | O_BINARY);
   if (fd < 0)
     {
-      error (0, errno, _("%s: failed to open for writing"), qname);
+      error (0, errno, _("%s: failed to open for writing"), quote (qname));
       return false;
     }
 
   ok = do_wipefd (fd, qname, s, flags);
   if (close (fd) != 0)
     {
-      error (0, errno, _("%s: failed to close"), qname);
+      error (0, errno, _("%s: failed to close"), quote (qname));
       ok = false;
     }
   if (ok && flags->remove_file)

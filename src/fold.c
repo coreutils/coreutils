@@ -25,6 +25,7 @@
 #include "system.h"
 #include "error.h"
 #include "fadvise.h"
+#include "quote.h"
 #include "xdectoint.h"
 
 #define TAB_WIDTH 8
@@ -136,7 +137,7 @@ fold_file (char const *filename, size_t width)
 
   if (istream == NULL)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", quote (filename));
       return false;
     }
 
@@ -221,14 +222,14 @@ fold_file (char const *filename, size_t width)
 
   if (ferror (istream))
     {
-      error (0, saved_errno, "%s", filename);
+      error (0, saved_errno, "%s", quote (filename));
       if (!STREQ (filename, "-"))
         fclose (istream);
       return false;
     }
   if (!STREQ (filename, "-") && fclose (istream) == EOF)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", quote (filename));
       return false;
     }
 

@@ -259,7 +259,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
         {
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", file);
+              error (0, errno, "%s", quote (file));
               ok = false;
               break;
             }
@@ -275,7 +275,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
         {
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", file);
+              error (0, errno, "%s", quote (file));
               ok = false;
               break;
             }
@@ -343,7 +343,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 # endif
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", file);
+              error (0, errno, "%s", quote (file));
               ok = false;
               break;
             }
@@ -464,7 +464,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           const char *p = buf;
           if (bytes_read == SAFE_READ_ERROR)
             {
-              error (0, errno, "%s", file);
+              error (0, errno, "%s", quote (file));
               ok = false;
               break;
             }
@@ -541,7 +541,7 @@ wc_file (char const *file, struct fstatus *fstatus)
       int fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
         {
-          error (0, errno, "%s", file);
+          error (0, errno, "%s", quote (file));
           return false;
         }
       else
@@ -549,7 +549,7 @@ wc_file (char const *file, struct fstatus *fstatus)
           bool ok = wc (fd, file, fstatus, 0);
           if (close (fd) != 0)
             {
-              error (0, errno, "%s", file);
+              error (0, errno, "%s", quote (file));
               return false;
             }
           return ok;

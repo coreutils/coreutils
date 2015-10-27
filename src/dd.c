@@ -1458,20 +1458,21 @@ scanargs (int argc, char *const *argv)
 
   if (output_flags & O_FULLBLOCK)
     {
-      error (0, 0, "%s: %s", _("invalid output flag"), "'fullblock'");
+      error (0, 0, "%s: %s", _("invalid output flag"), quote ("fullblock"));
       usage (EXIT_FAILURE);
     }
 
   if (input_flags & O_SEEK_BYTES)
     {
-      error (0, 0, "%s: %s", _("invalid input flag"), "'seek_bytes'");
+      error (0, 0, "%s: %s", _("invalid input flag"), quote ("seek_bytes"));
       usage (EXIT_FAILURE);
     }
 
   if (output_flags & (O_COUNT_BYTES | O_SKIP_BYTES))
     {
       error (0, 0, "%s: %s", _("invalid output flag"),
-             output_flags & O_COUNT_BYTES ? "'count_bytes'" : "'skip_bytes'");
+             quote (output_flags & O_COUNT_BYTES
+                    ? "count_bytes" : "skip_bytes"));
       usage (EXIT_FAILURE);
     }
 

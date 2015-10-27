@@ -274,13 +274,13 @@ compare_files (char **infiles)
       alt[i][2] = 0;
       streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
-        error (EXIT_FAILURE, errno, "%s", infiles[i]);
+        error (EXIT_FAILURE, errno, "%s", quote (infiles[i]));
 
       fadvise (streams[i], FADVISE_SEQUENTIAL);
 
       thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
       if (ferror (streams[i]))
-        error (EXIT_FAILURE, errno, "%s", infiles[i]);
+        error (EXIT_FAILURE, errno, "%s", quote (infiles[i]));
     }
 
   while (thisline[0] || thisline[1])
@@ -350,7 +350,7 @@ compare_files (char **infiles)
                            all_line[i][alt[i][1]], i + 1);
 
             if (ferror (streams[i]))
-              error (EXIT_FAILURE, errno, "%s", infiles[i]);
+              error (EXIT_FAILURE, errno, "%s", quote (infiles[i]));
 
             fill_up[i] = false;
           }
@@ -358,7 +358,7 @@ compare_files (char **infiles)
 
   for (i = 0; i < 2; i++)
     if (fclose (streams[i]) != 0)
-      error (EXIT_FAILURE, errno, "%s", infiles[i]);
+      error (EXIT_FAILURE, errno, "%s", quote (infiles[i]));
 }
 
 int

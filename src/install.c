@@ -532,7 +532,7 @@ strip (char const *name)
       break;
     case 0:			/* Child. */
       execlp (strip_program, strip_program, name, NULL);
-      error (EXIT_FAILURE, errno, _("cannot run %s"), strip_program);
+      error (EXIT_FAILURE, errno, _("cannot run %s"), quote (strip_program));
       break;
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
@@ -693,7 +693,7 @@ install_file_in_file (const char *from, const char *to,
     if (! strip (to))
       {
         if (unlink (to) != 0)  /* Cleanup.  */
-          error (EXIT_FAILURE, errno, _("cannot unlink %s"), to);
+          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quote (to));
         return false;
       }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
@@ -719,7 +719,7 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
 
   if (mkancesdirs (to, &wd, make_ancestor, x) == -1)
     {
-      error (0, errno, _("cannot create directory %s"), to);
+      error (0, errno, _("cannot create directory %s"), quote (to));
       status = EXIT_FAILURE;
     }
 
@@ -732,7 +732,7 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
         return false;
       if (restore_result < 0 && status == EXIT_SUCCESS)
         {
-          error (0, restore_errno, _("cannot create directory %s"), to);
+          error (0, restore_errno, _("cannot create directory %s"), quote (to));
           return false;
         }
     }

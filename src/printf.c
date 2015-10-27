@@ -139,15 +139,15 @@ verify_numeric (const char *s, const char *end)
 {
   if (errno)
     {
-      error (0, errno, "%s", s);
+      error (0, errno, "%s", quote (s));
       exit_status = EXIT_FAILURE;
     }
   else if (*end)
     {
       if (s == end)
-        error (0, 0, _("%s: expected a numeric value"), s);
+        error (0, 0, _("%s: expected a numeric value"), quote (s));
       else
-        error (0, 0, _("%s: value not completely converted"), s);
+        error (0, 0, _("%s: value not completely converted"), quote (s));
       exit_status = EXIT_FAILURE;
     }
 }
@@ -545,7 +545,7 @@ print_formatted (const char *format, int argc, char **argv)
                     field_width = width;
                   else
                     error (EXIT_FAILURE, 0, _("invalid field width: %s"),
-                           *argv);
+                           quote (*argv));
                   ++argv;
                   --argc;
                 }
@@ -580,7 +580,7 @@ print_formatted (const char *format, int argc, char **argv)
                         }
                       else if (INT_MAX < prec)
                         error (EXIT_FAILURE, 0, _("invalid precision: %s"),
-                               *argv);
+                               quote (*argv));
                       else
                         precision = prec;
                       ++argv;

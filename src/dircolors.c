@@ -285,7 +285,7 @@ dc_parse_stream (FILE *fp, const char *filename)
       if (arg == NULL)
         {
           error (0, 0, _("%s:%lu: invalid line;  missing second token"),
-                 filename, (unsigned long int) line_number);
+                 quote (filename), (unsigned long int) line_number);
           ok = false;
           free (keywd);
           continue;
@@ -376,7 +376,7 @@ dc_parse_file (const char *filename)
 
   if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == NULL)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", quote (filename));
       return false;
     }
 

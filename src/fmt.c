@@ -431,7 +431,7 @@ main (int argc, char **argv)
                   fmt (in_stream);
                   if (fclose (in_stream) == EOF)
                     {
-                      error (0, errno, "%s", file);
+                      error (0, errno, "%s", quote (file));
                       ok = false;
                     }
                 }

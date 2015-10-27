@@ -558,7 +558,7 @@ main (int argc, char **argv)
       specified_context = argv[optind++];
       if (security_check_context (se_const (specified_context)) < 0)
         error (EXIT_FAILURE, errno, _("invalid context: %s"),
-               quotearg_colon (specified_context));
+               quote (specified_context));
     }
 
   if (reference_file && component_specified)

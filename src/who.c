@@ -620,7 +620,7 @@ who (const char *filename, int options)
   STRUCT_UTMP *utmp_buf;
 
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
-    error (EXIT_FAILURE, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", quote (filename));
 
   if (short_list)
     list_entries_who (n_users, utmp_buf);

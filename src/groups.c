@@ -27,6 +27,7 @@
 #include "system.h"
 #include "error.h"
 #include "group-list.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "groups"
@@ -125,7 +126,8 @@ main (int argc, char **argv)
         {
           struct passwd *pwd = getpwnam (argv[optind]);
           if (pwd == NULL)
-            error (EXIT_FAILURE, 0, _("%s: no such user"), argv[optind]);
+            error (EXIT_FAILURE, 0, _("%s: no such user"),
+                   quote (argv[optind]));
           ruid = pwd->pw_uid;
           rgid = egid = pwd->pw_gid;
 

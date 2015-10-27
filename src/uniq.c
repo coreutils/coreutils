@@ -327,9 +327,9 @@ check_file (const char *infile, const char *outfile, char delimiter)
   struct linebuffer *thisline, *prevline;
 
   if (! (STREQ (infile, "-") || freopen (infile, "r", stdin)))
-    error (EXIT_FAILURE, errno, "%s", infile);
+    error (EXIT_FAILURE, errno, "%s", quote (infile));
   if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
-    error (EXIT_FAILURE, errno, "%s", outfile);
+    error (EXIT_FAILURE, errno, "%s", quote (outfile));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -462,7 +462,7 @@ check_file (const char *infile, const char *outfile, char delimiter)
 
  closefiles:
   if (ferror (stdin) || fclose (stdin) != 0)
-    error (EXIT_FAILURE, 0, _("error reading %s"), infile);
+    error (EXIT_FAILURE, 0, _("error reading %s"), quote (infile));
 
   /* stdout is handled via the atexit-invoked close_stdout function.  */
 

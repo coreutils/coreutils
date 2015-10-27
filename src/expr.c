@@ -466,7 +466,7 @@ toarith (VALUE *v)
         if (! looks_like_integer (s))
           return false;
         if (mpz_init_set_str (v->u.i, s, 10) != 0 && !HAVE_GMP)
-          error (EXPR_FAILURE, ERANGE, "%s", s);
+          error (EXPR_FAILURE, ERANGE, "%s", (s));
         free (s);
         v->type = integer;
         return true;
@@ -562,7 +562,7 @@ docolon (VALUE *sv, VALUE *pv)
     RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
   errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
   if (errmsg)
-    error (EXPR_INVALID, 0, "%s", errmsg);
+    error (EXPR_INVALID, 0, "%s", (errmsg));
   re_buffer.newline_anchor = 0;
 
   matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);

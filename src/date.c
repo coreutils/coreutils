@@ -520,7 +520,7 @@ main (int argc, char **argv)
           if (reference != NULL)
             {
               if (stat (reference, &refstats) != 0)
-                error (EXIT_FAILURE, errno, "%s", reference);
+                error (EXIT_FAILURE, errno, "%s", quote (reference));
               when = get_stat_mtime (&refstats);
             }
           else
@@ -563,7 +563,8 @@ show_date (const char *format, struct timespec when, timezone_t tz)
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      error (0, 0, _("time %s is out of range"), timetostr (when.tv_sec, buf));
+      error (0, 0, _("time %s is out of range"),
+             quote (timetostr (when.tv_sec, buf)));
       return false;
     }
 

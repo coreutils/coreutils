@@ -243,7 +243,7 @@ term (void)
         test_syntax_error (_("')' expected"), NULL);
       else
         if (argv[pos][0] != ')' || argv[pos][1])
-          test_syntax_error (_("')' expected, found %s"), argv[pos]);
+          test_syntax_error (_("')' expected, found %s"), quote (argv[pos]));
       advance (false);
     }
 
@@ -259,7 +259,7 @@ term (void)
       if (test_unop (argv[pos]))
         value = unary_operator ();
       else
-        test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+        test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
     }
   else
     {
@@ -366,7 +366,7 @@ binary_operator (bool l_is_l)
         }
 
       /* FIXME: is this dead code? */
-      test_syntax_error (_("unknown binary operator"), argv[op]);
+      test_syntax_error (_("%s: unknown binary operator"), quote (argv[op]));
     }
 
   if (argv[op][0] == '='
@@ -617,7 +617,7 @@ two_arguments (void)
       if (test_unop (argv[pos]))
         value = unary_operator ();
       else
-        test_syntax_error (_("%s: unary operator expected"), argv[pos]);
+        test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
     }
   else
     beyond ();
@@ -645,7 +645,7 @@ three_arguments (void)
   else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o"))
     value = expr ();
   else
-    test_syntax_error (_("%s: binary operator expected"), argv[pos+1]);
+    test_syntax_error (_("%s: binary operator expected"), quote (argv[pos+1]));
   return (value);
 }
 
