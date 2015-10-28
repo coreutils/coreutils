@@ -7498,7 +7498,7 @@ files; if you want output columns to line up, you may need to insert
 spaces in one of the two formats.
 
 @item full-iso
-List timestamps in full using ISO 8601 like date, time, and time zone
+List timestamps in full using ISO 8601 date, time, and time zone
 components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
@@ -7509,14 +7509,14 @@ explain @command{make}'s behavior, since GNU @command{make}
 uses the full timestamp to determine whether a file is out of date.
 
 @item long-iso
-List ISO 8601 like date and time in minutes, e.g.,
+List ISO 8601 date and time components with minute precision, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
 List ISO 8601 dates for non-recent timestamps (e.g.,
-@samp{2002-03-30@ }), and ISO 8601 like month, day, hour, and
+@samp{2002-03-30@ }), and ISO 8601-like month, day, hour, and
 minute for recent timestamps (e.g., @samp{03-30 23:45}).  These
 timestamps are uglier than @samp{long-iso} timestamps, but they carry
 nearly the same information in a smaller space and their brevity helps
@@ -11491,13 +11491,13 @@ with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
 
 @item full-iso
-List timestamps in full using ISO 8601 like date, time, and time zone
+List timestamps in full using ISO 8601 date, time, and time zone
 components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
 @item long-iso
-List ISO 8601 like date and time in minutes, e.g.,
+List ISO 8601 date and time components with minute precision, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
