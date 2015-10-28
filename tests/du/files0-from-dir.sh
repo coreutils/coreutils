@@ -29,10 +29,10 @@ cat dir > /dev/null && skip_ "cat dir/ succeeds"
 
 for prog in du wc; do
   $prog --files0-from=dir > /dev/null 2>err && fail=1
-  printf "$prog: dir:\n" > exp || fail=1
+  printf "$prog: 'dir':\n" > exp || fail=1
   # The diagnostic string is usually "Is a directory" (ENOTDIR),
   # but accept a different string or errno value.
-  sed 's/dir:.*/dir:/' err > k; mv k err
+  sed "s/'dir':.*/'dir':/" err > k; mv k err
   compare exp err || fail=1
 done
 

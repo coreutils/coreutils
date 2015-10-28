@@ -55,14 +55,14 @@ my @Tests =
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>2},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"}],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"}],
 
    # two NULs
    # Note that the behavior here differs from 'wc' in that the
    # first zero-length file name is treated as fatal, so there
    # is only one line of diagnostic output.
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>2},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"}],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"}],
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
@@ -86,7 +86,7 @@ my @Tests =
    # should be no output on STDOUT.
    ['zero-len', '--files0-from=-', '<',
     {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"}, {EXIT=>2} ],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"}, {EXIT=>2} ],
   );
 
 my $save_temps = $ENV{DEBUG};

@@ -13,7 +13,7 @@ exitfail
 inline
 fopen-safer
 gettimeofday
-quotearg
+quote
 stdalign
 stdbool
 stdint

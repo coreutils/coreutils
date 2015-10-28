@@ -33,7 +33,6 @@
 #include "mbchar.h"
 #include "physmem.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "readtokens0.h"
 #include "safe-read.h"
 #include "stat-size.h"
@@ -765,7 +764,7 @@ main (int argc, char **argv)
               goto argv_iter_done;
             case AI_ERR_READ:
               error (0, errno, _("%s: read error"),
-                     quotearg_colon (files_from));
+                     quote (files_from));
               ok = false;
               goto argv_iter_done;
             case AI_ERR_MEM:
@@ -798,7 +797,7 @@ main (int argc, char **argv)
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
               unsigned long int file_number = argv_iter_n_args (ai);
-              error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+              error (0, 0, "%s:%lu: %s", quote (files_from),
                      file_number, _("invalid zero-length file name"));
             }
           skip_file = true;

@@ -28,7 +28,7 @@ shred: 'f': pass 1/3 (random)...
 shred: 'f': pass 2/3 (random)...
 shred: 'f': pass 3/3 (random)...
 shred: 'f': removing
-shred: 'f': renamed to '0'
+shred: 'f': renamed to 0
 shred: 'f': removed" > exp || framework_failure_
 
 shred -v -u f 2>out || fail=1
@@ -40,7 +40,7 @@ compare exp out || fail=1
 touch f || framework_failure_
 echo "\
 shred: 'f': removing
-shred: 'f': renamed to '0'
+shred: 'f': renamed to 0
 shred: 'f': removed" > exp || framework_failure_
 
 shred -v -u f 2>out || fail=1
@@ -73,7 +73,7 @@ shred: 'f': pass 18/20 (eeeeee)...
 shred: 'f': pass 19/20 (333333)...
 shred: 'f': pass 20/20 (random)...
 shred: 'f': removing
-shred: 'f': renamed to '0'
+shred: 'f': renamed to 0
 shred: 'f': removed" > exp || framework_failure_
 
 shred -v -u -n20 --random-source=Us f 2>out || fail=1

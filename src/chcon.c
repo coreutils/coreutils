@@ -24,7 +24,6 @@
 #include "error.h"
 #include "ignore-value.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "root-dev-ino.h"
 #include "selinux-at.h"
 #include "xfts.h"
@@ -98,7 +97,7 @@ compute_context_from_mask (char const *context, context_t *ret)
   if (!new_context)
     {
       error (0, errno, _("failed to create security context: %s"),
-             quotearg_colon (context));
+             quote (context));
       return 1;
     }
 

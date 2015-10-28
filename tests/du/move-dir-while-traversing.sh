@@ -92,7 +92,7 @@ du -a $t d2 2> err
 test $? = 1 || fail=1
 
 # check for the new diagnostic
-printf "du: fts_read failed: $t/3/a/b: No such file or directory\n" > exp \
+printf "du: fts_read failed: '$t/3/a/b': No such file or directory\n" > exp \
   || fail=1
 compare exp err || fail=1
 

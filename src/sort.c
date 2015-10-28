@@ -4612,7 +4612,7 @@ main (int argc, char **argv)
                   unsigned long int file_number = i + 1;
                   error (SORT_FAILURE, 0,
                          _("%s:%lu: invalid zero-length file name"),
-                         quotearg_colon (files_from), file_number);
+                         quote (files_from), file_number);
                 }
             }
         }

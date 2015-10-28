@@ -66,7 +66,6 @@
 #include "getopt.h"
 #include "mountlist.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "strftime.h"
@@ -1188,7 +1187,7 @@ print_it (char const *format, int fd, char const *filename,
                     dest[len + 1] = *fmt_char;
                     dest[len + 2] = '\0';
                     error (EXIT_FAILURE, 0, _("%s: invalid directive"),
-                           quotearg_colon (dest));
+                           quote (dest));
                   }
                 putchar ('%');
                 break;

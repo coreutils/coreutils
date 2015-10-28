@@ -53,12 +53,12 @@ my @Tests =
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"}],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"}],
 
    # two NULs
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"
-          . "$prog: -:2: invalid zero-length file name\n"}],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"
+          . "$prog: '-':2: invalid zero-length file name\n"}],
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
@@ -84,7 +84,7 @@ my @Tests =
    ['zero-len', '--files0-from=-', '<',
     {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
     {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'},
-    {ERR => "$prog: -:1: invalid zero-length file name\n"}, {EXIT=>1} ],
+    {ERR => "$prog: '-':1: invalid zero-length file name\n"}, {EXIT=>1} ],
   );
 
 my $save_temps = $ENV{DEBUG};

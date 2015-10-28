@@ -52,9 +52,9 @@ my @Tests =
          {ERR=>"$prog: warning: backslash at end of format\n"}],
 
      ['err-1', "--printf=%9% .",       {EXIT => 1},
-         {ERR=>"$prog: %9%: invalid directive\n"}],
+         {ERR=>"$prog: '%9%': invalid directive\n"}],
      ['err-2', "--printf=%9 .",        {EXIT => 1},
-         {ERR=>"$prog: %9: invalid directive\n"}],
+         {ERR=>"$prog: '%9': invalid directive\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};

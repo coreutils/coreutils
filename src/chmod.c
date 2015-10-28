@@ -28,7 +28,6 @@
 #include "ignore-value.h"
 #include "modechange.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
 
@@ -312,7 +311,7 @@ process_file (FTS *fts, FTSENT *ent)
           new_perms[10] = naively_expected_perms[10] = '\0';
           error (0, 0,
                  _("%s: new permissions are %s, not %s"),
-                 quotearg_colon (file_full_name),
+                 quote (file_full_name),
                  new_perms + 1, naively_expected_perms + 1);
           ok = false;
         }

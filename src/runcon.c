@@ -49,7 +49,6 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
-#include "quotearg.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "runcon"
@@ -231,7 +230,7 @@ main (int argc, char **argv)
       con = context_new (cur_context);
       if (!con)
         error (EXIT_FAILURE, errno, _("failed to create security context: %s"),
-               quotearg_colon (cur_context));
+               quote (cur_context));
       if (user && context_user_set (con, user))
         error (EXIT_FAILURE, errno, _("failed to set new user: %s"),
                quote (user));
@@ -248,7 +247,7 @@ main (int argc, char **argv)
 
   if (security_check_context (context_str (con)) < 0)
     error (EXIT_FAILURE, errno, _("invalid context: %s"),
-           quotearg_colon (context_str (con)));
+           quote (context_str (con)));
 
   if (setexeccon (context_str (con)) != 0)
     error (EXIT_FAILURE, errno, _("unable to set security context %s"),

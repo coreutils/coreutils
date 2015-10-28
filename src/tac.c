@@ -46,7 +46,6 @@ tac -r -s '.\|
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "safe-read.h"
 #include "stdlib--.h"
 #include "xfreopen.h"
@@ -221,7 +220,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
     {
       file_pos -= remainder;
       if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-        error (0, errno, _("%s: seek failed"), quotearg_colon (file));
+        error (0, errno, _("%s: seek failed"), quote (file));
     }
 
   /* Scan backward, looking for end of file.  This caters to proc-like
@@ -231,7 +230,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
     {
       off_t rsize = read_size;
       if (lseek (input_fd, -rsize, SEEK_CUR) < 0)
-        error (0, errno, _("%s: seek failed"), quotearg_colon (file));
+        error (0, errno, _("%s: seek failed"), quote (file));
       file_pos -= read_size;
     }
 
@@ -249,7 +248,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
 
   if (saved_record_size == SAFE_READ_ERROR)
     {
-      error (0, errno, _("%s: read error"), quotearg_colon (file));
+      error (0, errno, _("%s: read error"), quote (file));
       return false;
     }
 
@@ -341,7 +340,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
               file_pos = 0;
             }
           if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-            error (0, errno, _("%s: seek failed"), quotearg_colon (file));
+            error (0, errno, _("%s: seek failed"), quote (file));
 
           /* Shift the pending record data right to make room for the new.
              The source and destination regions probably overlap.  */
@@ -355,7 +354,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
 
           if (safe_read (input_fd, G_buffer, read_size) != read_size)
             {
-              error (0, errno, _("%s: read error"), quotearg_colon (file));
+              error (0, errno, _("%s: read error"), quote (file));
               return false;
             }
         }
@@ -512,13 +511,13 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
         break;
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("%s: read error"), quotearg_colon (file));
+          error (0, errno, _("%s: read error"), quote (file));
           goto Fail;
         }
 
       if (fwrite (G_buffer, 1, bytes_read, fp) != bytes_read)
         {
-          error (0, errno, _("%s: write error"), quotearg_colon (file_name));
+          error (0, errno, _("%s: write error"), quote (file_name));
           goto Fail;
         }
 
@@ -530,7 +529,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
   if (fflush (fp) != 0)
     {
-      error (0, errno, _("%s: write error"), quotearg_colon (file_name));
+      error (0, errno, _("%s: write error"), quote (file_name));
       goto Fail;
     }
 
@@ -598,7 +597,7 @@ tac_file (const char *filename)
 
   if (!is_stdin && close (fd) != 0)
     {
-      error (0, errno, _("%s: read error"), quotearg_colon (filename));
+      error (0, errno, _("%s: read error"), quote (filename));
       ok = false;
     }
   return ok;

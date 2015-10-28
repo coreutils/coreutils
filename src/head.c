@@ -34,7 +34,6 @@
 #include "error.h"
 #include "full-read.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "safe-read.h"
 #include "stat-size.h"
 #include "xfreopen.h"
@@ -223,7 +222,7 @@ elseek (int fd, off_t offset, int whence, char const *filename)
            _(whence == SEEK_SET
              ? N_("%s: cannot seek to offset %s")
              : N_("%s: cannot seek to relative offset %s")),
-           quotearg_colon (filename),
+           quote (filename),
            offtostr (offset, buf));
 
   return new_offset;
@@ -838,7 +837,7 @@ head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
       if (fstat (fd, &st) != 0)
         {
           error (0, errno, _("cannot fstat %s"),
-                 quotearg_colon (filename));
+                 quote (filename));
           return false;
         }
       if (! presume_input_pipe && usable_st_size (&st))

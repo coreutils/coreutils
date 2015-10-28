@@ -38,7 +38,6 @@
 #include "modechange.h"
 #include "prog-fprintf.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "savewd.h"
 #include "stat-time.h"
 #include "utimens.h"
@@ -374,7 +373,7 @@ setdefaultfilecon (char const *file)
   if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
     error (0, errno,
            _("warning: %s: failed to change context to %s"),
-           quotearg_colon (file), scontext);
+           quote_n (0, file), quote_n (1, scontext));
 
   freecon (scontext);
   return;

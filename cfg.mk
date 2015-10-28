@@ -182,7 +182,7 @@ sc_prohibit_quotes_notation:
 # on a separate line to the following arguments.
 sc_error_quotes:
 	@cd $(srcdir)/src && GIT_PAGER= git grep -n 'error *(.*%s.*, [^(]*);$$'\
-	  *.c | grep -v quote \
+	  *.c | grep -v ', q' \
 	  && { echo '$(ME): '"Use quote() for error string arguments" 1>&2; \
 	       exit 1; }  \
 	  || :

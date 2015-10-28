@@ -37,7 +37,6 @@
 #include "human.h"
 #include "mountlist.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "stat-size.h"
 #include "stat-time.h"
 #include "stdio--.h"
@@ -692,7 +691,7 @@ du_files (char **files, int bit_flags)
               if (errno != 0)
                 {
                   error (0, errno, _("fts_read failed: %s"),
-                         quotearg_colon (fts->fts_path));
+                         quote (fts->fts_path));
                   ok = false;
                 }
 
@@ -883,7 +882,7 @@ main (int argc, char **argv)
           if (add_exclude_file (add_exclude, exclude, optarg,
                                 EXCLUDE_WILDCARDS, '\n'))
             {
-              error (0, errno, "%s", quotearg_colon (optarg));
+              error (0, errno, "%s", quote (optarg));
               ok = false;
             }
           break;
@@ -1069,7 +1068,7 @@ main (int argc, char **argv)
               goto argv_iter_done;
             case AI_ERR_READ:
               error (0, errno, _("%s: read error"),
-                     quotearg_colon (files_from));
+                     quote (files_from));
               ok = false;
               goto argv_iter_done;
             case AI_ERR_MEM:
@@ -1106,7 +1105,7 @@ main (int argc, char **argv)
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
               unsigned long int file_number = argv_iter_n_args (ai);
-              error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+              error (0, 0, "%s:%lu: %s", quote (files_from),
                      file_number, _("invalid zero-length file name"));
             }
           skip_file = true;

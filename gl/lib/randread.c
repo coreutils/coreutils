@@ -28,7 +28,7 @@
 #include <error.h>
 #include <exitfail.h>
 #include <fcntl.h>
-#include <quotearg.h>
+#include <quote.h>
 #include <stdalign.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -126,7 +126,7 @@ randread_error (void const *file_name)
   if (file_name)
     error (exit_failure, errno,
            errno == 0 ? _("%s: end of file") : _("%s: read error"),
-           quotearg_colon (file_name));
+           quote (file_name));
   abort ();
 }
 
