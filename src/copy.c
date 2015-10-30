@@ -432,6 +432,20 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               ext_len = 0;
             }
 
+          /* Truncate extent to EOF.  Extents starting after EOF are
+             treated as zero length extents starting right after EOF.
+             Generally this will trigger with an extent starting after
+             src_total_size, and result in creating a hole or zeros until EOF.
+             Though in a file in which extents have changed since src_total_size
+             was determined, we might have an extent spanning that size,
+             in which case we'll only copy data up to that size.  */
+          if (src_total_size < ext_start + ext_len)
+            {
+              if (src_total_size < ext_start)
+                ext_start = src_total_size;
+              ext_len = src_total_size - ext_start;
+            }
+
           ext_hole_size = ext_start - last_ext_start - last_ext_len;
 
           wrote_hole_at_eof = false;
@@ -495,14 +509,17 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
               off_t n_read;
               empty_extent = false;
               last_ext_len = ext_len;
+              bool read_hole;
 
               if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
                                   sparse_mode == SPARSE_ALWAYS ? hole_size: 0,
                                   true, src_name, dst_name, ext_len, &n_read,
-                                  &wrote_hole_at_eof))
+                                  &read_hole))
                 goto fail;
 
               dest_pos = ext_start + n_read;
+              if (n_read)
+                wrote_hole_at_eof = read_hole;
             }
 
           /* If the file ends with unwritten extents not accounted for in the

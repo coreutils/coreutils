@@ -446,7 +446,7 @@ all_tests =					\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
   tests/cp/fail-perm.sh				\
-  tests/cp/fiemap-empty.sh			\
+  tests/cp/fiemap-extents.sh			\
   tests/cp/fiemap-FMR.sh			\
   tests/cp/fiemap-perf.sh			\
   tests/cp/fiemap-2.sh				\
