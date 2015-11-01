@@ -187,6 +187,37 @@ sc_error_quotes:
 	       exit 1; }  \
 	  || :
 
+# Files in src/ should quote all file names in error() output
+# using quotef(), to provide quoting only when necessary,
+# but also provide better support for copy and paste when used.
+sc_error_shell_quotes:
+	@cd $(srcdir)/src && \
+	  { GIT_PAGER= git grep -E \
+	    'error \(.*%s[:"], .*(name|file)[^"]*\);$$' *.c; \
+	    GIT_PAGER= git grep -E \
+	    ' quote[ _].*file' *.c; } \
+	  | grep -Ev '(quotef|q[^ ]*name)' \
+	  && { echo '$(ME): '"Use quotef() for colon delimited names" 1>&2; \
+	       exit 1; }  \
+	  || :
+
+# Files in src/ should quote all file names in error() output
+# using quoteaf() when the name is separated with spaces,
+# to distinguish the file name at issue and
+# to provide better support for copy and paste.
+sc_error_shell_always_quotes:
+	@cd $(srcdir)/src && GIT_PAGER= git grep -E \
+	    'error \(.*[^:] %s[ "].*, .*(name|file)[^"]*\);$$' \
+	    *.c | grep -Ev '(quoteaf|q[^ ]*name)' \
+	  && { echo '$(ME): '"Use quoteaf() for space delimited names" 1>&2; \
+	       exit 1; }  \
+	  || :
+	@cd $(srcdir)/src && GIT_PAGER= git grep -E -A1 \
+	    'error \([^%]*[^:] %s[ "]' *.c | grep 'quotef' \
+	  && { echo '$(ME): '"Use quoteaf() for space delimited names" 1>&2; \
+	       exit 1; }  \
+	  || :
+
 sc_sun_os_names:
 	@grep -nEi \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \

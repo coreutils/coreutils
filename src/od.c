@@ -921,7 +921,7 @@ open_next_file (void)
           in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
           if (in_stream == NULL)
             {
-              error (0, errno, "%s", quote (input_filename));
+              error (0, errno, "%s", quotef (input_filename));
               ok = false;
             }
         }
@@ -950,14 +950,14 @@ check_and_close (int in_errno)
     {
       if (ferror (in_stream))
         {
-          error (0, in_errno, _("%s: read error"), quote (input_filename));
+          error (0, in_errno, _("%s: read error"), quotef (input_filename));
           if (! STREQ (file_list[-1], "-"))
             fclose (in_stream);
           ok = false;
         }
       else if (! STREQ (file_list[-1], "-") && fclose (in_stream) != 0)
         {
-          error (0, errno, "%s", quote (input_filename));
+          error (0, errno, "%s", quotef (input_filename));
           ok = false;
         }
 
@@ -1092,7 +1092,7 @@ skip (uintmax_t n_skip)
 
       else   /* cannot fstat() file */
         {
-          error (0, errno, "%s", quote (input_filename));
+          error (0, errno, "%s", quotef (input_filename));
           ok = false;
         }
 

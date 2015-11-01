@@ -213,7 +213,7 @@ main (int argc, char **argv)
           if (getfilecon (argv[optind], &file_context) == -1)
             error (EXIT_FAILURE, errno,
                    _("failed to get security context of %s"),
-                   quote (argv[optind]));
+                   quoteaf (argv[optind]));
           /* compute result of process transition */
           if (security_compute_create (cur_context, file_context,
                                        string_to_security_class ("process"),

@@ -23,7 +23,6 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
-#include "quotearg.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "pathchk"
@@ -168,7 +167,7 @@ no_leading_hyphen (char const *file)
     if (p == file || p[-1] == '/')
       {
         error (0, 0, _("leading '-' in a component of file name %s"),
-               quote (file));
+               quoteaf (file));
         return false;
       }
 
@@ -196,7 +195,7 @@ portable_chars_only (char const *file, size_t filelen)
              _("nonportable character %s in file name %s"),
              quotearg_n_style_mem (1, locale_quoting_style, invalid,
                                    (charlen <= MB_LEN_MAX ? charlen : 1)),
-             quote_n (0, file));
+             quoteaf_n (0, file));
       return false;
     }
 
@@ -290,7 +289,7 @@ validate_file_name (char *file, bool check_basic_portability,
         file_exists = true;
       else if (errno != ENOENT || filelen == 0)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           return false;
         }
     }
@@ -323,7 +322,7 @@ validate_file_name (char *file, bool check_basic_portability,
           unsigned long int len = filelen;
           unsigned long int maxlen = maxsize - 1;
           error (0, 0, _("limit %lu exceeded by length %lu of file name %s"),
-                 maxlen, len, quote (file));
+                 maxlen, len, quoteaf (file));
           return false;
         }
     }
@@ -393,7 +392,7 @@ validate_file_name (char *file, bool check_basic_portability,
 
                   default:
                     *start = '\0';
-                    error (0, errno, "%s", quote (dir));
+                    error (0, errno, "%s", quotef (dir));
                     *start = c;
                     return false;
                   }

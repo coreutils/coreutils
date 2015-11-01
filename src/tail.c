@@ -360,7 +360,7 @@ close_fd (int fd, const char *filename)
 {
   if (fd != -1 && fd != STDIN_FILENO && close (fd))
     {
-      error (0, errno, _("closing %s (fd=%d)"), quote (filename), fd);
+      error (0, errno, _("closing %s (fd=%d)"), quoteaf (filename), fd);
     }
 }
 
@@ -383,7 +383,7 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
     {
       clearerr (stdout); /* To avoid redundant close_stdout diagnostic.  */
       error (EXIT_FAILURE, errno, _("error writing %s"),
-             quote ("standard output"));
+             quoteaf ("standard output"));
     }
 }
 
@@ -408,7 +408,7 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
         {
           if (errno != EAGAIN)
             error (EXIT_FAILURE, errno, _("error reading %s"),
-                   quote (pretty_filename));
+                   quoteaf (pretty_filename));
           break;
         }
       if (bytes_read == 0)
@@ -446,15 +446,15 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
     {
     case SEEK_SET:
       error (0, errno, _("%s: cannot seek to offset %s"),
-             quote (filename), s);
+             quotef (filename), s);
       break;
     case SEEK_CUR:
       error (0, errno, _("%s: cannot seek to relative offset %s"),
-             quote (filename), s);
+             quotef (filename), s);
       break;
     case SEEK_END:
       error (0, errno, _("%s: cannot seek to end-relative offset %s"),
-             quote (filename), s);
+             quotef (filename), s);
       break;
     default:
       abort ();
@@ -495,7 +495,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == SAFE_READ_ERROR)
     {
-      error (0, errno, _("error reading %s"), quote (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       return false;
     }
   *read_pos = pos + bytes_read;
@@ -544,7 +544,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       bytes_read = safe_read (fd, buffer, BUFSIZ);
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("error reading %s"), quote (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
           return false;
         }
 
@@ -637,7 +637,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 
   if (n_read == SAFE_READ_ERROR)
     {
-      error (0, errno, _("error reading %s"), quote (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       ok = false;
       goto free_lbuffers;
     }
@@ -765,7 +765,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (n_read == SAFE_READ_ERROR)
     {
-      error (0, errno, _("error reading %s"), quote (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       ok = false;
       goto free_cbuffers;
     }
@@ -813,7 +813,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
         return -1;
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("error reading %s"), quote (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
           return 1;
         }
       *read_pos += bytes_read;
@@ -850,7 +850,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
         return -1;
       if (bytes_read == SAFE_READ_ERROR) /* error */
         {
-          error (0, errno, _("error reading %s"), quote (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
           return 1;
         }
 
@@ -891,7 +891,7 @@ fremote (int fd, const char *name)
          is open on a pipe.  Treat that like a remote file.  */
       if (errno != ENOSYS)
         error (0, errno, _("cannot determine location of %s. "
-                           "reverting to polling"), quote (name));
+                           "reverting to polling"), quoteaf (name));
     }
   else
     {
@@ -952,7 +952,7 @@ recheck (struct File_spec *f, bool blocking)
       f->ignore = true;
 
       error (0, 0, _("%s has been replaced with a symbolic link. "
-                     "giving up on this name"), quote (pretty_name (f)));
+                     "giving up on this name"), quoteaf (pretty_name (f)));
     }
   else if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
@@ -967,7 +967,7 @@ recheck (struct File_spec *f, bool blocking)
                  be seen to be the same file (dev/ino).  Otherwise, tail prints
                  the entire contents of the file when it becomes readable.  */
               error (0, f->errnum, _("%s has become inaccessible"),
-                     quote (pretty_name (f)));
+                     quoteaf (pretty_name (f)));
             }
           else
             {
@@ -975,7 +975,7 @@ recheck (struct File_spec *f, bool blocking)
             }
         }
       else if (prev_errnum != errno)
-        error (0, errno, "%s", quote (pretty_name (f)));
+        error (0, errno, "%s", quotef (pretty_name (f)));
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
@@ -983,7 +983,7 @@ recheck (struct File_spec *f, bool blocking)
       f->errnum = -1;
       error (0, 0, _("%s has been replaced with an untailable file;\
  giving up on this name"),
-             quote (pretty_name (f)));
+             quoteaf (pretty_name (f)));
       f->ignore = true;
     }
   else if (!disable_inotify && fremote (fd, pretty_name (f)))
@@ -991,7 +991,7 @@ recheck (struct File_spec *f, bool blocking)
       ok = false;
       f->errnum = -1;
       error (0, 0, _("%s has been replaced with a remote file. "
-                     "giving up on this name"), quote (pretty_name (f)));
+                     "giving up on this name"), quoteaf (pretty_name (f)));
       f->ignore = true;
       f->remote = true;
     }
@@ -1011,7 +1011,7 @@ recheck (struct File_spec *f, bool blocking)
     {
       new_file = true;
       assert (f->fd == -1);
-      error (0, 0, _("%s has become accessible"), quote (pretty_name (f)));
+      error (0, 0, _("%s has become accessible"), quoteaf (pretty_name (f)));
     }
   else if (f->fd == -1)
     {
@@ -1024,7 +1024,7 @@ recheck (struct File_spec *f, bool blocking)
 
       error (0, 0,
              _("%s has appeared;  following new file"),
-             quote (pretty_name (f)));
+             quoteaf (pretty_name (f)));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
@@ -1034,7 +1034,7 @@ recheck (struct File_spec *f, bool blocking)
 
       error (0, 0,
              _("%s has been replaced;  following new file"),
-             quote (pretty_name (f)));
+             quoteaf (pretty_name (f)));
 
       /* Close the old one.  */
       close_fd (f->fd, pretty_name (f));
@@ -1151,7 +1151,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                   else
                     error (EXIT_FAILURE, errno,
                            _("%s: cannot change nonblocking mode"),
-                           quote (name));
+                           quotef (name));
                 }
               else
                 f[i].blocking = blocking;
@@ -1163,7 +1163,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                 {
                   f[i].fd = -1;
                   f[i].errnum = errno;
-                  error (0, errno, "%s", quote (name));
+                  error (0, errno, "%s", quotef (name));
                   close (fd); /* ignore failure */
                   continue;
                 }
@@ -1196,7 +1196,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                  (in which case we ignore new data <= size).  */
               if (S_ISREG (mode) && stats.st_size < f[i].size)
                 {
-                  error (0, 0, _("%s: file truncated"), quote (name));
+                  error (0, 0, _("%s: file truncated"), quotef (name));
                   /* Assume the file was truncated to 0,
                      and therefore output all "new" data.  */
                   xlseek (fd, 0, SEEK_SET, name);
@@ -1338,7 +1338,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
      separate events for truncate() and write().  */
   if (S_ISREG (fspec->mode) && stats.st_size < fspec->size)
     {
-      error (0, 0, _("%s: file truncated"), quote (name));
+      error (0, 0, _("%s: file truncated"), quotef (name));
       xlseek (fspec->fd, 0, SEEK_SET, name);
       fspec->size = 0;
     }
@@ -1433,7 +1433,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                 {
                   if (errno != ENOSPC) /* suppress confusing error.  */
                     error (0, errno, _("cannot watch parent directory of %s"),
-                           quote (f[i].name));
+                           quoteaf (f[i].name));
                   else
                     error (0, 0, _("inotify resources exhausted"));
                   found_unwatchable_dir = true;
@@ -1456,7 +1456,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   break;
                 }
               else if (errno != f[i].errnum)
-                error (0, errno, _("cannot watch %s"), quote (f[i].name));
+                error (0, errno, _("cannot watch %s"), quoteaf (f[i].name));
               continue;
             }
 
@@ -1506,7 +1506,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   && (f[i].dev != stats.st_dev || f[i].ino != stats.st_ino))
                 {
                   error (0, errno, _("%s was replaced"),
-                         quote (pretty_name (&(f[i]))));
+                         quoteaf (pretty_name (&(f[i]))));
                   hash_free (wd_to_name);
 
                   errno = 0;
@@ -1635,7 +1635,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               else
                 {
                   /* Can get ENOENT for a dangling symlink for example.  */
-                  error (0, errno, _("cannot watch %s"), quote (f[j].name));
+                  error (0, errno, _("cannot watch %s"), quoteaf (f[j].name));
                 }
               /* We'll continue below after removing the existing watch.  */
             }
@@ -1726,7 +1726,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (fstat (fd, &stats))
     {
-      error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
+      error (0, errno, _("cannot fstat %s"), quoteaf (pretty_filename));
       return false;
     }
 
@@ -1782,7 +1782,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 
   if (fstat (fd, &stats))
     {
-      error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
+      error (0, errno, _("cannot fstat %s"), quoteaf (pretty_filename));
       return false;
     }
 
@@ -1881,7 +1881,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
           f->dev = 0;
         }
       error (0, errno, _("cannot open %s for reading"),
-             quote (pretty_name (f)));
+             quoteaf (pretty_name (f)));
       ok = false;
     }
   else
@@ -1906,13 +1906,14 @@ tail_file (struct File_spec *f, uintmax_t n_units)
             {
               ok = false;
               f->errnum = errno;
-              error (0, errno, _("error reading %s"), quote (pretty_name (f)));
+              error (0, errno, _("error reading %s"),
+                     quoteaf (pretty_name (f)));
             }
           else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
             {
               error (0, 0, _("%s: cannot follow end of this type of file;\
  giving up on this name"),
-                     quote (pretty_name (f)));
+                     quotef (pretty_name (f)));
               ok = false;
               f->errnum = -1;
               f->ignore = true;
@@ -1936,7 +1937,8 @@ tail_file (struct File_spec *f, uintmax_t n_units)
         {
           if (!is_stdin && close (fd))
             {
-              error (0, errno, _("error reading %s"), quote (pretty_name (f)));
+              error (0, errno, _("error reading %s"),
+                     quoteaf (pretty_name (f)));
               ok = false;
             }
         }
@@ -2258,7 +2260,7 @@ main (int argc, char **argv)
 
     /* When following by name, there must be a name.  */
     if (found_hyphen && follow_mode == Follow_name)
-      error (EXIT_FAILURE, 0, _("cannot follow %s by name"), quote ("-"));
+      error (EXIT_FAILURE, 0, _("cannot follow %s by name"), quoteaf ("-"));
 
     /* When following forever, warn if any file is '-'.
        This is only a warning, since tail's output (before a failing seek,

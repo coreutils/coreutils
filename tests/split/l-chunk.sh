@@ -24,7 +24,7 @@ echo "split: invalid number of chunks: '1o'" > exp
 split -n l/1o 2>err && fail=1
 compare exp err || fail=1
 
-echo "split: '-': cannot determine file size" > exp
+echo "split: -: cannot determine file size" > exp
 echo | split -n l/1 2>err && fail=1
 compare exp err || fail=1
 

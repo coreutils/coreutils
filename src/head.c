@@ -145,10 +145,10 @@ diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
   switch (err)
     {
     case COPY_FD_READ_ERROR:
-      error (0, errno, _("error reading %s"), quote (filename));
+      error (0, errno, _("error reading %s"), quoteaf (filename));
       break;
     case COPY_FD_UNEXPECTED_EOF:
-      error (0, errno, _("%s: file has shrunk too much"), quote (filename));
+      error (0, errno, _("%s: file has shrunk too much"), quotef (filename));
       break;
     default:
       abort ();
@@ -174,7 +174,7 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
     {
       clearerr (stdout); /* To avoid redundant close_stdout diagnostic.  */
       error (EXIT_FAILURE, errno, _("error writing %s"),
-             quote ("standard output"));
+             quoteaf ("standard output"));
     }
 }
 
@@ -222,7 +222,7 @@ elseek (int fd, off_t offset, int whence, char const *filename)
            _(whence == SEEK_SET
              ? N_("%s: cannot seek to offset %s")
              : N_("%s: cannot seek to relative offset %s")),
-           quote (filename),
+           quotef (filename),
            offtostr (offset, buf));
 
   return new_offset;
@@ -296,7 +296,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0,
             {
               if (errno != 0)
                 {
-                  error (0, errno, _("error reading %s"), quote (filename));
+                  error (0, errno, _("error reading %s"), quoteaf (filename));
                   ok = false;
                   break;
                 }
@@ -378,7 +378,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0,
             {
               if (errno != 0)
                 {
-                  error (0, errno, _("error reading %s"), quote (filename));
+                  error (0, errno, _("error reading %s"), quoteaf (filename));
                   ok = false;
                   goto free_mem;
                 }
@@ -574,7 +574,7 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
 
   if (n_read == SAFE_READ_ERROR)
     {
-      error (0, errno, _("error reading %s"), quote (filename));
+      error (0, errno, _("error reading %s"), quoteaf (filename));
       ok = false;
       goto free_lbuffers;
     }
@@ -656,7 +656,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == SAFE_READ_ERROR)
     {
-      error (0, errno, _("error reading %s"), quote (pretty_filename));
+      error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
       return false;
     }
 
@@ -725,7 +725,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
       bytes_read = safe_read (fd, buffer, BUFSIZ);
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("error reading %s"), quote (pretty_filename));
+          error (0, errno, _("error reading %s"), quoteaf (pretty_filename));
           return false;
         }
 
@@ -775,7 +775,7 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
       bytes_read = safe_read (fd, buffer, bytes_to_read);
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("error reading %s"), quote (filename));
+          error (0, errno, _("error reading %s"), quoteaf (filename));
           return false;
         }
       if (bytes_read == 0)
@@ -798,7 +798,7 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, _("error reading %s"), quote (filename));
+          error (0, errno, _("error reading %s"), quoteaf (filename));
           return false;
         }
       if (bytes_read == 0)
@@ -837,7 +837,7 @@ head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
       if (fstat (fd, &st) != 0)
         {
           error (0, errno, _("cannot fstat %s"),
-                 quote (filename));
+                 quoteaf (filename));
           return false;
         }
       if (! presume_input_pipe && usable_st_size (&st))
@@ -878,7 +878,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
       fd = open (filename, O_RDONLY | O_BINARY);
       if (fd < 0)
         {
-          error (0, errno, _("cannot open %s for reading"), quote (filename));
+          error (0, errno, _("cannot open %s for reading"), quoteaf (filename));
           return false;
         }
     }
@@ -886,7 +886,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
   ok = head (filename, fd, n_units, count_lines, elide_from_end);
   if (!is_stdin && close (fd) != 0)
     {
-      error (0, errno, _("failed to close %s"), quote (filename));
+      error (0, errno, _("failed to close %s"), quoteaf (filename));
       return false;
     }
   return ok;

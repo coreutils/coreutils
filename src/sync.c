@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sync"
@@ -111,7 +110,7 @@ sync_arg (enum sync_mode mode, char const *file)
       if (open_flags != (O_WRONLY | O_NONBLOCK))
         fd = open (file, O_WRONLY | O_NONBLOCK);
       if (fd < 0)
-        error (0, rd_errno, _("error opening %s"), quote (file));
+        error (0, rd_errno, _("error opening %s"), quoteaf (file));
       return false;
     }
 
@@ -121,7 +120,8 @@ sync_arg (enum sync_mode mode, char const *file)
   if (fdflags == -1
       || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
     {
-      error (0, errno, _("couldn't reset non-blocking mode %s"), quote (file));
+      error (0, errno, _("couldn't reset non-blocking mode %s"),
+             quoteaf (file));
       ret = false;
     }
 
@@ -151,14 +151,14 @@ sync_arg (enum sync_mode mode, char const *file)
 
       if (sync_status < 0)
         {
-          error (0, errno, _("error syncing %s"), quote (file));
+          error (0, errno, _("error syncing %s"), quoteaf (file));
           ret = false;
         }
     }
 
   if (close (fd) < 0)
     {
-      error (0, errno, _("failed to close %s"), quote (file));
+      error (0, errno, _("failed to close %s"), quoteaf (file));
       ret = false;
     }
 

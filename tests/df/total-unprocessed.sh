@@ -34,7 +34,7 @@ if test "$(df --output=fstype . | tail -n1)" != '-'; then
 fi
 
 cat <<\EOF > exp || framework_failure_
-df: '_does_not_exist_': No such file or directory
+df: _does_not_exist_: No such file or directory
 EOF
 
 # Ensure that df writes the error message also in the following case.

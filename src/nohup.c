@@ -29,7 +29,6 @@
 #include "filenamecat.h"
 #include "fd-reopen.h"
 #include "long-options.h"
-#include "quote.h"
 #include "unistd--.h"
 
 #define PROGRAM_NAME "nohup"
@@ -158,10 +157,10 @@ main (int argc, char **argv)
           if (out_fd < 0)
             {
               int saved_errno2 = errno;
-              error (0, saved_errno, _("failed to open %s"), quote (file));
+              error (0, saved_errno, _("failed to open %s"), quoteaf (file));
               if (in_home)
                 error (0, saved_errno2, _("failed to open %s"),
-                       quote (in_home));
+                       quoteaf (in_home));
               return exit_internal_failure;
             }
           file = in_home;
@@ -172,7 +171,7 @@ main (int argc, char **argv)
              _(ignoring_input
                ? N_("ignoring input and appending output to %s")
                : N_("appending output to %s")),
-             quote (file));
+             quoteaf (file));
       free (in_home);
     }
 
@@ -227,7 +226,7 @@ main (int argc, char **argv)
      In other words, output the diagnostic if possible, but only if
      it will go to the original stderr.  */
   if (dup2 (saved_stderr_fd, STDERR_FILENO) == STDERR_FILENO)
-    error (0, saved_errno, _("failed to run command %s"), quote (*cmd));
+    error (0, saved_errno, _("failed to run command %s"), quoteaf (*cmd));
 
   return exit_status;
 }

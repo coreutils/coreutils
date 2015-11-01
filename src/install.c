@@ -373,7 +373,7 @@ setdefaultfilecon (char const *file)
   if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
     error (0, errno,
            _("warning: %s: failed to change context to %s"),
-           quote_n (0, file), quote_n (1, scontext));
+           quotef_n (0, file), quote_n (1, scontext));
 
   freecon (scontext);
   return;
@@ -401,9 +401,10 @@ target_directory_operand (char const *file)
   int err = (stat (file, &st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && err != ENOENT)
-    error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
+    error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
   if (is_a_dir < looks_like_a_dir)
-    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
+    error (EXIT_FAILURE, err, _("target %s is not a directory"),
+           quoteaf (file));
   return is_a_dir;
 }
 
@@ -413,7 +414,7 @@ announce_mkdir (char const *dir, void *options)
 {
   struct cp_options const *x = options;
   if (x->verbose)
-    prog_fprintf (stdout, _("creating directory %s"), quote (dir));
+    prog_fprintf (stdout, _("creating directory %s"), quoteaf (dir));
 }
 
 /* Make ancestor directory DIR, whose last file name component is
@@ -481,9 +482,9 @@ change_attributes (char const *name)
 
   if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
       && lchown (name, owner_id, group_id) != 0)
-    error (0, errno, _("cannot change ownership of %s"), quote (name));
+    error (0, errno, _("cannot change ownership of %s"), quoteaf (name));
   else if (chmod (name, mode) != 0)
-    error (0, errno, _("cannot change permissions of %s"), quote (name));
+    error (0, errno, _("cannot change permissions of %s"), quoteaf (name));
   else
     ok = true;
 
@@ -505,7 +506,7 @@ change_timestamps (struct stat const *src_sb, char const *dest)
 
   if (utimens (dest, timespec))
     {
-      error (0, errno, _("cannot set time stamps for %s"), quote (dest));
+      error (0, errno, _("cannot set time stamps for %s"), quoteaf (dest));
       return false;
     }
   return true;
@@ -531,7 +532,7 @@ strip (char const *name)
       break;
     case 0:			/* Child. */
       execlp (strip_program, strip_program, name, NULL);
-      error (EXIT_FAILURE, errno, _("cannot run %s"), quote (strip_program));
+      error (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
       break;
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
@@ -561,7 +562,8 @@ get_ids (void)
           unsigned long int tmp;
           if (xstrtoul (owner_name, NULL, 0, &tmp, NULL) != LONGINT_OK
               || UID_T_MAX < tmp)
-            error (EXIT_FAILURE, 0, _("invalid user %s"), quote (owner_name));
+            error (EXIT_FAILURE, 0, _("invalid user %s"),
+                   quote (owner_name));
           owner_id = tmp;
         }
       else
@@ -579,7 +581,8 @@ get_ids (void)
           unsigned long int tmp;
           if (xstrtoul (group_name, NULL, 0, &tmp, NULL) != LONGINT_OK
               || GID_T_MAX < tmp)
-            error (EXIT_FAILURE, 0, _("invalid group %s"), quote (group_name));
+            error (EXIT_FAILURE, 0, _("invalid group %s"),
+                   quote (group_name));
           group_id = tmp;
         }
       else
@@ -683,7 +686,7 @@ install_file_in_file (const char *from, const char *to,
   struct stat from_sb;
   if (x->preserve_timestamps && stat (from, &from_sb) != 0)
     {
-      error (0, errno, _("cannot stat %s"), quote (from));
+      error (0, errno, _("cannot stat %s"), quoteaf (from));
       return false;
     }
   if (! copy_file (from, to, x))
@@ -692,7 +695,7 @@ install_file_in_file (const char *from, const char *to,
     if (! strip (to))
       {
         if (unlink (to) != 0)  /* Cleanup.  */
-          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quote (to));
+          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
         return false;
       }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
@@ -718,7 +721,7 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
 
   if (mkancesdirs (to, &wd, make_ancestor, x) == -1)
     {
-      error (0, errno, _("cannot create directory %s"), quote (to));
+      error (0, errno, _("cannot create directory %s"), quoteaf (to));
       status = EXIT_FAILURE;
     }
 
@@ -731,7 +734,8 @@ mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
         return false;
       if (restore_result < 0 && status == EXIT_SUCCESS)
         {
-          error (0, restore_errno, _("cannot create directory %s"), quote (to));
+          error (0, restore_errno, _("cannot create directory %s"),
+                 quoteaf (to));
           return false;
         }
     }
@@ -924,10 +928,10 @@ main (int argc, char **argv)
       bool stat_success = stat (target_directory, &st) == 0 ? true : false;
       if (! mkdir_and_install && ! stat_success)
         error (EXIT_FAILURE, errno, _("failed to access %s"),
-               quote (target_directory));
+               quoteaf (target_directory));
       if (stat_success && ! S_ISDIR (st.st_mode))
         error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quote (target_directory));
+               quoteaf (target_directory));
     }
 
   if (backup_suffix_string)
@@ -956,7 +960,7 @@ main (int argc, char **argv)
         error (0, 0, _("missing file operand"));
       else
         error (0, 0, _("missing destination file operand after %s"),
-               quote (file[0]));
+               quoteaf (file[0]));
       usage (EXIT_FAILURE);
     }
 
@@ -968,7 +972,7 @@ main (int argc, char **argv)
                  "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
-          error (0, 0, _("extra operand %s"), quote (file[2]));
+          error (0, 0, _("extra operand %s"), quoteaf (file[2]));
           usage (EXIT_FAILURE);
         }
     }
@@ -978,7 +982,7 @@ main (int argc, char **argv)
         target_directory = file[--n_files];
       else if (2 < n_files)
         error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quote (file[n_files - 1]));
+               quoteaf (file[n_files - 1]));
     }
 
   if (specified_mode)

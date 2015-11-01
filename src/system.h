@@ -693,7 +693,7 @@ WARNING: Circular directory structure.\n\
 This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following directory is part of the cycle:\n  %s\n"), \
-             quote (file_name));	\
+             quotef (file_name));	\
     }					\
   while (0)
 
@@ -731,3 +731,22 @@ is_ENOTSUP (int err)
 {
   return err == EOPNOTSUPP || (ENOTSUP != EOPNOTSUPP && err == ENOTSUP);
 }
+
+
+/* How coreutils quotes filenames, to minimize use of outer quotes,
+   but also provide better support for copy and paste when used.  */
+#include "quotearg.h"
+
+/* Use these to shell quote only when necessary,
+   when the quoted item is already delimited with colons.  */
+#define quotef(arg) \
+  quotearg_n_style_colon (0, shell_escape_quoting_style, arg)
+#define quotef_n(n, arg) \
+  quotearg_n_style_colon (n, shell_escape_quoting_style, arg)
+
+/* Use these when there are spaces around the file name,
+   in the error message.  */
+#define quoteaf(arg) \
+  quotearg_style (shell_escape_always_quoting_style, arg)
+#define quoteaf_n(n, arg) \
+  quotearg_n_style (n, shell_escape_always_quoting_style, arg)

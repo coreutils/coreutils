@@ -29,7 +29,6 @@
 #include "system.h"
 #include "error.h"
 #include "fadvise.h"
-#include "quote.h"
 #include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -431,14 +430,14 @@ main (int argc, char **argv)
                   fmt (in_stream);
                   if (fclose (in_stream) == EOF)
                     {
-                      error (0, errno, "%s", quote (file));
+                      error (0, errno, "%s", quotef (file));
                       ok = false;
                     }
                 }
               else
                 {
                   error (0, errno, _("cannot open %s for reading"),
-                         quote (file));
+                         quoteaf (file));
                   ok = false;
                 }
             }

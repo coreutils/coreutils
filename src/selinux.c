@@ -26,7 +26,6 @@
 #include "canonicalize.h"
 #include "dosname.h"
 #include "xfts.h"
-#include "quote.h"
 #include "selinux.h"
 
 #if HAVE_SELINUX_SELINUX_H
@@ -125,7 +124,7 @@ defaultcon (char const *path, mode_t mode)
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
         error (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-               quote (path));
+               quoteaf (path));
       path = newpath;
     }
 
@@ -298,7 +297,7 @@ restorecon (char const *path, bool recurse, bool local)
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
         error (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-               quote (path));
+               quoteaf (path));
     }
 
   const char *ftspath[2] = { newpath ? newpath : path, NULL };

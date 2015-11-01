@@ -651,7 +651,8 @@ static void
 set_input_file (const char *name)
 {
   if (! STREQ (name, "-") && fd_reopen (STDIN_FILENO, name, O_RDONLY, 0) < 0)
-    error (EXIT_FAILURE, errno, _("cannot open %s for reading"), quote (name));
+    error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+           quoteaf (name));
 }
 
 /* Write all lines from the beginning of the buffer up to, but
@@ -969,7 +970,7 @@ create_output_file (void)
 
   if (! fopen_ok)
     {
-      error (0, fopen_errno, "%s", quote (output_filename));
+      error (0, fopen_errno, "%s", quotef (output_filename));
       cleanup_fatal ();
     }
   bytes_written = 0;
@@ -990,7 +991,7 @@ delete_all_files (bool in_signal_handler)
     {
       const char *name = make_filename (i);
       if (unlink (name) != 0 && !in_signal_handler)
-        error (0, errno, "%s", quote (name));
+        error (0, errno, "%s", quotef (name));
     }
 
   files_created = 0;
@@ -1006,13 +1007,13 @@ close_output_file (void)
     {
       if (ferror (output_stream))
         {
-          error (0, 0, _("write error for %s"), quote (output_filename));
+          error (0, 0, _("write error for %s"), quoteaf (output_filename));
           output_stream = NULL;
           cleanup_fatal ();
         }
       if (fclose (output_stream) != 0)
         {
-          error (0, errno, "%s", quote (output_filename));
+          error (0, errno, "%s", quotef (output_filename));
           output_stream = NULL;
           cleanup_fatal ();
         }
@@ -1030,7 +1031,7 @@ close_output_file (void)
           sigprocmask (SIG_SETMASK, &oldset, NULL);
 
           if (! unlink_ok)
-            error (0, unlink_errno, "%s", quote (output_filename));
+            error (0, unlink_errno, "%s", quotef (output_filename));
         }
       else
         {

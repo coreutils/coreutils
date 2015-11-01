@@ -235,7 +235,7 @@ my @Tests =
       {POST => sub {unlink 'd/s' or die "d/s: $!\n";
                     rmdir 'd' or die "d: $!\n";
                     restore_ls_colors; }},
-      {ERR => "ls: cannot access d/s: No such file or directory\n"},
+      {ERR => "ls: cannot access 'd/s': No such file or directory\n"},
       {EXIT => 1}
      ],
      # Related to the above fix, is this case where
@@ -289,7 +289,7 @@ my @Tests =
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
          {OUT => "d:\n"},
-         {ERR => "ls: cannot access no-dir: No such file or directory\n"},
+         {ERR => "ls: cannot access 'no-dir': No such file or directory\n"},
          $mkdir, $rmdir, {EXIT => 2}],
 
      ['recursive-2', '-R d', {OUT => "d:\ne\n\nd/e:\n"}, $mkdir2, $rmdir2],
@@ -327,8 +327,8 @@ my @Tests =
      # at least one of which is a nonempty directory.
      ['multi-arg-U1', '-U1 d no-such',
       {OUT => "d:\nf\n"},
-      {ERR_SUBST=>'s/ch:.*/ch:/'},
-      {ERR => "$prog: cannot access no-such:\n"},
+      {ERR_SUBST=>"s/ch':.*/ch':/"},
+      {ERR => "$prog: cannot access 'no-such':\n"},
       $mkdir_reg,
       $rmdir_reg,
       {EXIT => 2},

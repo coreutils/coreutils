@@ -23,8 +23,8 @@ mkdir a a/a || framework_failure_
 > b || framework_failure_
 
 cat <<\EOF > exp || framework_failure_
-removed directory: 'a/a'
-removed directory: 'a'
+removed directory 'a/a'
+removed directory 'a'
 removed 'b'
 EOF
 

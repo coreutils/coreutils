@@ -166,13 +166,13 @@ main (int argc, char **argv)
         defaultcon (argv[optind], S_IFIFO);
       if (mkfifo (argv[optind], newmode) != 0)
         {
-          error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
+          error (0, errno, _("cannot create fifo %s"), quoteaf (argv[optind]));
           exit_status = EXIT_FAILURE;
         }
       else if (specified_mode && lchmod (argv[optind], newmode) != 0)
         {
           error (0, errno, _("cannot set permissions of %s"),
-                 quote (argv[optind]));
+                 quoteaf (argv[optind]));
           exit_status = EXIT_FAILURE;
         }
     }

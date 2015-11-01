@@ -30,7 +30,6 @@
 #include "system.h"
 #include "error.h"
 #include "prog-fprintf.h"
-#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "rmdir"
@@ -131,7 +130,7 @@ remove_parents (char *dir)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-        prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
+        prog_fprintf (stdout, _("removing directory, %s"), quoteaf (dir));
 
       ok = (rmdir (dir) == 0);
 
@@ -146,7 +145,7 @@ remove_parents (char *dir)
             {
               /* Barring race conditions, DIR is expected to be a directory.  */
               error (0, errno, _("failed to remove directory %s"),
-                     quote (dir));
+                     quoteaf (dir));
             }
           break;
         }
@@ -230,7 +229,7 @@ main (int argc, char **argv)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-        prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
+        prog_fprintf (stdout, _("removing directory, %s"), quoteaf (dir));
 
       if (rmdir (dir) != 0)
         {
@@ -239,7 +238,7 @@ main (int argc, char **argv)
 
           /* Here, the diagnostic is less precise, since we have no idea
              whether DIR is a directory.  */
-          error (0, errno, _("failed to remove %s"), quote (dir));
+          error (0, errno, _("failed to remove %s"), quoteaf (dir));
           ok = false;
         }
       else if (remove_empty_parents)

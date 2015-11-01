@@ -89,7 +89,8 @@ parse_group (const char *name)
           unsigned long int tmp;
           if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
                  && tmp <= GID_T_MAX))
-            error (EXIT_FAILURE, 0, _("invalid group: %s"), quote (name));
+            error (EXIT_FAILURE, 0, _("invalid group: %s"),
+                   quote (name));
           gid = tmp;
         }
       endgrent ();		/* Save a file descriptor. */
@@ -285,7 +286,7 @@ main (int argc, char **argv)
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quote (reference_file));
+               quoteaf (reference_file));
 
       gid = ref_stats.st_gid;
       chopt.group_name = gid_to_name (ref_stats.st_gid);
@@ -303,7 +304,7 @@ main (int argc, char **argv)
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (chopt.root_dev_ino == NULL)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quote ("/"));
+               quoteaf ("/"));
     }
 
   bit_flags |= FTS_DEFER_STAT;

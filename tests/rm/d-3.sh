@@ -28,7 +28,7 @@ printf "%s" \
     > exp.err || framework_failure_
 
 printf "%s\n" \
-    "removed directory: 'd'" \
+    "removed directory 'd'" \
     > exp || framework_failure_
 
 compare exp out || fail=1

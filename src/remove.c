@@ -25,7 +25,6 @@
 #include "error.h"
 #include "file-type.h"
 #include "ignore-value.h"
-#include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
 #include "write-any-file.h"
@@ -256,7 +255,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
             break;
           }
 
-      char const *quoted_name = quote (full_name);
+      char const *quoted_name = quoteaf (full_name);
 
       if (write_protected < 0)
         {
@@ -372,8 +371,8 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
       if (x->verbose)
         {
           printf ((is_dir
-                   ? _("removed directory: %s\n")
-                   : _("removed %s\n")), quote (ent->fts_path));
+                   ? _("removed directory %s\n")
+                   : _("removed %s\n")), quoteaf (ent->fts_path));
         }
       return RM_OK;
     }
@@ -403,7 +402,7 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
           || errno == EEXIST)
       && (ent->fts_errno == EPERM || ent->fts_errno == EACCES))
     errno = ent->fts_errno;
-  error (0, errno, _("cannot remove %s"), quote (ent->fts_path));
+  error (0, errno, _("cannot remove %s"), quoteaf (ent->fts_path));
   mark_ancestor_dirs (ent);
   return RM_ERROR;
 }
@@ -429,7 +428,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
              Not recursive, and it's not an empty directory (if we're removing
              them) so arrange to skip contents.  */
           int err = x->remove_empty_directories ? ENOTEMPTY : EISDIR;
-          error (0, err, _("cannot remove %s"), quote (ent->fts_path));
+          error (0, err, _("cannot remove %s"), quoteaf (ent->fts_path));
           mark_ancestor_dirs (ent);
           fts_skip_tree (fts, ent);
           return RM_ERROR;
@@ -445,8 +444,8 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
             {
               error (0, 0,
                      _("refusing to remove %s or %s directory: skipping %s"),
-                     quote_n (0, "."), quote_n (1, ".."),
-                     quote_n (2, ent->fts_path));
+                     quoteaf_n (0, "."), quoteaf_n (1, ".."),
+                     quoteaf_n (2, ent->fts_path));
               fts_skip_tree (fts, ent);
               return RM_ERROR;
             }
@@ -503,7 +502,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
           {
             mark_ancestor_dirs (ent);
             error (0, 0, _("skipping %s, since it's on a different device"),
-                   quote (ent->fts_path));
+                   quoteaf (ent->fts_path));
             return RM_ERROR;
           }
 
@@ -523,7 +522,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
       /* Various failures, from opendir to ENOMEM, to failure to "return"
          to preceding directory, can provoke this.  */
       error (0, ent->fts_errno, _("traversal failed: %s"),
-             quote (ent->fts_path));
+             quotef (ent->fts_path));
       fts_skip_tree (fts, ent);
       return RM_ERROR;
 
@@ -531,7 +530,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
       error (0, 0, _("unexpected failure: fts_info=%d: %s\n"
                      "please report to %s"),
              ent->fts_info,
-             quote (ent->fts_path),
+             quotef (ent->fts_path),
              PACKAGE_BUGREPORT);
       abort ();
     }

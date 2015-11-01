@@ -25,7 +25,7 @@ mkdir a || framework_failure_
 rm --verbose --dir a b > out || fail=1
 
 cat <<\EOF > exp || framework_failure_
-removed directory: 'a'
+removed directory 'a'
 removed 'b'
 EOF
 

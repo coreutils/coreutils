@@ -88,7 +88,7 @@ main (int argc, char **argv)
 
   if (link (argv[optind], argv[optind + 1]) != 0)
     error (EXIT_FAILURE, errno, _("cannot create link %s to %s"),
-           quote_n (0, argv[optind + 1]), quote_n (1, argv[optind]));
+           quoteaf_n (0, argv[optind + 1]), quoteaf_n (1, argv[optind]));
 
   return EXIT_SUCCESS;
 }

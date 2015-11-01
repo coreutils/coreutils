@@ -28,11 +28,11 @@
 #include "fadvise.h"
 #include "hard-locale.h"
 #include "posixver.h"
-#include "quote.h"
 #include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "uniq"
@@ -327,9 +327,9 @@ check_file (const char *infile, const char *outfile, char delimiter)
   struct linebuffer *thisline, *prevline;
 
   if (! (STREQ (infile, "-") || freopen (infile, "r", stdin)))
-    error (EXIT_FAILURE, errno, "%s", quote (infile));
+    error (EXIT_FAILURE, errno, "%s", quotef (infile));
   if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
-    error (EXIT_FAILURE, errno, "%s", quote (outfile));
+    error (EXIT_FAILURE, errno, "%s", quotef (outfile));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -462,7 +462,7 @@ check_file (const char *infile, const char *outfile, char delimiter)
 
  closefiles:
   if (ferror (stdin) || fclose (stdin) != 0)
-    error (EXIT_FAILURE, 0, _("error reading %s"), quote (infile));
+    error (EXIT_FAILURE, 0, _("error reading %s"), quoteaf (infile));
 
   /* stdout is handled via the atexit-invoked close_stdout function.  */
 

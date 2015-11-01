@@ -26,7 +26,6 @@
 #include "chown-core.h"
 #include "error.h"
 #include "ignore-value.h"
-#include "quote.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
 
@@ -145,7 +144,7 @@ describe_change (const char *file, enum Change_status changed,
   if (changed == CH_NOT_APPLIED)
     {
       printf (_("neither symbolic link %s nor referent has been changed\n"),
-              quote (file));
+              quoteaf (file));
       return;
     }
 
@@ -185,7 +184,7 @@ describe_change (const char *file, enum Change_status changed,
       abort ();
     }
 
-  printf (fmt, quote (file), old_spec, spec);
+  printf (fmt, quoteaf (file), old_spec, spec);
 
   free (old_spec);
   free (spec);
@@ -323,20 +322,20 @@ change_file_owner (FTS *fts, FTSENT *ent,
         }
       if (! chopt->force_silent)
         error (0, ent->fts_errno, _("cannot access %s"),
-               quote (file_full_name));
+               quoteaf (file_full_name));
       ok = false;
       break;
 
     case FTS_ERR:
       if (! chopt->force_silent)
-        error (0, ent->fts_errno, "%s", quote (file_full_name));
+        error (0, ent->fts_errno, "%s", quotef (file_full_name));
       ok = false;
       break;
 
     case FTS_DNR:
       if (! chopt->force_silent)
         error (0, ent->fts_errno, _("cannot read directory %s"),
-               quote (file_full_name));
+               quoteaf (file_full_name));
       ok = false;
       break;
 
@@ -377,7 +376,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
             {
               if (! chopt->force_silent)
                 error (0, errno, _("cannot dereference %s"),
-                       quote (file_full_name));
+                       quoteaf (file_full_name));
               ok = false;
             }
 
@@ -466,7 +465,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
         error (0, errno, (uid != (uid_t) -1
                           ? _("changing ownership of %s")
                           : _("changing group of %s")),
-               quote (file_full_name));
+               quoteaf (file_full_name));
     }
 
   if (chopt->verbosity != V_off)

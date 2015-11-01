@@ -506,7 +506,7 @@ process_file (FTS *fts, FTSENT *ent)
   if (info == FTS_DNR)
     {
       /* An error occurred, but the size is known, so count it.  */
-      error (0, ent->fts_errno, _("cannot read directory %s"), quote (file));
+      error (0, ent->fts_errno, _("cannot read directory %s"), quoteaf (file));
       ok = false;
     }
   else if (info != FTS_DP)
@@ -526,7 +526,7 @@ process_file (FTS *fts, FTSENT *ent)
 
           if (info == FTS_NS || info == FTS_SLNONE)
             {
-              error (0, ent->fts_errno, _("cannot access %s"), quote (file));
+              error (0, ent->fts_errno, _("cannot access %s"), quoteaf (file));
               return false;
             }
 
@@ -566,7 +566,7 @@ process_file (FTS *fts, FTSENT *ent)
 
         case FTS_ERR:
           /* An error occurred, but the size is known, so count it.  */
-          error (0, ent->fts_errno, "%s", quote (file));
+          error (0, ent->fts_errno, "%s", quotef (file));
           ok = false;
           break;
 
@@ -691,7 +691,7 @@ du_files (char **files, int bit_flags)
               if (errno != 0)
                 {
                   error (0, errno, _("fts_read failed: %s"),
-                         quote (fts->fts_path));
+                         quotef (fts->fts_path));
                   ok = false;
                 }
 
@@ -882,7 +882,7 @@ main (int argc, char **argv)
           if (add_exclude_file (add_exclude, exclude, optarg,
                                 EXCLUDE_WILDCARDS, '\n'))
             {
-              error (0, errno, "%s", quote (optarg));
+              error (0, errno, "%s", quotef (optarg));
               ok = false;
             }
           break;
@@ -1020,7 +1020,7 @@ main (int argc, char **argv)
 
       if (! (STREQ (files_from, "-") || freopen (files_from, "r", stdin)))
         error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-               quote (files_from));
+               quoteaf (files_from));
 
       ai = argv_iter_init_stream (stdin);
 
@@ -1068,7 +1068,7 @@ main (int argc, char **argv)
               goto argv_iter_done;
             case AI_ERR_READ:
               error (0, errno, _("%s: read error"),
-                     quote (files_from));
+                     quotef (files_from));
               ok = false;
               goto argv_iter_done;
             case AI_ERR_MEM:
@@ -1083,7 +1083,7 @@ main (int argc, char **argv)
              printf - | du --files0-from=- */
           error (0, 0, _("when reading file names from stdin, "
                          "no file name of %s allowed"),
-                 quote (file_name));
+                 quoteaf (file_name));
           skip_file = true;
         }
 
@@ -1105,7 +1105,7 @@ main (int argc, char **argv)
                  not totally appropriate, since NUL is the separator, not NL,
                  but it might be better than nothing.  */
               unsigned long int file_number = argv_iter_n_args (ai);
-              error (0, 0, "%s:%lu: %s", quote (files_from),
+              error (0, 0, "%s:%lu: %s", quotef (files_from),
                      file_number, _("invalid zero-length file name"));
             }
           skip_file = true;
@@ -1127,7 +1127,7 @@ main (int argc, char **argv)
     di_set_free (di_mnt);
 
   if (files_from && (ferror (stdin) || fclose (stdin) != 0) && ok)
-    error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));
+    error (EXIT_FAILURE, 0, _("error reading %s"), quoteaf (files_from));
 
   if (print_grand_total)
     print_size (&tot_dui, _("total"));

@@ -291,11 +291,11 @@ input_file_size (int fd, off_t size, char *buf, size_t bufsize)
           if (n_read == 0)
             break;
           if (n_read == SAFE_READ_ERROR)
-            error (EXIT_FAILURE, errno, "%s", quote (infile));
+            error (EXIT_FAILURE, errno, "%s", quotef (infile));
           size += n_read;
         }
       if (bufsize <= size && lseek (fd, - size, SEEK_CUR) < 0)
-        error (EXIT_FAILURE, errno, "%s", quote (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
     }
 
   return size;
@@ -384,7 +384,7 @@ new_name:
         char *dir = dir_name (outfile);
         long name_max = pathconf (dir, _PC_NAME_MAX);
         if (0 <= name_max && name_max < base_len (last_component (outfile)))
-          error (EXIT_FAILURE, ENAMETOOLONG, "%s", quote (outfile));
+          error (EXIT_FAILURE, ENAMETOOLONG, "%s", quotef (outfile));
         free (dir);
       }
 #endif
@@ -417,19 +417,19 @@ create (const char *name)
   if (!filter_command)
     {
       if (verbose)
-        fprintf (stdout, _("creating file %s\n"), quote (name));
+        fprintf (stdout, _("creating file %s\n"), quoteaf (name));
 
       int fd = open (name, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
       if (fd < 0)
         return fd;
       struct stat out_stat_buf;
       if (fstat (fd, &out_stat_buf) != 0)
-        error (EXIT_FAILURE, errno, _("failed to stat %s"), quote (name));
+        error (EXIT_FAILURE, errno, _("failed to stat %s"), quoteaf (name));
       if (SAME_INODE (in_stat_buf, out_stat_buf))
         error (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
-               quote (name));
+               quoteaf (name));
       if (ftruncate (fd, 0) != 0)
-        error (EXIT_FAILURE, errno, _("%s: error truncating"), quote (name));
+        error (EXIT_FAILURE, errno, _("%s: error truncating"), quotef (name));
 
       return fd;
     }
@@ -444,7 +444,7 @@ create (const char *name)
         error (EXIT_FAILURE, errno,
                _("failed to set FILE environment variable"));
       if (verbose)
-        fprintf (stdout, _("executing with FILE=%s\n"), quote (name));
+        fprintf (stdout, _("executing with FILE=%s\n"), quotef (name));
       if (pipe (fd_pair) != 0)
         error (EXIT_FAILURE, errno, _("failed to create pipe"));
       child_pid = fork ();
@@ -496,11 +496,11 @@ static void
 closeout (FILE *fp, int fd, pid_t pid, char const *name)
 {
   if (fp != NULL && fclose (fp) != 0 && ! ignorable (errno))
-    error (EXIT_FAILURE, errno, "%s", quote (name));
+    error (EXIT_FAILURE, errno, "%s", quotef (name));
   if (fd >= 0)
     {
       if (fp == NULL && close (fd) < 0)
-        error (EXIT_FAILURE, errno, "%s", quote (name));
+        error (EXIT_FAILURE, errno, "%s", quotef (name));
       int j;
       for (j = 0; j < n_open_pipes; ++j)
         {
@@ -526,7 +526,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
                 sprintf (signame, "%d", sig);
               error (sig + 128, 0,
                      _("with FILE=%s, signal %s from command: %s"),
-                     quote (name), signame, filter_command);
+                     quotef (name), signame, filter_command);
             }
         }
       else if (WIFEXITED (wstatus))
@@ -534,7 +534,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
           int ex = WEXITSTATUS (wstatus);
           if (ex != 0)
             error (ex, 0, _("with FILE=%s, exit %d from command: %s"),
-                   quote (name), ex, filter_command);
+                   quotef (name), ex, filter_command);
         }
       else
         {
@@ -559,10 +559,10 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
       closeout (NULL, output_desc, filter_pid, outfile);
       next_file_name ();
       if ((output_desc = create (outfile)) < 0)
-        error (EXIT_FAILURE, errno, "%s", quote (outfile));
+        error (EXIT_FAILURE, errno, "%s", quotef (outfile));
     }
   if (full_write (output_desc, bp, bytes) != bytes && ! ignorable (errno))
-    error (EXIT_FAILURE, errno, "%s", quote (outfile));
+    error (EXIT_FAILURE, errno, "%s", quotef (outfile));
 }
 
 /* Split into pieces of exactly N_BYTES bytes.
@@ -592,7 +592,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
         {
           n_read = safe_read (STDIN_FILENO, buf, bufsize);
           if (n_read == SAFE_READ_ERROR)
-            error (EXIT_FAILURE, errno, "%s", quote (infile));
+            error (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       bp_out = buf;
       to_read = n_read;
@@ -651,7 +651,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
     {
       n_read = safe_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", quote (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
       bp = bp_out = buf;
       eob = bp + n_read;
       *eob = eolchar;
@@ -700,7 +700,7 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
     {
       n_read = safe_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", quote (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
       size_t n_left = n_read;
       char *sob = buf;
       while (n_left)
@@ -823,7 +823,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
           initial_read -= start;
         }
       else if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
-        error (EXIT_FAILURE, errno, "%s", quote (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
       n_written = start;
       chunk_no = k - 1;
       chunk_end = chunk_no * chunk_size - 1;
@@ -842,7 +842,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         {
           n_read = safe_read (STDIN_FILENO, buf, bufsize);
           if (n_read == SAFE_READ_ERROR)
-            error (EXIT_FAILURE, errno, "%s", quote (infile));
+            error (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       if (n_read == 0)
         break; /* eof.  */
@@ -937,7 +937,7 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
       initial_read -= start;
     }
   else if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
-    error (EXIT_FAILURE, errno, "%s", quote (infile));
+    error (EXIT_FAILURE, errno, "%s", quotef (infile));
 
   while (start < end)
     {
@@ -951,14 +951,14 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         {
           n_read = safe_read (STDIN_FILENO, buf, bufsize);
           if (n_read == SAFE_READ_ERROR)
-            error (EXIT_FAILURE, errno, "%s", quote (infile));
+            error (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       if (n_read == 0)
         break; /* eof.  */
       n_read = MIN (n_read, end - start);
       if (full_write (STDOUT_FILENO, buf, n_read) != n_read
           && ! ignorable (errno))
-        error (EXIT_FAILURE, errno, "%s", quote ("-"));
+        error (EXIT_FAILURE, errno, "%s", quotef ("-"));
       start += n_read;
     }
 }
@@ -1023,7 +1023,7 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
             break;
 
           if (!(errno == EMFILE || errno == ENFILE))
-            error (EXIT_FAILURE, errno, "%s", quote (files[i_check].of_name));
+            error (EXIT_FAILURE, errno, "%s", quotef (files[i_check].of_name));
 
           file_limit = true;
 
@@ -1034,18 +1034,18 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
               /* No more open files to close, exit with E[NM]FILE.  */
               if (i_reopen == i_check)
                 error (EXIT_FAILURE, errno, "%s",
-                       quote (files[i_check].of_name));
+                       quotef (files[i_check].of_name));
             }
 
           if (fclose (files[i_reopen].ofile) != 0)
-            error (EXIT_FAILURE, errno, "%s", quote (files[i_reopen].of_name));
+            error (EXIT_FAILURE, errno, "%s", quotef (files[i_reopen].of_name));
           files[i_reopen].ofile = NULL;
           files[i_reopen].ofd = OFD_APPEND;
         }
 
       files[i_check].ofd = fd;
       if (!(files[i_check].ofile = fdopen (fd, "a")))
-        error (EXIT_FAILURE, errno, "%s", quote (files[i_check].of_name));
+        error (EXIT_FAILURE, errno, "%s", quotef (files[i_check].of_name));
       files[i_check].opid = filter_pid;
       filter_pid = 0;
     }
@@ -1094,7 +1094,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
       char *bp = buf, *eob;
       size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
-        error (EXIT_FAILURE, errno, "%s", quote (infile));
+        error (EXIT_FAILURE, errno, "%s", quotef (infile));
       else if (n_read == 0)
         break; /* eof.  */
       eob = buf + n_read;
@@ -1142,14 +1142,14 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
                       && ! ignorable (errno))
                     {
                       error (EXIT_FAILURE, errno, "%s",
-                             quote (files[i_file].of_name));
+                             quotef (files[i_file].of_name));
                     }
                 }
               else if (fwrite (bp, to_write, 1, files[i_file].ofile) != 1
                        && ! ignorable (errno))
                 {
                   error (EXIT_FAILURE, errno, "%s",
-                         quote (files[i_file].of_name));
+                         quotef (files[i_file].of_name));
                 }
               if (! ignorable (errno))
                 wrote = true;
@@ -1159,7 +1159,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
                   if (fclose (files[i_file].ofile) != 0)
                     {
                       error (EXIT_FAILURE, errno, "%s",
-                             quote (files[i_file].of_name));
+                             quotef (files[i_file].of_name));
                     }
                   files[i_file].ofile = NULL;
                   files[i_file].ofd = OFD_APPEND;
@@ -1494,7 +1494,7 @@ main (int argc, char **argv)
   if (! STREQ (infile, "-")
       && fd_reopen (STDIN_FILENO, infile, O_RDONLY, 0) < 0)
     error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
-           quote (infile));
+           quoteaf (infile));
 
   /* Binary I/O is safer when byte counts are used.  */
   if (O_BINARY && ! isatty (STDIN_FILENO))
@@ -1503,7 +1503,7 @@ main (int argc, char **argv)
   /* Get the optimal block size of input device and make a buffer.  */
 
   if (fstat (STDIN_FILENO, &in_stat_buf) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (infile));
+    error (EXIT_FAILURE, errno, "%s", quotef (infile));
 
   bool specified_buf_size = !! in_blk_size;
   if (! specified_buf_size)
@@ -1537,7 +1537,7 @@ main (int argc, char **argv)
         }
       if (input_offset < 0)
         error (EXIT_FAILURE, 0, _("%s: cannot determine file size"),
-               quote (infile));
+               quotef (infile));
       /* Overflow, and sanity checking.  */
       if (OFF_T_MAX < n_units)
         {
@@ -1605,7 +1605,7 @@ main (int argc, char **argv)
   IF_LINT (free (b));
 
   if (close (STDIN_FILENO) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (infile));
+    error (EXIT_FAILURE, errno, "%s", quotef (infile));
   closeout (NULL, output_desc, filter_pid, outfile);
 
   return EXIT_SUCCESS;

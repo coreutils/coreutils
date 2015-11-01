@@ -124,7 +124,7 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
         {
           if (! force_silent)
             error (0, errno, _("getting new attributes of %s"),
-                   quote (file_full_name));
+                   quoteaf (file_full_name));
           return false;
         }
 
@@ -148,7 +148,7 @@ describe_change (const char *file, mode_t old_mode, mode_t mode,
   if (changed == CH_NOT_APPLIED)
     {
       printf (_("neither symbolic link %s nor referent has been changed\n"),
-              quote (file));
+              quoteaf (file));
       return;
     }
 
@@ -168,13 +168,13 @@ describe_change (const char *file, mode_t old_mode, mode_t mode,
       break;
     case CH_NO_CHANGE_REQUESTED:
       fmt = _("mode of %s retained as %04lo (%s)\n");
-      printf (fmt, quote (file),
+      printf (fmt, quoteaf (file),
               (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
       return;
     default:
       abort ();
     }
-  printf (fmt, quote (file),
+  printf (fmt, quoteaf (file),
           (unsigned long int) (old_mode & CHMOD_MODE_BITS), &old_perms[1],
           (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
 }
@@ -215,27 +215,27 @@ process_file (FTS *fts, FTSENT *ent)
         }
       if (! force_silent)
         error (0, ent->fts_errno, _("cannot access %s"),
-               quote (file_full_name));
+               quoteaf (file_full_name));
       ok = false;
       break;
 
     case FTS_ERR:
       if (! force_silent)
-        error (0, ent->fts_errno, "%s", quote (file_full_name));
+        error (0, ent->fts_errno, "%s", quotef (file_full_name));
       ok = false;
       break;
 
     case FTS_DNR:
       if (! force_silent)
         error (0, ent->fts_errno, _("cannot read directory %s"),
-               quote (file_full_name));
+               quoteaf (file_full_name));
       ok = false;
       break;
 
     case FTS_SLNONE:
       if (! force_silent)
         error (0, 0, _("cannot operate on dangling symlink %s"),
-               quote (file_full_name));
+               quoteaf (file_full_name));
       ok = false;
       break;
 
@@ -275,7 +275,7 @@ process_file (FTS *fts, FTSENT *ent)
             {
               if (! force_silent)
                 error (0, errno, _("changing permissions of %s"),
-                       quote (file_full_name));
+                       quoteaf (file_full_name));
               ok = false;
             }
         }
@@ -311,7 +311,7 @@ process_file (FTS *fts, FTSENT *ent)
           new_perms[10] = naively_expected_perms[10] = '\0';
           error (0, 0,
                  _("%s: new permissions are %s, not %s"),
-                 quote (file_full_name),
+                 quotef (file_full_name),
                  new_perms + 1, naively_expected_perms + 1);
           ok = false;
         }
@@ -536,7 +536,7 @@ main (int argc, char **argv)
       change = mode_create_from_ref (reference_file);
       if (!change)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quote (reference_file));
+               quoteaf (reference_file));
     }
   else
     {
@@ -555,7 +555,7 @@ main (int argc, char **argv)
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (root_dev_ino == NULL)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quote ("/"));
+               quoteaf ("/"));
     }
   else
     {

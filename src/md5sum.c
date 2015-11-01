@@ -37,7 +37,6 @@
 #endif
 #include "error.h"
 #include "fadvise.h"
-#include "quote.h"
 #include "stdio--.h"
 #include "xfreopen.h"
 
@@ -483,7 +482,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
       fp = fopen (filename, (O_BINARY && *binary ? "rb" : "r"));
       if (fp == NULL)
         {
-          error (0, errno, "%s", quote (filename));
+          error (0, errno, "%s", quotef (filename));
           return false;
         }
     }
@@ -493,7 +492,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
   err = DIGEST_STREAM (fp, bin_result);
   if (err)
     {
-      error (0, errno, "%s", quote (filename));
+      error (0, errno, "%s", quotef (filename));
       if (fp != stdin)
         fclose (fp);
       return false;
@@ -501,7 +500,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
 
   if (!is_stdin && fclose (fp) != 0)
     {
-      error (0, errno, "%s", quote (filename));
+      error (0, errno, "%s", quotef (filename));
       return false;
     }
 
@@ -536,7 +535,7 @@ digest_check (const char *checkfile_name)
       checkfile_stream = fopen (checkfile_name, "r");
       if (checkfile_stream == NULL)
         {
-          error (0, errno, "%s", quote (checkfile_name));
+          error (0, errno, "%s", quotef (checkfile_name));
           return false;
         }
     }
@@ -554,7 +553,7 @@ digest_check (const char *checkfile_name)
       ++line_number;
       if (line_number == 0)
         error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
-               quote (checkfile_name));
+               quotef (checkfile_name));
 
       line_length = getline (&line, &line_chars_allocated, checkfile_stream);
       if (line_length <= 0)
@@ -579,7 +578,7 @@ digest_check (const char *checkfile_name)
               error (0, 0,
                      _("%s: %" PRIuMAX
                        ": improperly formatted %s checksum line"),
-                     quote (checkfile_name), line_number,
+                     quotef (checkfile_name), line_number,
                      DIGEST_TYPE_STRING);
             }
 
@@ -651,13 +650,13 @@ digest_check (const char *checkfile_name)
 
   if (ferror (checkfile_stream))
     {
-      error (0, 0, _("%s: read error"), quote (checkfile_name));
+      error (0, 0, _("%s: read error"), quotef (checkfile_name));
       return false;
     }
 
   if (!is_stdin && fclose (checkfile_stream) != 0)
     {
-      error (0, errno, "%s", quote (checkfile_name));
+      error (0, errno, "%s", quotef (checkfile_name));
       return false;
     }
 
@@ -665,7 +664,7 @@ digest_check (const char *checkfile_name)
     {
       /* Warn if no tests are found.  */
       error (0, 0, _("%s: no properly formatted %s checksum lines found"),
-             quote (checkfile_name), DIGEST_TYPE_STRING);
+             quotef (checkfile_name), DIGEST_TYPE_STRING);
     }
   else
     {

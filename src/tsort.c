@@ -30,9 +30,9 @@
 #include "long-options.h"
 #include "error.h"
 #include "fadvise.h"
-#include "quote.h"
 #include "readtokens.h"
 #include "stdio--.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tsort"
@@ -445,7 +445,7 @@ tsort (const char *file)
   root = new_item (NULL);
 
   if (!is_stdin && ! freopen (file, "r", stdin))
-    error (EXIT_FAILURE, errno, "%s", quote (file));
+    error (EXIT_FAILURE, errno, "%s", quotef (file));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -473,7 +473,7 @@ tsort (const char *file)
 
   if (k != NULL)
     error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
-           quote (file));
+           quotef (file));
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
@@ -518,7 +518,7 @@ tsort (const char *file)
       if (n_strings > 0)
         {
           /* The input contains a loop.  */
-          error (0, 0, _("%s: input contains a loop:"), quote (file));
+          error (0, 0, _("%s: input contains a loop:"), quotef (file));
           ok = false;
 
           /* Print the loop and remove a relation to break it.  */
@@ -532,7 +532,7 @@ tsort (const char *file)
 
   if (fclose (stdin) != 0)
     error (EXIT_FAILURE, errno, "%s",
-           is_stdin ? _("standard input") : quote (file));
+           is_stdin ? _("standard input") : quotef (file));
 
   return ok;
 }

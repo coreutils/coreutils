@@ -285,7 +285,7 @@ dc_parse_stream (FILE *fp, const char *filename)
       if (arg == NULL)
         {
           error (0, 0, _("%s:%lu: invalid line;  missing second token"),
-                 quote (filename), (unsigned long int) line_number);
+                 quotef (filename), (unsigned long int) line_number);
           ok = false;
           free (keywd);
           continue;
@@ -357,7 +357,7 @@ dc_parse_stream (FILE *fp, const char *filename)
       if (unrecognized && (state == ST_TERMSURE || state == ST_TERMYES))
         {
           error (0, 0, _("%s:%lu: unrecognized keyword %s"),
-                 (filename ? quote (filename) : _("<internal>")),
+                 (filename ? quotef (filename) : _("<internal>")),
                  (unsigned long int) line_number, keywd);
           ok = false;
         }
@@ -376,7 +376,7 @@ dc_parse_file (const char *filename)
 
   if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == NULL)
     {
-      error (0, errno, "%s", quote (filename));
+      error (0, errno, "%s", quotef (filename));
       return false;
     }
 
@@ -384,7 +384,7 @@ dc_parse_file (const char *filename)
 
   if (fclose (stdin) != 0)
     {
-      error (0, errno, "%s", quote (filename));
+      error (0, errno, "%s", quotef (filename));
       return false;
     }
 

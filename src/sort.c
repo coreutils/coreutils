@@ -44,7 +44,6 @@
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "randread.h"
 #include "readtokens0.h"
 #include "stdio--.h"
@@ -409,7 +408,7 @@ static void
 die (char const *message, char const *file)
 {
   error (0, errno, "%s: %s", message,
-         quote (file ? file : _("standard output")));
+         quotef (file ? file : _("standard output")));
   exit (SORT_FAILURE);
 }
 
@@ -723,12 +722,12 @@ reap (pid_t pid)
 
   if (cpid < 0)
     error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
-           quote (compress_program));
+           quoteaf (compress_program));
   else if (0 < cpid && (0 < pid || delete_proc (cpid)))
     {
       if (! WIFEXITED (status) || WEXITSTATUS (status))
         error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
-               quote (compress_program));
+               quoteaf (compress_program));
       --nprocs;
     }
 
@@ -882,7 +881,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
     {
       if (! (survive_fd_exhaustion && errno == EMFILE))
         error (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
-               quote (temp_dir));
+               quoteaf (temp_dir));
       free (node);
       node = NULL;
     }
@@ -958,7 +957,7 @@ stream_open (char const *file, char const *how)
     {
       if (file && ftruncate (STDOUT_FILENO, 0) != 0)
         error (SORT_FAILURE, errno, _("%s: error truncating"),
-               quote (file));
+               quotef (file));
       fp = stdout;
     }
   else
@@ -1177,7 +1176,7 @@ open_temp (struct tempnode *temp)
     case -1:
       if (errno != EMFILE)
         error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
-               quote (compress_program));
+               quoteaf (compress_program));
       close (tempfd);
       errno = EMFILE;
       break;
@@ -1249,7 +1248,7 @@ zaptemp (char const *name)
   cs_leave (cs);
 
   if (unlink_status != 0)
-    error (0, unlink_errno, _("warning: cannot remove: %s"), quote (name));
+    error (0, unlink_errno, _("warning: cannot remove: %s"), quotef (name));
   if (! next)
     temptail = pnode;
   free (node);
@@ -4570,7 +4569,7 @@ main (int argc, char **argv)
          on the command-line.  */
       if (nfiles)
         {
-          error (0, 0, _("extra operand %s"), quote (files[0]));
+          error (0, 0, _("extra operand %s"), quoteaf (files[0]));
           fprintf (stderr, "%s\n",
                    _("file operands cannot be combined with --files0-from"));
           usage (SORT_FAILURE);
@@ -4583,14 +4582,14 @@ main (int argc, char **argv)
           stream = fopen (files_from, "r");
           if (stream == NULL)
             error (SORT_FAILURE, errno, _("cannot open %s for reading"),
-                   quote (files_from));
+                   quoteaf (files_from));
         }
 
       readtokens0_init (&tok);
 
       if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
         error (SORT_FAILURE, 0, _("cannot read file names from %s"),
-               quote (files_from));
+               quoteaf (files_from));
 
       if (tok.n_tok)
         {
@@ -4603,7 +4602,7 @@ main (int argc, char **argv)
               if (STREQ (files[i], "-"))
                 error (SORT_FAILURE, 0, _("when reading file names from stdin, "
                                           "no file name of %s allowed"),
-                       quote (files[i]));
+                       quoteaf (files[i]));
               else if (files[i][0] == '\0')
                 {
                   /* Using the standard 'filename:line-number:' prefix here is
@@ -4612,13 +4611,13 @@ main (int argc, char **argv)
                   unsigned long int file_number = i + 1;
                   error (SORT_FAILURE, 0,
                          _("%s:%lu: invalid zero-length file name"),
-                         quote (files_from), file_number);
+                         quotef (files_from), file_number);
                 }
             }
         }
       else
         error (SORT_FAILURE, 0, _("no input from %s"),
-               quote (files_from));
+               quoteaf (files_from));
     }
 
   /* Inheritance of global options to individual keys. */
@@ -4701,7 +4700,7 @@ main (int argc, char **argv)
     {
       if (nfiles > 1)
         error (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
-               quote (files[1]), checkonly);
+               quoteaf (files[1]), checkonly);
 
       if (outfile)
         {

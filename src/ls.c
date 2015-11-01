@@ -100,7 +100,6 @@
 #include "mpsort.h"
 #include "obstack.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "smack.h"
 #include "stat-size.h"
 #include "stat-time.h"
@@ -2534,7 +2533,7 @@ set_exit_status (bool serious)
 static void
 file_failure (bool serious, char const *message, char const *file)
 {
-  error (0, errno, message, quote (file));
+  error (0, errno, message, quoteaf (file));
   set_exit_status (serious);
 }
 
@@ -2601,7 +2600,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       if (visit_dir (dir_stat.st_dev, dir_stat.st_ino))
         {
           error (0, 0, _("%s: not listing already-listed directory"),
-                 quote (name));
+                 quotef (name));
           closedir (dirp);
           set_exit_status (true);
           return;
@@ -3109,7 +3108,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           any_has_acl |= f->acl_type != ACL_T_NONE;
 
           if (err)
-            error (0, errno, "%s", quote (absolute_name));
+            error (0, errno, "%s", quotef (absolute_name));
         }
 
       if (S_ISLNK (f->stat.st_mode)

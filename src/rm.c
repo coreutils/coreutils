@@ -27,8 +27,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
-#include "quote.h"
-#include "quotearg.h"
 #include "remove.h"
 #include "root-dev-ino.h"
 #include "yesno.h"
@@ -118,8 +116,8 @@ diagnose_leading_hyphen (int argc, char **argv)
           fprintf (stderr,
                    _("Try '%s ./%s' to remove the file %s.\n"),
                    argv[0],
-                   quotearg_n_style (1, shell_quoting_style, arg),
-                   quote (arg));
+                   quotearg_n_style (1, shell_escape_quoting_style, arg),
+                   quoteaf (arg));
           break;
         }
     }
@@ -329,7 +327,7 @@ main (int argc, char **argv)
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (x.root_dev_ino == NULL)
         error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quote ("/"));
+               quoteaf ("/"));
     }
 
   uintmax_t n_files = argc - optind;

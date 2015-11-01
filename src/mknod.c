@@ -250,7 +250,7 @@ main (int argc, char **argv)
           defaultcon (argv[optind], node_type);
 
         if (mknod (argv[optind], newmode | node_type, device) != 0)
-          error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
+          error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
       }
       break;
 
@@ -258,7 +258,7 @@ main (int argc, char **argv)
       if (set_security_context)
         defaultcon (argv[optind], S_IFIFO);
       if (mkfifo (argv[optind], newmode) != 0)
-        error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
+        error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
       break;
 
     default:
@@ -268,7 +268,7 @@ main (int argc, char **argv)
 
   if (specified_mode && lchmod (argv[optind], newmode) != 0)
     error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
-           quote (argv[optind]));
+           quoteaf (argv[optind]));
 
   return EXIT_SUCCESS;
 }

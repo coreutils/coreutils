@@ -19,7 +19,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "quote.h"
 #include "save-cwd.h"
 #include "xgetcwd.h"
 #include "find-mount-point.h"
@@ -47,7 +46,7 @@ find_mount_point (char const *file, struct stat const *file_stat)
       last_stat = *file_stat;
       if (chdir (file) < 0)
         {
-          error (0, errno, _("cannot change to directory %s"), quote (file));
+          error (0, errno, _("cannot change to directory %s"), quoteaf (file));
           return NULL;
         }
     }
@@ -61,14 +60,14 @@ find_mount_point (char const *file, struct stat const *file_stat)
 
       if (chdir (dir) < 0)
         {
-          error (0, errno, _("cannot change to directory %s"), quote (dir));
+          error (0, errno, _("cannot change to directory %s"), quoteaf (dir));
           return NULL;
         }
 
       if (stat (".", &last_stat) < 0)
         {
           error (0, errno, _("cannot stat current directory (now %s)"),
-                 quote (dir));
+                 quoteaf (dir));
           goto done;
         }
     }
@@ -81,7 +80,7 @@ find_mount_point (char const *file, struct stat const *file_stat)
       struct stat st;
       if (stat ("..", &st) < 0)
         {
-          error (0, errno, _("cannot stat %s"), quote (".."));
+          error (0, errno, _("cannot stat %s"), quoteaf (".."));
           goto done;
         }
       if (st.st_dev != last_stat.st_dev || st.st_ino == last_stat.st_ino)
@@ -89,7 +88,7 @@ find_mount_point (char const *file, struct stat const *file_stat)
         break;
       if (chdir ("..") < 0)
         {
-          error (0, errno, _("cannot change to directory %s"), quote (".."));
+          error (0, errno, _("cannot change to directory %s"), quoteaf (".."));
           goto done;
         }
       last_stat = st;

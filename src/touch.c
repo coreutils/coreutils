@@ -169,7 +169,7 @@ touch (const char *file)
     {
       if (close (STDIN_FILENO) != 0)
         {
-          error (0, errno, _("failed to close %s"), quote (file));
+          error (0, errno, _("failed to close %s"), quoteaf (file));
           return false;
         }
     }
@@ -188,13 +188,13 @@ touch (const char *file)
              - the file does not exist, but the parent directory is unwritable
              - the file exists, but it isn't writable
              I think it's not worth trying to distinguish them.  */
-          error (0, open_errno, _("cannot touch %s"), quote (file));
+          error (0, open_errno, _("cannot touch %s"), quoteaf (file));
         }
       else
         {
           if (no_create && errno == ENOENT)
             return true;
-          error (0, errno, _("setting times of %s"), quote (file));
+          error (0, errno, _("setting times of %s"), quoteaf (file));
         }
       return false;
     }
@@ -344,7 +344,7 @@ main (int argc, char **argv)
       if (no_dereference ? lstat (ref_file, &ref_stats)
           : stat (ref_file, &ref_stats))
         error (EXIT_FAILURE, errno,
-               _("failed to get attributes of %s"), quote (ref_file));
+               _("failed to get attributes of %s"), quoteaf (ref_file));
       newtime[0] = get_stat_atime (&ref_stats);
       newtime[1] = get_stat_mtime (&ref_stats);
       date_set = true;

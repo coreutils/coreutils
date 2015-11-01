@@ -28,7 +28,6 @@
 #include "file-set.h"
 #include "hash.h"
 #include "hash-triple.h"
-#include "quote.h"
 #include "relpath.h"
 #include "same.h"
 #include "yesno.h"
@@ -130,9 +129,10 @@ target_directory_operand (char const *file)
   int err = (stat_result == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && ! errno_nonexisting (errno))
-    error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
+    error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
   if (is_a_dir < looks_like_a_dir)
-    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
+    error (EXIT_FAILURE, err, _("target %s is not a directory"),
+           quoteaf (file));
   return is_a_dir;
 }
 
@@ -194,7 +194,7 @@ do_link (const char *source, const char *dest)
            : lstat (source, &source_stats))
           != 0)
         {
-          error (0, errno, _("failed to access %s"), quote (source));
+          error (0, errno, _("failed to access %s"), quoteaf (source));
           return false;
         }
 
@@ -204,7 +204,7 @@ do_link (const char *source, const char *dest)
           if (! hard_dir_link)
             {
               error (0, 0, _("%s: hard link not allowed for directory"),
-                     quote (source));
+                     quotef (source));
               return false;
             }
         }
@@ -215,7 +215,7 @@ do_link (const char *source, const char *dest)
       dest_lstat_ok = (lstat (dest, &dest_stats) == 0);
       if (!dest_lstat_ok && errno != ENOENT)
         {
-          error (0, errno, _("failed to access %s"), quote (dest));
+          error (0, errno, _("failed to access %s"), quoteaf (dest));
           return false;
         }
     }
@@ -228,7 +228,7 @@ do_link (const char *source, const char *dest)
     {
       error (0, 0,
              _("will not overwrite just-created %s with %s"),
-             quote_n (0, dest), quote_n (1, source));
+             quoteaf_n (0, dest), quoteaf_n (1, source));
       return false;
     }
 
@@ -260,7 +260,7 @@ do_link (const char *source, const char *dest)
       && (source_stats.st_nlink == 1 || same_name (source, dest)))
     {
       error (0, 0, _("%s and %s are the same file"),
-             quote_n (0, source), quote_n (1, dest));
+             quoteaf_n (0, source), quoteaf_n (1, dest));
       return false;
     }
 
@@ -268,12 +268,12 @@ do_link (const char *source, const char *dest)
     {
       if (S_ISDIR (dest_stats.st_mode))
         {
-          error (0, 0, _("%s: cannot overwrite directory"), quote (dest));
+          error (0, 0, _("%s: cannot overwrite directory"), quotef (dest));
           return false;
         }
       if (interactive)
         {
-          fprintf (stderr, _("%s: replace %s? "), program_name, quote (dest));
+          fprintf (stderr, _("%s: replace %s? "), program_name, quoteaf (dest));
           if (!yesno ())
             return true;
           remove_existing_files = true;
@@ -289,7 +289,8 @@ do_link (const char *source, const char *dest)
               dest_backup = NULL;
               if (rename_errno != ENOENT)
                 {
-                  error (0, rename_errno, _("cannot backup %s"), quote (dest));
+                  error (0, rename_errno, _("cannot backup %s"),
+                         quoteaf (dest));
                   return false;
                 }
             }
@@ -327,7 +328,7 @@ do_link (const char *source, const char *dest)
     {
       if (unlink (dest) != 0)
         {
-          error (0, errno, _("cannot remove %s"), quote (dest));
+          error (0, errno, _("cannot remove %s"), quoteaf (dest));
           free (dest_backup);
           free (rel_source);
           return false;
@@ -349,9 +350,9 @@ do_link (const char *source, const char *dest)
       if (verbose)
         {
           if (dest_backup)
-            printf ("%s ~ ", quote (dest_backup));
-          printf ("%s %c> %s\n", quote_n (0, dest), (symbolic_link ? '-' : '='),
-                  quote_n (1, source));
+            printf ("%s ~ ", quoteaf (dest_backup));
+          printf ("%s %c> %s\n", quoteaf_n (0, dest),
+                  (symbolic_link ? '-' : '='), quoteaf_n (1, source));
         }
     }
   else
@@ -367,12 +368,12 @@ do_link (const char *source, const char *dest)
                     || errno == EROFS)
                  ? _("failed to create hard link %s")
                  : _("failed to create hard link %s => %s"))),
-             quote_n (0, dest), quote_n (1, source));
+             quoteaf_n (0, dest), quoteaf_n (1, source));
 
       if (dest_backup)
         {
           if (rename (dest_backup, dest) != 0)
-            error (0, errno, _("cannot un-backup %s"), quote (dest));
+            error (0, errno, _("cannot un-backup %s"), quoteaf (dest));
         }
     }
 
@@ -530,10 +531,10 @@ main (int argc, char **argv)
               struct stat st;
               if (stat (optarg, &st) != 0)
                 error (EXIT_FAILURE, errno, _("failed to access %s"),
-                       quote (optarg));
+                       quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
                 error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                       quote (optarg));
+                       quoteaf (optarg));
             }
           target_directory = optarg;
           break;
@@ -575,9 +576,9 @@ main (int argc, char **argv)
           if (n_files < 2)
             error (0, 0,
                    _("missing destination file operand after %s"),
-                   quote (file[0]));
+                   quoteaf (file[0]));
           else
-            error (0, 0, _("extra operand %s"), quote (file[2]));
+            error (0, 0, _("extra operand %s"), quoteaf (file[2]));
           usage (EXIT_FAILURE);
         }
     }
@@ -589,7 +590,7 @@ main (int argc, char **argv)
         target_directory = file[--n_files];
       else if (2 < n_files)
         error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quote (file[n_files - 1]));
+               quoteaf (file[n_files - 1]));
     }
 
   if (backup_suffix_string)

@@ -243,14 +243,14 @@ next_file (FILE *fp)
     {
       if (ferror (fp))
         {
-          error (0, errno, "%s", quote (prev_file));
+          error (0, errno, "%s", quotef (prev_file));
           exit_status = EXIT_FAILURE;
         }
       if (STREQ (prev_file, "-"))
         clearerr (fp);		/* Also clear EOF.  */
       else if (fclose (fp) != 0)
         {
-          error (0, errno, "%s", quote (prev_file));
+          error (0, errno, "%s", quotef (prev_file));
           exit_status = EXIT_FAILURE;
         }
     }
@@ -270,7 +270,7 @@ next_file (FILE *fp)
           fadvise (fp, FADVISE_SEQUENTIAL);
           return fp;
         }
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       exit_status = EXIT_FAILURE;
     }
   return NULL;

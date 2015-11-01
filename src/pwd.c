@@ -274,10 +274,10 @@ robust_getcwd (struct file_name *file_name)
 
   if (root_dev_ino == NULL)
     error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-           quote ("/"));
+           quoteaf ("/"));
 
   if (stat (".", &dot_sb) < 0)
-    error (EXIT_FAILURE, errno, _("failed to stat %s"), quote ("."));
+    error (EXIT_FAILURE, errno, _("failed to stat %s"), quoteaf ("."));
 
   while (1)
     {

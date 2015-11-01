@@ -25,7 +25,6 @@
 #include "argmatch.h"
 #include "error.h"
 #include "fadvise.h"
-#include "quote.h"
 #include "stdio--.h"
 #include "xfreopen.h"
 
@@ -219,7 +218,7 @@ tee_files (int nfiles, char **files)
         {
           error (output_error == output_error_exit
                  || output_error == output_error_exit_nopipe,
-                 errno, "%s", quote (files[i]));
+                 errno, "%s", quotef (files[i]));
           ok = false;
         }
       else
@@ -252,7 +251,7 @@ tee_files (int nfiles, char **files)
               {
                 error (output_error == output_error_exit
                        || output_error == output_error_exit_nopipe,
-                       w_errno, "%s", quote (files[i]));
+                       w_errno, "%s", quotef (files[i]));
               }
             descriptors[i] = NULL;
             if (fail)
@@ -271,7 +270,7 @@ tee_files (int nfiles, char **files)
   for (i = 1; i <= nfiles; i++)
     if (descriptors[i] && fclose (descriptors[i]) != 0)
       {
-        error (0, errno, "%s", quote (files[i]));
+        error (0, errno, "%s", quotef (files[i]));
         ok = false;
       }
 

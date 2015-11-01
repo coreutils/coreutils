@@ -180,7 +180,7 @@ uptime (const char *filename, int options)
 
 #if HAVE_UTMPX_H || HAVE_UTMP_H
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (filename));
+    error (EXIT_FAILURE, errno, "%s", quotef (filename));
 #endif
 
   print_uptime (n_users, utmp_buf);

@@ -110,7 +110,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
 
   if ((block_mode || (rel_mode && rsize < 0)) && fstat (fd, &sb) != 0)
     {
-      error (0, errno, _("cannot fstat %s"), quote (fname));
+      error (0, errno, _("cannot fstat %s"), quoteaf (fname));
       return false;
     }
   if (block_mode)
@@ -122,7 +122,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
                  _("overflow in %" PRIdMAX
                    " * %" PRIdMAX " byte blocks for file %s"),
                  (intmax_t) ssize, (intmax_t) blksize,
-                 quote (fname));
+                 quoteaf (fname));
           return false;
         }
       ssize *= blksize;
@@ -144,7 +144,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
                   /* Sanity check.  Overflow is the only reason I can think
                      this would ever go negative. */
                   error (0, 0, _("%s has unusable, apparently negative size"),
-                         quote (fname));
+                         quoteaf (fname));
                   return false;
                 }
             }
@@ -154,7 +154,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
               if (file_size < 0)
                 {
                   error (0, errno, _("cannot get the size of %s"),
-                         quote (fname));
+                         quoteaf (fname));
                   return false;
                 }
             }
@@ -176,7 +176,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
           if (overflow > OFF_T_MAX)
             {
               error (0, 0, _("overflow rounding up size of file %s"),
-                     quote (fname));
+                     quoteaf (fname));
               return false;
             }
           nsize = overflow;
@@ -186,7 +186,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
           if (ssize > OFF_T_MAX - (off_t)fsize)
             {
               error (0, 0, _("overflow extending size of file %s"),
-                     quote (fname));
+                     quoteaf (fname));
               return false;
             }
           nsize = fsize + ssize;
@@ -200,7 +200,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
   if (ftruncate (fd, nsize) == -1)      /* note updates mtime & ctime */
     {
       error (0, errno,
-             _("failed to truncate %s at %" PRIdMAX " bytes"), quote (fname),
+             _("failed to truncate %s at %" PRIdMAX " bytes"), quoteaf (fname),
              (intmax_t) nsize);
       return false;
     }
@@ -334,7 +334,7 @@ main (int argc, char **argv)
       struct stat sb;
       off_t file_size = -1;
       if (stat (ref_file, &sb) != 0)
-        error (EXIT_FAILURE, errno, _("cannot stat %s"), quote (ref_file));
+        error (EXIT_FAILURE, errno, _("cannot stat %s"), quoteaf (ref_file));
       if (usable_st_size (&sb))
         file_size = sb.st_size;
       else
@@ -356,7 +356,7 @@ main (int argc, char **argv)
         }
       if (file_size < 0)
         error (EXIT_FAILURE, errno, _("cannot get the size of %s"),
-               quote (ref_file));
+               quoteaf (ref_file));
       if (!got_size)
         size = file_size;
       else
@@ -376,7 +376,7 @@ main (int argc, char **argv)
           if (!(no_create && errno == ENOENT))
             {
               error (0, errno, _("cannot open %s for writing"),
-                     quote (fname));
+                     quoteaf (fname));
               errors = true;
             }
           continue;
@@ -388,7 +388,7 @@ main (int argc, char **argv)
           errors |= !do_ftruncate (fd, fname, size, rsize, rel_mode);
           if (close (fd) != 0)
             {
-              error (0, errno, _("failed to close %s"), quote (fname));
+              error (0, errno, _("failed to close %s"), quoteaf (fname));
               errors = true;
             }
         }

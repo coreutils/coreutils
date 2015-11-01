@@ -322,7 +322,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
           if (utimens (dst_name, timespec))
             {
               error (0, errno, _("failed to preserve times for %s"),
-                     quote (dst_name));
+                     quoteaf (dst_name));
               return false;
             }
         }
@@ -334,7 +334,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
               if (! chown_failure_ok (x))
                 {
                   error (0, errno, _("failed to preserve ownership for %s"),
-                         quote (dst_name));
+                         quoteaf (dst_name));
                   return false;
                 }
               /* Failing to preserve ownership is OK. Still, try to preserve
@@ -353,7 +353,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
           if (lchmod (dst_name, p->st.st_mode) != 0)
             {
               error (0, errno, _("failed to preserve permissions for %s"),
-                     quote (dst_name));
+                     quoteaf (dst_name));
               return false;
             }
         }
@@ -436,7 +436,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
               if (src_errno)
                 {
                   error (0, src_errno, _("failed to get attributes of %s"),
-                         quote (src));
+                         quoteaf (src));
                   return false;
                 }
 
@@ -480,7 +480,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
               if (mkdir (dir, mkdir_mode) != 0)
                 {
                   error (0, errno, _("cannot make directory %s"),
-                         quote (dir));
+                         quoteaf (dir));
                   return false;
                 }
               else
@@ -496,7 +496,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
               if (lstat (dir, &stats))
                 {
                   error (0, errno, _("failed to get attributes of %s"),
-                         quote (dir));
+                         quoteaf (dir));
                   return false;
                 }
 
@@ -521,7 +521,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
                   if (lchmod (dir, stats.st_mode | S_IRWXU) != 0)
                     {
                       error (0, errno, _("setting permissions for %s"),
-                             quote (dir));
+                             quoteaf (dir));
                       return false;
                     }
                 }
@@ -529,7 +529,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
           else if (!S_ISDIR (stats.st_mode))
             {
               error (0, 0, _("%s exists but is not a directory"),
-                     quote (dir));
+                     quoteaf (dir));
               return false;
             }
           else
@@ -547,7 +547,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
   else if (!S_ISDIR (stats.st_mode))
     {
-      error (0, 0, _("%s exists but is not a directory"), quote (dst_dir));
+      error (0, 0, _("%s exists but is not a directory"), quoteaf (dst_dir));
       return false;
     }
   else
@@ -574,7 +574,7 @@ target_directory_operand (char const *file, struct stat *st, bool *new_dst)
   if (err)
     {
       if (err != ENOENT)
-        error (EXIT_FAILURE, err, _("failed to access %s"), quote (file));
+        error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
       *new_dst = true;
     }
   return is_a_dir;
@@ -597,7 +597,7 @@ do_copy (int n_files, char **file, const char *target_directory,
         error (0, 0, _("missing file operand"));
       else
         error (0, 0, _("missing destination file operand after %s"),
-               quote (file[0]));
+               quoteaf (file[0]));
       usage (EXIT_FAILURE);
     }
 
@@ -609,7 +609,7 @@ do_copy (int n_files, char **file, const char *target_directory,
                  "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
-          error (0, 0, _("extra operand %s"), quote (file[2]));
+          error (0, 0, _("extra operand %s"), quoteaf (file[2]));
           usage (EXIT_FAILURE);
         }
       /* Update NEW_DST and SB, which may be checked below.  */
@@ -622,7 +622,7 @@ do_copy (int n_files, char **file, const char *target_directory,
         target_directory = file[--n_files];
       else if (2 < n_files)
         error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quote (file[n_files - 1]));
+               quoteaf (file[n_files - 1]));
     }
 
   if (target_directory)
@@ -1077,10 +1077,10 @@ main (int argc, char **argv)
               struct stat st;
               if (stat (optarg, &st) != 0)
                 error (EXIT_FAILURE, errno, _("failed to access %s"),
-                       quote (optarg));
+                       quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
                 error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                       quote (optarg));
+                       quoteaf (optarg));
             }
           target_directory = optarg;
           break;

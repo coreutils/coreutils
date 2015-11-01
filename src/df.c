@@ -938,7 +938,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
         }
       else
         {
-          error (0, errno, "%s", quote (stat_file));
+          error (0, errno, "%s", quotef (stat_file));
           exit_status = EXIT_FAILURE;
           return;
         }
@@ -1240,7 +1240,7 @@ get_disk (char const *disk)
   else if (eclipsed_device)
     {
       error (0, 0, _("cannot access %s: over-mounted by another device"),
-             quote (file));
+             quoteaf (file));
       exit_status = EXIT_FAILURE;
       return true;
     }
@@ -1304,7 +1304,7 @@ get_point (const char *point, const struct stat *statp)
                    can't possibly be on this file system.  */
                 if (errno == EIO)
                   {
-                    error (0, errno, "%s", quote (me->me_mountdir));
+                    error (0, errno, "%s", quotef (me->me_mountdir));
                     exit_status = EXIT_FAILURE;
                   }
 
@@ -1668,7 +1668,7 @@ main (int argc, char **argv)
           if ((fd < 0 || fstat (fd, &stats[i - optind]))
               && stat (argv[i], &stats[i - optind]))
             {
-              error (0, errno, "%s", quote (argv[i]));
+              error (0, errno, "%s", quotef (argv[i]));
               exit_status = EXIT_FAILURE;
               argv[i] = NULL;
             }

@@ -27,7 +27,6 @@
 #include "error.h"
 #include "fadvise.h"
 #include "human.h"
-#include "quote.h"
 #include "safe-read.h"
 #include "xfreopen.h"
 
@@ -106,7 +105,7 @@ bsd_sum_file (const char *file, int print_name)
       fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           return false;
         }
     }
@@ -123,7 +122,7 @@ bsd_sum_file (const char *file, int print_name)
 
   if (ferror (fp))
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       if (!is_stdin)
         fclose (fp);
       return false;
@@ -131,7 +130,7 @@ bsd_sum_file (const char *file, int print_name)
 
   if (!is_stdin && fclose (fp) != 0)
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       return false;
     }
 
@@ -176,7 +175,7 @@ sysv_sum_file (const char *file, int print_name)
       fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           return false;
         }
     }
@@ -191,7 +190,7 @@ sysv_sum_file (const char *file, int print_name)
 
       if (bytes_read == SAFE_READ_ERROR)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           if (!is_stdin)
             close (fd);
           return false;
@@ -204,7 +203,7 @@ sysv_sum_file (const char *file, int print_name)
 
   if (!is_stdin && close (fd) != 0)
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       return false;
     }
 
@@ -271,6 +270,6 @@ main (int argc, char **argv)
       ok &= sum_func (argv[optind], files_given);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, "%s", quote ("-"));
+    error (EXIT_FAILURE, errno, "%s", quotef ("-"));
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -92,7 +92,7 @@ my @Tests =
                                       . "invalid\n" }},
                                 {AUX=> {f=> 'foo'}},
                                 {OUT=>"f: FAILED\nf: FAILED\n"},
-              {ERR=>"md5sum: 'f.md5': 3: "
+              {ERR=>"md5sum: f.md5: 3: "
                               . "improperly formatted MD5 checksum line\n"
                   . "md5sum: WARNING: 1 line is improperly formatted\n"
                   . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
@@ -102,7 +102,7 @@ my @Tests =
      # sha1sum accept BSD format.
      ['check-bsd', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
                                 {AUX=> {f=> ''}},
-                                {ERR=>"md5sum: 'f.sha1': no properly formatted "
+                                {ERR=>"md5sum: f.sha1: no properly formatted "
                                        . "MD5 checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-bsd2', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
@@ -112,7 +112,7 @@ my @Tests =
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['check-openssl', '--check', {IN=> {'f.sha1' => "SHA1(f)= $degenerate\n"}},
                                 {AUX=> {f=> ''}},
-                                {ERR=>"md5sum: 'f.sha1': no properly formatted "
+                                {ERR=>"md5sum: f.sha1: no properly formatted "
                                        . "MD5 checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-openssl2', '--check', {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
@@ -121,7 +121,7 @@ my @Tests =
                                 {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
-      {ERR=> "$prog: 'z': no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
 
      # Ensure that when there's a NUL byte among the checksum hex digits
      # we detect the invalid formatting and don't even open the file.
@@ -129,7 +129,7 @@ my @Tests =
      #   h: FAILED
      #   md5sum: WARNING: 1 of 1 computed checksum did NOT match
      ['nul-in-cksum', '--check', {IN=> {'h'=>("\0"x32)."  h\n"}}, {EXIT=> 1},
-      {ERR=> "$prog: 'h': no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: h: no properly formatted MD5 checksum lines found\n"}],
     );
 
 # Insert the '--text' argument for each test.

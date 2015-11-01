@@ -520,7 +520,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
     block->start = read_file (file_name, &used_length);
 
   if (!block->start)
-    error (EXIT_FAILURE, errno, "%s", quote (using_stdin ? "-" : file_name));
+    error (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
 
   block->end = block->start + used_length;
 }
@@ -2076,7 +2076,7 @@ main (int argc, char **argv)
       if (optind < argc)
         {
           if (! freopen (argv[optind], "w", stdout))
-            error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
+            error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
           optind++;
         }
 

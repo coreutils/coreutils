@@ -733,7 +733,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
        : lgetfilecon (filename, &scontext)) < 0)
     {
       error (0, errno, _("failed to get security context of %s"),
-             quote (filename));
+             quoteaf (filename));
       scontext = NULL;
       fail = true;
     }
@@ -889,7 +889,7 @@ out_mount_point (char const *filename, char *pformat, size_t prefix_len,
       char *resolved = canonicalize_file_name (filename);
       if (!resolved)
         {
-          error (0, errno, _("failed to canonicalize %s"), quote (filename));
+          error (0, errno, _("failed to canonicalize %s"), quoteaf (filename));
           goto print_mount_point;
         }
       bp = find_bind_mount (resolved);
@@ -979,18 +979,18 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_string (pformat, prefix_len, filename);
       break;
     case 'N':
-      out_string (pformat, prefix_len, quote (filename));
+      out_string (pformat, prefix_len, quoteaf (filename));
       if (S_ISLNK (statbuf->st_mode))
         {
           char *linkname = areadlink_with_size (filename, statbuf->st_size);
           if (linkname == NULL)
             {
               error (0, errno, _("cannot read symbolic link %s"),
-                     quote (filename));
+                     quoteaf (filename));
               return true;
             }
           printf (" -> ");
-          out_string (pformat, prefix_len, quote (linkname));
+          out_string (pformat, prefix_len, quoteaf (linkname));
           free (linkname);
         }
       break;
@@ -1265,14 +1265,14 @@ do_statfs (char const *filename, char const *format)
   if (STREQ (filename, "-"))
     {
       error (0, 0, _("using %s to denote standard input does not work"
-                     " in file system mode"), quote (filename));
+                     " in file system mode"), quoteaf (filename));
       return false;
     }
 
   if (STATFS (filename, &statfsbuf) != 0)
     {
       error (0, errno, _("cannot read file system information for %s"),
-             quote (filename));
+             quoteaf (filename));
       return false;
     }
 
@@ -1303,7 +1303,7 @@ do_stat (char const *filename, char const *format,
             ? stat (filename, &statbuf)
             : lstat (filename, &statbuf)) != 0)
     {
-      error (0, errno, _("cannot stat %s"), quote (filename));
+      error (0, errno, _("cannot stat %s"), quoteaf (filename));
       return false;
     }
 

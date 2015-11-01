@@ -44,7 +44,6 @@
 #include <stdint.h>
 #include "system.h"
 #include "fadvise.h"
-#include "quote.h"
 #include "xfreopen.h"
 
 #ifdef CRCTAB
@@ -202,7 +201,7 @@ cksum (const char *file, bool print_name)
       fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           return false;
         }
     }
@@ -214,7 +213,7 @@ cksum (const char *file, bool print_name)
       unsigned char *cp = buf;
 
       if (length + bytes_read < length)
-        error (EXIT_FAILURE, 0, _("%s: file too long"), quote (file));
+        error (EXIT_FAILURE, 0, _("%s: file too long"), quotef (file));
       length += bytes_read;
       while (bytes_read--)
         crc = (crc << 8) ^ crctab[((crc >> 24) ^ *cp++) & 0xFF];
@@ -224,7 +223,7 @@ cksum (const char *file, bool print_name)
 
   if (ferror (fp))
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       if (!STREQ (file, "-"))
         fclose (fp);
       return false;
@@ -232,7 +231,7 @@ cksum (const char *file, bool print_name)
 
   if (!STREQ (file, "-") && fclose (fp) == EOF)
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       return false;
     }
 

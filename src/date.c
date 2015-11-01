@@ -290,7 +290,7 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
       in_stream = fopen (input_filename, "r");
       if (in_stream == NULL)
         {
-          error (EXIT_FAILURE, errno, "%s", quote (input_filename));
+          error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
         }
     }
 
@@ -320,7 +320,7 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
     }
 
   if (fclose (in_stream) == EOF)
-    error (EXIT_FAILURE, errno, "%s", quote (input_filename));
+    error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
 
   free (line);
 
@@ -520,7 +520,7 @@ main (int argc, char **argv)
           if (reference != NULL)
             {
               if (stat (reference, &refstats) != 0)
-                error (EXIT_FAILURE, errno, "%s", quote (reference));
+                error (EXIT_FAILURE, errno, "%s", quotef (reference));
               when = get_stat_mtime (&refstats);
             }
           else

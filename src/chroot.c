@@ -200,7 +200,7 @@ Run COMMAND with root directory set to NEWROOT.\n\
 "), stdout);
       printf (_("\
   --skip-chdir           do not change working directory to %s\n\
-"), quote ("/"));
+"), quoteaf ("/"));
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -284,7 +284,7 @@ main (int argc, char **argv)
   if (! is_oldroot && skip_chdir)
     {
       error (0, 0, _("option --skip-chdir only permitted if NEWROOT is old %s"),
-             quote ("/"));
+             quoteaf ("/"));
       usage (EXIT_CANCELED);
     }
 
@@ -327,7 +327,7 @@ main (int argc, char **argv)
 
   if (chroot (newroot) != 0)
     error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-           quote (newroot));
+           quoteaf (newroot));
 
   if (! skip_chdir && chdir ("/"))
     error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));

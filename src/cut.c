@@ -34,7 +34,6 @@
 #include "fadvise.h"
 #include "getndelim2.h"
 #include "hash.h"
-#include "quote.h"
 #include "xstrndup.h"
 
 #include "set-fields.h"
@@ -445,7 +444,7 @@ cut_file (char const *file)
       stream = fopen (file, "r");
       if (stream == NULL)
         {
-          error (0, errno, "%s", quote (file));
+          error (0, errno, "%s", quotef (file));
           return false;
         }
     }
@@ -456,14 +455,14 @@ cut_file (char const *file)
 
   if (ferror (stream))
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       return false;
     }
   if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, "%s", quotef (file));
       return false;
     }
   return true;

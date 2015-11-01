@@ -109,7 +109,7 @@ announce_mkdir (char const *dir, void *options)
 {
   struct mkdir_options const *o = options;
   if (o->created_directory_format)
-    prog_fprintf (stdout, o->created_directory_format, quote (dir));
+    prog_fprintf (stdout, o->created_directory_format, quoteaf (dir));
 }
 
 /* Make ancestor directory DIR, whose last component is COMPONENT,
@@ -125,7 +125,7 @@ make_ancestor (char const *dir, char const *component, void *options)
   if (o->set_security_context && defaultcon (dir, S_IFDIR) < 0
       && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
-           quote (dir));
+           quoteaf (dir));
 
   mode_t user_wx = S_IWUSR | S_IXUSR;
   bool self_denying_umask = (o->umask_value & user_wx) != 0;
@@ -158,7 +158,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
       if (! o->make_ancestor_function && defaultcon (dir, S_IFDIR) < 0
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to set default creation context for %s"),
-               quote (dir));
+               quoteaf (dir));
     }
 
   int ret = (make_dir_parents (dir, wd, o->make_ancestor_function, options,
@@ -178,7 +178,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
       if (! restorecon (last_component (dir), false, false)
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to restore context for %s"),
-               quote (dir));
+               quoteaf (dir));
     }
 
   return ret;

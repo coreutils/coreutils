@@ -971,7 +971,7 @@ add_file_name (char *name, char *names[2],
       switch (operand_status[op0])
         {
         case MUST_BE_OPERAND:
-          error (0, 0, _("extra operand %s"), quote (name));
+          error (0, 0, _("extra operand %s"), quoteaf (name));
           usage (EXIT_FAILURE);
 
         case MIGHT_BE_J1_ARG:
@@ -1183,18 +1183,18 @@ main (int argc, char **argv)
 
   fp1 = STREQ (g_names[0], "-") ? stdin : fopen (g_names[0], "r");
   if (!fp1)
-    error (EXIT_FAILURE, errno, "%s", quote (g_names[0]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
   fp2 = STREQ (g_names[1], "-") ? stdin : fopen (g_names[1], "r");
   if (!fp2)
-    error (EXIT_FAILURE, errno, "%s", quote (g_names[1]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
   if (fp1 == fp2)
     error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
   if (fclose (fp1) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (g_names[0]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[0]));
   if (fclose (fp2) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (g_names[1]));
+    error (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
     return EXIT_FAILURE;

@@ -90,7 +90,6 @@
 #include "error.h"
 #include "fcntl--.h"
 #include "human.h"
-#include "quote.h"
 #include "randint.h"
 #include "randread.h"
 #include "stat-size.h"
@@ -1082,7 +1081,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   char *base = last_component (newname);
   size_t len = base_len (base);
   char *dir = dir_name (newname);
-  char *qdir = xstrdup (quote (dir));
+  char *qdir = xstrdup (quotef (dir));
   bool first = true;
   bool ok = true;
   int dir_fd = -1;
@@ -1302,12 +1301,12 @@ main (int argc, char **argv)
 
   randint_source = randint_all_new (random_source, SIZE_MAX);
   if (! randint_source)
-    error (EXIT_FAILURE, errno, "%s", quote (random_source));
+    error (EXIT_FAILURE, errno, "%s", quotef (random_source));
   atexit (clear_random_data);
 
   for (i = 0; i < n_files; i++)
     {
-      char *qname = xstrdup (quote (file[i]));
+      char *qname = xstrdup (quotef (file[i]));
       if (STREQ (file[i], "-"))
         {
           ok &= wipefd (STDOUT_FILENO, qname, randint_source, &flags);
