@@ -26,13 +26,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now prefers sources towards the root of a device when
   eliding duplicate bind mounted entries.
 
-  md5sum now quotes all printed file names to avoid confusing error messages.
-  This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
-
 ** Improvements
 
   All utilities now quote user supplied arguments in error strings,
   which avoids confusing error messages in the presence of '\r' chars etc.
+
+  md5sum now ensures a single line per file for status on standard output,
+  by using a '\' at the start of the line, and replacing any newlines with '\n'.
+  This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
 
   dircolors now supports globbing of TERM entries in its database.
   For example "TERM *256color*" is now supported.

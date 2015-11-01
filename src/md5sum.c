@@ -417,6 +417,37 @@ hex_digits (unsigned char const *s)
   return *s == '\0';
 }
 
+/* If ESCAPE is true, then translate each NEWLINE byte to the string, "\\n",
+   and each backslash to "\\\\".  */
+static void
+print_filename (char const *file, bool escape)
+{
+  if (! escape)
+    {
+      fputs (file, stdout);
+      return;
+    }
+
+  while (*file)
+    {
+      switch (*file)
+        {
+        case '\n':
+          fputs ("\\n", stdout);
+          break;
+
+        case '\\':
+          fputs ("\\\\", stdout);
+          break;
+
+        default:
+          putchar (*file);
+          break;
+        }
+      file++;
+    }
+}
+
 /* An interface to the function, DIGEST_STREAM.
    Operate on FILENAME (it may be "-").
 
@@ -561,6 +592,9 @@ digest_check (const char *checkfile_name)
                                           '8', '9', 'a', 'b',
                                           'c', 'd', 'e', 'f' };
           bool ok;
+          /* Only escape in the edge case producing multiple lines,
+             to ease automatic processing of status output.  */
+          bool needs_escape = ! status_only && strchr (filename, '\n');
 
           ++n_properly_formatted_lines;
 
@@ -570,7 +604,12 @@ digest_check (const char *checkfile_name)
             {
               ++n_open_or_read_failures;
               if (!status_only)
-                printf (_("%s: FAILED open or read\n"), quote (filename));
+                {
+                  if (needs_escape)
+                    putchar ('\\');
+                  print_filename (filename, needs_escape);
+                  printf (": %s\n", _("FAILED open or read"));
+                }
             }
           else
             {
@@ -591,10 +630,17 @@ digest_check (const char *checkfile_name)
 
               if (!status_only)
                 {
+                  if (cnt != digest_bin_bytes || ! quiet)
+                    {
+                      if (needs_escape)
+                        putchar ('\\');
+                      print_filename (filename, needs_escape);
+                    }
+
                   if (cnt != digest_bin_bytes)
-                    printf ("%s: %s\n", quote (filename), _("FAILED"));
+                    printf (": %s\n", _("FAILED"));
                   else if (!quiet)
-                    printf ("%s: %s\n", quote (filename), _("OK"));
+                    printf (": %s\n", _("OK"));
                 }
             }
         }
@@ -655,37 +701,6 @@ digest_check (const char *checkfile_name)
           && n_mismatched_checksums == 0
           && n_open_or_read_failures == 0
           && (!strict || n_improperly_formatted_lines == 0));
-}
-
-/* If ESCAPE is true, then translate each NEWLINE byte to the string, "\\n",
-   and each backslash to "\\\\".  */
-static void
-print_filename (char const *file, bool escape)
-{
-  if (! escape)
-    {
-      fputs (file, stdout);
-      return;
-    }
-
-  while (*file)
-    {
-      switch (*file)
-        {
-        case '\n':
-          fputs ("\\n", stdout);
-          break;
-
-        case '\\':
-          fputs ("\\\\", stdout);
-          break;
-
-        default:
-          putchar (*file);
-          break;
-        }
-      file++;
-    }
 }
 
 int
