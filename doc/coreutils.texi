@@ -2951,7 +2951,9 @@ Without this option, when @command{tail} encounters a file that doesn't
 exist or is otherwise inaccessible, it reports that fact and
 never checks it again.
 
-@item --sleep-interval=@var{number}
+@item -s @var{number}
+@itemx --sleep-interval=@var{number}
+@opindex -s
 @opindex --sleep-interval
 Change the number of seconds to wait between iterations (the default is 1.0).
 During one iteration, every specified file is checked to see if it has
@@ -3386,12 +3388,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex output file name prefix
 Use @var{prefix} as the output file name prefix.
 
-@item -b @var{suffix}
-@itemx --suffix=@var{suffix}
+@item -b @var{format}
+@itemx --suffix-format=@var{format}
 @opindex -b
-@opindex --suffix
+@opindex --suffix-format
 @cindex output file name suffix
-Use @var{suffix} as the output file name suffix.  When this option is
+Use @var{format} as the output file name suffix.  When this option is
 specified, the suffix string must include exactly one
 @code{printf(3)}-style conversion specification, possibly including
 format specification flags, a field width, a precision specifications,
@@ -3399,7 +3401,7 @@ or all of these kinds of modifiers.  The format letter must convert a
 binary unsigned integer argument to readable form.  The format letters
 @samp{d} and @samp{i} are aliases for @samp{u}, and the
 @samp{u}, @samp{o}, @samp{x}, and @samp{X} conversions are allowed.  The
-entire @var{suffix} is given (with the current output file number) to
+entire @var{format} is given (with the current output file number) to
 @code{sprintf(3)} to form the file name suffixes for each of the
 individual output files in turn.  If this option is used, the
 @option{--digits} option is ignored.
@@ -4715,7 +4717,7 @@ operation modes:
 
 @table @samp
 
-@item -n @var{lines}
+@item -n @var{count}
 @itemx --head-count=@var{count}
 @opindex -n
 @opindex --head-count
@@ -5195,6 +5197,8 @@ quite blindly.
 
 @item -f
 @itemx --ignore-case
+@opindex -f
+@opindex --ignore-case
 Fold lower case letters to upper case for sorting.
 
 @end table
@@ -5207,6 +5211,8 @@ Fold lower case letters to upper case for sorting.
 
 @item -b @var{file}
 @itemx --break-file=@var{file}
+@opindex -b
+@opindex --break-file
 
 This option provides an alternative (to @option{-W}) method of describing
 which characters make up words.  It introduces the name of a
@@ -5224,6 +5230,8 @@ characters even if not included in the Break file.
 
 @item -i @var{file}
 @itemx --ignore-file=@var{file}
+@opindex -i
+@opindex --ignore-file
 
 The file associated with this option contains a list of words which will
 never be taken as keywords in concordance output.  It is called the
@@ -5233,6 +5241,8 @@ end of line separation of words is not subject to the value of the
 
 @item -o @var{file}
 @itemx --only-file=@var{file}
+@opindex -o
+@opindex --only-file
 
 The file associated with this option contains a list of words which will
 be retained in concordance output; any word not mentioned in this file
@@ -5246,6 +5256,8 @@ if it is listed in the Only file and not in the Ignore file.
 
 @item -r
 @itemx --references
+@opindex -r
+@opindex --references
 
 On each input line, the leading sequence of non-white space characters will be
 taken to be a reference that has the purpose of identifying this input
@@ -5263,6 +5275,8 @@ excluded from the output contexts.
 
 @item -S @var{regexp}
 @itemx --sentence-regexp=@var{regexp}
+@opindex -S
+@opindex --sentence-regexp
 
 This option selects which regular expression will describe the end of a
 line or the end of a sentence.  In fact, this regular expression is not
@@ -5306,6 +5320,8 @@ corresponding characters by @command{ptx} itself.
 
 @item -W @var{regexp}
 @itemx --word-regexp=@var{regexp}
+@opindex -W
+@opindex --word-regexp
 
 This option selects which regular expression will describe each keyword.
 By default, if GNU extensions are enabled, a word is a sequence of
@@ -5350,12 +5366,16 @@ Output format is further controlled by the following options.
 
 @item -g @var{number}
 @itemx --gap-size=@var{number}
+@opindex -g
+@opindex --gap-size
 
 Select the size of the minimum white space gap between the fields on the
 output line.
 
 @item -w @var{number}
 @itemx --width=@var{number}
+@opindex -w
+@opindex --width
 
 Select the maximum output width of each final line.  If references are
 used, they are included or excluded from the maximum output width
@@ -5369,6 +5389,8 @@ them.
 
 @item -A
 @itemx --auto-reference
+@opindex -A
+@opindex --auto-reference
 
 Select automatic references.  Each input line will have an automatic
 reference made up of the file name and the line ordinal, with a single
@@ -5379,6 +5401,8 @@ reference is used at output time, overriding the input reference.
 
 @item -R
 @itemx --right-side-refs
+@opindex -R
+@opindex --right-side-refs
 
 In the default output format, when option @option{-R} is not used, any
 references produced by the effect of options @option{-r} or @option{-A} are
@@ -5393,7 +5417,9 @@ This option is automatically selected whenever GNU extensions are
 disabled.
 
 @item -F @var{string}
-@itemx --flac-truncation=@var{string}
+@itemx --flag-truncation=@var{string}
+@opindex -F
+@opindex --flag-truncation
 
 This option will request that any truncation in the output be reported
 using the string @var{string}.  Most output fields theoretically extend
@@ -5416,12 +5442,16 @@ the corresponding characters by @command{ptx} itself.
 
 @item -M @var{string}
 @itemx --macro-name=@var{string}
+@opindex -M
+@opindex --macro-name
 
 Select another @var{string} to be used instead of @samp{xx}, while
 generating output suitable for @command{nroff}, @command{troff} or @TeX{}.
 
 @item -O
 @itemx --format=roff
+@opindex -O
+@opindex --format=roff
 
 Choose an output format suitable for @command{nroff} or @command{troff}
 processing.  Each output line will look like:
@@ -5443,6 +5473,8 @@ so it will be correctly processed by @command{nroff} or @command{troff}.
 
 @item -T
 @itemx --format=tex
+@opindex -T
+@opindex --format=tex
 
 Choose an output format suitable for @TeX{} processing.  Each output
 line will look like:
@@ -7437,7 +7469,7 @@ TAB following a non-ASCII byte.  You can avoid that issue by using the
 @option{-T0} option or put @code{TABSIZE=0} in your environment, to tell
 @command{ls} to align using spaces, not tabs.
 
-@item -w
+@item -w @var{cols}
 @itemx --width=@var{cols}
 @opindex -w
 @opindex --width
@@ -10810,7 +10842,7 @@ Change the access time only.
 @opindex --no-create
 Do not warn about or create files that do not exist.
 
-@item -d
+@item -d @var{time}
 @itemx --date=@var{time}
 @opindex -d
 @opindex --date
@@ -17245,8 +17277,8 @@ Options must precede operands.
 @table @samp
 @item -f @var{format}
 @itemx --format=@var{format}
-@opindex -f @var{format}
-@opindex --format=@var{format}
+@opindex -f
+@opindex --format
 @cindex formatting of numbers in @command{seq}
 Print all numbers using @var{format}.
 @var{format} must contain exactly one of the @samp{printf}-style
@@ -17267,12 +17299,16 @@ the default format is @samp{%g}.
 
 @item -s @var{string}
 @itemx --separator=@var{string}
+@opindex -s
+@opindex --separator
 @cindex separator for numbers in @command{seq}
 Separate numbers with @var{string}; default is a newline.
 The output always terminates with a newline.
 
 @item -w
 @itemx --equal-width
+@opindex -w
+@opindex --equal-width
 Print all numbers with the same width, by padding with leading zeros.
 @var{first}, @var{step}, and @var{last} should all use a fixed point
 decimal representation.
