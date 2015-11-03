@@ -1581,6 +1581,7 @@ decode_switches (int argc, char **argv)
       if (isatty (STDOUT_FILENO))
         {
           format = many_per_line;
+          set_quoting_style (NULL, shell_escape_quoting_style);
           /* See description of qmark_funny_chars, above.  */
           qmark_funny_chars = true;
         }

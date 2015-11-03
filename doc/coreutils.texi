@@ -7704,8 +7704,8 @@ this"} in the default C locale.  This looks nicer on many displays.
 
 You can specify the default value of the @option{--quoting-style} option
 with the environment variable @env{QUOTING_STYLE}@.  If that environment
-variable is not set, the default value is @samp{literal}, but this
-default may change to @samp{shell} in a future version of this package.
+variable is not set, the default value is @samp{shell-escape} when the
+output is a terminal, and @samp{literal} otherwise.
 
 @item --show-control-chars
 @opindex --show-control-chars

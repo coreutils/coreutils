@@ -32,6 +32,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now prefers sources towards the root of a device when
   eliding duplicate bind mounted entries.
 
+  ls now quotes file names unambiguously and appropriate for use in a shell,
+  when outputting to a terminal.
+
 ** Improvements
 
   All utilities now quote user supplied arguments in error strings,
