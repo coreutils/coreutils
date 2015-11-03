@@ -4906,8 +4906,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
-                               literal, locale, shell, shell-always, c, escape\
-\n\
+                               literal, locale, shell, shell-always,\n\
+                               shell-escape, shell-escape-always, c, escape\n\
 "), stdout);
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\

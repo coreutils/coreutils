@@ -7676,6 +7676,12 @@ The quoting is suitable for POSIX-compatible shells like
 like @command{csh}.
 @item shell-always
 Quote strings for the shell, even if they would normally not require quoting.
+@item shell-escape
+Like @samp{shell}, but also quoting non-printable characters using the POSIX
+proposed @samp{$''} syntax suitable for most shells.
+@item shell-escape-always
+Like @samp{shell-escape}, but quote strings even if they would
+normally not require quoting.
 @item c
 Quote strings as for C character string literals, including the
 surrounding double-quote characters; this is the same as the
