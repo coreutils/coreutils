@@ -12075,13 +12075,21 @@ one.
 
 @item
 @kindex %b
-@command{printf} has an additional directive, @samp{%b}, which prints its
+An additional directive @samp{%b}, prints its
 argument string with @samp{\} escapes interpreted in the same way as in
 the @var{format} string, except that octal escapes are of the form
 @samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.  If
 @samp{\@var{ooo}} is nine-bit value, ignore the ninth bit.
 If a precision is also given, it limits the number of bytes printed
 from the converted string.
+
+@item
+@kindex %q
+An additional directive @samp{%q}, prints its argument string
+in a format that can be reused as input by most shells.
+Non-printable characters are escaped with the POSIX proposed @samp{$''} syntax,
+and shell metacharacters are quoted appropriately.
+This is an equivalent format to @command{ls --quoting=shell-escape} output.
 
 @item
 Numeric arguments must be single C constants, possibly with leading

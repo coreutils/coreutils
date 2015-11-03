@@ -15,6 +15,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   base32 is added to complement the existing base64 command,
   and encodes and decodes printable text as per RFC 4648.
 
+** New features
+
+  printf now supports the '%q' format to print arguments in a form that
+  is reusable by most shells, with non-printable characters escaped
+  with the POSIX proposed $'...' syntax.
+
 ** Changes in behavior
 
   base64 no longer supports hex or oct --wrap parameters,

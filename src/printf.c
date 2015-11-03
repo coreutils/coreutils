@@ -41,6 +41,10 @@
    %b = print an argument string, interpreting backslash escapes,
      except that octal escapes are of the form \0 or \0ooo.
 
+   %q = print an argument string in a format that can be
+     reused as shell input.  Escaped characters used the proposed
+     POSIX $'' syntax supported by most shells.
+
    The 'format' argument is re-used as many times as necessary
    to convert all of the given arguments.
 
@@ -124,7 +128,9 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   %%      a single %\n\
   %b      ARGUMENT as a string with '\\' escapes interpreted,\n\
           except that octal escapes are of the form \\0 or \\0NNN\n\
-\n\
+  %q      ARGUMENT is printed in a format that can be reused as shell input,\n\
+          escaping non-printable characters with the proposed POSIX $'' syntax.\
+\n\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 "), stdout);
@@ -500,6 +506,18 @@ print_formatted (const char *format, int argc, char **argv)
               if (argc > 0)
                 {
                   print_esc_string (*argv);
+                  ++argv;
+                  --argc;
+                }
+              break;
+            }
+
+          if (*f == 'q')
+            {
+              if (argc > 0)
+                {
+                  fputs (quotearg_style (shell_escape_quoting_style, *argv),
+                         stdout);
                   ++argv;
                   --argc;
                 }
