@@ -4082,7 +4082,11 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
       quotearg_buffer (buf, len + 1, name, -1, options);
     }
 
-  if (qmark_funny_chars)
+  enum quoting_style qs = get_quoting_style (options);
+
+  if (qmark_funny_chars
+      && (qs == shell_quoting_style || qs == shell_always_quoting_style
+          || qs == literal_quoting_style))
     {
       if (MB_CUR_MAX > 1)
         {
