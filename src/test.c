@@ -48,6 +48,9 @@
 #include "stat-time.h"
 #include "strnumcmp.h"
 
+#include <stdarg.h>
+#include "verror.h"
+
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
@@ -81,17 +84,16 @@ static bool term (void);
 static bool and (void);
 static bool or (void);
 
-static void test_syntax_error (char const *format, char const *arg)
+static void test_syntax_error (char const *format, ...)
      ATTRIBUTE_NORETURN;
 static void beyond (void) ATTRIBUTE_NORETURN;
 
 static void
-test_syntax_error (char const *format, char const *arg)
+test_syntax_error (char const *format, ...)
 {
-  fprintf (stderr, "%s: ", argv[0]);
-  fprintf (stderr, format, arg);
-  fputc ('\n', stderr);
-  fflush (stderr);
+  va_list ap;
+  va_start (ap, format);
+  verror (0, 0, format, ap);
   test_exit (TEST_FAILURE);
 }
 
@@ -240,10 +242,11 @@ term (void)
 
       value = posixtest (nargs);
       if (argv[pos] == 0)
-        test_syntax_error (_("')' expected"), NULL);
+        test_syntax_error (_("%s expected"), quote (")"));
       else
         if (argv[pos][0] != ')' || argv[pos][1])
-          test_syntax_error (_("')' expected, found %s"), quote (argv[pos]));
+          test_syntax_error (_("%s expected, found %s"),
+                             quote_n (0, ")"), quote_n (1, argv[pos]));
       advance (false);
     }
 
@@ -857,7 +860,7 @@ main (int margc, char **margv)
             }
         }
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
-        test_syntax_error (_("missing ']'"), NULL);
+        test_syntax_error (_("missing %s"), quote ("]"));
 
       --margc;
     }
