@@ -502,10 +502,9 @@ main (int argc, char **argv)
     {
       /* Don't use the quote() quoting style, because that would double the
          number of displayed backslashes, making the diagnostic look bogus.  */
-      set_quoting_style (NULL, c_maybe_quoting_style);
       error (EXIT_FAILURE, 0,
              _("delimiter list ends with an unescaped backslash: %s"),
-             quotearg_colon (delim_arg));
+             quotearg_n_style_colon (0, c_maybe_quoting_style, delim_arg));
     }
 
   if (!serial_merge)

@@ -218,6 +218,17 @@ sc_error_shell_always_quotes:
 	       exit 1; }  \
 	  || :
 
+# Avoid unstyled quoting to internal slots and thus destined for diagnostics
+# as that can leak unescaped control characters to the output, when using
+# the default "literal" quoting style.
+# Instead use quotef(), or quoteaf() or in edge cases quotearg_n_style_colon().
+# A more general PCRE would be @prohibit='quotearg_.*(?!(style|buffer))'
+sc_prohibit-quotearg:
+	@prohibit='quotearg(_n)?(|_colon|_char|_mem) ' \
+	in_vc_files='\.c$$' \
+	halt='Unstyled diagnostic quoting detected' \
+	  $(_sc_search_regexp)
+
 sc_sun_os_names:
 	@grep -nEi \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
