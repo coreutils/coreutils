@@ -44,9 +44,8 @@ my @Tests =
    # Specifying a delimiter with a trailing backslash would overrun a
    # malloc'd buffer.
    ['delim-bs1', q!-d'\'!, {IN=>{'a'x50=>''}}, {EXIT => 1},
-    # We print a single backslash into the expected output, so need four
-    # (two, each escaped) here.
-    {ERR => $msg . q!\\\\! . "\n"} ],
+    # We print a single backslash into the expected output
+    {ERR => $msg . q!\\! . "\n"} ],
 
    # Prior to coreutils-5.1.2, this sort of abuse would make paste
    # scribble on command-line arguments.  With paste from coreutils-5.1.0,
@@ -55,7 +54,7 @@ my @Tests =
    # $ paste -d\\ '123\b\b\b.....@' 2>&1 |cat -A
    # paste: 23^H^H^H.....@...@: No such file or directory$
    ['delim-bs2', q!-d'\'!, {IN=>{'123\b\b\b.....@'=>''}}, {EXIT => 1},
-    {ERR => $msg . q!\\\\! . "\n"} ],
+    {ERR => $msg . q!\\! . "\n"} ],
   );
 
 my $save_temps = $ENV{DEBUG};
