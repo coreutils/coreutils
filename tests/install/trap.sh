@@ -19,12 +19,12 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ginstall
+require_trap_signame_
 
 
 # Use a subshell and an exec to work around a bug in FreeBSD 5.0 /bin/sh.
 (
-  # ash doesn't support "trap '' CHLD"; it knows only signal numbers.
-  sig=$(env kill -l CHLD 2>/dev/null) && trap '' $sig
+  trap '' CHLD
 
   # Before 2004-04-21, install would infloop, in the 'while (wait...' loop:
   exec ginstall -s "$abs_top_builddir/src/ginstall$EXEEXT" .

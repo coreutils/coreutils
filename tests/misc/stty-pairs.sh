@@ -23,6 +23,8 @@ expensive_
 
 # Make sure there's a tty on stdin.
 require_controlling_input_terminal_
+require_trap_signame_
+
 trap '' TTOU # Ignore SIGTTOU
 
 # Get the reversible settings from stty.c.

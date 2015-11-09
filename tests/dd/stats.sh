@@ -18,8 +18,9 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
+require_trap_signame_
 
-env kill -l | grep '^INFO$' && SIGINFO='INFO' || SIGINFO='USR1'
+kill -l | grep 'INFO' && SIGINFO='INFO' || SIGINFO='USR1'
 
 # This to avoid races in the USR1 case
 # as the dd process will terminate by default until

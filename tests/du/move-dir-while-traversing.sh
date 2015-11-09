@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
+require_trap_signame_
 
 # We use a python-inotify script, so...
 python -m pyinotify -h > /dev/null \

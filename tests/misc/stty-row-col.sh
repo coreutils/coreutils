@@ -32,6 +32,8 @@ export LC_ALL
 print_ver_ stty
 
 require_controlling_input_terminal_
+require_trap_signame_
+
 trap '' TTOU # Ignore SIGTTOU
 
 # Versions of GNU stty from shellutils-1.9.2c and earlier failed

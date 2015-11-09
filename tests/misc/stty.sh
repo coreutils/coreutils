@@ -21,6 +21,8 @@
 print_ver_ stty
 
 require_controlling_input_terminal_
+require_trap_signame_
+
 trap '' TTOU # Ignore SIGTTOU
 
 # Get the reversible settings from stty.c.
