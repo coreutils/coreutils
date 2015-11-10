@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Make sure stty can parse most of its options.
 
 # Copyright (C) 1998-2015 Free Software Foundation, Inc.

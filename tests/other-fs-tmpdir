@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 # Use stat to find a writable directory on a file system different from that
 # of the current directory.  If one is found, create a temporary directory

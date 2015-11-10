@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Test "nice".
 
 # Copyright (C) 2002-2015 Free Software Foundation, Inc.

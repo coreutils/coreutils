@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Basic tests for "install".
 
 # Copyright (C) 1998-2015 Free Software Foundation, Inc.

@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Make sure all of these programs work properly
 # when invoked with --help or --version.
 

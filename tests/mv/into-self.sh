@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Demonstrate how mv fails when it tries to move a directory into itself.
 
 # Copyright (C) 1998-2015 Free Software Foundation, Inc.
