@@ -31,7 +31,8 @@ done
 
 # Check the many small items case,
 # both fitting and overflowing the internal buffer
-if env true $(seq 4000); then
+external=env
+if external true $(seq 4000); then
   for i in 100 4000; do
     seq $i | paste -s -d ' ' | sed p > out.1
     yes $(seq $i) | head -n2 > out.2

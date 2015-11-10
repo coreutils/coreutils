@@ -18,7 +18,6 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ groups
-require_built_ groups
 
 # Coreutils 6.9 and earlier failed to display information on first argument
 # if later argument was --.

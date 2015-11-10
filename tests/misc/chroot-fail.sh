@@ -18,9 +18,7 @@
 
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ chroot
-
-require_built_ chroot
+print_ver_ chroot pwd
 
 # These tests verify exact status of internal failure; since none of
 # them actually run a command, we don't need root privileges

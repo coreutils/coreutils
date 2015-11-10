@@ -527,6 +527,20 @@ sc_prohibit_verbose_version:
 	halt='use the print_ver_ function instead...'			\
 	  $(_sc_search_regexp)
 
+# Enforce print_ver_ tracking of dependencies
+# Each coreutils specific program a test requires
+# should be tagged by calling through env(1).
+sc_env_test_dependencies:
+	@cd $(top_srcdir) && GIT_PAGER= git grep -E \
+	    "env ($$(build-aux/gen-lists-of-programs.sh --list-progs | \
+		grep -vF '[' |paste -d'|' -s))" tests | \
+	    sed "s/\([^:]\):.*env \([^)' ]*\).*/\1 \2/" | uniq | \
+	    while read test prog; do \
+	      printf '%s' $$test | grep -q '\.pl$$' && continue; \
+	      grep -q "print_ver_.* $$prog" $$test \
+		|| echo $$test should call: print_ver_ $$prog; \
+	    done | grep . && exit 1 || :
+
 # Use framework_failure_, not the old name without the trailing underscore.
 sc_prohibit_framework_failure:
 	@prohibit='\<framework_''failure\>'				\

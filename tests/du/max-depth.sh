@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ du
 
 mkdir -p a/b/c/d/e || framework_failure_
 printf 'a/b/c\na/b\na\n' > exp || framework_failure_

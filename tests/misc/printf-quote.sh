@@ -16,13 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-prog='env printf'
-
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ printf
 
+prog='env printf'
+
 # Equivalent output to ls --quoting=shell-escape
-env printf '%q\n' '' "'" a 'a b' '~a' 'a~' "$(env printf %b 'a\r')" > out
+$prog '%q\n' '' "'" a 'a b' '~a' 'a~' "$($prog %b 'a\r')" > out
 cat <<\EOF > exp || framework_failure_
 ''
 ''\'''
@@ -40,11 +40,11 @@ f=$LOCALE_FR_UTF8
 if test "$LOCALE_FR_UTF8" != "none"; then
   (
    #printable multi-byte
-   LC_ALL=$f env printf '%q\n' 'áḃç' > out
+   LC_ALL=$f $prog '%q\n' 'áḃç' > out
    #non-printable multi-byte
-   LC_ALL=$f env printf '%q\n' "$(LC_ALL=$f env printf '\u0378')" >> out
+   LC_ALL=$f $prog '%q\n' "$(LC_ALL=$f $prog '\u0378')" >> out
    #printable multi-byte in C locale
-   LC_ALL=C env printf '%q\n' 'áḃç' >> out
+   LC_ALL=C $prog '%q\n' 'áḃç' >> out
   )
   cat <<\EOF > exp || framework_failure_
 áḃç

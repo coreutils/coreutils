@@ -213,7 +213,8 @@ id_setup () { args=-u; }
 
 # Use env to avoid invoking built-in sleep of Solaris 11's /bin/sh.
 kill_setup () {
-  env sleep 10m & pid=$!
+  external=env
+  $external sleep 10m & pid=$!
   args=$pid
 }
 

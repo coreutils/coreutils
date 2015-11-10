@@ -32,7 +32,7 @@ TESTSUITE_PERL = $(SHELL) $(srcdir)/no-perl
 endif
 
 # Options passed to the perl invocations running the perl test scripts.
-TESTSUITE_PERL_OPTIONS = -w -I$(srcdir)/tests -MCoreutils -MCuSkip
+TESTSUITE_PERL_OPTIONS = -w -I$(srcdir)/tests -MCuSkip -MCoreutils
 # '$f' is set by the Automake-generated test harness to the path of the
 # current test script stripped of VPATH components, and is used by the
 # CuTmpdir module to determine the name of the temporary files to be

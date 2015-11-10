@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ touch
+print_ver_ touch test
 
 
 touch -c no-file > /dev/null 2>&1 || fail=1

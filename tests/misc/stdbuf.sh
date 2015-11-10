@@ -20,7 +20,6 @@
 print_ver_ stdbuf
 
 getlimits_
-require_built_ stdbuf
 
 # stdbuf fails when the absolute top build dir name contains e.g.,
 # space, TAB, NL

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ ls
+print_ver_ ls printf
 require_root_
 
 grep '^#define HAVE_CAP 1' $CONFIG_HEADER > /dev/null \

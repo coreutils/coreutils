@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ dd
+print_ver_ dd printf
 
 {
   # Two lines, EBCDIC " A A" and " A  ", followed by all the bytes in order.

@@ -19,8 +19,6 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ arch
 
-require_built_ arch
-
 arch > out || fail=1
 uname -m > exp || fail=1
 

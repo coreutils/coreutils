@@ -517,7 +517,9 @@ man1_MANS=`
 
 # Not installed by "make install", but must be built when creating
 # a distribution tarball.
-EXTRA_MANS=`for p in $no_install_progs_default; do echo man/$p.1; done`
+EXTRA_MANS=`for p in $no_install_progs_default $gl_no_install_prog; do
+              echo man/$p.1
+            done`
 
 # Replace all the programs by the single binary and symlinks if specified.
 single_binary_progs=

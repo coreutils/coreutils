@@ -23,7 +23,6 @@ use strict;
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my $prog = "$ENV{abs_top_builddir}/src/test";
 my @Tests =
     (
      # In coreutils-5.93, this diagnostic lacked the newline.
@@ -34,6 +33,6 @@ my @Tests =
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
-
-my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+my $prog = 'test';
+my $fail = run_tests ($program_name, \$prog, \@Tests, $save_temps, $verbose);
 exit $fail;

@@ -18,7 +18,6 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ groups
-require_built_ groups
 
 groups --version | sed 's/^groups/id/; /^$/q' > out || fail=1
 id --version | sed '/^$/q' > exp || fail=1

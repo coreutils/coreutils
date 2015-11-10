@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ tail
+print_ver_ tail sleep
 
 # Terminate any background gdb/tail process
 cleanup_() {

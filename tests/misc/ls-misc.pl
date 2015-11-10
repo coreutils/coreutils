@@ -55,7 +55,7 @@ sub shell_quote($)
 # that cannot be done.
 sub setuid_setup()
 {
-  my $test = shell_quote "$ENV{abs_top_builddir}/src/test";
+  my $test = 'env test';
   system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
            touch setgid && chmod g+s setgid && $test -g setgid &&
            mkdir sticky && chmod +t sticky  && $test -k sticky &&

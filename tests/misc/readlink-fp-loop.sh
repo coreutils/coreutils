@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ readlink
+print_ver_ readlink pwd
 cwd=$(env pwd -P)
 
 # To trigger this bug, we have to construct a name/situation during

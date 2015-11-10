@@ -68,6 +68,7 @@ $@
     {
       my $exp = new Expect;
       $exp->log_user(0);
+      $ENV{built_programs} =~ /\b$cmd\b/ || next;
       $exp->spawn("$cmd 2> $stderr")
         or (warn "$ME: cannot run '$cmd': $!\n"), $fail=1, next;
       # No input for cut -f2.
