@@ -245,6 +245,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
          a comment.  The S_MAGIC_... name and constant are automatically
          combined to produce the #define directives in fs.h.  */
 
+    case S_MAGIC_ACFS: /* 0x61636673 remote */
+      return "acfs";
     case S_MAGIC_ADFS: /* 0xADF5 local */
       return "adfs";
     case S_MAGIC_AFFS: /* 0xADFF local */
@@ -266,10 +268,14 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "bdevfs";
     case S_MAGIC_BFS: /* 0x1BADFACE local */
       return "bfs";
+    case S_MAGIC_BPF_FS: /* 0xCAFE4A11 local */
+      return "bpf_fs";
     case S_MAGIC_BINFMTFS: /* 0x42494E4D local */
       return "binfmt_misc";
     case S_MAGIC_BTRFS: /* 0x9123683E local */
       return "btrfs";
+    case S_MAGIC_BTRFS_TEST: /* 0x73727279 local */
+      return "btrfs_test";
     case S_MAGIC_CEPH: /* 0x00C36400 remote */
       return "ceph";
     case S_MAGIC_CGROUP: /* 0x0027E0EB local */
@@ -380,6 +386,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "nfsd";
     case S_MAGIC_NILFS: /* 0x3434 local */
       return "nilfs";
+    case S_MAGIC_NSFS: /* 0x6E736673 local */
+      return "nsfs";
     case S_MAGIC_NTFS: /* 0x5346544E local */
       return "ntfs";
     case S_MAGIC_OPENPROM: /* 0x9FA1 local */
@@ -431,6 +439,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "sysv4";
     case S_MAGIC_TMPFS: /* 0x01021994 local */
       return "tmpfs";
+    case S_MAGIC_TRACEFS: /* 0x74726163 local */
+      return "tracefs";
     case S_MAGIC_UBIFS: /* 0x24051905 local */
       return "ubifs";
     case S_MAGIC_UDF: /* 0x15013346 local */
