@@ -1051,7 +1051,13 @@ close_output_file (void)
 static void
 save_line_to_file (const struct cstring *line)
 {
-  fwrite (line->str, sizeof (char), line->len, output_stream);
+  size_t l = fwrite (line->str, sizeof (char), line->len, output_stream);
+  if (l != line->len)
+    {
+      error (0, errno, _("write error for %s"), quoteaf (output_filename));
+      output_stream = NULL;
+      cleanup_fatal ();
+    }
   bytes_written += line->len;
 }
 
