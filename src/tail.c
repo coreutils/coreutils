@@ -193,7 +193,7 @@ static bool tag_lines;
 /* If true, print time in tags. */
 static bool tag_lines_time;
 
-/* Colors used to print tags in -t mode. */
+/* Colors used to print tag prefix in -t mode. */
 static int const stdout_colors[] =
 {
   31, 32, 33, 34, 35, 36, 37, 0
@@ -303,7 +303,9 @@ With more than one FILE, precede each with a header giving the file name.\n\
                              to see if it has been unlinked or renamed\n\
                              (this is the usual case of rotated log files);\n\
                              with inotify, this option is rarely useful\n\
-      --multicolor         enable multicolor mode\n\
+      --multicolor         enable multicolor mode;\n\
+                             multicolor mode available for --tag and color\n\
+                             prefix in different colors for each file\n\
 "),
              DEFAULT_N_LINES,
              DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
@@ -318,8 +320,8 @@ With more than one FILE, precede each with a header giving the file name.\n\
                              (default 1.0) between iterations;\n\
                              with inotify and --pid=P, check process P at\n\
                              least once every N seconds\n\
-  -t, --tag                with -f, prints time and filename prefix for\n\
-                             each line\n\
+  -t, --tag                print filename prefix foreach line; \n\
+                             with --follow, also print time\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -356,16 +358,21 @@ valid_file_spec (struct File_spec const *f)
 static char const *
 pretty_name (struct File_spec const *f)
 {
+  return (STREQ (f->name, "-") ? _("standard input") : f->name);
+}
+
+static char const *
+short_name (const char *filename)
+{
   int lsi = 0;
   if (tag_lines)
     {
-      for (lsi = strlen (f->name) - 1; lsi >= 0; --lsi)
-        if (f->name[lsi] == '/')
+      for (lsi = strlen (filename) - 1; lsi >= 0; --lsi)
+        if (filename[lsi] == '/')
           break;
       ++lsi;
     }
-
-  return (STREQ (f->name, "-") ? _("standard input") : f->name + lsi);
+  return filename + lsi;
 }
 
 /* Record a file F with descriptor FD, size SIZE, status ST, and
@@ -406,6 +413,9 @@ write_header (const char *pretty_filename)
   printf ("%s==> %s <==\n", (first_file ? "" : "\n"), pretty_filename);
   first_file = false;
 }
+
+/* Color code for FILENAME. Store list of all filenames and 
+   return color code from stdout_colors.  */
 
 static int
 filename_color (const char *filename)
@@ -451,6 +461,8 @@ filename_color (const char *filename)
   return stdout_colors[index];
 }
 
+/* Write current time.  */
+
 static void
 write_date ()
 {
@@ -458,31 +470,38 @@ write_date ()
   struct tm *local_time = localtime (&t);
   timezone_t time_zone = tzalloc (getenv ("TZ"));
 
-  fprintftime (stdout, "%H:%M:%S ", local_time, time_zone, 0);
+  fprintftime (stdout, "%H:%M:%S", local_time, time_zone, 0);
   tzfree (time_zone);
 }
+
+/* Write current time and short filename.  */
 
 static void
 write_tag (const char *pretty_filename)
 {
   size_t fnlen;
+  const char *short_filename = short_name (pretty_filename);
 
   if (multicolor_mode)
-    printf ("\x1b[%dm", filename_color (pretty_filename));
+    printf ("\x1b[%dm", filename_color (short_filename));
   
   if (tag_lines_time)
-    write_date ();
+    {
+      write_date ();
+      fputs (" ", stdout);
+    }
 
-  fnlen = strlen (pretty_filename);
+  fnlen = strlen (short_filename);
   if (fnlen > max_file_name_length)
     max_file_name_length = fnlen;
-  printf ("%-*s | ", max_file_name_length, pretty_filename);
+  printf ("%-*s | ", max_file_name_length, short_filename);
 
   if (multicolor_mode)
     fputs ("\x1b[0m", stdout);
 }
 
 /* Write N_BYTES from BUFFER to stdout.
+   If tag_lines is true append prefix with write_tag before each line.
    Exit immediately on error with a single diagnostic.  */
 
 static void
@@ -492,12 +511,12 @@ xwrite_stdout (char const *buffer, size_t n_bytes, char const *pretty_filename)
   bool is_error = false;
   if (tag_lines) 
     {
+      size_t fromIndex = 0, sub_n_bytes = 0;
       if (first_tag_remaining)
         {
           write_tag (pretty_filename);
           first_tag_remaining = false;
         }
-      size_t fromIndex = 0, sub_n_bytes = 0;
       for (size_t index = 0; index < n_bytes && !is_error; ++index)
         {
           if (buffer[index] == '\n')
@@ -2446,7 +2465,7 @@ main (int argc, char **argv)
   for (i = 0; i < n_files; i++)
     {
       F[i].name = file[i];
-      fnlen = strlen (pretty_name (&F[i]));
+      fnlen = strlen (short_name (pretty_name (&F[i])));
       if (max_file_name_length < fnlen)
         max_file_name_length = fnlen;
     }
