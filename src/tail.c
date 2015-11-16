@@ -36,6 +36,7 @@
 #include "c-strtod.h"
 #include "error.h"
 #include "fcntl--.h"
+#include "fprintftime.h"  
 #include "isapipe.h"
 #include "posixver.h"
 #include "quote.h"
@@ -180,10 +181,22 @@ static bool from_start;
 /* If true, print filename headers.  */
 static bool print_headers;
 
+/* If true, print tag(date, filename) prefix before each line.  */
+static bool tag_lines;
+
+/* Maximal file name length. */
+static int max_file_name_length;
+
+/* Colors used to print tags in -t mode. */
+static int const stdout_colors[] =
+{
+  31, 32, 33, 34, 35, 36, 37, 0
+};
+
 /* When to print the filename banners.  */
 enum header_mode
 {
-  multiple_files, always, never
+  multiple_files, per_line, always, never
 };
 
 /* When tailing a file by name, if there have been this many consecutive
@@ -237,6 +250,7 @@ static struct option const long_options[] =
   {"retry", no_argument, NULL, RETRY_OPTION},
   {"silent", no_argument, NULL, 'q'},
   {"sleep-interval", required_argument, NULL, 's'},
+  {"tag", no_argument, NULL, 't'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -295,6 +309,8 @@ With more than one FILE, precede each with a header giving the file name.\n\
                              (default 1.0) between iterations;\n\
                              with inotify and --pid=P, check process P at\n\
                              least once every N seconds\n\
+  -t, --tag                with -f, prints time and filename prefix for\n\
+                             each line\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -331,7 +347,16 @@ valid_file_spec (struct File_spec const *f)
 static char const *
 pretty_name (struct File_spec const *f)
 {
-  return (STREQ (f->name, "-") ? _("standard input") : f->name);
+  int lsi = 0;
+  if (tag_lines)
+    {
+      for (lsi = strlen (f->name) - 1; lsi >= 0; --lsi)
+        if (f->name[lsi] == '/')
+          break;
+      ++lsi;
+    }
+
+  return (STREQ (f->name, "-") ? _("standard input") : f->name + lsi);
 }
 
 /* Record a file F with descriptor FD, size SIZE, status ST, and
@@ -373,13 +398,113 @@ write_header (const char *pretty_filename)
   first_file = false;
 }
 
+static int
+filename_color (const char *filename)
+{
+  struct filename
+  {
+    char *name;
+    struct filename *next;
+  };
+  typedef struct filename FILENAME;
+  static FILENAME *filenames = NULL;
+  FILENAME *cur;
+  size_t index;
+
+  if (filenames == NULL)
+    {
+      filenames = xmalloc (sizeof (FILENAME));
+      filenames->name = xmalloc (strlen (filename) + 1);
+      strcpy (filenames->name, filename);
+      filenames->next = NULL;
+      return stdout_colors[0];
+    }
+  
+  cur = filenames;
+  index = 0;
+  while (! STREQ(cur->name, filename) && cur->next)
+    {
+      cur = cur->next;
+      ++index;
+      if (stdout_colors[index] == 0)
+        index = 0;
+    }
+  if (STREQ(cur->name, filename))
+    return stdout_colors[index];
+
+  cur->next = xmalloc (sizeof (FILENAME));
+  cur->next->name = xmalloc (strlen (filename) + 1);
+  strcpy (cur->next->name, filename);
+  cur->next->next = NULL;
+  ++index;
+  if (stdout_colors[index] == 0)
+    index = 0;
+  return stdout_colors[index];
+}
+
+static void
+write_tag (const char *pretty_filename)
+{
+  size_t fnlen;
+  time_t t = time(NULL);
+  struct tm *local_time = localtime (&t);
+  timezone_t time_zone = tzalloc (getenv ("TZ"));
+
+  printf ("\x1b[%dm", filename_color (pretty_filename));
+  fprintftime (stdout, "%H:%M:%S", local_time, time_zone, 0);
+  tzfree (time_zone);
+
+  fnlen = strlen (pretty_filename);
+  if (fnlen > max_file_name_length)
+    max_file_name_length = fnlen;
+  printf (" %-*s | \x1b[0m", max_file_name_length, pretty_filename);
+}
+
 /* Write N_BYTES from BUFFER to stdout.
    Exit immediately on error with a single diagnostic.  */
 
 static void
-xwrite_stdout (char const *buffer, size_t n_bytes)
+xwrite_stdout (char const *buffer, size_t n_bytes, char const *pretty_filename)
 {
-  if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) < n_bytes)
+  static bool first_tag_remaining = true;
+  bool is_error = false;
+  if (tag_lines) 
+    {
+      if (first_tag_remaining)
+        {
+          write_tag (pretty_filename);
+          first_tag_remaining = false;
+        }
+      size_t fromIndex = 0, sub_n_bytes = 0;
+      for (size_t index = 0; index < n_bytes && !is_error; ++index)
+        {
+          if (buffer[index] == '\n')
+            {
+              if (index == n_bytes - 1)
+                {
+                  first_tag_remaining = true;
+                  break;
+                }
+              sub_n_bytes = index - fromIndex + 1;
+              is_error = fwrite (buffer + fromIndex, 1, 
+                                sub_n_bytes, stdout) < sub_n_bytes;
+              if (!is_error)
+                write_tag (pretty_filename);
+              fromIndex = index + 1;
+            }
+        }
+      if (!is_error && fromIndex < n_bytes)
+        {
+          sub_n_bytes = n_bytes - fromIndex;
+          is_error = fwrite (buffer + fromIndex, 1, 
+                            sub_n_bytes, stdout) < sub_n_bytes;
+        }
+    }
+  else
+    {
+      is_error = n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) < n_bytes;
+    }
+  if (is_error)
     {
       clearerr (stdout); /* To avoid redundant close_stdout diagnostic.  */
       error (EXIT_FAILURE, errno, _("error writing %s"),
@@ -413,7 +538,7 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
         }
       if (bytes_read == 0)
         break;
-      xwrite_stdout (buffer, bytes_read);
+      xwrite_stdout (buffer, bytes_read, pretty_filename);
       n_written += bytes_read;
       if (n_bytes != COPY_TO_EOF)
         {
@@ -521,7 +646,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
               /* If this newline isn't the last character in the buffer,
                  output the part that is after it.  */
               if (n != bytes_read - 1)
-                xwrite_stdout (nl + 1, bytes_read - (n + 1));
+                xwrite_stdout (nl + 1, bytes_read - (n + 1), pretty_filename);
               *read_pos += dump_remainder (pretty_filename, fd,
                                            end_pos - (pos + bytes_read));
               return true;
@@ -679,11 +804,11 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
           }
       }
 
-    xwrite_stdout (beg, buffer_end - beg);
+    xwrite_stdout (beg, buffer_end - beg, pretty_filename);
   }
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite_stdout (tmp->buffer, tmp->nbytes);
+    xwrite_stdout (tmp->buffer, tmp->nbytes, pretty_filename);
 
 free_lbuffers:
   while (first)
@@ -781,10 +906,10 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
     i = total_bytes - n_bytes;
   else
     i = 0;
-  xwrite_stdout (&tmp->buffer[i], tmp->nbytes - i);
+  xwrite_stdout (&tmp->buffer[i], tmp->nbytes - i, pretty_filename);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite_stdout (tmp->buffer, tmp->nbytes);
+    xwrite_stdout (tmp->buffer, tmp->nbytes, pretty_filename);
 
 free_cbuffers:
   while (first)
@@ -823,7 +948,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
         {
           size_t n_remaining = bytes_read - n_bytes;
           if (n_remaining)
-            xwrite_stdout (&buffer[n_bytes], n_remaining);
+            xwrite_stdout (&buffer[n_bytes], n_remaining, pretty_filename);
           break;
         }
     }
@@ -865,7 +990,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
           if (--n_lines == 0)
             {
               if (p < buffer_end)
-                xwrite_stdout (p, buffer_end - p);
+                xwrite_stdout (p, buffer_end - p, pretty_filename);
               return 0;
             }
         }
@@ -2049,7 +2174,7 @@ parse_options (int argc, char **argv,
 {
   int c;
 
-  while ((c = getopt_long (argc, argv, "c:n:fFqs:v0123456789",
+  while ((c = getopt_long (argc, argv, "c:n:fFqs:tv0123456789",
                            long_options, NULL))
          != -1)
     {
@@ -2120,6 +2245,10 @@ parse_options (int argc, char **argv,
                      _("invalid number of seconds: %s"), quote (optarg));
             *sleep_interval = s;
           }
+          break;
+
+        case 't':
+          *header_mode = per_line;
           break;
 
         case 'v':
@@ -2203,6 +2332,7 @@ main (int argc, char **argv)
   size_t n_files;
   char **file;
   struct File_spec *F;
+  size_t fnlen;
   size_t i;
   bool obsolete_option;
 
@@ -2222,7 +2352,7 @@ main (int argc, char **argv)
   have_read_stdin = false;
 
   count_lines = true;
-  forever = from_start = print_headers = false;
+  forever = from_start = print_headers = tag_lines = false;
   obsolete_option = parse_obsolete_option (argc, argv, &n_units);
   argc -= obsolete_option;
   argv += obsolete_option;
@@ -2274,13 +2404,22 @@ main (int argc, char **argv)
   if (! n_units && ! forever && ! from_start)
     return EXIT_SUCCESS;
 
-  F = xnmalloc (n_files, sizeof *F);
-  for (i = 0; i < n_files; i++)
-    F[i].name = file[i];
-
   if (header_mode == always
       || (header_mode == multiple_files && n_files > 1))
     print_headers = true;
+
+  if (header_mode == per_line && forever)
+    tag_lines = true;
+
+  F = xnmalloc (n_files, sizeof *F);
+  max_file_name_length = 0;
+  for (i = 0; i < n_files; i++)
+    {
+      F[i].name = file[i];
+      fnlen = strlen (pretty_name (&F[i]));
+      if (max_file_name_length < fnlen)
+        max_file_name_length = fnlen;
+    }
 
   if (O_BINARY && ! isatty (STDOUT_FILENO))
     xfreopen (NULL, "wb", stdout);
