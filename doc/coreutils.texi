@@ -3002,6 +3002,11 @@ and when it prints the lines that have accumulated in the new log file.
 This option is meaningful only when polling (i.e., without inotify)
 and when following by name.
 
+@item --multicolor
+@opindex --multicolor
+Enable multicolor mode. Multicolor mode available for --tag and color
+prefix in different colors for each file.
+
 @item -n @var{k}
 @itemx --lines=@var{k}
 @opindex -n
@@ -3010,6 +3015,12 @@ Output the last @var{k} lines.
 However, if @var{k} starts with a @samp{+}, start printing with the
 @var{k}th line from the start of each file, instead of from the end.
 Size multiplier suffixes are the same as with the @option{-c} option.
+
+@item -t
+@itemx --tag
+@opindex -t
+@opindex --tag
+Print filename prefix for each line. With @option{--follow}, also print time.
 
 @item -q
 @itemx --quiet
