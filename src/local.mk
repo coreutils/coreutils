@@ -436,6 +436,7 @@ endif SINGLE_BINARY
 CLEANFILES += src/coreutils_symlinks
 src/coreutils_symlinks: Makefile
 	$(AM_V_GEN)touch $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)for i in x $(single_binary_progs); do \
 		test $$i = x && continue; \
 		rm -f src/$$i$(EXEEXT) || exit $$?; \
@@ -445,6 +446,7 @@ src/coreutils_symlinks: Makefile
 CLEANFILES += src/coreutils_shebangs
 src/coreutils_shebangs: Makefile
 	$(AM_V_GEN)touch $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)for i in x $(single_binary_progs); do \
 		test $$i = x && continue; \
 		rm -f src/$$i$(EXEEXT) || exit $$?; \
@@ -464,6 +466,7 @@ clean-local:
 BUILT_SOURCES += src/dircolors.h
 src/dircolors.h: src/dcgen src/dircolors.hin
 	$(AM_V_GEN)rm -f $@ $@-t
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) -w -- $(srcdir)/src/dcgen \
 				$(srcdir)/src/dircolors.hin > $@-t
 	$(AM_V_at)chmod a-w $@-t
@@ -476,6 +479,7 @@ src/dircolors.h: src/dcgen src/dircolors.hin
 # known ints (currently 128-bit).
 BUILT_SOURCES += $(top_srcdir)/src/primes.h
 $(top_srcdir)/src/primes.h:
+	$(AM_V_at)${MKDIR_P} src
 	$(MAKE) src/make-prime-list$(EXEEXT)
 	$(AM_V_GEN)rm -f $@ $@-t
 	$(AM_V_at)src/make-prime-list$(EXEEXT) 5000 > $@-t
@@ -553,6 +557,7 @@ src/fs-kernel-magic: Makefile src/fs-latest-magic.h
 BUILT_SOURCES += src/fs-is-local.h
 src/fs-is-local.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
 			  --local $(srcdir)/src/stat.c > $@t
 	$(AM_V_at)chmod a-w $@t
@@ -561,6 +566,7 @@ src/fs-is-local.h: src/stat.c src/extract-magic
 BUILT_SOURCES += src/fs.h
 src/fs.h: src/stat.c src/extract-magic
 	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)$(PERL) $(srcdir)/src/extract-magic \
 			  $(srcdir)/src/stat.c > $@t
 	$(AM_V_at)chmod a-w $@t
@@ -569,6 +575,7 @@ src/fs.h: src/stat.c src/extract-magic
 BUILT_SOURCES += src/version.c
 src/version.c: Makefile
 	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)printf '#include <config.h>\n' > $@t
 	$(AM_V_at)printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
 	$(AM_V_at)chmod a-w $@t
@@ -577,6 +584,7 @@ src/version.c: Makefile
 BUILT_SOURCES += src/version.h
 src/version.h: Makefile
 	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)printf 'extern char const *Version;\n' > $@t
 	$(AM_V_at)chmod a-w $@t
 	$(AM_V_at)mv $@t $@
@@ -589,6 +597,7 @@ src/version.h: Makefile
 DISTCLEANFILES += src/coreutils.h
 src/coreutils.h: Makefile
 	$(AM_V_GEN)rm -f $@
+	$(AM_V_at)${MKDIR_P} src
 	$(AM_V_at)for prog in x $(single_binary_progs); do	\
 	  test $$prog = x && continue;				\
 	  prog=`basename $$prog`;				\
