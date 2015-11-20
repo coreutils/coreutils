@@ -13019,6 +13019,11 @@ so it works with @command{zsh}, @command{bash}, and @command{ksh},
 but not with @command{/bin/sh}.  So if you write code like this
 in a shell script, be sure to start the script with @samp{#!/bin/bash}.
 
+Note also that if any of the process substitutions (or piped stdout)
+might exit early without consuming all the data, the @option{-p} option
+is needed to allow @command{tee} to continue to process the input
+to any remaining outputs.
+
 Since the above example writes to one file and one process,
 a more conventional and portable use of @command{tee} is even better:
 
@@ -13085,6 +13090,17 @@ tardir=your-pkg-M.N
 tar chof - "$tardir" \
   | tee >(gzip -9 -c > your-pkg-M.N.tar.gz) \
   | bzip2 -9 -c > your-pkg-M.N.tar.bz2
+@end example
+
+If you want to further process the output from process substitutions,
+and those processes write atomically (i.e., write less than the system's
+PIPE_BUF size at a time), that's possible with a construct like:
+
+@example
+tardir=your-pkg-M.N
+tar chof - "$tardir" \
+  | tee >(md5sum --tag) > >(sha256sum --tag) \
+  | sort | gpg --clearsign > your-pkg-M.N.tar.sig
 @end example
 
 @exitstatus
