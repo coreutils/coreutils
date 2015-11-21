@@ -2839,14 +2839,22 @@ tail [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If more than one @var{file} is specified, @command{tail} prints a
-one-line header consisting of:
+one-line header before the output for each @var{file}, consisting of:
 
 @example
 ==> @var{file name} <==
 @end example
 
-@noindent
-before the output for each @var{file}.
+For further processing of tail output, it can be useful to convert the
+file headers to line prefixes, which can be done like:
+
+@example
+tail @dots{} |
+awk '
+  /^==> .* <==$/ @{prefix=substr($0,5,length-8)":"; next@}
+  @{print prefix$0@}
+' | @dots{}
+@end example
 
 @cindex BSD @command{tail}
 GNU @command{tail} can output any amount of data (some other versions of
