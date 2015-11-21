@@ -31,7 +31,11 @@ chmod 600 d || framework_failure_
 ls -Log d > out
 test $? = 1 || fail=1
 
-cat <<\EOF > exp || fail=1
+# Linux 2.6.32 client with Isilon OneFS always returns d_type==DT_DIR ('d')
+# Newer Linux 3.10.0 returns the more correct DT_UNKNOWN ('?')
+grep '^[l?]?' out || skip_ 'unrecognized d_type returned'
+
+cat <<\EOF > exp || framework_failure_
 total 0
 ?????????? ? ?            ? s
 EOF
@@ -42,7 +46,7 @@ sed 's/^l/?/' out | compare exp - || fail=1
 rm -f out exp
 returns_ $LS_MINOR_PROBLEM ls --dired -l d > out || fail=1
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
   total 0
   ?????????? ? ? ? ?            ? s
 //DIRED// 44 45
