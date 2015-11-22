@@ -3830,6 +3830,14 @@ an MD5 checksum inconsistent with the associated file, or if no valid
 line is found, @command{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
+@item --ignore-missing
+@opindex --ignore-missing
+@cindex verifying MD5 checksums
+This option is useful only when verifying checksums.
+When verifying checksums, don't fail or report any status
+for missing files.  This is useful when verifying a subset
+of downloaded files given a larger list of checksums.
+
 @item --quiet
 @opindex --quiet
 @cindex verifying MD5 checksums

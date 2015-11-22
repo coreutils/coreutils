@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  md5sum now supports the --ignore-missing option to allow
+  verifying a subset of files given a larger list of checksums.
+  This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
+
   printf now supports the '%q' format to print arguments in a form that
   is reusable by most shells, with non-printable characters escaped
   with the POSIX proposed $'...' syntax.

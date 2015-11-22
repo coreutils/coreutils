@@ -25,6 +25,8 @@ my $prog = 'md5sum';
 
 my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
 
+my $try_help = "Try 'md5sum --help' for more information.\n";
+
 my @Tests =
     (
      ['1', {IN=> {f=> ''}},	{OUT=>"$degenerate  f\n"}],
@@ -120,6 +122,27 @@ my @Tests =
      ['check-openssl3', '--check', '--status',
                                 {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
                                 {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
+     ['check-ignore-missing-1', '--check', '--ignore-missing',
+                                {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  f\n".
+                                                  "$degenerate  f.missing\n"}},
+                                {OUT=>"f: OK\n"}],
+     ['check-ignore-missing-2', '--check', '--ignore-missing',
+                                {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  f\n".
+                                                  "$degenerate  f.missing\n"}},
+                                {OUT=>"f: OK\n"}],
+     ['check-ignore-missing-3', '--check', '--quiet', '--ignore-missing',
+                                {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  missing/f\n".
+                                                  "$degenerate  f\n"}},
+                                {OUT=>""}],
+     ['check-ignore-missing-4', '--ignore-missing',
+                                {IN=> {f=> ''}},
+                                {ERR=>"md5sum: the --ignore-missing option is ".
+                                   "meaningful only when verifying checksums\n".
+                                   $try_help},
+                                {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
 
