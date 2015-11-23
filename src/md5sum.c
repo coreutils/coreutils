@@ -523,10 +523,11 @@ digest_check (const char *checkfile_name)
 {
   FILE *checkfile_stream;
   uintmax_t n_misformatted_lines = 0;
-  uintmax_t n_properly_formatted_lines = 0;
   uintmax_t n_improperly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
+  bool properly_formatted_lines = false;
+  bool matched_checksums = false;
   unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES + DIGEST_ALIGN];
   /* Make sure bin_buffer is properly aligned. */
   unsigned char *bin_buffer = ptr_align (bin_buffer_unaligned, DIGEST_ALIGN);
@@ -606,7 +607,7 @@ digest_check (const char *checkfile_name)
              to ease automatic processing of status output.  */
           bool needs_escape = ! status_only && strchr (filename, '\n');
 
-          ++n_properly_formatted_lines;
+          properly_formatted_lines = true;
 
           *bin_buffer = '\1'; /* flag set to 0 for ignored missing files.  */
           ok = digest_file (filename, &binary, bin_buffer);
@@ -645,6 +646,8 @@ digest_check (const char *checkfile_name)
                 }
               if (cnt != digest_bin_bytes)
                 ++n_mismatched_checksums;
+              else
+                matched_checksums = true;
 
               if (!status_only)
                 {
@@ -679,7 +682,7 @@ digest_check (const char *checkfile_name)
       return false;
     }
 
-  if (n_properly_formatted_lines == 0)
+  if (! properly_formatted_lines)
     {
       /* Warn if no tests are found.  */
       error (0, 0, _("%s: no properly formatted %s checksum lines found"),
@@ -712,10 +715,15 @@ digest_check (const char *checkfile_name)
                      "WARNING: %" PRIuMAX " computed checksums did NOT match",
                      select_plural (n_mismatched_checksums))),
                    n_mismatched_checksums);
+
+          if (ignore_missing && ! matched_checksums)
+            error (0, 0, _("%s: no file was verified"),
+                   quotef (checkfile_name));
         }
     }
 
-  return (n_properly_formatted_lines != 0
+  return (properly_formatted_lines
+          && matched_checksums
           && n_mismatched_checksums == 0
           && n_open_or_read_failures == 0
           && (!strict || n_improperly_formatted_lines == 0));

@@ -143,6 +143,12 @@ my @Tests =
                                    "meaningful only when verifying checksums\n".
                                    $try_help},
                                 {EXIT=> 1}],
+     ['check-ignore-missing-5', '--check', '--ignore-missing',
+                                {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  missing\n"}},
+                                {ERR=>
+                                    "md5sum: f.md5: no file was verified\n"},
+                                {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
 
