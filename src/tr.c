@@ -293,9 +293,9 @@ writing to standard output.\n\
 \n\
   -c, -C, --complement    use the complement of SET1\n\
   -d, --delete            delete characters in SET1, do not translate\n\
-  -s, --squeeze-repeats   replace each input sequence of a repeated character\n\
-                            that is listed in SET1 with a single occurrence\n\
-                            of that character\n\
+  -s, --squeeze-repeats   replace each sequence of a repeated character\n\
+                            that is listed in the last specified SET,\n\
+                            with a single occurrence of that character\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -342,9 +342,8 @@ Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
 SET1 by repeating its last character as necessary.  Excess characters\n\
 of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
 expand in ascending order; used in SET2 while translating, they may\n\
-only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
-translating nor deleting; else squeezing uses SET2 and occurs after\n\
-translation or deletion.\n\
+only be used in pairs to specify case conversion.  -s uses the last\n\
+specified SET, and occurs after translation or deletion.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }

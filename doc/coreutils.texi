@@ -297,7 +297,7 @@ Operating on characters
 
 * Character sets::               Specifying sets of characters
 * Translating::                  Changing one set of characters to another
-* Squeezing::                    Squeezing repeats and deleting
+* Squeezing and deleting::       Removing characters
 
 Directory listing
 
@@ -1609,7 +1609,8 @@ if @option{-b} is in effect.
 @opindex -s
 @opindex --squeeze-blank
 @cindex squeezing empty lines
-Suppress repeated adjacent empty lines; output just one empty line
+@cindex squeezing blank lines
+Suppress repeated adjacent blank lines; output just one empty line
 instead of several.
 
 @item -t
@@ -4968,9 +4969,9 @@ may be better suited for output direct to users.
 
 @macro ambiguousGroupNote
 Note that when groups are delimited and the input stream contains
-two or more consecutive blank lines, then the output is ambiguous.
-To avoid that, filter the input through @samp{tr -s '\\n'} to replace
-each sequence of consecutive newlines with a single newline.
+blank lines, then the output is ambiguous.
+To avoid that, filter the input through @samp{tr -s '\\n'} to
+remove blank lines.
 @end macro
 @ambiguousGroupNote
 
@@ -6215,7 +6216,7 @@ options.  @xref{Common options}.  Options must precede operands.
 @menu
 * Character sets::              Specifying sets of characters.
 * Translating::                 Changing one set of characters to another.
-* Squeezing::                   Squeezing repeats and deleting.
+* Squeezing and deleting::      Removing characters.
 @end menu
 
 
@@ -6438,18 +6439,20 @@ tr -cs '[:alnum:]' '[\n*]'
 @end example
 
 
-@node Squeezing
+@node Squeezing and deleting
 @subsection Squeezing repeats and deleting
 
 @cindex squeezing repeat characters
 @cindex deleting characters
+@cindex removing characters
 
 When given just the @option{--delete} (@option{-d}) option, @command{tr}
 removes any input characters that are in @var{set1}.
 
-When given just the @option{--squeeze-repeats} (@option{-s}) option,
-@command{tr} replaces each input sequence of a repeated character that
-is in @var{set1} with a single occurrence of that character.
+When given just the @option{--squeeze-repeats} (@option{-s}) option
+and not translating, @command{tr} replaces each input sequence of a
+repeated character that is in @var{set1} with a single occurrence of
+that character.
 
 When given both @option{--delete} and @option{--squeeze-repeats}, @command{tr}
 first performs any deletions using @var{set1}, then squeezes repeats
@@ -6480,7 +6483,8 @@ tr -cs '[:alnum:]' '[\n*]'
 @end example
 
 @item
-Convert each sequence of repeated newlines to a single newline:
+Convert each sequence of repeated newlines to a single newline.
+I.e., delete blank lines:
 
 @example
 tr -s '\n'
@@ -17831,8 +17835,8 @@ $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 @end smallexample
 
 This command turns blanks into newlines.  The @option{-s} option squeezes
-multiple newline characters in the output into just one.  This helps us
-avoid blank lines.  (The @samp{>} is the shell's ``secondary prompt.''
+multiple newline characters in the output into just one, removing
+blank lines.  (The @samp{>} is the shell's ``secondary prompt.''
 This is what the shell prints when it notices you haven't finished
 typing in all of a command.)
 
