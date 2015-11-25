@@ -327,7 +327,7 @@ elif diff_out_=`exec 2>/dev/null; diff -c "$0" "$0" < /dev/null`; then
       fi
     }
   fi
-elif ( cmp --version < /dev/null 2>&1 | grep GNU ) > /dev/null 2>&1; then
+elif cmp -s /dev/null /dev/null 2>/dev/null; then
   compare_ () { cmp -s "$@"; }
 else
   compare_ () { cmp "$@"; }
