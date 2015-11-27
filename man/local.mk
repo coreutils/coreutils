@@ -184,7 +184,8 @@ endif
 	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog$(EXEEXT) \
 				$$argv$(EXEEXT))			\
-	  && $(run_help2man)						\
+	&& : $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
+	&& export SOURCE_DATE_EPOCH && $(run_help2man)			\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
 		     --output=$$t/$$name.1				\

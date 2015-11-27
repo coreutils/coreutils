@@ -48,11 +48,10 @@ inadequate on this system.  Creating a stub man page instead.
 END
 
 progname=`basename_ "$1"`
-year=`LC_ALL=C date +%Y`
 bs='\'
 
 cat >"$output" <<END
-.TH "$progname" 1 "$year" "$source" "User Commands"
+.TH "$progname" 1 "$source" "User Commands"
 .SH NAME
 $progname $bs- a $source program
 .SH DESCRIPTION
