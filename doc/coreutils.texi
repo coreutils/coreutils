@@ -2777,22 +2777,22 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{k}
-@itemx --bytes=@var{k}
+@item -c [-]@var{num}
+@itemx --bytes=[-]@var{num}
 @opindex -c
 @opindex --bytes
-Print the first @var{k} bytes, instead of initial lines.
-However, if @var{k} starts with a @samp{-},
-print all but the last @var{k} bytes of each file.
-@multiplierSuffixes{k}
+Print the first @var{num} bytes, instead of initial lines.
+However, if @var{num} is prefixed with a @samp{-},
+print all but the last @var{num} bytes of each file.
+@multiplierSuffixes{num}
 
-@item -n @var{k}
-@itemx --lines=@var{k}
+@item -n [-]@var{num}
+@itemx --lines=[-]@var{num}
 @opindex -n
 @opindex --lines
-Output the first @var{k} lines.
-However, if @var{k} starts with a @samp{-},
-print all but the last @var{k} lines of each file.
+Output the first @var{num} lines.
+However, if @var{num} is prefixed with a @samp{-},
+print all but the last @var{num} lines of each file.
 Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item -q
@@ -2812,12 +2812,12 @@ Always print file name headers.
 @end table
 
 For compatibility @command{head} also supports an obsolete option syntax
-@option{-@var{count}@var{options}}, which is recognized only if it is
-specified first.  @var{count} is a decimal number optionally followed
+@option{-[@var{num}][bkm][cqv]}, which is recognized only if it is
+specified first.  @var{num} is a decimal number optionally followed
 by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
-Scripts intended for standard hosts should use @option{-c @var{count}}
-or @option{-n @var{count}} instead.  If your script must also run on
+Scripts intended for standard hosts should use @option{-c @var{num}}
+or @option{-n @var{num}} instead.  If your script must also run on
 hosts that support only the obsolete syntax, it is usually simpler to
 avoid @command{head}, e.g., by using @samp{sed 5q} instead of
 @samp{head -5}.
@@ -2870,14 +2870,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{k}
-@itemx --bytes=@var{k}
+@item -c [+]@var{num}
+@itemx --bytes=[+]@var{num}
 @opindex -c
 @opindex --bytes
-Output the last @var{k} bytes, instead of final lines.
-However, if @var{k} starts with a @samp{+}, start printing with the
-@var{k}th byte from the start of each file, instead of from the end.
-@multiplierSuffixes{k}
+Output the last @var{num} bytes, instead of final lines.
+However, if @var{num} is prefixed with a @samp{+}, start printing with
+byte @var{num} from the start of each file, instead of from the end.
+@multiplierSuffixes{num}
 
 @item -f
 @itemx --follow[=@var{how}]
@@ -2944,6 +2944,59 @@ This option is the same as @option{--follow=name --retry}.  That is, tail
 will attempt to reopen a file when it is removed.  Should this fail, tail
 will keep trying until it becomes accessible again.
 
+@item --max-unchanged-stats=@var{n}
+@opindex --max-unchanged-stats
+When tailing a file by name, if there have been @var{n} (default
+n=@value{DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS}) consecutive
+iterations for which the file has not changed, then
+@code{open}/@code{fstat} the file to determine if that file name is
+still associated with the same device/inode-number pair as before.
+When following a log file that is rotated, this is approximately the
+number of seconds between when tail prints the last pre-rotation lines
+and when it prints the lines that have accumulated in the new log file.
+This option is meaningful only when polling (i.e., without inotify)
+and when following by name.
+
+@item -n [+]@var{num}
+@itemx --lines=[+]@var{}
+@opindex -n
+@opindex --lines
+Output the last @var{num} lines.
+However, if @var{num} is prefixed with a @samp{+}, start printing with
+line @var{num} from the start of each file, instead of from the end.
+Size multiplier suffixes are the same as with the @option{-c} option.
+
+@item --pid=@var{pid}
+@opindex --pid
+When following by name or by descriptor, you may specify the process ID,
+@var{pid}, of the sole writer of all @var{file} arguments.  Then, shortly
+after that process terminates, tail will also terminate.  This will
+work properly only if the writer and the tailing process are running on
+the same machine.  For example, to save the output of a build in a file
+and to watch the file grow, if you invoke @command{make} and @command{tail}
+like this then the tail process will stop when your build completes.
+Without this option, you would have had to kill the @code{tail -f}
+process yourself.
+
+@example
+$ make >& makerr & tail --pid=$! -f makerr
+@end example
+
+If you specify a @var{pid} that is not in use or that does not correspond
+to the process that is writing to the tailed files, then @command{tail}
+may terminate long before any @var{file}s stop growing or it may not
+terminate until long after the real writer has terminated.
+Note that @option{--pid} cannot be supported on some systems; @command{tail}
+will print a warning if this is the case.
+
+@item -q
+@itemx --quiet
+@itemx --silent
+@opindex -q
+@opindex --quiet
+@opindex --silent
+Never print file name headers.
+
 @item --retry
 @opindex --retry
 Indefinitely try to open the specified file.
@@ -2975,59 +3028,6 @@ is usually ignored.  However, if you also specify @option{--pid=@var{p}},
 @command{tail} checks whether process @var{p} is alive at least
 every @var{number} seconds.
 
-@item --pid=@var{pid}
-@opindex --pid
-When following by name or by descriptor, you may specify the process ID,
-@var{pid}, of the sole writer of all @var{file} arguments.  Then, shortly
-after that process terminates, tail will also terminate.  This will
-work properly only if the writer and the tailing process are running on
-the same machine.  For example, to save the output of a build in a file
-and to watch the file grow, if you invoke @command{make} and @command{tail}
-like this then the tail process will stop when your build completes.
-Without this option, you would have had to kill the @code{tail -f}
-process yourself.
-
-@example
-$ make >& makerr & tail --pid=$! -f makerr
-@end example
-
-If you specify a @var{pid} that is not in use or that does not correspond
-to the process that is writing to the tailed files, then @command{tail}
-may terminate long before any @var{file}s stop growing or it may not
-terminate until long after the real writer has terminated.
-Note that @option{--pid} cannot be supported on some systems; @command{tail}
-will print a warning if this is the case.
-
-@item --max-unchanged-stats=@var{n}
-@opindex --max-unchanged-stats
-When tailing a file by name, if there have been @var{n} (default
-n=@value{DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS}) consecutive
-iterations for which the file has not changed, then
-@code{open}/@code{fstat} the file to determine if that file name is
-still associated with the same device/inode-number pair as before.
-When following a log file that is rotated, this is approximately the
-number of seconds between when tail prints the last pre-rotation lines
-and when it prints the lines that have accumulated in the new log file.
-This option is meaningful only when polling (i.e., without inotify)
-and when following by name.
-
-@item -n @var{k}
-@itemx --lines=@var{k}
-@opindex -n
-@opindex --lines
-Output the last @var{k} lines.
-However, if @var{k} starts with a @samp{+}, start printing with the
-@var{k}th line from the start of each file, instead of from the end.
-Size multiplier suffixes are the same as with the @option{-c} option.
-
-@item -q
-@itemx --quiet
-@itemx --silent
-@opindex -q
-@opindex --quiet
-@opindex --silent
-Never print file name headers.
-
 @item -v
 @itemx --verbose
 @opindex -v
@@ -3037,10 +3037,10 @@ Always print file name headers.
 @end table
 
 For compatibility @command{tail} also supports an obsolete usage
-@samp{tail -[@var{count}][bcl][f] [@var{file}]}, which is recognized
+@samp{tail -[@var{num}][bcl][f] [@var{file}]}, which is recognized
 only if it does not conflict with the usage described
 above.  This obsolete form uses exactly one option and at most one
-file.  In the option, @var{count} is an optional decimal number optionally
+file.  In the option, @var{num} is an optional decimal number optionally
 followed by a size letter (@samp{b}, @samp{c}, @samp{l}) to mean count
 by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
 which has the same meaning as @option{-f}.
@@ -3054,8 +3054,8 @@ This obsolete behavior can be enabled or disabled with the
 conformance}).
 
 Scripts intended for use on standard hosts should avoid obsolete
-syntax and should use @option{-c @var{count}[b]}, @option{-n
-@var{count}}, and/or @option{-f} instead.  If your script must also
+syntax and should use @option{-c @var{num}[b]}, @option{-n
+@var{num}}, and/or @option{-f} instead.  If your script must also
 run on hosts that support only the obsolete syntax, you can often
 rewrite it to avoid problematic usages, e.g., by using @samp{sed -n
 '$p'} rather than @samp{tail -1}.  If that's not possible, the script

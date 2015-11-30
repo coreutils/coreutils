@@ -106,22 +106,22 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
               program_name);
-      fputs (_("\
-Print the first 10 lines of each FILE to standard output.\n\
+      printf (_("\
+Print the first %d lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
-"), stdout);
+"), DEFAULT_NUMBER);
 
       emit_stdin_note ();
       emit_mandatory_arg_note ();
 
-      fputs (_("\
-  -c, --bytes=[-]K         print the first K bytes of each file;\n\
+      printf (_("\
+  -c, --bytes=[-]NUM       print the first NUM bytes of each file;\n\
                              with the leading '-', print all but the last\n\
-                             K bytes of each file\n\
-  -n, --lines=[-]K         print the first K lines instead of the first 10;\n\
+                             NUM bytes of each file\n\
+  -n, --lines=[-]NUM       print the first NUM lines instead of the first %d;\n\
                              with the leading '-', print all but the last\n\
-                             K lines of each file\n\
-"), stdout);
+                             NUM lines of each file\n\
+"), DEFAULT_NUMBER);
       fputs (_("\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
@@ -130,7 +130,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-K may have a multiplier suffix:\n\
+NUM may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 "), stdout);

@@ -263,8 +263,8 @@ With more than one FILE, precede each with a header giving the file name.\n\
       emit_mandatory_arg_note ();
 
      fputs (_("\
-  -c, --bytes=K            output the last K bytes; or use -c +K to output\n\
-                             bytes starting with the Kth of each file\n\
+  -c, --bytes=[+]NUM       output the last NUM bytes; or use -c +NUM to\n\
+                             output starting with byte NUM of each file\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
@@ -273,8 +273,8 @@ With more than one FILE, precede each with a header giving the file name.\n\
   -F                       same as --follow=name --retry\n\
 "), stdout);
      printf (_("\
-  -n, --lines=K            output the last K lines, instead of the last %d;\n\
-                             or use -n +K to output starting with the Kth\n\
+  -n, --lines=[+]NUM       output the last NUM lines, instead of the last %d;\n\
+                             or use -n +NUM to output starting with line NUM\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                              changed size after N (default %d) iterations\n\
@@ -301,9 +301,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
      fputs (_("\
 \n\
-If the first character of K (the number of bytes or lines) is a '+',\n\
-print beginning with the Kth item from the start of each file, otherwise,\n\
-print the last K items in the file.  K may have a multiplier suffix:\n\
+NUM may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 \n\
