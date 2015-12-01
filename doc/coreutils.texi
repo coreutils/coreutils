@@ -9094,6 +9094,9 @@ However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
 renames not the symlink but rather the directory referenced by the symlink.
 @xref{Trailing slashes}.
 
+@emph{Note}: @command{mv} will only replace empty directories in the
+destination.  Conflicting populated directories are skipped with a diagnostic.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
