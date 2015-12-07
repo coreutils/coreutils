@@ -558,14 +558,14 @@ enum indicator_no
     C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
     C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_MULTIHARDLINK,
-    C_CLR_TO_EOL
+    C_EXEC_HARDLINK, C_CLR_TO_EOL
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", "mh", "cl", NULL
+    "ow", "tw", "ca", "mh", "em", "cl", NULL
   };
 
 struct color_ext_type
@@ -599,7 +599,8 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
     { LEN_STR_PAIR ("30;41") },		/* ca: black on red */
-    { 0, NULL },			/* mh: disabled by default */
+    { 0, NULL },		 	            /* mh: disabled by default */
+    { 0, NULL },                    /* em: Executable HardLink: disabled by default */
     { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
   };
 
@@ -4397,6 +4398,8 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
             type = C_SETGID;
           else if (is_colored (C_CAP) && f->has_capability)
             type = C_CAP;
+          else if ((1 stat.st_nlink) && (mode & S_IXUGO) != 0 && is_colored (C_EXEC_HARDLINK))
+            type = C_EXEC_HARDLINK;  
           else if ((mode & S_IXUGO) != 0 && is_colored (C_EXEC))
             type = C_EXEC;
           else if ((1 < f->stat.st_nlink) && is_colored (C_MULTIHARDLINK))
