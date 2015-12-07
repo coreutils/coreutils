@@ -59,9 +59,9 @@ files (man/*.x) are welcome.  However, the authoritative documentation
 is in texinfo form in the doc directory.
 
 
-*****************************************
+*********************************************
 On Mac OS X 10.5.1 (Darwin 9.1), test failure
------------------------------------------
+---------------------------------------------
 
 Mac OS X 10.5.1 (Darwin 9.1) provides only partial (and incompatible)
 ACL support, so although "./configure && make" succeeds, "make check"
@@ -82,9 +82,9 @@ the mean time, you can configure with --disable-nls.  For details,
 see <http://thread.gmane.org/gmane.comp.lib.gnulib.bugs/12015/>.
 
 
-***********************
+*********************
 Pre-C99 build failure
------------------------
+---------------------
 
 In 2009 we added this requirement:
 To build the coreutils from source, you must have a C99-conforming
@@ -165,6 +165,15 @@ root than when run by less privileged users.
 Reporting bugs:
 ---------------
 
+Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
+To suggest a patch, see the files README-hacking and HACKING for tips.
+
+If you have a problem with 'sort', try running 'sort --debug', as it
+can can often help find and fix problems without having to wait for an
+answer to a bug report.  If the debug output does not suffice to fix
+the problem on your own, please compress and attach it to the rest of
+your bug report.
+
 IMPORTANT: if you take the time to report a test failure,
 please be sure to include the output of running 'make check'
 in verbose mode for each failing test.  For example,
@@ -176,9 +185,6 @@ run this command:
 For some tests, you can get even more detail by adding DEBUG=yes.
 Then include the contents of the file 'log' in your bug report.
 
-Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
-If you would like to suggest a patch, see the files README-hacking
-and HACKING for tips.
 
 ***************************************
 

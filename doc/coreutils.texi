@@ -516,10 +516,19 @@ will benefit.
 The GNU utilities documented here are mostly compatible with the
 POSIX standard.
 @cindex bugs, reporting
-Please report bugs to @email{bug-coreutils@@gnu.org}.  Remember
-to include the version number, machine architecture, input files, and
+
+Please report bugs to @email{bug-coreutils@@gnu.org}.
+Include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug: your input, what you
-expected, what you got, and why it is wrong.  Diffs are welcome, but
+expected, what you got, and why it is wrong.
+
+If you have a problem with @command{sort}, try running @samp{sort
+--debug}, as it can can often help find and fix problems without
+having to wait for an answer to a bug report.  If the debug output
+does not suffice to fix the problem on your own, please compress and
+attach it to the rest of your bug report.
+
+Although diffs are welcome,
 please include a description of the problem as well, since this is
 sometimes difficult to infer.  @xref{Bugs, , , gcc, Using and Porting GNU CC}.
 
@@ -4001,6 +4010,42 @@ output.  Synopsis:
 sort [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
+@cindex sort stability
+@cindex sort's last-resort comparison
+Many options affect how @command{sort} compares lines; if the results
+are unexpected, try the @option{--debug} option to see what happened.
+A pair of lines is compared as follows:
+@command{sort} compares each pair of fields, in the
+order specified on the command line, according to the associated
+ordering options, until a difference is found or no fields are left.
+If no key fields are specified, @command{sort} uses a default key of
+the entire line.  Finally, as a last resort when all keys compare
+equal, @command{sort} compares entire lines as if no ordering options
+other than @option{--reverse} (@option{-r}) were specified.  The
+@option{--stable} (@option{-s}) option disables this @dfn{last-resort
+comparison} so that lines in which all fields compare equal are left
+in their original relative order.  The @option{--unique}
+(@option{-u}) option also disables the last-resort comparison.
+@vindex LC_ALL
+@vindex LC_COLLATE
+
+Unless otherwise specified, all comparisons use the character collating
+sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
+use a non-POSIX locale (e.g., by setting @env{LC_ALL}
+to @samp{en_US}), then @command{sort} may produce output that is sorted
+differently than you're accustomed to.  In that case, set the @env{LC_ALL}
+environment variable to @samp{C}@.  Note that setting only @env{LC_COLLATE}
+has two problems.  First, it is ineffective if @env{LC_ALL} is also set.
+Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
+@env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
+you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
+@env{LC_COLLATE} is @code{en_US.UTF-8}.}
+A line's trailing newline is not part of the line for comparison
+purposes.  If the final byte of an input file is not a newline, GNU
+@command{sort} silently supplies one.  GNU @command{sort} (as
+specified for all GNU utilities) has no limit on input line length or
+restrictions on bytes allowed within lines.
+
 @command{sort} has three modes of operation: sort (the default), merge,
 and check for sortedness.  The following options change the operation
 mode:
@@ -4041,41 +4086,6 @@ merge; merging is provided because it is faster, in the case where it
 works.
 
 @end table
-
-@cindex sort stability
-@cindex sort's last-resort comparison
-A pair of lines is compared as follows:
-@command{sort} compares each pair of fields, in the
-order specified on the command line, according to the associated
-ordering options, until a difference is found or no fields are left.
-If no key fields are specified, @command{sort} uses a default key of
-the entire line.  Finally, as a last resort when all keys compare
-equal, @command{sort} compares entire lines as if no ordering options
-other than @option{--reverse} (@option{-r}) were specified.  The
-@option{--stable} (@option{-s}) option disables this @dfn{last-resort
-comparison} so that lines in which all fields compare equal are left
-in their original relative order.  The @option{--unique}
-(@option{-u}) option also disables the last-resort comparison.
-
-@vindex LC_ALL
-@vindex LC_COLLATE
-Unless otherwise specified, all comparisons use the character collating
-sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
-use a non-POSIX locale (e.g., by setting @env{LC_ALL}
-to @samp{en_US}), then @command{sort} may produce output that is sorted
-differently than you're accustomed to.  In that case, set the @env{LC_ALL}
-environment variable to @samp{C}@.  Note that setting only @env{LC_COLLATE}
-has two problems.  First, it is ineffective if @env{LC_ALL} is also set.
-Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
-@env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
-you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
-@env{LC_COLLATE} is @code{en_US.UTF-8}.}
-
-GNU @command{sort} (as specified for all GNU utilities) has no
-limit on input line length or restrictions on bytes allowed within lines.
-In addition, if the final byte of an input file is not a newline, GNU
-@command{sort} silently supplies one.  A line's trailing newline is not
-part of the line for comparison purposes.
 
 @cindex exit status of @command{sort}
 Exit status:
