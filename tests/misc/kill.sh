@@ -42,6 +42,7 @@ env kill -0 -1 || fail=1 # to group
 # table listing
 env kill -l || fail=1
 env kill -t || fail=1
+env kill -L || fail=1 # bash compat
 env kill -t TERM || fail=1
 
 # Verify name to signal number and vice versa

@@ -53,9 +53,9 @@
 
 static char const short_options[] =
   "0::1::2::3::4::5::6::7::8::9::"
-  "A::B::C::D::E::F::G::H::I::J::K::L::M::"
+  "A::B::C::D::E::F::G::H::I::J::K::M::"
   "N::O::P::Q::R::S::T::U::V::W::X::Y::Z::"
-  "ln:s:t";
+  "Lln:s:t";
 
 static struct option const long_options[] =
 {
@@ -249,7 +249,7 @@ main (int argc, char **argv)
         /* Fall through.  */
       case 'A': case 'B': case 'C': case 'D': case 'E':
       case 'F': case 'G': case 'H': case 'I': case 'J':
-      case 'K': case 'L': case 'M': case 'N': case 'O':
+      case 'K': /*case 'L':*/ case 'M': case 'N': case 'O':
       case 'P': case 'Q': case 'R': case 'S': case 'T':
       case 'U': case 'V': case 'W': case 'X': case 'Y':
       case 'Z':
@@ -274,6 +274,7 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         break;
 
+      case 'L': /* -L is not documented, but is for procps compatibility.  */
       case 't':
         table = true;
         /* Fall through.  */
