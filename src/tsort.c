@@ -71,7 +71,7 @@ static struct item *loop = NULL;
 
 /* The number of strings to sort.  */
 static size_t n_strings = 0;
-
+
 void
 usage (int status)
 {

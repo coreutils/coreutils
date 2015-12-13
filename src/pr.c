@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /*  By Pete TerMaat, with considerable refinement by Roland Huebner.  */
-
+
 /* Things to watch: Sys V screws up on ...
    pr -n -3 -s: /usr/dict/words
    pr -m -o10 -n /usr/dict/words{,,,}
@@ -306,7 +306,6 @@
                 affect -W option.)
 
 */
-
 
 #include <config.h>
 
@@ -1171,7 +1170,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
       *number = tmp_long;
     }
 }
-
+
 /* Set parameters related to formatting. */
 
 static void
@@ -1278,7 +1277,7 @@ init_parameters (int number_of_files)
   free (clump_buff);
   clump_buff = xmalloc (MAX (8, chars_per_input_tab));
 }
-
+
 /* Open the necessary files,
    maintaining a COLUMN structure for each column.
 
@@ -1354,7 +1353,7 @@ init_fps (int number_of_files, char **av)
   files_ready_to_read = total_files;
   return true;
 }
-
+
 /* Determine print_func and char_func, the functions
    used by each column for printing and/or storing.
 
@@ -1441,7 +1440,7 @@ init_funcs (void)
   p->numbered = numbered_lines && (!parallel_files || i == 1);
   p->start_position = h;
 }
-
+
 /* Open a file.  Return true if successful.
 
    With each file p, p->full_page_printed is initialized,
@@ -1565,7 +1564,7 @@ reset_status (void)
         files_ready_to_read = 1;
     }
 }
-
+
 /* Print a single file, or multiple files in parallel.
 
    Set up the list of columns, opening the necessary files.
@@ -1600,7 +1599,7 @@ print_files (int number_of_files, char **av)
   while (print_page ())
     ;
 }
-
+
 /* Initialize header information.
    If DESC is non-negative, it is a file descriptor open to
    FILENAME for reading.  */
@@ -1649,7 +1648,7 @@ init_header (char const *filename, int desc)
                             - mbswidth (date_text, 0)
                             - mbswidth (file_text, 0));
 }
-
+
 /* Set things up for printing a page
 
    Scan through the columns ...
@@ -1854,7 +1853,7 @@ print_page (void)
 
   return true;			/* More pages to go. */
 }
-
+
 /* Allocate space for storing columns.
 
    This is necessary when printing multiple columns from a single file.
@@ -2028,7 +2027,7 @@ add_line_number (COLUMN *p)
   if (truncate_lines && !parallel_files)
     input_position += number_width;
 }
-
+
 /* Print (or store) padding until the current horizontal position
    is position. */
 
@@ -2164,7 +2163,7 @@ skip_read (COLUMN *p, int column_number)
     if ((!parallel_files || column_number == 1) && !single_ff)
       ++line_count;
 }
-
+
 /* If we're tabifying output,
 
    When print_char encounters white space it keeps track
@@ -2710,7 +2709,7 @@ cleanup (void)
   free (end_vector);
   free (buff);
 }
-
+
 /* Complain, print a usage message, and die. */
 
 void

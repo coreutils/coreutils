@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Richard M. Stallman and David MacKenzie. */
-
+
 #include <config.h>
 
 #include <getopt.h>

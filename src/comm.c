@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Richard Stallman and David MacKenzie. */
-
+
 #include <config.h>
 
 #include <getopt.h>
@@ -91,7 +91,6 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-
 
 void
 usage (int status)

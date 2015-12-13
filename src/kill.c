@@ -32,7 +32,7 @@
 #define PROGRAM_NAME "kill"
 
 #define AUTHORS proper_name ("Paul Eggert")
-
+
 #if ! (HAVE_DECL_STRSIGNAL || defined strsignal)
 # if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)
 #  if HAVE_DECL__SYS_SIGLIST || defined _sys_siglist
@@ -50,7 +50,7 @@
 #  define strsignal(signum) 0
 # endif
 #endif
-
+
 static char const short_options[] =
   "0::1::2::3::4::5::6::7::8::9::"
   "A::B::C::D::E::F::G::H::I::J::K::L::M::"
@@ -104,7 +104,7 @@ PID is an integer; if negative it identifies a process group.\n\
     }
   exit (status);
 }
-
+
 /* Print a row of 'kill -t' output.  NUM_WIDTH is the maximum signal
    number width, and SIGNUM is the signal number to print.  The
    maximum name width is NAME_WIDTH, and SIGNAME is the name to print.  */
@@ -185,7 +185,7 @@ list_signals (bool table, char *const *argv)
 
   return status;
 }
-
+
 /* Send signal SIGNUM to all the processes or process groups specified
    by ARGV.  Return a suitable exit status.  */
 
@@ -216,7 +216,7 @@ send_signals (int signum, char *const *argv)
 
   return status;
 }
-
+
 int
 main (int argc, char **argv)
 {

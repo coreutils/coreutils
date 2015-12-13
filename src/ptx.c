@@ -54,7 +54,7 @@
 # define MALLOC_FUNC_CHECK 1
 # include <dmalloc.h>
 #endif
-
+
 /* Global definitions.  */
 
 /* FIXME: There are many unchecked integer overflows in this file,
@@ -272,7 +272,7 @@ static BLOCK head;		/* head field */
 static int head_truncation;	/* flag truncation before the head field */
 
 static BLOCK reference;		/* reference field for input reference mode */
-
+
 /* Miscellaneous routines.  */
 
 /* Diagnose an error in the regular expression matcher.  Then exit.  */
@@ -524,7 +524,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 
   block->end = block->start + used_length;
 }
-
+
 /* Sort and search routines.  */
 
 /*--------------------------------------------------------------------------.
@@ -634,7 +634,7 @@ sort_found_occurs (void)
     qsort (occurs_table[0], number_of_occurs[0], sizeof **occurs_table,
            compare_occurs);
 }
-
+
 /* Parameter files reading routines.  */
 
 /*----------------------------------------------------------------------.
@@ -736,7 +736,7 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
 
   qsort (table->start, table->length, sizeof table->start[0], compare_words);
 }
-
+
 /* Keyword recognition and selection.  */
 
 /*----------------------------------------------------------------------.
@@ -1015,7 +1015,7 @@ find_occurs_in_text (size_t file_index)
         }
     }
 }
-
+
 /* Formatting and actual output - service routines.  */
 
 /*-----------------------------------------.
@@ -1189,7 +1189,7 @@ print_field (BLOCK field)
         putchar (*cursor);
     }
 }
-
+
 /* Formatting and actual output - planning routines.  */
 
 /*--------------------------------------------------------------------.
@@ -1552,7 +1552,7 @@ define_all_fields (OCCURS *occurs)
       SKIP_NON_WHITE (reference.end, right_context_end);
     }
 }
-
+
 /* Formatting and actual output - control routines.  */
 
 /*----------------------------------------------------------------------.
@@ -1802,7 +1802,7 @@ generate_all_output (void)
       occurs_cursor++;
     }
 }
-
+
 /* Option decoding and main program.  */
 
 /*------------------------------------------------------.

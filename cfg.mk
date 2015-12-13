@@ -746,6 +746,12 @@ sc_gitignore_redundant:
 	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
 	      'entries from .gitignore' >&2; exit 1; } || :
 
+sc_prohibit-form-feed:
+	@prohibit=$$'\f' \
+	in_vc_files='\.[chly]$$' \
+	halt='Form Feed (^L) detected' \
+	  $(_sc_search_regexp)
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org

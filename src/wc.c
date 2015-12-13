@@ -16,7 +16,7 @@
 
 /* Written by Paul Rubin, phr@ocf.berkeley.edu
    and David MacKenzie, djm@gnu.ai.mit.edu. */
-
+
 #include <config.h>
 
 #include <stdio.h>

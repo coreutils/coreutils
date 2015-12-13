@@ -275,7 +275,7 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
-
+
 void
 usage (int status)
 {
