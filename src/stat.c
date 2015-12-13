@@ -394,6 +394,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "openprom";
     case S_MAGIC_OCFS2: /* 0x7461636F remote */
       return "ocfs2";
+    case S_MAGIC_OVERLAYFS: /* 0x794C7630 remote */
+      /* This may overlay remote file systems.
+         Also there have been issues reported with inotify and overlayfs,
+         so mark as "remote" so that polling is used.  */
+      return "overlayfs";
     case S_MAGIC_PANFS: /* 0xAAD7AAEA remote */
       return "panfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */

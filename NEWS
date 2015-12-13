@@ -63,8 +63,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls -w0 is now interpreted as no limit on the length of the outputted line.
 
   stat -f --format=%T now reports the file system type for new Linux
-  pseudo file systems "bpf_fs", "btrfs_test", "nsfs" and "tracefs",
-  and remote file system "acfs".
+  pseudo file systems "bpf_fs", "btrfs_test", "nsfs", "overlayfs"
+  and "tracefs", and remote file system "acfs".
 
 
 * Noteworthy changes in release 8.24 (2015-07-03) [stable]
