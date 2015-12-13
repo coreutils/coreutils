@@ -291,6 +291,7 @@ all_tests =					\
   tests/misc/head-c.sh				\
   tests/misc/head-pos.sh			\
   tests/misc/head-write-error.sh		\
+  tests/misc/kill.sh				\
   tests/misc/md5sum.pl				\
   tests/misc/md5sum-bsd.sh			\
   tests/misc/md5sum-newline.pl			\
