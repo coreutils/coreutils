@@ -140,6 +140,14 @@ sc_prohibit_colon_redirection:
 	       exit 1; }  \
 	  || :
 
+# Ensure emit_mandatory_arg_note() is called if required
+sc_ensure_emit_mandatory_arg_note:
+	@cd $(srcdir)/src && GIT_PAGER= git \
+	  grep -l -- '^ *-[^-].*--.*[^[]=' *.c \
+	  | xargs grep -L emit_mandatory_arg_note | grep . \
+	  && { echo '$(ME): '"emit_mandatory_arg_note() missing" 1>&2; \
+	       exit 1; } || :
+
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:
