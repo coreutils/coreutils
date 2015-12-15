@@ -85,19 +85,19 @@ for i in $built_programs; do
 
   # Make sure they fail upon 'disk full' error.
   if test -w /dev/full && test -c /dev/full; then
-    env $i --help    >/dev/full 2>/dev/null && fail=1
-    env $i --version >/dev/full 2>/dev/null && fail=1
-    status=$?
     test $i = [ && prog=lbracket || prog=$(echo $i|sed "s/$EXEEXT$//")
     eval "expected=\$expected_failure_status_$prog"
     test x$expected = x && expected=1
-    if test $status = $expected; then
-      : # ok
-    else
+
+    returns_ $expected env $i --help    >/dev/full 2>/dev/null &&
+    returns_ $expected env $i --version >/dev/full 2>/dev/null ||
+    {
       fail=1
+      env $i --help >/dev/full 2>/dev/null
+      status=$?
       echo "*** $i: bad exit status '$status' (expected $expected)," 1>&2
       echo "  with --help or --version output redirected to /dev/full" 1>&2
-    fi
+    }
   fi
 done
 
