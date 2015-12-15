@@ -20,33 +20,39 @@
 print_ver_ kill
 
 # params required
-env kill && fail=1
-env kill -TERM && fail=1
+returns_ 1 env kill || fail=1
+returns_ 1 env kill -TERM || fail=1
 
 # Invalid combinations
-env kill -l -l && fail=1
-env kill -l -t && fail=1
-env kill -l -s 1 && fail=1
-env kill -t -s 1 && fail=1
+returns_ 1 env kill -l -l || fail=1
+returns_ 1 env kill -l -t || fail=1
+returns_ 1 env kill -l -s 1 || fail=1
+returns_ 1 env kill -t -s 1 || fail=1
 
 # signal sending
-env kill -0 no_pid && fail=1
+returns_ 1 env kill -0 no_pid || fail=1
 env kill -0 $$ || fail=1
 env kill -s0 $$ || fail=1
 env kill -n0 $$ || fail=1 # bash compat
 env kill -CONT $$ || fail=1
 env kill -Cont $$ || fail=1
-env kill -cont $$ && fail=1
+returns_ 1 env kill -cont $$ || fail=1
 env kill -0 -1 || fail=1 # to group
 
 # table listing
 env kill -l || fail=1
 env kill -t || fail=1
 env kill -L || fail=1 # bash compat
-env kill -t TERM || fail=1
+env kill -t TERM HUP || fail=1
 
-# Verify name to signal number and vice versa
-SIGTERM=$(env kill -l TERM) || fail=1
+# Verify (multi) name to signal number and vice versa
+SIGTERM=$(env kill -l HUP TERM | tail -n1) || fail=1
 test $(env kill -l "$SIGTERM") = TERM || fail=1
+
+# Verify invalid signal spec is diagnosed
+SIGINVAL=$(env kill -t | tail -n1 | cut -f1 -d' ')
+SIGINVAL=$(expr "$SIGINVAL" + 1)
+returns_ 1 env kill -l "$SIGINVAL" 0 || fail=1
+returns_ 1 env kill -l INVALID TERM || fail=1
 
 Exit $fail
