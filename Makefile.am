@@ -99,11 +99,13 @@ BUILT_SOURCES = .version
 .version:
 	$(AM_V_GEN)echo $(VERSION) > $@-t && mv $@-t $@
 
-# Arrange so that .tarball-version appears only in the distribution
-# tarball, and never in a checked-out repository.
+# Have no read-only files in the tarball to allow easy removal.
+# Have .tarball-version based versions only in tarball builds.
+# Have .timestamp based dates only in tarball builds.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
 dist-hook: gen-ChangeLog
+	$(AM_V_GEN)chmod -R ug+rw $(distdir)
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
 	$(AM_V_GEN)date +%s > $(distdir)/.timestamp
 	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
