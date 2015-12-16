@@ -51,15 +51,15 @@ CUT_MAX=$(echo $SIZE_MAX | sed "$subtract_one")
 
 # From coreutils-8.10 through 8.20, this would make cut try to allocate
 # a 256MiB bit vector.
-(ulimit -v $vm && : | cut -b$CUT_MAX- > err 2>&1) || fail=1
+(ulimit -v $vm && cut -b$CUT_MAX- /dev/null > err 2>&1) || fail=1
 
 # Up to and including coreutils-8.21, cut would allocate possibly needed
 # memory upfront.  Subsequently extra memory is no longer needed.
-(ulimit -v $vm && : | cut -b1-$CUT_MAX >> err 2>&1) || fail=1
+(ulimit -v $vm && cut -b1-$CUT_MAX /dev/null >> err 2>&1) || fail=1
 
 # Explicitly disallow values above CUT_MAX
-(ulimit -v $vm && : | returns_ 1 cut -b$SIZE_MAX 2>/dev/null) || fail=1
-(ulimit -v $vm && : | returns_ 1 cut -b$SIZE_OFLOW 2>/dev/null) || fail=1
+(ulimit -v $vm && returns_ 1 cut -b$SIZE_MAX /dev/null 2>/dev/null) || fail=1
+(ulimit -v $vm && returns_ 1 cut -b$SIZE_OFLOW /dev/null 2>/dev/null) || fail=1
 
 compare /dev/null err || fail=1
 
