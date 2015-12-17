@@ -1,6 +1,6 @@
 #!/bin/sh
 # Ensure that mv, cp -a and cp --preserve=xattr(all) options do work
-# as expected on file system without their support and do show correct
+# as expected on file systems without their support and do show correct
 # diagnostics when required
 
 # Copyright (C) 2009-2015 Free Software Foundation, Inc.
@@ -85,7 +85,7 @@ compare /dev/null err || fail=1
 
 rm -f err noxattr/a
 
-# This should fail with coresponding diagnostics
+# This should fail with corresponding diagnostics
 cp -a --preserve=xattr xattr/a noxattr/ 2>err && fail=1
 if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
 cat <<\EOF > exp
@@ -117,8 +117,11 @@ txattr='trusted.overlay.whiteout'
 if setfattr -hn "$txattr" -v y xattr/symlink; then
   # Note only root can read the 'trusted.' namespace
   if getfattr -h -m- -d xattr/symlink | grep -F "$txattr"; then
-    mv xattr/symlink noxattr/ || fail=1
-    getfattr -h -m- -d noxattr/symlink | grep -F "$txattr" || fail=1
+    mv xattr/symlink noxattr/ 2>err || fail=1
+    if grep '^#define USE_XATTR 1' $CONFIG_HEADER > /dev/null; then
+      getfattr -h -m- -d noxattr/symlink | grep -F "$txattr" || fail=1
+    fi
+    compare /dev/null err || fail=1
   else
     echo "failed to get '$txattr' xattr. skipping symlink check" >&2
   fi
