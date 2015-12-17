@@ -105,7 +105,7 @@ BUILT_SOURCES = .version
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
 dist-hook: gen-ChangeLog
-	$(AM_V_GEN)chmod -R ug+rw $(distdir)
+	$(AM_V_GEN)chmod -R +rw $(distdir)
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
 	$(AM_V_GEN)date +%s > $(distdir)/.timestamp
 	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
