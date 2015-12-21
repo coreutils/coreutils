@@ -799,6 +799,7 @@ exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
   (^.*/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk|.*\.texi)$$
+exclude_file_name_regexp--sc_prohibit_test_minus_ao = *\.texi$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
 # longlong.h is maintained elsewhere.

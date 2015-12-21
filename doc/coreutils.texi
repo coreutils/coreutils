@@ -12638,25 +12638,55 @@ test 0x100 -eq 1
 @cindex logical connectives
 @cindex connectives, logical
 
-The usual logical connectives.
+Note it's preferred to use shell logical primitives
+rather than these logical connectives internal to @command{test},
+because an expression may become ambiguous
+depending on the expansion of its parameters.
+
+For example, this becomes ambiguous when @samp{$1}
+is set to @samp{'!'} and @samp{$2} to the empty string @samp{''}:
+
+@example
+test "$1" -a "$2"
+@end example
+
+and should be written as:
+
+@example
+test "$1" && test "$2"
+@end example
+
+Note the shell logical primitives also benefit from
+short circuit operation, which can be significant
+for file attribute tests.
 
 @table @samp
 
 @item ! @var{expr}
 @opindex !
 True if @var{expr} is false.
+@samp{!} has lower precedence than all parts of @var{expr}.
+Note @samp{!} needs to be specified to the left
+of a binary expression, I.e., @samp{'!' 1 -gt 2}
+rather than @samp{1 '!' -gt 2}.
+Also @samp{!} is often a shell special character
+and is best used quoted.
+
 
 @item @var{expr1} -a @var{expr2}
 @opindex -a
 @cindex logical and operator
 @cindex and operator
 True if both @var{expr1} and @var{expr2} are true.
+@samp{-a} is left associative,
+and has a higher precedence than @samp{-o}.
 
 @item @var{expr1} -o @var{expr2}
 @opindex -o
 @cindex logical or operator
 @cindex or operator
 True if either @var{expr1} or @var{expr2} is true.
+@samp{-o} is left associative.
 
 @end table
 
