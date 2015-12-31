@@ -8835,23 +8835,23 @@ trap '' USR1
 # which can be triggered by reception of signals.
 dd iflag=fullblock if=/dev/zero of=/dev/null count=5000000 bs=1000 & pid=$!
 
-# Output stats every half second
-until ! kill -s USR1 $pid 2>/dev/null; do sleep .5; done
+# Output stats every second.
+while kill -s USR1 $pid 2>/dev/null; do sleep 1; done
 @end example
 
-The above script will output in the following format
+The above script will output in the following format:
 
 @example
-859+0 records in
-859+0 records out
-4295000000 bytes (4.3 GB) copied, 0.539934 s, 8.0 GB/s
-1000+0 records in
-1000+0 records out
-5000000000 bytes (5.0 GB) copied, 0.630785 s, 7.9 GB/s
+3441325+0 records in
+3441325+0 records out
+3441325000 bytes (3.4 GB, 3.2 GiB) copied, 1.00036 s, 3.4 GB/s
+5000000+0 records in
+5000000+0 records out
+5000000000 bytes (5.0 GB, 4.7 GiB) copied, 1.44433 s, 3.5 GB/s
 @end example
 
-Note also the @samp{status=progress} option which periodically updates
-the last line of the transfer statistics above.
+The @samp{status=progress} option periodically updates the last line
+of the transfer statistics above.
 
 @vindex POSIXLY_CORRECT
 On systems lacking the @samp{INFO} signal @command{dd} responds to the

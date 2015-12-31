@@ -673,15 +673,10 @@ Options are:\n\
   exit (status);
 }
 
-static char *
-human_size (size_t n)
-{
-  static char hbuf[LONGEST_HUMAN_READABLE + 1];
-  int human_opts =
-    (human_autoscale | human_round_to_nearest | human_base_1024
-     | human_space_before_unit | human_SI | human_B);
-  return human_readable (n, hbuf, human_opts, 1, 1);
-}
+/* Common options to use when displaying sizes and rates.  */
+
+enum { human_opts = (human_autoscale | human_round_to_nearest
+                     | human_space_before_unit | human_SI | human_B) };
 
 /* Ensure input buffer IBUF is allocated.  */
 
@@ -693,9 +688,15 @@ alloc_ibuf (void)
 
   char *real_buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
   if (!real_buf)
-    error (EXIT_FAILURE, 0,
-           _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
-           (uintmax_t) input_blocksize, human_size (input_blocksize));
+    {
+      uintmax_t ibs = input_blocksize;
+      char hbuf[LONGEST_HUMAN_READABLE + 1];
+      error (EXIT_FAILURE, 0,
+             _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
+             ibs,
+             human_readable (input_blocksize, hbuf,
+                             human_opts | human_base_1024, 1, 1));
+    }
 
   real_buf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
@@ -715,10 +716,16 @@ alloc_obuf (void)
       /* Page-align the output buffer, too.  */
       char *real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
       if (!real_obuf)
-        error (EXIT_FAILURE, 0,
-               _("memory exhausted by output buffer of size %"PRIuMAX
-                 " bytes (%s)"),
-               (uintmax_t) output_blocksize, human_size (output_blocksize));
+        {
+          uintmax_t obs = output_blocksize;
+          char hbuf[LONGEST_HUMAN_READABLE + 1];
+          error (EXIT_FAILURE, 0,
+                 _("memory exhausted by output buffer of size %"PRIuMAX
+                   " bytes (%s)"),
+                 obs,
+                 human_readable (output_blocksize, hbuf,
+                                 human_opts | human_base_1024, 1, 1));
+        }
       obuf = ptr_align (real_obuf, page_size);
     }
   else
@@ -746,17 +753,23 @@ multiple_bits_set (int i)
   return MULTIPLE_BITS_SET (i);
 }
 
+static bool
+abbreviation_lacks_prefix (char const *message)
+{
+  return message[strlen (message) - 2] == ' ';
+}
+
 /* Print transfer statistics.  */
 
 static void
-print_xfer_stats (xtime_t progress_time) {
-  char hbuf[LONGEST_HUMAN_READABLE + 1];
-  int human_opts =
-    (human_autoscale | human_round_to_nearest
-     | human_space_before_unit | human_SI | human_B);
+print_xfer_stats (xtime_t progress_time)
+{
+  char hbuf[2][LONGEST_HUMAN_READABLE + 1];
   double delta_s;
   char const *bytes_per_second;
-
+  char const *si = human_readable (w_bytes, hbuf[0], human_opts, 1, 1);
+  char const *iec = human_readable (w_bytes, hbuf[1],
+                                    human_opts | human_base_1024, 1, 1);
   if (progress_time)
     fputc ('\r', stderr);
 
@@ -764,11 +777,14 @@ print_xfer_stats (xtime_t progress_time) {
      since that makes it easy to use SI abbreviations.  */
 
   fprintf (stderr,
-           ngettext ("%"PRIuMAX" byte (%s) copied",
-                     "%"PRIuMAX" bytes (%s) copied",
+           ngettext ("%"PRIuMAX" byte copied",
+                     (abbreviation_lacks_prefix (si)
+                      ? "%"PRIuMAX" bytes copied"
+                      : abbreviation_lacks_prefix (iec)
+                      ? "%"PRIuMAX" bytes (%s) copied"
+                      : "%"PRIuMAX" bytes (%s, %s) copied"),
                      select_plural (w_bytes)),
-           w_bytes,
-           human_readable (w_bytes, hbuf, human_opts, 1, 1));
+           w_bytes, si, iec);
 
   xtime_t now = progress_time ? progress_time : gethrxtime ();
 
@@ -778,7 +794,7 @@ print_xfer_stats (xtime_t progress_time) {
       uintmax_t delta_xtime = now;
       delta_xtime -= start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
-      bytes_per_second = human_readable (w_bytes, hbuf, human_opts,
+      bytes_per_second = human_readable (w_bytes, hbuf[0], human_opts,
                                          XTIME_PRECISION, delta_xtime);
     }
   else

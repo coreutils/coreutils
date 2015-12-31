@@ -23,14 +23,14 @@ print_ver_ dd
 cat <<\EOF > exp-reblock || framework_failure_
 0+2 records in
 1+1 records out
-4 bytes (4 B) copied
+4 bytes copied
 EOF
 
 # 2 short reads -> 2 partial writes
 cat <<\EOF > exp-no-reblock || framework_failure_
 0+2 records in
 0+2 records out
-4 bytes (4 B) copied
+4 bytes copied
 EOF
 
 

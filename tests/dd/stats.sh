@@ -60,14 +60,14 @@ for open in '' '1'; do
   wait
 
   # Ensure all data processed and at least last status written
-  grep '250000000 bytes .* copied' err || { cat err; fail=1; }
+  grep '250000000 bytes (250 MB, 238 MiB) copied' err || { cat err; fail=1; }
 done
 
 progress_output()
 {
   { sleep "$1"; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
-  # Progress output should be for "byte ... copied", while final is "bytes ..."
-  grep 'byte .* copied' err
+  # Progress output should be for "byte copied", while final is "bytes ..."
+  grep 'byte copied' err
 }
 retry_delay_ progress_output 1 4 || { cat err; fail=1; }
 
