@@ -212,11 +212,11 @@ static uintmax_t w_bytes = 0;
 /* Time that dd started.  */
 static xtime_t start_time;
 
-/* Previous time for periodic progress.  */
-static xtime_t previous_time;
+/* Next time to report periodic progress.  */
+static xtime_t next_time;
 
-/* Whether a '\n' is pending after writing progress.  */
-static bool newline_pending;
+/* If positive, the number of bytes output in the current progress line.  */
+static int progress_len;
 
 /* True if input is seekable.  */
 static bool input_seekable;
@@ -530,10 +530,10 @@ maybe_close_stdout (void)
 static void _GL_ATTRIBUTE_FORMAT ((__printf__, 3, 4))
 nl_error (int status, int errnum, const char *fmt, ...)
 {
-  if (newline_pending)
+  if (0 < progress_len)
     {
       fputc ('\n', stderr);
-      newline_pending = false;
+      progress_len = 0;
     }
 
   va_list ap;
@@ -764,37 +764,23 @@ abbreviation_lacks_prefix (char const *message)
 static void
 print_xfer_stats (xtime_t progress_time)
 {
-  char hbuf[2][LONGEST_HUMAN_READABLE + 1];
+  xtime_t now = progress_time ? progress_time : gethrxtime ();
+  char hbuf[3][LONGEST_HUMAN_READABLE + 1];
   double delta_s;
   char const *bytes_per_second;
   char const *si = human_readable (w_bytes, hbuf[0], human_opts, 1, 1);
   char const *iec = human_readable (w_bytes, hbuf[1],
                                     human_opts | human_base_1024, 1, 1);
-  if (progress_time)
-    fputc ('\r', stderr);
 
   /* Use integer arithmetic to compute the transfer rate,
      since that makes it easy to use SI abbreviations.  */
-
-  fprintf (stderr,
-           ngettext ("%"PRIuMAX" byte copied",
-                     (abbreviation_lacks_prefix (si)
-                      ? "%"PRIuMAX" bytes copied"
-                      : abbreviation_lacks_prefix (iec)
-                      ? "%"PRIuMAX" bytes (%s) copied"
-                      : "%"PRIuMAX" bytes (%s, %s) copied"),
-                     select_plural (w_bytes)),
-           w_bytes, si, iec);
-
-  xtime_t now = progress_time ? progress_time : gethrxtime ();
-
   if (start_time < now)
     {
       double XTIME_PRECISIONe0 = XTIME_PRECISION;
       uintmax_t delta_xtime = now;
       delta_xtime -= start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
-      bytes_per_second = human_readable (w_bytes, hbuf[0], human_opts,
+      bytes_per_second = human_readable (w_bytes, hbuf[2], human_opts,
                                          XTIME_PRECISION, delta_xtime);
     }
   else
@@ -803,22 +789,41 @@ print_xfer_stats (xtime_t progress_time)
       bytes_per_second = _("Infinity B");
     }
 
-  /* TRANSLATORS: The two instances of "s" in this string are the SI
-     symbol "s" (meaning second), and should not be translated.
-
-     This format used to be:
-
-     ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
-
-     but that was incorrect for languages like Polish.  To fix this
-     bug we now use SI symbols even though they're a bit more
-     confusing in English.  */
-  char const *time_fmt = _(", %g s, %s/s\n");
   if (progress_time)
-    time_fmt = _(", %.6f s, %s/s");  /* OK with '\r' as increasing width.  */
-  fprintf (stderr, time_fmt, delta_s, bytes_per_second);
+    fputc ('\r', stderr);
 
-  newline_pending = !!progress_time;
+  /* TRANSLATORS: The instances of "s" in the following formats are
+     the SI symbol "s" (meaning second), and should not be translated.
+     The strings use SI symbols for better internationalization even
+     though they may be a bit more confusing in English.  If one of
+     these formats A looks shorter on the screen than another format
+     B, then A's string length should be less than B's, and appending
+     strlen (B) - strlen (A) spaces to A should make it appear to be
+     at least as long as B.  */
+
+  int stats_len
+    = (abbreviation_lacks_prefix (si)
+       ? fprintf (stderr,
+                  ngettext ("%"PRIuMAX" byte copied, %g s, %s/s",
+                            "%"PRIuMAX" bytes copied, %g s, %s/s",
+                            select_plural (w_bytes)),
+                  w_bytes, delta_s, bytes_per_second)
+       : abbreviation_lacks_prefix (iec)
+       ? fprintf (stderr,
+                  _("%"PRIuMAX" bytes (%s) copied, %g s, %s/s"),
+                  w_bytes, si, delta_s, bytes_per_second)
+       : fprintf (stderr,
+                  _("%"PRIuMAX" bytes (%s, %s) copied, %g s, %s/s"),
+                  w_bytes, si, iec, delta_s, bytes_per_second));
+
+  if (progress_time)
+    {
+      if (0 <= stats_len && stats_len < progress_len)
+        fprintf (stderr, "%*s", progress_len - stats_len, "");
+      progress_len = stats_len;
+    }
+  else
+    fputc ('\n', stderr);
 }
 
 static void
@@ -827,10 +832,10 @@ print_stats (void)
   if (status_level == STATUS_NONE)
     return;
 
-  if (newline_pending)
+  if (0 < progress_len)
     {
       fputc ('\n', stderr);
-      newline_pending = false;
+      progress_len = 0;
     }
 
   fprintf (stderr,
@@ -2112,13 +2117,10 @@ dd_copy (void)
       if (status_level == STATUS_PROGRESS)
         {
           xtime_t progress_time = gethrxtime ();
-          uintmax_t delta_xtime = progress_time;
-          delta_xtime -= previous_time;
-          double XTIME_PRECISIONe0 = XTIME_PRECISION;
-          if (delta_xtime / XTIME_PRECISIONe0 > 1)
+          if (next_time <= progress_time)
             {
               print_xfer_stats (progress_time);
-              previous_time = progress_time;
+              next_time += XTIME_PRECISION;
             }
         }
 
@@ -2439,7 +2441,8 @@ main (int argc, char **argv)
         }
     }
 
-  start_time = previous_time = gethrxtime ();
+  start_time = gethrxtime ();
+  next_time = start_time + XTIME_PRECISION;
 
   exit_status = dd_copy ();
 

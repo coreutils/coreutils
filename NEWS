@@ -32,6 +32,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd now summarizes sizes in --human-readable format too, not just --si.
   E.g., "3441325000 bytes (3.4 GB, 3.2 GiB) copied".  It omits the summaries
   if they would not provide useful information, e.g., "3 bytes copied".
+  Its status=progress output now uses the same format as ordinary status,
+  perhaps with trailing spaces to erase previous progress output.
 
   md5sum now supports the --ignore-missing option to allow
   verifying a subset of files given a larger list of checksums.
