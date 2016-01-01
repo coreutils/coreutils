@@ -692,7 +692,8 @@ alloc_ibuf (void)
       uintmax_t ibs = input_blocksize;
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       error (EXIT_FAILURE, 0,
-             _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
+             _("memory exhausted by input buffer of size %"PRIuMAX
+               " bytes (%s)"),
              ibs,
              human_readable (input_blocksize, hbuf,
                              human_opts | human_base_1024, 1, 1));
