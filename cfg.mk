@@ -321,7 +321,7 @@ sc_long_lines:
 	sed -r 1q /dev/null 2>/dev/null					\
 	   || { echo "$@: skipping: sed -r not supported"; exit 0; };	\
 	files=$$($(VC_LIST_EXCEPT) | xargs wc -L | sed -rn '/ total$$/d;\
-		  s/^ *(8[1-9]|9[0-9]|[0-9]\{3,\}) //p');		\
+		  s/^ *(8[1-9]|9[0-9]|[0-9]{3,}) //p');			\
 	halt='line(s) with more than 80 characters; reindent';		\
 	for file in $$files; do						\
 	  expand $$file | grep -nE '^.{80}.' |				\
