@@ -1043,7 +1043,7 @@ main (int argc, char **argv)
           dest_info_init (&x);
           for (i = 0; i < n_files; i++)
             if (! install_file_in_dir (file[i], target_directory, &x,
-                                       mkdir_and_install))
+                                       i == 0 && mkdir_and_install))
               exit_status = EXIT_FAILURE;
         }
     }
