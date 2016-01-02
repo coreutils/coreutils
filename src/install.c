@@ -704,14 +704,17 @@ install_file_in_file (const char *from, const char *to,
   return change_attributes (to);
 }
 
-/* Copy file FROM onto file TO, creating any missing parent directories of TO.
+/* Create any missing parent directories of TO,
+   while maintaining the current Working Directory.
    Return true if successful.  */
 
 static bool
-mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
+mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x,
+                     bool save_always)
 {
   bool save_working_directory =
-    ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
+    save_always
+    || ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
   int status = EXIT_SUCCESS;
 
   struct savewd wd;
@@ -749,7 +752,7 @@ static bool
 install_file_in_file_parents (char const *from, char *to,
                               const struct cp_options *x)
 {
-  return (mkancesdirs_safe_wd (from, to, (struct cp_options *)x)
+  return (mkancesdirs_safe_wd (from, to, (struct cp_options *)x, false)
           && install_file_in_file (from, to, x));
 }
 
@@ -766,7 +769,7 @@ install_file_in_dir (const char *from, const char *to_dir,
   bool ret = true;
 
   if (mkdir_and_install)
-    ret = mkancesdirs_safe_wd (from, to, (struct cp_options *)x);
+    ret = mkancesdirs_safe_wd (from, to, (struct cp_options *)x, true);
 
   ret = ret && install_file_in_file (from, to, x);
   free (to);

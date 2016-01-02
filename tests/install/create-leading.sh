@@ -24,12 +24,19 @@ print_ver_ ginstall
 
 
 file=file
-echo foo > $file
+echo foo > $file || framework_failure_
 
 # Before 4.0q, this would mistakenly create $file, not 'dest'
 # in no-dir1/no-dir2/.
 ginstall -D $file no-dir1/no-dir2/dest || fail=1
 test -d no-dir1/no-dir2 || fail=1
 test -r no-dir1/no-dir2/dest || fail=1
+
+# Between 6.1 and 8.24, this would not copy $file
+# due to incorrectly modified working directory
+mkdir dir1 || framework_failure_
+touch dir1/file1 || framework_failure_
+ginstall -D $PWD/dir1/file1 $file -t $PWD/no-dir2/ || fail=1
+test -r no-dir2/$file && test -r no-dir2/file1 || fail=1
 
 Exit $fail

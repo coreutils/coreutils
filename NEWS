@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   cut --fields no longer outputs extraneous characters on some uClibc configs.
   [bug introduced in coreutils-6.11]
 
+  install -D again copies relative file names when absolute file names
+  are also specified along with an absolute destination directory name.
+  [bug introduced in coreutils-6.2]
+
   ls no longer prematurely wraps lines when printing short file names.
   [bug introduced in coreutils-5.1.0]
 
