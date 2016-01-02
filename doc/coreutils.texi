@@ -9024,6 +9024,7 @@ Program used to strip binaries.
 @optBackupSuffix
 
 @optTargetDirectory
+Also specifying the @option{-D} option will ensure the directory is present.
 
 @optNoTargetDirectory
 

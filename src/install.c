@@ -632,6 +632,7 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
 "), stdout);
       fputs (_("\
   -D                  create all leading components of DEST except the last,\n\
+                        or all components of --target-directory,\n\
                         then copy SOURCE to DEST\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
