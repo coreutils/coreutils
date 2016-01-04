@@ -35,6 +35,9 @@ stty $(cat $saved_state) || fail=1
 # This would segfault prior to sh-utils-2.0j.
 stty erase - || fail=1
 
+# Ensure --immediate mode is supported
+stty -I erase - || fail=1
+
 # These would improperly ignore invalid options through coreutils 5.2.1.
 returns_ 1 stty -F 2>/dev/null || fail=1
 returns_ 1 stty -raw -F no/such/file 2>/dev/null || fail=1

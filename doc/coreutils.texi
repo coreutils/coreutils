@@ -13808,6 +13808,18 @@ Print all current settings in a form that can be used as an argument to
 another @command{stty} command to restore the current settings.  This option
 may not be used in combination with any line settings.
 
+@item -I
+@itemx --immediate
+@opindex -I
+@opindex --immediate
+@cindex nonblocking @command{stty} setting
+Apply settings without first waiting for pending output to be transmitted.
+In some cases the system may be in a state where serial transmission
+is not possible.
+For example, if the system has received the @samp{DC3} character
+with @code{ixon} (software flow control) enabled, then @command{stty} would
+block without this option.
+
 @end table
 
 Many settings can be turned off by preceding them with a @samp{-}.

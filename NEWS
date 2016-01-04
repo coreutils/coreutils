@@ -47,6 +47,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   is reusable by most shells, with non-printable characters escaped
   with the POSIX proposed $'...' syntax.
 
+  stty now supports the -I, --immediate option, to apply settings
+  without waiting for transmission of any pending output.
+
 ** Changes in behavior
 
   base64 no longer supports hex or oct --wrap parameters,

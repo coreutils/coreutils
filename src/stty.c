@@ -469,6 +469,7 @@ static struct option const longopts[] =
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
   {"file", required_argument, NULL, 'F'},
+  {"immediate", no_argument, NULL, 'I'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -522,7 +523,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [-F DEVICE | --file=DEVICE] [SETTING]...\n\
+Usage: %s [-F DEVICE | --file=DEVICE] [-I] [SETTING]...\n\
   or:  %s [-F DEVICE | --file=DEVICE] [-a|--all]\n\
   or:  %s [-F DEVICE | --file=DEVICE] [-g|--save]\n\
 "),
@@ -537,6 +538,9 @@ Print or change terminal characteristics.\n\
   -a, --all          print all current settings in human-readable form\n\
   -g, --save         print all current settings in a stty-readable form\n\
   -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n\
+"), stdout);
+      fputs (_("\
+  -I, --immediate    apply setting without waiting for pending transmission\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -1080,6 +1084,7 @@ main (int argc, char **argv)
   bool noargs = true;
   char *file_name = NULL;
   const char *device_name;
+  int tcsetattr_options = TCSADRAIN;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1103,7 +1108,7 @@ main (int argc, char **argv)
      stty parses options, be sure it still works with combinations of
      short and long options, --, POSIXLY_CORRECT, etc.  */
 
-  while ((optc = getopt_long (argc - argi, argv + argi, "-agF:",
+  while ((optc = getopt_long (argc - argi, argv + argi, "-agF:I",
                               longopts, NULL))
          != -1)
     {
@@ -1123,6 +1128,10 @@ main (int argc, char **argv)
           if (file_name)
             error (EXIT_FAILURE, 0, _("only one device may be specified"));
           file_name = optarg;
+          break;
+
+        case 'I':
+          tcsetattr_options = TCSANOW;
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -1361,7 +1370,7 @@ main (int argc, char **argv)
          spurious difference in an uninitialized portion of the structure.  */
       static struct termios new_mode;
 
-      if (tcsetattr (STDIN_FILENO, TCSADRAIN, &mode))
+      if (tcsetattr (STDIN_FILENO, tcsetattr_options, &mode))
         error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
