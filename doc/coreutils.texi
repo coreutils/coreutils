@@ -14187,6 +14187,13 @@ each character over high latency links.  See also
 @uref{ftp://ftp.rfc-editor.org/in-notes/rfc1116.txt, Internet RFC 1116}.
 Non-POSIX@.
 May be negated.
+
+@item flusho
+@opindex flusho
+Discard output.
+Note this setting is currently ignored on GNU/Linux systems.
+Non-POSIX@.
+May be negated.
 @end table
 
 

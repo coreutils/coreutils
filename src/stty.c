@@ -343,6 +343,9 @@ static struct mode_info const mode_info[] =
   {"echoke", local, SANE_SET | REV, ECHOKE, 0},
   {"crtkill", local, REV | OMIT, ECHOKE, 0},
 #endif
+#ifdef FLUSHO
+  {"flusho", local, SANE_UNSET | REV, FLUSHO, 0},
+#endif
 #if defined TIOCEXT
   {"extproc", local, SANE_UNSET | REV | NO_SETATTR, EXTPROC, 0},
 #elif defined EXTPROC
@@ -835,6 +838,11 @@ Local settings:\n\
  * [-]extproc    enable \"LINEMODE\"; useful with high latency links\n\
 "), stdout);
 #endif
+#if defined FLUSHO
+      fputs (_("\
+ * [-]flusho     discard output\n\
+"), stdout);
+#endif
       printf (_("\
    [-]icanon     enable special characters: %s\n\
    [-]iexten     enable non-POSIX special characters\n\
@@ -1053,6 +1061,9 @@ Combination settings:\n\
 #endif
 #ifdef EXTPROC
    " -extproc"
+#endif
+#ifdef FLUSHO
+   " -flusho"
 #endif
 );
       fputs (_("\
