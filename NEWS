@@ -47,8 +47,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   is reusable by most shells, with non-printable characters escaped
   with the POSIX proposed $'...' syntax.
 
-  stty now supports the -I, --immediate option, to apply settings
-  without waiting for transmission of any pending output.
+  stty now supports the "[-]drain" setting to control whether to wait
+  for transmission of pending output before application of settings.
 
 ** Changes in behavior
 

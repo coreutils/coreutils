@@ -464,12 +464,14 @@ static int max_col;
 /* Current position, to know when to wrap. */
 static int current_col;
 
+/* Default "drain" mode for tcsetattr.  */
+static int tcsetattr_options = TCSADRAIN;
+
 static struct option const longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
   {"file", required_argument, NULL, 'F'},
-  {"immediate", no_argument, NULL, 'I'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -523,7 +525,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [-F DEVICE | --file=DEVICE] [-I] [SETTING]...\n\
+Usage: %s [-F DEVICE | --file=DEVICE] [SETTING]...\n\
   or:  %s [-F DEVICE | --file=DEVICE] [-a|--all]\n\
   or:  %s [-F DEVICE | --file=DEVICE] [-g|--save]\n\
 "),
@@ -538,9 +540,6 @@ Print or change terminal characteristics.\n\
   -a, --all          print all current settings in human-readable form\n\
   -g, --save         print all current settings in a stty-readable form\n\
   -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n\
-"), stdout);
-      fputs (_("\
-  -I, --immediate    apply setting without waiting for pending transmission\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -620,6 +619,9 @@ Special settings:\n\
  * columns N     same as cols N\n\
 "), stdout);
 #endif
+      printf (_("\
+ * [-]drain      wait for transmission before applying settings (%s by default)\
+\n"), tcsetattr_options == TCSADRAIN ? _("on") : _("off"));
       fputs (_("\
    ispeed N      set the input speed to N\n\
 "), stdout);
@@ -1084,7 +1086,6 @@ main (int argc, char **argv)
   bool noargs = true;
   char *file_name = NULL;
   const char *device_name;
-  int tcsetattr_options = TCSADRAIN;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1108,7 +1109,7 @@ main (int argc, char **argv)
      stty parses options, be sure it still works with combinations of
      short and long options, --, POSIXLY_CORRECT, etc.  */
 
-  while ((optc = getopt_long (argc - argi, argv + argi, "-agF:I",
+  while ((optc = getopt_long (argc - argi, argv + argi, "-agF:",
                               longopts, NULL))
          != -1)
     {
@@ -1130,16 +1131,16 @@ main (int argc, char **argv)
           file_name = optarg;
           break;
 
-        case 'I':
-          tcsetattr_options = TCSANOW;
-          break;
-
         case_GETOPT_HELP_CHAR;
 
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
         default:
-          noargs = false;
+          /* Consider "drain" as an option rather than a setting,
+             to support: alias stty='stty -drain'  etc.  */
+          if (! STREQ (argv[argi + opti], "-drain")
+              && ! STREQ (argv[argi + opti], "drain"))
+            noargs = false;
 
           /* Skip the argument containing this unrecognized option;
              the 2nd pass will analyze it.  */
@@ -1215,6 +1216,11 @@ main (int argc, char **argv)
         {
           ++arg;
           reversed = true;
+        }
+      if (STREQ (arg, "drain"))
+        {
+          tcsetattr_options = reversed ? TCSANOW : TCSADRAIN;
+          continue;
         }
       for (i = 0; mode_info[i].name != NULL; ++i)
         {
