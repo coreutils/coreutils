@@ -34,12 +34,22 @@ my @Tests =
    ['no-nl-3', {IN=>"a"},   {IN=>"b\n"}, {OUT=>"a\tb\n"}],
    ['no-nl-4', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\tb\n"}],
 
+   ['zno-nl-1', '-z', {IN=>"a"},   {IN=>"b"},   {OUT=>"a\tb\0"}],
+   ['zno-nl-2', '-z', {IN=>"a\0"}, {IN=>"b"},   {OUT=>"a\tb\0"}],
+   ['zno-nl-3', '-z', {IN=>"a"},   {IN=>"b\0"}, {OUT=>"a\tb\0"}],
+   ['zno-nl-4', '-z', {IN=>"a\0"}, {IN=>"b\0"}, {OUT=>"a\tb\0"}],
+
    # Same as above, but with a two lines in each input file and
    # the addition of the -d option to make SPACE be the output delimiter.
    ['no-nla1', '-d" "', {IN=>"1\na"},   {IN=>"2\nb"},   {OUT=>"1 2\na b\n"}],
    ['no-nla2', '-d" "', {IN=>"1\na\n"}, {IN=>"2\nb"},   {OUT=>"1 2\na b\n"}],
    ['no-nla3', '-d" "', {IN=>"1\na"},   {IN=>"2\nb\n"}, {OUT=>"1 2\na b\n"}],
    ['no-nla4', '-d" "', {IN=>"1\na\n"}, {IN=>"2\nb\n"}, {OUT=>"1 2\na b\n"}],
+
+   ['zno-nla1', '-zd" "', {IN=>"1\0a"},   {IN=>"2\0b"},   {OUT=>"1 2\0a b\0"}],
+   ['zno-nla2', '-zd" "', {IN=>"1\0a\0"}, {IN=>"2\0b"},   {OUT=>"1 2\0a b\0"}],
+   ['zno-nla3', '-zd" "', {IN=>"1\0a"},   {IN=>"2\0b\0"}, {OUT=>"1 2\0a b\0"}],
+   ['zno-nla4', '-zd" "', {IN=>"1\0a\0"}, {IN=>"2\0b\0"}, {OUT=>"1 2\0a b\0"}],
 
    # Specifying a delimiter with a trailing backslash would overrun a
    # malloc'd buffer.

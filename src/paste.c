@@ -67,10 +67,13 @@ static char *delims;
 /* A pointer to the character after the end of 'delims'. */
 static char const *delim_end;
 
+static unsigned char line_delim = '\n';
+
 static struct option const longopts[] =
 {
   {"serial", no_argument, NULL, 's'},
   {"delimiters", required_argument, NULL, 'd'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -250,7 +253,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
               while (chr != EOF)
                 {
                   sometodo = true;
-                  if (chr == '\n')
+                  if (chr == line_delim)
                     break;
                   xputchar (chr);
                   chr = getc (fileptr[i]);
@@ -295,7 +298,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
                             write_error ();
                           delims_saved = 0;
                         }
-                      xputchar ('\n');
+                      xputchar (line_delim);
                     }
                   continue;	/* Next read of files, or exit. */
                 }
@@ -316,7 +319,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
               /* Except for last file, replace last newline with delim. */
               if (i + 1 != nfiles)
                 {
-                  if (chr != '\n' && chr != EOF)
+                  if (chr != line_delim && chr != EOF)
                     xputchar (chr);
                   if (*delimptr != EMPTY_DELIM)
                     xputchar (*delimptr);
@@ -327,7 +330,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
                 {
                   /* If the last line of the last file lacks a newline,
                      print one anyhow.  POSIX requires this.  */
-                  char c = (chr == EOF ? '\n' : chr);
+                  char c = (chr == EOF ? line_delim : chr);
                   xputchar (c);
                 }
             }
@@ -386,7 +389,7 @@ paste_serial (size_t nfiles, char **fnamptr)
           while ((charnew = getc (fileptr)) != EOF)
             {
               /* Process the old character. */
-              if (charold == '\n')
+              if (charold == line_delim)
                 {
                   if (*delimptr != EMPTY_DELIM)
                     xputchar (*delimptr);
@@ -405,8 +408,8 @@ paste_serial (size_t nfiles, char **fnamptr)
           xputchar (charold);
         }
 
-      if (charold != '\n')
-        xputchar ('\n');
+      if (charold != line_delim)
+        xputchar (line_delim);
 
       if (ferror (fileptr))
         {
@@ -447,6 +450,9 @@ each FILE, separated by TABs, to standard output.\n\
   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
 "), stdout);
+      fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       /* FIXME: add a couple of examples.  */
@@ -473,7 +479,7 @@ main (int argc, char **argv)
   have_read_stdin = false;
   serial_merge = false;
 
-  while ((optc = getopt_long (argc, argv, "d:s", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "d:sz", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -484,6 +490,10 @@ main (int argc, char **argv)
 
         case 's':
           serial_merge = true;
+          break;
+
+        case 'z':
+          line_delim = '\0';
           break;
 
         case_GETOPT_HELP_CHAR;

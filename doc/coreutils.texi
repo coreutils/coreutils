@@ -6004,6 +6004,8 @@ $ paste -d '%_' num2 let3 num2
 %c_
 @end example
 
+@optZeroTerminated
+
 @end table
 
 @exitstatus

@@ -33,7 +33,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  comm, cut, head, tail now have the -z,--zero-terminated option, and
+  comm, cut, head, paste, tail now have the -z,--zero-terminated option, and
   tac --separator accepts an empty argument, to work with NUL delimited items.
 
   dd now summarizes sizes in --human-readable format too, not just --si.
