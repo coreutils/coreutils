@@ -98,6 +98,9 @@ static bool complement;
 /* The delimiter character for field mode. */
 static unsigned char delim;
 
+/* The delimiter for each line/record. */
+static unsigned char line_delim = '\n';
+
 /* True if the --output-delimiter=STRING option was specified.  */
 static bool output_delimiter_specified;
 
@@ -128,6 +131,7 @@ static struct option const longopts[] =
   {"only-delimited", no_argument, NULL, 's'},
   {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
   {"complement", no_argument, NULL, COMPLEMENT_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -170,6 +174,9 @@ Print selected parts of lines from each FILE to standard output.\n\
   -s, --only-delimited    do not print lines not containing delimiters\n\
       --output-delimiter=STRING  use STRING as the output delimiter\n\
                             the default is to use the input delimiter\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -239,9 +246,9 @@ cut_bytes (FILE *stream)
 
       c = getc (stream);
 
-      if (c == '\n')
+      if (c == line_delim)
         {
-          putchar ('\n');
+          putchar (c);
           byte_idx = 0;
           print_delimiter = false;
           current_rp = frp;
@@ -249,7 +256,7 @@ cut_bytes (FILE *stream)
       else if (c == EOF)
         {
           if (byte_idx > 0)
-            putchar ('\n');
+            putchar (line_delim);
           break;
         }
       else
@@ -308,7 +315,7 @@ cut_fields (FILE *stream)
           size_t n_bytes;
 
           len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
-                            GETNLINE_NO_LIMIT, delim, '\n', stream);
+                            GETNLINE_NO_LIMIT, delim, line_delim, stream);
           if (len < 0)
             {
               free (field_1_buffer);
@@ -336,9 +343,9 @@ cut_fields (FILE *stream)
                 {
                   fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
                   /* Make sure the output line is newline terminated.  */
-                  if (field_1_buffer[n_bytes - 1] != '\n')
-                    putchar ('\n');
-                  c = '\n';
+                  if (field_1_buffer[n_bytes - 1] != line_delim)
+                    putchar (line_delim);
+                  c = line_delim;
                 }
               continue;
             }
@@ -348,7 +355,7 @@ cut_fields (FILE *stream)
               fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
 
               /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
-              if (delim == '\n')
+              if (delim == line_delim)
                 {
                   int last_c = getc (stream);
                   if (last_c != EOF)
@@ -374,7 +381,7 @@ cut_fields (FILE *stream)
             }
           found_any_selected_field = true;
 
-          while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+          while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
             {
               putchar (c);
               prev_c = c;
@@ -382,14 +389,14 @@ cut_fields (FILE *stream)
         }
       else
         {
-          while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+          while ((c = getc (stream)) != delim && c != line_delim && c != EOF)
             {
               prev_c = c;
             }
         }
 
       /* With -d$'\n' don't treat the last '\n' as a delimiter.  */
-      if (delim == '\n' && c == delim)
+      if (delim == line_delim && c == delim)
         {
           int last_c = getc (stream);
           if (last_c != EOF)
@@ -400,13 +407,14 @@ cut_fields (FILE *stream)
 
       if (c == delim)
         next_item (&field_idx);
-      else if (c == '\n' || c == EOF)
+      else if (c == line_delim || c == EOF)
         {
           if (found_any_selected_field
               || !(suppress_non_delimited && field_idx == 1))
             {
-              if (c == '\n' || prev_c != '\n' || delim == '\n')
-                putchar ('\n');
+              if (c == line_delim || prev_c != line_delim
+                  || delim == line_delim)
+                putchar (line_delim);
             }
           if (c == EOF)
             break;
@@ -492,7 +500,7 @@ main (int argc, char **argv)
   delim = '\0';
   have_read_stdin = false;
 
-  while ((optc = getopt_long (argc, argv, "b:c:d:f:ns", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "b:c:d:f:nsz", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -536,6 +544,10 @@ main (int argc, char **argv)
 
         case 's':
           suppress_non_delimited = true;
+          break;
+
+        case 'z':
+          line_delim = '\0';
           break;
 
         case COMPLEMENT_OPTION:

@@ -5902,6 +5902,8 @@ In other words, do @emph{not} print the bytes, characters or fields
 specified via those options.  This option is useful when you have
 many fields and want to print all but a few of them.
 
+@optZeroTerminated
+
 @end table
 
 @exitstatus
