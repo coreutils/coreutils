@@ -1706,6 +1706,8 @@ Treat the separator string as a regular expression.
 @opindex -s
 @opindex --separator
 Use @var{separator} as the record separator, instead of newline.
+Note an empty @var{separator} is treated as a zero byte.
+I.e., input and output items are delimited with ASCII NUL.
 
 @end table
 

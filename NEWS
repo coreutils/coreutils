@@ -33,8 +33,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  cut, head, tail now have -z, --zero-terminated options to work with
-  NUL delimited items.
+  cut, head, tail now have the -z,--zero-terminated option, and
+  tac --separator accepts an empty argument, to work with NUL delimited items.
 
   dd now summarizes sizes in --human-readable format too, not just --si.
   E.g., "3441325000 bytes (3.4 GB, 3.2 GiB) copied".  It omits the summaries

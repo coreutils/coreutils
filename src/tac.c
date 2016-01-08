@@ -639,8 +639,6 @@ main (int argc, char **argv)
           break;
         case 's':
           separator = optarg;
-          if (*separator == 0)
-            error (EXIT_FAILURE, 0, _("separator cannot be empty"));
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -651,6 +649,9 @@ main (int argc, char **argv)
 
   if (sentinel_length == 0)
     {
+      if (*separator == 0)
+        error (EXIT_FAILURE, 0, _("separator cannot be empty"));
+
       compiled_separator.buffer = NULL;
       compiled_separator.allocated = 0;
       compiled_separator.fastmap = compiled_separator_fastmap;
@@ -661,7 +662,7 @@ main (int argc, char **argv)
         error (EXIT_FAILURE, 0, "%s", (error_message));
     }
   else
-    match_length = sentinel_length = strlen (separator);
+    match_length = sentinel_length = *separator ? strlen (separator) : 1;
 
   read_size = INITIAL_READSIZE;
   while (sentinel_length >= read_size / 2)

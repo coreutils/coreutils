@@ -45,6 +45,13 @@ my @Tests =
   ['basic-j', '', {IN=>"1234\n8\n"}, {OUT=>"8\n1234\n"}],
   ['basic-k', '', {IN=>"123\n8\n"}, {OUT=>"8\n123\n"}],
 
+  ['nul-0', '-s ""', {IN=>""}, {OUT=>""}],
+  ['nul-a', '-s ""', {IN=>"a"}, {OUT=>"a"}],
+  ['nul-b', '-s ""', {IN=>"\0"}, {OUT=>"\0"}],
+  ['nul-c', '-s ""', {IN=>"a\0"}, {OUT=>"a\0"}],
+  ['nul-d', '-s ""', {IN=>"a\0b"}, {OUT=>"ba\0"}],
+  ['nul-e', '-s ""', {IN=>"a\0b\0"}, {OUT=>"b\0a\0"}],
+
   ['opt-b', '-b', {IN=>"\na\nb\nc"}, {OUT=>"\nc\nb\na"}],
   ['opt-s', '-s:', {IN=>"a:b:c:"}, {OUT=>"c:b:a:"}],
   ['opt-sb', qw(-s : -b), {IN=>":a:b:c"}, {OUT=>":c:b:a"}],
