@@ -59,6 +59,9 @@ static bool seen_unpairable;
 /* If nonzero, we have warned about disorder in that file. */
 static bool issued_disorder_warning[2];
 
+/* line delimiter.  */
+static unsigned char delim = '\n';
+
 /* If nonzero, check that the input is correctly ordered. */
 static enum
   {
@@ -86,6 +89,7 @@ static struct option const long_options[] =
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
   {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -130,6 +134,9 @@ and column three contains lines common to both files.\n\
 "), stdout);
       fputs (_("\
   --output-delimiter=STR  separate columns with STR\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -277,7 +284,8 @@ compare_files (char **infiles)
 
       fadvise (streams[i], FADVISE_SEQUENTIAL);
 
-      thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
+      thisline[i] = readlinebuffer_delim (all_line[i][alt[i][0]], streams[i],
+                                          delim);
       if (ferror (streams[i]))
         error (EXIT_FAILURE, errno, "%s", quotef (infiles[i]));
     }
@@ -336,7 +344,8 @@ compare_files (char **infiles)
             alt[i][1] = alt[i][0];
             alt[i][0] = (alt[i][0] + 1) & 0x03;
 
-            thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
+            thisline[i] = readlinebuffer_delim (all_line[i][alt[i][0]],
+                                                streams[i], delim);
 
             if (thisline[i])
               check_order (all_line[i][alt[i][1]], thisline[i], i + 1);
@@ -382,7 +391,7 @@ main (int argc, char **argv)
   issued_disorder_warning[0] = issued_disorder_warning[1] = false;
   check_input_order = CHECK_ORDER_DEFAULT;
 
-  while ((c = getopt_long (argc, argv, "123", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "123z", long_options, NULL)) != -1)
     switch (c)
       {
       case '1':
@@ -395,6 +404,10 @@ main (int argc, char **argv)
 
       case '3':
         both = false;
+        break;
+
+      case 'z':
+        delim = '\0';
         break;
 
       case NOCHECK_ORDER_OPTION:

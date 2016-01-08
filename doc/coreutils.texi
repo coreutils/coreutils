@@ -5130,6 +5130,8 @@ rather than the default of a single TAB character.
 
 The delimiter @var{str} may not be empty.
 
+@optZeroTerminated
+
 @end table
 
 @node ptx invocation

@@ -28,14 +28,17 @@ my $prog = 'comm';
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @inputs = ({IN=>{a=>"1\n3"}}, {IN=>{b=>"2\n3"}});
+my @zinputs = ({IN=>{za=>"1\0003"}}, {IN=>{zb=>"2\0003"}});
 
 my @Tests =
   (
    # basic operation
    ['basic', @inputs, {OUT=>"1\n\t2\n\t\t3\n"} ],
+   ['zbasic', '-z', @zinputs, {OUT=>"1\0\t2\0\t\t3\0"} ],
 
    # suppress lines unique to file 1
    ['opt-1', '-1', @inputs, {OUT=>"2\n\t3\n"} ],
+   ['zopt-1', '-z', '-1', @zinputs, {OUT=>"2\0\t3\0"} ],
 
    # suppress lines unique to file 2
    ['opt-2', '-2', @inputs, {OUT=>"1\n\t3\n"} ],
