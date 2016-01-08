@@ -71,9 +71,9 @@ static enum
   } check_input_order;
 
 /* Output columns will be delimited with this string, which may be set
-   on the command-line with --output-delimiter=STR.  The default is a
-   single TAB character. */
-static char const *delimiter;
+   on the command-line with --output-delimiter=STR.  */
+static char const *col_sep = "\t";
+static size_t col_sep_len = 0;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -174,20 +174,17 @@ writeline (struct linebuffer const *line, FILE *stream, int class)
     case 2:
       if (!only_file_2)
         return;
-      /* Print a delimiter if we are printing lines from file 1.  */
       if (only_file_1)
-        fputs (delimiter, stream);
+        fwrite (col_sep, 1, col_sep_len, stream);
       break;
 
     case 3:
       if (!both)
         return;
-      /* Print a delimiter if we are printing lines from file 1.  */
       if (only_file_1)
-        fputs (delimiter, stream);
-      /* Print a delimiter if we are printing lines from file 2.  */
+        fwrite (col_sep, 1, col_sep_len, stream);
       if (only_file_2)
-        fputs (delimiter, stream);
+        fwrite (col_sep, 1, col_sep_len, stream);
       break;
     }
 
@@ -419,14 +416,10 @@ main (int argc, char **argv)
         break;
 
       case OUTPUT_DELIMITER_OPTION:
-        if (delimiter && !STREQ (delimiter, optarg))
-          error (EXIT_FAILURE, 0, _("multiple delimiters specified"));
-        delimiter = optarg;
-        if (!*delimiter)
-          {
-            error (EXIT_FAILURE, 0, _("empty %s not allowed"),
-                   quote ("--output-delimiter"));
-          }
+        if (col_sep_len && !STREQ (col_sep, optarg))
+          error (EXIT_FAILURE, 0, _("multiple output delimiters specified"));
+        col_sep = optarg;
+        col_sep_len = *optarg ? strlen (optarg) : 1;
         break;
 
       case_GETOPT_HELP_CHAR;
@@ -436,6 +429,9 @@ main (int argc, char **argv)
       default:
         usage (EXIT_FAILURE);
       }
+
+  if (! col_sep_len)
+    col_sep_len = 1;
 
   if (argc - optind < 2)
     {
@@ -451,10 +447,6 @@ main (int argc, char **argv)
       error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
       usage (EXIT_FAILURE);
     }
-
-  /* The default delimiter is a TAB. */
-  if (!delimiter)
-    delimiter = "\t";
 
   compare_files (argv + optind);
 

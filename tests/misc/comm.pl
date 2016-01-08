@@ -134,13 +134,15 @@ my @Tests =
    ['delim-2char', '--output-delimiter=++', @inputs,
     {OUT=>"1\n++2\n++++3\n"} ],
 
-   # invalid empty delimiter
-   ['delim-empty', '--output-delimiter=', @inputs, {EXIT=>1},
-    {ERR => "$prog: empty '--output-delimiter' not allowed\n"}],
+   # NUL delimiter
+   ['delim-empty', '--output-delimiter=', @inputs,
+    {OUT=>"1\n\0002\n\000\0003\n"} ],
+   ['zdelim-empty', '-z', '-z --output-delimiter=', @zinputs,
+    {OUT=>"1\000\0002\000\000\0003\000"} ],
 
    # invalid dual delimiter
-   ['delim-dual', '--output-delimiter=,', '--output-delimiter=+',
-    @inputs, {EXIT=>1}, {ERR => "$prog: multiple delimiters specified\n"}],
+   ['delim-dual', '--output-delimiter=,', '--output-delimiter=+', @inputs,
+    {EXIT=>1}, {ERR => "$prog: multiple output delimiters specified\n"}],
 
    # valid dual delimiter specification
    ['delim-dual2', '--output-delimiter=,', '--output-delimiter=,', @inputs,
