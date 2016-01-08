@@ -17171,6 +17171,9 @@ the output numbers represent other units (e.g. to represent @samp{4,000,000}
 bytes in blocks of 1KB, use @samp{--to=si --to-unit=1000}).
 Suffixes are handled as with @samp{--from=auto}.
 
+@optZeroTerminated
+@newlineFieldSeparator
+
 @end table
 
 @subsection Possible @var{unit}s:

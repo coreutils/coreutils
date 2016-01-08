@@ -147,6 +147,7 @@ static struct option const longopts[] =
   {"header", optional_argument, NULL, HEADER_OPTION},
   {"format", required_argument, NULL, FORMAT_OPTION},
   {"invalid", required_argument, NULL, INVALID_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -189,7 +190,12 @@ static int conv_exit_code = EXIT_CONVERSION_WARNINGS;
 /* auto-pad each line based on skipped whitespace.  */
 static int auto_padding = 0;
 static mbs_align_t padding_alignment = MBS_ALIGN_RIGHT;
+
+/* field delimiter */
 static int delimiter = DELIMITER_DEFAULT;
+
+/* line delimiter.  */
+static unsigned char line_delim = '\n';
 
 /* if non-zero, the first 'header' lines from STDIN are skipped.  */
 static uintmax_t header = 0;
@@ -204,6 +210,7 @@ static int decimal_point_length;
 
 /* debugging for developers.  Enables devmsg().  */
 static bool dev_debug = false;
+
 
 static inline int
 default_scale_base (enum scale_type scale)
@@ -934,7 +941,9 @@ Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
       fputs (_("\
       --to-unit=N      the output unit size (instead of the default 1)\n\
 "), stdout);
-
+      fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
@@ -1329,10 +1338,10 @@ next_field (char **line)
   else
     {
       /* keep any space prefix in the returned field */
-      while (*field_end && isblank (to_uchar (*field_end)))
+      while (*field_end && field_sep (*field_end))
         ++field_end;
 
-      while (*field_end && !isblank (to_uchar (*field_end)))
+      while (*field_end && ! field_sep (*field_end))
         ++field_end;
     }
 
@@ -1420,7 +1429,7 @@ process_line (char *line, bool newline)
   }
 
   if (newline)
-    putchar ('\n');
+    putchar (line_delim);
 
   return valid_number;
 }
@@ -1451,7 +1460,7 @@ main (int argc, char **argv)
 
   while (true)
     {
-      int c = getopt_long (argc, argv, "d:", longopts, NULL);
+      int c = getopt_long (argc, argv, "d:z", longopts, NULL);
 
       if (c == -1)
         break;
@@ -1510,6 +1519,10 @@ main (int argc, char **argv)
             error (EXIT_FAILURE, 0,
                    _("the delimiter must be a single character"));
           delimiter = optarg[0];
+          break;
+
+        case 'z':
+          line_delim = '\0';
           break;
 
         case SUFFIX_OPTION:
@@ -1599,12 +1612,14 @@ main (int argc, char **argv)
       size_t line_allocated = 0;
       ssize_t len;
 
-      while (header-- && getline (&line, &line_allocated, stdin) > 0)
+      while (header-- && getdelim (&line, &line_allocated,
+                                   line_delim, stdin) > 0)
         fputs (line, stdout);
 
-      while ((len = getline (&line, &line_allocated, stdin)) > 0)
+      while ((len = getdelim (&line, &line_allocated,
+                              line_delim, stdin)) > 0)
         {
-          bool newline = line[len - 1] == '\n';
+          bool newline = line[len - 1] == line_delim;
           if (newline)
             line[len - 1] = '\0';
           valid_numbers &= process_line (line, newline);

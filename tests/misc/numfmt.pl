@@ -804,6 +804,32 @@ my @Tests =
              {EXIT => 2}],
     );
 
+# test null-terminated lines
+my @NullDelim_Tests =
+  (
+     # Input from STDIN
+     ['z1', '-z --to=iec',
+             {IN_PIPE => "1025\x002048\x00"}, {OUT=>"1.1K\x002.0K\x00"}],
+
+     # Input from the commandline - terminated by NULL vs NL
+     ['z3', '   --to=iec 1024',  {OUT=>"1.0K\n"}],
+     ['z2', '-z --to=iec 1024',  {OUT=>"1.0K\x00"}],
+
+     # Input from STDIN, with fields
+     ['z4', '-z --field=3 --to=si',
+             {IN_PIPE => "A B 1001 C\x00" .
+                         "D E 2002 F\x00"},
+             {OUT => "A B 1.1K C\x00" .
+                     "D E 2.1K F\x00"}],
+
+     # Input from STDIN, with fields and embedded NL
+     ['z5', '-z --field=3 --to=si',
+             {IN_PIPE => "A\nB 1001 C\x00" .
+                         "D E\n2002 F\x00"},
+             {OUT => "A B 1.1K C\x00" .
+                     "D E 2.1K F\x00"}],
+  );
+
 my @Limit_Tests =
   (
      # Large Values
@@ -1079,6 +1105,9 @@ foreach $t (@Tests)
           and $e->{OUT} .= "\n"
       }
   }
+
+# Add test for null-terminated lines (after adjusting the OUT string, above).
+push @Tests, @NullDelim_Tests;
 
 my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
