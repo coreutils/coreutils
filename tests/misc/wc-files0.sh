@@ -40,4 +40,12 @@ if test "$fail" = ''; then
   compare exp out || fail=1
 fi
 
+# Ensure file name containing new lines are output on a single line
+nlname='1
+2'
+touch "$nlname" || framework_failure_
+printf '%s\0' "$nlname" | wc --files0-from=- > out || fail=1
+printf '%s\n' "0 0 0 '1'$'\\n''2'" > exp || framework_failure_
+compare exp out || fail=1
+
 Exit $fail

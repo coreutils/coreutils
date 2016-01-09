@@ -182,7 +182,7 @@ write_counts (uintmax_t lines,
       printf (format_int, number_width, umaxtostr (linelength, buf));
     }
   if (file)
-    printf (" %s", file);
+    printf (" %s", strchr (file, '\n') ? quotef (file) : file);
   putchar ('\n');
 }
 

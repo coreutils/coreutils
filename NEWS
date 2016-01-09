@@ -94,6 +94,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   pseudo file systems "bpf_fs", "btrfs_test", "nsfs", "overlayfs"
   and "tracefs", and remote file system "acfs".
 
+  wc now ensures a single line per file for counts on standard output,
+  by quoting names containing '\n' characters; appropriate for use in a shell.
+
 
 * Noteworthy changes in release 8.24 (2015-07-03) [stable]
 
