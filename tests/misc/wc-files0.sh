@@ -33,7 +33,7 @@ EOF
 
 compare exp out || fail=1
 
-if test "$fail" = ''; then
+if ! test "$fail" = 1; then
   # Repeat the above test, but read the file name list from stdin.
   rm -f out
   wc --files0-from=- < names > out || fail=1
