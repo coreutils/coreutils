@@ -35,6 +35,7 @@ cat_buf_1()
 {
   local delay="$1"
 
+  > out || framework_failure_
   dd count=1 if=fifo > out & pid=$!
   (echo 1; sleep $delay; echo 2) | cat -v > fifo
   wait $pid

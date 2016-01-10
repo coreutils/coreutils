@@ -72,7 +72,7 @@ if test "$HAVE_INOTIFY"; then
   {
     local delay="$1"
 
-    touch k || framework_failure_
+    > k && > tail.out && > tail.err || framework_failure_
     tail $fastpoll -F $mode k >tail.out 2>tail.err & pid=$!
     sleep $delay
     mv k l

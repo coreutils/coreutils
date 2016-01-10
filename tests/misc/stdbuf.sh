@@ -66,6 +66,7 @@ stdbuf_linebuffer()
   local delay="$1"
 
   printf '1\n' > exp
+  > out || framework_failure_
   dd count=1 if=fifo > out 2> err & pid=$!
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -oL uniq > fifo
   wait $pid
@@ -80,6 +81,7 @@ stdbuf_unbuffer()
 
   # Ensure un buffering stdout takes effect
   printf '1\n' > exp
+  > out || framework_failure_
   dd count=1 if=fifo > out 2> err & pid=$!
   (printf '1\n'; sleep $delay; printf '2\n') | stdbuf -o0 uniq > fifo
   wait $pid

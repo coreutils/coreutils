@@ -38,6 +38,8 @@ cleanup_()
 }
 
 for open in '' '1'; do
+  > err || framework_failure_
+
   # Run dd with the fullblock iflag to avoid short reads
   # which can be triggered by reception of signals
   dd iflag=fullblock if=/dev/zero of=fifo count=50 bs=5000000 2>err & pid=$!

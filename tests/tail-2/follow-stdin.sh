@@ -33,9 +33,10 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 fastpoll='-s.1 --max-unchanged-stats=1'
 
 echo line > in || framework_failure_
+echo line > exp || framework_failure_
 
 for mode in '' '---disable-inotify'; do
-  echo line > exp || framework_failure_
+  > out || framework_failure_
 
   tail $mode -f $fastpoll < in > out 2> err & pid=$!
 
