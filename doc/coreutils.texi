@@ -8677,12 +8677,18 @@ Use synchronized I/O for both data and metadata.
 @item nocache
 @opindex nocache
 @cindex discarding file cache
-Discard the data cache for a file.
-When count=0 all cache is discarded,
+Request to discard the system data cache for a file.
+When count=0 all cached data for the file is specified,
 otherwise the cache is dropped for the processed
-portion of the file.  Also when count=0
+portion of the file.  Also when count=0,
 failure to discard the cache is diagnosed
 and reflected in the exit status.
+
+Note data that is not already persisted to storage will not
+be discarded from cache, so note the use of the ``sync'' options
+in the examples below, which are used to maximize the
+effectiveness of the @samp{nocache} flag.
+
 Here are some usage examples:
 
 @example
@@ -8695,8 +8701,9 @@ dd of=ofile oflag=nocache conv=notrunc,fdatasync count=0
 # Drop cache for part of file
 dd if=ifile iflag=nocache skip=10 count=10 of=/dev/null
 
-# Stream data using just the read-ahead cache
-dd if=ifile of=ofile iflag=nocache oflag=nocache
+# Stream data using just the read-ahead cache.
+# See also the @samp{direct} flag.
+dd if=ifile of=ofile iflag=nocache oflag=nocache,sync
 @end example
 
 @item nonblock

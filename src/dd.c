@@ -632,7 +632,8 @@ Each FLAG symbol may be:\n\
         fputs (_("  noatime   do not update access time\n"), stdout);
 #if HAVE_POSIX_FADVISE
       if (O_NOCACHE)
-        fputs (_("  nocache   discard cached data\n"), stdout);
+        fputs (_("  nocache   Request to drop cache.  See also oflag=sync\n"),
+               stdout);
 #endif
       if (O_NOCTTY)
         fputs (_("  noctty    do not assign controlling terminal from file\n"),
