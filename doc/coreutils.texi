@@ -11738,7 +11738,7 @@ The valid @var{format} directives for files with @option{--format} and
 @option{--printf} are:
 
 @itemize @bullet
-@item %a - Access rights in octal
+@item %a - Access rights in octal (note @samp{#} and @samp{0} printf flags)
 @item %A - Access rights in human readable form
 @item %b - Number of blocks allocated (see @samp{%B})
 @item %B - The size in bytes of each block reported by @samp{%b}
@@ -11769,6 +11769,11 @@ The valid @var{format} directives for files with @option{--format} and
 @item %z - Time of last status change
 @item %Z - Time of last status change as seconds since Epoch
 @end itemize
+
+The @samp{%a} format prints the octal mode, and so it is useful
+to control the zero padding of the output with the @samp{#} and @samp{0}
+printf flags. For example to pad to at least 3 wide while making larger
+numbers unambiguously octal, you can use @samp{%#03a}.
 
 The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
 the stat(2) structure, and are only defined for character and block

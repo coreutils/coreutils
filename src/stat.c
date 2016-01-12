@@ -1453,7 +1453,7 @@ Display file or file system status.\n\
       fputs (_("\n\
 The valid format sequences for files (without --file-system):\n\
 \n\
-  %a   access rights in octal\n\
+  %a   access rights in octal (note '#' and '0' printf flags)\n\
   %A   access rights in human readable form\n\
   %b   number of blocks allocated (see %B)\n\
   %B   the size in bytes of each block reported by %b\n\
