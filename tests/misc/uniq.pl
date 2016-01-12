@@ -95,6 +95,7 @@ my @Tests =
  ['3z', '-z', {IN=>"a\na"}, {OUT=>"a\na\0"}],
  ['4z', '-z', {IN=>"a\nb"}, {OUT=>"a\nb\0"}],
  ['5z', '-z', {IN=>"a\na\nb"}, {OUT=>"a\na\nb\0"}],
+ ['10z', '-z -f1', {IN=>"a\nb\n\0c\nb\n\0"}, {OUT=>"a\nb\n\0"}],
  ['20z', '-dz', {IN=>"a\na\n"}, {OUT=>""}],
 
  # Make sure that eight bit characters work

@@ -4493,6 +4493,9 @@ numeric string when checking for uniqueness, whereas @code{sort -n |
 uniq} inspects the entire line.  @xref{uniq invocation}.
 
 @optZeroTerminated
+@macro newlineFieldSeparator
+Note with @option{-z} the newline character is treated as a field separator.
+@end macro
 
 @end table
 
@@ -5034,6 +5037,7 @@ fields and characters).  By default the entire rest of the lines are
 compared.
 
 @optZeroTerminated
+@newlineFieldSeparator
 
 @end table
 
@@ -6157,6 +6161,7 @@ Print a line for each unpairable line in file @var{file-number}
 (either @samp{1} or @samp{2}), instead of the normal output.
 
 @optZeroTerminated
+@newlineFieldSeparator
 
 @end table
 

@@ -194,7 +194,7 @@ Usage: %s [OPTION]... FILE1 FILE2\n\
               program_name);
       fputs (_("\
 For each pair of input lines with identical join fields, write a line to\n\
-standard output.  The default join field is the first, delimited by whitespace.\
+standard output.  The default join field is the first, delimited by blanks.\
 \n\
 "), stdout);
       fputs (_("\
@@ -284,19 +284,19 @@ xfields (struct line *line)
   else if (tab < 0)
     {
       /* Skip leading blanks before the first field.  */
-      while (isblank (to_uchar (*ptr)))
+      while (field_sep (*ptr))
         if (++ptr == lim)
           return;
 
       do
         {
           char *sep;
-          for (sep = ptr + 1; sep != lim && ! isblank (to_uchar (*sep)); sep++)
+          for (sep = ptr + 1; sep != lim && ! field_sep (*sep); sep++)
             continue;
           extract_field (line, ptr, sep - ptr);
           if (sep == lim)
             return;
-          for (ptr = sep + 1; ptr != lim && isblank (to_uchar (*ptr)); ptr++)
+          for (ptr = sep + 1; ptr != lim && field_sep (*ptr); ptr++)
             continue;
         }
       while (ptr != lim);

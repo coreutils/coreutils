@@ -155,6 +155,13 @@ enum
    errors that the cast doesn't.  */
 static inline unsigned char to_uchar (char ch) { return ch; }
 
+/* '\n' is considered a field separator with  --zero-terminated.  */
+static inline bool
+field_sep (unsigned char ch)
+{
+  return isblank (ch) || ch == '\n';
+}
+
 #include <locale.h>
 
 /* Take care of NLS matters.  */

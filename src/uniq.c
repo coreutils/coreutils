@@ -261,9 +261,9 @@ find_field (struct linebuffer const *line)
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
-      while (i < size && isblank (to_uchar (lp[i])))
+      while (i < size && field_sep (lp[i]))
         i++;
-      while (i < size && !isblank (to_uchar (lp[i])))
+      while (i < size && !field_sep (lp[i]))
         i++;
     }
 

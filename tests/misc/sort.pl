@@ -406,6 +406,11 @@ my @Tests =
 ["output-is-input-3", '-m -o f', {OUT=>''},
  {IN=> {g=> "a\n"}}, {IN=> {h=> "b\n"}}, {IN=> {f=> "c\n"}},
  {CMP=> ["a\nb\nc\n", {'f'=> undef}]} ],
+
+# --zero-terminated
+['zero-1', '-z', {IN=>"2\0001\000"}, {OUT=>"1\0002\000"}],
+['zero-2', '-z -k2,2', {IN=>"1\n2\0002\n1\000"}, {OUT=>"2\n1\0001\n2\000"}],
+['zero-3', '-zb -k2,2', {IN=>"1\n\n2\0002\n1\0"}, {OUT=>"2\n1\0001\n\n2\0"}],
 );
 
 # Add _POSIX2_VERSION=199209 to the environment of each test

@@ -1275,9 +1275,9 @@ inittables (void)
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      blanks[i] = !! isblank (i);
+      blanks[i] = field_sep (i);
       nonprinting[i] = ! isprint (i);
-      nondictionary[i] = ! isalnum (i) && ! isblank (i);
+      nondictionary[i] = ! isalnum (i) && ! field_sep (i);
       fold_toupper[i] = toupper (i);
     }
 

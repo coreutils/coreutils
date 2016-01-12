@@ -290,10 +290,13 @@ my @tv = (
 # missing last NUL at the end of the last line (=end of file)
 ['z4', '-z',
  ["a\0c\0e", "a\0b\0c"], "a\0c\0", 0],
-# edge-case: the embedded newlines should treated as
-# part of the nul-terminated line
+# With -z, embedded newlines are treated as field separators.
+# Note '\n' are converted to ' ' in this case.
 ['z5', '-z -a1 -a2',
- ["a\n1\0c 3\0","b\n8\0c 9\0"], "a\n1\0b\n8\0c 3 9\0"],
+ ["a\n\n1\0c 3\0", "a 2\0b\n8\0c 9\0"], "a 1 2\0b 8\0c 3 9\0"],
+# One can avoid field processing like:
+['z6', '-z -t ""',
+ ["a\n1\n\0", "a\n1\n\0"], "a\n1\n\0"],
 
 );
 

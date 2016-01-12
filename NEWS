@@ -64,6 +64,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now quotes file names unambiguously and appropriate for use in a shell,
   when outputting to a terminal.
 
+  join, sort, uniq with --zero-terminated, now treat '\n' as a field delimiter.
+
 ** Improvements
 
   All utilities now quote user supplied arguments in error strings,
