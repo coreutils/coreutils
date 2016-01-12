@@ -2278,10 +2278,14 @@ copy_internal (char const *src_name, char const *dst_name,
               error (0, 0, _("warning: source directory %s "
                              "specified more than once"),
                      quoteaf (top_level_src_name));
-              /* We only do backups in move mode and for non dirs,
-                 and in move mode this won't be the issue as the source will
-                 be missing for subsequent attempts.
-                 There we just warn and return here.  */
+              /* In move mode, if a previous rename succeeded, then
+                 we won't be in this path as the source is missing.  If the
+                 rename previously failed, then that has been handled, so
+                 pretend this attempt succeeded so the source isn't removed.  */
+              if (x->move_mode && rename_succeeded)
+                *rename_succeeded = true;
+              /* We only do backups in move mode, and for non directories.
+                 So just ignore this repeated entry.  */
               return true;
             }
           else if (x->dereference == DEREF_ALWAYS
