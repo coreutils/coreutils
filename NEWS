@@ -252,7 +252,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cp -a, mv, and install --preserve-context, once again set the correct SELinux
   context for existing directories in the destination.  Previously they set
-  the context of an existing directory to that of its last copied descendent.
+  the context of an existing directory to that of its last copied descendant.
   [bug introduced in coreutils-8.22]
 
   cp -a, mv, and install --preserve-context, no longer seg fault when running
@@ -577,7 +577,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   du recognizes -t SIZE as equivalent, for compatibility with FreeBSD.
 
   timeout now accepts the --preserve-status option to always propagate the exit
-  status, useful for commands that can run for an indeterminite amount of time.
+  status, useful for commands that can run for an indeterminate amount of time.
 
 ** Bug fixes
 
