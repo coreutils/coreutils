@@ -42,7 +42,7 @@ doc/constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	  sed -n -e \
 	      's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
 	    $(top_srcdir)/src/shred.c; } > $@-t \
-	  && { cmp $@-t $@ >/dev/null 2>&1 || mv $@-t $@; }
+	  && { cmp $@-t $@ >/dev/null 2>&1 || mv $@-t $@; rm -f $@-t; }
 
 MAINTAINERCLEANFILES += doc/constants.texi
 
