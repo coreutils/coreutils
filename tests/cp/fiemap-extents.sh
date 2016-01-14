@@ -21,14 +21,14 @@ print_ver_ cp
 
 require_sparse_support_
 
-touch fiemap_chk
+touch fiemap_chk || framework_failure_
 fiemap_capable_ fiemap_chk ||
   skip_ 'this file system lacks FIEMAP support'
 rm fiemap_chk
 
 fallocate --help >/dev/null || skip_ 'The fallocate utility is required'
 touch falloc.test || framework_failure_
-fallocate -l 1 -o 0 -n falloc.test ||
+fallocate -l 1 -o 1 -n falloc.test ||
   skip_ 'this file system lacks FALLOCATE support'
 rm falloc.test
 
@@ -40,6 +40,9 @@ if false; then
 # fallocate command would induce a temporary disk-full condition,
 # which would cause failure of unrelated tests run in parallel.
 require_file_system_bytes_free_ 800000000
+
+fallocate -l 1MiB num.test ||
+  skip_ "this fallocate doesn't support numbers with IEX suffixes"
 
 fallocate -l 600MiB space.test ||
   skip_ 'this test needs at least 600MiB free space'
@@ -67,14 +70,14 @@ fi
 # Note the '-l 1' case is an effective noop, and just checks
 # a file with a trailing hole is copied correctly.
 for sparse_mode in always auto never; do
-  for alloc in '-l 4MiB ' '-l 1MiB -o 4MiB' '-l 1'; do
+  for alloc in '-l 4194304' '-l 1048576 -o 4194304' '-l 1'; do
     dd count=10 if=/dev/urandom iflag=fullblock of=unwritten.withdata
     truncate -s 2MiB unwritten.withdata || framework_failure_
     fallocate $alloc -n unwritten.withdata || framework_failure_
     cp --sparse=$sparse_mode unwritten.withdata cp.test || fail=1
     test $(stat -c %s unwritten.withdata) = $(stat -c %s cp.test) || fail=1
     cmp unwritten.withdata cp.test || fail=1
-    rm unwritten.withdata cp.test
+    rm unwritten.withdata cp.test || framework_failure_
   done
 done
 
