@@ -4192,7 +4192,7 @@ main (int argc, char **argv)
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
-  locale_ok = setlocale (LC_ALL, "");
+  locale_ok = !! setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
@@ -4667,6 +4667,10 @@ main (int argc, char **argv)
                quote (setlocale (LC_COLLATE, NULL)));
       else
         {
+          /* OpenBSD can only set some categories with LC_ALL above,
+             so set LC_COLLATE explicitly to flag errors.  */
+          if (locale_ok)
+            locale_ok = !! setlocale (LC_COLLATE, "");
           error (0, 0, "%s%s", locale_ok ? "" : _("failed to set locale; "),
                  _("using simple byte comparison"));
         }
