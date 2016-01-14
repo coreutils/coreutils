@@ -49,10 +49,15 @@ env kill -t TERM HUP || fail=1
 SIGTERM=$(env kill -l HUP TERM | tail -n1) || fail=1
 test $(env kill -l "$SIGTERM") = TERM || fail=1
 
+# Verify we only consider the lower "signal" bits,
+# to support ksh which just adds 256 to the signal value
+STD_TERM_STATUS=$(expr "$SIGTERM" + 128)
+KSH_TERM_STATUS=$(expr "$SIGTERM" + 256)
+test $(env kill -l $STD_TERM_STATUS $KSH_TERM_STATUS | uniq) = TERM || fail=1
+
 # Verify invalid signal spec is diagnosed
-SIGINVAL=$(env kill -t | tail -n1 | cut -f1 -d' ')
-SIGINVAL=$(expr "$SIGINVAL" + 1)
-returns_ 1 env kill -l "$SIGINVAL" 0 || fail=1
+returns_ 1 env kill -l -1 || fail=1
+returns_ 1 env kill -l -1 0 || fail=1
 returns_ 1 env kill -l INVALID TERM || fail=1
 
 Exit $fail

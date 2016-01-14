@@ -39,6 +39,17 @@ operand2sig (char const *operand, char *signame)
 
   if (ISDIGIT (*operand))
     {
+      /* Note we don't put a limit on the maximum value passed,
+         because we're checking shell $? values here, and ksh for
+         example will add 256 to the signal value, thus being wider
+         than the number of WEXITSTATUS bits.
+         We could validate that values were not above say
+         ((WEXITSTATUS (~0) << 1) + 1), which would cater for ksh.
+         But some shells may use other adjustments in future to be
+         (forward) compatible with systems that support
+         wider exit status values as discussed at
+         http://austingroupbugs.net/view.php?id=947  */
+
       char *endp;
       long int l = (errno = 0, strtol (operand, &endp, 10));
       int i = l;
