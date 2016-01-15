@@ -42,7 +42,7 @@ esac
 # Only allocate memory as needed.
 # Coreutils <= 8.21 would allocate memory up front
 # based on the value passed to -c
-(ulimit -v $(($vm+1000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
+(ulimit -v $(($vm+4000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
 
 # Make sure it works on funny files in /proc and /sys.
 
