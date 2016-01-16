@@ -32,7 +32,11 @@ compare exp out || fail=1
 # This was not the case in coreutil-8.22 on systems
 # where the device in the mount list was a symlink itself.
 # I.e., '.' => /dev/mapper/fedora-home -> /dev/dm-2
-df --out=source,target '.' > out || fail=1
-compare exp out || fail=1
+# Restrict this test to systems with a 1:1 mapping between
+# source and target.  This excludes for example BTRFS sub-volumes.
+if test "$(df --output=source | grep -F "$disk" | wc -l)" = 1; then
+  df --out=source,target '.' > out || fail=1
+  compare exp out || fail=1
+fi
 
 Exit $fail
