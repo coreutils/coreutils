@@ -36,7 +36,7 @@ test -r no-dir1/no-dir2/dest || fail=1
 # due to incorrectly modified working directory
 mkdir dir1 || framework_failure_
 touch dir1/file1 || framework_failure_
-ginstall -D $PWD/dir1/file1 $file -t $PWD/no-dir2/ || fail=1
+ginstall -D "$PWD/dir1/file1" $file -t "$PWD/no-dir2/" || fail=1
 test -r no-dir2/$file && test -r no-dir2/file1 || fail=1
 
 Exit $fail
