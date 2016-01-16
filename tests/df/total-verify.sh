@@ -62,4 +62,6 @@ cat inode
 $PERL check-df space || fail=1
 $PERL check-df inode || fail=1
 
+test "$fail" = 1 && dump_mount_list_
+
 Exit $fail

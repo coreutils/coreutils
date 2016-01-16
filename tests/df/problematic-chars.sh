@@ -41,4 +41,6 @@ test $skip = 1 \
 
 test $(df "$mnt" | wc -l) = 2 || fail=1
 
+test "$fail" = 1 && dump_mount_list_
+
 Exit $fail

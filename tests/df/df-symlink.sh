@@ -39,4 +39,6 @@ if test "$(df --output=source | grep -F "$disk" | wc -l)" = 1; then
   compare exp out || fail=1
 fi
 
+test "$fail" = 1 && dump_mount_list_
+
 Exit $fail

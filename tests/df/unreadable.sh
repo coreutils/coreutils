@@ -24,4 +24,6 @@ touch unreadable || fail=1
 chmod a-r unreadable || fail=1
 df unreadable || fail=1
 
+test "$fail" = 1 && dump_mount_list_
+
 Exit $fail

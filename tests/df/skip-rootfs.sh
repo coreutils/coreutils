@@ -48,4 +48,6 @@ grep '^rootfs' out || { fail=1; cat out; }
 df -a -x rootfs >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
 
+test "$fail" = 1 && dump_mount_list_
+
 Exit $fail
