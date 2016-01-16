@@ -2232,7 +2232,14 @@ copy_internal (char const *src_name, char const *dst_name,
      Also, with --recursive, record dev/ino of each command-line directory.
      We'll use that info to detect this problem: cp -R dir dir.  */
 
-  if (x->move_mode && src_sb.st_nlink == 1)
+  if (x->recursive && S_ISDIR (src_mode))
+    {
+      if (command_line_arg)
+        earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
+      else
+        earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
+    }
+  else if (x->move_mode && src_sb.st_nlink == 1)
     {
       earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
@@ -2244,13 +2251,6 @@ copy_internal (char const *src_name, char const *dst_name,
                || x->dereference == DEREF_ALWAYS))
     {
       earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
-    }
-  else if (x->recursive && S_ISDIR (src_mode))
-    {
-      if (command_line_arg)
-        earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
-      else
-        earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
 
   /* Did we copy this inode somewhere else (in this command line argument)
