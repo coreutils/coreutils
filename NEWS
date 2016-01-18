@@ -79,7 +79,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   which avoids confusing error messages in the presence of '\r' chars etc.
 
   Utilities that traverse directories, like chmod, cp, and rm etc., will operate
-  more efficiently on XFS and in more cases on NFS, through "leaf optimization".
+  more efficiently on XFS through the use of "leaf optimization".
 
   md5sum now ensures a single line per file for status on standard output,
   by using a '\' at the start of the line, and replacing any newlines with '\n'.
