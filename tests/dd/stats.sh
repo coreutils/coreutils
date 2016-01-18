@@ -67,7 +67,7 @@ done
 
 progress_output()
 {
-  { sleep "$1"; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
+  { sleep $1; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
   # Progress output should be for "byte copied", while final is "bytes ..."
   grep 'byte copied' err
 }

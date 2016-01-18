@@ -31,15 +31,15 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 rm ---presume-input-tty dangle symlink & pid=$!
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
 
-# Wait up to 3.1s for rm to remove the files
+# Wait up to 6.3s for rm to remove the files
 check_files_removed() {
-  local delay="$1"
   local present=0
+  sleep $1
   ls -l dangle > /dev/null 2>&1 && present=1
   ls -l symlink > /dev/null 2>&1 && present=1
-  test $present = 1 && { sleep $delay; return 1; } || :
+  test $present = 0
 }
-retry_delay_ check_files_removed .1 5 || fail=1
+retry_delay_ check_files_removed .1 6 || fail=1
 
 cleanup_
 

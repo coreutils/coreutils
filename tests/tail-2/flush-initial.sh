@@ -34,9 +34,8 @@ tail $fastpoll -f in > out & pid=$!
 tail_flush()
 {
   local delay="$1"
-
-  test -s out ||
-    { sleep "$delay"; return 1; }
+  sleep $delay
+  test -s out
 }
 retry_delay_ tail_flush .1 5 || fail=1
 
