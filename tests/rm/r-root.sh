@@ -142,7 +142,7 @@ exercise_rm_r_root ()
 
   ret=$?
 
-  clean_rm_err_ < err.t > err || framework_failure_
+  clean_rm_err_ < err.t > err || ret=$?
 
   return $ret
 }
