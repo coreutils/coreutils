@@ -76,7 +76,7 @@ shred: f: removing
 shred: f: renamed to 0
 shred: f: removed" > exp || framework_failure_
 
-shred -v -u -n20 --random-source=Us f 2>out || fail=1
+shred -v -u -n20 -s4096 --random-source=Us f 2>out || fail=1
 compare exp out || fail=1
 
 
