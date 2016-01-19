@@ -65,7 +65,7 @@ for mode in '' '---disable-inotify'; do
   >tail.err
 done
 
-if test "$HAVE_INOTIFY"; then
+if test "$HAVE_INOTIFY" && test -z "$mode" && is_local_dir_ .; then
   # Ensure -F never follows a descriptor after rename
   # either with tiny or significant delays between operations
   tail_F()
