@@ -21,7 +21,7 @@ print_ver_ rm
 skip_if_root_
 
 mkdir -p b/a/p b/c b/d || framework_failure_
-chmod u-w b/a || framework_failure_
+chmod ug-w b/a || framework_failure_
 
 
 # This should fail.

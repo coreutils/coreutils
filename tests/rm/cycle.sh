@@ -22,7 +22,7 @@ skip_if_root_
 
 mkdir -p a/b
 touch a/b/file
-chmod u-w a/b
+chmod ug-w a/b
 
 
 rm -rf a a 2>&1 | sed 's/:[^:]*$//' > out || fail=1

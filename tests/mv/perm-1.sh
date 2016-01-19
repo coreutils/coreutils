@@ -22,7 +22,7 @@ print_ver_ mv
 skip_if_root_
 
 mkdir -p no-write/dir || framework_failure_
-chmod u-w no-write || framework_failure_
+chmod ug-w no-write || framework_failure_
 
 
 mv no-write/dir . > out 2>&1 && fail=1
