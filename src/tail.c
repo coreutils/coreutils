@@ -1270,6 +1270,20 @@ any_remote_file (const struct File_spec *f, size_t n_files)
   return false;
 }
 
+/* Return true if any of the N_FILES files in F is non remote, i.e., has
+   an open file descriptor and is not on a network file system.  */
+
+static bool
+any_non_remote_file (const struct File_spec *f, size_t n_files)
+{
+  size_t i;
+
+  for (i = 0; i < n_files; i++)
+    if (0 <= f[i].fd && ! f[i].remote)
+      return true;
+  return false;
+}
+
 /* Return true if any of the N_FILES files in F is a symlink.
    Note we don't worry about the edge case where "-" exists,
    since that will have the same consequences for inotify,
@@ -2313,6 +2327,11 @@ main (int argc, char **argv)
          in this case because it would miss any updates to the file
          that were not initiated from the local system.
 
+         any_non_remote_file() checks if the user has specified any
+         files that don't reside on remote file systems.  inotify is not used
+         if there are no open files, as we can't determine if those file
+         will be on a remote file system.
+
          any_symlinks() checks if the user has specified any symbolic links.
          inotify is not used in this case because it returns updated _targets_
          which would not match the specified names.  If we tried to always
@@ -2339,6 +2358,7 @@ main (int argc, char **argv)
          for one name when a name is specified multiple times.  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
                                || any_remote_file (F, n_files)
+                               || ! any_non_remote_file (F, n_files)
                                || any_symlinks (F, n_files)
                                || (!ok && follow_mode == Follow_descriptor)))
         disable_inotify = true;
