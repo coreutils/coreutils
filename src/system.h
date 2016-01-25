@@ -650,11 +650,17 @@ emit_ancillary_info (char const *program)
           node, node == program ? " invocation" : "");
 }
 
-static inline void
-emit_try_help (void)
-{
-  fprintf (stderr, _("Try '%s --help' for more information.\n"), program_name);
-}
+/* Use a macro rather than an inline function, as this references
+   the global program_name, which causes dynamic linking issues
+   in libstdbuf.so on some systems where unused functions
+   are not removed by the linker.  */
+#define emit_try_help() \
+  do \
+    { \
+      fprintf (stderr, _("Try '%s --help' for more information.\n"), \
+               program_name); \
+    } \
+  while (0)
 
 #include "inttostr.h"
 
