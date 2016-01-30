@@ -140,7 +140,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
                                FMT='date' for date only (the default),\n\
                                'hours', 'minutes', 'seconds', or 'ns'\n\
                                for date and time to the indicated precision.\n\
-                               Example: 2006-08-14T02:34:56-0600\n\
+                               Example: 2006-08-14T02:34:56-06:00\n\
 "), stdout);
       fputs (_("\
   -R, --rfc-2822             output date and time in RFC 2822 format.\n\
