@@ -21,6 +21,7 @@ print_ver_ chcon
 require_root_
 require_selinux_
 skip_if_mcstransd_is_running_
+mls_enabled_ || skip_ 'MLS is disabled'
 
 mkdir -p d/sub/s2 || framework_failure_
 touch f g d/sub/1 d/sub/2 || framework_failure_

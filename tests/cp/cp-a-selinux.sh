@@ -28,7 +28,8 @@ cwd=$(pwd)
 cleanup_() { cd /; umount "$cwd/mnt"; }
 
 # This context is special: it works even when mcstransd isn't running.
-ctx=root:object_r:tmp_t:s0
+ctx='root:object_r:tmp_t'
+mls_enabled_ && ctx="$ctx:s0"
 
 # Check basic functionality - before check on fixed context mount
 touch c || framework_failure_
@@ -62,7 +63,6 @@ grep $ctx ed_ctx &&
   { ls -lZd restore/existing_dir; fail=1; }
 
 # Check restorecon (-Z) functionality for file and directory
-get_selinux_type() { ls -Zd "$1" | sed -n 's/.*:\(.*_t\):.*/\1/p'; }
 # Also make a dir with our known context
 mkdir c_d || framework_failure_
 chcon $ctx c_d || framework_failure_

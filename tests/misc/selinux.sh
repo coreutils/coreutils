@@ -30,7 +30,8 @@ mkfifo_or_skip_ p
 
 
 # special context that works both with and without mcstransd
-ctx=root:object_r:tmp_t:s0
+ctx='root:object_r:tmp_t'
+mls_enabled_ && ctx="$ctx:s0"
 
 chcon $ctx f d p ||
   skip_ '"chcon '$ctx' ..." failed'

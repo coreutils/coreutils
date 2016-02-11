@@ -20,11 +20,10 @@
 print_ver_ mkdir mknod mkfifo
 require_selinux_
 
-
-get_selinux_type() { ls -Zd "$1" | sed -n 's/.*:\(.*_t\):.*/\1/p'; }
-
 mkdir subdir || framework_failure_
-chcon 'root:object_r:tmp_t:s0' subdir || framework_failure_
+ctx='root:object_r:tmp_t'
+mls_enabled_ && ctx="$ctx:s0"
+chcon "$ctx" subdir || framework_failure_
 cd subdir
 
 # --- mkdir -Z ---
