@@ -24,9 +24,9 @@ echo "split: invalid number of chunks: '1o'" > exp
 split -n l/1o 2>err && fail=1
 compare exp err || fail=1
 
-echo "split: -: cannot determine file size" > exp
-echo | split -n l/1 2>err && fail=1
-compare exp err || fail=1
+echo > exp
+echo | split -n l/1 || fail=1
+compare exp xaa || fail=1
 
 # N can be greater than the file size
 # in which case no data is extracted, or empty files are written
@@ -34,14 +34,14 @@ split -n l/10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
 rm x??
 
-# Ensure the correct number of files written
-# even if there is more data than the reported file size
-split -n l/2 /dev/zero
-test "$(stat -c %s x* | wc -l)" = '2' || fail=1
+# 'split' should reject any attempt to create an infinitely
+# long output file.
+returns_ 1 split -n l/2 /dev/zero || fail=1
 rm x??
 
 # Repeat the above,  but with 1/2, not l/2:
-split -n 1/2 /dev/zero || fail=1
+returns_ 1 split -n 1/2 /dev/zero || fail=1
+rm x??
 
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
@@ -54,7 +54,7 @@ lines=\
 printf "%s" "$lines" | tr '~' '\n' > in || framework_failure_
 
 echo "split: invalid chunk number: '16'" > exp
-split -n l/16/15 in 2>err.t && fail=1
+returns_ 1 split -n l/16/15 in 2>err.t || fail=1
 sed "s/': .*/'/" < err.t > err || framework_failure_
 compare exp err || fail=1
 
