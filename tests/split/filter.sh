@@ -18,6 +18,8 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
+require_sparse_support_ # for 'truncate --size=$OFF_T_MAX'
+eval $(getlimits) # for OFF_T limits
 xz --version || skip_ "xz (better than gzip/bzip2) required"
 
 for total_n_lines in 5 3000 20000; do
@@ -41,7 +43,7 @@ done
 # split does not run the command (and effectively elides the file)
 # only when the output to that command would have been empty.
 split -e -n 10 --filter='xz > $FILE.xz' /dev/null || fail=1
-stat x?? 2>/dev/null && fail=1
+returns_ 1 stat x?? 2>/dev/null || fail=1
 
 # Ensure this invalid combination is flagged
 returns_ 1 split -n 1/2 --filter='true' /dev/null 2>&1 || fail=1
@@ -50,8 +52,10 @@ returns_ 1 split -n 1/2 --filter='true' /dev/null 2>&1 || fail=1
 # where they would result in a non zero exit from split.
 yes | head -n200K | split -b1G --filter='head -c1 >/dev/null' || fail=1
 
-# Ensure that endless input is ignored when all filters finish
-timeout 10 yes | split --filter="head -c1 >/dev/null" -n r/1 || fail=1
-timeout 10 split --filter="head -c1 >/dev/null" -n 1 /dev/zero || fail=1
+# Ensure that "endless" input is ignored when all filters finish
+timeout 10 sh -c 'yes | split --filter="head -c1 >/dev/null" -n r/1' || fail=1
+if truncate -s$OFF_T_MAX zero.in; then
+  timeout 10 sh -c 'split --filter="head -c1 >/dev/null" -n 1 zero.in' || fail=1
+fi
 
 Exit $fail

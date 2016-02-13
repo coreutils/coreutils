@@ -278,6 +278,14 @@ CHUNKS may be:\n\
 static off_t
 input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
 {
+  off_t cur = lseek (fd, 0, SEEK_CUR);
+  if (cur < 0)
+    {
+      if (errno == ESPIPE)
+        errno = 0; /* Suppress confusing seek error.  */
+      return -1;
+    }
+
   off_t size = 0;
   do
     {
@@ -290,19 +298,20 @@ input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
     }
   while (size < bufsize);
 
-  /* The file contains at least BUFSIZE bytes.  Infer its size via
-     st->st_size if this seems reliable, or via lseek if not.  */
-  off_t cur = lseek (fd, 0, SEEK_CUR);
-  off_t end;
-  if (cur < 0)
-    return -1;
-  if (cur < size)
+  /* Note we check st_size _after_ the read() above
+     because /proc files on GNU/Linux are seekable
+     but have st_size == 0.  */
+  if (st->st_size == 0)
     {
-      /* E.g., /dev/zero on GNU/Linux, where CUR is zero and SIZE == BUFSIZE.
-         Assume there is no limit to the file size.  */
+      /* We've filled the buffer, from a seekable file,
+         which has an st_size==0, E.g., /dev/zero on GNU/Linux.
+         Assume there is no limit to file size.  */
       errno = EOVERFLOW;
       return -1;
     }
+
+  cur += size;
+  off_t end;
   if (usable_st_size (st) && cur <= st->st_size)
     end = st->st_size;
   else
@@ -1197,7 +1206,8 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
                          quotef (files[i_file].of_name));
                 }
 
-              wrote = true;
+              if (! ignorable (errno))
+                wrote = true;
 
               if (file_limit)
                 {
@@ -1558,8 +1568,7 @@ main (int argc, char **argv)
   char *buf = ptr_align (b, page_size);
   size_t initial_read = SIZE_MAX;
 
-  if ((split_type == type_chunk_bytes || split_type == type_chunk_lines)
-      && n_units != 1)
+  if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
     {
       file_size = input_file_size (STDIN_FILENO, &in_stat_buf,
                                    buf, in_blk_size);

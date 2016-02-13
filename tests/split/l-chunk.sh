@@ -21,12 +21,12 @@ print_ver_ split
 
 # invalid number of chunks
 echo "split: invalid number of chunks: '1o'" > exp
-split -n l/1o 2>err && fail=1
+returns_ 1 split -n l/1o 2>err || fail=1
 compare exp err || fail=1
 
-echo > exp
-echo | split -n l/1 || fail=1
-compare exp xaa || fail=1
+echo "split: -: cannot determine file size" > exp
+: | returns_ 1 split -n l/1 2>err || fail=1
+compare exp err || fail=1
 
 # N can be greater than the file size
 # in which case no data is extracted, or empty files are written
@@ -45,7 +45,7 @@ rm x??
 
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
-stat x?? 2>/dev/null && fail=1
+returns_ 1 stat x?? 2>/dev/null || fail=1
 
 # 80 bytes. ~ transformed to \n below
 lines=\
@@ -79,7 +79,7 @@ for ELIDE_EMPTY in '' '-e'; do
 
       if test -z "$ELIDE_EMPTY"; then
         split ---io-blksize=$IO_BLKSIZE -n l/2/$N in > chunk.k
-        stat x* 2>/dev/null && fail=1
+        returns_ 1 stat x* 2>/dev/null || fail=1
       fi
 
       split ---io-blksize=$IO_BLKSIZE $ELIDE_EMPTY -n l/$N in
