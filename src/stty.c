@@ -953,8 +953,6 @@ Combination settings:\n\
 #endif
 );
       fputs (_("\
-"), stdout);
-      fputs (_("\
    oddp          same as parenb parodd cs7\n\
    -oddp         same as -parenb cs8\n\
    [-]parity     same as [-]evenp\n\
