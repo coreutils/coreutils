@@ -548,6 +548,8 @@ main (int argc, char **argv)
       ok &= show_date (format, when, tz);
     }
 
+  IF_LINT (tzfree (tz));
+
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
