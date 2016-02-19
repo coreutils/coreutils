@@ -223,6 +223,9 @@ struct fileinfo
 
     /* For color listings, true if a regular file has capability info.  */
     bool has_capability;
+
+    /* Whether file name needs quoting. tri-state with -1 == unknown.  */
+    int quoted;
   };
 
 #define LEN_STR_PAIR(s) sizeof (s) - 1, s
@@ -241,17 +244,24 @@ struct bin_str
 # define tcgetpgrp(Fd) 0
 #endif
 
-static size_t quote_name (FILE *out, const char *name,
+static size_t quote_name (char const *name,
                           struct quoting_options const *options,
-                          size_t *width);
+                          int needs_general_quoting,
+                          const struct bin_str *color,
+                          bool allow_pad, struct obstack *stack);
+static size_t quote_name_buf (char **inbuf, size_t bufsize, char *name,
+                              struct quoting_options const *options,
+                              int needs_general_quoting, size_t *width,
+                              bool *pad);
 static char *make_link_name (char const *name, char const *linkname);
 static int decode_switches (int argc, char **argv);
 static bool file_ignored (char const *name);
 static uintmax_t gobble_file (char const *name, enum filetype type,
                               ino_t inode, bool command_line_arg,
                               char const *dirname);
-static bool print_color_indicator (const struct fileinfo *f,
-                                   bool symlink_target);
+static const struct bin_str * get_color_indicator (const struct fileinfo *f,
+                                                   bool symlink_target);
+static bool print_color_indicator (const struct bin_str *ind);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
@@ -316,6 +326,13 @@ static size_t cwd_n_alloc;
 
 /* Index of first unused slot in 'cwd_file'.  */
 static size_t cwd_n_used;
+
+/* Whether files needs may need padding due to quoting.  */
+static bool cwd_some_quoted;
+
+/* Whether quoting style _may_ add outer quotes,
+   and whether aligning those is useful.  */
+static bool align_variable_outer_quotes;
 
 /* Vector of pointers to files, in proper sorted order, and the number
    of entries allocated for it.  */
@@ -2065,8 +2082,15 @@ decode_switches (int argc, char **argv)
      or line_lengths shorter than MIN_COLUMN_WIDTH.  */
   max_idx += line_length % MIN_COLUMN_WIDTH != 0;
 
+  enum quoting_style qs = get_quoting_style (NULL);
+  align_variable_outer_quotes = format != with_commas
+                                && format != one_per_line
+                                && (line_length || format == long_format)
+                                && (qs == shell_quoting_style
+                                    || qs == shell_escape_quoting_style
+                                    || qs == c_maybe_quoting_style);
   filename_quoting_options = clone_quoting_options (NULL);
-  if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
+  if (qs == escape_quoting_style)
     set_char_quoting (filename_quoting_options, ' ', 1);
   if (file_type <= indicator_style)
     {
@@ -2686,23 +2710,23 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       dev_ino_push (dir_stat.st_dev, dir_stat.st_ino);
     }
 
+  clear_files ();
+
   if (recursive || print_dir_name)
     {
       if (!first)
         DIRED_PUTCHAR ('\n');
       first = false;
       DIRED_INDENT ();
-      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      dired_pos += quote_name (stdout, realname ? realname : name,
-                               dirname_quoting_options, NULL);
-      PUSH_CURRENT_DIRED_POS (&subdired_obstack);
+
+      quote_name (realname ? realname : name, dirname_quoting_options, -1,
+                  NULL, true, &subdired_obstack);
+
       DIRED_FPUTS_LITERAL (":\n", stdout);
     }
 
   /* Read the directory entries, and insert the subfiles into the 'cwd_file'
      table.  */
-
-  clear_files ();
 
   while (1)
     {
@@ -2911,6 +2935,7 @@ clear_files (void)
     }
 
   cwd_n_used = 0;
+  cwd_some_quoted = false;
   any_has_acl = false;
   inode_number_width = 0;
   block_size_width = 0;
@@ -3009,6 +3034,15 @@ has_capability_cache (char const *file, struct fileinfo *f)
   return b;
 }
 
+static bool
+needs_quoting (char const* name)
+{
+  char test[2];
+  size_t len = quotearg_buffer (test, sizeof test , name, -1,
+                                filename_quoting_options);
+  return *name != *test || strlen (name) != len;
+}
+
 /* Add a file to the current table of files.
    Verify that the file exists, and print an error message if it does not.
    Return the number of blocks that the file occupies.  */
@@ -3033,6 +3067,15 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   memset (f, '\0', sizeof *f);
   f->stat.st_ino = inode;
   f->filetype = type;
+
+  f->quoted = -1;
+  if ((! cwd_some_quoted) && align_variable_outer_quotes)
+    {
+      /* Determine if any quoted for padding purposes.  */
+      f->quoted = needs_quoting (name);
+      if (f->quoted)
+        cwd_some_quoted = 1;
+    }
 
   if (command_line_arg
       || format_needs_stat
@@ -4111,34 +4154,59 @@ print_long_format (const struct fileinfo *f)
     print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
 }
 
-/* Output to OUT a quoted representation of the file name NAME,
-   using OPTIONS to control quoting.  Produce no output if OUT is NULL.
+/* Write to *BUF a quoted representation of the file name NAME, if non-NULL,
+   using OPTIONS to control quoting.  *BUF is set to NAME if no quoting
+   is required.  *BUF is allocated if more space required (and the original
+   *BUF is not deallocated).
    Store the number of screen columns occupied by NAME's quoted
-   representation into WIDTH, if non-NULL.  Return the number of bytes
-   produced.  */
+   representation into WIDTH, if non-NULL.
+   Store into PAD whether an initial space is needed for padding.
+   Return the number of bytes in *BUF.  */
 
 static size_t
-quote_name (FILE *out, const char *name, struct quoting_options const *options,
-            size_t *width)
+quote_name_buf (char **inbuf, size_t bufsize, char *name,
+                struct quoting_options const *options,
+                int needs_general_quoting, size_t *width, bool *pad)
 {
-  char smallbuf[BUFSIZ];
-  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
-  char *buf;
+  char *buf = *inbuf;
   size_t displayed_width IF_LINT ( = 0);
-
-  if (len < sizeof smallbuf)
-    buf = smallbuf;
-  else
-    {
-      buf = alloca (len + 1);
-      quotearg_buffer (buf, len + 1, name, -1, options);
-    }
+  size_t len = 0;
+  bool quoted;
 
   enum quoting_style qs = get_quoting_style (options);
+  bool needs_further_quoting = qmark_funny_chars
+                               && (qs == shell_quoting_style
+                                   || qs == shell_always_quoting_style
+                                   || qs == literal_quoting_style);
 
-  if (qmark_funny_chars
-      && (qs == shell_quoting_style || qs == shell_always_quoting_style
-          || qs == literal_quoting_style))
+  if (needs_general_quoting != 0)
+    {
+      len = quotearg_buffer (buf, bufsize, name, -1, options);
+      if (bufsize <= len)
+        {
+          buf = xmalloc (len + 1);
+          quotearg_buffer (buf, len + 1, name, -1, options);
+        }
+
+      quoted = (*name != *buf) || strlen (name) != len;
+    }
+  else if (needs_further_quoting)
+    {
+      len = strlen (name);
+      if (bufsize <= len)
+        buf = xmalloc (len + 1);
+      memcpy (buf, name, len + 1);
+
+      quoted = false;
+    }
+  else
+    {
+      len = strlen (name);
+      buf = name;
+      quoted = false;
+    }
+
+  if (needs_further_quoting)
     {
       if (MB_CUR_MAX > 1)
         {
@@ -4274,11 +4342,72 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
         }
     }
 
-  if (out != NULL)
-    fwrite (buf, 1, len, out);
+  /* Set padding to better align quoted items,
+     and also give a visual indication that quotes are
+     not actually part of the name.  */
+  *pad = (align_variable_outer_quotes && cwd_some_quoted && ! quoted);
+
   if (width != NULL)
     *width = displayed_width;
+
+  *inbuf = buf;
+
   return len;
+}
+
+static size_t
+quote_name_width (const char *name, struct quoting_options const *options,
+                  int needs_general_quoting)
+{
+  char smallbuf[BUFSIZ];
+  char *buf = smallbuf;
+  size_t width;
+  bool pad;
+
+  quote_name_buf (&buf, sizeof smallbuf, (char *) name, options,
+                  needs_general_quoting, &width, &pad);
+
+  if (buf != smallbuf && buf != name)
+    free (buf);
+
+  width += pad;
+
+  return width;
+}
+
+static size_t
+quote_name (char const *name, struct quoting_options const *options,
+            int needs_general_quoting, const struct bin_str *color,
+            bool allow_pad, struct obstack *stack)
+{
+  char smallbuf[BUFSIZ];
+  char *buf = smallbuf;
+  size_t len;
+  bool pad;
+
+  len = quote_name_buf (&buf, sizeof smallbuf, (char *) name, options,
+                        needs_general_quoting, NULL, &pad);
+
+  if (pad && allow_pad)
+      DIRED_PUTCHAR (' ');
+
+  if (color)
+    print_color_indicator (color);
+
+  if (stack)
+    PUSH_CURRENT_DIRED_POS (stack);
+
+  fwrite (buf, 1, len, stdout);
+
+  if (buf != smallbuf && buf != name)
+    free (buf);
+
+  dired_pos += len;
+
+  if (stack)
+    PUSH_CURRENT_DIRED_POS (stack);
+
+  return len + pad;
 }
 
 static size_t
@@ -4289,30 +4418,32 @@ print_name_with_quoting (const struct fileinfo *f,
 {
   const char* name = symlink_target ? f->linkname : f->name;
 
-  bool used_color_this_time
-    = (print_with_color
-        && (print_color_indicator (f, symlink_target)
-            || is_colored (C_NORM)));
+  const struct bin_str *color = print_with_color ?
+                                get_color_indicator (f, symlink_target) : NULL;
 
-  if (stack)
-    PUSH_CURRENT_DIRED_POS (stack);
+  bool used_color_this_time = (print_with_color
+                               && (color || is_colored (C_NORM)));
 
-  size_t width = quote_name (stdout, name, filename_quoting_options, NULL);
-  dired_pos += width;
-
-  if (stack)
-    PUSH_CURRENT_DIRED_POS (stack);
+  size_t len = quote_name (name, filename_quoting_options, f->quoted,
+                           color, !symlink_target, stack);
 
   process_signals ();
   if (used_color_this_time)
     {
       prep_non_filename_text ();
+
+      /* We use the byte length rather than display width here as
+         an optimization to avoid accurately calculating the width,
+         because we only output the clear to EOL sequence if the name
+         _might_ wrap to the next line.  This may output a sequence
+         unnecessarily in multi-byte locales for example,
+         but in that case it's inconsequential to the output.  */
       if (line_length
-          && (start_col / line_length != (start_col + width - 1) / line_length))
+          && (start_col / line_length != (start_col + len - 1) / line_length))
         put_indicator (&color_indicator[C_CLR_TO_EOL]);
     }
 
-  return width;
+  return len;
 }
 
 static void
@@ -4403,9 +4534,26 @@ print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
   return !!c;
 }
 
-/* Returns whether any color sequence was printed. */
+/* Returns if color sequence was printed.  */
 static bool
-print_color_indicator (const struct fileinfo *f, bool symlink_target)
+print_color_indicator (const struct bin_str *ind)
+{
+  if (ind)
+    {
+      /* Need to reset so not dealing with attribute combinations */
+      if (is_colored (C_NORM))
+        restore_default_color ();
+      put_indicator (&color_indicator[C_LEFT]);
+      put_indicator (ind);
+      put_indicator (&color_indicator[C_RIGHT]);
+    }
+
+  return ind != NULL;
+}
+
+/* Returns color indicator or NULL if none.  */
+static const struct bin_str* _GL_ATTRIBUTE_PURE
+get_color_indicator (const struct fileinfo *f, bool symlink_target)
 {
   enum indicator_no type;
   struct color_ext_type *ext;	/* Color extension */
@@ -4508,22 +4656,10 @@ print_color_indicator (const struct fileinfo *f, bool symlink_target)
         type = C_ORPHAN;
     }
 
-  {
-    const struct bin_str *const s
-      = ext ? &(ext->seq) : &color_indicator[type];
-    if (s->string != NULL)
-      {
-        /* Need to reset so not dealing with attribute combinations */
-        if (is_colored (C_NORM))
-          restore_default_color ();
-        put_indicator (&color_indicator[C_LEFT]);
-        put_indicator (s);
-        put_indicator (&color_indicator[C_RIGHT]);
-        return true;
-      }
-    else
-      return false;
-  }
+  const struct bin_str *const s
+    = ext ? &(ext->seq) : &color_indicator[type];
+
+  return s->string ? s : NULL;
 }
 
 /* Output a color indicator (which may contain nulls).  */
@@ -4551,7 +4687,6 @@ static size_t
 length_of_file_name_and_frills (const struct fileinfo *f)
 {
   size_t len = 0;
-  size_t name_width;
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_inode)
@@ -4570,8 +4705,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_scontext)
     len += 1 + (format == with_commas ? strlen (f->scontext) : scontext_width);
 
-  quote_name (NULL, f->name, filename_quoting_options, &name_width);
-  len += name_width;
+  len += quote_name_width (f->name, filename_quoting_options, f->quoted);
 
   if (indicator_style != none)
     {

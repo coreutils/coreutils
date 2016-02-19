@@ -95,6 +95,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls is now fully responsive to signals until the first escape sequence is
   written to a terminal.
 
+  ls now aligns quoted items with non quoted items, which is easier to read,
+  and also better indicates that the quote is not part of the actual name.
+
   stat and tail now know about "prl_fs" (a parallels file system),
   "m1fs" (a Plexistor file system), "wslfs" (Windows Subsystem for Linux),
   and "smb2".  stat -f --format=%T now reports the file system type, and

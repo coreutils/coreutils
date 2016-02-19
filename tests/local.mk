@@ -584,6 +584,7 @@ all_tests =					\
   tests/ls/no-arg.sh				\
   tests/ls/no-cap.sh				\
   tests/ls/proc-selinux-segfault.sh		\
+  tests/ls/quote-align.sh			\
   tests/ls/readdir-mountpoint-inode.sh		\
   tests/ls/recursive.sh				\
   tests/ls/root-rel-symlink-color.sh		\
