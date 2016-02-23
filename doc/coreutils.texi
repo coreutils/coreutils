@@ -4384,9 +4384,12 @@ silently uses a smaller value.
 @cindex overwriting of input, allowed
 Write output to @var{output-file} instead of standard output.
 Normally, @command{sort} reads all input before opening
-@var{output-file}, so you can safely sort a file in place by using
+@var{output-file}, so you can sort a file in place by using
 commands like @code{sort -o F F} and @code{cat F | sort -o F}@.
-However, @command{sort} with @option{--merge} (@option{-m}) can open
+However, it is often safer to output to an otherwise-unused file, as
+data may be lost if the system crashes or @command{sort} encounters
+an I/O or other serious error while a file is being sorted in place.
+Also, @command{sort} with @option{--merge} (@option{-m}) can open
 the output file before reading all input, so a command like @code{cat
 F | sort -m -o F - G} is not safe as @command{sort} might start
 writing @file{F} before @command{cat} is done reading it.
