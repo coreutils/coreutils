@@ -1506,10 +1506,11 @@ probably do not need to define @env{POSIXLY_CORRECT}.
 Newer versions of POSIX are occasionally incompatible with older
 versions.  For example, older versions of POSIX required the
 command @samp{sort +1} to sort based on the second and succeeding
-fields in each input line, but starting with POSIX 1003.1-2001
+fields in each input line, but in POSIX 1003.1-2001
 the same command is required to sort the file named @file{+1}, and you
 must instead use the command @samp{sort -k 2} to get the field-based
-sort.
+sort.  To complicate things further, POSIX 1003.1-2008 allows an
+implementation to have either the old or the new behavior.
 
 @vindex _POSIX2_VERSION
 The GNU utilities normally conform to the version of POSIX
@@ -1520,10 +1521,10 @@ the year and month the standard was adopted.  Three values are currently
 supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
 POSIX 1003.2-1992, @samp{200112} stands for POSIX
 1003.1-2001, and @samp{200809} stands for POSIX 1003.1-2008.
-For example, if you have a newer system but are running software
-that assumes an older version of POSIX and uses @samp{sort +1}
-or @samp{tail +10}, you can work around any compatibility problems by setting
-@samp{_POSIX2_VERSION=199209} in your environment.
+For example, if you have a POSIX 1003.1-2001 system but are running software
+containing traditional usage like @samp{sort +1} or @samp{tail +10},
+you can work around the compatibility problems by setting
+@samp{_POSIX2_VERSION=200809} in your environment.
 
 @c This node is named "Multi-call invocation", not the usual
 @c "coreutils invocation", so that shell commands like
@@ -3060,17 +3061,18 @@ by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
 which has the same meaning as @option{-f}.
 
 @vindex _POSIX2_VERSION
-On older systems, the leading @samp{-} can be replaced by @samp{+} in
-the obsolete option syntax with the same meaning as in counts, and
-obsolete usage overrides normal usage when the two conflict.
-This obsolete behavior can be enabled or disabled with the
+On systems not conforming to POSIX 1003.1-2001, the leading @samp{-}
+can be replaced by @samp{+} in the traditional option syntax with the
+same meaning as in counts, and on obsolete systems predating POSIX
+1003.1-2001 traditional usage overrides normal usage when the two
+conflict.  This behavior can be controlled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
 conformance}).
 
-Scripts intended for use on standard hosts should avoid obsolete
+Scripts intended for use on standard hosts should avoid traditional
 syntax and should use @option{-c @var{num}[b]}, @option{-n
 @var{num}}, and/or @option{-f} instead.  If your script must also
-run on hosts that support only the obsolete syntax, you can often
+run on hosts that support only the traditional syntax, you can often
 rewrite it to avoid problematic usages, e.g., by using @samp{sed -n
 '$p'} rather than @samp{tail -1}.  If that's not possible, the script
 can use a test like @samp{if tail -c +1 </dev/null >/dev/null 2>&1;
@@ -4536,23 +4538,24 @@ is counted from the first nonblank character of the field.
 
 @vindex _POSIX2_VERSION
 @vindex POSIXLY_CORRECT
-On older systems, @command{sort} supports an obsolete origin-zero
+On systems not conforming to POSIX 1003.1-2001,
+@command{sort} supports a traditional origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
-The obsolete sequence @samp{sort +@var{a}.@var{x} -@var{b}.@var{y}}
+The traditional command @samp{sort +@var{a}.@var{x} -@var{b}.@var{y}}
 is equivalent to @samp{sort -k @var{a+1}.@var{x+1},@var{b}} if @var{y}
 is @samp{0} or absent, otherwise it is equivalent to @samp{sort -k
 @var{a+1}.@var{x+1},@var{b+1}.@var{y}}.
 
-This obsolete behavior can be enabled or disabled with the
+This traditional behavior can be controlled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
 conformance}); it can also be enabled when @env{POSIXLY_CORRECT} is
-not set by using the obsolete syntax with @samp{-@var{pos2}} present.
+not set by using the traditional syntax with @samp{-@var{pos2}} present.
 
-Scripts intended for use on standard hosts should avoid obsolete
+Scripts intended for use on standard hosts should avoid traditional
 syntax and should use @option{-k} instead.  For example, avoid
 @samp{sort +2}, since it might be interpreted as either @samp{sort
 ./+2} or @samp{sort -k 3}.  If your script must also run on hosts that
-support only the obsolete syntax, it can use a test like @samp{if sort
+support only the traditional syntax, it can use a test like @samp{if sort
 -k 1 </dev/null >/dev/null 2>&1; then @dots{}} to decide which syntax
 to use.
 
@@ -4911,7 +4914,7 @@ a null string for comparison if a line has fewer than @var{n} fields.  Fields
 are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
-For compatibility @command{uniq} supports an obsolete option syntax
+For compatibility @command{uniq} supports a traditional option syntax
 @option{-@var{n}}.  New scripts should use @option{-f @var{n}} instead.
 
 @item -s @var{n}
@@ -4923,11 +4926,12 @@ for comparison if a line has fewer than @var{n} characters.  If you use both
 the field and character skipping options, fields are skipped over first.
 
 @vindex _POSIX2_VERSION
-On older systems, @command{uniq} supports an obsolete option syntax
+On systems not conforming to POSIX 1003.1-2001,
+@command{uniq} supports a traditional option syntax
 @option{+@var{n}}.
-This obsolete behavior can be enabled or disabled with the
+Although this traditional behavior can be controlled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
-conformance}), but portable scripts should avoid commands whose
+conformance}), portable scripts should avoid commands whose
 behavior depends on this variable.
 For example, use @samp{uniq ./+10} or @samp{uniq -s 10} rather than
 the ambiguous @samp{uniq +10}.
@@ -10981,7 +10985,8 @@ On the atypical systems that support leap seconds, @var{ss} may be
 @end table
 
 @vindex _POSIX2_VERSION
-On older systems, @command{touch} supports an obsolete syntax, as follows.
+On systems predating POSIX 1003.1-2001,
+@command{touch} supports an obsolete syntax, as follows.
 If no timestamp is given with any of the @option{-d}, @option{-r}, or
 @option{-t} options, and if there are two or more @var{file}s and the
 first @var{file} is of the form @samp{@var{mmddhhmm}[@var{yy}]} and this
@@ -10989,9 +10994,9 @@ would be a valid argument to the @option{-t} option (if the @var{yy}, if
 any, were moved to the front), and if the represented year
 is in the range 1969--1999, that argument is interpreted as the time
 for the other files instead of as a file name.
-This obsolete behavior can be enabled or disabled with the
+Although this obsolete behavior can be controlled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
-conformance}), but portable scripts should avoid commands whose
+conformance}), portable scripts should avoid commands whose
 behavior depends on this variable.
 For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
 12312359 main.c} rather than the ambiguous @samp{touch 12312359 main.c}.

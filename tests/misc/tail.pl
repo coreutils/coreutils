@@ -116,11 +116,14 @@ foreach my $t (@tv)
     $ret
       and push @$e, {EXIT=>$ret}, {ERR=>$err_msg}, {ERR_SUBST=>$err_sub};
 
-    $test_name =~ /^(obs-plus-|minus-)/
+    $test_name =~ /^minus-/
       and push @$e, {ENV=>'_POSIX2_VERSION=199209'};
 
     $test_name =~ /^(err-6|c-2)$/
       and push @$e, {ENV=>'_POSIX2_VERSION=200112'};
+
+    $test_name =~ /^obs-plus-/
+      and push @$e, {ENV=>'_POSIX2_VERSION=200809'};
 
     $test_name =~ /^f-pipe-/
       and push @$e, {ENV=>'POSIXLY_CORRECT=1'};

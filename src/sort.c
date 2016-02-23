@@ -224,7 +224,7 @@ struct keyfield
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
-  bool obsolete_used;		/* obsolescent key option format is used. */
+  bool traditional_used;	/* Traditional key option format is used. */
   struct keyfield *next;	/* Next keyfield to try. */
 };
 
@@ -2394,7 +2394,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
 
   for (key = keylist; key; key = key->next, keynum++)
     {
-      if (key->obsolete_used)
+      if (key->traditional_used)
         {
           size_t sword = key->sword;
           size_t eword = key->eword;
@@ -4183,7 +4183,8 @@ main (int argc, char **argv)
   size_t nthreads = 0;
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-  bool obsolete_usage = (posix2_version () < 200112);
+  int posix_ver = posix2_version ();
+  bool traditional_usage = ! (200112 <= posix_ver && posix_ver < 200809);
   char **files;
   char *files_from = NULL;
   struct Tokens tok;
@@ -4288,13 +4289,13 @@ main (int argc, char **argv)
     {
       /* Parse an operand as a file after "--" was seen; or if
          pedantic and a file was seen, unless the POSIX version
-         predates 1003.1-2001 and -c was not seen and the operand is
+         is not 1003.1-2001 and -c was not seen and the operand is
          "-o FILE" or "-oFILE".  */
       int oi = -1;
 
       if (c == -1
           || (posixly_correct && nfiles != 0
-              && ! (obsolete_usage
+              && ! (traditional_usage
                     && ! checkonly
                     && optind != argc
                     && argv[optind][0] == '-' && argv[optind][1] == 'o'
@@ -4315,8 +4316,8 @@ main (int argc, char **argv)
             {
               bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
                                       && ISDIGIT (argv[optind][1]));
-              obsolete_usage |= minus_pos_usage && !posixly_correct;
-              if (obsolete_usage)
+              traditional_usage |= minus_pos_usage && !posixly_correct;
+              if (traditional_usage)
                 {
                   /* Treat +POS1 [-POS2] as a key if possible; but silently
                      treat an operand as a file if it is not a valid +POS1.  */
@@ -4356,7 +4357,7 @@ main (int argc, char **argv)
                             badfieldspec (optarg1,
                                       N_("stray character in field spec"));
                         }
-                      key->obsolete_used = true;
+                      key->traditional_used = true;
                       insertkey (key);
                     }
                 }

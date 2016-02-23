@@ -1981,7 +1981,6 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   const char *p;
   const char *n_string;
   const char *n_string_end;
-  bool obsolete_usage;
   int default_count = DEFAULT_N_LINES;
   bool t_from_start;
   bool t_count_lines = true;
@@ -1994,7 +1993,9 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
          || (3 <= argc && argc <= 4 && STREQ (argv[2], "--"))))
     return false;
 
-  obsolete_usage = (posix2_version () < 200112);
+  int posix_ver = posix2_version ();
+  bool obsolete_usage = posix_ver < 200112;
+  bool traditional_usage = obsolete_usage || 200809 <= posix_ver;
   p = argv[1];
 
   switch (*p++)
@@ -2003,8 +2004,8 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       return false;
 
     case '+':
-      /* Leading "+" is a file name in the non-obsolete form.  */
-      if (!obsolete_usage)
+      /* Leading "+" is a file name in the standard form.  */
+      if (!traditional_usage)
         return false;
 
       t_from_start = true;
@@ -2014,7 +2015,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       /* In the non-obsolete form, "-" is standard input and "-c"
          requires an option-argument.  The obsolete multidigit options
          are supported as a GNU extension even when conforming to
-         POSIX 1003.1-2001, so don't complain about them.  */
+         POSIX 1003.1-2001 or later, so don't complain about them.  */
       if (!obsolete_usage && !p[p[0] == 'c'])
         return false;
 

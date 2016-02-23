@@ -7,6 +7,13 @@ GNU coreutils NEWS                                    -*- outline -*-
    stty --help no longer outputs extraneous gettext header lines
    for translated languages. [bug introduced in coreutils-8.24]
 
+** Changes in behavior
+
+   sort, tail, and uniq now support traditional usage like 'sort +2'
+   and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
+   The 2008 edition of POSIX dropped the requirement that arguments
+   like '+2' must be treated as file names.
+
 
 * Noteworthy changes in release 8.25 (2016-01-20) [stable]
 

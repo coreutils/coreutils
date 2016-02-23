@@ -226,6 +226,13 @@ Also, comparisons honor the rules specified by 'LC_COLLATE'.\n\
   exit (status);
 }
 
+static bool
+strict_posix2 (void)
+{
+  int posix_ver = posix2_version ();
+  return 200112 <= posix_ver && posix_ver < 200809;
+}
+
 /* Convert OPT to size_t, reporting an error using MSGID if OPT is
    invalid.  Silently convert too-large values to SIZE_MAX.  */
 
@@ -533,7 +540,7 @@ main (int argc, char **argv)
           {
             unsigned long int size;
             if (optarg[0] == '+'
-                && posix2_version () < 200112
+                && ! strict_posix2 ()
                 && xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
                 && size <= SIZE_MAX)
               skip_chars = size;
