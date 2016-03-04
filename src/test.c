@@ -790,6 +790,11 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
       fputs (_("\
 \n\
+NOTE: Binary -a and -o are inherently ambiguous.  Use 'test EXPR1 && test\n\
+EXPR2' or 'test EXPR1 || test EXPR2' instead.\n\
+"), stdout);
+      fputs (_("\
+\n\
 NOTE: [ honors the --help and --version options, but test does not.\n\
 test treats each of those as it treats any other nonempty STRING.\n\
 "), stdout);
