@@ -52,9 +52,13 @@ returns_ 1 split -n 1/2 --filter='true' /dev/null 2>&1 || fail=1
 # where they would result in a non zero exit from split.
 yes | head -n200K | split -b1G --filter='head -c1 >/dev/null' || fail=1
 
+# Do not use a size of OFF_T_MAX, since split.c applies a GNU/Hurd
+# /dev/zero workaround for files of that size.  Use one less:
+N=$(expr $OFF_T_MAX - 1)
+
 # Ensure that "endless" input is ignored when all filters finish
 timeout 10 sh -c 'yes | split --filter="head -c1 >/dev/null" -n r/1' || fail=1
-if truncate -s$OFF_T_MAX zero.in; then
+if truncate -s$N zero.in; then
   timeout 10 sh -c 'split --filter="head -c1 >/dev/null" -n 1 zero.in' || fail=1
 fi
 
