@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2014-12-08.12; # UTC
+scriptversion=2016-01-24.06; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -42,7 +42,7 @@ export LC_ALL
 
 local_gl_dir=gl
 
-# Honour $PERL, but work even if there is none
+# Honor $PERL, but work even if there is none.
 PERL="${PERL-perl}"
 
 me=$0
@@ -1021,6 +1021,6 @@ echo "$0: done.  Now you can run './configure'."
 # eval: (add-hook 'write-file-hooks 'time-stamp)
 # time-stamp-start: "scriptversion="
 # time-stamp-format: "%:y-%02m-%02d.%02H"
-# time-stamp-time-zone: "UTC"
+# time-stamp-time-zone: "UTC0"
 # time-stamp-end: "; # UTC"
 # End:
