@@ -218,6 +218,10 @@ my @Tests =
      # Don't recognize %:z with a field width between the ':' and the 'z'.
      ['tz-5wf', '+%:8z', {OUT=>"%:8z"}, {ENV=>'TZ=XXX0:01'}],
 
+     # Test alphabetic timezone abbrv
+     ['tz-6', '+%Z', {OUT=>"UTC"}],
+     ['tz-7', '+%Z', {OUT=>"JST"}, {ENV=>'TZ=JST-9'}],
+
      ['ns-relative',
       '--iso=ns',
       "-d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",

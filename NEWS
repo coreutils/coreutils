@@ -8,10 +8,17 @@ GNU coreutils NEWS                                    -*- outline -*-
    handling ACLs on Cygwin and Solaris platforms. [bug introduced in
    coreutils-8.24]
 
+   date, du, ls, and pr no longer mishandle time zone abbreviations on
+   System V style platforms where this information is available only
+   in the global variable 'tzname'. [bug introduced in coreutils-8.24]
+
    stty --help no longer outputs extraneous gettext header lines
    for translated languages. [bug introduced in coreutils-8.24]
 
 ** Changes in behavior
+
+   stat now outputs nanosecond information for time stamps even if
+   they are out of localtime range.
 
    sort, tail, and uniq now support traditional usage like 'sort +2'
    and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.

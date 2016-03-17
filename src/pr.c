@@ -710,6 +710,9 @@ static char *custom_header;
 /* (-D) Date format for the header.  */
 static char const *date_format;
 
+/* The local time zone rules, as per the TZ environment variable.  */
+static timezone_t localtz;
+
 /* Date and file name for the header.  */
 static char *date_text;
 static char const *file_text;
@@ -1048,6 +1051,8 @@ main (int argc, char **argv)
     date_format = (getenv ("POSIXLY_CORRECT") && !hard_locale (LC_TIME)
                    ? "%b %e %H:%M %Y"
                    : "%Y-%m-%d %H:%M");
+
+  localtz = tzalloc (getenv ("TZ"));
 
   /* Now we can set a reasonable initial value: */
   if (first_page_number == 0)
@@ -1611,7 +1616,7 @@ init_header (char const *filename, int desc)
   struct stat st;
   struct timespec t;
   int ns;
-  struct tm *tm;
+  struct tm tm;
 
   /* If parallel files or standard input, use current date. */
   if (STREQ (filename, "-"))
@@ -1627,18 +1632,18 @@ init_header (char const *filename, int desc)
     }
 
   ns = t.tv_nsec;
-  tm = localtime (&t.tv_sec);
-  if (tm == NULL)
+  if (localtime_rz (localtz, &t.tv_sec, &tm))
     {
-      buf = xmalloc (INT_BUFSIZE_BOUND (long int)
-                     + MAX (10, INT_BUFSIZE_BOUND (int)));
-      sprintf (buf, "%ld.%09d", (long int) t.tv_sec, ns);
+      size_t bufsize
+        = nstrftime (NULL, SIZE_MAX, date_format, &tm, localtz, ns) + 1;
+      buf = xmalloc (bufsize);
+      nstrftime (buf, bufsize, date_format, &tm, localtz, ns);
     }
   else
     {
-      size_t bufsize = nstrftime (NULL, SIZE_MAX, date_format, tm, 0, ns) + 1;
-      buf = xmalloc (bufsize);
-      nstrftime (buf, bufsize, date_format, tm, 0, ns);
+      char secbuf[INT_BUFSIZE_BOUND (intmax_t)];
+      buf = xmalloc (sizeof secbuf + MAX (10, INT_BUFSIZE_BOUND (int)));
+      sprintf (buf, "%s.%09d", timetostr (t.tv_sec, secbuf), ns);
     }
 
   free (date_text);

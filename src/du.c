@@ -182,6 +182,9 @@ static char const *time_style = NULL;
 /* Format used to display date / time. Controlled by --time-style */
 static char const *time_format = NULL;
 
+/* The local time zone rules, as per the TZ environment variable.  */
+static timezone_t localtz;
+
 /* The units to use when printing sizes.  */
 static uintmax_t output_block_size;
 
@@ -372,19 +375,18 @@ hash_ins (struct di_set *di_set, ino_t ino, dev_t dev)
    in FORMAT.  */
 
 static void
-show_date (const char *format, struct timespec when)
+show_date (const char *format, struct timespec when, timezone_t tz)
 {
-  struct tm *tm = localtime (&when.tv_sec);
-  if (! tm)
+  struct tm tm;
+  if (localtime_rz (tz, &when.tv_sec, &tm))
+    fprintftime (stdout, format, &tm, tz, when.tv_nsec);
+  else
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       char *when_str = timetostr (when.tv_sec, buf);
       error (0, 0, _("time %s is out of range"), quote (when_str));
       fputs (when_str, stdout);
-      return;
     }
-
-  fprintftime (stdout, format, tm, 0, when.tv_nsec);
 }
 
 /* Print N_BYTES.  Convert it to a readable value before printing.  */
@@ -412,7 +414,7 @@ print_size (const struct duinfo *pdui, const char *string)
   if (opt_time)
     {
       putchar ('\t');
-      show_date (time_format, pdui->tmax);
+      show_date (time_format, pdui->tmax, localtz);
     }
   printf ("\t%s%c", string, opt_nul_terminate_output ? '\0' : '\n');
   fflush (stdout);
@@ -905,6 +907,7 @@ main (int argc, char **argv)
             (optarg
              ? XARGMATCH ("--time", optarg, time_args, time_types)
              : time_mtime);
+          localtz = tzalloc (getenv ("TZ"));
           break;
 
         case TIME_STYLE_OPTION:

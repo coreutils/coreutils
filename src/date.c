@@ -559,23 +559,23 @@ main (int argc, char **argv)
 static bool
 show_date (const char *format, struct timespec when, timezone_t tz)
 {
-  struct tm *tm;
+  struct tm tm;
 
-  tm = localtime (&when.tv_sec);
-  if (! tm)
+  if (localtime_rz (tz, &when.tv_sec, &tm))
+    {
+      if (format == rfc_2822_format)
+        setlocale (LC_TIME, "C");
+      fprintftime (stdout, format, &tm, tz, when.tv_nsec);
+      if (format == rfc_2822_format)
+        setlocale (LC_TIME, "");
+      fputc ('\n', stdout);
+      return true;
+    }
+  else
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       error (0, 0, _("time %s is out of range"),
              quote (timetostr (when.tv_sec, buf)));
       return false;
     }
-
-  if (format == rfc_2822_format)
-    setlocale (LC_TIME, "C");
-  fprintftime (stdout, format, tm, tz, when.tv_nsec);
-  fputc ('\n', stdout);
-  if (format == rfc_2822_format)
-    setlocale (LC_TIME, "");
-
-  return true;
 }

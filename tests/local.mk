@@ -390,6 +390,7 @@ all_tests =					\
   tests/misc/tail.pl				\
   tests/misc/tee.sh				\
   tests/misc/test-diag.pl			\
+  tests/misc/time-style.sh			\
   tests/misc/timeout.sh				\
   tests/misc/timeout-blocked.pl			\
   tests/misc/timeout-group.sh			\
