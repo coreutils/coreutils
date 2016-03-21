@@ -807,6 +807,9 @@ main (int argc, char **argv)
         ok = false;
       else
         ok &= wc_file (file_name, &fstatus[nfiles ? i : 0]);
+
+      if (! nfiles)
+        fstatus[0].failed = 1;
     }
  argv_iter_done:
 

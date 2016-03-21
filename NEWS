@@ -8,6 +8,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   158909489063877810457 and 222087527029934481871.
   [bug introduced in coreutils-8.20]
 
+  wc --bytes --files0-from now correctly reports byte counts.
+  Previously it may have returned values that were too large,
+  depending on the size of the first file processed.
+  [bug introduced in coreutils-7.1]
+
 
 * Noteworthy changes in release 8.26 (2016-11-30) [stable]
 

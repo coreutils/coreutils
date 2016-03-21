@@ -25,7 +25,7 @@ printf '2b\n2w\n' |tr '\n' '\0' > names || framework_failure_
 
 
 wc --files0-from=names > out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
  1  1  2 2b
  1  2  8 2w
  2  3 10 total
@@ -46,6 +46,17 @@ nlname='1
 touch "$nlname" || framework_failure_
 printf '%s\0' "$nlname" | wc --files0-from=- > out || fail=1
 printf '%s\n' "0 0 0 '1'$'\\n''2'" > exp || framework_failure_
+compare exp out || fail=1
+
+# Ensure correct byte counts, which fails between v7.1 and v8.26 inclusive
+truncate -s1G wc.big || framework_failure_
+touch wc.small || framework_failure_
+printf '%s\0' wc.big wc.small | wc -c --files0-from=- >out || fail=1
+cat <<\EOF > exp || framework_failure_
+1073741824 wc.big
+0 wc.small
+1073741824 total
+EOF
 compare exp out || fail=1
 
 Exit $fail
