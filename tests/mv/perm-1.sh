@@ -2,7 +2,7 @@
 # ensure that mv gives one diagnostic, not two, when failing
 # due to lack of permissions
 
-# Copyright (C) 2002-2015 Free Software Foundation, Inc.
+# Copyright (C) 2002-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ print_ver_ mv
 skip_if_root_
 
 mkdir -p no-write/dir || framework_failure_
-chmod u-w no-write || framework_failure_
+chmod ug-w no-write || framework_failure_
 
 
 mv no-write/dir . > out 2>&1 && fail=1

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that cat outputs processed data immediately.
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ cat_buf_1()
 {
   local delay="$1"
 
+  > out || framework_failure_
   dd count=1 if=fifo > out & pid=$!
   (echo 1; sleep $delay; echo 2) | cat -v > fifo
   wait $pid

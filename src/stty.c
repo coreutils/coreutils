@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2015 Free Software Foundation, Inc.
+   Copyright (C) 1990-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -343,6 +343,9 @@ static struct mode_info const mode_info[] =
   {"echoke", local, SANE_SET | REV, ECHOKE, 0},
   {"crtkill", local, REV | OMIT, ECHOKE, 0},
 #endif
+#ifdef FLUSHO
+  {"flusho", local, SANE_UNSET | REV, FLUSHO, 0},
+#endif
 #if defined TIOCEXT
   {"extproc", local, SANE_UNSET | REV | NO_SETATTR, EXTPROC, 0},
 #elif defined EXTPROC
@@ -463,6 +466,9 @@ static int max_col;
 
 /* Current position, to know when to wrap. */
 static int current_col;
+
+/* Default "drain" mode for tcsetattr.  */
+static int tcsetattr_options = TCSADRAIN;
 
 static struct option const longopts[] =
 {
@@ -616,6 +622,9 @@ Special settings:\n\
  * columns N     same as cols N\n\
 "), stdout);
 #endif
+      printf (_("\
+ * [-]drain      wait for transmission before applying settings (%s by default)\
+\n"), tcsetattr_options == TCSADRAIN ? _("on") : _("off"));
       fputs (_("\
    ispeed N      set the input speed to N\n\
 "), stdout);
@@ -829,6 +838,11 @@ Local settings:\n\
  * [-]extproc    enable \"LINEMODE\"; useful with high latency links\n\
 "), stdout);
 #endif
+#if defined FLUSHO
+      fputs (_("\
+ * [-]flusho     discard output\n\
+"), stdout);
+#endif
       printf (_("\
    [-]icanon     enable special characters: %s\n\
    [-]iexten     enable non-POSIX special characters\n\
@@ -939,8 +953,6 @@ Combination settings:\n\
 #endif
 );
       fputs (_("\
-"), stdout);
-      fputs (_("\
    oddp          same as parenb parodd cs7\n\
    -oddp         same as -parenb cs8\n\
    [-]parity     same as [-]evenp\n\
@@ -1048,6 +1060,9 @@ Combination settings:\n\
 #ifdef EXTPROC
    " -extproc"
 #endif
+#ifdef FLUSHO
+   " -flusho"
+#endif
 );
       fputs (_("\
 \n\
@@ -1130,7 +1145,11 @@ main (int argc, char **argv)
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
         default:
-          noargs = false;
+          /* Consider "drain" as an option rather than a setting,
+             to support: alias stty='stty -drain'  etc.  */
+          if (! STREQ (argv[argi + opti], "-drain")
+              && ! STREQ (argv[argi + opti], "drain"))
+            noargs = false;
 
           /* Skip the argument containing this unrecognized option;
              the 2nd pass will analyze it.  */
@@ -1206,6 +1225,11 @@ main (int argc, char **argv)
         {
           ++arg;
           reversed = true;
+        }
+      if (STREQ (arg, "drain"))
+        {
+          tcsetattr_options = reversed ? TCSANOW : TCSADRAIN;
+          continue;
         }
       for (i = 0; mode_info[i].name != NULL; ++i)
         {
@@ -1361,7 +1385,7 @@ main (int argc, char **argv)
          spurious difference in an uninitialized portion of the structure.  */
       static struct termios new_mode;
 
-      if (tcsetattr (STDIN_FILENO, TCSADRAIN, &mode))
+      if (tcsetattr (STDIN_FILENO, tcsetattr_options, &mode))
         error (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if

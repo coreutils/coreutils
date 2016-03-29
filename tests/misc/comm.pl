@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Test comm
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,14 +28,17 @@ my $prog = 'comm';
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @inputs = ({IN=>{a=>"1\n3"}}, {IN=>{b=>"2\n3"}});
+my @zinputs = ({IN=>{za=>"1\0003"}}, {IN=>{zb=>"2\0003"}});
 
 my @Tests =
   (
    # basic operation
    ['basic', @inputs, {OUT=>"1\n\t2\n\t\t3\n"} ],
+   ['zbasic', '-z', @zinputs, {OUT=>"1\0\t2\0\t\t3\0"} ],
 
    # suppress lines unique to file 1
    ['opt-1', '-1', @inputs, {OUT=>"2\n\t3\n"} ],
+   ['zopt-1', '-z', '-1', @zinputs, {OUT=>"2\0\t3\0"} ],
 
    # suppress lines unique to file 2
    ['opt-2', '-2', @inputs, {OUT=>"1\n\t3\n"} ],
@@ -131,13 +134,15 @@ my @Tests =
    ['delim-2char', '--output-delimiter=++', @inputs,
     {OUT=>"1\n++2\n++++3\n"} ],
 
-   # invalid empty delimiter
-   ['delim-empty', '--output-delimiter=', @inputs, {EXIT=>1},
-    {ERR => "$prog: empty '--output-delimiter' not allowed\n"}],
+   # NUL delimiter
+   ['delim-empty', '--output-delimiter=', @inputs,
+    {OUT=>"1\n\0002\n\000\0003\n"} ],
+   ['zdelim-empty', '-z', '-z --output-delimiter=', @zinputs,
+    {OUT=>"1\000\0002\000\000\0003\000"} ],
 
    # invalid dual delimiter
-   ['delim-dual', '--output-delimiter=,', '--output-delimiter=+',
-    @inputs, {EXIT=>1}, {ERR => "$prog: multiple delimiters specified\n"}],
+   ['delim-dual', '--output-delimiter=,', '--output-delimiter=+', @inputs,
+    {EXIT=>1}, {ERR => "$prog: multiple output delimiters specified\n"}],
 
    # valid dual delimiter specification
    ['delim-dual2', '--output-delimiter=,', '--output-delimiter=,', @inputs,

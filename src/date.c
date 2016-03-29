@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2015 Free Software Foundation, Inc.
+   Copyright (C) 1989-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
                                FMT='date' for date only (the default),\n\
                                'hours', 'minutes', 'seconds', or 'ns'\n\
                                for date and time to the indicated precision.\n\
-                               Example: 2006-08-14T02:34:56-0600\n\
+                               Example: 2006-08-14T02:34:56-06:00\n\
 "), stdout);
       fputs (_("\
   -R, --rfc-2822             output date and time in RFC 2822 format.\n\
@@ -548,6 +548,8 @@ main (int argc, char **argv)
       ok &= show_date (format, when, tz);
     }
 
+  IF_LINT (tzfree (tz));
+
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
@@ -557,23 +559,23 @@ main (int argc, char **argv)
 static bool
 show_date (const char *format, struct timespec when, timezone_t tz)
 {
-  struct tm *tm;
+  struct tm tm;
 
-  tm = localtime (&when.tv_sec);
-  if (! tm)
+  if (localtime_rz (tz, &when.tv_sec, &tm))
+    {
+      if (format == rfc_2822_format)
+        setlocale (LC_TIME, "C");
+      fprintftime (stdout, format, &tm, tz, when.tv_nsec);
+      if (format == rfc_2822_format)
+        setlocale (LC_TIME, "");
+      fputc ('\n', stdout);
+      return true;
+    }
+  else
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       error (0, 0, _("time %s is out of range"),
              quote (timetostr (when.tv_sec, buf)));
       return false;
     }
-
-  if (format == rfc_2822_format)
-    setlocale (LC_TIME, "C");
-  fprintftime (stdout, format, tm, tz, when.tv_nsec);
-  fputc ('\n', stdout);
-  if (format == rfc_2822_format)
-    setlocale (LC_TIME, "");
-
-  return true;
 }

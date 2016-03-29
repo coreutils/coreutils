@@ -1,7 +1,7 @@
 #!/bin/sh
 # rm (coreutils-4.5.4) could be tricked into mistakenly reporting a cycle.
 
-# Copyright (C) 2003-2015 Free Software Foundation, Inc.
+# Copyright (C) 2003-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ skip_if_root_
 
 mkdir -p a/b
 touch a/b/file
-chmod u-w a/b
+chmod ug-w a/b
 
 
 rm -rf a a 2>&1 | sed 's/:[^:]*$//' > out || fail=1

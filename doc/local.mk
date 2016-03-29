@@ -1,7 +1,7 @@
 # Make coreutils documentation.				-*-Makefile-*-
 # This is included by the top-level Makefile.am.
 
-# Copyright (C) 1995-2015 Free Software Foundation, Inc.
+# Copyright (C) 1995-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ doc/constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	  sed -n -e \
 	      's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
 	    $(top_srcdir)/src/shred.c; } > $@-t \
-	  && { cmp $@-t $@ >/dev/null 2>&1 || mv $@-t $@; }
+	  && { cmp $@-t $@ >/dev/null 2>&1 || mv $@-t $@; rm -f $@-t; }
 
 MAINTAINERCLEANFILES += doc/constants.texi
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that df outputs one line per entry
 
-# Copyright (C) 2012-2015 Free Software Foundation, Inc.
+# Copyright (C) 2012-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,5 +40,7 @@ test $skip = 1 \
   && skip_ "insufficient mount/ext2 support"
 
 test $(df "$mnt" | wc -l) = 2 || fail=1
+
+test "$fail" = 1 && dump_mount_list_
 
 Exit $fail

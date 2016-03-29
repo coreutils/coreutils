@@ -1,5 +1,5 @@
 /* relpath - print the relative path
-   Copyright (C) 2012-2015 Free Software Foundation, Inc.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ buffer_or_output (const char* str, char **pbuf, size_t *plen)
 }
 
 /* Output the relative representation if possible.
-   If BUF is non NULL, write to that buffer rather than to stdout.  */
+   If BUF is non-NULL, write to that buffer rather than to stdout.  */
 bool
 relpath (const char *can_fname, const char *can_reldir, char *buf, size_t len)
 {

@@ -1,7 +1,7 @@
 #!/bin/sh
 # test dd reblocking vs. bs=
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@ print_ver_ dd
 cat <<\EOF > exp-reblock || framework_failure_
 0+2 records in
 1+1 records out
-4 bytes (4 B) copied
+4 bytes copied
 EOF
 
 # 2 short reads -> 2 partial writes
 cat <<\EOF > exp-no-reblock || framework_failure_
 0+2 records in
 0+2 records out
-4 bytes (4 B) copied
+4 bytes copied
 EOF
 
 

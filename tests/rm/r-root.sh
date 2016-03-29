@@ -1,7 +1,7 @@
 #!/bin/sh
 # Try to remove '/' recursively.
 
-# Copyright (C) 2013-2015 Free Software Foundation, Inc.
+# Copyright (C) 2013-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -142,7 +142,7 @@ exercise_rm_r_root ()
 
   ret=$?
 
-  clean_rm_err_ < err.t > err || framework_failure_
+  clean_rm_err_ < err.t > err || ret=$?
 
   return $ret
 }

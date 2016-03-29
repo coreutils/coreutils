@@ -1,5 +1,5 @@
 /* wc - print the number of lines, words, and bytes in files
-   Copyright (C) 1985-2015 Free Software Foundation, Inc.
+   Copyright (C) 1985-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 /* Written by Paul Rubin, phr@ocf.berkeley.edu
    and David MacKenzie, djm@gnu.ai.mit.edu. */
-
+
 #include <config.h>
 
 #include <stdio.h>
@@ -182,7 +182,7 @@ write_counts (uintmax_t lines,
       printf (format_int, number_width, umaxtostr (linelength, buf));
     }
   if (file)
-    printf (" %s", file);
+    printf (" %s", strchr (file, '\n') ? quotef (file) : file);
   putchar ('\n');
 }
 

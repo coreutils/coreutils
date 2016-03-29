@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Test uniq.
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -95,6 +95,7 @@ my @Tests =
  ['3z', '-z', {IN=>"a\na"}, {OUT=>"a\na\0"}],
  ['4z', '-z', {IN=>"a\nb"}, {OUT=>"a\nb\0"}],
  ['5z', '-z', {IN=>"a\na\nb"}, {OUT=>"a\na\nb\0"}],
+ ['10z', '-z -f1', {IN=>"a\nb\n\0c\nb\n\0"}, {OUT=>"a\nb\n\0"}],
  ['20z', '-dz', {IN=>"a\na\n"}, {OUT=>""}],
 
  # Make sure that eight bit characters work

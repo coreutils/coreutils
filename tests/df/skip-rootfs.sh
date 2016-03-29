@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test df's behavior for skipping the pseudo "rootfs" file system.
 
-# Copyright (C) 2012-2015 Free Software Foundation, Inc.
+# Copyright (C) 2012-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -47,5 +47,7 @@ grep '^rootfs' out || { fail=1; cat out; }
 # black-listed.
 df -a -x rootfs >out || fail=1
 grep '^rootfs' out && { fail=1; cat out; }
+
+test "$fail" = 1 && dump_mount_list_
 
 Exit $fail

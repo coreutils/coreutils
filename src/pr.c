@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 1988-2015 Free Software Foundation, Inc.
+   Copyright (C) 1988-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /*  By Pete TerMaat, with considerable refinement by Roland Huebner.  */
-
+
 /* Things to watch: Sys V screws up on ...
    pr -n -3 -s: /usr/dict/words
    pr -m -o10 -n /usr/dict/words{,,,}
@@ -306,7 +306,6 @@
                 affect -W option.)
 
 */
-
 
 #include <config.h>
 
@@ -469,7 +468,7 @@ static size_t buff_allocated;
    we do column balancing on the last page. */
 static int *line_vector;
 
-/* Array of horizonal positions.
+/* Array of horizontal positions.
    For each line in line_vector, end_vector[line] is the horizontal
    position we are in after printing that line.  We keep track of this
    so that we know how much we need to pad to prepare for the next
@@ -710,6 +709,9 @@ static char *custom_header;
 
 /* (-D) Date format for the header.  */
 static char const *date_format;
+
+/* The local time zone rules, as per the TZ environment variable.  */
+static timezone_t localtz;
 
 /* Date and file name for the header.  */
 static char *date_text;
@@ -1050,6 +1052,8 @@ main (int argc, char **argv)
                    ? "%b %e %H:%M %Y"
                    : "%Y-%m-%d %H:%M");
 
+  localtz = tzalloc (getenv ("TZ"));
+
   /* Now we can set a reasonable initial value: */
   if (first_page_number == 0)
     first_page_number = 1;
@@ -1171,7 +1175,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
       *number = tmp_long;
     }
 }
-
+
 /* Set parameters related to formatting. */
 
 static void
@@ -1278,7 +1282,7 @@ init_parameters (int number_of_files)
   free (clump_buff);
   clump_buff = xmalloc (MAX (8, chars_per_input_tab));
 }
-
+
 /* Open the necessary files,
    maintaining a COLUMN structure for each column.
 
@@ -1354,7 +1358,7 @@ init_fps (int number_of_files, char **av)
   files_ready_to_read = total_files;
   return true;
 }
-
+
 /* Determine print_func and char_func, the functions
    used by each column for printing and/or storing.
 
@@ -1441,7 +1445,7 @@ init_funcs (void)
   p->numbered = numbered_lines && (!parallel_files || i == 1);
   p->start_position = h;
 }
-
+
 /* Open a file.  Return true if successful.
 
    With each file p, p->full_page_printed is initialized,
@@ -1565,7 +1569,7 @@ reset_status (void)
         files_ready_to_read = 1;
     }
 }
-
+
 /* Print a single file, or multiple files in parallel.
 
    Set up the list of columns, opening the necessary files.
@@ -1600,7 +1604,7 @@ print_files (int number_of_files, char **av)
   while (print_page ())
     ;
 }
-
+
 /* Initialize header information.
    If DESC is non-negative, it is a file descriptor open to
    FILENAME for reading.  */
@@ -1612,7 +1616,7 @@ init_header (char const *filename, int desc)
   struct stat st;
   struct timespec t;
   int ns;
-  struct tm *tm;
+  struct tm tm;
 
   /* If parallel files or standard input, use current date. */
   if (STREQ (filename, "-"))
@@ -1628,18 +1632,18 @@ init_header (char const *filename, int desc)
     }
 
   ns = t.tv_nsec;
-  tm = localtime (&t.tv_sec);
-  if (tm == NULL)
+  if (localtime_rz (localtz, &t.tv_sec, &tm))
     {
-      buf = xmalloc (INT_BUFSIZE_BOUND (long int)
-                     + MAX (10, INT_BUFSIZE_BOUND (int)));
-      sprintf (buf, "%ld.%09d", (long int) t.tv_sec, ns);
+      size_t bufsize
+        = nstrftime (NULL, SIZE_MAX, date_format, &tm, localtz, ns) + 1;
+      buf = xmalloc (bufsize);
+      nstrftime (buf, bufsize, date_format, &tm, localtz, ns);
     }
   else
     {
-      size_t bufsize = nstrftime (NULL, SIZE_MAX, date_format, tm, 0, ns) + 1;
-      buf = xmalloc (bufsize);
-      nstrftime (buf, bufsize, date_format, tm, 0, ns);
+      char secbuf[INT_BUFSIZE_BOUND (intmax_t)];
+      buf = xmalloc (sizeof secbuf + MAX (10, INT_BUFSIZE_BOUND (int)));
+      sprintf (buf, "%s.%09d", timetostr (t.tv_sec, secbuf), ns);
     }
 
   free (date_text);
@@ -1649,7 +1653,7 @@ init_header (char const *filename, int desc)
                             - mbswidth (date_text, 0)
                             - mbswidth (file_text, 0));
 }
-
+
 /* Set things up for printing a page
 
    Scan through the columns ...
@@ -1854,7 +1858,7 @@ print_page (void)
 
   return true;			/* More pages to go. */
 }
-
+
 /* Allocate space for storing columns.
 
    This is necessary when printing multiple columns from a single file.
@@ -2028,7 +2032,7 @@ add_line_number (COLUMN *p)
   if (truncate_lines && !parallel_files)
     input_position += number_width;
 }
-
+
 /* Print (or store) padding until the current horizontal position
    is position. */
 
@@ -2164,7 +2168,7 @@ skip_read (COLUMN *p, int column_number)
     if ((!parallel_files || column_number == 1) && !single_ff)
       ++line_count;
 }
-
+
 /* If we're tabifying output,
 
    When print_char encounters white space it keeps track
@@ -2710,7 +2714,7 @@ cleanup (void)
   free (end_vector);
   free (buff);
 }
-
+
 /* Complain, print a usage message, and die. */
 
 void

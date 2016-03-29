@@ -1,7 +1,7 @@
 #!/bin/sh
 # Check stats output for SIG{INFO,USR1} and status=progress
 
-# Copyright (C) 2014-2015 Free Software Foundation, Inc.
+# Copyright (C) 2014-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ cleanup_()
 }
 
 for open in '' '1'; do
+  > err || framework_failure_
+
   # Run dd with the fullblock iflag to avoid short reads
   # which can be triggered by reception of signals
   dd iflag=fullblock if=/dev/zero of=fifo count=50 bs=5000000 2>err & pid=$!
@@ -60,14 +62,14 @@ for open in '' '1'; do
   wait
 
   # Ensure all data processed and at least last status written
-  grep '250000000 bytes .* copied' err || { cat err; fail=1; }
+  grep '250000000 bytes (250 MB, 238 MiB) copied' err || { cat err; fail=1; }
 done
 
 progress_output()
 {
-  { sleep "$1"; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
-  # Progress output should be for "byte ... copied", while final is "bytes ..."
-  grep 'byte .* copied' err
+  { sleep $1; echo 1; } | dd bs=1 status=progress of=/dev/null 2>err
+  # Progress output should be for "byte copied", while final is "bytes ..."
+  grep 'byte copied' err
 }
 retry_delay_ progress_output 1 4 || { cat err; fail=1; }
 

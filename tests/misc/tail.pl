@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Test tail.
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -101,6 +101,10 @@ my @tv = (
 
 # With textutils-1.22, this failed.
 ['f-pipe-1', '-f -n 1', "a\nb\n", "b\n", 0],
+
+# --zero-terminated
+['zero-1', '-z -n 1', "x\0y", "y", 0],
+['zero-2', '-z -n 2', "x\0y", "x\0y", 0],
 );
 
 my @Tests;
@@ -112,11 +116,14 @@ foreach my $t (@tv)
     $ret
       and push @$e, {EXIT=>$ret}, {ERR=>$err_msg}, {ERR_SUBST=>$err_sub};
 
-    $test_name =~ /^(obs-plus-|minus-)/
+    $test_name =~ /^minus-/
       and push @$e, {ENV=>'_POSIX2_VERSION=199209'};
 
     $test_name =~ /^(err-6|c-2)$/
       and push @$e, {ENV=>'_POSIX2_VERSION=200112'};
+
+    $test_name =~ /^obs-plus-/
+      and push @$e, {ENV=>'_POSIX2_VERSION=200809'};
 
     $test_name =~ /^f-pipe-/
       and push @$e, {ENV=>'POSIXLY_CORRECT=1'};

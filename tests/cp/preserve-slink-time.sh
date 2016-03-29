@@ -1,7 +1,7 @@
 #!/bin/sh
 # Verify that cp -Pp preserves times even on symlinks.
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,11 +31,21 @@ case $(stat --format=%y dangle) in
   ??:??:??.000000000) sleep 2;;
 esac
 
-# Can't use --format=%x, as lstat() modifies atime on some platforms.
-cp -Pp dangle d2 || framework_failure_
-stat --format=%y dangle > t1 || framework_failure_
-stat --format=%y d2 > t2 || framework_failure_
+copy_timestamp_() {
+  sleep $1
+  rm -f d2
+  cp -Pp dangle d2 || framework_failure_
+  # Can't use --format=%x, as lstat() modifies atime on some platforms.
+  stat --format=%y dangle > t1 || framework_failure_
+  stat --format=%y d2 > t2 || framework_failure_
+  compare t1 t2
+}
 
-compare t1 t2 || fail=1
+# We retry with a delay at least 1.5s because on GPFS
+# it was seen that the timestamp wasn't updated unless there
+# was sufficient delay between the ln and cp.
+# I.e., if there wasn't sufficient difference in
+# the timestamp being updated, the update was discarded.
+retry_delay_ copy_timestamp_ .1 4 || fail=1
 
 Exit $fail

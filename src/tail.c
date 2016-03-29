@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989-2015 Free Software Foundation, Inc.
+   Copyright (C) 1989-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -180,6 +180,9 @@ static bool from_start;
 /* If true, print filename headers.  */
 static bool print_headers;
 
+/* Character to split lines by. */
+static char line_end;
+
 /* When to print the filename banners.  */
 enum header_mode
 {
@@ -238,6 +241,7 @@ static struct option const long_options[] =
   {"silent", no_argument, NULL, 'q'},
   {"sleep-interval", required_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -296,6 +300,9 @@ With more than one FILE, precede each with a header giving the file name.\n\
                              with inotify and --pid=P, check process P at\n\
                              least once every N seconds\n\
   -v, --verbose            always output headers giving file names\n\
+"), stdout);
+     fputs (_("\
+  -z, --zero-terminated    line delimiter is NUL, not newline\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -499,7 +506,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   *read_pos = pos + bytes_read;
 
   /* Count the incomplete line on files that don't end with a newline.  */
-  if (bytes_read && buffer[bytes_read - 1] != '\n')
+  if (bytes_read && buffer[bytes_read - 1] != line_end)
     --n_lines;
 
   do
@@ -510,7 +517,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       while (n)
         {
           char const *nl;
-          nl = memrchr (buffer, '\n', n);
+          nl = memrchr (buffer, line_end, n);
           if (nl == NULL)
             break;
           n = nl - buffer;
@@ -595,7 +602,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       {
         char const *buffer_end = tmp->buffer + n_read;
         char const *p = tmp->buffer;
-        while ((p = memchr (p, '\n', buffer_end - p)))
+        while ((p = memchr (p, line_end, buffer_end - p)))
           {
             ++p;
             ++tmp->nlines;
@@ -649,7 +656,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     goto free_lbuffers;
 
   /* Count the incomplete line on files that don't end with a newline.  */
-  if (last->buffer[last->nbytes - 1] != '\n')
+  if (last->buffer[last->nbytes - 1] != line_end)
     {
       ++last->nlines;
       ++total_lines;
@@ -671,7 +678,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
         size_t j;
         for (j = total_lines - n_lines; j; --j)
           {
-            beg = memchr (beg, '\n', buffer_end - beg);
+            beg = memchr (beg, line_end, buffer_end - beg);
             assert (beg);
             ++beg;
           }
@@ -857,7 +864,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       *read_pos += bytes_read;
 
       char *p = buffer;
-      while ((p = memchr (p, '\n', buffer_end - p)))
+      while ((p = memchr (p, line_end, buffer_end - p)))
         {
           ++p;
           if (--n_lines == 0)
@@ -1259,6 +1266,20 @@ any_remote_file (const struct File_spec *f, size_t n_files)
 
   for (i = 0; i < n_files; i++)
     if (0 <= f[i].fd && f[i].remote)
+      return true;
+  return false;
+}
+
+/* Return true if any of the N_FILES files in F is non remote, i.e., has
+   an open file descriptor and is not on a network file system.  */
+
+static bool
+any_non_remote_file (const struct File_spec *f, size_t n_files)
+{
+  size_t i;
+
+  for (i = 0; i < n_files; i++)
+    if (0 <= f[i].fd && ! f[i].remote)
       return true;
   return false;
 }
@@ -1960,7 +1981,6 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   const char *p;
   const char *n_string;
   const char *n_string_end;
-  bool obsolete_usage;
   int default_count = DEFAULT_N_LINES;
   bool t_from_start;
   bool t_count_lines = true;
@@ -1973,7 +1993,9 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
          || (3 <= argc && argc <= 4 && STREQ (argv[2], "--"))))
     return false;
 
-  obsolete_usage = (posix2_version () < 200112);
+  int posix_ver = posix2_version ();
+  bool obsolete_usage = posix_ver < 200112;
+  bool traditional_usage = obsolete_usage || 200809 <= posix_ver;
   p = argv[1];
 
   switch (*p++)
@@ -1982,8 +2004,8 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       return false;
 
     case '+':
-      /* Leading "+" is a file name in the non-obsolete form.  */
-      if (!obsolete_usage)
+      /* Leading "+" is a file name in the standard form.  */
+      if (!traditional_usage)
         return false;
 
       t_from_start = true;
@@ -1993,7 +2015,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       /* In the non-obsolete form, "-" is standard input and "-c"
          requires an option-argument.  The obsolete multidigit options
          are supported as a GNU extension even when conforming to
-         POSIX 1003.1-2001, so don't complain about them.  */
+         POSIX 1003.1-2001 or later, so don't complain about them.  */
       if (!obsolete_usage && !p[p[0] == 'c'])
         return false;
 
@@ -2047,7 +2069,7 @@ parse_options (int argc, char **argv,
 {
   int c;
 
-  while ((c = getopt_long (argc, argv, "c:n:fFqs:v0123456789",
+  while ((c = getopt_long (argc, argv, "c:n:fFqs:vz0123456789",
                            long_options, NULL))
          != -1)
     {
@@ -2122,6 +2144,10 @@ parse_options (int argc, char **argv,
 
         case 'v':
           *header_mode = always;
+          break;
+
+        case 'z':
+          line_end = '\0';
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -2221,6 +2247,7 @@ main (int argc, char **argv)
 
   count_lines = true;
   forever = from_start = print_headers = false;
+  line_end = '\n';
   obsolete_option = parse_obsolete_option (argc, argv, &n_units);
   argc -= obsolete_option;
   argv += obsolete_option;
@@ -2301,6 +2328,11 @@ main (int argc, char **argv)
          in this case because it would miss any updates to the file
          that were not initiated from the local system.
 
+         any_non_remote_file() checks if the user has specified any
+         files that don't reside on remote file systems.  inotify is not used
+         if there are no open files, as we can't determine if those file
+         will be on a remote file system.
+
          any_symlinks() checks if the user has specified any symbolic links.
          inotify is not used in this case because it returns updated _targets_
          which would not match the specified names.  If we tried to always
@@ -2327,6 +2359,7 @@ main (int argc, char **argv)
          for one name when a name is specified multiple times.  */
       if (!disable_inotify && (tailable_stdin (F, n_files)
                                || any_remote_file (F, n_files)
+                               || ! any_non_remote_file (F, n_files)
                                || any_symlinks (F, n_files)
                                || (!ok && follow_mode == Follow_descriptor)))
         disable_inotify = true;

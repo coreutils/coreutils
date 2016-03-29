@@ -1,7 +1,7 @@
 #!/bin/sh
 # Show that wc's new --files0-from option works.
 
-# Copyright (C) 2006-2015 Free Software Foundation, Inc.
+# Copyright (C) 2006-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,11 +33,19 @@ EOF
 
 compare exp out || fail=1
 
-if test "$fail" = ''; then
+if ! test "$fail" = 1; then
   # Repeat the above test, but read the file name list from stdin.
   rm -f out
   wc --files0-from=- < names > out || fail=1
   compare exp out || fail=1
 fi
+
+# Ensure file name containing new lines are output on a single line
+nlname='1
+2'
+touch "$nlname" || framework_failure_
+printf '%s\0' "$nlname" | wc --files0-from=- > out || fail=1
+printf '%s\n' "0 0 0 '1'$'\\n''2'" > exp || framework_failure_
+compare exp out || fail=1
 
 Exit $fail

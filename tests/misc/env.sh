@@ -1,7 +1,7 @@
 #!/bin/sh
 # Verify behavior of env.
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -153,9 +153,7 @@ test "x$(sh -c '\c=d echo fail')" = xpass && #dash 0.5.4 fails so check first
   { test "x$(env sh -c '\c=d echo fail')" = xpass || fail=1; }
 
 # catch unsetenv failure, broken through coreutils 8.0
-env -u a=b true && fail=1
-test $? = 125 || fail=1
-env -u '' true && fail=1
-test $? = 125 || fail=1
+returns_ 125 env -u a=b true || fail=1
+returns_ 125 env -u '' true || fail=1
 
 Exit $fail

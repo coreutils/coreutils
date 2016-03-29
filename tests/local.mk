@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-## Copyright (C) 2007-2015 Free Software Foundation, Inc.
+## Copyright (C) 2007-2016 Free Software Foundation, Inc.
 
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -291,6 +291,7 @@ all_tests =					\
   tests/misc/head-c.sh				\
   tests/misc/head-pos.sh			\
   tests/misc/head-write-error.sh		\
+  tests/misc/kill.sh				\
   tests/misc/md5sum.pl				\
   tests/misc/md5sum-bsd.sh			\
   tests/misc/md5sum-newline.pl			\
@@ -389,6 +390,7 @@ all_tests =					\
   tests/misc/tail.pl				\
   tests/misc/tee.sh				\
   tests/misc/test-diag.pl			\
+  tests/misc/time-style.sh			\
   tests/misc/timeout.sh				\
   tests/misc/timeout-blocked.pl			\
   tests/misc/timeout-group.sh			\
@@ -442,7 +444,6 @@ all_tests =					\
   tests/cp/dir-rm-dest.sh			\
   tests/cp/dir-slash.sh				\
   tests/cp/dir-vs-file.sh			\
-  tests/cp/duplicate-sources.sh			\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
   tests/cp/fail-perm.sh				\

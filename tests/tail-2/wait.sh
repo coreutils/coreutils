@@ -2,7 +2,7 @@
 # Make sure that 'tail -f' returns immediately if a file doesn't exist
 # while 'tail -F' waits for it to appear.
 
-# Copyright (C) 2003-2015 Free Software Foundation, Inc.
+# Copyright (C) 2003-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,14 +65,14 @@ for mode in '' '---disable-inotify'; do
   >tail.err
 done
 
-if test "$HAVE_INOTIFY"; then
+if test "$HAVE_INOTIFY" && test -z "$mode" && is_local_dir_ .; then
   # Ensure -F never follows a descriptor after rename
   # either with tiny or significant delays between operations
   tail_F()
   {
     local delay="$1"
 
-    touch k || framework_failure_
+    > k && > tail.out && > tail.err || framework_failure_
     tail $fastpoll -F $mode k >tail.out 2>tail.err & pid=$!
     sleep $delay
     mv k l

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test annotation of sort keys
 
-# Copyright (C) 2010-2015 Free Software Foundation, Inc.
+# Copyright (C) 2010-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -238,6 +238,10 @@ A>chr10
      ^ no match for key
 B>chr1
      ^ no match for key
+1 2
+ __
+1 3
+ __
 EOF
 
 (
@@ -282,6 +286,9 @@ printf '\0\ta\n' | sort -s -k2b,2 --debug | tr -d '\0'
 
 # Check that key end before key start is not underlined
 printf 'A\tchr10\nB\tchr1\n' | sort -s -k2.4b,2.3n --debug
+
+# Ensure that -b applied before -k offsets
+printf '1 2\n1 3\n' | sort -s -k1.2b --debug
 ) > out
 
 compare exp out || fail=1

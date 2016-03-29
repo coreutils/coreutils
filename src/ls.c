@@ -1,5 +1,5 @@
 /* 'dir', 'vdir' and 'ls' directory listing programs for GNU.
-   Copyright (C) 1985-2015 Free Software Foundation, Inc.
+   Copyright (C) 1985-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -946,7 +946,7 @@ static size_t dired_pos;
       }									\
     while (0)
 
-/* With --dired, store pairs of beginning and ending indices of filenames.  */
+/* With --dired, store pairs of beginning and ending indices of file names.  */
 static struct obstack dired_obstack;
 
 /* With --dired, store pairs of beginning and ending indices of any
@@ -2157,7 +2157,7 @@ get_funky_string (char **dest, const char **src, bool equals_end,
               state = ST_END;	/* End of string */
               break;
             case '\\':
-              state = ST_BACKSLASH; /* Backslash scape sequence */
+              state = ST_BACKSLASH; /* Backslash escape sequence */
               ++p;
               break;
             case '^':
@@ -3479,7 +3479,7 @@ cmp_name (struct fileinfo const *a, struct fileinfo const *b,
 }
 
 /* Compare file extensions.  Files with no extension are 'smallest'.
-   If extensions are the same, compare by filenames instead.  */
+   If extensions are the same, compare by file names instead.  */
 
 static inline int
 cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
@@ -3721,20 +3721,20 @@ long_time_expected_width (void)
   if (width < 0)
     {
       time_t epoch = 0;
-      struct tm const *tm = localtime (&epoch);
+      struct tm tm;
       char buf[TIME_STAMP_LEN_MAXIMUM + 1];
 
-      /* In case you're wondering if localtime can fail with an input time_t
+      /* In case you're wondering if localtime_rz can fail with an input time_t
          value of 0, let's just say it's very unlikely, but not inconceivable.
          The TZ environment variable would have to specify a time zone that
          is 2**31-1900 years or more ahead of UTC.  This could happen only on
          a 64-bit system that blindly accepts e.g., TZ=UTC+20000000000000.
          However, this is not possible with Solaris 10 or glibc-2.3.5, since
          their implementations limit the offset to 167:59 and 24:00, resp.  */
-      if (tm)
+      if (localtime_rz (localtz, &epoch, &tm))
         {
           size_t len =
-            align_nstrftime (buf, sizeof buf, long_time_format[0], tm,
+            align_nstrftime (buf, sizeof buf, long_time_format[0], &tm,
                              localtz, 0);
           if (len != 0)
             width = mbsnwidth (buf, len, 0);
@@ -3857,7 +3857,7 @@ print_long_format (const struct fileinfo *f)
   size_t s;
   char *p;
   struct timespec when_timespec;
-  struct tm *when_local;
+  struct tm when_local;
 
   /* Compute the mode string, except remove the trailing space if no
      file in this directory has an ACL or security context.  */
@@ -3984,11 +3984,10 @@ print_long_format (const struct fileinfo *f)
       p[-1] = ' ';
     }
 
-  when_local = localtime (&when_timespec.tv_sec);
   s = 0;
   *p = '\1';
 
-  if (f->stat_ok && when_local)
+  if (f->stat_ok && localtime_rz (localtz, &when_timespec.tv_sec, &when_local))
     {
       struct timespec six_months_ago;
       bool recent;
@@ -3998,13 +3997,7 @@ print_long_format (const struct fileinfo *f)
          time, in case the file happens to have been modified since
          the last time we checked the clock.  */
       if (timespec_cmp (current_time, when_timespec) < 0)
-        {
-          /* Note that gettime may call gettimeofday which, on some non-
-             compliant systems, clobbers the buffer used for localtime's result.
-             But it's ok here, because we use a gettimeofday wrapper that
-             saves and restores the buffer around the gettimeofday call.  */
-          gettime (&current_time);
-        }
+        gettime (&current_time);
 
       /* Consider a time to be recent if it is within the past six months.
          A Gregorian year has 365.2425 * 24 * 60 * 60 == 31556952 seconds
@@ -4020,7 +4013,7 @@ print_long_format (const struct fileinfo *f)
       /* We assume here that all time zones are offset from UTC by a
          whole number of seconds.  */
       s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
-                           when_local, localtz, when_timespec.tv_nsec);
+                           &when_local, localtz, when_timespec.tv_nsec);
     }
 
   if (s || !*p)

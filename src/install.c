@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 1989-2015 Free Software Foundation, Inc.
+   Copyright (C) 1989-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -632,6 +632,7 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
 "), stdout);
       fputs (_("\
   -D                  create all leading components of DEST except the last,\n\
+                        or all components of --target-directory,\n\
                         then copy SOURCE to DEST\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
@@ -704,14 +705,17 @@ install_file_in_file (const char *from, const char *to,
   return change_attributes (to);
 }
 
-/* Copy file FROM onto file TO, creating any missing parent directories of TO.
+/* Create any missing parent directories of TO,
+   while maintaining the current Working Directory.
    Return true if successful.  */
 
 static bool
-mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x)
+mkancesdirs_safe_wd (char const *from, char *to, struct cp_options *x,
+                     bool save_always)
 {
   bool save_working_directory =
-    ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
+    save_always
+    || ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
   int status = EXIT_SUCCESS;
 
   struct savewd wd;
@@ -749,7 +753,7 @@ static bool
 install_file_in_file_parents (char const *from, char *to,
                               const struct cp_options *x)
 {
-  return (mkancesdirs_safe_wd (from, to, (struct cp_options *)x)
+  return (mkancesdirs_safe_wd (from, to, (struct cp_options *)x, false)
           && install_file_in_file (from, to, x));
 }
 
@@ -766,7 +770,7 @@ install_file_in_dir (const char *from, const char *to_dir,
   bool ret = true;
 
   if (mkdir_and_install)
-    ret = mkancesdirs_safe_wd (from, to, (struct cp_options *)x);
+    ret = mkancesdirs_safe_wd (from, to, (struct cp_options *)x, true);
 
   ret = ret && install_file_in_file (from, to, x);
   free (to);
@@ -1040,7 +1044,7 @@ main (int argc, char **argv)
           dest_info_init (&x);
           for (i = 0; i < n_files; i++)
             if (! install_file_in_dir (file[i], target_directory, &x,
-                                       mkdir_and_install))
+                                       i == 0 && mkdir_and_install))
               exit_status = EXIT_FAILURE;
         }
     }

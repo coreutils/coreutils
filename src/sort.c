@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 1988-2015 Free Software Foundation, Inc.
+   Copyright (C) 1988-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -224,7 +224,7 @@ struct keyfield
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
   bool version;			/* sort by version number */
-  bool obsolete_used;		/* obsolescent key option format is used. */
+  bool traditional_used;	/* Traditional key option format is used. */
   struct keyfield *next;	/* Next keyfield to try. */
 };
 
@@ -238,7 +238,7 @@ struct month
 struct merge_node
 {
   struct line *lo;              /* Lines to merge from LO child node. */
-  struct line *hi;              /* Lines to merge from HI child ndoe. */
+  struct line *hi;              /* Lines to merge from HI child node. */
   struct line *end_lo;          /* End of available lines from LO. */
   struct line *end_hi;          /* End of available lines from HI. */
   struct line **dest;           /* Pointer to destination of merge. */
@@ -518,7 +518,7 @@ effect, characters in a field are counted from the beginning of the preceding\n\
 whitespace.  OPTS is one or more single-letter ordering options [bdfgiMhnRrV],\
 \n\
 which override global ordering options for that key.  If no key is given, use\n\
-the entire line as the key.\n\
+the entire line as the key.  Use --debug to diagnose incorrect key usage.\n\
 \n\
 SIZE may be followed by the following multiplicative suffixes:\n\
 "), stdout);
@@ -678,7 +678,7 @@ struct sortfile
   /* The file's name.  */
   char const *name;
 
-  /* Nonnull if this is a temporary file, in which case NAME == TEMP->name.  */
+  /* Non-null if this is a temporary file, in which case NAME == TEMP->name.  */
   struct tempnode *temp;
 };
 
@@ -1275,9 +1275,9 @@ inittables (void)
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      blanks[i] = !! isblank (i);
+      blanks[i] = field_sep (i);
       nonprinting[i] = ! isprint (i);
-      nondictionary[i] = ! isalnum (i) && ! isblank (i);
+      nondictionary[i] = ! isalnum (i) && ! field_sep (i);
       fold_toupper[i] = toupper (i);
     }
 
@@ -2274,7 +2274,8 @@ debug_key (struct line const *line, struct keyfield const *key)
       if (key->eword != SIZE_MAX)
         lim = limfield (line, key);
 
-      if (key->skipsblanks || key->month || key_numeric (key))
+      if ((key->skipsblanks && key->sword == SIZE_MAX)
+          || key->month || key_numeric (key))
         {
           char saved = *lim;
           *lim = '\0';
@@ -2393,7 +2394,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
 
   for (key = keylist; key; key = key->next, keynum++)
     {
-      if (key->obsolete_used)
+      if (key->traditional_used)
         {
           size_t sword = key->sword;
           size_t eword = key->eword;
@@ -2736,7 +2737,7 @@ compare (struct line const *a, struct line const *b)
 }
 
 /* Write LINE to output stream FP; the output file's name is
-   OUTPUT_FILE if OUTPUT_FILE is nonnull, and is the standard output
+   OUTPUT_FILE if OUTPUT_FILE is non-null, and is the standard output
    otherwise.  If debugging is enabled and FP is standard output,
    append some debugging information.  */
 
@@ -4182,7 +4183,8 @@ main (int argc, char **argv)
   size_t nthreads = 0;
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-  bool obsolete_usage = (posix2_version () < 200112);
+  int posix_ver = posix2_version ();
+  bool traditional_usage = ! (200112 <= posix_ver && posix_ver < 200809);
   char **files;
   char *files_from = NULL;
   struct Tokens tok;
@@ -4191,7 +4193,7 @@ main (int argc, char **argv)
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
-  locale_ok = setlocale (LC_ALL, "");
+  locale_ok = !! setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
@@ -4287,13 +4289,13 @@ main (int argc, char **argv)
     {
       /* Parse an operand as a file after "--" was seen; or if
          pedantic and a file was seen, unless the POSIX version
-         predates 1003.1-2001 and -c was not seen and the operand is
+         is not 1003.1-2001 and -c was not seen and the operand is
          "-o FILE" or "-oFILE".  */
       int oi = -1;
 
       if (c == -1
           || (posixly_correct && nfiles != 0
-              && ! (obsolete_usage
+              && ! (traditional_usage
                     && ! checkonly
                     && optind != argc
                     && argv[optind][0] == '-' && argv[optind][1] == 'o'
@@ -4314,8 +4316,8 @@ main (int argc, char **argv)
             {
               bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
                                       && ISDIGIT (argv[optind][1]));
-              obsolete_usage |= minus_pos_usage && !posixly_correct;
-              if (obsolete_usage)
+              traditional_usage |= minus_pos_usage && !posixly_correct;
+              if (traditional_usage)
                 {
                   /* Treat +POS1 [-POS2] as a key if possible; but silently
                      treat an operand as a file if it is not a valid +POS1.  */
@@ -4355,7 +4357,7 @@ main (int argc, char **argv)
                             badfieldspec (optarg1,
                                       N_("stray character in field spec"));
                         }
-                      key->obsolete_used = true;
+                      key->traditional_used = true;
                       insertkey (key);
                     }
                 }
@@ -4666,6 +4668,10 @@ main (int argc, char **argv)
                quote (setlocale (LC_COLLATE, NULL)));
       else
         {
+          /* OpenBSD can only set some categories with LC_ALL above,
+             so set LC_COLLATE explicitly to flag errors.  */
+          if (locale_ok)
+            locale_ok = !! setlocale (LC_COLLATE, "");
           error (0, 0, "%s%s", locale_ok ? "" : _("failed to set locale; "),
                  _("using simple byte comparison"));
         }

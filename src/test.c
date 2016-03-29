@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2015 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -787,6 +787,11 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 Except for -h and -L, all FILE-related tests dereference symbolic links.\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
+"), stdout);
+      fputs (_("\
+\n\
+NOTE: Binary -a and -o are inherently ambiguous.  Use 'test EXPR1 && test\n\
+EXPR2' or 'test EXPR1 || test EXPR2' instead.\n\
 "), stdout);
       fputs (_("\
 \n\

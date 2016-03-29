@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 1989-2015 Free Software Foundation, Inc.
+   Copyright (C) 1989-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1819,7 +1819,7 @@ should_dereference (const struct cp_options *x, bool command_line_arg)
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
-   be false if DST_NAME might already exist.  A nonnull PARENT describes the
+   be false if DST_NAME might already exist.  A non-null PARENT describes the
    parent directory.  ANCESTORS points to a linked, null terminated list of
    devices and inodes of parent directories of SRC_NAME.  COMMAND_LINE_ARG
    is true iff SRC_NAME was specified on the command line.
@@ -2232,7 +2232,14 @@ copy_internal (char const *src_name, char const *dst_name,
      Also, with --recursive, record dev/ino of each command-line directory.
      We'll use that info to detect this problem: cp -R dir dir.  */
 
-  if (x->move_mode && src_sb.st_nlink == 1)
+  if (x->recursive && S_ISDIR (src_mode))
+    {
+      if (command_line_arg)
+        earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
+      else
+        earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
+    }
+  else if (x->move_mode && src_sb.st_nlink == 1)
     {
       earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
@@ -2244,13 +2251,6 @@ copy_internal (char const *src_name, char const *dst_name,
                || x->dereference == DEREF_ALWAYS))
     {
       earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
-    }
-  else if (x->recursive && S_ISDIR (src_mode))
-    {
-      if (command_line_arg)
-        earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
-      else
-        earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
 
   /* Did we copy this inode somewhere else (in this command line argument)
@@ -2278,10 +2278,14 @@ copy_internal (char const *src_name, char const *dst_name,
               error (0, 0, _("warning: source directory %s "
                              "specified more than once"),
                      quoteaf (top_level_src_name));
-              /* We only do backups in move mode and for non dirs,
-                 and in move mode this won't be the issue as the source will
-                 be missing for subsequent attempts.
-                 There we just warn and return here.  */
+              /* In move mode, if a previous rename succeeded, then
+                 we won't be in this path as the source is missing.  If the
+                 rename previously failed, then that has been handled, so
+                 pretend this attempt succeeded so the source isn't removed.  */
+              if (x->move_mode && rename_succeeded)
+                *rename_succeeded = true;
+              /* We only do backups in move mode, and for non directories.
+                 So just ignore this repeated entry.  */
               return true;
             }
           else if (x->dereference == DEREF_ALWAYS
@@ -2375,7 +2379,7 @@ copy_internal (char const *src_name, char const *dst_name,
          If this happens to you, please do the following and send the output
          to the bug-reporting address (e.g., in the output of cp --help):
            touch k; perl -e 'rename "k","/tmp/k" or print "$!(",$!+0,")\n"'
-         where your current directory is on one partion and /tmp is the other.
+         where your current directory is on one partition and /tmp is the other.
          Also, please try to find the E* errno macro name corresponding to
          the diagnostic and parenthesized integer, and include that in your
          e-mail.  One way to do that is to run a command like this

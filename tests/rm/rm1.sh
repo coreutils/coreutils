@@ -1,7 +1,7 @@
 #!/bin/sh
 # exercise another small part of remove.c
 
-# Copyright (C) 2002-2015 Free Software Foundation, Inc.
+# Copyright (C) 2002-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ print_ver_ rm
 skip_if_root_
 
 mkdir -p b/a/p b/c b/d || framework_failure_
-chmod u-w b/a || framework_failure_
+chmod ug-w b/a || framework_failure_
 
 
 # This should fail.

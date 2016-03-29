@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure that df can handle an unreadable argument
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,5 +23,7 @@ skip_if_root_
 touch unreadable || fail=1
 chmod a-r unreadable || fail=1
 df unreadable || fail=1
+
+test "$fail" = 1 && dump_mount_list_
 
 Exit $fail

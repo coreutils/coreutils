@@ -4,16 +4,60 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+   cp, mv, and install no longer run into undefined behavior when
+   handling ACLs on Cygwin and Solaris platforms. [bug introduced in
+   coreutils-8.24]
+
+   date, du, ls, and pr no longer mishandle time zone abbreviations on
+   System V style platforms where this information is available only
+   in the global variable 'tzname'. [bug introduced in coreutils-8.24]
+
+   stty --help no longer outputs extraneous gettext header lines
+   for translated languages. [bug introduced in coreutils-8.24]
+
+** Changes in behavior
+
+   stat now outputs nanosecond information for time stamps even if
+   they are out of localtime range.
+
+   sort, tail, and uniq now support traditional usage like 'sort +2'
+   and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
+   The 2008 edition of POSIX dropped the requirement that arguments
+   like '+2' must be treated as file names.
+
+
+* Noteworthy changes in release 8.25 (2016-01-20) [stable]
+
+** Bug fixes
+
   cp now correctly copies files with a hole at the end of the file,
   and extents allocated beyond the apparent size of the file.
   That combination resulted in the trailing hole not being reproduced.
   [bug introduced in coreutils-8.10]
 
+  cut --fields no longer outputs extraneous characters on some uClibc configs.
+  [bug introduced in coreutils-6.11]
+
+  install -D again copies relative file names when absolute file names
+  are also specified along with an absolute destination directory name.
+  [bug introduced in coreutils-6.2]
+
   ls no longer prematurely wraps lines when printing short file names.
-  [bug introduced in 5.1.0]
+  [bug introduced in coreutils-5.1.0]
+
+  mv no longer causes data loss due to removing a source directory specified
+  multiple times, when that directory is also specified as the destination.
+  [bug introduced in coreutils-8.24]
 
   shred again uses defined patterns for all iteration counts.
   [bug introduced in coreutils-5.93]
+
+  sort --debug -b now correctly marks the matching extents for keys
+  that specify an offset for the first field.
+  [bug introduced with the --debug feature in coreutils-8.6]
+
+  tail -F now works with initially non existent files on a remote file system.
+  [bug introduced in coreutils-7.5]
 
 ** New commands
 
@@ -22,6 +66,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  comm,cut,head,numfmt,paste,tail now have the -z,--zero-terminated option, and
+  tac --separator accepts an empty argument, to work with NUL delimited items.
+
+  dd now summarizes sizes in --human-readable format too, not just --si.
+  E.g., "3441325000 bytes (3.4 GB, 3.2 GiB) copied".  It omits the summaries
+  if they would not provide useful information, e.g., "3 bytes copied".
+  Its status=progress output now uses the same format as ordinary status,
+  perhaps with trailing spaces to erase previous progress output.
+
   md5sum now supports the --ignore-missing option to allow
   verifying a subset of files given a larger list of checksums.
   This also affects sha1sum, sha224sum, sha256sum, sha384sum and sha512sum.
@@ -29,6 +82,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   printf now supports the '%q' format to print arguments in a form that
   is reusable by most shells, with non-printable characters escaped
   with the POSIX proposed $'...' syntax.
+
+  stty now supports the "[-]drain" setting to control whether to wait
+  for transmission of pending output before application of settings.
 
 ** Changes in behavior
 
@@ -44,10 +100,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now quotes file names unambiguously and appropriate for use in a shell,
   when outputting to a terminal.
 
+  join, sort, uniq with --zero-terminated, now treat '\n' as a field delimiter.
+
 ** Improvements
 
   All utilities now quote user supplied arguments in error strings,
   which avoids confusing error messages in the presence of '\r' chars etc.
+
+  Utilities that traverse directories, like chmod, cp, and rm etc., will operate
+  more efficiently on XFS through the use of "leaf optimization".
 
   md5sum now ensures a single line per file for status on standard output,
   by using a '\' at the start of the line, and replacing any newlines with '\n'.
@@ -63,8 +124,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls -w0 is now interpreted as no limit on the length of the outputted line.
 
   stat -f --format=%T now reports the file system type for new Linux
-  pseudo file systems "bpf_fs", "btrfs_test", "nsfs" and "tracefs",
-  and remote file system "acfs".
+  pseudo file systems "bpf_fs", "btrfs_test", "nsfs", "overlayfs"
+  and "tracefs", and remote file system "acfs".
+
+  wc now ensures a single line per file for counts on standard output,
+  by quoting names containing '\n' characters; appropriate for use in a shell.
 
 
 * Noteworthy changes in release 8.24 (2015-07-03) [stable]
@@ -217,7 +281,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cp -a, mv, and install --preserve-context, once again set the correct SELinux
   context for existing directories in the destination.  Previously they set
-  the context of an existing directory to that of its last copied descendent.
+  the context of an existing directory to that of its last copied descendant.
   [bug introduced in coreutils-8.22]
 
   cp -a, mv, and install --preserve-context, no longer seg fault when running
@@ -542,7 +606,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   du recognizes -t SIZE as equivalent, for compatibility with FreeBSD.
 
   timeout now accepts the --preserve-status option to always propagate the exit
-  status, useful for commands that can run for an indeterminite amount of time.
+  status, useful for commands that can run for an indeterminate amount of time.
 
 ** Bug fixes
 
@@ -4425,7 +4489,7 @@ packages, see ./old/*/NEWS.
 
 ========================================================================
 
-Copyright (C) 2001-2015 Free Software Foundation, Inc.
+Copyright (C) 2001-2016 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or

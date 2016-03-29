@@ -1,5 +1,5 @@
 /* kill -- send a signal to a process
-   Copyright (C) 2002-2015 Free Software Foundation, Inc.
+   Copyright (C) 2002-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 #define PROGRAM_NAME "kill"
 
 #define AUTHORS proper_name ("Paul Eggert")
-
+
 #if ! (HAVE_DECL_STRSIGNAL || defined strsignal)
 # if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)
 #  if HAVE_DECL__SYS_SIGLIST || defined _sys_siglist
@@ -50,12 +50,12 @@
 #  define strsignal(signum) 0
 # endif
 #endif
-
+
 static char const short_options[] =
   "0::1::2::3::4::5::6::7::8::9::"
-  "A::B::C::D::E::F::G::H::I::J::K::L::M::"
+  "A::B::C::D::E::F::G::H::I::J::K::M::"
   "N::O::P::Q::R::S::T::U::V::W::X::Y::Z::"
-  "ln:s:t";
+  "Lln:s:t";
 
 static struct option const long_options[] =
 {
@@ -104,7 +104,7 @@ PID is an integer; if negative it identifies a process group.\n\
     }
   exit (status);
 }
-
+
 /* Print a row of 'kill -t' output.  NUM_WIDTH is the maximum signal
    number width, and SIGNUM is the signal number to print.  The
    maximum name width is NAME_WIDTH, and SIGNAME is the name to print.  */
@@ -185,7 +185,7 @@ list_signals (bool table, char *const *argv)
 
   return status;
 }
-
+
 /* Send signal SIGNUM to all the processes or process groups specified
    by ARGV.  Return a suitable exit status.  */
 
@@ -216,7 +216,7 @@ send_signals (int signum, char *const *argv)
 
   return status;
 }
-
+
 int
 main (int argc, char **argv)
 {
@@ -249,7 +249,7 @@ main (int argc, char **argv)
         /* Fall through.  */
       case 'A': case 'B': case 'C': case 'D': case 'E':
       case 'F': case 'G': case 'H': case 'I': case 'J':
-      case 'K': case 'L': case 'M': case 'N': case 'O':
+      case 'K': /*case 'L':*/ case 'M': case 'N': case 'O':
       case 'P': case 'Q': case 'R': case 'S': case 'T':
       case 'U': case 'V': case 'W': case 'X': case 'Y':
       case 'Z':
@@ -274,6 +274,7 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         break;
 
+      case 'L': /* -L is not documented, but is for procps compatibility.  */
       case 't':
         table = true;
         /* Fall through.  */

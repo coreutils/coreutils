@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure "df --total" computes accurate totals
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -61,5 +61,7 @@ cat inode
 
 $PERL check-df space || fail=1
 $PERL check-df inode || fail=1
+
+test "$fail" = 1 && dump_mount_list_
 
 Exit $fail

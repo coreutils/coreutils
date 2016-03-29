@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 1986-2015 Free Software Foundation, Inc.
+   Copyright (C) 1986-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Richard M. Stallman and David MacKenzie. */
-
+
 #include <config.h>
 
 #include <getopt.h>
@@ -226,6 +226,13 @@ Also, comparisons honor the rules specified by 'LC_COLLATE'.\n\
   exit (status);
 }
 
+static bool
+strict_posix2 (void)
+{
+  int posix_ver = posix2_version ();
+  return 200112 <= posix_ver && posix_ver < 200809;
+}
+
 /* Convert OPT to size_t, reporting an error using MSGID if OPT is
    invalid.  Silently convert too-large values to SIZE_MAX.  */
 
@@ -261,9 +268,9 @@ find_field (struct linebuffer const *line)
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
-      while (i < size && isblank (to_uchar (lp[i])))
+      while (i < size && field_sep (lp[i]))
         i++;
-      while (i < size && !isblank (to_uchar (lp[i])))
+      while (i < size && !field_sep (lp[i]))
         i++;
     }
 
@@ -533,7 +540,7 @@ main (int argc, char **argv)
           {
             unsigned long int size;
             if (optarg[0] == '+'
-                && posix2_version () < 200112
+                && ! strict_posix2 ()
                 && xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
                 && size <= SIZE_MAX)
               skip_chars = size;

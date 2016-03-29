@@ -36,9 +36,14 @@ FIXME: enable excluded programs like arch? to get their manual pages?
       -O src/fs-latest-magic.h
 
   If it finds a new file system magic number, add it to src/stat.c.
-  If it is a remote file system, add the new S_MAGIC_* name you created
-  in stat.c to the list of remote file system types in src/tail.c's
-  fremote function.
+  If it is a remote file system tag it as such.
+
+  Note there may be some new file systems magic values not defined
+  in that linux/magic.h file, which can be seen at:
+
+    https://www.livegrep.com/search/linux\
+    ?q=%23define+.*_SUPER_MAGIC+-file%3Amagic\.h
+
 
 * Pre-release testing:
 

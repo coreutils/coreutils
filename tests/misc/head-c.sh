@@ -1,7 +1,7 @@
 #!/bin/sh
 # exercise head -c
 
-# Copyright (C) 2001-2015 Free Software Foundation, Inc.
+# Copyright (C) 2001-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ esac
 # Only allocate memory as needed.
 # Coreutils <= 8.21 would allocate memory up front
 # based on the value passed to -c
-(ulimit -v $(($vm+1000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
+(ulimit -v $(($vm+8000)) && head --bytes=-$SSIZE_MAX < /dev/null) || fail=1
 
 # Make sure it works on funny files in /proc and /sys.
 

@@ -1,5 +1,5 @@
 /* system-dependent definitions for coreutils
-   Copyright (C) 1989-2015 Free Software Foundation, Inc.
+   Copyright (C) 1989-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -154,6 +154,13 @@ enum
    a bit safer than casting to unsigned char, since it catches some type
    errors that the cast doesn't.  */
 static inline unsigned char to_uchar (char ch) { return ch; }
+
+/* '\n' is considered a field separator with  --zero-terminated.  */
+static inline bool
+field_sep (unsigned char ch)
+{
+  return isblank (ch) || ch == '\n';
+}
 
 #include <locale.h>
 
@@ -643,11 +650,17 @@ emit_ancillary_info (char const *program)
           node, node == program ? " invocation" : "");
 }
 
-static inline void
-emit_try_help (void)
-{
-  fprintf (stderr, _("Try '%s --help' for more information.\n"), program_name);
-}
+/* Use a macro rather than an inline function, as this references
+   the global program_name, which causes dynamic linking issues
+   in libstdbuf.so on some systems where unused functions
+   are not removed by the linker.  */
+#define emit_try_help() \
+  do \
+    { \
+      fprintf (stderr, _("Try '%s --help' for more information.\n"), \
+               program_name); \
+    } \
+  while (0)
 
 #include "inttostr.h"
 

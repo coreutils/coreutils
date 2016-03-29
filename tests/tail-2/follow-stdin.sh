@@ -1,7 +1,7 @@
 #!/bin/sh
 # tail -f - would fail with the initial inotify implementation
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,9 +33,10 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 fastpoll='-s.1 --max-unchanged-stats=1'
 
 echo line > in || framework_failure_
+echo line > exp || framework_failure_
 
 for mode in '' '---disable-inotify'; do
-  echo line > exp || framework_failure_
+  > out || framework_failure_
 
   tail $mode -f $fastpoll < in > out 2> err & pid=$!
 

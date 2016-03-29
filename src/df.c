@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 1991-2015 Free Software Foundation, Inc.
+   Copyright (C) 1991-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
-   --human-readable and --megabyte options added by lm@sgi.com.
+   --human-readable option added by lm@sgi.com.
    --si and large file support added by eggert@twinsun.com.  */
 
 #include <config.h>

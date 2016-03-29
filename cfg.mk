@@ -1,5 +1,5 @@
 # Customize maint.mk                           -*- makefile -*-
-# Copyright (C) 2003-2015 Free Software Foundation, Inc.
+# Copyright (C) 2003-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = 5c64c69e6303deaceecacc4b498a61fd
+old_NEWS_hash = 4cdc662ed636425161a383b9aa85b2eb
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_prog/ && !/dynamic-dep/'
@@ -139,6 +139,14 @@ sc_prohibit_colon_redirection:
 	  && { echo '$(ME): '"The leading colon in :> will hide errors" 1>&2; \
 	       exit 1; }  \
 	  || :
+
+# Ensure emit_mandatory_arg_note() is called if required
+sc_ensure_emit_mandatory_arg_note:
+	@cd $(srcdir)/src && GIT_PAGER= git \
+	  grep -l -- '^ *-[^-].*--.*[^[]=' *.c \
+	  | xargs grep -L emit_mandatory_arg_note | grep . \
+	  && { echo '$(ME): '"emit_mandatory_arg_note() missing" 1>&2; \
+	       exit 1; } || :
 
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
@@ -313,7 +321,7 @@ sc_long_lines:
 	sed -r 1q /dev/null 2>/dev/null					\
 	   || { echo "$@: skipping: sed -r not supported"; exit 0; };	\
 	files=$$($(VC_LIST_EXCEPT) | xargs wc -L | sed -rn '/ total$$/d;\
-		  s/^ *(8[1-9]|9[0-9]|[0-9]\{3,\}) //p');		\
+		  s/^ *(8[1-9]|9[0-9]|[0-9]{3,}) //p');			\
 	halt='line(s) with more than 80 characters; reindent';		\
 	for file in $$files; do						\
 	  expand $$file | grep -nE '^.{80}.' |				\
@@ -484,7 +492,7 @@ sc_prohibit_fail_0:
 # independently check its contents and thus detect any crash messages.
 sc_prohibit_and_fail_1:
 	@prohibit='&& fail=1'						\
-	exclude='(stat|kill|test |EGREP|grep|env|compare|2> *[^/])'	\
+	exclude='(stat|kill|test |EGREP|grep|compare|2> *[^/])'		\
 	halt='&& fail=1 detected. Please use: returns_ 1 ... || fail=1'	\
 	in_vc_files='^tests/'						\
 	  $(_sc_search_regexp)
@@ -746,6 +754,12 @@ sc_gitignore_redundant:
 	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
 	      'entries from .gitignore' >&2; exit 1; } || :
 
+sc_prohibit-form-feed:
+	@prohibit=$$'\f' \
+	in_vc_files='\.[chly]$$' \
+	halt='Form Feed (^L) detected' \
+	  $(_sc_search_regexp)
+
 # Override the default Cc: used in generating an announcement.
 announcement_Cc_ = $(translation_project_), \
   coreutils@gnu.org, coreutils-announce@gnu.org
@@ -785,6 +799,7 @@ exclude_file_name_regexp--sc_prohibit_always_true_header_tests = \
   ^m4/stat-prog\.m4$$
 exclude_file_name_regexp--sc_prohibit_fail_0 = \
   (^.*/git-hooks/commit-msg|^tests/init\.sh|Makefile\.am|\.mk|.*\.texi)$$
+exclude_file_name_regexp--sc_prohibit_test_minus_ao = *\.texi$$
 exclude_file_name_regexp--sc_prohibit_atoi_atof = ^lib/euidaccess-stat\.c$$
 
 # longlong.h is maintained elsewhere.
@@ -792,7 +807,7 @@ _ll = ^src/longlong\.h$$
 exclude_file_name_regexp--sc_useless_cpp_parens = $(_ll)
 exclude_file_name_regexp--sc_space_before_open_paren = $(_ll)
 
-tbi_1 = ^tests/pr/|(^gl/lib/reg.*\.c\.diff|\.mk|^man/help2man)$$
+tbi_1 = ^tests/pr/|(\.mk|^man/help2man)$$
 tbi_2 = ^scripts/git-hooks/(pre-commit|pre-applypatch|applypatch-msg)$$
 tbi_3 = (GNU)?[Mm]akefile(\.am)?$$|$(_ll)
 exclude_file_name_regexp--sc_prohibit_tab_based_indentation = \

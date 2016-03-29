@@ -1,7 +1,7 @@
 #!/bin/sh
 # Verify the operations done by shred
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ shred: f: removing
 shred: f: renamed to 0
 shred: f: removed" > exp || framework_failure_
 
-shred -v -u -n20 --random-source=Us f 2>out || fail=1
+shred -v -u -n20 -s4096 --random-source=Us f 2>out || fail=1
 compare exp out || fail=1
 
 

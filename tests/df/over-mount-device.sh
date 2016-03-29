@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that df /dev/loop0 errors out if overmounted by another device
 
-# Copyright (C) 2014-2015 Free Software Foundation, Inc.
+# Copyright (C) 2014-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,5 +53,7 @@ df $eclipsed_dev . > out 2> err && fail=1
 test $(wc -l < out) = 2 || fail=1
 
 compare exp err || fail=1
+
+test "$fail" = 1 && dump_mount_list_
 
 Exit $fail

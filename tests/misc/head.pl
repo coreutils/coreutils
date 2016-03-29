@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # test head
 
-# Copyright (C) 2008-2015 Free Software Foundation, Inc.
+# Copyright (C) 2008-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -72,6 +72,10 @@ my @Tests =
   ['no-oct-2', '-010', {IN=>"\n"x12}, {OUT=>"\n"x10}],
   ['no-oct-3', '-n 08', {IN=>"\n"x12}, {OUT=>"\n"x8}],
   ['no-oct-4', '-c 08', {IN=>"\n"x12}, {OUT=>"\n"x8}],
+
+  # --zero-terminated
+  ['zero-1', '-z -n 1',  {IN=>"x\0y"}, {OUT=>"x\0"}],
+  ['zero-2', '-z -n 2',  {IN=>"x\0y"}, {OUT=>"x\0y"}],
 );
 
 @Tests = triple_test \@Tests;

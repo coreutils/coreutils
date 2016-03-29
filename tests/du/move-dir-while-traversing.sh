@@ -1,7 +1,7 @@
 #!/bin/sh
 # Trigger a failed assertion in coreutils-8.9 and earlier.
 
-# Copyright (C) 2011-2015 Free Software Foundation, Inc.
+# Copyright (C) 2011-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ trap '' TSTP
 timeout 6 ./inotify-watch-for-dir-access.py $t/3/a/b > start-msg & pid=$!
 
 # Wait for the watcher to start...
-nonempty() { test -s start-msg || { sleep $1; return 1; }; }
+nonempty() { sleep $1; test -s start-msg; }
 retry_delay_ nonempty .1 5 || fail=1
 
 # The above watches for an IN_OPEN event on $t/3/a/b,

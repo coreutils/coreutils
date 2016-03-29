@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that "tail -f fifo" tails indefinitely.
 
-# Copyright (C) 2009-2015 Free Software Foundation, Inc.
+# Copyright (C) 2009-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,11 +32,7 @@ fastpoll='-s.1 --max-unchanged-stats=1'
 
 timeout 10 tail $fastpoll -f fifo > out & pid=$!
 
-check_tail_output()
-{
-  local n_sec="$1"
-  test -s out || { sleep $n_sec; return 1; }
-}
+check_tail_output() { sleep $1; test -s out; }
 
 # Wait 12.7s for tail to write something.
 retry_delay_ check_tail_output .1 7 || fail=1

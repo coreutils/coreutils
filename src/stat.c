@@ -1,5 +1,5 @@
 /* stat.c -- display file or file system status
-   Copyright (C) 2001-2015 Free Software Foundation, Inc.
+   Copyright (C) 2001-2016 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -394,6 +394,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "openprom";
     case S_MAGIC_OCFS2: /* 0x7461636F remote */
       return "ocfs2";
+    case S_MAGIC_OVERLAYFS: /* 0x794C7630 remote */
+      /* This may overlay remote file systems.
+         Also there have been issues reported with inotify and overlayfs,
+         so mark as "remote" so that polling is used.  */
+      return "overlayfs";
     case S_MAGIC_PANFS: /* 0xAAD7AAEA remote */
       return "panfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */
@@ -552,17 +557,27 @@ human_access (struct stat const *statbuf)
 static char * ATTRIBUTE_WARN_UNUSED_RESULT
 human_time (struct timespec t)
 {
-  static char str[MAX (INT_BUFSIZE_BOUND (intmax_t),
-                       (INT_STRLEN_BOUND (int) /* YYYY */
-                        + 1 /* because YYYY might equal INT_MAX + 1900 */
-                        + sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
+  /* STR must be at least this big, either because localtime_rz fails,
+     or because the time zone is truly outlandish so that %z expands
+     to a long string.  */
+  enum { intmax_bufsize = INT_BUFSIZE_BOUND (intmax_t) };
+
+  static char str[intmax_bufsize
+                  + INT_STRLEN_BOUND (int) /* YYYY */
+                  + 1 /* because YYYY might equal INT_MAX + 1900 */
+                  + sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +"];
   static timezone_t tz;
   if (!tz)
     tz = tzalloc (getenv ("TZ"));
-  struct tm const *tm = localtime (&t.tv_sec);
-  if (tm == NULL)
-    return timetostr (t.tv_sec, str);
-  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, tz, t.tv_nsec);
+  struct tm tm;
+  int ns = t.tv_nsec;
+  if (localtime_rz (tz, &t.tv_sec, &tm))
+    nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", &tm, tz, ns);
+  else
+    {
+      char secbuf[INT_BUFSIZE_BOUND (intmax_t)];
+      sprintf (str, "%s.%09d", timetostr (t.tv_sec, secbuf), ns);
+    }
   return str;
 }
 
@@ -1448,7 +1463,7 @@ Display file or file system status.\n\
       fputs (_("\n\
 The valid format sequences for files (without --file-system):\n\
 \n\
-  %a   access rights in octal\n\
+  %a   access rights in octal (note '#' and '0' printf flags)\n\
   %A   access rights in human readable form\n\
   %b   number of blocks allocated (see %B)\n\
   %B   the size in bytes of each block reported by %b\n\

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Test "date".
 
-# Copyright (C) 2005-2015 Free Software Foundation, Inc.
+# Copyright (C) 2005-2016 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,20 +41,6 @@ my $dm = '1997-02-19'; # next month
 my $dy = '1998-01-19'; # next month
 
 my $fmt = "'+%Y-%m-%d %T'";
-
-# Determine a number of seconds that will provoke an invalid
-# time diagnostic from date.  If possible, use a number that
-# is less than 2^64, yet so large that it would cause the resulting
-# tm_year value to be too large for a 32-bit int.  But some systems
-# (Solaris 8) have a buggy localtime that mistakenly accepts such
-# invalid times and give garbage in tm_year.  Other systems might
-# have an int type that is wider than 32.  So if this localtime
-# call succeeds, use 2^64 as the number of seconds.
-my $n_seconds = 72057594037927935;
-my @d = localtime ($n_seconds);
-my $year = $d[5];
-defined $year
-  and $n_seconds = '18446744073709551616';
 
 my @Tests =
     (
@@ -232,6 +218,10 @@ my @Tests =
      # Don't recognize %:z with a field width between the ':' and the 'z'.
      ['tz-5wf', '+%:8z', {OUT=>"%:8z"}, {ENV=>'TZ=XXX0:01'}],
 
+     # Test alphabetic timezone abbrv
+     ['tz-6', '+%Z', {OUT=>"UTC"}],
+     ['tz-7', '+%Z', {OUT=>"JST"}, {ENV=>'TZ=JST-9'}],
+
      ['ns-relative',
       '--iso=ns',
       "-d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",
@@ -255,22 +245,24 @@ my @Tests =
      ['neg-secs', '-d @-22 +%05s', {OUT=>"-0022"}],
      ['neg-secs2', '-d @-22 +%_5s', {OUT=>"  -22"}],
 
-     # Before today's fix, date would print uninitialized data
-     # to standard output for an out-of-range date:
-     # $ date -d @$(echo 2^56-1|bc) 2> /dev/null | od -a -N3
-     # 0000000   p   4   6
-     # 0000003
-     ['uninit-64', "-d \@$n_seconds",
-      {OUT=>''},
-      # Use ERR_SUBST to get around fact that the diagnostic
-      # you get on a system with 32-bit time_t is not the same as
-      # the one you get for a system where it's 64 bits wide:
-      # - date: time 72057594037927935 is out of range
-      # + date: invalid date '@72057594037927935'
-      {ERR_SUBST => 's/.*//'},
-      {ERR => "\n"},
-      {EXIT => 1},
-     ],
+     # FIXME: Ensure date doesn't print uninitialized data
+     # for an out-of-range date.  This test is currently
+     # disabled as various systems have different limits
+     # for localtime(), and we can't use perl for example
+     # to determine those limits as it doesn't always call
+     # down to the system localtime() as it has configure
+     # time checks and settings itself for these limits.
+     #['uninit-64', "-d \@72057594037927935",
+     # {OUT=>''},
+     # # Use ERR_SUBST to get around fact that the diagnostic
+     # # you get on a system with 32-bit time_t is not the same as
+     # # the one you get for a system where it's 64 bits wide:
+     # # - date: time 72057594037927935 is out of range
+     # # + date: invalid date '@72057594037927935'
+     # {ERR_SUBST => 's/.*//'},
+     # {ERR => "\n"},
+     # {EXIT => 1},
+     #],
 
      ['fill-1', '-d 1999-12-08 +%_3d', {OUT=>'  8'}],
      ['fill-2', '-d 1999-12-08 +%03d', {OUT=>'008'}],
