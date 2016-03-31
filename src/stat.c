@@ -403,9 +403,11 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "panfs";
     case S_MAGIC_PIPEFS: /* 0x50495045 remote */
       /* FIXME: change syntax or add an optional attribute like "inotify:no".
-         The above is labeled as "remote" so that tail always uses polling,
-         but this isn't really a remote file system type.  */
+         pipefs and prlfs are labeled as "remote" so that tail always polls,
+         but these aren't really remote file system types.  */
       return "pipefs";
+    case S_MAGIC_PRL_FS: /* 0x7C7C6673 remote */
+      return "prl_fs";
     case S_MAGIC_PROC: /* 0x9FA0 local */
       return "proc";
     case S_MAGIC_PSTOREFS: /* 0x6165676C local */

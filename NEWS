@@ -20,6 +20,8 @@ GNU coreutils NEWS                                    -*- outline -*-
    stat now outputs nanosecond information for time stamps even if
    they are out of localtime range.
 
+   stat -f --format=%T now reports "prl_fs" for a parallels file system.
+
    sort, tail, and uniq now support traditional usage like 'sort +2'
    and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
    The 2008 edition of POSIX dropped the requirement that arguments
