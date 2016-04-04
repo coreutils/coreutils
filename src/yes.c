@@ -121,6 +121,7 @@ main (int argc, char **argv)
       if ((pbuf - buf) && fwrite (buf, pbuf - buf, 1, stdout) != 1)
         {
           error (0, errno, _("standard output"));
+          clearerr (stdout);
           return EXIT_FAILURE;
         }
       for (j = i; j < argc; j++)
@@ -128,6 +129,7 @@ main (int argc, char **argv)
             || putchar (j == argc - 1 ? '\n' : ' ') == EOF)
           {
             error (0, errno, _("standard output"));
+            clearerr (stdout);
             return EXIT_FAILURE;
           }
     }
