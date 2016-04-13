@@ -364,6 +364,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "logfs";
     case S_MAGIC_LUSTRE: /* 0x0BD00BD0 remote */
       return "lustre";
+    case S_MAGIC_M1FS: /* 0x5346314D local */
+      return "m1fs";
     case S_MAGIC_MINIX: /* 0x137F local */
       return "minix";
     case S_MAGIC_MINIX_30: /* 0x138F local */

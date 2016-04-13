@@ -20,12 +20,17 @@ GNU coreutils NEWS                                    -*- outline -*-
    stat now outputs nanosecond information for time stamps even if
    they are out of localtime range.
 
-   stat -f --format=%T now reports "prl_fs" for a parallels file system.
-
    sort, tail, and uniq now support traditional usage like 'sort +2'
    and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
    The 2008 edition of POSIX dropped the requirement that arguments
    like '+2' must be treated as file names.
+
+** Improvements
+
+   stat and tail now know about "prl_fs" (a parallels file system), and
+   "m1fs" (a Plexistor file system).  stat -f --format=%T now reports the
+   file system type, and tail -f uses the more conservative polling for
+   "prl_fs", and inotify for "m1fs" file systems.
 
 
 * Noteworthy changes in release 8.25 (2016-01-20) [stable]
