@@ -27,10 +27,13 @@
 #include "quote.h"
 #include "xstrtod.h"
 
-/* Roll our own isfinite rather than using <math.h>, so that we don't
+/* Roll our own isfinite/isnan rather than using <math.h>, so that we don't
    have to worry about linking -lm just for isfinite.  */
 #ifndef isfinite
 # define isfinite(x) ((x) * 0 == 0)
+#endif
+#ifndef isnan
+# define isnan(x) ((x) != (x))
 #endif
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -92,7 +95,7 @@ INCREMENT would become greater than LAST.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
 INCREMENT is usually negative if FIRST is greater than LAST.\n\
-INCREMENT must not be 0.\n\
+INCREMENT must not be 0; none of FIRST, INCREMENT and LAST may be NaN.\n\
 "), stdout);
       fputs (_("\
 FORMAT must be suitable for printing one argument of type 'double';\n\
@@ -141,6 +144,13 @@ scan_arg (const char *arg)
   if (! xstrtold (arg, NULL, &ret.value, c_strtold))
     {
       error (0, 0, _("invalid floating point argument: %s"), quote (arg));
+      usage (EXIT_FAILURE);
+    }
+
+  if (isnan (ret.value))
+    {
+      error (0, 0, _("invalid %s argument: %s"), quote_n (0, "not-a-number"),
+             quote_n (1, arg));
       usage (EXIT_FAILURE);
     }
 

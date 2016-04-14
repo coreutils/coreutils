@@ -17424,6 +17424,7 @@ The sequence of numbers ends when the sum of the current number and
 so @code{seq 1 10 10} only produces @samp{1}.
 @var{increment} must not be @samp{0}; use @command{yes} to get
 repeated output of a constant number.
+@var{first}, @var{increment} and @var{last} must not be @code{NaN}.
 Floating-point numbers may be specified.  @xref{Floating point}.
 
 The program accepts the following options.  Also see @ref{Common options}.

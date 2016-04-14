@@ -26,6 +26,7 @@ use strict;
 my $prog = 'seq';
 my $try_help = "Try '$prog --help' for more information.\n";
 my $err_inc_zero = "seq: invalid Zero increment value: '0'\n".$try_help;
+my $err_nan_arg = "seq: invalid 'not-a-number' argument: 'nan'\n".$try_help;
 
 my $locale = $ENV{LOCALE_FR_UTF8};
 ! defined $locale || $locale eq 'none'
@@ -161,6 +162,22 @@ my @Tests =
     {ERR_SUBST => 's/0.0/0/'}],
    ['inc-zero-4',	qw(1 -0.0e-10 10), {EXIT => 1},{ERR => $err_inc_zero},
     {ERR_SUBST => 's/-0\.0e-10/0/'}],
+
+   # Ensure NaN arguments rejected.
+   ['nan-first-1', qw(nan),       {EXIT => 1}, {ERR => $err_nan_arg}],
+   ['nan-first-2', qw(NaN 2),     {EXIT => 1}, {ERR => $err_nan_arg},
+    {ERR_SUBST => 's/NaN/nan/'}],
+   ['nan-first-3', qw(nan 1 2),   {EXIT => 1}, {ERR => $err_nan_arg}],
+   ['nan-first-4', qw(-- -nan),   {EXIT => 1}, {ERR => $err_nan_arg},
+    {ERR_SUBST => 's/-nan/nan/'}],
+   ['nan-inc-1',   qw(1 nan 2),   {EXIT => 1}, {ERR => $err_nan_arg}],
+   ['nan-inc-2',   qw(1 -NaN 2),  {EXIT => 1}, {ERR => $err_nan_arg},
+    {ERR_SUBST => 's/-NaN/nan/'}],
+   ['nan-last-1',  qw(1 1 nan),   {EXIT => 1}, {ERR => $err_nan_arg}],
+   ['nan-last-2',  qw(1 NaN),     {EXIT => 1}, {ERR => $err_nan_arg},
+    {ERR_SUBST => 's/NaN/nan/'}],
+   ['nan-last-3',  qw(0 -1 -NaN), {EXIT => 1}, {ERR => $err_nan_arg},
+    {ERR_SUBST => 's/-NaN/nan/'}],
   );
 
 # Append a newline to each entry in the OUT array.

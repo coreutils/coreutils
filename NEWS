@@ -17,7 +17,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
-   seq no longer accepts 0 value as increment argument.
+   seq no longer accepts 0 value as increment, and now also rejects NaN
+   values for any argument.
 
    stat now outputs nanosecond information for time stamps even if
    they are out of localtime range.
