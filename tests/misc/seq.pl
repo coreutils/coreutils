@@ -25,6 +25,7 @@ use strict;
 
 my $prog = 'seq';
 my $try_help = "Try '$prog --help' for more information.\n";
+my $err_inc_zero = "seq: invalid Zero increment value: '0'\n".$try_help;
 
 my $locale = $ENV{LOCALE_FR_UTF8};
 ! defined $locale || $locale eq 'none'
@@ -151,6 +152,15 @@ my @Tests =
    ['fast-1', qw(4), {OUT => [qw(1 2 3 4)]}],
    ['fast-2', qw(1 4), {OUT => [qw(1 2 3 4)]}],
    ['fast-3', qw(1 1 4), {OUT => [qw(1 2 3 4)]}],
+
+   # Ensure an INCREMENT of Zero is rejected.
+   ['inc-zero-1',	qw(1 0 10), {EXIT => 1}, {ERR => $err_inc_zero}],
+   ['inc-zero-2',	qw(0 -0 0), {EXIT => 1}, {ERR => $err_inc_zero},
+    {ERR_SUBST => 's/-0/0/'}],
+   ['inc-zero-3',	qw(1 0.0 10), {EXIT => 1},{ERR => $err_inc_zero},
+    {ERR_SUBST => 's/0.0/0/'}],
+   ['inc-zero-4',	qw(1 -0.0e-10 10), {EXIT => 1},{ERR => $err_inc_zero},
+    {ERR_SUBST => 's/-0\.0e-10/0/'}],
   );
 
 # Append a newline to each entry in the OUT array.

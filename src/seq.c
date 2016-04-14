@@ -92,6 +92,7 @@ INCREMENT would become greater than LAST.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
 INCREMENT is usually negative if FIRST is greater than LAST.\n\
+INCREMENT must not be 0.\n\
 "), stdout);
       fputs (_("\
 FORMAT must be suitable for printing one argument of type 'double';\n\
@@ -635,6 +636,13 @@ main (int argc, char **argv)
       if (optind < argc)
         {
           step = last;
+          if (step.value == 0)
+            {
+              error (0, 0, _("invalid Zero increment value: %s"),
+                     quote (argv[optind-1]));
+              usage (EXIT_FAILURE);
+            }
+
           last = scan_arg (argv[optind++]);
         }
     }
