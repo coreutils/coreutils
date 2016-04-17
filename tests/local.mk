@@ -235,6 +235,8 @@ all_tests =					\
   tests/misc/ptx.pl				\
   tests/misc/test.pl				\
   tests/misc/seq.pl				\
+  tests/misc/seq-epipe.sh			\
+  tests/misc/seq-io-errors.sh			\
   tests/misc/seq-long-double.sh			\
   tests/misc/seq-precision.sh			\
   tests/misc/head.pl				\
