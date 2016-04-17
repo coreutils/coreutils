@@ -21,7 +21,7 @@ print_ver_ mkdir
 
 mkdir -pv foo/a/b/c/d >out || fail=1
 
-compare - out <<\EOF
+compare - out <<\EOF || fail=1
 mkdir: created directory 'foo'
 mkdir: created directory 'foo/a'
 mkdir: created directory 'foo/a/b'
