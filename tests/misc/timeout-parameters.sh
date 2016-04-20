@@ -24,16 +24,13 @@ getlimits_
 # internal errors are 125, distinct from execution failure
 
 # invalid timeout
-timeout invalid sleep 0
-test $? = 125 || fail=1
+returns_ 125 timeout invalid sleep 0 || fail=1
 
 # invalid kill delay
-timeout --kill-after=invalid 1 sleep 0
-test $? = 125 || fail=1
+returns_ 125 timeout --kill-after=invalid 1 sleep 0 || fail=1
 
 # invalid timeout suffix
-timeout 42D sleep 0
-test $? = 125 || fail=1
+returns_ 125 timeout 42D sleep 0 || fail=1
 
 # It was seen on 32 bit Linux/HPPA that a kernel time_t overflowed,
 # thus causing the timer to fire immediately.
@@ -50,24 +47,25 @@ if test $? != 124; then
 
   # floating point notation
   timeout 2.34e+5d sleep 0 || fail=1
+
+  # floating point overflow
+  timeout $LDBL_MAX sleep 0 || fail=1
+  returns_ 125 timeout -- -$LDBL_MAX sleep 0 || fail=1
 fi
 
 # floating point notation
-timeout 2.34 sleep 0 || fail=1
+timeout 10.34 sleep 0 || fail=1
 
 # nanoseconds potentially supported
-timeout .999999999 sleep 0 || fail=1
+timeout 9.999999999 sleep 0 || fail=1
 
 # invalid signal spec
-timeout --signal=invalid 1 sleep 0
-test $? = 125 || fail=1
+returns_ 125 timeout --signal=invalid 1 sleep 0 || fail=1
 
 # invalid command
-timeout 10 .
-test $? = 126 || fail=1
+returns_ 126 timeout 10 . || fail=1
 
 # no such command
-timeout 10 no_such
-test $? = 127 || fail=1
+returns_ 127 timeout 10 no_such || fail=1
 
 Exit $fail

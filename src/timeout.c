@@ -314,7 +314,7 @@ parse_duration (const char* str)
   double duration;
   const char *ep;
 
-  if (!xstrtod (str, &ep, &duration, c_strtod)
+  if (! (xstrtod (str, &ep, &duration, c_strtod) || errno == ERANGE)
       /* Nonnegative interval.  */
       || ! (0 <= duration)
       /* No extra chars after the number and an optional s,m,h,d char.  */
