@@ -46,7 +46,8 @@ subtract_one='
 # Ensure we can cut up to our sentinel value.
 # This is currently SIZE_MAX, but could be raised to UINTMAX_MAX
 # if we didn't allocate memory for each line as a unit.
-# Don't use expr to subtract one, since SIZE_MAX may exceed its maximum value.
+# Don't use expr to subtract one,
+# since SIZE_MAX may exceed its maximum value.
 CUT_MAX=$(echo $SIZE_MAX | sed "$subtract_one")
 
 # From coreutils-8.10 through 8.20, this would make cut try to allocate

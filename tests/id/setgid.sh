@@ -21,7 +21,9 @@ print_ver_ id
 require_root_
 
 # Construct a different group number
-gp1=$(expr $NON_ROOT_GID + 1)
+gp1=$NON_ROOT_GID
+gp1=$(expr $gp1 + 1) ||
+  skip_ "failed to adjust GID $NON_ROOT_GID"
 
 echo $gp1 > exp || framework_failure_
 

@@ -38,29 +38,22 @@ test $? = 125 || fail=1
 # It was seen on 32 bit Linux/HPPA that a kernel time_t overflowed,
 # thus causing the timer to fire immediately.
 # So verify that doesn't happen before checking large timeouts
-KERNEL_OVERFLOW_LIMIT=$(expr $TIME_T_MAX - $(date +%s) + 100)
+KERNEL_OVERFLOW_LIMIT=$(expr $TIME_T_MAX - $(date +%s) + 100) ||
+  skip_ "failed to adjust TIME_T_MAX $TIME_T_MAX"
 timeout $KERNEL_OVERFLOW_LIMIT sleep 0
 if test $? != 124; then
   # timeout overflow
-  timeout $UINT_OFLOW sleep 0
-  test $? = 0 || fail=1
+  timeout $UINT_OFLOW sleep 0 || fail=1
 
   # timeout overflow
-  timeout $(expr $UINT_MAX / 86400 + 1)d sleep 0
-  test $? = 0 || fail=1
-
-  # timeout overflow
-  timeout 999999999999999999999999999999999999999999999999999999999999d sleep 0
-  test $? = 0 || fail=1
+  timeout ${TIME_T_OFLOW}d sleep 0 || fail=1
 
   # floating point notation
-  timeout 2.34e+5d sleep 0
-  test $? = 0 || fail=1
+  timeout 2.34e+5d sleep 0 || fail=1
 fi
 
 # floating point notation
-timeout 2.34 sleep 0
-test $? = 0 || fail=1
+timeout 2.34 sleep 0 || fail=1
 
 # nanoseconds potentially supported
 timeout .999999999 sleep 0 || fail=1
