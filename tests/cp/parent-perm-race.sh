@@ -43,6 +43,8 @@ do
   # $d/attr and has started to read the source file $attr/fifo.
   timeout 10 sh -c "ls -ld d/$attr >$attr/fifo" || fail=1
 
+  wait $pid || fail=1
+
   ls_output=$(cat d/$attr/fifo) || fail=1
   case $attr,$ls_output in
   ownership,d???--[-S]--[-S]* | \
@@ -52,8 +54,6 @@ do
   *)
     fail=1;;
   esac
-
-  wait $pid || fail=1
 done
 
 Exit $fail
