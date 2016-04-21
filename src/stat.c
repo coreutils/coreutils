@@ -470,6 +470,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "vxfs";
     case S_MAGIC_VZFS: /* 0x565A4653 local */
       return "vzfs";
+    case S_MAGIC_WSLFS: /* 0x53464846 local */
+      return "wslfs";
     case S_MAGIC_XENFS: /* 0xABBA1974 local */
       return "xenfs";
     case S_MAGIC_XENIX: /* 0x012FF7B4 local */
