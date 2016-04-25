@@ -23,11 +23,12 @@ require_gcc_shared_
 
 # We use --local here so as to not activate
 # potentially very many remote mounts.
-df --local || skip_ 'df fails'
+df --local --output=target >LOCAL_FS || skip_ 'df fails'
+grep '^/$' LOCAL_FS || skip_ 'no root file system found'
 
-export CU_NONROOT_FS=$(df --local --output=target 2>&1 | grep /. | head -n1)
-export CU_REMOTE_FS=$(df --local --output=target 2>&1 | grep /. |
-                      tail -n+2 | head -n1)
+# Get real targets to substitute for /NONROOT and /REMOTE below.
+export CU_NONROOT_FS=$(grep /. LOCAL_FS | head -n1)
+export CU_REMOTE_FS=$(grep /. LOCAL_FS | tail -n+2 | head -n1)
 
 unique_entries=1
 test -z "$CU_NONROOT_FS" || unique_entries=$(expr $unique_entries + 1)
