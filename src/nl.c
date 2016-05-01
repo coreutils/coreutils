@@ -185,7 +185,7 @@ Write each FILE to standard output, with line numbers added.\n\
 
       fputs (_("\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
-  -d, --section-delimiter=CC      use CC for separating logical pages\n\
+  -d, --section-delimiter=CC      use CC for logical page delimiters\n\
   -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
 "), stdout);
       fputs (_("\
@@ -193,20 +193,20 @@ Write each FILE to standard output, with line numbers added.\n\
   -i, --line-increment=NUMBER     line number increment at each line\n\
   -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
   -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
-  -p, --no-renumber               do not reset line numbers at logical pages\n\
+  -p, --no-renumber               do not reset line numbers for each section\n\
   -s, --number-separator=STRING   add STRING after (possible) line number\n\
 "), stdout);
       fputs (_("\
-  -v, --starting-line-number=NUMBER  first line number on each logical page\n\
+  -v, --starting-line-number=NUMBER  first line number for each section\n\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
-two delimiter characters for separating logical pages, a missing\n\
-second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
+By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.\n\
+CC are two delimiter characters used to construct logical page delimiters,\n\
+a missing second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -298,6 +298,8 @@ proc_body (void)
 {
   current_type = body_type;
   current_regex = &body_regex;
+  if (reset_numbers)
+    line_no = starting_line_number;
   putchar ('\n');
 }
 
@@ -308,6 +310,8 @@ proc_footer (void)
 {
   current_type = footer_type;
   current_regex = &footer_regex;
+  if (reset_numbers)
+    line_no = starting_line_number;
   putchar ('\n');
 }
 

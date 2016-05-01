@@ -37,7 +37,22 @@ cat <<\EOF > exp
      1^Ia$
        $
 EOF
+compare exp out || fail=1
 
+# Ensure numbering reset at each delimiter.
+# coreutils <= v8.25 only reset at a page header.
+printf '%s\n' '\:\:\:' a '\:\:' b '\:' c > in.txt || framework_failure_
+nl -ha -fa in.txt > out.tmp || fail=1
+nl -p -ha -fa in.txt >> out.tmp || fail=1
+sed '/^$/d' < out.tmp > out || framework_failure_
+cat <<\EOF > exp
+     1	a
+     1	b
+     1	c
+     1	a
+     2	b
+     3	c
+EOF
 compare exp out || fail=1
 
 Exit $fail

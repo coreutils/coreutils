@@ -1741,10 +1741,10 @@ nl [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex logical pages, numbering on
-@command{nl} decomposes its input into (logical) pages; by default, the
-line number is reset to 1 at the top of each logical page.  @command{nl}
-treats all of the input files as a single document; it does not reset
-line numbers or logical pages between files.
+@command{nl} decomposes its input into (logical) page sections;
+by default, the line number is reset to 1 at each logical page section.
+@command{nl} treats all of the input files as a single document;
+it does not reset line numbers or logical pages between files.
 
 @cindex headers, numbering
 @cindex body, numbering
