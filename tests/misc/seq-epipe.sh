@@ -19,28 +19,23 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ seq
 
+(trap '' PIPE && yes | :) 2>&1 | grep -qF 'Broken pipe' ||
+    skip_ 'trapping SIGPIPE is not supported'
+
 # upon EPIPE with signals ignored, 'seq' should exit with an error.
-(trap '' PIPE;
- timeout 10 sh -c '( (seq inf 2>err ; echo $?>code) | head -n1)'>/dev/null)
+timeout 10 sh -c \
+  'trap "" PIPE && { seq inf 2>err; echo $? >code; } | head -n1' >out
 
 # Exit-code must be 1, indicating 'write error'
-cat << \EOF > exp || framework_failure_
-1
-EOF
-if test -e code ; then
-  compare exp code || fail=1
-else
-  # 'exitcode' file was not created
-  warn_ "missing exit code file (seq failed to detect EPIPE?)"
-  fail=1
-fi
+echo 1 > exp || framework_failure_
+compare exp out || fail=1
+compare exp code || fail=1
 
 # The error message must begin with "standard output:"
 # (but don't hard-code the strerror text)
-compare_dev_null_ /dev/null err
-if ! grep -qE '^seq: standard output: .+$' err ; then
-  warn_ "seq emitted incorrect error on EPIPE"
-  fail=1
-fi
+grep '^seq: standard output: ' err \
+  || { warn_ "seq emitted incorrect error on EPIPE"; \
+       cat err;\
+       fail=1; }
 
 Exit $fail
