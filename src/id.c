@@ -197,8 +197,10 @@ main (int argc, char **argv)
   if (just_user + just_group + just_group_list + just_context > 1)
     error (EXIT_FAILURE, 0, _("cannot print \"only\" of more than one choice"));
 
-  bool default_format = (just_user + just_group + just_group_list
-                         + just_context == 0);
+  bool default_format = ! (just_user
+                           || just_group
+                           || just_group_list
+                           || just_context);
 
   if (default_format && (use_real || use_name))
     error (EXIT_FAILURE, 0,
