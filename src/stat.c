@@ -434,6 +434,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "smackfs";
     case S_MAGIC_SMB: /* 0x517B remote */
       return "smb";
+    case S_MAGIC_SMB2: /* 0xFE534D42 remote */
+      return "smb2";
     case S_MAGIC_SNFS: /* 0xBEEFDEAD remote */
       return "snfs";
     case S_MAGIC_SOCKFS: /* 0x534F434B local */
