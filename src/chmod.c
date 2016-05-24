@@ -436,7 +436,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  recurse = force_silent = diagnose_surprises = false;
+  recurse = force_silent = diagnose_surprises = cheap_ops = false;
 
   while ((c = getopt_long (argc, argv,
                            ("RcfvCr::w::x::X::s::t::u::g::o::a::,::+::=::"
