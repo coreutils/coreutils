@@ -67,6 +67,9 @@ static mode_t umask_value;
 /* If true, change the modes of directories recursively. */
 static bool recurse;
 
+/* Cheap operations - do chmod(1) only if new mode would differ from old one */
+static bool cheap_ops;
+
 /* If true, force silence (suppress most of error messages). */
 static bool force_silent;
 
@@ -101,6 +104,7 @@ static struct option const long_options[] =
   {"reference", required_argument, NULL, REFERENCE_FILE_OPTION},
   {"silent", no_argument, NULL, 'f'},
   {"verbose", no_argument, NULL, 'v'},
+  {"cheap", no_argument, NULL, 'C'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -269,7 +273,7 @@ process_file (FTS *fts, FTSENT *ent)
 
       if (! S_ISLNK (old_mode))
         {
-          if (chmodat (fts->fts_cwd_fd, file, new_mode) == 0)
+          if ((cheap_ops && (old_mode & CHMOD_MODE_BITS) == (new_mode & CHMOD_MODE_BITS)) || chmodat (fts->fts_cwd_fd, file, new_mode) == 0)
             chmod_succeeded = true;
           else
             {
@@ -396,6 +400,9 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
       fputs (_("\
   -R, --recursive        change files and directories recursively\n\
 "), stdout);
+      fputs (_("\
+  -C, --cheap            do not chmod unless new mode differs from old one\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -432,7 +439,7 @@ main (int argc, char **argv)
   recurse = force_silent = diagnose_surprises = false;
 
   while ((c = getopt_long (argc, argv,
-                           ("Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::"
+                           ("RcfvCr::w::x::X::s::t::u::g::o::a::,::+::=::"
                             "0::1::2::3::4::5::6::7::"),
                            long_options, NULL))
          != -1)
@@ -500,6 +507,9 @@ main (int argc, char **argv)
           break;
         case 'v':
           verbosity = V_high;
+          break;
+        case 'C':
+          cheap_ops = true;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
