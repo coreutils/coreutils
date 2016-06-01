@@ -41,6 +41,7 @@ sort: using simple byte comparison
 sort: option '-r' only applies to last-resort comparison
 7
 sort: using simple byte comparison
+sort: leading blanks are significant in key 2; consider also specifying 'b'
 sort: options '-bg' are ignored
 8
 sort: using simple byte comparison
@@ -51,6 +52,7 @@ sort: option '-b' is ignored
 sort: using simple byte comparison
 11
 sort: using simple byte comparison
+sort: leading blanks are significant in key 1; consider also specifying 'b'
 12
 sort: using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
@@ -116,7 +118,6 @@ sort: using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 sort: obsolescent key '+2 -1' used; consider '-k 3,1' instead
 sort: key 2 has zero width and will be ignored
-sort: leading blanks are significant in key 2; consider also specifying 'b'
 sort: option '-b' is ignored
 sort: option '-r' only applies to last-resort comparison
 EOF

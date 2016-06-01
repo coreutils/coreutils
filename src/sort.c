@@ -2424,16 +2424,15 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
         }
 
       /* Warn about field specs that will never match.  */
-      if (key->sword != SIZE_MAX && key->eword < key->sword)
+      bool zero_width = key->sword != SIZE_MAX && key->eword < key->sword;
+      if (zero_width)
         error (0, 0, _("key %lu has zero width and will be ignored"), keynum);
 
       /* Warn about significant leading blanks.  */
       bool implicit_skip = key_numeric (key) || key->month;
-      bool maybe_space_aligned = !hard_LC_COLLATE && default_key_compare (key)
-                                 && !(key->schar || key->echar);
       bool line_offset = key->eword == 0 && key->echar != 0; /* -k1.x,1.y  */
-      if (!gkey_only && tab == TAB_DEFAULT && !line_offset
-          && ((!key->skipsblanks && !(implicit_skip || maybe_space_aligned))
+      if (!zero_width && !gkey_only && tab == TAB_DEFAULT && !line_offset
+          && ((!key->skipsblanks && !implicit_skip)
               || (!key->skipsblanks && key->schar)
               || (!key->skipeblanks && key->echar)))
         error (0, 0, _("leading blanks are significant in key %lu; "
