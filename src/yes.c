@@ -101,12 +101,22 @@ main (int argc, char **argv)
           memcpy (pbuf, pbuf - line_len, line_len);
           pbuf += line_len;
         }
-
-      while (0 <= write (STDOUT_FILENO, buf, pbuf - buf))
-        continue;
-
-      error (0, errno, _("standard output"));
-      return EXIT_FAILURE;
+    }
+  while (operandp == operand_lim)
+    {
+      char const* pwrite = buf;
+      size_t to_write = pbuf - buf;
+      while (to_write)
+        {
+          ssize_t written = write (STDOUT_FILENO, pwrite, to_write);
+          if (written < 0)
+            {
+              error (0, errno, _("standard output"));
+              return EXIT_FAILURE;
+            }
+          to_write -= written;
+          pwrite += written;
+        }
     }
 
   /* If the data doesn't fit in BUFSIZ then output

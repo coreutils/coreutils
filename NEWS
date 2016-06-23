@@ -21,6 +21,9 @@ GNU coreutils NEWS                                    -*- outline -*-
    seq now immediately exits upon write errors.
    [This bug was present in "the beginning".]
 
+   yes now handles short writes, rather than assuming all writes complete.
+   [bug introduced in coreutils-8.24]
+
 ** Changes in behavior
 
    seq no longer accepts 0 value as increment, and now also rejects NaN
