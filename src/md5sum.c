@@ -864,12 +864,13 @@ main (int argc, char **argv)
   if (!O_BINARY && binary < 0)
     binary = 0;
 
+  char **operand_lim = argv + argc;
   if (optind == argc)
-    argv[argc++] = bad_cast ("-");
+    *operand_lim++ = bad_cast ("-");
 
-  for (; optind < argc; ++optind)
+  for (char **operandp = argv + optind; operandp < operand_lim; operandp++)
     {
-      char *file = argv[optind];
+      char *file = *operandp;
 
       if (do_check)
         ok &= digest_check (file);

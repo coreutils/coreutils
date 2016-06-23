@@ -60,7 +60,6 @@ main (int argc, char **argv)
 {
   char buf[BUFSIZ];
   char *pbuf = buf;
-  int i;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -75,24 +74,25 @@ main (int argc, char **argv)
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
-  if (argc <= optind)
-    {
-      optind = argc;
-      argv[argc++] = bad_cast ("y");
-    }
+  char **operand_lim = argv + argc;
+  if (optind == argc)
+    *operand_lim++ = bad_cast ("-");
 
   /* Buffer data locally once, rather than having the
      large overhead of stdio buffering each item.  */
-  for (i = optind; i < argc; i++)
+  char **operandp;
+  for (operandp = argv + optind; operandp < operand_lim; operandp++)
     {
-      size_t len = strlen (argv[i]);
+      size_t len = strlen (*operandp);
       if (BUFSIZ < len || BUFSIZ - len <= pbuf - buf)
         break;
-      memcpy (pbuf, argv[i], len);
+      memcpy (pbuf, *operandp, len);
       pbuf += len;
-      *pbuf++ = i == argc - 1 ? '\n' : ' ';
+      *pbuf++ = operandp + 1 == operand_lim ? '\n' : ' ';
     }
-  if (i == argc)
+
+  /* The normal case is to continuously output the local buffer.  */
+  if (operandp == operand_lim)
     {
       size_t line_len = pbuf - buf;
       size_t lines = BUFSIZ / line_len;
@@ -101,32 +101,27 @@ main (int argc, char **argv)
           memcpy (pbuf, pbuf - line_len, line_len);
           pbuf += line_len;
         }
-    }
 
-  /* The normal case is to continuously output the local buffer.  */
-  while (i == argc)
-    {
-      if (write (STDOUT_FILENO, buf, pbuf - buf) == -1)
-        {
-          error (0, errno, _("standard output"));
-          return EXIT_FAILURE;
-        }
+      while (0 <= write (STDOUT_FILENO, buf, pbuf - buf))
+        continue;
+
+      error (0, errno, _("standard output"));
+      return EXIT_FAILURE;
     }
 
   /* If the data doesn't fit in BUFSIZ then output
      what we've buffered, and iterate over the remaining items.  */
-  while (true /* i != argc */)
+  while (true)
     {
-      int j;
       if ((pbuf - buf) && fwrite (buf, pbuf - buf, 1, stdout) != 1)
         {
           error (0, errno, _("standard output"));
           clearerr (stdout);
           return EXIT_FAILURE;
         }
-      for (j = i; j < argc; j++)
-        if (fputs (argv[j], stdout) == EOF
-            || putchar (j == argc - 1 ? '\n' : ' ') == EOF)
+      for (char **trailing = operandp; trailing < operand_lim; trailing++)
+        if (fputs (*trailing, stdout) == EOF
+            || putchar (trailing + 1 == operand_lim ? '\n' : ' ') == EOF)
           {
             error (0, errno, _("standard output"));
             clearerr (stdout);

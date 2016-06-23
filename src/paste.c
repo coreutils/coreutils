@@ -465,7 +465,6 @@ int
 main (int argc, char **argv)
 {
   int optc;
-  bool ok;
   char const *delim_arg = "\t";
 
   initialize_main (&argc, &argv);
@@ -505,8 +504,12 @@ main (int argc, char **argv)
         }
     }
 
-  if (optind == argc)
-    argv[argc++] = bad_cast ("-");
+  int nfiles = argc - optind;
+  if (nfiles == 0)
+    {
+      argv[optind] = bad_cast ("-");
+      nfiles++;
+    }
 
   if (collapse_escapes (delim_arg))
     {
@@ -517,10 +520,8 @@ main (int argc, char **argv)
              quotearg_n_style_colon (0, c_maybe_quoting_style, delim_arg));
     }
 
-  if (!serial_merge)
-    ok = paste_parallel (argc - optind, &argv[optind]);
-  else
-    ok = paste_serial (argc - optind, &argv[optind]);
+  bool ok = ((serial_merge ? paste_serial : paste_parallel)
+             (nfiles, &argv[optind]));
 
   free (delims);
 
