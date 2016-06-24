@@ -19,6 +19,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ yes
 
+# Check basic operation
+test "$(yes | head -n1)" = 'y' || fail=1
+
 # Check various single item sizes, with the most important
 # size being BUFSIZ used for the local buffer to yes(1).
 # Note a \n is added, so actual sizes required internally

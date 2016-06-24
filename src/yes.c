@@ -76,7 +76,7 @@ main (int argc, char **argv)
 
   char **operand_lim = argv + argc;
   if (optind == argc)
-    *operand_lim++ = bad_cast ("-");
+    *operand_lim++ = bad_cast ("y");
 
   /* Buffer data locally once, rather than having the
      large overhead of stdio buffering each item.  */
