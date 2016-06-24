@@ -24,6 +24,7 @@
 #include "system.h"
 
 #include "error.h"
+#include "full-write.h"
 #include "long-options.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -58,9 +59,6 @@ Repeatedly output a line with all specified STRING(s), or 'y'.\n\
 int
 main (int argc, char **argv)
 {
-  char buf[BUFSIZ];
-  char *pbuf = buf;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -74,68 +72,57 @@ main (int argc, char **argv)
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
+  char **operands = argv + optind;
   char **operand_lim = argv + argc;
   if (optind == argc)
     *operand_lim++ = bad_cast ("y");
 
   /* Buffer data locally once, rather than having the
      large overhead of stdio buffering each item.  */
-  char **operandp;
-  for (operandp = argv + optind; operandp < operand_lim; operandp++)
+  size_t bufalloc = 0;
+  bool reuse_operand_strings = true;
+  for (char **operandp = operands; operandp < operand_lim; operandp++)
     {
-      size_t len = strlen (*operandp);
-      if (BUFSIZ < len || BUFSIZ - len <= pbuf - buf)
-        break;
-      memcpy (pbuf, *operandp, len);
-      pbuf += len;
-      *pbuf++ = operandp + 1 == operand_lim ? '\n' : ' ';
+      size_t operand_len = strlen (*operandp);
+      bufalloc += operand_len + 1;
+      if (operandp + 1 < operand_lim
+          && *operandp + operand_len + 1 != operandp[1])
+        reuse_operand_strings = false;
     }
 
-  /* The normal case is to continuously output the local buffer.  */
-  if (operandp == operand_lim)
+  /* Improve performance by using a buffer size greater than BUFSIZ / 2.  */
+  if (bufalloc <= BUFSIZ / 2)
     {
-      size_t line_len = pbuf - buf;
-      size_t lines = BUFSIZ / line_len;
-      while (--lines)
-        {
-          memcpy (pbuf, pbuf - line_len, line_len);
-          pbuf += line_len;
-        }
-    }
-  while (operandp == operand_lim)
-    {
-      char const* pwrite = buf;
-      size_t to_write = pbuf - buf;
-      while (to_write)
-        {
-          ssize_t written = write (STDOUT_FILENO, pwrite, to_write);
-          if (written < 0)
-            {
-              error (0, errno, _("standard output"));
-              return EXIT_FAILURE;
-            }
-          to_write -= written;
-          pwrite += written;
-        }
+      bufalloc = BUFSIZ;
+      reuse_operand_strings = false;
     }
 
-  /* If the data doesn't fit in BUFSIZ then output
-     what we've buffered, and iterate over the remaining items.  */
-  while (true)
+  /* Fill the buffer with one copy of the output.  If possible, reuse
+     the operands strings; this wins when the buffer would be large.  */
+  char *buf = reuse_operand_strings ? *operands : xmalloc (bufalloc);
+  size_t bufused = 0;
+  for (char **operandp = operands; operandp < operand_lim; operandp++)
     {
-      if ((pbuf - buf) && fwrite (buf, pbuf - buf, 1, stdout) != 1)
-        {
-          error (0, errno, _("standard output"));
-          clearerr (stdout);
-          return EXIT_FAILURE;
-        }
-      for (char **trailing = operandp; trailing < operand_lim; trailing++)
-        if (fputs (*trailing, stdout) == EOF
-            || putchar (trailing + 1 == operand_lim ? '\n' : ' ') == EOF)
-          {
-            error (0, errno, _("standard output"));
-            clearerr (stdout);
-            return EXIT_FAILURE;
-          }
+      size_t operand_len = strlen (*operandp);
+      if (! reuse_operand_strings)
+        memcpy (buf + bufused, *operandp, operand_len);
+      bufused += operand_len;
+      buf[bufused++] = ' ';
     }
+  buf[bufused - 1] = '\n';
+
+  /* If a larger buffer was allocated, fill it by repeating the buffer
+     contents.  */
+  size_t copysize = bufused;
+  for (size_t copies = bufalloc / copysize; --copies; )
+    {
+      memcpy (buf + bufused, buf, copysize);
+      bufused += copysize;
+    }
+
+  /* Repeatedly output the buffer until there is a write error; then fail.  */
+  while (full_write (STDOUT_FILENO, buf, bufused) == bufused)
+    continue;
+  error (0, errno, _("standard output"));
+  return EXIT_FAILURE;
 }
