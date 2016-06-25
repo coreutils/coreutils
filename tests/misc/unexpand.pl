@@ -90,6 +90,42 @@ my @Tests =
      # setting of e.g., _POSIX2_VERSION=1.
      ['obs-ovflo', "-$limits->{UINTMAX_OFLOW}", {IN=>''}, {OUT=>''},
       {EXIT => 1}, {ERR => "$prog: tab stop value is too large\n"}],
+
+
+     # Test input with backspaces '\b' ('bs1' is the baseline, without \b)
+     # Note: If users report errors in these tests, copy&pasting results from
+     # their terminate output might be confusing due to '\b' overriding
+     # characters. For details see '\b' tests in 'expand.pl'.
+     ['bs1', '-a -t4', {IN=>"aa  c\n"},    {OUT=>"aa\tc\n"}],
+     ['bs2', '-a -t4', {IN=>"aa\b  c\n"},  {OUT=>"aa\b  c\n"}],
+     ['bs3', '-a -t4', {IN=>"aa\b   c\n"}, {OUT=>"aa\b\tc\n"}],
+     ['bs4', '-a -t3', {IN=>"aa\b  c\n"},  {OUT=>"aa\b\tc\n"}],
+
+     # Undocumented feature:
+     #   treat "unexpand -7"  as "unexpand --first-only --tabs 7" ,
+     #   and   "unexpand -90" as "unexpand --first-only --tabs 90",
+     ['u1', '-a -3',    {IN=>"a  b  c"}, {OUT=>"a\tb\tc"}],
+     ['u2', '-a -4,9',  {IN=>"a   b    c"}, {OUT=>"a\tb\tc"}],
+     ['u3', '-a -11',   {IN=>"a          b"}, {OUT=>"a\tb"}],
+     # Test all digits (for full code coverage)
+     ['u4', '-a -2,6',  {IN=>"a b   c"}, {OUT=>"a b\tc"}],
+     ['u5', '-a -7',    {IN=>"a      b"},    {OUT=>"a\tb"}],
+     ['u6', '-a -8',    {IN=>"a       b"},    {OUT=>"a\tb"}],
+     # This syntax is handled internally as "-3, -9"
+     ['u7', '-a -3,9',  {IN=>"a  b     c"}, {OUT=>"a\tb\tc"}],
+     # Default (without -a) is --first-only:
+     ['u8', '-3',  {IN=>"   a   b"}, {OUT=>"\ta   b"}],
+
+     # Arguably this should minimize translation as is done on Solaris.
+     # I.e., not modify the input.  But since the result is equivalent,
+     # and to be consistent in output with older versions, we output
+     # a '\t' rather than a space for the second tab position.
+     # For more detailed comparison with other implementations see:
+     # http://lists.gnu.org/archive/html/coreutils/2016-06/msg00015.html
+     # http://lists.gnu.org/archive/html/coreutils/2016-07/msg00011.html
+     ['ts1', '-t8,9', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t\t y\n"}],
+     # There is no ambiguity here. This should always be the output.
+     ['ts2', '-t5,8', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t y\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};

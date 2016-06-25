@@ -57,6 +57,7 @@ src/dirname.c
 src/du.c
 src/echo.c
 src/env.c
+src/expand-common.c
 src/expand.c
 src/expr.c
 src/factor.c

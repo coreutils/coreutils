@@ -44,6 +44,7 @@ noinst_HEADERS =		\
   src/copy.h			\
   src/cp-hash.h			\
   src/dircolors.h		\
+  src/expand-common.h		\
   src/fiemap.h			\
   src/find-mount-point.h	\
   src/fs.h			\
@@ -407,6 +408,9 @@ src_base32_SOURCES = src/base64.c
 src_base32_CPPFLAGS = -DBASE_TYPE=32 $(AM_CPPFLAGS)
 
 src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
+
+src_expand_SOURCES = src/expand.c src/expand-common.c
+src_unexpand_SOURCES = src/unexpand.c src/expand-common.c
 
 # Ensure we don't link against libcoreutils.a as that lib is
 # not compiled with -fPIC which causes issues on 64 bit at least
