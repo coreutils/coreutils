@@ -4,46 +4,52 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-   cp, mv, and install no longer run into undefined behavior when
-   handling ACLs on Cygwin and Solaris platforms. [bug introduced in
-   coreutils-8.24]
+  cp, mv, and install no longer run into undefined behavior when
+  handling ACLs on Cygwin and Solaris platforms. [bug introduced in
+  coreutils-8.24]
 
-   date, du, ls, and pr no longer mishandle time zone abbreviations on
-   System V style platforms where this information is available only
-   in the global variable 'tzname'. [bug introduced in coreutils-8.24]
+  chcon, chgrp, chmod, chown, du, and rm, or specifically utilities
+  using the FTS interface, now diagnose failures returned by readdir().
+  [this bug was inherent in the use of fts: thus, for rm the bug was
+  introduced in coreutils-8.0.  du, chmod, chgrp and chown started using
+  fts in 6.0.  chcon was added in coreutils-6.9.91 with fts support.  ]
 
-   nl now resets numbering for each page section rather than just for each page.
-   [This bug was present in "the beginning".]
+  date, du, ls, and pr no longer mishandle time zone abbreviations on
+  System V style platforms where this information is available only
+  in the global variable 'tzname'. [bug introduced in coreutils-8.24]
 
-   stty --help no longer outputs extraneous gettext header lines
-   for translated languages. [bug introduced in coreutils-8.24]
+  nl now resets numbering for each page section rather than just for each page.
+  [This bug was present in "the beginning".]
 
-   seq now immediately exits upon write errors.
-   [This bug was present in "the beginning".]
+  stty --help no longer outputs extraneous gettext header lines
+  for translated languages. [bug introduced in coreutils-8.24]
 
-   yes now handles short writes, rather than assuming all writes complete.
-   [bug introduced in coreutils-8.24]
+  seq now immediately exits upon write errors.
+  [This bug was present in "the beginning".]
+
+  yes now handles short writes, rather than assuming all writes complete.
+  [bug introduced in coreutils-8.24]
 
 ** Changes in behavior
 
-   seq no longer accepts 0 value as increment, and now also rejects NaN
-   values for any argument.
+  seq no longer accepts 0 value as increment, and now also rejects NaN
+  values for any argument.
 
-   stat now outputs nanosecond information for time stamps even if
-   they are out of localtime range.
+  stat now outputs nanosecond information for time stamps even if
+  they are out of localtime range.
 
-   sort, tail, and uniq now support traditional usage like 'sort +2'
-   and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
-   The 2008 edition of POSIX dropped the requirement that arguments
-   like '+2' must be treated as file names.
+  sort, tail, and uniq now support traditional usage like 'sort +2'
+  and 'tail +10' on systems conforming to POSIX 1003.1-2008 and later.
+  The 2008 edition of POSIX dropped the requirement that arguments
+  like '+2' must be treated as file names.
 
 ** Improvements
 
-   stat and tail now know about "prl_fs" (a parallels file system),
-   "m1fs" (a Plexistor file system), "wslfs" (Windows Subsystem for Linux),
-   and "smb2".  stat -f --format=%T now reports the file system type, and
-   tail -f uses polling for "prl_fs" and "smb2", inotify for "m1fs",
-   and attempts inotify for "wslfs".
+  stat and tail now know about "prl_fs" (a parallels file system),
+  "m1fs" (a Plexistor file system), "wslfs" (Windows Subsystem for Linux),
+  and "smb2".  stat -f --format=%T now reports the file system type, and
+  tail -f uses polling for "prl_fs" and "smb2", inotify for "m1fs",
+  and attempts inotify for "wslfs".
 
 
 * Noteworthy changes in release 8.25 (2016-01-20) [stable]
