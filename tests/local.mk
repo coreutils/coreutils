@@ -223,6 +223,7 @@ all_tests =					\
   tests/rm/unreadable.pl			\
   tests/rm/v-slash.sh				\
   tests/rm/many-dir-entries-vs-OOM.sh		\
+  tests/rm/rm-readdir-fail.sh			\
   tests/chgrp/default-no-deref.sh		\
   tests/chgrp/deref.sh				\
   tests/chgrp/no-x.sh				\
