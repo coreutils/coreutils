@@ -26,6 +26,12 @@ mkdir -p dir/notempty || framework_failure_
 # Simulate "readdir" failure.
 cat > k.c <<\EOF || framework_failure_
 #define _GNU_SOURCE
+
+/* Setup so we don't have to worry about readdir64.  */
+#ifndef __LP64__
+# define _FILE_OFFSET_BITS 64
+#endif
+
 #include <dlfcn.h>
 #include <dirent.h>
 #include <errno.h>
@@ -71,11 +77,6 @@ struct dirent *readdir (DIR *dirp)
   /* Fail.  */
   errno = ENOENT;
   return NULL;
-}
-
-struct dirent64 *readdir64 (DIR *dirp)
-{
-  return (struct dirent64 *) readdir (dirp);
 }
 EOF
 
