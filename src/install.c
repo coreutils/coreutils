@@ -39,6 +39,7 @@
 #include "prog-fprintf.h"
 #include "quote.h"
 #include "savewd.h"
+#include "selinux.h"
 #include "stat-time.h"
 #include "utimens.h"
 #include "xstrtol.h"
@@ -423,6 +424,12 @@ announce_mkdir (char const *dir, void *options)
 static int
 make_ancestor (char const *dir, char const *component, void *options)
 {
+  struct cp_options const *x = options;
+  if (x->set_security_context && defaultcon (dir, S_IFDIR) < 0
+      && ! ignorable_ctx_err (errno))
+    error (0, errno, _("failed to set default creation context for %s"),
+           quoteaf (dir));
+
   int r = mkdir (component, DEFAULT_MODE);
   if (r == 0)
     announce_mkdir (dir, options);
@@ -433,12 +440,28 @@ make_ancestor (char const *dir, char const *component, void *options)
 static int
 process_dir (char *dir, struct savewd *wd, void *options)
 {
-  return (make_dir_parents (dir, wd,
-                            make_ancestor, options,
-                            dir_mode, announce_mkdir,
-                            dir_mode_bits, owner_id, group_id, false)
+  struct cp_options const *x = options;
+
+  int ret = (make_dir_parents (dir, wd, make_ancestor, options,
+                               dir_mode, announce_mkdir,
+                               dir_mode_bits, owner_id, group_id, false)
           ? EXIT_SUCCESS
           : EXIT_FAILURE);
+
+  /* FIXME: Due to the current structure of make_dir_parents()
+     we don't have the facility to call defaultcon() before the
+     final component of DIR is created.  So for now, create the
+     final component with the context from previous component
+     and here we set the context for the final component. */
+  if (ret == EXIT_SUCCESS && x->set_security_context)
+    {
+      if (! restorecon (last_component (dir), false, false)
+          && ! ignorable_ctx_err (errno))
+        error (0, errno, _("failed to restore context for %s"),
+               quoteaf (dir));
+    }
+
+  return ret;
 }
 
 /* Copy file FROM onto file TO, creating TO if necessary.
@@ -651,7 +674,7 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
       fputs (_("\
       --preserve-context  preserve SELinux security context\n\
   -Z                      set SELinux security context of destination\n\
-                            file to default type\n\
+                            file and each created directory to default type\n\
       --context[=CTX]     like -Z, or if CTX is specified then set the\n\
                             SELinux or SMACK security context to CTX\n\
 "), stdout);

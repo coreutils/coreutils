@@ -9217,7 +9217,7 @@ Print the name of each file before moving it.
 @cindex security context
 This option functions similarly to the @command{restorecon} command,
 by adjusting the SELinux security context according
-to the system default type for destination files.
+to the system default type for destination files and each created directory.
 
 @end table
 

@@ -550,6 +550,7 @@ all_tests =					\
   tests/install/d-slashdot.sh			\
   tests/install/install-C.sh			\
   tests/install/install-C-selinux.sh		\
+  tests/install/install-Z-selinux.sh		\
   tests/install/strip-program.sh		\
   tests/install/trap.sh				\
   tests/ln/backup-1.sh				\
