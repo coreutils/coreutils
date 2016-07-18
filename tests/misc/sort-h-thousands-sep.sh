@@ -18,28 +18,29 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
+
 test "$(LC_ALL=sv_SE locale thousands_sep)" = ' ' \
   || skip_ 'The Swedish locale with blank thousands separator is unavailable.'
 
-tee exp1 > in << _EOF_
-1       1k      4 003   1M
-2k      2M      4 002   2
-3M      3       4 001   3k
+tee exp1 exp3 > in << _EOF_
+1       1k      1 M     4 003   1M
+2k      2M      2 k     4 002   2
+3M      3       3 G     4 001   3k
 _EOF_
 
 cat > exp2 << _EOF_
-3M      3       4 001   3k
-1       1k      4 003   1M
-2k      2M      4 002   2
+3M      3       3 G     4 001   3k
+1       1k      1 M     4 003   1M
+2k      2M      2 k     4 002   2
 _EOF_
 
-cat > exp3 << _EOF_
-3M      3       4 001   3k
-2k      2M      4 002   2
-1       1k      4 003   1M
+cat > exp5 << _EOF_
+3M      3       3 G     4 001   3k
+2k      2M      2 k     4 002   2
+1       1k      1 M     4 003   1M
 _EOF_
 
-for i in 1 2 3; do
+for i in 1 2 3 5; do
   LC_ALL="sv_SE.utf8" sort -h -k $i "in" > "out${i}" || fail=1
   compare "exp${i}" "out${i}" || fail=1
 done

@@ -1895,6 +1895,7 @@ traverse_raw_number (char const **number)
   char const *p = *number;
   unsigned char ch;
   unsigned char max_digit = '\0';
+  bool ends_with_thousands_sep = false;
 
   /* Scan to end of number.
      Decimals or separators not followed by digits stop the scan.
@@ -1910,8 +1911,16 @@ traverse_raw_number (char const **number)
       /* Allow to skip only one occurrence of thousands_sep to avoid finding
          the unit in the next column in case thousands_sep matches as blank
          and is used as column delimiter.  */
-      if (*p == thousands_sep)
+      ends_with_thousands_sep = (*p == thousands_sep);
+      if (ends_with_thousands_sep)
         ++p;
+    }
+
+  if (ends_with_thousands_sep)
+    {
+      /* thousands_sep not followed by digit is not allowed.  */
+      *number = p - 2;
+      return max_digit;
     }
 
   if (ch == decimal_point)
