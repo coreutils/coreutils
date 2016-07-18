@@ -21,6 +21,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   nl now resets numbering for each page section rather than just for each page.
   [This bug was present in "the beginning".]
 
+  sort -h -k now works even in locales that use blank as thousands separator.
+
   stty --help no longer outputs extraneous gettext header lines
   for translated languages. [bug introduced in coreutils-8.24]
 

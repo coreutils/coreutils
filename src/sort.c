@@ -1902,13 +1902,17 @@ traverse_raw_number (char const **number)
      to be lacking in units.
      FIXME: add support for multibyte thousands_sep and decimal_point.  */
 
-  do
+  while (ISDIGIT (ch = *p++))
     {
-      while (ISDIGIT (ch = *p++))
-        if (max_digit < ch)
-          max_digit = ch;
+      if (max_digit < ch)
+        max_digit = ch;
+
+      /* Allow to skip only one occurrence of thousands_sep to avoid finding
+         the unit in the next column in case thousands_sep matches as blank
+         and is used as column delimiter.  */
+      if (*p == thousands_sep)
+        ++p;
     }
-  while (ch == thousands_sep);
 
   if (ch == decimal_point)
     while (ISDIGIT (ch = *p++))

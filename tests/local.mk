@@ -348,6 +348,7 @@ all_tests =					\
   tests/misc/sort-discrim.sh			\
   tests/misc/sort-files0-from.pl		\
   tests/misc/sort-float.sh			\
+  tests/misc/sort-h-thousands-sep.sh		\
   tests/misc/sort-merge.pl			\
   tests/misc/sort-merge-fdlimit.sh		\
   tests/misc/sort-month.sh			\
