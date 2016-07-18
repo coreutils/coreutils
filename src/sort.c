@@ -1885,18 +1885,16 @@ static char const unit_order[UCHAR_LIM] =
 #endif
   };
 
-/* Return an integer that represents the order of magnitude of the
-   unit following the number.  The number may contain thousands
-   separators and a decimal point, but it may not contain leading blanks.
-   Negative numbers get negative orders; zero numbers have a zero order.  */
-
-static int _GL_ATTRIBUTE_PURE
-find_unit_order (char const *number)
+/* Traverse number given as *number consisting of digits, thousands_sep, and
+   decimal_point chars only.  Returns the highest digit found in the number,
+   or '\0' if no digit has been found.  Upon return *number points at the
+   character that immediately follows after the given number.  */
+static unsigned char
+traverse_raw_number (char const **number)
 {
-  bool minus_sign = (*number == '-');
-  char const *p = number + minus_sign;
-  int nonzero = 0;
+  char const *p = *number;
   unsigned char ch;
+  unsigned char max_digit = '\0';
 
   /* Scan to end of number.
      Decimals or separators not followed by digits stop the scan.
@@ -1907,16 +1905,34 @@ find_unit_order (char const *number)
   do
     {
       while (ISDIGIT (ch = *p++))
-        nonzero |= ch - '0';
+        if (max_digit < ch)
+          max_digit = ch;
     }
   while (ch == thousands_sep);
 
   if (ch == decimal_point)
     while (ISDIGIT (ch = *p++))
-      nonzero |= ch - '0';
+      if (max_digit < ch)
+        max_digit = ch;
 
-  if (nonzero)
+  *number = p - 1;
+  return max_digit;
+}
+
+/* Return an integer that represents the order of magnitude of the
+   unit following the number.  The number may contain thousands
+   separators and a decimal point, but it may not contain leading blanks.
+   Negative numbers get negative orders; zero numbers have a zero order.  */
+
+static int _GL_ATTRIBUTE_PURE
+find_unit_order (char const *number)
+{
+  bool minus_sign = (*number == '-');
+  char const *p = number + minus_sign;
+  unsigned char max_digit = traverse_raw_number (&p);
+  if ('0' < max_digit)
     {
+      unsigned char ch = *p;
       int order = unit_order[ch];
       return (minus_sign ? -order : order);
     }
@@ -2293,23 +2309,14 @@ debug_key (struct line const *line, struct keyfield const *key)
             ignore_value (strtold (beg, &tighter_lim));
           else if (key->numeric || key->human_numeric)
             {
-              char *p = beg + (beg < lim && *beg == '-');
-              bool found_digit = false;
-              unsigned char ch;
-
-              do
+              char const *p = beg + (beg < lim && *beg == '-');
+              unsigned char max_digit = traverse_raw_number (&p);
+              if ('0' <= max_digit)
                 {
-                  while (ISDIGIT (ch = *p++))
-                    found_digit = true;
+                  unsigned char ch = *p;
+                  tighter_lim = (char *) p
+                    + (key->human_numeric && unit_order[ch]);
                 }
-              while (ch == thousands_sep);
-
-              if (ch == decimal_point)
-                while (ISDIGIT (ch = *p++))
-                  found_digit = true;
-
-              if (found_digit)
-                tighter_lim = p - ! (key->human_numeric && unit_order[ch]);
             }
           else
             tighter_lim = lim;
