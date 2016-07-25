@@ -722,15 +722,22 @@ sc_THANKS_in_duplicates:
 	    && { echo '$(ME): remove the above names from THANKS.in'	\
 		  1>&2; exit 1; } || :
 
-# Ensure the contributor list stays sorted.  Use our sort as other
-# implementations may result in a different order.
-sc_THANKS_in_sorted:  src/sort
-	@sed '/^$$/,/^$$/!d;/^$$/d' $(srcdir)/THANKS.in > $@.1;		\
-	LC_ALL=en_US.UTF-8 src/sort -f -k1,1 $@.1 > $@.2
-	@diff -u $@.1 $@.2; diff=$$?;					\
-	rm -f $@.1 $@.2;						\
-	test "$$diff" = 0						\
-	  || { echo '$(ME): THANKS.in is unsorted' 1>&2; exit 1; }
+# Ensure the contributor list stays sorted.  However, if the system's
+# en_US.UTF-8 locale data is erroneous, give a diagnostic and skip
+# this test.  This affects OS X, up to at least 10.11.6.
+# Use our sort as other implementations may result in a different order.
+sc_THANKS_in_sorted:
+	@printf 'a\n.b\n'|LC_ALL=en_US.UTF-8 src/sort -c 2> /dev/null	\
+	  && {								\
+	    sed '/^$$/,/^$$/!d;/^$$/d' $(srcdir)/THANKS.in > $@.1 &&	\
+	    LC_ALL=en_US.UTF-8 src/sort -f -k1,1 $@.1 > $@.2 &&		\
+	    diff -u $@.1 $@.2; diff=$$?;				\
+	    rm -f $@.1 $@.2;						\
+	    test "$$diff" = 0						\
+	      || { echo '$(ME): THANKS.in is unsorted' 1>&2; exit 1; };	\
+	    }								\
+	  || { echo '$(ME): this system has erroneous locale data;'	\
+		    'skipping $@' 1>&2; }
 
 # Look for developer diagnostics that are marked for translation.
 # This won't find any for which devmsg's format string is on a separate line.
