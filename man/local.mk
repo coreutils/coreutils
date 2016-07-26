@@ -56,10 +56,10 @@ if SINGLE_BINARY
 mandeps += src/coreutils$(EXEEXT)
 else
 # Most prog.1 man pages depend on src/prog.  List the exceptions:
-man/arch.1:      src/uname$(EXEEXT)
 man/install.1:   src/ginstall$(EXEEXT)
 man/test.1:      src/[$(EXEEXT)
 
+man/arch.1:      src/arch$(EXEEXT)
 man/base32.1:    src/base32$(EXEEXT)
 man/base64.1:    src/base64$(EXEEXT)
 man/basename.1:  src/basename$(EXEEXT)
