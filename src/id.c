@@ -245,7 +245,10 @@ main (int argc, char **argv)
             }
         }
       if (pwd == NULL)
-        error (EXIT_FAILURE, 0, _("%s: no such user"), quote (spec));
+        {
+          error (0, 0, _("%s: no such user"), quote (spec));
+          exit (EXIT_FAILURE);
+        }
       pw_name = xstrdup (pwd->pw_name);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
