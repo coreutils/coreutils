@@ -122,7 +122,7 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [+FORMAT]\n\
-  or:  %s [-u|--utc|--universal] [mmddHHMM[[CC]yy][.SS]]\n\
+  or:  %s [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
 "),
               program_name, program_name);
       fputs (_("\

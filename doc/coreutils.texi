@@ -15018,7 +15018,7 @@ Synopses:
 @example
 date [@var{option}]@dots{} [+@var{format}]
 date [-u|--utc|--universal] @c this avoids a newline in the output
-[ mmddHHMM[[CC]yy][.SS] ]
+[ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
 @vindex LC_TIME
