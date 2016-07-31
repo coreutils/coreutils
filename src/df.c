@@ -34,6 +34,7 @@
 #include "mountlist.h"
 #include "quote.h"
 #include "find-mount-point.h"
+#include "hash.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "df"
@@ -43,14 +44,16 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Paul Eggert")
 
-/* Filled with device numbers of examined file systems to avoid
-   duplicates in output.  */
-static struct devlist
+struct devlist
 {
   dev_t dev_num;
   struct mount_entry *me;
   struct devlist *next;
-} *device_list;
+};
+
+/* Filled with device numbers of examined file systems to avoid
+   duplicates in output.  */
+static Hash_table *devlist_table;
 
 /* If true, show even file systems with zero size or
    uninteresting types.  */
@@ -603,23 +606,67 @@ excluded_fstype (const char *fstype)
   return false;
 }
 
+static size_t
+devlist_hash (void const *x, size_t table_size)
+{
+  struct devlist const *p = x;
+  return (uintmax_t) p->dev_num % table_size;
+}
+
+static bool
+devlist_compare (void const *x, void const *y)
+{
+  struct devlist const *a = x;
+  struct devlist const *b = y;
+  return a->dev_num == b->dev_num;
+}
+
+static struct devlist *
+devlist_for_dev (dev_t dev)
+{
+  if (devlist_table == NULL)
+    return NULL;
+  struct devlist dev_entry;
+  dev_entry.dev_num = dev;
+  return hash_lookup (devlist_table, &dev_entry);
+}
+
+static void
+devlist_free (void *p)
+{
+  free (p);
+}
+
 /* Filter mount list by skipping duplicate entries.
    In the case of duplicates - based on the device number - the mount entry
    with a '/' in its me_devname (i.e., not pseudo name like tmpfs) wins.
    If both have a real devname (e.g. bind mounts), then that with the shorter
    me_mountdir wins.  With DEVICES_ONLY == true (set with df -a), only update
-   the global device_list, rather than filtering the global mount_list.  */
+   the global devlist_table, rather than filtering the global mount_list.  */
 
 static void
 filter_mount_list (bool devices_only)
 {
   struct mount_entry *me;
 
+  /* Temporary list to keep entries ordered.  */
+  struct devlist *device_list = NULL;
+  int mount_list_size = 0;
+
+  for (me = mount_list; me; me = me->me_next)
+    mount_list_size++;
+
+  devlist_table = hash_initialize (mount_list_size, NULL,
+                                 devlist_hash,
+                                 devlist_compare,
+                                 devlist_free);
+  if (devlist_table == NULL)
+    xalloc_die ();
+
   /* Sort all 'wanted' entries into the list device_list.  */
   for (me = mount_list; me;)
     {
       struct stat buf;
-      struct devlist *devlist;
       struct mount_entry *discard_me = NULL;
 
       /* Avoid stating remote file systems as that may hang.
@@ -635,21 +682,20 @@ filter_mount_list (bool devices_only)
       else
         {
           /* If we've already seen this device...  */
-          for (devlist = device_list; devlist; devlist = devlist->next)
-            if (devlist->dev_num == buf.st_dev)
-              break;
+          struct devlist *seen_dev = devlist_for_dev (buf.st_dev);
 
-          if (devlist)
+          if (seen_dev)
             {
-              bool target_nearer_root = strlen (devlist->me->me_mountdir)
+              bool target_nearer_root = strlen (seen_dev->me->me_mountdir)
                                         > strlen (me->me_mountdir);
               /* With bind mounts, prefer items nearer the root of the source */
-              bool source_below_root = devlist->me->me_mntroot != NULL
+              bool source_below_root = seen_dev->me->me_mntroot != NULL
                                        && me->me_mntroot != NULL
-                                       && (strlen (devlist->me->me_mntroot)
+                                       && (strlen (seen_dev->me->me_mntroot)
                                            < strlen (me->me_mntroot));
-              if (! print_grand_total && me->me_remote && devlist->me->me_remote
-                  && ! STREQ (devlist->me->me_devname, me->me_devname))
+              if (! print_grand_total
+                  && me->me_remote && seen_dev->me->me_remote
+                  && ! STREQ (seen_dev->me->me_devname, me->me_devname))
                 {
                   /* Don't discard remote entries with different locations,
                      as these are more likely to be explicitly mounted.
@@ -658,21 +704,21 @@ filter_mount_list (bool devices_only)
                 }
               else if ((strchr (me->me_devname, '/')
                        /* let "real" devices with '/' in the name win.  */
-                        && ! strchr (devlist->me->me_devname, '/'))
+                        && ! strchr (seen_dev->me->me_devname, '/'))
                        /* let points towards the root of the device win.  */
                        || (target_nearer_root && ! source_below_root)
                        /* let an entry overmounted on a new device win...  */
-                       || (! STREQ (devlist->me->me_devname, me->me_devname)
+                       || (! STREQ (seen_dev->me->me_devname, me->me_devname)
                            /* ... but only when matching an existing mnt point,
                               to avoid problematic replacement when given
                               inaccurate mount lists, seen with some chroot
                               environments for example.  */
                            && STREQ (me->me_mountdir,
-                                     devlist->me->me_mountdir)))
+                                     seen_dev->me->me_mountdir)))
                 {
                   /* Discard mount entry for existing device.  */
-                  discard_me = devlist->me;
-                  devlist->me = me;
+                  discard_me = seen_dev->me;
+                  seen_dev->me = me;
                 }
               else
                 {
@@ -691,12 +737,14 @@ filter_mount_list (bool devices_only)
         }
       else
         {
-          /* Add the device number to the global list devlist.  */
-          devlist = xmalloc (sizeof *devlist);
+          /* Add the device number to the device_table.  */
+          struct devlist *devlist = xmalloc (sizeof *devlist);
           devlist->me = me;
           devlist->dev_num = buf.st_dev;
           devlist->next = device_list;
           device_list = devlist;
+          if (hash_insert (devlist_table, devlist) == NULL)
+            xalloc_die ();
 
           me = me->me_next;
         }
@@ -711,13 +759,14 @@ filter_mount_list (bool devices_only)
         me = device_list->me;
         me->me_next = mount_list;
         mount_list = me;
-        /* Free devlist entry and advance.  */
-        struct devlist *devlist = device_list->next;
-        free (device_list);
-        device_list = devlist;
+        device_list = device_list->next;
       }
+
+      hash_free (devlist_table);
+      devlist_table = NULL;
   }
 }
+
 
 /* Search a mount entry list for device id DEV.
    Return the corresponding mount entry if found or NULL if not.  */
@@ -725,14 +774,9 @@ filter_mount_list (bool devices_only)
 static struct mount_entry const * _GL_ATTRIBUTE_PURE
 me_for_dev (dev_t dev)
 {
-  struct devlist *dl = device_list;
-
-  while (dl)
-    {
-      if (dl->dev_num == dev)
+  struct devlist *dl = devlist_for_dev (dev);
+  if (dl)
         return dl->me;
-      dl = dl->next;
-    }
 
   return NULL;
 }
