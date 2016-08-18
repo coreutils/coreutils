@@ -476,7 +476,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
                  (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
                  to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
                  decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
-              mkdir_mode = src_mode & CHMOD_MODE_BITS & ~omitted_permissions;
+              mkdir_mode = x->explicit_no_preserve_mode ? S_IRWXUGO : src_mode;
+              mkdir_mode &= CHMOD_MODE_BITS & ~omitted_permissions;
               if (mkdir (dir, mkdir_mode) != 0)
                 {
                   error (0, errno, _("cannot make directory %s"),

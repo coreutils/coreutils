@@ -1,6 +1,4 @@
 #!/bin/sh
-# cp -R --parents dir-specified-with-trailing-slash/ other-dir
-# would get a failed assertion.
 
 # Copyright (C) 2000-2016 Free Software Foundation, Inc.
 
@@ -25,14 +23,15 @@ working_umask_or_skip_
 # Run the setgid check from the just-created directory.
 skip_if_setgid_
 
-mkdir foo bar || framework_failure_
-mkdir -p a/b/c d e g || framework_failure_
-ln -s d/a sym || framework_failure_
-touch f || framework_failure_
-
+{
+  mkdir foo bar
+  mkdir -p a/b/c d e g
+  ln -s d/a sym
+  touch f
+} || framework_failure_
 
 # With 4.0.37 and earlier (back to when?), this would fail
-# with the failed assertion from dirname.c.
+# with the failed assertion from dirname.c due to the trailing slash.
 cp -R --parents foo/ bar || fail=1
 
 # Exercise the make_path and re_protect code in cp.c.
@@ -54,5 +53,17 @@ p=$(ls -ld e/d/a|cut -b-10); case $p in drwx-w--w-);; *) fail=1;; esac
 p=$(ls -ld g/sym|cut -b-10); case $p in drwx-w--w-);; *) fail=1;; esac
 p=$(ls -ld e/d/a/b/c|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
 p=$(ls -ld g/sym/b/c|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
+
+# Before 8.25 cp --parents --no-preserve=mode would copy
+# the mode bits from the source directories
+{
+  mkdir -p np/b &&
+  chmod 0700 np &&
+  touch np/b/file &&
+  chmod 775 np/b/file &&
+  mkdir np_dest
+} || framework_failure_
+cp --parents --no-preserve=mode np/b/file np_dest/ || fail=1
+p=$(ls -ld np_dest/np|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
 
 Exit $fail
