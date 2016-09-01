@@ -15572,7 +15572,7 @@ of the month, you can use the (GNU extension)
 the padding altogether:
 
 @example
-date -d 1may '+%B %-d
+date -d 1may '+%B %-d'
 @end example
 
 @item
