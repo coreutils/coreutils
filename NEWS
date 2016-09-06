@@ -59,6 +59,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   install -Z now also sets the default SELinux context for created directories.
 
+  ls is now fully responsive to signals until the first escape sequence is
+  written to a terminal.
+
   stat and tail now know about "prl_fs" (a parallels file system),
   "m1fs" (a Plexistor file system), "wslfs" (Windows Subsystem for Linux),
   and "smb2".  stat -f --format=%T now reports the file system type, and

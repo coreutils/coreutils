@@ -1244,13 +1244,12 @@ process_signals (void)
     }
 }
 
-int
-main (int argc, char **argv)
-{
-  int i;
-  struct pending *thispend;
-  int n_files;
+/* Setup signal handlers if INIT is true,
+   otherwise restore to the default.  */
 
+static void
+signal_setup (bool init)
+{
   /* The signals that are trapped, and the number of such signals.  */
   static int const sig[] =
     {
@@ -1278,8 +1277,77 @@ main (int argc, char **argv)
   enum { nsigs = ARRAY_CARDINALITY (sig) };
 
 #if ! SA_NOCLDSTOP
-  bool caught_sig[nsigs];
+  static bool caught_sig[nsigs];
 #endif
+
+  int j;
+
+  if (init)
+    {
+#if SA_NOCLDSTOP
+      struct sigaction act;
+
+      sigemptyset (&caught_signals);
+      for (j = 0; j < nsigs; j++)
+        {
+          sigaction (sig[j], NULL, &act);
+          if (act.sa_handler != SIG_IGN)
+            sigaddset (&caught_signals, sig[j]);
+        }
+
+      act.sa_mask = caught_signals;
+      act.sa_flags = SA_RESTART;
+
+      for (j = 0; j < nsigs; j++)
+        if (sigismember (&caught_signals, sig[j]))
+          {
+            act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
+            sigaction (sig[j], &act, NULL);
+          }
+#else
+      for (j = 0; j < nsigs; j++)
+        {
+          caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
+          if (caught_sig[j])
+            {
+              signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
+              siginterrupt (sig[j], 0);
+            }
+        }
+#endif
+    }
+  else /* restore.  */
+    {
+#if SA_NOCLDSTOP
+      for (j = 0; j < nsigs; j++)
+        if (sigismember (&caught_signals, sig[j]))
+          signal (sig[j], SIG_DFL);
+#else
+      for (j = 0; j < nsigs; j++)
+        if (caught_sig[j])
+          signal (sig[j], SIG_DFL);
+#endif
+    }
+}
+
+static inline void
+signal_init (void)
+{
+  signal_setup (true);
+}
+
+static inline void
+signal_restore (void)
+{
+  signal_setup (false);
+}
+
+int
+main (int argc, char **argv)
+{
+  int i;
+  struct pending *thispend;
+  int n_files;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1314,46 +1382,6 @@ main (int argc, char **argv)
           || (is_colored (C_EXEC) && color_symlink_as_referent)
           || (is_colored (C_MISSING) && format == long_format))
         check_symlink_color = true;
-
-      /* If the standard output is a controlling terminal, watch out
-         for signals, so that the colors can be restored to the
-         default state if "ls" is suspended or interrupted.  */
-
-      if (0 <= tcgetpgrp (STDOUT_FILENO))
-        {
-          int j;
-#if SA_NOCLDSTOP
-          struct sigaction act;
-
-          sigemptyset (&caught_signals);
-          for (j = 0; j < nsigs; j++)
-            {
-              sigaction (sig[j], NULL, &act);
-              if (act.sa_handler != SIG_IGN)
-                sigaddset (&caught_signals, sig[j]);
-            }
-
-          act.sa_mask = caught_signals;
-          act.sa_flags = SA_RESTART;
-
-          for (j = 0; j < nsigs; j++)
-            if (sigismember (&caught_signals, sig[j]))
-              {
-                act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
-                sigaction (sig[j], &act, NULL);
-              }
-#else
-          for (j = 0; j < nsigs; j++)
-            {
-              caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
-              if (caught_sig[j])
-                {
-                  signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
-                  siginterrupt (sig[j], 0);
-                }
-            }
-#endif
-        }
     }
 
   if (dereference == DEREF_UNDEFINED)
@@ -1466,32 +1494,21 @@ main (int argc, char **argv)
       print_dir_name = true;
     }
 
-  if (print_with_color)
+  if (print_with_color && used_color)
     {
       int j;
 
-      if (used_color)
-        {
-          /* Skip the restore when it would be a no-op, i.e.,
-             when left is "\033[" and right is "m".  */
-          if (!(color_indicator[C_LEFT].len == 2
-                && memcmp (color_indicator[C_LEFT].string, "\033[", 2) == 0
-                && color_indicator[C_RIGHT].len == 1
-                && color_indicator[C_RIGHT].string[0] == 'm'))
-            restore_default_color ();
-        }
+      /* Skip the restore when it would be a no-op, i.e.,
+         when left is "\033[" and right is "m".  */
+      if (!(color_indicator[C_LEFT].len == 2
+            && memcmp (color_indicator[C_LEFT].string, "\033[", 2) == 0
+            && color_indicator[C_RIGHT].len == 1
+            && color_indicator[C_RIGHT].string[0] == 'm'))
+        restore_default_color ();
+
       fflush (stdout);
 
-      /* Restore the default signal handling.  */
-#if SA_NOCLDSTOP
-      for (j = 0; j < nsigs; j++)
-        if (sigismember (&caught_signals, sig[j]))
-          signal (sig[j], SIG_DFL);
-#else
-      for (j = 0; j < nsigs; j++)
-        if (caught_sig[j])
-          signal (sig[j], SIG_DFL);
-#endif
+      signal_restore ();
 
       /* Act on any signals that arrived before the default was restored.
          This can process signals out of order, but there doesn't seem to
@@ -4475,6 +4492,14 @@ put_indicator (const struct bin_str *ind)
   if (! used_color)
     {
       used_color = true;
+
+      /* If the standard output is a controlling terminal, watch out
+         for signals, so that the colors can be restored to the
+         default state if "ls" is suspended or interrupted.  */
+
+      if (0 <= tcgetpgrp (STDOUT_FILENO))
+        signal_init ();
+
       prep_non_filename_text ();
     }
 
