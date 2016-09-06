@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   System V style platforms where this information is available only
   in the global variable 'tzname'. [bug introduced in coreutils-8.24]
 
+  factor again outputs immediately when numbers are input interactively.
+  [bug introduced in coreutils-8.24]
+
   nl now resets numbering for each page section rather than just for each page.
   [This bug was present in "the beginning".]
 

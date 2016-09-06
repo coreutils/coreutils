@@ -2379,7 +2379,13 @@ lbuf_putc (char c)
     {
       size_t buffered = lbuf.end - lbuf.buf;
 
-      if (buffered >= FACTOR_PIPE_BUF)
+      /* Provide immediate output for interactive input.  */
+      static int line_buffered = -1;
+      if (line_buffered == -1)
+        line_buffered = isatty (STDIN_FILENO);
+      if (line_buffered)
+        lbuf_flush ();
+      else if (buffered >= FACTOR_PIPE_BUF)
         {
           /* Write output in <= PIPE_BUF chunks
              so consumers can read atomically.  */
