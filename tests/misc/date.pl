@@ -314,6 +314,35 @@ foreach my $t (@Tests)
       }
   }
 
+# Repeat all tests with --debug option, ensure it does not cause any regression
+my @debug_tests;
+foreach my $t (@Tests)
+  {
+    # Skip tests with EXIT!=0 or ERR_SUBST part
+    # (as '--debug' requires its own ERR_SUBST).
+    my $exit_val;
+    my $have_err_subst;
+    foreach my $e (@$t)
+      {
+        next unless ref $e && ref $e eq 'HASH';
+        $exit_val = $e->{EXIT} if defined $e->{EXIT};
+        $have_err_subst = 1 if defined $e->{ERR_SUBST};
+      }
+    next if $exit_val || $have_err_subst;
+
+    # Duplicate the test, add '--debug' argument
+    my @newt = @$t;
+    $newt[0] = 'dbg_' . $newt[0];
+    $newt[1] = '--debug ' . $newt[1];
+
+    # Discard all debug printouts before comparing output
+    push @newt, {ERR_SUBST => q!s/^date: .*\n//m!};
+
+    push @debug_tests, \@newt;
+  }
+push @Tests, @debug_tests;
+
+
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 

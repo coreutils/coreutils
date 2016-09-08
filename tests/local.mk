@@ -279,6 +279,7 @@ all_tests =					\
   tests/misc/csplit-heap.sh			\
   tests/misc/csplit-io-err.sh			\
   tests/misc/csplit-suppress-matched.pl		\
+  tests/misc/date-debug.sh			\
   tests/misc/date-sec.sh			\
   tests/misc/dircolors.pl			\
   tests/misc/dirname.pl				\

@@ -521,8 +521,8 @@ Include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug: your input, what you
 expected, what you got, and why it is wrong.
 
-If you have a problem with @command{sort}, try running @samp{sort
---debug}, as it can can often help find and fix problems without
+If you have a problem with @command{sort} or @command{date}, try using the
+@option{--debug} option, as it can can often help find and fix problems without
 having to wait for an answer to a bug report.  If the debug output
 does not suffice to fix the problem on your own, please compress and
 attach it to the rest of your bug report.
@@ -15391,6 +15391,14 @@ LC_TIME=C below is needed to print back the correct date in many locales:
 date -d "$(LC_TIME=C date)"
 @end example
 @xref{Date input formats}.
+
+@item --debug
+@opindex --debug
+@cindex debugging date strings
+@cindex date strings, debugging
+@cindex arbitrary date strings, debugging
+annotate the parsed date, display the effective time zone, and warn about
+potential misuse.
 
 @item -f @var{datefile}
 @itemx --file=@var{datefile}

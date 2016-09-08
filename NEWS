@@ -71,6 +71,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail -f uses polling for "prl_fs" and "smb2", inotify for "m1fs",
   and attempts inotify for "wslfs".
 
+** New Features
+
+   date now accepts the --debug option, to annotate the parsed date string,
+   display timezone information, and warn about potential misuse.
+
 
 * Noteworthy changes in release 8.25 (2016-01-20) [stable]
 

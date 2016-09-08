@@ -78,7 +78,8 @@ static char const rfc_2822_format[] = "%a, %d %b %Y %H:%M:%S %z";
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  RFC_3339_OPTION = CHAR_MAX + 1
+  RFC_3339_OPTION = CHAR_MAX + 1,
+  DEBUG_DATE_PARSING
 };
 
 static char const short_options[] = "d:f:I::r:Rs:u";
@@ -86,6 +87,7 @@ static char const short_options[] = "d:f:I::r:Rs:u";
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
+  {"debug", no_argument, NULL, DEBUG_DATE_PARSING},
   {"file", required_argument, NULL, 'f'},
   {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
@@ -100,6 +102,9 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* flags for parse_datetime2 */
+static unsigned int parse_datetime_flags;
 
 #if LOCALTIME_CACHE
 # define TZSET tzset ()
@@ -133,6 +138,12 @@ Display the current time in the given FORMAT, or set the system date.\n\
 
       fputs (_("\
   -d, --date=STRING          display time described by STRING, not 'now'\n\
+"), stdout);
+      fputs (_("\
+      --debug                annotate the parsed date,\n\
+                              and warn about questionable usage to stderr\n\
+"), stdout);
+      fputs (_("\
   -f, --file=DATEFILE        like --date; once for each line of DATEFILE\n\
 "), stdout);
       fputs (_("\
@@ -306,7 +317,7 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
           break;
         }
 
-      if (! parse_datetime (&when, line, NULL))
+      if (! parse_datetime2 (&when, line, NULL, parse_datetime_flags))
         {
           if (line[line_length - 1] == '\n')
             line[line_length - 1] = '\0';
@@ -359,6 +370,9 @@ main (int argc, char **argv)
         {
         case 'd':
           datestr = optarg;
+          break;
+        case DEBUG_DATE_PARSING:
+          parse_datetime_flags |= PARSE_DATETIME_DEBUG;
           break;
         case 'f':
           batch_file = optarg;
@@ -527,7 +541,8 @@ main (int argc, char **argv)
             {
               if (set_datestr)
                 datestr = set_datestr;
-              valid_date = parse_datetime (&when, datestr, NULL);
+              valid_date = parse_datetime2 (&when, datestr, NULL,
+                                            parse_datetime_flags);
             }
         }
 
