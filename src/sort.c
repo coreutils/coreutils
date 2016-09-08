@@ -34,6 +34,7 @@
 #include "error.h"
 #include "fadvise.h"
 #include "filevercmp.h"
+#include "flexmember.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "heap.h"
@@ -667,7 +668,7 @@ struct tempnode
   struct tempnode *volatile next;
   pid_t pid;     /* The subprocess PID; undefined if state == UNCOMPRESSED.  */
   char state;
-  char name[1];  /* Actual size is 1 + file name length.  */
+  char name[FLEXIBLE_ARRAY_MEMBER];
 };
 static struct tempnode *volatile temphead;
 static struct tempnode *volatile *temptail = &temphead;
@@ -855,7 +856,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   char const *temp_dir = temp_dirs[temp_dir_index];
   size_t len = strlen (temp_dir);
   struct tempnode *node =
-    xmalloc (offsetof (struct tempnode, name) + len + sizeof slashbase);
+    xmalloc (FLEXSIZEOF (struct tempnode, name, len + sizeof slashbase));
   char *file = node->name;
   struct cs_status cs;
 
