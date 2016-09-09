@@ -74,6 +74,14 @@
 # include <linux/falloc.h>
 #endif
 
+#ifdef HAVE_LINUX_FS_H
+# include <linux/fs.h>
+#endif
+
+#if !defined FICLONE && defined __linux__
+# define FICLONE _IOW (0x94, 9, int)
+#endif
+
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
@@ -320,12 +328,8 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 static inline int
 clone_file (int dest_fd, int src_fd)
 {
-#ifdef __linux__
-# undef BTRFS_IOCTL_MAGIC
-# define BTRFS_IOCTL_MAGIC 0x94
-# undef BTRFS_IOC_CLONE
-# define BTRFS_IOC_CLONE _IOW (BTRFS_IOCTL_MAGIC, 9, int)
-  return ioctl (dest_fd, BTRFS_IOC_CLONE, src_fd);
+#ifdef FICLONE
+  return ioctl (dest_fd, FICLONE, src_fd);
 #else
   (void) dest_fd;
   (void) src_fd;
