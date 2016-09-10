@@ -96,8 +96,6 @@
 # define UT_ID(U) "??"
 #endif
 
-char *ttyname (int);
-
 /* If true, attempt to canonicalize hostnames via a DNS lookup. */
 static bool do_lookup;
 

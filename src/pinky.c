@@ -37,8 +37,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Kaveh Ghazi")
 
-char *ttyname (int);
-
 /* If true, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed
    by a 'd' if not within the last day. */

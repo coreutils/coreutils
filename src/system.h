@@ -197,23 +197,23 @@ select_plural (uintmax_t n)
 #define STRNCMP_LIT(s, lit) strncmp (s, "" lit "", sizeof (lit) - 1)
 
 #if !HAVE_DECL_GETLOGIN
-char *getlogin ();
+char *getlogin (void);
 #endif
 
 #if !HAVE_DECL_TTYNAME
-char *ttyname ();
+char *ttyname (int);
 #endif
 
 #if !HAVE_DECL_GETEUID
-uid_t geteuid ();
+uid_t geteuid (void);
 #endif
 
 #if !HAVE_DECL_GETPWUID
-struct passwd *getpwuid ();
+struct passwd *getpwuid (uid_t);
 #endif
 
 #if !HAVE_DECL_GETGRGID
-struct group *getgrgid ();
+struct group *getgrgid (gid_t);
 #endif
 
 /* Interix has replacements for getgr{gid,nam,ent}, that don't
@@ -235,7 +235,7 @@ struct group *getgrgid ();
 #endif
 
 #if !HAVE_DECL_GETUID
-uid_t getuid ();
+uid_t getuid (void);
 #endif
 
 #include "xalloc.h"
