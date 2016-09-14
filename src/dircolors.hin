@@ -130,6 +130,8 @@ EXEC 01;32
 # image formats
 .jpg 01;35
 .jpeg 01;35
+.mjpg 01;35
+.mjpeg 01;35
 .gif 01;35
 .bmp 01;35
 .pbm 01;35
