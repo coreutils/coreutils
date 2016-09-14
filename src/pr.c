@@ -847,7 +847,7 @@ separator_string (const char *optarg_S)
 int
 main (int argc, char **argv)
 {
-  int n_files;
+  unsigned int n_files;
   bool old_options = false;
   bool old_w = false;
   bool old_s = false;
