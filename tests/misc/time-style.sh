@@ -27,7 +27,8 @@ echo hello >a || framework_failure_
 TZ=UTC0 touch -d '1970-07-08 09:10:11' a || framework_failure_
 
 for tz in UTC0 PST8 PST8PDT,M3.2.0,M11.1.0 XXXYYY-12:30; do
-  for style in full-iso long-iso iso locale '+%Y-%m-%d %H:%M:%S %z (%Z)'; do
+  for style in full-iso long-iso iso locale '+%Y-%m-%d %H:%M:%S %z (%Z)' \
+               +%%b%b%%b%b; do
     test "$style" = locale ||
       TZ=$tz LC_ALL=C du --time --time-style="$style" a >>duout 2>>err || fail=1
     TZ=$tz LC_ALL=C ls -no --time-style="$style" a >>lsout 2>>err || fail=1
@@ -46,18 +47,22 @@ cat <<\EOF > duexp || fail=1
 1970-07-08 09:10	a
 1970-07-08	a
 1970-07-08 09:10:11 +0000 (UTC)	a
+%bJul%bJul	a
 1970-07-08 01:10:11.000000000 -0800	a
 1970-07-08 01:10	a
 1970-07-08	a
 1970-07-08 01:10:11 -0800 (PST)	a
+%bJul%bJul	a
 1970-07-08 02:10:11.000000000 -0700	a
 1970-07-08 02:10	a
 1970-07-08	a
 1970-07-08 02:10:11 -0700 (PDT)	a
+%bJul%bJul	a
 1970-07-08 21:40:11.000000000 +1230	a
 1970-07-08 21:40	a
 1970-07-08	a
 1970-07-08 21:40:11 +1230 (XXXYYY)	a
+%bJul%bJul	a
 EOF
 
 cat <<\EOF > lsexp || fail=1
@@ -66,31 +71,43 @@ cat <<\EOF > lsexp || fail=1
 1970-07-08  a
 Jul  8  1970 a
 1970-07-08 09:10:11 +0000 (UTC) a
+%bJul%bJul a
 1970-07-08 01:10:11.000000000 -0800 a
 1970-07-08 01:10 a
 1970-07-08  a
 Jul  8  1970 a
 1970-07-08 01:10:11 -0800 (PST) a
+%bJul%bJul a
 1970-07-08 02:10:11.000000000 -0700 a
 1970-07-08 02:10 a
 1970-07-08  a
 Jul  8  1970 a
 1970-07-08 02:10:11 -0700 (PDT) a
+%bJul%bJul a
 1970-07-08 21:40:11.000000000 +1230 a
 1970-07-08 21:40 a
 1970-07-08  a
 Jul  8  1970 a
 1970-07-08 21:40:11 +1230 (XXXYYY) a
+%bJul%bJul a
 EOF
 
 cat <<\EOF > prexp || fail=1
 +1970-07-08 09:10:11 +0000 (UTC)                a                 Page 1
 hello
++%bJul%bJul                           a                           Page 1
+hello
 +1970-07-08 01:10:11 -0800 (PST)                a                 Page 1
+hello
++%bJul%bJul                           a                           Page 1
 hello
 +1970-07-08 02:10:11 -0700 (PDT)                a                 Page 1
 hello
++%bJul%bJul                           a                           Page 1
+hello
 +1970-07-08 21:40:11 +1230 (XXXYYY)               a               Page 1
+hello
++%bJul%bJul                           a                           Page 1
 hello
 EOF
 

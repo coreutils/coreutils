@@ -1034,6 +1034,23 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
     }
 }
 
+/* Return the address of the first plain %b spec in FMT, or NULL if
+   there is no such spec.  %5b etc. do not match, so that user
+   widths/flags are honored.  */
+
+static char const * _GL_ATTRIBUTE_PURE
+first_percent_b (char const *fmt)
+{
+  for (; *fmt; fmt++)
+    if (fmt[0] == '%')
+      switch (fmt[1])
+        {
+        case 'b': return fmt;
+        case '%': fmt++; break;
+        }
+  return NULL;
+}
+
 /* Read the abbreviated month names from the locale, to align them
    and to determine the max width of the field and to truncate names
    greater than our max allowed.
@@ -1044,18 +1061,25 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
 
 /* max number of display cells to use */
 enum { MAX_MON_WIDTH = 5 };
-/* In the unlikely event that the abmon[] storage is not big enough
-   an error message will be displayed, and we revert to using
-   unmodified abbreviated month names from the locale database.  */
-static char abmon[12][MAX_MON_WIDTH * 2 * MB_LEN_MAX + 1];
-/* minimum width needed to align %b, 0 => don't use precomputed values.  */
-static size_t required_mon_width;
+/* abformat[RECENT][MON] is the format to use for time stamps with
+   recentness RECENT and month MON.  */
+enum { ABFORMAT_SIZE = 128 };
+static char abformat[2][12][ABFORMAT_SIZE];
+/* True if precomputed formats should be used.  This can be false if
+   nl_langinfo fails, if a format or month abbreviation is unusually
+   long, or if a month abbreviation contains '%'.  */
+static bool use_abformat;
 
-static size_t
-abmon_init (void)
+/* Store into ABMON the abbreviated month names, suitably aligned.
+   Return true if successful.  */
+
+static bool
+abmon_init (char abmon[12][ABFORMAT_SIZE])
 {
-#ifdef HAVE_NL_LANGINFO
-  required_mon_width = MAX_MON_WIDTH;
+#ifndef HAVE_NL_LANGINFO
+  return false;
+#else
+  size_t required_mon_width = MAX_MON_WIDTH;
   size_t curr_max_width;
   do
     {
@@ -1064,24 +1088,62 @@ abmon_init (void)
       for (int i = 0; i < 12; i++)
         {
           size_t width = curr_max_width;
-
-          size_t req = mbsalign (nl_langinfo (ABMON_1 + i),
-                                 abmon[i], sizeof (abmon[i]),
+          char const *abbr = nl_langinfo (ABMON_1 + i);
+          if (strchr (abbr, '%'))
+            return false;
+          size_t req = mbsalign (abbr, abmon[i], ABFORMAT_SIZE,
                                  &width, MBS_ALIGN_LEFT, 0);
-
-          if (req == (size_t) -1 || req >= sizeof (abmon[i]))
-            {
-              required_mon_width = 0; /* ignore precomputed strings.  */
-              return required_mon_width;
-            }
-
+          if (! (req < ABFORMAT_SIZE))
+            return false;
           required_mon_width = MAX (required_mon_width, width);
         }
     }
   while (curr_max_width > required_mon_width);
-#endif
 
-  return required_mon_width;
+  return true;
+#endif
+}
+
+/* Initialize ABFORMAT and USE_ABFORMAT.  */
+
+static void
+abformat_init (void)
+{
+  char const *pb[2];
+  for (int recent = 0; recent < 2; recent++)
+    pb[recent] = first_percent_b (long_time_format[recent]);
+  if (! (pb[0] || pb[1]))
+    return;
+
+  char abmon[12][ABFORMAT_SIZE];
+  if (! abmon_init (abmon))
+    return;
+
+  for (int recent = 0; recent < 2; recent++)
+    {
+      char const *fmt = long_time_format[recent];
+      for (int i = 0; i < 12; i++)
+        {
+          char *nfmt = abformat[recent][i];
+          int nbytes;
+
+          if (! pb[recent])
+            nbytes = snprintf (nfmt, ABFORMAT_SIZE, "%s", fmt);
+          else
+            {
+              if (! (pb[recent] - fmt <= MIN (ABFORMAT_SIZE, INT_MAX)))
+                return;
+              int prefix_len = pb[recent] - fmt;
+              nbytes = snprintf (nfmt, ABFORMAT_SIZE, "%.*s%s%s",
+                                 prefix_len, fmt, abmon[i], pb[recent] + 2);
+            }
+
+          if (! (0 <= nbytes && nbytes < ABFORMAT_SIZE))
+            return;
+        }
+    }
+
+  use_abformat = true;
 }
 
 static size_t
@@ -2119,11 +2181,7 @@ decode_switches (int argc, char **argv)
             }
         }
 
-      /* Note we leave %5b etc. alone so user widths/flags are honored.  */
-      if (strstr (long_time_format[0], "%b")
-          || strstr (long_time_format[1], "%b"))
-        if (!abmon_init ())
-          error (0, 0, _("error initializing month strings"));
+      abformat_init ();
     }
 
   return optind;
@@ -3701,29 +3759,13 @@ print_current_files (void)
    process by around 17%, compared to letting strftime() handle the %b.  */
 
 static size_t
-align_nstrftime (char *buf, size_t size, char const *fmt, struct tm const *tm,
+align_nstrftime (char *buf, size_t size, bool recent, struct tm const *tm,
                  timezone_t tz, int ns)
 {
-  const char *nfmt = fmt;
-  /* In the unlikely event that rpl_fmt below is not large enough,
-     the replacement is not done.  A malloc here slows ls down by 2%  */
-  char rpl_fmt[sizeof (abmon[0]) + 100];
-  const char *pb;
-  if (required_mon_width && (pb = strstr (fmt, "%b"))
-      && 0 <= tm->tm_mon && tm->tm_mon <= 11)
-    {
-      if (strlen (fmt) < (sizeof (rpl_fmt) - sizeof (abmon[0]) + 2))
-        {
-          char *pfmt = rpl_fmt;
-          nfmt = rpl_fmt;
-
-          pfmt = mempcpy (pfmt, fmt, pb - fmt);
-          pfmt = stpcpy (pfmt, abmon[tm->tm_mon]);
-          strcpy (pfmt, pb + 2);
-        }
-    }
-  size_t ret = nstrftime (buf, size, nfmt, tm, tz, ns);
-  return ret;
+  char const *nfmt = (use_abformat
+                      ? abformat[recent][tm->tm_mon]
+                      : long_time_format[recent]);
+  return nstrftime (buf, size, nfmt, tm, tz, ns);
 }
 
 /* Return the expected number of columns in a long-format time stamp,
@@ -3749,9 +3791,8 @@ long_time_expected_width (void)
          their implementations limit the offset to 167:59 and 24:00, resp.  */
       if (localtime_rz (localtz, &epoch, &tm))
         {
-          size_t len =
-            align_nstrftime (buf, sizeof buf, long_time_format[0], &tm,
-                             localtz, 0);
+          size_t len = align_nstrftime (buf, sizeof buf, false,
+                                        &tm, localtz, 0);
           if (len != 0)
             width = mbsnwidth (buf, len, 0);
         }
@@ -4007,7 +4048,6 @@ print_long_format (const struct fileinfo *f)
     {
       struct timespec six_months_ago;
       bool recent;
-      char const *fmt;
 
       /* If the file appears to be in the future, update the current
          time, in case the file happens to have been modified since
@@ -4024,11 +4064,10 @@ print_long_format (const struct fileinfo *f)
 
       recent = (timespec_cmp (six_months_ago, when_timespec) < 0
                 && (timespec_cmp (when_timespec, current_time) < 0));
-      fmt = long_time_format[recent];
 
       /* We assume here that all time zones are offset from UTC by a
          whole number of seconds.  */
-      s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
+      s = align_nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, recent,
                            &when_local, localtz, when_timespec.tv_nsec);
     }
 
