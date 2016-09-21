@@ -55,11 +55,14 @@ tail --retry missing > out 2>&1 && fail=1
 [ "$(countlines_)" = 2 ]                     || { cat out; fail=1; }
 grep -F 'tail: warning: --retry ignored' out || { cat out; fail=1; }
 
+for mode in '' '---disable-inotify'; do
+
 # === Test:
 # Ensure that "tail --retry --follow=name" waits for the file to appear.
 # Clear 'out' so that we can check its contents without races
 >out                            || framework_failure_
-timeout 10 tail $fastpoll --follow=name --retry missing >out 2>&1 & pid=$!
+timeout 10 \
+  tail $mode $fastpoll --follow=name --retry missing >out 2>&1 & pid=$!
 # Wait for "cannot open" error.
 retry_delay_ wait4lines_ .1 6 1 || { cat out; fail=1; }
 echo "X" > missing              || framework_failure_
@@ -76,7 +79,8 @@ rm -f missing out          || framework_failure_
 # === Test:
 # Ensure that "tail --retry --follow=descriptor" waits for the file to appear.
 # tail-8.21 failed at this (since the implementation of the inotify support).
-timeout 10 tail $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
+timeout 10 \
+  tail $mode $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
 # Wait for "cannot open" error.
 retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
 echo "X" > missing              || framework_failure_
@@ -95,7 +99,8 @@ rm -f missing out          || framework_failure_
 # === Test:
 # Ensure that tail --follow=descriptor --retry exits when the file appears
 # untailable. Expect exit status 1.
-timeout 10 tail $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
+timeout 10 \
+  tail $mode $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
 # Wait for "cannot open" error.
 retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
 mkdir missing                   || framework_failure_  # Create untailable
@@ -116,16 +121,35 @@ rm -fd missing out                             || framework_failure_
 # Ensure that --follow=descriptor (without --retry) does *not wait* for the
 # file to appear.  Expect 2 lines in the output file ("cannot open" +
 # "no files remaining") and exit status 1.
-tail --follow=descriptor missing >out 2>&1 && fail=1
+tail $mode --follow=descriptor missing >out 2>&1 && fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
 
 # === Test:
 # Likewise for --follow=name (without --retry).
-tail --follow=name missing >out 2>&1 && fail=1
+tail $mode --follow=name missing >out 2>&1 && fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
+
+# === Test:
+# Ensure that tail -F retries when the file is initally untailable.
+mkdir untailable
+timeout 10 \
+  tail $mode $fastpoll -F untailable >out 2>&1 & pid=$!
+# Wait for "cannot open" error.
+retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
+{ rmdir untailable; echo foo > untailable; }   || framework_failure_
+# Wait for the expected output.
+retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
+cleanup_
+[ "$(countlines_)" = 4 ]                       || { fail=1; cat out; }
+grep -F 'cannot follow' out                    || { fail=1; cat out; }
+grep -F 'has become accessible' out            || { fail=1; cat out; }
+grep -F 'foo' out                              || { fail=1; cat out; }
+rm -fd untailable out                          || framework_failure_
+
+done
 
 Exit $fail

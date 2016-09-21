@@ -956,8 +956,8 @@ recheck (struct File_spec *f, bool blocking)
       f->errnum = -1;
       f->ignore = true;
 
-      error (0, 0, _("%s has been replaced with a symbolic link. "
-                     "giving up on this name"), quoteaf (pretty_name (f)));
+      error (0, 0, _("%s has been replaced with an untailable symbolic link"),
+             quoteaf (pretty_name (f)));
     }
   else if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
@@ -986,17 +986,20 @@ recheck (struct File_spec *f, bool blocking)
     {
       ok = false;
       f->errnum = -1;
-      error (0, 0, _("%s has been replaced with an untailable file;\
- giving up on this name"),
-             quoteaf (pretty_name (f)));
-      f->ignore = true;
+      f->tailable = false;
+      if (! (reopen_inaccessible_files && follow_mode == Follow_name))
+        f->ignore = true;
+      if (was_tailable || prev_errnum != f->errnum)
+        error (0, 0, _("%s has been replaced with an untailable file%s"),
+               quoteaf (pretty_name (f)),
+               f->ignore ? _("; giving up on this name") : "");
     }
   else if (!disable_inotify && fremote (fd, pretty_name (f)))
     {
       ok = false;
       f->errnum = -1;
-      error (0, 0, _("%s has been replaced with a remote file. "
-                     "giving up on this name"), quoteaf (pretty_name (f)));
+      error (0, 0, _("%s has been replaced with an untailable remote file"),
+             quoteaf (pretty_name (f)));
       f->ignore = true;
       f->remote = true;
     }
@@ -1075,20 +1078,20 @@ any_live_files (const struct File_spec *f, size_t n_files)
 {
   size_t i;
 
+  /* In inotify mode, ignore may be set for files
+     which may later be replaced with new files.
+     So always consider files live in -F mode.  */
   if (reopen_inaccessible_files && follow_mode == Follow_name)
-    return true;  /* continue following for -F option */
+    return true;
 
   for (i = 0; i < n_files; i++)
     {
       if (0 <= f[i].fd)
-        {
-          return true;
-        }
+        return true;
       else
         {
-          if (reopen_inaccessible_files && follow_mode == Follow_descriptor)
-            if (! f[i].ignore)
-              return true;
+          if (! f[i].ignore && reopen_inaccessible_files)
+            return true;
         }
     }
 
@@ -1930,12 +1933,14 @@ tail_file (struct File_spec *f, uintmax_t n_units)
             }
           else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
             {
-              error (0, 0, _("%s: cannot follow end of this type of file;\
- giving up on this name"),
-                     quotef (pretty_name (f)));
               ok = false;
               f->errnum = -1;
-              f->ignore = true;
+              f->tailable = false;
+              f->ignore = ! (reopen_inaccessible_files
+                             && follow_mode == Follow_name);
+              error (0, 0, _("%s: cannot follow end of this type of file%s"),
+                     quotef (pretty_name (f)),
+                     f->ignore ? _("; giving up on this name") : "");
             }
 
           if (!ok)

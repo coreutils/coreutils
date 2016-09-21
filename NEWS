@@ -42,6 +42,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq now immediately exits upon write errors.
   [This bug was present in "the beginning".]
 
+  tail -F now continues to process initially untailable files that are replaced
+  by a tailable file.  This was handled correctly when inotify was available,
+  and is now handled correctly in all cases.
+  [bug introduced in fileutils-4.0h]
+
   yes now handles short writes, rather than assuming all writes complete.
   [bug introduced in coreutils-8.24]
 
