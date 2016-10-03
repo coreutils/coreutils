@@ -25,7 +25,7 @@ prog='env printf'
 $prog '%q\n' '' "'" a 'a b' '~a' 'a~' "$($prog %b 'a\r')" > out
 cat <<\EOF > exp || framework_failure_
 ''
-''\'''
+"'"
 a
 'a b'
 '~a'

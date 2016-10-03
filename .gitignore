@@ -68,6 +68,7 @@
 /lib/inttypes.h
 /lib/langinfo.h
 /lib/libcoreutils.a
+/lib/limits.h
 /lib/link-warning.h
 /lib/locale.h
 /lib/math.h
