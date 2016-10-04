@@ -52,6 +52,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  rm no longer accepts shortened variants of the --no-preserve-root option.
+
   seq no longer accepts 0 value as increment, and now also rejects NaN
   values for any argument.
 
@@ -81,8 +83,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
-   date now accepts the --debug option, to annotate the parsed date string,
-   display timezone information, and warn about potential misuse.
+  date now accepts the --debug option, to annotate the parsed date string,
+  display timezone information, and warn about potential misuse.
 
 
 * Noteworthy changes in release 8.25 (2016-01-20) [stable]

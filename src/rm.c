@@ -287,6 +287,9 @@ main (int argc, char **argv)
           break;
 
         case NO_PRESERVE_ROOT:
+          if (! STREQ (argv[optind - 1], "--no-preserve-root"))
+            error (EXIT_FAILURE, 0,
+                   _("you may not abbreviate the --no-preserve-root option"));
           preserve_root = false;
           break;
 

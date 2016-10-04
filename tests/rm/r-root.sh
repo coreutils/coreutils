@@ -211,6 +211,15 @@ for opts in           \
 done
 
 #-------------------------------------------------------------------------------
+# Exercise with --no-preserve to ensure shortened equivalent is not allowed.
+cat <<EOD > exp_opt || framework_failure_
+rm: you may not abbreviate the --no-preserve-root option
+EOD
+returns_ 1 exercise_rm_r_root --no-preserve / || fail=1
+compare exp_opt err || fail=1
+test -f x && fail=1
+
+#-------------------------------------------------------------------------------
 # Exercise "rm -r file1 / file2".
 # Expect a non-Zero exit status representing failure to remove "/",
 # yet 'file1' and 'file2' should be removed.
