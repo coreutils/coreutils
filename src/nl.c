@@ -27,6 +27,7 @@
 
 #include <regex.h>
 
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "linebuffer.h"
@@ -352,7 +353,7 @@ proc_text (void)
                          0, line_buf.length - 1, NULL))
         {
         case -2:
-          error (EXIT_FAILURE, errno, _("error in regular expression search"));
+          die (EXIT_FAILURE, errno, _("error in regular expression search"));
 
         case -1:
           fputs (print_no_line_fmt, stdout);

@@ -3113,6 +3113,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                  directory, and --dereference-command-line-symlink-to-dir is
                  in effect.  Fall through so that we call lstat instead.  */
             }
+          /* fall through */
 
         default: /* DEREF_NEVER */
           err = lstat (absolute_name, &f->stat);

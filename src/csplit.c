@@ -28,6 +28,7 @@
 
 #include <regex.h>
 
+#include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
 #include "quote.h"
@@ -1287,8 +1288,7 @@ check_format_conv_type (char *format, int flags)
       break;
 
     case 0:
-      error (EXIT_FAILURE, 0, _("missing conversion specifier in suffix"));
-      break;
+      die (EXIT_FAILURE, 0, _("missing conversion specifier in suffix"));
 
     default:
       if (isprint (ch))

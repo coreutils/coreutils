@@ -146,7 +146,8 @@ main (int argc, char **argv)
         {
         case 's':
           suffix = optarg;
-          /* Fall through: -s implies -a.  */
+          /* -s implies -a, so...  */
+          /* fall through */
 
         case 'a':
           multiple_names = true;

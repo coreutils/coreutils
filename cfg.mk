@@ -794,7 +794,7 @@ exclude_file_name_regexp--sc_bindtextdomain = \
 exclude_file_name_regexp--sc_trailing_blank = \
   ^(tests/pr/|gl/.*\.diff$$|man/help2man)
 exclude_file_name_regexp--sc_system_h_headers = \
-  ^src/((system|copy)\.h|make-prime-list\.c)$$
+  ^src/((die|system|copy)\.h|make-prime-list\.c)$$
 
 _src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
 exclude_file_name_regexp--sc_require_config_h_first = \

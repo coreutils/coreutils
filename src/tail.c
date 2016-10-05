@@ -34,6 +34,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "c-strtod.h"
+#include "die.h"
 #include "error.h"
 #include "fcntl--.h"
 #include "isapipe.h"
@@ -2161,8 +2162,7 @@ parse_options (int argc, char **argv,
 
         case '0': case '1': case '2': case '3': case '4':
         case '5': case '6': case '7': case '8': case '9':
-          error (EXIT_FAILURE, 0,
-                 _("option used in invalid context -- %c"), c);
+          die (EXIT_FAILURE, 0, _("option used in invalid context -- %c"), c);
 
         default:
           usage (EXIT_FAILURE);

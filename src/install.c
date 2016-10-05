@@ -31,6 +31,7 @@
 #include "error.h"
 #include "cp-hash.h"
 #include "copy.h"
+#include "die.h"
 #include "filenamecat.h"
 #include "full-read.h"
 #include "mkancesdirs.h"
@@ -555,8 +556,7 @@ strip (char const *name)
       break;
     case 0:			/* Child. */
       execlp (strip_program, strip_program, name, NULL);
-      error (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
-      break;
+      die (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
         error (0, errno, _("waiting for strip"));

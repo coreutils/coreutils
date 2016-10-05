@@ -1040,6 +1040,7 @@ main (int argc, char **argv)
               x.require_preserve = true;
               break;
             }
+          /* fall through */
 
         case 'p':
           x.preserve_ownership = true;
