@@ -43,6 +43,7 @@ noinst_HEADERS =		\
   src/chown-core.h		\
   src/copy.h			\
   src/cp-hash.h			\
+  src/die.h			\
   src/dircolors.h		\
   src/expand-common.h		\
   src/fiemap.h			\
