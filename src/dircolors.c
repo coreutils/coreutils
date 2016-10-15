@@ -24,6 +24,7 @@
 #include "system.h"
 #include "dircolors.h"
 #include "c-strcase.h"
+#include "die.h"
 #include "error.h"
 #include "obstack.h"
 #include "quote.h"
@@ -470,7 +471,7 @@ main (int argc, char **argv)
           syntax = guess_shell_syntax ();
           if (syntax == SHELL_SYNTAX_UNKNOWN)
             {
-              error (EXIT_FAILURE, 0,
+              die (EXIT_FAILURE, 0,
          _("no SHELL environment variable, and no shell type option given"));
             }
         }

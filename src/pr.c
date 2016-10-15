@@ -312,6 +312,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "hard-locale.h"
@@ -903,11 +904,11 @@ main (int argc, char **argv)
         case PAGES_OPTION:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
           {			/* dominates old opt +... */
             if (! optarg)
-              error (EXIT_FAILURE, 0,
-                     _("'--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
+              die (EXIT_FAILURE, 0,
+                   _("'--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
             else if (! first_last_page (oi, 0, optarg))
-              error (EXIT_FAILURE, 0, _("invalid page range %s"),
-                     quote (optarg));
+              die (EXIT_FAILURE, 0, _("invalid page range %s"),
+                   quote (optarg));
             break;
           }
 
@@ -1059,11 +1060,11 @@ main (int argc, char **argv)
     first_page_number = 1;
 
   if (parallel_files && explicit_columns)
-    error (EXIT_FAILURE, 0,
+    die (EXIT_FAILURE, 0,
          _("cannot specify number of columns when printing in parallel"));
 
   if (parallel_files && print_across_flag)
-    error (EXIT_FAILURE, 0,
+    die (EXIT_FAILURE, 0,
        _("cannot specify both printing across and printing in parallel"));
 
 /* Translate some old short options to new/long options.
@@ -1137,7 +1138,7 @@ main (int argc, char **argv)
   IF_LINT (free (file_names));
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, _("standard input"));
+    die (EXIT_FAILURE, errno, _("standard input"));
   return failed_opens ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
@@ -1265,7 +1266,7 @@ init_parameters (int number_of_files)
                       - (columns - 1) * col_sep_length) / columns;
 
   if (chars_per_column < 1)
-    error (EXIT_FAILURE, 0, _("page width too narrow"));
+    die (EXIT_FAILURE, 0, _("page width too narrow"));
 
   if (numbered_lines)
     {
@@ -1493,9 +1494,9 @@ close_file (COLUMN *p)
   if (p->status == CLOSED)
     return;
   if (ferror (p->fp))
-    error (EXIT_FAILURE, errno, "%s", quotef (p->name));
+    die (EXIT_FAILURE, errno, "%s", quotef (p->name));
   if (fileno (p->fp) != STDIN_FILENO && fclose (p->fp) != 0)
-    error (EXIT_FAILURE, errno, "%s", quotef (p->name));
+    die (EXIT_FAILURE, errno, "%s", quotef (p->name));
 
   if (!parallel_files)
     {
@@ -2352,7 +2353,7 @@ print_header (void)
   print_white_space ();
 
   if (page_number == 0)
-    error (EXIT_FAILURE, 0, _("page number overflow"));
+    die (EXIT_FAILURE, 0, _("page number overflow"));
 
   /* The translator must ensure that formatting the translation of
      "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)

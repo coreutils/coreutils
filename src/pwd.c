@@ -20,6 +20,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "quote.h"
 #include "root-dev-ino.h"
@@ -161,17 +162,17 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 
   dirp = opendir ("..");
   if (dirp == NULL)
-    error (EXIT_FAILURE, errno, _("cannot open directory %s"),
-           quote (nth_parent (parent_height)));
+    die (EXIT_FAILURE, errno, _("cannot open directory %s"),
+         quote (nth_parent (parent_height)));
 
   fd = dirfd (dirp);
   if ((0 <= fd ? fchdir (fd) : chdir ("..")) < 0)
-    error (EXIT_FAILURE, errno, _("failed to chdir to %s"),
-           quote (nth_parent (parent_height)));
+    die (EXIT_FAILURE, errno, _("failed to chdir to %s"),
+         quote (nth_parent (parent_height)));
 
   if ((0 <= fd ? fstat (fd, &parent_sb) : stat (".", &parent_sb)) < 0)
-    error (EXIT_FAILURE, errno, _("failed to stat %s"),
-           quote (nth_parent (parent_height)));
+    die (EXIT_FAILURE, errno, _("failed to stat %s"),
+         quote (nth_parent (parent_height)));
 
   /* If parent and child directory are on different devices, then we
      can't rely on d_ino for useful i-node numbers; use lstat instead.  */
@@ -229,14 +230,14 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
     {
       /* Note that this diagnostic serves for both readdir
          and closedir failures.  */
-      error (EXIT_FAILURE, errno, _("reading directory %s"),
-             quote (nth_parent (parent_height)));
+      die (EXIT_FAILURE, errno, _("reading directory %s"),
+           quote (nth_parent (parent_height)));
     }
 
   if ( ! found)
-    error (EXIT_FAILURE, 0,
-           _("couldn't find directory entry in %s with matching i-node"),
-             quote (nth_parent (parent_height)));
+    die (EXIT_FAILURE, 0,
+         _("couldn't find directory entry in %s with matching i-node"),
+         quote (nth_parent (parent_height)));
 
   *dot_sb = parent_sb;
 }
@@ -273,11 +274,11 @@ robust_getcwd (struct file_name *file_name)
   struct stat dot_sb;
 
   if (root_dev_ino == NULL)
-    error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-           quoteaf ("/"));
+    die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+         quoteaf ("/"));
 
   if (stat (".", &dot_sb) < 0)
-    error (EXIT_FAILURE, errno, _("failed to stat %s"), quoteaf ("."));
+    die (EXIT_FAILURE, errno, _("failed to stat %s"), quoteaf ("."));
 
   while (1)
     {

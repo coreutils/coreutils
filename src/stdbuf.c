@@ -23,6 +23,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"
@@ -238,7 +239,7 @@ set_LD_PRELOAD (void)
 
       ++path;
       if ( ! *path)
-        error (EXIT_CANCELED, 0, _("failed to find %s"), quote (LIB_NAME));
+        die (EXIT_CANCELED, 0, _("failed to find %s"), quote (LIB_NAME));
     }
 
   /* FIXME: Do we need to support libstdbuf.dll, c:, '\' separators etc?  */
@@ -261,9 +262,9 @@ set_LD_PRELOAD (void)
 
   if (ret != 0)
     {
-      error (EXIT_CANCELED, errno,
-             _("failed to update the environment with %s"),
-             quote (LD_PRELOAD));
+      die (EXIT_CANCELED, errno,
+           _("failed to update the environment with %s"),
+           quote (LD_PRELOAD));
     }
 }
 
@@ -295,9 +296,9 @@ set_libstdbuf_options (void)
 
           if (putenv (var) != 0)
             {
-              error (EXIT_CANCELED, errno,
-                     _("failed to update the environment with %s"),
-                     quote (var));
+              die (EXIT_CANCELED, errno,
+                   _("failed to update the environment with %s"),
+                   quote (var));
             }
 
           env_set = true;
@@ -348,7 +349,7 @@ main (int argc, char **argv)
 
           if (!STREQ (optarg, "L")
               && parse_size (optarg, &stdbuf[opt_fileno].size) == -1)
-            error (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
+            die (EXIT_CANCELED, errno, _("invalid mode %s"), quote (optarg));
 
           break;
 

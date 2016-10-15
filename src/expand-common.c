@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
@@ -79,7 +80,7 @@ add_tab_stop (uintmax_t tabval)
   if (max_column_width < column_width)
     {
       if (SIZE_MAX < column_width)
-        error (EXIT_FAILURE, 0, _("tabs are too far apart"));
+        die (EXIT_FAILURE, 0, _("tabs are too far apart"));
       max_column_width = column_width;
     }
 }
@@ -150,9 +151,9 @@ validate_tab_stops (uintmax_t const *tabs, size_t entries)
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
-        error (EXIT_FAILURE, 0, _("tab size cannot be 0"));
+        die (EXIT_FAILURE, 0, _("tab size cannot be 0"));
       if (tabs[i] <= prev_tab)
-        error (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
+        die (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
 }
@@ -270,5 +271,5 @@ extern void
 cleanup_file_list_stdin (void)
 {
     if (have_read_stdin && fclose (stdin) != 0)
-      error (EXIT_FAILURE, errno, "-");
+      die (EXIT_FAILURE, errno, "-");
 }

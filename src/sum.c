@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "human.h"
@@ -270,6 +271,6 @@ main (int argc, char **argv)
       ok &= sum_func (argv[optind], files_given);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, "%s", quotef ("-"));
+    die (EXIT_FAILURE, errno, "%s", quotef ("-"));
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

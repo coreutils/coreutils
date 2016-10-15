@@ -87,6 +87,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "xdectoint.h"
+#include "die.h"
 #include "error.h"
 #include "fcntl--.h"
 #include "human.h"
@@ -1252,7 +1253,7 @@ main (int argc, char **argv)
 
         case RANDOM_SOURCE_OPTION:
           if (random_source && !STREQ (random_source, optarg))
-            error (EXIT_FAILURE, 0, _("multiple random sources specified"));
+            die (EXIT_FAILURE, 0, _("multiple random sources specified"));
           random_source = optarg;
           break;
 
@@ -1301,7 +1302,7 @@ main (int argc, char **argv)
 
   randint_source = randint_all_new (random_source, SIZE_MAX);
   if (! randint_source)
-    error (EXIT_FAILURE, errno, "%s", quotef (random_source));
+    die (EXIT_FAILURE, errno, "%s", quotef (random_source));
   atexit (clear_random_data);
 
   for (i = 0; i < n_files; i++)

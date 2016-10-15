@@ -26,6 +26,7 @@
 
 #include "system.h"
 #include "close-stream.h"
+#include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
@@ -692,12 +693,11 @@ alloc_ibuf (void)
     {
       uintmax_t ibs = input_blocksize;
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      error (EXIT_FAILURE, 0,
-             _("memory exhausted by input buffer of size %"PRIuMAX
-               " bytes (%s)"),
-             ibs,
-             human_readable (input_blocksize, hbuf,
-                             human_opts | human_base_1024, 1, 1));
+      die (EXIT_FAILURE, 0,
+           _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
+           ibs,
+           human_readable (input_blocksize, hbuf,
+                           human_opts | human_base_1024, 1, 1));
     }
 
   real_buf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
@@ -721,12 +721,12 @@ alloc_obuf (void)
         {
           uintmax_t obs = output_blocksize;
           char hbuf[LONGEST_HUMAN_READABLE + 1];
-          error (EXIT_FAILURE, 0,
-                 _("memory exhausted by output buffer of size %"PRIuMAX
-                   " bytes (%s)"),
-                 obs,
-                 human_readable (output_blocksize, hbuf,
-                                 human_opts | human_base_1024, 1, 1));
+          die (EXIT_FAILURE, 0,
+               _("memory exhausted by output buffer of size %"PRIuMAX
+                 " bytes (%s)"),
+               obs,
+               human_readable (output_blocksize, hbuf,
+                               human_opts | human_base_1024, 1, 1));
         }
       obuf = ptr_align (real_obuf, page_size);
     }
@@ -932,15 +932,14 @@ static void
 cleanup (void)
 {
   if (close (STDIN_FILENO) < 0)
-    error (EXIT_FAILURE, errno,
-           _("closing input file %s"), quoteaf (input_file));
+    die (EXIT_FAILURE, errno, _("closing input file %s"), quoteaf (input_file));
 
   /* Don't remove this call to close, even though close_stdout
      closes standard output.  This close is necessary when cleanup
      is called as part of a signal handler.  */
   if (close (STDOUT_FILENO) < 0)
-    error (EXIT_FAILURE, errno,
-           _("closing output file %s"), quoteaf (output_file));
+    die (EXIT_FAILURE, errno,
+         _("closing output file %s"), quoteaf (output_file));
 }
 
 /* Process any pending signals.  If signals are caught, this function
@@ -1450,8 +1449,8 @@ scanargs (int argc, char *const *argv)
             invalid = LONGINT_OVERFLOW;
 
           if (invalid != LONGINT_OK)
-            error (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
-                   "%s: %s", _("invalid number"), quote (val));
+            die (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
+                 "%s: %s", _("invalid number"), quote (val));
         }
     }
 
@@ -1534,16 +1533,16 @@ scanargs (int argc, char *const *argv)
   input_flags &= ~O_FULLBLOCK;
 
   if (multiple_bits_set (conversions_mask & (C_ASCII | C_EBCDIC | C_IBM)))
-    error (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
+    die (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
   if (multiple_bits_set (conversions_mask & (C_BLOCK | C_UNBLOCK)))
-    error (EXIT_FAILURE, 0, _("cannot combine block and unblock"));
+    die (EXIT_FAILURE, 0, _("cannot combine block and unblock"));
   if (multiple_bits_set (conversions_mask & (C_LCASE | C_UCASE)))
-    error (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
+    die (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
   if (multiple_bits_set (conversions_mask & (C_EXCL | C_NOCREAT)))
-    error (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
+    die (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
   if (multiple_bits_set (input_flags & (O_DIRECT | O_NOCACHE))
       || multiple_bits_set (output_flags & (O_DIRECT | O_NOCACHE)))
-    error (EXIT_FAILURE, 0, _("cannot combine direct and nocache"));
+    die (EXIT_FAILURE, 0, _("cannot combine direct and nocache"));
 
   if (input_flags & O_NOCACHE)
     {
@@ -1742,7 +1741,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
         {
            struct stat st;
            if (fstat (STDIN_FILENO, &st) != 0)
-             error (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
+             die (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
            if (usable_st_size (&st) && st.st_size < input_offset + offset)
              {
                /* When skipping past EOF, return the number of _full_ blocks
@@ -2022,7 +2021,7 @@ set_fd_flags (int fd, int add_flags, char const *name)
         }
 
       if (!ok)
-        error (EXIT_FAILURE, errno, _("setting flags for %s"), quoteaf (name));
+        die (EXIT_FAILURE, errno, _("setting flags for %s"), quoteaf (name));
     }
 }
 
@@ -2375,8 +2374,8 @@ main (int argc, char **argv)
   else
     {
       if (ifd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
-        error (EXIT_FAILURE, errno, _("failed to open %s"),
-               quoteaf (input_file));
+        die (EXIT_FAILURE, errno, _("failed to open %s"),
+             quoteaf (input_file));
     }
 
   offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
@@ -2405,8 +2404,8 @@ main (int argc, char **argv)
            || ifd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
           && (ifd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
               < 0))
-        error (EXIT_FAILURE, errno, _("failed to open %s"),
-               quoteaf (output_file));
+        die (EXIT_FAILURE, errno, _("failed to open %s"),
+             quoteaf (output_file));
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {
@@ -2414,11 +2413,11 @@ main (int argc, char **argv)
           unsigned long int obs = output_blocksize;
 
           if (OFF_T_MAX / output_blocksize < seek_records)
-            error (EXIT_FAILURE, 0,
-                   _("offset too large: "
-                     "cannot truncate to a length of seek=%"PRIuMAX""
-                     " (%lu-byte) blocks"),
-                   seek_records, obs);
+            die (EXIT_FAILURE, 0,
+                 _("offset too large: "
+                   "cannot truncate to a length of seek=%"PRIuMAX""
+                   " (%lu-byte) blocks"),
+                 seek_records, obs);
 
           if (iftruncate (STDOUT_FILENO, size) != 0)
             {
@@ -2430,15 +2429,15 @@ main (int argc, char **argv)
               int ftruncate_errno = errno;
               struct stat stdout_stat;
               if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
-                error (EXIT_FAILURE, errno, _("cannot fstat %s"),
-                       quoteaf (output_file));
+                die (EXIT_FAILURE, errno, _("cannot fstat %s"),
+                     quoteaf (output_file));
               if (S_ISREG (stdout_stat.st_mode)
                   || S_ISDIR (stdout_stat.st_mode)
                   || S_TYPEISSHM (&stdout_stat))
-                error (EXIT_FAILURE, ftruncate_errno,
-                       _("failed to truncate to %"PRIuMAX" bytes"
-                         " in output file %s"),
-                       size, quoteaf (output_file));
+                die (EXIT_FAILURE, ftruncate_errno,
+                     _("failed to truncate to %"PRIuMAX" bytes"
+                       " in output file %s"),
+                     size, quoteaf (output_file));
             }
         }
     }

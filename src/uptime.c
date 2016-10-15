@@ -32,6 +32,7 @@
 #endif
 
 #include "c-strtod.h"
+#include "die.h"
 #include "error.h"
 #include "long-options.h"
 #include "quote.h"
@@ -122,7 +123,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 #endif
     {
       if (boot_time == 0)
-        error (EXIT_FAILURE, errno, _("couldn't get boot time"));
+        die (EXIT_FAILURE, errno, _("couldn't get boot time"));
       uptime = time_now - boot_time;
     }
   updays = uptime / 86400;
@@ -180,7 +181,7 @@ uptime (const char *filename, int options)
 
 #if HAVE_UTMPX_H || HAVE_UTMP_H
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
-    error (EXIT_FAILURE, errno, "%s", quotef (filename));
+    die (EXIT_FAILURE, errno, "%s", quotef (filename));
 #endif
 
   print_uptime (n_users, utmp_buf);

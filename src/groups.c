@@ -25,7 +25,7 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "error.h"
+#include "die.h"
 #include "group-list.h"
 #include "quote.h"
 
@@ -103,17 +103,17 @@ main (int argc, char **argv)
       errno = 0;
       ruid = getuid ();
       if (ruid == NO_UID && errno)
-        error (EXIT_FAILURE, errno, _("cannot get real UID"));
+        die (EXIT_FAILURE, errno, _("cannot get real UID"));
 
       errno = 0;
       egid = getegid ();
       if (egid == NO_GID && errno)
-        error (EXIT_FAILURE, errno, _("cannot get effective GID"));
+        die (EXIT_FAILURE, errno, _("cannot get effective GID"));
 
       errno = 0;
       rgid = getgid ();
       if (rgid == NO_GID && errno)
-        error (EXIT_FAILURE, errno, _("cannot get real GID"));
+        die (EXIT_FAILURE, errno, _("cannot get real GID"));
 
       if (!print_group_list (NULL, ruid, rgid, egid, true, ' '))
         ok = false;
@@ -126,8 +126,8 @@ main (int argc, char **argv)
         {
           struct passwd *pwd = getpwnam (argv[optind]);
           if (pwd == NULL)
-            error (EXIT_FAILURE, 0, _("%s: no such user"),
-                   quote (argv[optind]));
+            die (EXIT_FAILURE, 0, _("%s: no such user"),
+                 quote (argv[optind]));
           ruid = pwd->pw_uid;
           rgid = egid = pwd->pw_gid;
 

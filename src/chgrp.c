@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "chown-core.h"
+#include "die.h"
 #include "error.h"
 #include "fts_.h"
 #include "quote.h"
@@ -89,8 +90,8 @@ parse_group (const char *name)
           unsigned long int tmp;
           if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
                  && tmp <= GID_T_MAX))
-            error (EXIT_FAILURE, 0, _("invalid group: %s"),
-                   quote (name));
+            die (EXIT_FAILURE, 0, _("invalid group: %s"),
+                 quote (name));
           gid = tmp;
         }
       endgrent ();		/* Save a file descriptor. */
@@ -261,8 +262,8 @@ main (int argc, char **argv)
       if (bit_flags == FTS_PHYSICAL)
         {
           if (dereference == 1)
-            error (EXIT_FAILURE, 0,
-                   _("-R --dereference requires either -H or -L"));
+            die (EXIT_FAILURE, 0,
+                 _("-R --dereference requires either -H or -L"));
           dereference = 0;
         }
     }
@@ -285,8 +286,8 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quoteaf (reference_file));
+        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+             quoteaf (reference_file));
 
       gid = ref_stats.st_gid;
       chopt.group_name = gid_to_name (ref_stats.st_gid);
@@ -303,8 +304,8 @@ main (int argc, char **argv)
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
       if (chopt.root_dev_ino == NULL)
-        error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-               quoteaf ("/"));
+        die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+             quoteaf ("/"));
     }
 
   bit_flags |= FTS_DEFER_STAT;

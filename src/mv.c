@@ -27,6 +27,7 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "die.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "remove.h"
@@ -94,8 +95,8 @@ rm_option_init (struct rm_options *x)
     static struct dev_ino dev_ino_buf;
     x->root_dev_ino = get_root_dev_ino (&dev_ino_buf);
     if (x->root_dev_ino == NULL)
-      error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-             quoteaf ("/"));
+      die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+           quoteaf ("/"));
   }
 }
 
@@ -152,7 +153,7 @@ target_directory_operand (char const *file)
   int err = (stat (file, &st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && err != ENOENT)
-    error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
   return is_a_dir;
 }
 
@@ -396,16 +397,16 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            error (EXIT_FAILURE, 0, _("multiple target directories specified"));
+            die (EXIT_FAILURE, 0, _("multiple target directories specified"));
           else
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                error (EXIT_FAILURE, errno, _("failed to access %s"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, errno, _("failed to access %s"),
+                     quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
-                error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+                     quoteaf (optarg));
             }
           target_directory = optarg;
           break;
@@ -454,9 +455,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        error (EXIT_FAILURE, 0,
-               _("cannot combine --target-directory (-t) "
-                 "and --no-target-directory (-T)"));
+        die (EXIT_FAILURE, 0,
+             _("cannot combine --target-directory (-t) "
+               "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -469,8 +470,8 @@ main (int argc, char **argv)
       if (target_directory_operand (file[n_files - 1]))
         target_directory = file[--n_files];
       else if (2 < n_files)
-        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quoteaf (file[n_files - 1]));
+        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+             quoteaf (file[n_files - 1]));
     }
 
   if (make_backups && x.interactive == I_ALWAYS_NO)

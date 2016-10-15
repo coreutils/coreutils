@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "die.h"
 #include <regex.h>
 #include "argmatch.h"
 #include "diacrit.h"
@@ -280,8 +281,7 @@ static BLOCK reference;		/* reference field for input reference mode */
 static void ATTRIBUTE_NORETURN
 matcher_error (void)
 {
-  error (0, errno, _("error in regular expression matcher"));
-  exit (EXIT_FAILURE);
+  die (EXIT_FAILURE, errno, _("error in regular expression matcher"));
 }
 
 /*------------------------------------------------------.
@@ -416,7 +416,7 @@ compile_regex (struct regex_data *regex)
 
   message = re_compile_pattern (string, strlen (string), pattern);
   if (message)
-    error (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
+    die (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
 
   /* The fastmap should be compiled before 're_match'.  The following
      call is not mandatory, because 're_search' is always called sooner,
@@ -520,7 +520,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
     block->start = read_file (file_name, &used_length);
 
   if (!block->start)
-    error (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
+    die (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
 
   block->end = block->start + used_length;
 }
@@ -1947,8 +1947,8 @@ main (int argc, char **argv)
             unsigned long int tmp_ulong;
             if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
                 || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
-              error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
-                     quote (optarg));
+              die (EXIT_FAILURE, 0, _("invalid gap width: %s"),
+                   quote (optarg));
             gap_size = tmp_ulong;
             break;
           }
@@ -1974,8 +1974,8 @@ main (int argc, char **argv)
             unsigned long int tmp_ulong;
             if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
                 || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
-              error (EXIT_FAILURE, 0, _("invalid line width: %s"),
-                     quote (optarg));
+              die (EXIT_FAILURE, 0, _("invalid line width: %s"),
+                   quote (optarg));
             line_width = tmp_ulong;
             break;
           }
@@ -2076,7 +2076,7 @@ main (int argc, char **argv)
       if (optind < argc)
         {
           if (! freopen (argv[optind], "w", stdout))
-            error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
+            die (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
           optind++;
         }
 

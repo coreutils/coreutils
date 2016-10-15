@@ -26,6 +26,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "die.h"
 #include "error.h"
 #include "parse-datetime.h"
 #include "posixtm.h"
@@ -301,7 +302,7 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
       in_stream = fopen (input_filename, "r");
       if (in_stream == NULL)
         {
-          error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
+          die (EXIT_FAILURE, errno, "%s", quotef (input_filename));
         }
     }
 
@@ -331,7 +332,7 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
     }
 
   if (fclose (in_stream) == EOF)
-    error (EXIT_FAILURE, errno, "%s", quotef (input_filename));
+    die (EXIT_FAILURE, errno, "%s", quotef (input_filename));
 
   free (line);
 
@@ -435,7 +436,7 @@ main (int argc, char **argv)
       if (new_format)
         {
           if (format)
-            error (EXIT_FAILURE, 0, _("multiple output formats specified"));
+            die (EXIT_FAILURE, 0, _("multiple output formats specified"));
           format = new_format;
         }
     }
@@ -469,7 +470,7 @@ main (int argc, char **argv)
       if (argv[optind][0] == '+')
         {
           if (format)
-            error (EXIT_FAILURE, 0, _("multiple output formats specified"));
+            die (EXIT_FAILURE, 0, _("multiple output formats specified"));
           format = argv[optind++] + 1;
         }
       else if (set_date || option_specified_date)
@@ -534,7 +535,7 @@ main (int argc, char **argv)
           if (reference != NULL)
             {
               if (stat (reference, &refstats) != 0)
-                error (EXIT_FAILURE, errno, "%s", quotef (reference));
+                die (EXIT_FAILURE, errno, "%s", quotef (reference));
               when = get_stat_mtime (&refstats);
             }
           else
@@ -547,7 +548,7 @@ main (int argc, char **argv)
         }
 
       if (! valid_date)
-        error (EXIT_FAILURE, 0, _("invalid date %s"), quote (datestr));
+        die (EXIT_FAILURE, 0, _("invalid date %s"), quote (datestr));
 
       if (set_date)
         {

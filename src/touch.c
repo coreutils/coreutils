@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
 #include "parse-datetime.h"
@@ -112,7 +113,7 @@ get_reldate (struct timespec *result,
              char const *flex_date, struct timespec const *now)
 {
   if (! parse_datetime (result, flex_date, now))
-    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
+    die (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
 }
 
 /* Update the time of file FILE according to the options given.
@@ -306,8 +307,8 @@ main (int argc, char **argv)
         case 't':
           if (! posixtime (&newtime[0].tv_sec, optarg,
                            PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
-            error (EXIT_FAILURE, 0, _("invalid date format %s"),
-                   quote (optarg));
+            die (EXIT_FAILURE, 0, _("invalid date format %s"),
+                 quote (optarg));
           newtime[0].tv_nsec = 0;
           newtime[1] = newtime[0];
           date_set = true;
@@ -343,8 +344,8 @@ main (int argc, char **argv)
          might be an object-like macro.  */
       if (no_dereference ? lstat (ref_file, &ref_stats)
           : stat (ref_file, &ref_stats))
-        error (EXIT_FAILURE, errno,
-               _("failed to get attributes of %s"), quoteaf (ref_file));
+        die (EXIT_FAILURE, errno,
+             _("failed to get attributes of %s"), quoteaf (ref_file));
       newtime[0] = get_stat_atime (&ref_stats);
       newtime[1] = get_stat_mtime (&ref_stats);
       date_set = true;

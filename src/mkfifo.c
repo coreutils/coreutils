@@ -23,6 +23,7 @@
 #include <selinux/selinux.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -139,9 +140,9 @@ main (int argc, char **argv)
         ret = setfscreatecon (se_const (scontext));
 
       if (ret < 0)
-        error (EXIT_FAILURE, errno,
-               _("failed to set default file creation context to %s"),
-               quote (scontext));
+        die (EXIT_FAILURE, errno,
+             _("failed to set default file creation context to %s"),
+             quote (scontext));
     }
 
   newmode = MODE_RW_UGO;
@@ -150,14 +151,14 @@ main (int argc, char **argv)
       mode_t umask_value;
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-        error (EXIT_FAILURE, 0, _("invalid mode"));
+        die (EXIT_FAILURE, 0, _("invalid mode"));
       umask_value = umask (0);
       umask (umask_value);
       newmode = mode_adjust (newmode, false, umask_value, change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
-        error (EXIT_FAILURE, 0,
-               _("mode must specify only file permission bits"));
+        die (EXIT_FAILURE, 0,
+             _("mode must specify only file permission bits"));
     }
 
   for (; optind < argc; ++optind)

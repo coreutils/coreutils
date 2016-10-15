@@ -388,8 +388,8 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
   if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) < n_bytes)
     {
       clearerr (stdout); /* To avoid redundant close_stdout diagnostic.  */
-      error (EXIT_FAILURE, errno, _("error writing %s"),
-             quoteaf ("standard output"));
+      die (EXIT_FAILURE, errno, _("error writing %s"),
+           quoteaf ("standard output"));
     }
 }
 
@@ -413,8 +413,8 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
       if (bytes_read == SAFE_READ_ERROR)
         {
           if (errno != EAGAIN)
-            error (EXIT_FAILURE, errno, _("error reading %s"),
-                   quoteaf (pretty_filename));
+            die (EXIT_FAILURE, errno, _("error reading %s"),
+                 quoteaf (pretty_filename));
           break;
         }
       if (bytes_read == 0)
@@ -1158,9 +1158,9 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                          the append-only attribute.  */
                     }
                   else
-                    error (EXIT_FAILURE, errno,
-                           _("%s: cannot change nonblocking mode"),
-                           quotef (name));
+                    die (EXIT_FAILURE, errno,
+                         _("%s: cannot change nonblocking mode"),
+                         quotef (name));
                 }
               else
                 f[i].blocking = blocking;
@@ -1234,7 +1234,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
         }
 
       if ((!any_input || blocking) && fflush (stdout) != 0)
-        error (EXIT_FAILURE, errno, _("write error"));
+        die (EXIT_FAILURE, errno, _("write error"));
 
       /* If nothing was read, sleep and/or check for dead writers.  */
       if (!any_input)
@@ -1252,7 +1252,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                             && errno != EPERM);
 
           if (!writer_is_dead && xnanosleep (sleep_interval))
-            error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
+            die (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
         }
     }
@@ -1380,7 +1380,7 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
   fspec->size += bytes_read;
 
   if (fflush (stdout) != 0)
-    error (EXIT_FAILURE, errno, _("write error"));
+    die (EXIT_FAILURE, errno, _("write error"));
 }
 
 /* Attempt to tail N_FILES files forever, or until killed.
@@ -1592,7 +1592,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
            if (file_change == 0)
              continue;
            else if (file_change == -1)
-             error (EXIT_FAILURE, errno, _("error monitoring inotify event"));
+             die (EXIT_FAILURE, errno, _("error monitoring inotify event"));
         }
 
       if (len <= evbuf_off)
@@ -1612,7 +1612,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             }
 
           if (len == 0 || len == SAFE_READ_ERROR)
-            error (EXIT_FAILURE, errno, _("error reading inotify event"));
+            die (EXIT_FAILURE, errno, _("error reading inotify event"));
         }
 
       void_ev = evbuf + evbuf_off;
@@ -2056,8 +2056,8 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
             & ~LONGINT_INVALID_SUFFIX_CHAR)
            != LONGINT_OK)
     {
-      error (EXIT_FAILURE, errno, "%s: %s", _("invalid number"),
-             quote (argv[1]));
+      die (EXIT_FAILURE, errno, "%s: %s", _("invalid number"),
+           quote (argv[1]));
     }
 
   /* Set globals.  */
@@ -2142,8 +2142,8 @@ parse_options (int argc, char **argv,
           {
             double s;
             if (! (xstrtod (optarg, NULL, &s, c_strtod) && 0 <= s))
-              error (EXIT_FAILURE, 0,
-                     _("invalid number of seconds: %s"), quote (optarg));
+              die (EXIT_FAILURE, 0,
+                   _("invalid number of seconds: %s"), quote (optarg));
             *sleep_interval = s;
           }
           break;
@@ -2290,7 +2290,7 @@ main (int argc, char **argv)
 
     /* When following by name, there must be a name.  */
     if (found_hyphen && follow_mode == Follow_name)
-      error (EXIT_FAILURE, 0, _("cannot follow %s by name"), quoteaf ("-"));
+      die (EXIT_FAILURE, 0, _("cannot follow %s by name"), quoteaf ("-"));
 
     /* When following forever, warn if any file is '-'.
        This is only a warning, since tail's output (before a failing seek,
@@ -2378,7 +2378,7 @@ main (int argc, char **argv)
                  tail_forever_inotify flushes only after writing,
                  not before reading.  */
               if (fflush (stdout) != 0)
-                error (EXIT_FAILURE, errno, _("write error"));
+                die (EXIT_FAILURE, errno, _("write error"));
 
               if (! tail_forever_inotify (wd, F, n_files, sleep_interval))
                 return EXIT_FAILURE;
@@ -2406,6 +2406,6 @@ main (int argc, char **argv)
   IF_LINT (free (F));
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
-    error (EXIT_FAILURE, errno, "-");
+    die (EXIT_FAILURE, errno, "-");
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

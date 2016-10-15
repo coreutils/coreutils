@@ -23,6 +23,7 @@
 #include <selinux/selinux.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -147,14 +148,14 @@ main (int argc, char **argv)
       mode_t umask_value;
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-        error (EXIT_FAILURE, 0, _("invalid mode"));
+        die (EXIT_FAILURE, 0, _("invalid mode"));
       umask_value = umask (0);
       umask (umask_value);
       newmode = mode_adjust (newmode, false, umask_value, change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
-        error (EXIT_FAILURE, 0,
-               _("mode must specify only file permission bits"));
+        die (EXIT_FAILURE, 0,
+             _("mode must specify only file permission bits"));
     }
 
   /* If the number of arguments is 0 or 1,
@@ -195,9 +196,9 @@ main (int argc, char **argv)
         ret = setfscreatecon (se_const (scontext));
 
       if (ret < 0)
-        error (EXIT_FAILURE, errno,
-               _("failed to set default file creation context to %s"),
-               quote (scontext));
+        die (EXIT_FAILURE, errno,
+             _("failed to set default file creation context to %s"),
+             quote (scontext));
     }
 
   /* Only check the first character, to allow mnemonic usage like
@@ -207,7 +208,7 @@ main (int argc, char **argv)
     {
     case 'b':			/* 'block' or 'buffered' */
 #ifndef S_IFBLK
-      error (EXIT_FAILURE, 0, _("block special files not supported"));
+      die (EXIT_FAILURE, 0, _("block special files not supported"));
 #else
       node_type = S_IFBLK;
 #endif
@@ -216,7 +217,7 @@ main (int argc, char **argv)
     case 'c':			/* 'character' */
     case 'u':			/* 'unbuffered' */
 #ifndef S_IFCHR
-      error (EXIT_FAILURE, 0, _("character special files not supported"));
+      die (EXIT_FAILURE, 0, _("character special files not supported"));
 #else
       node_type = S_IFCHR;
 #endif
@@ -231,26 +232,26 @@ main (int argc, char **argv)
 
         if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
             || i_major != (major_t) i_major)
-          error (EXIT_FAILURE, 0,
-                 _("invalid major device number %s"), quote (s_major));
+          die (EXIT_FAILURE, 0,
+               _("invalid major device number %s"), quote (s_major));
 
         if (xstrtoumax (s_minor, NULL, 0, &i_minor, NULL) != LONGINT_OK
             || i_minor != (minor_t) i_minor)
-          error (EXIT_FAILURE, 0,
-                 _("invalid minor device number %s"), quote (s_minor));
+          die (EXIT_FAILURE, 0,
+               _("invalid minor device number %s"), quote (s_minor));
 
         device = makedev (i_major, i_minor);
 #ifdef NODEV
         if (device == NODEV)
-          error (EXIT_FAILURE, 0, _("invalid device %s %s"),
-                 s_major, s_minor);
+          die (EXIT_FAILURE, 0, _("invalid device %s %s"),
+               s_major, s_minor);
 #endif
 
         if (set_security_context)
           defaultcon (argv[optind], node_type);
 
         if (mknod (argv[optind], newmode | node_type, device) != 0)
-          error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
+          die (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
       }
       break;
 
@@ -258,7 +259,7 @@ main (int argc, char **argv)
       if (set_security_context)
         defaultcon (argv[optind], S_IFIFO);
       if (mkfifo (argv[optind], newmode) != 0)
-        error (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
+        die (EXIT_FAILURE, errno, "%s", quotef (argv[optind]));
       break;
 
     default:
@@ -267,8 +268,8 @@ main (int argc, char **argv)
     }
 
   if (specified_mode && lchmod (argv[optind], newmode) != 0)
-    error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
-           quoteaf (argv[optind]));
+    die (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
+         quoteaf (argv[optind]));
 
   return EXIT_SUCCESS;
 }

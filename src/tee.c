@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "stdio--.h"
@@ -170,7 +171,7 @@ main (int argc, char **argv)
 
   ok = tee_files (argc - optind, &argv[optind]);
   if (close (STDIN_FILENO) != 0)
-    error (EXIT_FAILURE, errno, "%s", _("standard input"));
+    die (EXIT_FAILURE, errno, "%s", _("standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

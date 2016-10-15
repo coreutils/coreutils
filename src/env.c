@@ -22,6 +22,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "quote.h"
 
@@ -121,7 +122,7 @@ main (int argc, char **argv)
   optind = 0;			/* Force GNU getopt to re-initialize. */
   while ((optc = getopt_long (argc, argv, "+iu:0", longopts, NULL)) != -1)
     if (optc == 'u' && unsetenv (optarg))
-      error (EXIT_CANCELED, errno, _("cannot unset %s"), quote (optarg));
+      die (EXIT_CANCELED, errno, _("cannot unset %s"), quote (optarg));
 
   if (optind < argc && STREQ (argv[optind], "-"))
     ++optind;
@@ -132,8 +133,8 @@ main (int argc, char **argv)
       if (putenv (argv[optind]))
         {
           *eq = '\0';
-          error (EXIT_CANCELED, errno, _("cannot set %s"),
-                 quote (argv[optind]));
+          die (EXIT_CANCELED, errno, _("cannot set %s"),
+               quote (argv[optind]));
         }
       optind++;
     }

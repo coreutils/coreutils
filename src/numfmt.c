@@ -24,6 +24,7 @@
 #include "mbsalign.h"
 #include "argmatch.h"
 #include "c-ctype.h"
+#include "die.h"
 #include "error.h"
 #include "quote.h"
 #include "system.h"
@@ -752,8 +753,8 @@ double_to_human (long double val, int precision,
 
       num_size = snprintf (buf, buf_size, fmt, precision, val);
       if (num_size < 0 || num_size >= (int) buf_size)
-        error (EXIT_FAILURE, 0,
-               _("failed to prepare value '%Lf' for printing"), val);
+        die (EXIT_FAILURE, 0,
+             _("failed to prepare value '%Lf' for printing"), val);
       return;
     }
 
@@ -804,8 +805,8 @@ double_to_human (long double val, int precision,
   num_size = snprintf (buf, buf_size - 1, fmt, prec, val,
                        suffix_power_char (power));
   if (num_size < 0 || num_size >= (int) buf_size - 1)
-    error (EXIT_FAILURE, 0,
-           _("failed to prepare value '%Lf' for printing"), val);
+    die (EXIT_FAILURE, 0,
+         _("failed to prepare value '%Lf' for printing"), val);
 
   if (scale == scale_IEC_I && power > 0)
     strncat (buf, "i", buf_size - num_size - 1);
@@ -854,7 +855,7 @@ unit_to_umax (const char *n_string)
   if (s_err != LONGINT_OK || *end || n == 0)
     {
       free (t_string);
-      error (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
+      die (EXIT_FAILURE, 0, _("invalid unit size: %s"), quote (n_string));
     }
 
   free (t_string);
@@ -1054,8 +1055,8 @@ parse_format_string (char const *fmt)
   for (i = 0; !(fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
     {
       if (!fmt[i])
-        error (EXIT_FAILURE, 0,
-               _("format %s has no %% directive"), quote (fmt));
+        die (EXIT_FAILURE, 0,
+             _("format %s has no %% directive"), quote (fmt));
       prefix_len++;
     }
 
@@ -1081,8 +1082,8 @@ parse_format_string (char const *fmt)
   errno = 0;
   pad = strtol (fmt + i, &endptr, 10);
   if (errno == ERANGE)
-    error (EXIT_FAILURE, 0,
-           _("invalid format %s (width overflow)"), quote (fmt));
+    die (EXIT_FAILURE, 0,
+         _("invalid format %s (width overflow)"), quote (fmt));
 
   if (endptr != (fmt + i) && pad != 0)
     {
@@ -1106,7 +1107,7 @@ parse_format_string (char const *fmt)
   i = endptr - fmt;
 
   if (fmt[i] == '\0')
-    error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
+    die (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
 
   if (fmt[i] == '.')
     {
@@ -1121,23 +1122,23 @@ parse_format_string (char const *fmt)
              negative precision is only supported (and ignored)
              when used with '.*f'.  glibc at least will malform
              output when passed a direct negative precision.  */
-          error (EXIT_FAILURE, 0,
-                 _("invalid precision in format %s"), quote (fmt));
+          die (EXIT_FAILURE, 0,
+               _("invalid precision in format %s"), quote (fmt));
         }
       i = endptr - fmt;
     }
 
   if (fmt[i] != 'f')
-    error (EXIT_FAILURE, 0, _("invalid format %s,"
-                              " directive must be %%[0]['][-][N][.][N]f"),
-           quote (fmt));
+    die (EXIT_FAILURE, 0, _("invalid format %s,"
+                            " directive must be %%[0]['][-][N][.][N]f"),
+         quote (fmt));
   i++;
   suffix_pos = i;
 
   for (; fmt[i] != '\0'; i += (fmt[i] == '%') + 1)
     if (fmt[i] == '%' && fmt[i + 1] != '%')
-      error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
-             quote (fmt));
+      die (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
+           quote (fmt));
 
   if (prefix_len)
     format_str_prefix = xstrndup (fmt, prefix_len);
@@ -1496,8 +1497,8 @@ main (int argc, char **argv)
         case PADDING_OPTION:
           if (xstrtol (optarg, NULL, 10, &padding_width, "") != LONGINT_OK
               || padding_width == 0)
-            error (EXIT_FAILURE, 0, _("invalid padding value %s"),
-                   quote (optarg));
+            die (EXIT_FAILURE, 0, _("invalid padding value %s"),
+                 quote (optarg));
           if (padding_width < 0)
             {
               padding_alignment = MBS_ALIGN_LEFT;
@@ -1509,15 +1510,15 @@ main (int argc, char **argv)
 
         case FIELD_OPTION:
           if (n_frp)
-            error (EXIT_FAILURE, 0, _("multiple field specifications"));
+            die (EXIT_FAILURE, 0, _("multiple field specifications"));
           set_fields (optarg, SETFLD_ALLOW_DASH);
           break;
 
         case 'd':
           /* Interpret -d '' to mean 'use the NUL byte as the delimiter.'  */
           if (optarg[0] != '\0' && optarg[1] != '\0')
-            error (EXIT_FAILURE, 0,
-                   _("the delimiter must be a single character"));
+            die (EXIT_FAILURE, 0,
+                 _("the delimiter must be a single character"));
           delimiter = optarg[0];
           break;
 
@@ -1543,8 +1544,8 @@ main (int argc, char **argv)
             {
               if (xstrtoumax (optarg, NULL, 10, &header, "") != LONGINT_OK
                   || header == 0)
-                error (EXIT_FAILURE, 0, _("invalid header value %s"),
-                       quote (optarg));
+                die (EXIT_FAILURE, 0, _("invalid header value %s"),
+                     quote (optarg));
             }
           else
             {
@@ -1570,7 +1571,7 @@ main (int argc, char **argv)
     }
 
   if (format_str != NULL && grouping)
-    error (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
+    die (EXIT_FAILURE, 0, _("--grouping cannot be combined with --format"));
 
   if (debug && ! locale_ok)
     error (0, 0, _("failed to set locale"));
@@ -1586,7 +1587,7 @@ main (int argc, char **argv)
   if (grouping)
     {
       if (scale_to != scale_none)
-        error (EXIT_FAILURE, 0, _("grouping cannot be combined with --to"));
+        die (EXIT_FAILURE, 0, _("grouping cannot be combined with --to"));
       if (debug && (strlen (nl_langinfo (THOUSEP)) == 0))
         error (0, 0, _("grouping has no effect in this locale"));
     }

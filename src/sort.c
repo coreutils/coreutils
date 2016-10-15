@@ -31,6 +31,7 @@
 #include <assert.h>
 #include "system.h"
 #include "argmatch.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "filevercmp.h"
@@ -404,13 +405,12 @@ async_safe_die (int errnum, const char *errstr)
 /* Report MESSAGE for FILE, then clean up and exit.
    If FILE is null, it represents standard output.  */
 
-static void die (char const *, char const *) ATTRIBUTE_NORETURN;
+static void sort_die (char const *, char const *) ATTRIBUTE_NORETURN;
 static void
-die (char const *message, char const *file)
+sort_die (char const *message, char const *file)
 {
-  error (0, errno, "%s: %s", message,
-         quotef (file ? file : _("standard output")));
-  exit (SORT_FAILURE);
+  die (SORT_FAILURE, errno, "%s: %s", message,
+       quotef (file ? file : _("standard output")));
 }
 
 void
@@ -722,13 +722,13 @@ reap (pid_t pid)
   pid_t cpid = waitpid ((pid ? pid : -1), &status, (pid ? 0 : WNOHANG));
 
   if (cpid < 0)
-    error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
-           quoteaf (compress_program));
+    die (SORT_FAILURE, errno, _("waiting for %s [-d]"),
+         quoteaf (compress_program));
   else if (0 < cpid && (0 < pid || delete_proc (cpid)))
     {
       if (! WIFEXITED (status) || WEXITSTATUS (status))
-        error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
-               quoteaf (compress_program));
+        die (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
+             quoteaf (compress_program));
       --nprocs;
     }
 
@@ -881,8 +881,8 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   if (fd < 0)
     {
       if (! (survive_fd_exhaustion && errno == EMFILE))
-        error (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
-               quoteaf (temp_dir));
+        die (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
+             quoteaf (temp_dir));
       free (node);
       node = NULL;
     }
@@ -957,8 +957,8 @@ stream_open (char const *file, char const *how)
   else if (*how == 'w')
     {
       if (file && ftruncate (STDOUT_FILENO, 0) != 0)
-        error (SORT_FAILURE, errno, _("%s: error truncating"),
-               quotef (file));
+        die (SORT_FAILURE, errno, _("%s: error truncating"),
+             quotef (file));
       fp = stdout;
     }
   else
@@ -975,7 +975,7 @@ xfopen (char const *file, char const *how)
 {
   FILE *fp = stream_open (file, how);
   if (!fp)
-    die (_("open failed"), file);
+    sort_die (_("open failed"), file);
   return fp;
 }
 
@@ -995,12 +995,12 @@ xfclose (FILE *fp, char const *file)
     case STDOUT_FILENO:
       /* Don't close stdout just yet.  close_stdout does that.  */
       if (fflush (fp) != 0)
-        die (_("fflush failed"), file);
+        sort_die (_("fflush failed"), file);
       break;
 
     default:
       if (fclose (fp) != 0)
-        die (_("close failed"), file);
+        sort_die (_("close failed"), file);
       break;
     }
 }
@@ -1137,7 +1137,7 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
 
   *pfp = fdopen (tempfd, "w");
   if (! *pfp)
-    die (_("couldn't create temporary file"), node->name);
+    sort_die (_("couldn't create temporary file"), node->name);
 
   return node;
 }
@@ -1176,8 +1176,8 @@ open_temp (struct tempnode *temp)
     {
     case -1:
       if (errno != EMFILE)
-        error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
-               quoteaf (compress_program));
+        die (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
+             quoteaf (compress_program));
       close (tempfd);
       errno = EMFILE;
       break;
@@ -1337,9 +1337,9 @@ specify_nmerge (int oi, char c, char const *s)
             {
               error (0, 0, _("invalid --%s argument %s"),
                      long_options[oi].name, quote (s));
-              error (SORT_FAILURE, 0,
-                     _("minimum --%s argument is %s"),
-                     long_options[oi].name, quote ("2"));
+              die (SORT_FAILURE, 0,
+                   _("minimum --%s argument is %s"),
+                   long_options[oi].name, quote ("2"));
             }
           else if (max_nmerge < nmerge)
             {
@@ -1355,10 +1355,10 @@ specify_nmerge (int oi, char c, char const *s)
       char max_nmerge_buf[INT_BUFSIZE_BOUND (max_nmerge)];
       error (0, 0, _("--%s argument %s too large"),
              long_options[oi].name, quote (s));
-      error (SORT_FAILURE, 0,
-             _("maximum --%s argument with current rlimit is %s"),
-             long_options[oi].name,
-             uinttostr (max_nmerge, max_nmerge_buf));
+      die (SORT_FAILURE, 0,
+           _("maximum --%s argument with current rlimit is %s"),
+           long_options[oi].name,
+           uinttostr (max_nmerge, max_nmerge_buf));
     }
   else
     xstrtol_fatal (e, oi, c, long_options, s);
@@ -1438,7 +1438,7 @@ specify_nthreads (int oi, char c, char const *s)
   if (SIZE_MAX < nthreads)
     nthreads = SIZE_MAX;
   if (nthreads == 0)
-    error (SORT_FAILURE, 0, _("number in parallel must be nonzero"));
+    die (SORT_FAILURE, 0, _("number in parallel must be nonzero"));
   return nthreads;
 }
 
@@ -1523,7 +1523,7 @@ sort_buffer_size (FILE *const *fps, size_t nfps,
            : STREQ (files[i], "-") ? fstat (STDIN_FILENO, &st)
            : stat (files[i], &st))
           != 0)
-        die (_("stat failed"), files[i]);
+        sort_die (_("stat failed"), files[i]);
 
       if (S_ISREG (st.st_mode))
         file_size = st.st_size;
@@ -1785,7 +1785,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
           if (bytes_read != readsize)
             {
               if (ferror (fp))
-                die (_("read failed"), file);
+                sort_die (_("read failed"), file);
               if (feof (fp))
                 {
                   buf->eof = true;
@@ -2084,10 +2084,10 @@ random_md5_state_init (char const *random_source)
   unsigned char buf[MD5_DIGEST_SIZE];
   struct randread_source *r = randread_new (random_source, sizeof buf);
   if (! r)
-    die (_("open failed"), random_source);
+    sort_die (_("open failed"), random_source);
   randread (r, buf, sizeof buf);
   if (randread_free (r) != 0)
-    die (_("close failed"), random_source);
+    sort_die (_("close failed"), random_source);
   md5_init_ctx (&random_md5_state);
   md5_process_bytes (buf, sizeof buf, &random_md5_state);
 }
@@ -2104,9 +2104,9 @@ xstrxfrm (char *restrict dest, char const *restrict src, size_t destsize)
     {
       error (0, errno, _("string transformation failed"));
       error (0, 0, _("set LC_ALL='C' to work around the problem"));
-      error (SORT_FAILURE, 0,
-             _("the untransformed string was %s"),
-             quotearg_n_style (0, locale_quoting_style, src));
+      die (SORT_FAILURE, 0,
+           _("the untransformed string was %s"),
+           quotearg_n_style (0, locale_quoting_style, src));
     }
 
   return translated_size;
@@ -2781,7 +2781,7 @@ write_line (struct line const *line, FILE *fp, char const *output_file)
           else if (c == ebuf)
             wc = '\n';
           if (fputc (wc, fp) == EOF)
-            die (_("write failed"), output_file);
+            sort_die (_("write failed"), output_file);
         }
 
       debug_line (line);
@@ -2790,7 +2790,7 @@ write_line (struct line const *line, FILE *fp, char const *output_file)
     {
       ebuf[-1] = eolchar;
       if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
-        die (_("write failed"), output_file);
+        sort_die (_("write failed"), output_file);
       ebuf[-1] = '\0';
     }
 }
@@ -3121,7 +3121,7 @@ mergefiles (struct sortfile *files, size_t ntemps, size_t nfiles,
   FILE **fps;
   size_t nopened = open_input_files (files, nfiles, &fps);
   if (nopened < nfiles && nopened < 2)
-    die (_("open failed"), files[nopened].name);
+    sort_die (_("open failed"), files[nopened].name);
   mergefps (files, ntemps, nopened, ofp, output_file, fps);
   return nopened;
 }
@@ -3755,7 +3755,7 @@ check_inputs (char *const *files, size_t nfiles)
         continue;
 
       if (euidaccess (files[i], R_OK) != 0)
-        die (_("cannot read"), files[i]);
+        sort_die (_("cannot read"), files[i]);
     }
 }
 
@@ -3770,7 +3770,7 @@ check_output (char const *outfile)
     {
       int outfd = open (outfile, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
       if (outfd < 0)
-        die (_("open failed"), outfile);
+        sort_die (_("open failed"), outfile);
       move_fd_or_die (outfd, STDOUT_FILENO);
     }
 }
@@ -3861,10 +3861,10 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
               break;
             }
           if (errno != EMFILE || nopened <= 2)
-            die (_("open failed"), output_file);
+            sort_die (_("open failed"), output_file);
         }
       else if (nopened <= 2)
-        die (_("open failed"), files[nopened].name);
+        sort_die (_("open failed"), files[nopened].name);
 
       /* We ran out of file descriptors.  Close one of the input
          files, to gain a file descriptor.  Then create a temporary
@@ -4034,8 +4034,8 @@ static void badfieldspec (char const *, char const *)
 static void
 badfieldspec (char const *spec, char const *msgid)
 {
-  error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
-         _(msgid), quote (spec));
+  die (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
+       _(msgid), quote (spec));
   abort ();
 }
 
@@ -4045,7 +4045,7 @@ static void incompatible_options (char const *) ATTRIBUTE_NORETURN;
 static void
 incompatible_options (char const *opts)
 {
-  error (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
+  die (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
   abort ();
 }
 
@@ -4096,8 +4096,8 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
 
     case LONGINT_INVALID:
       if (msgid)
-        error (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
-               _(msgid), quote (string));
+        die (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
+             _(msgid), quote (string));
       return NULL;
     }
 
@@ -4422,7 +4422,7 @@ main (int argc, char **argv)
 
         case COMPRESS_PROGRAM_OPTION:
           if (compress_program && !STREQ (compress_program, optarg))
-            error (SORT_FAILURE, 0, _("multiple compress programs specified"));
+            die (SORT_FAILURE, 0, _("multiple compress programs specified"));
           compress_program = optarg;
           break;
 
@@ -4495,13 +4495,13 @@ main (int argc, char **argv)
 
         case 'o':
           if (outfile && !STREQ (outfile, optarg))
-            error (SORT_FAILURE, 0, _("multiple output files specified"));
+            die (SORT_FAILURE, 0, _("multiple output files specified"));
           outfile = optarg;
           break;
 
         case RANDOM_SOURCE_OPTION:
           if (random_source && !STREQ (random_source, optarg))
-            error (SORT_FAILURE, 0, _("multiple random sources specified"));
+            die (SORT_FAILURE, 0, _("multiple random sources specified"));
           random_source = optarg;
           break;
 
@@ -4517,7 +4517,7 @@ main (int argc, char **argv)
           {
             char newtab = optarg[0];
             if (! newtab)
-              error (SORT_FAILURE, 0, _("empty tab"));
+              die (SORT_FAILURE, 0, _("empty tab"));
             if (optarg[1])
               {
                 if (STREQ (optarg, "\\0"))
@@ -4528,12 +4528,12 @@ main (int argc, char **argv)
                        "multi-character tab" instead of "multibyte tab", so
                        that the diagnostic's wording does not need to be
                        changed once multibyte characters are supported.  */
-                    error (SORT_FAILURE, 0, _("multi-character tab %s"),
-                           quote (optarg));
+                    die (SORT_FAILURE, 0, _("multi-character tab %s"),
+                         quote (optarg));
                   }
               }
             if (tab != TAB_DEFAULT && tab != newtab)
-              error (SORT_FAILURE, 0, _("incompatible tabs"));
+              die (SORT_FAILURE, 0, _("incompatible tabs"));
             tab = newtab;
           }
           break;
@@ -4603,15 +4603,15 @@ main (int argc, char **argv)
         {
           stream = fopen (files_from, "r");
           if (stream == NULL)
-            error (SORT_FAILURE, errno, _("cannot open %s for reading"),
-                   quoteaf (files_from));
+            die (SORT_FAILURE, errno, _("cannot open %s for reading"),
+                 quoteaf (files_from));
         }
 
       readtokens0_init (&tok);
 
       if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
-        error (SORT_FAILURE, 0, _("cannot read file names from %s"),
-               quoteaf (files_from));
+        die (SORT_FAILURE, 0, _("cannot read file names from %s"),
+             quoteaf (files_from));
 
       if (tok.n_tok)
         {
@@ -4622,24 +4622,24 @@ main (int argc, char **argv)
           for (i = 0; i < nfiles; i++)
             {
               if (STREQ (files[i], "-"))
-                error (SORT_FAILURE, 0, _("when reading file names from stdin, "
-                                          "no file name of %s allowed"),
-                       quoteaf (files[i]));
+                die (SORT_FAILURE, 0, _("when reading file names from stdin, "
+                                        "no file name of %s allowed"),
+                     quoteaf (files[i]));
               else if (files[i][0] == '\0')
                 {
                   /* Using the standard 'filename:line-number:' prefix here is
                      not totally appropriate, since NUL is the separator,
                      not NL, but it might be better than nothing.  */
                   unsigned long int file_number = i + 1;
-                  error (SORT_FAILURE, 0,
-                         _("%s:%lu: invalid zero-length file name"),
-                         quotef (files_from), file_number);
+                  die (SORT_FAILURE, 0,
+                       _("%s:%lu: invalid zero-length file name"),
+                       quotef (files_from), file_number);
                 }
             }
         }
       else
-        error (SORT_FAILURE, 0, _("no input from %s"),
-               quoteaf (files_from));
+        die (SORT_FAILURE, 0, _("no input from %s"),
+             quoteaf (files_from));
     }
 
   /* Inheritance of global options to individual keys. */
@@ -4725,8 +4725,8 @@ main (int argc, char **argv)
   if (checkonly)
     {
       if (nfiles > 1)
-        error (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
-               quoteaf (files[1]), checkonly);
+        die (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
+             quoteaf (files[1]), checkonly);
 
       if (outfile)
         {
@@ -4780,7 +4780,7 @@ main (int argc, char **argv)
 #endif
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die (_("close failed"), "-");
+    sort_die (_("close failed"), "-");
 
   return EXIT_SUCCESS;
 }

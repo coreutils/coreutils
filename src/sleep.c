@@ -21,6 +21,7 @@
 
 #include "system.h"
 #include "c-strtod.h"
+#include "die.h"
 #include "error.h"
 #include "long-options.h"
 #include "quote.h"
@@ -143,7 +144,7 @@ main (int argc, char **argv)
     usage (EXIT_FAILURE);
 
   if (xnanosleep (seconds))
-    error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
+    die (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
   return EXIT_SUCCESS;
 }

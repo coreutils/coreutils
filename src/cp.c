@@ -27,6 +27,7 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "die.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "ignore-value.h"
@@ -575,7 +576,7 @@ target_directory_operand (char const *file, struct stat *st, bool *new_dst)
   if (err)
     {
       if (err != ENOENT)
-        error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+        die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
       *new_dst = true;
     }
   return is_a_dir;
@@ -605,9 +606,9 @@ do_copy (int n_files, char **file, const char *target_directory,
   if (no_target_directory)
     {
       if (target_directory)
-        error (EXIT_FAILURE, 0,
-               _("cannot combine --target-directory (-t) "
-                 "and --no-target-directory (-T)"));
+        die (EXIT_FAILURE, 0,
+             _("cannot combine --target-directory (-t) "
+               "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -622,8 +623,8 @@ do_copy (int n_files, char **file, const char *target_directory,
           && target_directory_operand (file[n_files - 1], &sb, &new_dst))
         target_directory = file[--n_files];
       else if (2 < n_files)
-        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quoteaf (file[n_files - 1]));
+        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+             quoteaf (file[n_files - 1]));
     }
 
   if (target_directory)
@@ -1072,17 +1073,17 @@ main (int argc, char **argv)
 
         case 't':
           if (target_directory)
-            error (EXIT_FAILURE, 0,
-                   _("multiple target directories specified"));
+            die (EXIT_FAILURE, 0,
+                 _("multiple target directories specified"));
           else
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                error (EXIT_FAILURE, errno, _("failed to access %s"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, errno, _("failed to access %s"),
+                     quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
-                error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+                     quoteaf (optarg));
             }
           target_directory = optarg;
           break;
@@ -1184,13 +1185,13 @@ main (int argc, char **argv)
     x.preserve_security_context = false;
 
   if (x.preserve_security_context && (x.set_security_context || scontext))
-    error (EXIT_FAILURE, 0,
-           _("cannot set target context and preserve it"));
+    die (EXIT_FAILURE, 0,
+         _("cannot set target context and preserve it"));
 
   if (x.require_preserve_context && ! selinux_enabled)
-    error (EXIT_FAILURE, 0,
-           _("cannot preserve security context "
-             "without an SELinux-enabled kernel"));
+    die (EXIT_FAILURE, 0,
+         _("cannot preserve security context "
+           "without an SELinux-enabled kernel"));
 
   /* FIXME: This handles new files.  But what about existing files?
      I.e., if updating a tree, new files would have the specified context,
@@ -1199,14 +1200,14 @@ main (int argc, char **argv)
          restorecon (dst_path, 0, true);
    */
   if (scontext && setfscreatecon (se_const (scontext)) < 0)
-    error (EXIT_FAILURE, errno,
-           _("failed to set default file creation context to %s"),
-           quote (scontext));
+    die (EXIT_FAILURE, errno,
+         _("failed to set default file creation context to %s"),
+         quote (scontext));
 
 #if !USE_XATTR
   if (x.require_preserve_xattr)
-    error (EXIT_FAILURE, 0, _("cannot preserve extended attributes, cp is "
-                              "built without xattr support"));
+    die (EXIT_FAILURE, 0, _("cannot preserve extended attributes, cp is "
+                            "built without xattr support"));
 #endif
 
   /* Allocate space for remembering copied and created files.  */

@@ -50,6 +50,7 @@
 #endif
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "quote.h"
 #include "uname.h"
@@ -283,7 +284,7 @@ main (int argc, char **argv)
       struct utsname name;
 
       if (uname (&name) == -1)
-        error (EXIT_FAILURE, errno, _("cannot get system name"));
+        die (EXIT_FAILURE, errno, _("cannot get system name"));
 
       if (toprint & PRINT_KERNEL_NAME)
         print_element (name.sysname);

@@ -41,6 +41,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 
@@ -159,7 +160,7 @@ static void write_error (void) ATTRIBUTE_NORETURN;
 static void
 write_error (void)
 {
-  error (EXIT_FAILURE, errno, _("write error"));
+  die (EXIT_FAILURE, errno, _("write error"));
   abort ();
 }
 
@@ -211,7 +212,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
         {
           fileptr[files_open] = fopen (fnamptr[files_open], "r");
           if (fileptr[files_open] == NULL)
-            error (EXIT_FAILURE, errno, "%s", quotef (fnamptr[files_open]));
+            die (EXIT_FAILURE, errno, "%s", quotef (fnamptr[files_open]));
           else if (fileno (fileptr[files_open]) == STDIN_FILENO)
             opened_stdin = true;
           fadvise (fileptr[files_open], FADVISE_SEQUENTIAL);
@@ -219,7 +220,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
     }
 
   if (opened_stdin && have_read_stdin)
-    error (EXIT_FAILURE, 0, _("standard input is closed"));
+    die (EXIT_FAILURE, 0, _("standard input is closed"));
 
   /* Read a line from each file and output it to stdout separated by a
      delimiter, until we go through the loop without successfully
@@ -515,9 +516,9 @@ main (int argc, char **argv)
     {
       /* Don't use the quote() quoting style, because that would double the
          number of displayed backslashes, making the diagnostic look bogus.  */
-      error (EXIT_FAILURE, 0,
-             _("delimiter list ends with an unescaped backslash: %s"),
-             quotearg_n_style_colon (0, c_maybe_quoting_style, delim_arg));
+      die (EXIT_FAILURE, 0,
+           _("delimiter list ends with an unescaped backslash: %s"),
+           quotearg_n_style_colon (0, c_maybe_quoting_style, delim_arg));
     }
 
   bool ok = ((serial_merge ? paste_serial : paste_parallel)
@@ -526,6 +527,6 @@ main (int argc, char **argv)
   free (delims);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, "-");
+    die (EXIT_FAILURE, errno, "-");
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

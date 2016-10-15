@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "backupfile.h"
+#include "die.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "file-set.h"
@@ -129,10 +130,10 @@ target_directory_operand (char const *file)
   int err = (stat_result == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && ! errno_nonexisting (errno))
-    error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
   if (is_a_dir < looks_like_a_dir)
-    error (EXIT_FAILURE, err, _("target %s is not a directory"),
-           quoteaf (file));
+    die (EXIT_FAILURE, err, _("target %s is not a directory"),
+         quoteaf (file));
   return is_a_dir;
 }
 
@@ -525,16 +526,16 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            error (EXIT_FAILURE, 0, _("multiple target directories specified"));
+            die (EXIT_FAILURE, 0, _("multiple target directories specified"));
           else
             {
               struct stat st;
               if (stat (optarg, &st) != 0)
-                error (EXIT_FAILURE, errno, _("failed to access %s"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, errno, _("failed to access %s"),
+                     quoteaf (optarg));
               if (! S_ISDIR (st.st_mode))
-                error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                       quoteaf (optarg));
+                die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+                     quoteaf (optarg));
             }
           target_directory = optarg;
           break;
@@ -568,9 +569,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        error (EXIT_FAILURE, 0,
-               _("cannot combine --target-directory "
-                 "and --no-target-directory"));
+        die (EXIT_FAILURE, 0,
+             _("cannot combine --target-directory "
+               "and --no-target-directory"));
       if (n_files != 2)
         {
           if (n_files < 2)
@@ -589,8 +590,8 @@ main (int argc, char **argv)
       else if (2 <= n_files && target_directory_operand (file[n_files - 1]))
         target_directory = file[--n_files];
       else if (2 < n_files)
-        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quoteaf (file[n_files - 1]));
+        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+             quoteaf (file[n_files - 1]));
     }
 
   if (backup_suffix_string)
@@ -602,8 +603,8 @@ main (int argc, char **argv)
 
   if (relative && !symbolic_link)
     {
-        error (EXIT_FAILURE, 0,
-               _("cannot do --relative without --symbolic"));
+        die (EXIT_FAILURE, 0,
+             _("cannot do --relative without --symbolic"));
     }
 
 

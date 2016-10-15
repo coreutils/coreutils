@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "long-options.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "readtokens.h"
@@ -445,7 +446,7 @@ tsort (const char *file)
   root = new_item (NULL);
 
   if (!is_stdin && ! freopen (file, "r", stdin))
-    error (EXIT_FAILURE, errno, "%s", quotef (file));
+    die (EXIT_FAILURE, errno, "%s", quotef (file));
 
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -472,8 +473,8 @@ tsort (const char *file)
     }
 
   if (k != NULL)
-    error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
-           quotef (file));
+    die (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
+         quotef (file));
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
@@ -531,8 +532,8 @@ tsort (const char *file)
   IF_LINT (free (root));
 
   if (fclose (stdin) != 0)
-    error (EXIT_FAILURE, errno, "%s",
-           is_stdin ? _("standard input") : quotef (file));
+    die (EXIT_FAILURE, errno, "%s",
+         is_stdin ? _("standard input") : quotef (file));
 
   return ok;
 }

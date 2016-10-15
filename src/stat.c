@@ -59,6 +59,7 @@
 #include "system.h"
 
 #include "areadlink.h"
+#include "die.h"
 #include "error.h"
 #include "file-type.h"
 #include "filemode.h"
@@ -1219,8 +1220,8 @@ print_it (char const *format, int fd, char const *filename,
                   {
                     dest[len + 1] = *fmt_char;
                     dest[len + 2] = '\0';
-                    error (EXIT_FAILURE, 0, _("%s: invalid directive"),
-                           quote (dest));
+                    die (EXIT_FAILURE, 0, _("%s: invalid directive"),
+                         quote (dest));
                   }
                 putchar ('%');
                 break;

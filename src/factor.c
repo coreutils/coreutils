@@ -114,6 +114,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "full-write.h"
 #include "quote.h"
@@ -2079,7 +2080,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
               if (g <= L)
                 {
                   if (qpos >= QUEUE_SIZE)
-                    error (EXIT_FAILURE, 0, _("squfof queue overflow"));
+                    die (EXIT_FAILURE, 0, _("squfof queue overflow"));
                   queue[qpos].Q = g;
                   queue[qpos].P = P % g;
                   qpos++;
@@ -2363,7 +2364,7 @@ lbuf_flush (void)
 {
   size_t size = lbuf.end - lbuf.buf;
   if (full_write (STDOUT_FILENO, lbuf.buf, size) != size)
-    error (EXIT_FAILURE, errno, "%s", _("write error"));
+    die (EXIT_FAILURE, errno, "%s", _("write error"));
   lbuf.end = lbuf.buf;
 }
 

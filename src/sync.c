@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -208,12 +209,12 @@ main (int argc, char **argv)
 
   if (arg_data && arg_file_system)
     {
-      error (EXIT_FAILURE, 0,
-             _("cannot specify both --data and --file-system"));
+      die (EXIT_FAILURE, 0,
+           _("cannot specify both --data and --file-system"));
     }
 
   if (!args_specified && arg_data)
-    error (EXIT_FAILURE, 0, _("--data needs at least one argument"));
+    die (EXIT_FAILURE, 0, _("--data needs at least one argument"));
 
   if (! args_specified || (arg_file_system && ! HAVE_SYNCFS))
     mode = MODE_SYNC;

@@ -38,6 +38,7 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "extent-scan.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "fcntl--.h"
@@ -1762,8 +1763,8 @@ static void
 restore_default_fscreatecon_or_die (void)
 {
   if (setfscreatecon (NULL) != 0)
-    error (EXIT_FAILURE, errno,
-           _("failed to restore the default file creation context"));
+    die (EXIT_FAILURE, errno,
+         _("failed to restore the default file creation context"));
 }
 
 /* Create a hard link DST_NAME to SRC_NAME, honoring the REPLACE, VERBOSE and

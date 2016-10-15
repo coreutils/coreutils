@@ -38,7 +38,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "error.h"
+#include "die.h"
 #include "xstrndup.h"
 
 #include "expand-common.h"
@@ -145,11 +145,11 @@ expand (void)
                     next_tab_column = column + 1;
 
                   if (next_tab_column < column)
-                    error (EXIT_FAILURE, 0, _("input line is too long"));
+                    die (EXIT_FAILURE, 0, _("input line is too long"));
 
                   while (++column < next_tab_column)
                     if (putchar (' ') < 0)
-                      error (EXIT_FAILURE, errno, _("write error"));
+                      die (EXIT_FAILURE, errno, _("write error"));
 
                   c = ' ';
                 }
@@ -164,7 +164,7 @@ expand (void)
                 {
                   column++;
                   if (!column)
-                    error (EXIT_FAILURE, 0, _("input line is too long"));
+                    die (EXIT_FAILURE, 0, _("input line is too long"));
                 }
 
               convert &= convert_entire_line || !! isblank (c);
@@ -174,7 +174,7 @@ expand (void)
             return;
 
           if (putchar (c) < 0)
-            error (EXIT_FAILURE, errno, _("write error"));
+            die (EXIT_FAILURE, errno, _("write error"));
         }
       while (c != '\n');
     }

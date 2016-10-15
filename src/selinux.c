@@ -21,6 +21,7 @@
 #include <selinux/context.h>
 #include <sys/types.h>
 
+#include "die.h"
 #include "error.h"
 #include "system.h"
 #include "canonicalize.h"
@@ -123,8 +124,8 @@ defaultcon (char const *path, mode_t mode)
          with libselinux < 2.1.5 2011-0826.  */
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
-        error (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-               quoteaf (path));
+        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
+             quoteaf (path));
       path = newpath;
     }
 
@@ -296,8 +297,8 @@ restorecon (char const *path, bool recurse, bool local)
          fts entries, which may be quicker to process in any case.  */
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
-        error (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-               quoteaf (path));
+        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
+             quoteaf (path));
     }
 
   const char *ftspath[2] = { newpath ? newpath : path, NULL };

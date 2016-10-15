@@ -26,6 +26,7 @@
 
 #include "system.h"
 #include "canonicalize.h"
+#include "die.h"
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
@@ -1784,7 +1785,7 @@ main (int argc, char **argv)
       /* Print the "no FS processed" diagnostic only if there was no preceding
          diagnostic, e.g., if all have been excluded.  */
       if (exit_status == EXIT_SUCCESS)
-        error (EXIT_FAILURE, 0, _("no file systems processed"));
+        die (EXIT_FAILURE, 0, _("no file systems processed"));
     }
 
   IF_LINT (free (columns));

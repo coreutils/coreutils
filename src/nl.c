@@ -256,7 +256,7 @@ build_type_arg (char const **typep,
         RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
       errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
       if (errmsg)
-        error (EXIT_FAILURE, 0, "%s", (errmsg));
+        die (EXIT_FAILURE, 0, "%s", (errmsg));
       break;
     default:
       rval = false;
@@ -276,7 +276,7 @@ print_lineno (void)
 
   next_line_no = line_no + page_incr;
   if (next_line_no < line_no)
-    error (EXIT_FAILURE, 0, _("line number overflow"));
+    die (EXIT_FAILURE, 0, _("line number overflow"));
   line_no = next_line_no;
 }
 
@@ -589,7 +589,7 @@ main (int argc, char **argv)
       ok &= nl_file (argv[optind]);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, "-");
+    die (EXIT_FAILURE, errno, "-");
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

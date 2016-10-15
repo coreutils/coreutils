@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "getopt.h"
@@ -222,14 +223,14 @@ read_input_reservoir_sampling (FILE *in, char eolbyte, size_t k,
       while (readlinebuffer_delim (line, in, eolbyte) != NULL && n_lines++);
 
       if (! n_lines)
-        error (EXIT_FAILURE, EOVERFLOW, _("too many input lines"));
+        die (EXIT_FAILURE, EOVERFLOW, _("too many input lines"));
 
       freebuffer (&dummy);
     }
 
   /* no more input lines, or an input error.  */
   if (ferror (in))
-    error (EXIT_FAILURE, errno, _("read error"));
+    die (EXIT_FAILURE, errno, _("read error"));
 
   *out_rsrv = rsrv;
   return MIN (k, n_lines);
@@ -278,7 +279,7 @@ read_input (FILE *in, char eolbyte, char ***pline)
      avoiding the reservoir CPU overhead when reading < RESERVOIR_MIN_INPUT
      from a pipe, and allow us to dispense with the input_size() function.  */
   if (!(buf = fread_file (in, &used)))
-    error (EXIT_FAILURE, errno, _("read error"));
+    die (EXIT_FAILURE, errno, _("read error"));
 
   if (used && buf[used - 1] != eolbyte)
     buf[used++] = eolbyte;
@@ -424,7 +425,7 @@ main (int argc, char **argv)
           bool invalid = !p;
 
           if (input_range)
-            error (EXIT_FAILURE, 0, _("multiple -i options specified"));
+            die (EXIT_FAILURE, 0, _("multiple -i options specified"));
           input_range = true;
 
           if (p)
@@ -442,8 +443,8 @@ main (int argc, char **argv)
           n_lines = hi_input - lo_input + 1;
           invalid |= ((lo_input <= hi_input) == (n_lines == 0));
           if (invalid)
-            error (EXIT_FAILURE, errno, "%s: %s", _("invalid input range"),
-                   quote (optarg));
+            die (EXIT_FAILURE, errno, "%s: %s", _("invalid input range"),
+                 quote (optarg));
         }
         break;
 
@@ -455,20 +456,20 @@ main (int argc, char **argv)
           if (e == LONGINT_OK)
             head_lines = MIN (head_lines, argval);
           else if (e != LONGINT_OVERFLOW)
-            error (EXIT_FAILURE, 0, _("invalid line count: %s"),
-                   quote (optarg));
+            die (EXIT_FAILURE, 0, _("invalid line count: %s"),
+                 quote (optarg));
         }
         break;
 
       case 'o':
         if (outfile && !STREQ (outfile, optarg))
-          error (EXIT_FAILURE, 0, _("multiple output files specified"));
+          die (EXIT_FAILURE, 0, _("multiple output files specified"));
         outfile = optarg;
         break;
 
       case RANDOM_SOURCE_OPTION:
         if (random_source && !STREQ (random_source, optarg))
-          error (EXIT_FAILURE, 0, _("multiple random sources specified"));
+          die (EXIT_FAILURE, 0, _("multiple random sources specified"));
         random_source = optarg;
         break;
 
@@ -519,7 +520,7 @@ main (int argc, char **argv)
       if (n_operands == 1)
         if (! (STREQ (operand[0], "-") || ! head_lines
                || freopen (operand[0], "r", stdin)))
-          error (EXIT_FAILURE, errno, "%s", quotef (operand[0]));
+          die (EXIT_FAILURE, errno, "%s", quotef (operand[0]));
 
       fadvise (stdin, FADVISE_SEQUENTIAL);
 
@@ -544,7 +545,7 @@ main (int argc, char **argv)
                                      ? SIZE_MAX
                                      : randperm_bound (head_lines, n_lines)));
   if (! randint_source)
-    error (EXIT_FAILURE, errno, "%s", quotef (random_source));
+    die (EXIT_FAILURE, errno, "%s", quotef (random_source));
 
   if (use_reservoir_sampling)
     {
@@ -560,13 +561,13 @@ main (int argc, char **argv)
      stdin.  */
   if (! (echo || input_range)
       && (fclose (stdin) != 0))
-    error (EXIT_FAILURE, errno, _("read error"));
+    die (EXIT_FAILURE, errno, _("read error"));
 
   if (!repeat)
     permutation = randperm_new (randint_source, head_lines, n_lines);
 
   if (outfile && ! freopen (outfile, "w", stdout))
-    error (EXIT_FAILURE, errno, "%s", quotef (outfile));
+    die (EXIT_FAILURE, errno, "%s", quotef (outfile));
 
   /* Generate output according to requested method */
   if (repeat)
@@ -576,7 +577,7 @@ main (int argc, char **argv)
       else
         {
           if (n_lines == 0)
-            error (EXIT_FAILURE, 0, _("no lines to repeat"));
+            die (EXIT_FAILURE, 0, _("no lines to repeat"));
           if (input_range)
             i = write_random_numbers (randint_source, head_lines,
                                       lo_input, hi_input, eolbyte);
@@ -596,7 +597,7 @@ main (int argc, char **argv)
     }
 
   if (i != 0)
-    error (EXIT_FAILURE, errno, _("write error"));
+    die (EXIT_FAILURE, errno, _("write error"));
 
 #ifdef lint
   free (permutation);

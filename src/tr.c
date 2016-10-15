@@ -24,6 +24,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
@@ -1203,8 +1204,8 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
          c1 must also transition at the same time.  */
       if (s2_new_element && class_s2 != UL_NONE
           && !(s1_new_element && class_s1 != UL_NONE))
-        error (EXIT_FAILURE, 0,
-               _("misaligned [:upper:] and/or [:lower:] construct"));
+        die (EXIT_FAILURE, 0,
+             _("misaligned [:upper:] and/or [:lower:] construct"));
 
       /* If case converting, quickly skip over the elements.  */
       if (class_s2 != UL_NONE)
@@ -1309,7 +1310,7 @@ get_spec_stats (struct Spec_list *s)
          indefinite element.  */
       new_length = length + len;
       if (! (length <= new_length && new_length <= REPEAT_COUNT_MAXIMUM))
-        error (EXIT_FAILURE, 0, _("too many characters in set"));
+        die (EXIT_FAILURE, 0, _("too many characters in set"));
       length = new_length;
     }
 
@@ -1392,8 +1393,8 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
            tr '[:upper:]0-9' '[:lower:]'
          That's not portable however, contradicts POSIX and is dependent
          on your collating sequence.  */
-      error (EXIT_FAILURE, 0,
-             _("when translating with string1 longer than string2,\nthe\
+      die (EXIT_FAILURE, 0,
+           _("when translating with string1 longer than string2,\nthe\
  latter string must not end with a character class"));
       abort (); /* inform gcc that the above use of error never returns. */
       break;
@@ -1452,8 +1453,8 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
   get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
     {
-      error (EXIT_FAILURE, 0,
-             _("the [c*] repeat construct may not appear in string1"));
+      die (EXIT_FAILURE, 0,
+           _("the [c*] repeat construct may not appear in string1"));
     }
 
   if (s2)
@@ -1462,23 +1463,23 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
 
       if (s2->n_indefinite_repeats > 1)
         {
-          error (EXIT_FAILURE, 0,
-                 _("only one [c*] repeat construct may appear in string2"));
+          die (EXIT_FAILURE, 0,
+               _("only one [c*] repeat construct may appear in string2"));
         }
 
       if (translating)
         {
           if (s2->has_equiv_class)
             {
-              error (EXIT_FAILURE, 0,
-                     _("[=c=] expressions may not appear in string2\
+              die (EXIT_FAILURE, 0,
+                   _("[=c=] expressions may not appear in string2\
  when translating"));
             }
 
           if (s2->has_restricted_char_class)
             {
-              error (EXIT_FAILURE, 0,
-                     _("when translating, the only character classes that may\
+              die (EXIT_FAILURE, 0,
+                   _("when translating, the only character classes that may\
  appear in\nstring2 are 'upper' and 'lower'"));
             }
 
@@ -1492,7 +1493,7 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
                      given or string1 is empty.  */
 
                   if (s2->length == 0)
-                    error (EXIT_FAILURE, 0,
+                    die (EXIT_FAILURE, 0,
                      _("when not truncating set1, string2 must be non-empty"));
                   string2_extend (s1, s2);
                 }
@@ -1501,8 +1502,8 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
           if (complement && s1->has_char_class
               && ! (s2->length == s1->length && homogeneous_spec_list (s2)))
             {
-              error (EXIT_FAILURE, 0,
-                     _("when translating with complemented character classes,\
+              die (EXIT_FAILURE, 0,
+                   _("when translating with complemented character classes,\
 \nstring2 must map all characters in the domain to one"));
             }
         }
@@ -1510,8 +1511,8 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
         /* Not translating.  */
         {
           if (s2->n_indefinite_repeats > 0)
-            error (EXIT_FAILURE, 0,
-                   _("the [c*] construct may appear in string2 only\
+            die (EXIT_FAILURE, 0,
+                 _("the [c*] construct may appear in string2 only\
  when translating"));
         }
     }
@@ -1591,7 +1592,7 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
             }
           if (out_len > 0
               && fwrite (&buf[begin], 1, out_len, stdout) != out_len)
-            error (EXIT_FAILURE, errno, _("write error"));
+            die (EXIT_FAILURE, errno, _("write error"));
         }
 
       if (char_to_squeeze != NOT_A_CHAR)
@@ -1615,7 +1616,7 @@ plain_read (char *buf, size_t size)
 {
   size_t nr = safe_read (STDIN_FILENO, buf, size);
   if (nr == SAFE_READ_ERROR)
-    error (EXIT_FAILURE, errno, _("read error"));
+    die (EXIT_FAILURE, errno, _("read error"));
   return nr;
 }
 
@@ -1814,7 +1815,7 @@ main (int argc, char **argv)
           if (nr == 0)
             break;
           if (fwrite (io_buf, 1, nr, stdout) != nr)
-            error (EXIT_FAILURE, errno, _("write error"));
+            die (EXIT_FAILURE, errno, _("write error"));
         }
     }
   else if (squeeze_repeats && delete && non_option_args == 2)
@@ -1906,13 +1907,13 @@ main (int argc, char **argv)
               if (bytes_read == 0)
                 break;
               if (fwrite (io_buf, 1, bytes_read, stdout) != bytes_read)
-                error (EXIT_FAILURE, errno, _("write error"));
+                die (EXIT_FAILURE, errno, _("write error"));
             }
         }
     }
 
   if (close (STDIN_FILENO) != 0)
-    error (EXIT_FAILURE, errno, _("standard input"));
+    die (EXIT_FAILURE, errno, _("standard input"));
 
   return EXIT_SUCCESS;
 }

@@ -35,6 +35,7 @@
 #if HASH_ALGO_SHA512 || HASH_ALGO_SHA384
 # include "sha512.h"
 #endif
+#include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "stdio--.h"
@@ -564,8 +565,8 @@ digest_check (const char *checkfile_name)
 
       ++line_number;
       if (line_number == 0)
-        error (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
-               quotef (checkfile_name));
+        die (EXIT_FAILURE, 0, _("%s: too many checksum lines"),
+             quotef (checkfile_name));
 
       line_length = getline (&line, &line_chars_allocated, checkfile_stream);
       if (line_length <= 0)
@@ -927,7 +928,7 @@ main (int argc, char **argv)
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, _("standard input"));
+    die (EXIT_FAILURE, errno, _("standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

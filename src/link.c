@@ -26,6 +26,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "long-options.h"
 #include "quote.h"
@@ -87,8 +88,8 @@ main (int argc, char **argv)
     }
 
   if (link (argv[optind], argv[optind + 1]) != 0)
-    error (EXIT_FAILURE, errno, _("cannot create link %s to %s"),
-           quoteaf_n (0, argv[optind + 1]), quoteaf_n (1, argv[optind]));
+    die (EXIT_FAILURE, errno, _("cannot create link %s to %s"),
+         quoteaf_n (0, argv[optind + 1]), quoteaf_n (1, argv[optind]));
 
   return EXIT_SUCCESS;
 }

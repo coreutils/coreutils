@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "canonicalize.h"
+#include "die.h"
 #include "error.h"
 #include "relpath.h"
 
@@ -142,7 +143,7 @@ isdir (const char *path)
 {
   struct stat sb;
   if (stat (path, &sb) != 0)
-    error (EXIT_FAILURE, errno, _("cannot stat %s"), quoteaf (path));
+    die (EXIT_FAILURE, errno, _("cannot stat %s"), quoteaf (path));
   return S_ISDIR (sb.st_mode);
 }
 
@@ -245,9 +246,9 @@ main (int argc, char **argv)
     {
       can_relative_to = realpath_canon (relative_to, can_mode);
       if (!can_relative_to)
-        error (EXIT_FAILURE, errno, "%s", quotef (relative_to));
+        die (EXIT_FAILURE, errno, "%s", quotef (relative_to));
       if (need_dir && !isdir (can_relative_to))
-        error (EXIT_FAILURE, ENOTDIR, "%s", quotef (relative_to));
+        die (EXIT_FAILURE, ENOTDIR, "%s", quotef (relative_to));
     }
   if (relative_base == relative_to)
     can_relative_base = can_relative_to;
@@ -255,9 +256,9 @@ main (int argc, char **argv)
     {
       char *base = realpath_canon (relative_base, can_mode);
       if (!base)
-        error (EXIT_FAILURE, errno, "%s", quotef (relative_base));
+        die (EXIT_FAILURE, errno, "%s", quotef (relative_base));
       if (need_dir && !isdir (base))
-        error (EXIT_FAILURE, ENOTDIR, "%s", quotef (relative_base));
+        die (EXIT_FAILURE, ENOTDIR, "%s", quotef (relative_base));
       /* --relative-to is a no-op if it does not have --relative-base
            as a prefix */
       if (path_prefix (base, can_relative_to))

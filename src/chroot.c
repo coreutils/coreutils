@@ -24,6 +24,7 @@
 #include <grp.h>
 
 #include "system.h"
+#include "die.h"
 #include "error.h"
 #include "ignore-value.h"
 #include "mgetgroups.h"
@@ -326,11 +327,11 @@ main (int argc, char **argv)
     }
 
   if (chroot (newroot) != 0)
-    error (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
-           quoteaf (newroot));
+    die (EXIT_CANCELED, errno, _("cannot change root directory to %s"),
+         quoteaf (newroot));
 
   if (! skip_chdir && chdir ("/"))
-    error (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
+    die (EXIT_CANCELED, errno, _("cannot chdir to root directory"));
 
   if (argc == optind + 1)
     {
@@ -355,7 +356,7 @@ main (int argc, char **argv)
       char const *err = parse_user_spec (userspec, &uid, &gid, NULL, NULL);
 
       if (err && uid_unset (uid) && gid_unset (gid))
-        error (EXIT_CANCELED, errno, "%s", (err));
+        die (EXIT_CANCELED, errno, "%s", (err));
     }
 
   /* If no gid is supplied or looked up, do so now.
@@ -371,8 +372,8 @@ main (int argc, char **argv)
         }
       else if (gid_unset (gid))
         {
-          error (EXIT_CANCELED, errno,
-                 _("no group specified for unknown uid: %d"), (int) uid);
+          die (EXIT_CANCELED, errno,
+               _("no group specified for unknown uid: %d"), (int) uid);
         }
     }
 
@@ -396,8 +397,8 @@ main (int argc, char **argv)
       if (ngroups <= 0)
         {
           if (! n_gids)
-            error (EXIT_CANCELED, errno,
-                   _("failed to get supplemental groups"));
+            die (EXIT_CANCELED, errno,
+                 _("failed to get supplemental groups"));
           /* else look-up outside the chroot worked, then go with those.  */
         }
       else
@@ -409,16 +410,16 @@ main (int argc, char **argv)
 #endif
 
   if ((uid_set (uid) || groups) && setgroups (n_gids, gids) != 0)
-    error (EXIT_CANCELED, errno, _("failed to set supplemental groups"));
+    die (EXIT_CANCELED, errno, _("failed to set supplemental groups"));
 
   free (in_gids);
   free (out_gids);
 
   if (gid_set (gid) && setgid (gid))
-    error (EXIT_CANCELED, errno, _("failed to set group-ID"));
+    die (EXIT_CANCELED, errno, _("failed to set group-ID"));
 
   if (uid_set (uid) && setuid (uid))
-    error (EXIT_CANCELED, errno, _("failed to set user-ID"));
+    die (EXIT_CANCELED, errno, _("failed to set user-ID"));
 
   /* Execute the given command.  */
   execvp (argv[0], argv);

@@ -403,10 +403,10 @@ target_directory_operand (char const *file)
   int err = (stat (file, &st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && err != ENOENT)
-    error (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
   if (is_a_dir < looks_like_a_dir)
-    error (EXIT_FAILURE, err, _("target %s is not a directory"),
-           quoteaf (file));
+    die (EXIT_FAILURE, err, _("target %s is not a directory"),
+         quoteaf (file));
   return is_a_dir;
 }
 
@@ -585,8 +585,8 @@ get_ids (void)
           unsigned long int tmp;
           if (xstrtoul (owner_name, NULL, 0, &tmp, NULL) != LONGINT_OK
               || UID_T_MAX < tmp)
-            error (EXIT_FAILURE, 0, _("invalid user %s"),
-                   quote (owner_name));
+            die (EXIT_FAILURE, 0, _("invalid user %s"),
+                 quote (owner_name));
           owner_id = tmp;
         }
       else
@@ -604,8 +604,8 @@ get_ids (void)
           unsigned long int tmp;
           if (xstrtoul (group_name, NULL, 0, &tmp, NULL) != LONGINT_OK
               || GID_T_MAX < tmp)
-            error (EXIT_FAILURE, 0, _("invalid group %s"),
-                   quote (group_name));
+            die (EXIT_FAILURE, 0, _("invalid group %s"),
+                 quote (group_name));
           group_id = tmp;
         }
       else
@@ -719,7 +719,7 @@ install_file_in_file (const char *from, const char *to,
     if (! strip (to))
       {
         if (unlink (to) != 0)  /* Cleanup.  */
-          error (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
+          die (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
         return false;
       }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
@@ -893,8 +893,8 @@ main (int argc, char **argv)
           break;
         case 't':
           if (target_directory)
-            error (EXIT_FAILURE, 0,
-                   _("multiple target directories specified"));
+            die (EXIT_FAILURE, 0,
+                 _("multiple target directories specified"));
           target_directory = optarg;
           break;
         case 'T':
@@ -943,22 +943,22 @@ main (int argc, char **argv)
 
   /* Check for invalid combinations of arguments. */
   if (dir_arg && strip_files)
-    error (EXIT_FAILURE, 0,
-           _("the strip option may not be used when installing a directory"));
+    die (EXIT_FAILURE, 0,
+         _("the strip option may not be used when installing a directory"));
   if (dir_arg && target_directory)
-    error (EXIT_FAILURE, 0,
-           _("target directory not allowed when installing a directory"));
+    die (EXIT_FAILURE, 0,
+         _("target directory not allowed when installing a directory"));
 
   if (target_directory)
     {
       struct stat st;
       bool stat_success = stat (target_directory, &st) == 0 ? true : false;
       if (! mkdir_and_install && ! stat_success)
-        error (EXIT_FAILURE, errno, _("failed to access %s"),
-               quoteaf (target_directory));
+        die (EXIT_FAILURE, errno, _("failed to access %s"),
+             quoteaf (target_directory));
       if (stat_success && ! S_ISDIR (st.st_mode))
-        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quoteaf (target_directory));
+        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+             quoteaf (target_directory));
     }
 
   if (backup_suffix_string)
@@ -970,13 +970,13 @@ main (int argc, char **argv)
                    : no_backups);
 
   if (x.preserve_security_context && (x.set_security_context || scontext))
-    error (EXIT_FAILURE, 0,
-           _("cannot set target context and preserve it"));
+    die (EXIT_FAILURE, 0,
+         _("cannot set target context and preserve it"));
 
   if (scontext && setfscreatecon (se_const (scontext)) < 0)
-    error (EXIT_FAILURE, errno,
-           _("failed to set default file creation context to %s"),
-           quote (scontext));
+    die (EXIT_FAILURE, errno,
+         _("failed to set default file creation context to %s"),
+         quote (scontext));
 
   n_files = argc - optind;
   file = argv + optind;
@@ -994,9 +994,9 @@ main (int argc, char **argv)
   if (no_target_directory)
     {
       if (target_directory)
-        error (EXIT_FAILURE, 0,
-               _("cannot combine --target-directory (-t) "
-                 "and --no-target-directory (-T)"));
+        die (EXIT_FAILURE, 0,
+             _("cannot combine --target-directory (-t) "
+               "and --no-target-directory (-T)"));
       if (2 < n_files)
         {
           error (0, 0, _("extra operand %s"), quoteaf (file[2]));
@@ -1008,15 +1008,15 @@ main (int argc, char **argv)
       if (2 <= n_files && target_directory_operand (file[n_files - 1]))
         target_directory = file[--n_files];
       else if (2 < n_files)
-        error (EXIT_FAILURE, 0, _("target %s is not a directory"),
-               quoteaf (file[n_files - 1]));
+        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
+             quoteaf (file[n_files - 1]));
     }
 
   if (specified_mode)
     {
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
-        error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
+        die (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
       mode = mode_adjust (0, false, 0, change, NULL);
       dir_mode = mode_adjust (0, true, 0, change, &dir_mode_bits);
       free (change);
