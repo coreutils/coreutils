@@ -4036,7 +4036,6 @@ badfieldspec (char const *spec, char const *msgid)
 {
   die (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
        _(msgid), quote (spec));
-  abort ();
 }
 
 /* Report incompatible options.  */
@@ -4046,7 +4045,6 @@ static void
 incompatible_options (char const *opts)
 {
   die (SORT_FAILURE, 0, _("options '-%s' are incompatible"), (opts));
-  abort ();
 }
 
 /* Check compatibility of ordering options.  */

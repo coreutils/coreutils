@@ -283,7 +283,6 @@ static void
 integer_overflow (char op)
 {
   die (EXPR_FAILURE, ERANGE, "%c", op);
-  abort (); /* notreached */
 }
 #endif
 

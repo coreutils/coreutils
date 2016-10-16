@@ -408,7 +408,6 @@ is_char_class_member (enum Char_class char_class, unsigned char c)
       break;
     default:
       abort ();
-      break;
     }
 
   return !! result;
@@ -1128,7 +1127,6 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 
     default:
       abort ();
-      break;
     }
 
   return return_val;
@@ -1301,7 +1299,6 @@ get_spec_stats (struct Spec_list *s)
 
         default:
           abort ();
-          break;
         }
 
       /* Check for arithmetic overflow in computing length.  Also, reject
@@ -1396,8 +1393,6 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       die (EXIT_FAILURE, 0,
            _("when translating with string1 longer than string2,\nthe\
  latter string must not end with a character class"));
-      abort (); /* inform gcc that the above use of error never returns. */
-      break;
 
     case RE_REPEATED_CHAR:
       char_to_repeat = p->u.repeated_char.the_repeated_char;
@@ -1407,11 +1402,9 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       /* This shouldn't happen, because validate exits with an error
          if it finds an equiv class in string2 when translating.  */
       abort ();
-      break;
 
     default:
       abort ();
-      break;
     }
 
   append_repeated_char (s2, char_to_repeat, s1->length - s2->length);

@@ -161,7 +161,6 @@ static void
 write_error (void)
 {
   die (EXIT_FAILURE, errno, _("write error"));
-  abort ();
 }
 
 /* Output a single byte, reporting any write errors.  */
