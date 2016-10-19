@@ -15207,6 +15207,8 @@ same as @samp{%b}
 day of year (@samp{001}@dots{}@samp{366})
 @item %m
 month (@samp{01}@dots{}@samp{12})
+@item %q
+quarter of year (@samp{1}@dots{}@samp{4})
 @item %u
 day of week (@samp{1}@dots{}@samp{7}) with @samp{1} corresponding to Monday
 @item %U

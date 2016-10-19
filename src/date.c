@@ -214,6 +214,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %N   nanoseconds (000000000..999999999)\n\
   %p   locale's equivalent of either AM or PM; blank if not known\n\
   %P   like %p, but lower case\n\
+  %q   quarter of year (1..4)\n\
   %r   locale's 12-hour clock time (e.g., 11:11:04 PM)\n\
   %R   24-hour hour and minute; same as %H:%M\n\
   %s   seconds since 1970-01-01 00:00:00 UTC\n\

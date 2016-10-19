@@ -434,14 +434,14 @@ sc_prohibit_stat_macro_address:
 	  $(_sc_search_regexp)
 
 # Ensure that date's --help output stays in sync with the info
-# documentation for GNU strftime.  The only exception is %N,
+# documentation for GNU strftime.  The only exception is %N and %q,
 # which date accepts but GNU strftime does not.
 extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
 sc_strftime_check:
 	@if test -f $(srcdir)/src/date.c; then				\
 	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
-	  { echo N;							\
+	  { echo N; echo q;						\
 	    info libc date calendar format 2>/dev/null			\
 	      | grep "^ *['\`]%.'$$"| $(extract_char); }| sort >$@-info;\
 	  if test $$(stat --format %s $@-info) != 2; then		\
