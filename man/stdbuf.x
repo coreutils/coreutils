@@ -11,7 +11,7 @@ Run COMMAND, with modified buffering operations for its standard streams.
 [EXAMPLES]
 .B tail -f access.log | stdbuf -oL cut -d \(aq \(aq -f1 | uniq
 .br
-This will immedidately display unique entries from access.log
+This will immediately display unique entries from access.log
 [BUGS]
 On GLIBC platforms, specifying a buffer size, i.e., using fully buffered mode
 will result in undefined operation.
