@@ -149,6 +149,13 @@ my @Tests =
                                 {ERR=>
                                     "md5sum: f.md5: no file was verified\n"},
                                 {EXIT=> 1}],
+     # coreutils-8.25 with --ignore-missing treated checksums starting with 00
+     # as if the file was not present
+     ['check-ignore-missing-6', '--check', '--ignore-missing',
+                                {AUX=> {f=> '9t'}},
+                                {IN=> {'f.md5' =>
+                                    "006999e6df389641adf1fa3a74801d9d  f\n"}},
+                                {OUT=>"f: OK\n"}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
 

@@ -28,6 +28,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --time-style no longer mishandles '%%b' in formats.
   [bug introduced in coreutils-7.2]
 
+  md5sum --check --ignore-missing no longer treats files with checksums
+  starting with "00" as missing.  This also affects sha*sum.
+  [bug introduced with the --ignore-missing feature in coreutils-8.25]
+
   nl now resets numbering for each page section rather than just for each page.
   [This bug was present in "the beginning".]
 
