@@ -28,7 +28,7 @@ print_ver_ md5sum
 # I.e., one not starting with ' ' or '*'
 for i in 'a' ' b' '*c' 'dd' ' '; do
   echo "$i" > "$i"
-  md5sum "$i" >> check.md5sum
+  md5sum "$i" >> check.md5sum || fail=1
 done
 sed 's/  / /' check.md5sum > check.md5
 
@@ -59,7 +59,7 @@ returns_ 1 md5sum --tag --text /dev/null || fail=1
 rm check.md5
 for i in 'a' ' b' '*c' 'dd' ' '; do
   echo "$i" > "$i"
-  md5sum --tag "$i" >> check.md5
+  md5sum --tag "$i" >> check.md5 || fail=1
 done
 md5sum --strict -c check.md5 || fail=1
 
@@ -70,8 +70,8 @@ nl='
 tab='	'
 rm check.md5
 for i in 'a\b' 'a\' "a${nl}b" "a${tab}b"; do
-  > "$i"
-  md5sum --tag "$i" >> check.md5
+  : > "$i"
+  md5sum --tag "$i" >> check.md5 || fail=1
 done
 md5sum --strict -c check.md5 || fail=1
 
@@ -82,7 +82,7 @@ ex_file='test
 ex_output='\MD5 (test\n\\\\file) = d41d8cd98f00b204e9800998ecf8427e'
 touch "$ex_file"
 printf "%s\n" "$ex_output" > exp
-md5sum --tag "$ex_file" > out
+md5sum --tag "$ex_file" > out || fail=1
 compare exp out || fail=1
 
 Exit $fail

@@ -37,6 +37,7 @@
 @dircategory Individual utilities
 @direntry
 * arch: (coreutils)arch invocation.             Print machine hardware name.
+* b2sum: (coreutils)b2sum invocation.           Print or check BLAKE2 digests.
 * base32: (coreutils)base32 invocation.         Base32 encode/decode data.
 * base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
@@ -186,7 +187,7 @@ Free Documentation License''.
 * Output of entire files::       cat tac nl od base32 base64
 * Formatting file contents::     fmt pr fold
 * Output of parts of files::     head tail split csplit
-* Summarizing files::            wc sum cksum md5sum sha1sum sha2
+* Summarizing files::            wc sum cksum b2sum md5sum sha1sum sha2
 * Operating on sorted files::    sort shuf uniq comm ptx tsort
 * Operating on fields::          cut paste join
 * Operating on characters::      tr expand unexpand
@@ -259,6 +260,7 @@ Summarizing files
 * wc invocation::                Print newline, word, and byte counts
 * sum invocation::               Print checksum and block counts
 * cksum invocation::             Print CRC checksum and byte counts
+* b2sum invocation::             Print or check BLAKE2 digests
 * md5sum invocation::            Print or check MD5 digests
 * sha1sum invocation::           Print or check SHA-1 digests
 * sha2 utilities::               Print or check SHA-2 digests
@@ -3557,6 +3559,7 @@ contents of files.
 * wc invocation::               Print newline, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
+* b2sum invocation::            Print or check BLAKE2 digests.
 * md5sum invocation::           Print or check MD5 digests.
 * sha1sum invocation::          Print or check SHA-1 digests.
 * sha2 utilities::              Print or check SHA-2 digests.
@@ -3768,6 +3771,33 @@ options}.
 
 @exitstatus
 
+
+@node b2sum invocation
+@section @command{b2sum}: Print or check BLAKE2 digests
+
+@pindex b2sum
+@cindex BLAKE2
+@cindex 512-bit checksum
+@cindex checksum, 512-bit
+@cindex fingerprint, 512-bit
+@cindex message-digest, 512-bit
+
+@command{b2sum} computes a 512-bit checksum for each specified
+@var{file}.  The same usage and options as the @command{md5sum}
+command are supported.  @xref{md5sum invocation}.
+In addition @command{b2sum} supports the following options.
+
+@table @samp
+@item -l
+@itemx --length
+@opindex -l
+@opindex --length
+@cindex BLAKE2 hash length
+Change (shorten) the default digest length.
+This is specified in bits and thus must be a multiple of 8.
+This option is ignored when @option{--check} is specified,
+as the length is automatically determined when checking.
+@end table
 
 @node md5sum invocation
 @section @command{md5sum}: Print or check MD5 digests

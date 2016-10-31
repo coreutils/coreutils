@@ -393,6 +393,12 @@ src_sha384sum_SOURCES = src/md5sum.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
 src_sha512sum_SOURCES = src/md5sum.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
+src_b2sum_CPPFLAGS = -include config.h -DHASH_ALGO_BLAKE2=1 \
+		     $(AM_CPPFLAGS)
+src_b2sum_SOURCES = src/md5sum.c \
+		    src/blake2/blake2.h src/blake2/blake2-impl.h \
+		    src/blake2/blake2b-ref.c \
+		    src/blake2/b2sum.c src/blake2/b2sum.h
 
 src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)
 src_base32_SOURCES = src/base64.c

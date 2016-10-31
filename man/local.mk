@@ -60,6 +60,7 @@ man/install.1:   src/ginstall$(EXEEXT)
 man/test.1:      src/[$(EXEEXT)
 
 man/arch.1:      src/arch$(EXEEXT)
+man/b2sum.1:     src/b2sum$(EXEEXT)
 man/base32.1:    src/base32$(EXEEXT)
 man/base64.1:    src/base64$(EXEEXT)
 man/basename.1:  src/basename$(EXEEXT)

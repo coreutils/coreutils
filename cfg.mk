@@ -21,6 +21,9 @@ manual_title = Core GNU utilities
 # it can take a while for the faster mirror links to become usable.
 url_dir_list = http://ftp.gnu.org/gnu/$(PACKAGE)
 
+# Exclude bundled external projects from syntax checks
+VC_LIST_ALWAYS_EXCLUDE_REGEX = src/blake2/.*$$
+
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip = \
   sc_proper_name_utf8_requires_ICONV

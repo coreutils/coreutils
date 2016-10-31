@@ -41,6 +41,7 @@ build_if_possible_progs='
 # be buildable without problems on any target system.
 normal_progs='
     [
+    b2sum
     base64
     base32
     basename

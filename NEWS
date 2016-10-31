@@ -104,6 +104,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat --format=%N for quoting file names now honors the
   same QUOTING_STYLE environment variable values as ls.
 
+** New programs
+
+  b2sum is added to support the BLAKE2 digest algorithm with
+  a similar interface to the existing md5sum and sha1sum, etc. commands.
+
 ** New Features
 
   date now accepts the --debug option, to annotate the parsed date string,
