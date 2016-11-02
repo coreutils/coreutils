@@ -922,7 +922,6 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
-  char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
   bool copy_contents = false;
@@ -940,10 +939,6 @@ main (int argc, char **argv)
 
   selinux_enabled = (0 < is_selinux_enabled ());
   cp_option_init (&x);
-
-  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use backup_suffix_string.  */
-  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:TZ",
                            long_opts, NULL))
@@ -1123,7 +1118,7 @@ main (int argc, char **argv)
 
         case 'S':
           make_backups = true;
-          backup_suffix_string = optarg;
+          simple_backup_suffix = optarg;
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -1153,9 +1148,6 @@ main (int argc, char **argv)
       error (0, 0, _("--reflink can be used only with --sparse=auto"));
       usage (EXIT_FAILURE);
     }
-
-  if (backup_suffix_string)
-    simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
                    ? xget_version (_("backup type"),

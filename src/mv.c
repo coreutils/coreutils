@@ -347,7 +347,6 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
-  char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
@@ -368,10 +367,6 @@ main (int argc, char **argv)
 
   /* Try to disable the ability to unlink a directory.  */
   priv_set_remove_linkdir ();
-
-  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use backup_suffix_string.  */
-  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((c = getopt_long (argc, argv, "bfint:uvS:TZ", long_options, NULL))
          != -1)
@@ -421,7 +416,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          backup_suffix_string = optarg;
+          simple_backup_suffix = optarg;
           break;
         case 'Z':
           /* As a performance enhancement, don't even bother trying
@@ -480,9 +475,6 @@ main (int argc, char **argv)
              _("options --backup and --no-clobber are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
-
-  if (backup_suffix_string)
-    simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
                    ? xget_version (_("backup type"),

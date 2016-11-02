@@ -465,7 +465,6 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
-  char *backup_suffix_string;
   char *version_control_string = NULL;
   char const *target_directory = NULL;
   bool no_target_directory = false;
@@ -479,10 +478,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdin);
-
-  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use backup_suffix_string.  */
-  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = false;
@@ -547,7 +542,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          backup_suffix_string = optarg;
+          simple_backup_suffix = optarg;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -593,9 +588,6 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, 0, _("target %s is not a directory"),
              quoteaf (file[n_files - 1]));
     }
-
-  if (backup_suffix_string)
-    simple_backup_suffix = xstrdup (backup_suffix_string);
 
   backup_type = (make_backups
                  ? xget_version (_("backup type"), version_control_string)

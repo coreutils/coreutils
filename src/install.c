@@ -807,7 +807,6 @@ main (int argc, char **argv)
   int exit_status = EXIT_SUCCESS;
   const char *specified_mode = NULL;
   bool make_backups = false;
-  char *backup_suffix_string;
   char *version_control_string = NULL;
   bool mkdir_and_install = false;
   struct cp_options x;
@@ -835,10 +834,6 @@ main (int argc, char **argv)
   strip_files = false;
   dir_arg = false;
   umask (0);
-
-  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use backup_suffix_string.  */
-  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((optc = getopt_long (argc, argv, "bcCsDdg:m:o:pt:TvS:Z", long_options,
                               NULL)) != -1)
@@ -889,7 +884,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          backup_suffix_string = optarg;
+          simple_backup_suffix = optarg;
           break;
         case 't':
           if (target_directory)
@@ -960,9 +955,6 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, 0, _("target %s is not a directory"),
              quoteaf (target_directory));
     }
-
-  if (backup_suffix_string)
-    simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
                    ? xget_version (_("backup type"),
