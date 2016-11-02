@@ -250,19 +250,7 @@ When --reflink[=always] is specified, perform a lightweight copy, where the\n\
 data blocks are copied only when modified.  If this is not possible the copy\n\
 fails, or if --reflink=auto is specified, fall back to a standard copy.\n\
 "), stdout);
-      fputs (_("\
-\n\
-The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
-The version control method may be selected via the --backup option or through\n\
-the VERSION_CONTROL environment variable.  Here are the values:\n\
-\n\
-"), stdout);
-      fputs (_("\
-  none, off       never make backups (even if --backup is given)\n\
-  numbered, t     make numbered backups\n\
-  existing, nil   numbered if numbered backups exist, simple otherwise\n\
-  simple, never   always make simple backups\n\
-"), stdout);
+      emit_backup_suffix_note ();
       fputs (_("\
 \n\
 As a special case, cp makes a backup of SOURCE when the force and backup\n\

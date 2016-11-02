@@ -609,6 +609,24 @@ Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is set).\n\
 }
 
 static inline void
+emit_backup_suffix_note (void)
+{
+  fputs (_("\
+\n\
+The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The version control method may be selected via the --backup option or through\n\
+the VERSION_CONTROL environment variable.  Here are the values:\n\
+\n\
+"), stdout);
+  fputs (_("\
+  none, off       never make backups (even if --backup is given)\n\
+  numbered, t     make numbered backups\n\
+  existing, nil   numbered if numbered backups exist, simple otherwise\n\
+  simple, never   always make simple backups\n\
+"), stdout);
+}
+
+static inline void
 emit_ancillary_info (char const *program)
 {
   struct infomap { char const *program; char const *node; } const infomap[] = {
