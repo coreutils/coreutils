@@ -4957,8 +4957,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
-  -N, --literal              print raw entry names (don't treat e.g. control\n\
-                               characters specially)\n\
+  -N, --literal              print entry names without quoting\n\
   -o                         like -l, but do not list group information\n\
   -p, --indicator-style=slash\n\
                              append / indicator to directories\n\
