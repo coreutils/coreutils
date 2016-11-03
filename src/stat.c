@@ -59,6 +59,7 @@
 #include "system.h"
 
 #include "areadlink.h"
+#include "argmatch.h"
 #include "die.h"
 #include "error.h"
 #include "file-type.h"
@@ -997,6 +998,32 @@ neg_to_zero (struct timespec ts)
   return z;
 }
 
+/* Set the quoting style default if the environment variable
+   QUOTING_STYLE is set.  */
+
+static void
+getenv_quoting_style (void)
+{
+  char const *q_style = getenv ("QUOTING_STYLE");
+  if (q_style)
+    {
+      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+      if (0 <= i)
+        set_quoting_style (NULL, quoting_style_vals[i]);
+      else
+        {
+          set_quoting_style (NULL, shell_escape_always_quoting_style);
+          error (0, 0, _("ignoring invalid value of environment "
+                         "variable QUOTING_STYLE: %s"), quote (q_style));
+        }
+    }
+  else
+    set_quoting_style (NULL, shell_escape_always_quoting_style);
+}
+
+/* Equivalent to quotearg(), but explicit to avoid syntax checks.  */
+#define quoteN(x) quotearg_style (get_quoting_style (NULL), x)
+
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
 print_stat (char *pformat, size_t prefix_len, unsigned int m,
@@ -1013,7 +1040,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       out_string (pformat, prefix_len, filename);
       break;
     case 'N':
-      out_string (pformat, prefix_len, quoteaf (filename));
+      out_string (pformat, prefix_len, quoteN (filename));
       if (S_ISLNK (statbuf->st_mode))
         {
           char *linkname = areadlink_with_size (filename, statbuf->st_size);
@@ -1024,7 +1051,7 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
               return true;
             }
           printf (" -> ");
-          out_string (pformat, prefix_len, quoteaf (linkname));
+          out_string (pformat, prefix_len, quoteN (linkname));
           free (linkname);
         }
       break;
@@ -1602,11 +1629,15 @@ main (int argc, char *argv[])
     }
 
   if (format)
-    format2 = format;
+    {
+      if (strstr (format, "%N"))
+        getenv_quoting_style ();
+      format2 = format;
+    }
   else
     {
-      format = default_format (fs, terse, false);
-      format2 = default_format (fs, terse, true);
+      format = default_format (fs, terse, /* device= */ false);
+      format2 = default_format (fs, terse, /* device= */ true);
     }
 
   for (i = optind; i < argc; i++)

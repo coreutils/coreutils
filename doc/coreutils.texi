@@ -7724,6 +7724,7 @@ Use style @var{word} to quote file names and other strings that may
 contain arbitrary characters.  The @var{word} should
 be one of the following:
 
+@macro quotingStyles
 @table @samp
 @item literal
 Output strings as-is; this is the same as the @option{-N} or
@@ -7761,6 +7762,8 @@ surrounding quotation marks appropriate for the locale, and quote
 @t{'like this'} instead of @t{"like
 this"} in the default C locale.  This looks nicer on many displays.
 @end table
+@end macro
+@quotingStyles
 
 You can specify the default value of the @option{--quoting-style} option
 with the environment variable @env{QUOTING_STYLE}@.  If that environment
@@ -11775,7 +11778,7 @@ The valid @var{format} directives for files with @option{--format} and
 @item %i - Inode number
 @item %m - Mount point (See note below)
 @item %n - File name
-@item %N - Quoted file name with dereference if symbolic link
+@item %N - Quoted file name with dereference if symbolic link (see below)
 @item %o - Optimal I/O transfer size hint
 @item %s - Total size, in bytes
 @item %t - Major device type in hex (see below)
@@ -11796,6 +11799,11 @@ The @samp{%a} format prints the octal mode, and so it is useful
 to control the zero padding of the output with the @samp{#} and @samp{0}
 printf flags. For example to pad to at least 3 wide while making larger
 numbers unambiguously octal, you can use @samp{%#03a}.
+
+The @samp{%N} format can be set with the environment variable
+@env{QUOTING_STYLE}@.  If that environment variable is not set,
+the default value is @samp{shell-escape}.  Valid quoting styles are:
+@quotingStyles
 
 The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
 the stat(2) structure, and are only defined for character and block

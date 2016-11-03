@@ -20,11 +20,24 @@
 print_ver_ stat
 
 
-
+# ensure that stat properly handles a format string ending with %
 for i in $(seq 50); do
   fmt=$(printf "%${i}s" %)
   out=$(stat --form="$fmt" .)
   test "$out" = "$fmt" || fail=1
 done
+
+# ensure QUOTING_STYLE is honored by %N
+touch "'" || framework_failure_
+# Default since v8.25
+stat -c%N \' >> out || fail=1
+# Default before v8.25
+QUOTING_STYLE=locale stat -c%N \' >> out || fail=1
+cat <<\EOF >exp
+"'"
+'\''
+EOF
+compare exp out || fail=1
+
 
 Exit $fail
