@@ -1342,6 +1342,12 @@ parse_integer (const char *str, strtol_error *invalid)
           return 0;
         }
 
+      if (n == 0 && STRPREFIX (str, "0x"))
+        error (0, 0,
+               _("warning: %s is a zero multiplier; "
+                 "use %s if that is intended"),
+               quote_n (0, "0x"), quote_n (1, "00x"));
+
       n *= multiplier;
     }
   else if (e != LONGINT_OK)

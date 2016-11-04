@@ -107,4 +107,14 @@ compare err_ok err || fail=1
 
 test $fail -eq 0 && fail=$warn
 
+# Check a warning is issued for ambiguous 0x... numbers
+dd if=/dev/null count=0x1 seek=0x1 skip=0x1 status=none 2>err || fail=1
+cat <<\EOF >exp
+dd: warning: '0x' is a zero multiplier; use '00x' if that is intended
+dd: warning: '0x' is a zero multiplier; use '00x' if that is intended
+dd: warning: '0x' is a zero multiplier; use '00x' if that is intended
+EOF
+compare exp err || fail=1
+
+
 Exit $fail
