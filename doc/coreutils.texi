@@ -5864,8 +5864,9 @@ line that contains no delimiter character, unless the
 @option{--only-delimited} (@option{-s}) option is specified.
 
 Note @command{awk} supports more sophisticated field processing,
-and by default will use (and discard) runs of blank characters to
-separate fields, and ignore leading and trailing blanks.
+like reordering fields, and handling non fixed width fields.
+By default @command{awk} uses (and discards) runs of blank characters
+to separate fields, and ignores leading and trailing blanks.
 @example
 @verbatim
 awk '{print $2}'    # print the second field
@@ -5873,6 +5874,8 @@ awk '{print $NF-1}' # print the penultimate field
 awk '{print $2,$1}' # reorder the first two fields
 @end verbatim
 @end example
+Note while @command{cut} accepts field specifications in
+arbitrary order, output is always in the order encountered in the file.
 
 In the unlikely event that @command{awk} is unavailable,
 one can use the @command{join} command, to process blank
