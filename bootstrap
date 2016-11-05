@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2016-01-24.06; # UTC
+scriptversion=2016-11-03.18; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -418,13 +418,8 @@ sort_ver() { # sort -V is not generally available
   done
 }
 
-get_version() {
-  app=$1
-
-  $app --version >/dev/null 2>&1 || { $app --version; return 1; }
-
-  $app --version 2>&1 |
-  sed -n '# Move version to start of line.
+get_version_sed='
+# Move version to start of line.
           s/.*[v ]\([0-9]\)/\1/
 
           # Skip lines that do not start with version.
@@ -440,6 +435,13 @@ get_version() {
           s/\.0*\([1-9]\)/.\1/g
           p
           q'
+
+get_version() {
+  app=$1
+
+  $app --version >/dev/null 2>&1 || { $app --version; return 1; }
+
+  $app --version 2>&1 | sed -n "$get_version_sed"
 }
 
 check_versions() {

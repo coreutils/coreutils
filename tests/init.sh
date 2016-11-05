@@ -128,6 +128,13 @@ else
 fi
 
 # We require $(...) support unconditionally.
+# We require non-surprising "local" semantics (this eliminates dash).
+# This takes the admittedly draconian step of eliminating dash, because the
+# assignment tab=$(printf '\t') works fine, yet preceding it with "local "
+# transforms it into an assignment that sets the variable to the empty string.
+# That is too counter-intuitive, and can lead to subtle run-time malfunction.
+# The example below is less subtle in that with dash, it evokes the run-time
+# exception "dash: 1: local: 1: bad variable name".
 # We require a few additional shell features only when $EXEEXT is nonempty,
 # in order to support automatic $EXEEXT emulation:
 # - hyphen-containing alias names
@@ -151,6 +158,7 @@ fi
 gl_shell_test_script_='
 test $(echo y) = y || exit 1
 f_local_() { local v=1; }; f_local_ || exit 1
+f_dash_local_fail_() { local t=$(printf " 1"); }; f_dash_local_fail_
 score_=10
 if test "$VERBOSE" = yes; then
   test -n "$( (exec 3>&1; set -x; P=1 true 2>&3) 2> /dev/null)" && score_=9
