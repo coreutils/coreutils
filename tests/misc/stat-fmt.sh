@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that stat properly handles a format string ending with %
+# stat --format tests
 
 # Copyright (C) 2003-2016 Free Software Foundation, Inc.
 
@@ -26,6 +26,7 @@ for i in $(seq 50); do
   out=$(stat --form="$fmt" .)
   test "$out" = "$fmt" || fail=1
 done
+
 
 # ensure QUOTING_STYLE is honored by %N
 touch "'" || framework_failure_

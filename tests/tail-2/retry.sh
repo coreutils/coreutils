@@ -134,7 +134,7 @@ grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
 
 # === Test:
-# Ensure that tail -F retries when the file is initally untailable.
+# Ensure that tail -F retries when the file is initially untailable.
 mkdir untailable
 timeout 10 \
   tail $mode $fastpoll -F untailable >out 2>&1 & pid=$!

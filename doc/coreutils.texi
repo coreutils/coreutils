@@ -5864,7 +5864,7 @@ line that contains no delimiter character, unless the
 @option{--only-delimited} (@option{-s}) option is specified.
 
 Note @command{awk} supports more sophisticated field processing,
-like reordering fields, and handling non fixed width fields.
+like reordering fields, and handling fields aligned with blank characters.
 By default @command{awk} uses (and discards) runs of blank characters
 to separate fields, and ignores leading and trailing blanks.
 @example
