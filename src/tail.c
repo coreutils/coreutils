@@ -2212,7 +2212,10 @@ ignore_fifo_and_pipe (struct File_spec *f, size_t n_files)
          && (S_ISFIFO (f[i].mode)
              || (HAVE_FIFO_PIPES != 1 && isapipe (f[i].fd))));
       if (is_a_fifo_or_pipe)
-        f[i].ignore = true;
+        {
+          f[i].fd = -1;
+          f[i].ignore = true;
+        }
       else
         ++n_viable;
     }

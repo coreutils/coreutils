@@ -51,6 +51,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   and is now handled correctly in all cases.
   [bug introduced in fileutils-4.0h]
 
+  tail -f - 'untailable file' will now terminate when there is no more data
+  to read from stdin.  Previously it behaved as if --retry was specified.
+  [This bug was present in "the beginning".]
+
   yes now handles short writes, rather than assuming all writes complete.
   [bug introduced in coreutils-8.24]
 
