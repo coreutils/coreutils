@@ -1220,9 +1220,19 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                 }
             }
 
-          bytes_read = dump_remainder (name, fd,
-                                       (f[i].blocking
-                                        ? COPY_A_BUFFER : COPY_TO_EOF));
+          /* Don't read more than st_size on networked file systems
+             because it was seen on glusterfs at least, that st_size
+             may be smaller than the data read on a _subsequent_ stat call.  */
+          uintmax_t bytes_to_read;
+          if (f[i].blocking)
+            bytes_to_read = COPY_A_BUFFER;
+          else if (S_ISREG (mode) && f[i].remote)
+            bytes_to_read = stats.st_size - f[i].size;
+          else
+            bytes_to_read = COPY_TO_EOF;
+
+          bytes_read = dump_remainder (name, fd, bytes_to_read);
+
           any_input |= (bytes_read != 0);
           f[i].size += bytes_read;
         }

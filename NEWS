@@ -55,6 +55,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   to read from stdin.  Previously it behaved as if --retry was specified.
   [This bug was present in "the beginning".]
 
+  tail -f 'remote file' will now avoid outputting repeated data on network
+  file systems that misreport file sizes through stale metadata.
+  [This bug was present in "the beginning" but exacerbated in coreutils-8.24]
+
   yes now handles short writes, rather than assuming all writes complete.
   [bug introduced in coreutils-8.24]
 
