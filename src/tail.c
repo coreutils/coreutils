@@ -1111,7 +1111,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 {
   /* Use blocking I/O as an optimization, when it's easy.  */
   bool blocking = (pid == 0 && follow_mode == Follow_descriptor
-                   && n_files == 1 && ! S_ISREG (f[0].mode));
+                   && n_files == 1 && f[0].fd != -1 && ! S_ISREG (f[0].mode));
   size_t last;
   bool writer_is_dead = false;
 

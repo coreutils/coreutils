@@ -83,17 +83,22 @@ timeout 10 \
   tail $mode $fastpoll --follow=descriptor --retry missing >out 2>&1 & pid=$!
 # Wait for "cannot open" error.
 retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
-echo "X" > missing              || framework_failure_
+echo "X1" > missing             || framework_failure_
 # Wait for the expected output.
 retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
+# Ensure truncation is detected
+# tail-8.25 failed at this (as assumed non file and went into blocking mode)
+echo "X" > missing             || framework_failure_
+retry_delay_ wait4lines_ .1 6 6 || { cat out; fail=1; }
 cleanup_
-# Expect 4 lines in the output file.
-[ "$(countlines_)" = 4 ]   || { fail=1; cat out; }
+[ "$(countlines_)" = 6 ]   || { fail=1; cat out; }
 grep -F 'retry only effective for the initial open' out \
                            || { fail=1; cat out; }
 grep -F 'cannot open' out  || { fail=1; cat out; }
 grep -F 'has appeared' out || { fail=1; cat out; }
-grep '^X$' out             || { fail=1; cat out; }
+grep '^X1$' out            || { fail=1; cat out; }
+grep -F 'file truncated' out || { fail=1; cat out; }
+grep '^X$' out            || { fail=1; cat out; }
 rm -f missing out          || framework_failure_
 
 # === Test:
