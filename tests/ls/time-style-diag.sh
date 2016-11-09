@@ -19,8 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
-ls -l --time-style=XX > out 2> err
-test $? = 2 || fail=1
+returns_ 2 ls -l --time-style=XX > out 2> err || fail=1
 
 cat <<\EOF > exp || fail=1
 ls: invalid argument 'XX' for 'time style'

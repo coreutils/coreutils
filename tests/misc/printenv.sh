@@ -39,8 +39,7 @@ if env -- printenv | grep '^ENV_TEST' >/dev/null ; then
 fi
 
 # Printing a single variable's value.
-env -- printenv ENV_TEST > out
-test $? = 1 || fail=1
+returns_ 1 env -- printenv ENV_TEST > out || fail=1
 compare /dev/null out || fail=1
 echo a > exp || framework_failure_
 ENV_TEST=a env -- printenv ENV_TEST > out || fail=1
@@ -60,10 +59,8 @@ EOF
 compare exp out || fail=1
 
 # Exit status reflects missing variable, but remaining arguments processed.
-ENV_TEST1=a env -- printenv ENV_TEST2 ENV_TEST1 > out
-test $? = 1 || fail=1
-ENV_TEST1=a env -- printenv ENV_TEST1 ENV_TEST2 >> out
-test $? = 1 || fail=1
+ENV_TEST1=a returns_ 1 env -- printenv ENV_TEST2 ENV_TEST1 > out || fail=1
+ENV_TEST1=a returns_ 1 env -- printenv ENV_TEST1 ENV_TEST2 >> out || fail=1
 cat <<EOF > exp || framework_failure_
 a
 a
@@ -78,8 +75,7 @@ compare exp out || fail=1
 
 # Silently reject invalid env-var names.
 # Bug present through coreutils 8.0.
-env a=b=c printenv a=b > out
-test $? = 1 || fail=1
+returns_ 1 env a=b=c printenv a=b > out || fail=1
 compare /dev/null out || fail=1
 
 Exit $fail

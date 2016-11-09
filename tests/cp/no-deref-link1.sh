@@ -29,10 +29,8 @@ cd ..
 
 # It should fail with a message something like this:
 #   ./cp: 'a/foo' and 'b/foo' are the same file
-cp -d a/foo b 2>/dev/null
-
 # Fail this test if the exit status is not 1
-test $? = 1 || fail=1
+returns_ 1 cp -d a/foo b 2>/dev/null || fail=1
 
 test "$(cat a/foo)" = $msg || fail=1
 

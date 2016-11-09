@@ -88,9 +88,8 @@ retry_delay_ nonempty .1 5 || fail=1
 # and when it triggers, moves the parent, $t/3/a, up one level
 # so it's directly under $t.
 
-du -a $t d2 2> err
 # Before coreutils-8.10, du would abort.
-test $? = 1 || fail=1
+returns_ 1 du -a $t d2 2> err || fail=1
 
 # check for the new diagnostic
 printf "du: fts_read failed: $t/3/a/b: No such file or directory\n" > exp \

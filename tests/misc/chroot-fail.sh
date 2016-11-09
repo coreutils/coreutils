@@ -22,20 +22,15 @@ print_ver_ chroot pwd
 
 # These tests verify exact status of internal failure; since none of
 # them actually run a command, we don't need root privileges
-chroot # missing argument
-test $? = 125 || fail=1
-chroot --- / true # unknown option
-test $? = 125 || fail=1
+returns_ 125 chroot || fail=1 # missing argument
+returns_ 125 chroot --- / true || fail=1 # unknown option
 
 # chroot("/") succeeds for non-root users on some systems, but not all.
 if chroot / true ; then
   can_chroot_root=1
-  chroot / sh -c 'exit 2' # exit status propagation
-  test $? = 2 || fail=1
-  chroot / . # invalid command
-  test $? = 126 || fail=1
-  chroot / no_such # no such command
-  test $? = 127 || fail=1
+  returns_ 2 chroot / sh -c 'exit 2' || fail=1 # exit status propagation
+  returns_ 126 chroot / .  || fail=1# invalid command
+  returns_ 127 chroot / no_such || fail=1 # no such command
 else
   test $? = 125 || fail=1
   can_chroot_root=0

@@ -22,17 +22,11 @@ print_ver_ nice
 
 
 # These tests verify exact status of internal failure.
-nice -n 1 # missing command
-test $? = 125 || fail=1
-nice --- # unknown option
-test $? = 125 || fail=1
-nice -n 1a # invalid adjustment
-test $? = 125 || fail=1
-nice sh -c 'exit 2' # exit status propagation
-test $? = 2 || fail=2
-nice . # invalid command
-test $? = 126 || fail=1
-nice no_such # no such command
-test $? = 127 || fail=1
+returns_ 125 nice -n 1 || fail=1 # missing command
+returns_ 125 nice --- || fail=1 # unknown option
+returns_ 125 nice -n 1a || fail=1 # invalid adjustment
+returns_ 2 nice sh -c 'exit 2' || fail=1 # exit status propagation
+returns_ 126 nice . || fail=1 # invalid command
+returns_ 127 nice no_such || fail=1 # no such command
 
 Exit $fail

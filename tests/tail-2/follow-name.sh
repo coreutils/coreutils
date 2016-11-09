@@ -24,8 +24,7 @@ tail: cannot open 'no-such' for reading: No such file or directory
 tail: no files remaining
 EOF
 
-timeout 10 tail --follow=name no-such > out 2> err
-test $? = 1 || fail=1
+returns_ 1 timeout 10 tail --follow=name no-such > out 2> err || fail=1
 
 # Remove an inconsequential inotify warning so
 # we can compare against the above error

@@ -28,8 +28,7 @@ ln -s / d/s || framework_failure_
 chmod 600 d || framework_failure_
 
 
-ls -Log d > out
-test $? = 1 || fail=1
+returns_ 1 ls -Log d > out || fail=1
 
 # Linux 2.6.32 client with Isilon OneFS always returns d_type==DT_DIR ('d')
 # Newer Linux 3.10.0 returns the more correct DT_UNKNOWN ('?')

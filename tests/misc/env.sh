@@ -43,16 +43,11 @@ echo a=b > exp || framework_failure_
 compare exp out || fail=1
 
 # These tests verify exact status of internal failure.
-env --- # unknown option
-test $? = 125 || fail=1
-env -u # missing option argument
-test $? = 125 || fail=1
-env sh -c 'exit 2' # exit status propagation
-test $? = 2 || fail=2
-env . # invalid command
-test $? = 126 || fail=1
-env no_such # no such command
-test $? = 127 || fail=1
+returns_ 125 env --- || fail=1 # unknown option
+returns_ 125 env -u || fail=1 # missing option argument
+returns_ 2 env sh -c 'exit 2' || fail=1 # exit status propagation
+returns_ 126 env . || fail=1 # invalid command
+returns_ 127 env no_such || fail=1 # no such command
 
 # POSIX is clear that environ may, but need not be, sorted.
 # Environment variable values may contain newlines, which cannot be
@@ -131,8 +126,7 @@ case $(env -- -u pass) in
 esac
 
 # After options have ended, the first argument not containing = is a program.
-env a=b -- true
-test $? = 127 || fail=1
+returns_ 127 env a=b -- true || fail=1
 ln -s "simple_echo" ./-- || framework_failure_
 case $(env a=b -- true || echo fail) in
   *true) ;;
