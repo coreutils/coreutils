@@ -31,8 +31,7 @@ for mode in '' '---disable-inotify'; do
   tail -f $mode here & pid=$!
 
   # Ensure that tail --pid=PID does not exit when PID is alive.
-  timeout 1 tail -f -s.1 --pid=$pid $mode here
-  test $? = 124 || fail=1
+  returns_ 124 timeout 1 tail -f -s.1 --pid=$pid $mode here || fail=1
 
   cleanup_
 
@@ -44,8 +43,7 @@ for mode in '' '---disable-inotify'; do
   test $ret = 0 || fail=1
 
   # Ensure tail doesn't wait for data when PID is dead
-  timeout 10 tail -f -s10 --pid=$PID_T_MAX $mode empty
-  test $? = 124 && fail=1
+  returns_ 124 timeout 10 tail -f -s10 --pid=$PID_T_MAX $mode empty && fail=1
 done
 
 Exit $fail

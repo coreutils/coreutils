@@ -45,8 +45,7 @@ fi
 if test "$fail" != '1'; then
   # Ensure a fifo doesn't block
   mkfifo_or_skip_ fifo
-  timeout 10 sync fifo
-  test $? = 124 && fail=1
+  returns_ 124 timeout 10 sync fifo && fail=1
 fi
 
 Exit $fail

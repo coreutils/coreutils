@@ -43,19 +43,17 @@ stdbuf -o1 true || fail=1 # verify size syntax
 stdbuf -oK true || fail=1 # verify size syntax
 stdbuf -o0 true || fail=1 # verify unbuffered syntax
 stdbuf -oL true || fail=1 # verify line buffered syntax
-stdbuf -ol true # Capital 'L' required
-test $? = 125 || fail=1 # Internal error is a particular status
-stdbuf -o$SIZE_OFLOW true # size too large
-test $? = 125 || fail=1
-stdbuf -iL true # line buffering stdin disallowed
-test $? = 125 || fail=1
-stdbuf true # a buffering mode must be specified
-test $? = 125 || fail=1
+
+# Capital 'L' required
+# Internal error is a particular status
+returns_ 125 stdbuf -ol true || fail=1
+
+returns_ 125 stdbuf -o$SIZE_OFLOW true || fail=1 # size too large
+returns_ 125 stdbuf -iL true || fail=1 # line buffering stdin disallowed
+returns_ 125 stdbuf true || fail=1 # a buffering mode must be specified
 stdbuf -i0 -o0 -e0 true || fail=1 #check all files
-stdbuf -o1 . # invalid command
-test $? = 126 || fail=1
-stdbuf -o1 no_such # no such command
-test $? = 127 || fail=1
+returns_ 126 stdbuf -o1 . || fail=1 # invalid command
+returns_ 127 stdbuf -o1 no_such || fail=1 # no such command
 
 # Terminate any background processes
 cleanup_() { kill $pid 2>/dev/null && wait $pid; }

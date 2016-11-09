@@ -79,8 +79,7 @@ if test x$(nice -n -1 nice 2> /dev/null) = x0 ; then
   compare exp err || fail=1
   # Failure to write advisory message is fatal.  Buggy through coreutils 8.0.
   if test -w /dev/full && test -c /dev/full; then
-    nice -n -1 nice > out 2> /dev/full
-    test $? = 125 || fail=1
+    returns_ 125 nice -n -1 nice > out 2> /dev/full || fail=1
     compare /dev/null out || fail=1
   fi
 else

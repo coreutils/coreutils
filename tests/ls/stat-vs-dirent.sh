@@ -23,8 +23,7 @@ print_ver_ ls
 root_dev_ino=$(stat --format=%d-%i /)
 t=$(pwd)
 while :; do
-  ls -i1 "$t" > tmp
-  if test $? = 0; then
+  if ls -i1 "$t" > tmp; then
     # Extract the inode number from the first line of output from ls -i1.
     # This value comes from dirent.d_ino, on systems with d_ino support.
     d_ino=$(sed -n '1s/^ *\([0-9][0-9]*\) .*/\1/p;q' tmp)

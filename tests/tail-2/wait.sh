@@ -35,29 +35,23 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 fastpoll='-s.1 --max-unchanged-stats=1'
 
 for mode in '' '---disable-inotify'; do
-  timeout 10 tail $fastpoll -f $mode not_here
-  test $? = 124 && fail=1
+  returns_ 124 timeout 10 tail $fastpoll -f $mode not_here && fail=1
 
   if test ! -r unreadable; then # can't test this when root
-    timeout 10 tail $fastpoll -f $mode unreadable
-    test $? = 124 && fail=1
+    returns_ 124 timeout 10 tail $fastpoll -f $mode unreadable && fail=1
   fi
 
-  timeout .1 tail $fastpoll -f $mode here 2>tail.err
-  test $? = 124 || fail=1
+  returns_ 124 timeout .1 tail $fastpoll -f $mode here 2>tail.err || fail=1
 
   # 'tail -F' must wait in any case.
 
-  timeout .1 tail $fastpoll -F $mode here 2>>tail.err
-  test $? = 124 || fail=1
+  returns_ 124 timeout .1 tail $fastpoll -F $mode here 2>>tail.err || fail=1
 
   if test ! -r unreadable; then # can't test this when root
-    timeout .1 tail $fastpoll -F $mode unreadable
-    test $? = 124 || fail=1
+    returns_ 124 timeout .1 tail $fastpoll -F $mode unreadable || fail=1
   fi
 
-  timeout .1 tail $fastpoll -F $mode not_here
-  test $? = 124 || fail=1
+  returns_ 124 timeout .1 tail $fastpoll -F $mode not_here || fail=1
 
   grep -Ev "$inotify_failed_re" tail.err > x
   mv x tail.err
