@@ -63,6 +63,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously truncation was ignored thus not outputting new data in the file.
   [bug introduced in coreutils-5.3.0]
 
+  tail -f will no longer continually try to open inaccessible files,
+  only doing so if --retry is specified.
+  [This bug was present in "the beginning".]
+
   yes now handles short writes, rather than assuming all writes complete.
   [bug introduced in coreutils-8.24]
 

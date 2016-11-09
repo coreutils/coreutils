@@ -1909,7 +1909,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
         {
           f->fd = -1;
           f->errnum = errno;
-          f->ignore = false;
+          f->ignore = ! reopen_inaccessible_files;
           f->ino = 0;
           f->dev = 0;
         }

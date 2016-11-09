@@ -38,7 +38,7 @@ for mode in '' '---disable-inotify'; do
   rm -f a foo out
   touch a || framework_failure_
 
-  tail $mode --follow=name $fastpoll a foo > out 2>&1 & pid=$!
+  tail $mode $fastpoll -F a foo > out 2>&1 & pid=$!
 
   # Wait up to 12.7s for tail to start.
   echo x > a || framework_failure_

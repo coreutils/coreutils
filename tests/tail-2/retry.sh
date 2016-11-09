@@ -51,7 +51,7 @@ grep -F 'tail: warning: --retry ignored' out || { cat out; fail=1; }
 
 # === Test:
 # The same with a missing file: expect error message and exit 1.
-tail --retry missing > out 2>&1 && fail=1
+returns_ 1 tail --retry missing > out 2>&1 || fail=1
 [ "$(countlines_)" = 2 ]                     || { cat out; fail=1; }
 grep -F 'tail: warning: --retry ignored' out || { cat out; fail=1; }
 
@@ -123,17 +123,35 @@ grep -F 'no files remaining' out               || { fail=1; cat out; }
 rm -fd missing out                             || framework_failure_
 
 # === Test:
+# Ensure that --follow=descriptor (without --retry) does *not* try
+# to open a file after an initial fail, even when there are other
+# tailable files.  This was an issue in <= 8.25.
+touch existing || framework_failure_
+tail $mode $fastpoll --follow=descriptor missing existing >out 2>&1 & pid=$!
+retry_delay_ wait4lines_ .1 6 2  || { cat out; fail=1; }
+[ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
+grep -F 'cannot open' out        || { fail=1; cat out; }
+echo "Y" > missing               || framework_failure_
+echo "X" > existing              || framework_failure_
+retry_delay_ wait4lines_ .1 6 3  || { cat out; fail=1; }
+[ "$(countlines_)" = 3 ]         || { fail=1; cat out; }
+grep '^X$' out                   || { fail=1; cat out; }
+grep '^Y$' out                   && { fail=1; cat out; }
+cleanup_
+rm -f missing out existing       || framework_failure_
+
+# === Test:
 # Ensure that --follow=descriptor (without --retry) does *not wait* for the
 # file to appear.  Expect 2 lines in the output file ("cannot open" +
 # "no files remaining") and exit status 1.
-tail $mode --follow=descriptor missing >out 2>&1 && fail=1
+returns_ 1 tail $mode --follow=descriptor missing >out 2>&1 || fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
 
 # === Test:
 # Likewise for --follow=name (without --retry).
-tail $mode --follow=name missing >out 2>&1 && fail=1
+returns_ 1 tail $mode --follow=name missing >out 2>&1 || fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
