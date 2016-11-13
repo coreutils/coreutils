@@ -46,7 +46,7 @@
 #define PROGRAM_NAME "split"
 
 #define AUTHORS \
-  proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
+  proper_name ("Torbjorn Granlund"), \
   proper_name ("Richard M. Stallman")
 
 /* Shell command to filter through, instead of creating files.  */

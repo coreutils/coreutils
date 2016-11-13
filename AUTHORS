@@ -5,7 +5,7 @@ arch: David MacKenzie, Karel Zak
 base32: Simon Josefsson
 base64: Simon Josefsson
 basename: David MacKenzie
-cat: Torbjörn Granlund, Richard M. Stallman
+cat: Torbjorn Granlund, Richard M. Stallman
 chcon: Russell Coker, Jim Meyering
 chgrp: David MacKenzie, Jim Meyering
 chmod: David MacKenzie, Jim Meyering
@@ -14,16 +14,16 @@ chroot: Roland McGrath
 cksum: Q. Frank Xia
 comm: Richard M. Stallman, David MacKenzie
 coreutils: Alex Deymo
-cp: Torbjörn Granlund, David MacKenzie, Jim Meyering
+cp: Torbjorn Granlund, David MacKenzie, Jim Meyering
 csplit: Stuart Kemp, David MacKenzie
 cut: David M. Ihnat, David MacKenzie, Jim Meyering
 date: David MacKenzie
 dd: Paul Rubin, David MacKenzie, Stuart Kemp
-df: Torbjörn Granlund, David MacKenzie, Paul Eggert
+df: Torbjorn Granlund, David MacKenzie, Paul Eggert
 dir: Richard M. Stallman, David MacKenzie
 dircolors: H. Peter Anvin
 dirname: David MacKenzie, Jim Meyering
-du: Torbjörn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
+du: Torbjorn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
 echo: Brian Fox, Chet Ramey
 env: Richard Mlynarik, David MacKenzie
 expand: David MacKenzie
@@ -65,7 +65,7 @@ printf: David MacKenzie
 ptx: François Pinard
 pwd: Jim Meyering
 readlink: Dmitry V. Levin
-realpath: Pádraig Brady
+realpath: Padraig Brady
 rm: Paul Rubin, David MacKenzie, Richard M. Stallman, Jim Meyering
 rmdir: David MacKenzie
 runcon: Russell Coker
@@ -79,9 +79,9 @@ shred: Colin Plumb
 shuf: Paul Eggert
 sleep: Jim Meyering, Paul Eggert
 sort: Mike Haertel, Paul Eggert
-split: Torbjörn Granlund, Richard M. Stallman
+split: Torbjorn Granlund, Richard M. Stallman
 stat: Michael Meskes
-stdbuf: Pádraig Brady
+stdbuf: Padraig Brady
 stty: David MacKenzie
 sum: Kayvan Aghaiepour, David MacKenzie
 sync: Jim Meyering, Giuseppe Scrivano
@@ -89,11 +89,11 @@ tac: Jay Lepreau, David MacKenzie
 tail: Paul Rubin, David MacKenzie, Ian Lance Taylor, Jim Meyering
 tee: Mike Parker, Richard M. Stallman, David MacKenzie
 test: Kevin Braunsdorf, Matthew Bradburn
-timeout: Pádraig Brady
+timeout: Padraig Brady
 touch: Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, Randy Smith
 tr: Jim Meyering
 true: Jim Meyering
-truncate: Pádraig Brady
+truncate: Padraig Brady
 tsort: Mark Kettenis
 tty: David MacKenzie
 uname: David MacKenzie

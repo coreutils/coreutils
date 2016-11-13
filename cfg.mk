@@ -261,7 +261,7 @@ au_dotdot = authors-dotdot
 au_actual = authors-actual
 sc_check-AUTHORS: $(all_programs)
 	@locale=en_US.UTF-8;				\
-	LC_ALL=$$locale ./src/cat --version		\
+	LC_ALL=$$locale ./src/factor --version		\
 	    | grep ' Torbjorn '	> /dev/null		\
 	  && { echo "$@: skipping this check"; exit 0; }; \
 	rm -f $(au_actual) $(au_dotdot);		\
