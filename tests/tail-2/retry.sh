@@ -148,6 +148,7 @@ returns_ 1 tail $mode --follow=descriptor missing >out 2>&1 || fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
+rm -f out                        || framework_failure_
 
 # === Test:
 # Likewise for --follow=name (without --retry).
@@ -155,10 +156,12 @@ returns_ 1 tail $mode --follow=name missing >out 2>&1 || fail=1
 [ "$(countlines_)" = 2 ]         || { fail=1; cat out; }
 grep -F 'cannot open' out        || { fail=1; cat out; }
 grep -F 'no files remaining' out || { fail=1; cat out; }
+rm -f out                        || framework_failure_
 
 # === Test:
 # Ensure that tail -F retries when the file is initially untailable.
-mkdir untailable
+if ! cat . >/dev/null; then
+mkdir untailable || framework_failure_
 timeout 10 \
   tail $mode $fastpoll -F untailable >out 2>&1 & pid=$!
 # Wait for "cannot open" error.
@@ -172,6 +175,7 @@ grep -F 'cannot follow' out                    || { fail=1; cat out; }
 grep -F 'has become accessible' out            || { fail=1; cat out; }
 grep -F 'foo' out                              || { fail=1; cat out; }
 rm -fd untailable out                          || framework_failure_
+fi
 
 done
 
