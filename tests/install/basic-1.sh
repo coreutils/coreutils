@@ -143,4 +143,9 @@ compare - out <<\EOF || fail=1
 'file' -> 'sub4/dir_exists/file'
 EOF
 
+# Ensure omitted directories are diagnosed
+returns_ 1 ginstall . . 2>err || fail=1
+printf '%s\n' "ginstall: omitting directory '.'" >exp || framework_failure_
+compare exp err || fail=1
+
 Exit $fail

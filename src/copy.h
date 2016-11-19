@@ -137,6 +137,9 @@ struct cp_options
      If that fails, then resort to copying.  */
   bool move_mode;
 
+  /* If true, install(1) is the caller.  */
+  bool install_mode;
+
   /* Whether this process has appropriate privileges to chown a file
      whose owner is not the effective user ID.  */
   bool chown_privileges;

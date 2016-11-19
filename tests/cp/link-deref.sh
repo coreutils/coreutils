@@ -92,7 +92,7 @@ for src in dirlink filelink danglink; do
         exp_result=1
         exp_inode=
         exp_ftype=
-        exp_error="cp: omitting directory 'dirlink'"
+        exp_error="cp: -r not specified; omitting directory 'dirlink'"
       elif [ "$src" = 'dirlink' ]; then
         # cp --link -R 'dirlink' should create a new directory.
         exp_result=0

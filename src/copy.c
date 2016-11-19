@@ -1873,7 +1873,10 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (S_ISDIR (src_mode) && !x->recursive)
     {
-      error (0, 0, _("omitting directory %s"), quoteaf (src_name));
+      error (0, 0, ! x->install_mode /* cp */
+                   ? _("-r not specified; omitting directory %s")
+                   : _("omitting directory %s"),
+             quoteaf (src_name));
       return false;
     }
 
