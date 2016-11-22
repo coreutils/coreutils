@@ -63,6 +63,9 @@ static bool issued_disorder_warning[2];
 /* line delimiter.  */
 static unsigned char delim = '\n';
 
+/* If true, print a summary.  */
+static bool total_option;
+
 /* If nonzero, check that the input is correctly ordered. */
 static enum
   {
@@ -82,7 +85,8 @@ enum
 {
   CHECK_ORDER_OPTION = CHAR_MAX + 1,
   NOCHECK_ORDER_OPTION,
-  OUTPUT_DELIMITER_OPTION
+  OUTPUT_DELIMITER_OPTION,
+  TOTAL_OPTION
 };
 
 static struct option const long_options[] =
@@ -90,6 +94,7 @@ static struct option const long_options[] =
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
   {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
+  {"total", no_argument, NULL, TOTAL_OPTION},
   {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -135,6 +140,9 @@ and column three contains lines common to both files.\n\
 "), stdout);
       fputs (_("\
   --output-delimiter=STR  separate columns with STR\n\
+"), stdout);
+      fputs (_("\
+  --total           output a summary\n\
 "), stdout);
       fputs (_("\
   -z, --zero-terminated    line delimiter is NUL, not newline\n\
@@ -263,6 +271,9 @@ compare_files (char **infiles)
   /* streams[i] holds the input stream for file i.  */
   FILE *streams[2];
 
+  /* Counters for the summary.  */
+  uintmax_t total[] = {0, 0, 0};
+
   int i, j;
 
   /* Initialize the storage. */
@@ -317,14 +328,26 @@ compare_files (char **infiles)
 
       /* Output the line that is lesser. */
       if (order == 0)
-        writeline (thisline[1], stdout, 3);
+        {
+          /* Line is seen in both files.  */
+          total[2]++;
+          writeline (thisline[1], stdout, 3);
+        }
       else
         {
           seen_unpairable = true;
           if (order <= 0)
-            writeline (thisline[0], stdout, 1);
+            {
+              /* Line is seen in file 1 only.  */
+              total[0]++;
+              writeline (thisline[0], stdout, 1);
+            }
           else
-            writeline (thisline[1], stdout, 2);
+            {
+              /* Line is seen in file 2 only.  */
+              total[1]++;
+              writeline (thisline[1], stdout, 2);
+            }
         }
 
       /* Step the file the line came from.
@@ -365,6 +388,19 @@ compare_files (char **infiles)
   for (i = 0; i < 2; i++)
     if (fclose (streams[i]) != 0)
       die (EXIT_FAILURE, errno, "%s", quotef (infiles[i]));
+
+  if (total_option)
+    {
+      /* Print the summary, minding the column and line delimiters.  */
+      char buf1[INT_BUFSIZE_BOUND (uintmax_t)];
+      char buf2[INT_BUFSIZE_BOUND (uintmax_t)];
+      char buf3[INT_BUFSIZE_BOUND (uintmax_t)];
+      printf ("%s%s%s%s%s%s%s%c",
+              umaxtostr (total[0], buf1), col_sep,
+              umaxtostr (total[1], buf2), col_sep,
+              umaxtostr (total[2], buf3), col_sep,
+              _("total"), delim);
+    }
 }
 
 int
@@ -388,6 +424,7 @@ main (int argc, char **argv)
   seen_unpairable = false;
   issued_disorder_warning[0] = issued_disorder_warning[1] = false;
   check_input_order = CHECK_ORDER_DEFAULT;
+  total_option = false;
 
   while ((c = getopt_long (argc, argv, "123z", long_options, NULL)) != -1)
     switch (c)
@@ -421,6 +458,10 @@ main (int argc, char **argv)
           die (EXIT_FAILURE, 0, _("multiple output delimiters specified"));
         col_sep = optarg;
         col_sep_len = *optarg ? strlen (optarg) : 1;
+        break;
+
+      case TOTAL_OPTION:
+        total_option = true;
         break;
 
       case_GETOPT_HELP_CHAR;

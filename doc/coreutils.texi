@@ -5174,6 +5174,37 @@ rather than the default of a single TAB character.
 
 The delimiter @var{str} may not be empty.
 
+@item --total
+Output a summary at the end.
+
+Similar to the regular output,
+column one contains the total number of lines unique to @var{file1},
+column two contains the total number of lines unique to @var{file2}, and
+column three contains the total number of lines common to both files,
+followed by the word @samp{total} in the additional column four.
+
+In the following example, @command{comm} omits the regular output
+(@option{-123}), thus just printing the summary:
+
+@example
+$ printf '%s\n' a b c d e     > file1
+$ printf '%s\n'   b c d e f g > file2
+$ comm --total -123 file1 file2
+1       2       4       total
+@end example
+
+This option is a GNU extension.  Portable scripts should use @command{wc} to
+get the totals, e.g. for the above example files:
+
+@example
+$ comm -23 file1 file2 | wc -l    # number of lines only in file1
+1
+$ comm -13 file1 file2 | wc -l    # number of lines only in file2
+2
+$ comm -12 file1 file2 | wc -l    # number of lines common to both files
+4
+@end example
+
 @optZeroTerminated
 
 @end table

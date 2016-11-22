@@ -114,6 +114,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  comm now accepts the --total option to output a summary at the end.
+
   date now accepts the --debug option, to annotate the parsed date string,
   display timezone information, and warn about potential misuse.
 

@@ -27,36 +27,49 @@ my $prog = 'comm';
 # Turn off localization of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my @inputs = ({IN=>{a=>"1\n3"}}, {IN=>{b=>"2\n3"}});
-my @zinputs = ({IN=>{za=>"1\0003"}}, {IN=>{zb=>"2\0003"}});
+my @inputs = ({IN=>{a=>"1\n3\n3\n3"}}, {IN=>{b=>"2\n2\n3\n3\n3"}});
+my @zinputs = ({IN=>{za=>"1\0003\0003\0003"}},
+               {IN=>{zb=>"2\0002\0003\0003\0003"}});
 
 my @Tests =
   (
    # basic operation
-   ['basic', @inputs, {OUT=>"1\n\t2\n\t\t3\n"} ],
-   ['zbasic', '-z', @zinputs, {OUT=>"1\0\t2\0\t\t3\0"} ],
+   ['basic', @inputs, {OUT=>"1\n\t2\n\t2\n\t\t3\n\t\t3\n\t\t3\n"} ],
+   ['zbasic', '-z', @zinputs, {OUT=>"1\0\t2\0\t2\0\t\t3\0\t\t3\0\t\t3\0"} ],
 
    # suppress lines unique to file 1
-   ['opt-1', '-1', @inputs, {OUT=>"2\n\t3\n"} ],
-   ['zopt-1', '-z', '-1', @zinputs, {OUT=>"2\0\t3\0"} ],
+   ['opt-1', '-1', @inputs, {OUT=>"2\n2\n\t3\n\t3\n\t3\n"} ],
+   ['zopt-1', '-z', '-1', @zinputs, {OUT=>"2\0002\000\t3\000\t3\000\t3\000"} ],
 
    # suppress lines unique to file 2
-   ['opt-2', '-2', @inputs, {OUT=>"1\n\t3\n"} ],
+   ['opt-2', '-2', @inputs, {OUT=>"1\n\t3\n\t3\n\t3\n"} ],
+   ['zopt-2', '-z', '-2', @zinputs, {OUT=>"1\000\t3\000\t3\000\t3\000"} ],
 
    # suppress lines that appear in both files
-   ['opt-3', '-3', @inputs, {OUT=>"1\n\t2\n"} ],
+   ['opt-3', '-3', @inputs, {OUT=>"1\n\t2\n\t2\n"} ],
+   ['zopt-3', '-z', '-3', @zinputs, {OUT=>"1\000\t2\000\t2\000"} ],
 
    # suppress lines unique to file 1 and lines unique to file 2
-   ['opt-12', '-1', '-2', @inputs, {OUT=>"3\n"} ],
+   ['opt-12', '-1', '-2', @inputs, {OUT=>"3\n3\n3\n"} ],
+   ['zopt-12', '-12z', @zinputs, {OUT=>"3\0003\0003\000"} ],
 
    # suppress lines unique to file 1 and those that appear in both files
-   ['opt-13', '-1', '-3', @inputs, {OUT=>"2\n"} ],
+   ['opt-13', '-1', '-3', @inputs, {OUT=>"2\n2\n"} ],
+   ['zopt-13', '-13z', @zinputs, {OUT=>"2\0002\000"} ],
 
    # suppress lines unique to file 2 and those that appear in both files
    ['opt-23', '-2', '-3', @inputs, {OUT=>"1\n"} ],
+   ['zopt-23', '-23z', @zinputs, {OUT=>"1\000"} ],
 
-   # suppress all output (really?)
+   # suppress all output
    ['opt-123', '-1', '-2', '-3', @inputs, {OUT=>""} ],
+
+   # show summary: 1 only in file1, 2 only in file2, 3 in both files
+   ['total-all', '--total', @inputs, {OUT=>"1\n\t2\n\t2\n\t\t3\n\t\t3\n\t\t3\n"
+     . "1\t2\t3\ttotal\n"} ],
+
+   # show summary only, suppressing regular output
+   ['total-123', '--total', '-123', @inputs, {OUT=>"1\t2\t3\ttotal\n"} ],
 
    # invalid missing command line argument (1)
    ['missing-arg1', $inputs[0], {EXIT=>1},
@@ -128,17 +141,17 @@ my @Tests =
 
    # alternate delimiter: ','
    ['delim-comma', '--output-delimiter=,', @inputs,
-    {OUT=>"1\n,2\n,,3\n"} ],
+    {OUT=>"1\n,2\n,2\n,,3\n,,3\n,,3\n"} ],
 
    # two-character alternate delimiter: '++'
    ['delim-2char', '--output-delimiter=++', @inputs,
-    {OUT=>"1\n++2\n++++3\n"} ],
+    {OUT=>"1\n++2\n++2\n++++3\n++++3\n++++3\n"} ],
 
    # NUL delimiter
    ['delim-empty', '--output-delimiter=', @inputs,
-    {OUT=>"1\n\0002\n\000\0003\n"} ],
+    {OUT=>"1\n\0002\n\0002\n\000\0003\n\000\0003\n\000\0003\n"} ],
    ['zdelim-empty', '-z', '-z --output-delimiter=', @zinputs,
-    {OUT=>"1\000\0002\000\000\0003\000"} ],
+    {OUT=>"1\000\0002\000\0002\000\000\0003\000\000\0003\000\000\0003\000"} ],
 
    # invalid dual delimiter
    ['delim-dual', '--output-delimiter=,', '--output-delimiter=+', @inputs,
@@ -146,8 +159,16 @@ my @Tests =
 
    # valid dual delimiter specification
    ['delim-dual2', '--output-delimiter=,', '--output-delimiter=,', @inputs,
-    {OUT=>"1\n,2\n,,3\n"} ],
+    {OUT=>"1\n,2\n,2\n,,3\n,,3\n,,3\n"} ],
 
+   # show summary, zero-terminated
+   ['totalz-all', '--total', '-z', @zinputs,
+    {OUT=>"1\000\t2\000\t2\000\t\t3\000\t\t3\000\t\t3\000"
+        . "1\t2\t3\ttotal\000"} ],
+
+   # show summary only (-123), zero-terminated and with ',' as delimiter
+   ['totalz-123', '--total', '-z123', '--output-delimiter=,', @zinputs,
+    {OUT=>"1,2,3,total\000"} ],
  );
 
 my $save_temps = $ENV{DEBUG};
