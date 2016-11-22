@@ -778,7 +778,7 @@ sc_fs-magic-compare:
 # Ensure gnulib generated files are ignored
 # TODO: Perhaps augment gnulib-tool to do this in lib/.gitignore?
 sc_gitignore_missing:
-	@{ sed -n '/^\/lib\/.*\.h$$/{p;p}' .gitignore;			\
+	@{ sed -n '/^\/lib\/.*\.h$$/{p;p}' $(srcdir)/.gitignore;	\
 	    find lib -name '*.in*' ! -name '*~' ! -name 'sys_*' |	\
 	      sed 's|^|/|; s|_\(.*in\.h\)|/\1|; s/\.in//'; } |		\
 	      sort | uniq -u | grep . && { echo '$(ME): Add above'	\
@@ -786,7 +786,8 @@ sc_gitignore_missing:
 
 # Flag redundant entries in .gitignore
 sc_gitignore_redundant:
-	@{ grep ^/lib .gitignore; sed 's|^|/lib|' lib/.gitignore; } |	\
+	@{ grep ^/lib $(srcdir)/.gitignore;				\
+	   sed 's|^|/lib|' $(srcdir)/lib/.gitignore; } |		\
 	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
 	      'entries from .gitignore' >&2; exit 1; } || :
 
