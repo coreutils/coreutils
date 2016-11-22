@@ -88,7 +88,8 @@ gcc_shared_ k.c k.so \
 export READDIR_PARTIAL
 for READDIR_PARTIAL in '' '1'; do
   rm -f preloaded
-  (LD_PRELOAD=$LD_PRELOAD:./k.so returns_ 1 rm -Rf dir 2>>err) || fail=1
+  (export LD_PRELOAD=$LD_PRELOAD:./k.so
+   returns_ 1 rm -Rf dir 2>>err) || fail=1
   test -f preloaded ||
     skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
 done

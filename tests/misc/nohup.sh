@@ -118,6 +118,8 @@ EOF
 # Make sure it fails with exit status of 125 when given too few arguments,
 # except that POSIX requires 127 in this case.
 returns_ 125 nohup >/dev/null 2>&1 || fail=1
-POSIXLY_CORRECT=1 returns_ 127 nohup >/dev/null 2>&1 || fail=1
+export POSIXLY_CORRECT=1
+returns_ 127 nohup >/dev/null 2>&1 || fail=1
+unset POSIXLY_CORRECT
 
 Exit $fail

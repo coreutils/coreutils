@@ -66,9 +66,9 @@ gcc_shared_ k.c k.so \
 # Split the input, and force fwrite() failure -
 # the 'csplit' command should fail with exit code 1
 # (checked with 'returns_ 1 ... || fail=1')
-seq 10 \
-  | LD_PRELOAD=$LD_PRELOAD:./k.so returns_ 1 csplit - 1 4 2>out \
-  || fail=1
+seq 10 |
+(export LD_PRELOAD=$LD_PRELOAD:./k.so
+ returns_ 1 csplit - 1 4 2>out) || fail=1
 
 test -e preloaded || skip_ 'LD_PRELOAD interception failed'
 

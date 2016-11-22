@@ -510,6 +510,14 @@ sc_prohibit_and_fail_1:
 	in_vc_files='^tests/'						\
 	  $(_sc_search_regexp)
 
+# Ensure that env vars are not passed through returns_ as
+# that was seen to fail on FreeBSD /bin/sh at least
+sc_prohibit_env_returns:
+	@prohibit='=[^ ]* returns_ '					\
+	halt='Passing env vars to returns_ is non portable'		\
+	in_vc_files='^tests/'						\
+	  $(_sc_search_regexp)
+
 # The mode part of a setfacl -m option argument must be three bytes long.
 # I.e., an argument of user:bin:rw or user:bin:r will make Solaris 10's
 # setfacl reject it with: "Unrecognized character found in mode field".

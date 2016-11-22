@@ -59,8 +59,10 @@ EOF
 compare exp out || fail=1
 
 # Exit status reflects missing variable, but remaining arguments processed.
-ENV_TEST1=a returns_ 1 env -- printenv ENV_TEST2 ENV_TEST1 > out || fail=1
-ENV_TEST1=a returns_ 1 env -- printenv ENV_TEST1 ENV_TEST2 >> out || fail=1
+export ENV_TEST1=a
+returns_ 1 env -- printenv ENV_TEST2 ENV_TEST1 > out || fail=1
+returns_ 1 env -- printenv ENV_TEST1 ENV_TEST2 >> out || fail=1
+unset ENV_TEST1
 cat <<EOF > exp || framework_failure_
 a
 a
