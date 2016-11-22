@@ -420,21 +420,21 @@ sort_ver() { # sort -V is not generally available
 
 get_version_sed='
 # Move version to start of line.
-          s/.*[v ]\([0-9]\)/\1/
+s/.*[v ]\([0-9]\)/\1/
 
-          # Skip lines that do not start with version.
-          /^[0-9]/!d
+# Skip lines that do not start with version.
+/^[0-9]/!d
 
-          # Remove characters after the version.
-          s/[^.a-z0-9-].*//
+# Remove characters after the version.
+s/[^.a-z0-9-].*//
 
-          # The first component must be digits only.
-          s/^\([0-9]*\)[a-z-].*/\1/
+# The first component must be digits only.
+s/^\([0-9]*\)[a-z-].*/\1/
 
-          #the following essentially does s/5.005/5.5/
-          s/\.0*\([1-9]\)/.\1/g
-          p
-          q'
+#the following essentially does s/5.005/5.5/
+s/\.0*\([1-9]\)/.\1/g
+p
+q'
 
 get_version() {
   app=$1

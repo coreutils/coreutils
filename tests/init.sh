@@ -295,50 +295,24 @@ compare_dev_null_ ()
   return 2
 }
 
-if diff_out_=`exec 2>/dev/null; diff -u "$0" "$0" < /dev/null` \
-   && diff -u Makefile "$0" 2>/dev/null | grep '^[+]#!' >/dev/null; then
-  # diff accepts the -u option and does not (like AIX 7 'diff') produce an
-  # extra space on column 1 of every content line.
-  if test -z "$diff_out_"; then
-    compare_ () { diff -u "$@"; }
-  else
-    compare_ ()
-    {
-      if diff -u "$@" > diff.out; then
-        # No differences were found, but Solaris 'diff' produces output
-        # "No differences encountered". Hide this output.
-        rm -f diff.out
-        true
-      else
-        cat diff.out
-        rm -f diff.out
-        false
-      fi
-    }
-  fi
-elif
-  for diff_opt_ in -U3 -c '' no; do
-    test "$diff_opt_" = no && break
-    diff_out_=`exec 2>/dev/null; diff $diff_opt_ "$0" "$0" </dev/null` && break
-  done
-  test "$diff_opt_" != no
-then
+for diff_opt_ in -u -U3 -c '' no; do
+  test "$diff_opt_" != no &&
+    diff_out_=`exec 2>/dev/null; diff $diff_opt_ "$0" "$0" < /dev/null` &&
+    break
+done
+if test "$diff_opt_" != no; then
   if test -z "$diff_out_"; then
     compare_ () { diff $diff_opt_ "$@"; }
   else
     compare_ ()
     {
-      if diff $diff_opt_ "$@" > diff.out; then
-        # No differences were found, but AIX and HP-UX 'diff' produce output
-        # "No differences encountered" or "There are no differences between the
-        # files.". Hide this output.
-        rm -f diff.out
-        true
-      else
-        cat diff.out
-        rm -f diff.out
-        false
-      fi
+      # If no differences were found, AIX and HP-UX 'diff' produce output
+      # like "No differences encountered".  Hide this output.
+      diff $diff_opt_ "$@" > diff.out
+      diff_status_=$?
+      test $diff_status_ -eq 0 || cat diff.out || diff_status_=2
+      rm -f diff.out || diff_status_=2
+      return $diff_status_
     }
   fi
 elif cmp -s /dev/null /dev/null 2>/dev/null; then
