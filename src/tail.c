@@ -878,9 +878,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     }
 }
 
-#if HAVE_INOTIFY
-/* Without inotify support, always return false.  Otherwise, return false
-   when FD is open on a file known to reside on a local file system.
+/* Return false when FD is open on a file residing on a local file system.
    If fstatfs fails, give a diagnostic and return true.
    If fstatfs cannot be called, return true.  */
 static bool
@@ -888,7 +886,7 @@ fremote (int fd, const char *name)
 {
   bool remote = true;           /* be conservative (poll by default).  */
 
-# if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE && defined __linux__
+#if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE && defined __linux__
   struct statfs buf;
   int err = fstatfs (fd, &buf);
   if (err != 0)
@@ -917,15 +915,10 @@ fremote (int fd, const char *name)
           assert (!"unexpected return value from is_local_fs_type");
         }
     }
-# endif
+#endif
 
   return remote;
 }
-#else
-/* Without inotify support, whether a file is remote is irrelevant.
-   Always return "false" in that case.  */
-# define fremote(fd, name) false
-#endif
 
 /* open/fstat F->name and handle changes.  */
 static void
@@ -995,7 +988,7 @@ recheck (struct File_spec *f, bool blocking)
                quoteaf (pretty_name (f)),
                f->ignore ? _("; giving up on this name") : "");
     }
-  else if (!disable_inotify && fremote (fd, pretty_name (f)))
+  else if ((f->remote = fremote (fd, pretty_name (f))) && ! disable_inotify)
     {
       ok = false;
       f->errnum = -1;
