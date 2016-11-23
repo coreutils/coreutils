@@ -649,4 +649,4 @@ cu_install_program = @INSTALL_PROGRAM@
 else
 cu_install_program = src/ginstall
 endif
-INSTALL_PROGRAM = $(cu_install_program)
+INSTALL = $(cu_install_program) -c
