@@ -1235,6 +1235,8 @@ fix_output_parameters (void)
 
   if ((auto_reference || input_reference) && !right_reference)
     line_width -= reference_max_width + gap_size;
+  if (line_width < 0)
+    line_width = 0;
 
   /* The output lines, minimally, will contain from left to right a left
      context, a gap, and a keyword followed by the right context with no
