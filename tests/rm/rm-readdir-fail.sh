@@ -47,8 +47,8 @@ struct dirent *readdir (DIR *dirp)
       errno = ESRCH;
       return NULL;
     }
-  static struct dirent* d;
-  if (! d && ! ( d = real_readdir (dirp)))
+  struct dirent* d;
+  if (! (d = real_readdir (dirp)))
     {
       fprintf (stderr, "Failed to get dirent\n");
       errno = ENOENT;
@@ -90,8 +90,10 @@ for READDIR_PARTIAL in '' '1'; do
   rm -f preloaded
   (export LD_PRELOAD=$LD_PRELOAD:./k.so
    returns_ 1 rm -Rf dir 2>>err) || fail=1
-  test -f preloaded ||
+  if ! test -f preloaded; then
+    cat err
     skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
+  fi
 done
 
 # First case is failure to read any items from dir, then assume empty.
