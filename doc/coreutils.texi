@@ -10304,7 +10304,7 @@ Print a warning if specified along with multiple @var{file}s.
 @opindex -q
 @opindex --silent
 @opindex --quiet
-Suppress most error messages.
+Suppress most error messages.  On by default.
 
 @item -v
 @itemx --verbose
