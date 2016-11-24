@@ -25,9 +25,14 @@ split -n 10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
 rm -f x??
 
+# When extracting K of N where N > file size
+# no data is extracted, and no files are written
+split -n 2/3 /dev/null || fail=1
+returns_ 1 stat x?? 2>/dev/null || fail=1
+
 # Ensure --elide-empty-files is honored
 split -e -n 10 /dev/null || fail=1
-stat x?? 2>/dev/null && fail=1
+returns_ 1 stat x?? 2>/dev/null || fail=1
 
 printf '1\n2\n3\n4\n5\n' > input || framework_failure_
 

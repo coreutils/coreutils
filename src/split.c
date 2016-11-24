@@ -982,7 +982,7 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   start = (k - 1) * (file_size / n);
   end = (k == n) ? file_size : k * (file_size / n);
 
-  if (initial_read != SIZE_MAX || start < initial_read)
+  if (start < initial_read)
     {
       memmove (buf, buf + start, initial_read - start);
       initial_read -= start;
