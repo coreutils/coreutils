@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   nl now resets numbering for each page section rather than just for each page.
   [This bug was present in "the beginning".]
 
+  pr now handles specified separator strings containing tabs correctly.
+  Previously it would have output random data from memory.
+  [This bug was detected with ASAN and present in "the beginning".]
+
   sort -h -k now works even in locales that use blank as thousands separator.
 
   stty --help no longer outputs extraneous gettext header lines

@@ -1233,7 +1233,7 @@ init_parameters (int number_of_files)
         }
       /* It's rather pointless to define a TAB separator with column
          alignment */
-      else if (!join_lines && *col_sep_string == '\t')
+      else if (!join_lines && col_sep_length == 1 && *col_sep_string == '\t')
         col_sep_string = column_separator;
 
       truncate_lines = true;

@@ -467,6 +467,13 @@ push @Tests,
     {IN=>{3=>"x\ty\tz\n"}},
      {OUT=>join("\t", qw(a b c m n o x y z)) . "\n"} ];
 
+# This resulted in reading invalid memory before coreutils-8.26
+push @Tests,
+   ['asan1', "-m -S'\t\t\t' -t",
+    {IN=>{1=>"a\n"}},
+    {IN=>{2=>"a\n"}},
+     {OUT=>"a\t\t\t\t  \t\t\ta\n"} ];
+
 @Tests = triple_test \@Tests;
 
 my $save_temps = $ENV{DEBUG};
