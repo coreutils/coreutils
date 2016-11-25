@@ -40,7 +40,7 @@
 /* If the platform supports unaligned access,
    then don't have -fsanitize=undefined warn about it.  */
 #undef ATTRIBUTE_NO_WARN_SANITIZE_UNDEFINED
-#if !_STRING_ARCH_unaligned \
+#if !(_STRING_ARCH_unaligned || _STRING_INLINE_unaligned) \
     || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9)
 # define ATTRIBUTE_NO_WARN_SANITIZE_UNDEFINED /* empty */
 #else

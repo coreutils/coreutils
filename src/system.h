@@ -515,7 +515,7 @@ is_nul (void const *buf, size_t length)
    to avoid -fsanitize=undefined warnings.
    Considering coreutils is mainly concerned with relatively
    large buffers, we'll just use the defined behavior.  */
-#if 0 && _STRING_ARCH_unaligned
+#if 0 && (_STRING_ARCH_unaligned || _STRING_INLINE_unaligned)
   unsigned long word;
 #else
   unsigned char word;

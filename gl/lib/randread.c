@@ -60,7 +60,7 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
-#if _STRING_ARCH_unaligned
+#if _STRING_ARCH_unaligned || _STRING_INLINE_unaligned
 # define ALIGNED_POINTER(ptr, type) true
 #else
 # define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
