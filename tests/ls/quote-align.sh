@@ -34,7 +34,6 @@ cat <<EOF >exp || framework_failure_
 '$dirname':
 'a b'   ${c_pre}c.foo${c_post}
 '$dirname':
-total 0
 'a b'
  ${c_pre}c.foo${c_post}
 '$dirname':
@@ -56,7 +55,7 @@ done
 echo >> out || fail=1
 
 # Strip possible varying portion of long format
-sed 's/.*T //' out > k && mv k out
+sed -e 's/.*T //' -e '/^total/d' out > k && mv k out
 
 compare exp out || fail=1
 
