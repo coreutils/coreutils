@@ -166,4 +166,9 @@ printf "A\nB\nC\nD\nE\n" | shuf --rep -n0 > exp || framework_failure_
 test \! -s exp ||
   { fail=1; echo "--repeat,STDIN,-n0 produced bad output">&2 ; }
 
+# shuf 8.25 mishandles input if stdin is closed, due to glibc bug#15589.
+# See coreutils bug#25029.
+shuf /dev/null <&- >out || fail=1
+compare /dev/null out || fail=1
+
 Exit $fail
