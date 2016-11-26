@@ -264,6 +264,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "aufs";
     case S_MAGIC_AUTOFS: /* 0x0187 local */
       return "autofs";
+    case S_MAGIC_BALLOON_KVM: /* 0x13661366 local */
+      return "balloon-kvm-fs";
     case S_MAGIC_BEFS: /* 0x42465331 local */
       return "befs";
     case S_MAGIC_BDEVFS: /* 0x62646576 local */
@@ -282,6 +284,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ceph";
     case S_MAGIC_CGROUP: /* 0x0027E0EB local */
       return "cgroupfs";
+    case S_MAGIC_CGROUP2: /* 0x63677270 local */
+      return "cgroup2fs";
     case S_MAGIC_CIFS: /* 0xFF534D42 remote */
       return "cifs";
     case S_MAGIC_CODA: /* 0x73757245 remote */
@@ -294,6 +298,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "cramfs";
     case S_MAGIC_CRAMFS_WEND: /* 0x453DCD28 local */
       return "cramfs-wend";
+    case S_MAGIC_DAXFS: /* 0x64646178 local */
+      return "daxfs";
     case S_MAGIC_DEBUGFS: /* 0x64626720 local */
       return "debugfs";
     case S_MAGIC_DEVFS: /* 0x1373 local */
@@ -486,6 +492,9 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "xia";
     case S_MAGIC_ZFS: /* 0x2FC12FC1 local */
       return "zfs";
+    case S_MAGIC_ZSMALLOC: /* 0x58295829 local */
+      return "zsmallocfs";
+
 
 # elif __GNU__
     case FSTYPE_UFS:
