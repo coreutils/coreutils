@@ -410,17 +410,17 @@ long __MPN(count_leading_zeros) (UDItype);
 	   : "=r" (sh),							\
 	     "=&r" (sl)							\
 	   : "r"  ((USItype) (ah)),					\
-	     "rIJ" ((USItype) (bh)),					\
+	     "rICal" ((USItype) (bh)),					\
 	     "%r" ((USItype) (al)),					\
-	     "rIJ" ((USItype) (bl)))
+	     "rICal" ((USItype) (bl)))
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   __asm__ ("sub.f\t%1, %4, %5\n\tsbc\t%0, %2, %3"			\
 	   : "=r" (sh),							\
 	     "=&r" (sl)							\
 	   : "r" ((USItype) (ah)),					\
-	     "rIJ" ((USItype) (bh)),					\
+	     "rICal" ((USItype) (bh)),					\
 	     "r" ((USItype) (al)),					\
-	     "rIJ" ((USItype) (bl)))
+	     "rICal" ((USItype) (bl)))
 #endif
 
 #if defined (__arm__) && (defined (__thumb2__) || !defined (__thumb__)) \
@@ -1570,6 +1570,15 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   } while (0)
 #endif /* RT/ROMP */
 
+#if defined (__riscv64) && W_TYPE_SIZE == 64
+#define umul_ppmm(ph, pl, u, v) \
+  do {									\
+    UDItype __u = (u), __v = (v);					\
+    (pl) = __u * __v;							\
+    __asm__ ("mulhu\t%2, %1, %0" : "=r" (ph) : "%r" (__u), "r" (__v));	\
+  } while (0)
+#endif
+
 #if (defined (__SH2__) || defined (__SH3__) || defined (__SH4__)) && W_TYPE_SIZE == 32
 #define umul_ppmm(w1, w0, u, v) \
   __asm__ ("dmulu.l %2,%3\n\tsts macl,%1\n\tsts mach,%0"		\
@@ -1881,11 +1890,11 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 /* FIXME: "sidi" here is highly doubtful, should sometimes be "diti".  */
 #if !defined (umul_ppmm) && defined (__umulsidi3)
 #define umul_ppmm(ph, pl, m0, m1) \
-  {									\
+  do {									\
     UDWtype __ll = __umulsidi3 (m0, m1);				\
     ph = (UWtype) (__ll >> W_TYPE_SIZE);				\
     pl = (UWtype) __ll;							\
-  }
+  } while (0)
 #endif
 
 #if !defined (__umulsidi3)
