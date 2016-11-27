@@ -1940,8 +1940,6 @@ tail_file (struct File_spec *f, uintmax_t n_units)
               ok = false;
               f->errnum = -1;
               f->tailable = false;
-              f->ignore = ! (reopen_inaccessible_files
-                             && follow_mode == Follow_name);
               error (0, 0, _("%s: cannot follow end of this type of file%s"),
                      quotef (pretty_name (f)),
                      f->ignore ? _("; giving up on this name") : "");
@@ -1949,6 +1947,8 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 
           if (!ok)
             {
+              f->ignore = ! (reopen_inaccessible_files
+                             && follow_mode == Follow_name);
               close_fd (fd, pretty_name (f));
               f->fd = -1;
             }

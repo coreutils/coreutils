@@ -50,4 +50,16 @@ for mode in '' '---disable-inotify'; do
   cleanup_
 done
 
+
+# Before coreutils-8.26 this would induce an UMR under UBSAN
+returns_ 1 timeout 10 tail -f - <&- 2>err || fail=1
+cat <<\EOF >exp || framework_failure_
+tail: cannot fstat 'standard input': Bad file descriptor
+tail: error reading 'standard input': Bad file descriptor
+tail: no files remaining
+tail: -: Bad file descriptor
+EOF
+compare exp err || fail=1
+
+
 Exit $fail
