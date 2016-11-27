@@ -94,6 +94,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now filters the system mount list more efficiently, with 20000
   mount entries now being processed in about 1.1s compared to 1.7s.
 
+  du, shuf, sort, and uniq no longer fail to process a specified file
+  when their stdin is closed, which would have happened with glibc >= 2.14.
+
   install -Z now also sets the default SELinux context for created directories.
 
   ls is now fully responsive to signals until the first escape sequence is
@@ -102,11 +105,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now aligns quoted items with non quoted items, which is easier to read,
   and also better indicates that the quote is not part of the actual name.
 
-  stat and tail now know about "prl_fs" (a parallels file system),
-  "m1fs" (a Plexistor file system), "wslfs" (Windows Subsystem for Linux),
-  and "smb2".  stat -f --format=%T now reports the file system type, and
-  tail -f uses polling for "prl_fs" and "smb2", inotify for "m1fs",
-  and attempts inotify for "wslfs".
+  stat and tail now know about these file systems:
+    "balloon-kvm-fs"    KVM dynamic RAM allocation support,
+    "cgroup2"           Linux Control Groups V2 support,
+    "daxfs"             Optical media file system,
+    "m1fs"              A Plexistor file system,
+    "prl_fs"            A parallels file system,
+    "smb2"              Samba for SMB protocol V2,
+    "wslfs"             Windows Subsystem for Linux,
+    "zsmalloc"          Linux compressed swap support,
+  stat -f --format=%T now reports the file system type, and
+  tail -f uses polling for "prl_fs" and "smb2", and inotify for others.
 
   stat --format=%N for quoting file names now honors the
   same QUOTING_STYLE environment variable values as ls.

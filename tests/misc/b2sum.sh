@@ -27,7 +27,7 @@ for i in 'a' ' b' '*c' '44' ' '; do
     b2sum -l $l --tag "$i" >> check.b2sum
   done
 done
-# Note -l is infered from the tags in the mixed format file
+# Note -l is inferred from the tags in the mixed format file
 b2sum --strict -c check.b2sum || fail=1
 # Also ensure the openssl tagged variant works
 sed 's/ //; s/ =/=/' < check.b2sum > openssl.b2sum || framework_failure_
