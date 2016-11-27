@@ -477,6 +477,7 @@ temp_stream (FILE **fp, char **file_name)
     }
   else
     {
+      clearerr (tmp_fp);
       if (fseeko (tmp_fp, 0, SEEK_SET) < 0
           || ftruncate (fileno (tmp_fp), 0) < 0)
         {
@@ -512,13 +513,13 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       if (bytes_read == SAFE_READ_ERROR)
         {
           error (0, errno, _("%s: read error"), quotef (file));
-          goto Fail;
+          return -1;
         }
 
       if (fwrite (G_buffer, 1, bytes_read, fp) != bytes_read)
         {
           error (0, errno, _("%s: write error"), quotef (file_name));
-          goto Fail;
+          return -1;
         }
 
       /* Implicitly <= OFF_T_MAX due to preceding fwrite(),
@@ -530,16 +531,12 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
   if (fflush (fp) != 0)
     {
       error (0, errno, _("%s: write error"), quotef (file_name));
-      goto Fail;
+      return -1;
     }
 
   *g_tmp = fp;
   *g_tempfile = file_name;
   return bytes_copied;
-
- Fail:
-  fclose (fp);
-  return -1;
 }
 
 /* Copy INPUT_FD to a temporary, then tac that file.

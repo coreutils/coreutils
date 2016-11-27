@@ -50,6 +50,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq now immediately exits upon write errors.
   [This bug was present in "the beginning".]
 
+  tac no longer crashes when there are issues reading from non-seekable inputs.
+  [bug introduced in coreutils-8.15]
+
   tail -F now continues to process initially untailable files that are replaced
   by a tailable file.  This was handled correctly when inotify was available,
   and is now handled correctly in all cases.

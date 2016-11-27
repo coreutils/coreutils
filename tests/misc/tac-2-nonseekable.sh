@@ -36,4 +36,7 @@ for file in /proc/version /sys/kernel/profiling; do
   fi
 done
 
+# This failed due to heap corruption from v8.15-v8.25 inclusive.
+returns_ 1 tac - - <&- 2>err || fail=1
+
 Exit $fail
