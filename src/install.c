@@ -427,7 +427,7 @@ static int
 make_ancestor (char const *dir, char const *component, void *options)
 {
   struct cp_options const *x = options;
-  if (x->set_security_context && defaultcon (dir, S_IFDIR) < 0
+  if (x->set_security_context && defaultcon (component, S_IFDIR) < 0
       && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
            quoteaf (dir));

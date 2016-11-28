@@ -25,6 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   factor again outputs immediately when numbers are input interactively.
   [bug introduced in coreutils-8.24]
 
+  install -DZ and mkdir -pZ now set default SELinux context correctly even if
+  two or more directories nested in each other are created and each of them
+  defaults to a different SELinux context.
+
   ls --time-style no longer mishandles '%%b' in formats.
   [bug introduced in coreutils-7.2]
 

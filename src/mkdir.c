@@ -123,7 +123,7 @@ make_ancestor (char const *dir, char const *component, void *options)
 {
   struct mkdir_options const *o = options;
 
-  if (o->set_security_context && defaultcon (dir, S_IFDIR) < 0
+  if (o->set_security_context && defaultcon (component, S_IFDIR) < 0
       && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
            quoteaf (dir));
