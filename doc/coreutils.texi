@@ -1375,11 +1375,11 @@ other parts of that standard.
 
 @cindex symbolic link to directory, controlling traversal of
 
-The following options modify how @command{chown} and @command{chgrp}
 @c FIXME: note that 'du' has these options, too, but they have slightly
 @c different meaning.
-traverse a hierarchy when the @option{--recursive} (@option{-R})
-option is also specified.
+The following options modify how @command {chmod}, @command{chown},
+and @command{chgrp} traverse a hierarchy when
+the @option{--recursive} (@option{-R}) option is also specified.
 If more than one of the following options is specified, only the final
 one takes effect.
 These options specify whether processing a symbolic link to a directory
@@ -1428,10 +1428,14 @@ possibly allowing the attacker to escalate privileges.
 @opindex -P
 @cindex symbolic link to directory, never traverse
 Do not traverse any symbolic links.
+@end macro
+@choptP
+
+@macro choptDefault
 This is the default if none of @option{-H}, @option{-L},
 or @option{-P} is specified.
 @end macro
-@choptP
+@choptDefault
 
 @end table
 
@@ -11723,6 +11727,7 @@ Recursively change ownership of directories and their contents.
 @xref{Traversing symlinks}.
 
 @choptP
+@choptDefault
 @xref{Traversing symlinks}.
 
 @end table
@@ -11836,6 +11841,7 @@ Recursively change the group ownership of directories and their contents.
 @xref{Traversing symlinks}.
 
 @choptP
+@choptDefault
 @xref{Traversing symlinks}.
 
 @end table
@@ -11869,13 +11875,14 @@ chmod [@var{option}]@dots{} @{@var{mode} | --reference=@var{ref_file}@}@c
 @end example
 
 @cindex symbolic links, permissions of
-@command{chmod} never changes the permissions of symbolic links, since
-the @command{chmod} system call cannot change their permissions.
-This is not a problem since the permissions of symbolic links are
-never used.  However, for each symbolic link listed on the command
+@command{chmod} doesn't change the permissions of symbolic links, since
+the @command{chmod} system call cannot change their permissions on most systems,
+and most systems ignore permissions of symbolic links.
+However, for each symbolic link listed on the command
 line, @command{chmod} changes the permissions of the pointed-to file.
 In contrast, @command{chmod} ignores symbolic links encountered during
-recursive directory traversals.
+recursive directory traversals. Options that modify this behavior
+are described below.
 
 Only a process whose effective user ID matches the user ID of the file,
 or a process with appropriate privileges, is permitted to change the
@@ -11908,6 +11915,23 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --changes
 Verbosely describe the action for each @var{file} whose permissions
 actually change.
+
+@item --dereference
+@opindex --dereference
+@cindex symbolic links, changing mode
+Do not act on symbolic links themselves but rather on what they point to.
+This is the default for command line arguments, but not for
+symbolic links encountered when recursing.
+@warnOptDerefWithRec
+
+@item -h
+@itemx --no-dereference
+@opindex -h
+@opindex --no-dereference
+@cindex symbolic links, changing mode
+Act on symbolic links themselves instead of what they point to.
+On systems that do not support this, no diagnostic is issued,
+but see @option{--verbose}.
 
 @item -f
 @itemx --silent
@@ -11951,6 +11975,17 @@ of the symbolic link, but rather that of the file it refers to.
 @opindex --recursive
 @cindex recursively changing access permissions
 Recursively change permissions of directories and their contents.
+
+@choptH
+@choptDefault
+@xref{Traversing symlinks}.
+
+@choptL
+@warnOptDerefWithRec
+@xref{Traversing symlinks}.
+
+@choptP
+@xref{Traversing symlinks}.
 
 @end table
 

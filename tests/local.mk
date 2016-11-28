@@ -476,6 +476,7 @@ all_tests =					\
   tests/chmod/thru-dangling.sh			\
   tests/chmod/umask-x.sh			\
   tests/chmod/usage.sh				\
+  tests/chmod/symlinks.sh				\
   tests/chown/deref.sh				\
   tests/chown/preserve-root.sh			\
   tests/chown/separator.sh			\

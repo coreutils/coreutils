@@ -60,17 +60,19 @@ file's group, with the same values; and the fourth for other users not
 in the file's group, with the same values.
 .PP
 .B chmod
-never changes the permissions of symbolic links; the
+doesn't change the permissions of symbolic links; the
 .B chmod
-system call cannot change their permissions.  This is not a problem
-since the permissions of symbolic links are never used.
+system call cannot change their permissions on most systems,
+and most systems ignore permissions of symbolic links.
 However, for each symbolic link listed on the command line,
 .B chmod
 changes the permissions of the pointed-to file.
 In contrast,
 .B chmod
 ignores symbolic links encountered during recursive directory
-traversals.
+traversals. Options that modify this behavior are described in the
+.B OPTIONS
+section.
 .SH "SETUID AND SETGID BITS"
 .B chmod
 clears the set-group-ID bit of a

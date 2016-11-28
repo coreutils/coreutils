@@ -74,6 +74,10 @@ static mode_t umask_value;
 /* If true, change the modes of directories recursively. */
 static bool recurse;
 
+/* 1 if --dereference, 0 if --no-dereference, -1 if neither has been
+   specified.  */
+static int dereference = -1;
+
 /* If true, force silence (suppress most of error messages). */
 static bool force_silent;
 
@@ -93,7 +97,8 @@ static struct dev_ino *root_dev_ino;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_PRESERVE_ROOT = CHAR_MAX + 1,
+  DEREFERENCE_OPTION = CHAR_MAX + 1,
+  NO_PRESERVE_ROOT,
   PRESERVE_ROOT,
   REFERENCE_FILE_OPTION
 };
@@ -101,7 +106,9 @@ enum
 static struct option const long_options[] =
 {
   {"changes", no_argument, nullptr, 'c'},
+  {"dereference", no_argument, nullptr, DEREFERENCE_OPTION},
   {"recursive", no_argument, nullptr, 'R'},
+  {"no-dereference", no_argument, nullptr, 'h'},
   {"no-preserve-root", no_argument, nullptr, NO_PRESERVE_ROOT},
   {"preserve-root", no_argument, nullptr, PRESERVE_ROOT},
   {"quiet", no_argument, nullptr, 'f'},
@@ -207,6 +214,7 @@ process_file (FTS *fts, FTSENT *ent)
   const struct stat *file_stats = ent->fts_statp;
   struct change_status ch = {0};
   ch.status = CH_NO_STAT;
+  struct stat stat_buf;
 
   switch (ent->fts_info)
     {
@@ -244,9 +252,30 @@ process_file (FTS *fts, FTSENT *ent)
       break;
 
     case FTS_SLNONE:
-      if (! force_silent)
-        error (0, 0, _("cannot operate on dangling symlink %s"),
-               quoteaf (file_full_name));
+      if (dereference)
+        {
+          if (! force_silent)
+            error (0, 0, _("cannot operate on dangling symlink %s"),
+                   quoteaf (file_full_name));
+          break;
+        }
+      ch.status = CH_NOT_APPLIED;
+      break;
+
+    case FTS_SL:
+      if (dereference == 1)
+        {
+          if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
+            {
+              if (! force_silent)
+                error (0, errno, _("cannot dereference %s"),
+                       quoteaf (file_full_name));
+              break;
+            }
+
+          file_stats = &stat_buf;
+        }
+      ch.status = CH_NOT_APPLIED;
       break;
 
     case FTS_DC:		/* directory that causes cycles */
@@ -272,19 +301,30 @@ process_file (FTS *fts, FTSENT *ent)
       return false;
     }
 
-  if (ch.status == CH_NOT_APPLIED && ! S_ISLNK (file_stats->st_mode))
+  /* With -H (default) or -P, (without -h), avoid operating on symlinks.
+     With -L, S_ISLNK should be false, and with -RP, dereference is 0.  */
+  if (ch.status == CH_NOT_APPLIED
+      && ! (S_ISLNK (file_stats->st_mode) && dereference == -1))
     {
       ch.old_mode = file_stats->st_mode;
       ch.new_mode = mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
                                  umask_value, change, nullptr);
-      if (chmodat (fts->fts_cwd_fd, file, ch.new_mode) == 0)
+      /* XXX: Racy if FILE is now replaced with a symlink, which is
+         a potential security issue with -[H]R.  */
+      if (fchmodat (fts->fts_cwd_fd, file, ch.new_mode,
+                    dereference ? 0 : AT_SYMLINK_NOFOLLOW) == 0)
         ch.status = CH_SUCCEEDED;
       else
         {
-          if (! force_silent)
-            error (0, errno, _("changing permissions of %s"),
-                   quoteaf (file_full_name));
-          ch.status = CH_FAILED;
+          if (! is_ENOTSUP (errno))
+            {
+              if (! force_silent)
+                error (0, errno, _("changing permissions of %s"),
+                       quoteaf (file_full_name));
+
+              ch.status = CH_FAILED;
+            }
+          /* else treat not supported as not applied.  */
         }
     }
 
@@ -389,6 +429,11 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
   -v, --verbose          output a diagnostic for every file processed\n\
 "), stdout);
       fputs (_("\
+      --dereference      affect the referent of each symbolic link,\n\
+                           rather than the symbolic link itself\n\
+  -h, --no-dereference   affect each symbolic link, rather than the referent\n\
+"), stdout);
+      fputs (_("\
       --no-preserve-root  do not treat '/' specially (the default)\n\
       --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
@@ -399,6 +444,7 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
       fputs (_("\
   -R, --recursive        change files and directories recursively\n\
 "), stdout);
+      emit_symlink_recurse_options ("-H");
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -423,6 +469,7 @@ main (int argc, char **argv)
   bool preserve_root = false;
   char const *reference_file = nullptr;
   int c;
+  int bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -435,13 +482,35 @@ main (int argc, char **argv)
   recurse = force_silent = diagnose_surprises = false;
 
   while ((c = getopt_long (argc, argv,
-                           ("Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::"
+                           ("HLPRcfhvr::w::x::X::s::t::u::g::o::a::,::+::=::"
                             "0::1::2::3::4::5::6::7::"),
                            long_options, nullptr))
          != -1)
     {
       switch (c)
         {
+
+        case 'H': /* Traverse command-line symlinks-to-directories.  */
+          bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
+          break;
+
+        case 'L': /* Traverse all symlinks-to-directories.  */
+          bit_flags = FTS_LOGICAL;
+          break;
+
+        case 'P': /* Traverse no symlinks-to-directories.  */
+          bit_flags = FTS_PHYSICAL;
+          break;
+
+        case 'h': /* --no-dereference: affect symlinks */
+          dereference = 0;
+          break;
+
+        case DEREFERENCE_OPTION: /* --dereference: affect the referent
+                                    of each symlink */
+          dereference = 1;
+          break;
+
         case 'r':
         case 'w':
         case 'x':
@@ -510,6 +579,17 @@ main (int argc, char **argv)
         }
     }
 
+  if (recurse)
+    {
+      if (bit_flags == FTS_PHYSICAL)
+        {
+          if (dereference == 1)
+            error (EXIT_FAILURE, 0,
+                   _("-R --dereference requires either -H or -L"));
+          dereference = 0;
+        }
+    }
+
   if (reference_file)
     {
       if (mode)
@@ -564,8 +644,8 @@ main (int argc, char **argv)
       root_dev_ino = nullptr;
     }
 
-  ok = process_files (argv + optind,
-                      FTS_COMFOLLOW | FTS_PHYSICAL | FTS_DEFER_STAT);
+  bit_flags |= FTS_DEFER_STAT;
+  ok = process_files (argv + optind, bit_flags);
 
   main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

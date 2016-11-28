@@ -76,6 +76,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   chgrp now accepts the --from=OWNER:GROUP option to restrict changes to files
   with matching current OWNER and/or GROUP, as already supported by chown(1).
 
+  chmod adds support for -h, -H,-L,-P, and --dereference options, providing
+  more control over symlink handling.  This supports more secure handling of
+  CLI arguments, and is more consistent with chown, and chmod on other systems.
+
   cp now accepts the --keep-directory-symlink option (like tar), to preserve
   and follow existing symlinks to directories in the destination.
 
