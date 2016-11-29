@@ -71,7 +71,7 @@ In the output below, the date of last modification for 'a' should
 have been $t3.
 EOF
   ls --full -l a
-  framework_failure_
+  skip_ "touch -m -d '$t3' didn't work"
   ;;
 esac
 

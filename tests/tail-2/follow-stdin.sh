@@ -52,13 +52,14 @@ done
 
 
 # Before coreutils-8.26 this would induce an UMR under UBSAN
-returns_ 1 timeout 10 tail -f - <&- 2>err || fail=1
+returns_ 1 timeout 10 tail -f - <&- 2>errt || fail=1
 cat <<\EOF >exp || framework_failure_
-tail: cannot fstat 'standard input': Bad file descriptor
-tail: error reading 'standard input': Bad file descriptor
+tail: cannot fstat 'standard input'
+tail: error reading 'standard input'
 tail: no files remaining
-tail: -: Bad file descriptor
+tail: -
 EOF
+sed 's/\(tail:.*\):.*/\1/' errt > err || framework_failure_
 compare exp err || fail=1
 
 

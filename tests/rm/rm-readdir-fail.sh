@@ -68,7 +68,7 @@ struct dirent *readdir (DIR *dirp)
       count++;
       d->d_name[0]='0'+count; d->d_name[1]='\0';
 #ifdef _DIRENT_HAVE_D_NAMLEN
-      _D_EXACT_NAMELEN(d)=2;
+      d->d_namlen = 2;
 #endif
       errno = 0;
       return d;
@@ -89,7 +89,7 @@ export READDIR_PARTIAL
 for READDIR_PARTIAL in '' '1'; do
   rm -f preloaded
   (export LD_PRELOAD=$LD_PRELOAD:./k.so
-   returns_ 1 rm -Rf dir 2>>err) || fail=1
+   returns_ 1 rm -Rf dir 2>>errt) || fail=1
   if ! test -f preloaded; then
     cat err
     skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
@@ -101,10 +101,10 @@ done
 # Second case is more general error where we fail immediately
 # (with ENOENT in this case but it could be anything).
 cat <<EOF > exp
-rm: cannot remove 'dir': Directory not empty
-rm: traversal failed: dir: No such file or directory
+rm: cannot remove 'dir'
+rm: traversal failed: dir
 EOF
-
+sed 's/\(rm:.*\):.*/\1/' errt > err || framework_failure_
 compare exp err || fail=1
 
 Exit $fail
