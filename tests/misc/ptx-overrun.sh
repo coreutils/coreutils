@@ -44,6 +44,6 @@ compare /dev/null out || fail=1
 # Trigger an invalid heap reference noticed by gcc -fsanitize=address
 # from coreutils-8.25 and earlier.
 echo a > a
-ptx -w1 -A $PWD/a >/dev/null || fail=1
+ptx -w1 -A "$PWD/a" >/dev/null || fail=1
 
 Exit $fail
