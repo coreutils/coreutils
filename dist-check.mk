@@ -123,7 +123,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 # With post-v1.15 automake, "distclean" would fail to remove .deps
 # directories, leading to a spurious failure of the following recursive diff.
 # FIXME: remove this, once automake is fixed.
-	find $(t)/$(distdir).old $(t)/$(distdir) -name .deps | xargs rmdir
+	find $(t)/$(distdir).old $(t)/$(distdir) -name .deps | xargs -r rmdir
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
 	rmdir $(tmpdir)/$(PACKAGE) $(tmpdir)
