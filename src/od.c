@@ -390,7 +390,7 @@ TYPE is made up of one or more of these specifications:\n\
 "), stdout);
       fputs (_("\
   d[SIZE]    signed decimal, SIZE bytes per integer\n\
-  f[SIZE]    floating point, SIZE bytes per integer\n\
+  f[SIZE]    floating point, SIZE bytes per float\n\
   o[SIZE]    octal, SIZE bytes per integer\n\
   u[SIZE]    unsigned decimal, SIZE bytes per integer\n\
   x[SIZE]    hexadecimal, SIZE bytes per integer\n\
