@@ -1522,6 +1522,13 @@ factor_using_pollard_rho (uintmax_t n, unsigned long int a,
         }
       while (g == 1);
 
+      if (n == g)
+        {
+          /* Found n itself as factor.  Restart with different params.  */
+          factor_using_pollard_rho (n, a + 1, factors);
+          return;
+        }
+
       n = n / g;
 
       if (!prime_p (g))
@@ -1607,7 +1614,7 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
 
       if (g1 == 0)
         {
-          /* The found factor is one word. */
+          /* The found factor is one word, and > 1. */
           divexact_21 (n1, n0, n1, n0, g0);     /* n = n / g */
 
           if (!prime_p (g0))
@@ -1620,6 +1627,13 @@ factor_using_pollard_rho2 (uintmax_t n1, uintmax_t n0, unsigned long int a,
           /* The found factor is two words.  This is highly unlikely, thus hard
              to trigger.  Please be careful before you change this code!  */
           uintmax_t ginv;
+
+          if (n1 == g1 && n0 == g0)
+            {
+              /* Found n itself as factor.  Restart with different params.  */
+              factor_using_pollard_rho2 (n1, n0, a + 1, factors);
+              return;
+            }
 
           binv (ginv, g0);      /* Compute n = n / g.  Since the result will */
           n0 = ginv * n0;       /* fit one word, we can compute the quotient */
