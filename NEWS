@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  factor no longer goes into an infinite loop for certain numbers like
+  158909489063877810457 and 222087527029934481871.
+  [bug introduced in coreutils-8.20]
+
 
 * Noteworthy changes in release 8.26 (2016-11-30) [stable]
 

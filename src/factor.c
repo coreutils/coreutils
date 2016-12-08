@@ -480,10 +480,16 @@ gcd_odd (uintmax_t a, uintmax_t b)
 static uintmax_t
 gcd2_odd (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0)
 {
+  assert (b0 & 1);
+
+  if ( (a0 | a1) == 0)
+    {
+      *r1 = b1;
+      return b0;
+    }
+
   while ((a0 & 1) == 0)
     rsh2 (a1, a0, a1, a0, 1);
-  while ((b0 & 1) == 0)
-    rsh2 (b1, b0, b1, b0, 1);
 
   for (;;)
     {
