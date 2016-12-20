@@ -48,7 +48,7 @@ printf '%s\0' "$nlname" | wc --files0-from=- > out || fail=1
 printf '%s\n' "0 0 0 '1'$'\\n''2'" > exp || framework_failure_
 compare exp out || fail=1
 
-# Ensure correct byte counts, which fails between v7.1 and v8.26 inclusive
+# Ensure correct byte counts, which fails between v8.24 and v8.26 inclusive
 truncate -s1G wc.big || framework_failure_
 touch wc.small || framework_failure_
 printf '%s\0' wc.big wc.small | wc -c --files0-from=- >out || fail=1
