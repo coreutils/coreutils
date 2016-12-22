@@ -71,6 +71,9 @@ static int number_width;
 /* True if we have ever read the standard input. */
 static bool have_read_stdin;
 
+/* Used to determine if file size can be determined without reading.  */
+static size_t page_size;
+
 /* The result of calling fstat or stat on a file descriptor or file.  */
 struct fstatus
 {
@@ -235,6 +238,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
   if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
+      bool skip_read = false;
+
       if (0 < fstatus->failed)
         fstatus->failed = fstat (fd, &fstatus->st);
 
@@ -245,24 +250,44 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
           && 0 <= fstatus->st.st_size)
         {
           size_t end_pos = fstatus->st.st_size;
-          off_t hi_pos = end_pos - end_pos % (ST_BLKSIZE (fstatus->st) + 1);
           if (current_pos < 0)
             current_pos = lseek (fd, 0, SEEK_CUR);
-          if (0 <= current_pos && current_pos < hi_pos
-              && 0 <= lseek (fd, hi_pos, SEEK_CUR))
-            bytes = hi_pos - current_pos;
+
+          if (end_pos % page_size)
+            {
+              /* We only need special handling of /proc and /sys files etc.
+                 when they're a multiple of PAGE_SIZE.  In the common case
+                 for files with st_size not a multiple of PAGE_SIZE,
+                 it's more efficient and accurate to use st_size.
+
+                 Be careful here.  The current position may actually be
+                 beyond the end of the file.  As in the example above.  */
+
+              bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
+              skip_read = true;
+            }
+          else
+            {
+              off_t hi_pos = end_pos - end_pos % (ST_BLKSIZE (fstatus->st) + 1);
+              if (0 <= current_pos && current_pos < hi_pos
+                  && 0 <= lseek (fd, hi_pos, SEEK_CUR))
+                bytes = hi_pos - current_pos;
+            }
         }
 
-      fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
-      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+      if (! skip_read)
         {
-          if (bytes_read == SAFE_READ_ERROR)
+          fdadvise (fd, 0, 0, FADVISE_SEQUENTIAL);
+          while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
             {
-              error (0, errno, "%s", quotef (file));
-              ok = false;
-              break;
+              if (bytes_read == SAFE_READ_ERROR)
+                {
+                  error (0, errno, "%s", quotef (file));
+                  ok = false;
+                  break;
+                }
+              bytes += bytes_read;
             }
-          bytes += bytes_read;
         }
     }
   else if (!count_chars && !count_complicated)
@@ -639,6 +664,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  page_size = getpagesize ();
   /* Line buffer stdout to ensure lines are written atomically and immediately
      so that processes running in parallel do not intersperse their output.  */
   setvbuf (stdout, NULL, _IOLBF, 0);

@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ wc
 
+# Ensure we read() /proc files to determine content length
 for file in /proc/version /sys/kernel/profiling; do
   if test -r $file; then
     cp -f $file copy &&
@@ -28,5 +29,17 @@ for file in /proc/version /sys/kernel/profiling; do
     compare exp1 out1 || fail=1
   fi
 done
+
+# Ensure we handle cases where we don't read()
+truncate -s 2 no_read || framework_failure_
+# read() used when multiple of page size
+truncate -s 1048576 do_read || framework_failure_
+wc -c no_read do_read > out || fail=1
+cat <<\EOF > exp
+      2 no_read
+1048576 do_read
+1048578 total
+EOF
+compare exp out || fail=1
 
 Exit $fail
