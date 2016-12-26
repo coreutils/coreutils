@@ -21,6 +21,7 @@
 print_ver_ chgrp
 require_membership_in_two_groups_
 skip_if_root_
+require_local_dir_
 
 set _ $groups; shift
 g1=$1

@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ chgrp
 require_membership_in_two_groups_
-
+require_local_dir_
 
 set _ $groups; shift
 g1=$1
