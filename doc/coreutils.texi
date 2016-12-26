@@ -3819,8 +3819,9 @@ are vanishingly small.  However, it should not be considered secure
 against malicious tampering: although finding a file with a given MD5
 fingerprint is considered infeasible at the moment, it is known how
 to modify certain files, including digital certificates, so that they
-appear valid when signed with an MD5 digest.
-For more secure hashes, consider using SHA-2.  @xref{sha2 utilities}.
+appear valid when signed with an MD5 digest.  For more secure hashes,
+consider using SHA-2, or the newer @command{b2sum} command.
+@xref{sha2 utilities}. @xref{b2sum invocation}.
 
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
