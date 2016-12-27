@@ -23,12 +23,10 @@ If you obtained this file as part of a "git clone", then see the
 README-hacking file.  If this file came to you as part of a tar archive,
 then see the file INSTALL for compilation and installation instructions.
 
-These programs are intended to conform to POSIX (with BSD and other
-extensions), like the rest of the GNU system.  By default they conform
-to older POSIX (1003.2-1992), and therefore support obsolete usages
-like "head -10" and "chown owner.group file".  This default is
-overridden at build-time by the value of <unistd.h>'s _POSIX2_VERSION
-macro, and this in turn can be overridden at runtime as described in
+Like the rest of the GNU system, these programs mostly conform to
+POSIX, with BSD and other extensions.  For closer conformance, or
+conformance to a particular POSIX version, set the POSIXLY_CORRECT
+and the _POSIX2_VERSION environment variables, as described in
 the documentation under "Standards conformance".
 
 The ls, dir, and vdir commands are all separate executables instead of
