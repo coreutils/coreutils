@@ -100,4 +100,184 @@ EOF
 TZ=America/Lima date --debug -d "$in3" >out3 2>&1 || fail=1
 compare exp3 out3 || fail=1
 
+##
+## Parsing a lone number.
+## Fixed in gnulib v0.1-1099-gf2d4b5c
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=f2d4b5caa
+cat<<EOF>exp4
+date: parsed number part: (Y-M-D) 2013-01-01
+date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: warning: using midnight as starting time: 00:00:00
+date: starting date/time: '(Y-M-D) 2013-01-01 00:00:00 TZ=+00:00'
+date: '(Y-M-D) 2013-01-01 00:00:00 TZ=+00:00' = 1356998400 epoch-seconds
+date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: final: 1356998400.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC0)
+date: final: (Y-M-D) 2013-01-01 00:00:00 (output timezone TZ=+00:00)
+Tue Jan  1 00:00:00 UTC 2013
+EOF
+
+date -u --debug -d '20130101' >out4 2>&1 || fail=1
+compare exp4 out4 || fail=1
+
+
+##
+## Parsing a relative number after a timezone string
+## Fixed in gnulib v0.1-1100-g5c438e8
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=5c438e8ce7d
+cat<<EOF>exp5
+date: parsed date part: (Y-M-D) 2013-10-30
+date: parsed time part: 00:00:00
+date: parsed relative part: -8 day(s)
+date: parsed zone part: TZ=+00:00
+date: input timezone: +00:00 (set from parsed date/time string)
+date: using specified time as starting value: '00:00:00'
+date: starting date/time: '(Y-M-D) 2013-10-30 00:00:00 TZ=+00:00'
+date: warning: when adding relative days, it is recommended to specify 12:00pm
+date: after date adjustment (+0 years, +0 months, -8 days),
+date:     new date/time = '(Y-M-D) 2013-10-22 00:00:00 TZ=+00:00'
+date: '(Y-M-D) 2013-10-22 00:00:00 TZ=+00:00' = 1382400000 epoch-seconds
+date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: final: 1382400000.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC0)
+date: final: (Y-M-D) 2013-10-22 00:00:00 (output timezone TZ=+00:00)
+2013-10-22
+EOF
+
+in5='2013-10-30 00:00:00 UTC -8 days'
+date -u --debug +%F -d "$in5" >out5 2>&1 || fail=1
+compare exp5 out5 || fail=1
+
+##
+## Explicitly warn about unexpected day/month shifts.
+## added in gnulib v0.1-1101-gf14eff1
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=f14eff1b3cde2b
+TOOLONG='it is recommended to specify the 15th of the months'
+cat<<EOF>exp6
+date: parsed date part: (Y-M-D) 2016-10-31
+date: parsed relative part: -1 month(s)
+date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: warning: using midnight as starting time: 00:00:00
+date: starting date/time: '(Y-M-D) 2016-10-31 00:00:00 TZ=+00:00'
+date: warning: when adding relative months/years, $TOOLONG
+date: after date adjustment (+0 years, -1 months, +0 days),
+date:     new date/time = '(Y-M-D) 2016-10-01 00:00:00 TZ=+00:00'
+date: warning: month/year adjustment resulted in shifted dates:
+date:      adjusted Y M D: 2016 09 31
+date:    normalized Y M D: 2016 10 01
+date: '(Y-M-D) 2016-10-01 00:00:00 TZ=+00:00' = 1475280000 epoch-seconds
+date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: final: 1475280000.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC0)
+date: final: (Y-M-D) 2016-10-01 00:00:00 (output timezone TZ=+00:00)
+Sat Oct  1 00:00:00 UTC 2016
+EOF
+
+date -u --debug -d '2016-10-31 - 1 month' >out6 2>&1 || fail=1
+compare exp6 out6 || fail=1
+
+
+##
+## Explicitly warn about crossing DST boundaries.
+## added in gnulib v0.1-1102-g30a55dd
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=30a55dd72dad2
+TOOLONG1='(set from TZ="America/New_York" environment value, dst)'
+TOOLONG2='it is recommended to specify the 15th of the months'
+cat<<EOF>exp7
+date: parsed date part: (Y-M-D) 2016-06-01
+date: parsed local_zone part: DST changed: is-dst=1
+date: parsed relative part: +6 month(s)
+date: input timezone: -04:00 $TOOLONG1
+date: warning: using midnight as starting time: 00:00:00
+date: starting date/time: '(Y-M-D) 2016-06-01 00:00:00 TZ=-04:00'
+date: warning: when adding relative months/years, $TOOLONG2
+date: after date adjustment (+0 years, +6 months, +0 days),
+date:     new date/time = '(Y-M-D) 2016-11-30 23:00:00 TZ=-04:00'
+date: warning: daylight saving time changed after date adjustment
+date: warning: month/year adjustment resulted in shifted dates:
+date:      adjusted Y M D: 2016 12 01
+date:    normalized Y M D: 2016 11 30
+date: '(Y-M-D) 2016-11-30 23:00:00 TZ=-04:00' = 1480564800 epoch-seconds
+date: output timezone: -05:00 (set from TZ="America/New_York" environment value)
+date: final: 1480564800.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2016-12-01 04:00:00 (UTC0)
+date: final: (Y-M-D) 2016-11-30 23:00:00 (output timezone TZ=-05:00)
+2016-11-30
+EOF
+
+in7='2016-06-01 EDT + 6 months'
+TZ=America/New_York date --debug -d "$in7" +%F >out7 2>&1 || fail=1
+compare exp7 out7 || fail=1
+
+
+## fix local timezone debug messages.
+## fixed in git v0.1-1103-gc56e7fb
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=c56e7fbb032
+
+cat<<EOF>exp8_1
+date: parsed date part: (Y-M-D) 2011-12-11
+date: parsed local_zone part: DST unchanged
+date: input timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: warning: using midnight as starting time: 00:00:00
+date: starting date/time: '(Y-M-D) 2011-12-11 00:00:00 TZ=+02:00'
+date: '(Y-M-D) 2011-12-11 00:00:00 TZ=+02:00' = 1323554400 epoch-seconds
+date: output timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: final: 1323554400.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2011-12-10 22:00:00 (UTC0)
+date: final: (Y-M-D) 2011-12-11 00:00:00 (output timezone TZ=+02:00)
+Sun Dec 11 00:00:00 EET 2011
+EOF
+
+TZ=Europe/Helsinki date --debug -d '2011-12-11 EET' >out8_1 2>&1 || fail=1
+compare exp8_1 out8_1 || fail=1
+
+TOOLONG='(set from TZ="Europe/Helsinki" environment value, dst)'
+cat<<EOF>exp8_2
+date: parsed date part: (Y-M-D) 2011-06-11
+date: parsed local_zone part: DST changed: is-dst=1
+date: input timezone: +03:00 $TOOLONG
+date: warning: using midnight as starting time: 00:00:00
+date: starting date/time: '(Y-M-D) 2011-06-11 00:00:00 TZ=+03:00'
+date: '(Y-M-D) 2011-06-11 00:00:00 TZ=+03:00' = 1307739600 epoch-seconds
+date: output timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: final: 1307739600.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2011-06-10 21:00:00 (UTC0)
+date: final: (Y-M-D) 2011-06-11 00:00:00 (output timezone TZ=+02:00)
+Sat Jun 11 00:00:00 EEST 2011
+EOF
+
+TZ=Europe/Helsinki date --debug -d '2011-06-11 EEST' >out8_2 2>&1 || fail=1
+compare exp8_2 out8_2 || fail=1
+
+
+
+## fix debug message on lone year number (The "2011" part).
+## fixed in gnulib v0.1-1104-g15b8f30
+## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=15b8f3046a25
+##
+## NOTE:
+## When the date 'Apr 11' is parsed, the year part will be the
+## current year. The expected output thus depends on the year
+## the test is being run. We'll use sed to change it to XXXX.
+cat<<EOF>exp9
+date: parsed date part: (Y-M-D) XXXX-04-11
+date: parsed time part: 22:59:00
+date: parsed number part: year: 2011
+date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: using specified time as starting value: '22:59:00'
+date: starting date/time: '(Y-M-D) 2011-04-11 22:59:00 TZ=+00:00'
+date: '(Y-M-D) 2011-04-11 22:59:00 TZ=+00:00' = 1302562740 epoch-seconds
+date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: final: 1302562740.000000000 (epoch-seconds)
+date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC0)
+date: final: (Y-M-D) 2011-04-11 22:59:00 (output timezone TZ=+00:00)
+Mon Apr 11 22:59:00 UTC 2011
+EOF
+
+date -u --debug -d 'Apr 11 22:59:00 2011' >out9_t 2>&1 || fail=1
+sed '1s/(Y-M-D) [0-9][0-9][0-9][0-9]-/(Y-M-D) XXXX-/' out9_t > out9 \
+    || framework_failure_
+compare exp9 out9 || fail=1
+
+
 Exit $fail
