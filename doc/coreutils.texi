@@ -342,6 +342,7 @@ Changing file attributes
 * chgrp invocation::             Change group ownership
 * chmod invocation::             Change access permissions
 * touch invocation::             Change file timestamps
+* File timestamps::              File timestamp issues
 
 Disk usage
 
@@ -7121,7 +7122,8 @@ uniquely identifies each file within a particular file system.)
 In addition to the name of each file, print the file type, file mode bits,
 number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
-the modification time.  Print question marks for information that
+the modification timestamp (the mtime, @pxref{File timestamps}).
+Print question marks for information that
 cannot be determined.
 
 Normally the size is printed as a byte count without punctuation, but
@@ -7292,11 +7294,10 @@ it outputs.  By default, sorting is done by character code
 @opindex status time@r{, printing or sorting by}
 @opindex use time@r{, printing or sorting files by}
 If the long listing format (e.g., @option{-l}, @option{-o}) is being used,
-print the status change time (the @samp{ctime} in the inode) instead of
-the modification time.
+print the status change timestamp (the ctime) instead of the mtime.
 When explicitly sorting by time (@option{--sort=time} or @option{-t})
 or when not using a long listing format,
-sort according to the status change time.
+sort according to the ctime.  @xref{File timestamps}.
 
 @item -f
 @opindex -f
@@ -7326,8 +7327,9 @@ Sort by file size, largest first.
 @itemx --sort=time
 @opindex -t
 @opindex --sort
-@opindex modification time@r{, sorting files by}
-Sort by modification time (the @samp{mtime} in the inode), newest first.
+@opindex modification timestamp@r{, sorting files by}
+Sort by modification timestamp (mtime), newest first.
+@xref{File timestamps}.
 
 @item -u
 @itemx --time=atime
@@ -7337,11 +7339,12 @@ Sort by modification time (the @samp{mtime} in the inode), newest first.
 @opindex --time
 @opindex use time@r{, printing or sorting files by}
 @opindex atime@r{, printing or sorting files by}
-@opindex access time@r{, printing or sorting files by}
+@opindex access timestamp@r{, printing or sorting files by}
 If the long listing format (e.g., @option{--format=long}) is being used,
-print the last access time (the @samp{atime} in the inode).
+print the last access timestamp (the atime).
 When explicitly sorting by time (@option{--sort=time} or @option{-t})
-or when not using a long listing format, sort according to the access time.
+or when not using a long listing format, sort according to the atime.
+@xref{File timestamps}.
 
 @item -U
 @itemx --sort=none
@@ -7623,6 +7626,7 @@ months old, and is not dated in the future.  If a timestamp dated
 today is not listed in recent form, the timestamp is in the future,
 which means you probably have clock skew problems which may break
 programs like @command{make} that rely on file timestamps.
+@xref{File timestamps}.
 
 @vindex TZ
 Timestamps are listed according to the time zone rules specified by
@@ -8396,7 +8400,7 @@ results in an error message on systems that do not support symbolic links.
 @opindex --update
 @cindex newer files, copying only
 Do not copy a non-directory that has an existing destination with the
-same or newer modification time.  If timestamps are being preserved,
+same or newer modification timestamp.  If timestamps are being preserved,
 the comparison is to the source timestamp truncated to the
 resolutions of the destination file system and of the system calls
 used to update timestamps; this avoids duplicate work if several
@@ -8795,8 +8799,9 @@ Use non-blocking I/O.
 
 @item noatime
 @opindex noatime
-@cindex access time
-Do not update the file's access time.
+@cindex access timestamp
+Do not update the file's access timestamp.
+@xref{File timestamps}.
 Some older file systems silently ignore this flag, so it is a good
 idea to test it on your files before relying on it.
 
@@ -9108,8 +9113,8 @@ print a warning and ignore the option.
 Set the time of last access and the time of last modification of each
 installed file to match those of each corresponding original file.
 When a file is installed without this option, its last access and
-last modification times are both set to the time of installation.
-This option is useful if you want to use the last modification times
+last modification timestamps are both set to the time of installation.
+This option is useful if you want to use the last modification timestamps
 of installed files to keep track of when they were last built as opposed
 to when they were last installed.
 
@@ -9256,7 +9261,7 @@ This option is mutually exclusive with @option{-b} or @option{--backup} option.
 @opindex --update
 @cindex newer files, moving only
 Do not move a non-directory that has an existing destination with the
-same or newer modification time.
+same or newer modification timestamp.
 If the move is across file system boundaries, the comparison is to the
 source timestamp truncated to the resolutions of the destination file
 system and of the system calls used to update timestamps; this avoids
@@ -10427,6 +10432,7 @@ These commands change file attributes.
 * chgrp invocation::            Change file groups.
 * chmod invocation::            Change access permissions.
 * touch invocation::            Change file timestamps.
+* File timestamps::             File timestamp issues.
 @end menu
 
 
@@ -10889,7 +10895,7 @@ Recursively change permissions of directories and their contents.
 @cindex file timestamps, changing
 @cindex timestamps, changing file
 
-@command{touch} changes the access and/or modification times of the
+@command{touch} changes the access and/or modification timestamps of the
 specified files.  Synopsis:
 
 @example
@@ -10905,58 +10911,24 @@ A @var{file} argument string of @samp{-} is handled specially and
 causes @command{touch} to change the times of the file associated with
 standard output.
 
-@cindex clock skew
 By default, @command{touch} sets file timestamps to the current time.
 Because @command{touch} acts on its operands left to right, the
 resulting timestamps of earlier and later operands may disagree.
-Also, the determination of what time is ``current'' depends on the
-platform.  Platforms with network file systems often use different
-clocks for the operating system and for file systems; because
-@command{touch} typically uses file systems' clocks by default, clock
-skew can cause the resulting file timestamps to appear to be in a
-program's ``future'' or ``past''.
-
-@cindex file timestamp resolution
-The @command{touch} command sets the file's timestamp to the greatest
-representable value that is not greater than the requested time.  This
-can differ from the requested time for several reasons.  First, the
-requested time may have a higher resolution than supported.  Second, a
-file system may use different resolutions for different types of
-times.  Third, file timestamps may use a different resolution than
-operating system timestamps.  Fourth, the operating system primitives
-used to update timestamps may employ yet a different resolution.  For
-example, in theory a file system might use 10-microsecond resolution
-for access time and 100-nanosecond resolution for modification time,
-and the operating system might use nanosecond resolution for the
-current time and microsecond resolution for the primitive that
-@command{touch} uses to set a file's timestamp to an arbitrary value.
 
 @cindex permissions, for changing file timestamps
 When setting file timestamps to the current time, @command{touch} can
 change the timestamps for files that the user does not own but has
 write permission for.  Otherwise, the user must own the files.  Some
 older systems have a further restriction: the user must own the files
-unless both the access and modification times are being set to the
+unless both the access and modification timestamps are being set to the
 current time.
 
-Although @command{touch} provides options for changing two of the times---the
-times of last access and modification---of a file, there is actually
-a standard third one as well: the inode change time.  This is often
-referred to as a file's @code{ctime}.
-The inode change time represents the time when the file's meta-information
-last changed.  One common example of this is when the permissions of a
-file change.  Changing the permissions doesn't access the file, so
-the atime doesn't change, nor does it modify the file, so the mtime
-doesn't change.  Yet, something about the file itself has changed,
-and this must be noted somewhere.  This is the job of the ctime field.
-This is necessary, so that, for example, a backup program can make a
-fresh copy of the file, including the new permissions value.
-Another operation that modifies a file's ctime without affecting
-the others is renaming.  In any case, it is not possible, in normal
-operations, for a user to change the ctime field to a user-specified value.
-Some operating systems and file systems support a fourth time: the
-birth time, when the file was first created; by definition, this
-timestamp never changes.
+The @command{touch} command cannot set a file's status change timestamp to
+a user-specified value, and cannot change the file's birth time (if
+supported) at all.  Also, @command{touch} has issues similar to those
+affecting all programs that update file timestamps.  For example,
+@command{touch} may set a file's timestamp to a value that differs
+slightly from the requested time.  @xref{File timestamps}.
 
 @vindex TZ
 Timestamps assume the time zone rules specified by the @env{TZ}
@@ -10979,7 +10951,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex atime@r{, changing}
 @opindex access @r{time, changing}
 @opindex use @r{time, changing}
-Change the access time only.
+Change the access timestamp only.  @xref{File timestamps}.
 
 @item -c
 @itemx --no-create
@@ -11019,7 +10991,7 @@ about files that do not exist.  Not all systems support changing the
 timestamps of symlinks, since underlying system support for this
 action was not required until POSIX 2008.  Also, on some
 systems, the mere act of examining a symbolic link changes the access
-time, such that only changes to the modification time will persist
+timestamp, such that only changes to the modification timestamp will persist
 long enough to be observable.  When coupled with option @option{-r}, a
 reference timestamp is taken from a symbolic link rather than the file
 it refers to.
@@ -11031,7 +11003,7 @@ it refers to.
 @opindex --time
 @opindex mtime@r{, changing}
 @opindex modify @r{time, changing}
-Change the modification time only.
+Change the modification timestamp only.
 
 @item -r @var{file}
 @itemx --reference=@var{file}
@@ -11077,6 +11049,73 @@ For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
 12312359 main.c} rather than the ambiguous @samp{touch 12312359 main.c}.
 
 @exitstatus
+
+
+@node File timestamps
+@section File timestamps
+
+@cindex atime
+@cindex birthtime
+@cindex ctime
+@cindex mtime
+Standard POSIX files have three timestamps: the access timestamp
+(atime) of the last read, the modification timestamp (mtime) of the
+last write, and the status change timestamp (ctime) of the last change
+to the the file's meta-information.  Some file systems support a
+fourth time: the birth timestamp (birthtime) of when the file was
+created; by definition, birthtime never changes.
+
+One common example of a ctime change is when the permissions of a file
+change.  Changing the permissions doesn't access the file, so atime
+doesn't change, nor does it modify the file, so the mtime doesn't
+change.  Yet, something about the file itself has changed, and this
+must be noted somewhere.  This is the job of the ctime field.  This is
+necessary, so that, for example, a backup program can make a fresh
+copy of the file, including the new permissions value.  Another
+operation that modifies a file's ctime without affecting the others is
+renaming.
+
+Naively, a file's atime, mtime, and ctime are set to the current time
+whenever you read, write, or change the attributes of the file
+respectively, and searching a directory counts as reading it.  A
+file's atime and mtime can also be set directly, via the
+@command{touch} command (@pxref{touch invocation}).  In practice,
+though, timestamps are not updated quite that way.
+
+For efficiency reasons, many systems are lazy about updating atimes:
+when a program accesses a file, they may delay updating the file's
+atime, or may not update the file's atime if the file has been
+accessed recently, or may not update the atime at all.  Similar
+laziness, though typically not quite so extreme, applies to mtimes and
+ctimes.
+
+Some systems emulate timestamps instead of supporting them directly,
+and these emulations may disagree with the naive interpretation.  For
+example, a system may fake an atime or ctime by using the mtime.
+
+@cindex clock skew
+The determination of what time is ``current'' depends on the
+platform.  Platforms with network file systems often use different
+clocks for the operating system and for file systems; because
+updates typically uses file systems' clocks by default, clock
+skew can cause the resulting file timestamps to appear to be in a
+program's ``future'' or ``past''.
+
+@cindex file timestamp resolution
+When the system updates a file timestamp to a desired time @var{t}
+(which is either the current time, or a time specified via the
+@command{touch} command), there are several reasons the file's
+timestamp may be set to a value that differs from @var{t}.  First,
+@var{t} may have a higher resolution than supported.  Second, a file
+system may use different resolutions for different types of times.
+Third, file timestamps may use a different resolution than operating
+system timestamps.  Fourth, the operating system primitives used to
+update timestamps may employ yet a different resolution.  For example,
+in theory a file system might use 10-microsecond resolution for access
+timestamp and 100-nanosecond resolution for modification timestamp, and the
+operating system might use nanosecond resolution for the current time
+and microsecond resolution for the primitive that @command{touch} uses
+to set a file's timestamp to an arbitrary value.
 
 
 @node Disk usage
@@ -11630,8 +11669,8 @@ du --inodes -x --threshold=20000 /
 @item --time
 @opindex --time
 @cindex last modified dates, displaying in @command{du}
-Show time of the most recent modification of any file in the directory,
-or any of its subdirectories.
+Show the most recent modification timestamp (mtime) of any file in the
+directory, or any of its subdirectories.  @xref{File timestamps}.
 
 @item --time=ctime
 @itemx --time=status
@@ -11640,16 +11679,16 @@ or any of its subdirectories.
 @opindex ctime@r{, show the most recent}
 @opindex status time@r{, show the most recent}
 @opindex use time@r{, show the most recent}
-Show the most recent status change time (the @samp{ctime} in the inode) of
-any file in the directory, instead of the modification time.
+Show the most recent status change timestamp (ctime) of any file in
+the directory, or any of its subdirectories.  @xref{File timestamps}.
 
 @item --time=atime
 @itemx --time=access
 @opindex --time
 @opindex atime@r{, show the most recent}
-@opindex access time@r{, show the most recent}
-Show the most recent access time (the @samp{atime} in the inode) of
-any file in the directory, instead of the modification time.
+@opindex access timestamp@r{, show the most recent}
+Show the most recent access timestamp (atime) of any file in the
+directory, or any of its subdirectories.  @xref{File timestamps}.
 
 @item --time-style=@var{style}
 @opindex --time-style
@@ -11878,7 +11917,7 @@ represent other quantities.
 The @samp{%W}, @samp{%X}, @samp{%Y}, and @samp{%Z} formats accept a
 precision preceded by a period to specify the number of digits to
 print after the decimal point.  For example, @samp{%.3X} outputs the
-last access time to millisecond precision.  If a period is given but no
+access timestamp to millisecond precision.  If a period is given but no
 precision, @command{stat} uses 9 digits, so @samp{%.X} is equivalent to
 @samp{%.9X}@.  When discarding excess precision, timestamps are truncated
 toward minus infinity.
