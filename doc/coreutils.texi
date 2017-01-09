@@ -2474,7 +2474,7 @@ locale, the default is @samp{%b %e %H:%M %Y} (for example,
 @samp{Dec@ @ 4 23:59 2001}.
 
 @vindex TZ
-Time stamps are listed according to the time zone rules specified by
+Timestamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
 with @env{TZ}, libc, The GNU C Library Reference Manual}.
@@ -4671,7 +4671,7 @@ skipped.
 
 @item
 Sort a set of log files, primarily by IPv4 address and secondarily by
-time stamp.  If two lines' primary and secondary keys are identical,
+timestamp.  If two lines' primary and secondary keys are identical,
 output the lines in the same order that they were input.  The log
 files contain lines that look like this:
 
@@ -4692,8 +4692,8 @@ sort -s -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n
 This example cannot be done with a single @command{sort} invocation,
 since IPv4 address components are separated by @samp{.} while dates
 come just after a space.  So it is broken down into two invocations of
-@command{sort}: the first sorts by time stamp and the second by IPv4
-address.  The time stamp is sorted by year, then month, then day, and
+@command{sort}: the first sorts by timestamp and the second by IPv4
+address.  The timestamp is sorted by year, then month, then day, and
 finally by hour-minute-second field, using @option{-k} to isolate each
 field.  Except for hour-minute-second there's no need to specify the
 end of each key field, since the @samp{n} and @samp{M} modifiers sort
@@ -7625,7 +7625,7 @@ which means you probably have clock skew problems which may break
 programs like @command{make} that rely on file timestamps.
 
 @vindex TZ
-Time stamps are listed according to the time zone rules specified by
+Timestamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
 with @env{TZ}, libc, The GNU C Library Reference Manual}.
@@ -8396,10 +8396,10 @@ results in an error message on systems that do not support symbolic links.
 @opindex --update
 @cindex newer files, copying only
 Do not copy a non-directory that has an existing destination with the
-same or newer modification time.  If time stamps are being preserved,
-the comparison is to the source time stamp truncated to the
+same or newer modification time.  If timestamps are being preserved,
+the comparison is to the source timestamp truncated to the
 resolutions of the destination file system and of the system calls
-used to update time stamps; this avoids duplicate work if several
+used to update timestamps; this avoids duplicate work if several
 @samp{cp -pu} commands are executed with the same source and destination.
 If @option{--preserve=links} is also specified (like with @samp{cp -au}
 for example), that will take precedence.  Consequently, depending on the
@@ -9258,8 +9258,8 @@ This option is mutually exclusive with @option{-b} or @option{--backup} option.
 Do not move a non-directory that has an existing destination with the
 same or newer modification time.
 If the move is across file system boundaries, the comparison is to the
-source time stamp truncated to the resolutions of the destination file
-system and of the system calls used to update time stamps; this avoids
+source timestamp truncated to the resolutions of the destination file
+system and of the system calls used to update timestamps; this avoids
 duplicate work if several @samp{mv -u} commands are executed with the
 same source and destination.
 
@@ -10959,12 +10959,12 @@ birth time, when the file was first created; by definition, this
 timestamp never changes.
 
 @vindex TZ
-Time stamps assume the time zone rules specified by the @env{TZ}
+Timestamps assume the time zone rules specified by the @env{TZ}
 environment variable, or by the system default rules if @env{TZ} is
 not set.  @xref{TZ Variable,, Specifying the Time Zone with @env{TZ},
 libc, The GNU C Library Reference Manual}.
 You can avoid ambiguities during
-daylight saving transitions by using UTC time stamps.
+daylight saving transitions by using UTC timestamps.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10998,7 +10998,7 @@ example, @option{--date="2004-02-27 14:19:13.489392193 +0530"}
 specifies the instant of time that is 489,392,193 nanoseconds after
 February 27, 2004 at 2:19:13 PM in a time zone that is 5 hours and 30
 minutes east of UTC@.  @xref{Date input formats}.
-File systems that do not support high-resolution time stamps
+File systems that do not support high-resolution timestamps
 silently ignore any excess precision here.
 
 @item -f
@@ -11041,8 +11041,8 @@ Use the times of the reference @var{file} instead of the current time.
 If this option is combined with the @option{--date=@var{time}}
 (@option{-d @var{time}}) option, the reference @var{file}'s time is
 the origin for any relative @var{time}s given, but is otherwise ignored.
-For example, @samp{-r foo -d '-5 seconds'} specifies a time stamp
-equal to five seconds before the corresponding time stamp for @file{foo}.
+For example, @samp{-r foo -d '-5 seconds'} specifies a timestamp
+equal to five seconds before the corresponding timestamp for @file{foo}.
 If @var{file} is a symbolic link, the reference timestamp is taken
 from the target of the symlink, unless @option{-h} was also in effect.
 
@@ -11880,7 +11880,7 @@ precision preceded by a period to specify the number of digits to
 print after the decimal point.  For example, @samp{%.3X} outputs the
 last access time to millisecond precision.  If a period is given but no
 precision, @command{stat} uses 9 digits, so @samp{%.X} is equivalent to
-@samp{%.9X}@.  When discarding excess precision, time stamps are truncated
+@samp{%.9X}@.  When discarding excess precision, timestamps are truncated
 toward minus infinity.
 
 @example
@@ -11935,7 +11935,7 @@ you must use a different set of @var{format} directives:
 @end itemize
 
 @vindex TZ
-Time stamps are listed according to the time zone rules specified by
+Timestamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
 with @env{TZ}, libc, The GNU C Library Reference Manual}.
@@ -14944,7 +14944,7 @@ by the hostname.  Traditionally, the two arguments given are @samp{am
 i}, as in @samp{who am i}.
 
 @vindex TZ
-Time stamps are listed according to the time zone rules specified by
+Timestamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
 with @env{TZ}, libc, The GNU C Library Reference Manual}.

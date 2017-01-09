@@ -23,7 +23,7 @@ print_ver_ pr
 
 echo hello >a || framework_failure_
 
-# The tests assume this is an old time stamp in northern hemisphere summer.
+# The tests assume this is an old timestamp in northern hemisphere summer.
 TZ=UTC0 touch -d '1970-07-08 09:10:11' a || framework_failure_
 
 for tz in UTC0 PST8 PST8PDT,M3.2.0,M11.1.0 XXXYYY-12:30; do

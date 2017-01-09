@@ -374,8 +374,8 @@ main (int argc, char **argv)
               && newtime[0].tv_sec == now.tv_sec
               && newtime[0].tv_nsec == now.tv_nsec)
             {
-              /* Check that it really was "-d now", and not a time
-                 stamp that just happens to be the current time.  */
+              /* Check that it really was "-d now", and not a timestamp
+                 that just happens to be the current time.  */
               struct timespec notnow, notnow1;
               notnow.tv_sec = now.tv_sec ^ 1;
               notnow.tv_nsec = now.tv_nsec;

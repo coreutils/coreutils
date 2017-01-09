@@ -531,7 +531,7 @@ change_timestamps (struct stat const *src_sb, char const *dest)
 
   if (utimens (dest, timespec))
     {
-      error (0, errno, _("cannot set time stamps for %s"), quoteaf (dest));
+      error (0, errno, _("cannot set timestamps for %s"), quoteaf (dest));
       return false;
     }
   return true;

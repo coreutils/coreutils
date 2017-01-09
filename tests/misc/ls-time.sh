@@ -20,7 +20,7 @@
 print_ver_ ls
 
 # Avoid any possible glitches due to daylight-saving changes near the
-# time stamps used during the test.
+# timestamps used during the test.
 TZ=UTC0
 export TZ
 

@@ -1946,9 +1946,9 @@ copy_internal (char const *src_name, char const *dst_name,
 
           if (!S_ISDIR (src_mode) && x->update)
             {
-              /* When preserving time stamps (but not moving within a file
-                 system), don't worry if the destination time stamp is
-                 less than the source merely because of time stamp
+              /* When preserving timestamps (but not moving within a file
+                 system), don't worry if the destination timestamp is
+                 less than the source merely because of timestamp
                  truncation.  */
               int options = ((x->preserve_timestamps
                               && ! (x->move_mode
@@ -2681,7 +2681,7 @@ copy_internal (char const *src_name, char const *dst_name,
               /* See if the destination is already the desired symlink.
                  FIXME: This behavior isn't documented, and seems wrong
                  in some cases, e.g., if the destination symlink has the
-                 wrong ownership, permissions, or time stamps.  */
+                 wrong ownership, permissions, or timestamps.  */
               char *dest_link_val =
                 areadlink_with_size (dst_name, dst_sb.st_size);
               if (dest_link_val && STREQ (dest_link_val, src_link_val))

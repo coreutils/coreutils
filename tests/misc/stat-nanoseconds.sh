@@ -23,11 +23,11 @@ print_ver_ stat
 TZ=UTC0
 export TZ
 
-# Use a time stamp near the Epoch to avoid trouble with leap seconds.
+# Use a timestamp near the Epoch to avoid trouble with leap seconds.
 touch -d '1970-01-01 18:43:33.023456789' k || framework_failure_
 
 ls --full-time | grep 18:43:33.023456789 \
-  || skip_ this file system does not support sub-second time stamps
+  || skip_ this file system does not support sub-second timestamps
 
 test "$(stat -c       %X k)" =    67413               || fail=1
 test "$(stat -c      %.X k)" =    67413.023456789     || fail=1

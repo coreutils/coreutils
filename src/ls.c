@@ -418,8 +418,8 @@ enum format
 static enum format format;
 
 /* 'full-iso' uses full ISO-style dates and times.  'long-iso' uses longer
-   ISO-style time stamps, though shorter than 'full-iso'.  'iso' uses shorter
-   ISO-style time stamps.  'locale' uses locale-dependent time stamps.  */
+   ISO-style timestamps, though shorter than 'full-iso'.  'iso' uses shorter
+   ISO-style timestamps.  'locale' uses locale-dependent timestamps.  */
 enum time_style
   {
     full_iso_time_style,	/* --time-style=full-iso */
@@ -730,11 +730,11 @@ static bool format_needs_stat;
 
 static bool format_needs_type;
 
-/* An arbitrary limit on the number of bytes in a printed time stamp.
+/* An arbitrary limit on the number of bytes in a printed timestamp.
    This is set to a relatively small value to avoid the need to worry
    about denial-of-service attacks on servers that run "ls" on behalf
    of remote clients.  1000 bytes should be enough for any practical
-   time stamp format.  */
+   timestamp format.  */
 
 enum { TIME_STAMP_LEN_MAXIMUM = MAX (1000, INT_STRLEN_BOUND (time_t)) };
 
@@ -1079,7 +1079,7 @@ first_percent_b (char const *fmt)
 
 /* max number of display cells to use */
 enum { MAX_MON_WIDTH = 5 };
-/* abformat[RECENT][MON] is the format to use for time stamps with
+/* abformat[RECENT][MON] is the format to use for timestamps with
    recentness RECENT and month MON.  */
 enum { ABFORMAT_SIZE = 128 };
 static char abformat[2][12][ABFORMAT_SIZE];
@@ -3813,7 +3813,7 @@ align_nstrftime (char *buf, size_t size, bool recent, struct tm const *tm,
   return nstrftime (buf, size, nfmt, tm, tz, ns);
 }
 
-/* Return the expected number of columns in a long-format time stamp,
+/* Return the expected number of columns in a long-format timestamp,
    or zero if it cannot be calculated.  */
 
 static int

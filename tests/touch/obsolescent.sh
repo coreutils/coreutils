@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test touch with obsolescent 8- or 10-digit time stamps.
+# Test touch with obsolescent 8- or 10-digit timestamps.
 
 # Copyright (C) 2000-2017 Free Software Foundation, Inc.
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Exercise du on a file with a big time stamp.
+# Exercise du on a file with a big timestamp.
 
 # Copyright (C) 2010-2017 Free Software Foundation, Inc.
 
@@ -33,9 +33,9 @@ case "$future_time" in
 *' Dec  4  300627798676 '*)
   skip_ "file system and localtime both handle big timestamps" ;;
 *)
-  skip_ "file system or localtime mishandles big time stamps:" \
+  skip_ "file system or localtime mishandles big timestamps:" \
       "$future_time" ;;
-esac || skip_ "file system cannot represent big time stamps"
+esac || skip_ "file system cannot represent big timestamps"
 
 printf "0\t$bignum\tfuture\n" > exp || framework_failure_
 printf "du: time '$bignum' is out of range\n" > err_ok || framework_failure_
