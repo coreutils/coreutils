@@ -11061,7 +11061,7 @@ For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
 Standard POSIX files have three timestamps: the access timestamp
 (atime) of the last read, the modification timestamp (mtime) of the
 last write, and the status change timestamp (ctime) of the last change
-to the the file's meta-information.  Some file systems support a
+to the file's meta-information.  Some file systems support a
 fourth time: the birth timestamp (birthtime) of when the file was
 created; by definition, birthtime never changes.
 
