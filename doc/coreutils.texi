@@ -209,6 +209,7 @@ Free Documentation License''.
 * Delaying::                     sleep
 * Numeric operations::           factor numfmt seq
 * File permissions::             Access modes
+* File timestamps::              File timestamp issues
 * Date input formats::           Specifying date strings
 * Opening the software toolbox:: The software tools philosophy
 * GNU Free Documentation License:: Copying and sharing this manual
@@ -342,7 +343,6 @@ Changing file attributes
 * chgrp invocation::             Change group ownership
 * chmod invocation::             Change access permissions
 * touch invocation::             Change file timestamps
-* File timestamps::              File timestamp issues
 
 Disk usage
 
@@ -466,6 +466,11 @@ Numeric operations
 * factor invocation::            Print prime factors
 * numfmt invocation::            Reformat numbers
 * seq invocation::               Print numeric sequences
+
+
+File timestamps
+
+* File timestamps::              File timestamp issues
 
 File permissions
 
@@ -10432,7 +10437,6 @@ These commands change file attributes.
 * chgrp invocation::            Change file groups.
 * chmod invocation::            Change access permissions.
 * touch invocation::            Change file timestamps.
-* File timestamps::             File timestamp issues.
 @end menu
 
 
@@ -11049,73 +11053,6 @@ For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
 12312359 main.c} rather than the ambiguous @samp{touch 12312359 main.c}.
 
 @exitstatus
-
-
-@node File timestamps
-@section File timestamps
-
-@cindex atime
-@cindex birthtime
-@cindex ctime
-@cindex mtime
-Standard POSIX files have three timestamps: the access timestamp
-(atime) of the last read, the modification timestamp (mtime) of the
-last write, and the status change timestamp (ctime) of the last change
-to the file's meta-information.  Some file systems support a
-fourth time: the birth timestamp (birthtime) of when the file was
-created; by definition, birthtime never changes.
-
-One common example of a ctime change is when the permissions of a file
-change.  Changing the permissions doesn't access the file, so atime
-doesn't change, nor does it modify the file, so the mtime doesn't
-change.  Yet, something about the file itself has changed, and this
-must be noted somewhere.  This is the job of the ctime field.  This is
-necessary, so that, for example, a backup program can make a fresh
-copy of the file, including the new permissions value.  Another
-operation that modifies a file's ctime without affecting the others is
-renaming.
-
-Naively, a file's atime, mtime, and ctime are set to the current time
-whenever you read, write, or change the attributes of the file
-respectively, and searching a directory counts as reading it.  A
-file's atime and mtime can also be set directly, via the
-@command{touch} command (@pxref{touch invocation}).  In practice,
-though, timestamps are not updated quite that way.
-
-For efficiency reasons, many systems are lazy about updating atimes:
-when a program accesses a file, they may delay updating the file's
-atime, or may not update the file's atime if the file has been
-accessed recently, or may not update the atime at all.  Similar
-laziness, though typically not quite so extreme, applies to mtimes and
-ctimes.
-
-Some systems emulate timestamps instead of supporting them directly,
-and these emulations may disagree with the naive interpretation.  For
-example, a system may fake an atime or ctime by using the mtime.
-
-@cindex clock skew
-The determination of what time is ``current'' depends on the
-platform.  Platforms with network file systems often use different
-clocks for the operating system and for file systems; because
-updates typically uses file systems' clocks by default, clock
-skew can cause the resulting file timestamps to appear to be in a
-program's ``future'' or ``past''.
-
-@cindex file timestamp resolution
-When the system updates a file timestamp to a desired time @var{t}
-(which is either the current time, or a time specified via the
-@command{touch} command), there are several reasons the file's
-timestamp may be set to a value that differs from @var{t}.  First,
-@var{t} may have a higher resolution than supported.  Second, a file
-system may use different resolutions for different types of times.
-Third, file timestamps may use a different resolution than operating
-system timestamps.  Fourth, the operating system primitives used to
-update timestamps may employ yet a different resolution.  For example,
-in theory a file system might use 10-microsecond resolution for access
-timestamp and 100-nanosecond resolution for modification timestamp, and the
-operating system might use nanosecond resolution for the current time
-and microsecond resolution for the primitive that @command{touch} uses
-to set a file's timestamp to an arbitrary value.
 
 
 @node Disk usage
@@ -17669,7 +17606,76 @@ outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 @chapter File permissions
 @include perm.texi
 
+
+@node File timestamps
+@chapter File timestamps
+
+@cindex atime
+@cindex birthtime
+@cindex ctime
+@cindex mtime
+Standard POSIX files have three timestamps: the access timestamp
+(atime) of the last read, the modification timestamp (mtime) of the
+last write, and the status change timestamp (ctime) of the last change
+to the file's meta-information.  Some file systems support a
+fourth time: the birth timestamp (birthtime) of when the file was
+created; by definition, birthtime never changes.
+
+One common example of a ctime change is when the permissions of a file
+change.  Changing the permissions doesn't access the file, so atime
+doesn't change, nor does it modify the file, so the mtime doesn't
+change.  Yet, something about the file itself has changed, and this
+must be noted somewhere.  This is the job of the ctime field.  This is
+necessary, so that, for example, a backup program can make a fresh
+copy of the file, including the new permissions value.  Another
+operation that modifies a file's ctime without affecting the others is
+renaming.
+
+Naively, a file's atime, mtime, and ctime are set to the current time
+whenever you read, write, or change the attributes of the file
+respectively, and searching a directory counts as reading it.  A
+file's atime and mtime can also be set directly, via the
+@command{touch} command (@pxref{touch invocation}).  In practice,
+though, timestamps are not updated quite that way.
+
+For efficiency reasons, many systems are lazy about updating atimes:
+when a program accesses a file, they may delay updating the file's
+atime, or may not update the file's atime if the file has been
+accessed recently, or may not update the atime at all.  Similar
+laziness, though typically not quite so extreme, applies to mtimes and
+ctimes.
+
+Some systems emulate timestamps instead of supporting them directly,
+and these emulations may disagree with the naive interpretation.  For
+example, a system may fake an atime or ctime by using the mtime.
+
+@cindex clock skew
+The determination of what time is ``current'' depends on the
+platform.  Platforms with network file systems often use different
+clocks for the operating system and for file systems; because
+updates typically uses file systems' clocks by default, clock
+skew can cause the resulting file timestamps to appear to be in a
+program's ``future'' or ``past''.
+
+@cindex file timestamp resolution
+When the system updates a file timestamp to a desired time @var{t}
+(which is either the current time, or a time specified via the
+@command{touch} command), there are several reasons the file's
+timestamp may be set to a value that differs from @var{t}.  First,
+@var{t} may have a higher resolution than supported.  Second, a file
+system may use different resolutions for different types of times.
+Third, file timestamps may use a different resolution than operating
+system timestamps.  Fourth, the operating system primitives used to
+update timestamps may employ yet a different resolution.  For example,
+in theory a file system might use 10-microsecond resolution for access
+timestamp and 100-nanosecond resolution for modification timestamp, and the
+operating system might use nanosecond resolution for the current time
+and microsecond resolution for the primitive that @command{touch} uses
+to set a file's timestamp to an arbitrary value.
+
+
 @include parse-datetime.texi
+
 
 @c              What's GNU?
 @c              Arnold Robbins
