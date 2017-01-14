@@ -74,9 +74,8 @@ appropriate bug-reporting address as reported by the --help option of
 each program.  One way to do this is to use vc-dwim
 <https://www.gnu.org/software/vc-dwim/>), as follows.
 
-  Run the command "vc-dwim --help", copy its definition of the
-  "git-changelog-symlink-init" function into your shell, and then run
-  this function at the top-level directory of the package.
+  Run the command "vc-dwim --initialize" from the top-level directory
+  of this package's git-cloned hierarchy.
 
   Edit the (empty) ChangeLog file that this command creates, creating a
   properly-formatted entry according to the GNU coding standards
