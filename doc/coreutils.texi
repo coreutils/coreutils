@@ -7664,7 +7664,7 @@ files; if you want output columns to line up, you may need to insert
 spaces in one of the two formats.
 
 @item full-iso
-List timestamps in full using ISO 8601 date, time, and time zone
+List timestamps in full using ISO 8601-like date, time, and time zone
 components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
@@ -11645,7 +11645,7 @@ with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
 
 @item full-iso
-List timestamps in full using ISO 8601 date, time, and time zone
+List timestamps in full using ISO 8601-like date, time, and time zone
 components with nanosecond precision, e.g., @samp{2002-03-30
 23:45:56.477817180 -0700}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
@@ -15161,26 +15161,26 @@ This may be @samp{60} if leap seconds are supported.
 @item %X
 locale's time representation (e.g., @samp{23:13:48})
 @item %z
-@w{RFC 5322/ISO 8601} style numeric time zone
-(e.g., @samp{-0600} or @samp{+0530}), or nothing if no
+Four-digit numeric time zone, e.g., @samp{-0600} or @samp{+0530}, or
+@samp{-0000} if no
 time zone is determinable.  This value reflects the numeric time zone
 appropriate for the current time, using the time zone rules specified
-by the @env{TZ} environment variable.
+by the @env{TZ} environment variable.  A time zone is not determinable if
+its numeric offset is zero and its abbreviation begins with @samp{-}.
 The time (and optionally, the time zone rules) can be overridden
 by the @option{--date} option.
 @item %:z
-@w{RFC 3339/ISO 8601} style numeric time zone with
-@samp{:} (e.g., @samp{-06:00} or @samp{+05:30}), or nothing if no time
-zone is determinable.
+Numeric time zone with @samp{:}, e.g., @samp{-06:00} or
+@samp{+05:30}), or @samp{-00:00} if no time zone is determinable.
 This is a GNU extension.
 @item %::z
 Numeric time zone to the nearest second with @samp{:} (e.g.,
-@samp{-06:00:00} or @samp{+05:30:00}), or nothing if no time zone is
+@samp{-06:00:00} or @samp{+05:30:00}), or @samp{-00:00:00} if no time zone is
 determinable.
 This is a GNU extension.
 @item %:::z
 Numeric time zone with @samp{:} using the minimum necessary precision
-(e.g., @samp{-06}, @samp{+05:30}, or @samp{-04:56:02}), or nothing if
+(e.g., @samp{-06}, @samp{+05:30}, or @samp{-04:56:02}), or @samp{-00} if
 no time zone is determinable.
 This is a GNU extension.
 @item %Z
@@ -15405,7 +15405,7 @@ second (optional)
 Note, the @option{--date} and @option{--set} options may not be used with an
 argument in the above format.  The @option{--universal} option may be used
 with such an argument to indicate that the specified date and time are
-relative to Coordinated Universal Time rather than to the local time zone.
+relative to Universal Time rather than to the local time zone.
 
 
 @node Options for date
@@ -15465,7 +15465,7 @@ be considerable.
 @itemx --iso-8601[=@var{timespec}]
 @opindex -I[@var{timespec}]
 @opindex --iso-8601[=@var{timespec}]
-Display the date using the ISO 8601 format, @samp{%Y-%m-%d}.
+Display the date using an ISO 8601 format, @samp{%Y-%m-%d}.
 
 The argument @var{timespec} specifies the number of additional
 terms of the time to include.  It can be one of the following:
@@ -15529,9 +15529,8 @@ For compatibility with older versions of @command{date},
 @opindex --rfc-3339=@var{timespec}
 Display the date using a format specified by
 @uref{https://tools.ietf.org/search/rfc3339, Internet
-RFC 3339}.  This is a subset of the ISO 8601
-format, except that it also permits applications to use a space rather
-than a @samp{T} to separate dates from times.
+RFC 3339}.  This is like @option{--iso-8601}, except that a space rather
+than a @samp{T} separates dates from times.
 @dateParseNote
 
 The argument @var{timespec} specifies how much of the time to include.
@@ -15575,9 +15574,10 @@ See also @ref{Setting the time}.
 @cindex GMT
 @cindex leap seconds
 @vindex TZ
-Use Coordinated Universal Time (UTC) by operating as if the
+@cindex Universal Time
+Use Universal Time by operating as if the
 @env{TZ} environment variable were set to the string @samp{UTC0}.
-Coordinated
+UTC stands for Coordinated Universal Time, established in 1960.
 Universal Time is often called ``Greenwich Mean Time'' (GMT) for
 historical reasons.
 Typically, systems ignore leap seconds and thus implement an

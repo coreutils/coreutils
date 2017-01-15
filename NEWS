@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Internet RFC number for email dates (currently RFC 5322).  The old
   option spellings --rfc-2822 and --rfc-822 still work.
 
+  date now outputs "-00" for a numeric time zone if the time is UTC
+  and the time zone abbreviation begins with "-", indicating that the
+  time zone is indeterminate.
+
   stty now validates arguments before interacting with the device,
   ensuring there are no side effects to specifying an invalid option.
 
