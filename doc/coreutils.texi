@@ -15161,7 +15161,7 @@ This may be @samp{60} if leap seconds are supported.
 @item %X
 locale's time representation (e.g., @samp{23:13:48})
 @item %z
-@w{RFC 2822/ISO 8601} style numeric time zone
+@w{RFC 5322/ISO 8601} style numeric time zone
 (e.g., @samp{-0600} or @samp{+0530}), or nothing if no
 time zone is determinable.  This value reflects the numeric time zone
 appropriate for the current time, using the time zone rules specified
@@ -15503,11 +15503,9 @@ Display the date and time of the last modification of @var{file},
 instead of the current date and time.
 
 @item -R
-@itemx --rfc-822
-@itemx --rfc-2822
+@itemx --rfc-email
 @opindex -R
-@opindex --rfc-822
-@opindex --rfc-2822
+@opindex --rfc-email
 Display the date and time using the format @samp{%a, %d %b %Y %H:%M:%S
 %z}, evaluated in the C locale so abbreviations are always in English.
 For example:
@@ -15516,11 +15514,16 @@ For example:
 Fri, 09 Sep 2005 13:51:39 -0700
 @end example
 
+@opindex --rfc-822
+@opindex --rfc-2822
 This format conforms to Internet RFCs
 @uref{https://tools.ietf.org/search/rfc5322, 5322},
 @uref{https://tools.ietf.org/search/rfc2822, 822} and
 @uref{https://tools.ietf.org/search/rfc822, 822}, the
 current and previous standards for Internet email.
+For compatibility with older versions of @command{date},
+@option{--rfc-2822} and @option{--rfc-822} are aliases for
+@option{--rfc-email}.
 
 @item --rfc-3339=@var{timespec}
 @opindex --rfc-3339=@var{timespec}
@@ -15650,8 +15653,8 @@ date --set='+2 minutes'
 @end example
 
 @item
-To print the date in RFC 2822 format,
-use @samp{date --rfc-2822}.  Here is some example output:
+To print the date in Internet RFC 5322 format,
+use @samp{date --rfc-email}.  Here is some example output:
 
 @example
 Fri, 09 Sep 2005 13:51:39 -0700

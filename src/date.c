@@ -72,8 +72,8 @@ static enum Time_spec const time_spec[] =
 };
 ARGMATCH_VERIFY (time_spec_string, time_spec);
 
-/* A format suitable for Internet RFC 2822.  */
-static char const rfc_2822_format[] = "%a, %d %b %Y %H:%M:%S %z";
+/* A format suitable for Internet RFCs 5322, 2822, and 822.  */
+static char const rfc_email_format[] = "%a, %d %b %Y %H:%M:%S %z";
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -92,6 +92,7 @@ static struct option const long_options[] =
   {"file", required_argument, NULL, 'f'},
   {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
+  {"rfc-email", no_argument, NULL, 'R'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"rfc-2822", no_argument, NULL, 'R'},
   {"rfc-3339", required_argument, NULL, RFC_3339_OPTION},
@@ -155,7 +156,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
                                Example: 2006-08-14T02:34:56-06:00\n\
 "), stdout);
       fputs (_("\
-  -R, --rfc-2822             output date and time in RFC 2822 format.\n\
+  -R, --rfc-email            output date and time in RFC 5322 format.\n\
                                Example: Mon, 14 Aug 2006 02:34:56 -0600\n\
 "), stdout);
       fputs (_("\
@@ -414,7 +415,7 @@ main (int argc, char **argv)
           reference = optarg;
           break;
         case 'R':
-          new_format = rfc_2822_format;
+          new_format = rfc_email_format;
           break;
         case 's':
           set_datestr = optarg;
@@ -580,10 +581,10 @@ show_date (const char *format, struct timespec when, timezone_t tz)
 
   if (localtime_rz (tz, &when.tv_sec, &tm))
     {
-      if (format == rfc_2822_format)
+      if (format == rfc_email_format)
         setlocale (LC_TIME, "C");
       fprintftime (stdout, format, &tm, tz, when.tv_nsec);
-      if (format == rfc_2822_format)
+      if (format == rfc_email_format)
         setlocale (LC_TIME, "");
       fputc ('\n', stdout);
       return true;
