@@ -57,29 +57,6 @@ files (man/*.x) are welcome.  However, the authoritative documentation
 is in texinfo form in the doc directory.
 
 
-*********************************************
-On Mac OS X 10.5.1 (Darwin 9.1), test failure
----------------------------------------------
-
-Mac OS X 10.5.1 (Darwin 9.1) provides only partial (and incompatible)
-ACL support, so although "./configure && make" succeeds, "make check"
-exposes numerous failures.  The solution is to turn off ACL support
-manually via "./configure --disable-acl".  For details, see
-<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/12292/focus=12318>.
-
-
-*****************************************
-Test failure with NLS and gettext <= 0.17
------------------------------------------
-
-Due to a conflict between libintl.h and gnulib's new xprintf module,
-when you configure with NLS support, and with a gettext installation
-older than 0.17.1 (not yet released, at the time of this writing),
-then some tests fail, at least on NetBSD 1.6.  To work around it in
-the mean time, you can configure with --disable-nls.  For details,
-see <http://thread.gmane.org/gmane.comp.lib.gnulib.bugs/12015/>.
-
-
 *********************
 Pre-C99 build failure
 ---------------------
@@ -210,7 +187,7 @@ coreutils@gnu.org including as much description and justification
 as you can.  Based on the feedback that generates, you may be able to
 convince us that it's worth adding.  Please also consult the list of
 previously discussed but ultimately rejected feature requests at:
-http://www.gnu.org/software/coreutils/rejected_requests.html
+https://www.gnu.org/software/coreutils/rejected_requests.html
 
 
 WARNING:  Now that we use the ./bootstrap script, you should not run
@@ -229,8 +206,8 @@ When reporting bugs, please include in the subject line both the package
 name/version and the name of the program for which you found a problem.
 
 For general documentation on the coding and usage standards
-this distribution follows, see the GNU Coding Standards,
-http://www.gnu.org/prep/standards_toc.html.
+this distribution follows, see the GNU Coding Standards at:
+https://www.gnu.org/prep/standards/
 
 For any copyright year range specified as YYYY-ZZZZ in this package
 note that the range specifies every single year in that closed interval.

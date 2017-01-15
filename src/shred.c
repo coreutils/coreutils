@@ -28,7 +28,7 @@
  *
  * For the theory behind this, see "Secure Deletion of Data from Magnetic
  * and Solid-State Memory", on line at
- * http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html
+ * https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html
  *
  * Just for the record, reversing one or two passes of disk overwrite
  * is not terribly difficult with hardware help.  Hook up a good-quality
@@ -379,8 +379,7 @@ direct_mode (int fd, bool enable)
     }
 
 #if HAVE_DIRECTIO && defined DIRECTIO_ON && defined DIRECTIO_OFF
-  /* This is Solaris-specific.  See the following for details:
-     http://docs.sun.com/db/doc/816-0213/6m6ne37so?q=directio&a=view  */
+  /* This is Solaris-specific.  */
   directio (fd, enable ? DIRECTIO_ON : DIRECTIO_OFF);
 #endif
 }

@@ -7,7 +7,6 @@
 # with or without modifications, as long as this notice is preserved.
 
 # Originally written by Andreas Gruenbacher.
-# http://www.suse.de/~agruen/coreutils/5.91/coreutils-xattr.diff
 
 AC_DEFUN([gl_FUNC_XATTR],
 [

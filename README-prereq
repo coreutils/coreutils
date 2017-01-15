@@ -1,17 +1,17 @@
 This gives some notes on obtaining the tools required for development.
 I.e., the tools checked for by the bootstrap script and include:
 
-- Autoconf  <http://www.gnu.org/software/autoconf/>
-- Automake  <http://www.gnu.org/software/automake/>
-- Bison     <http://www.gnu.org/software/bison/>
-- Gettext   <http://www.gnu.org/software/gettext/>
-- Git       <http://git.or.cz/>
-- Gperf     <http://www.gnu.org/software/gperf/>
-- Gzip      <http://www.gnu.org/software/gzip/>
+- Autoconf  <https://www.gnu.org/software/autoconf/>
+- Automake  <https://www.gnu.org/software/automake/>
+- Bison     <https://www.gnu.org/software/bison/>
+- Gettext   <https://www.gnu.org/software/gettext/>
+- Git       <https://git-scm.com/>
+- Gperf     <https://www.gnu.org/software/gperf/>
+- Gzip      <https://www.gnu.org/software/gzip/>
 - Perl      <http://www.cpan.org/>
-- Rsync     <http://samba.anu.edu.au/rsync/>
-- Tar       <http://www.gnu.org/software/tar/>
-- Texinfo   <http://www.gnu.org/software/texinfo/>
+- Rsync     <https://rsync.samba.org/>
+- Tar       <https://www.gnu.org/software/tar/>
+- Texinfo   <https://www.gnu.org/software/texinfo/>
 
 Note please try to install/build official packages for your system.
 If these programs are not available use the following instructions

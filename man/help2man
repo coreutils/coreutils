@@ -780,7 +780,7 @@ sub convert_option
 }
 
 # Insert spacing escape characters \, and \/ before and after italic text.  See
-# http://www.gnu.org/software/groff/manual/html_node/Ligatures-and-Kerning.html
+# https://www.gnu.org/software/groff/manual/html_node/Ligatures-and-Kerning.html
 sub fix_italic_spacing
 {
     local $_ = shift;

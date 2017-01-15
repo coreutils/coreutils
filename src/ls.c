@@ -113,7 +113,7 @@
 
 /* Include <sys/capability.h> last to avoid a clash of <sys/types.h>
    include guards with some premature versions of libcap.
-   For more details, see <http://bugzilla.redhat.com/483548>.  */
+   For more details, see <https://bugzilla.redhat.com/483548>.  */
 #ifdef HAVE_CAP
 # include <sys/capability.h>
 #endif

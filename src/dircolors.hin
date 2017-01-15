@@ -176,7 +176,7 @@ EXEC 01;32
 .cgm 01;35
 .emf 01;35
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+# https://wiki.xiph.org/MIME_Types_and_File_Extensions
 .ogv 01;35
 .ogx 01;35
 
@@ -194,7 +194,7 @@ EXEC 01;32
 .ra 00;36
 .wav 00;36
 
-# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+# https://wiki.xiph.org/MIME_Types_and_File_Extensions
 .oga 00;36
 .opus 00;36
 .spx 00;36

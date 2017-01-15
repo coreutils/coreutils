@@ -142,7 +142,7 @@ if test "$gl_gcc_warnings" = yes; then
 
   # Using -Wstrict-overflow is a pain, but the alternative is worse.
   # For an example, see the code that provoked this report:
-  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=33498
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=33498
   # Code like that still infloops with gcc-4.6.0 and -O2.  Scary indeed.
 
   gl_MANYWARN_ALL_GCC([ws])

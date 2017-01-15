@@ -57,7 +57,7 @@ done
 # ordinary redirection on the 'sort' command.  This is intended to
 # work around bugs in OpenBSD /bin/sh, and some other sh variants,
 # that squirrel away file descriptors before closing them; see
-# <http://lists.gnu.org/archive/html/bug-tar/2010-10/msg00075.html>.
+# <https://lists.gnu.org/archive/html/bug-tar/2010-10/msg00075.html>.
 # This test finds the bug only with shells that do not close FDs on
 # exec, and will miss the bug (if present) on other shells, but it's
 # not easy to fix this without running afoul of the OpenBSD-like sh bugs.

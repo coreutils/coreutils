@@ -317,7 +317,7 @@ my @Tests =
 ["22a", '-k 2,2fd -k 1,1r', {IN=>"3 b\n4 B\n"}, {OUT=>"4 B\n3 b\n"}],
 ["22b", '-k 2,2d  -k 1,1r', {IN=>"3 b\n4 b\n"}, {OUT=>"4 b\n3 b\n"}],
 
-# This fails in Fedora 20, per Göran Uddeborg in: http://bugs.gnu.org/18540
+# This fails in Fedora 20, per Göran Uddeborg in: https://bugs.gnu.org/18540
 ["23", '-s -k1,1 -t/', {IN=>"a b/x\na-b-c/x\n"}, {OUT=>"a b/x\na-b-c/x\n"},
  {ENV => "LC_ALL=$mb_locale"}],
 
@@ -383,8 +383,7 @@ my @Tests =
 ['obs-inval', '+1x', {EXIT=>2},
  {ERR=>"foo\n"}, {ERR_SUBST => 's/^$prog: .*/foo/'}],
 
-# Exercise the code that enlarges the line buffer.  See the thread here:
-# http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/11006
+# Exercise the code that enlarges the line buffer.
 ['realloc-buf', '-S1', {IN=>'a'x4000 ."\n"}, {OUT=>'a'x4000 ."\n"}],
 ['realloc-buf-2', '-S1', {IN=>'a'x5 ."\n"}, {OUT=>'a'x5 ."\n"}],
 

@@ -51,7 +51,7 @@ vm=$(get_min_ulimit_v_ env $prog %20f 0) \
 mkfifo_or_skip_ fifo
 
 # Disable MALLOC_PERTURB_, to avoid triggering this bug
-# http://bugs.debian.org/481543#77
+# https://bugs.debian.org/481543#77
 export MALLOC_PERTURB_=0
 
 # Terminate any background process

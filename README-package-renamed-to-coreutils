@@ -1,21 +1,13 @@
-As of 2002-09-01, the GNU fileutils, textutils, and sh-utils
-packages have been merged into one, called the GNU coreutils.
-See http://www.gnu.org/software/coreutils/ for a description.
+On 2002-09-01, the GNU fileutils, textutils, and sh-utils
+packages were merged into one, called the GNU coreutils.
+See https://www.gnu.org/software/coreutils/coreutils.html for a description.
 Here's the FAQ list:
 
-  http://www.gnu.org/software/coreutils/faq/
+  https://www.gnu.org/software/coreutils/faq/
 
 For information on the mailing lists associated with the
-coreutils package, see these:
+coreutils package, including archive locations, see these:
 
-  http://mail.gnu.org/mailman/listinfo/coreutils-announce
-  http://mail.gnu.org/mailman/listinfo/bug-coreutils
-  http://mail.gnu.org/mailman/listinfo/coreutils
-
-mailing list archives are here:
-
-  http://news.gmane.org/gmane.comp.gnu.coreutils.announce
-  http://news.gmane.org/gmane.comp.gnu.core-utils.bugs (up to the minute)
-  http://mail.gnu.org/pipermail/bug-coreutils/ (updated every 12 hours)
-  http://news.gmane.org/gmane.comp.gnu.coreutils.general
-  http://mail.gnu.org/pipermail/coreutils/ (updated every 12 hours)
+  https://lists.gnu.org/mailman/listinfo/coreutils-announce
+  https://lists.gnu.org/mailman/listinfo/bug-coreutils
+  https://lists.gnu.org/mailman/listinfo/coreutils

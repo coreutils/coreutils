@@ -61,7 +61,7 @@ for opt in $options; do
   # on Linux 2.2.0-pre4 kernels.  Also since around Linux 2.6.30
   # other serial control settings give the same error. So skip them.
   # Also on ppc*|sparc* glibc platforms 'icanon' gives the same error.
-  # See: http://debbugs.gnu.org/7228#14
+  # See: https://bugs.gnu.org/7228#14
   case $opt in
     parenb|parodd|cmspar) continue;;
     cstopb|crtscts|cdtrdsr|icanon) continue;;

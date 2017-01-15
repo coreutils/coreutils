@@ -1,5 +1,5 @@
 #!/bin/sh
-# Exercise the fix for http://debbugs.gnu.org/8419
+# Exercise the fix for https://bugs.gnu.org/8419
 
 # Copyright (C) 2011-2017 Free Software Foundation, Inc.
 

@@ -9,7 +9,7 @@ On Debian-based ones install the "git-core" package.
 Then run "git --version".  If that says it's older than
 version 1.4.4, then you'd do well to get a newer version.
 At worst, just download the latest stable release from
-http://git.or.cz/ and build from source.
+https://git-scm.com/ and build from source.
 
 For details on building the programs in this package, see
 the file, README-hacking.
@@ -224,7 +224,7 @@ keep the maximum line length at 72 or smaller, so that the generated
 ChangeLog lines, each with its leading TAB, will not exceed 80 columns.
 As for the ChangeLog-style content, please follow these guidelines:
 
-  http://www.gnu.org/software/guile/changelogs/guile-changelogs_3.html
+  https://www.gnu.org/prep/standards/standards.html#Change-Logs
 
 Try to make the summary line fit one of the following forms:
 
@@ -389,7 +389,7 @@ Send patches to the address listed in --help output
 Please follow the guidelines in the "Sending your patches." section of
 git's own SubmittingPatches:
 
-  http://git.kernel.org/?p=git/git.git;a=blob;f=Documentation/SubmittingPatches
+  https://github.com/git/git/blob/master/Documentation/SubmittingPatches
 
 
 Add documentation
@@ -406,7 +406,7 @@ active voice, not a passive one.  I.e., say "print the frobnozzle",
 not "the frobnozzle will be printed".
 
 Please add comments per the GNU Coding Standard:
-  http://www.gnu.org/prep/standards/html_node/Comments.html
+  https://www.gnu.org/prep/standards/html_node/Comments.html
 
 
 Minor syntactic preferences
@@ -418,7 +418,7 @@ Minor syntactic preferences
  character ;-) ]
 In writing arithmetic comparisons, use "<" and "<=" rather than
 ">" and ">=".  For some justification, read this:
-  http://thread.gmane.org/gmane.comp.version-control.git/3903/focus=4126
+  http://www.gelato.unsw.edu.au/archives/git/0505/4507.html
 
 const placement:
 Write "Type const *var", not "const Type *var".
@@ -480,18 +480,18 @@ The forms to choose from are in gnulib's doc/Copyright/ directory.
 If you want to assign a single change, you should use the file,
 doc/Copyright/request-assign.changes:
 
-    http://www.gnu.org/software/gnulib/Copyright/request-assign.changes
+    https://www.gnu.org/software/gnulib/Copyright/request-assign.changes
 
 If you would like to assign past and future contributions to a project,
 you'd use doc/Copyright/request-assign.future:
 
-    http://www.gnu.org/software/gnulib/Copyright/request-assign.future
+    https://www.gnu.org/software/gnulib/Copyright/request-assign.future
 
 You may make assignments for up to four projects at a time.
 
 In case you're wondering why we bother with all of this, read this:
 
-    http://www.gnu.org/licenses/why-assign.html
+    https://www.gnu.org/licenses/why-assign.html
 
 
 Run "make syntax-check", or even "make distcheck"
@@ -526,7 +526,7 @@ to configure your editor to highlight any offending characters in the
 files you edit.  If you use Emacs, customize its font-lock mode
 or use its WhiteSpace mode:
 
-    http://www.emacswiki.org/emacs/WhiteSpace
+    https://www.emacswiki.org/emacs/WhiteSpace
 
 If you use vim, add this to ~/.vimrc:
 

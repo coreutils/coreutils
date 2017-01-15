@@ -26,8 +26,6 @@ touch fiemap_chk
 if fiemap_capable_ fiemap_chk && ! df -t ext3 . >/dev/null; then
   : # Current partition has working extents.  Good!
 else
-  # FIXME: temporarily(?) skip this variant, at least until after this bug
-  # is fixed: http://thread.gmane.org/gmane.comp.file-systems.ext4/24495
   skip_ "current file system has insufficient FIEMAP support"
 
   # It's not;  we need to create one, hence we need root access.

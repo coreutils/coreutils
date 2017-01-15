@@ -2194,7 +2194,7 @@ base64 --decode [@var{option}]@dots{} [@var{file}]
 The base64 encoding expands data to roughly 133% of the original.
 The base32 encoding expands data to roughly 160% of the original.
 The format conforms to
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc4648.txt, RFC 4648}.
+@uref{https://tools.ietf.org/search/rfc4648, RFC 4648}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -8919,7 +8919,7 @@ tape=/dev/rmt/0
 For failing disks, other tools come with a great variety of extra
 functionality to ease the saving of as much data as possible before the
 disk finally dies, e.g.
-@uref{http://www.gnu.org/software/ddrescue/, GNU @command{ddrescue}}.
+@uref{https://www.gnu.org/software/ddrescue/, GNU @command{ddrescue}}.
 However, in some cases such a tool is not available or the administrator
 feels more comfortable with the handling of @command{dd}.
 As a simple rescue method, call @command{dd} as shown in the following
@@ -9502,7 +9502,7 @@ This uses many overwrite passes, with the data patterns chosen to
 maximize the damage they do to the old data.  While this will work on
 floppies, the patterns are designed for best effect on hard drives.
 For more details, see the source code and Peter Gutmann's paper
-@uref{http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html,
+@uref{https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html,
 @cite{Secure Deletion of Data from Magnetic and Solid-State Memory}},
 from the proceedings of the Sixth USENIX Security Symposium (San Jose,
 California, July 22--25, 1996).
@@ -13144,7 +13144,7 @@ you often want to verify its signature or checksum right away.
 The inefficient way to do it is simply:
 
 @example
-wget http://example.com/some.iso && sha1sum some.iso
+wget https://example.com/some.iso && sha1sum some.iso
 @end example
 
 One problem with the above is that it makes you wait for the
@@ -13158,7 +13158,7 @@ free, because the entire process parallelizes so well:
 
 @example
 # slightly contrived, to demonstrate process substitution
-wget -O - http://example.com/dvd.iso \
+wget -O - https://example.com/dvd.iso \
   | tee >(sha1sum > dvd.sha1) > dvd.iso
 @end example
 
@@ -13184,7 +13184,7 @@ Since the above example writes to one file and one process,
 a more conventional and portable use of @command{tee} is even better:
 
 @example
-wget -O - http://example.com/dvd.iso \
+wget -O - https://example.com/dvd.iso \
   | tee dvd.iso | sha1sum > dvd.sha1
 @end example
 
@@ -13193,7 +13193,7 @@ computing MD5 and SHA1 checksums in parallel.  In this case,
 process substitution is required:
 
 @example
-wget -O - http://example.com/dvd.iso \
+wget -O - https://example.com/dvd.iso \
   | tee >(sha1sum > dvd.sha1) \
         >(md5sum > dvd.md5) \
   > dvd.iso
@@ -14277,7 +14277,7 @@ May be negated.
 @opindex extproc
 Enable @samp{LINEMODE}, which is used to avoid echoing
 each character over high latency links.  See also
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc1116.txt, Internet RFC 1116}.
+@uref{https://tools.ietf.org/search/rfc1116, Internet RFC 1116}.
 Non-POSIX@.
 May be negated.
 
@@ -15516,16 +15516,16 @@ For example:
 Fri, 09 Sep 2005 13:51:39 -0700
 @end example
 
-This format conforms to
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc2822.txt, Internet
-RFCs 2822} and
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc822.txt, 822}, the
+This format conforms to Internet RFCs
+@uref{https://tools.ietf.org/search/rfc5322, 5322},
+@uref{https://tools.ietf.org/search/rfc2822, 822} and
+@uref{https://tools.ietf.org/search/rfc822, 822}, the
 current and previous standards for Internet email.
 
 @item --rfc-3339=@var{timespec}
 @opindex --rfc-3339=@var{timespec}
 Display the date using a format specified by
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc3339.txt, Internet
+@uref{https://tools.ietf.org/search/rfc3339, Internet
 RFC 3339}.  This is a subset of the ISO 8601
 format, except that it also permits applications to use a space rather
 than a @samp{T} to separate dates from times.
@@ -18212,10 +18212,9 @@ Know your toolbox!  Use each program appropriately.  If you don't have an
 appropriate tool, build one.
 @end enumerate
 
-As of this writing, all the programs discussed are available from
-@uref{http://ftp.gnu.org/old-gnu/textutils/textutils-1.22.tar.gz},
-with more recent versions available from
-@uref{http://ftp.gnu.org/gnu/coreutils}.
+All the programs discussed are available as described in
+@uref{https://www.gnu.org/software/coreutils/coreutils.html,
+GNU core utilities}.
 
 None of what I have presented in this column is new.  The Software Tools
 philosophy was first introduced in the book @cite{Software Tools}, by
@@ -18235,7 +18234,7 @@ reading if you're a programmer.  They certainly made a major change in
 how I view programming.
 
 The programs in both books are available from
-@uref{http://cm.bell-labs.com/who/bwk, Brian Kernighan's home page}.
+@uref{https://www.cs.princeton.edu/~bwk/, Brian Kernighan's home page}.
 For a number of years, there was an active
 Software Tools Users Group, whose members had ported the original
 @command{ratfor} programs to essentially every computer system with a

@@ -23,8 +23,7 @@ print_ver_ seq
 getlimits_
 
 # Run this test only with glibc and sizeof (long double) > sizeof (double).
-# Otherwise, there are known failures:
-# http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/14939/focus=14944
+# Otherwise, there are known failures.
 cat <<\EOF > long.c
 #include <features.h>
 #if defined __GNU_LIBRARY__ && __GLIBC__ >= 2
