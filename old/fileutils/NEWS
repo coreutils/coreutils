@@ -105,14 +105,14 @@
 * ls -n now implies -l, as per POSIX.
 * ls can now display dates and times in one of four time styles:
 
-  - The `full-iso' time style gives full ISO-style time stamps like
+  - The `full-iso' time style gives full ISO-style timestamps like
     `2001-05-14 23:45:56.477817180 -0700'.
-  - The 'iso' time style gives ISO-style time stamps like '2001-05-14 '
+  - The 'iso' time style gives ISO-style timestamps like '2001-05-14 '
     and '05-14 23:45'.
-  - The 'locale' time style gives locale-dependent time stamps like
+  - The 'locale' time style gives locale-dependent timestamps like
     'touko  14  2001' and 'touko  14 23:45' (in a Finnish locale).
   - The 'posix-iso' time style gives traditional POSIX-locale
-    time stamps like 'May 14  2001' and 'May 14 23:45' unless the user
+    timestamps like 'May 14  2001' and 'May 14 23:45' unless the user
     specifies a non-POSIX locale, in which case it uses ISO-style dates.
     This is the default.
 
@@ -136,7 +136,7 @@ Changes in release 4.1:
     directory, don't treat it as if it were the only argument.  Before,
     `mkdir d; ls no-dir d 2>/dev/null' would act like `ls d' and produce
     no output.  Now, it prints `d:'.
-* touch -d 'last friday' would use a time stamp that was one hour off
+* touch -d 'last friday' would use a timestamp that was one hour off
     (e.g., 23:00 on *thursday* rather than 00:00 of the preceding friday)
     when run such that the current time and the target date/time fall on
     opposite sides of a daylight savings time transition.
@@ -167,7 +167,7 @@ Changes in release 4.1:
     a diagnostic
 * The manual now warns that ls's --full-time format string is planned
     to change in a future release.
-* ls -l's time stamp format now depends on LC_TIME, not LC_MESSAGES,
+* ls -l's timestamp format now depends on LC_TIME, not LC_MESSAGES,
     as POSIX requires.
 * ls -l now reports the year for files even slightly in the future, as
     POSIX requires.  This helps warn users about clock skew problems.
@@ -458,7 +458,7 @@ Changes in release 4.0:
 * `cp -a --one-file-system' now copies any mount point directories it
   encounters on the selected file system.
 [3.16t]
-* cp (with --update) and ls compare time stamps with subsecond resolution when
+* cp (with --update) and ls compare timestamps with subsecond resolution when
   available (e.g., on systems with recent Linux kernels and on Solaris 2.6).
 * install once again does the -m-specified chmod *after* running strip
   (this fixes another bug introduced in 3.16o)

@@ -790,7 +790,7 @@ symlink_to_dir()
       # Leave any existing symlink alone, if it already points to the source,
       # so that broken build tools that care about symlink times
       # aren't confused into doing unnecessary builds.  Conversely, if the
-      # existing symlink's time stamp is older than the source, make it afresh,
+      # existing symlink's timestamp is older than the source, make it afresh,
       # so that broken tools aren't confused into skipping needed builds.  See
       # <http://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
       test -h "$dst" &&
