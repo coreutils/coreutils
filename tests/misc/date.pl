@@ -291,6 +291,12 @@ my @Tests =
       {ERR => "date: invalid date 'TZ=\"\"\"'\n"},
       {EXIT => 1},
      ],
+
+     # https://bugs.debian.org/851934#10
+     ['cross-TZ-mishandled', "-d 'TZ=\"EST5\" 1970-01-01 00:00'",
+      {ENV => 'TZ=PST8'},
+      {OUT => 'Wed Dec 31 21:00:00 PST 1969'},
+     ],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.

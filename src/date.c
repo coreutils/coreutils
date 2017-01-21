@@ -286,7 +286,8 @@ Show the local time for 9AM next Friday on the west coast of the US\n\
    Return true if successful.  */
 
 static bool
-batch_convert (const char *input_filename, const char *format, timezone_t tz)
+batch_convert (const char *input_filename, const char *format,
+               timezone_t tz, char const *tzstring)
 {
   bool ok;
   FILE *in_stream;
@@ -320,7 +321,8 @@ batch_convert (const char *input_filename, const char *format, timezone_t tz)
           break;
         }
 
-      if (! parse_datetime2 (&when, line, NULL, parse_datetime_flags))
+      if (! parse_datetime2 (&when, line, NULL,
+                             parse_datetime_flags, tz, tzstring))
         {
           if (line[line_length - 1] == '\n')
             line[line_length - 1] = '\0';
@@ -502,10 +504,11 @@ main (int argc, char **argv)
         }
     }
 
-  timezone_t tz = tzalloc (getenv ("TZ"));
+  char const *tzstring = getenv ("TZ");
+  timezone_t tz = tzalloc (tzstring);
 
   if (batch_file != NULL)
-    ok = batch_convert (batch_file, format, tz);
+    ok = batch_convert (batch_file, format, tz, tzstring);
   else
     {
       bool valid_date = true;
@@ -545,7 +548,8 @@ main (int argc, char **argv)
               if (set_datestr)
                 datestr = set_datestr;
               valid_date = parse_datetime2 (&when, datestr, NULL,
-                                            parse_datetime_flags);
+                                            parse_datetime_flags,
+                                            tz, tzstring);
             }
         }
 

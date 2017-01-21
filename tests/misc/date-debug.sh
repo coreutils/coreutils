@@ -48,10 +48,10 @@ date:     new date/time = '(Y-M-D) 1990-12-14 00:00:00 TZ=+09:00'
 date: '(Y-M-D) 1990-12-14 00:00:00 TZ=+09:00' = 661100400 epoch-seconds
 date: after time adjustment (+0 hours, -90 minutes, +0 seconds, +0 ns),
 date:     new time = 661095000 epoch-seconds
-date: output timezone: -06:00 (set from TZ="America/Belize" environment value)
+date: output timezone: +09:00 (set from TZ="Asia/Tokyo" environment value)
 date: final: 661095000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 1990-12-13 13:30:00 (UTC0)
-date: final: (Y-M-D) 1990-12-13 07:30:00 (output timezone TZ=-06:00)
+date: final: (Y-M-D) 1990-12-13 22:30:00 (output timezone TZ=+09:00)
 Thu Dec 13 07:30:00 CST 1990
 EOF
 
