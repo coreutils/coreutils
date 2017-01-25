@@ -645,7 +645,7 @@ check-duplicate-no-install: src/tr
 
 # Use the just-built 'ginstall', when not cross-compiling.
 if CROSS_COMPILING
-cu_install_program = @INSTALL_PROGRAM@
+cu_install_program = @INSTALL@
 else
 cu_install_program = src/ginstall
 endif
