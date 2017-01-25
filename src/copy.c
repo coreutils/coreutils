@@ -75,6 +75,7 @@
 # include <linux/falloc.h>
 #endif
 
+/* See HAVE_FALLOCATE workaround when including this file.  */
 #ifdef HAVE_LINUX_FS_H
 # include <linux/fs.h>
 #endif
@@ -166,7 +167,8 @@ static int
 punch_hole (int fd, off_t offset, off_t length)
 {
   int ret = 0;
-#if HAVE_FALLOCATE
+/* +0 is to work around older <linux/fs.h> defining HAVE_FALLOCATE to empty.  */
+#if HAVE_FALLOCATE + 0
 # if defined FALLOC_FL_PUNCH_HOLE && defined FALLOC_FL_KEEP_SIZE
   ret = fallocate (fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
                    offset, length);
