@@ -164,7 +164,7 @@ if ! cat . >/dev/null; then
 mkdir untailable || framework_failure_
 timeout 10 \
   tail $mode $fastpoll -F untailable >out 2>&1 & pid=$!
-# Wait for "cannot open" error.
+# Wait for "cannot follow" error.
 retry_delay_ wait4lines_ .1 6 2 || { cat out; fail=1; }
 { rmdir untailable; echo foo > untailable; }   || framework_failure_
 # Wait for the expected output.
@@ -173,6 +173,7 @@ cleanup_
 [ "$(countlines_)" = 4 ]                       || { fail=1; cat out; }
 grep -F 'cannot follow' out                    || { fail=1; cat out; }
 grep -F 'has become accessible' out            || { fail=1; cat out; }
+grep -F 'giving up'             out            && { fail=1; cat out; }
 grep -F 'foo' out                              || { fail=1; cat out; }
 rm -fd untailable out                          || framework_failure_
 fi
