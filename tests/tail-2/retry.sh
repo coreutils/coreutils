@@ -172,8 +172,9 @@ retry_delay_ wait4lines_ .1 6 4 || { cat out; fail=1; }
 cleanup_
 [ "$(countlines_)" = 4 ]                       || { fail=1; cat out; }
 grep -F 'cannot follow' out                    || { fail=1; cat out; }
-grep -F 'has become accessible' out            || { fail=1; cat out; }
-grep -F 'giving up'             out            && { fail=1; cat out; }
+# The first is the common case, "has appeared" arises with slow rmdir.
+grep -E 'become accessible|has appeared' out   || { fail=1; cat out; }
+grep -F 'giving up' out                        && { fail=1; cat out; }
 grep -F 'foo' out                              || { fail=1; cat out; }
 rm -fd untailable out                          || framework_failure_
 fi
