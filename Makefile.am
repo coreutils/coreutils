@@ -20,23 +20,9 @@ ALL_RECURSIVE_TARGETS =
 SUBDIRS = po . gnulib-tests
 
 changelog_etc =				\
-  ChangeLog-2005			\
-  ChangeLog-2006			\
-  ChangeLog-2007			\
-  ChangeLog-2008			\
   build-aux/ChangeLog-2007		\
-  doc/ChangeLog-2007			\
   lib/ChangeLog-2007			\
-  m4/ChangeLog-2007			\
-  old/fileutils/ChangeLog		\
-  old/fileutils/ChangeLog-1997		\
-  old/fileutils/NEWS			\
-  old/sh-utils/ChangeLog		\
-  old/sh-utils/ChangeLog.0		\
-  old/sh-utils/NEWS			\
-  old/textutils/ChangeLog		\
-  old/textutils/NEWS			\
-  po/ChangeLog-2007
+  m4/ChangeLog-2007
 
 EXTRA_DIST =				\
   $(changelog_etc)			\
@@ -110,7 +96,7 @@ dist-hook: gen-ChangeLog
 	$(AM_V_GEN)date +%s > $(distdir)/.timestamp
 	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
 
-gen_start_date = 2008-02-08
+gen_start_ver = 8.15
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
 	$(AM_V_GEN)if test -d .git; then				\
@@ -118,9 +104,11 @@ gen-ChangeLog:
 	  test -e "$$log_fix"						\
 	    && amend_git_log="--amend=$$log_fix"			\
 	    || amend_git_log=;						\
-	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
-	    $$amend_git_log --since=$(gen_start_date) > $(distdir)/cl-t && \
-	    { rm -f $(distdir)/ChangeLog &&				\
+	  $(top_srcdir)/build-aux/gitlog-to-changelog $$amend_git_log	\
+	    -- v$(gen_start_ver)~.. > $(distdir)/cl-t &&		\
+	    { printf '\n\nSee the source repo for older entries\n'	\
+	      >> $(distdir)/cl-t &&					\
+	      rm -f $(distdir)/ChangeLog &&				\
 	      mv $(distdir)/cl-t $(distdir)/ChangeLog; }		\
 	fi
 
