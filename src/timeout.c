@@ -79,7 +79,7 @@
 
 static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
-static int monitored_pid;
+static pid_t monitored_pid;
 static double kill_after;
 static bool foreground;      /* whether to use another program group.  */
 static bool preserve_status; /* whether to use a timeout status or not.  */
@@ -102,16 +102,6 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
-unblock_signal (int sig)
-{
-  sigset_t unblock_set;
-  sigemptyset (&unblock_set);
-  sigaddset (&unblock_set, sig);
-  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
-    error (0, errno, _("warning: sigprocmask"));
-}
-
 /* Start the timeout after which we'll receive a SIGALRM.
    Round DURATION up to the next representable value.
    Treat out-of-range values as if they were maximal,
@@ -120,10 +110,6 @@ unblock_signal (int sig)
 static void
 settimeout (double duration, bool warn)
 {
-
-  /* We configure timers below so that SIGALRM is sent on expiry.
-     Therefore ensure we don't inherit a mask blocking SIGALRM.  */
-  unblock_signal (SIGALRM);
 
 /* timer_settime() provides potentially nanosecond resolution.
    setitimer() is more portable (to Darwin for example),
@@ -165,11 +151,11 @@ settimeout (double duration, bool warn)
 /* send SIG avoiding the current process.  */
 
 static int
-send_sig (int where, int sig)
+send_sig (pid_t where, int sig)
 {
   /* If sending to the group, then ignore the signal,
      so we don't go into a signal loop.  Note that this will ignore any of the
-     signals registered in install_signal_handlers(), that are sent after we
+     signals registered in install_cleanup(), that are sent after we
      propagate the first one, which hopefully won't be an issue.  Note this
      process can be implicitly multithreaded due to some timer_settime()
      implementations, therefore a signal sent to the group, can be sent
@@ -178,6 +164,14 @@ send_sig (int where, int sig)
     signal (sig, SIG_IGN);
   return kill (where, sig);
 }
+
+/* Signal handler which is required for sigsuspend() to be interrupted
+   whenever SIGCHLD is received.  */
+static void
+chld (int sig)
+{
+}
+
 
 static void
 cleanup (int sig)
@@ -330,7 +324,7 @@ parse_duration (const char* str)
 }
 
 static void
-install_signal_handlers (int sigterm)
+install_cleanup (int sigterm)
 {
   struct sigaction sa;
   sigemptyset (&sa.sa_mask);  /* Allow concurrent calls to handler */
@@ -344,6 +338,33 @@ install_signal_handlers (int sigterm)
   sigaction (SIGHUP, &sa, NULL);  /* terminal closed for example.  */
   sigaction (SIGTERM, &sa, NULL); /* if we're killed, stop monitored proc.  */
   sigaction (sigterm, &sa, NULL); /* user specified termination signal.  */
+}
+
+/* Blocks all signals which were registered with cleanup
+   as signal handler.  Return original mask in OLD_SET.  */
+static void
+block_cleanup (int sigterm, sigset_t *old_set)
+{
+  sigset_t block_set;
+  sigemptyset (&block_set);
+  sigaddset (&block_set, SIGALRM);
+  sigaddset (&block_set, SIGINT);
+  sigaddset (&block_set, SIGQUIT);
+  sigaddset (&block_set, SIGHUP);
+  sigaddset (&block_set, SIGTERM);
+  sigaddset (&block_set, sigterm);
+  if (sigprocmask (SIG_BLOCK, &block_set, old_set) != 0)
+    error (0, errno, _("warning: sigprocmask"));
+}
+
+static void
+unblock_signal (int sig)
+{
+  sigset_t unblock_set;
+  sigemptyset (&unblock_set);
+  sigaddset (&unblock_set, sig);
+  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
+    error (0, errno, _("warning: sigprocmask"));
 }
 
 /* Try to disable core dumps for this process.
@@ -433,10 +454,10 @@ main (int argc, char **argv)
 
   /* Setup handlers before fork() so that we
      handle any signals caused by child, without races.  */
-  install_signal_handlers (term_signal);
+  install_cleanup (term_signal);
   signal (SIGTTIN, SIG_IGN);   /* Don't stop if background child needs tty.  */
   signal (SIGTTOU, SIG_IGN);   /* Don't stop if background child needs tty.  */
-  signal (SIGCHLD, SIG_DFL);   /* Don't inherit CHLD handling from parent.   */
+  signal (SIGCHLD, chld);      /* Interrupt sigsuspend() when child exits.   */
 
   monitored_pid = fork ();
   if (monitored_pid == -1)
@@ -462,11 +483,19 @@ main (int argc, char **argv)
       pid_t wait_result;
       int status;
 
+      /* We configure timers so that SIGALRM is sent on expiry.
+         Therefore ensure we don't inherit a mask blocking SIGALRM.  */
+      unblock_signal (SIGALRM);
+
       settimeout (timeout, true);
 
-      while ((wait_result = waitpid (monitored_pid, &status, 0)) < 0
-             && errno == EINTR)
-        continue;
+      /* Ensure we don't cleanup() after waitpid() reaps the child,
+         to avoid sending signals to a possibly different process.  */
+      sigset_t cleanup_set;
+      block_cleanup (term_signal, &cleanup_set);
+
+      while ((wait_result = waitpid (monitored_pid, &status, WNOHANG)) == 0)
+        sigsuspend (&cleanup_set);  /* Wait with cleanup signals unblocked.  */
 
       if (wait_result < 0)
         {
@@ -487,6 +516,7 @@ main (int argc, char **argv)
                 {
                   /* exit with the signal flag set.  */
                   signal (sig, SIG_DFL);
+                  unblock_signal (sig);
                   raise (sig);
                 }
               status = sig + 128; /* what sh returns for signaled processes.  */

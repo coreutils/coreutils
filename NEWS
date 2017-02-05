@@ -16,6 +16,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   which could be triggered especially when tail was suspended and resumed.
   [bug introduced with inotify support added in coreutils-7.5]
 
+  timeout no longer has a race that may terminate the wrong process.
+  The race is unlikely, as timeout(1) needs to receive a signal right
+  after the command being monitored finishes.  Also the system needs
+  to have reallocated that command's pid in that short time window.
+  [bug introduced when timeout was added in coreutils-7.0]
+
   wc --bytes --files0-from now correctly reports byte counts.
   Previously it may have returned values that were too large,
   depending on the size of the first file processed.

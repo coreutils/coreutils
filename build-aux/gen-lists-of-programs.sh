@@ -32,6 +32,7 @@ build_if_possible_progs='
     pinky
     stdbuf
     stty
+    timeout
     uptime
     users
     who
@@ -120,7 +121,6 @@ normal_progs='
     tail
     tee
     test
-    timeout
     touch
     tr
     true

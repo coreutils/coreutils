@@ -252,6 +252,8 @@ AC_CHECK_FUNCS([chroot],
         gl_ADD_PROG([optional_bin_progs], [chroot]))
 AC_CHECK_FUNCS([gethostid],
         gl_ADD_PROG([optional_bin_progs], [hostid]))
+AC_CHECK_FUNCS([sigsuspend],
+        gl_ADD_PROG([optional_bin_progs], [timeout]))
 
 gl_WINSIZE_IN_PTEM
 
