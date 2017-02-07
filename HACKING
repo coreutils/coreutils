@@ -444,7 +444,7 @@ as possible.  If you add a new test file (as opposed to adding a test to
 an existing test file) add the new test file to 'tests/local.mk'.
 Note to run tests/misc/new-test in isolation you can do:
 
-  make TESTS=tests/misc/new-test SUBDIRS=. VERBOSE=yes
+  make check TESTS=tests/misc/new-test SUBDIRS=. VERBOSE=yes
 
 Variables that are significant for tests with their default values are:
 
