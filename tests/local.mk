@@ -248,6 +248,7 @@ all_tests =					\
   tests/misc/date-next-dow.pl			\
   tests/misc/ptx-overrun.sh			\
   tests/misc/xstrtol.pl				\
+  tests/tail-2/overlay-headers.sh		\
   tests/tail-2/pid.sh				\
   tests/misc/od.pl				\
   tests/misc/od-endian.sh			\

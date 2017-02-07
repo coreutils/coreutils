@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   158909489063877810457 and 222087527029934481871.
   [bug introduced in coreutils-8.20]
 
+  tail no longer prints redundant file headers with interleaved inotify events,
+  which could be triggered especially when tail was suspended and resumed.
+  [bug introduced with inotify support added in coreutils-7.5]
+
   wc --bytes --files0-from now correctly reports byte counts.
   Previously it may have returned values that were too large,
   depending on the size of the first file processed.

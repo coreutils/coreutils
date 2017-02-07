@@ -399,7 +399,8 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
    Return the number of bytes read from the file.  */
 
 static uintmax_t
-dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
+dump_remainder (bool want_header, const char *pretty_filename, int fd,
+                uintmax_t n_bytes)
 {
   uintmax_t n_written;
   uintmax_t n_remaining = n_bytes;
@@ -419,6 +420,11 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
         }
       if (bytes_read == 0)
         break;
+      if (want_header)
+        {
+          write_header (pretty_filename);
+          want_header = false;
+        }
       xwrite_stdout (buffer, bytes_read);
       n_written += bytes_read;
       if (n_bytes != COPY_TO_EOF)
@@ -528,7 +534,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
                  output the part that is after it.  */
               if (n != bytes_read - 1)
                 xwrite_stdout (nl + 1, bytes_read - (n + 1));
-              *read_pos += dump_remainder (pretty_filename, fd,
+              *read_pos += dump_remainder (false, pretty_filename, fd,
                                            end_pos - (pos + bytes_read));
               return true;
             }
@@ -540,7 +546,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
           /* Not enough lines in the file; print everything from
              start_pos to the end.  */
           xlseek (fd, start_pos, SEEK_SET, pretty_filename);
-          *read_pos = start_pos + dump_remainder (pretty_filename, fd,
+          *read_pos = start_pos + dump_remainder (false, pretty_filename, fd,
                                                   end_pos);
           return true;
         }
@@ -1223,7 +1229,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
           else
             bytes_to_read = COPY_TO_EOF;
 
-          bytes_read = dump_remainder (name, fd, bytes_to_read);
+          bytes_read = dump_remainder (false, name, fd, bytes_to_read);
 
           any_input |= (bytes_read != 0);
           f[i].size += bytes_read;
@@ -1336,7 +1342,8 @@ wd_comparator (const void *e1, const void *e2)
   return spec1->wd == spec2->wd;
 }
 
-/* Output (new) data for FSPEC->fd.  */
+/* Output (new) data for FSPEC->fd.
+   PREV_FSPEC records the last File_spec for which we output.  */
 static void
 check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 {
@@ -1371,18 +1378,18 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
            && timespec_cmp (fspec->mtime, get_stat_mtime (&stats)) == 0)
     return;
 
-  if (fspec != *prev_fspec)
-    {
-      if (print_headers)
-        write_header (name);
-      *prev_fspec = fspec;
-    }
+  bool want_header = print_headers && (fspec != *prev_fspec);
 
-  uintmax_t bytes_read = dump_remainder (name, fspec->fd, COPY_TO_EOF);
+  uintmax_t bytes_read = dump_remainder (want_header, name, fspec->fd,
+                                         COPY_TO_EOF);
   fspec->size += bytes_read;
 
-  if (fflush (stdout) != 0)
-    die (EXIT_FAILURE, errno, _("write error"));
+  if (bytes_read)
+    {
+      *prev_fspec = fspec;
+      if (fflush (stdout) != 0)
+        die (EXIT_FAILURE, errno, _("write error"));
+    }
 }
 
 /* Attempt to tail N_FILES files forever, or until killed.
@@ -1792,7 +1799,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
       *read_pos = current_pos;
     }
 
-  *read_pos += dump_remainder (pretty_filename, fd, n_bytes);
+  *read_pos += dump_remainder (false, pretty_filename, fd, n_bytes);
   return true;
 }
 
@@ -1816,7 +1823,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       int t = start_lines (pretty_filename, fd, n_lines, read_pos);
       if (t)
         return t < 0;
-      *read_pos += dump_remainder (pretty_filename, fd, COPY_TO_EOF);
+      *read_pos += dump_remainder (false, pretty_filename, fd, COPY_TO_EOF);
     }
   else
     {
