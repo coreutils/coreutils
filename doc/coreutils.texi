@@ -10260,7 +10260,8 @@ of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @command{readlink} outputs the absolute name of the given files which contain
 no @file{.}, @file{..} components nor any repeated separators
-(@file{/}) or symbolic links.
+(@file{/}) or symbolic links.  Note the @command{realpath} command is the
+preferred command to use for canonicalization.  @xref{realpath invocation}
 
 @end table
 
@@ -13684,6 +13685,11 @@ all but the last component of the specified files must exist.  Synopsis:
 @example
 realpath [@var{option}]@dots{} @var{file}@dots{}
 @end example
+
+The file name canonicalization functionality overlaps with that of the
+@command{readlink} command.  This is the preferred command for
+canonicalization as it's a more suitable and standard name.  In addition
+this command supports relative file name processing functionality.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
