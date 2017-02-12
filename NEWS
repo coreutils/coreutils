@@ -2,11 +2,21 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Improvements
+
+  If the file B already exists, commands like 'ln -f A B' and
+  'cp -fl A B' no longer remove B before creating the new link.
+  That is, there is no longer a brief moment when B does not exist.
+
 ** Bug fixes
 
   date again converts from a specified time zone.  Previously output was
   not converted to the local time zone, and remained in the specified one.
   [bug introduced in coreutils-8.26]
+
+  Commands like 'cp --no-dereference -l A B' are no longer quiet no-ops
+  when A is a regular file and B is a symbolic link that points to A.
+  [bug introduced in fileutils-4.0]
 
   factor no longer goes into an infinite loop for certain numbers like
   158909489063877810457 and 222087527029934481871.

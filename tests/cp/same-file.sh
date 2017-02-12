@@ -142,7 +142,7 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bf (foo symlink symlink.~1~ -> foo)
 0 -bdf (foo symlink symlink.~1~ -> foo)
 1 -l [cp: cannot create hard link 'symlink' to 'foo'] (foo symlink -> foo)
-0 -dl (foo symlink -> foo)
+1 -dl [cp: cannot create hard link 'symlink' to 'foo'] (foo symlink -> foo)
 0 -fl (foo symlink)
 0 -dfl (foo symlink)
 0 -bl (foo symlink symlink.~1~ -> foo)

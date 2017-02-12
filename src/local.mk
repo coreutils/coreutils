@@ -328,7 +328,9 @@ copy_sources = \
   src/copy.c \
   src/cp-hash.c \
   src/extent-scan.c \
-  src/extent-scan.h
+  src/extent-scan.h \
+  src/force-link.c \
+  src/force-link.h
 
 # Use 'ginstall' in the definition of PROGRAMS and in dependencies to avoid
 # confusion with the 'install' target.  The install rule transforms 'ginstall'
@@ -357,7 +359,9 @@ src_vdir_SOURCES = src/ls.c src/ls-vdir.c
 src_id_SOURCES = src/id.c src/group-list.c
 src_groups_SOURCES = src/groups.c src/group-list.c
 src_ls_SOURCES = src/ls.c src/ls-ls.c
-src_ln_SOURCES = src/ln.c src/relpath.c src/relpath.h
+src_ln_SOURCES = src/ln.c \
+  src/force-link.c src/force-link.h \
+  src/relpath.c src/relpath.h
 src_chown_SOURCES = src/chown.c src/chown-core.c
 src_chgrp_SOURCES = src/chgrp.c src/chown-core.c
 src_kill_SOURCES = src/kill.c src/operand2sig.c

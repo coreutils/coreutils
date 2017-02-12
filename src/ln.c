@@ -27,6 +27,7 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "file-set.h"
+#include "force-link.h"
 #include "hash.h"
 #include "hash-triple.h"
 #include "relpath.h"
@@ -183,7 +184,6 @@ do_link (const char *source, const char *dest)
   char *rel_source = NULL;
   bool dest_lstat_ok = false;
   bool source_is_dir = false;
-  bool ok;
 
   if (!symbolic_link)
     {
@@ -301,12 +301,7 @@ do_link (const char *source, const char *dest)
   if (relative)
     source = rel_source = convert_abs_rel (source, dest);
 
-  ok = ((symbolic_link ? symlink (source, dest)
-         : linkat (AT_FDCWD, source, AT_FDCWD, dest,
-                   logical ? AT_SYMLINK_FOLLOW : 0))
-        == 0);
-
-  /* If the attempt to create a link failed and we are removing or
+  /* If the attempt to create a link fails and we are removing or
      backing up destinations, unlink the destination and try again.
 
      On the surface, POSIX describes an algorithm that states that
@@ -324,22 +319,12 @@ do_link (const char *source, const char *dest)
      that refer to the same file), rename succeeds and DEST remains.
      If we didn't remove DEST in that case, the subsequent symlink or link
      call would fail.  */
-
-  if (!ok && errno == EEXIST && (remove_existing_files || dest_backup))
-    {
-      if (unlink (dest) != 0)
-        {
-          error (0, errno, _("cannot remove %s"), quoteaf (dest));
-          free (dest_backup);
-          free (rel_source);
-          return false;
-        }
-
-      ok = ((symbolic_link ? symlink (source, dest)
-             : linkat (AT_FDCWD, source, AT_FDCWD, dest,
-                       logical ? AT_SYMLINK_FOLLOW : 0))
-            == 0);
-    }
+  bool ok_to_remove = remove_existing_files || dest_backup;
+  bool ok = 0 <= (symbolic_link
+                  ? force_symlinkat (source, AT_FDCWD, dest, ok_to_remove)
+                  : force_linkat (AT_FDCWD, source, AT_FDCWD, dest,
+                                  logical ? AT_SYMLINK_FOLLOW : 0,
+                                  ok_to_remove));
 
   if (ok)
     {

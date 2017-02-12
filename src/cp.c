@@ -1155,11 +1155,6 @@ main (int argc, char **argv)
   if (x.recursive)
     x.copy_as_regular = copy_contents;
 
-  /* If --force (-f) was specified and we're in link-creation mode,
-     first remove any existing destination file.  */
-  if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
-    x.unlink_dest_before_opening = true;
-
   /* Ensure -Z overrides -a.  */
   if ((x.set_security_context || scontext)
       && ! x.require_preserve_context)

@@ -8125,9 +8125,11 @@ Equivalent to @option{--no-dereference --preserve=links}.
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force},
 when a destination file cannot be opened, @command{cp} then removes it and
-tries to open it again.  Contrast this behavior with that enabled by
-@option{--link} and @option{--symbolic-link}, whereby the destination file
-is never opened but rather is removed unconditionally.  Also see the
+tries to open it again.  When this option is combined with
+@option{--link} (@option{-l}) or @option{--symbolic-link}
+(@option{-s}), the destination link is replaced, and unless
+@option{--backup} (@option{-b}) is also given there is no brief
+moment when the destination does not exist.  Also see the
 description of @option{--remove-destination}.
 
 This option is independent of the @option{--interactive} or
@@ -9825,11 +9827,13 @@ directory, using the @var{target}s' names.
 
 @end itemize
 
-Normally @command{ln} does not remove existing files.  Use the
-@option{--force} (@option{-f}) option to remove them unconditionally,
-the @option{--interactive} (@option{-i}) option to remove them
+Normally @command{ln} does not replace existing files.  Use the
+@option{--force} (@option{-f}) option to replace them unconditionally,
+the @option{--interactive} (@option{-i}) option to replace them
 conditionally, and the @option{--backup} (@option{-b}) option to
-rename them.
+rename them.  Unless the @option{--backup} (@option{-b}) option is
+used there is no brief moment when the destination does not exist;
+this is an extension to POSIX.
 
 @cindex hard link, defined
 @cindex inode, and hard links
