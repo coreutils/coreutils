@@ -24,16 +24,11 @@
    a window where B does not exist.  */
 
 #include <config.h>
+#include "system.h"
 
 #include "force-link.h"
 
-#include <dirname.h>
 #include <tempname.h>
-
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 /* A basename pattern suitable for a temporary file.  It should work
    even on file systems like FAT that support only short names.
@@ -94,7 +89,7 @@ try_link (char *dest, void *arg)
    1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
    -1 (setting errno) on failure.  */
-int
+extern int
 force_linkat (int srcdir, char const *srcname,
               int dstdir, char const *dstname, int flags, bool force)
 {
@@ -149,7 +144,7 @@ try_symlink (char *dest, void *arg)
    1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
    -1 (setting errno) on failure.  */
-int
+extern int
 force_symlinkat (char const *srcname, int dstdir, char const *dstname,
                  bool force)
 {
