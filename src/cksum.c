@@ -44,7 +44,7 @@
 #include <stdint.h>
 #include "system.h"
 #include "fadvise.h"
-#include "xfreopen.h"
+#include "xsetmode.h"
 
 #ifdef CRCTAB
 
@@ -194,8 +194,7 @@ cksum (const char *file, bool print_name)
     {
       fp = stdin;
       have_read_stdin = true;
-      if (O_BINARY && ! isatty (STDIN_FILENO))
-        xfreopen (NULL, "rb", stdin);
+      xsetmode (STDIN_FILENO, O_BINARY);
     }
   else
     {

@@ -31,7 +31,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 #include "xdectoint.h"
-#include "xfreopen.h"
+#include "xsetmode.h"
 
 #define AUTHORS proper_name ("Simon Josefsson")
 
@@ -320,8 +320,7 @@ main (int argc, char **argv)
 
   if (STREQ (infile, "-"))
     {
-      if (O_BINARY)
-        xfreopen (NULL, "rb", stdin);
+      xsetmode (STDIN_FILENO, O_BINARY);
       input_fh = stdin;
     }
   else

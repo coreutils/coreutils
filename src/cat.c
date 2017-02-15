@@ -39,7 +39,7 @@
 #include "fadvise.h"
 #include "full-write.h"
 #include "safe-read.h"
-#include "xfreopen.h"
+#include "xsetmode.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cat"
@@ -645,8 +645,7 @@ main (int argc, char **argv)
   if (! (number || show_ends || squeeze_blank))
     {
       file_open_mode |= O_BINARY;
-      if (O_BINARY && ! isatty (STDOUT_FILENO))
-        xfreopen (NULL, "wb", stdout);
+      xsetmode (STDOUT_FILENO, O_BINARY);
     }
 
   /* Check if any of the input files are the same as the output file.  */
@@ -665,8 +664,8 @@ main (int argc, char **argv)
         {
           have_read_stdin = true;
           input_desc = STDIN_FILENO;
-          if ((file_open_mode & O_BINARY) && ! isatty (STDIN_FILENO))
-            xfreopen (NULL, "rb", stdin);
+          if (file_open_mode & O_BINARY)
+            xsetmode (STDIN_FILENO, O_BINARY);
         }
       else
         {

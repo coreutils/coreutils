@@ -36,7 +36,7 @@
 #include "readtokens0.h"
 #include "safe-read.h"
 #include "stat-size.h"
-#include "xfreopen.h"
+#include "xsetmode.h"
 
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \
@@ -556,8 +556,7 @@ wc_file (char const *file, struct fstatus *fstatus)
   if (! file || STREQ (file, "-"))
     {
       have_read_stdin = true;
-      if (O_BINARY && ! isatty (STDIN_FILENO))
-        xfreopen (NULL, "rb", stdin);
+      xsetmode (STDIN_FILENO, O_BINARY);
       return wc (STDIN_FILENO, file, fstatus, -1);
     }
   else

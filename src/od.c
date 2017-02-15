@@ -29,8 +29,8 @@
 #include "ftoastr.h"
 #include "quote.h"
 #include "stat-size.h"
-#include "xfreopen.h"
 #include "xprintf.h"
+#include "xsetmode.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -914,8 +914,7 @@ open_next_file (void)
           input_filename = _("standard input");
           in_stream = stdin;
           have_read_stdin = true;
-          if (O_BINARY && ! isatty (STDIN_FILENO))
-            xfreopen (NULL, "rb", stdin);
+          xsetmode (STDIN_FILENO, O_BINARY);
         }
       else
         {

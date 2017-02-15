@@ -37,8 +37,8 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "stat-size.h"
-#include "xfreopen.h"
 #include "xdectoint.h"
+#include "xsetmode.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "head"
@@ -878,8 +878,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
       have_read_stdin = true;
       fd = STDIN_FILENO;
       filename = _("standard input");
-      if (O_BINARY && ! isatty (STDIN_FILENO))
-        xfreopen (NULL, "rb", stdin);
+      xsetmode (STDIN_FILENO, O_BINARY);
     }
   else
     {
@@ -1083,8 +1082,7 @@ main (int argc, char **argv)
                ? (char const *const *) &argv[optind]
                : default_file_list);
 
-  if (O_BINARY && ! isatty (STDOUT_FILENO))
-    xfreopen (NULL, "wb", stdout);
+  xsetmode (STDOUT_FILENO, O_BINARY);
 
   for (i = 0; file_list[i]; ++i)
     ok &= head_file (file_list[i], n_units, count_lines, elide_from_end);

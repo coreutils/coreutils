@@ -48,7 +48,7 @@ tac -r -s '.\|
 #include "filenamecat.h"
 #include "safe-read.h"
 #include "stdlib--.h"
-#include "xfreopen.h"
+#include "xsetmode.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tac"
@@ -572,8 +572,7 @@ tac_file (const char *filename)
       have_read_stdin = true;
       fd = STDIN_FILENO;
       filename = _("standard input");
-      if (O_BINARY && ! isatty (STDIN_FILENO))
-        xfreopen (NULL, "rb", stdin);
+      xsetmode (STDIN_FILENO, O_BINARY);
     }
   else
     {
@@ -688,8 +687,7 @@ main (int argc, char **argv)
           ? (char const *const *) &argv[optind]
           : default_file_list);
 
-  if (O_BINARY && ! isatty (STDOUT_FILENO))
-    xfreopen (NULL, "wb", stdout);
+  xsetmode (STDOUT_FILENO, O_BINARY);
 
   {
     size_t i;
