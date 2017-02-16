@@ -27,7 +27,7 @@
 #include "error.h"
 #include "fadvise.h"
 #include "stdio--.h"
-#include "xsetmode.h"
+#include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "tee"
@@ -194,8 +194,8 @@ tee_files (int nfiles, char **files)
      ? (append ? "ab" : "wb")
      : (append ? "a" : "w"));
 
-  xsetmode (STDIN_FILENO, O_BINARY);
-  xsetmode (STDOUT_FILENO, O_BINARY);
+  xset_binary_mode (STDIN_FILENO, O_BINARY);
+  xset_binary_mode (STDOUT_FILENO, O_BINARY);
   fadvise (stdin, FADVISE_SEQUENTIAL);
 
   /* Set up FILES[0 .. NFILES] and DESCRIPTORS[0 .. NFILES].

@@ -31,7 +31,7 @@
 #include "quote.h"
 #include "xstrtol.h"
 #include "xdectoint.h"
-#include "xsetmode.h"
+#include "xbinary-io.h"
 
 #define AUTHORS proper_name ("Simon Josefsson")
 
@@ -320,7 +320,7 @@ main (int argc, char **argv)
 
   if (STREQ (infile, "-"))
     {
-      xsetmode (STDIN_FILENO, O_BINARY);
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
       input_fh = stdin;
     }
   else

@@ -29,7 +29,7 @@
 #include "fadvise.h"
 #include "human.h"
 #include "safe-read.h"
-#include "xsetmode.h"
+#include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "sum"
@@ -98,7 +98,7 @@ bsd_sum_file (const char *file, int print_name)
     {
       fp = stdin;
       have_read_stdin = true;
-      xsetmode (STDIN_FILENO, O_BINARY);
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
     }
   else
     {
@@ -167,7 +167,7 @@ sysv_sum_file (const char *file, int print_name)
     {
       fd = STDIN_FILENO;
       have_read_stdin = true;
-      xsetmode (STDIN_FILENO, O_BINARY);
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
     }
   else
     {

@@ -43,9 +43,9 @@
 #include "safe-read.h"
 #include "stat-size.h"
 #include "stat-time.h"
-#include "xnanosleep.h"
+#include "xbinary-io.h"
 #include "xdectoint.h"
-#include "xsetmode.h"
+#include "xnanosleep.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
 
@@ -1894,7 +1894,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
     {
       have_read_stdin = true;
       fd = STDIN_FILENO;
-      xsetmode (STDIN_FILENO, O_BINARY);
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
     }
   else
     fd = open (f->name, O_RDONLY | O_BINARY);
@@ -2323,7 +2323,7 @@ main (int argc, char **argv)
       || (header_mode == multiple_files && n_files > 1))
     print_headers = true;
 
-  xsetmode (STDOUT_FILENO, O_BINARY);
+  xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
   for (i = 0; i < n_files; i++)
     ok &= tail_file (&F[i], n_units);

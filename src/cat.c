@@ -39,7 +39,7 @@
 #include "fadvise.h"
 #include "full-write.h"
 #include "safe-read.h"
-#include "xsetmode.h"
+#include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cat"
@@ -645,7 +645,7 @@ main (int argc, char **argv)
   if (! (number || show_ends || squeeze_blank))
     {
       file_open_mode |= O_BINARY;
-      xsetmode (STDOUT_FILENO, O_BINARY);
+      xset_binary_mode (STDOUT_FILENO, O_BINARY);
     }
 
   /* Check if any of the input files are the same as the output file.  */
@@ -665,7 +665,7 @@ main (int argc, char **argv)
           have_read_stdin = true;
           input_desc = STDIN_FILENO;
           if (file_open_mode & O_BINARY)
-            xsetmode (STDIN_FILENO, O_BINARY);
+            xset_binary_mode (STDIN_FILENO, O_BINARY);
         }
       else
         {

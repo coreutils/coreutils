@@ -38,8 +38,8 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "sig2str.h"
+#include "xbinary-io.h"
 #include "xdectoint.h"
-#include "xsetmode.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -1553,7 +1553,7 @@ main (int argc, char **argv)
          quoteaf (infile));
 
   /* Binary I/O is safer when byte counts are used.  */
-  xsetmode (STDIN_FILENO, O_BINARY);
+  xset_binary_mode (STDIN_FILENO, O_BINARY);
 
   /* Get the optimal block size of input device and make a buffer.  */
 

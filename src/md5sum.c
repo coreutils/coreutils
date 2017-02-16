@@ -46,7 +46,7 @@
 #include "error.h"
 #include "fadvise.h"
 #include "stdio--.h"
-#include "xsetmode.h"
+#include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #if HASH_ALGO_MD5
@@ -598,7 +598,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result,
           if (*binary < 0)
             *binary = ! isatty (STDIN_FILENO);
           if (*binary)
-            xsetmode (STDIN_FILENO, O_BINARY);
+            xset_binary_mode (STDIN_FILENO, O_BINARY);
         }
     }
   else
