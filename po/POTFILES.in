@@ -26,7 +26,7 @@ lib/userspec.c
 lib/verror.c
 lib/version-etc.c
 lib/xalloc-die.c
-lib/xfreopen.c
+lib/xbinary-io.c
 lib/xmemcoll.c
 lib/xprintf.c
 lib/xstrtol-error.c
