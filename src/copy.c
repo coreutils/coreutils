@@ -889,7 +889,7 @@ set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
    Based on CP_OPTIONS, diagnose warnings and fail when appropriate.
    Return FALSE on failure, TRUE on success.  */
 
-static bool
+bool
 set_process_security_ctx (char const *src_name, char const *dst_name,
                           mode_t mode, bool new_dst, const struct cp_options *x)
 {
@@ -951,7 +951,7 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
    failure, when allowed by various settings in CP_OPTIONS.
    Return FALSE on failure, TRUE on success.  */
 
-static bool
+bool
 set_file_security_ctx (char const *dst_name, bool process_local,
                        bool recurse, const struct cp_options *x)
 {

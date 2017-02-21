@@ -285,6 +285,14 @@ bool copy (char const *src_name, char const *dst_name,
            bool nonexistent_dst, const struct cp_options *options,
            bool *copy_into_self, bool *rename_succeeded);
 
+extern bool set_process_security_ctx (char const *src_name,
+                                      char const *dst_name,
+                                      mode_t mode, bool new_dst,
+                                      const struct cp_options *x);
+
+extern bool set_file_security_ctx (char const *dst_name, bool process_local,
+                                   bool recurse, const struct cp_options *x);
+
 void dest_info_init (struct cp_options *);
 void src_info_init (struct cp_options *);
 

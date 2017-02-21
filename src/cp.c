@@ -394,6 +394,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
   *attr_list = NULL;
 
+  /* XXX: If all dirs are present at the destination,
+     no permissions or security contexts will be updated.  */
   if (stat (dst_dir, &stats) != 0)
     {
       /* A parent of CONST_DIR does not exist.
@@ -436,6 +438,12 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
               new->next = *attr_list;
               *attr_list = new;
             }
+
+          /* If required set the default context for created dirs.  */
+          if (! set_process_security_ctx (src, dir,
+                                          missing_dir ? new->st.st_mode : 0,
+                                          missing_dir, x))
+            return false;
 
           if (missing_dir)
             {
@@ -524,6 +532,18 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
             }
           else
             *new_dst = false;
+
+          /* For existing dirs, set the security context as per that already
+             set for the process global context.  */
+          if (! *new_dst
+              && (x->set_security_context || x->preserve_security_context))
+            {
+              if (! set_file_security_ctx (dir, x->preserve_security_context,
+                                           false, x)
+                  && x->require_preserve_context)
+                  return false;
+            }
+
           *slash++ = '/';
 
           /* Avoid unnecessary calls to 'stat' when given

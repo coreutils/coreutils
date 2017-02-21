@@ -48,7 +48,6 @@ rm -f f
 # due to recursion, and was handled incorrectly in coreutils-8.22
 # Note standard permissions are updated for existing directories
 # in the destination, so SELinux contexts should be updated too.
-chmod o+rw restore/existing_dir
 mkdir -p backup/existing_dir/ || framework_failure_
 ls -Zd backup/existing_dir > ed_ctx || fail=1
 grep $ctx ed_ctx && framework_failure_
@@ -57,10 +56,30 @@ chcon $ctx backup/existing_dir/file || framework_failure_
 # Set the dir context to ensure it is reset
 mkdir -p --context="$ctx" restore/existing_dir || framework_failure_
 # Copy and ensure existing directories updated
-cp -a backup/. restore/
+cp -a backup/. restore/ || fail=1
 ls -Zd restore/existing_dir > ed_ctx || fail=1
 grep $ctx ed_ctx &&
   { ls -lZd restore/existing_dir; fail=1; }
+
+# Check context preserved with directories created with --parents,
+# which was not handled before coreutils-8.27
+mkdir -p parents/a/b || framework_failure_
+ls -Zd parents/a/b > ed_ctx || fail=1
+grep $ctx ed_ctx && framework_failure_
+touch parents/a/b/file || framework_failure_
+chcon $ctx parents/a/b || framework_failure_
+# Set the dir context to ensure it is reset
+mkdir -p --context="$ctx" parents_dest/parents/a || framework_failure_
+# Copy and ensure existing directories updated
+cp -r --parents --preserve=context parents/a/b/file parents_dest || fail=1
+# Check new context
+ls -Zd parents_dest/parents/a/b > ed_ctx || fail=1
+grep $ctx ed_ctx ||
+  { ls -lZd parents_dest/parents/a/b; fail=1; }
+# Check updated context
+ls -Zd parents_dest/parents/a > ed_ctx || fail=1
+grep $ctx ed_ctx &&
+  { ls -lZd parents_dest/parents/a; fail=1; }
 
 # Check restorecon (-Z) functionality for file and directory
 # Also make a dir with our known context
