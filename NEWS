@@ -158,6 +158,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  dd now warns about counts specified with a 0x "prefix", since dd will
+  interpret those as a zero multiplier rather than a hex constant.
+  The warning suggests to use 00x if a zero multiplier is really intended.
+
   df now filters the system mount list more efficiently, with 20000
   mount entries now being processed in about 1.1s compared to 1.7s.
 
