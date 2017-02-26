@@ -2,12 +2,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
-** Improvements
-
-  If the file B already exists, commands like 'ln -f A B' and
-  'cp -fl A B' no longer remove B before creating the new link.
-  That is, there is no longer a brief moment when B does not exist.
-
 ** Bug fixes
 
   cp --parents will now set an SELinux context for created directories,
@@ -52,8 +46,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   and the time zone abbreviation begins with "-", indicating that the
   time zone is indeterminate.
 
+  nproc now honors the OMP_THREAD_LIMIT environment variable to
+  set the maximum returned value.  OMP_NUM_THREADS continues to
+  set the minimum returned value, but is updated to support the
+  nested level syntax allowed in this variable.
+
   stty now validates arguments before interacting with the device,
   ensuring there are no side effects to specifying an invalid option.
+
+  If the file B already exists, commands like 'ln -f A B' and
+  'cp -fl A B' no longer remove B before creating the new link.
+  That is, there is no longer a brief moment when B does not exist.
 
 
 * Noteworthy changes in release 8.26 (2016-11-30) [stable]

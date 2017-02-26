@@ -15808,8 +15808,9 @@ not rely on its existence.
 Print the number of processing units available to the current process,
 which may be less than the number of online processors.
 If this information is not accessible, then print the number of
-processors installed.  If the @env{OMP_NUM_THREADS} environment variable is
-set, then it will determine the returned value.  The result is guaranteed to be
+processors installed.  If the @env{OMP_NUM_THREADS} or @env{OMP_THREAD_LIMIT}
+environment variables are set, then they will determine the minimum
+and maximum returned value respectively.  The result is guaranteed to be
 greater than zero.  Synopsis:
 
 @example
@@ -15824,7 +15825,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 Print the number of installed processors on the system, which may
 be greater than the number online or available to the current process.
-The @env{OMP_NUM_THREADS} environment variable is not honored in this case.
+The @env{OMP_NUM_THREADS} or @env{OMP_THREAD_LIMIT} environment variables
+are not honored in this case.
 
 @item --ignore=@var{number}
 @opindex --ignore
