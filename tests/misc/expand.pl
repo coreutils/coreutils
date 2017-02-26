@@ -39,9 +39,10 @@ my @Tests =
    ['t5', '--tabs=""',        {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
    ['t6', '--tabs=","',       {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
    ['t7', '--tabs=" "',       {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
+   ['t8', '--tabs="/"',       {IN=>"a\tb\tc"}, {OUT=>"a       b       c"}],
 
    # Input field wider than the specified tab list
-   ['t8', '--tabs=6,9', {IN=>"a\tbbbbbbbbbbbbb\tc"},
+   ['if', '--tabs=6,9', {IN=>"a\tbbbbbbbbbbbbb\tc"},
     {OUT=>"a     bbbbbbbbbbbbb c"}],
 
    ['i1', '--tabs=3 -i', {IN=>"\ta\tb"}, {OUT=>"   a\tb"}],
@@ -138,6 +139,17 @@ my @Tests =
     {OUT=>"1 2 3 4   5\n" .
           "a bHELLO\b\b\b c   d e\n"}],
 
+   # Test the trailing '/' feature which specifies the
+   # tab size to use after the last specified stop
+   ['trail1', '--tabs=1,/5',   {IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
+   ['trail2', '--tabs=2,/5',   {IN=>"\ta\tb\tc"}, {OUT=>"  a  b    c"}],
+   ['trail3', '--tabs=1,2,/5', {IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
+   ['trail4', '--tabs=/5',     {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['trail5', '--tabs=//5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['trail6', '--tabs=/,/5',   {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['trail7', '--tabs=,/5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['trail8', '--tabs=1 -t/5', {IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
+   ['trail9', '--tab=1,2 -t/5',{IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
 
    # Test errors
    ['e1', '--tabs="a"', {IN=>''}, {OUT=>''}, {EXIT=>1},
@@ -148,6 +160,12 @@ my @Tests =
     {ERR => "$prog: tab size cannot be 0\n"}],
    ['e4', '--tabs=3,3', {IN=>''}, {OUT=>''}, {EXIT=>1},
     {ERR => "$prog: tab sizes must be ascending\n"}],
+   ['e5', '--tabs=/3,6,8', {IN=>''}, {OUT=>''}, {EXIT=>1},
+    {ERR => "$prog: '/' specifier only allowed with the last value\n"}],
+   ['e6', '-t/3 -t/6', {IN=>''}, {OUT=>''}, {EXIT=>1},
+    {ERR => "$prog: '/' specifier only allowed with the last value\n"}],
+   ['e7', '--tabs=3/', {IN=>''}, {OUT=>''}, {EXIT=>1},
+    {ERR => "$prog: '/' specifier not at start of number: '/'\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};

@@ -34,6 +34,9 @@ bool convert_entire_line = false;
 /* If nonzero, the size of all tab stops.  If zero, use 'tab_list' instead.  */
 static uintmax_t tab_size = 0;
 
+/* If nonzero, the size of all tab stops after the last specifed.  */
+static uintmax_t extend_size = 0;
+
 /* The maximum distance between tab stops.  */
 size_t max_column_width;
 
@@ -85,14 +88,32 @@ add_tab_stop (uintmax_t tabval)
     }
 }
 
+static bool
+set_extend_size (uintmax_t tabval)
+{
+  bool ok = true;
+
+  if (extend_size)
+    {
+      error (0, 0,
+             _("'/' specifier only allowed"
+               " with the last value"));
+      ok = false;
+    }
+  extend_size = tabval;
+
+  return ok;
+}
+
 /* Add the comma or blank separated list of tab stops STOPS
    to the list of tab stops.  */
 extern void
 parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
-  uintmax_t tabval IF_LINT ( = 0);
-  char const *num_start IF_LINT ( = NULL);
+  uintmax_t tabval = 0;
+  bool extend_tabval = false;
+  char const *num_start = NULL;
   bool ok = true;
 
   for (; *stops; stops++)
@@ -100,8 +121,30 @@ parse_tab_stops (char const *stops)
       if (*stops == ',' || isblank (to_uchar (*stops)))
         {
           if (have_tabval)
-            add_tab_stop (tabval);
+            {
+              if (extend_tabval)
+                {
+                  if (! set_extend_size (tabval))
+                    {
+                      extend_tabval = false;
+                      ok = false;
+                      break;
+                    }
+                }
+              else
+                add_tab_stop (tabval);
+            }
           have_tabval = false;
+        }
+      else if (*stops == '/')
+        {
+          if (have_tabval)
+            {
+              error (0, 0, _("'/' specifier not at start of number: %s"),
+                     quote (stops));
+              ok = false;
+            }
+          extend_tabval = true;
         }
       else if (ISDIGIT (*stops))
         {
@@ -132,11 +175,16 @@ parse_tab_stops (char const *stops)
         }
     }
 
+  if (have_tabval)
+    {
+      if (extend_tabval)
+        ok &= set_extend_size (tabval);
+      else
+        add_tab_stop (tabval);
+    }
+
   if (!ok)
     exit (EXIT_FAILURE);
-
-  if (have_tabval)
-    add_tab_stop (tabval);
 }
 
 /* Check that the list of tab stops TABS, with ENTRIES entries,
@@ -172,8 +220,8 @@ finalize_tab_stops (void)
   validate_tab_stops (tab_list, first_free_tab);
 
   if (first_free_tab == 0)
-    tab_size = max_column_width = 8;
-  else if (first_free_tab == 1)
+    tab_size = max_column_width = extend_size ? extend_size : 8;
+  else if (first_free_tab == 1 && ! extend_size)
     tab_size = tab_list[0];
   else
     tab_size = 0;
@@ -198,6 +246,10 @@ get_next_tab_column (const uintmax_t column, size_t* tab_index,
         if (column < tab)
             return tab;
     }
+
+  /* relative last tab - return multiples of it */
+  if (extend_size)
+    return column + (extend_size - column % extend_size);
 
   *last_tab = true;
   return 0;

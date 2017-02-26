@@ -6695,8 +6695,16 @@ The program accepts the following options.  Also see @ref{Common options}.
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
 (default is 8).  Otherwise, set the tabs at columns @var{tab1},
 @var{tab2}, @dots{} (numbered from 0), and replace any tabs beyond the
-last tab stop given with single spaces.  Tab stops can be separated by
-blanks as well as by commas.
+last tab stop given with single spaces.
+@macro gnuExpandTabs
+Tab stops can be separated by blanks as well as by commas.
+As a GNU extension the last @var{tab} specified can be prefixed
+with a @samp{/} to indicate a tab size to use for remaining positions.
+For example, @option{--tabs=2,4,/8} will set tab stops at position 2 and 4,
+and every multiple of 8 after that.
+@end macro
+@gnuExpandTabs
+
 
 For compatibility, GNU @command{expand} also accepts the obsolete
 option syntax, @option{-@var{t1}[,@var{t2}]@dots{}}.  New scripts
@@ -6748,8 +6756,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 If only one tab stop is given, set the tabs @var{tab1} columns apart
 instead of the default 8.  Otherwise, set the tabs at columns
 @var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave blanks
-beyond the tab stops given unchanged.  Tab stops can be separated by
-blanks as well as by commas.  This option implies the @option{-a} option.
+beyond the tab stops given unchanged.
+@gnuExpandTabs
+
+This option implies the @option{-a} option.
 
 For compatibility, GNU @command{unexpand} supports the obsolete option syntax,
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
