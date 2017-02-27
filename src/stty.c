@@ -2268,11 +2268,13 @@ sane_mode (struct termios *mode)
       if (mode_info[i].flags & SANE_SET)
         {
           bitsp = mode_type_flag (mode_info[i].type, mode);
+          assert (bitsp); /* combination modes will not have SANE_SET.  */
           *bitsp = (*bitsp & ~mode_info[i].mask) | mode_info[i].bits;
         }
       else if (mode_info[i].flags & SANE_UNSET)
         {
           bitsp = mode_type_flag (mode_info[i].type, mode);
+          assert (bitsp); /* combination modes will not have SANE_UNSET.  */
           *bitsp = *bitsp & ~mode_info[i].mask & ~mode_info[i].bits;
         }
     }
