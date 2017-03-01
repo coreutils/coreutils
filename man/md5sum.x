@@ -5,4 +5,5 @@ md5sum \- compute and check MD5 message digest
 [BUGS]
 The MD5 algorithm should not be used any more for security related purposes.
 Instead, better use an SHA\-2 algorithm, implemented in the programs
-sha224sum(1), sha256sum(1), sha384sum(1), sha512sum(1)
+sha224sum(1), sha256sum(1), sha384sum(1), sha512sum(1),
+or the BLAKE2 algorithm, implemented in b2sum(1)

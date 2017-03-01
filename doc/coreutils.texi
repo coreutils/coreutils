@@ -3818,16 +3818,19 @@ as the length is automatically determined when checking.
 @command{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
 @dfn{message-digest}) for each specified @var{file}.
 
-Note: The MD5 digest is more reliable than a simple CRC (provided by
+@macro weakHash{hash}
+Note: The \hash\ digest is more reliable than a simple CRC (provided by
 the @command{cksum} command) for detecting accidental file corruption,
-as the chances of accidentally having two files with identical MD5
+as the chances of accidentally having two files with identical \hash\
 are vanishingly small.  However, it should not be considered secure
-against malicious tampering: although finding a file with a given MD5
+against malicious tampering: although finding a file with a given \hash\
 fingerprint is considered infeasible at the moment, it is known how
 to modify certain files, including digital certificates, so that they
-appear valid when signed with an MD5 digest.  For more secure hashes,
+appear valid when signed with an \hash\ digest.  For more secure hashes,
 consider using SHA-2, or the newer @command{b2sum} command.
 @xref{sha2 utilities}. @xref{b2sum invocation}.
+@end macro
+@weakHash{MD5}
 
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
@@ -3979,12 +3982,7 @@ exit nonzero after all warnings have been issued.
 @var{file}.  The usage and options of this command are precisely the
 same as for @command{md5sum}.  @xref{md5sum invocation}.
 
-Note: The SHA-1 digest is more secure than MD5, and no collisions of
-it are known (different files having the same fingerprint).  However,
-it is known that they can be produced with considerable, but not
-unreasonable, resources.  For this reason, it is generally considered
-that SHA-1 should be gradually phased out in favor of the more secure
-SHA-2 hash algorithms.  @xref{sha2 utilities}.
+@weakHash{SHA-1}
 
 
 @node sha2 utilities
