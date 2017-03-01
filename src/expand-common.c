@@ -126,7 +126,6 @@ parse_tab_stops (char const *stops)
                 {
                   if (! set_extend_size (tabval))
                     {
-                      extend_tabval = false;
                       ok = false;
                       break;
                     }
@@ -175,7 +174,7 @@ parse_tab_stops (char const *stops)
         }
     }
 
-  if (have_tabval)
+  if (ok && have_tabval)
     {
       if (extend_tabval)
         ok &= set_extend_size (tabval);
@@ -183,7 +182,7 @@ parse_tab_stops (char const *stops)
         add_tab_stop (tabval);
     }
 
-  if (!ok)
+  if (! ok)
     exit (EXIT_FAILURE);
 }
 
