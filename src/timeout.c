@@ -324,6 +324,18 @@ parse_duration (const char* str)
 }
 
 static void
+install_sigchld (void)
+{
+  struct sigaction sa;
+  sigemptyset (&sa.sa_mask);  /* Allow concurrent calls to handler */
+  sa.sa_handler = chld;
+  sa.sa_flags = SA_RESTART;   /* Restart syscalls if possible, as that's
+                                 more likely to work cleanly.  */
+
+  sigaction (SIGCHLD, &sa, NULL);
+}
+
+static void
 install_cleanup (int sigterm)
 {
   struct sigaction sa;
@@ -457,7 +469,7 @@ main (int argc, char **argv)
   install_cleanup (term_signal);
   signal (SIGTTIN, SIG_IGN);   /* Don't stop if background child needs tty.  */
   signal (SIGTTOU, SIG_IGN);   /* Don't stop if background child needs tty.  */
-  signal (SIGCHLD, chld);      /* Interrupt sigsuspend() when child exits.   */
+  install_sigchld ();          /* Interrupt sigsuspend() when child exits.   */
 
   monitored_pid = fork ();
   if (monitored_pid == -1)
