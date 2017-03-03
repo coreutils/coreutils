@@ -20,6 +20,11 @@
 #include <stdio.h>
 #include "system.h"
 
+/* Deactivate config.h's "rpl_"-prefixed definition of malloc,
+   since we don't link gnulib here, and the replacement isn't
+   needed in this case as we don't malloc(0).  */
+#undef malloc
+
 /* Note currently for glibc (2.3.5) the following call does not change
    the buffer size, and more problematically does not give any indication
    that the new size request was ignored:
