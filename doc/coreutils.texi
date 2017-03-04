@@ -6565,7 +6565,7 @@ Charlie  34    NA
 @end example
 
 
-To sort a file with a header line, use @sc{GNU} @command{sed -u}.
+To sort a file with a header line, use GNU @command{sed -u}.
 The following example sort the files but keeps the first line of each
 file in place:
 
