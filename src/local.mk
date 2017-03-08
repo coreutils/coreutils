@@ -644,7 +644,7 @@ check-README:
 # entry, because if that were to happen, it *would* be installed
 # by default.
 .PHONY: check-duplicate-no-install
-check-duplicate-no-install: src/tr
+check-duplicate-no-install:
 	$(AM_V_GEN)test -z "`echo '$(EXTRA_PROGRAMS)' | tr ' ' '\n' | uniq -d`"
 
 # Use the just-built 'ginstall', when not cross-compiling.
