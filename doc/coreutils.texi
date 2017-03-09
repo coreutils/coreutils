@@ -6315,7 +6315,7 @@ $ LC_ALL=C join file1.sorted file2.sorted > file3
 @subsection Working with fields
 
 Use @option{-1},@option{-2} to set the key fields for each of the input files.
-Ensure the preceeding @command{sort} commands operated on the same fields.
+Ensure the preceding @command{sort} commands operated on the same fields.
 
 @noindent
 The following example joins two files, using the values from seventh field
