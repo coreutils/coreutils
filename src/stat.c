@@ -428,6 +428,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "qnx6";
     case S_MAGIC_RAMFS: /* 0x858458F6 local */
       return "ramfs";
+    case S_MAGIC_RDTGROUP: /* 0x07655821 local */
+      return "rdt";
     case S_MAGIC_REISERFS: /* 0x52654973 local */
       return "reiserfs";
     case S_MAGIC_ROMFS: /* 0x7275 local */

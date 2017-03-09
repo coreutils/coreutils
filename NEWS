@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   158909489063877810457 and 222087527029934481871.
   [bug introduced in coreutils-8.20]
 
+  stat and tail now know about the "rdt" file system, which is an interface
+  to Resource Director Technology.  stat -f --format=%T now reports the
+  file system type, and tail -f uses inotify.
+
   tail no longer prints redundant file headers with interleaved inotify events,
   which could be triggered especially when tail was suspended and resumed.
   [bug introduced with inotify support added in coreutils-7.5]
