@@ -52,10 +52,11 @@ date: output timezone: +09:00 (set from TZ="Asia/Tokyo" environment value)
 date: final: 661095000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 1990-12-13 13:30:00 (UTC0)
 date: final: (Y-M-D) 1990-12-13 22:30:00 (output timezone TZ=+09:00)
-Thu Dec 13 07:30:00 CST 1990
+Thu Dec 13 07:30:00 -0600 1990
 EOF
 
-TZ=America/Belize date --debug -d "$in1" >out1 2>&1 || fail=1
+TZ=America/Belize date --debug -d "$in1" +'%a %b %e %T %z %Y' >out1 2>&1 ||
+  fail=1
 
 compare exp1 out1 || fail=1
 
@@ -94,10 +95,10 @@ date: output timezone: -05:00 (set from TZ="America/Lima" environment value)
 date: final: 1.000000000 (epoch-seconds)
 date: final: (Y-M-D) 1970-01-01 00:00:01 (UTC0)
 date: final: (Y-M-D) 1969-12-31 19:00:01 (output timezone TZ=-05:00)
-Wed Dec 31 19:00:01 PET 1969
+Wed Dec 31 19:00:01 -0500 1969
 EOF
 
-TZ=America/Lima date --debug -d "$in3" >out3 2>&1 || fail=1
+TZ=America/Lima date --debug -d "$in3" +'%a %b %e %T %z %Y' >out3 2>&1 || fail=1
 compare exp3 out3 || fail=1
 
 ##
