@@ -324,13 +324,13 @@ if test "$LOCALE_FR_UTF8" != "none"; then
   echo '   1²---++3   1,234  Mi' |
     LC_ALL=C sort --debug -k2g -k1b,1
   echo '   1²---++3   1,234  Mi' |
-    LC_COLLATE=$f LC_CTYPE=$f LC_NUMERIC=$f LC_MESSAGES=C \
-        sort --debug -k2g -k1b,1
+    LC_ALL=$f sort --debug -k2g -k1b,1
   echo '+1234 1234Gi 1,234M' |
-    LC_COLLATE=$f LC_CTYPE=$f LC_NUMERIC=$f LC_MESSAGES=C \
-      sort --debug -k1,1n -k1,1g \
-        -k1,1h -k2,2n -k2,2g -k2,2h -k3,3n -k3,3g -k3,3h
-  ) > out
+    LC_ALL=$f sort --debug \
+        -k1,1n -k1,1g -k1,1h \
+        -k2,2n -k2,2g -k2,2h \
+        -k3,3n -k3,3g -k3,3h
+  ) | sed 's/^^ .*/^ no match for key/' > out
   compare exp out || fail=1
 fi
 
