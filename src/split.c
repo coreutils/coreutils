@@ -623,6 +623,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
 {
   size_t n_read;
   bool new_file_flag = true;
+  bool filter_ok = true;
   uintmax_t to_write = n_bytes;
   uintmax_t opened = 0;
   bool eof;
@@ -637,42 +638,48 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
         }
       else
         {
+          if (! filter_ok
+              && lseek (STDIN_FILENO, to_write, SEEK_CUR) != -1)
+            {
+              to_write = n_bytes;
+              new_file_flag = true;
+            }
+
           n_read = safe_read (STDIN_FILENO, buf, bufsize);
           if (n_read == SAFE_READ_ERROR)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
           eof = n_read == 0;
         }
       char *bp_out = buf;
-      size_t to_read = n_read;
-      while (to_write <= to_read)
+      while (to_write <= n_read)
         {
-          size_t w = to_write;
-          bool cwrite_ok = cwrite (new_file_flag, bp_out, w);
+          if (filter_ok || new_file_flag)
+            filter_ok = cwrite (new_file_flag, bp_out, to_write);
           opened += new_file_flag;
           new_file_flag = !max_files || (opened < max_files);
-          if (!new_file_flag && !cwrite_ok)
+          if (! filter_ok && ! new_file_flag)
             {
-              /* If filter no longer accepting input, stop reading.  */
-              n_read = to_read = 0;
+              /* If filters no longer accepting input, stop reading.  */
+              n_read = 0;
               eof = true;
               break;
             }
-          bp_out += w;
-          to_read -= w;
+          bp_out += to_write;
+          n_read -= to_write;
           to_write = n_bytes;
         }
-      if (to_read != 0)
+      if (n_read != 0)
         {
-          bool cwrite_ok = cwrite (new_file_flag, bp_out, to_read);
+          if (filter_ok || new_file_flag)
+            filter_ok = cwrite (new_file_flag, bp_out, n_read);
           opened += new_file_flag;
-          to_write -= to_read;
           new_file_flag = false;
-          if (!cwrite_ok && opened == max_files)
+          if (! filter_ok && opened == max_files)
             {
-              /* If filter no longer accepting input, stop reading.  */
-              n_read = 0;
+              /* If filters no longer accepting input, stop reading.  */
               break;
             }
+          to_write -= n_read;
         }
     }
   while (! eof);
