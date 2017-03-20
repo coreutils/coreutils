@@ -654,6 +654,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
             {
               /* If filter no longer accepting input, stop reading.  */
               n_read = to_read = 0;
+              eof = true;
               break;
             }
           bp_out += w;
@@ -666,7 +667,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
           opened += new_file_flag;
           to_write -= to_read;
           new_file_flag = false;
-          if (!cwrite_ok)
+          if (!cwrite_ok && opened == max_files)
             {
               /* If filter no longer accepting input, stop reading.  */
               n_read = 0;

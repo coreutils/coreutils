@@ -62,4 +62,10 @@ if truncate -s$N zero.in; then
   timeout 10 sh -c 'split --filter="head -c1 >/dev/null" -n 1 zero.in' || fail=1
 fi
 
+# Ensure that "endless" input _is_ processed for unbounded number of filters
+for buf in 1000 1000000; do
+  returns_ 124 timeout .5 sh -c \
+    "yes | split --filter='head -c1 >/dev/null' -b $buf" || fail=1
+done
+
 Exit $fail
