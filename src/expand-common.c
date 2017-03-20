@@ -16,6 +16,7 @@
 
 #include <config.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
@@ -282,6 +283,7 @@ next_file (FILE *fp)
 
   if (fp)
     {
+      assert (prev_file);
       if (ferror (fp))
         {
           error (0, errno, "%s", quotef (prev_file));
