@@ -3243,6 +3243,12 @@ suffixes beyond @samp{99}.  Note if option @option{--number} is specified and
 the number of files is less than @var{from}, a single run is assumed and the
 minimum suffix length required is automatically determined.
 
+@item -x
+@itemx --hex-suffixes[=@var{from}]
+@opindex -x
+@opindex --hex-suffixes
+Like @option{--numeric-suffixes}, but use hexadecimal numbers (in lower case).
+
 @item --additional-suffix=@var{suffix}
 @opindex --additional-suffix
 Append an additional @var{suffix} to output file names.  @var{suffix}

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Show that split --numeric-suffixes[=from] works.
+# Test --{hex,numeric}-suffixes[=from]
 
 # Copyright (C) 2012-2017 Free Software Foundation, Inc.
 
@@ -19,47 +19,33 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
 
-# Check default start from 0
 printf '1\n2\n3\n4\n5\n' > in || framework_failure_
-split --numeric-suffixes --lines=2 in || fail=1
-cat <<\EOF > exp-1
-1
-2
-EOF
-cat <<\EOF > exp-2
-3
-4
-EOF
-cat <<\EOF > exp-3
-5
-EOF
-compare exp-1 x00 || fail=1
-compare exp-2 x01 || fail=1
-compare exp-3 x02 || fail=1
 
-# Check --numeric-suffixes=X
-split --numeric-suffixes=1 --lines=2 in || fail=1
-cat <<\EOF > exp-1
-1
-2
-EOF
-cat <<\EOF > exp-2
-3
-4
-EOF
-cat <<\EOF > exp-3
-5
-EOF
-compare exp-1 x01 || fail=1
-compare exp-2 x02 || fail=1
-compare exp-3 x03 || fail=1
+printf '%s\n' 1 2 > exp-0 || framework_failure_
+printf '%s\n' 3 4 > exp-1 || framework_failure_
+printf '%s\n' 5   > exp-2 || framework_failure_
 
-# Check that split failed when suffix length is not large enough for
-# the numerical suffix start value
-returns_ 1 split -a 3 --numeric-suffixes=1000 in 2>/dev/null || fail=1
+for mode in 'numeric' 'hex'; do
 
-# check invalid --numeric-suffixes start values are flagged
-returns_ 1 split --numeric-suffixes=-1 in 2> /dev/null || fail=1
-returns_ 1 split --numeric-suffixes=one in 2> /dev/null || fail=1
+  for start in 0 9; do
+    mode_option="--$mode-suffixes"
+    # check with and without specified start value
+    test $start != '0' && mode_option="$mode_option=$start"
+    split $mode_option --lines=2 in || fail=1
+
+    test $mode = 'hex' && format=x || format=d
+    for i in $(seq $start $(($start+2))); do
+      compare exp-$(($i-$start)) x$(printf %02$format $i) || fail=1
+    done
+  done
+
+  # Check that split failed when suffix length is not large enough for
+  # the numerical suffix start value
+  returns_ 1 split -a 3 --$mode-suffixes=1000 in 2>/dev/null || fail=1
+
+  # check invalid --$mode-suffixes start values are flagged
+  returns_ 1 split --$mode-suffixes=-1 in 2> /dev/null || fail=1
+  returns_ 1 split --$mode-suffixes=one in 2> /dev/null || fail=1
+done
 
 Exit $fail

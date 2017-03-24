@@ -141,6 +141,7 @@ static struct option const longopts[] =
   {"additional-suffix", required_argument, NULL,
    ADDITIONAL_SUFFIX_OPTION},
   {"numeric-suffixes", optional_argument, NULL, 'd'},
+  {"hex-suffixes", optional_argument, NULL, 'x'},
   {"filter", required_argument, NULL, FILTER_OPTION},
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
   {"separator", required_argument, NULL, 't'},
@@ -242,6 +243,8 @@ default size is 1000 lines, and default PREFIX is 'x'.\n\
   -d                      use numeric suffixes starting at 0, not alphabetic\n\
       --numeric-suffixes[=FROM]  same as -d, but allow setting the start value\
 \n\
+  -x                      use hex suffixes starting at 0, not alphabetic\n\
+      --hex-suffixes[=FROM]  same as -x, but allow setting the start value\n\
   -e, --elide-empty-files  do not generate empty output files with '-n'\n\
       --filter=COMMAND    write to shell COMMAND; file name is $FILE\n\
   -l, --lines=NUMBER      put NUMBER lines/records per output file\n\
@@ -1322,7 +1325,7 @@ main (int argc, char **argv)
       int this_optind = optind ? optind : 1;
       char *slash;
 
-      c = getopt_long (argc, argv, "0123456789C:a:b:del:n:t:u",
+      c = getopt_long (argc, argv, "0123456789C:a:b:del:n:t:ux",
                        longopts, NULL);
       if (c == -1)
         break;
@@ -1461,13 +1464,19 @@ main (int argc, char **argv)
           break;
 
         case 'd':
-          suffix_alphabet = "0123456789";
+        case 'x':
+          if (c == 'd')
+            suffix_alphabet = "0123456789";
+          else
+            suffix_alphabet = "0123456789abcdef";
           if (optarg)
             {
               if (strlen (optarg) != strspn (optarg, suffix_alphabet))
                 {
                   error (0, 0,
-                         _("%s: invalid start value for numerical suffix"),
+                         (c == 'd') ?
+                           _("%s: invalid start value for numerical suffix") :
+                           _("%s: invalid start value for hexadecimal suffix"),
                          quote (optarg));
                   usage (EXIT_FAILURE);
                 }
