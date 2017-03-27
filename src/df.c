@@ -674,9 +674,11 @@ filter_mount_list (bool devices_only)
          On Linux we probably have me_dev populated from /proc/self/mountinfo,
          however we still stat() in case another device was mounted later.  */
       if ((me->me_remote && show_local_fs)
+          || (!selected_fstype (me->me_type) || excluded_fstype (me->me_type))
           || -1 == stat (me->me_mountdir, &buf))
         {
-          /* If remote, and showing just local, add ME for filtering later.
+          /* If remote, and showing just local, or FS type is excluded,
+             add ME for filtering later.
              If stat failed; add ME to be able to complain about it later.  */
           buf.st_dev = me->me_dev;
         }
