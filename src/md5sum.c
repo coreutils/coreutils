@@ -346,6 +346,21 @@ filename_unescape (char *s, size_t s_len)
   return s;
 }
 
+/* Return true if S is a NUL-terminated string of DIGEST_HEX_BYTES hex digits.
+   Otherwise, return false.  */
+static bool _GL_ATTRIBUTE_PURE
+hex_digits (unsigned char const *s)
+{
+  unsigned int i;
+  for (i = 0; i < digest_hex_bytes; i++)
+    {
+      if (!isxdigit (*s))
+        return false;
+      ++s;
+    }
+  return *s == '\0';
+}
+
 /* Split the checksum string S (of length S_LEN) from a BSD 'md5' or
    'sha1' command into two parts: a hexadecimal digest, and the file
    name.  S is modified.  Return true if successful.  */
@@ -386,7 +401,8 @@ bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest,
     i++;
 
   *hex_digest = (unsigned char *) &s[i];
-  return true;
+
+  return hex_digits (*hex_digest);
 }
 
 /* Split the string S (of length S_LEN) into three parts:
@@ -492,6 +508,9 @@ split_3 (char *s, size_t s_len,
 
   s[i++] = '\0';
 
+  if (! hex_digits (*hex_digest))
+    return false;
+
   /* If "bsd reversed" format detected.  */
   if ((s_len - i == 1) || (s[i] != ' ' && s[i] != '*'))
     {
@@ -519,21 +538,6 @@ split_3 (char *s, size_t s_len,
     return filename_unescape (&s[i], s_len - i) != NULL;
 
   return true;
-}
-
-/* Return true if S is a NUL-terminated string of DIGEST_HEX_BYTES hex digits.
-   Otherwise, return false.  */
-static bool _GL_ATTRIBUTE_PURE
-hex_digits (unsigned char const *s)
-{
-  unsigned int i;
-  for (i = 0; i < digest_hex_bytes; i++)
-    {
-      if (!isxdigit (*s))
-        return false;
-      ++s;
-    }
-  return *s == '\0';
 }
 
 /* If ESCAPE is true, then translate each NEWLINE byte to the string, "\\n",
@@ -702,8 +706,7 @@ digest_check (const char *checkfile_name)
         line[--line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)
-             && ! (is_stdin && STREQ (filename, "-"))
-             && hex_digits (hex_digest)))
+             && ! (is_stdin && STREQ (filename, "-"))))
         {
           ++n_misformatted_lines;
 

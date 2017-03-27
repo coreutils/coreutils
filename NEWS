@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   split no longer exits when invocations of a --filter return EPIPE.
   [bug introduced in coreutils-8.26]
 
+  md5sum --check no longer incorrectly enables BSD reversed format mode when
+  ignoring some non checksum lines.  This also affects sha*sum and b2sum.
+  [bug introduced in coreutils-8.14]
+
 
 * Noteworthy changes in release 8.27 (2017-03-08) [stable]
 

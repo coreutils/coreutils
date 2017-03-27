@@ -36,6 +36,13 @@ sed 's/  / /' check.md5sum > check.md5
 md5sum --strict -c check.md5sum || fail=1
 md5sum --strict -c check.md5 || fail=1
 
+# Ensure we don't trigger BSD reversed format with GPG headers etc.
+{ echo '____not_all_hex_so_no_match_____ blah';
+  cat check.md5sum; } > check2.md5sum || framework_failure_
+md5sum -c check2.md5sum 2>check2.err || fail=1
+echo 'md5sum: WARNING: 1 line is improperly formatted' >check2.exp
+compare check2.exp check2.err || fail=1
+
 # If we skip the first entry in the BSD format checksums
 # then it'll be detected as standard format and error.
 # This unlikely caveat was thought better than mandating
