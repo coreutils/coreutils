@@ -7056,10 +7056,18 @@ If only one tab stop is given, set the tabs @var{tab1} spaces apart
 last tab stop given with single spaces.
 @macro gnuExpandTabs
 Tab stops can be separated by blanks as well as by commas.
+
 As a GNU extension the last @var{tab} specified can be prefixed
 with a @samp{/} to indicate a tab size to use for remaining positions.
 For example, @option{--tabs=2,4,/8} will set tab stops at position 2 and 4,
 and every multiple of 8 after that.
+
+Also the last @var{tab} specified can be prefixed with a @samp{+} to indicate
+a tab size to use for remaining positions, offset from the final explicitly
+specified tab stop.
+For example, to ignore the 1 character gutter present in diff output,
+one can specify a 1 character offset using @option{--tabs=1,+8},
+which will set tab stops at positions 1,9,17,@dots{}
 @end macro
 @gnuExpandTabs
 

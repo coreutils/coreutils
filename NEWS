@@ -17,6 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  expand and unexpand now support specifying an offset for tab stops
+  by prefixing the last specified number like --tabs=1,+8 which is
+  useful for visualizing diff output for example.
+
   split supports a new --hex-suffixes[=from] option to create files with
   lower case hexadecimal suffixes, similar to the --numeric-suffixes option.
 

@@ -146,10 +146,26 @@ my @Tests =
    ['trail3', '--tabs=1,2,/5', {IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
    ['trail4', '--tabs=/5',     {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
    ['trail5', '--tabs=//5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['trail5a','--tabs=+/5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
    ['trail6', '--tabs=/,/5',   {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
    ['trail7', '--tabs=,/5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
    ['trail8', '--tabs=1 -t/5', {IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
    ['trail9', '--tab=1,2 -t/5',{IN=>"\ta\tb\tc"}, {OUT=>" a   b    c"}],
+
+   # Test incremental trailing '+' feature which specifies that
+   # tab stops should continue every increment
+   ['incre0', '--tab=1,+5',    {IN=>"+\t\ta\tb"}, {OUT=>"+          a    b"}],
+   ['incre1', '--tabs=1,+5',   {IN=>"\ta\tb\tc"}, {OUT=>" a    b    c"}],
+   ['incre2', '--tabs=2,+5',   {IN=>"\ta\tb\tc"}, {OUT=>"  a    b    c"}],
+   ['incre3', '--tabs=1,2,+5', {IN=>"\ta\tb\tc"}, {OUT=>" a     b    c"}],
+   ['incre4', '--tabs=+5',     {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['incre5', '--tabs=++5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['incre5a','--tabs=/+5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['incre6', '--tabs=+,+5',   {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['incre7', '--tabs=,+5',    {IN=>"\ta\tb"},    {OUT=>"     a    b"}],
+   ['incre8', '--tabs=1 -t+5', {IN=>"\ta\tb\tc"}, {OUT=>" a    b    c"}],
+   ['incre9', '--tab=1,2 -t+5',{IN=>"\ta\tb\tc"}, {OUT=>" a     b    c"}],
+
 
    # Test errors
    ['e1', '--tabs="a"', {IN=>''}, {OUT=>''}, {EXIT=>1},

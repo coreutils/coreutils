@@ -38,6 +38,9 @@ static uintmax_t tab_size = 0;
 /* If nonzero, the size of all tab stops after the last specifed.  */
 static uintmax_t extend_size = 0;
 
+/* If nonzero, an increment for additional tab stops after the last specified.*/
+static uintmax_t increment_size = 0;
+
 /* The maximum distance between tab stops.  */
 size_t max_column_width;
 
@@ -106,6 +109,23 @@ set_extend_size (uintmax_t tabval)
   return ok;
 }
 
+static bool
+set_increment_size (uintmax_t tabval)
+{
+  bool ok = true;
+
+  if (increment_size)
+    {
+      error (0,0,
+             _("'+' specifier only allowed"
+               " with the last value"));
+      ok = false;
+    }
+  increment_size = tabval;
+
+  return ok;
+}
+
 /* Add the comma or blank separated list of tab stops STOPS
    to the list of tab stops.  */
 extern void
@@ -114,6 +134,7 @@ parse_tab_stops (char const *stops)
   bool have_tabval = false;
   uintmax_t tabval = 0;
   bool extend_tabval = false;
+  bool increment_tabval = false;
   char const *num_start = NULL;
   bool ok = true;
 
@@ -126,6 +147,14 @@ parse_tab_stops (char const *stops)
               if (extend_tabval)
                 {
                   if (! set_extend_size (tabval))
+                    {
+                      ok = false;
+                      break;
+                    }
+                }
+              else if (increment_tabval)
+                {
+                  if (! set_increment_size (tabval))
                     {
                       ok = false;
                       break;
@@ -145,6 +174,18 @@ parse_tab_stops (char const *stops)
               ok = false;
             }
           extend_tabval = true;
+          increment_tabval = false;
+        }
+      else if (*stops == '+')
+        {
+          if (have_tabval)
+            {
+              error (0, 0, _("'+' specifier not at start of number: %s"),
+                     quote (stops));
+              ok = false;
+            }
+          increment_tabval = true;
+          extend_tabval = false;
         }
       else if (ISDIGIT (*stops))
         {
@@ -179,6 +220,8 @@ parse_tab_stops (char const *stops)
     {
       if (extend_tabval)
         ok &= set_extend_size (tabval);
+      else if (increment_tabval)
+        ok &= set_increment_size (tabval);
       else
         add_tab_stop (tabval);
     }
@@ -204,6 +247,9 @@ validate_tab_stops (uintmax_t const *tabs, size_t entries)
         die (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
+
+  if (increment_size && extend_size)
+    die (EXIT_FAILURE, 0, _("'/' specifier is mutually exclusive with '+'"));
 }
 
 /* Called after all command-line options have been parsed,
@@ -220,8 +266,10 @@ finalize_tab_stops (void)
   validate_tab_stops (tab_list, first_free_tab);
 
   if (first_free_tab == 0)
-    tab_size = max_column_width = extend_size ? extend_size : 8;
-  else if (first_free_tab == 1 && ! extend_size)
+    tab_size = max_column_width = extend_size
+                                  ? extend_size : increment_size
+                                                  ? increment_size : 8;
+  else if (first_free_tab == 1 && ! extend_size && ! increment_size)
     tab_size = tab_list[0];
   else
     tab_size = 0;
@@ -250,6 +298,14 @@ get_next_tab_column (const uintmax_t column, size_t* tab_index,
   /* relative last tab - return multiples of it */
   if (extend_size)
     return column + (extend_size - column % extend_size);
+
+  /* incremental last tab - add increment_size to the previous tab stop */
+  if (increment_size)
+    {
+      uintmax_t end_tab = tab_list[first_free_tab - 1];
+
+      return column + (increment_size - ((column - end_tab) % increment_size));
+    }
 
   *last_tab = true;
   return 0;
