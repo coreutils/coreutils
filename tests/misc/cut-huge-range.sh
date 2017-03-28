@@ -20,9 +20,8 @@
 print_ver_ cut
 getlimits_
 
-vm=$(get_min_ulimit_v_ cut -b1 /dev/null) \
+vm=$(get_min_ulimit_v_ returns_ 0 cut -b1 /dev/null) \
   || skip_ "this shell lacks ulimit support"
-vm=$(($vm + 1000)) # avoid spurious failures
 
 # sed script to subtract one from the input.
 # Each input line should consist of a positive decimal number.
