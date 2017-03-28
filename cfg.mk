@@ -514,6 +514,7 @@ sc_prohibit_and_fail_1:
 # that was seen to fail on FreeBSD /bin/sh at least
 sc_prohibit_env_returns:
 	@prohibit='=[^ ]* returns_ '					\
+	exclude='_ returns_ '						\
 	halt='Passing env vars to returns_ is non portable'		\
 	in_vc_files='^tests/'						\
 	  $(_sc_search_regexp)
