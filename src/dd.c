@@ -560,7 +560,8 @@ Usage: %s [OPERAND]...\n\
       fputs (_("\
 Copy a file, converting and formatting according to the operands.\n\
 \n\
-  bs=BYTES        read and write up to BYTES bytes at a time\n\
+  bs=BYTES        read and write up to BYTES bytes at a time (default: 512);\n\
+                  overrides ibs and obs\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=CONVS      convert the file as per the comma separated symbol list\n\
   count=N         copy only N input blocks\n\
