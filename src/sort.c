@@ -900,7 +900,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    fadvise() is used to specify an access pattern for input files.
    There are a few hints we could possibly provide,
    and after careful testing it was decided that
-   specifying POSIX_FADV_SEQUENTIAL was not detrimental
+   specifying FADVISE_SEQUENTIAL was not detrimental
    to any cases.  On Linux 2.6.31, this option doubles
    the size of read ahead performed and thus was seen to
    benefit these cases:
@@ -910,7 +910,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
 
    In _addition_ one could also specify other hints...
 
-   POSIX_FADV_WILLNEED was tested, but Linux 2.6.31
+   FADVISE_WILLNEED was tested, but Linux 2.6.31
    at least uses that to _synchronously_ prepopulate the cache
    with the specified range.  While sort does need to
    read all of its input before outputting, a synchronous
@@ -926,14 +926,14 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    scheduling hints with 'nice' et. al. are more appropriate
    for this situation.
 
-   POSIX_FADV_NOREUSE is a possibility as it could lower
+   FADVISE_NOREUSE is a possibility as it could lower
    the priority of input data in the cache as sort will
    only need to process it once.  However its functionality
    has changed over Linux kernel versions and as of 2.6.31
    it does nothing and thus we can't depend on what it might
    do in future.
 
-   POSIX_FADV_DONTNEED is not appropriate for user specified
+   FADVISE_DONTNEED is not appropriate for user specified
    input files, but for temp files we do want to drop the
    cache immediately after processing.  This is done implicitly
    however when the files are unlinked.  */
