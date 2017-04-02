@@ -70,3 +70,7 @@ next_file (FILE *fp);
 /* */
 extern void
 cleanup_file_list_stdin (void);
+
+
+extern void
+emit_tab_list_info (void);

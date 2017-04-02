@@ -382,3 +382,20 @@ cleanup_file_list_stdin (void)
     if (have_read_stdin && fclose (stdin) != 0)
       die (EXIT_FAILURE, errno, "-");
 }
+
+
+extern void
+emit_tab_list_info (void)
+{
+  /* suppress syntax check for emit_mandatory_arg_note() */
+  fputs (_("\
+  -t, --tabs=LIST  use comma separated list of tab positions\n\
+"), stdout);
+  fputs (_("\
+                     The last specified position can be prefixed with '/'\n\
+                     to specify a tab size to use after the last\n\
+                     explicitly specified tab stop.  Also a prefix of '+'\n\
+                     can be used to align remaining tab stops relative to\n\
+                     the last specified tab stop instead of the first column\n\
+"), stdout);
+}

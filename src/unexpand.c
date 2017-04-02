@@ -90,8 +90,8 @@ Convert blanks in each FILE to tabs, writing to standard output.\n\
   -a, --all        convert all blanks, instead of just initial blanks\n\
       --first-only  convert only leading sequences of blanks (overrides -a)\n\
   -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n\
-  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n\
 "), stdout);
+      emit_tab_list_info ();
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_ancillary_info (PROGRAM_NAME);
