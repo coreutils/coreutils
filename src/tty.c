@@ -34,7 +34,8 @@
 enum
   {
     TTY_FAILURE = 2,
-    TTY_WRITE_ERROR = 3
+    TTY_WRITE_ERROR = 3,
+    TTY_STDIN_ERROR = 4
   };
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -77,7 +78,6 @@ Print the file name of the terminal connected to standard input.\n\
 int
 main (int argc, char **argv)
 {
-  char *tty;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -109,16 +109,29 @@ main (int argc, char **argv)
     }
 
   if (optind < argc)
-    error (0, 0, _("extra operand %s"), quote (argv[optind]));
-
-  tty = ttyname (STDIN_FILENO);
-  if (!silent)
     {
-      if (tty)
-        puts (tty);
-      else
-        puts (_("not a tty"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (TTY_FAILURE);
     }
 
-  return isatty (STDIN_FILENO) ? EXIT_SUCCESS : EXIT_FAILURE;
+  errno = ENOENT;
+
+  if (silent)
+    return (isatty (STDIN_FILENO) ? EXIT_SUCCESS
+            : errno == ENOTTY ? EXIT_FAILURE
+            : TTY_STDIN_ERROR);
+
+  int status = EXIT_SUCCESS;
+  char const *tty = ttyname (STDIN_FILENO);
+
+  if (! tty)
+    {
+      if (errno != ENOTTY)
+        error (TTY_STDIN_ERROR, errno, _("standard input"));
+      tty = _("not a tty");
+      status = EXIT_FAILURE;
+    }
+
+  puts (tty);
+  return status;
 }

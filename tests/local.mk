@@ -415,6 +415,7 @@ all_tests =					\
   tests/misc/truncate-parameters.sh		\
   tests/misc/truncate-relative.sh		\
   tests/misc/tsort.pl				\
+  tests/misc/tty.sh				\
   tests/misc/unexpand.pl			\
   tests/misc/uniq.pl				\
   tests/misc/uniq-perf.sh			\
