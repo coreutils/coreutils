@@ -16,8 +16,8 @@
 
 /* Displays "not a tty" if stdin is not a terminal.
    Displays nothing if -s option is given.
-   Exit status 0 if stdin is a tty, 1 if not, 2 if usage error,
-   3 if write error.
+   Exit status 0 if stdin is a tty, 1 if not a tty, 2 if usage error,
+   3 if write error, 4 for other stdin errors.
 
    Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
@@ -33,6 +33,7 @@
 /* Exit statuses.  */
 enum
   {
+    TTY_STDIN_NOTTY = 1,
     TTY_FAILURE = 2,
     TTY_WRITE_ERROR = 3,
     TTY_STDIN_ERROR = 4
@@ -118,7 +119,7 @@ main (int argc, char **argv)
 
   if (silent)
     return (isatty (STDIN_FILENO) ? EXIT_SUCCESS
-            : errno == ENOTTY ? EXIT_FAILURE
+            : errno == ENOTTY ? TTY_STDIN_NOTTY
             : TTY_STDIN_ERROR);
 
   int status = EXIT_SUCCESS;
@@ -129,7 +130,7 @@ main (int argc, char **argv)
       if (errno != ENOTTY)
         error (TTY_STDIN_ERROR, errno, _("standard input"));
       tty = _("not a tty");
-      status = EXIT_FAILURE;
+      status = TTY_STDIN_NOTTY;
     }
 
   puts (tty);
