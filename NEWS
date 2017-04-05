@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ignoring some non checksum lines.  This also affects sha*sum and b2sum.
   [bug introduced in coreutils-8.14]
 
+  tail -F 'dir/file' now monitored even when 'dir' is replaced.
+  [bug introduced with inotify support added in coreutils-7.5]
+
 ** New features
 
   expand and unexpand now support specifying an offset for tab stops

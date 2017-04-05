@@ -1,0 +1,82 @@
+#!/bin/sh
+# Makes sure, inotify will switch to polling mode if directory
+# of the watched file was removed and recreated.
+# (...instead of getting stuck forever)
+
+# Copyright (C) 2006-2017 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ tail
+
+
+# Terminate any background tail process
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+
+cleanup_fail_ ()
+{
+  warn_ $1
+  cleanup_
+  fail=1
+}
+
+# $check_re - string to be found
+# $check_f - file to be searched
+check_tail_output_ ()
+{
+  local delay="$1"
+  grep $check_re $check_f > /dev/null ||
+    { sleep $delay ; return 1; }
+}
+
+grep_timeout_ ()
+{
+  check_re="$1"
+  check_f="$2"
+  retry_delay_ check_tail_output_ .1 5
+}
+
+# Prepare the file to be watched
+mkdir dir && echo 'inotify' > dir/file || framework_failure_
+
+#tail must print content of the file to stdout, verify
+timeout 60 tail -F dir/file &>out & pid=$!
+grep_timeout_ 'inotify' 'out' ||
+{ cleanup_fail_ 'file to be tailed does not exist'; }
+
+# Remove the directory, should get the message about the deletion
+rm -r dir || framework_failure_
+grep_timeout_ 'polling' 'out' ||
+{ cleanup_fail_ 'tail did not switch to polling mode'; }
+
+# Recreate the dir, must get a message about recreation
+mkdir dir && touch dir/file || framework_failure_
+grep_timeout_ 'appeared' 'out' ||
+{ cleanup_fail_ 'previously removed file did not appear'; }
+
+cleanup_
+
+# Expected result for the whole process
+cat <<\EOF > exp || framework_failure_
+inotify
+tail: 'dir/file' has become inaccessible: No such file or directory
+tail: directory containing watched file was removed
+tail: inotify cannot be used, reverting to polling
+tail: 'dir/file' has appeared;  following new file
+EOF
+
+compare exp out || fail=1
+
+Exit $fail

@@ -1457,7 +1457,8 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                   In that case the same watch descriptor is returned.  */
               f[i].parent_wd = inotify_add_watch (wd, dirlen ? f[i].name : ".",
                                                   (IN_CREATE | IN_DELETE
-                                                   | IN_MOVED_TO | IN_ATTRIB));
+                                                   | IN_MOVED_TO | IN_ATTRIB
+                                                   | IN_DELETE_SELF));
 
               f[i].name[dirlen] = prev;
 
@@ -1627,6 +1628,25 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       void_ev = evbuf + evbuf_off;
       ev = void_ev;
       evbuf_off += sizeof (*ev) + ev->len;
+
+      /* If a directory is deleted, IN_DELETE_SELF is emitted
+         with ev->name of length 0.
+         We need to catch it, otherwise it would wait forever,
+         as wd for directory becomes inactive. Revert to polling now.   */
+      if ((ev->mask & IN_DELETE_SELF) && ! ev->len)
+        {
+          for (i = 0; i < n_files; i++)
+            {
+              if (ev->wd == f[i].parent_wd)
+                {
+                  hash_free (wd_to_name);
+                  error (0, 0,
+                      _("directory containing watched file was removed"));
+                  errno = 0;  /* we've already diagnosed enough errno detail. */
+                  return true;
+                }
+            }
+        }
 
       if (ev->len) /* event on ev->name in watched directory.  */
         {
