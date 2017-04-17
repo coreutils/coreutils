@@ -5941,9 +5941,9 @@ By default @command{awk} uses (and discards) runs of blank characters
 to separate fields, and ignores leading and trailing blanks.
 @example
 @verbatim
-awk '{print $2}'    # print the second field
-awk '{print $NF-1}' # print the penultimate field
-awk '{print $2,$1}' # reorder the first two fields
+awk '{print $2}'      # print the second field
+awk '{print $(NF-1)}' # print the penultimate field
+awk '{print $2,$1}'   # reorder the first two fields
 @end verbatim
 @end example
 Note while @command{cut} accepts field specifications in
