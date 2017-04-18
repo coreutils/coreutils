@@ -287,7 +287,7 @@ fillpattern (int type, unsigned char *r, size_t size)
   r[0] = (bits >> 4) & 255;
   r[1] = (bits >> 8) & 255;
   r[2] = bits & 255;
-  for (i = 3; i < size / 2; i *= 2)
+  for (i = 3; i <= size / 2; i *= 2)
     memcpy (r + i, r, i);
   if (i < size)
     memcpy (r + i, r, size - i);

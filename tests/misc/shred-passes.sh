@@ -79,5 +79,13 @@ shred: f: removed" > exp || framework_failure_
 shred -v -u -n20 -s4096 --random-source=Us f 2>out || fail=1
 compare exp out || fail=1
 
+# Trigger an issue in shred before v8.27 where single
+# bytes in the pattern space were not initialized correctly
+# for particular sizes, like 7,13,...
+# This failed under both valgrind and ASAN.
+for size in 1 2 6 7 8; do
+  touch shred.pattern.umr.size
+  shred -n4 -s$size shred.pattern.umr.size || fail=1
+done
 
 Exit $fail
