@@ -170,12 +170,8 @@ enum Algorithm
 {
   BLAKE2b
 };
-static enum Algorithm const algorithm[] =
-{
-  BLAKE2b
-};
-ARGMATCH_VERIFY (algorithm_in_string, algorithm);
-ARGMATCH_VERIFY (algorithm_out_string, algorithm);
+verify (ARRAY_CARDINALITY (algorithm_in_string) == 2);
+verify (ARRAY_CARDINALITY (algorithm_out_string) == 2);
 
 static enum Algorithm b2_algorithm;
 static uintmax_t b2_length;

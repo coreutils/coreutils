@@ -106,13 +106,6 @@ static inline randint shift_left (randint x)
   return HUGE_BYTES ? 0 : x << CHAR_BIT;
 }
 
-/* Return X shifted right by CHAR_BIT bits.  */
-static inline randint
-shift_right (randint x)
-{
-  return HUGE_BYTES ? 0 : x >> CHAR_BIT;
-}
-
 
 /* Consume random data from *S to generate a random number in the range
    0 .. GENMAX.  */
@@ -148,9 +141,9 @@ randint_genmax (struct randint_source *s, randint genmax)
           /* Increase RANDMAX by appending random bytes to RANDNUM and
              UCHAR_MAX to RANDMAX until RANDMAX is no less than
              GENMAX.  This may lose up to CHAR_BIT bits of information
-             if shift_right (RANDINT_MAX) < GENMAX, but it is not
-             worth the programming hassle of saving these bits since
-             GENMAX is rarely that large in practice.  */
+             if (HUGE_BYTES ? 0 : RANDINT_MAX >> CHAR_BIT) < GENMAX,
+             but it is not worth the programming hassle of saving
+             these bits since GENMAX is rarely that large in practice.  */
 
           i = 0;
 

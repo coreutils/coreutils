@@ -48,13 +48,6 @@
   __attribute__ ((__no_sanitize_undefined__))
 #endif
 
-/* The minimum of two sizes A and B.  */
-static inline size_t
-min (size_t a, size_t b)
-{
-  return (a < b ? a : b);
-}
-
 /* A if 32-bit ISAAC, B if 64-bit.  This is a macro, not an inline
    function, to prevent undefined behavior if the unused argument
    shifts by more than a word width.  */
