@@ -37,21 +37,21 @@ date: parsed day part: Sun (day ordinal=0 number=0)
 date: parsed date part: (Y-M-D) 0090-12-11
 date: parsed relative part: +3 day(s)
 date: parsed relative part: +3 day(s) -90 minutes
-date: input timezone: +09:00 (set from TZ="Asia/Tokyo" in date string)
+date: input timezone: TZ="Asia/Tokyo" in date string
 date: warning: adjusting year value 90 to 1990
 date: warning: using midnight as starting time: 00:00:00
 date: warning: day (Sun) ignored when explicit dates are given
-date: starting date/time: '(Y-M-D) 1990-12-11 00:00:00 TZ=+09:00'
-date: warning: when adding relative days, it is recommended to specify 12:00pm
+date: starting date/time: '(Y-M-D) 1990-12-11 00:00:00'
+date: warning: when adding relative days, it is recommended to specify noon
 date: after date adjustment (+0 years, +0 months, +3 days),
-date:     new date/time = '(Y-M-D) 1990-12-14 00:00:00 TZ=+09:00'
-date: '(Y-M-D) 1990-12-14 00:00:00 TZ=+09:00' = 661100400 epoch-seconds
+date:     new date/time = '(Y-M-D) 1990-12-14 00:00:00'
+date: '(Y-M-D) 1990-12-14 00:00:00' = 661100400 epoch-seconds
 date: after time adjustment (+0 hours, -90 minutes, +0 seconds, +0 ns),
 date:     new time = 661095000 epoch-seconds
-date: output timezone: +09:00 (set from TZ="Asia/Tokyo" environment value)
+date: timezone: TZ="Asia/Tokyo" environment value
 date: final: 661095000.000000000 (epoch-seconds)
-date: final: (Y-M-D) 1990-12-13 13:30:00 (UTC0)
-date: final: (Y-M-D) 1990-12-13 22:30:00 (output timezone TZ=+09:00)
+date: final: (Y-M-D) 1990-12-13 13:30:00 (UTC)
+date: final: (Y-M-D) 1990-12-13 22:30:00 (UTC+09)
 Thu Dec 13 07:30:00 -0600 1990
 EOF
 
@@ -67,11 +67,11 @@ in2='TZ="America/Edmonton" 2006-04-02 02:30:00'
 cat<<EOF>exp2
 date: parsed date part: (Y-M-D) 2006-04-02
 date: parsed time part: 02:30:00
-date: input timezone: -07:00 (set from TZ="America/Edmonton" in date string)
+date: input timezone: TZ="America/Edmonton" in date string
 date: using specified time as starting value: '02:30:00'
 date: error: invalid date/time value:
-date:     user provided time: '(Y-M-D) 2006-04-02 02:30:00 TZ=-07:00'
-date:        normalized time: '(Y-M-D) 2006-04-02 03:30:00 TZ=-07:00'
+date:     user provided time: '(Y-M-D) 2006-04-02 02:30:00'
+date:        normalized time: '(Y-M-D) 2006-04-02 03:30:00'
 date:                                             --
 date:      possible reasons:
 date:        non-existing due to daylight-saving time;
@@ -90,11 +90,11 @@ compare exp2 out2 || fail=1
 in3='@1'
 cat<<EOF>exp3
 date: parsed number of seconds part: number of seconds: 1
-date: input timezone: +00:00 (set from '@timespec' - always UTC0)
-date: output timezone: -05:00 (set from TZ="America/Lima" environment value)
+date: input timezone: '@timespec' - always UTC
+date: timezone: TZ="America/Lima" environment value
 date: final: 1.000000000 (epoch-seconds)
-date: final: (Y-M-D) 1970-01-01 00:00:01 (UTC0)
-date: final: (Y-M-D) 1969-12-31 19:00:01 (output timezone TZ=-05:00)
+date: final: (Y-M-D) 1970-01-01 00:00:01 (UTC)
+date: final: (Y-M-D) 1969-12-31 19:00:01 (UTC-05)
 Wed Dec 31 19:00:01 -0500 1969
 EOF
 
@@ -107,14 +107,14 @@ compare exp3 out3 || fail=1
 ## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=f2d4b5caa
 cat<<EOF>exp4
 date: parsed number part: (Y-M-D) 2013-01-01
-date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: input timezone: TZ="UTC0" environment value or -u
 date: warning: using midnight as starting time: 00:00:00
-date: starting date/time: '(Y-M-D) 2013-01-01 00:00:00 TZ=+00:00'
-date: '(Y-M-D) 2013-01-01 00:00:00 TZ=+00:00' = 1356998400 epoch-seconds
-date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: starting date/time: '(Y-M-D) 2013-01-01 00:00:00'
+date: '(Y-M-D) 2013-01-01 00:00:00' = 1356998400 epoch-seconds
+date: timezone: Universal Time
 date: final: 1356998400.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC0)
-date: final: (Y-M-D) 2013-01-01 00:00:00 (output timezone TZ=+00:00)
+date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC)
+date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC+00)
 Tue Jan  1 00:00:00 UTC 2013
 EOF
 
@@ -130,18 +130,18 @@ cat<<EOF>exp5
 date: parsed date part: (Y-M-D) 2013-10-30
 date: parsed time part: 00:00:00
 date: parsed relative part: -8 day(s)
-date: parsed zone part: TZ=+00:00
-date: input timezone: +00:00 (set from parsed date/time string)
+date: parsed zone part: UTC+00
+date: input timezone: parsed date/time string (+00)
 date: using specified time as starting value: '00:00:00'
-date: starting date/time: '(Y-M-D) 2013-10-30 00:00:00 TZ=+00:00'
-date: warning: when adding relative days, it is recommended to specify 12:00pm
+date: starting date/time: '(Y-M-D) 2013-10-30 00:00:00 TZ=+00'
+date: warning: when adding relative days, it is recommended to specify noon
 date: after date adjustment (+0 years, +0 months, -8 days),
-date:     new date/time = '(Y-M-D) 2013-10-22 00:00:00 TZ=+00:00'
-date: '(Y-M-D) 2013-10-22 00:00:00 TZ=+00:00' = 1382400000 epoch-seconds
-date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date:     new date/time = '(Y-M-D) 2013-10-22 00:00:00 TZ=+00'
+date: '(Y-M-D) 2013-10-22 00:00:00 TZ=+00' = 1382400000 epoch-seconds
+date: timezone: Universal Time
 date: final: 1382400000.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC0)
-date: final: (Y-M-D) 2013-10-22 00:00:00 (output timezone TZ=+00:00)
+date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC)
+date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC+00)
 2013-10-22
 EOF
 
@@ -157,20 +157,20 @@ TOOLONG='it is recommended to specify the 15th of the months'
 cat<<EOF>exp6
 date: parsed date part: (Y-M-D) 2016-10-31
 date: parsed relative part: -1 month(s)
-date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: input timezone: TZ="UTC0" environment value or -u
 date: warning: using midnight as starting time: 00:00:00
-date: starting date/time: '(Y-M-D) 2016-10-31 00:00:00 TZ=+00:00'
+date: starting date/time: '(Y-M-D) 2016-10-31 00:00:00'
 date: warning: when adding relative months/years, $TOOLONG
 date: after date adjustment (+0 years, -1 months, +0 days),
-date:     new date/time = '(Y-M-D) 2016-10-01 00:00:00 TZ=+00:00'
+date:     new date/time = '(Y-M-D) 2016-10-01 00:00:00'
 date: warning: month/year adjustment resulted in shifted dates:
 date:      adjusted Y M D: 2016 09 31
 date:    normalized Y M D: 2016 10 01
-date: '(Y-M-D) 2016-10-01 00:00:00 TZ=+00:00' = 1475280000 epoch-seconds
-date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: '(Y-M-D) 2016-10-01 00:00:00' = 1475280000 epoch-seconds
+date: timezone: Universal Time
 date: final: 1475280000.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC0)
-date: final: (Y-M-D) 2016-10-01 00:00:00 (output timezone TZ=+00:00)
+date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC)
+date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC+00)
 Sat Oct  1 00:00:00 UTC 2016
 EOF
 
@@ -182,27 +182,26 @@ compare exp6 out6 || fail=1
 ## Explicitly warn about crossing DST boundaries.
 ## added in gnulib v0.1-1102-g30a55dd
 ## http://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=30a55dd72dad2
-TOOLONG1='(set from TZ="America/New_York" environment value, dst)'
 TOOLONG2='it is recommended to specify the 15th of the months'
 cat<<EOF>exp7
 date: parsed date part: (Y-M-D) 2016-06-01
-date: parsed local_zone part: DST changed: is-dst=1
+date: parsed local_zone part: isdst=1
 date: parsed relative part: +6 month(s)
-date: input timezone: -04:00 $TOOLONG1
+date: input timezone: TZ="America/New_York" environment value, dst
 date: warning: using midnight as starting time: 00:00:00
-date: starting date/time: '(Y-M-D) 2016-06-01 00:00:00 TZ=-04:00'
+date: starting date/time: '(Y-M-D) 2016-06-01 00:00:00'
 date: warning: when adding relative months/years, $TOOLONG2
 date: after date adjustment (+0 years, +6 months, +0 days),
-date:     new date/time = '(Y-M-D) 2016-11-30 23:00:00 TZ=-04:00'
+date:     new date/time = '(Y-M-D) 2016-11-30 23:00:00'
 date: warning: daylight saving time changed after date adjustment
 date: warning: month/year adjustment resulted in shifted dates:
 date:      adjusted Y M D: 2016 12 01
 date:    normalized Y M D: 2016 11 30
-date: '(Y-M-D) 2016-11-30 23:00:00 TZ=-04:00' = 1480564800 epoch-seconds
-date: output timezone: -05:00 (set from TZ="America/New_York" environment value)
+date: '(Y-M-D) 2016-11-30 23:00:00' = 1480564800 epoch-seconds
+date: timezone: TZ="America/New_York" environment value
 date: final: 1480564800.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2016-12-01 04:00:00 (UTC0)
-date: final: (Y-M-D) 2016-11-30 23:00:00 (output timezone TZ=-05:00)
+date: final: (Y-M-D) 2016-12-01 04:00:00 (UTC)
+date: final: (Y-M-D) 2016-11-30 23:00:00 (UTC-05)
 2016-11-30
 EOF
 
@@ -217,33 +216,32 @@ compare exp7 out7 || fail=1
 
 cat<<EOF>exp8_1
 date: parsed date part: (Y-M-D) 2011-12-11
-date: parsed local_zone part: DST unchanged
-date: input timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: parsed local_zone part: isdst=0
+date: input timezone: TZ="Europe/Helsinki" environment value
 date: warning: using midnight as starting time: 00:00:00
-date: starting date/time: '(Y-M-D) 2011-12-11 00:00:00 TZ=+02:00'
-date: '(Y-M-D) 2011-12-11 00:00:00 TZ=+02:00' = 1323554400 epoch-seconds
-date: output timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: starting date/time: '(Y-M-D) 2011-12-11 00:00:00'
+date: '(Y-M-D) 2011-12-11 00:00:00' = 1323554400 epoch-seconds
+date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1323554400.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2011-12-10 22:00:00 (UTC0)
-date: final: (Y-M-D) 2011-12-11 00:00:00 (output timezone TZ=+02:00)
+date: final: (Y-M-D) 2011-12-10 22:00:00 (UTC)
+date: final: (Y-M-D) 2011-12-11 00:00:00 (UTC+02)
 Sun Dec 11 00:00:00 EET 2011
 EOF
 
 TZ=Europe/Helsinki date --debug -d '2011-12-11 EET' >out8_1 2>&1 || fail=1
 compare exp8_1 out8_1 || fail=1
 
-TOOLONG='(set from TZ="Europe/Helsinki" environment value, dst)'
 cat<<EOF>exp8_2
 date: parsed date part: (Y-M-D) 2011-06-11
-date: parsed local_zone part: DST changed: is-dst=1
-date: input timezone: +03:00 $TOOLONG
+date: parsed local_zone part: isdst=1
+date: input timezone: TZ="Europe/Helsinki" environment value, dst
 date: warning: using midnight as starting time: 00:00:00
-date: starting date/time: '(Y-M-D) 2011-06-11 00:00:00 TZ=+03:00'
-date: '(Y-M-D) 2011-06-11 00:00:00 TZ=+03:00' = 1307739600 epoch-seconds
-date: output timezone: +02:00 (set from TZ="Europe/Helsinki" environment value)
+date: starting date/time: '(Y-M-D) 2011-06-11 00:00:00'
+date: '(Y-M-D) 2011-06-11 00:00:00' = 1307739600 epoch-seconds
+date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1307739600.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2011-06-10 21:00:00 (UTC0)
-date: final: (Y-M-D) 2011-06-11 00:00:00 (output timezone TZ=+02:00)
+date: final: (Y-M-D) 2011-06-10 21:00:00 (UTC)
+date: final: (Y-M-D) 2011-06-11 00:00:00 (UTC+03)
 Sat Jun 11 00:00:00 EEST 2011
 EOF
 
@@ -264,14 +262,14 @@ cat<<EOF>exp9
 date: parsed date part: (Y-M-D) XXXX-04-11
 date: parsed time part: 22:59:00
 date: parsed number part: year: 2011
-date: input timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: input timezone: TZ="UTC0" environment value or -u
 date: using specified time as starting value: '22:59:00'
-date: starting date/time: '(Y-M-D) 2011-04-11 22:59:00 TZ=+00:00'
-date: '(Y-M-D) 2011-04-11 22:59:00 TZ=+00:00' = 1302562740 epoch-seconds
-date: output timezone: +00:00 (set from TZ=UTC0 environment value or -u)
+date: starting date/time: '(Y-M-D) 2011-04-11 22:59:00'
+date: '(Y-M-D) 2011-04-11 22:59:00' = 1302562740 epoch-seconds
+date: timezone: Universal Time
 date: final: 1302562740.000000000 (epoch-seconds)
-date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC0)
-date: final: (Y-M-D) 2011-04-11 22:59:00 (output timezone TZ=+00:00)
+date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC)
+date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC+00)
 Mon Apr 11 22:59:00 UTC 2011
 EOF
 

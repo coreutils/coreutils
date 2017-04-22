@@ -15835,7 +15835,7 @@ date -d "$(LC_TIME=C date)"
 @cindex debugging date strings
 @cindex date strings, debugging
 @cindex arbitrary date strings, debugging
-annotate the parsed date, display the effective time zone, and warn about
+Annotate the parsed date, display the effective time zone, and warn about
 potential misuse.
 
 @item -f @var{datefile}
