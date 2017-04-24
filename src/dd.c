@@ -795,29 +795,48 @@ print_xfer_stats (xtime_t progress_time)
   if (progress_time)
     fputc ('\r', stderr);
 
-  /* TRANSLATORS: The instances of "s" in the following formats are
-     the SI symbol "s" (meaning second), and should not be translated.
+  /* Use full seconds when printing progress, since the progress
+     report is output once per second and there is little point
+     displaying any subsecond jitter.  Use default precision with %g
+     otherwise, as this provides more-useful output then.  With long
+     transfers %g can generate a number with an exponent; that is OK.  */
+  char delta_s_buf[20];
+  snprintf (delta_s_buf, sizeof delta_s_buf,
+            progress_time ? "%.0f" : "%g", delta_s);
+
+  /* TRANSLATORS: Because SI symbols should be the same in all
+     languages, the instances of "s" in the following formats, which
+     are the SI symbol "s" (meaning second), should not be translated.
      The strings use SI symbols for better internationalization even
-     though they may be a bit more confusing in English.  If one of
-     these formats A looks shorter on the screen than another format
-     B, then A's string length should be less than B's, and appending
-     strlen (B) - strlen (A) spaces to A should make it appear to be
-     at least as long as B.  */
+     though they may be a bit more confusing in English.
+
+     These strings should be translated so that a new output line B
+     completely overwrites an old line A that is already present on
+     the screen, if (sB < sA ? sA - sB : 0) spaces are appended to B,
+     where sA == strlen (A) and sB == strlen (B).  For example, in a
+     UTF-8 locale where A is "8 bajtů zkopírováno, 1 s, 0 kB/s" (32
+     columns, strlen 35) and B is "19979567104 bajtů (20 GB, 19 GiB)
+     zkopírováno, 2 s, 10.0 GB/s" (61 columns, strlen 64), the
+     translation is OK because A looks shorter than B (32 vs 61
+     columns) even when no spaces are appended.  */
 
   int stats_len
     = (abbreviation_lacks_prefix (si)
        ? fprintf (stderr,
-                  ngettext ("%"PRIuMAX" byte copied, %g s, %s/s",
-                            "%"PRIuMAX" bytes copied, %g s, %s/s",
+                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
+                  ngettext ("%"PRIuMAX" byte copied, %s s, %s/s",
+                            "%"PRIuMAX" bytes copied, %s s, %s/s",
                             select_plural (w_bytes)),
-                  w_bytes, delta_s, bytes_per_second)
+                  w_bytes, delta_s_buf, bytes_per_second)
        : abbreviation_lacks_prefix (iec)
        ? fprintf (stderr,
-                  _("%"PRIuMAX" bytes (%s) copied, %g s, %s/s"),
-                  w_bytes, si, delta_s, bytes_per_second)
+                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
+                  _("%"PRIuMAX" bytes (%s) copied, %s s, %s/s"),
+                  w_bytes, si, delta_s_buf, bytes_per_second)
        : fprintf (stderr,
-                  _("%"PRIuMAX" bytes (%s, %s) copied, %g s, %s/s"),
-                  w_bytes, si, iec, delta_s, bytes_per_second));
+                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
+                  _("%"PRIuMAX" bytes (%s, %s) copied, %s s, %s/s"),
+                  w_bytes, si, iec, delta_s_buf, bytes_per_second));
 
   if (progress_time)
     {
