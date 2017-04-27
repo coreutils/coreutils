@@ -768,7 +768,8 @@ static void
 print_xfer_stats (xtime_t progress_time)
 {
   xtime_t now = progress_time ? progress_time : gethrxtime ();
-  char hbuf[3][LONGEST_HUMAN_READABLE + 1];
+  static char const slash_s[] = "/s";
+  char hbuf[3][LONGEST_HUMAN_READABLE + sizeof slash_s];
   double delta_s;
   char const *bytes_per_second;
   char const *si = human_readable (w_bytes, hbuf[0], human_opts, 1, 1);
@@ -777,19 +778,23 @@ print_xfer_stats (xtime_t progress_time)
 
   /* Use integer arithmetic to compute the transfer rate,
      since that makes it easy to use SI abbreviations.  */
+  char *bpsbuf = hbuf[2];
+  int bpsbufsize = sizeof hbuf[2];
   if (start_time < now)
     {
       double XTIME_PRECISIONe0 = XTIME_PRECISION;
       uintmax_t delta_xtime = now;
       delta_xtime -= start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
-      bytes_per_second = human_readable (w_bytes, hbuf[2], human_opts,
+      bytes_per_second = human_readable (w_bytes, bpsbuf, human_opts,
                                          XTIME_PRECISION, delta_xtime);
+      strcat (bytes_per_second - bpsbuf + bpsbuf, slash_s);
     }
   else
     {
       delta_s = 0;
-      bytes_per_second = _("Infinity B");
+      snprintf (bpsbuf, bpsbufsize, "%s B/s", _("Infinity"));
+      bytes_per_second = bpsbuf;
     }
 
   if (progress_time)
@@ -800,46 +805,33 @@ print_xfer_stats (xtime_t progress_time)
      displaying any subsecond jitter.  Use default precision with %g
      otherwise, as this provides more-useful output then.  With long
      transfers %g can generate a number with an exponent; that is OK.  */
-  char delta_s_buf[20];
+  char delta_s_buf[24];
   snprintf (delta_s_buf, sizeof delta_s_buf,
-            progress_time ? "%.0f" : "%g", delta_s);
-
-  /* TRANSLATORS: Because SI symbols should be the same in all
-     languages, the instances of "s" in the following formats, which
-     are the SI symbol "s" (meaning second), should not be translated.
-     The strings use SI symbols for better internationalization even
-     though they may be a bit more confusing in English.
-
-     These strings should be translated so that a new output line B
-     completely overwrites an old line A that is already present on
-     the screen, if (sB < sA ? sA - sB : 0) spaces are appended to B,
-     where sA == strlen (A) and sB == strlen (B).  For example, in a
-     UTF-8 locale where A is "8 bajtů zkopírováno, 1 s, 0 kB/s" (32
-     columns, strlen 35) and B is "19979567104 bajtů (20 GB, 19 GiB)
-     zkopírováno, 2 s, 10.0 GB/s" (61 columns, strlen 64), the
-     translation is OK because A looks shorter than B (32 vs 61
-     columns) even when no spaces are appended.  */
+            progress_time ? "%.0f s" : "%g s", delta_s);
 
   int stats_len
     = (abbreviation_lacks_prefix (si)
        ? fprintf (stderr,
-                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
-                  ngettext ("%"PRIuMAX" byte copied, %s s, %s/s",
-                            "%"PRIuMAX" bytes copied, %s s, %s/s",
+                  ngettext ("%"PRIuMAX" byte copied, %s, %s",
+                            "%"PRIuMAX" bytes copied, %s, %s",
                             select_plural (w_bytes)),
                   w_bytes, delta_s_buf, bytes_per_second)
        : abbreviation_lacks_prefix (iec)
        ? fprintf (stderr,
-                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
-                  _("%"PRIuMAX" bytes (%s) copied, %s s, %s/s"),
+                  _("%"PRIuMAX" bytes (%s) copied, %s, %s"),
                   w_bytes, si, delta_s_buf, bytes_per_second)
        : fprintf (stderr,
-                  /* TRANSLATORS: See comments in dd.c's print_xfer_stats.  */
-                  _("%"PRIuMAX" bytes (%s, %s) copied, %s s, %s/s"),
+                  _("%"PRIuMAX" bytes (%s, %s) copied, %s, %s"),
                   w_bytes, si, iec, delta_s_buf, bytes_per_second));
 
   if (progress_time)
     {
+      /* Erase any trailing junk on the output line by outputting
+         spaces.  In theory this could glitch the display because the
+         formatted translation of a line describing a larger file
+         could consume fewer screen columns than the strlen difference
+         from the previously formatted translation.  In practice this
+         does not seem to be a problem.  */
       if (0 <= stats_len && stats_len < progress_len)
         fprintf (stderr, "%*s", progress_len - stats_len, "");
       progress_len = stats_len;
