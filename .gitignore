@@ -58,6 +58,7 @@
 /lib/float.h
 /lib/fnmatch.h
 /lib/getopt.h
+/lib/getopt-cdefs.h
 /lib/glthread
 /lib/iconv.h
 /lib/iconv_open-aix.h
