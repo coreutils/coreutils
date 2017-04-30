@@ -601,22 +601,20 @@ option is always to improve tests.  You never know what you might
 uncover when you improve test coverage, and even if you don't find
 any bugs your contribution is sure to be appreciated.
 
-A good way to quickly assess current test coverage is to use "lcov"
-to generate HTML coverage reports.  Follow these steps:
+A good way to quickly assess current test coverage for standard
+and root only tests is to follow test steps (requires lcov to be installed):
 
-  # configure with coverage information
-  ./configure CFLAGS="-g -fprofile-arcs -ftest-coverage"
-  make
-  # run whatever tests you want, i.e.:
-  make check
-  # run lcov
-  lcov -t coreutils -q -d lib -b `pwd` -o lib.lcov -c
-  lcov -t coreutils -q -d src -b `pwd` -o src.lcov -c
-  # generate HTML from the output
-  genhtml -p `pwd` -t coreutils -q --output-directory lcov-html *.lcov
+  # Do a standard run as the current user
+  make -j$(nproc) coverage
 
-Then just open the index.html file (in the generated lcov-html directory)
-in your favorite web browser.
+  # Add the root only tests
+  sudo make -j$(nproc) build-coverage NON_ROOT_USERNAME=$USER SUBDIRS=.
+
+  # Generate the report with the combined results
+  make gen-coverage
+
+  # view the HTML report:
+  xdg-open doc/coverage/index.html
 
 ========================================================================
 Copyright (C) 2009-2017 Free Software Foundation, Inc.
