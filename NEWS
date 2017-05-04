@@ -12,7 +12,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   consistently rather than sometimes outputting "6.00001 s".
   [bug introduced in coreutils-8.24]
 
-  df non longer interacts with excluded file system types, so for example
+  df no longer interacts with excluded file system types, so for example
   specifying -x nfs will no longer hang with problematic nfs mounts.
   [bug introduced in coreutils-8.21]
 
@@ -23,7 +23,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   ignoring some non checksum lines.  This also affects sha*sum and b2sum.
   [bug introduced in coreutils-8.14]
 
-  tail -F 'dir/file' now monitored even when 'dir' is replaced.
+  tail -F 'dir/file' is now monitored even when 'dir' is replaced.
   [bug introduced with inotify support added in coreutils-7.5]
 
 ** New features

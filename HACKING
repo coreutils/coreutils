@@ -601,8 +601,8 @@ option is always to improve tests.  You never know what you might
 uncover when you improve test coverage, and even if you don't find
 any bugs your contribution is sure to be appreciated.
 
-A good way to quickly assess current test coverage for standard
-and root only tests is to follow test steps (requires lcov to be installed):
+A good way to quickly assess current test coverage, for standard
+and root only tests, is to follow these steps (requires lcov to be installed):
 
   # Do a standard run as the current user
   make -j$(nproc) coverage
