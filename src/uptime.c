@@ -134,7 +134,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
      previous versions of coreutils don't. */
   if (tmn)
     /* TRANSLATORS: This prints the current clock time. */
-    fprintftime (stdout, _(" %H:%M%P  "), tmn, 0, 0);
+    fprintftime (stdout, _(" %H:%M:%S  "), tmn, 0, 0);
   else
     printf (_(" ??:????  "));
   if (uptime == (time_t) -1)
