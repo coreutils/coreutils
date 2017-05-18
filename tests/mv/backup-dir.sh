@@ -26,7 +26,7 @@ touch X Y || framework_failure_
 # Before coreutils-6.2, the " (backup: 'B.~1~')" suffix was not printed.
 mv --verbose --backup=numbered -T A B > out || fail=1
 cat <<\EOF > exp || fail=1
-'A' -> 'B' (backup: 'B.~1~')
+renamed 'A' -> 'B' (backup: 'B.~1~')
 EOF
 
 compare exp out || fail=1

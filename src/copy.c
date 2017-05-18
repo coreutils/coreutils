@@ -2192,8 +2192,9 @@ copy_internal (char const *src_name, char const *dst_name,
 
   /* If the source is a directory, we don't always create the destination
      directory.  So --verbose should not announce anything until we're
-     sure we'll create a directory. */
-  if (x->verbose && !S_ISDIR (src_mode))
+     sure we'll create a directory.  Also don't announce yet when moving
+     so we can distinguish renames versus copies.  */
+  if (x->verbose && !x->move_mode && !S_ISDIR (src_mode))
     emit_verbose (src_name, dst_name, backup_succeeded ? dst_backup : NULL);
 
   /* Associate the destination file name with the source device and inode
@@ -2314,9 +2315,12 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       if (rename (src_name, dst_name) == 0)
         {
-          if (x->verbose && S_ISDIR (src_mode))
-            emit_verbose (src_name, dst_name,
-                          backup_succeeded ? dst_backup : NULL);
+          if (x->verbose)
+            {
+              printf (_("renamed "));
+              emit_verbose (src_name, dst_name,
+                            backup_succeeded ? dst_backup : NULL);
+            }
 
           if (x->set_security_context)
             {
@@ -2417,6 +2421,12 @@ copy_internal (char const *src_name, char const *dst_name,
           return false;
         }
 
+      if (x->verbose && !S_ISDIR (src_mode))
+        {
+          printf (_("copied "));
+          emit_verbose (src_name, dst_name,
+                        backup_succeeded ? dst_backup : NULL);
+        }
       new_dst = true;
     }
 
@@ -2511,7 +2521,12 @@ copy_internal (char const *src_name, char const *dst_name,
             }
 
           if (x->verbose)
-            emit_verbose (src_name, dst_name, NULL);
+            {
+              if (x->move_mode)
+                printf (_("created directory %s\n"), quoteaf (dst_name));
+              else
+                emit_verbose (src_name, dst_name, NULL);
+            }
         }
       else
         {

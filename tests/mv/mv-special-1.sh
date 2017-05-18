@@ -48,7 +48,10 @@ test -d "$other_partition_tmpdir/$dir/a/b/c" || fail=1
 # so ignore chatter about when files are removed and copied rather than renamed.
 sed "
   /^removed /d
+  s,renamed ,,
+  s,copied ,,
   s,$other_partition_tmpdir,XXX,
+  s,created directory 'XXX/\(.*\)','\1' -> 'XXX/\1',
 " out | sort > out2
 
 cat <<EOF | sort > exp
