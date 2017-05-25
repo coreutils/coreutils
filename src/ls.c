@@ -2811,7 +2811,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       char buf[LONGEST_HUMAN_READABLE + 1];
 
       DIRED_INDENT ();
-      p = _("total");
+      p = _("total:");
       DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR (' ');
       p = human_readable (total_blocks, buf, human_output_opts,
