@@ -16584,7 +16584,14 @@ are interpreted as arguments to the command.
 With neither @var{context} nor @var{command}, print the current
 security context.
 
-The program accepts the following options.  Also see @ref{Common options}.
+@cindex restricted security context
+@cindex NO_NEW_PRIVS
+Note also the @command{setpriv} command which can be used to set the
+NO_NEW_PRIVS bit using @command{setpriv --no-new-privs runcon ...},
+thus disallowing usage of a security context with more privileges
+than the process would normally have.
+
+@command{runcon} accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
