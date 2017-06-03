@@ -2714,7 +2714,8 @@ copy_internal (char const *src_name, char const *dst_name,
             {
               error (0, errno, _("failed to preserve ownership for %s"),
                      dst_name);
-              goto un_backup;
+              if (x->require_preserve)
+                goto un_backup;
             }
           else
             {

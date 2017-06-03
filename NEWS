@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp and mv now only warn about failure to preserve ownership of symlinks.
+  cp (without -p) will no longer exit with a failure status, and mv will
+  also no longer leave such symlinks remaining in the source file system.
+  [the bug dates back to the initial implementation]
+
   date and touch no longer overwrite the heap with large
   user specified TZ values (CVE-2017-7476).
   [bug introduced in coreutils-8.27]
