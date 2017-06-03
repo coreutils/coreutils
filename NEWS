@@ -4,9 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  cp and mv now only warn about failure to preserve ownership of symlinks.
-  cp (without -p) will no longer exit with a failure status, and mv will
-  also no longer leave such symlinks remaining in the source file system.
+  cp and mv now merely warn about any failure to preserve symlink ownership.
+  Before, cp (without -p) would exit with a failure status, and a cross-device
+  mv would leave such symlinks behind in the source file system.
   [the bug dates back to the initial implementation]
 
   date and touch no longer overwrite the heap with large
@@ -18,7 +18,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-8.24]
 
   df no longer interacts with excluded file system types, so for example
-  specifying -x nfs will no longer hang with problematic nfs mounts.
+  specifying -x nfs no longer hangs with problematic nfs mounts.
   [bug introduced in coreutils-8.21]
 
   split no longer exits when invocations of a --filter return EPIPE.
