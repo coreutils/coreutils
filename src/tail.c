@@ -175,6 +175,9 @@ static enum Follow_mode follow_mode = Follow_descriptor;
 /* If true, read from the ends of all specified files until killed.  */
 static bool forever;
 
+/* If true, monitor output so we exit if pipe reader terminates.  */
+static bool monitor_output;
+
 /* If true, count from start of file instead of end.  */
 static bool from_start;
 
@@ -325,6 +328,27 @@ named file in a way that accommodates renaming, removal and creation.\n\
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
+}
+
+/* If the output has gone away, then terminate
+   as we would if we had written to this output.  */
+static void
+check_output_alive (void)
+{
+  if (! monitor_output)
+    return;
+
+  struct timeval delay;
+  delay.tv_sec = delay.tv_usec = 0;
+
+  fd_set rfd;
+  FD_ZERO (&rfd);
+  FD_SET (STDOUT_FILENO, &rfd);
+
+  /* readable event on STDOUT is equivalent to POLLERR,
+     and implies an error condition on output like broken pipe.  */
+  if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
+    raise (SIGPIPE);
 }
 
 static bool
@@ -1244,6 +1268,8 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
       if ((!any_input || blocking) && fflush (stdout) != 0)
         die (EXIT_FAILURE, errno, _("write error"));
 
+      check_output_alive ();
+
       /* If nothing was read, sleep and/or check for dead writers.  */
       if (!any_input)
         {
@@ -1577,32 +1603,48 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
       /* When watching a PID, ensure that a read from WD will not block
          indefinitely.  */
-      if (pid && (len <= evbuf_off))
+      while (len <= evbuf_off)
         {
-          if (writer_is_dead)
-            exit (EXIT_SUCCESS);
-
-          writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
-
           struct timeval delay; /* how long to wait for file changes.  */
-          if (writer_is_dead)
-            delay.tv_sec = delay.tv_usec = 0;
-          else
+
+          if (pid)
             {
-              delay.tv_sec = (time_t) sleep_interval;
-              delay.tv_usec = 1000000 * (sleep_interval - delay.tv_sec);
+              if (writer_is_dead)
+                exit (EXIT_SUCCESS);
+
+              writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
+
+              if (writer_is_dead)
+                delay.tv_sec = delay.tv_usec = 0;
+              else
+                {
+                  delay.tv_sec = (time_t) sleep_interval;
+                  delay.tv_usec = 1000000 * (sleep_interval - delay.tv_sec);
+                }
             }
 
            fd_set rfd;
            FD_ZERO (&rfd);
            FD_SET (wd, &rfd);
+           if (monitor_output)
+             FD_SET (STDOUT_FILENO, &rfd);
 
-           int file_change = select (wd + 1, &rfd, NULL, NULL, &delay);
+           int file_change = select (MAX (wd, STDOUT_FILENO) + 1,
+                                     &rfd, NULL, NULL, pid ? &delay: NULL);
 
            if (file_change == 0)
              continue;
            else if (file_change == -1)
-             die (EXIT_FAILURE, errno, _("error monitoring inotify event"));
+             die (EXIT_FAILURE, errno,
+                  _("error waiting for inotify and output events"));
+           else if (FD_ISSET (STDOUT_FILENO, &rfd))
+             {
+               /* readable event on STDOUT is equivalent to POLLERR,
+                  and implies an error on output like broken pipe.  */
+               raise (SIGPIPE);
+             }
+           else
+             break;
         }
 
       if (len <= evbuf_off)
@@ -2350,6 +2392,15 @@ main (int argc, char **argv)
 
   if (forever && ignore_fifo_and_pipe (F, n_files))
     {
+      /* If stdout is a fifo or pipe, then monitor it
+         so that we exit if the reader goes away.
+         Note select() on a regular file is always readable.  */
+      struct stat out_stat;
+      if (fstat (STDOUT_FILENO, &out_stat) < 0)
+        die (EXIT_FAILURE, errno, _("standard output"));
+      monitor_output = (S_ISFIFO (out_stat.st_mode)
+                        || (HAVE_FIFO_PIPES != 1 && isapipe (STDOUT_FILENO)));
+
 #if HAVE_INOTIFY
       /* tailable_stdin() checks if the user specifies stdin via  "-",
          or implicitly by providing no arguments. If so, we won't use inotify.

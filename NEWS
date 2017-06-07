@@ -53,6 +53,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   mv --verbose now distinguishes rename and copy operations.
 
+  tail -f will now exit immediately if the output is piped
+  and the reader of the pipe terminates.
+
 
 * Noteworthy changes in release 8.27 (2017-03-08) [stable]
 
