@@ -54,7 +54,7 @@ grep_timeout_ ()
 mkdir dir && echo 'inotify' > dir/file || framework_failure_
 
 #tail must print content of the file to stdout, verify
-timeout 60 tail -F dir/file >out 2>&1 & pid=$!
+timeout 60 tail --pid=$$ -F dir/file >out 2>&1 & pid=$!
 grep_timeout_ 'inotify' 'out' ||
 { cleanup_fail_ 'file to be tailed does not exist'; }
 

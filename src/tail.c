@@ -1577,7 +1577,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
 
       /* When watching a PID, ensure that a read from WD will not block
          indefinitely.  */
-      if (pid)
+      if (pid && (len <= evbuf_off))
         {
           if (writer_is_dead)
             exit (EXIT_SUCCESS);
