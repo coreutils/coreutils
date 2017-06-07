@@ -3,7 +3,7 @@
 # of the watched file was removed and recreated.
 # (...instead of getting stuck forever)
 
-# Copyright (C) 2006-2017 Free Software Foundation, Inc.
+# Copyright (C) 2017 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
+grep '^#define HAVE_INOTIFY 1' "$CONFIG_HEADER" >/dev/null && is_local_dir_ . \
+  || skip_ 'inotify is not supported'
 
 # Terminate any background tail process
 cleanup_() { kill $pid 2>/dev/null && wait $pid; }
@@ -52,9 +54,13 @@ grep_timeout_ ()
 mkdir dir && echo 'inotify' > dir/file || framework_failure_
 
 #tail must print content of the file to stdout, verify
-timeout 60 tail -F dir/file &>out & pid=$!
+timeout 60 tail -F dir/file >out 2>&1 & pid=$!
 grep_timeout_ 'inotify' 'out' ||
 { cleanup_fail_ 'file to be tailed does not exist'; }
+
+inotify_failed_re='inotify (resources exhausted|cannot be used)'
+grep -E "$inotify_failed_re" out &&
+  skip_ "inotify can't be used"
 
 # Remove the directory, should get the message about the deletion
 rm -r dir || framework_failure_
