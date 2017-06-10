@@ -686,7 +686,7 @@ posixtest (int nargs)
             advance (false);
             break;
           }
-        /* FALLTHROUGH */
+        FALLTHROUGH;
       case 5:
       default:
         if (nargs <= 0)

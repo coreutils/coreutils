@@ -4086,7 +4086,7 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
       *val = n;
       if (*val == n)
         break;
-      /* Fall through.  */
+      FALLTHROUGH;
     case LONGINT_OVERFLOW:
     case LONGINT_OVERFLOW | LONGINT_INVALID_SUFFIX_CHAR:
       *val = SIZE_MAX;
@@ -4386,7 +4386,7 @@ main (int argc, char **argv)
 
         case SORT_OPTION:
           c = XARGMATCH ("--sort", optarg, sort_args, sort_types);
-          /* Fall through. */
+          FALLTHROUGH;
         case 'b':
         case 'd':
         case 'f':
@@ -4410,7 +4410,7 @@ main (int argc, char **argv)
           c = (optarg
                ? XARGMATCH ("--check", optarg, check_args, check_types)
                : 'c');
-          /* Fall through.  */
+          FALLTHROUGH;
         case 'c':
         case 'C':
           if (checkonly && checkonly != c)

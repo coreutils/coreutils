@@ -816,7 +816,7 @@ main (int argc, char **argv)
     {
     case 2:			/* who <blurf> <glop> */
       my_line_only = true;
-      /* Fall through.  */
+      FALLTHROUGH;
     case -1:
     case 0:			/* who */
       who (UTMP_FILE, READ_UTMP_CHECK_PIDS);

@@ -1041,7 +1041,7 @@ main (int argc, char **argv)
         {
         case 'v':
             print_pairables = false;
-            /* Fall through.  */
+            FALLTHROUGH;
 
         case 'a':
           {

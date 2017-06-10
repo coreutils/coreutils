@@ -2269,7 +2269,7 @@ get_funky_string (char **dest, const char **src, bool equals_end,
                   state = ST_END; /* End */
                   break;
                 }
-              /* else fall through */
+              FALLTHROUGH;
             default:
               *(q++) = *(p++);
               ++count;
@@ -3157,7 +3157,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                  directory, and --dereference-command-line-symlink-to-dir is
                  in effect.  Fall through so that we call lstat instead.  */
             }
-          /* fall through */
+          FALLTHROUGH;
 
         default: /* DEREF_NEVER */
           err = lstat (absolute_name, &f->stat);

@@ -426,7 +426,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                 {
                 case '\n':
                   lines++;
-                  /* Fall through. */
+                  FALLTHROUGH;
                 case '\r':
                 case '\f':
                   if (linepos > linelength)
@@ -438,7 +438,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   goto mb_word_separator;
                 case ' ':
                   linepos++;
-                  /* Fall through. */
+                  FALLTHROUGH;
                 case '\v':
                 mb_word_separator:
                   words += in_word;
@@ -500,7 +500,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                 {
                 case '\n':
                   lines++;
-                  /* Fall through. */
+                  FALLTHROUGH;
                 case '\r':
                 case '\f':
                   if (linepos > linelength)
@@ -512,7 +512,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   goto word_separator;
                 case ' ':
                   linepos++;
-                  /* Fall through. */
+                  FALLTHROUGH;
                 case '\v':
                 word_separator:
                   words += in_word;

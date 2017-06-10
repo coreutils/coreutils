@@ -216,7 +216,7 @@ append_quoted (const char *str)
         case '=':
           if (need_backslash)
             APPEND_CHAR ('\\');
-          /* Fall through */
+          FALLTHROUGH;
 
         default:
           need_backslash = true;

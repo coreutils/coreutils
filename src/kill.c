@@ -246,7 +246,7 @@ main (int argc, char **argv)
             optind--;
             goto no_more_options;
           }
-        /* Fall through.  */
+        FALLTHROUGH;
       case 'A': case 'B': case 'C': case 'D': case 'E':
       case 'F': case 'G': case 'H': case 'I': case 'J':
       case 'K': /*case 'L':*/ case 'M': case 'N': case 'O':
@@ -261,7 +261,7 @@ main (int argc, char **argv)
             usage (EXIT_FAILURE);
           }
         optarg--;
-        /* Fall through.  */
+        FALLTHROUGH;
       case 'n': /* -n is not documented, but is for Bash compatibility.  */
       case 's':
         if (0 <= signum)
@@ -277,7 +277,7 @@ main (int argc, char **argv)
       case 'L': /* -L is not documented, but is for procps compatibility.  */
       case 't':
         table = true;
-        /* Fall through.  */
+        FALLTHROUGH;
       case 'l':
         if (list)
           {

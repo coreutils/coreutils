@@ -1252,7 +1252,7 @@ print_it (char const *format, int fd, char const *filename,
               {
               case '\0':
                 --b;
-                /* fall through */
+                FALLTHROUGH;
               case '%':
                 if (0 < len)
                   {

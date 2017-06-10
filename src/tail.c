@@ -2064,8 +2064,8 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 
   switch (*p)
     {
-    case 'b': default_count *= 512;	/* Fall through.  */
-    case 'c': t_count_lines = false;	/* Fall through.  */
+    case 'b': default_count *= 512; FALLTHROUGH;
+    case 'c': t_count_lines = false; FALLTHROUGH;
     case 'l': p++; break;
     }
 

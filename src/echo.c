@@ -231,7 +231,7 @@ just_echo:
                       if (! ('0' <= *s && *s <= '7'))
                         break;
                       c = *s++;
-                      /* Fall through.  */
+                      FALLTHROUGH;
                     case '1': case '2': case '3':
                     case '4': case '5': case '6': case '7':
                       c -= '0';

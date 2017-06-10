@@ -278,7 +278,7 @@ main (int argc, char **argv)
               optargbuf[1] = '\0';
               optarg = optargbuf;
             }
-          /* Fall through.  */
+          FALLTHROUGH;
         case 'w':		/* Line width. */
           width = xdectoumax (optarg, 1, SIZE_MAX - TAB_WIDTH - 1, "",
                               _("invalid number of columns"), 0);
