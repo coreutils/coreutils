@@ -31,7 +31,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail -F 'dir/file' is now monitored even when 'dir' is replaced.
   [bug introduced with inotify support added in coreutils-7.5]
 
-  tail -f with --pid=PID will now process all inotify events.
+  tail -f with --pid=PID now processes all inotify events.
   Previously events may have been ignored completely upon PID death,
   or ignored until future events on the monitored files.
   [bug introduced with inotify support added in coreutils-7.5]
@@ -53,8 +53,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   mv --verbose now distinguishes rename and copy operations.
 
-  tail -f will now exit immediately if the output is piped
+  tail -f now exits immediately if the output is piped
   and the reader of the pipe terminates.
+
+  tail -f no longer erroneously warns about being ineffective
+  when following a single tty, as the simple blocking loop used
+  is effective in this case.
 
 
 * Noteworthy changes in release 8.27 (2017-03-08) [stable]

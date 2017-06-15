@@ -1,5 +1,5 @@
 #!/bin/sh
-# tail -f - would fail with the initial inotify implementation
+# Test tail -f -
 
 # Copyright (C) 2009-2017 Free Software Foundation, Inc.
 
@@ -18,6 +18,9 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
+
+#################
+# tail -f - would fail with the initial inotify implementation
 
 check_tail_output()
 {
@@ -51,6 +54,7 @@ for mode in '' '---disable-inotify'; do
 done
 
 
+#################
 # Before coreutils-8.26 this would induce an UMR under UBSAN
 returns_ 1 timeout 10 tail -f - <&- 2>errt || fail=1
 cat <<\EOF >exp || framework_failure_
@@ -62,5 +66,20 @@ EOF
 sed 's/\(tail:.*\):.*/\1/' errt > err || framework_failure_
 compare exp err || fail=1
 
+
+#################
+# Before coreutils-8.28 this would erroneously issue a warning
+if tty -s </dev/tty && test -t 0; then
+  for input in '' '-' '/dev/tty'; do
+    returns_ 124 timeout 0.1 tail -f $input 2>err || fail=1
+    compare /dev/null err || fail=1
+  done
+
+  tail -f - /dev/null </dev/tty 2> out & pid=$!
+  # Wait up to 12.7s for output to appear:
+  tail_re='ineffective' retry_delay_ check_tail_output .1 7 ||
+    { cat out; fail=1; }
+  cleanup_
+fi
 
 Exit $fail

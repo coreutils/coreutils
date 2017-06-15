@@ -2365,12 +2365,22 @@ main (int argc, char **argv)
     if (found_hyphen && follow_mode == Follow_name)
       die (EXIT_FAILURE, 0, _("cannot follow %s by name"), quoteaf ("-"));
 
-    /* When following forever, warn if any file is '-'.
+    /* When following forever, and not using simple blocking, warn if
+       any file is '-' as the stats() used to check for input are ineffective.
        This is only a warning, since tail's output (before a failing seek,
        and that from any non-stdin files) might still be useful.  */
-    if (forever && found_hyphen && isatty (STDIN_FILENO))
-      error (0, 0, _("warning: following standard input"
-                     " indefinitely is ineffective"));
+    if (forever && found_hyphen)
+      {
+        struct stat in_stat;
+        bool blocking_stdin;
+        blocking_stdin = (pid == 0 && follow_mode == Follow_descriptor
+                          && n_files == 1 && ! fstat (STDIN_FILENO, &in_stat)
+                          && ! S_ISREG (in_stat.st_mode));
+
+        if (! blocking_stdin && isatty (STDIN_FILENO))
+          error (0, 0, _("warning: following standard input"
+                         " indefinitely is ineffective"));
+      }
   }
 
   /* Don't read anything if we'll never output anything.  */
