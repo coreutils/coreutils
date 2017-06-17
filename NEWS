@@ -36,6 +36,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   or ignored until future events on the monitored files.
   [bug introduced with inotify support added in coreutils-7.5]
 
+  tail -f /dev/tty is now supported by not using inotify when any
+  non regular files are specified, as inotify is ineffective with these.
+  [bug introduced with inotify support added in coreutils-7.5]
+
   uptime no longer outputs the AM/PM component of the current time,
   as that's inconsistent with the 24 hour time format used.
   [bug introduced in coreutils-7.0]

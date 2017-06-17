@@ -177,6 +177,7 @@ all_tests =					\
   tests/tail-2/inotify-rotate.sh		\
   tests/tail-2/inotify-rotate-resources.sh	\
   tests/tail-2/inotify-dir-recreate.sh		\
+  tests/tail-2/inotify-only-regular.sh		\
   tests/chmod/no-x.sh				\
   tests/chgrp/basic.sh				\
   tests/rm/dangling-symlink.sh			\
