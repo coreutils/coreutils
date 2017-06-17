@@ -741,9 +741,7 @@ alloc_obuf (void)
 static void
 translate_charset (char const *new_trans)
 {
-  int i;
-
-  for (i = 0; i < 256; i++)
+  for (int i = 0; i < 256; i++)
     trans_table[i] = new_trans[trans_table[i]];
   translation_needed = true;
 }
@@ -1382,13 +1380,12 @@ operand_is (char const *operand, char const *name)
 static void
 scanargs (int argc, char *const *argv)
 {
-  int i;
   size_t blocksize = 0;
   uintmax_t count = (uintmax_t) -1;
   uintmax_t skip = 0;
   uintmax_t seek = 0;
 
-  for (i = optind; i < argc; i++)
+  for (int i = optind; i < argc; i++)
     {
       char const *name = argv[i];
       char const *val = strchr (name, '=');
@@ -1617,9 +1614,8 @@ apply_translations (void)
 static void
 translate_buffer (char *buf, size_t nread)
 {
-  char *cp;
   size_t i;
-
+  char *cp;
   for (i = nread, cp = buf; i; i--, cp++)
     *cp = trans_table[to_uchar (*cp)];
 }
@@ -1639,8 +1635,6 @@ static char *
 swab_buffer (char *buf, size_t *nread)
 {
   char *bufstart = buf;
-  char *cp;
-  size_t i;
 
   /* Is a char left from last time?  */
   if (char_is_saved)
@@ -1661,8 +1655,8 @@ swab_buffer (char *buf, size_t *nread)
      positions toward the end, working from the end of the buffer
      toward the beginning.  This way we only move half of the data.  */
 
-  cp = bufstart + *nread;	/* Start one char past the last.  */
-  for (i = *nread / 2; i; i--, cp -= 2)
+  char *cp = bufstart + *nread;	/* Start one char past the last.  */
+  for (size_t i = *nread / 2; i; i--, cp -= 2)
     *cp = *(cp - 2);
 
   return ++bufstart;
@@ -1933,9 +1927,7 @@ copy_simple (char const *buf, size_t nread)
 static void
 copy_with_block (char const *buf, size_t nread)
 {
-  size_t i;
-
-  for (i = nread; i; i--, buf++)
+  for (size_t i = nread; i; i--, buf++)
     {
       if (*buf == newline_character)
         {
@@ -1965,13 +1957,11 @@ copy_with_block (char const *buf, size_t nread)
 static void
 copy_with_unblock (char const *buf, size_t nread)
 {
-  size_t i;
-  char c;
   static size_t pending_spaces = 0;
 
-  for (i = 0; i < nread; i++)
+  for (size_t i = 0; i < nread; i++)
     {
-      c = buf[i];
+      char c = buf[i];
 
       if (col++ >= conversion_blocksize)
         {
@@ -2275,8 +2265,7 @@ dd_copy (void)
     {
       /* If the final input line didn't end with a '\n', pad
          the output block to 'conversion_blocksize' chars.  */
-      size_t i;
-      for (i = col; i < conversion_blocksize; i++)
+      for (size_t i = col; i < conversion_blocksize; i++)
         output_char (space_character);
     }
 

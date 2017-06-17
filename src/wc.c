@@ -599,9 +599,7 @@ get_input_fstatus (size_t nfiles, char *const *file)
     fstatus[0].failed = 1;
   else
     {
-      size_t i;
-
-      for (i = 0; i < nfiles; i++)
+      for (size_t i = 0; i < nfiles; i++)
         fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
                              ? fstat (STDIN_FILENO, &fstatus[i].st)
                              : stat (file[i], &fstatus[i].st));
@@ -623,9 +621,8 @@ compute_number_width (size_t nfiles, struct fstatus const *fstatus)
     {
       int minimum_width = 1;
       uintmax_t regular_total = 0;
-      size_t i;
 
-      for (i = 0; i < nfiles; i++)
+      for (size_t i = 0; i < nfiles; i++)
         if (! fstatus[i].failed)
           {
             if (S_ISREG (fstatus[i].st.st_mode))
@@ -774,9 +771,8 @@ main (int argc, char **argv)
   fstatus = get_input_fstatus (nfiles, files);
   number_width = compute_number_width (nfiles, fstatus);
 
-  int i;
   ok = true;
-  for (i = 0; /* */; i++)
+  for (int i = 0; /* */; i++)
     {
       bool skip_file = false;
       enum argv_iter_err ai_err;

@@ -441,9 +441,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
         {
           if (argc_names)
             {
-              int i;
-
-              for (i = 0; i < argc_names; i++)
+              for (int i = 0; i < argc_names; i++)
                 if (STREQ_LEN (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE))
                   {
                     print_entry (utmp_buf);
@@ -477,9 +475,7 @@ short_pinky (const char *filename,
 static void
 long_pinky (const int argc_names, char *const argv_names[])
 {
-  int i;
-
-  for (i = 0; i < argc_names; i++)
+  for (int i = 0; i < argc_names; i++)
     print_long_entry (argv_names[i]);
 }
 

@@ -224,12 +224,13 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 
           if (ignore_garbage)
             {
-              size_t i;
-              for (i = 0; n > 0 && i < n;)
-                if (isbase (inbuf[sum + i]) || inbuf[sum + i] == '=')
-                  i++;
-                else
-                  memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
+              for (size_t i = 0; n > 0 && i < n;)
+                {
+                  if (isbase (inbuf[sum + i]) || inbuf[sum + i] == '=')
+                    i++;
+                  else
+                    memmove (inbuf + sum + i, inbuf + sum + i + 1, --n - i);
+                }
             }
 
           sum += n;

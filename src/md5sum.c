@@ -347,8 +347,7 @@ filename_unescape (char *s, size_t s_len)
 static bool _GL_ATTRIBUTE_PURE
 hex_digits (unsigned char const *s)
 {
-  unsigned int i;
-  for (i = 0; i < digest_hex_bytes; i++)
+  for (unsigned int i = 0; i < digest_hex_bytes; i++)
     {
       if (!isxdigit (*s))
         return false;
@@ -1062,14 +1061,12 @@ main (int argc, char **argv)
                   fputs (") = ", stdout);
                 }
 
-              size_t i;
-
               /* Output a leading backslash if the file name contains
                  a newline or backslash.  */
               if (!prefix_tag && needs_escape)
                 putchar ('\\');
 
-              for (i = 0; i < (digest_hex_bytes / 2); ++i)
+              for (size_t i = 0; i < (digest_hex_bytes / 2); ++i)
                 printf ("%02x", bin_buffer[i]);
 
               if (!prefix_tag)

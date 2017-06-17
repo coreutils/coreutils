@@ -275,9 +275,8 @@ static bool
 set_libstdbuf_options (void)
 {
   bool env_set = false;
-  size_t i;
 
-  for (i = 0; i < ARRAY_CARDINALITY (stdbuf); i++)
+  for (size_t i = 0; i < ARRAY_CARDINALITY (stdbuf); i++)
     {
       if (stdbuf[i].optarg)
         {

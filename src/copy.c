@@ -420,9 +420,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           return false;
         }
 
-      unsigned int i;
       bool empty_extent = false;
-      for (i = 0; i < scan.ei_count || empty_extent; i++)
+      for (unsigned int i = 0; i < scan.ei_count || empty_extent; i++)
         {
           off_t ext_start;
           off_t ext_len;

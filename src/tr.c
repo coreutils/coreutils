@@ -1167,7 +1167,6 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
 {
   size_t n_upper = 0;
   size_t n_lower = 0;
-  unsigned int i;
   int c1 = 0;
   int c2 = 0;
   count old_s1_len = s1->length;
@@ -1180,7 +1179,7 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
   if (!s2->has_char_class)
     return;
 
-  for (i = 0; i < N_CHARS; i++)
+  for (int i = 0; i < N_CHARS; i++)
     {
       if (isupper (i))
         n_upper++;

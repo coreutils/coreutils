@@ -480,9 +480,7 @@ get_line (FILE *fp, struct line **linep, int which)
 static void
 free_spareline (void)
 {
-  size_t i;
-
-  for (i = 0; i < ARRAY_CARDINALITY (spareline); i++)
+  for (size_t i = 0; i < ARRAY_CARDINALITY (spareline); i++)
     {
       if (spareline[i])
         {
@@ -507,9 +505,8 @@ getseq (FILE *fp, struct seq *seq, int whichfile)
 {
   if (seq->count == seq->alloc)
     {
-      size_t i;
       seq->lines = X2NREALLOC (seq->lines, &seq->alloc);
-      for (i = seq->count; i < seq->alloc; i++)
+      for (size_t i = seq->count; i < seq->alloc; i++)
         seq->lines[i] = NULL;
     }
 
@@ -535,8 +532,7 @@ advance_seq (FILE *fp, struct seq *seq, bool first, int whichfile)
 static void
 delseq (struct seq *seq)
 {
-  size_t i;
-  for (i = 0; i < seq->alloc; i++)
+  for (size_t i = 0; i < seq->alloc; i++)
     {
       freeline (seq->lines[i]);
       free (seq->lines[i]);
@@ -693,7 +689,6 @@ join (FILE *fp1, FILE *fp2)
 
   while (seq1.count && seq2.count)
     {
-      size_t i;
       diff = keycmp (seq1.lines[0], seq2.lines[0],
                      join_field_1, join_field_2);
       if (diff < 0)
@@ -741,7 +736,7 @@ join (FILE *fp1, FILE *fp2)
 
       if (print_pairables)
         {
-          for (i = 0; i < seq1.count - 1; ++i)
+          for (size_t i = 0; i < seq1.count - 1; ++i)
             {
               size_t j;
               for (j = 0; j < seq2.count - 1; ++j)

@@ -127,8 +127,7 @@ buf_init_from_stdin (Buf *x, char eol_byte)
 static void
 buf_free (Buf *x)
 {
-  size_t i;
-  for (i = 0; i < x->n_bufs; i++)
+  for (size_t i = 0; i < x->n_bufs; i++)
     free (x->p[i].start);
   obstack_free (OBS, NULL);
 }
@@ -222,8 +221,7 @@ static void
 print_line (FILE *out_stream, const Buf *x,
             const Line_ptr *bol, const Line_ptr *bol_next)
 {
-  size_t i;
-  for (i = bol->i; i <= bol_next->i; i++)
+  for (size_t i = bol->i; i <= bol_next->i; i++)
     {
       char *a = (i == bol->i ? bol->ptr : x->p[i].start);
       char *b = (i == bol_next->i ? bol_next->ptr : ONE_PAST_END (x, i));

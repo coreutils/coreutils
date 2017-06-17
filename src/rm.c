@@ -105,9 +105,8 @@ diagnose_leading_hyphen (int argc, char **argv)
 {
   /* OPTIND is unreliable, so iterate through the arguments looking
      for a file name that looks like an option.  */
-  int i;
 
-  for (i = 1; i < argc; i++)
+  for (int i = 1; i < argc; i++)
     {
       char const *arg = argv[i];
       struct stat st;

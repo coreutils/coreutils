@@ -237,9 +237,8 @@ static void
 validate_tab_stops (uintmax_t const *tabs, size_t entries)
 {
   uintmax_t prev_tab = 0;
-  size_t i;
 
-  for (i = 0; i < entries; i++)
+  for (size_t i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
         die (EXIT_FAILURE, 0, _("tab size cannot be 0"));

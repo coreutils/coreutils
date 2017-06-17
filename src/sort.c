@@ -1511,9 +1511,7 @@ sort_buffer_size (FILE *const *fps, size_t nfps,
      This extra room might be needed when preparing to read EOF.  */
   size_t size = worst_case_per_input_byte + 1;
 
-  size_t i;
-
-  for (i = 0; i < nfiles; i++)
+  for (size_t i = 0; i < nfiles; i++)
     {
       struct stat st;
       off_t file_size;
@@ -3692,12 +3690,11 @@ static void
 avoid_trashing_input (struct sortfile *files, size_t ntemps,
                       size_t nfiles, char const *outfile)
 {
-  size_t i;
   bool got_outstat = false;
   struct stat outstat;
   struct tempnode *tempcopy = NULL;
 
-  for (i = ntemps; i < nfiles; i++)
+  for (size_t i = ntemps; i < nfiles; i++)
     {
       bool is_stdin = STREQ (files[i].name, "-");
       bool same;
@@ -3748,8 +3745,7 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 static void
 check_inputs (char *const *files, size_t nfiles)
 {
-  size_t i;
-  for (i = 0; i < nfiles; i++)
+  for (size_t i = 0; i < nfiles; i++)
     {
       if (STREQ (files[i], "-"))
         continue;
@@ -3997,10 +3993,9 @@ sort (char *const *files, size_t nfiles, char const *output_file,
 
   if (! output_file_created)
     {
-      size_t i;
       struct tempnode *node = temphead;
       struct sortfile *tempfiles = xnmalloc (ntemps, sizeof *tempfiles);
-      for (i = 0; node; i++)
+      for (size_t i = 0; node; i++)
         {
           tempfiles[i].name = node->name;
           tempfiles[i].temp = node;
@@ -4613,11 +4608,10 @@ main (int argc, char **argv)
 
       if (tok.n_tok)
         {
-          size_t i;
           free (files);
           files = tok.tok;
           nfiles = tok.n_tok;
-          for (i = 0; i < nfiles; i++)
+          for (size_t i = 0; i < nfiles; i++)
             {
               if (STREQ (files[i], "-"))
                 die (SORT_FAILURE, 0, _("when reading file names from stdin, "
@@ -4747,9 +4741,8 @@ main (int argc, char **argv)
   if (mergeonly)
     {
       struct sortfile *sortfiles = xcalloc (nfiles, sizeof *sortfiles);
-      size_t i;
 
-      for (i = 0; i < nfiles; ++i)
+      for (size_t i = 0; i < nfiles; ++i)
         sortfiles[i].name = files[i];
 
       merge (sortfiles, 0, nfiles, outfile);

@@ -484,9 +484,8 @@ PRINT_FLOATTYPE (print_long_double, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
 static void
 dump_hexl_mode_trailer (size_t n_bytes, const char *block)
 {
-  size_t i;
   fputs ("  >", stdout);
-  for (i = n_bytes; i > 0; i--)
+  for (size_t i = n_bytes; i > 0; i--)
     {
       unsigned char c = *block++;
       unsigned char c2 = (isprint (c) ? c : '.');
@@ -1205,10 +1204,8 @@ write_block (uintmax_t current_offset, size_t n_bytes,
     }
   else
     {
-      size_t i;
-
       prev_pair_equal = false;
-      for (i = 0; i < n_specs; i++)
+      for (size_t i = 0; i < n_specs; i++)
         {
           int datum_width = width_bytes[spec[i].size];
           int fields_per_block = bytes_per_block / datum_width;
@@ -1318,10 +1315,9 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 static int _GL_ATTRIBUTE_PURE
 get_lcm (void)
 {
-  size_t i;
   int l_c_m = 1;
 
-  for (i = 0; i < n_specs; i++)
+  for (size_t i = 0; i < n_specs; i++)
     l_c_m = lcm (l_c_m, width_bytes[spec[i].size]);
   return l_c_m;
 }

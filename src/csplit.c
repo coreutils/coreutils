@@ -900,9 +900,7 @@ process_regexp (struct control *p, uintmax_t repetition)
 static void
 split_file (void)
 {
-  size_t i;
-
-  for (i = 0; i < control_used; i++)
+  for (size_t i = 0; i < control_used; i++)
     {
       uintmax_t j;
       if (controls[i].regexpr)
@@ -983,12 +981,10 @@ create_output_file (void)
 static void
 delete_all_files (bool in_signal_handler)
 {
-  unsigned int i;
-
   if (! remove_files)
     return;
 
-  for (i = 0; i < files_created; i++)
+  for (unsigned int i = 0; i < files_created; i++)
     {
       const char *name = make_filename (i);
       if (unlink (name) != 0 && !in_signal_handler)
@@ -1178,12 +1174,11 @@ extract_regexp (int argnum, bool ignore, char const *str)
 static void
 parse_patterns (int argc, int start, char **argv)
 {
-  int i;			/* Index into ARGV. */
   struct control *p;		/* New control record created. */
   uintmax_t val;
   static uintmax_t last_val = 0;
 
-  for (i = start; i < argc; i++)
+  for (int i = start; i < argc; i++)
     {
       if (*argv[i] == '/' || *argv[i] == '%')
         {

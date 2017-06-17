@@ -640,7 +640,6 @@ do_copy (int n_files, char **file, const char *target_directory,
       /* cp file1...filen edir
          Copy the files 'file1' through 'filen'
          to the existing directory 'edir'. */
-      int i;
 
       /* Initialize these hash tables only if we'll need them.
          The problems they're used to detect can arise only if
@@ -651,7 +650,7 @@ do_copy (int n_files, char **file, const char *target_directory,
           src_info_init (x);
         }
 
-      for (i = 0; i < n_files; i++)
+      for (int i = 0; i < n_files; i++)
         {
           char *dst_name;
           bool parent_exists = true;  /* True if dir_name (dst_name) exists. */

@@ -613,7 +613,6 @@ process_file (FTS *fts, FTSENT *ent)
              Clear the accumulators for *all* levels between prev_level
              and the current one.  The depth may change dramatically,
              e.g., from 1 to 10.  */
-          size_t i;
 
           if (n_alloc <= level)
             {
@@ -621,7 +620,7 @@ process_file (FTS *fts, FTSENT *ent)
               n_alloc = level * 2;
             }
 
-          for (i = prev_level + 1; i <= level; i++)
+          for (size_t i = prev_level + 1; i <= level; i++)
             {
               duinfo_init (&dulvl[i].ent);
               duinfo_init (&dulvl[i].subdir);

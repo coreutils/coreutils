@@ -1461,9 +1461,8 @@ main (int argc, char **argv)
                    quotef (device_name));
 #ifdef TESTING
               {
-                size_t i;
                 printf ("new_mode: mode\n");
-                for (i = 0; i < sizeof (new_mode); i++)
+                for (size_t i = 0; i < sizeof (new_mode); i++)
                   printf ("0x%02x: 0x%02x\n",
                           *(((unsigned char *) &new_mode) + i),
                           *(((unsigned char *) &mode) + i));
@@ -2076,14 +2075,12 @@ display_speed (struct termios *mode, bool fancy)
 static void
 display_recoverable (struct termios *mode)
 {
-  size_t i;
-
   printf ("%lx:%lx:%lx:%lx",
           (unsigned long int) mode->c_iflag,
           (unsigned long int) mode->c_oflag,
           (unsigned long int) mode->c_cflag,
           (unsigned long int) mode->c_lflag);
-  for (i = 0; i < NCCS; ++i)
+  for (size_t i = 0; i < NCCS; ++i)
     printf (":%lx", (unsigned long int) mode->c_cc[i]);
   putchar ('\n');
 }
@@ -2226,9 +2223,7 @@ static struct speed_map const speeds[] =
 static speed_t _GL_ATTRIBUTE_PURE
 string_to_baud (const char *arg)
 {
-  int i;
-
-  for (i = 0; speeds[i].string != NULL; ++i)
+  for (int i = 0; speeds[i].string != NULL; ++i)
     if (STREQ (arg, speeds[i].string))
       return speeds[i].speed;
   return (speed_t) -1;
@@ -2237,9 +2232,7 @@ string_to_baud (const char *arg)
 static unsigned long int _GL_ATTRIBUTE_PURE
 baud_to_value (speed_t speed)
 {
-  int i;
-
-  for (i = 0; speeds[i].string != NULL; ++i)
+  for (int i = 0; speeds[i].string != NULL; ++i)
     if (speed == speeds[i].speed)
       return speeds[i].value;
   return 0;

@@ -690,9 +690,8 @@ main (int argc, char **argv)
   xset_binary_mode (STDOUT_FILENO, O_BINARY);
 
   {
-    size_t i;
     ok = true;
-    for (i = 0; file[i]; ++i)
+    for (size_t i = 0; file[i]; ++i)
       ok &= tac_file (file[i]);
   }
 

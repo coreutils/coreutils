@@ -474,8 +474,6 @@ main (int argc, char **argv)
 
   if (target_directory)
     {
-      int i;
-
       /* Initialize the hash table only if we'll need it.
          The problem it is used to detect can arise only if there are
          two or more files to move.  */
@@ -483,7 +481,7 @@ main (int argc, char **argv)
         dest_info_init (&x);
 
       ok = true;
-      for (i = 0; i < n_files; ++i)
+      for (int i = 0; i < n_files; ++i)
         ok &= movefile (file[i], target_directory, true, &x);
     }
   else

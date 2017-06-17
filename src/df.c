@@ -1701,13 +1701,11 @@ main (int argc, char **argv)
 
   if (optind < argc)
     {
-      int i;
-
       /* Open each of the given entries to make sure any corresponding
          partition is automounted.  This must be done before reading the
          file system table.  */
       stats = xnmalloc (argc - optind, sizeof *stats);
-      for (i = optind; i < argc; ++i)
+      for (int i = optind; i < argc; ++i)
         {
           /* Prefer to open with O_NOCTTY and use fstat, but fall back
              on using "stat", in case the file is unreadable.  */
@@ -1759,12 +1757,10 @@ main (int argc, char **argv)
 
   if (optind < argc)
     {
-      int i;
-
       /* Display explicitly requested empty file systems.  */
       show_listed_fs = true;
 
-      for (i = optind; i < argc; ++i)
+      for (int i = optind; i < argc; ++i)
         if (argv[i])
           get_entry (argv[i], &stats[i - optind]);
 

@@ -231,9 +231,8 @@ paste_parallel (size_t nfiles, char **fnamptr)
       bool somedone = false;
       char const *delimptr = delims;
       size_t delims_saved = 0;	/* Number of delims saved in 'delbuf'. */
-      size_t i;
 
-      for (i = 0; i < nfiles && files_open; i++)
+      for (size_t i = 0; i < nfiles && files_open; i++)
         {
           int chr IF_LINT ( = 0);	/* Input character. */
           int err IF_LINT ( = 0);	/* Input errno value.  */

@@ -820,8 +820,7 @@ print_statfs (char *pformat, size_t prefix_len, unsigned int m,
            with glibc's statvfs implementation.  */
         uintmax_t fsid = 0;
         int words = sizeof statfsbuf->f_fsid / sizeof *p;
-        int i;
-        for (i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
+        for (int i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
           {
             uintmax_t u = p[words - 1 - i];
             fsid |= u << (i * CHAR_BIT * sizeof *p);
@@ -1577,7 +1576,6 @@ int
 main (int argc, char *argv[])
 {
   int c;
-  int i;
   bool fs = false;
   bool terse = false;
   char *format = NULL;
@@ -1651,7 +1649,7 @@ main (int argc, char *argv[])
       format2 = default_format (fs, terse, /* device= */ true);
     }
 
-  for (i = optind; i < argc; i++)
+  for (int i = optind; i < argc; i++)
     ok &= (fs
            ? do_statfs (argv[i], format)
            : do_stat (argv[i], format, format2));

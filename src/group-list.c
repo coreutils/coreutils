@@ -59,7 +59,6 @@ print_group_list (const char *username,
 
   {
     gid_t *groups;
-    int i;
 
     int n_groups = xgetgroups (username, (pwd ? pwd->pw_gid : egid), &groups);
     if (n_groups < 0)
@@ -76,7 +75,7 @@ print_group_list (const char *username,
         return false;
       }
 
-    for (i = 0; i < n_groups; i++)
+    for (int i = 0; i < n_groups; i++)
       if (groups[i] != rgid && groups[i] != egid)
         {
           putchar (delim);

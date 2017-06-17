@@ -1099,15 +1099,13 @@ recheck (struct File_spec *f, bool blocking)
 static bool
 any_live_files (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
   /* In inotify mode, ignore may be set for files
      which may later be replaced with new files.
      So always consider files live in -F mode.  */
   if (reopen_inaccessible_files && follow_mode == Follow_name)
     return true;
 
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     {
       if (0 <= f[i].fd)
         return true;
@@ -1300,9 +1298,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 static bool
 any_remote_file (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     if (0 <= f[i].fd && f[i].remote)
       return true;
   return false;
@@ -1314,9 +1310,7 @@ any_remote_file (const struct File_spec *f, size_t n_files)
 static bool
 any_non_remote_file (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     if (0 <= f[i].fd && ! f[i].remote)
       return true;
   return false;
@@ -1330,10 +1324,8 @@ any_non_remote_file (const struct File_spec *f, size_t n_files)
 static bool
 any_symlinks (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
   struct stat st;
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     if (lstat (f[i].name, &st) == 0 && S_ISLNK (st.st_mode))
       return true;
   return false;
@@ -1347,9 +1339,7 @@ any_symlinks (const struct File_spec *f, size_t n_files)
 static bool
 any_non_regular (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     if (0 <= f[i].fd && ! S_ISREG (f[i].mode))
       return true;
   return false;
@@ -1361,9 +1351,7 @@ any_non_regular (const struct File_spec *f, size_t n_files)
 static bool
 tailable_stdin (const struct File_spec *f, size_t n_files)
 {
-  size_t i;
-
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     if (!f[i].ignore && STREQ (f[i].name, "-"))
       return true;
   return false;
@@ -2288,8 +2276,7 @@ ignore_fifo_and_pipe (struct File_spec *f, size_t n_files)
      ignore any "-" operand that corresponds to a pipe or FIFO.  */
   size_t n_viable = 0;
 
-  size_t i;
-  for (i = 0; i < n_files; i++)
+  for (size_t i = 0; i < n_files; i++)
     {
       bool is_a_fifo_or_pipe =
         (STREQ (f[i].name, "-")

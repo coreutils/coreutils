@@ -575,8 +575,6 @@ main (int argc, char **argv)
 
   if (target_directory)
     {
-      int i;
-
       /* Create the data structure we'll use to record which hard links we
          create.  Used to ensure that ln detects an obscure corner case that
          might result in user data loss.  Create it only if needed.  */
@@ -600,7 +598,7 @@ main (int argc, char **argv)
         }
 
       ok = true;
-      for (i = 0; i < n_files; ++i)
+      for (int i = 0; i < n_files; ++i)
         {
           char *dest_base;
           char *dest = file_name_concat (target_directory,

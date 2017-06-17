@@ -98,7 +98,6 @@ apply_suffix (double *x, char suffix_char)
 int
 main (int argc, char **argv)
 {
-  int i;
   double seconds = 0.0;
   bool ok = true;
 
@@ -121,7 +120,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  for (i = optind; i < argc; i++)
+  for (int i = optind; i < argc; i++)
     {
       double s;
       const char *p;

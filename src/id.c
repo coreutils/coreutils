@@ -400,7 +400,6 @@ print_full_info (const char *username)
 
   {
     gid_t *groups;
-    int i;
 
     gid_t primary_group;
     if (username)
@@ -422,7 +421,7 @@ print_full_info (const char *username)
 
     if (n_groups > 0)
       fputs (_(" groups="), stdout);
-    for (i = 0; i < n_groups; i++)
+    for (int i = 0; i < n_groups; i++)
       {
         if (i > 0)
           putchar (',');

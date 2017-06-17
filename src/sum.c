@@ -181,7 +181,6 @@ sysv_sum_file (const char *file, int print_name)
 
   while (1)
     {
-      size_t i;
       size_t bytes_read = safe_read (fd, buf, sizeof buf);
 
       if (bytes_read == 0)
@@ -195,7 +194,7 @@ sysv_sum_file (const char *file, int print_name)
           return false;
         }
 
-      for (i = 0; i < bytes_read; i++)
+      for (size_t i = 0; i < bytes_read; i++)
         s += buf[i];
       total_bytes += bytes_read;
     }

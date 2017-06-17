@@ -67,10 +67,8 @@ static uint_fast32_t r[8];
 static void
 fill_r (void)
 {
-  int i;
-
   r[0] = GEN;
-  for (i = 1; i < 8; i++)
+  for (int i = 1; i < 8; i++)
     r[i] = (r[i - 1] << 1) ^ ((r[i - 1] & SBIT) ? GEN : 0);
 }
 
@@ -78,9 +76,8 @@ static uint_fast32_t
 crc_remainder (int m)
 {
   uint_fast32_t rem = 0;
-  int i;
 
-  for (i = 0; i < 8; i++)
+  for (int i = 0; i < 8; i++)
     if (BIT (i) & m)
       rem ^= r[i];
 
@@ -90,11 +87,9 @@ crc_remainder (int m)
 int
 main (void)
 {
-  int i;
-
   fill_r ();
   printf ("static uint_fast32_t const crctab[256] =\n{\n  0x00000000");
-  for (i = 0; i < 51; i++)
+  for (int i = 0; i < 51; i++)
     {
       printf (",\n  0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x",
               crc_remainder (i * 5 + 1), crc_remainder (i * 5 + 2),

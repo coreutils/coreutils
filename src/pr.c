@@ -1136,8 +1136,7 @@ main (int argc, char **argv)
         print_files (n_files, file_names);
       else
         {
-          unsigned int i;
-          for (i = 0; i < n_files; i++)
+          for (unsigned int i = 0; i < n_files; i++)
             print_files (1, &file_names[i]);
         }
     }
@@ -1311,10 +1310,7 @@ init_parameters (int number_of_files)
 static bool
 init_fps (int number_of_files, char **av)
 {
-  int i, files_left;
   COLUMN *p;
-  FILE *firstfp;
-  char const *firstname;
 
   total_files = 0;
 
@@ -1323,7 +1319,7 @@ init_fps (int number_of_files, char **av)
 
   if (parallel_files)
     {
-      files_left = number_of_files;
+      int files_left = number_of_files;
       for (p = column_vector; files_left--; ++p, ++av)
         {
           if (! open_file (*av, p))
@@ -1358,8 +1354,9 @@ init_fps (int number_of_files, char **av)
           p->lines_stored = 0;
         }
 
-      firstname = p->name;
-      firstfp = p->fp;
+      char const *firstname = p->name;
+      FILE *firstfp = p->fp;
+      int i;
       for (i = columns - 1, ++p; i; --i, ++p)
         {
           p->name = firstname;
@@ -2077,12 +2074,10 @@ pad_across_to (int position)
 static void
 pad_down (unsigned int lines)
 {
-  unsigned int i;
-
   if (use_form_feed)
     putchar ('\f');
   else
-    for (i = lines; i; --i)
+    for (unsigned int i = lines; i; --i)
       putchar ('\n');
 }
 
@@ -2310,14 +2305,12 @@ print_char (char c)
 static bool
 skip_to_page (uintmax_t page)
 {
-  uintmax_t n;
-  int i;
-  int j;
-  COLUMN *p;
-
-  for (n = 1; n < page; ++n)
+  for (uintmax_t n = 1; n < page; ++n)
     {
-      for (i = 1; i < lines_per_body; ++i)
+      COLUMN *p;
+      int j;
+
+      for (int i = 1; i < lines_per_body; ++i)
         {
           for (j = 1, p = column_vector; j <= columns; ++j, ++p)
             if (p->status == OPEN)
@@ -2552,7 +2545,6 @@ static bool
 print_stored (COLUMN *p)
 {
   COLUMN *q;
-  int i;
 
   int line = p->current_line++;
   char *first = &buff[line_vector[line]];
@@ -2576,6 +2568,7 @@ print_stored (COLUMN *p)
 
   if (p->status == FF_FOUND)
     {
+      int i;
       for (i = 1, q = column_vector; i <= columns; ++i, ++q)
         q->status = ON_HOLD;
       if (column_vector->lines_to_print <= 0)
