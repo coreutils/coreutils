@@ -90,11 +90,14 @@ BUILT_SOURCES = .version
 # Have .timestamp based dates only in tarball builds.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
+# The touch avoids a subtle, spurious "make distcheck" failure.
 dist-hook: gen-ChangeLog
 	$(AM_V_GEN)chmod -R +rw $(distdir)
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
 	$(AM_V_GEN)date +%s > $(distdir)/.timestamp
 	$(AM_V_at)perl -pi -e '$(rm_subst)' $(distdir)/Makefile.in
+	$(AM_V_at)touch $(distdir)/doc/constants.texi \
+	  $(distdir)/doc/coreutils.info
 
 gen_start_ver = 8.15
 .PHONY: gen-ChangeLog
