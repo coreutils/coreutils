@@ -14113,22 +14113,22 @@ This is the default mode of operation.
 @opindex --quiet
 Suppress diagnostic messages for specified file names.
 
-@item --relative-to=@var{file}
+@item --relative-to=@var{dir}
 @opindex --relative-to
 @cindex relpath
-Print the resolved file names relative to the specified file.
+Print the resolved file names relative to the specified directory.
 Note this option honors the @option{-m} and @option{-e} options
 pertaining to file existence.
 
-@item --relative-base=@var{base}
+@item --relative-base=@var{dir}
 @opindex --relative-base
 This option is valid when used with @option{--relative-to}, and will restrict
 the output of @option{--relative-to} so that relative names are output,
-only when @var{file}s are descendants of @var{base}.  Otherwise output the
+only when @var{file}s are descendants of @var{dir}.  Otherwise output the
 absolute file name.  If @option{--relative-to} was not specified, then
-the descendants of @var{base} are printed relative to @var{base}.  If
+the descendants of @var{dir} are printed relative to @var{dir}.  If
 @option{--relative-to} is specified, then that directory must be a
-descendant of @var{base} for this option to have an effect.
+descendant of @var{dir} for this option to have an effect.
 Note: this option honors the @option{-m} and @option{-e}
 options pertaining to file existence.  For example:
 
