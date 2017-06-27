@@ -10624,7 +10624,7 @@ Set the mode of created files to @var{mode}, which is symbolic as in
 @cindex displaying value of a symbolic link
 @cindex canonical file name
 @cindex canonicalize a file name
-@findex realpath
+@cindex realpath
 
 @command{readlink} may work in one of two supported modes:
 
