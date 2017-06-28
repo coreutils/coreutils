@@ -14122,24 +14122,13 @@ pertaining to file existence.
 
 @item --relative-base=@var{dir}
 @opindex --relative-base
-This option is valid when used with @option{--relative-to}, and will restrict
-the output of @option{--relative-to} so that relative names are output,
-only when @var{file}s are descendants of @var{dir}.  Otherwise output the
-absolute file name.  If @option{--relative-to} was not specified, then
-the descendants of @var{dir} are printed relative to @var{dir}.  If
-@option{--relative-to} is specified, then that directory must be a
-descendant of @var{dir} for this option to have an effect.
-Note: this option honors the @option{-m} and @option{-e}
-options pertaining to file existence.  For example:
-
-@example
-realpath --relative-to=/usr /tmp /usr/bin
-@result{} ../tmp
-@result{} bin
-realpath --relative-base=/usr /tmp /usr/bin
-@result{} /tmp
-@result{} bin
-@end example
+Print the resolved file names as relative @emph{if} the files
+are descendants of @var{dir}.
+Otherwise, print the resolved file names as absolute.
+Note this option honors the @option{-m} and @option{-e} options
+pertaining to file existence.
+For details about combining @option{--relative-to} and @option{--relative-base},
+@pxref{Realpath usage examples}.
 
 @item -s
 @itemx --strip
@@ -14163,6 +14152,76 @@ Exit status:
 0 if all file names were printed without issue.
 1 otherwise.
 @end display
+
+
+@node Realpath usage examples
+@subsection Realpath usage examples
+
+@opindex --relative-to
+@opindex --relative-base
+
+By default, @command{realpath} prints the absolute file name of given files
+(symlinks are resolved, @file{words} is resolved to @file{american-english}):
+
+@example
+@group
+cd /home/user
+realpath /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
+@result{} /usr/bin/sort
+@result{} /tmp/foo
+@result{} /usr/share/dict/american-english
+@result{} /home/user/1.txt
+@end group
+@end example
+
+With @option{--relative-to}, file names are printed relative to
+the given directory:
+
+@example
+@group
+realpath --relative-to=/usr/bin \
+         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
+@result{} sort
+@result{} ../../tmp/foo
+@result{} ../share/dict/american-english
+@result{} ../../home/user/1.txt
+@end group
+@end example
+
+With @option{--relative-base}, relative file names are printed @emph{if}
+the resolved file name is below the given base directory. For files outside the
+base directory absolute file names are printed:
+
+@example
+@group
+realpath --relative-base=/usr \
+         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
+@result{} bin/sort
+@result{} /tmp/foo
+@result{} share/dict/american-english
+@result{} /home/user/1.txt
+@end group
+@end example
+
+When both @option{--relative-to=DIR1} and @option{--relative-base=DIR2}
+are used, file names are printed relative to @var{dir1} @emph{if} they are
+located below @var{dir2}. If the files are not below @var{dir2}, they are
+printed as absolute file names:
+
+@example
+@group
+realpath --relative-to=/usr/bin --relative-base=/usr \
+         /usr/bin/sort /tmp/foo /usr/share/dict/words 1.txt
+@result{} sort
+@result{} /tmp/foo
+@result{} ../share/dict/american-english
+@result{} /home/user/1.txt
+@end group
+@end example
+
+When both @option{--relative-to=DIR1} and @option{--relative-base=DIR2}
+are used, @var{dir1} @emph{must} be a subdirectory of @var{dir2}. Otherwise,
+@command{realpath} prints absolutes file names.
 
 
 @node Working context
