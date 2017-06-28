@@ -24,6 +24,10 @@ my $prog = 'expr';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $mb_locale = $ENV{LOCALE_FR_UTF8};
+! defined $mb_locale || $mb_locale eq 'none'
+  and $mb_locale = 'C';
+
 my $big =      '98782897298723498732987928734';
 my $big_p1 =   '98782897298723498732987928735';
 my $big_sum = '197565794597446997465975857469';
@@ -189,6 +193,22 @@ foreach $t (@Tests)
         $e->{OUT} .= "\n"
           if ref $e eq 'HASH' and exists $e->{OUT};
       }
+  }
+
+if ($mb_locale ne 'C')
+  {
+    # Duplicate each test vector, appending "-mb" to the test name and
+    # inserting {ENV => "LC_ALL=$mb_locale"} in the copy, so that we
+    # provide coverage for the distro-added multi-byte code paths.
+    my @new;
+    foreach my $t (@Tests)
+      {
+        my @new_t = @$t;
+        my $test_name = shift @new_t;
+
+        push @new, ["$test_name-mb", @new_t, {ENV => "LC_ALL=$mb_locale"}];
+      }
+    push @Tests, @new;
   }
 
 my $save_temps = $ENV{SAVE_TEMPS};

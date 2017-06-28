@@ -37,6 +37,7 @@
 #include "die.h"
 #include "error.h"
 #include "long-options.h"
+#include "mbuiter.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"
 
@@ -191,6 +192,148 @@ static VALUE *eval (bool);
 static bool nomoreargs (void);
 static bool null (VALUE *v);
 static void printv (VALUE *v);
+
+
+/*
+   Find the first occurrence in the character string STRING of any character
+   in the character string ACCEPT.
+
+   Copied from gnulib's mbscspn, with two differences:
+   1. Returns 1-based position of first found character, or zero if not found.
+   2. Returned value is the logical character index, NOT byte offset.
+
+   Examples:
+     mbs_logical_cspn ('hello','a')  => 0
+     mbs_logical_cspn ('hello','h')  => 1
+     mbs_logical_cspn ('hello','oe') => 1
+     mbs_logical_cspn ('hello','lo') => 3
+
+   In UTF-8 \xCE\xB1 is a single character (greek alpha):
+     mbs_logical_cspn ('\xCE\xB1bc','\xCE\xB1') => 1
+     mbs_logical_cspn ('\xCE\xB1bc','c') => 3 */
+static size_t
+mbs_logical_cspn (const char *s, const char *accept)
+{
+  size_t idx = 0;
+
+  if (accept[0] == '\0')
+    return 0;
+
+  /* General case.  */
+  if (MB_CUR_MAX > 1)
+    {
+      mbui_iterator_t iter;
+
+      for (mbui_init (iter, s); mbui_avail (iter); mbui_advance (iter))
+        {
+          ++idx;
+          if (mb_len (mbui_cur (iter)) == 1)
+            {
+              if (mbschr (accept, *mbui_cur_ptr (iter)))
+                return idx;
+            }
+          else
+            {
+              mbui_iterator_t aiter;
+
+              for (mbui_init (aiter, accept);
+                   mbui_avail (aiter);
+                   mbui_advance (aiter))
+                if (mb_equal (mbui_cur (aiter), mbui_cur (iter)))
+                  return idx;
+            }
+        }
+
+      /* not found */
+      return 0;
+    }
+  else
+    {
+      /* single-byte locale,
+         convert returned byte offset to 1-based index or zero if not found. */
+      size_t i = strcspn (s, accept);
+      return (s[i] ? i + 1 : 0);
+    }
+}
+
+/* Extract the substring of S, from logical character
+   position POS and LEN characters.
+   first character position is 1.
+   POS and LEN refer to logical characters, not octets.
+
+   Upon exit, sets v->s to the new string.
+   The new string might be empty if POS/LEN are invalid. */
+static char *
+mbs_logical_substr (const char *s, size_t pos, size_t len)
+{
+  char *v, *vlim;
+
+  size_t blen = strlen (s); /* byte length */
+  size_t llen = (MB_CUR_MAX > 1) ? mbslen (s) : blen; /* logical length */
+
+  if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
+    return xstrdup ("");
+
+  /* characters to copy */
+  size_t vlen = MIN (len, llen - pos + 1);
+
+  if (MB_CUR_MAX == 1)
+    {
+      /* Single-byte case */
+      v = xmalloc (vlen + 1);
+      vlim = mempcpy (v, s + pos - 1, vlen);
+    }
+  else
+    {
+      /* Multibyte case */
+
+      /* FIXME: this is wasteful. Some memory can be saved by counting
+         how many bytes the matching characters occupy. */
+      vlim = v = xmalloc (blen + 1);
+
+      mbui_iterator_t iter;
+      size_t idx=1;
+      for (mbui_init (iter, s);
+           mbui_avail (iter) && vlen > 0;
+           mbui_advance (iter), ++idx)
+        {
+          /* Skip until we reach the starting position */
+          if (idx < pos)
+            continue;
+
+          /* Copy one character */
+          --vlen;
+          vlim = mempcpy (vlim, mbui_cur_ptr (iter), mb_len (mbui_cur (iter)));
+        }
+    }
+  *vlim = '\0';
+  return v;
+}
+
+/* Return the number of logical characteres (possibly multibyte)
+   that are in string S in the first OFS octets.
+
+   Example in UTF-8:
+   "\xE2\x9D\xA7" is "U+2767 ROTATED FLORAL HEART BULLET".
+   In the string below, there are only two characters
+   up to the first 4 bytes (The U+2767 which occupies 3 bytes and 'x'):
+      mbs_count_to_offset ("\xE2\x9D\xA7xyz", 4) => 2  */
+static size_t
+mbs_offset_to_chars (const char *s, size_t ofs)
+{
+  mbui_iterator_t iter;
+  size_t c = 0;
+  for (mbui_init (iter, s); mbui_avail (iter); mbui_advance (iter))
+    {
+      ptrdiff_t d = mbui_cur_ptr (iter) - s;
+      if (d >= ofs)
+        break;
+      ++c;
+    }
+  return c;
+}
+
+
 
 void
 usage (int status)
@@ -574,7 +717,14 @@ docolon (VALUE *sv, VALUE *pv)
           v = str_value (sv->u.s + re_regs.start[1]);
         }
       else
-        v = int_value (matchlen);
+        {
+          /* In multibyte locales, convert the matched offset (=number of bytes)
+             to the number of matched characters. */
+          size_t i = (MB_CUR_MAX == 1
+                      ? matchlen
+                      : mbs_offset_to_chars (sv->u.s, matchlen));
+          v = int_value (i);
+        }
     }
   else if (matchlen == -1)
     {
@@ -650,7 +800,7 @@ eval6 (bool evaluate)
     {
       r = eval6 (evaluate);
       tostring (r);
-      v = int_value (strlen (r->u.s));
+      v = int_value (mbslen (r->u.s));
       freev (r);
       return v;
     }
@@ -676,20 +826,18 @@ eval6 (bool evaluate)
       r = eval6 (evaluate);
       tostring (l);
       tostring (r);
-      pos = strcspn (l->u.s, r->u.s);
-      v = int_value (l->u.s[pos] ? pos + 1 : 0);
+      pos = mbs_logical_cspn (l->u.s, r->u.s);
+      v = int_value (pos);
       freev (l);
       freev (r);
       return v;
     }
   else if (nextarg ("substr"))
     {
-      size_t llen;
       l = eval6 (evaluate);
       i1 = eval6 (evaluate);
       i2 = eval6 (evaluate);
       tostring (l);
-      llen = strlen (l->u.s);
 
       if (!toarith (i1) || !toarith (i2))
         v = str_value ("");
@@ -698,18 +846,8 @@ eval6 (bool evaluate)
           size_t pos = getsize (i1->u.i);
           size_t len = getsize (i2->u.i);
 
-          if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
-            v = str_value ("");
-          else
-            {
-              size_t vlen = MIN (len, llen - pos + 1);
-              char *vlim;
-              v = xmalloc (sizeof *v);
-              v->type = string;
-              v->u.s = xmalloc (vlen + 1);
-              vlim = mempcpy (v->u.s, l->u.s + pos - 1, vlen);
-              *vlim = '\0';
-            }
+          char *s = mbs_logical_substr (l->u.s, pos, len);
+          v = str_value (s);
         }
       freev (l);
       freev (i1);

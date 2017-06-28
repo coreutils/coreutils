@@ -44,6 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   as that's inconsistent with the 24 hour time format used.
   [bug introduced in coreutils-7.0]
 
+  expr now returns number of characters matched (instead of incorrect
+  number of bytes matched) with 'match'/':' operators on multibyte strings.
+
 ** New features
 
   expand and unexpand now support specifying an offset for tab stops
@@ -52,6 +55,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   split supports a new --hex-suffixes[=from] option to create files with
   lower case hexadecimal suffixes, similar to the --numeric-suffixes option.
+
+  expr supports multibyte strings for all string operations.
 
 ** Improvements
 

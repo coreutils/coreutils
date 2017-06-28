@@ -290,6 +290,7 @@ all_tests =					\
   tests/misc/env-null.sh			\
   tests/misc/expand.pl				\
   tests/misc/expr.pl				\
+  tests/misc/expr-multibyte.pl			\
   tests/misc/factor.pl				\
   tests/misc/factor-parallel.sh			\
   tests/misc/false-status.sh			\
