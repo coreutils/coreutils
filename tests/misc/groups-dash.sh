@@ -19,12 +19,14 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ groups
 
+# An invalid user name
+user=:invalid
+
+printf '%s\n' "groups: ':invalid': no such user" > exp || framework_failure_
+
 # Coreutils 6.9 and earlier failed to display information on first argument
 # if later argument was --.
-groups none -- > out 2>&1 && fail=1
-echo $? >> out
-groups -- none -- > exp 2>&1 && fail=1
-echo $? >> exp
+returns_ 1 groups $user -- > out 2>&1 || fail=1
 
 compare exp out || fail=1
 
