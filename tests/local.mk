@@ -296,6 +296,7 @@ all_tests =					\
   tests/misc/false-status.sh			\
   tests/misc/fold.pl				\
   tests/misc/groups-dash.sh			\
+  tests/misc/groups-process-all.sh		\
   tests/misc/groups-version.sh			\
   tests/misc/head-c.sh				\
   tests/misc/head-pos.sh			\

@@ -122,17 +122,20 @@ main (int argc, char **argv)
   else
     {
       /* At least one argument.  Divulge the details of the specified users.  */
-      while (optind < argc)
+      for ( ; optind < argc; optind++)
         {
           struct passwd *pwd = getpwnam (argv[optind]);
           if (pwd == NULL)
-            die (EXIT_FAILURE, 0, _("%s: no such user"),
-                 quote (argv[optind]));
+            {
+              error (0, 0, _("%s: no such user"), quote (argv[optind]));
+              ok = false;
+              continue;
+            }
           ruid = pwd->pw_uid;
           rgid = egid = pwd->pw_gid;
 
           printf ("%s : ", argv[optind]);
-          if (!print_group_list (argv[optind++], ruid, rgid, egid, true, ' '))
+          if (!print_group_list (argv[optind], ruid, rgid, egid, true, ' '))
             ok = false;
           putchar ('\n');
         }
