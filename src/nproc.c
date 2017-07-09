@@ -61,8 +61,8 @@ which may be less than the number of online processors\n\
 \n\
 "), stdout);
       fputs (_("\
-     --all       print the number of installed processors\n\
-     --ignore=N  if possible, exclude N processing units\n\
+      --all      print the number of installed processors\n\
+      --ignore=N if possible, exclude N processing units\n\
 "), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
