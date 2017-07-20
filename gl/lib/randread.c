@@ -341,7 +341,7 @@ int
 randread_free (struct randread_source *s)
 {
   FILE *source = s->source;
-  memset (s, 0, sizeof *s);
+  explicit_bzero (s, sizeof *s);
   free (s);
   return (source ? fclose (source) : 0);
 }

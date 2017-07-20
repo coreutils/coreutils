@@ -25,6 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Now, it prints a diagnostic or a line to stdout for each argument.
   [bug introduced in the bourne-shell-to-C rewrite for coreutils-6.11]
 
+  shred now erases buffers containing secrets via the explicit_bzero
+  function, which should be more reliable.
+  [potential bug has always been present in 'shred']
+
   split no longer exits when invocations of a --filter return EPIPE.
   [bug introduced in coreutils-8.26]
 
