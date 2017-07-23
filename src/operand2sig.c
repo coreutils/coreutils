@@ -53,8 +53,15 @@ operand2sig (char const *operand, char *signame)
       char *endp;
       long int l = (errno = 0, strtol (operand, &endp, 10));
       int i = l;
-      signum = (operand == endp || *endp || errno || i != l ? -1
-                : WIFSIGNALED (i) ? WTERMSIG (i) : i);
+      signum = (operand == endp || *endp || errno || i != l ? -1 : i);
+
+      if (signum != -1)
+        {
+          /* Note AIX uses a different bit pattern for status returned
+             from shell and wait(), so we can't use WTERMSIG etc. here.
+             Also ksh returns 0xFF + signal number.  */
+          signum &= signum >= 0xFF ? 0xFF : 0x7F;
+        }
     }
   else
     {
