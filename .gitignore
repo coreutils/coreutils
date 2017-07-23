@@ -106,6 +106,7 @@
 /lib/uniwidth
 /lib/uniwidth.h
 /lib/unused-parameter.h
+/lib/utime.h
 /lib/warn-on-use.h
 /lib/wchar.h
 /lib/wctype.h
