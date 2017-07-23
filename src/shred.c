@@ -653,7 +653,6 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
     }
 
 free_pattern_mem:
-  explicit_bzero (pbuf, FILLPATTERN_SIZE);
   free (fill_pattern_mem);
 
   return other_error ? -1 : write_error;
@@ -987,7 +986,6 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
     }
 
 wipefd_out:
-  explicit_bzero (passarray, flags->n_iterations * sizeof (int));
   free (passarray);
   return ok;
 }
