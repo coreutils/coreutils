@@ -45,7 +45,7 @@
  * assumption out, and the assumption that you want the data processed
  * as fast as the hard drive can spin, you can do better.
  *
- * If asked to wipe a file, this also unlinks it, renaming it to in a
+ * If asked to wipe a file, this also unlinks it, renaming it in a
  * clever way to try to leave no trace of the original filename.
  *
  * This was inspired by a desire to improve on some code titled:
