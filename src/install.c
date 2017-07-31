@@ -796,6 +796,7 @@ main (int argc, char **argv)
   int exit_status = EXIT_SUCCESS;
   const char *specified_mode = NULL;
   bool make_backups = false;
+  char const *backup_suffix = NULL;
   char *version_control_string = NULL;
   bool mkdir_and_install = false;
   struct cp_options x;
@@ -873,7 +874,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          simple_backup_suffix = optarg;
+          backup_suffix = optarg;
           break;
         case 't':
           if (target_directory)
@@ -949,6 +950,7 @@ main (int argc, char **argv)
                    ? xget_version (_("backup type"),
                                    version_control_string)
                    : no_backups);
+  set_simple_backup_suffix (backup_suffix);
 
   if (x.preserve_security_context && (x.set_security_context || scontext))
     die (EXIT_FAILURE, 0,

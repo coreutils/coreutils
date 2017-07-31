@@ -438,6 +438,7 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
+  char const *backup_suffix = NULL;
   char *version_control_string = NULL;
   char const *target_directory = NULL;
   bool no_target_directory = false;
@@ -515,7 +516,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          simple_backup_suffix = optarg;
+          backup_suffix = optarg;
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -565,6 +566,7 @@ main (int argc, char **argv)
   backup_type = (make_backups
                  ? xget_version (_("backup type"), version_control_string)
                  : no_backups);
+  set_simple_backup_suffix (backup_suffix);
 
   if (relative && !symbolic_link)
     {

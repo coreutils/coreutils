@@ -336,6 +336,7 @@ main (int argc, char **argv)
   int c;
   bool ok;
   bool make_backups = false;
+  char const *backup_suffix = NULL;
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
@@ -405,7 +406,7 @@ main (int argc, char **argv)
           break;
         case 'S':
           make_backups = true;
-          simple_backup_suffix = optarg;
+          backup_suffix = optarg;
           break;
         case 'Z':
           /* As a performance enhancement, don't even bother trying
@@ -469,6 +470,7 @@ main (int argc, char **argv)
                    ? xget_version (_("backup type"),
                                    version_control_string)
                    : no_backups);
+  set_simple_backup_suffix (backup_suffix);
 
   hash_init ();
 
