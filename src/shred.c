@@ -93,6 +93,7 @@
 #include "human.h"
 #include "randint.h"
 #include "randread.h"
+#include "renameat2.h"
 #include "stat-size.h"
 
 /* Default number of times to overwrite.  */
@@ -1077,7 +1078,6 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 {
   char *newname = xstrdup (oldname);
   char *base = last_component (newname);
-  size_t len = base_len (base);
   char *dir = dir_name (newname);
   char *qdir = xstrdup (quotef (dir));
   bool first = true;
@@ -1090,49 +1090,36 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
 
-  while ((flags->remove_file != remove_unlink) && len)
-    {
-      memset (base, nameset[0], len);
-      base[len] = 0;
-      do
-        {
-          struct stat st;
-          if (lstat (newname, &st) < 0)
-            {
-              if (rename (oldname, newname) == 0)
-                {
-                  if (0 <= dir_fd && dosync (dir_fd, qdir) != 0)
-                    ok = false;
-                  if (flags->verbose)
-                    {
-                      /*
-                       * People seem to understand this better than talking
-                       * about renaming oldname.  newname doesn't need
-                       * quoting because we picked it.  oldname needs to
-                       * be quoted only the first time.
-                       */
-                      char const *old = (first ? qoldname : oldname);
-                      error (0, 0, _("%s: renamed to %s"),
-                             old, newname);
-                      first = false;
-                    }
-                  memcpy (oldname + (base - newname), base, len + 1);
-                  break;
-                }
-              else
-                {
-                  /* The rename failed: give up on this length.  */
-                  break;
-                }
-            }
-          else
-            {
-              /* newname exists, so increment BASE so we use another */
-            }
-        }
-      while (incname (base, len));
-      len--;
-    }
+  if (flags->remove_file != remove_unlink)
+    for (size_t len = base_len (base); len != 0; len--)
+      {
+        memset (base, nameset[0], len);
+        base[len] = 0;
+        bool rename_ok;
+        while (! (rename_ok = (renameat2 (AT_FDCWD, oldname, AT_FDCWD, newname,
+                                          RENAME_NOREPLACE)
+                               == 0))
+               && errno == EEXIST && incname (base, len))
+          continue;
+        if (rename_ok)
+          {
+            if (0 <= dir_fd && dosync (dir_fd, qdir) != 0)
+              ok = false;
+            if (flags->verbose)
+              {
+                /* People seem to understand this better than talking
+                   about renaming OLDNAME.  NEWNAME doesn't need
+                   quoting because we picked it.  OLDNAME needs to be
+                   quoted only the first time.  */
+                char const *old = first ? qoldname : oldname;
+                error (0, 0, _("%s: renamed to %s"), old, newname);
+                first = false;
+              }
+            memcpy (oldname + (base - newname), base, len + 1);
+            break;
+          }
+      }
+
   if (unlink (oldname) != 0)
     {
       error (0, errno, _("%s: failed to remove"), qoldname);
