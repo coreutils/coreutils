@@ -37,6 +37,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   specifying -x nfs no longer hangs with problematic nfs mounts.
   [bug introduced in coreutils-8.21]
 
+  df no longer interacts with dummy file system types, so for example
+  no longer hangs with problematic nfs mounted via system.automount(5).
+  [bug introduced in coreutils-8.21]
+
   `groups inva:lid root` no longer exits immediately upon failure.
   Now, it prints a diagnostic or a line to stdout for each argument.
   [bug introduced in the bourne-shell-to-C rewrite for coreutils-6.11]
