@@ -15,10 +15,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   later, the races are still present on other platforms.
   [the bug dates back to the initial implementation]
 
-  cp, install, ln, and mv now use a numbered instead of a simple
-  backup if copying a backup file to what might be its original.
+  cp, install, ln, and mv no longer lose data when asked to copy a
+  backup file to its original via a differently-spelled file name.
   E.g., 'rm -f a a~; : > a; echo data > a~; cp --backup=simple a~ ./a'
-  now makes a numbered backup file instead of losing the data.
+  now fails instead of losing the data.
   [the bug dates back to the initial implementation]
 
   cp, install, ln, and mv now ignore nonsensical backup suffixes.

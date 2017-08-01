@@ -1806,6 +1806,29 @@ should_dereference (const struct cp_options *x, bool command_line_arg)
              && command_line_arg);
 }
 
+/* Return true if the source file with basename SRCBASE and status SRC_ST
+   is likely to be the simple backup file for DST_NAME.  */
+static bool
+source_is_dst_backup (char const *srcbase, struct stat const *src_st,
+                      char const *dst_name)
+{
+  size_t srcbaselen = strlen (srcbase);
+  char const *dstbase = last_component (dst_name);
+  size_t dstbaselen = strlen (dstbase);
+  size_t suffixlen = strlen (simple_backup_suffix);
+  if (! (srcbaselen == dstbaselen + suffixlen
+         && memcmp (srcbase, dstbase, dstbaselen) == 0
+         && STREQ (srcbase + dstbaselen, simple_backup_suffix)))
+    return false;
+  size_t dstlen = strlen (dst_name);
+  char *dst_back = xmalloc (dstlen + suffixlen + 1);
+  strcpy (mempcpy (dst_back, dst_name, dstlen), simple_backup_suffix);
+  struct stat dst_back_sb;
+  int dst_back_status = stat (dst_back, &dst_back_sb);
+  free (dst_back);
+  return dst_back_status == 0 && SAME_INODE (*src_st, dst_back_sb);
+}
+
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
@@ -2081,23 +2104,24 @@ copy_internal (char const *src_name, char const *dst_name,
                  existing hierarchy.  */
               && (x->move_mode || ! S_ISDIR (dst_sb.st_mode)))
             {
-              /* Silently use numbered backups if creating the backup
-                 file might destroy the source file.  Otherwise, the commands:
+              /* Fail if creating the backup file would likely destroy
+                 the source file.  Otherwise, the commands:
                  cd /tmp; rm -f a a~; : > a; echo A > a~; cp --b=simple a~ a
                  would leave two zero-length files: a and a~.  */
-              enum backup_type backup_type = x->backup_type;
-              if (backup_type != numbered_backups)
+              if (x->backup_type != numbered_backups
+                  && source_is_dst_backup (srcbase, &src_sb, dst_name))
                 {
-                  size_t srcbaselen = strlen (srcbase);
-                  char const *dstbase = last_component (dst_name);
-                  size_t dstbaselen = strlen (dstbase);
-                  if (srcbaselen == dstbaselen + strlen (simple_backup_suffix)
-                      && memcmp (srcbase, dstbase, dstbaselen) == 0
-                      && STREQ (srcbase + dstbaselen, simple_backup_suffix))
-                    backup_type = numbered_backups;
+                  const char *fmt;
+                  fmt = (x->move_mode
+                 ? _("backing up %s would destroy source;  %s not moved")
+                 : _("backing up %s would destroy source;  %s not copied"));
+                  error (0, 0, fmt,
+                         quoteaf_n (0, dst_name),
+                         quoteaf_n (1, src_name));
+                  return false;
                 }
 
-              char *tmp_backup = backup_file_rename (dst_name, backup_type);
+              char *tmp_backup = backup_file_rename (dst_name, x->backup_type);
 
               /* FIXME: use fts:
                  Using alloca for a file name that may be arbitrarily

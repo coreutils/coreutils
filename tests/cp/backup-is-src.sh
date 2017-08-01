@@ -20,15 +20,17 @@
 print_ver_ cp
 
 echo a > a || framework_failure_
-cp a a0 || framework_failure_
 echo a-tilde > a~ || framework_failure_
-cp a~ a~0 || framework_failure_
 
-# This cp command should not trash the source.
-cp --b=simple a~ ./a > out 2>&1 || fail=1
+# This cp command should exit nonzero.
+cp --b=simple a~ a > out 2>&1 && fail=1
 
-compare a~0 a || fail=1
-compare a~0 a~ || fail=1
-compare a0 a.~1~ || fail=1
+sed "s,cp:,XXX:," out > out2
+
+cat > exp <<\EOF
+XXX: backing up 'a' would destroy source;  'a~' not copied
+EOF
+
+compare exp out2 || fail=1
 
 Exit $fail

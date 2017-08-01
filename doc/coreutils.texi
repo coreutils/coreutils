@@ -865,19 +865,17 @@ Never make backups.
 @opindex numbered @r{backup method}
 Always make numbered backups.
 
-@item simple
-@itemx never
-@opindex simple @r{backup method}
-Make simple backups, except make a numbered backup if the source might
-be a simple backup of the destination; this avoids losing source data.
-Please note @samp{never} is not to be confused with @samp{none}.
-
 @item existing
 @itemx nil
 @opindex existing @r{backup method}
-Make numbered backups of files that already have them, or if the source
-might be a simple backup of the destination.
-Otherwise, make simple backups.
+Make numbered backups of files that already have them, simple backups
+of the others.
+
+@item simple
+@itemx never
+@opindex simple @r{backup method}
+Always make simple backups.  Please note @samp{never} is not to be
+confused with @samp{none}.
 
 @end table
 
