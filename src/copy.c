@@ -2113,8 +2113,8 @@ copy_internal (char const *src_name, char const *dst_name,
                 {
                   const char *fmt;
                   fmt = (x->move_mode
-                 ? _("backing up %s would destroy source;  %s not moved")
-                 : _("backing up %s would destroy source;  %s not copied"));
+                 ? _("backing up %s might destroy source;  %s not moved")
+                 : _("backing up %s might destroy source;  %s not copied"));
                   error (0, 0, fmt,
                          quoteaf_n (0, dst_name),
                          quoteaf_n (1, src_name));
