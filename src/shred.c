@@ -1112,7 +1112,8 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
                    quoting because we picked it.  OLDNAME needs to be
                    quoted only the first time.  */
                 char const *old = first ? qoldname : oldname;
-                error (0, 0, _("%s: renamed to %s"), old, newname);
+                error (0, 0,
+                       _("%s: renamed to %s"), old, newname);
                 first = false;
               }
             memcpy (oldname + (base - newname), base, len + 1);
