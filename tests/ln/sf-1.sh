@@ -33,9 +33,14 @@ esac
 
 # Ensure we replace symlinks that don't or can't link to an existing target.
 # coreutils-8.22 would fail to replace {ENOTDIR,ELOOP,ENAMETOOLONG}_link below.
-name_max_plus1=$(expr $(stat -f -c %l .) + 1)
+name_max=$(stat -f -c %l .) || skip_ 'Error determining NAME_MAX'
+# Apply a limit since AIX returns 2^32-1 which would trigger resource issues.
+name_limit=$((1024*1024))
+test "$name_max" -lt "$name_limit" || name_max="$name_limit"
+name_max_plus1=$(expr $name_max + 1)
 test $name_max_plus1 -gt 1 || skip_ 'Error determining NAME_MAX'
 long_name=$(printf '%0*d' $name_max_plus1 0)
+
 for f in '' f; do
   ln -s$f missing ENOENT_link || fail=1
   ln -s$f a/b ENOTDIR_link || fail=1
