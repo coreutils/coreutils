@@ -6131,7 +6131,7 @@ f Z
 
 $ join file1 file2
 a 1 X
-e 5 Z
+e 5 Y
 @end group
 @end example
 
