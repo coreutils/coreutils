@@ -133,6 +133,8 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wswitch-default"         # Too many warnings for now
   nw="$nw -Wstack-protector"        # not worth working around
   nw="$nw -Wtype-limits"            # False alarms for portable code
+  nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 80776
+  nw="$nw -Wformat-truncation=2"    # False alarm in ls.c, probably related
   # things I might fix soon:
   nw="$nw -Wfloat-equal"            # sort.c, seq.c
   nw="$nw -Wmissing-format-attribute" # copy.c
@@ -193,6 +195,8 @@ if test "$gl_gcc_warnings" = yes; then
   # We use a slightly smaller set of warning options for lib/.
   # Remove the following and save the result in GNULIB_WARN_CFLAGS.
   nw=
+  nw="$nw -Wduplicated-branches"    # Too many false alarms
+  nw="$nw -Wformat-truncation=2"
   nw="$nw -Wstrict-overflow"
   nw="$nw -Wuninitialized"
   nw="$nw -Wunused-macros"
