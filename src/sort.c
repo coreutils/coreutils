@@ -4675,18 +4675,19 @@ main (int argc, char **argv)
 
       /* Always output the locale in debug mode, since this
          is such a common source of confusion.  */
+
+      /* OpenBSD can only set some categories with LC_ALL above,
+         so set LC_COLLATE explicitly to flag errors.  */
+      if (locale_ok)
+        locale_ok = !! setlocale (LC_COLLATE, "");
+      if (! locale_ok)
+          error (0, 0, "%s", _("failed to set locale"));
       if (hard_LC_COLLATE)
         error (0, 0, _("using %s sorting rules"),
                quote (setlocale (LC_COLLATE, NULL)));
       else
-        {
-          /* OpenBSD can only set some categories with LC_ALL above,
-             so set LC_COLLATE explicitly to flag errors.  */
-          if (locale_ok)
-            locale_ok = !! setlocale (LC_COLLATE, "");
-          error (0, 0, "%s%s", locale_ok ? "" : _("failed to set locale; "),
-                 _("using simple byte comparison"));
-        }
+        error (0, 0, "%s", _("using simple byte comparison"));
+
       key_warnings (&gkey, gkey_only);
     }
 

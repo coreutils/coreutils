@@ -71,7 +71,8 @@ sort: using simple byte comparison
 17
 sort: using simple byte comparison
 18
-sort: failed to set locale; using simple byte comparison
+sort: failed to set locale
+sort: using simple byte comparison
 EOF
 
 echo 1 >> out
@@ -109,7 +110,11 @@ sort -rM --debug /dev/null 2>>out #no warning
 echo 17 >> out
 sort -rM -k1,1 --debug /dev/null 2>>out #no warning
 echo 18 >> out
-LC_ALL=missing sort --debug /dev/null 2>>out
+LC_ALL=missing sort --debug /dev/null 2>>out.t
+# musl libc accepts "missing" and implicitly uses UTF8,
+# so adjust the expected message accordingly.
+sed 's/using .*missing.* sorting rules/using simple byte comparison/' \
+  out.t >>out
 
 compare exp out || fail=1
 
