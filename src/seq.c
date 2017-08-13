@@ -284,7 +284,7 @@ io_error (void)
 {
   /* FIXME: consider option to silently ignore errno=EPIPE */
   clearerr (stdout);
-  die (EXIT_FAILURE, errno, _("standard output"));
+  die (EXIT_FAILURE, errno, _("write error"));
 }
 
 /* Actually print the sequence of numbers in the specified range, with the
