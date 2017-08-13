@@ -50,6 +50,9 @@ vm=$(get_min_ulimit_v_ env $prog %20f 0) \
 
 mkfifo_or_skip_ fifo
 
+(trap '' PIPE && yes | :) 2>&1 | grep -qF 'Broken pipe' ||
+    skip_ 'trapping SIGPIPE is not supported'
+
 # Disable MALLOC_PERTURB_, to avoid triggering this bug
 # https://bugs.debian.org/481543#77
 export MALLOC_PERTURB_=0
@@ -60,11 +63,11 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 head -c 10 fifo > out & pid=$!
 
 # Trigger large mem allocation failure
-( ulimit -v $vm && env $prog %20000000f 0 2>err-msg > fifo )
+( trap '' PIPE && ulimit -v $vm && env $prog %20000000f 0 2>err-msg > fifo )
 exit=$?
 
 # Map this longer, and rarer, diagnostic to the common one.
-# printf: cannot perform formatted output: Cannot allocate memory" \
+# printf: cannot perform formatted output: Cannot allocate memory"
 sed 's/cannot perform .*/write error/' err-msg > k && mv k err-msg
 err_msg=$(tr '\n' : < err-msg)
 
@@ -81,6 +84,7 @@ n_out=$(wc -c < out)
 
 case $n_out:$diagnostic:$exit in
   10:n:0) ;; # ok, succeeds w/no diagnostic: FreeBSD 6.1
+  10:y:1) ;; # ok, fails with EPIPE diagnostic: musl libc
   0:y:1)  ;; # ok, glibc-2.8 and newer, when printf(3) fails with ENOMEM
 
   # With MALLOC_PERTURB_=0, this no longer happens.
