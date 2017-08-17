@@ -24,7 +24,6 @@
 
 #include "system.h"
 
-#include "cloexec.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "fd-reopen.h"
@@ -182,12 +181,8 @@ main (int argc, char **argv)
          if execve fails.  It's no big deal if this dup fails.  It might
          not change anything, and at worst, it'll lead to suppression of
          the post-failed-execve diagnostic.  */
-      saved_stderr_fd = dup (STDERR_FILENO);
-
-      if (0 <= saved_stderr_fd
-          && set_cloexec_flag (saved_stderr_fd, true) != 0)
-        error (exit_internal_failure, errno,
-               _("failed to set the copy of stderr to close on exec"));
+      saved_stderr_fd = fcntl (STDERR_FILENO, F_DUPFD_CLOEXEC,
+                               STDERR_FILENO + 1);
 
       if (!redirecting_stdout)
         error (0, 0,
