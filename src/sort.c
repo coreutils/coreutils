@@ -374,9 +374,9 @@ static bool debug;
    number are present, temp files will be used. */
 static unsigned int nmerge = NMERGE_DEFAULT;
 
-/* Output an error to stderr using async-signal-safe routines, and _exit().
+/* Output an error to stderr and exit using async-signal-safe routines.
    This can be used safely from signal handlers,
-   and between fork() and exec() of multithreaded processes.  */
+   and between fork and exec of multithreaded processes.  */
 
 static void async_safe_die (int, const char *) ATTRIBUTE_NORETURN;
 static void
@@ -386,7 +386,7 @@ async_safe_die (int errnum, const char *errstr)
 
   /* Even if defined HAVE_STRERROR_R, we can't use it,
      as it may return a translated string etc. and even if not
-     may malloc() which is unsafe.  We might improve this
+     may call malloc which is unsafe.  We might improve this
      by testing for sys_errlist and using that if available.
      For now just report the error number.  */
   if (errnum)
@@ -897,7 +897,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
    opening an ordinary FILE.  Return NULL if unsuccessful.
 
-   fadvise() is used to specify an access pattern for input files.
+   Use fadvise to specify an access pattern for input files.
    There are a few hints we could possibly provide,
    and after careful testing it was decided that
    specifying FADVISE_SEQUENTIAL was not detrimental
@@ -920,7 +920,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
    in a couple of cases:
      Merging
      Sorting with a smaller internal buffer
-   Note this option was seen to shorten the runtime for sort
+   This option was seen to shorten the runtime for sort
    on a multicore system with lots of RAM and other processes
    competing for CPU.  It could be argued that more explicit
    scheduling hints with 'nice' et. al. are more appropriate
@@ -1008,8 +1008,10 @@ xfclose (FILE *fp, char const *file)
     }
 }
 
+/* Move OLDFD to NEWFD.  If OLDFD != NEWFD, NEWFD is not close-on-exec.  */
+
 static void
-move_fd_or_die (int oldfd, int newfd)
+move_fd (int oldfd, int newfd)
 {
   if (oldfd != newfd)
     {
@@ -1020,7 +1022,7 @@ move_fd_or_die (int oldfd, int newfd)
 }
 
 /* Fork a child process for piping to and do common cleanup.  The
-   TRIES parameter tells us how many times to try to fork before
+   TRIES parameter specifies how many times to try to fork before
    giving up.  Return the PID of the child, or -1 (setting errno)
    on failure. */
 
@@ -1126,11 +1128,11 @@ maybe_create_temp (FILE **pfp, bool survive_fd_exhaustion)
         }
       else if (node->pid == 0)
         {
-          /* Being the child of a multithreaded program before exec(),
+          /* Being the child of a multithreaded program before exec,
              we're restricted to calling async-signal-safe routines here.  */
           close (pipefds[1]);
-          move_fd_or_die (tempfd, STDOUT_FILENO);
-          move_fd_or_die (pipefds[0], STDIN_FILENO);
+          move_fd (tempfd, STDOUT_FILENO);
+          move_fd (pipefds[0], STDIN_FILENO);
 
           execlp (compress_program, compress_program, (char *) NULL);
 
@@ -1186,11 +1188,11 @@ open_temp (struct tempnode *temp)
       break;
 
     case 0:
-      /* Being the child of a multithreaded program before exec(),
+      /* Being the child of a multithreaded program before exec,
          we're restricted to calling async-signal-safe routines here.  */
       close (pipefds[0]);
-      move_fd_or_die (tempfd, STDIN_FILENO);
-      move_fd_or_die (pipefds[1], STDOUT_FILENO);
+      move_fd (tempfd, STDIN_FILENO);
+      move_fd (pipefds[1], STDOUT_FILENO);
 
       execlp (compress_program, compress_program, "-d", (char *) NULL);
 
@@ -1802,7 +1804,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
             {
               /* Delimit the line with NUL. This eliminates the need to
                  temporarily replace the last byte with NUL when calling
-                 xmemcoll(), which increases performance.  */
+                 xmemcoll, which increases performance.  */
               *p = '\0';
               ptr = p + 1;
               line--;
@@ -2491,7 +2493,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
     }
 
   /* Warn about ignored global options flagged above.
-     Note if gkey is the only one in the list, all flags are cleared.  */
+     This clears all flags if UGKEY is the only one in the list.  */
   if (!default_key_compare (&ugkey)
       || (ugkey.reverse && (stable || unique) && keylist))
     {
@@ -2745,7 +2747,7 @@ compare (struct line const *a, struct line const *b)
     diff = 1;
   else if (hard_LC_COLLATE)
     {
-      /* Note xmemcoll0 is a performance enhancement as
+      /* xmemcoll0 is a performance enhancement as
          it will not unconditionally write '\0' after the
          passed in buffers, which was seen to give around
          a 3% increase in performance for short lines.  */
@@ -3739,8 +3741,8 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
 /* Scan the input files to ensure all are accessible.
    Otherwise exit with a diagnostic.
 
-   Note this will catch common issues with permissions etc.
-   but will fail to notice issues where you can open() but not read(),
+   This will catch common issues with permissions etc.
+   but will fail to notice issues where you can open but not read,
    like when a directory is specified on some systems.
    Catching these obscure cases could slow down performance in
    common cases.  */
@@ -3771,7 +3773,7 @@ check_output (char const *outfile)
       int outfd = open (outfile, oflags, MODE_RW_UGO);
       if (outfd < 0)
         sort_die (_("open failed"), outfile);
-      move_fd_or_die (outfd, STDOUT_FILENO);
+      move_fd (outfd, STDOUT_FILENO);
     }
 }
 
