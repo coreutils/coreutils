@@ -59,9 +59,9 @@
 /* Global definitions.  */
 
 /* FIXME: There are many unchecked integer overflows in this file,
-   that will cause this command to misbehave given large inputs or
-   options.  Many of the "int" values below should be "size_t" or
-   something else like that.  */
+   and in theory they could cause this command to have undefined
+   behavior given large inputs or options.  This command should
+   diagnose any such overflow and exit.  */
 
 /* Program options.  */
 
@@ -77,8 +77,8 @@ static bool gnu_extensions = true;	/* trigger all GNU extensions */
 static bool auto_reference = false;	/* refs are 'file_name:line_number:' */
 static bool input_reference = false;	/* refs at beginning of input lines */
 static bool right_reference = false;	/* output refs after right context  */
-static int line_width = 72;	/* output line width in characters */
-static int gap_size = 3;	/* number of spaces between output fields */
+static ptrdiff_t line_width = 72;	/* output line width in characters */
+static ptrdiff_t gap_size = 3;	/* number of spaces between output fields */
 static const char *truncation_string = "/";
                                 /* string used to mark line truncations */
 static const char *macro_name = "xx";	/* macro name for roff or TeX output */
@@ -105,8 +105,8 @@ static struct regex_data context_regex;	/* end of context */
 static struct regex_data word_regex;	/* keyword */
 
 /* A BLOCK delimit a region in memory of arbitrary size, like the copy of a
-   whole file.  A WORD is something smaller, its length should fit in a
-   short integer.  A WORD_TABLE may contain several WORDs.  */
+   whole file.  A WORD is similar, except it is intended for smaller regions.
+   A WORD_TABLE may contain several WORDs.  */
 
 typedef struct
   {
@@ -118,7 +118,7 @@ BLOCK;
 typedef struct
   {
     char *start;		/* pointer to beginning of region */
-    short int size;		/* length of the region */
+    ptrdiff_t size;		/* length of the region */
   }
 WORD;
 
@@ -126,7 +126,7 @@ typedef struct
   {
     WORD *start;		/* array of WORDs */
     size_t alloc;		/* allocated length */
-    size_t length;		/* number of used entries */
+    ptrdiff_t length;		/* number of used entries */
   }
 WORD_TABLE;
 
@@ -149,10 +149,10 @@ static struct re_registers word_regs;
 static char word_fastmap[CHAR_SET_SIZE];
 
 /* Maximum length of any word read.  */
-static int maximum_word_length;
+static ptrdiff_t maximum_word_length;
 
 /* Maximum width of any reference used.  */
-static int reference_max_width;
+static ptrdiff_t reference_max_width;
 
 /* Ignore and Only word tables.  */
 
@@ -162,9 +162,9 @@ static WORD_TABLE only_table;		/* table of words to select */
 /* Source text table, and scanning macros.  */
 
 static int number_input_files;	/* number of text input files */
-static int total_line_count;	/* total number of lines seen so far */
+static intmax_t total_line_count;	/* total number of lines seen so far */
 static const char **input_file_name;	/* array of text input file names */
-static int *file_line_count;	/* array of 'total_line_count' values at end */
+static intmax_t *file_line_count;	/* array of line count values at end */
 
 static BLOCK *text_buffers;	/* files to study */
 
@@ -219,20 +219,18 @@ static BLOCK *text_buffers;	/* files to study */
 
    When automatic references are used, the 'reference' value is the
    overall line number in all input files read so far, in this case, it
-   is of type (int).  When input references are used, the 'reference'
+   is of type intmax_t.  When input references are used, the 'reference'
    value indicates the distance between the keyword beginning and the
-   start of the reference field, it is of type (DELTA) and usually
+   start of the reference field, and it fits in ptrdiff_t and is usually
    negative.  */
-
-typedef short int DELTA;	/* to hold displacement within one context */
 
 typedef struct
   {
     WORD key;			/* description of the keyword */
-    DELTA left;			/* distance to left context start */
-    DELTA right;		/* distance to right context end */
-    int reference;		/* reference descriptor */
-    size_t file_index;		/* corresponding file  */
+    ptrdiff_t left;		/* distance to left context start */
+    ptrdiff_t right;		/* distance to right context end */
+    intmax_t reference;		/* reference descriptor */
+    int file_index;		/* corresponding file  */
   }
 OCCURS;
 
@@ -241,7 +239,7 @@ OCCURS;
 
 static OCCURS *occurs_table[1];	/* all words retained from the read text */
 static size_t occurs_alloc[1];	/* allocated size of occurs_table */
-static size_t number_of_occurs[1]; /* number of used slots in occurs_table */
+static ptrdiff_t number_of_occurs[1]; /* number of used slots in occurs_table */
 
 
 /* Communication among output routines.  */
@@ -249,10 +247,17 @@ static size_t number_of_occurs[1]; /* number of used slots in occurs_table */
 /* Indicate if special output processing is requested for each character.  */
 static char edited_flag[CHAR_SET_SIZE];
 
-static int half_line_width;	/* half of line width, reference excluded */
-static int before_max_width;	/* maximum width of before field */
-static int keyafter_max_width;	/* maximum width of keyword-and-after field */
-static int truncation_string_length;/* length of string that flags truncation */
+/* Half of line width, reference excluded.  */
+static ptrdiff_t half_line_width;
+
+/* Maximum width of before field.  */
+static ptrdiff_t before_max_width;
+
+/* Maximum width of keyword-and-after field.  */
+static ptrdiff_t keyafter_max_width;
+
+/* Length of string that flags truncation.  */
+static ptrdiff_t truncation_string_length;
 
 /* When context is limited by lines, wraparound may happen on final output:
    the 'head' pointer gives access to some supplementary left context which
@@ -261,16 +266,16 @@ static int truncation_string_length;/* length of string that flags truncation */
    beginning of the output line. */
 
 static BLOCK tail;		/* tail field */
-static int tail_truncation;	/* flag truncation after the tail field */
+static bool tail_truncation;	/* flag truncation after the tail field */
 
 static BLOCK before;		/* before field */
-static int before_truncation;	/* flag truncation before the before field */
+static bool before_truncation;	/* flag truncation before the before field */
 
 static BLOCK keyafter;		/* keyword-and-after field */
-static int keyafter_truncation;	/* flag truncation after the keyafter field */
+static bool keyafter_truncation; /* flag truncation after the keyafter field */
 
 static BLOCK head;		/* head field */
-static int head_truncation;	/* flag truncation before the head field */
+static bool head_truncation;	/* flag truncation before the head field */
 
 static BLOCK reference;		/* reference field for input reference mode */
 
@@ -540,8 +545,8 @@ compare_words (const void *void_first, const void *void_second)
 {
 #define first ((const WORD *) void_first)
 #define second ((const WORD *) void_second)
-  int length;			/* minimum of two lengths */
-  int counter;			/* cursor in words */
+  ptrdiff_t length;		/* minimum of two lengths */
+  ptrdiff_t counter;		/* cursor in words */
   int value;			/* value of comparison */
 
   length = first->size < second->size ? first->size : second->size;
@@ -567,7 +572,7 @@ compare_words (const void *void_first, const void *void_second)
         }
     }
 
-  return first->size - second->size;
+  return first->size < second->size ? -1 : first->size > second->size;
 #undef first
 #undef second
 }
@@ -586,21 +591,21 @@ compare_occurs (const void *void_first, const void *void_second)
   int value;
 
   value = compare_words (&first->key, &second->key);
-  return value == 0 ? first->key.start - second->key.start : value;
+  return (value ? value
+          : first->key.start < second->key.start ? -1
+          : first->key.start > second->key.start);
 #undef first
 #undef second
 }
 
-/*------------------------------------------------------------.
-| Return !0 if WORD appears in TABLE.  Uses a binary search.  |
-`------------------------------------------------------------*/
+/* True if WORD appears in TABLE.  Uses a binary search.  */
 
-static int _GL_ATTRIBUTE_PURE
+static bool _GL_ATTRIBUTE_PURE
 search_table (WORD *word, WORD_TABLE *table)
 {
-  int lowest;			/* current lowest possible index */
-  int highest;			/* current highest possible index */
-  int middle;			/* current middle index */
+  ptrdiff_t lowest;		/* current lowest possible index */
+  ptrdiff_t highest;		/* current highest possible index */
+  ptrdiff_t middle;		/* current middle index */
   int value;			/* value from last comparison */
 
   lowest = 0;
@@ -614,9 +619,9 @@ search_table (WORD *word, WORD_TABLE *table)
       else if (value > 0)
         lowest = middle + 1;
       else
-        return 1;
+        return true;
     }
-  return 0;
+  return false;
 }
 
 /*---------------------------------------------------------------------.
@@ -713,14 +718,8 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
       if (cursor > word_start)
         {
           if (table->length == table->alloc)
-            {
-              if ((SIZE_MAX / sizeof *table->start - 1) / 2 < table->alloc)
-                xalloc_die ();
-              table->alloc = table->alloc * 2 + 1;
-              table->start = xrealloc (table->start,
-                                       table->alloc * sizeof *table->start);
-            }
-
+            table->start = x2nrealloc (table->start, &table->alloc,
+                                       sizeof *table->start);
           table->start[table->length].start = word_start;
           table->start[table->length].size = cursor - word_start;
           table->length++;
@@ -744,13 +743,13 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
 `----------------------------------------------------------------------*/
 
 static void
-find_occurs_in_text (size_t file_index)
+find_occurs_in_text (int file_index)
 {
   char *cursor;			/* for scanning the source text */
   char *scan;			/* for scanning the source text also */
   char *line_start;		/* start of the current input line */
   char *line_scan;		/* newlines scanned until this point */
-  int reference_length;		/* length of reference in input mode */
+  ptrdiff_t reference_length;	/* length of reference in input mode */
   WORD possible_key;		/* possible key, to ease searches */
   OCCURS *occurs_cursor;	/* current OCCURS under construction */
 
@@ -946,16 +945,9 @@ find_occurs_in_text (size_t file_index)
              where it will be constructed.  */
 
           if (number_of_occurs[0] == occurs_alloc[0])
-            {
-              if ((SIZE_MAX / sizeof *occurs_table[0] - 1) / 2
-                  < occurs_alloc[0])
-                xalloc_die ();
-              occurs_alloc[0] = occurs_alloc[0] * 2 + 1;
-              occurs_table[0] =
-                xrealloc (occurs_table[0],
-                          occurs_alloc[0] * sizeof *occurs_table[0]);
-            }
-
+            occurs_table[0] = x2nrealloc (occurs_table[0],
+                                          &occurs_alloc[0],
+                                          sizeof *occurs_table[0]);
           occurs_cursor = occurs_table[0] + number_of_occurs[0];
 
           /* Define the reference field, if any.  */
@@ -990,8 +982,7 @@ find_occurs_in_text (size_t file_index)
                  of the reference.  The reference position is simply the
                  value of 'line_start'.  */
 
-              occurs_cursor->reference
-                = (DELTA) (line_start - possible_key.start);
+              occurs_cursor->reference = line_start - possible_key.start;
               if (reference_length > reference_max_width)
                 reference_max_width = reference_length;
             }
@@ -1023,11 +1014,9 @@ find_occurs_in_text (size_t file_index)
 `-----------------------------------------*/
 
 static void
-print_spaces (int number)
+print_spaces (ptrdiff_t number)
 {
-  int counter;
-
-  for (counter = number; counter > 0; counter--)
+  for (ptrdiff_t counter = number; counter > 0; counter--)
     putchar (' ');
 }
 
@@ -1200,10 +1189,9 @@ print_field (BLOCK field)
 static void
 fix_output_parameters (void)
 {
-  size_t file_index;		/* index in text input file arrays */
-  int line_ordinal;		/* line ordinal value for reference */
-  char ordinal_string[12];	/* edited line ordinal for reference */
-  int reference_width;		/* width for the whole reference */
+  int file_index;		/* index in text input file arrays */
+  intmax_t line_ordinal;	/* line ordinal value for reference */
+  ptrdiff_t reference_width;	/* width for the whole reference */
   int character;		/* character ordinal */
   const char *cursor;		/* cursor in some constant strings */
 
@@ -1219,15 +1207,15 @@ fix_output_parameters (void)
           line_ordinal = file_line_count[file_index] + 1;
           if (file_index > 0)
             line_ordinal -= file_line_count[file_index - 1];
-          sprintf (ordinal_string, "%d", line_ordinal);
-          reference_width = strlen (ordinal_string);
+          char ordinal_string[INT_BUFSIZE_BOUND (intmax_t)];
+          reference_width = sprintf (ordinal_string, "%"PRIdMAX, line_ordinal);
           if (input_file_name[file_index])
             reference_width += strlen (input_file_name[file_index]);
           if (reference_width > reference_max_width)
             reference_max_width = reference_width;
         }
       reference_max_width++;
-      reference.start = xmalloc ((size_t) reference_max_width + 1);
+      reference.start = xmalloc (reference_max_width + 1);
     }
 
   /* If the reference appears to the left of the output line, reserve some
@@ -1355,14 +1343,14 @@ fix_output_parameters (void)
 static void
 define_all_fields (OCCURS *occurs)
 {
-  int tail_max_width;		/* allowable width of tail field */
-  int head_max_width;		/* allowable width of head field */
+  ptrdiff_t tail_max_width;	/* allowable width of tail field */
+  ptrdiff_t head_max_width;	/* allowable width of head field */
   char *cursor;			/* running cursor in source text */
   char *left_context_start;	/* start of left context */
   char *right_context_end;	/* end of right context */
   char *left_field_start;	/* conservative start for 'head'/'before' */
   const char *file_name;	/* file name for reference */
-  int line_ordinal;		/* line ordinal for reference */
+  intmax_t line_ordinal;	/* line ordinal for reference */
   const char *buffer_start;	/* start of buffered file for this occurs */
   const char *buffer_end;	/* end of buffered file for this occurs */
 
@@ -1435,7 +1423,7 @@ define_all_fields (OCCURS *occurs)
       before_truncation = cursor > left_context_start;
     }
   else
-    before_truncation = 0;
+    before_truncation = false;
 
   SKIP_WHITE (before.start, buffer_end);
 
@@ -1468,11 +1456,11 @@ define_all_fields (OCCURS *occurs)
 
       if (tail.end > tail.start)
         {
-          keyafter_truncation = 0;
+          keyafter_truncation = false;
           tail_truncation = truncation_string && tail.end < right_context_end;
         }
       else
-        tail_truncation = 0;
+        tail_truncation = false;
 
       SKIP_WHITE_BACKWARDS (tail.end, tail.start);
     }
@@ -1483,7 +1471,7 @@ define_all_fields (OCCURS *occurs)
 
       tail.start = NULL;
       tail.end = NULL;
-      tail_truncation = 0;
+      tail_truncation = false;
     }
 
   /* 'head' could not take more columns than what has been left in the right
@@ -1506,12 +1494,12 @@ define_all_fields (OCCURS *occurs)
 
       if (head.end > head.start)
         {
-          before_truncation = 0;
+          before_truncation = false;
           head_truncation = (truncation_string
                              && head.start > left_context_start);
         }
       else
-        head_truncation = 0;
+        head_truncation = false;
 
       SKIP_WHITE (head.start, head.end);
     }
@@ -1522,7 +1510,7 @@ define_all_fields (OCCURS *occurs)
 
       head.start = NULL;
       head.end = NULL;
-      head_truncation = 0;
+      head_truncation = false;
     }
 
   if (auto_reference)
@@ -1540,8 +1528,8 @@ define_all_fields (OCCURS *occurs)
       if (occurs->file_index > 0)
         line_ordinal -= file_line_count[occurs->file_index - 1];
 
-      sprintf (reference.start, "%s:%d", file_name, line_ordinal);
-      reference.end = reference.start + strlen (reference.start);
+      char *file_end = stpcpy (reference.start, file_name);
+      reference.end = file_end + sprintf (file_end, ":%"PRIdMAX, line_ordinal);
     }
   else if (input_reference)
     {
@@ -1549,7 +1537,7 @@ define_all_fields (OCCURS *occurs)
       /* Reference starts at saved position for reference and extends right
          until some white space is met.  */
 
-      reference.start = keyafter.start + (DELTA) occurs->reference;
+      reference.start = keyafter.start + occurs->reference;
       reference.end = reference.start;
       SKIP_NON_WHITE (reference.end, right_context_end);
     }
@@ -1753,7 +1741,7 @@ output_one_dumb_line (void)
 static void
 generate_all_output (void)
 {
-  size_t occurs_index;		/* index of keyword entry being processed */
+  ptrdiff_t occurs_index;	/* index of keyword entry being processed */
   OCCURS *occurs_cursor;	/* current keyword entry being processed */
 
   /* The following assignments are useful to provide default values in case
@@ -1762,11 +1750,11 @@ generate_all_output (void)
 
   tail.start = NULL;
   tail.end = NULL;
-  tail_truncation = 0;
+  tail_truncation = false;
 
   head.start = NULL;
   head.end = NULL;
-  head_truncation = 0;
+  head_truncation = false;
 
   /* Loop over all keyword occurrences.  */
 
@@ -1946,12 +1934,12 @@ main (int argc, char **argv)
 
         case 'g':
           {
-            unsigned long int tmp_ulong;
-            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-                || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+            intmax_t tmp;
+            if (! (xstrtoimax (optarg, NULL, 0, &tmp, NULL) == LONGINT_OK
+                   && 0 < tmp && tmp <= PTRDIFF_MAX))
               die (EXIT_FAILURE, 0, _("invalid gap width: %s"),
                    quote (optarg));
-            gap_size = tmp_ulong;
+            gap_size = tmp;
             break;
           }
 
@@ -1973,12 +1961,12 @@ main (int argc, char **argv)
 
         case 'w':
           {
-            unsigned long int tmp_ulong;
-            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-                || ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+            intmax_t tmp;
+            if (! (xstrtoimax (optarg, NULL, 0, &tmp, NULL) == LONGINT_OK
+                   && 0 < tmp && tmp <= PTRDIFF_MAX))
               die (EXIT_FAILURE, 0, _("invalid line width: %s"),
                    quote (optarg));
-            line_width = tmp_ulong;
+            line_width = tmp;
             break;
           }
 
@@ -2045,9 +2033,9 @@ main (int argc, char **argv)
   else if (gnu_extensions)
     {
       number_input_files = argc - optind;
-      input_file_name = xmalloc (number_input_files * sizeof *input_file_name);
-      file_line_count = xmalloc (number_input_files * sizeof *file_line_count);
-      text_buffers    = xmalloc (number_input_files * sizeof *text_buffers);
+      input_file_name = xnmalloc (number_input_files, sizeof *input_file_name);
+      file_line_count = xnmalloc (number_input_files, sizeof *file_line_count);
+      text_buffers    = xnmalloc (number_input_files, sizeof *text_buffers);
 
       for (file_index = 0; file_index < number_input_files; file_index++)
         {
