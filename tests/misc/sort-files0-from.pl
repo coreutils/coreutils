@@ -37,7 +37,7 @@ my @Tests =
 
    # missing input file
    ['missing', '--files0-from=missing', {EXIT=>2},
-    {ERR => "$prog: cannot open 'missing' for reading: "
+    {ERR => "$prog: open failed: missing: "
      . "No such file or directory\n"}],
 
    # input file name of '-'

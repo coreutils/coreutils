@@ -868,7 +868,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
 
   /* Create the temporary file in a critical section, to avoid races.  */
   cs = cs_enter ();
-  fd = mkstemp (file);
+  fd = mkostemp (file, O_CLOEXEC);
   if (0 <= fd)
     {
       *temptail = node;
@@ -951,7 +951,10 @@ stream_open (char const *file, char const *how)
           fp = stdin;
         }
       else
-        fp = fopen (file, how);
+        {
+          int fd = open (file, O_RDONLY | O_CLOEXEC);
+          fp = fd < 0 ? NULL : fdopen (fd, how);
+        }
       fadvise (fp, FADVISE_SEQUENTIAL);
     }
   else if (*how == 'w')
@@ -1031,7 +1034,7 @@ pipe_fork (int pipefds[2], size_t tries)
   pid_t pid IF_LINT ( = -1);
   struct cs_status cs;
 
-  if (pipe (pipefds) < 0)
+  if (pipe2 (pipefds, O_CLOEXEC) < 0)
     return -1;
 
   /* At least NMERGE + 1 subprocesses are needed.  More could be created, but
@@ -3764,7 +3767,8 @@ check_output (char const *outfile)
 {
   if (outfile)
     {
-      int outfd = open (outfile, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
+      int oflags = O_WRONLY | O_BINARY | O_CLOEXEC | O_CREAT;
+      int outfd = open (outfile, oflags, MODE_RW_UGO);
       if (outfd < 0)
         sort_die (_("open failed"), outfile);
       move_fd_or_die (outfd, STDOUT_FILENO);
@@ -4578,8 +4582,6 @@ main (int argc, char **argv)
 
   if (files_from)
     {
-      FILE *stream;
-
       /* When using --files0-from=F, you may not specify any files
          on the command-line.  */
       if (nfiles)
@@ -4590,21 +4592,14 @@ main (int argc, char **argv)
           usage (SORT_FAILURE);
         }
 
-      if (STREQ (files_from, "-"))
-        stream = stdin;
-      else
-        {
-          stream = fopen (files_from, "r");
-          if (stream == NULL)
-            die (SORT_FAILURE, errno, _("cannot open %s for reading"),
-                 quoteaf (files_from));
-        }
+      FILE *stream = xfopen (files_from, "r");
 
       readtokens0_init (&tok);
 
-      if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
+      if (! readtokens0 (stream, &tok))
         die (SORT_FAILURE, 0, _("cannot read file names from %s"),
              quoteaf (files_from));
+      xfclose (stream, files_from);
 
       if (tok.n_tok)
         {
