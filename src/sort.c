@@ -83,6 +83,11 @@ struct rlimit { size_t rlim_cur; };
 # endif
 #endif
 
+#if GNULIB_defined_pthread_functions
+# undef pthread_sigmask
+# define pthread_sigmask(how, set, oset) sigprocmask (how, set, oset)
+#endif
+
 #if !defined OPEN_MAX && defined NR_OPEN
 # define OPEN_MAX NR_OPEN
 #endif
@@ -638,22 +643,21 @@ struct cs_status
 };
 
 /* Enter a critical section.  */
-static struct cs_status
-cs_enter (void)
+static void
+cs_enter (struct cs_status *status)
 {
-  struct cs_status status;
-  status.valid = (sigprocmask (SIG_BLOCK, &caught_signals, &status.sigs) == 0);
-  return status;
+  int ret = pthread_sigmask (SIG_BLOCK, &caught_signals, &status->sigs);
+  status->valid = ret == 0;
 }
 
 /* Leave a critical section.  */
 static void
-cs_leave (struct cs_status status)
+cs_leave (struct cs_status const *status)
 {
-  if (status.valid)
+  if (status->valid)
     {
       /* Ignore failure when restoring the signal mask. */
-      sigprocmask (SIG_SETMASK, &status.sigs, NULL);
+      pthread_sigmask (SIG_SETMASK, &status->sigs, NULL);
     }
 }
 
@@ -832,9 +836,10 @@ exit_cleanup (void)
     {
       /* Clean up any remaining temporary files in a critical section so
          that a signal handler does not try to clean them too.  */
-      struct cs_status cs = cs_enter ();
+      struct cs_status cs;
+      cs_enter (&cs);
       cleanup ();
-      cs_leave (cs);
+      cs_leave (&cs);
     }
 
   close_stdout ();
@@ -867,7 +872,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
     temp_dir_index = 0;
 
   /* Create the temporary file in a critical section, to avoid races.  */
-  cs = cs_enter ();
+  cs_enter (&cs);
   fd = mkostemp (file, O_CLOEXEC);
   if (0 <= fd)
     {
@@ -875,7 +880,7 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
       temptail = &node->next;
     }
   saved_errno = errno;
-  cs_leave (cs);
+  cs_leave (&cs);
   errno = saved_errno;
 
   if (fd < 0)
@@ -1053,7 +1058,7 @@ pipe_fork (int pipefds[2], size_t tries)
     {
       /* This is so the child process won't delete our temp files
          if it receives a signal before exec-ing.  */
-      cs = cs_enter ();
+      cs_enter (&cs);
       saved_temphead = temphead;
       temphead = NULL;
 
@@ -1062,7 +1067,7 @@ pipe_fork (int pipefds[2], size_t tries)
       if (pid)
         temphead = saved_temphead;
 
-      cs_leave (cs);
+      cs_leave (&cs);
       errno = saved_errno;
 
       if (0 <= pid || errno != EAGAIN)
@@ -1247,11 +1252,11 @@ zaptemp (char const *name)
 
   /* Unlink the temporary file in a critical section to avoid races.  */
   next = node->next;
-  cs = cs_enter ();
+  cs_enter (&cs);
   unlink_status = unlink (name);
   unlink_errno = errno;
   *pnode = next;
-  cs_leave (cs);
+  cs_leave (&cs);
 
   if (unlink_status != 0)
     error (0, unlink_errno, _("warning: cannot remove: %s"), quotef (name));
