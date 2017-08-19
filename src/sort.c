@@ -48,7 +48,6 @@
 #include "quote.h"
 #include "randread.h"
 #include "readtokens0.h"
-#include "stdio--.h"
 #include "stdlib--.h"
 #include "strnumcmp.h"
 #include "xmemcoll.h"
