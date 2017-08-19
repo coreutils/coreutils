@@ -45,7 +45,7 @@ nlname='1
 2'
 touch "$nlname" || framework_failure_
 printf '%s\0' "$nlname" | wc --files0-from=- > out || fail=1
-printf '%s\n' "0 0 0 '1'$'\\n''2'" > exp || framework_failure_
+printf '%s\n' "0 0 0 '1'\$'\\n''2'" > exp || framework_failure_
 compare exp out || fail=1
 
 # Ensure correct byte counts, which fails between v8.24 and v8.26 inclusive

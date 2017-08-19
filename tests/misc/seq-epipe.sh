@@ -31,8 +31,6 @@ echo 1 > exp || framework_failure_
 compare exp out || fail=1
 compare exp code || fail=1
 
-# The error message must begin with "standard output:"
-# (but don't hard-code the strerror text)
 grep '^seq: write error: ' err \
   || { warn_ "seq emitted incorrect error on EPIPE"; \
        cat err;\
