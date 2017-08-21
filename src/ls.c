@@ -110,6 +110,9 @@
 #include "areadlink.h"
 #include "mbsalign.h"
 #include "dircolors.h"
+#include "xgethostname.h"
+#include "c-ctype.h"
+#include "canonicalize.h"
 
 /* Include <sys/capability.h> last to avoid a clash of <sys/types.h>
    include guards with some premature versions of libcap.
@@ -200,6 +203,9 @@ struct fileinfo
     /* For symbolic link, name of the file linked to, otherwise zero.  */
     char *linkname;
 
+    /* For terminal hyperlinks. */
+    char *absolute_name;
+
     struct stat stat;
 
     enum filetype filetype;
@@ -248,7 +254,8 @@ static size_t quote_name (char const *name,
                           struct quoting_options const *options,
                           int needs_general_quoting,
                           const struct bin_str *color,
-                          bool allow_pad, struct obstack *stack);
+                          bool allow_pad, struct obstack *stack,
+                          char const *absolute_name);
 static size_t quote_name_buf (char **inbuf, size_t bufsize, char *name,
                               struct quoting_options const *options,
                               int needs_general_quoting, size_t *width,
@@ -345,6 +352,8 @@ static size_t sorted_file_alloc;
    regardless.  This is set when 'ln=target' appears in LS_COLORS.  */
 
 static bool color_symlink_as_referent;
+
+static char const *hostname;
 
 /* mode of appropriate file for colorization */
 #define FILE_OR_LINK_MODE(File) \
@@ -548,17 +557,19 @@ ARGMATCH_VERIFY (indicator_style_args, indicator_style_types);
 
 static bool print_with_color;
 
+static bool print_hyperlink;
+
 /* Whether we used any colors in the output so far.  If so, we will
    need to restore the default color later.  If not, we will need to
    call prep_non_filename_text before using color for the first time. */
 
 static bool used_color = false;
 
-enum color_type
+enum when_type
   {
-    color_never,		/* 0: default or --color=never */
-    color_always,		/* 1: --color=always */
-    color_if_tty		/* 2: --color=tty */
+    when_never,		/* 0: default or --color=never */
+    when_always,	/* 1: --color=always */
+    when_if_tty		/* 2: --color=tty */
   };
 
 enum Dereference_symlink
@@ -814,6 +825,7 @@ enum
   FULL_TIME_OPTION,
   GROUP_DIRECTORIES_FIRST_OPTION,
   HIDE_OPTION,
+  HYPERLINK_OPTION,
   INDICATOR_STYLE_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
@@ -864,6 +876,7 @@ static struct option const long_options[] =
   {"time", required_argument, NULL, TIME_OPTION},
   {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
   {"color", optional_argument, NULL, COLOR_OPTION},
+  {"hyperlink", optional_argument, NULL, HYPERLINK_OPTION},
   {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
   {"context", no_argument, 0, 'Z'},
   {"author", no_argument, NULL, AUTHOR_OPTION},
@@ -904,20 +917,20 @@ static enum time_type const time_types[] =
 };
 ARGMATCH_VERIFY (time_args, time_types);
 
-static char const *const color_args[] =
+static char const *const when_args[] =
 {
   /* force and none are for compatibility with another color-ls version */
   "always", "yes", "force",
   "never", "no", "none",
   "auto", "tty", "if-tty", NULL
 };
-static enum color_type const color_types[] =
+static enum when_type const when_types[] =
 {
-  color_always, color_always, color_always,
-  color_never, color_never, color_never,
-  color_if_tty, color_if_tty, color_if_tty
+  when_always, when_always, when_always,
+  when_never, when_never, when_never,
+  when_if_tty, when_if_tty, when_if_tty
 };
-ARGMATCH_VERIFY (color_args, color_types);
+ARGMATCH_VERIFY (when_args, when_types);
 
 /* Information about filling a column.  */
 struct column_info
@@ -1064,6 +1077,14 @@ first_percent_b (char const *fmt)
         case '%': fmt++; break;
         }
   return NULL;
+}
+
+static char RFC3986[256];
+static void
+file_escape_init (void)
+{
+  for (int i = 0; i < 256; i++)
+    RFC3986[i] |= c_isalnum (i) || i == '~' || i == '-' || i == '.' || i == '_';
 }
 
 /* Read the abbreviated month names from the locale, to align them
@@ -1500,6 +1521,17 @@ main (int argc, char **argv)
       obstack_init (&subdired_obstack);
     }
 
+  if (print_hyperlink)
+    {
+      file_escape_init ();
+
+      hostname = xgethostname ();
+      /* The hostname is generally ignored,
+         so ignore failures obtaining it.  */
+      if (! hostname)
+        hostname = "";
+    }
+
   cwd_n_alloc = 100;
   cwd_file = xnmalloc (cwd_n_alloc, sizeof *cwd_file);
   cwd_n_used = 0;
@@ -1783,6 +1815,7 @@ decode_switches (int argc, char **argv)
             format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
           print_block_size = false;	/* disable -s */
           print_with_color = false;	/* disable --color */
+          print_hyperlink = false;	/* disable --hyperlink */
           break;
 
         case FILE_TYPE_INDICATOR_OPTION: /* --file-type */
@@ -1985,14 +2018,14 @@ decode_switches (int argc, char **argv)
           {
             int i;
             if (optarg)
-              i = XARGMATCH ("--color", optarg, color_args, color_types);
+              i = XARGMATCH ("--color", optarg, when_args, when_types);
             else
               /* Using --color with no argument is equivalent to using
                  --color=always.  */
-              i = color_always;
+              i = when_always;
 
-            print_with_color = (i == color_always
-                                || (i == color_if_tty
+            print_with_color = (i == when_always
+                                || (i == when_if_tty
                                     && isatty (STDOUT_FILENO)));
 
             if (print_with_color)
@@ -2002,6 +2035,22 @@ decode_switches (int argc, char **argv)
                    color codes on the same line.  */
                 tabsize = 0;
               }
+            break;
+          }
+
+        case HYPERLINK_OPTION:
+          {
+            int i;
+            if (optarg)
+              i = XARGMATCH ("--hyperlink", optarg, when_args, when_types);
+            else
+              /* Using --hyperlink with no argument is equivalent to using
+                 --hyperlink=always.  */
+              i = when_always;
+
+            print_hyperlink = (i == when_always
+                               || (i == when_if_tty
+                                   && isatty (STDOUT_FILENO)));
             break;
           }
 
@@ -2102,7 +2151,7 @@ decode_switches (int argc, char **argv)
   /* --dired is meaningful only with --format=long (-l).
      Otherwise, ignore it.  FIXME: warn about this?
      Alternatively, make --dired imply --format=long?  */
-  if (dired && format != long_format)
+  if (dired && (format != long_format || print_hyperlink))
     dired = false;
 
   /* If -c or -u is specified and not -l (or any other option that implies -l),
@@ -2715,8 +2764,18 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       first = false;
       DIRED_INDENT ();
 
+      char *absolute_name = NULL;
+      if (print_hyperlink)
+        {
+          absolute_name = canonicalize_filename_mode (name, CAN_MISSING);
+          if (! absolute_name)
+            file_failure (command_line_arg,
+                          _("error canonicalizing %s"), name);
+        }
       quote_name (realname ? realname : name, dirname_quoting_options, -1,
-                  NULL, true, &subdired_obstack);
+                  NULL, true, &subdired_obstack, absolute_name);
+
+      free (absolute_name);
 
       DIRED_FPUTS_LITERAL (":\n", stdout);
     }
@@ -2909,6 +2968,7 @@ free_ent (struct fileinfo *f)
 {
   free (f->name);
   free (f->linkname);
+  free (f->absolute_name);
   if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
     {
       if (is_smack_enabled ())
@@ -3072,6 +3132,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
     }
 
   if (command_line_arg
+      || print_hyperlink
       || format_needs_stat
       /* When coloring a directory (we may know the type from
          direct.d_type), we have to stat it in order to indicate
@@ -3110,22 +3171,31 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
     {
       /* Absolute name of this file.  */
-      char *absolute_name;
+      char *full_name;
       bool do_deref;
       int err;
 
       if (name[0] == '/' || dirname[0] == 0)
-        absolute_name = (char *) name;
+        full_name = (char *) name;
       else
         {
-          absolute_name = alloca (strlen (name) + strlen (dirname) + 2);
-          attach (absolute_name, dirname, name);
+          full_name = alloca (strlen (name) + strlen (dirname) + 2);
+          attach (full_name, dirname, name);
+        }
+
+      if (print_hyperlink)
+        {
+          f->absolute_name = canonicalize_filename_mode (full_name,
+                                                         CAN_MISSING);
+          if (! f->absolute_name)
+            file_failure (command_line_arg,
+                          _("error canonicalizing %s"), full_name);
         }
 
       switch (dereference)
         {
         case DEREF_ALWAYS:
-          err = stat (absolute_name, &f->stat);
+          err = stat (full_name, &f->stat);
           do_deref = true;
           break;
 
@@ -3134,7 +3204,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           if (command_line_arg)
             {
               bool need_lstat;
-              err = stat (absolute_name, &f->stat);
+              err = stat (full_name, &f->stat);
               do_deref = true;
 
               if (dereference == DEREF_COMMAND_LINE_ARGUMENTS)
@@ -3147,14 +3217,14 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                 break;
 
               /* stat failed because of ENOENT, maybe indicating a dangling
-                 symlink.  Or stat succeeded, ABSOLUTE_NAME does not refer to a
+                 symlink.  Or stat succeeded, FULL_NAME does not refer to a
                  directory, and --dereference-command-line-symlink-to-dir is
                  in effect.  Fall through so that we call lstat instead.  */
             }
           FALLTHROUGH;
 
         default: /* DEREF_NEVER */
-          err = lstat (absolute_name, &f->stat);
+          err = lstat (full_name, &f->stat);
           do_deref = false;
           break;
         }
@@ -3165,7 +3235,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
              an exit status of 2.  For other files, stat failure
              provokes an exit status of 1.  */
           file_failure (command_line_arg,
-                        _("cannot access %s"), absolute_name);
+                        _("cannot access %s"), full_name);
           if (command_line_arg)
             return 0;
 
@@ -3180,13 +3250,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       /* Note has_capability() adds around 30% runtime to 'ls --color'  */
       if ((type == normal || S_ISREG (f->stat.st_mode))
           && print_with_color && is_colored (C_CAP))
-        f->has_capability = has_capability_cache (absolute_name, f);
+        f->has_capability = has_capability_cache (full_name, f);
 
       if (format == long_format || print_scontext)
         {
           bool have_scontext = false;
           bool have_acl = false;
-          int attr_len = getfilecon_cache (absolute_name, f, do_deref);
+          int attr_len = getfilecon_cache (full_name, f, do_deref);
           err = (attr_len < 0);
 
           if (err == 0)
@@ -3210,7 +3280,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
           if (err == 0 && format == long_format)
             {
-              int n = file_has_acl_cache (absolute_name, f);
+              int n = file_has_acl_cache (full_name, f);
               err = (n < 0);
               have_acl = (0 < n);
             }
@@ -3223,7 +3293,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           any_has_acl |= f->acl_type != ACL_T_NONE;
 
           if (err)
-            error (0, errno, "%s", quotef (absolute_name));
+            error (0, errno, "%s", quotef (full_name));
         }
 
       if (S_ISLNK (f->stat.st_mode)
@@ -3231,8 +3301,8 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
         {
           struct stat linkstats;
 
-          get_link_name (absolute_name, f, command_line_arg);
-          char *linkname = make_link_name (absolute_name, f->linkname);
+          get_link_name (full_name, f, command_line_arg);
+          char *linkname = make_link_name (full_name, f->linkname);
 
           /* Use the slower quoting path for this entry, though
              don't update CWD_SOME_QUOTED since alignment not affected.  */
@@ -4373,10 +4443,33 @@ quote_name_width (const char *name, struct quoting_options const *options,
   return width;
 }
 
+/* %XX escape any input out of range as defined in RFC3986,
+   and also if PATH, convert all path separators to '/'.  */
+static char *
+file_escape (const char *str, bool path)
+{
+  char *esc = xnmalloc (3, strlen (str) + 1);
+  char *p = esc;
+  while (*str)
+    {
+      if (path && ISSLASH (*str))
+        {
+          *p++ = '/';
+          str++;
+        }
+      else if (RFC3986[to_uchar (*str)])
+        *p++ = *str++;
+      else
+        p += sprintf (p, "%%%02x", to_uchar (*str++));
+    }
+  *p = '\0';
+  return esc;
+}
+
 static size_t
 quote_name (char const *name, struct quoting_options const *options,
             int needs_general_quoting, const struct bin_str *color,
-            bool allow_pad, struct obstack *stack)
+            bool allow_pad, struct obstack *stack, char const *absolute_name)
 {
   char smallbuf[BUFSIZ];
   char *buf = smallbuf;
@@ -4392,18 +4485,48 @@ quote_name (char const *name, struct quoting_options const *options,
   if (color)
     print_color_indicator (color);
 
+  /* If we're padding, then don't include the outer quotes in
+     the --hyperlink, to improve the alignment of those links.  */
+  bool skip_quotes = false;
+
+  if (absolute_name)
+    {
+      if (align_variable_outer_quotes && cwd_some_quoted && ! pad)
+        {
+          skip_quotes = true;
+          putchar (*buf);
+        }
+      char *h = file_escape (hostname, /* path= */ false);
+      char *n = file_escape (absolute_name, /* path= */ true);
+      /* TODO: It would be good to be able to define parameters
+         to give hints to the terminal as how best to render the URI.
+         For example since ls is outputting a dense block of URIs
+         it would be best to not underline by default, and only
+         do so upon hover etc.  */
+      printf ("\033]8;;file://%s%s%s\a", h, *n == '/' ? "" : "/", n);
+      free (h);
+      free (n);
+    }
+
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
-  fwrite (buf, 1, len, stdout);
-
-  if (buf != smallbuf && buf != name)
-    free (buf);
+  fwrite (buf + skip_quotes, 1, len - (skip_quotes * 2), stdout);
 
   dired_pos += len;
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
+
+  if (absolute_name)
+    {
+      fputs ("\033]8;;\a", stdout);
+      if (skip_quotes)
+        putchar (*(buf + len - 1));
+    }
+
+  if (buf != smallbuf && buf != name)
+    free (buf);
 
   return len + pad;
 }
@@ -4423,7 +4546,7 @@ print_name_with_quoting (const struct fileinfo *f,
                                && (color || is_colored (C_NORM)));
 
   size_t len = quote_name (name, filename_quoting_options, f->quoted,
-                           color, !symlink_target, stack);
+                           color, !symlink_target, stack, f->absolute_name);
 
   process_signals ();
   if (used_color_this_time)
@@ -5067,6 +5190,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       --hide=PATTERN         do not list implied entries matching shell PATTERN\
 \n\
                                (overridden by -a or -A)\n\
+"), stdout);
+      fputs (_("\
+      --hyperlink[=WHEN]     hyperlink file names; WHEN can be 'always'\n\
+                               (default if omitted), 'auto', or 'never'\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD  append indicator with style WORD to entry names:\

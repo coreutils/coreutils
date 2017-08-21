@@ -7857,9 +7857,8 @@ may be omitted, or one of:
 @end itemize
 Specifying @option{--color} and no @var{when} is equivalent to
 @option{--color=always}.
-Piping a colorized listing through a pager like @command{more} or
-@command{less} usually produces unreadable results.  However, using
-@code{more -f} does seem to work.
+If piping a colorized listing through a pager like @command{less},
+use the @option{-R} option to pass the color codes to the terminal.
 
 @vindex LS_COLORS
 @vindex SHELL @r{environment variable, and color}
@@ -7904,6 +7903,27 @@ command line unless the @option{--dereference-command-line} (@option{-H}),
 @cindex file type, marking
 Append a character to each file name indicating the file type.  This is
 like @option{-F}, except that executables are not marked.
+
+@item --hyperlink [=@var{when}]
+@opindex --hyperlink
+@cindex hyperlink, linking to files
+Output codes recognized by some terminals to link
+to files using the @samp{file://} URI format.
+@var{when} may be omitted, or one of:
+@itemize @bullet
+@item none
+@vindex none @r{hyperlink option}
+- Do not use hyperlinks at all.  This is the default.
+@item auto
+@vindex auto @r{hyperlink option}
+@cindex terminal, using hyperlink iff
+- Only use hyperlinks if standard output is a terminal.
+@item always
+@vindex always @r{hyperlink option}
+- Always use hyperlinks.
+@end itemize
+Specifying @option{--hyperlink} and no @var{when} is equivalent to
+@option{--hyperlink=always}.
 
 @item --indicator-style=@var{word}
 @opindex --indicator-style

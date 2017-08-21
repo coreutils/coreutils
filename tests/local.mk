@@ -607,6 +607,7 @@ all_tests =					\
   tests/ls/symlink-slash.sh			\
   tests/ls/time-style-diag.sh			\
   tests/ls/x-option.sh				\
+  tests/ls/hyperlink.sh				\
   tests/mkdir/p-1.sh				\
   tests/mkdir/p-2.sh				\
   tests/mkdir/p-3.sh				\

@@ -85,6 +85,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   by prefixing the last specified number like --tabs=1,+8 which is
   useful for visualizing diff output for example.
 
+  ls supports a new --hyperlink[=when] option to output file://
+  format links to files, supported by some terminals.
+
   split supports a new --hex-suffixes[=from] option to create files with
   lower case hexadecimal suffixes, similar to the --numeric-suffixes option.
 
