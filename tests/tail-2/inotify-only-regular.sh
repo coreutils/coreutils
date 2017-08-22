@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that tail -f only uses inotify for regular files
+# ensure that tail -f only uses inotify for regular files or fifos
 
 # Copyright (C) 2017 Free Software Foundation, Inc.
 

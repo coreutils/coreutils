@@ -1332,15 +1332,15 @@ any_symlinks (const struct File_spec *f, size_t n_files)
 }
 
 /* Return true if any of the N_FILES files in F is not
-   a regular file.  This is used to avoid adding inotify
+   a regular file or fifo.  This is used to avoid adding inotify
    watches on a device file for example, which inotify
    will accept, but not give any events for.  */
 
 static bool
-any_non_regular (const struct File_spec *f, size_t n_files)
+any_non_regular_fifo (const struct File_spec *f, size_t n_files)
 {
   for (size_t i = 0; i < n_files; i++)
-    if (0 <= f[i].fd && ! S_ISREG (f[i].mode))
+    if (0 <= f[i].fd && ! S_ISREG (f[i].mode) && ! S_ISFIFO (f[i].mode))
       return true;
   return false;
 }
@@ -2460,7 +2460,7 @@ main (int argc, char **argv)
                                || any_remote_file (F, n_files)
                                || ! any_non_remote_file (F, n_files)
                                || any_symlinks (F, n_files)
-                               || any_non_regular (F, n_files)
+                               || any_non_regular_fifo (F, n_files)
                                || (!ok && follow_mode == Follow_descriptor)))
         disable_inotify = true;
 
