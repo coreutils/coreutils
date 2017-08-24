@@ -45,6 +45,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have always returned the 'EXIT' name.
   [bug introduced in fileutils-4.1.9]
 
+  ls now quotes symlink targets consistently.  Previously it may not
+  have quoted the target name if the link name itself didn't need quoting.
+  [bug introduced in coreutils-8.26]
+
   split no longer exits when invocations of a --filter return EPIPE.
   [bug introduced in coreutils-8.26]
 

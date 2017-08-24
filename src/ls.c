@@ -3234,6 +3234,11 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           get_link_name (absolute_name, f, command_line_arg);
           char *linkname = make_link_name (absolute_name, f->linkname);
 
+          /* Use the slower quoting path for this entry, though
+             don't update CWD_SOME_QUOTED since alignment not affected.  */
+          if (linkname && f->quoted == 0 && needs_quoting (f->linkname))
+            f->quoted = -1;
+
           /* Avoid following symbolic links when possible, ie, when
              they won't be traced and when no indicator is needed.  */
           if (linkname
