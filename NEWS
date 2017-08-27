@@ -88,6 +88,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split supports a new --hex-suffixes[=from] option to create files with
   lower case hexadecimal suffixes, similar to the --numeric-suffixes option.
 
+  env now has a --chdir (-C) option to change the working directory before
+  executing the subsidiary program.
+
   expr supports multibyte strings for all string operations.
 
 ** Improvements

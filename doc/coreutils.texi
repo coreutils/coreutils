@@ -16968,6 +16968,25 @@ environment.
 @opindex --ignore-environment
 Start with an empty environment, ignoring the inherited environment.
 
+@item -C @var{dir}
+@itemx --chdir=@var{dir}
+@opindex -C
+@opindex --chdir
+Change the working directory to @var{dir} before invoking @var{command}.
+This differs from the shell built-in @command{cd} in that it starts
+@var{command} as a subprocess rather than altering the shell's own working
+directory; this allows it to be chained with other commands that run commands
+in a different context.  For example:
+
+@example
+# Run 'true' with /chroot as its root directory and /srv as its working
+# directory.
+chroot /chroot env --chdir=/srv true
+# Run 'true' with /build as its working directory, FOO=bar in its
+# environment, and a time limit of five seconds.
+env --chdir=/build FOO=bar timeout 5 true
+@end example
+
 @end table
 
 @cindex exit status of @command{env}
