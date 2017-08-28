@@ -333,6 +333,7 @@ all_tests =					\
   tests/misc/readlink-root.sh			\
   tests/misc/realpath.sh			\
   tests/misc/runcon-no-reorder.sh		\
+  tests/misc/runcon-no-inject.sh		\
   tests/misc/sha1sum.pl				\
   tests/misc/sha1sum-vec.pl			\
   tests/misc/sha224sum.pl			\

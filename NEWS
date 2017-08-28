@@ -72,6 +72,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   non regular files are specified, as inotify is ineffective with these.
   [bug introduced with inotify support added in coreutils-7.5]
 
+  runcon now disables use of the TIOCSTI ioctl in its children, which could
+  be used to inject commands to the terminal and run at the original context.
+  [the issue dates back to the initial implementation]
+
   uptime no longer outputs the AM/PM component of the current time,
   as that's inconsistent with the 24 hour time format used.
   [bug introduced in coreutils-7.0]
