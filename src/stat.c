@@ -247,6 +247,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
          a comment.  The S_MAGIC_... name and constant are automatically
          combined to produce the #define directives in fs.h.  */
 
+    case S_MAGIC_AAFS: /* 0x5A3C69F0 local */
+      return "aafs";
     case S_MAGIC_ACFS: /* 0x61636673 remote */
       return "acfs";
     case S_MAGIC_ADFS: /* 0xADF5 local */
