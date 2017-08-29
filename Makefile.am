@@ -19,13 +19,7 @@ ALL_RECURSIVE_TARGETS =
 
 SUBDIRS = po . gnulib-tests
 
-changelog_etc =				\
-  build-aux/ChangeLog-2007		\
-  lib/ChangeLog-2007			\
-  m4/ChangeLog-2007
-
 EXTRA_DIST =				\
-  $(changelog_etc)			\
   .mailmap				\
   .prev-version				\
   .version				\
@@ -99,7 +93,7 @@ dist-hook: gen-ChangeLog
 	$(AM_V_at)touch $(distdir)/doc/constants.texi \
 	  $(distdir)/doc/coreutils.info
 
-gen_start_ver = 8.15
+gen_start_ver = 8.18
 .PHONY: gen-ChangeLog
 gen-ChangeLog:
 	$(AM_V_GEN)if test -d .git; then				\
