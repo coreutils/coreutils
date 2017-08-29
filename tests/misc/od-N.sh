@@ -23,7 +23,7 @@ echo abcdefg > in || framework_failure_
 
 
 (od -An -N3 -c; od -An -N3 -c) < in > out
-cat <<EOF > exp || fail=1
+cat <<EOF > exp || framework_failure_
    a   b   c
    d   e   f
 EOF

@@ -19,8 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
 
-echo nan > F || fail=1
-printf 'nan\nnan\n' > exp || fail=1
+echo nan > F || framework_failure_
+printf 'nan\nnan\n' > exp || framework_failure_
 timeout 10 sort -g -m F F > out || fail=1
 
 compare exp out || fail=1

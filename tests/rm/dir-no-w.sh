@@ -25,7 +25,7 @@ mkdir --mode=0500 unwritable-dir || framework_failure_
 
 # For rm from coreutils-5.0.1, this would prompt.
 rm ---presume-input-tty unwritable-dir < /dev/null > out-t 2>&1 && fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 rm: cannot remove 'unwritable-dir': Is a directory
 EOF
 

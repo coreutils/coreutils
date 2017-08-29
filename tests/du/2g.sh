@@ -62,7 +62,7 @@ du -k $big > out1 || fail=1
 rm -f $big
 sed 's/^2[0-9][0-9][0-9][0-9][0-9][0-9]	'$big'$/~2M/' out1 > out
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 ~2M
 EOF
 

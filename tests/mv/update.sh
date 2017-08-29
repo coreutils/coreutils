@@ -42,9 +42,9 @@ test -f new && fail=1
 case "$(cat old)" in new) ;; *) fail=1 ;; esac
 
 # Restore initial conditions.
-echo old > old || fail=1
+echo old > old || framework_failure_
 touch -d yesterday old || fail=1
-echo new > new || fail=1
+echo new > new || framework_failure_
 
 # This will actually perform the copy.
 cp --update new old || fail=1

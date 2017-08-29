@@ -73,7 +73,7 @@ for copy in cp mv; do
       case "$args" in *loc_sl*) slink=$loc_sl ;; esac
       case "$args" in *rem_sl*) slink=$rem_sl ;; esac
 
-      echo $contents > "$reg_abs" || fail=1
+      echo $contents > "$reg_abs" || framework_failure_
       ln -nsf "$reg_abs" $slink || fail=1
       actual_args=$(echo $args|sed 's,^,$,;s/ / $/')
       actual_args=$(eval echo $actual_args)
@@ -151,7 +151,7 @@ done
 test $fail = 1 &&
   { (exit 1); exit; }
 
-cat <<\EOF > expected
+cat <<\EOF > expected || framework_failure_
 1 cp loc_reg rem_sl
  [cp: 'loc_reg' and 'rem_sl' are the same file]
  (loc_reg) (rem_sl -> dir/loc_reg)

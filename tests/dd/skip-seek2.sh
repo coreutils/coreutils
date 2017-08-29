@@ -21,14 +21,14 @@
 print_ver_ dd
 
 
-echo LA:3456789abcdef > in || fail=1
+echo LA:3456789abcdef > in || framework_failure_
 (dd bs=1 skip=3 count=0 && dd bs=5) < in > out 2> /dev/null || fail=1
 case $(cat out) in
   3456789abcdef) ;;
   *) fail=1 ;;
 esac
 
-echo LA:3456789abcdef > in || fail=1
+echo LA:3456789abcdef > in || framework_failure_
 (dd bs=1 skip=3 count=0 && dd bs=5 count=2) < in > out 2> /dev/null || fail=1
 case $(cat out) in
   3456789abc) ;;

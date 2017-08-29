@@ -37,16 +37,16 @@ chmod -R --preserve-root u+r / >> out 2>&1 && fail=1
 # With -RHh, --preserve-root should trigger nothing,
 # since the symlink in question is not a command line argument.
 # Contrary to the above commands, these two should succeed.
-echo '==== test -RHh' >> out
+echo '==== test -RHh' >> out || framework_failure_
 chown -RHh --preserve-root $(id -u) d >> out 2>&1 || fail=1
 chgrp -RHh --preserve-root $(id -g) d >> out 2>&1 || fail=1
 
 # These must fail.
-echo '==== test -RLh' >> out
+echo '==== test -RLh' >> out || framework_failure_
 chown -RLh --preserve-root $(id -u) d >> out 2>&1 && fail=1
 chgrp -RLh --preserve-root $(id -g) d >> out 2>&1 && fail=1
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 chown: it is dangerous to operate recursively on '/'
 chown: use --no-preserve-root to override this failsafe
 chgrp: it is dangerous to operate recursively on '/'

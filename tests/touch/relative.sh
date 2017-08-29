@@ -29,7 +29,7 @@ touch --ref f --date='-5 days' f || fail=1
 TZ=UTC0 ls -og --time-style=+%Y-%m-%d f > out.1 || fail
 sed 's/ f$//;s/.* //' out.1 > out
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 2004-01-11
 EOF
 

@@ -34,7 +34,7 @@ ln -s ../s/2 d/1 || framework_failure_
 # With coreutils-6.9, this would fail with ELOOP.
 readlink -v -e p/1 > out || fail=1
 # readlink -e d/2 > exp || fail=1
-echo "$cwd/d/2" > exp || fail=1
+echo "$cwd/d/2" > exp || framework_failure_
 compare exp out || fail=1
 
 # Construct a real loop and make sure readlink still detects it.
@@ -56,7 +56,7 @@ ln -nsf ../p/7 d/6 || framework_failure_
 ln -nsf ../p/8 d/7 || framework_failure_
 echo x > d/8       || framework_failure_
 readlink -v -e p/1 > out || fail=1
-echo "$cwd/d/8" > exp || fail=1
+echo "$cwd/d/8" > exp || framework_failure_
 compare exp out || fail=1
 
 # A trivial loop

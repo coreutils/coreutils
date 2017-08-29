@@ -30,43 +30,41 @@ rm -f out err || framework_failure_
 # The prompt has a trailing space, and no newline, so an extra
 # 'echo .' is inserted after each rm to make it obvious what was asked.
 
-echo 'no WHEN' > err || fail=1
+echo 'no WHEN' > err || framework_failure_
 rm -R --interactive file1-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file1-1 || fail=1
 test -f file1-2 && fail=1
 
-echo 'WHEN=never' >> err || fail=1
+echo 'WHEN=never' >> err || framework_failure_
 rm -R --interactive=never file2-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file2-1 && fail=1
 test -f file2-2 && fail=1
 
-echo 'WHEN=once' >> err || fail=1
+echo 'WHEN=once' >> err || framework_failure_
 rm -R --interactive=once file3-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file3-1 || fail=1
 test -f file3-2 || fail=1
 
-echo 'WHEN=always' >> err || fail=1
+echo 'WHEN=always' >> err || framework_failure_
 rm -R --interactive=always file4-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file4-1 || fail=1
 test -f file4-2 && fail=1
 
-echo '-f overrides --interactive' >> err || fail=1
+echo '-f overrides --interactive' >> err || framework_failure_
 rm -R --interactive=once -f file1-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file1-1 && fail=1
 
-echo '--interactive overrides -f' >> err || fail=1
+echo '--interactive overrides -f' >> err || framework_failure_
 rm -R -f --interactive=once file4-* < in >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file4-1 || fail=1
 
-cat <<\EOF > expout || fail=1
-EOF
-sed 's/@remove_empty/rm: remove regular empty file/g' <<\EOF > experr || fail=1
+cat <<\EOF > experr.t || framework_failure_
 no WHEN
 @remove_empty 'file1-1'? @remove_empty 'file1-2'? .
 WHEN=never
@@ -80,8 +78,10 @@ WHEN=always
 --interactive overrides -f
 rm: remove 1 argument recursively? .
 EOF
+sed 's/@remove_empty/rm: remove regular empty file/g' < experr.t > experr ||
+  framework_failure_
 
-compare expout out || fail=1
+compare /dev/null out || fail=1
 compare experr err || fail=1
 
 Exit $fail

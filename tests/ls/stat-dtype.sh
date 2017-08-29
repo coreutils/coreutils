@@ -42,19 +42,18 @@ chmod 600 e || framework_failure_
 
 
 ls --file-type d > out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 s@
 EOF
 
 compare exp out || fail=1
 
-rm -f out exp
 # Check for the ls -CF misaligned-columns bug:
 ls -CF e > out || fail=1
 
 # coreutils-6.0 would print two spaces after the first slash,
 # rather than the appropriate TAB.
-printf 'a2345/\tb/\n' > exp || fail=1
+printf 'a2345/\tb/\n' > exp || framework_failure_
 
 compare exp out || fail=1
 

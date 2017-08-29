@@ -28,8 +28,8 @@ EOF
 chmod a+x b || framework_failure_
 
 
-echo abc > src || fail=1
-echo aBc > exp || fail=1
+echo abc > src || framework_failure_
+echo aBc > exp || framework_failure_
 ginstall src dest -s --strip-program=./b || fail=1
 compare exp dest || fail=1
 

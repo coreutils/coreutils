@@ -32,7 +32,7 @@ rm -f out err || framework_failure_
 
 echo 'one file, no recursion' > err || framework_failure_
 rm -I file1-* < in-n >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file1-1 && fail=1
 
 echo 'one file, read only, answer no' >> err || framework_failure_
@@ -44,7 +44,7 @@ if ls /dev/stdin >/dev/null 2>&1; then
     write_prot_msg1="rm: remove write-protected regular empty file 'file1-1'? "
   fi
   rm ---presume-input-tty -I file1-* < in-n >> out 2>> err || fail=1
-  echo . >> err || fail=1
+  echo . >> err || framework_failure_
   if test "$write_prot_msg1"; then
     test -f file1-1 || fail=1
   fi
@@ -54,14 +54,14 @@ fi
 
 echo 'three files, no recursion' >> err || framework_failure_
 rm -I file2-* < in-n >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file2-1 && fail=1
 test -f file2-2 && fail=1
 test -f file2-3 && fail=1
 
 echo 'four files, no recursion, answer no' >> err || framework_failure_
 rm -I file3-* < in-n >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file3-1 || fail=1
 test -f file3-2 || fail=1
 test -f file3-3 || fail=1
@@ -69,7 +69,7 @@ test -f file3-4 || fail=1
 
 echo 'four files, no recursion, answer yes' >> err || framework_failure_
 rm -I file3-* < in-y >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -f file3-1 && fail=1
 test -f file3-2 && fail=1
 test -f file3-3 && fail=1
@@ -86,7 +86,7 @@ if ls /dev/stdin >/dev/null 2>&1; then
     write_prot_msg2="rm: remove write-protected regular file 'file3-4'? "
   fi
   cat in-y in-n | rm ---presume-input-tty -I file3-* >> out 2>> err || fail=1
-  echo . >> err || fail=1
+  echo . >> err || framework_failure_
   test -f file3-1 && fail=1
   test -f file3-2 && fail=1
   test -f file3-3 && fail=1
@@ -99,29 +99,27 @@ fi
 
 echo 'one file, recursion, answer no' >> err || framework_failure_
 rm -I -R dir1-* < in-n >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -d dir1-1 || fail=1
 
 echo 'one file, recursion, answer yes' >> err || framework_failure_
 rm -I -R dir1-* < in-y >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -d dir1-1 && fail=1
 
 echo 'multiple files, recursion, answer no' >> err || framework_failure_
 rm -I -R dir2-* < in-n >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -d dir2-1 || fail=1
 test -d dir2-2 || fail=1
 
 echo 'multiple files, recursion, answer yes' >> err || framework_failure_
 rm -I -R dir2-* < in-y >> out 2>> err || fail=1
-echo . >> err || fail=1
+echo . >> err || framework_failure_
 test -d dir2-1 && fail=1
 test -d dir2-2 && fail=1
 
-cat <<\EOF > expout || fail=1
-EOF
-cat <<EOF > experr || fail=1
+cat <<EOF > experr || framework_failure_
 one file, no recursion
 .
 one file, read only, answer no
@@ -144,7 +142,7 @@ multiple files, recursion, answer yes
 rm: remove 2 arguments recursively? .
 EOF
 
-compare expout out || fail=1
+compare /dev/null out || fail=1
 compare experr err || fail=1
 
 Exit $fail

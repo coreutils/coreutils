@@ -29,7 +29,7 @@ set _ $(ls -ldo dangle); shift; user=$3
 chown --dereference $user dangle 2> out1 && fail=1
 sed 's/: [^:]*$//' out1 > out
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 chown: cannot dereference 'dangle'
 EOF
 

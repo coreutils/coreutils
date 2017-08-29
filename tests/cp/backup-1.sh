@@ -23,7 +23,7 @@ suffix=.b
 file=F
 file_backup="$file$suffix"
 
-echo test > $file || fail=1
+echo test > $file || framework_failure_
 
 # Specify both version control and suffix so the environment variables
 # (possibly set by the user running these tests) aren't used.

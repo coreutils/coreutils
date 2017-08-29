@@ -52,7 +52,7 @@ for opt in '-w0 -x' '-x' '-og' '-1' '-m' '-C'; do
 done
 
 # Append a newline, to accommodate less-capable versions of sed.
-echo >> out || fail=1
+echo >> out || framework_failure_
 
 # Strip possible varying portion of long format
 sed -e 's/.*T //' -e '/^total/d' out > k && mv k out

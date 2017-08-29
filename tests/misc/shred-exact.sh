@@ -22,9 +22,9 @@ print_ver_ shred
 
 # make sure that neither --exact nor --zero gobbles a command line argument
 for opt in --exact --zero; do
-  echo a > a || fail=1
-  echo bb > b || fail=1
-  echo ccc > c || fail=1
+  echo a > a || framework_failure_
+  echo bb > b || framework_failure_
+  echo ccc > c || framework_failure_
 
   shred --remove $opt a b || fail=1
   test -f a && fail=1

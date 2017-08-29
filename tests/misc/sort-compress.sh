@@ -28,7 +28,7 @@ sort -S 1k in > out || fail=1
 compare exp out || fail=1
 
 # Create our own gzip program that will be used as the default
-cat <<EOF > gzip || fail=1
+cat <<EOF > gzip || framework_failure_
 #!$SHELL
 tr 41 14
 touch ok

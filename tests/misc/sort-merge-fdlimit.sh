@@ -61,8 +61,8 @@ done
 # This test finds the bug only with shells that do not close FDs on
 # exec, and will miss the bug (if present) on other shells, but it's
 # not easy to fix this without running afoul of the OpenBSD-like sh bugs.
-(seq 6 && echo 6) >exp || fail=1
-echo 6 >out || fail=1
+(seq 6 && echo 6) >exp || framework_failure_
+echo 6 >out || framework_failure_
 (exec 3<&- 4<&- 5<&- 6</dev/null 7<&6 8<&6 9<&6 &&
  ulimit -n 10 &&
  sort -n -m --batch-size=7 -o out out in/1 in/2 in/3 in/4 in/5 out

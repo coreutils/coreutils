@@ -42,7 +42,7 @@ for i in $dir_list $(expr $n + 1); do
   esac
   i_minus_1=$i
 done
-echo foo > $i
+echo foo > $i || framework_failure_
 
 # If a system can handle this many symlinks in a file name,
 # just skip this test.
@@ -63,9 +63,9 @@ too_many=$(sed 's/.*: //' err)
 # With coreutils-5.94 we get the desired diagnostic:
 # du: cannot access '1/s/s/s/.../s': Too many levels of symbolic links
 du -L 1 > /dev/null 2> out1 && fail=1
-sed "s, .1/s/s/s/[/s]*',," out1 > out || fail=1
+sed "s, .1/s/s/s/[/s]*',," out1 > out || framework_failure_
 
-echo "du: cannot access: $too_many" > exp || fail=1
+echo "du: cannot access: $too_many" > exp || framework_failure_
 
 compare exp out || fail=1
 

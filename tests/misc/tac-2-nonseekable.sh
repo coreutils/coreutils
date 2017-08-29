@@ -20,7 +20,7 @@
 print_ver_ tac
 
 echo x | tac - - > out 2> err || fail=1
-echo x > exp || fail=1
+echo x > exp || framework_failure_
 compare exp out || fail=1
 compare /dev/null err || fail=1
 

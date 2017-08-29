@@ -34,7 +34,7 @@ set +x
 test -d "$p/abs1" && fail=1
 test -d "$p/abs2" && fail=1
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 rm: cannot remove 'rel': Permission denied
 EOF
 

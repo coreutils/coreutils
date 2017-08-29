@@ -33,7 +33,7 @@ mv b/t a 2> out && fail=1
 sed             's/: File exists/: Directory not empty/'<out>o1;mv o1 out
 sed 's/: Device or resource busy/: Directory not empty/'<out>o1;mv o1 out
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 mv: cannot move 'b/t' to 'a/t': Directory not empty
 EOF
 

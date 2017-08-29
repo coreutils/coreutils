@@ -27,7 +27,7 @@ print_ver_ FIXME
 # FIXME: . "$abs_srcdir/tests/other-fs-tmpdir"
 
 FIXME > out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 FIXME
 EOF
 

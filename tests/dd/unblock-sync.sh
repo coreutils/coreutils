@@ -23,7 +23,7 @@ printf 000100020003xx > in || framework_failure_
 
 
 dd cbs=4 ibs=4 conv=unblock,sync < in > out 2> /dev/null || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 0001
 0002
 0003

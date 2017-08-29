@@ -23,7 +23,7 @@ touch f || framework_failure_
 
 
 ln --backup f f 2> out && fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 ln: 'f' and 'f' are the same file
 EOF
 

@@ -63,7 +63,7 @@ mkfifo_or_skip_ fifo
 seq 1000 > fifo & pid=$!
 TMPDIR=$FULL_PARTITION_TMPDIR tac fifo in >out 2>err && fail=1
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 5
 4
 3

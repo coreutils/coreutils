@@ -42,7 +42,7 @@ sed 's/[^	]*	//' duout >dued || framework_failure_
 sed 's/[^ ]* *[^ ]* *[^ ]* *[^ ]* *//' lsout >lsed || framework_failure_
 sed '/^$/d' prout >pred || framework_failure_
 
-cat <<\EOF > duexp || fail=1
+cat <<\EOF > duexp || framework_failure_
 1970-07-08 09:10:11.000000000 +0000	a
 1970-07-08 09:10	a
 1970-07-08	a
@@ -65,7 +65,7 @@ cat <<\EOF > duexp || fail=1
 %bJul%bJul	a
 EOF
 
-cat <<\EOF > lsexp || fail=1
+cat <<\EOF > lsexp || framework_failure_
 1970-07-08 09:10:11.000000000 +0000 a
 1970-07-08 09:10 a
 1970-07-08  a
@@ -92,7 +92,7 @@ Jul  8  1970 a
 %bJul%bJul a
 EOF
 
-cat <<\EOF > prexp || fail=1
+cat <<\EOF > prexp || framework_failure_
 +1970-07-08 09:10:11 +0000 (UTC)                a                 Page 1
 hello
 +%bJul%bJul                           a                           Page 1

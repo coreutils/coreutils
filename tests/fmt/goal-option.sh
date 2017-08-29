@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ fmt
 
-cat <<\_EOF_ > base || fail=1
+cat <<\_EOF_ > base || framework_failure_
 
 @command{fmt} prefers breaking lines at the end of a sentence, and tries to
 avoid line breaks after the first word of a sentence or before the last word
@@ -36,7 +36,7 @@ _EOF_
 
 fmt -g 60 -w 72 base > out || fail=1
 
-cat <<\_EOF_ > exp
+cat <<\_EOF_ > exp || framework_failure_
 
 @command{fmt} prefers breaking lines at the end of a sentence,
 and tries to avoid line breaks after the first word of a sentence

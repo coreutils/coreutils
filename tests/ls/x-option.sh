@@ -27,7 +27,7 @@ touch subdir/a || framework_failure_
 # Coreutils 6.8 and 6.9 would output this in the wrong order.
 ls -x subdir > out || fail=1
 ls -rx subdir >> out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 a  b
 b  a
 EOF

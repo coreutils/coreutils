@@ -21,12 +21,8 @@ print_ver_ cp
 
 mkdir x y || framework_failure_
 
-
 cd y
 cp --verbose -ab ../x/. . > out 2>&1 || fail=1
-cat <<\EOF > exp || fail=1
-EOF
-
-compare exp out || fail=1
+compare /dev/null out || fail=1
 
 Exit $fail

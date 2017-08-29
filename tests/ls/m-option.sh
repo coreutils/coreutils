@@ -29,7 +29,7 @@ ls -w2 -m a b > out || fail=1
 # Before coreutils-5.1.1, the following would produce leading white space.
 # All of the sed business is because the sizes are not portable.
 ls -sm a b | sed 's/^[0-9]/0/;s/, [0-9][0-9]* b/, 12 b/' >> out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 a,
 b
 0 a, 12 b

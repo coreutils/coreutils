@@ -21,7 +21,7 @@ print_ver_ ls
 
 returns_ 2 ls -l --time-style=XX > out 2> err || fail=1
 
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 ls: invalid argument 'XX' for 'time style'
 Valid arguments are:
   - [posix-]full-iso

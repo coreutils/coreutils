@@ -33,7 +33,7 @@ du > ../t 2>&1 && fail=1
 # /proc support, nor native openat support.
 
 sed 's/^[0-9][0-9]*	//' ../t | sort -u > out
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 .
 ./a
 ./b

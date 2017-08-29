@@ -24,7 +24,7 @@ touch a/x || framework_failure_
 
 
 rm --verbose -r a/// > out || fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 removed 'a/x'
 removed directory 'a/'
 EOF

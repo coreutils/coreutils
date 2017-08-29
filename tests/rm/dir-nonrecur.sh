@@ -24,7 +24,7 @@ mkdir d || framework_failure_
 
 
 rm d 2> out && fail=1
-cat <<\EOF > exp || fail=1
+cat <<\EOF > exp || framework_failure_
 rm: cannot remove 'd': Is a directory
 EOF
 

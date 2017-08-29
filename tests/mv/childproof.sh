@@ -72,8 +72,8 @@ test -f c/g || fail=1
 # Test ln -f.
 
 rm -f a/f b/f c/f
-echo a > a/f || fail=1
-echo b > b/f || fail=1
+echo a > a/f || framework_failure_
+echo b > b/f || framework_failure_
 returns_ 1 ln -f a/f b/f c 2> /dev/null || fail=1
 # a/f and c/f must be linked
 test $(stat --format %i a/f) = $(stat --format %i c/f) || fail=1

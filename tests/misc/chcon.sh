@@ -57,7 +57,7 @@ for i in -u$u1 -r$r1 -t$t1; do
   stat --printf="f|$i|"'%C\n' f >> out || fail=1
 done
 
-cat <<EOF > exp || fail=1
+cat <<EOF > exp || framework_failure_
 f|$ctx
 g|$ctx
 f|--user=$u2|$u2:$r1:$t1:$range
@@ -72,7 +72,7 @@ EOF
 compare exp out || fail=1
 
 chcon --verbose -u$u1 f > out || fail=1
-echo "changing security context of 'f'" > exp
+echo "changing security context of 'f'" > exp || framework_failure_
 compare exp out || fail=1
 
 Exit $fail

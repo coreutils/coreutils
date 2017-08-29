@@ -28,8 +28,8 @@ ln -s "$other_partition_tmpdir/x" d || framework_failure_
 # would not traverse into second and subsequent directories listed
 # on the command line.
 du -ax b y > t || fail=1
-sed 's/^[0-9][0-9]*	//' t > out
-cat <<\EOF > exp || fail=1
+sed 's/^[0-9][0-9]*	//' t > out || framework_failure_
+cat <<\EOF > exp || framework_failure_
 b/c
 b
 y/z
@@ -41,16 +41,16 @@ compare exp out || fail=1
 # "du -xL" reported a zero count for a file in a different file system,
 # instead of ignoring it.
 du -xL d > u || fail=1
-sed 's/^[0-9][0-9]*	//' u > out1
-echo d > exp1 || fail=1
+sed 's/^[0-9][0-9]*	//' u > out1 || framework_failure_
+echo d > exp1 || framework_failure_
 compare exp1 out1 || fail=1
 
 # With coreutils-8.15, "du -xs FILE" would print no output.
 touch f
 for opt in -x -xs; do
   du $opt f > u || fail=1
-  sed 's/^[0-9][0-9]*	//' u > out2
-  echo f > exp2 || fail=1
+  sed 's/^[0-9][0-9]*	//' u > out2 || framework_failure_
+  echo f > exp2 || framework_failure_
   compare exp2 out2 || fail=1
 done
 

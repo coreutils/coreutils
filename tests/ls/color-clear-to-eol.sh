@@ -32,7 +32,7 @@ env TERM=xterm COLUMNS=80 LS_COLORS="*.foo=$color_code" TIME_STYLE=+T \
   ls -og --color=always $long_name > out || fail=1
 
 # Append a newline, to accommodate less-capable versions of sed.
-echo >> out || fail=1
+echo >> out || framework_failure_
 
 sed 's/.*T //' out > k && mv k out
 
