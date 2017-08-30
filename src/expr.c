@@ -848,6 +848,7 @@ eval6 (bool evaluate)
 
           char *s = mbs_logical_substr (l->u.s, pos, len);
           v = str_value (s);
+          free (s);
         }
       freev (l);
       freev (i1);
