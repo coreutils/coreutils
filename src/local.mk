@@ -243,7 +243,6 @@ src_mkfifo_LDADD += $(LIB_SMACK)
 src_mknod_LDADD += $(LIB_SELINUX)
 src_mknod_LDADD += $(LIB_SMACK)
 src_runcon_LDADD += $(LIB_SELINUX)
-src_runcon_LDADD += $(LIB_SECCOMP)
 src_stat_LDADD += $(LIB_SELINUX)
 
 # for nvlist_lookup_uint64_array

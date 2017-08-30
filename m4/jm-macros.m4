@@ -63,19 +63,6 @@ AC_DEFUN([coreutils_MACROS],
         esac
       fi
     ])
-
-    # Used by runcon.c
-    LIB_SECCOMP=
-    AC_SUBST([LIB_SECCOMP])
-    if test "$with_selinux" != no; then
-      AC_SEARCH_LIBS([seccomp_init], [seccomp],
-        [test "$ac_cv_search_seccomp_init" = "none required" ||
-          LIB_SECCOMP=$ac_cv_search_seccomp_init
-         AC_DEFINE([HAVE_SECCOMP], [1], [libseccomp usability])],
-        [test "$ac_cv_header_selinux_selinux_h" = yes &&
-         AC_MSG_WARN([libseccomp library was not found or not usable])
-         AC_MSG_WARN([runcon will be vulnerable to tty injection])])
-    fi
   LIBS=$coreutils_saved_libs
 
   # Used by sort.c.

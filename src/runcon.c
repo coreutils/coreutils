@@ -45,10 +45,6 @@
 #include <getopt.h>
 #include <selinux/selinux.h>
 #include <selinux/context.h>
-#ifdef HAVE_SECCOMP
-# include <seccomp.h>
-# include <sys/ioctl.h>
-#endif
 #include <sys/types.h>
 #include "system.h"
 #include "die.h"
@@ -105,28 +101,6 @@ With neither CONTEXT nor COMMAND, print the current security context.\n\
     }
   exit (status);
 }
-
-static void
-disable_tty_inject (void)
-{
-#ifdef HAVE_SECCOMP
-  scmp_filter_ctx ctx = seccomp_init (SCMP_ACT_ALLOW);
-  if (! ctx)
-    die (EXIT_FAILURE, 0, _("failed to initialize seccomp context"));
-  if (seccomp_rule_add (ctx, SCMP_ACT_ERRNO (EPERM), SCMP_SYS (ioctl), 1,
-                        SCMP_A1 (SCMP_CMP_EQ, (int) TIOCSTI)) < 0)
-    die (EXIT_FAILURE, 0, _("failed to add seccomp rule"));
-  if (seccomp_load (ctx) < 0)
-    die (EXIT_FAILURE, 0, _("failed to load seccomp rule"));
-  seccomp_release (ctx);
-#else
-  /* This may have unwanted side effects, but is a fallback
-     on older systems without libseccomp.  */
-  if (setsid () != 0)
-    die (EXIT_FAILURE, errno, _("cannot create session"));
-#endif /* HAVE_SECCOMP */
-}
-
 
 int
 main (int argc, char **argv)
@@ -220,8 +194,6 @@ main (int argc, char **argv)
   if (is_selinux_enabled () != 1)
     die (EXIT_FAILURE, 0, _("%s may be used only on a SELinux kernel"),
          program_name);
-
-  disable_tty_inject ();
 
   if (context)
     {
