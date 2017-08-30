@@ -119,7 +119,7 @@ main (int argc, char **argv)
 
   if (silent)
     return (isatty (STDIN_FILENO) ? EXIT_SUCCESS
-            : errno == ENOTTY ? TTY_STDIN_NOTTY
+            : (errno == ENOTTY || errno == EINVAL) ? TTY_STDIN_NOTTY
             : TTY_STDIN_ERROR);
 
   int status = EXIT_SUCCESS;
@@ -127,7 +127,7 @@ main (int argc, char **argv)
 
   if (! tty)
     {
-      if (errno != ENOTTY)
+      if (errno != ENOTTY && errno != EINVAL)
         error (TTY_STDIN_ERROR, errno, _("standard input"));
       tty = _("not a tty");
       status = TTY_STDIN_NOTTY;

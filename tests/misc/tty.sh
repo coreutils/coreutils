@@ -32,7 +32,9 @@ returns_ 2 tty a || fail=1
 returns_ 2 tty -s a || fail=1
 
 if test -w /dev/full && test -c /dev/full; then
-  returns_ 3 tty >/dev/full || fail=1
+  if test -t 0; then
+    returns_ 3 tty >/dev/full || fail=1
+  fi
   returns_ 3 tty </dev/null >/dev/full || fail=1
 fi
 
