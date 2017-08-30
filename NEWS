@@ -104,6 +104,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   mv --verbose now distinguishes rename and copy operations.
 
+  stat -f -c %l, used to output the max file name length on a file system,
+  is now supported on FreeBSD and OpenBSD.
+
   tail -f now exits immediately if the output is piped
   and the reader of the pipe terminates.
 

@@ -92,6 +92,8 @@
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS_F_TYPE
 # if HAVE_STRUCT_STATFS_F_NAMELEN
 #  define SB_F_NAMEMAX(S) ((S)->f_namelen)
+# elif HAVE_STRUCT_STATFS_F_NAMEMAX
+#  define SB_F_NAMEMAX(S) ((S)->f_namemax)
 # endif
 # define STATFS statfs
 # if HAVE_OS_H /* BeOS */
@@ -139,8 +141,9 @@ statfs (char const *filename, struct fs_info *buf)
 #ifdef SB_F_NAMEMAX
 # define OUT_NAMEMAX out_uint
 #else
-/* NetBSD 1.5.2 has neither f_namemax nor f_namelen.  */
-# define SB_F_NAMEMAX(S) "*"
+/* Depending on whether statvfs or statfs is used,
+   neither f_namemax or f_namelen may be available.  */
+# define SB_F_NAMEMAX(S) "?"
 # define OUT_NAMEMAX out_string
 #endif
 
