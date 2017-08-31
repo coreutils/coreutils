@@ -37,7 +37,7 @@ esac
 name_max=$(stat -f -c %l .) && test "$name_max" -lt $((1024*1024)) ||
   name_max=1 # skip this portion of the test
 name_max_plus1=$(expr $name_max + 1)
-long_name=$(printf '%0*d' $name_max_plus1 0)
+long_name=$(printf '%*s' $name_max_plus1 | tr ' ' '0')
 
 for f in '' f; do
   ln -s$f missing ENOENT_link || fail=1
