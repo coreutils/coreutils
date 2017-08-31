@@ -27,6 +27,8 @@ fi
 
 returns_ 1 tty </dev/null || fail=1
 returns_ 1 tty -s </dev/null || fail=1
+returns_ 1 tty <&- 2>/dev/null || fail=1
+returns_ 1 tty -s <&- || fail=1
 
 returns_ 2 tty a || fail=1
 returns_ 2 tty -s a || fail=1
@@ -37,8 +39,5 @@ if test -w /dev/full && test -c /dev/full; then
   fi
   returns_ 3 tty </dev/null >/dev/full || fail=1
 fi
-
-returns_ 4 tty <&- 2>/dev/null || fail=1
-returns_ 4 tty -s <&- || fail=1
 
 Exit $fail

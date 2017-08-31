@@ -15123,7 +15123,6 @@ Exit status:
 1 if standard input is a non-terminal file
 2 if given incorrect arguments
 3 if a write error occurs
-4 if standard input is closed or its type cannot be determined
 @end display
 
 

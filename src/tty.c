@@ -17,7 +17,7 @@
 /* Displays "not a tty" if stdin is not a terminal.
    Displays nothing if -s option is given.
    Exit status 0 if stdin is a tty, 1 if not a tty, 2 if usage error,
-   3 if write error, 4 for other stdin errors.
+   3 if write error.
 
    Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
@@ -35,8 +35,7 @@ enum
   {
     TTY_STDIN_NOTTY = 1,
     TTY_FAILURE = 2,
-    TTY_WRITE_ERROR = 3,
-    TTY_STDIN_ERROR = 4
+    TTY_WRITE_ERROR = 3
   };
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -118,17 +117,13 @@ main (int argc, char **argv)
   errno = ENOENT;
 
   if (silent)
-    return (isatty (STDIN_FILENO) ? EXIT_SUCCESS
-            : (errno == ENOTTY || errno == EINVAL) ? TTY_STDIN_NOTTY
-            : TTY_STDIN_ERROR);
+    return isatty (STDIN_FILENO) ? EXIT_SUCCESS : TTY_STDIN_NOTTY;
 
   int status = EXIT_SUCCESS;
   char const *tty = ttyname (STDIN_FILENO);
 
   if (! tty)
     {
-      if (errno != ENOTTY && errno != EINVAL)
-        error (TTY_STDIN_ERROR, errno, _("standard input"));
       tty = _("not a tty");
       status = TTY_STDIN_NOTTY;
     }
