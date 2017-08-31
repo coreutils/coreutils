@@ -23,7 +23,7 @@ require_selinux_
 mkdir subdir || framework_failure_
 ctx='root:object_r:tmp_t'
 mls_enabled_ && ctx="$ctx:s0"
-chcon "$ctx" subdir || framework_failure_
+chcon "$ctx" subdir || skip "Failed to set context: $ctx"
 cd subdir
 
 # --- mkdir -Z ---

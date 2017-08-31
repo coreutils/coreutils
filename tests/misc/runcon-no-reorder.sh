@@ -30,7 +30,7 @@ echo "$diag" > exp || framework_failure_
 runcon $(id -Z) true -j 2> out && > exp
 
 # When run on a system with no /selinux/context (i.e., in a chroot),
-# it chcon fails with this: "runcon: invalid context: \
+# it fails with this: "runcon: invalid context: \
 # root:system_r:unconfined_t:s0-s0:c0.c1023: No such file or directory"
 # That diagnostic is ok, too, so map it to the more common one.
 case $(cat out) in
