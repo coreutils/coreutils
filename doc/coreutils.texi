@@ -14175,6 +14175,10 @@ Exit status:
 1 otherwise.
 @end display
 
+@menu
+* Realpath usage examples::              Realpath usage examples.
+@end menu
+
 
 @node Realpath usage examples
 @subsection Realpath usage examples
