@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  ptx -S no longer infloops for a pattern which returns zero-length matches.
+  [the bug dates back to the initial implementation]
+
 
 * Noteworthy changes in release 8.28 (2017-09-01) [stable]
 

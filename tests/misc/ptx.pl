@@ -40,6 +40,12 @@ my @Tests =
                               {OUT=>".xx \"\" \"\" \"foo\" \"\"\n"}],
 ["format-t", '--format=tex',  {IN=>"foo\n"},
                               {OUT=>"\\xx {}{}{foo}{}{}\n"}],
+
+# with coreutils-8.28 and earlier, the -S option would infloop with
+# matches of zero-length.
+["S-infloop", '-S ^', {IN=>"a\n"}, {EXIT=>1},
+                      {ERR_SUBST=>'s/^.*reg.*ex.*length zero.*$/regexlzero/'},
+                      {ERR=>"regexlzero\n"}],
 );
 
 @Tests = triple_test \@Tests;

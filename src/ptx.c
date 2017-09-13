@@ -818,6 +818,11 @@ find_occurs_in_text (int file_index)
           case -1:
             break;
 
+          case 0:
+            die (EXIT_FAILURE, 0,
+                 _("error: regular expression has a match of length zero: %s"),
+                 quote (context_regex.string));
+
           default:
             next_context_start = cursor + context_regs.end[0];
             break;
