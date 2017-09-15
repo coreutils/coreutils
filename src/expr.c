@@ -413,12 +413,6 @@ or 0, 2 if EXPRESSION is syntactically invalid, and 3 if an error occurred.\n\
   exit (status);
 }
 
-/* Report a syntax error and exit.  */
-static void
-syntax_error (void)
-{
-  die (EXPR_INVALID, 0, _("syntax error"));
-}
 
 #if ! HAVE_GMP
 /* Report an integer overflow for operation OP and exit.  */
@@ -465,7 +459,9 @@ main (int argc, char **argv)
 
   v = eval (true);
   if (!nomoreargs ())
-    syntax_error ();
+    die (EXPR_INVALID, 0, _("syntax error: unexpected argument %s"),
+         quotearg_n_style (0, locale_quoting_style, *args));
+
   printv (v);
 
   return null (v);
@@ -659,6 +655,18 @@ nomoreargs (void)
   return *args == 0;
 }
 
+/* Report missing operand.
+   There is an implicit assumption that there was a previous argument,
+   and (args-1) is valid. */
+static void
+require_more_args (void)
+{
+  if (nomoreargs ())
+    die (EXPR_INVALID, 0, _("syntax error: missing argument after %s"),
+         quotearg_n_style (0, locale_quoting_style, *(args-1)));
+}
+
+
 #ifdef EVAL_TRACE
 /* Print evaluation trace and args remaining.  */
 
@@ -759,19 +767,22 @@ eval7 (bool evaluate)
 #ifdef EVAL_TRACE
   trace ("eval7");
 #endif
-  if (nomoreargs ())
-    syntax_error ();
+  require_more_args ();
 
   if (nextarg ("("))
     {
       v = eval (evaluate);
+      if (nomoreargs ())
+        die (EXPR_INVALID, 0, _("syntax error: expecting ')' after %s"),
+             quotearg_n_style (0, locale_quoting_style, *(args-1)));
       if (!nextarg (")"))
-        syntax_error ();
+        die (EXPR_INVALID, 0, _("syntax error: expecting ')' instead of %s"),
+             quotearg_n_style (0, locale_quoting_style, *args));
       return v;
     }
 
   if (nextarg (")"))
-    syntax_error ();
+    die (EXPR_INVALID, 0, _("syntax error: unexpected ')'"));
 
   return str_value (*args++);
 }
@@ -792,8 +803,7 @@ eval6 (bool evaluate)
 #endif
   if (nextarg ("+"))
     {
-      if (nomoreargs ())
-        syntax_error ();
+      require_more_args ();
       return str_value (*args++);
     }
   else if (nextarg ("length"))
