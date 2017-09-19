@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2017-01-09.19; # UTC
+scriptversion=2017-09-19.08; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -17,7 +17,7 @@ scriptversion=2017-01-09.19; # UTC
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Originally written by Paul Eggert.  The canonical version of this
 # script is maintained as build-aux/bootstrap in gnulib, however, to
@@ -141,7 +141,7 @@ po_download_command_format=\
 # Fallback for downloading .po files (if rsync fails).
 po_download_command_format2=\
 "wget --mirror -nd -q -np -A.po -P '%s' \
- http://translationproject.org/latest/%s/"
+ https://translationproject.org/latest/%s/"
 
 # Prefer a non-empty tarname (4th argument of AC_INIT if given), else
 # fall back to the package name (1st argument with munging)
@@ -699,7 +699,7 @@ download_po_files() {
   echo "$me: getting translations into $subdir for $domain..."
   cmd=$(printf "$po_download_command_format" "$domain" "$subdir")
   eval "$cmd" && return
-  # Fallback to HTTP.
+  # Fallback to HTTPS.
   cmd=$(printf "$po_download_command_format2" "$subdir" "$domain")
   eval "$cmd"
 }
@@ -792,7 +792,7 @@ symlink_to_dir()
       # aren't confused into doing unnecessary builds.  Conversely, if the
       # existing symlink's timestamp is older than the source, make it afresh,
       # so that broken tools aren't confused into skipping needed builds.  See
-      # <http://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
+      # <https://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
       test -h "$dst" &&
       src_ls=$(ls -diL "$src" 2>/dev/null) && set $src_ls && src_i=$1 &&
       dst_ls=$(ls -diL "$dst" 2>/dev/null) && set $dst_ls && dst_i=$1 &&
