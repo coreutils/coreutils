@@ -32,6 +32,7 @@
 #include "hash-triple.h"
 #include "relpath.h"
 #include "same.h"
+#include "targetdir.h"
 #include "yesno.h"
 #include "canonicalize.h"
 
@@ -120,22 +121,33 @@ errno_nonexisting (int err)
    directory if it referred to anything at all.  */
 
 static bool
-target_directory_operand (char const *file)
+target_directory_operand (char *file)
 {
-  char const *b = last_component (file);
-  size_t blen = strlen (b);
-  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
   int stat_result =
     (dereference_dest_dir_symlinks ? stat (file, &st) : lstat (file, &st));
-  int err = (stat_result == 0 ? 0 : errno);
-  bool is_a_dir = !err && S_ISDIR (st.st_mode);
-  if (err && ! errno_nonexisting (errno))
-    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
-  if (is_a_dir < looks_like_a_dir)
-    die (EXIT_FAILURE, err, _("target %s is not a directory"),
+  if (stat_result != 0)
+    {
+      int err = errno;
+      if (! errno_nonexisting (err))
+        die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+      char const *b = last_component (file);
+      size_t blen = strlen (b);
+      if (blen == 0 || ISSLASH (b[blen - 1]))
+        die (EXIT_FAILURE, err, _("target %s is not a directory"),
+             quoteaf (file));
+      return false;
+    }
+  if (! S_ISDIR (st.st_mode))
+    return false;
+  enum targetdir ty
+    = targetdir_operand_type (file,
+                              dereference_dest_dir_symlinks ? NULL : &st);
+  if (ty == TARGETDIR_VULNERABLE && ! getenv ("POSIXLY_CORRECT"))
+    die (EXIT_FAILURE, 0,
+         _("%s: vulnerable target directory (append '/' to use anyway)"),
          quoteaf (file));
-  return is_a_dir;
+  return ty != TARGETDIR_NOT;
 }
 
 /* Return FROM represented as relative to the dir of TARGET.

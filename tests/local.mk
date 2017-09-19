@@ -130,6 +130,7 @@ all_root_tests =				\
   tests/mkdir/smack-root.sh			\
   tests/mv/hardlink-case.sh			\
   tests/mv/sticky-to-xpart.sh			\
+  tests/mv/vulnerable-target.sh			\
   tests/rm/fail-2eperm.sh			\
   tests/rm/no-give-up.sh			\
   tests/rm/one-file-system.sh			\

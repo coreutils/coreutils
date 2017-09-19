@@ -2,6 +2,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Changes in behavior
+
+  cp, install, ln, and mv by default now reject some usages that are
+  likely vulnerable to hijacking, to foil some attacks on unsafe
+  shared target directories.  For example, if /tmp/risky is
+  world-writable and /tmp/risky/d is a directory, 'cp f /tmp/risky/d'
+  now fails because the target directory is vulnerable.  To suppress
+  the vulnerability heuristic, append '/' to the name of the target
+  directory, or use the -t or -T options, or (for cp, ln, and mv) set
+  the POSIXLY_CORRECT environment variable.
+
 ** Bug fixes
 
   ptx -S no longer infloops for a pattern which returns zero-length matches.

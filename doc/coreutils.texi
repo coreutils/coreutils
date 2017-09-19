@@ -1282,7 +1282,38 @@ The @command{cp}, @command{install}, @command{ln}, and @command{mv}
 commands normally treat the last operand specially when it is a
 directory or a symbolic link to a directory.  For example, @samp{cp
 source dest} is equivalent to @samp{cp source dest/source} if
-@file{dest} is a directory.  Sometimes this behavior is not exactly
+@file{dest} is a directory.
+
+@cindex vulnerable target directory
+@vindex POSIXLY_CORRECT
+However, if the destination is a directory whose name could be that of
+an ordinary file, and the directory's parent appears to be vulnerable
+to an attack by another user, then these programs report the
+vulnerability and fail.  If you are not worried about such an attack
+you can suppress this heuristic by appending @samp{/} to the
+destination's name, or by using the @option{--target-directory}
+(@option{-t}) or @option{--no-target-directory} (@option{-T}) options.
+(For @command{cp}, @command{ln}, and @command{mv} you can also
+suppress the heuristic by setting the @env{POSIXLY_CORRECT}
+environment variable.)  For example, if @file{/tmp/risky/d} is a
+directory whose parent @file{/tmp/risky} is is world-writable and is
+not sticky, the command @samp{cp passwd /tmp/risky/d} fails with
+a diagnostic reporting a vulnerable target directory, as an attacker
+could replace @file{/tmp/risky/d} by a symbolic link to a victim
+directory while @command{cp} is running.  In this example, you can
+suppress the heuristic by issuing one of the following shell commands
+instead:
+
+@example
+# These can be hijacked if /tmp/risky is rwxrwxrwx!
+cp passwd /tmp/risky/d/
+cp -t /tmp/risky/d passwd
+cp -T passwd /tmp/risky/d/passwd
+POSIXLY_CORRECT=yes cp passwd /tmp/risky/d
+@end example
+
+As this example illustrates, sometimes the default behavior with
+destination directories is not exactly
 what is wanted, so these commands support the following options to
 allow more fine-grained control:
 
