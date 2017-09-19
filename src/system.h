@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Include this file _after_ system headers if possible.  */
 
@@ -656,11 +656,11 @@ emit_ancillary_info (char const *program)
   if (lc_messages && STRNCMP_LIT (lc_messages, "en_"))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
-         <http://translationproject.org/team/LANG_CODE.html> to form one of
-         the URLs at http://translationproject.org/team/.  Otherwise, replace
+         <https://translationproject.org/team/LANG_CODE.html> to form one of
+         the URLs at https://translationproject.org/team/.  Otherwise, replace
          the entire URL with your translation team's email address.  */
       printf (_("Report %s translation bugs to "
-                "<http://translationproject.org/team/>\n"), program);
+                "<https://translationproject.org/team/>\n"), program);
     }
   printf (_("Full documentation at: <%s%s>\n"),
           PACKAGE_URL, program);

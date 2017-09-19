@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # In 4.0.35 and earlier, 'mkdir dir && cp -R dir dir' would produce this:
 #   cp: won't create hard link 'dir/dir/dir' to directory ''

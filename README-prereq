@@ -8,7 +8,7 @@ I.e., the tools checked for by the bootstrap script and include:
 - Git       <https://git-scm.com/>
 - Gperf     <https://www.gnu.org/software/gperf/>
 - Gzip      <https://www.gnu.org/software/gzip/>
-- Perl      <http://www.cpan.org/>
+- Perl      <https://www.cpan.org/>
 - Rsync     <https://rsync.samba.org/>
 - Tar       <https://www.gnu.org/software/tar/>
 - Texinfo   <https://www.gnu.org/software/texinfo/>

@@ -13,7 +13,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use strict;
 
@@ -190,7 +190,7 @@ my @Tests =
 ["10e", '-k 1.2,1.2', {IN=>"ab\nba\n"}, {OUT=>"ba\nab\n"}],
 #
 # The way sort works on these inputs (10f and 10g) seems wrong to me.
-# See http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=3c467c0d223
+# See https://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=3c467c0d223
 # POSIX doesn't seem to say one way or the other, but that's the way all
 # other sort implementations work.
 ["10f", '-t : -k 1.3,1.3', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],

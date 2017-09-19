@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use strict;
 
@@ -24,7 +24,7 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 # The data from which these tests were derived came from here:
-# http://web.archive.org/web/20060505234703/http://csrc.nist.gov/cryptval/shs/sha1-vectors.zip
+# https://web.archive.org/web/20060505234703/http://csrc.nist.gov/cryptval/shs/sha1-vectors.zip
 
 my @Tests =
     (

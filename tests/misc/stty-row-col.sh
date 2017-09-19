@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Setting this envvar to a very small value used to cause e.g., 'stty size'
 # to generate slightly different output on certain systems.
@@ -23,7 +23,7 @@ export COLUMNS
 
 # Make sure we get English-language behavior.
 # See the report about a possibly-related Solaris problem by Alexandre Peshansky
-# <http://lists.gnu.org/archive/html/bug-coreutils/2004-10/msg00035.html>.
+# <https://lists.gnu.org/archive/html/bug-coreutils/2004-10/msg00035.html>.
 # Currently stty isn't localized, but it might be in the future.
 LC_ALL=C
 export LC_ALL

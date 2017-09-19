@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use strict;
 
@@ -121,8 +121,8 @@ my @Tests =
      # and to be consistent in output with older versions, we output
      # a '\t' rather than a space for the second tab position.
      # For more detailed comparison with other implementations see:
-     # http://lists.gnu.org/archive/html/coreutils/2016-06/msg00015.html
-     # http://lists.gnu.org/archive/html/coreutils/2016-07/msg00011.html
+     # https://lists.gnu.org/archive/html/coreutils/2016-06/msg00015.html
+     # https://lists.gnu.org/archive/html/coreutils/2016-07/msg00011.html
      ['ts1', '-t8,9', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t\t y\n"}],
      # There is no ambiguity here. This should always be the output.
      ['ts2', '-t5,8', {IN=>"x\t \t y\n"},    {OUT=>"x\t\t y\n"}],

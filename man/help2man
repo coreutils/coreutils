@@ -15,10 +15,10 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, see <https://www.gnu.org/licenses/>.
 
 # Written by Brendan O'Dea <bod@debian.org>
-# Available from ftp://ftp.gnu.org/gnu/help2man/
+# Available from https://ftp.gnu.org/gnu/help2man/
 
 use 5.008;
 use strict;

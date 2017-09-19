@@ -125,10 +125,10 @@ sub check_msg($$)
 
   my $buf = join ("\n", @line) . "\n";
   $buf =~ m!https?://bugzilla\.redhat\.com/show_bug\.cgi\?id=(\d+)!s
-    and return "use shorter http://bugzilla.redhat.com/$1";
+    and return "use shorter https://bugzilla.redhat.com/$1";
 
   $buf =~ m!https?://debbugs\.gnu\.org/(?:cgi/bugreport\.cgi\?bug=)?(\d+)!s
-    and return "use shorter http://bugs.gnu.org/$1";
+    and return "use shorter https://bugs.gnu.org/$1";
 
   $buf =~ /^ *Signed-off-by:/mi
     and return q(do not use "Signed-off-by:");

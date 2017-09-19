@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
@@ -48,7 +48,7 @@ fastpoll='-s.1 --max-unchanged-stats=1'
 
 # Perform at least this many iterations, because on multi-core systems
 # the offending sequence of events can be surprisingly uncommon.
-# See: http://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
+# See: https://lists.gnu.org/archive/html/bug-coreutils/2009-11/msg00213.html
 for i in $(seq 50); do
     echo $i
     rm -f k x out

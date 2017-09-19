@@ -3601,7 +3601,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   These changes are in response to decisions taken in the January 2005
   Austin Group standardization meeting.  For more details, please see
   "Utility Syntax Guidelines" in the Minutes of the January 2005
-  Meeting <http://www.opengroup.org/austin/docs/austin_239.html>.
+  Meeting <https://www.opengroup.org/austin/docs/austin_239.html>.
 
 ** Binary input and output are now implemented more consistently.
   These changes affect only platforms like MS-DOS that distinguish
@@ -3679,9 +3679,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
     The new -P option checks whether a file name component has leading "-",
     as suggested in interpretation "Austin-039:XCU:pathchk:pathchk -p"
-    <http://www.opengroup.org/austin/interps/doc.tpl?gdid=6232>.
+    <https://collaboration.opengroup.org/austin/interps/documents.php?action=show&gdid=6232>.
     It also rejects the empty name even if the current host accepts it; see
-    <http://www.opengroup.org/austin/interps/doc.tpl?gdid=6233>.
+    <https://collaboration.opengroup.org/austin/interps/documents.php?action=show&gdid=6233>.
 
     The --portability option is now equivalent to -p -P.
 

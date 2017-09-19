@@ -955,7 +955,7 @@ that are upward compatible with the
 @uref{http://www.bipm.org/en/publications/si-brochure/chapter3.html,
 SI prefixes}
 for decimal multiples and with the
-@uref{http://physics.nist.gov/cuu/Units/binary.html, ISO/IEC 80000-13
+@uref{https://physics.nist.gov/cuu/Units/binary.html, ISO/IEC 80000-13
 (formerly IEC 60027-2) prefixes} for binary multiples.
 
 With human-readable formats, output sizes are followed by a size letter
@@ -18210,7 +18210,7 @@ to set a file's timestamp to an arbitrary value.
 @chapter Opening the Software Toolbox
 
 An earlier version of this chapter appeared in
-@uref{http://www.linuxjournal.com/article.php?sid=2762, the
+@uref{https://www.linuxjournal.com/article.php?sid=2762, the
 @cite{What's GNU@?} column of the June 1994 @cite{Linux Journal}}.
 It was written by Arnold Robbins.
 

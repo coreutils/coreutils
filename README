@@ -179,7 +179,7 @@ reproduce whatever problem prompted it.  Plus, you'll earn lots of
 karma if you include a test case to exercise any bug(s) you fix.
 Here are instructions for checking out the latest development sources:
 
-  http://savannah.gnu.org/git/?group=coreutils
+  https://savannah.gnu.org/git/?group=coreutils
 
 If your patch adds a new feature, please try to get some sort of consensus
 that it is a worthwhile change.  One way to do that is to send mail to

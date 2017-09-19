@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Before coreutils-4.5.3, --target-dir didn't work with one file.
 # It would create the desired link, but would fail with a diagnosis like this:

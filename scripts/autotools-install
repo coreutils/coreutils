@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION='2015-10-06 12:49' # UTC
+VERSION='2017-09-19 07:31' # UTC
 
 # Building coreutils from a git-cloned directory may require versions of
 # tools like autoconf, automake, gettext, etc. that are newer than the ones
@@ -26,12 +26,12 @@ prog_name=`basename $0`
 die () { echo "$prog_name: $*" >&2; exit 1; }
 
 tarballs='
-  http://pkgconfig.freedesktop.org/releases/pkg-config-0.28.tar.gz
-  http://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz
-  http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-  http://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz
-  http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz
-  http://ftp.gnu.org/gnu/gettext/gettext-0.19.6.tar.gz
+  https://pkgconfig.freedesktop.org/releases/pkg-config-0.28.tar.gz
+  https://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz
+  https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+  https://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz
+  https://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz
+  https://ftp.gnu.org/gnu/gettext/gettext-0.19.6.tar.gz
 '
 
 usage() {

@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Originally written by Paul Rubin <phr@ocf.berkeley.edu>.
    Adapted for GNU, fixed to factor UINT_MAX by Jim Meyering.
@@ -1972,7 +1972,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
      SQUARE FORM FACTORIZATION
      JASON E. GOWER AND SAMUEL S. WAGSTAFF, JR.
 
-     http://homes.cerias.purdue.edu/~ssw/squfof.pdf
+     https://homes.cerias.purdue.edu/~ssw/squfof.pdf
    */
 
   static const unsigned int multipliers_1[] =
