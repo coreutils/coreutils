@@ -20,13 +20,9 @@
 #include <targetdir.h>
 
 #include <die.h>
-#include <dirname.h>
 #include <root-uid.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "system.h"
 
 /* Check whether DIR, which the caller presumably has already verified
    is a directory or a symlink to a directory, is likely to be
@@ -43,7 +39,7 @@
    This function might temporarily modify the DIR string; it restores
    the string to its original value before returning.  */
 
-enum targetdir
+extern enum targetdir
 targetdir_operand_type (char *restrict dir,
                         struct stat const *restrict dir_lstat)
 {
@@ -53,7 +49,7 @@ targetdir_operand_type (char *restrict dir,
   /* If DIR ends in / or has a last component of . or .. then it is
      good enough.  */
   if (lclen == 0 || ISSLASH (lc[lclen - 1])
-      || strcmp (lc, ".") == 0 || strcmp (lc, "..") == 0)
+      || STREQ (lc, ".") || STREQ (lc, ".."))
     return TARGETDIR_OK;
 
   char lc0 = *lc;

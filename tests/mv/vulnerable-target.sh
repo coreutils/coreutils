@@ -25,7 +25,7 @@ mkdir -m a+rwx risky || framework_failure_
 mkdir risky/d || framework_failure_
 echo foo >foo || framework_failure_
 
-mv foo risky/d && fail=1
+returns_ 1 mv foo risky/d || fail=1
 mv foo risky/d/ || fail=1
 mv risky/d/foo . || fail=1
 mv -t risky/d foo || fail=1

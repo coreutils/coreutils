@@ -130,7 +130,6 @@ all_root_tests =				\
   tests/mkdir/smack-root.sh			\
   tests/mv/hardlink-case.sh			\
   tests/mv/sticky-to-xpart.sh			\
-  tests/mv/vulnerable-target.sh			\
   tests/rm/fail-2eperm.sh			\
   tests/rm/no-give-up.sh			\
   tests/rm/one-file-system.sh			\
@@ -663,6 +662,7 @@ all_tests =					\
   tests/mv/to-symlink.sh			\
   tests/mv/trailing-slash.sh			\
   tests/mv/update.sh				\
+  tests/mv/vulnerable-target.sh			\
   tests/readlink/can-e.sh			\
   tests/readlink/can-f.sh			\
   tests/readlink/can-m.sh			\
