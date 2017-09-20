@@ -1117,7 +1117,6 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
                 first = false;
               }
             memcpy (oldname + (base - newname), base, len + 1);
-            break;
           }
       }
 

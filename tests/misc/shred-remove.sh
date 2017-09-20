@@ -44,4 +44,24 @@ done
 touch $file || framework_failure_
 returns_ 1 shred -n0 --remove=none $file 2>/dev/null || fail=1
 
+# Ensure rename passes complete.
+# coreutils-8.28 did not do the decreasing length rename
+# which may have leaked the length of the removed file name
+printf 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_. |
+sed 's/./&\n/g' | xargs touch || framework_failure_  # test level exhaustion
+touch test 000 || framework_failure_  # test level increment
+shred -vu test 2>out || fail=1
+cat <<\EOF >exp || framework_failure_
+shred: test: removing
+shred: test: renamed to 0000
+shred: 0000: renamed to 001
+shred: 001: renamed to 00
+shred: test: removed
+EOF
+compare exp out || fail=1
+
+# Ensure renames are only retried for EEXIST
+mkdir rodir && cd rodir && touch $file && chmod a-w . || framework_failure_
+returns_ 1 timeout 10 shred -u $file || fail=1
+
 Exit $fail

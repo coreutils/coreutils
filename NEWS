@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx -S no longer infloops for a pattern which returns zero-length matches.
   [the bug dates back to the initial implementation]
 
+  shred --remove will again repeatedly rename files with shortening names
+  to attempt to hide the original length of the file name.
+  [bug introduced in coreutils-8.28]
+
 
 * Noteworthy changes in release 8.28 (2017-09-01) [stable]
 
