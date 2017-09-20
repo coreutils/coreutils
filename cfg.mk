@@ -48,7 +48,7 @@ export VERBOSE = yes
 # 4914152 9e
 export XZ_OPT = -8e
 
-old_NEWS_hash = 0c14d8be06bfd7cc0024b7d39fdd6e1e
+old_NEWS_hash = 8c2a749f657a6bd541e8b9c5227fe26f
 
 # Add an exemption for sc_makefile_at_at_check.
 _makefile_at_at_check_exceptions = ' && !/^cu_install_prog/ && !/dynamic-dep/'
@@ -320,11 +320,12 @@ sc_prohibit-gl-attributes:
 	  $(_sc_search_regexp)
 
 # Look for lines longer than 80 characters, except omit:
-# - program-generated long lines in diff headers,
+# - urls
 # - the help2man script copied from upstream,
 # - tests involving long checksum lines, and
 # - the 'pr' test cases.
 FILTER_LONG_LINES =						\
+  \|^[^:]*NEWS:.*https\{,1\}://| d;					\
   \|^[^:]*man/help2man:| d;					\
   \|^[^:]*tests/misc/sha[0-9]*sum.*\.pl[-:]| d;			\
   \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
