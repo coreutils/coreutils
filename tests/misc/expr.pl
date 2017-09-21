@@ -164,8 +164,6 @@ my @Tests =
      ['bre61', '"acd" : "a\\(b\\)?c\\1d"', {OUT => ''}, {EXIT => 1}],
      ['bre62', '-- "-5" : "-\\{0,1\\}[0-9]*\$"', {OUT => '2'}],
 
-     ['fail-b', '9 9',
-      {ERR => "$prog: syntax error: unexpected argument '9'\n"}, {EXIT => 2}],
      ['fail-c', {ERR => "$prog: missing operand\n"
                  . "Try '$prog --help' for more information.\n"},
       {EXIT => 2}],
@@ -179,6 +177,8 @@ my @Tests =
 
 
      # Test syntax error messages
+     ['se0', '9 9',
+      {ERR => "$prog: syntax error: unexpected argument '9'\n"}, {EXIT => 2}],
      ['se1', "2 a", {EXIT=>2},
       {ERR=>"$prog: syntax error: unexpected argument 'a'\n"}],
      ['se2', "2 '+'", {EXIT=>2},
@@ -210,6 +210,8 @@ foreach $t (@Tests)
       }
   }
 
+# Try multibyte locale in most tests.
+#
 if ($mb_locale ne 'C')
   {
     # Duplicate each test vector, appending "-mb" to the test name and
@@ -218,6 +220,10 @@ if ($mb_locale ne 'C')
     my @new;
     foreach my $t (@Tests)
       {
+        # Don't add the quote varying tests to the multi-byte set
+        $t->[0] =~ /^se/
+        and next;
+
         my @new_t = @$t;
         my $test_name = shift @new_t;
 
