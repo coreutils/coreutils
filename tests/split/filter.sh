@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ split
 require_sparse_support_ # for 'truncate --size=$LARGE'
-xz --version || skip_ "xz (better than gzip/bzip2) required"
+xz --version || skip_ 'xz required'
 
 for total_n_lines in 5 3000 20000; do
   seq $total_n_lines > in || framework_failure_
@@ -53,26 +53,22 @@ yes | head -n200K | split -b1G --filter='head -c1 >/dev/null' || fail=1
 
 # Ensure that "endless" input is ignored when all filters finish
 for mode in '' 'r/'; do
-  FILE = '-'
+  in_file='-'
+  in_cmd='yes'
   if test "$mode" = ''; then
-    FILE = 'zero.in'
+    in_file='zero.in'
+    in_cmd='true'
     truncate -s10T "$FILE" || continue
   fi
   for N in 1 2; do
     rm -f x??.n || framework_failure_
-    timeout 10 sh -c \
-      "yes | split --filter='head -c1 >\$FILE.n' -n $mode$N $FILE" || fail=1
+    $in_cmd |
+     timeout 10 split --filter='head -c1 >$FILE.n' -n $mode$N $in_file || fail=1
     # Also ensure we get appropriate output from each filter
     seq 1 $N | tr '0-9' 1 > stat.exp
     stat -c%s x??.n > stat.out || framework_failure_
     compare stat.exp stat.out || fail=1
   done
-done
-
-# Ensure that "endless" input _is_ processed for unbounded number of filters
-for buf in 1000 1000000; do
-  returns_ 124 timeout .5 sh -c \
-    "yes | split --filter='head -c1 >/dev/null' -b $buf" || fail=1
 done
 
 # Ensure that "endless" input _is_ processed for unbounded number of filters
