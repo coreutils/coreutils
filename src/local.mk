@@ -59,7 +59,6 @@ noinst_HEADERS =		\
   src/remove.h			\
   src/set-fields.h		\
   src/system.h			\
-  src/targetdir.h		\
   src/uname.h
 
 EXTRA_DIST +=		\
@@ -345,8 +344,8 @@ copy_sources = \
 
 transform = s/ginstall/install/;/libstdbuf/!$(program_transform_name)
 
-src_ginstall_SOURCES = src/install.c src/prog-fprintf.c src/targetdir.c \
-  $(copy_sources) $(selinux_sources)
+src_ginstall_SOURCES = src/install.c src/prog-fprintf.c $(copy_sources) \
+		       $(selinux_sources)
 
 # This is for the '[' program.  Automake transliterates '[' and '/' to '_'.
 src___SOURCES = src/lbracket.c
@@ -354,7 +353,7 @@ src___SOURCES = src/lbracket.c
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
-src_cp_SOURCES = src/cp.c src/targetdir.c $(copy_sources) $(selinux_sources)
+src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_vdir_SOURCES = src/ls.c src/ls-vdir.c
 src_id_SOURCES = src/id.c src/group-list.c
@@ -362,16 +361,14 @@ src_groups_SOURCES = src/groups.c src/group-list.c
 src_ls_SOURCES = src/ls.c src/ls-ls.c
 src_ln_SOURCES = src/ln.c \
   src/force-link.c src/force-link.h \
-  src/relpath.c src/relpath.h \
-  src/targetdir.c
+  src/relpath.c src/relpath.h
 src_chown_SOURCES = src/chown.c src/chown-core.c
 src_chgrp_SOURCES = src/chgrp.c src/chown-core.c
 src_kill_SOURCES = src/kill.c src/operand2sig.c
 src_realpath_SOURCES = src/realpath.c src/relpath.c src/relpath.h
 src_timeout_SOURCES = src/timeout.c src/operand2sig.c
 
-src_mv_SOURCES = src/mv.c src/remove.c src/targetdir.c \
-  $(copy_sources) $(selinux_sources)
+src_mv_SOURCES = src/mv.c src/remove.c $(copy_sources) $(selinux_sources)
 src_rm_SOURCES = src/rm.c src/remove.c
 
 src_mkdir_SOURCES = src/mkdir.c src/prog-fprintf.c $(selinux_sources)

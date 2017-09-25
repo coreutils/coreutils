@@ -662,7 +662,6 @@ all_tests =					\
   tests/mv/to-symlink.sh			\
   tests/mv/trailing-slash.sh			\
   tests/mv/update.sh				\
-  tests/mv/vulnerable-target.sh			\
   tests/readlink/can-e.sh			\
   tests/readlink/can-f.sh			\
   tests/readlink/can-m.sh			\

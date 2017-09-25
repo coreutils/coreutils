@@ -33,7 +33,6 @@
 #include "ignore-value.h"
 #include "quote.h"
 #include "stat-time.h"
-#include "targetdir.h"
 #include "utimens.h"
 #include "acl.h"
 
@@ -568,20 +567,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   return true;
 }
 
-/* Store FILE's status into *ST.  If FILE does not exist, set *NEW_DST.
-   If there is some other error, report it and exit.  */
-
-static void
-stat_target_operand (char const *file, struct stat *st, bool *new_dst)
-{
-  if (stat (file, st) != 0)
-    {
-      if (errno != ENOENT)
-        die (EXIT_FAILURE, errno, _("failed to access %s"), quoteaf (file));
-      *new_dst = true;
-    }
-}
-
 /* FILE is the last operand of this command.
    Return true if FILE is a directory.
    But report an error and exit if there is a problem accessing FILE,
@@ -592,17 +577,17 @@ stat_target_operand (char const *file, struct stat *st, bool *new_dst)
    Otherwise, set *NEW_DST.  */
 
 static bool
-target_directory_operand (char *file, struct stat *st, bool *new_dst)
+target_directory_operand (char const *file, struct stat *st, bool *new_dst)
 {
-  stat_target_operand (file, st, new_dst);
-  if (*new_dst || ! S_ISDIR (st->st_mode))
-    return false;
-  enum targetdir ty = targetdir_operand_type (file, NULL);
-  if (ty == TARGETDIR_VULNERABLE && ! getenv ("POSIXLY_CORRECT"))
-    die (EXIT_FAILURE, 0,
-         _("vulnerable target directory %s (append '/' to use anyway)"),
-         quoteaf (file));
-  return ty != TARGETDIR_NOT;
+  int err = (stat (file, st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st->st_mode);
+  if (err)
+    {
+      if (err != ENOENT)
+        die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+      *new_dst = true;
+    }
+  return is_a_dir;
 }
 
 /* Scan the arguments, and copy each by calling copy.
@@ -638,7 +623,7 @@ do_copy (int n_files, char **file, const char *target_directory,
           usage (EXIT_FAILURE);
         }
       /* Update NEW_DST and SB, which may be checked below.  */
-      stat_target_operand (file[n_files -1], &sb, &new_dst);
+      ignore_value (target_directory_operand (file[n_files -1], &sb, &new_dst));
     }
   else if (!target_directory)
     {

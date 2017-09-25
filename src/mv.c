@@ -32,7 +32,6 @@
 #include "filenamecat.h"
 #include "remove.h"
 #include "root-dev-ino.h"
-#include "targetdir.h"
 #include "priv-set.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -149,23 +148,14 @@ cp_option_init (struct cp_options *x)
    than nonexistence (errno == ENOENT).  */
 
 static bool
-target_directory_operand (char *file)
+target_directory_operand (char const *file)
 {
   struct stat st;
-  if (stat (file, &st) == 0)
-    {
-      if (! S_ISDIR (st.st_mode))
-        return false;
-      enum targetdir ty = targetdir_operand_type (file, NULL);
-      if (ty == TARGETDIR_VULNERABLE && ! getenv ("POSIXLY_CORRECT"))
-        die (EXIT_FAILURE, 0,
-             _("vulnerable target directory %s (append / to use anyway)"),
-             quoteaf (file));
-      return ty != TARGETDIR_NOT;
-    }
-  if (errno != ENOENT)
-    die (EXIT_FAILURE, errno, _("failed to access %s"), quoteaf (file));
-  return false;
+  int err = (stat (file, &st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st.st_mode);
+  if (err && err != ENOENT)
+    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+  return is_a_dir;
 }
 
 /* Move SOURCE onto DEST.  Handles cross-file-system moves.

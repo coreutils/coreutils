@@ -42,7 +42,6 @@
 #include "savewd.h"
 #include "selinux.h"
 #include "stat-time.h"
-#include "targetdir.h"
 #include "utimens.h"
 #include "xstrtol.h"
 
@@ -396,29 +395,20 @@ setdefaultfilecon (char const *file)
    directory if it referred to anything at all.  */
 
 static bool
-target_directory_operand (char *file)
+target_directory_operand (char const *file)
 {
+  char const *b = last_component (file);
+  size_t blen = strlen (b);
+  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
-  if (stat (file, &st) != 0)
-    {
-      int err = errno;
-      if (err == ENOENT)
-        {
-          char const *b = last_component (file);
-          size_t blen = strlen (b);
-          if (blen != 0 && ! ISSLASH (b[blen - 1]))
-            return false;
-        }
-      die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
-    }
-  if (! S_ISDIR (st.st_mode))
-    return false;
-  enum targetdir ty = targetdir_operand_type (file, NULL);
-  if (ty == TARGETDIR_VULNERABLE)
-    die (EXIT_FAILURE, 0,
-         _("vulnerable target directory %s (append '/' to use anyway)"),
+  int err = (stat (file, &st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st.st_mode);
+  if (err && err != ENOENT)
+    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
+  if (is_a_dir < looks_like_a_dir)
+    die (EXIT_FAILURE, err, _("target %s is not a directory"),
          quoteaf (file));
-  return ty != TARGETDIR_NOT;
+  return is_a_dir;
 }
 
 /* Report that directory DIR was made, if OPTIONS requests this.  */
