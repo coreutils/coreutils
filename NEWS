@@ -11,6 +11,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   to attempt to hide the original length of the file name.
   [bug introduced in coreutils-8.28]
 
+** Build-related
+
+  Default man pages are now distributed which are used if perl is
+  not available on the build system, or when cross compiling.
+
 
 * Noteworthy changes in release 8.28 (2017-09-01) [stable]
 

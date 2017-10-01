@@ -18,22 +18,27 @@
 
 EXTRA_DIST += man/help2man man/dummy-man
 
+## Use the distributed man pages if cross compiling or lack perl
+if CROSS_COMPILING
+run_help2man = $(SHELL) $(srcdir)/man/dummy-man
+else
 ## Graceful degradation for systems lacking perl.
 if HAVE_PERL
 run_help2man = $(PERL) -- $(srcdir)/man/help2man
 else
 run_help2man = $(SHELL) $(srcdir)/man/dummy-man
 endif
+endif
 
 man1_MANS = @man1_MANS@
-EXTRA_DIST += $(man1_MANS:.1=.x)
+EXTRA_DIST += $(man1_MANS) $(man1_MANS:.1=.x)
 
 EXTRA_MANS = @EXTRA_MANS@
-EXTRA_DIST += $(EXTRA_MANS:.1=.x)
+EXTRA_DIST += $(EXTRA_MANS) $(EXTRA_MANS:.1=.x)
 
 ALL_MANS = $(man1_MANS) $(EXTRA_MANS)
 
-CLEANFILES += $(ALL_MANS)
+MAINTAINERCLEANFILES += $(ALL_MANS)
 
 # This is a kludge to remove generated 'man/*.1' from a non-srcdir build.
 # Without this, "make distcheck" might fail.
@@ -179,13 +184,14 @@ endif
 ## Note the use of $$t/$*, rather than just '$*' as in other packages.
 ## That is necessary to avoid failures for programs that are also shell
 ## built-in functions like echo, false, printf, pwd.
-	rm -f $@ $@-t							\
+	rm -f $@-t							\
 	  && t=$*.td							\
 	  && rm -rf $$t							\
 	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog$(EXEEXT) \
 				$$argv$(EXEEXT))			\
 	&& : $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
+	&& : $${TZ=UTC0} && export TZ					\
 	&& export SOURCE_DATE_EPOCH && $(run_help2man)			\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
@@ -198,4 +204,4 @@ endif
 	       $$t/$$name.1 > $@-t			\
 	  && rm -rf $$t							\
 	  && chmod a-w $@-t						\
-	  && mv $@-t $@
+	  && rm -f $@ && mv $@-t $@

@@ -1,8 +1,7 @@
 #!/bin/sh
-# Poor man's placeholder for help2man invocation on systems lacking perl;
-# it generates a dummy man page stating that a proper one could not be
-# generated, and redirecting the user back to either the info
-# documentation or the '--help' output.
+# Poor man's placeholder for help2man invocation on systems lacking perl,
+# or when cross compiling.
+# It just copies the distributed man pages.
 
 set -e; set -u
 
@@ -24,12 +23,12 @@ while test $# -gt 0; do
     # Help2man options we recognize and handle.
     --output=*) output=`expr x"$1" : x'--output=\(.*\)'`;;
     --output) shift; output=$1;;
+    --include=*) include=`expr x"$1" : x'--include=\(.*\)'`;;
+    --include) shift; include=$1;;
     --source=*) source=`expr x"$1" : x'--source=\(.*\)'`;;
     --source) shift; source=$1;;
     # Recognize (as no-op) other help2man options that might be used
     # in the makefile.
-    --include=*);;
-    --include) shift;;
     --info-page=*);;
     -*) fatal_ "invalid or unrecognized help2man option '$1'";;
     --) shift; break;;
@@ -41,10 +40,13 @@ done
 test $# -gt 0 || fatal_ "missing argument"
 test $# -le 1 || fatal_ "too many non-option arguments"
 
+dist_man=$(printf '%s\n' "$include" | sed 's/\.x$/.1/')
+test -f "$dist_man" && cp "$dist_man" "$output" && exit || :
+
 baseout=`basename_ "$output"`
 sed 's/^/WARNING: /' >&2 <<END
-Cannot create proper '$baseout' man page, since perl is missing or
-inadequate on this system.  Creating a stub man page instead.
+Did not generate or find default '$baseout' man page.
+Creating a stub man page instead.
 END
 
 progname=`basename_ "$1"`
@@ -55,9 +57,8 @@ cat >"$output" <<END
 .SH NAME
 $progname $bs- a $source program
 .SH DESCRIPTION
-.B OOOPS!
-Due to the lack of perl on the build system, we were
-unable to create a proper manual page for
+.B OOPS!
+We were unable to create a proper manual page for
 .B $progname.
 For concise option descriptions, run
 .IP

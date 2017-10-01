@@ -256,7 +256,7 @@ my $epoch_secs = time;
 if (exists $ENV{SOURCE_DATE_EPOCH} and $ENV{SOURCE_DATE_EPOCH} =~ /^(\d+)$/)
 {
     $epoch_secs = $1;
-    $ENV{TZ} = 'UTC';
+    $ENV{TZ} = 'UTC0';
 }
 
 # Translators: the following message is a strftime(3) format string, which in
