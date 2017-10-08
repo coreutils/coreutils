@@ -346,6 +346,7 @@ all_tests =					\
   tests/misc/shuf.sh				\
   tests/misc/shuf-reservoir.sh			\
   tests/misc/sleep.sh				\
+  tests/misc/sm3sum.pl				\
   tests/misc/sort.pl				\
   tests/misc/sort-benchmark-random.sh		\
   tests/misc/sort-compress.sh			\

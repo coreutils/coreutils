@@ -79,6 +79,7 @@ sha512sum: Ulrich Drepper, Scott Miller, David Madore
 shred: Colin Plumb
 shuf: Paul Eggert
 sleep: Jim Meyering, Paul Eggert
+sm3sum: Jia Zhang
 sort: Mike Haertel, Paul Eggert
 split: Torbjorn Granlund, Richard M. Stallman
 stat: Michael Meskes

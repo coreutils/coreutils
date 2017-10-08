@@ -112,6 +112,7 @@ normal_progs='
     shred
     shuf
     sleep
+    sm3sum
     sort
     split
     stat
