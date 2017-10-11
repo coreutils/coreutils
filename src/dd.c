@@ -31,6 +31,7 @@
 #include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "human.h"
+#include "ioblksize.h"
 #include "long-options.h"
 #include "quote.h"
 #include "verror.h"
@@ -265,6 +266,9 @@ static sig_atomic_t volatile info_signal_count;
 
 /* Whether to discard cache for input or output.  */
 static bool i_nocache, o_nocache;
+
+/* Whether to instruct the kernel to discard the complete file.  */
+static bool i_nocache_eof, o_nocache_eof;
 
 /* Function used for read (to handle iflag=fullblock parameter).  */
 static ssize_t (*iread_fnc) (int fd, char *buf, size_t size);
@@ -1000,7 +1004,8 @@ quit (int code)
   exit (code);
 }
 
-/* Return LEN rounded down to a multiple of PAGE_SIZE
+/* Return LEN rounded down to a multiple of IO_BUFSIZE
+   (to minimize calls to the expensive posix_fadvise(,POSIX_FADV_DONTNEED),
    while storing the remainder internally per FD.
    Pass LEN == 0 to get the current remainder.  */
 
@@ -1013,7 +1018,7 @@ cache_round (int fd, off_t len)
   if (len)
     {
       uintmax_t c_pending = *pending + len;
-      *pending = c_pending % page_size;
+      *pending = c_pending % IO_BUFSIZE;
       if (c_pending > *pending)
         len = c_pending - *pending;
       else
@@ -1033,54 +1038,64 @@ static bool
 invalidate_cache (int fd, off_t len)
 {
   int adv_ret = -1;
+  off_t offset;
+  bool nocache_eof = (fd == STDIN_FILENO ? i_nocache_eof : o_nocache_eof);
 
   /* Minimize syscalls.  */
   off_t clen = cache_round (fd, len);
   if (len && !clen)
     return true; /* Don't advise this time.  */
-  if (!len && !clen && max_records)
-    return true; /* Nothing pending.  */
+  else if (! len && ! clen && ! nocache_eof)
+    return true;
   off_t pending = len ? cache_round (fd, 0) : 0;
 
   if (fd == STDIN_FILENO)
     {
       if (input_seekable)
-        {
-          /* Note we're being careful here to only invalidate what
-             we've read, so as not to dump any read ahead cache.  */
-#if HAVE_POSIX_FADVISE
-            adv_ret = posix_fadvise (fd, input_offset - clen - pending, clen,
-                                     POSIX_FADV_DONTNEED);
-#else
-            errno = ENOTSUP;
-#endif
-        }
+        offset = input_offset;
       else
-        errno = ESPIPE;
+        {
+          offset = -1;
+          errno = ESPIPE;
+        }
     }
-  else if (fd == STDOUT_FILENO)
+  else
     {
       static off_t output_offset = -2;
 
       if (output_offset != -1)
         {
-          if (0 > output_offset)
-            {
-              output_offset = lseek (fd, 0, SEEK_CUR);
-              output_offset -= clen + pending;
-            }
-          if (0 <= output_offset)
-            {
-#if HAVE_POSIX_FADVISE
-              adv_ret = posix_fadvise (fd, output_offset, clen,
-                                       POSIX_FADV_DONTNEED);
-#else
-              errno = ENOTSUP;
-#endif
-              output_offset += clen + pending;
-            }
+          if (output_offset < 0)
+            output_offset = lseek (fd, 0, SEEK_CUR);
+          else if (len)
+            output_offset += clen + pending;
         }
+
+      offset = output_offset;
     }
+
+  if (0 <= offset)
+   {
+     if (! len && clen && nocache_eof)
+       {
+         pending = clen;
+         clen = 0;
+       }
+
+     /* Note we're being careful here to only invalidate what
+        we've read, so as not to dump any read ahead cache.
+        Note also the kernel is conservative and only invalidates
+        full pages in the specified range.  */
+#if HAVE_POSIX_FADVISE
+     offset = offset - clen - pending;
+     /* ensure full page specified when invalidating to eof.  */
+     if (clen == 0)
+       offset -= offset % page_size;
+     adv_ret = posix_fadvise (fd, offset, clen, POSIX_FADV_DONTNEED);
+#else
+     errno = ENOTSUP;
+#endif
+   }
 
   return adv_ret != -1 ? true : false;
 }
@@ -1168,15 +1183,19 @@ iwrite (int fd, char const *buf, size_t size)
                quotef (output_file));
 
       /* Since we have just turned off O_DIRECT for the final write,
-         here we try to preserve some of its semantics.  First, use
-         posix_fadvise to tell the system not to pollute the buffer
-         cache with this data.  Don't bother to diagnose lseek or
-         posix_fadvise failure. */
+         we try to preserve some of its semantics.  */
+
+      /* Call invalidate_cache() to setup the appropriate offsets
+         for subsequent calls.  */
+      o_nocache_eof = true;
       invalidate_cache (STDOUT_FILENO, 0);
 
       /* Attempt to ensure that that final block is committed
          to disk as quickly as possible.  */
       conversions_mask |= C_FSYNC;
+
+      /* After the subsequent fsync() we'll call invalidate_cache()
+         to attempt to clear all data from the page cache.  */
     }
 
   while (total_written < size)
@@ -1562,11 +1581,13 @@ scanargs (int argc, char *const *argv)
   if (input_flags & O_NOCACHE)
     {
       i_nocache = true;
+      i_nocache_eof = (max_records == 0 && max_bytes == 0);
       input_flags &= ~O_NOCACHE;
     }
   if (output_flags & O_NOCACHE)
     {
       o_nocache = true;
+      o_nocache_eof = (max_records == 0 && max_bytes == 0);
       output_flags &= ~O_NOCACHE;
     }
 }
@@ -2149,13 +2170,19 @@ dd_copy (void)
       else
         nread = iread_fnc (STDIN_FILENO, ibuf, input_blocksize);
 
-      if (nread >= 0 && i_nocache)
-        invalidate_cache (STDIN_FILENO, nread);
-
-      if (nread == 0)
-        break;			/* EOF.  */
-
-      if (nread < 0)
+      if (nread > 0)
+        {
+          advance_input_offset (nread);
+          if (i_nocache)
+            invalidate_cache (STDIN_FILENO, nread);
+        }
+      else if (nread == 0)
+        {
+          i_nocache_eof |= i_nocache;
+          o_nocache_eof |= o_nocache && ! (conversions_mask & C_NOTRUNC);
+          break;			/* EOF.  */
+        }
+      else
         {
           if (!(conversions_mask & C_NOERROR) || status_level != STATUS_NONE)
             error (0, errno, _("error reading %s"), quoteaf (input_file));
@@ -2194,7 +2221,6 @@ dd_copy (void)
         }
 
       n_bytes_read = nread;
-      advance_input_offset (nread);
 
       if (n_bytes_read < input_blocksize)
         {
@@ -2470,13 +2496,12 @@ main (int argc, char **argv)
           exit_status = EXIT_FAILURE;
         }
     }
-  else if (max_records != (uintmax_t) -1)
+  else
     {
-      /* Invalidate any pending region less than page size,
-         in case the kernel might round up.  */
-      if (i_nocache)
+      /* Invalidate any pending region or to EOF if appropriate.  */
+      if (i_nocache || i_nocache_eof)
         invalidate_cache (STDIN_FILENO, 0);
-      if (o_nocache)
+      if (o_nocache || o_nocache_eof)
         invalidate_cache (STDOUT_FILENO, 0);
     }
 

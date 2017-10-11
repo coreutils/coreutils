@@ -7,6 +7,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   b2sum no longer crashes when processing certain truncated check files.
   [bug introduced with b2sum coreutils-8.26]
 
+  dd now ensures the correct cache ranges are specified for the "nocache"
+  and "direct" flags.  Previously some pages in the page cache were not
+  invalidated.  [bug introduced for "direct" in coreutils-7.5,
+  and with the "nocache" implementation in coreutils-8.11]
+
   ptx -S no longer infloops for a pattern which returns zero-length matches.
   [the bug dates back to the initial implementation]
 

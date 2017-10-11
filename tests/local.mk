@@ -511,6 +511,7 @@ all_tests =					\
   tests/dd/misc.sh				\
   tests/dd/no-allocate.sh			\
   tests/dd/nocache.sh				\
+  tests/dd/nocache_eof.sh			\
   tests/dd/not-rewound.sh			\
   tests/dd/reblock.sh				\
   tests/dd/skip-seek.pl				\

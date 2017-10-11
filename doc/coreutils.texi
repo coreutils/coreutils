@@ -9187,7 +9187,9 @@ dd if=ifile iflag=nocache count=0
 # Ensure drop cache for the whole file
 dd of=ofile oflag=nocache conv=notrunc,fdatasync count=0
 
-# Drop cache for part of file
+# Advise to drop cache for part of file
+# Note the kernel will only consider complete and
+# already persisted pages.
 dd if=ifile iflag=nocache skip=10 count=10 of=/dev/null
 
 # Stream data using just the read-ahead cache.
