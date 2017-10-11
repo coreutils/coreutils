@@ -178,6 +178,13 @@ static char const digits[] = "0123456789";
    out_epoch_sec.  */
 static char const printf_flags[] = "'-+ #0I";
 
+/* Formats for the --terse option.  */
+static char const fmt_terse_fs[] = "%n %i %l %t %s %S %b %f %a %c %d\n";
+static char const fmt_terse_regular[] = "%n %s %b %f %u %g %D %i %h %t %T"
+                                        " %X %Y %Z %W %o\n";
+static char const fmt_terse_selinux[] = "%n %s %b %f %u %g %D %i %h %t %T"
+                                        " %X %Y %Z %W %o %C\n";
+
 #define PROGRAM_NAME "stat"
 
 #define AUTHORS proper_name ("Michael Meskes")
@@ -1399,7 +1406,7 @@ default_format (bool fs, bool terse, bool device)
   if (fs)
     {
       if (terse)
-        format = xstrdup ("%n %i %l %t %s %S %b %f %a %c %d\n");
+        format = xstrdup (fmt_terse_fs);
       else
         {
           /* TRANSLATORS: This string uses format specifiers from
@@ -1416,11 +1423,9 @@ default_format (bool fs, bool terse, bool device)
       if (terse)
         {
           if (0 < is_selinux_enabled ())
-            format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
-                              " %X %Y %Z %W %o %C\n");
+            format = xstrdup (fmt_terse_selinux);
           else
-            format = xstrdup ("%n %s %b %f %u %g %D %i %h %t %T"
-                              " %X %Y %Z %W %o\n");
+            format = xstrdup (fmt_terse_regular);
         }
       else
         {
@@ -1571,6 +1576,23 @@ Valid format sequences for file systems:\n\
   %t   file system type in hex\n\
   %T   file system type in human readable form\n\
 "), stdout);
+
+      printf (_("\n\
+--terse is equivalent to the following FORMAT:\n\
+    %s\
+"),
+#if HAVE_SELINUX_SELINUX_H
+              fmt_terse_selinux
+#else
+              fmt_terse_regular
+#endif
+              );
+
+        printf (_("\
+--terse --file-system is equivalent to the following FORMAT:\n\
+    %s\
+"), fmt_terse_fs);
+
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }
