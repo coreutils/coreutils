@@ -1108,11 +1108,21 @@ static ssize_t
 iread (int fd, char *buf, size_t size)
 {
   ssize_t nread;
+  static ssize_t prev_nread;
 
   do
     {
       process_signals ();
       nread = read (fd, buf, size);
+      /* Ignore final read error with iflag=direct as that
+         returns EINVAL due to the non aligned file offset.  */
+      if (nread == -1 && errno == EINVAL
+          && 0 < prev_nread && prev_nread < size
+          && (input_flags & O_DIRECT))
+        {
+          errno = 0;
+          nread = 0;
+        }
     }
   while (nread < 0 && errno == EINTR);
 
@@ -1122,8 +1132,6 @@ iread (int fd, char *buf, size_t size)
 
   if (0 < nread && warn_partial_read)
     {
-      static ssize_t prev_nread;
-
       if (0 < prev_nread && prev_nread < size)
         {
           uintmax_t prev = prev_nread;
@@ -1136,10 +1144,9 @@ iread (int fd, char *buf, size_t size)
                    prev);
           warn_partial_read = false;
         }
-
-      prev_nread = nread;
     }
 
+  prev_nread = nread;
   return nread;
 }
 

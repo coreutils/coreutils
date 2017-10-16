@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that dd's oflag=direct works
+# ensure that dd's iflag=direct and oflag=direct work
 
 # Copyright (C) 2009-2017 Free Software Foundation, Inc.
 
@@ -29,7 +29,7 @@ truncate -s 8193 p1 || framework_failure_
 
 for i in short m1 p1; do
   rm -f out
-  dd if=$i oflag=direct of=out || fail=1
+  dd if=$i iflag=direct oflag=direct of=out || fail=1
 done
 
 Exit $fail

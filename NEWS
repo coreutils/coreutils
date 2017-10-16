@@ -37,6 +37,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  dd now supports iflag=direct with arbitrary sized files on all file systems.
+
   tail --bytes=NUM will efficiently seek to the end of block devices,
   rather than reading from the start.
 
