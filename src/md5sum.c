@@ -430,7 +430,8 @@ split_3 (char *s, size_t s_len,
 #if HASH_ALGO_BLAKE2
       /* Terminate and match algorithm name.  */
       char const *algo_name = &s[i - algo_name_len];
-      while (! ISWHITE (s[i]) && s[i] != '-' && s[i] != '(')
+      /* Skip algorithm variants.  */
+      while (s[i] && ! ISWHITE (s[i]) && s[i] != '-' && s[i] != '(')
         ++i;
       bool length_specified = s[i] == '-';
       bool openssl_format = s[i] == '('; /* and no length_specified */

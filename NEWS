@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  b2sum no longer crashes when processing certain truncated check files.
+  [bug introduced with b2sum coreutils-8.26]
+
   ptx -S no longer infloops for a pattern which returns zero-length matches.
   [the bug dates back to the initial implementation]
 

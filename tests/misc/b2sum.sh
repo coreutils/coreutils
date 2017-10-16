@@ -46,4 +46,9 @@ b2sum -l 128 check.vals > out || fail=1
 printf '%s\n' '796485dd32fe9b754ea5fd6c721271d9  check.vals' > exp
 compare exp out || fail=1
 
+# This would segfault from coreutils-8.26 to coreutils-8.28
+printf '%s\n' 'BLAKE2' 'BLAKE2b' 'BLAKE2-' 'BLAKE2(' 'BLAKE2 (' > crash.check \
+  || framework_failure_
+returns_ 1 b2sum -c crash.check || fail=1
+
 Exit $fail
