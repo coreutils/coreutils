@@ -41,6 +41,15 @@ returns_ 1 stty $(echo $saved_state |sed 's/^[^:]*:/'$hex_2_64:/) \
 returns_ 1 stty $(echo $saved_state |sed 's/:[0-9a-f]*$/:'$hex_2_64/) \
   2>/dev/null || fail=1
 
+# From coreutils 5.3.0 to 8.28, the following would crash
+# due to incorrect argument handling.
+if tty -s </dev/tty; then
+  returns_ 1 stty eol -F /dev/tty || fail=1
+  returns_ 1 stty -F /dev/tty eol || fail=1
+  returns_ 1 stty -F/dev/tty eol || fail=1
+  returns_ 1 stty eol -F/dev/tty eol || fail=1
+fi
+
 # Just in case either of the above mistakenly succeeds (and changes
 # the state of our tty), try to restore the initial state.
 stty $saved_state || fail=1

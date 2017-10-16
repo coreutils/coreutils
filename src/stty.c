@@ -1089,6 +1089,13 @@ apply_settings (bool checking, const char *device_name,
                 struct termios *mode, bool *speed_was_set,
                 bool *require_set_attr)
 {
+#define check_argument(arg) \
+  if (k == n_settings - 1 || ! settings[k+1]) \
+    { \
+      error (0, 0, _("missing argument to %s"), quote (arg)); \
+      usage (EXIT_FAILURE); \
+    }
+
   for (int k = 1; k < n_settings; k++)
     {
       char const *arg = settings[k];
@@ -1135,11 +1142,7 @@ apply_settings (bool checking, const char *device_name,
             {
               if (STREQ (arg, control_info[i].name))
                 {
-                  if (k == n_settings - 1)
-                    {
-                      error (0, 0, _("missing argument to %s"), quote (arg));
-                      usage (EXIT_FAILURE);
-                    }
+                  check_argument (arg);
                   match_found = true;
                   ++k;
                   set_control_char (&control_info[i], settings[k], mode);
@@ -1152,11 +1155,7 @@ apply_settings (bool checking, const char *device_name,
         {
           if (STREQ (arg, "ispeed"))
             {
-              if (k == n_settings - 1)
-                {
-                  error (0, 0, _("missing argument to %s"), quote (arg));
-                  usage (EXIT_FAILURE);
-                }
+              check_argument (arg);
               ++k;
               if (checking)
                 continue;
@@ -1166,11 +1165,7 @@ apply_settings (bool checking, const char *device_name,
             }
           else if (STREQ (arg, "ospeed"))
             {
-              if (k == n_settings - 1)
-                {
-                  error (0, 0, _("missing argument to %s"), quote (arg));
-                  usage (EXIT_FAILURE);
-                }
+              check_argument (arg);
               ++k;
               if (checking)
                 continue;
@@ -1198,11 +1193,7 @@ apply_settings (bool checking, const char *device_name,
 #ifdef TIOCGWINSZ
           else if (STREQ (arg, "rows"))
             {
-              if (k == n_settings - 1)
-                {
-                  error (0, 0, _("missing argument to %s"), quote (arg));
-                  usage (EXIT_FAILURE);
-                }
+              check_argument (arg);
               ++k;
               if (checking)
                 continue;
@@ -1212,11 +1203,7 @@ apply_settings (bool checking, const char *device_name,
           else if (STREQ (arg, "cols")
                    || STREQ (arg, "columns"))
             {
-              if (k == n_settings - 1)
-                {
-                  error (0, 0, _("missing argument to %s"), quote (arg));
-                  usage (EXIT_FAILURE);
-                }
+              check_argument (arg);
               ++k;
               if (checking)
                 continue;
@@ -1236,11 +1223,7 @@ apply_settings (bool checking, const char *device_name,
           else if (STREQ (arg, "line"))
             {
               unsigned long int value;
-              if (k == n_settings - 1)
-                {
-                  error (0, 0, _("missing argument to %s"), quote (arg));
-                  usage (EXIT_FAILURE);
-                }
+              check_argument (arg);
               ++k;
               mode->c_line = value = integer_arg (settings[k], ULONG_MAX);
               if (mode->c_line != value)
