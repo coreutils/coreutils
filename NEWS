@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   to attempt to hide the original length of the file name.
   [bug introduced in coreutils-8.28]
 
+  timeout will again notice its managed command exiting, even when
+  invoked with blocked CHLD signal.
+  [bug introduced in coreutils-8.27]
+
 ** Build-related
 
   Default man pages are now distributed which are used if perl is

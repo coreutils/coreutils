@@ -324,6 +324,16 @@ parse_duration (const char* str)
 }
 
 static void
+unblock_signal (int sig)
+{
+  sigset_t unblock_set;
+  sigemptyset (&unblock_set);
+  sigaddset (&unblock_set, sig);
+  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
+    error (0, errno, _("warning: sigprocmask"));
+}
+
+static void
 install_sigchld (void)
 {
   struct sigaction sa;
@@ -333,6 +343,10 @@ install_sigchld (void)
                                  more likely to work cleanly.  */
 
   sigaction (SIGCHLD, &sa, NULL);
+
+  /* We inherit the signal mask from our parent process,
+     so ensure SIGCHLD is not blocked. */
+  unblock_signal (SIGCHLD);
 }
 
 static void
@@ -366,16 +380,6 @@ block_cleanup (int sigterm, sigset_t *old_set)
   sigaddset (&block_set, SIGTERM);
   sigaddset (&block_set, sigterm);
   if (sigprocmask (SIG_BLOCK, &block_set, old_set) != 0)
-    error (0, errno, _("warning: sigprocmask"));
-}
-
-static void
-unblock_signal (int sig)
-{
-  sigset_t unblock_set;
-  sigemptyset (&unblock_set);
-  sigaddset (&unblock_set, sig);
-  if (sigprocmask (SIG_UNBLOCK, &unblock_set, NULL) != 0)
     error (0, errno, _("warning: sigprocmask"));
 }
 
