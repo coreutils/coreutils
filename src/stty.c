@@ -1089,12 +1089,16 @@ apply_settings (bool checking, const char *device_name,
                 struct termios *mode, bool *speed_was_set,
                 bool *require_set_attr)
 {
-#define check_argument(arg) \
-  if (k == n_settings - 1 || ! settings[k+1]) \
-    { \
-      error (0, 0, _("missing argument to %s"), quote (arg)); \
-      usage (EXIT_FAILURE); \
-    }
+#define check_argument(arg)						\
+  do									\
+    {									\
+      if (k == n_settings - 1 || ! settings[k+1])			\
+        {								\
+          error (0, 0, _("missing argument to %s"), quote (arg));	\
+          usage (EXIT_FAILURE);						\
+        }								\
+    }									\
+  while (0)
 
   for (int k = 1; k < n_settings; k++)
     {
