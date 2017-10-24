@@ -12,7 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-8.28]
 
   timeout will again notice its managed command exiting, even when
-  invoked with blocked CHLD signal.
+  invoked with blocked CHLD signal, or in a narrow window where
+  this CHLD signal from the exiting child was missed.  In each case
+  timeout would have then waited for the time limit to expire.
   [bug introduced in coreutils-8.27]
 
 ** Build-related

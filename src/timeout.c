@@ -366,19 +366,26 @@ install_cleanup (int sigterm)
   sigaction (sigterm, &sa, NULL); /* user specified termination signal.  */
 }
 
-/* Blocks all signals which were registered with cleanup
-   as signal handler.  Return original mask in OLD_SET.  */
+/* Block all signals which were registered with cleanup() as the signal
+   handler, so we never kill processes after waitpid() returns.
+   Also block SIGCHLD to ensure it doesn't fire between
+   waitpid() polling and sigsuspend() waiting for a signal.
+   Return original mask in OLD_SET.  */
 static void
-block_cleanup (int sigterm, sigset_t *old_set)
+block_cleanup_and_chld (int sigterm, sigset_t *old_set)
 {
   sigset_t block_set;
   sigemptyset (&block_set);
+
   sigaddset (&block_set, SIGALRM);
   sigaddset (&block_set, SIGINT);
   sigaddset (&block_set, SIGQUIT);
   sigaddset (&block_set, SIGHUP);
   sigaddset (&block_set, SIGTERM);
   sigaddset (&block_set, sigterm);
+
+  sigaddset (&block_set, SIGCHLD);
+
   if (sigprocmask (SIG_BLOCK, &block_set, old_set) != 0)
     error (0, errno, _("warning: sigprocmask"));
 }
@@ -508,7 +515,7 @@ main (int argc, char **argv)
       /* Ensure we don't cleanup() after waitpid() reaps the child,
          to avoid sending signals to a possibly different process.  */
       sigset_t cleanup_set;
-      block_cleanup (term_signal, &cleanup_set);
+      block_cleanup_and_chld (term_signal, &cleanup_set);
 
       while ((wait_result = waitpid (monitored_pid, &status, WNOHANG)) == 0)
         sigsuspend (&cleanup_set);  /* Wait with cleanup signals unblocked.  */
