@@ -41,12 +41,6 @@ advised_to_eof() {
 # The commented fadvise64 calls are what are expected with
 # a 4KiB page size and 128KiB IO_BUFSIZE.
 
-strace_dd if=in.f of=out.f bs=1M oflag=direct
-#The first call is redundant but inconsequential
-#fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
-#fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
-advised_to_eof || fail=1
-
 strace_dd if=in.f of=out.f bs=1M oflag=nocache,sync
 #fadvise64(1, 0, 1048576, POSIX_FADV_DONTNEED) = 0
 #fadvise64(1, 1048576, 131072, POSIX_FADV_DONTNEED) = 0
@@ -84,12 +78,17 @@ advised_to_eof || fail=1
 # Ensure sub page size offsets are handled.
 # I.e., only page aligned offsets are sent to fadvise.
 if ! strace -o dd.strace -e fadvise64 dd status=none \
- if=in.f of=out.f bs=1M oflag=direct seek=512 oflag=seek_bytes 2>err; then
-  # older XFS had a page size alignment requirement
-  echo "dd: error writing 'out.f': Invalid argument" > err_ok
-  compare err_ok err || fail=1
+ if=in.f of=out.f bs=1M oflag=direct seek=512 oflag=seek_bytes; then
+  warn_ '512 byte aligned O_DIRECT is not supported on this (file) system'
+  # The current file system may not support O_DIRECT,
+  # or older XFS had a page size alignment requirement
 else
   #The first call is redundant but inconsequential
+  #fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
+  #fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
+  advised_to_eof || fail=1
+
+  strace_dd if=in.f of=out.f bs=1M oflag=direct
   #fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
   #fadvise64(1, 1048576, 0, POSIX_FADV_DONTNEED) = 0
   advised_to_eof || fail=1

@@ -21,7 +21,7 @@ print_ver_ dd
 
 truncate -s 8192 in || framework_failure_
 dd if=in oflag=direct of=out 2> /dev/null \
-  || skip_ 'this file system lacks support for O_DIRECT'
+  || skip_ '512 byte aligned O_DIRECT is not supported on this (file) system'
 
 truncate -s 511 short || framework_failure_
 truncate -s 8191 m1 || framework_failure_
