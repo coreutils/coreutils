@@ -3603,25 +3603,25 @@ typedef int (*qsortFunc)(V a, V b);
   /* direct, non-dirfirst versions */					\
   static int xstrcoll_##key_name (V a, V b)				\
   { return key_cmp_func (a, b, xstrcoll); }				\
-  static int strcmp_##key_name (V a, V b)				\
+  static int _GL_ATTRIBUTE_PURE strcmp_##key_name (V a, V b)		\
   { return key_cmp_func (a, b, strcmp); }				\
                                                                         \
   /* reverse, non-dirfirst versions */					\
   static int rev_xstrcoll_##key_name (V a, V b)				\
   { return key_cmp_func (b, a, xstrcoll); }				\
-  static int rev_strcmp_##key_name (V a, V b)				\
+  static int _GL_ATTRIBUTE_PURE rev_strcmp_##key_name (V a, V b)	\
   { return key_cmp_func (b, a, strcmp); }				\
                                                                         \
   /* direct, dirfirst versions */					\
   static int xstrcoll_df_##key_name (V a, V b)				\
   { DIRFIRST_CHECK (a, b); return key_cmp_func (a, b, xstrcoll); }	\
-  static int strcmp_df_##key_name (V a, V b)				\
+  static int _GL_ATTRIBUTE_PURE strcmp_df_##key_name (V a, V b)		\
   { DIRFIRST_CHECK (a, b); return key_cmp_func (a, b, strcmp); }	\
                                                                         \
   /* reverse, dirfirst versions */					\
   static int rev_xstrcoll_df_##key_name (V a, V b)			\
   { DIRFIRST_CHECK (a, b); return key_cmp_func (b, a, xstrcoll); }	\
-  static int rev_strcmp_df_##key_name (V a, V b)			\
+  static int _GL_ATTRIBUTE_PURE rev_strcmp_df_##key_name (V a, V b)	\
   { DIRFIRST_CHECK (a, b); return key_cmp_func (b, a, strcmp); }
 
 static inline int
