@@ -86,6 +86,7 @@ sha512sum
 shred
 shuf
 sleep
+sm3sum
 sort
 split
 stat

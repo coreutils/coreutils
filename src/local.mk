@@ -180,6 +180,7 @@ src_sha512sum_LDADD = $(LDADD)
 src_shred_LDADD = $(LDADD)
 src_shuf_LDADD = $(LDADD)
 src_sleep_LDADD = $(LDADD)
+src_sm3sum_LDADD = $(LDADD)
 src_sort_LDADD = $(LDADD)
 src_split_LDADD = $(LDADD)
 src_stat_LDADD = $(LDADD)
@@ -300,6 +301,7 @@ src_sha224sum_LDADD += $(LIB_CRYPTO)
 src_sha256sum_LDADD += $(LIB_CRYPTO)
 src_sha384sum_LDADD += $(LIB_CRYPTO)
 src_sha512sum_LDADD += $(LIB_CRYPTO)
+src_sm3sum_LDADD += $(LIB_CRYPTO)
 
 # for canon_host
 src_pinky_LDADD += $(GETADDRINFO_LIB)
@@ -397,6 +399,9 @@ src_sha384sum_SOURCES = src/md5sum.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
 src_sha512sum_SOURCES = src/md5sum.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
+src_sm3sum_SOURCES = src/md5sum.c
+src_sm3sum_CPPFLAGS = -DHASH_ALGO_SM3=1 $(AM_CPPFLAGS)
+
 # Include the file on the command line to avoid modifying
 # the blake2 upstream source
 if USE_XLC_INCLUDE

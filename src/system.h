@@ -636,6 +636,7 @@ emit_ancillary_info (char const *program)
     { "sha256sum", "sha2 utilities" },
     { "sha384sum", "sha2 utilities" },
     { "sha512sum", "sha2 utilities" },
+    { "sm3sum", "sm3 utility" },
     { NULL, NULL }
   };
 

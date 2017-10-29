@@ -42,6 +42,9 @@
 #if HASH_ALGO_SHA512 || HASH_ALGO_SHA384
 # include "sha512.h"
 #endif
+#if HASH_ALGO_SM3
+# include "sm3.h"
+#endif
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
@@ -98,6 +101,13 @@
 # define DIGEST_BITS 384
 # define DIGEST_REFERENCE "FIPS-180-2"
 # define DIGEST_ALIGN 8
+#elif HASH_ALGO_SM3
+# define PROGRAM_NAME "sm3sum"
+# define DIGEST_TYPE_STRING "SM3"
+# define DIGEST_STREAM sm3_stream
+# define DIGEST_BITS 256
+# define DIGEST_REFERENCE "GB/T 32905-2016"
+# define DIGEST_ALIGN 4
 #else
 # error "Can't decide which hash algorithm to compile."
 #endif
@@ -106,6 +116,10 @@
 # define AUTHORS \
   proper_name ("Padraig Brady"), \
   proper_name ("Samuel Neves")
+#elif HASH_ALGO_SM3
+# define AUTHORS \
+  proper_name ("Jia Zhang")
+# define DIGEST_HEX_BYTES (DIGEST_BITS / 4)
 #else
 # define AUTHORS \
   proper_name ("Ulrich Drepper"), \
