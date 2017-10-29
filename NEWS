@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   invalidated.  [bug introduced for "direct" in coreutils-7.5,
   and with the "nocache" implementation in coreutils-8.11]
 
+  df no longer hangs when given a fifo argument.
+  [bug introduced in coreutils-7.3]
+
   ptx -S no longer infloops for a pattern which returns zero-length matches.
   [the bug dates back to the initial implementation]
 

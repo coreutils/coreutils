@@ -1702,24 +1702,25 @@ main (int argc, char **argv)
 
   if (optind < argc)
     {
-      /* Open each of the given entries to make sure any corresponding
+      /* stat each of the given entries to make sure any corresponding
          partition is automounted.  This must be done before reading the
          file system table.  */
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (int i = optind; i < argc; ++i)
         {
-          /* Prefer to open with O_NOCTTY and use fstat, but fall back
-             on using "stat", in case the file is unreadable.  */
-          int fd = open (argv[i], O_RDONLY | O_NOCTTY);
-          if ((fd < 0 || fstat (fd, &stats[i - optind]))
-              && stat (argv[i], &stats[i - optind]))
+          if (stat (argv[i], &stats[i - optind]))
             {
               error (0, errno, "%s", quotef (argv[i]));
               exit_status = EXIT_FAILURE;
               argv[i] = NULL;
             }
-          if (0 <= fd)
-            close (fd);
+          else if (! S_ISFIFO (stats[i - optind].st_mode))
+            {
+              /* open() is needed to automount in some cases.  */
+              int fd = open (argv[i], O_RDONLY | O_NOCTTY);
+              if (0 <= fd)
+                close (fd);
+            }
         }
     }
 
