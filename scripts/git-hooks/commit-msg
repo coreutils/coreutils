@@ -130,6 +130,9 @@ sub check_msg($$)
   $buf =~ m!https?://debbugs\.gnu\.org/(?:cgi/bugreport\.cgi\?bug=)?(\d+)!s
     and return "use shorter https://bugs.gnu.org/$1";
 
+  $buf =~ m!https://lists\.gnu\.org/archive/html/!s
+    and return "use '/r/' in place of '/archive/html/' in lists.gnu.org URLs";
+
   $buf =~ /^ *Signed-off-by:/mi
     and return q(do not use "Signed-off-by:");
 
