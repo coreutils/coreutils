@@ -23,7 +23,7 @@ export COLUMNS
 
 # Make sure we get English-language behavior.
 # See the report about a possibly-related Solaris problem by Alexandre Peshansky
-# <https://lists.gnu.org/archive/html/bug-coreutils/2004-10/msg00035.html>.
+# <https://lists.gnu.org/r/bug-coreutils/2004-10/msg00035.html>.
 # Currently stty isn't localized, but it might be in the future.
 LC_ALL=C
 export LC_ALL

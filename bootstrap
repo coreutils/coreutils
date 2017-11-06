@@ -792,7 +792,7 @@ symlink_to_dir()
       # aren't confused into doing unnecessary builds.  Conversely, if the
       # existing symlink's timestamp is older than the source, make it afresh,
       # so that broken tools aren't confused into skipping needed builds.  See
-      # <https://lists.gnu.org/archive/html/bug-gnulib/2011-05/msg00326.html>.
+      # <https://lists.gnu.org/r/bug-gnulib/2011-05/msg00326.html>.
       test -h "$dst" &&
       src_ls=$(ls -diL "$src" 2>/dev/null) && set $src_ls && src_i=$1 &&
       dst_ls=$(ls -diL "$dst" 2>/dev/null) && set $dst_ls && dst_i=$1 &&

@@ -2027,7 +2027,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
             {
               /* Note: we must use read_pos here, not stats.st_size,
                  to avoid a race condition described by Ken Raeburn:
-       https://lists.gnu.org/archive/html/bug-textutils/2003-05/msg00007.html */
+       https://lists.gnu.org/r/bug-textutils/2003-05/msg00007.html */
               record_open_fd (f, fd, read_pos, &stats, (is_stdin ? -1 : 1));
               f->remote = fremote (fd, pretty_name (f));
             }

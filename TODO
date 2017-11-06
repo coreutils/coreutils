@@ -8,7 +8,7 @@ before embarking on a big project.
 Modify chmod so that it does not change an inode's st_ctime
   when the selected operation would have no other effect.
   First suggested by Hans Ecke <https://hans.ecke.ws> in
-    https://lists.gnu.org/archive/html/bug-coreutils/2004-09/msg00145.html
+    https://lists.gnu.org/r/bug-coreutils/2004-09/msg00145.html
   Discussed more recently on <https://bugs.debian.org/497514>.
 
 document the following in coreutils.texi:
@@ -52,7 +52,7 @@ Write an autoconf test to work around build failure in HPUX's 64-bit mode.
 See notes in README -- and remove them once there's a work-around.
 
 Integrate use of sendfile, suggested here:
-  https://lists.gnu.org/archive/html/bug-fileutils/2003-03/msg00030.html
+  https://lists.gnu.org/r/bug-fileutils/2003-03/msg00030.html
 I don't plan to do that, since a few tests demonstrate no significant benefit.
 
 printf: consider adapting builtins/printf.def from bash
@@ -86,7 +86,7 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   Mathematical Monthly 66 (1959), 387-389.
 
 shred: Update shred as described here to conform to DoD 5220 rules:
-https://lists.gnu.org/archive/html/bug-coreutils/2007-05/msg00075.html
+https://lists.gnu.org/r/bug-coreutils/2007-05/msg00075.html
 
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)

@@ -23,7 +23,7 @@ print_ver_ rm
 # Create a directory containing many files.
 # What counts is a combination of the number of files and
 # the lengths of their names.  For details, see
-# https://lists.gnu.org/archive/html/bug-coreutils/2006-09/msg00326.html
+# https://lists.gnu.org/r/bug-coreutils/2006-09/msg00326.html
 mkdir b || framework_failure_
 cd b || framework_failure_
 for i in $(seq 1 250); do
