@@ -23,9 +23,12 @@ AC_PREREQ([2.69])
 # Make inter-release version strings look like, e.g., v6.9-219-g58ddd, which
 # indicates that it is built from the 219th delta (in _some_ repository)
 # following the v6.9 tag, and that 58ddd is a prefix of the commit SHA1.
+# The explicit URL can be removed when autoconf > 2.69 is released.
 AC_INIT([GNU coreutils],
         m4_esyscmd([build-aux/git-version-gen .tarball-version]),
-        [bug-coreutils@gnu.org])
+        [bug-coreutils@gnu.org],
+        [coreutils],
+        [https://www.gnu.org/software/coreutils/])
 
 AC_CONFIG_SRCDIR([src/ls.c])
 
