@@ -55,7 +55,10 @@ inode_via_readdir()
   esac
   opts=$(ls_ignore_options "$base")
   parent_dir=$(dirname "$mount_point")
-  eval "ls -i $opts '$parent_dir'" | sed 's/ .*//'
+  ls_out=$(eval "ls -i $opts '$parent_dir'")
+  test $? -eq 0 || \
+    skip_ "'$parent_dir' is not readable for current user"
+  echo $ls_out | sed 's/ .*//'
 }
 
 while read dir; do
