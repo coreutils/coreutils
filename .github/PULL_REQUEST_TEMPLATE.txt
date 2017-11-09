@@ -1,0 +1,105 @@
+Please *do not* send pull-requests or open new issues on Github.
+See "hacking resources" below for recommended alternatives.
+
+Github is a downstream mirror and is not frequently monitored,
+all development is coordinated upstream on GNU resources.
+
+* Send general questions or suggestions to: coreutils@gnu.org .
+* Send bugs reports to: <bug-coreutils@gnu.org>
+
+Before sending the bug, please consult the FAQ and Mailing list
+archives (see below).  Often these perceived bugs are simply due to
+wrong program usage.
+
+Please remember that development of Coreutils is a volunteer effort,
+and you can also contribute to its development. For information about
+contributing to the GNU Project, please read
+[How to help GNU](https://www.gnu.org/help/].
+
+
+## Getting Help
+
+* Coreutils FAQ: https://www.gnu.org/software/coreutils/faq/coreutils-faq.html
+
+* Coreutils Gotchas: https://www.pixelbeat.org/docs/coreutils-gotchas.html
+  contains a list of some quirks and unexpected behaviour (which are often
+  mistaken for bugs).
+
+* Online Manual:
+  https://www.gnu.org/software/coreutils/manual/html_node/index.html
+
+* Search the archives for previous questions and answers:
+
+   * Coreutils Mailing list (General usage and advice):
+     https://lists.gnu.org/archive/html/coreutils/
+
+   * Bug reports Mailing List:
+     https://lists.gnu.org/archive/html/bug-coreutils/
+
+* Open Bugs: https://debbugs.gnu.org/cgi/pkgreport.cgi?which=pkg&data=coreitils
+
+* Translation related issues:
+  https://translationproject.org/domain/coreutils.html
+
+
+## Mailing List Etiquette
+
+When sending messages to coreutils@gnu.org or bug-coreutils@gnu.org :
+
+* Send messages as plain text.
+* Do not send messages encoded as HTML nor encoded as base64 MIME nor
+  included as multiple formats.
+* Include a descriptive subject line.
+* Avoid sending large messages, such as log files, system call trace
+  output, and other content resulting in messages over about 40 kB.
+* Avoid sending screenshots (e.g. PNG files). When reporting errors
+  you encounter on the terminal, copy and paste the text to your message.
+* List policy is reply-to-all, and non-subscribers may post.
+* There may be a moderation delay for a first-time post, whether or not
+  you subscribe.
+
+
+## Hacking resources
+
+files contain information about hacking and contributing to GNU coreutils:
+  https://git.savannah.gnu.org/cgit/coreutils.git/tree/HACKING
+  https://git.savannah.gnu.org/cgit/coreutils.git/tree/README-hacking
+Please read them first.
+
+Before suggesting a new feature, read the list of rejected features requests:
+ https://www.gnu.org/software/coreutils/rejected_requests.html
+
+Send a patch as an email attachment. Patches can be generated with
+`git format-patch` (the HACKING links above provide examples of generating
+a patch).
+
+
+## Copyright Assignment
+
+If your change is significant (i.e., if it adds more than ~10 lines),
+then you'll have to have a copyright assignment on file with the FSF.
+To learn more see https://www.gnu.org/licenses/why-assign.html .
+
+The HACKING file (above) contains more details about how to initial
+the copyright assignment process.  Coreutils maintainers can also help
+in this matter.
+
+
+
+
+<!--
+Copyright (C) 2017 Free Software Foundation, Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
