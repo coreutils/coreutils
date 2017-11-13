@@ -31,6 +31,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   timeout would have then waited for the time limit to expire.
   [bug introduced in coreutils-8.27]
 
+** Improvements
+
+  tail --bytes=NUM will efficiently seek to the end of block devices,
+  rather than reading from the start.
+
 ** Build-related
 
   Default man pages are now distributed which are used if perl is

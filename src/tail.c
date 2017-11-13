@@ -1830,12 +1830,11 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (from_start)
     {
-      if ( ! presume_input_pipe
-           && S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
-        {
-          xlseek (fd, n_bytes, SEEK_CUR, pretty_filename);
-          *read_pos += n_bytes;
-        }
+      if (! presume_input_pipe && n_bytes <= OFF_T_MAX
+          && ((S_ISREG (stats.st_mode)
+               && xlseek (fd, n_bytes, SEEK_CUR, pretty_filename) >= 0)
+              || lseek (fd, n_bytes, SEEK_CUR) != -1))
+        *read_pos += n_bytes;
       else
         {
           int t = start_bytes (pretty_filename, fd, n_bytes, read_pos);
@@ -1846,12 +1845,20 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
     }
   else
     {
-      off_t end_pos = ((! presume_input_pipe && usable_st_size (&stats)
-                        && n_bytes <= OFF_T_MAX)
-                       ? stats.st_size : -1);
+      off_t end_pos = -1;
+      off_t current_pos = -1;
+
+      if (! presume_input_pipe && n_bytes <= OFF_T_MAX)
+        {
+          if (usable_st_size (&stats))
+            end_pos = stats.st_size;
+          else if ((current_pos = lseek (fd, -n_bytes, SEEK_END)) != -1)
+            end_pos = current_pos + n_bytes;
+        }
       if (end_pos <= ST_BLKSIZE (stats))
         return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
-      off_t current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
+      if (current_pos == -1)
+        current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
       if (current_pos < end_pos)
         {
           off_t bytes_remaining = end_pos - current_pos;

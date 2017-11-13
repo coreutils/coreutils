@@ -135,6 +135,7 @@ all_root_tests =				\
   tests/rm/one-file-system.sh			\
   tests/rm/read-only.sh				\
   tests/tail-2/append-only.sh			\
+  tests/tail-2/end-of-device.sh			\
   tests/touch/now-owned-by-other.sh
 
 ALL_RECURSIVE_TARGETS += check-root
