@@ -83,6 +83,8 @@ static pid_t monitored_pid;
 static double kill_after;
 static bool foreground;      /* whether to use another program group.  */
 static bool preserve_status; /* whether to use a timeout status or not.  */
+static bool verbose;         /* whether to diagnose timeouts or not.  */
+static char const* command;
 
 /* for long options with no corresponding short option, use enum */
 enum
@@ -95,6 +97,7 @@ static struct option const long_options[] =
 {
   {"kill-after", required_argument, NULL, 'k'},
   {"signal", required_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
   {"foreground", no_argument, NULL, FOREGROUND_OPTION},
   {"preserve-status", no_argument, NULL, PRESERVE_STATUS_OPTION},
   {GETOPT_HELP_OPTION_DECL},
@@ -196,6 +199,14 @@ cleanup (int sig)
       /* Send the signal directly to the monitored child,
          in case it has itself become group leader,
          or is not running in a separate group.  */
+      if (verbose)
+        {
+          char signame[MAX (SIG2STR_MAX, INT_BUFSIZE_BOUND (int))];
+          if (sig2str (sig, signame) != 0)
+            snprintf (signame, sizeof signame, "%d", sig);
+          error (0, 0, _("sending signal %s to command %s"),
+                 signame, quote (command));
+        }
       send_sig (monitored_pid, sig);
 
       /* The normal case is the job has remained in our
@@ -246,6 +257,8 @@ Start COMMAND, and kill it if still running after DURATION.\n\
                  specify the signal to be sent on timeout;\n\
                    SIGNAL may be a name like 'HUP' or a number;\n\
                    see 'kill -l' for a list of signals\n"), stdout);
+      fputs (_("\
+  -v, --verbose  diagnose to stderr any signal sent upon timeout\n"), stdout);
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -443,6 +456,10 @@ main (int argc, char **argv)
             usage (EXIT_CANCELED);
           break;
 
+        case 'v':
+          verbose = true;
+          break;
+
         case FOREGROUND_OPTION:
           foreground = true;
           break;
@@ -467,6 +484,7 @@ main (int argc, char **argv)
   timeout = parse_duration (argv[optind++]);
 
   argv += optind;
+  command = argv[0];
 
   /* Ensure we're in our own group so all subprocesses can be killed.
      Note we don't just put the child in a separate group as
@@ -498,7 +516,7 @@ main (int argc, char **argv)
 
       /* exit like sh, env, nohup, ...  */
       int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-      error (0, errno, _("failed to run command %s"), quote (argv[0]));
+      error (0, errno, _("failed to run command %s"), quote (command));
       return exit_status;
     }
   else

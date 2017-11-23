@@ -17388,6 +17388,12 @@ the @var{command}.
 Send this @var{signal} to @var{command} on timeout, rather than the
 default @samp{TERM} signal.  @var{signal} may be a name like @samp{HUP}
 or a number.  @xref{Signal specifications}.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+Diagnose to stderr, any signal sent upon timeout.
 @end table
 
 @cindex time units
