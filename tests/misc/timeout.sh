@@ -58,11 +58,13 @@ status=$?
 test "$out" = "" && test $status = 124 || fail=1
 
 # Verify --verbose output
-timeout --verbose -s0 -k .1 .1 sleep 10 2> err
 cat > exp <<\EOF
 timeout: sending signal EXIT to command 'sleep'
 timeout: sending signal KILL to command 'sleep'
 EOF
-compare exp err || fail=1
+for opt in -v --verbose; do
+  timeout $opt -s0 -k .1 .1 sleep 10 2> err
+  compare exp err || fail=1
+done
 
 Exit $fail

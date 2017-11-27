@@ -442,7 +442,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+k:s:", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+k:s:v", long_options, NULL)) != -1)
     {
       switch (c)
         {
