@@ -42,6 +42,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail --bytes=NUM will efficiently seek to the end of block devices,
   rather than reading from the start.
 
+  Utilities which do not support long options (other than the default --help
+  and --version), e.g. cksum and sleep, now use more consistent error diagnostic
+  for unknown long options.
+
 ** Build-related
 
   Default man pages are now distributed which are used if perl is

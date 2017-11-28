@@ -107,6 +107,11 @@ main (void)
 # include "die.h"
 # include "error.h"
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
 
@@ -291,7 +296,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
                       usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   have_read_stdin = false;

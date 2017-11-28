@@ -46,6 +46,11 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Stuart Kemp")
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
 #ifndef SA_NOCLDSTOP
@@ -2394,7 +2399,7 @@ main (int argc, char **argv)
                       usage, AUTHORS, (char const *) NULL);
   close_stdout_required = false;
 
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   /* Initialize translation table to identity translation. */

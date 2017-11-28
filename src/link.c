@@ -36,6 +36,11 @@
 
 #define AUTHORS proper_name ("Michael Stone")
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 void
 usage (int status)
 {
@@ -69,7 +74,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   if (argc < optind + 2)

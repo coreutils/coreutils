@@ -33,6 +33,11 @@
 
 #define AUTHORS proper_name ("Jim Meyering")
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 #if !defined HAVE_SETHOSTNAME && defined HAVE_SYSINFO && \
      defined HAVE_SYS_SYSTEMINFO_H
 # include <sys/systeminfo.h>
@@ -83,7 +88,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   if (argc == optind + 1)

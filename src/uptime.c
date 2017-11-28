@@ -47,6 +47,11 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Kaveh Ghazi")
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 static void
 print_uptime (size_t n, const STRUCT_UTMP *this)
 {
@@ -236,7 +241,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   switch (argc - optind)

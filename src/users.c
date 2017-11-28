@@ -36,6 +36,11 @@
   proper_name ("Joseph Arceneaux"), \
   proper_name ("David MacKenzie")
 
+static struct option const long_options[] =
+{
+  {NULL, 0, NULL, 0}
+};
+
 static int
 userid_compare (const void *v_a, const void *v_b)
 {
@@ -130,7 +135,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
                       usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
     usage (EXIT_FAILURE);
 
   switch (argc - optind)
