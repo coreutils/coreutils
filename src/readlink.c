@@ -78,7 +78,7 @@ usage (int status)
 \n\
                                 without requirements on components existence\n\
   -n, --no-newline              do not output the trailing delimiter\n\
-  -q, --quiet,\n\
+  -q, --quiet\n\
   -s, --silent                  suppress most error messages (on by default)\n\
   -v, --verbose                 report error messages\n\
   -z, --zero                    end each output line with NUL, not newline\n\
