@@ -19,6 +19,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
+get_mode() { ls -ld "$1" | cut -b-10; }
+
 rm -f a b c
 umask 0022
 touch a
@@ -27,9 +29,7 @@ chmod 600 b
 
 #regular file test
 cp --no-preserve=mode b c || fail=1
-mode_a=$(ls -l a | gawk '{print $1}')
-mode_c=$(ls -l c | gawk '{print $1}')
-test "$mode_a" = "$mode_c" || fail=1
+test "$(get_mode a)" = "$(get_mode c)" || fail=1
 
 rm -rf d1 d2 d3
 mkdir d1 d2
@@ -37,9 +37,7 @@ chmod 705 d2
 
 #directory test
 cp --no-preserve=mode -r d2 d3 || fail=1
-mode_d1=$(ls -l d1 | gawk '{print $1}')
-mode_d3=$(ls -l d3 | gawk '{print $1}')
-test "$mode_d1" = "$mode_d3" || fail=1
+test "$(get_mode d1)" = "$(get_mode d3)" || fail=1
 
 rm -f a b c
 touch a
@@ -47,8 +45,6 @@ chmod 600 a
 
 #contradicting options test
 cp --no-preserve=mode --preserve=all a b || fail=1
-mode_a=$(ls -l a | gawk '{print $1}')
-mode_b=$(ls -l b | gawk '{print $1}')
-test "$mode_a" = "$mode_b" || fail=1
+test "$(get_mode a)" = "$(get_mode b)" || fail=1
 
 Exit $fail
