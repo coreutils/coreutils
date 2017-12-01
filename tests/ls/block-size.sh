@@ -39,6 +39,7 @@ POSIXLY_CORRECT=1 ls -k -og * | sed "$size_etc" >>../out || fail=1
 for var in BLOCKSIZE BLOCK_SIZE LS_BLOCK_SIZE; do
   for blocksize in 1 512 1K 1KiB; do
     (eval $var=$blocksize && export $var &&
+     echo "x x # $var=$blocksize" &&
      ls -og * &&
      ls -og -k * &&
      ls -og -k --block-size=$blocksize *
@@ -58,6 +59,7 @@ cat >exp <<'EOF'
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
+# BLOCKSIZE=1
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
@@ -67,36 +69,7 @@ cat >exp <<'EOF'
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-2 Jan  1  2001 file1024
-512 Jan  1  2001 file262144
-8 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
-1024 Jan  1  2001 file1024
-262144 Jan  1  2001 file262144
-4096 Jan  1  2001 file4096
+# BLOCKSIZE=512
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
@@ -106,30 +79,27 @@ cat >exp <<'EOF'
 2 Jan  1  2001 file1024
 512 Jan  1  2001 file262144
 8 Jan  1  2001 file4096
-2 Jan  1  2001 file1024
-512 Jan  1  2001 file262144
-8 Jan  1  2001 file4096
-2 Jan  1  2001 file1024
-512 Jan  1  2001 file262144
-8 Jan  1  2001 file4096
+# BLOCKSIZE=1K
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
 1 Jan  1  2001 file1024
 256 Jan  1  2001 file262144
 4 Jan  1  2001 file4096
+# BLOCKSIZE=1KiB
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
 1 Jan  1  2001 file1024
 256 Jan  1  2001 file262144
 4 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
-1 Jan  1  2001 file1024
-256 Jan  1  2001 file262144
-4 Jan  1  2001 file4096
+# BLOCK_SIZE=1
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
@@ -139,6 +109,7 @@ cat >exp <<'EOF'
 1024 Jan  1  2001 file1024
 262144 Jan  1  2001 file262144
 4096 Jan  1  2001 file4096
+# BLOCK_SIZE=512
 2 Jan  1  2001 file1024
 512 Jan  1  2001 file262144
 8 Jan  1  2001 file4096
@@ -148,6 +119,7 @@ cat >exp <<'EOF'
 2 Jan  1  2001 file1024
 512 Jan  1  2001 file262144
 8 Jan  1  2001 file4096
+# BLOCK_SIZE=1K
 1 Jan  1  2001 file1024
 256 Jan  1  2001 file262144
 4 Jan  1  2001 file4096
@@ -157,6 +129,47 @@ cat >exp <<'EOF'
 1 Jan  1  2001 file1024
 256 Jan  1  2001 file262144
 4 Jan  1  2001 file4096
+# BLOCK_SIZE=1KiB
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+# LS_BLOCK_SIZE=1
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
+1024 Jan  1  2001 file1024
+262144 Jan  1  2001 file262144
+4096 Jan  1  2001 file4096
+# LS_BLOCK_SIZE=512
+2 Jan  1  2001 file1024
+512 Jan  1  2001 file262144
+8 Jan  1  2001 file4096
+2 Jan  1  2001 file1024
+512 Jan  1  2001 file262144
+8 Jan  1  2001 file4096
+2 Jan  1  2001 file1024
+512 Jan  1  2001 file262144
+8 Jan  1  2001 file4096
+# LS_BLOCK_SIZE=1K
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+1 Jan  1  2001 file1024
+256 Jan  1  2001 file262144
+4 Jan  1  2001 file4096
+# LS_BLOCK_SIZE=1KiB
 1 Jan  1  2001 file1024
 256 Jan  1  2001 file262144
 4 Jan  1  2001 file4096
