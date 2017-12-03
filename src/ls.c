@@ -5140,9 +5140,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -b, --escape               print C-style escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
-      --block-size=SIZE      scale sizes by SIZE before printing them; e.g.,\n\
-                               '--block-size=M' prints sizes in units of\n\
-                               1,048,576 bytes; see SIZE format below\n\
+      --block-size=SIZE      with -l, scale sizes by SIZE when printing them;\n\
+                               e.g., '--block-size=M'; see SIZE format below\n\
+"), stdout);
+      fputs (_("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information);\n\
@@ -5177,8 +5178,9 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\
-  -h, --human-readable       with -l and/or -s, print human readable sizes\n\
-                               (e.g., 1K 234M 2G)\n\
+"), stdout);
+      fputs (_("\
+  -h, --human-readable       with -l and -s, print sizes like 1K 234M 2G etc.\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
 "), stdout);
       fputs (_("\
@@ -5203,7 +5205,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -i, --inode                print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
 \n\
-  -k, --kibibytes            default to 1024-byte blocks for disk usage\n\
+"), stdout);
+      fputs (_("\
+  -k, --kibibytes            default to 1024-byte blocks for disk usage;\n\
+                               used only with -s and per directory totals\n\
 "), stdout);
       fputs (_("\
   -l                         use a long listing format\n\
@@ -5248,16 +5253,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                                as sort key if --sort=time (newest first)\n\
 "), stdout);
       fputs (_("\
-      --time-style=STYLE     with -l, show times using style STYLE:\n\
-                               full-iso, long-iso, iso, locale, or +FORMAT;\n\
-                               FORMAT is interpreted like in 'date'; if FORMAT\
-\n\
-                               is FORMAT1<newline>FORMAT2, then FORMAT1 applies\
-\n\
-                               to non-recent files and FORMAT2 to recent files;\
-\n\
-                               if STYLE is prefixed with 'posix-', STYLE\n\
-                               takes effect only outside the POSIX locale\n\
+      --time-style=TIME_STYLE  time/date format with -l; see TIME_STYLE below\n\
 "), stdout);
       fputs (_("\
   -t                         sort by modification time, newest first\n\
@@ -5281,6 +5277,14 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_size_note ();
+      fputs (_("\
+\n\
+The TIME_STYLE argument can be full-iso, long-iso, iso, locale, or +FORMAT.\n\
+FORMAT is interpreted like in date(1).  If FORMAT is FORMAT1<newline>FORMAT2,\n\
+then FORMAT1 applies to non-recent files and FORMAT2 to recent files.\n\
+TIME_STYLE prefixed with 'posix-' takes effect only outside the POSIX locale.\n\
+Also the TIME_STYLE environment variable sets the default style to use.\n\
+"), stdout);
       fputs (_("\
 \n\
 Using color to distinguish file types is disabled both by default and\n\
