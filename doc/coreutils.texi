@@ -12246,7 +12246,7 @@ numbers unambiguously octal, you can use @samp{%#03a}.
 
 The @samp{%N} format can be set with the environment variable
 @env{QUOTING_STYLE}@.  If that environment variable is not set,
-the default value is @samp{shell-escape}.  Valid quoting styles are:
+the default value is @samp{shell-escape-always}.  Valid quoting styles are:
 @quotingStyles
 
 The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
