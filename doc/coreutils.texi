@@ -8520,8 +8520,9 @@ Equivalent to @option{--no-dereference --preserve=links}.
 @opindex --force
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force},
-when a destination file cannot be opened, @command{cp} then removes it and
-tries to open it again.  When this option is combined with
+when a destination file cannot be opened, @command{cp} then
+tries to recreate the file by first removing it.
+When this option is combined with
 @option{--link} (@option{-l}) or @option{--symbolic-link}
 (@option{-s}), the destination link is replaced, and unless
 @option{--backup} (@option{-b}) is also given there is no brief
