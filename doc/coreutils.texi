@@ -9958,8 +9958,8 @@ destroy it.
 @command{shred} makes no attempt to detect or report this problem, just as
 it makes no attempt to do anything about backups.  However, since it is
 more reliable to shred devices than files, @command{shred} by default does
-not truncate or remove the output file.  This default is more suitable
-for devices, which typically cannot be truncated and should not be
+not deallocate or remove the output file.  This default is more suitable
+for devices, which typically cannot be deallocated and should not be
 removed.
 
 Finally, consider the risk of backups and mirrors.
@@ -10016,7 +10016,7 @@ the whole file.  @var{bytes} can be followed by a size specification like
 @opindex --remove=wipe
 @opindex --remove=wipesync
 @cindex removing files after shredding
-After shredding a file, truncate it (if possible) and then remove it.
+After shredding a file, deallocate it (if possible) and then remove it.
 If a file has multiple links, only the named links will be removed.
 Often the file name is less sensitive than the file data, in which case
 the optional @var{how} parameter, supported with the long form option,

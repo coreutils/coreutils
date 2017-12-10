@@ -186,7 +186,7 @@ If FILE is -, shred standard output.\n\
   -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
 "), DEFAULT_PASSES);
       fputs (_("\
-  -u             truncate and remove file after overwriting\n\
+  -u             deallocate and remove file after overwriting\n\
       --remove[=HOW]  like -u but give control on HOW to delete;  See below\n\
   -v, --verbose  show progress\n\
   -x, --exact    do not round file sizes up to the next full block;\n\
