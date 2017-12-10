@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
-require_strace_ fadvise64
+require_strace_ fadvise64,fadvise64_64
 
 head -c1234567 /dev/zero > in.f || framework_failure_
 
@@ -31,7 +31,7 @@ dd if=in.f iflag=nocache count=0 ||
   skip_ 'this file system lacks support for posix_fadvise()'
 
 strace_dd() {
-  strace -o dd.strace -e fadvise64 dd status=none "$@" || fail=1
+  strace -o dd.strace -e fadvise64,fadvise64_64 dd status=none "$@" || fail=1
 }
 
 advised_to_eof() {
@@ -77,7 +77,7 @@ advised_to_eof || fail=1
 
 # Ensure sub page size offsets are handled.
 # I.e., only page aligned offsets are sent to fadvise.
-if ! strace -o dd.strace -e fadvise64 dd status=none \
+if ! strace -o dd.strace -e fadvise64,fadvise64_64 dd status=none \
  if=in.f of=out.f bs=1M oflag=direct seek=512 oflag=seek_bytes; then
   warn_ '512 byte aligned O_DIRECT is not supported on this (file) system'
   # The current file system may not support O_DIRECT,
