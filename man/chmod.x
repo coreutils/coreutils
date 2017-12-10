@@ -87,14 +87,19 @@ functionality of the underlying
 system call.  When in
 doubt, check the underlying system behavior.
 .PP
+For directories
 .B chmod
-preserves a directory's set-user-ID and set-group-ID bits unless you
+preserves set-user-ID and set-group-ID bits unless you
 explicitly specify otherwise.  You can set or clear the bits with
 symbolic modes like
 .B u+s
 and
-.BR g\-s ,
-and you can set (but not clear) the bits with a numeric mode.
+.BR g\-s .
+To clear these bits for directories with a numeric mode requires
+an additional leading zero, or leading = like
+.B 00755
+, or
+.B =755
 .SH "RESTRICTED DELETION FLAG OR STICKY BIT"
 The restricted deletion flag or sticky bit is a single bit, whose
 interpretation depends on the file type.  For directories, it prevents
