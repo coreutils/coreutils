@@ -25,6 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   stty no longer crashes when processing settings with -F also specified.
   [bug introduced in fileutils-4.0]
 
+  tail --bytes again supports non seekable inputs on all systems.
+  On systems like android it always tried to process as seekable inputs.
+  [bug introduced in coreutils-8.24]
+
   timeout will again notice its managed command exiting, even when
   invoked with blocked CHLD signal, or in a narrow window where
   this CHLD signal from the exiting child was missed.  In each case

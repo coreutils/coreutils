@@ -20,15 +20,19 @@
 print_ver_ tail
 
 # Make sure it works on funny files in /proc and /sys.
-
 for file in /proc/version /sys/kernel/profiling; do
   if test -r $file; then
     cp -f $file copy &&
-    tail -c -1 copy > exp1 || framework_failure_
+    tail -c -1 copy > exp || framework_failure_
 
-    tail -c -1 $file > out1 || fail=1
-    compare exp1 out1 || fail=1
+    tail -c -1 $file > out || fail=1
+    compare exp out || fail=1
   fi
 done
+
+# Make sure it works for pipes
+printf '123456' | tail -c3 > out || fail=1
+printf '456' > exp || framework_failure_
+compare exp out || fail=1
 
 Exit $fail
