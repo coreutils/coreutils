@@ -1720,7 +1720,7 @@ advance_input_offset (uintmax_t offset)
    The offending behavior has been confirmed with an Exabyte SCSI tape
    drive accessed via /dev/nst0 on both Linux 2.2.17 and 2.4.16 kernels.  */
 
-#ifdef __linux__
+#if defined __linux__ && HAVE_SYS_MTIO_H
 
 # include <sys/mtio.h>
 

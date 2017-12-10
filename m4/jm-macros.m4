@@ -211,6 +211,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     paths.h
     priv.h
     stropts.h
+    sys/mtio.h
     sys/param.h
     sys/systeminfo.h
     syslog.h

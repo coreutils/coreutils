@@ -80,7 +80,7 @@
 #include <assert.h>
 #include <setjmp.h>
 #include <sys/types.h>
-#ifdef __linux__
+#if defined __linux__ && HAVE_SYS_MTIO_H
 # include <sys/mtio.h>
 #endif
 
@@ -391,7 +391,7 @@ dorewind (int fd, struct stat const *st)
 {
   if (S_ISCHR (st->st_mode))
     {
-#ifdef __linux__
+#if defined __linux__ && HAVE_SYS_MTIO_H
       /* In the Linux kernel, lseek does not work on tape devices; it
          returns a randomish value instead.  Try the low-level tape
          rewind operation first.  */
