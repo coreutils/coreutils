@@ -11219,6 +11219,10 @@ line, @command{chmod} changes the permissions of the pointed-to file.
 In contrast, @command{chmod} ignores symbolic links encountered during
 recursive directory traversals.
 
+Only a process whose effective user ID matches the user ID of the file,
+or a process with appropriate privileges, is permitted to change the
+file mode bits of a file.
+
 A successful use of @command{chmod} clears the set-group-ID bit of a
 regular file if the file's group ID does not match the user's
 effective group ID or one of the user's supplementary group IDs,
