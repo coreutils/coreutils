@@ -1194,7 +1194,7 @@ print_field (BLOCK field)
 static void
 fix_output_parameters (void)
 {
-  int file_index;		/* index in text input file arrays */
+  size_t file_index;		/* index in text input file arrays */
   intmax_t line_ordinal;	/* line ordinal value for reference */
   ptrdiff_t reference_width;	/* width for the whole reference */
   int character;		/* character ordinal */
