@@ -34,7 +34,7 @@ checkprg () {
   grep -F "$o" err || framework_failure_
   sed -n "1s/--$o/OPT/p" < err > pat || framework_failure_
 
-  # Append the pattern for a short unkown option.
+  # Append the pattern for a short unknown option.
   returns_ $rcexp $prg -/ >/dev/null 2> err || fail=1
   grep -F "'/'" err || framework_failure_
   sed -n "1s/'\/'/'OPT'/p" < err >> pat || framework_failure_
@@ -43,8 +43,10 @@ checkprg () {
   $prg --help > help || fail=1
 
   # Extract all options mention in the above --help output.
+  nl="
+  "
   sed -n -e '/--version/q' \
-    -e 's/^ \{2,6\}-/-/; s/  .*//; s/[=[].*//; s/, /\'$'\n''/g; s/^-/-/p' help \
+    -e 's/^ \{2,6\}-/-/; s/  .*//; s/[=[].*//; s/, /\'"$nl"'/g; s/^-/-/p' help \
     > opts || framework_failure_
   cat opts  # for debugging purposes
 

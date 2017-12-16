@@ -63,7 +63,8 @@ timeout: sending signal EXIT to command 'sleep'
 timeout: sending signal KILL to command 'sleep'
 EOF
 for opt in -v --verbose; do
-  timeout $opt -s0 -k .1 .1 sleep 10 2> err
+  timeout $opt -s0 -k .1 .1 sleep 10 2> errt
+  sed '/^Killed/d' < errt > err || framework_failure_
   compare exp err || fail=1
 done
 
