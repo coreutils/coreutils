@@ -47,8 +47,10 @@ returns_ 1 shred -n0 --remove=none $file 2>/dev/null || fail=1
 # Ensure rename passes complete.
 # coreutils-8.28 did not do the decreasing length rename
 # which may have leaked the length of the removed file name
-printf 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_. |
-sed 's/./&\n/g' | xargs touch || framework_failure_  # test level exhaustion
+NL="
+"
+printf 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ |
+sed "s/./&\\$NL/g" | xargs touch || framework_failure_  # test level exhaustion
 touch test 000 || framework_failure_  # test level increment
 shred -vu test 2>out || fail=1
 cat <<\EOF >exp || framework_failure_
