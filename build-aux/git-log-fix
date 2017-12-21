@@ -1,8 +1,3 @@
 # This file is expected to be used via gitlog-to-changelog's --amend=FILE
 # option.  It specifies what changes to make to each given SHA1's commit
 # log and metadata, using Perl-eval'able expressions.
-
-# I was unable to apply the c-set using normal methods, so
-# applied it with patch and then forgot to reset the Author.
-51a4b04954ad5ad12de1d1b82a3603fc350a3bfa
-s,Jim .*>,Ondrej Oprala <ooprala\@redhat.com>,
