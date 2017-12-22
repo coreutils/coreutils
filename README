@@ -94,14 +94,28 @@ Here is one possible patch to correct the problem:
 
 
 ************************
-OSF/1 4.0d build failure
+OSF/1 4.0d and AIX build failures
 ------------------------
 
-If you use /usr/bin/make on an OSF/1 4.0d system, it will fail due
-to the presence of the "[" target.  That version of make appears to
-treat "[" as some syntax relating to locks.  To work around that,
+If you use /usr/bin/make on these systems, the build will fail due
+to the presence of the "[" target.  OSF/1 make(1) appears to
+treat "[" as some syntax relating to locks, while AIX make(1)
+appears to skip the "[" target.  To work around these issues
 the best solution is to use GNU make.  Otherwise, simply remove
 all mention of "[$(EXEEXT)" from src/Makefile.
+
+
+************************
+32 bit time_t build failures
+------------------------
+
+On systems where it's determined that 64 bit time_t is supported
+(indicated by touch -t <some time after 2038>), but that coreutils
+would be built with a narrower time_t, the build will fail.
+This can be allowed by passing TIME_T_32_BIT_OK=yes to configure,
+or avoided by enabling 64 bit builds.  For example GCC on AIX defaults
+to 32 bit, and to enable the 64 bit ABI one can use:
+./configure CFLAGS=-maix64 LDFLAGs=-maix64 AR='ar -X64'
 
 
 *************************************************
