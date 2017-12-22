@@ -40,7 +40,7 @@ compare exp out || fail=1
 timeout 10 tail -f $mode $fastpoll out | sleep .1 || fail=1
 
 # This would wait indefinitely before v8.28 (until first write)
-returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&- || fail=1
+(returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&-) || fail=1
 done
 
 Exit $fail
