@@ -10989,7 +10989,7 @@ chown -h -R --from=OLDUSER NEWUSER /
 @cindex symbolic links, changing owner
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
-This is the default.
+This is the default when not operating recursively.
 
 @item -h
 @itemx --no-dereference
@@ -11119,7 +11119,7 @@ changed.
 @cindex symbolic links, changing owner
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
-This is the default.
+This is the default when not operating recursively.
 
 @item -h
 @itemx --no-dereference
