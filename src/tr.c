@@ -1705,10 +1705,16 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "+cCdst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+AcCdst", long_options, NULL)) != -1)
     {
       switch (c)
         {
+        case 'A':
+          /* Undocumented option, for compatibility with AIX.  */
+          setlocale (LC_COLLATE, "C");
+          setlocale (LC_CTYPE, "C");
+          break;
+
         case 'c':
         case 'C':
           complement = true;
