@@ -1428,6 +1428,19 @@ a command line argument is a symbolic link to a directory, traverse it.
 In a recursive traversal, traverse every symbolic link to a directory
 that is encountered.
 @end macro
+
+@c Append the following warning to -L where appropriate (e.g. chown).
+@macro warnOptDerefWithRec
+
+Combining this dereferencing option with the @option{--recursive} option
+may create a security risk:
+During the traversal of the directory tree, an attacker may be able to
+introduce a symlink to an arbitrary target; when the tool reaches that,
+the operation will be performed on the target of that symlink,
+possibly allowing the attacker to escalate privileges.
+
+@end macro
+
 @choptL
 
 @macro choptP
@@ -10995,6 +11008,7 @@ chown -h -R --from=OLDUSER NEWUSER /
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
 This is the default when not operating recursively.
+@warnOptDerefWithRec
 
 @item -h
 @itemx --no-dereference
@@ -11051,6 +11065,7 @@ Recursively change ownership of directories and their contents.
 @xref{Traversing symlinks}.
 
 @choptL
+@warnOptDerefWithRec
 @xref{Traversing symlinks}.
 
 @choptP
@@ -11125,6 +11140,7 @@ changed.
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
 This is the default when not operating recursively.
+@warnOptDerefWithRec
 
 @item -h
 @itemx --no-dereference
@@ -11180,6 +11196,7 @@ Recursively change the group ownership of directories and their contents.
 @xref{Traversing symlinks}.
 
 @choptL
+@warnOptDerefWithRec
 @xref{Traversing symlinks}.
 
 @choptP
