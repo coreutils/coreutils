@@ -1145,6 +1145,9 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  if (x.interactive == I_ALWAYS_NO)
+    x.update = false;
+
   if (make_backups && x.interactive == I_ALWAYS_NO)
     {
       error (0, 0,

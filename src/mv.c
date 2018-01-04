@@ -459,6 +459,9 @@ main (int argc, char **argv)
              quoteaf (file[n_files - 1]));
     }
 
+  if (x.interactive == I_ALWAYS_NO)
+    x.update = false;
+
   if (make_backups && x.interactive == I_ALWAYS_NO)
     {
       error (0, 0,

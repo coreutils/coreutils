@@ -8569,7 +8569,8 @@ a regular file in the destination tree.
 @itemx --no-clobber
 @opindex -n
 @opindex --no-clobber
-Do not overwrite an existing file.  The @option{-n} option overrides a previous
+Do not overwrite an existing file; silently do nothing instead.
+This option overrides a previous
 @option{-i} option.  This option is mutually exclusive with @option{-b} or
 @option{--backup} option.
 
@@ -8809,8 +8810,10 @@ the comparison is to the source timestamp truncated to the
 resolutions of the destination file system and of the system calls
 used to update timestamps; this avoids duplicate work if several
 @samp{cp -pu} commands are executed with the same source and destination.
-If @option{--preserve=links} is also specified (like with @samp{cp -au}
-for example), that will take precedence.  Consequently, depending on the
+This option is ignored if the @option{-n} or @option{--no-clobber}
+option is also specified.
+Also, if @option{--preserve=links} is also specified (like with @samp{cp -au}
+for example), that will take precedence; consequently, depending on the
 order that files are processed from the source, newer files in the destination
 may be replaced, to mirror hard links in the source.
 
@@ -9657,7 +9660,7 @@ If the response is not affirmative, the file is skipped.
 @opindex -n
 @opindex --no-clobber
 @cindex prompts, omitting
-Do not overwrite an existing file.
+Do not overwrite an existing file; silently do nothing instead.
 @mvOptsIfn
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
 
@@ -9673,6 +9676,8 @@ source timestamp truncated to the resolutions of the destination file
 system and of the system calls used to update timestamps; this avoids
 duplicate work if several @samp{mv -u} commands are executed with the
 same source and destination.
+This option is ignored if the @option{-n} or @option{--no-clobber}
+option is also specified.
 
 @item -v
 @itemx --verbose

@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  'cp -n -u' and 'mv -n -u' now consistently ignore the -u option.
+  Previously, this option combination suffered from race conditions
+  that caused -u to sometimes override -n.
+  [bug introduced with coreutils-7.1]
+
 
 * Noteworthy changes in release 8.29 (2017-12-27) [stable]
 
