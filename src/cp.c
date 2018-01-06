@@ -40,16 +40,6 @@
 # define lchown(name, uid, gid) chown (name, uid, gid)
 #endif
 
-#define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
-  do							\
-    {							\
-      char *tmp_abns_;					\
-      ASSIGN_STRDUPA (tmp_abns_, (File_name));		\
-      Dest = last_component (tmp_abns_);		\
-      strip_trailing_slashes (Dest);			\
-    }							\
-  while (0)
-
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "cp"
 
@@ -693,8 +683,8 @@ do_copy (int n_files, char **file, const char *target_directory,
             {
               char *arg_base;
               /* Append the last component of 'arg' to 'target_directory'.  */
-
-              ASSIGN_BASENAME_STRDUPA (arg_base, arg);
+              ASSIGN_STRDUPA (arg_base, last_component (arg));
+              strip_trailing_slashes (arg_base);
               /* For 'cp -R source/.. dest', don't copy into 'dest/..'. */
               dst_name = (STREQ (arg_base, "..")
                           ? xstrdup (target_directory)
