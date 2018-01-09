@@ -324,6 +324,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "efivarfs";
     case S_MAGIC_EFS: /* 0x00414A53 local */
       return "efs";
+    case S_MAGIC_EXFS: /* 0x45584653 local */
+      return "exfs";
     case S_MAGIC_EXOFS: /* 0x5DF5 local */
       return "exofs";
     case S_MAGIC_EXT: /* 0x137D local */

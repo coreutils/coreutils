@@ -21,6 +21,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have set executable bits on created special files.
   [bug introduced with coreutils-8.20]
 
+** Improvements
+
+  stat and tail now know about the "exfs" file system, which is a
+  version of XFS.  stat -f --format=%T now reports the file system type,
+  and tail -f uses inotify.
+
 
 * Noteworthy changes in release 8.29 (2017-12-27) [stable]
 
