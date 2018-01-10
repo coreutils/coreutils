@@ -53,6 +53,7 @@
 #include "ignore-value.h"
 #include "ioblksize.h"
 #include "quote.h"
+#include "renameat2.h"
 #include "root-uid.h"
 #include "same.h"
 #include "savedir.h"
@@ -1907,44 +1908,62 @@ copy_internal (char const *src_name, char const *dst_name,
 
   bool dereference = should_dereference (x, command_line_arg);
 
+  int rename_errno = -1;
+  if (x->move_mode)
+    {
+      if (renameat2 (AT_FDCWD, src_name, AT_FDCWD, dst_name, RENAME_NOREPLACE)
+          != 0)
+        rename_errno = errno;
+      else
+        {
+          rename_errno = 0;
+          new_dst = true;
+          if (rename_succeeded)
+            *rename_succeeded = true;
+        }
+    }
+
   if (!new_dst)
     {
-      /* Regular files can be created by writing through symbolic
-         links, but other files cannot.  So use stat on the
-         destination when copying a regular file, and lstat otherwise.
-         However, if we intend to unlink or remove the destination
-         first, use lstat, since a copy won't actually be made to the
-         destination in that case.  */
-      bool use_stat =
-        ((S_ISREG (src_mode)
-          || (x->copy_as_regular
-              && ! (S_ISDIR (src_mode) || S_ISLNK (src_mode))))
-         && ! (x->move_mode || x->symbolic_link || x->hard_link
-               || x->backup_type != no_backups
-               || x->unlink_dest_before_opening));
-      if ((use_stat
-           ? stat (dst_name, &dst_sb)
-           : lstat (dst_name, &dst_sb))
-          != 0)
+      if (! (rename_errno == EEXIST && x->interactive == I_ALWAYS_NO))
         {
-          if (errno != ENOENT)
+          /* Regular files can be created by writing through symbolic
+             links, but other files cannot.  So use stat on the
+             destination when copying a regular file, and lstat otherwise.
+             However, if we intend to unlink or remove the destination
+             first, use lstat, since a copy won't actually be made to the
+             destination in that case.  */
+          bool use_lstat
+            = ((! S_ISREG (src_mode)
+                && (! x->copy_as_regular
+                    || S_ISDIR (src_mode) || S_ISLNK (src_mode)))
+               || x->move_mode || x->symbolic_link || x->hard_link
+               || x->backup_type != no_backups
+               || x->unlink_dest_before_opening);
+          int fstatat_flags = use_lstat ? AT_SYMLINK_NOFOLLOW : 0;
+          if (fstatat (AT_FDCWD, dst_name, &dst_sb, fstatat_flags) == 0)
             {
-              error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
-              return false;
+              have_dst_lstat = use_lstat;
+              rename_errno = EEXIST;
             }
           else
             {
+              if (errno != ENOENT)
+                {
+                  error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
+                  return false;
+                }
               new_dst = true;
             }
         }
-      else
-        { /* Here, we know that dst_name exists, at least to the point
-             that it is stat'able or lstat'able.  */
-          bool return_now;
 
-          have_dst_lstat = !use_stat;
-          if (! same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
-                              x, &return_now))
+      if (rename_errno == EEXIST)
+        {
+          bool return_now = false;
+
+          if (x->interactive != I_ALWAYS_NO
+              && ! same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
+                                 x, &return_now))
             {
               error (0, 0, _("%s and %s are the same file"),
                      quoteaf_n (0, src_name), quoteaf_n (1, dst_name));
@@ -2233,7 +2252,9 @@ copy_internal (char const *src_name, char const *dst_name,
      Also, with --recursive, record dev/ino of each command-line directory.
      We'll use that info to detect this problem: cp -R dir dir.  */
 
-  if (x->recursive && S_ISDIR (src_mode))
+  if (rename_errno == 0)
+    earlier_file = NULL;
+  else if (x->recursive && S_ISDIR (src_mode))
     {
       if (command_line_arg)
         earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
@@ -2319,7 +2340,10 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (x->move_mode)
     {
-      if (rename (src_name, dst_name) == 0)
+      if (rename_errno == EEXIST)
+        rename_errno = rename (src_name, dst_name) == 0 ? 0 : errno;
+
+      if (rename_errno == 0)
         {
           if (x->verbose)
             {
@@ -2356,7 +2380,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       /* This happens when attempting to rename a directory to a
          subdirectory of itself.  */
-      if (errno == EINVAL)
+      if (rename_errno == EINVAL)
         {
           /* FIXME: this is a little fragile in that it relies on rename(2)
              failing with a specific errno value.  Expect problems on
@@ -2391,7 +2415,7 @@ copy_internal (char const *src_name, char const *dst_name,
          where you'd replace '18' with the integer in parentheses that
          was output from the perl one-liner above.
          If necessary, of course, change '/tmp' to some other directory.  */
-      if (errno != EXDEV)
+      if (rename_errno != EXDEV)
         {
           /* There are many ways this can happen due to a race condition.
              When something happens between the initial XSTAT and the
@@ -2403,7 +2427,7 @@ copy_internal (char const *src_name, char const *dst_name,
              If the permissions on the directory containing the source or
              destination file are made too restrictive, the rename will
              fail.  Etc.  */
-          error (0, errno,
+          error (0, rename_errno,
                  _("cannot move %s to %s"),
                  quoteaf_n (0, src_name), quoteaf_n (1, dst_name));
           forget_created (src_sb.st_ino, src_sb.st_dev);

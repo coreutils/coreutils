@@ -4,6 +4,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'mv -n A B' no longer suffers from a race condition that can
+  overwrite a simultaneously-created B.  This bug fix requires
+  platform support for the renameat2 or renameatx_np syscalls, found
+  in recent Linux and macOS kernels.
+  [bug introduced with coreutils-7.1]
+
   'cp -n -u' and 'mv -n -u' now consistently ignore the -u option.
   Previously, this option combination suffered from race conditions
   that caused -u to sometimes override -n.
