@@ -249,6 +249,15 @@ struct cp_options
      such a symlink) and returns false.  */
   bool open_dangling_dest_symlink;
 
+  /* If true, this is the last filed to be copied.  mv uses this to
+     avoid some unnecessary work.  */
+  bool last_file;
+
+  /* Zero if the source has already been renamed to the destination; a
+     positive errno number if this failed with the given errno; -1 if
+     no attempt has been made to rename.  Always -1, except for mv.  */
+  int rename_errno;
+
   /* Control creation of COW files.  */
   enum Reflink_type reflink_mode;
 

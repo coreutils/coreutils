@@ -1854,7 +1854,7 @@ copy_internal (char const *src_name, char const *dst_name,
 {
   struct stat src_sb;
   struct stat dst_sb;
-  mode_t src_mode;
+  mode_t src_mode IF_LINT ( = 0);
   mode_t dst_mode IF_LINT ( = 0);
   mode_t dst_mode_bits;
   mode_t omitted_permissions;
@@ -1866,33 +1866,48 @@ copy_internal (char const *src_name, char const *dst_name,
   bool dest_is_symlink = false;
   bool have_dst_lstat = false;
 
-  if (x->move_mode && rename_succeeded)
-    *rename_succeeded = false;
-
   *copy_into_self = false;
 
-  if (XSTAT (x, src_name, &src_sb) != 0)
+  int rename_errno = x->rename_errno;
+  if (x->move_mode)
     {
-      error (0, errno, _("cannot stat %s"), quoteaf (src_name));
-      return false;
+      if (rename_errno < 0)
+        rename_errno = (renameat2 (AT_FDCWD, src_name, AT_FDCWD, dst_name,
+                                   RENAME_NOREPLACE)
+                        ? errno : 0);
+      new_dst = rename_errno == 0;
+      if (rename_succeeded)
+        *rename_succeeded = new_dst;
     }
 
-  src_mode = src_sb.st_mode;
-
-  if (S_ISDIR (src_mode) && !x->recursive)
+  if (rename_errno == 0
+      ? !x->last_file
+      : rename_errno != EEXIST || x->interactive != I_ALWAYS_NO)
     {
-      error (0, 0, ! x->install_mode /* cp */
-                   ? _("-r not specified; omitting directory %s")
-                   : _("omitting directory %s"),
-             quoteaf (src_name));
-      return false;
+      char const *name = rename_errno == 0 ? dst_name : src_name;
+      if (XSTAT (x, name, &src_sb) != 0)
+        {
+          error (0, errno, _("cannot stat %s"), quoteaf (name));
+          return false;
+        }
+
+      src_mode = src_sb.st_mode;
+
+      if (S_ISDIR (src_mode) && !x->recursive)
+        {
+          error (0, 0, ! x->install_mode /* cp */
+                 ? _("-r not specified; omitting directory %s")
+                 : _("omitting directory %s"),
+                 quoteaf (src_name));
+          return false;
+        }
     }
 
   /* Detect the case in which the same source file appears more than
      once on the command line and no backup option has been selected.
      If so, simply warn and don't copy it the second time.
      This check is enabled only if x->src_info is non-NULL.  */
-  if (command_line_arg)
+  if (command_line_arg && x->src_info)
     {
       if ( ! S_ISDIR (src_sb.st_mode)
            && x->backup_type == no_backups
@@ -1907,21 +1922,6 @@ copy_internal (char const *src_name, char const *dst_name,
     }
 
   bool dereference = should_dereference (x, command_line_arg);
-
-  int rename_errno = -1;
-  if (x->move_mode)
-    {
-      if (renameat2 (AT_FDCWD, src_name, AT_FDCWD, dst_name, RENAME_NOREPLACE)
-          != 0)
-        rename_errno = errno;
-      else
-        {
-          rename_errno = 0;
-          new_dst = true;
-          if (rename_succeeded)
-            *rename_succeeded = true;
-        }
-    }
 
   if (!new_dst)
     {
@@ -1970,7 +1970,7 @@ copy_internal (char const *src_name, char const *dst_name,
               return false;
             }
 
-          if (!S_ISDIR (src_mode) && x->update)
+          if (x->update && !S_ISDIR (src_mode))
             {
               /* When preserving timestamps (but not moving within a file
                  system), don't worry if the destination timestamp is
@@ -2360,7 +2360,7 @@ copy_internal (char const *src_name, char const *dst_name,
           if (rename_succeeded)
             *rename_succeeded = true;
 
-          if (command_line_arg)
+          if (command_line_arg && !x->last_file)
             {
               /* Record destination dev/ino/name, so that if we are asked
                  to overwrite that file again, we can detect it and fail.  */
@@ -2998,6 +2998,7 @@ cp_options_default (struct cp_options *x)
 #else
   x->chown_privileges = x->owner_privileges = (geteuid () == ROOT_UID);
 #endif
+  x->rename_errno = -1;
 }
 
 /* Return true if it's OK for chown to fail, where errno is

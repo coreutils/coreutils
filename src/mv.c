@@ -31,6 +31,7 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "remove.h"
+#include "renameat2.h"
 #include "root-dev-ino.h"
 #include "priv-set.h"
 
@@ -452,8 +453,15 @@ main (int argc, char **argv)
   else if (!target_directory)
     {
       assert (2 <= n_files);
-      if (target_directory_operand (file[n_files - 1]))
-        target_directory = file[--n_files];
+      if (n_files == 2)
+        x.rename_errno = (renameat2 (AT_FDCWD, file[0], AT_FDCWD, file[1],
+                                     RENAME_NOREPLACE)
+                          ? errno : 0);
+      if (x.rename_errno != 0 && target_directory_operand (file[n_files - 1]))
+        {
+          x.rename_errno = -1;
+          target_directory = file[--n_files];
+        }
       else if (2 < n_files)
         die (EXIT_FAILURE, 0, _("target %s is not a directory"),
              quoteaf (file[n_files - 1]));
@@ -487,10 +495,16 @@ main (int argc, char **argv)
 
       ok = true;
       for (int i = 0; i < n_files; ++i)
-        ok &= movefile (file[i], target_directory, true, &x);
+        {
+          x.last_file = i + 1 == n_files;
+          ok &= movefile (file[i], target_directory, true, &x);
+        }
     }
   else
-    ok = movefile (file[0], file[1], false, &x);
+    {
+      x.last_file = true;
+      ok = movefile (file[0], file[1], false, &x);
+    }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
