@@ -1336,9 +1336,9 @@ The @option{--target-directory} (@option{-t}) option allows the @command{cp},
 conveniently with @command{xargs}.  For example, you can move the files
 from the current directory to a sibling directory, @code{d} like this:
 
-@smallexample
+@example
 ls | xargs mv -t ../d --
-@end smallexample
+@end example
 
 However, this doesn't move files whose names begin with @samp{.}.
 If you use the GNU @command{find} program, you can move those
@@ -1679,13 +1679,13 @@ if standard output is a terminal.
 
 Examples:
 
-@smallexample
+@example
 # Output f's contents, then standard input, then g's contents.
 cat f - g
 
 # Copy standard input to standard output.
 cat
-@end smallexample
+@end example
 
 
 @node tac invocation
@@ -1922,12 +1922,12 @@ Use @var{number} characters for line numbers (default 6).
 (@samp{-} means standard input), or standard input if none are given.
 Synopses:
 
-@smallexample
+@example
 od [@var{option}]@dots{} [@var{file}]@dots{}
 od [-abcdfilosx]@dots{} [@var{file}] [[+]@var{offset}[.][b]]
 od [@var{option}]@dots{} --traditional [@var{file}]@c
  [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
-@end smallexample
+@end example
 
 Each line of output consists of the offset in the input, followed by
 groups of data from the file.  By default, @command{od} prints the offset in
@@ -2158,9 +2158,9 @@ Output as hexadecimal two-byte units.  Equivalent to @samp{-t x2}.
 Recognize the non-option label argument that traditional @command{od}
 accepted.  The following syntax:
 
-@smallexample
+@example
 od --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
-@end smallexample
+@end example
 
 @noindent
 can be used to specify at most one file and optional arguments
@@ -2199,10 +2199,10 @@ into (or from) base64 encoded form.  The base64 encoded form uses
 printable ASCII characters to represent binary data.
 Synopses:
 
-@smallexample
+@example
 base64 [@var{option}]@dots{} [@var{file}]
 base64 --decode [@var{option}]@dots{} [@var{file}]
-@end smallexample
+@end example
 
 The base64 encoding expands data to roughly 133% of the original.
 The base32 encoding expands data to roughly 160% of the original.
@@ -4729,9 +4729,9 @@ sorts is stable.
 @item
 Generate a tags file in case-insensitive sorted order.
 
-@smallexample
+@example
 find src -type f -print0 | sort -z -f | xargs -0 etags --append
-@end smallexample
+@end example
 
 The use of @option{-print0}, @option{-z}, and @option{-0} in this case means
 that file names that contain blanks or other special characters are
@@ -5593,10 +5593,10 @@ generating output suitable for @command{nroff}, @command{troff} or @TeX{}.
 Choose an output format suitable for @command{nroff} or @command{troff}
 processing.  Each output line will look like:
 
-@smallexample
+@example
 .xx "@var{tail}" "@var{before}" "@var{keyword_and_after}"@c
  "@var{head}" "@var{ref}"
-@end smallexample
+@end example
 
 so it will be possible to write a @samp{.xx} roff macro to take care of
 the output typesetting.  This is the default output format when GNU
@@ -5616,10 +5616,10 @@ so it will be correctly processed by @command{nroff} or @command{troff}.
 Choose an output format suitable for @TeX{} processing.  Each output
 line will look like:
 
-@smallexample
+@example
 \xx @{@var{tail}@}@{@var{before}@}@{@var{keyword}@}@c
 @{@var{after}@}@{@var{head}@}@{@var{ref}@}
-@end smallexample
+@end example
 
 @noindent
 so it will be possible to write a @code{\xx} definition to take care of
@@ -7332,9 +7332,9 @@ in the shell, an initial @samp{.} in a file name does not match a
 wildcard at the start of @var{pattern}.  Sometimes it is useful
 to give this option several times.  For example,
 
-@smallexample
+@example
 $ ls --ignore='.??*' --ignore='.[^.]' --ignore='#*'
-@end smallexample
+@end example
 
 The first option ignores names of length 3 or more that start with @samp{.},
 the second ignores all two-character names that start with @samp{.}
@@ -8640,11 +8640,11 @@ Then the @option{--preserve=links} option also implied by @option{-a}
 will preserve the perceived hard link.
 
 Here is a similar example that exercises @command{cp}'s @option{-L} option:
-@smallexample
+@example
 $ mkdir b c; (cd b; : > a; ln -s a b); cp -aL b c; ls -i1 c/b
 74163295 a
 74163295 b
-@end smallexample
+@end example
 
 @item context
 Preserve SELinux security context of the file, or fail with full diagnostics.
@@ -10382,10 +10382,10 @@ Make symbolic links relative to the link location.
 
 Example:
 
-@smallexample
+@example
 ln -srv /a/file /tmp
 '/tmp/file' -> '../a/file'
-@end smallexample
+@end example
 
 Relative symbolic links are generated based on their canonicalized
 containing directory, and canonicalized targets.  I.e., all symbolic
@@ -10440,7 +10440,7 @@ if @code{link} follows symbolic links (such as on BSD).
 
 Examples:
 
-@smallexample
+@example
 Bad Example:
 
 # Create link ../a pointing to a in that directory.
@@ -10464,7 +10464,7 @@ Better Example:
 # work across networked file systems.
 ln -s afile anotherfile
 ln -s ../adir/afile yetanotherfile
-@end smallexample
+@end example
 
 
 @node mkdir invocation
@@ -10980,9 +10980,9 @@ it narrows considerably the window of potential abuse.
 For example, to reflect a user ID numbering change for one user's files
 without an option like this, @code{root} might run
 
-@smallexample
+@example
 find / -owner OLDUSER -print0 | xargs -0 chown -h NEWUSER
-@end smallexample
+@end example
 
 But that is dangerous because the interval between when the @command{find}
 tests the existing file's owner and when the @command{chown} is actually run
@@ -11077,7 +11077,7 @@ Recursively change ownership of directories and their contents.
 
 Examples:
 
-@smallexample
+@example
 # Change the owner of /u to "root".
 chown root /u
 
@@ -11086,7 +11086,7 @@ chown root:staff /u
 
 # Change the owner of /u and subfiles to "root".
 chown -hR root /u
-@end smallexample
+@end example
 
 
 @node chgrp invocation
@@ -11208,13 +11208,13 @@ Recursively change the group ownership of directories and their contents.
 
 Examples:
 
-@smallexample
+@example
 # Change the group of /u to "staff".
 chgrp staff /u
 
 # Change the group of /u and subfiles to "staff".
 chgrp -hR staff /u
-@end smallexample
+@end example
 
 
 @node chmod invocation
@@ -12736,13 +12736,13 @@ use GNU recode 3.5c (or newer) to convert strings to this encoding.  Here
 is how to convert a piece of text into a shell script which will output
 this text in a locale-independent way:
 
-@smallexample
+@example
 $ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf \
     '\u4e2d\u6587\n' > sample.txt
 $ recode BIG5..JAVA < sample.txt \
     | sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" \
     > sample.sh
-@end smallexample
+@end example
 
 @exitstatus
 
@@ -13777,7 +13777,7 @@ This option implies the @option{-a} option.
 
 Examples:
 
-@smallexample
+@example
 # Output "sort".
 basename /usr/bin/sort
 
@@ -13789,7 +13789,7 @@ basename -s .h include/stdio.h
 
 # Output "stdio" followed by "stdlib"
 basename -a -s .h include/stdio.h include/stdlib.h
-@end smallexample
+@end example
 
 
 @node dirname invocation
@@ -13832,7 +13832,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 Examples:
 
-@smallexample
+@example
 # Output "/usr/bin".
 dirname /usr/bin/sort
 dirname /usr/bin//.//
@@ -13842,7 +13842,7 @@ dirname dir1/str dir2/str
 
 # Output ".".
 dirname stdio.h
-@end smallexample
+@end example
 
 
 @node pathchk invocation
@@ -16209,26 +16209,26 @@ date -u --date=2000-01-01 +%s
 To convert such an unwieldy number of seconds back to
 a more readable form, use a command like this:
 
-@smallexample
+@example
 # local time zone used
 date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
 1999-12-31 19:00:00 -0500
-@end smallexample
+@end example
 
 Or if you do not mind depending on the @samp{@@} feature present since
 coreutils 5.3.0, you could shorten this to:
 
-@smallexample
+@example
 date -d @@946684800 +"%F %T %z"
 1999-12-31 19:00:00 -0500
-@end smallexample
+@end example
 
 Often it is better to output UTC-relative date and time:
 
-@smallexample
+@example
 date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
 2000-01-01 00:00:00 +0000
-@end smallexample
+@end example
 
 @item
 @cindex leap seconds
@@ -16352,11 +16352,11 @@ The information may contain internal spaces, so such output cannot be
 parsed reliably.  In the following example, @var{release} is
 @samp{2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001}:
 
-@smallexample
+@example
 uname -a
 @result{} Linux dumdum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686@c
  unknown unknown GNU/Linux
-@end smallexample
+@end example
 
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -16574,12 +16574,12 @@ contexts.
 @command{chcon} changes the SELinux security context of the selected files.
 Synopses:
 
-@smallexample
+@example
 chcon [@var{option}]@dots{} @var{context} @var{file}@dots{}
 chcon [@var{option}]@dots{} [-u @var{user}] [-r @var{role}] [-l @var{range}]@c
  [-t @var{type}] @var{file}@dots{}
 chcon [@var{option}]@dots{} --reference=@var{rfile} @var{file}@dots{}
-@end smallexample
+@end example
 
 Change the SELinux security context of each @var{file} to @var{context}.
 With @option{--reference}, change the security context of each @var{file}
@@ -16677,11 +16677,11 @@ Set range @var{range} in the target security context.
 @command{runcon} runs file in specified SELinux security context.
 
 Synopses:
-@smallexample
+@example
 runcon @var{context} @var{command} [@var{args}]
 runcon [ -c ] [-u @var{user}] [-r @var{role}] [-t @var{type}]@c
  [-l @var{range}] @var{command} [@var{args}]
-@end smallexample
+@end example
 
 Run @var{command} with completely-specified @var{context}, or with
 current or transitioned security context modified by one or more of @var{level},
@@ -18308,9 +18308,9 @@ water pipeline.
 
 With the Unix shell, it's very easy to set up data pipelines:
 
-@smallexample
+@example
 program_to_create_data | filter1 | ... | filterN > final.pretty.data
-@end smallexample
+@end example
 
 We start out by creating the raw data; each filter applies some successive
 transformation to the data, until by the time it comes out of the pipeline,
@@ -18590,9 +18590,9 @@ The next step is to get rid of punctuation.  Quoted words and unquoted words
 should be treated identically; it's easiest to just get the punctuation out of
 the way.
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' | ...
-@end smallexample
+@end example
 
 The second @command{tr} command operates on the complement of the listed
 characters, which are all the letters, the digits, the underscore, and
@@ -18605,10 +18605,10 @@ The words only contain alphanumeric characters (and the underscore).  The
 next step is break the data apart so that we have one word per line.  This
 makes the counting operation much easier, as we will see shortly.
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | ...
-@end smallexample
+@end example
 
 This command turns blanks into newlines.  The @option{-s} option squeezes
 multiple newline characters in the output into just one, removing
@@ -18619,10 +18619,10 @@ typing in all of a command.)
 We now have data consisting of one word per line, no punctuation, all one
 case.  We're ready to count each word:
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | sort | uniq -c | ...
-@end smallexample
+@end example
 
 At this point, the data might look something like this:
 
@@ -18651,7 +18651,7 @@ reverse the order of the sort
 
 The final pipeline looks like this:
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | sort | uniq -c | sort -n -r
 @print{}    156 the
@@ -18660,7 +18660,7 @@ $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 @print{}     51 of
 @print{}     51 and
 @dots{}
-@end smallexample
+@end example
 
 Whew!  That's a lot to digest.  Yet, the same principles apply.  With six
 commands, on two lines (really one long one split for convenience), we've
@@ -18679,19 +18679,19 @@ this is a sorted, 45,402 word dictionary.
 Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | sort -u | ...
-@end smallexample
+@end example
 
 Now, all we need is a list of words that are @emph{not} in the
 dictionary.  Here is where the @command{comm} command comes in.
 
-@smallexample
+@example
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | sort -u |
 > comm -23 - /usr/dict/words
-@end smallexample
+@end example
 
 The @option{-2} and @option{-3} options eliminate lines that are only in the
 dictionary (the second file), and lines that are in both files.  Lines
