@@ -1353,7 +1353,10 @@ preserve_metadata:
       bool access_changed = false;
 
       if (!(sb.st_mode & S_IWUSR) && geteuid () != ROOT_UID)
-        access_changed = fchmod_or_lchmod (dest_desc, dst_name, 0600) == 0;
+        {
+          access_changed = fchmod_or_lchmod (dest_desc, dst_name,
+                                             S_IRUSR | S_IWUSR) == 0;
+        }
 
       if (!copy_attr (src_name, source_desc, dst_name, dest_desc, x)
           && x->require_preserve_xattr)
@@ -1378,7 +1381,7 @@ preserve_metadata:
     }
   else if (x->explicit_no_preserve_mode)
     {
-      if (set_acl (dst_name, dest_desc, 0666 & ~cached_umask ()) != 0)
+      if (set_acl (dst_name, dest_desc, MODE_RW_UGO & ~cached_umask ()) != 0)
         return_val = false;
     }
   else if (omitted_permissions)
@@ -2860,7 +2863,9 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (x->explicit_no_preserve_mode)
     {
-      if (set_acl (dst_name, -1, 0777 & ~cached_umask ()) != 0)
+      int default_permissions = S_ISDIR (src_mode) || S_ISSOCK (src_mode)
+                                ? S_IRWXUGO : MODE_RW_UGO;
+      if (set_acl (dst_name, -1, default_permissions & ~cached_umask ()) != 0)
         return false;
     }
   else

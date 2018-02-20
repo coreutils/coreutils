@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-get_mode() { ls -ld "$1" | cut -b-10; }
+get_mode() { stat -c%f "$1"; }
 
 rm -f a b c
 umask 0022
@@ -46,5 +46,13 @@ chmod 600 a
 #contradicting options test
 cp --no-preserve=mode --preserve=all a b || fail=1
 test "$(get_mode a)" = "$(get_mode b)" || fail=1
+
+#fifo test
+if mkfifo fifo; then
+  cp -a --no-preserve=mode fifo fifo_copy || fail=1
+  #ensure default perms set appropriate for non regular files
+  #which wasn't done between v8.20 and 8.29 inclusive
+  test "$(get_mode fifo)" = "$(get_mode fifo_copy)" || fail=1
+fi
 
 Exit $fail

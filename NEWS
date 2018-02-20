@@ -16,6 +16,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   that caused -u to sometimes override -n.
   [bug introduced with coreutils-7.1]
 
+  'cp -a --no-preserve=mode' now sets appropriate default permissions
+  for non regular files like fifos and character device nodes etc.
+  Previously it would have set executable bits on created special files.
+  [bug introduced with coreutils-8.20]
+
 
 * Noteworthy changes in release 8.29 (2017-12-27) [stable]
 
