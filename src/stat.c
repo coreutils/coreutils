@@ -590,12 +590,10 @@ human_access (struct stat const *statbuf)
 static char * ATTRIBUTE_WARN_UNUSED_RESULT
 human_time (struct timespec t)
 {
-  /* STR must be at least this big, either because localtime_rz fails,
-     or because the time zone is truly outlandish so that %z expands
-     to a long string.  */
-  enum { intmax_bufsize = INT_BUFSIZE_BOUND (intmax_t) };
-
-  static char str[intmax_bufsize
+  /* STR must be at least INT_BUFSIZE_BOUND (intmax_t) big, either
+     because localtime_rz fails, or because the time zone is truly
+     outlandish so that %z expands to a long string.  */
+  static char str[INT_BUFSIZE_BOUND (intmax_t)
                   + INT_STRLEN_BOUND (int) /* YYYY */
                   + 1 /* because YYYY might equal INT_MAX + 1900 */
                   + sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +"];
