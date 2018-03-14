@@ -1095,8 +1095,11 @@ file_escape_init (void)
    variable width abbreviated months and also precomputing/caching
    the names was seen to increase the performance of ls significantly.  */
 
-/* max number of display cells to use */
-enum { MAX_MON_WIDTH = 5 };
+/* max number of display cells to use.
+   As of 2018 the abmon for Arabic has entries with width 12.
+   It doesn't make much sense to support wider than this
+   and locales should aim for abmon entries of width <= 5.  */
+enum { MAX_MON_WIDTH = 12 };
 /* abformat[RECENT][MON] is the format to use for timestamps with
    recentness RECENT and month MON.  */
 enum { ABFORMAT_SIZE = 128 };

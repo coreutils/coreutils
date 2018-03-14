@@ -32,17 +32,20 @@ for format in "%b" "[%b" "%b]" "[%b]"; do
     # The sed usage here is slightly different from the original,
     # removing the \(.*\), to avoid triggering misbehavior in at least
     # GNU sed 4.2 (possibly miscompiled) on Mac OS X (Darwin 9.8.0).
-    n_widths=$(
+    months="$(
       LC_ALL=$LOC TIME_STYLE=+"$format" ls -lgG *.ts |
-      LC_ALL=C sed 's/.\{15\}//;s/ ..\.ts$//;s/ /./g' |
+      LC_ALL=C sed 's/.\{15\}//;s/ ..\.ts$//;s/ /./g')"
+    n_widths=$(echo "$months" |
       while read mon; do echo "$mon" | LC_ALL=$LOC wc -L; done |
       uniq | wc -l
     )
+    n_dupes=$(echo "$months" | sort | uniq -d | wc -l)
     test "$n_widths" = "1" || { fail=1; break 2; }
+    test "$n_dupes" = "0" || { fail=1; break 2; }
   done
 done
 if test "$fail" = "1"; then
-   echo "misalignment detected in $LOC locale:"
+   echo "misalignment or ambiguous output in $LOC locale:"
    LC_ALL=$LOC TIME_STYLE=+%b ls -lgG *.ts
 fi
 

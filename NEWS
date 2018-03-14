@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have set executable bits on created special files.
   [bug introduced with coreutils-8.20]
 
+  ls no longer truncates the abbreviated month names that have a
+  display width between 6 and 12 inclusive.  Previously this would have
+  output ambiguous months for Arabic or Catalan locales.
+
 ** Improvements
 
   stat and tail now know about the "exfs" file system, which is a
