@@ -36,7 +36,7 @@ contributing to the GNU Project, please read
    * Bug reports Mailing List:
      https://lists.gnu.org/archive/html/bug-coreutils/
 
-* Open Bugs: https://debbugs.gnu.org/cgi/pkgreport.cgi?which=pkg&data=coreitils
+* Open Bugs: https://debbugs.gnu.org/cgi/pkgreport.cgi?which=pkg&data=coreutils
 
 * Translation related issues:
   https://translationproject.org/domain/coreutils.html

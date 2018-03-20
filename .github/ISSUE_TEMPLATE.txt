@@ -28,7 +28,7 @@ Before reporting a new bug, please check the following resources:
      https://lists.gnu.org/archive/html/bug-coreutils/
 
 * Open Bugs:
-  https://debbugs.gnu.org/cgi/pkgreport.cgi?which=pkg&data=coreitils
+  https://debbugs.gnu.org/cgi/pkgreport.cgi?which=pkg&data=coreutils
 
 * Translation related issues:
   https://translationproject.org/domain/coreutils.html
