@@ -30,6 +30,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cut supports line lengths up to the max file size on 32 bit systems.
+  Previously only offsets up to SIZE_MAX-1 were supported.
+
   stat and tail now know about the "exfs" file system, which is a
   version of XFS.  stat -f --format=%T now reports the file system type,
   and tail -f uses inotify.

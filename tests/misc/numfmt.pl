@@ -308,9 +308,9 @@ my @Tests =
              {EXIT=>1}, {ERR=>"$prog: invalid field range\n$try"}],
      ['field-range-err-12','--field 0-1 --to=si 10',
              {EXIT=>1}, {ERR=>"$prog: fields are numbered from 1\n$try"}],
-     ['field-range-err-13','--field '.$limits->{SIZE_MAX}.',22 --to=si 10',
+     ['field-range-err-13','--field '.$limits->{UINTMAX_MAX}.',22 --to=si 10',
              {EXIT=>1}, {ERR=>"$prog: field number " .
-                              "'".$limits->{SIZE_MAX}."' is too large\n$try"}],
+                            "'".$limits->{UINTMAX_MAX}."' is too large\n$try"}],
 
      # Auto-consume white-space, setup auto-padding
      ['whitespace-1', '--to=si --field 2 "A    500 B"', {OUT=>"A    500 B"}],

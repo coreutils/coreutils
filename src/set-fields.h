@@ -19,8 +19,8 @@
 
 struct field_range_pair
   {
-    size_t lo;
-    size_t hi;
+    uintmax_t lo;
+    uintmax_t hi;
   };
 
 /* Array of `struct range_pair' holding all the finite ranges. */

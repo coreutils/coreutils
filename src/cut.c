@@ -204,7 +204,7 @@ Each range is one of:\n\
    and if required CURRENT_RP.  */
 
 static inline void
-next_item (size_t *item_idx)
+next_item (uintmax_t *item_idx)
 {
   (*item_idx)++;
   if ((*item_idx) > current_rp->hi)
@@ -214,7 +214,7 @@ next_item (size_t *item_idx)
 /* Return nonzero if the K'th field or byte is printable. */
 
 static inline bool
-print_kth (size_t k)
+print_kth (uintmax_t k)
 {
   return current_rp->lo <= k;
 }
@@ -222,7 +222,7 @@ print_kth (size_t k)
 /* Return nonzero if K'th byte is the beginning of a range. */
 
 static inline bool
-is_range_start_index (size_t k)
+is_range_start_index (uintmax_t k)
 {
   return k == current_rp->lo;
 }
@@ -232,7 +232,7 @@ is_range_start_index (size_t k)
 static void
 cut_bytes (FILE *stream)
 {
-  size_t byte_idx;	/* Number of bytes in the line so far. */
+  uintmax_t byte_idx;	/* Number of bytes in the line so far. */
   /* Whether to begin printing delimiters between ranges for the current line.
      Set after we've begun printing data corresponding to the first range.  */
   bool print_delimiter;
@@ -286,7 +286,7 @@ static void
 cut_fields (FILE *stream)
 {
   int c;
-  size_t field_idx = 1;
+  uintmax_t field_idx = 1;
   bool found_any_selected_field = false;
   bool buffer_first_field;
 

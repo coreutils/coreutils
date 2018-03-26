@@ -1351,13 +1351,13 @@ next_field (char **line)
 }
 
 static bool _GL_ATTRIBUTE_PURE
-include_field (size_t field)
+include_field (uintmax_t field)
 {
   struct field_range_pair *p = frp;
   if (!p)
     return field == 1;
 
-  while (p->lo != SIZE_MAX)
+  while (p->lo != UINTMAX_MAX)
     {
       if (p->lo <= field && p->hi >= field)
         return true;
@@ -1369,7 +1369,7 @@ include_field (size_t field)
 /* Convert and output the given field. If it is not included in the set
    of fields to process just output the original */
 static bool
-process_field (char *text, size_t field)
+process_field (char *text, uintmax_t field)
 {
   long double val = 0;
   size_t precision = 0;
@@ -1400,7 +1400,7 @@ static int
 process_line (char *line, bool newline)
 {
   char *next;
-  size_t field = 0;
+  uintmax_t field = 0;
   bool valid_number = true;
 
   while (true) {
