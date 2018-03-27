@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'ls -aA' is now equivalent to 'ls -A', since -A now overrides -a.
+  [bug introduced in coreutils-5.3.0]
+
   'mv -n A B' no longer suffers from a race condition that can
   overwrite a simultaneously-created B.  This bug fix requires
   platform support for the renameat2 or renameatx_np syscalls, found

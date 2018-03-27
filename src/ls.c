@@ -1903,8 +1903,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'A':
-          if (ignore_mode == IGNORE_DEFAULT)
-            ignore_mode = IGNORE_DOT_AND_DOTDOT;
+          ignore_mode = IGNORE_DOT_AND_DOTDOT;
           break;
 
         case 'B':
