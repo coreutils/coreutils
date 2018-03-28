@@ -21,7 +21,7 @@ print_ver_ ls
 
 mkdir d || framework_failure_
 
-ls -aA d >out || framework_failure
+ls -aA d >out || framework_failure_
 compare /dev/null out || fail=1
 
 Exit $fail
