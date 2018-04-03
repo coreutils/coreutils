@@ -494,10 +494,47 @@ the file to all users.
 As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
 number that represents the mode.
-This number is always interpreted in octal; you do not have to add a
-leading @samp{0}, as you do in C.  Mode @samp{0055} is the same as
-mode @samp{55}.  (However, modes of five digits or more, such as
-@samp{00055}, are sometimes special.  @xref{Directory Setuid and Setgid}.)
+
+The permissions granted to the user,
+to other users in the file's group,
+and to other users not in the file's group each require three
+bits: one bit for read, one for write, and one for execute/search permission.
+These three bits are represented as one octal digit;
+for example, if all three are present, the resulting 111 (in binary)
+is represented as the digit 7 (in octal).  The three special
+mode bits also require one bit each, and they are as a group
+represented as another octal digit.  Here is how the bits are arranged,
+starting with the highest valued bit:
+
+@example
+Value in  Corresponding
+Mode      Mode Bit
+
+          Special mode bits:
+4000      Set user ID on execution
+2000      Set group ID on execution
+1000      Restricted deletion flag or sticky bit
+
+          The file's owner:
+ 400      Read
+ 200      Write
+ 100      Execute/search
+
+          Other users in the file's group:
+  40      Read
+  20      Write
+  10      Execute/search
+
+          Other users not in the file's group:
+   4      Read
+   2      Write
+   1      Execute/search
+@end example
+
+For example, numeric mode @samp{4751} corresponds to symbolic mode
+@samp{u=srwx,g=rx,o=x}, and numeric mode @samp{664} corresponds to symbolic mode
+@samp{ug=rw,o=r}.  Numeric mode @samp{0} corresponds to symbolic mode
+@samp{a=}.
 
 A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that normally it cannot take into account the
@@ -507,43 +544,10 @@ to this general limitation.  @xref{Directory Setuid and Setgid}.
 Also, operator numeric modes can take previous file mode bits into
 account.  @xref{Operator Numeric Modes}.
 
-The permissions granted to the user,
-to other users in the file's group,
-and to other users not in the file's group each require three
-bits, which are represented as one octal digit.  The three special
-mode bits also require one bit each, and they are as a group
-represented as another octal digit.  Here is how the bits are arranged,
-starting with the lowest valued bit:
-
-@example
-Value in  Corresponding
-Mode      Mode Bit
-
-          Other users not in the file's group:
-   1      Execute/search
-   2      Write
-   4      Read
-
-          Other users in the file's group:
-  10      Execute/search
-  20      Write
-  40      Read
-
-          The file's owner:
- 100      Execute/search
- 200      Write
- 400      Read
-
-          Special mode bits:
-1000      Restricted deletion flag or sticky bit
-2000      Set group ID on execution
-4000      Set user ID on execution
-@end example
-
-For example, numeric mode @samp{4755} corresponds to symbolic mode
-@samp{u=rwxs,go=rx}, and numeric mode @samp{664} corresponds to symbolic mode
-@samp{ug=rw,o=r}.  Numeric mode @samp{0} corresponds to symbolic mode
-@samp{a=}.
+Numeric modes are always interpreted in octal; you do not have to add a
+leading @samp{0}, as you do in C@.  Mode @samp{0055} is the same as
+mode @samp{55}.  However, modes of five digits or more, such as
+@samp{00055}, are sometimes special (@pxref{Directory Setuid and Setgid}).
 
 @node Operator Numeric Modes
 @section Operator Numeric Modes
