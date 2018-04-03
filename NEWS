@@ -1781,7 +1781,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  split accepts the --number option to generate a specific number of files.
+  split accepts the --number/-n option to generate a specific number of
+  files, as well as the --elide-empty-files/-e and --unbuffered/-u
+  options to fine-tune the resulting output.
 
 
 * Noteworthy changes in release 8.7 (2010-11-13) [stable]
