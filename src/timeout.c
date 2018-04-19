@@ -265,8 +265,8 @@ Start COMMAND, and kill it if still running after DURATION.\n\
 
       fputs (_("\n\
 DURATION is a floating point number with an optional suffix:\n\
-'s' for seconds (the default), 'm' for minutes, 'h' for hours \
-or 'd' for days.\n"), stdout);
+'s' for seconds (the default), 'm' for minutes, 'h' for hours or \
+'d' for days.\nA duration of 0 disables the associated timeout.\n"), stdout);
 
       fputs (_("\n\
 If the command times out, and --preserve-status is not set, then exit with\n\
