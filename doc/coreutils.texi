@@ -17043,6 +17043,22 @@ chroot /chroot env --chdir=/srv true
 env --chdir=/build FOO=bar timeout 5 true
 @end example
 
+@item -v
+@itemx --debug
+@opindex -v
+@opindex --debug
+Show verbose information for each processing step.
+
+@example
+$ env -v -uTERM A=B uname -s
+unset:    TERM
+setenv:   A=B
+executing: uname
+   arg[0]= 'uname'
+   arg[1]= '-s'
+Linux
+@end example
+
 @end table
 
 @cindex exit status of @command{env}

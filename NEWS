@@ -50,6 +50,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  env supports a new -v/--debug option to show verbose information about
+  each processing step.
+
   md5sum accepts a new option: --zero (-z) to delimit the output lines with a
   NUL instead of a newline character.  This also disables file name escaping.
   This also applies to sha*sum and b2sum.

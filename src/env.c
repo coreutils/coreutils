@@ -38,12 +38,16 @@ static const char** usvars;
 size_t usvars_alloc;
 size_t usvars_used;
 
+/* Annotate the output with extra info to aid the user.  */
+static bool dev_debug;
+
 static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
   {"null", no_argument, NULL, '0'},
   {"unset", required_argument, NULL, 'u'},
   {"chdir", required_argument, NULL, 'C'},
+  {"debug", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -73,6 +77,9 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       fputs (_("\
   -C, --chdir=DIR      change working directory to DIR\n\
 "), stdout);
+      fputs (_("\
+  -v, --debug          print verbose information for each processing step\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -97,6 +104,8 @@ unset_envvars (void)
 {
   for (size_t i = 0; i < usvars_used; ++i)
     {
+      devmsg ("unset:    %s\n", usvars[i]);
+
       if (unsetenv (usvars[i]))
         die (EXIT_CANCELED, errno, _("cannot unset %s"),
              quote (usvars[i]));
@@ -125,7 +134,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "+C:iu:0", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "+C:iu:v0", longopts, NULL)) != -1)
     {
       switch (optc)
         {
@@ -134,6 +143,9 @@ main (int argc, char **argv)
           break;
         case 'u':
           append_unset_var (optarg);
+          break;
+        case 'v':
+          dev_debug = true;
           break;
         case '0':
           opt_nul_terminate_output = true;
@@ -156,6 +168,7 @@ main (int argc, char **argv)
 
   if (ignore_environment)
     {
+      devmsg ("cleaning environ\n");
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
     }
@@ -165,6 +178,8 @@ main (int argc, char **argv)
   char *eq;
   while (optind < argc && (eq = strchr (argv[optind], '=')))
     {
+      devmsg ("setenv:   %s\n", argv[optind]);
+
       if (putenv (argv[optind]))
         {
           *eq = '\0';
@@ -199,9 +214,18 @@ main (int argc, char **argv)
 
   if (newdir)
     {
+      devmsg ("chdir:    %s\n", quoteaf (newdir));
+
       if (chdir (newdir) != 0)
         die (EXIT_CANCELED, errno, _("cannot change directory to %s"),
              quoteaf (newdir));
+    }
+
+  if (dev_debug)
+    {
+      devmsg ("executing: %s\n", argv[optind]);
+      for (int i=optind; i<argc; ++i)
+        devmsg ("   arg[%d]= %s\n", i-optind, quote (argv[i]));
     }
 
   execvp (argv[optind], &argv[optind]);
