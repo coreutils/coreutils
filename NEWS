@@ -53,6 +53,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   env supports a new -v/--debug option to show verbose information about
   each processing step.
 
+  env supports a new -S/--split-string=S option to split a single argument
+  string into multiple arguments. Used to pass multiple arguments in scripts
+  (shebang lines).
+
   md5sum accepts a new option: --zero (-z) to delimit the output lines with a
   NUL instead of a newline character.  This also disables file name escaping.
   This also applies to sha*sum and b2sum.

@@ -16901,7 +16901,16 @@ the exit status of @var{command} otherwise
 @example
 env [@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
 [@var{command} [@var{args}]@dots{}]
+env -[v]S'[@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
+[@var{command} [@var{args}]@dots{}]'
 env
+@end example
+
+@command{env} is commonly used on first line of scripts (shebang line):
+@example
+#!/usr/bin/env @var{command}
+#!/usr/bin/env -[v]S[@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
+@var{command} [@var{args}]@dots{}
 @end example
 
 Operands of the form @samp{@var{variable}=@var{value}} set
@@ -17002,6 +17011,8 @@ env -u EDITOR PATH=/energy -- e=mc2 bar baz
 @end itemize
 
 
+@subsection General options
+
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
@@ -17059,6 +17070,21 @@ executing: uname
 Linux
 @end example
 
+When combined with @option{-S} it is recommended to list @option{-v}
+first, e.g. @command{env -vS'string'}.
+
+@item -S @var{string}
+@itemx --split-string=@var{string}
+@opindex -S
+@opindex --split-string
+@cindex shebang arguments
+@cindex scripts arguments
+@cindex env in scripts
+process and split @var{string} into separate arguments used to pass
+multiple arguments on shebang lines.  @command{env} supports FreeBSD's
+syntax of several escape sequences and environment variable
+expansions. See below for details and examples.
+
 @end table
 
 @cindex exit status of @command{env}
@@ -17071,6 +17097,352 @@ Exit status:
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
+
+@subsection @option{-S}/@option{--split-string} usage in scripts
+
+The @option{-S}/@option{--split-string} options enable using multiple
+arguments on the first one of scripts (shebang line, @samp{#!}).
+
+When a script's interpreter is in a known location, scripts typically
+contain the absolute file name in their first line:
+
+@multitable {Python Script:} {#!/usr/bin/python3}
+@item Shell script:
+@tab
+@example
+#!/bin/sh
+echo hello
+@end example
+
+@item Perl script:
+@tab
+@example
+#!/usr/bin/perl
+print "hello\n";
+@end example
+
+@item Python script:
+@tab
+@example
+#!/usr/bin/python3
+print("hello")
+@end example
+
+@end multitable
+
+When a script's interpreter is in a non-standard location
+in the @env{PATH} environment variable, it is recommended
+to use @command{env} on the first line of the script to
+find the executable and run it:
+
+@multitable {Python Script:} {#!/usr/bin/env python3}
+@item Shell script:
+@tab
+@example
+#!/usr/bin/env bash
+echo hello
+@end example
+
+@item Perl script:
+@tab
+@example
+#!/usr/bin/env perl
+print "hello\n";
+@end example
+
+@item Python script:
+@tab
+@example
+#!/usr/bin/env python3
+print("hello")
+@end example
+
+@end multitable
+
+Most operating systems (e.g. GNU/Linux, BSDs) treat all text after the
+first space as a single argument. When using @command{env} in a script
+it is thus not possible to specify multiple arguments.
+
+In the following example:
+@example
+#!/usr/bin/env perl -T -w
+print "hello\n";
+@end example
+
+The operating system treats @samp{perl -T -w} as one argument (the
+program's name), and executing the script fails with:
+
+@example
+/usr/bin/env: 'perl -T -w': No such file or directory
+@end example
+
+The @option{-S} option instructs @command{env} to split the single string
+into multiple arguments. The following example works as expected:
+
+@example
+$ cat hello.pl
+#!/usr/bin/env -S perl -T -w
+print "hello\n";
+
+$ chmod a+x hello.pl
+$ ./hello.pl
+hello
+@end example
+
+And is equivalent to running @command{perl -T -w hello.pl} on the command line
+prompt.
+
+@unnumberedsubsubsec Testing and troubleshooting
+
+@cindex single quotes, and @command{env -S}
+@cindex @command{env -S}, and single quotes
+@cindex @option{-S}, env and single quotes
+To test @command{env -S} on the command line, use single quotes for the
+@option{-S} string to emulate a single paramter. Single quotes are not
+needed when using @command{env -S} in a shebang line on the first line of a
+script (the operating system already treats it as one argument).
+
+The following command is equivalent to the @file{hello.pl} script above:
+
+@example
+$ env -S'perl -T -w' hello.pl
+@end example
+
+@cindex @command{env -S}, debugging
+@cindex debugging, @command{env -S}
+
+To troubleshoot @option{-S} usage add the @option{-v} as the first
+argument (before @option{-S}).
+
+Using @option{-vS} on a shebang line in a script:
+
+@example
+$ cat hello-debug.pl
+#!/usr/bin/env -vS perl -T -w
+print "hello\n";
+
+$ chmod a+x hello-debug.pl
+$ ./hello-debug.pl
+split -S:  'perl -T -w'
+ into:    'perl'
+     &    '-T'
+     &    '-w'
+executing: perl
+   arg[0]= 'perl'
+   arg[1]= '-T'
+   arg[2]= '-w'
+   arg[3]= './hello-debug.pl'
+hello
+@end example
+
+Using @option{-vS} on the command line prompt (adding single quotes):
+
+@example
+$ env -vS'perl -T -w' hello-debug.pl
+split -S:  'perl -T -w'
+ into:    'perl'
+     &    '-T'
+     &    '-w'
+executing: perl
+   arg[0]= 'perl'
+   arg[1]= '-T'
+   arg[2]= '-w'
+   arg[3]= 'hello-debug.pl'
+hello
+@end example
+
+@subsection @option{-S}/@option{--split-string} syntax
+
+@unnumberedsubsubsec Splitting arguments by whitespace
+
+Running @command{env -Sstring} splits the @var{string} into
+arguments based on unquoted spaces or tab characters.
+
+In the following contrived example the @command{awk} variable
+@samp{OFS} will be @code{<space>xyz<space>} as these spaces are inside
+double quotes. The other space characters are used as argument separators:
+
+@example
+$ cat one.awk
+#!/usr/bin/env -S awk -v OFS=" xyz " -f
+BEGIN @{print 1,2,3@}
+
+$ chmod a+x one.awk
+$ ./one.awk
+1 xyz 2 xyz 3
+@end example
+
+When using @option{-S} on the command line prompt, remember to add
+single quotes around the entire string:
+
+@example
+$ env -S'awk -v OFS=" xyz " -f' one.awk
+1 xyz 2 xyz 3
+@end example
+
+@unnumberedsubsubsec Escape sequences
+
+@command{env} supports several escape sequences. These sequences
+are processed when unquoted or inside double quotes (unless otherwise noted).
+Single quotes disable escape sequences except @samp{\'} and @samp{\\}.
+
+@multitable @columnfractions .10 .90
+
+@item @code{\c}
+@tab Ignore the remaining characters in the string.
+Cannot be used inside double quotes.
+
+@item @code{\f}
+@tab form-feed character (ASCII 0x0C)
+
+@item @code{\n}
+@tab new-line character (ASCII 0x0A)
+
+@item @code{\r}
+@tab carriage-return character (ASCII 0x0D)
+
+@item @code{\t}
+@tab tab character (ASCII 0x09)
+
+@item @code{\v}
+@tab vertical tab character (ASCII 0x0B)
+
+@item @code{\#}
+@tab A hash @samp{#} character. Used when a @samp{#} character
+is needed as the first character of an argument (see 'comments' section
+below).
+
+@item @code{\$}
+@tab A dollar-sign character @samp{$}. Unescaped @samp{$} characters
+are used to expand environment variables (see 'variables' section below).
+
+@item @code{\_}
+@tab Inside double-quotes, replaced with a single space character.
+Outside quotes, treated as an argument separator. @samp{\_} can be used
+to avoid space characters in a shebang line (see examples below).
+
+@item @code{\"}
+@tab A double-quote character.
+
+@item @code{\'}
+@tab A single-quote character.
+This escape sequence works inside single-quoted strings.
+
+@item @code{\\}
+@tab A backslash character.
+This escape sequence works inside single-quoted strings.
+
+@end multitable
+
+The following @command{awk} script will use tab character as input and output
+field seperator (instead of spaces and tabs):
+
+@example
+$ cat tabs.awk
+#!/usr/bin/env -S awk -v FS="\t" -v OFS="\t" -f
+...
+@end example
+
+@unnumberedsubsubsec Comments
+
+The escape sequence @samp{\c} (used outside single/double quotes)
+causes @command{env} to ignore the rest of the string.
+
+The @samp{#} character causes @command{env} to ignore the rest of
+the string when it appears as the first character of an argument.
+Use @samp{\#} to reverse this behavior.
+
+@example
+$ env -S'printf %s\n A B C'
+A
+B
+C
+
+$ env -S'printf %s\n A# B C'
+A#
+B
+C
+
+$ env -S'printf %s\n A #B C'
+A
+
+$ env -S'printf %s\n A \#B C'
+A
+#B
+C
+
+$ env -S'printf %s\n A\cB C'
+A
+@end example
+
+NOTE: The above examples use single quotes as they are executed
+on the command-line.
+
+
+
+@unnumberedsubsubsec Environment variable expansion
+
+The pattern @samp{$@{VARNAME@}} is used to substitute a value from
+the environment variable. The pattern must include the curly braces
+(@samp{@{},@samp{@}}). Without them @command{env} will reject the string.
+Special shell variables (such as @samp{$@@}, @samp{$*}, @samp{$$}) are
+not supported.
+
+If the environment variable is empty or not set, the pattern will be replaced
+by an empty string. The value of @samp{$@{VARNAME@}} will be that of
+the executed @command{env}, before any modifications using
+@option{-i}/@option{--ignore-environment}/@option{-u}/@option{--unset} or
+setting new values using @samp{VAR=VALUE}.
+
+The following python script prepends @file{/opt/custom/modules} to the python
+module search path environment variable (@samp{PYTHONPATH}):
+
+@example
+$ cat custom.py
+#!/usr/bin/env -S PYTHONPATH=/opt/custom/modules/:$@{PYTHONPATH@} python
+print "hello"
+...
+@end example
+
+The expansion of @samp{$@{PYTHONPATH@}} is performed by @command{env},
+not by a shell. If the curly braces are omitted, @command{env} will fail:
+
+@example
+$ cat custom.py
+#!/usr/bin/env -S PYTHONPATH=/opt/custom/modules/:$PYTHONPATH python
+print "hello"
+...
+
+$ chmod a+x custom.py
+$ custom.py
+/usr/bin/env: only $@{VARNAME@} expansion is supported, error at: $PYTHONPATH @c
+python
+@end example
+
+Environment variable expansion happens before clearing the environment
+(with @option{-i}) or unsetting specific variables (with @option{-u}):
+
+@example
+$ env -S'-i OLDUSER=$@{USER@} env'
+OLDUSER=gordon
+@end example
+
+Use @option{-v} to diagnose the operations step-by-step:
+
+@example
+$ env -vS'-i OLDUSER=$@{USER@} env'
+expanding $@{USER@} into 'gordon'
+split -S:  '-i OLDUSER=$@{USER@} env'
+ into:    '-i'
+     &    'OLDUSER=gordon'
+     &    'env'
+cleaning environ
+setenv:   OLDUSER=gordon
+executing: env
+   arg[0]= 'env'
+OLDUSER=gordon
+@end example
+
 
 
 @node nice invocation

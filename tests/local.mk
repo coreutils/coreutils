@@ -290,6 +290,8 @@ all_tests =					\
   tests/misc/dircolors.pl			\
   tests/misc/dirname.pl				\
   tests/misc/env-null.sh			\
+  tests/misc/env-S.pl				\
+  tests/misc/env-S-script.sh			\
   tests/misc/expand.pl				\
   tests/misc/expr.pl				\
   tests/misc/expr-multibyte.pl			\
