@@ -190,15 +190,19 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   expr supports multibyte strings for all string operations.
 
+** Changes in behavior
+
+  tail -f now exits immediately if the output is piped and the reader of
+  the pipe terminates.  That allows `tail -f file | grep -q foo` to return
+  responsively, but does make `tail -f file | :` exit immediately without
+  waiting for data.  Instead one should now `tail -f file | grep -q .`
+
 ** Improvements
 
   mv --verbose now distinguishes rename and copy operations.
 
   stat -f -c %l, used to output the max file name length on a file system,
   is now supported on FreeBSD and OpenBSD.
-
-  tail -f now exits immediately if the output is piped
-  and the reader of the pipe terminates.
 
   tail -f no longer erroneously warns about being ineffective
   when following a single tty, as the simple blocking loop used
