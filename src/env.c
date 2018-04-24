@@ -33,6 +33,11 @@
   proper_name ("Richard Mlynarik"), \
   proper_name ("David MacKenzie")
 
+/* array of envvars to unset. */
+static const char** usvars;
+size_t usvars_alloc;
+size_t usvars_used;
+
 static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
@@ -79,6 +84,30 @@ A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
   exit (status);
 }
 
+static void
+append_unset_var (const char *var)
+{
+  if (usvars_used == usvars_alloc)
+    usvars = x2nrealloc (usvars, &usvars_alloc, sizeof *usvars);
+  usvars[usvars_used++] = var;
+}
+
+static void
+unset_envvars (void)
+{
+  for (size_t i = 0; i < usvars_used; ++i)
+    {
+      if (unsetenv (usvars[i]))
+        die (EXIT_CANCELED, errno, _("cannot unset %s"),
+             quote (usvars[i]));
+    }
+
+  IF_LINT (free (usvars));
+  IF_LINT (usvars = NULL);
+  IF_LINT (usvars_used = 0);
+  IF_LINT (usvars_alloc = 0);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -104,6 +133,7 @@ main (int argc, char **argv)
           ignore_environment = true;
           break;
         case 'u':
+          append_unset_var (optarg);
           break;
         case '0':
           opt_nul_terminate_output = true;
@@ -119,21 +149,18 @@ main (int argc, char **argv)
     }
 
   if (optind < argc && STREQ (argv[optind], "-"))
-    ignore_environment = true;
+    {
+      ignore_environment = true;
+      ++optind;
+    }
 
   if (ignore_environment)
     {
       static char *dummy_environ[] = { NULL };
       environ = dummy_environ;
     }
-
-  optind = 0;			/* Force GNU getopt to re-initialize. */
-  while ((optc = getopt_long (argc, argv, "+C:iu:0", longopts, NULL)) != -1)
-    if (optc == 'u' && unsetenv (optarg))
-      die (EXIT_CANCELED, errno, _("cannot unset %s"), quote (optarg));
-
-  if (optind < argc && STREQ (argv[optind], "-"))
-    ++optind;
+  else
+    unset_envvars ();
 
   char *eq;
   while (optind < argc && (eq = strchr (argv[optind], '=')))
