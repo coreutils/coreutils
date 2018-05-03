@@ -157,7 +157,7 @@ output_primes (const struct prime *primes, unsigned nprimes)
   printf ("#define FIRST_OMITTED_PRIME %u\n", p);
 }
 
-static void *
+static void * _GL_ATTRIBUTE_MALLOC
 xalloc (size_t s)
 {
   void *p = malloc (s);
