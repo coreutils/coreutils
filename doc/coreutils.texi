@@ -8534,7 +8534,8 @@ Equivalent to @option{--no-dereference --preserve=links}.
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force},
 when a destination file cannot be opened, @command{cp} then
-tries to recreate the file by first removing it.
+tries to recreate the file by first removing it.  Note @option{--force}
+alone will not remove symlinks that can't be traversed.
 When this option is combined with
 @option{--link} (@option{-l}) or @option{--symbolic-link}
 (@option{-s}), the destination link is replaced, and unless

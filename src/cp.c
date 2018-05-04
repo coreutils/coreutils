@@ -559,23 +559,27 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
 /* FILE is the last operand of this command.
    Return true if FILE is a directory.
-   But report an error and exit if there is a problem accessing FILE,
-   or if FILE does not exist but would have to refer to an existing
-   directory if it referred to anything at all.
 
-   If the file exists, store the file's status into *ST.
+   Without -f, report an error and exit if FILE exists
+   but can't be accessed.
+
+   If the file exists and is accessible store the file's status into *ST.
    Otherwise, set *NEW_DST.  */
 
 static bool
-target_directory_operand (char const *file, struct stat *st, bool *new_dst)
+target_directory_operand (char const *file, struct stat *st,
+                          bool *new_dst, bool forcing)
 {
   int err = (stat (file, st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st->st_mode);
   if (err)
     {
-      if (err != ENOENT)
+      if (err == ENOENT)
+        *new_dst = true;
+      else if (forcing)
+        st->st_mode = 0;  /* clear so we don't enter --backup case below.  */
+      else
         die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
-      *new_dst = true;
     }
   return is_a_dir;
 }
@@ -590,6 +594,8 @@ do_copy (int n_files, char **file, const char *target_directory,
   struct stat sb;
   bool new_dst = false;
   bool ok = true;
+  bool forcing = x->unlink_dest_before_opening
+                 || x->unlink_dest_after_failed_open;
 
   if (n_files <= !target_directory)
     {
@@ -613,12 +619,14 @@ do_copy (int n_files, char **file, const char *target_directory,
           usage (EXIT_FAILURE);
         }
       /* Update NEW_DST and SB, which may be checked below.  */
-      ignore_value (target_directory_operand (file[n_files -1], &sb, &new_dst));
+      ignore_value (target_directory_operand (file[n_files -1], &sb, &new_dst,
+                                              forcing));
     }
   else if (!target_directory)
     {
       if (2 <= n_files
-          && target_directory_operand (file[n_files - 1], &sb, &new_dst))
+          && target_directory_operand (file[n_files - 1], &sb, &new_dst,
+                                       forcing))
         target_directory = file[--n_files];
       else if (2 < n_files)
         die (EXIT_FAILURE, 0, _("target %s is not a directory"),

@@ -27,10 +27,11 @@ echo "cp: not writing through dangling symlink 'dangle'" \
 
 
 # Starting with 6.9.90, this usage fails, by default:
-cp f dangle > err 2>&1 && fail=1
-
-compare exp-err err || fail=1
-test -f no-such && fail=1
+for opt in '' '-f'; do
+  cp $opt f dangle > err 2>&1 && fail=1
+  compare exp-err err || fail=1
+  test -f no-such && fail=1
+done
 
 # But you can set POSIXLY_CORRECT to get the historical behavior.
 env POSIXLY_CORRECT=1 cp f dangle > out 2>&1 || fail=1

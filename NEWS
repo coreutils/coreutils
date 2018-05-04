@@ -24,6 +24,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously it would have set executable bits on created special files.
   [bug introduced with coreutils-8.20]
 
+  'cp --remove-destination file symlink' now removes the symlink
+  even if it can't be traversed.
+  [bug introduced with --remove-destination in fileutils-4.1.1]
+
   ls no longer truncates the abbreviated month names that have a
   display width between 6 and 12 inclusive.  Previously this would have
   output ambiguous months for Arabic or Catalan locales.
