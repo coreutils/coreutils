@@ -1627,14 +1627,9 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
         }
     }
 
-  /* It's ok to remove a destination symlink.  But that works only
-     when creating symbolic links, or when the source and destination
-     are on the same file system and when creating hard links or when
-     unlinking before opening the destination.  */
-  if (x->symbolic_link
-      || ((x->hard_link || x->unlink_dest_before_opening)
-          && S_ISLNK (dst_sb_link->st_mode)))
-    return dst_sb_link->st_dev == src_sb_link->st_dev;
+  /* It's ok to recreate a destination symlink. */
+  if (x->symbolic_link && S_ISLNK (dst_sb_link->st_mode))
+    return true;
 
   if (x->dereference == DEREF_NEVER)
     {
@@ -1651,10 +1646,13 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       if ( ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
         return true;
 
-      /* FIXME: shouldn't this be testing whether we're making symlinks?  */
       if (x->hard_link)
         {
-          *return_now = true;
+          /* It's ok to attempt to hardlink the same file,
+            and return early if not replacing a symlink.
+            Note we need to return early to avoid a later
+            unlink() of DST (when SRC is a symlink).  */
+          *return_now = ! S_ISLNK (dst_sb_link->st_mode);
           return true;
         }
     }

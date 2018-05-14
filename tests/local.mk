@@ -113,6 +113,7 @@ all_root_tests =				\
   tests/cp/cp-mv-enotsup-xattr.sh		\
   tests/cp/capability.sh			\
   tests/cp/sparse-fiemap.sh			\
+  tests/cp/cross-dev-symlink.sh			\
   tests/dd/skip-seek-past-dev.sh		\
   tests/df/problematic-chars.sh			\
   tests/df/over-mount-device.sh			\

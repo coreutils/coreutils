@@ -47,7 +47,7 @@ contents=XYZ
 for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' \
             'foo hardlink' 'hlsl sl2'; do
   for options in '' -d -f -df --rem -b -bd -bf -bdf \
-                 -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
+                 -l -dl -fl -dfl -bl -bdl -bfl -bdfl -s -sf; do
     case $args$options in
       # These tests are not portable.
       # They all involve making a hard link to a symbolic link.
@@ -100,6 +100,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' \
         # and put brackets around the output.
         if test -s _err; then
           sed '
+            s/symbolic link/symlink/
             s/^[^:]*:\([^:]*\).*/cp:\1/
             1s/^/[/
             $s/$/]/
@@ -149,6 +150,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bdl (foo symlink symlink.~1~ -> foo)
 0 -bfl (foo symlink symlink.~1~ -> foo)
 0 -bdfl (foo symlink symlink.~1~ -> foo)
+1 -s [cp: cannot create symlink 'symlink' to 'foo'] (foo symlink -> foo)
+0 -sf (foo symlink -> foo)
 
 1 [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
 1 -d [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
@@ -164,6 +167,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -fl (foo symlink -> foo)
 0 -bl (foo symlink -> foo)
 0 -bfl (foo symlink -> foo)
+1 -s [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
+1 -sf [cp: 'symlink' and 'foo' are the same file] (foo symlink -> foo)
 
 1 [cp: 'foo' and 'foo' are the same file] (foo)
 1 -d [cp: 'foo' and 'foo' are the same file] (foo)
@@ -182,6 +187,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bdl (foo)
 0 -bfl (foo foo.~1~)
 0 -bdfl (foo foo.~1~)
+1 -s [cp: 'foo' and 'foo' are the same file] (foo)
+1 -sf [cp: 'foo' and 'foo' are the same file] (foo)
 
 1 [cp: 'sl1' and 'sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
 0 -d (foo sl1 -> foo sl2 -> foo)
@@ -196,6 +203,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -fl (foo sl1 -> foo sl2)
 0 -bl (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bfl (foo sl1 -> foo sl2 sl2.~1~ -> foo)
+1 -s [cp: cannot create symlink 'sl2' to 'sl1'] (foo sl1 -> foo sl2 -> foo)
+0 -sf (foo sl1 -> foo sl2 -> sl1)
 
 1 [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
 1 -d [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
@@ -214,6 +223,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bdl (foo hardlink)
 0 -bfl (foo hardlink)
 0 -bdfl (foo hardlink)
+1 -s [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
+1 -sf [cp: 'foo' and 'hardlink' are the same file] (foo hardlink)
 
 1 [cp: 'hlsl' and 'sl2' are the same file] (foo hlsl -> foo sl2 -> foo)
 0 -d (foo hlsl -> foo sl2 -> foo)
@@ -232,6 +243,8 @@ cat <<\EOF | sed "$remove_these_sed" > expected
 0 -bdl (foo hlsl -> foo sl2 -> foo)
 0 -bfl (foo hlsl -> foo sl2 sl2.~1~ -> foo)
 0 -bdfl (foo hlsl -> foo sl2 -> foo)
+1 -s [cp: cannot create symlink 'sl2' to 'hlsl'] (foo hlsl -> foo sl2 -> foo)
+0 -sf (foo hlsl -> foo sl2 -> hlsl)
 
 EOF
 
