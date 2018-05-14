@@ -295,7 +295,7 @@ main (int argc, char **argv)
   else
     {
       char *group_name = argv[optind++];
-      chopt.group_name = (*group_name ? group_name : NULL);
+      chopt.group_name = (*group_name ? xstrdup (group_name) : NULL);
       gid = parse_group (group_name);
     }
 
@@ -313,7 +313,7 @@ main (int argc, char **argv)
                     (uid_t) -1, gid,
                     (uid_t) -1, (gid_t) -1, &chopt);
 
-  chopt_free (&chopt);
+  IF_LINT (chopt_free (&chopt));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

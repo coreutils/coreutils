@@ -66,6 +66,13 @@ chopt_init (struct Chown_option *chopt)
   chopt->group_name = NULL;
 }
 
+extern void
+chopt_free (struct Chown_option *chopt)
+{
+  free (chopt->user_name);
+  free (chopt->group_name);
+}
+
 /* Convert the numeric group-id, GID, to a string stored in xmalloc'd memory,
    and return it.  If there's no corresponding group name, use the decimal
    representation of the ID.  */

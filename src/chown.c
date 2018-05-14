@@ -306,7 +306,7 @@ main (int argc, char **argv)
          empty string so that diagnostics say "ownership :GROUP"
          rather than "group GROUP".  */
       if (!chopt.user_name && chopt.group_name)
-        chopt.user_name = bad_cast ("");
+        chopt.user_name = xstrdup ("");
 
       optind++;
     }
@@ -325,7 +325,7 @@ main (int argc, char **argv)
                     uid, gid,
                     required_uid, required_gid, &chopt);
 
-  chopt_free (&chopt);
+  IF_LINT (chopt_free (&chopt));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

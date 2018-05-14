@@ -68,9 +68,8 @@ struct Chown_option
 void
 chopt_init (struct Chown_option *);
 
-/* Deliberately do not free chopt->user_name or ->group_name.
-   They're not always allocated.  */
-# define chopt_free(chopt)
+void
+chopt_free (struct Chown_option *);
 
 char *
 gid_to_name (gid_t) _GL_ATTRIBUTE_MALLOC;
