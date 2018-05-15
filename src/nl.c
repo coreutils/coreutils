@@ -205,23 +205,28 @@ Write each FILE to standard output, with line numbers added.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.\n\
-CC are two delimiter characters used to construct logical page delimiters,\n\
-a missing second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
+Default options are: -bt -d'\\:' -fn -hn -i1 -l1 -n'rn' -s<TAB> -v1 -w6\n\
+\n\
+CC are two delimiter characters used to construct logical page delimiters;\n\
+a missing second character implies ':'.\n\
 "), stdout);
       fputs (_("\
 \n\
-  a         number all lines\n\
-  t         number only nonempty lines\n\
-  n         number no lines\n\
-  pBRE      number only lines that contain a match for the basic regular\n\
-            expression, BRE\n\
+STYLE is one of:\n\
+\n\
+  a      number all lines\n\
+  t      number only nonempty lines\n\
+  n      number no lines\n\
+  pBRE   number only lines that contain a match for the basic regular\n\
+         expression, BRE\n\
+"), stdout);
+      fputs (_("\
 \n\
 FORMAT is one of:\n\
 \n\
-  ln   left justified, no leading zeros\n\
-  rn   right justified, no leading zeros\n\
-  rz   right justified, leading zeros\n\
+  ln     left justified, no leading zeros\n\
+  rn     right justified, no leading zeros\n\
+  rz     right justified, leading zeros\n\
 \n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
