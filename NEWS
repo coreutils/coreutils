@@ -39,6 +39,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   now silently does nothing if A exists.
   [bug introduced with coreutils-7.1]
 
+** Changes in behavior
+
+  'cp --force file symlink' now removes the symlink even if
+  it is self referential.
 
 ** Improvements
 

@@ -28,15 +28,24 @@ echo "cp: not writing through dangling symlink 'dangle'" \
 
 # Starting with 6.9.90, this usage fails, by default:
 for opt in '' '-f'; do
-  cp $opt f dangle > err 2>&1 && fail=1
+  returns_ 1 cp $opt f dangle > err 2>&1 || fail=1
   compare exp-err err || fail=1
   test -f no-such && fail=1
 done
 
+
 # But you can set POSIXLY_CORRECT to get the historical behavior.
 env POSIXLY_CORRECT=1 cp f dangle > out 2>&1 || fail=1
 cat no-such >> out || fail=1
-
 compare exp out || fail=1
+
+
+# Starting with 8.30 we treat ELOOP as existing and so
+# remove the symlink
+ln -s loop loop || framework_failure_
+cp -f f loop > err 2>&1 || fail=1
+compare /dev/null err || fail=1
+compare exp loop || fail=1
+test -f loop || fail=1
 
 Exit $fail

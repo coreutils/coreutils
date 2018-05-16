@@ -1949,12 +1949,15 @@ copy_internal (char const *src_name, char const *dst_name,
             }
           else
             {
-              if (errno != ENOENT)
+              if (errno == ELOOP && x->unlink_dest_after_failed_open)
+                /* leave new_dst=false so we unlink later.  */;
+              else if (errno != ENOENT)
                 {
                   error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
                   return false;
                 }
-              new_dst = true;
+              else
+                new_dst = true;
             }
         }
 
