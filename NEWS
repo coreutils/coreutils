@@ -55,6 +55,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   version of XFS.  stat -f --format=%T now reports the file system type,
   and tail -f uses inotify.
 
+  wc avoids redundant processing of ASCII text in multibyte locales,
+  which is especially significant on macOS.
+
 
 * Noteworthy changes in release 8.29 (2017-12-27) [stable]
 

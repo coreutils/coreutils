@@ -379,6 +379,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
             {
               wchar_t wide_char;
               size_t n;
+              bool wide = true;
 
               if (!in_shift && is_basic (*p))
                 {
@@ -386,6 +387,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                      mbrtowc().  */
                   n = 1;
                   wide_char = *p;
+                  wide = false;
                 }
               else
                 {
@@ -419,9 +421,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                       n = 1;
                     }
                 }
-              p += n;
-              bytes_read -= n;
-              chars++;
+
               switch (wide_char)
                 {
                 case '\n':
@@ -445,17 +445,33 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   in_word = false;
                   break;
                 default:
-                  if (iswprint (wide_char))
+                  if (wide && iswprint (wide_char))
                     {
-                      int width = wcwidth (wide_char);
-                      if (width > 0)
-                        linepos += width;
+                      /* wcwidth can be expensive on OSX for example,
+                         so avoid if uneeded.  */
+                      if (print_linelength)
+                        {
+                          int width = wcwidth (wide_char);
+                          if (width > 0)
+                            linepos += width;
+                        }
                       if (iswspace (wide_char))
+                        goto mb_word_separator;
+                      in_word = true;
+                    }
+                  else if (!wide && isprint (to_uchar (*p)))
+                    {
+                      linepos++;
+                      if (isspace (to_uchar (*p)))
                         goto mb_word_separator;
                       in_word = true;
                     }
                   break;
                 }
+
+              p += n;
+              bytes_read -= n;
+              chars++;
             }
           while (bytes_read > 0);
 
