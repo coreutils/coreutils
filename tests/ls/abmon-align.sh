@@ -19,8 +19,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+mid_month="$(date +%Y-%m-15)" || framework_failure_
 for mon in $(seq -w 12); do
-    touch -d"+$mon month" $mon.ts || framework_failure_
+    touch -d"$mid_month +$mon month" $mon.ts || framework_failure_
 done
 
 
