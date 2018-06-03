@@ -17,8 +17,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced with coreutils-7.1]
 
   'cp -a --no-preserve=mode' now sets appropriate default permissions
-  for non regular files like fifos and character device nodes etc.
-  Previously it would have set executable bits on created special files.
+  for non regular files like fifos and character device nodes etc.,
+  and leaves mode bits of existing files unchanged.
+  Previously it would have set executable bits on created special files,
+  and set mode bits for existing files as if they had been created.
   [bug introduced with coreutils-8.20]
 
   'cp --remove-destination file symlink' now removes the symlink

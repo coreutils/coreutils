@@ -21,29 +21,29 @@ print_ver_ cp
 
 get_mode() { stat -c%f "$1"; }
 
-rm -f a b c
-umask 0022
-touch a
-touch b
-chmod 600 b
+umask 0022 || framework_failure_
 
 #regular file test
+touch a b || framework_failure_
+chmod 600 b || framework_failure_
 cp --no-preserve=mode b c || fail=1
 test "$(get_mode a)" = "$(get_mode c)" || fail=1
 
-rm -rf d1 d2 d3
-mkdir d1 d2
-chmod 705 d2
+#existing destination test
+chmod 600 c || framework_failure_
+cp --no-preserve=mode a b || fail=1
+test "$(get_mode b)" = "$(get_mode c)" || fail=1
 
 #directory test
+mkdir d1 d2 || framework_failure_
+chmod 705 d2 || framework_failure_
 cp --no-preserve=mode -r d2 d3 || fail=1
 test "$(get_mode d1)" = "$(get_mode d3)" || fail=1
 
-rm -f a b c
-touch a
-chmod 600 a
-
 #contradicting options test
+rm -f a b || framework_failure_
+touch a || framework_failure_
+chmod 600 a || framework_failure_
 cp --no-preserve=mode --preserve=all a b || fail=1
 test "$(get_mode a)" = "$(get_mode b)" || fail=1
 

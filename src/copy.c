@@ -1379,7 +1379,7 @@ preserve_metadata:
       if (set_acl (dst_name, dest_desc, x->mode) != 0)
         return_val = false;
     }
-  else if (x->explicit_no_preserve_mode)
+  else if (x->explicit_no_preserve_mode && *new_dst)
     {
       if (set_acl (dst_name, dest_desc, MODE_RW_UGO & ~cached_umask ()) != 0)
         return_val = false;
@@ -2862,7 +2862,7 @@ copy_internal (char const *src_name, char const *dst_name,
       if (set_acl (dst_name, -1, x->mode) != 0)
         return false;
     }
-  else if (x->explicit_no_preserve_mode)
+  else if (x->explicit_no_preserve_mode && new_dst)
     {
       int default_permissions = S_ISDIR (src_mode) || S_ISSOCK (src_mode)
                                 ? S_IRWXUGO : MODE_RW_UGO;
