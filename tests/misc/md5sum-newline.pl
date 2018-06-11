@@ -30,10 +30,12 @@ system ('touch', "a\nb") == 0
 
 my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
 my $t = '--text';
+my $z = '--zero';
 
 my @Tests =
     (
      ['newline', $t, {IN=> {"a\nb"=> ''}}, {OUT=>"\\$degenerate  a\\nb\n"}],
+     ['zero', $z, {IN=> {"a\nb"=> ''}}, {OUT=>"$degenerate  a\nb\0"}],
     );
 
 my $save_temps = $ENV{DEBUG};

@@ -157,6 +157,9 @@ static bool strict = false;
 /* Whether a BSD reversed format checksum is detected.  */
 static int bsd_reversed = -1;
 
+/* line delimiter.  */
+static unsigned char delim = '\n';
+
 #if HASH_ALGO_BLAKE2
 static char const *const algorithm_in_string[] =
 {
@@ -210,6 +213,7 @@ static struct option const long_options[] =
   { "warn", no_argument, NULL, 'w' },
   { "strict", no_argument, NULL, STRICT_OPTION },
   { "tag", no_argument, NULL, TAG_OPTION },
+  { "zero", no_argument, NULL, 'z' },
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
@@ -261,6 +265,10 @@ Print or check %s (%d-bit) checksums.\n\
       else
         fputs (_("\
   -t, --text           read in text mode (default)\n\
+"), stdout);
+      fputs (_("\
+  -z, --zero           end each output line with NUL, not newline,\n\
+                       and disable file name escaping\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -875,10 +883,10 @@ main (int argc, char **argv)
   setvbuf (stdout, NULL, _IOLBF, 0);
 
 #if HASH_ALGO_BLAKE2
-  const char* short_opts = "l:bctw";
+  const char* short_opts = "l:bctwz";
   const char* b2_length_str = "";
 #else
-  const char* short_opts = "bctw";
+  const char* short_opts = "bctwz";
 #endif
 
   while ((opt = getopt_long (argc, argv, short_opts, long_options, NULL)) != -1)
@@ -930,6 +938,9 @@ main (int argc, char **argv)
         prefix_tag = true;
         binary = 1;
         break;
+      case 'z':
+        delim = '\0';
+        break;
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
@@ -963,6 +974,13 @@ main (int argc, char **argv)
      error (0, 0, _("--tag does not support --text mode"));
      usage (EXIT_FAILURE);
    }
+
+  if (delim != '\n' && do_check)
+    {
+      error (0, 0, _("the --zero option is not supported when "
+                     "verifying checksums"));
+      usage (EXIT_FAILURE);
+    }
 
   if (prefix_tag && do_check)
     {
@@ -1043,7 +1061,8 @@ main (int argc, char **argv)
                  against old (hashed) outputs, in the presence of files
                  containing '\\' characters, we decided to not simplify the
                  output in this case.  */
-              bool needs_escape = strchr (file, '\\') || strchr (file, '\n');
+              bool needs_escape = (strchr (file, '\\') || strchr (file, '\n'))
+                                  && delim == '\n';
 
               if (prefix_tag)
                 {
@@ -1079,7 +1098,7 @@ main (int argc, char **argv)
                   print_filename (file, needs_escape);
                 }
 
-              putchar ('\n');
+              putchar (delim);
             }
         }
     }

@@ -46,6 +46,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cp --force file symlink' now removes the symlink even if
   it is self referential.
 
+** New features
+
+  md5sum accepts a new option: --zero (-z) to delimit the output lines with a
+  NUL instead of a newline character.  This also disables file name escaping.
+  This also applies to sha*sum and b2sum.
+
 ** Improvements
 
   cut supports line lengths up to the max file size on 32 bit systems.
