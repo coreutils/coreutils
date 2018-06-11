@@ -56,6 +56,10 @@ struct rm_options
      and preserving '/'.  Otherwise NULL.  */
   struct dev_ino *root_dev_ino;
 
+  /* If true, do not traverse into (or remove) any directory that is
+     the root of a file system.  I.e., a separate device.  */
+  bool preserve_all_root;
+
   /* If nonzero, stdin is a tty.  */
   bool stdin_tty;
 

@@ -24,6 +24,7 @@
 #include "system.h"
 #include "error.h"
 #include "file-type.h"
+#include "filenamecat.h"
 #include "ignore-value.h"
 #include "remove.h"
 #include "root-dev-ino.h"
@@ -458,6 +459,40 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
               ROOT_DEV_INO_WARN (ent->fts_path);
               fts_skip_tree (fts, ent);
               return RM_ERROR;
+            }
+
+          /* If a command line argument is a mount point and
+             --preserve-root=all is in effect, diagnose and skip it.
+             This doesn't handle "/", but that's handled above.  */
+          if (x->preserve_all_root)
+            {
+              bool failed = false;
+              char *parent = file_name_concat (ent->fts_accpath, "..", NULL);
+              struct stat statbuf;
+
+              if (!parent || lstat (parent, &statbuf))
+                {
+                  error (0, 0,
+                         _("failed to stat %s: skipping %s"),
+                         quoteaf_n (0, parent),
+                         quoteaf_n (1, ent->fts_accpath));
+                  failed = true;
+                }
+
+              free (parent);
+
+              if (failed || fts->fts_dev != statbuf.st_dev)
+                {
+                  if (! failed)
+                    {
+                      error (0, 0,
+                             _("skipping %s, since it's on a different device"),
+                             quoteaf (ent->fts_path));
+                      error (0, 0, _("and --preserve-root=all is in effect"));
+                    }
+                  fts_skip_tree (fts, ent);
+                  return RM_ERROR;
+                }
             }
         }
 

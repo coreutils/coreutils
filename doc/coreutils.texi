@@ -9818,7 +9818,6 @@ removal is requested.  Equivalent to @option{-I}.
 @cindex one file system, restricting @command{rm} to
 When removing a hierarchy recursively, skip any directory that is on a
 file system different from that of the corresponding command line argument.
-
 @cindex bind mount
 This option is useful when removing a build ``chroot'' hierarchy,
 which normally contains no valuable data.  However, it is not uncommon
@@ -9831,14 +9830,18 @@ Use the @option{--one-file-system} option, and it will
 warn about and skip directories on other file systems.
 Of course, this will not save your @file{/home} if it and your
 chroot happen to be on the same file system.
+See also @option{--preserve-root=all} to protect command line arguments
+themselves.
 
-@item --preserve-root
+@item --preserve-root [=all]
 @opindex --preserve-root
 @cindex root directory, disallow recursive destruction
 Fail upon any attempt to remove the root directory, @file{/},
 when used with the @option{--recursive} option.
 This is the default behavior.
 @xref{Treating / specially}.
+When @samp{all} is specified, reject any command line argument
+that is not on the same file system as its parent.
 
 @item --no-preserve-root
 @opindex --no-preserve-root

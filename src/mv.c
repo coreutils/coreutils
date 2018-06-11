@@ -99,6 +99,8 @@ rm_option_init (struct rm_options *x)
       die (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
            quoteaf ("/"));
   }
+
+  x->preserve_all_root = false;
 }
 
 static void

@@ -63,6 +63,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   NUL instead of a newline character.  This also disables file name escaping.
   This also applies to sha*sum and b2sum.
 
+  rm --preserve-root now supports the --preserve-root=all option to
+  reject any command line argument that is mounted to a separate file system.
+
 ** Improvements
 
   cut supports line lengths up to the max file size on 32 bit systems.
