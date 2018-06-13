@@ -376,10 +376,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [-T] TARGET LINK_NAME   (1st form)\n\
-  or:  %s [OPTION]... TARGET                  (2nd form)\n\
-  or:  %s [OPTION]... TARGET... DIRECTORY     (3rd form)\n\
-  or:  %s [OPTION]... -t DIRECTORY TARGET...  (4th form)\n\
+Usage: %s [OPTION]... [-T] TARGET LINK_NAME\n\
+  or:  %s [OPTION]... TARGET\n\
+  or:  %s [OPTION]... TARGET... DIRECTORY\n\
+  or:  %s [OPTION]... -t DIRECTORY TARGET...\n\
 "),
               program_name, program_name, program_name, program_name);
       fputs (_("\
