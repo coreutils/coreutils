@@ -6,14 +6,14 @@ test \- check file types and compare values
 .br
 .B test
 .br
-.\" Quote the square brackets to help doclifter (Bug#31803).
-.B "["
+.\" \& tells doclifter the brackets are literal (Bug#31803).
+.B [\&
 .I EXPRESSION
-.B "]"
+.B ]\&
 .br
-.B "[ ]"
+.B "[\& ]\&"
 .br
-.B "["
+.B [\&
 .I OPTION
 [DESCRIPTION]
 .\" Add any additional description here
