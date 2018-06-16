@@ -4761,13 +4761,29 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
     {
       /* Test if NAME has a recognized suffix.  */
 
+
+//ZONE DE MODIFICATIONS : 
+//On utilise le ls dans l'archive coreutils directement (on aurait pu utiliser un aliase)
+//make au niveau de coreutils, puis cd /src, ./ls, ./ls --color
+
+
+
       len = strlen (name);
       name += len;		/* Pointer to final \0.  */
       for (ext = color_ext_list; ext != NULL; ext = ext->next)
         {
+            char *tmp; //Cette variable temporaire représente le lowercase du char UNIQUEMENT pendant la comparaison sans modifier la valeur originale "name"
+            tmp = malloc(sizeof(char) * strlen(name - ext->ext.len) + 1); //allocation mémoire de la taille de name - la taille de l'extension 
+            strcpy(tmp, name - ext->ext.len);//on mets la chaîne originale à comparer dans tmp 
+            for (int i = 0; i <= strlen(tmp); i++)
+            {
+                if (tmp[i] >= 65 && tmp[i] <= 90)//Lowercase de la chaîne originale (ASCII)
+                    tmp[i] = tmp[i] + 32;
+            }
+
           if (ext->ext.len <= len
-              && STREQ_LEN (name - ext->ext.len, ext->ext.string,
-                            ext->ext.len))
+              && STREQ_LEN (tmp, ext->ext.string,
+                            ext->ext.len))//On remplace la chaine originale par le tmp en minuscule parce que la liste chainée d'extension connait .jpg en minuscule
             break;
         }
     }
