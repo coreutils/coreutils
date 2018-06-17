@@ -46,6 +46,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cp --force file symlink' now removes the symlink even if
   it is self referential.
 
+  ls --color now matches file extensions case insensitively.
+
 ** New features
 
   md5sum accepts a new option: --zero (-z) to delimit the output lines with a

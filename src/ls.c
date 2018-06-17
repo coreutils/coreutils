@@ -86,6 +86,7 @@
 
 #include "acl.h"
 #include "argmatch.h"
+#include "c-strcase.h"
 #include "dev-ino.h"
 #include "die.h"
 #include "error.h"
@@ -4766,8 +4767,8 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
       for (ext = color_ext_list; ext != NULL; ext = ext->next)
         {
           if (ext->ext.len <= len
-              && STREQ_LEN (name - ext->ext.len, ext->ext.string,
-                            ext->ext.len))
+              && c_strncasecmp (name - ext->ext.len, ext->ext.string,
+                                ext->ext.len) == 0)
             break;
         }
     }
