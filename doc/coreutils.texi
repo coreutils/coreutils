@@ -8743,6 +8743,9 @@ then report the failure for each file and exit with a failure status.
 @item auto
 If the copy-on-write operation is not supported then fall back
 to the standard copy behavior.
+
+@item never
+Disable copy-on-write operation and use the standard copy behavior.
 @end table
 
 This option is overridden by the @option{--link}, @option{--symbolic-link}

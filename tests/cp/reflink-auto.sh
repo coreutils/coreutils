@@ -38,4 +38,8 @@ test -s b || fail=1
 cp --reflink=auto --sparse=always "$a_other" b || fail=1
 test -s b || fail=1
 
+# --reflink=auto should be overridden by --reflink=never
+cp --reflink=auto --reflink=never "$a_other" b || fail=1
+test -s b || fail=1
+
 Exit $fail

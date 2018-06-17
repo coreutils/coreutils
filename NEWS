@@ -50,6 +50,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp --reflink now supports --reflink=never to enforce a standard copy.
+
   env supports a new -v/--debug option to show verbose information about
   each processing step.
 

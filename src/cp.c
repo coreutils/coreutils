@@ -96,11 +96,11 @@ ARGMATCH_VERIFY (sparse_type_string, sparse_type);
 
 static char const *const reflink_type_string[] =
 {
-  "auto", "always", NULL
+  "auto", "always", "never", NULL
 };
 static enum Reflink_type const reflink_type[] =
 {
-  REFLINK_AUTO, REFLINK_ALWAYS
+  REFLINK_AUTO, REFLINK_ALWAYS, REFLINK_NEVER
 };
 ARGMATCH_VERIFY (reflink_type_string, reflink_type);
 
@@ -235,10 +235,13 @@ corresponding DEST file is made sparse as well.  That is the behavior\n\
 selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n\
 file whenever the SOURCE file contains a long enough sequence of zero bytes.\n\
 Use --sparse=never to inhibit creation of sparse files.\n\
+"), stdout);
+      fputs (_("\
 \n\
 When --reflink[=always] is specified, perform a lightweight copy, where the\n\
 data blocks are copied only when modified.  If this is not possible the copy\n\
 fails, or if --reflink=auto is specified, fall back to a standard copy.\n\
+Use --reflink=never to ensure a standard copy is performed.\n\
 "), stdout);
       emit_backup_suffix_note ();
       fputs (_("\
