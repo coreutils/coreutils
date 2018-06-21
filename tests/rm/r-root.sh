@@ -36,12 +36,18 @@ require_gcc_shared_
 # used later in the unlinkat() wrapper.
 unset CU_TEST_SKIP_EXIT
 
-# Use gdb to provide further protection by limiting calls to unlinkat().
-( timeout 10s gdb --version ) > gdb.out 2>&1
-case $(cat gdb.out) in
+# Set this to 0 if you don't have a working gdb but would
+# still like to run the test
+USE_GDB=1
+
+if test $USE_GDB = 1; then
+  # Use gdb to provide further protection by limiting calls to unlinkat().
+  ( timeout 10s gdb --version ) > gdb.out 2>&1
+  case $(cat gdb.out) in
     *'GNU gdb'*) ;;
     *) skip_ "can't run gdb";;
-esac
+  esac
+fi
 
 # Break on a line rather than a symbol, to cater for inline functions
 break_src="$abs_top_srcdir/src/remove.c"
@@ -131,14 +137,20 @@ exercise_rm_r_root ()
     skip_exit='CU_TEST_SKIP_EXIT=1'
   fi
 
-  gdb -nx --batch-silent -return-child-result				\
-    --eval-command="set exec-wrapper					\
-                     env 'LD_PRELOAD=$LD_PRELOAD:./k.so' $skip_exit"	\
-    --eval-command="break '$break_line'"				\
-    --eval-command='source bp.py'					\
-    --eval-command="run -rv --one-file-system $*"			\
-    --eval-command='quit'						\
-    rm < /dev/null > out 2> err.t
+  if test $USE_GDB = 1; then
+    gdb -nx --batch-silent -return-child-result				\
+      --eval-command="set exec-wrapper					\
+                       env 'LD_PRELOAD=$LD_PRELOAD:./k.so' $skip_exit"	\
+      --eval-command="break '$break_line'"				\
+      --eval-command='source bp.py'					\
+      --eval-command="run -rv --one-file-system $*"			\
+      --eval-command='quit'						\
+      rm < /dev/null > out 2> err.t
+  else
+    touch excise.break
+    env LD_PRELOAD=$LD_PRELOAD:./k.so $skip_exit \
+      rm -rv --one-file-system $* < /dev/null > out 2> err.t
+  fi
 
   ret=$?
 
