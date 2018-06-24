@@ -170,6 +170,9 @@
 /src/coreutils_shebangs
 /src/cu-progs.mk
 /src/fs-latest-magic.h
+/src/fs-def
+/src/fs-kernel-magic
+/src/fs-magic
 /src/libsinglebin_*.a
 /src/make-prime-list
 /src/primes.h

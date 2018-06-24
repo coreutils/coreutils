@@ -523,6 +523,7 @@ fs_normalize_perl_subst =			\
   -e 's/MINIX2_SUPER_MAGIC2\b/MINIX_V2_30/;'	\
   -e 's/MINIX3_SUPER_MAGIC\b/MINIX_V3/;'	\
   -e 's/CIFS_MAGIC_NUMBER/CIFS/;'		\
+  -e 's/AFS_FS/KAFS/;'				\
   -e 's/(_SUPER)?_MAGIC//;'			\
   -e 's/\s+0x(\S+)/" 0x" . uc $$1/e;'		\
   -e 's/(\s+0x)(\X{3})\b/$${1}0$$2/;'		\
