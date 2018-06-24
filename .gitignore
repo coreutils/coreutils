@@ -45,7 +45,10 @@
 /lib/.dirstamp
 /lib/.gitignore
 /lib/alloca.h
+/lib/arg-nonnull.h
 /lib/arpa/inet.h
+/lib/byteswap.h
+/lib/c++defs.h
 /lib/charset.alias
 /lib/config.h
 /lib/config.hin
@@ -104,7 +107,9 @@
 /lib/unitypes.h
 /lib/uniwidth
 /lib/uniwidth.h
+/lib/unused-parameter.h
 /lib/utime.h
+/lib/warn-on-use.h
 /lib/wchar.h
 /lib/wctype.h
 /m4/.cvsignore
