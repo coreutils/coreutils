@@ -113,7 +113,7 @@ mpz_tdiv_r (mpz_t r, mpz_t a0, mpz_t b0)
   /* Some x86-style hosts raise an exception for INT_MIN % -1.  */
   r[0] = a < - INTMAX_MAX && b == -1 ? 0 : a % b;
 }
-static char *
+static char * _GL_ATTRIBUTE_MALLOC
 mpz_get_str (char const *str, int base, mpz_t z)
 {
   (void) str; (void) base;
