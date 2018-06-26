@@ -16,7 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use strict;
-use Data::Dumper;
 
 my $limits = getlimits ();
 
