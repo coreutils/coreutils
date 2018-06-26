@@ -20,9 +20,25 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ env
 print_ver_ printf
+require_perl_
 
 # a shortcut to avoid long lines
 dir="$abs_top_builddir/src"
+
+cat <<EOF > shebang || framework_failure_
+#!$SHELL
+EOF
+cat <<\EOF >> shebang || framework_failure_
+# Execute a script as per 3 argument shebang
+# but without length limits (127 on Linux for example).
+script="$1"; shift
+shebang=$(sed -n 's/^#!//p;q' < "$script")
+interp=$(printf '%s' "$shebang" | cut -d' ' -f1)
+rest=$(printf '%s' "$shebang" | cut -s -d' ' -f2-)
+test "$rest" && exec "$interp" "$rest" "$script" "$@"
+exec "$interp" "$script" "$@"
+EOF
+chmod a+x shebang || framework_failure_
 
 # A simple shebang program to call our new "env"
 printf "#!$dir/env sh\necho hello\n" > env_test || framework_failure_
@@ -30,18 +46,7 @@ chmod a+x env_test || framework_failure_
 
 # Verify we can run the shebang which is not the case if
 # there are spaces in $abs_top_builddir.
-./env_test || skip_ "Error running env_test script"
-
-
-# This script (without -S) should not work if the OS does not
-# support multiple arguments on the shebang line.
-# Ignoring the absolute paths, the script is:
-#     #!env printf x%sx\n A B
-printf "#!$dir/env $dir/printf "'x%%sx\\n A B\n' > env_bad ||
-  framework_failure_
-chmod a+x env_bad || framework_failure_
-returns_ 127 ./env_bad ||
-  warn_ 'Note: OS natively accepts multiple arguments on shebang line'
+./shebang ./env_test || skip_ "Error running env_test script"
 
 # env should execute 'printf' with 7 parameters:
 # 'x%sx\n', 'A', 'B' from the "-S" argument,
@@ -58,7 +63,7 @@ xCx
 xDx
 xE Fx
 EOF
-./env1 C D "E F" > out1 || fail=1
+./shebang ./env1 C D "E F" > out1 || fail=1
 compare exp1 out1 || fail=1
 
 
@@ -73,7 +78,7 @@ cat<<\EOF>exp2 || framework_failure_
 xA Bx
 x./env2x
 EOF
-./env2 > out2 || fail=1
+./shebang ./env2 > out2 || fail=1
 compare exp2 out2 || fail=1
 
 
@@ -88,7 +93,7 @@ xYx
 x./env3x
 xWx
 EOF
-./env3 W > out3 || fail=1
+./shebang ./env3 W > out3 || fail=1
 compare exp3 out3 || fail=1
 
 
@@ -104,7 +109,7 @@ xA#Bx
 x./env4x
 xZx
 EOF
-./env4 Z > out4 || fail=1
+./shebang ./env4 Z > out4 || fail=1
 compare exp4 out4 || fail=1
 
 
@@ -119,7 +124,7 @@ chmod a+x env5 || framework_failure_
 cat<<\EOF>exp5 || framework_failure_
 hello
 EOF
-./env5 > out5 || fail=1
+./shebang ./env5 > out5 || fail=1
 compare exp5 out5 || fail=1
 
 
@@ -134,7 +139,7 @@ compare exp5 out5 || fail=1
 chmod a+x env6 || framework_failure_
 # Note: the perl script does not output a newline.
 printf "env6" > exp6 || framework_failure_
-./env6 > out6 || fail=1
+./shebang ./env6 > out6 || fail=1
 compare exp6 out6 || fail=1
 
 
