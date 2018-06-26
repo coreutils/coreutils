@@ -28,7 +28,7 @@ TEST_EXTENSIONS = .sh .pl .xpl
 if HAVE_PERL
 TESTSUITE_PERL = $(PERL)
 else
-TESTSUITE_PERL = $(SHELL) $(srcdir)/no-perl
+TESTSUITE_PERL = $(SHELL) $(srcdir)/tests/no-perl
 endif
 
 # Options passed to the perl invocations running the perl test scripts.
