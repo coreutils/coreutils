@@ -48,7 +48,7 @@ static bool dev_debug;
 static char *varname;
 static size_t vnlen;
 
-static char const shortopts[] = "+C:iS:u:v0 \t-";
+static char const shortopts[] = "+C:iS:u:v0 \t";
 
 static struct option const longopts[] =
 {
@@ -566,14 +566,12 @@ main (int argc, char **argv)
           break;
         case ' ':
         case '\t':
-        case '-':
           /* Space,tab,dash are undocumented options. Attempt to detect
              incorrect shebang usage with extraneous space, e.g.:
                 #!/usr/bin/env -i command
              In which case argv[1] == "-i command".  */
           error (0, 0, _("invalid option -- '%c'"), optc);
-          if (argc == 3)
-            error (0, 0, _("use -[v]S to pass options in shebang lines"));
+          error (0, 0, _("use -[v]S to pass options in shebang lines"));
           usage (EXIT_CANCELED);
 
         case_GETOPT_HELP_CHAR;
@@ -656,7 +654,7 @@ main (int argc, char **argv)
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
   error (0, errno, "%s", quote (argv[optind]));
 
-  if (argc == 3 && exit_status == EXIT_ENOENT && strchr (argv[optind], ' '))
+  if (exit_status == EXIT_ENOENT && strchr (argv[optind], ' '))
     error (0, 0, _("use -[v]S to pass options in shebang lines"));
 
   return exit_status;

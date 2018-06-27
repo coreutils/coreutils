@@ -201,20 +201,18 @@ my @Tests =
       {ERR=>"$prog: only \${VARNAME} expansion is supported, " .
            "error at: \${9B}\n"}],
 
-     # Test incorrect shebang usage (extraneous sapce).
-     # With anything other than 3 args report invalid options (as before).
-     ['err_sp1', q['-v-S cat -n'], {EXIT=>125},
-      {ERR=>"env: invalid option -- '-'\n" .
-           "Try 'env --help' for more information.\n"}],
+     # Test incorrect shebang usage (extraneous whitespace).
      ['err_sp2', q['-v -S cat -n'], {EXIT=>125},
       {ERR=>"env: invalid option -- ' '\n" .
+            "env: use -[v]S to pass options in shebang lines\n" .
            "Try 'env --help' for more information.\n"}],
      ['err_sp3', q['-v	-S cat -n'], {EXIT=>125}, # embedded tab after -v
       {ERR=>"env: invalid option -- '\t'\n" .
+            "env: use -[v]S to pass options in shebang lines\n" .
            "Try 'env --help' for more information.\n"}],
 
-     # With exactly 3 args, assume it's incorrect shebang usage,
-     # and report a different message. This typically happens with:
+     # Also diagnose incorrect shebang usage when failing to exec.
+     # This typically happens with:
      #
      #   $ cat xxx
      #   #!env -v -S cat -n
@@ -225,12 +223,11 @@ my @Tests =
      #   argv[0] = env
      #   argv[1] = '-v -S cat -n'
      #   argv[2] = './xxx'
-     ['err_sp5', q['-v -S cat -n' ./xxx], {EXIT=>125},
-      {ERR=>"env: invalid option -- ' '\n" .
-            "env: use -[v]S to pass options in shebang lines\n" .
-            "Try 'env --help' for more information.\n"}],
+     ['err_sp5', q['cat -n' ./xxx], {EXIT=>127},
+      {ERR=>"env: 'cat -n': No such file or directory\n" .
+            "env: use -[v]S to pass options in shebang lines\n"}],
 
-     ['err_sp6', q['cat -n' ./xxx], {EXIT=>127},
+     ['err_sp6', q['cat -n' ./xxx arg], {EXIT=>127},
       {ERR=>"env: 'cat -n': No such file or directory\n" .
             "env: use -[v]S to pass options in shebang lines\n"}],
     );
