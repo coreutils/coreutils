@@ -787,11 +787,13 @@ sc_gitignore_missing:
 		'entries to .gitignore' >&2; exit 1; } || :
 
 # Flag redundant entries in .gitignore
-sc_gitignore_redundant:
-	@{ grep ^/lib $(srcdir)/.gitignore;				\
-	   sed 's|^|/lib|' $(srcdir)/lib/.gitignore; } |		\
-	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
-	      'entries from .gitignore' >&2; exit 1; } || :
+# Disabled for now as too aggressive flagging
+# entries like /lib/arg-nonnull.h
+#sc_gitignore_redundant:
+#	@{ grep ^/lib $(srcdir)/.gitignore;				\
+#	   sed 's|^|/lib|' $(srcdir)/lib/.gitignore; } |		\
+#	    sort | uniq -d | grep . && { echo '$(ME): Remove above'	\
+#	      'entries from .gitignore' >&2; exit 1; } || :
 
 sc_prohibit-form-feed:
 	@prohibit=$$'\f' \
