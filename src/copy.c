@@ -1903,6 +1903,13 @@ copy_internal (char const *src_name, char const *dst_name,
           return false;
         }
     }
+#ifdef lint
+  else
+    {
+      assert (x->move_mode);
+      memset (&src_sb, 0, sizeof src_sb);
+    }
+#endif
 
   /* Detect the case in which the same source file appears more than
      once on the command line and no backup option has been selected.
@@ -1910,7 +1917,7 @@ copy_internal (char const *src_name, char const *dst_name,
      This check is enabled only if x->src_info is non-NULL.  */
   if (command_line_arg && x->src_info)
     {
-      if ( ! S_ISDIR (src_sb.st_mode)
+      if ( ! S_ISDIR (src_mode)
            && x->backup_type == no_backups
            && seen_file (x->src_info, src_name, &src_sb))
         {
