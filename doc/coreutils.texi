@@ -17341,7 +17341,7 @@ This escape sequence works inside single-quoted strings.
 @end multitable
 
 The following @command{awk} script will use tab character as input and output
-field seperator (instead of spaces and tabs):
+field separator (instead of spaces and tabs):
 
 @example
 $ cat tabs.awk

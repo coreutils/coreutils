@@ -566,7 +566,7 @@ main (int argc, char **argv)
           break;
         case ' ':
         case '\t':
-          /* Space,tab,dash are undocumented options. Attempt to detect
+          /* These are undocumented options. Attempt to detect
              incorrect shebang usage with extraneous space, e.g.:
                 #!/usr/bin/env -i command
              In which case argv[1] == "-i command".  */

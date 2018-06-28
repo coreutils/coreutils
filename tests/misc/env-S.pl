@@ -139,7 +139,7 @@ my @Tests =
      ['d11', q[-S'echo FOO \\#BAR'],    {OUT=>"FOO #BAR"}],
      ['d12', q[-S'echo FOO#BAR'],       {OUT=>"FOO#BAR"}],
 
-     # Test underscore as space/seperator in double/single/no quotes
+     # Test underscore as space/separator in double/single/no quotes
      ['s1',  q[-S'printf x%sx\\n "A\\_B"'],   {OUT=>"xA Bx"}],
      ['s2',  q[-S"printf x%sx\\n 'A\\_B'"],   {OUT=>"xA\\_Bx"}],
      ['s3',  q[-S"printf x%sx\\n A\\_B"],     {OUT=>"xAx\nxBx"}],
