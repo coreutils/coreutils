@@ -34,7 +34,6 @@ mkdir x || framework_failure_
 cd x || framework_failure_
 
 # Construct a hierarchy containing a relative file with a long name
-: ${PERL=perl}
 $PERL \
     -e 'my $d = "x" x 200; foreach my $i (1..52)' \
     -e '  { mkdir ($d, 0700) && chdir $d or die "$!" }' \

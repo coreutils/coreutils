@@ -19,6 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
+require_perl_
 require_root_
 
 # Some of the tests expect a umask that grants group and/or world read access.

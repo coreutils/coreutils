@@ -31,6 +31,8 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ du
 
+require_perl_
+
 # ecryptfs for example uses some of the file name space
 # for encrypting filenames, so we must check dynamically.
 name_max=$(stat -f -c %l .)
@@ -58,7 +60,6 @@ dir=$(printf '%200s\n' ' '|tr ' ' x)
 
 cwd=$(pwd)
 # Use perl instead:
-: ${PERL=perl}
 $PERL \
     -e 'my $d = '$dir'; foreach my $i (1..52)' \
     -e '  { mkdir ($d, 0700) && chdir $d or die "$!" }' \

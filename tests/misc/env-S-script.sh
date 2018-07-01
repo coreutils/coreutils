@@ -20,6 +20,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ env
 print_ver_ printf
+
 require_perl_
 
 # a shortcut to avoid long lines
@@ -118,7 +119,7 @@ compare exp4 out4 || fail=1
 # Ignoring the absolute paths, the script is:
 #     #!env -S perl -w -T
 #     print "hello\n";
-{ printf "#!$dir/env -S perl -w -T\n" ;
+{ printf "#!$dir/env -S $PERL -w -T\n" ;
   printf 'print "hello\\n";\n' ; } > env5 || framework_failure_
 chmod a+x env5 || framework_failure_
 cat<<\EOF>exp5 || framework_failure_
@@ -134,7 +135,7 @@ compare exp5 out5 || fail=1
 # The backslash before the '$' is required to prevent env(1) from treating
 # $ARGV as an (invalid syntax) envvar, and pass it as-is to Perl.
 { printf "#!$dir/env -S " ;
-  printf 'perl -mFile::Basename=basename -e ' ;
+  printf "$PERL -mFile::Basename=basename -e " ;
   printf '"print basename(\\$ARGV[0]);"\n' ; } > env6 || framework_failure_
 chmod a+x env6 || framework_failure_
 # Note: the perl script does not output a newline.

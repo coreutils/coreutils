@@ -20,10 +20,11 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ sort
+require_perl_
 
 very_expensive_
 
-perl -e '
+$PERL -e '
 my $num_lines = 500000;
 my $length = 100;
 
@@ -39,7 +40,7 @@ for (my $i=0; $i < $num_lines; $i++)
 # We need to generate a lot of data for sort to show a noticeable
 # improvement in performance. Sorting it in PERL may take awhile.
 
-perl -e '
+$PERL -e '
 open (FILE, "<in");
 my @list = <FILE>;
 print sort(@list);

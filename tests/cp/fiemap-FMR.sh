@@ -21,7 +21,6 @@ print_ver_ cp
 
 require_valgrind_
 require_perl_
-: ${PERL=perl}
 
 $PERL -e 'for (1..600) { sysseek (*STDOUT, 4096, 1)' \
   -e '&& syswrite (*STDOUT, "a" x 1024) or die "$!"}' > j || fail=1
