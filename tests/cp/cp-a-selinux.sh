@@ -33,7 +33,7 @@ mls_enabled_ && ctx="$ctx:s0"
 
 # Check basic functionality - before check on fixed context mount
 touch c || framework_failure_
-chcon $ctx c || skip "Failed to set context: $ctx"
+chcon $ctx c || skip_ "Failed to set context: $ctx"
 cp -a c d 2>err || framework_failure_
 cp --preserve=context c e || framework_failure_
 cp --preserve=all c f || framework_failure_

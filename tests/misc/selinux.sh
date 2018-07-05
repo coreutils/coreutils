@@ -33,7 +33,7 @@ mkfifo_or_skip_ p
 ctx='root:object_r:tmp_t'
 mls_enabled_ && ctx="$ctx:s0"
 
-chcon $ctx f d p || skip "Failed to set context: $ctx"
+chcon $ctx f d p || skip_ "Failed to set context: $ctx"
 
 # inspect that context with both ls -Z and stat.
 for i in d f p; do

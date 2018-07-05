@@ -35,7 +35,7 @@ r1=object_r
 t1=tmp_t
 range=s0
 ctx=$u1:$r1:$t1:$range
-chcon $ctx f || skip "Failed to set context: $ctx"
+chcon $ctx f || skip_ "Failed to set context: $ctx"
 stat --printf='f|%C\n' f > out || fail=1
 
 # Use --reference.

@@ -45,7 +45,7 @@ big=big
 if ! fallocate -l2G $big; then
   rm -f $big
   {
-    is_local_dir_ . || skip 'Not writing 2GB data to remote'
+    is_local_dir_ . || skip_ 'Not writing 2GB data to remote'
     for i in $(seq 100); do
       # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
       printf %21474836s x || fail=1

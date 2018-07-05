@@ -250,6 +250,11 @@ sc_prohibit-quotearg:
 	halt='Unstyled diagnostic quoting detected' \
 	  $(_sc_search_regexp)
 
+sc_prohibit-skip:
+	@prohibit='\|\| skip ' \
+	halt='Use skip_ not skip' \
+	  $(_sc_search_regexp)
+
 sc_sun_os_names:
 	@grep -nEi \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
