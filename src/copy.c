@@ -53,7 +53,7 @@
 #include "ignore-value.h"
 #include "ioblksize.h"
 #include "quote.h"
-#include "renameat2.h"
+#include "renameatu.h"
 #include "root-uid.h"
 #include "same.h"
 #include "savedir.h"
@@ -1873,7 +1873,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->move_mode)
     {
       if (rename_errno < 0)
-        rename_errno = (renameat2 (AT_FDCWD, src_name, AT_FDCWD, dst_name,
+        rename_errno = (renameatu (AT_FDCWD, src_name, AT_FDCWD, dst_name,
                                    RENAME_NOREPLACE)
                         ? errno : 0);
       new_dst = rename_errno == 0;

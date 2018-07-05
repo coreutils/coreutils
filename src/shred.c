@@ -93,7 +93,7 @@
 #include "human.h"
 #include "randint.h"
 #include "randread.h"
-#include "renameat2.h"
+#include "renameatu.h"
 #include "stat-size.h"
 
 /* Default number of times to overwrite.  */
@@ -1096,7 +1096,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
         memset (base, nameset[0], len);
         base[len] = 0;
         bool rename_ok;
-        while (! (rename_ok = (renameat2 (AT_FDCWD, oldname, AT_FDCWD, newname,
+        while (! (rename_ok = (renameatu (AT_FDCWD, oldname, AT_FDCWD, newname,
                                           RENAME_NOREPLACE)
                                == 0))
                && errno == EEXIST && incname (base, len))

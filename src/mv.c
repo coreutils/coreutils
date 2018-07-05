@@ -31,7 +31,7 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "remove.h"
-#include "renameat2.h"
+#include "renameatu.h"
 #include "root-dev-ino.h"
 #include "priv-set.h"
 
@@ -456,7 +456,7 @@ main (int argc, char **argv)
     {
       assert (2 <= n_files);
       if (n_files == 2)
-        x.rename_errno = (renameat2 (AT_FDCWD, file[0], AT_FDCWD, file[1],
+        x.rename_errno = (renameatu (AT_FDCWD, file[0], AT_FDCWD, file[1],
                                      RENAME_NOREPLACE)
                           ? errno : 0);
       if (x.rename_errno != 0 && target_directory_operand (file[n_files - 1]))
