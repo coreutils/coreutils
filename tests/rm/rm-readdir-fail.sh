@@ -40,6 +40,15 @@ cat > k.c <<\EOF || framework_failure_
 
 struct dirent *readdir (DIR *dirp)
 {
+  static int count = 1;
+
+#ifndef __LP64__
+  if (count == 1)
+    fclose (fopen ("32bit", "w"));
+  errno = ENOSYS;
+  return NULL;
+#endif
+
   static struct dirent *(*real_readdir)(DIR *dirp);
   if (! real_readdir && ! (real_readdir = dlsym (RTLD_NEXT, "readdir")))
     {
@@ -56,7 +65,6 @@ struct dirent *readdir (DIR *dirp)
     }
 
   /* Flag that LD_PRELOAD and above functions work.  */
-  static int count = 1;
   if (count == 1)
     fclose (fopen ("preloaded", "w"));
 
@@ -90,8 +98,10 @@ for READDIR_PARTIAL in '' '1'; do
   rm -f preloaded
   (export LD_PRELOAD=$LD_PRELOAD:./k.so
    returns_ 1 rm -Rf dir 2>>errt) || fail=1
-  if ! test -f preloaded; then
-    cat err
+  if test -f 32bit; then
+    skip_ 'This test only supports 64 bit systems'
+  elif ! test -f preloaded; then
+    cat errt
     skip_ "internal test failure: maybe LD_PRELOAD doesn't work?"
   fi
 done
