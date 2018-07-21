@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  df no longer corrupts displayed multibyte characters on macOS.
+
 
 * Noteworthy changes in release 8.30 (2018-07-01) [stable]
 

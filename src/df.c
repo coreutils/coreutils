@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <assert.h>
+#include <c-ctype.h>
 
 #include "system.h"
 #include "canonicalize.h"
@@ -281,7 +282,7 @@ hide_problematic_chars (char *cell)
   char *p = cell;
   while (*p)
     {
-      if (iscntrl (to_uchar (*p)))
+      if (c_iscntrl (to_uchar (*p)))
         *p = '?';
       p++;
     }
