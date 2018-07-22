@@ -23,7 +23,8 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <assert.h>
-#include <c-ctype.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "system.h"
 #include "canonicalize.h"
@@ -272,21 +273,41 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Replace problematic chars with '?'.
-   Since only control characters are currently considered,
-   this should work in all encodings.  */
+/* Replace problematic chars with '?'.  */
 
-static char*
+static void
 hide_problematic_chars (char *cell)
 {
-  char *p = cell;
-  while (*p)
+  char *srcend = cell + strlen (cell);
+  char *dst = cell;
+  mbstate_t mbstate = { 0, };
+  size_t n;
+
+  for (char *src = cell; src != srcend; src += n)
     {
-      if (c_iscntrl (to_uchar (*p)))
-        *p = '?';
-      p++;
+      wchar_t wc;
+      size_t srcbytes = srcend - src;
+      n = mbrtowc (&wc, src, srcbytes, &mbstate);
+      bool ok = 0 < n && n <= srcbytes;
+
+      if (ok)
+        ok = !iswcntrl (wc);
+      else
+        n = 1;
+
+      if (ok)
+        {
+          memmove (dst, src, n);
+          dst += n;
+        }
+      else
+        {
+          *dst++ = '?';
+          memset (&mbstate, 0, sizeof mbstate);
+        }
     }
-  return cell;
+
+  *dst = '\0';
 }
 
 /* Dynamically allocate a row of pointers in TABLE, which
