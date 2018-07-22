@@ -315,6 +315,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
 NUM may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
+Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 \n\
 "), stdout);
      fputs (_("\

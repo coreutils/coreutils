@@ -697,6 +697,8 @@ one of the following multiplicative suffixes:
 @samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
 and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+Binary prefixes can be used, too: @samp{KiB}=@samp{K}, @samp{MiB}=@samp{M},
+and so on.
 @end macro
 
 @c FIXME: same as above, but no ``blocks'' line.
@@ -712,6 +714,8 @@ one of the following multiplicative suffixes:
 @samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
 and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+Binary prefixes can be used, too: @samp{KiB}=@samp{K}, @samp{MiB}=@samp{M},
+and so on.
 @end macro
 
 @cindex common options

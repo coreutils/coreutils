@@ -417,6 +417,7 @@ BYTES is hex with 0x or 0X prefix, and may have a multiplier suffix:\n\
   MB   1000*1000\n\
   M    1024*1024\n\
 and so on for G, T, P, E, Z, Y.\n\
+Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
