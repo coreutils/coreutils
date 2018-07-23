@@ -6,6 +6,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   df no longer corrupts displayed multibyte characters on macOS.
 
+** New features
+
+  id now supports specifying multiple users.
+
 
 * Noteworthy changes in release 8.30 (2018-07-01) [stable]
 

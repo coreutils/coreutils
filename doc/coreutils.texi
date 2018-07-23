@@ -15207,7 +15207,7 @@ logins, groups, and so forth.
 running it if no user is specified.  Synopsis:
 
 @example
-id [@var{option}]@dots{} [@var{user}]
+id [@var{option}]@dots{} [@var{user}]@dots{}
 @end example
 
 @var{user} can be either a user ID or a name, with name look-up
@@ -15276,8 +15276,11 @@ set the exit status to 1.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Delimit output items with NUL characters.
+Delimit output items with ASCII NUL characters.
 This option is not permitted when using the default format.
+When multiple users are specified, and the @option{--groups} option
+is also in effect, groups are delimited with a single NUL character,
+while users are delimited with two NUL characters.
 
 Example:
 @example

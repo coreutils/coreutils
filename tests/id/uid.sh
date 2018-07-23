@@ -24,6 +24,11 @@ user=$(id -nu) || fail=1
 # Ensure the empty user spec is discarded
 returns_ 1 id '' || fail=1
 
+# Ensure we don't exit early, and process all users
+id $user > user_out || fail=1
+returns_ 1 id '' $user >multi_user_out || fail=1
+compare user_out multi_user_out || fail=1
+
 for mode in '' '-G' '-g'; do
   id $mode $user > user_out || fail=1 # lookup name for comparison
 

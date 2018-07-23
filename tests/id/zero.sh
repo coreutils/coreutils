@@ -63,4 +63,41 @@ printf '\n' >> out || framework_failure_
 tr '\0' ' ' < out > out2 || framework_failure_
 compare exp out2 || fail=1
 
+# multiuser testing with -z
+# test if the options work, these tests should pass if the above tests
+# do.
+
+for o in g gr u ur ; do
+  for n in '' n ; do
+    id -${o}${n}  $users >> tmp1 ||
+      { test $? -ne 1 || test -z "$n" && fail=1; }
+    id -${o}${n}z $users  > tmp2 ||
+      { test $? -ne 1 || test -z "$n" && fail=1; }
+    tr '\0' '\n' < tmp2 >> tmp3
+  done
+done
+compare tmp1 tmp3 || fail=1
+
+# Separate checks when we are testing for multiple users && -G.
+# This is done because we terminate the records with two NULs
+# instead of a regular single NUL.
+
+NL='
+'
+
+for o in G Gr ; do
+  for n in '' n ; do
+    id -${o}${n}  $users >> gtmp1 ||
+      { test $? -ne 1 || test -z "$n" && fail=1; }
+    id -${o}${n}z $users  > gtmp2 ||
+      { test $? -ne 1 || test -z "$n" && fail=1; }
+    # we replace all NULs with spaces, the result we get is there are two
+    # consecutive spaces instead of two NUL's, we pass this to sed
+    # to replace more than 1 space with a newline. This is ideally where a new
+    # line should be. This should make the output similar to without -z.
+    tr '\0' ' ' < gtmp2 | sed "s/  /\\$NL/g" >> gtmp3
+  done
+done
+compare gtmp1 gtmp3 || fail=1
+
 Exit $fail

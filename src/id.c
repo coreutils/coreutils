@@ -43,10 +43,20 @@
 
 /* If nonzero, output only the SELinux context.  */
 static bool just_context = 0;
-
-static void print_user (uid_t uid);
-static void print_full_info (const char *username);
-
+/* If true, delimit entries with NUL characters, not whitespace */
+static bool opt_zero = false;
+/* If true, output the list of all group IDs. -G */
+static bool just_group_list = false;
+/* If true, output only the group ID(s). -g */
+static bool just_group = false;
+/* If true, output real UID/GID instead of default effective UID/GID. -r */
+static bool use_real = false;
+/* If true, output only the user ID(s). -u */
+static bool just_user = false;
+/* True unless errors have been encountered.  */
+static bool ok = true;
+/* If true, we are using multiple users. Terminate -G with double NUL. */
+static bool multiple_users = false;
 /* If true, output user/group name instead of ID number. -n */
 static bool use_name = false;
 
@@ -54,12 +64,13 @@ static bool use_name = false;
 static uid_t ruid, euid;
 static gid_t rgid, egid;
 
-/* True unless errors have been encountered.  */
-static bool ok = true;
-
 /* The SELinux context.  Start with a known invalid value so print_full_info
    knows when 'context' has not been set to a meaningful value.  */
 static char *context = NULL;
+
+static void print_user (uid_t uid);
+static void print_full_info (const char *username);
+static void print_stuff (const char *pw_name);
 
 static struct option const longopts[] =
 {
@@ -82,9 +93,9 @@ usage (int status)
     emit_try_help ();
   else
     {
-      printf (_("Usage: %s [OPTION]... [USER]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
       fputs (_("\
-Print user and group information for the specified USER,\n\
+Print user and group information for each specified USER,\n\
 or (when USER omitted) for the current user.\n\
 \n"),
              stdout);
@@ -116,17 +127,7 @@ main (int argc, char **argv)
   int optc;
   int selinux_enabled = (is_selinux_enabled () > 0);
   bool smack_enabled = is_smack_enabled ();
-  bool opt_zero = false;
   char *pw_name = NULL;
-
-  /* If true, output the list of all group IDs. -G */
-  bool just_group_list = false;
-  /* If true, output only the group ID(s). -g */
-  bool just_group = false;
-  /* If true, output real UID/GID instead of default effective UID/GID. -r */
-  bool use_real = false;
-  /* If true, output only the user ID(s). -u */
-  bool just_user = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -185,11 +186,6 @@ main (int argc, char **argv)
     }
 
   size_t n_ids = argc - optind;
-  if (1 < n_ids)
-    {
-      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-      usage (EXIT_FAILURE);
-    }
 
   if (n_ids && just_context)
     die (EXIT_FAILURE, 0,
@@ -228,28 +224,44 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, 0, _("can't get process context"));
     }
 
-  if (n_ids == 1)
+  if (n_ids >= 1)
     {
-      struct passwd *pwd = NULL;
-      const char *spec = argv[optind];
-      /* Disallow an empty spec here as parse_user_spec() doesn't
-         give an error for that as it seems it's a valid way to
-         specify a noop or "reset special bits" depending on the system.  */
-      if (*spec)
+      multiple_users = n_ids > 1 ? true : false;
+      /* Changing the value of n_ids to the last index in the array where we
+         have the last possible user id. This helps us because we don't have
+         to declare a different variable to keep a track of where the
+         last username lies in argv[].  */
+      n_ids += optind;
+      /* For each username/userid to get its pw_name field */
+      for (; optind < n_ids; optind++)
         {
-          if (parse_user_spec (spec, &euid, NULL, NULL, NULL) == NULL)
+          struct passwd *pwd = NULL;
+          const char *spec = argv[optind];
+          /* Disallow an empty spec here as parse_user_spec() doesn't
+             give an error for that as it seems it's a valid way to
+             specify a noop or "reset special bits" depending on the system.  */
+          if (*spec)
             {
-              /* parse_user_spec will only extract a numeric spec,
-                 so we lookup that here to verify and also retrieve
-                 the PW_NAME used subsequently in group lookup.  */
-              pwd = getpwuid (euid);
+              if (parse_user_spec (spec, &euid, NULL, NULL, NULL) == NULL)
+                {
+                  /* parse_user_spec will only extract a numeric spec,
+                     so we lookup that here to verify and also retrieve
+                     the PW_NAME used subsequently in group lookup.  */
+                  pwd = getpwuid (euid);
+                }
             }
+          if (pwd == NULL)
+            {
+              error (0, errno, _("%s: no such user"), quote (argv[optind]));
+              ok &= false;
+              continue;
+            }
+          pw_name = xstrdup (pwd->pw_name);
+          ruid = euid = pwd->pw_uid;
+          rgid = egid = pwd->pw_gid;
+          print_stuff (pw_name);
+          free (pw_name);
         }
-      if (pwd == NULL)
-        die (EXIT_FAILURE, 0, _("%s: no such user"), quote (spec));
-      pw_name = xstrdup (pwd->pw_name);
-      ruid = euid = pwd->pw_uid;
-      rgid = egid = pwd->pw_gid;
     }
   else
     {
@@ -289,34 +301,9 @@ main (int argc, char **argv)
           if (rgid == NO_GID && errno)
             die (EXIT_FAILURE, errno, _("cannot get real GID"));
         }
+        print_stuff (pw_name);
     }
 
-  if (just_user)
-    {
-      print_user (use_real ? ruid : euid);
-    }
-  else if (just_group)
-    {
-      if (!print_group (use_real ? rgid : egid, use_name))
-        ok = false;
-    }
-  else if (just_group_list)
-    {
-      if (!print_group_list (pw_name, ruid, rgid, egid, use_name,
-                             opt_zero ? '\0' : ' '))
-        ok = false;
-    }
-  else if (just_context)
-    {
-      fputs (context, stdout);
-    }
-  else
-    {
-      print_full_info (pw_name);
-    }
-  putchar (opt_zero ? '\0' : '\n');
-
-  IF_LINT (free (pw_name));
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
@@ -356,7 +343,7 @@ print_user (uid_t uid)
         {
           error (0, 0, _("cannot find name for user ID %s"),
                  uidtostr (uid));
-          ok = false;
+          ok &= false;
         }
     }
 
@@ -415,7 +402,7 @@ print_full_info (const char *username)
                  quote (username));
         else
           error (0, errno, _("failed to get groups for the current process"));
-        ok = false;
+        ok &= false;
         return;
       }
 
@@ -437,4 +424,41 @@ print_full_info (const char *username)
      any context=... part, so skip that if POSIXLY_CORRECT is set.  */
   if (context)
     printf (_(" context=%s"), context);
+}
+
+/* Print information about the user based on the arguments passed. */
+
+static void
+print_stuff (const char *pw_name)
+{
+  if (just_user)
+      print_user (use_real ? ruid : euid);
+
+  /* print_group and print_group_lists functions return true on successful
+     execution but false if something goes wrong. We then AND this value with
+     the current value of 'ok' because we want to know if one of the previous
+     users faced a problem in these functions. This value of 'ok' is later used
+     to understand what status program should exit with. */
+  else if (just_group)
+    ok &= print_group (use_real ? rgid : egid, use_name);
+  else if (just_group_list)
+    ok &= print_group_list (pw_name, ruid, rgid, egid,
+                            use_name, opt_zero ? '\0' : ' ');
+  else if (just_context)
+    fputs (context, stdout);
+  else
+    print_full_info (pw_name);
+
+  /* When printing records for more than 1 user, at the end of groups
+     of each user terminate the record with two consequent NUL characters
+     to make parsing and distinguishing between two records possible. */
+  if (opt_zero && just_group_list && multiple_users)
+    {
+      putchar ('\0');
+      putchar ('\0');
+    }
+  else
+    {
+      putchar (opt_zero ? '\0' : '\n');
+    }
 }
