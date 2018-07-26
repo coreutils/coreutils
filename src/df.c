@@ -595,7 +595,8 @@ get_header (void)
 
       table[nrows - 1][col] = cell;
 
-      columns[col]->width = MAX (columns[col]->width, mbswidth (cell, 0));
+      size_t cell_width = mbswidth (cell, 0);
+      columns[col]->width = MAX (columns[col]->width, cell_width);
     }
 }
 
@@ -1205,7 +1206,8 @@ get_dev (char const *disk, char const *mount_point, char const* file,
         assert (!"empty cell");
 
       hide_problematic_chars (cell);
-      columns[col]->width = MAX (columns[col]->width, mbswidth (cell, 0));
+      size_t cell_width = mbswidth (cell, 0);
+      columns[col]->width = MAX (columns[col]->width, cell_width);
       table[nrows - 1][col] = cell;
     }
   free (dev_name);
