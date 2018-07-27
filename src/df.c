@@ -288,7 +288,7 @@ hide_problematic_chars (char *cell)
       wchar_t wc;
       size_t srcbytes = srcend - src;
       n = mbrtowc (&wc, src, srcbytes, &mbstate);
-      bool ok = 0 < n && n <= srcbytes;
+      bool ok = n <= srcbytes;
 
       if (ok)
         ok = !iswcntrl (wc);
