@@ -16,6 +16,7 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <assert.h>
 #include <sys/types.h>
 #include "system.h"
 
@@ -34,35 +35,35 @@ enum { DEFAULT_ECHO_TO_XPG = false };
 void
 usage (int status)
 {
-  if (status != EXIT_SUCCESS)
-    emit_try_help ();
-  else
-    {
-      printf (_("\
+  /* STATUS should always be EXIT_SUCCESS (unlike in most other
+     utilities which would call emit_try_help otherwise).  */
+  assert (status == EXIT_SUCCESS);
+
+  printf (_("\
 Usage: %s [SHORT-OPTION]... [STRING]...\n\
   or:  %s LONG-OPTION\n\
 "), program_name, program_name);
-      fputs (_("\
+  fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
   -n             do not output the trailing newline\n\
 "), stdout);
-      fputs (_(DEFAULT_ECHO_TO_XPG
-               ? N_("\
+  fputs (_(DEFAULT_ECHO_TO_XPG
+           ? N_("\
   -e             enable interpretation of backslash escapes (default)\n\
   -E             disable interpretation of backslash escapes\n")
-               : N_("\
+           : N_("\
   -e             enable interpretation of backslash escapes\n\
   -E             disable interpretation of backslash escapes (default)\n")),
-             stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
+         stdout);
+  fputs (HELP_OPTION_DESCRIPTION, stdout);
+  fputs (VERSION_OPTION_DESCRIPTION, stdout);
+  fputs (_("\
 \n\
 If -e is in effect, the following sequences are recognized:\n\
 \n\
 "), stdout);
-      fputs (_("\
+  fputs (_("\
   \\\\      backslash\n\
   \\a      alert (BEL)\n\
   \\b      backspace\n\
@@ -74,13 +75,12 @@ If -e is in effect, the following sequences are recognized:\n\
   \\t      horizontal tab\n\
   \\v      vertical tab\n\
 "), stdout);
-      fputs (_("\
+  fputs (_("\
   \\0NNN   byte with octal value NNN (1 to 3 digits)\n\
   \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
 "), stdout);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      emit_ancillary_info (PROGRAM_NAME);
-    }
+  printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
+  emit_ancillary_info (PROGRAM_NAME);
   exit (status);
 }
 

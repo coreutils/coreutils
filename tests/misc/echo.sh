@@ -63,4 +63,37 @@ foo
 EOF
 compare exp out || fail=1
 
+# Further test coverage.
+# Output a literal '-' (on a line itself).
+$prog - > out || fail=1
+# Output a literal backslash '\', no newline.
+$prog -n -e '\\' >> out || fail=1
+# Output an empty line (merely to have a newline after the previous test).
+$prog >> out || fail=1
+# Test other characters escaped by a backslash:
+# \a  hex 07  alert, bell
+# \b  hex 08  backspace
+# \e  hex 1b  escape
+# \f  hex 0c  form feed
+# \n  hex 0a  new line
+# \r  hex 0d  carriage return
+# \t  hex 09  horizontal tab
+# \v  hex 0b  vertical tab
+# Convert output, yet checking the exit status of $prog.
+{ $prog -n -e '\a\b\e\f\n\r\t\v' || touch fail; } | od -tx1 >> out || fail=1
+test '!' -f fail || fail=1
+# Output hex values which contain hexadecimal characters to test hextobin().
+# Hex values 4a through 4f are ASCII "JKLMNO".
+$prog -n -e '\x4a\x4b\x4c\x4d\x4e\x4f\x4A\x4B\x4C\x4D\x4E\x4F' >> out || fail=1
+# Output another newline.
+$prog >> out || fail=1
+cat <<\EOF > exp
+-
+\
+0000000 07 08 1b 0c 0a 0d 09 0b
+0000010
+JKLMNOJKLMNO
+EOF
+compare exp out || fail=1
+
 Exit $fail
