@@ -9,6 +9,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   [This bug was present in "the beginning".]
 
   df no longer corrupts displayed multibyte characters on macOS.
+  [bug introduced with coreutils-8.18]
+
+** Changes in behavior
+
+  echo now always processes backslash escapes when the POSIXLY_CORRECT
+  environment variable is set.
 
   When possible 'ln A B' now merely links A to B and reports an error
   if this fails, instead of statting A and B before linking.  This

@@ -108,8 +108,9 @@ int
 main (int argc, char **argv)
 {
   bool display_return = true;
+  bool posixly_correct = getenv ("POSIXLY_CORRECT");
   bool allow_options =
-    (! getenv ("POSIXLY_CORRECT")
+    (! posixly_correct
      || (! DEFAULT_ECHO_TO_XPG && 1 < argc && STREQ (argv[1], "-n")));
 
   /* System V machines already have a /bin/sh with a v9 behavior.
@@ -189,7 +190,7 @@ main (int argc, char **argv)
 
 just_echo:
 
-  if (do_v9)
+  if (do_v9 || posixly_correct)
     {
       while (argc > 0)
         {

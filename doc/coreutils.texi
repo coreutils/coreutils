@@ -12608,7 +12608,7 @@ If the @env{POSIXLY_CORRECT} environment variable is set, then when
 @command{echo}'s first argument is not @option{-n} it outputs
 option-like arguments instead of treating them as options.  For
 example, @code{echo -ne hello} outputs @samp{-ne hello} instead of
-plain @samp{hello}.
+plain @samp{hello}.  Also backslash escapes are always enabled.
 
 POSIX does not require support for any options, and says
 that the behavior of @command{echo} is implementation-defined if any

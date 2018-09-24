@@ -237,6 +237,7 @@ all_tests =					\
   tests/fmt/base.pl				\
   tests/fmt/long-line.sh			\
   tests/fmt/goal-option.sh			\
+  tests/misc/echo.sh				\
   tests/misc/env.sh				\
   tests/misc/ptx.pl				\
   tests/misc/test.pl				\

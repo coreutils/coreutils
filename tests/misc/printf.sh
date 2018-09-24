@@ -60,9 +60,8 @@ $prog '5 % +d\n' 234  >> out || fail=1
 # coreutils-5.0.1, it would print six bytes: "6 \41\n".
 $prog '6 \41\n' | tr '\41' '!' >> out
 
-# Note that as of coreutils-5.0.1, printf with a format of '\0002x'
-# prints a NUL byte followed by the digit '2' and an 'x'.
-# By contrast bash's printf outputs the same thing as $(printf '\2x') does.
+# Note that as of coreutils-5.0.1, printf with a format of '\0002y'
+# prints a NUL byte followed by the digit '2' and a 'y'.
 $prog '7 \2y \02y \002y \0002y\n' |tr '\0\2' '*=' >> out
 
 $prog '8 %b %b %b %b\n' '\1y' '\01y' '\001y' '\0001y'|tr '\1' = >> out
