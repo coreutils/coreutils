@@ -3427,7 +3427,8 @@ The output files' names consist of a prefix (@samp{xx} by default)
 followed by a suffix.  By default, the suffix is an ascending sequence
 of two-digit decimal numbers from @samp{00} to @samp{99}.  In any case,
 concatenating the output files in sorted order by file name produces the
-original input file.
+original input file, excluding portions skipped with a %@var{regexp}%
+pattern or the @option{--suppress-matched} option.
 
 By default, if @command{csplit} encounters an error or receives a hangup,
 interrupt, quit, or terminate signal, it removes any output files
