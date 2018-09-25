@@ -3410,6 +3410,8 @@ including) the next line of the input file that contains a match for
 If it is given, the input up to (but not including) the
 matching line plus or minus @var{offset} is put into the output file,
 and the line after that begins the next section of input.
+Note lines within a negative offset of a regexp pattern
+are not matched in subsequent regexp patterns.
 
 @item %@var{regexp}%[@var{offset}]
 Like the previous type, except that it does not create an output
