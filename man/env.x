@@ -11,7 +11,7 @@ env \- run a program in a modified environment
 .SS "\-S/\-\-split\-string usage in scripts"
 The
 .B \-S
-option allows specifing multiple parameters in a script.
+option allows specifying multiple parameters in a script.
 Running a script named
 .B 1.pl
 containing the following first line:
@@ -19,7 +19,7 @@ containing the following first line:
 .RS
 .nf
 #!/usr/bin/env \-S perl \-w \-T
-...
+\&...
 .fi
 .RE
 .PP
