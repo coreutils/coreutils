@@ -2657,9 +2657,9 @@ copy_internal (char const *src_name, char const *dst_name,
            && !(! CAN_HARDLINK_SYMLINKS && S_ISLNK (src_mode)
                 && x->dereference == DEREF_NEVER))
     {
-      if (! create_hard_link (src_name, dst_name,
-                              x->unlink_dest_after_failed_open,
-                              false, dereference))
+      bool replace = (x->unlink_dest_after_failed_open
+                      || x->interactive == I_ASK_USER);
+      if (! create_hard_link (src_name, dst_name, replace, false, dereference))
         goto un_backup;
     }
   else if (S_ISREG (src_mode)

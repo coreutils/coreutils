@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  When B already exists, 'cp -il A B' no longer immediately fails
+  after asking the user whether to proceed.
+  [This bug was present in "the beginning".]
+
   df no longer corrupts displayed multibyte characters on macOS.
 
 ** New features
