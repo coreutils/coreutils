@@ -1783,16 +1783,16 @@ static bool
 create_hard_link (char const *src_name, char const *dst_name,
                   bool replace, bool verbose, bool dereference)
 {
-  int status = force_linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name,
-                             dereference ? AT_SYMLINK_FOLLOW : 0,
-                             replace);
-  if (status < 0)
+  int err = force_linkat (AT_FDCWD, src_name, AT_FDCWD, dst_name,
+                          dereference ? AT_SYMLINK_FOLLOW : 0,
+                          replace, -1);
+  if (0 < err)
     {
-      error (0, errno, _("cannot create hard link %s to %s"),
+      error (0, err, _("cannot create hard link %s to %s"),
              quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
       return false;
     }
-  if (0 < status && verbose)
+  if (err < 0 && verbose)
     printf (_("removed %s\n"), quoteaf (dst_name));
   return true;
 }
@@ -2630,11 +2630,12 @@ copy_internal (char const *src_name, char const *dst_name,
               goto un_backup;
             }
         }
-      if (force_symlinkat (src_name, AT_FDCWD, dst_name,
-                           x->unlink_dest_after_failed_open)
-          < 0)
+
+      int err = force_symlinkat (src_name, AT_FDCWD, dst_name,
+                                 x->unlink_dest_after_failed_open, -1);
+      if (0 < err)
         {
-          error (0, errno, _("cannot create symbolic link %s to %s"),
+          error (0, err, _("cannot create symbolic link %s to %s"),
                  quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
           goto un_backup;
         }
@@ -2713,10 +2714,9 @@ copy_internal (char const *src_name, char const *dst_name,
           goto un_backup;
         }
 
-      int symlink_r = force_symlinkat (src_link_val, AT_FDCWD, dst_name,
-                                       x->unlink_dest_after_failed_open);
-      int symlink_err = symlink_r < 0 ? errno : 0;
-      if (symlink_err && x->update && !new_dst && S_ISLNK (dst_sb.st_mode)
+      int symlink_err = force_symlinkat (src_link_val, AT_FDCWD, dst_name,
+                                         x->unlink_dest_after_failed_open, -1);
+      if (0 < symlink_err && x->update && !new_dst && S_ISLNK (dst_sb.st_mode)
           && dst_sb.st_size == strlen (src_link_val))
         {
           /* See if the destination is already the desired symlink.
@@ -2733,7 +2733,7 @@ copy_internal (char const *src_name, char const *dst_name,
             }
         }
       free (src_link_val);
-      if (symlink_err)
+      if (0 < symlink_err)
         {
           error (0, symlink_err, _("cannot create symbolic link %s"),
                  quoteaf (dst_name));

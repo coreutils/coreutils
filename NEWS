@@ -10,6 +10,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   df no longer corrupts displayed multibyte characters on macOS.
 
+  When possible 'ln A B' now merely links A to B and reports an error
+  if this fails, instead of statting A and B before linking.  This
+  uses fewer system calls and avoids some races.  The old statting
+  approach is still used in situations where hard links to directories
+  are allowed (e.g., NetBSD when superuser).
+
 ** New features
 
   id now supports specifying multiple users.

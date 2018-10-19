@@ -85,22 +85,27 @@ try_link (char *dest, void *arg)
 
 /* Hard-link directory SRCDIR's file SRCNAME to directory DSTDIR's
    file DSTNAME, using linkat-style FLAGS to control the linking.
-   If FORCE and DSTNAME already exists, replace it atomically.  Return
-   1 if successful and DSTNAME already existed,
+   If FORCE and DSTNAME already exists, replace it atomically.
+   If LINKAT_ERRNO is 0, the hard link is already done; if positive,
+   the hard link was tried and failed with errno == LINKAT_ERRNO.  Return
+   -1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
-   -1 (setting errno) on failure.  */
+   a positive errno value on failure.  */
 extern int
 force_linkat (int srcdir, char const *srcname,
-              int dstdir, char const *dstname, int flags, bool force)
+              int dstdir, char const *dstname, int flags, bool force,
+              int linkat_errno)
 {
-  int r = linkat (srcdir, srcname, dstdir, dstname, flags);
-  if (!force || r == 0 || errno != EEXIST)
-    return r;
+  if (linkat_errno < 0)
+    linkat_errno = (linkat (srcdir, srcname, dstdir, dstname, flags) == 0
+                    ? 0 : errno);
+  if (!force || linkat_errno != EEXIST)
+    return linkat_errno;
 
   char buf[smallsize];
   char *dsttmp = samedir_template (dstname, buf);
   if (! dsttmp)
-    return -1;
+    return errno;
   struct link_arg arg = { srcdir, srcname, dstdir, flags };
   int err;
 
@@ -108,7 +113,7 @@ force_linkat (int srcdir, char const *srcname,
     err = errno;
   else
     {
-      err = renameat (dstdir, dsttmp, dstdir, dstname) == 0 ? 0 : errno;
+      err = renameat (dstdir, dsttmp, dstdir, dstname) == 0 ? -1 : errno;
       /* Unlink DSTTMP even if renameat succeeded, in case DSTTMP
          and DSTNAME were already the same hard link and renameat
          was a no-op.  */
@@ -117,10 +122,7 @@ force_linkat (int srcdir, char const *srcname,
 
   if (dsttmp != buf)
     free (dsttmp);
-  if (!err)
-    return 1;
-  errno = err;
-  return -1;
+  return err;
 }
 
 
@@ -140,22 +142,25 @@ try_symlink (char *dest, void *arg)
 }
 
 /* Create a symlink containing SRCNAME in directory DSTDIR's file DSTNAME.
-   If FORCE and DSTNAME already exists, replace it atomically.  Return
-   1 if successful and DSTNAME already existed,
+   If FORCE and DSTNAME already exists, replace it atomically.
+   If SYMLINKAT_ERRNO is 0, the symlink is already done; if positive,
+   the symlink was tried and failed with errno == SYMLINKAT_ERRNO.  Return
+   -1 if successful and DSTNAME already existed,
    0 if successful and DSTNAME did not already exist, and
-   -1 (setting errno) on failure.  */
+   a positive errno value on failure.  */
 extern int
 force_symlinkat (char const *srcname, int dstdir, char const *dstname,
-                 bool force)
+                 bool force, int symlinkat_errno)
 {
-  int r = symlinkat (srcname, dstdir, dstname);
-  if (!force || r == 0 || errno != EEXIST)
-    return r;
+  if (symlinkat_errno < 0)
+    symlinkat_errno = symlinkat (srcname, dstdir, dstname) == 0 ? 0 : errno;
+  if (!force || symlinkat_errno != EEXIST)
+    return symlinkat_errno;
 
   char buf[smallsize];
   char *dsttmp = samedir_template (dstname, buf);
   if (!dsttmp)
-    return -1;
+    return errno;
   struct symlink_arg arg = { srcname, dstdir };
   int err;
 
@@ -170,13 +175,10 @@ force_symlinkat (char const *srcname, int dstdir, char const *dstname,
     {
       /* Don't worry about renameat being a no-op, since DSTTMP is
          newly created.  */
-      err = 0;
+      err = -1;
     }
 
   if (dsttmp != buf)
     free (dsttmp);
-  if (!err)
-    return 1;
-  errno = err;
-  return -1;
+  return err;
 }
