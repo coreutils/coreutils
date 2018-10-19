@@ -2,10 +2,10 @@ diff --git a/modules/tempname b/modules/tempname
 index 570ea54..f1be8ff 100644
 --- a/modules/tempname
 +++ b/modules/tempname
-@@ -12,6 +12,8 @@
- fcntl-h
+@@ -13,6 +13,8 @@
  gettimeofday
  lstat
+ mkdir
 +randint
 +stdbool
  stdint
