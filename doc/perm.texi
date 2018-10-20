@@ -70,38 +70,36 @@ In addition to the three sets of three permissions listed above, the
 file mode bits have three special components, which affect only
 executable files (programs) and, on most systems, directories:
 
-@enumerate
-@item
+@table @asis
+@item The @dfn{set-user-ID bit} (@dfn{setuid bit}).
 @cindex set-user-ID
 @cindex setuid
-Set the process's effective user ID to that of the file upon execution
-(called the @dfn{set-user-ID bit}, or sometimes the @dfn{setuid bit}).
+On execution, set the process's effective user ID to that of the file.
 For directories on a few systems, give files created in the directory
 the same owner as the directory, no matter who creates them, and set
 the set-user-ID bit of newly-created subdirectories.
-@item
+
+@item The @dfn{set-group-ID bit} (@dfn{setgid bit}).
 @cindex set-group-ID
 @cindex setgid
-Set the process's effective group ID to that of the file upon execution
-(called the @dfn{set-group-ID bit}, or sometimes the @dfn{setgid bit}).
+On execution, set the process's effective group ID to that of the file.
 For directories on most systems, give files created in the directory
 the same group as the directory, no matter what group the user who
 creates them is in, and set the set-group-ID bit of newly-created
 subdirectories.
-@item
+
+@item The @dfn{restricted deletion flag} or @dfn{sticky bit}.
 @cindex sticky
 @cindex swap space, saving text image in
 @cindex text image, saving in swap space
 @cindex restricted deletion flag
 Prevent unprivileged users from removing or renaming a file in a directory
-unless they own the file or the directory; this is called the
-@dfn{restricted deletion flag} for the directory, and is commonly
+unless they own the file or the directory; this is commonly
 found on world-writable directories like @file{/tmp}.
-
 For regular files on some older systems, save the program's text image on the
-swap device so it will load more quickly when run; this is called the
-@dfn{sticky bit}.
-@end enumerate
+swap device so it will load more quickly when run, so that the image
+is ``sticky''.
+@end table
 
 In addition to the file mode bits listed above, there may be file attributes
 specific to the file system, e.g., access control lists (ACLs), whether a
@@ -511,8 +509,8 @@ Value in  Corresponding
 Mode      Mode Bit
 
           Special mode bits:
-4000      Set user ID on execution
-2000      Set group ID on execution
+4000      Set user ID
+2000      Set group ID
 1000      Restricted deletion flag or sticky bit
 
           The file's owner:
