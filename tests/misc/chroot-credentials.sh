@@ -61,6 +61,9 @@ if ! test "$HAVE_SETGROUPS"; then
   Exit $fail
 fi
 
+# Change all whitespaces to newlines, then sort the input.
+# Use for tests with more groups in 'id' output.
+num_sort() { tr -s ' ' '\n' | sort -n; }
 
 # Verify that there are no additional groups.
 id_G_after_chroot=$(
@@ -70,12 +73,12 @@ id_G_after_chroot=$(
 test "$id_G_after_chroot" = $NON_ROOT_GID || fail=1
 
 # Verify that when specifying only the user name we get all their groups
-test "$(chroot --userspec=$NON_ROOT_USERNAME / id -G)" = \
-     "$(id -G $NON_ROOT_USERNAME)" || fail=1
+test "$(chroot --userspec=$NON_ROOT_USERNAME / id -G | num_sort)" = \
+     "$(id -G $NON_ROOT_USERNAME | num_sort)" || fail=1
 
 # Ditto with trailing : on the user name.
-test "$(chroot --userspec=$NON_ROOT_USERNAME: / id -G)" = \
-     "$(id -G $NON_ROOT_USERNAME)" || fail=1
+test "$(chroot --userspec=$NON_ROOT_USERNAME: / id -G | num_sort)" = \
+     "$(id -G $NON_ROOT_USERNAME | num_sort)" || fail=1
 
 # Verify that when specifying only the user and clearing supplemental groups
 # that we only get the primary group
@@ -83,8 +86,8 @@ test "$(chroot --userspec=$NON_ROOT_USERNAME --groups='' / id -G)" = \
      $NON_ROOT_GID || fail=1
 
 # Verify that when specifying only the UID we get all their groups
-test "$(chroot --userspec=$NON_ROOT_UID / id -G)" = \
-     "$(id -G $NON_ROOT_USERNAME)" || fail=1
+test "$(chroot --userspec=$NON_ROOT_UID / id -G | num_sort)" = \
+     "$(id -G $NON_ROOT_USERNAME | num_sort)" || fail=1
 
 # Verify that when specifying only the user and clearing supplemental groups
 # that we only get the primary group. Note this variant with prepended '+'
