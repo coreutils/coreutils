@@ -27,6 +27,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   id now supports specifying multiple users.
 
+  test now supports the '-N FILE' unary operator (like e.g. bash) to check
+  whether FILE exists and has been modified since it was last read.
+
 
 * Noteworthy changes in release 8.30 (2018-07-01) [stable]
 

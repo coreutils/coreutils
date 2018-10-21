@@ -417,6 +417,16 @@ unary_operator (void)
       unary_advance ();
       return euidaccess (argv[pos - 1], X_OK) == 0;
 
+    case 'N':  /* File exists and has been modified since it was last read? */
+      {
+        unary_advance ();
+        if (stat (argv[pos - 1], &stat_buf) != 0)
+          return false;
+        struct timespec atime = get_stat_atime (&stat_buf);
+        struct timespec mtime = get_stat_mtime (&stat_buf);
+        return (timespec_cmp (mtime, atime) > 0);
+      }
+
     case 'O':			/* File is owned by you? */
       {
         unary_advance ();
@@ -741,6 +751,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "), stdout);
       fputs (_("\
   -L FILE     FILE exists and is a symbolic link (same as -h)\n\
+  -N FILE     FILE exists and has been modified since it was last read\n\
   -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
   -r FILE     FILE exists and read permission is granted\n\
