@@ -406,8 +406,7 @@ unary_operator (void)
          pos right past it.  This means that pos - 1 is the location of the
          argument. */
 
-    case 'a':			/* file exists in the file system? */
-    case 'e':
+    case 'e':			/* file exists in the file system? */
       unary_advance ();
       return stat (argv[pos - 1], &stat_buf) == 0;
 
@@ -586,7 +585,7 @@ test_unop (char const *op)
 
   switch (op[1])
     {
-    case 'a': case 'b': case 'c': case 'd': case 'e':
+    case 'b': case 'c': case 'd': case 'e':
     case 'f': case 'g': case 'h': case 'k': case 'n':
     case 'o': case 'p': case 'r': case 's': case 't':
     case 'u': case 'w': case 'x': case 'z':

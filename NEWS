@@ -16,6 +16,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   approach is still used in situations where hard links to directories
   are allowed (e.g., NetBSD when superuser).
 
+** Changes in behavior
+
+  'test -a FILE' is not supported anymore.  Long ago, there were concerns about
+  the high probability of humans confusing the -a primary with the -a binary
+  operator, so POSIX changed this to 'test -e FILE'.  Scripts using it were
+  already broken and non-portable; the -a unary operator was never documented.
+
 ** New features
 
   id now supports specifying multiple users.
