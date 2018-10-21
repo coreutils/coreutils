@@ -72,7 +72,6 @@ static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
-static bool test_unop (char const *s);
 static bool unary_operator (void);
 static bool binary_operator (bool);
 static bool two_arguments (void);
@@ -258,12 +257,7 @@ term (void)
 
   /* It might be a switch type argument.  */
   else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][2] == '\0')
-    {
-      if (test_unop (argv[pos]))
-        value = unary_operator ();
-      else
-        test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
-    }
+    value = unary_operator ();
   else
     {
       value = (argv[pos][0] != '\0');
@@ -399,6 +393,7 @@ unary_operator (void)
   switch (argv[pos][1])
     {
     default:
+      test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
       return false;
 
       /* All of the following unary operators use unary_advance (), which
@@ -576,26 +571,6 @@ expr (void)
   return or ();		/* Same with this. */
 }
 
-/* Return true if OP is one of the test command's unary operators. */
-static bool
-test_unop (char const *op)
-{
-  if (op[0] != '-')
-    return false;
-
-  switch (op[1])
-    {
-    case 'b': case 'c': case 'd': case 'e':
-    case 'f': case 'g': case 'h': case 'k': case 'n':
-    case 'o': case 'p': case 'r': case 's': case 't':
-    case 'u': case 'w': case 'x': case 'z':
-    case 'G': case 'L': case 'O': case 'S': case 'N':
-      return true;
-    default:
-      return false;
-    }
-}
-
 static bool
 one_argument (void)
 {
@@ -616,10 +591,7 @@ two_arguments (void)
            && argv[pos][1] != '\0'
            && argv[pos][2] == '\0')
     {
-      if (test_unop (argv[pos]))
-        value = unary_operator ();
-      else
-        test_syntax_error (_("%s: unary operator expected"), quote (argv[pos]));
+      value = unary_operator ();
     }
   else
     beyond ();

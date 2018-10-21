@@ -26,8 +26,8 @@ use strict;
 my @Tests =
     (
      # In coreutils-5.93, this diagnostic lacked the newline.
-     ['o', '-o arg', {ERR => "test: extra argument '-o'\n"},
-      {ERR_SUBST => 's!^.*:!test:!'},
+     ['o', '-o arg', {ERR => "test: '-o': unary operator expected\n"},
+      {ERR_SUBST => 's!^.*test:!test:!'},
       {EXIT => 2}],
     );
 
