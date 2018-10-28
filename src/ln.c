@@ -311,7 +311,8 @@ do_link (const char *source, const char *dest, int link_errno)
 
                   if (backup_type != no_backups)
                     {
-                      dest_backup = find_backup_file_name (dest, backup_type);
+                      dest_backup = find_backup_file_name (AT_FDCWD, dest,
+                                                           backup_type);
                       if (rename (dest, dest_backup) != 0)
                         {
                           int rename_errno = errno;

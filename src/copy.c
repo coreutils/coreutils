@@ -2151,7 +2151,8 @@ copy_internal (char const *src_name, char const *dst_name,
                   return false;
                 }
 
-              char *tmp_backup = backup_file_rename (dst_name, x->backup_type);
+              char *tmp_backup = backup_file_rename (AT_FDCWD, dst_name,
+                                                     x->backup_type);
 
               /* FIXME: use fts:
                  Using alloca for a file name that may be arbitrarily
