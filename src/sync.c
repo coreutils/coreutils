@@ -111,8 +111,10 @@ sync_arg (enum sync_mode mode, char const *file)
       if (open_flags != (O_WRONLY | O_NONBLOCK))
         fd = open (file, O_WRONLY | O_NONBLOCK);
       if (fd < 0)
-        error (0, rd_errno, _("error opening %s"), quoteaf (file));
-      return false;
+        {
+          error (0, rd_errno, _("error opening %s"), quoteaf (file));
+          return false;
+        }
     }
 
   /* We used O_NONBLOCK above to not hang with fifos,
