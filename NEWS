@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df no longer corrupts displayed multibyte characters on macOS.
   [bug introduced with coreutils-8.18]
 
+  sync no longer fails for write-only file arguments.
+  [bug introduced with argument support to sync in coreutils-8.24]
+
 ** Changes in behavior
 
   echo now always processes backslash escapes when the POSIXLY_CORRECT
@@ -21,8 +24,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   uses fewer system calls and avoids some races.  The old statting
   approach is still used in situations where hard links to directories
   are allowed (e.g., NetBSD when superuser).
-
-** Changes in behavior
 
   'test -a FILE' is not supported anymore.  Long ago, there were concerns about
   the high probability of humans confusing the -a primary with the -a binary
