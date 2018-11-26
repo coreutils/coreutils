@@ -102,15 +102,9 @@ main (void)
 
 #else /* !CRCTAB */
 
-# include <getopt.h>
 # include "long-options.h"
 # include "die.h"
 # include "error.h"
-
-static struct option const long_options[] =
-{
-  {NULL, 0, NULL, 0}
-};
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -294,10 +288,8 @@ main (int argc, char **argv)
      so that processes running in parallel do not intersperse their output.  */
   setvbuf (stdout, NULL, _IOLBF, 0);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-                      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
-    usage (EXIT_FAILURE);
+  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE, Version,
+                                   true, usage, AUTHORS, (char const *) NULL);
 
   have_read_stdin = false;
 

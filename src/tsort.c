@@ -23,7 +23,6 @@
 #include <config.h>
 
 #include <assert.h>
-#include <getopt.h>
 #include <sys/types.h>
 
 #include "system.h"
@@ -39,11 +38,6 @@
 #define PROGRAM_NAME "tsort"
 
 #define AUTHORS proper_name ("Mark Kettenis")
-
-static struct option const long_options[] =
-{
-  {NULL, 0, NULL, 0}
-};
 
 /* Token delimiters when reading from a file.  */
 #define DELIM " \t\n"
@@ -556,10 +550,9 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-                      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
-    usage (EXIT_FAILURE);
+  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
+                                   Version, true, usage, AUTHORS,
+                                   (char const *) NULL);
 
   if (1 < argc - optind)
     {

@@ -22,7 +22,6 @@
 
 #include <sys/types.h>
 #include <signal.h>
-#include <getopt.h>
 
 #include "system.h"
 #include "close-stream.h"
@@ -45,11 +44,6 @@
   proper_name ("Paul Rubin"), \
   proper_name ("David MacKenzie"), \
   proper_name ("Stuart Kemp")
-
-static struct option const long_options[] =
-{
-  {NULL, 0, NULL, 0}
-};
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
@@ -2396,12 +2390,9 @@ main (int argc, char **argv)
 
   page_size = getpagesize ();
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-                      usage, AUTHORS, (char const *) NULL);
+  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE, Version,
+                                   true, usage, AUTHORS, (char const *) NULL);
   close_stdout_required = false;
-
-  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
-    usage (EXIT_FAILURE);
 
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)

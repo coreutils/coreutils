@@ -37,6 +37,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cksum, dd, hostid, hostname, link, logname, sleep, tsort, unlink,
+  uptime, users, whoami, yes: now always process --help and --version options,
+  regardless of any other arguments present before any optional '--'
+  end-of-options marker.
+
+  nohup: now process --help and --version as first options even if other
+  parameters follow.
+
+  'yes a -- b' now outputs 'a b' instead of including the end-of-options
+  marker as before: 'a -- b'.
+
   echo now always processes backslash escapes when the POSIXLY_CORRECT
   environment variable is set.
 

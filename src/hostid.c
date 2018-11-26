@@ -18,7 +18,6 @@
 /* Written by Jim Meyering.  */
 
 #include <config.h>
-#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -31,11 +30,6 @@
 #define PROGRAM_NAME "hostid"
 
 #define AUTHORS proper_name ("Jim Meyering")
-
-static struct option const long_options[] =
-{
-  {NULL, 0, NULL, 0}
-};
 
 void
 usage (int status)
@@ -69,10 +63,9 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-                      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", long_options, NULL) != -1)
-    usage (EXIT_FAILURE);
+  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
+                                   Version, true, usage, AUTHORS,
+                                   (char const *) NULL);
 
   if (optind < argc)
     {

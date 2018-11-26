@@ -163,6 +163,7 @@ check-root:
 
 all_tests =					\
   tests/misc/help-version.sh			\
+  tests/misc/help-version-getopt.sh		\
   tests/tail-2/inotify-race.sh			\
   tests/tail-2/inotify-race2.sh			\
   tests/misc/invalid-opt.pl			\
