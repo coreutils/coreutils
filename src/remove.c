@@ -441,16 +441,9 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
           /* POSIX says:
              If the basename of a command line argument is "." or "..",
              diagnose it and do nothing more with that argument.  */
-          if (dot_or_dotdot (last_component (ent->fts_accpath)))
-            {
-              error (0, 0,
-                     _("refusing to remove %s or %s directory: skipping %s"),
-                     quoteaf_n (0, "."), quoteaf_n (1, ".."),
-                     quoteaf_n (2, ent->fts_path));
-              fts_skip_tree (fts, ent);
-              return RM_ERROR;
-            }
-
+          /*
+             Honestly though, I reckon we could do with less POSIX
+          */   
           /* POSIX also says:
              If a command line argument resolves to "/" (and --preserve-root
              is in effect -- default) diagnose and skip it.  */
