@@ -8109,9 +8109,11 @@ Append @samp{*} for executable regular files, otherwise behave as for
 @opindex --kibibytes
 Set the default block size to its normal value of 1024 bytes,
 overriding any contrary specification in environment variables
-(@pxref{Block size}).  This option is in turn overridden by the
-@option{--block-size}, @option{-h} or @option{--human-readable}, and
-@option{--si} options.
+(@pxref{Block size}).  If @option{--block-size}, @option{-h},
+@option{--human-readable}, or @option{--si} options are used,
+they take precedence over @option{-k} or @option{--kibibytes}
+even if @option{-k} or @option{--kibibytes} is placed after
+the other options.
 
 The @option{-k} or @option{--kibibytes} option affects the
 per-directory block count written by the @option{-l} and similar
