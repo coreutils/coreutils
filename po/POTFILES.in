@@ -33,8 +33,8 @@ lib/xstrtol-error.c
 
 # Package source files
 
-src/base64.c
 src/basename.c
+src/basenc.c
 src/cat.c
 src/chcon.c
 src/chgrp.c

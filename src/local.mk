@@ -410,8 +410,9 @@ src_b2sum_SOURCES = src/md5sum.c \
 		    src/blake2/blake2b-ref.c \
 		    src/blake2/b2sum.c src/blake2/b2sum.h
 
+src_base64_SOURCES = src/basenc.c
 src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)
-src_base32_SOURCES = src/base64.c
+src_base32_SOURCES = src/basenc.c
 src_base32_CPPFLAGS = -DBASE_TYPE=32 $(AM_CPPFLAGS)
 
 src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
