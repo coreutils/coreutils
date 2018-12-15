@@ -11,6 +11,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   df no longer corrupts displayed multibyte characters on macOS.
   [bug introduced with coreutils-8.18]
 
+  shred, sort, and split no longer falsely report ftruncate errors
+  when outputting to less-common file types.  For example, the shell
+  command 'sort /dev/null -o /dev/stdout | cat' no longer fails with
+  an "error truncating" diagnostic.
+  [bug was introduced with coreutils-8.18 for sort and split, and
+   (for shared memory objects only) with fileutils-4.1 for shred]
+
   sync no longer fails for write-only file arguments.
   [bug introduced with argument support to sync in coreutils-8.24]
 
