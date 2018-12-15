@@ -470,7 +470,8 @@ create (const char *name)
       if (SAME_INODE (in_stat_buf, out_stat_buf))
         die (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
              quoteaf (name));
-      if (ftruncate (fd, 0) != 0)
+      if (ftruncate (fd, 0) != 0
+          && (S_ISREG (out_stat_buf.st_mode) || S_TYPEISSHM (&out_stat_buf)))
         die (EXIT_FAILURE, errno, _("%s: error truncating"), quotef (name));
 
       return fd;

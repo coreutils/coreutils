@@ -975,11 +975,13 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
         }
     }
 
-  /* Now deallocate the data.  The effect of ftruncate on
-     non-regular files is unspecified, so don't worry about any
-     errors reported for them.  */
+  /* Now deallocate the data.  The effect of ftruncate is specified
+     on regular files and shared memory objects (also directories, but
+     they are not possible here); don't worry about errors reported
+     for other file types.  */
+
   if (flags->remove_file && ftruncate (fd, 0) != 0
-      && S_ISREG (st.st_mode))
+      && (S_ISREG (st.st_mode) || S_TYPEISSHM (&st)))
     {
       error (0, errno, _("%s: error truncating"), qname);
       ok = false;

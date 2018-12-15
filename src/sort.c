@@ -895,8 +895,21 @@ create_temp_file (int *pfd, bool survive_fd_exhaustion)
   return node;
 }
 
-/* Return a stream for FILE, opened with mode HOW.  A null FILE means
-   standard output; HOW should be "w".  When opening for input, "-"
+/* Return a pointer to stdout status, or NULL on failure.  */
+
+static struct stat *
+get_outstatus (void)
+{
+  static int outstat_errno;
+  static struct stat outstat;
+  if (outstat_errno == 0)
+    outstat_errno = fstat (STDOUT_FILENO, &outstat) == 0 ? -1 : errno;
+  return outstat_errno < 0 ? &outstat : NULL;
+}
+
+/* Return a stream for FILE, opened with mode HOW.  If HOW is "w",
+   the file is already open on standard output, and needs to be
+   truncated unless FILE is null.  When opening for input, "-"
    means standard input.  To avoid confusion, do not return file
    descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
    opening an ordinary FILE.  Return NULL if unsuccessful.
@@ -964,8 +977,13 @@ stream_open (char const *file, char const *how)
   else if (*how == 'w')
     {
       if (file && ftruncate (STDOUT_FILENO, 0) != 0)
-        die (SORT_FAILURE, errno, _("%s: error truncating"),
-             quotef (file));
+        {
+          int ftruncate_errno = errno;
+          struct stat *outst = get_outstatus ();
+          if (!outst || S_ISREG (outst->st_mode) || S_TYPEISSHM (outst))
+            die (SORT_FAILURE, ftruncate_errno, _("%s: error truncating"),
+                 quotef (file));
+        }
       fp = stdout;
     }
   else
@@ -3699,8 +3717,6 @@ static void
 avoid_trashing_input (struct sortfile *files, size_t ntemps,
                       size_t nfiles, char const *outfile)
 {
-  bool got_outstat = false;
-  struct stat outstat;
   struct tempnode *tempcopy = NULL;
 
   for (size_t i = ntemps; i < nfiles; i++)
@@ -3713,18 +3729,15 @@ avoid_trashing_input (struct sortfile *files, size_t ntemps,
         same = true;
       else
         {
-          if (! got_outstat)
-            {
-              if (fstat (STDOUT_FILENO, &outstat) != 0)
-                break;
-              got_outstat = true;
-            }
+          struct stat *outst = get_outstatus ();
+          if (!outst)
+            break;
 
           same = (((is_stdin
                     ? fstat (STDIN_FILENO, &instat)
                     : stat (files[i].name, &instat))
                    == 0)
-                  && SAME_INODE (instat, outstat));
+                  && SAME_INODE (instat, *outst));
         }
 
       if (same)
