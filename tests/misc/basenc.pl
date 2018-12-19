@@ -81,9 +81,8 @@ my @Tests =
  ['noenc', '',    {IN=>''}, {EXIT=>1},
   {ERR=>"$prog: missing encoding type\n" . $try_help }],
 
- ## TODO: Fix to "B" (this is a bug in the original base64.c:1064
  ['extra', '--base64 A B',  {IN=>''}, {EXIT=>1},
-  {ERR=>"$prog: extra operand 'A'\n" . $try_help}],
+  {ERR=>"$prog: extra operand 'B'\n" . $try_help}],
 
 
  ['empty1', '--base64',    {IN=>''}, {OUT=>""}],

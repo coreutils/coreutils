@@ -21,6 +21,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   sync no longer fails for write-only file arguments.
   [bug introduced with argument support to sync in coreutils-8.24]
 
+  In 'base64 a b', and likewise for base32, the tool now correctly
+  diagnoses 'b' as the extra operand, not 'a'.
+  [bug introduced in coreutils-5.3.0]
+
 ** Changes in behavior
 
   echo now always processes backslash escapes when the POSIXLY_CORRECT

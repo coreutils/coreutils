@@ -1220,7 +1220,7 @@ main (int argc, char **argv)
 
   if (argc - optind > 1)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      error (0, 0, _("extra operand %s"), quote (argv[optind+1]));
       usage (EXIT_FAILURE);
     }
 
