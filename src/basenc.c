@@ -1,7 +1,5 @@
-/* Base64 encode/decode strings or files.
+/* Base64, base32, and similar encoding/decoding strings or files.
    Copyright (C) 2004-2018 Free Software Foundation, Inc.
-
-   This file is part of Base64.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
