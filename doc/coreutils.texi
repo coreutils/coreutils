@@ -41,6 +41,7 @@
 * base32: (coreutils)base32 invocation.         Base32 encode/decode data.
 * base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
+* basenc: (coreutils)basenc invocation.         Encoding/decoding of data.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
 * chcon: (coreutils)chcon invocation.           Change SELinux CTX of files.
 * chgrp: (coreutils)chgrp invocation.           Change file groups.
@@ -184,7 +185,7 @@ Free Documentation License''.
 @menu
 * Introduction::                 Caveats, overview, and authors
 * Common options::               Common options
-* Output of entire files::       cat tac nl od base32 base64
+* Output of entire files::       cat tac nl od base32 base64 basenc
 * Formatting file contents::     fmt pr fold
 * Output of parts of files::     head tail split csplit
 * Summarizing files::            wc sum cksum b2sum md5sum sha1sum sha2
@@ -242,6 +243,7 @@ Output of entire files
 * od invocation::                Write files in octal or other formats
 * base32 invocation::            Transform data into printable data
 * base64 invocation::            Transform data into printable data
+* basenc invocation::            Transform data into printable data
 
 Formatting file contents
 
@@ -1589,6 +1591,7 @@ in some way.
 * od invocation::               Write files in octal or other formats.
 * base32 invocation::           Transform data into printable data.
 * base64 invocation::           Transform data into printable data.
+* basenc invocation::           Transform data into printable data.
 @end menu
 
 @node cat invocation
@@ -2251,6 +2254,132 @@ to permit distorted data to be decoded.
 @end table
 
 @exitstatus
+
+@node basenc invocation
+@section @command{basenc}: Transform data into printable data
+
+@pindex basenc
+@cindex base32 encoding
+
+@command{basenc} transforms data read from a file, or standard input,
+into (or from) various common encoding forms.  The encoded form uses
+printable ASCII characters to represent binary data.
+
+Synopses:
+
+@example
+basenc @var{encoding} [@var{option}]@dots{} [@var{file}]
+basenc @var{encoding} --decode [@var{option}]@dots{} [@var{file}]
+@end example
+
+The @var{encoding} argument is required. If @var{file} is omitted,
+reads input from stdin. The @option{-w/--wrap},@option{-i/--ignore-garbage},
+@option{-d/--decode} options of this command are precisely the same as
+for @command{base64}. @xref{base64 invocation}.
+
+
+Supported @var{encoding}s are:
+
+@table @samp
+
+@item --base64
+@opindex --base64
+Encode into (or decode from with @option{-d/--decode}) base64 form.
+The format conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648@hashchar{}4}.
+Equivalent to the @command{base64} command.
+
+@item --base64url
+@opindex --base64url
+Encode into (or decode from with @option{-d/--decode}) file-and-url-safe
+base64 form (using @samp{_} and @samp{-} instead of @samp{+} and @samp{/}).
+The format conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-5, RFC 4648@hashchar{}5}.
+
+@item --base32
+@opindex --base32
+Encode into (or decode from with @option{-d/--decode}) base32 form.
+The encoded data uses the @samp{ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=} characters.
+The format conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-6, RFC 4648@hashchar{}6}.
+Equivalent to the @command{base32} command.
+
+@item --base32hex
+@opindex --base32hex
+Encode into (or decode from with @option{-d/--decode}) Extended Hex Alphabet
+base32 form. The encoded data uses the
+@samp{0123456789ABCDEFGHIJKLMNOPQRSTUV=} characters. The format conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-7, RFC 4648@hashchar{}7}.
+
+@item --base16
+@opindex --base16
+Encode into (or decode from with @option{-d/--decode}) base16 (hexadecimal)
+form. The encoded data uses the @samp{0123456789ABCDEF} characters. The format
+conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-8, RFC 4648@hashchar{}8}.
+
+@item --base2lsbf
+@opindex --base2lsbf
+Encode into (or decode from with @option{-d/--decode}) binary string form
+(@samp{0} and @samp{1}) with the @emph{least} significant bit of every byte
+first.
+
+@item --base2msbf
+@opindex --base2msbf
+Encode into (or decode from with @option{-d/--decode}) binary string form
+(@samp{0} and @samp{1}) with the @emph{most} significant bit of every byte
+first.
+
+@item --z85
+@opindex --z85
+Encode into (or decode from with @option{-d/--decode}) Z85 form
+(a modified Ascii85 form). The encoded data uses the
+@samp{0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU@
+VWXYZ.-:+=^!/*?&<>()[]@{@}@@%$#}.
+characters. The format conforms to
+@uref{https://rfc.zeromq.org/spec:32/Z85/, ZeroMQ spec:32/Z85}.
+
+When encoding with @option{--z85}, input length must be a multiple of 4;
+when decoding with @option{--z85}, input length must be a multiple of 5.
+
+@end table
+
+
+
+Encoding/decoding examples:
+
+@example
+$ printf '\376\117\202' | basenc --base64
+/k+C
+
+$ printf '\376\117\202' | basenc --base64url
+_k-C
+
+$ printf '\376\117\202' | basenc --base32
+7ZHYE===
+
+$ printf '\376\117\202' | basenc --base32hex
+VP7O4===
+
+$ printf '\376\117\202' | basenc --base16
+FE4F82
+
+$ printf '\376\117\202' | basenc --base2lsbf
+011111111111001001000001
+
+$ printf '\376\117\202' | basenc --base2msbf
+111111100100111110000010
+
+$ printf '\376\117\202\000' | basenc --z85
+@@.FaC
+
+$ printf 01010100 | basenc --base2msbf --decode
+T
+
+$ printf 01010100 | basenc --base2lsbf --decode
+*
+@end example
+
 
 
 @node Formatting file contents

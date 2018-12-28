@@ -6,6 +6,7 @@ b2sum: Padraig Brady, Samuel Neves
 base32: Simon Josefsson
 base64: Simon Josefsson
 basename: David MacKenzie
+basenc: Simon Josefsson, Assaf Gordon
 cat: Torbjorn Granlund, Richard M. Stallman
 chcon: Russell Coker, Jim Meyering
 chgrp: David MacKenzie, Jim Meyering

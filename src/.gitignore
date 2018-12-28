@@ -5,6 +5,7 @@ arch
 b2sum
 base32
 base64
+basenc
 basename
 cat
 chcon

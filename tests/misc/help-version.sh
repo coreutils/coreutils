@@ -184,6 +184,7 @@ defid_setup () { args=t; }
 basename_setup () { args=$tmp_in; }
 dirname_setup () { args=$tmp_in; }
 expr_setup () { args=foo; }
+basenc_setup () { args=--version; }
 
 # Punt, in case GNU 'id' hasn't been installed yet.
 groups_setup () { args=--version; }

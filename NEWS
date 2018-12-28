@@ -44,6 +44,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   test now supports the '-N FILE' unary operator (like e.g. bash) to check
   whether FILE exists and has been modified since it was last read.
 
+** New commands
+
+  basenc is added to complement existing base64,base32 commands,
+  and encodes and decodes printable text using various common encodings:
+  base64,base64url,base32,base32hex,base16,base2,z85.
+
 
 * Noteworthy changes in release 8.30 (2018-07-01) [stable]
 

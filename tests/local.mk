@@ -278,6 +278,7 @@ all_tests =					\
   tests/misc/cat-self.sh			\
   tests/misc/base64.pl				\
   tests/misc/basename.pl			\
+  tests/misc/basenc.pl				\
   tests/misc/close-stdout.sh			\
   tests/misc/chroot-fail.sh			\
   tests/misc/comm.pl				\

@@ -97,6 +97,7 @@ LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) lib/libcoreutils.a
 src_arch_LDADD = $(LDADD)
 src_base64_LDADD = $(LDADD)
 src_base32_LDADD = $(LDADD)
+src_basenc_LDADD = $(LDADD)
 src_basename_LDADD = $(LDADD)
 src_cat_LDADD = $(LDADD)
 src_chcon_LDADD = $(LDADD)
@@ -414,6 +415,8 @@ src_base64_SOURCES = src/basenc.c
 src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)
 src_base32_SOURCES = src/basenc.c
 src_base32_CPPFLAGS = -DBASE_TYPE=32 $(AM_CPPFLAGS)
+src_basenc_SOURCES = src/basenc.c
+src_basenc_CPPFLAGS = -DBASE_TYPE=42 $(AM_CPPFLAGS)
 
 src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
 

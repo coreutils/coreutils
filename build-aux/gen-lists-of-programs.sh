@@ -45,6 +45,7 @@ normal_progs='
     b2sum
     base64
     base32
+    basenc
     basename
     cat
     chcon

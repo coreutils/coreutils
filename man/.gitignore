@@ -3,6 +3,7 @@ Makefile.in
 b2sum.1
 base32.1
 base64.1
+basenc.1
 basename.1
 cat.1
 chgrp.1
