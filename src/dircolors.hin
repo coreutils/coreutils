@@ -35,8 +35,10 @@ TERM tmux*
 TERM vt100
 TERM xterm*
 
-# Below are the color init strings for the basic file types. A color init
-# string consists of one or more of the following numeric codes:
+# Below are the color init strings for the basic file types.
+# One can use codes for 256 or more colors supported by modern terminals.
+# The default color codes use the capabilities of an 8 color terminal
+# with some additional attributes as per the following codes:
 # Attribute codes:
 # 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
 # Text color codes:
