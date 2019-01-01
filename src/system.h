@@ -660,10 +660,10 @@ emit_ancillary_info (char const *program)
          <https://translationproject.org/team/LANG_CODE.html> to form one of
          the URLs at https://translationproject.org/team/.  Otherwise, replace
          the entire URL with your translation team's email address.  */
-      printf (_("Report %s translation bugs to "
-                "<https://translationproject.org/team/>\n"), program);
+      fputs (_("Report any translation bugs to "
+               "<https://translationproject.org/team/>\n"), stdout);
     }
-  printf (_("Full documentation at: <%s%s>\n"),
+  printf (_("Full documentation <%s%s>\n"),
           PACKAGE_URL, program);
   printf (_("or available locally via: info '(coreutils) %s%s'\n"),
           node, node == program ? " invocation" : "");
