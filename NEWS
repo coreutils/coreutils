@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'base64 a b' now correctly diagnoses 'b' as the extra operand, not 'a'.
+  [bug introduced in coreutils-5.3.0]
+
   When B already exists, 'cp -il A B' no longer immediately fails
   after asking the user whether to proceed.
   [This bug was present in "the beginning".]
@@ -21,9 +24,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sync no longer fails for write-only file arguments.
   [bug introduced with argument support to sync in coreutils-8.24]
 
-  In 'base64 a b', and likewise for base32, the tool now correctly
-  diagnoses 'b' as the extra operand, not 'a'.
-  [bug introduced in coreutils-5.3.0]
+  'tail -f file | filter' no longer exits immediately on AIX.
+  [bug introduced in coreutils-8.28]
 
 ** Changes in behavior
 

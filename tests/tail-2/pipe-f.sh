@@ -37,7 +37,10 @@ compare exp out || fail=1
 
 # This would wait indefinitely before v8.28 due to no EPIPE being
 # generated due to no data written after the first small amount
-timeout 10 tail -f $mode $fastpoll out | sleep .1 || fail=1
+(returns_ 124 timeout 10 tail -n2 -f $mode $fastpoll out && touch timed_out) |
+ sed 2q > out2
+test -e timed_out && fail=1
+compare exp out2 || fail=1
 
 # This would wait indefinitely before v8.28 (until first write)
 (returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&-) || fail=1

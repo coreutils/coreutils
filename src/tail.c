@@ -30,6 +30,9 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
+#ifdef _AIX
+# include <poll.h>
+#endif
 
 #include "system.h"
 #include "argmatch.h"
@@ -336,6 +339,16 @@ named file in a way that accommodates renaming, removal and creation.\n\
 static void
 check_output_alive (void)
 {
+#ifdef _AIX
+  /* select on AIX was seen to give a readable event immediately.  */
+  struct pollfd pfd;
+  pfd.fd = STDOUT_FILENO;
+  pfd.events = POLLERR;
+
+  if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
+    raise (SIGPIPE);
+#endif
+
   if (! monitor_output)
     return;
 
