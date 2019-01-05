@@ -976,9 +976,11 @@ static void
 do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 {
   size_t current_column = 0;
-  char inbuf[ENC_BLOCKSIZE];
-  char outbuf[BASE_LENGTH (ENC_BLOCKSIZE)];
+  char *inbuf, *outbuf;
   size_t sum;
+
+  inbuf = xmalloc (ENC_BLOCKSIZE);
+  outbuf = xmalloc (BASE_LENGTH (ENC_BLOCKSIZE));
 
   do
     {
@@ -1010,15 +1012,20 @@ do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 
   if (ferror (in))
     die (EXIT_FAILURE, errno, _("read error"));
+
+  IF_LINT (free (inbuf));
+  IF_LINT (free (outbuf));
 }
 
 static void
 do_decode (FILE *in, FILE *out, bool ignore_garbage)
 {
-  char inbuf[BASE_LENGTH (DEC_BLOCKSIZE)];
-  char outbuf[DEC_BLOCKSIZE];
+  char *inbuf, *outbuf;
   size_t sum;
   struct base_decode_context ctx;
+
+  inbuf = xmalloc (BASE_LENGTH (DEC_BLOCKSIZE));
+  outbuf = xmalloc (DEC_BLOCKSIZE);
 
 #if BASE_TYPE == 42
   ctx.inbuf = NULL;
@@ -1077,6 +1084,8 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 #if BASE_TYPE == 42
   IF_LINT (free (ctx.inbuf));
 #endif
+  IF_LINT (free (inbuf));
+  IF_LINT (free (outbuf));
 }
 
 int
