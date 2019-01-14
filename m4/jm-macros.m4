@@ -41,6 +41,10 @@ AC_DEFUN([coreutils_MACROS],
   AC_DEFINE([ARGMATCH_DIE_DECL], [void usage (int _e)],
             [Define to the declaration of the xargmatch failure function.])
 
+  # Ensure VLAs are not used.
+  # Note -Wvla is implicitly added by gl_MANYWARN_ALL_GCC
+  AC_DEFINE([GNULIB_NO_VLA], [1], [Define to 1 to disable use of VLAs])
+
   # used by shred
   AC_CHECK_FUNCS_ONCE([directio])
 
