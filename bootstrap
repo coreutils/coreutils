@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2018-10-13.05; # UTC
+scriptversion=2019-01-04.17; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -962,6 +962,16 @@ fi
 
 bootstrap_post_import_hook \
   || die "bootstrap_post_import_hook failed"
+
+# Don't proceed if there are uninitialized submodules.  In particular,
+# the next step will remove dangling links, which might be links into
+# uninitialized submodules.
+#
+# Uninitialized submodules are listed with an initial dash.
+if $use_git && git submodule | grep '^-' >/dev/null; then
+  die "some git submodules are not initialized. "     \
+      "Run 'git submodule init' and bootstrap again."
+fi
 
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
