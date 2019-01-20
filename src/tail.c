@@ -339,6 +339,9 @@ named file in a way that accommodates renaming, removal and creation.\n\
 static void
 check_output_alive (void)
 {
+  if (! monitor_output)
+    return;
+
 #ifdef _AIX
   /* select on AIX was seen to give a readable event immediately.  */
   struct pollfd pfd;
@@ -347,11 +350,7 @@ check_output_alive (void)
 
   if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
     raise (SIGPIPE);
-#endif
-
-  if (! monitor_output)
-    return;
-
+#else
   struct timeval delay;
   delay.tv_sec = delay.tv_usec = 0;
 
@@ -363,6 +362,7 @@ check_output_alive (void)
      and implies an error condition on output like broken pipe.  */
   if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
     raise (SIGPIPE);
+#endif
 }
 
 static bool
