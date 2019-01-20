@@ -334,6 +334,14 @@ named file in a way that accommodates renaming, removal and creation.\n\
   exit (status);
 }
 
+/* Ensure exit, either with SIGPIPE or EXIT_FAILURE status.  */
+static void ATTRIBUTE_NORETURN
+die_pipe (void)
+{
+  raise (SIGPIPE);
+  exit (EXIT_FAILURE);
+}
+
 /* If the output has gone away, then terminate
    as we would if we had written to this output.  */
 static void
@@ -349,7 +357,7 @@ check_output_alive (void)
   pfd.events = POLLERR;
 
   if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
-    raise (SIGPIPE);
+    die_pipe ();
 #else
   struct timeval delay;
   delay.tv_sec = delay.tv_usec = 0;
@@ -361,7 +369,7 @@ check_output_alive (void)
   /* readable event on STDOUT is equivalent to POLLERR,
      and implies an error condition on output like broken pipe.  */
   if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
-    raise (SIGPIPE);
+    die_pipe ();
 #endif
 }
 
@@ -1659,7 +1667,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
              {
                /* readable event on STDOUT is equivalent to POLLERR,
                   and implies an error on output like broken pipe.  */
-               raise (SIGPIPE);
+               die_pipe ();
              }
            else
              break;

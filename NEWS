@@ -27,6 +27,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'tail -f file | filter' no longer exits immediately on AIX.
   [bug introduced in coreutils-8.28]
 
+  'tail -f file | filter' no longer goes into an infinite loop
+  if filter exits and SIGPIPE is ignored.
+  [bug introduced in coreutils-8.28]
+
 ** Changes in behavior
 
   echo now always processes backslash escapes when the POSIXLY_CORRECT

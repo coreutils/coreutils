@@ -18,9 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ seq
-
-(trap '' PIPE && yes | :) 2>&1 | grep -qF 'Broken pipe' ||
-    skip_ 'trapping SIGPIPE is not supported'
+trap_sigpipe_or_skip_
 
 # upon EPIPE with signals ignored, 'seq' should exit with an error.
 timeout 10 sh -c \

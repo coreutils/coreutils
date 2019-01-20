@@ -18,6 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
+trap_sigpipe_or_skip_
 
 # Speedup the non inotify case
 fastpoll='-s.1 --max-unchanged-stats=1'
@@ -36,11 +37,19 @@ echo bar | returns_ 1 \
 compare exp out || fail=1
 
 # This would wait indefinitely before v8.28 due to no EPIPE being
-# generated due to no data written after the first small amount
-(returns_ 124 timeout 10 tail -n2 -f $mode $fastpoll out && touch timed_out) |
- sed 2q > out2
-test -e timed_out && fail=1
-compare exp out2 || fail=1
+# generated due to no data written after the first small amount.
+# Also check tail exits if SIGPIPE is being ignored.
+# Note 'trap - SIGPIPE' is ineffective if the initiating shell
+# has ignored SIGPIPE, but that's not the normal case.
+for disposition in '' '-'; do
+  (trap "$disposition" PIPE;
+   returns_ 124 timeout 10 \
+    tail -n2 -f $mode $fastpoll out && touch timed_out) |
+  sed 2q > out2
+  test -e timed_out && fail=1
+  compare exp out2 || fail=1
+  rm -f timed_out
+done
 
 # This would wait indefinitely before v8.28 (until first write)
 (returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&-) || fail=1
