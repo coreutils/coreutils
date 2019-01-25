@@ -18121,7 +18121,7 @@ sleep @var{number}[smhd]@dots{}
 @end example
 
 @cindex time units
-Each argument is a number followed by an optional unit; the default
+Each argument is a non-negative number followed by an optional unit; the default
 is seconds.  The units are:
 
 @table @samp
@@ -18135,10 +18135,10 @@ hours
 days
 @end table
 
-Historical implementations of @command{sleep} have required that
-@var{number} be an integer, and only accepted a single argument
-without a suffix.  However, GNU @command{sleep} accepts
-arbitrary floating point numbers.  @xref{Floating point}.
+Although portable POSIX scripts must give @command{sleep} a single
+non-negative integer argument without a suffix, GNU @command{sleep}
+also accepts two or more arguments, unit suffixes, and floating-point
+numbers.  @xref{Floating point}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
