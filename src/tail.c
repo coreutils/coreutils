@@ -36,7 +36,7 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "c-strtod.h"
+#include "cl-strtod.h"
 #include "die.h"
 #include "error.h"
 #include "fcntl--.h"
@@ -2244,7 +2244,7 @@ parse_options (int argc, char **argv,
         case 's':
           {
             double s;
-            if (! (xstrtod (optarg, NULL, &s, c_strtod) && 0 <= s))
+            if (! (xstrtod (optarg, NULL, &s, cl_strtod) && 0 <= s))
               die (EXIT_FAILURE, 0,
                    _("invalid number of seconds: %s"), quote (optarg));
             *sleep_interval = s;

@@ -1,0 +1,24 @@
+Description:
+Convert string to double in current or C locale.
+
+Files:
+lib/cl-strtod.c
+lib/cl-strtod.h
+
+Depends-on:
+c-strtod
+
+configure.ac:
+AC_REQUIRE([AC_C_RESTRICT])
+
+Makefile.am:
+lib_SOURCES += cl-strtod.c
+
+Include:
+"cl-strtod.h"
+
+License:
+GPL
+
+Maintainer:
+all

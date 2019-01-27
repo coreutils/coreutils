@@ -53,6 +53,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   id now supports specifying multiple users.
 
+  printf, seq, sleep, tail, and timeout now accept floating point
+  numbers in either the current or the C locale.  For example, if the
+  current locale's decimal point is ',', 'sleep 0,1' and 'sleep 0.1'
+  now mean the same thing.  Previously, these commands accepted only
+  C-locale syntax with '.' as the decimal point.  The new behavior is
+  more compatible with other implementations in non-C locales.
+
   test now supports the '-N FILE' unary operator (like e.g. bash) to check
   whether FILE exists and has been modified since it was last read.
 

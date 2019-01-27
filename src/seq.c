@@ -23,7 +23,7 @@
 
 #include "system.h"
 #include "die.h"
-#include "c-strtod.h"
+#include "cl-strtod.h"
 #include "error.h"
 #include "quote.h"
 #include "xstrtod.h"
@@ -142,7 +142,7 @@ scan_arg (const char *arg)
 {
   operand ret;
 
-  if (! xstrtold (arg, NULL, &ret.value, c_strtold))
+  if (! xstrtold (arg, NULL, &ret.value, cl_strtold))
     {
       error (0, 0, _("invalid floating point argument: %s"), quote (arg));
       usage (EXIT_FAILURE);
@@ -331,7 +331,7 @@ print_numbers (char const *fmt, struct layout layout,
                 xalloc_die ();
               x_str[x_strlen - layout.suffix_len] = '\0';
 
-              if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
+              if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, cl_strtold)
                   && x_val == last)
                 {
                   char *x0_str = NULL;

@@ -1,0 +1,23 @@
+Description:
+Convert string to long double in current or C locale.
+
+Files:
+lib/cl-strtold.c
+
+Depends-on:
+c-strtold
+cl-strtod
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += cl-strtold.c
+
+Include:
+"cl-strtod.h"
+
+License:
+GPL
+
+Maintainer:
+all

@@ -20,7 +20,7 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "c-strtod.h"
+#include "cl-strtod.h"
 #include "die.h"
 #include "error.h"
 #include "long-options.h"
@@ -128,7 +128,7 @@ main (int argc, char **argv)
     {
       double s;
       const char *p;
-      if (! (xstrtod (argv[i], &p, &s, c_strtod) || errno == ERANGE)
+      if (! (xstrtod (argv[i], &p, &s, cl_strtod) || errno == ERANGE)
           /* Nonnegative interval.  */
           || ! (0 <= s)
           /* No extra chars after the number and an optional s,m,h,d char.  */

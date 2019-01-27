@@ -1088,7 +1088,6 @@ information, please see David Goldberg's paper
 @uref{https://@/docs.oracle.com/@/cd/@/E19957-01/@/806-3568/@/ncg_goldberg.html,
 What Every Computer Scientist Should Know About Floating-Point Arithmetic}.
 
-@vindex LC_NUMERIC
 Commands that accept floating point numbers as options, operands or
 input use the standard C functions @code{strtod} and @code{strtold} to
 convert from text to floating point numbers.  These floating point
@@ -1098,9 +1097,15 @@ case-insensitive @code{inf}, @code{infinity}, and @code{NaN}, although
 whether such values are useful depends on the command in question.
 Modern C implementations also accept hexadecimal floating point
 numbers such as @code{-0x.ep-3}, which stands for @minus{}14/16 times
-@math{2^-3}, which equals @minus{}0.109375.  The @env{LC_NUMERIC}
-locale determines the decimal-point character.  @xref{Parsing of
+@math{2^-3}, which equals @minus{}0.109375.  @xref{Parsing of
 Floats,,, libc, The GNU C Library Reference Manual}.
+
+@vindex LC_NUMERIC
+Normally the @env{LC_NUMERIC} locale determines the decimal-point
+character.  However, some commands' descriptions specify that they
+accept numbers in either the current or the C locale; for example,
+they treat @samp{3.14} like @samp{3,14} if the current locale uses
+comma as a decimal point.
 
 @node Signal specifications
 @section Signal specifications
@@ -3187,13 +3192,12 @@ never checks it again.
 Change the number of seconds to wait between iterations (the default is 1.0).
 During one iteration, every specified file is checked to see if it has
 changed size.
-Historical implementations of @command{tail} have required that
-@var{number} be an integer.  However, GNU @command{tail} accepts
-an arbitrary floating point number.  @xref{Floating point}.
 When @command{tail} uses inotify, this polling-related option
 is usually ignored.  However, if you also specify @option{--pid=@var{p}},
 @command{tail} checks whether process @var{p} is alive at least
 every @var{number} seconds.
+The @var{number} must be non-negative and can be a floating-point number
+in either the current or the C locale.  @xref{Floating point}.
 
 @item -v
 @itemx --verbose
@@ -12829,11 +12833,11 @@ warning is printed.  For example, @samp{printf "%d" "'a"} outputs
 @end itemize
 
 @vindex LC_NUMERIC
-A floating-point argument must use a period before any fractional
-digits, but is printed according to the @env{LC_NUMERIC} category of the
-current locale.  For example, in a locale whose radix character is a
-comma, the command @samp{printf %g 3.14} outputs @samp{3,14} whereas
-the command @samp{printf %g 3,14} is an error.
+A floating point argument is interpreted according to
+the @env{LC_NUMERIC} category of either the current or the C locale,
+and is printed according to the current locale.
+For example, in a locale whose decimal point character is a comma,
+the command @samp{printf '%g %g' 2,5 2.5} outputs @samp{2,5 2,5}.
 @xref{Floating point}.
 
 @kindex \@var{ooo}
@@ -17985,7 +17989,8 @@ Diagnose to stderr, any signal sent upon timeout.
 @end table
 
 @cindex time units
-@var{duration} is a floating point number followed by an optional unit:
+@var{duration} is a floating point number in either the current or the
+C locale (@pxref{Floating point}) followed by an optional unit:
 @display
 @samp{s} for seconds (the default)
 @samp{m} for minutes
@@ -18138,7 +18143,7 @@ days
 Although portable POSIX scripts must give @command{sleep} a single
 non-negative integer argument without a suffix, GNU @command{sleep}
 also accepts two or more arguments, unit suffixes, and floating-point
-numbers.  @xref{Floating point}.
+numbers in either the current or the C locale.  @xref{Floating point}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -18587,7 +18592,8 @@ so @code{seq 1 10 10} only produces @samp{1}.
 @var{increment} must not be @samp{0}; use @command{yes} to get
 repeated output of a constant number.
 @var{first}, @var{increment} and @var{last} must not be @code{NaN}.
-Floating-point numbers may be specified.  @xref{Floating point}.
+Floating-point numbers may be specified in either the current or
+the C locale.  @xref{Floating point}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
