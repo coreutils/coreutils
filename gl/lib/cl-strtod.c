@@ -29,10 +29,12 @@
 #if LONG
 # define CL_STRTOD cl_strtold
 # define DOUBLE long double
+# define STRTOD strtold
 # define C_STRTOD c_strtold
 #else
 # define CL_STRTOD cl_strtod
 # define DOUBLE double
+# define STRTOD strtod
 # define C_STRTOD c_strtod
 #endif
 
@@ -57,7 +59,7 @@ DOUBLE
 CL_STRTOD (char const *nptr, char **restrict endptr)
 {
   char *end;
-  DOUBLE d = strtod (nptr, &end);
+  DOUBLE d = STRTOD (nptr, &end);
   if (*end)
     {
       int strtod_errno = errno;
