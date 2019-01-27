@@ -2,13 +2,15 @@ Description:
 Convert string to long double in current or C locale.
 
 Files:
+lib/cl-strtod.c
+lib/cl-strtod.h
 lib/cl-strtold.c
 
 Depends-on:
 c-strtold
-cl-strtod
 
 configure.ac:
+AC_REQUIRE([AC_C_RESTRICT])
 
 Makefile.am:
 lib_SOURCES += cl-strtold.c
