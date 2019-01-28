@@ -828,8 +828,9 @@ exclude_file_name_regexp--sc_system_h_headers = \
   ^src/((die|system|copy)\.h|make-prime-list\.c)$$
 
 _src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
+_gl_src = (xdecto.max|cl-strtold)
 exclude_file_name_regexp--sc_require_config_h_first = \
-  (^lib/buffer-lcm\.c|gl/lib/xdecto.max\.c|src/$(_src)\.c)$$
+  (^lib/buffer-lcm\.c|gl/lib/$(_gl_src)\.c|src/$(_src)\.c)$$
 exclude_file_name_regexp--sc_require_config_h = \
   $(exclude_file_name_regexp--sc_require_config_h_first)
 
