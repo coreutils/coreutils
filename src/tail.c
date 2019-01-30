@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <getopt.h>
+#include <sys/select.h>
 #include <sys/types.h>
 #include <signal.h>
 #ifdef _AIX
@@ -55,8 +56,6 @@
 #if HAVE_INOTIFY
 # include "hash.h"
 # include <sys/inotify.h>
-/* 'select' is used by tail_forever_inotify.  */
-# include <sys/select.h>
 #endif
 
 /* Linux can optimize the handling of local files.  */
