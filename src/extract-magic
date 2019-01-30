@@ -125,7 +125,7 @@ EOF
   print $emit_magic ? $magic_comment : $map_comment;
 
   $emit_magic
-    and print "\n#if defined __linux__\n";
+    and print "\n#if defined __linux__ || defined __ANDROID__\n";
   $emit_magic
     or print "static inline int\n"
       . "is_local_fs_type (unsigned long int magic)\n"

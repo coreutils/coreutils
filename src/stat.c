@@ -235,7 +235,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 #else
   switch (statfsbuf->f_type)
     {
-# if defined __linux__
+# if defined __linux__ || defined __ANDROID__
 
       /* Compare with what's in libc:
          f=/a/libc/sysdeps/unix/sysv/linux/linux_fsinfo.h
@@ -450,6 +450,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "romfs";
     case S_MAGIC_RPC_PIPEFS: /* 0x67596969 local */
       return "rpc_pipefs";
+    case S_MAGIC_SDCARDFS: /* 0x5DCA2DF5 local */
+      return "sdcardfs";
     case S_MAGIC_SECURITYFS: /* 0x73636673 local */
       return "securityfs";
     case S_MAGIC_SELINUX: /* 0xF97CFF8C local */

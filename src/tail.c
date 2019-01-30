@@ -57,8 +57,10 @@
 # include <sys/inotify.h>
 /* 'select' is used by tail_forever_inotify.  */
 # include <sys/select.h>
+#endif
 
-/* inotify needs to know if a file is local.  */
+/* Linux can optimize the handling of local files.  */
+#if defined __linux__ || defined __ANDROID__
 # include "fs.h"
 # include "fs-is-local.h"
 # if HAVE_SYS_STATFS_H
@@ -938,7 +940,8 @@ fremote (int fd, const char *name)
 {
   bool remote = true;           /* be conservative (poll by default).  */
 
-#if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE && defined __linux__
+#if HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE \
+ && (defined __linux__ || defined __ANDROID__)
   struct statfs buf;
   int err = fstatfs (fd, &buf);
   if (err != 0)
