@@ -244,6 +244,7 @@ all_tests =					\
   tests/misc/seq.pl				\
   tests/misc/seq-epipe.sh			\
   tests/misc/seq-io-errors.sh			\
+  tests/misc/seq-locale.sh			\
   tests/misc/seq-long-double.sh			\
   tests/misc/seq-precision.sh			\
   tests/misc/head.pl				\

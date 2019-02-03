@@ -42,6 +42,9 @@
 
 #define AUTHORS proper_name ("Ulrich Drepper")
 
+/* True if the locale settings were honored.  */
+static bool locale_ok;
+
 /* If true print all number with equal width.  */
 static bool equal_width;
 
@@ -324,9 +327,11 @@ print_numbers (char const *fmt, struct layout layout,
               long double x_val;
               char *x_str;
               int x_strlen;
-              setlocale (LC_NUMERIC, "C");
+              if (locale_ok)
+                setlocale (LC_NUMERIC, "C");
               x_strlen = asprintf (&x_str, fmt, x);
-              setlocale (LC_NUMERIC, "");
+              if (locale_ok)
+                setlocale (LC_NUMERIC, "");
               if (x_strlen < 0)
                 xalloc_die ();
               x_str[x_strlen - layout.suffix_len] = '\0';
@@ -559,7 +564,7 @@ main (int argc, char **argv)
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
-  setlocale (LC_ALL, "");
+  locale_ok = !!setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 

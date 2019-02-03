@@ -14,6 +14,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   df no longer corrupts displayed multibyte characters on macOS.
   [bug introduced with coreutils-8.18]
 
+  seq no longer outputs inconsistent decimal point characters
+  for the last number, when locales are misconfigured.
+  [bug introduced in coreutils-7.0]
+
   shred, sort, and split no longer falsely report ftruncate errors
   when outputting to less-common file types.  For example, the shell
   command 'sort /dev/null -o /dev/stdout | cat' no longer fails with
