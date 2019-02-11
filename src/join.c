@@ -1193,7 +1193,7 @@ main (int argc, char **argv)
     die (EXIT_FAILURE, errno, "%s", quotef (g_names[1]));
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])
-    return EXIT_FAILURE;
+    die (EXIT_FAILURE, 0, _("input is not in sorted order"));
   else
     return EXIT_SUCCESS;
 }

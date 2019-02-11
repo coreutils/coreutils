@@ -216,13 +216,17 @@ my @tv = (
 ['chkodr-5d', '',
  ["a\nx\n\n", "b\ny\n\n"], "", 1,
  "$prog: chkodr-5d.1:3: is not sorted: \n" .
- "$prog: chkodr-5d.2:3: is not sorted: \n"],
+ "$prog: chkodr-5d.2:3: is not sorted: \n" .
+ "$prog: input is not in sorted order\n"
+ ],
 
 # Similar, but make it so each offending line has no newline.
 ['chkodr-5e', '',
  ["a\nx\no", "b\ny\np"], "", 1,
  "$prog: chkodr-5e.1:3: is not sorted: o\n" .
- "$prog: chkodr-5e.2:3: is not sorted: p\n"],
+ "$prog: chkodr-5e.2:3: is not sorted: p\n" .
+ "$prog: input is not in sorted order\n"
+ ],
 
 # Without order check, both inputs out of order and some lines
 # unpairable.  This is NOT supported by the GNU extension.  All that
