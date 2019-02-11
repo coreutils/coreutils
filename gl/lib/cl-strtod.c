@@ -30,16 +30,11 @@
 # define CL_STRTOD cl_strtold
 # define DOUBLE long double
 # define C_STRTOD c_strtold
+# define STRTOD strtold
 #else
 # define CL_STRTOD cl_strtod
 # define DOUBLE double
 # define C_STRTOD c_strtod
-#endif
-
-/* fall back on strtod if strtold doesn't conform to C99.  */
-#if LONG && HAVE_C99_STRTOLD
-# define STRTOD strtold
-#else
 # define STRTOD strtod
 #endif
 

@@ -96,14 +96,6 @@ struct rlimit { size_t rlim_cur; };
 
 #define UCHAR_LIM (UCHAR_MAX + 1)
 
-#if HAVE_C99_STRTOLD
-# define long_double long double
-#else
-# define long_double double
-# undef strtold
-# define strtold strtod
-#endif
-
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
@@ -2011,16 +2003,16 @@ numcompare (char const *a, char const *b)
 
 /* Work around a problem whereby the long double value returned by glibc's
    strtold ("NaN", ...) contains uninitialized bits: clear all bytes of
-   A and B before calling strtold.  FIXME: remove this function once
+   A and B before calling strtold.  FIXME: remove this function if
    gnulib guarantees that strtold's result is always well defined.  */
 static int
 nan_compare (char const *sa, char const *sb)
 {
-  long_double a;
+  long double a;
   memset (&a, 0, sizeof a);
   a = strtold (sa, NULL);
 
-  long_double b;
+  long double b;
   memset (&b, 0, sizeof b);
   b = strtold (sb, NULL);
 
@@ -2035,8 +2027,8 @@ general_numcompare (char const *sa, char const *sb)
 
   char *ea;
   char *eb;
-  long_double a = strtold (sa, &ea);
-  long_double b = strtold (sb, &eb);
+  long double a = strtold (sa, &ea);
+  long double b = strtold (sb, &eb);
 
   /* Put conversion errors at the start of the collating sequence.  */
   if (sa == ea)

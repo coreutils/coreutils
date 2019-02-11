@@ -57,10 +57,6 @@ for LOC in C $LOCALE_FR; do
 
   LC_ALL=$LOC getlimits_
 
-  # See if sort should be using long doubles
-  grep '^#define HAVE_C99_STRTOLD 1' $CONFIG_HEADER > /dev/null ||
-    { LDBL_MAX="$DBL_MAX"; LDBL_MIN="$DBL_MIN"; }
-
   # If DBL_MIN happens to be smaller than LDBL_MIN, swap them,
   # so that out expected output is sorted.
   if test $reversed = 1; then
