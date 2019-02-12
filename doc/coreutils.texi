@@ -16193,7 +16193,7 @@ Fri, 09 Sep 2005 13:51:39 -0700
 @opindex --rfc-2822
 This format conforms to Internet RFCs
 @uref{https://tools.ietf.org/search/rfc5322, 5322},
-@uref{https://tools.ietf.org/search/rfc2822, 822} and
+@uref{https://tools.ietf.org/search/rfc2822, 2822} and
 @uref{https://tools.ietf.org/search/rfc822, 822}, the
 current and previous standards for Internet email.
 For compatibility with older versions of @command{date},
