@@ -21,12 +21,15 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <c-ctype.h>
+#include <signal.h>
 
 #include <assert.h>
 #include "system.h"
 #include "die.h"
 #include "error.h"
+#include "operand2sig.h"
 #include "quote.h"
+#include "sig2str.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "env"
@@ -48,7 +51,35 @@ static bool dev_debug;
 static char *varname;
 static size_t vnlen;
 
+/* Possible actions on each signal.  */
+enum SIGNAL_MODE {
+  UNCHANGED = 0,
+  DEFAULT,       /* Set to default handler (SIG_DFL). */
+  DEFAULT_NOERR, /* ditto, but ignore sigaction(2) errors.  */
+  IGNORE,        /* Set to ignore (SIG_IGN). */
+  IGNORE_NOERR   /* ditto, but ignore sigaction(2) errors.  */
+};
+static enum SIGNAL_MODE signals[SIGNUM_BOUND + 1];
+
+/* Set of signals to block.  */
+static sigset_t block_signals;
+
+/* Set of signals to unblock.  */
+static sigset_t unblock_signals;
+
+/* Whether signal mask adjustment requested.  */
+static bool sig_mask_changed;
+
 static char const shortopts[] = "+C:iS:u:v0 \t";
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  DEFAULT_SIGNAL_OPTION = CHAR_MAX + 1,
+  IGNORE_SIGNAL_OPTION,
+  BLOCK_SIGNAL_OPTION,
+};
 
 static struct option const longopts[] =
 {
@@ -56,6 +87,9 @@ static struct option const longopts[] =
   {"null", no_argument, NULL, '0'},
   {"unset", required_argument, NULL, 'u'},
   {"chdir", required_argument, NULL, 'C'},
+  {"default-signal", optional_argument, NULL, DEFAULT_SIGNAL_OPTION},
+  {"ignore-signal",  optional_argument, NULL, IGNORE_SIGNAL_OPTION},
+  {"block-signal",   optional_argument, NULL, BLOCK_SIGNAL_OPTION},
   {"debug", no_argument, NULL, 'v'},
   {"split-string", required_argument, NULL, 'S'},
   {GETOPT_HELP_OPTION_DECL},
@@ -90,6 +124,17 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       fputs (_("\
   -S, --split-string=S  process and split S into separate arguments;\n\
                         used to pass multiple arguments on shebang lines\n\
+"), stdout);
+      fputs (_("\
+      --block-signal[=SIG]    block delivery of SIG signal(s) to COMMAND\n\
+"), stdout);
+      fputs (_("\
+      --default-signal[=SIG]  reset handling of SIG signal(s) to the default\n\
+"), stdout);
+      fputs (_("\
+      --ignore-signal[=SIG]   set handling of SIG signals(s) to do nothing\n\
+"), stdout);
+      fputs (_("\
   -v, --debug          print verbose information for each processing step\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -97,6 +142,12 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       fputs (_("\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
+"), stdout);
+      fputs (_("\
+\n\
+SIG may be a signal name like 'PIPE', or a signal number like '13'.\n\
+Without SIG, all known signals are included.  Multiple signals can be\n\
+comma-separated.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
@@ -525,6 +576,176 @@ parse_split_string (const char* str, int /*out*/ *orig_optind,
   *orig_optind = 0; /* tell getopt to restart from first argument */
 }
 
+static void
+parse_signal_action_params (const char* optarg, bool set_default)
+{
+  char signame[SIG2STR_MAX];
+  char *opt_sig;
+  char *optarg_writable;
+
+  if (! optarg)
+    {
+      /* without an argument, reset all signals.
+         Some signals cannot be set to ignore or default (e.g., SIGKILL,
+         SIGSTOP on most OSes, and SIGCONT on AIX.) - so ignore errors.  */
+      for (int i = 1 ; i <= SIGNUM_BOUND; i++)
+        if (sig2str (i, signame) == 0)
+          signals[i] = set_default ? DEFAULT_NOERR : IGNORE_NOERR;
+      return;
+    }
+
+  optarg_writable = xstrdup (optarg);
+
+  opt_sig = strtok (optarg_writable, ",");
+  while (opt_sig)
+    {
+      int signum = operand2sig (opt_sig, signame);
+      /* operand2sig accepts signal 0 (EXIT) - but we reject it.  */
+      if (signum == 0)
+        error (0, 0, _("%s: invalid signal"), quote (opt_sig));
+      if (signum <= 0)
+        usage (exit_failure);
+
+      signals[signum] = set_default ? DEFAULT : IGNORE;
+
+      opt_sig = strtok (NULL, ",");
+    }
+
+  free (optarg_writable);
+}
+
+static void
+reset_signal_handlers (void)
+{
+  for (int i = 1; i <= SIGNUM_BOUND; i++)
+    {
+      struct sigaction act;
+
+      if (signals[i] == UNCHANGED)
+        continue;
+
+      bool ignore_errors = (signals[i] == DEFAULT_NOERR
+                            || signals[i] == IGNORE_NOERR);
+
+      bool set_to_default = (signals[i] == DEFAULT
+                             || signals[i] == DEFAULT_NOERR);
+
+      int sig_err = sigaction (i, NULL, &act);
+
+      if (sig_err && !ignore_errors)
+        die (EXIT_CANCELED, errno,
+             _("failed to get signal action for signal %d"), i);
+
+      if (! sig_err)
+        {
+          act.sa_handler = set_to_default ? SIG_DFL : SIG_IGN;
+
+          if ((sig_err = sigaction (i, &act, NULL)) && !ignore_errors)
+            die (EXIT_CANCELED, errno,
+                 _("failed to set signal action for signal %d"), i);
+        }
+
+      if (dev_debug)
+        {
+          char signame[SIG2STR_MAX];
+          sig2str (i, signame);
+          devmsg ("Reset signal %s (%d) to %s%s\n",
+                  signame, i,
+                  set_to_default ? "DEFAULT" : "IGNORE",
+                  sig_err ? " (failure ignored)" : "");
+        }
+    }
+}
+
+
+static void
+parse_block_signal_params (const char* optarg, bool block)
+{
+  char signame[SIG2STR_MAX];
+  char *opt_sig;
+  char *optarg_writable;
+
+  if (! optarg)
+    {
+      /* without an argument, reset all signals.  */
+      sigfillset (block ? &block_signals : &unblock_signals);
+      sigemptyset (block ? &unblock_signals : &block_signals);
+    }
+  else if (! sig_mask_changed)
+    {
+      /* Initialize the sets.  */
+      sigemptyset (&block_signals);
+      sigemptyset (&unblock_signals);
+    }
+
+  sig_mask_changed = true;
+
+  if (! optarg)
+    return;
+
+  optarg_writable = xstrdup (optarg);
+
+  opt_sig = strtok (optarg_writable, ",");
+  while (opt_sig)
+    {
+      int signum = operand2sig (opt_sig, signame);
+      /* operand2sig accepts signal 0 (EXIT) - but we reject it.  */
+      if (signum == 0)
+        error (0, 0, _("%s: invalid signal"), quote (opt_sig));
+      if (signum <= 0)
+        usage (exit_failure);
+
+      sigaddset (block ? &block_signals : &unblock_signals, signum);
+      sigdelset (block ? &unblock_signals : &block_signals, signum);
+
+      opt_sig = strtok (NULL, ",");
+    }
+
+  free (optarg_writable);
+}
+
+static void
+set_signal_proc_mask (void)
+{
+  /* Get the existing signal mask */
+  sigset_t set;
+  const char *debug_act;
+
+  sigemptyset (&set);
+
+  if (sigprocmask (0, NULL, &set))
+    die (EXIT_CANCELED, errno, _("failed to get signal process mask"));
+
+  for (int i = 1; i <= SIGNUM_BOUND; i++)
+    {
+      if (sigismember (&block_signals, i))
+        {
+          sigaddset (&set, i);
+          debug_act = "BLOCK";
+        }
+      else if (sigismember (&unblock_signals, i))
+        {
+          sigdelset (&set, i);
+          debug_act = "UNBLOCK";
+        }
+      else
+        {
+          debug_act = NULL;
+        }
+
+      if (dev_debug && debug_act)
+        {
+          char signame[SIG2STR_MAX];
+          sig2str (i, signame);
+          devmsg ("signal %s (%d) mask set to %s\n",
+                  signame, i, debug_act);
+        }
+    }
+
+  if (sigprocmask (SIG_SETMASK, &set, NULL))
+    die (EXIT_CANCELED, errno, _("failed to set signal process mask"));
+}
+
 int
 main (int argc, char **argv)
 {
@@ -557,6 +778,16 @@ main (int argc, char **argv)
           break;
         case '0':
           opt_nul_terminate_output = true;
+          break;
+        case DEFAULT_SIGNAL_OPTION:
+          parse_signal_action_params (optarg, true);
+          parse_block_signal_params (optarg, false);
+          break;
+        case IGNORE_SIGNAL_OPTION:
+          parse_signal_action_params (optarg, false);
+          break;
+        case BLOCK_SIGNAL_OPTION:
+          parse_block_signal_params (optarg, true);
           break;
         case 'C':
           newdir = optarg;
@@ -632,6 +863,10 @@ main (int argc, char **argv)
         printf ("%s%c", *e++, opt_nul_terminate_output ? '\0' : '\n');
       return EXIT_SUCCESS;
     }
+
+  reset_signal_handlers ();
+  if (sig_mask_changed)
+    set_signal_proc_mask ();
 
   if (newdir)
     {

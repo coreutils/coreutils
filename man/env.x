@@ -37,3 +37,31 @@ parameter the script will likely fail with:
 .RE
 .PP
 See the full documentation for more details.
+.PP
+.SS "\-\-default-signal[=SIG]" usage
+This option allows setting a signal handler to its default
+action, which is not possible using the traditional shell
+trap command.  The following example ensures that seq
+will be terminated by SIGPIPE no matter how this signal
+is being handled in the process invoking the command.
+
+.PP
+.RS
+.nf
+sh \-c 'env \-\-default-signal=PIPE seq inf | head \-n1'
+.fi
+.RE
+.PP
+
+[NOTES]
+POSIX's exec(2) pages says:
+.RS
+"many existing applications wrongly assume that they start with certain
+signals set to the default action and/or unblocked.... Therefore, it is best
+not to block or ignore signals across execs without explicit reason to do so,
+and especially not to block signals across execs of arbitrary (not closely
+cooperating) programs."
+.RE
+
+[SEE ALSO]
+sigaction(2), sigprocmask(2), signal(7)

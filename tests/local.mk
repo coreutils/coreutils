@@ -240,6 +240,7 @@ all_tests =					\
   tests/fmt/goal-option.sh			\
   tests/misc/echo.sh				\
   tests/misc/env.sh				\
+  tests/misc/env-signal-handler.sh		\
   tests/misc/ptx.pl				\
   tests/misc/test.pl				\
   tests/misc/seq.pl				\

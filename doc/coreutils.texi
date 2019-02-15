@@ -17246,6 +17246,64 @@ chroot /chroot env --chdir=/srv true
 env --chdir=/build FOO=bar timeout 5 true
 @end example
 
+@item --default-signal[=@var{sig}]
+Unblock and reset signal @var{sig} to its default signal handler.
+Without @var{sig} all known signals are unblocked and reset to their defaults.
+Multiple signals can be comma-separated.  The following command runs
+@command{seq} with SIGINT and SIGPIPE set to their default
+(which is to terminate the program):
+
+@example
+env --default-signal=PIPE,INT seq 1000 | head -n1
+@end example
+
+In the following example, we see how this is not
+possible to do with traditional shells.
+Here the first trap command sets SIGPIPE to ignore.
+The second trap command ostensibly sets it back to its default,
+but POSIX mandates that the shell must not change inherited
+state of the signal - so it is a no-op.
+
+@example
+trap '' PIPE && sh -c 'trap - PIPE ; seq inf | head -n1'
+@end example
+
+Using @option{--default-signal=PIPE} we can
+ensure the signal handling is set to its default behavior:
+
+@example
+trap '' PIPE && sh -c 'env --default-signal=PIPE seq inf | head -n1'
+@end example
+
+
+@item --ignore-signal[=@var{sig}]
+Ignore signal @var{sig} when running a program.  Without @var{sig} all
+known signals are set to ignore.  Multiple signals can be
+comma-separated.  The following command runs @command{seq} with SIGINT set
+to be ignored - pressing @kbd{Ctrl-C} will not terminate it:
+
+@example
+env --ignore-signal=INT seq inf > /dev/null
+@end example
+
+@samp{SIGCHLD} is special, in that @option{--ignore-signal=CHLD} might have
+no effect (POSIX says it's unspecified).
+
+Most operating systems do not allow ignoring @samp{SIGKILL}, @samp{SIGSTOP}
+(and possibly other signals).  Attempting to ignore these signals will fail.
+
+Multiple (and contradictory) @option{--default-signal=SIG} and
+@option{--ignore-signal=SIG} options are processed left-to-right,
+with the latter taking precedence.  In the following example, @samp{SIGPIPE} is
+set to default while @samp{SIGINT} is ignored:
+
+@example
+env --default-signal=INT,PIPE --ignore-signal=INT
+@end example
+
+@item --block-signal[=@var{sig}]
+Block signal(s) @var{sig} from being delivered.
+
 @item -v
 @itemx --debug
 @opindex -v
