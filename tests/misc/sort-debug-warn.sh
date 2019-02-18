@@ -21,55 +21,55 @@ print_ver_ sort
 
 cat <<\EOF > exp
 1
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: key 1 has zero width and will be ignored
 2
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: key 1 has zero width and will be ignored
 3
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 4
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: options '-bghMRrV' are ignored
 5
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: options '-bghMRV' are ignored
 sort: option '-r' only applies to last-resort comparison
 6
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: option '-r' only applies to last-resort comparison
 7
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 2; consider also specifying 'b'
 sort: options '-bg' are ignored
 8
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 9
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: option '-b' is ignored
 10
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 11
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
 12
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
 13
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
 sort: option '-d' is ignored
 14
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: leading blanks are significant in key 1; consider also specifying 'b'
 sort: option '-i' is ignored
 15
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 16
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 17
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 EOF
 
 echo 1 >> out
@@ -112,7 +112,7 @@ compare exp out || fail=1
 
 cat <<\EOF > exp
 sort: failed to set locale
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 EOF
 
 LC_ALL=missing sort --debug /dev/null 2>out
@@ -126,7 +126,7 @@ fi
 
 
 cat <<\EOF > exp
-sort: using simple byte comparison
+sort: text ordering performed using simple byte comparison
 sort: key 1 is numeric and spans multiple fields
 sort: obsolescent key '+2 -1' used; consider '-k 3,1' instead
 sort: key 2 has zero width and will be ignored

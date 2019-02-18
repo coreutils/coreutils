@@ -4689,10 +4689,11 @@ main (int argc, char **argv)
       if (! locale_ok)
           error (0, 0, "%s", _("failed to set locale"));
       if (hard_LC_COLLATE)
-        error (0, 0, _("using %s sorting rules"),
+        error (0, 0, _("text ordering performed using %s sorting rules"),
                quote (setlocale (LC_COLLATE, NULL)));
       else
-        error (0, 0, "%s", _("using simple byte comparison"));
+        error (0, 0, "%s",
+               _("text ordering performed using simple byte comparison"));
 
       key_warnings (&gkey, gkey_only);
     }
