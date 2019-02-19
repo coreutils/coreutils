@@ -75,6 +75,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  ls -l now better aligns abbreviated months containing digits,
+  which is common in Asian locales.
+
   stat and tail now know about the "sdcardfs" file system on Android.
   stat -f -c%T now reports the file system type, and tail -f uses inotify.
 

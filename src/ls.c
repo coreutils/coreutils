@@ -1131,8 +1131,10 @@ abmon_init (char abmon[12][ABFORMAT_SIZE])
           char const *abbr = nl_langinfo (ABMON_1 + i);
           if (strchr (abbr, '%'))
             return false;
+          mbs_align_t alignment = isdigit (to_uchar (*abbr))
+                                  ? MBS_ALIGN_RIGHT : MBS_ALIGN_LEFT;
           size_t req = mbsalign (abbr, abmon[i], ABFORMAT_SIZE,
-                                 &width, MBS_ALIGN_LEFT, 0);
+                                 &width, alignment, 0);
           if (! (req < ABFORMAT_SIZE))
             return false;
           required_mon_width = MAX (required_mon_width, width);
