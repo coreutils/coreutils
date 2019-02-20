@@ -6536,7 +6536,7 @@ matches the default operation of sort:
 @group
 $ sort file1 > file1.sorted
 $ sort file2 > file2.sorted
-$ join -t'' file1.sorted file2.sorted > file3
+$ join -t '' file1.sorted file2.sorted > file3
 @end group
 @end example
 
@@ -6627,7 +6627,7 @@ see note below regarding @code{-o auto}.
 @item
 @example
 $ join -v 1 file1 file2
-b 1
+b 2
 @end example
 @tab
 unpaired lines from the first file
@@ -6692,6 +6692,7 @@ $ cat file2
 a a2
 c c2
 b b2
+
 $ join file1 file2
 a a1 a2
 c c1 c2
@@ -6760,22 +6761,22 @@ perform the equivalent of set operations on files:
 @item @code{sort file1 file2 | uniq -u}
 @tab Symmetric Difference of unsorted files
 
-@item @code{join -t'' -a1 -a2 file1 file2}
+@item @code{join -t '' -a1 -a2 file1 file2}
 @tab Union of sorted files
 
-@item @code{join -t'' file1 file2}
+@item @code{join -t '' file1 file2}
 @tab Intersection of sorted files
 
-@item @code{join -t'' -v2 file1 file2}
+@item @code{join -t '' -v2 file1 file2}
 @tab Difference of sorted files
 
-@item @code{join -t'' -v1 -v2 file1 file2}
+@item @code{join -t '' -v1 -v2 file1 file2}
 @tab Symmetric Difference of sorted files
 
 @end multitable
 
 All examples above operate on entire lines and not on specific fields:
-@command{sort} without @option{-k} and @command{join -t''} both consider
+@command{sort} without @option{-k} and @command{join -t ''} both consider
 entire lines as the key.
 
 
