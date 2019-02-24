@@ -273,6 +273,7 @@ all_tests =					\
   tests/misc/wc.pl				\
   tests/misc/wc-files0-from.pl			\
   tests/misc/wc-files0.sh			\
+  tests/misc/wc-nbsp.sh				\
   tests/misc/wc-parallel.sh			\
   tests/misc/wc-proc.sh				\
   tests/misc/cat-proc.sh			\

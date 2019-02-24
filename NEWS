@@ -67,6 +67,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   operator, so POSIX changed this to 'test -e FILE'.  Scripts using it were
   already broken and non-portable; the -a unary operator was never documented.
 
+  wc now treats non breaking space characters as word delimiters
+  unless the POSIXLY_CORRECT environment variable is set.
+
 ** New features
 
   id now supports specifying multiple users.

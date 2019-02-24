@@ -74,6 +74,9 @@ static bool have_read_stdin;
 /* Used to determine if file size can be determined without reading.  */
 static size_t page_size;
 
+/* Enable to _not_ treat non breaking space as a word separator.  */
+static bool posixly_correct;
+
 /* The result of calling fstat or stat on a file descriptor or file.  */
 struct fstatus
 {
@@ -145,6 +148,21 @@ the following order: newline, word, character, byte, maximum line length.\n\
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
+}
+
+/* Return non zero if a non breaking space.  */
+static int _GL_ATTRIBUTE_PURE
+iswnbspace (wint_t wc)
+{
+  return ! posixly_correct
+         && (wc == 0x00A0 || wc == 0x2007
+             || wc == 0x202F || wc == 0x2060);
+}
+
+static int
+isnbspace (int c)
+{
+  return iswnbspace (btowc (c));
 }
 
 /* FILE is the name of the file (or NULL for standard input)
@@ -455,7 +473,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                           if (width > 0)
                             linepos += width;
                         }
-                      if (iswspace (wide_char))
+                      if (iswspace (wide_char) || iswnbspace (wide_char))
                         goto mb_word_separator;
                       in_word = true;
                     }
@@ -538,7 +556,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                   if (isprint (to_uchar (p[-1])))
                     {
                       linepos++;
-                      if (isspace (to_uchar (p[-1])))
+                      if (isspace (to_uchar (p[-1]))
+                          || isnbspace (to_uchar (p[-1])))
                         goto word_separator;
                       in_word = true;
                     }
@@ -680,6 +699,8 @@ main (int argc, char **argv)
   /* Line buffer stdout to ensure lines are written atomically and immediately
      so that processes running in parallel do not intersperse their output.  */
   setvbuf (stdout, NULL, _IOLBF, 0);
+
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
   print_lines = print_words = print_chars = print_bytes = false;
   print_linelength = false;
