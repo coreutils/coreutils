@@ -15896,7 +15896,9 @@ date; same as @samp{%m/%d/%y}
 @item %e
 day of month, space padded; same as @samp{%_d}
 @item %F
-full date in ISO 8601 format; same as @samp{%Y-%m-%d}.
+full date in ISO 8601 format; like @samp{%+4Y-%m-%d}
+except that any flags or field width override the @samp{+}
+and (after subtracting 6) the @samp{4}.
 This is a good choice for a date format, as it is standard and
 is easy to sort in the usual case where years are in the range
 0000@dots{}9999.
@@ -16052,6 +16054,12 @@ applies only to numeric conversion specifiers.
 
 If the format supports the modifier but no alternate representation
 is available, it is ignored.
+
+POSIX specifies the behavior of flags and field widths only for
+@samp{%C}, @samp{%F}, @samp{%G}, and @samp{%Y} (all without
+modifiers), and requires a flag to be present if and only if a field
+width is also present.  Other combinations of flags, field widths and
+modifiers are GNU extensions.
 
 
 @node Setting the time
