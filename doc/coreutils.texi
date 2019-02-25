@@ -16003,8 +16003,9 @@ would normally pad with spaces.
 Pad with zeros, like @samp{0}.  In addition, precede any year number
 with @samp{+} if it exceeds 9999 or if its field width exceeds 4;
 similarly, precede any century number with @samp{+} if it exceeds 99
-or if its field width exceeds 2.  Preceding with @samp{+} is helpful
-for generating some ISO 8601 formats.
+or if its field width exceeds 2.  This supports ISO 8601 formats
+for dates far in the future; for example, the command @code{date
+--date=12019-02-25 +%+13F} outputs the string @samp{+012019-02-25}.
 @item ^
 Use upper case characters if possible.
 This is a GNU extension.
