@@ -15985,24 +15985,33 @@ example, numeric months are always output as two digits.
 Seconds since the epoch are not padded, though,
 since there is no natural width for them.
 
-As a GNU extension, @command{date} recognizes any of the
-following optional flags after the @samp{%}:
+The following optional flags can appear after the @samp{%}:
 
 @table @samp
 @item -
 (hyphen) Do not pad the field; useful if the output is intended for
 human consumption.
+This is a GNU extension.
 @item _
 (underscore) Pad with spaces; useful if you need a fixed
 number of characters in the output, but zeros are too distracting.
+This is a GNU extension.
 @item 0
 (zero) Pad with zeros even if the conversion specifier
 would normally pad with spaces.
+@item +
+Pad with zeros, like @samp{0}.  In addition, precede any year number
+with @samp{+} if it exceeds 9999 or if its field width exceeds 4;
+similarly, precede any century number with @samp{+} if it exceeds 99
+or if its field width exceeds 2.  Preceding with @samp{+} is helpful
+for generationg some ISO 8601 formats.
 @item ^
 Use upper case characters if possible.
+This is a GNU extension.
 @item #
 Use opposite case characters if possible.
 A field that is normally upper case becomes lower case, and vice versa.
+This is a GNU extension.
 @end table
 
 @noindent
@@ -16017,7 +16026,7 @@ date +%_d/%_m -d "Feb 1"
 @result{}  1/ 2
 @end example
 
-As a GNU extension, you can specify the field width
+You can optionally specify the field width
 (after any flag, if present) as a decimal number.  If the natural size of the
 output of the field has less than the specified number of characters,
 the result is written right adjusted and padded to the given

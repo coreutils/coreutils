@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   after asking the user whether to proceed.
   [This bug was present in "the beginning".]
 
+  'date' now supports the '+' conversion specification flag,
+  introduced in POSIX.1-2017.
+
   df no longer corrupts displayed multibyte characters on macOS.
   [bug introduced with coreutils-8.18]
 

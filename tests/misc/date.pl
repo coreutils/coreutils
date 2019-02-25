@@ -297,6 +297,9 @@ my @Tests =
       {ENV => 'TZ=PST8'},
       {OUT => 'Wed Dec 31 21:00:00 PST 1969'},
      ],
+
+     # https://bugs.gnu.org/34608
+     ['date-century-plus', '-d @0 +.%+4C.', {OUT => '.+019.'}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
