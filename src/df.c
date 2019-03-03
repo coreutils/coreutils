@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <assert.h>
+#include <c-ctype.h>
 #include <wchar.h>
 #include <wctype.h>
 
@@ -273,10 +274,26 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Replace problematic chars with '?'.
+   Since only control characters are currently considered,
+   this should work in all encodings.  */
+
+static void
+replace_control_chars (char *cell)
+{
+  char *p = cell;
+  while (*p)
+    {
+      if (c_iscntrl (to_uchar (*p)))
+        *p = '?';
+      p++;
+    }
+}
+
 /* Replace problematic chars with '?'.  */
 
 static void
-hide_problematic_chars (char *cell)
+replace_invalid_chars (char *cell)
 {
   char *srcend = cell + strlen (cell);
   char *dst = cell;
@@ -309,6 +326,17 @@ hide_problematic_chars (char *cell)
 
   *dst = '\0';
 }
+
+static void
+replace_problematic_chars (char *cell)
+{
+  static int tty_out = -1;
+  if (tty_out < 0)
+    tty_out = isatty (STDOUT_FILENO);
+
+  (tty_out ? replace_invalid_chars : replace_control_chars) (cell) ;
+}
+
 
 /* Dynamically allocate a row of pointers in TABLE, which
    can then be accessed with standard 2D array notation.  */
@@ -591,7 +619,7 @@ get_header (void)
       if (!cell)
         xalloc_die ();
 
-      hide_problematic_chars (cell);
+      replace_problematic_chars (cell);
 
       table[nrows - 1][col] = cell;
 
@@ -1205,7 +1233,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
       if (!cell)
         assert (!"empty cell");
 
-      hide_problematic_chars (cell);
+      replace_problematic_chars (cell);
       size_t cell_width = mbswidth (cell, 0);
       columns[col]->width = MAX (columns[col]->width, cell_width);
       table[nrows - 1][col] = cell;
