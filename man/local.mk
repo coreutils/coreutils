@@ -191,16 +191,9 @@ endif
 	  && $(MKDIR_P) $$t						\
 	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog$(EXEEXT) \
 				$$argv$(EXEEXT))			\
-	  || exit 1;							\
-## Double-check whether the built binary succeeds with --help as the above
-## CROSS_COMPILING condition might have been wrong in some cases, e.g. when
-## building against an incompatible glibc version on the same platform.
-	$$t/$$argv$(EXEEXT) --help </dev/null >/dev/null		\
-	  && run_help2man="$(run_help2man)"				\
-	  || run_help2man="$(srcdir)/man/dummy-man";			\
-	: $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
+	&& : $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
 	&& : $${TZ=UTC0} && export TZ					\
-	&& export SOURCE_DATE_EPOCH && $${run_help2man}			\
+	&& export SOURCE_DATE_EPOCH && $(run_help2man)			\
 		     --source='$(PACKAGE_STRING)'			\
 		     --include=$(srcdir)/man/$$name.x			\
 		     --output=$$t/$$name.1				\
