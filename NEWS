@@ -87,6 +87,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   env now supports '--default-signal[=SIG]', '--ignore-signal[=SIG]', and
   '--block-signal[=SIG], to setup signal handling before executing a program.
 
+  env now supports '--list-signal-handling' to indicate non-default
+  signal handling before executing a program.
+
 ** New commands
 
   basenc is added to complement existing base64,base32 commands,

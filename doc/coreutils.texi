@@ -17304,6 +17304,9 @@ env --default-signal=INT,PIPE --ignore-signal=INT
 @item --block-signal[=@var{sig}]
 Block signal(s) @var{sig} from being delivered.
 
+@item --list-signal-handling
+List blocked or ignored signals to stderr, before executing a command.
+
 @item -v
 @itemx --debug
 @opindex -v

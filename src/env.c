@@ -70,6 +70,9 @@ static sigset_t unblock_signals;
 /* Whether signal mask adjustment requested.  */
 static bool sig_mask_changed;
 
+/* Whether to list non default handling.  */
+static bool report_signal_handling;
+
 static char const shortopts[] = "+C:iS:u:v0 \t";
 
 /* For long options that have no equivalent short option, use a
@@ -79,6 +82,7 @@ enum
   DEFAULT_SIGNAL_OPTION = CHAR_MAX + 1,
   IGNORE_SIGNAL_OPTION,
   BLOCK_SIGNAL_OPTION,
+  LIST_SIGNAL_HANDLING_OPTION,
 };
 
 static struct option const longopts[] =
@@ -90,6 +94,7 @@ static struct option const longopts[] =
   {"default-signal", optional_argument, NULL, DEFAULT_SIGNAL_OPTION},
   {"ignore-signal",  optional_argument, NULL, IGNORE_SIGNAL_OPTION},
   {"block-signal",   optional_argument, NULL, BLOCK_SIGNAL_OPTION},
+  {"list-signal-handling", no_argument, NULL,  LIST_SIGNAL_HANDLING_OPTION},
   {"debug", no_argument, NULL, 'v'},
   {"split-string", required_argument, NULL, 'S'},
   {GETOPT_HELP_OPTION_DECL},
@@ -133,6 +138,9 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 "), stdout);
       fputs (_("\
       --ignore-signal[=SIG]   set handling of SIG signals(s) to do nothing\n\
+"), stdout);
+      fputs (_("\
+      --list-signal-handling  list non default signal handling to stderr\n\
 "), stdout);
       fputs (_("\
   -v, --debug          print verbose information for each processing step\n\
@@ -746,6 +754,35 @@ set_signal_proc_mask (void)
     die (EXIT_CANCELED, errno, _("failed to set signal process mask"));
 }
 
+static void
+list_signal_handling (void)
+{
+  sigset_t set;
+  char signame[SIG2STR_MAX];
+
+  sigemptyset (&set);
+  if (sigprocmask (0, NULL, &set))
+    die (EXIT_CANCELED, errno, _("failed to get signal process mask"));
+
+  for (int i = 1; i <= SIGNUM_BOUND; i++)
+    {
+      struct sigaction act;
+      if (sigaction (i, NULL, &act))
+        continue;
+
+      char const* ignored = act.sa_handler == SIG_IGN ? "IGNORE" : "";
+      char const* blocked = sigismember (&set, i) ? "BLOCK" : "";
+      char const* connect = *ignored && *blocked ? "," : "";
+
+      if (! *ignored && ! *blocked)
+        continue;
+
+      sig2str (i, signame);
+      fprintf (stderr, "%-10s (%2d): %s%s%s\n", signame, i,
+               blocked, connect, ignored);
+    }
+}
+
 int
 main (int argc, char **argv)
 {
@@ -788,6 +825,9 @@ main (int argc, char **argv)
           break;
         case BLOCK_SIGNAL_OPTION:
           parse_block_signal_params (optarg, true);
+          break;
+        case LIST_SIGNAL_HANDLING_OPTION:
+          report_signal_handling = true;
           break;
         case 'C':
           newdir = optarg;
@@ -867,6 +907,9 @@ main (int argc, char **argv)
   reset_signal_handlers ();
   if (sig_mask_changed)
     set_signal_proc_mask ();
+
+  if (report_signal_handling)
+    list_signal_handling ();
 
   if (newdir)
     {

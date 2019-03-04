@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ env seq test timeout
+print_ver_ env seq test timeout printf
 trap_sigpipe_or_skip_
 
 # Paraphrasing http://bugs.gnu.org/34488#8:
@@ -126,6 +126,14 @@ env timeout --verbose --kill-after=.1 --signal=INT .1 \
 sed -n '1,2p' err7t > err7 || framework_failure_
 
 compare exp-err6 err7 || fail=1
+
+
+# env test --list-signal-handling
+env --default-signal --ignore-signal=INT --list-signal-handling true \
+  2> err8t || fail=1
+sed 's/(.*)/()/' err8t > err8 || framework_failure_
+env printf 'INT        (): IGNORE\n' > exp-err8
+compare exp-err8 err8 || fail=1
 
 
 Exit $fail
