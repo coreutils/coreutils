@@ -11,9 +11,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   after asking the user whether to proceed.
   [This bug was present in "the beginning".]
 
-  'date' now supports the '+' conversion specification flag,
-  introduced in POSIX.1-2017.
-
   df no longer corrupts displayed multibyte characters on macOS.
   [bug introduced with coreutils-8.18]
 
@@ -45,7 +42,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   regardless of any other arguments present before any optional '--'
   end-of-options marker.
 
-  nohup: now process --help and --version as first options even if other
+  nohup now processes --help and --version as first options even if other
   parameters follow.
 
   'yes a -- b' now outputs 'a b' instead of including the end-of-options
@@ -73,6 +70,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** New features
 
   id now supports specifying multiple users.
+
+  'date' now supports the '+' conversion specification flag,
+  introduced in POSIX.1-2017.
 
   printf, seq, sleep, tail, and timeout now accept floating point
   numbers in either the current or the C locale.  For example, if the
