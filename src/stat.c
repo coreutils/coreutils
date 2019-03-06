@@ -1009,7 +1009,7 @@ get_birthtime (int fd, char const *filename, struct stat const *st)
     }
 #endif
 
-#if HAVE_STATX
+#if HAVE_STATX && defined STATX_BTIME
   if (ts.tv_nsec < 0)
     {
       struct statx stx;
