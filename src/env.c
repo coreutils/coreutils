@@ -59,7 +59,7 @@ enum SIGNAL_MODE {
   IGNORE,        /* Set to ignore (SIG_IGN). */
   IGNORE_NOERR   /* ditto, but ignore sigaction(2) errors.  */
 };
-static enum SIGNAL_MODE signals[SIGNUM_BOUND + 1];
+static enum SIGNAL_MODE *signals;
 
 /* Set of signals to block.  */
 static sigset_t block_signals;
@@ -783,6 +783,17 @@ list_signal_handling (void)
     }
 }
 
+static void
+initialize_signals (void)
+{
+  signals = xmalloc ((sizeof *signals) * (SIGNUM_BOUND + 1));
+
+  for (int i = 0 ; i <= SIGNUM_BOUND; i++)
+    signals[i] = UNCHANGED;
+
+  return;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -799,6 +810,8 @@ main (int argc, char **argv)
 
   initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
+
+  initialize_signals ();
 
   while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
