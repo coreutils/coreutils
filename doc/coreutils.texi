@@ -2291,7 +2291,7 @@ Supported @var{encoding}s are:
 @opindex --base64
 Encode into (or decode from with @option{-d/--decode}) base64 form.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648@hashchar{}4}.
+@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648#4}.
 Equivalent to the @command{base64} command.
 
 @item --base64url
@@ -2299,14 +2299,14 @@ Equivalent to the @command{base64} command.
 Encode into (or decode from with @option{-d/--decode}) file-and-url-safe
 base64 form (using @samp{_} and @samp{-} instead of @samp{+} and @samp{/}).
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-5, RFC 4648@hashchar{}5}.
+@uref{https://tools.ietf.org/search/rfc4648#section-5, RFC 4648#5}.
 
 @item --base32
 @opindex --base32
 Encode into (or decode from with @option{-d/--decode}) base32 form.
 The encoded data uses the @samp{ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=} characters.
 The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-6, RFC 4648@hashchar{}6}.
+@uref{https://tools.ietf.org/search/rfc4648#section-6, RFC 4648#6}.
 Equivalent to the @command{base32} command.
 
 @item --base32hex
@@ -2314,14 +2314,14 @@ Equivalent to the @command{base32} command.
 Encode into (or decode from with @option{-d/--decode}) Extended Hex Alphabet
 base32 form. The encoded data uses the
 @samp{0123456789ABCDEFGHIJKLMNOPQRSTUV=} characters. The format conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-7, RFC 4648@hashchar{}7}.
+@uref{https://tools.ietf.org/search/rfc4648#section-7, RFC 4648#7}.
 
 @item --base16
 @opindex --base16
 Encode into (or decode from with @option{-d/--decode}) base16 (hexadecimal)
 form. The encoded data uses the @samp{0123456789ABCDEF} characters. The format
 conforms to
-@uref{https://tools.ietf.org/search/rfc4648#section-8, RFC 4648@hashchar{}8}.
+@uref{https://tools.ietf.org/search/rfc4648#section-8, RFC 4648#8}.
 
 @item --base2lsbf
 @opindex --base2lsbf
