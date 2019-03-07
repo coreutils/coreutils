@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ tail
+print_ver_ tail test
 trap_sigpipe_or_skip_
 
 # Speedup the non inotify case
@@ -52,7 +52,12 @@ for disposition in '' '-'; do
 done
 
 # This would wait indefinitely before v8.28 (until first write)
-(returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&-) || fail=1
+# test -w /dev/stdout is used to check that >&- is effective
+# which was seen not to be the case on NetBSD 7.1 / x86_64:
+if env test -w /dev/stdout >/dev/null &&
+   env test ! -w /dev/stdout >&-; then
+  (returns_ 1 timeout 10 tail -f $mode $fastpoll /dev/null >&-) || fail=1
+fi
 done
 
 Exit $fail
