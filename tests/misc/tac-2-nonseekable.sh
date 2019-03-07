@@ -36,7 +36,10 @@ for file in /proc/version /sys/kernel/profiling; do
   fi
 done
 
+# Assume timeout is due to failure to close stdin with <&-
+# which was seen on NetBSD 7.1 / x86_64
+returns_ 124 timeout 10 tac - - <&- 2>err && skip_ 'error closing stdin'
 # This failed due to heap corruption from v8.15-v8.25 inclusive.
-returns_ 1 tac - - <&- 2>err || fail=1
+returns_ 1 timeout 10 tac - - <&- 2>err || fail=1
 
 Exit $fail
