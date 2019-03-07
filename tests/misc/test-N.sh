@@ -17,26 +17,34 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ test
+print_ver_ test stat
+
+stat_mtime() { env stat -c '%Y' "$1"; }
+stat_atime() { env stat -c '%X' "$1"; }
+stat_test_N() { env test "$(stat_mtime "$1")" -gt "$(stat_atime "$1")"; }
 
 # For a freshly touched file, atime should equal mtime: 'test -N' returns 1.
 touch file || framework_failure_
-stat file
-returns_ 1 env test -N file || fail=1
+if ! stat_test_N file; then
+  returns_ 1 env test -N file || fail=1
+fi
 
 # Set access time to 2 days ago: 'test -N' returns 0.
-touch -a -d "12:00 today -2 days" file || framework_failure_
-stat file
-env test -N file || fail=1
+touch -a -d '12:00 today -2 days' file || framework_failure_
+if stat_test_N file; then
+  env test -N file || fail=1
+fi
 
 # Set mtime to 2 days before atime: 'test -N' returns 1;
-touch -m -d "12:00 today -4 days" file || framework_failure_
-stat file
-returns_ 1 env test -N file || fail=1
+touch -m -d '12:00 today -4 days' file || framework_failure_
+if ! stat_test_N file; then
+  returns_ 1 env test -N file || fail=1
+fi
 
 # Now modify the file: 'test -N' returns 0.
-> file || framework_failure_
-stat file
-env test -N file || fail=1
+echo 'data' > file || framework_failure_
+if stat_test_N file; then
+  env test -N file || fail=1
+fi
 
 Exit $fail
