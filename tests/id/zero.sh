@@ -89,13 +89,15 @@ for o in G Gr ; do
   for n in '' n ; do
     id -${o}${n}  $users >> gtmp1 ||
       { test $? -ne 1 || test -z "$n" && fail=1; }
+    echo >> gtmp1 || framework_failure_
+
     id -${o}${n}z $users  > gtmp2 ||
       { test $? -ne 1 || test -z "$n" && fail=1; }
     # we replace all NULs with spaces, the result we get is there are two
     # consecutive spaces instead of two NUL's, we pass this to sed
     # to replace more than 1 space with a newline. This is ideally where a new
     # line should be. This should make the output similar to without -z.
-    tr '\0' ' ' < gtmp2 | sed "s/  /\\$NL/g" >> gtmp3
+    { tr '\0' ' ' < gtmp2; echo; } | sed "s/  /\\$NL/g" >> gtmp3
   done
 done
 compare gtmp1 gtmp3 || fail=1
