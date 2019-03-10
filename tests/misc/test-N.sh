@@ -19,9 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ test stat
 
-stat_mtime() { env stat -c '%Y' "$1"; }
-stat_atime() { env stat -c '%X' "$1"; }
-stat_test_N() { env test "$(stat_mtime "$1")" -gt "$(stat_atime "$1")"; }
+stat_test_N() {
+  mtime=$(env stat -c '%.Y' "$1")
+  atime=$(env stat -c '%.X' "$1")
+  test "$mtime" = "$atime" && return 1
+  latest=$(printf '%s\n' "$mtime" "$atime" | sort -g | tail -n1)
+  test "$mtime" = "$latest"
+}
 
 # For a freshly touched file, atime should equal mtime: 'test -N' returns 1.
 touch file || framework_failure_
