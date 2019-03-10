@@ -22,29 +22,31 @@ print_ver_ wc printf
 # Before coreutils 8.31 nbsp was treated as part of a word,
 # rather than a word delimiter
 
-export LC_ALL=en_US.ISO-8859-1
-if test "$(locale charmap 2>/dev/null)" = ISO-8859-1; then
+check_word_sep() {
+  char="$1"
   # Use -L to determine whether NBSP is printable.
   # FreeBSD 11 and OS X treat NBSP as non printable ?
-  if test "$(env printf '=\xA0=' | wc -L)" = 3; then
-    test $(env printf '=\xA0=' | wc -w) = 2 || fail=1
-    test $(env printf '=\xA0=' | POSIXLY_CORRECT=1 wc -w) = 1 || fail=1
+  if test "$(env printf "=$char=" | wc -L)" = 3; then
+    test $(env printf "=$char=" | wc -w) = 2 || fail=1
   fi
+}
+
+export LC_ALL=en_US.ISO-8859-1
+if test "$(locale charmap 2>/dev/null)" = ISO-8859-1; then
+  check_word_sep '\xA0'
 fi
+
 export LC_ALL=en_US.UTF-8
 if test "$(locale charmap 2>/dev/null)" = UTF-8; then
-  if test "$(env printf '=\u00A0=' | wc -L)" = 3; then
-    test $(env printf '=\u00A0=' | wc -w) = 2 || fail=1
-    test $(env printf '=\u2007=' | wc -w) = 2 || fail=1
-    test $(env printf '=\u202F=' | wc -w) = 2 || fail=1
-    test $(env printf '=\u2060=' | wc -w) = 2 || fail=1
-  fi
+  check_word_sep '\u00A0'
+  check_word_sep '\u2007'
+  check_word_sep '\u202F'
+  check_word_sep '\u2060'
 fi
+
 export LC_ALL=ru_RU.KOI8-R
 if test "$(locale charmap 2>/dev/null)" = KOI8-R; then
-  if test "$(env printf '=\x9A=' | wc -L)" = 3; then
-    test $(env printf '=\x9A=' | wc -w) = 2 || fail=1
-  fi
+  check_word_sep '\x9A'
 fi
 
 Exit $fail
