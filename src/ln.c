@@ -610,13 +610,25 @@ main (int argc, char **argv)
           int flags = (O_PATHSEARCH | O_DIRECTORY
                        | (dereference_dest_dir_symlinks ? 0 : O_NOFOLLOW));
           destdir_fd = openat_safer (AT_FDCWD, d, flags);
+          int err = errno;
+          if (!O_DIRECTORY && 0 <= destdir_fd)
+            {
+              struct stat st;
+              err = (fstat (destdir_fd, &st) != 0 ? errno
+                     : S_ISDIR (st.st_mode) ? 0 : ENOTDIR);
+              if (err != 0)
+                {
+                  close (destdir_fd);
+                  destdir_fd = -1;
+                }
+            }
           if (0 <= destdir_fd)
             {
               n_files -= !target_directory;
               target_directory = d;
             }
           else if (! (n_files == 2 && !target_directory))
-            die (EXIT_FAILURE, errno, _("target %s"), quoteaf (d));
+            die (EXIT_FAILURE, err, _("target %s"), quoteaf (d));
         }
     }
 
