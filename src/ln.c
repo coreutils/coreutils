@@ -603,7 +603,8 @@ main (int argc, char **argv)
     {
       if (n_files == 2 && !target_directory)
         link_errno = atomic_link (file[0], AT_FDCWD, file[1]);
-      if (link_errno < 0 || link_errno == EEXIST || link_errno == ENOTDIR)
+      if (link_errno < 0 || link_errno == EEXIST || link_errno == ENOTDIR
+	  || link_errno == EINVAL)
         {
           char const *d
             = target_directory ? target_directory : file[n_files - 1];
