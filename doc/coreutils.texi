@@ -9073,7 +9073,7 @@ The default is 512 bytes.
 Set both input and output block sizes to @var{bytes}.
 This makes @command{dd} read and write @var{bytes} per block,
 overriding any @samp{ibs} and @samp{obs} settings.
-In addition, if no data-transforming @option{conv} option is specified,
+In addition, if no data-transforming @option{conv} operand is specified,
 input is copied to the output as soon as it's read,
 even if it is smaller than the block size.
 
@@ -9114,10 +9114,9 @@ input read operations.
 
 @item status=@var{level}
 @opindex status
-Transfer information is normally output to stderr upon
-receipt of the @samp{INFO} signal or when @command{dd} exits.
-Specifying @var{level} will adjust the amount of information printed,
-with the last @var{level} specified taking precedence.
+Specify the amount of information printed.
+If this operand is given multiple times, the last one takes precedence.
+The @var{level} value can be one of the following:
 
 @table @samp
 
@@ -9140,6 +9139,23 @@ can be delayed when waiting on I/O.
 
 @end table
 
+Transfer information is normally output to stderr upon
+receipt of the @samp{INFO} signal or when @command{dd} exits,
+and defaults to the following form in the C locale:
+
+@example
+7287+1 records in
+116608+0 records out
+59703296 bytes (60 MB, 57 MiB) copied, 0.0427974 s, 1.4 GB/s
+@end example
+
+The notation @samp{@var{w}+@var{p}} stands for @var{w} whole blocks
+and @var{p} partial blocks.  A partial block occurs when a read or
+write operation succeeds but transfers less data than the block size.
+An additional line like @samp{1 truncated record} or @samp{10
+truncated records} is output after the @samp{records out} line if
+@samp{conv=block} processing truncated one or more input records.
+
 @item conv=@var{conversion}[,@var{conversion}]@dots{}
 @opindex conv
 Convert the file as specified by the @var{conversion} argument(s).
@@ -9154,14 +9170,14 @@ Conversions:
 Convert EBCDIC to ASCII,
 using the conversion table specified by POSIX@.
 This provides a 1:1 translation for all 256 bytes.
-This option implies @samp{conv=unblock}; input is converted to
+This implies @samp{conv=unblock}; input is converted to
 ASCII before trailing spaces are deleted.
 
 @item ebcdic
 @opindex ebcdic@r{, converting to}
 Convert ASCII to EBCDIC@.
 This is the inverse of the @samp{ascii} conversion.
-This option implies @samp{conv=block}; trailing spaces are added
+This implies @samp{conv=block}; trailing spaces are added
 before being converted to EBCDIC@.
 
 @item ibm
@@ -9172,13 +9188,14 @@ This is not a 1:1 translation, but reflects common historical practice
 for @samp{~}, @samp{[}, and @samp{]}.
 
 The @samp{ascii}, @samp{ebcdic}, and @samp{ibm} conversions are
-mutually exclusive.  If you use any of these options, you should also
-use the @samp{cbs=} option.
+mutually exclusive.  If you use any of these conversions, you should also
+use the @samp{cbs=} operand.
 
 @item block
 @opindex block @r{(space-padding)}
 For each line in the input, output @samp{cbs} bytes, replacing the
-input newline with a space and padding with spaces as necessary.
+input newline with a space and truncating or padding input lines with
+spaces as necessary.
 
 @item unblock
 @opindex unblock
@@ -9202,13 +9219,13 @@ The @samp{lcase} and @samp{ucase} conversions are mutually exclusive.
 Try to seek rather than write NUL output blocks.
 On a file system that supports sparse files, this will create
 sparse output when extending the output file.
-Be careful when using this option in conjunction with
+Be careful when using this conversion in conjunction with
 @samp{conv=notrunc} or @samp{oflag=append}.
 With @samp{conv=notrunc}, existing data in the output file
 corresponding to NUL blocks from the input, will be untouched.
 With @samp{oflag=append} the seeks performed will be ineffective.
 Similarly, when the output is a device rather than a file,
-NUL input blocks are not copied, and therefore this option
+NUL input blocks are not copied, and therefore this conversion
 is most useful with virtual or pre zeroed devices.
 
 @item swab
@@ -9341,7 +9358,7 @@ failure to discard the cache is diagnosed
 and reflected in the exit status.
 
 Note data that is not already persisted to storage will not
-be discarded from cache, so note the use of the ``sync'' options
+be discarded from cache, so note the use of the @samp{sync} conversions
 in the examples below, which are used to maximize the
 effectiveness of the @samp{nocache} flag.
 
@@ -9382,7 +9399,7 @@ idea to test it on your files before relying on it.
 @cindex controlling terminal
 Do not assign the file to be a controlling terminal for @command{dd}.
 This has no effect when the file is not a terminal.
-On many hosts (e.g., GNU/Linux hosts), this option has no effect
+On many hosts (e.g., GNU/Linux hosts), this flag has no effect
 at all.
 
 @item nofollow
@@ -9398,13 +9415,13 @@ Fail if the file has multiple hard links.
 @item binary
 @opindex binary
 @cindex binary I/O
-Use binary I/O@.  This option has an effect only on nonstandard
+Use binary I/O@.  This flag has an effect only on nonstandard
 platforms that distinguish binary from text I/O.
 
 @item text
 @opindex text
 @cindex text I/O
-Use text I/O@.  Like @samp{binary}, this option has no effect on
+Use text I/O@.  Like @samp{binary}, this flag has no effect on
 standard platforms.
 
 @item fullblock
@@ -9490,7 +9507,7 @@ disk finally dies, e.g.
 However, in some cases such a tool is not available or the administrator
 feels more comfortable with the handling of @command{dd}.
 As a simple rescue method, call @command{dd} as shown in the following
-example: the options @samp{conv=noerror,sync} are used to continue
+example: the operand @samp{conv=noerror,sync} is used to continue
 after read errors and to pad out bad reads with NULs, while
 @samp{iflag=fullblock} caters for short reads (which traditionally never
 occur on disk based devices):
@@ -9532,7 +9549,7 @@ The above script will output in the following format:
 5000000000 bytes (5.0 GB, 4.7 GiB) copied, 1.44433 s, 3.5 GB/s
 @end example
 
-The @samp{status=progress} option periodically updates the last line
+The @samp{status=progress} operand periodically updates the last line
 of the transfer statistics above.
 
 @vindex POSIXLY_CORRECT
