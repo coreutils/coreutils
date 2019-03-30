@@ -228,7 +228,7 @@ tee_files (int nfiles, char **files)
 
   while (n_outputs)
     {
-      bytes_read = read (0, buffer, sizeof buffer);
+      bytes_read = read (STDIN_FILENO, buffer, sizeof buffer);
       if (bytes_read < 0 && errno == EINTR)
         continue;
       if (bytes_read <= 0)
