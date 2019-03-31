@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  factor again outputs immediately when stdout is a tty but stdin is not.
+  [bug introduced in coreutils-8.24]
+
   ln works again on old systems without O_DIRECTORY support (like Solaris 10),
   and on systems where symlink ("x", ".") fails with errno == EINVAL
   (like Solaris 10 and Solaris 11).
