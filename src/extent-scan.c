@@ -94,7 +94,8 @@ extent_scan_read (struct extent_scan *scan)
       union { struct fiemap f; char c[4096]; } fiemap_buf;
       struct fiemap *fiemap = &fiemap_buf.f;
       struct fiemap_extent *fm_extents = &fiemap->fm_extents[0];
-      enum { count = (sizeof fiemap_buf - sizeof *fiemap)/sizeof *fm_extents };
+      enum { headersize = offsetof (struct fiemap, fm_extents) };
+      enum { count = (sizeof fiemap_buf - headersize) / sizeof *fm_extents };
       verify (count > 1);
 
       /* This is required at least to initialize fiemap->fm_start,

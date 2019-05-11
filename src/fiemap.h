@@ -51,13 +51,8 @@ struct fiemap
 
   uint32_t fm_reserved;
 
-  /* Array of mapped extents(out).
-     This is protected by the ifdef because it uses non standard
-     zero length arrays.  Note C99 has the equivalent flexible arrays,
-     but we don't use those for maximum portability to older systems.  */
-# ifdef __linux__
-  struct fiemap_extent fm_extents[0];
-# endif
+  /* Array of mapped extents(out).  */
+  struct fiemap_extent fm_extents[FLEXIBLE_ARRAY_MEMBER];
 };
 
 /* The maximum offset can be mapped for a file.  */
