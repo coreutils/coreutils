@@ -18,10 +18,18 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#if defined(_MSC_VER)
-#define BLAKE2_PACKED(x) __pragma(pack(push, 1)) x __pragma(pack(pop))
-#else
-#define BLAKE2_PACKED(x) x __attribute__((packed))
+#ifdef __has_attribute
+# if __has_attribute (packed)
+#  define BLAKE2_PACKED(x) x __attribute__ ((packed))
+# endif
+#endif
+#if !defined BLAKE2_PACKED && defined _MSC_VER
+# define BLAKE2_PACKED(x) __pragma (pack (push, 1)) x __pragma (pack (pop))
+#endif
+#ifndef BLAKE2_PACKED
+/* This should be good enough on other platforms.
+   If it's not good on yours, please file a bug report.  */
+# define BLAKE2_PACKED(x) x
 #endif
 
 #if defined(__cplusplus)
