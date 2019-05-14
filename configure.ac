@@ -476,6 +476,8 @@ fi
 # Build stdbuf only if supported
 ac_save_CFLAGS=$CFLAGS
 ac_save_LDFLAGS=$LDFLAGS
+cu_save_c_werror_flag=$ac_c_werror_flag
+AC_LANG_WERROR
 # Detect warnings about ignored "constructor" attributes.
 gl_WARN_ADD([-Werror], [CFLAGS])
 gl_WARN_ADD([-errwarn], [CFLAGS])
@@ -504,6 +506,7 @@ if test "$stdbuf_supported" = "yes" && test -z "$EXEEXT"; then
 fi
 CFLAGS=$ac_save_CFLAGS
 LDFLAGS=$ac_save_LDFLAGS
+ac_c_werror_flag=$cu_save_c_werror_flag
 
 # Detect when using xlc to determine whether to use -qinclude=
 AC_CACHE_CHECK([whether the system supports xlc include], [utils_cv_xlc],
