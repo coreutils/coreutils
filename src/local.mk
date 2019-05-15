@@ -399,14 +399,7 @@ src_sha384sum_SOURCES = src/md5sum.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
 src_sha512sum_SOURCES = src/md5sum.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
-# Include the file on the command line to avoid modifying
-# the blake2 upstream source
-if USE_XLC_INCLUDE
-src_b2sum_CPPFLAGS = -qinclude=config.h
-else
-src_b2sum_CPPFLAGS = -include config.h
-endif
-src_b2sum_CPPFLAGS += -DHASH_ALGO_BLAKE2=1 $(AM_CPPFLAGS)
+src_b2sum_CPPFLAGS = -DHASH_ALGO_BLAKE2=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
 src_b2sum_SOURCES = src/md5sum.c \
 		    src/blake2/blake2.h src/blake2/blake2-impl.h \
 		    src/blake2/blake2b-ref.c \
