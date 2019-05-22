@@ -6755,7 +6755,7 @@ perform the equivalent of set operations on files:
 @item @code{sort file1 file2 | uniq -d}
 @tab Intersection of unsorted files
 
-@item @code{sort file1 file1 file2 | uniq}
+@item @code{sort file1 file1 file2 | uniq -u}
 @tab Difference of unsorted files
 
 @item @code{sort file1 file2 | uniq -u}
