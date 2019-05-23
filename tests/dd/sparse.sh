@@ -60,9 +60,9 @@ kb_alloc() { du -k "$1"|cut -f1; }
 # after its creation.
 if test $(kb_alloc file.in) -gt 3000; then
 
-  # Ensure NUL blocks smaller than the block size are not made sparse.
+  # Ensure NUL blocks smaller than the *output* block size are not made sparse.
   # Here, with a 2MiB block size, dd's conv=sparse must *not* introduce a hole.
-  dd if=file.in of=file.out bs=2M conv=sparse || fail=1
+  dd if=file.in of=file.out ibs=1M obs=2M conv=sparse || fail=1
 
   # Intermittently BTRFS returns 0 allocation for file.out unless synced
   sync file.out || framework_failure_
@@ -75,8 +75,8 @@ if test $(kb_alloc file.in) -gt 3000; then
   rm -f file.out
   truncate --size=3M file.out
 
-  # Ensure that this 1MiB string of NULs *is* converted to a hole.
-  dd if=file.in of=file.out bs=1M conv=sparse,notrunc
+  # Ensure that this 1MiB *output* block of NULs *is* converted to a hole.
+  dd if=file.in of=file.out ibs=2M obs=1M conv=sparse,notrunc
   test $(kb_alloc file.out) -lt 2500 || fail=1
 
 fi
