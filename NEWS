@@ -34,6 +34,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   for --numeric, --hex, or default alphabetic suffixes respectively.
   [bug introduced in coreutils-8.24]
 
+** New Features
+
+  stat(1) now uses the statx() system call where available, which can
+  operate more efficiently by only retrieving requested attributes.
+  stat(1) also supports a new --cached= option to control cache
+  coherency of file system attributes, useful on network file systems.
+
 
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
 

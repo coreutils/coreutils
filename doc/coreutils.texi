@@ -12366,6 +12366,27 @@ Report information about the file systems where the given files are located
 instead of information about the files themselves.
 This option implies the @option{-L} option.
 
+@item --cached=@var{mode}
+@opindex --cached=@var{mode}
+@cindex attribute caching
+Control how attributes are read from the file system;
+if supported by the system.  This allows one to
+control the trade-off between freshness and efficiency
+of attribute access, especially useful with remote file systems.
+@var{mode} can be:
+
+@table @samp
+@item always
+Always read the already cached attributes if available.
+
+@item never
+Always sychronize with the latest file system attributes.
+
+@item default
+Leave the caching behavior to the underlying file system.
+
+@end table
+
 @item -c
 @itemx --format=@var{format}
 @opindex -c
