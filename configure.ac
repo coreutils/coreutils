@@ -353,6 +353,15 @@ case $utils_cv_func_setpriority,$ac_cv_func_nice in
   gl_ADD_PROG([optional_bin_progs], [nice])
 esac
 
+if test "$cross_compiling" = yes || test -c /dev/stdin <.; then
+  AC_DEFINE([DEV_FD_MIGHT_BE_CHR], [1],
+    [Define to 1 if /dev/std{in,out,err} and /dev/fd/N, if they exist, might be
+     character-special devices whose minor device number is the file
+     descriptor number, such as on Solaris.  Leave undefined if they are
+     definitely the actual files.  This determination should be done after any
+     symbolic links are followed.])
+fi
+
 AC_DEFUN([coreutils_DUMMY_1],
 [
   AC_REQUIRE([gl_READUTMP])

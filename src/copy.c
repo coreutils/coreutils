@@ -147,6 +147,42 @@ static bool owner_failure_ok (struct cp_options const *x);
 static char const *top_level_src_name;
 static char const *top_level_dst_name;
 
+#ifndef DEV_FD_MIGHT_BE_CHR
+# define DEV_FD_MIGHT_BE_CHR false
+#endif
+
+/* Act like fstat (DIRFD, FILENAME, ST, FLAGS), except when following
+   symbolic links on Solaris-like systems, treat any character-special
+   device like /dev/fd/0 as if it were the file it is open on.  */
+static int
+follow_fstatat (int dirfd, char const *filename, struct stat *st, int flags)
+{
+  int result = fstatat (dirfd, filename, st, flags);
+
+  if (DEV_FD_MIGHT_BE_CHR && result == 0 && !(flags & AT_SYMLINK_NOFOLLOW)
+      && S_ISCHR (st->st_mode))
+    {
+      static dev_t stdin_rdev;
+      static signed char stdin_rdev_status;
+      if (stdin_rdev_status == 0)
+        {
+          struct stat stdin_st;
+          if (stat ("/dev/stdin", &stdin_st) == 0 && S_ISCHR (stdin_st.st_mode)
+              && minor (stdin_st.st_rdev) == STDIN_FILENO)
+            {
+              stdin_rdev = stdin_st.st_rdev;
+              stdin_rdev_status = 1;
+            }
+          else
+            stdin_rdev_status = -1;
+        }
+      if (0 < stdin_rdev_status && major (stdin_rdev) == major (st->st_rdev))
+        result = fstat (minor (st->st_rdev), st);
+    }
+
+  return result;
+}
+
 /* Set the timestamp of symlink, FILE, to TIMESPEC.
    If this system lacks support for that, simply return 0.  */
 static inline int
@@ -1010,7 +1046,7 @@ is_probably_sparse (struct stat const *sb)
    X provides many option settings.
    Return true if successful.
    *NEW_DST is as in copy_internal.
-   SRC_SB is the result of calling XSTAT (aka stat) on SRC_NAME.  */
+   SRC_SB is the result of calling follow_fstatat on SRC_NAME.  */
 
 static bool
 copy_reg (char const *src_name, char const *dst_name,
@@ -1886,7 +1922,9 @@ copy_internal (char const *src_name, char const *dst_name,
       : rename_errno != EEXIST || x->interactive != I_ALWAYS_NO)
     {
       char const *name = rename_errno == 0 ? dst_name : src_name;
-      if (XSTAT (x, name, &src_sb) != 0)
+      int fstatat_flags
+        = x->dereference == DEREF_NEVER ? AT_SYMLINK_NOFOLLOW : 0;
+      if (follow_fstatat (AT_FDCWD, name, &src_sb, fstatat_flags) != 0)
         {
           error (0, errno, _("cannot stat %s"), quoteaf (name));
           return false;
@@ -1949,7 +1987,7 @@ copy_internal (char const *src_name, char const *dst_name,
                || x->backup_type != no_backups
                || x->unlink_dest_before_opening);
           int fstatat_flags = use_lstat ? AT_SYMLINK_NOFOLLOW : 0;
-          if (fstatat (AT_FDCWD, dst_name, &dst_sb, fstatat_flags) == 0)
+          if (follow_fstatat (AT_FDCWD, dst_name, &dst_sb, fstatat_flags) == 0)
             {
               have_dst_lstat = use_lstat;
               rename_errno = EEXIST;
@@ -2430,7 +2468,7 @@ copy_internal (char const *src_name, char const *dst_name,
       if (rename_errno != EXDEV)
         {
           /* There are many ways this can happen due to a race condition.
-             When something happens between the initial XSTAT and the
+             When something happens between the initial follow_fstatat and the
              subsequent rename, we can get many different types of errors.
              For example, if the destination is initially a non-directory
              or non-existent, but it is created as a directory, the rename

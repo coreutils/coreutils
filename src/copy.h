@@ -276,11 +276,6 @@ struct cp_options
   Hash_table *src_info;
 };
 
-# define XSTAT(X, Src_name, Src_sb) \
-  ((X)->dereference == DEREF_NEVER \
-   ? lstat (Src_name, Src_sb) \
-   : stat (Src_name, Src_sb))
-
 /* Arrange to make rename calls go through the wrapper function
    on systems with a rename function that fails for a source file name
    specified with a trailing slash.  */

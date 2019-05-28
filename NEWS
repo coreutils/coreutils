@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp now copies /dev/fd/N correctly on platforms like Solaris where
+  it is a character-special file whose minor device number is N.
+  [bug introduced in coreutils-8.16]
+
   df now correctly parses the /proc/self/mountinfo file for unusual entries
   like ones with '\r' in a field value ("mount -t tmpfs tmpfs /foo$'\r'bar"),
   when the source field is empty ('mount -t tmpfs "" /mnt'), and when the
