@@ -8,6 +8,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   it is a character-special file whose minor device number is N.
   [bug introduced in fileutils-4.1.6]
 
+  dd conv=fdatasync no longer reports a "Bad file descriptor" error
+  when fdatasync is interrupted, and dd now retries interrupted calls
+  to close, fdatasync, fstat and fsync instead of incorrectly
+  reporting an "Interrupted system call" error.
+  [bugs introduced in coreutils-6.0]
+
   df now correctly parses the /proc/self/mountinfo file for unusual entries
   like ones with '\r' in a field value ("mount -t tmpfs tmpfs /foo$'\r'bar"),
   when the source field is empty ('mount -t tmpfs "" /mnt'), and when the
