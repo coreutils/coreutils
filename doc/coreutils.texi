@@ -3078,7 +3078,8 @@ the need for any periodic reopening.
 
 No matter which method you use, if the tracked file is determined to have
 shrunk, @command{tail} prints a message saying the file has been truncated
-and resumes tracking the end of the file from the newly-determined endpoint.
+and resumes tracking from the start of the file, assuming it has been
+truncated to 0, which is the usual truncation operation for log files.
 
 When a file is removed, @command{tail}'s behavior depends on whether it is
 following the name or the descriptor.  When following by name, tail can
