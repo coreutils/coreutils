@@ -28,12 +28,6 @@
 # define USE_STATVFS 0
 #endif
 
-#if HAVE_STATX && defined STATX_INO
-# define USE_STATX 1
-#else
-# define USE_STATX 0
-#endif
-
 #include <stddef.h>
 #include <stdio.h>
 #include <stdalign.h>
@@ -79,6 +73,12 @@
 #include "strftime.h"
 #include "find-mount-point.h"
 #include "xvasprintf.h"
+
+#if HAVE_STATX && defined STATX_INO
+# define USE_STATX 1
+#else
+# define USE_STATX 0
+#endif
 
 #if USE_STATVFS
 # define STRUCT_STATXFS_F_FSID_IS_INTEGER STRUCT_STATVFS_F_FSID_IS_INTEGER
