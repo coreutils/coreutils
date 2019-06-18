@@ -7662,7 +7662,10 @@ In addition to the name of each file, print the file type, file mode bits,
 number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
 the modification timestamp (the mtime, @pxref{File timestamps}).
-Print question marks for information that
+If the owner or group name cannot be determined, print
+the owner or group ID instead, right-justified as a cue
+that it is a number rather than a textual name.
+Print question marks for other information that
 cannot be determined.
 
 Normally the size is printed as a byte count without punctuation, but
@@ -7772,7 +7775,8 @@ is marked with a @samp{+} character.
 @cindex numeric uid and gid
 @cindex numeric user and group IDs
 Produce long format directory listings, but
-display numeric user and group IDs instead of the owner and group names.
+display right-justified numeric user and group IDs
+instead of left-justified owner and group names.
 
 @item -o
 @opindex -o
