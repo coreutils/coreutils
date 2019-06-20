@@ -36,6 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  od --skip-bytes now can use lseek even if the input is not a regular
+  file, greatly improving performance in some cases.
+
   stat(1) now uses the statx() system call where available, which can
   operate more efficiently by only retrieving requested attributes.
   stat(1) also supports a new --cached= option to control cache
