@@ -1282,7 +1282,7 @@ fmt_to_mask (char fmt)
   switch (fmt)
     {
     case 'N':
-      return STATX_MODE|STATX_SIZE;
+      return STATX_MODE;
     case 'd':
     case 'D':
       return STATX_MODE;
@@ -1354,7 +1354,7 @@ do_stat (char const *filename, char const *format, char const *format2)
   int fd = STREQ (filename, "-") ? 0 : AT_FDCWD;
   int flags = 0;
   struct stat st;
-  struct statx stx;
+  struct statx stx = { 0, };
   const char *pathname = filename;
   struct print_args pa;
   pa.st = &st;
