@@ -22,7 +22,8 @@ doc_coreutils_TEXINFOS = \
   doc/perm.texi \
   doc/parse-datetime.texi \
   doc/constants.texi \
-  doc/fdl.texi
+  doc/fdl.texi \
+  doc/sort-version.texi
 
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,

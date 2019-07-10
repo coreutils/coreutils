@@ -212,6 +212,7 @@ Free Documentation License''.
 * File permissions::             Access modes
 * File timestamps::              File timestamp issues
 * Date input formats::           Specifying date strings
+* Version sort ordering::        Details on version-sort algorithm
 * Opening the software toolbox:: The software tools philosophy
 * GNU Free Documentation License:: Copying and sharing this manual
 * Concept index::                General index
@@ -315,7 +316,6 @@ Directory listing
 * Which files are listed::       Which files are listed
 * What information is listed::   What information is listed
 * Sorting the output::           Sorting the output
-* Details about version sort::   More details about version sort
 * General output formatting::    General output formatting
 * Formatting the file names::    Formatting the file names
 
@@ -494,6 +494,13 @@ Date input formats
 * Seconds since the Epoch::      @@1078100502
 * Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
 * Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al.
+
+Version sorting order
+
+* Version sort overview::
+* Implementation Details::
+* Differences from the official Debian Algorithm::
+* Advanced Topics::
 
 Opening the software toolbox
 
@@ -4470,7 +4477,7 @@ To compare such strings numerically, use the
 @cindex version number sort
 Sort by version name and number.  It behaves like a standard sort,
 except that each sequence of decimal digits is treated numerically
-as an index/version number.  (@xref{Details about version sort}.)
+as an index/version number.  (@xref{Version sort ordering}.)
 
 @item -r
 @itemx --reverse
@@ -7370,7 +7377,6 @@ Also see @ref{Common options}.
 * Which files are listed::
 * What information is listed::
 * Sorting the output::
-* Details about version sort::
 * General output formatting::
 * Formatting file timestamps::
 * Formatting the file names::
@@ -7906,7 +7912,7 @@ directories, since not doing any sorting can be noticeably faster.
 @opindex version@r{, sorting option for @command{ls}}
 Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
-as an index/version number.  (@xref{Details about version sort}.)
+as an index/version number.  (@xref{Version sort ordering}.)
 
 @item -X
 @itemx --sort=extension
@@ -7918,60 +7924,6 @@ after the last @samp{.}); files with no extension are sorted first.
 
 @end table
 
-
-@node Details about version sort
-@subsection Details about version sort
-
-Version sorting handles the fact that file names frequently include indices or
-version numbers.  Standard sorting usually does not produce the order that one
-expects because comparisons are made on a character-by-character basis.
-Version sorting is especially useful when browsing directories that contain
-many files with indices/version numbers in their names:
-
-@example
-$ ls -1            $ ls -1v
-abc.zml-1.gz       abc.zml-1.gz
-abc.zml-12.gz      abc.zml-2.gz
-abc.zml-2.gz       abc.zml-12.gz
-@end example
-
-Version-sorted strings are compared such that if @var{ver1} and @var{ver2}
-are version numbers and @var{prefix} and @var{suffix} (@var{suffix} matching
-the regular expression @samp{(\.[A-Za-z~][A-Za-z0-9~]*)*}) are strings then
-@var{ver1} < @var{ver2} implies that the name composed of
-``@var{prefix} @var{ver1} @var{suffix}'' sorts before
-``@var{prefix} @var{ver2} @var{suffix}''.
-
-Note also that leading zeros of numeric parts are ignored:
-
-@example
-$ ls -1            $ ls -1v
-abc-1.007.tgz      abc-1.01a.tgz
-abc-1.012b.tgz     abc-1.007.tgz
-abc-1.01a.tgz      abc-1.012b.tgz
-@end example
-
-This functionality is implemented using gnulib's @code{filevercmp} function,
-which has some caveats worth noting.
-
-@itemize @bullet
-@item @env{LC_COLLATE} is ignored, which means @samp{ls -v} and @samp{sort -V}
-will sort non-numeric prefixes as if the @env{LC_COLLATE} locale category
-was set to @samp{C}@.
-@item Some suffixes will not be matched by the regular
-expression mentioned above.  Consequently these examples may
-not sort as you expect:
-
-@example
-abc-1.2.3.4.7z
-abc-1.2.3.7z
-@end example
-
-@example
-abc-1.2.3.4.x86_64.rpm
-abc-1.2.3.x86_64.rpm
-@end example
-@end itemize
 
 @node General output formatting
 @subsection General output formatting
@@ -18903,6 +18855,7 @@ to set a file's timestamp to an arbitrary value.
 
 @include parse-datetime.texi
 
+@include sort-version.texi
 
 @c              What's GNU?
 @c              Arnold Robbins
