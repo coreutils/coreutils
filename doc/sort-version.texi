@@ -90,11 +90,11 @@ ordering option:
 $ cat input2
 1000  b3   apples
 2000  b11  oranges
-3000  b1   potatos
+3000  b1   potatoes
 4000  b20  bananas
 
 $ sort -k2V,2 input2
-3000  b1   potatos
+3000  b1   potatoes
 1000  b3   apples
 2000  b11  oranges
 4000  b20  bananas
@@ -143,7 +143,7 @@ GNU coreutils' version sort algorithm is based on
 Debian's versioning scheme}, specifically on the "upstream version"
 part.
 
-This section describe the ordering rules.
+This section describes the ordering rules.
 
 The next section (@ref{Differences from the official Debian
 Algorithm}) describes some differences between GNU coreutils
@@ -387,13 +387,14 @@ character-by-character. @samp{@code{a}} compares identically in both
 strings.
 
 Rule 2.2.1 dictates that letters (@samp{@code{z}}) sorts earlier than all
-non-letters (@samp{@code{%}}) - hence az appears first (despite z having ASCII
-value of 122, much bigger than @samp{@code{%}} with ASCII value 37).
+non-letters (@samp{@code{%}}) - hence @samp{@code{az}} appears first (despite
+@samp{@code{z}} having ASCII value of 122, much bigger than @samp{@code{%}}
+with ASCII value 37).
 
 @node Tilde @samp{~} character
 @subsection Tilde @samp{~} character
 
-Rule 2.2.2 dictates that tilde character @samp{~} (ASCII 126) sorts
+Rule 2.2.2 dictates that tilde character @samp{@code{~}} (ASCII 126) sorts
 before all other non-digit characters, including an empty part.
 
 @example
@@ -416,11 +417,11 @@ The sorting algorithm starts by breaking down the string into
 non-digits (rule 2) and digits parts (rule 3).
 
 In the above input file, only the last line in the input file starts
-with a non-digit (@code{~}). This is the first part. All other lines
+with a non-digit (@samp{@code{~}}). This is the first part. All other lines
 in the input file start with a digit - their first non-digit part is
 empty.
 
-Based on rule 2.2.2, tilde @code{~} sorts before all other non-digits
+Based on rule 2.2.2, tilde @samp{@code{~}} sorts before all other non-digits
 including the empty part - hence it comes before all other strings,
 and is listed first in the sorted output.
 
@@ -437,7 +438,7 @@ on previously explained rules.
 @node Version sort ignores locale
 @subsection Version sort uses ASCII order, ignores locale, unicode characters
 
-In version sort unicode characters are compared byte-by-byte according
+In version sort, unicode characters are compared byte-by-byte according
 to their binary representation, ignoring their unicode value or the
 current locale.
 
@@ -474,12 +475,14 @@ official Debian algorithm, in order to accommodate more general usage
 and file name listing.
 
 
-@node Minus/Hyphen @samp{-} and Colons @samp{:} characters
-@subsection Minus/Hyphen @samp{-} and Colons @samp{:} characters
+@node Minus/Hyphen @samp{-} and Colon @samp{:} characters
+@subsection Minus/Hyphen @samp{-} and Colon @samp{:} characters
 
 In Debian's version string syntax the version consists of three parts:
-@code{[epoch:]upstream_version[-debian_revision]} (@code{epoch} and
-@code{debian_revision} are optional).
+@example
+[epoch:]upstream_version[-debian_revision]
+@end example
+The @code{epoch} and @code{debian_revision} parts are optional.
 
 Example of such version strings:
 
@@ -496,7 +499,7 @@ If the @code{debian_revision part} is not present,
 hyphen characters @samp{-} are not allowed.
 If epoch is not present, colons @samp{:} are not allowed.
 
-If these parts are present, hyphen and/or colons can appear only onces
+If these parts are present, hyphen and/or colons can appear only once
 in valid Debian version strings.
 
 In GNU coreutils, such restrictions are not reasonable (a file name can
@@ -525,8 +528,8 @@ With Debian's @command{dpkg} they will be listed as @code{ab-cd} first and
 
 For further technical details see @uref{https://bugs.gnu.org/35939,bug35939}.
 
-@node Additional hard-coded priorities In GNU coreutils' version sort
-@subsection Additional hard-coded priorities In GNU coreutils' version sort
+@node Additional hard-coded priorities in GNU coreutils' version sort
+@subsection Additional hard-coded priorities in GNU coreutils' version sort
 
 In GNU coreutils' version sort algorithm, the following items have
 special priority and sort earlier than all other characters (listed in
@@ -563,8 +566,8 @@ first, followed by any hidden files (files starting with a dot),
 followed by non-hidden files.
 
 For @samp{sort -V} these priorities might seem arbitrary. However,
-because the sorting code is shared between the ls and sort program,
-the ordering rules are the same.
+because the sorting code is shared between the @command{ls} and @command{sort}
+program, the ordering rules are the same.
 
 @node Special handling of file extensions
 @subsection Special handling of file extensions
@@ -700,15 +703,15 @@ being first.
 A real-world example would be listing files such as:
 @file{gcc_10.fc9.tar.gz}
 and @file{gcc_10.8.12.7rc2.fc9.tar.bz2}: Debian's algorithm would list
-@file{gcc_10.8.12.7rc2.fc9.tar.bz2 first}, while @samp{ls -v} will list
+@file{gcc_10.8.12.7rc2.fc9.tar.bz2} first, while @samp{ls -v} will list
 @file{gcc_10.fc9.tar.gz} first.
 
 These priorities make sense for @samp{ls -v}:
 Versioned files will be listed in a more natural order.
 
 For @samp{sort -V} these priorities might seem arbitrary. However,
-because the sorting code is shared between the ls and sort program,
-the ordering rules are the same.
+because the sorting code is shared between the @command{ls} and @command{sort}
+program, the ordering rules are the same.
 
 
 @node Advanced Topics
@@ -761,7 +764,7 @@ dpkg: warning: version '3.0/' has bad syntax:
 
 To illustrate the different handling of hyphens between Debian and
 coreutils' algorithms (see
-@ref{Minus/Hyphen @samp{-} and Colons @samp{:} characters}):
+@ref{Minus/Hyphen @samp{-} and Colon @samp{:} characters}):
 
 @example
 $ compver abb ab-cd 2>/dev/null     $ printf "abb\nab-cd\n" | sort -V
@@ -843,14 +846,14 @@ Perl has multiple packages for natual and version sorts
 @uref{https://metacpan.org/pod/CPAN::Version,CPAN::Version}.
 
 @item
-PHP has a builtin function
+PHP has a built-in function
 @uref{https://www.php.net/manual/en/function.natsort.php,natsort}.
 
 @item
 NodeJS's @uref{https://www.npmjs.com/package/natural-sort,natural-sort package}.
 
 @item
-in zsh, the
+In zsh, the
 @uref{http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Qualifiers,
 glob modifier} @code{*(n)} will expand to files in natural sort order.
 
