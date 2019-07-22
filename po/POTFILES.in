@@ -3,6 +3,7 @@
 
 # These are nominally temporary...
 lib/argmatch.c
+lib/argmatch.h
 lib/closein.c
 lib/closeout.c
 lib/copy-acl.c
