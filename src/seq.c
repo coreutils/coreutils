@@ -340,8 +340,10 @@ print_numbers (char const *fmt, struct layout layout,
                   && x_val == last)
                 {
                   char *x0_str = NULL;
-                  if (asprintf (&x0_str, fmt, x0) < 0)
+                  int x0_strlen = asprintf (&x0_str, fmt, x0);
+                  if (x0_strlen < 0)
                     xalloc_die ();
+                  x0_str[x0_strlen - layout.suffix_len] = '\0';
                   print_extra_number = !STREQ (x0_str, x_str);
                   free (x0_str);
                 }

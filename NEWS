@@ -34,6 +34,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   for --numeric, --hex, or default alphabetic suffixes respectively.
   [bug introduced in coreutils-8.24]
 
+  seq no longer prints an extra line under certain circumstances (such as
+  'seq -f "%g " 1000000 1000000').
+  [bug introduced in coreutils-6.10]
+
 ** New Features
 
   od --skip-bytes now can use lseek even if the input is not a regular
