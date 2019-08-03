@@ -1,0 +1,75 @@
+diff -r -U3 coreutils-5.0/src/Makefile.in coreutils-5.0-patched/src/Makefile.in
+--- coreutils-5.0/src/Makefile.in	2003-04-02 07:46:19.000000000 -0700
++++ coreutils-5.0-patched/src/Makefile.in	2019-08-01 19:38:07.440997426 -0600
+@@ -209,7 +209,7 @@
+ printf_LDADD = $(LDADD) @POW_LIB@ @LIBICONV@
+
+ # If necessary, add -lm to resolve use of floor, rint, modf.
+-seq_LDADD = $(LDADD) @SEQ_LIBM@
++seq_LDADD = $(LDADD) @SEQ_LIBM@ -lm
+
+ # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
+ # or for the fesetround reference in programs using nanosec.c.
+diff -r -U3 coreutils-5.0/src/tee.c coreutils-5.0-patched/src/tee.c
+--- coreutils-5.0/src/tee.c	2002-12-15 07:21:45.000000000 -0700
++++ coreutils-5.0-patched/src/tee.c	2019-08-01 19:34:32.374301325 -0600
+@@ -32,7 +32,7 @@
+
+ #define AUTHORS N_ ("Mike Parker, Richard M. Stallman, and David MacKenzie")
+
+-static int tee (int nfiles, const char **files);
++static int tee_FOO (int nfiles, const char **files);
+
+ /* If nonzero, append to output files rather than truncating them. */
+ static int append;
+@@ -146,7 +146,7 @@
+   /* Do *not* warn if tee is given no file arguments.
+      POSIX requires that it work when given no arguments.  */
+
+-  errs = tee (argc - optind, (const char **) &argv[optind]);
++  errs = tee_FOO (argc - optind, (const char **) &argv[optind]);
+   if (close (STDIN_FILENO) != 0)
+     error (EXIT_FAILURE, errno, _("standard input"));
+
+@@ -158,7 +158,7 @@
+    Return 0 if successful, 1 if any errors occur. */
+
+ static int
+-tee (int nfiles, const char **files)
++tee_FOO (int nfiles, const char **files)
+ {
+   FILE **descriptors;
+   char buffer[BUFSIZ];
+diff -r -U3 coreutils-5.0/src/test.c coreutils-5.0-patched/src/test.c
+--- coreutils-5.0/src/test.c	2003-02-10 02:19:09.000000000 -0700
++++ coreutils-5.0-patched/src/test.c	2019-08-01 19:35:52.871307966 -0600
+@@ -139,7 +139,7 @@
+ /* Do the same thing access(2) does, but use the effective uid and gid.  */
+
+ static int
+-eaccess (char const *file, int mode)
++eaccess_FOO (char const *file, int mode)
+ {
+   static int have_ids;
+   static uid_t uid, euid;
+@@ -635,17 +635,17 @@
+
+     case 'r':			/* file is readable? */
+       unary_advance ();
+-      value = -1 != eaccess (argv[pos - 1], R_OK);
++      value = -1 != eaccess_FOO (argv[pos - 1], R_OK);
+       return (TRUE == value);
+
+     case 'w':			/* File is writable? */
+       unary_advance ();
+-      value = -1 != eaccess (argv[pos - 1], W_OK);
++      value = -1 != eaccess_FOO (argv[pos - 1], W_OK);
+       return (TRUE == value);
+
+     case 'x':			/* File is executable? */
+       unary_advance ();
+-      value = -1 != eaccess (argv[pos - 1], X_OK);
++      value = -1 != eaccess_FOO (argv[pos - 1], X_OK);
+       return (TRUE == value);
+
+     case 'O':			/* File is owned by you? */

@@ -1,0 +1,24 @@
+diff -r -U3 coreutils-6.10/lib/freadahead.c coreutils-6.10-patched/lib/freadahead.c
+--- coreutils-6.10/lib/freadahead.c	2007-11-08 00:32:20.000000000 -0700
++++ coreutils-6.10-patched/lib/freadahead.c	2019-08-01 20:09:03.731243826 -0600
+@@ -22,7 +22,7 @@
+ size_t
+ freadahead (FILE *fp)
+ {
+-#if defined _IO_ferror_unlocked     /* GNU libc, BeOS */
++#if defined _IO_EOF_SEEN || defined _IO_ferror_unlocked     /* GNU libc, BeOS */
+   if (fp->_IO_write_ptr > fp->_IO_write_base)
+     return 0;
+   return fp->_IO_read_end - fp->_IO_read_ptr;
+diff -r -U3 coreutils-6.10/lib/fseterr.c coreutils-6.10-patched/lib/fseterr.c
+--- coreutils-6.10/lib/fseterr.c	2007-11-08 00:32:20.000000000 -0700
++++ coreutils-6.10-patched/lib/fseterr.c	2019-08-01 20:09:16.407416594 -0600
+@@ -27,7 +27,7 @@
+   /* Most systems provide FILE as a struct and the necessary bitmask in
+      <stdio.h>, because they need it for implementing getc() and putc() as
+      fast macros.  */
+-#if defined _IO_ferror_unlocked     /* GNU libc, BeOS */
++#if defined _IO_EOF_SEEN || defined _IO_ferror_unlocked     /* GNU libc, BeOS */
+   fp->_flags |= _IO_ERR_SEEN;
+ #elif defined __sferror             /* FreeBSD, NetBSD, OpenBSD, MacOS X, Cygwin */
+   fp->_flags |= __SERR;

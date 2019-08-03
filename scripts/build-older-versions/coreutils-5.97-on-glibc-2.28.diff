@@ -1,0 +1,51 @@
+diff -r -U3 coreutils-6.4/lib/utimens.c coreutils-6.4-patched/lib/utimens.c
+--- coreutils-6.4/lib/utimens.c    2006-09-14 03:53:59.000000000 -0600
++++ coreutils-6.4-patched/lib/utimens.c    2019-08-01 19:09:08.228883163 -0600
+@@ -73,7 +73,7 @@
+    Return 0 on success, -1 (setting errno) on failure.  */
+
+ int
+-futimens (int fd ATTRIBUTE_UNUSED,
++futimens_FOO (int fd ATTRIBUTE_UNUSED,
+      char const *file, struct timespec const timespec[2])
+ {
+   /* There's currently no interface to set file timestamps with
+@@ -166,5 +166,5 @@
+ int
+ utimens (char const *file, struct timespec const timespec[2])
+ {
+-  return futimens (-1, file, timespec);
++  return futimens_FOO (-1, file, timespec);
+ }
+diff -r -U3 coreutils-6.4/lib/utimens.h coreutils-6.4-patched/lib/utimens.h
+--- coreutils-6.4/lib/utimens.h    2004-11-23 14:39:48.000000000 -0700
++++ coreutils-6.4-patched/lib/utimens.h    2019-08-01 19:08:25.656313704 -0600
+@@ -1,3 +1,3 @@
+ #include "timespec.h"
+-int futimens (int, char const *, struct timespec const [2]);
++int futimens_FOO (int, char const *, struct timespec const [2]);
+ int utimens (char const *, struct timespec const [2]);
+diff -r -U3 coreutils-6.4/src/copy.c coreutils-6.4-patched/src/copy.c
+--- coreutils-6.4/src/copy.c    2006-10-22 10:54:15.000000000 -0600
++++ coreutils-6.4-patched/src/copy.c    2019-08-01 19:09:42.421340384 -0600
+@@ -487,7 +487,7 @@
+       timespec[0] = get_stat_atime (src_sb);
+       timespec[1] = get_stat_mtime (src_sb);
+
+-      if (futimens (dest_desc, dst_name, timespec) != 0)
++      if (futimens_FOO (dest_desc, dst_name, timespec) != 0)
+    {
+      error (0, errno, _("preserving times for %s"), quote (dst_name));
+      if (x->require_preserve)
+diff -r -U3 coreutils-6.4/src/touch.c coreutils-6.4-patched/src/touch.c
+--- coreutils-6.4/src/touch.c    2006-10-22 10:54:15.000000000 -0600
++++ coreutils-6.4-patched/src/touch.c    2019-08-01 19:09:34.685236947 -0600
+@@ -182,7 +182,7 @@
+       t = timespec;
+     }
+
+-  ok = (futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
++  ok = (futimens_FOO (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
+
+   if (fd == STDIN_FILENO)
+     {

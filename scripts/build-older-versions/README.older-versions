@@ -1,0 +1,174 @@
+Building older GNU coreutils versions on newer systems
+======================================================
+
+Overview
+--------
+
+Some older GNU coreutils fail to build on newer GNU/Linux systems.
+
+This happens with Coreutils version 8.29 and earlier, on systems
+using GlibC version 2.28 or newer, Such as Debian 10, CentOS 8, Fedora 29.
+
+A typical error is:
+
+    $ wget https://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.xz
+    $ tar -xf coreutils-7.6.tar.xz
+    $ cd coreutils-7.6
+    $ ./configure
+    $ make
+    [...]
+    freadahead.c: In function 'freadahead':
+    freadahead.c:83:3: error: #error "Please port gnulib freadahead.c to
+                              your platform! Look at the definition of fflush,
+                              fread, ungetc on your system, then report this
+                              to bug-gnulib."
+    [...]
+    make[4]: *** [Makefile:1700: freadahead.o] Error 1
+
+Other similar errors mention 'freadptr', 'freadseek','fseterr'.
+Older version (pre 7.2) mention 'tee','eaccess','futimens'.
+
+
+Details
+-------
+
+GLibC version 2.28 removed non-standed headre file (libio.h) and some
+internal symbols which were used by gnulib (a core component of GNU coreutils).
+
+These were announced as 'deprecated' in vesion 2.27 [1], and removed in
+version 2.28. Gnulib code was adjusted shortly after [2],
+but the code changes obviously can't be retroactively made to
+previously-released coreutils versions.
+
+[1] https://sourceware.org/ml/libc-announce/2018/msg00000.html
+[2] https://lists.gnu.org/r/bug-gnulib/2018-03/msg00000.html
+
+Older coreutils versions defined functions that were later picked-up
+by glibc ('tee','eaccess','futimens') resulting in conflicts.
+
+See the patches for the exact code changes.
+
+
+Supplied patches
+----------------
+
+The patch files in this directory change the source code of older
+coreutils versions, enabling successful build on newer systems.
+
+Some versions require different patches.
+
+Coreutils Versions             Patch file
+5.0                            coreutils-5.0-on-glibc-2.28.diff
+5.97 to 6.9                    coreutils-5.97-on-glibc-2.28.diff
+6.10                           coreutils-6.10-on-glibc-2.28.diff
+6.11                           coreutils-6.11-on-glibc-2.28.diff
+6.12                           coreutils-6.12-on-glibc-2.28.diff
+7.2  to 8.3                    coreutils-7.2-on-glibc-2.28.diff
+8.4  to 8.12                   coreutils-8.4-on-glibc-2.28.diff
+8.13 to 8.16                   coreutils-8.13-on-glibc-2.28.diff
+8.17                           coreutils-8.17-on-glibc-2.28.diff
+8.18 to 8.23                   coreutils-8.18-on-glibc-2.28.diff
+8.24 to 8.29                   coreutils-8.24-on-glibc-2.28.diff
+8.30 and newer                 [builds without patching]
+
+
+Manual build
+------------
+
+1. Download the desired version from https://ftp.gnu.org/gnu/coreutils .
+2. Patch using the corresponding patch file (see table above).
+3. Configure the build, optionally adding the version number
+   to the executables, to ensure they will not conflict with existing
+   (newer) executables
+4. Build with 'make'
+5. Optionally install with 'sudo make install'
+
+Example:
+
+    wget https://ftp.gnu.org/gnu/coreutils/coreutils-5.97.tar.gz
+    tar -xf coreutils-5.97.tar.gz
+    cd coreutils-5.97
+    patch -p1 < ../coreutils-5.97-on-glibc-2.28.diff
+    ./configure --program-suffix=-5.97
+    make
+    sudo make install
+
+This will install the programs (e.g. 'sort', 'head) in
+/usr/local/bin, with "-5.97" added to each program name (e.g. 'sort-5.97',
+'head-5.97').
+
+NOTE:
+With very old versions (5.X and 6.X), running "./configure" will
+hang for a long time at the following step:
+   "checking for mktime..."
+But will eventually continue successfully.
+
+
+Automated build
+---------------
+
+The script 'build-older-versions.sh' automatically performs the manual steps
+listed above. The script installs each package in a separate directory:
+Programs in `$HOME/old-coreutils/coreutils-{VERSION}/bin`,
+manual pages in `$HOME/old-coreutils/coreutils-{VERSION}/share/man`,
+PDF manual in `$HOME/old-coreutils/coreutils-{VERSION}/share/doc`,
+INFO pages in `$HOME/old-coreutils/coreutils-{VERSION}/share/info`.
+It will also create symlinks to all version in a common directory
+`$HOME/old-coreutils/bin`.
+
+Example, running the following commands:
+
+    ./build-older-versions.sh 5.0
+    ./build-older-versions.sh 5.97
+    ./build-older-versions.sh 6.12
+    ./build-older-versions.sh 7.6
+
+Will download, patch, build and install the programs for GNU coreutils
+versions 5.0,5.97,6.12,7.6 in `$HOME/old-coreutils/bin` :
+
+    $ ls $HOME/old-coreutils/bin
+    [-5.97          id-5.0          sha224sum-7.6
+    [-6.12          id-5.97         sha256sum-6.12
+    [-7.6           id-6.12         sha256sum-7.6
+    base64-6.12     id-7.6          sha384sum-6.12
+    base64-7.6      install-5.0     sha384sum-7.6
+    basename-5.0    install-5.97    sha512sum-6.12
+    basename-5.97   install-6.12    sha512sum-7.6
+    basename-6.12   install-7.6     shred-5.0
+    basename-7.6    join-5.0        shred-5.97
+    cat-5.0         join-5.97       shred-6.12
+    cat-5.97        join-6.12       shred-7.6
+    cat-6.12        join-7.6        shuf-6.12
+    cat-7.6         kill-5.0        shuf-7.6
+    chcon-6.12      kill-5.97       sleep-5.0
+    chcon-7.6       kill-6.12       sleep-5.97
+    chgrp-5.0       kill-7.6        sleep-6.12
+    chgrp-5.97      link-5.0        sleep-7.6
+    chgrp-6.12      link-5.97       sort-5.0
+    chgrp-7.6       link-6.12       sort-5.97
+    chmod-5.0       link-7.6        sort-6.12
+    chmod-5.97      ln-5.0          sort-7.6
+    chmod-6.12      ln-5.97         split-5.0
+    chmod-7.6       ln-6.12         split-5.97
+    chown-5.0       ln-7.6          split-6.12
+    [... many more files ...]
+
+By adding the directory to your $PATH, older versions can be easily used:
+
+    export PATH=$PATH:$HOME/old-coreutils/bin
+    export MANPATH=$MANPATH:$HOME/old-coreutils/man
+
+
+
+
+
+========================================================================
+
+Copyright (C) 2019 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts.  A copy of the license is included in the "GNU Free
+Documentation License" file as part of this distribution.

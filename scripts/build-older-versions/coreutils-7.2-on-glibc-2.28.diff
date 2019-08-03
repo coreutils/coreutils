@@ -1,0 +1,75 @@
+diff -r -U3 coreutils-7.6/lib/freadahead.c coreutils-7.6-patched/lib/freadahead.c
+--- coreutils-7.6/lib/freadahead.c	2009-05-03 23:46:33.000000000 -0600
++++ coreutils-7.6-patched/lib/freadahead.c	2019-08-01 17:30:54.589238442 -0600
+@@ -25,7 +25,7 @@
+ size_t
+ freadahead (FILE *fp)
+ {
+-#if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
++#if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+   if (fp->_IO_write_ptr > fp->_IO_write_base)
+     return 0;
+   return (fp->_IO_read_end - fp->_IO_read_ptr)
+diff -r -U3 coreutils-7.6/lib/freadptr.c coreutils-7.6-patched/lib/freadptr.c
+--- coreutils-7.6/lib/freadptr.c	2009-05-03 23:46:33.000000000 -0600
++++ coreutils-7.6-patched/lib/freadptr.c	2019-08-01 17:34:10.692659598 -0600
+@@ -29,7 +29,7 @@
+   size_t size;
+
+   /* Keep this code in sync with freadahead!  */
+-#if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
++#if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+   if (fp->_IO_write_ptr > fp->_IO_write_base)
+     return NULL;
+   size = fp->_IO_read_end - fp->_IO_read_ptr;
+diff -r -U3 coreutils-7.6/lib/freadseek.c coreutils-7.6-patched/lib/freadseek.c
+--- coreutils-7.6/lib/freadseek.c	2009-05-03 23:46:33.000000000 -0600
++++ coreutils-7.6-patched/lib/freadseek.c	2019-08-01 17:34:41.013164702 -0600
+@@ -34,7 +34,7 @@
+ freadptrinc (FILE *fp, size_t increment)
+ {
+   /* Keep this code in sync with freadptr!  */
+-#if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
++#if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+   fp->_IO_read_ptr += increment;
+ #elif defined __sferror || defined __DragonFly__ /* FreeBSD, NetBSD, OpenBSD, DragonFly, MacOS X, Cygwin */
+   fp_->_p += increment;
+diff -r -U3 coreutils-7.6/lib/fseeko.c coreutils-7.6-patched/lib/fseeko.c
+--- coreutils-7.6/lib/fseeko.c	2009-08-09 10:16:11.000000000 -0600
++++ coreutils-7.6-patched/lib/fseeko.c	2019-08-01 17:36:11.030633785 -0600
+@@ -44,7 +44,7 @@
+ #endif
+
+   /* These tests are based on fpurge.c.  */
+-#if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
++#if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+   if (fp->_IO_read_end == fp->_IO_read_ptr
+       && fp->_IO_write_ptr == fp->_IO_write_base
+       && fp->_IO_save_base == NULL)
+diff -r -U3 coreutils-7.6/lib/fseterr.c coreutils-7.6-patched/lib/fseterr.c
+--- coreutils-7.6/lib/fseterr.c	2009-05-03 23:46:33.000000000 -0600
++++ coreutils-7.6-patched/lib/fseterr.c	2019-08-01 17:34:57.285433551 -0600
+@@ -29,7 +29,7 @@
+   /* Most systems provide FILE as a struct and the necessary bitmask in
+      <stdio.h>, because they need it for implementing getc() and putc() as
+      fast macros.  */
+-#if defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
++#if defined _IO_EOF_SEEN || defined _IO_ftrylockfile || __GNU_LIBRARY__ == 1 /* GNU libc, BeOS, Haiku, Linux libc5 */
+   fp->_flags |= _IO_ERR_SEEN;
+ #elif defined __sferror || defined __DragonFly__ /* FreeBSD, NetBSD, OpenBSD, DragonFly, MacOS X, Cygwin */
+   fp_->_flags |= __SERR;
+diff -r -U3 coreutils-7.6/lib/stdio-impl.h coreutils-7.6-patched/lib/stdio-impl.h
+--- coreutils-7.6/lib/stdio-impl.h	2009-05-03 23:46:34.000000000 -0600
++++ coreutils-7.6-patched/lib/stdio-impl.h	2019-08-01 17:32:36.431051254 -0600
+@@ -18,6 +18,12 @@
+    the same implementation of stdio extension API, except that some fields
+    have different naming conventions, or their access requires some casts.  */
+
++/* Glibc 2.28 made _IO_IN_BACKUP private.  For now, work around this
++ *    problem by defining it ourselves.  FIXME: Do not rely on glibc
++ *       internals.  */
++#if !defined _IO_IN_BACKUP && defined _IO_EOF_SEEN
++# define _IO_IN_BACKUP 0x100
++#endif
+
+ /* BSD stdio derived implementations.  */
