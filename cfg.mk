@@ -635,8 +635,7 @@ sc_prohibit_test_background_without_cleanup_:
 # Ensure that tests call the print_ver_ function for programs which are
 # actually used in that test.
 sc_prohibit_test_calls_print_ver_with_irrelevant_argument:
-	@cd $(srcdir)							\
-	&& git -C  grep -w print_ver_ tests				\
+	@git -C $(srcdir) grep -w print_ver_ tests			\
 	  | sed 's#:print_ver_##'					\
 	  | { fail=0;							\
 	      while read file name; do					\
