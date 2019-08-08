@@ -12593,8 +12593,8 @@ Any @var{file} that does not exist is created.
 @cindex sparse files, creating
 @cindex holes, creating files with
 If a @var{file} is larger than the specified size, the extra data is lost.
-If a @var{file} is shorter, it is extended and the extended part (or hole)
-reads as zero bytes.
+If a @var{file} is shorter, it is extended and the sparse extended part
+(or hole) reads as zero bytes.
 
 The program accepts the following options.  Also see @ref{Common options}.
 

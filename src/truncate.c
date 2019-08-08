@@ -74,7 +74,7 @@ Shrink or extend the size of each FILE to the specified size\n\
 A FILE argument that does not exist is created.\n\
 \n\
 If a FILE is larger than the specified size, the extra data is lost.\n\
-If a FILE is shorter, it is extended and the extended part (hole)\n\
+If a FILE is shorter, it is extended and the sparse extended part (hole)\n\
 reads as zero bytes.\n\
 "), stdout);
 
