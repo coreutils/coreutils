@@ -49,6 +49,19 @@ GNU coreutils NEWS                                    -*- outline -*-
   coherency of file system attributes, useful on network file systems.
 
 
+** Changes in behavior
+
+  date now parses military time zones in accordance with common usage:
+    "A" to "M"  are equivalent to UTC+1 to UTC+12
+    "N" to "Y"  are equivalent to UTC-1 to UTC-12
+    "Z" is "zulu" time (UTC).
+  For example, 'date -d "09:00B" is now equivalent to 9am in UTC+2 time zone.
+  Previously, military time zones were parsed according to the obsolete
+  rfc822, with their value negated (e.g., "B" was equivalent to UTC-2).
+  [The old behavior was introduced in sh-utils 2.0.15 ca. 1999, predating
+  coreutils package.]
+
+
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
 
 ** Bug fixes
