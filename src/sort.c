@@ -82,11 +82,6 @@ struct rlimit { size_t rlim_cur; };
 # endif
 #endif
 
-#if GNULIB_defined_pthread_functions
-# undef pthread_sigmask
-# define pthread_sigmask(how, set, oset) sigprocmask (how, set, oset)
-#endif
-
 #if !defined OPEN_MAX && defined NR_OPEN
 # define OPEN_MAX NR_OPEN
 #endif
