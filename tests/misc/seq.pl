@@ -153,6 +153,9 @@ my @Tests =
    ['fast-1', qw(4), {OUT => [qw(1 2 3 4)]}],
    ['fast-2', qw(1 4), {OUT => [qw(1 2 3 4)]}],
    ['fast-3', qw(1 1 4), {OUT => [qw(1 2 3 4)]}],
+   ['fast-4', qw(1 2 4), {OUT => [qw(1 3)]}],
+   ['fast-5', qw(1 4 4), {OUT => [qw(1)]}],
+   ['fast-6', qw(1 1e0 4), {OUT => [qw(1 2 3 4)]}],
 
    # Ensure an INCREMENT of Zero is rejected.
    ['inc-zero-1',	qw(1 0 10), {EXIT => 1}, {ERR => $err_inc_zero}],
