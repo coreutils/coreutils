@@ -38,17 +38,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   'seq -f "%g " 1000000 1000000').
   [bug introduced in coreutils-6.10]
 
-** New Features
-
-  od --skip-bytes now can use lseek even if the input is not a regular
-  file, greatly improving performance in some cases.
-
-  stat(1) now uses the statx() system call where available, which can
-  operate more efficiently by only retrieving requested attributes.
-  stat(1) also supports a new --cached= option to control cache
-  coherency of file system attributes, useful on network file systems.
-
-
 ** Changes in behavior
 
   date now parses military time zones in accordance with common usage:
@@ -60,6 +49,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   rfc822, with their value negated (e.g., "B" was equivalent to UTC-2).
   [The old behavior was introduced in sh-utils 2.0.15 ca. 1999, predating
   coreutils package.]
+
+** New Features
+
+  od --skip-bytes now can use lseek even if the input is not a regular
+  file, greatly improving performance in some cases.
+
+  stat(1) now uses the statx() system call where available, which can
+  operate more efficiently by only retrieving requested attributes.
+  stat(1) also supports a new --cached= option to control cache
+  coherency of file system attributes, useful on network file systems.
 
 
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
