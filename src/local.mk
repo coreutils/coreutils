@@ -58,6 +58,7 @@ noinst_HEADERS =		\
   src/prog-fprintf.h		\
   src/remove.h			\
   src/set-fields.h		\
+  src/statx.h			\
   src/system.h			\
   src/uname.h
 

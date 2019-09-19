@@ -55,10 +55,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   od --skip-bytes now can use lseek even if the input is not a regular
   file, greatly improving performance in some cases.
 
-  stat(1) now uses the statx() system call where available, which can
+  stat(1) supports a new --cached= option, used on systems with statx(2)
+  to control cache coherency of file system attributes,
+  useful on network file systems.
+
+** Improvements
+
+  stat and ls now use the statx() system call where available, which can
   operate more efficiently by only retrieving requested attributes.
-  stat(1) also supports a new --cached= option to control cache
-  coherency of file system attributes, useful on network file systems.
 
 
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
