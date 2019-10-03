@@ -335,9 +335,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
             }
           else  /* Coalesce writes/seeks.  */
             {
-              if (psize <= OFF_T_MAX - csize)
-                psize += csize;
-              else
+              if (INT_ADD_WRAPV (psize, csize, &psize))
                 {
                   error (0, 0, _("overflow reading %s"), quoteaf (src_name));
                   return false;
