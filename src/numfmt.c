@@ -1081,7 +1081,7 @@ parse_format_string (char const *fmt)
 
   errno = 0;
   pad = strtol (fmt + i, &endptr, 10);
-  if (errno == ERANGE)
+  if (errno == ERANGE || pad < -LONG_MAX)
     die (EXIT_FAILURE, 0,
          _("invalid format %s (width overflow)"), quote (fmt));
 
