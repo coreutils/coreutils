@@ -275,14 +275,10 @@ build_type_arg (char const **typep,
 static void
 print_lineno (void)
 {
-  intmax_t next_line_no;
-
   printf (lineno_format, lineno_width, line_no, separator_str);
 
-  next_line_no = line_no + page_incr;
-  if (next_line_no < line_no)
+  if (INT_ADD_WRAPV (line_no, page_incr, &line_no))
     die (EXIT_FAILURE, 0, _("line number overflow"));
-  line_no = next_line_no;
 }
 
 /* Switch to a header section. */
