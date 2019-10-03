@@ -116,31 +116,29 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
     }
   if (block_mode)
     {
-      off_t const blksize = ST_BLKSIZE (sb);
-      if (ssize < OFF_T_MIN / blksize || ssize > OFF_T_MAX / blksize)
+      ptrdiff_t blksize = ST_BLKSIZE (sb);
+      intmax_t ssize0 = ssize;
+      if (INT_MULTIPLY_WRAPV (ssize, blksize, &ssize))
         {
           error (0, 0,
                  _("overflow in %" PRIdMAX
-                   " * %" PRIdMAX " byte blocks for file %s"),
-                 (intmax_t) ssize, (intmax_t) blksize,
-                 quoteaf (fname));
+                   " * %" PRIdPTR " byte blocks for file %s"),
+                 ssize0, blksize, quoteaf (fname));
           return false;
         }
-      ssize *= blksize;
     }
   if (rel_mode)
     {
-      uintmax_t fsize;
+      off_t fsize;
 
       if (0 <= rsize)
         fsize = rsize;
       else
         {
-          off_t file_size;
           if (usable_st_size (&sb))
             {
-              file_size = sb.st_size;
-              if (file_size < 0)
+              fsize = sb.st_size;
+              if (fsize < 0)
                 {
                   /* Sanity check.  Overflow is the only reason I can think
                      this would ever go negative. */
@@ -151,46 +149,37 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
             }
           else
             {
-              file_size = lseek (fd, 0, SEEK_END);
-              if (file_size < 0)
+              fsize = lseek (fd, 0, SEEK_END);
+              if (fsize < 0)
                 {
                   error (0, errno, _("cannot get the size of %s"),
                          quoteaf (fname));
                   return false;
                 }
             }
-          fsize = file_size;
         }
 
       if (rel_mode == rm_min)
-        nsize = MAX (fsize, (uintmax_t) ssize);
+        nsize = MAX (fsize, ssize);
       else if (rel_mode == rm_max)
-        nsize = MIN (fsize, (uintmax_t) ssize);
+        nsize = MIN (fsize, ssize);
       else if (rel_mode == rm_rdn)
         /* 0..ssize-1 -> 0 */
-        nsize = (fsize / ssize) * ssize;
-      else if (rel_mode == rm_rup)
-        /* 1..ssize -> ssize */
-        {
-          /* Here ssize>=1 && fsize>=0 */
-          uintmax_t const overflow = ((fsize + ssize - 1) / ssize) * ssize;
-          if (overflow > OFF_T_MAX)
-            {
-              error (0, 0, _("overflow rounding up size of file %s"),
-                     quoteaf (fname));
-              return false;
-            }
-          nsize = overflow;
-        }
+        nsize = fsize - fsize % ssize;
       else
         {
-          if (ssize > OFF_T_MAX - (off_t)fsize)
+          if (rel_mode == rm_rup)
+            {
+              /* 1..ssize -> ssize */
+              off_t r = fsize % ssize;
+              ssize = r == 0 ? 0 : ssize - r;
+            }
+          if (INT_ADD_WRAPV (fsize, ssize, &nsize))
             {
               error (0, 0, _("overflow extending size of file %s"),
                      quoteaf (fname));
               return false;
             }
-          nsize = fsize + ssize;
         }
     }
   else
