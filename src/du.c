@@ -317,6 +317,7 @@ Summarize disk usage of the set of FILEs, recursively for directories.\n\
       --files0-from=F   summarize disk usage of the\n\
                           NUL-terminated file names specified in file F;\n\
                           if F is -, then read names from standard input\n\
+  -g                    like --block-size=1G\n\
   -H                    equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\
 \n\
@@ -755,7 +756,7 @@ main (int argc, char **argv)
   while (true)
     {
       int oi = -1;
-      int c = getopt_long (argc, argv, "0abd:chHklmst:xB:DLPSX:",
+      int c = getopt_long (argc, argv, "0abd:cghHklmst:xB:DLPSX:",
                            long_options, &oi);
       if (c == -1)
         break;
@@ -790,6 +791,10 @@ main (int argc, char **argv)
           print_grand_total = true;
           break;
 
+         case 'g':
+           human_output_opts = 0;
+           output_block_size = 1024 * 1024 * 1024;
+            
         case 'h':
           human_output_opts = human_autoscale | human_SI | human_base_1024;
           output_block_size = 1;
