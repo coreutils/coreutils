@@ -39,6 +39,10 @@ compare in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
 sort -n out > out1
 compare in out1 || { fail=1; echo "not a permutation" 1>&2; }
 
+# Exercize shuf's -r -n 0 options, with no standard input.
+shuf -r -n 0 in <&- >out || fail=1
+compare /dev/null out || fail=1
+
 # Exercise shuf's -e option.
 t=$(shuf -e a b c d e | sort | fmt)
 test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }

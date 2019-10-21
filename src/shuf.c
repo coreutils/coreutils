@@ -493,7 +493,12 @@ main (int argc, char **argv)
     }
 
   /* Prepare input.  */
-  if (echo)
+  if (head_lines == 0)
+    {
+      n_lines = 0;
+      line = NULL;
+    }
+  else if (echo)
     {
       input_from_argv (operand, n_operands, eolbyte);
       n_lines = n_operands;
@@ -507,54 +512,54 @@ main (int argc, char **argv)
   else
     {
       /* If an input file is specified, re-open it as stdin.  */
-      if (n_operands == 1)
-        if (! (STREQ (operand[0], "-") || ! head_lines
-               || freopen (operand[0], "r", stdin)))
-          die (EXIT_FAILURE, errno, "%s", quotef (operand[0]));
+      if (n_operands == 1
+          && ! (STREQ (operand[0], "-")
+                || freopen (operand[0], "r", stdin)))
+        die (EXIT_FAILURE, errno, "%s", quotef (operand[0]));
 
       fadvise (stdin, FADVISE_SEQUENTIAL);
 
-      if (! repeat && head_lines != SIZE_MAX
-          && (! head_lines || input_size () > RESERVOIR_MIN_INPUT))
-        {
-          use_reservoir_sampling = true;
-          n_lines = SIZE_MAX;   /* unknown number of input lines, for now.  */
-        }
-      else
+      if (repeat || head_lines == SIZE_MAX
+          || input_size () <= RESERVOIR_MIN_INPUT)
         {
           n_lines = read_input (stdin, eolbyte, &input_lines);
           line = input_lines;
         }
+      else
+        {
+          use_reservoir_sampling = true;
+          n_lines = SIZE_MAX;   /* unknown number of input lines, for now.  */
+        }
     }
 
-  if (! repeat)
-    head_lines = MIN (head_lines, n_lines);
+  /* The adjusted head line count; can be less than HEAD_LINES if the
+     input is small and if not repeating.  */
+  size_t ahead_lines = repeat || head_lines < n_lines ? head_lines : n_lines;
 
   randint_source = randint_all_new (random_source,
                                     (use_reservoir_sampling || repeat
                                      ? SIZE_MAX
-                                     : randperm_bound (head_lines, n_lines)));
+                                     : randperm_bound (ahead_lines, n_lines)));
   if (! randint_source)
     die (EXIT_FAILURE, errno, "%s", quotef (random_source));
 
   if (use_reservoir_sampling)
     {
       /* Instead of reading the entire file into 'line',
-         use reservoir-sampling to store just "head_lines" random lines.  */
-      n_lines = read_input_reservoir_sampling (stdin, eolbyte, head_lines,
+         use reservoir-sampling to store just AHEAD_LINES random lines.  */
+      n_lines = read_input_reservoir_sampling (stdin, eolbyte, ahead_lines,
                                                randint_source, &reservoir);
-      head_lines = n_lines;
+      ahead_lines = n_lines;
     }
 
   /* Close stdin now, rather than earlier, so that randint_all_new
      doesn't have to worry about opening something other than
      stdin.  */
-  if (! (echo || input_range)
-      && (fclose (stdin) != 0))
+  if (! (head_lines == 0 || echo || input_range || fclose (stdin) == 0))
     die (EXIT_FAILURE, errno, _("read error"));
 
   if (!repeat)
-    permutation = randperm_new (randint_source, head_lines, n_lines);
+    permutation = randperm_new (randint_source, ahead_lines, n_lines);
 
   if (outfile && ! freopen (outfile, "w", stdout))
     die (EXIT_FAILURE, errno, "%s", quotef (outfile));
@@ -569,10 +574,10 @@ main (int argc, char **argv)
           if (n_lines == 0)
             die (EXIT_FAILURE, 0, _("no lines to repeat"));
           if (input_range)
-            i = write_random_numbers (randint_source, head_lines,
+            i = write_random_numbers (randint_source, ahead_lines,
                                       lo_input, hi_input, eolbyte);
           else
-            i = write_random_lines (randint_source, head_lines, line, n_lines);
+            i = write_random_lines (randint_source, ahead_lines, line, n_lines);
         }
     }
   else
@@ -580,10 +585,10 @@ main (int argc, char **argv)
       if (use_reservoir_sampling)
         i = write_permuted_output_reservoir (n_lines, reservoir, permutation);
       else if (input_range)
-        i = write_permuted_numbers (head_lines, lo_input,
+        i = write_permuted_numbers (ahead_lines, lo_input,
                                     permutation, eolbyte);
       else
-        i = write_permuted_lines (head_lines, line, permutation);
+        i = write_permuted_lines (ahead_lines, line, permutation);
     }
 
   if (i != 0)

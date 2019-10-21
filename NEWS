@@ -29,6 +29,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   (like Solaris 10 and Solaris 11).
   [bug introduced in coreutils-8.31]
 
+  'shuf -r -n 0 file' no longer mistakenly reads from standard input.
+  [bug introduced with the --repeat feature in coreutils-8.22]
+
   split no longer reports a "output file suffixes exhausted" error
   when the specified number of files is evenly divisible by 10, 16, 26,
   for --numeric, --hex, or default alphabetic suffixes respectively.
@@ -210,7 +213,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   'mv -n A B' no longer suffers from a race condition that can
   overwrite a simultaneously-created B.  This bug fix requires
   platform support for the renameat2 or renameatx_np syscalls, found
-  in recent Linux and macOS kernels.  As a side effect, ‘mv -n A A’
+  in recent Linux and macOS kernels.  As a side effect, 'mv -n A A'
   now silently does nothing if A exists.
   [bug introduced with coreutils-7.1]
 
