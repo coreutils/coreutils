@@ -18,7 +18,9 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "system.h"
+#include "minmax.h"
 
 /* Deactivate config.h's "rpl_"-prefixed definition of malloc,
    since we don't link gnulib here, and the replacement isn't
@@ -90,7 +92,7 @@ apply_mode (FILE *stream, const char *mode)
 {
   char *buf = NULL;
   int setvbuf_mode;
-  size_t size = 0;
+  uintmax_t size = 0;
 
   if (*mode == '0')
     setvbuf_mode = _IONBF;
@@ -99,27 +101,28 @@ apply_mode (FILE *stream, const char *mode)
   else
     {
       setvbuf_mode = _IOFBF;
-      verify (SIZE_MAX <= ULONG_MAX);
-      size = strtoul (mode, NULL, 10);
-      if (size > 0)
-        {
-          if (!(buf = malloc (size)))   /* will be freed by fclose()  */
-            {
-              /* We could defer the allocation to libc, however since
-                 glibc currently ignores the combination of NULL buffer
-                 with non zero size, we'll fail here.  */
-              fprintf (stderr,
-                       _("failed to allocate a %" PRIuMAX
-                         " byte stdio buffer\n"), (uintmax_t) size);
-              return;
-            }
-        }
-      else
+      char *mode_end;
+      size = strtoumax (mode, &mode_end, 10);
+      if (size == 0 || *mode_end)
         {
           fprintf (stderr, _("invalid buffering mode %s for %s\n"),
                    mode, fileno_to_name (fileno (stream)));
           return;
         }
+
+      buf = size <= SIZE_MAX ? malloc (size) : NULL;
+      if (!buf)
+        {
+          /* We could defer the allocation to libc, however since
+             glibc currently ignores the combination of NULL buffer
+             with non zero size, we'll fail here.  */
+          fprintf (stderr,
+                   _("failed to allocate a %" PRIuMAX
+                     " byte stdio buffer\n"),
+                   size);
+          return;
+        }
+      /* buf will be freed by fclose.  */
     }
 
   if (setvbuf (stream, buf, setvbuf_mode, size) != 0)
