@@ -128,7 +128,6 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wunreachable-code"       # Too many warnings for now
   nw="$nw -Wpadded"                 # Our structs are not padded
   nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
-  nw="$nw -Wlogical-op"             # Too many warnings until GCC 4.8.0
   nw="$nw -Wformat-nonliteral"      # who.c and pinky.c strftime uses
   nw="$nw -Wnested-externs"         # use of XARGMATCH/verify_function__
   nw="$nw -Wswitch-enum"            # Too many warnings for now
@@ -156,11 +155,6 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
   gl_WARN_ADD([-Wno-format-nonliteral])
-
-  # Enable this warning only with gcc-4.8 and newer.  Before that
-  # bounds checking as done in truncate.c was incorrectly flagged.
-  # See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=43772
-  gl_GCC_VERSION_IFELSE([4], [8], [gl_WARN_ADD([-Wlogical-op])])
 
   # clang is unduly picky about some things.
   AC_CACHE_CHECK([whether the compiler is clang], [utils_cv_clang],
