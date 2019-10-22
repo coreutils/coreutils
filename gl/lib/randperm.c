@@ -19,24 +19,29 @@
 
 #include <config.h>
 
-#include "hash.h"
 #include "randperm.h"
 
 #include <limits.h>
+#include <stdint.h>
 #include <stdlib.h>
 
+#include "count-leading-zeros.h"
+#include "hash.h"
+#include "verify.h"
 #include "xalloc.h"
 
-/* Return the ceiling of the log base 2 of N.  If N is zero, return
-   an unspecified value.  */
+/* Return the floor of the log base 2 of N.  If N is zero, return -1.  */
 
-static size_t _GL_ATTRIBUTE_CONST
-ceil_lg (size_t n)
+static int _GL_ATTRIBUTE_CONST
+floor_lg (size_t n)
 {
-  size_t b = 0;
-  for (n--; n != 0; n /= 2)
-    b++;
-  return b;
+  verify (SIZE_WIDTH <= ULLONG_WIDTH);
+  return (n == 0 ? -1
+          : SIZE_WIDTH <= UINT_WIDTH
+          ? UINT_WIDTH - 1 - count_leading_zeros (n)
+          : SIZE_WIDTH <= ULONG_WIDTH
+          ? ULONG_WIDTH - 1 - count_leading_zeros_l (n)
+          : ULLONG_WIDTH - 1 - count_leading_zeros_ll (n));
 }
 
 /* Return an upper bound on the number of random bytes needed to
@@ -48,10 +53,10 @@ randperm_bound (size_t h, size_t n)
 {
   /* Upper bound on number of bits needed to generate the first number
      of the permutation.  */
-  size_t lg_n = ceil_lg (n);
+  uintmax_t lg_n = floor_lg (n) + 1;
 
   /* Upper bound on number of bits needed to generated the first H elements.  */
-  size_t ar = lg_n * h;
+  uintmax_t ar = lg_n * h;
 
   /* Convert the bit count to a byte count.  */
   size_t bound = (ar + CHAR_BIT - 1) / CHAR_BIT;

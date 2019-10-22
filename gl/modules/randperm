@@ -6,7 +6,9 @@ lib/randperm.c
 lib/randperm.h
 
 Depends-on:
+count-leading-zeros
 randint
+stdint
 xalloc
 hash
 
