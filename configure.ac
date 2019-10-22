@@ -134,7 +134,6 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wswitch-enum"            # Too many warnings for now
   nw="$nw -Wswitch-default"         # Too many warnings for now
   nw="$nw -Wstack-protector"        # not worth working around
-  nw="$nw -Wtype-limits"            # False alarms for portable code
   nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 80776
   nw="$nw -Wformat-truncation=2"    # False alarm in ls.c, probably related
   # things I might fix soon:
@@ -155,7 +154,6 @@ if test "$gl_gcc_warnings" = yes; then
     gl_WARN_ADD([$w])
   done
   gl_WARN_ADD([-Wno-sign-compare])     # Too many warnings for now
-  gl_WARN_ADD([-Wno-type-limits])      # False alarms for portable code
   gl_WARN_ADD([-Wno-unused-parameter]) # Too many warnings for now
   gl_WARN_ADD([-Wno-format-nonliteral])
 
