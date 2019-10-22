@@ -583,8 +583,8 @@ get_ids (void)
       pw = getpwnam (owner_name);
       if (pw == NULL)
         {
-          unsigned long int tmp;
-          if (xstrtoul (owner_name, NULL, 0, &tmp, NULL) != LONGINT_OK
+          uintmax_t tmp;
+          if (xstrtoumax (owner_name, NULL, 0, &tmp, "") != LONGINT_OK
               || UID_T_MAX < tmp)
             die (EXIT_FAILURE, 0, _("invalid user %s"),
                  quote (owner_name));
@@ -602,8 +602,8 @@ get_ids (void)
       gr = getgrnam (group_name);
       if (gr == NULL)
         {
-          unsigned long int tmp;
-          if (xstrtoul (group_name, NULL, 0, &tmp, NULL) != LONGINT_OK
+          uintmax_t tmp;
+          if (xstrtoumax (group_name, NULL, 0, &tmp, "") != LONGINT_OK
               || GID_T_MAX < tmp)
             die (EXIT_FAILURE, 0, _("invalid group %s"),
                  quote (group_name));

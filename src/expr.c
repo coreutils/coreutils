@@ -60,7 +60,7 @@ static void mpz_init_set_ui (mpz_t z, unsigned long int i) { z[0] = i; }
 static int
 mpz_init_set_str (mpz_t z, char *s, int base)
 {
-  return xstrtoimax (s, NULL, base, z, NULL) == LONGINT_OK ? 0 : -1;
+  return xstrtoimax (s, NULL, base, z, "") == LONGINT_OK ? 0 : -1;
 }
 static void
 mpz_add (mpz_t r, mpz_t a0, mpz_t b0)

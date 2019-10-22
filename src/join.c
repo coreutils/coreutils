@@ -839,10 +839,9 @@ static size_t
 string_to_join_field (char const *str)
 {
   size_t result;
-  unsigned long int val;
-  verify (SIZE_MAX <= ULONG_MAX);
+  uintmax_t val;
 
-  strtol_error s_err = xstrtoul (str, NULL, 10, &val, "");
+  strtol_error s_err = xstrtoumax (str, NULL, 10, &val, "");
   if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
     val = SIZE_MAX;
   else if (s_err != LONGINT_OK || val == 0)

@@ -440,8 +440,8 @@ main (int argc, char **argv)
 
       case 'n':
         {
-          unsigned long int argval;
-          strtol_error e = xstrtoul (optarg, NULL, 10, &argval, NULL);
+          uintmax_t argval;
+          strtol_error e = xstrtoumax (optarg, NULL, 10, &argval, "");
 
           if (e == LONGINT_OK)
             head_lines = MIN (head_lines, argval);

@@ -1330,7 +1330,7 @@ specify_nmerge (int oi, char c, char const *s)
 {
   uintmax_t n;
   struct rlimit rlimit;
-  enum strtol_error e = xstrtoumax (s, NULL, 10, &n, NULL);
+  enum strtol_error e = xstrtoumax (s, NULL, 10, &n, "");
 
   /* Try to find out how many file descriptors we'll be able
      to open.  We need at least nmerge + 3 (STDIN_FILENO,
@@ -1443,8 +1443,8 @@ specify_sort_size (int oi, char c, char const *s)
 static size_t
 specify_nthreads (int oi, char c, char const *s)
 {
-  unsigned long int nthreads;
-  enum strtol_error e = xstrtoul (s, NULL, 10, &nthreads, "");
+  uintmax_t nthreads;
+  enum strtol_error e = xstrtoumax (s, NULL, 10, &nthreads, "");
   if (e == LONGINT_OVERFLOW)
     return SIZE_MAX;
   if (e != LONGINT_OK)

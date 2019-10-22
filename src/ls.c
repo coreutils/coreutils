@@ -1902,18 +1902,15 @@ decode_switches (int argc, char **argv)
     tabsize = 8;
     if (p)
       {
-        unsigned long int tmp_ulong;
-        if (xstrtoul (p, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
-            && tmp_ulong <= SIZE_MAX)
-          {
-            tabsize = tmp_ulong;
-          }
+        uintmax_t tmp;
+        if (xstrtoumax (p, NULL, 0, &tmp, "") == LONGINT_OK
+            && tmp <= SIZE_MAX)
+          tabsize = tmp;
         else
-          {
-            error (0, 0,
-             _("ignoring invalid tab size in environment variable TABSIZE: %s"),
-                   quote (p));
-          }
+          error (0, 0,
+                 _("ignoring invalid tab size in environment variable TABSIZE:"
+                   " %s"),
+                 quote (p));
       }
   }
 

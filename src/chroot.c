@@ -106,9 +106,10 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
   for (tmp = strtok (buffer, ","); tmp; tmp = strtok (NULL, ","))
     {
       struct group *g;
-      unsigned long int value;
+      uintmax_t value;
 
-      if (xstrtoul (tmp, NULL, 10, &value, "") == LONGINT_OK && value <= MAXGID)
+      if (xstrtoumax (tmp, NULL, 10, &value, "") == LONGINT_OK
+          && value <= MAXGID)
         {
           while (isspace (to_uchar (*tmp)))
             tmp++;

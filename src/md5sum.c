@@ -450,26 +450,23 @@ split_3 (char *s, size_t s_len,
       ptrdiff_t algo = argmatch (algo_name, algorithm_out_string, NULL, 0);
       if (algo < 0)
         return false;
-      else
-        b2_algorithm = algo;
+      b2_algorithm = algo;
       if (openssl_format)
         s[--i] = '(';
 
+      b2_length = blake2_max_len[b2_algorithm] * 8;
       if (length_specified)
         {
-          unsigned long int tmp_ulong;
-          if (xstrtoul (s + i, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
-              && 0 < tmp_ulong && tmp_ulong <= blake2_max_len[b2_algorithm] * 8
-              && tmp_ulong % 8 == 0)
-            b2_length = tmp_ulong;
-          else
+          uintmax_t length;
+          char *siend;
+          if (! (xstrtoumax (s + i, &siend, 0, &length, NULL) == LONGINT_OK
+                 && 0 < length && length <= b2_length
+                 && length % 8 == 0))
             return false;
 
-          while (ISDIGIT (s[i]))
-            ++i;
+          i = siend - s;
+          b2_length = length;
         }
-      else
-        b2_length = blake2_max_len[b2_algorithm] * 8;
 
       digest_hex_bytes = b2_length / 4;
 #endif

@@ -87,8 +87,8 @@ parse_group (const char *name)
         gid = grp->gr_gid;
       else
         {
-          unsigned long int tmp;
-          if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
+          uintmax_t tmp;
+          if (! (xstrtoumax (name, NULL, 10, &tmp, "") == LONGINT_OK
                  && tmp <= GID_T_MAX))
             die (EXIT_FAILURE, 0, _("invalid group: %s"),
                  quote (name));

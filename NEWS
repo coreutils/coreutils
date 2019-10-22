@@ -43,6 +43,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  Several programs now check that numbers end properly.  For example,
+  'du -d 1x' now reports an error instead of silently ignoring the 'x'.
+  Affected programs and options include du -d, expr's numeric operands
+  on non-GMP builds, install -g and -o, ls's TABSIZE environment
+  variable, mknod b and c, ptx -g and -w, shuf -n, and sort --batch-size
+  and --parallel.
+
   date now parses military time zones in accordance with common usage:
     "A" to "M"  are equivalent to UTC+1 to UTC+12
     "N" to "Y"  are equivalent to UTC-1 to UTC-12

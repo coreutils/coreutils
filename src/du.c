@@ -807,12 +807,12 @@ main (int argc, char **argv)
 
         case 'd':		/* --max-depth=N */
           {
-            unsigned long int tmp_ulong;
-            if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
-                && tmp_ulong <= SIZE_MAX)
+            uintmax_t tmp;
+            if (xstrtoumax (optarg, NULL, 0, &tmp, "") == LONGINT_OK
+                && tmp <= SIZE_MAX)
               {
                 max_depth_specified = true;
-                max_depth = tmp_ulong;
+                max_depth = tmp;
               }
             else
               {

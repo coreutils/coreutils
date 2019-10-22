@@ -240,10 +240,9 @@ strict_posix2 (void)
 static size_t
 size_opt (char const *opt, char const *msgid)
 {
-  unsigned long int size;
-  verify (SIZE_MAX <= ULONG_MAX);
+  uintmax_t size;
 
-  switch (xstrtoul (opt, NULL, 10, &size, ""))
+  switch (xstrtoumax (opt, NULL, 10, &size, ""))
     {
     case LONGINT_OK:
     case LONGINT_OVERFLOW:
@@ -539,10 +538,10 @@ main (int argc, char **argv)
         {
         case 1:
           {
-            unsigned long int size;
+            uintmax_t size;
             if (optarg[0] == '+'
                 && ! strict_posix2 ()
-                && xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
+                && xstrtoumax (optarg, NULL, 10, &size, "") == LONGINT_OK
                 && size <= SIZE_MAX)
               skip_chars = size;
             else if (nfiles == 2)
