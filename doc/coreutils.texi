@@ -9877,7 +9877,7 @@ by POSIX.
 
 @emph{Warning}: If you use @command{rm} to remove a file, it is usually
 possible to recover the contents of that file.  If you want more assurance
-that the contents are truly unrecoverable, consider using @command{shred}.
+that the contents are unrecoverable, consider using @command{shred}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10019,51 +10019,46 @@ predates the development of the @code{getopt} standard syntax.
 @cindex erasing data
 
 @command{shred} overwrites devices or files, to help prevent even
-very expensive hardware from recovering the data.
+extensive forensics from recovering the data.
 
-Ordinarily when you remove a file (@pxref{rm invocation}), the data is
-not actually destroyed.  Only the index listing where the file is
-stored is destroyed, and the storage is made available for reuse.
-There are undelete utilities that will attempt to reconstruct the index
-and can bring the file back if the parts were not reused.
+Ordinarily when you remove a file (@pxref{rm invocation}), its data
+and metadata are not actually destroyed.  Only the file's directory
+entry is removed, and the file's storage is reclaimed only when no
+process has the file open and no other directory entry links to the
+file.  And even if file's data and metadata's storage space is freed
+for further reuse, there are undelete utilities that will attempt to
+reconstruct the file from the data in freed storage, and that can
+bring the file back if the storage was not rewritten.
 
-On a busy system with a nearly-full drive, space can get reused in a few
-seconds.  But there is no way to know for sure.  If you have sensitive
-data, you may want to be sure that recovery is not possible by actually
-overwriting the file with non-sensitive data.
-
-However, even after doing that, it is possible to take the disk back
-to a laboratory and use a lot of sensitive (and expensive) equipment
-to look for the faint ``echoes'' of the original data underneath the
-overwritten data.  If the data has only been overwritten once, it's not
-even that hard.
+On a busy system with a nearly-full device, space can get reused in a few
+seconds.  But there is no way to know for sure.  And although the
+undelete utilities and already-existing processes require insider or
+superuser access, you may be wary of the superuser,
+of processes running on your behalf, or of attackers
+that can physically access the storage device.  So if you have sensitive
+data, you may want to be sure that recovery is not possible
+by plausible attacks like these.
 
 The best way to remove something irretrievably is to destroy the media
 it's on with acid, melt it down, or the like.  For cheap removable media
-like floppy disks, this is the preferred method.  However, hard drives
-are expensive and hard to melt, so the @command{shred} utility tries
-to achieve a similar effect non-destructively.
+this is often the preferred method.  However, some storage devices
+are expensive or are harder to destroy, so the @command{shred} utility tries
+to achieve a similar effect non-destructively, by overwriting the file
+with non-sensitive data.
 
-This uses many overwrite passes, with the data patterns chosen to
-maximize the damage they do to the old data.  While this will work on
-floppies, the patterns are designed for best effect on hard drives.
-For more details, see the source code and Peter Gutmann's paper
-@uref{https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html,
-@cite{Secure Deletion of Data from Magnetic and Solid-State Memory}},
-from the proceedings of the Sixth USENIX Security Symposium (San Jose,
-California, July 22--25, 1996).
-
-@strong{Please note} that @command{shred} relies on a very important assumption:
-that the file system overwrites data in place.  This is the traditional
+@strong{Please note} that @command{shred} relies on a crucial
+assumption: that the file system and hardware overwrite data in place.
+Although this is common and is the traditional
 way to do things, but many modern file system designs do not satisfy this
 assumption.  Exceptions include:
 
 @itemize @bullet
 
 @item
-Log-structured or journaled file systems, such as those supplied with
-AIX and Solaris, and JFS, ReiserFS, XFS, Ext3 (in @code{data=journal} mode),
-BFS, NTFS, etc., when they are configured to journal @emph{data}.
+Log-structured or journaled file systems, such as ext3/ext4 (in
+@code{data=journal} mode), Btrfs, NTFS, ReiserFS, XFS, ZFS, file
+systems supplied with AIX and Solaris, etc., when they are configured to
+journal data.
 
 @item
 File systems that write redundant data and carry on even if some writes
@@ -10080,27 +10075,64 @@ clients.
 Compressed file systems.
 @end itemize
 
-In the particular case of ext3 file systems, the above disclaimer applies (and
-@command{shred} is thus of limited effectiveness) only in @code{data=journal}
+For ext3 and ext4 file systems, @command{shred} is less effective
+when the file system is in @code{data=journal}
 mode, which journals file data in addition to just metadata.  In both
 the @code{data=ordered} (default) and @code{data=writeback} modes,
-@command{shred} works as usual.  Ext3 journaling modes can be changed
+@command{shred} works as usual.  The ext3/ext4 journaling modes can be changed
 by adding the @code{data=something} option to the mount options for a
 particular file system in the @file{/etc/fstab} file, as documented in
-the mount man page (man mount).
+the @command{mount} man page (@samp{man mount}).  Alternatively, if
+you know how large the journal is, you can shred the journal by
+shredding enough file data so that the journal cycles around and fills
+up with shredded data.
 
 If you are not sure how your file system operates, then you should assume
-that it does not overwrite data in place, which means that shred cannot
+that it does not overwrite data in place, which means @command{shred} cannot
 reliably operate on regular files in your file system.
 
 Generally speaking, it is more reliable to shred a device than a file,
-since this bypasses the problem of file system design mentioned above.
-However, even shredding devices is not always completely reliable.  For
-example, most disks map out bad sectors invisibly to the application; if
-the bad sectors contain sensitive data, @command{shred} won't be able to
-destroy it.
+since this bypasses file system design issues mentioned above.
+However, devices are also problematic for shredding, for reasons
+such as the following:
 
-@command{shred} makes no attempt to detect or report this problem, just as
+@itemize @bullet
+
+@item
+Solid-state storage devices (SSDs) typically do wear leveling to
+prolong service life, and this means writes are distributed to other
+blocks by the hardware, so ``overwritten'' data blocks are still
+present in the underlying device.
+
+@item
+Most storage devices map out bad blocks invisibly to
+the application; if the bad blocks contain sensitive data,
+@command{shred} won't be able to destroy it.
+
+@item
+With some obsolete storage technologies,
+it may be possible to take (say) a floppy disk back
+to a laboratory and use a lot of sensitive (and expensive) equipment
+to look for the faint ``echoes'' of the original data underneath the
+overwritten data.  With these older technologies, if the file has been
+overwritten only once, it's reputedly not even that hard.  Luckily,
+this kind of data recovery has become difficult, and there is no
+public evidence that today's higher-density storage devices can be
+analyzed in this way.
+
+The @command{shred} command can use many overwrite passes,
+with data patterns chosen to
+maximize the damage they do to the old data.
+By default the patterns are designed for best effect on hard drives using
+now-obsolete technology; for newer devices, a single pass should suffice.
+For more details, see the source code and Peter Gutmann's paper
+@uref{https://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html,
+@cite{Secure Deletion of Data from Magnetic and Solid-State Memory}},
+from the proceedings of the Sixth USENIX Security Symposium (San Jose,
+California, July 22--25, 1996).
+@end itemize
+
+@command{shred} makes no attempt to detect or report these problems, just as
 it makes no attempt to do anything about backups.  However, since it is
 more reliable to shred devices than files, @command{shred} by default does
 not deallocate or remove the output file.  This default is more suitable
@@ -10198,7 +10230,7 @@ shred does not increase the apparent size of the file.
 @opindex -z
 @opindex --zero
 Normally, the last pass that @command{shred} writes is made up of
-random data.  If this would be conspicuous on your hard drive (for
+random data.  If this would be conspicuous on your storage device (for
 example, because it looks like encrypted data), or you just think
 it's tidier, the @option{--zero} option adds an additional overwrite pass with
 all zero bits.  This is in addition to the number of passes specified
@@ -10206,28 +10238,22 @@ by the @option{--iterations} option.
 
 @end table
 
-You might use the following command to erase all trace of the
-file system you'd created on the floppy disk in your first drive.
-That command takes about 20 minutes to erase a ``1.44MB'' (actually
-1440 KiB) floppy.
+You might use the following command to erase the file system you
+created on a USB flash drive.  This command typically takes several
+minutes, depending on the drive's size and write speed.  On modern
+storage devices a single pass should be adequate, and will take one
+third the time of the default three-pass approach.
 
 @example
-shred --verbose /dev/fd0
+shred -v -n 1 /dev/sdd1
 @end example
 
 Similarly, to erase all data on a selected partition of
-your hard disk, you could give a command like this:
-
-@example
-shred --verbose /dev/sda5
-@end example
-
-On modern disks, a single pass should be adequate,
-and it will take one third the time of the default three-pass approach.
+your hard disk, you could give a command like the following.
 
 @example
 # 1 pass, write pseudo-random data; 3x faster than the default
-shred --verbose -n1 /dev/sda5
+shred -v -n1 /dev/sda5
 @end example
 
 To be on the safe side, use at least one pass that overwrites using
