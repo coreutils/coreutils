@@ -475,7 +475,7 @@ official Debian algorithm, in order to accommodate more general usage
 and file name listing.
 
 
-@node Minus/Hyphen @samp{-} and Colon @samp{:} characters
+@node Minus/Hyphen and Colon characters
 @subsection Minus/Hyphen @samp{-} and Colon @samp{:} characters
 
 In Debian's version string syntax the version consists of three parts:
@@ -764,7 +764,7 @@ dpkg: warning: version '3.0/' has bad syntax:
 
 To illustrate the different handling of hyphens between Debian and
 coreutils' algorithms (see
-@ref{Minus/Hyphen @samp{-} and Colon @samp{:} characters}):
+@ref{Minus/Hyphen and Colon characters}):
 
 @example
 $ compver abb ab-cd 2>/dev/null     $ printf "abb\nab-cd\n" | sort -V
