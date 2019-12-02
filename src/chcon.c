@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "dev-ino.h"
@@ -557,7 +558,8 @@ main (int argc, char **argv)
   else
     {
       specified_context = argv[optind++];
-      if (security_check_context (se_const (specified_context)) < 0)
+      if (0 < is_selinux_enabled ()
+          && security_check_context (se_const (specified_context)) < 0)
         die (EXIT_FAILURE, errno, _("invalid context: %s"),
              quote (specified_context));
     }
