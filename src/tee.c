@@ -205,7 +205,6 @@ tee_files (int nfiles, char **files)
   files--;
   descriptors[0] = stdout;
   files[0] = bad_cast (_("standard output"));
-  setvbuf (stdout, NULL, _IONBF, 0);
   n_outputs++;
 
   for (i = 1; i <= nfiles; i++)
@@ -221,7 +220,6 @@ tee_files (int nfiles, char **files)
         }
       else
         {
-          setvbuf (descriptors[i], NULL, _IONBF, 0);
           n_outputs++;
         }
     }
