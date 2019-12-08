@@ -18248,6 +18248,13 @@ non-negative integer argument without a suffix, GNU @command{sleep}
 also accepts two or more arguments, unit suffixes, and floating-point
 numbers in either the current or the C locale.  @xref{Floating point}.
 
+For instance, the following could be used to @command{sleep} for
+1 second, 234 milli-, 567 micro- and 890 nanoseconds:
+
+@example
+sleep 1234e-3 567.89e-6
+@end example
+
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
