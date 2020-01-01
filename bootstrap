@@ -4,7 +4,7 @@ scriptversion=2019-01-04.17; # UTC
 
 # Bootstrap this package from checked-out sources.
 
-# Copyright (C) 2003-2019 Free Software Foundation, Inc.
+# Copyright (C) 2003-2020 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -166,7 +166,7 @@ bootstrap_epilogue() { :; }
 # specified directory.  Fill in the first %s with the destination
 # directory and the second with the domain name.
 po_download_command_format=\
-"wget --mirror --level=1 -nd -q -A.po -P '%s' \
+"wget --mirror --level=1 -nd -nv -A.po -P '%s' \
  https://translationproject.org/latest/%s/"
 
 # Prefer a non-empty tarname (4th argument of AC_INIT if given), else
