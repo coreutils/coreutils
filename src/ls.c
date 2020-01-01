@@ -108,6 +108,7 @@
 #include "strftime.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
+#include "xstrtol-error.h"
 #include "areadlink.h"
 #include "mbsalign.h"
 #include "dircolors.h"

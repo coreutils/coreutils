@@ -39,6 +39,7 @@
 #include "quote.h"
 #include "find-mount-point.h"
 #include "hash.h"
+#include "xstrtol-error.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "df"

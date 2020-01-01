@@ -32,6 +32,7 @@
 #include "xbinary-io.h"
 #include "xprintf.h"
 #include "xstrtol.h"
+#include "xstrtol-error.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "od"

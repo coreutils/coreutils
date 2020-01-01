@@ -53,6 +53,7 @@
 #include "xmemcoll.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
+#include "xstrtol-error.h"
 
 #ifndef RLIMIT_DATA
 struct rlimit { size_t rlim_cur; };

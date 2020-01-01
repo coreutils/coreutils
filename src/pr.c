@@ -322,6 +322,7 @@
 #include "stdio--.h"
 #include "strftime.h"
 #include "xstrtol.h"
+#include "xstrtol-error.h"
 #include "xdectoint.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

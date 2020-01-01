@@ -43,6 +43,7 @@
 #include "stdio--.h"
 #include "xfts.h"
 #include "xstrtol.h"
+#include "xstrtol-error.h"
 
 extern bool fts_debug;
 
