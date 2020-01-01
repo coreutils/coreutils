@@ -68,6 +68,7 @@
 /lib/iconv_open-irix.h
 /lib/iconv_open-osf.h
 /lib/iconv_open-solaris.h
+/lib/iconv_open-zos.h
 /lib/inttypes.h
 /lib/langinfo.h
 /lib/libcoreutils.a
