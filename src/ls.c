@@ -460,6 +460,7 @@ enum time_type
     time_mtime,			/* default */
     time_ctime,			/* -c */
     time_atime,			/* -u */
+    time_btime,                 /* birth time */
     time_numtypes		/* the number of elements of this enum */
   };
 
@@ -912,11 +913,16 @@ ARGMATCH_VERIFY (sort_args, sort_types);
 
 static char const *const time_args[] =
 {
-  "atime", "access", "use", "ctime", "status", NULL
+  "atime", "access", "use",
+  "ctime", "status",
+  "birth", "creation",
+  NULL
 };
 static enum time_type const time_types[] =
 {
-  time_atime, time_atime, time_atime, time_ctime, time_ctime
+  time_atime, time_atime, time_atime,
+  time_ctime, time_ctime,
+  time_btime, time_btime,
 };
 ARGMATCH_VERIFY (time_args, time_types);
 
@@ -1065,6 +1071,24 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
     }
 }
 
+/* Return the platform birthtime member of the stat structure,
+   or fallback to the mtime member, which we have populated
+   from the statx structure or reset to an invalid timestamp
+   where birth time is not supported.  */
+static struct timespec
+get_stat_btime (struct stat const *st)
+{
+  struct timespec btimespec;
+
+#if HAVE_STATX && defined STATX_INO
+  btimespec = get_stat_mtime (st);
+#else
+  btimespec = get_stat_birthtime (st);
+#endif
+
+  return btimespec;
+}
+
 #if HAVE_STATX && defined STATX_INO
 static unsigned int _GL_ATTRIBUTE_PURE
 time_type_to_statx (void)
@@ -1077,6 +1101,8 @@ time_type_to_statx (void)
       return STATX_MTIME;
     case time_atime:
       return STATX_ATIME;
+    case time_btime:
+      return STATX_BTIME;
     default:
       abort ();
     }
@@ -1127,9 +1153,22 @@ do_statx (int fd, const char *name, struct stat *st, int flags,
           unsigned int mask)
 {
   struct statx stx;
+  bool want_btime = mask & STATX_BTIME;
   int ret = statx (fd, name, flags, mask, &stx);
   if (ret >= 0)
-    statx_to_stat (&stx, st);
+    {
+      statx_to_stat (&stx, st);
+      /* Since we only need one timestamp type,
+         store birth time in st_mtim.  */
+      if (want_btime)
+        {
+          if (stx.stx_mask & STATX_BTIME)
+            st->st_mtim = statx_timestamp_to_timespec (stx.stx_btime);
+          else
+            st->st_mtim.tv_sec = st->st_mtim.tv_nsec = -1;
+        }
+    }
+
   return ret;
 }
 
@@ -2298,7 +2337,8 @@ decode_switches (int argc, char **argv)
      -lu means show atime and sort by name, -lut means show atime and sort
      by atime.  */
 
-  if ((time_type == time_ctime || time_type == time_atime)
+  if ((time_type == time_ctime || time_type == time_atime
+       || time_type == time_btime)
       && !sort_type_specified && format != long_format)
     {
       sort_type = sort_time;
@@ -3786,6 +3826,15 @@ cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
 }
 
 static inline int
+cmp_btime (struct fileinfo const *a, struct fileinfo const *b,
+           int (*cmp) (char const *, char const *))
+{
+  int diff = timespec_cmp (get_stat_btime (&b->stat),
+                           get_stat_btime (&a->stat));
+  return diff ? diff : cmp (a->name, b->name);
+}
+
+static inline int
 cmp_size (struct fileinfo const *a, struct fileinfo const *b,
           int (*cmp) (char const *, char const *))
 {
@@ -3816,6 +3865,7 @@ cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
 DEFINE_SORT_FUNCTIONS (ctime, cmp_ctime)
 DEFINE_SORT_FUNCTIONS (mtime, cmp_mtime)
 DEFINE_SORT_FUNCTIONS (atime, cmp_atime)
+DEFINE_SORT_FUNCTIONS (btime, cmp_btime)
 DEFINE_SORT_FUNCTIONS (size, cmp_size)
 DEFINE_SORT_FUNCTIONS (name, cmp_name)
 DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
@@ -3892,7 +3942,8 @@ static qsortFunc const sort_functions[][2][2][2] =
     /* last are time sort functions */
     LIST_SORTFUNCTION_VARIANTS (mtime),
     LIST_SORTFUNCTION_VARIANTS (ctime),
-    LIST_SORTFUNCTION_VARIANTS (atime)
+    LIST_SORTFUNCTION_VARIANTS (atime),
+    LIST_SORTFUNCTION_VARIANTS (btime)
   };
 
 /* The number of sort keys is calculated as the sum of
@@ -4162,6 +4213,7 @@ print_long_format (const struct fileinfo *f)
   char *p;
   struct timespec when_timespec;
   struct tm when_local;
+  bool btime_ok = true;
 
   /* Compute the mode string, except remove the trailing space if no
      file in this directory has an ACL or security context.  */
@@ -4190,6 +4242,11 @@ print_long_format (const struct fileinfo *f)
       break;
     case time_atime:
       when_timespec = get_stat_atime (&f->stat);
+      break;
+    case time_btime:
+      when_timespec = get_stat_btime (&f->stat);
+      if (when_timespec.tv_sec == -1 && when_timespec.tv_nsec == -1)
+        btime_ok = false;
       break;
     default:
       abort ();
@@ -4291,7 +4348,8 @@ print_long_format (const struct fileinfo *f)
   s = 0;
   *p = '\1';
 
-  if (f->stat_ok && localtime_rz (localtz, &when_timespec.tv_sec, &when_local))
+  if (f->stat_ok && btime_ok
+      && localtime_rz (localtz, &when_timespec.tv_sec, &when_local))
     {
       struct timespec six_months_ago;
       bool recent;
@@ -4332,7 +4390,7 @@ print_long_format (const struct fileinfo *f)
          print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
       sprintf (p, "%*s ", long_time_expected_width (),
-               (! f->stat_ok
+               (! f->stat_ok || ! btime_ok
                 ? "?"
                 : timetostr (when_timespec.tv_sec, hbuf)));
       /* FIXME: (maybe) We discarded when_timespec.tv_nsec. */
@@ -5380,17 +5438,18 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
 ,\n\
                                time (-t), version (-v), extension (-X)\n\
-      --time=WORD            with -l, show time as WORD instead of default\n\
-                               modification time: atime or access or use (-u);\
-\n\
-                               ctime or status (-c); also use specified time\n\
-                               as sort key if --sort=time (newest first)\n\
+      --time=WORD            change the default of using modification times;\n\
+                               access time (-u): atime, access, use;\n\
+                               change time (-c): ctime, status;\n\
+                               birth time: birth, creation;\n\
+                             with -l, WORD determines which time to show;\n\
+                             with --sort=time, sort by WORD (newest first)\n\
 "), stdout);
       fputs (_("\
       --time-style=TIME_STYLE  time/date format with -l; see TIME_STYLE below\n\
 "), stdout);
       fputs (_("\
-  -t                         sort by modification time, newest first\n\
+  -t                         sort by time, newest first; see --time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);
       fputs (_("\

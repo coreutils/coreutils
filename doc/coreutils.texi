@@ -7877,7 +7877,8 @@ Sort by file size, largest first.
 @opindex -t
 @opindex --sort
 @opindex modification timestamp@r{, sorting files by}
-Sort by modification timestamp (mtime), newest first.
+Sort by modification timestamp (mtime) by default, newest first.
+The timestamp to order by can be changed with the @option{--time} option.
 @xref{File timestamps}.
 
 @item -u
@@ -7893,6 +7894,17 @@ If the long listing format (e.g., @option{--format=long}) is being used,
 print the last access timestamp (the atime).
 When explicitly sorting by time (@option{--sort=time} or @option{-t})
 or when not using a long listing format, sort according to the atime.
+@xref{File timestamps}.
+
+@item --time=birth
+@itemx --time=creation
+@opindex --time
+@opindex birth time@r{, printing or sorting files by}
+@opindex creation timestamp@r{, printing or sorting files by}
+If the long listing format (e.g., @option{--format=long}) is being used,
+print the file creation timestamp if available.
+When explicitly sorting by time (@option{--sort=time} or @option{-t})
+or when not using a long listing format, sort according to the birth time.
 @xref{File timestamps}.
 
 @item -U

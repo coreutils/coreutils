@@ -62,6 +62,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  ls now supports the --time=birth option to display and sort by
+  file creation time, where available.
+
   od --skip-bytes now can use lseek even if the input is not a regular
   file, greatly improving performance in some cases.
 
