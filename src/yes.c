@@ -79,7 +79,8 @@ main (int argc, char **argv)
      large overhead of stdio buffering each item.  */
   size_t bufalloc = 0;
   bool reuse_operand_strings = true;
-  for (char **operandp = operands; operandp < operand_lim; operandp++)
+  char **operandp = operands;
+  do
     {
       size_t operand_len = strlen (*operandp);
       bufalloc += operand_len + 1;
@@ -87,6 +88,7 @@ main (int argc, char **argv)
           && *operandp + operand_len + 1 != operandp[1])
         reuse_operand_strings = false;
     }
+  while (++operandp < operand_lim);
 
   /* Improve performance by using a buffer size greater than BUFSIZ / 2.  */
   if (bufalloc <= BUFSIZ / 2)
@@ -99,7 +101,8 @@ main (int argc, char **argv)
      the operands strings; this wins when the buffer would be large.  */
   char *buf = reuse_operand_strings ? *operands : xmalloc (bufalloc);
   size_t bufused = 0;
-  for (char **operandp = operands; operandp < operand_lim; operandp++)
+  operandp = operands;
+  do
     {
       size_t operand_len = strlen (*operandp);
       if (! reuse_operand_strings)
@@ -107,6 +110,7 @@ main (int argc, char **argv)
       bufused += operand_len;
       buf[bufused++] = ' ';
     }
+  while (++operandp < operand_lim);
   buf[bufused - 1] = '\n';
 
   /* If a larger buffer was allocated, fill it by repeating the buffer
