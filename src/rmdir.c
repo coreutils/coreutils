@@ -77,16 +77,15 @@ errno_rmdir_non_empty (int error_number)
 }
 
 /* Return true if when rmdir fails with errno == ERROR_NUMBER
-   the directory may be empty.  */
+   the directory may be non empty.  */
 static bool
-errno_may_be_empty (int error_number)
+errno_may_be_non_empty (int error_number)
 {
   switch (error_number)
     {
     case EACCES:
     case EPERM:
     case EROFS:
-    case EEXIST:
     case EBUSY:
       return true;
     default:
@@ -101,8 +100,9 @@ ignorable_failure (int error_number, char const *dir)
 {
   return (ignore_fail_on_non_empty
           && (errno_rmdir_non_empty (error_number)
-              || (errno_may_be_empty (error_number)
-                  && is_empty_dir (AT_FDCWD, dir))));
+              || (errno_may_be_non_empty (error_number)
+                  && ! is_empty_dir (AT_FDCWD, dir)
+                  && errno == 0 /* definitely non empty  */)));
 }
 
 /* Remove any empty parent directories of DIR.
@@ -133,18 +133,19 @@ remove_parents (char *dir)
         prog_fprintf (stdout, _("removing directory, %s"), quoteaf (dir));
 
       ok = (rmdir (dir) == 0);
+      int rmdir_errno = errno;
 
-      if (!ok)
+      if (! ok)
         {
           /* Stop quietly if --ignore-fail-on-non-empty. */
-          if (ignorable_failure (errno, dir))
+          if (ignorable_failure (rmdir_errno, dir))
             {
               ok = true;
             }
           else
             {
               /* Barring race conditions, DIR is expected to be a directory.  */
-              error (0, errno, _("failed to remove directory %s"),
+              error (0, rmdir_errno, _("failed to remove directory %s"),
                      quoteaf (dir));
             }
           break;
@@ -233,12 +234,13 @@ main (int argc, char **argv)
 
       if (rmdir (dir) != 0)
         {
-          if (ignorable_failure (errno, dir))
+          int rmdir_errno = errno;
+          if (ignorable_failure (rmdir_errno, dir))
             continue;
 
           /* Here, the diagnostic is less precise, since we have no idea
              whether DIR is a directory.  */
-          error (0, errno, _("failed to remove %s"), quoteaf (dir));
+          error (0, rmdir_errno, _("failed to remove %s"), quoteaf (dir));
           ok = false;
         }
       else if (remove_empty_parents)

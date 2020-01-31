@@ -285,7 +285,9 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
     }
 }
 
-/* Return true if DIR is determined to be an empty directory.  */
+/* Return true if DIR is determined to be an empty directory.
+   Return false with ERRNO==0 if DIR is a non empty directory.
+   Return false if not able to determine if directory empty.  */
 static inline bool
 is_empty_dir (int fd_cwd, char const *dir)
 {
@@ -310,6 +312,7 @@ is_empty_dir (int fd_cwd, char const *dir)
   dp = readdir_ignoring_dot_and_dotdot (dirp);
   saved_errno = errno;
   closedir (dirp);
+  errno = saved_errno;
   if (dp != NULL)
     return false;
   return saved_errno == 0 ? true : false;
