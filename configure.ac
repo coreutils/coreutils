@@ -142,6 +142,8 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
   nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
   nw="$nw -Wsuggest-attribute=format" # warns about copy.c and factor.c
+  nw="$nw -Wvector-operation-performance" # warns about randperm.c
+
 
   # Using -Wstrict-overflow is a pain, but the alternative is worse.
   # For an example, see the code that provoked this report:
