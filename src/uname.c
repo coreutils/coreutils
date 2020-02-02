@@ -27,7 +27,7 @@
 # include <sys/systeminfo.h>
 #endif
 
-#if HAVE_SYS_SYSCTL_H
+#if HAVE_SYS_SYSCTL_H && ! defined __GLIBC__
 # if HAVE_SYS_PARAM_H
 #  include <sys/param.h> /* needed for OpenBSD 3.0 */
 # endif

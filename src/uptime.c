@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include "system.h"
 
-#if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H
+#if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H && ! defined __GLIBC__
 # include <sys/sysctl.h>
 #endif
 
@@ -80,7 +80,8 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
     }
 #endif /* HAVE_PROC_UPTIME */
 
-#if HAVE_SYSCTL && defined CTL_KERN && defined KERN_BOOTTIME
+#if HAVE_SYSCTL && ! defined __GLIBC__ \
+    && defined CTL_KERN && defined KERN_BOOTTIME
   {
     /* FreeBSD specific: fetch sysctl "kern.boottime".  */
     static int request[2] = { CTL_KERN, KERN_BOOTTIME };
