@@ -19,22 +19,18 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-kall=/proc/kallsyms
+proc_large=/proc/cpuinfo  # usually > 4KiB
 
-test -r $kall || skip_ "your system lacks $kall"
+test -r $proc_large || skip_ "your system lacks $proc_large"
 
-# Before coreutils-7.3, cp would copy less than 4KiB of this 1MB+ file.
-cp $kall 1    || fail=1
-cat $kall > 2 || fail=1
-compare 1 2   || fail=1
+# Before coreutils-7.3, cp would copy less than 4KiB of this file.
+cp $proc_large 1    || fail=1
+cat $proc_large > 2 || fail=1
 
-# Also check md5sum, just for good measure.
-md5sum $kall > 3 || fail=1
-md5sum 2     > 4 || fail=1
+# adjust varying parts
+sed '/MHz/d; /bogomips/d;' 1 > proc.cp || framework_failure_
+sed '/MHz/d; /bogomips/d;' 2 > proc.cat || framework_failure_
 
-# Remove each file name before comparing checksums.
-sed 's/ .*//' 3 > sum.proc || fail=1
-sed 's/ .*//' 4 > sum.2    || fail=1
-compare sum.proc sum.2 || fail=1
+compare proc.cp proc.cat || fail=1
 
 Exit $fail
