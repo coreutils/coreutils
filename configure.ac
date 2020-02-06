@@ -202,6 +202,10 @@ if test "$gl_gcc_warnings" = yes; then
   # FIXME: it may be easy to remove this, since it affects only one file:
   # the snprintf call at ftoastr.c:132.
   nw="$nw -Wdouble-promotion"
+
+  # FIXME: remove this line when gcc improves
+  gl_WARN_ADD([-Wno-return-local-addr]) # FP in careadlinkat.c w/gcc 10.0.1 20200205
+
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_WARN_CFLAGS])
 
