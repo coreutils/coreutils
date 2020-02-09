@@ -85,6 +85,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat and ls now use the statx() system call where available, which can
   operate more efficiently by only retrieving requested attributes.
 
+  stat and tail now know about the "binderfs", "dma-buf-fs", "erofs",
+  "ppc-cmm-fs", and "z3fold" file systems.
+  stat -f -c%T now reports the file system type, and tail -f uses inotify.
+
 
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
 

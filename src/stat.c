@@ -313,6 +313,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "bdevfs";
     case S_MAGIC_BFS: /* 0x1BADFACE local */
       return "bfs";
+    case S_MAGIC_BINDERFS: /* 0x6C6F6F70 local */
+      return "binderfs";
     case S_MAGIC_BPF_FS: /* 0xCAFE4A11 local */
       return "bpf_fs";
     case S_MAGIC_BINFMTFS: /* 0x42494E4D local */
@@ -347,12 +349,16 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "devfs";
     case S_MAGIC_DEVPTS: /* 0x1CD1 local */
       return "devpts";
+    case S_MAGIC_DMA_BUF: /* 0x444D4142 local */
+      return "dma-buf-fs";
     case S_MAGIC_ECRYPTFS: /* 0xF15F local */
       return "ecryptfs";
     case S_MAGIC_EFIVARFS: /* 0xDE5E81E4 local */
       return "efivarfs";
     case S_MAGIC_EFS: /* 0x00414A53 local */
       return "efs";
+    case S_MAGIC_EROFS_V1: /* 0xE0F5E1E2 local */
+      return "erofs";
     case S_MAGIC_EXFS: /* 0x45584653 local */
       return "exfs";
     case S_MAGIC_EXOFS: /* 0x5DF5 local */
@@ -459,6 +465,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
          pipefs and prlfs are labeled as "remote" so that tail always polls,
          but these aren't really remote file system types.  */
       return "pipefs";
+    case S_MAGIC_PPC_CMM: /* 0xC7571590 local */
+      return "ppc-cmm-fs";
     case S_MAGIC_PRL_FS: /* 0x7C7C6673 remote */
       return "prl_fs";
     case S_MAGIC_PROC: /* 0x9FA0 local */
@@ -537,6 +545,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "xfs";
     case S_MAGIC_XIAFS: /* 0x012FD16D local */
       return "xia";
+    case S_MAGIC_Z3FOLD: /* 0x0033 local */
+      return "z3fold";
     case S_MAGIC_ZFS: /* 0x2FC12FC1 local */
       return "zfs";
     case S_MAGIC_ZSMALLOC: /* 0x58295829 local */
