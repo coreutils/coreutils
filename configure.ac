@@ -204,7 +204,8 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wdouble-promotion"
 
   # FIXME: remove this line when gcc improves
-  gl_WARN_ADD([-Wno-return-local-addr]) # FP in careadlinkat.c w/gcc 10.0.1 20200205
+  # FP in careadlinkat.c w/gcc 10.0.1 20200205
+  gl_WARN_ADD([-Wno-return-local-addr])
 
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_WARN_CFLAGS])
