@@ -111,7 +111,7 @@ cleanup_() { rm -rf "$tmp_path"; }
 test -d /tmp && TMPDIR=/tmp
 tmp_path=$(mktemp -d) || fail_ "failed to create temporary directory"
 if test -x "$abs_path_dir_/coreutils" &&
-   { test -l "$abs_path_dir_/cp" ||
+   { test -L "$abs_path_dir_/cp" ||
      test $(wc -l < "$abs_path_dir_/cp") = 1; } then
   # if configured with --enable-single-binary we need to use the single binary
   cp "$abs_path_dir_/coreutils" "$tmp_path/cp" || framework_failure_
