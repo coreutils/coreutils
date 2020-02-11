@@ -615,6 +615,7 @@ all_tests =					\
   tests/ls/quote-align.sh			\
   tests/ls/readdir-mountpoint-inode.sh		\
   tests/ls/recursive.sh				\
+  tests/ls/removed-directory.sh			\
   tests/ls/root-rel-symlink-color.sh		\
   tests/ls/rt-1.sh				\
   tests/ls/slink-acl.sh				\

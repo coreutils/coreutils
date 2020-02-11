@@ -65,6 +65,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   [The old behavior was introduced in sh-utils 2.0.15 ca. 1999, predating
   coreutils package.]
 
+  ls issues an error message on a removed directory, on GNU/Linux systems.
+  Previously no error and no entries were output, and so indistinguishable
+  from an empty directory, with default ls options.
+
   uniq no longer uses strcoll() to determine string equivalence,
   and so will operate more efficiently and consistently.
 
