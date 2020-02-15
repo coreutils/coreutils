@@ -12438,8 +12438,8 @@ The valid @var{format} directives for files with @option{--format} and
 @option{--printf} are:
 
 @itemize @bullet
-@item %a - Access rights in octal (note @samp{#} and @samp{0} printf flags)
-@item %A - Access rights in human readable form
+@item %a - Permission bits in octal (note @samp{#} and @samp{0} printf flags)
+@item %A - Permission bits in symbolic form (similar to @command{ls -ld})
 @item %b - Number of blocks allocated (see @samp{%B})
 @item %B - The size in bytes of each block reported by @samp{%b}
 @item %C - The SELinux security context of a file, if available
