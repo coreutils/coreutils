@@ -438,6 +438,7 @@ all_tests =					\
   tests/misc/unexpand.pl			\
   tests/misc/uniq.pl				\
   tests/misc/uniq-perf.sh			\
+  tests/misc/uniq-collate.sh			\
   tests/misc/xattr.sh				\
   tests/misc/yes.sh				\
   tests/tail-2/wait.sh				\

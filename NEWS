@@ -65,6 +65,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   [The old behavior was introduced in sh-utils 2.0.15 ca. 1999, predating
   coreutils package.]
 
+  uniq no longer uses strcoll() to determine string equivalence,
+  and so will operate more efficiently and consistently.
+
 ** New Features
 
   ls now supports the --time=birth option to display and sort by
