@@ -1,0 +1,49 @@
+language: cpp
+matrix:
+  include:
+  - os: linux
+    dist: bionic
+    compiler: gcc
+    arch: amd64
+    env: TPCP_OPTIONS=amd64_linux_gcc
+  - os: linux
+    dist: bionic
+    compiler: clang
+    arch: amd64
+    env: TPCP_OPTIONS=amd64_linux_clang
+  - os: linux
+    dist: bionic
+    compiler: gcc
+    arch: arm64
+    env: TPCP_OPTIONS=arm64_linux_gcc
+    
+before_install:
+- export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
+- export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
+- if [ ${TRAVIS_OS_NAME} == "linux" ]; then
+    sudo apt-get update &&
+    sudo apt-get install -y texinfo;
+  fi
+
+script:
+- ./bootstrap
+- ./configure
+- make
+- make check
+
+branches:
+  only:
+  - master
+env:
+  global:
+  - LANG="en_US.UTF-8"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: pmWWyI3ycU/JDzqsfFHWSNbuew3snAcgV2BvfzckcQvP+dz3lVS9dyycMhsA2DjQPfzVegyL1derwrJOWnqKJnTB6M85CWWVeZLS8yBhWdNKu9m+uY5hqmSjqyRkBYBX45x8tL0TpLi240IZeCy0PH8V6E+mF7s8aekxLKDutx+YLlvmDX1ru0PYqmpbpnlYnZNZ6jQ6xCxjKlBem0RJC5JZ02WbkJ0uNt14Hsc9odiRWHsygvDBjUkzE9QnBlpOq5w4z3n/sxOcMgYn516laCjxpWlz9tGrScvwnM/IMuT1zwlWNfMCrM9QYVLFJ1T3+dedqTOe1vKvJmgjt4vQchmCIN2xKXL/KxveYHFxh22Z/2tCNgWX2iqU/jM4486VuBxbTMZMf/BC5QZECBZDqI6+6iS+gBUWm0WmZXfGLeohq80gcbPbepby4Fp5pLeYLNQTraJ3z0m/vmFdPN8a222FHpTut7CFthZsFA07Bwd8y1TFUfOq6GNOLzRi5h3AEhGd4SSkaGg7ju0msnivIcddxLYAFczPxynmR0YuSWtSOiirViHSsGUciquAlPYD+/9AZWUup+D0Qe4YGw6ORuwcvVusP6zvcYpK5kdFK0CB+qChv3SGlk80rmYNhUNbEmMwm/PsfvxFeQ7NATEYlmlEMPLY/r6Kr2vEYV0oWIk=
+  file_glob: true
+  file: final-exe/*
+  skip_cleanup: true
+  on:
+    repo: tpcp-project/coreutils
