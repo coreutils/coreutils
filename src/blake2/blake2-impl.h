@@ -15,6 +15,13 @@
 #ifndef BLAKE2_IMPL_H
 #define BLAKE2_IMPL_H
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+#ifndef WORDS_BIGENDIAN
+# define NATIVE_LITTLE_ENDIAN 1
+#endif
+
 #include <stdint.h>
 #include <string.h>
 
@@ -72,8 +79,8 @@ static BLAKE2_INLINE uint16_t load16( const void *src )
   return w;
 #else
   const uint8_t *p = ( const uint8_t * )src;
-  return (( uint16_t )( p[0] ) <<  0) |
-         (( uint16_t )( p[1] ) <<  8) ;
+  return ( uint16_t )((( uint32_t )( p[0] ) <<  0) |
+                      (( uint32_t )( p[1] ) <<  8));
 #endif
 }
 
