@@ -432,11 +432,39 @@ long __MPN(count_leading_zeros) (UDItype);
 	   : "=r" (sh), "=&r" (sl)					\
 	   : "r" (ah), "rI" (bh), "%r" (al), "rI" (bl) __CLOBBER_CC);	\
   } while (0)
-/* FIXME: Extend the immediate range for the low word by using both
-   ADDS and SUBS, since they set carry in the same way.  */
+/* FIXME: Extend the immediate range for the low word by using both ADDS and
+   SUBS, since they set carry in the same way.  Note: We need separate
+   definitions for thumb and non-thumb due to the absence of RSC on thumb.  */
+#if defined (__thumb__)
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   do {									\
-    if (__builtin_constant_p (al))					\
+    if (__builtin_constant_p (ah) && __builtin_constant_p (bh)		\
+	&& (ah) == (bh))						\
+      __asm__ ("subs\t%1, %2, %3\n\tsbc\t%0, %0, %0"			\
+	       : "=r" (sh), "=r" (sl)					\
+	       : "r" (al), "rI" (bl) __CLOBBER_CC);			\
+    else if (__builtin_constant_p (al))					\
+      __asm__ ("rsbs\t%1, %5, %4\n\tsbc\t%0, %2, %3"			\
+	       : "=r" (sh), "=&r" (sl)					\
+	       : "r" (ah), "rI" (bh), "rI" (al), "r" (bl) __CLOBBER_CC); \
+    else if (__builtin_constant_p (bl))					\
+      __asm__ ("subs\t%1, %4, %5\n\tsbc\t%0, %2, %3"			\
+	       : "=r" (sh), "=&r" (sl)					\
+	       : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
+    else								\
+      __asm__ ("subs\t%1, %4, %5\n\tsbc\t%0, %2, %3"			\
+	       : "=r" (sh), "=&r" (sl)					\
+	       : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
+    } while (0)
+#else
+#define sub_ddmmss(sh, sl, ah, al, bh, bl) \
+  do {									\
+    if (__builtin_constant_p (ah) && __builtin_constant_p (bh)		\
+	&& (ah) == (bh))						\
+      __asm__ ("subs\t%1, %2, %3\n\tsbc\t%0, %0, %0"			\
+	       : "=r" (sh), "=r" (sl)					\
+	       : "r" (al), "rI" (bl) __CLOBBER_CC);			\
+    else if (__builtin_constant_p (al))					\
       {									\
 	if (__builtin_constant_p (ah))					\
 	  __asm__ ("rsbs\t%1, %5, %4\n\trsc\t%0, %3, %2"		\
@@ -459,21 +487,15 @@ long __MPN(count_leading_zeros) (UDItype);
 		   : "rI" (ah), "r" (bh), "rI" (al), "r" (bl) __CLOBBER_CC); \
       }									\
     else if (__builtin_constant_p (bl))					\
-      {									\
-	if (__builtin_constant_p (bh))					\
-	  __asm__ ("subs\t%1, %4, %5\n\tsbc\t%0, %2, %3"		\
-		   : "=r" (sh), "=&r" (sl)				\
-		   : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
-	else								\
-	  __asm__ ("subs\t%1, %4, %5\n\trsc\t%0, %3, %2"		\
-		   : "=r" (sh), "=&r" (sl)				\
-		   : "rI" (ah), "r" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
-      }									\
+      __asm__ ("subs\t%1, %4, %5\n\tsbc\t%0, %2, %3"			\
+	       : "=r" (sh), "=&r" (sl)					\
+	       : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
     else /* only bh might be a constant */				\
       __asm__ ("subs\t%1, %4, %5\n\tsbc\t%0, %2, %3"			\
 	       : "=r" (sh), "=&r" (sl)					\
-	       : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC);\
+	       : "r" (ah), "rI" (bh), "r" (al), "rI" (bl) __CLOBBER_CC); \
     } while (0)
+#endif
 #if defined (__ARM_ARCH_2__) || defined (__ARM_ARCH_2A__) \
     || defined (__ARM_ARCH_3__)
 #define umul_ppmm(xh, xl, a, b)						\
@@ -1016,14 +1038,16 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 	   : "=r" (sh), "=&r" (sl)					\
 	   : "0" ((UDItype)(ah)), "rme" ((UDItype)(bh)),		\
 	     "1" ((UDItype)(al)), "rme" ((UDItype)(bl)))
-#if defined (HAVE_MULX)
+#if X86_ASM_MULX \
+   && (HAVE_HOST_CPU_haswell || HAVE_HOST_CPU_broadwell \
+       || HAVE_HOST_CPU_skylake || HAVE_HOST_CPU_bd4 || HAVE_HOST_CPU_zen)
 #define umul_ppmm(w1, w0, u, v) \
-  __asm__ ("mulx	%3, %0, %1"					\
+  __asm__ ("mulx\t%3, %0, %1"						\
 	   : "=r" (w0), "=r" (w1)					\
 	   : "%d" ((UDItype)(u)), "rm" ((UDItype)(v)))
 #else
 #define umul_ppmm(w1, w0, u, v) \
-  __asm__ ("mulq	%3"						\
+  __asm__ ("mulq\t%3"							\
 	   : "=a" (w0), "=d" (w1)					\
 	   : "%0" ((UDItype)(u)), "rm" ((UDItype)(v)))
 #endif
@@ -1031,21 +1055,44 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   __asm__ ("divq %4"		     /* stringification in K&R C */	\
 	   : "=a" (q), "=d" (r)						\
 	   : "0" ((UDItype)(n0)), "1" ((UDItype)(n1)), "rm" ((UDItype)(dx)))
-/* bsrq destination must be a 64-bit register, hence UDItype for __cbtmp. */
+
+#if HAVE_HOST_CPU_haswell || HAVE_HOST_CPU_broadwell || HAVE_HOST_CPU_skylake \
+  || HAVE_HOST_CPU_k10 || HAVE_HOST_CPU_bd1 || HAVE_HOST_CPU_bd2	\
+  || HAVE_HOST_CPU_bd3 || HAVE_HOST_CPU_bd4 || HAVE_HOST_CPU_zen	\
+  || HAVE_HOST_CPU_bobcat || HAVE_HOST_CPU_jaguar
+#define count_leading_zeros(count, x)					\
+  do {									\
+    /* This is lzcnt, spelled for older assemblers.  Destination and */	\
+    /* source must be a 64-bit registers, hence cast and %q.         */	\
+    __asm__ ("rep;bsr\t%1, %q0" : "=r" (count) : "rm" ((UDItype)(x)));	\
+  } while (0)
+#define COUNT_LEADING_ZEROS_0 64
+#else
 #define count_leading_zeros(count, x)					\
   do {									\
     UDItype __cbtmp;							\
     ASSERT ((x) != 0);							\
-    __asm__ ("bsrq %1,%0" : "=r" (__cbtmp) : "rm" ((UDItype)(x)));	\
+    __asm__ ("bsr\t%1,%0" : "=r" (__cbtmp) : "rm" ((UDItype)(x)));	\
     (count) = __cbtmp ^ 63;						\
   } while (0)
-/* bsfq destination must be a 64-bit register, "%q0" forces this in case
-   count is only an int. */
+#endif
+
+#if HAVE_HOST_CPU_bd2 || HAVE_HOST_CPU_bd3 || HAVE_HOST_CPU_bd4 \
+  || HAVE_HOST_CPU_zen || HAVE_HOST_CPU_jaguar
+#define count_trailing_zeros(count, x)					\
+  do {									\
+    /* This is tzcnt, spelled for older assemblers.  Destination and */	\
+    /* source must be a 64-bit registers, hence cast and %q.         */	\
+    __asm__ ("rep;bsf\t%1, %q0" : "=r" (count) : "rm" ((UDItype)(x)));	\
+  } while (0)
+#define COUNT_TRAILING_ZEROS_0 64
+#else
 #define count_trailing_zeros(count, x)					\
   do {									\
     ASSERT ((x) != 0);							\
-    __asm__ ("bsfq %1,%q0" : "=r" (count) : "rm" ((UDItype)(x)));	\
+    __asm__ ("bsf\t%1, %q0" : "=r" (count) : "rm" ((UDItype)(x)));	\
   } while (0)
+#endif
 #endif /* __amd64__ */
 
 #if defined (__i860__) && W_TYPE_SIZE == 32
@@ -1239,7 +1286,15 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif /* __mips */
 
 #if (defined (__mips) && __mips >= 3) && W_TYPE_SIZE == 64
-#if __GMP_GNUC_PREREQ (4,4)
+#if defined (_MIPS_ARCH_MIPS64R6)
+#define umul_ppmm(w1, w0, u, v) \
+  do {									\
+    UDItype __m0 = (u), __m1 = (v);					\
+    (w0) = __m0 * __m1;							\
+    __asm__ ("dmuhu\t%0, %1, %2" : "=d" (w1) : "d" (__m0), "d" (__m1));	\
+  } while (0)
+#endif
+#if !defined (umul_ppmm) && __GMP_GNUC_PREREQ (4,4)
 #define umul_ppmm(w1, w0, u, v) \
   do {									\
     typedef unsigned int __ll_UTItype __attribute__((mode(TI)));	\
@@ -1324,33 +1379,41 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   do {									\
     if (__builtin_constant_p (bh) && (bh) == 0)				\
       __asm__ ("add%I4c %1,%3,%4\n\taddze %0,%2"			\
-	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));	\
+	       : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl)	\
+		 __CLOBBER_CC);						\
     else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
       __asm__ ("add%I4c %1,%3,%4\n\taddme %0,%2"			\
-	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));	\
+	       : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl)	\
+		 __CLOBBER_CC);						\
     else								\
       __asm__ ("add%I5c %1,%4,%5\n\tadde %0,%2,%3"			\
-	     : "=r" (sh), "=&r" (sl)					\
-	     : "r" (ah), "r" (bh), "%r" (al), "rI" (bl));		\
+	       : "=r" (sh), "=&r" (sl)					\
+	       : "r" (ah), "r" (bh), "%r" (al), "rI" (bl)		\
+		 __CLOBBER_CC);						\
   } while (0)
 #define sub_ddmmss(sh, sl, ah, al, bh, bl) \
   do {									\
     if (__builtin_constant_p (ah) && (ah) == 0)				\
       __asm__ ("subf%I3c %1,%4,%3\n\tsubfze %0,%2"			\
-	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
+	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl)	\
+		 __CLOBBER_CC);						\
     else if (__builtin_constant_p (ah) && (ah) == ~(USItype) 0)		\
       __asm__ ("subf%I3c %1,%4,%3\n\tsubfme %0,%2"			\
-	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\
+	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl)	\
+		 __CLOBBER_CC);						\
     else if (__builtin_constant_p (bh) && (bh) == 0)			\
       __asm__ ("subf%I3c %1,%4,%3\n\taddme %0,%2"			\
-	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
+	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl)	\
+		 __CLOBBER_CC);						\
     else if (__builtin_constant_p (bh) && (bh) == ~(USItype) 0)		\
       __asm__ ("subf%I3c %1,%4,%3\n\taddze %0,%2"			\
-	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\
+	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl)	\
+		 __CLOBBER_CC);						\
     else								\
       __asm__ ("subf%I4c %1,%5,%4\n\tsubfe %0,%3,%2"			\
 	       : "=r" (sh), "=&r" (sl)					\
-	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl));		\
+	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl)		\
+		 __CLOBBER_CC);						\
   } while (0)
 #define count_leading_zeros(count, x) \
   __asm__ ("cntlzw %0,%1" : "=r" (count) : "r" (x))
@@ -1398,17 +1461,20 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
       __asm__ ("add%I4c %1,%3,%4\n\taddze %0,%2"			\
 	       : "=r" (sh), "=&r" (sl)					\
 	       : "r"  ((UDItype)(ah)),					\
-		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl)));		\
+		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl))		\
+		 __CLOBBER_CC);						\
     else if (__builtin_constant_p (bh) && (bh) == ~(UDItype) 0)		\
       __asm__ ("add%I4c %1,%3,%4\n\taddme %0,%2"			\
 	       : "=r" (sh), "=&r" (sl)					\
 	       : "r"  ((UDItype)(ah)),					\
-		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl)));		\
+		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl))		\
+		 __CLOBBER_CC);						\
     else								\
       __asm__ ("add%I5c %1,%4,%5\n\tadde %0,%2,%3"			\
 	       : "=r" (sh), "=&r" (sl)					\
 	       : "r"  ((UDItype)(ah)), "r"  ((UDItype)(bh)),		\
-		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl)));		\
+		 "%r" ((UDItype)(al)), "rI" ((UDItype)(bl))		\
+		 __CLOBBER_CC);						\
   } while (0)
 /* We use "*rI" for the constant operand here, since with just "I", gcc barfs.
    This might seem strange, but gcc folds away the dead code late.  */
@@ -1419,53 +1485,63 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 	  __asm__ ("addic %1,%3,%4\n\tsubfze %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   :                       "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl))));	\
+		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl)))	\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (ah) && (ah) == ~(UDItype) 0)	\
 	  __asm__ ("addic %1,%3,%4\n\tsubfme %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   :                       "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl))));	\
+		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl)))	\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (bh) && (bh) == 0)		\
 	  __asm__ ("addic %1,%3,%4\n\taddme %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)),				\
-		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl))));	\
+		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl)))	\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (bh) && (bh) == ~(UDItype) 0)	\
 	  __asm__ ("addic %1,%3,%4\n\taddze %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)),				\
-		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl))));	\
+		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl)))	\
+		     __CLOBBER_CC);					\
 	else								\
 	  __asm__ ("addic %1,%4,%5\n\tsubfe %0,%3,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)), "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl))));	\
+		     "rI" ((UDItype)(al)), "*rI" (-((UDItype)(bl)))	\
+		     __CLOBBER_CC);					\
     } else {								\
 	if (__builtin_constant_p (ah) && (ah) == 0)			\
 	  __asm__ ("subf%I3c %1,%4,%3\n\tsubfze %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   :                       "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl)));	\
+		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl))		\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (ah) && (ah) == ~(UDItype) 0)	\
 	  __asm__ ("subf%I3c %1,%4,%3\n\tsubfme %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   :                       "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl)));	\
+		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl))		\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (bh) && (bh) == 0)		\
 	  __asm__ ("subf%I3c %1,%4,%3\n\taddme %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)),				\
-		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl)));	\
+		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl))		\
+		     __CLOBBER_CC);					\
 	else if (__builtin_constant_p (bh) && (bh) == ~(UDItype) 0)	\
 	  __asm__ ("subf%I3c %1,%4,%3\n\taddze %0,%2"			\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)),				\
-		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl)));	\
+		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl))		\
+		     __CLOBBER_CC);					\
 	else								\
 	  __asm__ ("subf%I4c %1,%5,%4\n\tsubfe %0,%3,%2"		\
 		   : "=r" (sh), "=&r" (sl)				\
 		   : "r"  ((UDItype)(ah)), "r" ((UDItype)(bh)),		\
-		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl)));	\
+		     "rI" ((UDItype)(al)), "r" ((UDItype)(bl))		\
+		     __CLOBBER_CC);					\
     }									\
   } while (0)
 #endif /* ! _LONG_LONG_LIMB */
