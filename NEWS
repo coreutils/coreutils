@@ -93,6 +93,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   "ppc-cmm-fs", and "z3fold" file systems.
   stat -f -c%T now reports the file system type, and tail -f uses inotify.
 
+** Build-related
+
+  gzip-compressed tarballs are distributed once again
+
 
 * Noteworthy changes in release 8.31 (2019-03-10) [stable]
 
