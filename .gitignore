@@ -4,9 +4,9 @@
 *.gcda
 *.gcno
 *.o
-*/.deps/
 *~
 ._bootmp
+.deps
 .gdb-history
 .kludge-stamp
 .version
