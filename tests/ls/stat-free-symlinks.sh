@@ -32,7 +32,7 @@ ln -s x link-to-x || framework_failure_
 # symlink and an executable file properly.
 
 LS_COLORS='or=0:mi=0:ex=01;32:ln=01;35' \
-  strace -qe stat ls -F --color=always x link-to-x > out.tmp 2> err || fail
+  strace -qe stat ls -F --color=always x link-to-x > out.tmp 2> err || fail=1
 # Elide info messages strace can send to stdout of the form:
 #   [ Process PID=1234 runs in 32 bit mode. ]
 sed '/Process PID=/d' out.tmp > out

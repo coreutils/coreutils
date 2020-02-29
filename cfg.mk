@@ -519,6 +519,14 @@ sc_prohibit_and_fail_1:
 	in_vc_files='^tests/'						\
 	  $(_sc_search_regexp)
 
+# Ensure that tests don't use `cmd ... || fail` as that's a noop.
+sc_prohibit_or_fail:
+	@prohibit='\|\| fail$$'						\
+	exclude=':#'							\
+	halt='|| fail detected. Please use: || fail=1'			\
+	in_vc_files='^tests/'						\
+	  $(_sc_search_regexp)
+
 # Ensure that env vars are not passed through returns_ as
 # that was seen to fail on FreeBSD /bin/sh at least
 sc_prohibit_env_returns:

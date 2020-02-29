@@ -37,7 +37,7 @@ done
 tee - <sample >out 2>err || fail=1
 compare sample ./- || fail=1
 compare sample out || fail=1
-compare /dev/null err || fail
+compare /dev/null err || fail=1
 
 # Ensure tee exits early if no more writable outputs
 if test -w /dev/full && test -c /dev/full; then
