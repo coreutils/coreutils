@@ -39,9 +39,23 @@ cat > k.c <<'EOF' || framework_failure_
 size_t
 fwrite (const void *ptr, size_t size, size_t nitems, FILE *stream)
 {
-  fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
-  errno = ENOSPC;
-  return 0;
+  if (stream == stderr)
+    {
+      /* Perform the normal operation of fwrite.  */
+      const char *p = ptr;
+      size_t count = size * nitems;
+      size_t i;
+      for (i = 0; i < count; i++)
+        if (putc ((unsigned char) *p++, stream) == EOF)
+          break;
+      return i / size;
+    }
+  else
+    {
+      fclose (fopen ("preloaded","w")); /* marker for preloaded interception */
+      errno = ENOSPC;
+      return 0;
+    }
 }
 
 size_t
