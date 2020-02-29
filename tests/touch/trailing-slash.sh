@@ -33,7 +33,9 @@ returns_ 1 touch no-file/ || fail=1
 returns_ 1 touch file/ || fail=1
 returns_ 1 touch dangling/ || fail=1
 returns_ 1 touch loop/ || fail=1
-returns_ 1 touch link1/ || fail=1
+if returns_ 2 ls link1/; then  # darwin allows trailing slash to files
+  returns_ 1 touch link1/ || fail=1
+fi
 touch dir/ || fail=1
 
 # -c silences ENOENT, but not ENOTDIR or ELOOP
@@ -41,7 +43,9 @@ touch -c no-file/ || fail=1
 returns_ 1 touch -c file/ || fail=1
 touch -c dangling/ || fail=1
 returns_ 1 touch -c loop/ || fail=1
-returns_ 1 touch -c link1/ || fail=1
+if returns_ 2 ls link1/; then
+  returns_ 1 touch -c link1/ || fail=1
+fi
 touch -c dir/ || fail=1
 returns_ 1 test -f no-file || fail=1
 returns_ 1 test -f nowhere || fail=1
