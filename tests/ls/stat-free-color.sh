@@ -18,14 +18,16 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
-
-# Note this list of _file name_ stat functions must be
-# as cross platform as possible and so doesn't include
-# fstatat64 as that's not available on aarch64 for example.
-stats='stat,lstat,stat64,lstat64,newfstatat'
-
-require_strace_ $stats
+require_strace_ stat
 require_dirent_d_type_
+
+stats='stat'
+# List of other _file name_ stat functions to increase coverage.
+other_stats='statx lstat stat64 lstat64 newfstatat fstatat64'
+for stat in $other_stats; do
+  strace -qe "$stat" true > /dev/null 2>&1 &&
+    stats="$stats,$stat"
+done
 
 # Disable enough features via LS_COLORS so that ls --color
 # can do its job without calling stat (other than the obligatory
@@ -59,8 +61,8 @@ eval $(dircolors -b color-without-stat)
 # invocation under test.
 mkdir d || framework_failure_
 
-strace -o log1 -e $stats ls --color=always d || fail=1
-n_stat1=$(wc -l < log1) || framework_failure_
+strace -q -o log1 -e $stats ls --color=always d || fail=1
+n_stat1=$(grep -vF '+++' log1 | wc -l) || framework_failure_
 
 test $n_stat1 = 0 \
   && skip_ 'No stat calls recognized on this platform'
@@ -74,8 +76,8 @@ mkdir d/subdir \
   || framework_failure_
 
 # Invocation under test.
-strace -o log2 -e $stats ls --color=always d || fail=1
-n_stat2=$(wc -l < log2) || framework_failure_
+strace -q -o log2 -e $stats ls --color=always d || fail=1
+n_stat2=$(grep -vF '+++' log2 | wc -l) || framework_failure_
 
 # Expect the same number of stat calls.
 test $n_stat1 = $n_stat2 \
