@@ -20,6 +20,11 @@
 print_ver_ env seq test timeout printf
 trap_sigpipe_or_skip_
 
+# /bin/sh has an intermittent failure in ignoring SIGPIPE on OpenIndiana 11
+# so we require bash as discussed at:
+# https://lists.gnu.org/archive/html/coreutils/2020-03/msg00004.html
+require_bash_as_SHELL_
+
 # Paraphrasing http://bugs.gnu.org/34488#8:
 # POSIX requires that sh started with an inherited ignored SIGPIPE must
 # silently ignore all attempts from within the shell to restore SIGPIPE
