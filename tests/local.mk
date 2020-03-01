@@ -421,6 +421,7 @@ all_tests =					\
   tests/misc/timeout.sh				\
   tests/misc/timeout-blocked.pl			\
   tests/misc/timeout-group.sh			\
+  tests/misc/timeout-large-parameters.sh	\
   tests/misc/timeout-parameters.sh		\
   tests/misc/tr.pl				\
   tests/misc/tr-case-class.sh			\

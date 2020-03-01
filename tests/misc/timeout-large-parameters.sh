@@ -1,5 +1,6 @@
 #!/bin/sh
-# Validate timeout parameter combinations
+# Validate large timeout parameters
+# Separated from standard parameter testing due to kernel overflow bugs.
 
 # Copyright (C) 2008-2020 Free Software Foundation, Inc.
 
@@ -20,31 +21,26 @@
 print_ver_ timeout
 getlimits_
 
+# It was seen on 32 bit Linux/HPPA and OpenIndiana 11
+# that a kernel time_t overflowing cause the timer to fire immediately.
+# This is still racy, but unlikely to cause an issue unless
+# timeout can't process the timer firing within 3 seconds.
+timeout $TIME_T_OFLOW sleep 3
+if test $? = 124; then
+  skip_ 'timeout $TIME_T_OFLOW ..., timed out immediately!'
+fi
 
-# internal errors are 125, distinct from execution failure
+# timeout overflow
+timeout $UINT_OFLOW sleep 0 || fail=1
 
-# invalid timeout
-returns_ 125 timeout invalid sleep 0 || fail=1
-
-# invalid kill delay
-returns_ 125 timeout --kill-after=invalid 1 sleep 0 || fail=1
-
-# invalid timeout suffix
-returns_ 125 timeout 42D sleep 0 || fail=1
+# timeout overflow
+timeout ${TIME_T_OFLOW}d sleep 0 || fail=1
 
 # floating point notation
-timeout 10.34 sleep 0 || fail=1
+timeout 2.34e+5d sleep 0 || fail=1
 
-# nanoseconds potentially supported
-timeout 9.999999999 sleep 0 || fail=1
-
-# invalid signal spec
-returns_ 125 timeout --signal=invalid 1 sleep 0 || fail=1
-
-# invalid command
-returns_ 126 timeout 10 . || fail=1
-
-# no such command
-returns_ 127 timeout 10 no_such || fail=1
+# floating point overflow
+timeout $LDBL_MAX sleep 0 || fail=1
+returns_ 125 timeout -- -$LDBL_MAX sleep 0 || fail=1
 
 Exit $fail
