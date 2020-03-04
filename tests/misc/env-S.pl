@@ -21,32 +21,38 @@ use strict;
 (my $program_name = $0) =~ s|.*/||;
 my $prog = 'env';
 
+my $env = "$ENV{abs_top_builddir}/src/env";
+# Ensure no whitespace or other problematic chars in path
+$env =~ m!^([-+\@\w./]+)$!
+  or CuSkip::skip "unusual absolute builddir name; skipping this test\n";
+$env = $1;
+
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @Tests =
     (
      # Test combination of -S and regular arguments
-     ['1', q[-i    A=B FOO=AR  sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
-     ['2', q[-i -S'A=B FOO=AR  sh -c "echo \\$A\\$FOO"'], {OUT=>"BAR"}],
-     ['3', q[-i -S'A=B FOO=AR' sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
-     ['4', q[-i -S'A=B' FOO=AR sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
-     ['5', q[-S'-i A=B FOO=AR sh -c "echo \\$A\\$FOO"'],  {OUT=>"BAR"}],
+     ['1', q[-ufoo    A=B FOO=AR  sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
+     ['2', q[-ufoo -S'A=B FOO=AR  sh -c "echo \\$A\\$FOO"'], {OUT=>"BAR"}],
+     ['3', q[-ufoo -S'A=B FOO=AR' sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
+     ['4', q[-ufoo -S'A=B' FOO=AR sh -c 'echo $A$FOO'],      {OUT=>"BAR"}],
+     ['5', q[-S'-ufoo A=B FOO=AR sh -c "echo \\$A\\$FOO"'],  {OUT=>"BAR"}],
 
      # Test quoting inside -S
-     ['q1', q[-S'-i A="B C" env'],       {OUT=>"A=B C"}],
-     ['q2', q[-S"-i A='B C' env"],       {OUT=>"A=B C"}],
-     ['q3', q[-S"-i A=\"B C\" env"],     {OUT=>"A=B C"}],
+     ['q1', q[-S'-i A="B C" ]."$env'",       {OUT=>"A=B C"}],
+     ['q2', q[-S"-i A='B C' ]."$env\"",       {OUT=>"A=B C"}],
+     ['q3', q[-S"-i A=\"B C\" ]."$env\"",     {OUT=>"A=B C"}],
      # Test backslash-quoting inside quoting inside -S
-     ['q4', q[-S'-i A="B \" C" env'],    {OUT=>'A=B " C'}],
-     ['q5', q[-S"-i A='B \\' C' env"],   {OUT=>"A=B ' C"}],
+     ['q4', q[-S'-i A="B \" C" ]."$env'",    {OUT=>'A=B " C'}],
+     ['q5', q[-S"-i A='B \\' C' ]."$env\"",   {OUT=>"A=B ' C"}],
      # Single-quotes in double-quotes and vice-versa
-     ['q6', q[-S'-i A="B'"'"'C" env'],   {OUT=>"A=B'C"}],
-     ['q7', q[-S"-i A='B\\"C' env"],     {OUT=>'A=B"C'}],
+     ['q6', q[-S'-i A="B'"'"'C" ]."$env'",   {OUT=>"A=B'C"}],
+     ['q7', q[-S"-i A='B\\"C' ]."$env\"",     {OUT=>'A=B"C'}],
 
      # Test tab and space (note: tab here is expanded by perl
      # and sent to the shell as ASCII 0x9 inside single-quotes).
-     ['t1', qq[-S'-i\tA="B \tC" env'],    {OUT=>"A=B \tC"}],
+     ['t1', qq[-S'-i\tA="B \tC" $env'],    {OUT=>"A=B \tC"}],
      # Here '\\t' is not interpolated by perl/shell, passed as two characters
      # (backslash, 't') to env, resulting in one argument ("A<tab>B").
      ['t2',  qq[-S'printf x%sx\\n A\\tB'],    {OUT=>"xA\tBx"}],
@@ -57,39 +63,39 @@ my @Tests =
 
 
      # Test empty strings
-     ['m1', qq[-i -S""    A=B env],       {OUT=>"A=B"}],
-     ['m2', qq[-i -S"  \t" A=B env],      {OUT=>"A=B"}],
+     ['m1', qq[-i -S""    A=B $env],       {OUT=>"A=B"}],
+     ['m2', qq[-i -S"  \t" A=B $env],      {OUT=>"A=B"}],
 
      # Test escape sequences.
      # note: in the following, there is no interpolation by perl due
      # to q[], and no interpolation by the shell due to single-quotes.
      # env will receive the backslash character followed by t/f/r/n/v.
      # Also: Perl does not recognize "\v", so use "\013" for vertical tab.
-     ['e1', q[-i -S'A="B\tC" env'],    {OUT=>"A=B\tC"}],
-     ['e2', q[-i -S'A="B\fC" env'],    {OUT=>"A=B\fC"}],
-     ['e3', q[-i -S'A="B\rC" env'],    {OUT=>"A=B\rC"}],
-     ['e4', q[-i -S'A="B\nC" env'],    {OUT=>"A=B\nC"}],
-     ['e5', q[-i -S'A="B\vC" env'],    {OUT=>"A=B\013C"}],
-     ['e6', q[-i -S'A="B\$C" env'],    {OUT=>'A=B$C'}],
-     ['e7', q[-i -S'A=B\$C env'],      {OUT=>'A=B$C'}],
-     ['e8', q[-i -S'A="B\#C" env'],    {OUT=>'A=B#C'}],
-     ['e9', q[-i -S'A="B\\\\C" env'],  {OUT=>'A=B\\C'}],
-     ['e10',q[-i -S"A='B\\\\\\\\C' env"],  {OUT=>'A=B\\C'}],
+     ['e1', q[-i -S'A="B\tC" ]."$env'",    {OUT=>"A=B\tC"}],
+     ['e2', q[-i -S'A="B\fC" ]."$env'",    {OUT=>"A=B\fC"}],
+     ['e3', q[-i -S'A="B\rC" ]."$env'",    {OUT=>"A=B\rC"}],
+     ['e4', q[-i -S'A="B\nC" ]."$env'",    {OUT=>"A=B\nC"}],
+     ['e5', q[-i -S'A="B\vC" ]."$env'",    {OUT=>"A=B\013C"}],
+     ['e6', q[-i -S'A="B\$C" ]."$env'",    {OUT=>'A=B$C'}],
+     ['e7', q[-i -S'A=B\$C ]."$env'",      {OUT=>'A=B$C'}],
+     ['e8', q[-i -S'A="B\#C" ]."$env'",    {OUT=>'A=B#C'}],
+     ['e9', q[-i -S'A="B\\\\C" ]."$env'",  {OUT=>'A=B\\C'}],
+     ['e10',q[-i -S"A='B\\\\\\\\C' ]."$env\"",  {OUT=>'A=B\\C'}],
 
      # Escape in single-quoted string - passed as-is
      # (the multiple pairs of backslashes are to survive two interpolations:
      #  by perl and then by the shell due to double-quotes).
-     ['e11',q[-i -S"A='B\\\\tC' env"],    {OUT=>'A=B\tC'}],
-     ['e12',q[-i -S"A='B\\\\#C' env"],    {OUT=>'A=B\#C'}],
-     ['e13',q[-i -S"A='B\\\\\\$C' env"],  {OUT=>'A=B\$C'}],
-     ['e14',q[-i -S"A='B\\\\\\"C' env"],  {OUT=>'A=B\"C'}],
+     ['e11',q[-i -S"A='B\\\\tC' ]."$env\"",    {OUT=>'A=B\tC'}],
+     ['e12',q[-i -S"A='B\\\\#C' ]."$env\"",    {OUT=>'A=B\#C'}],
+     ['e13',q[-i -S"A='B\\\\\\$C' ]."$env\"",  {OUT=>'A=B\$C'}],
+     ['e14',q[-i -S"A='B\\\\\\"C' ]."$env\"",  {OUT=>'A=B\"C'}],
 
      # Special escape sequences:
      # \_ in duoble-quotes is a space - result is just one envvar 'A'
-     ['e20', q[-i -S'A="B\_C=D" env'],    {OUT=>'A=B C=D'}],
+     ['e20', q[-i -S'A="B\_C=D" ]."$env'",    {OUT=>'A=B C=D'}],
      # \_ outside double-quotes is arg separator, the command to
      # execute should be 'env env'
-     ['e21', q[-i -S'A=B\_env\_env'],    {OUT=>"A=B"}],
+     ['e21', q[-i -S'A=B]."\\_$env\\_$env'",    {OUT=>"A=B"}],
 
      # Test -C inside -S
      ['c1',  q["-S-C/ pwd"], {OUT=>"/"}],
@@ -112,28 +118,28 @@ my @Tests =
       {ENV=>"FOO=BAR"}, {OUT=>"xBARx =="}],
 
      # Test ENVVAR expansion
-     ['v1', q[-i -S'A=${FOO}     env'], {ENV=>"FOO=BAR"}, {OUT=>"A=BAR"}],
-     ['v2', q[-i -S'A=x${FOO}x   env'], {ENV=>"FOO=BAR"}, {OUT=>"A=xBARx"}],
-     ['v3', q[-i -S'A=x${FOO}x   env'], {ENV=>"FOO="},    {OUT=>"A=xx"}],
-     ['v4', q[-i -S'A=x${FOO}x   env'],                   {OUT=>"A=xx"}],
-     ['v5', q[-i -S'A="x${FOO}x" env'], {ENV=>"FOO=BAR"}, {OUT=>"A=xBARx"}],
-     ['v6', q[-i -S'${FOO}=A     env'], {ENV=>"FOO=BAR"}, {OUT=>"BAR=A"}],
+     ['v1', q[-i -S'A=${FOO}     ]."$env'", {ENV=>"FOO=BAR"}, {OUT=>"A=BAR"}],
+     ['v2', q[-i -S'A=x${FOO}x   ]."$env'", {ENV=>"FOO=BAR"}, {OUT=>"A=xBARx"}],
+     ['v3', q[-i -S'A=x${FOO}x   ]."$env'", {ENV=>"FOO="},    {OUT=>"A=xx"}],
+     ['v4', q[-i -S'A=x${FOO}x   ]."$env'",                   {OUT=>"A=xx"}],
+     ['v5', q[-i -S'A="x${FOO}x" ]."$env'", {ENV=>"FOO=BAR"}, {OUT=>"A=xBARx"}],
+     ['v6', q[-i -S'${FOO}=A     ]."$env'", {ENV=>"FOO=BAR"}, {OUT=>"BAR=A"}],
      # No expansion inside single-quotes
-     ['v7', q[-i -S"A='x\${FOO}x' env"],               {OUT=>'A=x${FOO}x'}],
-     ['v8', q[-i -S'A="${_FOO}" env'],   {ENV=>"_FOO=BAR"}, {OUT=>"A=BAR"}],
-     ['v9', q[-i -S'A="${F_OO}" env'],   {ENV=>"F_OO=BAR"}, {OUT=>"A=BAR"}],
-     ['v10', q[-i -S'A="${FOO1}" env'],  {ENV=>"FOO1=BAR"}, {OUT=>"A=BAR"}],
+     ['v7', q[-i -S"A='x\${FOO}x' ]."$env\"",              {OUT=>'A=x${FOO}x'}],
+     ['v8', q[-i -S'A="${_FOO}" ]."$env'",   {ENV=>"_FOO=BAR"}, {OUT=>"A=BAR"}],
+     ['v9', q[-i -S'A="${F_OO}" ]."$env'",   {ENV=>"F_OO=BAR"}, {OUT=>"A=BAR"}],
+     ['v10', q[-i -S'A="${FOO1}" ]."$env'",  {ENV=>"FOO1=BAR"}, {OUT=>"A=BAR"}],
 
      # Test end-of-string '#" and '\c'
-     ['d1', q[-i -S'A=B #C=D'    env],  {OUT=>"A=B"}],
-     ['d2', q[-i -S'#A=B C=D'   env],   {OUT=>""}],
-     ['d3', q[-i -S'A=B#'   env],       {OUT=>"A=B#"}],
-     ['d4', q[-i -S'A=B #'   env],      {OUT=>"A=B"}],
+     ['d1', q[-i -S'A=B #C=D'    ]."$env",  {OUT=>"A=B"}],
+     ['d2', q[-i -S'#A=B C=D'   ]."$env",   {OUT=>""}],
+     ['d3', q[-i -S'A=B#'   ]."$env",       {OUT=>"A=B#"}],
+     ['d4', q[-i -S'A=B #'   ]."$env",      {OUT=>"A=B"}],
 
-     ['d5', q[-i -S'A=B\cC=D'  env],    {OUT=>"A=B"}],
-     ['d6', q[-i -S'\cA=B C=D' env],    {OUT=>""}],
-     ['d7', q[-i -S'A=B\c'     env],    {OUT=>"A=B"}],
-     ['d8', q[-i -S'A=B \c'    env],    {OUT=>"A=B"}],
+     ['d5', q[-i -S'A=B\cC=D'  ]."$env",    {OUT=>"A=B"}],
+     ['d6', q[-i -S'\cA=B C=D' ]."$env",    {OUT=>""}],
+     ['d7', q[-i -S'A=B\c'     ]."$env",    {OUT=>"A=B"}],
+     ['d8', q[-i -S'A=B \c'    ]."$env",    {OUT=>"A=B"}],
 
      ['d10', q[-S'echo FOO #BAR'],      {OUT=>"FOO"}],
      ['d11', q[-S'echo FOO \\#BAR'],    {OUT=>"FOO #BAR"}],
