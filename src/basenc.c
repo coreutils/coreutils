@@ -627,7 +627,10 @@ z85_encode (const char *restrict in, size_t inlen,
       /* Got a quad, encode it */
       if (i == 4)
         {
-          val = (quad[0] << 24) + (quad[1] << 16) + (quad[2] << 8) + quad[3];
+          val = ((uint32_t) quad[0] << 24)
+                + ((uint32_t) quad[1] << 16)
+                + ((uint32_t) quad[2] << 8)
+                + quad[3];
 
           for (int j = 4; j>=0; --j)
             {
@@ -665,7 +668,7 @@ z85_decode_ctx_init (struct base_decode_context *ctx)
 
 
 # define Z85_HI_CTX_TO_32BIT_VAL(ctx) \
-  ((ctx)->ctx.z85.octets[0] * 85 * 85 * 85 * 85 )
+  ((uint32_t)(ctx)->ctx.z85.octets[0] * 85 * 85 * 85 * 85 )
 
 /*
  0 -  9:  0 1 2 3 4 5 6 7 8 9
