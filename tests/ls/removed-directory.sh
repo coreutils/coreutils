@@ -26,20 +26,14 @@ case $host_triplet in
   *) skip_ 'non linux kernel' ;;
 esac
 
-LS_FAILURE=2
-
-cat <<\EOF >exp-err || framework_failure_
-ls: reading directory '.': No such file or directory
-EOF
-
 cwd=$(pwd)
 mkdir d || framework_failure_
 cd d || framework_failure_
 rmdir ../d || framework_failure_
 
-returns_ $LS_FAILURE ls >../out 2>../err || fail=1
+ls >../out 2>../err || fail=1
 cd "$cwd" || framework_failure_
 compare /dev/null out || fail=1
-compare exp-err err || fail=1
+compare /dev/null err || fail=1
 
 Exit $fail

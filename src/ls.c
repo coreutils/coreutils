@@ -49,10 +49,6 @@
 # include <sys/ptem.h>
 #endif
 
-#ifdef __linux__
-# include <sys/syscall.h>
-#endif
-
 #include <stdio.h>
 #include <assert.h>
 #include <setjmp.h>
@@ -2896,7 +2892,6 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   struct dirent *next;
   uintmax_t total_blocks = 0;
   static bool first = true;
-  bool found_any_entries = false;
 
   errno = 0;
   dirp = opendir (name);
@@ -2972,7 +2967,6 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
       next = readdir (dirp);
       if (next)
         {
-          found_any_entries = true;
           if (! file_ignored (next->d_name))
             {
               enum filetype type = unknown;
@@ -3018,22 +3012,6 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
           if (errno != EOVERFLOW)
             break;
         }
-#ifdef __linux__
-      else if (! found_any_entries)
-        {
-          /* If readdir finds no directory entries at all, not even "." or
-             "..", then double check that the directory exists.  */
-          if (syscall (SYS_getdents, dirfd (dirp), NULL, 0) == -1
-              && errno != EINVAL)
-            {
-              /* We exclude EINVAL as that pertains to buffer handling,
-                 and we've passed NULL as the buffer for simplicity.
-                 ENOENT is returned if appropriate before buffer handling.  */
-              file_failure (command_line_arg, _("reading directory %s"), name);
-            }
-          break;
-        }
-#endif
       else
         break;
 
