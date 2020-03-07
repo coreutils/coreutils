@@ -1,7 +1,7 @@
 #!/bin/sh
-# If ls is asked to list a removed directory (e.g. the parent process's
-# current working directory that has been removed by another process), it
-# emits an error message.
+# If ls is asked to list a removed directory (e.g., the parent process's
+# current working directory has been removed by another process), it
+# should not emit an error message merely because the directory is removed.
 
 # Copyright (C) 2020 Free Software Foundation, Inc.
 
@@ -21,15 +21,10 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
-case $host_triplet in
-  *linux*) ;;
-  *) skip_ 'non linux kernel' ;;
-esac
-
 cwd=$(pwd)
 mkdir d || framework_failure_
 cd d || framework_failure_
-rmdir ../d || framework_failure_
+rmdir ../d || skip_ "can't remove working directory on this platform"
 
 ls >../out 2>../err || fail=1
 cd "$cwd" || framework_failure_
