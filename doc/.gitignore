@@ -1,3 +1,4 @@
+/.dirstamp
 /constants.texi
 /coreutils.aux
 /coreutils.cp
@@ -12,13 +13,13 @@
 /coreutils.op
 /coreutils.pdf
 /coreutils.pg
+/coreutils.t2p/
 /coreutils.toc
 /coreutils.tp
 /coreutils.vr
 /fdl.texi
 /gendocs_template
+/gendocs_template_min
 /parse-datetime.texi
 /stamp-vti
 /version.texi
-/.dirstamp
-/gendocs_template_min
