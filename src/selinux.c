@@ -25,7 +25,6 @@
 #include "error.h"
 #include "system.h"
 #include "canonicalize.h"
-#include "dosname.h"
 #include "xfts.h"
 #include "selinux.h"
 
