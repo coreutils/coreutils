@@ -65,38 +65,38 @@ matrix:
     env:
     - TPCP_OPTIONS=amd64_linux_clang_o3
     - CFLAGS="-O3"
-  - name: Ubuntu with gcc on arm64 and -O0
-    os: linux
-    dist: bionic
-    compiler: gcc
-    arch: arm64
-    env:
-    - TPCP_OPTIONS=arm64_linux_gcc_o0
-    - CFLAGS="-O0"
-  - name: Ubuntu with gcc on arm64 and -O1
-    os: linux
-    dist: bionic
-    compiler: gcc
-    arch: arm64
-    env:
-    - TPCP_OPTIONS=arm64_linux_gcc_o1
-    - CFLAGS="-O1"
-  - name: Ubuntu with gcc on arm64 and -O2
-    os: linux
-    dist: bionic
-    compiler: gcc
-    arch: arm64
-    env:
-    - TPCP_OPTIONS=arm64_linux_gcc_o2
-    - CFLAGS="-O2"
-  - name: Ubuntu with gcc on arm64 and -O3
-    os: linux
-    dist: bionic
-    compiler: gcc
-    arch: arm64
-    env:
-    - TPCP_OPTIONS=arm64_linux_gcc_o3
-    - CFLAGS="-O3"
+#  - name: Ubuntu with gcc on arm64 and -O0
+#    os: linux
+#    dist: bionic
+#    compiler: gcc
+#    arch: arm64
+#    env:
+#    - TPCP_OPTIONS=arm64_linux_gcc_o0
+#    - CFLAGS="-O0"
+#  - name: Ubuntu with gcc on arm64 and -O1
+#    os: linux
+#    dist: bionic
+#    compiler: gcc
+#    arch: arm64
+#    env:
+#    - TPCP_OPTIONS=arm64_linux_gcc_o1
+#    - CFLAGS="-O1"
+#  - name: Ubuntu with gcc on arm64 and -O2
+#    os: linux
+#    dist: bionic
+#    compiler: gcc
+#    arch: arm64
+#    env:
+#    - TPCP_OPTIONS=arm64_linux_gcc_o2
+#    - CFLAGS="-O2"
+#  - name: Ubuntu with gcc on arm64 and -O3
+#    os: linux
+#    dist: bionic
+#    compiler: gcc
+#    arch: arm64
+#    env:
+#    - TPCP_OPTIONS=arm64_linux_gcc_o3
+#    - CFLAGS="-O3"
 #  - name: Windows with gcc on amd64 and -O0
 #    os: windows
 #    compiler: gcc
