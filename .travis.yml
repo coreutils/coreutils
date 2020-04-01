@@ -136,7 +136,7 @@ before_install:
   export CFLAGS=${CFLAGS}" -Wno-error"
   case ${TRAVIS_OS_NAME} in
     linux)
-      sudo apt-get update && sudo apt-get install -y texinfo gettext gperf autoconf automake bison perl
+      sudo apt-get update && sudo apt-get install -y texinfo gettext gperf autoconf automake bison perl autopoint
       export cmd_prefix=""
       ;;
     windows)
