@@ -19,11 +19,26 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-printf '1' > file1
-printf '2' > file2
-printf '2' > file2.exp
+printf '1' > file1 || framework_failure_
+printf '2' > file2 || framework_failure_
+printf '2' > file2.exp || framework_failure_
 
 cp --attributes-only file1 file2 || fail=1
 cmp file2 file2.exp || fail=1
+
+# coreutils v8.32 and before would remove destination files
+# if hardlinked or the source was not a regular file.
+ln file2 link2 || framework_failure_
+cp -a --attributes-only file1 file2 || fail=1
+cmp file2 file2.exp || fail=1
+
+ln -s file1 sym1 || framework_failure_
+returns_ 1 cp -a --attributes-only sym1 file2 || fail=1
+cmp file2 file2.exp || fail=1
+
+# One can still force removal though
+cp -a --remove-destination --attributes-only sym1 file2 || fail=1
+test -L file2 || fail=1
+cmp file1 file2 || fail=1
 
 Exit $fail

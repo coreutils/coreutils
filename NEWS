@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  cp -a --attributes-only now never removes destination files,
+  even if the destination files are hardlinked, or the source
+  is a non regular file.
+  [bug introduced in coreutils-8.6]
+
 ** Changes in behavior
 
   On GNU/Linux systems, ls no longer issues an error message on
