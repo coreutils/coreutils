@@ -1,35 +1,178 @@
 language: cpp
 matrix:
   include:
-  - os: linux
+  - name: Ubuntu with gcc on amd64 and -O0
+    os: linux
     dist: bionic
     compiler: gcc
     arch: amd64
-    env: TPCP_OPTIONS=amd64_linux_gcc
-  - os: linux
+    env:
+    - TPCP_OPTIONS=amd64_linux_gcc_o0
+    - CFLAGS="-O0"
+  - name: Ubuntu with gcc on amd64 and -O1
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_gcc_o1
+    - CFLAGS="-O1"
+  - name: Ubuntu with gcc on amd64 and -O2
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_gcc_o2
+    - CFLAGS="-O2"
+  - name: Ubuntu with gcc on amd64 and -O3
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_gcc_o3
+    - CFLAGS="-O3"
+  - name: Ubuntu with clang on amd64 and -O0
+    os: linux
     dist: bionic
     compiler: clang
     arch: amd64
-    env: TPCP_OPTIONS=amd64_linux_clang
-  - os: linux
+    env:
+    - TPCP_OPTIONS=amd64_linux_clang_o0
+    - CFLAGS="-O0"
+  - name: Ubuntu with clang on amd64 and -O1
+    os: linux
+    dist: bionic
+    compiler: clang
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_clang_o1
+    - CFLAGS="-O1"
+  - name: Ubuntu with clang on amd64 and -O2
+    os: linux
+    dist: bionic
+    compiler: clang
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_clang_o2
+    - CFLAGS="-O2"
+  - name: Ubuntu with clang on amd64 and -O3
+    os: linux
+    dist: bionic
+    compiler: clang
+    arch: amd64
+    env:
+    - TPCP_OPTIONS=amd64_linux_clang_o3
+    - CFLAGS="-O3"
+  - name: Ubuntu with gcc on arm64 and -O0
+    os: linux
     dist: bionic
     compiler: gcc
     arch: arm64
-    env: TPCP_OPTIONS=arm64_linux_gcc
-    
+    env:
+    - TPCP_OPTIONS=arm64_linux_gcc_o0
+    - CFLAGS="-O0"
+  - name: Ubuntu with gcc on arm64 and -O1
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: arm64
+    env:
+    - TPCP_OPTIONS=arm64_linux_gcc_o1
+    - CFLAGS="-O1"
+  - name: Ubuntu with gcc on arm64 and -O2
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: arm64
+    env:
+    - TPCP_OPTIONS=arm64_linux_gcc_o2
+    - CFLAGS="-O2"
+  - name: Ubuntu with gcc on arm64 and -O3
+    os: linux
+    dist: bionic
+    compiler: gcc
+    arch: arm64
+    env:
+    - TPCP_OPTIONS=arm64_linux_gcc_o3
+    - CFLAGS="-O3"
+#  - name: Windows with gcc on amd64 and -O0
+#    os: windows
+#    compiler: gcc
+#    arch: amd64
+#    env:
+#    - TPCP_OPTIONS=amd64_windows_gcc_o0
+#    - CFLAGS="-O0"
+#  - name: Windows with gcc on amd64 and -O1
+#    os: windows
+#    compiler: gcc
+#    arch: amd64
+#    env:
+#    - TPCP_OPTIONS=amd64_windows_gcc_o1
+#    - CFLAGS="-O1"
+#  - name: Windows with gcc on amd64 and -O2
+#    os: windows
+#    compiler: gcc
+#    arch: amd64
+#    env:
+#    - TPCP_OPTIONS=amd64_windows_gcc_o2
+#    - CFLAGS="-O2"
+#  - name: Windows with gcc on amd64 and -O3
+#    os: windows
+#    compiler: gcc
+#    arch: amd64
+#    env:
+#    - TPCP_OPTIONS=amd64_windows_gcc_o3
+#    - CFLAGS="-O3"
+
 before_install:
-- export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
-- export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
-- if [ ${TRAVIS_OS_NAME} == "linux" ]; then
-    sudo apt-get update &&
-    sudo apt-get install -y texinfo;
-  fi
+- |-
+  export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
+  export CFLAGS=${CFLAGS}" "${ENV_CXXFLAGS}
+  # we need to turn off warning errors because of some declaration type mismatches
+  # in the header files that get installed in windows, and optimization changes 
+  # appear to cause some other warnings to appear.
+  export CFLAGS=${CFLAGS}" -Wno-error"
+  case ${TRAVIS_OS_NAME} in
+    linux)
+      sudo apt-get update && sudo apt-get install -y texinfo
+      export cmd_prefix=""
+      ;;
+    windows)
+      [[ ! -f C:/tools/msys64/msys2_shell.cmd ]] && rm -rf C:/tools/msys64
+      choco uninstall -y mingw
+      choco upgrade --no-progress -y msys2
+      export cmd_prefix='cmd //C RefreshEnv.cmd '
+      export cmd_prefix+='& set MSYS=winsymlinks:nativestrict '
+      export cmd_prefix+='& C:\\tools\\msys64\\msys2_shell.cmd -defterm -no-start'
+      export cmd_prefix+=" -msys2 -c "\"\$@"\" --" 
+      $cmd_prefix pacman -Syu
+      $cmd_prefix pacman --sync --noconfirm --needed base-devel make gcc texinfo
+      ;;
+  esac 
 
 script:
 - ./bootstrap
-- ./configure
-- make
-- make check
+#- $cmd_prefix ../tpcp-build-helper.sh
+- $cmd_prefix ./configure
+- $cmd_prefix make
+- $cmd_prefix make check
+
+before_cache:
+- |-
+  case $TRAVIS_OS_NAME in
+    windows)
+      # https://unix.stackexchange.com/a/137322/107554
+      $cmd_prefix pacman --sync --clean --noconfirm
+      ;;
+  esac
+
+# cache magic, baby (otherwise, windows config takes for. ev. er.)
+cache:
+  directories:
+  - $HOME/AppData/Local/Temp/chocolatey
+  - /C/tools/msys64
 
 branches:
   only:
