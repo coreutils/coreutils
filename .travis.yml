@@ -134,6 +134,7 @@ before_install:
   # in the header files that get installed in windows, and optimization changes 
   # appear to cause some other warnings to appear.
   export CFLAGS=${CFLAGS}" -Wno-error"
+  export INSTALL_DIR=`pwd`/final-exe
   case ${TRAVIS_OS_NAME} in
     linux)
       sudo apt-get update && sudo apt-get install -y texinfo gettext gperf autoconf automake bison perl autopoint
@@ -155,9 +156,10 @@ before_install:
 script:
 - ./bootstrap
 #- $cmd_prefix ../tpcp-build-helper.sh
-- $cmd_prefix ./configure
-- $cmd_prefix make
-- $cmd_prefix make check
+- $cmd_prefix ./configure --bindir=$INSTALL_DIR --sbindir=$INSTALL_DIR --libexecdir=$INSTALL_DIR --program-suffix=_exe_$TPCP_OPTIONS
+- $cmd_prefix make -j
+#- $cmd_prefix make check
+- $cmd_prefix make install
 
 before_cache:
 - |-
