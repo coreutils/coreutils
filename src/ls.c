@@ -859,7 +859,7 @@ static struct option const long_options[] =
   {"width", required_argument, NULL, 'w'},
   {"almost-all", no_argument, NULL, 'A'},
   {"ignore-backups", no_argument, NULL, 'B'},
-  {"classify", no_argument, NULL, 'F'},
+  {"classify", optional_argument, NULL, 'F'},
   {"file-type", no_argument, NULL, FILE_TYPE_INDICATOR_OPTION},
   {"si", no_argument, NULL, SI_OPTION},
   {"dereference-command-line", no_argument, NULL, 'H'},
@@ -2093,8 +2093,20 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'F':
-          indicator_style = classify;
-          break;
+          {
+            int i;
+            if (optarg)
+              i = XARGMATCH ("--classify", optarg, when_args, when_types);
+            else
+              /* Using --classify with no argument is equivalent to using
+                 --classify=always.  */
+              i = when_always;
+
+            if (i == when_always
+                || (i == when_if_tty && isatty (STDOUT_FILENO)))
+              indicator_style = classify;
+            break;
+          }
 
         case 'G':		/* inhibit display of group info */
           print_group = false;
@@ -5353,7 +5365,9 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -f                         do not sort, enable -aU, disable -ls --color\n\
-  -F, --classify             append indicator (one of */=>@|) to entries\n\
+  -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries;\n\
+                               WHEN can be 'always' (default if omitted),\n\
+                               'auto', or 'never'\n\
       --file-type            likewise, except do not append '*'\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\

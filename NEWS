@@ -19,6 +19,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   directory merely because it was removed.  This reverts a change
   that was made in release 8.32.
 
+** New Features
+
+   ls --classify now supports the "always", "auto", or "never" flags,
+   to support only outputting classifier characters if connected to a tty.
+
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
 

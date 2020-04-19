@@ -8004,7 +8004,7 @@ and on a @code{dirent.d_type}-capable file system, @command{ls}
 will perform only one @code{stat} call per command line argument.
 
 @item -F
-@itemx --classify
+@itemx --classify [=@var{when}]
 @itemx --indicator-style=classify
 @opindex -F
 @opindex --classify
@@ -8016,6 +8016,21 @@ for regular files that are executable, append @samp{*}.  The file type
 indicators are @samp{/} for directories, @samp{@@} for symbolic links,
 @samp{|} for FIFOs, @samp{=} for sockets, @samp{>} for doors,
 and nothing for regular files.
+@var{when} may be omitted, or one of:
+@itemize @bullet
+@item none
+@vindex none @r{classify option}
+- Do not classify.  This is the default.
+@item auto
+@vindex auto @r{classify option}
+@cindex terminal, using classify iff
+- Only classify if standard output is a terminal.
+@item always
+@vindex always @r{classify option}
+- Always classify.
+@end itemize
+Specifying @option{--classify} and no @var{when} is equivalent to
+@option{--classify=always}.
 @c The following sentence is the same as the one for -d.
 Do not follow symbolic links listed on the
 command line unless the @option{--dereference-command-line} (@option{-H}),

@@ -593,6 +593,7 @@ all_tests =					\
   tests/ls/abmon-align.sh			\
   tests/ls/birthtime.sh				\
   tests/ls/block-size.sh			\
+  tests/ls/classify.sh				\
   tests/ls/color-clear-to-eol.sh		\
   tests/ls/color-dtype-dir.sh			\
   tests/ls/color-norm.sh			\
