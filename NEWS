@@ -9,6 +9,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   is a non regular file.
   [bug introduced in coreutils-8.6]
 
+  du no longer crashes on XFS file systems when the directory hierarchy is
+  heavily changed during the run.
+  [bug introduced in coreutils-8.25]
+
 ** Changes in behavior
 
   On GNU/Linux systems, ls no longer issues an error message on
