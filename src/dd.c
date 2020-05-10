@@ -243,9 +243,13 @@ static char newline_character = '\n';
 static char space_character = ' ';
 
 /* Input buffer. */
+static char *real_ibuf;
+/* aligned offset into the above.  */
 static char *ibuf;
 
 /* Output buffer. */
+static char *real_obuf;
+/* aligned offset into the above.  */
 static char *obuf;
 
 /* Current index into 'obuf'. */
@@ -693,8 +697,8 @@ alloc_ibuf (void)
   if (ibuf)
     return;
 
-  char *real_buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
-  if (!real_buf)
+  real_ibuf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
+  if (!real_ibuf)
     {
       uintmax_t ibs = input_blocksize;
       char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -705,9 +709,7 @@ alloc_ibuf (void)
                            human_opts | human_base_1024, 1, 1));
     }
 
-  real_buf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
-
-  ibuf = ptr_align (real_buf, page_size);
+  ibuf = ptr_align (real_ibuf + SWAB_ALIGN_OFFSET, page_size);
 }
 
 /* Ensure output buffer OBUF is allocated/initialized.  */
@@ -721,7 +723,7 @@ alloc_obuf (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      char *real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
+      real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
       if (!real_obuf)
         {
           uintmax_t obs = output_blocksize;
@@ -962,6 +964,13 @@ iclose (int fd)
 static void
 cleanup (void)
 {
+#ifdef lint
+  free (real_ibuf);
+  free (real_obuf);
+  real_ibuf = NULL;
+  real_obuf = NULL;
+#endif
+
   if (iclose (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, _("closing input file %s"), quoteaf (input_file));
 

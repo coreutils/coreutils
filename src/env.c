@@ -481,10 +481,10 @@ build_argv (const char* str, int extra_argc)
           if (sq)
             break;
 
-          /* Store the ${VARNAME} value. Error checking omitted as
-             the ${VARNAME} was already validated. */
+          /* Store the ${VARNAME} value. */
           {
             char *n = extract_varname (str);
+            assert (n);  /* ${VARNAME} already validated. */
             char *v = getenv (n);
             if (v)
               {

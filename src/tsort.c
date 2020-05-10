@@ -143,6 +143,7 @@ search_item (struct item *root, const char *str)
   while (true)
     {
       /* A2. Compare.  */
+      assert (str && p && p->str);
       a = strcmp (str, p->str);
       if (a == 0)
         return p;
@@ -165,7 +166,7 @@ search_item (struct item *root, const char *str)
             p->right = q;
 
           /* A6. Adjust balance factors.  */
-          assert (!STREQ (str, s->str));
+          assert (str && s && s->str && !STREQ (str, s->str));
           if (strcmp (str, s->str) < 0)
             {
               r = p = s->left;
@@ -179,7 +180,7 @@ search_item (struct item *root, const char *str)
 
           while (p != q)
             {
-              assert (!STREQ (str, p->str));
+              assert (str && p && p->str && !STREQ (str, p->str));
               if (strcmp (str, p->str) < 0)
                 {
                   p->balance = -1;
@@ -273,6 +274,12 @@ record_relation (struct item *j, struct item *k)
 {
   struct successor *p;
 
+/* GCC 10 gives a false postive warning with -fanalyzer for this,
+   and an assert did not suppress the warning
+   with the initial GCC 10 release.  */
+#if (__GNUC__ == 10 && 0 <= __GNUC_MINOR__) || 10 < __GNUC__
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wanalyzer-null-dereference"
   if (!STREQ (j->str, k->str))
     {
       k->count++;
@@ -281,6 +288,8 @@ record_relation (struct item *j, struct item *k)
       p->next = j->top;
       j->top = p;
     }
+# pragma GCC diagnostic pop
+#endif
 }
 
 static bool

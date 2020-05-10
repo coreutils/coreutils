@@ -16,6 +16,11 @@
 
 /* Extracted from chown.c/chgrp.c and librarified by Jim Meyering.  */
 
+/* GCC 10 gives a false postive warning with -fanalyzer for this.  */
+#if (__GNUC__ == 10 && 0 <= __GNUC_MINOR__) || 10 < __GNUC__
+# pragma GCC diagnostic ignored "-Wanalyzer-double-free"
+#endif
+
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
