@@ -242,14 +242,14 @@ static uintmax_t r_truncate = 0;
 static char newline_character = '\n';
 static char space_character = ' ';
 
-/* Input buffer. */
+#ifdef lint
+/* Memory blocks allocated for I/O buffers and surrounding areas.  */
 static char *real_ibuf;
-/* aligned offset into the above.  */
-static char *ibuf;
-
-/* Output buffer. */
 static char *real_obuf;
-/* aligned offset into the above.  */
+#endif
+
+/* I/O buffers.  */
+static char *ibuf;
 static char *obuf;
 
 /* Current index into 'obuf'. */
@@ -697,8 +697,8 @@ alloc_ibuf (void)
   if (ibuf)
     return;
 
-  real_ibuf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
-  if (!real_ibuf)
+  char *buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
+  if (!buf)
     {
       uintmax_t ibs = input_blocksize;
       char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -708,8 +708,10 @@ alloc_ibuf (void)
            human_readable (input_blocksize, hbuf,
                            human_opts | human_base_1024, 1, 1));
     }
-
-  ibuf = ptr_align (real_ibuf + SWAB_ALIGN_OFFSET, page_size);
+#ifdef lint
+  real_ibuf = buf;
+#endif
+  ibuf = ptr_align (buf + SWAB_ALIGN_OFFSET, page_size);
 }
 
 /* Ensure output buffer OBUF is allocated/initialized.  */
@@ -723,8 +725,8 @@ alloc_obuf (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      real_obuf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
-      if (!real_obuf)
+      char *buf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
+      if (!buf)
         {
           uintmax_t obs = output_blocksize;
           char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -735,7 +737,10 @@ alloc_obuf (void)
                human_readable (output_blocksize, hbuf,
                                human_opts | human_base_1024, 1, 1));
         }
-      obuf = ptr_align (real_obuf, page_size);
+#ifdef lint
+      real_obuf = buf;
+#endif
+      obuf = ptr_align (buf, page_size);
     }
   else
     {
