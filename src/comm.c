@@ -16,11 +16,6 @@
 
 /* Written by Richard Stallman and David MacKenzie. */
 
-/* GCC 10 gives a false postive warning with -fanalyzer for this.  */
-#if (__GNUC__ == 10 && 0 <= __GNUC_MINOR__) || 10 < __GNUC__
-# pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
-#endif
-
 #include <config.h>
 
 #include <getopt.h>

@@ -274,12 +274,6 @@ record_relation (struct item *j, struct item *k)
 {
   struct successor *p;
 
-/* GCC 10 gives a false postive warning with -fanalyzer for this,
-   and an assert did not suppress the warning
-   with the initial GCC 10 release.  */
-#if (__GNUC__ == 10 && 0 <= __GNUC_MINOR__) || 10 < __GNUC__
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wanalyzer-null-dereference"
   if (!STREQ (j->str, k->str))
     {
       k->count++;
@@ -288,8 +282,6 @@ record_relation (struct item *j, struct item *k)
       p->next = j->top;
       j->top = p;
     }
-# pragma GCC diagnostic pop
-#endif
 }
 
 static bool
