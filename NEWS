@@ -90,6 +90,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   [The old behavior was introduced in sh-utils 2.0.15 ca. 1999, predating
   coreutils package.]
 
+  date now pads nanoseconds on the right, not the left.  For example,
+  if the time is currently 1590020079.003388470 seconds after the
+  Epoch, then "date '+%s.%-N'" formerly output "1590020079.3388470",
+  and it now outputs "1590020079.00338847".
+
   ls issues an error message on a removed directory, on GNU/Linux systems.
   Previously no error and no entries were output, and so indistinguishable
   from an empty directory, with default ls options.

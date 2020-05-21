@@ -16034,7 +16034,10 @@ a horizontal tab
 Unless otherwise specified, @command{date} normally pads numeric fields
 with zeros, so that, for
 example, numeric months are always output as two digits.
-Seconds since the epoch are not padded, though,
+Most numeric fields are padded on the left.
+However, nanoseconds are padded on the right since they are commonly
+used after decimal points in formats like @samp{%s.%-N}.
+Also, seconds since the epoch are not padded
 since there is no natural width for them.
 
 The following optional flags can appear after the @samp{%}:
@@ -16082,9 +16085,10 @@ date +%_d/%_m -d "Feb 1"
 You can optionally specify the field width
 (after any flag, if present) as a decimal number.  If the natural size of the
 output of the field has less than the specified number of characters,
-the result is written right adjusted and padded to the given
+the result is normally written right adjusted and padded to the given
 size.  For example, @samp{%9B} prints the right adjusted month name in
-a field of width 9.
+a field of width 9.  Nanoseconds are left adjusted, and are truncated
+or padded to the field width.
 
 An optional modifier can follow the optional flag and width
 specification.  The modifiers are:
