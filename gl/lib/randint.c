@@ -38,7 +38,7 @@ main (int argc, char **argv)
   randint n = strtoumax (argv[1], NULL, 10);
   randint choices = strtoumax (argv[2], NULL, 10);
   char const *name = argv[3];
-  struct randint_source *ints = randint_all_new (name, SIZE_MAX);
+  struct randint_source *ints = randint_all_new (name);
 
   for (i = 0; i < n; i++)
     printf ("%"PRIuMAX"\n", randint_choose (ints, choices));
@@ -81,9 +81,9 @@ randint_new (struct randread_source *source)
    unsuccessful.  */
 
 struct randint_source *
-randint_all_new (char const *name, size_t bytes_bound)
+randint_all_new (char const *name)
 {
-  struct randread_source *source = randread_new (name, bytes_bound);
+  struct randread_source *source = randread_new (name);
   return (source ? randint_new (source) : NULL);
 }
 

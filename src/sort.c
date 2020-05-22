@@ -2095,7 +2095,7 @@ static void
 random_md5_state_init (char const *random_source)
 {
   unsigned char buf[MD5_DIGEST_SIZE];
-  struct randread_source *r = randread_new (random_source, sizeof buf);
+  struct randread_source *r = randread_new (random_source);
   if (! r)
     sort_die (_("open failed"), random_source);
   randread (r, buf, sizeof buf);

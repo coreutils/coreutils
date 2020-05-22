@@ -143,56 +143,31 @@ simple_new (FILE *source, void const *handler_arg)
   return s;
 }
 
-/* Put a nonce value into BUFFER, with size BUFSIZE, but do not get
-   more than BYTES_BOUND bytes' worth of random information from any
-   nonce device.  */
+/* Put a nonce value into BUFFER, with size BUFSIZE.
 
-static void
-get_nonce (void *buffer, size_t bufsize, size_t bytes_bound)
+   Return true on success, false (setting errno) on failure. */
+
+static bool
+get_nonce (void *buffer, size_t bufsize)
 {
   char *buf = buffer;
   ssize_t seeded = 0;
 
   /* Get some data from FD if available.  */
   int fd = open (NAME_OF_NONCE_DEVICE, O_RDONLY | O_BINARY);
-  if (0 <= fd)
-    {
-      seeded = read (fd, buf, MIN (bufsize, bytes_bound));
-      if (seeded < 0)
-        seeded = 0;
-      close (fd);
-    }
+  if (fd < 0)
+      return false;
 
-  /* If there's no nonce device, use a poor approximation
-     by getting the time of day, etc.  */
-#define ISAAC_SEED(type, initialize_v)                      \
-  if (seeded < bufsize)                                     \
-    {                                                       \
-      type v;                                               \
-      size_t nbytes = MIN (sizeof v, bufsize - seeded);     \
-      initialize_v;                                         \
-      memcpy (buf + seeded, &v, nbytes);                    \
-      seeded += nbytes;                                     \
-    }
-  ISAAC_SEED (struct timeval, gettimeofday (&v, NULL));
-  ISAAC_SEED (pid_t, v = getpid ());
-  ISAAC_SEED (pid_t, v = getppid ());
-  ISAAC_SEED (uid_t, v = getuid ());
-  ISAAC_SEED (uid_t, v = getgid ());
+  TEMP_FAILURE_RETRY(seeded = read(fd, buf, bufsize));
+  if (seeded < 0)
+      return false;
 
-#ifdef lint
-  /* Normally we like having the extra randomness from uninitialized
-     parts of BUFFER.  However, omit this randomness if we want to
-     avoid false-positives from memory-checking debugging tools.  */
-  memset (buf + seeded, 0, bufsize - seeded);
-#endif
+  close(fd);
+  return true;
 }
 
-
 /* Create and initialize a random data source from NAME, or use a
-   reasonable default source if NAME is null.  BYTES_BOUND is an upper
-   bound on the number of bytes that will be needed.  If zero, it is a
-   hard bound; otherwise it is just an estimate.
+   reasonable default source if NAME is null.
 
    If NAME is not null, NAME is saved for use as the argument of the
    default handler.  Unless a non-default handler is used, NAME's
@@ -201,33 +176,28 @@ get_nonce (void *buffer, size_t bufsize, size_t bytes_bound)
    Return NULL (setting errno) on failure.  */
 
 struct randread_source *
-randread_new (char const *name, size_t bytes_bound)
+randread_new (char const *name)
 {
-  if (bytes_bound == 0)
-    return simple_new (NULL, NULL);
+  FILE *source = NULL;
+  struct randread_source *s;
+
+  if (name)
+    if (! (source = fopen_safer (name, "rb")))
+      return NULL;
+
+  s = simple_new (source, name);
+
+  if (source)
+    setvbuf (source, s->buf.c, _IOFBF, sizeof s->buf.c);
   else
     {
-      FILE *source = NULL;
-      struct randread_source *s;
-
-      if (name)
-        if (! (source = fopen_safer (name, "rb")))
-          return NULL;
-
-      s = simple_new (source, name);
-
-      if (source)
-        setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
-      else
-        {
-          s->buf.isaac.buffered = 0;
-          get_nonce (s->buf.isaac.state.m, sizeof s->buf.isaac.state.m,
-                     bytes_bound);
-          isaac_seed (&s->buf.isaac.state);
-        }
-
-      return s;
+      s->buf.isaac.buffered = 0;
+      if (!get_nonce (s->buf.isaac.state.m, sizeof s->buf.isaac.state.m))
+        return NULL;
+      isaac_seed(&s->buf.isaac.state);
     }
+
+  return s;
 }
 
 

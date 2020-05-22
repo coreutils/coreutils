@@ -33,7 +33,7 @@ typedef uintmax_t randint;
 struct randint_source;
 
 struct randint_source *randint_new (struct randread_source *);
-struct randint_source *randint_all_new (char const *, size_t);
+struct randint_source *randint_all_new (char const *);
 struct randread_source *randint_get_source (struct randint_source const *)
   _GL_ATTRIBUTE_PURE;
 randint randint_genmax (struct randint_source *, randint genmax);

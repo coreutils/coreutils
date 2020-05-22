@@ -536,11 +536,8 @@ main (int argc, char **argv)
      input is small and if not repeating.  */
   size_t ahead_lines = repeat || head_lines < n_lines ? head_lines : n_lines;
 
-  randint_source = randint_all_new (random_source,
-                                    (use_reservoir_sampling || repeat
-                                     ? SIZE_MAX
-                                     : randperm_bound (ahead_lines, n_lines)));
-  if (! randint_source)
+  randint_source = randint_all_new(random_source);
+  if (!randint_source)
     die (EXIT_FAILURE, errno, "%s", quotef (random_source));
 
   if (use_reservoir_sampling)

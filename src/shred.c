@@ -1252,7 +1252,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  randint_source = randint_all_new (random_source, SIZE_MAX);
+  randint_source = randint_all_new (random_source);
   if (! randint_source)
     die (EXIT_FAILURE, errno, "%s", quotef (random_source));
   atexit (clear_random_data);
