@@ -21,17 +21,16 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+cwd=$(pwd)
 mkdir d || framework_failure_
-(cd d || exit 10
- rmdir ../d || exit 11
- test -d . || exit 12
- ls || exit 13) >out 2>err
-case $? in
-  11) skip_ "can't remove working directory on this platform";;
-  12) skip_ "can't examine removed working directory on this platform";;
-  13) fail=1;;
-  * ) framework_failure_;;
-esac
+cd d || framework_failure_
+rmdir ../d || skip_ "can't remove working directory on this platform"
+
+# On NFS, 'ls' would run into the error "Stale file handle".
+test -d . || skip_ "can't examine removed working directory on this platform"
+
+ls >../out 2>../err || fail=1
+cd "$cwd" || framework_failure_
 
 compare /dev/null out || fail=1
 compare /dev/null err || fail=1
