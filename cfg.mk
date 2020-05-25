@@ -327,11 +327,13 @@ sc_prohibit-gl-attributes:
 
 # Look for lines longer than 80 characters, except omit:
 # - urls
+# - the fdl.texi file copied from gnulib,
 # - the help2man script copied from upstream,
 # - tests involving long checksum lines, and
 # - the 'pr' test cases.
 FILTER_LONG_LINES =						\
   \|^[^:]*NEWS:.*https\{,1\}://| d;					\
+  \|^[^:]*doc/fdl.texi:| d;					\
   \|^[^:]*man/help2man:| d;					\
   \|^[^:]*tests/misc/sha[0-9]*sum.*\.pl[-:]| d;			\
   \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
