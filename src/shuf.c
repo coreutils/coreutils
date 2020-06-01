@@ -542,7 +542,7 @@ main (int argc, char **argv)
                                      : randperm_bound (ahead_lines, n_lines)));
   if (! randint_source)
     die (EXIT_FAILURE, errno, "%s",
-         quotef (random_source ? random_source : "getentropy"));
+         quotef (random_source ? random_source : "getrandom"));
 
   if (use_reservoir_sampling)
     {

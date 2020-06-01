@@ -1255,7 +1255,7 @@ main (int argc, char **argv)
   randint_source = randint_all_new (random_source, SIZE_MAX);
   if (! randint_source)
     die (EXIT_FAILURE, errno, "%s",
-         quotef (random_source ? random_source : "getentropy"));
+         quotef (random_source ? random_source : "getrandom"));
   atexit (clear_random_data);
 
   for (i = 0; i < n_files; i++)

@@ -35,8 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
-#include <unistd.h>
+#include <sys/random.h>
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
@@ -148,11 +147,11 @@ get_nonce (void *buffer, size_t bufsize)
   char *buf = buffer, *buflim = buf + bufsize;
   while (buf < buflim)
     {
-      int getentropy_bound = 256;
-      int nbytes = MIN (buflim - buf, getentropy_bound);
-      if (getentropy (buf, nbytes) != 0)
+      ssize_t nbytes = getrandom (buf, buflim - buf, 0);
+      if (0 <= nbytes)
+        buf += nbytes;
+      else if (errno != EINTR)
         return false;
-      buf += nbytes;
     }
   return true;
 }
