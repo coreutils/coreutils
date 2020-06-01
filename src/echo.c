@@ -108,7 +108,7 @@ int
 main (int argc, char **argv)
 {
   bool display_return = true;
-  bool posixly_correct = getenv ("POSIXLY_CORRECT");
+  bool posixly_correct = !!getenv ("POSIXLY_CORRECT");
   bool allow_options =
     (! posixly_correct
      || (! DEFAULT_ECHO_TO_XPG && 1 < argc && STREQ (argv[1], "-n")));
