@@ -275,7 +275,7 @@ read_input (FILE *in, char eolbyte, char ***pline)
      or if none left, stdin.  Doing that would give better performance by
      avoiding the reservoir CPU overhead when reading < RESERVOIR_MIN_INPUT
      from a pipe, and allow us to dispense with the input_size() function.  */
-  if (!(buf = fread_file (in, &used)))
+  if (!(buf = fread_file (in, 0, &used)))
     die (EXIT_FAILURE, errno, _("read error"));
 
   if (used && buf[used - 1] != eolbyte)
@@ -541,7 +541,8 @@ main (int argc, char **argv)
                                      ? SIZE_MAX
                                      : randperm_bound (ahead_lines, n_lines)));
   if (! randint_source)
-    die (EXIT_FAILURE, errno, "%s", quotef (random_source));
+    die (EXIT_FAILURE, errno, "%s",
+         quotef (random_source ? random_source : "getentropy"));
 
   if (use_reservoir_sampling)
     {

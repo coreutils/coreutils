@@ -520,9 +520,9 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
      its name.  */
   bool using_stdin = !file_name || !*file_name || STREQ (file_name, "-");
   if (using_stdin)
-    block->start = fread_file (stdin, &used_length);
+    block->start = fread_file (stdin, 0, &used_length);
   else
-    block->start = read_file (file_name, &used_length);
+    block->start = read_file (file_name, 0, &used_length);
 
   if (!block->start)
     die (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));

@@ -66,10 +66,6 @@
 # define ALIGNED_POINTER(ptr, type) ((size_t) (ptr) % alignof (type) == 0)
 #endif
 
-#ifndef NAME_OF_NONCE_DEVICE
-# define NAME_OF_NONCE_DEVICE "/dev/urandom"
-#endif
-
 /* The maximum buffer size used for reads of random data.  Using the
    value 2 * ISAAC_BYTES makes this the largest power of two that
    would not otherwise cause struct randread_source to grow.  */
@@ -143,51 +139,23 @@ simple_new (FILE *source, void const *handler_arg)
   return s;
 }
 
-/* Put a nonce value into BUFFER, with size BUFSIZE, but do not get
-   more than BYTES_BOUND bytes' worth of random information from any
-   nonce device.  */
+/* Put a nonce value into BUFFER, with size BUFSIZE.
+   Return true on success, false (setting errno) on failure.  */
 
-static void
-get_nonce (void *buffer, size_t bufsize, size_t bytes_bound)
+static bool
+get_nonce (void *buffer, size_t bufsize)
 {
-  char *buf = buffer;
-  ssize_t seeded = 0;
-
-  /* Get some data from FD if available.  */
-  int fd = open (NAME_OF_NONCE_DEVICE, O_RDONLY | O_BINARY);
-  if (0 <= fd)
+  char *buf = buffer, *buflim = buf + bufsize;
+  while (buf < buflim)
     {
-      seeded = read (fd, buf, MIN (bufsize, bytes_bound));
-      if (seeded < 0)
-        seeded = 0;
-      close (fd);
+      int getentropy_bound = 256;
+      int nbytes = MIN (buflim - buf, getentropy_bound);
+      if (getentropy (buf, nbytes) != 0)
+        return false;
+      buf += nbytes;
     }
-
-  /* If there's no nonce device, use a poor approximation
-     by getting the time of day, etc.  */
-#define ISAAC_SEED(type, initialize_v)                      \
-  if (seeded < bufsize)                                     \
-    {                                                       \
-      type v;                                               \
-      size_t nbytes = MIN (sizeof v, bufsize - seeded);     \
-      initialize_v;                                         \
-      memcpy (buf + seeded, &v, nbytes);                    \
-      seeded += nbytes;                                     \
-    }
-  ISAAC_SEED (struct timeval, gettimeofday (&v, NULL));
-  ISAAC_SEED (pid_t, v = getpid ());
-  ISAAC_SEED (pid_t, v = getppid ());
-  ISAAC_SEED (uid_t, v = getuid ());
-  ISAAC_SEED (uid_t, v = getgid ());
-
-#ifdef lint
-  /* Normally we like having the extra randomness from uninitialized
-     parts of BUFFER.  However, omit this randomness if we want to
-     avoid false-positives from memory-checking debugging tools.  */
-  memset (buf + seeded, 0, bufsize - seeded);
-#endif
+  return true;
 }
-
 
 /* Create and initialize a random data source from NAME, or use a
    reasonable default source if NAME is null.  BYTES_BOUND is an upper
@@ -221,8 +189,14 @@ randread_new (char const *name, size_t bytes_bound)
       else
         {
           s->buf.isaac.buffered = 0;
-          get_nonce (s->buf.isaac.state.m, sizeof s->buf.isaac.state.m,
-                     bytes_bound);
+          if (! get_nonce (s->buf.isaac.state.m,
+                           MIN (sizeof s->buf.isaac.state.m, bytes_bound)))
+            {
+              int e = errno;
+              randread_free (s);
+              errno = e;
+              return NULL;
+            }
           isaac_seed (&s->buf.isaac.state);
         }
 

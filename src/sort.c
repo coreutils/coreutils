@@ -2097,7 +2097,7 @@ random_md5_state_init (char const *random_source)
   unsigned char buf[MD5_DIGEST_SIZE];
   struct randread_source *r = randread_new (random_source, sizeof buf);
   if (! r)
-    sort_die (_("open failed"), random_source);
+    sort_die (_("open failed"), random_source ? random_source : "getentropy");
   randread (r, buf, sizeof buf);
   if (randread_free (r) != 0)
     sort_die (_("close failed"), random_source);

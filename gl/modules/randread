@@ -12,7 +12,7 @@ error
 exitfail
 inline
 fopen-safer
-gettimeofday
+getentropy
 quote
 stdalign
 stdbool
