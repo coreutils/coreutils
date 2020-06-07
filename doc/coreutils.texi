@@ -18139,14 +18139,19 @@ which should be especially considered when specifying sub-second timeouts.
 Exit status:
 
 @display
-124 if @var{command} times out
+124 if @var{command} times out, and @option{--preserve-status} is not specified
 125 if @command{timeout} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
-137 if @var{command} is sent the KILL(9) signal (128+9)
+137 if @var{command} or @command{timeout} is sent the KILL(9) signal (128+9)
 the exit status of @var{command} otherwise
 @end display
 
+In case of the @samp{KILL(9)} signal, @command{timeout} returns with
+exit status 137, regardless of whether that signal is sent to @var{command}
+or to @command{timeout} itself, i.e., these cases cannot be distinguished.
+In the latter case, the @var{command} process may still be alive after
+@command{timeout} has forcefully been terminated.
 
 @node Process control
 @chapter Process control

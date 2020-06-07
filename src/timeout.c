@@ -269,12 +269,21 @@ DURATION is a floating point number with an optional suffix:\n\
 'd' for days.\nA duration of 0 disables the associated timeout.\n"), stdout);
 
       fputs (_("\n\
-If the command times out, and --preserve-status is not set, then exit with\n\
-status 124.  Otherwise, exit with the status of COMMAND.  If no signal\n\
-is specified, send the TERM signal upon timeout.  The TERM signal kills\n\
-any process that does not block or catch that signal.  It may be necessary\n\
-to use the KILL (9) signal, since this signal cannot be caught, in which\n\
-case the exit status is 128+9 rather than 124.\n"), stdout);
+Upon timeout, send the TERM signal to COMMAND, if no other SIGNAL specified.\n\
+The TERM signal kills any process that does not block or catch that signal.\n\
+It may be necessary to use the KILL signal, since this signal can't be caught.\
+\n"), stdout);
+
+      fputs (_("\n\
+EXIT status:\n\
+  124  if COMMAND times out, and --preserve-status is not specified\n\
+  125  if the timeout command itself fails\n\
+  126  if COMMAND is found but cannot be invoked\n\
+  127  if COMMAND cannot be found\n\
+  137  if COMMAND (or timeout itself) is sent the KILL (9) signal (128+9)\n\
+  -    the exit status of COMMAND otherwise\n\
+"), stdout);
+
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);
