@@ -178,6 +178,9 @@ my @Tests =
      ['pad-3.1', '--padding=0 5',
              {ERR => "$prog: invalid padding value '0'\n"},
              {EXIT => '1'}],
+     ['pad-3.2', "--padding=$limits->{LONG_MIN} 0",
+             {ERR => "$prog: invalid padding value '$limits->{LONG_MIN}'\n"},
+             {EXIT => '1'}],
      ['pad-4', '--padding=10 --to=si 50000',             {OUT=>'       50K'}],
      ['pad-5', '--padding=-10 --to=si 50000',            {OUT=>'50K       '}],
 

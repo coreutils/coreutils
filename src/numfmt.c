@@ -1496,7 +1496,7 @@ main (int argc, char **argv)
 
         case PADDING_OPTION:
           if (xstrtol (optarg, NULL, 10, &padding_width, "") != LONGINT_OK
-              || padding_width == 0)
+              || padding_width == 0 || padding_width < -LONG_MAX)
             die (EXIT_FAILURE, 0, _("invalid padding value %s"),
                  quote (optarg));
           if (padding_width < 0)

@@ -197,7 +197,7 @@ scan_arg (const char *arg)
         e = strchr (arg, 'E');
       if (e)
         {
-          long exponent = strtol (e + 1, NULL, 10);
+          long exponent = MAX (strtol (e + 1, NULL, 10), -LONG_MAX);
           ret.precision += exponent < 0 ? -exponent
                                         : - MIN (ret.precision, exponent);
           /* Don't account for e.... in the width since this is not output.  */
