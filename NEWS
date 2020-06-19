@@ -26,6 +26,11 @@ GNU coreutils NEWS                                    -*- outline -*-
    ls --classify now supports the "always", "auto", or "never" flags,
    to support only outputting classifier characters if connected to a tty.
 
+** Improvements
+
+  stat and tail now know about the "vboxsf" file system type.
+  stat -f -c%T now reports the file system type, and tail -f uses polling.
+
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
 

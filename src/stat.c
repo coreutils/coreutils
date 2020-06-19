@@ -527,6 +527,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "usbdevfs";
     case S_MAGIC_V9FS: /* 0x01021997 local */
       return "v9fs";
+    case S_MAGIC_VBOXSF: /* 0x786F4256 remote */
+      return "vboxsf";
     case S_MAGIC_VMHGFS: /* 0xBACBACBC remote */
       return "vmhgfs";
     case S_MAGIC_VXFS: /* 0xA501FCF5 remote */
