@@ -793,7 +793,7 @@ cp_option_init (struct cp_options *x)
   x->move_mode = false;
   x->install_mode = false;
   x->one_file_system = false;
-  x->reflink_mode = REFLINK_NEVER;
+  x->reflink_mode = REFLINK_AUTO;
 
   x->preserve_ownership = false;
   x->preserve_links = false;

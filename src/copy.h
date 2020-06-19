@@ -46,10 +46,10 @@ enum Sparse_type
 /* Control creation of COW files.  */
 enum Reflink_type
 {
-  /* Default to a standard copy.  */
+  /* Do a standard copy.  */
   REFLINK_NEVER,
 
-  /* Try a COW copy and fall back to a standard copy.  */
+  /* Try a COW copy and fall back to a standard copy; this is the default.  */
   REFLINK_AUTO,
 
   /* Require a COW copy and fail if not available.  */

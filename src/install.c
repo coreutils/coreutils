@@ -264,7 +264,7 @@ cp_option_init (struct cp_options *x)
 {
   cp_options_default (x);
   x->copy_as_regular = true;
-  x->reflink_mode = REFLINK_NEVER;
+  x->reflink_mode = REFLINK_AUTO;
   x->dereference = DEREF_ALWAYS;
   x->unlink_dest_before_opening = true;
   x->unlink_dest_after_failed_open = false;

@@ -8864,12 +8864,14 @@ The @var{when} value can be one of the following:
 
 @table @samp
 @item always
-The default behavior: if the copy-on-write operation is not supported
+If the copy-on-write operation is not supported
 then report the failure for each file and exit with a failure status.
+Plain @option{--reflink} is equivalent to @option{--reflink=when}.
 
 @item auto
 If the copy-on-write operation is not supported then fall back
 to the standard copy behavior.
+This is the default if no @option{--reflink} option is given.
 
 @item never
 Disable copy-on-write operation and use the standard copy behavior.
@@ -8878,12 +8880,6 @@ Disable copy-on-write operation and use the standard copy behavior.
 This option is overridden by the @option{--link}, @option{--symbolic-link}
 and @option{--attributes-only} options, thus allowing it to be used
 to configure the default data copying behavior for @command{cp}.
-For example, with the following alias, @command{cp} will use the
-minimum amount of space supported by the file system.
-
-@example
-alias cp='cp --reflink=auto --sparse=always'
-@end example
 
 @item --remove-destination
 @opindex --remove-destination
@@ -8927,6 +8923,15 @@ Never make the output file sparse.
 This is useful in creating a file for use with the @command{mkswap} command,
 since such a file must not have any holes.
 @end table
+
+For example, with the following alias, @command{cp} will use the
+minimum amount of space supported by the file system.
+(Older versions of @command{cp} can also benefit from
+@option{--reflink=auto} here.)
+
+@example
+alias cp='cp --sparse=always'
+@end example
 
 @optStripTrailingSlashes
 

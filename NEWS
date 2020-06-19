@@ -15,6 +15,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cp and install now default to copy-on-write (COW) if available.
+
   On GNU/Linux systems, ls no longer issues an error message on
   directory merely because it was removed.  This reverts a change
   that was made in release 8.32.
