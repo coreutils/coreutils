@@ -388,7 +388,7 @@ emit_tab_list_info (void)
 {
   /* suppress syntax check for emit_mandatory_arg_note() */
   fputs (_("\
-  -t, --tabs=LIST  use comma separated list of tab positions\n\
+  -t, --tabs=LIST  use comma separated list of tab positions.\n\
 "), stdout);
   fputs (_("\
                      The last specified position can be prefixed with '/'\n\

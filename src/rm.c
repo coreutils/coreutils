@@ -180,7 +180,7 @@ use one of these commands:\n\
 \n\
 Note that if you use rm to remove a file, it might be possible to recover\n\
 some of its contents, given sufficient expertise and/or time.  For greater\n\
-assurance that the contents are truly unrecoverable, consider using shred.\n\
+assurance that the contents are truly unrecoverable, consider using shred(1).\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }

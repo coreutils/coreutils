@@ -895,7 +895,7 @@ Reformat NUMBER(s), or the numbers from standard input if none are specified.\n\
   -d, --delimiter=X    use X instead of whitespace for field delimiter\n\
 "), stdout);
       fputs (_("\
-      --field=FIELDS   replace the numbers in these input fields (default=1)\n\
+      --field=FIELDS   replace the numbers in these input fields (default=1);\n\
                          see FIELDS below\n\
 "), stdout);
       fputs (_("\
