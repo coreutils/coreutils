@@ -422,9 +422,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              size_t hole_size, off_t src_total_size,
              enum Sparse_type sparse_mode,
              char const *src_name, char const *dst_name,
-             bool *require_normal_copy)
+             struct extent_scan *scan)
 {
-  struct extent_scan scan;
   off_t last_ext_start = 0;
   off_t last_ext_len = 0;
 
@@ -432,45 +431,25 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
      We may need this at the end, for a final ftruncate.  */
   off_t dest_pos = 0;
 
-  extent_scan_init (src_fd, &scan);
-
-  *require_normal_copy = false;
   bool wrote_hole_at_eof = true;
-  do
+  while (true)
     {
-      bool ok = extent_scan_read (&scan);
-      if (! ok)
-        {
-          if (scan.hit_final_extent)
-            break;
-
-          if (scan.initial_scan_failed)
-            {
-              *require_normal_copy = true;
-              return false;
-            }
-
-          error (0, errno, _("%s: failed to get extents info"),
-                 quotef (src_name));
-          return false;
-        }
-
       bool empty_extent = false;
-      for (unsigned int i = 0; i < scan.ei_count || empty_extent; i++)
+      for (unsigned int i = 0; i < scan->ei_count || empty_extent; i++)
         {
           off_t ext_start;
           off_t ext_len;
           off_t ext_hole_size;
 
-          if (i < scan.ei_count)
+          if (i < scan->ei_count)
             {
-              ext_start = scan.ext_info[i].ext_logical;
-              ext_len = scan.ext_info[i].ext_length;
+              ext_start = scan->ext_info[i].ext_logical;
+              ext_len = scan->ext_info[i].ext_length;
             }
           else /* empty extent at EOF.  */
             {
               i--;
-              ext_start = last_ext_start + scan.ext_info[i].ext_length;
+              ext_start = last_ext_start + scan->ext_info[i].ext_length;
               ext_len = 0;
             }
 
@@ -498,7 +477,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                 {
                   error (0, errno, _("cannot lseek %s"), quoteaf (src_name));
                 fail:
-                  extent_scan_free (&scan);
+                  extent_scan_free (scan);
                   return false;
                 }
 
@@ -539,7 +518,7 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           /* For now, do not treat FIEMAP_EXTENT_UNWRITTEN specially,
              because that (in combination with no sync) would lead to data
              loss at least on XFS and ext4 when using 2.6.39-rc3 kernels.  */
-          if (0 && (scan.ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN))
+          if (0 && (scan->ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN))
             {
               empty_extent = true;
               last_ext_len = 0;
@@ -571,16 +550,23 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              extents beyond the apparent size.  */
           if (dest_pos == src_total_size)
             {
-              scan.hit_final_extent = true;
+              scan->hit_final_extent = true;
               break;
             }
         }
 
       /* Release the space allocated to scan->ext_info.  */
-      extent_scan_free (&scan);
+      extent_scan_free (scan);
 
+      if (scan->hit_final_extent)
+        break;
+      if (! extent_scan_read (scan) && ! scan->hit_final_extent)
+        {
+          error (0, errno, _("%s: failed to get extents info"),
+                 quotef (src_name));
+          return false;
+        }
     }
-  while (! scan.hit_final_extent);
 
   /* When the source file ends with a hole, we have to do a little more work,
      since the above copied only up to and including the final extent.
@@ -1021,16 +1007,35 @@ fchmod_or_lchmod (int desc, char const *name, mode_t mode)
 # define HAVE_STRUCT_STAT_ST_BLOCKS 0
 #endif
 
+/* Type of scan being done on the input when looking for sparseness.  */
+enum scantype
+  {
+   /* No fancy scanning; just read and write.  */
+   PLAIN_SCANTYPE,
+
+   /* Read and examine data looking for zero blocks; useful when
+      attempting to create sparse output.  */
+   ZERO_SCANTYPE,
+
+   /* Extent information is available.  */
+   EXTENT_SCANTYPE
+  };
+
 /* Use a heuristic to determine whether stat buffer SB comes from a file
    with sparse blocks.  If the file has fewer blocks than would normally
    be needed for a file of its size, then at least one of the blocks in
    the file is a hole.  In that case, return true.  */
-static bool
-is_probably_sparse (struct stat const *sb)
+static enum scantype
+infer_scantype (int fd, struct stat const *sb, struct extent_scan *scan)
 {
-  return (HAVE_STRUCT_STAT_ST_BLOCKS
-          && S_ISREG (sb->st_mode)
-          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE);
+  if (! (HAVE_STRUCT_STAT_ST_BLOCKS
+         && S_ISREG (sb->st_mode)
+         && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
+    return PLAIN_SCANTYPE;
+
+  extent_scan_init (fd, scan);
+  extent_scan_read (scan);
+  return scan->initial_scan_failed ? ZERO_SCANTYPE : EXTENT_SCANTYPE;
 }
 
 
@@ -1061,6 +1066,7 @@ copy_reg (char const *src_name, char const *dst_name,
   mode_t src_mode = src_sb->st_mode;
   struct stat sb;
   struct stat src_open_sb;
+  struct extent_scan scan;
   bool return_val = true;
   bool data_copy_required = x->data_copy_required;
 
@@ -1260,23 +1266,13 @@ copy_reg (char const *src_name, char const *dst_name,
       fdadvise (source_desc, 0, 0, FADVISE_SEQUENTIAL);
 
       /* Deal with sparse files.  */
-      bool make_holes = false;
-      bool sparse_src = is_probably_sparse (&src_open_sb);
-
-      if (S_ISREG (sb.st_mode))
-        {
-          /* Even with --sparse=always, try to create holes only
-             if the destination is a regular file.  */
-          if (x->sparse_mode == SPARSE_ALWAYS)
-            make_holes = true;
-
-          /* Use a heuristic to determine whether SRC_NAME contains any sparse
-             blocks.  If the file has fewer blocks than would normally be
-             needed for a file of its size, then at least one of the blocks in
-             the file is a hole.  */
-          if (x->sparse_mode == SPARSE_AUTO && sparse_src)
-            make_holes = true;
-        }
+      enum scantype scantype = infer_scantype (source_desc, &src_open_sb,
+                                               &scan);
+      bool make_holes
+        = (S_ISREG (sb.st_mode)
+           && (x->sparse_mode == SPARSE_ALWAYS
+               || (x->sparse_mode == SPARSE_AUTO
+                   && scantype != PLAIN_SCANTYPE)));
 
       /* If not making a sparse file, try to use a more-efficient
          buffer size.  */
@@ -1305,10 +1301,8 @@ copy_reg (char const *src_name, char const *dst_name,
       buf_alloc = xmalloc (buf_size + buf_alignment);
       buf = ptr_align (buf_alloc, buf_alignment);
 
-      if (sparse_src)
+      if (scantype == EXTENT_SCANTYPE)
         {
-          bool normal_copy_required;
-
           /* Perform an efficient extent-based copy, falling back to the
              standard copy only if the initial extent scan fails.  If the
              '--sparse=never' option is specified, write all data but use
@@ -1316,14 +1310,11 @@ copy_reg (char const *src_name, char const *dst_name,
           if (extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                            src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
-                           src_name, dst_name, &normal_copy_required))
+                           src_name, dst_name, &scan))
             goto preserve_metadata;
 
-          if (! normal_copy_required)
-            {
-              return_val = false;
-              goto close_src_and_dst_desc;
-            }
+          return_val = false;
+          goto close_src_and_dst_desc;
         }
 
       off_t n_read;
