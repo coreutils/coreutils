@@ -416,7 +416,12 @@ write_zeros (int fd, off_t n_bytes)
    Upon a successful copy, return true.  If the initial extent scan
    fails, set *NORMAL_COPY_REQUIRED to true and return false.
    Upon any other failure, set *NORMAL_COPY_REQUIRED to false and
-   return false.  */
+   return false.
+
+   FIXME: Once we no longer need to support Linux kernel versions
+   before 3.1 (2011), this function can be retired as it is superseded
+   by lseek_copy.  That is, we no longer need extent-scan.h and can
+   remove any of the code that uses it.  */
 static bool
 extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              size_t hole_size, off_t src_total_size,
@@ -594,6 +599,150 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
   return true;
 }
+
+#ifdef SEEK_HOLE
+/* Perform an efficient extent copy, if possible.  This avoids
+   the overhead of detecting holes in hole-introducing/preserving
+   copy, and thus makes copying sparse files much more efficient.
+   Copy from SRC_FD to DEST_FD, using BUF (of size BUF_SIZE) for a buffer.
+   Look for holes of size HOLE_SIZE in the input.
+   The input file is of size SRC_TOTAL_SIZE.
+   Use SPARSE_MODE to determine whether to create holes in the output.
+   SRC_NAME and DST_NAME are the input and output file names.
+   Return true if successful, false (with a diagnostic) otherwise.  */
+
+static bool
+lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
+            size_t hole_size, off_t ext_start, off_t src_total_size,
+            enum Sparse_type sparse_mode,
+            char const *src_name, char const *dst_name)
+{
+  off_t last_ext_start = 0;
+  off_t last_ext_len = 0;
+  off_t dest_pos = 0;
+  bool wrote_hole_at_eof = true;
+
+  while (0 <= ext_start)
+    {
+      off_t ext_end = lseek (src_fd, ext_start, SEEK_HOLE);
+      if (ext_end < 0)
+        {
+          if (errno != ENXIO)
+            goto cannot_lseek;
+          ext_end = src_total_size;
+          if (ext_end <= ext_start)
+            {
+              /* The input file grew; get its current size.  */
+              src_total_size = lseek (src_fd, 0, SEEK_END);
+              if (src_total_size < 0)
+                goto cannot_lseek;
+
+              /* If the input file shrank after growing, stop copying.  */
+              if (src_total_size <= ext_start)
+                break;
+
+              ext_end = src_total_size;
+            }
+        }
+      /* If the input file must have grown, increase its measured size.  */
+      if (src_total_size < ext_end)
+        src_total_size = ext_end;
+
+      if (lseek (src_fd, ext_start, SEEK_SET) < 0)
+        goto cannot_lseek;
+
+      wrote_hole_at_eof = false;
+      off_t ext_hole_size = ext_start - last_ext_start - last_ext_len;
+
+      if (ext_hole_size)
+        {
+          if (sparse_mode != SPARSE_NEVER)
+            {
+              if (! create_hole (dest_fd, dst_name,
+                                 sparse_mode == SPARSE_ALWAYS,
+                                 ext_hole_size))
+                return false;
+              wrote_hole_at_eof = true;
+            }
+          else
+            {
+              /* When not inducing holes and when there is a hole between
+                 the end of the previous extent and the beginning of the
+                 current one, write zeros to the destination file.  */
+              if (! write_zeros (dest_fd, ext_hole_size))
+                {
+                  error (0, errno, _("%s: write failed"),
+                         quotef (dst_name));
+                  return false;
+                }
+            }
+        }
+
+      off_t ext_len = ext_end - ext_start;
+      last_ext_start = ext_start;
+      last_ext_len = ext_len;
+
+      /* Copy this extent, looking for further opportunities to not
+         bother to write zeros unless --sparse=never, since SEEK_HOLE
+         is conservative and may miss some holes.  */
+      off_t n_read;
+      bool read_hole;
+      if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
+                          sparse_mode == SPARSE_NEVER ? 0 : hole_size,
+                          true, src_name, dst_name, ext_len, &n_read,
+                          &read_hole))
+        return false;
+
+      dest_pos = ext_start + n_read;
+      if (n_read)
+        wrote_hole_at_eof = read_hole;
+      if (n_read < ext_len)
+        {
+          /* The input file shrank.  */
+          src_total_size = dest_pos;
+          break;
+        }
+
+      ext_start = lseek (src_fd, dest_pos, SEEK_DATA);
+      if (ext_start < 0)
+        {
+          if (errno != ENXIO)
+            goto cannot_lseek;
+          break;
+        }
+    }
+
+  /* When the source file ends with a hole, we have to do a little more work,
+     since the above copied only up to and including the final extent.
+     In order to complete the copy, we may have to insert a hole or write
+     zeros in the destination corresponding to the source file's hole-at-EOF.
+
+     In addition, if the final extent was a block of zeros at EOF and we've
+     just converted them to a hole in the destination, we must call ftruncate
+     here in order to record the proper length in the destination.  */
+  if ((dest_pos < src_total_size || wrote_hole_at_eof)
+      && ! (sparse_mode == SPARSE_NEVER
+            ? write_zeros (dest_fd, src_total_size - dest_pos)
+            : ftruncate (dest_fd, src_total_size) == 0))
+    {
+      error (0, errno, _("failed to extend %s"), quoteaf (dst_name));
+      return false;
+    }
+
+  if (sparse_mode == SPARSE_ALWAYS && dest_pos < src_total_size
+      && punch_hole (dest_fd, dest_pos, src_total_size - dest_pos) < 0)
+    {
+      error (0, errno, _("error deallocating %s"), quoteaf (dst_name));
+      return false;
+    }
+
+  return true;
+
+ cannot_lseek:
+  error (0, errno, _("cannot lseek %s"), quoteaf (src_name));
+  return false;
+}
+#endif
 
 /* FIXME: describe */
 /* FIXME: rewrite this to use a hash table so we avoid the quadratic
@@ -1010,6 +1159,9 @@ fchmod_or_lchmod (int desc, char const *name, mode_t mode)
 /* Type of scan being done on the input when looking for sparseness.  */
 enum scantype
   {
+   /* An error was found when determining scantype.  */
+   ERROR_SCANTYPE,
+
    /* No fancy scanning; just read and write.  */
    PLAIN_SCANTYPE,
 
@@ -1017,22 +1169,44 @@ enum scantype
       attempting to create sparse output.  */
    ZERO_SCANTYPE,
 
+   /* lseek information is available.  */
+   LSEEK_SCANTYPE,
+
    /* Extent information is available.  */
    EXTENT_SCANTYPE
   };
 
-/* Use a heuristic to determine whether stat buffer SB comes from a file
-   with sparse blocks.  If the file has fewer blocks than would normally
-   be needed for a file of its size, then at least one of the blocks in
-   the file is a hole.  In that case, return true.  */
+/* Result of infer_scantype.  */
+union scan_inference
+{
+  /* Used if infer_scantype returns LSEEK_SCANTYPE.  This is the
+     offset of the first data block, or -1 if the file has no data.  */
+  off_t ext_start;
+
+  /* Used if infer_scantype returns EXTENT_SCANTYPE.  */
+  struct extent_scan extent_scan;
+};
+
+/* Return how to scan a file with descriptor FD and stat buffer SB.
+   Store any information gathered into *SCAN.  */
 static enum scantype
-infer_scantype (int fd, struct stat const *sb, struct extent_scan *scan)
+infer_scantype (int fd, struct stat const *sb,
+                union scan_inference *scan_inference)
 {
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
     return PLAIN_SCANTYPE;
 
+#ifdef SEEK_HOLE
+  scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
+  if (0 <= scan_inference->ext_start)
+    return LSEEK_SCANTYPE;
+  else if (errno != EINVAL && errno != ENOTSUP)
+    return errno == ENXIO ? LSEEK_SCANTYPE : ERROR_SCANTYPE;
+#endif
+
+  struct extent_scan *scan = &scan_inference->extent_scan;
   extent_scan_init (fd, scan);
   extent_scan_read (scan);
   return scan->initial_scan_failed ? ZERO_SCANTYPE : EXTENT_SCANTYPE;
@@ -1066,7 +1240,7 @@ copy_reg (char const *src_name, char const *dst_name,
   mode_t src_mode = src_sb->st_mode;
   struct stat sb;
   struct stat src_open_sb;
-  struct extent_scan scan;
+  union scan_inference scan_inference;
   bool return_val = true;
   bool data_copy_required = x->data_copy_required;
 
@@ -1263,16 +1437,22 @@ copy_reg (char const *src_name, char const *dst_name,
       size_t buf_size = io_blksize (sb);
       size_t hole_size = ST_BLKSIZE (sb);
 
-      fdadvise (source_desc, 0, 0, FADVISE_SEQUENTIAL);
-
       /* Deal with sparse files.  */
       enum scantype scantype = infer_scantype (source_desc, &src_open_sb,
-                                               &scan);
+                                               &scan_inference);
+      if (scantype == ERROR_SCANTYPE)
+        {
+          error (0, errno, _("cannot lseek %s"), quoteaf (src_name));
+          return_val = false;
+          goto close_src_and_dst_desc;
+        }
       bool make_holes
         = (S_ISREG (sb.st_mode)
            && (x->sparse_mode == SPARSE_ALWAYS
                || (x->sparse_mode == SPARSE_AUTO
                    && scantype != PLAIN_SCANTYPE)));
+
+      fdadvise (source_desc, 0, 0, FADVISE_SEQUENTIAL);
 
       /* If not making a sparse file, try to use a more-efficient
          buffer size.  */
@@ -1307,7 +1487,14 @@ copy_reg (char const *src_name, char const *dst_name,
              ? extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                             src_open_sb.st_size,
                             make_holes ? x->sparse_mode : SPARSE_NEVER,
-                            src_name, dst_name, &scan)
+                            src_name, dst_name, &scan_inference.extent_scan)
+#ifdef SEEK_HOLE
+             : scantype == LSEEK_SCANTYPE
+             ? lseek_copy (source_desc, dest_desc, buf, buf_size, hole_size,
+                           scan_inference.ext_start, src_open_sb.st_size,
+                           make_holes ? x->sparse_mode : SPARSE_NEVER,
+                           src_name, dst_name)
+#endif
              : sparse_copy (source_desc, dest_desc, buf, buf_size,
                             make_holes ? hole_size : 0,
                             x->sparse_mode == SPARSE_ALWAYS,

@@ -17,6 +17,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cp and install now default to copy-on-write (COW) if available.
 
+  cp, install and mv now prefer lseek+SEEK_HOLE to ioctl+FS_IOC_FIEMAP
+  on sparse files, as lseek is simpler and more portable.
+
   On GNU/Linux systems, ls no longer issues an error message on a
   directory merely because it was removed.  This reverts a change
   that was made in release 8.32.
