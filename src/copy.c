@@ -1301,29 +1301,18 @@ copy_reg (char const *src_name, char const *dst_name,
       buf_alloc = xmalloc (buf_size + buf_alignment);
       buf = ptr_align (buf_alloc, buf_alignment);
 
-      if (scantype == EXTENT_SCANTYPE)
-        {
-          /* Perform an efficient extent-based copy, falling back to the
-             standard copy only if the initial extent scan fails.  If the
-             '--sparse=never' option is specified, write all data but use
-             any extents to read more efficiently.  */
-          if (extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
-                           src_open_sb.st_size,
-                           make_holes ? x->sparse_mode : SPARSE_NEVER,
-                           src_name, dst_name, &scan))
-            goto preserve_metadata;
-
-          return_val = false;
-          goto close_src_and_dst_desc;
-        }
-
       off_t n_read;
-      bool wrote_hole_at_eof;
-      if (! sparse_copy (source_desc, dest_desc, buf, buf_size,
-                         make_holes ? hole_size : 0,
-                         x->sparse_mode == SPARSE_ALWAYS, src_name, dst_name,
-                         UINTMAX_MAX, &n_read,
-                         &wrote_hole_at_eof))
+      bool wrote_hole_at_eof = false;
+      if (! (scantype == EXTENT_SCANTYPE
+             ? extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
+                            src_open_sb.st_size,
+                            make_holes ? x->sparse_mode : SPARSE_NEVER,
+                            src_name, dst_name, &scan)
+             : sparse_copy (source_desc, dest_desc, buf, buf_size,
+                            make_holes ? hole_size : 0,
+                            x->sparse_mode == SPARSE_ALWAYS,
+                            src_name, dst_name, UINTMAX_MAX, &n_read,
+                            &wrote_hole_at_eof)))
         {
           return_val = false;
           goto close_src_and_dst_desc;
@@ -1336,7 +1325,6 @@ copy_reg (char const *src_name, char const *dst_name,
         }
     }
 
-preserve_metadata:
   if (x->preserve_timestamps)
     {
       struct timespec timespec[2];
