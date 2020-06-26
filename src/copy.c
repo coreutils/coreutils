@@ -265,6 +265,46 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 {
   *last_write_made_hole = false;
   *total_n_read = 0;
+
+  /* If not looking for holes, use copy_file_range if available.  */
+  if (!hole_size)
+    while (max_n_read)
+      {
+        /* Copy at most COPY_MAX bytes at a time; this is min
+           (PTRDIFF_MAX, SIZE_MAX) truncated to a value that is
+           surely aligned well.  */
+        ssize_t ssize_max = TYPE_MAXIMUM (ssize_t);
+        ptrdiff_t copy_max = MIN (ssize_max, SIZE_MAX) >> 30 << 30;
+        ssize_t n_copied = copy_file_range (src_fd, NULL, dest_fd, NULL,
+                                            MIN (max_n_read, copy_max), 0);
+        if (n_copied == 0)
+          {
+            /* copy_file_range incorrectly returns 0 when reading from
+               the proc file system on the Linux kernel through at
+               least 5.6.19 (2020), so fall back on 'read' if the
+               input file seems empty.  */
+            if (*total_n_read == 0)
+              break;
+            return true;
+          }
+        if (n_copied < 0)
+          {
+            if (errno == ENOSYS || errno == EINVAL
+                || errno == EBADF || errno == EXDEV)
+              break;
+            if (errno == EINTR)
+              n_copied = 0;
+            else
+              {
+                error (0, errno, _("error copying %s to %s"),
+                       quoteaf_n (0, src_name), quoteaf_n (1, dst_name));
+                return false;
+              }
+          }
+        max_n_read -= n_copied;
+        *total_n_read += n_copied;
+      }
+
   bool make_hole = false;
   off_t psize = 0;
 
