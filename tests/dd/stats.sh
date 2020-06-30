@@ -50,7 +50,7 @@ for open in '' '1'; do
 
   # dd will block on open until fifo is opened for reading.
   # Timeout in case dd goes away erroneously which we check for below.
-  timeout 20 sh -c 'wc -c < fifo > nwritten' & pid2=$!
+  timeout 60 sh -c 'wc -c < fifo > nwritten' & pid2=$!
 
   # Send lots of signals immediately to ensure dd not killed due
   # to race setting handler, or blocking on open of fifo.
