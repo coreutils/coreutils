@@ -18107,9 +18107,19 @@ themselves (like GDB for example).
 @opindex -k
 @opindex --kill-after
 Ensure the monitored @var{command} is killed by also sending a @samp{KILL}
-signal, after the specified @var{duration}.  Without this option, if the
-selected signal proves not to be fatal, @command{timeout} does not kill
-the @var{command}.
+signal.
+
+The specified @var{duration} starts from the point in time when
+@command{timeout} sends the initial signal to @var{command}, i.e.,
+not from the beginning when the @var{command} is started.
+
+This option has no effect if @command{timeout}'s duration is 0 which
+disables the associated timeout.
+
+This option may be useful if the selected signal did not kill the @var{command},
+either because the signal was blocked or ignored, or if the @var{command} takes
+too long (e.g. for cleanup work) to terminate itself within a certain amount
+of time.
 
 @item -s @var{signal}
 @itemx --signal=@var{signal}
