@@ -474,8 +474,6 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
 #include <signal.h>])
 
-cu_GMP
-
 # Build df only if there's a point to it.
 if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])

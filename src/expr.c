@@ -33,6 +33,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include <gmp.h>
 #include <regex.h>
 #include "die.h"
 #include "error.h"
@@ -44,105 +45,6 @@
 /* Various parts of this code assume size_t fits into unsigned long
    int, the widest unsigned type that GMP supports.  */
 verify (SIZE_MAX <= ULONG_MAX);
-
-#ifndef HAVE_GMP
-# define HAVE_GMP 0
-#endif
-
-#if HAVE_GMP
-# include <gmp.h>
-#else
-static void integer_overflow (char) ATTRIBUTE_NORETURN;
-/* Approximate gmp.h well enough for expr.c's purposes.  */
-typedef intmax_t mpz_t[1];
-static void mpz_clear (mpz_t z) { (void) z; }
-static void mpz_init_set_ui (mpz_t z, unsigned long int i) { z[0] = i; }
-static int
-mpz_init_set_str (mpz_t z, char *s, int base)
-{
-  return xstrtoimax (s, NULL, base, z, "") == LONGINT_OK ? 0 : -1;
-}
-static void
-mpz_add (mpz_t r, mpz_t a0, mpz_t b0)
-{
-  intmax_t a = a0[0];
-  intmax_t b = b0[0];
-  intmax_t val = a + b;
-  if ((val < a) != (b < 0))
-    integer_overflow ('+');
-  r[0] = val;
-}
-static void
-mpz_sub (mpz_t r, mpz_t a0, mpz_t b0)
-{
-  intmax_t a = a0[0];
-  intmax_t b = b0[0];
-  intmax_t val = a - b;
-  if ((a < val) != (b < 0))
-    integer_overflow ('-');
-  r[0] = val;
-}
-static void
-mpz_mul (mpz_t r, mpz_t a0, mpz_t b0)
-{
-  intmax_t a = a0[0];
-  intmax_t b = b0[0];
-  intmax_t val = a * b;
-  if (! (a == 0 || b == 0
-         || ((val < 0) == ((a < 0) ^ (b < 0)) && val / a == b)))
-    integer_overflow ('*');
-  r[0] = val;
-}
-static void
-mpz_tdiv_q (mpz_t r, mpz_t a0, mpz_t b0)
-{
-  intmax_t a = a0[0];
-  intmax_t b = b0[0];
-
-  /* Some x86-style hosts raise an exception for INT_MIN / -1.  */
-  if (a < - INTMAX_MAX && b == -1)
-    integer_overflow ('/');
-  r[0] = a / b;
-}
-static void
-mpz_tdiv_r (mpz_t r, mpz_t a0, mpz_t b0)
-{
-  intmax_t a = a0[0];
-  intmax_t b = b0[0];
-
-  /* Some x86-style hosts raise an exception for INT_MIN % -1.  */
-  r[0] = a < - INTMAX_MAX && b == -1 ? 0 : a % b;
-}
-static char * _GL_ATTRIBUTE_MALLOC
-mpz_get_str (char const *str, int base, mpz_t z)
-{
-  (void) str; (void) base;
-  char buf[INT_BUFSIZE_BOUND (intmax_t)];
-  return xstrdup (imaxtostr (z[0], buf));
-}
-static int
-mpz_sgn (mpz_t z)
-{
-  return z[0] < 0 ? -1 : 0 < z[0];
-}
-static int
-mpz_fits_ulong_p (mpz_t z)
-{
-  return 0 <= z[0] && z[0] <= ULONG_MAX;
-}
-static unsigned long int
-mpz_get_ui (mpz_t z)
-{
-  return z[0];
-}
-static int
-mpz_out_str (FILE *stream, int base, mpz_t z)
-{
-  (void) base;
-  char buf[INT_BUFSIZE_BOUND (intmax_t)];
-  return fputs (imaxtostr (z[0], buf), stream) != EOF;
-}
-#endif
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "expr"
@@ -414,15 +316,6 @@ or 0, 2 if EXPRESSION is syntactically invalid, and 3 if an error occurred.\n\
 }
 
 
-#if ! HAVE_GMP
-/* Report an integer overflow for operation OP and exit.  */
-static void
-integer_overflow (char op)
-{
-  die (EXPR_FAILURE, ERANGE, "%c", op);
-}
-#endif
-
 int
 main (int argc, char **argv)
 {
@@ -603,7 +496,7 @@ toarith (VALUE *v)
 
         if (! looks_like_integer (s))
           return false;
-        if (mpz_init_set_str (v->u.i, s, 10) != 0 && !HAVE_GMP)
+        if (mpz_init_set_str (v->u.i, s, 10) != 0)
           die (EXPR_FAILURE, ERANGE, "%s", (s));
         free (s);
         v->type = integer;
