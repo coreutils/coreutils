@@ -27,8 +27,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
-   ls --classify now supports the "always", "auto", or "never" flags,
-   to support only outputting classifier characters if connected to a tty.
+  expr and factor now support bignums on all platforms.
+
+  ls --classify now supports the "always", "auto", or "never" flags,
+  to support only outputting classifier characters if connected to a tty.
 
 ** Improvements
 
