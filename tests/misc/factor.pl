@@ -80,17 +80,14 @@ my @Tests =
       {OUT => '15601 26449 111427 4830277'}],
      ['bug-2016-c', '12847291069740315094892340035',
       {OUT => '5 4073 18899 522591721 63874247821'}],
+     ['bug-gmp-2_sup_128', '340282366920938463463374607431768211456',
+      {OUT => '2 'x127 . '2'}],
+     ['bug-gmp-2_sup_256',
+      '115792089237316195423570985008687907853'
+      . '269984665640564039457584007913129639936',
+      {OUT => '2 'x255 . '2'}],
     );
 
-# If we have GMP support, append tests to exercise it.
-(system "grep '^#define HAVE_GMP 1' $ENV{CONFIG_HEADER} > /dev/null") == 0
-  and push (@Tests,
-            ['bug-gmp-2_sup_128', '340282366920938463463374607431768211456',
-             {OUT => '2 'x127 . '2'}],
-            ['bug-gmp-2_sup_256',
-             '115792089237316195423570985008687907853'
-             . '269984665640564039457584007913129639936',
-             {OUT => '2 'x255 . '2'}]);
 
 # Prepend the command line argument and append a newline to end
 # of each expected 'OUT' string.
