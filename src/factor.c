@@ -2258,21 +2258,6 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
 
   strtol_error err = LONGINT_INVALID;
 
-  /* Skip initial spaces and '+'.  */
-  for (;;)
-    {
-      char c = *s;
-      if (c == ' ')
-        s++;
-      else if (c == '+')
-        {
-          s++;
-          break;
-        }
-      else
-        break;
-    }
-
   /* Initial scan for invalid digits.  */
   const char *p = s;
   for (;;)
@@ -2290,7 +2275,7 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
       err = LONGINT_OK;           /* we've seen at least one valid digit */
     }
 
-  for (;err == LONGINT_OK;)
+  while (err == LONGINT_OK)
     {
       unsigned int c = *s++;
       if (c == 0)
@@ -2473,13 +2458,19 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
 static bool
 print_factors (const char *input)
 {
+  /* Skip initial spaces and '+'.  */
+  char const *str = input;
+  while (*str == ' ')
+    str++;
+  str += *str == '+';
+
   uintmax_t t1, t0;
 
   /* Try converting the number to one or two words.  If it fails, use GMP or
      print an error message.  The 2nd condition checks that the most
      significant bit of the two-word number is clear, in a typesize neutral
      way.  */
-  strtol_error err = strto2uintmax (&t1, &t0, input);
+  strtol_error err = strto2uintmax (&t1, &t0, str);
 
   switch (err)
     {
@@ -2505,7 +2496,7 @@ print_factors (const char *input)
   mpz_t t;
   struct mp_factors factors;
 
-  mpz_init_set_str (t, input, 10);
+  mpz_init_set_str (t, str, 10);
 
   gmp_printf ("%Zd:", t);
   mp_factor (t, &factors);
