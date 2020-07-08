@@ -193,10 +193,6 @@ my @Tests =
       {ERR=>"$prog: syntax error: expecting ')' instead of 'a'\n"}],
     );
 
-# If using big numbers fails, remove all /^bignum-/ tests
-qx!expr $big_prod '*' $big_prod '*' $big_prod!
-  or @Tests = grep {$_->[0] !~ /^bignum-/} @Tests;
-
 # Append a newline to end of each expected 'OUT' string.
 my $t;
 foreach $t (@Tests)

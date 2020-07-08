@@ -39,8 +39,7 @@ dev_size=$(get_device_size "$device") ||
   skip_ "failed to determine size of $device"
 
 # Don't use shell arithmetic as older versions of dash use longs
-DEV_OFLOW=$(expr $dev_size + 1) ||
-  skip_ "failed to adjust device size $dev_size"
+DEV_OFLOW=$(expr $dev_size + 1) || framework_failure_
 
 timeout 10 dd bs=1 skip=$DEV_OFLOW count=0 status=noxfer < "$device" 2> err
 test "$?" = "1" || fail=1

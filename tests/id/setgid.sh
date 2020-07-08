@@ -24,8 +24,7 @@ getlimits_
 
 # Construct a different group number
 gp1=$NON_ROOT_GID
-gp1=$(expr $gp1 + 1) ||
-  skip_ "failed to adjust GID $NON_ROOT_GID"
+gp1=$(expr $gp1 + 1) || framework_failure_
 
 test "$gp1" -lt $GID_T_MAX ||
   skip_ "GID $gp1 is reserved on some systems"
