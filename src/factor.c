@@ -836,7 +836,7 @@ mp_factor_using_division (mpz_t t, struct mp_factors *factors)
   mpz_init (q);
 
   p = mpz_scan1 (t, 0);
-  mpz_div_2exp (t, t, p);
+  mpz_fdiv_q_2exp (t, t, p);
   while (p)
     {
       mp_factor_insert_ui (factors, 2);
@@ -2503,12 +2503,16 @@ print_factors (const char *input)
 
   mpz_init_set_str (t, str, 10);
 
-  gmp_printf ("%Zd:", t);
+  mpz_out_str (stdout, 10, t);
+  putchar (':');
   mp_factor (t, &factors);
 
   for (unsigned int j = 0; j < factors.nfactors; j++)
     for (unsigned int k = 0; k < factors.e[j]; k++)
-      gmp_printf (" %Zd", factors.p[j]);
+      {
+        putchar (' ');
+        mpz_out_str (stdout, 10, factors.p[j]);
+      }
 
   mp_factor_clear (&factors);
   mpz_clear (t);
