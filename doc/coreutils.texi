@@ -484,14 +484,14 @@ File permissions
 Date input formats
 
 * General date syntax::          Common rules
-* Calendar date items::          19 Dec 1994
+* Calendar date items::          21 Jul 2020
 * Time of day items::            9:20pm
-* Time zone items::              EST, PDT, UTC, @dots{}
-* Combined date and time of day items:: 1972-09-24T20:02:00,000000-0500
+* Time zone items::              UTC, -0700, +0900, @dots{}
+* Combined date and time of day items:: 2020-07-21T20:02:00,000000-0400
 * Day of week items::            Monday and others
 * Relative items in date strings:: next tuesday, 2 years ago
-* Pure numbers in date strings:: 19931219, 1440
-* Seconds since the Epoch::      @@1078100502
+* Pure numbers in date strings:: 20200721, 1440
+* Seconds since the Epoch::      @@1595289600
 * Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
 * Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al.
 
@@ -2631,11 +2631,11 @@ e.g., @option{--date-format="Monday morning"}.
 @vindex POSIXLY_CORRECT
 @vindex LC_TIME
 The default date format is @samp{%Y-%m-%d %H:%M} (for example,
-@samp{2001-12-04 23:59});
+@samp{2020-07-09 23:59});
 but if the @env{POSIXLY_CORRECT} environment variable is set
 and the @env{LC_TIME} locale category specifies the POSIX
 locale, the default is @samp{%b %e %H:%M %Y} (for example,
-@samp{Dec@ @ 4 23:59 2001}.
+@samp{Jul@ @ 9 23:59 2020}.
 
 @vindex TZ
 Timestamps are listed according to the time zone rules specified by
@@ -4850,8 +4850,8 @@ output the lines in the same order that they were input.  The log
 files contain lines that look like this:
 
 @example
-4.150.156.3 - - [01/Apr/2004:06:31:51 +0000] message 1
-211.24.3.231 - - [24/Apr/2004:20:17:39 +0000] message 2
+4.150.156.3 - - [01/Apr/2020:06:31:51 +0000] message 1
+211.24.3.231 - - [24/Apr/2020:20:17:39 +0000] message 2
 @end example
 
 Fields are separated by exactly one space.  Sort IPv4 addresses
@@ -8160,7 +8160,7 @@ be delimited with spaces, not tabs.
 @subsection Formatting file timestamps
 
 By default, file timestamps are listed in abbreviated form, using
-a date like @samp{Mar 30@ @ 2002} for non-recent timestamps, and a
+a date like @samp{Mar 30@ @ 2020} for non-recent timestamps, and a
 date-without-year and time like @samp{Mar 30 23:45} for recent timestamps.
 This format can change depending on the current locale as detailed below.
 
@@ -8193,7 +8193,7 @@ be one of the following:
 List timestamps using @var{format}, where @var{format} is interpreted
 like the format argument of @command{date} (@pxref{date invocation}).
 For example, @option{--time-style="+%Y-%m-%d %H:%M:%S"} causes
-@command{ls} to list timestamps like @samp{2002-03-30 23:45:56}.  As
+@command{ls} to list timestamps like @samp{2020-03-30 23:45:56}.  As
 with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
 
@@ -8204,8 +8204,8 @@ spaces in one of the two formats.
 
 @item full-iso
 List timestamps in full using ISO 8601-like date, time, and time zone
-components with nanosecond precision, e.g., @samp{2002-03-30
-23:45:56.477817180 -0700}.  This style is equivalent to
+components with nanosecond precision, e.g., @samp{2020-07-21
+23:45:56.477817180 -0400}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
 This is useful because the time output includes all the information that
@@ -8215,13 +8215,13 @@ uses the full timestamp to determine whether a file is out of date.
 
 @item long-iso
 List ISO 8601 date and time components with minute precision, e.g.,
-@samp{2002-03-30 23:45}.  These timestamps are shorter than
+@samp{2020-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
 List ISO 8601 dates for non-recent timestamps (e.g.,
-@samp{2002-03-30@ }), and ISO 8601-like month, day, hour, and
+@samp{2020-03-30@ }), and ISO 8601-like month, day, hour, and
 minute for recent timestamps (e.g., @samp{03-30 23:45}).  These
 timestamps are uglier than @samp{long-iso} timestamps, but they carry
 nearly the same information in a smaller space and their brevity helps
@@ -8237,16 +8237,16 @@ ls -l --time-style="iso"
 
 @item locale
 @vindex LC_TIME
-List timestamps in a locale-dependent form.  For example, a Finnish
-locale might list non-recent timestamps like @samp{maalis 30@ @ 2002}
-and recent timestamps like @samp{maalis 30 23:45}.  Locale-dependent
+List timestamps in a locale-dependent form.  For example, a French
+locale might list non-recent timestamps like @samp{30 mars@ @ @ 2020}
+and recent timestamps like @samp{30 mars@ @ 23:45}.  Locale-dependent
 timestamps typically consume more space than @samp{iso} timestamps and
 are harder for programs to parse because locale conventions vary so
 widely, but they are easier for many people to read.
 
 The @env{LC_TIME} locale category specifies the timestamp format.  The
 default POSIX locale uses timestamps like @samp{Mar 30@
-@ 2002} and @samp{Mar 30 23:45}; in this locale, the following two
+@ 2020} and @samp{Mar 30 23:45}; in this locale, the following two
 @command{ls} invocations are equivalent:
 
 @example
@@ -8259,7 +8259,7 @@ ls -l --time-style="locale"
 Other locales behave differently.  For example, in a German locale,
 @option{--time-style="locale"} might be equivalent to
 @option{--time-style="+%e. %b %Y $newline%e. %b %H:%M"}
-and might generate timestamps like @samp{30. M@"ar 2002@ } and
+and might generate timestamps like @samp{30. M@"ar 2020@ } and
 @samp{30. M@"ar 23:45}.
 
 @item posix-@var{style}
@@ -8267,8 +8267,8 @@ and might generate timestamps like @samp{30. M@"ar 2002@ } and
 List POSIX-locale timestamps if the @env{LC_TIME} locale
 category is POSIX, @var{style} timestamps otherwise.  For
 example, the @samp{posix-long-iso} style lists
-timestamps like @samp{Mar 30@ @ 2002} and @samp{Mar 30 23:45} when in
-the POSIX locale, and like @samp{2002-03-30 23:45} otherwise.
+timestamps like @samp{Mar 30@ @ 2020} and @samp{Mar 30 23:45} when in
+the POSIX locale, and like @samp{2020-03-30 23:45} otherwise.
 @end table
 @end table
 
@@ -11603,9 +11603,9 @@ Do not warn about or create files that do not exist.
 @opindex time
 Use @var{time} instead of the current time.  It can contain month names,
 time zones, @samp{am} and @samp{pm}, @samp{yesterday}, etc.  For
-example, @option{--date="2004-02-27 14:19:13.489392193 +0530"}
+example, @option{--date="2020-07-21 14:19:13.489392193 +0530"}
 specifies the instant of time that is 489,392,193 nanoseconds after
-February 27, 2004 at 2:19:13 PM in a time zone that is 5 hours and 30
+July 21, 2020 at 2:19:13 PM in a time zone that is 5 hours and 30
 minutes east of UTC@.  @xref{Date input formats}.
 File systems that do not support high-resolution timestamps
 silently ignore any excess precision here.
@@ -12273,24 +12273,24 @@ be one of the following:
 List timestamps using @var{format}, where @var{format} is interpreted
 like the format argument of @command{date} (@pxref{date invocation}).
 For example, @option{--time-style="+%Y-%m-%d %H:%M:%S"} causes
-@command{du} to list timestamps like @samp{2002-03-30 23:45:56}.  As
+@command{du} to list timestamps like @samp{2020-07-21 23:45:56}.  As
 with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
 
 @item full-iso
 List timestamps in full using ISO 8601-like date, time, and time zone
-components with nanosecond precision, e.g., @samp{2002-03-30
-23:45:56.477817180 -0700}.  This style is equivalent to
+components with nanosecond precision, e.g., @samp{2020-07-21
+23:45:56.477817180 -0400}.  This style is equivalent to
 @samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
 @item long-iso
 List ISO 8601 date and time components with minute precision, e.g.,
-@samp{2002-03-30 23:45}.  These timestamps are shorter than
+@samp{2020-07-21 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
 work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
-List ISO 8601 dates for timestamps, e.g., @samp{2002-03-30}.
+List ISO 8601 dates for timestamps, e.g., @samp{2020-07-21}.
 This style is equivalent to @samp{+%Y-%m-%d}.
 @end table
 
@@ -15804,7 +15804,7 @@ date [-u|--utc|--universal] @c this avoids a newline in the output
 Invoking @command{date} with no @var{format} argument is equivalent to invoking
 it with a default format that depends on the @env{LC_TIME} locale category.
 In the default C locale, this format is @samp{'+%a %b %e %H:%M:%S %Z %Y'},
-so the output looks like @samp{Thu Mar @ 3 13:47:51 PST 2005}.
+so the output looks like @samp{Thu Jul @ 9 17:00:00 EDT 2020}.
 
 @vindex TZ
 Normally, @command{date} uses the time zone rules indicated by the
@@ -15874,11 +15874,11 @@ locale's 12-hour clock time (e.g., @samp{11:11:04 PM})
 @item %R
 24-hour hour and minute.  Same as @samp{%H:%M}.
 @item %s
-@cindex epoch, seconds since
-@cindex seconds since the epoch
+@cindex Epoch, seconds since
+@cindex seconds since the Epoch
 @cindex beginning of time
 @cindex leap seconds
-seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC@.
+seconds since the Epoch, i.e., since 1970-01-01 00:00 UTC@.
 Leap seconds are not counted unless leap second support is available.
 @xref{%s-examples}, for examples.
 This is a GNU extension.
@@ -15937,10 +15937,10 @@ locale's abbreviated month name (e.g., @samp{Jan})
 @item %B
 locale's full month name, variable length (e.g., @samp{January})
 @item %c
-locale's date and time (e.g., @samp{Thu Mar @ 3 23:05:25 2005})
+locale's date and time (e.g., @samp{Thu Mar @ 3 23:05:25 2020})
 @item %C
 century.  This is like @samp{%Y}, except the last two digits are omitted.
-For example, it is @samp{20} if @samp{%Y} is @samp{2000},
+For example, it is @samp{20} if @samp{%Y} is @samp{2019},
 and is @samp{-0} if @samp{%Y} is @samp{-001}.
 It is normally at least two characters, but it may be more.
 @item %d
@@ -16041,7 +16041,7 @@ example, numeric months are always output as two digits.
 Most numeric fields are padded on the left.
 However, nanoseconds are padded on the right since they are commonly
 used after decimal points in formats like @samp{%s.%-N}.
-Also, seconds since the epoch are not padded
+Also, seconds since the Epoch are not padded
 since there is no natural width for them.
 
 The following optional flags can appear after the @samp{%}:
@@ -16184,9 +16184,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 Display the date and time specified in @var{datestr} instead of the
 current date and time.  @var{datestr} can be in almost any common
 format.  It can contain month names, time zones, @samp{am} and @samp{pm},
-@samp{yesterday}, etc.  For example, @option{--date="2004-02-27
+@samp{yesterday}, etc.  For example, @option{--date="2020-07-21
 14:19:13.489392193 +0530"} specifies the instant of time that is
-489,392,193 nanoseconds after February 27, 2004 at 2:19:13 PM in a
+489,392,193 nanoseconds after July 21, 2020 at 2:19:13 PM in a
 time zone that is 5 hours and 30 minutes east of UTC.@*
 Note: input currently must be in locale independent format.  E.g., the
 LC_TIME=C below is needed to print back the correct date in many locales:
@@ -16263,7 +16263,7 @@ Display the date and time using the format @samp{%a, %d %b %Y %H:%M:%S
 For example:
 
 @example
-Fri, 09 Sep 2005 13:51:39 -0700
+Mon, 09 Jul 2020 17:00:00 -0400
 @end example
 
 @opindex --rfc-822
@@ -16290,19 +16290,19 @@ It can be one of the following:
 
 @table @samp
 @item date
-Print just the full-date, e.g., @samp{2005-09-14}.
+Print just the full-date, e.g., @samp{2020-07-21}.
 This is equivalent to the format @samp{%Y-%m-%d}.
 
 @item seconds
 Print the full-date and full-time separated by a space, e.g.,
-@samp{2005-09-14 00:56:06+05:30}.  The output ends with a numeric
+@samp{2020-07-21 04:30:37+05:30}.  The output ends with a numeric
 time-offset; here the @samp{+05:30} means that local time is five
 hours and thirty minutes east of UTC@.  This is equivalent to
 the format @samp{%Y-%m-%d %H:%M:%S%:z}.
 
 @item ns
 Like @samp{seconds}, but also print nanoseconds, e.g.,
-@samp{2005-09-14 00:56:06.998458565+05:30}.
+@samp{2020-07-21 04:30:37.998458565+05:30}.
 This is equivalent to the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
 
 @end table
@@ -16409,17 +16409,17 @@ To print the date in Internet RFC 5322 format,
 use @samp{date --rfc-email}.  Here is some example output:
 
 @example
-Fri, 09 Sep 2005 13:51:39 -0700
+Tue, 09 Jul 2020 19:00:37 -0400
 @end example
 
 @anchor{%s-examples}
 @item
-To convert a date string to the number of seconds since the epoch
-(which is 1970-01-01 00:00:00 UTC), use the @option{--date} option with
+To convert a date string to the number of seconds since the Epoch
+(which is 1970-01-01 00:00 UTC), use the @option{--date} option with
 the @samp{%s} format.  That can be useful in sorting and/or graphing
 and/or comparing data by date.  The following command outputs the
-number of the seconds since the epoch for the time two minutes after the
-epoch:
+number of the seconds since the Epoch for the time two minutes after the
+Epoch:
 
 @example
 date --date='1970-01-01 00:02:00 +0000' +%s
@@ -16440,13 +16440,13 @@ date --date='1970-01-01 00:02:00' +%s
 
 @item
 If you're sorting or graphing dated data, your raw date values may be
-represented as seconds since the epoch.  But few people can look at
-the date @samp{946684800} and casually note ``Oh, that's the first second
-of the year 2000 in Greenwich, England.''
+represented as seconds since the Epoch.  But few people can look at
+the date @samp{1577836800} and casually note ``Oh, that's the first
+second of the year 2020 in Greenwich, England.''
 
 @example
-date --date='2000-01-01 UTC' +%s
-946684800
+date --date='2020-01-01 UTC' +%s
+1577836800
 @end example
 
 An alternative is to use the @option{--utc} (@option{-u}) option.
@@ -16456,32 +16456,23 @@ with a time zone offset different from zero, it would give a different
 result for zone-dependent formats like @samp{%z}.
 
 @example
-date -u --date=2000-01-01 +%s
-946684800
+date -u --date=2020-07-21 +%s
+1595289600
 @end example
 
 To convert such an unwieldy number of seconds back to
 a more readable form, use a command like this:
 
 @example
-# local time zone used
-date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
-1999-12-31 19:00:00 -0500
-@end example
-
-Or if you do not mind depending on the @samp{@@} feature present since
-coreutils 5.3.0, you could shorten this to:
-
-@example
-date -d @@946684800 +"%F %T %z"
-1999-12-31 19:00:00 -0500
+date -d @@1595289600 +"%F %T %z"
+2020-07-20 20:00:00 -0400
 @end example
 
 Often it is better to output UTC-relative date and time:
 
 @example
-date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
-2000-01-01 00:00:00 +0000
+date -u -d @@1595289600 +"%F %T %z"
+2020-07-21 00:00:00 +0000
 @end example
 
 @item
@@ -16492,26 +16483,26 @@ between the seconds count and a future timestamp is not reliable on
 the atypical systems that include leap seconds in their counts.
 
 Here is how the two kinds of systems handle the leap second at
-2012-06-30 23:59:60 UTC:
+the end of the year 2016:
 
 @example
 # Typical systems ignore leap seconds:
-date --date='2012-06-30 23:59:59 +0000' +%s
-1341100799
-date --date='2012-06-30 23:59:60 +0000' +%s
-date: invalid date '2012-06-30 23:59:60 +0000'
-date --date='2012-07-01 00:00:00 +0000' +%s
-1341100800
+date --date='2016-12-31 23:59:59 +0000' +%s
+1483228799
+date --date='2016-12-31 23:59:60 +0000' +%s
+date: invalid date '2016-12-31 23:59:60 +0000'
+date --date='2017-01-01 00:00:00 +0000' +%s
+1483228800
 @end example
 
 @example
 # Atypical systems count leap seconds:
-date --date='2012-06-30 23:59:59 +0000' +%s
-1341100823
-date --date='2012-06-30 23:59:60 +0000' +%s
-1341100824
-date --date='2012-07-01 00:00:00 +0000' +%s
-1341100825
+date --date='2016-12-31 23:59:59 +0000' +%s
+1483228825
+date --date='2016-12-31 23:59:60 +0000' +%s
+1483228826
+date --date='2017-01-01 00:00:00 +0000' +%s
+1483228827
 @end example
 
 @end itemize
@@ -16603,13 +16594,13 @@ printed in this order:
 @end example
 
 The information may contain internal spaces, so such output cannot be
-parsed reliably.  In the following example, @var{release} is
-@samp{2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001}:
+parsed reliably.  In the following example, @var{kernel-version} is
+@samp{#1 SMP Fri Jul 17 17:18:38 UTC 2020}:
 
 @example
 uname -a
-@result{} Linux dumdum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686@c
- unknown unknown GNU/Linux
+@result{} Linux dumdum.example.org 5.7.9-100.fc31.x86_64@c
+ #1 SMP Fri Jul 17 17:18:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
 @end example
 
 
