@@ -218,7 +218,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %q   quarter of year (1..4)\n\
   %r   locale's 12-hour clock time (e.g., 11:11:04 PM)\n\
   %R   24-hour hour and minute; same as %H:%M\n\
-  %s   seconds since 1970-01-01 00:00:00 UTC\n\
+  %s   seconds since the Epoch (1970-01-01 00:00 UTC)\n\
 "), stdout);
       fputs (_("\
   %S   second (00..60)\n\
@@ -267,7 +267,7 @@ O to use the locale's alternate numeric symbols if available.\n\
       fputs (_("\
 \n\
 Examples:\n\
-Convert seconds since the epoch (1970-01-01 UTC) to a date\n\
+Convert seconds since the Epoch (1970-01-01 UTC) to a date\n\
   $ date --date='@2147483647'\n\
 \n\
 Show the time on the west coast of the US (use tzselect(1) to find TZ)\n\
