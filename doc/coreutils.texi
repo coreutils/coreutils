@@ -17402,8 +17402,8 @@ the exit status of @var{command} otherwise
 
 @subsection @option{-S}/@option{--split-string} usage in scripts
 
-The @option{-S}/@option{--split-string} options enable using multiple
-arguments on the first one of scripts (shebang line, @samp{#!}).
+The @option{-S}/@option{--split-string} option enables use of multiple
+arguments on the first line of scripts (the shebang line, @samp{#!}).
 
 When a script's interpreter is in a known location, scripts typically
 contain the absolute file name in their first line:
