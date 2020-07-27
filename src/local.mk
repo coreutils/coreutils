@@ -276,8 +276,8 @@ src_sort_LDADD += $(LIB_NANOSLEEP)
 src_tail_LDADD += $(LIB_NANOSLEEP)
 
 # for various GMP functions
-src_expr_LDADD += $(LIB_GMP)
-src_factor_LDADD += $(LIB_GMP)
+src_expr_LDADD += $(LIBGMP)
+src_factor_LDADD += $(LIBGMP)
 
 # for getloadavg
 src_uptime_LDADD += $(GETLOADAVG_LIBS)
