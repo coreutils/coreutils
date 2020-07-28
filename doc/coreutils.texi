@@ -1,13 +1,13 @@
 \input texinfo
 @c %**start of header
 @setfilename coreutils.info
-@settitle GNU Coreutils
+@include version.texi
+@settitle GNU Coreutils @value{VERSION}
 @documentencoding UTF-8
 @allowcodebreaks false
 
 @c %**end of header
 
-@include version.texi
 @include constants.texi
 
 @c Define new indices.
