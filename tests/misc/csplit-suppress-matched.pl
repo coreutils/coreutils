@@ -67,20 +67,26 @@ my @csplit_tests =
     {OUTPUTS => [ "a\na\nYY\n", "\nXX\nb\nb\nYY\n","\nXX\nc\nYY\n",
                   "\nXX\nd\nd\nd\n" ] }],
 
-  # the newline (matched line) does not appears in the output files
+  # the newline (matched line) does not appear in the output files
   ["re-1", " --suppress-matched -q - '/^\$/' '{*}'", {IN_PIPE => $IN_UNIQ},
     {OUTPUTS => ["a\na\nYY\n", "XX\nb\nb\nYY\n", "XX\nc\nYY\n",
                  "XX\nd\nd\nd\n"]}],
 
-  # the 'XX' (matched line + offset 1) does not appears in the output files.
+  # the 'XX' (matched line + offset 1) does not appear in the output files.
   # the newline appears in the files (before each split, at the end of the file)
   ["re-2", "--suppress-matched -q - '/^\$/1' '{*}'", {IN_PIPE => $IN_UNIQ},
     {OUTPUTS => ["a\na\nYY\n\n","b\nb\nYY\n\n","c\nYY\n\n","d\nd\nd\n"]}],
 
-  # the 'YY' (matched line + offset of -1) does not appears in the output files
+  # the 'YY' (matched line + offset of -1) does not appear in the output files
   # the newline appears in the files (as the first line of the new split)
   ["re-3", " --suppress-matched -q - '/^\$/-1' '{*}'", {IN_PIPE => $IN_UNIQ},
     {OUTPUTS => ["a\na\n", "\nXX\nb\nb\n", "\nXX\nc\n", "\nXX\nd\nd\nd\n"]}],
+
+  # the last matched line for a non infinite match repetition is suppressed.
+  # Up to and including coreutils 8.32, the last match was output.
+  ["re-4", " --suppress-matched -q - '/^\$/' '{2}'", {IN_PIPE => $IN_UNIQ},
+    {OUTPUTS => ["a\na\nYY\n", "XX\nb\nb\nYY\n", "XX\nc\nYY\n",
+                 "XX\nd\nd\nd\n"]}],
 
   # Test two consecutive matched lines
   # without suppress-matched, the second file should contain a single newline.

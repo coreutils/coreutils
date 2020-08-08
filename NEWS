@@ -9,6 +9,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   is a non regular file.
   [bug introduced in coreutils-8.6]
 
+  csplit --suppress-matched now elides the last matched line
+  when a specific number of pattern matches are performed.
+  [bug introduced with the --suppress-matched feature in coreutils-8.22]
+
   du no longer crashes on XFS file systems when the directory hierarchy is
   heavily changed during the run.
   [bug introduced in coreutils-8.25]

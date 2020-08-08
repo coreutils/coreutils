@@ -803,9 +803,6 @@ process_regexp (struct control *p, uintmax_t repetition)
   if (!ignore)
     create_output_file ();
 
-  if (suppress_matched && current_line > 0)
-    remove_line ();
-
   /* If there is no offset for the regular expression, or
      it is positive, then it is not necessary to buffer the lines. */
 
@@ -893,6 +890,9 @@ process_regexp (struct control *p, uintmax_t repetition)
 
   if (p->offset > 0)
     current_line = break_line;
+
+  if (suppress_matched)
+    remove_line ();
 }
 
 /* Split the input file according to the control records we have built. */
