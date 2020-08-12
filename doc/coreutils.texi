@@ -18077,8 +18077,8 @@ managed @var{command} supports running for an indeterminate amount of time.
 @opindex --foreground
 Don't create a separate background program group, so that
 the managed @var{command} can use the foreground TTY normally.
-This is needed to support timing out commands not started
-directly from an interactive shell, in two situations.
+This is needed to support two situations when timing out commands,
+when not invoking @command{timeout} from an interactive shell.
 @enumerate
 @item
 @var{command} is interactive and needs to read from the terminal for example
