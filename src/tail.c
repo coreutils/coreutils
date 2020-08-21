@@ -500,6 +500,9 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
   if (0 <= new_offset)
     return new_offset;
 
+  if (errno == ESPIPE)
+    return new_offset;
+
   s = offtostr (offset, buf);
   switch (whence)
     {

@@ -40,6 +40,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat and tail now know about the "vboxsf" file system type.
   stat -f -c%T now reports the file system type, and tail -f uses polling.
+  When a pipe reappears, tail no longer fails with `cannot seek to offset 0: Illegal seek` but instead correctly ignores any `ESPIPE` error.
 
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
