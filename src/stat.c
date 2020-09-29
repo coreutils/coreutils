@@ -1717,10 +1717,10 @@ Display file or file system status.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
       fputs (_("\n\
-The --cached MODE argument can be; always, never, or default.\n\
-`always` will use cached attributes if available, while\n\
-`never` will try to synchronize with the latest attributes, and\n\
-`default` will leave it up to the underlying file system.\n\
+The MODE argument of --cached can be: always, never, or default.\n\
+'always' will use cached attributes if available, while\n\
+'never' will try to synchronize with the latest attributes, and\n\
+'default' will leave it up to the underlying file system.\n\
 "), stdout);
 
       fputs (_("\n\
