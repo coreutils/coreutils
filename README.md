@@ -1,3 +1,5 @@
+# Coreutils
+
 These are the GNU core utilities.  This package is the union of
 the GNU fileutils, sh-utils, and textutils packages.
 
@@ -7,15 +9,15 @@ arbitrary limits.
 
 The programs that can be built with this package are:
 
-  [ arch b2sum base32 base64 basename basenc cat chcon chgrp chmod chown
-  chroot cksum comm coreutils cp csplit cut date dd df dir dircolors dirname
-  du echo env expand expr factor false fmt fold groups head hostid hostname
-  id install join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp
-  mv nice nl nohup nproc numfmt od paste pathchk pinky pr printenv printf ptx
-  pwd readlink realpath rm rmdir runcon seq sha1sum sha224sum sha256sum
-  sha384sum sha512sum shred shuf sleep sort split stat stdbuf stty sum sync
-  tac tail tee test timeout touch tr true truncate tsort tty uname unexpand
-  uniq unlink uptime users vdir wc who whoami yes
+    arch b2sum base32 base64 basename basenc cat chcon chgrp chmod chown
+    chroot cksum comm coreutils cp csplit cut date dd df dir dircolors dirname
+    du echo env expand expr factor false fmt fold groups head hostid hostname
+    id install join kill link ln logname ls md5sum mkdir mkfifo mknod mktemp
+    mv nice nl nohup nproc numfmt od paste pathchk pinky pr printenv printf ptx
+    pwd readlink realpath rm rmdir runcon seq sha1sum sha224sum sha256sum
+    sha384sum sha512sum shred shuf sleep sort split stat stdbuf stty sum sync
+    tac tail tee test timeout touch tr true truncate tsort tty uname unexpand
+    uniq unlink uptime users vdir wc who whoami yes
 
 See the file NEWS for a list of major changes in the current release.
 
@@ -35,6 +37,7 @@ programs to things like gls, gnuls, l, etc.  Renaming a program
 file shouldn't affect how it operates, so that people can get the
 behavior they want with whatever name they want.
 
+## Contributors
 Special thanks to Paul Eggert, Brian Matthews, Bruce Evans, Karl Berry,
 Kaveh Ghazi, and François Pinard for help with debugging and porting
 these programs.  Many thanks to all of the people who have taken the
@@ -56,10 +59,9 @@ and from the corresponding --help usage message.  Patches to the template
 files (man/*.x) are welcome.  However, the authoritative documentation
 is in texinfo form in the doc directory.
 
+## Common issues
 
-*********************
-Pre-C99 build failure
----------------------
+### Pre-C99 build failure
 
 In 2009 we added this requirement:
 To build the coreutils from source, you must have a C99-conforming
@@ -71,10 +73,7 @@ There used to be a "c99-to-c89.diff" patch you could apply to convert
 to code that even an old pre-c99 compiler can handle, but it was too
 tedious to maintain, so has been removed.
 
-
-***********************
-HPUX 11.x build failure
------------------------
+### HPUX 11.x build failure
 
 A known problem exists when compiling on HPUX on both hppa and ia64
 in 64-bit mode (i.e., +DD64) on HP-UX 11.0, 11.11, and 11.23.  This
@@ -86,16 +85,15 @@ to fix the system /usr/include/inttypes.h header file.  After
 correcting that file the software also compiles fine in 64-bit mode.
 Here is one possible patch to correct the problem:
 
+```patch
 --- /usr/include/inttypes.h.orig	Thu May 30 01:00:00 1996
 +++ /usr/include/inttypes.h	Sun Mar 23 00:20:36 2003
 @@ -489 +489 @@
 -#ifndef __STDC_32_MODE__
 +#ifndef __LP64__
+```
 
-
-************************
-OSF/1 4.0d and AIX build failures
-------------------------
+### OSF/1 4.0d and AIX build failures
 
 If you use /usr/bin/make on these systems, the build will fail due
 to the presence of the "[" target.  OSF/1 make(1) appears to
@@ -104,10 +102,7 @@ appears to skip the "[" target.  To work around these issues
 the best solution is to use GNU make.  Otherwise, simply remove
 all mention of "[$(EXEEXT)" from src/Makefile.
 
-
-************************
-32 bit time_t build failures
-------------------------
+### 32 bit time_t build failures
 
 On systems where it's determined that 64 bit time_t is supported
 (indicated by touch -t <some time after 2038>), but that coreutils
@@ -115,12 +110,10 @@ would be built with a narrower time_t, the build will fail.
 This can be allowed by passing TIME_T_32_BIT_OK=yes to configure,
 or avoided by enabling 64 bit builds.  For example GCC on AIX defaults
 to 32 bit, and to enable the 64 bit ABI one can use:
-./configure CFLAGS=-maix64 LDFLAGs=-maix64 AR='ar -X64'
 
+    ./configure CFLAGS=-maix64 LDFLAGs=-maix64 AR='ar -X64'
 
-*************************************************
-"make check" failure on IRIX 6.5 and Solaris <= 9
--------------------------------------------------
+### "make check" failure on IRIX 6.5 and Solaris <= 9
 
 Using the vendor make program to run "make check" fails on these two systems.
 If you want to run all of the tests there, use GNU make.
@@ -142,7 +135,7 @@ I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
 to run the privilege-requiring tests:
 
-  sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
+    sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
 
 If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's
@@ -150,9 +143,7 @@ arguably more important that these tools work well when run by
 root than when run by less privileged users.
 
 
-***************
-Reporting bugs:
----------------
+## Reporting bugs:
 
 Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
 To suggest a patch, see the files README-hacking and HACKING for tips.
@@ -163,13 +154,13 @@ answer to a bug report.  If the debug output does not suffice to fix
 the problem on your own, please compress and attach it to the rest of
 your bug report.
 
-IMPORTANT: if you take the time to report a test failure,
+**IMPORTANT**: if you take the time to report a test failure,
 please be sure to include the output of running 'make check'
 in verbose mode for each failing test.  For example,
 if the test that fails is tests/df/df-P.sh, then you would
 run this command:
 
-  make check TESTS=tests/df/df-P.sh VERBOSE=yes SUBDIRS=. >> log 2>&1
+    make check TESTS=tests/df/df-P.sh VERBOSE=yes SUBDIRS=. >> log 2>&1
 
 For some tests, you can get even more detail by adding DEBUG=yes.
 Then include the contents of the file 'log' in your bug report.
@@ -204,18 +195,18 @@ previously discussed but ultimately rejected feature requests at:
 https://www.gnu.org/software/coreutils/rejected_requests.html
 
 
-WARNING:  Now that we use the ./bootstrap script, you should not run
+**WARNING**:  Now that we use the ./bootstrap script, you should not run
 autoreconf manually.  Doing that will overwrite essential source files
 with older versions, which may make the package unbuildable or introduce
 subtle bugs.
 
 
-WARNING:  If you modify files like configure.in, m4/*.m4, aclocal.m4,
+**WARNING**:  If you modify files like configure.in, m4/*.m4, aclocal.m4,
 or any Makefile.am, then don't be surprised if what gets regenerated no
 longer works.  To make things work, you'll have to be using appropriate
 versions of the tools listed in bootstrap.conf's buildreq string.
 
-All of these programs except 'test' recognize the '--version' option.
+All of these programs except 'test' recognize the `--version` option.
 When reporting bugs, please include in the subject line both the package
 name/version and the name of the program for which you found a problem.
 
@@ -230,8 +221,7 @@ Mail suggestions and bug reports for these programs to
 the address on the last line of --help output.
 
 
-========================================================================
-
+------------------------------------------------------
 Copyright (C) 1998-2020 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
