@@ -166,8 +166,7 @@ usage (int status)
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
       --ignore-fail-on-non-empty\n\
-                  ignore each failure that is solely because a directory\n\
-                    is non-empty\n\
+                  ignore each failure on non-empty directory\n\
 "), stdout);
       fputs (_("\
   -p, --parents   remove DIRECTORY and its ancestors; e.g., 'rmdir -p a/b/c' is\
