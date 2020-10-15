@@ -2479,10 +2479,6 @@ main (int argc, char **argv)
          recheck it and follow the new file, or ignore it if the
          file has changed to being remote.
 
-         FIXME: when using inotify, and a directory for a watched file
-         is recreated, then we don't recheck any new file when
-         follow_mode == Follow_name.
-
          FIXME-maybe: inotify has a watch descriptor per inode, and hence with
          our current hash implementation will only --follow data for one
          of the names when multiple hardlinked files are specified, or
