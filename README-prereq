@@ -34,6 +34,7 @@ set correctly by running this command:
   # Please use the latest stable release version as indicated by git tags.
   git clone --depth=1 git://git.sv.gnu.org/autoconf.git
   cd autoconf
+  git pull --tags
   git checkout v2.64
   autoreconf -vi
   ./configure --prefix=$prefix
@@ -55,7 +56,7 @@ requires version 1.10a or newer, as well as the xz program itself.
 
 * xz *
 
-  git clone git://ctrl.tukaani.org/xz.git
+  git clone https://git.tukaani.org/xz.git
   cd xz
   ./autogen.sh
   ./configure --prefix=$prefix
