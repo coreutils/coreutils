@@ -1766,7 +1766,7 @@ main (int argc, char **argv)
                  Use its dev/ino numbers to remove the corresponding
                  entry from the active_dir_set hash table.  */
               struct dev_ino di = dev_ino_pop ();
-              struct dev_ino *found = hash_delete (active_dir_set, &di);
+              struct dev_ino *found = hash_remove (active_dir_set, &di);
               /* ASSERT_MATCHING_DEV_INO (thispend->realname, di); */
               assert (found);
               dev_ino_free (found);

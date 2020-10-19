@@ -119,8 +119,8 @@ sparse_new (size_t size_hint)
 static void
 sparse_swap (sparse_map *sv, size_t* v, size_t i, size_t j)
 {
-  struct sparse_ent_ *v1 = hash_delete (sv, &(struct sparse_ent_) {i,0});
-  struct sparse_ent_ *v2 = hash_delete (sv, &(struct sparse_ent_) {j,0});
+  struct sparse_ent_ *v1 = hash_remove (sv, &(struct sparse_ent_) {i,0});
+  struct sparse_ent_ *v2 = hash_remove (sv, &(struct sparse_ent_) {j,0});
 
   /* FIXME: reduce the frequency of these mallocs.  */
   if (!v1)

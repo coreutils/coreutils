@@ -757,7 +757,7 @@ delete_proc (pid_t pid)
   struct tempnode test;
 
   test.pid = pid;
-  struct tempnode *node = hash_delete (proctab, &test);
+  struct tempnode *node = hash_remove (proctab, &test);
   if (! node)
     return false;
   node->state = REAPED;

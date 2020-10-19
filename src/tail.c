@@ -1771,7 +1771,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               if (0 <= fspec->wd)
                 {
                   inotify_rm_watch (wd, fspec->wd);
-                  hash_delete (wd_to_name, fspec);
+                  hash_remove (wd_to_name, fspec);
                 }
 
               fspec->wd = new_wd;
@@ -1782,7 +1782,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               /* If the file was moved then inotify will use the source file wd
                 for the destination file.  Make sure the key is not present in
                 the table.  */
-              struct File_spec *prev = hash_delete (wd_to_name, fspec);
+              struct File_spec *prev = hash_remove (wd_to_name, fspec);
               if (prev && prev != fspec)
                 {
                   if (follow_mode == Follow_name)
@@ -1817,7 +1817,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           if (ev->mask & IN_DELETE_SELF)
             {
               inotify_rm_watch (wd, fspec->wd);
-              hash_delete (wd_to_name, fspec);
+              hash_remove (wd_to_name, fspec);
             }
 
           /* Note we get IN_ATTRIB for unlink() as st_nlink decrements.
