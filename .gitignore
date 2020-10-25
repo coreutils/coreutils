@@ -79,6 +79,7 @@
 /lib/netdb.h
 /lib/netinet/in.h
 /lib/parse-datetime.c
+/lib/parse-datetime-gen.h
 /lib/printf.c
 /lib/pthread.h
 /lib/ref-add.sed
