@@ -36,6 +36,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --classify now supports the "always", "auto", or "never" flags,
   to support only outputting classifier characters if connected to a tty.
 
+  nl --line-increment can now take a negative number to decrement the count.
+
 ** Improvements
 
   stat and tail now know about the "vboxsf" file system type.

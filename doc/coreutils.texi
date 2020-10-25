@@ -1867,6 +1867,7 @@ Analogous to @option{--body-numbering}.
 @opindex -i
 @opindex --line-increment
 Increment line numbers by @var{number} (default 1).
+@var{number} can be negative to decrement.
 
 @item -l @var{number}
 @itemx --join-blank-lines=@var{number}
@@ -1916,6 +1917,7 @@ Separate the line number from the text line in the output with
 @opindex -v
 @opindex --starting-line-number
 Set the initial line number on each logical page to @var{number} (default 1).
+The starting @var{number} can be negative.
 
 @item -w @var{number}
 @itemx --number-width=@var{number}

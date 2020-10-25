@@ -67,4 +67,16 @@ EOF
 compare exp out || fail=1
 returns_ 1 nl -p -v$INTMAX_MAX in.txt > out || fail=1
 
+# Test negative iteration
+returns_ 1 nl -i$INTMAX_UFLOW /dev/null || fail=1
+printf '%s\n' a b > in.txt || framework_failure_
+nl -v$INTMAX_MAX -i$INTMAX_MIN in.txt > out || fail=1
+cat <<EOF > exp
+$INTMAX_MAX	a
+    -1	b
+EOF
+compare exp out || fail=1
+printf '%s\n' a b c > in.txt || framework_failure_
+returns_ 1 nl -v$INTMAX_MAX -i$INTMAX_MIN in.txt > out || fail=1
+
 Exit $fail

@@ -521,7 +521,7 @@ main (int argc, char **argv)
                                              0);
           break;
         case 'i':
-          page_incr = xdectoimax (optarg, 1, INTMAX_MAX, "",
+          page_incr = xdectoimax (optarg, INTMAX_MIN, INTMAX_MAX, "",
                                   _("invalid line number increment"), 0);
           break;
         case 'p':
