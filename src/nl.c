@@ -143,6 +143,9 @@ static char const *lineno_format = FORMAT_RIGHT_NOLZ;
 /* Current print line number.  */
 static intmax_t line_no;
 
+/* Whether the current line number has incremented past limits.  */
+static bool line_no_overflow;
+
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
@@ -275,10 +278,23 @@ build_type_arg (char const **typep,
 static void
 print_lineno (void)
 {
+  if (line_no_overflow)
+    die (EXIT_FAILURE, 0, _("line number overflow"));
+
   printf (lineno_format, lineno_width, line_no, separator_str);
 
   if (INT_ADD_WRAPV (line_no, page_incr, &line_no))
-    die (EXIT_FAILURE, 0, _("line number overflow"));
+    line_no_overflow = true;
+}
+
+static void
+reset_lineno (void)
+{
+  if (reset_numbers)
+    {
+      line_no = starting_line_number;
+      line_no_overflow = false;
+    }
 }
 
 /* Switch to a header section. */
@@ -288,8 +304,7 @@ proc_header (void)
 {
   current_type = header_type;
   current_regex = &header_regex;
-  if (reset_numbers)
-    line_no = starting_line_number;
+  reset_lineno ();
   putchar ('\n');
 }
 
@@ -300,8 +315,7 @@ proc_body (void)
 {
   current_type = body_type;
   current_regex = &body_regex;
-  if (reset_numbers)
-    line_no = starting_line_number;
+  reset_lineno ();
   putchar ('\n');
 }
 
@@ -312,8 +326,7 @@ proc_footer (void)
 {
   current_type = footer_type;
   current_regex = &footer_regex;
-  if (reset_numbers)
-    line_no = starting_line_number;
+  reset_lineno ();
   putchar ('\n');
 }
 

@@ -18,7 +18,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ nl
-
+getlimits_
 
 echo a | nl > out || fail=1
 echo b | nl -s%n >> out || fail=1
@@ -54,5 +54,17 @@ cat <<\EOF > exp
      3	c
 EOF
 compare exp out || fail=1
+
+# Ensure we only indicate overflow when needing to output overflowed numbers
+returns_ 1 nl -v$INTMAX_OFLOW /dev/null || fail=1
+printf '%s\n' a \\:\\: b > in.txt || framework_failure_
+nl -v$INTMAX_MAX in.txt > out || fail=1
+cat <<EOF > exp
+$INTMAX_MAX	a
+
+$INTMAX_MAX	b
+EOF
+compare exp out || fail=1
+returns_ 1 nl -p -v$INTMAX_MAX in.txt > out || fail=1
 
 Exit $fail
