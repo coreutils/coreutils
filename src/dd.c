@@ -1784,59 +1784,6 @@ advance_input_offset (uintmax_t offset)
     input_offset_overflow = true;
 }
 
-/* This is a wrapper for lseek.  It detects and warns about a kernel
-   bug that makes lseek a no-op for tape devices, even though the kernel
-   lseek return value suggests that the function succeeded.
-
-   The parameters are the same as those of the lseek function, but
-   with the addition of FILENAME, the name of the file associated with
-   descriptor FDESC.  The file name is used solely in the warning that's
-   printed when the bug is detected.  Return the same value that lseek
-   would have returned, but when the lseek bug is detected, return -1
-   to indicate that lseek failed.
-
-   The offending behavior has been confirmed with an Exabyte SCSI tape
-   drive accessed via /dev/nst0 on both Linux 2.2.17 and 2.4.16 kernels.  */
-
-#if defined __linux__ && HAVE_SYS_MTIO_H
-
-# include <sys/mtio.h>
-
-# define MT_SAME_POSITION(P, Q) \
-   ((P).mt_resid == (Q).mt_resid \
-    && (P).mt_fileno == (Q).mt_fileno \
-    && (P).mt_blkno == (Q).mt_blkno)
-
-static off_t
-skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
-{
-  struct mtget s1;
-  struct mtget s2;
-  bool got_original_tape_position = (ioctl (fdesc, MTIOCGET, &s1) == 0);
-  /* known bad device type */
-  /* && s.mt_type == MT_ISSCSI2 */
-
-  off_t new_position = lseek (fdesc, offset, whence);
-  if (0 <= new_position
-      && got_original_tape_position
-      && ioctl (fdesc, MTIOCGET, &s2) == 0
-      && MT_SAME_POSITION (s1, s2))
-    {
-      if (status_level != STATUS_NONE)
-        error (0, 0, _("warning: working around lseek kernel bug for file "
-                       "(%s)\n  of mt_type=0x%0lx -- "
-                       "see <sys/mtio.h> for the list of types"),
-               filename, s2.mt_type + 0Lu);
-      errno = 0;
-      new_position = -1;
-    }
-
-  return new_position;
-}
-#else
-# define skip_via_lseek(Filename, Fd, Offset, Whence) lseek (Fd, Offset, Whence)
-#endif
-
 /* Throw away RECORDS blocks of BLOCKSIZE bytes plus BYTES bytes on
    file descriptor FDESC, which is open with read permission for FILE.
    Store up to BLOCKSIZE bytes of the data at a time in IBUF or OBUF, if
@@ -1858,7 +1805,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 
   errno = 0;
   if (records <= OFF_T_MAX / blocksize
-      && 0 <= skip_via_lseek (file, fdesc, offset, SEEK_CUR))
+      && 0 <= lseek (fdesc, offset, SEEK_CUR))
     {
       if (fdesc == STDIN_FILENO)
         {
@@ -1893,7 +1840,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
          Or it may not have been done at all (> OFF_T_MAX).
          Therefore try to seek to the end of the file,
          to avoid redundant reading.  */
-      if ((skip_via_lseek (file, fdesc, 0, SEEK_END)) >= 0)
+      if (lseek (fdesc, 0, SEEK_END) >= 0)
         {
           /* File is seekable, and we're at the end of it, and
              size <= OFF_T_MAX. So there's no point using read to advance.  */
@@ -1998,7 +1945,7 @@ advance_input_after_read_error (size_t nbytes)
           diff = input_offset - offset;
           if (! (0 <= diff && diff <= nbytes) && status_level != STATUS_NONE)
             error (0, 0, _("warning: invalid file offset after failed read"));
-          if (0 <= skip_via_lseek (input_file, STDIN_FILENO, diff, SEEK_CUR))
+          if (0 <= lseek (STDIN_FILENO, diff, SEEK_CUR))
             return true;
           if (errno == 0)
             error (0, 0, _("cannot work around kernel bug after all"));
