@@ -40,8 +40,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  stat and tail now know about the "vboxsf" file system type.
-  stat -f -c%T now reports the file system type, and tail -f uses polling.
+  stat and tail now know about the "devmem", "vboxsf", and "zonefs"
+  file system types.  stat -f -c%T now reports the file system type,
+  and tail -f uses polling for "vboxsf" and inotify for the others.
 
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
