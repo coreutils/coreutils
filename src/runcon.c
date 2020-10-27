@@ -93,7 +93,6 @@ With neither CONTEXT nor COMMAND, print the current security context.\n\
   -u, --user=USER    user identity\n\
   -r, --role=ROLE    role\n\
   -l, --range=RANGE  levelrange\n\
-\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

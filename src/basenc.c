@@ -142,7 +142,6 @@ Base%d encode or decode FILE, or standard input, to standard output.\n\
   -i, --ignore-garbage  when decoding, ignore non-alphabet characters\n\
   -w, --wrap=COLS       wrap encoded lines after COLS character (default 76).\n\
                           Use 0 to disable line wrapping\n\
-\n\
 "), stdout);
 #if BASE_TYPE == 42
       fputs (_("\

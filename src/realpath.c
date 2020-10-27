@@ -85,7 +85,6 @@ all but the last component must exist\n\
       --relative-base=DIR      print absolute paths unless paths below DIR\n\
   -s, --strip, --no-symlinks   don't expand symlinks\n\
   -z, --zero                   end each output line with NUL, not newline\n\
-\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
