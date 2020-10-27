@@ -511,7 +511,7 @@ src/fs-magic-compare: src/fs-magic src/fs-kernel-magic src/fs-def
 
 CLEANFILES += src/fs-def
 src/fs-def: src/fs.h
-	grep '^# *define ' src/fs.h | $(ASSORT) > $@-t && mv $@-t $@
+	@grep '^# *define ' src/fs.h | $(ASSORT) > $@-t && mv $@-t $@
 
 # Massage bits of the statfs man page and definitions from
 # /usr/include/linux/magic.h to be in a form consistent with what's in fs.h.
@@ -525,6 +525,7 @@ fs_normalize_perl_subst =			\
   -e 's/AFS_FS/KAFS/;'				\
   -e 's/(_SUPER)?_MAGIC//;'			\
   -e 's/\s+0x(\S+)/" 0x" . uc $$1/e;'		\
+  -e 's/(\s+0x)(\X{2})\b/$${1}00$$2/;'		\
   -e 's/(\s+0x)(\X{3})\b/$${1}0$$2/;'		\
   -e 's/(\s+0x)(\X{6})\b/$${1}00$$2/;'		\
   -e 's/(\s+0x)(\X{7})\b/$${1}0$$2/;'		\
