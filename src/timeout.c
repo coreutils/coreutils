@@ -114,14 +114,9 @@ static void
 settimeout (double duration, bool warn)
 {
 
-/* timer_settime() provides potentially nanosecond resolution.
-   setitimer() is more portable (to Darwin for example),
-   but only provides microsecond resolution and thus is
-   a little more awkward to use with timespecs, as well as being
-   deprecated by POSIX.  Instead we fallback to single second
-   resolution provided by alarm().  */
-
 #if HAVE_TIMER_SETTIME
+  /* timer_settime() provides potentially nanosecond resolution.  */
+
   struct timespec ts = dtotimespec (duration);
   struct itimerspec its = { {0, 0}, ts };
   timer_t timerid;
@@ -138,7 +133,36 @@ settimeout (double duration, bool warn)
     }
   else if (warn && errno != ENOSYS)
     error (0, errno, _("warning: timer_create"));
+
+#elif HAVE_SETITIMER
+  /* setitimer() is more portable (to Darwin for example),
+     but only provides microsecond resolution.  */
+
+  struct timeval tv;
+  struct timespec ts = dtotimespec (duration);
+  tv.tv_sec = ts.tv_sec;
+  tv.tv_usec = (ts.tv_nsec + 999) / 1000;
+  if (tv.tv_usec == 1000 * 1000)
+    {
+      if (tv.tv_sec != TYPE_MAXIMUM (time_t))
+        {
+          tv.tv_sec++;
+          tv.tv_usec = 0;
+        }
+      else
+        tv.tv_usec--;
+    }
+  struct itimerval it = { {0, 0}, tv };
+  if (setitimer (ITIMER_REAL, &it, NULL) == 0)
+    return;
+  else
+    {
+      if (warn && errno != ENOSYS)
+        error (0, errno, _("warning: setitimer"));
+    }
 #endif
+
+  /* fallback to single second resolution provided by alarm().  */
 
   unsigned int timeint;
   if (UINT_MAX <= duration)

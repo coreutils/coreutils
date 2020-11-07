@@ -44,6 +44,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   file system types.  stat -f -c%T now reports the file system type,
   and tail -f uses polling for "vboxsf" and inotify for the others.
 
+  timeout now supports sub-second timeouts on macOS.
+
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
 
