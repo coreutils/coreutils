@@ -450,8 +450,8 @@ make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
   size_t utmpsize = sizeof UT_ID (utmp_ent);
   char *comment = xmalloc (strlen (_("id=")) + utmpsize + 1);
 
-  strcpy (comment, _("id="));
-  strncat (comment, UT_ID (utmp_ent), utmpsize);
+  char *p = stpcpy (comment, _("id="));
+  stzncpy (p, UT_ID (utmp_ent), utmpsize);
   return comment;
 }
 
