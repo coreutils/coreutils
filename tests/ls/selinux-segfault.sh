@@ -1,5 +1,5 @@
 #!/bin/sh
-# ls -l /proc/sys would segfault when built against libselinux1 2.0.15-2+b1
+# Ensure we don't segfault in selinux handling
 
 # Copyright (C) 2008-2020 Free Software Foundation, Inc.
 
@@ -19,9 +19,15 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ ls
 
+# ls -l /proc/sys would segfault when built against libselinux1 2.0.15-2+b1
 f=/proc/sys
 test -r $f || f=.
-
 ls -l $f > out || fail=1
+
+# ls <= 8.32 would segfault when printing
+# the security context of broken symlink targets
+mkdir sedir || framework_failure_
+ln -sf missing sedir/broken || framework_failure_
+returns_ 1 ls -L -R -Z -m sedir > out || fail=1
 
 Exit $fail

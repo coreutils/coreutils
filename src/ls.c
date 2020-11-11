@@ -3424,6 +3424,9 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
              provokes an exit status of 1.  */
           file_failure (command_line_arg,
                         _("cannot access %s"), full_name);
+
+          f->scontext = UNKNOWN_SECURITY_CONTEXT;
+
           if (command_line_arg)
             return 0;
 
