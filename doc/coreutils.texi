@@ -13336,6 +13336,8 @@ True if the strings are equal.
 @opindex ==
 @cindex equal string check
 True if the strings are equal (synonym for =).
+Note this form is not as portable to other
+shells and systems.
 
 @item @var{string1} != @var{string2}
 @opindex !=
