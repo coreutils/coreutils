@@ -1176,7 +1176,7 @@ validate_case_classes (struct Spec_list *s1, struct Spec_list *s2)
   bool s1_new_element = true;
   bool s2_new_element = true;
 
-  if (!s2->has_char_class)
+  if (complement || !s2->has_char_class)
     return;
 
   for (int i = 0; i < N_CHARS; i++)

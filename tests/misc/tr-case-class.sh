@@ -110,4 +110,7 @@ the latter string must not end with a character class' > exp
   compare exp out || fail=1
 fi
 
+# coreutils 8.6 - 8.32 inclusive, would abort trying to validate the following
+returns_ 1 tr -c '[:upper:]\000-\370' '[:lower:]' < /dev/null || fail=1
+
 Exit $fail

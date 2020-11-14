@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer crashes when printing the SELinux context for unstatable files.
   [bug introduced in coreutils-6.9.91]
 
+  tr no longer crashes when using --complement with certain
+  invalid combinations of case character classes.
+  [bug introduced in coreutils-8.6]
+
 ** Changes in behavior
 
   cp and install now default to copy-on-write (COW) if available.
