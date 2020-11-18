@@ -4397,6 +4397,12 @@ Use this option only if there is no alternative; it is much slower than
 @option{--numeric-sort} (@option{-n}) and it can lose information when
 converting to floating point.
 
+You can use this option to sort hexadecimal numbers prefixed with
+@samp{0x} or @samp{0X}, where those numbers are not fixed width,
+or of varying case.  However for hex numbers of consistent case,
+and left padded with @samp{0} to a consistent width, a standard
+lexicographic sort will be faster.
+
 @item -h
 @itemx --human-numeric-sort
 @itemx --sort=human-numeric
