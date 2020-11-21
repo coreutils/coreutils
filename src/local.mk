@@ -250,12 +250,15 @@ src_stat_LDADD += $(LIB_SELINUX)
 # for nvlist_lookup_uint64_array
 src_stat_LDADD += $(LIB_NVPAIR)
 
-# for gettime, settime, utimecmp, utimens
+# for gettime, settime, tempname, utimecmp, utimens
 copy_ldadd += $(LIB_CLOCK_GETTIME)
 src_date_LDADD += $(LIB_CLOCK_GETTIME)
 src_ginstall_LDADD += $(LIB_CLOCK_GETTIME)
+src_ln_LDADD += $(LIB_CLOCK_GETTIME)
 src_ls_LDADD += $(LIB_CLOCK_GETTIME)
+src_mktemp_LDADD += $(LIB_CLOCK_GETTIME)
 src_pr_LDADD += $(LIB_CLOCK_GETTIME)
+src_tac_LDADD += $(LIB_CLOCK_GETTIME)
 src_timeout_LDADD += $(LIB_TIMER_TIME)
 src_touch_LDADD += $(LIB_CLOCK_GETTIME)
 
