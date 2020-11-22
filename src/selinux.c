@@ -21,7 +21,9 @@
 #include <selinux/context.h>
 #include <sys/types.h>
 
+#include "die.h"
 #include "system.h"
+#include "canonicalize.h"
 #include "xfts.h"
 #include "selinux.h"
 
@@ -113,6 +115,16 @@ defaultcon (struct selabel_handle *selabel_handle,
   context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;
+  char *newpath = NULL;
+
+  if (! IS_ABSOLUTE_FILE_NAME (path))
+    {
+      newpath = canonicalize_filename_mode (path, CAN_MISSING);
+      if (! newpath)
+        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
+             quoteaf (path));
+      path = newpath;
+    }
 
   if (selabel_lookup (selabel_handle, &scon, path, mode) < 0)
     {
@@ -120,7 +132,7 @@ defaultcon (struct selabel_handle *selabel_handle,
          when processing files, when in fact it was the
          associated default context that was not found.
          Therefore map the error to something more appropriate
-         to the context in which we're using matchpathcon().  */
+         to the context in which we're using selabel_lookup().  */
       if (errno == ENOENT)
         errno = ENODATA;
       goto quit;
@@ -146,6 +158,7 @@ quit:
   context_free (tcontext);
   freecon (scon);
   freecon (tcon);
+  free (newpath);
   return rc;
 }
 
@@ -269,8 +282,23 @@ bool
 restorecon (struct selabel_handle *selabel_handle,
             char const *path, bool recurse)
 {
+  char *newpath = NULL;
+
+  if (! IS_ABSOLUTE_FILE_NAME (path))
+    {
+      newpath = canonicalize_filename_mode (path, CAN_MISSING);
+      if (! newpath)
+        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
+             quoteaf (path));
+      path = newpath;
+    }
+
   if (! recurse)
-    return restorecon_private (selabel_handle, path) == 0;
+    {
+      bool ok = restorecon_private (selabel_handle, path) != -1;
+      free (newpath);
+      return ok;
+    }
 
   char const *ftspath[2] = { path, NULL };
   FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
@@ -286,6 +314,7 @@ restorecon (struct selabel_handle *selabel_handle,
   if (fts_close (fts) != 0)
     err = errno;
 
+  free (newpath);
   return !err;
 }
 #endif
