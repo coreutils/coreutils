@@ -17,18 +17,15 @@
 /* Written by Daniel Walsh <dwalsh@redhat.com> */
 
 #include <config.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 #include <selinux/context.h>
 #include <sys/types.h>
 
-#include "die.h"
-#include "error.h"
 #include "system.h"
-#include "canonicalize.h"
 #include "xfts.h"
 #include "selinux.h"
 
-#if HAVE_SELINUX_SELINUX_H
+#if HAVE_SELINUX_LABEL_H
 
 # if ! HAVE_MODE_TO_SECURITY_CLASS
 /*
@@ -98,16 +95,17 @@ quit:
 }
 
 /*
-  This function takes a path and a mode, it calls computecon to get the
+  This function takes a handle, path and mode, it calls computecon to get the
   label of the path object if the current process created it, then it calls
-  matchpathcon to get the default type for the object.  It substitutes the
+  selabel_lookup to get the default type for the object.  It substitutes the
   default type into label.  It tells the SELinux Kernel to label all new file
   system objects created by the current process with this label.
 
   Returns -1 on failure.  errno will be set appropriately.
 */
 int
-defaultcon (char const *path, mode_t mode)
+defaultcon (struct selabel_handle *selabel_handle,
+            char const *path, mode_t mode)
 {
   int rc = -1;
   char *scon = NULL;
@@ -115,20 +113,8 @@ defaultcon (char const *path, mode_t mode)
   context_t scontext = 0, tcontext = 0;
   const char *contype;
   char *constr;
-  char *newpath = NULL;
 
-  if (! IS_ABSOLUTE_FILE_NAME (path))
-    {
-      /* Generate absolute path as required by subsequent matchpathcon(),
-         with libselinux < 2.1.5 2011-0826.  */
-      newpath = canonicalize_filename_mode (path, CAN_MISSING);
-      if (! newpath)
-        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-             quoteaf (path));
-      path = newpath;
-    }
-
-  if (matchpathcon (path, mode, &scon) < 0)
+  if (selabel_lookup (selabel_handle, &scon, path, mode) < 0)
     {
       /* "No such file or directory" is a confusing error,
          when processing files, when in fact it was the
@@ -160,25 +146,20 @@ quit:
   context_free (tcontext);
   freecon (scon);
   freecon (tcon);
-  free (newpath);
   return rc;
 }
 
 /*
-  This function takes a PATH of an existing file system object, and a LOCAL
-  boolean that indicates whether the function should set the object's label
-  to the default for the local process, or one using system wide settings.
-  If LOCAL == true, it will ask the SELinux Kernel what the default label
-  for all objects created should be and then sets the label on the object.
-  Otherwise it calls matchpathcon on the object to ask the system what the
-  default label should be, extracts the type field and then modifies the file
+  If SELABEL_HANDLE is null, set PATH's label to the default to the
+  local process.  Otherwise use selabel_lookup to determine the
+  default label, extract the type field and then modify the file
   system object.  Note only the type field is updated, thus preserving MLS
   levels and user identity etc. of the PATH.
 
   Returns -1 on failure.  errno will be set appropriately.
 */
 static int
-restorecon_private (char const *path, bool local)
+restorecon_private (struct selabel_handle *selabel_handle, char const *path)
 {
   int rc = -1;
   struct stat sb;
@@ -189,7 +170,7 @@ restorecon_private (char const *path, bool local)
   char *constr;
   int fd;
 
-  if (local)
+  if (!selabel_handle)
     {
       if (getfscreatecon (&tcon) < 0)
         return rc;
@@ -199,7 +180,9 @@ restorecon_private (char const *path, bool local)
           return rc;
         }
       rc = lsetfilecon (path, tcon);
+      int err = errno;
       freecon (tcon);
+      errno = err;
       return rc;
     }
 
@@ -218,13 +201,13 @@ restorecon_private (char const *path, bool local)
         goto quit;
     }
 
-  if (matchpathcon (path, sb.st_mode, &scon) < 0)
+  if (selabel_lookup (selabel_handle, &scon, path, sb.st_mode) < 0)
     {
       /* "No such file or directory" is a confusing error,
          when processing files, when in fact it was the
          associated default context that was not found.
          Therefore map the error to something more appropriate
-         to the context in which we're using matchpathcon().  */
+         to the context in which we're using selabel_lookup.  */
       if (errno == ENOENT)
         errno = ENODATA;
       goto quit;
@@ -258,83 +241,51 @@ restorecon_private (char const *path, bool local)
   else
     rc = lsetfilecon (path, constr);
 
-quit:
+ quit:;
+  int err = errno;
   if (fd != -1)
     close (fd);
   context_free (scontext);
   context_free (tcontext);
   freecon (scon);
   freecon (tcon);
+  errno = err;
   return rc;
 }
 
 /*
   This function takes three parameters:
 
+  SELABEL_HANDLE for selabel_lookup, or null to preserve.
+
   PATH of an existing file system object.
 
   A RECURSE boolean which if the file system object is a directory, will
   call restorecon_private on every file system object in the directory.
 
-  A LOCAL boolean that indicates whether the function should set object labels
-  to the default for the local process, or use system wide settings.
-
-  Returns false on failure.  errno will be set appropriately.
+  Return false on failure.  errno will be set appropriately.
 */
 bool
-restorecon (char const *path, bool recurse, bool local)
+restorecon (struct selabel_handle *selabel_handle,
+            char const *path, bool recurse)
 {
-  char *newpath = NULL;
-  FTS *fts;
-  bool ok = true;
-
-  if (! IS_ABSOLUTE_FILE_NAME (path) && ! local)
-    {
-      /* Generate absolute path as required by subsequent matchpathcon(),
-         with libselinux < 2.1.5 2011-0826.  Also generating the absolute
-         path before the fts walk, will generate absolute paths in the
-         fts entries, which may be quicker to process in any case.  */
-      newpath = canonicalize_filename_mode (path, CAN_MISSING);
-      if (! newpath)
-        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-             quoteaf (path));
-    }
-
-  const char *ftspath[2] = { newpath ? newpath : path, NULL };
-
   if (! recurse)
-    {
-      ok = restorecon_private (*ftspath, local) != -1;
-      free (newpath);
-      return ok;
-    }
+    return restorecon_private (selabel_handle, path) == 0;
 
-  fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
-  while (1)
-    {
-      FTSENT *ent;
+  char const *ftspath[2] = { path, NULL };
+  FTS *fts = xfts_open ((char *const *) ftspath, FTS_PHYSICAL, NULL);
 
-      ent = fts_read (fts);
-      if (ent == NULL)
-        {
-          if (errno != 0)
-            {
-              error (0, errno, _("fts_read failed"));
-              ok = false;
-            }
-          break;
-        }
+  int err = 0;
+  for (FTSENT *ent; (ent = fts_read (fts)); )
+    if (restorecon_private (selabel_handle, fts->fts_path) < 0)
+      err = errno;
 
-      ok &= restorecon_private (fts->fts_path, local) != -1;
-    }
+  if (errno != 0)
+    err = errno;
 
   if (fts_close (fts) != 0)
-    {
-      error (0, errno, _("fts_close failed"));
-      ok = false;
-    }
+    err = errno;
 
-  free (newpath);
-  return ok;
+  return !err;
 }
 #endif

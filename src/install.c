@@ -23,7 +23,7 @@
 #include <signal.h>
 #include <pwd.h>
 #include <grp.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 #include <sys/wait.h>
 
 #include "system.h"
@@ -63,10 +63,6 @@ static bool use_default_selinux_context = true;
 
 #if ! HAVE_LCHOWN
 # define lchown(name, uid, gid) chown (name, uid, gid)
-#endif
-
-#if ! HAVE_MATCHPATHCON_INIT_PREFIX
-# define matchpathcon_init_prefix(a, p) /* empty */
 #endif
 
 /* The user name that will own the files, or NULL to make the owner
@@ -298,24 +294,37 @@ cp_option_init (struct cp_options *x)
   x->update = false;
   x->require_preserve_context = false;  /* Not used by install currently.  */
   x->preserve_security_context = false; /* Whether to copy context from src.  */
-  x->set_security_context = false;    /* Whether to set sys default context.  */
+  x->set_security_context = NULL;     /* Whether to set sys default context.  */
   x->preserve_xattr = false;
   x->verbose = false;
   x->dest_info = NULL;
   x->src_info = NULL;
 }
 
-#ifdef ENABLE_MATCHPATHCON
+static struct selabel_handle *
+get_labeling_handle (void)
+{
+  static bool initialized;
+  static struct selabel_handle *hnd;
+  if (!initialized)
+    {
+      initialized = true;
+      hnd = selabel_open (SELABEL_CTX_FILE, NULL, 0);
+      if (!hnd)
+        error (0, errno, _("warning: security labeling handle failed"));
+    }
+  return hnd;
+}
+
 /* Modify file context to match the specified policy.
    If an error occurs the file will remain with the default directory
-   context.  Note this sets the context to that returned by matchpathcon,
+   context.  Note this sets the context to that returned by selabel_lookup
    and thus discards MLS levels and user identity of the FILE.  */
 static void
 setdefaultfilecon (char const *file)
 {
   struct stat st;
   char *scontext = NULL;
-  static bool first_call = true;
 
   if (selinux_enabled != 1)
     {
@@ -325,51 +334,14 @@ setdefaultfilecon (char const *file)
   if (lstat (file, &st) != 0)
     return;
 
-  if (first_call && IS_ABSOLUTE_FILE_NAME (file))
+  struct selabel_handle *hnd = get_labeling_handle ();
+  if (!hnd)
+    return;
+  if (selabel_lookup (hnd, &scontext, file, st.st_mode) != 0)
     {
-      /* Calling matchpathcon_init_prefix (NULL, "/first_component/")
-         is an optimization to minimize the expense of the following
-         matchpathcon call.  Do it only once, just before the first
-         matchpathcon call.  We *could* call matchpathcon_fini after
-         the final matchpathcon call, but that's not necessary, since
-         by then we're about to exit, and besides, the buffers it
-         would free are still reachable.  */
-      char const *p0;
-      char const *p = file + 1;
-      while (ISSLASH (*p))
-        ++p;
-
-      /* Record final leading slash, for when FILE starts with two or more.  */
-      p0 = p - 1;
-
-      if (*p)
-        {
-          char *prefix;
-          do
-            {
-              ++p;
-            }
-          while (*p && !ISSLASH (*p));
-
-          prefix = malloc (p - p0 + 2);
-          if (prefix)
-            {
-              stpcpy (stpncpy (prefix, p0, p - p0), "/");
-              matchpathcon_init_prefix (NULL, prefix);
-              free (prefix);
-            }
-        }
-    }
-  first_call = false;
-
-  /* If there's an error determining the context, or it has none,
-     return to allow default context.  Note the "<<none>>" check
-     is only needed for libselinux < 1.20 (2005-01-04).  */
-  if ((matchpathcon (file, st.st_mode, &scontext) != 0)
-      || STREQ (scontext, "<<none>>"))
-    {
-      if (scontext != NULL)
-        freecon (scontext);
+      if (errno != ENOENT)
+        error (0, errno, _("warning: %s: context lookup failed"),
+               quotef (file));
       return;
     }
 
@@ -379,15 +351,7 @@ setdefaultfilecon (char const *file)
            quotef_n (0, file), quote_n (1, scontext));
 
   freecon (scontext);
-  return;
 }
-#else
-static void
-setdefaultfilecon (char const *file)
-{
-  (void) file;
-}
-#endif
 
 /* FILE is the last operand of this command.  Return true if FILE is a
    directory.  But report an error there is a problem accessing FILE,
@@ -427,7 +391,8 @@ static int
 make_ancestor (char const *dir, char const *component, void *options)
 {
   struct cp_options const *x = options;
-  if (x->set_security_context && defaultcon (component, S_IFDIR) < 0
+  if (x->set_security_context
+      && defaultcon (x->set_security_context, component, S_IFDIR) < 0
       && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
            quoteaf (dir));
@@ -457,7 +422,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
      and here we set the context for the final component. */
   if (ret == EXIT_SUCCESS && x->set_security_context)
     {
-      if (! restorecon (last_component (dir), false, false)
+      if (! restorecon (x->set_security_context, last_component (dir), false)
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to restore context for %s"),
                quoteaf (dir));
@@ -902,7 +867,7 @@ main (int argc, char **argv)
               /* Disable use of the install(1) specific setdefaultfilecon().
                  Note setdefaultfilecon() is different from the newer and more
                  generic restorecon() in that the former sets the context of
-                 the dest files to that returned by matchpathcon directly,
+                 the dest files to that returned by selabel_lookup directly,
                  thus discarding MLS level and user identity of the file.
                  TODO: consider removing setdefaultfilecon() in future.  */
               use_default_selinux_context = false;
@@ -910,7 +875,7 @@ main (int argc, char **argv)
               if (optarg)
                 scontext = optarg;
               else
-                x.set_security_context = true;
+                x.set_security_context = get_labeling_handle ();
             }
           else if (optarg)
             {

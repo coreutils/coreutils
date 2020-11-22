@@ -21,7 +21,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <assert.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 
 #include "system.h"
 #include "backupfile.h"
@@ -125,7 +125,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_timestamps = true;
   x->explicit_no_preserve_mode= false;
   x->preserve_security_context = selinux_enabled;
-  x->set_security_context = false;
+  x->set_security_context = NULL;
   x->reduce_diagnostics = false;
   x->data_copy_required = true;
   x->require_preserve = false;  /* FIXME: maybe make this an option */
@@ -417,7 +417,10 @@ main (int argc, char **argv)
           if (selinux_enabled)
             {
               x.preserve_security_context = false;
-              x.set_security_context = true;
+	      x.set_security_context = selabel_open (SELABEL_CTX_FILE,
+						     NULL, 0);
+	      if (! x.set_security_context)
+		error (0, errno, _("warning: ignoring --context"));
             }
           break;
         case_GETOPT_HELP_CHAR;

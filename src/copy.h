@@ -22,6 +22,8 @@
 # include <stdbool.h>
 # include "hash.h"
 
+struct selabel_handle;
+
 /* Control creation of sparse files (files with holes).  */
 enum Sparse_type
 {
@@ -162,8 +164,8 @@ struct cp_options
   bool preserve_timestamps;
   bool explicit_no_preserve_mode;
 
-  /* If true, attempt to set specified security context */
-  bool set_security_context;
+  /* If non-null, attempt to set specified security context */
+  struct selabel_handle *set_security_context;
 
   /* Enabled for mv, and for cp by the --preserve=links option.
      If true, attempt to preserve in the destination files any
@@ -294,7 +296,7 @@ extern bool set_process_security_ctx (char const *src_name,
                                       mode_t mode, bool new_dst,
                                       const struct cp_options *x);
 
-extern bool set_file_security_ctx (char const *dst_name, bool process_local,
+extern bool set_file_security_ctx (char const *dst_name,
                                    bool recurse, const struct cp_options *x);
 
 void dest_info_init (struct cp_options *);

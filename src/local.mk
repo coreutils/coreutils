@@ -416,8 +416,6 @@ src_base32_CPPFLAGS = -DBASE_TYPE=32 $(AM_CPPFLAGS)
 src_basenc_SOURCES = src/basenc.c
 src_basenc_CPPFLAGS = -DBASE_TYPE=42 $(AM_CPPFLAGS)
 
-src_ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
-
 src_expand_SOURCES = src/expand.c src/expand-common.c
 src_unexpand_SOURCES = src/unexpand.c src/expand-common.c
 

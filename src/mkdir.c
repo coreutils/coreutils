@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 
 #include "system.h"
 #include "die.h"
@@ -98,7 +98,7 @@ struct mkdir_options
   mode_t mode_bits;
 
   /* Set the SELinux File Context.  */
-  bool set_security_context;
+  struct selabel_handle *set_security_context;
 
   /* If not null, format to use when reporting newly made directories.  */
   char const *created_directory_format;
@@ -123,7 +123,8 @@ make_ancestor (char const *dir, char const *component, void *options)
 {
   struct mkdir_options const *o = options;
 
-  if (o->set_security_context && defaultcon (component, S_IFDIR) < 0
+  if (o->set_security_context
+      && defaultcon (o->set_security_context, component, S_IFDIR) < 0
       && ! ignorable_ctx_err (errno))
     error (0, errno, _("failed to set default creation context for %s"),
            quoteaf (dir));
@@ -156,7 +157,8 @@ process_dir (char *dir, struct savewd *wd, void *options)
   /* If possible set context before DIR created.  */
   if (o->set_security_context)
     {
-      if (! o->make_ancestor_function && defaultcon (dir, S_IFDIR) < 0
+      if (! o->make_ancestor_function
+          && defaultcon (o->set_security_context, dir, S_IFDIR) < 0
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to set default creation context for %s"),
                quoteaf (dir));
@@ -176,7 +178,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
   if (ret == EXIT_SUCCESS && o->set_security_context
       && o->make_ancestor_function)
     {
-      if (! restorecon (last_component (dir), false, false)
+      if (! restorecon (o->set_security_context, last_component (dir), false)
           && ! ignorable_ctx_err (errno))
         error (0, errno, _("failed to restore context for %s"),
                quoteaf (dir));
@@ -197,7 +199,7 @@ main (int argc, char **argv)
   options.mode = S_IRWXUGO;
   options.mode_bits = 0;
   options.created_directory_format = NULL;
-  options.set_security_context = false;
+  options.set_security_context = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -231,7 +233,12 @@ main (int argc, char **argv)
               if (optarg)
                 scontext = optarg;
               else
-                options.set_security_context = true;
+                {
+                  options.set_security_context = selabel_open (SELABEL_CTX_FILE,
+                                                               NULL, 0);
+                  if (! options.set_security_context)
+                    error (0, errno, _("warning: ignoring --context"));
+                }
             }
           else if (optarg)
             {
@@ -255,7 +262,7 @@ main (int argc, char **argv)
 
   /* FIXME: This assumes mkdir() is done in the same process.
      If that's not always the case we would need to call this
-     like we do when options.set_security_context == true.  */
+     like we do when options.set_security_context.  */
   if (scontext)
     {
       int ret = 0;

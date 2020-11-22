@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 
 #include "system.h"
 #include "argmatch.h"
@@ -531,10 +531,9 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
           if (! *new_dst
               && (x->set_security_context || x->preserve_security_context))
             {
-              if (! set_file_security_ctx (dir, x->preserve_security_context,
-                                           false, x)
+              if (! set_file_security_ctx (dir, false, x)
                   && x->require_preserve_context)
-                  return false;
+                return false;
             }
 
           *slash++ = '/';
@@ -802,7 +801,7 @@ cp_option_init (struct cp_options *x)
   x->explicit_no_preserve_mode = false;
   x->preserve_security_context = false; /* -a or --preserve=context.  */
   x->require_preserve_context = false;  /* --preserve=context.  */
-  x->set_security_context = false;      /* -Z, set sys default context. */
+  x->set_security_context = NULL;       /* -Z, set sys default context. */
   x->preserve_xattr = false;
   x->reduce_diagnostics = false;
   x->require_preserve_xattr = false;
@@ -1116,7 +1115,12 @@ main (int argc, char **argv)
               if (optarg)
                 scontext = optarg;
               else
-                x.set_security_context = true;
+                {
+                  x.set_security_context = selabel_open (SELABEL_CTX_FILE,
+                                                         NULL, 0);
+                  if (! x.set_security_context)
+                    error (0, errno, _("warning: ignoring --context"));
+                }
             }
           else if (optarg)
             {
@@ -1197,8 +1201,8 @@ main (int argc, char **argv)
   /* FIXME: This handles new files.  But what about existing files?
      I.e., if updating a tree, new files would have the specified context,
      but shouldn't existing files be updated for consistency like this?
-       if (scontext)
-         restorecon (dst_path, 0, true);
+       if (scontext && !restorecon (NULL, dst_path, 0))
+          error (...);
    */
   if (scontext && setfscreatecon (se_const (scontext)) < 0)
     die (EXIT_FAILURE, errno,

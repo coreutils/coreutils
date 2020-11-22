@@ -1141,7 +1141,7 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
     {
       /* With -Z, adjust the default context for the process
          to have the type component adjusted as per the destination path.  */
-      if (new_dst && defaultcon (dst_name, mode) < 0
+      if (new_dst && defaultcon (x->set_security_context, dst_name, mode) < 0
           && ! ignorable_ctx_err (errno))
         {
           error (0, errno,
@@ -1154,21 +1154,21 @@ set_process_security_ctx (char const *src_name, char const *dst_name,
 }
 
 /* Reset the security context of DST_NAME, to that already set
-   as the process default if PROCESS_LOCAL is true.  Otherwise
+   as the process default if !X->set_security_context.  Otherwise
    adjust the type component of DST_NAME's security context as
    per the system default for that path.  Issue warnings upon
-   failure, when allowed by various settings in CP_OPTIONS.
-   Return FALSE on failure, TRUE on success.  */
+   failure, when allowed by various settings in X.
+   Return false on failure, true on success.  */
 
 bool
-set_file_security_ctx (char const *dst_name, bool process_local,
+set_file_security_ctx (char const *dst_name,
                        bool recurse, const struct cp_options *x)
 {
   bool all_errors = (!x->data_copy_required
                      || x->require_preserve_context);
   bool some_errors = !all_errors && !x->reduce_diagnostics;
 
-  if (! restorecon (dst_name, recurse, process_local))
+  if (! restorecon (x->set_security_context, dst_name, recurse))
     {
       if (all_errors || (some_errors && !errno_unsupported (errno)))
         error (0, errno, _("failed to set the security context of %s"),
@@ -1330,8 +1330,7 @@ copy_reg (char const *src_name, char const *dst_name,
       if ((x->set_security_context || x->preserve_security_context)
           && 0 <= dest_desc)
         {
-          if (! set_file_security_ctx (dst_name, x->preserve_security_context,
-                                       false, x))
+          if (! set_file_security_ctx (dst_name, false, x))
             {
               if (x->require_preserve_context)
                 {
@@ -2609,7 +2608,7 @@ copy_internal (char const *src_name, char const *dst_name,
           if (x->set_security_context)
             {
               /* -Z failures are only warnings currently.  */
-              (void) set_file_security_ctx (dst_name, false, true, x);
+              (void) set_file_security_ctx (dst_name, true, x);
             }
 
           if (rename_succeeded)
@@ -2819,8 +2818,7 @@ copy_internal (char const *src_name, char const *dst_name,
              descendents, so use it to set the context for existing dirs here.
              This will also give earlier indication of failure to set ctx.  */
           if (x->set_security_context || x->preserve_security_context)
-            if (! set_file_security_ctx (dst_name, x->preserve_security_context,
-                                         false, x))
+            if (! set_file_security_ctx (dst_name, false, x))
               {
                 if (x->require_preserve_context)
                   goto un_backup;
@@ -3020,8 +3018,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (!new_dst && !x->copy_as_regular && !S_ISDIR (src_mode)
       && (x->set_security_context || x->preserve_security_context))
     {
-      if (! set_file_security_ctx (dst_name, x->preserve_security_context,
-                                   false, x))
+      if (! set_file_security_ctx (dst_name, false, x))
         {
            if (x->require_preserve_context)
              goto un_backup;

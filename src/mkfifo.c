@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <selinux/selinux.h>
+#include <selinux/label.h>
 
 #include "system.h"
 #include "die.h"
@@ -81,7 +81,7 @@ main (int argc, char **argv)
   int exit_status = EXIT_SUCCESS;
   int optc;
   char const *scontext = NULL;
-  bool set_security_context = false;
+  struct selabel_handle *set_security_context = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -109,7 +109,12 @@ main (int argc, char **argv)
               if (optarg)
                 scontext = optarg;
               else
-                set_security_context = true;
+                {
+                  set_security_context = selabel_open (SELABEL_CTX_FILE,
+                                                       NULL, 0);
+                  if (! set_security_context)
+                    error (0, errno, _("warning: ignoring --context"));
+                }
             }
           else if (optarg)
             {
@@ -164,7 +169,7 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     {
       if (set_security_context)
-        defaultcon (argv[optind], S_IFIFO);
+        defaultcon (set_security_context, argv[optind], S_IFIFO);
       if (mkfifo (argv[optind], newmode) != 0)
         {
           error (0, errno, _("cannot create fifo %s"), quoteaf (argv[optind]));
