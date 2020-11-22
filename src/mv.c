@@ -417,10 +417,9 @@ main (int argc, char **argv)
           if (selinux_enabled)
             {
               x.preserve_security_context = false;
-	      x.set_security_context = selabel_open (SELABEL_CTX_FILE,
-						     NULL, 0);
-	      if (! x.set_security_context)
-		error (0, errno, _("warning: ignoring --context"));
+              x.set_security_context = selabel_open (SELABEL_CTX_FILE, NULL, 0);
+              if (! x.set_security_context)
+                error (0, errno, _("warning: ignoring --context"));
             }
           break;
         case_GETOPT_HELP_CHAR;
