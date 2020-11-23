@@ -21,7 +21,6 @@
 #include <selinux/context.h>
 #include <sys/types.h>
 
-#include "die.h"
 #include "system.h"
 #include "canonicalize.h"
 #include "xfts.h"
@@ -89,10 +88,12 @@ computecon (char const *path, mode_t mode, char **con)
     goto quit;
   rc = security_compute_create (scon, tcon, tclass, con);
 
-quit:
+ quit:;
+  int err = errno;
   free (dir);
   freecon (scon);
   freecon (tcon);
+  errno = err;
   return rc;
 }
 
@@ -119,10 +120,10 @@ defaultcon (struct selabel_handle *selabel_handle,
 
   if (! IS_ABSOLUTE_FILE_NAME (path))
     {
+      /* Generate absolute name as required by subsequent selabel_lookup.  */
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
-        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-             quoteaf (path));
+        goto quit;
       path = newpath;
     }
 
@@ -153,12 +154,14 @@ defaultcon (struct selabel_handle *selabel_handle,
 
   rc = setfscreatecon (constr);
 
-quit:
+ quit:;
+  int err = errno;
   context_free (scontext);
   context_free (tcontext);
   freecon (scon);
   freecon (tcon);
   free (newpath);
+  errno = err;
   return rc;
 }
 
@@ -286,17 +289,21 @@ restorecon (struct selabel_handle *selabel_handle,
 
   if (! IS_ABSOLUTE_FILE_NAME (path))
     {
+      /* Generate absolute name as required by subsequent selabel_lookup.
+         When RECURSE, this also generates absolute names in the
+         fts entries, which may be quicker to process in any case.  */
       newpath = canonicalize_filename_mode (path, CAN_MISSING);
       if (! newpath)
-        die (EXIT_FAILURE, errno, _("error canonicalizing %s"),
-             quoteaf (path));
+        return false;
       path = newpath;
     }
 
   if (! recurse)
     {
       bool ok = restorecon_private (selabel_handle, path) != -1;
+      int err = errno;
       free (newpath);
+      errno = err;
       return ok;
     }
 
