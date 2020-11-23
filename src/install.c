@@ -921,7 +921,7 @@ main (int argc, char **argv)
     die (EXIT_FAILURE, 0,
          _("cannot set target context and preserve it"));
 
-  if (scontext && setfscreatecon (se_const (scontext)) < 0)
+  if (scontext && setfscreatecon (scontext) < 0)
     die (EXIT_FAILURE, errno,
          _("failed to set default file creation context to %s"),
          quote (scontext));

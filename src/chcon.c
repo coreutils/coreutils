@@ -182,8 +182,8 @@ change_file_context (int fd, char const *file)
   if (file_context == NULL || ! STREQ (context_string, file_context))
     {
       int fail = (affect_symlink_referent
-                  ?  setfileconat (fd, file, se_const (context_string))
-                  : lsetfileconat (fd, file, se_const (context_string)));
+                  ?  setfileconat (fd, file, context_string)
+                  : lsetfileconat (fd, file, context_string));
 
       if (fail)
         {
@@ -559,7 +559,7 @@ main (int argc, char **argv)
     {
       specified_context = argv[optind++];
       if (0 < is_selinux_enabled ()
-          && security_check_context (se_const (specified_context)) < 0)
+          && security_check_context (specified_context) < 0)
         die (EXIT_FAILURE, errno, _("invalid context: %s"),
              quote (specified_context));
     }

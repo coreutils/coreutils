@@ -269,7 +269,7 @@ main (int argc, char **argv)
       if (is_smack_enabled ())
         ret = smack_set_label_for_self (scontext);
       else
-        ret = setfscreatecon (se_const (scontext));
+        ret = setfscreatecon (scontext);
 
       if (ret < 0)
         die (EXIT_FAILURE, errno,

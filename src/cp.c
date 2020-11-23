@@ -1204,7 +1204,7 @@ main (int argc, char **argv)
        if (scontext && !restorecon (NULL, dst_path, 0))
           error (...);
    */
-  if (scontext && setfscreatecon (se_const (scontext)) < 0)
+  if (scontext && setfscreatecon (scontext) < 0)
     die (EXIT_FAILURE, errno,
          _("failed to set default file creation context to %s"),
          quote (scontext));
