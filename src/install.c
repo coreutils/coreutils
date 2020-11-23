@@ -339,7 +339,7 @@ setdefaultfilecon (char const *file)
     return;
   if (selabel_lookup (hnd, &scontext, file, st.st_mode) != 0)
     {
-      if (errno != ENOENT)
+      if (errno != ENOENT && ! ignorable_ctx_err (errno))
         error (0, errno, _("warning: %s: context lookup failed"),
                quotef (file));
       return;
