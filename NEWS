@@ -20,6 +20,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer crashes when printing the SELinux context for unstatable files.
   [bug introduced in coreutils-6.9.91]
 
+  rm no longer skips an extra file when the removal of an empty directory fails.
+  [bug introduced by the rewrite to use fts in coreutils-8.0]
+
   tr no longer crashes when using --complement with certain
   invalid combinations of case character classes.
   [bug introduced in coreutils-8.6]

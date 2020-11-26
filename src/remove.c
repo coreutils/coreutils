@@ -506,7 +506,8 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
             /* When we know (from prompt when in interactive mode)
                that this is an empty directory, don't prompt twice.  */
             s = excise (fts, ent, x, true);
-            fts_skip_tree (fts, ent);
+            if (s == RM_OK)
+              fts_skip_tree (fts, ent);
           }
 
         if (s != RM_OK)

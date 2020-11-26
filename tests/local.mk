@@ -136,6 +136,7 @@ all_root_tests =				\
   tests/rm/no-give-up.sh			\
   tests/rm/one-file-system.sh			\
   tests/rm/read-only.sh				\
+  tests/rm/empty-immutable-skip.sh		\
   tests/tail-2/append-only.sh			\
   tests/tail-2/end-of-device.sh			\
   tests/touch/now-owned-by-other.sh
