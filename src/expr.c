@@ -212,7 +212,7 @@ mbs_logical_substr (const char *s, size_t pos, size_t len)
   return v;
 }
 
-/* Return the number of logical characteres (possibly multibyte)
+/* Return the number of logical characters (possibly multibyte)
    that are in string S in the first OFS octets.
 
    Example in UTF-8:
