@@ -52,6 +52,7 @@ date: timezone: TZ="Asia/Tokyo" environment value
 date: final: 661095000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 1990-12-13 13:30:00 (UTC)
 date: final: (Y-M-D) 1990-12-13 22:30:00 (UTC+09)
+date: output format: '%a %b %e %T %z %Y'
 Thu Dec 13 07:30:00 -0600 1990
 EOF
 
@@ -102,6 +103,7 @@ date: timezone: TZ="America/Lima" environment value
 date: final: 1.000000000 (epoch-seconds)
 date: final: (Y-M-D) 1970-01-01 00:00:01 (UTC)
 date: final: (Y-M-D) 1969-12-31 19:00:01 (UTC-05)
+date: output format: '%a %b %e %T %z %Y'
 Wed Dec 31 19:00:01 -0500 1969
 EOF
 
@@ -122,6 +124,7 @@ date: timezone: Universal Time
 date: final: 1356998400.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC)
 date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC+00)
+date: output format: '%a %b %e %H:%M:%S %Z %Y'
 Tue Jan  1 00:00:00 UTC 2013
 EOF
 
@@ -149,6 +152,7 @@ date: timezone: Universal Time
 date: final: 1382400000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC)
 date: final: (Y-M-D) 2013-10-22 00:00:00 (UTC+00)
+date: output format: '%F'
 2013-10-22
 EOF
 
@@ -178,6 +182,7 @@ date: timezone: Universal Time
 date: final: 1475280000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC)
 date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC+00)
+date: output format: '%a %b %e %H:%M:%S %Z %Y'
 Sat Oct  1 00:00:00 UTC 2016
 EOF
 
@@ -209,6 +214,7 @@ date: timezone: TZ="America/New_York" environment value
 date: final: 1480564800.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2016-12-01 04:00:00 (UTC)
 date: final: (Y-M-D) 2016-11-30 23:00:00 (UTC-05)
+date: output format: '%F'
 2016-11-30
 EOF
 
@@ -232,6 +238,7 @@ date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1323554400.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-12-10 22:00:00 (UTC)
 date: final: (Y-M-D) 2011-12-11 00:00:00 (UTC+02)
+date: output format: '%a %b %e %H:%M:%S %Z %Y'
 Sun Dec 11 00:00:00 EET 2011
 EOF
 
@@ -249,6 +256,7 @@ date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1307739600.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-06-10 21:00:00 (UTC)
 date: final: (Y-M-D) 2011-06-11 00:00:00 (UTC+03)
+date: output format: '%a %b %e %H:%M:%S %Z %Y'
 Sat Jun 11 00:00:00 EEST 2011
 EOF
 
@@ -277,6 +285,7 @@ date: timezone: Universal Time
 date: final: 1302562740.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC)
 date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC+00)
+date: output format: '%a %b %e %H:%M:%S %Z %Y'
 Mon Apr 11 22:59:00 UTC 2011
 EOF
 

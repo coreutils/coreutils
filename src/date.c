@@ -584,6 +584,9 @@ show_date (const char *format, struct timespec when, timezone_t tz)
 {
   struct tm tm;
 
+  if (parse_datetime_flags & PARSE_DATETIME_DEBUG)
+    error (0, 0, _("output format: %s"), quote (format));
+
   if (localtime_rz (tz, &when.tv_sec, &tm))
     {
       if (format == rfc_email_format)
