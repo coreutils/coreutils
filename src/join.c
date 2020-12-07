@@ -204,28 +204,28 @@ When FILE1 or FILE2 (not both) is -, read standard input.\n\
 "), stdout);
       fputs (_("\
 \n\
-  -a FILENUM        also print unpairable lines from file FILENUM, where\n\
-                      FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
-  -e EMPTY          replace missing input fields with EMPTY\n\
+  -a FILENUM             also print unpairable lines from file FILENUM, where\n\
+                           FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
+  -e EMPTY               replace missing input fields with EMPTY\n\
 "), stdout);
       fputs (_("\
-  -i, --ignore-case  ignore differences in case when comparing fields\n\
-  -j FIELD          equivalent to '-1 FIELD -2 FIELD'\n\
-  -o FORMAT         obey FORMAT while constructing output line\n\
-  -t CHAR           use CHAR as input and output field separator\n\
+  -i, --ignore-case      ignore differences in case when comparing fields\n\
+  -j FIELD               equivalent to '-1 FIELD -2 FIELD'\n\
+  -o FORMAT              obey FORMAT while constructing output line\n\
+  -t CHAR                use CHAR as input and output field separator\n\
 "), stdout);
       fputs (_("\
-  -v FILENUM        like -a FILENUM, but suppress joined output lines\n\
-  -1 FIELD          join on this FIELD of file 1\n\
-  -2 FIELD          join on this FIELD of file 2\n\
-  --check-order     check that the input is correctly sorted, even\n\
-                      if all input lines are pairable\n\
-  --nocheck-order   do not check that the input is correctly sorted\n\
-  --header          treat the first line in each file as field headers,\n\
-                      print them without trying to pair them\n\
+  -v FILENUM             like -a FILENUM, but suppress joined output lines\n\
+  -1 FIELD               join on this FIELD of file 1\n\
+  -2 FIELD               join on this FIELD of file 2\n\
+      --check-order      check that the input is correctly sorted, even\n\
+                           if all input lines are pairable\n\
+      --nocheck-order    do not check that the input is correctly sorted\n\
+      --header           treat the first line in each file as field headers,\n\
+                           print them without trying to pair them\n\
 "), stdout);
       fputs (_("\
-  -z, --zero-terminated     line delimiter is NUL, not newline\n\
+  -z, --zero-terminated  line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

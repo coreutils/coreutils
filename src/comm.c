@@ -128,24 +128,24 @@ and column three contains lines common to both files.\n\
 "), stdout);
       fputs (_("\
 \n\
-  -1              suppress column 1 (lines unique to FILE1)\n\
-  -2              suppress column 2 (lines unique to FILE2)\n\
-  -3              suppress column 3 (lines that appear in both files)\n\
+  -1                      suppress column 1 (lines unique to FILE1)\n\
+  -2                      suppress column 2 (lines unique to FILE2)\n\
+  -3                      suppress column 3 (lines that appear in both files)\n\
 "), stdout);
       fputs (_("\
 \n\
-  --check-order     check that the input is correctly sorted, even\n\
-                      if all input lines are pairable\n\
-  --nocheck-order   do not check that the input is correctly sorted\n\
+      --check-order       check that the input is correctly sorted, even\n\
+                            if all input lines are pairable\n\
+      --nocheck-order     do not check that the input is correctly sorted\n\
 "), stdout);
       fputs (_("\
-  --output-delimiter=STR  separate columns with STR\n\
+      --output-delimiter=STR  separate columns with STR\n\
 "), stdout);
       fputs (_("\
-  --total           output a summary\n\
+      --total             output a summary\n\
 "), stdout);
       fputs (_("\
-  -z, --zero-terminated    line delimiter is NUL, not newline\n\
+  -z, --zero-terminated   line delimiter is NUL, not newline\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

@@ -195,13 +195,13 @@ Run COMMAND with root directory set to NEWROOT.\n\
 "), stdout);
 
       fputs (_("\
-  --groups=G_LIST        specify supplementary groups as g1,g2,..,gN\n\
+      --groups=G_LIST        specify supplementary groups as g1,g2,..,gN\n\
 "), stdout);
       fputs (_("\
-  --userspec=USER:GROUP  specify user and group (ID or name) to use\n\
+      --userspec=USER:GROUP  specify user and group (ID or name) to use\n\
 "), stdout);
       printf (_("\
-  --skip-chdir           do not change working directory to %s\n\
+      --skip-chdir           do not change working directory to %s\n\
 "), quoteaf ("/"));
 
       fputs (HELP_OPTION_DESCRIPTION, stdout);
