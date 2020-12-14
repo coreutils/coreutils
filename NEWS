@@ -20,6 +20,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer crashes when printing the SELinux context for unstatable files.
   [bug introduced in coreutils-6.9.91]
 
+  nl now handles single character --section-delimiter arguments,
+  by assuming a second ':' character has been specified, as specified by POSIX.
+  [This bug was present in "the beginning".]
+
   rm no longer skips an extra file when the removal of an empty directory fails.
   [bug introduced by the rewrite to use fts in coreutils-8.0]
 

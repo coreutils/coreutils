@@ -99,4 +99,15 @@ cat <<EOF > exp
 EOF
 compare exp out || fail=1
 
+# Ensure single char delimiters assume a following ':' character (as per POSIX)
+# coreutils <= v8.32 didn't match single char delimiters at all
+printf '%s\n' a x:x: c > in.txt || framework_failure_
+nl -d 'x' in.txt > out || fail=1
+cat <<EOF > exp
+     1	a
+
+     1	c
+EOF
+compare exp out || fail=1
+
 Exit $fail

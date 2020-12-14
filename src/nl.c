@@ -556,7 +556,8 @@ main (int argc, char **argv)
             }
           break;
         case 'd':
-          if (strlen (optarg) == 2)  /* POSIX.  */
+          len = strlen (optarg);
+          if (len == 1 || len == 2)  /* POSIX.  */
             {
               char *p = section_del;
               while (*optarg)
