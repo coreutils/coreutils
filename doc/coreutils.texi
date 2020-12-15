@@ -10693,6 +10693,8 @@ Set the file permission bits of created directories to @var{mode},
 which uses the same syntax as
 in @command{chmod} and uses @samp{a=rwx} (read, write and execute allowed for
 everyone) for the point of the departure.  @xref{File permissions}.
+This option affects only directories given on the command line;
+it does not affect any parents that may be created via the @option{-p} option.
 
 Normally the directory has the desired file mode bits at the moment it
 is created.  As a GNU extension, @var{mode} may also mention
@@ -10708,15 +10710,18 @@ overridden in this way.
 @opindex --parents
 @cindex parent directories, creating
 Make any missing parent directories for each argument, setting their
-file permission bits to the umask modified by @samp{u+wx}.  Ignore
+file permission bits to @samp{=rwx,u+wx},
+that is, with the umask modified by @samp{u+wx}.  Ignore
 existing parent directories, and do not change their file permission
 bits.
 
-To set the file permission bits of any newly-created parent
-directories to a value that includes @samp{u+wx}, you can set the
+If the @option{-m} option is also given, it does not affect
+file permission bits of any newly-created parent directories.
+To control these bits, set the
 umask before invoking @command{mkdir}.  For example, if the shell
 command @samp{(umask u=rwx,go=rx; mkdir -p P/Q)} creates the parent
-@file{P} it sets the parent's permission bits to @samp{u=rwx,go=rx}.
+@file{P} it sets the parent's file permission bits to @samp{u=rwx,go=rx}.
+(The umask must include @samp{u=wx} for this method to work.)
 To set a parent's special mode bits as well, you can invoke
 @command{chmod} after @command{mkdir}.  @xref{Directory Setuid and
 Setgid}, for how the set-user-ID and set-group-ID bits of
