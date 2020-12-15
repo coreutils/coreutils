@@ -54,7 +54,7 @@ static char const FORMAT_RIGHT_LZ[] = "%0*" PRIdMAX "%s";
 static char const FORMAT_LEFT[] = "%-*" PRIdMAX "%s";
 
 /* Default section delimiter characters.  */
-static char const DEFAULT_SECTION_DELIMITERS[] = "\\:";
+static char DEFAULT_SECTION_DELIMITERS[] = "\\:";
 
 /* Types of input lines: either one of the section delimiters,
    or text to output. */
@@ -96,7 +96,7 @@ static struct re_pattern_buffer *current_regex = NULL;
 static char const *separator_str = "\t";
 
 /* Input section delimiter string (-d).  */
-static char const *section_del = DEFAULT_SECTION_DELIMITERS;
+static char *section_del = DEFAULT_SECTION_DELIMITERS;
 
 /* Header delimiter string.  */
 static char *header_del = NULL;
@@ -388,7 +388,8 @@ check_section (void)
 {
   size_t len = line_buf.length - 1;
 
-  if (len < 2 || memcmp (line_buf.buffer, section_del, 2))
+  if (len < 2 || footer_del_len < 2
+      || memcmp (line_buf.buffer, section_del, 2))
     return Text;
   if (len == header_del_len
       && !memcmp (line_buf.buffer, header_del, header_del_len))
@@ -553,7 +554,14 @@ main (int argc, char **argv)
             }
           break;
         case 'd':
-          section_del = optarg;
+          if (strlen (optarg) == 2)  /* POSIX.  */
+            {
+              char *p = section_del;
+              while (*optarg)
+                *p++ = *optarg++;
+            }
+          else
+            section_del = optarg;  /* GNU extension.  */
           break;
         case_GETOPT_HELP_CHAR;
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -574,12 +582,10 @@ main (int argc, char **argv)
   stpcpy (stpcpy (stpcpy (header_del, section_del), section_del), section_del);
 
   body_del_len = len * 2;
-  body_del = xmalloc (body_del_len + 1);
-  stpcpy (stpcpy (body_del, section_del), section_del);
+  body_del = header_del + len;
 
   footer_del_len = len;
-  footer_del = xmalloc (footer_del_len + 1);
-  stpcpy (footer_del, section_del);
+  footer_del = body_del + len;
 
   /* Initialize the input buffer.  */
   initbuffer (&line_buf);
