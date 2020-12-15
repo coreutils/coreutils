@@ -211,7 +211,9 @@ Write each FILE to standard output, with line numbers added.\n\
 Default options are: -bt -d'\\:' -fn -hn -i1 -l1 -n'rn' -s<TAB> -v1 -w6\n\
 \n\
 CC are two delimiter characters used to construct logical page delimiters;\n\
-a missing second character implies ':'.\n\
+a missing second character implies ':'.  As a GNU extension one can specify\n\
+more than two characters, and also specifying the empty string (-d '')\n\
+disables section matching.\n\
 "), stdout);
       fputs (_("\
 \n\

@@ -79,4 +79,24 @@ compare exp out || fail=1
 printf '%s\n' a b c > in.txt || framework_failure_
 returns_ 1 nl -v$INTMAX_MAX -i$INTMAX_MIN in.txt > out || fail=1
 
+# Test GNU extension to --section-delimiter, of disabling section matching
+printf '%s\n' a '\:\:' c > in.txt || framework_failure_
+nl -d '' in.txt > out || fail=1
+cat <<\EOF > exp
+     1	a
+     2	\:\:
+     3	c
+EOF
+compare exp out || fail=1
+
+# Test GNU extension to --section-delimiter, of supporting strings longer than 2
+printf '%s\n' a foofoo c > in.txt || framework_failure_
+nl -d 'foo' in.txt > out || fail=1
+cat <<EOF > exp
+     1	a
+
+     1	c
+EOF
+compare exp out || fail=1
+
 Exit $fail

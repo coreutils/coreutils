@@ -1805,9 +1805,9 @@ start of body;
 start of footer.
 @end table
 
-The two characters from which these strings are made can be changed from
-@samp{\} and @samp{:} via options (see below), but the pattern and
-length of each string cannot be changed.
+The characters from which these strings are made can be changed from
+@samp{\} and @samp{:} via options (see below), but the pattern
+of each string cannot be changed.
 
 A section delimiter is replaced by an empty line on output.  Any text
 that comes before the first section delimiter string in the input file
@@ -1847,6 +1847,9 @@ expression @var{bre}.
 @cindex section delimiters of pages
 Set the section delimiter characters to @var{cd}; default is
 @samp{\:}.  If only @var{c} is given, the second remains @samp{:}.
+As a GNU extension more than two characters can be specified,
+and also if @var{cd} is empty (@option{-d ''}), then section
+matching is disabled.
 (Remember to protect @samp{\} or other metacharacters from shell
 expansion with quotes or extra backslashes.)
 
