@@ -18752,16 +18752,16 @@ $ LC_ALL=en_US.utf8 numfmt --from=iec --grouping 2G
 $ LC_ALL=ta_IN numfmt --from=iec --grouping 2G
 2,14,74,83,648
 
-$ LC_ALL=C ./src/numfmt --from=iec --format="==%'15f==" 2G
+$ LC_ALL=C numfmt --from=iec --format="==%'15f==" 2G
 ==     2147483648==
 
-$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'15f==" 2G
+$ LC_ALL=en_US.utf8 numfmt --from=iec --format="==%'15f==" 2G
 ==  2,147,483,648==
 
-$ LC_ALL=en_US.utf8 ./src/numfmt --from=iec --format="==%'-15f==" 2G
+$ LC_ALL=en_US.utf8 numfmt --from=iec --format="==%'-15f==" 2G
 ==2,147,483,648  ==
 
-$ LC_ALL=ta_IN ./src/numfmt --from=iec --format="==%'15f==" 2G
+$ LC_ALL=ta_IN numfmt --from=iec --format="==%'15f==" 2G
 == 2,14,74,83,648==
 @end example
 
