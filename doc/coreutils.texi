@@ -18337,6 +18337,12 @@ For instance, the following could be used to @command{sleep} for
 sleep 1234e-3 567.89e-6
 @end example
 
+Also one could sleep indefinitely like:
+
+@example
+sleep inf
+@end example
+
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
@@ -18786,7 +18792,8 @@ The sequence of numbers ends when the sum of the current number and
 so @code{seq 1 10 10} only produces @samp{1}.
 @var{increment} must not be @samp{0}; use the tool @command{yes} to get
 repeated output of a constant number.
-@var{first}, @var{increment} and @var{last} must not be @code{NaN}.
+@var{first}, @var{increment} and @var{last} must not be @code{NaN},
+but @code{inf} is supported.
 Floating-point numbers may be specified in either the current or
 the C locale.  @xref{Floating point}.
 
@@ -18882,8 +18889,10 @@ $ seq 50000000000000000000 2 50000000000000000004
 @end example
 
 However, note that when limited to non-negative whole numbers,
-an increment of 1 and no format-specifying option, seq can print
-arbitrarily large numbers.
+an increment of less than 200, and no format-specifying option,
+seq can print arbitrarily large numbers.
+Therefore @command{seq inf} can be used to
+generate an infinite sequence of numbers.
 
 Be careful when using @command{seq} with outlandish values: otherwise
 you may see surprising results, as @command{seq} uses floating point

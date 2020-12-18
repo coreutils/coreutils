@@ -39,7 +39,7 @@
 
 /* Limit below which seq_fast has more throughput.
    Determined with: seq 0 200 inf | pv > /dev/null  */
-#define SEQ_FAST_STEP_LIMIT 200
+#define SEQ_FAST_STEP_LIMIT 200  /* Keep in sync with texinfo description.  */
 #define SEQ_FAST_STEP_LIMIT_DIGITS 3
 
 /* The official name of this program (e.g., no 'g' prefix).  */
