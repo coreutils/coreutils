@@ -27,8 +27,9 @@ this program.  If not, see https://www.gnu.org/licenses/.  */
 #include <stdlib.h>
 #include <errno.h>
 
-/* Deactivate config.h's "rpl_"-prefixed definitions of these symbols.  */
+/* Deactivate "rpl_"-prefixed definitions of these symbols.  */
 #undef fclose
+#undef free
 #undef malloc
 #undef strerror
 
