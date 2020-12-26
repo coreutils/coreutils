@@ -54,6 +54,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cksum is now up to 4 times faster by using a slice by 8 algorithm.
+
   df now recognizes these file systems as remote:
   acfs, coda, fhgfs, gpfs, ibrix, ocfs2, and vxfs.
 
