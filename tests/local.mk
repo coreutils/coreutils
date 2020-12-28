@@ -287,6 +287,7 @@ all_tests =					\
   tests/misc/basenc.pl				\
   tests/misc/close-stdout.sh			\
   tests/misc/chroot-fail.sh			\
+  tests/misc/cksum.sh				\
   tests/misc/comm.pl				\
   tests/misc/csplit.sh				\
   tests/misc/csplit-1000.sh			\
