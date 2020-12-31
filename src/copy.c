@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 1989-2020 Free Software Foundation, Inc.
+   Copyright (C) 1989-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -281,7 +281,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           {
             /* copy_file_range incorrectly returns 0 when reading from
                the proc file system on the Linux kernel through at
-               least 5.6.19 (2020), so fall back on 'read' if the
+               least 5.6.19 (2021), so fall back on 'read' if the
                input file seems empty.  */
             if (*total_n_read == 0)
               break;

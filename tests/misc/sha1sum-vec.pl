@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Sample vectors for "sha1sum".
 
-# Copyright (C) 2000-2020 Free Software Foundation, Inc.
+# Copyright (C) 2000-2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -157,7 +157,7 @@ my @Tests =
      ['64', {IN=> {f=> '50 1 12 8 20 13 2 9 20 9 14 10 1 16 2 22 6 4 16 14 15 1 12 4 14 9 21 3 3 9 8 21 15 14 8 4 14 4 2 3 8 12 8 6 1 2 18 20 15 3 19 10 ^'}},
      {OUT=>'3ACBF874199763EBA20F3789DFC59572ACA4CF33'}],
      ['65', {IN=> {f=> '44 0 10 20 14 6 3 4 21 1 12 4 18 2 6 7 6 9 20 14 10 10 19 17 21 12 15 17 7 10 11 8 10 12 1 19 19 9 18 21 4 18 11 9 22 5 ^'}},
-     {OUT=>'86BE037C4D509C9202020767D860DAB039CADACE'}],
+     {OUT=>'86BE037C4D509C9202120767D860DAB039CADACE'}],
      ['66', {IN=> {f=> '47 0 15 8 15 3 5 6 2 19 12 17 4 20 8 11 20 2 18 4 16 20 12 9 9 6 16 21 16 3 16 18 3 19 5 16 2 4 2 12 11 15 11 14 17 2 10 18 8 ^'}},
      {OUT=>'51B57D7080A87394EEC3EB2E0B242E553F2827C9'}],
      ['67', {IN=> {f=> '48 1 5 13 3 21 5 3 6 18 18 10 1 21 21 7 1 13 12 19 1 14 6 8 21 19 21 11 19 13 2 13 4 1 10 22 16 4 9 4 10 16 3 7 15 11 9 13 17 12 ^'}},

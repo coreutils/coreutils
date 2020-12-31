@@ -1,7 +1,7 @@
 #!/bin/sh
 # Create the factor test scripts.
 
-# Copyright (C) 2012-2020 Free Software Foundation, Inc.
+# Copyright (C) 2012-2021 Free Software Foundation, Inc.
 
 test_name=$1
 template=$2

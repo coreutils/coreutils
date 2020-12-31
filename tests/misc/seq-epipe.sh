@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test for proper detection of EPIPE with ignored SIGPIPE
 
-# Copyright (C) 2016-2020 Free Software Foundation, Inc.
+# Copyright (C) 2016-2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ trap_sigpipe_or_skip_
 
 # /bin/sh has an intermittent failure in ignoring SIGPIPE on OpenIndiana 11
 # so we require bash as discussed at:
-# https://lists.gnu.org/archive/html/coreutils/2020-03/msg00004.html
+# https://lists.gnu.org/archive/html/coreutils/2021-03/msg00004.html
 require_bash_as_SHELL_
 
 # upon EPIPE with signals ignored, 'seq' should exit with an error.

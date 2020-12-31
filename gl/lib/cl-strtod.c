@@ -1,6 +1,6 @@
 /* Convert string to double in the current locale, falling back on the C locale.
 
-   Copyright 2019-2020 Free Software Foundation, Inc.
+   Copyright 2019-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

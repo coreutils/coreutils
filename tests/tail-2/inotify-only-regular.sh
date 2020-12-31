@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure that tail -f only uses inotify for regular files or fifos
 
-# Copyright (C) 2017-2020 Free Software Foundation, Inc.
+# Copyright (C) 2017-2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

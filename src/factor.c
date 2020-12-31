@@ -1,5 +1,5 @@
 /* factor -- print prime factors of n.
-   Copyright (C) 1986-2020 Free Software Foundation, Inc.
+   Copyright (C) 1986-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1817,7 +1817,7 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 }
 
 /* MAGIC[N] has a bit i set iff i is a quadratic residue mod N. */
-# define MAGIC64 0x0202021202030213ULL
+# define MAGIC64 0x0202121202130213ULL
 # define MAGIC63 0x0402483012450293ULL
 # define MAGIC65 0x218a019866014613ULL
 # define MAGIC11 0x23b
