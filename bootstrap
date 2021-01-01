@@ -1,10 +1,10 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2020-04-13.15; # UTC
+scriptversion=2020-11-18.17; # UTC
 
 # Bootstrap this package from checked-out sources.
 
-# Copyright (C) 2003-2020 Free Software Foundation, Inc.
+# Copyright (C) 2003-2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -71,7 +71,9 @@ Options:
  --no-git                 do not use git to update gnulib.  Requires that
                           --gnulib-srcdir point to a correct gnulib snapshot
  --skip-po                do not download po files
-
+EOF
+  bootstrap_print_option_usage_hook
+  cat <<EOF
 If the file $me.conf exists in the same directory as this script, its
 contents are read as shell variables to configure the bootstrap.
 
@@ -153,6 +155,18 @@ gnulib_files=
 
 : ${AUTOPOINT=autopoint}
 : ${AUTORECONF=autoreconf}
+
+# A function to be called for each unrecognized option.  Returns 0 if
+# the option in $1 has been processed by the function.  Returns 1 if
+# the option has not been processed by the function.  Override it via
+# your own definition in bootstrap.conf
+
+bootstrap_option_hook() { return 1; }
+
+# A function to be called in order to print the --help information
+# corresponding to user-defined command-line options.
+
+bootstrap_print_option_usage_hook() { :; }
 
 # A function to be called right after gnulib-tool is run.
 # Override it via your own definition in bootstrap.conf.
@@ -335,7 +349,7 @@ do
   --no-git)
     use_git=false;;
   *)
-    die "$option: unknown option";;
+    bootstrap_option_hook $option || die "$option: unknown option";;
   esac
 done
 
