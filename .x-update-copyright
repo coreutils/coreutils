@@ -1,4 +1,5 @@
 ^COPYING$
 ^bootstrap$
+^doc/fdl\.texi$
 ^man/help2man$
 ^tests/init\.sh$
