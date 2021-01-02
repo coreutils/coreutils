@@ -3,4 +3,4 @@ tac \- concatenate and print files in reverse
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]
-\fBrev\fP(1)
+cat(1), rev(1)
