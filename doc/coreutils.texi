@@ -7714,7 +7714,7 @@ high performance (``contiguous data'') file
 @item d
 directory
 @item D
-door (Solaris 2.5 and up)
+door (Solaris)
 @c @item F
 @c semaphore, if this is a distinct file type
 @item l
@@ -7728,7 +7728,7 @@ network special file (HP-UX)
 @item p
 FIFO (named pipe)
 @item P
-port (Solaris 10 and up)
+port (Solaris)
 @c @item Q
 @c message queue, if this is a distinct file type
 @item s
@@ -11824,7 +11824,7 @@ are also listed.
 @cindex file system space, retrieving old data more quickly
 Do not invoke the @code{sync} system call before getting any usage data.
 This may make @command{df} run significantly faster on systems with many
-disks, but on some systems (notably SunOS) the results may be slightly
+disks, but on some systems (notably Solaris) the results may be slightly
 out of date.  This is the default.
 
 @item --output
@@ -11925,7 +11925,7 @@ otherwise.  @xref{Block size}.
 @opindex --sync
 @cindex file system space, retrieving current data more slowly
 Invoke the @code{sync} system call before getting any usage data.  On
-some systems (notably SunOS), doing this yields more up to date results,
+some systems (notably Solaris), doing this yields more up to date results,
 but in general this option makes @command{df} much slower, especially when
 there are many or very busy file systems.
 
@@ -11980,7 +11980,7 @@ all systems.
 @opindex xfs @r{file system type}
 @opindex btrfs @r{file system type}
 A file system on a locally-mounted hard disk.  (The system might even
-support more than one type here; Linux does.)
+support more than one type here; GNU/Linux does.)
 
 @item iso9660@r{, }cdfs
 @cindex CD-ROM file system type
@@ -13564,9 +13564,8 @@ expression operators.
 @kindex \| @r{regexp operator}
 In the regular expression, @code{\+}, @code{\?}, and @code{\|} are
 operators which respectively match one or more, zero or one, or separate
-alternatives.  SunOS and other @command{expr}'s treat these as regular
-characters.  (POSIX allows either behavior.)
-@xref{Top, , Regular Expression Library, regex, Regex}, for details of
+alternatives.  These operators are GNU extensions.  @xref{Regular Expressions,,
+Regular Expressions, grep, The GNU Grep Manual}, for details of
 regular expression syntax.  Some examples are in @ref{Examples of expr}.
 
 @item match @var{string} @var{regex}
@@ -15204,7 +15203,7 @@ Switch to a different shell layer.  Non-POSIX.
 
 @item status
 @opindex status
-Send an info signal.  Not currently supported on Linux.  Non-POSIX.
+Send an info signal.  Not currently supported on GNU/Linux.  Non-POSIX.
 
 @item start
 @opindex start
@@ -16617,8 +16616,8 @@ parsed reliably.  In the following example, @var{kernel-version} is
 
 @example
 uname -a
-@result{} Linux dumdum.example.org 5.7.9-100.fc31.x86_64@c
- #1 SMP Fri Jul 17 17:18:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+@result{} Linux dumdum.example.org 5.9.16-200.fc33.x86_64@c
+ #1 SMP Mon Dec 21 14:08:22 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
 @end example
 
 
@@ -19015,7 +19014,7 @@ might be used.  What it's really about is the ``Software Tools'' philosophy
 of program development and usage.
 
 The software tools philosophy was an important and integral concept
-in the initial design and development of Unix (of which Linux and GNU are
+in the initial design and development of Unix (of which GNU/Linux and GNU are
 essentially clones).  Unfortunately, in the modern day press of
 Internetworking and flashy GUIs, it seems to have fallen by the
 wayside.  This is a shame, since it provides a powerful mental model
@@ -19443,10 +19442,7 @@ A minor modification to the above pipeline can give us a simple spelling
 checker!  To determine if you've spelled a word correctly, all you have to
 do is look it up in a dictionary.  If it is not there, then chances are
 that your spelling is incorrect.  So, we need a dictionary.
-The conventional location for a dictionary is @file{/usr/dict/words}.
-On my GNU/Linux system,@footnote{Redhat Linux 6.1, for the November 2000
-revision of this article.}
-this is a sorted, 45,402 word dictionary.
+The conventional location for a dictionary is @file{/usr/share/dict/words}.
 
 Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
@@ -19458,11 +19454,16 @@ $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 
 Now, all we need is a list of words that are @emph{not} in the
 dictionary.  Here is where the @command{comm} command comes in.
+Unfortunately @command{comm} operates on sorted input and
+@file{/usr/share/dict/words} is not sorted the way that @command{sort}
+and @command{comm} normally use, so we first create a properly-sorted
+copy of the dictionary and then run a pipeline that uses the copy.
 
 @example
+$ sort /usr/share/dict/words > sorted-words
 $ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
 > tr -s ' ' '\n' | sort -u |
-> comm -23 - /usr/dict/words
+> comm -23 - sorted-words
 @end example
 
 The @option{-2} and @option{-3} options eliminate lines that are only in the
