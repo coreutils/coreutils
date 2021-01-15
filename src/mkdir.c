@@ -89,8 +89,11 @@ struct mkdir_options
      made.  */
   int (*make_ancestor_function) (char const *, char const *, void *);
 
-  /* Umask value in effect.  */
-  mode_t umask_value;
+  /* Umask value for when making an ancestor.  */
+  mode_t umask_ancestor;
+
+  /* Umask value for when making the directory itself.  */
+  mode_t umask_self;
 
   /* Mode for directory itself.  */
   mode_t mode;
@@ -130,20 +133,18 @@ make_ancestor (char const *dir, char const *component, void *options)
     error (0, errno, _("failed to set default creation context for %s"),
            quoteaf (dir));
 
-  mode_t user_wx = S_IWUSR | S_IXUSR;
-  bool self_denying_umask = (o->umask_value & user_wx) != 0;
-  if (self_denying_umask)
-    umask (o->umask_value & ~user_wx);
+  if (o->umask_ancestor != o->umask_self)
+    umask (o->umask_ancestor);
   int r = mkdir (component, S_IRWXUGO);
-  if (self_denying_umask)
+  if (o->umask_ancestor != o->umask_self)
     {
       int mkdir_errno = errno;
-      umask (o->umask_value);
+      umask (o->umask_self);
       errno = mkdir_errno;
     }
   if (r == 0)
     {
-      r = (o->umask_value & S_IRUSR) != 0;
+      r = (o->umask_ancestor & S_IRUSR) != 0;
       announce_mkdir (dir, options);
     }
   return r;
@@ -282,8 +283,7 @@ main (int argc, char **argv)
   if (options.make_ancestor_function || specified_mode)
     {
       mode_t umask_value = umask (0);
-      umask (umask_value);
-      options.umask_value = umask_value;
+      options.umask_ancestor = umask_value & ~(S_IWUSR | S_IXUSR);
 
       if (specified_mode)
         {
@@ -293,10 +293,16 @@ main (int argc, char **argv)
                  quote (specified_mode));
           options.mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
                                       &options.mode_bits);
+          options.umask_self = umask_value & ~options.mode;
           free (change);
         }
       else
-        options.mode = S_IRWXUGO;
+        {
+          options.mode = S_IRWXUGO;
+          options.umask_self = umask_value;
+        }
+
+      umask (options.umask_self);
     }
 
   return savewd_process_files (argc - optind, argv + optind,

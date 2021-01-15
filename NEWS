@@ -20,6 +20,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer crashes when printing the SELinux context for unstatable files.
   [bug introduced in coreutils-6.9.91]
 
+  mkdir -m no longer mishandles modes more generous than the umask.
+  [bug introduced in coreutils-8.22]
+
   nl now handles single character --section-delimiter arguments,
   by assuming a second ':' character has been specified, as specified by POSIX.
   [This bug was present in "the beginning".]
