@@ -11006,7 +11006,19 @@ Give a diagnostic for each successful removal.
 
 @end table
 
-@xref{rm invocation}, for how to remove non-empty directories (recursively).
+@xref{rm invocation}, for how to remove non-empty directories recursively.
+
+To remove all empty directories under @var{dirname}, including
+directories that become empty because other directories are removed,
+you can use either of the following commands:
+
+@example
+# This uses GNU extensions.
+find @var{dirname} -type d -empty -delete
+
+# This runs on any POSIX platform.
+find @var{dirname} -depth -type d -exec rmdir @{@} +
+@end example
 
 @exitstatus
 
