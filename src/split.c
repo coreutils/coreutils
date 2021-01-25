@@ -1001,7 +1001,7 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
     }
   else
     {
-      if (lseek (STDIN_FILENO, start, SEEK_CUR) < 0)
+      if (lseek (STDIN_FILENO, start - initial_read, SEEK_CUR) < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
       initial_read = SIZE_MAX;
     }

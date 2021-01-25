@@ -30,6 +30,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm no longer skips an extra file when the removal of an empty directory fails.
   [bug introduced by the rewrite to use fts in coreutils-8.0]
 
+  split --number=K/N will again correctly split chunk K of N to stdout.
+  Previously a chunk starting after 128KiB, output the wrong part of the file.
+  [bug introduced in coreutils-8.26]
+
   tr no longer crashes when using --complement with certain
   invalid combinations of case character classes.
   [bug introduced in coreutils-8.6]
