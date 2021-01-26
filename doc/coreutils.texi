@@ -13559,12 +13559,14 @@ second is considered to be a (basic, a la GNU @code{grep}) regular
 expression, with a @code{^} implicitly prepended.  The first argument is
 then matched against this regular expression.
 
-If the match succeeds and @var{regex} uses @samp{\(} and @samp{\)}, the
-@code{:} expression returns the part of @var{string} that matched the
-subexpression; otherwise, it returns the number of characters matched.
+If @var{regex} does not use @samp{\(} and @samp{\)}, the @code{:}
+expression returns the number of characters matched, or 0 if the match
+fails.
 
-If the match fails, the @code{:} operator returns the null string if
-@samp{\(} and @samp{\)} are used in @var{regex}, otherwise 0.
+If @var{regex} uses @samp{\(} and @samp{\)}, the @code{:} expression
+returns the part of @var{string} that matched the subexpression, or
+the null string if the match failed or the subexpression did not
+contribute to the match.
 
 @kindex \( @r{regexp operator}
 Only the first @samp{\( @dots{} \)} pair is relevant to the return

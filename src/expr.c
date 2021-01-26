@@ -614,8 +614,13 @@ docolon (VALUE *sv, VALUE *pv)
       /* Were \(...\) used? */
       if (re_buffer.re_nsub > 0)
         {
-          sv->u.s[re_regs.end[1]] = '\0';
-          v = str_value (sv->u.s + re_regs.start[1]);
+          if (re_regs.end[1] < 0)
+            v = str_value ("");
+          else
+            {
+              sv->u.s[re_regs.end[1]] = '\0';
+              v = str_value (sv->u.s + re_regs.start[1]);
+            }
         }
       else
         {

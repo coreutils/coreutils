@@ -84,6 +84,9 @@ my @Tests =
      # In 5.94 and earlier, anchors incorrectly matched newlines.
      ['anchor', "'a\nb' : 'a\$'", {OUT => '0'}, {EXIT => 1}],
 
+     # In 8.32, \( ... \) that did not match caused memory errors.
+     ['emptysub', '"a" : "\\(b\\)*"', {OUT => ''}, {EXIT => 1}],
+
      # These tests are taken from grep/tests/bre.tests.
      ['bre1', '"abc" : "a\\(b\\)c"', {OUT => 'b'}],
      ['bre2', '"a(" : "a("', {OUT => '2'}],
