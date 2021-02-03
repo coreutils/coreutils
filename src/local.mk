@@ -358,7 +358,11 @@ src___SOURCES = src/lbracket.c
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
+src/cksum_pclmul.o: CFLAGS += -mavx -mpclmul
 src_cksum_SOURCES = src/cksum.c src/cksum.h
+if USE_PCLMUL_CRC32
+src_cksum_SOURCES += src/cksum_pclmul.c
+endif
 src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_env_SOURCES = src/env.c src/operand2sig.c
