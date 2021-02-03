@@ -122,7 +122,7 @@ main (void)
         }
     }
 
-  printf ("static uint_fast32_t const crctab[8][256] = {\n");
+  printf ("uint_fast32_t const crctab[8][256] = {\n");
   for (int y = 0; y < 8; y++)
     {
       printf ("{\n  0x%08x", crctab[y][0]);
@@ -146,6 +146,9 @@ main (void)
 # include "error.h"
 
 # include "cksum.h"
+# if USE_PCLMUL_CRC32
+#  include "cpuid.h"
+# endif /* USE_PCLMUL_CRC32 */
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -153,39 +156,46 @@ main (void)
 /* Nonzero if any of the files read were the standard input. */
 static bool have_read_stdin;
 
-/* Calculate and print the checksum and length in bytes
-   of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is true, print FILE next to the checksum and size.
-   Return true if successful.  */
+static bool
+cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
+              uintmax_t *length_out);
+static bool
+  (*cksum_fp)(FILE *, const char *, uint_fast32_t *,
+              uintmax_t *) = cksum_slice8;
+
+# if USE_PCLMUL_CRC32
+static bool
+pclmul_supported (void)
+{
+  unsigned int eax = 0;
+  unsigned int ebx = 0;
+  unsigned int ecx = 0;
+  unsigned int edx = 0;
+
+  if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
+    return false;
+
+  if (! (ecx & bit_PCLMUL))
+    return false;
+
+  if (! (ecx & bit_AVX))
+    return false;
+
+  return true;
+}
+# endif /* USE_PCLMUL_CRC32 */
 
 static bool
-cksum (const char *file, bool print_name)
+cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
+              uintmax_t *length_out)
 {
   uint32_t buf[BUFLEN/sizeof (uint32_t)];
   uint_fast32_t crc = 0;
   uintmax_t length = 0;
   size_t bytes_read;
-  FILE *fp;
-  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-  char const *hp;
 
-  if (STREQ (file, "-"))
-    {
-      fp = stdin;
-      have_read_stdin = true;
-      xset_binary_mode (STDIN_FILENO, O_BINARY);
-    }
-  else
-    {
-      fp = fopen (file, (O_BINARY ? "rb" : "r"));
-      if (fp == NULL)
-        {
-          error (0, errno, "%s", quotef (file));
-          return false;
-        }
-    }
-
-  fadvise (fp, FADVISE_SEQUENTIAL);
+  if (!fp || !file || !crc_out || !length_out)
+    return false;
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
     {
@@ -220,6 +230,47 @@ cksum (const char *file, bool print_name)
       if (feof (fp))
         break;
     }
+
+  *crc_out = crc;
+  *length_out = length;
+
+  return true;
+}
+
+/* Calculate and print the checksum and length in bytes
+   of file FILE, or of the standard input if FILE is "-".
+   If PRINT_NAME is true, print FILE next to the checksum and size.
+   Return true if successful.  */
+
+static bool
+cksum (const char *file, bool print_name)
+{
+  uint_fast32_t crc = 0;
+  uintmax_t length = 0;
+  FILE *fp;
+  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char const *hp;
+
+  if (STREQ (file, "-"))
+    {
+      fp = stdin;
+      have_read_stdin = true;
+      xset_binary_mode (STDIN_FILENO, O_BINARY);
+    }
+  else
+    {
+      fp = fopen (file, (O_BINARY ? "rb" : "r"));
+      if (fp == NULL)
+        {
+          error (0, errno, "%s", quotef (file));
+          return false;
+        }
+    }
+
+  fadvise (fp, FADVISE_SEQUENTIAL);
+
+  if (! cksum_fp (fp, file, &crc, &length))
+    return false;
 
   if (ferror (fp))
     {
@@ -298,6 +349,11 @@ main (int argc, char **argv)
                                    true, usage, AUTHORS, (char const *) NULL);
 
   have_read_stdin = false;
+
+# if USE_PCLMUL_CRC32
+  if (pclmul_supported ())
+     cksum_fp = cksum_pclmul;
+# endif /* USE_PCLMUL_CRC32 */
 
   if (optind == argc)
     ok = cksum ("-", false);

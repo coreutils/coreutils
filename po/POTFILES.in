@@ -44,6 +44,7 @@ src/chown-core.c
 src/chown.c
 src/chroot.c
 src/cksum.c
+src/cksum_pclmul.c
 src/comm.c
 src/copy.c
 src/coreutils.c

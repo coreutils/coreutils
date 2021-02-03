@@ -1,4 +1,13 @@
-static uint_fast32_t const crctab[8][256] = {
+#ifndef __CKSUM_H__
+# define __CKSUM_H__
+
+extern bool
+cksum_pclmul (FILE *fp, const char *file, uint_fast32_t *crc_out,
+              uintmax_t *length_out);
+
+extern uint_fast32_t const crctab[8][256];
+
+uint_fast32_t const crctab[8][256] = {
 {
   0x00000000,
   0x04c11db7, 0x09823b6e, 0x0d4326d9, 0x130476dc, 0x17c56b6b,
@@ -432,3 +441,5 @@ static uint_fast32_t const crctab[8][256] = {
   0x0d26bcfb, 0x8b82b73a, 0xd0236bf0, 0x3cc10eae, 0x6760d264
 },
 };
+
+#endif

@@ -359,6 +359,13 @@ nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
 src_cksum_SOURCES = src/cksum.c src/cksum.h
+if USE_PCLMUL_CRC32
+noinst_LIBRARIES += src/libcksum_pclmul.a
+src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
+cksum_pclmul_ldadd = src/libcksum_pclmul.a
+src_cksum_LDADD += $(cksum_pclmul_ldadd)
+src_libcksum_pclmul_a_CFLAGS = -mavx -mpclmul $(AM_CFLAGS)
+endif
 src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_env_SOURCES = src/env.c src/operand2sig.c
