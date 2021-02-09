@@ -1645,6 +1645,7 @@ Equivalent to @option{-vE}.
 @opindex -E
 @opindex --show-ends
 Display a @samp{$} after the end of each line.
+The @code{\r\n} combination is shown as @samp{^M$}.
 
 @item -n
 @itemx --number

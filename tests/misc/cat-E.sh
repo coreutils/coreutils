@@ -1,8 +1,5 @@
 #!/bin/sh
-# Ensure that cat -E produces same output as cat, modulo '$'s,
-# even when applied to a file in /proc.
-
-# Copyright (C) 2006-2021 Free Software Foundation, Inc.
+# Copyright (C) 2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,18 +17,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cat
 
+# \r followed by \n is displayed as ^M$
+# Up to and including 8.32 the $ would have displayed at the start of the line
+# overwriting the first character
+printf 'a\rb\r\nc\n\r\nd\r' > 'in' || framework_failure_
+printf 'a\rb^M$\nc$\n^M$\nd^M' > 'exp' || framework_failure_
 
-f=/proc/cpuinfo
-test -f $f \
-  || skip_ "no $f"
-
-
-# Yes, parts of /proc/cpuinfo might change between cat runs.
-# If that happens, consider choosing a file that's less likely to change,
-# or just filter out the changing lines.  The sed filter should help
-# to avoid any spurious numeric differences.
-cat -E $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > out || fail=1
-cat    $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > exp || fail=1
+cat -E 'in' > out || fail=1
 
 compare exp out || fail=1
 

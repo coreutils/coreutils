@@ -279,6 +279,7 @@ all_tests =					\
   tests/misc/wc-nbsp.sh				\
   tests/misc/wc-parallel.sh			\
   tests/misc/wc-proc.sh				\
+  tests/misc/cat-E.sh				\
   tests/misc/cat-proc.sh			\
   tests/misc/cat-buf.sh				\
   tests/misc/cat-self.sh			\

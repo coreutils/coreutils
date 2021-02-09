@@ -64,6 +64,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cat --show-ends will now show \r\n as ^M$.  Previously the \r was taken
+  literally, thus overwriting the first character in the line with '$'.
+
   cksum is now up to 4 times faster by using a slice by 8 algorithm.
 
   df now recognizes these file systems as remote:

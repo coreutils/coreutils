@@ -486,7 +486,15 @@ cat (
                   *bpout++ = ch + 64;
                 }
               else if (ch != '\n')
-                *bpout++ = ch;
+                {
+                  if (ch == '\r' && *bpin == '\n' && show_ends)
+                    {
+                      *bpout++ = '^';
+                      *bpout++ = 'M';
+                    }
+                  else
+                    *bpout++ = ch;
+                }
               else
                 {
                   newlines = -1;
