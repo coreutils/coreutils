@@ -1237,6 +1237,8 @@ init_parameters (int number_of_files)
         col_sep_string = column_separator;
 
       truncate_lines = true;
+      if (! (col_sep_length == 1 && *col_sep_string == '\t'))
+        untabify_input = true;
       tabify_output = true;
     }
   else

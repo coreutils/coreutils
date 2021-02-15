@@ -466,6 +466,27 @@ push @Tests,
     {IN=>{2=>"m\tn\to\n"}},
     {IN=>{3=>"x\ty\tz\n"}},
      {OUT=>join("\t", qw(a b c m n o x y z)) . "\n"} ];
+# -s and -s$'\t' use different code paths
+push @Tests,
+   ['merge-w-tabs-sepstr', "-m -s'\t' -t",
+    {IN=>{1=>"a\tb\tc\n"}},
+    {IN=>{2=>"m\tn\to\n"}},
+    {IN=>{3=>"x\ty\tz\n"}},
+     {OUT=>join("\t", qw(a b c m n o x y z)) . "\n"} ];
+
+# Exercise a variant of the bug with pr -m -s (commit 553d347)
+# test 2 files, too (merging 3 files automatically aligns columns on TAB stops)
+push @Tests,
+   ['merge-2-w-tabs', '-m -s -t',
+    {IN=>{1=>"a\tb\tc\n"}},
+    {IN=>{2=>"m\tn\to\n"}},
+     {OUT=>join("\t", qw(a b c m n o)) . "\n"} ];
+# -s and -s$'\t' use different code paths
+push @Tests,
+   ['merge-2-w-tabs-sepstr', "-m -s'\t' -t",
+    {IN=>{1=>"a\tb\tc\n"}},
+    {IN=>{2=>"m\tn\to\n"}},
+     {OUT=>join("\t", qw(a b c m n o)) . "\n"} ];
 
 # This resulted in reading invalid memory before coreutils-8.26
 push @Tests,
@@ -473,6 +494,23 @@ push @Tests,
     {IN=>{1=>"a\n"}},
     {IN=>{2=>"a\n"}},
      {OUT=>"a\t\t\t\t  \t\t\ta\n"} ];
+
+# Exercise a bug with pr -t -2 (bug #46422)
+push @Tests,
+   ['mcol-w-tabs', '-t -2',
+    {IN=>"x\tx\tx\tx\tx\nx\tx\tx\tx\tx\n"},
+     {OUT=>"x\tx\tx\tx\tx   x\t    x\t    x\t    x\t    x\n"} ];
+
+# generalize case from commit 553d347 (problem results from -s, not -m)
+push @Tests,
+   ['mcol-w-tabs-w-tabsep', '-t -2 -s',
+    {IN=>"x\tx\tx\tx\tx\nx\tx\tx\tx\tx\n"},
+     {OUT=>"x\tx\tx\tx\tx\tx\tx\tx\tx\tx\n"} ];
+# -s and -s$'\t' use different code paths
+push @Tests,
+   ['mcol-w-tabs-w-tabsep-sepstr', "-t -2 -s'\t'",
+    {IN=>"x\tx\tx\tx\tx\nx\tx\tx\tx\tx\n"},
+     {OUT=>"x\tx\tx\tx\tx\tx\tx\tx\tx\tx\n"} ];
 
 @Tests = triple_test \@Tests;
 

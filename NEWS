@@ -30,6 +30,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   by assuming a second ':' character has been specified, as specified by POSIX.
   [This bug was present in "the beginning".]
 
+  pr again adjusts tabs in input, to maintain alignment in multi column output.
+  [bug introduced in coreutils-6.9]
+
   rm no longer skips an extra file when the removal of an empty directory fails.
   [bug introduced by the rewrite to use fts in coreutils-8.0]
 
