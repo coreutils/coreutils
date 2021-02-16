@@ -144,9 +144,19 @@ remove_parents (char *dir)
             }
           else
             {
-              /* Barring race conditions, DIR is expected to be a directory.  */
-              error (0, rmdir_errno, _("failed to remove directory %s"),
-                     quoteaf (dir));
+              char const* error_msg;
+              if (rmdir_errno != ENOTDIR)
+                {
+                  /* Barring race conditions,
+                     DIR is expected to be a directory.  */
+                  error_msg = N_("failed to remove directory %s");
+                }
+              else
+                {
+                  /* A path component could be a symbolic link */
+                  error_msg = N_("failed to remove %s");
+                }
+              error (0, rmdir_errno, _(error_msg), quoteaf (dir));
             }
           break;
         }
@@ -238,9 +248,42 @@ main (int argc, char **argv)
           if (ignorable_failure (rmdir_errno, dir))
             continue;
 
-          /* Here, the diagnostic is less precise, since we have no idea
-             whether DIR is a directory.  */
-          error (0, rmdir_errno, _("failed to remove %s"), quoteaf (dir));
+          /* Distinguish the case for a symlink with trailing slash.
+             On Linux, rmdir(2) confusingly does not follow the symlink,
+             thus giving the errno ENOTDIR, while on other systems the symlink
+             is followed.  We don't provide consistent behavior here,
+             but at least we provide a more accurate error message.  */
+          bool custom_error = false;
+          if (rmdir_errno == ENOTDIR)
+            {
+              char const *last_unix_slash = strrchr (dir, '/');
+              if (last_unix_slash && (*(last_unix_slash + 1) == '\0'))
+                {
+                  struct stat st;
+                  int ret = stat (dir, &st);
+                  /* Some other issue following, or is actually a directory. */
+                  if ((ret != 0 && errno != ENOTDIR) || S_ISDIR (st.st_mode))
+                    {
+                      /* Ensure the last component was a symlink.  */
+                      char* dir_arg = xstrdup (dir);
+                      strip_trailing_slashes (dir);
+                      ret = lstat (dir, &st);
+                      if (ret == 0 && S_ISLNK (st.st_mode))
+                        {
+                          error (0, 0,
+                                 _("failed to remove %s:"
+                                   " Symbolic link not followed"),
+                                 quoteaf (dir_arg));
+                          custom_error = true;
+                        }
+                      free (dir_arg);
+                    }
+                }
+            }
+
+          if (! custom_error)
+            error (0, rmdir_errno, _("failed to remove %s"), quoteaf (dir));
+
           ok = false;
         }
       else if (remove_empty_parents)

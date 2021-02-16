@@ -695,6 +695,7 @@ all_tests =					\
   tests/readlink/rl-1.sh			\
   tests/rmdir/fail-perm.sh			\
   tests/rmdir/ignore.sh				\
+  tests/rmdir/symlink-errors.sh			\
   tests/rmdir/t-slash.sh			\
   tests/tail-2/assert-2.sh			\
   tests/tail-2/big-4gb.sh			\
