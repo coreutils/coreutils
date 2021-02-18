@@ -75,7 +75,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   df now recognizes these file systems as remote:
   acfs, coda, fhgfs, gpfs, ibrix, ocfs2, and vxfs.
 
-  stat and tail now know about the "devmem", "vboxsf", and "zonefs"
+  stat and tail now know about the "devmem", "exfat", "vboxsf", and "zonefs"
   file system types.  stat -f -c%T now reports the file system type,
   and tail -f uses polling for "vboxsf" and inotify for the others.
 

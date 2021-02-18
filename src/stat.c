@@ -361,6 +361,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "efs";
     case S_MAGIC_EROFS_V1: /* 0xE0F5E1E2 local */
       return "erofs";
+    case S_MAGIC_EXFAT: /* 0x2011BAB0 local */
+      return "exfat";
     case S_MAGIC_EXFS: /* 0x45584653 local */
       return "exfs";
     case S_MAGIC_EXOFS: /* 0x5DF5 local */
