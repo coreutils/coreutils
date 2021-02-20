@@ -142,6 +142,7 @@ src/unlink.c
 src/uptime.c
 src/users.c
 src/wc.c
+src/wc_avx2.c
 src/who.c
 src/whoami.c
 src/yes.c
