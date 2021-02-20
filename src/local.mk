@@ -427,6 +427,15 @@ src_basenc_CPPFLAGS = -DBASE_TYPE=42 $(AM_CPPFLAGS)
 src_expand_SOURCES = src/expand.c src/expand-common.c
 src_unexpand_SOURCES = src/unexpand.c src/expand-common.c
 
+src_wc_SOURCES = src/wc.c
+if USE_AVX2_WC_LINECOUNT
+noinst_LIBRARIES += src/libwc_avx2.a
+src_libwc_avx2_a_SOURCES = src/wc_avx2.c
+wc_avx2_ldadd = src/libwc_avx2.a
+src_wc_LDADD += $(wc_avx2_ldadd)
+src_libwc_avx2_a_CFLAGS = -mavx2 $(AM_CFLAGS)
+endif
+
 # Ensure we don't link against libcoreutils.a as that lib is
 # not compiled with -fPIC which causes issues on 64 bit at least
 src_libstdbuf_so_LDADD = $(LIBINTL)

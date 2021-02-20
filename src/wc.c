@@ -37,6 +37,9 @@
 #include "safe-read.h"
 #include "stat-size.h"
 #include "xbinary-io.h"
+#ifdef USE_AVX2_WC_LINECOUNT
+# include <cpuid.h>
+#endif
 
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \
@@ -52,6 +55,20 @@
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
+
+static bool
+wc_lines (char const *file, int fd, uintmax_t *lines_out,
+          uintmax_t *bytes_out);
+#ifdef USE_AVX2_WC_LINECOUNT
+/* From wc_avx2.c */
+extern bool
+wc_lines_avx2 (char const *file, int fd, uintmax_t *lines_out,
+               uintmax_t *bytes_out);
+#endif
+static bool
+(*wc_lines_p) (char const *file, int fd, uintmax_t *lines_out,
+                uintmax_t *bytes_out) = wc_lines;
+
 
 /* Cumulative number of lines, words, chars and bytes in all files so far.
    max_line_length is the maximum over all files processed so far.  */
@@ -107,6 +124,33 @@ static struct option const longopts[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+#ifdef USE_AVX2_WC_LINECOUNT
+static bool
+avx2_supported (void)
+{
+  unsigned int eax = 0;
+  unsigned int ebx = 0;
+  unsigned int ecx = 0;
+  unsigned int edx = 0;
+
+  if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
+    return false;
+
+  if (! (ecx & bit_OSXSAVE))
+    return false;
+
+  eax = ebx = ecx = edx = 0;
+
+  if (! __get_cpuid_count (7, 0, &eax, &ebx, &ecx, &edx))
+    return false;
+
+  if (! (ebx & bit_AVX2))
+    return false;
+
+  return true;
+}
+#endif
 
 void
 usage (int status)
@@ -206,6 +250,70 @@ write_counts (uintmax_t lines,
   if (file)
     printf (" %s", strchr (file, '\n') ? quotef (file) : file);
   putchar ('\n');
+}
+
+static bool
+wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
+{
+  size_t bytes_read;
+  uintmax_t lines, bytes;
+  char buf[BUFFER_SIZE + 1];
+  bool long_lines = false;
+
+  if (!lines_out || !bytes_out)
+    {
+      return false;
+    }
+
+  lines = bytes = 0;
+
+  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+    {
+
+      if (bytes_read == SAFE_READ_ERROR)
+        {
+          error (0, errno, "%s", quotef (file));
+          return false;
+        }
+
+      bytes += bytes_read;
+
+      char *p = buf;
+      char *end = buf + bytes_read;
+      uintmax_t plines = lines;
+
+      if (! long_lines)
+        {
+          /* Avoid function call overhead for shorter lines.  */
+          while (p != end)
+            lines += *p++ == '\n';
+        }
+      else
+        {
+          /* memchr is more efficient with longer lines.  */
+          while ((p = memchr (p, '\n', end - p)))
+            {
+              ++p;
+              ++lines;
+            }
+        }
+
+      /* If the average line length in the block is >= 15, then use
+          memchr for the next block, where system specific optimizations
+          may outweigh function call overhead.
+          FIXME: This line length was determined in 2015, on both
+          x86_64 and ppc64, but it's worth re-evaluating in future with
+          newer compilers, CPUs, or memchr() implementations etc.  */
+      if (lines - plines <= bytes_read / 15)
+        long_lines = true;
+      else
+        long_lines = false;
+    }
+
+  *bytes_out = bytes;
+  *lines_out = lines;
+
+  return true;
 }
 
 /* Count words.  FILE_X is the name of the file (or NULL for standard
@@ -312,49 +420,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
          but not chars or words.  */
-      bool long_lines = false;
-      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
-        {
-          if (bytes_read == SAFE_READ_ERROR)
-            {
-              error (0, errno, "%s", quotef (file));
-              ok = false;
-              break;
-            }
-
-          bytes += bytes_read;
-
-          char *p = buf;
-          char *end = p + bytes_read;
-          uintmax_t plines = lines;
-
-          if (! long_lines)
-            {
-              /* Avoid function call overhead for shorter lines.  */
-              while (p != end)
-                lines += *p++ == '\n';
-            }
-          else
-            {
-              /* memchr is more efficient with longer lines.  */
-              while ((p = memchr (p, '\n', end - p)))
-                {
-                  ++p;
-                  ++lines;
-                }
-            }
-
-          /* If the average line length in the block is >= 15, then use
-             memchr for the next block, where system specific optimizations
-             may outweigh function call overhead.
-             FIXME: This line length was determined in 2015, on both
-             x86_64 and ppc64, but it's worth re-evaluating in future with
-             newer compilers, CPUs, or memchr() implementations etc.  */
-          if (lines - plines <= bytes_read / 15)
-            long_lines = true;
-          else
-            long_lines = false;
-        }
+      ok = wc_lines_p (file, fd, &lines, &bytes);
     }
 #if MB_LEN_MAX > 1
 # define SUPPORT_OLD_MBRTOWC 1
@@ -705,6 +771,11 @@ main (int argc, char **argv)
   print_lines = print_words = print_chars = print_bytes = false;
   print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
+
+#ifdef USE_AVX2_WC_LINECOUNT
+  if (avx2_supported ())
+    wc_lines_p = wc_lines_avx2;
+#endif
 
   while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
