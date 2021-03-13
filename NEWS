@@ -70,7 +70,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cat --show-ends will now show \r\n as ^M$.  Previously the \r was taken
   literally, thus overwriting the first character in the line with '$'.
 
-  cksum is now up to 4 times faster by using a slice by 8 algorithm.
+  cksum is now up to 4 times faster by using a slice by 8 algorithm,
+  and at least 8 times faster where pclmul instructions are supported.
+  A new --debug option will indicate if pclmul is being used.
 
   df now recognizes these file systems as remote:
   acfs, coda, fhgfs, gpfs, ibrix, ocfs2, and vxfs.

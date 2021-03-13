@@ -39,6 +39,7 @@
 
 #define AUTHORS proper_name ("Q. Frank Xia")
 
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <stdint.h>
@@ -141,7 +142,6 @@ main (void)
 
 #else /* !CRCTAB */
 
-# include "long-options.h"
 # include "die.h"
 # include "error.h"
 
@@ -152,6 +152,21 @@ main (void)
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
+
+static bool debug;
+
+enum
+{
+  DEBUG_PROGRAM_OPTION = CHAR_MAX + 1,
+};
+
+static struct option const longopts[] =
+{
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {NULL, 0, NULL, 0},
+};
 
 /* Nonzero if any of the files read were the standard input. */
 static bool have_read_stdin;
@@ -173,13 +188,21 @@ pclmul_supported (void)
   unsigned int edx = 0;
 
   if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
-    return false;
+    {
+      if (debug)
+        error (0, 0, "%s", _("failed to get cpuid"));
+      return false;
+    }
 
-  if (! (ecx & bit_PCLMUL))
-    return false;
+  if (! (ecx & bit_PCLMUL) || ! (ecx & bit_AVX))
+    {
+      if (debug)
+        error (0, 0, "%s", _("pclmul support not detected"));
+      return false;
+    }
 
-  if (! (ecx & bit_AVX))
-    return false;
+  if (debug)
+    error (0, 0, "%s", _("using pclmul hardware support"));
 
   return true;
 }
@@ -330,7 +353,7 @@ Print CRC checksum and byte counts of each FILE.\n\
 int
 main (int argc, char **argv)
 {
-  int i;
+  int i, c;
   bool ok;
 
   initialize_main (&argc, &argv);
@@ -345,8 +368,22 @@ main (int argc, char **argv)
      so that processes running in parallel do not intersperse their output.  */
   setvbuf (stdout, NULL, _IOLBF, 0);
 
-  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE, Version,
-                                   true, usage, AUTHORS, (char const *) NULL);
+  while ((c = getopt_long (argc, argv, "", longopts, NULL)) != -1)
+    {
+      switch (c)
+        {
+        case DEBUG_PROGRAM_OPTION:
+          debug = true;
+          break;
+
+        case_GETOPT_HELP_CHAR;
+
+        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+        default:
+          usage (EXIT_FAILURE);
+        }
+    }
 
   have_read_stdin = false;
 
