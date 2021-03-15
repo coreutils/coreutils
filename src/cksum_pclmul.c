@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <x86intrin.h>
 #include "system.h"
-#include "die.h"
+#include "error.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
@@ -74,7 +74,10 @@ cksum_pclmul (FILE *fp, const char *file, uint_fast32_t *crc_out,
       __m128i xor_crc;
 
       if (length + bytes_read < length)
-        die (EXIT_FAILURE, 0, _("%s: file too long"), quotef (file));
+        {
+          error (0, EOVERFLOW, _("%s: file too long"), quotef (file));
+          return false;
+        }
       length += bytes_read;
 
       datap = (__m128i *)buf;

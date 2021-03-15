@@ -226,7 +226,10 @@ cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
       uint32_t second = 0;
 
       if (length + bytes_read < length)
-        die (EXIT_FAILURE, 0, _("%s: file too long"), quotef (file));
+        {
+          error (0, EOVERFLOW, _("%s: file too long"), quotef (file));
+          return false;
+        }
       length += bytes_read;
 
       /* Process multiples of 8 bytes */
