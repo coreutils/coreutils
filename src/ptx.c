@@ -25,7 +25,6 @@
 #include "die.h"
 #include <regex.h>
 #include "argmatch.h"
-#include "diacrit.h"
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
@@ -1033,8 +1032,6 @@ static void
 print_field (BLOCK field)
 {
   char *cursor;			/* Cursor in field to print */
-  int base;			/* Base character, without diacritic */
-  int diacritic;		/* Diacritic code for the character */
 
   /* Whitespace is not really compressed.  Instead, each white space
      character (tab, vt, ht etc.) is printed as one single space.  */
@@ -1044,140 +1041,44 @@ print_field (BLOCK field)
       unsigned char character = *cursor;
       if (edited_flag[character])
         {
+          /* Handle cases which are specific to 'roff' or TeX.  All
+             white space processing is done as the default case of
+             this switch.  */
 
-          /* First check if this is a diacriticized character.
-
-             This works only for TeX.  I do not know how diacriticized
-             letters work with 'roff'.  Please someone explain it to me!  */
-
-          diacritic = todiac (character);
-          if (diacritic != 0 && output_format == TEX_FORMAT)
+          switch (character)
             {
-              base = tobase (character);
-              switch (diacritic)
-                {
+            case '"':
+              /* In roff output format, double any quote.  */
+              putchar ('"');
+              putchar ('"');
+              break;
 
-                case 1:		/* Latin diphthongs */
-                  switch (base)
-                    {
-                    case 'o':
-                      fputs ("\\oe{}", stdout);
-                      break;
+            case '$':
+            case '%':
+            case '&':
+            case '#':
+            case '_':
+              /* In TeX output format, precede these with a backslash.  */
+              putchar ('\\');
+              putchar (character);
+              break;
 
-                    case 'O':
-                      fputs ("\\OE{}", stdout);
-                      break;
+            case '{':
+            case '}':
+              /* In TeX output format, precede these with a backslash and
+                 force mathematical mode.  */
+              printf ("$\\%c$", character);
+              break;
 
-                    case 'a':
-                      fputs ("\\ae{}", stdout);
-                      break;
+            case '\\':
+              /* In TeX output mode, request production of a backslash.  */
+              fputs ("\\backslash{}", stdout);
+              break;
 
-                    case 'A':
-                      fputs ("\\AE{}", stdout);
-                      break;
-
-                    default:
-                      putchar (' ');
-                    }
-                  break;
-
-                case 2:		/* Acute accent */
-                  printf ("\\'%s%c", (base == 'i' ? "\\" : ""), base);
-                  break;
-
-                case 3:		/* Grave accent */
-                  printf ("\\'%s%c", (base == 'i' ? "\\" : ""), base);
-                  break;
-
-                case 4:		/* Circumflex accent */
-                  printf ("\\^%s%c", (base == 'i' ? "\\" : ""), base);
-                  break;
-
-                case 5:		/* Diaeresis */
-                  printf ("\\\"%s%c", (base == 'i' ? "\\" : ""), base);
-                  break;
-
-                case 6:		/* Tilde accent */
-                  printf ("\\~%s%c", (base == 'i' ? "\\" : ""), base);
-                  break;
-
-                case 7:		/* Cedilla */
-                  printf ("\\c{%c}", base);
-                  break;
-
-                case 8:		/* Small circle beneath */
-                  switch (base)
-                    {
-                    case 'a':
-                      fputs ("\\aa{}", stdout);
-                      break;
-
-                    case 'A':
-                      fputs ("\\AA{}", stdout);
-                      break;
-
-                    default:
-                      putchar (' ');
-                    }
-                  break;
-
-                case 9:		/* Strike through */
-                  switch (base)
-                    {
-                    case 'o':
-                      fputs ("\\o{}", stdout);
-                      break;
-
-                    case 'O':
-                      fputs ("\\O{}", stdout);
-                      break;
-
-                    default:
-                      putchar (' ');
-                    }
-                  break;
-                }
+            default:
+              /* Any other flagged character produces a single space.  */
+              putchar (' ');
             }
-          else
-
-            /* This is not a diacritic character, so handle cases which are
-               really specific to 'roff' or TeX.  All white space processing
-               is done as the default case of this switch.  */
-
-            switch (character)
-              {
-              case '"':
-                /* In roff output format, double any quote.  */
-                putchar ('"');
-                putchar ('"');
-                break;
-
-              case '$':
-              case '%':
-              case '&':
-              case '#':
-              case '_':
-                /* In TeX output format, precede these with a backslash.  */
-                putchar ('\\');
-                putchar (character);
-                break;
-
-              case '{':
-              case '}':
-                /* In TeX output format, precede these with a backslash and
-                   force mathematical mode.  */
-                printf ("$\\%c$", character);
-                break;
-
-              case '\\':
-                /* In TeX output mode, request production of a backslash.  */
-                fputs ("\\backslash{}", stdout);
-                break;
-
-              default:
-                /* Any other flagged character produces a single space.  */
-                putchar (' ');
-              }
         }
       else
         putchar (*cursor);
@@ -1331,11 +1232,6 @@ fix_output_parameters (void)
       for (cursor = "$%&#_{}\\"; *cursor; cursor++)
         edited_flag[to_uchar (*cursor)] = 1;
 
-      /* Any character with 8th bit set will print to a single space, unless
-         it is diacriticized.  */
-
-      for (character = 0200; character < CHAR_SET_SIZE; character++)
-        edited_flag[character] = todiac (character) != 0;
       break;
     }
 }

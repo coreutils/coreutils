@@ -5481,17 +5481,18 @@ processing.
 @node Charset selection in ptx
 @subsection Charset selection
 
-@c FIXME:  People don't necessarily know what an IBM-PC was these days.
-As it is set up now, the program assumes that the input file is coded
-using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
-@emph{unless} it is compiled for MS-DOS, in which case it uses the
-character set of the IBM-PC@.  (GNU @command{ptx} is not known to work on
-smaller MS-DOS machines anymore.)  Compared to 7-bit ASCII, the set
-of characters which are letters is different; this alters the behavior
-of regular expression matching.  Thus, the default regular expression
+As it is set up now, @command{ptx} assumes that the input file is coded
+using 8-bit characters, and it may not work well in multibyte locales.
+In a single-byte locale, the default regular expression
 for a keyword allows foreign or diacriticized letters.  Keyword sorting,
 however, is still crude; it obeys the underlying character set ordering
 quite blindly.
+
+The output of @command{ptx} assumes the locale's character encoding.
+For example, with @command{ptx}'s @option{-T} option, if the locale
+uses the Latin-1 encoding you may need a LaTeX directive like
+@samp{\usepackage[latin1]@{inputenc@}} to render non-ASCII characters
+correctly.
 
 @table @samp
 
