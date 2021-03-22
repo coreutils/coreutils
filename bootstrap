@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2020-11-18.17; # UTC
+scriptversion=2021-01-10.00; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -47,7 +47,7 @@ PERL="${PERL-perl}"
 
 me=$0
 
-default_gnulib_url=git://git.sv.gnu.org/gnulib
+default_gnulib_url=https://git.savannah.gnu.org/git/gnulib.git
 
 usage() {
   cat <<EOF
@@ -184,7 +184,7 @@ po_download_command_format=\
  https://translationproject.org/latest/%s/"
 
 # Prefer a non-empty tarname (4th argument of AC_INIT if given), else
-# fall back to the package name (1st argument with munging)
+# fall back to the package name (1st argument with munging).
 extract_package_name='
   /^AC_INIT(\[*/{
      s///
@@ -201,8 +201,11 @@ extract_package_name='
      p
   }
 '
-package=$(sed -n "$extract_package_name" configure.ac) \
-  || die 'cannot find package name in configure.ac'
+package=$(${AUTOCONF:-autoconf} --trace AC_INIT:\$4 configure.ac 2>/dev/null)
+if test -z "$package"; then
+  package=$(sed -n "$extract_package_name" configure.ac) \
+      || die 'cannot find package name in configure.ac'
+fi
 gnulib_name=lib$package
 
 build_aux=build-aux
