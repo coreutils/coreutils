@@ -223,7 +223,6 @@ cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
     {
       uint32_t *datap;
-      uint32_t second = 0;
 
       if (length + bytes_read < length)
         {
@@ -236,17 +235,18 @@ cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
       datap = (uint32_t *)buf;
       while (bytes_read >= 8)
         {
-           crc ^= SWAP (*(datap++));
-           second = SWAP (*(datap++));
-           crc =   crctab[7][(crc >> 24) & 0xFF]
+          uint32_t first = *datap++, second = *datap++;
+          crc ^= SWAP (first);
+          second = SWAP (second);
+          crc = (crctab[7][(crc >> 24) & 0xFF]
                  ^ crctab[6][(crc >> 16) & 0xFF]
                  ^ crctab[5][(crc >> 8) & 0xFF]
                  ^ crctab[4][(crc) & 0xFF]
                  ^ crctab[3][(second >> 24) & 0xFF]
                  ^ crctab[2][(second >> 16) & 0xFF]
                  ^ crctab[1][(second >> 8) & 0xFF]
-                 ^ crctab[0][(second) & 0xFF];
-           bytes_read -= 8;
+                 ^ crctab[0][(second) & 0xFF]);
+          bytes_read -= 8;
         }
 
       /* And finish up last 0-7 bytes in a byte by byte fashion */
