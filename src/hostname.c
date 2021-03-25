@@ -103,7 +103,7 @@ main (int argc, char **argv)
       hostname = xgethostname ();
       if (hostname == NULL)
         die (EXIT_FAILURE, errno, _("cannot determine hostname"));
-      printf ("%s\n", hostname);
+      puts (hostname);
     }
 
   if (optind + 1 < argc)
