@@ -229,14 +229,14 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
               if (errno != ENOENT)
                 {
                   error (0, errno, _("failed to access %s"), quoteaf (dest));
-                  return false;
+                  goto fail;
                 }
               force = false;
             }
           else if (S_ISDIR (dest_stats.st_mode))
             {
               error (0, 0, _("%s: cannot overwrite directory"), quotef (dest));
-              return false;
+              goto fail;
             }
           else if (seen_file (dest_set, dest, &dest_stats))
             {
@@ -245,7 +245,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
               error (0, 0,
                      _("will not overwrite just-created %s with %s"),
                      quoteaf_n (0, dest), quoteaf_n (1, source));
-              return false;
+              goto fail;
             }
           else
             {
@@ -274,7 +274,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                     {
                       error (0, 0, _("%s and %s are the same file"),
                              quoteaf_n (0, source), quoteaf_n (1, dest));
-                      return false;
+                      goto fail;
                     }
                 }
 
@@ -285,7 +285,10 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                       fprintf (stderr, _("%s: replace %s? "),
                                program_name, quoteaf (dest));
                       if (!yesno ())
-                        return true;
+                        {
+                          free(rel_source);
+                          return true;
+                        }
                     }
 
                   if (backup_type != no_backups)
@@ -304,7 +307,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                            {
                               error (0, rename_errno, _("cannot backup %s"),
                                      quoteaf (dest));
-                              return false;
+                              goto fail;
                             }
                           force = false;
                         }
@@ -397,6 +400,10 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
   free (backup_base);
   free (rel_source);
   return link_errno <= 0;
+
+fail:
+  free (rel_source);
+  return false;
 }
 
 void
