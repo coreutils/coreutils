@@ -286,7 +286,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                                program_name, quoteaf (dest));
                       if (!yesno ())
                         {
-                          free(rel_source);
+                          free (rel_source);
                           return true;
                         }
                     }
@@ -304,7 +304,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                           free (backup_base);
                           backup_base = NULL;
                           if (rename_errno != ENOENT)
-                           {
+                            {
                               error (0, rename_errno, _("cannot backup %s"),
                                      quoteaf (dest));
                               goto fail;
