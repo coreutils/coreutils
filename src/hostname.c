@@ -104,6 +104,7 @@ main (int argc, char **argv)
       if (hostname == NULL)
         die (EXIT_FAILURE, errno, _("cannot determine hostname"));
       puts (hostname);
+      IF_LINT (free (hostname));
     }
 
   if (optind + 1 < argc)
