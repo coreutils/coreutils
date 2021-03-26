@@ -73,7 +73,10 @@ static bool sig_mask_changed;
 /* Whether to list non default handling.  */
 static bool report_signal_handling;
 
-static char const shortopts[] = "+C:iS:u:v0 \t";
+/* isspace characters in the C locale.  */
+#define C_ISSPACE_CHARS " \t\n\v\f\r"
+
+static char const shortopts[] = "+C:iS:u:v0" C_ISSPACE_CHARS;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -277,7 +280,7 @@ validate_split_str (const char* str, size_t* /*out*/ bufsize,
   size_t buflen;
   int cnt = 1;
 
-  assert (str && str[0] && !isspace (str[0]));     /* LCOV_EXCL_LINE */
+  assert (str && str[0] && !c_isspace (str[0]));     /* LCOV_EXCL_LINE */
 
   dq = sq = sp = false;
   buflen = strlen (str)+1;
@@ -286,7 +289,7 @@ validate_split_str (const char* str, size_t* /*out*/ bufsize,
     {
       const char next = *(str+1);
 
-      if (isspace (*str) && !dq && !sq)
+      if (c_isspace (*str) && !dq && !sq)
         {
           sp = true;
         }
@@ -392,7 +395,7 @@ build_argv (const char* str, int extra_argc)
       }                                         \
   } while (0)
 
-  assert (str && str[0] && !isspace (str[0]));             /* LCOV_EXCL_LINE */
+  assert (str && str[0] && !c_isspace (str[0]));          /* LCOV_EXCL_LINE */
 
   validate_split_str (str, &buflen, &newargc);
 
@@ -433,13 +436,12 @@ build_argv (const char* str, int extra_argc)
           ++str;
           continue;
 
-        case ' ':
-        case '\t':
-          /* space/tab outside quotes starts a new argument. */
+        case ' ': case '\t': case '\n': case '\v': case '\f': case '\r':
+          /* Start a new argument if outside quotes.  */
           if (sq || dq)
             break;
           sep = true;
-          str += strspn (str, " \t"); /* skip whitespace. */
+          str += strspn (str, C_ISSPACE_CHARS);
           continue;
 
         case '#':
@@ -540,7 +542,7 @@ parse_split_string (const char* str, int /*out*/ *orig_optind,
   char **newargv, **nextargv;
 
 
-  while (isspace (*str))
+  while (c_isspace (*str))
     str++;
   if (*str == '\0')
     return;
@@ -848,8 +850,7 @@ main (int argc, char **argv)
         case 'S':
           parse_split_string (optarg, &optind, &argc, &argv);
           break;
-        case ' ':
-        case '\t':
+        case ' ': case '\t': case '\n': case '\v': case '\f': case '\r':
           /* These are undocumented options. Attempt to detect
              incorrect shebang usage with extraneous space, e.g.:
                 #!/usr/bin/env -i command
