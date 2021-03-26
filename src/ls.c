@@ -307,6 +307,10 @@ static void parse_ls_color (void);
 
 static void getenv_quoting_style (void);
 
+static size_t quote_name_width (const char *name,
+                                struct quoting_options const *options,
+                                int needs_general_quoting);
+
 /* Initial size of hash table.
    Most hierarchies are likely to be shallower than this.  */
 #define INITIAL_TABLE_SIZE 30
@@ -475,6 +479,7 @@ enum sort_type
     sort_none = -1,		/* -U */
     sort_name,			/* default */
     sort_extension,		/* -X */
+    sort_width,
     sort_size,			/* -S */
     sort_version,		/* -v */
     sort_time,			/* -t */
@@ -903,11 +908,11 @@ ARGMATCH_VERIFY (format_args, format_types);
 
 static char const *const sort_args[] =
 {
-  "none", "time", "size", "extension", "version", NULL
+  "none", "time", "size", "extension", "version", "width", NULL
 };
 static enum sort_type const sort_types[] =
 {
-  sort_none, sort_time, sort_size, sort_extension, sort_version
+  sort_none, sort_time, sort_size, sort_extension, sort_version, sort_width
 };
 ARGMATCH_VERIFY (sort_args, sort_types);
 
@@ -1134,6 +1139,7 @@ calc_req_mask (void)
     case sort_name:
     case sort_version:
     case sort_extension:
+    case sort_width:
       break;
     case sort_time:
       mask |= time_type_to_statx ();
@@ -3877,6 +3883,20 @@ cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
   return diff ? diff : cmp (a->name, b->name);
 }
 
+static inline size_t
+fileinfo_width (struct fileinfo const *f)
+{
+  return quote_name_width (f->name, filename_quoting_options, f->quoted);
+}
+
+static inline int
+cmp_width (struct fileinfo const *a, struct fileinfo const *b,
+          int (*cmp) (char const *, char const *))
+{
+  int diff = fileinfo_width (a) - fileinfo_width (b);
+  return diff ? diff : cmp (a->name, b->name);
+}
+
 DEFINE_SORT_FUNCTIONS (ctime, cmp_ctime)
 DEFINE_SORT_FUNCTIONS (mtime, cmp_mtime)
 DEFINE_SORT_FUNCTIONS (atime, cmp_atime)
@@ -3884,6 +3904,7 @@ DEFINE_SORT_FUNCTIONS (btime, cmp_btime)
 DEFINE_SORT_FUNCTIONS (size, cmp_size)
 DEFINE_SORT_FUNCTIONS (name, cmp_name)
 DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
+DEFINE_SORT_FUNCTIONS (width, cmp_width)
 
 /* Compare file versions.
    Unlike all other compare functions above, cmp_version depends only
@@ -3936,6 +3957,7 @@ static qsortFunc const sort_functions[][2][2][2] =
   {
     LIST_SORTFUNCTION_VARIANTS (name),
     LIST_SORTFUNCTION_VARIANTS (extension),
+    LIST_SORTFUNCTION_VARIANTS (width),
     LIST_SORTFUNCTION_VARIANTS (size),
 
     {
@@ -5454,7 +5476,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -S                         sort by file size, largest first\n\
       --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
 ,\n\
-                               time (-t), version (-v), extension (-X)\n\
+                               time (-t), version (-v), extension (-X), width\n\
       --time=WORD            change the default of using modification times;\n\
                                access time (-u): atime, access, use;\n\
                                change time (-c): ctime, status;\n\

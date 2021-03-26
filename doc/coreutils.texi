@@ -7939,6 +7939,13 @@ Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
 as an index/version number.  (@xref{Version sort ordering}.)
 
+@item --sort=width
+@opindex --sort
+@opindex width@r{, sorting option for @command{ls}}
+Sort by printed width of file names.
+This is especially useful with the default @option{--format=vertical}
+output format, to most densely display the listed files.
+
 @item -X
 @itemx --sort=extension
 @opindex -X

@@ -70,6 +70,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --classify now supports the "always", "auto", or "never" flags,
   to support only outputting classifier characters if connected to a tty.
 
+  ls now accepts the --sort=width option, to sort by file name width.
+  This is useful to more compactly organize the default vertical column output.
+
   nl --line-increment can now take a negative number to decrement the count.
 
 ** Improvements

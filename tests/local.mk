@@ -632,6 +632,7 @@ all_tests =					\
   tests/ls/symlink-quote.sh			\
   tests/ls/symlink-slash.sh			\
   tests/ls/time-style-diag.sh			\
+  tests/ls/sort-width-option.sh			\
   tests/ls/x-option.sh				\
   tests/ls/hyperlink.sh				\
   tests/mkdir/p-1.sh				\
