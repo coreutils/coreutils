@@ -942,7 +942,7 @@ main (int argc, char **argv)
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
   error (0, errno, "%s", quote (argv[optind]));
 
-  if (exit_status == EXIT_ENOENT && strchr (argv[optind], ' '))
+  if (exit_status == EXIT_ENOENT && strpbrk (argv[optind], C_ISSPACE_CHARS))
     error (0, 0, _("use -[v]S to pass options in shebang lines"));
 
   return exit_status;
