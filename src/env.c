@@ -41,14 +41,14 @@
 /* Array of envvars to unset.  */
 static const char **usvars;
 static size_t usvars_alloc;
-static size_t usvars_used;
+static ptrdiff_t usvars_used;
 
 /* Annotate the output with extra info to aid the user.  */
 static bool dev_debug;
 
 /* Buffer and length of extracted envvars in -S strings.  */
 static char *varname;
-static size_t vnlen;
+static ptrdiff_t vnlen;
 
 /* Possible actions on each signal.  */
 enum SIGNAL_MODE {
@@ -175,7 +175,7 @@ append_unset_var (const char *var)
 static void
 unset_envvars (void)
 {
-  for (size_t i = 0; i < usvars_used; ++i)
+  for (ptrdiff_t i = 0; i < usvars_used; ++i)
     {
       devmsg ("unset:    %s\n", usvars[i]);
 
@@ -271,11 +271,11 @@ extract_varname (const char *str)
              after ENVVAR expansion (the value is overestimated).
    maxargc - the maximum number of arguments (the size of the new argv).  */
 static void
-validate_split_str (const char *str, size_t *bufsize, int *maxargc)
+validate_split_str (const char *str, ptrdiff_t *bufsize, int *maxargc)
 {
   bool dq, sq, sp;
   const char *pch;
-  size_t buflen;
+  ptrdiff_t buflen;
   int cnt = 1;
 
   dq = sq = sp = false;
@@ -379,7 +379,7 @@ build_argv (const char *str, int extra_argc)
 
   char **newargv, **nextargv;
   int newargc = 0;
-  size_t buflen = 0;
+  ptrdiff_t buflen = 0;
 
   /* This macro is called before inserting any characters to the output
      buffer.  It checks if the previous character was a separator
