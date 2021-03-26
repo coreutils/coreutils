@@ -17,6 +17,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   heavily changed during the run.
   [bug introduced in coreutils-8.25]
 
+  env -S no longer crashes when given unusual whitespace characters
+  [bug introduced in coreutils-8.30]
+
   expr no longer mishandles unmatched \(...\) in regular expressions.
   [bug introduced in coreutils-6.0]
 

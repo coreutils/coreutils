@@ -17592,6 +17592,8 @@ hello
 
 Running @command{env -Sstring} splits the @var{string} into
 arguments based on unquoted spaces or tab characters.
+(Newlines, carriage returns, vertical tabs and form feeds are treated
+like spaces and tabs.)
 
 In the following contrived example the @command{awk} variable
 @samp{OFS} will be @code{<space>xyz<space>} as these spaces are inside
