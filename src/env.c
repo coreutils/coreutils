@@ -23,7 +23,6 @@
 #include <c-ctype.h>
 #include <signal.h>
 
-#include <assert.h>
 #include "system.h"
 #include "die.h"
 #include "error.h"
@@ -210,7 +209,7 @@ escape_char (const char c)
     case 'r': return '\r';
     case 't': return '\t';
     case 'v': return '\v';
-    default:  assert (0);                           /* LCOV_EXCL_LINE */
+    default: assume (false);
     }
 }
 
@@ -221,7 +220,6 @@ escape_char (const char c)
 static const char* _GL_ATTRIBUTE_PURE
 scan_varname (const char* str)
 {
-  assert (str && *str == '$');                      /* LCOV_EXCL_LINE */
   if ( *(str+1) == '{' && (c_isalpha (*(str+2)) || *(str+2) == '_'))
     {
       const char* end = str+3;
@@ -280,8 +278,6 @@ validate_split_str (const char* str, size_t* /*out*/ bufsize,
   size_t buflen;
   int cnt = 1;
 
-  assert (str && str[0] && !c_isspace (str[0]));     /* LCOV_EXCL_LINE */
-
   dq = sq = sp = false;
   buflen = strlen (str)+1;
 
@@ -303,12 +299,10 @@ validate_split_str (const char* str, size_t* /*out*/ bufsize,
       switch (*str)
         {
         case '\'':
-          assert (!(sq && dq));                           /* LCOV_EXCL_LINE */
           sq = !sq && !dq;
           break;
 
         case '"':
-          assert (!(sq && dq));                           /* LCOV_EXCL_LINE */
           dq = !sq && !dq;
           break;
 
@@ -394,8 +388,6 @@ build_argv (const char* str, int extra_argc)
         sep = false;                            \
       }                                         \
   } while (0)
-
-  assert (str && str[0] && !c_isspace (str[0]));          /* LCOV_EXCL_LINE */
 
   validate_split_str (str, &buflen, &newargc);
 
@@ -486,7 +478,6 @@ build_argv (const char* str, int extra_argc)
           /* Store the ${VARNAME} value. */
           {
             char *n = extract_varname (str);
-            assert (n);  /* ${VARNAME} already validated. */
             char *v = getenv (n);
             if (v)
               {
