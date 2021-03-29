@@ -47,7 +47,6 @@ id
 join
 kill
 libstdbuf.so
-libver.a
 link
 ln
 localedir.h
