@@ -60,6 +60,10 @@ my @Tests =
      # to env, resulting in two arguments ("A" <whitespace> "B").
      ['t3',  qq[-S'printf x%sx\\n A\tB'],     {OUT=>"xAx\nxBx"}],
      ['t4',  qq[-S'printf x%sx\\n A \t B'],   {OUT=>"xAx\nxBx"}],
+     # Ensure \v\f\r\n treated like other whitespace.
+     # From 8.30 - 8.32 these would introduce arguments to printf,
+     # and also crash ASAN builds with out of bounds access.
+     ['t5',  qq[-S'printf x%sx\\n A \t B \013\f\r\n'],   {OUT=>"xAx\nxBx"}],
 
 
      # Test empty strings
