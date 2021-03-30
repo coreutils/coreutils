@@ -26,6 +26,8 @@
 #include "system.h"
 #include "die.h"
 #include "error.h"
+#include "idx.h"
+#include "minmax.h"
 #include "operand2sig.h"
 #include "quote.h"
 #include "sig2str.h"
@@ -41,14 +43,14 @@
 /* Array of envvars to unset.  */
 static const char **usvars;
 static size_t usvars_alloc;
-static ptrdiff_t usvars_used;
+static idx_t usvars_used;
 
 /* Annotate the output with extra info to aid the user.  */
 static bool dev_debug;
 
 /* Buffer and length of extracted envvars in -S strings.  */
 static char *varname;
-static ptrdiff_t vnlen;
+static idx_t vnlen;
 
 /* Possible actions on each signal.  */
 enum SIGNAL_MODE {
@@ -175,7 +177,7 @@ append_unset_var (const char *var)
 static void
 unset_envvars (void)
 {
-  for (ptrdiff_t i = 0; i < usvars_used; ++i)
+  for (idx_t i = 0; i < usvars_used; ++i)
     {
       devmsg ("unset:    %s\n", usvars[i]);
 
@@ -188,29 +190,6 @@ unset_envvars (void)
   IF_LINT (usvars = NULL);
   IF_LINT (usvars_used = 0);
   IF_LINT (usvars_alloc = 0);
-}
-
-static bool _GL_ATTRIBUTE_PURE
-valid_escape_sequence (const char c)
-{
-  return (c == 'c' || c == 'f' || c == 'n' || c == 'r' || c == 't' || c == 'v' \
-          || c == '#' || c == '$' || c == '_' || c == '"' || c == '\'' \
-          || c == '\\');
-}
-
-static char _GL_ATTRIBUTE_PURE
-escape_char (const char c)
-{
-  switch (c)
-    {
-    /* \a, \b not supported by FreeBSD's env.  */
-    case 'f': return '\f';
-    case 'n': return '\n';
-    case 'r': return '\r';
-    case 't': return '\t';
-    case 'v': return '\v';
-    default: assume (false);
-    }
 }
 
 /* Return a pointer to the end of a valid ${VARNAME} string, or NULL.
@@ -241,7 +220,7 @@ scan_varname (const char *str)
 static char *
 extract_varname (const char *str)
 {
-  ptrdiff_t i;
+  idx_t i;
   const char *p;
 
   p = scan_varname (str);
@@ -263,150 +242,127 @@ extract_varname (const char *str)
   return varname;
 }
 
-/* Validate the "-S" parameter, according to the syntax defined by FreeBSD's
-   env(1).  Terminate with an error message if not valid.
-
-   Calculate and set two values:
-   bufsize - the size (in bytes) required to hold the resulting string
-             after ENVVAR expansion (the value is overestimated).
-   maxargc - the maximum number of arguments (the size of the new argv).  */
-static void
-validate_split_str (const char *str, ptrdiff_t *bufsize, int *maxargc)
+/* Temporary buffer used by --split-string processing.  */
+struct splitbuf
 {
-  bool dq, sq, sp;
-  const char *pch;
-  ptrdiff_t buflen;
-  int cnt = 1;
+  /* Buffer address, arg count, and half the number of elements in the buffer.
+     ARGC and ARGV are as in 'main', and ARGC + 1 <= HALF_ALLOC so
+     that the upper half of ARGV can be used for string contents.
+     This may waste up to half the space but keeps the code simple,
+     which is better for this rarely-used but security-sensitive code.
 
-  dq = sq = sp = false;
-  buflen = strlen (str) + 1;
+     ARGV[0] is not initialized; that is the caller's responsibility
+     after finalization.
 
-  while (*str)
-    {
-      const char next = str[1];
+     During assembly, ARGV[I] (where 0 < I < ARGC) contains the offset
+     of the Ith string (relative to ARGV + HALF_ALLOC), so that
+     reallocating ARGV does not change the validity of its contents.
+     The integer offset is cast to char * during assembly, and is
+     converted to a true char * pointer on finalization.
 
-      if (c_isspace (*str) && !dq && !sq)
-        {
-          sp = true;
-        }
-      else
-        {
-          if (sp)
-            ++cnt;
-          sp = false;
-        }
+     During assembly, ARGV[ARGC] contains the offset of the first
+     unused string byte (relative to ARGV + HALF_ALLOC).  */
+  char **argv;
+  int argc;
+  idx_t half_alloc;
 
-      switch (*str)
-        {
-        case '\'':
-          sq = !sq && !dq;
-          break;
+  /* The number of extra argv slots to keep room for.  */
+  int extra_argc;
 
-        case '"':
-          dq = !sq && !dq;
-          break;
+  /* Whether processing should act as if the most recent character
+     seen was a separator.  */
+  bool sep;
+};
 
-        case '\\':
-          if (dq && next == 'c')
-            die (EXIT_CANCELED, 0,
-                 _("'\\c' must not appear in double-quoted -S string"));
-
-          if (next == '\0')
-            die (EXIT_CANCELED, 0,
-                 _("invalid backslash at end of string in -S"));
-
-          if (!valid_escape_sequence (next))
-            die (EXIT_CANCELED, 0, _("invalid sequence '\\%c' in -S"), next);
-
-          if (next == '_')
-            ++cnt;
-
-          ++str;
-          break;
-
-
-        case '$':
-          if (sq)
-            break;
-
-          pch = extract_varname (str);
-          if (! pch)
-            die (EXIT_CANCELED, 0, _("only ${VARNAME} expansion is supported,"\
-                                     " error at: %s"), str);
-
-          pch = getenv (pch);
-          if (pch)
-            buflen += strlen (pch);
-          break;
-        }
-      ++str;
-    }
-
-  if (dq || sq)
-    die (EXIT_CANCELED, 0, _("no terminating quote in -S string"));
-
-  *maxargc = cnt;
-  *bufsize = buflen;
+/* Expand SS so that it has at least one more argv slot and at least
+   one more string byte.  */
+static void
+splitbuf_grow (struct splitbuf *ss)
+{
+  idx_t old_half_alloc = ss->half_alloc;
+  idx_t string_bytes = (intptr_t) ss->argv[ss->argc];
+  ss->argv = xpalloc (ss->argv, &ss->half_alloc, 1,
+                      MIN (INT_MAX, IDX_MAX), 2 * sizeof *ss->argv);
+  memmove (ss->argv + ss->half_alloc, ss->argv + old_half_alloc, string_bytes);
 }
 
-/* Return a newly-allocated *arg[]-like array,
+/* In SS, append C to the last string.  */
+static void
+splitbuf_append_byte (struct splitbuf *ss, char c)
+{
+  idx_t string_bytes = (intptr_t) ss->argv[ss->argc];
+  if (ss->half_alloc * sizeof *ss->argv <= string_bytes)
+    splitbuf_grow (ss);
+  ((char *) (ss->argv + ss->half_alloc))[string_bytes] = c;
+  ss->argv[ss->argc] = (char *) (intptr_t) (string_bytes + 1);
+}
+
+/* If SS's most recent character was a separator, finish off its
+   previous argument and start a new one.  */
+static void
+check_start_new_arg (struct splitbuf *ss)
+{
+  if (ss->sep)
+    {
+      splitbuf_append_byte (ss, '\0');
+      int argc = ss->argc;
+      if (ss->half_alloc <= argc + ss->extra_argc + 1)
+        splitbuf_grow (ss);
+      ss->argv[argc + 1] = ss->argv[argc];
+      ss->argc = argc + 1;
+      ss->sep = false;
+    }
+}
+
+/* All additions to SS have been made.  Convert its offsets to pointers,
+   and return the resulting argument vector.  */
+static char **
+splitbuf_finishup (struct splitbuf *ss)
+{
+  int argc = ss->argc;
+  char **argv = ss->argv;
+  char *stringbase = (char *) (ss->argv + ss->half_alloc);
+  for (int i = 1; i < argc; i++)
+    argv[i] = stringbase + (intptr_t) argv[i];
+  return argv;
+}
+
+/* Return a newly-allocated argv-like array,
    by parsing and splitting the input 'str'.
+
    'extra_argc' is the number of additional elements to allocate
    in the array (on top of the number of args required to split 'str').
 
+   Store into *argc the number of arguments found (plus 1 for
+   the program name).
+
    Example:
-     char **argv = build_argv ("A=B uname -k', 3)
+     int argc;
+     char **argv = build_argv ("A=B uname -k', 3, &argc);
    Results in:
-     argv[0] = "DUMMY" - dummy executable name, can be replaced later.
+     argc = 4
+     argv[0] = [not initialized]
      argv[1] = "A=B"
      argv[2] = "uname"
      argv[3] = "-k"
-     argv[4] = NULL
-     argv[5,6,7] = [allocated due to extra_argc, but not initialized]
+     argv[4,5,6,7] = [allocated due to extra_argc + 1, but not initialized]
 
-   The strings are stored in an allocated buffer, pointed by argv[0].
    To free allocated memory:
-     free (argv[0]);
-     free (argv); */
+     free (argv);
+   However, 'env' does not free since it's about to exec or exit anyway
+   and the complexity of keeping track of the storage that may have been
+   allocated via multiple calls to build_argv is not worth the hassle.  */
 static char **
-build_argv (const char *str, int extra_argc)
+build_argv (const char *str, int extra_argc, int *argc)
 {
-  bool dq = false, sq = false, sep = true;
-
-  /* Buffer to hold the new argv values.  Allocated as one buffer, but
-     will contain multiple NUL-terminate strings.  */
-  char *dest;
-
-  char **newargv, **nextargv;
-  int newargc = 0;
-  ptrdiff_t buflen = 0;
-
-  /* This macro is called before inserting any characters to the output
-     buffer.  It checks if the previous character was a separator
-     and if so starts a new argv element.  */
-#define CHECK_START_NEW_ARG                     \
-  do {                                          \
-    if (sep)                                    \
-      {                                         \
-        *dest++ = '\0';                         \
-        *nextargv++ = dest;                     \
-        sep = false;                            \
-      }                                         \
-  } while (0)
-
-  validate_split_str (str, &buflen, &newargc);
-
-  /* Allocate buffer.  +6 for the "DUMMY\0" executable name, +1 for NUL.  */
-  dest = xmalloc (buflen + 6 + 1);
-
-  /* Allocate the argv array.
-     +2 for the program name (argv[0]) and the last NULL pointer.  */
-  nextargv = newargv = xmalloc ((newargc + extra_argc + 2) * sizeof (char *));
-
-  /* argv[0] = executable's name  - will be replaced later.  */
-  strcpy (dest, "DUMMY");
-  *nextargv++ = dest;
-  dest += 6;
+  bool dq = false, sq = false;
+  struct splitbuf ss;
+  ss.argv = xnmalloc (extra_argc + 2, 2 * sizeof *ss.argv);
+  ss.argc = 1;
+  ss.half_alloc = extra_argc + 2;
+  ss.extra_argc = extra_argc;
+  ss.sep = true;
+  ss.argv[ss.argc] = 0;
 
   /* In the following loop,
      'break' causes the character 'newc' to be added to *dest,
@@ -421,7 +377,7 @@ build_argv (const char *str, int extra_argc)
           if (dq)
             break;
           sq = !sq;
-          CHECK_START_NEW_ARG;
+          check_start_new_arg (&ss);
           ++str;
           continue;
 
@@ -429,7 +385,7 @@ build_argv (const char *str, int extra_argc)
           if (sq)
             break;
           dq = !dq;
-          CHECK_START_NEW_ARG;
+          check_start_new_arg (&ss);
           ++str;
           continue;
 
@@ -437,12 +393,12 @@ build_argv (const char *str, int extra_argc)
           /* Start a new argument if outside quotes.  */
           if (sq || dq)
             break;
-          sep = true;
+          ss.sep = true;
           str += strspn (str, C_ISSPACE_CHARS);
           continue;
 
         case '#':
-          if (!sep)
+          if (!ss.sep)
             break;
           goto eos; /* '#' as first char terminates the string.  */
 
@@ -454,26 +410,41 @@ build_argv (const char *str, int extra_argc)
 
           /* Skip the backslash and examine the next character.  */
           newc = *++str;
-          if (newc == '\\' || newc == '\''
-              || (!sq && (newc == '#' || newc == '$' || newc == '"')))
+          switch (newc)
             {
+            case '"': case '#': case '$': case '\'': case '\\':
               /* Pass escaped character as-is.  */
-            }
-          else if (newc == '_')
-            {
+              break;
+
+            case '_':
               if (!dq)
                 {
                   ++str;  /* '\_' outside double-quotes is arg separator.  */
-                  sep = true;
+                  ss.sep = true;
                   continue;
                 }
-              else
-                newc = ' ';  /* '\_' inside double-quotes is space.  */
+              newc = ' ';  /* '\_' inside double-quotes is space.  */
+              break;
+
+            case 'c':
+              if (dq)
+                die (EXIT_CANCELED, 0,
+                     _("'\\c' must not appear in double-quoted -S string"));
+              goto eos; /* '\c' terminates the string.  */
+
+            case 'f': newc = '\f'; break;
+            case 'n': newc = '\n'; break;
+            case 'r': newc = '\r'; break;
+            case 't': newc = '\t'; break;
+            case 'v': newc = '\v'; break;
+
+            case '\0':
+              die (EXIT_CANCELED, 0,
+                   _("invalid backslash at end of string in -S"));
+
+            default:
+              die (EXIT_CANCELED, 0, _("invalid sequence '\\%c' in -S"), newc);
             }
-          else if (newc == 'c')
-            goto eos; /* '\c' terminates the string.  */
-          else
-            newc = escape_char (newc);  /* Other characters (e.g., '\n').  */
           break;
 
         case '$':
@@ -484,12 +455,18 @@ build_argv (const char *str, int extra_argc)
           /* Store the ${VARNAME} value.  */
           {
             char *n = extract_varname (str);
+            if (!n)
+              die (EXIT_CANCELED, 0,
+                   _("only ${VARNAME} expansion is supported, error at: %s"),
+                   str);
+
             char *v = getenv (n);
             if (v)
               {
-                CHECK_START_NEW_ARG;
+                check_start_new_arg (&ss);
                 devmsg ("expanding ${%s} into %s\n", n, quote (v));
-                dest = stpcpy (dest, v);
+                for (; *v; v++)
+                  splitbuf_append_byte (&ss, *v);
               }
             else
               devmsg ("replacing ${%s} with null string\n", n);
@@ -499,16 +476,18 @@ build_argv (const char *str, int extra_argc)
           }
         }
 
-      CHECK_START_NEW_ARG;
-      *dest++ = newc;
+      check_start_new_arg (&ss);
+      splitbuf_append_byte (&ss, newc);
       ++str;
     }
 
- eos:
-  *dest = '\0';
-  *nextargv = NULL; /* Mark the last element in argv as NULL.  */
+  if (dq || sq)
+    die (EXIT_CANCELED, 0, _("no terminating quote in -S string"));
 
-  return newargv;
+ eos:
+  splitbuf_append_byte (&ss, '\0');
+  *argc = ss.argc;
+  return splitbuf_finishup (&ss);
 }
 
 /* Process an "-S" string and create the corresponding argv array.
@@ -517,67 +496,47 @@ build_argv (const char *str, int extra_argc)
    Example: if executed as:
       $ env -S"-i -C/tmp A=B" foo bar
    The input argv is:
-      argv[0] = 'env'
+      argv[0] = "env"
       argv[1] = "-S-i -C/tmp A=B"
-      argv[2] = foo
-      argv[3] = bar
+      argv[2] = "foo"
+      argv[3] = "bar"
+      argv[4] = NULL
    This function will modify argv to be:
-      argv[0] = 'env'
+      argv[0] = "env"
       argv[1] = "-i"
       argv[2] = "-C/tmp"
-      argv[3] =  A=B"
-      argv[4] = foo
-      argv[5] = bar
+      argv[3] = "A=B"
+      argv[4] = "foo"
+      argv[5] = "bar"
+      argv[6] = NULL
    argc will be updated from 4 to 6.
    optind will be reset to 0 to force getopt_long to rescan all arguments.  */
 static void
 parse_split_string (const char *str, int *orig_optind,
                     int *orig_argc, char ***orig_argv)
 {
-  int i, newargc;
-  char **newargv, **nextargv;
-
-
-  while (c_isspace (*str))
-    str++;
-  if (*str == '\0')
-    return;
-
-  newargv = build_argv (str, *orig_argc - *orig_optind);
+  int extra_argc = *orig_argc - *orig_optind, newargc;
+  char **newargv = build_argv (str, extra_argc, &newargc);
 
   /* Restore argv[0] - the 'env' executable name.  */
   *newargv = (*orig_argv)[0];
 
-  /* Start from argv[1] */
-  nextargv = newargv + 1;
-
-  /* Print parsed arguments */
-  if (dev_debug && *nextargv)
+  /* Print parsed arguments.  */
+  if (dev_debug && 1 < newargc)
     {
       devmsg ("split -S:  %s\n", quote (str));
-      devmsg (" into:    %s\n", quote (*nextargv++));
-      while (*nextargv)
-        devmsg ("     &    %s\n", quote (*nextargv++));
-    }
-  else
-    {
-      /* Ensure nextargv points to the last argument */
-      while (*nextargv)
-        ++nextargv;
+      devmsg (" into:    %s\n", quote (newargv[1]));
+      for (int i = 2; i < newargc; i++)
+        devmsg ("     &    %s\n", quote (newargv[i]));
     }
 
-  /* Add remaining arguments from original command line */
-  for (i = *orig_optind; i < *orig_argc; ++i)
-    *nextargv++ = (*orig_argv)[i];
-  *nextargv = NULL;
-
-  /* Count how many new arguments we have */
-  newargc = 0;
-  for (nextargv = newargv; *nextargv; ++nextargv)
-    ++newargc;
+  /* Add remaining arguments and terminating null from the original
+     command line.  */
+  memcpy (newargv + newargc, *orig_argv + *orig_optind,
+          (extra_argc + 1) * sizeof *newargv);
 
   /* Set new values for original getopt variables.  */
-  *orig_argc = newargc;
+  *orig_argc = newargc + extra_argc;
   *orig_argv = newargv;
   *orig_optind = 0; /* Tell getopt to restart from first argument.  */
 }
