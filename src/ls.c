@@ -235,6 +235,9 @@ struct fileinfo
 
     /* Whether file name needs quoting. tri-state with -1 == unknown.  */
     int quoted;
+
+    /* Cached screen width (including quoting).  */
+    size_t width;
   };
 
 #define LEN_STR_PAIR(s) sizeof (s) - 1, s
@@ -3883,17 +3886,22 @@ cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
   return diff ? diff : cmp (a->name, b->name);
 }
 
+/* Return the (cached) screen width,
+   for the NAME associated with the passed fileinfo F.  */
+
 static inline size_t
-fileinfo_width (struct fileinfo const *f)
+fileinfo_name_width (struct fileinfo const *f)
 {
-  return quote_name_width (f->name, filename_quoting_options, f->quoted);
+  return f->width
+         ? f->width
+         : quote_name_width (f->name, filename_quoting_options, f->quoted);
 }
 
 static inline int
 cmp_width (struct fileinfo const *a, struct fileinfo const *b,
           int (*cmp) (char const *, char const *))
 {
-  int diff = fileinfo_width (a) - fileinfo_width (b);
+  int diff = fileinfo_name_width (a) - fileinfo_name_width (b);
   return diff ? diff : cmp (a->name, b->name);
 }
 
@@ -4003,6 +4011,24 @@ initialize_ordering_vector (void)
     sorted_file[i] = &cwd_file[i];
 }
 
+/* Cache values based on attributes global to all files.  */
+
+static void
+update_current_files_info (void)
+{
+  /* Cache screen width of name, if needed multiple times.  */
+  if (sort_type == sort_width
+      || (line_length && (format == many_per_line || format == horizontal)))
+    {
+      size_t i;
+      for (i = 0; i < cwd_n_used; i++)
+        {
+          struct fileinfo *f = sorted_file[i];
+          f->width = fileinfo_name_width (f);
+        }
+    }
+}
+
 /* Sort the files now in the table.  */
 
 static void
@@ -4018,6 +4044,8 @@ sort_files (void)
     }
 
   initialize_ordering_vector ();
+
+  update_current_files_info ();
 
   if (sort_type == sort_none)
     return;
@@ -5055,7 +5083,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_scontext)
     len += 1 + (format == with_commas ? strlen (f->scontext) : scontext_width);
 
-  len += quote_name_width (f->name, filename_quoting_options, f->quoted);
+  len += fileinfo_name_width (f);
 
   if (indicator_style != none)
     {
