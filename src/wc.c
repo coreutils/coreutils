@@ -123,7 +123,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  A word is a non-zero-length sequence of\n\
-characters delimited by white space.\n\
+printable characters delimited by white space.\n\
 "), stdout);
 
       emit_stdin_note ();

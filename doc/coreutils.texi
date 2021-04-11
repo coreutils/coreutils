@@ -3754,9 +3754,10 @@ contents of files.
 @cindex word count
 @cindex line count
 
-@command{wc} counts the number of bytes, characters, whitespace-separated
-words, and newlines in each given @var{file}, or standard input if none
-are given or for a @var{file} of @samp{-}.  Synopsis:
+@command{wc} counts the number of bytes, characters, words, and newlines
+in each given @var{file}, or standard input if none are given
+or for a @var{file} of @samp{-}.  A word is a nonzero length
+sequence of printable characters delimited by white space.  Synopsis:
 
 @example
 wc [@var{option}]@dots{} [@var{file}]@dots{}
@@ -3807,19 +3808,23 @@ Print only the byte counts.
 @itemx --chars
 @opindex -m
 @opindex --chars
-Print only the character counts.
+Print only the character counts, as per the current locale.
+Invalid characters are not counted.
 
 @item -w
 @itemx --words
 @opindex -w
 @opindex --words
-Print only the word counts.
+Print only the word counts.  A word is a nonzero length
+sequence of printable characters separated by white space.
 
 @item -l
 @itemx --lines
 @opindex -l
 @opindex --lines
-Print only the newline counts.
+Print only the newline character counts.
+Note a file without a trailing newline character,
+will not have that last portion included in the line count.
 
 @item -L
 @itemx --max-line-length
