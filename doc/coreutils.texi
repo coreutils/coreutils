@@ -10589,6 +10589,7 @@ link will be the same as if a hard link had been created.
 @opindex -r
 @opindex --relative
 Make symbolic links relative to the link location.
+This option is only valid with the @option{--symbolic} option.
 
 Example:
 

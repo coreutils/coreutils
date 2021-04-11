@@ -447,7 +447,7 @@ interpreted in relation to its parent directory.\n\
   -n, --no-dereference        treat LINK_NAME as a normal file if\n\
                                 it is a symbolic link to a directory\n\
   -P, --physical              make hard links directly to symbolic links\n\
-  -r, --relative              create symbolic links relative to link location\n\
+  -r, --relative              with -s, create links relative to link location\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
 "), stdout);
       fputs (_("\
