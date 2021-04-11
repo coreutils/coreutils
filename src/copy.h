@@ -282,7 +282,7 @@ struct cp_options
    on systems with a rename function that fails for a source file name
    specified with a trailing slash.  */
 # if RENAME_TRAILING_SLASH_BUG
-int rpl_rename (const char *, const char *);
+int rpl_rename (char const *, char const *);
 #  undef rename
 #  define rename rpl_rename
 # endif

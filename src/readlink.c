@@ -155,7 +155,7 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
-      const char *fname = argv[optind];
+      char const *fname = argv[optind];
       char *value = (can_mode != -1
                      ? canonicalize_filename_mode (fname, can_mode)
                      : areadlink_with_size (fname, 63));

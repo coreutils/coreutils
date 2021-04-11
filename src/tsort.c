@@ -52,7 +52,7 @@ struct successor
 /* Each string is held in core as the head of a list of successors.  */
 struct item
 {
-  const char *str;
+  char const *str;
   struct item *left, *right;
   int balance; /* -1, 0, or +1 */
   size_t count;
@@ -99,7 +99,7 @@ Write totally ordered list consistent with the partial ordering in FILE.\n\
 
 /* Create a new item/node for STR.  */
 static struct item *
-new_item (const char *str)
+new_item (char const *str)
 {
   struct item *k = xmalloc (sizeof *k);
 
@@ -124,7 +124,7 @@ new_item (const char *str)
    Volume 3/Searching and Sorting, pages 455--457.  */
 
 static struct item *
-search_item (struct item *root, const char *str)
+search_item (struct item *root, char const *str)
 {
   struct item *p, *q, *r, *s, *t;
   int a;
@@ -433,7 +433,7 @@ walk_tree (struct item *root, bool (*action) (struct item *))
 /* Do a topological sort on FILE.   Return true if successful.  */
 
 static bool
-tsort (const char *file)
+tsort (char const *file)
 {
   bool ok = true;
   struct item *root;

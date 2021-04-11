@@ -78,16 +78,16 @@ static bool input_reference = false;	/* refs at beginning of input lines */
 static bool right_reference = false;	/* output refs after right context  */
 static ptrdiff_t line_width = 72;	/* output line width in characters */
 static ptrdiff_t gap_size = 3;	/* number of spaces between output fields */
-static const char *truncation_string = "/";
+static char const *truncation_string = "/";
                                 /* string used to mark line truncations */
-static const char *macro_name = "xx";	/* macro name for roff or TeX output */
+static char const *macro_name = "xx";	/* macro name for roff or TeX output */
 static enum Format output_format = UNKNOWN_FORMAT;
                                 /* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static const char *break_file = NULL;	/* name of the 'Break chars' file */
-static const char *only_file = NULL;	/* name of the 'Only words' file */
-static const char *ignore_file = NULL;	/* name of the 'Ignore words' file */
+static char const *break_file = NULL;	/* name of the 'Break chars' file */
+static char const *only_file = NULL;	/* name of the 'Only words' file */
+static char const *ignore_file = NULL;	/* name of the 'Ignore words' file */
 
 /* Options that use regular expressions.  */
 struct regex_data
@@ -162,7 +162,7 @@ static WORD_TABLE only_table;		/* table of words to select */
 
 static int number_input_files;	/* number of text input files */
 static intmax_t total_line_count;	/* total number of lines seen so far */
-static const char **input_file_name;	/* array of text input file names */
+static char const **input_file_name;	/* array of text input file names */
 static intmax_t *file_line_count;	/* array of line count values at end */
 
 static BLOCK *text_buffers;	/* files to study */
@@ -295,7 +295,7 @@ matcher_error (void)
 /* Loosely adapted from GNU sh-utils printf.c code.  */
 
 static char *
-copy_unescaped_string (const char *string)
+copy_unescaped_string (char const *string)
 {
   char *result;			/* allocated result */
   char *cursor;			/* cursor in result */
@@ -510,7 +510,7 @@ initialize_regex (void)
 `------------------------------------------------------------------------*/
 
 static void
-swallow_file_in_memory (const char *file_name, BLOCK *block)
+swallow_file_in_memory (char const *file_name, BLOCK *block)
 {
   size_t used_length;		/* used length in memory buffer */
 
@@ -648,7 +648,7 @@ sort_found_occurs (void)
 `----------------------------------------------------------------------*/
 
 static void
-digest_break_file (const char *file_name)
+digest_break_file (char const *file_name)
 {
   BLOCK file_contents;		/* to receive a copy of the file */
   char *cursor;			/* cursor in file copy */
@@ -688,7 +688,7 @@ digest_break_file (const char *file_name)
 `-----------------------------------------------------------------------*/
 
 static void
-digest_word_file (const char *file_name, WORD_TABLE *table)
+digest_word_file (char const *file_name, WORD_TABLE *table)
 {
   BLOCK file_contents;		/* to receive a copy of the file */
   char *cursor;			/* cursor in file copy */
@@ -1099,7 +1099,7 @@ fix_output_parameters (void)
   intmax_t line_ordinal;	/* line ordinal value for reference */
   ptrdiff_t reference_width;	/* width for the whole reference */
   int character;		/* character ordinal */
-  const char *cursor;		/* cursor in some constant strings */
+  char const *cursor;		/* cursor in some constant strings */
 
   /* In auto reference mode, the maximum width of this field is
      precomputed and subtracted from the overall line width.  Add one for
@@ -1250,10 +1250,10 @@ define_all_fields (OCCURS *occurs)
   char *left_context_start;	/* start of left context */
   char *right_context_end;	/* end of right context */
   char *left_field_start;	/* conservative start for 'head'/'before' */
-  const char *file_name;	/* file name for reference */
+  char const *file_name;	/* file name for reference */
   intmax_t line_ordinal;	/* line ordinal for reference */
-  const char *buffer_start;	/* start of buffered file for this occurs */
-  const char *buffer_end;	/* end of buffered file for this occurs */
+  char const *buffer_start;	/* start of buffered file for this occurs */
+  char const *buffer_end;	/* end of buffered file for this occurs */
 
   /* Define 'keyafter', start of left context and end of right context.
      'keyafter' starts at the saved position for keyword and extend to the

@@ -171,7 +171,7 @@ static enum scale_type scale_from = scale_none;
 static enum scale_type scale_to = scale_none;
 static enum round_type round_style = round_from_zero;
 static enum inval_type inval_style = inval_abort;
-static const char *suffix = NULL;
+static char const *suffix = NULL;
 static uintmax_t from_unit_size = 1;
 static uintmax_t to_unit_size = 1;
 static int grouping = 0;
@@ -180,7 +180,7 @@ static size_t padding_buffer_size = 0;
 static long int padding_width = 0;
 static long int zero_padding_width = 0;
 static long int user_precision = -1;
-static const char *format_str = NULL;
+static char const *format_str = NULL;
 static char *format_str_prefix = NULL;
 static char *format_str_suffix = NULL;
 
@@ -206,7 +206,7 @@ static uintmax_t header = 0;
 static bool debug;
 
 /* will be set according to the current locale.  */
-static const char *decimal_point;
+static char const *decimal_point;
 static int decimal_point_length;
 
 /* debugging for developers.  Enables devmsg().  */
@@ -233,7 +233,7 @@ default_scale_base (enum scale_type scale)
 static inline int
 valid_suffix (const char suf)
 {
-  static const char *valid_suffixes = "KMGTPEZY";
+  static char const *valid_suffixes = "KMGTPEZY";
   return (strchr (valid_suffixes, suf) != NULL);
 }
 
@@ -271,7 +271,7 @@ suffix_power (const char suf)
     }
 }
 
-static inline const char *
+static inline char const *
 suffix_power_char (unsigned int power)
 {
   switch (power)
@@ -463,7 +463,7 @@ enum simple_strtod_error
       SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
       SSE_INVALID_NUMBER    - if no digits were found.  */
 static enum simple_strtod_error
-simple_strtod_int (const char *input_str,
+simple_strtod_int (char const *input_str,
                    char **endptr, long double *value, bool *negative)
 {
   enum simple_strtod_error e = SSE_OK;
@@ -528,7 +528,7 @@ simple_strtod_int (const char *input_str,
       SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
       SSE_INVALID_NUMBER    - if no digits were found.  */
 static enum simple_strtod_error
-simple_strtod_float (const char *input_str,
+simple_strtod_float (char const *input_str,
                      char **endptr,
                      long double *value,
                      size_t *precision)
@@ -604,7 +604,7 @@ simple_strtod_float (const char *input_str,
       SSE_INVALID_SUFFIX
       SSE_MISSING_I_SUFFIX  */
 static enum simple_strtod_error
-simple_strtod_human (const char *input_str,
+simple_strtod_human (char const *input_str,
                      char **endptr, long double *value, size_t *precision,
                      enum scale_type allowed_scaling)
 {
@@ -821,15 +821,15 @@ double_to_human (long double val, int precision,
    Upon successful conversion, return that value.
    If it cannot be converted, give a diagnostic and exit.  */
 static uintmax_t
-unit_to_umax (const char *n_string)
+unit_to_umax (char const *n_string)
 {
   strtol_error s_err;
-  const char *c_string = n_string;
+  char const *c_string = n_string;
   char *t_string = NULL;
   size_t n_len = strlen (n_string);
   char *end = NULL;
   uintmax_t n;
-  const char *suffixes = "KMGTPEZY";
+  char const *suffixes = "KMGTPEZY";
 
   /* Adjust suffixes so K=1000, Ki=1024, KiB=invalid.  */
   if (n_len && ! c_isdigit (n_string[n_len - 1]))
@@ -1164,7 +1164,7 @@ parse_format_string (char const *fmt)
    If there are any trailing characters after the number
    (besides a valid suffix) - exits with an error.  */
 static enum simple_strtod_error
-parse_human_number (const char *str, long double /*output */ *value,
+parse_human_number (char const *str, long double /*output */ *value,
                     size_t *precision)
 {
   char *ptr = NULL;

@@ -197,7 +197,7 @@ enum mode_type
 /* Each mode.  */
 struct mode_info
   {
-    const char *name;		/* Name given on command line.  */
+    char const *name;		/* Name given on command line.  */
     enum mode_type type;	/* Which structure element to change. */
     char flags;			/* Setting and display options.  */
     unsigned long bits;		/* Bits to set for this mode.  */
@@ -383,7 +383,7 @@ static struct mode_info const mode_info[] =
 /* Control character settings.  */
 struct control_info
   {
-    const char *name;		/* Name given on command line.  */
+    char const *name;		/* Name given on command line.  */
     cc_t saneval;		/* Value to set for 'stty sane'.  */
     size_t offset;		/* Offset in c_cc.  */
   };
@@ -443,22 +443,22 @@ static bool recover_mode (char const *arg, struct termios *mode);
 static int screen_columns (void);
 static bool set_mode (struct mode_info const *info, bool reversed,
                       struct termios *mode);
-static unsigned long int integer_arg (const char *s, unsigned long int max);
-static speed_t string_to_baud (const char *arg);
+static unsigned long int integer_arg (char const *s, unsigned long int max);
+static speed_t string_to_baud (char const *arg);
 static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
 static void display_all (struct termios *mode, char const *device_name);
 static void display_changed (struct termios *mode);
 static void display_recoverable (struct termios *mode);
 static void display_settings (enum output_type output_type,
                               struct termios *mode,
-                              const char *device_name);
+                              char const *device_name);
 static void display_speed (struct termios *mode, bool fancy);
 static void display_window_size (bool fancy, char const *device_name);
 static void sane_mode (struct termios *mode);
 static void set_control_char (struct control_info const *info,
-                              const char *arg,
+                              char const *arg,
                               struct termios *mode);
-static void set_speed (enum speed_setting type, const char *arg,
+static void set_speed (enum speed_setting type, char const *arg,
                        struct termios *mode);
 static void set_window_size (int rows, int cols, char const *device_name);
 
@@ -481,7 +481,7 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-static void wrapf (const char *message, ...)
+static void wrapf (char const *message, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /* Print format string MESSAGE and optional args.
@@ -489,7 +489,7 @@ static void wrapf (const char *message, ...)
    Print a space first unless MESSAGE will start a new line. */
 
 static void
-wrapf (const char *message,...)
+wrapf (char const *message,...)
 {
   va_list args;
   char *buf;
@@ -1084,7 +1084,7 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
    with a device, and only validates specified settings.  */
 
 static void
-apply_settings (bool checking, const char *device_name,
+apply_settings (bool checking, char const *device_name,
                 char * const *settings, int n_settings,
                 struct termios *mode, bool *speed_was_set,
                 bool *require_set_attr)
@@ -1281,7 +1281,7 @@ main (int argc, char **argv)
   bool recoverable_output;
   bool noargs = true;
   char *file_name = NULL;
-  const char *device_name;
+  char const *device_name;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1672,7 +1672,7 @@ set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
 }
 
 static void
-set_control_char (struct control_info const *info, const char *arg,
+set_control_char (struct control_info const *info, char const *arg,
                   struct termios *mode)
 {
   unsigned long int value;
@@ -1696,7 +1696,7 @@ set_control_char (struct control_info const *info, const char *arg,
 }
 
 static void
-set_speed (enum speed_setting type, const char *arg, struct termios *mode)
+set_speed (enum speed_setting type, char const *arg, struct termios *mode)
 {
   speed_t baud;
 
@@ -2133,7 +2133,7 @@ recover_mode (char const *arg, struct termios *mode)
 
 struct speed_map
 {
-  const char *string;		/* ASCII representation. */
+  char const *string;		/* ASCII representation. */
   speed_t speed;		/* Internal form. */
   unsigned long int value;	/* Numeric value. */
 };
@@ -2208,7 +2208,7 @@ static struct speed_map const speeds[] =
 };
 
 static speed_t _GL_ATTRIBUTE_PURE
-string_to_baud (const char *arg)
+string_to_baud (char const *arg)
 {
   for (int i = 0; speeds[i].string != NULL; ++i)
     if (STREQ (arg, speeds[i].string))
@@ -2263,7 +2263,7 @@ sane_mode (struct termios *mode)
 /* Return a string that is the printable representation of character CH.  */
 /* Adapted from 'cat' by Torbjorn Granlund.  */
 
-static const char *
+static char const *
 visible (cc_t ch)
 {
   static char buf[10];
@@ -2308,7 +2308,7 @@ visible (cc_t ch)
       *bpout++ = ch + 64;
     }
   *bpout = '\0';
-  return (const char *) buf;
+  return (char const *) buf;
 }
 
 /* Parse string S as an integer, using decimal radix by default,
@@ -2316,7 +2316,7 @@ visible (cc_t ch)
    larger than MAXVAL.  */
 
 static unsigned long int
-integer_arg (const char *s, unsigned long int maxval)
+integer_arg (char const *s, unsigned long int maxval)
 {
   return xnumtoumax (s, 0, 0, maxval, "bB", _("invalid integer argument"), 0);
 }

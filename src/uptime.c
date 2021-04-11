@@ -174,7 +174,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
    utmp file.  */
 
 static void
-uptime (const char *filename, int options)
+uptime (char const *filename, int options)
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf = NULL;

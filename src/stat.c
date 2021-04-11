@@ -1343,7 +1343,7 @@ do_stat (char const *filename, char const *format, char const *format2)
   int flags = 0;
   struct stat st;
   struct statx stx = { 0, };
-  const char *pathname = filename;
+  char const *pathname = filename;
   struct print_args pa;
   pa.st = &st;
   pa.btime = (struct timespec) {-1, -1};

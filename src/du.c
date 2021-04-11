@@ -377,7 +377,7 @@ hash_ins (struct di_set *di_set, ino_t ino, dev_t dev)
    in FORMAT.  */
 
 static void
-show_date (const char *format, struct timespec when, timezone_t tz)
+show_date (char const *format, struct timespec when, timezone_t tz)
 {
   struct tm tm;
   if (localtime_rz (tz, &when.tv_sec, &tm))
@@ -407,7 +407,7 @@ print_only_size (uintmax_t n_bytes)
 /* Print size (and optionally time) indicated by *PDUI, followed by STRING.  */
 
 static void
-print_size (const struct duinfo *pdui, const char *string)
+print_size (const struct duinfo *pdui, char const *string)
 {
   print_only_size (opt_inodes
                    ? pdui->inodes
@@ -503,7 +503,7 @@ process_file (FTS *fts, FTSENT *ent)
      directory at the specified level.  */
   static struct dulevel *dulvl;
 
-  const char *file = ent->fts_path;
+  char const *file = ent->fts_path;
   const struct stat *sb = ent->fts_statp;
   int info = ent->fts_info;
 

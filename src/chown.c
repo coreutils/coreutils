@@ -227,7 +227,7 @@ main (int argc, char **argv)
 
         case FROM_OPTION:
           {
-            const char *e = parse_user_spec (optarg,
+            char const *e = parse_user_spec (optarg,
                                              &required_uid, &required_gid,
                                              NULL, NULL);
             if (e)
@@ -297,7 +297,7 @@ main (int argc, char **argv)
     }
   else
     {
-      const char *e = parse_user_spec (argv[optind], &uid, &gid,
+      char const *e = parse_user_spec (argv[optind], &uid, &gid,
                                        &chopt.user_name, &chopt.group_name);
       if (e)
         die (EXIT_FAILURE, 0, "%s: %s", e, quote (argv[optind]));

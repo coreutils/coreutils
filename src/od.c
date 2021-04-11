@@ -448,7 +448,7 @@ N (size_t fields, size_t blank, void const *block,                      \
             char b[sizeof (T)];                                         \
           } u;                                                          \
           for (j = 0; j < sizeof (T); j++)                              \
-            u.b[j] = ((const char *) p)[sizeof (T) - 1 - j];            \
+            u.b[j] = ((char const *) p)[sizeof (T) - 1 - j];            \
           x = u.x;                                                      \
         }                                                               \
       else                                                              \
@@ -484,7 +484,7 @@ PRINT_FLOATTYPE (print_long_double, long double, ldtoastr, LDBL_BUFSIZE_BOUND)
 #undef PRINT_FLOATTYPE
 
 static void
-dump_hexl_mode_trailer (size_t n_bytes, const char *block)
+dump_hexl_mode_trailer (size_t n_bytes, char const *block)
 {
   fputs ("  >", stdout);
   for (size_t i = n_bytes; i > 0; i--)
@@ -498,7 +498,7 @@ dump_hexl_mode_trailer (size_t n_bytes, const char *block)
 
 static void
 print_named_ascii (size_t fields, size_t blank, void const *block,
-                   const char *unused_fmt_string _GL_UNUSED,
+                   char const *unused_fmt_string _GL_UNUSED,
                    int width, int pad)
 {
   unsigned char const *p = block;
@@ -508,7 +508,7 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
     {
       int next_pad = pad * (i - 1) / fields;
       int masked_c = *p++ & 0x7f;
-      const char *s;
+      char const *s;
       char buf[2];
 
       if (masked_c == 127)
@@ -529,7 +529,7 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
 
 static void
 print_ascii (size_t fields, size_t blank, void const *block,
-             const char *unused_fmt_string _GL_UNUSED, int width,
+             char const *unused_fmt_string _GL_UNUSED, int width,
              int pad)
 {
   unsigned char const *p = block;
@@ -539,7 +539,7 @@ print_ascii (size_t fields, size_t blank, void const *block,
     {
       int next_pad = pad * (i - 1) / fields;
       unsigned char c = *p++;
-      const char *s;
+      char const *s;
       char buf[4];
 
       switch (c)
@@ -595,7 +595,7 @@ print_ascii (size_t fields, size_t blank, void const *block,
    the result of the conversion and return true.  */
 
 static bool
-simple_strtoul (const char *s, const char **p, unsigned long int *val)
+simple_strtoul (char const *s, char const **p, unsigned long int *val)
 {
   unsigned long int sum;
 
@@ -632,7 +632,7 @@ simple_strtoul (const char *s, const char **p, unsigned long int *val)
    */
 
 static bool
-decode_one_format (const char *s_orig, const char *s, const char **next,
+decode_one_format (char const *s_orig, char const *s, char const **next,
                    struct tspec *tspec)
 {
   enum size_spec size_spec;
@@ -640,7 +640,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   enum output_format fmt;
   void (*print_function) (size_t, size_t, void const *, char const *,
                           int, int);
-  const char *p;
+  char const *p;
   char c;
   int field_width;
 
@@ -979,14 +979,14 @@ check_and_close (int in_errno)
    necessary.  Return true if S is valid.  */
 
 static bool
-decode_format_string (const char *s)
+decode_format_string (char const *s)
 {
-  const char *s_orig = s;
+  char const *s_orig = s;
   assert (s != NULL);
 
   while (*s != '\0')
     {
-      const char *next;
+      char const *next;
 
       if (n_specs_allocated <= n_specs)
         spec = X2NREALLOC (spec, &n_specs_allocated);
@@ -1186,7 +1186,7 @@ format_address_label (uintmax_t address, char c)
 
 static void
 write_block (uintmax_t current_offset, size_t n_bytes,
-             const char *prev_block, const char *curr_block)
+             char const *prev_block, char const *curr_block)
 {
   static bool first = true;
   static bool prev_pair_equal = false;
@@ -1332,7 +1332,7 @@ get_lcm (void)
    leading '+' return true and set *OFFSET to the offset it denotes.  */
 
 static bool
-parse_old_offset (const char *s, uintmax_t *offset)
+parse_old_offset (char const *s, uintmax_t *offset)
 {
   int radix;
 

@@ -536,7 +536,7 @@ maybe_close_stdout (void)
 /* Like the 'error' function but handle any pending newline.  */
 
 static void _GL_ATTRIBUTE_FORMAT ((__printf__, 3, 4))
-nl_error (int status, int errnum, const char *fmt, ...)
+nl_error (int status, int errnum, char const *fmt, ...)
 {
   if (0 < progress_len)
     {
@@ -1445,7 +1445,7 @@ parse_symbols (char const *str, struct symbol_value const *table,
    number in this format.  */
 
 static uintmax_t
-parse_integer (const char *str, strtol_error *invalid)
+parse_integer (char const *str, strtol_error *invalid)
 {
   uintmax_t n;
   char *suffix;
@@ -1961,7 +1961,7 @@ advance_input_after_read_error (size_t nbytes)
 static void
 copy_simple (char const *buf, size_t nread)
 {
-  const char *start = buf;	/* First uncopied char in BUF.  */
+  char const *start = buf;	/* First uncopied char in BUF.  */
 
   do
     {

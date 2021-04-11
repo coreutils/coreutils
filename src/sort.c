@@ -370,9 +370,9 @@ static unsigned int nmerge = NMERGE_DEFAULT;
    This can be used safely from signal handlers,
    and between fork and exec of multithreaded processes.  */
 
-static void async_safe_die (int, const char *) ATTRIBUTE_NORETURN;
+static void async_safe_die (int, char const *) ATTRIBUTE_NORETURN;
 static void
-async_safe_die (int errnum, const char *errstr)
+async_safe_die (int errnum, char const *errstr)
 {
   ignore_value (write (STDERR_FILENO, errstr, strlen (errstr)));
 

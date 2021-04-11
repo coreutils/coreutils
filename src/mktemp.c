@@ -36,7 +36,7 @@
   proper_name ("Jim Meyering"), \
   proper_name ("Eric Blake")
 
-static const char *default_template = "tmp.XXXXXXXXXX";
+static char const *default_template = "tmp.XXXXXXXXXX";
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -104,7 +104,7 @@ Files are created u+rw, and directories u+rwx, minus umask restrictions.\n\
 }
 
 static size_t
-count_consecutive_X_s (const char *s, size_t len)
+count_consecutive_X_s (char const *s, size_t len)
 {
   size_t n = 0;
   for ( ; len && s[len-1] == 'X'; len--)

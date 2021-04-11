@@ -84,7 +84,7 @@ static size_t suffix_length;
 static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 /* Numerical suffix start value.  */
-static const char *numeric_suffix_start;
+static char const *numeric_suffix_start;
 
 /* Additional suffix to append to output file names.  */
 static char const *additional_suffix;
@@ -454,7 +454,7 @@ new_name:
 /* Create or truncate a file.  */
 
 static int
-create (const char *name)
+create (char const *name)
 {
   if (!filter_command)
     {
@@ -594,7 +594,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
    Return true if successful.  */
 
 static bool
-cwrite (bool new_file_flag, const char *bp, size_t bytes)
+cwrite (bool new_file_flag, char const *bp, size_t bytes)
 {
   if (new_file_flag)
     {

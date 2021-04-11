@@ -166,7 +166,7 @@ target_directory_operand (char const *file)
    Return true if successful.  */
 
 static bool
-do_move (const char *source, const char *dest, const struct cp_options *x)
+do_move (char const *source, char const *dest, const struct cp_options *x)
 {
   bool copy_into_self;
   bool rename_succeeded;

@@ -249,7 +249,7 @@ struct fileinfo
 struct bin_str
   {
     size_t len;			/* Number of bytes */
-    const char *string;		/* Pointer to the same */
+    char const *string;		/* Pointer to the same */
   };
 
 #if ! HAVE_TCGETPGRP
@@ -276,8 +276,8 @@ static const struct bin_str * get_color_indicator (const struct fileinfo *f,
                                                    bool symlink_target);
 static bool print_color_indicator (const struct bin_str *ind);
 static void put_indicator (const struct bin_str *ind);
-static void add_ignore_pattern (const char *pattern);
-static void attach (char *dest, const char *dirname, const char *name);
+static void add_ignore_pattern (char const *pattern);
+static void attach (char *dest, char const *dirname, char const *name);
 static void clear_files (void);
 static void extract_dirs_from_files (char const *dirname,
                                      bool command_line_arg);
@@ -310,7 +310,7 @@ static void parse_ls_color (void);
 
 static void getenv_quoting_style (void);
 
-static size_t quote_name_width (const char *name,
+static size_t quote_name_width (char const *name,
                                 struct quoting_options const *options,
                                 int needs_general_quoting);
 
@@ -602,7 +602,7 @@ enum indicator_no
     C_CLR_TO_EOL
   };
 
-static const char *const indicator_name[]=
+static char const *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
@@ -700,7 +700,7 @@ static enum
 
 struct ignore_pattern
   {
-    const char *pattern;
+    char const *pattern;
     struct ignore_pattern *next;
   };
 
@@ -1064,7 +1064,7 @@ dev_ino_pop (void)
    a space-separated list of the integers stored in OS all on one line.  */
 
 static void
-dired_dump_obstack (const char *prefix, struct obstack *os)
+dired_dump_obstack (char const *prefix, struct obstack *os)
 {
   size_t n_pos;
 
@@ -1158,7 +1158,7 @@ calc_req_mask (void)
 }
 
 static int
-do_statx (int fd, const char *name, struct stat *st, int flags,
+do_statx (int fd, char const *name, struct stat *st, int flags,
           unsigned int mask)
 {
   struct statx stx;
@@ -1182,26 +1182,26 @@ do_statx (int fd, const char *name, struct stat *st, int flags,
 }
 
 static inline int
-do_stat (const char *name, struct stat *st)
+do_stat (char const *name, struct stat *st)
 {
   return do_statx (AT_FDCWD, name, st, 0, calc_req_mask ());
 }
 
 static inline int
-do_lstat (const char *name, struct stat *st)
+do_lstat (char const *name, struct stat *st)
 {
   return do_statx (AT_FDCWD, name, st, AT_SYMLINK_NOFOLLOW, calc_req_mask ());
 }
 
 static inline int
-stat_for_mode (const char *name, struct stat *st)
+stat_for_mode (char const *name, struct stat *st)
 {
   return do_statx (AT_FDCWD, name, st, 0, STATX_MODE);
 }
 
 /* dev+ino should be static, so no need to sync with backing store */
 static inline int
-stat_for_ino (const char *name, struct stat *st)
+stat_for_ino (char const *name, struct stat *st)
 {
   return do_statx (AT_FDCWD, name, st, 0, STATX_INO);
 }
@@ -1213,25 +1213,25 @@ fstat_for_ino (int fd, struct stat *st)
 }
 #else
 static inline int
-do_stat (const char *name, struct stat *st)
+do_stat (char const *name, struct stat *st)
 {
   return stat (name, st);
 }
 
 static inline int
-do_lstat (const char *name, struct stat *st)
+do_lstat (char const *name, struct stat *st)
 {
   return lstat (name, st);
 }
 
 static inline int
-stat_for_mode (const char *name, struct stat *st)
+stat_for_mode (char const *name, struct stat *st)
 {
   return stat (name, st);
 }
 
 static inline int
-stat_for_ino (const char *name, struct stat *st)
+stat_for_ino (char const *name, struct stat *st)
 {
   return stat (name, st);
 }
@@ -2468,7 +2468,7 @@ decode_switches (int argc, char **argv)
    the input string, respectively.  */
 
 static bool
-get_funky_string (char **dest, const char **src, bool equals_end,
+get_funky_string (char **dest, char const **src, bool equals_end,
                   size_t *output_count)
 {
   char num;			/* For numerical codes */
@@ -2476,7 +2476,7 @@ get_funky_string (char **dest, const char **src, bool equals_end,
   enum {
     ST_GND, ST_BACKSLASH, ST_OCTAL, ST_HEX, ST_CARET, ST_END, ST_ERROR
   } state;
-  const char *p;
+  char const *p;
   char *q;
 
   p = *src;			/* We don't want to double-indirect */
@@ -2699,7 +2699,7 @@ known_term_type (void)
 static void
 parse_ls_color (void)
 {
-  const char *p;		/* Pointer to character being parsed */
+  char const *p;		/* Pointer to character being parsed */
   char *buf;			/* color_buf buffer pointer */
   int ind_no;			/* Indicator number */
   char label[3];		/* Indicator label */
@@ -3059,7 +3059,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 
   if (format == long_format || print_block_size)
     {
-      const char *p;
+      char const *p;
       char buf[LONGEST_HUMAN_READABLE + 1];
 
       DIRED_INDENT ();
@@ -3080,7 +3080,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
    not listed.  */
 
 static void
-add_ignore_pattern (const char *pattern)
+add_ignore_pattern (char const *pattern)
 {
   struct ignore_pattern *ignore;
 
@@ -3687,7 +3687,7 @@ make_link_name (char const *name, char const *linkname)
    This is so we don't try to recurse on '././././. ...' */
 
 static bool
-basename_is_dot_or_dotdot (const char *name)
+basename_is_dot_or_dotdot (char const *name)
 {
   char const *base = last_component (name);
   return dot_or_dotdot (base);
@@ -4681,7 +4681,7 @@ quote_name_buf (char **inbuf, size_t bufsize, char *name,
 }
 
 static size_t
-quote_name_width (const char *name, struct quoting_options const *options,
+quote_name_width (char const *name, struct quoting_options const *options,
                   int needs_general_quoting)
 {
   char smallbuf[BUFSIZ];
@@ -4703,7 +4703,7 @@ quote_name_width (const char *name, struct quoting_options const *options,
 /* %XX escape any input out of range as defined in RFC3986,
    and also if PATH, convert all path separators to '/'.  */
 static char *
-file_escape (const char *str, bool path)
+file_escape (char const *str, bool path)
 {
   char *esc = xnmalloc (3, strlen (str) + 1);
   char *p = esc;
@@ -5235,9 +5235,9 @@ indent (size_t from, size_t to)
    non-malloc'ing version of file_name_concat.  */
 
 static void
-attach (char *dest, const char *dirname, const char *name)
+attach (char *dest, char const *dirname, char const *name)
 {
-  const char *dirnamep = dirname;
+  char const *dirnamep = dirname;
 
   /* Copy dirname if it is not ".".  */
   if (dirname[0] != '.' || dirname[1] != 0)

@@ -52,8 +52,8 @@ enum {
 };
 
 size_t
-mbsalign (const char *src, char *dest, size_t dest_size,
+mbsalign (char const *src, char *dest, size_t dest_size,
           size_t *width, mbs_align_t align, int flags);
 
 char *
-ambsalign (const char *src, size_t *width, mbs_align_t align, int flags);
+ambsalign (char const *src, size_t *width, mbs_align_t align, int flags);

@@ -29,13 +29,13 @@
 extern uint_fast32_t const crctab[8][256];
 
 extern bool
-cksum_pclmul (FILE *fp, const char *file, uint_fast32_t *crc_out,
+cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
               uintmax_t *length_out);
 
 /* Calculate CRC32 using PCLMULQDQ CPU instruction found in x86/x64 CPUs */
 
 bool
-cksum_pclmul (FILE *fp, const char *file, uint_fast32_t *crc_out,
+cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
               uintmax_t *length_out)
 {
   __m128i buf[BUFLEN / sizeof (__m128i)];

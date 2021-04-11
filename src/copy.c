@@ -855,7 +855,7 @@ copy_attr_free (struct error_context *ctx _GL_UNUSED,
    FIXME: Should we handle POSIX ACLs similarly?
    Return zero to skip.  */
 static int
-check_selinux_attr (const char *name, struct error_context *ctx)
+check_selinux_attr (char const *name, struct error_context *ctx)
 {
   return STRNCMP_LIT (name, "security.selinux")
          && attr_copy_check_permissions (name, ctx);
@@ -1062,7 +1062,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
    DEST_NAME if defined.  */
 
 static void
-set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
+set_author (char const *dst_name, int dest_desc, const struct stat *src_sb)
 {
 #if HAVE_STRUCT_STAT_ST_AUTHOR
   /* FIXME: Modify the following code so that it does not
@@ -2382,7 +2382,7 @@ copy_internal (char const *src_name, char const *dst_name,
               if (x->backup_type != numbered_backups
                   && source_is_dst_backup (srcbase, &src_sb, dst_name))
                 {
-                  const char *fmt;
+                  char const *fmt;
                   fmt = (x->move_mode
                  ? _("backing up %s might destroy source;  %s not moved")
                  : _("backing up %s might destroy source;  %s not copied"));

@@ -453,7 +453,7 @@ enum
 # define ASSIGN_STRDUPA(DEST, S)		\
   do						\
     {						\
-      const char *s_ = (S);			\
+      char const *s_ = (S);			\
       size_t len_ = strlen (s_) + 1;		\
       char *tmp_dest_ = alloca (len_);		\
       DEST = memcpy (tmp_dest_, s_, len_);	\
@@ -656,7 +656,7 @@ emit_ancillary_info (char const *program)
 
   /* Don't output this redundant message for English locales.
      Note we still output for 'C' so that it gets included in the man page.  */
-  const char *lc_messages = setlocale (LC_MESSAGES, NULL);
+  char const *lc_messages = setlocale (LC_MESSAGES, NULL);
   if (lc_messages && STRNCMP_LIT (lc_messages, "en_"))
     {
       /* TRANSLATORS: Replace LANG_CODE in this URL with your language code

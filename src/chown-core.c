@@ -133,11 +133,11 @@ user_group_str (char const *user, char const *group)
    CHANGED describes what (if anything) has happened. */
 
 static void
-describe_change (const char *file, enum Change_status changed,
+describe_change (char const *file, enum Change_status changed,
                  char const *old_user, char const *old_group,
                  char const *user, char const *group)
 {
-  const char *fmt;
+  char const *fmt;
   char *old_spec;
   char *spec;
 

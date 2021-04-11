@@ -39,7 +39,7 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static bool show_date (const char *, struct timespec, timezone_t);
+static bool show_date (char const *, struct timespec, timezone_t);
 
 enum Time_spec
 {
@@ -287,7 +287,7 @@ Show the local time for 9AM next Friday on the west coast of the US\n\
    Return true if successful.  */
 
 static bool
-batch_convert (const char *input_filename, const char *format,
+batch_convert (char const *input_filename, char const *format,
                timezone_t tz, char const *tzstring)
 {
   bool ok;
@@ -348,8 +348,8 @@ int
 main (int argc, char **argv)
 {
   int optc;
-  const char *datestr = NULL;
-  const char *set_datestr = NULL;
+  char const *datestr = NULL;
+  char const *set_datestr = NULL;
   struct timespec when;
   bool set_date = false;
   char const *format = NULL;
@@ -580,7 +580,7 @@ main (int argc, char **argv)
    in FORMAT, followed by a newline.  Return true if successful.  */
 
 static bool
-show_date (const char *format, struct timespec when, timezone_t tz)
+show_date (char const *format, struct timespec when, timezone_t tz)
 {
   struct tm tm;
 

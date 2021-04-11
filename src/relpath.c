@@ -27,7 +27,7 @@
    of canonical PATH1 and PATH2, ensuring only full path components
    are matched.  Return 0 on no match.  */
 static int _GL_ATTRIBUTE_PURE
-path_common_prefix (const char *path1, const char *path2)
+path_common_prefix (char const *path1, char const *path2)
 {
   int i = 0;
   int ret = 0;
@@ -85,7 +85,7 @@ buffer_or_output (const char* str, char **pbuf, size_t *plen)
 /* Output the relative representation if possible.
    If BUF is non-NULL, write to that buffer rather than to stdout.  */
 bool
-relpath (const char *can_fname, const char *can_reldir, char *buf, size_t len)
+relpath (char const *can_fname, char const *can_reldir, char *buf, size_t len)
 {
   bool buf_err = false;
 
@@ -94,8 +94,8 @@ relpath (const char *can_fname, const char *can_reldir, char *buf, size_t len)
   if (!common_index)
     return false;
 
-  const char *relto_suffix = can_reldir + common_index;
-  const char *fname_suffix = can_fname + common_index;
+  char const *relto_suffix = can_reldir + common_index;
+  char const *fname_suffix = can_fname + common_index;
 
   /* Skip over extraneous '/'.  */
   if (*relto_suffix == '/')

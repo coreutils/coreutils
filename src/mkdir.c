@@ -192,7 +192,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
 int
 main (int argc, char **argv)
 {
-  const char *specified_mode = NULL;
+  char const *specified_mode = NULL;
   int optc;
   char const *scontext = NULL;
   struct mkdir_options options;

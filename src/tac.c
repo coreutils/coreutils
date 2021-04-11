@@ -156,7 +156,7 @@ Write each FILE to standard output, last line first.\n\
    If START is NULL, just flush the buffer. */
 
 static void
-output (const char *start, const char *past_end)
+output (char const *start, char const *past_end)
 {
   static char buffer[WRITESIZE];
   static size_t bytes_in_buffer = 0;
@@ -190,7 +190,7 @@ output (const char *start, const char *past_end)
    Return true if successful.  */
 
 static bool
-tac_seekable (int input_fd, const char *file, off_t file_pos)
+tac_seekable (int input_fd, char const *file, off_t file_pos)
 {
   /* Pointer to the location in 'G_buffer' where the search for
      the next separator will begin. */
@@ -393,7 +393,7 @@ tac_seekable (int input_fd, const char *file, off_t file_pos)
    But this isn't a big deal, since the code is used only on WOE/DOS
    systems, and few people invoke tac on that many nonseekable files.  */
 
-static const char *file_to_remove;
+static char const *file_to_remove;
 static FILE *fp_to_close;
 
 static void
@@ -543,7 +543,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
    Return true if successful.  */
 
 static bool
-tac_nonseekable (int input_fd, const char *file)
+tac_nonseekable (int input_fd, char const *file)
 {
   FILE *tmp_stream;
   char *tmp_file;
@@ -560,7 +560,7 @@ tac_nonseekable (int input_fd, const char *file)
    Return true if successful.  */
 
 static bool
-tac_file (const char *filename)
+tac_file (char const *filename)
 {
   bool ok;
   off_t file_size;
@@ -602,7 +602,7 @@ tac_file (const char *filename)
 int
 main (int argc, char **argv)
 {
-  const char *error_message;	/* Return value from re_compile_pattern. */
+  char const *error_message;	/* Return value from re_compile_pattern. */
   int optc;
   bool ok;
   size_t half_buffer_size;

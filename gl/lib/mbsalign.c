@@ -109,14 +109,14 @@ mbs_align_pad (char *dest, const char* dest_end, size_t n_spaces)
    Update *WIDTH to indicate how many columns were used before padding.  */
 
 size_t
-mbsalign (const char *src, char *dest, size_t dest_size,
+mbsalign (char const *src, char *dest, size_t dest_size,
           size_t *width, mbs_align_t align, int flags)
 {
   size_t ret = SIZE_MAX;
   size_t src_size = strlen (src) + 1;
   char *newstr = NULL;
   wchar_t *str_wc = NULL;
-  const char *str_to_print = src;
+  char const *str_to_print = src;
   size_t n_cols = src_size - 1;
   size_t n_used_bytes = n_cols; /* Not including NUL */
   size_t n_spaces = 0;
@@ -245,7 +245,7 @@ mbsalign_cleanup:
    Return NULL on failure.  */
 
 char *
-ambsalign (const char *src, size_t *width, mbs_align_t align, int flags)
+ambsalign (char const *src, size_t *width, mbs_align_t align, int flags)
 {
   size_t orig_width = *width;
   size_t size = *width;         /* Start with enough for unibyte mode.  */

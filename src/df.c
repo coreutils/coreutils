@@ -170,7 +170,7 @@ struct field_data_t
   display_field_t field;
   char const *arg;
   field_type_t field_type;
-  const char *caption;/* NULL means to use the default header of this field.  */
+  char const *caption;/* NULL means to use the default header of this field.  */
   size_t width;       /* Auto adjusted (up) widths used to align columns.  */
   mbs_align_t align;  /* Alignment for this field.  */
   bool used;
@@ -395,7 +395,7 @@ print_table (void)
    can then be accessed with standard array notation.  */
 
 static void
-alloc_field (int f, const char *c)
+alloc_field (int f, char const *c)
 {
   ncolumns++;
   columns = xnrealloc (columns, ncolumns, sizeof (struct field_data_t *));
@@ -632,7 +632,7 @@ get_header (void)
 /* Is FSTYPE a type of file system that should be listed?  */
 
 static bool _GL_ATTRIBUTE_PURE
-selected_fstype (const char *fstype)
+selected_fstype (char const *fstype)
 {
   const struct fs_type_list *fsp;
 
@@ -647,7 +647,7 @@ selected_fstype (const char *fstype)
 /* Is FSTYPE a type of file system that should be omitted?  */
 
 static bool _GL_ATTRIBUTE_PURE
-excluded_fstype (const char *fstype)
+excluded_fstype (char const *fstype)
 {
   const struct fs_type_list *fsp;
 
@@ -1353,7 +1353,7 @@ get_disk (char const *disk)
    and show its disk usage.
    STATP must be the result of 'stat (POINT, STATP)'.  */
 static void
-get_point (const char *point, const struct stat *statp)
+get_point (char const *point, const struct stat *statp)
 {
   struct stat disk_stats;
   struct mount_entry *me;
@@ -1478,7 +1478,7 @@ get_all_entries (void)
 /* Add FSTYPE to the list of file system types to display.  */
 
 static void
-add_fs_type (const char *fstype)
+add_fs_type (char const *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -1491,7 +1491,7 @@ add_fs_type (const char *fstype)
 /* Add FSTYPE to the list of file system types to be omitted.  */
 
 static void
-add_excluded_fs_type (const char *fstype)
+add_excluded_fs_type (char const *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -1590,7 +1590,7 @@ main (int argc, char **argv)
   /* If true, use the POSIX output format.  */
   bool posix_format = false;
 
-  const char *msg_mut_excl = _("options %s and %s are mutually exclusive");
+  char const *msg_mut_excl = _("options %s and %s are mutually exclusive");
 
   while (true)
     {
@@ -1799,7 +1799,7 @@ main (int argc, char **argv)
         {
           status = EXIT_FAILURE;
         }
-      const char *warning = (status == 0 ? _("Warning: ") : "");
+      char const *warning = (status == 0 ? _("Warning: ") : "");
       error (status, errno, "%s%s", warning,
              _("cannot read table of mounted file systems"));
     }

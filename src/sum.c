@@ -85,7 +85,7 @@ Print checksum and block counts for each FILE.\n\
    Return true if successful.  */
 
 static bool
-bsd_sum_file (const char *file, int print_name)
+bsd_sum_file (char const *file, int print_name)
 {
   FILE *fp;
   int checksum = 0;	/* The checksum mod 2^16. */
@@ -149,7 +149,7 @@ bsd_sum_file (const char *file, int print_name)
    Return true if successful.  */
 
 static bool
-sysv_sum_file (const char *file, int print_name)
+sysv_sum_file (char const *file, int print_name)
 {
   int fd;
   unsigned char buf[8192];
@@ -223,7 +223,7 @@ main (int argc, char **argv)
   bool ok;
   int optc;
   int files_given;
-  bool (*sum_func) (const char *, int) = bsd_sum_file;
+  bool (*sum_func) (char const *, int) = bsd_sum_file;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

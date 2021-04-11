@@ -317,7 +317,7 @@ writeline (struct linebuffer const *line,
    If either is "-", use the standard I/O stream for it instead. */
 
 static void
-check_file (const char *infile, const char *outfile, char delimiter)
+check_file (char const *infile, char const *outfile, char delimiter)
 {
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;

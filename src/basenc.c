@@ -217,7 +217,7 @@ verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
 
 static int (*base_length) (int i);
 static bool (*isbase) (char ch);
-static void (*base_encode) (const char *restrict in, size_t inlen,
+static void (*base_encode) (char const *restrict in, size_t inlen,
                             char *restrict out, size_t outlen);
 
 struct base16_decode_context
@@ -252,7 +252,7 @@ struct base_decode_context
 };
 static void (*base_decode_ctx_init) (struct base_decode_context *ctx);
 static bool (*base_decode_ctx) (struct base_decode_context *ctx,
-const char *restrict in, size_t inlen,
+char const *restrict in, size_t inlen,
 char *restrict out, size_t *outlen);
 #endif
 
@@ -275,7 +275,7 @@ base64_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base64_decode_ctx_wrapper (struct base_decode_context *ctx,
-                           const char *restrict in, size_t inlen,
+                           char const *restrict in, size_t inlen,
                            char *restrict out, size_t *outlen)
 {
   bool b = base64_decode_ctx (&ctx->ctx.base64, in, inlen, out, outlen);
@@ -302,7 +302,7 @@ prepare_inbuf (struct base_decode_context *ctx, size_t inlen)
 
 
 static void
-base64url_encode (const char *restrict in, size_t inlen,
+base64url_encode (char const *restrict in, size_t inlen,
                   char *restrict out, size_t outlen)
 {
   base64_encode (in, inlen, out, outlen);
@@ -335,7 +335,7 @@ base64url_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base64url_decode_ctx_wrapper (struct base_decode_context *ctx,
-                              const char *restrict in, size_t inlen,
+                              char const *restrict in, size_t inlen,
                               char *restrict out, size_t *outlen)
 {
   prepare_inbuf (ctx, inlen);
@@ -381,7 +381,7 @@ base32_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base32_decode_ctx_wrapper (struct base_decode_context *ctx,
-                           const char *restrict in, size_t inlen,
+                           char const *restrict in, size_t inlen,
                            char *restrict out, size_t *outlen)
 {
   bool b = base32_decode_ctx (&ctx->ctx.base32, in, inlen, out, outlen);
@@ -439,7 +439,7 @@ isbase32hex (char ch)
 
 
 static void
-base32hex_encode (const char *restrict in, size_t inlen,
+base32hex_encode (char const *restrict in, size_t inlen,
                   char *restrict out, size_t outlen)
 {
   base32_encode (in, inlen, out, outlen);
@@ -462,7 +462,7 @@ base32hex_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
-                              const char *restrict in, size_t inlen,
+                              char const *restrict in, size_t inlen,
                               char *restrict out, size_t *outlen)
 {
   prepare_inbuf (ctx, inlen);
@@ -502,7 +502,7 @@ base16_length (int len)
 static const char base16[16] = "0123456789ABCDEF";
 
 static void
-base16_encode (const char *restrict in, size_t inlen,
+base16_encode (char const *restrict in, size_t inlen,
                char *restrict out, size_t outlen)
 {
   while (inlen--)
@@ -526,7 +526,7 @@ base16_decode_ctx_init (struct base_decode_context *ctx)
 
 static bool
 base16_decode_ctx (struct base_decode_context *ctx,
-                   const char *restrict in, size_t inlen,
+                   char const *restrict in, size_t inlen,
                    char *restrict out, size_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
@@ -597,7 +597,7 @@ static char const z85_encoding[85] =
   ".-:+=^!/*?&<>()[]{}@%$#";
 
 static void
-z85_encode (const char *restrict in, size_t inlen,
+z85_encode (char const *restrict in, size_t inlen,
             char *restrict out, size_t outlen)
 {
   int i = 0;
@@ -697,7 +697,7 @@ static unsigned char z85_decoding[93] = {
 
 static bool
 z85_decode_ctx (struct base_decode_context *ctx,
-                const char *restrict in, size_t inlen,
+                char const *restrict in, size_t inlen,
                 char *restrict out, size_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
@@ -794,7 +794,7 @@ base2_length (int len)
 
 
 inline static void
-base2msbf_encode (const char *restrict in, size_t inlen,
+base2msbf_encode (char const *restrict in, size_t inlen,
                   char *restrict out, size_t outlen)
 {
   while (inlen--)
@@ -811,7 +811,7 @@ base2msbf_encode (const char *restrict in, size_t inlen,
 }
 
 inline static void
-base2lsbf_encode (const char *restrict in, size_t inlen,
+base2lsbf_encode (char const *restrict in, size_t inlen,
                   char *restrict out, size_t outlen)
 {
   while (inlen--)
@@ -839,7 +839,7 @@ base2_decode_ctx_init (struct base_decode_context *ctx)
 
 static bool
 base2lsbf_decode_ctx (struct base_decode_context *ctx,
-                      const char *restrict in, size_t inlen,
+                      char const *restrict in, size_t inlen,
                       char *restrict out, size_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
@@ -883,7 +883,7 @@ base2lsbf_decode_ctx (struct base_decode_context *ctx,
 
 static bool
 base2msbf_decode_ctx (struct base_decode_context *ctx,
-                      const char *restrict in, size_t inlen,
+                      char const *restrict in, size_t inlen,
                       char *restrict out, size_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
@@ -932,7 +932,7 @@ base2msbf_decode_ctx (struct base_decode_context *ctx,
 
 
 static void
-wrap_write (const char *buffer, size_t len,
+wrap_write (char const *buffer, size_t len,
             uintmax_t wrap_column, size_t *current_column, FILE *out)
 {
   size_t written;
@@ -1087,7 +1087,7 @@ main (int argc, char **argv)
 {
   int opt;
   FILE *input_fh;
-  const char *infile;
+  char const *infile;
 
   /* True if --decode has been given and we should decode data. */
   bool decode = false;

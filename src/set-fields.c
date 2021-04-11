@@ -135,7 +135,7 @@ complement_rp (void)
                           { .lo = UINTMAX_MAX, .hi = UINTMAX_MAX } ];
 */
 void
-set_fields (const char *fieldstr, unsigned int options)
+set_fields (char const *fieldstr, unsigned int options)
 {
   uintmax_t initial = 1;	/* Value of first number in a range.  */
   uintmax_t value = 0;		/* If nonzero, a number being accumulated.  */

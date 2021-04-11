@@ -133,7 +133,7 @@ struct Word
 
     /* Static attributes determined during input.  */
 
-    const char *text;		/* the text of the word */
+    char const *text;		/* the text of the word */
     int length;			/* length of this word */
     int space;			/* the size of the following space */
     unsigned int paren:1;	/* starts with open paren */
@@ -183,7 +183,7 @@ static bool split;
 static bool uniform;
 
 /* Prefix minus leading and trailing spaces (default "").  */
-static const char *prefix;
+static char const *prefix;
 
 /* User-supplied maximum line width (default WIDTH).  The only output
    lines longer than this will each comprise a single word.  */
@@ -618,7 +618,7 @@ get_paragraph (FILE *f)
 static int
 copy_rest (FILE *f, int c)
 {
-  const char *s;
+  char const *s;
 
   out_column = 0;
   if (in_column > next_prefix_indent || (c != '\n' && c != EOF))
@@ -725,7 +725,7 @@ get_prefix (FILE *f)
       prefix_lead_space : in_column;
   else
     {
-      const char *p;
+      char const *p;
       next_prefix_indent = in_column;
       for (p = prefix; *p != '\0'; p++)
         {
@@ -994,7 +994,7 @@ put_line (WORD *w, int indent)
 static void
 put_word (WORD *w)
 {
-  const char *s;
+  char const *s;
   int n;
 
   s = w->text;

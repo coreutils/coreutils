@@ -139,12 +139,12 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
    CHANGED describes what (if anything) has happened. */
 
 static void
-describe_change (const char *file, mode_t old_mode, mode_t mode,
+describe_change (char const *file, mode_t old_mode, mode_t mode,
                  enum Change_status changed)
 {
   char perms[12];		/* "-rwxrwxrwx" ls-style modes. */
   char old_perms[12];
-  const char *fmt;
+  char const *fmt;
 
   if (changed == CH_NOT_APPLIED)
     {

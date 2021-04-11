@@ -69,8 +69,8 @@ static gid_t rgid, egid;
 static char *context = NULL;
 
 static void print_user (uid_t uid);
-static void print_full_info (const char *username);
-static void print_stuff (const char *pw_name);
+static void print_full_info (char const *username);
+static void print_stuff (char const *pw_name);
 
 static struct option const longopts[] =
 {
@@ -236,7 +236,7 @@ main (int argc, char **argv)
       for (; optind < n_ids; optind++)
         {
           struct passwd *pwd = NULL;
-          const char *spec = argv[optind];
+          char const *spec = argv[optind];
           /* Disallow an empty spec here as parse_user_spec() doesn't
              give an error for that as it seems it's a valid way to
              specify a noop or "reset special bits" depending on the system.  */
@@ -354,7 +354,7 @@ print_user (uid_t uid)
 /* Print all of the info about the user's user and group IDs. */
 
 static void
-print_full_info (const char *username)
+print_full_info (char const *username)
 {
   struct passwd *pwd;
   struct group *grp;
@@ -429,7 +429,7 @@ print_full_info (const char *username)
 /* Print information about the user based on the arguments passed. */
 
 static void
-print_stuff (const char *pw_name)
+print_stuff (char const *pw_name)
 {
   if (just_user)
       print_user (use_real ? ruid : euid);

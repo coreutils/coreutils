@@ -16,4 +16,4 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 bool print_group (gid_t, bool);
-bool print_group_list (const char *, uid_t, gid_t, gid_t, bool, char);
+bool print_group_list (char const *, uid_t, gid_t, gid_t, bool, char);

@@ -89,7 +89,7 @@
   sprintf (Var, "%ld", (long int) (Utmp_ent->ut_pid))
 #else
 # define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
-  const char *Var = ""
+  char const *Var = ""
 #endif
 
 #if HAVE_STRUCT_XTMP_UT_ID
@@ -184,7 +184,7 @@ static struct option const longopts[] =
 /* Return a string representing the time between WHEN and now.
    BOOTTIME is the time of last reboot.
    FIXME: locale? */
-static const char *
+static char const *
 idle_string (time_t when, time_t boottime)
 {
   static time_t now = TYPE_MINIMUM (time_t);
@@ -214,7 +214,7 @@ idle_string (time_t when, time_t boottime)
 }
 
 /* Return a time string.  */
-static const char *
+static char const *
 time_string (const STRUCT_UTMP *utmp_ent)
 {
   static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
@@ -241,10 +241,10 @@ time_string (const STRUCT_UTMP *utmp_ent)
    will need tweaking if any of the localization stuff is done, or for 64 bit
    pids, etc. */
 static void
-print_line (int userlen, const char *user, const char state,
-            int linelen, const char *line,
-            const char *time_str, const char *idle, const char *pid,
-            const char *comment, const char *exitstr)
+print_line (int userlen, char const *user, const char state,
+            int linelen, char const *line,
+            char const *time_str, char const *idle, char const *pid,
+            char const *comment, char const *exitstr)
 {
   static char mesg[3] = { ' ', 'x', '\0' };
   char *buf;
@@ -618,7 +618,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 /* Display a list of who is on the system, according to utmp file FILENAME.
    Use read_utmp OPTIONS to read the file.  */
 static void
-who (const char *filename, int options)
+who (char const *filename, int options)
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf;

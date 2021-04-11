@@ -120,7 +120,7 @@ get_reldate (struct timespec *result,
    Return true if successful.  */
 
 static bool
-touch (const char *file)
+touch (char const *file)
 {
   bool ok;
   int fd = -1;

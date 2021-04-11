@@ -41,7 +41,7 @@
   proper_name ("Assaf Gordon")
 
 /* Array of envvars to unset.  */
-static const char **usvars;
+static char const **usvars;
 static size_t usvars_alloc;
 static idx_t usvars_used;
 
@@ -167,7 +167,7 @@ comma-separated.\n\
 }
 
 static void
-append_unset_var (const char *var)
+append_unset_var (char const *var)
 {
   if (usvars_used == usvars_alloc)
     usvars = x2nrealloc (usvars, &usvars_alloc, sizeof *usvars);
@@ -197,12 +197,12 @@ unset_envvars (void)
    First letter in VARNAME must be alpha or underscore,
    rest of letters are alnum or underscore.
    Any other character is an error.  */
-static const char * _GL_ATTRIBUTE_PURE
-scan_varname (const char *str)
+static char const * _GL_ATTRIBUTE_PURE
+scan_varname (char const *str)
 {
   if (str[1] == '{' && (c_isalpha (str[2]) || str[2] == '_'))
     {
-      const char *end = str + 3;
+      char const *end = str + 3;
       while (c_isalnum (*end) || *end == '_')
         ++end;
       if (*end == '}')
@@ -218,10 +218,10 @@ scan_varname (const char *str)
    The returned pointer should not be freed.
    Return NULL if not a valid ${VARNAME} syntax.  */
 static char *
-extract_varname (const char *str)
+extract_varname (char const *str)
 {
   idx_t i;
-  const char *p;
+  char const *p;
 
   p = scan_varname (str);
   if (!p)
@@ -353,7 +353,7 @@ splitbuf_finishup (struct splitbuf *ss)
    and the complexity of keeping track of the storage that may have been
    allocated via multiple calls to build_argv is not worth the hassle.  */
 static char **
-build_argv (const char *str, int extra_argc, int *argc)
+build_argv (char const *str, int extra_argc, int *argc)
 {
   bool dq = false, sq = false;
   struct splitbuf ss;
@@ -512,7 +512,7 @@ build_argv (const char *str, int extra_argc, int *argc)
    argc will be updated from 4 to 6.
    optind will be reset to 0 to force getopt_long to rescan all arguments.  */
 static void
-parse_split_string (const char *str, int *orig_optind,
+parse_split_string (char const *str, int *orig_optind,
                     int *orig_argc, char ***orig_argv)
 {
   int extra_argc = *orig_argc - *orig_optind, newargc;
@@ -542,7 +542,7 @@ parse_split_string (const char *str, int *orig_optind,
 }
 
 static void
-parse_signal_action_params (const char *optarg, bool set_default)
+parse_signal_action_params (char const *optarg, bool set_default)
 {
   char signame[SIG2STR_MAX];
   char *opt_sig;
@@ -624,7 +624,7 @@ reset_signal_handlers (void)
 
 
 static void
-parse_block_signal_params (const char *optarg, bool block)
+parse_block_signal_params (char const *optarg, bool block)
 {
   char signame[SIG2STR_MAX];
   char *opt_sig;
@@ -674,7 +674,7 @@ set_signal_proc_mask (void)
 {
   /* Get the existing signal mask */
   sigset_t set;
-  const char *debug_act;
+  char const *debug_act;
 
   sigemptyset (&set);
 

@@ -82,10 +82,10 @@ Examples:\n\
    consists entirely of SUFFIX.  */
 
 static void
-remove_suffix (char *name, const char *suffix)
+remove_suffix (char *name, char const *suffix)
 {
   char *np;
-  const char *sp;
+  char const *sp;
 
   np = name + strlen (name);
   sp = suffix + strlen (suffix);
@@ -101,7 +101,7 @@ remove_suffix (char *name, const char *suffix)
    the trailing SUFFIX.  Finally, output the result string.  */
 
 static void
-perform_basename (const char *string, const char *suffix, bool use_nuls)
+perform_basename (char const *string, char const *suffix, bool use_nuls)
 {
   char *name = base_name (string);
   strip_trailing_slashes (name);
@@ -125,7 +125,7 @@ main (int argc, char **argv)
 {
   bool multiple_names = false;
   bool use_nuls = false;
-  const char *suffix = NULL;
+  char const *suffix = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

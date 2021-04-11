@@ -82,7 +82,7 @@ static struct option const longopts[] =
 /* Count and return the number of ampersands in STR.  */
 
 static size_t _GL_ATTRIBUTE_PURE
-count_ampersands (const char *str)
+count_ampersands (char const *str)
 {
   size_t count = 0;
   do
@@ -100,7 +100,7 @@ count_ampersands (const char *str)
    this function.  */
 
 static char *
-create_fullname (const char *gecos_name, const char *user_name)
+create_fullname (char const *gecos_name, char const *user_name)
 {
   size_t rsize = strlen (gecos_name) + 1;
   char *result;
@@ -122,7 +122,7 @@ create_fullname (const char *gecos_name, const char *user_name)
     {
       if (*gecos_name == '&')
         {
-          const char *uname = user_name;
+          char const *uname = user_name;
           if (islower (to_uchar (*uname)))
             *r++ = toupper (to_uchar (*uname++));
           while (*uname)
@@ -143,7 +143,7 @@ create_fullname (const char *gecos_name, const char *user_name)
 /* Return a string representing the time between WHEN and the time
    that this function is first run. */
 
-static const char *
+static char const *
 idle_string (time_t when)
 {
   static time_t now = 0;
@@ -171,7 +171,7 @@ idle_string (time_t when)
 }
 
 /* Return a time string.  */
-static const char *
+static char const *
 time_string (const STRUCT_UTMP *utmp_ent)
 {
   static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
@@ -348,7 +348,7 @@ print_long_entry (const char name[])
     {
       FILE *stream;
       char buf[1024];
-      const char *const baseproject = "/.project";
+      char const *const baseproject = "/.project";
       char *const project =
         xmalloc (strlen (pw->pw_dir) + strlen (baseproject) + 1);
       stpcpy (stpcpy (project, pw->pw_dir), baseproject);
@@ -372,7 +372,7 @@ print_long_entry (const char name[])
     {
       FILE *stream;
       char buf[1024];
-      const char *const baseplan = "/.plan";
+      char const *const baseplan = "/.plan";
       char *const plan =
         xmalloc (strlen (pw->pw_dir) + strlen (baseplan) + 1);
       stpcpy (stpcpy (plan, pw->pw_dir), baseplan);
@@ -458,7 +458,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
 /* Display a list of who is on the system, according to utmp file FILENAME. */
 
 static void
-short_pinky (const char *filename,
+short_pinky (char const *filename,
              const int argc_names, char *const argv_names[])
 {
   size_t n_users;

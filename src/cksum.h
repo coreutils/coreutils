@@ -2,7 +2,7 @@
 # define __CKSUM_H__
 
 extern bool
-cksum_pclmul (FILE *fp, const char *file, uint_fast32_t *crc_out,
+cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
               uintmax_t *length_out);
 
 extern uint_fast32_t const crctab[8][256];

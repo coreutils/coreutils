@@ -173,7 +173,7 @@ write_counts (uintmax_t lines,
               uintmax_t chars,
               uintmax_t bytes,
               uintmax_t linelength,
-              const char *file)
+              char const *file)
 {
   static char const format_sp_int[] = " %*s";
   char const *format_int = format_sp_int + 1;
@@ -379,7 +379,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
       while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
         {
-          const char *p;
+          char const *p;
 # if SUPPORT_OLD_MBRTOWC
           mbstate_t backup_state;
 # endif
@@ -519,7 +519,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
         {
-          const char *p = buf;
+          char const *p = buf;
           if (bytes_read == SAFE_READ_ERROR)
             {
               error (0, errno, "%s", quotef (file));

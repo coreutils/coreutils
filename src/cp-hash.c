@@ -112,7 +112,7 @@ src_to_dest_lookup (ino_t ino, dev_t dev)
    Return NULL if inserted, otherwise non-NULL. */
 
 extern char *
-remember_copied (const char *name, ino_t ino, dev_t dev)
+remember_copied (char const *name, ino_t ino, dev_t dev)
 {
   struct Src_to_dest *ent;
   struct Src_to_dest *ent_from_table;

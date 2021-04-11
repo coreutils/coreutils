@@ -93,7 +93,7 @@ Use: '%s --coreutils-prog=PROGRAM_NAME --help' for individual program help.\n"),
 }
 
 static void
-launch_program (const char *prog_name, int prog_argc, char **prog_argv)
+launch_program (char const *prog_name, int prog_argc, char **prog_argv)
 {
   int (*prog_main) (int, char **) = NULL;
 

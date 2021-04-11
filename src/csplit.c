@@ -649,7 +649,7 @@ no_more_lines (void)
 /* Open NAME as standard input.  */
 
 static void
-set_input_file (const char *name)
+set_input_file (char const *name)
 {
   if (! STREQ (name, "-") && fd_reopen (STDIN_FILENO, name, O_RDONLY, 0) < 0)
     die (EXIT_FAILURE, errno, _("cannot open %s for reading"),
@@ -986,7 +986,7 @@ delete_all_files (bool in_signal_handler)
 
   for (unsigned int i = 0; i < files_created; i++)
     {
-      const char *name = make_filename (i);
+      char const *name = make_filename (i);
       if (unlink (name) != 0 && !in_signal_handler)
         error (0, errno, "%s", quotef (name));
     }
@@ -1083,7 +1083,7 @@ new_control_record (void)
    NUM is the numeric part of STR. */
 
 static void
-check_for_offset (struct control *p, const char *str, const char *num)
+check_for_offset (struct control *p, char const *str, char const *num)
 {
   if (xstrtoimax (num, NULL, 10, &p->offset, "") != LONGINT_OK)
     die (EXIT_FAILURE, 0, _("%s: integer expected after delimiter"),
@@ -1136,7 +1136,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   char delim = *str;
   char const *closing_delim;
   struct control *p;
-  const char *err;
+  char const *err;
 
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)

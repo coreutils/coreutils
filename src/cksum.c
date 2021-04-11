@@ -172,10 +172,10 @@ static struct option const longopts[] =
 static bool have_read_stdin;
 
 static bool
-cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
+cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
               uintmax_t *length_out);
 static bool
-  (*cksum_fp)(FILE *, const char *, uint_fast32_t *,
+  (*cksum_fp)(FILE *, char const *, uint_fast32_t *,
               uintmax_t *) = cksum_slice8;
 
 # if USE_PCLMUL_CRC32
@@ -209,7 +209,7 @@ pclmul_supported (void)
 # endif /* USE_PCLMUL_CRC32 */
 
 static bool
-cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
+cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
               uintmax_t *length_out)
 {
   uint32_t buf[BUFLEN/sizeof (uint32_t)];
@@ -269,7 +269,7 @@ cksum_slice8 (FILE *fp, const char *file, uint_fast32_t *crc_out,
    Return true if successful.  */
 
 static bool
-cksum (const char *file, bool print_name)
+cksum (char const *file, bool print_name)
 {
   uint_fast32_t crc = 0;
   uintmax_t length = 0;

@@ -114,7 +114,7 @@ static void printv (VALUE *v);
      mbs_logical_cspn ('\xCE\xB1bc','\xCE\xB1') => 1
      mbs_logical_cspn ('\xCE\xB1bc','c') => 3 */
 static size_t
-mbs_logical_cspn (const char *s, const char *accept)
+mbs_logical_cspn (char const *s, char const *accept)
 {
   size_t idx = 0;
 
@@ -166,7 +166,7 @@ mbs_logical_cspn (const char *s, const char *accept)
    Upon exit, sets v->s to the new string.
    The new string might be empty if POS/LEN are invalid. */
 static char *
-mbs_logical_substr (const char *s, size_t pos, size_t len)
+mbs_logical_substr (char const *s, size_t pos, size_t len)
 {
   char *v, *vlim;
 
@@ -221,7 +221,7 @@ mbs_logical_substr (const char *s, size_t pos, size_t len)
    up to the first 4 bytes (The U+2767 which occupies 3 bytes and 'x'):
       mbs_count_to_offset ("\xE2\x9D\xA7xyz", 4) => 2  */
 static size_t
-mbs_offset_to_chars (const char *s, size_t ofs)
+mbs_offset_to_chars (char const *s, size_t ofs)
 {
   mbui_iterator_t iter;
   size_t c = 0;
@@ -584,7 +584,7 @@ static VALUE *
 docolon (VALUE *sv, VALUE *pv)
 {
   VALUE *v IF_LINT ( = NULL);
-  const char *errmsg;
+  char const *errmsg;
   struct re_pattern_buffer re_buffer;
   char fastmap[UCHAR_MAX + 1];
   struct re_registers re_regs;

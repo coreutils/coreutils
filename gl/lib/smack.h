@@ -29,7 +29,7 @@ smack_new_label_from_self (char **label)
 }
 
 static inline int
-smack_set_label_for_self (const char *label)
+smack_set_label_for_self (char const *label)
 {
   return -1;
 }

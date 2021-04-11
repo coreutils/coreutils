@@ -33,7 +33,7 @@
 
 /* Print all of the distinct groups the user is in. */
 extern bool
-print_group_list (const char *username,
+print_group_list (char const *username,
                   uid_t ruid, gid_t rgid, gid_t egid,
                   bool use_names, char delim)
 {

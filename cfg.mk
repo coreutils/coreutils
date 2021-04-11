@@ -325,6 +325,13 @@ sc_prohibit-gl-attributes:
 	halt='Use _GL... attribute macros'			\
 	  $(_sc_search_regexp)
 
+# Prefer the const declaration form, with const following the type
+sc_prohibit-const-char:
+	@prohibit='const char \*'				\
+	in_vc_files='\.[ch]$$'					\
+	halt='Use char const *, not const char *'		\
+	  $(_sc_search_regexp)
+
 # Look for lines longer than 80 characters, except omit:
 # - urls
 # - the fdl.texi file copied from gnulib,

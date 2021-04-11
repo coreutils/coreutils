@@ -165,7 +165,7 @@ diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
 }
 
 static void
-write_header (const char *filename)
+write_header (char const *filename)
 {
   static bool first_file = true;
 
@@ -245,7 +245,7 @@ elseek (int fd, off_t offset, int whence, char const *filename)
    Return true upon success.
    Give a diagnostic and return false upon error.  */
 static bool
-elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0,
+elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide_0,
                        off_t current_pos)
 {
   size_t n_elide = n_elide_0;
@@ -462,7 +462,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0,
    the length determination and the actual reading, then head fails.  */
 
 static bool
-elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide,
+elide_tail_bytes_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
@@ -495,7 +495,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide,
    adding them as needed.  Return true if successful.  */
 
 static bool
-elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide,
+elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
                        off_t current_pos)
 {
   struct linebuffer
@@ -644,7 +644,7 @@ free_lbuffers:
    Unfortunately, factoring out some common core looks like it'd result
    in a less efficient implementation or a messy interface.  */
 static bool
-elide_tail_lines_seekable (const char *pretty_filename, int fd,
+elide_tail_lines_seekable (char const *pretty_filename, int fd,
                            uintmax_t n_lines,
                            off_t start_pos, off_t size)
 {
@@ -751,7 +751,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
    Give a diagnostic and return nonzero upon error.  */
 
 static bool
-elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide,
+elide_tail_lines_file (char const *filename, int fd, uintmax_t n_elide,
                        struct stat const *st, off_t current_pos)
 {
   off_t size = st->st_size;
@@ -771,7 +771,7 @@ elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide,
 }
 
 static bool
-head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
+head_bytes (char const *filename, int fd, uintmax_t bytes_to_write)
 {
   char buffer[BUFSIZ];
   size_t bytes_to_read = BUFSIZ;
@@ -796,7 +796,7 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 }
 
 static bool
-head_lines (const char *filename, int fd, uintmax_t lines_to_write)
+head_lines (char const *filename, int fd, uintmax_t lines_to_write)
 {
   char buffer[BUFSIZ];
 
@@ -833,7 +833,7 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 }
 
 static bool
-head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
+head (char const *filename, int fd, uintmax_t n_units, bool count_lines,
       bool elide_from_end)
 {
   if (print_headers)
@@ -867,7 +867,7 @@ head (const char *filename, int fd, uintmax_t n_units, bool count_lines,
 }
 
 static bool
-head_file (const char *filename, uintmax_t n_units, bool count_lines,
+head_file (char const *filename, uintmax_t n_units, bool count_lines,
            bool elide_from_end)
 {
   int fd;
@@ -907,7 +907,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
    of lines.  It is used solely to give a more specific diagnostic.  */
 
 static uintmax_t
-string_to_integer (bool count_lines, const char *n_string)
+string_to_integer (bool count_lines, char const *n_string)
 {
   return xdectoumax (n_string, 0, UINTMAX_MAX, "bkKmMGTPEZY0",
                      count_lines ? _("invalid number of lines")

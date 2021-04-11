@@ -41,8 +41,8 @@ enum
 static bool verbose = true;
 static bool logical;
 static bool use_nuls;
-static const char *can_relative_to;
-static const char *can_relative_base;
+static char const *can_relative_to;
+static char const *can_relative_base;
 
 static struct option const longopts[] =
 {
@@ -96,7 +96,7 @@ all but the last component must exist\n\
 /* A wrapper around canonicalize_filename_mode(),
    to call it twice when in LOGICAL mode.  */
 static char *
-realpath_canon (const char *fname, int can_mode)
+realpath_canon (char const *fname, int can_mode)
 {
   char *can_fname = canonicalize_filename_mode (fname, can_mode);
   if (logical && can_fname)  /* canonicalize again to resolve symlinks.  */
@@ -111,7 +111,7 @@ realpath_canon (const char *fname, int can_mode)
 
 /* Test whether canonical prefix is parent or match of path.  */
 static bool _GL_ATTRIBUTE_PURE
-path_prefix (const char *prefix, const char *path)
+path_prefix (char const *prefix, char const *path)
 {
   /* We already know prefix[0] and path[0] are '/'.  */
   prefix++;
@@ -138,7 +138,7 @@ path_prefix (const char *prefix, const char *path)
 }
 
 static bool
-isdir (const char *path)
+isdir (char const *path)
 {
   struct stat sb;
   if (stat (path, &sb) != 0)
@@ -147,7 +147,7 @@ isdir (const char *path)
 }
 
 static bool
-process_path (const char *fname, int can_mode)
+process_path (char const *fname, int can_mode)
 {
   char *can_fname = realpath_canon (fname, can_mode);
   if (!can_fname)
@@ -174,8 +174,8 @@ main (int argc, char **argv)
 {
   bool ok = true;
   int can_mode = CAN_ALL_BUT_LAST;
-  const char *relative_to = NULL;
-  const char *relative_base = NULL;
+  char const *relative_to = NULL;
+  char const *relative_base = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);

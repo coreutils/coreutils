@@ -129,7 +129,7 @@ errnoize (int status)
    The result is malloced.  */
 
 static char *
-convert_abs_rel (const char *from, const char *target)
+convert_abs_rel (char const *from, char const *target)
 {
   /* Get dirname to generate paths relative to.  We don't resolve
      the full TARGET as the last component could be an existing symlink.  */

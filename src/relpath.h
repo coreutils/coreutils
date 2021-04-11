@@ -20,6 +20,6 @@
 # define _RELPATH_H
 
 extern bool
-relpath (const char *can_fname, const char *can_reldir, char *buf, size_t len);
+relpath (char const *can_fname, char const *can_reldir, char *buf, size_t len);
 
 #endif

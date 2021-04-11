@@ -349,10 +349,10 @@ apply_time_suffix (double *x, char suffix_char)
 }
 
 static double
-parse_duration (const char *str)
+parse_duration (char const *str)
 {
   double duration;
-  const char *ep;
+  char const *ep;
 
   if (! (xstrtod (str, &ep, &duration, cl_strtod) || errno == ERANGE)
       /* Nonnegative interval.  */

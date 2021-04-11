@@ -167,7 +167,7 @@ extra_mode (mode_t input)
 
 /* Return true if copy of file SRC_NAME to file DEST_NAME is necessary. */
 static bool
-need_copy (const char *src_name, const char *dest_name,
+need_copy (char const *src_name, char const *dest_name,
            const struct cp_options *x)
 {
   struct stat src_sb, dest_sb;
@@ -435,7 +435,7 @@ process_dir (char *dir, struct savewd *wd, void *options)
    Return true if successful.  */
 
 static bool
-copy_file (const char *from, const char *to, const struct cp_options *x)
+copy_file (char const *from, char const *to, const struct cp_options *x)
 {
   bool copy_into_self;
 
@@ -658,7 +658,7 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
    Return true if successful.  */
 
 static bool
-install_file_in_file (const char *from, const char *to,
+install_file_in_file (char const *from, char const *to,
                       const struct cp_options *x)
 {
   struct stat from_sb;
@@ -739,10 +739,10 @@ install_file_in_file_parents (char const *from, char *to,
    Return true if successful.  */
 
 static bool
-install_file_in_dir (const char *from, const char *to_dir,
+install_file_in_dir (char const *from, char const *to_dir,
                      const struct cp_options *x, bool mkdir_and_install)
 {
-  const char *from_base = last_component (from);
+  char const *from_base = last_component (from);
   char *to = file_name_concat (to_dir, from_base, NULL);
   bool ret = true;
 
@@ -759,7 +759,7 @@ main (int argc, char **argv)
 {
   int optc;
   int exit_status = EXIT_SUCCESS;
-  const char *specified_mode = NULL;
+  char const *specified_mode = NULL;
   bool make_backups = false;
   char const *backup_suffix = NULL;
   char *version_control_string = NULL;

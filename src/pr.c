@@ -426,8 +426,8 @@ static bool skip_to_page (uintmax_t page);
 static void print_header (void);
 static void pad_across_to (int position);
 static void add_line_number (COLUMN *p);
-static void getoptnum (const char *n_str, int min, int *num,
-                       const char *errfmt);
+static void getoptnum (char const *n_str, int min, int *num,
+                       char const *errfmt);
 static void getoptarg (char *arg, char switch_char, char *character,
                        int *number);
 static void print_files (int number_of_files, char **av);
@@ -445,7 +445,7 @@ static void skip_read (COLUMN *p, int column_number);
 static void print_char (char c);
 static void cleanup (void);
 static void print_sep_string (void);
-static void separator_string (const char *optarg_S);
+static void separator_string (char const *optarg_S);
 
 /* All of the columns to print.  */
 static COLUMN *column_vector;
@@ -845,7 +845,7 @@ parse_column_count (char const *s)
 /* Estimate length of col_sep_string with option -S.  */
 
 static void
-separator_string (const char *optarg_S)
+separator_string (char const *optarg_S)
 {
   size_t len = strlen (optarg_S);
   if (INT_MAX < len)
@@ -1153,7 +1153,7 @@ main (int argc, char **argv)
 /* Parse numeric arguments, ensuring MIN <= number <= INT_MAX.  */
 
 static void
-getoptnum (const char *n_str, int min, int *num, const char *err)
+getoptnum (char const *n_str, int min, int *num, char const *err)
 {
   intmax_t tnum = xdectoimax (n_str, min, INT_MAX, "", err, 0);
   *num = tnum;

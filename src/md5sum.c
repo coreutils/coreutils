@@ -588,7 +588,7 @@ print_filename (char const *file, bool escape)
    Return true if successful.  */
 
 static bool
-digest_file (const char *filename, int *binary, unsigned char *bin_result,
+digest_file (char const *filename, int *binary, unsigned char *bin_result,
              bool *missing)
 {
   FILE *fp;
@@ -649,7 +649,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result,
 }
 
 static bool
-digest_check (const char *checkfile_name)
+digest_check (char const *checkfile_name)
 {
   FILE *checkfile_stream;
   uintmax_t n_misformatted_lines = 0;

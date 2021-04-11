@@ -59,7 +59,7 @@ enum Shell_syntax
    variable.  */
 static struct obstack lsc_obstack;
 
-static const char *const slack_codes[] =
+static char const *const slack_codes[] =
 {
   "NORMAL", "NORM", "FILE", "RESET", "DIR", "LNK", "LINK",
   "SYMLINK", "ORPHAN", "MISSING", "FIFO", "PIPE", "SOCK", "BLK", "BLOCK",
@@ -69,7 +69,7 @@ static const char *const slack_codes[] =
   "MULTIHARDLINK", "CLRTOEOL", NULL
 };
 
-static const char *const ls_codes[] =
+static char const *const ls_codes[] =
 {
   "no", "no", "fi", "rs", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
@@ -192,7 +192,7 @@ parse_line (char const *line, char **keyword, char **arg)
    sequences like unescaped : and = characters.  */
 
 static void
-append_quoted (const char *str)
+append_quoted (char const *str)
 {
   bool need_backslash = true;
 
@@ -236,7 +236,7 @@ append_quoted (const char *str)
    Return true if successful.  */
 
 static bool
-dc_parse_stream (FILE *fp, const char *filename)
+dc_parse_stream (FILE *fp, char const *filename)
 {
   size_t line_number = 0;
   char const *next_G_line = G_line;
@@ -371,7 +371,7 @@ dc_parse_stream (FILE *fp, const char *filename)
 }
 
 static bool
-dc_parse_file (const char *filename)
+dc_parse_file (char const *filename)
 {
   bool ok;
 
@@ -486,8 +486,8 @@ main (int argc, char **argv)
         {
           size_t len = obstack_object_size (&lsc_obstack);
           char *s = obstack_finish (&lsc_obstack);
-          const char *prefix;
-          const char *suffix;
+          char const *prefix;
+          char const *suffix;
 
           if (syntax == SHELL_SYNTAX_BOURNE)
             {

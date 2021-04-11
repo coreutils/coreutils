@@ -76,7 +76,7 @@ static struct option const long_options[] =
 /* Return the group ID of NAME, or -1 if no name was specified.  */
 
 static gid_t
-parse_group (const char *name)
+parse_group (char const *name)
 {
   gid_t gid = -1;
 

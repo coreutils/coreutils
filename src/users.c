@@ -82,7 +82,7 @@ list_entries_users (size_t n, const STRUCT_UTMP *this)
    Use read_utmp OPTIONS to read FILENAME.  */
 
 static void
-users (const char *filename, int options)
+users (char const *filename, int options)
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf;

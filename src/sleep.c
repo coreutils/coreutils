@@ -120,7 +120,7 @@ main (int argc, char **argv)
   for (int i = optind; i < argc; i++)
     {
       double s;
-      const char *p;
+      char const *p;
       if (! (xstrtod (argv[i], &p, &s, cl_strtod) || errno == ERANGE)
           /* Nonnegative interval.  */
           || ! (0 <= s)

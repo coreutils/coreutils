@@ -409,7 +409,7 @@ record_open_fd (struct File_spec *f, int fd,
 /* Close the file with descriptor FD and name FILENAME.  */
 
 static void
-close_fd (int fd, const char *filename)
+close_fd (int fd, char const *filename)
 {
   if (fd != -1 && fd != STDIN_FILENO && close (fd))
     {
@@ -418,7 +418,7 @@ close_fd (int fd, const char *filename)
 }
 
 static void
-write_header (const char *pretty_filename)
+write_header (char const *pretty_filename)
 {
   static bool first_file = true;
 
@@ -446,7 +446,7 @@ xwrite_stdout (char const *buffer, size_t n_bytes)
    Return the number of bytes read from the file.  */
 
 static uintmax_t
-dump_remainder (bool want_header, const char *pretty_filename, int fd,
+dump_remainder (bool want_header, char const *pretty_filename, int fd,
                 uintmax_t n_bytes)
 {
   uintmax_t n_written;
@@ -532,7 +532,7 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
    Return true if successful.  */
 
 static bool
-file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
+file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
             off_t start_pos, off_t end_pos, uintmax_t *read_pos)
 {
   char buffer[BUFSIZ];
@@ -620,7 +620,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
    Return true if successful.  */
 
 static bool
-pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
+pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
             uintmax_t *read_pos)
 {
   struct linebuffer
@@ -759,7 +759,7 @@ free_lbuffers:
    Return true if successful.  */
 
 static bool
-pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
+pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
             uintmax_t *read_pos)
 {
   struct charbuffer
@@ -860,7 +860,7 @@ free_cbuffers:
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
+start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
              uintmax_t *read_pos)
 {
   char buffer[BUFSIZ];
@@ -895,7 +895,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
    Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
-start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
+start_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
              uintmax_t *read_pos)
 {
   if (n_lines == 0)
@@ -935,7 +935,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
    If fstatfs fails, give a diagnostic and return true.
    If fstatfs cannot be called, return true.  */
 static bool
-fremote (int fd, const char *name)
+fremote (int fd, char const *name)
 {
   bool remote = true;           /* be conservative (poll by default).  */
 
@@ -1841,7 +1841,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
    Return true if successful.  */
 
 static bool
-tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
+tail_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
             uintmax_t *read_pos)
 {
   struct stat stats;
@@ -1904,7 +1904,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
    Return true if successful.  */
 
 static bool
-tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
+tail_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
             uintmax_t *read_pos)
 {
   struct stat stats;
@@ -1966,7 +1966,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
    Return true if successful.  */
 
 static bool
-tail (const char *filename, int fd, uintmax_t n_units,
+tail (char const *filename, int fd, uintmax_t n_units,
       uintmax_t *read_pos)
 {
   *read_pos = 0;
@@ -2089,9 +2089,9 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 static bool
 parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 {
-  const char *p;
-  const char *n_string;
-  const char *n_string_end;
+  char const *p;
+  char const *n_string;
+  char const *n_string_end;
   int default_count = DEFAULT_N_LINES;
   bool t_from_start;
   bool t_count_lines = true;

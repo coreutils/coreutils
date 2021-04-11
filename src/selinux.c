@@ -114,7 +114,7 @@ defaultcon (struct selabel_handle *selabel_handle,
   char *scon = NULL;
   char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
-  const char *contype;
+  char const *contype;
   char *constr;
   char *newpath = NULL;
 
@@ -182,7 +182,7 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
   char *scon = NULL;
   char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
-  const char *contype;
+  char const *contype;
   char *constr;
   int fd;
 

@@ -146,7 +146,7 @@ struct layout
    Return if the string is correct else signal error.  */
 
 static operand
-scan_arg (const char *arg)
+scan_arg (char const *arg)
 {
   operand ret;
 

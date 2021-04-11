@@ -590,7 +590,7 @@ target_directory_operand (char const *file, struct stat *st,
    Return true if successful.  */
 
 static bool
-do_copy (int n_files, char **file, const char *target_directory,
+do_copy (int n_files, char **file, char const *target_directory,
          bool no_target_directory, struct cp_options *x)
 {
   struct stat sb;

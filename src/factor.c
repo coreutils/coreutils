@@ -2256,7 +2256,7 @@ mp_factor (mpz_t t, struct mp_factors *factors)
 }
 
 static strtol_error
-strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
+strto2uintmax (uintmax_t *hip, uintmax_t *lop, char const *s)
 {
   unsigned int lo_carry;
   uintmax_t hi = 0, lo = 0;
@@ -2264,7 +2264,7 @@ strto2uintmax (uintmax_t *hip, uintmax_t *lop, const char *s)
   strtol_error err = LONGINT_INVALID;
 
   /* Initial scan for invalid digits.  */
-  const char *p = s;
+  char const *p = s;
   for (;;)
     {
       unsigned int c = *p++;
@@ -2461,7 +2461,7 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
    has enough digits, because the algorithm is better.  The turnover point
    depends on the value.  */
 static bool
-print_factors (const char *input)
+print_factors (char const *input)
 {
   /* Skip initial spaces and '+'.  */
   char const *str = input;

@@ -133,7 +133,7 @@ and are thus unaffected by 'stdbuf' settings.\n\
    dladdr(), pstat_getpathname(), etc.  */
 
 static void
-set_program_path (const char *arg)
+set_program_path (char const *arg)
 {
   if (strchr (arg, '/'))        /* Use absolute or relative paths directly.  */
     {

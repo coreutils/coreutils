@@ -33,8 +33,8 @@
    ERR is printed along with N_STR on error.  */
 
 __xdectoint_t
-__xnumtoint (const char *n_str, int base, __xdectoint_t min, __xdectoint_t max,
-             const char *suffixes, const char *err, int err_exit)
+__xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
+             char const *suffixes, char const *err, int err_exit)
 {
   strtol_error s_err;
 
@@ -79,8 +79,8 @@ __xnumtoint (const char *n_str, int base, __xdectoint_t min, __xdectoint_t max,
    ERR is printed along with N_STR on error.  */
 
 __xdectoint_t
-__xdectoint (const char *n_str, __xdectoint_t min, __xdectoint_t max,
-             const char *suffixes, const char *err, int err_exit)
+__xdectoint (char const *n_str, __xdectoint_t min, __xdectoint_t max,
+             char const *suffixes, char const *err, int err_exit)
 {
   return __xnumtoint (n_str, 10, min, max, suffixes, err, err_exit);
 }

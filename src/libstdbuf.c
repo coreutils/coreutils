@@ -65,10 +65,10 @@
    However I think it's just a buggy implementation due to the various
    inconsistencies with write sizes and subsequent writes.  */
 
-static const char *
+static char const *
 fileno_to_name (const int fd)
 {
-  const char *ret = NULL;
+  char const *ret = NULL;
 
   switch (fd)
     {
@@ -90,7 +90,7 @@ fileno_to_name (const int fd)
 }
 
 static void
-apply_mode (FILE *stream, const char *mode)
+apply_mode (FILE *stream, char const *mode)
 {
   char *buf = NULL;
   int setvbuf_mode;

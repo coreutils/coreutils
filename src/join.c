@@ -857,7 +857,7 @@ string_to_join_field (char const *str)
    If S is valid, return true.  Otherwise, give a diagnostic and exit.  */
 
 static void
-decode_field_spec (const char *s, int *file_index, size_t *field_index)
+decode_field_spec (char const *s, int *file_index, size_t *field_index)
 {
   /* The first character must be 0, 1, or 2.  */
   switch (s[0])
