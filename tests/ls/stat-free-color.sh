@@ -56,12 +56,14 @@ eval $(dircolors -b color-without-stat)
 # The system may perform additional stat-like calls before main.
 # Furthermore, underlying library functions may also implicitly
 # add an extra stat call, e.g. opendir since glibc-2.21-360-g46f894d.
-# To avoid counting those, first get a baseline count for running
-# ls with one empty directory argument.  Then, compare that with the
-# invocation under test.
+# Finally, ls(1) makes a stat call for stdout, but only in the case
+# when there is something to output.
+# To get the comparison right, first get a baseline count for running
+# 'ls -a' with one empty directory argument.  Then, compare that with
+# the invocation under test.
 mkdir d || framework_failure_
 
-strace -q -o log1 -e $stats ls --color=always d || fail=1
+strace -q -o log1 -e $stats ls -a --color=always d || fail=1
 n_stat1=$(grep -vF '+++' log1 | wc -l) || framework_failure_
 
 test $n_stat1 = 0 \
