@@ -52,7 +52,7 @@ m4_syscmd([test "${GNULIB_POSIXCHECK+set}" = set])
 m4_if(m4_sysval, [0], [], [dnl
 gl_ASSERT_NO_GNULIB_POSIXCHECK])
 
-AC_PROG_CC_STDC
+AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL

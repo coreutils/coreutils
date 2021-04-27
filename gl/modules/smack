@@ -10,7 +10,7 @@ configure.ac:
 # Check whether libsmack is available
 LIB_SMACK=
 AC_ARG_ENABLE([libsmack],
-  AC_HELP_STRING([--disable-libsmack], [disable libsmack support]))
+  AS_HELP_STRING([--disable-libsmack], [disable libsmack support]))
 if test "X$enable_libsmack" != "Xno"; then
   AC_CHECK_LIB([smack], [smack_new_label_from_self],
     [AC_CHECK_LIB([smack], [smack_new_label_from_path],

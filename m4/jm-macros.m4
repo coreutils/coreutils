@@ -1,4 +1,4 @@
-#serial 112   -*- autoconf -*-
+#serial 113   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -23,9 +23,6 @@ AC_DEFUN([coreutils_MACROS],
 [
   AM_MISSING_PROG(HELP2MAN, help2man)
   AC_SUBST([MAN])
-
-  dnl This macro actually runs replacement code.  See isc-posix.m4.
-  AC_REQUIRE([AC_ISC_POSIX])dnl
 
   gl_CHECK_ALL_TYPES
 
@@ -116,7 +113,7 @@ AC_DEFUN([coreutils_MACROS],
   # Check whether libcap is usable -- for ls --color support
   LIB_CAP=
   AC_ARG_ENABLE([libcap],
-    AC_HELP_STRING([--disable-libcap], [disable libcap support]))
+    AS_HELP_STRING([--disable-libcap], [disable libcap support]))
   if test "X$enable_libcap" != "Xno"; then
     AC_CHECK_LIB([cap], [cap_get_file],
       [AC_CHECK_HEADER([sys/capability.h],
@@ -142,29 +139,38 @@ AC_DEFUN([coreutils_MACROS],
   # and doesn't have a separate math library.
 
   AC_SUBST([SEQ_LIBM])
-  ac_seq_body='
-     static double x, y;
-     x = floor (x);
-     x = rint (x);
-     x = modf (x, &y);'
-  AC_TRY_LINK([#include <math.h>], [$ac_seq_body], ,
-    [ac_seq_save_LIBS="$LIBS"
-     LIBS="$LIBS -lm"
-     AC_TRY_LINK([#include <math.h>], [$ac_seq_body], [SEQ_LIBM=-lm])
-     LIBS="$ac_seq_save_LIBS"
-    ])
-
+  jm_break=:
+  for jm_seqlibs in '' '-lm'; do
+    jm_seq_save_LIBS=$LIBS
+    AC_LINK_IFELSE(
+      [AC_LANG_PROGRAM(
+         [[#include <math.h>
+         ]],
+         [[static double x, y;
+           x = floor (x);
+           x = rint (x);
+           x = modf (x, &y);]])],
+      [SEQ_LIBM=$jm_seqlibs
+       jm_break=break])
+    LIBS=$jm_seq_save_LIBS
+    $jm_break
+  done
 
   # See is fpsetprec() required to use extended double precision
   # This is needed on 32 bit FreeBSD to give accurate conversion of:
   # `numfmt 9223372036854775808`
-  AC_TRY_LINK([#include <ieeefp.h>],
-    [#ifdef __i386__
-      fpsetprec(FP_PE);
-     #else
-     # error not required on 64 bit
-     #endif
-    ], [ac_have_fpsetprec=yes], [ac_have_fpsetprec=no])
+  AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+       [[#include <ieeefp.h>
+       ]],
+       [[#ifdef __i386__
+          fpsetprec(FP_PE);
+         #else
+         # error not required on 64 bit
+         #endif
+       ]])],
+    [ac_have_fpsetprec=yes],
+    [ac_have_fpsetprec=no])
   if test "$ac_have_fpsetprec" = "yes" ; then
     AC_DEFINE([HAVE_FPSETPREC], 1, [whether fpsetprec is present and required])
   fi
