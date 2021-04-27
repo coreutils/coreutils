@@ -416,7 +416,8 @@ get_new_buffer (size_t min_size)
   if (alloc_size < min_size)
     {
       size_t s = min_size - alloc_size + INCR_SIZE - 1;
-      alloc_size += s - s % INCR_SIZE;
+      if (INT_ADD_WRAPV (alloc_size, s - s % INCR_SIZE, &alloc_size))
+        xalloc_die ();
     }
 
   new_buffer = create_new_buffer (alloc_size);
