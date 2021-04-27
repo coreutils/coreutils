@@ -110,9 +110,9 @@ create_fullname (char const *gecos_name, char const *user_name)
   if (ampersands != 0)
     {
       size_t ulen = strlen (user_name);
-      size_t product = ampersands * ulen;
-      rsize += product - ampersands;
-      if (xalloc_oversized (ulen, ampersands) || rsize < product)
+      size_t product;
+      if (INT_MULTIPLY_WRAPV (ulen, ampersands - 1, &product)
+          || INT_ADD_WRAPV (rsize, product, &rsize))
         xalloc_die ();
     }
 

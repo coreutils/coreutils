@@ -518,9 +518,8 @@ load_buffer (void)
       if (lines_found || have_read_eof)
         break;
 
-      if (xalloc_oversized (2, b->bytes_alloc))
+      if (INT_MULTIPLY_WRAPV (b->bytes_alloc, 2, &bytes_wanted))
         xalloc_die ();
-      bytes_wanted = 2 * b->bytes_alloc;
       free_buffer (b);
       free (b);
     }
