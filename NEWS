@@ -96,6 +96,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   timeout now supports sub-second timeouts on macOS.
 
+  wc is up to 5 times faster when counting only new line characters,
+  where avx2 instructions are supported.
+  A new --debug option will indicate if avx2 is being used.
+
 
 * Noteworthy changes in release 8.32 (2020-03-05) [stable]
 

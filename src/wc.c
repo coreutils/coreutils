@@ -69,6 +69,7 @@ static bool
 (*wc_lines_p) (char const *file, int fd, uintmax_t *lines_out,
                 uintmax_t *bytes_out) = wc_lines;
 
+static bool debug;
 
 /* Cumulative number of lines, words, chars and bytes in all files so far.
    max_line_length is the maximum over all files processed so far.  */
@@ -109,7 +110,8 @@ struct fstatus
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  FILES0_FROM_OPTION = CHAR_MAX + 1
+  DEBUG_PROGRAM_OPTION = CHAR_MAX + 1,
+  FILES0_FROM_OPTION,
 };
 
 static struct option const longopts[] =
@@ -118,6 +120,7 @@ static struct option const longopts[] =
   {"chars", no_argument, NULL, 'm'},
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
   {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"max-line-length", no_argument, NULL, 'L'},
   {GETOPT_HELP_OPTION_DECL},
@@ -133,22 +136,48 @@ avx2_supported (void)
   unsigned int ebx = 0;
   unsigned int ecx = 0;
   unsigned int edx = 0;
+  bool getcpuid_ok = false;
+  bool avx_enabled = false;
 
-  if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
-    return false;
+  if (__get_cpuid (1, &eax, &ebx, &ecx, &edx))
+    {
+      getcpuid_ok = true;
+      if (ecx & bit_OSXSAVE)
+        avx_enabled = true;  /* Support is not disabled.  */
+    }
 
-  if (! (ecx & bit_OSXSAVE))
-    return false;
 
-  eax = ebx = ecx = edx = 0;
+  if (avx_enabled)
+    {
+      eax = ebx = ecx = edx = 0;
+      if (! __get_cpuid_count (7, 0, &eax, &ebx, &ecx, &edx))
+        getcpuid_ok = false;
+      else
+        {
+          if (! (ebx & bit_AVX2))
+            avx_enabled = false;  /* Hardware doesn't support it.  */
+        }
+    }
 
-  if (! __get_cpuid_count (7, 0, &eax, &ebx, &ecx, &edx))
-    return false;
 
-  if (! (ebx & bit_AVX2))
-    return false;
-
-  return true;
+  if (! getcpuid_ok)
+    {
+      if (debug)
+        error (0, 0, "%s", _("failed to get cpuid"));
+      return false;
+    }
+  else if (! avx_enabled)
+    {
+      if (debug)
+        error (0, 0, "%s", _("avx2 support not detected"));
+      return false;
+    }
+  else
+    {
+      if (debug)
+        error (0, 0, "%s", _("using avx2 hardware support"));
+      return true;
+    }
 }
 #endif
 
@@ -418,6 +447,11 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
     }
   else if (!count_chars && !count_complicated)
     {
+#ifdef USE_AVX2_WC_LINECOUNT
+      if (avx2_supported ())
+        wc_lines_p = wc_lines_avx2;
+#endif
+
       /* Use a separate loop when counting only lines or lines and bytes --
          but not chars or words.  */
       ok = wc_lines_p (file, fd, &lines, &bytes);
@@ -772,11 +806,6 @@ main (int argc, char **argv)
   print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
-#ifdef USE_AVX2_WC_LINECOUNT
-  if (avx2_supported ())
-    wc_lines_p = wc_lines_avx2;
-#endif
-
   while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
       {
@@ -798,6 +827,10 @@ main (int argc, char **argv)
 
       case 'L':
         print_linelength = true;
+        break;
+
+      case DEBUG_PROGRAM_OPTION:
+        debug = true;
         break;
 
       case FILES0_FROM_OPTION:
