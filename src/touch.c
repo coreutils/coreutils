@@ -122,7 +122,6 @@ get_reldate (struct timespec *result,
 static bool
 touch (char const *file)
 {
-  bool ok;
   int fd = -1;
   int open_errno = 0;
   struct timespec const *t = newtime;
@@ -134,12 +133,7 @@ touch (char const *file)
       /* Try to open FILE, creating it if necessary.  */
       fd = fd_reopen (STDIN_FILENO, file,
                       O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY, MODE_RW_UGO);
-
-      /* Don't save a copy of errno if it's EISDIR, since that would lead
-         touch to give a bogus diagnostic for e.g., 'touch /' (assuming
-         we don't own / or have write access to it).  On Solaris 5.6,
-         and probably other systems, it is EINVAL.  On SunOS4, it's EPERM.  */
-      if (fd == -1 && errno != EISDIR && errno != EINVAL && errno != EPERM)
+      if (fd < 0)
         open_errno = errno;
     }
 
@@ -162,9 +156,10 @@ touch (char const *file)
       t = NULL;
     }
 
-  ok = (fdutimensat (fd, AT_FDCWD, (fd == STDOUT_FILENO ? NULL : file), t,
-                     (no_dereference && fd == -1) ? AT_SYMLINK_NOFOLLOW : 0)
-        == 0);
+  char const *file_opt = fd == STDOUT_FILENO ? NULL : file;
+  int atflag = no_dereference ? AT_SYMLINK_NOFOLLOW : 0;
+  int utime_errno = (fdutimensat (fd, AT_FDCWD, file_opt, t, atflag) == 0
+                     ? 0 : errno);
 
   if (fd == STDIN_FILENO)
     {
@@ -177,13 +172,22 @@ touch (char const *file)
   else if (fd == STDOUT_FILENO)
     {
       /* Do not diagnose "touch -c - >&-".  */
-      if (!ok && errno == EBADF && no_create)
+      if (utime_errno == EBADF && no_create)
         return true;
     }
 
-  if (!ok)
+  if (utime_errno != 0)
     {
-      if (open_errno)
+      /* Don't diagnose with open_errno if FILE is a directory, as that
+         would give a bogus diagnostic for e.g., 'touch /' (assuming we
+         don't own / or have write access).  On Solaris 10 and probably
+         other systems, opening a directory like "." fails with EINVAL.
+         (On SunOS 4 it was EPERM but that's obsolete.)  */
+      struct stat st;
+      if (open_errno
+          && ! (open_errno == EISDIR
+                || (open_errno == EINVAL
+                    && stat (file, &st) == 0 && S_ISDIR (st.st_mode))))
         {
           /* The wording of this diagnostic should cover at least two cases:
              - the file does not exist, but the parent directory is unwritable
@@ -193,9 +197,9 @@ touch (char const *file)
         }
       else
         {
-          if (no_create && errno == ENOENT)
+          if (no_create && utime_errno == ENOENT)
             return true;
-          error (0, errno, _("setting times of %s"), quoteaf (file));
+          error (0, utime_errno, _("setting times of %s"), quoteaf (file));
         }
       return false;
     }
