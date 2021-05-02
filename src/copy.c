@@ -258,7 +258,7 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
    bytes read.  */
 static bool
 sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             size_t hole_size, bool punch_holes,
+             size_t hole_size, bool punch_holes, bool allow_reflink,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *total_n_read,
              bool *last_write_made_hole)
@@ -266,8 +266,9 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
   *last_write_made_hole = false;
   *total_n_read = 0;
 
-  /* If not looking for holes, use copy_file_range if available.  */
-  if (!hole_size)
+  /* If not looking for holes, use copy_file_range if available,
+     but don't use if reflink disallowed as that may be implicit.  */
+  if ((! hole_size) && allow_reflink)
     while (max_n_read)
       {
         /* Copy at most COPY_MAX bytes at a time; this is min
@@ -466,6 +467,7 @@ static bool
 extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
              size_t hole_size, off_t src_total_size,
              enum Sparse_type sparse_mode,
+             bool allow_reflink,
              char const *src_name, char const *dst_name,
              struct extent_scan *scan)
 {
@@ -579,8 +581,8 @@ extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
               if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
                                   sparse_mode == SPARSE_ALWAYS ? hole_size: 0,
-                                  true, src_name, dst_name, ext_len, &n_read,
-                                  &read_hole))
+                                  true, allow_reflink, src_name, dst_name,
+                                  ext_len, &n_read, &read_hole))
                 goto fail;
 
               dest_pos = ext_start + n_read;
@@ -655,6 +657,7 @@ static bool
 lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
             size_t hole_size, off_t ext_start, off_t src_total_size,
             enum Sparse_type sparse_mode,
+            bool allow_reflink,
             char const *src_name, char const *dst_name)
 {
   off_t last_ext_start = 0;
@@ -729,8 +732,8 @@ lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       bool read_hole;
       if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
                           sparse_mode == SPARSE_NEVER ? 0 : hole_size,
-                          true, src_name, dst_name, ext_len, &n_read,
-                          &read_hole))
+                          true, allow_reflink, src_name, dst_name,
+                          ext_len, &n_read, &read_hole))
         return false;
 
       dest_pos = ext_start + n_read;
@@ -1526,17 +1529,20 @@ copy_reg (char const *src_name, char const *dst_name,
              ? extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                             src_open_sb.st_size,
                             make_holes ? x->sparse_mode : SPARSE_NEVER,
+                            x->reflink_mode != REFLINK_NEVER,
                             src_name, dst_name, &scan_inference.extent_scan)
 #ifdef SEEK_HOLE
              : scantype == LSEEK_SCANTYPE
              ? lseek_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                            scan_inference.ext_start, src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
+                           x->reflink_mode != REFLINK_NEVER,
                            src_name, dst_name)
 #endif
              : sparse_copy (source_desc, dest_desc, buf, buf_size,
                             make_holes ? hole_size : 0,
                             x->sparse_mode == SPARSE_ALWAYS,
+                            x->reflink_mode != REFLINK_NEVER,
                             src_name, dst_name, UINTMAX_MAX, &n_read,
                             &wrote_hole_at_eof)))
         {
