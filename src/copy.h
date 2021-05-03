@@ -300,7 +300,9 @@ extern bool set_file_security_ctx (char const *dst_name,
                                    bool recurse, const struct cp_options *x);
 
 void dest_info_init (struct cp_options *);
+void dest_info_free (struct cp_options *);
 void src_info_init (struct cp_options *);
+void src_info_free (struct cp_options *);
 
 void cp_options_default (struct cp_options *);
 bool chown_failure_ok (struct cp_options const *) _GL_ATTRIBUTE_PURE;

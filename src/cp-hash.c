@@ -157,8 +157,10 @@ hash_init (void)
 /* Reset the hash structure in the global variable 'htab' to
    contain no entries.  */
 
+#ifdef lint
 extern void
 forget_all (void)
 {
   hash_free (src_to_dest);
 }
+#endif

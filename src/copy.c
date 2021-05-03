@@ -1957,6 +1957,16 @@ dest_info_init (struct cp_options *x)
     xalloc_die ();
 }
 
+#ifdef lint
+extern void
+dest_info_free (struct cp_options *x)
+{
+  if (x->dest_info)
+    hash_free (x->dest_info);
+  x->dest_info = NULL;
+}
+#endif
+
 /* Initialize the hash table implementing a set of F_triple entries
    corresponding to source files listed on the command line.  */
 extern void
@@ -1980,6 +1990,16 @@ src_info_init (struct cp_options *x)
   if (! x->src_info)
     xalloc_die ();
 }
+
+#ifdef lint
+extern void
+src_info_free (struct cp_options *x)
+{
+  if (x->src_info)
+    hash_free (x->src_info);
+  x->src_info = NULL;
+}
+#endif
 
 /* When effecting a move (e.g., for mv(1)), and given the name DST_NAME
    of the destination and a corresponding stat buffer, DST_SB, return

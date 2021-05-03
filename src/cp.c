@@ -730,6 +730,11 @@ do_copy (int n_files, char **file, char const *target_directory,
 
           free (dst_name);
         }
+
+#ifdef lint
+      dest_info_free (x);
+      src_info_free (x);
+#endif
     }
   else /* !target_directory */
     {

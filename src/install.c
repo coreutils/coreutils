@@ -1017,6 +1017,9 @@ main (int argc, char **argv)
             if (! install_file_in_dir (file[i], target_directory, &x,
                                        i == 0 && mkdir_and_install))
               exit_status = EXIT_FAILURE;
+#ifdef lint
+          dest_info_free (&x);
+#endif
         }
     }
 

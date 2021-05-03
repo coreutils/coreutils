@@ -1568,7 +1568,12 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       return true;
     }
   if (follow_mode == Follow_descriptor && !found_watchable_file)
-    return false;
+    {
+# ifdef lint
+      hash_free (wd_to_name);
+# endif
+      return false;
+    }
 
   prev_fspec = &(f[n_files - 1]);
 
@@ -1626,6 +1631,9 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           && hash_get_n_entries (wd_to_name) == 0)
         {
           error (0, 0, _("no files remaining"));
+# ifdef lint
+          hash_free (wd_to_name);
+# endif
           return false;
         }
 

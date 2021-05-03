@@ -503,6 +503,10 @@ main (int argc, char **argv)
           x.last_file = i + 1 == n_files;
           ok &= movefile (file[i], target_directory, true, &x);
         }
+
+#ifdef lint
+      dest_info_free (&x);
+#endif
     }
   else
     {
