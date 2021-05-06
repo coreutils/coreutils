@@ -1954,7 +1954,7 @@ dest_info_init (struct cp_options *x)
                        triple_compare,
                        triple_free);
   if (! x->dest_info)
-    xalloc_die();
+    xalloc_die ();
 }
 
 /* Initialize the hash table implementing a set of F_triple entries
@@ -1978,7 +1978,7 @@ src_info_init (struct cp_options *x)
                        triple_compare,
                        triple_free);
   if (! x->src_info)
-    xalloc_die();
+    xalloc_die ();
 }
 
 /* When effecting a move (e.g., for mv(1)), and given the name DST_NAME
