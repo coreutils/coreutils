@@ -290,8 +290,9 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
           }
         if (n_copied < 0)
           {
-            if (errno == ENOSYS || errno == EINVAL
-                || errno == EBADF || errno == EXDEV || errno == ETXTBSY)
+            if (errno == ENOSYS || is_ENOTSUP (errno)
+                || errno == EINVAL || errno == EBADF
+                || errno == EXDEV || errno == ETXTBSY)
               break;
             if (errno == EINTR)
               n_copied = 0;
