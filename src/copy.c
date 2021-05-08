@@ -294,6 +294,15 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
                 || errno == EINVAL || errno == EBADF
                 || errno == EXDEV || errno == ETXTBSY)
               break;
+
+            /* copy_file_range might not be enabled in seccomp filters,
+               so retry with a standard copy.  EPERM can also occur
+               for immutable files, but that would only be in the edge case
+               where the file is made immutable after creating/truncating,
+               in which case the (more accurate) error is still shown.  */
+            if (errno == EPERM && *total_n_read == 0)
+              break;
+
             if (errno == EINTR)
               n_copied = 0;
             else
