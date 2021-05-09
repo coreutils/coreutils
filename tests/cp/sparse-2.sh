@@ -1,5 +1,5 @@
 #!/bin/sh
-# Exercise a few more corners of the fiemap-copying code.
+# Exercise a few more corners of the copying code.
 
 # Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
@@ -19,10 +19,9 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-# Require a fiemap-enabled FS.
-touch fiemap_chk # check a file rather than current dir for best coverage
-fiemap_capable_ fiemap_chk \
-  || skip_ "this file system lacks FIEMAP support"
+touch sparse_chk
+seek_data_capable_ sparse_chk \
+  || skip_ "this file system lacks SEEK_DATA support"
 
 # Exercise the code that handles a file ending in a hole.
 printf x > k || framework_failure_

@@ -98,7 +98,7 @@ EXTRA_DIST +=			\
   tests/factor/run.sh		\
   tests/factor/create-test.sh	\
   tests/filefrag-extent-compare \
-  tests/fiemap-capable		\
+  tests/seek-data-capable	\
   tests/init.sh			\
   tests/lang-default		\
   tests/no-perl			\
@@ -113,7 +113,7 @@ all_root_tests =				\
   tests/cp/special-bits.sh			\
   tests/cp/cp-mv-enotsup-xattr.sh		\
   tests/cp/capability.sh			\
-  tests/cp/sparse-fiemap.sh			\
+  tests/cp/sparse-extents-2.sh			\
   tests/cp/cross-dev-symlink.sh			\
   tests/dd/skip-seek-past-dev.sh		\
   tests/df/problematic-chars.sh			\
@@ -481,10 +481,10 @@ all_tests =					\
   tests/cp/existing-perm-dir.sh			\
   tests/cp/existing-perm-race.sh		\
   tests/cp/fail-perm.sh				\
-  tests/cp/fiemap-extents.sh			\
-  tests/cp/fiemap-FMR.sh			\
-  tests/cp/fiemap-perf.sh			\
-  tests/cp/fiemap-2.sh				\
+  tests/cp/sparse-extents.sh			\
+  tests/cp/copy-FMR.sh				\
+  tests/cp/sparse-perf.sh			\
+  tests/cp/sparse-2.sh				\
   tests/cp/file-perm-race.sh			\
   tests/cp/into-self.sh				\
   tests/cp/link.sh				\

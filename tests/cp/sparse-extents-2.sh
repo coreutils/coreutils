@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test cp --sparse=always through fiemap copy
+# Test cp --sparse=always through SEEK_DATA copy
 
 # Copyright (C) 2010-2021 Free Software Foundation, Inc.
 
@@ -22,11 +22,11 @@ require_perl_
 
 # The test was seen to fail on ext3 so exclude that type
 # (or any file system where the type can't be determined)
-touch fiemap_chk
-if fiemap_capable_ fiemap_chk && ! df -t ext3 . >/dev/null; then
+touch sparse_chk
+if seek_data_capable_ sparse_chk && ! df -t ext3 . >/dev/null; then
   : # Current partition has working extents.  Good!
 else
-  skip_ "current file system has insufficient FIEMAP support"
+  skip_ "current file system has insufficient SEEK_DATA support"
 
   # It's not;  we need to create one, hence we need root access.
   require_root_
@@ -50,8 +50,8 @@ else
 fi
 
 # =================================================
-# Ensure that we exercise the FIEMAP-copying code enough
-# to provoke at least two iterations of the do...while loop
+# The data below was set up to ensure that the original FIEMAP-copying code
+# was exercised enough to provoke at least two iterations of the do...while loop
 # in which it calls ioctl (fd, FS_IOC_FIEMAP,...
 # This also verifies that non-trivial extents are preserved.
 

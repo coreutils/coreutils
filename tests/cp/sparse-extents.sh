@@ -21,10 +21,9 @@ print_ver_ cp
 
 require_sparse_support_
 
-touch fiemap_chk || framework_failure_
-fiemap_capable_ fiemap_chk ||
-  skip_ 'this file system lacks FIEMAP support'
-rm fiemap_chk
+touch sparse_chk || framework_failure_
+seek_data_capable_ sparse_chk ||
+  skip_ 'this file system lacks SEEK_DATA support'
 
 fallocate --help >/dev/null || skip_ 'The fallocate utility is required'
 touch falloc.test || framework_failure_
@@ -65,7 +64,7 @@ fi
 # Ensure we handle extents beyond file size correctly.
 # Note until we support fallocate, we will not maintain
 # the file allocation.  FIXME: amend this test if fallocate is supported.
-# Note currently this only uses fiemap logic when the allocation (-l)
+# Note currently this only uses SEEK_DATA logic when the allocation (-l)
 # is smaller than the size, thus identifying the file as sparse.
 # Note the '-l 1' case is an effective noop, and just checks
 # a file with a trailing hole is copied correctly.

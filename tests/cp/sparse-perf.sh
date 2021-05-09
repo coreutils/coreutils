@@ -19,30 +19,18 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-# Require a fiemap-enabled FS.
-touch fiemap_chk
-fiemap_capable_ fiemap_chk ||
-  skip_ "this file system lacks FIEMAP support"
-
-# Exclude ext[23] (or unknown fs types)
-# as the emulated extent scanning can be slow
-df -t ext2 -t ext3 . >/dev/null &&
-  skip_ "ext[23] can have slow FIEMAP scanning"
+touch sparse_chk
+seek_data_capable_ sparse_chk ||
+  skip_ "this file system lacks SEEK_DATA support"
 
 # Create a large-but-sparse file.
 timeout 10 truncate -s1T f ||
   skip_ "unable to create a 1 TiB sparse file"
 
-# Disable this test on old BTRFS (e.g. Fedora 14)
-# which reports (unwritten) extents for holes.
-filefrag f || skip_ "the 'filefrag' utility is missing"
-filefrag f | grep -F ': 0 extents found' > /dev/null ||
-  skip_ 'this file system reports extents for holes'
-
 # Nothing can read (much less write) that many bytes in so little time.
 timeout 10 cp f f2 || fail=1
 
-# Ensure that the sparse file copied through fiemap has the same size
+# Ensure that the sparse file copied through SEEK_DATA has the same size
 # in bytes as the original.
 test "$(stat --printf %s f)" = "$(stat --printf %s f2)" || fail=1
 

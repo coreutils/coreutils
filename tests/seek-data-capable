@@ -1,0 +1,33 @@
+import sys, os, errno, platform
+
+# Pass an _empty_ file
+if len(sys.argv) != 2:
+    sys.exit(1)
+
+if not hasattr(os, 'SEEK_DATA'):
+    # Not available on python 2, or on darwin python 3
+    # Also Darwin swaps SEEK_DATA/SEEK_HOLE definitions
+    if platform.system() == "Darwin":
+        SEEK_DATA = 4
+    else:
+        SEEK_DATA = 3 # Valid on Linux, FreeBSD, Solaris
+else:
+    SEEK_DATA = os.SEEK_DATA
+
+# Even if os supports SEEK_DATA or SEEK_HOLE,
+# the file system may not, in which case it would report
+# current and eof positions respectively.
+# Therefore work with an empty file,
+# ensuring SEEK_DATA returns ENXIO (no more data)
+try:
+    fd = os.open(sys.argv[1], os.O_RDONLY)
+except:
+    sys.exit(1)
+
+try:
+    data = os.lseek(fd, 0, SEEK_DATA)
+except OSError as e:
+    if e.errno == errno.ENXIO:
+      sys.exit(0)
+
+sys.exit(1)

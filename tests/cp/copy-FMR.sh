@@ -22,6 +22,7 @@ print_ver_ cp
 require_valgrind_
 require_perl_
 
+# Trigger FMR in fiemap logic from v8.11..v8.19
 $PERL -e 'for (1..600) { sysseek (*STDOUT, 4096, 1)' \
   -e '&& syswrite (*STDOUT, "a" x 1024) or die "$!"}' > j || fail=1
 valgrind --quiet --error-exitcode=3 cp --reflink=never j j2 || fail=1
