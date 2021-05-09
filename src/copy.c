@@ -1246,7 +1246,7 @@ infer_scantype (int fd, struct stat const *sb,
   scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
   if (0 <= scan_inference->ext_start)
     return LSEEK_SCANTYPE;
-  else if (errno != EINVAL && errno != ENOTSUP)
+  else if (errno != EINVAL && !is_ENOTSUP (errno))
     return errno == ENXIO ? LSEEK_SCANTYPE : ERROR_SCANTYPE;
 #endif
 
