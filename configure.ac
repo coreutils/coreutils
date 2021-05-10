@@ -525,7 +525,7 @@ LDFLAGS=$ac_save_LDFLAGS
 ac_c_werror_flag=$cu_save_c_werror_flag
 
 AC_MSG_CHECKING([if __get_cpuid available])
-AC_COMPILE_IFELSE(
+AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     #include <cpuid.h>
 
@@ -576,7 +576,7 @@ AM_CONDITIONAL([USE_PCLMUL_CRC32],
 CFLAGS=$ac_save_CFLAGS
 
 AC_MSG_CHECKING([if __get_cpuid_count exists])
-AC_COMPILE_IFELSE(
+AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     #include <cpuid.h>
 
