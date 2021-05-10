@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2021-01-10.00; # UTC
+scriptversion=2021-04-11.09; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -114,6 +114,12 @@ appropriate revision, or set \$GNULIB_REVISION (and if necessary
 Running without arguments will suffice in most cases.
 EOF
 }
+
+copyright_year=`echo "$scriptversion" | sed -e 's/[^0-9].*//'`
+copyright="Copyright (C) ${copyright_year} Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law."
 
 # warnf_ FORMAT-STRING ARG1...
 warnf_ ()
@@ -337,6 +343,12 @@ do
   --help)
     usage
     exit;;
+  --version)
+    set -e
+    echo "bootstrap $scriptversion"
+    echo "$copyright"
+    exit 0
+    ;;
   --gnulib-srcdir=*)
     GNULIB_SRCDIR=${option#--gnulib-srcdir=};;
   --skip-po)
