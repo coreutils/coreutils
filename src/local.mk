@@ -46,7 +46,6 @@ noinst_HEADERS =		\
   src/die.h			\
   src/dircolors.h		\
   src/expand-common.h		\
-  src/fiemap.h			\
   src/find-mount-point.h	\
   src/fs.h			\
   src/fs-is-local.h		\
@@ -332,8 +331,6 @@ selinux_sources = \
 copy_sources = \
   src/copy.c \
   src/cp-hash.c \
-  src/extent-scan.c \
-  src/extent-scan.h \
   src/force-link.c \
   src/force-link.h
 

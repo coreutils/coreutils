@@ -52,7 +52,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp and install now default to copy-on-write (COW) if available.
 
   cp, install and mv now use the copy_file_range syscall if available.
-  Also, they prefer lseek+SEEK_HOLE to ioctl+FS_IOC_FIEMAP on sparse
+  Also, they use lseek+SEEK_HOLE rather than ioctl+FS_IOC_FIEMAP on sparse
   files, as lseek is simpler and more portable.
 
   On GNU/Linux systems, ls no longer issues an error message on a

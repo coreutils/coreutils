@@ -38,12 +38,10 @@
 #include "canonicalize.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "extent-scan.h"
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
 #include "fcntl--.h"
-#include "fiemap.h"
 #include "file-set.h"
 #include "filemode.h"
 #include "filenamecat.h"
@@ -499,197 +497,6 @@ write_zeros (int fd, off_t n_bytes)
       if ((full_write (fd, zeros, n)) != n)
         return false;
       n_bytes -= n;
-    }
-
-  return true;
-}
-
-/* Perform an efficient extent copy, if possible.  This avoids
-   the overhead of detecting holes in hole-introducing/preserving
-   copy, and thus makes copying sparse files much more efficient.
-   Upon a successful copy, return true.  If the initial extent scan
-   fails, set *NORMAL_COPY_REQUIRED to true and return false.
-   Upon any other failure, set *NORMAL_COPY_REQUIRED to false and
-   return false.
-
-   FIXME: Once we no longer need to support Linux kernel versions
-   before 3.1 (2011), this function can be retired as it is superseded
-   by lseek_copy.  That is, we no longer need extent-scan.h and can
-   remove any of the code that uses it.  */
-static bool
-extent_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
-             size_t hole_size, off_t src_total_size,
-             enum Sparse_type sparse_mode,
-             bool allow_reflink,
-             char const *src_name, char const *dst_name,
-             struct extent_scan *scan)
-{
-  off_t last_ext_start = 0;
-  off_t last_ext_len = 0;
-
-  /* Keep track of the output position.
-     We may need this at the end, for a final ftruncate.  */
-  off_t dest_pos = 0;
-
-  bool wrote_hole_at_eof = true;
-  while (true)
-    {
-      bool empty_extent = false;
-      for (unsigned int i = 0; i < scan->ei_count || empty_extent; i++)
-        {
-          off_t ext_start;
-          off_t ext_len;
-          off_t ext_hole_size;
-
-          if (i < scan->ei_count)
-            {
-              ext_start = scan->ext_info[i].ext_logical;
-              ext_len = scan->ext_info[i].ext_length;
-            }
-          else /* empty extent at EOF.  */
-            {
-              i--;
-              ext_start = last_ext_start + scan->ext_info[i].ext_length;
-              ext_len = 0;
-            }
-
-          /* Truncate extent to EOF.  Extents starting after EOF are
-             treated as zero length extents starting right after EOF.
-             Generally this will trigger with an extent starting after
-             src_total_size, and result in creating a hole or zeros until EOF.
-             Though in a file in which extents have changed since src_total_size
-             was determined, we might have an extent spanning that size,
-             in which case we'll only copy data up to that size.  */
-          if (src_total_size < ext_start + ext_len)
-            {
-              if (src_total_size < ext_start)
-                ext_start = src_total_size;
-              ext_len = src_total_size - ext_start;
-            }
-
-          ext_hole_size = ext_start - last_ext_start - last_ext_len;
-
-          wrote_hole_at_eof = false;
-
-          if (ext_hole_size)
-            {
-              if (lseek (src_fd, ext_start, SEEK_SET) < 0)
-                {
-                  error (0, errno, _("cannot lseek %s"), quoteaf (src_name));
-                fail:
-                  extent_scan_free (scan);
-                  return false;
-                }
-
-              if ((empty_extent && sparse_mode == SPARSE_ALWAYS)
-                  || (!empty_extent && sparse_mode != SPARSE_NEVER))
-                {
-                  if (! create_hole (dest_fd, dst_name,
-                                     sparse_mode == SPARSE_ALWAYS,
-                                     ext_hole_size))
-                    goto fail;
-                  wrote_hole_at_eof = true;
-                }
-              else
-                {
-                  /* When not inducing holes and when there is a hole between
-                     the end of the previous extent and the beginning of the
-                     current one, write zeros to the destination file.  */
-                  off_t nzeros = ext_hole_size;
-                  if (empty_extent)
-                    nzeros = MIN (src_total_size - dest_pos, ext_hole_size);
-
-                  if (! write_zeros (dest_fd, nzeros))
-                    {
-                      error (0, errno, _("%s: write failed"),
-                             quotef (dst_name));
-                      goto fail;
-                    }
-
-                  dest_pos = MIN (src_total_size, ext_start);
-                }
-            }
-
-          last_ext_start = ext_start;
-
-          /* Treat an unwritten but allocated extent much like a hole.
-             I.e., don't read, but don't convert to a hole in the destination,
-             unless SPARSE_ALWAYS.  */
-          /* For now, do not treat FIEMAP_EXTENT_UNWRITTEN specially,
-             because that (in combination with no sync) would lead to data
-             loss at least on XFS and ext4 when using 2.6.39-rc3 kernels.  */
-          if (0 && (scan->ext_info[i].ext_flags & FIEMAP_EXTENT_UNWRITTEN))
-            {
-              empty_extent = true;
-              last_ext_len = 0;
-              if (ext_len == 0) /* The last extent is empty and processed.  */
-                empty_extent = false;
-            }
-          else
-            {
-              off_t n_read;
-              empty_extent = false;
-              last_ext_len = ext_len;
-              bool read_hole;
-
-              if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
-                                  sparse_mode == SPARSE_ALWAYS ? hole_size: 0,
-                                  true, allow_reflink, src_name, dst_name,
-                                  ext_len, &n_read, &read_hole))
-                goto fail;
-
-              dest_pos = ext_start + n_read;
-              if (n_read)
-                wrote_hole_at_eof = read_hole;
-            }
-
-          /* If the file ends with unwritten extents not accounted for in the
-             size, then skip processing them, and the associated redundant
-             read() calls which will always return 0.  We will need to
-             remove this when we add fallocate() so that we can maintain
-             extents beyond the apparent size.  */
-          if (dest_pos == src_total_size)
-            {
-              scan->hit_final_extent = true;
-              break;
-            }
-        }
-
-      /* Release the space allocated to scan->ext_info.  */
-      extent_scan_free (scan);
-
-      if (scan->hit_final_extent)
-        break;
-      if (! extent_scan_read (scan) && ! scan->hit_final_extent)
-        {
-          error (0, errno, _("%s: failed to get extents info"),
-                 quotef (src_name));
-          return false;
-        }
-    }
-
-  /* When the source file ends with a hole, we have to do a little more work,
-     since the above copied only up to and including the final extent.
-     In order to complete the copy, we may have to insert a hole or write
-     zeros in the destination corresponding to the source file's hole-at-EOF.
-
-     In addition, if the final extent was a block of zeros at EOF and we've
-     just converted them to a hole in the destination, we must call ftruncate
-     here in order to record the proper length in the destination.  */
-  if ((dest_pos < src_total_size || wrote_hole_at_eof)
-      && (sparse_mode != SPARSE_NEVER
-          ? ftruncate (dest_fd, src_total_size)
-          : ! write_zeros (dest_fd, src_total_size - dest_pos)))
-    {
-      error (0, errno, _("failed to extend %s"), quoteaf (dst_name));
-      return false;
-    }
-
-  if (sparse_mode == SPARSE_ALWAYS && dest_pos < src_total_size
-      && punch_hole (dest_fd, dest_pos, src_total_size - dest_pos) < 0)
-    {
-      error (0, errno, _("error deallocating %s"), quoteaf (dst_name));
-      return false;
     }
 
   return true;
@@ -1267,9 +1074,6 @@ enum scantype
 
    /* lseek information is available.  */
    LSEEK_SCANTYPE,
-
-   /* Extent information is available.  */
-   EXTENT_SCANTYPE
   };
 
 /* Result of infer_scantype.  */
@@ -1278,9 +1082,6 @@ union scan_inference
   /* Used if infer_scantype returns LSEEK_SCANTYPE.  This is the
      offset of the first data block, or -1 if the file has no data.  */
   off_t ext_start;
-
-  /* Used if infer_scantype returns EXTENT_SCANTYPE.  */
-  struct extent_scan extent_scan;
 };
 
 /* Return how to scan a file with descriptor FD and stat buffer SB.
@@ -1302,10 +1103,7 @@ infer_scantype (int fd, struct stat const *sb,
     return errno == ENXIO ? LSEEK_SCANTYPE : ERROR_SCANTYPE;
 #endif
 
-  struct extent_scan *scan = &scan_inference->extent_scan;
-  extent_scan_init (fd, scan);
-  extent_scan_read (scan);
-  return scan->initial_scan_failed ? ZERO_SCANTYPE : EXTENT_SCANTYPE;
+  return ZERO_SCANTYPE;
 }
 
 
@@ -1578,21 +1376,17 @@ copy_reg (char const *src_name, char const *dst_name,
 
       off_t n_read;
       bool wrote_hole_at_eof = false;
-      if (! (scantype == EXTENT_SCANTYPE
-             ? extent_copy (source_desc, dest_desc, buf, buf_size, hole_size,
-                            src_open_sb.st_size,
-                            make_holes ? x->sparse_mode : SPARSE_NEVER,
-                            x->reflink_mode != REFLINK_NEVER,
-                            src_name, dst_name, &scan_inference.extent_scan)
+      if (! (
 #ifdef SEEK_HOLE
-             : scantype == LSEEK_SCANTYPE
+             scantype == LSEEK_SCANTYPE
              ? lseek_copy (source_desc, dest_desc, buf, buf_size, hole_size,
                            scan_inference.ext_start, src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
                            x->reflink_mode != REFLINK_NEVER,
                            src_name, dst_name)
+             :
 #endif
-             : sparse_copy (source_desc, dest_desc, buf, buf_size,
+             sparse_copy (source_desc, dest_desc, buf, buf_size,
                             make_holes ? hole_size : 0,
                             x->sparse_mode == SPARSE_ALWAYS,
                             x->reflink_mode != REFLINK_NEVER,
