@@ -40,7 +40,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "die.h"
-#include "xstrndup.h"
 
 #include "expand-common.h"
 

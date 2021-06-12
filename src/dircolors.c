@@ -29,7 +29,6 @@
 #include "obstack.h"
 #include "quote.h"
 #include "stdio--.h"
-#include "xstrndup.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "dircolors"
@@ -163,7 +162,7 @@ parse_line (char const *line, char **keyword, char **arg)
       ++p;
     }
 
-  *keyword = xstrndup (keyword_start, p - keyword_start);
+  *keyword = ximemdup0 (keyword_start, p - keyword_start);
   if (*p  == '\0')
     return;
 
@@ -185,7 +184,7 @@ parse_line (char const *line, char **keyword, char **arg)
     continue;
   ++p;
 
-  *arg = xstrndup (arg_start, p - arg_start);
+  *arg = ximemdup0 (arg_start, p - arg_start);
 }
 
 /* FIXME: Write a string to standard out, while watching for "dangerous"

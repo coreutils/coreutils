@@ -24,7 +24,6 @@
 #include "error.h"
 #include "fadvise.h"
 #include "quote.h"
-#include "xstrndup.h"
 
 #include "expand-common.h"
 
@@ -200,7 +199,7 @@ parse_tab_stops (char const *stops)
           if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
             {
               size_t len = strspn (num_start, "0123456789");
-              char *bad_num = xstrndup (num_start, len);
+              char *bad_num = ximemdup0 (num_start, len);
               error (0, 0, _("tab stop is too large %s"), quote (bad_num));
               free (bad_num);
               ok = false;

@@ -34,7 +34,6 @@
 #include "fadvise.h"
 #include "getndelim2.h"
 #include "hash.h"
-#include "xstrndup.h"
 
 #include "set-fields.h"
 

@@ -21,7 +21,6 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
-#include "xstrndup.h"
 #include "set-fields.h"
 
 /* Array of `struct field_range_pair' holding all the finite ranges. */
@@ -254,7 +253,7 @@ set_fields (char const *fieldstr, unsigned int options)
                  complain only about the first number.  */
               /* Determine the length of the offending number.  */
               size_t len = strspn (num_start, "0123456789");
-              char *bad_num = xstrndup (num_start, len);
+              char *bad_num = ximemdup0 (num_start, len);
               error (0, 0, (options & SETFLD_ERRMSG_USE_POS)
                            ?_("byte/character offset %s is too large")
                            :_("field number %s is too large"),

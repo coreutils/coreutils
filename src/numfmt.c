@@ -29,7 +29,6 @@
 #include "quote.h"
 #include "system.h"
 #include "xstrtol.h"
-#include "xstrndup.h"
 
 #include "set-fields.h"
 
@@ -1141,7 +1140,7 @@ parse_format_string (char const *fmt)
            quote (fmt));
 
   if (prefix_len)
-    format_str_prefix = xstrndup (fmt, prefix_len);
+    format_str_prefix = ximemdup0 (fmt, prefix_len);
   if (fmt[suffix_pos] != '\0')
     format_str_suffix = xstrdup (fmt + suffix_pos);
 
