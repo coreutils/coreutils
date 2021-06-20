@@ -1677,7 +1677,7 @@ default_format (bool fs, bool terse, bool device)
               /* TRANSLATORS: This string uses format specifiers from
                  'stat --help' without --file-system, and NOT from printf.  */
               format = xasprintf ("%s%s", format, _("\
-" "Device: %Dh/%dd\tInode: %-10i  Links: %-5h Device type: %t,%T\n\
+" "Device: %Hd,%Ld\tInode: %-10i  Links: %-5h Device type: %Hr,%Lr\n\
 "));
             }
           else
@@ -1685,7 +1685,7 @@ default_format (bool fs, bool terse, bool device)
               /* TRANSLATORS: This string uses format specifiers from
                  'stat --help' without --file-system, and NOT from printf.  */
               format = xasprintf ("%s%s", format, _("\
-" "Device: %Dh/%dd\tInode: %-10i  Links: %h\n\
+" "Device: %Hd,%Ld\tInode: %-10i  Links: %h\n\
 "));
             }
           free (temp);

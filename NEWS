@@ -63,6 +63,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   for 8-bit non-ASCII alphabetic characters.  TeX indexes should
   instead use '\usepackage[latin1]{inputenc}' or equivalent.
 
+  stat will use decomposed (major,minor) device numbers in its default format.
+  This is less ambiguous, and more consistent with ls.
+
 ** New Features
 
   expr and factor now support bignums on all platforms.
