@@ -75,6 +75,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   nl --line-increment can now take a negative number to decrement the count.
 
+  stat supports more formats for representing decomposed device numbers.
+  %Hd,%Ld and %Hr,%Lr will output major,minor device numbers and device types
+  respectively.  %d corresponds to st_dev and %r to std_rdev.
+
 ** Improvements
 
   cat --show-ends will now show \r\n as ^M$.  Previously the \r was taken

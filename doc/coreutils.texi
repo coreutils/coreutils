@@ -12506,8 +12506,10 @@ The valid @var{format} directives for files with @option{--format} and
 @item %b - Number of blocks allocated (see @samp{%B})
 @item %B - The size in bytes of each block reported by @samp{%b}
 @item %C - The SELinux security context of a file, if available
-@item %d - Device number in decimal
-@item %D - Device number in hex
+@item %d - Device number in decimal (st_dev)
+@item %D - Device number in hex (st_dev)
+@item %Hd - Major device number in decimal
+@item %Ld - Minor device number in decimal
 @item %f - Raw mode in hex
 @item %F - File type
 @item %g - Group ID of owner
@@ -12519,6 +12521,10 @@ The valid @var{format} directives for files with @option{--format} and
 @item %N - Quoted file name with dereference if symbolic link (see below)
 @item %o - Optimal I/O transfer size hint
 @item %s - Total size, in bytes
+@item %r - Device type in decimal (st_rdev)
+@item %R - Device type in hex (st_rdev)
+@item %Hr - Major device type in decimal (see below)
+@item %Lr - Minor device type in decimal (see below)
 @item %t - Major device type in hex (see below)
 @item %T - Minor device type in hex (see below)
 @item %u - User ID of owner
@@ -12543,8 +12549,9 @@ The @samp{%N} format can be set with the environment variable
 the default value is @samp{shell-escape-always}.  Valid quoting styles are:
 @quotingStyles
 
-The @samp{%t} and @samp{%T} formats operate on the st_rdev member of
-the stat(2) structure, and are only defined for character and block
+The @samp{r}, @samp{R}, @samp{%t}, and @samp{%T} formats operate on the st_rdev
+member of the stat(2) structure, i.e., the represented device rather than
+the containing device, and so are only defined for character and block
 special files.  On some systems or file types, st_rdev may be used to
 represent other quantities.
 

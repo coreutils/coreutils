@@ -40,5 +40,8 @@ cat <<\EOF >exp
 EOF
 compare exp out || fail=1
 
+# ensure %H and %L modifiers are handled
+stat -c '%r %R %Hd,%Ld %Hr,%Lr' . > out || fail=1
+grep -F '?' out && fail=1
 
 Exit $fail

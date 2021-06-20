@@ -247,7 +247,7 @@ static char const *decimal_point;
 static size_t decimal_point_len;
 
 static bool
-print_stat (char *pformat, size_t prefix_len, unsigned int m,
+print_stat (char *pformat, size_t prefix_len, char mod, char m,
             int fd, char const *filename, void const *data);
 
 /* Return the type of the specified file system.
@@ -852,7 +852,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
-print_statfs (char *pformat, size_t prefix_len, unsigned int m,
+print_statfs (char *pformat, size_t prefix_len, char mod _GL_UNUSED, char m,
               int fd, char const *filename,
               void const *data)
 {
@@ -1119,7 +1119,7 @@ format_code_offset (char const* directive)
    Return zero upon success, nonzero upon failure.  */
 static bool ATTRIBUTE_WARN_UNUSED_RESULT
 print_it (char const *format, int fd, char const *filename,
-          bool (*print_func) (char *, size_t, unsigned int,
+          bool (*print_func) (char *, size_t, char, char,
                               int, char const *, void const *),
           void const *data)
 {
@@ -1144,11 +1144,12 @@ print_it (char const *format, int fd, char const *filename,
         case '%':
           {
             size_t len = format_code_offset (b);
-            char const *fmt_char = b + len;
+            char fmt_char = *(b + len);
+            char mod_char = 0;
             memcpy (dest, b, len);
             b += len;
 
-            switch (*fmt_char)
+            switch (fmt_char)
               {
               case '\0':
                 --b;
@@ -1156,15 +1157,30 @@ print_it (char const *format, int fd, char const *filename,
               case '%':
                 if (1 < len)
                   {
-                    dest[len] = *fmt_char;
+                    dest[len] = fmt_char;
                     dest[len + 1] = '\0';
                     die (EXIT_FAILURE, 0, _("%s: invalid directive"),
                          quote (dest));
                   }
                 putchar ('%');
                 break;
+              case 'H':
+              case 'L':
+                mod_char = fmt_char;
+                fmt_char = *(b + 1);
+                if (print_func == print_stat
+                    && (fmt_char == 'd' || fmt_char == 'r'))
+                  {
+                    b++;
+                  }
+                else
+                  {
+                    fmt_char = mod_char;
+                    mod_char = 0;
+                  }
+                FALLTHROUGH;
               default:
-                fail |= print_func (dest, len, to_uchar (*fmt_char),
+                fail |= print_func (dest, len, mod_char, fmt_char,
                                     fd, filename, data);
                 break;
               }
@@ -1460,7 +1476,7 @@ do_stat (char const *filename, char const *format,
 
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
-print_stat (char *pformat, size_t prefix_len, unsigned int m,
+print_stat (char *pformat, size_t prefix_len, char mod, char m,
             int fd, char const *filename, void const *data)
 {
   struct print_args *parg = (struct print_args *) data;
@@ -1492,7 +1508,12 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
         }
       break;
     case 'd':
-      out_uint (pformat, prefix_len, statbuf->st_dev);
+      if (mod == 'H')
+        out_uint (pformat, prefix_len, major (statbuf->st_dev));
+      else if (mod == 'L')
+        out_uint (pformat, prefix_len, minor (statbuf->st_dev));
+      else
+        out_uint (pformat, prefix_len, statbuf->st_dev);
       break;
     case 'D':
       out_uint_x (pformat, prefix_len, statbuf->st_dev);
@@ -1536,6 +1557,17 @@ print_stat (char *pformat, size_t prefix_len, unsigned int m,
       break;
     case 's':
       out_int (pformat, prefix_len, statbuf->st_size);
+      break;
+    case 'r':
+      if (mod == 'H')
+        out_uint (pformat, prefix_len, major (statbuf->st_rdev));
+      else if (mod == 'L')
+        out_uint (pformat, prefix_len, minor (statbuf->st_rdev));
+      else
+        out_uint (pformat, prefix_len, statbuf->st_rdev);
+      break;
+    case 'R':
+      out_uint_x (pformat, prefix_len, statbuf->st_rdev);
       break;
     case 't':
       out_uint_x (pformat, prefix_len, major (statbuf->st_rdev));
@@ -1739,8 +1771,10 @@ The valid format sequences for files (without --file-system):\n\
   %C   SELinux security context string\n\
 "), stdout);
       fputs (_("\
-  %d   device number in decimal\n\
-  %D   device number in hex\n\
+  %d   device number in decimal (st_dev)\n\
+  %D   device number in hex (st_dev)\n\
+  %Hd  major device number in decimal\n\
+  %Ld  minor device number in decimal\n\
   %f   raw mode in hex\n\
   %F   file type\n\
   %g   group ID of owner\n\
@@ -1754,6 +1788,10 @@ The valid format sequences for files (without --file-system):\n\
   %N   quoted file name with dereference if symbolic link\n\
   %o   optimal I/O transfer size hint\n\
   %s   total size, in bytes\n\
+  %r   device type in decimal (st_rdev)\n\
+  %R   device type in hex (st_rdev)\n\
+  %Hr  major device type in decimal, for character/block device special files\n\
+  %Lr  minor device type in decimal, for character/block device special files\n\
   %t   major device type in hex, for character/block device special files\n\
   %T   minor device type in hex, for character/block device special files\n\
 "), stdout);
