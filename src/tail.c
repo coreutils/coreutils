@@ -579,8 +579,7 @@ file_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
             {
               /* If this newline isn't the last character in the buffer,
                  output the part that is after it.  */
-              if (n != bytes_read - 1)
-                xwrite_stdout (nl + 1, bytes_read - (n + 1));
+              xwrite_stdout (nl + 1, bytes_read - (n + 1));
               *read_pos += dump_remainder (false, pretty_filename, fd,
                                            end_pos - (pos + bytes_read));
               return true;
@@ -881,8 +880,8 @@ start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
       else
         {
           size_t n_remaining = bytes_read - n_bytes;
-          if (n_remaining)
-            xwrite_stdout (&buffer[n_bytes], n_remaining);
+          // Print extra characters if there are any
+          xwrite_stdout (&buffer[n_bytes], n_remaining);
           break;
         }
     }
