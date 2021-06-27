@@ -28,12 +28,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <getopt.h>
-#include <sys/select.h>
+#include <poll.h>
 #include <sys/types.h>
 #include <signal.h>
-#ifdef _AIX
-# include <poll.h>
-#endif
 
 #include "system.h"
 #include "argmatch.h"
@@ -351,27 +348,12 @@ check_output_alive (void)
   if (! monitor_output)
     return;
 
-#ifdef _AIX
-  /* select on AIX was seen to give a readable event immediately.  */
   struct pollfd pfd;
   pfd.fd = STDOUT_FILENO;
   pfd.events = POLLERR;
 
   if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
     die_pipe ();
-#else
-  struct timeval delay;
-  delay.tv_sec = delay.tv_usec = 0;
-
-  fd_set rfd;
-  FD_ZERO (&rfd);
-  FD_SET (STDOUT_FILENO, &rfd);
-
-  /* readable event on STDOUT is equivalent to POLLERR,
-     and implies an error condition on output like broken pipe.  */
-  if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
-    die_pipe ();
-#endif
 }
 
 static bool
@@ -1616,7 +1598,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   /* Wait for inotify events and handle them.  Events on directories
      ensure that watched files can be re-added when following by name.
      This loop blocks on the 'safe_read' call until a new event is notified.
-     But when --pid=P is specified, tail usually waits via the select.  */
+     But when --pid=P is specified, tail usually waits via poll.  */
   while (true)
     {
       struct File_spec *fspec;
@@ -1636,54 +1618,51 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
           return false;
         }
 
-      /* When watching a PID, ensure that a read from WD will not block
-         indefinitely.  */
-      while (len <= evbuf_off)
-        {
-          struct timeval delay; /* how long to wait for file changes.  */
-
-          if (pid)
-            {
-              if (writer_is_dead)
-                exit (EXIT_SUCCESS);
-
-              writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
-
-              if (writer_is_dead)
-                delay.tv_sec = delay.tv_usec = 0;
-              else
-                {
-                  delay.tv_sec = (time_t) sleep_interval;
-                  delay.tv_usec = 1000000 * (sleep_interval - delay.tv_sec);
-                }
-            }
-
-           fd_set rfd;
-           FD_ZERO (&rfd);
-           FD_SET (wd, &rfd);
-           if (monitor_output)
-             FD_SET (STDOUT_FILENO, &rfd);
-
-           int file_change = select (MAX (wd, STDOUT_FILENO) + 1,
-                                     &rfd, NULL, NULL, pid ? &delay: NULL);
-
-           if (file_change == 0)
-             continue;
-           else if (file_change == -1)
-             die (EXIT_FAILURE, errno,
-                  _("error waiting for inotify and output events"));
-           else if (FD_ISSET (STDOUT_FILENO, &rfd))
-             {
-               /* readable event on STDOUT is equivalent to POLLERR,
-                  and implies an error on output like broken pipe.  */
-               die_pipe ();
-             }
-           else
-             break;
-        }
-
       if (len <= evbuf_off)
         {
+          /* Poll for inotify events.  When watching a PID, ensure
+             that a read from WD will not block indefinitely.
+             If MONITOR_OUTPUT, also poll for a broken output pipe.  */
+
+          int file_change;
+          struct pollfd pfd[2];
+          do
+            {
+              /* How many ms to wait for changes.  -1 means wait forever.  */
+              int delay = -1;
+
+              if (pid)
+                {
+                  if (writer_is_dead)
+                    exit (EXIT_SUCCESS);
+
+                  writer_is_dead = (kill (pid, 0) != 0 && errno != EPERM);
+
+                  if (writer_is_dead || sleep_interval <= 0)
+                    delay = 0;
+                  else if (sleep_interval < INT_MAX / 1000 - 1)
+                    {
+                      /* delay = ceil (sleep_interval * 1000), sans libm.  */
+                      double ddelay = sleep_interval * 1000;
+                      delay = ddelay;
+                      delay += delay < ddelay;
+                    }
+                }
+
+              pfd[0].fd = wd;
+              pfd[0].events = POLLIN;
+              pfd[1].fd = STDOUT_FILENO;
+              pfd[1].events = pfd[1].revents = 0;
+              file_change = poll (pfd, monitor_output + 1, delay);
+            }
+          while (file_change == 0);
+
+          if (file_change < 0)
+            die (EXIT_FAILURE, errno,
+                 _("error waiting for inotify and output events"));
+          if (pfd[1].revents)
+            die_pipe ();
+
           len = safe_read (wd, evbuf, evlen);
           evbuf_off = 0;
 
@@ -2444,8 +2423,7 @@ main (int argc, char **argv)
   if (forever && ignore_fifo_and_pipe (F, n_files))
     {
       /* If stdout is a fifo or pipe, then monitor it
-         so that we exit if the reader goes away.
-         Note select() on a regular file is always readable.  */
+         so that we exit if the reader goes away.  */
       struct stat out_stat;
       if (fstat (STDOUT_FILENO, &out_stat) < 0)
         die (EXIT_FAILURE, errno, _("standard output"));

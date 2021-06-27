@@ -43,6 +43,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously a chunk starting after 128KiB, output the wrong part of the file.
   [bug introduced in coreutils-8.26]
 
+  tail -f no longer overruns a stack buffer when given too many files
+  to follow and ulimit -n exceeds 1024.
+  [bug introduced in coreutils-7.5]
+
   tr no longer crashes when using --complement with certain
   invalid combinations of case character classes.
   [bug introduced in coreutils-8.6]
