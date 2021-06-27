@@ -1387,7 +1387,7 @@ dump (void)
 
   if (limit_bytes_to_format)
     {
-      while (1)
+      while (true)
         {
           size_t n_needed;
           if (current_offset >= end_offset)
@@ -1409,7 +1409,7 @@ dump (void)
     }
   else
     {
-      while (1)
+      while (true)
         {
           ok &= read_block (bytes_per_block, block[idx], &n_bytes_read);
           if (n_bytes_read < bytes_per_block)
@@ -1462,7 +1462,7 @@ dump_strings (void)
   uintmax_t address = n_bytes_to_skip;
   bool ok = true;
 
-  while (1)
+  while (true)
     {
       size_t i;
       int c;

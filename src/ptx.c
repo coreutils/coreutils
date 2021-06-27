@@ -837,7 +837,7 @@ find_occurs_in_text (int file_index)
       /* Read and process a single input line or sentence, one word at a
          time.  */
 
-      while (1)
+      while (true)
         {
           if (word_regex.string)
 

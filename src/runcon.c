@@ -124,7 +124,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while (1)
+  while (true)
     {
       int option_index = 0;
       int c = getopt_long (argc, argv, "+r:t:u:l:c", long_options,

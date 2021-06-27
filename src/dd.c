@@ -2179,7 +2179,7 @@ dd_copy (void)
   alloc_ibuf ();
   alloc_obuf ();
 
-  while (1)
+  while (true)
     {
       if (status_level == STATUS_PROGRESS)
         {

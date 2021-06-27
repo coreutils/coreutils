@@ -185,7 +185,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while (1)
+  while (true)
     {
       int c = getopt_long (argc, argv, "eLmPqsz", longopts, NULL);
       if (c == -1)

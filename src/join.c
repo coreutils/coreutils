@@ -598,7 +598,7 @@ prjoin (struct line const *line1, struct line const *line2)
       const struct outlist *o;
 
       o = outlist;
-      while (1)
+      while (true)
         {
           if (o->file == 0)
             {

@@ -86,7 +86,7 @@ main (int argc, char **argv)
 
   enum nproc_query mode = NPROC_CURRENT_OVERRIDABLE;
 
-  while (1)
+  while (true)
     {
       int c = getopt_long (argc, argv, "", longopts, NULL);
       if (c == -1)

@@ -505,7 +505,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
   if (!temp_stream (&fp, &file_name))
     return -1;
 
-  while (1)
+  while (true)
     {
       size_t bytes_read = safe_read (input_fd, G_buffer, read_size);
       if (bytes_read == 0)

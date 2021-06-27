@@ -117,7 +117,7 @@ remove_parents (char *dir)
   bool ok = true;
 
   strip_trailing_slashes (dir);
-  while (1)
+  while (true)
     {
       slash = strrchr (dir, '/');
       if (slash == NULL)

@@ -3552,7 +3552,7 @@ static void
 merge_loop (struct merge_node_queue *queue,
             size_t total_lines, FILE *tfp, char const *temp_output)
 {
-  while (1)
+  while (true)
     {
       struct merge_node *node = queue_pop (queue);
 

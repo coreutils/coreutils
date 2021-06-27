@@ -590,7 +590,7 @@ rm (char *const *file, struct rm_options const *x)
 
       FTS *fts = xfts_open (file, bit_flags, NULL);
 
-      while (1)
+      while (true)
         {
           FTSENT *ent;
 

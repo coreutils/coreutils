@@ -452,7 +452,7 @@ tsort (char const *file)
 
   init_tokenbuffer (&tokenbuffer);
 
-  while (1)
+  while (true)
     {
       /* T2. Next Relation.  */
       size_t len = readtoken (stdin, DELIM, sizeof (DELIM) - 1, &tokenbuffer);

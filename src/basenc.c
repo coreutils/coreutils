@@ -605,7 +605,7 @@ z85_encode (char const *restrict in, size_t inlen,
   unsigned int val;
   size_t outidx = 0;
 
-  while (1)
+  while (true)
     {
       if (inlen == 0)
         {

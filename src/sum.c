@@ -179,7 +179,7 @@ sysv_sum_file (char const *file, int print_name)
         }
     }
 
-  while (1)
+  while (true)
     {
       size_t bytes_read = safe_read (fd, buf, sizeof buf);
 

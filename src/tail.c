@@ -453,7 +453,7 @@ dump_remainder (bool want_header, char const *pretty_filename, int fd,
   uintmax_t n_remaining = n_bytes;
 
   n_written = 0;
-  while (1)
+  while (true)
     {
       char buffer[BUFSIZ];
       size_t n = MIN (n_remaining, BUFSIZ);
@@ -641,7 +641,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
   tmp = xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer.  */
-  while (1)
+  while (true)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
@@ -780,7 +780,7 @@ pipe_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
   tmp = xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer.  */
-  while (1)
+  while (true)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
@@ -900,7 +900,7 @@ start_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
   if (n_lines == 0)
     return 0;
 
-  while (1)
+  while (true)
     {
       char buffer[BUFSIZ];
       size_t bytes_read = safe_read (fd, buffer, BUFSIZ);
@@ -1160,7 +1160,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
 
   last = n_files - 1;
 
-  while (1)
+  while (true)
     {
       size_t i;
       bool any_input = false;
@@ -1617,7 +1617,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
      ensure that watched files can be re-added when following by name.
      This loop blocks on the 'safe_read' call until a new event is notified.
      But when --pid=P is specified, tail usually waits via the select.  */
-  while (1)
+  while (true)
     {
       struct File_spec *fspec;
       struct inotify_event *ev;

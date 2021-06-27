@@ -781,7 +781,7 @@ eval5 (bool evaluate)
   trace ("eval5");
 #endif
   l = eval6 (evaluate);
-  while (1)
+  while (true)
     {
       if (nextarg (":"))
         {
@@ -812,7 +812,7 @@ eval4 (bool evaluate)
   trace ("eval4");
 #endif
   l = eval5 (evaluate);
-  while (1)
+  while (true)
     {
       if (nextarg ("*"))
         fxn = multiply;
@@ -851,7 +851,7 @@ eval3 (bool evaluate)
   trace ("eval3");
 #endif
   l = eval4 (evaluate);
-  while (1)
+  while (true)
     {
       if (nextarg ("+"))
         fxn = plus;
@@ -881,7 +881,7 @@ eval2 (bool evaluate)
   trace ("eval2");
 #endif
   l = eval3 (evaluate);
-  while (1)
+  while (true)
     {
       VALUE *r;
       enum
@@ -960,7 +960,7 @@ eval1 (bool evaluate)
   trace ("eval1");
 #endif
   l = eval2 (evaluate);
-  while (1)
+  while (true)
     {
       if (nextarg ("&"))
         {
@@ -991,7 +991,7 @@ eval (bool evaluate)
   trace ("eval");
 #endif
   l = eval1 (evaluate);
-  while (1)
+  while (true)
     {
       if (nextarg ("|"))
         {

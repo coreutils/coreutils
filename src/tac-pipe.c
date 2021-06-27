@@ -58,7 +58,7 @@ buf_init_from_stdin (Buf *x, char eol_byte)
 #define OBS (&(x->obs))
   obstack_init (OBS);
 
-  while (1)
+  while (true)
     {
       char *buf = (char *) malloc (BUFFER_SIZE);
       size_t bytes_read;
@@ -185,7 +185,7 @@ find_bol (const Buf *x,
   tmp = line_ptr_decrement (x, last_bol);
   last_bol_ptr = tmp.ptr;
   i = tmp.i;
-  while (1)
+  while (true)
     {
       char *nl = memrchr (x->p[i].start, last_bol_ptr, eol_byte);
       if (nl)
@@ -250,7 +250,7 @@ tac_mem ()
   bol.i = x.n_bufs - 1;
   bol.ptr = ONE_PAST_END (&x, bol.i);
 
-  while (1)
+  while (true)
     {
       Line_ptr new_bol;
       if (! find_bol (&x, &bol, &new_bol, eol_byte))

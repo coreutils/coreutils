@@ -313,7 +313,7 @@ batch_convert (char const *input_filename, char const *format,
   line = NULL;
   buflen = 0;
   ok = true;
-  while (1)
+  while (true)
     {
       ssize_t line_length = getline (&line, &buflen, in_stream);
       if (line_length < 0)

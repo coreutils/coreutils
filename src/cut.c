@@ -306,7 +306,7 @@ cut_fields (FILE *stream)
      That is because a non-delimited line has exactly one field.  */
   buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
 
-  while (1)
+  while (true)
     {
       if (field_idx == 1 && buffer_first_field)
         {

@@ -253,7 +253,7 @@ dc_parse_stream (FILE *fp, char const *filename)
   if (term == NULL || *term == '\0')
     term = "none";
 
-  while (1)
+  while (true)
     {
       char *keywd, *arg;
       bool unrecognized;

@@ -496,7 +496,7 @@ load_buffer (void)
   if (bytes_wanted < hold_count)
     bytes_wanted = hold_count;
 
-  while (1)
+  while (true)
     {
       b = get_new_buffer (bytes_wanted);
       bytes_avail = b->bytes_alloc; /* Size of buffer returned. */

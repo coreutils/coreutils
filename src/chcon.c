@@ -315,7 +315,7 @@ process_files (char **files, int bit_flags)
 
   FTS *fts = xfts_open (files, bit_flags, NULL);
 
-  while (1)
+  while (true)
     {
       FTSENT *ent;
 

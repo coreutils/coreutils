@@ -2980,7 +2980,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   /* Read the directory entries, and insert the subfiles into the 'cwd_file'
      table.  */
 
-  while (1)
+  while (true)
     {
       /* Set errno to zero so we can distinguish between a readdir failure
          and when readdir simply finds that there are no more entries.  */
@@ -5112,7 +5112,7 @@ print_many_per_line (void)
       size_t pos = 0;
 
       /* Print the next row.  */
-      while (1)
+      while (true)
         {
           struct fileinfo const *f = sorted_file[filesno];
           size_t name_length = length_of_file_name_and_frills (f);

@@ -277,7 +277,7 @@ dot_or_dotdot (char const *file_name)
 static inline struct dirent const *
 readdir_ignoring_dot_and_dotdot (DIR *dirp)
 {
-  while (1)
+  while (true)
     {
       struct dirent const *dp = readdir (dirp);
       if (dp == NULL || ! dot_or_dotdot (dp->d_name))

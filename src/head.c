@@ -520,7 +520,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
   /* Always read into a fresh buffer.
      Read, (producing no output) until we've accumulated at least
      n_elide newlines, or until EOF, whichever comes first.  */
-  while (1)
+  while (true)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
@@ -676,7 +676,7 @@ elide_tail_lines_seekable (char const *pretty_filename, int fd,
   if (n_lines && bytes_read && buffer[bytes_read - 1] != line_end)
     --n_lines;
 
-  while (1)
+  while (true)
     {
       /* Scan backward, counting the newlines in this bufferfull.  */
 
