@@ -33,8 +33,8 @@ for mode in '' '---disable-inotify'; do
 
   for i in $(seq 200); do
     kill -0 $pid || break;
-    mv f g
-    touch f
+    touch g
+    mv g f
   done
 
   # Ensure tail hasn't aborted
