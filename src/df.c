@@ -54,6 +54,7 @@ struct devlist
   dev_t dev_num;
   struct mount_entry *me;
   struct devlist *next;
+  struct devlist *seen_last; /* valid for hashed devlist entries only */
 };
 
 /* Filled with device numbers of examined file systems to avoid
@@ -681,7 +682,13 @@ devlist_for_dev (dev_t dev)
     return NULL;
   struct devlist dev_entry;
   dev_entry.dev_num = dev;
-  return hash_lookup (devlist_table, &dev_entry);
+
+  struct devlist *found = hash_lookup (devlist_table, &dev_entry);
+  if (found == NULL)
+    return NULL;
+
+  /* Return the last devlist entry we have seen with this dev_num */
+  return found->seen_last;
 }
 
 static void
@@ -799,8 +806,12 @@ filter_mount_list (bool devices_only)
           devlist->dev_num = buf.st_dev;
           devlist->next = device_list;
           device_list = devlist;
-          if (hash_insert (devlist_table, devlist) == NULL)
+
+          struct devlist *hash_entry = hash_insert (devlist_table, devlist);
+          if (hash_entry == NULL)
             xalloc_die ();
+          /* Ensure lookups use this latest devlist.  */
+          hash_entry->seen_last = devlist;
 
           me = me->me_next;
         }

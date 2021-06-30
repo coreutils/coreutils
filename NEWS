@@ -13,6 +13,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   when a specific number of pattern matches are performed.
   [bug introduced with the --suppress-matched feature in coreutils-8.22]
 
+  df no longer outputs duplicate remote mounts in the presence of bind mounts.
+  [bug introduced in coreutils-8.26]
+
   du no longer crashes on XFS file systems when the directory hierarchy is
   heavily changed during the run.
   [bug introduced in coreutils-8.25]
