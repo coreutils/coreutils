@@ -141,7 +141,7 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       --default-signal[=SIG]  reset handling of SIG signal(s) to the default\n\
 "), stdout);
       fputs (_("\
-      --ignore-signal[=SIG]   set handling of SIG signals(s) to do nothing\n\
+      --ignore-signal[=SIG]   set handling of SIG signal(s) to do nothing\n\
 "), stdout);
       fputs (_("\
       --list-signal-handling  list non default signal handling to stderr\n\
