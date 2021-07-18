@@ -315,7 +315,7 @@ main (int argc, char **argv)
 
   finalize_tab_stops ();
 
-  set_file_list ( (optind < argc) ? &argv[optind] : NULL);
+  set_file_list ((optind < argc) ? &argv[optind] : NULL);
 
   unexpand ();
 

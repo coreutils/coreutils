@@ -287,7 +287,8 @@ void unset_TZ (void)
     if (! (to[0][0] == 'T' && to[0][1] == 'Z' && to[0][2] == '='))
       to++;
 }
-int main()
+int
+main ()
 {
   time_t now = time ((time_t *) 0);
   int hour_GMT0, hour_unset;
@@ -529,10 +530,11 @@ AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     #include <cpuid.h>
 
-    int main(void)
+    int
+    main (void)
     {
       unsigned int eax, ebx, ecx, edx;
-      __get_cpuid(1, &eax, &ebx, &ecx, &edx);
+      __get_cpuid (1, &eax, &ebx, &ecx, &edx);
       return 1;
     }
   ]])
@@ -551,10 +553,11 @@ AC_COMPILE_IFELSE(
   [AC_LANG_SOURCE([[
     #include <x86intrin.h>
 
-    int main(void)
+    int
+    main (void)
     {
       __m128i a, b;
-      a = _mm_clmulepi64_si128(a, b, 0x00);
+      a = _mm_clmulepi64_si128 (a, b, 0x00);
       return 1;
     }
   ]])
@@ -580,10 +583,11 @@ AC_LINK_IFELSE(
   [AC_LANG_SOURCE([[
     #include <cpuid.h>
 
-    int main(void)
+    int
+    main (void)
     {
       unsigned int eax = 0, ebx = 0, ecx = 0, edx = 0;
-      __get_cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+      __get_cpuid_count (7, 0, &eax, &ebx, &ecx, &edx);
       return 1;
     }
   ]])
@@ -600,10 +604,11 @@ AC_COMPILE_IFELSE(
   [AC_LANG_SOURCE([[
     #include <x86intrin.h>
 
-    int main(void)
+    int
+    main (void)
     {
       __m256i a, b;
-      a = _mm256_sad_epu8(a, b);
+      a = _mm256_sad_epu8 (a, b);
       return 1;
     }
   ]])

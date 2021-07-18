@@ -1037,7 +1037,7 @@ quit (int code)
 }
 
 /* Return LEN rounded down to a multiple of IO_BUFSIZE
-   (to minimize calls to the expensive posix_fadvise(,POSIX_FADV_DONTNEED),
+   (to minimize calls to the expensive posix_fadvise (,POSIX_FADV_DONTNEED),
    while storing the remainder internally per FD.
    Pass LEN == 0 to get the current remainder.  */
 

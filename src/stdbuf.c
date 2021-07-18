@@ -129,7 +129,7 @@ and are thus unaffected by 'stdbuf' settings.\n\
 /* argv[0] can be anything really, but generally it contains
    the path to the executable or just a name if it was executed
    using $PATH. In the latter case to get the path we can:
-   search getenv("PATH"), readlink("/prof/self/exe"), getenv("_"),
+   search getenv ("PATH"), readlink ("/prof/self/exe"), getenv ("_"),
    dladdr(), pstat_getpathname(), etc.  */
 
 static void

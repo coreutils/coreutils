@@ -1,4 +1,4 @@
-#serial 113   -*- autoconf -*-
+#serial 114   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -164,7 +164,7 @@ AC_DEFUN([coreutils_MACROS],
        [[#include <ieeefp.h>
        ]],
        [[#ifdef __i386__
-          fpsetprec(FP_PE);
+          fpsetprec (FP_PE);
          #else
          # error not required on 64 bit
          #endif

@@ -162,17 +162,17 @@ set_fields (char const *fieldstr, unsigned int options)
           in_digits = false;
           /* Starting a range. */
           if (dash_found)
-            FATAL_ERROR ( (options & SETFLD_ERRMSG_USE_POS)
-                          ?_("invalid byte or character range")
-                          :_("invalid field range"));
+            FATAL_ERROR ((options & SETFLD_ERRMSG_USE_POS)
+                         ? _("invalid byte or character range")
+                         : _("invalid field range"));
 
           dash_found = true;
           fieldstr++;
 
           if (lhs_specified && !value)
-            FATAL_ERROR ( (options & SETFLD_ERRMSG_USE_POS)
-                          ?_("byte/character positions are numbered from 1")
-                          :_("fields are numbered from 1"));
+            FATAL_ERROR ((options & SETFLD_ERRMSG_USE_POS)
+                         ? _("byte/character positions are numbered from 1")
+                         : _("fields are numbered from 1"));
 
           initial = (lhs_specified ? value : 1);
           value = 0;
@@ -216,9 +216,9 @@ set_fields (char const *fieldstr, unsigned int options)
             {
               /* A simple field number, not a range. */
               if (value == 0)
-                FATAL_ERROR ( (options & SETFLD_ERRMSG_USE_POS)
-                              ?_("byte/character positions are numbered from 1")
-                              :_("fields are numbered from 1"));
+                FATAL_ERROR ((options & SETFLD_ERRMSG_USE_POS)
+                             ? _("byte/character positions are numbered from 1")
+                             : _("fields are numbered from 1"));
 
               add_range_pair (value, value);
               value = 0;
@@ -275,9 +275,9 @@ set_fields (char const *fieldstr, unsigned int options)
     }
 
   if (!n_frp)
-    FATAL_ERROR ( (options&SETFLD_ERRMSG_USE_POS)
-                  ?_("missing list of byte/character positions")
-                  :_("missing list of fields"));
+    FATAL_ERROR ((options&SETFLD_ERRMSG_USE_POS)
+                 ? _("missing list of byte/character positions")
+                 : _("missing list of fields"));
 
   qsort (frp, n_frp, sizeof (frp[0]), compare_ranges);
 
