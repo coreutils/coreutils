@@ -838,6 +838,7 @@ enum
   HIDE_OPTION,
   HYPERLINK_OPTION,
   INDICATOR_STYLE_OPTION,
+  NULL_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
   SI_OPTION,
@@ -858,6 +859,7 @@ static struct option const long_options[] =
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
   {"kibibytes", no_argument, NULL, 'k'},
+  {"null", no_argument, NULL, NULL_OPTION},
   {"numeric-uid-gid", no_argument, NULL, 'n'},
   {"no-group", no_argument, NULL, 'G'},
   {"hide-control-chars", no_argument, NULL, 'q'},
@@ -1065,6 +1067,8 @@ assert_matching_dev_ino (char const *name, struct dev_ino di)
   assert (sb.st_ino == di.st_ino);
 }
 
+static char eolbyte = '\n';
+
 /* Write to standard output PREFIX, followed by the quoting style and
    a space-separated list of the integers stored in OS all on one line.  */
 
@@ -1083,7 +1087,7 @@ dired_dump_obstack (char const *prefix, struct obstack *os)
           intmax_t p = pos[i];
           printf (" %"PRIdMAX, p);
         }
-      putchar ('\n');
+      putchar (eolbyte);
     }
 }
 
@@ -1764,7 +1768,7 @@ main (int argc, char **argv)
     {
       print_current_files ();
       if (pending_dirs)
-        dired_outbyte ('\n');
+        dired_outbyte (eolbyte);
     }
   else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
     print_dir_name = false;
@@ -1832,8 +1836,9 @@ main (int argc, char **argv)
       /* No need to free these since we're about to exit.  */
       dired_dump_obstack ("//DIRED//", &dired_obstack);
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
-      printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
-              quoting_style_args[get_quoting_style (filename_quoting_options)]);
+      printf ("//DIRED-OPTIONS// --quoting-style=%s%c",
+              quoting_style_args[get_quoting_style (filename_quoting_options)],
+              eolbyte);
     }
 
   if (LOOP_DETECT)
@@ -2263,6 +2268,10 @@ decode_switches (int argc, char **argv)
           indicator_style = XARGMATCH ("--indicator-style", optarg,
                                        indicator_style_args,
                                        indicator_style_types);
+          break;
+
+        case NULL_OPTION:
+          eolbyte = 0;
           break;
 
         case QUOTING_STYLE_OPTION:
@@ -2966,7 +2975,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   if (recursive || print_dir_name)
     {
       if (!first)
-        dired_outbyte ('\n');
+        dired_outbyte (eolbyte);
       first = false;
       dired_indent ();
 
@@ -2983,7 +2992,8 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 
       free (absolute_name);
 
-      dired_outstring (":\n");
+      dired_outbyte (':');
+      dired_outbyte (eolbyte);
     }
 
   /* Read the directory entries, and insert the subfiles into the 'cwd_file'
@@ -3073,7 +3083,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
                                 ST_NBLOCKSIZE, output_block_size);
       char *pend = p + strlen (p);
       *--p = ' ';
-      *pend++ = '\n';
+      *pend++ = eolbyte;
       dired_indent ();
       dired_outstring (_("total"));
       dired_outbuf (p, pend - p);
@@ -4103,7 +4113,7 @@ print_current_files (void)
       for (i = 0; i < cwd_n_used; i++)
         {
           print_file_name_and_frills (sorted_file[i], 0);
-          putchar ('\n');
+          putchar (eolbyte);
         }
       break;
 
@@ -4130,7 +4140,7 @@ print_current_files (void)
         {
           set_normal_color ();
           print_long_format (sorted_file[i]);
-          dired_outbyte ('\n');
+          dired_outbyte (eolbyte);
         }
       break;
     }
@@ -5121,7 +5131,7 @@ print_many_per_line (void)
           indent (pos + name_length, pos + max_name_length);
           pos += max_name_length;
         }
-      putchar ('\n');
+      putchar (eolbyte);
     }
 }
 
@@ -5146,7 +5156,7 @@ print_horizontal (void)
 
       if (col == 0)
         {
-          putchar ('\n');
+          putchar (eolbyte);
           pos = 0;
         }
       else
@@ -5161,7 +5171,7 @@ print_horizontal (void)
       name_length = length_of_file_name_and_frills (f);
       max_name_length = line_fmt->col_arr[col];
     }
-  putchar ('\n');
+  putchar (eolbyte);
 }
 
 /* Output name + SEP + ' '.  */
@@ -5191,7 +5201,7 @@ print_with_separator (char sep)
           else
             {
               pos = 0;
-              separator = '\n';
+              separator = eolbyte;
             }
 
           putchar (sep);
@@ -5201,7 +5211,7 @@ print_with_separator (char sep)
       print_file_name_and_frills (f, pos);
       pos += len;
     }
-  putchar ('\n');
+  putchar (eolbyte);
 }
 
 /* Assuming cursor is at position FROM, indent up to position TO.
@@ -5473,6 +5483,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
+      --null                 end each output line with NUL, not newline\n\
   -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
   -N, --literal              print entry names without quoting\n\
   -o                         like -l, but do not list group information\n\

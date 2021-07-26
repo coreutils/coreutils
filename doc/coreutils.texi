@@ -8137,6 +8137,10 @@ option.  It does not affect the file size written by @option{-l}.
 List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space).
 
+@item --null
+@opindex --null
+@outputNUL
+
 @item -p
 @itemx --indicator-style=slash
 @opindex -p

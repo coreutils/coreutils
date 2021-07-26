@@ -83,6 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now accepts the --sort=width option, to sort by file name width.
   This is useful to more compactly organize the default vertical column output.
 
+  ls now accepts the --null option, to terminate each output line with
+  NUL instead of newline.
+
   nl --line-increment can now take a negative number to decrement the count.
 
   stat supports more formats for representing decomposed device numbers.
