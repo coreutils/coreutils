@@ -80,6 +80,7 @@
 /lib/netinet/in.h
 /lib/parse-datetime-gen.h
 /lib/parse-datetime.c
+/lib/poll.h
 /lib/printf.c
 /lib/pthread.h
 /lib/ref-add.sed
