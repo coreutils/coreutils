@@ -4227,8 +4227,7 @@ format_user_or_group_width (char const *name, unsigned long int id)
   else
     {
       char buf[INT_BUFSIZE_BOUND (id)];
-      sprintf (buf, "%lu", id);
-      return strlen (buf);
+      return sprintf (buf, "%lu", id);
     }
 }
 
@@ -4322,11 +4321,8 @@ print_long_format (const struct fileinfo *f)
   if (print_inode)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-      sprintf (p, "%*s ", inode_number_width,
-               format_inode (hbuf, sizeof hbuf, f));
-      /* Increment by strlen (p) here, rather than by inode_number_width + 1.
-         The latter is wrong when inode_number_width is zero.  */
-      p += strlen (p);
+      p += sprintf (p, "%*s ", inode_number_width,
+                    format_inode (hbuf, sizeof hbuf, f));
     }
 
   if (print_block_size)
@@ -4349,13 +4345,9 @@ print_long_format (const struct fileinfo *f)
      "optional alternate access method flag".  */
   {
     char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
-    sprintf (p, "%s %*s ", modebuf, nlink_width,
-             ! f->stat_ok ? "?" : umaxtostr (f->stat.st_nlink, hbuf));
+    p += sprintf (p, "%s %*s ", modebuf, nlink_width,
+                  ! f->stat_ok ? "?" : umaxtostr (f->stat.st_nlink, hbuf));
   }
-  /* Increment by strlen (p) here, rather than by, e.g.,
-     sizeof modebuf - 2 + any_has_acl + 1 + nlink_width + 1.
-     The latter is wrong when nlink_width is zero.  */
-  p += strlen (p);
 
   DIRED_INDENT ();
 
@@ -4386,12 +4378,11 @@ print_long_format (const struct fileinfo *f)
       int blanks_width = (file_size_width
                           - (major_device_number_width + 2
                              + minor_device_number_width));
-      sprintf (p, "%*s, %*s ",
-               major_device_number_width + MAX (0, blanks_width),
-               umaxtostr (major (f->stat.st_rdev), majorbuf),
-               minor_device_number_width,
-               umaxtostr (minor (f->stat.st_rdev), minorbuf));
-      p += file_size_width + 1;
+      p += sprintf (p, "%*s, %*s ",
+                    major_device_number_width + MAX (0, blanks_width),
+                    umaxtostr (major (f->stat.st_rdev), majorbuf),
+                    minor_device_number_width,
+                    umaxtostr (minor (f->stat.st_rdev), minorbuf));
     }
   else
     {
@@ -4454,12 +4445,11 @@ print_long_format (const struct fileinfo *f)
       /* The time cannot be converted using the desired format, so
          print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
-      sprintf (p, "%*s ", long_time_expected_width (),
-               (! f->stat_ok || ! btime_ok
-                ? "?"
-                : timetostr (when_timespec.tv_sec, hbuf)));
+      p += sprintf (p, "%*s ", long_time_expected_width (),
+                    (! f->stat_ok || ! btime_ok
+                     ? "?"
+                     : timetostr (when_timespec.tv_sec, hbuf)));
       /* FIXME: (maybe) We discarded when_timespec.tv_nsec. */
-      p += strlen (p);
     }
 
   DIRED_FPUTS (buf, stdout, p - buf);
