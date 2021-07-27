@@ -304,7 +304,7 @@ static void queue_directory (char const *name, char const *realname,
 static void sort_files (void);
 static void parse_ls_color (void);
 
-static void getenv_quoting_style (void);
+static int getenv_quoting_style (void);
 
 static size_t quote_name_width (char const *name,
                                 struct quoting_options const *options,
@@ -463,7 +463,7 @@ ARGMATCH_VERIFY (time_style_args, time_style_types);
 
 enum time_type
   {
-    time_mtime,			/* default */
+    time_mtime = 0,		/* default */
     time_ctime,			/* -c */
     time_atime,			/* -u */
     time_btime,                 /* birth time */
@@ -478,13 +478,13 @@ static enum time_type time_type;
 
 enum sort_type
   {
-    sort_none = -1,		/* -U */
-    sort_name,			/* default */
+    sort_name = 0,		/* default */
     sort_extension,		/* -X */
     sort_width,
     sort_size,			/* -S */
     sort_version,		/* -v */
-    sort_time,			/* -t */
+    sort_time,			/* -t; must be second to last */
+    sort_none,			/* -U; must be last */
     sort_numtypes		/* the number of elements of this enum */
   };
 
@@ -543,7 +543,7 @@ static bool dired;
 
 enum indicator_style
   {
-    none,	/*     --indicator-style=none */
+    none = 0,	/*     --indicator-style=none (default) */
     slash,	/* -p, --indicator-style=slash */
     file_type,	/*     --indicator-style=file-type */
     classify	/* -F, --indicator-style=classify */
@@ -585,7 +585,7 @@ enum when_type
 
 enum Dereference_symlink
   {
-    DEREF_UNDEFINED = 1,
+    DEREF_UNDEFINED = 0,		/* default */
     DEREF_NEVER,
     DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
     DEREF_COMMAND_LINE_SYMLINK_TO_DIR,	/* the default, in certain cases */
@@ -683,7 +683,7 @@ static enum
 {
   /* Ignore files whose names start with '.', and files specified by
      --hide and --ignore.  */
-  IGNORE_DEFAULT,
+  IGNORE_DEFAULT = 0,
 
   /* Ignore '.', '..', and files specified by --ignore.  */
   IGNORE_DOT_AND_DOTDOT,
@@ -734,7 +734,7 @@ static size_t tabsize;
 static bool print_dir_name;
 
 /* The line length to use for breaking lines in many-per-line format.
-   Can be set with -w.  */
+   Can be set with -w.  If zero, there is no limit.  */
 
 static size_t line_length;
 
@@ -1671,6 +1671,15 @@ main (int argc, char **argv)
 
   /* Test print_with_color again, because the call to parse_ls_color
      may have just reset it -- e.g., if LS_COLORS is invalid.  */
+
+  if (print_with_color)
+    {
+      /* Don't use TAB characters in output.  Some terminal
+         emulators can't handle the combination of tabs and
+         color codes on the same line.  */
+      tabsize = 0;
+    }
+
   if (directories_first)
     check_symlink_mode = true;
   else if (print_with_color)
@@ -1850,29 +1859,39 @@ main (int argc, char **argv)
   return exit_status;
 }
 
-/* Set the line length to the value given by SPEC.  Return true if
-   successful.  0 means no limit on line length.  */
+/* Return the line length indicated by the value given by SPEC, or -1
+   if unsuccessful.  0 means no limit on line length.  */
 
-static bool
-set_line_length (char const *spec)
+static ptrdiff_t
+decode_line_length (char const *spec)
 {
   uintmax_t val;
 
-  /* Treat too-large values as if they were SIZE_MAX, which is
+  /* Treat too-large values as if they were 0, which is
      effectively infinity.  */
   switch (xstrtoumax (spec, NULL, 0, &val, ""))
     {
     case LONGINT_OK:
-      line_length = MIN (val, SIZE_MAX);
-      return true;
+      return val <= MIN (PTRDIFF_MAX, SIZE_MAX) ? val : 0;
 
     case LONGINT_OVERFLOW:
-      line_length = SIZE_MAX;
-      return true;
+      return 0;
 
     default:
-      return false;
+      return -1;
     }
+}
+
+/* Return true if standard output is a tty, caching the result.  */
+
+static bool
+stdout_isatty (void)
+{
+  static signed char out_tty = -1;
+  if (out_tty < 0)
+    out_tty = isatty (STDOUT_FILENO);
+  assume (out_tty == 0 || out_tty == 1);
+  return out_tty;
 }
 
 /* Set all the option flags according to the switches specified.
@@ -1883,99 +1902,14 @@ decode_switches (int argc, char **argv)
 {
   char *time_style_option = NULL;
 
-  bool sort_type_specified = false;
+  /* These variables are false or -1 unless a switch says otherwise.  */
   bool kibibytes_specified = false;
-
-  qmark_funny_chars = false;
-
-  /* initialize all switches to default settings */
-
-  switch (ls_mode)
-    {
-    case LS_MULTI_COL:
-      /* This is for the 'dir' program.  */
-      format = many_per_line;
-      set_quoting_style (NULL, escape_quoting_style);
-      break;
-
-    case LS_LONG_FORMAT:
-      /* This is for the 'vdir' program.  */
-      format = long_format;
-      set_quoting_style (NULL, escape_quoting_style);
-      break;
-
-    case LS_LS:
-      /* This is for the 'ls' program.  */
-      if (isatty (STDOUT_FILENO))
-        {
-          format = many_per_line;
-          set_quoting_style (NULL, shell_escape_quoting_style);
-          /* See description of qmark_funny_chars, above.  */
-          qmark_funny_chars = true;
-        }
-      else
-        {
-          format = one_per_line;
-          qmark_funny_chars = false;
-        }
-      break;
-
-    default:
-      abort ();
-    }
-
-  time_type = time_mtime;
-  sort_type = sort_name;
-  sort_reverse = false;
-  numeric_ids = false;
-  print_block_size = false;
-  indicator_style = none;
-  print_inode = false;
-  dereference = DEREF_UNDEFINED;
-  recursive = false;
-  immediate_dirs = false;
-  ignore_mode = IGNORE_DEFAULT;
-  ignore_patterns = NULL;
-  hide_patterns = NULL;
-  print_scontext = false;
-
-  getenv_quoting_style ();
-
-  line_length = 80;
-  {
-    char const *p = getenv ("COLUMNS");
-    if (p && *p && ! set_line_length (p))
-      error (0, 0,
-             _("ignoring invalid width in environment variable COLUMNS: %s"),
-             quote (p));
-  }
-
-#ifdef TIOCGWINSZ
-  {
-    struct winsize ws;
-
-    if (ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws) != -1
-        && 0 < ws.ws_col && ws.ws_col == (size_t) ws.ws_col)
-      line_length = ws.ws_col;
-  }
-#endif
-
-  {
-    char const *p = getenv ("TABSIZE");
-    tabsize = 8;
-    if (p)
-      {
-        uintmax_t tmp;
-        if (xstrtoumax (p, NULL, 0, &tmp, "") == LONGINT_OK
-            && tmp <= SIZE_MAX)
-          tabsize = tmp;
-        else
-          error (0, 0,
-                 _("ignoring invalid tab size in environment variable TABSIZE:"
-                   " %s"),
-                 quote (p));
-      }
-  }
+  int format_opt = -1;
+  int hide_control_chars_opt = -1;
+  int quoting_style_opt = -1;
+  int sort_opt = -1;
+  ptrdiff_t tabsize_opt = -1;
+  ptrdiff_t width_opt = -1;
 
   while (true)
     {
@@ -1993,7 +1927,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'b':
-          set_quoting_style (NULL, escape_quoting_style);
+          quoting_style_opt = escape_quoting_style;
           break;
 
         case 'c':
@@ -2007,11 +1941,10 @@ decode_switches (int argc, char **argv)
         case 'f':
           /* Same as enabling -a -U and disabling -l -s.  */
           ignore_mode = IGNORE_MINIMAL;
-          sort_type = sort_none;
-          sort_type_specified = true;
+          sort_opt = sort_none;
           /* disable -l */
-          if (format == long_format)
-            format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
+          if (format_opt == long_format)
+            format_opt = -1;
           print_block_size = false;	/* disable -s */
           print_with_color = false;	/* disable --color */
           print_hyperlink = false;	/* disable --hyperlink */
@@ -2022,7 +1955,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'g':
-          format = long_format;
+          format_opt = long_format;
           print_owner = false;
           break;
 
@@ -2041,20 +1974,20 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'l':
-          format = long_format;
+          format_opt = long_format;
           break;
 
         case 'm':
-          format = with_commas;
+          format_opt = with_commas;
           break;
 
         case 'n':
           numeric_ids = true;
-          format = long_format;
+          format_opt = long_format;
           break;
 
         case 'o':  /* Just like -l, but don't display group info.  */
-          format = long_format;
+          format_opt = long_format;
           print_group = false;
           break;
 
@@ -2063,7 +1996,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'q':
-          qmark_funny_chars = true;
+          hide_control_chars_opt = true;
           break;
 
         case 'r':
@@ -2075,8 +2008,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 't':
-          sort_type = sort_time;
-          sort_type_specified = true;
+          sort_opt = sort_time;
           break;
 
         case 'u':
@@ -2084,18 +2016,18 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'v':
-          sort_type = sort_version;
-          sort_type_specified = true;
+          sort_opt = sort_version;
           break;
 
         case 'w':
-          if (! set_line_length (optarg))
+          width_opt = decode_line_length (optarg);
+          if (width_opt < 0)
             die (LS_FAILURE, 0, "%s: %s", _("invalid line width"),
                  quote (optarg));
           break;
 
         case 'x':
-          format = horizontal;
+          format_opt = horizontal;
           break;
 
         case 'A':
@@ -2108,7 +2040,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'C':
-          format = many_per_line;
+          format_opt = many_per_line;
           break;
 
         case 'D':
@@ -2125,8 +2057,7 @@ decode_switches (int argc, char **argv)
                  --classify=always.  */
               i = when_always;
 
-            if (i == when_always
-                || (i == when_if_tty && isatty (STDOUT_FILENO)))
+            if (i == when_always || (i == when_if_tty && stdout_isatty ()))
               indicator_style = classify;
             break;
           }
@@ -2152,11 +2083,11 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'N':
-          set_quoting_style (NULL, literal_quoting_style);
+          quoting_style_opt = literal_quoting_style;
           break;
 
         case 'Q':
-          set_quoting_style (NULL, c_quoting_style);
+          quoting_style_opt = c_quoting_style;
           break;
 
         case 'R':
@@ -2164,29 +2095,26 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'S':
-          sort_type = sort_size;
-          sort_type_specified = true;
+          sort_opt = sort_size;
           break;
 
         case 'T':
-          tabsize = xnumtoumax (optarg, 0, 0, SIZE_MAX, "",
-                                _("invalid tab size"), LS_FAILURE);
+          tabsize_opt = xnumtoumax (optarg, 0, 0, MIN (PTRDIFF_MAX, SIZE_MAX),
+                                    "", _("invalid tab size"), LS_FAILURE);
           break;
 
         case 'U':
-          sort_type = sort_none;
-          sort_type_specified = true;
+          sort_opt = sort_none;
           break;
 
         case 'X':
-          sort_type = sort_extension;
-          sort_type_specified = true;
+          sort_opt = sort_extension;
           break;
 
         case '1':
           /* -1 has no effect after -l.  */
-          if (format != long_format)
-            format = one_per_line;
+          if (format_opt != long_format)
+            format_opt = one_per_line;
           break;
 
         case AUTHOR_OPTION:
@@ -2203,8 +2131,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case SORT_OPTION:
-          sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
-          sort_type_specified = true;
+          sort_opt = XARGMATCH ("--sort", optarg, sort_args, sort_types);
           break;
 
         case GROUP_DIRECTORIES_FIRST_OPTION:
@@ -2216,11 +2143,12 @@ decode_switches (int argc, char **argv)
           break;
 
         case FORMAT_OPTION:
-          format = XARGMATCH ("--format", optarg, format_args, format_types);
+          format_opt = XARGMATCH ("--format", optarg, format_args,
+                                  format_types);
           break;
 
         case FULL_TIME_OPTION:
-          format = long_format;
+          format_opt = long_format;
           time_style_option = bad_cast ("full-iso");
           break;
 
@@ -2235,16 +2163,7 @@ decode_switches (int argc, char **argv)
               i = when_always;
 
             print_with_color = (i == when_always
-                                || (i == when_if_tty
-                                    && isatty (STDOUT_FILENO)));
-
-            if (print_with_color)
-              {
-                /* Don't use TAB characters in output.  Some terminal
-                   emulators can't handle the combination of tabs and
-                   color codes on the same line.  */
-                tabsize = 0;
-              }
+                                || (i == when_if_tty && stdout_isatty ()));
             break;
           }
 
@@ -2259,8 +2178,7 @@ decode_switches (int argc, char **argv)
               i = when_always;
 
             print_hyperlink = (i == when_always
-                               || (i == when_if_tty
-                                   && isatty (STDOUT_FILENO)));
+                               || (i == when_if_tty && stdout_isatty ()));
             break;
           }
 
@@ -2275,10 +2193,9 @@ decode_switches (int argc, char **argv)
           break;
 
         case QUOTING_STYLE_OPTION:
-          set_quoting_style (NULL,
-                             XARGMATCH ("--quoting-style", optarg,
-                                        quoting_style_args,
-                                        quoting_style_vals));
+          quoting_style_opt = XARGMATCH ("--quoting-style", optarg,
+                                         quoting_style_args,
+                                         quoting_style_vals);
           break;
 
         case TIME_STYLE_OPTION:
@@ -2286,7 +2203,7 @@ decode_switches (int argc, char **argv)
           break;
 
         case SHOW_CONTROL_CHARS_OPTION:
-          qmark_funny_chars = false;
+          hide_control_chars_opt = false;
           break;
 
         case BLOCK_SIZE_OPTION:
@@ -2336,19 +2253,106 @@ decode_switches (int argc, char **argv)
         }
     }
 
+
+  static signed char const default_format[] =
+    {
+      [LS_LS] = -1,
+      [LS_MULTI_COL] = many_per_line,
+      [LS_LONG_FORMAT] = long_format,
+    };
+  int form = format_opt < 0 ? default_format[ls_mode] : format_opt;
+  format = form < 0 ? (stdout_isatty () ? many_per_line : one_per_line) : form;
+
+  /* If the line length was not set by a switch but is needed to determine
+     output, go to the work of obtaining it from the environment.  */
+  ptrdiff_t linelen = width_opt;
+  if (format == many_per_line || format == horizontal || format == with_commas
+      || print_with_color)
+    {
+#ifdef TIOCGWINSZ
+      if (linelen < 0)
+        {
+          /* Suppress bogus warning re comparing ws.ws_col to big integer.  */
+#         if __GNUC_PREREQ (4, 6)
+#          pragma GCC diagnostic push
+#          pragma GCC diagnostic ignored "-Wtype-limits"
+#         endif
+          struct winsize ws;
+          if (stdout_isatty ()
+              && 0 <= ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws)
+              && 0 < ws.ws_col)
+            linelen = ws.ws_col <= MIN (PTRDIFF_MAX, SIZE_MAX) ? ws.ws_col : 0;
+#         if __GNUC_PREREQ (4, 6)
+#          pragma GCC diagnostic pop
+#         endif
+        }
+#endif
+      if (linelen < 0)
+        {
+          char const *p = getenv ("COLUMNS");
+          if (p && *p)
+            {
+              linelen = decode_line_length (p);
+              if (linelen < 0)
+                error (0, 0,
+                       _("ignoring invalid width"
+                         " in environment variable COLUMNS: %s"),
+                       quote (p));
+            }
+        }
+    }
+
+  line_length = linelen < 0 ? 80 : linelen;
+
   /* Determine the max possible number of display columns.  */
   max_idx = line_length / MIN_COLUMN_WIDTH;
   /* Account for first display column not having a separator,
      or line_lengths shorter than MIN_COLUMN_WIDTH.  */
   max_idx += line_length % MIN_COLUMN_WIDTH != 0;
 
-  enum quoting_style qs = get_quoting_style (NULL);
-  align_variable_outer_quotes = format != with_commas
-                                && format != one_per_line
-                                && (line_length || format == long_format)
-                                && (qs == shell_quoting_style
-                                    || qs == shell_escape_quoting_style
-                                    || qs == c_maybe_quoting_style);
+  if (format == many_per_line || format == horizontal || format == with_commas)
+    {
+      if (0 <= tabsize_opt)
+        tabsize = tabsize_opt;
+      else
+        {
+          tabsize = 8;
+          char const *p = getenv ("TABSIZE");
+          if (p)
+            {
+              uintmax_t tmp;
+              if (xstrtoumax (p, NULL, 0, &tmp, "") == LONGINT_OK
+                  && tmp <= SIZE_MAX)
+                tabsize = tmp;
+              else
+                error (0, 0,
+                       _("ignoring invalid tab size"
+                         " in environment variable TABSIZE: %s"),
+                       quote (p));
+            }
+        }
+    }
+
+  qmark_funny_chars = (hide_control_chars_opt < 0
+                       ? ls_mode == LS_LS && stdout_isatty ()
+                       : hide_control_chars_opt);
+
+  int qs = quoting_style_opt;
+  if (qs < 0)
+    qs = getenv_quoting_style ();
+  if (qs < 0)
+    qs = (ls_mode == LS_LS
+          ? (stdout_isatty () ? shell_escape_quoting_style : -1)
+          : escape_quoting_style);
+  if (0 <= qs)
+    set_quoting_style (NULL, qs);
+  qs = get_quoting_style (NULL);
+  align_variable_outer_quotes
+    = ((format == long_format
+        || ((format == many_per_line || format == horizontal) && line_length))
+       && (qs == shell_quoting_style
+           || qs == shell_escape_quoting_style
+           || qs == c_maybe_quoting_style));
   filename_quoting_options = clone_quoting_options (NULL);
   if (qs == escape_quoting_style)
     set_char_quoting (filename_quoting_options, ' ', 1);
@@ -2376,12 +2380,11 @@ decode_switches (int argc, char **argv)
      -lu means show atime and sort by name, -lut means show atime and sort
      by atime.  */
 
-  if ((time_type == time_ctime || time_type == time_atime
-       || time_type == time_btime)
-      && !sort_type_specified && format != long_format)
-    {
-      sort_type = sort_time;
-    }
+  sort_type = (0 <= sort_opt ? sort_opt
+               : (format != long_format
+                  && (time_type == time_ctime || time_type == time_atime
+                      || time_type == time_btime))
+               ? sort_time : sort_name);
 
   if (format == long_format)
     {
@@ -2856,23 +2859,25 @@ parse_ls_color (void)
     color_symlink_as_referent = true;
 }
 
-/* Set the quoting style default if the environment variable
-   QUOTING_STYLE is set.  */
+/* Return the quoting style specified by the environment variable
+   QUOTING_STYLE if set and valid, -1 otherwise.  */
 
-static void
+static int
 getenv_quoting_style (void)
 {
   char const *q_style = getenv ("QUOTING_STYLE");
-  if (q_style)
+  if (!q_style)
+    return -1;
+  int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
+  if (i < 0)
     {
-      int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
-      if (0 <= i)
-        set_quoting_style (NULL, quoting_style_vals[i]);
-      else
-        error (0, 0,
-       _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
-               quote (q_style));
+      error (0, 0,
+             _("ignoring invalid value"
+               " of environment variable QUOTING_STYLE: %s"),
+             quote (q_style));
+      return -1;
     }
+  return quoting_style_vals[i];
 }
 
 /* Set the exit status to report a failure.  If SERIOUS, it is a
@@ -4022,14 +4027,15 @@ static qsortFunc const sort_functions[][2][2][2] =
 
 /* The number of sort keys is calculated as the sum of
      the number of elements in the sort_type enum (i.e., sort_numtypes)
-     the number of elements in the time_type enum (i.e., time_numtypes) - 1
+     -2 because neither sort_time nor sort_none use entries themselves
+     the number of elements in the time_type enum (i.e., time_numtypes)
    This is because when sort_type==sort_time, we have up to
    time_numtypes possible sort keys.
 
    This line verifies at compile-time that the array of sort functions has been
    initialized for all possible sort keys. */
 verify (ARRAY_CARDINALITY (sort_functions)
-        == sort_numtypes + time_numtypes - 1 );
+        == sort_numtypes - 2 + time_numtypes);
 
 /* Set up SORTED_FILE to point to the in-use entries in CWD_FILE, in order.  */
 
@@ -5263,10 +5269,9 @@ attach (char *dest, char const *dirname, char const *name)
    narrowest possible columns.  */
 
 static void
-init_column_info (void)
+init_column_info (size_t max_cols)
 {
   size_t i;
-  size_t max_cols = MIN (max_idx, cwd_n_used);
 
   /* Currently allocated columns in column_info.  */
   static size_t column_info_alloc;
@@ -5276,7 +5281,7 @@ init_column_info (void)
       size_t new_column_info_alloc;
       size_t *p;
 
-      if (max_cols < max_idx / 2)
+      if (!max_idx || max_cols < max_idx / 2)
         {
           /* The number of columns is far less than the display width
              allows.  Grow the allocation, but only so that it's
@@ -5339,9 +5344,9 @@ calculate_columns (bool by_columns)
   /* Normally the maximum number of columns is determined by the
      screen width.  But if few files are available this might limit it
      as well.  */
-  size_t max_cols = MIN (max_idx, cwd_n_used);
+  size_t max_cols = 0 < max_idx && max_idx < cwd_n_used ? max_idx : cwd_n_used;
 
-  init_column_info ();
+  init_column_info (max_cols);
 
   /* Compute the maximum number of possible columns.  */
   for (filesno = 0; filesno < cwd_n_used; ++filesno)
