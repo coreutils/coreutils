@@ -21,7 +21,15 @@ print_ver_ ls
 
 mkdir dir && touch dir/a dir/b dir/cc || framework_failure_
 
-LC_ALL=C ls --zero dir >out || fail=1
+allowed_options='-l'  # explict -l with --zero is allowed
+LC_ALL=C ls $allowed_options --zero dir >out || fail=1
+grep '^total' out || fail=1  # Ensure -l honored
+
+disallowed_options='-l --dired'  # dired only enabled with -l
+returns_ 2 ls $disallowed_options --zero dir || fail=1
+
+disabled_options='--color=always -x -m -C -Q -q'
+LC_ALL=C ls $disabled_options --zero dir >out || fail=1
 tr '\n' '\0' <<EOF >exp
 a
 b
