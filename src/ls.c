@@ -838,13 +838,13 @@ enum
   HIDE_OPTION,
   HYPERLINK_OPTION,
   INDICATOR_STYLE_OPTION,
-  NULL_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
   SI_OPTION,
   SORT_OPTION,
   TIME_OPTION,
-  TIME_STYLE_OPTION
+  TIME_STYLE_OPTION,
+  ZERO_OPTION,
 };
 
 static struct option const long_options[] =
@@ -859,7 +859,6 @@ static struct option const long_options[] =
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
   {"kibibytes", no_argument, NULL, 'k'},
-  {"null", no_argument, NULL, NULL_OPTION},
   {"numeric-uid-gid", no_argument, NULL, 'n'},
   {"no-group", no_argument, NULL, 'G'},
   {"hide-control-chars", no_argument, NULL, 'q'},
@@ -888,6 +887,7 @@ static struct option const long_options[] =
   {"tabsize", required_argument, NULL, 'T'},
   {"time", required_argument, NULL, TIME_OPTION},
   {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
+  {"zero", no_argument, NULL, ZERO_OPTION},
   {"color", optional_argument, NULL, COLOR_OPTION},
   {"hyperlink", optional_argument, NULL, HYPERLINK_OPTION},
   {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
@@ -1087,7 +1087,7 @@ dired_dump_obstack (char const *prefix, struct obstack *os)
           intmax_t p = pos[i];
           printf (" %"PRIdMAX, p);
         }
-      putchar (eolbyte);
+      putchar ('\n');
     }
 }
 
@@ -1777,7 +1777,7 @@ main (int argc, char **argv)
     {
       print_current_files ();
       if (pending_dirs)
-        dired_outbyte (eolbyte);
+        dired_outbyte ('\n');
     }
   else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
     print_dir_name = false;
@@ -1845,9 +1845,8 @@ main (int argc, char **argv)
       /* No need to free these since we're about to exit.  */
       dired_dump_obstack ("//DIRED//", &dired_obstack);
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
-      printf ("//DIRED-OPTIONS// --quoting-style=%s%c",
-              quoting_style_args[get_quoting_style (filename_quoting_options)],
-              eolbyte);
+      printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
+              quoting_style_args[get_quoting_style (filename_quoting_options)]);
     }
 
   if (LOOP_DETECT)
@@ -2188,10 +2187,6 @@ decode_switches (int argc, char **argv)
                                        indicator_style_types);
           break;
 
-        case NULL_OPTION:
-          eolbyte = 0;
-          break;
-
         case QUOTING_STYLE_OPTION:
           quoting_style_opt = XARGMATCH ("--quoting-style", optarg,
                                          quoting_style_args,
@@ -2227,6 +2222,15 @@ decode_switches (int argc, char **argv)
           print_scontext = true;
           break;
 
+        case ZERO_OPTION:
+          eolbyte = 0;
+          hide_control_chars_opt = false;
+          if (format_opt != long_format)
+            format_opt = one_per_line;
+          print_with_color = false;
+          quoting_style_opt = literal_quoting_style;
+          break;
+
         case_GETOPT_HELP_CHAR;
 
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -2253,15 +2257,11 @@ decode_switches (int argc, char **argv)
         }
     }
 
-
-  static signed char const default_format[] =
-    {
-      [LS_LS] = -1,
-      [LS_MULTI_COL] = many_per_line,
-      [LS_LONG_FORMAT] = long_format,
-    };
-  int form = format_opt < 0 ? default_format[ls_mode] : format_opt;
-  format = form < 0 ? (stdout_isatty () ? many_per_line : one_per_line) : form;
+  format = (0 <= format_opt ? format_opt
+            : ls_mode == LS_LS ? (stdout_isatty ()
+                                  ? many_per_line : one_per_line)
+            : ls_mode == LS_MULTI_COL ? many_per_line
+            : /* ls_mode == LS_LONG_FORMAT */ long_format);
 
   /* If the line length was not set by a switch but is needed to determine
      output, go to the work of obtaining it from the environment.  */
@@ -2366,11 +2366,13 @@ decode_switches (int argc, char **argv)
   dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);
 
-  /* --dired is meaningful only with --format=long (-l).
+  /* --dired is meaningful only with --format=long (-l) and sans --hyperlink.
      Otherwise, ignore it.  FIXME: warn about this?
      Alternatively, make --dired imply --format=long?  */
-  if (dired && (format != long_format || print_hyperlink))
-    dired = false;
+  dired &= (format == long_format) & !print_hyperlink;
+
+  if (eolbyte < dired)
+    die (LS_FAILURE, 0, _("--dired and --zero are incompatible"));
 
   /* If -c or -u is specified and not -l (or any other option that implies -l),
      and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
@@ -2980,7 +2982,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   if (recursive || print_dir_name)
     {
       if (!first)
-        dired_outbyte (eolbyte);
+        dired_outbyte ('\n');
       first = false;
       dired_indent ();
 
@@ -2997,8 +2999,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 
       free (absolute_name);
 
-      dired_outbyte (':');
-      dired_outbyte (eolbyte);
+      dired_outstring (":\n");
     }
 
   /* Read the directory entries, and insert the subfiles into the 'cwd_file'
@@ -5488,7 +5489,6 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
-      --null                 end each output line with NUL, not newline\n\
   -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
   -N, --literal              print entry names without quoting\n\
   -o                         like -l, but do not list group information\n\
@@ -5542,6 +5542,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -Z, --context              print any security context of each file\n\
+      --zero                 end each output line with NUL, not newline\n\
   -1                         list one file per line.  Avoid '\\n' with -q or -b\
 \n\
 "), stdout);

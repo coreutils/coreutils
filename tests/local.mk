@@ -609,10 +609,10 @@ all_tests =					\
   tests/ls/getxattr-speedup.sh			\
   tests/ls/group-dirs.sh			\
   tests/ls/hex-option.sh			\
+  tests/ls/hyperlink.sh				\
   tests/ls/infloop.sh				\
   tests/ls/inode.sh				\
   tests/ls/m-option.sh				\
-  tests/ls/null-option.sh			\
   tests/ls/w-option.sh				\
   tests/ls/multihardlink.sh			\
   tests/ls/no-arg.sh				\
@@ -635,7 +635,7 @@ all_tests =					\
   tests/ls/time-style-diag.sh			\
   tests/ls/sort-width-option.sh			\
   tests/ls/x-option.sh				\
-  tests/ls/hyperlink.sh				\
+  tests/ls/zero-option.sh			\
   tests/mkdir/p-1.sh				\
   tests/mkdir/p-2.sh				\
   tests/mkdir/p-3.sh				\

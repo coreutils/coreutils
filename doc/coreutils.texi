@@ -8137,8 +8137,14 @@ option.  It does not affect the file size written by @option{-l}.
 List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space).
 
-@item --null
-@opindex --null
+@item --zero
+@opindex --zero
+This option is incompatible with the @option{-D} or @option{--dired} option.
+This option also implies the options
+@option{--show-control-chars},
+@option{-1} or @option{--format=single-column},
+@option{--color=none}, and
+@option{-N} or @option{--quoting-style=literal}.
 @outputNUL
 
 @item -p

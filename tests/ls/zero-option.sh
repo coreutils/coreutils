@@ -1,5 +1,5 @@
 #!/bin/sh
-# Verify behavior of ls --null.
+# Verify behavior of ls --zero.
 
 # Copyright 2021 Free Software Foundation, Inc.
 
@@ -21,7 +21,7 @@ print_ver_ ls
 
 mkdir dir && touch dir/a dir/b dir/cc || framework_failure_
 
-LC_ALL=C ls --null dir >out || fail=1
+LC_ALL=C ls --zero dir >out || fail=1
 tr '\n' '\0' <<EOF >exp
 a
 b
