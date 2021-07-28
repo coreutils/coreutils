@@ -203,7 +203,7 @@ and those files usually should not be removed.\n\
 The optional HOW parameter indicates how to remove a directory entry:\n\
 'unlink' => use a standard unlink call.\n\
 'wipe' => also first obfuscate bytes in the name.\n\
-'wipesync' => also sync each obfuscated byte to disk.\n\
+'wipesync' => also sync each obfuscated byte to the device.\n\
 The default mode is 'wipesync', but note it can be expensive.\n\
 \n\
 "), stdout);
@@ -629,7 +629,7 @@ free_pattern_mem:
  * The passes start and end with a random pass, and the passes in between
  * are done in random order.  The idea is to deprive someone trying to
  * reverse the process of knowledge of the overwrite patterns, so they
- * have the additional step of figuring out what was done to the disk
+ * have the additional step of figuring out what was done to the device
  * before they can try to reverse or cancel it.
  *
  * First, all possible 1-bit patterns.  There are two of them.
@@ -1018,7 +1018,7 @@ incname (char *name, size_t len)
 /*
  * Repeatedly rename a file with shorter and shorter names,
  * to obliterate all traces of the file name (and length) on any system
- * that adds a trailing delimiter to on-disk file names and reuses
+ * that adds a trailing delimiter to on-device file names and reuses
  * the same directory slot.  Finally, unlink it.
  * The passed-in filename is modified in place to the new filename.
  * (Which is unlinked if this function succeeds, but is still present if

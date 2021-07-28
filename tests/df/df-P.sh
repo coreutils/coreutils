@@ -23,7 +23,7 @@ print_ver_ df
               df -P . > t1 || fail=1
 BLOCK_SIZE=1M df -P . > t2 || fail=1
 
-# Since disk utilization may be changing, compare only df's header line.
+# Since file system utilization may be changing, compare only df's header line.
 # That records the block size.  E.g., for "1M", it would be:
 # Filesystem         1048576-blocks      Used Available Capacity Mounted on
 # while for 1K, it would be

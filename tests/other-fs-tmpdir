@@ -45,7 +45,7 @@ done
 
 if test -z "$other_partition_tmpdir"; then
   skip_ \
-"requires a writable directory on a different disk partition,
+"requires a writable directory on a different file system,
 and I couldn't find one.  I tried these:
   $CANDIDATE_TMP_DIRS
 Set your environment variable CANDIDATE_TMP_DIRS to make

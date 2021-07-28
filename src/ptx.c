@@ -2024,7 +2024,7 @@ main (int argc, char **argv)
     {
       BLOCK *text_buffer = text_buffers + file_index;
 
-      /* Read the file in core, then study it.  */
+      /* Read the file contents into memory, then study it.  */
 
       swallow_file_in_memory (input_file_name[file_index], text_buffer);
       find_occurs_in_text (file_index);

@@ -21,7 +21,7 @@ print_ver_ rm
 
 very_expensive_
 
-# Using rm -rf to remove a 400k-entry directory takes:
+# In a circa 2008 benchmark, using rm -rf to remove a 400k-entry directory took:
 # - 9 seconds with the patch, on a 2-yr-old system
 # - 350 seconds without the patch, on a high-end system (disk 20-30% faster)
 threshold_seconds=60
@@ -32,9 +32,9 @@ n=400000
 # Choose a value that is large enough to ensure an accidentally
 # regressed rm would require much longer than $threshold_seconds to remove
 # the directory.  With n=400k, pre-patch GNU rm would require about 350
-# seconds even on a fast disk.  On a relatively modern system, the
+# seconds even on a fast disk.  On a circa 2006 system, the
 # patched version of rm requires about 10 seconds, so even if you
-# choose to enable very expensive tests with a disk that is much slower,
+# choose to enable very expensive tests with a device that is much slower,
 # the test should still succeed.
 
 # Skip unless "." is on an ext[34] file system.

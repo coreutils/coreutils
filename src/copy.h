@@ -41,7 +41,7 @@ enum Sparse_type
      create a corresponding hole in DEST.  There is a performance penalty
      here because CP has to search for holes in SRC.  But if the holes are
      big enough, that penalty can be offset by the decrease in the amount
-     of data written to disk.   */
+     of data written to the file system.   */
   SPARSE_ALWAYS
 };
 

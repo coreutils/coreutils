@@ -36,7 +36,7 @@ if false; then
 # Require more space than we'll actually use, so that
 # tests run in parallel do not run out of space.
 # Otherwise, with inadequate space, simply running the following
-# fallocate command would induce a temporary disk-full condition,
+# fallocate command would induce a temporary file-system-full condition,
 # which would cause failure of unrelated tests run in parallel.
 require_file_system_bytes_free_ 800000000
 

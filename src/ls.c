@@ -5477,7 +5477,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
-  -k, --kibibytes            default to 1024-byte blocks for disk usage;\n\
+  -k, --kibibytes            default to 1024-byte blocks for file system usage;\n\
                                used only with -s and per directory totals\n\
 "), stdout);
       fputs (_("\

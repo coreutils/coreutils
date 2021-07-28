@@ -2616,7 +2616,7 @@ copy_internal (char const *src_name, char const *dst_name,
       /* If this directory has been copied before during the
          recursion, there is a symbolic link to an ancestor
          directory of the symbolic link.  It is impossible to
-         continue to copy this, unless we've got an infinite disk.  */
+         continue to copy this, unless we've got an infinite file system.  */
 
       if (is_ancestor (&src_sb, ancestors))
         {

@@ -132,7 +132,7 @@ enum
   {
     /* The number of times we should try to fork a compression process
        (we retry if the fork call fails).  We don't _need_ to compress
-       temp files, this is just to reduce disk access, so this number
+       temp files, this is just to reduce file system access, so this number
        can be small.  Each retry doubles in duration.  */
     MAX_FORK_TRIES_COMPRESS = 4,
 
@@ -171,7 +171,7 @@ enum blanktype { bl_start, bl_end, bl_both };
 /* The character marking end of line. Default to \n. */
 static char eolchar = '\n';
 
-/* Lines are held in core as counted strings. */
+/* Lines are held in memory as counted strings. */
 struct line
 {
   char *text;			/* Text of the line. */
@@ -3036,7 +3036,7 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
       else
         write_line (smallest, ofp, output_file);
 
-      /* Check if we need to read more lines into core. */
+      /* Check if we need to read more lines into memory. */
       if (base[ord[0]] < smallest)
         cur[ord[0]] = smallest - 1;
       else

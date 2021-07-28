@@ -29,7 +29,7 @@ because file offsets are only 32 bits on this file system'
 fi
 
 # FIXME: this should be a test of dd.
-# On some systems (at least linux-2.4.18 + NFS to disks on a Solaris system)
+# On some systems (at least linux-2.4.18 + NFS to Solaris system)
 # the 'dd' command above mistakenly creates a file of length '0', yet
 # doesn't fail.  The root of that failure is that the ftruncate call
 # returns zero but doesn't do its job.  Detect this failure.

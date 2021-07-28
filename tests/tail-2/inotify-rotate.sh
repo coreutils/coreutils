@@ -54,7 +54,7 @@ for i in $(seq 50); do
     rm -f k x out
 
     # Normally less than a second is required here, but with heavy load
-    # and a lot of disk activity, even 20 seconds is insufficient, which
+    # and a lot of file system activity, even 20 seconds is insufficient, which
     # leads to this timeout killing tail before the "ok" is written below.
     >k && >x || framework_failure_ failed to initialize files
     timeout 60 tail $fastpoll -F k > out 2>&1 & pid=$!

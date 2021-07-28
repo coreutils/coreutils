@@ -1230,7 +1230,7 @@ iwrite (int fd, char const *buf, size_t size)
       invalidate_cache (STDOUT_FILENO, 0);
 
       /* Attempt to ensure that that final block is committed
-         to disk as quickly as possible.  */
+         to stable storage as quickly as possible.  */
       conversions_mask |= C_FSYNC;
 
       /* After the subsequent fsync we'll call invalidate_cache
@@ -2112,7 +2112,7 @@ dd_copy (void)
      extra two bytes.  */
 
   /* Some devices require alignment on a sector or page boundary
-     (e.g. character disk devices).  Align the input buffer to a
+     (e.g. character flash or disk devices).  Align the input buffer to a
      page boundary to cover all bases.  Note that due to the swab
      algorithm, we must have at least one byte in the page before
      the input buffer;  thus we allocate 2 pages of slop in the
@@ -2120,8 +2120,8 @@ dd_copy (void)
 
      The page alignment is necessary on any Linux kernel that supports
      either the SGI raw I/O patch or Steven Tweedies raw I/O patch.
-     It is necessary when accessing raw (i.e., character special) disk
-     devices on Unixware or other SVR4-derived system.  */
+     It is necessary when accessing raw (i.e., character special)
+     storage devices on SVR4-derived systems.  */
 
   if (skip_records != 0 || skip_bytes != 0)
     {

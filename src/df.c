@@ -1,4 +1,4 @@
-/* df - summarize free disk space
+/* df - summarize free file system space
    Copyright (C) 1991-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ static bool file_systems_processed;
 
 /* If true, invoke the 'sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
-   busy disks.  Note that this may make a difference on some systems --
+   busy file systems.  This may make a difference on some systems --
    SunOS 4.1.3, for one.  It is *not* necessary on GNU/Linux.  */
 static bool require_sync;
 
@@ -986,23 +986,23 @@ add_to_grand_total (struct field_values_t *bv, struct field_values_t *iv)
                             bv->negate_available);
 }
 
-/* Obtain a space listing for the disk device with absolute file name DISK.
+/* Obtain a space listing for the device with absolute file name DEVICE.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
-   file system on DISK.
+   file system on DEVICE.
    If STAT_FILE is non-null, it is the name of a file within the file
    system that the user originally asked for; this provides better
    diagnostics, and sometimes it provides better results on networked
    file systems that give different free-space results depending on
    where in the file system you probe.
-   If FSTYPE is non-NULL, it is the type of the file system on DISK.
-   If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
+   If FSTYPE is non-NULL, it is the type of the file system on DEVICE.
+   If MOUNT_POINT is non-NULL, then DEVICE may be NULL -- certain systems may
    not be able to produce statistics in this case.
    ME_DUMMY and ME_REMOTE are the mount entry flags.
    Caller must set PROCESS_ALL to true when iterating over all entries, as
    when df is invoked with no non-option argument.  See below for details.  */
 
 static void
-get_dev (char const *disk, char const *mount_point, char const* file,
+get_dev (char const *device, char const *mount_point, char const* file,
          char const *stat_file, char const *fstype,
          bool me_dummy, bool me_remote,
          const struct fs_usage *force_fsu,
@@ -1027,12 +1027,12 @@ get_dev (char const *disk, char const *mount_point, char const* file,
      It would be better to report on the unmounted file system,
      but statfs doesn't do that on most systems.  */
   if (!stat_file)
-    stat_file = mount_point ? mount_point : disk;
+    stat_file = mount_point ? mount_point : device;
 
   struct fs_usage fsu;
   if (force_fsu)
     fsu = *force_fsu;
-  else if (get_fs_usage (stat_file, disk, &fsu))
+  else if (get_fs_usage (stat_file, device, &fsu))
     {
       /* If we can't access a system provided entry due
          to it not being present (now), or due to permissions,
@@ -1064,7 +1064,7 @@ get_dev (char const *disk, char const *mount_point, char const* file,
       if (stat (stat_file, &sb) == 0)
         {
           struct mount_entry const * dev_me = me_for_dev (sb.st_dev);
-          if (dev_me && ! STREQ (dev_me->me_devname, disk)
+          if (dev_me && ! STREQ (dev_me->me_devname, device)
               && (! dev_me->me_remote || ! me_remote))
             {
               fstype = "-";
@@ -1083,13 +1083,13 @@ get_dev (char const *disk, char const *mount_point, char const* file,
 
   alloc_table_row ();
 
-  if (! disk)
-    disk = "-";			/* unknown */
+  if (! device)
+    device = "-";		/* unknown */
 
   if (! file)
     file = "-";			/* unspecified */
 
-  char *dev_name = xstrdup (disk);
+  char *dev_name = xstrdup (device);
   char *resolved_dev;
 
   /* On some systems, dev_name is a long-named symlink like
@@ -1280,20 +1280,20 @@ last_device_for_mount (char const* mount)
     return NULL;
 }
 
-/* If DISK corresponds to a mount point, show its usage
+/* If DEVICE corresponds to a mount point, show its usage
    and return true.  Otherwise, return false.  */
 static bool
-get_disk (char const *disk)
+get_device (char const *device)
 {
   struct mount_entry const *me;
   struct mount_entry const *best_match = NULL;
   bool best_match_accessible = false;
   bool eclipsed_device = false;
-  char const *file = disk;
+  char const *file = device;
 
-  char *resolved = canonicalize_file_name (disk);
+  char *resolved = canonicalize_file_name (device);
   if (resolved && IS_ABSOLUTE_FILE_NAME (resolved))
-    disk = resolved;
+    device = resolved;
 
   size_t best_match_len = SIZE_MAX;
   for (me = mount_list; me; me = me->me_next)
@@ -1304,7 +1304,7 @@ get_disk (char const *disk)
       if (canon_dev && IS_ABSOLUTE_FILE_NAME (canon_dev))
         devname = canon_dev;
 
-      if (STREQ (disk, devname))
+      if (STREQ (device, devname))
         {
           char *last_device = last_device_for_mount (me->me_mountdir);
           eclipsed_device = last_device && ! STREQ (last_device, devname);
@@ -1313,10 +1313,10 @@ get_disk (char const *disk)
           if (! eclipsed_device
               && (! best_match_accessible || len < best_match_len))
             {
-              struct stat disk_stats;
+              struct stat device_stats;
               bool this_match_accessible = false;
 
-              if (stat (me->me_mountdir, &disk_stats) == 0)
+              if (stat (me->me_mountdir, &device_stats) == 0)
                 best_match_accessible = this_match_accessible = true;
 
               if (this_match_accessible
@@ -1361,12 +1361,12 @@ get_disk (char const *disk)
 }
 
 /* Figure out which device file or directory POINT is mounted on
-   and show its disk usage.
+   and show its device usage.
    STATP must be the result of 'stat (POINT, STATP)'.  */
 static void
 get_point (char const *point, const struct stat *statp)
 {
-  struct stat disk_stats;
+  struct stat device_stats;
   struct mount_entry *me;
   struct mount_entry const *best_match = NULL;
 
@@ -1398,8 +1398,8 @@ get_point (char const *point, const struct stat *statp)
     }
   free (resolved);
   if (best_match
-      && (stat (best_match->me_mountdir, &disk_stats) != 0
-          || disk_stats.st_dev != statp->st_dev))
+      && (stat (best_match->me_mountdir, &device_stats) != 0
+          || device_stats.st_dev != statp->st_dev))
     best_match = NULL;
 
   if (! best_match)
@@ -1407,8 +1407,8 @@ get_point (char const *point, const struct stat *statp)
       {
         if (me->me_dev == (dev_t) -1)
           {
-            if (stat (me->me_mountdir, &disk_stats) == 0)
-              me->me_dev = disk_stats.st_dev;
+            if (stat (me->me_mountdir, &device_stats) == 0)
+              me->me_dev = device_stats.st_dev;
             else
               {
                 /* Report only I/O errors.  Other errors might be
@@ -1430,8 +1430,8 @@ get_point (char const *point, const struct stat *statp)
             && (!best_match || best_match->me_dummy || !me->me_dummy))
           {
             /* Skip bogus mtab entries.  */
-            if (stat (me->me_mountdir, &disk_stats) != 0
-                || disk_stats.st_dev != me->me_dev)
+            if (stat (me->me_mountdir, &device_stats) != 0
+                || device_stats.st_dev != me->me_dev)
               me->me_dev = (dev_t) -2;
             else
               best_match = me;
@@ -1458,14 +1458,14 @@ get_point (char const *point, const struct stat *statp)
     }
 }
 
-/* Determine what kind of node NAME is and show the disk usage
+/* Determine what kind of node NAME is and show the device usage
    for it.  STATP is the results of 'stat' on NAME.  */
 
 static void
 get_entry (char const *name, struct stat const *statp)
 {
   if ((S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-      && get_disk (name))
+      && get_device (name))
     return;
 
   get_point (name, statp);

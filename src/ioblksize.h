@@ -59,7 +59,7 @@
 
    Note that this is to minimize system call overhead.
    Other values may be appropriate to minimize file system
-   or disk overhead.  For example on my current GNU/Linux system
+   overhead.  For example on my current GNU/Linux system
    the readahead setting is 128KiB which was read using:
 
    file="."

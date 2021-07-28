@@ -49,7 +49,7 @@ struct successor
   struct successor *next;
 };
 
-/* Each string is held in core as the head of a list of successors.  */
+/* Each string is held in memory as the head of a list of successors.  */
 struct item
 {
   char const *str;

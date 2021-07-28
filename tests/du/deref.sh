@@ -36,8 +36,8 @@ du -sD slink b > /dev/null 2>&1 || fail=1
 # This used to fail to report the dangling symlink.
 returns_ 1 du -L dangle > /dev/null 2>&1 || fail=1
 
-# du -L used to mess up, either by counting the symlink's disk space itself
-# (-L should follow symlinks, not count their space)
+# du -L used to mess up, either by counting the symlink's file system space
+# itself (-L should follow symlinks, not count their space)
 # or (briefly in July 2010) by omitting the entry for "a".
 du_L_output=$(du -L a) || fail=1
 du_lL_output=$(du -lL a) || fail=1

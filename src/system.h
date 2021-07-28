@@ -365,7 +365,7 @@ enum
 /* Define away proper_name (leaving proper_name_utf8, which affects far
    fewer programs), since it's not worth the cost of adding ~17KB to
    the x86_64 text size of every single program.  This avoids a 40%
-   (almost ~2MB) increase in the on-disk space utilization for the set
+   (almost ~2MB) increase in the file system space utilization for the set
    of the 100 binaries. */
 #define proper_name(x) (x)
 

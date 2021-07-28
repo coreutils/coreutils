@@ -83,7 +83,7 @@ for i in $built_programs; do
   env $i --help    >/dev/null || fail=1
   env $i --version >/dev/null || fail=1
 
-  # Make sure they fail upon 'disk full' error.
+  # Make sure they fail upon 'file system full' error.
   if test -w /dev/full && test -c /dev/full; then
     test $i = [ && prog=lbracket || prog=$(echo $i|sed "s/$EXEEXT$//")
     eval "expected=\$expected_failure_status_$prog"

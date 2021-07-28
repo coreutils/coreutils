@@ -30,7 +30,7 @@ You can get a copy of the source repository like this:
 
 As an optional step, if you already have a copy of the gnulib git
 repository, then you can use it as a reference to reduce download
-time and disk space requirements:
+time and file system space requirements:
 
         $ export GNULIB_SRCDIR=/path/to/gnulib
 

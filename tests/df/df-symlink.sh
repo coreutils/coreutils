@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that df dereferences symlinks to disk nodes
+# Ensure that df dereferences symlinks to file system nodes
 
 # Copyright (C) 2013-2021 Free Software Foundation, Inc.
 
@@ -19,12 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ df
 
-disk=$(df --out=source '.' | tail -n1) ||
+file_system=$(df --out=source '.' | tail -n1) ||
   skip_ "cannot determine '.' file system"
 
-ln -s "$disk" symlink || framework_failure_
+ln -s "$file_system" symlink || framework_failure_
 
-df --out=source,target "$disk" > exp || skip_ "cannot get info for $disk"
+df --out=source,target "$file_system" > exp ||
+  skip_ "cannot get info for $file_system"
 df --out=source,target symlink > out || fail=1
 compare exp out || fail=1
 
@@ -34,7 +35,7 @@ compare exp out || fail=1
 # I.e., '.' => /dev/mapper/fedora-home -> /dev/dm-2
 # Restrict this test to systems with a 1:1 mapping between
 # source and target.  This excludes for example BTRFS sub-volumes.
-if test "$(df --output=source | grep -F "$disk" | wc -l)" = 1; then
+if test "$(df --output=source | grep -F "$file_system" | wc -l)" = 1; then
   df --out=source,target '.' > out || fail=1
   compare exp out || fail=1
 fi

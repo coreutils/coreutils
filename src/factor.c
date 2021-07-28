@@ -65,7 +65,8 @@
       from a prime.  We might instead compute the inverse on-the-fly.
 
     * Tune trial division table size (not forgetting that this is a standalone
-      program where the table will be read from disk for each invocation).
+      program where the table will be read from secondary storage for
+      each invocation).
 
     * Implement less naive powm, using k-ary exponentiation for k = 3 or
       perhaps k = 4.
