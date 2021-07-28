@@ -1938,15 +1938,15 @@ decode_switches (int argc, char **argv)
           break;
 
         case 'f':
-          /* Same as enabling -a -U and disabling -l -s.  */
+          /* Same as -a -U -1 --color=none --hyperlink=none,
+             while disabling -s.  */
           ignore_mode = IGNORE_MINIMAL;
           sort_opt = sort_none;
-          /* disable -l */
           if (format_opt == long_format)
             format_opt = -1;
-          print_block_size = false;	/* disable -s */
-          print_with_color = false;	/* disable --color */
-          print_hyperlink = false;	/* disable --hyperlink */
+          print_with_color = false;
+          print_hyperlink = false;
+          print_block_size = false;
           break;
 
         case FILE_TYPE_INDICATOR_OPTION: /* --file-type */
@@ -5428,7 +5428,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
-  -f                         do not sort, enable -aU, disable -ls --color\n\
+  -f                         list all entries in directory order\n\
   -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries;\n\
                                WHEN can be 'always' (default if omitted),\n\
                                'auto', or 'never'\n\
@@ -5543,8 +5543,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -X                         sort alphabetically by entry extension\n\
   -Z, --context              print any security context of each file\n\
       --zero                 end each output line with NUL, not newline\n\
-  -1                         list one file per line.  Avoid '\\n' with -q or -b\
-\n\
+  -1                         list one file per line\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);

@@ -7350,7 +7350,8 @@ and @command{vdir}, which list information about files.
 
 The @command{ls} program lists information about files (of any type,
 including directories).  Options and file arguments can be intermixed
-arbitrarily, as usual.
+arbitrarily, as usual.  Later options override earlier options that
+are incompatible.
 
 For non-option command-line arguments that are directories, by default
 @command{ls} lists the contents of directories, not recursively, and
@@ -7460,10 +7461,10 @@ Do not dereference symbolic links, with one exception:
 if a command line argument specifies a symbolic link that refers to
 a directory, show information for that directory rather than for the
 link itself.
-This is the default behavior when no other dereferencing-related
-option has been specified (@option{--classify} (@option{-F}),
+This is the default behavior unless long format is being used
+or any of the following options is in effect:
+@option{--classify} (@option{-F}),
 @option{--directory} (@option{-d}),
-(@option{-l}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line} (@option{-H})).
 
@@ -7541,7 +7542,7 @@ default, only file names are shown.
 @item --author
 @opindex --author
 @cindex hurd, author, printing
-List each file's author when producing long format directory listings.
+In long format, list each file's author.
 In GNU/Hurd, file authors can differ from their owners, but in other
 operating systems the two are the same.
 
@@ -7550,8 +7551,7 @@ operating systems the two are the same.
 @opindex -D
 @opindex --dired
 @cindex dired Emacs mode support
-With the long listing (@option{-l}) format, print an additional line after
-the main output:
+Print an additional line after the main output:
 
 @example
 //DIRED// @var{beg1} @var{end1} @var{beg2} @var{end2} @dots{}
@@ -7563,7 +7563,8 @@ byte position of the beginning and end of each file name in the output.
 This makes it easy for Emacs to find the names, even when they contain
 unusual characters such as space or newline, without fancy searching.
 
-If directories are being listed recursively (@option{-R}), output a similar
+If directories are being listed recursively via
+@option{--recursive} (@option{-R}), output a similar
 line with offsets for each subdirectory name:
 
 @example
@@ -7608,7 +7609,7 @@ $ ls -gloRF --dired a
 //DIRED-OPTIONS// --quoting-style=literal
 @end example
 
-Note that the pairs of offsets on the @samp{//DIRED//} line above delimit
+The pairs of offsets on the @samp{//DIRED//} line above delimit
 these names: @file{f1}, @file{f2}, @file{sub}, @file{sub2}, @file{deeper},
 @file{file}.
 The offsets on the @samp{//SUBDIRED//} line delimit the following
@@ -7623,11 +7624,12 @@ $ dd bs=1 skip=222 count=6 < out 2>/dev/null; echo
 deeper
 @end example
 
-Note that although the listing above includes a trailing slash
+Although the listing above includes a trailing slash
 for the @samp{deeper} entry, the offsets select the name without
 the trailing slash.  However, if you invoke @command{ls} with @option{--dired}
-along with an option like @option{--escape} (aka @option{-b}) and operate
-on a file whose name contains special characters, notice that the backslash
+(@option{-D}) along with an option like
+@option{--escape} (@option{-b}) and operate
+on a file whose name contains special characters, the backslash
 @emph{is} included:
 
 @example
@@ -7638,29 +7640,33 @@ $ ls -blog --dired 'a b'
 //DIRED-OPTIONS// --quoting-style=escape
 @end example
 
-If you use a quoting style that adds quote marks
-(e.g., @option{--quoting-style=c}), then the offsets include the quote marks.
+If you use a quoting style like @option{--quoting-style=c} (@option{-Q})
+that adds quote marks, then the offsets include the quote marks.
 So beware that the user may select the quoting style via the environment
 variable @env{QUOTING_STYLE}@.  Hence, applications using @option{--dired}
-should either specify an explicit @option{--quoting-style=literal} option
-(aka @option{-N} or @option{--literal}) on the command line, or else be
+should either specify an explicit @option{--quoting-style=literal}
+(@option{-N}) option on the command line, or else be
 prepared to parse the escaped names.
+
+The @option{--dired} (@option{-D}) option has well-defined behavior
+only when long format is in effect and hyperlinks are disabled (e.g.,
+@option{--hyperlink=none}).
 
 @item --full-time
 @opindex --full-time
-Produce long format directory listings, and list times in full.  It is
-equivalent to using @option{--format=long} with
+Produce long format, and list times in full.  It is
+equivalent to using @option{--format=long} (@option{-l}) with
 @option{--time-style=full-iso} (@pxref{Formatting file timestamps}).
 
 @item -g
 @opindex -g
-Produce long format directory listings, but don't display owner information.
+Produce long format, but omit owner information.
 
 @item -G
 @itemx --no-group
 @opindex -G
 @opindex --no-group
-Inhibit display of group information in a long format directory listing.
+Inhibit display of group information in long format.
 (This is the default in some non-GNU versions of @command{ls}, so we
 provide this option for compatibility.)
 
@@ -7682,6 +7688,7 @@ uniquely identifies each file within a particular file system.)
 @opindex --format
 @opindex long ls @r{format}
 @opindex verbose ls @r{format}
+Produce long format.
 In addition to the name of each file, print the file type, file mode bits,
 number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
@@ -7693,7 +7700,8 @@ Print question marks for other information that
 cannot be determined.
 
 Normally the size is printed as a byte count without punctuation, but
-this can be overridden (@pxref{Block size}).  For example, @option{-h}
+this can be overridden (@pxref{Block size}).
+For example, @option{--human-readable} (@option{-h})
 prints an abbreviated, human-readable count, and
 @samp{--block-size="'1"} prints a byte count with the thousands
 separator of the current locale.
@@ -7798,14 +7806,15 @@ is marked with a @samp{+} character.
 @opindex --numeric-uid-gid
 @cindex numeric uid and gid
 @cindex numeric user and group IDs
-Produce long format directory listings, but
+Produce long format, but
 display right-justified numeric user and group IDs
 instead of left-justified owner and group names.
 
 @item -o
 @opindex -o
-Produce long format directory listings, but don't display group information.
-It is equivalent to using @option{--format=long} with @option{--no-group} .
+Produce long format, but omit group information.
+It is equivalent to using @option{--format=long} (@option{-l})
+with @option{--no-group} (@option{-G}).
 
 @item -s
 @itemx --size
@@ -7836,8 +7845,7 @@ it also affects the HP-UX @command{ls} program.
 @cindex SELinux
 @cindex security context
 Display the SELinux security context or @samp{?} if none is found.
-When used with the @option{-l} option, print the security context
-to the left of the size column.
+In long format, print the security context to the left of the size column.
 
 @end table
 
@@ -7860,20 +7868,20 @@ it outputs.  By default, sorting is done by character code
 @opindex ctime@r{, printing or sorting by}
 @opindex status time@r{, printing or sorting by}
 @opindex use time@r{, printing or sorting files by}
-If the long listing format (e.g., @option{-l}, @option{-o}) is being used,
+In long format,
 print the status change timestamp (the ctime) instead of the mtime.
-When explicitly sorting by time (@option{--sort=time} or @option{-t})
-or when not using a long listing format,
+When sorting by time or when not using long format,
 sort according to the ctime.  @xref{File timestamps}.
 
 @item -f
 @opindex -f
 @cindex unsorted directory listing
 @cindex directory order, listing by
-Primarily, like @option{-U}---do not sort; list the files in whatever
-order they are stored in the directory.  But also enable @option{-a} (list
-all files) and disable @option{-l}, @option{--color}, and @option{-s} (if they
-were specified before the @option{-f}).
+Produce an unsorted directory listing.
+This is equivalent to the combination of @option{--all} (@option{-a}),
+@option{--sort=none} (@option{-U}), @option{-1},
+@option{--color=none}, and @option{--hyperlink=none},
+while also disabling any previous use of @option{--size} (@option{-s}).
 
 @item -r
 @itemx --reverse
@@ -7882,6 +7890,8 @@ were specified before the @option{-f}).
 @cindex reverse sorting
 Reverse whatever the sorting method is---e.g., list files in reverse
 alphabetical order, youngest first, smallest first, or whatever.
+This option has no effect when @option{--sort=none} (@option{-U})
+is in effect.
 
 @item -S
 @itemx --sort=size
@@ -7908,10 +7918,9 @@ The timestamp to order by can be changed with the @option{--time} option.
 @opindex use time@r{, printing or sorting files by}
 @opindex atime@r{, printing or sorting files by}
 @opindex access timestamp@r{, printing or sorting files by}
-If the long listing format (e.g., @option{--format=long}) is being used,
-print the last access timestamp (the atime).
-When explicitly sorting by time (@option{--sort=time} or @option{-t})
-or when not using a long listing format, sort according to the atime.
+In long format, print the last access timestamp (the atime).
+When sorting by time or when not using long format,
+sort according to the atime.
 @xref{File timestamps}.
 
 @item --time=birth
@@ -7919,10 +7928,9 @@ or when not using a long listing format, sort according to the atime.
 @opindex --time
 @opindex birth time@r{, printing or sorting files by}
 @opindex creation timestamp@r{, printing or sorting files by}
-If the long listing format (e.g., @option{--format=long}) is being used,
-print the file creation timestamp if available.
-When explicitly sorting by time (@option{--sort=time} or @option{-t})
-or when not using a long listing format, sort according to the birth time.
+In long format, print the file creation timestamp if available.
+When sorting by time or when not using long format,
+sort according to the birth time.
 @xref{File timestamps}.
 
 @item -U
@@ -7932,8 +7940,8 @@ or when not using a long listing format, sort according to the birth time.
 @opindex none@r{, sorting option for @command{ls}}
 Do not sort; list the files in whatever order they are
 stored in the directory.  (Do not do any of the other unrelated things
-that @option{-f} does.)  This is especially useful when listing very large
-directories, since not doing any sorting can be noticeably faster.
+that @option{-f} does.)  This can be useful when listing large
+directories, where sorting can take some time.
 
 @item -v
 @itemx --sort=version
@@ -7942,13 +7950,13 @@ directories, since not doing any sorting can be noticeably faster.
 @opindex version@r{, sorting option for @command{ls}}
 Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
-as an index/version number.  (@xref{Version sort ordering}.)
+as an index/version number.  @xref{Version sort ordering}.
 
 @item --sort=width
 @opindex --sort
 @opindex width@r{, sorting option for @command{ls}}
 Sort by printed width of file names.
-This is especially useful with the default @option{--format=vertical}
+This can be useful with the @option{--format=vertical} (@option{-C})
 output format, to most densely display the listed files.
 
 @item -X
@@ -7969,30 +7977,35 @@ These options affect the appearance of the overall output.
 
 @table @samp
 
-@item -1
-@itemx --format=single-column
-@opindex -1
+@item --format=single-column
 @opindex --format
 @opindex single-column @r{output of files}
-List one file per line.  This is the default for @command{ls} when standard
-output is not a terminal.  See also the @option{-b} and @option{-q} options
-to suppress direct output of newline characters within a file name.
+List one file name per line, with no other information.
+This is the default for @command{ls} when standard
+output is not a terminal.  See also the @option{--escape} (@option{-b}),
+@option{--hide-control-chars} (@option{-q}), and @option{--zero} options
+to disambiguate output of file names containing newline characters.
+
+@item -1
+@opindex -1
+List one file per line.  This is like @option{--format=single-column}
+except that it has no effect if long format is also in effect.
 
 @item -C
 @itemx --format=vertical
 @opindex -C
 @opindex --format
 @opindex vertical @r{sorted files in columns}
-List files in columns, sorted vertically.  This is the default for
-@command{ls} if standard output is a terminal.  It is always the default
-for the @command{dir} program.
+List files in columns, sorted vertically, with no other information.
+This is the default for @command{ls} if standard output is a terminal.
+It is always the default for the @command{dir} program.
 GNU @command{ls} uses variable width columns to display as many files as
 possible in the fewest lines.
 
 @item --color [=@var{when}]
 @opindex --color
 @cindex color, distinguishing file types with
-Specify whether to use color for distinguishing file types.  @var{when}
+Specify whether to use color for distinguishing file types; @var{when}
 may be omitted, or one of:
 @itemize @bullet
 @item none
@@ -8009,12 +8022,12 @@ may be omitted, or one of:
 Specifying @option{--color} and no @var{when} is equivalent to
 @option{--color=always}.
 If piping a colorized listing through a pager like @command{less},
-use the @option{-R} option to pass the color codes to the terminal.
+use the pager's @option{-R} option to pass the color codes to the terminal.
 
 @vindex LS_COLORS
 @vindex SHELL @r{environment variable, and color}
-Note that using the @option{--color} option may incur a noticeable
-performance penalty when run in a directory with very many entries,
+Using the @option{--color} option may incur a noticeable
+performance penalty when run in a large directory,
 because the default settings require that @command{ls} @code{stat} every
 single file it lists.
 However, if you would like most of the file-type coloring
@@ -8068,7 +8081,7 @@ command line unless the @option{--dereference-command-line} (@option{-H}),
 @opindex --indicator-style
 @cindex file type, marking
 Append a character to each file name indicating the file type.  This is
-like @option{-F}, except that executables are not marked.
+like @option{--classify} (@option{-F}, except that executables are not marked.
 
 @item --hyperlink [=@var{when}]
 @opindex --hyperlink
@@ -8108,8 +8121,8 @@ for FIFOs, @samp{=} for sockets, and nothing for regular files.  This is
 the same as the @option{--file-type} option.
 @item classify
 Append @samp{*} for executable regular files, otherwise behave as for
-@samp{file-type}.  This is the same as the @option{-F} or
-@option{--classify} option.
+@samp{file-type}.  This is the same as the @option{--classify}
+(@option{-F}) option.
 @end table
 
 @item -k
@@ -8118,16 +8131,15 @@ Append @samp{*} for executable regular files, otherwise behave as for
 @opindex --kibibytes
 Set the default block size to its normal value of 1024 bytes,
 overriding any contrary specification in environment variables
-(@pxref{Block size}).  If @option{--block-size}, @option{-h},
-@option{--human-readable}, or @option{--si} options are used,
-they take precedence over @option{-k} or @option{--kibibytes}
-even if @option{-k} or @option{--kibibytes} is placed after
-the other options.
+(@pxref{Block size}).  If @option{--block-size},
+@option{--human-readable} (@option{-h}), or @option{--si} options are used,
+they take precedence even if @option{--kibibytes} (@option{-k}) is placed after
 
-The @option{-k} or @option{--kibibytes} option affects the
-per-directory block count written by the @option{-l} and similar
-options, and the size written by the @option{-s} or @option{--size}
-option.  It does not affect the file size written by @option{-l}.
+The @option{--kibibytes} (@option{-k}) option affects the
+per-directory block count written in long format,
+and the disk allocation written by the @option{--size} (@option{-s})
+option.  It does not affect the file size in bytes that is written in
+long format.
 
 @item -m
 @itemx --format=commas
@@ -8135,17 +8147,16 @@ option.  It does not affect the file size written by @option{-l}.
 @opindex --format
 @opindex commas@r{, outputting between files}
 List files horizontally, with as many as will fit on each line,
-separated by @samp{, } (a comma and a space).
+separated by @samp{, } (a comma and a space),
+and with no other information.
 
 @item --zero
 @opindex --zero
-This option is incompatible with the @option{-D} or @option{--dired} option.
-This option also implies the options
-@option{--show-control-chars},
-@option{-1} or @option{--format=single-column},
-@option{--color=none}, and
-@option{-N} or @option{--quoting-style=literal}.
 @outputNUL
+This option is incompatible with the @option{--dired} (@option{-D}) option.
+This option also implies the options @option{--show-control-chars},
+@option{-1}, @option{--color=none}, and
+@option{--quoting-style=literal} (@option{-N}).
 
 @item -p
 @itemx --indicator-style=slash
@@ -8375,8 +8386,8 @@ be one of the following:
 @macro quotingStyles
 @table @samp
 @item literal
-Output strings as-is; this is the same as the @option{-N} or
-@option{--literal} option.
+Output strings as-is; this is the same as the @option{--literal} (@option{-N})
+option.
 @item shell
 Quote strings for the shell if they contain shell metacharacters or would
 cause ambiguous output.
@@ -8394,11 +8405,11 @@ normally not require quoting.
 @item c
 Quote strings as for C character string literals, including the
 surrounding double-quote characters; this is the same as the
-@option{-Q} or @option{--quote-name} option.
+@option{--quote-name} (@option{-Q}) option.
 @item escape
 Quote strings as for C character string literals, except omit the
 surrounding double-quote
-characters; this is the same as the @option{-b} or @option{--escape} option.
+characters; this is the same as the @option{--escape} (@option{-b}) option.
 @item clocale
 Quote strings as for C character string literals, except use
 surrounding quotation marks appropriate for the
