@@ -2273,18 +2273,18 @@ decode_switches (int argc, char **argv)
       if (linelen < 0)
         {
           /* Suppress bogus warning re comparing ws.ws_col to big integer.  */
-#         if __GNUC_PREREQ (4, 6)
-#          pragma GCC diagnostic push
-#          pragma GCC diagnostic ignored "-Wtype-limits"
-#         endif
+# if __GNUC_PREREQ (4, 6)
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wtype-limits"
+# endif
           struct winsize ws;
           if (stdout_isatty ()
               && 0 <= ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws)
               && 0 < ws.ws_col)
             linelen = ws.ws_col <= MIN (PTRDIFF_MAX, SIZE_MAX) ? ws.ws_col : 0;
-#         if __GNUC_PREREQ (4, 6)
-#          pragma GCC diagnostic pop
-#         endif
+# if __GNUC_PREREQ (4, 6)
+#  pragma GCC diagnostic pop
+# endif
         }
 #endif
       if (linelen < 0)
@@ -5477,7 +5477,8 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
-  -k, --kibibytes            default to 1024-byte blocks for file system usage;\n\
+  -k, --kibibytes            default to 1024-byte blocks for file system usage;\
+\n\
                                used only with -s and per directory totals\n\
 "), stdout);
       fputs (_("\
