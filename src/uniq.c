@@ -352,7 +352,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
   */
   if (output_unique && output_first_repeated && countmode == count_none)
     {
-      char *prevfield IF_LINT ( = NULL);
+      char *prevfield = NULL;
       size_t prevlen IF_LINT ( = 0);
       bool first_group_printed = false;
 
@@ -368,7 +368,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
           thisfield = find_field (thisline);
           thislen = thisline->length - 1 - (thisfield - thisline->buffer);
 
-          new_group = (prevline->length == 0
+          new_group = (!prevfield
                        || different (thisfield, prevfield, thislen, prevlen));
 
           if (new_group && grouping != GM_NONE
