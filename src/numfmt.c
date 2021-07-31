@@ -480,7 +480,7 @@ simple_strtod_int (char const *input_str,
     *negative = false;
 
   *endptr = (char *) input_str;
-  while (*endptr && c_isdigit (**endptr))
+  while (c_isdigit (**endptr))
     {
       int digit = (**endptr) - '0';
 
