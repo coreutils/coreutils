@@ -78,6 +78,9 @@ static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 /* Preserves the 'cat' function's local 'newlines' between invocations.  */
 static int newlines2 = 0;
 
+/* Whether there is a pending CR to process.  */
+static bool pending_cr = false;
+
 void
 usage (int status)
 {
@@ -397,9 +400,16 @@ cat (
                 }
 
               /* Output a currency symbol if requested (-e).  */
-
               if (show_ends)
-                *bpout++ = '$';
+                {
+                  if (pending_cr)
+                    {
+                      *bpout++ = '^';
+                      *bpout++ = 'M';
+                      pending_cr = false;
+                    }
+                  *bpout++ = '$';
+                }
 
               /* Output the newline.  */
 
@@ -409,6 +419,14 @@ cat (
         }
       while (ch == '\n');
 
+      /* Here CH cannot contain a newline character.  */
+
+      if (pending_cr)
+        {
+          *bpout++ = '\r';
+          pending_cr = false;
+        }
+
       /* Are we at the beginning of a line, and line numbers are requested?  */
 
       if (newlines >= 0 && number)
@@ -416,8 +434,6 @@ cat (
           next_line_num ();
           bpout = stpcpy (bpout, line_num_print);
         }
-
-      /* Here CH cannot contain a newline character.  */
 
       /* The loops below continue until a newline character is found,
          which means that the buffer is empty or that a proper newline
@@ -489,8 +505,13 @@ cat (
                 {
                   if (ch == '\r' && *bpin == '\n' && show_ends)
                     {
-                      *bpout++ = '^';
-                      *bpout++ = 'M';
+                      if (bpin == eob)
+                        pending_cr = true;
+                      else
+                        {
+                          *bpout++ = '^';
+                          *bpout++ = 'M';
+                        }
                     }
                   else
                     *bpout++ = ch;
@@ -767,6 +788,12 @@ main (int argc, char **argv)
         }
     }
   while (++argind < argc);
+
+  if (pending_cr)
+    {
+      if (full_write (STDOUT_FILENO, "\r", 1) != 1)
+        die (EXIT_FAILURE, errno, _("write error"));
+    }
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     die (EXIT_FAILURE, errno, _("closing standard input"));
