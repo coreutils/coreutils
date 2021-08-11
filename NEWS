@@ -16,6 +16,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   df no longer outputs duplicate remote mounts in the presence of bind mounts.
   [bug introduced in coreutils-8.26]
 
+  df no longer mishandles command-line args that it pre-mounts
+  [bug introduced in coreutils-8.29]
+
   du no longer crashes on XFS file systems when the directory hierarchy is
   heavily changed during the run.
   [bug introduced in coreutils-8.25]

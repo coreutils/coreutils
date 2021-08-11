@@ -276,6 +276,28 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Stat FILE and put the results into *ST.  Return 0 if successful, an
+   error number otherwise.  Try to open FILE before statting, to
+   trigger automounts.  */
+
+static int
+automount_stat_err (char const *file, struct stat *st)
+{
+  int fd = open (file, O_RDONLY | O_NOCTTY | O_NONBLOCK);
+  if (fd < 0)
+    {
+      if (errno == ENOENT || errno == ENOTDIR)
+        return errno;
+      return stat (file, st) == 0 ? 0 : errno;
+    }
+  else
+    {
+      int err = fstat (fd, st) == 0 ? 0 : errno;
+      close (fd);
+      return err;
+    }
+}
+
 /* Replace problematic chars with '?'.
    Since only control characters are currently considered,
    this should work in all encodings.  */
@@ -1772,18 +1794,12 @@ main (int argc, char **argv)
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (int i = optind; i < argc; ++i)
         {
-          if (stat (argv[i], &stats[i - optind]))
+          int err = automount_stat_err (argv[i], &stats[i - optind]);
+          if (err != 0)
             {
-              error (0, errno, "%s", quotef (argv[i]));
+              error (0, err, "%s", quotef (argv[i]));
               exit_status = EXIT_FAILURE;
               argv[i] = NULL;
-            }
-          else if (! S_ISFIFO (stats[i - optind].st_mode))
-            {
-              /* open() is needed to automount in some cases.  */
-              int fd = open (argv[i], O_RDONLY | O_NOCTTY);
-              if (0 <= fd)
-                close (fd);
             }
         }
     }
