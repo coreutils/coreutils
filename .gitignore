@@ -75,6 +75,7 @@
 /lib/limits.h
 /lib/link-warning.h
 /lib/locale.h
+/lib/malloc/
 /lib/math.h
 /lib/netdb.h
 /lib/netinet/in.h
