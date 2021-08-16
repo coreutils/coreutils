@@ -37,6 +37,13 @@ my $base64url_out_nl = $base64url_out;
 $base64url_out_nl =~ s/(..)/\1\n/g; # add newline every two characters
 
 
+# Bug 49741:
+# The input  is 'abc' in base64, in an 8K buffer (larger than 1024*5,
+# the buffer size which caused the bug).
+my $base64_bug49741_in = "YWJj" x 2000 ;
+my $base64_bug49741_out = "abc" x 2000 ;
+
+
 my $base32_in = "\xfd\xd8\x07\xd1\xa5";
 my $base32_out = "7XMAPUNF";
 my $x = $base32_out;
@@ -111,6 +118,8 @@ my @Tests =
  ['b64u_7', '--base64url -d',  {IN=>$base64_out},
   {EXIT=>1},  {ERR=>"$prog: invalid input\n"}],
 
+ ['b64_bug49741', '--base64 -d',  {IN=>$base64_bug49741_in},
+  {OUT=>$base64_bug49741_out}],
 
 
 

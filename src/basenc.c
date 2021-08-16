@@ -214,7 +214,9 @@ verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
 
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
-# define DEC_BLOCKSIZE (1024*5)
+# define DEC_BLOCKSIZE (4200)
+verify (DEC_BLOCKSIZE % 40 == 0); /* complete encoded blocks for base32 */
+verify (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64 */
 
 static int (*base_length) (int i);
 static bool (*isbase) (char ch);

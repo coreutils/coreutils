@@ -60,6 +60,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   invalid combinations of case character classes.
   [bug introduced in coreutils-8.6]
 
+  basenc --base64 --decode no longer silently discards decoded characters
+  on (1024*5) buffer boundaries
+  [bug introduced in coreutils-8.31]
+
 ** Changes in behavior
 
   cp and install now default to copy-on-write (COW) if available.
