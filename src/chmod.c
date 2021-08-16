@@ -39,12 +39,19 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
 
-enum Change_status
+struct change_status
 {
-  CH_NOT_APPLIED,
-  CH_SUCCEEDED,
-  CH_FAILED,
-  CH_NO_CHANGE_REQUESTED
+  enum
+    {
+      CH_NO_STAT,
+      CH_NOT_APPLIED,
+      CH_FAILED,
+      CH_NO_CHANGE_REQUESTED,
+      CH_SUCCEEDED
+    }
+    status;
+  mode_t old_mode;
+  mode_t new_mode;
 };
 
 enum Verbosity
@@ -136,30 +143,42 @@ mode_changed (int dir_fd, char const *file, char const *file_full_name,
 }
 
 /* Tell the user how/if the MODE of FILE has been changed.
-   CHANGED describes what (if anything) has happened. */
+   CH describes what (if anything) has happened. */
 
 static void
-describe_change (char const *file, mode_t old_mode, mode_t mode,
-                 enum Change_status changed)
+describe_change (char const *file, struct change_status const *ch)
 {
   char perms[12];		/* "-rwxrwxrwx" ls-style modes. */
   char old_perms[12];
   char const *fmt;
+  char const *quoted_file = quoteaf (file);
 
-  if (changed == CH_NOT_APPLIED)
+  switch (ch->status)
     {
+    case CH_NOT_APPLIED:
       printf (_("neither symbolic link %s nor referent has been changed\n"),
-              quoteaf (file));
+              quoted_file);
       return;
-    }
 
-  strmode (mode, perms);
+    case CH_NO_STAT:
+      printf (_("%s could not be accessed\n"), quoted_file);
+      return;
+
+    default:
+      break;
+  }
+
+  unsigned long int
+    old_m = ch->old_mode & CHMOD_MODE_BITS,
+    m = ch->new_mode & CHMOD_MODE_BITS;
+
+  strmode (ch->new_mode, perms);
   perms[10] = '\0';		/* Remove trailing space.  */
 
-  strmode (old_mode, old_perms);
+  strmode (ch->old_mode, old_perms);
   old_perms[10] = '\0';		/* Remove trailing space.  */
 
-  switch (changed)
+  switch (ch->status)
     {
     case CH_SUCCEEDED:
       fmt = _("mode of %s changed from %04lo (%s) to %04lo (%s)\n");
@@ -169,15 +188,12 @@ describe_change (char const *file, mode_t old_mode, mode_t mode,
       break;
     case CH_NO_CHANGE_REQUESTED:
       fmt = _("mode of %s retained as %04lo (%s)\n");
-      printf (fmt, quoteaf (file),
-              (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
+      printf (fmt, quoted_file, m, &perms[1]);
       return;
     default:
       abort ();
     }
-  printf (fmt, quoteaf (file),
-          (unsigned long int) (old_mode & CHMOD_MODE_BITS), &old_perms[1],
-          (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
+  printf (fmt, quoted_file, old_m, &old_perms[1], m, &perms[1]);
 }
 
 /* Change the mode of FILE.
@@ -190,10 +206,8 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
-  mode_t old_mode IF_LINT ( = 0);
-  mode_t new_mode IF_LINT ( = 0);
-  bool ok = true;
-  bool chmod_succeeded = false;
+  struct change_status ch;
+  ch.status = CH_NO_STAT;
 
   switch (ent->fts_info)
     {
@@ -217,27 +231,23 @@ process_file (FTS *fts, FTSENT *ent)
       if (! force_silent)
         error (0, ent->fts_errno, _("cannot access %s"),
                quoteaf (file_full_name));
-      ok = false;
       break;
 
     case FTS_ERR:
       if (! force_silent)
         error (0, ent->fts_errno, "%s", quotef (file_full_name));
-      ok = false;
       break;
 
     case FTS_DNR:
       if (! force_silent)
         error (0, ent->fts_errno, _("cannot read directory %s"),
                quoteaf (file_full_name));
-      ok = false;
       break;
 
     case FTS_SLNONE:
       if (! force_silent)
         error (0, 0, _("cannot operate on dangling symlink %s"),
                quoteaf (file_full_name));
-      ok = false;
       break;
 
     case FTS_DC:		/* directory that causes cycles */
@@ -246,13 +256,14 @@ process_file (FTS *fts, FTSENT *ent)
           emit_cycle_warning (file_full_name);
           return false;
         }
-      break;
-
+      FALLTHROUGH;
     default:
+      ch.status = CH_NOT_APPLIED;
       break;
     }
 
-  if (ok && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
+  if (ch.status == CH_NOT_APPLIED
+      && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
       /* Tell fts not to traverse into this hierarchy.  */
@@ -262,66 +273,56 @@ process_file (FTS *fts, FTSENT *ent)
       return false;
     }
 
-  if (ok)
+  if (ch.status == CH_NOT_APPLIED && ! S_ISLNK (file_stats->st_mode))
     {
-      old_mode = file_stats->st_mode;
-      new_mode = mode_adjust (old_mode, S_ISDIR (old_mode) != 0, umask_value,
-                              change, NULL);
-
-      if (! S_ISLNK (old_mode))
+      ch.old_mode = file_stats->st_mode;
+      ch.new_mode = mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0,
+                                 umask_value, change, NULL);
+      if (chmodat (fts->fts_cwd_fd, file, ch.new_mode) == 0)
+        ch.status = CH_SUCCEEDED;
+      else
         {
-          if (chmodat (fts->fts_cwd_fd, file, new_mode) == 0)
-            chmod_succeeded = true;
-          else
-            {
-              if (! force_silent)
-                error (0, errno, _("changing permissions of %s"),
-                       quoteaf (file_full_name));
-              ok = false;
-            }
+          if (! force_silent)
+            error (0, errno, _("changing permissions of %s"),
+                   quoteaf (file_full_name));
+          ch.status = CH_FAILED;
         }
     }
 
   if (verbosity != V_off)
     {
-      bool changed = (chmod_succeeded
-                      && mode_changed (fts->fts_cwd_fd, file, file_full_name,
-                                       old_mode, new_mode));
+      if (ch.status == CH_SUCCEEDED
+          && !mode_changed (fts->fts_cwd_fd, file, file_full_name,
+                            ch.old_mode, ch.new_mode))
+        ch.status = CH_NO_CHANGE_REQUESTED;
 
-      if (changed || verbosity == V_high)
-        {
-          enum Change_status ch_status =
-            (!ok ? CH_FAILED
-             : !chmod_succeeded ? CH_NOT_APPLIED
-             : !changed ? CH_NO_CHANGE_REQUESTED
-             : CH_SUCCEEDED);
-          describe_change (file_full_name, old_mode, new_mode, ch_status);
-        }
+      if (ch.status == CH_SUCCEEDED || verbosity == V_high)
+        describe_change (file_full_name, &ch);
     }
 
-  if (chmod_succeeded && diagnose_surprises)
+  if (CH_NO_CHANGE_REQUESTED <= ch.status && diagnose_surprises)
     {
       mode_t naively_expected_mode =
-        mode_adjust (old_mode, S_ISDIR (old_mode) != 0, 0, change, NULL);
-      if (new_mode & ~naively_expected_mode)
+        mode_adjust (ch.old_mode, S_ISDIR (ch.old_mode) != 0, 0, change, NULL);
+      if (ch.new_mode & ~naively_expected_mode)
         {
           char new_perms[12];
           char naively_expected_perms[12];
-          strmode (new_mode, new_perms);
+          strmode (ch.new_mode, new_perms);
           strmode (naively_expected_mode, naively_expected_perms);
           new_perms[10] = naively_expected_perms[10] = '\0';
           error (0, 0,
                  _("%s: new permissions are %s, not %s"),
                  quotef (file_full_name),
                  new_perms + 1, naively_expected_perms + 1);
-          ok = false;
+          ch.status = CH_FAILED;
         }
     }
 
   if ( ! recurse)
     fts_set (fts, ent, FTS_SKIP);
 
-  return ok;
+  return CH_NO_CHANGE_REQUESTED <= ch.status;
 }
 
 /* Recursively change the modes of the specified FILES (the last entry
