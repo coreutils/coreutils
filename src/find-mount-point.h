@@ -14,4 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-extern char *find_mount_point (char const *, struct stat const *);
+#include <stdlib.h>
+
+extern char *find_mount_point (char const *, struct stat const *)
+  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE;
