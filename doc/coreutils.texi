@@ -2291,7 +2291,8 @@ basenc @var{encoding} --decode [@var{option}]@dots{} [@var{file}]
 @end example
 
 The @var{encoding} argument is required. If @var{file} is omitted,
-reads input from stdin. The @option{-w/--wrap},@option{-i/--ignore-garbage},
+@command{basenc} reads from standard input.
+The @option{-w/--wrap},@option{-i/--ignore-garbage},
 @option{-d/--decode} options of this command are precisely the same as
 for @command{base64}. @xref{base64 invocation}.
 
@@ -3356,11 +3357,11 @@ Split @var{input} to @var{chunks} output files where @var{chunks} may be:
 
 @example
 @var{n}      generate @var{n} files based on current size of @var{input}
-@var{k}/@var{n}    only output @var{k}th of @var{n} to stdout
+@var{k}/@var{n}    output only @var{k}th of @var{n} to standard output
 l/@var{n}    generate @var{n} files without splitting lines or records
-l/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
+l/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to stdout
 r/@var{n}    like @samp{l} but use round robin distribution
-r/@var{k}/@var{n}  likewise but only output @var{k}th of @var{n} to stdout
+r/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to stdout
 @end example
 
 Any excess bytes remaining after dividing the @var{input}
@@ -4050,7 +4051,7 @@ for reading standard input when standard input is a terminal.
 @item -c
 @itemx --check
 Read file names and checksum information (not data) from each
-@var{file} (or from stdin if no @var{file} was specified) and report
+@var{file} (or from standard input if no @var{file} was specified) and report
 whether the checksums match the contents of the named files.
 The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
@@ -4579,7 +4580,7 @@ of the line being used in the sort.
 
 @item --debug
 Highlight the portion of each line used for sorting.
-Also issue warnings about questionable usage to stderr.
+Also issue warnings about questionable usage to standard error.
 
 @item --batch-size=@var{nmerge}
 @opindex --batch-size
@@ -6228,7 +6229,7 @@ $ paste num2 let3 num2
        @ c
 @end example
 
-Intermix lines from stdin:
+Intermix lines from standard input:
 @example
 $ paste - let3 - < num2
 1       a      2
@@ -9186,7 +9187,7 @@ The @var{level} value can be one of the following:
 
 @item none
 @opindex none @r{dd status=}
-Do not print any informational or warning messages to stderr.
+Do not print any informational or warning messages to standard error.
 Error messages are output as normal.
 
 @item noxfer
@@ -9196,14 +9197,14 @@ that normally make up the last status line.
 
 @item progress
 @opindex progress @r{dd status=}
-Print the transfer rate and volume statistics on stderr,
+Print the transfer rate and volume statistics on standard error,
 when processing each input block.  Statistics are output
 on a single line at most once every second, but updates
 can be delayed when waiting on I/O.
 
 @end table
 
-Transfer information is normally output to stderr upon
+Transfer information is normally output to standard error upon
 receipt of the @samp{INFO} signal or when @command{dd} exits,
 and defaults to the following form in the C locale:
 
@@ -13837,7 +13838,7 @@ it's described here.
 @pindex tee
 @cindex pipe fitting
 @cindex destinations, multiple output
-@cindex read from stdin and write to stdout and files
+@cindex read from standard input and write to standard output and files
 
 The @command{tee} command copies standard input to standard output and also
 to any files given as arguments.  This is useful when you want not only
@@ -13941,7 +13942,7 @@ so it works with @command{zsh}, @command{bash}, and @command{ksh},
 but not with @command{/bin/sh}.  So if you write code like this
 in a shell script, be sure to start the script with @samp{#!/bin/bash}.
 
-Note also that if any of the process substitutions (or piped stdout)
+Note also that if any of the process substitutions (or piped standard output)
 might exit early without consuming all the data, the @option{-p} option
 is needed to allow @command{tee} to continue to process the input
 to any remaining outputs.
@@ -17462,7 +17463,7 @@ env --default-signal=INT,PIPE --ignore-signal=INT
 Block signal(s) @var{sig} from being delivered.
 
 @item --list-signal-handling
-List blocked or ignored signals to stderr, before executing a command.
+List blocked or ignored signals to standard error, before executing a command.
 
 @item -v
 @itemx --debug
@@ -18234,7 +18235,7 @@ or a number.  @xref{Signal specifications}.
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Diagnose to stderr, any signal sent upon timeout.
+Diagnose to standard error, any signal sent upon timeout.
 @end table
 
 @cindex time units
