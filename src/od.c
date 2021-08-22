@@ -949,16 +949,15 @@ check_and_close (int in_errno)
 
   if (in_stream != NULL)
     {
-      if (ferror (in_stream))
+      if (!ferror (in_stream))
+        in_errno = 0;
+      if (STREQ (file_list[-1], "-"))
+        clearerr (in_stream);
+      else if (fclose (in_stream) != 0 && !in_errno)
+        in_errno = errno;
+      if (in_errno)
         {
-          error (0, in_errno, _("%s: read error"), quotef (input_filename));
-          if (! STREQ (file_list[-1], "-"))
-            fclose (in_stream);
-          ok = false;
-        }
-      else if (! STREQ (file_list[-1], "-") && fclose (in_stream) != 0)
-        {
-          error (0, errno, "%s", quotef (input_filename));
+          error (0, in_errno, "%s", quotef (input_filename));
           ok = false;
         }
 

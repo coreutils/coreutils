@@ -460,16 +460,16 @@ cut_file (char const *file)
 
   cut_stream (stream);
 
-  if (ferror (stream))
-    {
-      error (0, errno, "%s", quotef (file));
-      return false;
-    }
+  int err = errno;
+  if (!ferror (stream))
+    err = 0;
   if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
+    err = errno;
+  if (err)
     {
-      error (0, errno, "%s", quotef (file));
+      error (0, err, "%s", quotef (file));
       return false;
     }
   return true;

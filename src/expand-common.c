@@ -338,16 +338,16 @@ next_file (FILE *fp)
   if (fp)
     {
       assert (prev_file);
-      if (ferror (fp))
-        {
-          error (0, errno, "%s", quotef (prev_file));
-          exit_status = EXIT_FAILURE;
-        }
+      int err = errno;
+      if (!ferror (fp))
+        err = 0;
       if (STREQ (prev_file, "-"))
         clearerr (fp);		/* Also clear EOF.  */
       else if (fclose (fp) != 0)
+        err = errno;
+      if (err)
         {
-          error (0, errno, "%s", quotef (prev_file));
+          error (0, err, "%s", quotef (prev_file));
           exit_status = EXIT_FAILURE;
         }
     }

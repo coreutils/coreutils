@@ -120,17 +120,16 @@ bsd_sum_file (char const *file, int print_name)
       checksum &= 0xffff;	/* Keep it within bounds. */
     }
 
-  if (ferror (fp))
+  int err = errno;
+  if (!ferror (fp))
+    err = 0;
+  if (is_stdin)
+    clearerr (fp);
+  else if (fclose (fp) != 0 && !err)
+    err = errno;
+  if (err)
     {
-      error (0, errno, "%s", quotef (file));
-      if (!is_stdin)
-        fclose (fp);
-      return false;
-    }
-
-  if (!is_stdin && fclose (fp) != 0)
-    {
-      error (0, errno, "%s", quotef (file));
+      error (0, err, "%s", quotef (file));
       return false;
     }
 

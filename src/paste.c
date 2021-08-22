@@ -266,16 +266,15 @@ paste_parallel (size_t nfiles, char **fnamptr)
                  If an EOF or error, close the file.  */
               if (fileptr[i])
                 {
-                  if (ferror (fileptr[i]))
-                    {
-                      error (0, err, "%s", quotef (fnamptr[i]));
-                      ok = false;
-                    }
+                  if (!ferror (fileptr[i]))
+                    err = 0;
                   if (fileptr[i] == stdin)
                     clearerr (fileptr[i]); /* Also clear EOF. */
-                  else if (fclose (fileptr[i]) == EOF)
+                  else if (fclose (fileptr[i]) == EOF && !err)
+                    err = errno;
+                  if (err)
                     {
-                      error (0, errno, "%s", quotef (fnamptr[i]));
+                      error (0, err, "%s", quotef (fnamptr[i]));
                       ok = false;
                     }
 
@@ -410,16 +409,15 @@ paste_serial (size_t nfiles, char **fnamptr)
       if (charold != line_delim)
         xputchar (line_delim);
 
-      if (ferror (fileptr))
-        {
-          error (0, saved_errno, "%s", quotef (*fnamptr));
-          ok = false;
-        }
+      if (!ferror (fileptr))
+        saved_errno = 0;
       if (is_stdin)
         clearerr (fileptr);	/* Also clear EOF. */
-      else if (fclose (fileptr) == EOF)
+      else if (fclose (fileptr) != 0 && !saved_errno)
+        saved_errno = errno;
+      if (saved_errno)
         {
-          error (0, errno, "%s", quotef (*fnamptr));
+          error (0, saved_errno, "%s", quotef (*fnamptr));
           ok = false;
         }
     }

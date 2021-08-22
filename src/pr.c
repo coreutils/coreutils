@@ -1506,10 +1506,16 @@ close_file (COLUMN *p)
 
   if (p->status == CLOSED)
     return;
-  if (ferror (p->fp))
-    die (EXIT_FAILURE, errno, "%s", quotef (p->name));
-  if (fileno (p->fp) != STDIN_FILENO && fclose (p->fp) != 0)
-    die (EXIT_FAILURE, errno, "%s", quotef (p->name));
+
+  int err = errno;
+  if (!ferror (p->fp))
+    err = 0;
+  if (fileno (p->fp) == STDIN_FILENO)
+    clearerr (p->fp);
+  else if (fclose (p->fp) != 0 && !err)
+    err = errno;
+  if (err)
+    die (EXIT_FAILURE, err, "%s", quotef (p->name));
 
   if (!parallel_files)
     {

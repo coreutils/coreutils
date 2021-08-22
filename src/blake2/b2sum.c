@@ -388,7 +388,10 @@ int main( int argc, char **argv )
         printf( "  %s\n", argv[i] );
     }
 
-    if( f != stdin ) fclose( f );
+    if( f == stdin )
+      clearerr( f );
+    else if( fclose( f ) != 0 )
+      fprintf( stderr, "Could not close `%s': %s\n", argv[i], strerror( errno ) );
   }
 
   return 0;

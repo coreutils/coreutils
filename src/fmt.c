@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "die.h"
 #include "fadvise.h"
 #include "xdectoint.h"
 
@@ -151,7 +152,7 @@ struct Word
 /* Forward declarations.  */
 
 static void set_prefix (char *p);
-static void fmt (FILE *f);
+static bool fmt (FILE *f, char const *);
 static bool get_paragraph (FILE *f);
 static int get_line (FILE *f, int c);
 static int get_prefix (FILE *f);
@@ -412,28 +413,29 @@ main (int argc, char **argv)
       goal_width = max_width * (2 * (100 - LEEWAY) + 1) / 200;
     }
 
+  bool have_read_stdin = false;
+
   if (optind == argc)
-    fmt (stdin);
+    {
+      have_read_stdin = true;
+      ok = fmt (stdin, "-");
+    }
   else
     {
       for (; optind < argc; optind++)
         {
           char *file = argv[optind];
           if (STREQ (file, "-"))
-            fmt (stdin);
+            {
+              ok &= fmt (stdin, file);
+              have_read_stdin = true;
+            }
           else
             {
               FILE *in_stream;
               in_stream = fopen (file, "r");
               if (in_stream != NULL)
-                {
-                  fmt (in_stream);
-                  if (fclose (in_stream) == EOF)
-                    {
-                      error (0, errno, "%s", quotef (file));
-                      ok = false;
-                    }
-                }
+                ok &= fmt (in_stream, file);
               else
                 {
                   error (0, errno, _("cannot open %s for reading"),
@@ -443,6 +445,9 @@ main (int argc, char **argv)
             }
         }
     }
+
+  if (have_read_stdin && fclose (stdin) != 0)
+    die (EXIT_FAILURE, errno, "%s", _("closing standard input"));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
@@ -470,10 +475,13 @@ set_prefix (char *p)
   prefix_length = s - p;
 }
 
-/* read file F and send formatted output to stdout.  */
+/* Read F and send formatted output to stdout.
+   Close F when done, unless F is stdin.  Diagnose input errors, using FILE.
+   If !F, assume F resulted from an fopen failure and diagnose that.
+   Return true if successful.  */
 
-static void
-fmt (FILE *f)
+static bool
+fmt (FILE *f, char const *file)
 {
   fadvise (f, FADVISE_SEQUENTIAL);
   tabs = false;
@@ -484,6 +492,15 @@ fmt (FILE *f)
       fmt_paragraph ();
       put_paragraph (word_limit);
     }
+
+  int err = ferror (f) ? 0 : -1;
+  if (f == stdin)
+    clearerr (f);
+  else if (fclose (f) != 0 && err < 0)
+    err = errno;
+  if (0 <= err)
+    error (0, err, err ? "%s" : _("read error"), quotef (file));
+  return err < 0;
 }
 
 /* Set the global variable 'other_indent' according to SAME_PARAGRAPH

@@ -526,6 +526,9 @@ swallow_file_in_memory (char const *file_name, BLOCK *block)
   if (!block->start)
     die (EXIT_FAILURE, errno, "%s", quotef (using_stdin ? "-" : file_name));
 
+  if (using_stdin)
+    clearerr (stdin);
+
   block->end = block->start + used_length;
 }
 

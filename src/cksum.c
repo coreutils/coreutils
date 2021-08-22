@@ -298,17 +298,16 @@ cksum (char const *file, bool print_name)
   if (! cksum_fp (fp, file, &crc, &length))
     return false;
 
-  if (ferror (fp))
+  int err = errno;
+  if (!ferror (fp))
+    err = 0;
+  if (STREQ (file, "-"))
+    clearerr (fp);
+  else if (fclose (fp) != 0 && !err)
+    err = errno;
+  if (err)
     {
-      error (0, errno, "%s", quotef (file));
-      if (!STREQ (file, "-"))
-        fclose (fp);
-      return false;
-    }
-
-  if (!STREQ (file, "-") && fclose (fp) == EOF)
-    {
-      error (0, errno, "%s", quotef (file));
+      error (0, err, "%s", quotef (file));
       return false;
     }
 

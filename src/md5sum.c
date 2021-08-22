@@ -631,17 +631,15 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 #else
   err = DIGEST_STREAM (fp, bin_result);
 #endif
+  err = err ? errno : 0;
+  if (is_stdin)
+    clearerr (fp);
+  else if (fclose (fp) != 0 && !err)
+    err = errno;
+
   if (err)
     {
-      error (0, errno, "%s", quotef (filename));
-      if (fp != stdin)
-        fclose (fp);
-      return false;
-    }
-
-  if (!is_stdin && fclose (fp) != 0)
-    {
-      error (0, errno, "%s", quotef (filename));
+      error (0, err, "%s", quotef (filename));
       return false;
     }
 
@@ -798,15 +796,16 @@ digest_check (char const *checkfile_name)
 
   free (line);
 
-  if (ferror (checkfile_stream))
-    {
-      error (0, 0, _("%s: read error"), quotef (checkfile_name));
-      return false;
-    }
+  int err = ferror (checkfile_stream) ? 0 : -1;
+  if (is_stdin)
+    clearerr (checkfile_stream);
+  else if (fclose (checkfile_stream) != 0 && err < 0)
+    err = errno;
 
-  if (!is_stdin && fclose (checkfile_stream) != 0)
+  if (0 <= err)
     {
-      error (0, errno, "%s", quotef (checkfile_name));
+      error (0, err, err ? "%s" : _("%s: read error"),
+             quotef (checkfile_name));
       return false;
     }
 

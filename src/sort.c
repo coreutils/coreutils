@@ -1001,8 +1001,7 @@ xfclose (FILE *fp, char const *file)
     {
     case STDIN_FILENO:
       /* Allow reading stdin from tty more than once.  */
-      if (feof (fp))
-        clearerr (fp);
+      clearerr (fp);
       break;
 
     case STDOUT_FILENO:
