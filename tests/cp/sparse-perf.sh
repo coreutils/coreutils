@@ -28,7 +28,7 @@ timeout 10 truncate -s1T f ||
   skip_ "unable to create a 1 TiB sparse file"
 
 # Nothing can read (much less write) that many bytes in so little time.
-timeout 10 cp f f2 || fail=1
+timeout 10 cp --reflink=never f f2 || fail=1
 
 # Ensure that the sparse file copied through SEEK_DATA has the same size
 # in bytes as the original.

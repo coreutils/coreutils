@@ -74,9 +74,10 @@ for i in $(seq 1 2 21); do
 
     # Note there is an implicit sync performed by cp on Linux kernels
     # before 2.6.39 to work around bugs in EXT4 and BTRFS.
+    # (this was removed in the release after coreutils-8.32).
     # Note also the -s parameter to the filefrag commands below
     # for the same reasons.
-    cp --sparse=always j1 j2 || fail=1
+    cp --reflink=never --sparse=always j1 j2 || fail=1
 
     cmp j1 j2 || fail_ "data loss i=$i j=$j"
     if ! filefrag -vs j1 | grep -F extent >/dev/null; then

@@ -56,7 +56,7 @@ rm space.test
 
 # Ensure we read a large empty file quickly
 fallocate -l 300MiB empty.big || framework_failure_
-timeout 3 cp --sparse=always empty.big cp.test || fail=1
+timeout 3 cp --reflink=never --sparse=always empty.big cp.test || fail=1
 test $(stat -c %s empty.big) = $(stat -c %s cp.test) || fail=1
 rm empty.big cp.test
 fi
@@ -68,12 +68,12 @@ fi
 # is smaller than the size, thus identifying the file as sparse.
 # Note the '-l 1' case is an effective noop, and just checks
 # a file with a trailing hole is copied correctly.
-for sparse_mode in always auto never; do
+for sparse_arg in always auto never; do
   for alloc in '-l 4194304' '-l 1048576 -o 4194304' '-l 1'; do
     dd count=10 if=/dev/urandom iflag=fullblock of=unwritten.withdata
     truncate -s 2MiB unwritten.withdata || framework_failure_
     fallocate $alloc -n unwritten.withdata || framework_failure_
-    cp --sparse=$sparse_mode unwritten.withdata cp.test || fail=1
+    cp --reflink=never --sparse=$sparse_arg unwritten.withdata cp.test || fail=1
     test $(stat -c %s unwritten.withdata) = $(stat -c %s cp.test) || fail=1
     cmp unwritten.withdata cp.test || fail=1
     rm unwritten.withdata cp.test || framework_failure_

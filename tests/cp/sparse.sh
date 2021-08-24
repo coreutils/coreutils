@@ -27,8 +27,12 @@ require_sparse_support_
 size=$(expr 128 \* 1024 + 1)
 dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure_
 
+# Avoid reflinking. We want to test hole navigation here.
+cp_no_reflink() {
+  cp --reflink=never "$@"
+}
 
-cp --sparse=always sparse copy || fail=1
+cp_no_reflink --sparse=always sparse copy || fail=1
 
 # Ensure that the copy has the same block count as the original.
 test $(stat --printf %b copy) -le $(stat --printf %b sparse) || fail=1
@@ -51,22 +55,22 @@ for pattern in 1 0; do
   for n in 1 2 4 11 32 $maxn; do
     parts=$(expr $maxn / $n)
 
-    rm -f sparse.in
+    rm -f file.in
 
     # Generate non sparse file for copying with alternating
     # hole/data patterns of size n * $hole_size
     for i in $(yes "$pattern" | head -n$parts); do
-      dd iflag=fullblock if=$i of=sparse.in conv=notrunc oflag=append \
+      dd iflag=fullblock if=$i of=file.in conv=notrunc oflag=append \
          bs=$hole_size count=$n status=none || framework_failure_
     done
 
-    cp --sparse=always sparse.in sparse.out   || fail=1 # non sparse input
-    cp --sparse=always sparse.out sparse.out2 || fail=1 # sparse input
+    cp_no_reflink --sparse=always file.in sparse.out || fail=1 # non sparse in
+    cp_no_reflink --sparse=always sparse.out sparse.out2 || fail=1 # sparse in
 
-    cmp sparse.in sparse.out || fail=1
-    cmp sparse.in sparse.out2 || fail=1
+    cmp file.in sparse.out || fail=1
+    cmp file.in sparse.out2 || fail=1
 
-    ls -lsh sparse.*
+    ls -lsh file.in sparse.*
   done
 done
 

@@ -32,7 +32,7 @@ dd bs=1k seek=128 of=k < /dev/null || framework_failure_
 for append in no yes; do
   test $append = yes && printf y >> k
   for i in always never; do
-    cp --sparse=$i k k2 || fail=1
+    cp --reflink=never --sparse=$i k k2 || fail=1
     cmp k k2 || fail=1
   done
 done
@@ -48,7 +48,7 @@ dd bs=1k seek=1 of=k count=255 < /dev/zero || framework_failure_
 # Currently, on my F14/ext4 desktop, this K file starts off with size 256KiB,
 # (note that the K in the preceding test starts off with size 4KiB).
 # cp from coreutils-8.9 with --sparse=always reduces the size to 32KiB.
-cp --sparse=always k k2 || fail=1
+cp --reflink=never --sparse=always k k2 || fail=1
 if test $(stat -c %b k2) -ge $(stat -c %b k); then
   # If not sparse, then double check by creating with dd
   # as we're not guaranteed that seek will create a hole.
