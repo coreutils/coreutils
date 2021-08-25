@@ -175,7 +175,7 @@ sc_system_h_headers: .re-list
 	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0;			\
 	  $(gl_trap_);							\
 	  grep -nE -f .re-list						\
-	      $$($(VC_LIST_EXCEPT) | grep '^\($(srcdir)/\)\?src/')	\
+	      $$($(VC_LIST_EXCEPT) | grep -E '^($(srcdir)/)?src/')	\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2;  exit 1; } || :;				\
 	fi
@@ -838,7 +838,7 @@ exclude_file_name_regexp--sc_bindtextdomain = \
 exclude_file_name_regexp--sc_trailing_blank = \
   ^(tests/pr/|gl/.*\.diff$$|man/help2man)
 exclude_file_name_regexp--sc_system_h_headers = \
-  ^src/((die|system|copy)\.h|make-prime-list\.c)$$
+  ^src/((die|system|copy|find-mount-point)\.h|make-prime-list\.c)$$
 
 _src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
 _gl_src = (xdecto.max|cl-strtold)
