@@ -27,6 +27,7 @@
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
+#include "idx.h"
 #include "quote.h"
 #include "xstrtol.h"
 #include "xdectoint.h"
@@ -217,8 +218,8 @@ verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
 
 static int (*base_length) (int i);
 static bool (*isbase) (char ch);
-static void (*base_encode) (char const *restrict in, size_t inlen,
-                            char *restrict out, size_t outlen);
+static void (*base_encode) (char const *restrict in, idx_t inlen,
+                            char *restrict out, idx_t outlen);
 
 struct base16_decode_context
 {
@@ -234,7 +235,7 @@ struct z85_decode_context
 
 struct base2_decode_context
 {
-  unsigned octet;
+  unsigned char octet;
 };
 
 struct base_decode_context
@@ -248,12 +249,12 @@ struct base_decode_context
     struct z85_decode_context z85;
   } ctx;
   char *inbuf;
-  size_t bufsize;
+  idx_t bufsize;
 };
 static void (*base_decode_ctx_init) (struct base_decode_context *ctx);
 static bool (*base_decode_ctx) (struct base_decode_context *ctx,
-char const *restrict in, size_t inlen,
-char *restrict out, size_t *outlen);
+                                char const *restrict in, idx_t inlen,
+                                char *restrict out, idx_t *outlen);
 #endif
 
 
@@ -275,8 +276,8 @@ base64_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base64_decode_ctx_wrapper (struct base_decode_context *ctx,
-                           char const *restrict in, size_t inlen,
-                           char *restrict out, size_t *outlen)
+                           char const *restrict in, idx_t inlen,
+                           char *restrict out, idx_t *outlen)
 {
   bool b = base64_decode_ctx (&ctx->ctx.base64, in, inlen, out, outlen);
   ctx->i = ctx->ctx.base64.i;
@@ -291,7 +292,7 @@ init_inbuf (struct base_decode_context *ctx)
 }
 
 static void
-prepare_inbuf (struct base_decode_context *ctx, size_t inlen)
+prepare_inbuf (struct base_decode_context *ctx, idx_t inlen)
 {
   if (ctx->bufsize < inlen)
     {
@@ -302,8 +303,8 @@ prepare_inbuf (struct base_decode_context *ctx, size_t inlen)
 
 
 static void
-base64url_encode (char const *restrict in, size_t inlen,
-                  char *restrict out, size_t outlen)
+base64url_encode (char const *restrict in, idx_t inlen,
+                  char *restrict out, idx_t outlen)
 {
   base64_encode (in, inlen, out, outlen);
   /* translate 62nd and 63rd characters */
@@ -335,14 +336,14 @@ base64url_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base64url_decode_ctx_wrapper (struct base_decode_context *ctx,
-                              char const *restrict in, size_t inlen,
-                              char *restrict out, size_t *outlen)
+                              char const *restrict in, idx_t inlen,
+                              char *restrict out, idx_t *outlen)
 {
   prepare_inbuf (ctx, inlen);
   memcpy (ctx->inbuf, in, inlen);
 
   /* translate 62nd and 63rd characters */
-  size_t i = inlen;
+  idx_t i = inlen;
   char* p = ctx->inbuf;
   while (i--)
     {
@@ -381,8 +382,8 @@ base32_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base32_decode_ctx_wrapper (struct base_decode_context *ctx,
-                           char const *restrict in, size_t inlen,
-                           char *restrict out, size_t *outlen)
+                           char const *restrict in, idx_t inlen,
+                           char *restrict out, idx_t *outlen)
 {
   bool b = base32_decode_ctx (&ctx->ctx.base32, in, inlen, out, outlen);
   ctx->i = ctx->ctx.base32.i;
@@ -439,8 +440,8 @@ isbase32hex (char ch)
 
 
 static void
-base32hex_encode (char const *restrict in, size_t inlen,
-                  char *restrict out, size_t outlen)
+base32hex_encode (char const *restrict in, idx_t inlen,
+                  char *restrict out, idx_t outlen)
 {
   base32_encode (in, inlen, out, outlen);
 
@@ -462,12 +463,12 @@ base32hex_decode_ctx_init_wrapper (struct base_decode_context *ctx)
 
 static bool
 base32hex_decode_ctx_wrapper (struct base_decode_context *ctx,
-                              char const *restrict in, size_t inlen,
-                              char *restrict out, size_t *outlen)
+                              char const *restrict in, idx_t inlen,
+                              char *restrict out, idx_t *outlen)
 {
   prepare_inbuf (ctx, inlen);
 
-  size_t i = inlen;
+  idx_t i = inlen;
   char *p = ctx->inbuf;
   while (i--)
     {
@@ -502,8 +503,8 @@ base16_length (int len)
 static const char base16[16] = "0123456789ABCDEF";
 
 static void
-base16_encode (char const *restrict in, size_t inlen,
-               char *restrict out, size_t outlen)
+base16_encode (char const *restrict in, idx_t inlen,
+               char *restrict out, idx_t outlen)
 {
   while (inlen--)
     {
@@ -526,11 +527,10 @@ base16_decode_ctx_init (struct base_decode_context *ctx)
 
 static bool
 base16_decode_ctx (struct base_decode_context *ctx,
-                   char const *restrict in, size_t inlen,
-                   char *restrict out, size_t *outlen)
+                   char const *restrict in, idx_t inlen,
+                   char *restrict out, idx_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
-  unsigned int nib;
 
   *outlen = 0;
 
@@ -548,14 +548,13 @@ base16_decode_ctx (struct base_decode_context *ctx,
           continue;
         }
 
-      if (*in >= 'A' && *in <= 'F')
-        nib = (*in-'A'+10);
-      else if (*in >= '0' && *in <= '9')
-        nib = (*in-'0');
+      int nib = *in++;
+      if ('0' <= nib && nib <= '9')
+        nib -= '0';
+      else if ('A' <= nib && nib <= 'F')
+        nib -= 'A' - 10;
       else
         return false; /* garbage - return false */
-
-      ++in;
 
       if (ctx->ctx.base16.have_nibble)
         {
@@ -597,13 +596,12 @@ static char const z85_encoding[85] =
   ".-:+=^!/*?&<>()[]{}@%$#";
 
 static void
-z85_encode (char const *restrict in, size_t inlen,
-            char *restrict out, size_t outlen)
+z85_encode (char const *restrict in, idx_t inlen,
+            char *restrict out, idx_t outlen)
 {
   int i = 0;
   unsigned char quad[4];
-  unsigned int val;
-  size_t outidx = 0;
+  idx_t outidx = 0;
 
   while (true)
     {
@@ -626,14 +624,12 @@ z85_encode (char const *restrict in, size_t inlen,
       /* Got a quad, encode it */
       if (i == 4)
         {
-          val = ((uint32_t) quad[0] << 24)
-                + ((uint32_t) quad[1] << 16)
-                + ((uint32_t) quad[2] << 8)
-                + quad[3];
+          int_fast64_t val = quad[0];
+          val = (val << 24) + (quad[1] << 16) + (quad[2] << 8) + quad[3];
 
-          for (int j = 4; j>=0; --j)
+          for (int j = 4; j >= 0; --j)
             {
-              unsigned char c = val%85;
+              int c = val % 85;
               val /= 85;
 
               /* NOTE: if there is padding (which is trimmed by z85
@@ -667,7 +663,7 @@ z85_decode_ctx_init (struct base_decode_context *ctx)
 
 
 # define Z85_HI_CTX_TO_32BIT_VAL(ctx) \
-  ((uint32_t)(ctx)->ctx.z85.octets[0] * 85 * 85 * 85 * 85 )
+  ((int_fast64_t) (ctx)->ctx.z85.octets[0] * 85 * 85 * 85 * 85 )
 
 /*
  0 -  9:  0 1 2 3 4 5 6 7 8 9
@@ -680,25 +676,25 @@ z85_decode_ctx_init (struct base_decode_context *ctx)
  70 - 79:  * ? & < > ( ) [ ] {
  80 - 84:  } @ % $ #
 */
-static unsigned char z85_decoding[93] = {
-  68, 255, 84,  83, 82,  72, 255,              /* ! " # $ % & ' */
-  75, 76,  70,  65, 255, 63, 62,  69,          /* ( ) * + , - . / */
+static signed char const z85_decoding[93] = {
+  68, -1,  84,  83, 82,  72, -1,               /* ! " # $ % & ' */
+  75, 76,  70,  65, -1,  63, 62, 69,           /* ( ) * + , - . / */
   0,  1,   2,   3,  4,   5,  6,   7,  8,  9,   /* '0' to '9' */
-  64, 255, 73,  66, 74,  71, 81,               /* : ; < =  > ? @ */
+  64, -1,  73,  66, 74,  71, 81,               /* : ; < =  > ? @ */
   36, 37,  38,  39, 40,  41, 42,  43, 44, 45,  /* 'A' to 'J' */
   46, 47,  48,  49, 50,  51, 52,  53, 54, 55,  /* 'K' to 'T' */
   56, 57,  58,  59, 60,  61,                   /* 'U' to 'Z' */
-  77, 255, 78,  67, 255, 255,                  /* [ \ ] ^ _ ` */
+  77,  -1, 78,  67,  -1,  -1,                  /* [ \ ] ^ _ ` */
   10, 11,  12,  13, 14,  15, 16,  17, 18, 19,  /* 'a' to 'j' */
   20, 21,  22,  23, 24,  25, 26,  27, 28, 29,  /* 'k' to 't' */
   30, 31,  32,  33, 34,  35,                   /* 'u' to 'z' */
-  79, 255, 80                                  /* { | } */
+  79, -1,  80                                  /* { | } */
 };
 
 static bool
 z85_decode_ctx (struct base_decode_context *ctx,
-                char const *restrict in, size_t inlen,
-                char *restrict out, size_t *outlen)
+                char const *restrict in, idx_t inlen,
+                char *restrict out, idx_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
 
@@ -731,9 +727,10 @@ z85_decode_ctx (struct base_decode_context *ctx,
 
       if (c >= 33 && c <= 125)
         {
-          c = z85_decoding[c-33];
-          if (c == 255)
+          signed char ch = z85_decoding[c - 33];
+          if (ch < 0)
             return false; /* garbage - return false */
+          c = ch;
         }
       else
         return false; /* garbage - return false */
@@ -744,28 +741,16 @@ z85_decode_ctx (struct base_decode_context *ctx,
       if (ctx->ctx.z85.i == 5)
         {
           /* decode the lowest 4 octets, then check for overflows.  */
-          unsigned int val = Z85_LO_CTX_TO_32BIT_VAL (ctx);
+          int_fast64_t val = Z85_LO_CTX_TO_32BIT_VAL (ctx);
 
           /* The Z85 spec and the reference implementation say nothing
-             about overflows. To be on the safe side, reject them.
+             about overflows. To be on the safe side, reject them.  */
 
-             '$' (decoded to 83) in the highest octet
-             would result in value of 83*85^4 = 4332651875 , which is larger
-             than 2^32-1 and will overflow an unsigned int (similarly
-             for '$' decoded to 84).
-
-             '%' (decoded to 82) in the highest octet can fit in unsigned int
-             if the other 4 octets decode to a small enough value.
-          */
-          if (ctx->ctx.z85.octets[0] == 84 || ctx->ctx.z85.octets[0] == 83
-              || (ctx->ctx.z85.octets[0] == 82
-                  && val > 0xFFFFFFFF - 82*85*85*85*85U))
+          val += Z85_HI_CTX_TO_32BIT_VAL (ctx);
+          if ((val >> 24) & ~0xFF)
             return false;
 
-          /* no overflow, add the high octet value */
-          val += Z85_HI_CTX_TO_32BIT_VAL (ctx);
-
-          *out++ = (val >> 24) & 0xFF;
+          *out++ = val >> 24;
           *out++ = (val >> 16) & 0xFF;
           *out++ = (val >> 8) & 0xFF;
           *out++ = val & 0xFF;
@@ -794,8 +779,8 @@ base2_length (int len)
 
 
 inline static void
-base2msbf_encode (char const *restrict in, size_t inlen,
-                  char *restrict out, size_t outlen)
+base2msbf_encode (char const *restrict in, idx_t inlen,
+                  char *restrict out, idx_t outlen)
 {
   while (inlen--)
     {
@@ -811,8 +796,8 @@ base2msbf_encode (char const *restrict in, size_t inlen,
 }
 
 inline static void
-base2lsbf_encode (char const *restrict in, size_t inlen,
-                  char *restrict out, size_t outlen)
+base2lsbf_encode (char const *restrict in, idx_t inlen,
+                  char *restrict out, idx_t outlen)
 {
   while (inlen--)
     {
@@ -839,8 +824,8 @@ base2_decode_ctx_init (struct base_decode_context *ctx)
 
 static bool
 base2lsbf_decode_ctx (struct base_decode_context *ctx,
-                      char const *restrict in, size_t inlen,
-                      char *restrict out, size_t *outlen)
+                      char const *restrict in, idx_t inlen,
+                      char *restrict out, idx_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
 
@@ -883,8 +868,8 @@ base2lsbf_decode_ctx (struct base_decode_context *ctx,
 
 static bool
 base2msbf_decode_ctx (struct base_decode_context *ctx,
-                      char const *restrict in, size_t inlen,
-                      char *restrict out, size_t *outlen)
+                      char const *restrict in, idx_t inlen,
+                      char *restrict out, idx_t *outlen)
 {
   bool ignore_lines = true;  /* for now, always ignore them */
 
@@ -932,11 +917,9 @@ base2msbf_decode_ctx (struct base_decode_context *ctx,
 
 
 static void
-wrap_write (char const *buffer, size_t len,
-            uintmax_t wrap_column, size_t *current_column, FILE *out)
+wrap_write (char const *buffer, idx_t len,
+            idx_t wrap_column, idx_t *current_column, FILE *out)
 {
-  size_t written;
-
   if (wrap_column == 0)
     {
       /* Simple write. */
@@ -944,11 +927,9 @@ wrap_write (char const *buffer, size_t len,
         die (EXIT_FAILURE, errno, _("write error"));
     }
   else
-    for (written = 0; written < len;)
+    for (idx_t written = 0; written < len; )
       {
-        uintmax_t cols_remaining = wrap_column - *current_column;
-        size_t to_write = MIN (cols_remaining, SIZE_MAX);
-        to_write = MIN (to_write, len - written);
+        idx_t to_write = MIN (wrap_column - *current_column, len - written);
 
         if (to_write == 0)
           {
@@ -967,18 +948,18 @@ wrap_write (char const *buffer, size_t len,
 }
 
 static void
-do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
+do_encode (FILE *in, FILE *out, idx_t wrap_column)
 {
-  size_t current_column = 0;
+  idx_t current_column = 0;
   char *inbuf, *outbuf;
-  size_t sum;
+  idx_t sum;
 
   inbuf = xmalloc (ENC_BLOCKSIZE);
   outbuf = xmalloc (BASE_LENGTH (ENC_BLOCKSIZE));
 
   do
     {
-      size_t n;
+      idx_t n;
 
       sum = 0;
       do
@@ -1015,7 +996,7 @@ static void
 do_decode (FILE *in, FILE *out, bool ignore_garbage)
 {
   char *inbuf, *outbuf;
-  size_t sum;
+  idx_t sum;
   struct base_decode_context ctx;
 
   inbuf = xmalloc (BASE_LENGTH (DEC_BLOCKSIZE));
@@ -1029,17 +1010,16 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
   do
     {
       bool ok;
-      size_t n;
-      unsigned int k;
 
       sum = 0;
       do
         {
-          n = fread (inbuf + sum, 1, BASE_LENGTH (DEC_BLOCKSIZE) - sum, in);
+          idx_t n = fread (inbuf + sum,
+                           1, BASE_LENGTH (DEC_BLOCKSIZE) - sum, in);
 
           if (ignore_garbage)
             {
-              for (size_t i = 0; n > 0 && i < n;)
+              for (idx_t i = 0; n > 0 && i < n;)
                 {
                   if (isbase (inbuf[sum + i]) || inbuf[sum + i] == '=')
                     i++;
@@ -1059,11 +1039,11 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
          However, when it processes the final input buffer, we want
          to iterate it one additional time, but with an indicator
          telling it to flush what is in CTX.  */
-      for (k = 0; k < 1 + !!feof (in); k++)
+      for (int k = 0; k < 1 + !!feof (in); k++)
         {
           if (k == 1 && ctx.i == 0)
             break;
-          n = DEC_BLOCKSIZE;
+          idx_t n = DEC_BLOCKSIZE;
           ok = base_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
           if (fwrite (outbuf, 1, n, out) < n)
@@ -1093,8 +1073,8 @@ main (int argc, char **argv)
   bool decode = false;
   /* True if we should ignore non-base-alphabetic characters. */
   bool ignore_garbage = false;
-  /* Wrap encoded data around the 76:th column, by default. */
-  uintmax_t wrap_column = 76;
+  /* Wrap encoded data around the 76th column, by default. */
+  idx_t wrap_column = 76;
 
 #if BASE_TYPE == 42
   int base_type = 0;
@@ -1116,8 +1096,14 @@ main (int argc, char **argv)
         break;
 
       case 'w':
-        wrap_column = xdectoumax (optarg, 0, UINTMAX_MAX, "",
-                                  _("invalid wrap size"), 0);
+        {
+          intmax_t w;
+          strtol_error s_err = xstrtoimax (optarg, NULL, 10, &w, "");
+          if (LONGINT_OVERFLOW < s_err || w < 0)
+            die (EXIT_FAILURE, 0, "%s: %s",
+                 _("invalid wrap size"), quote (optarg));
+          wrap_column = s_err == LONGINT_OVERFLOW || IDX_MAX < w ? 0 : w;
+        }
         break;
 
       case 'i':
