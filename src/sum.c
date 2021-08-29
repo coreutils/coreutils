@@ -22,251 +22,171 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <getopt.h>
 #include "system.h"
-#include "die.h"
-#include "error.h"
-#include "fadvise.h"
 #include "human.h"
-#include "safe-read.h"
-#include "xbinary-io.h"
+#include "sum.h"
 
-/* The official name of this program (e.g., no 'g' prefix).  */
-#define PROGRAM_NAME "sum"
+/* Calculate the checksum and the size in bytes of stream STREAM.
+   Return -1 on error, 0 on success.  */
 
-#define AUTHORS \
-  proper_name ("Kayvan Aghaiepour"), \
-  proper_name ("David MacKenzie")
-
-/* True if any of the files read were the standard input. */
-static bool have_read_stdin;
-
-static struct option const longopts[] =
+int
+bsd_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 {
-  {"sysv", no_argument, NULL, 's'},
-  {GETOPT_HELP_OPTION_DECL},
-  {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
-};
-
-void
-usage (int status)
-{
-  if (status != EXIT_SUCCESS)
-    emit_try_help ();
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"),
-              program_name);
-      fputs (_("\
-Print checksum and block counts for each FILE.\n\
-"), stdout);
-
-      emit_stdin_note ();
-
-      fputs (_("\
-\n\
-  -r              use BSD sum algorithm (the default), use 1K blocks\n\
-  -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      emit_ancillary_info (PROGRAM_NAME);
-    }
-  exit (status);
-}
-
-/* Calculate and print the rotated checksum and the size in 1K blocks
-   of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is >0, print FILE next to the checksum and size.
-   The checksum varies depending on sizeof (int).
-   Return true if successful.  */
-
-static bool
-bsd_sum_file (char const *file, int print_name)
-{
-  FILE *fp;
+  int ret = -1;
+  size_t sum, n;
   int checksum = 0;	/* The checksum mod 2^16. */
   uintmax_t total_bytes = 0;	/* The number of bytes. */
-  int ch;		/* Each character read. */
-  char hbuf[LONGEST_HUMAN_READABLE + 1];
-  bool is_stdin = STREQ (file, "-");
+  static const size_t buffer_length = 32768;
+  uint8_t *buffer = malloc (buffer_length);
 
-  if (is_stdin)
+  if (! buffer)
+    return -1;
+
+  /* Process file */
+  while (true)
+  {
+    sum = 0;
+
+    /* Read block */
+    while (true)
     {
-      fp = stdin;
-      have_read_stdin = true;
-      xset_binary_mode (STDIN_FILENO, O_BINARY);
-    }
-  else
-    {
-      fp = fopen (file, (O_BINARY ? "rb" : "r"));
-      if (fp == NULL)
+      n = fread (buffer + sum, 1, buffer_length - sum, stream);
+      sum += n;
+
+      if (buffer_length == sum)
+        break;
+
+      if (n == 0)
         {
-          error (0, errno, "%s", quotef (file));
-          return false;
+          if (ferror (stream))
+            goto cleanup_buffer;
+          goto final_process;
         }
+
+      if (feof (stream))
+        goto final_process;
     }
 
-  fadvise (fp, FADVISE_SEQUENTIAL);
+    for (size_t i = 0; i < sum; i++)
+      {
+        checksum = (checksum >> 1) + ((checksum & 1) << 15);
+        checksum += buffer[i];
+        checksum &= 0xffff;	/* Keep it within bounds. */
+      }
+    total_bytes += sum;
+  }
 
-  while ((ch = getc (fp)) != EOF)
+final_process:;
+
+  for (size_t i = 0; i < sum; i++)
     {
-      total_bytes++;
       checksum = (checksum >> 1) + ((checksum & 1) << 15);
-      checksum += ch;
+      checksum += buffer[i];
       checksum &= 0xffff;	/* Keep it within bounds. */
     }
+  total_bytes += sum;
 
-  int err = errno;
-  if (!ferror (fp))
-    err = 0;
-  if (is_stdin)
-    clearerr (fp);
-  else if (fclose (fp) != 0 && !err)
-    err = errno;
-  if (err)
-    {
-      error (0, err, "%s", quotef (file));
-      return false;
-    }
-
-  printf ("%05d %5s", checksum,
-          human_readable (total_bytes, hbuf, human_ceiling, 1, 1024));
-  if (print_name)
-    printf (" %s", file);
-  putchar ('\n');
-
-  return true;
+  memcpy (resstream, &checksum, sizeof checksum);
+  *length = total_bytes;
+  ret = 0;
+cleanup_buffer:
+  free (buffer);
+  return ret;
 }
 
-/* Calculate and print the checksum and the size in 512-byte blocks
-   of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is >0, print FILE next to the checksum and size.
-   Return true if successful.  */
+/* Calculate the checksum and the size in bytes of stream STREAM.
+   Return -1 on error, 0 on success.  */
 
-static bool
-sysv_sum_file (char const *file, int print_name)
+int
+sysv_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 {
-  int fd;
-  unsigned char buf[8192];
+  int ret = -1;
+  size_t sum, n;
   uintmax_t total_bytes = 0;
-  char hbuf[LONGEST_HUMAN_READABLE + 1];
-  int r;
-  int checksum;
+  static const size_t buffer_length = 32768;
+  uint8_t *buffer = malloc (buffer_length);
+
+  if (! buffer)
+    return -1;
 
   /* The sum of all the input bytes, modulo (UINT_MAX + 1).  */
   unsigned int s = 0;
 
-  bool is_stdin = STREQ (file, "-");
-
-  if (is_stdin)
-    {
-      fd = STDIN_FILENO;
-      have_read_stdin = true;
-      xset_binary_mode (STDIN_FILENO, O_BINARY);
-    }
-  else
-    {
-      fd = open (file, O_RDONLY | O_BINARY);
-      if (fd == -1)
-        {
-          error (0, errno, "%s", quotef (file));
-          return false;
-        }
-    }
-
+  /* Process file */
   while (true)
-    {
-      size_t bytes_read = safe_read (fd, buf, sizeof buf);
+  {
+    sum = 0;
 
-      if (bytes_read == 0)
+    /* Read block */
+    while (true)
+    {
+      n = fread (buffer + sum, 1, buffer_length - sum, stream);
+      sum += n;
+
+      if (buffer_length == sum)
         break;
 
-      if (bytes_read == SAFE_READ_ERROR)
+      if (n == 0)
         {
-          error (0, errno, "%s", quotef (file));
-          if (!is_stdin)
-            close (fd);
-          return false;
+          if (ferror (stream))
+            goto cleanup_buffer;
+          goto final_process;
         }
 
-      for (size_t i = 0; i < bytes_read; i++)
-        s += buf[i];
-      total_bytes += bytes_read;
+      if (feof (stream))
+        goto final_process;
     }
 
-  if (!is_stdin && close (fd) != 0)
-    {
-      error (0, errno, "%s", quotef (file));
-      return false;
-    }
+    for (size_t i = 0; i < sum; i++)
+      s += buffer[i];
+    total_bytes += sum;
+  }
 
-  r = (s & 0xffff) + ((s & 0xffffffff) >> 16);
-  checksum = (r & 0xffff) + (r >> 16);
+final_process:;
 
-  printf ("%d %s", checksum,
-          human_readable (total_bytes, hbuf, human_ceiling, 1, 512));
-  if (print_name)
-    printf (" %s", file);
-  putchar ('\n');
+  for (size_t i = 0; i < sum; i++)
+    s += buffer[i];
+  total_bytes += sum;
 
-  return true;
+  int r = (s & 0xffff) + ((s & 0xffffffff) >> 16);
+  int checksum = (r & 0xffff) + (r >> 16);
+
+  memcpy (resstream, &checksum, sizeof checksum);
+  *length = total_bytes;
+  ret = 0;
+cleanup_buffer:
+  free (buffer);
+  return ret;
 }
 
-int
-main (int argc, char **argv)
+/* Print the checksum and size (in 1024 byte blocks) to stdout.
+   If ARGS is true, also print the FILE name.  */
+
+void
+output_bsd (char const *file, int binary_file, void const *digest,
+            bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
 {
-  bool ok;
-  int optc;
-  int files_given;
-  bool (*sum_func) (char const *, int) = bsd_sum_file;
 
-  initialize_main (&argc, &argv);
-  set_program_name (argv[0]);
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
+  printf ("%05d %5s", *(int *)digest,
+          human_readable (length, hbuf, human_ceiling, 1, 1024));
+  if (args)
+    printf (" %s", file);
+  putchar ('\n');
+}
 
-  atexit (close_stdout);
+/* Print the checksum and size (in 512 byte blocks) to stdout.
+   If ARGS is true, also print the FILE name.  */
 
-  /* Line buffer stdout to ensure lines are written atomically and immediately
-     so that processes running in parallel do not intersperse their output.  */
-  setvbuf (stdout, NULL, _IOLBF, 0);
+void
+output_sysv (char const *file, int binary_file, void const *digest,
+             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+{
 
-  have_read_stdin = false;
-
-  while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)
-    {
-      switch (optc)
-        {
-        case 'r':		/* For SysV compatibility. */
-          sum_func = bsd_sum_file;
-          break;
-
-        case 's':
-          sum_func = sysv_sum_file;
-          break;
-
-        case_GETOPT_HELP_CHAR;
-
-        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
-        default:
-          usage (EXIT_FAILURE);
-        }
-    }
-
-  files_given = argc - optind;
-  if (files_given <= 0)
-    ok = sum_func ("-", files_given);
-  else
-    for (ok = true; optind < argc; optind++)
-      ok &= sum_func (argv[optind], files_given);
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, "%s", quotef ("-"));
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
+  printf ("%d %s", *(int *)digest,
+          human_readable (length, hbuf, human_ceiling, 1, 512));
+  if (args)
+    printf (" %s", file);
+  putchar ('\n');
 }

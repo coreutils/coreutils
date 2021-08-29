@@ -355,6 +355,9 @@ src___SOURCES = src/lbracket.c
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
+src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
+src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
+
 src_cksum_SOURCES = src/cksum.c src/cksum.h
 if USE_PCLMUL_CRC32
 noinst_LIBRARIES += src/libcksum_pclmul.a

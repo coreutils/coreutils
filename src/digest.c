@@ -27,6 +27,9 @@
 #include "xdectoint.h"
 #include "xstrtol.h"
 
+#if HASH_ALGO_SUM
+# include "sum.h"
+#endif
 #if HASH_ALGO_BLAKE2
 # include "blake2/b2sum.h"
 #endif
@@ -49,7 +52,14 @@
 #include "xbinary-io.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
-#if HASH_ALGO_MD5
+#if HASH_ALGO_SUM
+# define PROGRAM_NAME "sum"
+# define DIGEST_TYPE_STRING "BSD"
+# define DIGEST_STREAM sumfns[sum_algorithm]
+# define DIGEST_OUT sum_output_fns[sum_algorithm]
+# define DIGEST_BITS 16
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_MD5
 # define PROGRAM_NAME "md5sum"
 # define DIGEST_TYPE_STRING "MD5"
 # define DIGEST_STREAM md5_stream
@@ -101,8 +111,15 @@
 #else
 # error "Can't decide which hash algorithm to compile."
 #endif
+#if !HASH_ALGO_SUM
+# define DIGEST_OUT output_file
+#endif
 
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_SUM
+# define AUTHORS \
+  proper_name ("Kayvan Aghaiepour"), \
+  proper_name ("David MacKenzie")
+#elif HASH_ALGO_BLAKE2
 # define AUTHORS \
   proper_name ("Padraig Brady"), \
   proper_name ("Samuel Neves")
@@ -111,6 +128,8 @@
   proper_name ("Ulrich Drepper"), \
   proper_name ("Scott Miller"), \
   proper_name ("David Madore")
+#endif
+#if !HASH_ALGO_BLAKE2
 # define DIGEST_HEX_BYTES (DIGEST_BITS / 4)
 #endif
 #define DIGEST_BIN_BYTES (DIGEST_BITS / 8)
@@ -188,6 +207,28 @@ static uintmax_t blake2_max_len[]=
 };
 #endif /* HASH_ALGO_BLAKE2 */
 
+typedef void (*digest_output_fn)(char const*, int, void const*,
+                                 bool, bool, uintmax_t);
+#if HASH_ALGO_SUM
+enum Algorithm
+{
+  bsd,
+  sysv,
+};
+
+static enum Algorithm sum_algorithm;
+static sumfn sumfns[]=
+{
+  bsd_sum_stream,
+  sysv_sum_stream,
+};
+static digest_output_fn sum_output_fns[]=
+{
+  output_bsd,
+  output_sysv,
+};
+#endif
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -204,6 +245,7 @@ static struct option const long_options[] =
 #if HASH_ALGO_BLAKE2
   { "length", required_argument, NULL, 'l'},
 #endif
+#if !HASH_AGLO_SUM
   { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },
   { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION},
@@ -214,6 +256,9 @@ static struct option const long_options[] =
   { "strict", no_argument, NULL, STRICT_OPTION },
   { "tag", no_argument, NULL, TAG_OPTION },
   { "zero", no_argument, NULL, 'z' },
+#else
+  {"sysv", no_argument, NULL, 's'},
+#endif
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
@@ -235,6 +280,13 @@ Print or check %s (%d-bit) checksums.\n\
               DIGEST_BITS);
 
       emit_stdin_note ();
+#if HASH_ALGO_SUM
+      fputs (_("\
+\n\
+  -r              use BSD sum algorithm (the default), use 1K blocks\n\
+  -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
+"), stdout);
+#else
       if (O_BINARY)
         fputs (_("\
 \n\
@@ -249,12 +301,12 @@ Print or check %s (%d-bit) checksums.\n\
       printf (_("\
   -c, --check          read %s sums from the FILEs and check them\n"),
               DIGEST_TYPE_STRING);
-#if HASH_ALGO_BLAKE2
+# if HASH_ALGO_BLAKE2
         fputs (_("\
   -l, --length         digest length in bits; must not exceed the maximum for\n\
                        the blake2 algorithm and must be a multiple of 8\n\
 "), stdout);
-#endif
+# endif
       fputs (_("\
       --tag            create a BSD-style checksum\n\
 "), stdout);
@@ -280,8 +332,10 @@ The following five options are useful only when verifying checksums:\n\
   -w, --warn           warn about improperly formatted checksum lines\n\
 \n\
 "), stdout);
+#endif
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+#if !HASH_ALGO_SUM
       printf (_("\
 \n\
 The sums are computed as described in %s.  When checking, the input\n\
@@ -292,6 +346,7 @@ line with checksum, a space, a character indicating input mode ('*' for binary,\
 Note: There is no difference between binary mode and text mode on GNU systems.\
 \n"),
               DIGEST_REFERENCE);
+#endif
       emit_ancillary_info (PROGRAM_NAME);
     }
 
@@ -626,7 +681,9 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 
   fadvise (fp, FADVISE_SEQUENTIAL);
 
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_SUM
+  err = DIGEST_STREAM (fp, bin_result, length);
+#elif HASH_ALGO_BLAKE2
   err = DIGEST_STREAM (fp, bin_result, b2_length / 8);
 #else
   err = DIGEST_STREAM (fp, bin_result);
@@ -645,6 +702,60 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 
   return true;
 }
+
+#if !HASH_ALGO_SUM
+static void
+output_file (char const *file, int binary_file, void const *digest,
+             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+{
+  unsigned char const *bin_buffer = digest;
+  /* We don't really need to escape, and hence detect, the '\\'
+      char, and not doing so should be both forwards and backwards
+      compatible, since only escaped lines would have a '\\' char at
+      the start.  However just in case users are directly comparing
+      against old (hashed) outputs, in the presence of files
+      containing '\\' characters, we decided to not simplify the
+      output in this case.  */
+  bool needs_escape = (strchr (file, '\\') || strchr (file, '\n'))
+                      && delim == '\n';
+
+  if (tagged)
+    {
+      if (needs_escape)
+        putchar ('\\');
+
+# if HASH_ALGO_BLAKE2
+      fputs (algorithm_out_string[b2_algorithm], stdout);
+      if (b2_length < blake2_max_len[b2_algorithm] * 8)
+        printf ("-%"PRIuMAX, b2_length);
+# else
+      fputs (DIGEST_TYPE_STRING, stdout);
+# endif
+      fputs (" (", stdout);
+      print_filename (file, needs_escape);
+      fputs (") = ", stdout);
+    }
+
+  /* Output a leading backslash if the file name contains
+      a newline or backslash.  */
+  if (!tagged && needs_escape)
+    putchar ('\\');
+
+  for (size_t i = 0; i < (digest_hex_bytes / 2); ++i)
+    printf ("%02x", bin_buffer[i]);
+
+  if (!tagged)
+    {
+      putchar (' ');
+
+      putchar (binary_file ? '*' : ' ');
+
+      print_filename (file, needs_escape);
+    }
+
+  putchar (delim);
+}
+#endif
 
 static bool
 digest_check (char const *checkfile_name)
@@ -881,7 +992,9 @@ main (int argc, char **argv)
      so that processes running in parallel do not intersperse their output.  */
   setvbuf (stdout, NULL, _IOLBF, 0);
 
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_SUM
+  const char* short_opts = "rs";
+#elif HASH_ALGO_BLAKE2
   const char* short_opts = "l:bctwz";
   const char* b2_length_str = "";
 #else
@@ -903,6 +1016,7 @@ main (int argc, char **argv)
           }
         break;
 #endif
+#if !HASH_ALGO_SUM
       case 'b':
         binary = 1;
         break;
@@ -940,6 +1054,15 @@ main (int argc, char **argv)
       case 'z':
         delim = '\0';
         break;
+#else
+      case 'r':		/* For SysV compatibility. */
+        sum_algorithm = bsd;
+        break;
+
+      case 's':
+        sum_algorithm = sysv;
+        break;
+#endif
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
@@ -1041,63 +1164,20 @@ main (int argc, char **argv)
   for (char **operandp = argv + optind; operandp < operand_lim; operandp++)
     {
       char *file = *operandp;
-
       if (do_check)
         ok &= digest_check (file);
       else
         {
-          int file_is_binary = binary;
+          int binary_file = binary;
           bool missing;
+          uintmax_t length;
 
-          if (! digest_file (file, &file_is_binary, bin_buffer, &missing, NULL))
+          if (! digest_file (file, &binary_file, bin_buffer, &missing, &length))
             ok = false;
           else
             {
-              /* We don't really need to escape, and hence detect, the '\\'
-                 char, and not doing so should be both forwards and backwards
-                 compatible, since only escaped lines would have a '\\' char at
-                 the start.  However just in case users are directly comparing
-                 against old (hashed) outputs, in the presence of files
-                 containing '\\' characters, we decided to not simplify the
-                 output in this case.  */
-              bool needs_escape = (strchr (file, '\\') || strchr (file, '\n'))
-                                  && delim == '\n';
-
-              if (prefix_tag)
-                {
-                  if (needs_escape)
-                    putchar ('\\');
-
-#if HASH_ALGO_BLAKE2
-                  fputs (algorithm_out_string[b2_algorithm], stdout);
-                  if (b2_length < blake2_max_len[b2_algorithm] * 8)
-                    printf ("-%"PRIuMAX, b2_length);
-#else
-                  fputs (DIGEST_TYPE_STRING, stdout);
-#endif
-                  fputs (" (", stdout);
-                  print_filename (file, needs_escape);
-                  fputs (") = ", stdout);
-                }
-
-              /* Output a leading backslash if the file name contains
-                 a newline or backslash.  */
-              if (!prefix_tag && needs_escape)
-                putchar ('\\');
-
-              for (size_t i = 0; i < (digest_hex_bytes / 2); ++i)
-                printf ("%02x", bin_buffer[i]);
-
-              if (!prefix_tag)
-                {
-                  putchar (' ');
-
-                  putchar (file_is_binary ? '*' : ' ');
-
-                  print_filename (file, needs_escape);
-                }
-
-              putchar (delim);
+              DIGEST_OUT (file, binary_file, bin_buffer, prefix_tag,
+                          optind != argc, length);
             }
         }
     }
