@@ -68,7 +68,7 @@ Print checksum and block counts for each FILE.\n\
 
       fputs (_("\
 \n\
-  -r              use BSD sum algorithm, use 1K blocks\n\
+  -r              use BSD sum algorithm (the default), use 1K blocks\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
