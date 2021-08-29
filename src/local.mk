@@ -397,19 +397,20 @@ src_arch_SOURCES = src/uname.c src/uname-arch.c
 src_cut_SOURCES = src/cut.c src/set-fields.c
 src_numfmt_SOURCES = src/numfmt.c src/set-fields.c
 
+src_md5sum_SOURCES = src/digest.c
 src_md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
-src_sha1sum_SOURCES = src/md5sum.c
+src_sha1sum_SOURCES = src/digest.c
 src_sha1sum_CPPFLAGS = -DHASH_ALGO_SHA1=1 $(AM_CPPFLAGS)
-src_sha224sum_SOURCES = src/md5sum.c
+src_sha224sum_SOURCES = src/digest.c
 src_sha224sum_CPPFLAGS = -DHASH_ALGO_SHA224=1 $(AM_CPPFLAGS)
-src_sha256sum_SOURCES = src/md5sum.c
+src_sha256sum_SOURCES = src/digest.c
 src_sha256sum_CPPFLAGS = -DHASH_ALGO_SHA256=1 $(AM_CPPFLAGS)
-src_sha384sum_SOURCES = src/md5sum.c
+src_sha384sum_SOURCES = src/digest.c
 src_sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
-src_sha512sum_SOURCES = src/md5sum.c
+src_sha512sum_SOURCES = src/digest.c
 src_sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 src_b2sum_CPPFLAGS = -DHASH_ALGO_BLAKE2=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
-src_b2sum_SOURCES = src/md5sum.c \
+src_b2sum_SOURCES = src/digest.c \
 		    src/blake2/blake2.h src/blake2/blake2-impl.h \
 		    src/blake2/blake2b-ref.c \
 		    src/blake2/b2sum.c src/blake2/b2sum.h

@@ -82,7 +82,7 @@ src/link.c
 src/ln.c
 src/logname.c
 src/ls.c
-src/md5sum.c
+src/digest.c
 src/mkdir.c
 src/mkfifo.c
 src/mknod.c
