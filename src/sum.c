@@ -80,7 +80,7 @@ Print checksum and block counts for each FILE.\n\
 
 /* Calculate and print the rotated checksum and the size in 1K blocks
    of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is >1, print FILE next to the checksum and size.
+   If PRINT_NAME is >0, print FILE next to the checksum and size.
    The checksum varies depending on sizeof (int).
    Return true if successful.  */
 
@@ -135,7 +135,7 @@ bsd_sum_file (char const *file, int print_name)
 
   printf ("%05d %5s", checksum,
           human_readable (total_bytes, hbuf, human_ceiling, 1, 1024));
-  if (print_name > 1)
+  if (print_name)
     printf (" %s", file);
   putchar ('\n');
 

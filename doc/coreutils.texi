@@ -3887,10 +3887,8 @@ sum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @command{sum} prints the checksum for each @var{file} followed by the
-number of blocks in the file (rounded up).  If more than one @var{file}
-is given, file names are also printed (by default).  (With the
-@option{--sysv} option, corresponding file names are printed when there is
-at least one file argument.)
+number of blocks in the file (rounded up).  If at least one @var{file}
+is given, file names are also printed.
 
 By default, GNU @command{sum} computes checksums using an algorithm
 compatible with BSD @command{sum} and prints file sizes in units of

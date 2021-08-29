@@ -83,6 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat will use decomposed (major,minor) device numbers in its default format.
   This is less ambiguous, and more consistent with ls.
 
+  sum [-r] will output a file name, even if only a single name is passed.
+  This is consistent with sum -s, cksum, and other sum(1) implementations.
+
 ** New Features
 
   expr and factor now support bignums on all platforms.
