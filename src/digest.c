@@ -589,7 +589,7 @@ print_filename (char const *file, bool escape)
 
 static bool
 digest_file (char const *filename, int *binary, unsigned char *bin_result,
-             bool *missing)
+             bool *missing, uintmax_t* length _GL_UNUSED)
 {
   FILE *fp;
   int err;
@@ -737,7 +737,7 @@ digest_check (char const *checkfile_name)
 
           properly_formatted_lines = true;
 
-          ok = digest_file (filename, &binary, bin_buffer, &missing);
+          ok = digest_file (filename, &binary, bin_buffer, &missing, NULL);
 
           if (!ok)
             {
@@ -1049,7 +1049,7 @@ main (int argc, char **argv)
           int file_is_binary = binary;
           bool missing;
 
-          if (! digest_file (file, &file_is_binary, bin_buffer, &missing))
+          if (! digest_file (file, &file_is_binary, bin_buffer, &missing, NULL))
             ok = false;
           else
             {
