@@ -139,16 +139,16 @@ cmp_setup () { args="$tmp_in $tmp_in2"; }
 dd_setup () { args=status=noxfer; }
 
 zdiff_setup () { args="$zin $zin2"; }
-zcmp_setup () { args="$zin $zin2"; }
-zcat_setup () { args=$zin; }
-gunzip_setup () { args=$zin; }
-zmore_setup () { args=$zin; }
-zless_setup () { args=$zin; }
+zcmp_setup () { zdiff_setup; }
+zcat_setup () { TERM=dumb; export TERM; args=$zin; }
+gunzip_setup () { zcat_setup; }
+zmore_setup () { zcat_setup; }
+zless_setup () { zcat_setup; }
 znew_setup () { args=$bigZ_in; }
-zforce_setup () { args=$zin; }
+zforce_setup () { zcat_setup; }
 zgrep_setup () { args="z $zin"; }
-zegrep_setup () { args="z $zin"; }
-zfgrep_setup () { args="z $zin"; }
+zegrep_setup () { zgrep_setup; }
+zfgrep_setup () { zgrep_setup; }
 gzexe_setup () { args=$tmp_in; }
 
 # We know that $tmp_in contains a "0"
