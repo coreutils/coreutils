@@ -176,7 +176,7 @@ my @tv = (
  ["a\n", "b\n"], " a b\n", 0],
 
 # FIXME: change this to ensure the diagnostic makes sense
-['invalid-j', '-j x', {}, "", 1,
+['invalid-j', '-j x', ["", ""], "", 1,
  "$prog: invalid field number: 'x'\n"],
 
 # With ordering check, inputs in order
