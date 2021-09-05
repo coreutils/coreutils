@@ -21,7 +21,6 @@
 #include <stdint.h>
 #include <x86intrin.h>
 #include "system.h"
-#include "error.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
@@ -29,14 +28,12 @@
 extern uint_fast32_t const crctab[8][256];
 
 extern bool
-cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
-              uintmax_t *length_out);
+cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 
 /* Calculate CRC32 using PCLMULQDQ CPU instruction found in x86/x64 CPUs */
 
 bool
-cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
-              uintmax_t *length_out)
+cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 {
   __m128i buf[BUFLEN / sizeof (__m128i)];
   uint_fast32_t crc = 0;
@@ -46,7 +43,7 @@ cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
   __m128i four_mult_constant;
   __m128i shuffle_constant;
 
-  if (!fp || !file || !crc_out || !length_out)
+  if (!fp || !crc_out || !length_out)
     return false;
 
   /* These constants and general algorithms are taken from the Intel whitepaper
@@ -75,10 +72,16 @@ cksum_pclmul (FILE *fp, char const *file, uint_fast32_t *crc_out,
 
       if (length + bytes_read < length)
         {
-          error (0, EOVERFLOW, _("%s: file too long"), quotef (file));
+          errno = EOVERFLOW;
           return false;
         }
       length += bytes_read;
+
+      if (bytes_read == 0)
+        {
+          if (ferror (fp))
+            return false;
+        }
 
       datap = (__m128i *)buf;
 

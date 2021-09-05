@@ -835,13 +835,13 @@ update-copyright-env = \
 exclude_file_name_regexp--sc_space_tab = \
   ^(tests/pr/|tests/misc/nl\.sh$$|gl/.*\.diff$$|man/help2man$$)
 exclude_file_name_regexp--sc_bindtextdomain = \
-  ^(gl/.*|lib/euidaccess-stat|src/make-prime-list)\.c$$
+  ^(gl/.*|lib/euidaccess-stat|src/make-prime-list|src/cksum)\.c$$
 exclude_file_name_regexp--sc_trailing_blank = \
   ^(tests/pr/|gl/.*\.diff$$|man/help2man)
 exclude_file_name_regexp--sc_system_h_headers = \
   ^src/((die|system|copy|find-mount-point)\.h|make-prime-list\.c)$$
 
-_src = (false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
+_src = (crctab|false|lbracket|ls-(dir|ls|vdir)|tac-pipe|uname-(arch|uname))
 _gl_src = (xdecto.max|cl-strtold)
 exclude_file_name_regexp--sc_require_config_h_first = \
   (^lib/buffer-lcm\.c|gl/lib/$(_gl_src)\.c|src/$(_src)\.c)$$

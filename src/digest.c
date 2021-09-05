@@ -30,6 +30,9 @@
 #if HASH_ALGO_SUM
 # include "sum.h"
 #endif
+#if HASH_ALGO_CKSUM
+# include "cksum.h"
+#endif
 #if HASH_ALGO_BLAKE2
 # include "blake2/b2sum.h"
 #endif
@@ -58,6 +61,13 @@
 # define DIGEST_STREAM sumfns[sum_algorithm]
 # define DIGEST_OUT sum_output_fns[sum_algorithm]
 # define DIGEST_BITS 16
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_CKSUM
+# define PROGRAM_NAME "cksum"
+# define DIGEST_TYPE_STRING "CRC"
+# define DIGEST_STREAM crc_sum_stream
+# define DIGEST_OUT output_crc
+# define DIGEST_BITS 32
 # define DIGEST_ALIGN 4
 #elif HASH_ALGO_MD5
 # define PROGRAM_NAME "md5sum"
@@ -111,7 +121,7 @@
 #else
 # error "Can't decide which hash algorithm to compile."
 #endif
-#if !HASH_ALGO_SUM
+#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
 # define DIGEST_OUT output_file
 #endif
 
@@ -119,6 +129,8 @@
 # define AUTHORS \
   proper_name ("Kayvan Aghaiepour"), \
   proper_name ("David MacKenzie")
+#elif HASH_ALGO_CKSUM
+# define AUTHORS proper_name ("Q. Frank Xia")
 #elif HASH_ALGO_BLAKE2
 # define AUTHORS \
   proper_name ("Padraig Brady"), \
@@ -229,15 +241,21 @@ static digest_output_fn sum_output_fns[]=
 };
 #endif
 
+#if HASH_ALGO_CKSUM
+bool cksum_debug;
+#endif
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+
 enum
 {
   IGNORE_MISSING_OPTION = CHAR_MAX + 1,
   STATUS_OPTION,
   QUIET_OPTION,
   STRICT_OPTION,
-  TAG_OPTION
+  TAG_OPTION,
+  DEBUG_PROGRAM_OPTION,
 };
 
 static struct option const long_options[] =
@@ -245,7 +263,7 @@ static struct option const long_options[] =
 #if HASH_ALGO_BLAKE2
   { "length", required_argument, NULL, 'l'},
 #endif
-#if !HASH_AGLO_SUM
+#if !HASH_AGLO_SUM && !HASH_ALGO_CKSUM
   { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },
   { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION},
@@ -256,7 +274,11 @@ static struct option const long_options[] =
   { "strict", no_argument, NULL, STRICT_OPTION },
   { "tag", no_argument, NULL, TAG_OPTION },
   { "zero", no_argument, NULL, 'z' },
-#else
+#endif
+#if HASH_ALGO_CKSUM
+  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+#endif
+#if HASH_ALGO_SUM
   {"sysv", no_argument, NULL, 's'},
 #endif
   { GETOPT_HELP_OPTION_DECL },
@@ -286,7 +308,8 @@ Print or check %s (%d-bit) checksums.\n\
   -r              use BSD sum algorithm (the default), use 1K blocks\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
 "), stdout);
-#else
+#endif
+#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
       if (O_BINARY)
         fputs (_("\
 \n\
@@ -333,9 +356,14 @@ The following five options are useful only when verifying checksums:\n\
 \n\
 "), stdout);
 #endif
+#if HASH_ALGO_CKSUM
+      fputs (_("\
+      --debug          indicate which implementation used\n\
+"), stdout);
+#endif
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-#if !HASH_ALGO_SUM
+#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
       printf (_("\
 \n\
 The sums are computed as described in %s.  When checking, the input\n\
@@ -681,7 +709,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 
   fadvise (fp, FADVISE_SEQUENTIAL);
 
-#if HASH_ALGO_SUM
+#if HASH_ALGO_SUM || HASH_ALGO_CKSUM
   err = DIGEST_STREAM (fp, bin_result, length);
 #elif HASH_ALGO_BLAKE2
   err = DIGEST_STREAM (fp, bin_result, b2_length / 8);
@@ -703,7 +731,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
   return true;
 }
 
-#if !HASH_ALGO_SUM
+#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
              bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
@@ -994,6 +1022,8 @@ main (int argc, char **argv)
 
 #if HASH_ALGO_SUM
   const char* short_opts = "rs";
+#elif HASH_ALGO_CKSUM
+  const char* short_opts = "";
 #elif HASH_ALGO_BLAKE2
   const char* short_opts = "l:bctwz";
   const char* b2_length_str = "";
@@ -1004,6 +1034,11 @@ main (int argc, char **argv)
   while ((opt = getopt_long (argc, argv, short_opts, long_options, NULL)) != -1)
     switch (opt)
       {
+#if HASH_ALGO_CKSUM
+      case DEBUG_PROGRAM_OPTION:
+        cksum_debug = true;
+        break;
+#endif
 #if HASH_ALGO_BLAKE2
       case 'l':
         b2_length = xdectoumax (optarg, 0, UINTMAX_MAX, "",
@@ -1016,7 +1051,7 @@ main (int argc, char **argv)
           }
         break;
 #endif
-#if !HASH_ALGO_SUM
+#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
       case 'b':
         binary = 1;
         break;
@@ -1054,7 +1089,8 @@ main (int argc, char **argv)
       case 'z':
         delim = '\0';
         break;
-#else
+#endif
+#if HASH_ALGO_SUM
       case 'r':		/* For SysV compatibility. */
         sum_algorithm = bsd;
         break;

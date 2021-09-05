@@ -25,7 +25,7 @@
   do something like the following:
 
       cc -I../lib -DCRCTAB -o crctab cksum.c
-      crctab > cksum.h
+      crctab > crctab.c
 
   This software is compatible with neither the System V nor the BSD
   'sum' program.  It is supposed to conform to POSIX, except perhaps
@@ -34,18 +34,11 @@
 
 #include <config.h>
 
-/* The official name of this program (e.g., no 'g' prefix).  */
-#define PROGRAM_NAME "cksum"
-
-#define AUTHORS proper_name ("Q. Frank Xia")
-
-#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <stdint.h>
 #include "system.h"
-#include "fadvise.h"
-#include "xbinary-io.h"
+
 #include <byteswap.h>
 #ifdef WORDS_BIGENDIAN
 # define SWAP(n) (n)
@@ -123,6 +116,7 @@ main (void)
         }
     }
 
+  printf ("#include <stdint.h>\n\n");
   printf ("uint_fast32_t const crctab[8][256] = {\n");
   for (int y = 0; y < 8; y++)
     {
@@ -148,40 +142,23 @@ main (void)
 # include "cksum.h"
 # if USE_PCLMUL_CRC32
 #  include "cpuid.h"
+# else
+#  define cksum_pclmul cksum_slice8
 # endif /* USE_PCLMUL_CRC32 */
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
 
-static bool debug;
-
-enum
-{
-  DEBUG_PROGRAM_OPTION = CHAR_MAX + 1,
-};
-
-static struct option const longopts[] =
-{
-  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
-  {GETOPT_HELP_OPTION_DECL},
-  {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0},
-};
-
-/* Nonzero if any of the files read were the standard input. */
-static bool have_read_stdin;
 
 static bool
-cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
-              uintmax_t *length_out);
+cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);
 static bool
-  (*cksum_fp)(FILE *, char const *, uint_fast32_t *,
-              uintmax_t *) = cksum_slice8;
+  (*cksum_fp)(FILE *, uint_fast32_t *, uintmax_t *);
 
-# if USE_PCLMUL_CRC32
 static bool
 pclmul_supported (void)
 {
+# if USE_PCLMUL_CRC32
   unsigned int eax = 0;
   unsigned int ebx = 0;
   unsigned int ecx = 0;
@@ -189,35 +166,38 @@ pclmul_supported (void)
 
   if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
     {
-      if (debug)
+      if (cksum_debug)
         error (0, 0, "%s", _("failed to get cpuid"));
       return false;
     }
 
   if (! (ecx & bit_PCLMUL) || ! (ecx & bit_AVX))
     {
-      if (debug)
+      if (cksum_debug)
         error (0, 0, "%s", _("pclmul support not detected"));
       return false;
     }
 
-  if (debug)
+  if (cksum_debug)
     error (0, 0, "%s", _("using pclmul hardware support"));
 
   return true;
-}
+# else
+  if (cksum_debug)
+    error (0, 0, "%s", _("using generic hardware support"));
+  return false;
 # endif /* USE_PCLMUL_CRC32 */
+}
 
 static bool
-cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
-              uintmax_t *length_out)
+cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 {
   uint32_t buf[BUFLEN/sizeof (uint32_t)];
   uint_fast32_t crc = 0;
   uintmax_t length = 0;
   size_t bytes_read;
 
-  if (!fp || !file || !crc_out || !length_out)
+  if (!fp || !crc_out || !length_out)
     return false;
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
@@ -226,10 +206,16 @@ cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
 
       if (length + bytes_read < length)
         {
-          error (0, EOVERFLOW, _("%s: file too long"), quotef (file));
+          errno = EOVERFLOW;
           return false;
         }
       length += bytes_read;
+
+      if (bytes_read == 0)
+        {
+          if (ferror (fp))
+            return false;
+        }
 
       /* Process multiples of 8 bytes */
       datap = (uint32_t *)buf;
@@ -263,155 +249,49 @@ cksum_slice8 (FILE *fp, char const *file, uint_fast32_t *crc_out,
   return true;
 }
 
-/* Calculate and print the checksum and length in bytes
-   of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is true, print FILE next to the checksum and size.
-   Return true if successful.  */
-
-static bool
-cksum (char const *file, bool print_name)
-{
-  uint_fast32_t crc = 0;
-  uintmax_t length = 0;
-  FILE *fp;
-  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-  char const *hp;
-
-  if (STREQ (file, "-"))
-    {
-      fp = stdin;
-      have_read_stdin = true;
-      xset_binary_mode (STDIN_FILENO, O_BINARY);
-    }
-  else
-    {
-      fp = fopen (file, (O_BINARY ? "rb" : "r"));
-      if (fp == NULL)
-        {
-          error (0, errno, "%s", quotef (file));
-          return false;
-        }
-    }
-
-  fadvise (fp, FADVISE_SEQUENTIAL);
-
-  if (! cksum_fp (fp, file, &crc, &length))
-    return false;
-
-  int err = errno;
-  if (!ferror (fp))
-    err = 0;
-  if (STREQ (file, "-"))
-    clearerr (fp);
-  else if (fclose (fp) != 0 && !err)
-    err = errno;
-  if (err)
-    {
-      error (0, err, "%s", quotef (file));
-      return false;
-    }
-
-  hp = umaxtostr (length, length_buf);
-
-  for (; length; length >>= 8)
-    crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ length) & 0xFF];
-
-  crc = ~crc & 0xFFFFFFFF;
-
-  if (print_name)
-    printf ("%u %s %s\n", (unsigned int) crc, hp, file);
-  else
-    printf ("%u %s\n", (unsigned int) crc, hp);
-
-  if (ferror (stdout))
-    die (EXIT_FAILURE, errno, "-: %s", _("write error"));
-
-  return true;
-}
-
-void
-usage (int status)
-{
-  if (status != EXIT_SUCCESS)
-    emit_try_help ();
-  else
-    {
-      printf (_("\
-Usage: %s [FILE]...\n\
-  or:  %s [OPTION]\n\
-"),
-              program_name, program_name);
-      fputs (_("\
-Print CRC checksum and byte counts of each FILE.\n\
-\n\
-"), stdout);
-      fputs (_("\
-      --debug    indicate which implementation used\n\
-"), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      emit_ancillary_info (PROGRAM_NAME);
-    }
-  exit (status);
-}
+/* Calculate the checksum and length in bytes of stream STREAM.
+   Return -1 on error, 0 on success.  */
 
 int
-main (int argc, char **argv)
+crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 {
-  int i, c;
-  bool ok;
+  uintmax_t total_bytes = 0;
+  uint_fast32_t crc = 0;
 
-  initialize_main (&argc, &argv);
-  set_program_name (argv[0]);
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
-
-  atexit (close_stdout);
-
-  /* Line buffer stdout to ensure lines are written atomically and immediately
-     so that processes running in parallel do not intersperse their output.  */
-  setvbuf (stdout, NULL, _IOLBF, 0);
-
-  while ((c = getopt_long (argc, argv, "", longopts, NULL)) != -1)
+  if (! cksum_fp)
     {
-      switch (c)
-        {
-        case DEBUG_PROGRAM_OPTION:
-          debug = true;
-          break;
-
-        case_GETOPT_HELP_CHAR;
-
-        case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
-        default:
-          usage (EXIT_FAILURE);
-        }
+       if (pclmul_supported ())
+         cksum_fp = cksum_pclmul;
+       else
+         cksum_fp = cksum_slice8;
     }
 
-  have_read_stdin = false;
+  if (! cksum_fp (stream, &crc, &total_bytes))
+    return -1;
 
-# if USE_PCLMUL_CRC32
-  if (pclmul_supported ())
-     cksum_fp = cksum_pclmul;
-  else
-# endif /* USE_PCLMUL_CRC32 */
-  if (debug)
-    error (0, 0, "%s", _("using generic hardware support"));
+  *length = total_bytes;
 
-  if (optind == argc)
-    ok = cksum ("-", false);
-  else
-    {
-      ok = true;
-      for (i = optind; i < argc; i++)
-        ok &= cksum (argv[i], true);
-    }
+  for (; total_bytes; total_bytes >>= 8)
+    crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ total_bytes) & 0xFF];
+  crc = ~crc & 0xFFFFFFFF;
 
-  if (have_read_stdin && fclose (stdin) == EOF)
-    die (EXIT_FAILURE, errno, "-");
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  memcpy (resstream, &crc, sizeof crc);
+
+  return 0;
+}
+
+/* Print the checksum and size to stdout.
+   If ARGS is true, also print the FILE name.  */
+
+void
+output_crc (char const *file, int binary_file, void const *digest,
+            bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+{
+  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  printf ("%u %s", *(unsigned int *)digest, umaxtostr (length, length_buf));
+  if (args)
+    printf (" %s", file);
+  putchar ('\n');
 }
 
 #endif /* !CRCTAB */

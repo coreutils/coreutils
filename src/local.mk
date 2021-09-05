@@ -358,7 +358,8 @@ src_coreutils_SOURCES = src/coreutils.c
 src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
 src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
 
-src_cksum_SOURCES = src/cksum.c src/cksum.h
+src_cksum_SOURCES = src/cksum.c src/cksum.h src/crctab.c src/digest.c
+src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 $(AM_CPPFLAGS)
 if USE_PCLMUL_CRC32
 noinst_LIBRARIES += src/libcksum_pclmul.a
 src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
