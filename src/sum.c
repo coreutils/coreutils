@@ -73,6 +73,11 @@ bsd_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
         checksum += buffer[i];
         checksum &= 0xffff;	/* Keep it within bounds. */
       }
+    if (total_bytes + sum < total_bytes)
+      {
+        errno = EOVERFLOW;
+        goto cleanup_buffer;
+      }
     total_bytes += sum;
   }
 
@@ -83,6 +88,11 @@ final_process:;
       checksum = (checksum >> 1) + ((checksum & 1) << 15);
       checksum += buffer[i];
       checksum &= 0xffff;	/* Keep it within bounds. */
+    }
+  if (total_bytes + sum < total_bytes)
+    {
+      errno = EOVERFLOW;
+      goto cleanup_buffer;
     }
   total_bytes += sum;
 
@@ -139,6 +149,11 @@ sysv_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 
     for (size_t i = 0; i < sum; i++)
       s += buffer[i];
+    if (total_bytes + sum < total_bytes)
+      {
+        errno = EOVERFLOW;
+        goto cleanup_buffer;
+      }
     total_bytes += sum;
   }
 
@@ -146,6 +161,11 @@ final_process:;
 
   for (size_t i = 0; i < sum; i++)
     s += buffer[i];
+  if (total_bytes + sum < total_bytes)
+    {
+      errno = EOVERFLOW;
+      goto cleanup_buffer;
+    }
   total_bytes += sum;
 
   int r = (s & 0xffff) + ((s & 0xffffffff) >> 16);
