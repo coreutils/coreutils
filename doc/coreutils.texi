@@ -3949,8 +3949,14 @@ The CRC algorithm is specified by the POSIX standard.  It is not
 compatible with the BSD or System V @command{sum} algorithms (see the
 previous section); it is more robust.
 
-The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item --debug
+@opindex --debug
+Output extra information to stderr, like the checksum implementation being used.
+@end table
 
 @exitstatus
 

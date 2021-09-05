@@ -345,6 +345,9 @@ Usage: %s [FILE]...\n\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
 "), stdout);
+      fputs (_("\
+      --debug    indicate which implementation used\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_ancillary_info (PROGRAM_NAME);
@@ -392,7 +395,10 @@ main (int argc, char **argv)
 # if USE_PCLMUL_CRC32
   if (pclmul_supported ())
      cksum_fp = cksum_pclmul;
+  else
 # endif /* USE_PCLMUL_CRC32 */
+  if (debug)
+    error (0, 0, "%s", _("using generic hardware support"));
 
   if (optind == argc)
     ok = cksum ("-", false);
