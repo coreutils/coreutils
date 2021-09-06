@@ -304,6 +304,7 @@ src_sha224sum_LDADD += $(LIB_CRYPTO)
 src_sha256sum_LDADD += $(LIB_CRYPTO)
 src_sha384sum_LDADD += $(LIB_CRYPTO)
 src_sha512sum_LDADD += $(LIB_CRYPTO)
+src_cksum_LDADD += $(LIB_CRYPTO)
 
 # for canon_host
 src_pinky_LDADD += $(GETADDRINFO_LIB)
@@ -355,18 +356,6 @@ src___SOURCES = src/lbracket.c
 nodist_src_coreutils_SOURCES = src/coreutils.h
 src_coreutils_SOURCES = src/coreutils.c
 
-src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
-src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
-
-src_cksum_SOURCES = src/cksum.c src/cksum.h src/crctab.c src/digest.c
-src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 $(AM_CPPFLAGS)
-if USE_PCLMUL_CRC32
-noinst_LIBRARIES += src/libcksum_pclmul.a
-src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
-cksum_pclmul_ldadd = src/libcksum_pclmul.a
-src_cksum_LDADD += $(cksum_pclmul_ldadd)
-src_libcksum_pclmul_a_CFLAGS = -mavx -mpclmul $(AM_CFLAGS)
-endif
 src_cp_SOURCES = src/cp.c $(copy_sources) $(selinux_sources)
 src_dir_SOURCES = src/ls.c src/ls-dir.c
 src_env_SOURCES = src/env.c src/operand2sig.c
@@ -401,6 +390,9 @@ src_arch_SOURCES = src/uname.c src/uname-arch.c
 src_cut_SOURCES = src/cut.c src/set-fields.c
 src_numfmt_SOURCES = src/numfmt.c src/set-fields.c
 
+src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
+src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
+
 src_md5sum_SOURCES = src/digest.c
 src_md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
 src_sha1sum_SOURCES = src/digest.c
@@ -418,6 +410,17 @@ src_b2sum_SOURCES = src/digest.c \
 		    src/blake2/blake2.h src/blake2/blake2-impl.h \
 		    src/blake2/blake2b-ref.c \
 		    src/blake2/b2sum.c src/blake2/b2sum.h
+
+src_cksum_SOURCES = $(src_b2sum_SOURCES) src/sum.c src/sum.h \
+		    src/cksum.c src/cksum.h src/crctab.c
+src_cksum_CPPFLAGS = -DHASH_ALGO_CKSUM=1 -DHAVE_CONFIG_H $(AM_CPPFLAGS)
+if USE_PCLMUL_CRC32
+noinst_LIBRARIES += src/libcksum_pclmul.a
+src_libcksum_pclmul_a_SOURCES = src/cksum_pclmul.c src/cksum.h
+cksum_pclmul_ldadd = src/libcksum_pclmul.a
+src_cksum_LDADD += $(cksum_pclmul_ldadd)
+src_libcksum_pclmul_a_CFLAGS = -mavx -mpclmul $(AM_CFLAGS)
+endif
 
 src_base64_SOURCES = src/basenc.c
 src_base64_CPPFLAGS = -DBASE_TYPE=64 $(AM_CPPFLAGS)

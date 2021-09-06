@@ -27,25 +27,25 @@
 #include "xdectoint.h"
 #include "xstrtol.h"
 
-#if HASH_ALGO_SUM
+#if HASH_ALGO_SUM || HASH_ALGO_CKSUM
 # include "sum.h"
 #endif
 #if HASH_ALGO_CKSUM
 # include "cksum.h"
 #endif
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # include "blake2/b2sum.h"
 #endif
-#if HASH_ALGO_MD5
+#if HASH_ALGO_MD5 || HASH_ALGO_CKSUM
 # include "md5.h"
 #endif
-#if HASH_ALGO_SHA1
+#if HASH_ALGO_SHA1 || HASH_ALGO_CKSUM
 # include "sha1.h"
 #endif
-#if HASH_ALGO_SHA256 || HASH_ALGO_SHA224
+#if HASH_ALGO_SHA256 || HASH_ALGO_SHA224 || HASH_ALGO_CKSUM
 # include "sha256.h"
 #endif
-#if HASH_ALGO_SHA512 || HASH_ALGO_SHA384
+#if HASH_ALGO_SHA512 || HASH_ALGO_SHA384 || HASH_ALGO_CKSUM
 # include "sha512.h"
 #endif
 #include "die.h"
@@ -63,12 +63,14 @@
 # define DIGEST_BITS 16
 # define DIGEST_ALIGN 4
 #elif HASH_ALGO_CKSUM
+# define MAX_DIGEST_BITS 512
+# define MAX_DIGEST_ALIGN 8
 # define PROGRAM_NAME "cksum"
-# define DIGEST_TYPE_STRING "CRC"
-# define DIGEST_STREAM crc_sum_stream
-# define DIGEST_OUT output_crc
-# define DIGEST_BITS 32
-# define DIGEST_ALIGN 4
+# define DIGEST_TYPE_STRING algorithm_tags[cksum_algorithm]
+# define DIGEST_STREAM cksumfns[cksum_algorithm]
+# define DIGEST_OUT cksum_output_fns[cksum_algorithm]
+# define DIGEST_BITS MAX_DIGEST_BITS
+# define DIGEST_ALIGN MAX_DIGEST_ALIGN
 #elif HASH_ALGO_MD5
 # define PROGRAM_NAME "md5sum"
 # define DIGEST_TYPE_STRING "MD5"
@@ -79,7 +81,7 @@
 #elif HASH_ALGO_BLAKE2
 # define PROGRAM_NAME "b2sum"
 # define DIGEST_TYPE_STRING "BLAKE2"
-# define DIGEST_STREAM blake2fns[b2_algorithm]
+# define DIGEST_STREAM blake2b_stream
 # define DIGEST_BITS 512
 # define DIGEST_REFERENCE "RFC 7693"
 # define DIGEST_ALIGN 8
@@ -141,21 +143,26 @@
   proper_name ("Scott Miller"), \
   proper_name ("David Madore")
 #endif
-#if !HASH_ALGO_BLAKE2
+#if !HASH_ALGO_BLAKE2 && !HASH_ALGO_CKSUM
 # define DIGEST_HEX_BYTES (DIGEST_BITS / 4)
 #endif
 #define DIGEST_BIN_BYTES (DIGEST_BITS / 8)
 
-
 /* The minimum length of a valid digest line.  This length does
    not include any newline character at the end of a line.  */
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # define MIN_DIGEST_LINE_LENGTH 3 /* With -l 8.  */
 #else
 # define MIN_DIGEST_LINE_LENGTH \
    (DIGEST_HEX_BYTES /* length of hexadecimal message digest */ \
     + 1 /* blank */ \
     + 1 /* minimum filename length */ )
+#endif
+
+#if !HASH_ALGO_SUM
+static void
+output_file (char const *file, int binary_file, void const *digest,
+             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED);
 #endif
 
 /* True if any of the files read were the standard input. */
@@ -191,7 +198,7 @@ static int bsd_reversed = -1;
 /* line delimiter.  */
 static unsigned char delim = '\n';
 
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 static char const *const algorithm_in_string[] =
 {
   "blake2b", NULL
@@ -200,19 +207,15 @@ static char const *const algorithm_out_string[] =
 {
   "BLAKE2b", NULL
 };
-enum Algorithm
+enum blake2_Algorithm
 {
   BLAKE2b
 };
 verify (ARRAY_CARDINALITY (algorithm_in_string) == 2);
 verify (ARRAY_CARDINALITY (algorithm_out_string) == 2);
 
-static enum Algorithm b2_algorithm;
+static enum blake2_Algorithm b2_algorithm;
 static uintmax_t b2_length;
-static blake2fn blake2fns[]=
-{
-  blake2b_stream
-};
 static uintmax_t blake2_max_len[]=
 {
   BLAKE2B_OUTBYTES
@@ -242,6 +245,109 @@ static digest_output_fn sum_output_fns[]=
 #endif
 
 #if HASH_ALGO_CKSUM
+static int
+md5_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return md5_stream (stream, resstream);
+}
+static int
+sha1_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sha1_stream (stream, resstream);
+}
+static int
+sha224_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sha224_stream (stream, resstream);
+}
+static int
+sha256_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sha256_stream (stream, resstream);
+}
+static int
+sha384_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sha384_stream (stream, resstream);
+}
+static int
+sha512_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sha512_stream (stream, resstream);
+}
+static int
+blake2b_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return blake2b_stream (stream, resstream, *length);
+}
+
+enum Algorithm
+{
+  bsd,
+  sysv,
+  crc,
+  md5,
+  sha1,
+  sha224,
+  sha256,
+  sha384,
+  sha512,
+  blake2b,
+};
+
+static char const *const algorithm_args[] =
+{
+  "bsd", "sysv", "crc", "md5", "sha1", "sha224",
+  "sha256", "sha384", "sha512", "blake2b", NULL
+};
+static enum Algorithm const algorithm_types[] =
+{
+  bsd, sysv, crc, md5, sha1, sha224,
+  sha256, sha384, sha512, blake2b,
+};
+ARGMATCH_VERIFY (algorithm_args, algorithm_types);
+
+static char const *const algorithm_tags[] =
+{
+  "BSD", "SYSV", "CRC", "MD5", "SHA1", "SHA224",
+  "SHA256", "SHA384", "SHA512", "BLAKE2b", NULL
+};
+static int const algorithm_bits[] =
+{
+  16, 16, 32, 128, 160, 224,
+  256, 384, 512, 512, 0
+};
+
+verify (ARRAY_CARDINALITY (algorithm_bits)
+        == ARRAY_CARDINALITY (algorithm_args));
+
+static enum Algorithm cksum_algorithm = crc;
+static sumfn cksumfns[]=
+{
+  bsd_sum_stream,
+  sysv_sum_stream,
+  crc_sum_stream,
+  md5_sum_stream,
+  sha1_sum_stream,
+  sha224_sum_stream,
+  sha256_sum_stream,
+  sha384_sum_stream,
+  sha512_sum_stream,
+  blake2b_sum_stream,
+};
+static digest_output_fn cksum_output_fns[]=
+{
+  output_bsd,
+  output_sysv,
+  output_crc,
+  output_file,
+  output_file,
+  output_file,
+  output_file,
+  output_file,
+  output_file,
+  output_file,
+};
 bool cksum_debug;
 #endif
 
@@ -260,10 +366,10 @@ enum
 
 static struct option const long_options[] =
 {
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
   { "length", required_argument, NULL, 'l'},
 #endif
-#if !HASH_AGLO_SUM && !HASH_ALGO_CKSUM
+#if !HASH_ALGO_SUM
   { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },
   { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION},
@@ -276,6 +382,7 @@ static struct option const long_options[] =
   { "zero", no_argument, NULL, 'z' },
 #endif
 #if HASH_ALGO_CKSUM
+  {"algorithm", required_argument, NULL, 'a'},
   {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
 #endif
 #if HASH_ALGO_SUM
@@ -295,11 +402,19 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
+"), program_name);
+#if HASH_ALGO_CKSUM
+      fputs (_("\
+Print or verify checksums.\n\
+By default use the 32 bit CRC algorithm.\n\
+"), stdout);
+#else
+      printf (_("\
 Print or check %s (%d-bit) checksums.\n\
 "),
-              program_name,
               DIGEST_TYPE_STRING,
               DIGEST_BITS);
+#endif
 
       emit_stdin_note ();
 #if HASH_ALGO_SUM
@@ -309,22 +424,27 @@ Print or check %s (%d-bit) checksums.\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
 "), stdout);
 #endif
-#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
-      if (O_BINARY)
+#if HASH_ALGO_CKSUM
         fputs (_("\
 \n\
+  -a, --algorithm      select the digest mode to operate in.  See DIGEST below.\
+\n\
+"), stdout);
+#endif
+#if !HASH_ALGO_SUM
+      if (O_BINARY)
+        fputs (_("\
   -b, --binary         read in binary mode (default unless reading tty stdin)\n\
 "), stdout);
       else
         fputs (_("\
-\n\
   -b, --binary         read in binary mode\n\
 "), stdout);
 
-      printf (_("\
-  -c, --check          read %s sums from the FILEs and check them\n"),
-              DIGEST_TYPE_STRING);
-# if HASH_ALGO_BLAKE2
+        fputs (_("\
+  -c, --check          read checksums from the FILEs and check them\n\
+"), stdout);
+# if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
         fputs (_("\
   -l, --length         digest length in bits; must not exceed the maximum for\n\
                        the blake2 algorithm and must be a multiple of 8\n\
@@ -363,17 +483,40 @@ The following five options are useful only when verifying checksums:\n\
 #endif
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+#if HASH_ALGO_CKSUM
+      fputs (_("\
+\n\
+DIGEST determines the digest algorithm and default output format:\n\
+  'sysv'      (equivalent to sum -s)\n\
+  'bsd'       (equivalent to sum -r)\n\
+  'crc'       (equivalent to cksum)\n\
+  'md5'       (equivalent to md5sum)\n\
+  'sha1'      (equivalent to sha1sum)\n\
+  'sha224'    (equivalent to sha224sum)\n\
+  'sha256'    (equivalent to sha256sum)\n\
+  'sha384'    (equivalent to sha384sum)\n\
+  'sha512'    (equivalent to sha512sum)\n\
+  'blake2b'   (equivalent to b2sum)\n\
+\n"), stdout);
+#endif
 #if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
       printf (_("\
 \n\
-The sums are computed as described in %s.  When checking, the input\n\
-should be a former output of this program.  The default mode is to print a\n\
-line with checksum, a space, a character indicating input mode ('*' for binary,\
-\n' ' for text or where binary is insignificant), and name for each FILE.\n\
+The sums are computed as described in %s.\n"), DIGEST_REFERENCE);
+      fputs (_("\
+When checking, the input should be a former output of this program.\n\
+The default mode is to print a line with: checksum, a space,\n\
+a character indicating input mode ('*' for binary, ' ' for text\n\
+or where binary is insignificant), and name for each FILE.\n\
 \n\
 Note: There is no difference between binary mode and text mode on GNU systems.\
-\n"),
-              DIGEST_REFERENCE);
+\n"), stdout);
+#endif
+#if HASH_ALGO_CKSUM
+      fputs (_("\
+When checking, the input should be a former output of this program,\n\
+or equivalent standalone program.\
+\n"), stdout);
 #endif
       emit_ancillary_info (PROGRAM_NAME);
     }
@@ -521,7 +664,10 @@ split_3 (char *s, size_t s_len,
   if (STREQ_LEN (s + i, DIGEST_TYPE_STRING, algo_name_len))
     {
       i += algo_name_len;
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
+# if HASH_ALGO_CKSUM
+      if (cksum_algorithm == blake2b) {
+# endif
       /* Terminate and match algorithm name.  */
       char const *algo_name = &s[i - algo_name_len];
       /* Skip algorithm variants.  */
@@ -550,7 +696,9 @@ split_3 (char *s, size_t s_len,
           i = siend - s;
           b2_length = length;
         }
-
+# if HASH_ALGO_CKSUM
+      }
+# endif
       digest_hex_bytes = b2_length / 4;
 #endif
       if (s[i] == ' ')
@@ -574,8 +722,11 @@ split_3 (char *s, size_t s_len,
 
   *hex_digest = (unsigned char *) &s[i];
 
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
   /* Auto determine length.  */
+# if HASH_ALGO_CKSUM
+  if (cksum_algorithm == blake2b) {
+# endif
   unsigned char const *hp = *hex_digest;
   digest_hex_bytes = 0;
   while (isxdigit (*hp++))
@@ -584,6 +735,9 @@ split_3 (char *s, size_t s_len,
       || blake2_max_len[b2_algorithm] * 2 < digest_hex_bytes)
     return false;
   b2_length = digest_hex_bytes * 4;
+# if HASH_ALGO_CKSUM
+  }
+# endif
 #endif
 
   /* The first field has to be the n-character hexadecimal
@@ -709,7 +863,11 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 
   fadvise (fp, FADVISE_SEQUENTIAL);
 
-#if HASH_ALGO_SUM || HASH_ALGO_CKSUM
+#if HASH_ALGO_CKSUM
+  if (cksum_algorithm == blake2b)
+    *length = b2_length / 8;
+  err = DIGEST_STREAM (fp, bin_result, length);
+#elif HASH_ALGO_SUM
   err = DIGEST_STREAM (fp, bin_result, length);
 #elif HASH_ALGO_BLAKE2
   err = DIGEST_STREAM (fp, bin_result, b2_length / 8);
@@ -731,7 +889,7 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
   return true;
 }
 
-#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
+#if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
              bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
@@ -758,6 +916,13 @@ output_file (char const *file, int binary_file, void const *digest,
         printf ("-%"PRIuMAX, b2_length);
 # else
       fputs (DIGEST_TYPE_STRING, stdout);
+#  if HASH_ALGO_CKSUM
+      if (cksum_algorithm == blake2b)
+        {
+          if (b2_length < blake2_max_len[b2_algorithm] * 8)
+            printf ("-%"PRIuMAX, b2_length);
+        }
+#  endif
 # endif
       fputs (" (", stdout);
       print_filename (file, needs_escape);
@@ -876,7 +1041,8 @@ digest_check (char const *checkfile_name)
 
           properly_formatted_lines = true;
 
-          ok = digest_file (filename, &binary, bin_buffer, &missing, NULL);
+          uintmax_t length;
+          ok = digest_file (filename, &binary, bin_buffer, &missing, &length);
 
           if (!ok)
             {
@@ -1023,7 +1189,8 @@ main (int argc, char **argv)
 #if HASH_ALGO_SUM
   const char* short_opts = "rs";
 #elif HASH_ALGO_CKSUM
-  const char* short_opts = "";
+  const char* short_opts = "a:l:bctwz";
+  const char* b2_length_str = "";
 #elif HASH_ALGO_BLAKE2
   const char* short_opts = "l:bctwz";
   const char* b2_length_str = "";
@@ -1035,11 +1202,16 @@ main (int argc, char **argv)
     switch (opt)
       {
 #if HASH_ALGO_CKSUM
+      case 'a':
+        cksum_algorithm = XARGMATCH ("--algorithm", optarg,
+                                     algorithm_args, algorithm_types);
+        break;
+
       case DEBUG_PROGRAM_OPTION:
         cksum_debug = true;
         break;
 #endif
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
       case 'l':
         b2_length = xdectoumax (optarg, 0, UINTMAX_MAX, "",
                                 _("invalid length"), 0);
@@ -1051,7 +1223,7 @@ main (int argc, char **argv)
           }
         break;
 #endif
-#if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM
+#if !HASH_ALGO_SUM
       case 'b':
         binary = 1;
         break;
@@ -1106,7 +1278,12 @@ main (int argc, char **argv)
       }
 
   min_digest_line_length = MIN_DIGEST_LINE_LENGTH;
-#if HASH_ALGO_BLAKE2
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
+# if HASH_ALGO_CKSUM
+  if (b2_length && cksum_algorithm != blake2b)
+    die (EXIT_FAILURE, 0,
+         _("--length is only supported with --algorithm=blake2b"));
+# endif
   if (b2_length > blake2_max_len[b2_algorithm] * 8)
     {
       error (0, 0, _("invalid length: %s"), quote (b2_length_str));
@@ -1117,9 +1294,38 @@ main (int argc, char **argv)
     }
   if (b2_length == 0 && ! do_check)
     b2_length = blake2_max_len[b2_algorithm] * 8;
+# if HASH_ALGO_BLAKE2
   digest_hex_bytes = b2_length / 4;
+# else
+  if (cksum_algorithm == blake2b)
+    digest_hex_bytes = b2_length / 4;
+  else
+    digest_hex_bytes = algorithm_bits[cksum_algorithm] / 4;
+# endif
 #else
   digest_hex_bytes = DIGEST_HEX_BYTES;
+#endif
+
+#if HASH_ALGO_CKSUM
+  switch (cksum_algorithm)
+    {
+    case bsd:
+    case sysv:
+    case crc:
+        if (delim != '\n')
+          die (EXIT_FAILURE, 0,
+              _("--zero is not supported with --algorithm={bsd,sysv,crc}"));
+        if (prefix_tag)
+          die (EXIT_FAILURE, 0,
+              _("--tag is not supported with --algorithm={bsd,sysv,crc}"));
+        if (do_check)
+          die (EXIT_FAILURE, 0,
+              _("--check is not supported with --algorithm={bsd,sysv,crc}"));
+        break;
+    default:
+        break;
+    }
+
 #endif
 
   if (prefix_tag && !binary)

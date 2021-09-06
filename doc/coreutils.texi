@@ -3922,43 +3922,70 @@ next section) is preferable in new applications.
 
 
 @node cksum invocation
-@section @command{cksum}: Print CRC checksum and byte counts
+@section @command{cksum}: Print and verify file checksums
 
 @pindex cksum
 @cindex cyclic redundancy check
 @cindex CRC checksum
+@cindex digest
 
-@command{cksum} computes a cyclic redundancy check (CRC) checksum for each
-given @var{file}, or standard input if none are given or for a
-@var{file} of @samp{-}.  Synopsis:
+@command{cksum} by default computes a cyclic redundancy check (CRC) checksum
+for each given @var{file}, or standard input if none are given or for a
+@var{file} of @samp{-}.
+
+cksum also supports the @option{-a,--algorithm} option to select the
+digest algorithm to use, and this is the preferred interface
+to these digests, subsuming the other standalone checksumming utilities.
+Synopsis:
 
 @example
 cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@command{cksum} prints the CRC checksum for each file along with the number
-of bytes in the file, and the file name unless no arguments were given.
-
-@command{cksum} is typically used to ensure that files
-transferred by unreliable means (e.g., netnews) have not been corrupted,
+@command{cksum} is typically used to ensure that files have not been corrupted,
 by comparing the @command{cksum} output for the received files with the
 @command{cksum} output for the original files (typically given in the
 distribution).
 
-The CRC algorithm is specified by the POSIX standard.  It is not
-compatible with the BSD or System V @command{sum} algorithms (see the
-previous section); it is more robust.
+@command{cksum} by default prints the POSIX standard CRC checksum
+for each file along with the number of bytes in the file,
+and the file name unless no arguments were given.
 
-The program accepts the following options.  Also see @ref{Common options}.
+The same usage and options as the @command{b2sum}
+command are supported.  @xref{b2sum invocation}.
+In addition @command{cksum} supports the following options.
 
 @table @samp
+
+@item -a
+@itemx --algorithm
+@opindex -a
+@opindex --algorithm
+@cindex digest algorithm
+Compute checksums using the specified digest algorithm.
+
+Supported legacy checksums (which are not supported by @option{--check}):
+@example
+@samp{sysv}      equivalent to @command{sum -s}
+@samp{bsd}       equivalent to @command{sum -r}
+@samp{crc}       equivalent to @command{cksum} (the default)
+@end example
+
+Supported more modern digest algorithms are:
+@example
+@samp{md5}       equivalent to @command{md5sum}
+@samp{sha1}      equivalent to @command{sha1sum}
+@samp{sha224}    equivalent to @command{sha224sum}
+@samp{sha256}    equivalent to @command{sha256sum}
+@samp{sha384}    equivalent to @command{sha384sum}
+@samp{sha512}    equivalent to @command{sha512sum}
+@samp{blake2b}   equivalent to @command{b2sum}
+@end example
 
 @item --debug
 @opindex --debug
 Output extra information to stderr, like the checksum implementation being used.
 @end table
-
-@exitstatus
 
 
 @node b2sum invocation
@@ -4078,6 +4105,8 @@ If any listed file cannot be opened or read, if any valid line has
 an MD5 checksum inconsistent with the associated file, or if no valid
 line is found, @command{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
+Note the @command{cksum} command doesn't support @option{--check}
+with the older @samp{sysv}, @samp{bsd}, or @samp{crc} algorithms.
 
 @item --ignore-missing
 @opindex --ignore-missing

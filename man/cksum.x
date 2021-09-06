@@ -1,4 +1,4 @@
 [NAME]
-cksum \- checksum and count the bytes in a file
+cksum \- compute and verify file checksums
 [DESCRIPTION]
 .\" Add any additional description here

@@ -1,0 +1,43 @@
+#!/bin/sh
+# Validate cksum --algorithm operation
+
+# Copyright (C) 2021 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+. "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
+print_ver_ cksum
+
+printf "
+bsd     sum -r
+sysv    sum -s
+crc     cksum
+md5     md5um -t
+sha1    sha1sum -t
+sha224  sha224sum -t
+sha256  sha256sum -t
+sha384  sha384sum -t
+sha512  sha512sum -t
+blake2b b2sum -t
+" | while read algo prog; do
+  $prog < /dev/null >> out || continue
+  cksum --algorithm=$algo < /dev/null >> out-a || fail=1
+done
+compare out out-a || fail=1
+
+returns_ 1 cksum -a bsd --tag </dev/null
+returns_ 1 cksum -a bsd --zero </dev/null
+returns_ 1 cksum -a bsd --check </dev/null
+
+Exit $fail

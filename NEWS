@@ -88,6 +88,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  cksum now supports the -a (--algorithm) option to select any
+  of the existing sum, md5sum, b2sum, sha*sum implementations etc.
+  cksum now subsumes all of these programs, and coreutils
+  will introduce no future standalone checksum utility.
+
   expr and factor now support bignums on all platforms.
 
   ls --classify now supports the "always", "auto", or "never" flags,
@@ -110,7 +115,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   cat --show-ends will now show \r\n as ^M$.  Previously the \r was taken
   literally, thus overwriting the first character in the line with '$'.
 
-  cksum is now up to 4 times faster by using a slice by 8 algorithm,
+  cksum [-a crc] is now up to 4 times faster by using a slice by 8 algorithm,
   and at least 8 times faster where pclmul instructions are supported.
   A new --debug option will indicate if pclmul is being used.
 
