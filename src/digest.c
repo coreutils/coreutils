@@ -48,6 +48,9 @@
 #if HASH_ALGO_SHA512 || HASH_ALGO_SHA384 || HASH_ALGO_CKSUM
 # include "sha512.h"
 #endif
+#if HASH_ALGO_CKSUM
+# include "sm3.h"
+#endif
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
@@ -280,6 +283,11 @@ blake2b_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 {
   return blake2b_stream (stream, resstream, *length);
 }
+static int
+sm3_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
+{
+  return sm3_stream (stream, resstream);
+}
 
 enum Algorithm
 {
@@ -293,29 +301,30 @@ enum Algorithm
   sha384,
   sha512,
   blake2b,
+  sm3,
 };
 
 static char const *const algorithm_args[] =
 {
   "bsd", "sysv", "crc", "md5", "sha1", "sha224",
-  "sha256", "sha384", "sha512", "blake2b", NULL
+  "sha256", "sha384", "sha512", "blake2b", "sm3", NULL
 };
 static enum Algorithm const algorithm_types[] =
 {
   bsd, sysv, crc, md5, sha1, sha224,
-  sha256, sha384, sha512, blake2b,
+  sha256, sha384, sha512, blake2b, sm3,
 };
 ARGMATCH_VERIFY (algorithm_args, algorithm_types);
 
 static char const *const algorithm_tags[] =
 {
   "BSD", "SYSV", "CRC", "MD5", "SHA1", "SHA224",
-  "SHA256", "SHA384", "SHA512", "BLAKE2b", NULL
+  "SHA256", "SHA384", "SHA512", "BLAKE2b", "SM3", NULL
 };
 static int const algorithm_bits[] =
 {
   16, 16, 32, 128, 160, 224,
-  256, 384, 512, 512, 0
+  256, 384, 512, 512, 256, 0
 };
 
 verify (ARRAY_CARDINALITY (algorithm_bits)
@@ -334,12 +343,14 @@ static sumfn cksumfns[]=
   sha384_sum_stream,
   sha512_sum_stream,
   blake2b_sum_stream,
+  sm3_sum_stream,
 };
 static digest_output_fn cksum_output_fns[]=
 {
   output_bsd,
   output_sysv,
   output_crc,
+  output_file,
   output_file,
   output_file,
   output_file,
@@ -497,6 +508,7 @@ DIGEST determines the digest algorithm and default output format:\n\
   'sha384'    (equivalent to sha384sum)\n\
   'sha512'    (equivalent to sha512sum)\n\
   'blake2b'   (equivalent to b2sum)\n\
+  'sm3'       (only available through cksum)\n\
 \n"), stdout);
 #endif
 #if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM

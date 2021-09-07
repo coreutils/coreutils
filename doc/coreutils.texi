@@ -3980,6 +3980,7 @@ Supported more modern digest algorithms are:
 @samp{sha384}    equivalent to @command{sha384sum}
 @samp{sha512}    equivalent to @command{sha512sum}
 @samp{blake2b}   equivalent to @command{b2sum}
+@samp{sm3}       only available through @command{cksum}
 @end example
 
 @item --debug
