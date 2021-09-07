@@ -31,6 +31,7 @@ $@
 {
   my $fail = 0;
   my @stdin_reading_commands = qw(
+    b2sum
     base32
     base64
     cat
@@ -63,7 +64,7 @@ $@
     wc
   );
   my $stderr = 'tty-eof.err';
-  foreach my $cmd ((@stdin_reading_commands), 'cut -f2',
+  foreach my $cmd ((@stdin_reading_commands), 'basenc --z85', 'cut -f2',
                    'numfmt --invalid=ignore')
     {
       my $exp = new Expect;
