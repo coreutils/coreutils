@@ -14210,7 +14210,7 @@ The length of one component of @var{name} is longer than
 its file system's maximum.
 @end enumerate
 
-A nonexistent @var{name} is not an error, so long a file with that
+A nonexistent @var{name} is not an error, so long as a file with that
 name could be created under the above conditions.
 
 The program accepts the following options.  Also see @ref{Common options}.
