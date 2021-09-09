@@ -158,7 +158,7 @@ Send bug reports, questions, comments, etc. to bug-coreutils@gnu.org.
 To suggest a patch, see the files README-hacking and HACKING for tips.
 
 If you have a problem with 'sort', try running 'sort --debug', as it
-can can often help find and fix problems without having to wait for an
+can often help find and fix problems without having to wait for an
 answer to a bug report.  If the debug output does not suffice to fix
 the problem on your own, please compress and attach it to the rest of
 your bug report.
