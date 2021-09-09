@@ -26,7 +26,8 @@ VC_LIST_ALWAYS_EXCLUDE_REGEX = src/blake2/.*$$
 
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip = \
-  sc_proper_name_utf8_requires_ICONV
+  sc_proper_name_utf8_requires_ICONV \
+  sc_indent
 
 # Tools used to bootstrap this package, used for "announcement".
 bootstrap-tools = autoconf,automake,gnulib,bison
