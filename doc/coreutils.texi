@@ -539,7 +539,7 @@ any other information needed to reproduce the bug: your input, what you
 expected, what you got, and why it is wrong.
 
 If you have a problem with @command{sort} or @command{date}, try using the
-@option{--debug} option, as it can can often help find and fix problems without
+@option{--debug} option, as it can often help find and fix problems without
 having to wait for an answer to a bug report.  If the debug output
 does not suffice to fix the problem on your own, please compress and
 attach it to the rest of your bug report.
