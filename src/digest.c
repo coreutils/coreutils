@@ -83,7 +83,7 @@
 # define DIGEST_ALIGN 4
 #elif HASH_ALGO_BLAKE2
 # define PROGRAM_NAME "b2sum"
-# define DIGEST_TYPE_STRING "BLAKE2"
+# define DIGEST_TYPE_STRING "BLAKE2b"
 # define DIGEST_STREAM blake2b_stream
 # define DIGEST_BITS 512
 # define DIGEST_REFERENCE "RFC 7693"
@@ -202,27 +202,8 @@ static int bsd_reversed = -1;
 static unsigned char delim = '\n';
 
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
-static char const *const algorithm_in_string[] =
-{
-  "blake2b", NULL
-};
-static char const *const algorithm_out_string[] =
-{
-  "BLAKE2b", NULL
-};
-enum blake2_Algorithm
-{
-  BLAKE2b
-};
-verify (ARRAY_CARDINALITY (algorithm_in_string) == 2);
-verify (ARRAY_CARDINALITY (algorithm_out_string) == 2);
-
-static enum blake2_Algorithm b2_algorithm;
+# define BLAKE2B_MAX_LEN BLAKE2B_OUTBYTES
 static uintmax_t b2_length;
-static uintmax_t blake2_max_len[]=
-{
-  BLAKE2B_OUTBYTES
-};
 #endif /* HASH_ALGO_BLAKE2 */
 
 typedef void (*digest_output_fn)(char const*, int, void const*,
@@ -682,20 +663,15 @@ split_3 (char *s, size_t s_len,
 # endif
       /* Terminate and match algorithm name.  */
       char const *algo_name = &s[i - algo_name_len];
-      /* Skip algorithm variants.  */
-      while (s[i] && ! ISWHITE (s[i]) && s[i] != '-' && s[i] != '(')
-        ++i;
       bool length_specified = s[i] == '-';
       bool openssl_format = s[i] == '('; /* and no length_specified */
       s[i++] = '\0';
-      ptrdiff_t algo = argmatch (algo_name, algorithm_out_string, NULL, 0);
-      if (algo < 0)
+      if (!STREQ (algo_name, DIGEST_TYPE_STRING))
         return false;
-      b2_algorithm = algo;
       if (openssl_format)
         s[--i] = '(';
 
-      b2_length = blake2_max_len[b2_algorithm] * 8;
+      b2_length = BLAKE2B_MAX_LEN * 8;
       if (length_specified)
         {
           uintmax_t length;
@@ -744,7 +720,7 @@ split_3 (char *s, size_t s_len,
   while (isxdigit (*hp++))
     digest_hex_bytes++;
   if (digest_hex_bytes < 2 || digest_hex_bytes % 2
-      || blake2_max_len[b2_algorithm] * 2 < digest_hex_bytes)
+      || BLAKE2B_MAX_LEN * 2 < digest_hex_bytes)
     return false;
   b2_length = digest_hex_bytes * 4;
 # if HASH_ALGO_CKSUM
@@ -922,19 +898,16 @@ output_file (char const *file, int binary_file, void const *digest,
       if (needs_escape)
         putchar ('\\');
 
-# if HASH_ALGO_BLAKE2
-      fputs (algorithm_out_string[b2_algorithm], stdout);
-      if (b2_length < blake2_max_len[b2_algorithm] * 8)
-        printf ("-%"PRIuMAX, b2_length);
-# else
       fputs (DIGEST_TYPE_STRING, stdout);
-#  if HASH_ALGO_CKSUM
+# if HASH_ALGO_BLAKE2
+      if (b2_length < BLAKE2B_MAX_LEN * 8)
+        printf ("-%"PRIuMAX, b2_length);
+# elif HASH_ALGO_CKSUM
       if (cksum_algorithm == blake2b)
         {
-          if (b2_length < blake2_max_len[b2_algorithm] * 8)
+          if (b2_length < BLAKE2B_MAX_LEN * 8)
             printf ("-%"PRIuMAX, b2_length);
         }
-#  endif
 # endif
       fputs (" (", stdout);
       print_filename (file, needs_escape);
@@ -1296,16 +1269,16 @@ main (int argc, char **argv)
     die (EXIT_FAILURE, 0,
          _("--length is only supported with --algorithm=blake2b"));
 # endif
-  if (b2_length > blake2_max_len[b2_algorithm] * 8)
+  if (b2_length > BLAKE2B_MAX_LEN * 8)
     {
       error (0, 0, _("invalid length: %s"), quote (b2_length_str));
       die (EXIT_FAILURE, 0,
-           _("maximum digest length for %s is %"PRIuMAX" bits"),
-           quote (algorithm_in_string[b2_algorithm]),
-           blake2_max_len[b2_algorithm] * 8);
+           _("maximum digest length for %s is %d bits"),
+           quote (DIGEST_TYPE_STRING),
+           BLAKE2B_MAX_LEN * 8);
     }
   if (b2_length == 0 && ! do_check)
-    b2_length = blake2_max_len[b2_algorithm] * 8;
+    b2_length = BLAKE2B_MAX_LEN * 8;
 # if HASH_ALGO_BLAKE2
   digest_hex_bytes = b2_length / 4;
 # else
