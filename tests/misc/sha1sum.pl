@@ -54,7 +54,7 @@ my @Tests =
      ['check-bsd', '--check', {IN=> {'f.md5' => "MD5 (f) = $sha_degenerate\n"}},
                         {AUX=> {f=> ''}},
                         {ERR=>"sha1sum: f.md5: no properly formatted "
-                          . "SHA1 checksum lines found\n"},
+                          . "checksum lines found\n"},
                         {EXIT=> 1}],
      ['check-bsd2', '--check',
                         {IN=> {'f.sha1' => "SHA1 (f) = $sha_degenerate\n"}},
@@ -66,7 +66,7 @@ my @Tests =
                         {IN=> {'f.md5' => "MD5(f)= $sha_degenerate\n"}},
                         {AUX=> {f=> ''}},
                         {ERR=>"sha1sum: f.md5: no properly formatted "
-                          . "SHA1 checksum lines found\n"},
+                          . "checksum lines found\n"},
                         {EXIT=> 1}],
      ['check-openssl2', '--check',
                         {IN=> {'f.sha1' => "SHA1(f)= $sha_degenerate\n"}},
@@ -75,7 +75,7 @@ my @Tests =
                         {IN=> {'f.sha1' => "SHA1(f)= $sha_degenerate\n"}},
                         {AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "SHA1 ("}}, {EXIT=> 1},
-      {ERR=> "$prog: z: no properly formatted SHA1 checksum lines found\n"}],
+      {ERR=> "$prog: z: no properly formatted checksum lines found\n"}],
     );
 
 # Insert the '--text' argument for each test.

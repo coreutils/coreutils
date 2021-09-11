@@ -311,6 +311,7 @@ static int const algorithm_bits[] =
 verify (ARRAY_CARDINALITY (algorithm_bits)
         == ARRAY_CARDINALITY (algorithm_args));
 
+static bool algorithm_specified = false;
 static enum Algorithm cksum_algorithm = crc;
 static sumfn cksumfns[]=
 {
@@ -630,6 +631,45 @@ bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest,
   return hex_digits (*hex_digest);
 }
 
+#if HASH_ALGO_CKSUM
+/* Return the corresponding Algorithm for the string S,
+   or -1 for no match.  */
+
+static ptrdiff_t
+algorithm_from_tag (char *s)
+{
+  /* Limit check size to this length for perf reasons.  */
+  static size_t max_tag_len;
+  if (! max_tag_len)
+    {
+      char const * const * tag = algorithm_tags;
+      while (*tag)
+        {
+          size_t tag_len = strlen (*tag++);
+          max_tag_len = MAX (tag_len, max_tag_len);
+        }
+    }
+
+  size_t i = 0;
+
+  /* Find end of tag */
+  while (i <= max_tag_len && s[i] && ! ISWHITE (s[i])
+         && s[i] != '-' && s[i] != '(')
+    ++i;
+
+  if (i > max_tag_len)
+    return -1;
+
+  /* Terminate tag, and lookup.  */
+  char sep = s[i];
+  s[i] = '\0';
+  ptrdiff_t algo = argmatch (s, algorithm_tags, NULL, 0);
+  s[i] = sep;
+
+  return algo;
+}
+#endif
+
 /* Split the string S (of length S_LEN) into three parts:
    a hexadecimal digest, binary flag, and the file name.
    S is modified.  Return true if successful.  */
@@ -652,6 +692,21 @@ split_3 (char *s, size_t s_len,
     }
 
   /* Check for BSD-style checksum line. */
+
+#if HASH_ALGO_CKSUM
+  if (! algorithm_specified)
+    {
+      ptrdiff_t algo_tag = algorithm_from_tag (s+i);
+      if (algo_tag >= 0)
+        {
+          if (algo_tag <= crc)
+            return false;  /* We don't support checking these older formats.  */
+          cksum_algorithm = algo_tag;
+        }
+      else
+        return false;  /* We only support tagged format without -a.  */
+    }
+#endif
 
   algo_name_len = strlen (DIGEST_TYPE_STRING);
   if (STREQ_LEN (s + i, DIGEST_TYPE_STRING, algo_name_len))
@@ -687,7 +742,14 @@ split_3 (char *s, size_t s_len,
 # if HASH_ALGO_CKSUM
       }
 # endif
+# if HASH_ALGO_CKSUM
+      if (cksum_algorithm == blake2b)
+        digest_hex_bytes = b2_length / 4;
+      else
+        digest_hex_bytes = algorithm_bits[cksum_algorithm] / 4;
+# else
       digest_hex_bytes = b2_length / 4;
+# endif
 #endif
       if (s[i] == ' ')
         ++i;
@@ -1102,8 +1164,8 @@ digest_check (char const *checkfile_name)
   if (! properly_formatted_lines)
     {
       /* Warn if no tests are found.  */
-      error (0, 0, _("%s: no properly formatted %s checksum lines found"),
-             quotef (checkfile_name), DIGEST_TYPE_STRING);
+      error (0, 0, _("%s: no properly formatted checksum lines found"),
+             quotef (checkfile_name));
     }
   else
     {
@@ -1190,6 +1252,7 @@ main (int argc, char **argv)
       case 'a':
         cksum_algorithm = XARGMATCH ("--algorithm", optarg,
                                      algorithm_args, algorithm_types);
+        algorithm_specified = true;
         break;
 
       case DEBUG_PROGRAM_OPTION:
@@ -1303,7 +1366,7 @@ main (int argc, char **argv)
         if (prefix_tag)
           die (EXIT_FAILURE, 0,
               _("--tag is not supported with --algorithm={bsd,sysv,crc}"));
-        if (do_check)
+        if (do_check && algorithm_specified)
           die (EXIT_FAILURE, 0,
               _("--check is not supported with --algorithm={bsd,sysv,crc}"));
         break;

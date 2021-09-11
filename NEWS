@@ -95,6 +95,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cksum -a now supports the 'sm3' argument, to use the SM3 digest algorithm.
 
+  cksum --check now supports auto detecting the digest type to use,
+  when verifying tagged format checksums.
+
   expr and factor now support bignums on all platforms.
 
   ls --classify now supports the "always", "auto", or "never" flags,

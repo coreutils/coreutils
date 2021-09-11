@@ -4087,10 +4087,16 @@ Read file names and checksum information (not data) from each
 whether the checksums match the contents of the named files.
 The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
+
 Three input formats are supported.  Either the default output
 format described above, the @option{--tag} output format,
 or the BSD reversed mode format which is similar to the default mode,
 but doesn't use a character to distinguish binary and text modes.
+
+For the @command{cksum} command, the @option{--check} option
+supports auto-detecting the digest algorithm to use,
+when presented with checksum information in the @option{--tag} output format.
+
 Output with @option{--zero} enabled is not supported by @option{--check}.
 @sp 1
 For each such line, @command{md5sum} reads the named file and computes its

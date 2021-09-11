@@ -105,7 +105,7 @@ my @Tests =
      ['check-bsd', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
                                 {AUX=> {f=> ''}},
                                 {ERR=>"md5sum: f.sha1: no properly formatted "
-                                       . "MD5 checksum lines found\n"},
+                                       . "checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-bsd2', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
                                 {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
@@ -115,7 +115,7 @@ my @Tests =
      ['check-openssl', '--check', {IN=> {'f.sha1' => "SHA1(f)= $degenerate\n"}},
                                 {AUX=> {f=> ''}},
                                 {ERR=>"md5sum: f.sha1: no properly formatted "
-                                       . "MD5 checksum lines found\n"},
+                                       . "checksum lines found\n"},
                                 {EXIT=> 1}],
      ['check-openssl2', '--check', {IN=> {'f.md5' => "MD5(f)= $degenerate\n"}},
                                 {AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
@@ -157,7 +157,7 @@ my @Tests =
                                     "006999e6df389641adf1fa3a74801d9d  f\n"}},
                                 {OUT=>"f: OK\n"}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
-      {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: z: no properly formatted checksum lines found\n"}],
 
      # Ensure that when there's a NUL byte among the checksum hex digits
      # we detect the invalid formatting and don't even open the file.
@@ -165,7 +165,7 @@ my @Tests =
      #   h: FAILED
      #   md5sum: WARNING: 1 of 1 computed checksum did NOT match
      ['nul-in-cksum', '--check', {IN=> {'h'=>("\0"x32)."  h\n"}}, {EXIT=> 1},
-      {ERR=> "$prog: h: no properly formatted MD5 checksum lines found\n"}],
+      {ERR=> "$prog: h: no properly formatted checksum lines found\n"}],
     );
 
 # Insert the '--text' argument for each test.
