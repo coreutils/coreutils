@@ -203,7 +203,7 @@ static unsigned char delim = '\n';
 
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # define BLAKE2B_MAX_LEN BLAKE2B_OUTBYTES
-static uintmax_t b2_length;
+static uintmax_t digest_length;
 #endif /* HASH_ALGO_BLAKE2 */
 
 typedef void (*digest_output_fn)(char const*, int, void const*,
@@ -713,9 +713,6 @@ split_3 (char *s, size_t s_len,
     {
       i += algo_name_len;
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
-# if HASH_ALGO_CKSUM
-      if (cksum_algorithm == blake2b) {
-# endif
       /* Terminate and match algorithm name.  */
       char const *algo_name = &s[i - algo_name_len];
       bool length_specified = s[i] == '-';
@@ -726,30 +723,24 @@ split_3 (char *s, size_t s_len,
       if (openssl_format)
         s[--i] = '(';
 
-      b2_length = BLAKE2B_MAX_LEN * 8;
+# if HASH_ALGO_BLAKE2
+      digest_length = BLAKE2B_MAX_LEN * 8;
+# else
+      digest_length = algorithm_bits[cksum_algorithm];
+# endif
       if (length_specified)
         {
           uintmax_t length;
           char *siend;
           if (! (xstrtoumax (s + i, &siend, 0, &length, NULL) == LONGINT_OK
-                 && 0 < length && length <= b2_length
+                 && 0 < length && length <= digest_length
                  && length % 8 == 0))
             return false;
 
           i = siend - s;
-          b2_length = length;
+          digest_length = length;
         }
-# if HASH_ALGO_CKSUM
-      }
-# endif
-# if HASH_ALGO_CKSUM
-      if (cksum_algorithm == blake2b)
-        digest_hex_bytes = b2_length / 4;
-      else
-        digest_hex_bytes = algorithm_bits[cksum_algorithm] / 4;
-# else
-      digest_hex_bytes = b2_length / 4;
-# endif
+      digest_hex_bytes = digest_length / 4;
 #endif
       if (s[i] == ' ')
         ++i;
@@ -784,7 +775,7 @@ split_3 (char *s, size_t s_len,
   if (digest_hex_bytes < 2 || digest_hex_bytes % 2
       || BLAKE2B_MAX_LEN * 2 < digest_hex_bytes)
     return false;
-  b2_length = digest_hex_bytes * 4;
+  digest_length = digest_hex_bytes * 4;
 # if HASH_ALGO_CKSUM
   }
 # endif
@@ -915,12 +906,12 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 
 #if HASH_ALGO_CKSUM
   if (cksum_algorithm == blake2b)
-    *length = b2_length / 8;
+    *length = digest_length / 8;
   err = DIGEST_STREAM (fp, bin_result, length);
 #elif HASH_ALGO_SUM
   err = DIGEST_STREAM (fp, bin_result, length);
 #elif HASH_ALGO_BLAKE2
-  err = DIGEST_STREAM (fp, bin_result, b2_length / 8);
+  err = DIGEST_STREAM (fp, bin_result, digest_length / 8);
 #else
   err = DIGEST_STREAM (fp, bin_result);
 #endif
@@ -962,13 +953,13 @@ output_file (char const *file, int binary_file, void const *digest,
 
       fputs (DIGEST_TYPE_STRING, stdout);
 # if HASH_ALGO_BLAKE2
-      if (b2_length < BLAKE2B_MAX_LEN * 8)
-        printf ("-%"PRIuMAX, b2_length);
+      if (digest_length < BLAKE2B_MAX_LEN * 8)
+        printf ("-%"PRIuMAX, digest_length);
 # elif HASH_ALGO_CKSUM
       if (cksum_algorithm == blake2b)
         {
-          if (b2_length < BLAKE2B_MAX_LEN * 8)
-            printf ("-%"PRIuMAX, b2_length);
+          if (digest_length < BLAKE2B_MAX_LEN * 8)
+            printf ("-%"PRIuMAX, digest_length);
         }
 # endif
       fputs (" (", stdout);
@@ -1237,10 +1228,10 @@ main (int argc, char **argv)
   const char* short_opts = "rs";
 #elif HASH_ALGO_CKSUM
   const char* short_opts = "a:l:bctwz";
-  const char* b2_length_str = "";
+  const char* digest_length_str = "";
 #elif HASH_ALGO_BLAKE2
   const char* short_opts = "l:bctwz";
-  const char* b2_length_str = "";
+  const char* digest_length_str = "";
 #else
   const char* short_opts = "bctwz";
 #endif
@@ -1261,12 +1252,12 @@ main (int argc, char **argv)
 #endif
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
       case 'l':
-        b2_length = xdectoumax (optarg, 0, UINTMAX_MAX, "",
+        digest_length = xdectoumax (optarg, 0, UINTMAX_MAX, "",
                                 _("invalid length"), 0);
-        b2_length_str = optarg;
-        if (b2_length % 8 != 0)
+        digest_length_str = optarg;
+        if (digest_length % 8 != 0)
           {
-            error (0, 0, _("invalid length: %s"), quote (b2_length_str));
+            error (0, 0, _("invalid length: %s"), quote (digest_length_str));
             die (EXIT_FAILURE, 0, _("length is not a multiple of 8"));
           }
         break;
@@ -1328,28 +1319,27 @@ main (int argc, char **argv)
   min_digest_line_length = MIN_DIGEST_LINE_LENGTH;
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # if HASH_ALGO_CKSUM
-  if (b2_length && cksum_algorithm != blake2b)
+  if (digest_length && cksum_algorithm != blake2b)
     die (EXIT_FAILURE, 0,
          _("--length is only supported with --algorithm=blake2b"));
 # endif
-  if (b2_length > BLAKE2B_MAX_LEN * 8)
+  if (digest_length > BLAKE2B_MAX_LEN * 8)
     {
-      error (0, 0, _("invalid length: %s"), quote (b2_length_str));
+      error (0, 0, _("invalid length: %s"), quote (digest_length_str));
       die (EXIT_FAILURE, 0,
            _("maximum digest length for %s is %d bits"),
            quote (DIGEST_TYPE_STRING),
            BLAKE2B_MAX_LEN * 8);
     }
-  if (b2_length == 0 && ! do_check)
-    b2_length = BLAKE2B_MAX_LEN * 8;
+  if (digest_length == 0 && ! do_check)
+    {
 # if HASH_ALGO_BLAKE2
-  digest_hex_bytes = b2_length / 4;
+      digest_length = BLAKE2B_MAX_LEN * 8;
 # else
-  if (cksum_algorithm == blake2b)
-    digest_hex_bytes = b2_length / 4;
-  else
-    digest_hex_bytes = algorithm_bits[cksum_algorithm] / 4;
+      digest_length = algorithm_bits[cksum_algorithm];
 # endif
+    }
+  digest_hex_bytes = digest_length / 4;
 #else
   digest_hex_bytes = DIGEST_HEX_BYTES;
 #endif
