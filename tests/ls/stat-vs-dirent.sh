@@ -32,7 +32,8 @@ while :; do
     file=$(sed -n '1s/^ *[0-9][0-9]* //p;q' tmp)
 
     # Get its inode number (stat.st_ino) via stat(1)'s call to lstat.
-    st_ino=$(stat --format=%i "$t/$file")
+    st_ino=$(stat --format=%i "$t/$file") ||
+        skip_ "error stating: $t/$file"  # removed or newlines in name etc.
 
     # Make sure that they are the same.
     # We know from experience that there may be mismatches on some
