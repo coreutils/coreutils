@@ -184,7 +184,8 @@ cleanup_buffer:
 
 void
 output_bsd (char const *file, int binary_file, void const *digest,
-            bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+            bool tagged, unsigned char delim, bool args _GL_UNUSED,
+            uintmax_t length _GL_UNUSED)
 {
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -192,7 +193,7 @@ output_bsd (char const *file, int binary_file, void const *digest,
           human_readable (length, hbuf, human_ceiling, 1, 1024));
   if (args)
     printf (" %s", file);
-  putchar ('\n');
+  putchar (delim);
 }
 
 /* Print the checksum and size (in 512 byte blocks) to stdout.
@@ -200,7 +201,8 @@ output_bsd (char const *file, int binary_file, void const *digest,
 
 void
 output_sysv (char const *file, int binary_file, void const *digest,
-             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+             bool tagged, unsigned char delim, bool args _GL_UNUSED,
+             uintmax_t length _GL_UNUSED)
 {
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -208,5 +210,5 @@ output_sysv (char const *file, int binary_file, void const *digest,
           human_readable (length, hbuf, human_ceiling, 1, 512));
   if (args)
     printf (" %s", file);
-  putchar ('\n');
+  putchar (delim);
 }

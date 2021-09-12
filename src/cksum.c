@@ -285,13 +285,14 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 
 void
 output_crc (char const *file, int binary_file, void const *digest,
-            bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+            bool tagged, unsigned char delim, bool args _GL_UNUSED,
+            uintmax_t length _GL_UNUSED)
 {
   char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
   printf ("%u %s", *(unsigned int *)digest, umaxtostr (length, length_buf));
   if (args)
     printf (" %s", file);
-  putchar ('\n');
+  putchar (delim);
 }
 
 #endif /* !CRCTAB */

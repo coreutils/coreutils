@@ -37,7 +37,6 @@ done
 compare out out-a || fail=1
 
 returns_ 1 cksum -a bsd --tag </dev/null
-returns_ 1 cksum -a bsd --zero </dev/null
 returns_ 1 cksum -a bsd --check </dev/null
 
 Exit $fail

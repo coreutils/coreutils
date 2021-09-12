@@ -165,7 +165,8 @@
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED);
+             bool tagged, unsigned char delim, bool args _GL_UNUSED,
+             uintmax_t length _GL_UNUSED);
 #endif
 
 /* True if any of the files read were the standard input. */
@@ -199,7 +200,7 @@ static bool strict = false;
 static int bsd_reversed = -1;
 
 /* line delimiter.  */
-static unsigned char delim = '\n';
+static unsigned char digest_delim = '\n';
 
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # define BLAKE2B_MAX_LEN BLAKE2B_OUTBYTES
@@ -207,7 +208,7 @@ static uintmax_t digest_length;
 #endif /* HASH_ALGO_BLAKE2 */
 
 typedef void (*digest_output_fn)(char const*, int, void const*,
-                                 bool, bool, uintmax_t);
+                                 bool, unsigned char, bool, uintmax_t);
 #if HASH_ALGO_SUM
 enum Algorithm
 {
@@ -933,7 +934,8 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, bool args _GL_UNUSED, uintmax_t length _GL_UNUSED)
+             bool tagged, unsigned char delim, bool args _GL_UNUSED,
+             uintmax_t length _GL_UNUSED)
 {
   unsigned char const *bin_buffer = digest;
   /* We don't really need to escape, and hence detect, the '\\'
@@ -1298,7 +1300,7 @@ main (int argc, char **argv)
         binary = 1;
         break;
       case 'z':
-        delim = '\0';
+        digest_delim = '\0';
         break;
 #endif
 #if HASH_ALGO_SUM
@@ -1350,9 +1352,6 @@ main (int argc, char **argv)
     case bsd:
     case sysv:
     case crc:
-        if (delim != '\n')
-          die (EXIT_FAILURE, 0,
-              _("--zero is not supported with --algorithm={bsd,sysv,crc}"));
         if (prefix_tag)
           die (EXIT_FAILURE, 0,
               _("--tag is not supported with --algorithm={bsd,sysv,crc}"));
@@ -1377,7 +1376,7 @@ main (int argc, char **argv)
      usage (EXIT_FAILURE);
    }
 
-  if (delim != '\n' && do_check)
+  if (digest_delim != '\n' && do_check)
     {
       error (0, 0, _("the --zero option is not supported when "
                      "verifying checksums"));
@@ -1457,7 +1456,7 @@ main (int argc, char **argv)
           else
             {
               DIGEST_OUT (file, binary_file, bin_buffer, prefix_tag,
-                          optind != argc, length);
+                          digest_delim, optind != argc, length);
             }
         }
     }
