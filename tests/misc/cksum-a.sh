@@ -32,7 +32,7 @@ sha512  sha512sum -t
 blake2b b2sum -t
 " | while read algo prog; do
   $prog < /dev/null >> out || continue
-  cksum --algorithm=$algo < /dev/null >> out-a || fail=1
+  cksum --untagged --algorithm=$algo < /dev/null >> out-a || fail=1
 done
 compare out out-a || fail=1
 

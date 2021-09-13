@@ -355,6 +355,7 @@ enum
   QUIET_OPTION,
   STRICT_OPTION,
   TAG_OPTION,
+  UNTAG_OPTION,
   DEBUG_PROGRAM_OPTION,
 };
 
@@ -372,7 +373,11 @@ static struct option const long_options[] =
   { "text", no_argument, NULL, 't' },
   { "warn", no_argument, NULL, 'w' },
   { "strict", no_argument, NULL, STRICT_OPTION },
+# if HASH_ALGO_CKSUM
+  { "untagged", no_argument, NULL, UNTAG_OPTION },
+# else
   { "tag", no_argument, NULL, TAG_OPTION },
+# endif
   { "zero", no_argument, NULL, 'z' },
 #endif
 #if HASH_ALGO_CKSUM
@@ -444,9 +449,15 @@ Print or check %s (%d-bit) checksums.\n\
                        the blake2 algorithm and must be a multiple of 8\n\
 "), stdout);
 # endif
+# if HASH_ALGO_CKSUM
+      fputs (_("\
+      --untagged       create a reversed style checksum, without digest type\n\
+"), stdout);
+# else
       fputs (_("\
       --tag            create a BSD-style checksum\n\
 "), stdout);
+# endif
       if (O_BINARY)
         fputs (_("\
   -t, --text           read in text mode (default if reading tty stdin)\n\
@@ -1211,7 +1222,11 @@ main (int argc, char **argv)
   int opt;
   bool ok = true;
   int binary = -1;
+#if HASH_ALGO_CKSUM
+  bool prefix_tag = true;
+#else
   bool prefix_tag = false;
+#endif
 
   /* Setting values of global variables.  */
   initialize_main (&argc, &argv);
@@ -1295,10 +1310,16 @@ main (int argc, char **argv)
       case STRICT_OPTION:
         strict = true;
         break;
+# if HASH_ALGO_CKSUM
+      case UNTAG_OPTION:
+        prefix_tag = false;
+        break;
+# else
       case TAG_OPTION:
         prefix_tag = true;
         binary = 1;
         break;
+# endif
       case 'z':
         digest_delim = '\0';
         break;
@@ -1352,9 +1373,6 @@ main (int argc, char **argv)
     case bsd:
     case sysv:
     case crc:
-        if (prefix_tag)
-          die (EXIT_FAILURE, 0,
-              _("--tag is not supported with --algorithm={bsd,sysv,crc}"));
         if (do_check && algorithm_specified)
           die (EXIT_FAILURE, 0,
               _("--check is not supported with --algorithm={bsd,sysv,crc}"));
@@ -1382,13 +1400,21 @@ main (int argc, char **argv)
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
-
+#if HASH_ALGO_CKSUM
+  if (!prefix_tag && do_check)
+    {
+      error (0, 0, _("the --untagged option is meaningless when "
+                     "verifying checksums"));
+      usage (EXIT_FAILURE);
+    }
+#else
   if (prefix_tag && do_check)
     {
       error (0, 0, _("the --tag option is meaningless when "
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
+#endif
 
   if (0 <= binary && do_check)
     {

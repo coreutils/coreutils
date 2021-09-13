@@ -25,10 +25,11 @@ for prog in 'b2sum' 'cksum -a blake2b'; do
 
 # Ensure we can --check the --tag format we produce
 rm -f check.b2sum || framework_failure_
+[ "$prog" = 'b2sum' ] && tag_opt='--tag' || tag_opt=''
 for i in 'a' ' b' '*c' '44' ' '; do
   echo "$i" > "$i"
   for l in 0 128; do
-    $prog -l $l --tag "$i" >> check.b2sum
+    $prog -l $l $tag_opt "$i" >> check.b2sum
   done
 done
 # Note -l is inferred from the tags in the mixed format file
@@ -39,15 +40,17 @@ $prog --strict -c openssl.b2sum || fail=1
 
 rm -f check.vals || framework_failure_
 # Ensure we can check non tagged format
+[ "$prog" != 'b2sum' ] && tag_opt='--untagged' || tag_opt=''
 for l in 0 128; do
-  $prog -l $l /dev/null | tee -a check.vals > check.b2sum
+  $prog $tag_opt -l $l /dev/null | tee -a check.vals > check.b2sum
   $prog -l $l --strict -c check.b2sum || fail=1
   $prog --strict -c check.b2sum || fail=1
 done
 
 # Ensure the checksum values are correct.  The reference
 # check.vals was created with the upstream SSE reference implementation.
-$prog --length=128 check.vals > out || fail=1
+[ "$prog" != 'b2sum' ] && tag_opt='--untagged' || tag_opt=''
+$prog $tag_opt --length=128 check.vals > out || fail=1
 printf '%s\n' '796485dd32fe9b754ea5fd6c721271d9  check.vals' > exp
 compare exp out || fail=1
 

@@ -22,7 +22,7 @@ print_ver_ cksum shuf
 shuf -i 1-10 > input || framework_failure_
 
 for args in '-a sha384' '-a blake2b' '-a blake2b -l 384' '-a sm3'; do
-  cksum $args --tag 'input' >> CHECKSUMS || fail=1
+  cksum $args 'input' >> CHECKSUMS || fail=1
 done
 cksum --strict --check CHECKSUMS || fail=1
 

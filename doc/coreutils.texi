@@ -3986,6 +3986,16 @@ Supported more modern digest algorithms are:
 @item --debug
 @opindex --debug
 Output extra information to stderr, like the checksum implementation being used.
+
+@item --untagged
+@opindex --untagged
+Output using the original coreutils format used by the other
+standalone checksum utilities like @command{md5sum} for example.
+This format has the checksum at the start of the line, and may be
+more amenable to further processing by other utilities,
+especially in combination with the @option{--zero} option.
+Note this does not identify the digest algorithm used for the checksum.
+@xref{md5sum invocation} for details of this format.
 @end table
 
 
@@ -4147,6 +4157,8 @@ indicating there was a failure.
 @item --tag
 @opindex --tag
 @cindex BSD output
+Note this option is not supported by the @command{cksum} command,
+as this is the default output format that it uses.
 Output BSD style checksums, which indicate the checksum algorithm used.
 As a GNU extension, if @option{--zero} is not used, file names with problematic
 characters are escaped as described above, with the same escaping indicator of
