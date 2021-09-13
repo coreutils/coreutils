@@ -364,29 +364,30 @@ static struct option const long_options[] =
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
   { "length", required_argument, NULL, 'l'},
 #endif
+
 #if !HASH_ALGO_SUM
-  { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },
   { "ignore-missing", no_argument, NULL, IGNORE_MISSING_OPTION},
   { "quiet", no_argument, NULL, QUIET_OPTION },
   { "status", no_argument, NULL, STATUS_OPTION },
-  { "text", no_argument, NULL, 't' },
   { "warn", no_argument, NULL, 'w' },
   { "strict", no_argument, NULL, STRICT_OPTION },
+  { "zero", no_argument, NULL, 'z' },
+
 # if HASH_ALGO_CKSUM
+  { "algorithm", required_argument, NULL, 'a'},
+  { "debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
   { "untagged", no_argument, NULL, UNTAG_OPTION },
 # else
+  { "binary", no_argument, NULL, 'b' },
+  { "text", no_argument, NULL, 't' },
   { "tag", no_argument, NULL, TAG_OPTION },
 # endif
-  { "zero", no_argument, NULL, 'z' },
-#endif
-#if HASH_ALGO_CKSUM
-  {"algorithm", required_argument, NULL, 'a'},
-  {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
-#endif
-#if HASH_ALGO_SUM
+
+#else
   {"sysv", no_argument, NULL, 's'},
 #endif
+
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
@@ -431,6 +432,7 @@ Print or check %s (%d-bit) checksums.\n\
 "), stdout);
 #endif
 #if !HASH_ALGO_SUM
+# if !HASH_ALGO_CKSUM
       if (O_BINARY)
         fputs (_("\
   -b, --binary         read in binary mode (default unless reading tty stdin)\n\
@@ -439,7 +441,7 @@ Print or check %s (%d-bit) checksums.\n\
         fputs (_("\
   -b, --binary         read in binary mode\n\
 "), stdout);
-
+# endif
         fputs (_("\
   -c, --check          read checksums from the FILEs and check them\n\
 "), stdout);
@@ -458,6 +460,7 @@ Print or check %s (%d-bit) checksums.\n\
       --tag            create a BSD-style checksum\n\
 "), stdout);
 # endif
+# if !HASH_ALGO_CKSUM
       if (O_BINARY)
         fputs (_("\
   -t, --text           read in text mode (default if reading tty stdin)\n\
@@ -466,6 +469,7 @@ Print or check %s (%d-bit) checksums.\n\
         fputs (_("\
   -t, --text           read in text mode (default)\n\
 "), stdout);
+# endif
       fputs (_("\
   -z, --zero           end each output line with NUL, not newline,\n\
                        and disable file name escaping\n\
@@ -992,7 +996,12 @@ output_file (char const *file, int binary_file, void const *digest,
     {
       putchar (' ');
 
+# if HASH_ALGO_CKSUM
+      /* Simplify output as always in binary mode.  */
+      putchar (' ');
+# else
       putchar (binary_file ? '*' : ' ');
+# endif
 
       print_filename (file, needs_escape);
     }
@@ -1221,10 +1230,11 @@ main (int argc, char **argv)
   bool do_check = false;
   int opt;
   bool ok = true;
-  int binary = -1;
 #if HASH_ALGO_CKSUM
+  int binary = 1;
   bool prefix_tag = true;
 #else
+  int binary = -1;
   bool prefix_tag = false;
 #endif
 
@@ -1280,9 +1290,6 @@ main (int argc, char **argv)
         break;
 #endif
 #if !HASH_ALGO_SUM
-      case 'b':
-        binary = 1;
-        break;
       case 'c':
         do_check = true;
         break;
@@ -1291,9 +1298,14 @@ main (int argc, char **argv)
         warn = false;
         quiet = false;
         break;
+# if !HASH_ALGO_CKSUM
+      case 'b':
+        binary = 1;
+        break;
       case 't':
         binary = 0;
         break;
+# endif
       case 'w':
         status_only = false;
         warn = true;
@@ -1416,12 +1428,14 @@ main (int argc, char **argv)
     }
 #endif
 
+#if !HASH_ALGO_CKSUM
   if (0 <= binary && do_check)
     {
       error (0, 0, _("the --binary and --text options are meaningless when "
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
+#endif
 
   if (ignore_missing && !do_check)
     {

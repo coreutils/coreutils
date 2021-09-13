@@ -41,11 +41,10 @@ my @Tests =
 {OUT=>"c8aaf89429554029e231941a2acc0ad61ff2a5acd8fadd25847a3a732b3b02c3  f\n"}],
     );
 
-# Insert the '--text' argument for each test.
+# Insert the arguments for each test.
 my $t;
 foreach $t (@Tests)
   {
-    splice @$t, 1, 0, '--text' unless @$t[1] =~ /--check/;
     splice @$t, 1, 0, '--untagged -a sm3'
   }
 

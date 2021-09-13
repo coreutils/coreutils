@@ -4066,7 +4066,8 @@ For each @var{file}, @samp{md5sum} outputs by default, the MD5 checksum,
 a space, a flag indicating binary or text input mode, and the file name.
 Binary mode is indicated with @samp{*}, text mode with @samp{ } (space).
 Binary mode is the default on systems where it's significant,
-otherwise text mode is the default.
+otherwise text mode is the default.  The @command{cksum} command always
+uses binary mode and a @samp{ } (space) flag.
 Without @option{--zero}, if @var{file} contains a backslash or newline,
 the line is started with a backslash, and each problematic character in
 the file name is escaped with a backslash, making the output
@@ -4082,6 +4083,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -b
 @opindex --binary
 @cindex binary input files
+Note this option is not supported by the @command{cksum} command,
+as it operates in binary mode exclusively.
 Treat each input file as binary, by reading it in binary mode and
 outputting a @samp{*} flag.  This is the inverse of @option{--text}.
 On systems like GNU that do not distinguish between binary
@@ -4172,6 +4175,7 @@ the output format, while providing little benefit.
 @opindex -t
 @opindex --text
 @cindex text input files
+Note this option is not supported by the @command{cksum} command.
 Treat each input file as text, by reading it in text mode and
 outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
 This option is the default on systems like GNU that do not
