@@ -44,8 +44,13 @@ my @Tests =
                                 {OUT=>"\\$degenerate  .\\nfoo\n"}],
      ['backslash-2', {IN=> {".\\foo"=> ''}},
                                 {OUT=>"\\$degenerate  .\\\\foo\n"}],
+     ['backslash-3', {IN=> {".\rfoo"=> ''}},
+                                {OUT=>"\\$degenerate  .\\rfoo\n"}],
      ['check-1', '--check', {AUX=> {f=> ''}},
                                 {IN=> {'f.md5' => "$degenerate  f\n"}},
+                                {OUT=>"f: OK\n"}],
+     ['check-windows', '--check', {AUX=> {f=> ''}},
+                                {IN=> {'f.md5' => "$degenerate  f\r\n"}},
                                 {OUT=>"f: OK\n"}],
 
      # Same as above, but with an added empty line, to provoke --strict.

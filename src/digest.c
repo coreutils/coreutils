@@ -538,7 +538,8 @@ or equivalent standalone program.\
 
 /* Given a file name, S of length S_LEN, that is not NUL-terminated,
    modify it in place, performing the equivalent of this sed substitution:
-   's/\\n/\n/g;s/\\\\/\\/g' i.e., replacing each "\\n" string with a newline
+   's/\\n/\n/g;s/\\r/\r/g;s/\\\\/\\/g' i.e., replacing each "\\n" string
+   with a newline, each "\\r" string with a carriage return,
    and each "\\\\" with a single backslash, NUL-terminate it and return S.
    If S is not a valid escaped file name, i.e., if it ends with an odd number
    of backslashes or if it contains a backslash followed by anything other
@@ -565,11 +566,14 @@ filename_unescape (char *s, size_t s_len)
             case 'n':
               *dst++ = '\n';
               break;
+            case 'r':
+              *dst++ = '\r';
+              break;
             case '\\':
               *dst++ = '\\';
               break;
             default:
-              /* Only '\' or 'n' may follow a backslash.  */
+              /* Only '\', 'n' or 'r' may follow a backslash.  */
               return NULL;
             }
           break;
@@ -838,7 +842,9 @@ split_3 (char *s, size_t s_len,
   return true;
 }
 
-/* If ESCAPE is true, then translate each NEWLINE byte to the string, "\\n",
+/* If ESCAPE is true, then translate each:
+   NEWLINE byte to the string, "\\n",
+   CARRIAGE RETURN byte to the string, "\\r",
    and each backslash to "\\\\".  */
 static void
 print_filename (char const *file, bool escape)
@@ -855,6 +861,10 @@ print_filename (char const *file, bool escape)
         {
         case '\n':
           fputs ("\\n", stdout);
+          break;
+
+        case '\r':
+          fputs ("\\r", stdout);
           break;
 
         case '\\':
@@ -953,21 +963,18 @@ output_file (char const *file, int binary_file, void const *digest,
              uintmax_t length _GL_UNUSED)
 {
   unsigned char const *bin_buffer = digest;
-  /* We don't really need to escape, and hence detect, the '\\'
-      char, and not doing so should be both forwards and backwards
-      compatible, since only escaped lines would have a '\\' char at
-      the start.  However just in case users are directly comparing
-      against old (hashed) outputs, in the presence of files
-      containing '\\' characters, we decided to not simplify the
-      output in this case.  */
-  bool needs_escape = (strchr (file, '\\') || strchr (file, '\n'))
-                      && delim == '\n';
+
+  /* Output a leading backslash if the file name contains problematic chars.
+     Note we escape '\' itself to provide some forward compat to introduce
+     escaping of other characters.  */
+  bool needs_escape = delim == '\n' && (strchr (file, '\\')
+                                        || strchr (file, '\n')
+                                        || strchr (file, '\r'));
+  if (needs_escape)
+    putchar ('\\');
 
   if (tagged)
     {
-      if (needs_escape)
-        putchar ('\\');
-
       fputs (DIGEST_TYPE_STRING, stdout);
 # if HASH_ALGO_BLAKE2
       if (digest_length < BLAKE2B_MAX_LEN * 8)
@@ -983,11 +990,6 @@ output_file (char const *file, int binary_file, void const *digest,
       print_filename (file, needs_escape);
       fputs (") = ", stdout);
     }
-
-  /* Output a leading backslash if the file name contains
-      a newline or backslash.  */
-  if (!tagged && needs_escape)
-    putchar ('\\');
 
   for (size_t i = 0; i < (digest_hex_bytes / 2); ++i)
     printf ("%02x", bin_buffer[i]);
@@ -1069,6 +1071,9 @@ digest_check (char const *checkfile_name)
 
       /* Remove any trailing newline.  */
       if (line[line_length - 1] == '\n')
+        line[--line_length] = '\0';
+      /* Remove any trailing carriage return.  */
+      if (line[line_length - 1] == '\r')
         line[--line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)

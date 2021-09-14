@@ -124,6 +124,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   and at least 8 times faster where pclmul instructions are supported.
   A new --debug option will indicate if pclmul is being used.
 
+  md5sum --check now supports checksum files with CRLF line endings.
+  This also applies to cksum, sha*sum, and b2sum.
+
   df now recognizes these file systems as remote:
   acfs, coda, fhgfs, gpfs, ibrix, ocfs2, and vxfs.
 

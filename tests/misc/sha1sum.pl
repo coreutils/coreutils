@@ -48,6 +48,8 @@ my @Tests =
                         {OUT=>"\\$sha_degenerate  .\\nfoo\n"}],
      ['bs-sha-2', {IN=> {".\\foo"=> ''}},
                         {OUT=>"\\$sha_degenerate  .\\\\foo\n"}],
+     ['bs-sha-3', {IN=> {".\rfoo"=> ''}},
+                        {OUT=>"\\$sha_degenerate  .\\rfoo\n"}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that sha1sum does *not* share the part that makes
      # md5sum accept BSD format.
