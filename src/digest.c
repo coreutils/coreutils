@@ -448,7 +448,7 @@ Print or check %s (%d-bit) checksums.\n\
 # if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
         fputs (_("\
   -l, --length         digest length in bits; must not exceed the maximum for\n\
-                       the blake2 algorithm and must be a multiple of 8\n\
+                         the blake2 algorithm and must be a multiple of 8\n\
 "), stdout);
 # endif
 # if HASH_ALGO_CKSUM
@@ -472,7 +472,7 @@ Print or check %s (%d-bit) checksums.\n\
 # endif
       fputs (_("\
   -z, --zero           end each output line with NUL, not newline,\n\
-                       and disable file name escaping\n\
+                         and disable file name escaping\n\
 "), stdout);
       fputs (_("\
 \n\
