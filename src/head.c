@@ -500,7 +500,7 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 {
   struct linebuffer
   {
-    char buffer[BUFSIZ];
+    char buffer[BUFSIZ + 1];
     size_t nbytes;
     size_t nlines;
     struct linebuffer *next;
@@ -539,9 +539,10 @@ elide_tail_lines_pipe (char const *filename, int fd, uintmax_t n_elide,
 
       /* Count the number of newlines just read.  */
       {
-        char const *buffer_end = tmp->buffer + n_read;
+        char *buffer_end = tmp->buffer + n_read;
+        *buffer_end = line_end;
         char const *p = tmp->buffer;
-        while ((p = memchr (p, line_end, buffer_end - p)))
+        while ((p = rawmemchr (p, line_end)) < buffer_end)
           {
             ++p;
             ++tmp->nlines;

@@ -319,8 +319,9 @@ wc_lines (char const *file, int fd, uintmax_t *lines_out, uintmax_t *bytes_out)
         }
       else
         {
-          /* memchr is more efficient with longer lines.  */
-          while ((p = memchr (p, '\n', end - p)))
+          /* rawmemchr is more efficient with longer lines.  */
+          *end = '\n';
+          while ((p = rawmemchr (p, '\n')) < end)
             {
               ++p;
               ++lines;

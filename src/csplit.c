@@ -31,6 +31,7 @@
 #include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
+#include "idx.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "stdio--.h"
@@ -344,8 +345,6 @@ static size_t
 record_line_starts (struct buffer_record *b)
 {
   char *line_start;		/* Start of current line. */
-  char *line_end;		/* End of each line found. */
-  size_t bytes_left;		/* Length of incomplete last line. */
   size_t lines;			/* Number of lines found. */
   size_t line_length;		/* Length of each line found. */
 
@@ -354,21 +353,22 @@ record_line_starts (struct buffer_record *b)
 
   lines = 0;
   line_start = b->buffer;
-  bytes_left = b->bytes_used;
+  char *buffer_end = line_start + b->bytes_used;
+  *buffer_end = '\n';
 
   while (true)
     {
-      line_end = memchr (line_start, '\n', bytes_left);
-      if (line_end == NULL)
+      char *line_end = rawmemchr (line_start, '\n');
+      if (line_end == buffer_end)
         break;
       line_length = line_end - line_start + 1;
       keep_new_line (b, line_start, line_length);
-      bytes_left -= line_length;
       line_start = line_end + 1;
       lines++;
     }
 
   /* Check for an incomplete last line. */
+  idx_t bytes_left = buffer_end - line_start;
   if (bytes_left)
     {
       if (have_read_eof)
@@ -492,9 +492,10 @@ load_buffer (void)
     return false;
 
   /* We must make the buffer at least as large as the amount of data
-     in the partial line left over from the last call. */
-  if (bytes_wanted < hold_count)
-    bytes_wanted = hold_count;
+     in the partial line left over from the last call,
+     plus room for a sentinel '\n'. */
+  if (bytes_wanted <= hold_count)
+    bytes_wanted = hold_count + 1;
 
   while (true)
     {
@@ -512,7 +513,7 @@ load_buffer (void)
           hold_count = 0;
         }
 
-      b->bytes_used += read_input (p, bytes_avail);
+      b->bytes_used += read_input (p, bytes_avail - 1);
 
       lines_found = record_line_starts (b);
 

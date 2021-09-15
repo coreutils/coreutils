@@ -713,8 +713,7 @@ pipe_lines (char const *pretty_filename, int fd, uintmax_t n_lines,
         size_t j;
         for (j = total_lines - n_lines; j; --j)
           {
-            beg = memchr (beg, line_end, buffer_end - beg);
-            assert (beg);
+            beg = rawmemchr (beg, line_end);
             ++beg;
           }
       }

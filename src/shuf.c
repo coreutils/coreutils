@@ -134,13 +134,13 @@ input_from_argv (char **operand, int n_operands, char eolbyte)
   operand[n_operands] = p;
 }
 
-/* Return the start of the next line after LINE.  The current line
-   ends in EOLBYTE, and is guaranteed to end before LINE + N.  */
+/* Return the start of the next line after LINE, which is guaranteed
+   to end in EOLBYTE.  */
 
 static char *
-next_line (char *line, char eolbyte, size_t n)
+next_line (char *line, char eolbyte)
 {
-  char *p = memchr (line, eolbyte, n);
+  char *p = rawmemchr (line, eolbyte);
   return p + 1;
 }
 
@@ -284,14 +284,14 @@ read_input (FILE *in, char eolbyte, char ***pline)
   lim = buf + used;
 
   n_lines = 0;
-  for (p = buf; p < lim; p = next_line (p, eolbyte, lim - p))
+  for (p = buf; p < lim; p = next_line (p, eolbyte))
     n_lines++;
 
   *pline = line = xnmalloc (n_lines + 1, sizeof *line);
 
   line[0] = p = buf;
   for (size_t i = 1; i <= n_lines; i++)
-    line[i] = p = next_line (p, eolbyte, lim - p);
+    line[i] = p = next_line (p, eolbyte);
 
   return n_lines;
 }

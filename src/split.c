@@ -716,7 +716,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
       *eob = eolchar;
       while (true)
         {
-          bp = memchr (bp, eolchar, eob - bp + 1);
+          bp = rawmemchr (bp, eolchar);
           if (bp == eob)
             {
               if (eob != bp_out) /* do not write 0 bytes! */
