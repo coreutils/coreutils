@@ -921,8 +921,11 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
           /* Begin looking for '\n' at last byte of chunk.  */
           off_t skip = MIN (n_read, MAX (0, chunk_end - n_written));
           char *bp_out = memchr (bp + skip, eolchar, n_read - skip);
-          if (bp_out++)
-            next = true;
+          if (bp_out)
+            {
+              bp_out++;
+              next = true;
+            }
           else
             bp_out = eob;
           to_write = bp_out - bp;
