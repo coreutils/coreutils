@@ -1,4 +1,4 @@
 [NAME]
-whoami \- print effective userid
+whoami \- print effective user name
 [DESCRIPTION]
 .\" Add any additional description here

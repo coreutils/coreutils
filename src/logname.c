@@ -38,7 +38,7 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]\n"), program_name);
       fputs (_("\
-Print the name of the current user.\n\
+Print the user's login name.\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);

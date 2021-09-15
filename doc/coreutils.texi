@@ -15643,10 +15643,10 @@ options}.
 
 
 @node whoami invocation
-@section @command{whoami}: Print effective user ID
+@section @command{whoami}: Print effective user name
 
 @pindex whoami
-@cindex effective user ID, printing
+@cindex effective user name, printing
 @cindex printing the effective user ID
 
 @command{whoami} prints the user name associated with the current
