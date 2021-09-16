@@ -42,7 +42,7 @@ returns_ 1 sync file nofile || fail=1
 mkdir norw || framework_failure_
 chmod 0 norw || framework_failure_
 if ! test -r norw; then
-  returns_ 1 sync norw 2>errt
+  returns_ 1 sync norw 2>errt || fail=1
   # AIX gives "Is a directory"
   sed 's/Is a directory/Permission denied/' <errt >err || framework_failure_
   printf "sync: error opening 'norw': Permission denied\n" >exp

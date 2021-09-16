@@ -50,7 +50,7 @@ if test -w /dev/full && test -c /dev/full; then
   printf '%s\n' "yes: standard output" > exp
 
   for size in 1 16384; do
-    returns_ 1 yes "$(printf %${size}s '')" >/dev/full 2>errt
+    returns_ 1 yes "$(printf %${size}s '')" >/dev/full 2>errt || fail=1
     sed 's/\(yes:.*\):.*/\1/' errt > err
     compare exp err || fail=1
   done
