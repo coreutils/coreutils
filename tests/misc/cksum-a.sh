@@ -19,7 +19,7 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cksum
 
-printf "
+cat > input_options <<\EOF || framework_failure_
 bsd     sum -r
 sysv    sum -s
 crc     cksum
@@ -30,10 +30,21 @@ sha256  sha256sum -t
 sha384  sha384sum -t
 sha512  sha512sum -t
 blake2b b2sum -t
-" | while read algo prog; do
-  $prog < /dev/null >> out || continue
-  cksum --untagged --algorithm=$algo < /dev/null >> out-a || fail=1
-done
+EOF
+
+while read algo prog; do
+  $prog /dev/null >> out || continue
+  cksum --untagged --algorithm=$algo /dev/null > out-c || fail=1
+
+  case "$algo" in
+    bsd) ;;
+    sysv) ;;
+    crc) ;;
+    *) cksum --check --algorithm=$algo out-c || fail=1 ;;
+  esac
+
+  cat out-c >> out-a || framework_failure_
+done < input_options
 compare out out-a || fail=1
 
 returns_ 1 cksum -a bsd --tag </dev/null

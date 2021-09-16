@@ -1370,7 +1370,7 @@ main (int argc, char **argv)
            quote (DIGEST_TYPE_STRING),
            BLAKE2B_MAX_LEN * 8);
     }
-  if (digest_length == 0 && ! do_check)
+  if (digest_length == 0)
     {
 # if HASH_ALGO_BLAKE2
       digest_length = BLAKE2B_MAX_LEN * 8;
