@@ -262,7 +262,8 @@ main (int argc, char **argv)
                   struct stat st;
                   int ret = stat (dir, &st);
                   /* Some other issue following, or is actually a directory. */
-                  if ((ret != 0 && errno != ENOTDIR) || S_ISDIR (st.st_mode))
+                  if ((ret != 0 && errno != ENOTDIR)
+                      || (ret == 0 && S_ISDIR (st.st_mode)))
                     {
                       /* Ensure the last component was a symlink.  */
                       char* dir_arg = xstrdup (dir);
