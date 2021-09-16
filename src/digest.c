@@ -1070,11 +1070,10 @@ digest_check (char const *checkfile_name)
         continue;
 
       /* Remove any trailing newline.  */
-      if (line[line_length - 1] == '\n')
-        line[--line_length] = '\0';
+      line_length -= line[line_length - 1] == '\n';
       /* Remove any trailing carriage return.  */
-      if (line[line_length - 1] == '\r')
-        line[--line_length] = '\0';
+      line_length -= line[line_length - (0 < line_length)] == '\r';
+      line[line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)
              && ! (is_stdin && STREQ (filename, "-"))))
