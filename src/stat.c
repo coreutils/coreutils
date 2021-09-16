@@ -493,6 +493,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "rpc_pipefs";
     case S_MAGIC_SDCARDFS: /* 0x5DCA2DF5 local */
       return "sdcardfs";
+    case S_MAGIC_SECRETMEM: /* 0x5345434D local */
+      return "secretmem";
     case S_MAGIC_SECURITYFS: /* 0x73636673 local */
       return "securityfs";
     case S_MAGIC_SELINUX: /* 0xF97CFF8C local */

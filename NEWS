@@ -133,9 +133,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   rmdir now clarifies the error if a symlink_to_dir/ has not been traversed.
   This is the case on GNU/Linux systems, where the trailing slash is ignored.
 
-  stat and tail now know about the "devmem", "exfat", "vboxsf", and "zonefs"
-  file system types.  stat -f -c%T now reports the file system type,
-  and tail -f uses polling for "vboxsf" and inotify for the others.
+  stat and tail now know about the "devmem", "exfat", "secretmem", "vboxsf",
+  and "zonefs" file system types.  stat -f -c%T now reports the file system
+  type, and tail -f uses polling for "vboxsf" and inotify for the others.
 
   timeout now supports sub-second timeouts on macOS.
 
