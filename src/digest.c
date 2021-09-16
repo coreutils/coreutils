@@ -1073,6 +1073,11 @@ digest_check (char const *checkfile_name)
       line_length -= line[line_length - 1] == '\n';
       /* Remove any trailing carriage return.  */
       line_length -= line[line_length - (0 < line_length)] == '\r';
+
+      /* Ignore empty lines.  */
+      if (line_length == 0)
+        continue;
+
       line[line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)
