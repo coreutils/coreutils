@@ -23,7 +23,7 @@ cat > input_options <<\EOF || framework_failure_
 bsd     sum -r
 sysv    sum -s
 crc     cksum
-md5     md5um -t
+md5     md5sum -t
 sha1    sha1sum -t
 sha224  sha224sum -t
 sha256  sha256sum -t
