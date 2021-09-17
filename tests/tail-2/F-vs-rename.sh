@@ -21,11 +21,17 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ tail
 
-check_tail_output()
-{
+check_tail_output() {
   local delay="$1"
-  grep "$tail_re" out ||
-    { sleep $delay; return 1; }
+  if [ "$tail_re" ]; then
+    grep "$tail_re" err ||
+      { sleep $delay; return 1; }
+  else
+    local tail_re="==> $file <==@$data@"
+    tr '\n' @ < out | grep "$tail_re" > /dev/null ||
+      { sleep $delay; return 1; }
+  fi
+  unset tail_re
 }
 
 # Terminate any background tail process
@@ -35,14 +41,14 @@ cleanup_() { kill $pid 2>/dev/null && wait $pid; }
 fastpoll='-s.1 --max-unchanged-stats=1'
 
 for mode in '' '---disable-inotify'; do
-  rm -f a b out
+  rm -f a b out err
   touch a b || framework_failure_
 
-  tail $mode -F $fastpoll a b > out 2>&1 & pid=$!
+  tail $mode -F $fastpoll a b >out 2>err & pid=$!
 
   # Wait up to 12.7s for tail to start.
   echo x > a
-  tail_re='^x$' retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
+  file=a data=x retry_delay_ check_tail_output .1 7 || { cat out; fail=1; }
 
   mv a b || framework_failure_
 
@@ -55,32 +61,28 @@ for mode in '' '---disable-inotify'; do
   # tail: 'b' has been replaced;  following new file
   tail_re='replaced' retry_delay_ check_tail_output .1 7 ||
     { cat out; fail=1; }
+  # Wait up to 12.7s for "x" to be displayed:
+  file='b' data='x' retry_delay_ check_tail_output .1 7 ||
+    { echo "$0: b: unexpected delay?"; cat out; fail=1; }
 
-  echo x > a
+  echo x2 > a
   # Wait up to 12.7s for this to appear in the output:
   # "tail: '...' has appeared;  following new file"
   tail_re='has appeared' retry_delay_ check_tail_output .1 7 ||
     { echo "$0: a: unexpected delay?"; cat out; fail=1; }
+  # Wait up to 12.7s for "x2" to be displayed:
+  file='a' data='x2' retry_delay_ check_tail_output .1 7 ||
+    { echo "$0: a: unexpected delay 2?"; cat out; fail=1; }
 
   echo y >> b
   # Wait up to 12.7s for "y" to appear in the output:
-  tail_f_vs_rename_2() {
-    local delay="$1"
-    tr '\n' @ < out | grep '@@==> b <==@y@$' > /dev/null ||
-      { sleep $delay; return 1; }
-  }
-  retry_delay_ tail_f_vs_rename_2 .1 7 ||
-    { echo "$0: b: unexpected delay?"; cat out; fail=1; }
+  file='b' data='y' retry_delay_ check_tail_output .1 7 ||
+    { echo "$0: b: unexpected delay 2?"; cat out; fail=1; }
 
   echo z >> a
   # Wait up to 12.7s for "z" to appear in the output:
-  tail_f_vs_rename_3() {
-    local delay="$1"
-    tr '\n' @ < out | grep '@@==> a <==@z@$' > /dev/null ||
-      { sleep $delay; return 1; }
-  }
-  retry_delay_ tail_f_vs_rename_3 .1 7 ||
-    { echo "$0: a: unexpected delay?"; cat out; fail=1; }
+  file='a' data='z' retry_delay_ check_tail_output .1 7 ||
+    { echo "$0: a: unexpected delay 3?"; cat out; fail=1; }
 
   cleanup_
 done
