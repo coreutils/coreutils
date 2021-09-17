@@ -51,6 +51,11 @@ for mode in '' '---disable-inotify'; do
   tail_re='inaccessible' retry_delay_ check_tail_output .1 7 ||
     { cat out; fail=1; }
 
+  # Wait 12.7s for this diagnostic:
+  # tail: 'b' has been replaced;  following new file
+  tail_re='replaced' retry_delay_ check_tail_output .1 7 ||
+    { cat out; fail=1; }
+
   echo x > a
   # Wait up to 12.7s for this to appear in the output:
   # "tail: '...' has appeared;  following new file"
