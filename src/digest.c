@@ -504,17 +504,17 @@ The following five options are useful only when verifying checksums:\n\
       fputs (_("\
 \n\
 DIGEST determines the digest algorithm and default output format:\n\
-  'sysv'      (equivalent to sum -s)\n\
-  'bsd'       (equivalent to sum -r)\n\
-  'crc'       (equivalent to cksum)\n\
-  'md5'       (equivalent to md5sum)\n\
-  'sha1'      (equivalent to sha1sum)\n\
-  'sha224'    (equivalent to sha224sum)\n\
-  'sha256'    (equivalent to sha256sum)\n\
-  'sha384'    (equivalent to sha384sum)\n\
-  'sha512'    (equivalent to sha512sum)\n\
-  'blake2b'   (equivalent to b2sum)\n\
-  'sm3'       (only available through cksum)\n\
+  sysv      (equivalent to sum -s)\n\
+  bsd       (equivalent to sum -r)\n\
+  crc       (equivalent to cksum)\n\
+  md5       (equivalent to md5sum)\n\
+  sha1      (equivalent to sha1sum)\n\
+  sha224    (equivalent to sha224sum)\n\
+  sha256    (equivalent to sha256sum)\n\
+  sha384    (equivalent to sha384sum)\n\
+  sha512    (equivalent to sha512sum)\n\
+  blake2b   (equivalent to b2sum)\n\
+  sm3       (only available through cksum)\n\
 \n"), stdout);
 #endif
 #if !HASH_ALGO_SUM && !HASH_ALGO_CKSUM

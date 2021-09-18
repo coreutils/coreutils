@@ -100,10 +100,10 @@ Copy standard input to each FILE, and also to standard output.\n\
       fputs (_("\
 \n\
 MODE determines behavior with write errors on the outputs:\n\
-  'warn'         diagnose errors writing to any output\n\
-  'warn-nopipe'  diagnose errors writing to any output not a pipe\n\
-  'exit'         exit on error writing to any output\n\
-  'exit-nopipe'  exit on error writing to any output not a pipe\n\
+  warn           diagnose errors writing to any output\n\
+  warn-nopipe    diagnose errors writing to any output not a pipe\n\
+  exit           exit on error writing to any output\n\
+  exit-nopipe    exit on error writing to any output not a pipe\n\
 The default MODE for the -p option is 'warn-nopipe'.\n\
 The default operation when --output-error is not specified, is to\n\
 exit immediately on error writing to a pipe, and diagnose errors\n\
