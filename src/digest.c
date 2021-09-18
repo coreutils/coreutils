@@ -135,7 +135,9 @@
   proper_name ("Kayvan Aghaiepour"), \
   proper_name ("David MacKenzie")
 #elif HASH_ALGO_CKSUM
-# define AUTHORS proper_name ("Q. Frank Xia")
+# define AUTHORS \
+  proper_name ("Padraig Brady"), \
+  proper_name ("Q. Frank Xia")
 #elif HASH_ALGO_BLAKE2
 # define AUTHORS \
   proper_name ("Padraig Brady"), \
