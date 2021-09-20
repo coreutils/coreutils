@@ -372,6 +372,7 @@ static struct option const long_options[] =
   { "status", no_argument, NULL, STATUS_OPTION },
   { "warn", no_argument, NULL, 'w' },
   { "strict", no_argument, NULL, STRICT_OPTION },
+  { "tag", no_argument, NULL, TAG_OPTION },
   { "zero", no_argument, NULL, 'z' },
 
 # if HASH_ALGO_CKSUM
@@ -381,7 +382,6 @@ static struct option const long_options[] =
 # else
   { "binary", no_argument, NULL, 'b' },
   { "text", no_argument, NULL, 't' },
-  { "tag", no_argument, NULL, TAG_OPTION },
 # endif
 
 #else
@@ -452,6 +452,9 @@ Print or check %s (%d-bit) checksums.\n\
 "), stdout);
 # endif
 # if HASH_ALGO_CKSUM
+      fputs (_("\
+      --tag            create a BSD-style checksum (the default)\n\
+"), stdout);
       fputs (_("\
       --untagged       create a reversed style checksum, without digest type\n\
 "), stdout);
@@ -1335,12 +1338,11 @@ main (int argc, char **argv)
       case UNTAG_OPTION:
         prefix_tag = false;
         break;
-# else
+# endif
       case TAG_OPTION:
         prefix_tag = true;
         binary = 1;
         break;
-# endif
       case 'z':
         digest_delim = '\0';
         break;
@@ -1421,14 +1423,7 @@ main (int argc, char **argv)
                      "verifying checksums"));
       usage (EXIT_FAILURE);
     }
-#if HASH_ALGO_CKSUM
-  if (!prefix_tag && do_check)
-    {
-      error (0, 0, _("the --untagged option is meaningless when "
-                     "verifying checksums"));
-      usage (EXIT_FAILURE);
-    }
-#else
+#if !HASH_ALGO_CKSUM
   if (prefix_tag && do_check)
     {
       error (0, 0, _("the --tag option is meaningless when "

@@ -47,7 +47,6 @@ while read algo prog; do
 done < input_options
 compare out out-a || fail=1
 
-returns_ 1 cksum -a bsd --tag </dev/null || fail=1
 returns_ 1 cksum -a bsd --check </dev/null || fail=1
 
 Exit $fail

@@ -3934,8 +3934,9 @@ for each given @var{file}, or standard input if none are given or for a
 @var{file} of @samp{-}.
 
 cksum also supports the @option{-a,--algorithm} option to select the
-digest algorithm to use, and this is the preferred interface
-to these digests, subsuming the other standalone checksumming utilities.
+digest algorithm to use. @command{cksum} is the preferred interface
+to these digests, subsuming the other standalone checksumming utilities,
+which can be emulated using @code{cksum -a md5 --untagged "$@@"} etc.
 Synopsis:
 
 @example
@@ -4162,8 +4163,6 @@ indicating there was a failure.
 @item --tag
 @opindex --tag
 @cindex BSD output
-Note this option is not supported by the @command{cksum} command,
-as this is the default output format that it uses.
 Output BSD style checksums, which indicate the checksum algorithm used.
 As a GNU extension, if @option{--zero} is not used, file names with problematic
 characters are escaped as described above, with the same escaping indicator of
@@ -4171,6 +4170,7 @@ characters are escaped as described above, with the same escaping indicator of
 The @option{--tag} option implies binary mode, and is disallowed with
 @option{--text} mode as supporting that would unnecessarily complicate
 the output format, while providing little benefit.
+The @command{cksum} command, uses @option{--tag} as its default output format.
 
 @item -t
 @itemx --text
