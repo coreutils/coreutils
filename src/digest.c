@@ -424,10 +424,12 @@ Print or check %s (%d-bit) checksums.\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
 "), stdout);
 #endif
+#if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
+        emit_mandatory_arg_note ();
+#endif
 #if HASH_ALGO_CKSUM
         fputs (_("\
-\n\
-  -a, --algorithm      select the digest mode to operate in.  See DIGEST below.\
+  -a, --algorithm=TYPE  select the digest type to use.  See DIGEST below.\
 \n\
 "), stdout);
 #endif
@@ -435,62 +437,63 @@ Print or check %s (%d-bit) checksums.\n\
 # if !HASH_ALGO_CKSUM
       if (O_BINARY)
         fputs (_("\
-  -b, --binary         read in binary mode (default unless reading tty stdin)\n\
+  -b, --binary          read in binary mode (default unless reading tty stdin)\
+\n\
 "), stdout);
       else
         fputs (_("\
-  -b, --binary         read in binary mode\n\
+  -b, --binary          read in binary mode\n\
 "), stdout);
 # endif
         fputs (_("\
-  -c, --check          read checksums from the FILEs and check them\n\
+  -c, --check           read checksums from the FILEs and check them\n\
 "), stdout);
 # if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
         fputs (_("\
-  -l, --length         digest length in bits; must not exceed the maximum for\n\
-                         the blake2 algorithm and must be a multiple of 8\n\
+  -l, --length=BITS     digest length in bits; must not exceed the max for\n\
+                          the blake2 algorithm and must be a multiple of 8\n\
 "), stdout);
 # endif
 # if HASH_ALGO_CKSUM
       fputs (_("\
-      --tag            create a BSD-style checksum (the default)\n\
+      --tag             create a BSD-style checksum (the default)\n\
 "), stdout);
       fputs (_("\
-      --untagged       create a reversed style checksum, without digest type\n\
+      --untagged        create a reversed style checksum, without digest type\n\
 "), stdout);
 # else
       fputs (_("\
-      --tag            create a BSD-style checksum\n\
+      --tag             create a BSD-style checksum\n\
 "), stdout);
 # endif
 # if !HASH_ALGO_CKSUM
       if (O_BINARY)
         fputs (_("\
-  -t, --text           read in text mode (default if reading tty stdin)\n\
+  -t, --text            read in text mode (default if reading tty stdin)\n\
 "), stdout);
       else
         fputs (_("\
-  -t, --text           read in text mode (default)\n\
+  -t, --text            read in text mode (default)\n\
 "), stdout);
 # endif
       fputs (_("\
-  -z, --zero           end each output line with NUL, not newline,\n\
-                         and disable file name escaping\n\
+  -z, --zero            end each output line with NUL, not newline,\n\
+                          and disable file name escaping\n\
 "), stdout);
       fputs (_("\
 \n\
 The following five options are useful only when verifying checksums:\n\
       --ignore-missing  don't fail or report status for missing files\n\
-      --quiet          don't print OK for each successfully verified file\n\
-      --status         don't output anything, status code shows success\n\
-      --strict         exit non-zero for improperly formatted checksum lines\n\
-  -w, --warn           warn about improperly formatted checksum lines\n\
+      --quiet           don't print OK for each successfully verified file\n\
+      --status          don't output anything, status code shows success\n\
+      --strict          exit non-zero for improperly formatted checksum lines\n\
+  -w, --warn            warn about improperly formatted checksum lines\n\
 \n\
 "), stdout);
 #endif
 #if HASH_ALGO_CKSUM
       fputs (_("\
-      --debug          indicate which implementation used\n\
+      --debug           indicate which implementation used\n\
 "), stdout);
 #endif
       fputs (HELP_OPTION_DESCRIPTION, stdout);
