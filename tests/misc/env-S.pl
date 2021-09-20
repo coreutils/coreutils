@@ -30,6 +30,12 @@ $env = $1;
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+# This envvar is somehow set at least on macOS 11.6, and would
+# otherwise cause failure of q*, t* and more tests below.  Ignore it.
+my $cf = '__CF_USER_TEXT_ENCODING';
+exists $ENV{$cf}
+  and $env .= " -u$cf";
+
 my @Tests =
     (
      # Test combination of -S and regular arguments
