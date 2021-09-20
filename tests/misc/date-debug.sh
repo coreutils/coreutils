@@ -26,6 +26,9 @@ export LC_ALL=C
 test "$(TZ=America/Belize date +%z)" = '-0600' \
     || skip_ 'Timezones database not found'
 
+date --debug >/dev/null 2>d_t_fmt.err || fail=1
+d_t_fmt=$(sed -n "s/.*'\(.*\)'$/\1/p" < d_t_fmt.err) || framework_failure_
+test -n "$d_t_fmt" || fail=1
 
 ##
 ## Test 1: complex date string
@@ -124,7 +127,7 @@ date: timezone: Universal Time
 date: final: 1356998400.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC)
 date: final: (Y-M-D) 2013-01-01 00:00:00 (UTC+00)
-date: output format: '%a %b %e %H:%M:%S %Z %Y'
+date: output format: '$d_t_fmt'
 Tue Jan  1 00:00:00 UTC 2013
 EOF
 
@@ -182,7 +185,7 @@ date: timezone: Universal Time
 date: final: 1475280000.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC)
 date: final: (Y-M-D) 2016-10-01 00:00:00 (UTC+00)
-date: output format: '%a %b %e %H:%M:%S %Z %Y'
+date: output format: '$d_t_fmt'
 Sat Oct  1 00:00:00 UTC 2016
 EOF
 
@@ -238,7 +241,7 @@ date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1323554400.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-12-10 22:00:00 (UTC)
 date: final: (Y-M-D) 2011-12-11 00:00:00 (UTC+02)
-date: output format: '%a %b %e %H:%M:%S %Z %Y'
+date: output format: '$d_t_fmt'
 Sun Dec 11 00:00:00 EET 2011
 EOF
 
@@ -256,7 +259,7 @@ date: timezone: TZ="Europe/Helsinki" environment value
 date: final: 1307739600.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-06-10 21:00:00 (UTC)
 date: final: (Y-M-D) 2011-06-11 00:00:00 (UTC+03)
-date: output format: '%a %b %e %H:%M:%S %Z %Y'
+date: output format: '$d_t_fmt'
 Sat Jun 11 00:00:00 EEST 2011
 EOF
 
@@ -285,7 +288,7 @@ date: timezone: Universal Time
 date: final: 1302562740.000000000 (epoch-seconds)
 date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC)
 date: final: (Y-M-D) 2011-04-11 22:59:00 (UTC+00)
-date: output format: '%a %b %e %H:%M:%S %Z %Y'
+date: output format: '$d_t_fmt'
 Mon Apr 11 22:59:00 UTC 2011
 EOF
 
