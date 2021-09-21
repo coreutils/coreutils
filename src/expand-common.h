@@ -22,15 +22,6 @@ extern bool convert_entire_line;
 /* The maximum distance between tab stops.  */
 extern size_t max_column_width;
 
-/* Null-terminated array of input filenames.  */
-//extern char **file_list;
-
-/* Default for 'file_list' if no files are given on the command line.  */
-//extern char *stdin_argv[];
-
-/* True if we have ever read standard input.  */
-//extern bool have_read_stdin;
-
 /* The desired exit status.  */
 extern int exit_status;
 

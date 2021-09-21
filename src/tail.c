@@ -861,7 +861,7 @@ start_bytes (char const *pretty_filename, int fd, uintmax_t n_bytes,
       else
         {
           size_t n_remaining = bytes_read - n_bytes;
-          // Print extra characters if there are any
+          /* Print extra characters if there are any.  */
           xwrite_stdout (&buffer[n_bytes], n_remaining);
           break;
         }
