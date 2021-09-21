@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <getopt.h>
-#include <poll.h>
+#include <sys/select.h>
 #include <sys/types.h>
 #include <signal.h>
 
@@ -53,6 +53,10 @@
 #if HAVE_INOTIFY
 # include "hash.h"
 # include <sys/inotify.h>
+#endif
+
+#if defined _AIX || HAVE_INOTIFY
+# include <poll.h>
 #endif
 
 /* Linux can optimize the handling of local files.  */
@@ -348,12 +352,31 @@ check_output_alive (void)
   if (! monitor_output)
     return;
 
+  /* Use 'poll' on AIX (where 'select' was seen to give a readable
+     event immediately) or if using inotify (which relies on 'poll'
+     anyway).  Otherwise, use 'select' as it's more portable;
+     'poll' doesn't work for this application on macOS.  */
+#if defined _AIX || HAVE_INOTIFY
   struct pollfd pfd;
   pfd.fd = STDOUT_FILENO;
   pfd.events = POLLERR;
 
   if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
     die_pipe ();
+#else
+  struct timeval delay;
+  delay.tv_sec = delay.tv_usec = 0;
+
+  fd_set rfd;
+  FD_ZERO (&rfd);
+  FD_SET (STDOUT_FILENO, &rfd);
+
+  /* readable event on STDOUT is equivalent to POLLERR,
+     and implies an error condition on output like broken pipe.  */
+  if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
+    die_pipe ();
+#endif
+
 }
 
 static bool
