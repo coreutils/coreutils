@@ -275,7 +275,8 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
     crc = (crc << 8) ^ crctab[0][((crc >> 24) ^ total_bytes) & 0xFF];
   crc = ~crc & 0xFFFFFFFF;
 
-  memcpy (resstream, &crc, sizeof crc);
+  unsigned int crc_out = crc;
+  memcpy (resstream, &crc_out, sizeof crc_out);
 
   return 0;
 }
