@@ -28,7 +28,16 @@ timeout 10 truncate -s1T f ||
   skip_ "unable to create a 1 TiB sparse file"
 
 # Nothing can read (much less write) that many bytes in so little time.
-timeout 10 cp --reflink=never f f2 || fail=1
+timeout 10 cp --reflink=never f f2
+ret=$?
+if test $ret -eq 124; then  # timeout
+  # Only fail if we allocated more data
+  # as we've seen SEEK_DATA taking 35s on some freebsd VMs
+  test $(stat -c%b f2) -gt $(stat -c%b f) && fail=1 ||
+    skip_ "SEEK_DATA timed out"
+elif test $ret -ne 0; then
+  fail=1
+fi
 
 # Ensure that the sparse file copied through SEEK_DATA has the same size
 # in bytes as the original.
