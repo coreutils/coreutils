@@ -456,6 +456,7 @@ all_tests =					\
   tests/chmod/c-option.sh			\
   tests/chmod/equal-x.sh			\
   tests/chmod/equals.sh				\
+  tests/chmod/ignore-symlink.sh			\
   tests/chmod/inaccessible.sh			\
   tests/chmod/octal.sh				\
   tests/chmod/setgid.sh				\

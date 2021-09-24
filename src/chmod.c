@@ -44,8 +44,8 @@ struct change_status
   enum
     {
       CH_NO_STAT,
-      CH_NOT_APPLIED,
       CH_FAILED,
+      CH_NOT_APPLIED,
       CH_NO_CHANGE_REQUESTED,
       CH_SUCCEEDED
     }
@@ -322,7 +322,7 @@ process_file (FTS *fts, FTSENT *ent)
   if ( ! recurse)
     fts_set (fts, ent, FTS_SKIP);
 
-  return CH_NO_CHANGE_REQUESTED <= ch.status;
+  return CH_NOT_APPLIED <= ch.status;
 }
 
 /* Recursively change the modes of the specified FILES (the last entry
