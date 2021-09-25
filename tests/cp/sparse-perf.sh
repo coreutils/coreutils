@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure that a sparse file is copied efficiently, by default
 
-# Copyright (C) 2011-2021 Free Software Foundation, Inc.
+# Copyright (C) 2021 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,25 +19,19 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp
 
-touch sparse_chk
-seek_data_capable_ sparse_chk ||
-  skip_ "this file system lacks SEEK_DATA support"
-
 # Create a large-but-sparse file.
 timeout 10 truncate -s1T f ||
   skip_ "unable to create a 1 TiB sparse file"
 
-# Nothing can read (much less write) that many bytes in so little time.
-timeout 10 cp --reflink=never f f2
-ret=$?
-if test $ret -eq 124; then  # timeout
-  # Only fail if we allocated more data
-  # as we've seen SEEK_DATA taking 35s on some freebsd VMs
-  test $(stat -c%b f2) -gt $(stat -c%b f) && fail=1 ||
-    skip_ "SEEK_DATA timed out"
-elif test $ret -ne 0; then
-  fail=1
-fi
+# Note zfs with zfs_dmu_offset_next_sync=0 (the default)
+# will generally skip here, due to needing about 5 seconds
+# between the creation of the file and the use of SEEK_DATA,
+# for it to determine it's an empty file (return ENXIO).
+seek_data_capable_ f ||
+  skip_ "this file system lacks appropriate SEEK_DATA support"
+
+# Nothing can read that many bytes in so little time.
+timeout 10 cp --reflink=never f f2 || fail=1
 
 # Ensure that the sparse file copied through SEEK_DATA has the same size
 # in bytes as the original.
