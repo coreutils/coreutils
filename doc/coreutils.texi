@@ -8238,14 +8238,6 @@ List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space),
 and with no other information.
 
-@item --zero
-@opindex --zero
-@outputNUL
-This option is incompatible with the @option{--dired} (@option{-D}) option.
-This option also implies the options @option{--show-control-chars},
-@option{-1}, @option{--color=none}, and
-@option{--quoting-style=literal} (@option{-N}).
-
 @item -p
 @itemx --indicator-style=slash
 @opindex -p
@@ -8286,6 +8278,14 @@ variable @env{COLUMNS} is used if it is set; otherwise the default
 is 80.  With a @var{cols} value of @samp{0}, there is no limit on
 the length of the output line, and that single output line will
 be delimited with spaces, not tabs.
+
+@item --zero
+@opindex --zero
+@outputNUL
+This option is incompatible with the @option{--dired} (@option{-D}) option.
+This option also implies the options @option{--show-control-chars},
+@option{-1}, @option{--color=none}, and
+@option{--quoting-style=literal} (@option{-N}).
 
 @end table
 
