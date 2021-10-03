@@ -2273,7 +2273,7 @@ decode_switches (int argc, char **argv)
       if (linelen < 0)
         {
           /* Suppress bogus warning re comparing ws.ws_col to big integer.  */
-# if __GNUC_PREREQ (4, 6)
+# if 4 < __GNUC__ + (6 <= __GNUC_MINOR__)
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wtype-limits"
 # endif
@@ -2282,7 +2282,7 @@ decode_switches (int argc, char **argv)
               && 0 <= ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws)
               && 0 < ws.ws_col)
             linelen = ws.ws_col <= MIN (PTRDIFF_MAX, SIZE_MAX) ? ws.ws_col : 0;
-# if __GNUC_PREREQ (4, 6)
+# if 4 < __GNUC__ + (6 <= __GNUC_MINOR__)
 #  pragma GCC diagnostic pop
 # endif
         }
