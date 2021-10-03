@@ -83,11 +83,9 @@ static bool term (void);
 static bool and (void);
 static bool or (void);
 
-static void test_syntax_error (char const *format, ...)
-     ATTRIBUTE_NORETURN;
-static void beyond (void) ATTRIBUTE_NORETURN;
+static void beyond (void);
 
-static void
+static _Noreturn void
 test_syntax_error (char const *format, ...)
 {
   va_list ap;

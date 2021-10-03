@@ -1029,7 +1029,7 @@ finish_up (void)
   print_stats ();
 }
 
-static void ATTRIBUTE_NORETURN
+static void
 quit (int code)
 {
   finish_up ();

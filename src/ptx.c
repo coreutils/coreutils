@@ -282,7 +282,7 @@ static BLOCK reference;		/* reference field for input reference mode */
 
 /* Diagnose an error in the regular expression matcher.  Then exit.  */
 
-static void ATTRIBUTE_NORETURN
+static void
 matcher_error (void)
 {
   die (EXIT_FAILURE, errno, _("error in regular expression matcher"));

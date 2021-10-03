@@ -220,8 +220,7 @@ cleanup (void)
   sigprocmask (SIG_SETMASK, &oldset, NULL);
 }
 
-static void cleanup_fatal (void) ATTRIBUTE_NORETURN;
-static void
+static _Noreturn void
 cleanup_fatal (void)
 {
   cleanup ();
@@ -709,8 +708,6 @@ dump_rest_of_file (void)
 /* Handle an attempt to read beyond EOF under the control of record P,
    on iteration REPETITION if nonzero. */
 
-static void handle_line_error (const struct control *, uintmax_t)
-     ATTRIBUTE_NORETURN;
 static void
 handle_line_error (const struct control *p, uintmax_t repetition)
 {
@@ -765,7 +762,6 @@ process_line_count (const struct control *p, uintmax_t repetition)
     handle_line_error (p, repetition);
 }
 
-static void regexp_error (struct control *, uintmax_t, bool) ATTRIBUTE_NORETURN;
 static void
 regexp_error (struct control *p, uintmax_t repetition, bool ignore)
 {

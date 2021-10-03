@@ -156,7 +156,6 @@ collapse_escapes (char const *strptr)
 
 /* Report a write error and exit.  */
 
-static void write_error (void) ATTRIBUTE_NORETURN;
 static void
 write_error (void)
 {

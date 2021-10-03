@@ -337,7 +337,7 @@ named file in a way that accommodates renaming, removal and creation.\n\
 }
 
 /* Ensure exit, either with SIGPIPE or EXIT_FAILURE status.  */
-static void ATTRIBUTE_NORETURN
+static void
 die_pipe (void)
 {
   raise (SIGPIPE);

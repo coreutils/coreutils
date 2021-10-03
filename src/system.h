@@ -425,10 +425,6 @@ enum
 # endif
 #endif
 
-#ifndef ATTRIBUTE_NORETURN
-# define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
-#endif
-
 /* The warn_unused_result attribute appeared first in gcc-3.4.0 */
 #undef ATTRIBUTE_WARN_UNUSED_RESULT
 #if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)
@@ -708,7 +704,7 @@ usable_st_size (struct stat const *sb)
           || S_TYPEISSHM (sb) || S_TYPEISTMO (sb));
 }
 
-void usage (int status) ATTRIBUTE_NORETURN;
+_Noreturn void usage (int status);
 
 /* Like error(0, 0, ...), but without an implicit newline.
    Also a noop unless the global DEV_DEBUG is set.  */

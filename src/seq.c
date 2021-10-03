@@ -287,7 +287,7 @@ long_double_format (char const *fmt, struct layout *layout)
       }
 }
 
-static void ATTRIBUTE_NORETURN
+static void
 io_error (void)
 {
   /* FIXME: consider option to silently ignore errno=EPIPE */

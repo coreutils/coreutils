@@ -370,8 +370,7 @@ static unsigned int nmerge = NMERGE_DEFAULT;
    This can be used safely from signal handlers,
    and between fork and exec of multithreaded processes.  */
 
-static void async_safe_die (int, char const *) ATTRIBUTE_NORETURN;
-static void
+static _Noreturn void
 async_safe_die (int errnum, char const *errstr)
 {
   ignore_value (write (STDERR_FILENO, errstr, strlen (errstr)));
@@ -397,7 +396,6 @@ async_safe_die (int errnum, char const *errstr)
 /* Report MESSAGE for FILE, then clean up and exit.
    If FILE is null, it represents standard output.  */
 
-static void sort_die (char const *, char const *) ATTRIBUTE_NORETURN;
 static void
 sort_die (char const *message, char const *file)
 {
@@ -4034,8 +4032,6 @@ insertkey (struct keyfield *key_arg)
 
 /* Report a bad field specification SPEC, with extra info MSGID.  */
 
-static void badfieldspec (char const *, char const *)
-     ATTRIBUTE_NORETURN;
 static void
 badfieldspec (char const *spec, char const *msgid)
 {
@@ -4045,7 +4041,6 @@ badfieldspec (char const *spec, char const *msgid)
 
 /* Report incompatible options.  */
 
-static void incompatible_options (char const *) ATTRIBUTE_NORETURN;
 static void
 incompatible_options (char const *opts)
 {

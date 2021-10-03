@@ -51,10 +51,6 @@
 # endif
 #endif
 
-#ifndef ATTRIBUTE_NORETURN
-# define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
-#endif
-
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
@@ -115,7 +111,7 @@ struct randread_source
 
 /* The default error handler.  */
 
-static void ATTRIBUTE_NORETURN
+static void
 randread_error (void const *file_name)
 {
   if (file_name)
