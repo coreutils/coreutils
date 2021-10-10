@@ -156,6 +156,8 @@ static char decimal_point;
 
 /* Thousands separator; if outside char range, there is no separator.  */
 static int thousands_sep;
+/* We currently ignore multi-byte grouping chars.  */
+static bool thousands_sep_ignored;
 
 /* Nonzero if the corresponding locales are hard.  */
 static bool hard_LC_COLLATE;
@@ -2425,9 +2427,21 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
   struct keyfield const *key;
   struct keyfield ugkey = *gkey;
   unsigned long keynum = 1;
+  bool basic_numeric_field = false;
+  bool general_numeric_field = false;
+  bool basic_numeric_field_span = false;
+  bool general_numeric_field_span = false;
 
   for (key = keylist; key; key = key->next, keynum++)
     {
+      if (key_numeric (key))
+        {
+          if (key->general_numeric)
+            general_numeric_field = true;
+          else
+            basic_numeric_field = true;
+        }
+
       if (key->traditional_used)
         {
           size_t sword = key->sword;
@@ -2482,8 +2496,14 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
           if (!sword)
             sword++;
           if (!eword || sword < eword)
-            error (0, 0, _("key %lu is numeric and spans multiple fields"),
-                   keynum);
+            {
+              error (0, 0, _("key %lu is numeric and spans multiple fields"),
+                     keynum);
+              if (key->general_numeric)
+                general_numeric_field_span = true;
+              else
+                basic_numeric_field_span = true;
+            }
         }
 
       /* Flag global options not copied or specified in any key.  */
@@ -2500,6 +2520,69 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
       ugkey.random &= !key->random;
       ugkey.version &= !key->version;
       ugkey.reverse &= !key->reverse;
+    }
+
+  /* Explicitly warn if field delimiters in this locale
+     don't constrain numbers.  */
+  bool number_locale_warned = false;
+  if (basic_numeric_field_span)
+    {
+      if (tab == TAB_DEFAULT
+          ? thousands_sep != NON_CHAR && (isblank (to_uchar (thousands_sep)))
+          : tab == thousands_sep)
+        {
+          error (0, 0,
+                 _("field separator %s is treated as a "
+                   "group separator in numbers"),
+                 quote (((char []) {thousands_sep, 0})));
+          number_locale_warned = true;
+        }
+    }
+  if (basic_numeric_field_span || general_numeric_field_span)
+    {
+      if (tab == TAB_DEFAULT
+          ? thousands_sep != NON_CHAR && (isblank (to_uchar (decimal_point)))
+          : tab == decimal_point)
+        {
+          error (0, 0,
+                 _("field separator %s is treated as a "
+                   "decimal point in numbers"),
+                 quote (((char []) {decimal_point, 0})));
+          number_locale_warned = true;
+        }
+      else if (tab == '-')
+        {
+          error (0, 0,
+                 _("field separator %s is treated as a "
+                   "minus sign in numbers"),
+                 quote (((char []) {tab, 0})));
+        }
+      else if (general_numeric_field_span && tab == '+')
+        {
+          error (0, 0,
+                 _("field separator %s is treated as a "
+                   "plus sign in numbers"),
+                 quote (((char []) {tab, 0})));
+        }
+    }
+
+  /* Explicitly indicate the decimal point used in this locale,
+     as it suggests that robust scripts need to consider
+     setting the locale when comparing numbers.  */
+  if ((basic_numeric_field || general_numeric_field) && ! number_locale_warned)
+    {
+      error (0, 0,
+             _("%snumbers use %s as a decimal point in this locale"),
+             tab == decimal_point ? "" : _("note "),
+             quote (((char []) {decimal_point, 0})));
+
+    }
+
+  if (basic_numeric_field && thousands_sep_ignored)
+    {
+      error (0, 0,
+             _("the multi-byte number group separator "
+               "in this locale is not supported"));
     }
 
   /* Warn about ignored global options flagged above.
@@ -4238,6 +4321,8 @@ main (int argc, char **argv)
 
     /* FIXME: add support for multibyte thousands separators.  */
     thousands_sep = locale->thousands_sep[0];
+    if (thousands_sep && locale->thousands_sep[1])
+      thousands_sep_ignored = true;
     if (! thousands_sep || locale->thousands_sep[1])
       thousands_sep = NON_CHAR;
   }

@@ -11,9 +11,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   timeout --foreground --kill-after=... will now exit with status 137
-  if the kill signal was sent, which is consistent with the behaviour
+  if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to
   distinguish if the command was more forcefully terminated.
+
+** Improvements
+
+  sort --debug now diagnoses issues with --field-separator characters
+  that conflict with characters possibly used in numbers.
 
 
 * Noteworthy changes in release 9.0 (2021-09-24) [stable]
