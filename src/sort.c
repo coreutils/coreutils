@@ -152,9 +152,9 @@ enum
   };
 
 /* The representation of the decimal point in the current locale.  */
-static int decimal_point;
+static char decimal_point;
 
-/* Thousands separator; if -1, then there isn't one.  */
+/* Thousands separator; if outside char range, there is no separator.  */
 static int thousands_sep;
 
 /* Nonzero if the corresponding locales are hard.  */
@@ -337,6 +337,9 @@ static bool reverse;
    comparison of lines, and instead leaves lines in the same order
    they were read if all keys compare equal.  */
 static bool stable;
+
+/* An int value outside char range.  */
+enum { NON_CHAR = CHAR_MAX + 1 };
 
 /* If TAB has this value, blanks separate fields.  */
 enum { TAB_DEFAULT = CHAR_MAX + 1 };
@@ -1900,12 +1903,12 @@ static char const unit_order[UCHAR_LIM] =
    decimal_point chars only.  Returns the highest digit found in the number,
    or '\0' if no digit has been found.  Upon return *number points at the
    character that immediately follows after the given number.  */
-static unsigned char
+static char
 traverse_raw_number (char const **number)
 {
   char const *p = *number;
-  unsigned char ch;
-  unsigned char max_digit = '\0';
+  char ch;
+  char max_digit = '\0';
   bool ends_with_thousands_sep = false;
 
   /* Scan to end of number.
@@ -1953,7 +1956,7 @@ find_unit_order (char const *number)
 {
   bool minus_sign = (*number == '-');
   char const *p = number + minus_sign;
-  unsigned char max_digit = traverse_raw_number (&p);
+  char max_digit = traverse_raw_number (&p);
   if ('0' < max_digit)
     {
       unsigned char ch = *p;
@@ -2334,7 +2337,7 @@ debug_key (struct line const *line, struct keyfield const *key)
           else if (key->numeric || key->human_numeric)
             {
               char const *p = beg + (beg < lim && *beg == '-');
-              unsigned char max_digit = traverse_raw_number (&p);
+              char max_digit = traverse_raw_number (&p);
               if ('0' <= max_digit)
                 {
                   unsigned char ch = *p;
@@ -4229,14 +4232,14 @@ main (int argc, char **argv)
     /* If the locale doesn't define a decimal point, or if the decimal
        point is multibyte, use the C locale's decimal point.  FIXME:
        add support for multibyte decimal points.  */
-    decimal_point = to_uchar (locale->decimal_point[0]);
+    decimal_point = locale->decimal_point[0];
     if (! decimal_point || locale->decimal_point[1])
       decimal_point = '.';
 
     /* FIXME: add support for multibyte thousands separators.  */
-    thousands_sep = to_uchar (*locale->thousands_sep);
+    thousands_sep = locale->thousands_sep[0];
     if (! thousands_sep || locale->thousands_sep[1])
-      thousands_sep = -1;
+      thousands_sep = NON_CHAR;
   }
 
   have_read_stdin = false;

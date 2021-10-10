@@ -106,8 +106,8 @@ fraccompare (char const *a, char const *b, char decimal_point)
 /* Compare strings A and B as numbers without explicitly converting
    them to machine numbers, to avoid overflow problems and perhaps
    improve performance.  DECIMAL_POINT is the decimal point and
-   THOUSANDS_SEP the thousands separator.  A DECIMAL_POINT of -1
-   causes comparisons to act as if there is no decimal point
+   THOUSANDS_SEP the thousands separator.  A DECIMAL_POINT outside
+   'char' range causes comparisons to act as if there is no decimal point
    character, and likewise for THOUSANDS_SEP.  */
 
 static inline int _GL_ATTRIBUTE_PURE
