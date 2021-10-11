@@ -18321,11 +18321,14 @@ Exit status:
 the exit status of @var{command} otherwise
 @end display
 
-In case of the @samp{KILL(9)} signal, @command{timeout} returns with
+In the case of the @samp{KILL(9)} signal, @command{timeout} returns with
 exit status 137, regardless of whether that signal is sent to @var{command}
 or to @command{timeout} itself, i.e., these cases cannot be distinguished.
 In the latter case, the @var{command} process may still be alive after
 @command{timeout} has forcefully been terminated.
+However if the @option{--foreground} option is specified then
+@command{timeout} will not send any signals to its own process,
+and so it will exit with one of the other exit status values detailed above.
 
 Examples:
 
