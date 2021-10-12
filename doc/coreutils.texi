@@ -18273,8 +18273,9 @@ The specified @var{duration} starts from the point in time when
 @command{timeout} sends the initial signal to @var{command}, i.e.,
 not from the beginning when the @var{command} is started.
 
-This option has no effect if @command{timeout}'s duration is 0 which
-disables the associated timeout.
+This option has no effect if either the main @var{duration}
+of the @command{timeout} command, or the @var{duration} specified
+to this option, is 0.
 
 This option may be useful if the selected signal did not kill the @var{command},
 either because the signal was blocked or ignored, or if the @var{command} takes
