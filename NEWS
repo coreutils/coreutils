@@ -8,6 +8,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   All files would be processed correctly, but the exit status was incorrect.
   [bug introduced in coreutils-9.0]
 
+** Changes in behavior
+
+  timeout --foreground --kill-after=... will now exit with status 137
+  if the kill signal was sent, which is consistent with the behaviour
+  when the --foreground option is not specified.  This allows users to
+  distinguish if the command was more forcefully terminated.
+
 
 * Noteworthy changes in release 9.0 (2021-09-24) [stable]
 

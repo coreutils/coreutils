@@ -593,6 +593,11 @@ main (int argc, char **argv)
                   unblock_signal (sig);
                   raise (sig);
                 }
+              /* Allow users to distinguish if command was forcably killed.
+                 Needed with --foreground where we don't send SIGKILL to
+                 the timeout process itself.  */
+              if (timed_out && sig == SIGKILL)
+                preserve_status = true;
               status = sig + 128; /* what sh returns for signaled processes.  */
             }
           else
