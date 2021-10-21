@@ -12896,6 +12896,13 @@ echo [@var{option}]@dots{} [@var{string}]@dots{}
 
 @mayConflictWithShellBuiltIn{echo}
 
+Due to historical and backwards compatibility reasons, certain bare option-like
+strings cannot be passed to @command{echo} as non-option arguments.
+It is therefore not advisable to use @command{echo} for printing unknown or
+variable arguments.  The @command{printf} command is recommended as a more
+portable and flexible replacement for tasks historically performed by
+@command{echo}.  @xref{printf invocation}.
+
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands, and the normally-special argument
 @samp{--} has no special meaning and is treated like any other
@@ -12961,13 +12968,15 @@ If the @env{POSIXLY_CORRECT} environment variable is set, then when
 option-like arguments instead of treating them as options.  For
 example, @code{echo -ne hello} outputs @samp{-ne hello} instead of
 plain @samp{hello}.  Also backslash escapes are always enabled.
+Note to echo the string @samp{-n}, one of the characters
+can be escaped in either octal or hexadecimal representation.
+For example, @code{echo -e '\x2dn'}.
 
 POSIX does not require support for any options, and says
 that the behavior of @command{echo} is implementation-defined if any
-@var{string} contains a backslash or if the first argument is
-@option{-n}.  Portable programs can use the @command{printf} command
-if they need to omit trailing newlines or output control characters or
-backslashes.  @xref{printf invocation}.
+@var{string} contains a backslash or if the first argument is @option{-n}.
+Portable programs should use the @command{printf} command instead.
+@xref{printf invocation}.
 
 @exitstatus
 

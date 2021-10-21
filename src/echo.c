@@ -80,6 +80,10 @@ If -e is in effect, the following sequences are recognized:\n\
   \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
 "), stdout);
   printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
+  fputs (_("\n\
+NOTE: printf(1) is a preferred alternative,\n\
+which does not have issues outputting option-like strings.\n\
+"), stdout);
   emit_ancillary_info (PROGRAM_NAME);
   exit (status);
 }
