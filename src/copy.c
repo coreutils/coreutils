@@ -530,7 +530,7 @@ lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
       off_t ext_end = lseek (src_fd, ext_start, SEEK_HOLE);
       if (ext_end < 0)
         {
-          if (! (ext_end == -1 && errno == ENXIO))
+          if (errno != ENXIO)
             goto cannot_lseek;
           ext_end = src_total_size;
           if (ext_end <= ext_start)
@@ -607,7 +607,7 @@ lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
         }
 
       ext_start = lseek (src_fd, dest_pos, SEEK_DATA);
-      if (ext_start < 0 && ! (ext_start == -1 && errno == ENXIO))
+      if (ext_start < 0 && errno != ENXIO)
         goto cannot_lseek;
     }
 
@@ -1093,8 +1093,7 @@ infer_scantype (int fd, struct stat const *sb,
 
 #ifdef SEEK_HOLE
   scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
-  if (0 <= scan_inference->ext_start
-      || (scan_inference->ext_start == -1 && errno == ENXIO))
+  if (0 <= scan_inference->ext_start || errno == ENXIO)
     return LSEEK_SCANTYPE;
   else if (errno != EINVAL && !is_ENOTSUP (errno))
     return ERROR_SCANTYPE;
