@@ -1,34 +1,45 @@
--*- outline -*-
+Building from a Git repository				-*- outline -*-
 
 These notes intend to help people working on the checked-out sources.
 These requirements do not apply when building from a distribution tarball.
-See also HACKING for more detailed contribution guidelines.
+If this package has a file HACKING, please also read that file for
+more detailed contribution guidelines.
 
 * Requirements
 
-We've opted to keep only the highest-level sources in the GIT repository.
-This eases our maintenance burden, (fewer merges etc.), but imposes more
+We've opted to keep only the highest-level sources in the Git repository.
+This eases our maintenance burden (fewer merges etc.), but imposes more
 requirements on anyone wishing to build from the just-checked-out sources.
-Note the requirements to build the released archive are much less and
-are just the requirements of the standard ./configure && make procedure.
+(The requirements to build from a release are much less and are just
+the requirements of the standard './configure && make' procedure.)
 Specific development tools and versions will be checked for and listed by
 the bootstrap script.  See README-prereq for specific notes on obtaining
 these prerequisite tools.
 
 Valgrind <http://valgrind.org/> is also highly recommended, if
-Valgrind supports your architecture. See also README-valgrind.
+Valgrind supports your architecture.  See also README-valgrind
+(if present).
 
 While building from a just-cloned source tree may require installing a
-few prerequisites, later, a plain 'git pull && make' should be sufficient.
+few prerequisites, later, a plain 'git pull && make' typically suffices.
 
-* First GIT checkout
+* First Git checkout
 
 You can get a copy of the source repository like this:
 
-        $ git clone git://git.sv.gnu.org/coreutils
-        $ cd coreutils
+        $ git clone git://git.sv.gnu.org/<packagename>
+        $ cd <packagename>
 
-As an optional step, if you already have a copy of the gnulib git
+where '<packagename>' stands for 'coreutils' or whatever other package
+you are building.
+
+To use the most-recent Gnulib (as opposed to the Gnulib version that
+the package last synchronized to), do this next:
+
+        $ git submodule foreach git pull origin master
+        $ git commit -m 'build: update gnulib submodule to latest' gnulib
+
+As an optional step, if you already have a copy of the Gnulib Git
 repository, then you can use it as a reference to reduce download
 time and file system space requirements:
 
@@ -39,20 +50,14 @@ which are extracted from other source packages:
 
         $ ./bootstrap
 
-To use the most-recent gnulib (as opposed to the gnulib version that
-the package last synchronized to), do this next:
-
-        $ git submodule foreach git pull origin master
-        $ git commit -m 'build: update gnulib submodule to latest' gnulib
-
 And there you are!  Just
 
-        $ ./configure --quiet #[--enable-gcc-warnings] [*]
+        $ ./configure --quiet #[--disable-gcc-warnings] [*]
         $ make
         $ make check
 
 At this point, there should be no difference between your local copy,
-and the GIT master copy:
+and the Git master copy:
 
         $ git diff
 
@@ -60,12 +65,15 @@ should output no difference.
 
 Enjoy!
 
-[*] The --enable-gcc-warnings option is useful only with glibc
-and with a very recent version of gcc.  You'll probably also have
-to use recent system headers.  If you configure with this option,
-and spot a problem, please be sure to send the report to the bug
-reporting address of this package, and not to that of gnulib, even
-if the problem seems to originate in a gnulib-provided file.
+[*] By default GCC warnings are enabled when building from Git.
+If you get warnings with recent GCC and Glibc with default
+configure-time options, please report the warnings to the bug
+reporting address of this package instead of to bug-gnulib,
+even if the problem seems to originate in a Gnulib-provided file.
+If you get warnings with other configurations, you can run
+'./configure --disable-gcc-warnings' or 'make WERROR_CFLAGS='
+to build quietly or verbosely, respectively.
+-----
 
 * Submitting patches
 
