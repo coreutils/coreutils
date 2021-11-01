@@ -27,7 +27,6 @@
 #include "die.h"
 #include "error.h"
 #include "idx.h"
-#include "minmax.h"
 #include "operand2sig.h"
 #include "quote.h"
 #include "sig2str.h"

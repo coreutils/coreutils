@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "system.h"
-#include "minmax.h"
 
 /* Deactivate config.h's "rpl_"-prefixed definitions, since we don't
    link gnulib here, and the replacements aren't needed.  */
