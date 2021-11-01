@@ -668,6 +668,7 @@ errno_unsupported (int err)
 }
 
 #if USE_XATTR
+ATTRIBUTE_FORMAT ((printf, 2, 3))
 static void
 copy_attr_error (struct error_context *ctx _GL_UNUSED,
                  char const *fmt, ...)
@@ -684,9 +685,10 @@ copy_attr_error (struct error_context *ctx _GL_UNUSED,
     }
 }
 
+ATTRIBUTE_FORMAT ((printf, 2, 3))
 static void
 copy_attr_allerror (struct error_context *ctx _GL_UNUSED,
-                 char const *fmt, ...)
+                    char const *fmt, ...)
 {
   int err = errno;
   va_list ap;
@@ -728,26 +730,32 @@ static bool
 copy_attr (char const *src_path, int src_fd,
            char const *dst_path, int dst_fd, struct cp_options const *x)
 {
-  int ret;
   bool all_errors = (!x->data_copy_required || x->require_preserve_xattr);
   bool some_errors = (!all_errors && !x->reduce_diagnostics);
-  bool selinux_done = (x->preserve_security_context || x->set_security_context);
-  struct error_context ctx =
-  {
-    .error = all_errors ? copy_attr_allerror : copy_attr_error,
-    .quote = copy_attr_quote,
-    .quote_free = copy_attr_free
-  };
-  if (0 <= src_fd && 0 <= dst_fd)
-    ret = attr_copy_fd (src_path, src_fd, dst_path, dst_fd,
-                        selinux_done ? check_selinux_attr : NULL,
-                        (all_errors || some_errors ? &ctx : NULL));
-  else
-    ret = attr_copy_file (src_path, dst_path,
-                          selinux_done ? check_selinux_attr : NULL,
-                          (all_errors || some_errors ? &ctx : NULL));
+  int (*check) (char const *, struct error_context *)
+    = (x->preserve_security_context || x->set_security_context
+       ? check_selinux_attr : NULL);
 
-  return ret == 0;
+# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
+  /* Pacify gcc -Wsuggest-attribute=format through at least GCC 11.2.1.  */
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
+# endif
+  struct error_context *ctx
+    = (all_errors || some_errors
+       ? (&(struct error_context) {
+           .error = all_errors ? copy_attr_allerror : copy_attr_error,
+           .quote = copy_attr_quote,
+           .quote_free = copy_attr_free
+         })
+       : NULL);
+# if 4 < __GNUC__ + (8 <= __GNUC_MINOR__)
+#  pragma GCC diagnostic pop
+# endif
+
+  return ! (0 <= src_fd && 0 <= dst_fd
+            ? attr_copy_fd (src_path, src_fd, dst_path, dst_fd, check, ctx)
+            : attr_copy_file (src_path, dst_path, check, ctx));
 }
 #else /* USE_XATTR */
 

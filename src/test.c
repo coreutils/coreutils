@@ -85,6 +85,7 @@ static bool or (void);
 
 static void beyond (void);
 
+ATTRIBUTE_FORMAT ((printf, 1, 2))
 static _Noreturn void
 test_syntax_error (char const *format, ...)
 {
@@ -323,7 +324,7 @@ binary_operator (bool l_is_l)
               bool le, re;
               pos += 3;
               if (l_is_l || r_is_l)
-                test_syntax_error (_("-nt does not accept -l"), NULL);
+                test_syntax_error (_("-nt does not accept -l"));
               le = get_mtime (argv[op - 1], &lt);
               re = get_mtime (argv[op + 1], &rt);
               return le && (!re || timespec_cmp (lt, rt) > 0);
@@ -336,7 +337,7 @@ binary_operator (bool l_is_l)
               /* ef - hard link? */
               pos += 3;
               if (l_is_l || r_is_l)
-                test_syntax_error (_("-ef does not accept -l"), NULL);
+                test_syntax_error (_("-ef does not accept -l"));
               return (stat (argv[op - 1], &stat_buf) == 0
                       && stat (argv[op + 1], &stat_spare) == 0
                       && stat_buf.st_dev == stat_spare.st_dev
@@ -352,7 +353,7 @@ binary_operator (bool l_is_l)
               bool le, re;
               pos += 3;
               if (l_is_l || r_is_l)
-                test_syntax_error (_("-ot does not accept -l"), NULL);
+                test_syntax_error (_("-ot does not accept -l"));
               le = get_mtime (argv[op - 1], &lt);
               re = get_mtime (argv[op + 1], &rt);
               return re && (!le || timespec_cmp (lt, rt) < 0);

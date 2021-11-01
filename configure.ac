@@ -150,7 +150,6 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Wmissing-format-attribute" # copy.c
   nw="$nw -Wunsafe-loop-optimizations" # a few src/*.c
   nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
-  nw="$nw -Wsuggest-attribute=format" # warns about copy.c and factor.c
   nw="$nw -Wvector-operation-performance" # warns about randperm.c
 
 
@@ -224,6 +223,7 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Wstrict-prototypes"
   # It's not worth being this picky about test programs.
   nw="$nw -Wsuggest-attribute=const"
+  nw="$nw -Wsuggest-attribute=format"
   nw="$nw -Wsuggest-attribute=pure"
   gl_MANYWARN_COMPLEMENT([GNULIB_TEST_WARN_CFLAGS],
                          [$GNULIB_WARN_CFLAGS], [$nw])
