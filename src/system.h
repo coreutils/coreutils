@@ -380,14 +380,7 @@ enum
     exit (EXIT_SUCCESS);						\
     break;
 
-#ifndef MAX
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
-#ifndef MIN
-# define MIN(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-
+#include "minmax.h"
 #include "intprops.h"
 
 #ifndef SSIZE_MAX

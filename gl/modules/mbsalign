@@ -6,6 +6,7 @@ lib/mbsalign.c
 lib/mbsalign.h
 
 Depends-on:
+minmax
 wchar
 wctype
 wcwidth

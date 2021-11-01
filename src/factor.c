@@ -1950,7 +1950,6 @@ static const unsigned short invtab[0x81] =
 # define Q_FREQ_SIZE 50
 /* Element 0 keeps the total */
 static unsigned int q_freq[Q_FREQ_SIZE + 1];
-# define MIN(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
 #if USE_SQUFOF

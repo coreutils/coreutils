@@ -19,6 +19,8 @@
 #include <config.h>
 #include "mbsalign.h"
 
+#include "minmax.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -27,10 +29,6 @@
 #include <limits.h>
 #include <wchar.h>
 #include <wctype.h>
-
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
 
 /* Replace non printable chars.
    Note \t and \n etc. are non printable.

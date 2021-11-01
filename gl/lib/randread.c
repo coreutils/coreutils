@@ -40,14 +40,11 @@
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
+#include "minmax.h"
 #include "rand-isaac.h"
 #include "stdio-safer.h"
 #include "unlocked-io.h"
 #include "xalloc.h"
-
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
 
 #if _STRING_ARCH_unaligned || _STRING_INLINE_unaligned
 # define ALIGNED_POINTER(ptr, type) true
