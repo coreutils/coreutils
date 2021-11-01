@@ -45,12 +45,6 @@
 #include "unlocked-io.h"
 #include "xalloc.h"
 
-#ifndef __attribute__
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
-#  define __attribute__(x) /* empty */
-# endif
-#endif
-
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
