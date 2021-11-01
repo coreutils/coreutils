@@ -481,13 +481,11 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-static void wrapf (char const *message, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));
-
 /* Print format string MESSAGE and optional args.
    Wrap to next line first if it won't fit.
    Print a space first unless MESSAGE will start a new line. */
 
+ATTRIBUTE_FORMAT ((printf, 1, 2))
 static void
 wrapf (char const *message,...)
 {

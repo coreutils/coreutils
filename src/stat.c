@@ -107,7 +107,8 @@
 /* BeOS has a statvfs function, but it does not return sensible values
    for f_files, f_ffree and f_favail, and lacks f_type, f_basetype and
    f_fstypename.  Use 'struct fs_info' instead.  */
-static int ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static int
 statfs (char const *filename, struct fs_info *buf)
 {
   dev_t device = dev_for_path (filename);
@@ -256,7 +257,8 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
    Others have statfs.f_fstypename[MFSNAMELEN] (NetBSD 1.5.2).
    Still others have neither and have to get by with f_type (GNU/Linux).
    But f_type may only exist in statfs (Cygwin).  */
-static char const * ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static char const *
 human_fstype (STRUCT_STATVFS const *statfsbuf)
 {
 #ifdef STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME
@@ -631,7 +633,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 #endif
 }
 
-static char * ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static char *
 human_access (struct stat const *statbuf)
 {
   static char modebuf[12];
@@ -640,7 +643,8 @@ human_access (struct stat const *statbuf)
   return modebuf;
 }
 
-static char * ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static char *
 human_time (struct timespec t)
 {
   /* STR must be at least INT_BUFSIZE_BOUND (intmax_t) big, either
@@ -830,7 +834,8 @@ out_epoch_sec (char *pformat, size_t prefix_len,
 
 /* Print the context information of FILENAME, and return true iff the
    context could not be obtained.  */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 out_file_context (char *pformat, size_t prefix_len, char const *filename)
 {
   char *scontext;
@@ -853,7 +858,8 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 }
 
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 print_statfs (char *pformat, size_t prefix_len, char mod _GL_UNUSED, char m,
               int fd, char const *filename,
               void const *data)
@@ -941,7 +947,8 @@ print_statfs (char *pformat, size_t prefix_len, char mod _GL_UNUSED, char m,
 /* Return any bind mounted source for a path.
    The caller should not free the returned buffer.
    Return NULL if no bind mount found.  */
-static char const * ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static char const *
 find_bind_mount (char const * name)
 {
   char const * bind_mount = NULL;
@@ -980,7 +987,8 @@ find_bind_mount (char const * name)
 }
 
 /* Print mount point.  Return zero upon success, nonzero upon failure.  */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 out_mount_point (char const *filename, char *pformat, size_t prefix_len,
                  const struct stat *statp)
 {
@@ -1120,7 +1128,8 @@ format_code_offset (char const* directive)
 /* Print the information specified by the format string, FORMAT,
    calling PRINT_FUNC for each %-directive encountered.
    Return zero upon success, nonzero upon failure.  */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 print_it (char const *format, int fd, char const *filename,
           bool (*print_func) (char *, size_t, char, char,
                               int, char const *, void const *),
@@ -1248,7 +1257,8 @@ print_it (char const *format, int fd, char const *filename,
 }
 
 /* Stat the file system and print what we find.  */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 do_statfs (char const *filename, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
@@ -1356,7 +1366,8 @@ format_to_mask (char const *format)
 }
 
 /* statx the file and print what we find */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 do_stat (char const *filename, char const *format, char const *format2)
 {
   int fd = STREQ (filename, "-") ? 0 : AT_FDCWD;
@@ -1440,7 +1451,8 @@ get_birthtime (int fd, char const *filename, struct stat const *st)
 
 
 /* stat the file and print what we find */
-static bool ATTRIBUTE_WARN_UNUSED_RESULT
+NODISCARD
+static bool
 do_stat (char const *filename, char const *format,
          char const *format2)
 {

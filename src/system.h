@@ -421,20 +421,6 @@ enum
 # define IF_LINT(Code) /* empty */
 #endif
 
-#ifndef __attribute__
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
-#  define __attribute__(x) /* empty */
-# endif
-#endif
-
-/* The warn_unused_result attribute appeared first in gcc-3.4.0 */
-#undef ATTRIBUTE_WARN_UNUSED_RESULT
-#if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)
-# define ATTRIBUTE_WARN_UNUSED_RESULT /* empty */
-#else
-# define ATTRIBUTE_WARN_UNUSED_RESULT __attribute__ ((__warn_unused_result__))
-#endif
-
 #ifdef __GNUC__
 # define LIKELY(cond)    __builtin_expect ((cond), 1)
 # define UNLIKELY(cond)  __builtin_expect ((cond), 0)
