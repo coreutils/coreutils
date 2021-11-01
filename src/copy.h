@@ -289,23 +289,27 @@ int rpl_rename (char const *, char const *);
 
 bool copy (char const *src_name, char const *dst_name,
            bool nonexistent_dst, const struct cp_options *options,
-           bool *copy_into_self, bool *rename_succeeded);
+           bool *copy_into_self, bool *rename_succeeded)
+  _GL_ATTRIBUTE_NONNULL ((1, 2, 4, 5));
 
 extern bool set_process_security_ctx (char const *src_name,
                                       char const *dst_name,
                                       mode_t mode, bool new_dst,
-                                      const struct cp_options *x);
+                                      const struct cp_options *x)
+  _GL_ATTRIBUTE_NONNULL ();
 
 extern bool set_file_security_ctx (char const *dst_name,
-                                   bool recurse, const struct cp_options *x);
+                                   bool recurse, const struct cp_options *x)
+  _GL_ATTRIBUTE_NONNULL ();
 
-void dest_info_init (struct cp_options *);
-void dest_info_free (struct cp_options *);
-void src_info_init (struct cp_options *);
-void src_info_free (struct cp_options *);
+void dest_info_init (struct cp_options *) _GL_ATTRIBUTE_NONNULL ();
+void dest_info_free (struct cp_options *) _GL_ATTRIBUTE_NONNULL ();
+void src_info_init (struct cp_options *) _GL_ATTRIBUTE_NONNULL ();
+void src_info_free (struct cp_options *) _GL_ATTRIBUTE_NONNULL ();
 
-void cp_options_default (struct cp_options *);
-bool chown_failure_ok (struct cp_options const *) _GL_ATTRIBUTE_PURE;
+void cp_options_default (struct cp_options *) _GL_ATTRIBUTE_NONNULL ();
+bool chown_failure_ok (struct cp_options const *)
+  _GL_ATTRIBUTE_NONNULL () _GL_ATTRIBUTE_PURE;
 mode_t cached_umask (void);
 
 #endif

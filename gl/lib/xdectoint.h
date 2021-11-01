@@ -22,10 +22,12 @@
 
 # define _DECLARE_XDECTOINT(name, type) \
   type name (char const *n_str, type min, type max, \
-             char const *suffixes, char const *err, int err_exit);
+             char const *suffixes, char const *err, int err_exit) \
+    _GL_ATTRIBUTE_NONNULL ((1, 5));
 # define _DECLARE_XNUMTOINT(name, type) \
   type name (char const *n_str, int base, type min, type max, \
-             char const *suffixes, char const *err, int err_exit);
+             char const *suffixes, char const *err, int err_exit) \
+    _GL_ATTRIBUTE_NONNULL ((1, 6));
 
 _DECLARE_XDECTOINT (xdectoimax, intmax_t)
 _DECLARE_XDECTOINT (xdectoumax, uintmax_t)

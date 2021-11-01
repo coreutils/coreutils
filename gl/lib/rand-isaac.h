@@ -59,7 +59,8 @@ struct isaac_state
     isaac_word a, b, c;		/* Extra variables */
   };
 
-void isaac_seed (struct isaac_state *);
-void isaac_refill (struct isaac_state *, isaac_word[ISAAC_WORDS]);
+void isaac_seed (struct isaac_state *) _GL_ATTRIBUTE_NONNULL ();
+void isaac_refill (struct isaac_state *, isaac_word[ISAAC_WORDS])
+  _GL_ATTRIBUTE_NONNULL ();
 
 #endif

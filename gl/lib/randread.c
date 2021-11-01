@@ -146,6 +146,17 @@ get_nonce (void *buffer, size_t bufsize)
   return true;
 }
 
+/* Body of randread_free, broken out to pacify gcc -Wmismatched-dealloc.  */
+
+static int
+randread_free_body (struct randread_source *s)
+{
+  FILE *source = s->source;
+  explicit_bzero (s, sizeof *s);
+  free (s);
+  return source ? fclose (source) : 0;
+}
+
 /* Create and initialize a random data source from NAME, or use a
    reasonable default source if NAME is null.  BYTES_BOUND is an upper
    bound on the number of bytes that will be needed.  If zero, it is a
@@ -182,7 +193,7 @@ randread_new (char const *name, size_t bytes_bound)
                            MIN (sizeof s->buf.isaac.state.m, bytes_bound)))
             {
               int e = errno;
-              randread_free (s);
+              randread_free_body (s);
               errno = e;
               return NULL;
             }
@@ -303,8 +314,5 @@ randread (struct randread_source *s, void *buf, size_t size)
 int
 randread_free (struct randread_source *s)
 {
-  FILE *source = s->source;
-  explicit_bzero (s, sizeof *s);
-  free (s);
-  return (source ? fclose (source) : 0);
+  return randread_free_body (s);
 }

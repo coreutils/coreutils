@@ -9,7 +9,8 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length);
 extern void
 output_crc (char const *file, int binary_file, void const *digest,
             bool tagged, unsigned char delim, bool args _GL_UNUSED,
-            uintmax_t length _GL_UNUSED);
+            uintmax_t length _GL_UNUSED)
+  _GL_ATTRIBUTE_NONNULL ((3));
 
 extern bool
 cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out);

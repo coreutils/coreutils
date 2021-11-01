@@ -32,12 +32,13 @@ add_tab_stop (uintmax_t tabval);
 /* Add the comma or blank separated list of tab stops STOPS
    to the list of tab stops.  */
 extern void
-parse_tab_stops (char const *stops);
+parse_tab_stops (char const *stops) _GL_ATTRIBUTE_NONNULL ();
 
 /* TODO: Document */
 extern uintmax_t
-get_next_tab_column (const uintmax_t column, size_t* tab_index,
-                     bool* last_tab);
+get_next_tab_column (const uintmax_t column, size_t *tab_index,
+                     bool *last_tab)
+  _GL_ATTRIBUTE_NONNULL ((3));
 
 /* Called after all command-line options have been parsed,
    sets the final tab-stops values */

@@ -22,7 +22,7 @@
 # include "same-inode.h"
 
 struct dev_ino *
-get_root_dev_ino (struct dev_ino *root_d_i);
+get_root_dev_ino (struct dev_ino *root_d_i) _GL_ATTRIBUTE_NONNULL ();
 
 /* These macros are common to the programs that support the
    --preserve-root and --no-preserve-root options.  */
