@@ -441,7 +441,8 @@ cmp (char const *a, size_t a_len, char const *b, size_t b_len)
 
 /* Trim leading 0's from S, but if S is all 0's, leave one.
    Return a pointer to the trimmed string.  */
-static char const * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static char const *
 trim_leading_zeros (char const *s)
 {
   char const *p = s;
@@ -558,7 +559,8 @@ seq_fast (char const *a, char const *b, uintmax_t step)
 }
 
 /* Return true if S consists of at least one digit and no non-digits.  */
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 all_digits_p (char const *s)
 {
   size_t n = strlen (s);

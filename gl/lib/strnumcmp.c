@@ -23,7 +23,7 @@
 
 /* Externally-visible name for numcompare.  */
 
-int _GL_ATTRIBUTE_PURE
+int
 strnumcmp (char const *a, char const *b,
            int decimal_point, int thousands_sep)
 {

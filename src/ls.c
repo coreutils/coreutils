@@ -1110,7 +1110,8 @@ get_stat_btime (struct stat const *st)
 }
 
 #if HAVE_STATX && defined STATX_INO
-static unsigned int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static unsigned int
 time_type_to_statx (void)
 {
   switch (time_type)
@@ -1129,7 +1130,8 @@ time_type_to_statx (void)
     return 0;
 }
 
-static unsigned int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static unsigned int
 calc_req_mask (void)
 {
   unsigned int mask = STATX_MODE;
@@ -1259,7 +1261,8 @@ fstat_for_ino (int fd, struct stat *st)
    there is no such spec.  %5b etc. do not match, so that user
    widths/flags are honored.  */
 
-static char const * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static char const *
 first_percent_b (char const *fmt)
 {
   for (; *fmt; fmt++)
@@ -3818,25 +3821,25 @@ dirfirst_check (struct fileinfo const *a, struct fileinfo const *b,
   /* direct, non-dirfirst versions */					\
   static int xstrcoll_##key_name (V a, V b)				\
   { return key_cmp_func (a, b, xstrcoll); }				\
-  static int _GL_ATTRIBUTE_PURE strcmp_##key_name (V a, V b)		\
+  ATTRIBUTE_PURE static int strcmp_##key_name (V a, V b)		\
   { return key_cmp_func (a, b, strcmp); }				\
                                                                         \
   /* reverse, non-dirfirst versions */					\
   static int rev_xstrcoll_##key_name (V a, V b)				\
   { return key_cmp_func (b, a, xstrcoll); }				\
-  static int _GL_ATTRIBUTE_PURE rev_strcmp_##key_name (V a, V b)	\
+  ATTRIBUTE_PURE static int rev_strcmp_##key_name (V a, V b)	\
   { return key_cmp_func (b, a, strcmp); }				\
                                                                         \
   /* direct, dirfirst versions */					\
   static int xstrcoll_df_##key_name (V a, V b)				\
   { return dirfirst_check (a, b, xstrcoll_##key_name); }		\
-  static int _GL_ATTRIBUTE_PURE strcmp_df_##key_name (V a, V b)		\
+  ATTRIBUTE_PURE static int strcmp_df_##key_name (V a, V b)		\
   { return dirfirst_check (a, b, strcmp_##key_name); }			\
                                                                         \
   /* reverse, dirfirst versions */					\
   static int rev_xstrcoll_df_##key_name (V a, V b)			\
   { return dirfirst_check (a, b, rev_xstrcoll_##key_name); }		\
-  static int _GL_ATTRIBUTE_PURE rev_strcmp_df_##key_name (V a, V b)	\
+  ATTRIBUTE_PURE static int rev_strcmp_df_##key_name (V a, V b)	\
   { return dirfirst_check (a, b, rev_strcmp_##key_name); }
 
 static int
@@ -4942,7 +4945,8 @@ print_color_indicator (const struct bin_str *ind)
 }
 
 /* Returns color indicator or NULL if none.  */
-static const struct bin_str* _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static const struct bin_str*
 get_color_indicator (const struct fileinfo *f, bool symlink_target)
 {
   enum indicator_no type;

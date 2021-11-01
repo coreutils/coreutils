@@ -602,7 +602,8 @@ compare_occurs (const void *void_first, const void *void_second)
 
 /* True if WORD appears in TABLE.  Uses a binary search.  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 search_table (WORD *word, WORD_TABLE *table)
 {
   ptrdiff_t lowest;		/* current lowest possible index */

@@ -1830,7 +1830,8 @@ screen_columns (void)
   }
 }
 
-static tcflag_t * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static tcflag_t *
 mode_type_flag (enum mode_type type, struct termios *mode)
 {
   switch (type)
@@ -2207,7 +2208,8 @@ static struct speed_map const speeds[] =
   {NULL, 0, 0}
 };
 
-static speed_t _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static speed_t
 string_to_baud (char const *arg)
 {
   for (int i = 0; speeds[i].string != NULL; ++i)
@@ -2216,7 +2218,8 @@ string_to_baud (char const *arg)
   return (speed_t) -1;
 }
 
-static unsigned long int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static unsigned long int
 baud_to_value (speed_t speed)
 {
   for (int i = 0; speeds[i].string != NULL; ++i)

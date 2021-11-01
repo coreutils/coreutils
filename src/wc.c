@@ -224,7 +224,8 @@ the following order: newline, word, character, byte, maximum line length.\n\
 }
 
 /* Return non zero if a non breaking space.  */
-static int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static int
 iswnbspace (wint_t wc)
 {
   return ! posixly_correct
@@ -748,7 +749,8 @@ get_input_fstatus (size_t nfiles, char *const *file)
    recorded in FSTATUS.  Optimize the same special case that
    get_input_fstatus optimizes.  */
 
-static int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static int
 compute_number_width (size_t nfiles, struct fstatus const *fstatus)
 {
   int width = 1;

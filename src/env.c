@@ -197,7 +197,8 @@ unset_envvars (void)
    First letter in VARNAME must be alpha or underscore,
    rest of letters are alnum or underscore.
    Any other character is an error.  */
-static char const * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static char const *
 scan_varname (char const *str)
 {
   if (str[1] == '{' && (c_isalpha (str[2]) || str[2] == '_'))

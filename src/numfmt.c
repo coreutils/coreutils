@@ -395,7 +395,8 @@ simple_round_nearest (long double val)
   return val < 0 ? val - 0.5 : val + 0.5;
 }
 
-static inline long double _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static inline long double
 simple_round (long double val, enum round_type t)
 {
   intmax_t rval;
@@ -1349,7 +1350,8 @@ next_field (char **line)
   return field_start;
 }
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 include_field (uintmax_t field)
 {
   struct field_range_pair *p = frp;

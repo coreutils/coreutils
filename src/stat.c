@@ -1105,7 +1105,8 @@ print_esc_char (char c)
   putchar (c);
 }
 
-static size_t _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static size_t
 format_code_offset (char const* directive)
 {
   size_t len = strspn (directive + 1, printf_flags);
@@ -1334,7 +1335,8 @@ fmt_to_mask (char fmt)
   return 0;
 }
 
-static unsigned int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static unsigned int
 format_to_mask (char const *format)
 {
   unsigned int mask = 0;

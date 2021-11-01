@@ -415,7 +415,8 @@ printv (VALUE *v)
 
 /* Return true if V is a null-string or zero-number.  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 null (VALUE *v)
 {
   switch (v->type)
@@ -446,7 +447,8 @@ null (VALUE *v)
 
 /* Return true if CP takes the form of an integer.  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 looks_like_integer (char const *cp)
 {
   cp += (*cp == '-');

@@ -110,7 +110,8 @@ realpath_canon (char const *fname, int can_mode)
 }
 
 /* Test whether canonical prefix is parent or match of path.  */
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 path_prefix (char const *prefix, char const *path)
 {
   /* We already know prefix[0] and path[0] are '/'.  */

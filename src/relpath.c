@@ -26,7 +26,8 @@
 /* Return the length of the longest common prefix
    of canonical PATH1 and PATH2, ensuring only full path components
    are matched.  Return 0 on no match.  */
-static int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static int
 path_common_prefix (char const *path1, char const *path2)
 {
   int i = 0;

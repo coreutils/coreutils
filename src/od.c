@@ -1317,7 +1317,8 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 /* Return the least common multiple of the sizes associated
    with the format specs.  */
 
-static int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static int
 get_lcm (void)
 {
   int l_c_m = 1;

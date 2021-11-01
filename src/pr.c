@@ -781,7 +781,8 @@ integer_overflow (void)
 /* Return the number of columns that have either an open file or
    stored lines. */
 
-static unsigned int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static unsigned int
 cols_ready_to_print (void)
 {
   COLUMN *q;

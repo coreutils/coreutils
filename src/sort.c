@@ -1653,7 +1653,8 @@ begfield (struct line const *line, struct keyfield const *key)
 /* Return the limit of (a pointer to the first character after) the field
    in LINE specified by KEY. */
 
-static char * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static char *
 limfield (struct line const *line, struct keyfield const *key)
 {
   char *ptr = line->text, *lim = ptr + line->length - 1;
@@ -1953,7 +1954,8 @@ traverse_raw_number (char const **number)
    separators and a decimal point, but it may not contain leading blanks.
    Negative numbers get negative orders; zero numbers have a zero order.  */
 
-static int _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static int
 find_unit_order (char const *number)
 {
   bool minus_sign = (*number == '-');
@@ -1972,6 +1974,7 @@ find_unit_order (char const *number)
 /* Compare numbers A and B ending in units with SI or IEC prefixes
        <none/unknown> < K/k < M < G < T < P < E < Z < Y  */
 
+ATTRIBUTE_PURE
 static int
 human_numcompare (char const *a, char const *b)
 {
@@ -1988,6 +1991,7 @@ human_numcompare (char const *a, char const *b)
    machine numbers.  Comparatively slow for short strings, but asymptotically
    hideously fast. */
 
+ATTRIBUTE_PURE
 static int
 numcompare (char const *a, char const *b)
 {

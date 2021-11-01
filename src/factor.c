@@ -431,7 +431,8 @@ mod2 (uintmax_t *r1, uintmax_t a1, uintmax_t a0, uintmax_t d1, uintmax_t d0)
   return a0;
 }
 
-static uintmax_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static uintmax_t
 gcd_odd (uintmax_t a, uintmax_t b)
 {
   if ((b & 1) == 0)
@@ -1046,7 +1047,8 @@ mulredc2 (uintmax_t *r1p,
   return r0;
 }
 
-static uintmax_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static uintmax_t
 powm (uintmax_t b, uintmax_t e, uintmax_t n, uintmax_t ni, uintmax_t one)
 {
   uintmax_t y = one;
@@ -1107,7 +1109,8 @@ powm2 (uintmax_t *r1m,
   return r0;
 }
 
-static bool _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static bool
 millerrabin (uintmax_t n, uintmax_t ni, uintmax_t b, uintmax_t q,
              unsigned int k, uintmax_t one)
 {
@@ -1752,7 +1755,8 @@ mp_factor_using_pollard_rho (mpz_t n, unsigned long int a,
 #if USE_SQUFOF
 /* FIXME: Maybe better to use an iteration converging to 1/sqrt(n)?  If
    algorithm is replaced, consider also returning the remainder.  */
-static uintmax_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static uintmax_t
 isqrt (uintmax_t n)
 {
   uintmax_t x;
@@ -1775,7 +1779,8 @@ isqrt (uintmax_t n)
     }
 }
 
-static uintmax_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static uintmax_t
 isqrt2 (uintmax_t nh, uintmax_t nl)
 {
   unsigned int shift;
@@ -1827,7 +1832,8 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
 # define MAGIC11 0x23b
 
 /* Return the square root if the input is a square, otherwise 0.  */
-static uintmax_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static uintmax_t
 is_square (uintmax_t x)
 {
   /* Uses the tests suggested by Cohen.  Excludes 99% of the non-squares before

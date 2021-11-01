@@ -16,6 +16,8 @@
 
 /* Include this file _after_ system headers if possible.  */
 
+#include <attribute.h>
+
 #include <alloca.h>
 
 #include <sys/stat.h>
@@ -464,7 +466,8 @@ enum
 /* Compute the greatest common divisor of U and V using Euclid's
    algorithm.  U and V must be nonzero.  */
 
-static inline size_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static inline size_t
 gcd (size_t u, size_t v)
 {
   do
@@ -482,7 +485,8 @@ gcd (size_t u, size_t v)
    nonzero.  There is no overflow checking, so callers should not
    specify outlandish sizes.  */
 
-static inline size_t _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static inline size_t
 lcm (size_t u, size_t v)
 {
   return u * (v / gcd (u, v));
@@ -504,7 +508,8 @@ ptr_align (void const *ptr, size_t alignment)
 /* Return whether the buffer consists entirely of NULs.
    Based on memeqzero in CCAN by Rusty Russell under CC0 (Public domain).  */
 
-static inline bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static inline bool
 is_nul (void const *buf, size_t length)
 {
   const unsigned char *p = buf;
@@ -775,11 +780,3 @@ is_ENOTSUP (int err)
   quotearg_style (shell_escape_always_quoting_style, arg)
 #define quoteaf_n(n, arg) \
   quotearg_n_style (n, shell_escape_always_quoting_style, arg)
-
-#ifndef FALLTHROUGH
-# if __GNUC__ < 7
-#  define FALLTHROUGH ((void) 0)
-# else
-#  define FALLTHROUGH __attribute__ ((__fallthrough__))
-# endif
-#endif

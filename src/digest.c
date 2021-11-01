@@ -603,7 +603,8 @@ filename_unescape (char *s, size_t s_len)
 
 /* Return true if S is a NUL-terminated string of DIGEST_HEX_BYTES hex digits.
    Otherwise, return false.  */
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 hex_digits (unsigned char const *s)
 {
   for (unsigned int i = 0; i < digest_hex_bytes; i++)

@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "attribute.h"
 #include "count-leading-zeros.h"
 #include "hash.h"
 #include "verify.h"
@@ -32,7 +33,7 @@
 
 /* Return the floor of the log base 2 of N.  If N is zero, return -1.  */
 
-static int _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST static int
 floor_lg (size_t n)
 {
   verify (SIZE_WIDTH <= ULLONG_WIDTH);

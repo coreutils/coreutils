@@ -535,7 +535,8 @@ maybe_close_stdout (void)
 
 /* Like the 'error' function but handle any pending newline.  */
 
-static void _GL_ATTRIBUTE_FORMAT ((__printf__, 3, 4))
+ATTRIBUTE_FORMAT ((__printf__, 3, 4))
+static void
 nl_error (int status, int errnum, char const *fmt, ...)
 {
   if (0 < progress_len)
@@ -1390,7 +1391,8 @@ iftruncate (int fd, off_t length)
 
 /* Return true if STR is of the form "PATTERN" or "PATTERNDELIM...".  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 operand_matches (char const *str, char const *pattern, char delim)
 {
   while (*pattern)
@@ -1480,7 +1482,8 @@ parse_integer (char const *str, strtol_error *invalid)
 
 /* OPERAND is of the form "X=...".  Return true if X is NAME.  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 operand_is (char const *operand, char const *name)
 {
   return operand_matches (operand, name, '=');

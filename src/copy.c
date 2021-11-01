@@ -648,7 +648,8 @@ lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
    performance hit that's probably noticeable only on trees deeper
    than a few hundred levels.  See use of active_dir_map in remove.c  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 {
   while (ancestors != 0)
@@ -1912,7 +1913,8 @@ create_hard_link (char const *src_name, char const *dst_name,
 /* Return true if the current file should be (tried to be) dereferenced:
    either for DEREF_ALWAYS or for DEREF_COMMAND_LINE_ARGUMENTS in the case
    where the current file is a COMMAND_LINE_ARG; otherwise return false.  */
-static inline bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static inline bool
 should_dereference (const struct cp_options *x, bool command_line_arg)
 {
   return x->dereference == DEREF_ALWAYS
@@ -3057,7 +3059,8 @@ un_backup:
   return false;
 }
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 valid_options (const struct cp_options *co)
 {
   assert (co != NULL);

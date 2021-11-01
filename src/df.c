@@ -654,7 +654,8 @@ get_header (void)
 
 /* Is FSTYPE a type of file system that should be listed?  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 selected_fstype (char const *fstype)
 {
   const struct fs_type_list *fsp;
@@ -669,7 +670,8 @@ selected_fstype (char const *fstype)
 
 /* Is FSTYPE a type of file system that should be omitted?  */
 
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 excluded_fstype (char const *fstype)
 {
   const struct fs_type_list *fsp;
@@ -860,7 +862,8 @@ filter_mount_list (bool devices_only)
 /* Search a mount entry list for device id DEV.
    Return the corresponding mount entry if found or NULL if not.  */
 
-static struct mount_entry const * _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static struct mount_entry const *
 me_for_dev (dev_t dev)
 {
   struct devlist *dl = devlist_for_dev (dev);
@@ -941,7 +944,8 @@ add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
 /* Return true if S ends in a string that may be a 36-byte UUID,
    i.e., of the form HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH, where
    each H is an upper or lower case hexadecimal digit.  */
-static bool _GL_ATTRIBUTE_PURE
+ATTRIBUTE_PURE
+static bool
 has_uuid_suffix (char const *s)
 {
   size_t len = strlen (s);

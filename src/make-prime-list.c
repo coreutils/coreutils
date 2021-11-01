@@ -19,9 +19,11 @@ this program.  If not, see https://www.gnu.org/licenses/.  */
 
 #include <config.h>
 
+#include <attribute.h>
+#include <inttypes.h>
+
 #include <limits.h>
 #include <stdint.h>
-#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -54,7 +56,8 @@ struct prime
   wide_uint lim; /* floor ((wide_uint) -1 / p) */
 };
 
-static wide_uint _GL_ATTRIBUTE_CONST
+ATTRIBUTE_CONST
+static wide_uint
 binvert (wide_uint a)
 {
   wide_uint x = 0xf5397db1 >> (4*((a/2) & 0x7));
@@ -158,7 +161,8 @@ output_primes (const struct prime *primes, unsigned nprimes)
   printf ("#define FIRST_OMITTED_PRIME %u\n", p);
 }
 
-static void * _GL_ATTRIBUTE_MALLOC
+ATTRIBUTE_MALLOC
+static void *
 xalloc (size_t s)
 {
   void *p = malloc (s);
