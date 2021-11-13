@@ -82,62 +82,44 @@ compare /dev/null err4 || fail=1
 # env test - block signal handler
 env --block-signal true || fail=1
 
+env_ignore_delay_()
+{
+  local delay="$1"
+
+  # The first 'env' is just to ensure timeout is not a shell built-in.
+  env timeout --verbose --kill-after=.1 --signal=INT $delay \
+    env $env_opt sleep 10 > /dev/null 2>outt
+  # check only the first two lines from stderr, which are printed by timeout.
+  # (operating systems might add more messages, like "killed").
+  sed -n '1,2p' outt > out || framework_failure_
+  compare exp out
+}
+
 # Baseline test - ignore signal handler
 # -------------------------------------
-# Kill 'sleep' after 1 second with SIGINT - it should terminate (as SIGINT's
-# default action is to terminate a program).
-# (The first 'env' is just to ensure timeout is not the shell's built-in.)
-env timeout --verbose --kill-after=.1 --signal=INT .1 \
-    sleep 10 > /dev/null 2>err5
-
-printf "timeout: sending signal INT to command 'sleep'\n" > exp-err5 \
-    || framework_failure_
-
-compare exp-err5 err5 || fail=1
-
+# Terminate 'sleep' with SIGINT
+# (SIGINT's default action is to terminate a program).
+cat <<\EOF >exp || framework_failure_
+timeout: sending signal INT to command 'env'
+EOF
+env_opt='' retry_delay_ env_ignore_delay_ .1 6 || fail=1
 
 # env test - ignore signal handler
 # --------------------------------
-# Use env to silence (ignore) SIGINT - "seq" should continue running
-# after timeout sends SIGINT, and be killed after 1 second using SIGKILL.
-
-cat>exp-err6 <<EOF
+# Use env to ignore SIGINT - "sleep" should continue running
+# after timeout sends SIGINT, and be killed using SIGKILL.
+cat <<\EOF >exp || framework_failure_
 timeout: sending signal INT to command 'env'
 timeout: sending signal KILL to command 'env'
 EOF
-
-env timeout --verbose --kill-after=.1 --signal=INT .1 \
-    env --ignore-signal=INT \
-    sleep 10 > /dev/null 2>err6t
-
-# check only the first two lines from stderr, which are printed by timeout.
-# (operating systems might add more messages, like "killed").
-sed -n '1,2p' err6t > err6 || framework_failure_
-
-compare exp-err6 err6 || fail=1
-
-
-# env test - ignore signal handler (2)
-# ------------------------------------
-# Repeat the previous test with "--ignore-signals" and no signal names,
-# i.e., all signals.
-
-env timeout --verbose --kill-after=.1 --signal=INT .1 \
-    env --ignore-signal \
-    sleep 10 > /dev/null 2>err7t
-
-# check only the first two lines from stderr, which are printed by timeout.
-# (operating systems might add more messages, like "killed").
-sed -n '1,2p' err7t > err7 || framework_failure_
-
-compare exp-err6 err7 || fail=1
-
+env_opt='--ignore-signal=INT' retry_delay_ env_ignore_delay_ .1 6 || fail=1
+env_opt='--ignore-signal' retry_delay_ env_ignore_delay_ .1 6 || fail=1
 
 # env test --list-signal-handling
 env --default-signal --ignore-signal=INT --list-signal-handling true \
   2> err8t || fail=1
 sed 's/(.*)/()/' err8t > err8 || framework_failure_
-env printf 'INT        (): IGNORE\n' > exp-err8
+env printf 'INT        (): IGNORE\n' > exp-err8 || framework_failure_
 compare exp-err8 err8 || fail=1
 
 
