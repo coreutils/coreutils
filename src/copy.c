@@ -1120,7 +1120,9 @@ infer_scantype (int fd, struct stat const *sb,
    OMITTED_PERMISSIONS after copying as needed.
    X provides many option settings.
    Return true if successful.
-   *NEW_DST is as in copy_internal.
+   *NEW_DST is initially as in copy_internal.
+   If successful, set *NEW_DST to true if the destination file was created and
+   to false otherwise; if unsuccessful, perhaps set *NEW_DST to some value.
    SRC_SB is the result of calling follow_fstatat on SRC_NAME.  */
 
 static bool
@@ -1185,8 +1187,8 @@ copy_reg (char const *src_name, char const *dst_name,
          the existing context according to the system default for the dest.
          Note we set the context here, _after_ the file is opened, lest the
          new context disallow that.  */
-      if ((x->set_security_context || x->preserve_security_context)
-          && 0 <= dest_desc)
+      if (0 <= dest_desc
+          && (x->set_security_context || x->preserve_security_context))
         {
           if (! set_file_security_ctx (dst_name, false, x))
             {
@@ -1198,38 +1200,45 @@ copy_reg (char const *src_name, char const *dst_name,
             }
         }
 
-      if (dest_desc < 0 && x->unlink_dest_after_failed_open)
+      if (dest_desc < 0 && dest_errno != ENOENT
+          && x->unlink_dest_after_failed_open)
         {
-          if (unlink (dst_name) != 0)
+          if (unlink (dst_name) == 0)
+            {
+              if (x->verbose)
+                printf (_("removed %s\n"), quoteaf (dst_name));
+            }
+          else if (errno != ENOENT)
             {
               error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
               return_val = false;
               goto close_src_desc;
             }
-          if (x->verbose)
-            printf (_("removed %s\n"), quoteaf (dst_name));
 
-          /* Tell caller that the destination file was unlinked.  */
-          *new_dst = true;
+          dest_errno = ENOENT;
+        }
 
+      if (dest_desc < 0 && dest_errno == ENOENT)
+        {
           /* Ensure there is no race where a file may be left without
              an appropriate security context.  */
           if (x->set_security_context)
             {
               if (! set_process_security_ctx (src_name, dst_name, dst_mode,
-                                              *new_dst, x))
+                                              true, x))
                 {
                   return_val = false;
                   goto close_src_desc;
                 }
             }
+
+          /* Tell caller that the destination file is created.  */
+          *new_dst = true;
         }
     }
 
   if (*new_dst)
     {
-    open_with_O_CREAT:;
-
       int open_flags = O_WRONLY | O_CREAT | O_BINARY;
       dest_desc = open (dst_name, open_flags | O_EXCL,
                         dst_mode & ~omitted_permissions);
@@ -1280,23 +1289,6 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (dest_desc < 0)
     {
-      /* If we've just failed due to ENOENT for an ostensibly preexisting
-         destination (*new_dst was 0), that's a bit of a contradiction/race:
-         the prior stat/lstat said the file existed (*new_dst was 0), yet
-         the subsequent open-existing-file failed with ENOENT.  With NFS,
-         the race window is wider still, since its meta-data caching tends
-         to make the stat succeed for a just-removed remote file, while the
-         more-definitive initial open call will fail with ENOENT.  When this
-         situation arises, we attempt to open again, but this time with
-         O_CREAT.  Do this only when not in move-mode, since when handling
-         a cross-device move, we must never open an existing destination.  */
-      if (dest_errno == ENOENT && ! *new_dst && ! x->move_mode)
-        {
-          *new_dst = 1;
-          goto open_with_O_CREAT;
-        }
-
-      /* Otherwise, it's an error.  */
       error (0, dest_errno, _("cannot create regular file %s"),
              quoteaf (dst_name));
       return_val = false;
