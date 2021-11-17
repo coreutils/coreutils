@@ -313,10 +313,9 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
     while (max_n_read)
       {
         /* Copy at most COPY_MAX bytes at a time; this is min
-           (PTRDIFF_MAX, SIZE_MAX) truncated to a value that is
+           (SSIZE_MAX, SIZE_MAX) truncated to a value that is
            surely aligned well.  */
-        ssize_t ssize_max = TYPE_MAXIMUM (ssize_t);
-        ptrdiff_t copy_max = MIN (ssize_max, SIZE_MAX) >> 30 << 30;
+        ssize_t copy_max = MIN (SSIZE_MAX, SIZE_MAX) >> 30 << 30;
         ssize_t n_copied = copy_file_range (src_fd, NULL, dest_fd, NULL,
                                             MIN (max_n_read, copy_max), 0);
         if (n_copied == 0)
