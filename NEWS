@@ -8,6 +8,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   All files would be processed correctly, but the exit status was incorrect.
   [bug introduced in coreutils-9.0]
 
+  On macOS, 'cp A B' no longer miscopies when A is in an APFS file system
+  and B is in some other file system.
+  [bug introduced in coreutils-9.0]
+
 ** Changes in behavior
 
   timeout --foreground --kill-after=... will now exit with status 137
