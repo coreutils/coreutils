@@ -1174,7 +1174,7 @@ copy_reg (char const *src_name, char const *dst_name,
   if (! *new_dst)
     {
       int open_flags =
-        O_WRONLY | O_BINARY | (x->data_copy_required ? O_TRUNC : 0);
+        O_WRONLY | O_BINARY | (data_copy_required ? O_TRUNC : 0);
       dest_desc = open (dst_name, open_flags);
       dest_errno = errno;
 
