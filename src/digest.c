@@ -167,8 +167,8 @@
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, bool args _GL_UNUSED,
-             uintmax_t length _GL_UNUSED);
+             bool tagged, unsigned char delim, bool args,
+             uintmax_t length);
 #endif
 
 /* True if any of the files read were the standard input. */
@@ -902,7 +902,7 @@ print_filename (char const *file, bool escape)
 
 static bool
 digest_file (char const *filename, int *binary, unsigned char *bin_result,
-             bool *missing, uintmax_t* length _GL_UNUSED)
+             bool *missing, MAYBE_UNUSED uintmax_t *length)
 {
   FILE *fp;
   int err;
@@ -968,8 +968,8 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, bool args _GL_UNUSED,
-             uintmax_t length _GL_UNUSED)
+             bool tagged, unsigned char delim, MAYBE_UNUSED bool args,
+             MAYBE_UNUSED uintmax_t length)
 {
   unsigned char const *bin_buffer = digest;
 

@@ -67,7 +67,7 @@ static struct option const long_opts[] =
 #if ! HAVE_SETGROUPS
 /* At least Interix lacks supplemental group support.  */
 static int
-setgroups (size_t size, gid_t const *list _GL_UNUSED)
+setgroups (size_t size, MAYBE_UNUSED gid_t const *list)
 {
   if (size == 0)
     {

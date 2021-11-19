@@ -285,7 +285,7 @@ record_relation (struct item *j, struct item *k)
 }
 
 static bool
-count_items (struct item *unused _GL_UNUSED)
+count_items (MAYBE_UNUSED struct item *unused)
 {
   n_strings++;
   return false;

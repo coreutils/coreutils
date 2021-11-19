@@ -184,8 +184,8 @@ cleanup_buffer:
 
 void
 output_bsd (char const *file, int binary_file, void const *digest,
-            bool tagged, unsigned char delim, bool args _GL_UNUSED,
-            uintmax_t length _GL_UNUSED)
+            bool tagged, unsigned char delim, bool args,
+            uintmax_t length)
 {
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -201,8 +201,8 @@ output_bsd (char const *file, int binary_file, void const *digest,
 
 void
 output_sysv (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, bool args _GL_UNUSED,
-             uintmax_t length _GL_UNUSED)
+             bool tagged, unsigned char delim, bool args,
+             uintmax_t length)
 {
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];

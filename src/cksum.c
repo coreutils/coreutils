@@ -286,8 +286,7 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
 
 void
 output_crc (char const *file, int binary_file, void const *digest,
-            bool tagged, unsigned char delim, bool args _GL_UNUSED,
-            uintmax_t length _GL_UNUSED)
+            bool tagged, unsigned char delim, bool args, uintmax_t length)
 {
   char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
   printf ("%u %s", *(unsigned int *)digest, umaxtostr (length, length_buf));

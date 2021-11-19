@@ -427,10 +427,10 @@ Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 
 /* Define the print functions.  */
 
-#define PRINT_FIELDS(N, T, FMT_STRING, ACTION)                          \
+#define PRINT_FIELDS(N, T, FMT_STRING_DECL, ACTION)                     \
 static void                                                             \
 N (size_t fields, size_t blank, void const *block,                      \
-   char const *FMT_STRING, int width, int pad)                          \
+   FMT_STRING_DECL, int width, int pad)                                 \
 {                                                                       \
   T const *p = block;                                                   \
   uintmax_t i;                                                          \
@@ -460,10 +460,11 @@ N (size_t fields, size_t blank, void const *block,                      \
 }
 
 #define PRINT_TYPE(N, T)                                                \
-  PRINT_FIELDS (N, T, fmt_string, xprintf (fmt_string, adjusted_width, x))
+  PRINT_FIELDS (N, T, char const *fmt_string,                           \
+                xprintf (fmt_string, adjusted_width, x))
 
 #define PRINT_FLOATTYPE(N, T, FTOASTR, BUFSIZE)                         \
-  PRINT_FIELDS (N, T, fmt_string _GL_UNUSED,                      \
+  PRINT_FIELDS (N, T, MAYBE_UNUSED char const *fmt_string,              \
                 char buf[BUFSIZE];                                      \
                 FTOASTR (buf, sizeof buf, 0, 0, x);                     \
                 xprintf ("%*s", adjusted_width, buf))
@@ -498,7 +499,7 @@ dump_hexl_mode_trailer (size_t n_bytes, char const *block)
 
 static void
 print_named_ascii (size_t fields, size_t blank, void const *block,
-                   char const *unused_fmt_string _GL_UNUSED,
+                   MAYBE_UNUSED char const *unused_fmt_string,
                    int width, int pad)
 {
   unsigned char const *p = block;
@@ -529,7 +530,7 @@ print_named_ascii (size_t fields, size_t blank, void const *block,
 
 static void
 print_ascii (size_t fields, size_t blank, void const *block,
-             char const *unused_fmt_string _GL_UNUSED, int width,
+             MAYBE_UNUSED char const *unused_fmt_string, int width,
              int pad)
 {
   unsigned char const *p = block;
@@ -1112,8 +1113,8 @@ skip (uintmax_t n_skip)
 }
 
 static void
-format_address_none (uintmax_t address _GL_UNUSED,
-                     char c _GL_UNUSED)
+format_address_none (MAYBE_UNUSED uintmax_t address,
+                     MAYBE_UNUSED char c)
 {
 }
 

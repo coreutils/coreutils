@@ -860,7 +860,7 @@ out_file_context (char *pformat, size_t prefix_len, char const *filename)
 /* Print statfs info.  Return zero upon success, nonzero upon failure.  */
 NODISCARD
 static bool
-print_statfs (char *pformat, size_t prefix_len, char mod _GL_UNUSED, char m,
+print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
               int fd, char const *filename,
               void const *data)
 {

@@ -1274,7 +1274,7 @@ main (int argc, char **argv)
   int argi = 0;
   int opti = 1;
   bool require_set_attr;
-  bool speed_was_set _GL_UNUSED;
+  MAYBE_UNUSED bool speed_was_set;
   bool verbose_output;
   bool recoverable_output;
   bool noargs = true;

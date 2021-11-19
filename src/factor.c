@@ -776,7 +776,8 @@ factor_using_division (uintmax_t *t1p, uintmax_t t1, uintmax_t t0,
     {
       for (;;)
         {
-          uintmax_t q1, q0, hi, lo _GL_UNUSED;
+          uintmax_t q1, q0, hi;
+          MAYBE_UNUSED uintmax_t lo;
 
           q0 = t0 * primes_dtab[i].binv;
           umul_ppmm (hi, lo, q0, p);
@@ -916,7 +917,8 @@ static const unsigned char  binvert_table[128] =
     _q0 = (u0) * _di;                                                   \
     if ((u1) >= (d))                                                    \
       {                                                                 \
-        uintmax_t _p1, _p0 _GL_UNUSED;					\
+        uintmax_t _p1;                                                  \
+        MAYBE_UNUSED intmax_t _p0;                                      \
         umul_ppmm (_p1, _p0, _q0, d);                                   \
         (q1) = ((u1) - _p1) * _di;                                      \
         (q0) = _q0;                                                     \
@@ -931,7 +933,7 @@ static const unsigned char  binvert_table[128] =
 /* x B (mod n).  */
 #define redcify(r_prim, r, n)                                           \
   do {                                                                  \
-    uintmax_t _redcify_q _GL_UNUSED;					\
+    MAYBE_UNUSED uintmax_t _redcify_q;					\
     udiv_qrnnd (_redcify_q, r_prim, r, 0, n);                           \
   } while (0)
 
@@ -964,7 +966,8 @@ static const unsigned char  binvert_table[128] =
 static inline uintmax_t
 mulredc (uintmax_t a, uintmax_t b, uintmax_t m, uintmax_t mi)
 {
-  uintmax_t rh, rl, q, th, tl _GL_UNUSED, xh;
+  uintmax_t rh, rl, q, th, xh;
+  MAYBE_UNUSED uintmax_t tl;
 
   umul_ppmm (rh, rl, a, b);
   q = rl * mi;
@@ -984,7 +987,8 @@ mulredc2 (uintmax_t *r1p,
           uintmax_t a1, uintmax_t a0, uintmax_t b1, uintmax_t b0,
           uintmax_t m1, uintmax_t m0, uintmax_t mi)
 {
-  uintmax_t r1, r0, q, p1, p0 _GL_UNUSED, t1, t0, s1, s0;
+  uintmax_t r1, r0, q, p1, t1, t0, s1, s0;
+  MAYBE_UNUSED uintmax_t p0;
   mi = -mi;
   assert ((a1 >> (W_TYPE_SIZE - 1)) == 0);
   assert ((b1 >> (W_TYPE_SIZE - 1)) == 0);
@@ -1254,7 +1258,7 @@ prime_p (uintmax_t n)
           a_prim = s0 % n;
         else
           {
-            uintmax_t dummy _GL_UNUSED;
+            MAYBE_UNUSED uintmax_t dummy;
             udiv_qrnnd (dummy, a_prim, s1, s0, n);
           }
       }
@@ -1802,7 +1806,7 @@ isqrt2 (uintmax_t nh, uintmax_t nl)
   /* Do we need more than one iteration?  */
   for (;;)
     {
-      uintmax_t r _GL_UNUSED;
+      MAYBE_UNUSED uintmax_t r;
       uintmax_t q, y;
       udiv_qrnnd (q, r, nh, nl, x);
       y = (x + q) / 2;

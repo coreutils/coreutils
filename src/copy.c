@@ -669,7 +669,7 @@ errno_unsupported (int err)
 #if USE_XATTR
 ATTRIBUTE_FORMAT ((printf, 2, 3))
 static void
-copy_attr_error (struct error_context *ctx _GL_UNUSED,
+copy_attr_error (MAYBE_UNUSED struct error_context *ctx,
                  char const *fmt, ...)
 {
   if (!errno_unsupported (errno))
@@ -686,7 +686,7 @@ copy_attr_error (struct error_context *ctx _GL_UNUSED,
 
 ATTRIBUTE_FORMAT ((printf, 2, 3))
 static void
-copy_attr_allerror (struct error_context *ctx _GL_UNUSED,
+copy_attr_allerror (MAYBE_UNUSED struct error_context *ctx,
                     char const *fmt, ...)
 {
   int err = errno;
@@ -699,14 +699,14 @@ copy_attr_allerror (struct error_context *ctx _GL_UNUSED,
 }
 
 static char const *
-copy_attr_quote (struct error_context *ctx _GL_UNUSED, char const *str)
+copy_attr_quote (MAYBE_UNUSED struct error_context *ctx, char const *str)
 {
   return quoteaf (str);
 }
 
 static void
-copy_attr_free (struct error_context *ctx _GL_UNUSED,
-                char const *str _GL_UNUSED)
+copy_attr_free (MAYBE_UNUSED struct error_context *ctx,
+                MAYBE_UNUSED char const *str)
 {
 }
 
@@ -759,11 +759,11 @@ copy_attr (char const *src_path, int src_fd,
 #else /* USE_XATTR */
 
 static bool
-copy_attr (char const *src_path _GL_UNUSED,
-           int src_fd _GL_UNUSED,
-           char const *dst_path _GL_UNUSED,
-           int dst_fd _GL_UNUSED,
-           struct cp_options const *x _GL_UNUSED)
+copy_attr (MAYBE_UNUSED char const *src_path,
+           MAYBE_UNUSED int src_fd,
+           MAYBE_UNUSED char const *dst_path,
+           MAYBE_UNUSED int dst_fd,
+           MAYBE_UNUSED struct cp_options const *x)
 {
   return true;
 }
