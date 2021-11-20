@@ -66,6 +66,10 @@
 #include "xstrtol.h"
 #include "selinux.h"
 
+#ifndef USE_XATTR
+# define USE_XATTR false
+#endif
+
 #if USE_XATTR
 # include <attr/error_context.h>
 # include <attr/libattr.h>
@@ -1138,11 +1142,13 @@ copy_reg (char const *src_name, char const *dst_name,
   int dest_errno;
   int source_desc;
   mode_t src_mode = src_sb->st_mode;
+  mode_t extra_permissions;
   struct stat sb;
   struct stat src_open_sb;
   union scan_inference scan_inference;
   bool return_val = true;
   bool data_copy_required = x->data_copy_required;
+  bool preserve_xattr = USE_XATTR & x->preserve_xattr;
 
   source_desc = open (src_name,
                       (O_RDONLY | O_BINARY
@@ -1239,9 +1245,16 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (*new_dst)
     {
+      /* To allow copying xattrs on read-only files, create with u+w.
+         This satisfies an inode permission check done by
+         xattr_permission in fs/xattr.c of the GNU/Linux kernel.  */
+      mode_t open_mode =
+        ((dst_mode & ~omitted_permissions)
+         | (preserve_xattr && !x->owner_privileges ? S_IWUSR : 0));
+      extra_permissions = open_mode & ~dst_mode; /* either 0 or S_IWUSR */
+
       int open_flags = O_WRONLY | O_CREAT | O_BINARY;
-      dest_desc = open (dst_name, open_flags | O_EXCL,
-                        dst_mode & ~omitted_permissions);
+      dest_desc = open (dst_name, open_flags | O_EXCL, open_mode);
       dest_errno = errno;
 
       /* When trying to copy through a dangling destination symlink,
@@ -1262,8 +1275,7 @@ copy_reg (char const *src_name, char const *dst_name,
             {
               if (x->open_dangling_dest_symlink)
                 {
-                  dest_desc = open (dst_name, open_flags,
-                                    dst_mode & ~omitted_permissions);
+                  dest_desc = open (dst_name, open_flags, open_mode);
                   dest_errno = errno;
                 }
               else
@@ -1284,7 +1296,7 @@ copy_reg (char const *src_name, char const *dst_name,
     }
   else
     {
-      omitted_permissions = 0;
+      omitted_permissions = extra_permissions = 0;
     }
 
   if (dest_desc < 0)
@@ -1301,6 +1313,14 @@ copy_reg (char const *src_name, char const *dst_name,
       return_val = false;
       goto close_src_and_dst_desc;
     }
+
+  /* If extra permissions needed for copy_xattr didn't happen (e.g.,
+     due to umask) chmod to add them temporarily; if that fails give
+     up with extra permissions, letting copy_attr fail later.  */
+  mode_t temporary_mode = sb.st_mode | extra_permissions;
+  if (temporary_mode != sb.st_mode
+      && fchmod_or_lchmod (dest_desc, dst_name, temporary_mode) != 0)
+    extra_permissions = 0;
 
   /* --attributes-only overrides --reflink.  */
   if (data_copy_required && x->reflink_mode)
@@ -1433,25 +1453,11 @@ copy_reg (char const *src_name, char const *dst_name,
         }
     }
 
-  /* To allow copying xattrs on read-only files, temporarily chmod u+rw.
-     This workaround is required as an inode permission check is done
-     by xattr_permission() in fs/xattr.c of the GNU/Linux kernel tree.  */
-  if (x->preserve_xattr)
+  if (preserve_xattr)
     {
-      bool access_changed = false;
-
-      if (!(sb.st_mode & S_IWUSR) && geteuid () != ROOT_UID)
-        {
-          access_changed = fchmod_or_lchmod (dest_desc, dst_name,
-                                             S_IRUSR | S_IWUSR) == 0;
-        }
-
       if (!copy_attr (src_name, source_desc, dst_name, dest_desc, x)
           && x->require_preserve_xattr)
         return_val = false;
-
-      if (access_changed)
-        fchmod_or_lchmod (dest_desc, dst_name, dst_mode & ~omitted_permissions);
     }
 
   set_author (dst_name, dest_desc, src_sb);
@@ -1472,11 +1478,13 @@ copy_reg (char const *src_name, char const *dst_name,
       if (set_acl (dst_name, dest_desc, MODE_RW_UGO & ~cached_umask ()) != 0)
         return_val = false;
     }
-  else if (omitted_permissions)
+  else if (omitted_permissions | extra_permissions)
     {
       omitted_permissions &= ~ cached_umask ();
-      if (omitted_permissions
-          && fchmod_or_lchmod (dest_desc, dst_name, dst_mode) != 0)
+      if ((omitted_permissions | extra_permissions)
+          && (fchmod_or_lchmod (dest_desc, dst_name,
+                                dst_mode & ~ cached_umask ())
+              != 0))
         {
           error (0, errno, _("preserving permissions for %s"),
                  quoteaf (dst_name));
