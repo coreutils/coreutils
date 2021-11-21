@@ -90,6 +90,10 @@
 # define FICLONE _IOW (0x94, 9, int)
 #endif
 
+#if HAVE_FCLONEFILEAT && !USE_XATTR
+# include <sys/clonefile.h>
+#endif
+
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
@@ -1245,6 +1249,14 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (*new_dst)
     {
+#if HAVE_FCLONEFILEAT && !USE_XATTR
+      int clone_flags = x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY;
+      if (data_copy_required && x->reflink_mode
+          && x->preserve_mode && x->preserve_timestamps
+          && fclonefileat (source_desc, AT_FDCWD, dst_name, clone_flags) == 0)
+        goto close_src_desc;
+#endif
+
       /* To allow copying xattrs on read-only files, create with u+w.
          This satisfies an inode permission check done by
          xattr_permission in fs/xattr.c of the GNU/Linux kernel.  */

@@ -320,6 +320,9 @@ if test $utils_cv_localtime_cache = yes; then
   AC_DEFINE([LOCALTIME_CACHE], [1], [FIXME])
 fi
 
+# macOS >= 10.12
+AC_CHECK_FUNCS([fclonefileat])
+
 # Assume that if getattrat exists, it's compatible with Solaris 11.
 AC_CHECK_FUNCS([getattrat])
 if test $ac_cv_func_getattrat = yes; then
