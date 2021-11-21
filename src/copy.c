@@ -1093,7 +1093,7 @@ union scan_inference
 };
 
 /* Return how to scan a file with descriptor FD and stat buffer SB.
-   Store any information gathered into *SCAN.  */
+   Store any information gathered into *SCAN_INFERENCE.  */
 static enum scantype
 infer_scantype (int fd, struct stat const *sb,
                 union scan_inference *scan_inference)
@@ -1307,7 +1307,23 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_desc;
     }
 
-  if (fstat (dest_desc, &sb) != 0)
+  /* --attributes-only overrides --reflink.  */
+  if (data_copy_required && x->reflink_mode)
+    {
+      if (clone_file (dest_desc, source_desc) == 0)
+        data_copy_required = false;
+      else if (x->reflink_mode == REFLINK_ALWAYS)
+        {
+          error (0, errno, _("failed to clone %s from %s"),
+                 quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+          return_val = false;
+          goto close_src_and_dst_desc;
+        }
+    }
+
+  if (! (data_copy_required | x->preserve_ownership | extra_permissions))
+    sb.st_mode = 0;
+  else if (fstat (dest_desc, &sb) != 0)
     {
       error (0, errno, _("cannot fstat %s"), quoteaf (dst_name));
       return_val = false;
@@ -1321,23 +1337,6 @@ copy_reg (char const *src_name, char const *dst_name,
   if (temporary_mode != sb.st_mode
       && fchmod_or_lchmod (dest_desc, dst_name, temporary_mode) != 0)
     extra_permissions = 0;
-
-  /* --attributes-only overrides --reflink.  */
-  if (data_copy_required && x->reflink_mode)
-    {
-      bool clone_ok = clone_file (dest_desc, source_desc) == 0;
-      if (clone_ok || x->reflink_mode == REFLINK_ALWAYS)
-        {
-          if (!clone_ok)
-            {
-              error (0, errno, _("failed to clone %s from %s"),
-                     quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
-              return_val = false;
-              goto close_src_and_dst_desc;
-            }
-          data_copy_required = false;
-        }
-    }
 
   if (data_copy_required)
     {
