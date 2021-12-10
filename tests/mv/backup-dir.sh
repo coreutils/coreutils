@@ -31,4 +31,9 @@ EOF
 
 compare exp out || fail=1
 
+# Bug#52410
+mkdir C D E || framework_failure_
+mv -T --backup=numbered C E/ || fail=1
+mv -T --backup=numbered D E/ || fail=1
+
 Exit $fail
