@@ -1137,7 +1137,7 @@ millerrabin (uintmax_t n, uintmax_t ni, uintmax_t b, uintmax_t q,
   return false;
 }
 
-static bool
+ATTRIBUTE_PURE static bool
 millerrabin2 (const uintmax_t *np, uintmax_t ni, const uintmax_t *bp,
               const uintmax_t *qp, unsigned int k, const uintmax_t *one)
 {
