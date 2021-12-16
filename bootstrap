@@ -313,6 +313,116 @@ find_tool ()
   eval "export $find_tool_envvar"
 }
 
+# Strip blank and comment lines to leave significant entries.
+gitignore_entries() {
+  sed '/^#/d; /^$/d' "$@"
+}
+
+# If $STR is not already on a line by itself in $FILE, insert it at the start.
+# Entries are inserted at the start of the ignore list to ensure existing
+# entries starting with ! are not overridden.  Such entries support
+# whitelisting exceptions after a more generic blacklist pattern.
+insert_if_absent() {
+  file=$1
+  str=$2
+  test -f $file || touch $file
+  test -r $file || die "Error: failed to read ignore file: $file"
+  duplicate_entries=$(gitignore_entries $file | sort | uniq -d)
+  if [ "$duplicate_entries" ] ; then
+    die "Error: Duplicate entries in $file: " $duplicate_entries
+  fi
+  linesold=$(gitignore_entries $file | wc -l)
+  linesnew=$( { echo "$str"; cat $file; } | gitignore_entries | sort -u | wc -l)
+  if [ $linesold != $linesnew ] ; then
+    { echo "$str" | cat - $file > $file.bak && mv $file.bak $file; } \
+      || die "insert_if_absent $file $str: failed"
+  fi
+}
+
+# Adjust $PATTERN for $VC_IGNORE_FILE and insert it with
+# insert_if_absent.
+insert_vc_ignore() {
+  vc_ignore_file="$1"
+  pattern="$2"
+  case $vc_ignore_file in
+  *.gitignore)
+    # A .gitignore entry that does not start with '/' applies
+    # recursively to subdirectories, so prepend '/' to every
+    # .gitignore entry.
+    pattern=$(echo "$pattern" | sed s,^,/,);;
+  esac
+  insert_if_absent "$vc_ignore_file" "$pattern"
+}
+
+symlink_to_dir()
+{
+  src=$1/$2
+  dst=${3-$2}
+
+  test -f "$src" && {
+
+    # If the destination directory doesn't exist, create it.
+    # This is required at least for "lib/uniwidth/cjk.h".
+    dst_dir=$(dirname "$dst")
+    if ! test -d "$dst_dir"; then
+      mkdir -p "$dst_dir"
+
+      # If we've just created a directory like lib/uniwidth,
+      # tell version control system(s) it's ignorable.
+      # FIXME: for now, this does only one level
+      parent=$(dirname "$dst_dir")
+      for dot_ig in x $vc_ignore; do
+        test $dot_ig = x && continue
+        ig=$parent/$dot_ig
+        insert_vc_ignore $ig "${dst_dir##*/}"
+      done
+    fi
+
+    if $copy; then
+      {
+        test ! -h "$dst" || {
+          echo "$me: rm -f $dst" &&
+          rm -f "$dst"
+        }
+      } &&
+      test -f "$dst" &&
+      cmp -s "$src" "$dst" || {
+        echo "$me: cp -fp $src $dst" &&
+        cp -fp "$src" "$dst"
+      }
+    else
+      # Leave any existing symlink alone, if it already points to the source,
+      # so that broken build tools that care about symlink times
+      # aren't confused into doing unnecessary builds.  Conversely, if the
+      # existing symlink's timestamp is older than the source, make it afresh,
+      # so that broken tools aren't confused into skipping needed builds.  See
+      # <https://lists.gnu.org/r/bug-gnulib/2011-05/msg00326.html>.
+      test -h "$dst" &&
+      src_ls=$(ls -diL "$src" 2>/dev/null) && set $src_ls && src_i=$1 &&
+      dst_ls=$(ls -diL "$dst" 2>/dev/null) && set $dst_ls && dst_i=$1 &&
+      test "$src_i" = "$dst_i" &&
+      both_ls=$(ls -dt "$src" "$dst") &&
+      test "X$both_ls" = "X$dst$nl$src" || {
+        dot_dots=
+        case $src in
+        /*) ;;
+        *)
+          case /$dst/ in
+          *//* | */../* | */./* | /*/*/*/*/*/)
+             die "invalid symlink calculation: $src -> $dst";;
+          /*/*/*/*/)    dot_dots=../../../;;
+          /*/*/*/)      dot_dots=../../;;
+          /*/*/)        dot_dots=../;;
+          esac;;
+        esac
+
+        echo "$me: ln -fs $dot_dots$src $dst" &&
+        ln -fs "$dot_dots$src" "$dst"
+      }
+    fi
+  }
+}
+
 # Override the default configuration, if necessary.
 # Make sure that bootstrap.conf is sourced from the current directory
 # if we were invoked as "sh bootstrap".
@@ -374,47 +484,6 @@ $use_git || test -d "$GNULIB_SRCDIR" \
 if test -n "$checkout_only_file" && test ! -r "$checkout_only_file"; then
   die "Bootstrapping from a non-checked-out distribution is risky."
 fi
-
-# Strip blank and comment lines to leave significant entries.
-gitignore_entries() {
-  sed '/^#/d; /^$/d' "$@"
-}
-
-# If $STR is not already on a line by itself in $FILE, insert it at the start.
-# Entries are inserted at the start of the ignore list to ensure existing
-# entries starting with ! are not overridden.  Such entries support
-# whitelisting exceptions after a more generic blacklist pattern.
-insert_if_absent() {
-  file=$1
-  str=$2
-  test -f $file || touch $file
-  test -r $file || die "Error: failed to read ignore file: $file"
-  duplicate_entries=$(gitignore_entries $file | sort | uniq -d)
-  if [ "$duplicate_entries" ] ; then
-    die "Error: Duplicate entries in $file: " $duplicate_entries
-  fi
-  linesold=$(gitignore_entries $file | wc -l)
-  linesnew=$( { echo "$str"; cat $file; } | gitignore_entries | sort -u | wc -l)
-  if [ $linesold != $linesnew ] ; then
-    { echo "$str" | cat - $file > $file.bak && mv $file.bak $file; } \
-      || die "insert_if_absent $file $str: failed"
-  fi
-}
-
-# Adjust $PATTERN for $VC_IGNORE_FILE and insert it with
-# insert_if_absent.
-insert_vc_ignore() {
-  vc_ignore_file="$1"
-  pattern="$2"
-  case $vc_ignore_file in
-  *.gitignore)
-    # A .gitignore entry that does not start with '/' applies
-    # recursively to subdirectories, so prepend '/' to every
-    # .gitignore entry.
-    pattern=$(echo "$pattern" | sed s,^,/,);;
-  esac
-  insert_if_absent "$vc_ignore_file" "$pattern"
-}
 
 # Die if there is no AC_CONFIG_AUX_DIR($build_aux) line in configure.ac.
 found_aux_dir=no
@@ -812,75 +881,6 @@ case $SKIP_PO in
     update_po_files runtime-po $package-runtime || exit
   fi;;
 esac
-
-symlink_to_dir()
-{
-  src=$1/$2
-  dst=${3-$2}
-
-  test -f "$src" && {
-
-    # If the destination directory doesn't exist, create it.
-    # This is required at least for "lib/uniwidth/cjk.h".
-    dst_dir=$(dirname "$dst")
-    if ! test -d "$dst_dir"; then
-      mkdir -p "$dst_dir"
-
-      # If we've just created a directory like lib/uniwidth,
-      # tell version control system(s) it's ignorable.
-      # FIXME: for now, this does only one level
-      parent=$(dirname "$dst_dir")
-      for dot_ig in x $vc_ignore; do
-        test $dot_ig = x && continue
-        ig=$parent/$dot_ig
-        insert_vc_ignore $ig "${dst_dir##*/}"
-      done
-    fi
-
-    if $copy; then
-      {
-        test ! -h "$dst" || {
-          echo "$me: rm -f $dst" &&
-          rm -f "$dst"
-        }
-      } &&
-      test -f "$dst" &&
-      cmp -s "$src" "$dst" || {
-        echo "$me: cp -fp $src $dst" &&
-        cp -fp "$src" "$dst"
-      }
-    else
-      # Leave any existing symlink alone, if it already points to the source,
-      # so that broken build tools that care about symlink times
-      # aren't confused into doing unnecessary builds.  Conversely, if the
-      # existing symlink's timestamp is older than the source, make it afresh,
-      # so that broken tools aren't confused into skipping needed builds.  See
-      # <https://lists.gnu.org/r/bug-gnulib/2011-05/msg00326.html>.
-      test -h "$dst" &&
-      src_ls=$(ls -diL "$src" 2>/dev/null) && set $src_ls && src_i=$1 &&
-      dst_ls=$(ls -diL "$dst" 2>/dev/null) && set $dst_ls && dst_i=$1 &&
-      test "$src_i" = "$dst_i" &&
-      both_ls=$(ls -dt "$src" "$dst") &&
-      test "X$both_ls" = "X$dst$nl$src" || {
-        dot_dots=
-        case $src in
-        /*) ;;
-        *)
-          case /$dst/ in
-          *//* | */../* | */./* | /*/*/*/*/*/)
-             die "invalid symlink calculation: $src -> $dst";;
-          /*/*/*/*/)    dot_dots=../../../;;
-          /*/*/*/)      dot_dots=../../;;
-          /*/*/)        dot_dots=../;;
-          esac;;
-        esac
-
-        echo "$me: ln -fs $dot_dots$src $dst" &&
-        ln -fs "$dot_dots$src" "$dst"
-      }
-    fi
-  }
-}
 
 version_controlled_file() {
   parent=$1
