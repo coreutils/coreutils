@@ -1104,7 +1104,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
          quote (str));
   *end = '\0';
 
-  if (str+1 == end-1 && *(str+1) == '*')
+  if (str + 1 == end - 1 && *(str + 1) == '*')
     p->repeat_forever = true;
   else
     {

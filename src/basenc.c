@@ -175,13 +175,13 @@ from any other non-alphabet bytes in the encoded stream.\n"),
   exit (status);
 }
 
-#define ENC_BLOCKSIZE (1024*3*10)
+#define ENC_BLOCKSIZE (1024 * 3 * 10)
 
 #if BASE_TYPE == 32
 # define BASE_LENGTH BASE32_LENGTH
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
-# define DEC_BLOCKSIZE (1024*5)
+# define DEC_BLOCKSIZE (1024 * 5)
 
 /* Ensure that BLOCKSIZE is a multiple of 5 and 8.  */
 verify (ENC_BLOCKSIZE % 40 == 0);  /* So padding chars only on last block.  */
@@ -196,7 +196,7 @@ verify (DEC_BLOCKSIZE % 40 == 0);  /* So complete encoded blocks are used.  */
 # define BASE_LENGTH BASE64_LENGTH
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
-# define DEC_BLOCKSIZE (1024*3)
+# define DEC_BLOCKSIZE (1024 * 3)
 
 /* Ensure that BLOCKSIZE is a multiple of 3 and 4.  */
 verify (ENC_BLOCKSIZE % 12 == 0);  /* So padding chars only on last block.  */
@@ -310,7 +310,7 @@ base64url_encode (char const *restrict in, idx_t inlen,
 {
   base64_encode (in, inlen, out, outlen);
   /* translate 62nd and 63rd characters */
-  char* p = out;
+  char *p = out;
   while (outlen--)
     {
       if (*p == '+')
@@ -346,7 +346,7 @@ base64url_decode_ctx_wrapper (struct base_decode_context *ctx,
 
   /* translate 62nd and 63rd characters */
   idx_t i = inlen;
-  char* p = ctx->inbuf;
+  char *p = ctx->inbuf;
   while (i--)
     {
       if (*p == '+' || *p == '/')
@@ -395,7 +395,7 @@ base32_decode_ctx_wrapper (struct base_decode_context *ctx,
 /* ABCDEFGHIJKLMNOPQRSTUVWXYZ234567
      to
    0123456789ABCDEFGHIJKLMNOPQRSTUV */
-static const char base32_norm_to_hex[32+9] = {
+static const char base32_norm_to_hex[32 + 9] = {
 /*0x32, 0x33, 0x34, 0x35, 0x36, 0x37, */
   'Q',  'R',  'S',  'T',  'U',  'V',
 
@@ -417,7 +417,7 @@ static const char base32_norm_to_hex[32+9] = {
 /* 0123456789ABCDEFGHIJKLMNOPQRSTUV
      to
    ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 */
-static const char base32_hex_to_norm[32+9] = {
+static const char base32_hex_to_norm[32 + 9] = {
   /* from: 0x30 .. 0x39 ('0' to '9') */
   /* to:*/ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 
@@ -581,7 +581,7 @@ static int
 z85_length (int len)
 {
   /* Z85 does not allow padding, so no need to round to highest integer.  */
-  int outlen = (len*5)/4;
+  int outlen = (len * 5) / 4;
   return outlen;
 }
 
@@ -1209,7 +1209,7 @@ main (int argc, char **argv)
 
   if (argc - optind > 1)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind+1]));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 

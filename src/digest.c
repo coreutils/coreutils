@@ -209,7 +209,7 @@ static unsigned char digest_delim = '\n';
 static uintmax_t digest_length;
 #endif /* HASH_ALGO_BLAKE2 */
 
-typedef void (*digest_output_fn)(char const*, int, void const*,
+typedef void (*digest_output_fn)(char const *, int, void const *,
                                  bool, unsigned char, bool, uintmax_t);
 #if HASH_ALGO_SUM
 enum Algorithm
@@ -725,7 +725,7 @@ split_3 (char *s, size_t s_len,
 #if HASH_ALGO_CKSUM
   if (! algorithm_specified)
     {
-      ptrdiff_t algo_tag = algorithm_from_tag (s+i);
+      ptrdiff_t algo_tag = algorithm_from_tag (s + i);
       if (algo_tag >= 0)
         {
           if (algo_tag <= crc)
@@ -1270,15 +1270,15 @@ main (int argc, char **argv)
   setvbuf (stdout, NULL, _IOLBF, 0);
 
 #if HASH_ALGO_SUM
-  const char* short_opts = "rs";
+  const char *short_opts = "rs";
 #elif HASH_ALGO_CKSUM
-  const char* short_opts = "a:l:bctwz";
-  const char* digest_length_str = "";
+  const char *short_opts = "a:l:bctwz";
+  const char *digest_length_str = "";
 #elif HASH_ALGO_BLAKE2
-  const char* short_opts = "l:bctwz";
-  const char* digest_length_str = "";
+  const char *short_opts = "l:bctwz";
+  const char *digest_length_str = "";
 #else
-  const char* short_opts = "bctwz";
+  const char *short_opts = "bctwz";
 #endif
 
   while ((opt = getopt_long (argc, argv, short_opts, long_options, NULL)) != -1)

@@ -144,7 +144,7 @@ remove_parents (char *dir)
             }
           else
             {
-              char const* error_msg;
+              char const *error_msg;
               if (rmdir_errno != ENOTDIR)
                 {
                   /* Barring race conditions,
@@ -266,7 +266,7 @@ main (int argc, char **argv)
                       || (ret == 0 && S_ISDIR (st.st_mode)))
                     {
                       /* Ensure the last component was a symlink.  */
-                      char* dir_arg = xstrdup (dir);
+                      char *dir_arg = xstrdup (dir);
                       strip_trailing_slashes (dir);
                       ret = lstat (dir, &st);
                       if (ret == 0 && S_ISLNK (st.st_mode))

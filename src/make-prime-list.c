@@ -60,10 +60,10 @@ ATTRIBUTE_CONST
 static wide_uint
 binvert (wide_uint a)
 {
-  wide_uint x = 0xf5397db1 >> (4*((a/2) & 0x7));
+  wide_uint x = 0xf5397db1 >> (4 * ((a / 2) & 0x7));
   for (;;)
     {
-      wide_uint y = 2*x - x*x*a;
+      wide_uint y = 2 * x - x * x * a;
       if (y == x)
         return x;
       x = y;
@@ -198,7 +198,7 @@ main (int argc, char **argv)
   if ( !(limit & 1))
     limit--;
 
-  size = (limit-1)/2;
+  size = (limit - 1) / 2;
   /* sieve[i] represents 3+2*i */
   sieve = xalloc (size);
   memset (sieve, 1, size);
@@ -208,12 +208,12 @@ main (int argc, char **argv)
 
   for (i = 0; i < size;)
     {
-      unsigned p = 3+2*i;
+      unsigned p = 3 + 2 * i;
       unsigned j;
 
       process_prime (&prime_list[nprimes++], p);
 
-      for (j = (p*p - 3)/2; j < size; j+= p)
+      for (j = (p * p - 3) / 2; j < size; j += p)
         sieve[j] = 0;
 
       while (++i < size && sieve[i] == 0)

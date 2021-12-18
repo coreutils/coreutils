@@ -301,7 +301,7 @@ functional_copy_file_range (void)
    print a diagnostic and return false upon error.
    Note that for best results, BUF should be "well"-aligned.
    BUF must have sizeof(uintptr_t)-1 bytes of additional space
-   beyond BUF[BUF_SIZE-1].
+   beyond BUF[BUF_SIZE - 1].
    Set *LAST_WRITE_MADE_HOLE to true if the final operation on
    DEST_FD introduced a hole.  Set *TOTAL_N_READ to the number of
    bytes read.  */

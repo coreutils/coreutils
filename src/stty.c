@@ -1090,7 +1090,7 @@ apply_settings (bool checking, char const *device_name,
 #define check_argument(arg)						\
   do									\
     {									\
-      if (k == n_settings - 1 || ! settings[k+1])			\
+      if (k == n_settings - 1 || ! settings[k + 1])			\
         {								\
           error (0, 0, _("missing argument to %s"), quote (arg));	\
           usage (EXIT_FAILURE);						\

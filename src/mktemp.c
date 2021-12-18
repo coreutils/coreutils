@@ -107,7 +107,7 @@ static size_t
 count_consecutive_X_s (char const *s, size_t len)
 {
   size_t n = 0;
-  for ( ; len && s[len-1] == 'X'; len--)
+  for ( ; len && s[len - 1] == 'X'; len--)
     ++n;
   return n;
 }

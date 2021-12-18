@@ -84,7 +84,7 @@ static double kill_after;
 static bool foreground;      /* whether to use another program group.  */
 static bool preserve_status; /* whether to use a timeout status or not.  */
 static bool verbose;         /* whether to diagnose timeouts or not.  */
-static char const* command;
+static char const *command;
 
 /* for long options with no corresponding short option, use enum */
 enum

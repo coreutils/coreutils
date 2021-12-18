@@ -3312,7 +3312,7 @@ has_capability_cache (char const *file, struct fileinfo *f)
 }
 
 static bool
-needs_quoting (char const* name)
+needs_quoting (char const *name)
 {
   char test[2];
   size_t len = quotearg_buffer (test, sizeof test , name, -1,
@@ -4809,7 +4809,7 @@ print_name_with_quoting (const struct fileinfo *f,
                          struct obstack *stack,
                          size_t start_col)
 {
-  const char* name = symlink_target ? f->linkname : f->name;
+  const char *name = symlink_target ? f->linkname : f->name;
 
   const struct bin_str *color = print_with_color ?
                                 get_color_indicator (f, symlink_target) : NULL;
@@ -4953,7 +4953,7 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
   struct color_ext_type *ext;	/* Color extension */
   size_t len;			/* Length of name */
 
-  const char* name;
+  const char *name;
   mode_t mode;
   int linkok;
   if (symlink_target)

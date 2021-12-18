@@ -70,7 +70,7 @@
    In the future we could use the above method if available
    and default to io_blksize() if not.
  */
-enum { IO_BUFSIZE = 128*1024 };
+enum { IO_BUFSIZE = 128 * 1024 };
 static inline size_t
 io_blksize (struct stat sb)
 {

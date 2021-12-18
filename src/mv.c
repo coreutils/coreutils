@@ -235,7 +235,7 @@ do_move (char const *source, char const *dest, const struct cp_options *x)
           dir[0] = dir_to_remove;
           dir[1] = NULL;
 
-          status = rm ((void*) dir, &rm_options);
+          status = rm ((void *) dir, &rm_options);
           assert (VALID_STATUS (status));
           if (status == RM_ERROR)
             ok = false;

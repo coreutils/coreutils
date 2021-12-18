@@ -118,7 +118,7 @@ heapify_down (void **array, size_t count, size_t initial,
     {
       size_t child = 2 * parent;
 
-      if (child < count && compare (array[child], array[child+1]) < 0)
+      if (child < count && compare (array[child], array[child + 1]) < 0)
         child++;
 
       if (compare (array[child], element) <= 0)
@@ -141,9 +141,9 @@ heapify_up (void **array, size_t count,
   size_t k = count;
   void *new_element = array[k];
 
-  while (k != 1 && compare (array[k/2], new_element) <= 0)
+  while (k != 1 && compare (array[k / 2], new_element) <= 0)
     {
-      array[k] = array[k/2];
+      array[k] = array[k / 2];
       k /= 2;
     }
 

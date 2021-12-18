@@ -1786,7 +1786,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0},
 };
 
-static char const* const format_args[] =
+static char const *const format_args[] =
 {
   "roff", "tex", NULL
 };

@@ -770,7 +770,7 @@ genpattern (int *dest, size_t num, struct randint_source *s)
         }
     }
   top = num - randpasses;	/* Top of initialized data */
-  /* assert (d == dest+top); */
+  /* assert (d == dest + top); */
 
   /*
    * We now have fixed patterns in the dest buffer up to

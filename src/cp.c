@@ -857,7 +857,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
       PRESERVE_ALL
     };
   /* Valid arguments to the '--preserve' option. */
-  static char const* const preserve_args[] =
+  static char const *const preserve_args[] =
     {
       "mode", "timestamps",
       "ownership", "links", "context", "xattr", "all", NULL

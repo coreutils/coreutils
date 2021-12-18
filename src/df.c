@@ -1028,7 +1028,7 @@ add_to_grand_total (struct field_values_t *bv, struct field_values_t *iv)
    when df is invoked with no non-option argument.  See below for details.  */
 
 static void
-get_dev (char const *device, char const *mount_point, char const* file,
+get_dev (char const *device, char const *mount_point, char const *file,
          char const *stat_file, char const *fstype,
          bool me_dummy, bool me_remote,
          const struct fs_usage *force_fsu,
@@ -1282,7 +1282,7 @@ get_dev (char const *device, char const *mount_point, char const* file,
 /* Scan the mount list returning the _last_ device found for MOUNT.
    NULL is returned if MOUNT not found.  The result is malloced.  */
 static char *
-last_device_for_mount (char const* mount)
+last_device_for_mount (char const *mount)
 {
   struct mount_entry const *me;
   struct mount_entry const *le = NULL;

@@ -4,7 +4,7 @@ bsd_sum_stream (FILE *stream, void *resstream, uintmax_t *length);
 extern int
 sysv_sum_stream (FILE *stream, void *resstream, uintmax_t *length);
 
-typedef int (*sumfn)(FILE *, void *, uintmax_t*);
+typedef int (*sumfn)(FILE *, void *, uintmax_t *);
 
 
 extern void

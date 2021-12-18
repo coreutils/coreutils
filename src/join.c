@@ -398,7 +398,7 @@ check_order (const struct line *prev,
   if (check_input_order != CHECK_ORDER_DISABLED
       && ((check_input_order == CHECK_ORDER_ENABLED) || seen_unpairable))
     {
-      if (!issued_disorder_warning[whatfile-1])
+      if (!issued_disorder_warning[whatfile - 1])
         {
           size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
           if (keycmp (prev, current, join_field, join_field) > 0)
@@ -420,7 +420,7 @@ check_order (const struct line *prev,
 
               /* If we get to here, the message was merely a warning.
                  Arrange to issue it only once per file.  */
-              issued_disorder_warning[whatfile-1] = true;
+              issued_disorder_warning[whatfile - 1] = true;
             }
         }
     }

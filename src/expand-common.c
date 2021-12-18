@@ -275,8 +275,8 @@ finalize_tab_stops (void)
 
 
 extern uintmax_t
-get_next_tab_column (const uintmax_t column, size_t* tab_index,
-                     bool* last_tab)
+get_next_tab_column (const uintmax_t column, size_t *tab_index,
+                     bool *last_tab)
 {
   *last_tab = false;
 

@@ -1115,7 +1115,7 @@ print_esc_char (char c)
 
 ATTRIBUTE_PURE
 static size_t
-format_code_offset (char const* directive)
+format_code_offset (char const *directive)
 {
   size_t len = strspn (directive + 1, printf_flags);
   char const *fmt_char = directive + len + 1;

@@ -48,10 +48,10 @@ __xnumtoint (char const *n_str, int base, __xdectoint_t min, __xdectoint_t max,
           s_err = LONGINT_OVERFLOW;
           /* Use have the INT range as a heuristic to distinguish
              type overflow rather than other min/max limits.  */
-          if (tnum > INT_MAX/2)
+          if (tnum > INT_MAX / 2)
             errno = EOVERFLOW;
 #if __xdectoint_signed
-          else if (tnum < INT_MIN/2)
+          else if (tnum < INT_MIN / 2)
             errno = EOVERFLOW;
 #endif
           else

@@ -693,7 +693,7 @@ main (int argc, char **argv)
           if (step.value == 0)
             {
               error (0, 0, _("invalid Zero increment value: %s"),
-                     quote (argv[optind-1]));
+                     quote (argv[optind - 1]));
               usage (EXIT_FAILURE);
             }
 

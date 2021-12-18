@@ -949,7 +949,7 @@ static const unsigned char  binvert_table[128] =
     else                                                                \
       {                                                                 \
         _r1 = 0; _r0 = (x);                                             \
-        _i = 2*W_TYPE_SIZE;                                             \
+        _i = 2 * W_TYPE_SIZE;                                           \
       }                                                                 \
     while (_i-- > 0)                                                    \
       {                                                                 \
@@ -1775,7 +1775,7 @@ isqrt (uintmax_t n)
 
   for (;;)
     {
-      uintmax_t y = (x + n/x) / 2;
+      uintmax_t y = (x + n / x) / 2;
       if (y >= x)
         return x;
 
@@ -1849,7 +1849,7 @@ is_square (uintmax_t x)
       && ((MAGIC11 >> (x % 11) & 1)))
     {
       uintmax_t r = isqrt (x);
-      if (r*r == x)
+      if (r * r == x)
         return r;
     }
   return 0;
@@ -1897,7 +1897,7 @@ static const unsigned short invtab[0x81] =
             _dinv = invtab[((d) >> (W_TYPE_SIZE - 8 - _cnt)) - 0x7f];   \
             _q = _dinv * (_r >> (W_TYPE_SIZE - 3 - _cnt)) >> 11;        \
           }                                                             \
-        _r -= _q*(d);                                                   \
+        _r -= _q * (d);                                                 \
                                                                         \
         _mask = -(uintmax_t) (_r >= (d));                               \
         (r) = _r - (_mask & (d));                                       \
@@ -1913,11 +1913,11 @@ static const unsigned short invtab[0x81] =
   } while (0)
 
 /* Notes: Example N = 22117019.  After first phase we find Q1 = 6314, Q
-   = 3025, P = 1737, representing F_{18} = (-6314, 2* 1737, 3025),
+   = 3025, P = 1737, representing F_{18} = (-6314, 2 * 1737, 3025),
    with 3025 = 55^2.
 
    Constructing the square root, we get Q1 = 55, Q = 8653, P = 4652,
-   representing G_0 = (-55, 2*4652, 8653).
+   representing G_0 = (-55, 2 * 4652, 8653).
 
    In the notation of the paper:
 
@@ -2011,7 +2011,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                 }
               /* Duplicate the new factors */
               for (unsigned int i = 0; i < f.nfactors; i++)
-                factor_insert_multiplicity (factors, f.p[i], 2*f.e[i]);
+                factor_insert_multiplicity (factors, f.p[i], 2 * f.e[i]);
             }
           return true;
         }
@@ -2040,7 +2040,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
          Requiring 64 mu^3 < n seems sufficient.  */
       if (n1 == 0)
         {
-          if ((uintmax_t) mu*mu*mu >= n0 / 64)
+          if ((uintmax_t) mu * mu * mu >= n0 / 64)
             continue;
         }
       else
@@ -2060,10 +2060,10 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
       P = S;
 
       /* Square root remainder fits in one word, so ignore high part.  */
-      Q = Dl - P*P;
+      Q = Dl - P * P;
       /* FIXME: When can this differ from floor (sqrt (2 * sqrt (D)))?  */
-      L = isqrt (2*S);
-      B = 2*L;
+      L = isqrt (2 * S);
+      B = 2 * L;
       L1 = mu * 2 * L;
 
       /* The form is (+/- Q1, 2P, -/+ Q), of discriminant 4 (P^2 + Q Q1) =
@@ -2073,7 +2073,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
         {
           uintmax_t q, P1, t, rem;
 
-          div_smallq (q, rem, S+P, Q);
+          div_smallq (q, rem, S + P, Q);
           P1 = S - rem; /* P1 = q*Q - P */
 
           IF_LINT (assert (q > 0 && Q > 0));
@@ -2162,7 +2162,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
                          floor([S+P]/\hat Q), but looking at the equations
                          in Sec. 3.1, it should be q <-- floor([S+P] / Q).
                          (In this code, \hat Q is Q1).  */
-                      div_smallq (q, rem, S+P, Q);
+                      div_smallq (q, rem, S + P, Q);
                       P1 = S - rem;     /* P1 = q*Q - P */
 
 # if STAT_SQUFOF

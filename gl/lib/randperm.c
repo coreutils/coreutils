@@ -118,7 +118,7 @@ sparse_new (size_t size_hint)
    index I in array V.  */
 
 static void
-sparse_swap (sparse_map *sv, size_t* v, size_t i, size_t j)
+sparse_swap (sparse_map *sv, size_t *v, size_t i, size_t j)
 {
   struct sparse_ent_ *v1 = hash_remove (sv, &(struct sparse_ent_) {i,0});
   struct sparse_ent_ *v2 = hash_remove (sv, &(struct sparse_ent_) {j,0});

@@ -558,7 +558,7 @@ require_more_args (void)
 {
   if (nomoreargs ())
     die (EXPR_INVALID, 0, _("syntax error: missing argument after %s"),
-         quotearg_n_style (0, locale_quoting_style, *(args-1)));
+         quotearg_n_style (0, locale_quoting_style, *(args - 1)));
 }
 
 
@@ -674,7 +674,7 @@ eval7 (bool evaluate)
       v = eval (evaluate);
       if (nomoreargs ())
         die (EXPR_INVALID, 0, _("syntax error: expecting ')' after %s"),
-             quotearg_n_style (0, locale_quoting_style, *(args-1)));
+             quotearg_n_style (0, locale_quoting_style, *(args - 1)));
       if (!nextarg (")"))
         die (EXPR_INVALID, 0, _("syntax error: expecting ')' instead of %s"),
              quotearg_n_style (0, locale_quoting_style, *args));

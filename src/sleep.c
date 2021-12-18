@@ -125,7 +125,7 @@ main (int argc, char **argv)
           /* Nonnegative interval.  */
           || ! (0 <= s)
           /* No extra chars after the number and an optional s,m,h,d char.  */
-          || (*p && *(p+1))
+          || (*p && *(p + 1))
           /* Check any suffix char and update S based on the suffix.  */
           || ! apply_suffix (&s, *p))
         {

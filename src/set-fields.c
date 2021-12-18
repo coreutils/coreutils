@@ -82,14 +82,14 @@ complement_rp (void)
 
   for (size_t i = 1; i < n; ++i)
     {
-      if (c[i-1].hi + 1 == c[i].lo)
+      if (c[i - 1].hi + 1 == c[i].lo)
         continue;
 
-      add_range_pair (c[i-1].hi + 1, c[i].lo - 1);
+      add_range_pair (c[i - 1].hi + 1, c[i].lo - 1);
     }
 
-  if (c[n-1].hi < UINTMAX_MAX)
-    add_range_pair (c[n-1].hi + 1, UINTMAX_MAX);
+  if (c[n - 1].hi < UINTMAX_MAX)
+    add_range_pair (c[n - 1].hi + 1, UINTMAX_MAX);
 
   free (c);
 }

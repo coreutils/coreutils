@@ -94,7 +94,7 @@ static struct option const longopts[] =
 };
 
 /* Valid arguments to the '--time' option. */
-static char const* const time_args[] =
+static char const *const time_args[] =
 {
   "atime", "access", "use", "mtime", "modify", NULL
 };

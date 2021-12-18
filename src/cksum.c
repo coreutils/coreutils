@@ -192,7 +192,7 @@ pclmul_supported (void)
 static bool
 cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
 {
-  uint32_t buf[BUFLEN/sizeof (uint32_t)];
+  uint32_t buf[BUFLEN / sizeof (uint32_t)];
   uint_fast32_t crc = 0;
   uintmax_t length = 0;
   size_t bytes_read;

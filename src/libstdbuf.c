@@ -32,7 +32,7 @@
    the buffer size, and more problematically does not give any indication
    that the new size request was ignored:
 
-       setvbuf (stdout, (char*)NULL, _IOFBF, 8192);
+       setvbuf (stdout, NULL, _IOFBF, 8192);
 
    The ISO C99 standard section 7.19.5.6 on the setvbuf function says:
 

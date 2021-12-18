@@ -86,7 +86,7 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
       datap = (__m128i *)buf;
 
       /* Fold in parallel eight 16-byte blocks into four 16-byte blocks */
-      if (bytes_read >= 16*8)
+      if (bytes_read >= 16 * 8)
         {
           data = _mm_loadu_si128 (datap);
           data = _mm_shuffle_epi8 (data, shuffle_constant);
@@ -95,15 +95,15 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
           xor_crc = _mm_set_epi32 (crc, 0, 0, 0);
           crc = 0;
           data = _mm_xor_si128 (data, xor_crc);
-          data3 = _mm_loadu_si128 (datap+1);
+          data3 = _mm_loadu_si128 (datap + 1);
           data3 = _mm_shuffle_epi8 (data3, shuffle_constant);
-          data5 = _mm_loadu_si128 (datap+2);
+          data5 = _mm_loadu_si128 (datap + 2);
           data5 = _mm_shuffle_epi8 (data5, shuffle_constant);
-          data7 = _mm_loadu_si128 (datap+3);
+          data7 = _mm_loadu_si128 (datap + 3);
           data7 = _mm_shuffle_epi8 (data7, shuffle_constant);
 
 
-          while (bytes_read >= 16*8)
+          while (bytes_read >= 16 * 8)
             {
               datap += 4;
 
@@ -128,17 +128,17 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
               data = _mm_xor_si128 (data, data2);
 
               data3 = _mm_xor_si128 (data3, data4);
-              data4 = _mm_loadu_si128 (datap+1);
+              data4 = _mm_loadu_si128 (datap + 1);
               data4 = _mm_shuffle_epi8 (data4, shuffle_constant);
               data3 = _mm_xor_si128 (data3, data4);
 
               data5 = _mm_xor_si128 (data5, data6);
-              data6 = _mm_loadu_si128 (datap+2);
+              data6 = _mm_loadu_si128 (datap + 2);
               data6 = _mm_shuffle_epi8 (data6, shuffle_constant);
               data5 = _mm_xor_si128 (data5, data6);
 
               data7 = _mm_xor_si128 (data7, data8);
-              data8 = _mm_loadu_si128 (datap+3);
+              data8 = _mm_loadu_si128 (datap + 3);
               data8 = _mm_shuffle_epi8 (data8, shuffle_constant);
               data7 = _mm_xor_si128 (data7, data8);
 
@@ -149,11 +149,11 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
           data = _mm_shuffle_epi8 (data, shuffle_constant);
           _mm_storeu_si128 (datap, data);
           data3 = _mm_shuffle_epi8 (data3, shuffle_constant);
-          _mm_storeu_si128 (datap+1, data3);
+          _mm_storeu_si128 (datap + 1, data3);
           data5 = _mm_shuffle_epi8 (data5, shuffle_constant);
-          _mm_storeu_si128 (datap+2, data5);
+          _mm_storeu_si128 (datap + 2, data5);
           data7 = _mm_shuffle_epi8 (data7, shuffle_constant);
-          _mm_storeu_si128 (datap+3, data7);
+          _mm_storeu_si128 (datap + 3, data7);
         }
 
       /* Fold two 16-byte blocks into one 16-byte block */
