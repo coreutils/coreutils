@@ -96,7 +96,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
       fputs (_("\
 Print user and group information for each specified USER,\n\
-or (when USER omitted) for the current user.\n\
+or (when USER omitted) for the current process.\n\
 \n"),
              stdout);
       fputs (_("\
