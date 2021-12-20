@@ -87,7 +87,7 @@ sub check_msg($$)
   my ($log_file, $line_ref) = @_;
 
   local *LOG;
-  open LOG, '<', $log_file
+  open LOG, '<:utf8', $log_file
     or return "failed to open for reading: $!";
   @$line_ref = <LOG>;
   close LOG;
@@ -117,10 +117,12 @@ sub check_msg($$)
     and return 'second line must be empty';
 
   # Limit line length to allow for the ChangeLog's leading TAB.
+  my $max_len = 72;
   foreach my $line (@line)
     {
-      72 < length $line && $line =~ /^[^#]/
-        and return 'line longer than 72';
+      my $len = length $line;
+      $max_len < $len && $line =~ /^[^#]/
+        and return "line length ($len) greater than than max: $max_len";
     }
 
   my $buf = join ("\n", @line) . "\n";
@@ -149,6 +151,7 @@ sub check_msg($$)
       $err eq ''
         and last;
       $err = "$ME: $err\n";
+      -t STDOUT or die $err;
       warn $err;
       # Insert the diagnostic as a comment on the first line of $log_file.
       rewrite $log_file, $err, \@line;
