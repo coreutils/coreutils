@@ -1270,15 +1270,15 @@ main (int argc, char **argv)
   setvbuf (stdout, NULL, _IOLBF, 0);
 
 #if HASH_ALGO_SUM
-  const char *short_opts = "rs";
+  char const *short_opts = "rs";
 #elif HASH_ALGO_CKSUM
-  const char *short_opts = "a:l:bctwz";
-  const char *digest_length_str = "";
+  char const *short_opts = "a:l:bctwz";
+  char const *digest_length_str = "";
 #elif HASH_ALGO_BLAKE2
-  const char *short_opts = "l:bctwz";
-  const char *digest_length_str = "";
+  char const *short_opts = "l:bctwz";
+  char const *digest_length_str = "";
 #else
-  const char *short_opts = "bctwz";
+  char const *short_opts = "bctwz";
 #endif
 
   while ((opt = getopt_long (argc, argv, short_opts, long_options, NULL)) != -1)

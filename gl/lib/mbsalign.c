@@ -83,7 +83,7 @@ wc_truncate (wchar_t *wc, size_t width)
    A pointer to the terminating NUL is returned.  */
 
 static char *
-mbs_align_pad (char *dest, const char *dest_end, size_t n_spaces)
+mbs_align_pad (char *dest, char const *dest_end, size_t n_spaces)
 {
   /* FIXME: Should we pad with "figure space" (\u2007)
      if non ascii data present?  */

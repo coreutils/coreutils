@@ -169,7 +169,7 @@ parse_additional_groups (char const *groups, GETGROUPS_T **pgids,
    could be bind mounted to a separate location.  */
 
 static bool
-is_root (const char *dir)
+is_root (char const *dir)
 {
   char *resolved = canonicalize_file_name (dir);
   bool is_res_root = resolved && STREQ ("/", resolved);

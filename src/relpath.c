@@ -64,7 +64,7 @@ path_common_prefix (char const *path1, char const *path2)
    and adjust *PLEN to reflect the remaining space.
    Return TRUE on failure.  */
 static bool
-buffer_or_output (const char *str, char **pbuf, size_t *plen)
+buffer_or_output (char const *str, char **pbuf, size_t *plen)
 {
   if (*pbuf)
     {
