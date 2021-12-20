@@ -628,7 +628,8 @@ three_arguments (void)
   else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o"))
     value = expr ();
   else
-    test_syntax_error (_("%s: binary operator expected"), quote (argv[pos + 1]));
+    test_syntax_error (_("%s: binary operator expected"),
+                       quote (argv[pos + 1]));
   return (value);
 }
 
