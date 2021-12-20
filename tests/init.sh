@@ -426,6 +426,23 @@ setup_ ()
   for sig_ in 1 2 3 13 15; do
     eval "trap 'Exit $(expr $sig_ + 128)' $sig_"
   done
+
+  # Remove relative and non-accessible directories from PATH, including '.'
+  # and Zero-length entries.
+  saved_IFS="$IFS"
+  IFS=:
+  new_PATH=
+  sep_=
+  for dir in $PATH; do
+    case "$dir" in
+      /*) test -d "$dir/." || continue
+          new_PATH="${new_PATH}${sep_}${dir}"
+          sep_=':';;
+    esac
+  done
+  IFS="$saved_IFS"
+  PATH="$new_PATH"
+  export PATH
 }
 
 # This is a stub function that is run upon trap (upon regular exit and
