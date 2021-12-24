@@ -62,7 +62,7 @@ n_stat2=$(grep -vF '+++' log2 | wc -l) || framework_failure_
 test $n_stat1 = $(($n_stat2 - 1)) \
   || { fail=1; head -n30 log*; }
 
-# Check that output is colorized, as requested, too.
+# Check that output is colored, as requested, too.
 {
   printf '\033[0m\033[01;35mlink-to-x\033[0m@\n'
   printf '\033[01;32mx\033[0m*\n'

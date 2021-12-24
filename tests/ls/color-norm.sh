@@ -36,7 +36,7 @@ touch nocolor || framework_failure_
 
 TCOLORS="no=7:ex=01;32"
 
-# Non coloured files inherit NORMAL attributes
+# Uncolored file names inherit NORMAL attributes.
 LS_COLORS=$TCOLORS      ls -gGU --color exe nocolor | qls >> out || fail=1
 LS_COLORS=$TCOLORS      ls -xU  --color exe nocolor       >> out || fail=1
 LS_COLORS=$TCOLORS      ls -gGU --color nocolor exe | qls >> out || fail=1

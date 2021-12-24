@@ -361,7 +361,7 @@ static bool color_symlink_as_referent;
 
 static char const *hostname;
 
-/* mode of appropriate file for colorization */
+/* Mode of appropriate file for coloring.  */
 static mode_t
 file_or_link_mode (struct fileinfo const *file)
 {
@@ -5424,7 +5424,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         colorize the output; WHEN can be 'always' (default\
+      --color[=WHEN]         color the output; WHEN can be 'always' (default\
 \n\
                                if omitted), 'auto', or 'never'; more info below\
 \n\

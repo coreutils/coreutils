@@ -3063,7 +3063,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   install accepts a new option --strip-program to specify the program used to
   strip binaries.
 
-  ls now colorizes files with capabilities if libcap is available
+  ls now colors names of files with capabilities if libcap is available.
 
   ls -v now uses filevercmp function as sort predicate (instead of strverscmp)
 

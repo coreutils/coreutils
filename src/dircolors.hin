@@ -9,7 +9,7 @@
 # slackware version of dircolors) are recognized but ignored.
 
 # Below are TERM entries, which can be a glob patterns, to match
-# against the TERM environment variable to determine if it is colorizable.
+# against the TERM environment variable to determine if it is colorable.
 TERM Eterm
 TERM ansi
 TERM *color*
@@ -71,7 +71,7 @@ STICKY 37;44	# dir with the sticky bit set (+t) and not other-writable
 EXEC 01;32
 
 # List any file extensions like '.gz' or '.tar' that you would like ls
-# to colorize below. Put the extension, a space, and the color init string.
+# to color below. Put the extension, a space, and the color init string.
 # (and any comments you want to add after a '#')
 
 # If you use DOS-style suffixes, you may want to uncomment the following:
@@ -80,7 +80,7 @@ EXEC 01;32
 #.com 01;32
 #.btm 01;32
 #.bat 01;32
-# Or if you want to colorize scripts even if they do not have the
+# Or if you want to color scripts even if they do not have the
 # executable bit actually set.
 #.sh  01;32
 #.csh 01;32

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure "ls --color" properly colorizes file extensions
+# Ensure "ls --color" properly colors file name extensions.
 
 # Copyright (C) 2018-2021 Free Software Foundation, Inc.
 

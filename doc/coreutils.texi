@@ -8109,7 +8109,7 @@ may be omitted, or one of:
 @end itemize
 Specifying @option{--color} and no @var{when} is equivalent to
 @option{--color=always}.
-If piping a colorized listing through a pager like @command{less},
+If piping a colored listing through a pager like @command{less},
 use the pager's @option{-R} option to pass the color codes to the terminal.
 
 @vindex LS_COLORS

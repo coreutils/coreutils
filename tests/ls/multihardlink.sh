@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure "ls --color" properly colorizes hard linked files.
+# Ensure "ls --color" properly colors names of hard linked files.
 
 # Copyright (C) 2008-2021 Free Software Foundation, Inc.
 

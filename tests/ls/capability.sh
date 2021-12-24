@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure "ls --color" properly colorizes file with capability.
+# Ensure "ls --color" properly colors name of file with capability.
 
 # Copyright (C) 2008-2021 Free Software Foundation, Inc.
 
