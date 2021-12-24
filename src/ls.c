@@ -5424,18 +5424,13 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
-      --color[=WHEN]         color the output; WHEN can be 'always' (default\
-\n\
-                               if omitted), 'auto', or 'never'; more info below\
-\n\
+      --color[=WHEN]         color the output WHEN; more info below\n\
   -d, --directory            list directories themselves, not their contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
   -f                         list all entries in directory order\n\
-  -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries;\n\
-                               WHEN can be 'always' (default if omitted),\n\
-                               'auto', or 'never'\n\
+  -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
       --file-type            likewise, except do not append '*'\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
@@ -5468,8 +5463,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
                                (overridden by -a or -A)\n\
 "), stdout);
       fputs (_("\
-      --hyperlink[=WHEN]     hyperlink file names; WHEN can be 'always'\n\
-                               (default if omitted), 'auto', or 'never'\n\
+      --hyperlink[=WHEN]     hyperlink file names WHEN\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD  append indicator with style WORD to entry names:\
@@ -5560,6 +5554,10 @@ FORMAT is interpreted like in date(1).  If FORMAT is FORMAT1<newline>FORMAT2,\n\
 then FORMAT1 applies to non-recent files and FORMAT2 to recent files.\n\
 TIME_STYLE prefixed with 'posix-' takes effect only outside the POSIX locale.\n\
 Also the TIME_STYLE environment variable sets the default style to use.\n\
+"), stdout);
+      fputs (_("\
+\n\
+The WHEN argument defaults to 'always' and can also be 'auto' or 'never'.\n\
 "), stdout);
       fputs (_("\
 \n\
