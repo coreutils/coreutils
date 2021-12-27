@@ -46,6 +46,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort --debug now diagnoses issues with --field-separator characters
   that conflict with characters possibly used in numbers.
 
+  root invoked coreutils, that are built and run in single binary mode,
+  now adjust /proc/$pid/cmdline to be more specific to the utility
+  being run, rather than using the general "coreutils" binary name.
+
 
 * Noteworthy changes in release 9.0 (2021-09-24) [stable]
 

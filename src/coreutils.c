@@ -120,8 +120,9 @@ launch_program (char const *prog_name, int prog_argc, char **prog_argv)
 #endif
 #if HAVE_PRCTL && defined PR_SET_MM_ARG_START
   /* Shift the beginning of the command line to prog_argv[0] (if set) so
-     /proc/pid/cmdline reflects the right value.  */
-  prctl (PR_SET_MM_ARG_START, prog_argv[0]);
+     /proc/$pid/cmdline reflects a more specific value.  Note one needs
+     CAP_SYS_RESOURCE or root privileges for this to succeed.  */
+  prctl (PR_SET_MM, PR_SET_MM_ARG_START, prog_argv[0], 0, 0);
 #endif
 
   exit (prog_main (prog_argc, prog_argv));
