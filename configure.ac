@@ -64,11 +64,7 @@ gl_INIT
 coreutils_MACROS
 
 # The test suite needs to know if we have a working perl.
-# FIXME: this is suboptimal.  Ideally, we would be able to call gl_PERL
-# with an ACTION-IF-NOT-FOUND argument ...
-cu_have_perl=yes
-case $PERL in *"/missing "*) cu_have_perl=no;; esac
-AM_CONDITIONAL([HAVE_PERL], [test $cu_have_perl = yes])
+AM_CONDITIONAL([HAVE_PERL], [test "$gl_cv_prog_perl" != no])
 
 # gl_GCC_VERSION_IFELSE([major], [minor], [run-if-found], [run-if-not-found])
 # ------------------------------------------------
