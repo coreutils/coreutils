@@ -79,8 +79,9 @@ static char const rfc_email_format[] = "%a, %d %b %Y %H:%M:%S %z";
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  RFC_3339_OPTION = CHAR_MAX + 1,
-  DEBUG_DATE_PARSING
+  DEBUG_DATE_PARSING_OPTION = CHAR_MAX + 1,
+  RESOLUTION_OPTION,
+  RFC_3339_OPTION
 };
 
 static char const short_options[] = "d:f:I::r:Rs:u";
@@ -88,10 +89,11 @@ static char const short_options[] = "d:f:I::r:Rs:u";
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
-  {"debug", no_argument, NULL, DEBUG_DATE_PARSING},
+  {"debug", no_argument, NULL, DEBUG_DATE_PARSING_OPTION},
   {"file", required_argument, NULL, 'f'},
   {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
+  {"resolution", no_argument, NULL, RESOLUTION_OPTION},
   {"rfc-email", no_argument, NULL, 'R'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"rfc-2822", no_argument, NULL, 'R'},
@@ -154,6 +156,10 @@ Display the current time in the given FORMAT, or set the system date.\n\
                                'hours', 'minutes', 'seconds', or 'ns'\n\
                                for date and time to the indicated precision.\n\
                                Example: 2006-08-14T02:34:56-06:00\n\
+"), stdout);
+      fputs (_("\
+  --resolution               output the available resolution of timestamps\n\
+                               Example: 0.000000001\n\
 "), stdout);
       fputs (_("\
   -R, --rfc-email            output date and time in RFC 5322 format.\n\
@@ -386,11 +392,11 @@ main (int argc, char **argv)
   struct timespec when;
   bool set_date = false;
   char const *format = NULL;
+  bool get_resolution = false;
   char *batch_file = NULL;
   char *reference = NULL;
   struct stat refstats;
   bool ok;
-  int option_specified_date;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -410,11 +416,14 @@ main (int argc, char **argv)
         case 'd':
           datestr = optarg;
           break;
-        case DEBUG_DATE_PARSING:
+        case DEBUG_DATE_PARSING_OPTION:
           parse_datetime_flags |= PARSE_DATETIME_DEBUG;
           break;
         case 'f':
           batch_file = optarg;
+          break;
+        case RESOLUTION_OPTION:
+          get_resolution = true;
           break;
         case RFC_3339_OPTION:
           {
@@ -479,9 +488,8 @@ main (int argc, char **argv)
         }
     }
 
-  option_specified_date = ((datestr ? 1 : 0)
-                           + (batch_file ? 1 : 0)
-                           + (reference ? 1 : 0));
+  int option_specified_date = (!!datestr + !!batch_file + !!reference
+                               + get_resolution);
 
   if (option_specified_date > 1)
     {
@@ -524,9 +532,12 @@ main (int argc, char **argv)
 
   if (!format)
     {
-      format = DATE_FMT_LANGINFO ();
-      if (! *format)
+      if (get_resolution)
+        format = "%s.%N";
+      else
         {
+          format = DATE_FMT_LANGINFO ();
+
           /* Do not wrap the following literal format string with _(...).
              For example, suppose LC_ALL is unset, LC_TIME=POSIX,
              and LANG="ko_KR".  In that case, POSIX says that LC_TIME
@@ -534,7 +545,8 @@ main (int argc, char **argv)
              written by date, which means "date" must generate output
              using the POSIX locale; but adding _() would cause "date"
              to use a Korean translation of the format.  */
-          format = "%a %b %e %H:%M:%S %Z %Y";
+          if (! *format)
+            format = "%a %b %e %H:%M:%S %Z %Y";
         }
     }
 
@@ -578,6 +590,12 @@ main (int argc, char **argv)
               if (stat (reference, &refstats) != 0)
                 die (EXIT_FAILURE, errno, "%s", quotef (reference));
               when = get_stat_mtime (&refstats);
+            }
+          else if (get_resolution)
+            {
+              long int res = gettime_res ();
+              when.tv_sec = res / TIMESPEC_HZ;
+              when.tv_nsec = res % TIMESPEC_HZ;
             }
           else
             {

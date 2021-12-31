@@ -16436,6 +16436,19 @@ for the @option{--date} (@option{-d}) and @option{--file}
 Display the date and time of the last modification of @var{file},
 instead of the current date and time.
 
+@item --resolution
+@opindex --resolution
+Display the timestamp resolution instead of the time.
+Current clock timestamps that are output by @command{date}
+are integer multiples of the timestamp resolution.
+With this option, the format defaults to @samp{%s.%N}.
+For example, if the clock resolution is 1 millsecond,
+the output is:
+
+@example
+0.001000000
+@end example
+
 @item -R
 @itemx --rfc-email
 @opindex -R
