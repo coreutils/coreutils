@@ -16227,6 +16227,12 @@ The following optional flags can appear after the @samp{%}:
 (hyphen) Do not pad the field; useful if the output is intended for
 human consumption.
 This is a GNU extension.
+As a special case, @samp{%-N} outputs only enough trailing digits to
+not lose information, assuming that the timestamp's resolution is the
+same as the current hardware clock.  For example, if the hardware
+clock resolution is 1 microsecond, @samp{%s.%-N} outputs something
+like @samp{1640890100.395710}.
+
 @item _
 (underscore) Pad with spaces; useful if you need a fixed
 number of characters in the output, but zeros are too distracting.

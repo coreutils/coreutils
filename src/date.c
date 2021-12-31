@@ -281,6 +281,39 @@ Show the local time for 9AM next Friday on the west coast of the US\n\
   exit (status);
 }
 
+/* Yield the number of decimal digits needed to output a time with the
+   nanosecond resolution RES, without losing information.  */
+
+static int
+res_width (long int res)
+{
+  int i = 9;
+  for (long long int r = 1; (r *= 10) <= res; )
+    i--;
+  return i;
+}
+
+/* Return a newly allocated copy of FORMAT with each "%-N" adjusted to
+   be "%9N", "%6N", or whatever other resolution is appropriate for
+   the current platform.  If no "%-N" appears, return NULL.  */
+
+static char *
+adjust_resolution (char const *format)
+{
+  char *copy = NULL;
+
+  for (char const *f = format; *f; f++)
+    if (f[0] == '%' && f[1] == '-' && f[2] == 'N')
+      {
+        if (!copy)
+          copy = xstrdup (format);
+        copy[f + 1 - format] = '0' + res_width (gettime_res ());
+        f += 2;
+      }
+
+  return copy;
+}
+
 /* Parse each line in INPUT_FILENAME as with --date and display each
    resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
@@ -505,11 +538,13 @@ main (int argc, char **argv)
         }
     }
 
+  char *format_copy = adjust_resolution (format);
+  char const *format_res = format_copy ? format_copy : format;
   char const *tzstring = getenv ("TZ");
   timezone_t tz = tzalloc (tzstring);
 
   if (batch_file != NULL)
-    ok = batch_convert (batch_file, format, tz, tzstring);
+    ok = batch_convert (batch_file, format_res, tz, tzstring);
   else
     {
       bool valid_date = true;
@@ -568,10 +603,11 @@ main (int argc, char **argv)
             }
         }
 
-      ok &= show_date (format, when, tz);
+      ok &= show_date (format_res, when, tz);
     }
 
   IF_LINT (tzfree (tz));
+  IF_LINT (free (format_copy));
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

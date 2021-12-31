@@ -34,6 +34,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  date +'%-N' now suppresses excess trailing digits, instead of always
+  padding them with zeros to 9 digits.  It uses clock_getres and
+  clock_gettime to infer the clock resolution.
+
   timeout --foreground --kill-after=... will now exit with status 137
   if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to
