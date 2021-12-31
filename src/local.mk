@@ -90,7 +90,9 @@ remove_ldadd =
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
 # But libcoreutils.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libcoreutils.a.
-LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) lib/libcoreutils.a
+# Similarly for $(LIB_MBRTOWC).
+LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) $(LIB_MBRTOWC) \
+  lib/libcoreutils.a
 
 # First, list all programs, to make listing per-program libraries easier.
 # See [ below.
@@ -317,8 +319,11 @@ src_uname_LDADD += $(GETHOSTNAME_LIB)
 # for strsignal
 src_kill_LDADD += $(LIBTHREAD)
 
-# for pthread
-src_sort_LDADD += $(LIB_PTHREAD)
+# for pthread-cond, pthread-mutex, pthread-thread
+src_sort_LDADD += $(LIBPMULTITHREAD)
+
+# for pthread_sigmask
+src_sort_LDADD += $(LIB_PTHREAD_SIGMASK)
 
 # Get the release year from lib/version-etc.c.
 RELEASE_YEAR = \

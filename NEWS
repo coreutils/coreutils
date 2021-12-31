@@ -29,6 +29,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   for B when A is a directory, possibly inflooping.
   [bug introduced in coreutils-6.3]
 
+  AIX builds no longer fail because some library functions are not found.
+  [bug introduced in coreutils-8.32]
+
 ** Changes in behavior
 
   timeout --foreground --kill-after=... will now exit with status 137
