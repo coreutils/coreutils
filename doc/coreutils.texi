@@ -16458,7 +16458,8 @@ For compatibility with older versions of @command{date},
 Display the date using a format specified by
 @uref{https://tools.ietf.org/search/rfc3339, Internet
 RFC 3339}.  This is like @option{--iso-8601}, except that a space rather
-than a @samp{T} separates dates from times.
+than a @samp{T} separates dates from times, and a period rather than
+a comma separates seconds from subseconds.
 @dateParseNote
 
 The argument @var{timespec} specifies how much of the time to include.
