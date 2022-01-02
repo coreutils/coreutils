@@ -106,6 +106,7 @@
 /lib/sys/
 /lib/termios.h
 /lib/time.h
+/lib/unictype
 /lib/unistd.h
 /lib/unistr
 /lib/unistr.h

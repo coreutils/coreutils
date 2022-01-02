@@ -414,7 +414,7 @@ The Free Software Foundation may publish new, revised versions
 of the GNU Free Documentation License from time to time.  Such new
 versions will be similar in spirit to the present version, but may
 differ in detail to address new problems or concerns.  See
-@uref{https://www.gnu.org/copyleft/}.
+@uref{https://www.gnu.org/licenses/}.
 
 Each version of the License is given a distinguishing version number.
 If the Document specifies that a particular numbered version of this
