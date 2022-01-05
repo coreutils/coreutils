@@ -906,9 +906,6 @@ df_readable (bool negative, uintmax_t n, char *buf,
     }
 }
 
-/* Logical equivalence */
-#define LOG_EQ(a, b) (!(a) == !(b))
-
 /* Add integral value while using uintmax_t for value part and separate
    negation flag.  It adds value of SRC and SRC_NEG to DEST and DEST_NEG.
    The result will be in DEST and DEST_NEG.  See df_readable to understand
@@ -917,7 +914,7 @@ static void
 add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
                         uintmax_t src, bool src_neg)
 {
-  if (LOG_EQ (*dest_neg, src_neg))
+  if (*dest_neg == src_neg)
     {
       *dest += src;
       return;
