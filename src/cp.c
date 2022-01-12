@@ -738,7 +738,6 @@ do_copy (int n_files, char **file, char const *target_directory,
     }
   else /* !target_directory */
     {
-      char const *new_dest;
       char const *source = file[0];
       char const *dest = file[1];
       bool unused;
@@ -763,7 +762,7 @@ do_copy (int n_files, char **file, char const *target_directory,
         {
           static struct cp_options x_tmp;
 
-          new_dest = find_backup_file_name (AT_FDCWD, dest, x->backup_type);
+          dest = find_backup_file_name (AT_FDCWD, dest, x->backup_type);
           /* Set x->backup_type to 'no_backups' so that the normal backup
              mechanism is not used when performing the actual copy.
              backup_type must be set to 'no_backups' only *after* the above
@@ -773,12 +772,8 @@ do_copy (int n_files, char **file, char const *target_directory,
           x_tmp.backup_type = no_backups;
           x = &x_tmp;
         }
-      else
-        {
-          new_dest = dest;
-        }
 
-      ok = copy (source, new_dest, 0, x, &unused, NULL);
+      ok = copy (source, dest, false, x, &unused, NULL);
     }
 
   return ok;
