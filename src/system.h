@@ -25,10 +25,6 @@
 /* Commonly used file permission combination.  */
 #define MODE_RW_UGO (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 
-#if !defined HAVE_MKFIFO
-# define mkfifo(name, mode) mknod (name, (mode) | S_IFIFO, 0)
-#endif
-
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
@@ -105,6 +101,11 @@ initialize_exit_failure (int status)
 }
 
 #include <fcntl.h>
+#ifdef O_PATH
+enum { O_PATHSEARCH = O_PATH };
+#else
+enum { O_PATHSEARCH = O_SEARCH };
+#endif
 
 #include <dirent.h>
 #ifndef _D_EXACT_NAMLEN

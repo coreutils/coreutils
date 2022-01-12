@@ -45,6 +45,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp now uses openat and similar syscalls when copying to a directory.
+  This avoids some race conditions and should be more efficient.
+
   On macOS, cp creates a copy-on-write clone if source and destination
   are regular files on the same APFS file system, the destination does
   not already exist, and cp is preserving mode and timestamps (e.g.,

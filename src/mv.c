@@ -170,7 +170,8 @@ do_move (char const *source, char const *dest, const struct cp_options *x)
 {
   bool copy_into_self;
   bool rename_succeeded;
-  bool ok = copy (source, dest, false, x, &copy_into_self, &rename_succeeded);
+  bool ok = copy (source, dest, AT_FDCWD, dest, false, x,
+                  &copy_into_self, &rename_succeeded);
 
   if (ok)
     {

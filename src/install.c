@@ -448,7 +448,7 @@ copy_file (char const *from, char const *to, const struct cp_options *x)
      However, since !x->recursive, the call to "copy" will fail if FROM
      is a directory.  */
 
-  return copy (from, to, false, x, &copy_into_self, NULL);
+  return copy (from, to, AT_FDCWD, to, false, x, &copy_into_self, NULL);
 }
 
 /* Set the attributes of file or directory NAME.

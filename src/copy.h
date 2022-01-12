@@ -288,9 +288,10 @@ int rpl_rename (char const *, char const *);
 # endif
 
 bool copy (char const *src_name, char const *dst_name,
+           int dst_dirfd, char const *dst_relname,
            bool nonexistent_dst, const struct cp_options *options,
            bool *copy_into_self, bool *rename_succeeded)
-  _GL_ATTRIBUTE_NONNULL ((1, 2, 4, 5));
+  _GL_ATTRIBUTE_NONNULL ((1, 2, 4, 6, 7));
 
 extern bool set_process_security_ctx (char const *src_name,
                                       char const *dst_name,

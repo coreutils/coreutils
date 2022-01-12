@@ -38,12 +38,6 @@
 #include "yesno.h"
 #include "canonicalize.h"
 
-#ifdef O_PATH
-enum { O_PATHSEARCH = O_PATH };
-#else
-enum { O_PATHSEARCH = O_SEARCH };
-#endif
-
 /* The official name of this program (e.g., no 'g' prefix).  */
 #define PROGRAM_NAME "ln"
 

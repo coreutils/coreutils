@@ -38,7 +38,7 @@ chmod 0 D
 ln -s D/D symlink
 touch F
 cat > exp <<\EOF
-cp: failed to access 'symlink': Permission denied
+cp: cannot stat 'symlink': Permission denied
 EOF
 
 cp F symlink 2> out && fail=1
@@ -48,6 +48,14 @@ cp F symlink 2> out && fail=1
 # to the expected one:
 sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
 compare exp out || fail=1
+
+cp --no-target-directory F symlink 2> out && fail=1
+sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
+compare exp out || fail=1
+
+cat > exp <<\EOF
+cp: target directory 'symlink': Permission denied
+EOF
 
 cp --target-directory=symlink F 2> out && fail=1
 sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
