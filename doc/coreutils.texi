@@ -11609,7 +11609,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -c
 @opindex --changes
 Verbosely describe the action for each @var{file} whose permissions
-actually changes.
+actually change.
 
 @item -f
 @itemx --silent
