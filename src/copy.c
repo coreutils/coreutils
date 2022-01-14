@@ -127,7 +127,7 @@ struct dir_list
 
 static bool copy_internal (char const *src_name, char const *dst_name,
                            int dst_dirfd, char const *dst_relname,
-                           bool new_dst, struct stat const *parent,
+                           int nonexistent_dst, struct stat const *parent,
                            struct dir_list *ancestors,
                            const struct cp_options *x,
                            bool command_line_arg,
@@ -1978,19 +1978,24 @@ source_is_dst_backup (char const *srcbase, struct stat const *src_st,
 }
 
 /* Copy the file SRC_NAME to the file DST_NAME aka DST_DIRFD+DST_RELNAME.
-   NEW_DST means DST_NAME is known not to exist (e.g., because its
-   parent directory was just created).  A non-null PARENT describes the
-   parent directory.  ANCESTORS points to a linked, null terminated list of
-   devices and inodes of parent directories of SRC_NAME.  COMMAND_LINE_ARG
-   is true iff SRC_NAME was specified on the command line.
+   If NONEXISTENT_DST is positive, DST_NAME does not exist even as a
+   dangling symlink; if negative, it does not exist except possibly
+   as a dangling symlink; if zero, its existence status is unknown.
+   A non-null PARENT describes the parent directory.
+   ANCESTORS points to a linked, null terminated list of
+   devices and inodes of parent directories of SRC_NAME.
+   X summarizes the command-line options.
+   COMMAND_LINE_ARG means SRC_NAME was specified on the command line.
    FIRST_DIR_CREATED_PER_COMMAND_LINE_ARG is both input and output.
    Set *COPY_INTO_SELF if SRC_NAME is a parent of (or the
    same as) DST_NAME; otherwise, clear it.
+   If X->move_mode, set *RENAME_SUCCEEDED according to whether
+   the source was simply renamed to the destination.
    Return true if successful.  */
 static bool
 copy_internal (char const *src_name, char const *dst_name,
                int dst_dirfd, char const *dst_relname,
-               bool new_dst,
+               int nonexistent_dst,
                struct stat const *parent,
                struct dir_list *ancestors,
                const struct cp_options *x,
@@ -2013,6 +2018,12 @@ copy_internal (char const *src_name, char const *dst_name,
   bool dest_is_symlink = false;
   bool have_dst_lstat = false;
 
+  /* Whether the destination is (or was) known to be new, updated as
+     more info comes in.  This may become true if the destination is a
+     dangling symlink, in contexts where dangling symlinks should be
+     treated the same as nonexistent files.  */
+  bool new_dst = 0 < nonexistent_dst;
+
   *copy_into_self = false;
 
   int rename_errno = x->rename_errno;
@@ -2022,9 +2033,7 @@ copy_internal (char const *src_name, char const *dst_name,
         rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, dst_relname,
                                    RENAME_NOREPLACE)
                         ? errno : 0);
-      new_dst = rename_errno == 0;
-      if (rename_succeeded)
-        *rename_succeeded = new_dst;
+      nonexistent_dst = *rename_succeeded = new_dst = rename_errno == 0;
     }
 
   if (rename_errno == 0
@@ -2081,7 +2090,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
   bool dereference = should_dereference (x, command_line_arg);
 
-  if (!new_dst)
+  if (nonexistent_dst <= 0)
     {
       if (! (rename_errno == EEXIST && x->interactive == I_ALWAYS_NO))
         {
@@ -2099,8 +2108,11 @@ copy_internal (char const *src_name, char const *dst_name,
                || x->backup_type != no_backups
                || x->unlink_dest_before_opening);
           int fstatat_flags = use_lstat ? AT_SYMLINK_NOFOLLOW : 0;
-          if (follow_fstatat (dst_dirfd, dst_relname, &dst_sb, fstatat_flags)
-              == 0)
+          if (!use_lstat && nonexistent_dst < 0)
+            new_dst = true;
+          else if (follow_fstatat (dst_dirfd, dst_relname, &dst_sb,
+                                   fstatat_flags)
+                   == 0)
             {
               have_dst_lstat = use_lstat;
               rename_errno = EEXIST;
@@ -3139,17 +3151,20 @@ valid_options (const struct cp_options *co)
 }
 
 /* Copy the file SRC_NAME to the file DST_NAME aka DST_DIRFD+DST_RELNAME.
-   NONEXISTENT_DST means the file DST_NAME is known not to exist
-   (e.g., because its parent directory was just created).
-   OPTIONS is ... FIXME-describe
+   If NONEXISTENT_DST is positive, DST_NAME does not exist even as a
+   dangling symlink; if negative, it does not exist except possibly
+   as a dangling symlink; if zero, its existence status is unknown.
+   OPTIONS summarizes the command-line options.
    Set *COPY_INTO_SELF if SRC_NAME is a parent of (or the
    same as) DST_NAME; otherwise, set clear it.
+   If X->move_mode, set *RENAME_SUCCEEDED according to whether
+   the source was simply renamed to the destination.
    Return true if successful.  */
 
 extern bool
 copy (char const *src_name, char const *dst_name,
       int dst_dirfd, char const *dst_relname,
-      bool nonexistent_dst, const struct cp_options *options,
+      int nonexistent_dst, const struct cp_options *options,
       bool *copy_into_self, bool *rename_succeeded)
 {
   assert (valid_options (options));

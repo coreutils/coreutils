@@ -289,7 +289,7 @@ int rpl_rename (char const *, char const *);
 
 bool copy (char const *src_name, char const *dst_name,
            int dst_dirfd, char const *dst_relname,
-           bool nonexistent_dst, const struct cp_options *options,
+           int nonexistent_dst, const struct cp_options *options,
            bool *copy_into_self, bool *rename_succeeded)
   _GL_ATTRIBUTE_NONNULL ((1, 2, 4, 6, 7));
 

@@ -836,7 +836,7 @@ do_copy (int n_files, char **file, char const *target_directory,
           x = &x_tmp;
         }
 
-      ok = copy (source, dest, AT_FDCWD, dest, false, x, &unused, NULL);
+      ok = copy (source, dest, AT_FDCWD, dest, -new_dst, x, &unused, NULL);
     }
 
   return ok;
