@@ -797,13 +797,14 @@ copy_dir (char const *src_name_in, char const *dst_name_in,
       char *src_name = file_name_concat (src_name_in, namep, NULL);
       char *dst_name = file_name_concat (dst_name_in, namep, NULL);
       bool first_dir_created = *first_dir_created_per_command_line_arg;
+      bool rename_succeeded;
 
       ok &= copy_internal (src_name, dst_name, dst_dirfd,
                            dst_name + (dst_relname_in - dst_name_in),
                            new_dst, src_sb,
                            ancestors, &non_command_line_options, false,
                            &first_dir_created,
-                           &local_copy_into_self, NULL);
+                           &local_copy_into_self, &rename_succeeded);
       *copy_into_self |= local_copy_into_self;
 
       free (dst_name);

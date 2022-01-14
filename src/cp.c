@@ -371,6 +371,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   char *dst_dir;	/* Leading directory of DIR.  */
   idx_t dirlen = dir_len (const_dir);
 
+  *attr_list = NULL;
+
   /* Succeed immediately if the parent of CONST_DIR must already exist,
      as the target directory has already been checked.  */
   if (dirlen <= src_offset)
@@ -386,8 +388,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   char const *dst_reldir = dst_dir + src_offset;
   while (*dst_reldir == '/')
     dst_reldir++;
-
-  *attr_list = NULL;
 
   /* XXX: If all dirs are present at the destination,
      no permissions or security contexts will be updated.  */
