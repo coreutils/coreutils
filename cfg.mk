@@ -441,12 +441,6 @@ sc_prohibit_operator_at_end_of_line:
 	halt='found operator at end of line'				\
 	  $(_sc_search_regexp)
 
-# Don't use "readlink" or "readlinkat" directly
-sc_prohibit_readlink:
-	@prohibit='\<readlink(at)? \('					\
-	halt='do not use readlink(at); use via xreadlink or areadlink*'	\
-	  $(_sc_search_regexp)
-
 # Don't use address of "stat" or "lstat" functions
 sc_prohibit_stat_macro_address:
 	@prohibit='\<l?stat '':|&l?stat\>'				\
