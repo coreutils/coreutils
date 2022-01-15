@@ -21,7 +21,6 @@
 #include <assert.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
-#include <sys/utsname.h>
 #include <selinux/selinux.h>
 
 #if HAVE_HURD_H
@@ -63,7 +62,6 @@
 #include "write-any-file.h"
 #include "areadlink.h"
 #include "yesno.h"
-#include "xstrtol.h"
 #include "selinux.h"
 
 #ifndef USE_XATTR
@@ -224,47 +222,6 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
   return true;
 }
 
-/* copy_file_range() before Linux kernel release 5.3 had many issues,
-   as described at https://lwn.net/Articles/789527/,
-   so return FALSE for Linux kernels earlier than that.
-   This function can be removed when such kernels (released before Sep 2019)
-   are no longer a consideration.  */
-
-static bool
-functional_copy_file_range (void)
-{
-#ifdef __linux__
-  static int version_allowed = -1;
-
-  if (version_allowed == -1)
-    version_allowed = 0;
-  else
-    return version_allowed;
-
-  struct utsname name;
-  if (uname (&name) == -1)
-    return version_allowed;
-
-  char *p = name.release;
-  uintmax_t ver[2] = {0, 0};
-  size_t iver = 0;
-
-  do
-    {
-      strtol_error err = xstrtoumax (p, &p, 10, &ver[iver], NULL);
-      if (err != LONGINT_OK || *p++ != '.')
-        break;
-    }
-  while (++iver < ARRAY_CARDINALITY (ver));
-
-  version_allowed = (ver[0] > 5 || (ver[0] == 5 && ver[1] >= 3));
-
-  return version_allowed;
-#else
-  return true;
-#endif
-
-}
 
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
@@ -289,7 +246,7 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
   /* If not looking for holes, use copy_file_range if functional,
      but don't use if reflink disallowed as that may be implicit.  */
-  if ((! hole_size) && allow_reflink && functional_copy_file_range ())
+  if (!hole_size && allow_reflink)
     while (max_n_read)
       {
         /* Copy at most COPY_MAX bytes at a time; this is min
