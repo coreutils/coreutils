@@ -33,6 +33,7 @@
 #include <sys/ioctl.h>
 
 #include "system.h"
+#include "idx.h"
 #include "ioblksize.h"
 #include "die.h"
 #include "error.h"
@@ -154,7 +155,7 @@ next_line_num (void)
    Return true if successful.  */
 
 static bool
-simple_cat (char *buf, size_t bufsize)
+simple_cat (char *buf, idx_t bufsize)
 {
   /* Loop until the end of the file.  */
 
@@ -188,7 +189,7 @@ simple_cat (char *buf, size_t bufsize)
 static inline void
 write_pending (char *outbuf, char **bpout)
 {
-  size_t n_write = *bpout - outbuf;
+  idx_t n_write = *bpout - outbuf;
   if (0 < n_write)
     {
       if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
@@ -210,7 +211,7 @@ write_pending (char *outbuf, char **bpout)
    an explicit test for buffer end unnecessary.  */
 
 static bool
-cat (char *inbuf, size_t insize, char *outbuf, size_t outsize,
+cat (char *inbuf, idx_t insize, char *outbuf, idx_t outsize,
      bool show_nonprinting, bool show_tabs, bool number, bool number_nonblank,
      bool show_ends, bool squeeze_blank)
 {
@@ -252,7 +253,7 @@ cat (char *inbuf, size_t insize, char *outbuf, size_t outsize,
           if (outbuf + outsize <= bpout)
             {
               char *wp = outbuf;
-              size_t remaining_bytes;
+              idx_t remaining_bytes;
               do
                 {
                   if (full_write (STDOUT_FILENO, wp, outsize) != outsize)
@@ -608,7 +609,7 @@ main (int argc, char **argv)
     die (EXIT_FAILURE, errno, _("standard output"));
 
   /* Optimal size of i/o operations of output.  */
-  size_t outsize = io_blksize (stat_buf);
+  idx_t outsize = io_blksize (stat_buf);
 
   /* Device and I-node number of the output.  */
   dev_t out_dev = stat_buf.st_dev;
@@ -628,7 +629,7 @@ main (int argc, char **argv)
   infile = "-";
   int argind = optind;
   bool ok = true;
-  size_t page_size = getpagesize ();
+  idx_t page_size = getpagesize ();
 
   do
     {
@@ -662,7 +663,7 @@ main (int argc, char **argv)
         }
 
       /* Optimal size of i/o operations of input.  */
-      size_t insize = io_blksize (stat_buf);
+      idx_t insize = io_blksize (stat_buf);
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
@@ -689,13 +690,13 @@ main (int argc, char **argv)
              || show_tabs || squeeze_blank))
         {
           insize = MAX (insize, outsize);
-          inbuf = xmalloc (insize + page_size - 1);
+          inbuf = ximalloc (insize + page_size - 1);
 
           ok &= simple_cat (ptr_align (inbuf, page_size), insize);
         }
       else
         {
-          inbuf = xmalloc (insize + 1 + page_size - 1);
+          inbuf = ximalloc (insize + 1 + page_size - 1);
 
           /* Why are
              (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN + PAGE_SIZE - 1)
@@ -719,8 +720,8 @@ main (int argc, char **argv)
              on some paging implementations, so add PAGE_SIZE - 1 bytes to the
              request to make room for the alignment.  */
 
-          char *outbuf = xmalloc (outsize - 1 + insize * 4
-                                  + LINE_COUNTER_BUF_LEN + page_size - 1);
+          char *outbuf = ximalloc (outsize - 1 + insize * 4
+                                   + LINE_COUNTER_BUF_LEN + page_size - 1);
 
           ok &= cat (ptr_align (inbuf, page_size), insize,
                      ptr_align (outbuf, page_size), outsize, show_nonprinting,
