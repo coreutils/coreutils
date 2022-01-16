@@ -140,6 +140,7 @@ next_line_num (void)
       *endp-- = '0';
     }
   while (endp >= line_num_start);
+
   if (line_num_start > line_buf)
     *--line_num_start = '1';
   else
@@ -148,28 +149,20 @@ next_line_num (void)
     line_num_print--;
 }
 
-/* Plain cat.  Copies the file behind 'input_desc' to STDOUT_FILENO.
+/* Plain cat.  Copy the file behind 'input_desc' to STDOUT_FILENO.
+   BUF (of size BUFSIZE) is the I/O buffer, used by reads and writes.
    Return true if successful.  */
 
 static bool
-simple_cat (
-     /* Pointer to the buffer, used by reads and writes.  */
-     char *buf,
-
-     /* Number of characters preferably read or written by each read and write
-        call.  */
-     size_t bufsize)
+simple_cat (char *buf, size_t bufsize)
 {
-  /* Actual number of characters read, and therefore written.  */
-  size_t n_read;
-
   /* Loop until the end of the file.  */
 
   while (true)
     {
       /* Read a block of input.  */
 
-      n_read = safe_read (input_desc, buf, bufsize);
+      size_t n_read = safe_read (input_desc, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
         {
           error (0, errno, "%s", quotef (infile));
@@ -183,12 +176,8 @@ simple_cat (
 
       /* Write this block out.  */
 
-      {
-        /* The following is ok, since we know that 0 < n_read.  */
-        size_t n = n_read;
-        if (full_write (STDOUT_FILENO, buf, n) != n)
-          die (EXIT_FAILURE, errno, _("write error"));
-      }
+      if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
+        die (EXIT_FAILURE, errno, _("write error"));
     }
 }
 
@@ -208,7 +197,12 @@ write_pending (char *outbuf, char **bpout)
     }
 }
 
-/* Cat the file behind INPUT_DESC to the file behind OUTPUT_DESC.
+/* Copy the file behind 'input_desc' to STDOUT_FILENO.
+   Use INBUF and read INSIZE with each call,
+   and OUTBUF and write OUTSIZE with each call.
+   (The buffers are a bit larger than the I/O sizes.)
+   The remaining boolean args say what 'cat' options to use.
+
    Return true if successful.
    Called if any option more than -u was specified.
 
@@ -216,42 +210,12 @@ write_pending (char *outbuf, char **bpout)
    an explicit test for buffer end unnecessary.  */
 
 static bool
-cat (
-     /* Pointer to the beginning of the input buffer.  */
-     char *inbuf,
-
-     /* Number of characters read in each read call.  */
-     size_t insize,
-
-     /* Pointer to the beginning of the output buffer.  */
-     char *outbuf,
-
-     /* Number of characters written by each write call.  */
-     size_t outsize,
-
-     /* Variables that have values according to the specified options.  */
-     bool show_nonprinting,
-     bool show_tabs,
-     bool number,
-     bool number_nonblank,
-     bool show_ends,
-     bool squeeze_blank)
+cat (char *inbuf, size_t insize, char *outbuf, size_t outsize,
+     bool show_nonprinting, bool show_tabs, bool number, bool number_nonblank,
+     bool show_ends, bool squeeze_blank)
 {
   /* Last character read from the input buffer.  */
   unsigned char ch;
-
-  /* Pointer to the next character in the input buffer.  */
-  char *bpin;
-
-  /* Pointer to the first non-valid byte in the input buffer, i.e., the
-     current end of the buffer.  */
-  char *eob;
-
-  /* Pointer to the position where the next character shall be written.  */
-  char *bpout;
-
-  /* Number of characters read by the last read call.  */
-  size_t n_read;
 
   /* Determines how many consecutive newlines there have been in the
      input.  0 newlines makes NEWLINES -1, 1 newline makes NEWLINES 1,
@@ -269,10 +233,15 @@ cat (
   /* The inbuf pointers are initialized so that BPIN > EOB, and thereby input
      is read immediately.  */
 
-  eob = inbuf;
-  bpin = eob + 1;
+  /* Pointer to the first non-valid byte in the input buffer, i.e., the
+     current end of the buffer.  */
+  char *eob = inbuf;
 
-  bpout = outbuf;
+  /* Pointer to the next character in the input buffer.  */
+  char *bpin = eob + 1;
+
+  /* Pointer to the position where the next character shall be written.  */
+  char *bpout = outbuf;
 
   while (true)
     {
@@ -342,7 +311,7 @@ cat (
 
               /* Read more input into INBUF.  */
 
-              n_read = safe_read (input_desc, inbuf, insize);
+              size_t n_read = safe_read (input_desc, inbuf, insize);
               if (n_read == SAFE_READ_ERROR)
                 {
                   error (0, errno, "%s", quotef (infile));
@@ -531,35 +500,6 @@ cat (
 int
 main (int argc, char **argv)
 {
-  /* Optimal size of i/o operations of output.  */
-  size_t outsize;
-
-  /* Optimal size of i/o operations of input.  */
-  size_t insize;
-
-  size_t page_size = getpagesize ();
-
-  /* Pointer to the input buffer.  */
-  char *inbuf;
-
-  /* Pointer to the output buffer.  */
-  char *outbuf;
-
-  bool ok = true;
-  int c;
-
-  /* Index in argv to processed argument.  */
-  int argind;
-
-  /* Device number of the output (file or whatever).  */
-  dev_t out_dev;
-
-  /* I-node number of the output.  */
-  ino_t out_ino;
-
-  /* True if the output is a regular file.  */
-  bool out_isreg;
-
   /* Nonzero if we have ever read standard input.  */
   bool have_read_stdin = false;
 
@@ -602,6 +542,7 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
+  int c;
   while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL))
          != -1)
     {
@@ -666,10 +607,15 @@ main (int argc, char **argv)
   if (fstat (STDOUT_FILENO, &stat_buf) < 0)
     die (EXIT_FAILURE, errno, _("standard output"));
 
-  outsize = io_blksize (stat_buf);
-  out_dev = stat_buf.st_dev;
-  out_ino = stat_buf.st_ino;
-  out_isreg = S_ISREG (stat_buf.st_mode) != 0;
+  /* Optimal size of i/o operations of output.  */
+  size_t outsize = io_blksize (stat_buf);
+
+  /* Device and I-node number of the output.  */
+  dev_t out_dev = stat_buf.st_dev;
+  ino_t out_ino = stat_buf.st_ino;
+
+  /* True if the output is a regular file.  */
+  bool out_isreg = S_ISREG (stat_buf.st_mode) != 0;
 
   if (! (number || show_ends || squeeze_blank))
     {
@@ -677,19 +623,20 @@ main (int argc, char **argv)
       xset_binary_mode (STDOUT_FILENO, O_BINARY);
     }
 
-  /* Check if any of the input files are the same as the output file.  */
-
   /* Main loop.  */
 
   infile = "-";
-  argind = optind;
+  int argind = optind;
+  bool ok = true;
+  size_t page_size = getpagesize ();
 
   do
     {
       if (argind < argc)
         infile = argv[argind];
 
-      if (STREQ (infile, "-"))
+      bool reading_stdin = STREQ (infile, "-");
+      if (reading_stdin)
         {
           have_read_stdin = true;
           input_desc = STDIN_FILENO;
@@ -713,7 +660,9 @@ main (int argc, char **argv)
           ok = false;
           goto contin;
         }
-      insize = io_blksize (stat_buf);
+
+      /* Optimal size of i/o operations of input.  */
+      size_t insize = io_blksize (stat_buf);
 
       fdadvise (input_desc, 0, 0, FADVISE_SEQUENTIAL);
 
@@ -729,6 +678,9 @@ main (int argc, char **argv)
           ok = false;
           goto contin;
         }
+
+      /* Pointer to the input buffer.  */
+      char *inbuf;
 
       /* Select which version of 'cat' to use.  If any format-oriented
          options were given use 'cat'; otherwise use 'simple_cat'.  */
@@ -767,8 +719,8 @@ main (int argc, char **argv)
              on some paging implementations, so add PAGE_SIZE - 1 bytes to the
              request to make room for the alignment.  */
 
-          outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN
-                            + page_size - 1);
+          char *outbuf = xmalloc (outsize - 1 + insize * 4
+                                  + LINE_COUNTER_BUF_LEN + page_size - 1);
 
           ok &= cat (ptr_align (inbuf, page_size), insize,
                      ptr_align (outbuf, page_size), outsize, show_nonprinting,
@@ -781,7 +733,7 @@ main (int argc, char **argv)
       free (inbuf);
 
     contin:
-      if (!STREQ (infile, "-") && close (input_desc) < 0)
+      if (!reading_stdin && close (input_desc) < 0)
         {
           error (0, errno, "%s", quotef (infile));
           ok = false;
