@@ -38,8 +38,7 @@ struct randint_source *randint_new (struct randread_source *)
   _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC (randint_free, 1)
   _GL_ATTRIBUTE_NONNULL () _GL_ATTRIBUTE_RETURNS_NONNULL;
 struct randint_source *randint_all_new (char const *, size_t)
-  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC (randint_all_free, 1)
-  _GL_ATTRIBUTE_NONNULL ();
+  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC (randint_all_free, 1);
 struct randread_source *randint_get_source (struct randint_source const *)
   _GL_ATTRIBUTE_NONNULL () _GL_ATTRIBUTE_PURE;
 randint randint_genmax (struct randint_source *, randint genmax)
