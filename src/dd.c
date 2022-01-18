@@ -98,11 +98,12 @@
 #define OUTPUT_BLOCK_SLOP (page_size - 1)
 
 /* Maximum blocksize for the given SLOP.
-   Keep it smaller than SIZE_MAX - SLOP, so that we can
+   Keep it smaller than MIN (IDX_MAX, SIZE_MAX) - SLOP, so that we can
    allocate buffers that size.  Keep it smaller than SSIZE_MAX, for
    the benefit of system calls like "read".  And keep it smaller than
    OFF_T_MAX, for the benefit of the large-offset seek code.  */
-#define MAX_BLOCKSIZE(slop) MIN (SIZE_MAX - (slop), MIN (SSIZE_MAX, OFF_T_MAX))
+#define MAX_BLOCKSIZE(slop) MIN (MIN (IDX_MAX, SIZE_MAX) - (slop), \
+                                 MIN (SSIZE_MAX, OFF_T_MAX))
 
 /* Conversions bit masks. */
 enum
@@ -148,39 +149,39 @@ static char const *input_file = NULL;
 static char const *output_file = NULL;
 
 /* The page size on this host.  */
-static size_t page_size;
+static idx_t page_size;
 
 /* The number of bytes in which atomic reads are done. */
-static size_t input_blocksize = 0;
+static idx_t input_blocksize = 0;
 
 /* The number of bytes in which atomic writes are done. */
-static size_t output_blocksize = 0;
+static idx_t output_blocksize = 0;
 
 /* Conversion buffer size, in bytes.  0 prevents conversions. */
-static size_t conversion_blocksize = 0;
+static idx_t conversion_blocksize = 0;
 
 /* Skip this many records of 'input_blocksize' bytes before input. */
-static uintmax_t skip_records = 0;
+static intmax_t skip_records = 0;
 
 /* Skip this many bytes before input in addition of 'skip_records'
    records.  */
-static size_t skip_bytes = 0;
+static idx_t skip_bytes = 0;
 
 /* Skip this many records of 'output_blocksize' bytes before output. */
-static uintmax_t seek_records = 0;
+static intmax_t seek_records = 0;
 
 /* Skip this many bytes in addition to 'seek_records' records before
    output.  */
-static uintmax_t seek_bytes = 0;
+static intmax_t seek_bytes = 0;
 
 /* Whether the final output was done with a seek (rather than a write).  */
 static bool final_op_was_seek;
 
 /* Copy only this many records.  The default is effectively infinity.  */
-static uintmax_t max_records = (uintmax_t) -1;
+static intmax_t max_records = INTMAX_MAX;
 
 /* Copy this many bytes in addition to 'max_records' records.  */
-static size_t max_bytes = 0;
+static idx_t max_bytes = 0;
 
 /* Bit vector of conversions to apply. */
 static int conversions_mask = 0;
@@ -196,19 +197,19 @@ static int status_level = STATUS_DEFAULT;
 static bool translation_needed = false;
 
 /* Number of partial blocks written. */
-static uintmax_t w_partial = 0;
+static intmax_t w_partial = 0;
 
 /* Number of full blocks written. */
-static uintmax_t w_full = 0;
+static intmax_t w_full = 0;
 
 /* Number of partial blocks read. */
-static uintmax_t r_partial = 0;
+static intmax_t r_partial = 0;
 
 /* Number of full blocks read. */
-static uintmax_t r_full = 0;
+static intmax_t r_full = 0;
 
 /* Number of bytes written.  */
-static uintmax_t w_bytes = 0;
+static intmax_t w_bytes = 0;
 
 /* Time that dd started.  */
 static xtime_t start_time;
@@ -226,16 +227,14 @@ static bool input_seekable;
    If ESPIPE, do not issue any more diagnostics about it.  */
 static int input_seek_errno;
 
-/* File offset of the input, in bytes, along with a flag recording
-   whether it overflowed.  */
-static uintmax_t input_offset;
-static bool input_offset_overflow;
+/* File offset of the input, in bytes, or -1 if it overflowed.  */
+static off_t input_offset;
 
 /* True if a partial read should be diagnosed.  */
 static bool warn_partial_read;
 
 /* Records truncated by conv=block. */
-static uintmax_t r_truncate = 0;
+static intmax_t r_truncate = 0;
 
 /* Output representation of newline and space characters.
    They change if we're converting to EBCDIC.  */
@@ -253,10 +252,10 @@ static char *ibuf;
 static char *obuf;
 
 /* Current index into 'obuf'. */
-static size_t oc = 0;
+static idx_t oc = 0;
 
 /* Index into current line, for 'conv=block' and 'conv=unblock'.  */
-static size_t col = 0;
+static idx_t col = 0;
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -274,7 +273,7 @@ static bool i_nocache, o_nocache;
 static bool i_nocache_eof, o_nocache_eof;
 
 /* Function used for read (to handle iflag=fullblock parameter).  */
-static ssize_t (*iread_fnc) (int fd, char *buf, size_t size);
+static ssize_t (*iread_fnc) (int fd, char *buf, idx_t size);
 
 /* A longest symbol in the struct symbol_values tables below.  */
 #define LONGEST_SYMBOL "count_bytes"
@@ -701,11 +700,10 @@ alloc_ibuf (void)
   char *buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
   if (!buf)
     {
-      uintmax_t ibs = input_blocksize;
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       die (EXIT_FAILURE, 0,
-           _("memory exhausted by input buffer of size %"PRIuMAX" bytes (%s)"),
-           ibs,
+           _("memory exhausted by input buffer of size %td bytes (%s)"),
+           input_blocksize,
            human_readable (input_blocksize, hbuf,
                            human_opts | human_base_1024, 1, 1));
     }
@@ -729,12 +727,11 @@ alloc_obuf (void)
       char *buf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
       if (!buf)
         {
-          uintmax_t obs = output_blocksize;
           char hbuf[LONGEST_HUMAN_READABLE + 1];
           die (EXIT_FAILURE, 0,
-               _("memory exhausted by output buffer of size %"PRIuMAX
+               _("memory exhausted by output buffer of size %td"
                  " bytes (%s)"),
-               obs,
+               output_blocksize,
                human_readable (output_blocksize, hbuf,
                                human_opts | human_base_1024, 1, 1));
         }
@@ -793,8 +790,7 @@ print_xfer_stats (xtime_t progress_time)
   if (start_time < now)
     {
       double XTIME_PRECISIONe0 = XTIME_PRECISION;
-      uintmax_t delta_xtime = now;
-      delta_xtime -= start_time;
+      xtime_t delta_xtime = now - start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
       bytes_per_second = human_readable (w_bytes, bpsbuf, human_opts,
                                          XTIME_PRECISION, delta_xtime);
@@ -822,16 +818,16 @@ print_xfer_stats (xtime_t progress_time)
   int stats_len
     = (abbreviation_lacks_prefix (si)
        ? fprintf (stderr,
-                  ngettext ("%"PRIuMAX" byte copied, %s, %s",
-                            "%"PRIuMAX" bytes copied, %s, %s",
+                  ngettext ("%"PRIdMAX" byte copied, %s, %s",
+                            "%"PRIdMAX" bytes copied, %s, %s",
                             select_plural (w_bytes)),
                   w_bytes, delta_s_buf, bytes_per_second)
        : abbreviation_lacks_prefix (iec)
        ? fprintf (stderr,
-                  _("%"PRIuMAX" bytes (%s) copied, %s, %s"),
+                  _("%"PRIdMAX" bytes (%s) copied, %s, %s"),
                   w_bytes, si, delta_s_buf, bytes_per_second)
        : fprintf (stderr,
-                  _("%"PRIuMAX" bytes (%s, %s) copied, %s, %s"),
+                  _("%"PRIdMAX" bytes (%s, %s) copied, %s, %s"),
                   w_bytes, si, iec, delta_s_buf, bytes_per_second));
 
   if (progress_time)
@@ -863,14 +859,14 @@ print_stats (void)
     }
 
   fprintf (stderr,
-           _("%"PRIuMAX"+%"PRIuMAX" records in\n"
-             "%"PRIuMAX"+%"PRIuMAX" records out\n"),
+           _("%"PRIdMAX"+%"PRIdMAX" records in\n"
+             "%"PRIdMAX"+%"PRIdMAX" records out\n"),
            r_full, r_partial, w_full, w_partial);
 
   if (r_truncate != 0)
     fprintf (stderr,
-             ngettext ("%"PRIuMAX" truncated record\n",
-                       "%"PRIuMAX" truncated records\n",
+             ngettext ("%"PRIdMAX" truncated record\n",
+                       "%"PRIdMAX" truncated records\n",
                        select_plural (r_truncate)),
              r_truncate);
 
@@ -1050,7 +1046,9 @@ cache_round (int fd, off_t len)
 
   if (len)
     {
-      uintmax_t c_pending = *pending + len;
+      intmax_t c_pending;
+      if (INT_ADD_WRAPV (*pending, len, &c_pending))
+        c_pending = INTMAX_MAX;
       *pending = c_pending % IO_BUFSIZE;
       if (c_pending > *pending)
         len = c_pending - *pending;
@@ -1138,7 +1136,7 @@ invalidate_cache (int fd, off_t len)
    bytes read if successful, -1 (setting errno) on failure.  */
 
 static ssize_t
-iread (int fd, char *buf, size_t size)
+iread (int fd, char *buf, idx_t size)
 {
   ssize_t nread;
   static ssize_t prev_nread;
@@ -1167,11 +1165,11 @@ iread (int fd, char *buf, size_t size)
     {
       if (0 < prev_nread && prev_nread < size)
         {
-          uintmax_t prev = prev_nread;
+          idx_t prev = prev_nread;
           if (status_level != STATUS_NONE)
-            error (0, 0, ngettext (("warning: partial read (%"PRIuMAX" byte); "
+            error (0, 0, ngettext (("warning: partial read (%td byte); "
                                     "suggest iflag=fullblock"),
-                                   ("warning: partial read (%"PRIuMAX" bytes); "
+                                   ("warning: partial read (%td bytes); "
                                     "suggest iflag=fullblock"),
                                    select_plural (prev)),
                    prev);
@@ -1185,7 +1183,7 @@ iread (int fd, char *buf, size_t size)
 
 /* Wrapper around iread function to accumulate full blocks.  */
 static ssize_t
-iread_fullblock (int fd, char *buf, size_t size)
+iread_fullblock (int fd, char *buf, idx_t size)
 {
   ssize_t nread = 0;
 
@@ -1209,10 +1207,10 @@ iread_fullblock (int fd, char *buf, size_t size)
    this is less than SIZE.  Keep trying if there are partial
    writes.  */
 
-static size_t
-iwrite (int fd, char const *buf, size_t size)
+static idx_t
+iwrite (int fd, char const *buf, idx_t size)
 {
-  size_t total_written = 0;
+  idx_t total_written = 0;
 
   if ((output_flags & O_DIRECT) && size < output_blocksize)
     {
@@ -1290,7 +1288,7 @@ iwrite (int fd, char const *buf, size_t size)
 static void
 write_output (void)
 {
-  size_t nwritten = iwrite (STDOUT_FILENO, obuf, output_blocksize);
+  idx_t nwritten = iwrite (STDOUT_FILENO, obuf, output_blocksize);
   w_bytes += nwritten;
   if (nwritten != output_blocksize)
     {
@@ -1422,7 +1420,7 @@ parse_symbols (char const *str, struct symbol_value const *table,
         {
           if (! entry->symbol[0])
             {
-              size_t slen = strcomma ? strcomma - str : strlen (str);
+              idx_t slen = strcomma ? strcomma - str : strlen (str);
               error (0, 0, "%s: %s", _(error_msgid),
                      quotearg_n_style_mem (0, locale_quoting_style, str, slen));
               usage (EXIT_FAILURE);
@@ -1443,40 +1441,61 @@ parse_symbols (char const *str, struct symbol_value const *table,
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
-   Set *INVALID to a nonzero error value if STR does not represent a
-   number in this format.  */
+   If STR does not represent a number in this format,
+   set *INVALID to a nonzero error value and return
+   INTMAX_MAX if it is an overflow, an indeterminate value otherwise.  */
 
-static uintmax_t
+static intmax_t
 parse_integer (char const *str, strtol_error *invalid)
 {
+  /* Call xstrtoumax, not xstrtoimax, since we don't want to
+     allow strings like "  -0".  */
   uintmax_t n;
   char *suffix;
   strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
 
-  if (e == LONGINT_INVALID_SUFFIX_CHAR && *suffix == 'x')
+  if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
+      && *suffix == 'x')
     {
-      uintmax_t multiplier = parse_integer (suffix + 1, invalid);
-
-      if (multiplier != 0 && n * multiplier / multiplier != n)
+      strtol_error invalid2 = LONGINT_OK;
+      intmax_t result = parse_integer (suffix + 1, &invalid2);
+      if ((invalid2 & ~LONGINT_OVERFLOW) != LONGINT_OK)
         {
-          *invalid = LONGINT_OVERFLOW;
-          return 0;
+          *invalid = invalid2;
+          return result;
         }
 
-      if (n == 0 && STRPREFIX (str, "0x"))
-        error (0, 0,
-               _("warning: %s is a zero multiplier; "
-                 "use %s if that is intended"),
-               quote_n (0, "0x"), quote_n (1, "00x"));
+      if (INT_MULTIPLY_WRAPV (n, result, &result))
+        {
+          *invalid = LONGINT_OVERFLOW;
+          return INTMAX_MAX;
+        }
 
-      n *= multiplier;
+      if (result == 0)
+        {
+          if (STRPREFIX (str, "0x"))
+            error (0, 0,
+                   _("warning: %s is a zero multiplier; "
+                     "use %s if that is intended"),
+                   quote_n (0, "0x"), quote_n (1, "00x"));
+        }
+      else if ((e | invalid2) & LONGINT_OVERFLOW)
+        {
+          *invalid = LONGINT_OVERFLOW;
+          return INTMAX_MAX;
+        }
+
+      return result;
     }
-  else if (e != LONGINT_OK)
+
+  if (INTMAX_MAX < n)
     {
-      *invalid = e;
-      return 0;
+      *invalid = LONGINT_OVERFLOW;
+      return INTMAX_MAX;
     }
 
+  if (e != LONGINT_OK)
+    *invalid = e;
   return n;
 }
 
@@ -1492,10 +1511,10 @@ operand_is (char const *operand, char const *name)
 static void
 scanargs (int argc, char *const *argv)
 {
-  size_t blocksize = 0;
-  uintmax_t count = (uintmax_t) -1;
-  uintmax_t skip = 0;
-  uintmax_t seek = 0;
+  idx_t blocksize = 0;
+  intmax_t count = INTMAX_MAX;
+  intmax_t skip = 0;
+  intmax_t seek = 0;
 
   for (int i = optind; i < argc; i++)
     {
@@ -1529,33 +1548,34 @@ scanargs (int argc, char *const *argv)
       else
         {
           strtol_error invalid = LONGINT_OK;
-          uintmax_t n = parse_integer (val, &invalid);
-          uintmax_t n_min = 0;
-          uintmax_t n_max = UINTMAX_MAX;
+          intmax_t n = parse_integer (val, &invalid);
+          intmax_t n_min = 0;
+          intmax_t n_max = INTMAX_MAX;
+          idx_t *converted_idx = NULL;
 
           if (operand_is (name, "ibs"))
             {
               n_min = 1;
               n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
-              input_blocksize = n;
+              converted_idx = &input_blocksize;
             }
           else if (operand_is (name, "obs"))
             {
               n_min = 1;
               n_max = MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP);
-              output_blocksize = n;
+              converted_idx = &output_blocksize;
             }
           else if (operand_is (name, "bs"))
             {
               n_min = 1;
               n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
-              blocksize = n;
+              converted_idx = &blocksize;
             }
           else if (operand_is (name, "cbs"))
             {
               n_min = 1;
-              n_max = SIZE_MAX;
-              conversion_blocksize = n;
+              n_max = MIN (SIZE_MAX, IDX_MAX);
+              converted_idx = &conversion_blocksize;
             }
           else if (operand_is (name, "skip"))
             skip = n;
@@ -1578,6 +1598,8 @@ scanargs (int argc, char *const *argv)
           if (invalid != LONGINT_OK)
             die (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
                  "%s: %s", _("invalid number"), quote (val));
+          else if (converted_idx)
+            *converted_idx = n;
         }
     }
 
@@ -1628,12 +1650,12 @@ scanargs (int argc, char *const *argv)
   else if (skip != 0)
     skip_records = skip;
 
-  if (input_flags & O_COUNT_BYTES && count != (uintmax_t) -1)
+  if (input_flags & O_COUNT_BYTES && count != INTMAX_MAX)
     {
       max_records = count / input_blocksize;
       max_bytes = count % input_blocksize;
     }
-  else if (count != (uintmax_t) -1)
+  else if (count != INTMAX_MAX)
     max_records = count;
 
   if (output_flags & O_SEEK_BYTES && seek != 0)
@@ -1651,7 +1673,7 @@ scanargs (int argc, char *const *argv)
   warn_partial_read =
     (! (conversions_mask & C_TWOBUFS) && ! (input_flags & O_FULLBLOCK)
      && (skip_records
-         || (0 < max_records && max_records < (uintmax_t) -1)
+         || (0 < max_records && max_records < INTMAX_MAX)
          || (input_flags | output_flags) & O_DIRECT));
 
   iread_fnc = ((input_flags & O_FULLBLOCK)
@@ -1726,9 +1748,9 @@ apply_translations (void)
    to the NREAD bytes in BUF.  */
 
 static void
-translate_buffer (char *buf, size_t nread)
+translate_buffer (char *buf, idx_t nread)
 {
-  size_t i;
+  idx_t i;
   char *cp;
   for (i = nread, cp = buf; i; i--, cp++)
     *cp = trans_table[to_uchar (*cp)];
@@ -1746,7 +1768,7 @@ static char saved_char;
    next call.   Return the new start of the BUF buffer.  */
 
 static char *
-swab_buffer (char *buf, size_t *nread)
+swab_buffer (char *buf, idx_t *nread)
 {
   char *bufstart = buf;
 
@@ -1770,7 +1792,7 @@ swab_buffer (char *buf, size_t *nread)
      toward the beginning.  This way we only move half of the data.  */
 
   char *cp = bufstart + *nread;	/* Start one char past the last.  */
-  for (size_t i = *nread / 2; i; i--, cp -= 2)
+  for (idx_t i = *nread >> 1; i; i--, cp -= 2)
     *cp = *(cp - 2);
 
   return ++bufstart;
@@ -1780,11 +1802,10 @@ swab_buffer (char *buf, size_t *nread)
    necessary.  */
 
 static void
-advance_input_offset (uintmax_t offset)
+advance_input_offset (intmax_t offset)
 {
-  input_offset += offset;
-  if (input_offset < offset)
-    input_offset_overflow = true;
+  if (0 <= input_offset && INT_ADD_WRAPV (input_offset, offset, &input_offset))
+    input_offset = -1;
 }
 
 /* Throw away RECORDS blocks of BLOCKSIZE bytes plus BYTES bytes on
@@ -1796,18 +1817,18 @@ advance_input_offset (uintmax_t offset)
    reached.  If FDESC is STDOUT_FILENO, on return, BYTES is the
    remaining bytes in addition to the remaining records.  */
 
-static uintmax_t
-skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
-      size_t *bytes)
+static intmax_t
+skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
+      idx_t *bytes)
 {
-  uintmax_t offset = records * blocksize + *bytes;
-
   /* Try lseek and if an error indicates it was an inappropriate operation --
      or if the file offset is not representable as an off_t --
      fall back on using read.  */
 
   errno = 0;
-  if (records <= OFF_T_MAX / blocksize
+  off_t offset;
+  if (! INT_MULTIPLY_WRAPV (records, blocksize, &offset)
+      && ! INT_ADD_WRAPV (offset, *bytes, &offset)
       && 0 <= lseek (fdesc, offset, SEEK_CUR))
     {
       if (fdesc == STDIN_FILENO)
@@ -1815,7 +1836,8 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
            struct stat st;
            if (ifstat (STDIN_FILENO, &st) != 0)
              die (EXIT_FAILURE, errno, _("cannot fstat %s"), quoteaf (file));
-           if (usable_st_size (&st) && st.st_size < input_offset + offset)
+           if (usable_st_size (&st) && 0 <= input_offset
+               && st.st_size - input_offset < offset)
              {
                /* When skipping past EOF, return the number of _full_ blocks
                 * that are not skipped, and set offset to EOF, so the caller
@@ -1920,7 +1942,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
    be seekable.  */
 
 static bool
-advance_input_after_read_error (size_t nbytes)
+advance_input_after_read_error (idx_t nbytes)
 {
   if (! input_seekable)
     {
@@ -1932,8 +1954,7 @@ advance_input_after_read_error (size_t nbytes)
     {
       off_t offset;
       advance_input_offset (nbytes);
-      input_offset_overflow |= (OFF_T_MAX < input_offset);
-      if (input_offset_overflow)
+      if (input_offset < 0)
         {
           error (0, 0, _("offset overflow while reading file %s"),
                  quoteaf (input_file));
@@ -1962,13 +1983,13 @@ advance_input_after_read_error (size_t nbytes)
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
 static void
-copy_simple (char const *buf, size_t nread)
+copy_simple (char const *buf, idx_t nread)
 {
   char const *start = buf;	/* First uncopied char in BUF.  */
 
   do
     {
-      size_t nfree = MIN (nread, output_blocksize - oc);
+      idx_t nfree = MIN (nread, output_blocksize - oc);
 
       memcpy (obuf + oc, start, nfree);
 
@@ -1986,15 +2007,15 @@ copy_simple (char const *buf, size_t nread)
    replacing the newline with trailing spaces).  */
 
 static void
-copy_with_block (char const *buf, size_t nread)
+copy_with_block (char const *buf, idx_t nread)
 {
-  for (size_t i = nread; i; i--, buf++)
+  for (idx_t i = nread; i; i--, buf++)
     {
       if (*buf == newline_character)
         {
           if (col < conversion_blocksize)
             {
-              size_t j;
+              idx_t j;
               for (j = col; j < conversion_blocksize; j++)
                 output_char (space_character);
             }
@@ -2016,11 +2037,11 @@ copy_with_block (char const *buf, size_t nread)
    with a newline).  */
 
 static void
-copy_with_unblock (char const *buf, size_t nread)
+copy_with_unblock (char const *buf, idx_t nread)
 {
-  static size_t pending_spaces = 0;
+  static idx_t pending_spaces = 0;
 
-  for (size_t i = 0; i < nread; i++)
+  for (idx_t i = 0; i < nread; i++)
     {
       char c = buf[i];
 
@@ -2104,10 +2125,10 @@ dd_copy (void)
 
   /* If nonzero, then the previously read block was partial and
      PARTREAD was its size.  */
-  size_t partread = 0;
+  idx_t partread = 0;
 
   int exit_status = EXIT_SUCCESS;
-  size_t n_bytes_read;
+  idx_t n_bytes_read;
 
   /* Leave at least one extra byte at the beginning and end of 'ibuf'
      for conv=swab, but keep the buffer address even.  But some peculiar
@@ -2128,11 +2149,13 @@ dd_copy (void)
 
   if (skip_records != 0 || skip_bytes != 0)
     {
-      uintmax_t us_bytes = input_offset + (skip_records * input_blocksize)
-                           + skip_bytes;
-      uintmax_t us_blocks = skip (STDIN_FILENO, input_file,
-                                  skip_records, input_blocksize, &skip_bytes);
-      us_bytes -= input_offset;
+      intmax_t us_bytes;
+      bool us_bytes_overflow =
+        (INT_MULTIPLY_WRAPV (skip_records, input_blocksize, &us_bytes)
+         || INT_ADD_WRAPV (skip_bytes, us_bytes, &us_bytes));
+      off_t input_offset0 = input_offset;
+      intmax_t us_blocks = skip (STDIN_FILENO, input_file,
+                                 skip_records, input_blocksize, &skip_bytes);
 
       /* POSIX doesn't say what to do when dd detects it has been
          asked to skip past EOF, so I assume it's non-fatal.
@@ -2140,7 +2163,10 @@ dd_copy (void)
              1. file is too small
              2. pipe has not enough data
              3. partial reads  */
-      if ((us_blocks || (!input_offset_overflow && us_bytes))
+      if ((us_blocks
+           || (0 <= input_offset
+               && (us_bytes_overflow
+                   || us_bytes != input_offset - input_offset0)))
           && status_level != STATUS_NONE)
         {
           error (0, 0,
@@ -2150,8 +2176,8 @@ dd_copy (void)
 
   if (seek_records != 0 || seek_bytes != 0)
     {
-      size_t bytes = seek_bytes;
-      uintmax_t write_records = skip (STDOUT_FILENO, output_file,
+      idx_t bytes = seek_bytes;
+      intmax_t write_records = skip (STDOUT_FILENO, output_file,
                                       seek_records, output_blocksize, &bytes);
 
       if (write_records != 0 || bytes != 0)
@@ -2160,7 +2186,7 @@ dd_copy (void)
 
           do
             {
-              size_t size = write_records ? output_blocksize : bytes;
+              idx_t size = write_records ? output_blocksize : bytes;
               if (iwrite (STDOUT_FILENO, obuf, size) != size)
                 {
                   error (0, errno, _("writing to %s"), quoteaf (output_file));
@@ -2230,7 +2256,7 @@ dd_copy (void)
           if (conversions_mask & C_NOERROR)
             {
               print_stats ();
-              size_t bad_portion = input_blocksize - partread;
+              idx_t bad_portion = input_blocksize - partread;
 
               /* We already know this data is not cached,
                  but call this so that correct offsets are maintained.  */
@@ -2284,7 +2310,7 @@ dd_copy (void)
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
         {
-          size_t nwritten = iwrite (STDOUT_FILENO, obuf, n_bytes_read);
+          idx_t nwritten = iwrite (STDOUT_FILENO, obuf, n_bytes_read);
           w_bytes += nwritten;
           if (nwritten != n_bytes_read)
             {
@@ -2331,7 +2357,7 @@ dd_copy (void)
     {
       /* If the final input line didn't end with a '\n', pad
          the output block to 'conversion_blocksize' chars.  */
-      for (size_t i = col; i < conversion_blocksize; i++)
+      for (idx_t i = col; i < conversion_blocksize; i++)
         output_char (space_character);
     }
 
@@ -2344,7 +2370,7 @@ dd_copy (void)
   /* Write out the last block. */
   if (oc != 0)
     {
-      size_t nwritten = iwrite (STDOUT_FILENO, obuf, oc);
+      idx_t nwritten = iwrite (STDOUT_FILENO, obuf, oc);
       w_bytes += nwritten;
       if (nwritten != 0)
         w_partial++;
@@ -2477,15 +2503,14 @@ main (int argc, char **argv)
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {
-          uintmax_t size = seek_records * output_blocksize + seek_bytes;
-          unsigned long int obs = output_blocksize;
-
-          if (OFF_T_MAX / output_blocksize < seek_records)
+          off_t size;
+          if (INT_MULTIPLY_WRAPV (seek_records, output_blocksize, &size)
+              || INT_ADD_WRAPV (seek_bytes, size, &size))
             die (EXIT_FAILURE, 0,
                  _("offset too large: "
-                   "cannot truncate to a length of seek=%"PRIuMAX""
-                   " (%lu-byte) blocks"),
-                 seek_records, obs);
+                   "cannot truncate to a length of seek=%"PRIdMAX""
+                   " (%td-byte) blocks"),
+                 seek_records, output_blocksize);
 
           if (iftruncate (STDOUT_FILENO, size) != 0)
             {
@@ -2502,10 +2527,13 @@ main (int argc, char **argv)
               if (S_ISREG (stdout_stat.st_mode)
                   || S_ISDIR (stdout_stat.st_mode)
                   || S_TYPEISSHM (&stdout_stat))
-                die (EXIT_FAILURE, ftruncate_errno,
-                     _("failed to truncate to %"PRIuMAX" bytes"
-                       " in output file %s"),
-                     size, quoteaf (output_file));
+                {
+                  intmax_t isize = size;
+                  die (EXIT_FAILURE, ftruncate_errno,
+                       _("failed to truncate to %"PRIdMAX" bytes"
+                         " in output file %s"),
+                       isize, quoteaf (output_file));
+                }
             }
         }
     }

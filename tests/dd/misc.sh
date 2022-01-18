@@ -19,6 +19,7 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
+export LC_ALL=C
 
 tmp_in=dd-in
 tmp_in2=dd-in2
@@ -98,7 +99,7 @@ test "$outbytes" -eq 3 || fail=1
 # A delay is required to trigger a failure.
 # There might be some missed failures but it's unlikely.
 (echo a; sleep .1; echo b) \
-  | env LC_ALL=C dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
+  | dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
 printf 'a\nb\n' > out_ok || framework_failure_
 echo "1+0 records in
 1+0 records out" > err_ok || framework_failure_
@@ -116,5 +117,11 @@ dd: warning: '0x' is a zero multiplier; use '00x' if that is intended
 EOF
 compare exp err || fail=1
 
+echo "0+0 records in
+0+0 records out" >err_ok || framework_failure_
+big=9999999999999999999999999999999999999999999999999999999999999
+dd if=$tmp_in of=$tmp_out count=00x$big status=noxfer 2>err || fail=1
+compare /dev/null $tmp_out || fail=1
+compare err_ok err || fail=1
 
 Exit $fail

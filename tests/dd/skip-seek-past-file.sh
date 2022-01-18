@@ -20,7 +20,7 @@
 print_ver_ dd
 require_sparse_support_ # for 'truncate --size=$OFF_T_MAX'
 eval $(getlimits) # for OFF_T limits
-
+export LC_ALL=C
 
 printf "1234" > file || framework_failure_
 
@@ -65,8 +65,11 @@ compare err_ok err || fail=1
 
 # skipping > OFF_T_MAX should fail immediately
 dd bs=1 skip=$OFF_T_OFLOW count=0 status=noxfer < file 2> err && fail=1
-# error message should be "... cannot skip: strerror(EOVERFLOW)"
-grep "cannot skip:" err >/dev/null || fail=1
+# error message should be "... invalid number: strerror(EOVERFLOW)"
+grep "invalid number:" err >/dev/null || fail=1
+dd bs=1 skip=${OFF_T_OFLOW}x$OFF_T_OFLOW count=0 status=noxfer < file 2> err &&
+    fail=1
+grep "invalid number:" err >/dev/null || fail=1
 
 # skipping > max file size should fail immediately
 if ! truncate --size=$OFF_T_MAX in 2>/dev/null; then
