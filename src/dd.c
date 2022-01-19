@@ -18,8 +18,6 @@
 
 #include <config.h>
 
-#define SWAB_ALIGN_OFFSET 2
-
 #include <sys/types.h>
 #include <signal.h>
 
@@ -93,8 +91,8 @@
 
 /* How many bytes to add to the input and output block sizes before invoking
    malloc.  See dd_copy for details.  INPUT_BLOCK_SLOP must be no less than
-   OUTPUT_BLOCK_SLOP.  */
-#define INPUT_BLOCK_SLOP (2 * SWAB_ALIGN_OFFSET + 2 * page_size - 1)
+   OUTPUT_BLOCK_SLOP, and has one more byte because of swab_buffer.  */
+#define INPUT_BLOCK_SLOP page_size
 #define OUTPUT_BLOCK_SLOP (page_size - 1)
 
 /* Maximum blocksize for the given SLOP.
@@ -697,6 +695,7 @@ alloc_ibuf (void)
   if (ibuf)
     return;
 
+  /* Ensure the input buffer is page aligned.  */
   char *buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
   if (!buf)
     {
@@ -710,7 +709,7 @@ alloc_ibuf (void)
 #ifdef lint
   real_ibuf = buf;
 #endif
-  ibuf = ptr_align (buf + SWAB_ALIGN_OFFSET, page_size);
+  ibuf = ptr_align (buf, page_size);
 }
 
 /* Ensure output buffer OBUF is allocated/initialized.  */
@@ -1756,46 +1755,41 @@ translate_buffer (char *buf, idx_t nread)
     *cp = trans_table[to_uchar (*cp)];
 }
 
-/* If true, the last char from the previous call to 'swab_buffer'
-   is saved in 'saved_char'.  */
-static bool char_is_saved = false;
-
-/* Odd char from previous call.  */
-static char saved_char;
-
-/* Swap NREAD bytes in BUF, plus possibly an initial char from the
-   previous call.  If NREAD is odd, save the last char for the
-   next call.   Return the new start of the BUF buffer.  */
+/* Swap *NREAD bytes in BUF, which should have room for an extra byte
+   after the end because the swapping is not in-place.  If *SAVED_BYTE
+   is nonnegative, also swap that initial byte from the previous call.
+   Save the last byte into into *SAVED_BYTE if needed to make the
+   resulting *NREAD even, and set *SAVED_BYTE to -1 otherwise.
+   Return the buffer's adjusted start, either BUF or BUF + 1.  */
 
 static char *
-swab_buffer (char *buf, idx_t *nread)
+swab_buffer (char *buf, idx_t *nread, int *saved_byte)
 {
-  char *bufstart = buf;
+  if (*nread == 0)
+    return buf;
 
-  /* Is a char left from last time?  */
-  if (char_is_saved)
+  /* Update *SAVED_BYTE, and set PREV_SAVED to its old value.  */
+  int prev_saved = *saved_byte;
+  if ((prev_saved < 0) == (*nread & 1))
     {
-      *--bufstart = saved_char;
-      (*nread)++;
-      char_is_saved = false;
+      unsigned char c = buf[--*nread];
+      *saved_byte = c;
     }
+  else
+    *saved_byte = -1;
 
-  if (*nread & 1)
-    {
-      /* An odd number of chars are in the buffer.  */
-      saved_char = bufstart[--*nread];
-      char_is_saved = true;
-    }
-
-  /* Do the byte-swapping by moving every second character two
+  /* Do the byte-swapping by moving every other byte two
      positions toward the end, working from the end of the buffer
-     toward the beginning.  This way we only move half of the data.  */
+     toward the beginning.  This way we move only half the data.  */
+  for (idx_t i = *nread; 1 < i; i -= 2)
+    buf[i] = buf[i - 2];
 
-  char *cp = bufstart + *nread;	/* Start one char past the last.  */
-  for (idx_t i = *nread >> 1; i; i--, cp -= 2)
-    *cp = *(cp - 2);
+  if (prev_saved < 0)
+    return buf + 1;
 
-  return ++bufstart;
+  buf[1] = prev_saved;
+  ++*nread;
+  return buf;
 }
 
 /* Add OFFSET to the input offset, setting the overflow flag if
@@ -2130,23 +2124,6 @@ dd_copy (void)
   int exit_status = EXIT_SUCCESS;
   idx_t n_bytes_read;
 
-  /* Leave at least one extra byte at the beginning and end of 'ibuf'
-     for conv=swab, but keep the buffer address even.  But some peculiar
-     device drivers work only with word-aligned buffers, so leave an
-     extra two bytes.  */
-
-  /* Some devices require alignment on a sector or page boundary
-     (e.g. character flash or disk devices).  Align the input buffer to a
-     page boundary to cover all bases.  Note that due to the swab
-     algorithm, we must have at least one byte in the page before
-     the input buffer;  thus we allocate 2 pages of slop in the
-     real buffer.  8k above the blocksize shouldn't bother anyone.
-
-     The page alignment is necessary on any Linux kernel that supports
-     either the SGI raw I/O patch or Steven Tweedies raw I/O patch.
-     It is necessary when accessing raw (i.e., character special)
-     storage devices on SVR4-derived systems.  */
-
   if (skip_records != 0 || skip_bytes != 0)
     {
       intmax_t us_bytes;
@@ -2207,6 +2184,7 @@ dd_copy (void)
 
   alloc_ibuf ();
   alloc_obuf ();
+  int saved_byte = -1;
 
   while (true)
     {
@@ -2330,7 +2308,7 @@ dd_copy (void)
         translate_buffer (ibuf, n_bytes_read);
 
       if (conversions_mask & C_SWAB)
-        bufstart = swab_buffer (ibuf, &n_bytes_read);
+        bufstart = swab_buffer (ibuf, &n_bytes_read, &saved_byte);
       else
         bufstart = ibuf;
 
@@ -2343,8 +2321,9 @@ dd_copy (void)
     }
 
   /* If we have a char left as a result of conv=swab, output it.  */
-  if (char_is_saved)
+  if (0 <= saved_byte)
     {
+      char saved_char = saved_byte;
       if (conversions_mask & C_BLOCK)
         copy_with_block (&saved_char, 1);
       else if (conversions_mask & C_UNBLOCK)
