@@ -1078,7 +1078,6 @@ copy_reg (char const *src_name, char const *dst_name,
 {
   char *buf;
   char *buf_alloc = NULL;
-  char *name_alloc = NULL;
   int dest_desc;
   int dest_errno;
   int source_desc;
@@ -1459,7 +1458,6 @@ close_src_desc:
     }
 
   free (buf_alloc);
-  free (name_alloc);
   return return_val;
 }
 
