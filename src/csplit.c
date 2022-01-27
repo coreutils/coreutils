@@ -52,8 +52,8 @@
 struct control
 {
   intmax_t offset;		/* Offset from regexp to split at. */
-  uintmax_t lines_required;	/* Number of lines required. */
-  uintmax_t repeat;		/* Repeat count. */
+  intmax_t lines_required;	/* Number of lines required. */
+  intmax_t repeat;		/* Repeat count. */
   int argnum;			/* ARGV index. */
   bool repeat_forever;		/* True if '*' used as a repeat count. */
   bool ignore;			/* If true, produce no output (for regexp). */
@@ -64,23 +64,19 @@ struct control
 /* Initial size of data area in buffers. */
 #define START_SIZE	8191
 
-/* Increment size for data area. */
-#define INCR_SIZE	2048
-
 /* Number of lines kept in each node in line list. */
 #define CTRL_SIZE	80
 
 #ifdef DEBUG
 /* Some small values to test the algorithms. */
 # define START_SIZE	200
-# define INCR_SIZE	10
 # define CTRL_SIZE	1
 #endif
 
 /* A string with a length count. */
 struct cstring
 {
-  size_t len;
+  idx_t len;
   char *str;
 };
 
@@ -88,9 +84,9 @@ struct cstring
    These structures are linked together if needed. */
 struct line
 {
-  size_t used;			/* Number of offsets used in this struct. */
-  size_t insert_index;		/* Next offset to use when inserting line. */
-  size_t retrieve_index;	/* Next index to use when retrieving line. */
+  idx_t used;			/* Number of offsets used in this struct. */
+  idx_t insert_index;		/* Next offset to use when inserting line. */
+  idx_t retrieve_index;	/* Next index to use when retrieving line. */
   struct cstring starts[CTRL_SIZE]; /* Lines in the data area. */
   struct line *next;		/* Next in linked list. */
 };
@@ -100,11 +96,11 @@ struct line
    pointers to the individual lines. */
 struct buffer_record
 {
-  size_t bytes_alloc;		/* Size of the buffer area. */
-  size_t bytes_used;		/* Bytes used in the buffer area. */
-  uintmax_t start_line;		/* First line number in this buffer. */
-  uintmax_t first_available;	/* First line that can be retrieved. */
-  size_t num_lines;		/* Number of complete lines in this buffer. */
+  idx_t bytes_alloc;		/* Size of the buffer area. */
+  idx_t bytes_used;		/* Bytes used in the buffer area. */
+  intmax_t start_line;		/* First line number in this buffer. */
+  intmax_t first_available;	/* First line that can be retrieved. */
+  idx_t num_lines;		/* Number of complete lines in this buffer. */
   char *buffer;			/* Data area. */
   struct line *line_start;	/* Head of list of pointers to lines. */
   struct line *curr_line;	/* The line start record currently in use. */
@@ -123,13 +119,13 @@ static struct buffer_record *head = NULL;
 static char *hold_area = NULL;
 
 /* Number of bytes in 'hold_area'. */
-static size_t hold_count = 0;
+static idx_t hold_count = 0;
 
 /* Number of the last line in the buffers. */
-static uintmax_t last_line_number = 0;
+static intmax_t last_line_number = 0;
 
 /* Number of the line currently being examined. */
-static uintmax_t current_line = 0;
+static intmax_t current_line = 0;
 
 /* If true, we have read EOF. */
 static bool have_read_eof = false;
@@ -147,10 +143,10 @@ static char *volatile suffix = NULL;
 static int volatile digits = 2;
 
 /* Number of files created so far. */
-static unsigned int volatile files_created = 0;
+static int volatile files_created = 0;
 
 /* Number of bytes written to current file. */
-static uintmax_t bytes_written;
+static intmax_t bytes_written;
 
 /* Output file pointer. */
 static FILE *output_stream = NULL;
@@ -178,7 +174,7 @@ static bool suppress_matched;
 static struct control *controls;
 
 /* Number of elements in 'controls'. */
-static size_t control_used;
+static idx_t control_used;
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -249,7 +245,7 @@ interrupt_handler (int sig)
    These bytes will be retrieved later when another large buffer is read.  */
 
 static void
-save_to_hold_area (char *start, size_t num)
+save_to_hold_area (char *start, idx_t num)
 {
   free (hold_area);
   hold_area = start;
@@ -259,10 +255,10 @@ save_to_hold_area (char *start, size_t num)
 /* Read up to MAX_N_BYTES bytes from the input stream into DEST.
    Return the number of bytes read. */
 
-static size_t
-read_input (char *dest, size_t max_n_bytes)
+static idx_t
+read_input (char *dest, idx_t max_n_bytes)
 {
-  size_t bytes_read;
+  idx_t bytes_read;
 
   if (max_n_bytes == 0)
     return 0;
@@ -308,7 +304,7 @@ new_line_control (void)
    of length LINE_LEN in the large buffer, in the lines buffer of B. */
 
 static void
-keep_new_line (struct buffer_record *b, char *line_start, size_t line_len)
+keep_new_line (struct buffer_record *b, char *line_start, idx_t line_len)
 {
   struct line *l;
 
@@ -340,12 +336,12 @@ keep_new_line (struct buffer_record *b, char *line_start, size_t line_len)
    a pointer is kept to this area, which will be used when
    the next buffer is filled. */
 
-static size_t
+static idx_t
 record_line_starts (struct buffer_record *b)
 {
   char *line_start;		/* Start of current line. */
-  size_t lines;			/* Number of lines found. */
-  size_t line_length;		/* Length of each line found. */
+  idx_t lines;			/* Number of lines found. */
+  idx_t line_length;		/* Length of each line found. */
 
   if (b->bytes_used == 0)
     return 0;
@@ -376,7 +372,7 @@ record_line_starts (struct buffer_record *b)
           lines++;
         }
       else
-        save_to_hold_area (xmemdup (line_start, bytes_left), bytes_left);
+        save_to_hold_area (ximemdup (line_start, bytes_left), bytes_left);
     }
 
   b->num_lines = lines;
@@ -386,62 +382,36 @@ record_line_starts (struct buffer_record *b)
   return lines;
 }
 
-/* Return a new buffer with room to store SIZE bytes, plus
-   an extra byte for safety. */
-
-static struct buffer_record *
-create_new_buffer (size_t size)
-{
-  struct buffer_record *new_buffer = xmalloc (sizeof *new_buffer);
-
-  new_buffer->buffer = xmalloc (size + 1);
-
-  new_buffer->bytes_alloc = size;
-  new_buffer->line_start = new_buffer->curr_line = NULL;
-
-  return new_buffer;
-}
-
-/* Return a new buffer of at least MINSIZE bytes.  If a buffer of at
-   least that size is currently free, use it, otherwise create a new one. */
-
-static struct buffer_record *
-get_new_buffer (size_t min_size)
-{
-  struct buffer_record *new_buffer; /* Buffer to return. */
-  size_t alloc_size;	/* Actual size that will be requested. */
-
-  alloc_size = START_SIZE;
-  if (alloc_size < min_size)
-    {
-      size_t s = min_size - alloc_size + INCR_SIZE - 1;
-      if (INT_ADD_WRAPV (alloc_size, s - s % INCR_SIZE, &alloc_size))
-        xalloc_die ();
-    }
-
-  new_buffer = create_new_buffer (alloc_size);
-
-  new_buffer->num_lines = 0;
-  new_buffer->bytes_used = 0;
-  new_buffer->start_line = new_buffer->first_available = last_line_number + 1;
-  new_buffer->next = NULL;
-
-  return new_buffer;
-}
-
 static void
 free_buffer (struct buffer_record *buf)
 {
-  struct line *l;
-  for (l = buf->line_start; l;)
+  for (struct line *l = buf->line_start; l;)
     {
       struct line *n = l->next;
       free (l);
       l = n;
     }
-  buf->line_start = NULL;
   free (buf->buffer);
-  buf->buffer = NULL;
+  free (buf);
+}
+
+/* Return a new buffer of at least MINSIZE bytes.  */
+
+static ATTRIBUTE_DEALLOC (free_buffer, 1)
+struct buffer_record *
+get_new_buffer (idx_t min_size)
+{
+  struct buffer_record *new_buffer = xmalloc (sizeof *new_buffer);
+  new_buffer->bytes_alloc = 0;
+  new_buffer->buffer = xpalloc (NULL, &new_buffer->bytes_alloc, min_size,
+                                -1, 1);
+  new_buffer->bytes_used = 0;
+  new_buffer->start_line = new_buffer->first_available = last_line_number + 1;
+  new_buffer->num_lines = 0;
+  new_buffer->line_start = new_buffer->curr_line = NULL;
+  new_buffer->next = NULL;
+
+  return new_buffer;
 }
 
 /* Append buffer BUF to the linked list of buffers that contain
@@ -482,9 +452,9 @@ static bool
 load_buffer (void)
 {
   struct buffer_record *b;
-  size_t bytes_wanted = START_SIZE; /* Minimum buffer size. */
-  size_t bytes_avail;		/* Size of new buffer created. */
-  size_t lines_found;		/* Number of lines in this new buffer. */
+  idx_t bytes_wanted = START_SIZE; /* Minimum buffer size. */
+  idx_t bytes_avail;		/* Size of new buffer created. */
+  idx_t lines_found;		/* Number of lines in this new buffer. */
   char *p;			/* Place to load into buffer. */
 
   if (have_read_eof)
@@ -522,23 +492,19 @@ load_buffer (void)
       if (INT_MULTIPLY_WRAPV (b->bytes_alloc, 2, &bytes_wanted))
         xalloc_die ();
       free_buffer (b);
-      free (b);
     }
 
   if (lines_found)
     save_buffer (b);
   else
-    {
-      free_buffer (b);
-      free (b);
-    }
+    free_buffer (b);
 
   return lines_found != 0;
 }
 
 /* Return the line number of the first line that has not yet been retrieved. */
 
-static uintmax_t
+static intmax_t
 get_first_line_in_buffer (void)
 {
   if (head == NULL && !load_buffer ())
@@ -565,7 +531,6 @@ remove_line (void)
   if (prev_buf)
     {
       free_buffer (prev_buf);
-      free (prev_buf);
       prev_buf = NULL;
     }
 
@@ -603,7 +568,7 @@ remove_line (void)
    Return a pointer to the line, or NULL if it is not found in the file. */
 
 static struct cstring *
-find_line (uintmax_t linenum)
+find_line (intmax_t linenum)
 {
   struct buffer_record *b;
 
@@ -620,7 +585,7 @@ find_line (uintmax_t linenum)
         {
           /* The line is in this buffer. */
           struct line *l;
-          size_t offset;	/* How far into the buffer the line is. */
+          idx_t offset;	/* How far into the buffer the line is. */
 
           l = b->line_start;
           offset = linenum - b->start_line;
@@ -662,12 +627,12 @@ set_input_file (char const *name)
    ARGNUM is the index in ARGV of the current pattern. */
 
 static void
-write_to_file (uintmax_t last_line, bool ignore, int argnum)
+write_to_file (intmax_t last_line, bool ignore, int argnum)
 {
   struct cstring *line;
-  uintmax_t first_line;		/* First available input line. */
-  uintmax_t lines;		/* Number of lines to output. */
-  uintmax_t i;
+  intmax_t first_line;		/* First available input line. */
+  intmax_t lines;		/* Number of lines to output. */
+  intmax_t i;
 
   first_line = get_first_line_in_buffer ();
 
@@ -709,14 +674,14 @@ dump_rest_of_file (void)
    on iteration REPETITION if nonzero. */
 
 static void
-handle_line_error (const struct control *p, uintmax_t repetition)
+handle_line_error (const struct control *p, intmax_t repetition)
 {
-  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
 
   fprintf (stderr, _("%s: %s: line number out of range"),
-           program_name, quote (umaxtostr (p->lines_required, buf)));
+           program_name, quote (imaxtostr (p->lines_required, buf)));
   if (repetition)
-    fprintf (stderr, _(" on repetition %s\n"), umaxtostr (repetition, buf));
+    fprintf (stderr, _(" on repetition %s\n"), imaxtostr (repetition, buf));
   else
     fprintf (stderr, "\n");
 
@@ -729,10 +694,10 @@ handle_line_error (const struct control *p, uintmax_t repetition)
    REPETITION is the repetition number. */
 
 static void
-process_line_count (const struct control *p, uintmax_t repetition)
+process_line_count (const struct control *p, intmax_t repetition)
 {
-  uintmax_t linenum;
-  uintmax_t last_line_to_save = p->lines_required * (repetition + 1);
+  intmax_t linenum;
+  intmax_t last_line_to_save = p->lines_required * (repetition + 1);
 
   create_output_file ();
 
@@ -763,15 +728,15 @@ process_line_count (const struct control *p, uintmax_t repetition)
 }
 
 static void
-regexp_error (struct control *p, uintmax_t repetition, bool ignore)
+regexp_error (struct control *p, intmax_t repetition, bool ignore)
 {
   fprintf (stderr, _("%s: %s: match not found"),
            program_name, quote (global_argv[p->argnum]));
 
   if (repetition)
     {
-      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-      fprintf (stderr, _(" on repetition %s\n"), umaxtostr (repetition, buf));
+      char buf[INT_BUFSIZE_BOUND (intmax_t)];
+      fprintf (stderr, _(" on repetition %s\n"), imaxtostr (repetition, buf));
     }
   else
     fprintf (stderr, "\n");
@@ -789,11 +754,11 @@ regexp_error (struct control *p, uintmax_t repetition, bool ignore)
    REPETITION is this repeat-count; 0 means the first time. */
 
 static void
-process_regexp (struct control *p, uintmax_t repetition)
+process_regexp (struct control *p, intmax_t repetition)
 {
   struct cstring *line;		/* From input file. */
-  size_t line_len;		/* To make "$" in regexps work. */
-  uintmax_t break_line;		/* First line number of next file. */
+  idx_t line_len;		/* To make "$" in regexps work. */
+  intmax_t break_line;		/* First line number of next file. */
   bool ignore = p->ignore;	/* If true, skip this section. */
   regoff_t ret;
 
@@ -897,9 +862,9 @@ process_regexp (struct control *p, uintmax_t repetition)
 static void
 split_file (void)
 {
-  for (size_t i = 0; i < control_used; i++)
+  for (idx_t i = 0; i < control_used; i++)
     {
-      uintmax_t j;
+      intmax_t j;
       if (controls[i].regexpr)
         {
           for (j = 0; (controls[i].repeat_forever
@@ -927,13 +892,13 @@ split_file (void)
    know of any hosts where this implementation isn't safe.  */
 
 static char *
-make_filename (unsigned int num)
+make_filename (int num)
 {
   strcpy (filename_space, prefix);
   if (suffix)
     sprintf (filename_space + strlen (prefix), suffix, num);
   else
-    sprintf (filename_space + strlen (prefix), "%0*u", digits, num);
+    sprintf (filename_space + strlen (prefix), "%0*d", digits, num);
   return filename_space;
 }
 
@@ -942,12 +907,13 @@ make_filename (unsigned int num)
 static void
 create_output_file (void)
 {
+  int nfiles = files_created;
   bool fopen_ok;
   int fopen_errno;
 
-  output_filename = make_filename (files_created);
+  output_filename = make_filename (nfiles);
 
-  if (files_created == UINT_MAX)
+  if (nfiles == INT_MAX)
     {
       fopen_ok = false;
       fopen_errno = EOVERFLOW;
@@ -960,7 +926,7 @@ create_output_file (void)
       output_stream = fopen (output_filename, "w");
       fopen_ok = (output_stream != NULL);
       fopen_errno = errno;
-      files_created += fopen_ok;
+      files_created = nfiles + fopen_ok;
       sigprocmask (SIG_SETMASK, &oldset, NULL);
     }
 
@@ -981,10 +947,10 @@ delete_all_files (bool in_signal_handler)
   if (! remove_files)
     return;
 
-  for (unsigned int i = 0; i < files_created; i++)
+  for (int i = files_created; 0 <= --i; )
     {
       char const *name = make_filename (i);
-      if (unlink (name) != 0 && !in_signal_handler)
+      if (unlink (name) != 0 && errno != ENOENT && !in_signal_handler)
         error (0, errno, "%s", quotef (name));
     }
 
@@ -1021,18 +987,18 @@ close_output_file (void)
           sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
           unlink_ok = (unlink (output_filename) == 0);
           unlink_errno = errno;
-          files_created -= unlink_ok;
+          files_created--;
           sigprocmask (SIG_SETMASK, &oldset, NULL);
 
-          if (! unlink_ok)
+          if (! unlink_ok && unlink_errno != ENOENT)
             error (0, unlink_errno, "%s", quotef (output_filename));
         }
       else
         {
           if (!suppress_count)
             {
-              char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-              fprintf (stdout, "%s\n", umaxtostr (bytes_written, buf));
+              char buf[INT_BUFSIZE_BOUND (intmax_t)];
+              fprintf (stdout, "%s\n", imaxtostr (bytes_written, buf));
             }
         }
       output_stream = NULL;
@@ -1045,7 +1011,7 @@ close_output_file (void)
 static void
 save_line_to_file (const struct cstring *line)
 {
-  size_t l = fwrite (line->str, sizeof (char), line->len, output_stream);
+  idx_t l = fwrite (line->str, sizeof (char), line->len, output_stream);
   if (l != line->len)
     {
       error (0, errno, _("write error for %s"), quoteaf (output_filename));
@@ -1060,11 +1026,11 @@ save_line_to_file (const struct cstring *line)
 static struct control *
 new_control_record (void)
 {
-  static size_t control_allocated = 0; /* Total space allocated. */
+  static idx_t control_allocated = 0; /* Total space allocated. */
   struct control *p;
 
   if (control_used == control_allocated)
-    controls = X2NREALLOC (controls, &control_allocated);
+    controls = xpalloc (controls, &control_allocated, 1, -1, sizeof *controls);
   p = &controls[control_used++];
   p->regexpr = false;
   p->repeat = 0;
@@ -1095,7 +1061,6 @@ check_for_offset (struct control *p, char const *str, char const *num)
 static void
 parse_repeat_count (int argnum, struct control *p, char *str)
 {
-  uintmax_t val;
   char *end;
 
   end = str + strlen (str) - 1;
@@ -1108,7 +1073,9 @@ parse_repeat_count (int argnum, struct control *p, char *str)
     p->repeat_forever = true;
   else
     {
-      if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK)
+      uintmax_t val;
+      if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK
+          || INTMAX_MAX < val)
         {
           die (EXIT_FAILURE, 0,
                _("%s}: integer required between '{' and '}'"),
@@ -1129,7 +1096,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
 static struct control *
 extract_regexp (int argnum, bool ignore, char const *str)
 {
-  size_t len;			/* Number of bytes in this regexp. */
+  idx_t len;			/* Number of bytes in this regexp. */
   char delim = *str;
   char const *closing_delim;
   struct control *p;
@@ -1172,8 +1139,7 @@ static void
 parse_patterns (int argc, int start, char **argv)
 {
   struct control *p;		/* New control record created. */
-  uintmax_t val;
-  static uintmax_t last_val = 0;
+  static intmax_t last_val = 0;
 
   for (int i = start; i < argc; i++)
     {
@@ -1186,17 +1152,19 @@ parse_patterns (int argc, int start, char **argv)
           p = new_control_record ();
           p->argnum = i;
 
-          if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK)
+          uintmax_t val;
+          if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK
+              || INTMAX_MAX < val)
             die (EXIT_FAILURE, 0, _("%s: invalid pattern"), quote (argv[i]));
           if (val == 0)
             die (EXIT_FAILURE, 0,
                  _("%s: line number must be greater than zero"), argv[i]);
           if (val < last_val)
             {
-              char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+              char buf[INT_BUFSIZE_BOUND (intmax_t)];
               die (EXIT_FAILURE, 0,
                _("line number %s is smaller than preceding line number, %s"),
-                   quote (argv[i]), umaxtostr (last_val, buf));
+                   quote (argv[i]), imaxtostr (last_val, buf));
             }
 
           if (val == last_val)
@@ -1225,12 +1193,12 @@ enum { FLAG_THOUSANDS = 1, FLAG_ALTERNATIVE = 2 };
 
 /* Scan the printf format flags in FORMAT, storing info about the
    flags into *FLAGS_PTR.  Return the number of flags found.  */
-static size_t
+static idx_t
 get_format_flags (char const *format, int *flags_ptr)
 {
   int flags = 0;
 
-  for (size_t count = 0; ; count++)
+  for (idx_t count = 0; ; count++)
     {
       switch (format[count])
         {
@@ -1254,8 +1222,8 @@ get_format_flags (char const *format, int *flags_ptr)
 }
 
 /* Check that the printf format conversion specifier *FORMAT is valid
-   and compatible with FLAGS.  Change it to 'u' if it is 'd' or 'i',
-   since the format will be used with an unsigned value.  */
+   and compatible with FLAGS.  Change it to 'd' if it is 'u',
+   since the format will be used with a signed value.  */
 static void
 check_format_conv_type (char *format, int flags)
 {
@@ -1266,10 +1234,10 @@ check_format_conv_type (char *format, int flags)
     {
     case 'd':
     case 'i':
-      *format = 'u';
       break;
 
     case 'u':
+      *format = 'd';
       break;
 
     case 'o':
@@ -1297,9 +1265,9 @@ check_format_conv_type (char *format, int flags)
 }
 
 /* Return the maximum number of bytes that can be generated by
-   applying FORMAT to an unsigned int value.  If the format is
+   applying FORMAT to an int value.  If the format is
    invalid, diagnose the problem and exit.  */
-static size_t
+static idx_t
 max_out (char *format)
 {
   bool percent = false;
@@ -1325,8 +1293,8 @@ max_out (char *format)
     die (EXIT_FAILURE, 0,
          _("missing %% conversion specification in suffix"));
 
-  int maxlen = snprintf (NULL, 0, format, UINT_MAX);
-  if (! (0 <= maxlen && maxlen <= SIZE_MAX))
+  int maxlen = snprintf (NULL, 0, format, INT_MAX);
+  if (maxlen < 0)
     xalloc_die ();
   return maxlen;
 }
@@ -1368,7 +1336,7 @@ main (int argc, char **argv)
         break;
 
       case 'n':
-        digits = xdectoimax (optarg, 0, MIN (INT_MAX, SIZE_MAX), "",
+        digits = xdectoimax (optarg, 0, MIN (INT_MAX, IDX_MAX), "",
                              _("invalid number"), 0);
         break;
 
@@ -1402,14 +1370,15 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  size_t prefix_len = strlen (prefix);
-  size_t max_digit_string_len
+  idx_t prefix_len = strlen (prefix);
+  idx_t max_digit_string_len
     = (suffix
        ? max_out (suffix)
-       : MAX (INT_STRLEN_BOUND (unsigned int), digits));
-  if (SIZE_MAX - 1 - prefix_len < max_digit_string_len)
+       : MAX (INT_STRLEN_BOUND (int), digits));
+  idx_t filename_size;
+  if (INT_ADD_WRAPV (prefix_len, max_digit_string_len + 1, &filename_size))
     xalloc_die ();
-  filename_space = xmalloc (prefix_len + max_digit_string_len + 1);
+  filename_space = ximalloc (filename_size);
 
   set_input_file (argv[optind++]);
 
