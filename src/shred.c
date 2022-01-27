@@ -85,6 +85,7 @@
 #endif
 
 #include "system.h"
+#include "alignalloc.h"
 #include "argmatch.h"
 #include "xdectoint.h"
 #include "die.h"
@@ -412,11 +413,8 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   verify (PERIODIC_OUTPUT_SIZE % 3 == 0);
   size_t output_size = periodic_pattern (type)
                        ? PERIODIC_OUTPUT_SIZE : NONPERIODIC_OUTPUT_SIZE;
-#define PAGE_ALIGN_SLOP (page_size - 1)                /* So directio works */
 #define FILLPATTERN_SIZE (((output_size + 2) / 3) * 3) /* Multiple of 3 */
-#define PATTERNBUF_SIZE (PAGE_ALIGN_SLOP + FILLPATTERN_SIZE)
-  void *fill_pattern_mem = xmalloc (PATTERNBUF_SIZE);
-  unsigned char *pbuf = ptr_align (fill_pattern_mem, page_size);
+  unsigned char *pbuf = xalignalloc (page_size, FILLPATTERN_SIZE);
 
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
@@ -620,7 +618,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
     }
 
 free_pattern_mem:
-  free (fill_pattern_mem);
+  alignfree (pbuf);
 
   return other_error ? -1 : write_error;
 }

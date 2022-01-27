@@ -22,6 +22,7 @@
 #include <signal.h>
 
 #include "system.h"
+#include "alignalloc.h"
 #include "close-stream.h"
 #include "die.h"
 #include "error.h"
@@ -88,20 +89,6 @@
 
 /* Default input and output blocksize. */
 #define DEFAULT_BLOCKSIZE 512
-
-/* How many bytes to add to the input and output block sizes before invoking
-   malloc.  See dd_copy for details.  INPUT_BLOCK_SLOP must be no less than
-   OUTPUT_BLOCK_SLOP, and has one more byte because of swab_buffer.  */
-#define INPUT_BLOCK_SLOP page_size
-#define OUTPUT_BLOCK_SLOP (page_size - 1)
-
-/* Maximum blocksize for the given SLOP.
-   Keep it smaller than MIN (IDX_MAX, SIZE_MAX) - SLOP, so that we can
-   allocate buffers that size.  Keep it smaller than SSIZE_MAX, for
-   the benefit of system calls like "read".  And keep it smaller than
-   OFF_T_MAX, for the benefit of the large-offset seek code.  */
-#define MAX_BLOCKSIZE(slop) MIN (MIN (IDX_MAX, SIZE_MAX) - (slop), \
-                                 MIN (SSIZE_MAX, OFF_T_MAX))
 
 /* Conversions bit masks. */
 enum
@@ -238,12 +225,6 @@ static intmax_t r_truncate = 0;
    They change if we're converting to EBCDIC.  */
 static char newline_character = '\n';
 static char space_character = ' ';
-
-#ifdef lint
-/* Memory blocks allocated for I/O buffers and surrounding areas.  */
-static char *real_ibuf;
-static char *real_obuf;
-#endif
 
 /* I/O buffers.  */
 static char *ibuf;
@@ -695,9 +676,9 @@ alloc_ibuf (void)
   if (ibuf)
     return;
 
-  /* Ensure the input buffer is page aligned.  */
-  char *buf = malloc (input_blocksize + INPUT_BLOCK_SLOP);
-  if (!buf)
+  bool extra_byte_for_swab = !!(conversions_mask & C_SWAB);
+  ibuf = alignalloc (page_size, input_blocksize + extra_byte_for_swab);
+  if (!ibuf)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       die (EXIT_FAILURE, 0,
@@ -706,10 +687,6 @@ alloc_ibuf (void)
            human_readable (input_blocksize, hbuf,
                            human_opts | human_base_1024, 1, 1));
     }
-#ifdef lint
-  real_ibuf = buf;
-#endif
-  ibuf = ptr_align (buf, page_size);
 }
 
 /* Ensure output buffer OBUF is allocated/initialized.  */
@@ -722,9 +699,8 @@ alloc_obuf (void)
 
   if (conversions_mask & C_TWOBUFS)
     {
-      /* Page-align the output buffer, too.  */
-      char *buf = malloc (output_blocksize + OUTPUT_BLOCK_SLOP);
-      if (!buf)
+      obuf = alignalloc (page_size, output_blocksize);
+      if (!obuf)
         {
           char hbuf[LONGEST_HUMAN_READABLE + 1];
           die (EXIT_FAILURE, 0,
@@ -734,10 +710,6 @@ alloc_obuf (void)
                human_readable (output_blocksize, hbuf,
                                human_opts | human_base_1024, 1, 1));
         }
-#ifdef lint
-      real_obuf = buf;
-#endif
-      obuf = ptr_align (buf, page_size);
     }
   else
     {
@@ -966,10 +938,9 @@ static void
 cleanup (void)
 {
 #ifdef lint
-  free (real_ibuf);
-  free (real_obuf);
-  real_ibuf = NULL;
-  real_obuf = NULL;
+  if (ibuf != obuf)
+    alignfree (ibuf);
+  alignfree (obuf);
 #endif
 
   if (iclose (STDIN_FILENO) != 0)
@@ -1552,22 +1523,29 @@ scanargs (int argc, char *const *argv)
           intmax_t n_max = INTMAX_MAX;
           idx_t *converted_idx = NULL;
 
+          /* Maximum blocksize.  Keep it smaller than IDX_MAX, so that
+             it fits into blocksize vars even if 1 is added for conv=swab.
+             Do not exceed SSIZE_MAX, for the benefit of system calls
+             like "read".  And do not exceed OFF_T_MAX, for the
+             benefit of the large-offset seek code.  */
+          idx_t max_blocksize = MIN (IDX_MAX - 1, MIN (SSIZE_MAX, OFF_T_MAX));
+
           if (operand_is (name, "ibs"))
             {
               n_min = 1;
-              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
+              n_max = max_blocksize;
               converted_idx = &input_blocksize;
             }
           else if (operand_is (name, "obs"))
             {
               n_min = 1;
-              n_max = MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP);
+              n_max = max_blocksize;
               converted_idx = &output_blocksize;
             }
           else if (operand_is (name, "bs"))
             {
               n_min = 1;
-              n_max = MAX_BLOCKSIZE (INPUT_BLOCK_SLOP);
+              n_max = max_blocksize;
               converted_idx = &blocksize;
             }
           else if (operand_is (name, "cbs"))

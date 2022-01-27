@@ -33,6 +33,7 @@
 #include <sys/ioctl.h>
 
 #include "system.h"
+#include "alignalloc.h"
 #include "idx.h"
 #include "ioblksize.h"
 #include "die.h"
@@ -690,16 +691,17 @@ main (int argc, char **argv)
              || show_tabs || squeeze_blank))
         {
           insize = MAX (insize, outsize);
-          inbuf = ximalloc (insize + page_size - 1);
+          inbuf = xalignalloc (page_size, insize);
 
-          ok &= simple_cat (ptr_align (inbuf, page_size), insize);
+          ok &= simple_cat (inbuf, insize);
         }
       else
         {
-          inbuf = ximalloc (insize + 1 + page_size - 1);
+          /* Allocate, with an extra byte for a newline sentinel.  */
+          inbuf = xalignalloc (page_size, insize + 1);
 
           /* Why are
-             (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN + PAGE_SIZE - 1)
+             (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
              bytes allocated for the output buffer?
 
              A test whether output needs to be written is done when the input
@@ -717,21 +719,23 @@ main (int argc, char **argv)
              positions.
 
              Align the output buffer to a page size boundary, for efficiency
-             on some paging implementations, so add PAGE_SIZE - 1 bytes to the
-             request to make room for the alignment.  */
+             on some paging implementations.  */
 
-          char *outbuf = ximalloc (outsize - 1 + insize * 4
-                                   + LINE_COUNTER_BUF_LEN + page_size - 1);
+          idx_t bufsize;
+          if (INT_MULTIPLY_WRAPV (insize, 4, &bufsize)
+              || INT_ADD_WRAPV (bufsize, outsize, &bufsize)
+              || INT_ADD_WRAPV (bufsize, LINE_COUNTER_BUF_LEN - 1, &bufsize))
+            xalloc_die ();
+          char *outbuf = xalignalloc (page_size, bufsize);
 
-          ok &= cat (ptr_align (inbuf, page_size), insize,
-                     ptr_align (outbuf, page_size), outsize, show_nonprinting,
+          ok &= cat (inbuf, insize, outbuf, outsize, show_nonprinting,
                      show_tabs, number, number_nonblank, show_ends,
                      squeeze_blank);
 
-          free (outbuf);
+          alignfree (outbuf);
         }
 
-      free (inbuf);
+      alignfree (inbuf);
 
     contin:
       if (!reading_stdin && close (input_desc) < 0)

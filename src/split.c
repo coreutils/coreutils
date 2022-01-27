@@ -29,6 +29,7 @@
 #include <sys/wait.h>
 
 #include "system.h"
+#include "alignalloc.h"
 #include "die.h"
 #include "error.h"
 #include "fd-reopen.h"
@@ -1300,7 +1301,7 @@ int
 main (int argc, char **argv)
 {
   enum Split_type split_type = type_undef;
-  size_t in_blk_size = 0;	/* optimal block size of input file device */
+  idx_t in_blk_size = 0;	/* optimal block size of input file device */
   size_t page_size = getpagesize ();
   uintmax_t k_units = 0;
   uintmax_t n_units = 0;
@@ -1503,7 +1504,7 @@ main (int argc, char **argv)
           break;
 
         case IO_BLKSIZE_OPTION:
-          in_blk_size = xdectoumax (optarg, 1, SIZE_MAX - page_size,
+          in_blk_size = xdectoumax (optarg, 1, MIN (IDX_MAX, SIZE_MAX) - 1,
                                     multipliers, _("invalid IO block size"), 0);
           break;
 
@@ -1585,8 +1586,7 @@ main (int argc, char **argv)
   if (! specified_buf_size)
     in_blk_size = io_blksize (in_stat_buf);
 
-  void *b = xmalloc (in_blk_size + 1 + page_size - 1);
-  char *buf = ptr_align (b, page_size);
+  char *buf = xalignalloc (page_size, in_blk_size + 1);
   size_t initial_read = SIZE_MAX;
 
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines)
@@ -1661,7 +1661,7 @@ main (int argc, char **argv)
       abort ();
     }
 
-  IF_LINT (free (b));
+  IF_LINT (alignfree (buf));
 
   if (close (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (infile));

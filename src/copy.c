@@ -32,6 +32,7 @@
 
 #include "system.h"
 #include "acl.h"
+#include "alignalloc.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
 #include "canonicalize.h"
@@ -229,8 +230,6 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
    Return true upon successful completion;
    print a diagnostic and return false upon error.
    Note that for best results, BUF should be "well"-aligned.
-   BUF must have sizeof(uintptr_t)-1 bytes of additional space
-   beyond BUF[BUF_SIZE - 1].
    Set *LAST_WRITE_MADE_HOLE to true if the final operation on
    DEST_FD introduced a hole.  Set *TOTAL_N_READ to the number of
    bytes read.  */
@@ -1076,8 +1075,7 @@ copy_reg (char const *src_name, char const *dst_name,
           mode_t dst_mode, mode_t omitted_permissions, bool *new_dst,
           struct stat const *src_sb)
 {
-  char *buf;
-  char *buf_alloc = NULL;
+  char *buf = NULL;
   int dest_desc;
   int dest_errno;
   int source_desc;
@@ -1292,7 +1290,6 @@ copy_reg (char const *src_name, char const *dst_name,
   if (data_copy_required)
     {
       /* Choose a suitable buffer size; it may be adjusted later.  */
-      size_t buf_alignment = getpagesize ();
       size_t buf_size = io_blksize (sb);
       size_t hole_size = ST_BLKSIZE (sb);
 
@@ -1319,7 +1316,7 @@ copy_reg (char const *src_name, char const *dst_name,
         {
           /* Compute the least common multiple of the input and output
              buffer sizes, adjusting for outlandish values.  */
-          size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX) - buf_alignment;
+          size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX);
           size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
                                     blcm_max);
 
@@ -1337,8 +1334,7 @@ copy_reg (char const *src_name, char const *dst_name,
             buf_size = blcm;
         }
 
-      buf_alloc = xmalloc (buf_size + buf_alignment);
-      buf = ptr_align (buf_alloc, buf_alignment);
+      buf = xalignalloc (getpagesize (), buf_size);
 
       off_t n_read;
       bool wrote_hole_at_eof = false;
@@ -1457,7 +1453,7 @@ close_src_desc:
       return_val = false;
     }
 
-  free (buf_alloc);
+  alignfree (buf);
   return return_val;
 }
 

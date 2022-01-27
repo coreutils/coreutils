@@ -16,7 +16,8 @@
 
 /* Include this file _after_ system headers if possible.  */
 
-/* sys/stat.h will already have been included by system.h. */
+/* sys/stat.h and minmax.h will already have been included by system.h. */
+#include "idx.h"
 #include "stat-size.h"
 
 
@@ -71,8 +72,11 @@
    and default to io_blksize() if not.
  */
 enum { IO_BUFSIZE = 128 * 1024 };
-static inline size_t
+static inline idx_t
 io_blksize (struct stat sb)
 {
-  return MAX (IO_BUFSIZE, ST_BLKSIZE (sb));
+  /* Don’t go above the largest power of two that fits in idx_t and size_t,
+     as that is asking for trouble.  */
+  return MIN (MIN (IDX_MAX, SIZE_MAX) / 2 + 1,
+              MAX (IO_BUFSIZE, ST_BLKSIZE (sb)));
 }
