@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cat now uses the copy_file_range syscall if available, when doing
+  simple copies between regular files.
+
   date +'%-N' now suppresses excess trailing digits, instead of always
   padding them with zeros to 9 digits.  It uses clock_getres and
   clock_gettime to infer the clock resolution.

@@ -499,6 +499,42 @@ cat (char *inbuf, idx_t insize, char *outbuf, idx_t outsize,
     }
 }
 
+/* Copy data from input to output using copy_file_range if possible.
+   Return 1 if successful, 0 if ordinary read+write should be tried,
+   -1 if a serious problem has been diagnosed.  */
+
+static int
+copy_cat (void)
+{
+  /* Copy at most COPY_MAX bytes at a time; this is min
+     (SSIZE_MAX, SIZE_MAX) truncated to a value that is
+     surely aligned well.  */
+  ssize_t copy_max = MIN (SSIZE_MAX, SIZE_MAX) >> 30 << 30;
+
+  /* copy_file_range does not support some cases, and it
+     incorrectly returns 0 when reading from the proc file
+     system on the Linux kernel through at least 5.6.19 (2020),
+     so fall back on read+write if the copy_file_range is
+     unsupported or the input file seems empty.  */
+
+  for (bool some_copied = false; ; some_copied = true)
+    switch (copy_file_range (input_desc, NULL, STDOUT_FILENO, NULL,
+                             copy_max, 0))
+      {
+      case 0:
+        return some_copied;
+
+      case -1:
+        if (errno == ENOSYS || is_ENOTSUP (errno) || errno == EINVAL
+            || errno == EBADF || errno == EXDEV || errno == ETXTBSY
+            || errno == EPERM)
+          return 0;
+        error (0, errno, "%s", quotef (infile));
+        return -1;
+      }
+}
+
+
 int
 main (int argc, char **argv)
 {
@@ -685,15 +721,25 @@ main (int argc, char **argv)
       char *inbuf;
 
       /* Select which version of 'cat' to use.  If any format-oriented
-         options were given use 'cat'; otherwise use 'simple_cat'.  */
+         options were given use 'cat'; if not, use 'copy_cat' if it
+         works, 'simple_cat' otherwise.  */
 
       if (! (number || show_ends || show_nonprinting
              || show_tabs || squeeze_blank))
         {
-          insize = MAX (insize, outsize);
-          inbuf = xalignalloc (page_size, insize);
-
-          ok &= simple_cat (inbuf, insize);
+          int copy_cat_status =
+            out_isreg && S_ISREG (stat_buf.st_mode) ? copy_cat () : 0;
+          if (copy_cat_status != 0)
+            {
+              inbuf = NULL;
+              ok &= 0 < copy_cat_status;
+            }
+          else
+            {
+              insize = MAX (insize, outsize);
+              inbuf = xalignalloc (page_size, insize);
+              ok &= simple_cat (inbuf, insize);
+            }
         }
       else
         {
