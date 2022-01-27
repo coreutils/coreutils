@@ -3554,7 +3554,8 @@ file once for each repeat.
 @item /@var{regexp}/[@var{offset}]
 Create an output file containing the current line up to (but not
 including) the next line of the input file that contains a match for
-@var{regexp}.  The optional @var{offset} is an integer.
+@var{regexp}.  The optional @var{offset} is an integer, that can
+be preceded by @samp{+} or @samp{-}.
 If it is given, the input up to (but not including) the
 matching line plus or minus @var{offset} is put into the output file,
 and the line after that begins the next section of input.

@@ -1515,7 +1515,7 @@ Each PATTERN may be:\n\
   {INTEGER}          repeat the previous pattern specified number of times\n\
   {*}                repeat the previous pattern as many times as possible\n\
 \n\
-A line OFFSET is a required '+' or '-' followed by a positive integer.\n\
+A line OFFSET is an integer optionally preceded by '+' or '-'\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
