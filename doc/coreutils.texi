@@ -9397,14 +9397,16 @@ Continue after read errors.
 @item fdatasync
 @opindex fdatasync
 @cindex synchronized data writes, before finishing
-Synchronize output data just before finishing.  This forces a physical
-write of output data.
+Synchronize output data just before finishing,
+even if there were write errors.
+This forces a physical write of output data.
 
 @item fsync
 @opindex fsync
 @cindex synchronized data and metadata writes, before finishing
-Synchronize output data and metadata just before finishing.  This
-forces a physical write of output data and metadata.
+Synchronize output data and metadata just before finishing,
+even if there were write errors.
+This forces a physical write of output data and metadata.
 
 @end table
 

@@ -939,6 +939,8 @@ iclose (int fd)
   return 0;
 }
 
+static int synchronize_output (void);
+
 static void
 cleanup (void)
 {
@@ -947,6 +949,13 @@ cleanup (void)
     alignfree (ibuf);
   alignfree (obuf);
 #endif
+
+  if (!interrupt_signal)
+    {
+      int sync_status = synchronize_output ();
+      if (sync_status)
+        exit (sync_status);
+    }
 
   if (iclose (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, _("closing input file %s"), quoteaf (input_file));
@@ -2377,17 +2386,33 @@ dd_copy (void)
       && 0 <= reported_w_bytes && reported_w_bytes < w_bytes)
     print_xfer_stats (0);
 
-  if ((conversions_mask & C_FDATASYNC) && ifdatasync (STDOUT_FILENO) != 0)
+  return exit_status;
+}
+
+/* Synchronize output according to conversions_mask.
+   Do this even if w_bytes is zero, as fsync and fdatasync
+   flush out write requests from other processes too.
+   Clear bits in conversions_mask so that synchronization is done only once.
+   Return zero if successful, an exit status otherwise.  */
+
+static int
+synchronize_output (void)
+{
+  int exit_status = 0;
+  int mask = conversions_mask;
+  conversions_mask &= ~ (C_FDATASYNC | C_FSYNC);
+
+  if ((mask & C_FDATASYNC) && ifdatasync (STDOUT_FILENO) != 0)
     {
       if (errno != ENOSYS && errno != EINVAL)
         {
           error (0, errno, _("fdatasync failed for %s"), quoteaf (output_file));
           exit_status = EXIT_FAILURE;
         }
-      conversions_mask |= C_FSYNC;
+      mask |= C_FSYNC;
     }
 
-  if ((conversions_mask & C_FSYNC) && ifsync (STDOUT_FILENO) != 0)
+  if ((mask & C_FSYNC) && ifsync (STDOUT_FILENO) != 0)
     {
       error (0, errno, _("fsync failed for %s"), quoteaf (output_file));
       return EXIT_FAILURE;
@@ -2460,6 +2485,16 @@ main (int argc, char **argv)
            | (conversions_mask & C_EXCL ? O_EXCL : 0)
            | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
+      off_t size;
+      if ((INT_MULTIPLY_WRAPV (seek_records, output_blocksize, &size)
+           || INT_ADD_WRAPV (seek_bytes, size, &size))
+          && !(conversions_mask & C_NOTRUNC))
+        die (EXIT_FAILURE, 0,
+             _("offset too large: "
+               "cannot truncate to a length of seek=%"PRIdMAX""
+               " (%td-byte) blocks"),
+             seek_records, output_blocksize);
+
       /* Open the output file with *read* access only if we might
          need to read to satisfy a 'seek=' request.  If we can't read
          the file, go ahead with write-only access; it might work.  */
@@ -2472,15 +2507,6 @@ main (int argc, char **argv)
 
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
         {
-          off_t size;
-          if (INT_MULTIPLY_WRAPV (seek_records, output_blocksize, &size)
-              || INT_ADD_WRAPV (seek_bytes, size, &size))
-            die (EXIT_FAILURE, 0,
-                 _("offset too large: "
-                   "cannot truncate to a length of seek=%"PRIdMAX""
-                   " (%td-byte) blocks"),
-                 seek_records, output_blocksize);
-
           if (iftruncate (STDOUT_FILENO, size) != 0)
             {
               /* Complain only when ftruncate fails on a regular file, a
@@ -2491,17 +2517,21 @@ main (int argc, char **argv)
               int ftruncate_errno = errno;
               struct stat stdout_stat;
               if (ifstat (STDOUT_FILENO, &stdout_stat) != 0)
-                die (EXIT_FAILURE, errno, _("cannot fstat %s"),
-                     quoteaf (output_file));
-              if (S_ISREG (stdout_stat.st_mode)
-                  || S_ISDIR (stdout_stat.st_mode)
-                  || S_TYPEISSHM (&stdout_stat))
+                {
+                  error (0, errno, _("cannot fstat %s"),
+                         quoteaf (output_file));
+                  exit_status = EXIT_FAILURE;
+                }
+              else if (S_ISREG (stdout_stat.st_mode)
+                       || S_ISDIR (stdout_stat.st_mode)
+                       || S_TYPEISSHM (&stdout_stat))
                 {
                   intmax_t isize = size;
-                  die (EXIT_FAILURE, ftruncate_errno,
-                       _("failed to truncate to %"PRIdMAX" bytes"
-                         " in output file %s"),
-                       isize, quoteaf (output_file));
+                  error (0, ftruncate_errno,
+                         _("failed to truncate to %"PRIdMAX" bytes"
+                           " in output file %s"),
+                         isize, quoteaf (output_file));
+                  exit_status = EXIT_FAILURE;
                 }
             }
         }
@@ -2511,6 +2541,10 @@ main (int argc, char **argv)
   next_time = start_time + XTIME_PRECISION;
 
   exit_status = dd_copy ();
+
+  int sync_status = synchronize_output ();
+  if (sync_status)
+    exit_status = sync_status;
 
   if (max_records == 0 && max_bytes == 0)
     {
