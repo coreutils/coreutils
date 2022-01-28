@@ -58,6 +58,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   The new 'date' option --resolution outputs the timestamp resolution.
 
+  With conv=fdatasync or conv=fsync, dd status=progress now reports
+  any extra final progress just before synchronizing output data,
+  since synchronizing can take a long time.
+
   sort --debug now diagnoses issues with --field-separator characters
   that conflict with characters possibly used in numbers.
 

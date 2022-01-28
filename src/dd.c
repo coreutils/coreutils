@@ -196,6 +196,9 @@ static intmax_t r_full = 0;
 /* Number of bytes written.  */
 static intmax_t w_bytes = 0;
 
+/* Last-reported number of bytes written, or negative if never reported.  */
+static intmax_t reported_w_bytes = -1;
+
 /* Time that dd started.  */
 static xtime_t start_time;
 
@@ -815,6 +818,8 @@ print_xfer_stats (xtime_t progress_time)
     }
   else
     fputc ('\n', stderr);
+
+  reported_w_bytes = w_bytes;
 }
 
 static void
@@ -2364,6 +2369,13 @@ dd_copy (void)
             }
         }
     }
+
+  /* fdatasync/fsync can take a long time, so issue a final progress
+     indication now if progress has been made since the previous indication.  */
+  if (conversions_mask & (C_FDATASYNC | C_FSYNC)
+      && status_level == STATUS_PROGRESS
+      && 0 <= reported_w_bytes && reported_w_bytes < w_bytes)
+    print_xfer_stats (0);
 
   if ((conversions_mask & C_FDATASYNC) && ifdatasync (STDOUT_FILENO) != 0)
     {
