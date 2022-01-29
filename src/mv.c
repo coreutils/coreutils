@@ -50,9 +50,6 @@ enum
   STRIP_TRAILING_SLASHES_OPTION = CHAR_MAX + 1
 };
 
-/* Remove any trailing slashes from each SOURCE argument.  */
-static bool remove_trailing_slashes;
-
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
@@ -146,31 +143,18 @@ cp_option_init (struct cp_options *x)
   x->src_info = NULL;
 }
 
-/* FILE is the last operand of this command.  Return true if FILE is a
-   directory.  But report an error if there is a problem accessing FILE, other
-   than nonexistence (errno == ENOENT).  */
-
-static bool
-target_directory_operand (char const *file)
-{
-  struct stat st;
-  int err = (stat (file, &st) == 0 ? 0 : errno);
-  bool is_a_dir = !err && S_ISDIR (st.st_mode);
-  if (err && err != ENOENT)
-    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
-  return is_a_dir;
-}
-
-/* Move SOURCE onto DEST.  Handles cross-file-system moves.
+/* Move SOURCE onto DEST aka DEST_DIRFD+DEST_RELNAME.
+   Handle cross-file-system moves.
    If SOURCE is a directory, DEST must not exist.
    Return true if successful.  */
 
 static bool
-do_move (char const *source, char const *dest, const struct cp_options *x)
+do_move (char const *source, char const *dest,
+         int dest_dirfd, char const *dest_relname, const struct cp_options *x)
 {
   bool copy_into_self;
   bool rename_succeeded;
-  bool ok = copy (source, dest, AT_FDCWD, dest, 0, x,
+  bool ok = copy (source, dest, dest_dirfd, dest_relname, 0, x,
                   &copy_into_self, &rename_succeeded);
 
   if (ok)
@@ -246,43 +230,6 @@ do_move (char const *source, char const *dest, const struct cp_options *x)
   return ok;
 }
 
-/* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
-   Treat DEST as a directory if DEST_IS_DIR.
-   Return true if successful.  */
-
-static bool
-movefile (char *source, char *dest, bool dest_is_dir,
-          const struct cp_options *x)
-{
-  bool ok;
-
-  /* This code was introduced to handle the ambiguity in the semantics
-     of mv that is induced by the varying semantics of the rename function.
-     Some systems (e.g., GNU/Linux) have a rename function that honors a
-     trailing slash, while others (like Solaris 5,6,7) have a rename
-     function that ignores a trailing slash.  I believe the GNU/Linux
-     rename semantics are POSIX and susv2 compliant.  */
-
-  if (remove_trailing_slashes)
-    strip_trailing_slashes (source);
-
-  if (dest_is_dir)
-    {
-      /* Treat DEST as a directory; build the full filename.  */
-      char const *src_basename = last_component (source);
-      char *new_dest = file_name_concat (dest, src_basename, NULL);
-      strip_trailing_slashes (new_dest);
-      ok = do_move (source, new_dest, x);
-      free (new_dest);
-    }
-  else
-    {
-      ok = do_move (source, dest, x);
-    }
-
-  return ok;
-}
-
 void
 usage (int status)
 {
@@ -343,7 +290,8 @@ main (int argc, char **argv)
   char const *backup_suffix = NULL;
   char *version_control_string = NULL;
   struct cp_options x;
-  char *target_directory = NULL;
+  bool remove_trailing_slashes = false;
+  char const *target_directory = NULL;
   bool no_target_directory = false;
   int n_files;
   char **file;
@@ -387,16 +335,6 @@ main (int argc, char **argv)
         case 't':
           if (target_directory)
             die (EXIT_FAILURE, 0, _("multiple target directories specified"));
-          else
-            {
-              struct stat st;
-              if (stat (optarg, &st) != 0)
-                die (EXIT_FAILURE, errno, _("failed to access %s"),
-                     quoteaf (optarg));
-              if (! S_ISDIR (st.st_mode))
-                die (EXIT_FAILURE, 0, _("target %s is not a directory"),
-                     quoteaf (optarg));
-            }
           target_directory = optarg;
           break;
         case 'T':
@@ -443,6 +381,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  int target_dirfd = AT_FDCWD;
   if (no_target_directory)
     {
       if (target_directory)
@@ -455,22 +394,59 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         }
     }
-  else if (!target_directory)
+  else if (target_directory)
     {
-      assert (2 <= n_files);
+      target_dirfd = target_directory_operand (target_directory);
+      if (! target_dirfd_valid (target_dirfd))
+        die (EXIT_FAILURE, errno, _("target directory %s"),
+             quoteaf (target_directory));
+    }
+  else
+    {
+      char const *lastfile = file[n_files - 1];
       if (n_files == 2)
-        x.rename_errno = (renameatu (AT_FDCWD, file[0], AT_FDCWD, file[1],
+        x.rename_errno = (renameatu (AT_FDCWD, file[0], AT_FDCWD, lastfile,
                                      RENAME_NOREPLACE)
                           ? errno : 0);
-      if (x.rename_errno != 0 && target_directory_operand (file[n_files - 1]))
+      if (x.rename_errno != 0)
         {
-          x.rename_errno = -1;
-          target_directory = file[--n_files];
+          int fd = target_directory_operand (lastfile);
+          if (target_dirfd_valid (fd))
+            {
+              x.rename_errno = -1;
+              target_dirfd = fd;
+              target_directory = lastfile;
+              n_files--;
+            }
+          else
+            {
+              /* The last operand LASTFILE cannot be opened as a directory.
+                 If there are more than two operands, report an error.
+
+                 Also, report an error if LASTFILE is known to be a directory
+                 even though it could not be opened, which can happen if
+                 opening failed with EACCES on a platform lacking O_PATH.
+                 In this case use stat to test whether LASTFILE is a
+                 directory, in case opening a non-directory with (O_SEARCH
+                 | O_DIRECTORY) failed with EACCES not ENOTDIR.  */
+              int err = errno;
+              struct stat st;
+              if (2 < n_files
+                  || (O_PATHSEARCH == O_SEARCH && err == EACCES
+                      && stat (lastfile, &st) == 0 && S_ISDIR (st.st_mode)))
+                die (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
+            }
         }
-      else if (2 < n_files)
-        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
-             quoteaf (file[n_files - 1]));
     }
+
+  /* Handle the ambiguity in the semantics of mv induced by the
+     varying semantics of the rename function.  POSIX-compatible
+     systems (e.g., GNU/Linux) have a rename function that honors a
+     trailing slash in the source, while others (Solaris 9, FreeBSD
+     7.2) have a rename function that ignores it.  */
+  if (remove_trailing_slashes)
+    for (int i = 0; i < n_files; i++)
+      strip_trailing_slashes (file[i]);
 
   if (x.interactive == I_ALWAYS_NO)
     x.update = false;
@@ -502,7 +478,14 @@ main (int argc, char **argv)
       for (int i = 0; i < n_files; ++i)
         {
           x.last_file = i + 1 == n_files;
-          ok &= movefile (file[i], target_directory, true, &x);
+          char const *source = file[i];
+          char const *source_basename = last_component (source);
+          char *dest_relname;
+          char *dest = file_name_concat (target_directory, source_basename,
+                                         &dest_relname);
+          strip_trailing_slashes (dest_relname);
+          ok &= do_move (source, dest, target_dirfd, dest_relname, &x);
+          free (dest);
         }
 
 #ifdef lint
@@ -512,7 +495,7 @@ main (int argc, char **argv)
   else
     {
       x.last_file = true;
-      ok = movefile (file[0], file[1], false, &x);
+      ok = do_move (file[0], file[1], AT_FDCWD, file[1], &x);
     }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;

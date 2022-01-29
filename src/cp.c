@@ -564,63 +564,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
   return true;
 }
 
-/* Must F designate the working directory?  */
-
-ATTRIBUTE_PURE static bool
-must_be_working_directory (char const *f)
-{
-  /* Return true for ".", "./.", ".///./", etc.  */
-  while (*f++ == '.')
-    {
-      if (*f != '/')
-        return !*f;
-      while (*++f == '/')
-        continue;
-      if (!*f)
-        return true;
-    }
-  return false;
-}
-
-/* Return a file descriptor open to FILE, for use in openat.
-   As an optimization, return AT_FDCWD if FILE must be the working directory.
-   Fail if FILE is not a directory.
-   On failure return a negative value; this is -1 unless AT_FDCWD == -1.  */
-
-static int
-target_directory_operand (char const *file)
-{
-  if (must_be_working_directory (file))
-    return AT_FDCWD;
-
-  int fd = open (file, O_PATHSEARCH | O_DIRECTORY);
-
-  if (!O_DIRECTORY && 0 <= fd)
-    {
-      /* On old systems like Solaris 10 that do not support O_DIRECTORY,
-         check by hand whether FILE is a directory.  */
-      struct stat st;
-      int err;
-      if (fstat (fd, &st) != 0 ? (err = errno, true)
-          : !S_ISDIR (st.st_mode) && (err = ENOTDIR, true))
-        {
-          close (fd);
-          errno = err;
-          fd = -1;
-        }
-    }
-
-  return fd - (AT_FDCWD == -1 && fd < 0);
-}
-
-/* Return true if FD represents success for target_directory_operand.  */
-
-static bool
-target_dirfd_valid (int fd)
-{
-  return fd != -1 - (AT_FDCWD == -1);
-}
-
 /* Scan the arguments, and copy each by calling copy.
    Return true if successful.  */
 

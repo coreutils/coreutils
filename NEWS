@@ -52,7 +52,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
-  cp now uses openat and similar syscalls when copying to a directory.
+  cp, mv, and install now use openat-like syscalls when copying to a directory.
   This avoids some race conditions and should be more efficient.
 
   On macOS, cp creates a copy-on-write clone if source and destination

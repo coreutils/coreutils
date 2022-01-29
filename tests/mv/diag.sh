@@ -39,8 +39,8 @@ mv: missing file operand
 Try 'mv --help' for more information.
 mv: missing destination file operand after 'no-file'
 Try 'mv --help' for more information.
-mv: target 'f1' is not a directory
-mv: target 'f2' is not a directory
+mv: target 'f1': Not a directory
+mv: target directory 'f2': Not a directory
 EOF
 
 compare exp out || fail=1

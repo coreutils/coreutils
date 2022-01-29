@@ -61,10 +61,6 @@ static bool use_default_selinux_context = true;
 # define endpwent() ((void) 0)
 #endif
 
-#if ! HAVE_LCHOWN
-# define lchown(name, uid, gid) chown (name, uid, gid)
-#endif
-
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */
 static char *owner_name;
@@ -165,9 +161,11 @@ extra_mode (mode_t input)
   return !! (input & ~ mask);
 }
 
-/* Return true if copy of file SRC_NAME to file DEST_NAME is necessary. */
+/* Return true if copy of file SRC_NAME to file DEST_NAME aka
+   DEST_DIRFD+DEST_RELNAME is necessary. */
 static bool
 need_copy (char const *src_name, char const *dest_name,
+           int dest_dirfd, char const *dest_relname,
            const struct cp_options *x)
 {
   struct stat src_sb, dest_sb;
@@ -181,7 +179,7 @@ need_copy (char const *src_name, char const *dest_name,
   if (lstat (src_name, &src_sb) != 0)
     return true;
 
-  if (lstat (dest_name, &dest_sb) != 0)
+  if (lstatat (dest_dirfd, dest_relname, &dest_sb) != 0)
     return true;
 
   if (!S_ISREG (src_sb.st_mode) || !S_ISREG (dest_sb.st_mode)
@@ -241,7 +239,7 @@ need_copy (char const *src_name, char const *dest_name,
   if (src_fd < 0)
     return true;
 
-  dest_fd = open (dest_name, O_RDONLY | O_BINARY);
+  dest_fd = openat (dest_dirfd, dest_relname, O_RDONLY | O_BINARY);
   if (dest_fd < 0)
     {
       close (src_fd);
@@ -353,28 +351,6 @@ setdefaultfilecon (char const *file)
   freecon (scontext);
 }
 
-/* FILE is the last operand of this command.  Return true if FILE is a
-   directory.  But report an error there is a problem accessing FILE,
-   or if FILE does not exist but would have to refer to an existing
-   directory if it referred to anything at all.  */
-
-static bool
-target_directory_operand (char const *file)
-{
-  char const *b = last_component (file);
-  size_t blen = strlen (b);
-  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
-  struct stat st;
-  int err = (stat (file, &st) == 0 ? 0 : errno);
-  bool is_a_dir = !err && S_ISDIR (st.st_mode);
-  if (err && err != ENOENT)
-    die (EXIT_FAILURE, err, _("failed to access %s"), quoteaf (file));
-  if (is_a_dir < looks_like_a_dir)
-    die (EXIT_FAILURE, err, _("target %s is not a directory"),
-         quoteaf (file));
-  return is_a_dir;
-}
-
 /* Report that directory DIR was made, if OPTIONS requests this.  */
 static void
 announce_mkdir (char const *dir, void *options)
@@ -431,15 +407,16 @@ process_dir (char *dir, struct savewd *wd, void *options)
   return ret;
 }
 
-/* Copy file FROM onto file TO, creating TO if necessary.
-   Return true if successful.  */
+/* Copy file FROM onto file TO aka TO_DIRFD+TO_RELNAME, creating TO if
+   necessary.  Return true if successful.  */
 
 static bool
-copy_file (char const *from, char const *to, const struct cp_options *x)
+copy_file (char const *from, char const *to,
+           int to_dirfd, char const *to_relname, const struct cp_options *x)
 {
   bool copy_into_self;
 
-  if (copy_only_if_needed && !need_copy (from, to, x))
+  if (copy_only_if_needed && !need_copy (from, to, to_dirfd, to_relname, x))
     return true;
 
   /* Allow installing from non-regular files like /dev/null.
@@ -448,14 +425,14 @@ copy_file (char const *from, char const *to, const struct cp_options *x)
      However, since !x->recursive, the call to "copy" will fail if FROM
      is a directory.  */
 
-  return copy (from, to, AT_FDCWD, to, 0, x, &copy_into_self, NULL);
+  return copy (from, to, to_dirfd, to_relname, 0, x, &copy_into_self, NULL);
 }
 
-/* Set the attributes of file or directory NAME.
+/* Set the attributes of file or directory NAME aka DIRFD+RELNAME.
    Return true if successful.  */
 
 static bool
-change_attributes (char const *name)
+change_attributes (char const *name, int dirfd, char const *relname)
 {
   bool ok = false;
   /* chown must precede chmod because on some systems,
@@ -471,9 +448,9 @@ change_attributes (char const *name)
      want to know.  */
 
   if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
-      && lchown (name, owner_id, group_id) != 0)
+      && lchownat (dirfd, relname, owner_id, group_id) != 0)
     error (0, errno, _("cannot change ownership of %s"), quoteaf (name));
-  else if (chmod (name, mode) != 0)
+  else if (chmodat (dirfd, relname, mode) != 0)
     error (0, errno, _("cannot change permissions of %s"), quoteaf (name));
   else
     ok = true;
@@ -484,17 +461,18 @@ change_attributes (char const *name)
   return ok;
 }
 
-/* Set the timestamps of file DEST to match those of SRC_SB.
+/* Set the timestamps of file DEST aka DIRFD+RELNAME to match those of SRC_SB.
    Return true if successful.  */
 
 static bool
-change_timestamps (struct stat const *src_sb, char const *dest)
+change_timestamps (struct stat const *src_sb, char const *dest,
+                   int dirfd, char const *relname)
 {
   struct timespec timespec[2];
   timespec[0] = get_stat_atime (src_sb);
   timespec[1] = get_stat_mtime (src_sb);
 
-  if (utimens (dest, timespec))
+  if (utimensat (dirfd, relname, timespec, 0))
     {
       error (0, errno, _("cannot set timestamps for %s"), quoteaf (dest));
       return false;
@@ -653,12 +631,13 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
   exit (status);
 }
 
-/* Copy file FROM onto file TO and give TO the appropriate
-   attributes.
+/* Copy file FROM onto file TO aka TO_DIRFD+TO_RELNAME and give TO the
+   appropriate attributes.  X gives the command options.
    Return true if successful.  */
 
 static bool
 install_file_in_file (char const *from, char const *to,
+                      int to_dirfd, char const *to_relname,
                       const struct cp_options *x)
 {
   struct stat from_sb;
@@ -667,19 +646,19 @@ install_file_in_file (char const *from, char const *to,
       error (0, errno, _("cannot stat %s"), quoteaf (from));
       return false;
     }
-  if (! copy_file (from, to, x))
+  if (! copy_file (from, to, to_dirfd, to_relname, x))
     return false;
   if (strip_files)
     if (! strip (to))
       {
-        if (unlink (to) != 0)  /* Cleanup.  */
+        if (unlinkat (to_dirfd, to_relname, 0) != 0)  /* Cleanup.  */
           die (EXIT_FAILURE, errno, _("cannot unlink %s"), quoteaf (to));
         return false;
       }
   if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
-      && ! change_timestamps (&from_sb, to))
+      && ! change_timestamps (&from_sb, to, to_dirfd, to_relname))
     return false;
-  return change_attributes (to);
+  return change_attributes (to, to_dirfd, to_relname);
 }
 
 /* Create any missing parent directories of TO,
@@ -731,7 +710,7 @@ install_file_in_file_parents (char const *from, char *to,
                               const struct cp_options *x)
 {
   return (mkancesdirs_safe_wd (from, to, (struct cp_options *)x, false)
-          && install_file_in_file (from, to, x));
+          && install_file_in_file (from, to, AT_FDCWD, to, x));
 }
 
 /* Copy file FROM into directory TO_DIR, keeping its same name,
@@ -740,16 +719,39 @@ install_file_in_file_parents (char const *from, char *to,
 
 static bool
 install_file_in_dir (char const *from, char const *to_dir,
-                     const struct cp_options *x, bool mkdir_and_install)
+                     const struct cp_options *x, bool mkdir_and_install,
+                     int *target_dirfd)
 {
   char const *from_base = last_component (from);
-  char *to = file_name_concat (to_dir, from_base, NULL);
+  char *to_relname;
+  char *to = file_name_concat (to_dir, from_base, &to_relname);
   bool ret = true;
 
-  if (mkdir_and_install)
-    ret = mkancesdirs_safe_wd (from, to, (struct cp_options *)x, true);
+  if (!target_dirfd_valid (*target_dirfd)
+      && (ret = mkdir_and_install)
+      && (ret = mkancesdirs_safe_wd (from, to, (struct cp_options *) x, true)))
+    {
+      int fd = open (to_dir, O_PATHSEARCH | O_DIRECTORY);
+      if (fd < 0)
+        {
+          error (0, errno, _("cannot open %s"), quoteaf (to));
+          ret = false;
+        }
+      else
+        *target_dirfd = fd;
+    }
 
-  ret = ret && install_file_in_file (from, to, x);
+  if (ret)
+    {
+      int to_dirfd = *target_dirfd;
+      if (!target_dirfd_valid (to_dirfd))
+        {
+          to_dirfd = AT_FDCWD;
+          to_relname = to;
+        }
+      ret = install_file_in_file (from, to, to_dirfd, to_relname, x);
+    }
+
   free (to);
   return ret;
 }
@@ -899,18 +901,6 @@ main (int argc, char **argv)
     die (EXIT_FAILURE, 0,
          _("target directory not allowed when installing a directory"));
 
-  if (target_directory)
-    {
-      struct stat st;
-      bool stat_success = stat (target_directory, &st) == 0 ? true : false;
-      if (! mkdir_and_install && ! stat_success)
-        die (EXIT_FAILURE, errno, _("failed to access %s"),
-             quoteaf (target_directory));
-      if (stat_success && ! S_ISDIR (st.st_mode))
-        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
-             quoteaf (target_directory));
-    }
-
   x.backup_type = (make_backups
                    ? xget_version (_("backup type"),
                                    version_control_string)
@@ -939,6 +929,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  int target_dirfd = AT_FDCWD;
   if (no_target_directory)
     {
       if (target_directory)
@@ -951,13 +942,26 @@ main (int argc, char **argv)
           usage (EXIT_FAILURE);
         }
     }
-  else if (! (dir_arg || target_directory))
+  else if (target_directory)
     {
-      if (2 <= n_files && target_directory_operand (file[n_files - 1]))
-        target_directory = file[--n_files];
+      target_dirfd = target_directory_operand (target_directory);
+      if (! (target_dirfd_valid (target_dirfd)
+             || (mkdir_and_install && errno == ENOENT)))
+        die (EXIT_FAILURE, errno, _("failed to access %s"),
+             quoteaf (target_directory));
+    }
+  else if (!dir_arg)
+    {
+      char const *lastfile = file[n_files - 1];
+      int fd = target_directory_operand (lastfile);
+      if (target_dirfd_valid (fd))
+        {
+          target_dirfd = fd;
+          target_directory = lastfile;
+          n_files--;
+        }
       else if (2 < n_files)
-        die (EXIT_FAILURE, 0, _("target %s is not a directory"),
-             quoteaf (file[n_files - 1]));
+        die (EXIT_FAILURE, errno, _("target %s"), quoteaf (lastfile));
     }
 
   if (specified_mode)
@@ -1006,7 +1010,8 @@ main (int argc, char **argv)
         {
           if (! (mkdir_and_install
                  ? install_file_in_file_parents (file[0], file[1], &x)
-                 : install_file_in_file (file[0], file[1], &x)))
+                 : install_file_in_file (file[0], file[1], AT_FDCWD,
+                                         file[1], &x)))
             exit_status = EXIT_FAILURE;
         }
       else
@@ -1015,7 +1020,8 @@ main (int argc, char **argv)
           dest_info_init (&x);
           for (i = 0; i < n_files; i++)
             if (! install_file_in_dir (file[i], target_directory, &x,
-                                       i == 0 && mkdir_and_install))
+                                       i == 0 && mkdir_and_install,
+                                       &target_dirfd))
               exit_status = EXIT_FAILURE;
 #ifdef lint
           dest_info_free (&x);

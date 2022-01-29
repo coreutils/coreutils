@@ -131,7 +131,7 @@ EOF
 touch sub4/file_exists || framework_failure_
 ginstall -t sub4/file_exists -Dv file >out 2>&1 && fail=1
 compare - out <<\EOF || fail=1
-ginstall: target 'sub4/file_exists' is not a directory
+ginstall: failed to access 'sub4/file_exists': Not a directory
 EOF
 
 # Ensure that -D with an already existing directory for -t's option argument
