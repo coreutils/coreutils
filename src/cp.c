@@ -598,7 +598,7 @@ target_directory_operand (char const *file)
   if (!O_DIRECTORY && 0 <= fd)
     {
       /* On old systems like Solaris 10 that do not support O_DIRECTORY,
-         check by hand whether DIRECTORY is a directory.  */
+         check by hand whether FILE is a directory.  */
       struct stat st;
       int err;
       if (fstat (fd, &st) != 0 ? (err = errno, true)
