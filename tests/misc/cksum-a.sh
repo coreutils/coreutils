@@ -47,6 +47,10 @@ while read algo prog; do
 done < input_options
 compare out out-a || fail=1
 
+# Ensure --check not allowed with older (non tagged) algorithms
 returns_ 1 cksum -a bsd --check </dev/null || fail=1
+
+# Ensure abbreviations not supported for algorithm selection
+returns_ 1 cksum -a sha22 </dev/null || fail=1
 
 Exit $fail

@@ -692,7 +692,7 @@ algorithm_from_tag (char *s)
   /* Terminate tag, and lookup.  */
   char sep = s[i];
   s[i] = '\0';
-  ptrdiff_t algo = argmatch (s, algorithm_tags, NULL, 0);
+  ptrdiff_t algo = argmatch_exact (s, algorithm_tags);
   s[i] = sep;
 
   return algo;
@@ -1286,8 +1286,8 @@ main (int argc, char **argv)
       {
 #if HASH_ALGO_CKSUM
       case 'a':
-        cksum_algorithm = XARGMATCH ("--algorithm", optarg,
-                                     algorithm_args, algorithm_types);
+        cksum_algorithm = XARGMATCH_EXACT ("--algorithm", optarg,
+                                           algorithm_args, algorithm_types);
         algorithm_specified = true;
         break;
 
