@@ -166,7 +166,7 @@ unexpand (void)
 
               if (blank)
                 {
-                  bool last_tab IF_LINT (=0);
+                  bool last_tab;
 
                   next_tab_column = get_next_tab_column (column, &tab_index,
                                                          &last_tab);
