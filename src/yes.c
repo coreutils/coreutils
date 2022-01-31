@@ -126,5 +126,5 @@ main (int argc, char **argv)
   while (full_write (STDOUT_FILENO, buf, bufused) == bufused)
     continue;
   error (0, errno, _("standard output"));
-  return EXIT_FAILURE;
+  main_exit (EXIT_FAILURE);
 }
