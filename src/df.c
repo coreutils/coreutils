@@ -404,14 +404,9 @@ print_table (void)
           /* When ambsalign fails, output unaligned data.  */
           fputs (cell ? cell : table[row][col], stdout);
           free (cell);
-
-          IF_LINT (free (table[row][col]));
         }
       putchar ('\n');
-      IF_LINT (free (table[row]));
     }
-
-  IF_LINT (free (table));
 }
 
 /* Dynamically allocate a struct field_t in COLUMNS, which
@@ -1600,7 +1595,7 @@ field names are: 'source', 'fstype', 'itotal', 'iused', 'iavail', 'ipcent',\n\
 int
 main (int argc, char **argv)
 {
-  struct stat *stats IF_LINT ( = 0);
+  struct stat *stats = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -1838,7 +1833,7 @@ main (int argc, char **argv)
   get_field_list ();
   get_header ();
 
-  if (optind < argc)
+  if (stats)
     {
       /* Display explicitly requested empty file systems.  */
       show_listed_fs = true;
@@ -1846,8 +1841,6 @@ main (int argc, char **argv)
       for (int i = optind; i < argc; ++i)
         if (argv[i])
           get_entry (argv[i], &stats[i - optind]);
-
-      IF_LINT (free (stats));
     }
   else
     get_all_entries ();
@@ -1869,7 +1862,5 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, 0, _("no file systems processed"));
     }
 
-  IF_LINT (free (columns));
-
-  return exit_status;
+  main_exit (exit_status);
 }
