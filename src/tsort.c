@@ -54,7 +54,8 @@ struct item
 {
   char const *str;
   struct item *left, *right;
-  int balance; /* -1, 0, or +1 */
+  signed char balance; /* -1, 0, or +1 */
+  bool printed;
   size_t count;
   struct item *qlink;
   struct successor *top;
@@ -101,17 +102,10 @@ Write totally ordered list consistent with the partial ordering in FILE.\n\
 static struct item *
 new_item (char const *str)
 {
-  struct item *k = xmalloc (sizeof *k);
-
-  k->str = (str ? xstrdup (str): NULL);
-  k->left = k->right = NULL;
-  k->balance = 0;
-
   /* T1. Initialize (COUNT[k] <- 0 and TOP[k] <- ^).  */
-  k->count = 0;
-  k->qlink = NULL;
-  k->top = NULL;
-
+  struct item *k = xzalloc (sizeof *k);
+  if (str)
+    k->str = xstrdup (str);
   return k;
 }
 
@@ -295,7 +289,7 @@ static bool
 scan_zeros (struct item *k)
 {
   /* Ignore strings that have already been printed.  */
-  if (k->count == 0 && k->str)
+  if (k->count == 0 && !k->printed)
     {
       if (head == NULL)
         head = k;
@@ -430,9 +424,9 @@ walk_tree (struct item *root, bool (*action) (struct item *))
     recurse_tree (root->right, action);
 }
 
-/* Do a topological sort on FILE.   Return true if successful.  */
+/* Do a topological sort on FILE.  Exit with appropriate exit status.  */
 
-static bool
+static void
 tsort (char const *file)
 {
   bool ok = true;
@@ -490,12 +484,7 @@ tsort (char const *file)
 
           /* T5. Output front of queue.  */
           puts (head->str);
-#ifdef lint
-          /* suppress valgrind "definitely lost" warnings.  */
-          void *head_str = (void *) head->str;
-          free (head_str);
-#endif
-          head->str = NULL;	/* Avoid printing the same string twice.  */
+          head->printed = true;
           n_strings--;
 
           /* T6. Erase relations.  */
@@ -529,20 +518,16 @@ tsort (char const *file)
         }
     }
 
-  IF_LINT (free (root));
-
   if (fclose (stdin) != 0)
     die (EXIT_FAILURE, errno, "%s",
          is_stdin ? _("standard input") : quotef (file));
 
-  return ok;
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 int
 main (int argc, char **argv)
 {
-  bool ok;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -561,7 +546,5 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  ok = tsort (optind == argc ? "-" : argv[optind]);
-
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  tsort (optind == argc ? "-" : argv[optind]);
 }
