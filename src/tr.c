@@ -1913,5 +1913,5 @@ main (int argc, char **argv)
   if (close (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, _("standard input"));
 
-  return EXIT_SUCCESS;
+  main_exit (EXIT_SUCCESS);
 }
