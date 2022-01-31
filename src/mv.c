@@ -487,10 +487,6 @@ main (int argc, char **argv)
           ok &= do_move (source, dest, target_dirfd, dest_relname, &x);
           free (dest);
         }
-
-#ifdef lint
-      dest_info_free (&x);
-#endif
     }
   else
     {
@@ -498,5 +494,5 @@ main (int argc, char **argv)
       ok = do_move (file[0], file[1], AT_FDCWD, file[1], &x);
     }
 
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

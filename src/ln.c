@@ -674,15 +674,9 @@ main (int argc, char **argv)
           ok &= do_link (file[i], destdir_fd, dest_base, dest, -1);
           free (dest);
         }
-
-#ifdef lint
-      if (dest_set)
-        hash_free (dest_set);
-      dest_set = NULL;
-#endif
     }
   else
     ok = do_link (file[0], AT_FDCWD, file[1], file[1], link_errno);
 
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

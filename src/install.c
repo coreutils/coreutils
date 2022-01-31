@@ -1023,11 +1023,8 @@ main (int argc, char **argv)
                                        i == 0 && mkdir_and_install,
                                        &target_dirfd))
               exit_status = EXIT_FAILURE;
-#ifdef lint
-          dest_info_free (&x);
-#endif
         }
     }
 
-  return exit_status;
+  main_exit (exit_status);
 }

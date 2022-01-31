@@ -735,11 +735,6 @@ do_copy (int n_files, char **file, char const *target_directory,
 
           free (dst_name);
         }
-
-#ifdef lint
-      dest_info_free (x);
-      src_info_free (x);
-#endif
     }
   else /* !target_directory */
     {
@@ -1218,9 +1213,5 @@ main (int argc, char **argv)
   ok = do_copy (argc - optind, argv + optind,
                 target_directory, no_target_directory, &x);
 
-#ifdef lint
-  forget_all ();
-#endif
-
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
