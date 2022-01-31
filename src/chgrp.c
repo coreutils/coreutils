@@ -313,7 +313,5 @@ main (int argc, char **argv)
                     (uid_t) -1, gid,
                     (uid_t) -1, (gid_t) -1, &chopt);
 
-  IF_LINT (chopt_free (&chopt));
-
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -325,7 +325,5 @@ main (int argc, char **argv)
                     uid, gid,
                     required_uid, required_gid, &chopt);
 
-  IF_LINT (chopt_free (&chopt));
-
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
