@@ -133,7 +133,7 @@ expand (void)
                 {
                   /* Column the next input tab stop is on.  */
                   uintmax_t next_tab_column;
-                  bool last_tab IF_LINT (=0);
+                  bool last_tab;
 
                   next_tab_column = get_next_tab_column (column, &tab_index,
                                                          &last_tab);
