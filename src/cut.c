@@ -95,7 +95,7 @@ static size_t output_delimiter_length;
 static char *output_delimiter_string;
 
 /* The output delimiter string contents, if the default.  */
-char output_delimiter_default[1];
+static char output_delimiter_default[1];
 
 /* True if we have ever read standard input. */
 static bool have_read_stdin;
