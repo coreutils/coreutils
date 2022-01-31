@@ -187,11 +187,11 @@ do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize,
   if (nsize < 0)
     nsize = 0;
 
-  if (ftruncate (fd, nsize) == -1)      /* note updates mtime & ctime */
+  if (ftruncate (fd, nsize) != 0)
     {
-      error (0, errno,
-             _("failed to truncate %s at %" PRIdMAX " bytes"), quoteaf (fname),
-             (intmax_t) nsize);
+      intmax_t s = nsize;
+      error (0, errno, _("failed to truncate %s at %"PRIdMAX" bytes"),
+             quoteaf (fname), s);
       return false;
     }
 
@@ -202,12 +202,10 @@ int
 main (int argc, char **argv)
 {
   bool got_size = false;
-  bool errors = false;
   off_t size IF_LINT ( = 0);
   off_t rsize = -1;
   rel_mode_t rel_mode = rm_abs;
-  int c, fd = -1, oflags;
-  char const *fname;
+  int c;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -353,11 +351,13 @@ main (int argc, char **argv)
         rsize = file_size;
     }
 
-  oflags = O_WRONLY | (no_create ? 0 : O_CREAT) | O_NONBLOCK;
+  int oflags = O_WRONLY | (no_create ? 0 : O_CREAT) | O_NONBLOCK;
+  bool errors = false;
 
-  while ((fname = *argv++) != NULL)
+  for (char const *fname; (fname = *argv); argv++)
     {
-      if ((fd = open (fname, oflags, MODE_RW_UGO)) == -1)
+      int fd = open (fname, oflags, MODE_RW_UGO);
+      if (fd < 0)
         {
           /* 'truncate -s0 -c no-such-file'  shouldn't gen error
              'truncate -s0 no-such-dir/file' should gen ENOENT error
@@ -369,11 +369,8 @@ main (int argc, char **argv)
                      quoteaf (fname));
               errors = true;
             }
-          continue;
         }
-
-
-      if (fd != -1)
+      else
         {
           errors |= !do_ftruncate (fd, fname, size, rsize, rel_mode);
           if (close (fd) != 0)
