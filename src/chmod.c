@@ -567,7 +567,5 @@ main (int argc, char **argv)
   ok = process_files (argv + optind,
                       FTS_COMFOLLOW | FTS_PHYSICAL | FTS_DEFER_STAT);
 
-  IF_LINT (free (change));
-
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
