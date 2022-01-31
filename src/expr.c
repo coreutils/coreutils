@@ -357,7 +357,7 @@ main (int argc, char **argv)
 
   printv (v);
 
-  return null (v);
+  main_exit (null (v));
 }
 
 /* Return a VALUE for I.  */
@@ -585,7 +585,7 @@ trace (fxn)
 static VALUE *
 docolon (VALUE *sv, VALUE *pv)
 {
-  VALUE *v IF_LINT ( = NULL);
+  VALUE *v;
   char const *errmsg;
   struct re_pattern_buffer re_buffer;
   char fastmap[UCHAR_MAX + 1];

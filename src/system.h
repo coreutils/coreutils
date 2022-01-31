@@ -465,11 +465,23 @@ enum
 # define PID_T_MAX TYPE_MAXIMUM (pid_t)
 #endif
 
-/* Use this to suppress gcc's '...may be used before initialized' warnings. */
+/* Use this to suppress gcc warnings.  */
 #ifdef lint
 # define IF_LINT(Code) Code
 #else
 # define IF_LINT(Code) /* empty */
+#endif
+
+/* main_exit should be called only from the main function.  It is
+   equivalent to 'exit'.  When checking for lint it calls 'exit', to
+   pacify gcc -fsanitize=lint which would otherwise have false alarms
+   for pointers in the main function's activation record.  Otherwise
+   it simply returns from 'main'; this used to be what gcc's static
+   checking preferred and may yet be again.  */
+#ifdef lint
+# define main_exit(status) exit (status)
+#else
+# define main_exit(status) return status
 #endif
 
 #ifdef __GNUC__
