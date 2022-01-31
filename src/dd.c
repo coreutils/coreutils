@@ -1427,8 +1427,10 @@ static intmax_t
 parse_integer (char const *str, strtol_error *invalid)
 {
   /* Call xstrtoumax, not xstrtoimax, since we don't want to
-     allow strings like "  -0".  */
-  uintmax_t n;
+     allow strings like " -0".  Initialize N to an interminate value;
+     calling code should not rely on this function returning 0
+     when *INVALID represents a non-overflow error.  */
+  uintmax_t n = 0;
   char *suffix;
   strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
 
@@ -1468,7 +1470,7 @@ parse_integer (char const *str, strtol_error *invalid)
 
   if (INTMAX_MAX < n)
     {
-      *invalid = LONGINT_OVERFLOW;
+      *invalid = e | LONGINT_OVERFLOW;
       return INTMAX_MAX;
     }
 
