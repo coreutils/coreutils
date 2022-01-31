@@ -1144,11 +1144,10 @@ main (int argc, char **argv)
     }
 
   cleanup ();
-  IF_LINT (free (file_names));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     die (EXIT_FAILURE, errno, _("standard input"));
-  return failed_opens ? EXIT_FAILURE : EXIT_SUCCESS;
+  main_exit (failed_opens ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 /* Parse numeric arguments, ensuring MIN <= number <= INT_MAX.  */
