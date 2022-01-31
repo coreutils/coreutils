@@ -1451,10 +1451,10 @@ check_fspec (struct File_spec *fspec, struct File_spec **prev_fspec)
 
 /* Attempt to tail N_FILES files forever, or until killed.
    Check modifications using the inotify events system.
-   Return false on error, or true to revert to polling.  */
-static bool
+   Exit if finished or on fatal error; return to revert to polling.  */
+static void
 tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
-                      double sleep_interval)
+                      double sleep_interval, Hash_table **wd_to_namep)
 {
 # if TAIL_TEST_SLEEP
   /* Delay between open() and inotify_add_watch()
@@ -1480,6 +1480,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
   wd_to_name = hash_initialize (n_files, NULL, wd_hasher, wd_comparator, NULL);
   if (! wd_to_name)
     xalloc_die ();
+  *wd_to_namep = wd_to_name;
 
   /* The events mask used with inotify on files (not directories).  */
   uint32_t inotify_wd_mask = IN_MODIFY;
@@ -1564,19 +1565,9 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
      tailed but unwatchable due rename/unlink race, should also revert.  */
   if (no_inotify_resources || found_unwatchable_dir
       || (follow_mode == Follow_descriptor && tailed_but_unwatchable))
-    {
-      hash_free (wd_to_name);
-
-      errno = 0;
-      return true;
-    }
+    return;
   if (follow_mode == Follow_descriptor && !found_watchable_file)
-    {
-# ifdef lint
-      hash_free (wd_to_name);
-# endif
-      return false;
-    }
+    exit (EXIT_FAILURE);
 
   prev_fspec = &(f[n_files - 1]);
 
@@ -1602,10 +1593,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
                 {
                   error (0, errno, _("%s was replaced"),
                          quoteaf (pretty_name (&(f[i]))));
-                  hash_free (wd_to_name);
-
-                  errno = 0;
-                  return true;
+                  return;
                 }
             }
 
@@ -1632,13 +1620,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
       if (follow_mode == Follow_name
           && ! reopen_inaccessible_files
           && hash_get_n_entries (wd_to_name) == 0)
-        {
-          error (0, 0, _("no files remaining"));
-# ifdef lint
-          hash_free (wd_to_name);
-# endif
-          return false;
-        }
+        die (EXIT_FAILURE, 0, _("no files remaining"));
 
       if (len <= evbuf_off)
         {
@@ -1717,11 +1699,9 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
             {
               if (ev->wd == f[i].parent_wd)
                 {
-                  hash_free (wd_to_name);
                   error (0, 0,
                       _("directory containing watched file was removed"));
-                  errno = 0;  /* we've already diagnosed enough errno detail. */
-                  return true;
+                  return;
                 }
             }
         }
@@ -1758,9 +1738,7 @@ tail_forever_inotify (int wd, struct File_spec *f, size_t n_files,
               if (errno == ENOSPC || errno == ENOMEM)
                 {
                   error (0, 0, _("inotify resources exhausted"));
-                  hash_free (wd_to_name);
-                  errno = 0;
-                  return true; /* revert to polling.  */
+                  return; /* revert to polling.  */
                 }
               else
                 {
@@ -2382,8 +2360,6 @@ main (int argc, char **argv)
         --n_units;
     }
 
-  IF_LINT (assert (0 <= argc));
-
   if (optind < argc)
     {
       n_files = argc - optind;
@@ -2509,32 +2485,20 @@ main (int argc, char **argv)
               if (fflush (stdout) != 0)
                 die (EXIT_FAILURE, errno, _("write error"));
 
-              if (! tail_forever_inotify (wd, F, n_files, sleep_interval))
-                return EXIT_FAILURE;
+              Hash_table *ht;
+              tail_forever_inotify (wd, F, n_files, sleep_interval, &ht);
+              hash_free (ht);
+              close (wd);
+              errno = 0;
             }
           error (0, errno, _("inotify cannot be used, reverting to polling"));
-
-          /* Free resources as this process can be long lived,
-            and we may have exhausted system resources above.  */
-
-          for (i = 0; i < n_files; i++)
-            {
-              /* It's OK to remove the same watch multiple times,
-                ignoring the EINVAL from redundant calls.  */
-              if (F[i].wd != -1)
-                inotify_rm_watch (wd, F[i].wd);
-              if (F[i].parent_wd != -1)
-                inotify_rm_watch (wd, F[i].parent_wd);
-            }
         }
 #endif
       disable_inotify = true;
       tail_forever (F, n_files, sleep_interval);
     }
 
-  IF_LINT (free (F));
-
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     die (EXIT_FAILURE, errno, "-");
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
