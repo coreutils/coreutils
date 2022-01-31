@@ -184,11 +184,6 @@ unset_envvars (void)
         die (EXIT_CANCELED, errno, _("cannot unset %s"),
              quote (usvars[i]));
     }
-
-  IF_LINT (free (usvars));
-  IF_LINT (usvars = NULL);
-  IF_LINT (usvars_used = 0);
-  IF_LINT (usvars_alloc = 0);
 }
 
 /* Return a pointer to the end of a valid ${VARNAME} string, or NULL.
@@ -904,5 +899,5 @@ main (int argc, char **argv)
   if (exit_status == EXIT_ENOENT && strpbrk (argv[optind], C_ISSPACE_CHARS))
     error (0, 0, _("use -[v]S to pass options in shebang lines"));
 
-  return exit_status;
+  main_exit (exit_status);
 }
