@@ -341,10 +341,5 @@ main (int argc, char **argv)
         }
     }
 
-#ifdef lint
-  free (dest_name);
-  free (template);
-#endif
-
-  return status;
+  main_exit (status);
 }
