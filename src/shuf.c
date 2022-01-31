@@ -595,22 +595,5 @@ main (int argc, char **argv)
   if (i != 0)
     die (EXIT_FAILURE, errno, _("write error"));
 
-#ifdef lint
-  free (permutation);
-  randint_all_free (randint_source);
-  if (input_lines)
-    {
-      free (input_lines[0]);
-      free (input_lines);
-    }
-  if (reservoir)
-    {
-      size_t j;
-      for (j = 0; j < n_lines; ++j)
-        freebuffer (&reservoir[j]);
-      free (reservoir);
-    }
-#endif
-
-  return EXIT_SUCCESS;
+  main_exit (EXIT_SUCCESS);
 }
