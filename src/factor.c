@@ -2076,7 +2076,7 @@ factor_using_squfof (uintmax_t n1, uintmax_t n0, struct factors *factors)
           div_smallq (q, rem, S + P, Q);
           P1 = S - rem; /* P1 = q*Q - P */
 
-          IF_LINT (assert (q > 0 && Q > 0));
+          assert (q > 0 && Q > 0);
 
 # if STAT_SQUFOF
           q_freq[0]++;
