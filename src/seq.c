@@ -456,9 +456,9 @@ trim_leading_zeros (char const *s)
 }
 
 /* Print all whole numbers from A to B, inclusive -- to stdout, each
-   followed by a newline.  If B < A, return false and print nothing.
-   Otherwise, return true.  */
-static bool
+   followed by a newline.  If B < A, return and print nothing.
+   Otherwise, do all the work and exit.  */
+static void
 seq_fast (char const *a, char const *b, uintmax_t step)
 {
   bool inf = STREQ (b, "inf");
@@ -549,13 +549,13 @@ seq_fast (char const *a, char const *b, uintmax_t step)
       *bufp++ = *terminator;
       if (fwrite (buf, bufp - buf, 1, stdout) != 1)
         io_error ();
-
-      IF_LINT (free (buf));
     }
+
+  if (ok)
+    exit (EXIT_SUCCESS);
 
   free (p0);
   free (q0);
-  return ok;
 }
 
 /* Return true if S consists of at least one digit and no non-digits.  */
@@ -674,8 +674,7 @@ main (int argc, char **argv)
     {
       char const *s1 = n_args == 1 ? "1" : argv[optind];
       char const *s2 = argv[optind + (n_args - 1)];
-      if (seq_fast (s1, s2, step.value))
-        return EXIT_SUCCESS;
+      seq_fast (s1, s2, step.value);
 
       /* Upon any failure, let the more general code deal with it.  */
     }
@@ -717,12 +716,8 @@ main (int argc, char **argv)
       else if (asprintf (&s2, "%0.Lf", last.value) < 0)
         xalloc_die ();
 
-      if (*s1 != '-' && *s2 != '-' && seq_fast (s1, s2, step.value))
-        {
-          IF_LINT (free (s1));
-          IF_LINT (free (s2));
-          return EXIT_SUCCESS;
-        }
+      if (*s1 != '-' && *s2 != '-')
+        seq_fast (s1, s2, step.value);
 
       free (s1);
       free (s2);
@@ -734,5 +729,5 @@ main (int argc, char **argv)
 
   print_numbers (format_str, layout, first.value, step.value, last.value);
 
-  return EXIT_SUCCESS;
+  main_exit (EXIT_SUCCESS);
 }
