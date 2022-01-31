@@ -233,8 +233,8 @@ paste_parallel (size_t nfiles, char **fnamptr)
 
       for (size_t i = 0; i < nfiles && files_open; i++)
         {
-          int chr IF_LINT ( = 0);	/* Input character. */
-          int err IF_LINT ( = 0);	/* Input errno value.  */
+          int chr;			/* Input character. */
+          int err;			/* Input errno value.  */
           bool sometodo = false;	/* Input chars to process.  */
 
           if (fileptr[i])
