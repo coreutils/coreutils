@@ -469,8 +469,7 @@ short_pinky (char const *filename,
     die (EXIT_FAILURE, errno, "%s", quotef (filename));
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
-
-  IF_LINT (free (utmp_buf));
+  exit (EXIT_SUCCESS);
 }
 
 static void
