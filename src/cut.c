@@ -602,7 +602,5 @@ main (int argc, char **argv)
       ok = false;
     }
 
-  IF_LINT (reset_fields ());
-
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -308,12 +308,3 @@ set_fields (char const *fieldstr, unsigned int options)
   frp = xrealloc (frp, n_frp * sizeof (struct field_range_pair));
   frp[n_frp - 1].lo = frp[n_frp - 1].hi = UINTMAX_MAX;
 }
-
-void
-reset_fields (void)
-{
-  n_frp = 0 ;
-  n_frp_allocated = 0;
-  free (frp);
-  frp = NULL;
-}

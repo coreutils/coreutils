@@ -41,7 +41,4 @@ enum
 /* allocates and initializes the FRP array and N_FRP count */
 extern void set_fields (char const *fieldstr, unsigned int options);
 
-/* frees memory allocated by set_fields() */
-extern void reset_fields (void);
-
 #endif
