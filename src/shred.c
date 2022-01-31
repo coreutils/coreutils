@@ -422,7 +422,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
-  char const *previous_human_offset IF_LINT ( = 0);
+  char const *previous_human_offset;
 
   /* As a performance tweak, avoid direct I/O for small sizes,
      as it's just a performance rather then security consideration,
