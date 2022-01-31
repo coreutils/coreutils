@@ -944,12 +944,6 @@ static int synchronize_output (void);
 static void
 cleanup (void)
 {
-#ifdef lint
-  if (ibuf != obuf)
-    alignfree (ibuf);
-  alignfree (obuf);
-#endif
-
   if (!interrupt_signal)
     {
       int sync_status = synchronize_output ();
@@ -2572,5 +2566,5 @@ main (int argc, char **argv)
     }
 
   finish_up ();
-  return exit_status;
+  main_exit (exit_status);
 }
