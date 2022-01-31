@@ -186,7 +186,7 @@ uptime (char const *filename, int options)
 
   print_uptime (n_users, utmp_buf);
 
-  IF_LINT (free (utmp_buf));
+  exit (EXIT_SUCCESS);
 }
 
 void
@@ -252,6 +252,4 @@ main (int argc, char **argv)
       error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
-
-  return EXIT_SUCCESS;
 }
