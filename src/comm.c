@@ -248,7 +248,8 @@ check_order (struct linebuffer const *prev,
 /* Compare INFILES[0] and INFILES[1].
    If either is "-", use the standard input for that file.
    Assume that each input file is sorted;
-   merge them and output the result.  */
+   merge them and output the result.
+   Exit the program when done.  */
 
 static void
 compare_files (char **infiles)
@@ -401,6 +402,12 @@ compare_files (char **infiles)
               umaxtostr (total[2], buf3), col_sep,
               _("total"), delim);
     }
+
+  if (issued_disorder_warning[0] || issued_disorder_warning[1])
+    die (EXIT_FAILURE, 0, _("input is not in sorted order"));
+
+  /* Exit here to pacify gcc -fsanitizer=leak.  */
+  exit (EXIT_SUCCESS);
 }
 
 int
@@ -491,9 +498,4 @@ main (int argc, char **argv)
     }
 
   compare_files (argv + optind);
-
-  if (issued_disorder_warning[0] || issued_disorder_warning[1])
-    die (EXIT_FAILURE, 0, _("input is not in sorted order"));
-  else
-    return EXIT_SUCCESS;
 }
