@@ -1627,18 +1627,9 @@ main (int argc, char **argv)
           valid_numbers &= process_line (line, newline);
         }
 
-      IF_LINT (free (line));
-
       if (ferror (stdin))
         error (0, errno, _("error reading input"));
     }
-
-#ifdef lint
-  free (padding_buffer);
-  free (format_str_prefix);
-  free (format_str_suffix);
-  reset_fields ();
-#endif
 
   if (debug && !valid_numbers)
     error (0, 0, _("failed to convert some of the input numbers"));
@@ -1648,5 +1639,5 @@ main (int argc, char **argv)
       && inval_style != inval_warn && inval_style != inval_ignore)
     exit_status = EXIT_CONVERSION_WARNINGS;
 
-  return exit_status;
+  main_exit (exit_status);
 }
