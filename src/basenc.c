@@ -950,7 +950,21 @@ wrap_write (char const *buffer, idx_t len,
 }
 
 static void
-do_encode (FILE *in, FILE *out, idx_t wrap_column)
+finish_and_exit (FILE *in, char const *infile)
+{
+  if (fclose (in) != 0)
+    {
+      if (STREQ (infile, "-"))
+        die (EXIT_FAILURE, errno, _("closing standard input"));
+      else
+        die (EXIT_FAILURE, errno, "%s", quotef (infile));
+    }
+
+  exit (EXIT_SUCCESS);
+}
+
+static void
+do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
 {
   idx_t current_column = 0;
   char *inbuf, *outbuf;
@@ -990,12 +1004,11 @@ do_encode (FILE *in, FILE *out, idx_t wrap_column)
   if (ferror (in))
     die (EXIT_FAILURE, errno, _("read error"));
 
-  IF_LINT (free (inbuf));
-  IF_LINT (free (outbuf));
+  finish_and_exit (in, infile);
 }
 
 static void
-do_decode (FILE *in, FILE *out, bool ignore_garbage)
+do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
 {
   char *inbuf, *outbuf;
   idx_t sum;
@@ -1057,11 +1070,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
     }
   while (!feof (in));
 
-#if BASE_TYPE == 42
-  IF_LINT (free (ctx.inbuf));
-#endif
-  IF_LINT (free (inbuf));
-  IF_LINT (free (outbuf));
+  finish_and_exit (in, infile);
 }
 
 int
@@ -1233,17 +1242,7 @@ main (int argc, char **argv)
   fadvise (input_fh, FADVISE_SEQUENTIAL);
 
   if (decode)
-    do_decode (input_fh, stdout, ignore_garbage);
+    do_decode (input_fh, infile, stdout, ignore_garbage);
   else
-    do_encode (input_fh, stdout, wrap_column);
-
-  if (fclose (input_fh) == EOF)
-    {
-      if (STREQ (infile, "-"))
-        die (EXIT_FAILURE, errno, _("closing standard input"));
-      else
-        die (EXIT_FAILURE, errno, "%s", quotef (infile));
-    }
-
-  return EXIT_SUCCESS;
+    do_encode (input_fh, infile, stdout, wrap_column);
 }
