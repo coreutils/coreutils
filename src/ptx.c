@@ -288,22 +288,16 @@ matcher_error (void)
   die (EXIT_FAILURE, errno, _("error in regular expression matcher"));
 }
 
-/*------------------------------------------------------.
-| Duplicate string STRING, while evaluating \-escapes.  |
-`------------------------------------------------------*/
+/* Unescape STRING in-place.  */
 
-/* Loosely adapted from GNU sh-utils printf.c code.  */
-
-static char *
-copy_unescaped_string (char const *string)
+static void
+unescape_string (char *string)
 {
-  char *result;			/* allocated result */
   char *cursor;			/* cursor in result */
   int value;			/* value of \nnn escape */
   int length;			/* length of \nnn escape */
 
-  result = xmalloc (strlen (string) + 1);
-  cursor = result;
+  cursor = string;
 
   while (*string)
     {
@@ -399,7 +393,6 @@ copy_unescaped_string (char const *string)
     }
 
   *cursor = '\0';
-  return result;
 }
 
 /*--------------------------------------------------------------------------.
@@ -1880,7 +1873,8 @@ main (int argc, char **argv)
           break;
 
         case 'F':
-          truncation_string = copy_unescaped_string (optarg);
+          truncation_string = optarg;
+          unescape_string (optarg);
           break;
 
         case 'M':
@@ -1896,7 +1890,8 @@ main (int argc, char **argv)
           break;
 
         case 'S':
-          context_regex.string = copy_unescaped_string (optarg);
+          context_regex.string = optarg;
+          unescape_string (optarg);
           break;
 
         case 'T':
@@ -1904,7 +1899,8 @@ main (int argc, char **argv)
           break;
 
         case 'W':
-          word_regex.string = copy_unescaped_string (optarg);
+          word_regex.string = optarg;
+          unescape_string (optarg);
           if (!*word_regex.string)
             word_regex.string = NULL;
           break;
