@@ -1965,5 +1965,5 @@ main (int argc, char *argv[])
            ? do_statfs (argv[i], format)
            : do_stat (argv[i], format, format2));
 
-  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
