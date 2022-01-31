@@ -354,7 +354,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
   if (output_unique && output_first_repeated && countmode == count_none)
     {
       char *prevfield = NULL;
-      size_t prevlen IF_LINT ( = 0);
+      size_t prevlen;
       bool first_group_printed = false;
 
       while (!feof (stdin))
