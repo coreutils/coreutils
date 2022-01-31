@@ -11,6 +11,8 @@ Depends-on:
 error
 errno
 quote
+stdbool
+verify
 xstrtoimax
 xstrtoumax
 
