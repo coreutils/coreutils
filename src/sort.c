@@ -1045,7 +1045,7 @@ pipe_fork (int pipefds[2], size_t tries)
   struct tempnode *saved_temphead;
   int saved_errno;
   double wait_retry = 0.25;
-  pid_t pid IF_LINT ( = -1);
+  pid_t pid;
   struct cs_status cs;
 
   if (pipe2 (pipefds, O_CLOEXEC) < 0)
@@ -2648,9 +2648,9 @@ keycompare (struct line const *a, struct line const *b)
           size_t tlena;
           size_t tlenb;
 
-          char enda IF_LINT (= 0);
-          char endb IF_LINT (= 0);
-          void *allocated IF_LINT (= NULL);
+          char enda;
+          char endb;
+          void *allocated;
           char stackbuf[4000];
 
           if (ignore || translate)
@@ -3995,7 +3995,6 @@ sort (char *const *files, size_t nfiles, char const *output_file,
       size_t nthreads)
 {
   struct buffer buf;
-  IF_LINT (buf.buf = NULL);
   size_t ntemps = 0;
   bool output_file_created = false;
 
@@ -4070,10 +4069,8 @@ sort (char *const *files, size_t nfiles, char const *output_file,
               sortlines (line, nthreads, buf.nlines, merge_tree + 1,
                          &queue, tfp, temp_output);
 
-#ifdef lint
               merge_tree_destroy (nthreads, merge_tree);
               queue_destroy (&queue);
-#endif
             }
           else
             write_unique (line - 1, tfp, temp_output);
@@ -4819,7 +4816,7 @@ main (int argc, char **argv)
 
       /* POSIX requires that sort return 1 IFF invoked with -c or -C and the
          input is not properly sorted.  */
-      return check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER;
+      exit (check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
 
   /* Check all inputs are accessible, or exit immediately.  */
@@ -4836,7 +4833,6 @@ main (int argc, char **argv)
         sortfiles[i].name = files[i];
 
       merge (sortfiles, 0, nfiles, outfile);
-      IF_LINT (free (sortfiles));
     }
   else
     {
@@ -4853,15 +4849,8 @@ main (int argc, char **argv)
       sort (files, nfiles, outfile, nthreads);
     }
 
-#ifdef lint
-  if (files_from)
-    readtokens0_free (&tok);
-  else
-    free (files);
-#endif
-
   if (have_read_stdin && fclose (stdin) == EOF)
     sort_die (_("close failed"), "-");
 
-  return EXIT_SUCCESS;
+  main_exit (EXIT_SUCCESS);
 }
