@@ -352,8 +352,10 @@ detect_loop (struct item *k)
                           if (loop == k)
                             {
                               /* Remove relation.  */
-                              (*p)->suc->count--;
-                              *p = (*p)->next;
+                              struct successor *s = *p;
+                              s->suc->count--;
+                              *p = s->next;
+                              IF_LINT (free (s));
                               break;
                             }
 
