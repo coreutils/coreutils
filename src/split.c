@@ -1125,12 +1125,14 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
 }
 
 /* -n r/[K/]N: Divide file into N chunks in round robin fashion.
+   Use BUF of size BUFSIZE for the buffer, and if allocating storage
+   put its address into *FILESP to pacify -fsanitize=leak.
    When K == 0, we try to keep the files open in parallel.
    If we run out of file resources, then we revert
    to opening and closing each file for each line.  */
 
 static void
-lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
+lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize, of_t **filesp)
 {
   bool wrapped = false;
   bool wrote = false;
@@ -1145,7 +1147,7 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize)
     {
       if (SIZE_MAX < n)
         xalloc_die ();
-      files = xnmalloc (n, sizeof *files);
+      files = *filesp = xnmalloc (n, sizeof *files);
 
       /* Generate output file names. */
       for (i_file = 0; i_file < n; i_file++)
@@ -1269,7 +1271,6 @@ no_filters:
           files[i_file].ofd = OFD_APPEND;
         }
     }
-  IF_LINT (free (files));
 }
 
 #define FAIL_ONLY_ONE_WAY()					\
@@ -1654,18 +1655,19 @@ main (int argc, char **argv)
     case type_rr:
       /* Note, this is like 'sed -n ${k}~${n}p' when k > 0,
          but the functionality is provided for symmetry.  */
-      lines_rr (k_units, n_units, buf, in_blk_size);
+      {
+        of_t *files;
+        lines_rr (k_units, n_units, buf, in_blk_size, &files);
+      }
       break;
 
     default:
       abort ();
     }
 
-  IF_LINT (alignfree (buf));
-
   if (close (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (infile));
   closeout (NULL, output_desc, filter_pid, outfile);
 
-  return EXIT_SUCCESS;
+  main_exit (EXIT_SUCCESS);
 }
