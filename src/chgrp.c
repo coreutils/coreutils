@@ -313,5 +313,5 @@ main (int argc, char **argv)
                     (uid_t) -1, gid,
                     (uid_t) -1, (gid_t) -1, &chopt);
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  main_exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
