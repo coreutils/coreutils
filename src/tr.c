@@ -1778,13 +1778,13 @@ main (int argc, char **argv)
 
   spec_init (s1);
   if (!parse_str (argv[optind], s1))
-    return EXIT_FAILURE;
+    main_exit (EXIT_FAILURE);
 
   if (non_option_args == 2)
     {
       spec_init (s2);
       if (!parse_str (argv[optind + 1], s2))
-        return EXIT_FAILURE;
+        main_exit (EXIT_FAILURE);
     }
   else
     s2 = NULL;
