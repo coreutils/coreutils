@@ -38,6 +38,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   simple copies between regular files.  This may be more efficient, by avoiding
   user space copies, and possibly employing copy offloading or reflinking.
 
+  cksum no longer allows abbreviated algorithm names,
+  so that forward compatibility and robustness is improved.
+
   date +'%-N' now suppresses excess trailing digits, instead of always
   padding them with zeros to 9 digits.  It uses clock_getres and
   clock_gettime to infer the clock resolution.
