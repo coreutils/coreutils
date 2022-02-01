@@ -84,6 +84,36 @@ AC_DEFUN([gl_GCC_VERSION_IFELSE],
   ]
 )
 
+AC_ARG_ENABLE([single-binary],
+  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks]],
+     [Compile all the tools in a single binary, reducing the overall size.
+      When compiled this way, shebangs (default when enabled) or symlinks are
+      installed for each tool that points to the single binary.])],
+  [gl_single_binary=no ;
+   case $enableval in
+     yes) gl_single_binary=shebangs ;;
+     no|shebangs|symlinks) gl_single_binary=$enableval ;;
+     *)      AC_MSG_ERROR([bad value $enableval for single-binary option.
+                           Options are: symlinks, shebangs, no.]) ;;
+   esac],
+  [gl_single_binary=no]
+)
+AC_ARG_ENABLE([single-binary-exceptions],
+  [AS_HELP_STRING([--enable-single-binary-exceptions=PROG_LIST],
+     [When used with --enable-single-binary, exclude the PROG_LIST from
+      it, so these programs are compiled as separated files
+      (comma-separated, default none))])],
+  [gl_single_binary_exceptions=$enableval],
+  [gl_single_binary_exceptions=]
+)
+if test "$gl_single_binary" = 'symlinks'; then
+  if ! test "`echo ls | sed \"$program_transform_name\"`" = 'ls'; then
+    AC_MSG_ERROR([program name transformations are not currently supported
+                  with --enable-single-binary=symlinks.])
+  fi
+fi
+AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
+
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings@<:@=TYPE@:>@],
     [control generation of GCC warnings.  The TYPE 'no' disables
@@ -148,6 +178,12 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Winline"                 # system.h's readdir_ignoring_dot_and_dotdot
   nw="$nw -Wvector-operation-performance" # warns about randperm.c
 
+  # Suppress noreturn warnings with single binaries; otherwise
+  # GCC complains about the renamed 'main' not being declared noreturn
+  # because 'main_exit' calls 'exit' when linting.
+  if test "$gl_single_binary" != no; then
+    nw="$nw -Wsuggest-attribute=noreturn"
+  fi
 
   # Using -Wstrict-overflow is a pain, but the alternative is worse.
   # For an example, see the code that provoked this report:
@@ -225,36 +261,6 @@ if test $gl_gcc_warnings != no; then
                          [$GNULIB_WARN_CFLAGS], [$nw])
   AC_SUBST([GNULIB_TEST_WARN_CFLAGS])
 fi
-
-AC_ARG_ENABLE([single-binary],
-  [AS_HELP_STRING([--enable-single-binary=[shebangs|symlinks]],
-     [Compile all the tools in a single binary, reducing the overall size.
-      When compiled this way, shebangs (default when enabled) or symlinks are
-      installed for each tool that points to the single binary.])],
-  [gl_single_binary=no ;
-   case $enableval in
-     yes) gl_single_binary=shebangs ;;
-     no|shebangs|symlinks) gl_single_binary=$enableval ;;
-     *)      AC_MSG_ERROR([bad value $enableval for single-binary option.
-                           Options are: symlinks, shebangs, no.]) ;;
-   esac],
-  [gl_single_binary=no]
-)
-AC_ARG_ENABLE([single-binary-exceptions],
-  [AS_HELP_STRING([--enable-single-binary-exceptions=PROG_LIST],
-     [When used with --enable-single-binary, exclude the PROG_LIST from
-      it, so these programs are compiled as separated files
-      (comma-separated, default none))])],
-  [gl_single_binary_exceptions=$enableval],
-  [gl_single_binary_exceptions=]
-)
-if test "$gl_single_binary" = 'symlinks'; then
-  if ! test "`echo ls | sed \"$program_transform_name\"`" = 'ls'; then
-    AC_MSG_ERROR([program name transformations are not currently supported
-                  with --enable-single-binary=symlinks.])
-  fi
-fi
-AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
 
 AC_FUNC_FORK
 
