@@ -251,7 +251,7 @@ check_order (struct linebuffer const *prev,
    merge them and output the result.
    Exit the program when done.  */
 
-static void
+static _Noreturn void
 compare_files (char **infiles)
 {
   /* For each file, we have four linebuffers in lba. */

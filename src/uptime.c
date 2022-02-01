@@ -173,7 +173,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
    according to utmp file FILENAME.  Use read_utmp OPTIONS to read the
    utmp file.  */
 
-static void
+static _Noreturn void
 uptime (char const *filename, int options)
 {
   size_t n_users;

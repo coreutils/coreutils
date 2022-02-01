@@ -949,7 +949,7 @@ wrap_write (char const *buffer, idx_t len,
       }
 }
 
-static void
+static _Noreturn void
 finish_and_exit (FILE *in, char const *infile)
 {
   if (fclose (in) != 0)
@@ -963,7 +963,7 @@ finish_and_exit (FILE *in, char const *infile)
   exit (EXIT_SUCCESS);
 }
 
-static void
+static _Noreturn void
 do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
 {
   idx_t current_column = 0;
@@ -1007,7 +1007,7 @@ do_encode (FILE *in, char const *infile, FILE *out, idx_t wrap_column)
   finish_and_exit (in, infile);
 }
 
-static void
+static _Noreturn void
 do_decode (FILE *in, char const *infile, FILE *out, bool ignore_garbage)
 {
   char *inbuf, *outbuf;

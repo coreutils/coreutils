@@ -428,7 +428,7 @@ walk_tree (struct item *root, bool (*action) (struct item *))
 
 /* Do a topological sort on FILE.  Exit with appropriate exit status.  */
 
-static void
+static _Noreturn void
 tsort (char const *file)
 {
   bool ok = true;
