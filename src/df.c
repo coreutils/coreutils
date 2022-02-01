@@ -710,12 +710,6 @@ devlist_for_dev (dev_t dev)
   return found->seen_last;
 }
 
-static void
-devlist_free (void *p)
-{
-  free (p);
-}
-
 /* Filter mount list by skipping duplicate entries.
    In the case of duplicates - based on the device number - the mount entry
    with a '/' in its me_devname (i.e., not pseudo name like tmpfs) wins.
@@ -736,9 +730,7 @@ filter_mount_list (bool devices_only)
     mount_list_size++;
 
   devlist_table = hash_initialize (mount_list_size, NULL,
-                                 devlist_hash,
-                                 devlist_compare,
-                                 devlist_free);
+                                   devlist_hash, devlist_compare, NULL);
   if (devlist_table == NULL)
     xalloc_die ();
 
@@ -845,7 +837,9 @@ filter_mount_list (bool devices_only)
         me = device_list->me;
         me->me_next = mount_list;
         mount_list = me;
-        device_list = device_list->next;
+        struct devlist *next = device_list->next;
+        free (device_list);
+        device_list = next;
       }
 
       hash_free (devlist_table);
