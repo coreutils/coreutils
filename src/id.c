@@ -127,7 +127,6 @@ main (int argc, char **argv)
   int optc;
   int selinux_enabled = (is_selinux_enabled () > 0);
   bool smack_enabled = is_smack_enabled ();
-  char *pw_name = NULL;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -235,6 +234,7 @@ main (int argc, char **argv)
       /* For each username/userid to get its pw_name field */
       for (; optind < n_ids; optind++)
         {
+          char *pw_name = NULL;
           struct passwd *pwd = NULL;
           char const *spec = argv[optind];
           /* Disallow an empty spec here as parse_user_spec() doesn't
@@ -242,24 +242,22 @@ main (int argc, char **argv)
              specify a noop or "reset special bits" depending on the system.  */
           if (*spec)
             {
-              if (parse_user_spec (spec, &euid, NULL, NULL, NULL) == NULL)
-                {
-                  /* parse_user_spec will only extract a numeric spec,
-                     so we lookup that here to verify and also retrieve
-                     the PW_NAME used subsequently in group lookup.  */
-                  pwd = getpwuid (euid);
-                }
+              if (parse_user_spec (spec, &euid, NULL, &pw_name, NULL) == NULL)
+                pwd = pw_name ? getpwnam (pw_name) : getpwuid (euid);
             }
           if (pwd == NULL)
             {
-              error (0, errno, _("%s: no such user"), quote (argv[optind]));
+              error (0, errno, _("%s: no such user"), quote (spec));
               ok &= false;
-              continue;
             }
-          pw_name = xstrdup (pwd->pw_name);
-          ruid = euid = pwd->pw_uid;
-          rgid = egid = pwd->pw_gid;
-          print_stuff (pw_name);
+          else
+            {
+              if (!pw_name)
+                pw_name = xstrdup (pwd->pw_name);
+              ruid = euid = pwd->pw_uid;
+              rgid = egid = pwd->pw_gid;
+              print_stuff (pw_name);
+            }
           free (pw_name);
         }
     }
@@ -301,7 +299,7 @@ main (int argc, char **argv)
           if (rgid == NO_GID && errno)
             die (EXIT_FAILURE, errno, _("cannot get real GID"));
         }
-        print_stuff (pw_name);
+        print_stuff (NULL);
     }
 
   return ok ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -434,7 +432,7 @@ print_stuff (char const *pw_name)
   if (just_user)
       print_user (use_real ? ruid : euid);
 
-  /* print_group and print_group_lists functions return true on successful
+  /* print_group and print_group_list return true on successful
      execution but false if something goes wrong. We then AND this value with
      the current value of 'ok' because we want to know if one of the previous
      users faced a problem in these functions. This value of 'ok' is later used
