@@ -301,6 +301,9 @@ my @Tests =
      # https://bugs.gnu.org/34608
      ['date-century-plus', '-d @0 +.%+4C.', {OUT => '.+019.'}],
 
+     # https://bugs.gnu.org/50115
+     ['date-epoch-minus-1', '-u -d "1970-12-31T23:59:59+00:00 - 1 year"',
+      {OUT => 'Wed Dec 31 23:59:59 UTC 1969'}],
 
      # Military time zones, new behavior (since 8.32)
      # https://lists.gnu.org/r/bug-gnulib/2019-08/msg00005.html
