@@ -15976,12 +15976,12 @@ Synopses:
 @example
 date [@var{option}]@dots{} [+@var{format}]
 date [-u|--utc|--universal] @c this avoids a newline in the output
-[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]]
+[ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
 The @command{date} command displays the date and time.
 With the @option{--set} (@option{-s}) option, or with
-@samp{[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]]},
+@samp{MMDDhhmm[[CC]YY][.ss]},
 it sets the date and time.
 
 @vindex LC_TIME
@@ -16325,7 +16325,7 @@ might not happen automatically on your system.
 To set the clock, you can use the @option{--set} (@option{-s}) option
 (@pxref{Options for date}).  To set the clock without using GNU
 extensions, you can give @command{date} an argument of the form
-@samp{@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]} where each two-letter
+@samp{MMDDhhmm[[CC]YY][.ss]} where each two-letter
 component stands for two digits with the following meanings:
 
 @table @var
