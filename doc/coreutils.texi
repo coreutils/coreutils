@@ -15976,8 +15976,13 @@ Synopses:
 @example
 date [@var{option}]@dots{} [+@var{format}]
 date [-u|--utc|--universal] @c this avoids a newline in the output
-[ MMDDhhmm[[CC]YY][.ss] ]
+[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]]
 @end example
+
+The @command{date} command displays the date and time.
+With the @option{--set} (@option{-s}) option, or with
+@samp{[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]]},
+it sets the date and time.
 
 @vindex LC_TIME
 Invoking @command{date} with no @var{format} argument is equivalent to invoking
@@ -16312,17 +16317,18 @@ modifiers are GNU extensions.
 @cindex time setting
 @cindex appropriate privileges
 
-If given an argument that does not start with @samp{+}, @command{date} sets
-the system clock to the date and time specified by that argument (as
-described below).  You must have appropriate privileges to set the
-system clock.  Note for changes to persist across a reboot, the
+You must have appropriate privileges to set the
+system clock.  For changes to persist across a reboot, the
 hardware clock may need to be updated from the system clock, which
 might not happen automatically on your system.
 
-The argument must consist entirely of digits, which have the following
-meaning:
+To set the clock, you can use the @option{--set} (@option{-s}) option
+(@pxref{Options for date}).  To set the clock without using GNU
+extensions, you can give @command{date} an argument of the form
+@samp{@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}]} where each two-letter
+component stands for two digits with the following meanings:
 
-@table @samp
+@table @var
 @item MM
 month
 @item DD
@@ -16352,6 +16358,7 @@ relative to Universal Time rather than to the local time zone.
 @cindex options for @command{date}
 
 The program accepts the following options.  Also see @ref{Common options}.
+Except for @option{-u}, these options are all GNU extensions to POSIX.
 
 @table @samp
 

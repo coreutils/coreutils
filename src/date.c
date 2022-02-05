@@ -135,7 +135,8 @@ Usage: %s [OPTION]... [+FORMAT]\n\
 "),
               program_name, program_name);
       fputs (_("\
-Display the current time in the given FORMAT, or set the system date.\n\
+Display date and time in the given FORMAT.\n\
+With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
 "), stdout);
 
       emit_mandatory_arg_note ();
