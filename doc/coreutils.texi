@@ -498,9 +498,9 @@ Date input formats
 Version sorting order
 
 * Version sort overview::
-* Implementation Details::
-* Differences from the official Debian Algorithm::
-* Advanced Topics::
+* Version sort implementation::
+* Differences from Debian version sort::
+* Advanced version sort topics::
 
 Opening the software toolbox
 
@@ -3991,7 +3991,7 @@ Output extra information to stderr, like the checksum implementation being used.
 
 @item --untagged
 @opindex --untagged
-Output using the original coreutils format used by the other
+Output using the original Coreutils format used by the other
 standalone checksum utilities like @command{md5sum} for example.
 This format has the checksum at the start of the line, and may be
 more amenable to further processing by other utilities,
@@ -13922,11 +13922,11 @@ If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @option{-a} option is used.
 
-In previous versions of GNU coreutils (v5.3.0 - v8.23), a @var{file} of @samp{-}
+In previous versions of GNU Coreutils (v5.3.0 -- v8.23),
+a @var{file} of @samp{-}
 caused @command{tee} to send another copy of input to standard output.
 However, as the interleaved output was not very useful, @command{tee} now
-conforms to POSIX which explicitly mandates it to treat @samp{-} as a file
-with such name.
+conforms to POSIX and treats @samp{-} as a file name.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
