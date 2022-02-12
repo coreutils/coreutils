@@ -410,9 +410,9 @@ enum
 "for details about the options it supports.\n")
 
 #define HELP_OPTION_DESCRIPTION \
-  _("      --help     display this help and exit\n")
+  _("      --help        display this help and exit\n")
 #define VERSION_OPTION_DESCRIPTION \
-  _("      --version  output version information and exit\n")
+  _("      --version     output version information and exit\n")
 
 #include "closein.h"
 #include "closeout.h"
