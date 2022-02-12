@@ -716,8 +716,12 @@ emit_ancillary_info (char const *program)
       fputs (_("Report any translation bugs to "
                "<https://translationproject.org/team/>\n"), stdout);
     }
+  /* .htaccess on the coreutils web site maps programs to the appropriate page,
+     however we explicitly handle "[" -> "test" here as the "[" is not
+     recognized as part of a URL by default in terminals.  */
+  char const *url_program = STREQ (program, "[") ? "test" : program;
   printf (_("Full documentation <%s%s>\n"),
-          PACKAGE_URL, program);
+          PACKAGE_URL, url_program);
   printf (_("or available locally via: info '(coreutils) %s%s'\n"),
           node, node == program ? " invocation" : "");
 }
