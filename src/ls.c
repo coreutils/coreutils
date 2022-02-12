@@ -5609,7 +5609,7 @@ The WHEN argument defaults to 'always' and can also be 'auto' or 'never'.\n\
 Using color to distinguish file types is disabled both by default and\n\
 with --color=never.  With --color=auto, ls emits color codes only when\n\
 standard output is connected to a terminal.  The LS_COLORS environment\n\
-variable can change the settings.  Use the dircolors command to set it.\n\
+variable can change the settings.  Use the dircolors(1) command to set it.\n\
 "), stdout);
       fputs (_("\
 \n\
