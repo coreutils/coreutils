@@ -5413,14 +5413,18 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
       --block-size=SIZE      with -l, scale sizes by SIZE when printing them;\n\
-                               e.g., '--block-size=M'; see SIZE format below\n\
+                             e.g., '--block-size=M'; see SIZE format below\n\
+\n\
 "), stdout);
       fputs (_("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
+"), stdout);
+      fputs (_("\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
-                               modification of file status information);\n\
-                               with -l: show ctime and sort by name;\n\
-                               otherwise: sort by ctime, newest first\n\
+                             modification of file status information);\n\
+                             with -l: show ctime and sort by name;\n\
+                             otherwise: sort by ctime, newest first\n\
+\n\
 "), stdout);
       fputs (_("\
   -C                         list entries by columns\n\
@@ -5432,8 +5436,13 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
   -f                         list all entries in directory order\n\
   -F, --classify[=WHEN]      append indicator (one of */=>@|) to entries WHEN\n\
       --file-type            likewise, except do not append '*'\n\
+"), stdout);
+      fputs (_("\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
-                               single-column -1, verbose -l, vertical -C\n\
+                             single-column -1, verbose -l, vertical -C\n\
+\n\
+"), stdout);
+      fputs (_("\
       --full-time            like -l --time-style=full-iso\n\
 "), stdout);
       fputs (_("\
@@ -5442,8 +5451,9 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (_("\
       --group-directories-first\n\
                              group directories before files;\n\
-                               can be augmented with a --sort option, but any\n\
-                               use of --sort=none (-U) disables grouping\n\
+                             can be augmented with a --sort option, but any\n\
+                             use of --sort=none (-U) disables grouping\n\
+\n\
 "), stdout);
       fputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\
@@ -5455,21 +5465,30 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (_("\
   -H, --dereference-command-line\n\
                              follow symbolic links listed on the command line\n\
+"), stdout);
+      fputs (_("\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
-                               that points to a directory\n\
+                             that points to a directory\n\
+\n\
+"), stdout);
+      fputs (_("\
       --hide=PATTERN         do not list implied entries matching shell PATTERN\
 \n\
-                               (overridden by -a or -A)\n\
+                             (overridden by -a or -A)\n\
+\n\
 "), stdout);
       fputs (_("\
       --hyperlink[=WHEN]     hyperlink file names WHEN\n\
 "), stdout);
       fputs (_("\
-      --indicator-style=WORD  append indicator with style WORD to entry names:\
+      --indicator-style=WORD\n\
+                             append indicator with style WORD to entry names:\n\
+                             none (default), slash (-p),\n\
+                             file-type (--file-type), classify (-F)\n\
 \n\
-                               none (default), slash (-p),\n\
-                               file-type (--file-type), classify (-F)\n\
+"), stdout);
+      fputs (_("\
   -i, --inode                print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\
 \n\
@@ -5477,13 +5496,19 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (_("\
   -k, --kibibytes            default to 1024-byte blocks for file system usage;\
 \n\
-                               used only with -s and per directory totals\n\
+                             used only with -s and per directory totals\n\
+\n\
 "), stdout);
       fputs (_("\
   -l                         use a long listing format\n\
+"), stdout);
+      fputs (_("\
   -L, --dereference          when showing file information for a symbolic\n\
-                               link, show information for the file the link\n\
-                               references rather than for the link itself\n\
+                             link, show information for the file the link\n\
+                             references rather than for the link itself\n\
+\n\
+"), stdout);
+      fputs (_("\
   -m                         fill width with a comma separated list of entries\
 \n\
 "), stdout);
@@ -5496,14 +5521,22 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -q, --hide-control-chars   print ? instead of nongraphic characters\n\
+"), stdout);
+      fputs (_("\
       --show-control-chars   show nongraphic characters as-is (the default,\n\
-                               unless program is 'ls' and output is a terminal)\
+                             unless program is 'ls' and output is a terminal)\
 \n\
+\n\
+"), stdout);
+      fputs (_("\
   -Q, --quote-name           enclose entry names in double quotes\n\
+"), stdout);
+      fputs (_("\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
-                               literal, locale, shell, shell-always,\n\
-                               shell-escape, shell-escape-always, c, escape\n\
-                               (overrides QUOTING_STYLE environment variable)\n\
+                             literal, locale, shell, shell-always,\n\
+                             shell-escape, shell-escape-always, c, escape\n\
+                             (overrides QUOTING_STYLE environment variable)\n\
+\n\
 "), stdout);
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\
@@ -5512,18 +5545,25 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size, largest first\n\
+"), stdout);
+      fputs (_("\
       --sort=WORD            sort by WORD instead of name: none (-U), size (-S)\
 ,\n\
-                               time (-t), version (-v), extension (-X), width\n\
+                             time (-t), version (-v), extension (-X), width\n\
+\n\
+"), stdout);
+      fputs (_("\
       --time=WORD            change the default of using modification times;\n\
                                access time (-u): atime, access, use;\n\
                                change time (-c): ctime, status;\n\
                                birth time: birth, creation;\n\
                              with -l, WORD determines which time to show;\n\
                              with --sort=time, sort by WORD (newest first)\n\
+\n\
 "), stdout);
       fputs (_("\
-      --time-style=TIME_STYLE  time/date format with -l; see TIME_STYLE below\n\
+      --time-style=TIME_STYLE\n\
+                             time/date format with -l; see TIME_STYLE below\n\
 "), stdout);
       fputs (_("\
   -t                         sort by time, newest first; see --time\n\
@@ -5531,9 +5571,14 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -u                         with -lt: sort by, and show, access time;\n\
-                               with -l: show access time and sort by name;\n\
-                               otherwise: sort by access time, newest first\n\
+                             with -l: show access time and sort by name;\n\
+                             otherwise: sort by access time, newest first\n\
+\n\
+"), stdout);
+      fputs (_("\
   -U                         do not sort; list entries in directory order\n\
+"), stdout);
+      fputs (_("\
   -v                         natural sort of (version) numbers within text\n\
 "), stdout);
       fputs (_("\
