@@ -67,6 +67,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dircolors takes a new --print-ls-colors option to display LS_COLORS
   entries, on separate lines, colored according to the entry color code.
 
+  dircolors will now also match COLORTERM in addition to TERM environment
+  variables.  The default config will apply colors with any COLORTERM set.
+
 ** Improvements
 
   cp, mv, and install now use openat-like syscalls when copying to a directory.

@@ -271,6 +271,7 @@ dc_parse_stream (FILE *fp, char const *filename)
   size_t input_line_size = 0;
   char const *line;
   char const *term;
+  char const *colorterm;
   bool ok = true;
 
   /* State for the parser.  */
@@ -280,6 +281,11 @@ dc_parse_stream (FILE *fp, char const *filename)
   term = getenv ("TERM");
   if (term == NULL || *term == '\0')
     term = "none";
+
+  /* Also match $COLORTERM.  */
+  colorterm = getenv ("COLORTERM");
+  if (colorterm == NULL)
+    colorterm = "";  /* Doesn't match default "?*"  */
 
   while (true)
     {
@@ -327,10 +333,17 @@ dc_parse_stream (FILE *fp, char const *filename)
           else if (state != ST_TERMSURE)
             state = ST_TERMNO;
         }
+      else if (c_strcasecmp (keywd, "COLORTERM") == 0)
+        {
+          if (fnmatch (arg, colorterm, 0) == 0)
+            state = ST_TERMSURE;
+          else if (state != ST_TERMSURE)
+            state = ST_TERMNO;
+        }
       else
         {
           if (state == ST_TERMSURE)
-            state = ST_TERMYES; /* Another TERM can cancel */
+            state = ST_TERMYES;  /* Another {COLOR,}TERM can cancel.  */
 
           if (state != ST_TERMNO)
             {

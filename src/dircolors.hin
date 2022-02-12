@@ -8,8 +8,11 @@
 # The keywords COLOR, OPTIONS, and EIGHTBIT (honored by the
 # slackware version of dircolors) are recognized but ignored.
 
-# Below are TERM entries, which can be a glob patterns, to match
-# against the TERM environment variable to determine if it is colorable.
+# Global config options can be specified before TERM or COLORTERM entries
+
+# Below are TERM or COLORTERM entries, which can be glob patterns, which
+# restrict following config to systems with matching environment variables.
+COLORTERM ?*
 TERM Eterm
 TERM ansi
 TERM *color*
@@ -207,3 +210,6 @@ EXEC 01;32
 .opus 00;36
 .spx 00;36
 .xspf 00;36
+
+# Subsequent TERM or COLORTERM entries, can be used to add / override
+# config specific to those matching environment variables.

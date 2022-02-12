@@ -42,6 +42,14 @@ my @Tests =
      ['term-4', '-b', {IN => "TERM N*match\nowt 40;33\n"},
       {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
 
+     ['colorterm-1', '-b', {ENV => 'COLORTERM=any'},
+      {IN => "COLORTERM ?*\nowt 40;33\n"},
+      {OUT => "LS_COLORS='tw=40;33:';\nexport LS_COLORS\n"}],
+
+     ['colorterm-2', '-b', {ENV => 'COLORTERM='},
+      {IN => "COLORTERM ?*\nowt 40;33\n"},
+      {OUT => "LS_COLORS='';\nexport LS_COLORS\n"}],
+
      ['print-clash1', '-p', '--print-ls',
       {ERR => "dircolors: options --print-database and --print-ls-colors " .
               "are mutually exclusive\n" .
