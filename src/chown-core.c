@@ -73,6 +73,28 @@ chopt_free (struct Chown_option *chopt)
   free (chopt->group_name);
 }
 
+/* Convert the numeric user-id, UID, to a string stored in xmalloc'd memory,
+   and return it.  Use the decimal representation of the ID.  */
+
+static char *
+uid_to_str (uid_t uid)
+{
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
+  return xstrdup (TYPE_SIGNED (uid_t) ? imaxtostr (uid, buf)
+                  : umaxtostr (uid, buf));
+}
+
+/* Convert the numeric group-id, GID, to a string stored in xmalloc'd memory,
+   and return it.  Use the decimal representation of the ID.  */
+
+static char *
+gid_to_str (gid_t gid)
+{
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
+  return xstrdup (TYPE_SIGNED (gid_t) ? imaxtostr (gid, buf)
+                  : umaxtostr (gid, buf));
+}
+
 /* Convert the numeric group-id, GID, to a string stored in xmalloc'd memory,
    and return it.  If there's no corresponding group name, use the decimal
    representation of the ID.  */
@@ -80,11 +102,8 @@ chopt_free (struct Chown_option *chopt)
 extern char *
 gid_to_name (gid_t gid)
 {
-  char buf[INT_BUFSIZE_BOUND (intmax_t)];
   struct group *grp = getgrgid (gid);
-  return xstrdup (grp ? grp->gr_name
-                  : TYPE_SIGNED (gid_t) ? imaxtostr (gid, buf)
-                  : umaxtostr (gid, buf));
+  return grp ? xstrdup (grp->gr_name) : gid_to_str (gid);
 }
 
 /* Convert the numeric user-id, UID, to a string stored in xmalloc'd memory,
@@ -94,11 +113,8 @@ gid_to_name (gid_t gid)
 extern char *
 uid_to_name (uid_t uid)
 {
-  char buf[INT_BUFSIZE_BOUND (intmax_t)];
   struct passwd *pwd = getpwuid (uid);
-  return xstrdup (pwd ? pwd->pw_name
-                  : TYPE_SIGNED (uid_t) ? imaxtostr (uid, buf)
-                  : umaxtostr (uid, buf));
+  return pwd ? xstrdup (pwd->pw_name) : uid_to_str (uid);
 }
 
 /* Allocate a string representing USER and GROUP.  */
@@ -484,11 +500,21 @@ change_file_owner (FTS *fts, FTSENT *ent,
              : CH_SUCCEEDED);
           char *old_usr = file_stats ? uid_to_name (file_stats->st_uid) : NULL;
           char *old_grp = file_stats ? gid_to_name (file_stats->st_gid) : NULL;
+          char *new_usr = chopt->user_name
+                          ? chopt->user_name : uid != -1
+                                               ? uid_to_str (uid) : NULL;
+          char *new_grp = chopt->group_name
+                          ? chopt->group_name : gid != -1
+                                               ? gid_to_str (gid) : NULL;
           describe_change (file_full_name, ch_status,
                            old_usr, old_grp,
-                           chopt->user_name, chopt->group_name);
+                           new_usr, new_grp);
           free (old_usr);
           free (old_grp);
+          if (new_usr != chopt->user_name)
+            free (new_usr);
+          if (new_grp != chopt->group_name)
+            free (new_grp);
         }
     }
 
