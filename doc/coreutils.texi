@@ -8625,6 +8625,12 @@ Print the (compiled-in) default color configuration database.  This
 output is itself a valid configuration file, and is fairly descriptive
 of the possibilities.
 
+@item --print-ls-colors
+@opindex --print-ls-colors
+@cindex printing ls colors
+Print the LS_COLORS entries on separate lines,
+each colored as per the color they represent.
+
 @end table
 
 @exitstatus

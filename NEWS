@@ -62,6 +62,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   when the --foreground option is not specified.  This allows users to
   distinguish if the command was more forcefully terminated.
 
+** New Features
+
+  dircolors takes a new --print-ls-colors option to display LS_COLORS
+  entries, on separate lines, colored according to the entry color code.
+
 ** Improvements
 
   cp, mv, and install now use openat-like syscalls when copying to a directory.
