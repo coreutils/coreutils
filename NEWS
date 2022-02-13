@@ -24,6 +24,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   'id xyz' now uses the name 'xyz' to determine groups, instead of xyz's uid.
   [bug introduced in coreutils-8.22]
 
+  'ls -v' and 'sort -V' no longer mishandle corner cases like "a..a" vs "a.+"
+  or lines containing NULs.  Their behavior now matches the documentation
+  for file names like ".m4" that consist entirely of an extension,
+  and the documentation has been clarified for unusual cases.
+  [bug introduced in coreutils-7.0]
+
   On macOS, 'mv A B' no longer fails with "Operation not supported"
   when A and B are in the same tmpfs file system.
   [bug introduced in coreutils-9.0]

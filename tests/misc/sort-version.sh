@@ -58,6 +58,7 @@ string start 5.8.0 end of str
 string start 5.80.0 end of str
 string start 5.9.0 end of str
 string start 5.90.0 end of str
+string start 5.04.0 end of str
 _EOF_
 
 cat > exp << _EOF_
@@ -85,6 +86,7 @@ string start 5.1.0 end of str
 string start 5.2.0 end of str
 string start 5.3.0 end of str
 string start 5.4.0 end of str
+string start 5.04.0 end of str
 string start 5.5.0 end of str
 string start 5.6.0 end of str
 string start 5.7.0 end of str
@@ -101,6 +103,12 @@ string start 5.80.0 end of str
 string start 5.90.0 end of str
 _EOF_
 
-sort --sort=version -o out in || fail=1
+sort --stable --sort=version -o out in || fail=1
 compare exp out || fail=1
+
+tr ' ' '\0' <in >in0 || framework_failure_
+sort --stable --sort=version -o out0 in0 || fail=1
+tr '\0' ' ' <out0 >out1 || framework_failure_
+compare exp out1 || fail=1
+
 Exit $fail

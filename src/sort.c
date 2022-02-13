@@ -2703,7 +2703,7 @@ keycompare (struct line const *a, struct line const *b)
           else if (key->random)
             diff = compare_random (ta, tlena, tb, tlenb);
           else if (key->version)
-            diff = filevercmp (ta, tb);
+            diff = filenvercmp (ta, tlena, tb, tlenb);
           else
             {
               /* Locale-dependent string sorting.  This is slower than

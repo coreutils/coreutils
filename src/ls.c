@@ -3941,18 +3941,20 @@ DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
 DEFINE_SORT_FUNCTIONS (width, cmp_width)
 
 /* Compare file versions.
-   Unlike all other compare functions above, cmp_version depends only
-   on filevercmp, which does not fail (even for locale reasons), and does not
-   need a secondary sort key. See lib/filevercmp.h for function description.
+   Unlike the other compare functions, cmp_version does not fail
+   because filevercmp and strcmp do not fail; cmp_version uses strcmp
+   instead of xstrcoll because filevercmp is locale-independent so
+   strcmp is its appropriate secondary.
 
-   All the other sort options, in fact, need xstrcoll and strcmp variants,
-   because they all use a string comparison (either as the primary or secondary
+   All the other sort options need xstrcoll and strcmp variants,
+   because they all use xstrcoll (either as the primary or secondary
    sort key), and xstrcoll has the ability to do a longjmp if strcoll fails for
-   locale reasons.  Lastly, filevercmp is ALWAYS available with gnulib.  */
+   locale reasons.  */
 static int
 cmp_version (struct fileinfo const *a, struct fileinfo const *b)
 {
-  return filevercmp (a->name, b->name);
+  int diff = filevercmp (a->name, b->name);
+  return diff ? diff : strcmp (a->name, b->name);
 }
 
 static int

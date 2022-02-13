@@ -113,8 +113,12 @@ sub make_j_d ()
   chmod 0555, 'j/d' or die "making j/d executable: $!\n";
 }
 
-my @v1 = (qw(0 9 A Z a z), 'zz~', 'zz', 'zz.~1~', 'zz.0');
-my @v_files = ((map { ".$_" } @v1), @v1);
+my @v_files = (
+    '.A', '.Z', '.a', '.z', '.zz~', '.zz', '.zz.~1~',
+    '.0', '.9', '.zz.0',
+     '0',  '9',
+     'A',  'Z',  'a',  'z',  'zz~',  'zz',  'zz.~1~',
+     'zz.0');
 my $exe_in_subdir = {PRE => sub { make_j_d (); push_ls_colors('ex=01;32') }};
 my $remove_j = {POST => sub {unlink 'j/d' or die "j/d: $!\n";
                              rmdir 'j' or die "j: $!\n";
