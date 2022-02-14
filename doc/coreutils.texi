@@ -300,7 +300,7 @@ Operating on characters
 
 @command{tr}: Translate, squeeze, and/or delete characters
 
-* Character sets::               Specifying sets of characters
+* Character arrays::             Specifying arrays of characters
 * Translating::                  Changing one set of characters to another
 * Squeezing and deleting::       Removing characters
 
@@ -6888,7 +6888,7 @@ These commands operate on individual characters.
 Synopsis:
 
 @example
-tr [@var{option}]@dots{} @var{set1} [@var{set2}]
+tr [@var{option}]@dots{} @var{string1} [@var{string2}]
 @end example
 
 @command{tr} copies standard input to standard output, performing
@@ -6905,9 +6905,11 @@ delete characters,
 delete characters, then squeeze repeated characters from the result.
 @end itemize
 
-The @var{set1} and (if given) @var{set2} arguments define ordered
-sets of characters, referred to below as @var{set1} and @var{set2}.  These
-sets are the characters of the input that @command{tr} operates on.
+The @var{string1} and @var{string2} operands define arrays of
+characters @var{array1} and @var{array2}.  By default @var{array1}
+lists input characters that @command{tr} operates on, and @var{array2}
+lists corresponding translations.  In some cases the second operand is
+omitted.
 
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
@@ -6920,34 +6922,29 @@ Options must precede operands.
 @opindex -c
 @opindex -C
 @opindex --complement
-This option replaces @var{set1} with its
-complement (all of the characters that are not in @var{set1}).
-Currently @command{tr} fully supports only single-byte characters.
-Eventually it will support multibyte characters; when it does, the
-@option{-C} option will cause it to complement the set of characters,
-whereas @option{-c} will cause it to complement the set of values.
-This distinction will matter only when some values are not characters,
-and this is possible only in locales using multibyte encodings when
-the input contains encoding errors.
+Instead of @var{array1}, use its complement (all characters not
+specified by @var{string1}), in ascending order.  Use this option with
+caution in multibyte locales where its meaning is not always clear
+or portable; see @ref{Character arrays}.
 
 @item -d
 @itemx --delete
 @opindex -d
 @opindex --delete
-Delete characters in @var{set1}, do not translate
+Delete characters in @var{array1}; do not translate.
 
 @item -s
 @itemx --squeeze-repeats
 @opindex -s
 @opindex --squeeze-repeats
 Replace each sequence of a repeated character that is listed in
-the last specified @var{set}, with a single occurrence of that character.
+the last specified @var{array}, with a single occurrence of that character.
 
 @item -t
 @itemx --truncate-set1
 @opindex -t
 @opindex --truncate-set1
-First truncate @var{set1} to length of @var{set2}.
+Truncate @var{array1} to the length of @var{array2}.
 
 @end table
 
@@ -6955,23 +6952,41 @@ First truncate @var{set1} to length of @var{set2}.
 @exitstatus
 
 @menu
-* Character sets::              Specifying sets of characters.
-* Translating::                 Changing one set of characters to another.
+* Character arrays::            Specifying arrays of characters.
+* Translating::                 Changing characters to other characters.
 * Squeezing and deleting::      Removing characters.
 @end menu
 
 
-@node Character sets
-@subsection Specifying sets of characters
+@node Character arrays
+@subsection Specifying arrays of characters
 
-@cindex specifying sets of characters
+@cindex arrays of characters in @command{tr}
 
-The format of the @var{set1} and @var{set2} arguments resembles
-the format of regular expressions; however, they are not regular
-expressions, only lists of characters.  Most characters simply
-represent themselves in these strings, but the strings can contain
-the shorthands listed below, for convenience.  Some of them can be
-used only in @var{set1} or @var{set2}, as noted below.
+The @var{string1} and @var{string2} operands are not regular
+expressions, even though they may look similar.  Instead, they
+merely represent arrays of characters.  As a GNU extension to POSIX,
+an empty string operand represents an empty array of characters.
+
+The interpretation of @var{string1} and @var{string2} depends on locale.
+GNU @command{tr} fully supports only safe single-byte locales,
+where each possible input byte represents a single character.
+Unfortunately, this means GNU @command{tr} will not handle commands
+like @samp{tr @U{7530} @U{68EE}} the way you might expect,
+since (assuming a UTF-8 encoding) this is equivalent to
+@samp{tr '\347\224\260' '\346\243\256'} and GNU @command{tr} will
+simply transliterate all @samp{\347} bytes to @samp{\346} bytes, etc.
+POSIX does not clearly specify the behavior of @command{tr} in locales
+where characters are represented by byte sequences instead of by
+individual bytes, or where data might contain invalid bytes that are
+encoding errors.  To avoid problems in this area, you can run
+@command{tr} in a safe single-byte locale by using a shell command
+like @samp{LC_ALL=C tr} instead of plain @command{tr}.
+
+Although most characters simply represent themselves in @var{string1}
+and @var{string2}, the strings can contain shorthands listed below,
+for convenience.  Some shorthands can be used only in @var{string1} or
+@var{string2}, as noted below.
 
 @table @asis
 
@@ -6982,38 +6997,42 @@ The following backslash escape sequences are recognized:
 
 @table @samp
 @item \a
-Control-G.
+Bell (BEL, Control-G).
 @item \b
-Control-H.
+Backspace (BS, Control-H).
 @item \f
-Control-L.
+Form feed (FF, Control-L).
 @item \n
-Control-J.
+Newline (LF, Control-J).
 @item \r
-Control-M.
+Carriage return (CR, Control-M).
 @item \t
-Control-I.
+Tab (HT, Control-I).
 @item \v
-Control-K.
+Vertical tab (VT, Control-K).
 @item \@var{ooo}
-The 8-bit character with the value given by @var{ooo}, which is 1 to 3
-octal digits.  Note that @samp{\400} is interpreted as the two-byte
-sequence, @samp{\040} @samp{0}.
+The eight-bit byte with the value given by @var{ooo}, which is the longest
+sequence of one to three octal digits following the backslash.
+For portability, @var{ooo} should represent a value that fits in eight bits.
+As a GNU extension to POSIX, if the value would not fit, then only the
+first two digits of @var{ooo} are used, e.g., @samp{\400}
+is equivalent to @samp{\0400} and represents a two-byte sequence.
 @item \\
 A backslash.
 @end table
 
-While a backslash followed by a character not listed above is
-interpreted as that character, the backslash also effectively
-removes any special significance, so it is useful to escape
-@samp{[}, @samp{]}, @samp{*}, and @samp{-}.
+It is an error if no character follows an unescaped backslash.
+As a GNU extension, a backslash followed by a character not listed
+above is interpreted as that character, removing any special
+significance; this can be used to escape the characters
+@samp{[} and @samp{-} when they would otherwise be special.
 
 @item Ranges
 @cindex ranges
 
-The notation @samp{@var{m}-@var{n}} expands to all of the characters
+The notation @samp{@var{m}-@var{n}} expands to the characters
 from @var{m} through @var{n}, in ascending order.  @var{m} should
-collate before @var{n}; if it doesn't, an error results.  As an example,
+not collate after @var{n}; if it does, an error results.  As an example,
 @samp{0-9} is the same as @samp{0123456789}.
 
 GNU @command{tr} does not support the System V syntax that uses square
@@ -7023,38 +7042,37 @@ to themselves.  However, they should be avoided because they sometimes
 behave unexpectedly.  For example, @samp{tr -d '[0-9]'} deletes brackets
 as well as digits.
 
-Many historically common and even accepted uses of ranges are not
+Many historically common and even accepted uses of ranges are not fully
 portable.  For example, on EBCDIC hosts using the @samp{A-Z}
 range will not do what most would expect because @samp{A} through @samp{Z}
 are not contiguous as they are in ASCII@.
-If you can rely on a POSIX compliant version of @command{tr}, then
-the best way to work around this is to use character classes (see below).
+One way to work around this is to use character classes (see below).
 Otherwise, it is most portable (and most ugly) to enumerate the members
 of the ranges.
 
 @item Repeated characters
 @cindex repeated characters
 
-The notation @samp{[@var{c}*@var{n}]} in @var{set2} expands to @var{n}
+The notation @samp{[@var{c}*@var{n}]} in @var{string2} expands to @var{n}
 copies of character @var{c}.  Thus, @samp{[y*6]} is the same as
 @samp{yyyyyy}.  The notation @samp{[@var{c}*]} in @var{string2} expands
-to as many copies of @var{c} as are needed to make @var{set2} as long as
-@var{set1}.  If @var{n} begins with @samp{0}, it is interpreted in
-octal, otherwise in decimal.
+to as many copies of @var{c} as are needed to make @var{array2} as long as
+@var{array1}.  If @var{n} begins with @samp{0}, it is interpreted in
+octal, otherwise in decimal.  A zero-valued @var{n} is treated as if
+it were absent.
 
 @item Character classes
 @cindex character classes
 
-The notation @samp{[:@var{class}:]} expands to all of the characters in
-the (predefined) class @var{class}.  The characters expand in no
-particular order, except for the @code{upper} and @code{lower} classes,
-which expand in ascending order.  When the @option{--delete} (@option{-d})
+The notation @samp{[:@var{class}:]} expands to all characters in
+the (predefined) class @var{class}.  When the @option{--delete} (@option{-d})
 and @option{--squeeze-repeats} (@option{-s}) options are both given, any
-character class can be used in @var{set2}.  Otherwise, only the
+character class can be used in @var{string2}.  Otherwise, only the
 character classes @code{lower} and @code{upper} are accepted in
-@var{set2}, and then only if the corresponding character class
+@var{string2}, and then only if the corresponding character class
 (@code{upper} and @code{lower}, respectively) is specified in the same
-relative position in @var{set1}.  Doing this specifies case conversion.
+relative position in @var{string1}.  Doing this specifies case conversion.
+Except for case conversion, a class's characters appear in no particular order.
 The class names are given below; an error results when an invalid class
 name is given.
 
@@ -7100,10 +7118,13 @@ Hexadecimal digits.
 @item Equivalence classes
 @cindex equivalence classes
 
-The syntax @samp{[=@var{c}=]} expands to all of the characters that are
-equivalent to @var{c}, in no particular order.  Equivalence classes are
-a relatively recent invention intended to support non-English alphabets.
-But there seems to be no standard way to define them or determine their
+The syntax @samp{[=@var{c}=]} expands to all characters equivalent to
+@var{c}, in no particular order.  These equivalence classes are
+allowed in @var{string2} only when @option{--delete} (@option{-d}) and
+@option{--squeeze-repeats} @option{-s} are both given.
+
+Although equivalence classes are intended to support non-English alphabets,
+there seems to be no standard way to define them or determine their
 contents.  Therefore, they are not fully implemented in GNU @command{tr};
 each character's equivalence class consists only of that character,
 which is of no particular use.
@@ -7116,13 +7137,14 @@ which is of no particular use.
 
 @cindex translating characters
 
-@command{tr} performs translation when @var{set1} and @var{set2} are
+@command{tr} performs translation when @var{string1} and @var{string2} are
 both given and the @option{--delete} (@option{-d}) option is not given.
-@command{tr} translates each character of its input that is in @var{set1}
-to the corresponding character in @var{set2}.  Characters not in
-@var{set1} are passed through unchanged.  When a character appears more
-than once in @var{set1} and the corresponding characters in @var{set2}
-are not all the same, only the final one is used.  For example, these
+@command{tr} translates each character of its input that is in @var{array1}
+to the corresponding character in @var{array2}.  Characters not in
+@var{array1} are passed through unchanged.
+
+As a GNU extension to POSIX, when a character appears more than once
+in @var{array1}, only the final instance is used.  For example, these
 two commands are equivalent:
 
 @example
@@ -7140,17 +7162,17 @@ tr '[:lower:]' '[:upper:]'
 @end example
 
 @noindent
-But note that using ranges like @code{a-z} above is not portable.
+However, ranges like @code{a-z} are not portable outside the C locale.
 
-When @command{tr} is performing translation, @var{set1} and @var{set2}
-typically have the same length.  If @var{set1} is shorter than
-@var{set2}, the extra characters at the end of @var{set2} are ignored.
+When @command{tr} is performing translation, @var{array1} and @var{array2}
+typically have the same length.  If @var{array1} is shorter than
+@var{array2}, the extra characters at the end of @var{array2} are ignored.
 
-On the other hand, making @var{set1} longer than @var{set2} is not
+On the other hand, making @var{array1} longer than @var{array2} is not
 portable; POSIX says that the result is undefined.  In this situation,
-BSD @command{tr} pads @var{set2} to the length of @var{set1} by repeating
-the last character of @var{set2} as many times as necessary.  System V
-@command{tr} truncates @var{set1} to the length of @var{set2}.
+BSD @command{tr} pads @var{array2} to the length of @var{array1} by repeating
+the last character of @var{array2} as many times as necessary.  System V
+@command{tr} truncates @var{array1} to the length of @var{array2}.
 
 By default, GNU @command{tr} handles this case like BSD @command{tr}.
 When the @option{--truncate-set1} (@option{-t}) option is given,
@@ -7166,13 +7188,12 @@ tr -cs A-Za-z0-9 '\012'
 
 @noindent
 because it converts only zero bytes (the first element in the
-complement of @var{set1}), rather than all non-alphanumerics, to
+complement of @var{array1}), rather than all non-alphanumerics, to
 newlines.
 
 @noindent
 By the way, the above idiom is not portable because it uses ranges, and
-it assumes that the octal code for newline is 012.
-Assuming a POSIX compliant @command{tr}, here is a better
+it assumes that the octal code for newline is 012.  Here is a better
 way to write it:
 
 @example
@@ -7188,20 +7209,20 @@ tr -cs '[:alnum:]' '[\n*]'
 @cindex removing characters
 
 When given just the @option{--delete} (@option{-d}) option, @command{tr}
-removes any input characters that are in @var{set1}.
+removes any input characters that are in @var{array1}.
 
 When given just the @option{--squeeze-repeats} (@option{-s}) option
 and not translating, @command{tr} replaces each input sequence of a
-repeated character that is in @var{set1} with a single occurrence of
+repeated character that is in @var{array1} with a single occurrence of
 that character.
 
 When given both @option{--delete} and @option{--squeeze-repeats}, @command{tr}
-first performs any deletions using @var{set1}, then squeezes repeats
-from any remaining characters using @var{set2}.
+first performs any deletions using @var{array1}, then squeezes repeats
+from any remaining characters using @var{array2}.
 
 The @option{--squeeze-repeats} option may also be used when translating,
 in which case @command{tr} first performs translation, then squeezes
-repeats from any remaining characters using @var{set2}.
+repeats from any remaining characters using @var{array2}.
 
 Here are some examples to illustrate various combinations of options:
 
@@ -7225,7 +7246,7 @@ tr -cs '[:alnum:]' '[\n*]'
 
 @item
 Convert each sequence of repeated newlines to a single newline.
-I.e., delete blank lines:
+I.e., delete empty lines:
 
 @example
 tr -s '\n'
@@ -7278,16 +7299,6 @@ Or you can use @samp{--} to terminate option processing:
 @example
 tr -d -- -axM
 @end example
-
-More generally, use the character class notation @code{[=c=]}
-with @samp{-} (or any other character) in place of the @samp{c}:
-
-@example
-tr -d '[=-=]axM'
-@end example
-
-Note how single quotes are used in the above example to protect the
-square brackets from interpretation by a shell.
 
 @end itemize
 

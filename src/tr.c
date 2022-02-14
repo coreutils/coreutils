@@ -285,25 +285,26 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SET1 [SET2]\n\
+Usage: %s [OPTION]... STRING1 [STRING2]\n\
 "),
               program_name);
       fputs (_("\
 Translate, squeeze, and/or delete characters from standard input,\n\
-writing to standard output.\n\
+writing to standard output.  STRING1 and STRING2 specify arrays of\n\
+characters ARRAY1 and ARRAY2 that control the action.\n\
 \n\
-  -c, -C, --complement    use the complement of SET1\n\
-  -d, --delete            delete characters in SET1, do not translate\n\
+  -c, -C, --complement    use the complement of ARRAY1\n\
+  -d, --delete            delete characters in ARRAY1, do not translate\n\
   -s, --squeeze-repeats   replace each sequence of a repeated character\n\
-                            that is listed in the last specified SET,\n\
+                            that is listed in the last specified ARRAY,\n\
                             with a single occurrence of that character\n\
-  -t, --truncate-set1     first truncate SET1 to length of SET2\n\
+  -t, --truncate-set1     first truncate ARRAY1 to length of ARRAY2\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-SETs are specified as strings of characters.  Most represent themselves.\n\
+ARRAYs are specified as strings of characters.  Most represent themselves.\n\
 Interpreted sequences are:\n\
 \n\
   \\NNN            character with octal value NNN (1 to 3 octal digits)\n\
@@ -318,7 +319,7 @@ Interpreted sequences are:\n\
      fputs (_("\
   \\v              vertical tab\n\
   CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n\
-  [CHAR*]         in SET2, copies of CHAR until length of SET1\n\
+  [CHAR*]         in ARRAY2, copies of CHAR until length of ARRAY1\n\
   [CHAR*REPEAT]   REPEAT copies of CHAR, REPEAT octal if starting with 0\n\
   [:alnum:]       all letters and digits\n\
   [:alpha:]       all letters\n\
@@ -338,13 +339,12 @@ Interpreted sequences are:\n\
 "), stdout);
      fputs (_("\
 \n\
-Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
--t may be used only when translating.  SET2 is extended to length of\n\
-SET1 by repeating its last character as necessary.  Excess characters\n\
-of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
-expand in ascending order; used in SET2 while translating, they may\n\
-only be used in pairs to specify case conversion.  -s uses the last\n\
-specified SET, and occurs after translation or deletion.\n\
+Translation occurs if -d is not given and both STRING1 and STRING2 appear.\n\
+-t may be used only when translating.  ARRAY2 is extended to length of\n\
+ARRAY1 by repeating its last character as necessary.  Excess characters\n\
+of ARRAY2 are ignored.  Character classes expand in unspecified order;\n\
+while translating, [:lower:] and [:upper:] may be used in pairs to\n\
+specify case conversion.  Squeezing occurs after translation or deletion.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
