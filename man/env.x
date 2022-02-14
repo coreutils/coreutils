@@ -54,7 +54,7 @@ sh \-c 'env \-\-default-signal=PIPE seq inf | head \-n1'
 .PP
 
 [NOTES]
-POSIX's exec(2) pages says:
+POSIX's exec(3p) pages says:
 .RS
 "many existing applications wrongly assume that they start with certain
 signals set to the default action and/or unblocked.... Therefore, it is best
