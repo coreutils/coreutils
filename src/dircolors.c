@@ -328,17 +328,13 @@ dc_parse_stream (FILE *fp, char const *filename)
       unrecognized = false;
       if (c_strcasecmp (keywd, "TERM") == 0)
         {
-          if (fnmatch (arg, term, 0) == 0)
-            state = ST_TERMSURE;
-          else if (state != ST_TERMSURE)
-            state = ST_TERMNO;
+          if (state != ST_TERMSURE)
+            state = fnmatch (arg, term, 0) == 0 ? ST_TERMSURE : ST_TERMNO;
         }
       else if (c_strcasecmp (keywd, "COLORTERM") == 0)
         {
-          if (fnmatch (arg, colorterm, 0) == 0)
-            state = ST_TERMSURE;
-          else if (state != ST_TERMSURE)
-            state = ST_TERMNO;
+          if (state != ST_TERMSURE)
+            state = fnmatch (arg, colorterm, 0) == 0 ? ST_TERMSURE : ST_TERMNO;
         }
       else
         {
