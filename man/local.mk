@@ -24,7 +24,10 @@ run_help2man = $(SHELL) $(srcdir)/man/dummy-man
 else
 ## Graceful degradation for systems lacking perl.
 if HAVE_PERL
-run_help2man = $(PERL) -- $(srcdir)/man/help2man
+if BOLD_MAN_REFS
+help2man_OPTS=--bold-refs
+endif
+run_help2man = $(PERL) -- $(srcdir)/man/help2man $(help2man_OPTS)
 else
 run_help2man = $(SHELL) $(srcdir)/man/dummy-man
 endif

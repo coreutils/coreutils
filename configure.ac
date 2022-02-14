@@ -114,6 +114,20 @@ if test "$gl_single_binary" = 'symlinks'; then
 fi
 AM_CONDITIONAL([SINGLE_BINARY], [test "$gl_single_binary" != no])
 
+AC_ARG_ENABLE([bold-man-page-references],
+  [AS_HELP_STRING([--disable-bold-man-page-references],
+     [When generating man pages, do not apply bold style around any
+      references like name(1) etc.])],
+  [gl_bold_manpages=yes ;
+   case $enableval in
+     no|yes) gl_bold_manpages=$enableval ;;
+     *)      AC_MSG_ERROR([bad value $enableval for bold-man-page-references.
+                           Options are: yes, no.]) ;;
+   esac],
+  [gl_bold_manpages=yes]
+)
+AM_CONDITIONAL([BOLD_MAN_REFS], [test "$gl_bold_manpages" != no])
+
 AC_ARG_ENABLE([gcc-warnings],
   [AS_HELP_STRING([--enable-gcc-warnings@<:@=TYPE@:>@],
     [control generation of GCC warnings.  The TYPE 'no' disables

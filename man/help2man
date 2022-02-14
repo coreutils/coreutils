@@ -78,6 +78,7 @@ Usage: %s [OPTION]... EXECUTABLE
  -p, --info-page=TEXT    name of Texinfo manual
  -N, --no-info           suppress pointer to Texinfo manual
  -l, --libtool           exclude the `lt-' from the program name
+ -b, --bold-refs         apply bold style to references
      --help              print this help, then exit
      --version           print version number, then exit
 
@@ -99,7 +100,7 @@ my $help_option = '--help';
 my $version_option = '--version';
 my $discard_stderr = 1;
 my ($opt_name, @opt_include, $opt_output, $opt_info, $opt_no_info, $opt_libtool,
-    $version_text);
+    $opt_bold_refs, $version_text);
 
 my %opt_def = (
     'n|name=s'		 => \$opt_name,
@@ -113,6 +114,7 @@ my %opt_def = (
     'p|info-page=s'	 => \$opt_info,
     'N|no-info'		 => \$opt_no_info,
     'l|libtool'		 => \$opt_libtool,
+    'b|bold-refs'	 => \$opt_bold_refs,
     'help'		 => sub { print $help_info; exit },
     'version'		 => sub { print $version_info; exit },
     'h|help-option=s'	 => \$help_option,
@@ -714,6 +716,13 @@ for my $sect (@pre, (grep !$filter{$_}, @sections), @post)
 
 	for ($include{$sect})
 	{
+            # Add bold style around referenced pages.
+            if ($opt_bold_refs)
+            {
+                # This will ignore entries already marked up (with \)
+                s/(^|\s|,)([\[\w\x83]+)\(([1-9][[:lower:]]?)\)/$1\\fB$2\\fP($3)/g;
+            }
+
 	    # Replace leading dot, apostrophe, backslash and hyphen
 	    # tokens.
 	    s/\x80/\\&./g;
