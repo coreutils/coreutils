@@ -226,7 +226,8 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
 
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
-   BUF for temporary storage.  Copy no more than MAX_N_READ bytes.
+   *ABUF for temporary storage, allocating it lazily if *ABUF is null.
+   Copy no more than MAX_N_READ bytes.
    Return true upon successful completion;
    print a diagnostic and return false upon error.
    Note that for best results, BUF should be "well"-aligned.
@@ -234,7 +235,7 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
    DEST_FD introduced a hole.  Set *TOTAL_N_READ to the number of
    bytes read.  */
 static bool
-sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
+sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
              size_t hole_size, bool punch_holes, bool allow_reflink,
              char const *src_name, char const *dst_name,
              uintmax_t max_n_read, off_t *total_n_read,
@@ -297,6 +298,9 @@ sparse_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
 
   while (max_n_read)
     {
+      if (!*abuf)
+        *abuf = xalignalloc (getpagesize (), buf_size);
+      char *buf = *abuf;
       ssize_t n_read = read (src_fd, buf, MIN (max_n_read, buf_size));
       if (n_read < 0)
         {
@@ -441,7 +445,8 @@ write_zeros (int fd, off_t n_bytes)
 /* Perform an efficient extent copy, if possible.  This avoids
    the overhead of detecting holes in hole-introducing/preserving
    copy, and thus makes copying sparse files much more efficient.
-   Copy from SRC_FD to DEST_FD, using BUF (of size BUF_SIZE) for a buffer.
+   Copy from SRC_FD to DEST_FD, using *ABUF (of size BUF_SIZE) for a buffer.
+   Allocate *ABUF lazily if *ABUF is null.
    Look for holes of size HOLE_SIZE in the input.
    The input file is of size SRC_TOTAL_SIZE.
    Use SPARSE_MODE to determine whether to create holes in the output.
@@ -449,7 +454,7 @@ write_zeros (int fd, off_t n_bytes)
    Return true if successful, false (with a diagnostic) otherwise.  */
 
 static bool
-lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
+lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
             size_t hole_size, off_t ext_start, off_t src_total_size,
             enum Sparse_type sparse_mode,
             bool allow_reflink,
@@ -525,7 +530,7 @@ lseek_copy (int src_fd, int dest_fd, char *buf, size_t buf_size,
          is conservative and may miss some holes.  */
       off_t n_read;
       bool read_hole;
-      if ( ! sparse_copy (src_fd, dest_fd, buf, buf_size,
+      if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
                           sparse_mode == SPARSE_NEVER ? 0 : hole_size,
                           true, allow_reflink, src_name, dst_name,
                           ext_len, &n_read, &read_hole))
@@ -1334,21 +1339,19 @@ copy_reg (char const *src_name, char const *dst_name,
             buf_size = blcm;
         }
 
-      buf = xalignalloc (getpagesize (), buf_size);
-
       off_t n_read;
       bool wrote_hole_at_eof = false;
       if (! (
 #ifdef SEEK_HOLE
              scantype == LSEEK_SCANTYPE
-             ? lseek_copy (source_desc, dest_desc, buf, buf_size, hole_size,
+             ? lseek_copy (source_desc, dest_desc, &buf, buf_size, hole_size,
                            scan_inference.ext_start, src_open_sb.st_size,
                            make_holes ? x->sparse_mode : SPARSE_NEVER,
                            x->reflink_mode != REFLINK_NEVER,
                            src_name, dst_name)
              :
 #endif
-             sparse_copy (source_desc, dest_desc, buf, buf_size,
+               sparse_copy (source_desc, dest_desc, &buf, buf_size,
                             make_holes ? hole_size : 0,
                             x->sparse_mode == SPARSE_ALWAYS,
                             x->reflink_mode != REFLINK_NEVER,
