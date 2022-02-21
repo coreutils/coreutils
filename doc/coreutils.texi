@@ -9189,8 +9189,7 @@ Read from @var{file} instead of standard input.
 @item of=@var{file}
 @opindex of
 Write to @var{file} instead of standard output.  Unless
-@samp{conv=notrunc} is given, @command{dd} truncates @var{file} to zero
-bytes (or the size specified with @samp{seek=}).
+@samp{conv=notrunc} is given, truncate @var{file} before writing it.
 
 @item ibs=@var{bytes}
 @opindex ibs
@@ -9230,15 +9229,20 @@ When converting variable-length records to fixed-length ones
 use @var{bytes} as the fixed record length.
 
 @item skip=@var{n}
+@itemx iseek=@var{n}
 @opindex skip
+@opindex iseek
 Skip @var{n} @samp{ibs}-byte blocks in the input file before copying.
 If @samp{iflag=skip_bytes} is specified, @var{n} is interpreted
 as a byte count rather than a block count.
 
 @item seek=@var{n}
+@itemx oseek=@var{n}
 @opindex seek
-Skip @var{n} @samp{obs}-byte blocks in the output file before copying.
-if @samp{oflag=seek_bytes} is specified, @var{n} is interpreted
+@opindex oseek
+Skip @var{n} @samp{obs}-byte blocks in the output file before
+truncating or copying.
+If @samp{oflag=seek_bytes} is specified, @var{n} is interpreted
 as a byte count rather than a block count.
 
 @item count=@var{n}
@@ -9588,14 +9592,14 @@ This flag can be used only with @code{iflag}.
 
 @item skip_bytes
 @opindex skip_bytes
-Interpret the @samp{skip=} operand as a byte count,
+Interpret the @samp{skip=} or @samp{iseek=} operand as a byte count,
 rather than a block count, which allows specifying
 an offset that is not a multiple of the I/O block size.
 This flag can be used only with @code{iflag}.
 
 @item seek_bytes
 @opindex seek_bytes
-Interpret the @samp{seek=} operand as a byte count,
+Interpret the @samp{seek=} or @samp{oseek=} operand as a byte count,
 rather than a block count, which allows specifying
 an offset that is not a multiple of the I/O block size.
 This flag can be used only with @code{oflag}.

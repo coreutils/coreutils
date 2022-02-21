@@ -562,8 +562,8 @@ Copy a file, converting and formatting according to the operands.\n\
   obs=BYTES       write BYTES bytes at a time (default: 512)\n\
   of=FILE         write to FILE instead of stdout\n\
   oflag=FLAGS     write as per the comma separated symbol list\n\
-  seek=N          skip N obs-sized blocks at start of output\n\
-  skip=N          skip N ibs-sized blocks at start of input\n\
+  seek=N          (or oseek=N) skip N obs-sized output blocks\n\
+  skip=N          (or iseek=N) skip N ibs-sized input blocks\n\
   status=LEVEL    The LEVEL of information to print to stderr;\n\
                   'none' suppresses everything but error messages,\n\
                   'noxfer' suppresses the final transfer statistics,\n\
@@ -1564,9 +1564,9 @@ scanargs (int argc, char *const *argv)
               n_max = MIN (SIZE_MAX, IDX_MAX);
               converted_idx = &conversion_blocksize;
             }
-          else if (operand_is (name, "skip"))
+          else if (operand_is (name, "skip") || operand_is (name, "iseek"))
             skip = n;
-          else if (operand_is (name, "seek"))
+          else if (operand_is (name + (*name == 'o'), "seek"))
             seek = n;
           else if (operand_is (name, "count"))
             count = n;

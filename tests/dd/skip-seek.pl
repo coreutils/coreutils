@@ -68,6 +68,16 @@ my @Tests =
       {OUT=> "bc\n"},
       {ERR=> "3+0 records in\n3+0 records out\n"},
      ],
+     [
+      # Check that iseek and oseek aliases work too.
+      'sk-seek5',
+      qw (bs=1 iseek=1 oseek=2 conv=notrunc count=3 status=noxfer of=@AUX@ < ),
+      {IN=> '0123456789abcdef'},
+      {AUX=> 'zyxwvutsrqponmlkji'},
+      {OUT=> ''},
+      {ERR=> "3+0 records in\n3+0 records out\n"},
+      {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
+     ],
     );
 
 my $save_temps = $ENV{DEBUG};

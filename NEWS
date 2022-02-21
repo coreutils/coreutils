@@ -57,6 +57,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd conv=fsync now synchronizes output even after a write error,
   and similarly for dd conv=fdatasync.
 
+  dd now supports the aliases iseek=N for skip=N, and oseek=N for seek=N,
+  like FreeBSD and other operating systems.
+
   timeout --foreground --kill-after=... will now exit with status 137
   if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to
