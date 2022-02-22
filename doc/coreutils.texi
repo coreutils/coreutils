@@ -9166,9 +9166,8 @@ option, and overrides the @option{--preserve=all} and @option{-a} options.
 @pindex dd
 @cindex converting while copying a file
 
-@command{dd} copies a file (from standard input to standard output, by
-default) with a changeable I/O block size, while optionally performing
-conversions on it.  Synopses:
+@command{dd} copies input to output with a changeable I/O block size,
+while optionally performing conversions on the data.  Synopses:
 
 @example
 dd [@var{operand}]@dots{}
@@ -9176,7 +9175,43 @@ dd @var{option}
 @end example
 
 The only options are @option{--help} and @option{--version}.
-@xref{Common options}.  @command{dd} accepts the following operands,
+@xref{Common options}.
+
+By default, @command{dd} copies standard input to standard output.
+To copy, @command{dd} repeatedly does the following steps in order:
+
+@enumerate
+@item
+Read an input block.
+
+@item
+If converting via @samp{sync}, pad as needed to meet the input block size.
+Pad with spaces if converting via @samp{block} or @samp{unblock}, NUL
+bytes otherwise.
+
+@item
+If @samp{bs=} is given and no conversion mentioned in steps (4) or (5)
+is given, output the data as a single block and skip all remaining steps.
+
+@item
+If the @samp{swab} conversion is given, swap each pair of input bytes.
+If the input data length is odd, preserve the last input byte
+(since there is nothing to swap it with).
+
+@item
+If any of the conversions @samp{swab}, @samp{block}, @samp{unblock},
+@samp{lcase}, @samp{ucase}, @samp{ascii}, @samp{ebcdic} and @samp{ibm}
+are given, do these conversions.  These conversions operate
+independently of input blocking, and might deal with records that span
+block boundaries.
+
+@item
+Aggregate the resulting data into output blocks of the specified size,
+and output each output block in turn.  Do not pad the last output block;
+it can be shorter than usual.
+@end enumerate
+
+@command{dd} accepts the following operands,
 whose syntax was inspired by the DD (data definition) statement of
 OS/360 JCL.
 
@@ -9233,8 +9268,9 @@ use @var{bytes} as the fixed record length.
 @opindex skip
 @opindex iseek
 Skip @var{n} @samp{ibs}-byte blocks in the input file before copying.
-If @samp{iflag=skip_bytes} is specified, @var{n} is interpreted
+With @samp{iflag=skip_bytes}, interpret @var{n}
 as a byte count rather than a block count.
+(The @samp{iseek=} spelling is an extension to POSIX.)
 
 @item seek=@var{n}
 @itemx oseek=@var{n}
@@ -9242,20 +9278,22 @@ as a byte count rather than a block count.
 @opindex oseek
 Skip @var{n} @samp{obs}-byte blocks in the output file before
 truncating or copying.
-If @samp{oflag=seek_bytes} is specified, @var{n} is interpreted
+With @samp{oflag=seek_bytes}, interpret @var{n}
 as a byte count rather than a block count.
+(The @samp{oseek=} spelling is an extension to POSIX.)
 
 @item count=@var{n}
 @opindex count
 Copy @var{n} @samp{ibs}-byte blocks from the input file, instead
 of everything until the end of the file.
-if @samp{iflag=count_bytes} is specified, @var{n} is interpreted
+With @samp{iflag=count_bytes}, interpret @var{n}
 as a byte count rather than a block count.
-Note if the input may return short reads as could be the case
+If short reads occur, as could be the case
 when reading from a pipe for example, @samp{iflag=fullblock}
-will ensure that @samp{count=} corresponds to complete input blocks
-rather than the traditional POSIX specified behavior of counting
-input read operations.
+ensures that @samp{count=} counts complete input blocks
+rather than input read operations.
+As an extension to POSIX, @samp{count=0} copies zero blocks
+instead of copying all blocks.
 
 @item status=@var{level}
 @opindex status
@@ -9300,6 +9338,8 @@ write operation succeeds but transfers less data than the block size.
 An additional line like @samp{1 truncated record} or @samp{10
 truncated records} is output after the @samp{records out} line if
 @samp{conv=block} processing truncated one or more input records.
+
+The @samp{status=} operand is a GNU extension to POSIX.
 
 @item conv=@var{conversion}[,@var{conversion}]@dots{}
 @opindex conv
@@ -9348,6 +9388,8 @@ Remove any trailing spaces in each @samp{cbs}-sized input block,
 and append a newline.
 
 The @samp{block} and @samp{unblock} conversions are mutually exclusive.
+If you use either of these conversions, you should also use the
+@samp{cbs=} operand.
 
 @item lcase
 @opindex lcase@r{, converting to}
@@ -9373,12 +9415,12 @@ Similarly, when the output is a device rather than a file,
 NUL input blocks are not copied, and therefore this conversion
 is most useful with virtual or pre zeroed devices.
 
+The @samp{sparse} conversion is a GNU extension to POSIX.
+
 @item swab
 @opindex swab @r{(byte-swapping)}
 @cindex byte-swapping
-Swap every pair of input bytes.  GNU @command{dd}, unlike others, works
-when an odd number of bytes are read---the last byte is simply copied
-(since there is nothing to swap it with).
+Swap every pair of input bytes.
 
 @item sync
 @opindex sync @r{(padding with ASCII NULs)}
@@ -9403,7 +9445,8 @@ output file itself.
 @cindex creating output file, avoiding
 Do not create the output file; the output file must already exist.
 
-The @samp{excl} and @samp{nocreat} conversions are mutually exclusive.
+The @samp{excl} and @samp{nocreat} conversions are mutually exclusive,
+and are GNU extensions to POSIX.
 
 @item notrunc
 @opindex notrunc
@@ -9421,6 +9464,7 @@ Continue after read errors.
 Synchronize output data just before finishing,
 even if there were write errors.
 This forces a physical write of output data.
+This conversion is a GNU extension to POSIX.
 
 @item fsync
 @opindex fsync
@@ -9428,6 +9472,7 @@ This forces a physical write of output data.
 Synchronize output data and metadata just before finishing,
 even if there were write errors.
 This forces a physical write of output data and metadata.
+This conversion is a GNU extension to POSIX.
 
 @end table
 
@@ -9441,8 +9486,7 @@ argument(s).  (No spaces around any comma(s).)
 Access the output file using the flags specified by the @var{flag}
 argument(s).  (No spaces around any comma(s).)
 
-Here are the flags.  Not every flag is supported on every operating
-system.
+Here are the flags.
 
 @table @samp
 
@@ -9606,7 +9650,8 @@ This flag can be used only with @code{oflag}.
 
 @end table
 
-These flags are not supported on all systems, and @samp{dd} rejects
+These flags are all GNU extensions to POSIX.
+They are not supported on all systems, and @samp{dd} rejects
 attempts to use them when they are not supported.  When reading from
 standard input or writing to standard output, the @samp{nofollow} and
 @samp{noctty} flags should not be specified, and the other flags
@@ -9615,11 +9660,20 @@ affected file descriptors, even after @command{dd} exits.
 
 @end table
 
+The behavior of @command{dd} is unspecified if operands other than
+@samp{conv=}, @samp{iflag=}, @samp{oflag=}, and @samp{status=} are
+specified more than once.
+
 @cindex multipliers after numbers
 The numeric-valued strings above (@var{n} and @var{bytes})
+are unsigned decimal integers that
 can be followed by a multiplier: @samp{b}=512, @samp{c}=1,
 @samp{w}=2, @samp{x@var{m}}=@var{m}, or any of the
 standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
+These multipliers are GNU extensions to POSIX, except that
+POSIX allows @var{bytes} to be followed by @samp{k}, @samp{b}, and
+@samp{x@var{m}}.
+Block sizes (i.e., specified by @var{bytes} strings) must be nonzero.
 
 Any block size you specify via @samp{bs=}, @samp{ibs=}, @samp{obs=}, @samp{cbs=}
 should not be too large---values larger than a few megabytes
