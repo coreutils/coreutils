@@ -60,6 +60,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd now supports the aliases iseek=N for skip=N, and oseek=N for seek=N,
   like FreeBSD and other operating systems.
 
+  dd now counts bytes instead of blocks if a block count ends in "B".
+  For example, 'dd count=100KiB' now copies 100 KiB of data, not
+  102,400 blocks of data.  The flags count_bytes, skip_bytes and
+  seek_bytes are therefore obsolescent and are no longer documented,
+  though they still work.
+
   timeout --foreground --kill-after=... will now exit with status 137
   if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to

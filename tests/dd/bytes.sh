@@ -18,39 +18,46 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ dd
 
-# count_bytes
 echo 0123456789abcdefghijklm > in || framework_failure_
-dd count=14 conv=swab iflag=count_bytes < in > out 2> /dev/null || fail=1
-case $(cat out) in
- 1032547698badc) ;;
- *) fail=1 ;;
-esac
 
-# skip_bytes
-echo 0123456789abcdefghijklm > in || framework_failure_
-dd skip=10 iflag=skip_bytes < in > out 2> /dev/null || fail=1
-case $(cat out) in
- abcdefghijklm) ;;
- *) fail=1 ;;
-esac
+# count bytes
+for operands in "count=14B" "count=14 iflag=count_bytes"; do
+  dd $operands conv=swab < in > out 2> /dev/null || fail=1
+  case $(cat out) in
+   1032547698badc) ;;
+   *) fail=1 ;;
+  esac
+done
 
-# skip records and bytes from pipe
-echo 0123456789abcdefghijklm |
- dd skip=10 bs=2 iflag=skip_bytes > out 2> /dev/null || fail=1
-case $(cat out) in
- abcdefghijklm) ;;
- *) fail=1 ;;
-esac
+for operands in "iseek=10B" "skip=10 iflag=skip_bytes"; do
+  # skip bytes
+  dd $operands < in > out 2> /dev/null || fail=1
+  case $(cat out) in
+   abcdefghijklm) ;;
+   *) fail=1 ;;
+  esac
 
-# seek bytes
-echo abcdefghijklm |
- dd bs=5 seek=8 oflag=seek_bytes > out 2> /dev/null || fail=1
-printf '\0\0\0\0\0\0\0\0abcdefghijklm\n' > expected
-compare expected out || fail=1
+  # skip records and bytes from pipe
+  echo 0123456789abcdefghijklm |
+    dd $operands bs=2 > out 2> /dev/null || fail=1
+  case $(cat out) in
+   abcdefghijklm) ;;
+   *) fail=1 ;;
+  esac
+done
 
-# Just truncation, no I/O
-dd bs=5 seek=8 oflag=seek_bytes of=out2 count=0 2> /dev/null || fail=1
 truncate -s8 expected2
-compare expected2 out2 || fail=1
+printf '\0\0\0\0\0\0\0\0abcdefghijklm\n' > expected
+
+for operands in "oseek=8B" "seek=8 oflag=seek_bytes"; do
+  # seek bytes
+  echo abcdefghijklm |
+    dd $operands bs=5 > out 2> /dev/null || fail=1
+  compare expected out || fail=1
+
+  # Just truncation, no I/O
+  dd $operands bs=5 of=out2 count=0 2> /dev/null || fail=1
+  compare expected2 out2 || fail=1
+done
 
 Exit $fail

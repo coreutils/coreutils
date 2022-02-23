@@ -78,7 +78,7 @@ advised_to_eof || fail=1
 # Ensure sub page size offsets are handled.
 # I.e., only page aligned offsets are sent to fadvise.
 if ! strace -o dd.strace -e fadvise64,fadvise64_64 dd status=none \
- if=in.f of=out.f bs=1M oflag=direct seek=512 oflag=seek_bytes; then
+ if=in.f of=out.f bs=1M oflag=direct oseek=512B; then
   warn_ '512 byte aligned O_DIRECT is not supported on this (file) system'
   # The current file system may not support O_DIRECT,
   # or older XFS had a page size alignment requirement

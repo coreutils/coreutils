@@ -575,6 +575,7 @@ N and BYTES may be followed by the following multiplicative suffixes:\n\
 c=1, w=2, b=512, kB=1000, K=1024, MB=1000*1000, M=1024*1024, xM=M,\n\
 GB=1000*1000*1000, G=1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
+If N ends in 'B', it counts bytes not blocks.\n\
 \n\
 Each CONV symbol may be:\n\
 \n\
@@ -638,15 +639,6 @@ Each FLAG symbol may be:\n\
         fputs (_("  binary    use binary I/O for data\n"), stdout);
       if (O_TEXT)
         fputs (_("  text      use text I/O for data\n"), stdout);
-      if (O_COUNT_BYTES)
-        fputs (_("  count_bytes  treat 'count=N' as a byte count (iflag only)\n\
-"), stdout);
-      if (O_SKIP_BYTES)
-        fputs (_("  skip_bytes  treat 'skip=N' as a byte count (iflag only)\n\
-"), stdout);
-      if (O_SEEK_BYTES)
-        fputs (_("  seek_bytes  treat 'seek=N' as a byte count (oflag only)\n\
-"), stdout);
 
       {
         printf (_("\
@@ -1419,9 +1411,8 @@ parse_symbols (char const *str, struct symbol_value const *table,
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
-   If STR does not represent a number in this format,
-   set *INVALID to a nonzero error value and return
-   INTMAX_MAX if it is an overflow, an indeterminate value otherwise.  */
+   Set *INVALID to an appropriate error value and return INTMAX_MAX if
+   it is an overflow, an indeterminate value if some other error occurred.  */
 
 static intmax_t
 parse_integer (char const *str, strtol_error *invalid)
@@ -1430,53 +1421,57 @@ parse_integer (char const *str, strtol_error *invalid)
      allow strings like " -0".  Initialize N to an interminate value;
      calling code should not rely on this function returning 0
      when *INVALID represents a non-overflow error.  */
-  uintmax_t n = 0;
+  int indeterminate = 0;
+  uintmax_t n = indeterminate;
   char *suffix;
-  strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
+  static char const suffixes[] = "bcEGkKMPTwYZ0";
+  strtol_error e = xstrtoumax (str, &suffix, 10, &n, suffixes);
+  intmax_t result;
 
   if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
-      && *suffix == 'x')
+      && suffix[-1] != 'B' && *suffix == 'B')
     {
-      strtol_error invalid2 = LONGINT_OK;
-      intmax_t result = parse_integer (suffix + 1, &invalid2);
-      if ((invalid2 & ~LONGINT_OVERFLOW) != LONGINT_OK)
-        {
-          *invalid = invalid2;
-          return result;
-        }
+      suffix++;
+      if (!*suffix)
+        e &= ~LONGINT_INVALID_SUFFIX_CHAR;
+    }
 
-      if (INT_MULTIPLY_WRAPV (n, result, &result))
+  if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
+      && *suffix == 'x' && ! (suffix[-1] == 'B' && strchr (suffix + 1, 'B')))
+    {
+      uintmax_t o;
+      strtol_error f = xstrtoumax (suffix + 1, &suffix, 10, &o, suffixes);
+      if ((f & ~LONGINT_OVERFLOW) != LONGINT_OK)
         {
-          *invalid = LONGINT_OVERFLOW;
-          return INTMAX_MAX;
+          e = f;
+          result = indeterminate;
         }
-
-      if (result == 0)
+      else if (INT_MULTIPLY_WRAPV (n, o, &result)
+               || (result != 0 && ((e | f) & LONGINT_OVERFLOW)))
         {
-          if (STRPREFIX (str, "0x"))
+          e = LONGINT_OVERFLOW;
+          result = INTMAX_MAX;
+        }
+      else
+        {
+          if (result == 0 && STRPREFIX (str, "0x"))
             error (0, 0,
                    _("warning: %s is a zero multiplier; "
                      "use %s if that is intended"),
                    quote_n (0, "0x"), quote_n (1, "00x"));
+          e = LONGINT_OK;
         }
-      else if ((e | invalid2) & LONGINT_OVERFLOW)
-        {
-          *invalid = LONGINT_OVERFLOW;
-          return INTMAX_MAX;
-        }
-
-      return result;
     }
-
-  if (INTMAX_MAX < n)
+  else if (n <= INTMAX_MAX)
+    result = n;
+  else
     {
-      *invalid = e | LONGINT_OVERFLOW;
-      return INTMAX_MAX;
+      e = LONGINT_OVERFLOW;
+      result = INTMAX_MAX;
     }
 
-  if (e != LONGINT_OK)
-    *invalid = e;
-  return n;
+  *invalid = e;
+  return result;
 }
 
 /* OPERAND is of the form "X=...".  Return true if X is NAME.  */
@@ -1495,6 +1490,7 @@ scanargs (int argc, char *const *argv)
   intmax_t count = INTMAX_MAX;
   intmax_t skip = 0;
   intmax_t seek = 0;
+  bool count_B = false, skip_B = false, seek_B = false;
 
   for (int i = optind; i < argc; i++)
     {
@@ -1529,6 +1525,7 @@ scanargs (int argc, char *const *argv)
         {
           strtol_error invalid = LONGINT_OK;
           intmax_t n = parse_integer (val, &invalid);
+          bool has_B = !!strchr (val, 'B');
           intmax_t n_min = 0;
           intmax_t n_max = INTMAX_MAX;
           idx_t *converted_idx = NULL;
@@ -1565,11 +1562,20 @@ scanargs (int argc, char *const *argv)
               converted_idx = &conversion_blocksize;
             }
           else if (operand_is (name, "skip") || operand_is (name, "iseek"))
-            skip = n;
+            {
+              skip = n;
+              skip_B = has_B;
+            }
           else if (operand_is (name + (*name == 'o'), "seek"))
-            seek = n;
+            {
+              seek = n;
+              seek_B = has_B;
+            }
           else if (operand_is (name, "count"))
-            count = n;
+            {
+              count = n;
+              count_B = has_B;
+            }
           else
             {
               error (0, 0, _("unrecognized operand %s"),
@@ -1615,20 +1621,8 @@ scanargs (int argc, char *const *argv)
       usage (EXIT_FAILURE);
     }
 
-  if (input_flags & O_SEEK_BYTES)
-    {
-      error (0, 0, "%s: %s", _("invalid input flag"), quote ("seek_bytes"));
-      usage (EXIT_FAILURE);
-    }
-
-  if (output_flags & (O_COUNT_BYTES | O_SKIP_BYTES))
-    {
-      error (0, 0, "%s: %s", _("invalid output flag"),
-             quote (output_flags & O_COUNT_BYTES
-                    ? "count_bytes" : "skip_bytes"));
-      usage (EXIT_FAILURE);
-    }
-
+  if (skip_B)
+    input_flags |= O_SKIP_BYTES;
   if (input_flags & O_SKIP_BYTES && skip != 0)
     {
       skip_records = skip / input_blocksize;
@@ -1637,6 +1631,8 @@ scanargs (int argc, char *const *argv)
   else if (skip != 0)
     skip_records = skip;
 
+  if (count_B)
+    input_flags |= O_COUNT_BYTES;
   if (input_flags & O_COUNT_BYTES && count != INTMAX_MAX)
     {
       max_records = count / input_blocksize;
@@ -1645,6 +1641,8 @@ scanargs (int argc, char *const *argv)
   else if (count != INTMAX_MAX)
     max_records = count;
 
+  if (seek_B)
+    output_flags |= O_SEEK_BYTES;
   if (output_flags & O_SEEK_BYTES && seek != 0)
     {
       seek_records = seek / output_blocksize;

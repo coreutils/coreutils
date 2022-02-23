@@ -9268,9 +9268,9 @@ use @var{bytes} as the fixed record length.
 @opindex skip
 @opindex iseek
 Skip @var{n} @samp{ibs}-byte blocks in the input file before copying.
-With @samp{iflag=skip_bytes}, interpret @var{n}
+If @var{n} ends in the letter @samp{B}, interpret @var{n}
 as a byte count rather than a block count.
-(The @samp{iseek=} spelling is an extension to POSIX.)
+(@samp{B} and the @samp{iseek=} spelling are GNU extensions to POSIX.)
 
 @item seek=@var{n}
 @itemx oseek=@var{n}
@@ -9278,16 +9278,17 @@ as a byte count rather than a block count.
 @opindex oseek
 Skip @var{n} @samp{obs}-byte blocks in the output file before
 truncating or copying.
-With @samp{oflag=seek_bytes}, interpret @var{n}
+If @var{n} ends in the letter @samp{B}, interpret @var{n}
 as a byte count rather than a block count.
-(The @samp{oseek=} spelling is an extension to POSIX.)
+(@samp{B} and the @samp{oseek=} spelling are GNU extensions to POSIX.)
 
 @item count=@var{n}
 @opindex count
 Copy @var{n} @samp{ibs}-byte blocks from the input file, instead
 of everything until the end of the file.
-With @samp{iflag=count_bytes}, interpret @var{n}
-as a byte count rather than a block count.
+If @var{n} ends in the letter @samp{B},
+interpret @var{n} as a byte count rather than a block count;
+this is a GNU extension to POSIX.
 If short reads occur, as could be the case
 when reading from a pipe for example, @samp{iflag=fullblock}
 ensures that @samp{count=} counts complete input blocks
@@ -9627,27 +9628,6 @@ as they may return short reads. In that case,
 this flag is needed to ensure that a @samp{count=} argument is
 interpreted as a block count rather than a count of read operations.
 
-@item count_bytes
-@opindex count_bytes
-Interpret the @samp{count=} operand as a byte count,
-rather than a block count, which allows specifying
-a length that is not a multiple of the I/O block size.
-This flag can be used only with @code{iflag}.
-
-@item skip_bytes
-@opindex skip_bytes
-Interpret the @samp{skip=} or @samp{iseek=} operand as a byte count,
-rather than a block count, which allows specifying
-an offset that is not a multiple of the I/O block size.
-This flag can be used only with @code{iflag}.
-
-@item seek_bytes
-@opindex seek_bytes
-Interpret the @samp{seek=} or @samp{oseek=} operand as a byte count,
-rather than a block count, which allows specifying
-an offset that is not a multiple of the I/O block size.
-This flag can be used only with @code{oflag}.
-
 @end table
 
 These flags are all GNU extensions to POSIX.
@@ -9680,23 +9660,22 @@ should not be too large---values larger than a few megabytes
 are generally wasteful or (as in the gigabyte..exabyte case) downright
 counterproductive or error-inducing.
 
-To process data that is at an offset or size that is not a
-multiple of the I/O@ block size, you can use the @samp{skip_bytes},
-@samp{seek_bytes} and @samp{count_bytes} flags.  Alternatively
-the traditional method of separate @command{dd} invocations can be used.
+To process data with offset or size that is not a multiple of the I/O
+block size, you can use a numeric string @var{n} that ends in the
+letter @samp{B}.
 For example, the following shell commands copy data
-in 512 KiB blocks between a flash drive and a tape, but do not save
-or restore a 1 MiB area at the start of the flash drive:
+in 1 MiB blocks between a flash drive and a tape, but do not save
+or restore a 512-byte area at the start of the flash drive:
 
 @example
 flash=/dev/sda
 tape=/dev/st0
 
-# Copy all but the initial 1 MiB from flash to tape.
-(dd bs=1M skip=1 count=0 && dd bs=512k) <$flash >$tape
+# Copy all but the initial 512 bytes from flash to tape.
+dd if=$flash iseek=512B bs=1MiB of=$tape
 
-# Copy from tape back to flash, leaving initial 1 MiB alone.
-(dd bs=1M seek=1 count=0 && dd bs=512k) <$tape >$flash
+# Copy from tape back to flash, leaving initial 512 bytes alone.
+dd if=$tape bs=1MiB of=$flash oseek=512B
 @end example
 
 @cindex ddrescue
