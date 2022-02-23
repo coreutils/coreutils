@@ -26,6 +26,7 @@
    it to be a type get syntax errors for the variable declaration below.  */
 #define word unused_word_type
 
+#include "c-ctype.h"
 #include "system.h"
 #include "error.h"
 #include "die.h"
@@ -702,7 +703,7 @@ get_line (FILE *f, int c)
           *wptr++ = c;
           c = getc (f);
         }
-      while (c != EOF && !isspace (c));
+      while (c != EOF && !c_isspace (c));
       in_column += word_limit->length = wptr - word_limit->text;
       check_punctuation (word_limit);
 

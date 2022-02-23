@@ -237,8 +237,9 @@ all_tests =					\
   tests/chgrp/posix-H.sh			\
   tests/chgrp/recurse.sh			\
   tests/fmt/base.pl				\
-  tests/fmt/long-line.sh			\
   tests/fmt/goal-option.sh			\
+  tests/fmt/long-line.sh			\
+  tests/fmt/non-space.sh			\
   tests/misc/echo.sh				\
   tests/misc/env.sh				\
   tests/misc/env-signal-handler.sh		\
