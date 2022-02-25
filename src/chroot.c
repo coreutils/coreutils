@@ -354,10 +354,11 @@ main (int argc, char **argv)
      Diagnose any failures.  If any have failed, exit before execvp.  */
   if (userspec)
     {
-      char const *err = parse_user_spec (userspec, &uid, &gid, NULL, NULL);
-
-      if (err && uid_unset (uid) && gid_unset (gid))
-        die (EXIT_CANCELED, errno, "%s", (err));
+      bool warn;
+      char const *err = parse_user_spec_warn (userspec, &uid, &gid,
+                                              NULL, NULL, &warn);
+      if (err)
+        error (warn ? 0 : EXIT_CANCELED, 0, "%s", err);
     }
 
   /* If no gid is supplied or looked up, do so now.

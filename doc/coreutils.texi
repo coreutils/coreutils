@@ -11318,7 +11318,8 @@ or group ID, then you may specify it with a leading @samp{+}.
 Some older scripts may still use @samp{.} in place of the @samp{:} separator.
 POSIX 1003.1-2001 (@pxref{Standards conformance}) does not
 require support for that, but for backward compatibility GNU
-@command{chown} supports @samp{.} so long as no ambiguity results.
+@command{chown} supports @samp{.} so long as no ambiguity results,
+although it issues a warning and support may be removed in future versions.
 New scripts should avoid the use of @samp{.} because it is not
 portable, and because it has undesirable results if the entire
 @var{owner@samp{.}group} happens to identify a user whose name

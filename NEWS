@@ -51,6 +51,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   simple copies between regular files.  This may be more efficient, by avoiding
   user space copies, and possibly employing copy offloading or reflinking.
 
+  chown and chroot now warn about usages like "chown root.root f",
+  which have the nonstandard and long-obsolete "." separator that
+  causes problems on platforms where user names contain ".".
+  Applications should use ":" instead of ".".
+
   cksum no longer allows abbreviated algorithm names,
   so that forward compatibility and robustness is improved.
 
