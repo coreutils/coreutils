@@ -310,12 +310,17 @@ adjust_resolution (char const *format)
   char *copy = NULL;
 
   for (char const *f = format; *f; f++)
-    if (f[0] == '%' && f[1] == '-' && f[2] == 'N')
+    if (f[0] == '%')
       {
-        if (!copy)
-          copy = xstrdup (format);
-        copy[f + 1 - format] = '0' + res_width (gettime_res ());
-        f += 2;
+        if (f[1] == '-' && f[2] == 'N')
+          {
+            if (!copy)
+              copy = xstrdup (format);
+            copy[f + 1 - format] = '0' + res_width (gettime_res ());
+            f += 2;
+          }
+        else
+          f += f[1] == '%';
       }
 
   return copy;

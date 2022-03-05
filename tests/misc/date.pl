@@ -313,6 +313,9 @@ my @Tests =
      ['mtz4', '-u -d "09:00T" +%T', {OUT => '16:00:00'}],
      ['mtz5', '-u -d "09:00X" +%T', {OUT => '20:00:00'}],
      ['mtz6', '-u -d "09:00Z" +%T', {OUT => '09:00:00'}],
+
+     # test with %%-N
+     ['pct-pct', '+%%-N', {OUT => '%-N'}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
