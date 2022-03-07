@@ -358,7 +358,7 @@ main (int argc, char **argv)
       char const *err = parse_user_spec_warn (userspec, &uid, &gid,
                                               NULL, NULL, &warn);
       if (err)
-        error (warn ? 0 : EXIT_CANCELED, 0, "%s", err);
+        error (warn ? 0 : EXIT_CANCELED, 0, "%s", (err));
     }
 
   /* If no gid is supplied or looked up, do so now.

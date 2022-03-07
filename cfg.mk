@@ -192,7 +192,7 @@ sc_prohibit_quotes_notation:
 # Files in src/ should quote all strings in error() output, so that
 # unexpected input chars like \r etc. don't corrupt the error.
 # In edge cases this can be avoided by putting the format string
-# on a separate line to the following arguments.
+# on a separate line to the arguments, or the arguments in parenthesis.
 sc_error_quotes:
 	@cd $(srcdir)/src && GIT_PAGER= git grep -n 'error *(.*%s.*, [^(]*);$$'\
 	  *.c | grep -v ', q' \
@@ -236,7 +236,7 @@ sc_error_shell_always_quotes:
 # to the compiler that it doesn't return.
 sc_die_EXIT_FAILURE:
 	@cd $(srcdir)/src && GIT_PAGER= git grep -E \
-	    'error \(.*_(FAILURE|INVALID)' \
+	    'error \([^?]*EXIT_' \
 	  && { echo '$(ME): '"Use die() instead of error" 1>&2; \
 	       exit 1; }  \
 	  || :
