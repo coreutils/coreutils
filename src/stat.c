@@ -1394,6 +1394,9 @@ do_stat (char const *filename, char const *format, char const *format2)
   else if (force_sync)
     flags |= AT_STATX_FORCE_SYNC;
 
+  if (! force_sync)
+    flags |= AT_NO_AUTOMOUNT;
+
   fd = statx (fd, pathname, flags, format_to_mask (format), &stx);
   if (fd < 0)
     {

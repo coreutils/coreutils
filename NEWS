@@ -78,6 +78,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer tries to automount files, reverting to the behavior
   before the statx() call was introduced in coreutils-8.32.
 
+  stat no longer tries to automount files by default, reverting to the
+  behavior before the statx() call was introduced in coreutils-8.32.
+  Only `stat --cached=never` will continue to automount files.
+
   timeout --foreground --kill-after=... will now exit with status 137
   if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to

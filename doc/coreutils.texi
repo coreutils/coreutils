@@ -12608,6 +12608,7 @@ Always read the already cached attributes if available.
 
 @item never
 Always sychronize with the latest file system attributes.
+This also mounts automounted files.
 
 @item default
 Leave the caching behavior to the underlying file system.
