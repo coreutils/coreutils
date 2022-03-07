@@ -1177,7 +1177,7 @@ do_statx (int fd, char const *name, struct stat *st, int flags,
 {
   struct statx stx;
   bool want_btime = mask & STATX_BTIME;
-  int ret = statx (fd, name, flags, mask, &stx);
+  int ret = statx (fd, name, flags | AT_NO_AUTOMOUNT, mask, &stx);
   if (ret >= 0)
     {
       statx_to_stat (&stx, st);

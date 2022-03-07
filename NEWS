@@ -75,6 +75,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   seek_bytes are therefore obsolescent and are no longer documented,
   though they still work.
 
+  ls no longer tries to automount files, reverting to the behavior
+  before the statx() call was introduced in coreutils-8.32.
+
   timeout --foreground --kill-after=... will now exit with status 137
   if the kill signal was sent, which is consistent with the behavior
   when the --foreground option is not specified.  This allows users to
