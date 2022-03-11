@@ -13451,7 +13451,7 @@ True if @var{file} exists and has its @dfn{sticky} bit set.
 @item -r @var{file}
 @opindex -r
 @cindex readable file check
-True if @var{file} exists and read permission is granted.
+True if @var{file} exists and the user has read access.
 
 @item -u @var{file}
 @opindex -u
@@ -13461,12 +13461,12 @@ True if @var{file} exists and has its set-user-ID bit set.
 @item -w @var{file}
 @opindex -w
 @cindex writable file check
-True if @var{file} exists and write permission is granted.
+True if @var{file} exists and the user has write access.
 
 @item -x @var{file}
 @opindex -x
 @cindex executable file check
-True if @var{file} exists and execute permission is granted
+True if @var{file} exists and the user has execute access
 (or search permission, if it is a directory).
 
 @item -O @var{file}

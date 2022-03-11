@@ -750,15 +750,15 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -N FILE     FILE exists and has been modified since it was last read\n\
   -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
-  -r FILE     FILE exists and read permission is granted\n\
+  -r FILE     FILE exists and the user has read access\n\
   -s FILE     FILE exists and has a size greater than zero\n\
 "), stdout);
       fputs (_("\
   -S FILE     FILE exists and is a socket\n\
   -t FD       file descriptor FD is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
-  -w FILE     FILE exists and write permission is granted\n\
-  -x FILE     FILE exists and execute (or search) permission is granted\n\
+  -w FILE     FILE exists and the user has write access\n\
+  -x FILE     FILE exists and the user has execute (or search) access\n\
 "), stdout);
       fputs (_("\
 \n\
