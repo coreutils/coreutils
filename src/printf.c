@@ -53,6 +53,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <wchar.h>
 
 #include "system.h"
 #include "cl-strtod.h"
@@ -170,6 +171,21 @@ FUNC_NAME (char const *s)						 \
     {									 \
       unsigned char ch = *++s;						 \
       val = ch;								 \
+                                                                         \
+      if (MB_CUR_MAX > 1 && *(s + 1))					 \
+        {								 \
+          mbstate_t mbstate = { 0, };					 \
+          wchar_t wc;							 \
+          size_t slen = strlen (s);					 \
+          ssize_t bytes;						 \
+          bytes = mbrtowc (&wc, s, slen, &mbstate);			 \
+          if (0 < bytes)						 \
+            {								 \
+              val = wc;							 \
+              s += bytes - 1;						 \
+            }								 \
+        }								 \
+                                                                         \
       /* If POSIXLY_CORRECT is not set, then give a warning that there	 \
          are characters following the character constant and that GNU	 \
          printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \

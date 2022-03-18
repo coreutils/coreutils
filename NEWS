@@ -108,6 +108,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   any extra final progress just before synchronizing output data,
   since synchronizing can take a long time.
 
+  printf now supports printing the numeric value of multi-byte characters.
+
   sort --debug now diagnoses issues with --field-separator characters
   that conflict with characters possibly used in numbers.
 

@@ -344,6 +344,7 @@ all_tests =					\
   tests/misc/printf.sh				\
   tests/misc/printf-cov.pl			\
   tests/misc/printf-hex.sh			\
+  tests/misc/printf-mb.sh			\
   tests/misc/printf-surprise.sh			\
   tests/misc/printf-quote.sh			\
   tests/misc/pwd-long.sh			\
