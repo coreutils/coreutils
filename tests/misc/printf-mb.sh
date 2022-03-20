@@ -34,8 +34,11 @@ if test "$LOCALE_FR_UTF8" != "none"; then
    LC_ALL=C $prog '%04x\n' "'$($prog '\xe1')" >>out 2>>err
    #valid multi-byte, with trailing
    LC_ALL=$f $prog '%04x\n' '"á"' >>out 2>>err
+   #invalid multi-byte, with trailing
+   LC_ALL=$f $prog '%04x\n' "'$($prog '\xe1')'" >>out 2>>err
   )
   cat <<\EOF > exp || framework_failure_
+00e1
 00e1
 00e1
 00e1
@@ -45,6 +48,7 @@ EOF
 
   cat <<EOF > exp_err
 printf: warning: ": character(s) following character constant have been ignored
+printf: warning: ': character(s) following character constant have been ignored
 EOF
   compare exp_err err || fail=1
 fi
