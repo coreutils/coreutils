@@ -211,5 +211,24 @@ EXEC 01;32
 .spx 00;36
 .xspf 00;36
 
+# backup files
+*~ 00;90
+*# 00;90
+.bak 00;90
+.old 00;90
+.orig 00;90
+.part 00;90
+.rej 00;90
+.swp 00;90
+.tmp 00;90
+.dpkg-dist 00;90
+.dpkg-old 00;90
+.ucf-dist 00;90
+.ucf-new 00;90
+.ucf-old 00;90
+.rpmnew 00;90
+.rpmorig 00;90
+.rpmsave 00;90
+
 # Subsequent TERM or COLORTERM entries, can be used to add / override
 # config specific to those matching environment variables.
