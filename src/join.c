@@ -206,7 +206,11 @@ When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
   -a FILENUM             also print unpairable lines from file FILENUM, where\n\
                            FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
-  -e EMPTY               replace missing input fields with EMPTY\n\
+"), stdout);
+      fputs (_("\
+  -e STRING              replace missing (empty) input fields with STRING;\n\
+                           I.e., missing fields specified with '-12jo' options\
+\n\
 "), stdout);
       fputs (_("\
   -i, --ignore-case      ignore differences in case when comparing fields\n\
