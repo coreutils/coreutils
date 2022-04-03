@@ -63,9 +63,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd conv=fsync now synchronizes output even after a write error,
   and similarly for dd conv=fdatasync.
 
-  dd now supports the aliases iseek=N for skip=N, and oseek=N for seek=N,
-  like FreeBSD and other operating systems.
-
   dd now counts bytes instead of blocks if a block count ends in "B".
   For example, 'dd count=100KiB' now copies 100 KiB of data, not
   102,400 blocks of data.  The flags count_bytes, skip_bytes and
@@ -89,6 +86,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   distinguish if the command was more forcefully terminated.
 
 ** New Features
+
+  dd now supports the aliases iseek=N for skip=N, and oseek=N for seek=N,
+  like FreeBSD and other operating systems.
 
   dircolors takes a new --print-ls-colors option to display LS_COLORS
   entries, on separate lines, colored according to the entry color code.
