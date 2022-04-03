@@ -72,6 +72,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   seek_bytes are therefore obsolescent and are no longer documented,
   though they still work.
 
+  ls no longer colors files with capabilities by default, as file-based
+  capabilties are very rarely used, and lookup increases processing per file by
+  about 30%.  It's best to use getcap [-r] to identify files with capabilities.
+
   ls no longer tries to automount files, reverting to the behavior
   before the statx() call was introduced in coreutils-8.32.
 

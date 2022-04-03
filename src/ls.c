@@ -638,7 +638,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("37;44") },		/* st: sticky: black on blue */
     { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
-    { LEN_STR_PAIR ("30;41") },		/* ca: black on red */
+    { 0, NULL },			/* ca: disabled by default */
     { 0, NULL },			/* mh: disabled by default */
     { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
   };
