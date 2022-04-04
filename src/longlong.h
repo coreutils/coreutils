@@ -1142,6 +1142,17 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
 #endif /* i960mx */
 #endif /* i960 */
 
+
+#if defined (__loongarch64) && W_TYPE_SIZE == 64
+#define umul_ppmm(w1, w0, u, v) \
+  do {									\
+    UDItype __u = (u), __v = (v);					\
+    (w0) = __u * __v;							\
+    (w1) = (unsigned __int128__) __u * __v >> 64;			\
+  } while (0)
+#endif
+
+
 #if (defined (__mc68000__) || defined (__mc68020__) || defined(mc68020) \
      || defined (__m68k__) || defined (__mc5200__) || defined (__mc5206e__) \
      || defined (__mc5307__)) && W_TYPE_SIZE == 32
@@ -1638,12 +1649,12 @@ extern UWtype __MPN(udiv_qrnnd) (UWtype *, UWtype, UWtype, UWtype);
   } while (0)
 #endif /* RT/ROMP */
 
-#if defined (__riscv64) && W_TYPE_SIZE == 64
+#if defined (__riscv) && defined (__riscv_mul) && W_TYPE_SIZE == 64
 #define umul_ppmm(ph, pl, u, v) \
   do {									\
     UDItype __u = (u), __v = (v);					\
     (pl) = __u * __v;							\
-    __asm__ ("mulhu\t%2, %1, %0" : "=r" (ph) : "%r" (__u), "r" (__v));	\
+    __asm__ ("mulhu\t%0, %1, %2" : "=r" (ph) : "%r" (__u), "r" (__v));	\
   } while (0)
 #endif
 
