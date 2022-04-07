@@ -1535,7 +1535,8 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       if (!same)
         return true;
 
-      if (lstatat (dst_dirfd, dst_relname, &tmp_dst_sb) != 0
+      if (fstatat (dst_dirfd, dst_relname, &tmp_dst_sb,
+                   AT_SYMLINK_NOFOLLOW) != 0
           || lstat (src_name, &tmp_src_sb) != 0)
         return true;
 
@@ -1688,7 +1689,7 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
 
       if ( ! S_ISLNK (dst_sb_link->st_mode))
         tmp_dst_sb = *dst_sb_link;
-      else if (statat (dst_dirfd, dst_relname, &tmp_dst_sb) != 0)
+      else if (fstatat (dst_dirfd, dst_relname, &tmp_dst_sb, 0) != 0)
         return true;
 
       if ( ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
@@ -1907,7 +1908,7 @@ source_is_dst_backup (char const *srcbase, struct stat const *src_st,
                                  dst_relname + strlen (dst_relname),
                                  simple_backup_suffix);
   struct stat dst_back_sb;
-  int dst_back_status = statat (dst_dirfd, dst_back, &dst_back_sb);
+  int dst_back_status = fstatat (dst_dirfd, dst_back, &dst_back_sb, 0);
   free (dst_back);
   return dst_back_status == 0 && SAME_INODE (*src_st, dst_back_sb);
 }
@@ -2312,12 +2313,13 @@ copy_internal (char const *src_name, char const *dst_name,
       struct stat *dst_lstat_sb;
 
       /* If we did not follow symlinks above, good: use that data.
-         Otherwise, call lstatat here, in case dst_name is a symlink.  */
+         Otherwise, use AT_SYMLINK_NOFOLLOW, in case dst_name is a symlink.  */
       if (have_dst_lstat)
         dst_lstat_sb = &dst_sb;
       else
         {
-          if (lstatat (dst_dirfd, dst_relname, &tmp_buf) == 0)
+          if (fstatat (dst_dirfd, dst_relname, &tmp_buf,
+                       AT_SYMLINK_NOFOLLOW) == 0)
             dst_lstat_sb = &tmp_buf;
           else
             lstat_ok = false;
@@ -2650,7 +2652,8 @@ copy_internal (char const *src_name, char const *dst_name,
              for writing the directory's contents. Check if these
              permissions are there.  */
 
-          if (lstatat (dst_dirfd, dst_relname, &dst_sb) != 0)
+          if (fstatat (dst_dirfd, dst_relname, &dst_sb,
+                       AT_SYMLINK_NOFOLLOW) != 0)
             {
               error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
               goto un_backup;
@@ -2739,8 +2742,8 @@ copy_internal (char const *src_name, char const *dst_name,
                                the failure and say dst_name is in the current
                                directory.  Other things will fail later.  */
                             || stat (".", &dot_sb) != 0
-                            || (statat (dst_dirfd, dst_parent, &dst_parent_sb)
-                                != 0)
+                            || (fstatat (dst_dirfd, dst_parent, &dst_parent_sb,
+                                         0) != 0)
                             || SAME_INODE (dot_sb, dst_parent_sb));
           free (dst_parent);
 
@@ -2916,7 +2919,7 @@ copy_internal (char const *src_name, char const *dst_name,
       /* Now that the destination file is very likely to exist,
          add its info to the set.  */
       struct stat sb;
-      if (lstatat (dst_dirfd, dst_relname, &sb) == 0)
+      if (fstatat (dst_dirfd, dst_relname, &sb, AT_SYMLINK_NOFOLLOW) == 0)
         record_file (x->dest_info, dst_relname, &sb);
     }
 
@@ -3016,7 +3019,8 @@ copy_internal (char const *src_name, char const *dst_name,
                  the lstat, but deducing the current destination mode
                  is tricky in the presence of implementation-defined
                  rules for special mode bits.  */
-              if (new_dst && lstatat (dst_dirfd, dst_relname, &dst_sb) != 0)
+              if (new_dst && fstatat (dst_dirfd, dst_relname, &dst_sb,
+                                     AT_SYMLINK_NOFOLLOW) != 0)
                 {
                   error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
                   return false;

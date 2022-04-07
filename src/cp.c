@@ -391,7 +391,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
   /* XXX: If all dirs are present at the destination,
      no permissions or security contexts will be updated.  */
-  if (statat (dst_dirfd, dst_reldir, &stats) != 0)
+  if (fstatat (dst_dirfd, dst_reldir, &stats, 0) != 0)
     {
       /* A parent of CONST_DIR does not exist.
          Make all missing intermediate directories. */
@@ -408,7 +408,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
           bool missing_dir;
 
           *slash = '\0';
-          missing_dir = statat (dst_dirfd, dst_reldir, &stats) != 0;
+          missing_dir = fstatat (dst_dirfd, dst_reldir, &stats, 0) != 0;
 
           if (missing_dir || x->preserve_ownership || x->preserve_mode
               || x->preserve_timestamps)
@@ -488,7 +488,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
                  for writing the directory's contents. Check if these
                  permissions are there.  */
 
-              if (lstatat (dst_dirfd, dst_reldir, &stats))
+              if (fstatat (dst_dirfd, dst_reldir, &stats, AT_SYMLINK_NOFOLLOW))
                 {
                   error (0, errno, _("failed to get attributes of %s"),
                          quoteaf (dir));

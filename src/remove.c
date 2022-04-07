@@ -385,8 +385,9 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
   if (errno == EROFS)
     {
       struct stat st;
-      if ( ! (lstatat (fts->fts_cwd_fd, ent->fts_accpath, &st)
-                       && errno == ENOENT))
+      if ( ! (fstatat (fts->fts_cwd_fd, ent->fts_accpath, &st,
+                       AT_SYMLINK_NOFOLLOW)
+              && errno == ENOENT))
         errno = EROFS;
     }
 

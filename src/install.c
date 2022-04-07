@@ -179,7 +179,7 @@ need_copy (char const *src_name, char const *dest_name,
   if (lstat (src_name, &src_sb) != 0)
     return true;
 
-  if (lstatat (dest_dirfd, dest_relname, &dest_sb) != 0)
+  if (fstatat (dest_dirfd, dest_relname, &dest_sb, AT_SYMLINK_NOFOLLOW) != 0)
     return true;
 
   if (!S_ISREG (src_sb.st_mode) || !S_ISREG (dest_sb.st_mode)
