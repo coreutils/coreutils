@@ -136,13 +136,26 @@ target_directory_operand (char const *file)
   if (must_be_working_directory (file))
     return AT_FDCWD;
 
-  int fd = open (file, O_PATHSEARCH | O_DIRECTORY);
+  int fd = -1;
+  bool is_a_dir = false;
+  struct stat st;
+
+  /* On old systems like Solaris 10, check with stat first
+     lest we try to open a fifo for example and hang.  */
+  if (!O_DIRECTORY && stat (file, &st) == 0)
+    {
+      is_a_dir = !!S_ISDIR (st.st_mode);
+      if (! is_a_dir)
+        errno = ENOTDIR;
+    }
+
+  if (O_DIRECTORY || is_a_dir)
+    fd = open (file, O_PATHSEARCH | O_DIRECTORY);
 
   if (!O_DIRECTORY && 0 <= fd)
     {
-      /* On old systems like Solaris 10 that do not support O_DIRECTORY,
-         check by hand whether FILE is a directory.  */
-      struct stat st;
+      /* On old systems like Solaris 10 double check type,
+         to ensure we've opened a directory.  */
       int err;
       if (fstat (fd, &st) != 0 ? (err = errno, true)
           : !S_ISDIR (st.st_mode) && (err = ENOTDIR, true))

@@ -24,12 +24,10 @@ mkfifo_or_skip_ fifo
 
 touch e || framework-failure
 
-
-# Without -f, expect it to fail.
-cp -R fifo e || fail=1
-
-# With -f, it must succeed.
-cp -Rf fifo e || fail=1
-test -p fifo || fail=1
+for force in '' '-f'; do
+  # Second time through will need to unlink fifo e
+  timeout 10 cp -R $force fifo e || fail=1
+  test -p fifo || fail=1
+done
 
 Exit $fail
