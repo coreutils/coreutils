@@ -9796,8 +9796,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --compare
 @opindex -C
 @opindex --compare
-Compare each pair of source and destination files, and if the destination has
-identical content and any specified owner, group, permissions, and possibly
+Compare content of source and destination files, and if there would be no
+change to the destination content, owner, group, permissions, and possibly
 SELinux context, then do not modify the destination at all.
 Note this option is best used in conjunction with @option{--user},
 @option{--group} and @option{--mode} options, lest @command{install}

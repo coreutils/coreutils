@@ -592,8 +592,9 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
       --backup[=CONTROL]  make a backup of each existing destination file\n\
   -b                  like --backup but does not accept an argument\n\
   -c                  (ignored)\n\
-  -C, --compare       compare each pair of source and destination files, and\n\
-                        in some cases, do not modify the destination at all\n\
+  -C, --compare       compare content of source and destination files, and\n\
+                        if no change to content, ownership, and permissions,\n\
+                        do not modify the destination at all\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
 "), stdout);
