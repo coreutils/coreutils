@@ -137,19 +137,23 @@ target_directory_operand (char const *file)
     return AT_FDCWD;
 
   int fd = -1;
-  bool is_a_dir = false;
+  int maybe_dir = -1;
   struct stat st;
 
-  /* On old systems like Solaris 10, check with stat first
-     lest we try to open a fifo for example and hang.  */
-  if (!O_DIRECTORY && stat (file, &st) == 0)
+  /* On old systems without O_DIRECTORY, like Solaris 10,
+     check with stat first lest we try to open a fifo for example and hang.
+     Also check on systems with O_PATHSEARCH == O_SEARCH, like Solaris 11,
+     where open() was seen to return EACCES for non executable non dirs.
+     */
+  if ((!O_DIRECTORY || (O_PATHSEARCH == O_SEARCH))
+      && stat (file, &st) == 0)
     {
-      is_a_dir = !!S_ISDIR (st.st_mode);
-      if (! is_a_dir)
+      maybe_dir = S_ISDIR (st.st_mode);
+      if (! maybe_dir)
         errno = ENOTDIR;
     }
 
-  if (O_DIRECTORY || is_a_dir)
+  if (maybe_dir)
     fd = open (file, O_PATHSEARCH | O_DIRECTORY);
 
   if (!O_DIRECTORY && 0 <= fd)
