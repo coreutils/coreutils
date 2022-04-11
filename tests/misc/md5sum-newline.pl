@@ -35,7 +35,7 @@ my $z = '--zero';
 my @Tests =
     (
      ['newline', $t, {IN=> {"a\nb"=> ''}}, {OUT=>"\\$degenerate  a\\nb\n"}],
-     ['zero', $z, {IN=> {"a\nb"=> ''}}, {OUT=>"$degenerate  a\nb\0"}],
+     ['zero', "$t $z", {IN=> {"a\nb"=> ''}}, {OUT=>"$degenerate  a\nb\0"}],
     );
 
 my $save_temps = $ENV{DEBUG};

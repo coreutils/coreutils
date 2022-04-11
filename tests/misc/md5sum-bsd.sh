@@ -28,7 +28,7 @@ print_ver_ md5sum
 # I.e., one not starting with ' ' or '*'
 for i in 'a' ' b' '*c' 'dd' ' '; do
   echo "$i" > "$i"
-  md5sum "$i" >> check.md5sum || fail=1
+  md5sum --text "$i" >> check.md5sum || fail=1
 done
 sed 's/  / /' check.md5sum > check.md5
 
