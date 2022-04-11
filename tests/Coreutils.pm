@@ -42,6 +42,11 @@ my $Global_count = 1;
 defined $ENV{DJDIR}
   and $ENV{SHELL} = "$ENV{DJDIR}/bin/bash.exe";
 
+# Perl 5.22.2 was seen to default to TERM=dumb on Solaris 11 OpenIndiana
+# So ensure this variable is unset.
+defined $ENV{TERM}
+  and delete $ENV{TERM};
+
 # A file spec: a scalar or a reference to a single-keyed hash
 # ================
 # 'contents'               contents only (file name is derived from test name)
