@@ -41,8 +41,9 @@ $prog --strict -c openssl.b2sum || fail=1
 rm -f check.vals || framework_failure_
 # Ensure we can check non tagged format
 [ "$prog" != 'b2sum' ] && tag_opt='--untagged' || tag_opt=''
+[ "$prog" == 'b2sum' ] && text_opt='--text' || text_opt=''
 for l in 0 128; do
-  $prog $tag_opt -l $l /dev/null | tee -a check.vals > check.b2sum
+  $prog $tag_opt $text_opt -l $l /dev/null | tee -a check.vals > check.b2sum
   $prog -l $l --strict -c check.b2sum || fail=1
   $prog --strict -c check.b2sum || fail=1
 done
@@ -50,7 +51,8 @@ done
 # Ensure the checksum values are correct.  The reference
 # check.vals was created with the upstream SSE reference implementation.
 [ "$prog" != 'b2sum' ] && tag_opt='--untagged' || tag_opt=''
-$prog $tag_opt --length=128 check.vals > out || fail=1
+$prog $tag_opt --length=128 check.vals > out.tmp || fail=1
+tr '*' ' ' < out.tmp > out || framework_failure_  # Remove binary tag on cygwin
 printf '%s\n' '796485dd32fe9b754ea5fd6c721271d9  check.vals' > exp
 compare exp out || fail=1
 
