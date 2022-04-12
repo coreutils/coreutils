@@ -33,8 +33,12 @@ $env = $1;
 # This envvar is somehow set at least on macOS 11.6, and would
 # otherwise cause failure of q*, t* and more tests below.  Ignore it.
 my $cf = '__CF_USER_TEXT_ENCODING';
-exists $ENV{$cf}
-  and $env .= " -u$cf";
+exists $ENV{$cf} and $env .= " -u$cf";
+# Likewise for these Cygwin env vars
+my $cf = 'SYSTEMROOT';
+exists $ENV{$cf} and $env .= " -u$cf";
+my $cf = 'WINDIR';
+exists $ENV{$cf} and $env .= " -u$cf";
 
 my @Tests =
     (
