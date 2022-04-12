@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ timeout
+print_ver_ timeout env
 getlimits_
 
 
@@ -42,7 +42,7 @@ timeout 9.999999999 sleep 0 || fail=1
 returns_ 125 timeout --signal=invalid 1 sleep 0 || fail=1
 
 # invalid command
-returns_ 126 timeout 10 . || fail=1
+returns_ 126 env . && { returns_ 126 timeout 10 . || fail=1; }
 
 # no such command
 returns_ 127 timeout 10 no_such || fail=1

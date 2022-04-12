@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ stdbuf
+print_ver_ stdbuf env
 
 getlimits_
 
@@ -52,7 +52,7 @@ returns_ 125 stdbuf -o$SIZE_OFLOW true || fail=1 # size too large
 returns_ 125 stdbuf -iL true || fail=1 # line buffering stdin disallowed
 returns_ 125 stdbuf true || fail=1 # a buffering mode must be specified
 stdbuf -i0 -o0 -e0 true || fail=1 #check all files
-returns_ 126 stdbuf -o1 . || fail=1 # invalid command
+returns_ 126 env . && { returns_ 126 stdbuf -o1 . || fail=1; } # invalid command
 returns_ 127 stdbuf -o1 no_such || fail=1 # no such command
 
 # Terminate any background processes

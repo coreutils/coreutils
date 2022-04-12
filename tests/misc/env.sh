@@ -18,7 +18,7 @@
 
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ env pwd
+print_ver_ env pwd nice
 
 # A simple shebang program to call "echo" from symlinks like "./-u" or "./--".
 echo "#!$abs_top_builddir/src/echo simple_echo" > simple_echo \
@@ -46,7 +46,7 @@ compare exp out || fail=1
 returns_ 125 env --- || fail=1 # unknown option
 returns_ 125 env -u || fail=1 # missing option argument
 returns_ 2 env sh -c 'exit 2' || fail=1 # exit status propagation
-returns_ 126 env . || fail=1 # invalid command
+returns_ 126 nice . && { returns_ 126 env . || fail=1; } # invalid command
 returns_ 127 env no_such || fail=1 # no such command
 
 # POSIX is clear that environ may, but need not be, sorted.

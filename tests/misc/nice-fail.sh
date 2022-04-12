@@ -18,7 +18,7 @@
 
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ nice
+print_ver_ nice env
 
 
 # These tests verify exact status of internal failure.
@@ -26,7 +26,7 @@ returns_ 125 nice -n 1 || fail=1 # missing command
 returns_ 125 nice --- || fail=1 # unknown option
 returns_ 125 nice -n 1a || fail=1 # invalid adjustment
 returns_ 2 nice sh -c 'exit 2' || fail=1 # exit status propagation
-returns_ 126 nice . || fail=1 # invalid command
+returns_ 126 env . && { returns_ 126 nice . || fail=1; } # invalid command
 returns_ 127 nice no_such || fail=1 # no such command
 
 Exit $fail
