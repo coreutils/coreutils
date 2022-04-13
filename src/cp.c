@@ -602,7 +602,7 @@ do_copy (int n_files, char **file, char const *target_directory,
     }
   else if (target_directory)
     {
-      target_dirfd = target_directory_operand (target_directory);
+      target_dirfd = target_directory_operand (target_directory, &sb);
       if (! target_dirfd_valid (target_dirfd))
         die (EXIT_FAILURE, errno, _("target directory %s"),
              quoteaf (target_directory));
@@ -610,7 +610,7 @@ do_copy (int n_files, char **file, char const *target_directory,
   else
     {
       char const *lastfile = file[n_files - 1];
-      int fd = target_directory_operand (lastfile);
+      int fd = target_directory_operand (lastfile, &sb);
       if (target_dirfd_valid (fd))
         {
           target_dirfd = fd;
@@ -634,7 +634,8 @@ do_copy (int n_files, char **file, char const *target_directory,
              | O_DIRECTORY) failed with EACCES not ENOTDIR.  */
           if (2 < n_files
               || (O_PATHSEARCH == O_SEARCH && err == EACCES
-                  && stat (lastfile, &sb) == 0 && S_ISDIR (sb.st_mode)))
+                  && (sb.st_mode || stat (lastfile, &sb) == 0)
+                  && S_ISDIR (sb.st_mode)))
             die (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
         }
     }

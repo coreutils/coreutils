@@ -53,18 +53,18 @@ must_be_working_directory (char const *f)
 
 /* Return a file descriptor open to FILE, for use in openat.
    As an optimization, return AT_FDCWD if FILE must be the working directory.
+   As a side effect, possibly set *ST to the file's status.
    Fail and set errno if FILE is not a directory.
    On failure return -2 if AT_FDCWD is -1, -1 otherwise.  */
 
 int
-target_directory_operand (char const *file)
+target_directory_operand (char const *file, struct stat *st)
 {
   if (must_be_working_directory (file))
     return AT_FDCWD;
 
   int fd = -1;
   int maybe_dir = -1;
-  struct stat st;
 
   /* On old systems without O_DIRECTORY, like Solaris 10,
      check with stat first lest we try to open a fifo for example and hang.
@@ -72,9 +72,9 @@ target_directory_operand (char const *file)
      where open() was seen to return EACCES for non executable non dirs.
      */
   if ((!O_DIRECTORY || (O_PATHSEARCH == O_SEARCH))
-      && stat (file, &st) == 0)
+      && stat (file, st) == 0)
     {
-      maybe_dir = S_ISDIR (st.st_mode);
+      maybe_dir = S_ISDIR (st->st_mode);
       if (! maybe_dir)
         errno = ENOTDIR;
     }
@@ -87,8 +87,8 @@ target_directory_operand (char const *file)
       /* On old systems like Solaris 10 double check type,
          to ensure we've opened a directory.  */
       int err;
-      if (fstat (fd, &st) != 0 ? (err = errno, true)
-          : !S_ISDIR (st.st_mode) && (err = ENOTDIR, true))
+      if (fstat (fd, st) != 0 ? (err = errno, true)
+          : !S_ISDIR (st->st_mode) && (err = ENOTDIR, true))
         {
           close (fd);
           errno = err;

@@ -17,6 +17,7 @@
 
 #include <fcntl.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 
 #ifndef _GL_INLINE_HEADER_BEGIN
  #error "Please include config.h first."
@@ -28,9 +29,10 @@ _GL_INLINE_HEADER_BEGIN
 
 /* Return a file descriptor open to FILE, for use in openat.
    As an optimization, return AT_FDCWD if FILE must be the working directory.
+   As a side effect, possibly set *ST to the file's status.
    Fail and set errno if FILE is not a directory.
    On failure return -2 if AT_FDCWD is -1, -1 otherwise.  */
-extern int target_directory_operand (char const *file);
+extern int target_directory_operand (char const *file, struct stat *st);
 
 /* Return true if FD represents success for target_directory_operand.  */
 TARGETDIR_INLINE _GL_ATTRIBUTE_PURE bool

@@ -382,6 +382,8 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  struct stat sb;
+  sb.st_mode = 0;
   int target_dirfd = AT_FDCWD;
   if (no_target_directory)
     {
@@ -397,7 +399,7 @@ main (int argc, char **argv)
     }
   else if (target_directory)
     {
-      target_dirfd = target_directory_operand (target_directory);
+      target_dirfd = target_directory_operand (target_directory, &sb);
       if (! target_dirfd_valid (target_dirfd))
         die (EXIT_FAILURE, errno, _("target directory %s"),
              quoteaf (target_directory));
@@ -411,7 +413,7 @@ main (int argc, char **argv)
                           ? errno : 0);
       if (x.rename_errno != 0)
         {
-          int fd = target_directory_operand (lastfile);
+          int fd = target_directory_operand (lastfile, &sb);
           if (target_dirfd_valid (fd))
             {
               x.rename_errno = -1;
@@ -431,10 +433,10 @@ main (int argc, char **argv)
                  directory, in case opening a non-directory with (O_SEARCH
                  | O_DIRECTORY) failed with EACCES not ENOTDIR.  */
               int err = errno;
-              struct stat st;
               if (2 < n_files
                   || (O_PATHSEARCH == O_SEARCH && err == EACCES
-                      && stat (lastfile, &st) == 0 && S_ISDIR (st.st_mode)))
+                      && (sb.st_mode != 0 || stat (lastfile, &sb) == 0)
+                      && S_ISDIR (sb.st_mode)))
                 die (EXIT_FAILURE, err, _("target %s"), quoteaf (lastfile));
             }
         }

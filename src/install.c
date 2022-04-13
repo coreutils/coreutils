@@ -931,6 +931,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  struct stat sb;
   int target_dirfd = AT_FDCWD;
   if (no_target_directory)
     {
@@ -946,7 +947,7 @@ main (int argc, char **argv)
     }
   else if (target_directory)
     {
-      target_dirfd = target_directory_operand (target_directory);
+      target_dirfd = target_directory_operand (target_directory, &sb);
       if (! (target_dirfd_valid (target_dirfd)
              || (mkdir_and_install && errno == ENOENT)))
         die (EXIT_FAILURE, errno, _("failed to access %s"),
@@ -955,7 +956,7 @@ main (int argc, char **argv)
   else if (!dir_arg)
     {
       char const *lastfile = file[n_files - 1];
-      int fd = target_directory_operand (lastfile);
+      int fd = target_directory_operand (lastfile, &sb);
       if (target_dirfd_valid (fd))
         {
           target_dirfd = fd;
