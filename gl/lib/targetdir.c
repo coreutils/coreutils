@@ -35,7 +35,7 @@ enum { O_PATHSEARCH = O_SEARCH };
 
 /* Must F designate the working directory?  */
 
-ATTRIBUTE_PURE static inline bool
+ATTRIBUTE_PURE static bool
 must_be_working_directory (char const *f)
 {
   /* Return true for ".", "./.", ".///./", etc.  */
