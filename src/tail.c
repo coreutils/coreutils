@@ -55,7 +55,7 @@
 # include <sys/inotify.h>
 #endif
 
-#if defined _AIX || HAVE_INOTIFY
+#if defined _AIX || defined __sun || HAVE_INOTIFY
 # include <poll.h>
 #endif
 
@@ -356,12 +356,12 @@ check_output_alive (void)
      event immediately) or if using inotify (which relies on 'poll'
      anyway).  Otherwise, use 'select' as it's more portable;
      'poll' doesn't work for this application on macOS.  */
-#if defined _AIX || HAVE_INOTIFY
+#if defined _AIX || defined __sun || HAVE_INOTIFY
   struct pollfd pfd;
   pfd.fd = STDOUT_FILENO;
-  pfd.events = POLLERR;
+  pfd.events = pfd.revents = 0;
 
-  if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & POLLERR))
+  if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & (POLLERR | POLLHUP)))
     die_pipe ();
 #else
   struct timeval delay;

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
-print_ver_ tail test
+print_ver_ tail test head
 trap_sigpipe_or_skip_
 
 # Speedup the non inotify case
@@ -45,7 +45,7 @@ for disposition in '' '-'; do
   (trap "$disposition" PIPE;
    returns_ 124 timeout 10 \
     tail -n2 -f $mode $fastpoll out && touch timed_out) |
-  sed 2q > out2
+  head -n2 > out2
   test -e timed_out && fail=1
   compare exp out2 || fail=1
   rm -f timed_out

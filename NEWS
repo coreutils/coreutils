@@ -117,6 +117,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort --debug now diagnoses issues with --field-separator characters
   that conflict with characters possibly used in numbers.
 
+  'tail -f file | filter' now exits on Solaris when filter exits.
+
   root invoked coreutils, that are built and run in single binary mode,
   now adjust /proc/$pid/cmdline to be more specific to the utility
   being run, rather than using the general "coreutils" binary name.
