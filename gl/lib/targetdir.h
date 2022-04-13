@@ -20,7 +20,7 @@
 #include <sys/stat.h>
 
 #ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
+# error "Please include config.h first."
 #endif
 _GL_INLINE_HEADER_BEGIN
 #ifndef TARGETDIR_INLINE
