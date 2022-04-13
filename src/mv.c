@@ -33,6 +33,7 @@
 #include "remove.h"
 #include "renameatu.h"
 #include "root-dev-ino.h"
+#include "targetdir.h"
 #include "priv-set.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */

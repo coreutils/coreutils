@@ -33,6 +33,7 @@
 #include "ignore-value.h"
 #include "quote.h"
 #include "stat-time.h"
+#include "targetdir.h"
 #include "utimens.h"
 #include "acl.h"
 

@@ -42,6 +42,7 @@
 #include "savewd.h"
 #include "selinux.h"
 #include "stat-time.h"
+#include "targetdir.h"
 #include "utimens.h"
 #include "xstrtol.h"
 

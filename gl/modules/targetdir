@@ -1,0 +1,25 @@
+Description:
+Target directory operands
+
+Files:
+lib/targetdir.c
+lib/targetdir.h
+
+Depends-on:
+attribute
+fcntl-h
+stdbool
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += targetdir.c targetdir.h
+
+Include:
+"targetdir.h"
+
+License:
+GPL
+
+Maintainer:
+all
