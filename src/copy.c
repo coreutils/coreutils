@@ -1189,9 +1189,14 @@ copy_reg (char const *src_name, char const *dst_name,
   if (*new_dst)
     {
 #if HAVE_FCLONEFILEAT && !USE_XATTR
+/* CLONE_NOOWNERCOPY only available on macos >= 10.13.  */
+# ifndef CLONE_NOOWNERCOPY
+#  define CLONE_NOOWNERCOPY 0
+# endif
       int clone_flags = x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY;
       if (data_copy_required && x->reflink_mode
           && x->preserve_mode && x->preserve_timestamps
+          && (x->preserve_ownership || CLONE_NOOWNERCOPY)
           && (fclonefileat (source_desc, dst_dirfd, dst_relname, clone_flags)
               == 0))
         goto close_src_desc;
