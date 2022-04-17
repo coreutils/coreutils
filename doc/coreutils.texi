@@ -11163,8 +11163,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @item --ignore-fail-on-non-empty
 @opindex --ignore-fail-on-non-empty
 @cindex directory deletion, ignoring failures
-Ignore each failure to remove a directory that is solely because
-the directory is non-empty.
+Ignore each failure to remove a directory that is non-empty.
 
 @item -p
 @itemx --parents

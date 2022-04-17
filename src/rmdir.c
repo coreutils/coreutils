@@ -178,14 +178,11 @@ Remove the DIRECTORY(ies), if they are empty.\n\
 "), stdout);
       fputs (_("\
       --ignore-fail-on-non-empty\n\
-                    ignore each failure that is solely because a directory\n\
-                    is non-empty\n\
-\n\
+                    ignore each failure to remove a non-empty directory\n\
 "), stdout);
       fputs (_("\
-  -p, --parents     remove DIRECTORY and its ancestors; e.g., 'rmdir -p a/b/c'\
-\n\
-                    is similar to 'rmdir a/b/c a/b a'\n\
+  -p, --parents     remove DIRECTORY and its ancestors;\n\
+                    e.g., 'rmdir -p a/b' is similar to 'rmdir a/b a'\n\
 \n\
 "), stdout);
       fputs (_("\
