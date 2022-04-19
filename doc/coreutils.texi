@@ -6972,10 +6972,10 @@ The interpretation of @var{string1} and @var{string2} depends on locale.
 GNU @command{tr} fully supports only safe single-byte locales,
 where each possible input byte represents a single character.
 Unfortunately, this means GNU @command{tr} will not handle commands
-like @samp{tr $'\u7530' $'\u68EE'} the way you might expect,
+like @samp{tr @"o @L{}} the way you might expect,
 since (assuming a UTF-8 encoding) this is equivalent to
-@samp{tr '\347\224\260' '\346\243\256'} and GNU @command{tr} will
-simply transliterate all @samp{\347} bytes to @samp{\346} bytes, etc.
+@samp{tr '\303\266' '\305\201'} and GNU @command{tr} will
+simply transliterate all @samp{\303} bytes to @samp{\305} bytes, etc.
 POSIX does not clearly specify the behavior of @command{tr} in locales
 where characters are represented by byte sequences instead of by
 individual bytes, or where data might contain invalid bytes that are
