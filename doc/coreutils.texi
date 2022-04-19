@@ -4,6 +4,8 @@
 @include version.texi
 @settitle GNU Coreutils @value{VERSION}
 @documentencoding UTF-8
+@set txicodequoteundirected
+@set txicodequotebacktick
 @allowcodebreaks false
 
 @c %**end of header
