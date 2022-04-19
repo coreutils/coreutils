@@ -1215,8 +1215,8 @@ Since the @var{user} and @var{group} arguments to these commands
 may be specified as names or numeric IDs, there is an
 apparent ambiguity.
 What if a user or group @emph{name} is a string of digits?
-@footnote{Using a number as a user name is common in some environments.}
 Should the command interpret it as a user name or as an ID@?
+(Using a number as a user name is common in some environments.)
 POSIX requires that these commands
 first attempt to resolve the specified string as a name, and
 only once that fails, then try to interpret it as an ID@.
@@ -6601,9 +6601,9 @@ $ join -t, -j3    file1.sorted file2.sorted > file3
 @end example
 
 @noindent
-To specify a tab (@sc{ascii} 0x09) character instead of whitespace, use
-@footnote{the @code{$'\t'} is supported in most modern shells.
-For older shells, use a literal tab}:
+To specify a tab (@sc{ascii} 0x09) character instead of whitespace,
+use:@footnote{the @code{$'\t'} is supported in most modern shells.
+For older shells, use a literal tab.}
 
 @example
 @group
