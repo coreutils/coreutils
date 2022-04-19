@@ -1173,10 +1173,17 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
   if (*arg)
     {
       long int tmp_long;
-      if (xstrtol (arg, NULL, 10, &tmp_long, "") != LONGINT_OK
-          || tmp_long <= 0 || INT_MAX < tmp_long)
+      strtol_error e = xstrtol (arg, NULL, 10, &tmp_long, "");
+      if (e == LONGINT_OK)
         {
-          error (0, INT_MAX < tmp_long ?  EOVERFLOW : errno,
+          if (tmp_long <= 0)
+            e = LONGINT_INVALID;
+          else if (INT_MAX < tmp_long)
+            e = LONGINT_OVERFLOW;
+        }
+      if (e != LONGINT_OK)
+        {
+          error (0, e & LONGINT_OVERFLOW ? EOVERFLOW : 0,
              _("'-%c' extra characters or invalid number in the argument: %s"),
                  switch_char, quote (arg));
           usage (EXIT_FAILURE);
