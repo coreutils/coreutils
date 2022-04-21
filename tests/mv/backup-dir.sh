@@ -36,4 +36,10 @@ mkdir C D E || framework_failure_
 mv -T --backup=numbered C E/ || fail=1
 mv -T --backup=numbered D E/ || fail=1
 
+# Bug#55029
+mkdir F && echo 1 >1 && echo 2 >2 && cp 1 F/X && cp 2 X || framework_failure_
+mv --backup=simple X F/ || fail=1
+compare 1 F/X~ || fail=1
+compare 2 F/X || fail=1
+
 Exit $fail
