@@ -13,6 +13,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   long been documented to be platform-dependent.
   [bug introduced 1999-05-02 and only partly fixed in coreutils-8.14]
 
+** New Features
+
+  factor now accepts the --exponents (-h) option to print factors
+  in the form p^e, rather than repeating the prime p, e times.
+
 
 * Noteworthy changes in release 9.1 (2022-04-15) [stable]
 

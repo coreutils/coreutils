@@ -226,11 +226,15 @@ enum
 
 static struct option const long_options[] =
 {
+  {"exponents", no_argument, NULL, 'h'},
   {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* If true, use p^e output format.  */
+static bool print_exponents;
 
 struct factors
 {
@@ -2457,6 +2461,12 @@ print_factors_single (uintmax_t t1, uintmax_t t0)
       {
         lbuf_putc (' ');
         print_uintmaxes (0, factors.p[j]);
+        if (print_exponents && factors.e[j] > 1)
+          {
+            lbuf_putc ('^');
+            lbuf_putint (factors.e[j], 0);
+            break;
+          }
       }
 
   if (factors.plarge[1])
@@ -2525,6 +2535,11 @@ print_factors (char const *input)
       {
         putchar (' ');
         mpz_out_str (stdout, 10, factors.p[j]);
+        if (print_exponents && factors.e[j] > 1)
+          {
+            printf ("^%lu", factors.e[j]);
+            break;
+          }
       }
 
   mp_factor_clear (&factors);
@@ -2542,15 +2557,17 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [NUMBER]...\n\
-  or:  %s OPTION\n\
+Usage: %s [OPTION] [NUMBER]...\n\
 "),
-              program_name, program_name);
+              program_name);
       fputs (_("\
 Print the prime factors of each specified integer NUMBER.  If none\n\
 are specified on the command line, read them from standard input.\n\
 \n\
 "), stdout);
+      fputs ("\
+  -h, --exponents   print repeated factors in form p^e unless e is 1\n\
+", stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_ancillary_info (PROGRAM_NAME);
@@ -2593,10 +2610,14 @@ main (int argc, char **argv)
   atexit (lbuf_flush);
 
   int c;
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "h", long_options, NULL)) != -1)
     {
       switch (c)
         {
+        case 'h':  /* NetBSD used -h for this functionality first.  */
+          print_exponents = true;
+          break;
+
         case DEV_DEBUG_OPTION:
           dev_debug = true;
           break;

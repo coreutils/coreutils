@@ -89,6 +89,8 @@ my @Tests =
      ['bug-gmp-plus_2_sup_128_plus_1',
       '+170141183460469231731687303715884105729',
       {OUT => '3 56713727820156410577229101238628035243'}],
+     ['h-1', '-h 3000', {OUT => '2^3 3 5^3'}],
+     ['h-2', '3000 --exponents', {OUT => '2^3 3 5^3'}],
     );
 
 
@@ -99,7 +101,8 @@ my $t;
 Test:
 foreach $t (@Tests)
   {
-    (my $arg1 = $t->[1]) =~ s| *\+?||;
+    (my $arg1 = $t->[1]) =~ s| *\+?||;     # strip '+'
+    (my $arg1 = $arg1) =~ s| *-[^ ]+ *||;  # strip option
 
     # Don't fiddle with expected OUT string if there's a nonzero exit status.
     foreach my $e (@$t)

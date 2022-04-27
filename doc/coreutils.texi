@@ -18619,26 +18619,30 @@ These programs do numerically-related operations.
 @pindex factor
 @cindex prime factors
 
-@command{factor} prints prime factors.  Synopses:
+@command{factor} prints prime factors.  Synopsis:
 
 @example
-factor [@var{number}]@dots{}
-factor @var{option}
+factor [@var{option}]@dots{} [@var{number}]@dots{}
 @end example
 
 If no @var{number} is specified on the command line, @command{factor} reads
 numbers from standard input, delimited by newlines, tabs, or spaces.
 
-The @command{factor} command supports only a small number of options:
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-@item --help
-Print a short help on standard output, then exit without further
-processing.
+@item -h
+@itemx --exponents
+@opindex -h
+@opindex --exponents
+print factors in the form @math{p^e}, rather than repeating
+the prime @samp{p}, @samp{e} times. If the exponent @samp{e} is 1,
+then it is omitted.
 
-@item --version
-Print the program version on standard output, then exit without further
-processing.
+@example
+$ factor --exponents 3000
+3000: 2^3 3 5^3
+@end example
 @end table
 
 If the number to be factored is small (less than @math{2^{127}} on
