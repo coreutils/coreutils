@@ -23,6 +23,9 @@ echo nan > F || framework_failure_
 printf 'nan\nnan\n' > exp || framework_failure_
 timeout 10 sort -g -m F F > out || fail=1
 
+# This was seen to infloop on some systems until coreutils v9.2 (bug 55212)
+yes nan | head -n128095 | timeout 60 sort -g > /dev/null || fail=1
+
 compare exp out || fail=1
 
 Exit $fail

@@ -2006,7 +2006,7 @@ numcompare (char const *a, char const *b)
 static int
 nan_compare (long double a, long double b)
 {
-  char buf[2][sizeof "-nan()" + CHAR_BIT * sizeof a];
+  char buf[2][sizeof "-nan""()" + CHAR_BIT * sizeof a];
   snprintf (buf[0], sizeof buf[0], "%Lf", a);
   snprintf (buf[1], sizeof buf[1], "%Lf", b);
   return strcmp (buf[0], buf[1]);
