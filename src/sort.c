@@ -2003,22 +2003,13 @@ numcompare (char const *a, char const *b)
   return strnumcmp (a, b, decimal_point, thousands_sep);
 }
 
-/* Work around a problem whereby the long double value returned by glibc's
-   strtold ("NaN", ...) contains uninitialized bits: clear all bytes of
-   A and B before calling strtold.  FIXME: remove this function if
-   gnulib guarantees that strtold's result is always well defined.  */
 static int
-nan_compare (char const *sa, char const *sb)
+nan_compare (long double a, long double b)
 {
-  long double a;
-  memset (&a, 0, sizeof a);
-  a = strtold (sa, NULL);
-
-  long double b;
-  memset (&b, 0, sizeof b);
-  b = strtold (sb, NULL);
-
-  return memcmp (&a, &b, sizeof a);
+  char buf[2][sizeof "-nan()" + CHAR_BIT * sizeof a];
+  snprintf (buf[0], sizeof buf[0], "%Lf", a);
+  snprintf (buf[1], sizeof buf[1], "%Lf", b);
+  return strcmp (buf[0], buf[1]);
 }
 
 static int
@@ -2046,7 +2037,7 @@ general_numcompare (char const *sa, char const *sb)
           : a == b ? 0
           : b == b ? -1
           : a == a ? 1
-          : nan_compare (sa, sb));
+          : nan_compare (a, b));
 }
 
 /* Return an integer in 1..12 of the month name MONTH.
