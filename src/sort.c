@@ -2634,14 +2634,15 @@ keycompare (struct line const *a, struct line const *b)
       if (hard_LC_COLLATE || key_numeric (key)
           || key->month || key->random || key->version)
         {
-          char *ta;
-          char *tb;
-          size_t tlena;
-          size_t tlenb;
+          /* Ordinarily use the keys in-place, temporarily null-terminated.  */
+          char *ta = texta;
+          char *tb = textb;
+          size_t tlena = lena;
+          size_t tlenb = lenb;
+          char enda = ta[tlena];
+          char endb = tb[tlenb];
 
-          char enda;
-          char endb;
-          void *allocated;
+          void *allocated = NULL;
           char stackbuf[4000];
 
           if (ignore || translate)
@@ -2655,7 +2656,7 @@ keycompare (struct line const *a, struct line const *b)
               /* Allocate space for copies.  */
               size_t size = lena + 1 + lenb + 1;
               if (size <= sizeof stackbuf)
-                ta = stackbuf, allocated = NULL;
+                ta = stackbuf;
               else
                 ta = allocated = xmalloc (size);
               tb = ta + lena + 1;
@@ -2667,21 +2668,16 @@ keycompare (struct line const *a, struct line const *b)
                   ta[tlena++] = (translate
                                  ? translate[to_uchar (texta[i])]
                                  : texta[i]);
-              ta[tlena] = '\0';
 
               for (tlenb = i = 0; i < lenb; i++)
                 if (! (ignore && ignore[to_uchar (textb[i])]))
                   tb[tlenb++] = (translate
                                  ? translate[to_uchar (textb[i])]
                                  : textb[i]);
-              tb[tlenb] = '\0';
             }
-          else
-            {
-              /* Use the keys in-place, temporarily null-terminated.  */
-              ta = texta; tlena = lena; enda = ta[tlena]; ta[tlena] = '\0';
-              tb = textb; tlenb = lenb; endb = tb[tlenb]; tb[tlenb] = '\0';
-            }
+
+          ta[tlena] = '\0';
+          tb[tlenb] = '\0';
 
           if (key->numeric)
             diff = numcompare (ta, tb);
@@ -2707,13 +2703,11 @@ keycompare (struct line const *a, struct line const *b)
                 diff = xmemcoll0 (ta, tlena + 1, tb, tlenb + 1);
             }
 
-          if (ignore || translate)
+          ta[tlena] = enda;
+          tb[tlenb] = endb;
+
+          if (allocated)
             free (allocated);
-          else
-            {
-              ta[tlena] = enda;
-              tb[tlenb] = endb;
-            }
         }
       else if (ignore)
         {
