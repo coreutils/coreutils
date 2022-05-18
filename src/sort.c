@@ -2794,7 +2794,9 @@ keycompare (struct line const *a, struct line const *b)
         }
     }
 
-  return key->reverse ? -diff : diff;
+  if (key->reverse)
+    diff = diff < 0 ? -1 : -diff;
+  return diff;
 }
 
 /* Compare two lines A and B, returning negative, zero, or positive
@@ -2839,7 +2841,9 @@ compare (struct line const *a, struct line const *b)
         diff = (alen > blen) - (alen < blen);
     }
 
-  return reverse ? -diff : diff;
+  if (reverse)
+    diff = diff < 0 ? 1 : -diff;
+  return diff;
 }
 
 /* Write LINE to output stream FP; the output file's name is
