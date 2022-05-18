@@ -567,7 +567,7 @@ compare_words (const void *void_first, const void *void_second)
         }
     }
 
-  return first->size < second->size ? -1 : first->size > second->size;
+  return (first->size > second->size) - (first->size < second->size);
 #undef first
 #undef second
 }
@@ -587,8 +587,8 @@ compare_occurs (const void *void_first, const void *void_second)
 
   value = compare_words (&first->key, &second->key);
   return (value ? value
-          : first->key.start < second->key.start ? -1
-          : first->key.start > second->key.start);
+          : ((first->key.start > second->key.start)
+             - (first->key.start < second->key.start)));
 #undef first
 #undef second
 }
