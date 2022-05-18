@@ -2721,15 +2721,17 @@ keycompare (struct line const *a, struct line const *b)
               while (textb < limb && ignore[to_uchar (*textb)])		\
                 ++textb;						\
               if (! (texta < lima && textb < limb))			\
-                break;							\
+                {							\
+                  diff = (texta < lima) - (textb < limb);		\
+                  break;						\
+                }							\
               diff = to_uchar (A) - to_uchar (B);			\
               if (diff)							\
-                goto not_equal;						\
+                break;							\
               ++texta;							\
               ++textb;							\
             }								\
                                                                         \
-          diff = (texta < lima) - (textb < limb);			\
     }									\
   while (0)
 
@@ -2739,37 +2741,37 @@ keycompare (struct line const *a, struct line const *b)
           else
             CMP_WITH_IGNORE (*texta, *textb);
         }
-      else if (lena == 0)
-        diff = - NONZERO (lenb);
-      else if (lenb == 0)
-        goto greater;
       else
         {
-          if (translate)
+          size_t lenmin = MIN (lena, lenb);
+          if (lenmin == 0)
+            diff = 0;
+          else if (translate)
             {
-              while (texta < lima && textb < limb)
+              size_t i = 0;
+              do
                 {
-                  diff = (to_uchar (translate[to_uchar (*texta++)])
-                          - to_uchar (translate[to_uchar (*textb++)]));
+                  diff = (to_uchar (translate[to_uchar (texta[i])])
+                          - to_uchar (translate[to_uchar (textb[i])]));
                   if (diff)
-                    goto not_equal;
+                    break;
+                  i++;
                 }
+              while (i < lenmin);
             }
           else
-            {
-              diff = memcmp (texta, textb, MIN (lena, lenb));
-              if (diff)
-                goto not_equal;
-            }
-          diff = lena < lenb ? -1 : lena != lenb;
+            diff = memcmp (texta, textb, lenmin);
+
+          if (! diff)
+            diff = (lena > lenb) - (lena < lenb);
         }
 
       if (diff)
-        goto not_equal;
+        break;
 
       key = key->next;
       if (! key)
-        break;
+        return 0;
 
       /* Find the beginning and limit of the next field.  */
       if (key->eword != SIZE_MAX)
@@ -2792,11 +2794,6 @@ keycompare (struct line const *a, struct line const *b)
         }
     }
 
-  return 0;
-
- greater:
-  diff = 1;
- not_equal:
   return key->reverse ? -diff : diff;
 }
 
@@ -2835,8 +2832,12 @@ compare (struct line const *a, struct line const *b)
          a 3% increase in performance for short lines.  */
       diff = xmemcoll0 (a->text, alen + 1, b->text, blen + 1);
     }
-  else if (! (diff = memcmp (a->text, b->text, MIN (alen, blen))))
-    diff = alen < blen ? -1 : alen != blen;
+  else
+    {
+      diff = memcmp (a->text, b->text, MIN (alen, blen));
+      if (!diff)
+        diff = (alen > blen) - (alen < blen);
+    }
 
   return reverse ? -diff : diff;
 }
