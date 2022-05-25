@@ -2607,7 +2607,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
 static int
 diff_reversed (int diff, bool reversed)
 {
-  return reversed ? (diff < 0 ? 1 : -diff) : diff;
+  return reversed ? (diff < 0) - (diff > 0) : diff;
 }
 
 /* Compare two lines A and B trying every key in sequence until there
