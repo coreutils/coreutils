@@ -2601,6 +2601,15 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
     error (0, 0, _("option '-r' only applies to last-resort comparison"));
 }
 
+/* Return either the sense of DIFF or its reverse, depnding on REVERSED.
+   If REVERSED, do not simply negate DIFF as that can mishandle INT_MIN.  */
+
+static int
+diff_reversed (int diff, bool reversed)
+{
+  return reversed ? (diff < 0 ? 1 : -diff) : diff;
+}
+
 /* Compare two lines A and B trying every key in sequence until there
    are no more keys or a difference is found. */
 
@@ -2793,9 +2802,7 @@ keycompare (struct line const *a, struct line const *b)
         }
     }
 
-  if (key->reverse)
-    diff = diff < 0 ? 1 : -diff;
-  return diff;
+  return diff_reversed (diff, key->reverse);
 }
 
 /* Compare two lines A and B, returning negative, zero, or positive
@@ -2840,9 +2847,7 @@ compare (struct line const *a, struct line const *b)
         diff = (alen > blen) - (alen < blen);
     }
 
-  if (reverse)
-    diff = diff < 0 ? 1 : -diff;
-  return diff;
+  return diff_reversed (diff, reverse);
 }
 
 /* Write LINE to output stream FP; the output file's name is
