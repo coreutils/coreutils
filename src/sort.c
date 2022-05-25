@@ -2795,7 +2795,7 @@ keycompare (struct line const *a, struct line const *b)
     }
 
   if (key->reverse)
-    diff = diff < 0 ? -1 : -diff;
+    diff = diff < 0 ? 1 : -diff;
   return diff;
 }
 
