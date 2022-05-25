@@ -2706,8 +2706,7 @@ keycompare (struct line const *a, struct line const *b)
           ta[tlena] = enda;
           tb[tlenb] = endb;
 
-          if (allocated)
-            free (allocated);
+          free (allocated);
         }
       else if (ignore)
         {
