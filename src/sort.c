@@ -2601,7 +2601,7 @@ key_warnings (struct keyfield const *gkey, bool gkey_only)
     error (0, 0, _("option '-r' only applies to last-resort comparison"));
 }
 
-/* Return either the sense of DIFF or its reverse, depnding on REVERSED.
+/* Return either the sense of DIFF or its reverse, depending on REVERSED.
    If REVERSED, do not simply negate DIFF as that can mishandle INT_MIN.  */
 
 static int
