@@ -8,7 +8,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced in coreutils-9.1]
 
   'sort -g' no longer infloops when given multiple NaNs on platforms
-  like x86-64 where 'long double' has padding bits in memory.
+  like x86_64 where 'long double' has padding bits in memory.
   Although the fix alters sort -g's NaN ordering, that ordering has
   long been documented to be platform-dependent.
   [bug introduced 1999-05-02 and only partly fixed in coreutils-8.14]
