@@ -1,6 +1,6 @@
 #! /bin/sh
 # Print a version string.
-scriptversion=2022-03-21.01; # UTC
+scriptversion=2022-06-04.00; # UTC
 
 # Bootstrap this package from checked-out sources.
 
@@ -487,7 +487,7 @@ fi
 
 # Die if there is no AC_CONFIG_AUX_DIR($build_aux) line in configure.ac.
 found_aux_dir=no
-grep '^[	 ]*AC_CONFIG_AUX_DIR(\['"$build_aux"'\])' configure.ac \
+grep '^[	 ]*AC_CONFIG_AUX_DIR(\['"$build_aux"'])' configure.ac \
     >/dev/null && found_aux_dir=yes
 grep '^[	 ]*AC_CONFIG_AUX_DIR('"$build_aux"')' configure.ac \
     >/dev/null && found_aux_dir=yes

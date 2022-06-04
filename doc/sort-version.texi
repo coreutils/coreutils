@@ -587,6 +587,8 @@ ASCII letter or tilde, followed by zero or more ASCII letters, digits,
 or tildes; all repeated zero or more times, and ending at string end.
 This is equivalent to matching the extended regular expression
 @code{(\.[A-Za-z~][A-Za-z0-9~]*)*$} in the C locale.
+The longest such match is used, except that a suffix is not
+allowed to match an entire nonempty string.
 
 @item
 The suffixes are temporarily removed, and the strings are compared

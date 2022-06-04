@@ -13,6 +13,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   long been documented to be platform-dependent.
   [bug introduced 1999-05-02 and only partly fixed in coreutils-8.14]
 
+** Changes in behavior
+
+  'ls -v' and 'sort -V' go back to sorting ".0" before ".A",
+  reverting to the behavior in coreutils-9.0 and earlier.
+  This behavior is now documented.
+
 ** New Features
 
   factor now accepts the --exponents (-h) option to print factors
