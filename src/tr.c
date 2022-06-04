@@ -825,7 +825,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 }
 
 /* Return true if the string at ES->s[IDX] matches the regular
-   expression '\*[0-9]*\]', false otherwise.  The string does not
+   expression '\*[0-9]*]', false otherwise.  The string does not
    match if any of its characters are escaped.  */
 
 ATTRIBUTE_PURE
@@ -942,7 +942,7 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
         try_bracketed_repeat:
 
           /* Determine whether this is a bracketed repeat range
-             matching the RE \[.\*(dec_or_oct_number)?\].  */
+             matching the RE \[.\*(dec_or_oct_number)?].  */
           err = find_bracketed_repeat (es, i + 1, &char_to_repeat,
                                        &repeat_count,
                                        &closing_bracket_idx);

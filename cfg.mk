@@ -76,8 +76,8 @@ sc_dd_O_FLAGS:
 dd_c = $(srcdir)/src/dd.c
 sc_dd_max_sym_length:
 ifneq ($(wildcard $(dd_c)),)
-	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
-		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
+	@len=$$( (sed -n '/conversions\[] =$$/,/^};/p' $(dd_c);\
+		 sed -n '/flags\[] =$$/,/^};/p' $(dd_c) )	\
 		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'| wc -L);\
 	max=$$(sed -n '/^#define LONGEST_SYMBOL /s///p' $(dd_c)	\
 	      |tr -d '"' | wc -L);		\
@@ -496,7 +496,7 @@ sc_ensure_comma_after_id_est:
 # a period.  Check the first line after each "SEE ALSO" line in man/*.x:
 sc_prohibit_man_see_also_period:
 	@grep -nB1 '\.$$' $$($(VC_LIST_EXCEPT) | grep 'man/.*\.x$$')	\
-	    | grep -A1 -e '-\[SEE ALSO\]' | grep '\.$$' &&		\
+	    | grep -A1 -e '-\[SEE ALSO]' | grep '\.$$' &&		\
 	  { echo '$(ME): do not end "SEE ALSO" section with a period'	\
 	      1>&2; exit 1; } || :
 

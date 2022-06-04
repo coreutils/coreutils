@@ -672,7 +672,7 @@ same_para (int c)
 /* Read a line from input file F, given first non-blank character C
    after the prefix, and the following indent, and break it into words.
    A word is a maximal non-empty string of non-white characters.  A word
-   ending in [.?!]["')\]]* and followed by end-of-line or at least two
+   ending in [.?!][])"']* and followed by end-of-line or at least two
    spaces ends a sentence, as in emacs.
 
    Return the first non-blank character of the next line.  */
