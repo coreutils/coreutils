@@ -1954,6 +1954,7 @@ copy_internal (char const *src_name, char const *dst_name,
   bool restore_dst_mode = false;
   char *earlier_file = NULL;
   char *dst_backup = NULL;
+  char const *drelname = *dst_relname ? dst_relname : ".";
   bool delayed_ok;
   bool copied_as_regular = false;
   bool dest_is_symlink = false;
@@ -1971,7 +1972,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->move_mode)
     {
       if (rename_errno < 0)
-        rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, dst_relname,
+        rename_errno = (renameatu (AT_FDCWD, src_name, dst_dirfd, drelname,
                                    RENAME_NOREPLACE)
                         ? errno : 0);
       nonexistent_dst = *rename_succeeded = new_dst = rename_errno == 0;
@@ -1983,7 +1984,7 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       char const *name = rename_errno == 0 ? dst_name : src_name;
       int dirfd = rename_errno == 0 ? dst_dirfd : AT_FDCWD;
-      char const *relname = rename_errno == 0 ? dst_relname : src_name;
+      char const *relname = rename_errno == 0 ? drelname : src_name;
       int fstatat_flags
         = x->dereference == DEREF_NEVER ? AT_SYMLINK_NOFOLLOW : 0;
       if (follow_fstatat (dirfd, relname, &src_sb, fstatat_flags) != 0)
@@ -2051,8 +2052,7 @@ copy_internal (char const *src_name, char const *dst_name,
           int fstatat_flags = use_lstat ? AT_SYMLINK_NOFOLLOW : 0;
           if (!use_lstat && nonexistent_dst < 0)
             new_dst = true;
-          else if (follow_fstatat (dst_dirfd, dst_relname, &dst_sb,
-                                   fstatat_flags)
+          else if (follow_fstatat (dst_dirfd, drelname, &dst_sb, fstatat_flags)
                    == 0)
             {
               have_dst_lstat = use_lstat;
@@ -2077,7 +2077,7 @@ copy_internal (char const *src_name, char const *dst_name,
           bool return_now = false;
 
           if (x->interactive != I_ALWAYS_NO
-              && ! same_file_ok (src_name, &src_sb, dst_dirfd, dst_relname,
+              && ! same_file_ok (src_name, &src_sb, dst_dirfd, drelname,
                                  &dst_sb, x, &return_now))
             {
               error (0, 0, _("%s and %s are the same file"),
@@ -2140,7 +2140,7 @@ copy_internal (char const *src_name, char const *dst_name,
              cp and mv treat -i and -f differently.  */
           if (x->move_mode)
             {
-              if (abandon_move (x, dst_name, dst_dirfd, dst_relname, &dst_sb))
+              if (abandon_move (x, dst_name, dst_dirfd, drelname, &dst_sb))
                 {
                   /* Pretend the rename succeeded, so the caller (mv)
                      doesn't end up removing the source file.  */
@@ -2321,14 +2321,11 @@ copy_internal (char const *src_name, char const *dst_name,
          Otherwise, use AT_SYMLINK_NOFOLLOW, in case dst_name is a symlink.  */
       if (have_dst_lstat)
         dst_lstat_sb = &dst_sb;
+      else if (fstatat (dst_dirfd, drelname, &tmp_buf, AT_SYMLINK_NOFOLLOW)
+               == 0)
+        dst_lstat_sb = &tmp_buf;
       else
-        {
-          if (fstatat (dst_dirfd, dst_relname, &tmp_buf,
-                       AT_SYMLINK_NOFOLLOW) == 0)
-            dst_lstat_sb = &tmp_buf;
-          else
-            lstat_ok = false;
-        }
+        lstat_ok = false;
 
       /* Never copy through a symlink we've just created.  */
       if (lstat_ok
@@ -2475,8 +2472,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->move_mode)
     {
       if (rename_errno == EEXIST)
-        rename_errno = ((renameat (AT_FDCWD, src_name, dst_dirfd, dst_relname)
-                         == 0)
+        rename_errno = (renameat (AT_FDCWD, src_name, dst_dirfd, drelname) == 0
                         ? 0 : errno);
 
       if (rename_errno == 0)
@@ -2576,7 +2572,7 @@ copy_internal (char const *src_name, char const *dst_name,
          or not, and this is enforced above.  Therefore we check the src_mode
          and operate on dst_name here as a tighter constraint and also because
          src_mode is readily available here.  */
-      if ((unlinkat (dst_dirfd, dst_relname,
+      if ((unlinkat (dst_dirfd, drelname,
                      S_ISDIR (src_mode) ? AT_REMOVEDIR : 0)
            != 0)
           && errno != ENOENT)
@@ -2646,7 +2642,7 @@ copy_internal (char const *src_name, char const *dst_name,
              to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
              decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
           mode_t mode = dst_mode_bits & ~omitted_permissions;
-          if (mkdirat (dst_dirfd, dst_relname, mode) != 0)
+          if (mkdirat (dst_dirfd, drelname, mode) != 0)
             {
               error (0, errno, _("cannot create directory %s"),
                      quoteaf (dst_name));
@@ -2657,8 +2653,7 @@ copy_internal (char const *src_name, char const *dst_name,
              for writing the directory's contents. Check if these
              permissions are there.  */
 
-          if (fstatat (dst_dirfd, dst_relname, &dst_sb,
-                       AT_SYMLINK_NOFOLLOW) != 0)
+          if (fstatat (dst_dirfd, drelname, &dst_sb, AT_SYMLINK_NOFOLLOW) != 0)
             {
               error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
               goto un_backup;
@@ -2670,7 +2665,7 @@ copy_internal (char const *src_name, char const *dst_name,
               dst_mode = dst_sb.st_mode;
               restore_dst_mode = true;
 
-              if (lchmodat (dst_dirfd, dst_relname, dst_mode | S_IRWXU) != 0)
+              if (lchmodat (dst_dirfd, drelname, dst_mode | S_IRWXU) != 0)
                 {
                   error (0, errno, _("setting permissions for %s"),
                          quoteaf (dst_name));
@@ -2924,7 +2919,7 @@ copy_internal (char const *src_name, char const *dst_name,
       /* Now that the destination file is very likely to exist,
          add its info to the set.  */
       struct stat sb;
-      if (fstatat (dst_dirfd, dst_relname, &sb, AT_SYMLINK_NOFOLLOW) == 0)
+      if (fstatat (dst_dirfd, drelname, &sb, AT_SYMLINK_NOFOLLOW) == 0)
         record_file (x->dest_info, dst_relname, &sb);
     }
 
@@ -2957,7 +2952,7 @@ copy_internal (char const *src_name, char const *dst_name,
       timespec[1] = get_stat_mtime (&src_sb);
 
       int utimensat_flags = dest_is_symlink ? AT_SYMLINK_NOFOLLOW : 0;
-      if (utimensat (dst_dirfd, dst_relname, timespec, utimensat_flags) != 0)
+      if (utimensat (dst_dirfd, drelname, timespec, utimensat_flags) != 0)
         {
           error (0, errno, _("preserving times for %s"), quoteaf (dst_name));
           if (x->require_preserve)
@@ -2969,7 +2964,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (!dest_is_symlink && x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      switch (set_owner (x, dst_name, dst_dirfd, dst_relname, -1,
+      switch (set_owner (x, dst_name, dst_dirfd, drelname, -1,
                          &src_sb, new_dst, &dst_sb))
         {
         case -1:
@@ -3024,8 +3019,9 @@ copy_internal (char const *src_name, char const *dst_name,
                  the lstat, but deducing the current destination mode
                  is tricky in the presence of implementation-defined
                  rules for special mode bits.  */
-              if (new_dst && fstatat (dst_dirfd, dst_relname, &dst_sb,
-                                     AT_SYMLINK_NOFOLLOW) != 0)
+              if (new_dst && (fstatat (dst_dirfd, drelname, &dst_sb,
+                                       AT_SYMLINK_NOFOLLOW)
+                              != 0))
                 {
                   error (0, errno, _("cannot stat %s"), quoteaf (dst_name));
                   return false;
@@ -3038,7 +3034,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       if (restore_dst_mode)
         {
-          if (lchmodat (dst_dirfd, dst_relname, dst_mode | omitted_permissions)
+          if (lchmodat (dst_dirfd, drelname, dst_mode | omitted_permissions)
               != 0)
             {
               error (0, errno, _("preserving permissions for %s"),
@@ -3068,7 +3064,7 @@ un_backup:
   if (dst_backup)
     {
       char const *dst_relbackup = &dst_backup[dst_relname - dst_name];
-      if (renameat (dst_dirfd, dst_relbackup, dst_dirfd, dst_relname) != 0)
+      if (renameat (dst_dirfd, dst_relbackup, dst_dirfd, drelname) != 0)
         error (0, errno, _("cannot un-backup %s"), quoteaf (dst_name));
       else
         {
