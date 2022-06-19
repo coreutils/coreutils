@@ -340,7 +340,7 @@ Interpreted sequences are:\n\
      fputs (_("\
 \n\
 Translation occurs if -d is not given and both STRING1 and STRING2 appear.\n\
--t may be used only when translating.  ARRAY2 is extended to length of\n\
+-t is only significant when translating.  ARRAY2 is extended to length of\n\
 ARRAY1 by repeating its last character as necessary.  Excess characters\n\
 of ARRAY2 are ignored.  Character classes expand in unspecified order;\n\
 while translating, [:lower:] and [:upper:] may be used in pairs to\n\
