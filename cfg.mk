@@ -441,9 +441,13 @@ sc_prohibit_operator_at_end_of_line:
 	halt='found operator at end of line'				\
 	  $(_sc_search_regexp)
 
+# Partial substitutes for GNU extensions \< and \> in regexps.
+begword = (^|[^_[:alnum:]])
+endword = ($$|[^_[:alnum:]])
+
 # Don't use address of "stat" or "lstat" functions
 sc_prohibit_stat_macro_address:
-	@prohibit='\<l?stat '':|&l?stat\>'				\
+	@prohibit='$(begword)l?stat '':|&l?stat$(endword)'		\
 	halt='stat() and lstat() may be function-like macros'		\
 	  $(_sc_search_regexp)
 
@@ -508,7 +512,7 @@ sc_prohibit_emacs__indent_tabs_mode__setting:
 
 # Ensure that tests don't include a redundant fail=0.
 sc_prohibit_fail_0:
-	@prohibit='\<fail=0\>'						\
+	@prohibit='$(begword)fail=0$(endword)'				\
 	halt='fail=0 initialization'					\
 	  $(_sc_search_regexp)
 
@@ -545,14 +549,14 @@ sc_prohibit_env_returns:
 # setfacl reject it with: "Unrecognized character found in mode field".
 # Use hyphens to give it a length of 3: "...:rw-" or "...:r--".
 sc_prohibit_short_facl_mode_spec:
-	@prohibit='\<setfacl .*-m.*:.*:[rwx-]{1,2} '			\
+	@prohibit='$(begword)setfacl .*-m.*:.*:[rwx-]{1,2} '		\
 	halt='setfacl mode string length < 3; extend with hyphen(s)'	\
 	  $(_sc_search_regexp)
 
 # Ensure that "stdio--.h" is used where appropriate.
 sc_require_stdio_safer:
 	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
-	  files=$$(grep -l '\bfreopen \?(' $$($(VC_LIST_EXCEPT)		\
+	  files=$$(grep -l '$(begword)freopen \?(' $$($(VC_LIST_EXCEPT)	\
 	      | grep '\.[ch]$$'));					\
 	  test -n "$$files" && grep -LE 'include "stdio--.h"' $$files	\
 	      | grep . &&						\
@@ -568,7 +572,7 @@ sc_prohibit_perl_hash_quotes:
 
 # Prefer xnanosleep over other less-precise sleep methods
 sc_prohibit_sleep:
-	@prohibit='\<(nano|u)?sleep \('					\
+	@prohibit='$(begword)(nano|u)?sleep \('				\
 	halt='prefer xnanosleep over other sleep interfaces'		\
 	  $(_sc_search_regexp)
 
@@ -594,7 +598,7 @@ sc_env_test_dependencies:
 
 # Use framework_failure_, not the old name without the trailing underscore.
 sc_prohibit_framework_failure:
-	@prohibit='\<framework_''failure\>'				\
+	@prohibit='$(begword)framework_''failure$(endword)'		\
 	halt='use framework_failure_ instead'				\
 	  $(_sc_search_regexp)
 
@@ -778,7 +782,7 @@ sc_THANKS_in_sorted:
 # Look for developer diagnostics that are marked for translation.
 # This won't find any for which devmsg's format string is on a separate line.
 sc_marked_devdiagnostics:
-	@prohibit='\<devmsg *\(.*_\('                                   \
+	@prohibit='$(begword)devmsg *\(.*_\('				\
 	halt='found marked developer diagnostic(s)'                     \
 	  $(_sc_search_regexp)
 

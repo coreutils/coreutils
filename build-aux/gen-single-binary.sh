@@ -41,7 +41,7 @@ done
 # Load actual values from src/local.mk. This will read all the variables from
 # the local.mk matching the src_${cmd}_... case.
 while read l; do
-  if echo "$l" | grep -E '^src_\w+ +\+?=' > /dev/null; then
+  if echo "$l" | grep -E '^src_[_[:alnum:]]+ +\+?=' > /dev/null; then
     var=$(echo $l | cut -f 1 -d ' ')
     value=$(echo $l | cut -f 2- -d =)
     if [ "$value" != " \$(LDADD)" ]; then
