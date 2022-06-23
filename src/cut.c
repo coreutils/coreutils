@@ -33,7 +33,6 @@
 #include "error.h"
 #include "fadvise.h"
 #include "getndelim2.h"
-#include "hash.h"
 
 #include "set-fields.h"
 
