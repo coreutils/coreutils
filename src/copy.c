@@ -1045,7 +1045,10 @@ infer_scantype (int fd, struct stat const *sb,
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
-    return PLAIN_SCANTYPE;
+    {
+      scan_inference->ext_start = -1;
+      return PLAIN_SCANTYPE;
+    }
 
 #ifdef SEEK_HOLE
   scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
@@ -1053,6 +1056,8 @@ infer_scantype (int fd, struct stat const *sb,
     return LSEEK_SCANTYPE;
   else if (errno != EINVAL && !is_ENOTSUP (errno))
     return ERROR_SCANTYPE;
+#else
+  scan_inference->ext_start = -1;
 #endif
 
   return ZERO_SCANTYPE;
