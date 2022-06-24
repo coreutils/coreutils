@@ -32,7 +32,6 @@
 #include "randperm.h"
 #include "read-file.h"
 #include "stdio--.h"
-#include "xdectoint.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no 'g' prefix).  */
@@ -410,31 +409,37 @@ main (int argc, char **argv)
 
       case 'i':
         {
-          char *p = strchr (optarg, '-');
-          char const *hi_optarg = optarg;
-          bool invalid = !p;
-
           if (input_range)
             die (EXIT_FAILURE, 0, _("multiple -i options specified"));
           input_range = true;
 
-          if (p)
+          uintmax_t u;
+          char *lo_end;
+          strtol_error err = xstrtoumax (optarg, &lo_end, 10, &u, NULL);
+          if (err == LONGINT_OK)
             {
-              *p = '\0';
-              lo_input = xdectoumax (optarg, 0, SIZE_MAX, "",
-                                     _("invalid input range"), 0);
-              *p = '-';
-              hi_optarg = p + 1;
+              lo_input = u;
+              if (lo_input != u)
+                err = LONGINT_OVERFLOW;
+              else if (*lo_end != '-')
+                err = LONGINT_INVALID;
+              else
+                {
+                  err = xstrtoumax (lo_end + 1, NULL, 10, &u, "");
+                  if (err == LONGINT_OK)
+                    {
+                      hi_input = u;
+                      if (hi_input != u)
+                        err = LONGINT_OVERFLOW;
+                    }
+                }
             }
 
-          hi_input = xdectoumax (hi_optarg, 0, SIZE_MAX, "",
-                                 _("invalid input range"), 0);
-
           n_lines = hi_input - lo_input + 1;
-          invalid |= ((lo_input <= hi_input) == (n_lines == 0));
-          if (invalid)
-            die (EXIT_FAILURE, errno, "%s: %s", _("invalid input range"),
-                 quote (optarg));
+
+          if (err != LONGINT_OK || (lo_input <= hi_input) == (n_lines == 0))
+            die (EXIT_FAILURE, err == LONGINT_OVERFLOW ? EOVERFLOW : 0,
+                 "%s: %s", _("invalid input range"), quote (optarg));
         }
         break;
 
