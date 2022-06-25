@@ -55,6 +55,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now supports the --time=modification option, to explicitly
   select the default mtime timestamp for display and sorting.
 
+  wc now accepts the --total={auto,never,always,only} option
+  to give explicit control over when the total is output.
+
 ** Improvements
 
   date --debug now diagnoses if multiple --date or --set options are

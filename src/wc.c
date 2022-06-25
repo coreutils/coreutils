@@ -27,6 +27,7 @@
 #include <wctype.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "argv-iter.h"
 #include "die.h"
 #include "error.h"
@@ -112,6 +113,7 @@ enum
 {
   DEBUG_PROGRAM_OPTION = CHAR_MAX + 1,
   FILES0_FROM_OPTION,
+  TOTAL_OPTION,
 };
 
 static struct option const longopts[] =
@@ -123,10 +125,29 @@ static struct option const longopts[] =
   {"debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
   {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"max-line-length", no_argument, NULL, 'L'},
+  {"total", required_argument, NULL, TOTAL_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+enum total_type
+  {
+    total_auto,         /* 0: default or --total=auto */
+    total_always,       /* 1: --total=always */
+    total_only,         /* 2: --total=only */
+    total_never         /* 3: --total=never */
+  };
+static char const *const total_args[] =
+{
+  "auto", "always", "only", "never", NULL
+};
+static enum total_type const total_types[] =
+{
+  total_auto, total_always, total_only, total_never
+};
+ARGMATCH_VERIFY (total_args, total_types);
+static enum total_type total_mode = total_auto;
 
 #ifdef USE_AVX2_WC_LINECOUNT
 static bool
@@ -215,6 +236,10 @@ the following order: newline, word, character, byte, maximum line length.\n\
                            If F is - then read names from standard input\n\
   -L, --max-line-length  print the maximum display width\n\
   -w, --words            print the word counts\n\
+"), stdout);
+      fputs (_("\
+      --total=WHEN       when to print a line with total counts;\n\
+                           WHEN can be: auto, always, only, never\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -676,7 +701,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   if (count_chars < print_chars)
     chars = bytes;
 
-  write_counts (lines, words, chars, bytes, linelength, file_x);
+  if (total_mode != total_only)
+    write_counts (lines, words, chars, bytes, linelength, file_x);
   total_lines += lines;
   total_words += words;
   total_chars += chars;
@@ -840,6 +866,10 @@ main (int argc, char **argv)
         files_from = optarg;
         break;
 
+      case TOTAL_OPTION:
+        total_mode = XARGMATCH ("--total", optarg, total_args, total_types);
+        break;
+
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -913,7 +943,10 @@ main (int argc, char **argv)
     xalloc_die ();
 
   fstatus = get_input_fstatus (nfiles, files);
-  number_width = compute_number_width (nfiles, fstatus);
+  if (total_mode == total_only)
+    number_width = 1;  /* No extra padding, since no alignment requirement.  */
+  else
+    number_width = compute_number_width (nfiles, fstatus);
 
   ok = true;
   for (int i = 0; /* */; i++)
@@ -987,9 +1020,11 @@ main (int argc, char **argv)
   if (read_tokens)
     readtokens0_free (&tok);
 
-  if (1 < argv_iter_n_args (ai))
+  if (total_mode != total_never
+      && (total_mode != total_auto || 1 < argv_iter_n_args (ai)))
     write_counts (total_lines, total_words, total_chars, total_bytes,
-                  max_line_length, _("total"));
+                  max_line_length,
+                  total_mode != total_only ? _("total") : NULL);
 
   argv_iter_free (ai);
 

@@ -3769,10 +3769,12 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 
 @cindex total counts
 @command{wc} prints one line of counts for each file, and if the file was
-given as an argument, it prints the file name following the counts.  If
-more than one @var{file} is given, @command{wc} prints a final line
-containing the cumulative counts, with the file name @file{total}.  The
-counts are printed in this order: newlines, words, characters, bytes,
+given as an argument, it prints the file name following the counts. By default
+if more than one @var{file} is given, @command{wc} prints a final line
+containing the cumulative counts, with the file name @file{total}.
+This @samp{total} line can be controlled with the @option{--total} option,
+which is a GNU extension.
+The counts are printed in this order: newlines, words, characters, bytes,
 maximum line length.
 Each count is printed right-justified in a field with at least one
 space between fields so that the numbers and file names normally line
@@ -3838,6 +3840,29 @@ Print only the maximum display widths.
 Tabs are set at every 8th column.
 Display widths of wide characters are considered.
 Non-printable characters are given 0 width.
+
+@item --total=@var{when}
+@opindex --total=@var{when}
+Control when and how the final line with cumulative counts is printed.
+@var{when} is one of:
+@itemize @bullet
+@item auto
+@vindex auto @r{total option}
+- This is the default mode of @command{wc} when no @option{--total}
+option is specified.  Output a total line if more than one @var{file}
+is specified.
+@item always
+@vindex always @r{total option}
+- Always output a total line, irrespective of the number of files processed.
+@item only
+@vindex only @r{total option}
+- Only output total counts.  I.e., don't print individual file counts,
+suppress any leading spaces, and don't print the @samp{total} word itself,
+to simplify subsequent processing.
+@item never
+@vindex none @r{total option}
+- Never output a total line.
+@end itemize
 
 @macro filesZeroFromOption{cmd,withTotalOption,subListOutput}
 @item --files0-from=@var{file}
