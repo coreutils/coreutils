@@ -109,7 +109,7 @@ enum grouping_method
   /* No grouping, when "--group" isn't used */
   GM_NONE,
 
-  /* Delimiter preceges all groups.  --group=prepend */
+  /* Delimiter precedes all groups.  --group=prepend */
   GM_PREPEND,
 
   /* Delimiter follows all groups.   --group=append */
