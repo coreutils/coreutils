@@ -1279,6 +1279,9 @@ copy_reg (char const *src_name, char const *dst_name,
         {
           error (0, errno, _("failed to clone %s from %s"),
                  quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+          if (*new_dst && unlinkat (dst_dirfd, dst_relname, 0) != 0
+              && errno != ENOENT)
+            error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
           return_val = false;
           goto close_src_and_dst_desc;
         }
