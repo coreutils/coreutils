@@ -18,6 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  'cp --reflink=always A B' no longer leaves behind a newly created
+  empty file B merely because copy-on-write clones are not supported.
+
   'ls -v' and 'sort -V' go back to sorting ".0" before ".A",
   reverting to the behavior in coreutils-9.0 and earlier.
   This behavior is now documented.
