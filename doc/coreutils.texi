@@ -9466,7 +9466,13 @@ Continue after read errors.
 @cindex synchronized data writes, before finishing
 Synchronize output data just before finishing,
 even if there were write errors.
-This forces a physical write of output data.
+This forces a physical write of output data,
+so that even if power is lost the output data will be preserved.
+If neither this nor @samp{fsync} are specified, output is treated as
+usual with file systems, i.e., output data and metadata may be cached
+in primary memory for some time before the operating system physically
+writes it, and thus output data and metadata may be lost if power is lost.
+@xref{sync invocation}.
 This conversion is a GNU extension to POSIX.
 
 @item fsync
@@ -9474,7 +9480,10 @@ This conversion is a GNU extension to POSIX.
 @cindex synchronized data and metadata writes, before finishing
 Synchronize output data and metadata just before finishing,
 even if there were write errors.
-This forces a physical write of output data and metadata.
+This acts like @samp{fdatasync} except it also preserves output metadata,
+such as the last-modified time of the output file; for this reason it
+may be a bit slower than @samp{fdatasync} although the performance
+difference is typically insignificant for @command{dd}.
 This conversion is a GNU extension to POSIX.
 
 @end table
