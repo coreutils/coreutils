@@ -1492,6 +1492,14 @@ do_stat (char const *filename, char const *format,
 }
 #endif /* USE_STATX */
 
+/* POSIX requires 'ls' to print file sizes without a sign, even
+   when negative.  Be consistent with that.  */
+
+static uintmax_t
+unsigned_file_size (off_t size)
+{
+  return size + (size < 0) * ((uintmax_t) OFF_T_MAX - OFF_T_MIN + 1);
+}
 
 /* Print stat info.  Return zero upon success, nonzero upon failure.  */
 static bool
@@ -1575,7 +1583,7 @@ print_stat (char *pformat, size_t prefix_len, char mod, char m,
       fail |= out_mount_point (filename, pformat, prefix_len, statbuf);
       break;
     case 's':
-      out_int (pformat, prefix_len, statbuf->st_size);
+      out_uint (pformat, prefix_len, unsigned_file_size (statbuf->st_size));
       break;
     case 'r':
       if (mod == 'H')
