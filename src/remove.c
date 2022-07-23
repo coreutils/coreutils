@@ -28,6 +28,7 @@
 #include "ignore-value.h"
 #include "remove.h"
 #include "root-dev-ino.h"
+#include "stat-time.h"
 #include "write-any-file.h"
 #include "xfts.h"
 #include "yesno.h"
@@ -62,29 +63,37 @@ enum Prompt_action
 # define DT_LNK 2
 #endif
 
-/* Like fstatat, but cache the result.  If ST->st_size is -1, the
-   status has not been gotten yet.  If less than -1, fstatat failed
-   with errno == ST->st_ino.  Otherwise, the status has already
-   been gotten, so return 0.  */
+/* Like fstatat, but cache on POSIX-compatible systems.  */
 static int
 cache_fstatat (int fd, char const *file, struct stat *st, int flag)
 {
-  if (st->st_size == -1 && fstatat (fd, file, st, flag) != 0)
+#if HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC
+  /* If ST->st_atim.tv_nsec is -1, the status has not been gotten yet.
+     If less than -1, fstatat failed with errno == ST->st_ino.
+     Otherwise, the status has already been gotten, so return 0.  */
+  if (0 <= st->st_atim.tv_nsec)
+    return 0;
+  if (st->st_atim.tv_nsec == -1)
     {
-      st->st_size = -2;
+      if (fstatat (fd, file, st, flag) == 0)
+        return 0;
+      st->st_atim.tv_nsec = -2;
       st->st_ino = errno;
     }
-  if (0 <= st->st_size)
-    return 0;
-  errno = (int) st->st_ino;
+  errno = st->st_ino;
   return -1;
+#else
+  return fstatat (fd, file, st, flag);
+#endif
 }
 
 /* Initialize a fstatat cache *ST.  Return ST for convenience.  */
 static inline struct stat *
 cache_stat_init (struct stat *st)
 {
-  st->st_size = -1;
+#if HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC
+  st->st_atim.tv_nsec = -1;
+#endif
   return st;
 }
 
