@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'mv --backup=simple f d/' no longer mistakenly backs up d/f to f~.
   [bug introduced in coreutils-9.1]
 
+  runcon --compute no longer looks up the specified command in the $PATH
+  so that there is no mismatch between the inspected and executed file.
+  [bug introduced when runcon was introduced in coreutils-6.9.90]
+
   'sort -g' no longer infloops when given multiple NaNs on platforms
   like x86_64 where 'long double' has padding bits in memory.
   Although the fix alters sort -g's NaN ordering, that ordering has

@@ -255,7 +255,7 @@ main (int argc, char **argv)
   if (cur_context != NULL)
     freecon (cur_context);
 
-  execvp (argv[optind], argv + optind);
+  (compute_trans ? execv : execvp) (argv[optind], argv + optind);
 
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
   error (0, errno, "%s", quote (argv[optind]));

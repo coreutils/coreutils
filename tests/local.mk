@@ -351,6 +351,7 @@ all_tests =					\
   tests/misc/readlink-fp-loop.sh		\
   tests/misc/readlink-root.sh			\
   tests/misc/realpath.sh			\
+  tests/misc/runcon-compute.sh			\
   tests/misc/runcon-no-reorder.sh		\
   tests/misc/sha1sum.pl				\
   tests/misc/sha1sum-vec.pl			\
