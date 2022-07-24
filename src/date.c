@@ -183,6 +183,11 @@ With -s, or with [MMDDhhmm[[CC]YY][.ss]], set the date and time.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
+All options that specify the date to display are mutually exclusive.\n\
+I.e.: --date, --file, --reference, --resolution.\n\
+"), stdout);
+      fputs (_("\
+\n\
 FORMAT controls the output.  Interpreted sequences are:\n\
 \n\
   %%   a literal %\n\

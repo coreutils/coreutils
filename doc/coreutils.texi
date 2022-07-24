@@ -16426,6 +16426,10 @@ relative to Universal Time rather than to the local time zone.
 The program accepts the following options.  Also see @ref{Common options}.
 Except for @option{-u}, these options are all GNU extensions to POSIX.
 
+All options that specify the date to display are mutually exclusive.
+I.e.: @option{--date}, @option{--file}, @option{--reference},
+@option{--resolution}.
+
 @table @samp
 
 @item -d @var{datestr}
