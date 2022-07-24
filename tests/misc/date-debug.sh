@@ -298,4 +298,14 @@ sed '1s/(Y-M-D) [0-9][0-9][0-9][0-9]-/(Y-M-D) XXXX-/' out9_t > out9 \
 compare exp9 out9 || fail=1
 
 
+# Diagnose discarded -d arguments
+echo 'date: only using last of multiple -d options' > exp10 \
+    || framework_failure_
+cat exp9 >> exp10 || framework_failure_
+date -u --debug -d 'discard' -d 'Apr 11 22:59:00 2011' > out10_t 2>&1 || fail=1
+sed '2s/(Y-M-D) [0-9][0-9][0-9][0-9]-/(Y-M-D) XXXX-/' out10_t >> out10 \
+    || framework_failure_
+compare exp10 out10 || fail=1
+
+
 Exit $fail

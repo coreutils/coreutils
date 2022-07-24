@@ -403,6 +403,8 @@ main (int argc, char **argv)
   char *reference = NULL;
   struct stat refstats;
   bool ok;
+  bool discarded_datestr = false;
+  bool discarded_set_datestr = false;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -420,6 +422,8 @@ main (int argc, char **argv)
       switch (optc)
         {
         case 'd':
+          if (datestr)
+            discarded_datestr = true;
           datestr = optarg;
           break;
         case DEBUG_DATE_PARSING_OPTION:
@@ -469,6 +473,8 @@ main (int argc, char **argv)
           new_format = rfc_email_format;
           break;
         case 's':
+          if (set_datestr)
+            discarded_set_datestr = true;
           set_datestr = optarg;
           set_date = true;
           break;
@@ -510,6 +516,12 @@ main (int argc, char **argv)
           _("the options to print and set the time may not be used together"));
       usage (EXIT_FAILURE);
     }
+
+  if (discarded_datestr && (parse_datetime_flags & PARSE_DATETIME_DEBUG))
+    error (0, 0, _("only using last of multiple -d options"));
+
+  if (discarded_set_datestr && (parse_datetime_flags & PARSE_DATETIME_DEBUG))
+    error (0, 0, _("only using last of multiple -s options"));
 
   if (optind < argc)
     {
