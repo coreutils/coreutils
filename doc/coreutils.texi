@@ -17574,9 +17574,9 @@ env --chdir=/build FOO=bar timeout 5 true
 @item --default-signal[=@var{sig}]
 Unblock and reset signal @var{sig} to its default signal handler.
 Without @var{sig} all known signals are unblocked and reset to their defaults.
-Multiple signals can be comma-separated.  The following command runs
-@command{seq} with SIGINT and SIGPIPE set to their default
-(which is to terminate the program):
+Multiple signals can be comma-separated. An empty @var{sig} argument is a no-op.
+The following command runs @command{seq} with SIGINT and SIGPIPE set to their
+default (which is to terminate the program):
 
 @example
 env --default-signal=PIPE,INT seq 1000 | head -n1
@@ -17603,9 +17603,9 @@ trap '' PIPE && sh -c 'env --default-signal=PIPE seq inf | head -n1'
 
 @item --ignore-signal[=@var{sig}]
 Ignore signal @var{sig} when running a program.  Without @var{sig} all
-known signals are set to ignore.  Multiple signals can be
-comma-separated.  The following command runs @command{seq} with SIGINT set
-to be ignored - pressing @kbd{Ctrl-C} will not terminate it:
+known signals are set to ignore.  Multiple signals can be comma-separated.
+An empty @var{sig} argument is a no-op. The following command runs @command{seq}
+with SIGINT set to be ignored - pressing @kbd{Ctrl-C} will not terminate it:
 
 @example
 env --ignore-signal=INT seq inf > /dev/null
@@ -17627,7 +17627,9 @@ env --default-signal=INT,PIPE --ignore-signal=INT
 @end example
 
 @item --block-signal[=@var{sig}]
-Block signal(s) @var{sig} from being delivered.
+Block signal(s) @var{sig} from being delivered.  Without @var{sig} all
+known signals are set to blocked.  Multiple signals can be comma-separated.
+An empty @var{sig} argument is a no-op.
 
 @item --list-signal-handling
 List blocked or ignored signals to standard error, before executing a command.

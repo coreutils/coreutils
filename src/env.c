@@ -158,7 +158,7 @@ A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 \n\
 SIG may be a signal name like 'PIPE', or a signal number like '13'.\n\
 Without SIG, all known signals are included.  Multiple signals can be\n\
-comma-separated.\n\
+comma-separated.  An empty SIG argument is a no-op.\n\
 "), stdout);
       emit_ancillary_info (PROGRAM_NAME);
     }
