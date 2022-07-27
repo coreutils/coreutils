@@ -105,15 +105,15 @@ static int const time_masks[] =
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
 
-/* Store into *RESULT the result of interpreting FLEX_DATE as a date,
-   relative to NOW.  If NOW is null, use the current time.  */
+/* The interpretation of FLEX_DATE as a date, relative to NOW.  */
 
-static void
-get_reldate (struct timespec *result,
-             char const *flex_date, struct timespec const *now)
+static struct timespec
+date_relative (char const *flex_date, struct timespec now)
 {
-  if (! parse_datetime (result, flex_date, now))
+  struct timespec result;
+  if (! parse_datetime (&result, flex_date, &now))
     die (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
+  return result;
 }
 
 /* Update the time of file FILE according to the options given.
@@ -356,19 +356,17 @@ main (int argc, char **argv)
       if (flex_date)
         {
           if (change_times & CH_ATIME)
-            get_reldate (&newtime[0], flex_date, &newtime[0]);
+            newtime[0] = date_relative (flex_date, newtime[0]);
           if (change_times & CH_MTIME)
-            get_reldate (&newtime[1], flex_date, &newtime[1]);
+            newtime[1] = date_relative (flex_date, newtime[1]);
         }
     }
   else
     {
       if (flex_date)
         {
-          struct timespec now;
-          gettime (&now);
-          get_reldate (&newtime[0], flex_date, &now);
-          newtime[1] = newtime[0];
+          struct timespec now = current_timespec ();
+          newtime[1] = newtime[0] = date_relative (flex_date, now);
           date_set = true;
 
           /* If neither -a nor -m is specified, treat "-d now" as if
@@ -383,7 +381,7 @@ main (int argc, char **argv)
               struct timespec notnow, notnow1;
               notnow.tv_sec = now.tv_sec ^ 1;
               notnow.tv_nsec = now.tv_nsec;
-              get_reldate (&notnow1, flex_date, &notnow);
+              notnow1 = date_relative (flex_date, notnow);
               if (notnow1.tv_sec == notnow.tv_sec
                   && notnow1.tv_nsec == notnow.tv_nsec)
                 date_set = false;
