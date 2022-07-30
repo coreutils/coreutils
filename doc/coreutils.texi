@@ -9021,7 +9021,7 @@ The @var{when} value can be one of the following:
 @item always
 If the copy-on-write operation is not supported
 then report the failure for each file and exit with a failure status.
-Plain @option{--reflink} is equivalent to @option{--reflink=when}.
+Plain @option{--reflink} is equivalent to @option{--reflink=always}.
 
 @item auto
 If the copy-on-write operation is not supported then fall back
