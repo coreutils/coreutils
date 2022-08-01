@@ -5201,9 +5201,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -f
 @opindex --skip-fields
 Skip @var{n} fields on each line before checking for uniqueness.  Use
-a null string for comparison if a line has fewer than @var{n} fields.  Fields
-are sequences of non-space non-tab characters that are separated from
-each other by at least one space or tab.
+a null string for comparison if a line has fewer than @var{n} fields.
+Fields are a sequence of blank characters followed by non-blank characters.
+Field numbers are one based, i.e., @option{-f 1} will skip the first
+field (which may optionally have leading blanks).
 
 For compatibility @command{uniq} supports a traditional option syntax
 @option{-@var{n}}.  New scripts should use @option{-f @var{n}} instead.
