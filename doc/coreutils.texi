@@ -8031,7 +8031,8 @@ sort according to the atime.
 @opindex --time
 @opindex birth time@r{, printing or sorting files by}
 @opindex creation timestamp@r{, printing or sorting files by}
-In long format, print the file creation timestamp if available.
+In long format, print the file creation timestamp if available,
+falling back to the file modification timestamp (mtime) if not.
 When sorting by time or when not using long format,
 sort according to the birth time.
 @xref{File timestamps}.

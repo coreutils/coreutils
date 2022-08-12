@@ -5423,7 +5423,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 "), stdout);
       fputs (_("\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
-                             modification of file status information);\n\
+                             change of file status information);\n\
                              with -l: show ctime and sort by name;\n\
                              otherwise: sort by ctime, newest first\n\
 \n\
@@ -5557,7 +5557,7 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
       fputs (_("\
       --time=WORD            change the default of using modification times;\n\
                                access time (-u): atime, access, use;\n\
-                               change time (-c): ctime, status;\n\
+                               metadata change time (-c): ctime, status;\n\
                                birth time: birth, creation;\n\
                              with -l, WORD determines which time to show;\n\
                              with --sort=time, sort by WORD (newest first)\n\
