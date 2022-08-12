@@ -924,6 +924,7 @@ static char const *const time_args[] =
 {
   "atime", "access", "use",
   "ctime", "status",
+  "mtime", "modification",
   "birth", "creation",
   NULL
 };
@@ -931,6 +932,7 @@ static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime,
   time_ctime, time_ctime,
+  time_mtime, time_mtime,
   time_btime, time_btime,
 };
 ARGMATCH_VERIFY (time_args, time_types);
@@ -5555,9 +5557,10 @@ Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.\n\
 \n\
 "), stdout);
       fputs (_("\
-      --time=WORD            change the default of using modification times;\n\
+      --time=WORD            select which timestamp used to display or sort;\n\
                                access time (-u): atime, access, use;\n\
                                metadata change time (-c): ctime, status;\n\
+                               modified time (default): mtime, modification;\n\
                                birth time: birth, creation;\n\
                              with -l, WORD determines which time to show;\n\
                              with --sort=time, sort by WORD (newest first)\n\

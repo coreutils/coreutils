@@ -36,6 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   factor now accepts the --exponents (-h) option to print factors
   in the form p^e, rather than repeating the prime p, e times.
 
+  ls now supports the --time=modification option, to explicitly
+  select the default mtime timestamp for display and sorting.
+
 ** Improvements
 
   date --debug now diagnoses if multiple --date or --set options are

@@ -58,7 +58,7 @@ sleep 2
 ln c d || framework_failure_
 
 # Before we go any further, verify that touch's -m option works.
-set -- $(ls --full -l a)
+set -- $(ls --full -l --time=mtime a)
 case "$*" in
   *" $t3:00.000000000 +0000 a") ;;
   *)

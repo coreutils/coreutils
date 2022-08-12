@@ -8026,6 +8026,17 @@ When sorting by time or when not using long format,
 sort according to the atime.
 @xref{File timestamps}.
 
+@item --time=mtime
+@itemx --time=modification
+@opindex --time
+@opindex data modification time@r{, printing or sorting files by}
+@opindex mtime@r{, printing or sorting files by}
+This is the default timestamp display and sorting mode.
+In long format, print the last data modification timestamp (the mtime).
+When sorting by time or when not using long format,
+sort according to the mtime.
+@xref{File timestamps}.
+
 @item --time=birth
 @itemx --time=creation
 @opindex --time
