@@ -1,0 +1,111 @@
+Please see the file INSTALL for generic build and installation instructions.
+This file details coreutils and system specific build instructions.
+
+
+*********************
+Pre-C99 build failure
+---------------------
+
+In 2009 we added this requirement:
+To build the coreutils from source, you must have a C99-conforming
+compiler, due to the use of declarations after non-declaration statements
+in several files in src/.  There is code in configure to find and, if
+possible, enable an appropriate compiler.  However, if configure doesn't
+find a C99 compiler, it continues nonetheless, and your build will fail.
+There used to be a "c99-to-c89.diff" patch you could apply to convert
+to code that even an old pre-c99 compiler can handle, but it was too
+tedious to maintain, so has been removed.
+
+
+***********************
+HPUX 11.x build failure
+-----------------------
+
+A known problem exists when compiling on HPUX on both hppa and ia64
+in 64-bit mode (i.e., +DD64) on HP-UX 11.0, 11.11, and 11.23.  This
+is not due to a bug in the package but instead due to a bug in the
+system header file which breaks things in 64-bit mode.  The default
+compilation mode is 32-bit and the software compiles fine using the
+default mode.  To build this software in 64-bit mode you will need
+to fix the system /usr/include/inttypes.h header file.  After
+correcting that file the software also compiles fine in 64-bit mode.
+Here is one possible patch to correct the problem:
+
+--- /usr/include/inttypes.h.orig	Thu May 30 01:00:00 1996
++++ /usr/include/inttypes.h	Sun Mar 23 00:20:36 2003
+@@ -489 +489 @@
+-#ifndef __STDC_32_MODE__
++#ifndef __LP64__
+
+
+************************
+OSF/1 4.0d and AIX build failures
+------------------------
+
+If you use /usr/bin/make on these systems, the build will fail due
+to the presence of the "[" target.  OSF/1 make(1) appears to
+treat "[" as some syntax relating to locks, while AIX make(1)
+appears to skip the "[" target.  To work around these issues
+the best solution is to use GNU make.  Otherwise, simply remove
+all mention of "[$(EXEEXT)" from src/Makefile.
+
+
+************************
+32 bit time_t build failures
+------------------------
+
+On systems where it's determined that 64 bit time_t is supported
+(indicated by touch -t <some time after 2038>), but that coreutils
+would be built with a narrower time_t, the build will fail.
+This can be allowed by passing TIME_T_32_BIT_OK=yes to configure,
+or avoided by enabling 64 bit builds.  For example GCC on AIX defaults
+to 32 bit, and to enable the 64 bit ABI one can use:
+./configure CFLAGS=-maix64 LDFLAGs=-maix64 AR='ar -X64'
+
+
+*************************************************
+"make check" failure on IRIX 6.5 and Solaris <= 9
+-------------------------------------------------
+
+Using the vendor make program to run "make check" fails on these two systems.
+If you want to run all of the tests there, use GNU make.
+
+
+
+**********************
+Running tests as root:
+----------------------
+
+If you run the tests as root, note that a few of them create files
+and/or run programs as a non-root user, 'nobody' by default.
+If you want to use some other non-root username, specify it via
+the NON_ROOT_USERNAME environment variable.  Depending on the
+permissions with which the working directories have been created,
+using 'nobody' may fail, because that user won't have the required
+read and write access to the build and test directories.
+I find that it is best to unpack and build as a non-privileged
+user, and then to run the following command as that user in order
+to run the privilege-requiring tests:
+
+  sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
+
+If you can run the tests as root, please do so and report any
+problems.  We get much less test coverage in that mode, and it's
+arguably more important that these tools work well when run by
+root than when run by less privileged users.
+
+
+
+**********************
+autotools considerations:
+----------------------
+
+WARNING:  Now that we use the ./bootstrap script, you should not run
+autoreconf manually.  Doing that will overwrite essential source files
+with older versions, which may make the package unbuildable or introduce
+subtle bugs.
+
+WARNING:  If you modify files like configure.in, m4/*.m4, aclocal.m4,
+or any Makefile.am, then don't be surprised if what gets regenerated no
+longer works.  To make things work, you'll have to be using appropriate
+versions of the tools listed in bootstrap.conf's buildreq string.

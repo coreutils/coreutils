@@ -49,7 +49,7 @@ no longer incurs the overhead of saving src. dev/ino and dest. filename
 in the hash table.
 
 Write an autoconf test to work around build failure in HPUX's 64-bit mode.
-See notes in README -- and remove them once there's a work-around.
+See notes in README-install -- and remove them once there's a work-around.
 
 Integrate use of sendfile, suggested here:
   https://lists.gnu.org/r/bug-fileutils/2003-03/msg00030.html
