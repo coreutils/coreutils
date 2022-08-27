@@ -17276,8 +17276,9 @@ Set range @var{range} in the target security context.
 Exit status:
 
 @display
+125 if @command{runcon} itself fails
 126 if @var{command} is found but cannot be invoked
-127 if @command{runcon} itself fails or if @var{command} cannot be found
+127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
 

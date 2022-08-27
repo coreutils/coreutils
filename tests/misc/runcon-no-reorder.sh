@@ -28,6 +28,8 @@ echo "$diag" > exp || framework_failure_
 # Before the no-reorder change, it would have failed with a diagnostic
 # about -j being an invalid option.
 runcon $(id -Z) true -j 2> out && > exp
+# Ensure we fail appropriately for invalid options
+returns_ 125 runcon -j true || fail=1
 
 # When run on a system with no /selinux/context (i.e., in a chroot),
 # it fails with this: "runcon: invalid context: \
