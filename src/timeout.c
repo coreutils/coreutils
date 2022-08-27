@@ -545,7 +545,7 @@ main (int argc, char **argv)
       signal (SIGTTIN, SIG_DFL);
       signal (SIGTTOU, SIG_DFL);
 
-      execvp (argv[0], argv);   /* FIXME: should we use "sh -c" ... here?  */
+      execvp (argv[0], argv);
 
       /* exit like sh, env, nohup, ...  */
       int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
