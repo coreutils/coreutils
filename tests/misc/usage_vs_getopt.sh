@@ -26,7 +26,7 @@ checkprg () {
   rcexp=1
   case "$prg" in
     dir | ls | printenv | sort | tty | vdir ) rcexp=2 ;;
-    env | chroot | nice | nohup | stdbuf | timeout ) rcexp=125 ;;
+    env | chroot | nice | nohup | runcon | stdbuf | timeout ) rcexp=125 ;;
   esac
   # Write the pattern for a long, unknown option into a pattern file.
   o='thisoptiondoesnotexist'

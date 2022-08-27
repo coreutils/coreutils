@@ -34,6 +34,7 @@ my %exit_status =
     expr => 0,
     nice => 125,
     nohup => 125,
+    runcon => 125,
     sort => 2,
     stdbuf => 125,
     test => 0,
