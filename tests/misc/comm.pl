@@ -157,6 +157,9 @@ my @Tests =
     {OUT=>"1\n\0002\n\0002\n\000\0003\n\000\0003\n\000\0003\n"} ],
    ['zdelim-empty', '-z', '-z --output-delimiter=', @zinputs,
     {OUT=>"1\000\0002\000\0002\000\000\0003\000\000\0003\000\000\0003\000"} ],
+   ['total-delim-empty', '--total --output-delimiter=', @inputs,
+    {OUT=>"1\n\0002\n\0002\n\000\0003\n\000\0003\n\000\0003\n"
+        . "1\0002\0003\000total\n"} ],
 
    # invalid dual delimiter
    ['delim-dual', '--output-delimiter=,', '--output-delimiter=+', @inputs,

@@ -395,11 +395,22 @@ compare_files (char **infiles)
       char buf1[INT_BUFSIZE_BOUND (uintmax_t)];
       char buf2[INT_BUFSIZE_BOUND (uintmax_t)];
       char buf3[INT_BUFSIZE_BOUND (uintmax_t)];
-      printf ("%s%s%s%s%s%s%s%c",
-              umaxtostr (total[0], buf1), col_sep,
-              umaxtostr (total[1], buf2), col_sep,
-              umaxtostr (total[2], buf3), col_sep,
-              _("total"), delim);
+      if (col_sep_len == 1)
+        { /* Separate to handle NUL char.  */
+          printf ("%s%c%s%c%s%c%s%c",
+                  umaxtostr (total[0], buf1), *col_sep,
+                  umaxtostr (total[1], buf2), *col_sep,
+                  umaxtostr (total[2], buf3), *col_sep,
+                  _("total"), delim);
+        }
+      else
+        {
+          printf ("%s%s%s%s%s%s%s%c",
+                  umaxtostr (total[0], buf1), col_sep,
+                  umaxtostr (total[1], buf2), col_sep,
+                  umaxtostr (total[2], buf3), col_sep,
+                  _("total"), delim);
+        }
     }
 
   if (issued_disorder_warning[0] || issued_disorder_warning[1])

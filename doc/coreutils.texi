@@ -5427,7 +5427,8 @@ Other options are:
 Print @var{str} between adjacent output columns,
 rather than the default of a single TAB character.
 
-The delimiter @var{str} may not be empty.
+The delimiter @var{str} may be empty, in which case
+the ASCII NUL character is used to delimit output columns.
 
 @item --total
 Output a summary at the end.
