@@ -23,6 +23,8 @@ print_ver_ runcon
 printf '%s\n' '#!/bin/sh' 'exit 1' >> 'true' || framework_failure_
 chmod a+x 'true' || framework_failure_
 
-returns_ 1 runcon -c true || fail=1
+runcon -c true; ret=$?
+test "$ret" = 125 && skip_ 'runcon setup failed'
+test "$ret" = 1 || fail=1
 
 Exit $fail
