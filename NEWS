@@ -4,6 +4,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  'comm --output-delimiter="" --total' now delimits columns in the total
+  line with the NUL character, consistent with NUL column delimiters in
+  the rest of the output.  Previously no delimiters were used for the
+  total line in this case.
+  [bug introduced with the --total option in coreutils-8.26]
+
   'cp -rx / /mnt' no longer complains "cannot create directory /mnt/".
   [bug introduced in coreutils-9.1]
 
@@ -28,6 +34,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   'ls -v' and 'sort -V' go back to sorting ".0" before ".A",
   reverting to the behavior in coreutils-9.0 and earlier.
   This behavior is now documented.
+
+  runcon now exits with status 125 for internal errors.  Previously upon
+  internal errors it would exit with status 1, which was less distinguishable
+  from errors from the invoked command.
 
   ’stat -c %s' now prints sizes as unsigned, consistent with 'ls'.
 
