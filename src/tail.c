@@ -352,6 +352,13 @@ check_output_alive (void)
   if (! monitor_output)
     return;
 
+  /* Check we've not enabled gnulib's poll module
+     as that will emulate poll() in a way not
+     currently compatible with tail's usage.  */
+#if defined HAVE_POLL
+# error "gnulib's poll() replacement is currently incompatible"
+#endif
+
   /* poll(2) is needed on AIX (where 'select' gives a readable
      event immediately) and Solaris (where 'select' never gave
      a readable event).  Also use poll(2) on systems we know work
