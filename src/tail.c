@@ -352,14 +352,15 @@ check_output_alive (void)
   if (! monitor_output)
     return;
 
-  /* Use 'poll' on AIX (where 'select' was seen to give a readable
-     event immediately) or if using inotify (which relies on 'poll'
-     anyway).  Otherwise, use 'select' as it's more portable;
-     'poll' doesn't work for this application on macOS.  */
-#if defined _AIX || defined __sun || HAVE_INOTIFY
+  /* poll(2) is needed on AIX (where 'select' gives a readable
+     event immediately) and Solaris (where 'select' never gave
+     a readable event).  Also use poll(2) on systems we know work
+     and/or are already using poll (inotify).  */
+#if defined _AIX || defined __sun || defined __APPLE__ || HAVE_INOTIFY
   struct pollfd pfd;
   pfd.fd = STDOUT_FILENO;
   pfd.events = pfd.revents = 0;
+  pfd.events |= POLLRDBAND; /* Needed for illumos, macos.  */
 
   if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & (POLLERR | POLLHUP)))
     die_pipe ();
