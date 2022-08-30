@@ -1159,6 +1159,11 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
+              if (string_to_baud (settings[k]) == (speed_t) -1)
+                {
+                  error (0, 0, _("invalid ispeed %s"), quote (settings[k]));
+                  usage (EXIT_FAILURE);
+                }
               if (checking)
                 continue;
               set_speed (input_speed, settings[k], mode);
@@ -1169,6 +1174,11 @@ apply_settings (bool checking, char const *device_name,
             {
               check_argument (arg);
               ++k;
+              if (string_to_baud (settings[k]) == (speed_t) -1)
+                {
+                  error (0, 0, _("invalid ospeed %s"), quote (settings[k]));
+                  usage (EXIT_FAILURE);
+                }
               if (checking)
                 continue;
               set_speed (output_speed, settings[k], mode);
@@ -1696,13 +1706,24 @@ set_control_char (struct control_info const *info, char const *arg,
 static void
 set_speed (enum speed_setting type, char const *arg, struct termios *mode)
 {
-  speed_t baud;
+  /* Note cfset[io]speed(), do not check with the device,
+     and only check whether the system logic supports the specified speed.
+     Therefore we don't report the device name in any errors.  */
 
-  baud = string_to_baud (arg);
+  speed_t baud = string_to_baud (arg);
+
+  assert (baud != (speed_t) -1);
+
   if (type == input_speed || type == both_speeds)
-    cfsetispeed (mode, baud);
+    {
+      if (cfsetispeed (mode, baud))
+        die (EXIT_FAILURE, 0, "unsupported ispeed %s", quotef (arg));
+    }
   if (type == output_speed || type == both_speeds)
-    cfsetospeed (mode, baud);
+    {
+      if (cfsetospeed (mode, baud))
+        die (EXIT_FAILURE, 0, "unsupported ospeed %s", quotef (arg));
+    }
 }
 
 #ifdef TIOCGWINSZ

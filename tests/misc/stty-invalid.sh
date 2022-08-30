@@ -50,6 +50,9 @@ if tty -s </dev/tty; then
   returns_ 1 stty eol -F/dev/tty eol || fail=1
 fi
 
+# coreutils <= 9.1 would not validate speeds to ispeed or ospeed
+returns_ 1 stty ispeed 420 || fail=1
+
 # Just in case either of the above mistakenly succeeds (and changes
 # the state of our tty), try to restore the initial state.
 stty $saved_state || fail=1
