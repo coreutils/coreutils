@@ -471,11 +471,22 @@ static int current_col;
 /* Default "drain" mode for tcsetattr.  */
 static int tcsetattr_options = TCSADRAIN;
 
+/* Extra info to aid stty development.  */
+static bool dev_debug;
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  DEV_DEBUG_OPTION = CHAR_MAX + 1,
+};
+
 static struct option const longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
   {"file", required_argument, NULL, 'F'},
+  {"-debug", no_argument, NULL, DEV_DEBUG_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -1335,6 +1346,10 @@ main (int argc, char **argv)
           file_name = optarg;
           break;
 
+        case DEV_DEBUG_OPTION:
+          dev_debug = true;
+          break;
+
         case_GETOPT_HELP_CHAR;
 
         case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -1451,18 +1466,21 @@ main (int argc, char **argv)
           if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
 #endif
             {
+              if (dev_debug)
+                {
+                  error (0, 0, _("indx: mode: actual mode"));
+                  for (unsigned int i = 0; i < sizeof (new_mode); i++)
+                    {
+                      unsigned int newc = *(((unsigned char *) &new_mode) + i);
+                      unsigned int oldc = *(((unsigned char *) &mode) + i);
+                      error (0, 0, "0x%02x, 0x%02x: 0x%02x%s", i, oldc, newc,
+                             newc == oldc ? "" : " *");
+                    }
+                }
+
               die (EXIT_FAILURE, 0,
                    _("%s: unable to perform all requested operations"),
                    quotef (device_name));
-#ifdef TESTING
-              {
-                printf ("new_mode: mode\n");
-                for (size_t i = 0; i < sizeof (new_mode); i++)
-                  printf ("0x%02x: 0x%02x\n",
-                          *(((unsigned char *) &new_mode) + i),
-                          *(((unsigned char *) &mode) + i));
-              }
-#endif
             }
         }
     }
