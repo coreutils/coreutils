@@ -15518,6 +15518,8 @@ Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
 @cindex nonblocking @command{stty} setting
 Apply settings after first waiting for pending output to be transmitted.
 This is enabled by default for GNU @command{stty}.
+Note this is treated as an option rather than a line setting,
+and will follow the option processing rules described in the summary above.
 It is useful to disable this option
 in cases where the system may be in a state where serial transmission
 is not possible.
