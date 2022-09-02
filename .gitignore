@@ -63,6 +63,7 @@
 /lib/getopt-cdefs.h
 /lib/getopt.h
 /lib/glthread
+/lib/gmp.h
 /lib/iconv.h
 /lib/iconv_open-aix.h
 /lib/iconv_open-hpux.h
