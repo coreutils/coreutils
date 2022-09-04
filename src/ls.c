@@ -612,6 +612,7 @@ struct color_ext_type
   {
     struct bin_str ext;		/* The extension we're looking for */
     struct bin_str seq;		/* The sequence to output when we do */
+    bool   exact_match;		/* Whether to compare case insensitively */
     struct color_ext_type *next;	/* Next in list */
   };
 
@@ -643,7 +644,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
   };
 
-/* FIXME: comment  */
+/* A list mapping file extensions to corresponding display sequence.  */
 static struct color_ext_type *color_ext_list = NULL;
 
 /* Buffer for color sequences */
@@ -2775,6 +2776,7 @@ parse_ls_color (void)
               ext = xmalloc (sizeof *ext);
               ext->next = color_ext_list;
               color_ext_list = ext;
+              ext->exact_match = false;
 
               ++p;
               ext->ext.string = buf;
@@ -2859,6 +2861,49 @@ parse_ls_color (void)
           free (e2);
         }
       print_with_color = false;
+    }
+  else
+    {
+      /* Postprocess list to set EXACT_MATCH on entries where there are
+         different cased extensions with separate sequences defined.
+         Also set ext.len to SIZE_MAX on any entries that can't
+         match due to precedence, to avoid redundant string compares.  */
+      struct color_ext_type *e1;
+
+      for (e1 = color_ext_list; e1 != NULL; e1 = e1->next)
+        {
+          struct color_ext_type *e2;
+          bool case_ignored = false;
+
+          for (e2 = e1->next; e2 != NULL; e2 = e2->next)
+            {
+              if (e2->ext.len < SIZE_MAX && e1->ext.len == e2->ext.len)
+                {
+                  if (memcmp (e1->ext.string, e2->ext.string, e1->ext.len) == 0)
+                    e2->ext.len = SIZE_MAX; /* Ignore */
+                  else if (c_strncasecmp (e1->ext.string, e2->ext.string,
+                                          e1->ext.len) == 0)
+                    {
+                      if (case_ignored)
+                        {
+                          e2->ext.len = SIZE_MAX; /* Ignore */
+                        }
+                      else if (e1->seq.len == e2->seq.len
+                               && memcmp (e1->seq.string, e2->seq.string,
+                                          e1->seq.len) == 0)
+                        {
+                          e2->ext.len = SIZE_MAX; /* Ignore */
+                          case_ignored = true;    /* Ignore all subsequent */
+                        }
+                      else
+                        {
+                          e1->exact_match = true;
+                          e2->exact_match = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 
   if (color_indicator[C_LINK].len == 6
@@ -5040,10 +5085,21 @@ get_color_indicator (const struct fileinfo *f, bool symlink_target)
       name += len;		/* Pointer to final \0.  */
       for (ext = color_ext_list; ext != NULL; ext = ext->next)
         {
-          if (ext->ext.len <= len
-              && c_strncasecmp (name - ext->ext.len, ext->ext.string,
-                                ext->ext.len) == 0)
-            break;
+          if (ext->ext.len <= len)
+            {
+              if (ext->exact_match)
+                {
+                  if (STREQ_LEN (name - ext->ext.len, ext->ext.string,
+                                 ext->ext.len))
+                    break;
+                }
+              else
+                {
+                  if (c_strncasecmp (name - ext->ext.len, ext->ext.string,
+                                     ext->ext.len) == 0)
+                    break;
+                }
+            }
         }
     }
 

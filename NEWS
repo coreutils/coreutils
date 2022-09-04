@@ -103,6 +103,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   reverting to the behavior in coreutils-9.0 and earlier.
   This behavior is now documented.
 
+  ls --color now matches a file extension case sensitively
+  if there are different sequences defined for separate cases.
+
   printf unicode \uNNNN, \UNNNNNNNN syntax, now supports all valid
   unicode code points.  Previously is was restricted to the C
   universal character subset, which restricted most points <= 0x9F.

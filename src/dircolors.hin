@@ -74,8 +74,10 @@ STICKY 37;44	# dir with the sticky bit set (+t) and not other-writable
 EXEC 01;32
 
 # List any file extensions like '.gz' or '.tar' that you would like ls
-# to color below. Put the extension, a space, and the color init string.
-# (and any comments you want to add after a '#')
+# to color below. Put the suffix, a space, and the color init string.
+# (and any comments you want to add after a '#').
+# Suffixes are matched case insensitively, but if you define different
+# init strings for separate cases, those will be honored.
 
 # If you use DOS-style suffixes, you may want to uncomment the following:
 #.cmd 01;32 # executables (bright green)
@@ -88,7 +90,7 @@ EXEC 01;32
 #.sh  01;32
 #.csh 01;32
 
- # archives or compressed (bright red)
+# archives or compressed (bright red)
 .tar 01;31
 .tgz 01;31
 .arc 01;31
