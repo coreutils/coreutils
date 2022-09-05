@@ -5,11 +5,15 @@
 # Copying and distribution of this file, with or without modification,
 # are permitted provided the copyright notice and this notice are preserved.
 
+#
 # The keywords COLOR, OPTIONS, and EIGHTBIT (honored by the
 # slackware version of dircolors) are recognized but ignored.
 
 # Global config options can be specified before TERM or COLORTERM entries
 
+# ===================================================================
+# Terminal filters
+# ===================================================================
 # Below are TERM or COLORTERM entries, which can be glob patterns, which
 # restrict following config to systems with matching environment variables.
 COLORTERM ?*
@@ -39,6 +43,9 @@ TERM tmux*
 TERM vt100
 TERM xterm*
 
+# ===================================================================
+# Basic file attributes
+# ===================================================================
 # Below are the color init strings for the basic file types.
 # One can use codes for 256 or more colors supported by modern terminals.
 # The default color codes use the capabilities of an 8 color terminal
@@ -73,11 +80,15 @@ STICKY 37;44	# dir with the sticky bit set (+t) and not other-writable
 # This is for files with execute permission:
 EXEC 01;32
 
+# ===================================================================
+# File extension attributes
+# ===================================================================
 # List any file extensions like '.gz' or '.tar' that you would like ls
 # to color below. Put the suffix, a space, and the color init string.
 # (and any comments you want to add after a '#').
 # Suffixes are matched case insensitively, but if you define different
 # init strings for separate cases, those will be honored.
+#
 
 # If you use DOS-style suffixes, you may want to uncomment the following:
 #.cmd 01;32 # executables (bright green)
@@ -232,5 +243,6 @@ EXEC 01;32
 .rpmorig 00;90
 .rpmsave 00;90
 
+#
 # Subsequent TERM or COLORTERM entries, can be used to add / override
 # config specific to those matching environment variables.
