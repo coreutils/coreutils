@@ -443,6 +443,7 @@ static bool recover_mode (char const *arg, struct termios *mode);
 static int screen_columns (void);
 static bool set_mode (struct mode_info const *info, bool reversed,
                       struct termios *mode);
+static bool eq_mode (struct termios *mode1, struct termios *mode2);
 static unsigned long int integer_arg (char const *s, unsigned long int max);
 static speed_t string_to_baud (char const *arg);
 static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
@@ -1087,16 +1088,14 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 }
 
 
-/* Apply specified settings to MODE, and update
-   SPEED_WAS_SET and REQUIRE_SET_ATTR as required.
+/* Apply specified settings to MODE and REQUIRE_SET_ATTR as required.
    If CHECKING is true, this function doesn't interact
    with a device, and only validates specified settings.  */
 
 static void
 apply_settings (bool checking, char const *device_name,
                 char * const *settings, int n_settings,
-                struct termios *mode, bool *speed_was_set,
-                bool *require_set_attr)
+                struct termios *mode, bool *require_set_attr)
 {
 #define check_argument(arg)						\
   do									\
@@ -1178,7 +1177,6 @@ apply_settings (bool checking, char const *device_name,
               if (checking)
                 continue;
               set_speed (input_speed, settings[k], mode);
-              *speed_was_set = true;
               *require_set_attr = true;
             }
           else if (STREQ (arg, "ospeed"))
@@ -1193,7 +1191,6 @@ apply_settings (bool checking, char const *device_name,
               if (checking)
                 continue;
               set_speed (output_speed, settings[k], mode);
-              *speed_was_set = true;
               *require_set_attr = true;
             }
 #ifdef TIOCEXT
@@ -1267,7 +1264,6 @@ apply_settings (bool checking, char const *device_name,
               if (checking)
                 continue;
               set_speed (both_speeds, arg, mode);
-              *speed_was_set = true;
               *require_set_attr = true;
             }
           else
@@ -1286,16 +1282,13 @@ apply_settings (bool checking, char const *device_name,
 int
 main (int argc, char **argv)
 {
-  /* Initialize to all zeroes so there is no risk memcmp will report a
-     spurious difference in an uninitialized portion of the structure.  */
-  static struct termios mode;
+  struct termios mode;
 
   enum output_type output_type;
   int optc;
   int argi = 0;
   int opti = 1;
   bool require_set_attr;
-  MAYBE_UNUSED bool speed_was_set;
   bool verbose_output;
   bool recoverable_output;
   bool noargs = true;
@@ -1394,7 +1387,7 @@ main (int argc, char **argv)
     {
       static struct termios check_mode;
       apply_settings (/* checking= */ true, device_name, argv, argc,
-                      &check_mode, &speed_was_set, &require_set_attr);
+                      &check_mode, &require_set_attr);
     }
 
   if (file_name)
@@ -1419,16 +1412,13 @@ main (int argc, char **argv)
       return EXIT_SUCCESS;
     }
 
-  speed_was_set = false;
   require_set_attr = false;
   apply_settings (/* checking= */ false, device_name, argv, argc,
-                  &mode, &speed_was_set, &require_set_attr);
+                  &mode, &require_set_attr);
 
   if (require_set_attr)
     {
-      /* Initialize to all zeroes so there is no risk memcmp will report a
-         spurious difference in an uninitialized portion of the structure.  */
-      static struct termios new_mode;
+      struct termios new_mode;
 
       if (tcsetattr (STDIN_FILENO, tcsetattr_options, &mode))
         die (EXIT_FAILURE, errno, "%s", quotef (device_name));
@@ -1443,49 +1433,44 @@ main (int argc, char **argv)
       if (tcgetattr (STDIN_FILENO, &new_mode))
         die (EXIT_FAILURE, errno, "%s", quotef (device_name));
 
-      /* Normally, one shouldn't use memcmp to compare structures that
-         may have 'holes' containing uninitialized data, but we have been
-         careful to initialize the storage of these two variables to all
-         zeroes.  One might think it more efficient simply to compare the
-         modified fields, but that would require enumerating those fields --
-         and not all systems have the same fields in this structure.  */
-
-      if (memcmp (&mode, &new_mode, sizeof (mode)) != 0)
+      if (! eq_mode (&mode, &new_mode))
         {
-#ifdef CIBAUD
-          /* SunOS 4.1.3 (at least) has the problem that after this sequence,
-             tcgetattr (&m1); tcsetattr (&m1); tcgetattr (&m2);
-             sometimes (m1 != m2).  The only difference is in the four bits
-             of the c_cflag field corresponding to the baud rate.  To save
-             Sun users a little confusion, don't report an error if this
-             happens.  But suppress the error only if we haven't tried to
-             set the baud rate explicitly -- otherwise we'd never give an
-             error for a true failure to set the baud rate.  */
-
-          new_mode.c_cflag &= (~CIBAUD);
-          if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
-#endif
+          if (dev_debug)
             {
-              if (dev_debug)
+              error (0, 0, _("indx: mode: actual mode"));
+              for (unsigned int i = 0; i < sizeof (new_mode); i++)
                 {
-                  error (0, 0, _("indx: mode: actual mode"));
-                  for (unsigned int i = 0; i < sizeof (new_mode); i++)
-                    {
-                      unsigned int newc = *(((unsigned char *) &new_mode) + i);
-                      unsigned int oldc = *(((unsigned char *) &mode) + i);
-                      error (0, 0, "0x%02x, 0x%02x: 0x%02x%s", i, oldc, newc,
-                             newc == oldc ? "" : " *");
-                    }
+                  unsigned int newc = *(((unsigned char *) &new_mode) + i);
+                  unsigned int oldc = *(((unsigned char *) &mode) + i);
+                  error (0, 0, "0x%02x, 0x%02x: 0x%02x%s", i, oldc, newc,
+                          newc == oldc ? "" : " *");
                 }
-
-              die (EXIT_FAILURE, 0,
-                   _("%s: unable to perform all requested operations"),
-                   quotef (device_name));
             }
+
+          die (EXIT_FAILURE, 0,
+                _("%s: unable to perform all requested operations"),
+                quotef (device_name));
         }
     }
 
   return EXIT_SUCCESS;
+}
+
+/* Return true if modes are equivalent.  */
+
+static bool
+eq_mode (struct termios *mode1, struct termios *mode2)
+{
+  return mode1->c_iflag == mode2->c_iflag
+      && mode1->c_oflag == mode2->c_oflag
+      && mode1->c_cflag == mode2->c_cflag
+      && mode1->c_lflag == mode2->c_lflag
+#ifdef HAVE_C_LINE
+      && mode1->c_line == mode2->c_line
+#endif
+      && memcmp (mode1->c_cc, mode2->c_cc, sizeof (mode1->c_cc)) == 0
+      && cfgetispeed (mode1) == cfgetispeed (mode2)
+      && cfgetospeed (mode1) == cfgetospeed (mode2);
 }
 
 /* Return false if not applied because not reversible; otherwise

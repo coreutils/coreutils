@@ -27,8 +27,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   [bug introduced 1999-05-02 and only partly fixed in coreutils-8.14]
 
   stty ispeed and ospeed options no longer accept and silently ignore
-  invalid speed arguments.  Now they're validated against both the
-  general accepted set, and the system supported set of valid speeds.
+  invalid speed arguments, or give false warnings for valid speeds.
+  Now they're validated against both the general accepted set,
+  and the system supported set of valid speeds.
   [This bug was present in "the beginning".]
 
 ** Changes in behavior
