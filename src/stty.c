@@ -453,6 +453,7 @@ static void display_recoverable (struct termios *mode);
 static void display_settings (enum output_type output_type,
                               struct termios *mode,
                               char const *device_name);
+static void check_speed (struct termios *mode);
 static void display_speed (struct termios *mode, bool fancy);
 static void display_window_size (bool fancy, char const *device_name);
 static void sane_mode (struct termios *mode);
@@ -474,6 +475,10 @@ static int tcsetattr_options = TCSADRAIN;
 
 /* Extra info to aid stty development.  */
 static bool dev_debug;
+
+/* Record last speed set for correlation.  */
+static speed_t last_ibaud = (speed_t) -1;
+static speed_t last_obaud = (speed_t) -1;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -1174,9 +1179,9 @@ apply_settings (bool checking, char const *device_name,
                   error (0, 0, _("invalid ispeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
                 }
+              set_speed (input_speed, settings[k], mode);
               if (checking)
                 continue;
-              set_speed (input_speed, settings[k], mode);
               *require_set_attr = true;
             }
           else if (STREQ (arg, "ospeed"))
@@ -1188,9 +1193,9 @@ apply_settings (bool checking, char const *device_name,
                   error (0, 0, _("invalid ospeed %s"), quote (settings[k]));
                   usage (EXIT_FAILURE);
                 }
+              set_speed (output_speed, settings[k], mode);
               if (checking)
                 continue;
-              set_speed (output_speed, settings[k], mode);
               *require_set_attr = true;
             }
 #ifdef TIOCEXT
@@ -1261,9 +1266,9 @@ apply_settings (bool checking, char const *device_name,
             }
           else if (string_to_baud (arg) != (speed_t) -1)
             {
+              set_speed (both_speeds, arg, mode);
               if (checking)
                 continue;
-              set_speed (both_speeds, arg, mode);
               *require_set_attr = true;
             }
           else
@@ -1277,6 +1282,9 @@ apply_settings (bool checking, char const *device_name,
             }
         }
     }
+
+  if (checking)
+    check_speed (mode);
 }
 
 int
@@ -1714,16 +1722,17 @@ set_speed (enum speed_setting type, char const *arg, struct termios *mode)
      Therefore we don't report the device name in any errors.  */
 
   speed_t baud = string_to_baud (arg);
-
   assert (baud != (speed_t) -1);
 
   if (type == input_speed || type == both_speeds)
     {
+      last_ibaud = baud;
       if (cfsetispeed (mode, baud))
         die (EXIT_FAILURE, 0, "unsupported ispeed %s", quotef (arg));
     }
   if (type == output_speed || type == both_speeds)
     {
+      last_obaud = baud;
       if (cfsetospeed (mode, baud))
         die (EXIT_FAILURE, 0, "unsupported ospeed %s", quotef (arg));
     }
@@ -2066,6 +2075,23 @@ display_all (struct termios *mode, char const *device_name)
     }
   putchar ('\n');
   current_col = 0;
+}
+
+/* Verify requested asymmetric speeds are supported.
+   Note we don't flag the case where only ispeed or
+   ospeed is set, when that would set both.  */
+
+static void
+check_speed (struct termios *mode)
+{
+  if (last_ibaud != -1 && last_obaud != -1)
+    {
+      if (cfgetispeed (mode) != last_ibaud
+          || cfgetospeed (mode) != last_obaud)
+        die (EXIT_FAILURE, 0,
+             _("asymmetric input (%lu), output (%lu) speeds not supported"),
+             baud_to_value (last_ibaud), baud_to_value (last_obaud));
+    }
 }
 
 static void
