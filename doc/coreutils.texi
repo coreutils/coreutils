@@ -10297,7 +10297,7 @@ with non-sensitive data.
 @strong{Please note} that @command{shred} relies on a crucial
 assumption: that the file system and hardware overwrite data in place.
 Although this is common and is the traditional
-way to do things, but many modern file system designs do not satisfy this
+way to do things, many modern file system designs do not satisfy this
 assumption.  Exceptions include:
 
 @itemize @bullet
