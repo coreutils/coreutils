@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include "fts_.h"
 
 FTS *

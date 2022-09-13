@@ -25,7 +25,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <limits.h>
 #include <wchar.h>
 #include <wctype.h>

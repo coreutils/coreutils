@@ -30,7 +30,6 @@
 #include <fcntl.h>
 #include <quote.h>
 #include <stdalign.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

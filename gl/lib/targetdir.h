@@ -16,7 +16,6 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <stdbool.h>
 #include <sys/stat.h>
 
 #ifndef _GL_INLINE_HEADER_BEGIN

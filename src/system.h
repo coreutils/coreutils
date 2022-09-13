@@ -77,7 +77,6 @@
 # define ENODATA (-1)
 #endif
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include "version.h"
 

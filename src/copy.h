@@ -19,7 +19,6 @@
 #ifndef COPY_H
 # define COPY_H
 
-# include <stdbool.h>
 # include "hash.h"
 
 struct selabel_handle;

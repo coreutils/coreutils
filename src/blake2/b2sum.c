@@ -26,7 +26,6 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <stdbool.h>
 
 #include "blake2.h"
 

@@ -20,7 +20,6 @@
 # define DIE_H
 
 # include <error.h>
-# include <stdbool.h>
 # include <verify.h>
 
 /* Like 'error (STATUS, ...)', except STATUS must be a nonzero constant.
