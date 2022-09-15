@@ -17,8 +17,6 @@
 /* Here we replace or wrap the most common smack functions used by coreutils.
    Others will need to be protected by HAVE_SMACK.  */
 
-#include <config.h>
-
 #ifdef HAVE_SMACK
 # include <sys/smack.h>
 #else
