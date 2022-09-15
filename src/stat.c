@@ -30,7 +30,6 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#include <stdalign.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
