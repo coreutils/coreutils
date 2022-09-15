@@ -878,9 +878,10 @@ print_statfs (char *pformat, size_t prefix_len, MAYBE_UNUSED char mod, char m,
         uintmax_t fsid = statfsbuf->f_fsid;
 #else
         typedef unsigned int fsid_word;
-        verify (alignof (STRUCT_STATVFS) % alignof (fsid_word) == 0);
-        verify (offsetof (STRUCT_STATVFS, f_fsid) % alignof (fsid_word) == 0);
-        verify (sizeof statfsbuf->f_fsid % alignof (fsid_word) == 0);
+        static_assert (alignof (STRUCT_STATVFS) % alignof (fsid_word) == 0);
+        static_assert (offsetof (STRUCT_STATVFS, f_fsid) % alignof (fsid_word)
+                       == 0);
+        static_assert (sizeof statfsbuf->f_fsid % alignof (fsid_word) == 0);
         fsid_word const *p = (fsid_word *) &statfsbuf->f_fsid;
 
         /* Assume a little-endian word order, as that is compatible

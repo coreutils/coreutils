@@ -108,7 +108,7 @@ enum { VERBOSE_UPDATE = 5 };
    The size must be a power of 2.  */
 enum { SECTOR_SIZE = 512 };
 enum { SECTOR_MASK = SECTOR_SIZE - 1 };
-verify (0 < SECTOR_SIZE && (SECTOR_SIZE & SECTOR_MASK) == 0);
+static_assert (0 < SECTOR_SIZE && (SECTOR_SIZE & SECTOR_MASK) == 0);
 
 enum remove_method
 {
@@ -410,7 +410,7 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
   size_t page_size = getpagesize ();
 #define PERIODIC_OUTPUT_SIZE (60 * 1024)
 #define NONPERIODIC_OUTPUT_SIZE (64 * 1024)
-  verify (PERIODIC_OUTPUT_SIZE % 3 == 0);
+  static_assert (PERIODIC_OUTPUT_SIZE % 3 == 0);
   size_t output_size = periodic_pattern (type)
                        ? PERIODIC_OUTPUT_SIZE : NONPERIODIC_OUTPUT_SIZE;
 #define FILLPATTERN_SIZE (((output_size + 2) / 3) * 3) /* Multiple of 3 */
@@ -512,8 +512,8 @@ dopass (int fd, struct stat const *st, char const *qname, off_t *sizep,
                      code works because lim is always a multiple of
                      SECTOR_SIZE, except at the end.  This size constraint
                      also enables direct I/O on some (file) systems.  */
-                  verify (PERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
-                  verify (NONPERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
+                  static_assert (PERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
+                  static_assert (NONPERIODIC_OUTPUT_SIZE % SECTOR_SIZE == 0);
                   if (errnum == EIO && known (size)
                       && (soff | SECTOR_MASK) < lim)
                     {

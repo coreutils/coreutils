@@ -179,7 +179,7 @@ static char const filetype_letter[] = "?pcdb-lswd";
 
 /* Ensure that filetype and filetype_letter have the same
    number of elements.  */
-verify (sizeof filetype_letter - 1 == arg_directory + 1);
+static_assert (sizeof filetype_letter - 1 == arg_directory + 1);
 
 #define FILETYPE_INDICATORS				\
   {							\
@@ -4042,8 +4042,8 @@ static qsortFunc const sort_functions[][2][2][2] =
 
    This line verifies at compile-time that the array of sort functions has been
    initialized for all possible sort keys. */
-verify (ARRAY_CARDINALITY (sort_functions)
-        == sort_numtypes - 2 + time_numtypes);
+static_assert (ARRAY_CARDINALITY (sort_functions)
+               == sort_numtypes - 2 + time_numtypes);
 
 /* Set up SORTED_FILE to point to the in-use entries in CWD_FILE, in order.  */
 

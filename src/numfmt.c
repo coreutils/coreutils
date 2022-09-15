@@ -724,9 +724,10 @@ double_to_human (long double val, int precision,
 {
   int num_size;
   char fmt[64];
-  verify (sizeof (fmt) > (INT_BUFSIZE_BOUND (zero_padding_width)
-                          + INT_BUFSIZE_BOUND (precision)
-                          + 10 /* for %.Lf  etc.  */));
+  static_assert ((INT_BUFSIZE_BOUND (zero_padding_width)
+                  + INT_BUFSIZE_BOUND (precision)
+                  + 10 /* for %.Lf  etc.  */)
+                 < sizeof fmt);
 
   char *pfmt = fmt;
   *pfmt++ = '%';

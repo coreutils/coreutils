@@ -184,8 +184,8 @@ from any other non-alphabet bytes in the encoded stream.\n"),
 # define DEC_BLOCKSIZE (1024 * 5)
 
 /* Ensure that BLOCKSIZE is a multiple of 5 and 8.  */
-verify (ENC_BLOCKSIZE % 40 == 0);  /* So padding chars only on last block.  */
-verify (DEC_BLOCKSIZE % 40 == 0);  /* So complete encoded blocks are used.  */
+static_assert (ENC_BLOCKSIZE % 40 == 0); /* Padding chars only on last block.  */
+static_assert (DEC_BLOCKSIZE % 40 == 0); /* Complete encoded blocks are used.  */
 
 # define base_encode base32_encode
 # define base_decode_context base32_decode_context
@@ -199,8 +199,8 @@ verify (DEC_BLOCKSIZE % 40 == 0);  /* So complete encoded blocks are used.  */
 # define DEC_BLOCKSIZE (1024 * 3)
 
 /* Ensure that BLOCKSIZE is a multiple of 3 and 4.  */
-verify (ENC_BLOCKSIZE % 12 == 0);  /* So padding chars only on last block.  */
-verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
+static_assert (ENC_BLOCKSIZE % 12 == 0); /* Padding chars only on last block.  */
+static_assert (DEC_BLOCKSIZE % 12 == 0); /* Complete encoded blocks are used.  */
 
 # define base_encode base64_encode
 # define base_decode_context base64_decode_context
@@ -215,8 +215,8 @@ verify (DEC_BLOCKSIZE % 12 == 0);  /* So complete encoded blocks are used.  */
 /* Note that increasing this may decrease performance if --ignore-garbage
    is used, because of the memmove operation below.  */
 # define DEC_BLOCKSIZE (4200)
-verify (DEC_BLOCKSIZE % 40 == 0); /* complete encoded blocks for base32 */
-verify (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64 */
+static_assert (DEC_BLOCKSIZE % 40 == 0); /* complete encoded blocks for base32 */
+static_assert (DEC_BLOCKSIZE % 12 == 0); /* complete encoded blocks for base64 */
 
 static int (*base_length) (int i);
 static bool (*isbase) (char ch);

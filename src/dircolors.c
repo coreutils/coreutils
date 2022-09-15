@@ -67,7 +67,7 @@ static char const *const ls_codes[] =
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "mh", "cl", NULL
 };
-verify (ARRAY_CARDINALITY (slack_codes) == ARRAY_CARDINALITY (ls_codes));
+static_assert (ARRAY_CARDINALITY (slack_codes) == ARRAY_CARDINALITY (ls_codes));
 
 /* Whether to output escaped ls color codes for display.  */
 static bool print_ls_colors;

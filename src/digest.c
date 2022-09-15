@@ -311,8 +311,8 @@ static int const algorithm_bits[] =
   256, 384, 512, 512, 256, 0
 };
 
-verify (ARRAY_CARDINALITY (algorithm_bits)
-        == ARRAY_CARDINALITY (algorithm_args));
+static_assert (ARRAY_CARDINALITY (algorithm_bits)
+               == ARRAY_CARDINALITY (algorithm_args));
 
 static bool algorithm_specified = false;
 static enum Algorithm cksum_algorithm = crc;

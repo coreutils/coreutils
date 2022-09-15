@@ -6,6 +6,7 @@ lib/randperm.c
 lib/randperm.h
 
 Depends-on:
+assert-h
 count-leading-zeros
 randint
 stdint

@@ -28,7 +28,6 @@
 #include "attribute.h"
 #include "count-leading-zeros.h"
 #include "hash.h"
-#include "verify.h"
 #include "xalloc.h"
 
 /* Return the floor of the log base 2 of N.  If N is zero, return -1.  */
@@ -36,7 +35,7 @@
 ATTRIBUTE_CONST static int
 floor_lg (size_t n)
 {
-  verify (SIZE_WIDTH <= ULLONG_WIDTH);
+  static_assert (SIZE_WIDTH <= ULLONG_WIDTH);
   return (n == 0 ? -1
           : SIZE_WIDTH <= UINT_WIDTH
           ? UINT_WIDTH - 1 - count_leading_zeros (n)

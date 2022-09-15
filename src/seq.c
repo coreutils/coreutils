@@ -476,7 +476,7 @@ seq_fast (char const *a, char const *b, uintmax_t step)
 #define INITIAL_ALLOC_DIGITS 31
   size_t inc_size = MAX (MAX (p_len + 1, q_len), INITIAL_ALLOC_DIGITS);
   /* Ensure we only increase by at most 1 digit at buffer boundaries.  */
-  verify (SEQ_FAST_STEP_LIMIT_DIGITS < INITIAL_ALLOC_DIGITS - 1);
+  static_assert (SEQ_FAST_STEP_LIMIT_DIGITS < INITIAL_ALLOC_DIGITS - 1);
 
   /* Copy input strings (incl NUL) to end of new buffers.  */
   char *p0 = xmalloc (inc_size + 1);

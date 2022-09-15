@@ -110,7 +110,7 @@ struct rlimit { size_t rlim_cur; };
    than with --parallel=1.  By contrast, using --parallel=1 is about 10%
    faster than using --parallel=2 with a 64K-line input.  */
 enum { SUBTHREAD_LINES_HEURISTIC = 128 * 1024 };
-verify (4 <= SUBTHREAD_LINES_HEURISTIC);
+static_assert (4 <= SUBTHREAD_LINES_HEURISTIC);
 
 /* The number of threads after which there are
    diminishing performance gains.  */

@@ -327,20 +327,20 @@ enum
   };
 
 /* Ensure that we got something.  */
-verify (O_FULLBLOCK != 0);
-verify (O_NOCACHE != 0);
-verify (O_COUNT_BYTES != 0);
-verify (O_SKIP_BYTES != 0);
-verify (O_SEEK_BYTES != 0);
+static_assert (O_FULLBLOCK != 0);
+static_assert (O_NOCACHE != 0);
+static_assert (O_COUNT_BYTES != 0);
+static_assert (O_SKIP_BYTES != 0);
+static_assert (O_SEEK_BYTES != 0);
 
 #define MULTIPLE_BITS_SET(i) (((i) & ((i) - 1)) != 0)
 
 /* Ensure that this is a single-bit value.  */
-verify ( ! MULTIPLE_BITS_SET (O_FULLBLOCK));
-verify ( ! MULTIPLE_BITS_SET (O_NOCACHE));
-verify ( ! MULTIPLE_BITS_SET (O_COUNT_BYTES));
-verify ( ! MULTIPLE_BITS_SET (O_SKIP_BYTES));
-verify ( ! MULTIPLE_BITS_SET (O_SEEK_BYTES));
+static_assert ( ! MULTIPLE_BITS_SET (O_FULLBLOCK));
+static_assert ( ! MULTIPLE_BITS_SET (O_NOCACHE));
+static_assert ( ! MULTIPLE_BITS_SET (O_COUNT_BYTES));
+static_assert ( ! MULTIPLE_BITS_SET (O_SKIP_BYTES));
+static_assert ( ! MULTIPLE_BITS_SET (O_SEEK_BYTES));
 
 /* Flags, for iflag="..." and oflag="...".  */
 static struct symbol_value const flags[] =

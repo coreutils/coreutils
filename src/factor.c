@@ -663,7 +663,7 @@ mp_factor_insert_ui (struct mp_factors *factors, unsigned long int prime)
 enum { W = sizeof (uintmax_t) * CHAR_BIT };
 
 /* Verify that uintmax_t does not have holes in its representation.  */
-verify (UINTMAX_MAX >> (W - 1) == 1);
+static_assert (UINTMAX_MAX >> (W - 1) == 1);
 
 #define P(a,b,c,d) a,
 static const unsigned char primes_diff[] = {
@@ -696,7 +696,7 @@ static const struct primes_dtab primes_dtab[] = {
 
 /* Verify that uintmax_t is not wider than
    the integers used to generate primes.h.  */
-verify (W <= WIDE_UINT_BITS);
+static_assert (W <= WIDE_UINT_BITS);
 
 /* debugging for developers.  Enables devmsg().
    This flag is used only in the GMP code.  */
