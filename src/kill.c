@@ -199,9 +199,10 @@ send_signals (int signum, char *const *argv)
     {
       char *endp;
       intmax_t n = (errno = 0, strtoimax (arg, &endp, 10));
-      pid_t pid = n;
+      pid_t pid;
 
-      if (errno == ERANGE || pid != n || arg == endp || *endp)
+      if (errno == ERANGE || INT_ADD_WRAPV (n, 0, &pid)
+          || arg == endp || *endp)
         {
           error (0, 0, _("%s: invalid process id"), quote (arg));
           status = EXIT_FAILURE;
