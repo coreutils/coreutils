@@ -323,7 +323,7 @@ nonexistent_file_errno (int errnum)
      Another case to consider is when a particular name is invalid for
      a given file system.  In 2011, smbfs returns EINVAL, but the next
      revision of POSIX will require EILSEQ for that situation:
-     http://austingroupbugs.net/view.php?id=293
+     https://austingroupbugs.net/view.php?id=293
   */
 
   switch (errnum)

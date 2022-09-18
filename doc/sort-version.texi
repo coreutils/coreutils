@@ -864,9 +864,9 @@ glob modifier} @samp{*(n)} will expand to files in natural sort order.
 @item
 When writing C programs, the GNU libc library (@samp{glibc})
 provides the
-@uref{http://man7.org/linux/man-pages/man3/strverscmp.3.html,
+@uref{https://man7.org/linux/man-pages/man3/strverscmp.3.html,
 strvercmp(3)} function to compare two strings, and
-@uref{http://man7.org/linux/man-pages/man3/versionsort.3.html,versionsort(3)}
+@uref{https://man7.org/linux/man-pages/man3/versionsort.3.html,versionsort(3)}
 function to compare two directory entries (despite the names, they are
 not identical to GNU Coreutils version sort ordering).
 

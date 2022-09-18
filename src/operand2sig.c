@@ -48,7 +48,7 @@ operand2sig (char const *operand, char *signame)
          But some shells may use other adjustments in future to be
          (forward) compatible with systems that support
          wider exit status values as discussed at
-         http://austingroupbugs.net/view.php?id=947  */
+         https://austingroupbugs.net/view.php?id=947  */
 
       char *endp;
       long int l = (errno = 0, strtol (operand, &endp, 10));

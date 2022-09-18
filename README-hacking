@@ -16,7 +16,7 @@ Specific development tools and versions will be checked for and listed by
 the bootstrap script.  See README-prereq for specific notes on obtaining
 these prerequisite tools.
 
-Valgrind <http://valgrind.org/> is also highly recommended, if
+Valgrind <https://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.  See also README-valgrind
 (if present).
 

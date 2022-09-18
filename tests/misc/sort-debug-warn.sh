@@ -125,7 +125,7 @@ EOF
 LC_ALL=missing sort --debug /dev/null 2>out || fail=1
 # musl libc maps unknown locales to the default utf8 locale
 # with no way to determine failures.  This is discussed at:
-# http://www.openwall.com/lists/musl/2016/04/02/1
+# https://www.openwall.com/lists/musl/2016/04/02/1
 if ! grep -E 'using .*(missing|C.UTF-8).* sorting rules' out; then
   compare exp out || fail=1
 fi

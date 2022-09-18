@@ -25,7 +25,7 @@ trap_sigpipe_or_skip_
 # https://lists.gnu.org/archive/html/coreutils/2020-03/msg00004.html
 require_bash_as_SHELL_
 
-# Paraphrasing http://bugs.gnu.org/34488#8:
+# Paraphrasing https://bugs.gnu.org/34488#8:
 # POSIX requires that sh started with an inherited ignored SIGPIPE must
 # silently ignore all attempts from within the shell to restore SIGPIPE
 # handling to child processes of the shell:

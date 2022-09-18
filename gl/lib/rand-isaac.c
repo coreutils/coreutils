@@ -25,7 +25,7 @@
  * so I can be a little bit experimental in the choice of RNGs here.
  *
  * This generator is based somewhat on RC4, but has analysis
- * <http://burtleburtle.net/bob/rand/isaacafa.html>
+ * <https://burtleburtle.net/bob/rand/isaacafa.html>
  * pointing to it actually being better.  I like it because it's nice
  * and fast, and because the author did good work analyzing it.
  * --------------------------------------------------------------------
