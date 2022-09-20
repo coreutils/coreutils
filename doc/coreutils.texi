@@ -8295,7 +8295,7 @@ TAB following a non-ASCII byte.  You can avoid that issue by using the
 @option{-T0} option or put @code{TABSIZE=0} in your environment, to tell
 @command{ls} to align using spaces, not tabs.
 
-If set a terminal's hardware tabs to anything other than the default,
+If you set a terminal's hardware tabs to anything other than the default,
 you should also use a @command{--tabsize} option or @env{TABSIZE}
 environment variable either to match the hardware tabs, or to disable
 the use of hardware tabs.  Otherwise, the output of @command{ls} may
