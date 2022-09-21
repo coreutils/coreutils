@@ -33,14 +33,6 @@
 #include "xfts.h"
 #include "yesno.h"
 
-enum Ternary
-  {
-    T_UNKNOWN = 2,
-    T_NO,
-    T_YES
-  };
-typedef enum Ternary Ternary;
-
 /* The prompt function may be called twice for a given directory.
    The first time, we ask whether to descend into it, and the
    second time, we ask whether to remove it.  */
@@ -168,9 +160,23 @@ write_protected_non_symlink (int fd_cwd,
   }
 }
 
-/* Prompt whether to remove FILENAME (ent->, if required via a combination of
+/* Return the status of the directory identified by FTS and ENT.
+   This is -1 if the directory is empty, 0 if it is nonempty,
+   and a positive error number if there was trouble determining the status,
+   e.g., it is not a directory, or permissions problems, or I/O errors.
+   Use *DIR_STATUS is a cache for the status.  */
+static int
+get_dir_status (FTS const *fts, FTSENT const *ent, int *dir_status)
+{
+  if (*dir_status < -1)
+    *dir_status = directory_status (fts->fts_cwd_fd, ent->fts_accpath);
+  return *dir_status;
+}
+
+/* Prompt whether to remove FILENAME, if required via a combination of
    the options specified by X and/or file attributes.  If the file may
-   be removed, return RM_OK.  If the user declines to remove the file,
+   be removed, return RM_OK or RM_USER_ACCEPTED, the latter if the user
+   was prompted and accepted.  If the user declines to remove the file,
    return RM_USER_DECLINED.  If not ignoring missing files and we
    cannot lstat FILENAME, then return RM_ERROR.
 
@@ -178,33 +184,22 @@ write_protected_non_symlink (int fd_cwd,
 
    Depending on MODE, ask whether to 'descend into' or to 'remove' the
    directory FILENAME.  MODE is ignored when FILENAME is not a directory.
-   Set *IS_EMPTY_P to T_YES if FILENAME is an empty directory, and it is
-   appropriate to try to remove it with rmdir (e.g. recursive mode).
-   Don't even try to set *IS_EMPTY_P when MODE == PA_REMOVE_DIR.  */
+   Use and update *DIR_STATUS as needed, via the conventions of
+   get_dir_status.  */
 static enum RM_status
 prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
         struct rm_options const *x, enum Prompt_action mode,
-        Ternary *is_empty_p)
+        int *dir_status)
 {
   int fd_cwd = fts->fts_cwd_fd;
   char const *full_name = ent->fts_path;
   char const *filename = ent->fts_accpath;
-  if (is_empty_p)
-    *is_empty_p = T_UNKNOWN;
-
   struct stat st;
   struct stat *sbuf = &st;
   cache_stat_init (sbuf);
 
   int dirent_type = is_dir ? DT_DIR : DT_UNKNOWN;
   int write_protected = 0;
-
-  bool is_empty = false;
-  if (is_empty_p)
-    {
-      is_empty = is_empty_dir (fd_cwd, filename);
-      *is_empty_p = is_empty ? T_YES : T_NO;
-    }
 
   /* When nonzero, this indicates that we failed to remove a child entry,
      either because the user declined an interactive prompt, or due to
@@ -257,10 +252,12 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
              /* Unless we're either deleting directories or deleting
                 recursively, we want to raise an EISDIR error rather than
                 prompting the user  */
-            if ( ! (x->recursive || (x->remove_empty_directories && is_empty)))
+            if ( ! (x->recursive
+                    || (x->remove_empty_directories
+                        && get_dir_status (fts, ent, dir_status) < 0)))
               {
                 write_protected = -1;
-                wp_errno = EISDIR;
+                wp_errno = *dir_status <= 0 ? EISDIR : *dir_status;
               }
             break;
           }
@@ -276,12 +273,17 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
       /* Issue the prompt.  */
       if (dirent_type == DT_DIR
           && mode == PA_DESCEND_INTO_DIR
-          && !is_empty)
+          && get_dir_status (fts, ent, dir_status) == 0)
         fprintf (stderr,
                  (write_protected
                   ? _("%s: descend into write-protected directory %s? ")
                   : _("%s: descend into directory %s? ")),
                  program_name, quoted_name);
+      else if (0 < *dir_status)
+        {
+          error (0, *dir_status, _("cannot remove %s"), quoted_name);
+          return RM_ERROR;
+        }
       else
         {
           if (cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
@@ -302,8 +304,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
                    program_name, file_type (sbuf), quoted_name);
         }
 
-      if (!yesno ())
-        return RM_USER_DECLINED;
+      return yesno () ? RM_USER_ACCEPTED : RM_USER_DECLINED;
     }
   return RM_OK;
 }
@@ -405,13 +406,12 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
 
   /* When failing to rmdir an unreadable directory, we see errno values
      like EISDIR or ENOTDIR (or, on Solaris 10, EEXIST), but they would be
-     meaningless in a diagnostic.  When that happens and the errno value
-     from the failed open is EPERM or EACCES, use the earlier, more
+     meaningless in a diagnostic.  When that happens, use the earlier, more
      descriptive errno value.  */
   if (ent->fts_info == FTS_DNR
       && (errno == ENOTEMPTY || errno == EISDIR || errno == ENOTDIR
           || errno == EEXIST)
-      && (ent->fts_errno == EPERM || ent->fts_errno == EACCES))
+      && ent->fts_errno != 0)
     errno = ent->fts_errno;
   error (0, errno, _("cannot remove %s"), quoteaf (ent->fts_path));
   mark_ancestor_dirs (ent);
@@ -427,12 +427,14 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
 static enum RM_status
 rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
 {
+  int dir_status = -2;
+
   switch (ent->fts_info)
     {
     case FTS_D:			/* preorder directory */
       if (! x->recursive
           && !(x->remove_empty_directories
-               && is_empty_dir (fts->fts_cwd_fd, ent->fts_accpath)))
+               && get_dir_status (fts, ent, &dir_status) < 0))
         {
           /* This is the first (pre-order) encounter with a directory
              that we cannot delete.
@@ -507,11 +509,10 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
         }
 
       {
-        Ternary is_empty_directory;
         enum RM_status s = prompt (fts, ent, true /*is_dir*/, x,
-                                   PA_DESCEND_INTO_DIR, &is_empty_directory);
+                                   PA_DESCEND_INTO_DIR, &dir_status);
 
-        if (s == RM_OK && is_empty_directory == T_YES)
+        if (s == RM_USER_ACCEPTED && dir_status == -1)
           {
             /* When we know (from prompt when in interactive mode)
                that this is an empty directory, don't prompt twice.  */
@@ -520,7 +521,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
               fts_skip_tree (fts, ent);
           }
 
-        if (s != RM_OK)
+        if (! (s == RM_OK || s == RM_USER_ACCEPTED))
           {
             mark_ancestor_dirs (ent);
             fts_skip_tree (fts, ent);
@@ -553,8 +554,9 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
           }
 
         bool is_dir = ent->fts_info == FTS_DP || ent->fts_info == FTS_DNR;
-        enum RM_status s = prompt (fts, ent, is_dir, x, PA_REMOVE_DIR, NULL);
-        if (s != RM_OK)
+        enum RM_status s = prompt (fts, ent, is_dir, x, PA_REMOVE_DIR,
+                                   &dir_status);
+        if (! (s == RM_OK || s == RM_USER_ACCEPTED))
           return s;
         return excise (fts, ent, x, is_dir);
       }

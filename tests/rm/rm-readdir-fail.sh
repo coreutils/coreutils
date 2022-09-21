@@ -112,6 +112,7 @@ done
 # (with ENOENT in this case but it could be anything).
 cat <<EOF > exp
 rm: cannot remove 'dir'
+Failed to get dirent
 rm: traversal failed: dir
 EOF
 sed 's/\(rm:.*\):.*/\1/' errt > err || framework_failure_

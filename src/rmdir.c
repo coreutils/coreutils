@@ -101,8 +101,7 @@ ignorable_failure (int error_number, char const *dir)
   return (ignore_fail_on_non_empty
           && (errno_rmdir_non_empty (error_number)
               || (errno_may_be_non_empty (error_number)
-                  && ! is_empty_dir (AT_FDCWD, dir)
-                  && errno == 0 /* definitely non empty  */)));
+                  && directory_status (AT_FDCWD, dir) == 0)));
 }
 
 /* Remove any empty parent directories of DIR.

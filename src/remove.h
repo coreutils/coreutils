@@ -79,13 +79,15 @@ enum RM_status
 {
   /* These must be listed in order of increasing seriousness. */
   RM_OK = 2,
+  RM_USER_ACCEPTED,
   RM_USER_DECLINED,
   RM_ERROR,
   RM_NONEMPTY_DIR
 };
 
 # define VALID_STATUS(S) \
-  ((S) == RM_OK || (S) == RM_USER_DECLINED || (S) == RM_ERROR)
+  ((S) == RM_OK || (S) == RM_USER_ACCEPTED || (S) == RM_USER_DECLINED \
+   || (S) == RM_ERROR)
 
 # define UPDATE_STATUS(S, New_value)				\
   do								\

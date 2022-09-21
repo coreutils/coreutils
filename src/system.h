@@ -287,37 +287,36 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
     }
 }
 
-/* Return true if DIR is determined to be an empty directory.
-   Return false with ERRNO==0 if DIR is a non empty directory.
-   Return false if not able to determine if directory empty.  */
-static inline bool
-is_empty_dir (int fd_cwd, char const *dir)
+/* Return -1 if DIR is an empty directory,
+   0 if DIR is a nonempty directory,
+   and a positive error number if there was trouble determining
+   whether DIR is an empty or nonempty directory.  */
+static inline int
+directory_status (int fd_cwd, char const *dir)
 {
   DIR *dirp;
-  struct dirent const *dp;
+  bool no_direntries;
   int saved_errno;
   int fd = openat (fd_cwd, dir,
                    (O_RDONLY | O_DIRECTORY
                     | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
 
   if (fd < 0)
-    return false;
+    return errno;
 
   dirp = fdopendir (fd);
   if (dirp == NULL)
     {
+      saved_errno = errno;
       close (fd);
-      return false;
+      return saved_errno;
     }
 
   errno = 0;
-  dp = readdir_ignoring_dot_and_dotdot (dirp);
+  no_direntries = !readdir_ignoring_dot_and_dotdot (dirp);
   saved_errno = errno;
   closedir (dirp);
-  errno = saved_errno;
-  if (dp != NULL)
-    return false;
-  return saved_errno == 0 ? true : false;
+  return no_direntries && saved_errno == 0 ? -1 : saved_errno;
 }
 
 /* Factor out some of the common --help and --version processing code.  */
