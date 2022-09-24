@@ -76,7 +76,7 @@ struct dirent *readdir (DIR *dirp)
       count++;
       d->d_name[0]='0'+count; d->d_name[1]='\0';
 #ifdef _DIRENT_HAVE_D_NAMLEN
-      d->d_namlen = 2;
+      d->d_namlen = 1;
 #endif
       errno = 0;
       return d;
