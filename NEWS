@@ -60,6 +60,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   date --debug now diagnoses if multiple --date or --set options are
   specified, as only the last specified is significant in that case.
 
+  rm outputs more accurate diagnostics in the presence of errors
+  when removing directories.  For example EIO will be faithfully
+  diagnosed, rather than being conflated with ENOTEMPTY.
+
 
 * Noteworthy changes in release 9.1 (2022-04-15) [stable]
 
