@@ -164,11 +164,11 @@ write_protected_non_symlink (int fd_cwd,
    This is -1 if the directory is empty, 0 if it is nonempty,
    and a positive error number if there was trouble determining the status,
    e.g., it is not a directory, or permissions problems, or I/O errors.
-   Use *DIR_STATUS is a cache for the status.  */
+   Use *DIR_STATUS as a cache for the status.  */
 static int
 get_dir_status (FTS const *fts, FTSENT const *ent, int *dir_status)
 {
-  if (*dir_status < -1)
+  if (*dir_status == DS_UNKNOWN)
     *dir_status = directory_status (fts->fts_cwd_fd, ent->fts_accpath);
   return *dir_status;
 }
@@ -254,7 +254,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
                 prompting the user  */
             if ( ! (x->recursive
                     || (x->remove_empty_directories
-                        && get_dir_status (fts, ent, dir_status) < 0)))
+                        && get_dir_status (fts, ent, dir_status) == DS_EMPTY)))
               {
                 write_protected = -1;
                 wp_errno = *dir_status <= 0 ? EISDIR : *dir_status;
@@ -273,7 +273,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
       /* Issue the prompt.  */
       if (dirent_type == DT_DIR
           && mode == PA_DESCEND_INTO_DIR
-          && get_dir_status (fts, ent, dir_status) == 0)
+          && get_dir_status (fts, ent, dir_status) == DS_NONEMPTY)
         fprintf (stderr,
                  (write_protected
                   ? _("%s: descend into write-protected directory %s? ")
@@ -427,14 +427,14 @@ excise (FTS *fts, FTSENT *ent, struct rm_options const *x, bool is_dir)
 static enum RM_status
 rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
 {
-  int dir_status = -2;
+  int dir_status = DS_UNKNOWN;
 
   switch (ent->fts_info)
     {
     case FTS_D:			/* preorder directory */
       if (! x->recursive
           && !(x->remove_empty_directories
-               && get_dir_status (fts, ent, &dir_status) < 0))
+               && get_dir_status (fts, ent, &dir_status) == DS_EMPTY))
         {
           /* This is the first (pre-order) encounter with a directory
              that we cannot delete.
@@ -512,7 +512,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
         enum RM_status s = prompt (fts, ent, true /*is_dir*/, x,
                                    PA_DESCEND_INTO_DIR, &dir_status);
 
-        if (s == RM_USER_ACCEPTED && dir_status == -1)
+        if (s == RM_USER_ACCEPTED && dir_status == DS_EMPTY)
           {
             /* When we know (from prompt when in interactive mode)
                that this is an empty directory, don't prompt twice.  */

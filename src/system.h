@@ -291,6 +291,11 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
    0 if DIR is a nonempty directory,
    and a positive error number if there was trouble determining
    whether DIR is an empty or nonempty directory.  */
+enum {
+    DS_UNKNOWN = -2,
+    DS_EMPTY = -1,
+    DS_NONEMPTY = 0,
+};
 static inline int
 directory_status (int fd_cwd, char const *dir)
 {
@@ -316,7 +321,7 @@ directory_status (int fd_cwd, char const *dir)
   no_direntries = !readdir_ignoring_dot_and_dotdot (dirp);
   saved_errno = errno;
   closedir (dirp);
-  return no_direntries && saved_errno == 0 ? -1 : saved_errno;
+  return no_direntries && saved_errno == 0 ? DS_EMPTY : saved_errno;
 }
 
 /* Factor out some of the common --help and --version processing code.  */
