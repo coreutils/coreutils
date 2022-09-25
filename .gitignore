@@ -48,6 +48,7 @@
 /lib/alloca.h
 /lib/arg-nonnull.h
 /lib/arpa/inet.h
+/lib/assert.h
 /lib/byteswap.h
 /lib/c++defs.h
 /lib/charset.alias
@@ -98,6 +99,7 @@
 /lib/stdalign.h
 /lib/stdarg.h
 /lib/stdbool.h
+/lib/stdckdint.h
 /lib/stddef.h
 /lib/stdint.h
 /lib/stdio.h

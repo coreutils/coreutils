@@ -139,7 +139,8 @@ static unsigned int const bytes_to_hex_digits[] =
 /* It'll be a while before we see integral types wider than 16 bytes,
    but if/when it happens, this check will catch it.  Without this check,
    a wider type would provoke a buffer overrun.  */
-static_assert (MAX_INTEGRAL_TYPE_SIZE < ARRAY_CARDINALITY (bytes_to_hex_digits));
+static_assert (MAX_INTEGRAL_TYPE_SIZE
+               < ARRAY_CARDINALITY (bytes_to_hex_digits));
 
 /* Make sure the other arrays have the same length.  */
 static_assert (sizeof bytes_to_oct_digits == sizeof bytes_to_signed_dec_digits);
