@@ -299,7 +299,7 @@ It may be necessary to use the KILL signal, since this signal can't be caught.\
 \n"), stdout);
 
       fputs (_("\n\
-EXIT status:\n\
+Exit status:\n\
   124  if COMMAND times out, and --preserve-status is not specified\n\
   125  if the timeout command itself fails\n\
   126  if COMMAND is found but cannot be invoked\n\

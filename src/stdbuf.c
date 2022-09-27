@@ -121,6 +121,7 @@ for example) then that will override corresponding changes by 'stdbuf'.\n\
 Also some filters (like 'dd' and 'cat' etc.) don't use streams for I/O,\n\
 and are thus unaffected by 'stdbuf' settings.\n\
 "), stdout);
+      emit_exec_status (PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

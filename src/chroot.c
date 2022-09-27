@@ -210,6 +210,7 @@ Run COMMAND with root directory set to NEWROOT.\n\
 \n\
 If no command is given, run '\"$SHELL\" -i' (default: '/bin/sh -i').\n\
 "), stdout);
+      emit_exec_status (PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

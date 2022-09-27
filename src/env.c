@@ -160,6 +160,7 @@ SIG may be a signal name like 'PIPE', or a signal number like '13'.\n\
 Without SIG, all known signals are included.  Multiple signals can be\n\
 comma-separated.  An empty SIG argument is a no-op.\n\
 "), stdout);
+      emit_exec_status (PROGRAM_NAME);
       emit_ancillary_info (PROGRAM_NAME);
     }
   exit (status);

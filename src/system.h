@@ -627,6 +627,18 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
 }
 
 static inline void
+emit_exec_status (char const *program)
+{
+      printf (_("\n\
+Exit status:\n\
+  125  if the %s command itself fails\n\
+  126  if COMMAND is found but cannot be invoked\n\
+  127  if COMMAND cannot be found\n\
+  -    the exit status of COMMAND otherwise\n\
+"), program);
+}
+
+static inline void
 emit_ancillary_info (char const *program)
 {
   struct infomap { char const *program; char const *node; } const infomap[] = {

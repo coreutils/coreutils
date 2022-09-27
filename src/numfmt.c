@@ -42,7 +42,7 @@
 #define AUTHORS proper_name ("Assaf Gordon")
 
 /* Exit code when some numbers fail to convert.  */
-enum { EXIT_CONVERSION_WARNINGS = 2 };
+enum { TIMEOUT_FAILURE = 1, EXIT_CONVERSION_WARNINGS = 2 };
 
 enum
 {
@@ -1459,6 +1459,7 @@ main (int argc, char **argv)
     decimal_point = ".";
   decimal_point_length = strlen (decimal_point);
 
+  initialize_exit_failure (TIMEOUT_FAILURE);
   atexit (close_stdout);
 
   while (true)
