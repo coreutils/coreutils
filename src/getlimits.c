@@ -123,11 +123,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAILURE);
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
-                      usage, AUTHORS, (char const *) NULL);
+  parse_gnu_standard_options_only (argc, argv, PROGRAM_NAME, PACKAGE_NAME,
+                                   VERSION, true, usage, AUTHORS, NULL);
 
 #define print_int(TYPE)                                                  \
   sprintf (limit + 1, "%"PRIuMAX, (uintmax_t) TYPE##_MAX);               \
