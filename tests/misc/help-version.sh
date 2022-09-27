@@ -26,6 +26,7 @@ expected_failure_status_chroot=125
 expected_failure_status_env=125
 expected_failure_status_nice=125
 expected_failure_status_nohup=125
+expected_failure_status_runcon=125
 expected_failure_status_stdbuf=125
 expected_failure_status_timeout=125
 expected_failure_status_printenv=2

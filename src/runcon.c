@@ -122,6 +122,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
   while (true)
