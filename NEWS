@@ -45,7 +45,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   internal errors it would exit with status 1, which was less distinguishable
   from errors from the invoked command.
 
-  ’stat -c %s' now prints sizes as unsigned, consistent with 'ls'.
+  'stat -c %s' now prints sizes as unsigned, consistent with 'ls'.
 
 ** New Features
 
