@@ -4971,7 +4971,7 @@ sort -s -t ' ' -k 4.9n -k 4.5M -k 4.2n -k 4.14,4.21 file*.log |
 sort -s -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n
 @end example
 
-This example cannot be done with a single @command{sort} invocation,
+This example cannot be done with a single POSIX @command{sort} invocation,
 since IPv4 address components are separated by @samp{.} while dates
 come just after a space.  So it is broken down into two invocations of
 @command{sort}: the first sorts by timestamp and the second by IPv4
@@ -4983,7 +4983,9 @@ based on leading prefixes that cannot cross field boundaries.  The
 IPv4 addresses are sorted lexicographically.  The second sort uses
 @samp{-s} so that ties in the primary key are broken by the secondary
 key; the first sort uses @samp{-s} so that the combination of the two
-sorts is stable.
+sorts is stable.  Note as a GNU extension, the above example could
+be achieved in a single @command{sort} invocation by sorting the
+IPv4 address field using a @samp{V} version type, like @samp{-k1,1V}.
 
 @item
 Generate a tags file in case-insensitive sorted order.
