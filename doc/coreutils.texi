@@ -2217,6 +2217,7 @@ into (or from) base32 encoded form.  The base32 encoded form uses
 printable ASCII characters to represent binary data.
 The usage and options of this command are precisely the
 same as for @command{base64}.  @xref{base64 invocation}.
+For more general encoding functionalty see @ref{basenc invocation}.
 
 
 @node base64 invocation
@@ -2239,6 +2240,8 @@ The base64 encoding expands data to roughly 133% of the original.
 The base32 encoding expands data to roughly 160% of the original.
 The format conforms to
 @uref{https://tools.ietf.org/search/rfc4648, RFC 4648}.
+
+For more general encoding functionalty see @ref{basenc invocation}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
