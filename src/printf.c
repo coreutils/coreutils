@@ -298,14 +298,9 @@ print_esc (char const *escstart, bool octal_0)
           uni_value = uni_value * 16 + hextobin (*p);
         }
 
-      /* A universal character name shall not specify a character short
-         identifier in the range 00000000 through 00000020, 0000007F through
-         0000009F, or 0000D800 through 0000DFFF inclusive. A universal
-         character name shall not designate a character in the required
-         character set.  */
-      if ((uni_value <= 0x9f
-           && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
-          || (uni_value >= 0xd800 && uni_value <= 0xdfff))
+      /* Error for invalid code points 0000D800 through 0000DFFF inclusive.
+         Note print_unicode_char() would print the literal \u.. in this case. */
+      if (uni_value >= 0xd800 && uni_value <= 0xdfff)
         die (EXIT_FAILURE, 0, _("invalid universal character name \\%c%0*x"),
              esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
 

@@ -13209,16 +13209,16 @@ For example, @samp{printf '\400'} is equivalent to @samp{printf '\0'}.
 @cindex Unicode
 @cindex ISO/IEC 10646
 @vindex LC_CTYPE
-@command{printf} interprets two character syntaxes introduced in
-ISO C 99:
-@samp{\u} for 16-bit Unicode (ISO/IEC 10646)
-characters, specified as
+@command{printf} interprets two syntaxes for specifying Unicode
+(ISO/IEC 10646) characters.
+@samp{\u} for 16-bit Unicode characters, specified as
 four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
 characters, specified as eight hexadecimal digits @var{hhhhhhhh}.
 @command{printf} outputs the Unicode characters
-according to the @env{LC_CTYPE} locale.  Unicode characters in the ranges
-U+0000@dots{}U+009F, U+D800@dots{}U+DFFF cannot be specified by this syntax,
-except for U+0024 ($), U+0040 (@@), and U+0060 (@`).
+according to the @env{LC_CTYPE} locale.  Unicode characters in the range
+U+D800@dots{}U+DFFF cannot be specified by this syntax.
+This syntax fully supports the universal character subset
+introduced in ISO C 99.
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),

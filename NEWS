@@ -41,6 +41,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   reverting to the behavior in coreutils-9.0 and earlier.
   This behavior is now documented.
 
+  printf unicode \uNNNN, \UNNNNNNNN syntax, now supports all valid
+  unicode code points.  Previously is was restricted to the C
+  universal character subset, which restricted most points <= 0x9F.
+
   runcon now exits with status 125 for internal errors.  Previously upon
   internal errors it would exit with status 1, which was less distinguishable
   from errors from the invoked command.
