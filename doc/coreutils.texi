@@ -13225,10 +13225,6 @@ The processing of @samp{\u} and @samp{\U} requires a full-featured
 or when @code{libiconv} is installed prior to this package.  Otherwise
 @samp{\u} and @samp{\U} will print as-is.
 
-The only options are a lone @option{--help} or
-@option{--version}.  @xref{Common options}.
-Options must precede operands.
-
 The Unicode character syntaxes are useful for writing strings in a locale
 independent way.  For example, a string containing the Euro currency symbol
 
@@ -13265,6 +13261,10 @@ $ recode BIG5..JAVA < sample.txt \
     | sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" \
     > sample.sh
 @end example
+
+The only options are a lone @option{--help} or
+@option{--version}.  @xref{Common options}.
+Options must precede operands.
 
 @exitstatus
 
