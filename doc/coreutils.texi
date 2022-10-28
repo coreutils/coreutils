@@ -13255,10 +13255,10 @@ is how to convert a piece of text into a shell script which will output
 this text in a locale-independent way:
 
 @example
-$ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf \
+$ LC_CTYPE=zh_TW.big5 env printf \
     '\u4e2d\u6587\n' > sample.txt
 $ recode BIG5..JAVA < sample.txt \
-    | sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" \
+    | sed -e "s|^|env printf '|" -e "s|%|%%|g" -e "s|$|\\\\n'|" \
     > sample.sh
 @end example
 
