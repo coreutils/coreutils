@@ -599,8 +599,8 @@ sc_env_test_dependencies:
 		grep -vF '[' |paste -d'|' -s))" tests | \
 	    sed "s/\([^:]\):.*env \([^)' ]*\).*/\1 \2/" | uniq | \
 	    while read test prog; do \
-	      printf '%s' $$test | grep -q '\.pl$$' && continue; \
-	      grep -q "print_ver_.* $$prog" $$test \
+	      printf '%s' $$test | grep '\.pl$$' >/dev/null && continue; \
+	      grep "print_ver_.* $$prog" $$test >/dev/null \
 		|| echo $$test should call: print_ver_ $$prog; \
 	    done | grep . && exit 1 || :
 
@@ -657,7 +657,7 @@ sc_prohibit_test_calls_print_ver_with_irrelevant_argument:
 	      while read file name; do					\
 		for i in $$name; do					\
 		  case "$$i" in install) i=ginstall;; esac;		\
-		  grep -w "$$i" $$file|grep -vw print_ver_|grep -q .	\
+		  grep -w "$$i" $$file|grep -vw print_ver_|grep . >/dev/null \
 		    || { fail=1;					\
 			 echo "*** Test: $$file, offending: $$i." 1>&2; };\
 		done;							\
@@ -905,6 +905,10 @@ exclude_file_name_regexp--sc_prohibit_uppercase_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_dblspace_after_dot_before_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_comma_after_id_est = \.diff|$(_ll)$$
 exclude_file_name_regexp--sc_long_lines = \.diff$$|$(_ll)
+
+# `grep . -q` is not exactly equivalent to `grep . >/dev/null`
+# and this difference is significant in the NEWS description
+exclude_file_name_regexp--sc_unportable_grep_q = NEWS
 
 # Augment AM_CFLAGS to include our per-directory options:
 AM_CFLAGS += $($(@D)_CFLAGS)

@@ -24,7 +24,7 @@ ln -s 'needs quoting' symlink || framework_failure_
 ls -l --quoting-style='shell-escape' symlink >out || fail=1
 
 # Coreutils v8.26 and 8.27 failed to quote the target name
-grep -q "symlink -> 'needs quoting'\$" out ||
+grep "symlink -> 'needs quoting'\$" out >/dev/null ||
   { cat out; fail=1; }
 
 Exit $fail
