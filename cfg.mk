@@ -366,10 +366,7 @@ sc_option_desc_uppercase: $(ALL_MANS)
 	@grep '^\\fB\\-' -A1 man/*.1 | LC_ALL=C grep '\.1.[A-Z][a-z]'	\
 	  && { echo 1>&2 '$@: found initial capitals in --help'; exit 1; } || :
 
-# Option descriptions should not start with a capital letter.
-# One could grep source directly as follows:
-# grep -E " {2,6}-.*[^.]  [A-Z][a-z]" $$($(VC_LIST_EXCEPT) | grep '\.c$$')
-# but that would miss descriptions not on the same line as the -option.
+# '--' should not be treated as '–' (U+2013 EN DASH) in long option names.
 sc_texi_long_option_escaped: doc/coreutils.info
 	@grep ' –[^ ]' '$<'						\
 	  && { echo 1>&2 '$@: found unquoted --long-option'; exit 1; } || :
