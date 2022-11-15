@@ -296,7 +296,7 @@ example in @ref{Version-sort ordering rules}).
 Comparing the string @samp{8.1} to @samp{8.01}, first the
 @samp{8}s are compared (and are identical), then the
 dots (@samp{.}) are compared and are identical, and lastly the
-remaining digits are compared numerically (@samp{1} and @samp{01}) -
+remaining digits are compared numerically (@samp{1} and @samp{01}) --
 which are numerically equal.  Hence, @samp{8.01} and @samp{8.1}
 are grouped together.
 
@@ -685,7 +685,7 @@ empty   @r{vs}  .txt
 @end example
 
 The comparison of the third parts (@samp{.} vs
-@samp{.txt}) will determine that the shorter string comes first -
+@samp{.txt}) will determine that the shorter string comes first --
 resulting in @file{hello-8.2.txt} appearing first.
 
 Indeed this is the order in which Debian's @command{dpkg} compares the strings.

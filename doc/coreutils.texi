@@ -1171,7 +1171,7 @@ This is troublesome when you want to specify a numeric ID, say 42,
 and it must work even in a pathological situation where
 @samp{42} is a user name that maps to some other user ID, say 1000.
 Simply invoking @code{chown 42 F}, will set @file{F}s owner ID to
-1000---not what you intended.
+1000 -- not what you intended.
 
 GNU @command{chown}, @command{chgrp}, @command{chroot}, and @command{id}
 provide a way to work around this, that at the same time may result in a
@@ -1491,7 +1491,7 @@ and a nonzero value indicates failure.
 Nearly every command invocation yields an integral @dfn{exit status}
 that can be used to change how other commands work.
 For the vast majority of commands, an exit status of zero indicates
-success.  Failure is indicated by a nonzero value---typically
+success.  Failure is indicated by a nonzero value -- typically
 @samp{1}, though it may differ on unusual platforms as POSIX
 requires only that it be nonzero.
 
@@ -2465,7 +2465,7 @@ spaces or end of line, ignoring any intervening parentheses or quotes.
 Like @TeX{}, @command{fmt} reads entire ``paragraphs'' before choosing line
 breaks; the algorithm is a variant of that given by Donald E. Knuth
 and Michael F. Plass in ``Breaking Paragraphs Into Lines'',
-@cite{Software---Practice & Experience} @b{11}, 11 (November 1981),
+@cite{Software: Practice & Experience} @b{11}, 11 (November 1981),
 1119--1184.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -3130,8 +3130,8 @@ operand specified as @samp{-}, when standard input is a FIFO or a pipe.
 
 With kernel inotify support, output is triggered by file changes
 and is generally very prompt.
-Otherwise, @command{tail} sleeps for one second between checks---
-use @option{--sleep-interval=@var{n}} to change that default---which can
+Otherwise, @command{tail} sleeps for one second between checks --
+use @option{--sleep-interval=@var{n}} to change that default -- which can
 make the output appear slightly less responsive or bursty.
 When using tail without inotify support, you can make it more responsive
 by using a sub-second sleep interval, e.g., via an alias like this:
@@ -3974,7 +3974,7 @@ next section) is preferable in new applications.
 for each given @var{file}, or standard input if none are given or for a
 @var{file} of @samp{-}.
 
-cksum also supports the @option{-a,--algorithm} option to select the
+cksum also supports the @option{-a/--algorithm} option to select the
 digest algorithm to use. @command{cksum} is the preferred interface
 to these digests, subsuming the other standalone checksumming utilities,
 which can be emulated using @code{cksum -a md5 --untagged "$@@"} etc.
@@ -5011,7 +5011,8 @@ by the sort operation.
 @c This example is a bit contrived and needs more explanation.
 @c @item
 @c Sort records separated by an arbitrary string by using a pipe to convert
-@c each record delimiter string to @samp{\0}, then using sort's -z option,
+@c each record delimiter string to @samp{\0},
+@c then using sort's @option{-z} option,
 @c and converting each @samp{\0} back to the original record delimiter.
 @c
 @c @example
@@ -6522,8 +6523,8 @@ Blank separators typically need to be quoted for the shell.  For
 example, the commands @samp{join -o 1.2,2.2} and @samp{join -o '1.2
 2.2'} are equivalent.
 
-All output lines---including those printed because of any -a or -v
-option---are subject to the specified @var{field-list}.
+All output lines -- including those printed because of any @option{-a}
+or @option{-v} option -- are subject to the specified @var{field-list}.
 
 @item -t @var{char}
 Use character @var{char} as the input and output field separator.
@@ -8032,7 +8033,7 @@ while also disabling any previous use of @option{--size} (@option{-s}).
 @opindex -r
 @opindex --reverse
 @cindex reverse sorting
-Reverse whatever the sorting method is---e.g., list files in reverse
+Reverse whatever the sorting method is -- e.g., list files in reverse
 alphabetical order, youngest first, smallest first, or whatever.
 This option has no effect when @option{--sort=none} (@option{-U})
 is in effect.
@@ -9108,7 +9109,7 @@ Remove each existing destination file before attempting to open it
 @cindex sparse files, copying
 @cindex holes, copying files with
 @findex read @r{system call, and holes}
-A @dfn{sparse file} contains @dfn{holes}---a sequence of zero bytes that
+A @dfn{sparse file} contains @dfn{holes} -- a sequence of zero bytes that
 does not occupy any file system blocks; the @samp{read} system call
 reads these as zeros.  This can both save considerable space and
 increase speed, since many binary files contain lots of consecutive zero
@@ -9730,7 +9731,7 @@ POSIX allows @var{bytes} to be followed by @samp{k}, @samp{b}, and
 Block sizes (i.e., specified by @var{bytes} strings) must be nonzero.
 
 Any block size you specify via @samp{bs=}, @samp{ibs=}, @samp{obs=}, @samp{cbs=}
-should not be too large---values larger than a few megabytes
+should not be too large -- values larger than a few megabytes
 are generally wasteful or (as in the gigabyte..exabyte case) downright
 counterproductive or error-inducing.
 
@@ -9920,7 +9921,7 @@ Set the file mode bits for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
 @command{chmod}, with @samp{a=} (no access allowed to anyone) as the
 point of departure (@pxref{File permissions}).
-The default mode is @samp{u=rwx,go=rx,a-s}---read, write, and
+The default mode is @samp{u=rwx,go=rx,a-s} -- read, write, and
 execute for the owner, read and execute for group and other, and with
 set-user-ID and set-group-ID disabled.
 This default is not quite the same as @samp{755}, since it disables
@@ -10596,7 +10597,7 @@ Although Unix-like operating systems have markedly fewer special file
 types than others, not @emph{everything} can be treated only as the
 undifferentiated byte stream of @dfn{normal files}.  For example, when a
 file is created or removed, the system must record this information,
-which it does in a @dfn{directory}---a special type of file.  Although
+which it does in a @dfn{directory} -- a special type of file.  Although
 you can read directories as normal files, if you're curious, in order
 for the system to do its job it must impose a structure, a certain
 order, on the bytes of the file.  Thus it is a ``special'' type of file.
@@ -10708,7 +10709,7 @@ this is an extension to POSIX.
 A @dfn{hard link} is another name for an existing file; the link and the
 original are indistinguishable.  Technically speaking, they share the
 same inode, and the inode contains all the information about a
-file---indeed, it is not incorrect to say that the inode @emph{is} the
+file -- indeed, it is not incorrect to say that the inode @emph{is} the
 file.  Most systems prohibit making a hard link to
 a directory; on those where it is allowed, only the super-user can do
 so (and with caution, since creating a cycle will cause problems to many
@@ -10806,7 +10807,7 @@ But when the specified destination is a symlink to a directory,
 there are two ways to treat the user's request.  @command{ln} can
 treat the destination just as it would a normal directory and create
 the link in it.  On the other hand, the destination can be viewed as a
-non-directory---as the symlink itself.  In that case, @command{ln}
+non-directory -- as the symlink itself.  In that case, @command{ln}
 must delete or backup that symlink before creating the new link.
 The default is to treat a destination that is a symlink to a directory
 just like a directory.
@@ -12507,8 +12508,9 @@ greater than or equal to 200 megabytes:
 du --threshold=200MB
 @end example
 
-Here's how you would use @option{--threshold} to find directories and files -
-note the @option{-a} - with an apparent size smaller than or equal to 500 bytes:
+Here's how you would use @option{--threshold} to find directories and
+files -- note the @option{-a} -- with an apparent size smaller than or
+equal to 500 bytes:
 
 @example
 du -a -t -500 --apparent-size
@@ -12745,42 +12747,42 @@ The valid @var{format} directives for files with @option{--format} and
 @option{--printf} are:
 
 @itemize @bullet
-@item %a - Permission bits in octal (note @samp{#} and @samp{0} printf flags)
-@item %A - Permission bits in symbolic form (similar to @command{ls -ld})
-@item %b - Number of blocks allocated (see @samp{%B})
-@item %B - The size in bytes of each block reported by @samp{%b}
-@item %C - The SELinux security context of a file, if available
-@item %d - Device number in decimal (st_dev)
-@item %D - Device number in hex (st_dev)
-@item %Hd - Major device number in decimal
-@item %Ld - Minor device number in decimal
-@item %f - Raw mode in hex
-@item %F - File type
-@item %g - Group ID of owner
-@item %G - Group name of owner
-@item %h - Number of hard links
-@item %i - Inode number
-@item %m - Mount point (See note below)
-@item %n - File name
-@item %N - Quoted file name with dereference if symbolic link (see below)
-@item %o - Optimal I/O transfer size hint
-@item %s - Total size, in bytes
-@item %r - Device type in decimal (st_rdev)
-@item %R - Device type in hex (st_rdev)
-@item %Hr - Major device type in decimal (see below)
-@item %Lr - Minor device type in decimal (see below)
-@item %t - Major device type in hex (see below)
-@item %T - Minor device type in hex (see below)
-@item %u - User ID of owner
-@item %U - User name of owner
-@item %w - Time of file birth, or @samp{-} if unknown
-@item %W - Time of file birth as seconds since Epoch, or @samp{0}
-@item %x - Time of last access
-@item %X - Time of last access as seconds since Epoch
-@item %y - Time of last data modification
-@item %Y - Time of last data modification as seconds since Epoch
-@item %z - Time of last status change
-@item %Z - Time of last status change as seconds since Epoch
+@item %a -- Permission bits in octal (note @samp{#} and @samp{0} printf flags)
+@item %A -- Permission bits in symbolic form (similar to @command{ls -ld})
+@item %b -- Number of blocks allocated (see @samp{%B})
+@item %B -- The size in bytes of each block reported by @samp{%b}
+@item %C -- The SELinux security context of a file, if available
+@item %d -- Device number in decimal (st_dev)
+@item %D -- Device number in hex (st_dev)
+@item %Hd -- Major device number in decimal
+@item %Ld -- Minor device number in decimal
+@item %f -- Raw mode in hex
+@item %F -- File type
+@item %g -- Group ID of owner
+@item %G -- Group name of owner
+@item %h -- Number of hard links
+@item %i -- Inode number
+@item %m -- Mount point (See note below)
+@item %n -- File name
+@item %N -- Quoted file name with dereference if symbolic link (see below)
+@item %o -- Optimal I/O transfer size hint
+@item %s -- Total size, in bytes
+@item %r -- Device type in decimal (st_rdev)
+@item %R -- Device type in hex (st_rdev)
+@item %Hr -- Major device type in decimal (see below)
+@item %Lr -- Minor device type in decimal (see below)
+@item %t -- Major device type in hex (see below)
+@item %T -- Minor device type in hex (see below)
+@item %u -- User ID of owner
+@item %U -- User name of owner
+@item %w -- Time of file birth, or @samp{-} if unknown
+@item %W -- Time of file birth as seconds since Epoch, or @samp{0}
+@item %x -- Time of last access
+@item %X -- Time of last access as seconds since Epoch
+@item %y -- Time of last data modification
+@item %Y -- Time of last data modification as seconds since Epoch
+@item %z -- Time of last status change
+@item %Z -- Time of last status change as seconds since Epoch
 @end itemize
 
 The @samp{%a} format prints the octal mode, and so it is useful
@@ -12844,18 +12846,18 @@ When listing file system information (@option{--file-system} (@option{-f})),
 you must use a different set of @var{format} directives:
 
 @itemize @bullet
-@item %a - Free blocks available to non-super-user
-@item %b - Total data blocks in file system
-@item %c - Total file nodes in file system
-@item %d - Free file nodes in file system
-@item %f - Free blocks in file system
-@item %i - File System ID in hex
-@item %l - Maximum length of file names
-@item %n - File name
-@item %s - Block size (for faster transfers)
-@item %S - Fundamental block size (for block counts)
-@item %t - Type in hex
-@item %T - Type in human readable form
+@item %a -- Free blocks available to non-super-user
+@item %b -- Total data blocks in file system
+@item %c -- Total file nodes in file system
+@item %d -- Free file nodes in file system
+@item %f -- Free blocks in file system
+@item %i -- File System ID in hex
+@item %l -- Maximum length of file names
+@item %n -- File name
+@item %s -- Block size (for faster transfers)
+@item %S -- Fundamental block size (for block counts)
+@item %t -- Type in hex
+@item %T -- Type in human readable form
 @end itemize
 
 @vindex TZ
@@ -14021,7 +14023,7 @@ expr index + index a
 @cindex redirection
 @cindex commands for redirection
 
-Unix shells commonly provide several forms of @dfn{redirection}---ways
+Unix shells commonly provide several forms of @dfn{redirection} -- ways
 to change the input source or output destination of a command.  But one
 useful redirection is performed by a separate command, not by the shell;
 it's described here.
@@ -14051,7 +14053,7 @@ If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @option{-a} option is used.
 
-In previous versions of GNU Coreutils (v5.3.0 -- v8.23),
+In previous versions of GNU Coreutils (5.3.0--8.23),
 a @var{file} of @samp{-}
 caused @command{tee} to send another copy of input to standard output.
 However, as the interleaved output was not very useful, @command{tee} now
@@ -14864,7 +14866,7 @@ contents.  Otherwise, fall back to default @option{-P} handling.
 @opindex -P
 @opindex --physical
 Print a fully resolved name for the current directory.  That is, all
-components of the printed name will be actual directory names---none
+components of the printed name will be actual directory names -- none
 will be symbolic links.
 @end table
 
@@ -17653,7 +17655,7 @@ possible to do with traditional shells.
 Here the first trap command sets SIGPIPE to ignore.
 The second trap command ostensibly sets it back to its default,
 but POSIX mandates that the shell must not change inherited
-state of the signal - so it is a no-op.
+state of the signal -- so it is a no-op.
 
 @example
 trap '' PIPE && sh -c 'trap - PIPE ; seq inf | head -n1'
@@ -17671,7 +17673,7 @@ trap '' PIPE && sh -c 'env --default-signal=PIPE seq inf | head -n1'
 Ignore signal @var{sig} when running a program.  Without @var{sig} all
 known signals are set to ignore.  Multiple signals can be comma-separated.
 An empty @var{sig} argument is a no-op. The following command runs @command{seq}
-with SIGINT set to be ignored - pressing @kbd{Ctrl-C} will not terminate it:
+with SIGINT set to be ignored -- pressing @kbd{Ctrl-C} will not terminate it:
 
 @example
 env --ignore-signal=INT seq inf > /dev/null
@@ -18947,7 +18949,7 @@ one of the following suffixes:
 
 The @option{iec} option uses a single letter suffix (e.g. @samp{G}), which is
 not fully standard, as the @emph{iec} standard recommends a two-letter symbol
-(e.g @samp{Gi}) - but in practice, this method common.  Compare with
+(e.g @samp{Gi}) -- but in practice, this method is common.  Compare with
 the @option{iec-i} option.
 
 @item iec-i
@@ -19362,7 +19364,7 @@ where you need a simple, general purpose tool, it's just the thing.
 
 On the other hand, an experienced carpenter doesn't build a house using
 a Swiss Army knife.  Instead, he has a toolbox chock full of specialized
-tools---a saw, a hammer, a screwdriver, a plane, and so on.  And he knows
+tools -- a saw, a hammer, a screwdriver, a plane, and so on.  And he knows
 exactly when and where to use each tool; you won't catch him hammering nails
 with the handle of his screwdriver.
 
@@ -19385,7 +19387,7 @@ difficult to extend to meet new situations.
 
 Instead, they felt that programs should be specialized tools.  In short, each
 program ``should do one thing well.''  No more and no less.  Such programs are
-simpler to design, write, and get right---they only do one thing.
+simpler to design, write, and get right -- they only do one thing.
 
 Furthermore, they found that with the right machinery for hooking programs
 together, that the whole was greater than the sum of the parts.  By combining
