@@ -379,9 +379,9 @@ Conditions
 
 @command{expr}: Evaluate expression
 
-* String expressions::           + : match substr index length
-* Numeric expressions::          + - * / %
-* Relations for expr::           | & < <= = == != >= >
+* String expressions::           @code{+ : match substr index length}
+* Numeric expressions::          @code{+ - * / %}
+* Relations for expr::           @code{| & < <= = == != >= >}
 * Examples of expr::             Examples of using @command{expr}
 
 Redirection
@@ -486,15 +486,15 @@ File permissions
 Date input formats
 
 * General date syntax::          Common rules
-* Calendar date items::          21 Jul 2020
-* Time of day items::            9:20pm
-* Time zone items::              UTC, -0700, +0900, @dots{}
-* Combined date and time of day items:: 2020-07-21T20:02:00,000000-0400
-* Day of week items::            Monday and others
-* Relative items in date strings:: next tuesday, 2 years ago
-* Pure numbers in date strings:: 20200721, 1440
-* Seconds since the Epoch::      @@1595289600
-* Specifying time zone rules::   TZ="America/New_York", TZ="UTC0"
+* Calendar date items::          @samp{14 Nov 2022}
+* Time of day items::            @samp{9:02pm}
+* Time zone items::              @samp{UTC}, @samp{-0700}, @samp{+0900}, @dots{}
+* Combined date and time of day items:: @samp{2022-11-14T21:02:42,000000-0500}
+* Day of week items::            @samp{Monday} and others
+* Relative items in date strings:: @samp{next tuesday, 2 years ago}
+* Pure numbers in date strings:: @samp{20221114}, @samp{2102}
+* Seconds since the Epoch::      @samp{@@1668477762}
+* Specifying time zone rules::   @samp{TZ="America/New_York"}, @samp{TZ="UTC0"}
 * Authors of parse_datetime::    Bellovin, Eggert, Salz, Berets, et al.
 
 Version sorting order
@@ -793,16 +793,16 @@ name.
 
 @menu
 * Exit status::                 Indicating program success or failure.
-* Backup options::              -b -S, in some programs.
-* Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Backup options::              @option{-b} @option{-S}, in some programs.
+* Block size::                  BLOCK_SIZE and @option{--block-size}, in some programs.
 * Floating point::              Floating point number representation.
-* Signal specifications::       Specifying signals using the --signal option.
+* Signal specifications::       Specifying signals using @option{--signal}.
 * Disambiguating names and IDs:: chgrp, chown, chroot, id: user and group syntax
-* Random sources::              --random-source, in some programs.
+* Random sources::              @option{--random-source}, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
-* Trailing slashes::            --strip-trailing-slashes, in some programs.
-* Traversing symlinks::         -H, -L, or -P, in some programs.
-* Treating / specially::        --preserve-root and --no-preserve-root.
+* Trailing slashes::            @option{--strip-trailing-slashes}, in some programs.
+* Traversing symlinks::         @option{-H}, @option{-L}, or @option{-P}, in some programs.
+* Treating / specially::        @option{--preserve-root} and @option{--no-preserve-root}.
 * Special built-in utilities::  @command{break}, @command{:}, @dots{}
 * Standards conformance::       Conformance to the POSIX standard.
 * Multi-call invocation::       Multi-call program invocation.
@@ -13428,12 +13428,12 @@ Exit status:
 @end display
 
 @menu
-* File type tests::             -[bcdfhLpSt]
-* Access permission tests::     -[gkruwxOG]
-* File characteristic tests::   -e -s -nt -ot -ef
-* String tests::                -z -n = == !=
-* Numeric tests::               -eq -ne -lt -le -gt -ge
-* Connectives for test::        ! -a -o
+* File type tests::             @code{-[bcdfhLpSt]}
+* Access permission tests::     @code{-[gkruwxOG]}
+* File characteristic tests::   @code{-e -s -nt -ot -ef}
+* String tests::                @code{-z -n = == !=}
+* Numeric tests::               @code{-eq -ne -lt -le -gt -ge}
+* Connectives for test::        @code{! -a -o}
 @end menu
 
 
@@ -13801,9 +13801,9 @@ Exit status:
 @end display
 
 @menu
-* String expressions::          + : match substr index length
-* Numeric expressions::         + - * / %
-* Relations for expr::          | & < <= = == != >= >
+* String expressions::          @code{+ : match substr index length}
+* Numeric expressions::         @code{+ - * / %}
+* Relations for expr::          @code{| & < <= = == != >= >}
 * Examples of expr::            Examples.
 @end menu
 
