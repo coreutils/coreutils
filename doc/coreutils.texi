@@ -792,49 +792,26 @@ otherwise specified, a @samp{-} can appear as any operand that requires a file
 name.
 
 @menu
-* Exit status::                 Indicating program success or failure.
-* Backup options::              @option{-b} @option{-S}, in some programs.
-* Block size::                  BLOCK_SIZE and @option{--block-size}, in some programs.
-* Floating point::              Floating point number representation.
-* Signal specifications::       Specifying signals using @option{--signal}.
+Items shared between some programs:
+
+* Backup options::               @option{-b} @option{-S}.
+* Block size::                   BLOCK_SIZE and @option{--block-size}.
+* Signal specifications::        Specifying signals with @option{--signal}.
 * Disambiguating names and IDs:: chgrp, chown, chroot, id: user and group syntax
-* Random sources::              @option{--random-source}, in some programs.
-* Target directory::            Specifying a target directory, in some programs.
-* Trailing slashes::            @option{--strip-trailing-slashes}, in some programs.
-* Traversing symlinks::         @option{-H}, @option{-L}, or @option{-P}, in some programs.
-* Treating / specially::        @option{--preserve-root} and @option{--no-preserve-root}.
-* Special built-in utilities::  @command{break}, @command{:}, @dots{}
-* Standards conformance::       Conformance to the POSIX standard.
-* Multi-call invocation::       Multi-call program invocation.
+* Random sources::               @option{--random-source}.
+* Target directory::             Specifying a target directory.
+* Trailing slashes::             @option{--strip-trailing-slashes}.
+* Traversing symlinks::          @option{-H}, @option{-L}, or @option{-P}.
+* Treating / specially::         @option{--preserve-root} and the converse.
+* Special built-in utilities::   @command{break}, @command{:}, @dots{}
+
+Items applicable to all programs:
+
+* Exit status::                  Indicating program success or failure.
+* Floating point::               Floating point number representation.
+* Standards conformance::        Conformance to the POSIX standard.
+* Multi-call invocation::        Multi-call program invocation.
 @end menu
-
-
-@node Exit status
-@section Exit status
-
-@macro exitstatus
-An exit status of zero indicates success,
-and a nonzero value indicates failure.
-@end macro
-
-Nearly every command invocation yields an integral @dfn{exit status}
-that can be used to change how other commands work.
-For the vast majority of commands, an exit status of zero indicates
-success.  Failure is indicated by a nonzero value---typically
-@samp{1}, though it may differ on unusual platforms as POSIX
-requires only that it be nonzero.
-
-However, some of the programs documented here do produce
-other exit status values and a few associate different
-meanings with the values @samp{0} and @samp{1}.
-Here are the exceptions:
-@c You can generate the following list with:
-@c grep initialize_exit_failure src/*.c | cut -f1 -d: |
-@c sed -n 's|src/\(.*\)\.c|@command{\1},|p' | sort | fmt
-@command{chroot}, @command{env}, @command{expr}, @command{ls},
-@command{nice}, @command{nohup}, @command{numfmt}, @command{printenv},
-@command{runcon}, @command{sort}, @command{stdbuf}, @command{test},
-@command{timeout}, @command{tty}.
 
 
 @node Backup options
@@ -1083,42 +1060,6 @@ set.  The @option{-h} or @option{--human-readable} option is equivalent to
 equivalent to @option{--block-size=si}.  Note for @command{ls}
 the @option{-k} option does not control the display of the
 apparent file sizes, whereas the @option{--block-size} option does.
-
-@node Floating point
-@section Floating point numbers
-@cindex floating point
-@cindex IEEE floating point
-
-Commands that accept or produce floating point numbers employ the
-floating point representation of the underlying system, and suffer
-from rounding error, overflow, and similar floating-point issues.
-Almost all modern systems use IEEE-754 floating point, and it is
-typically portable to assume IEEE-754 behavior these days.  IEEE-754
-has positive and negative infinity, distinguishes positive from
-negative zero, and uses special values called NaNs to represent
-invalid computations such as dividing zero by itself.  For more
-information, please see David Goldberg's paper
-@uref{https://@/docs.oracle.com/@/cd/@/E19957-01/@/806-3568/@/ncg_goldberg.html,
-What Every Computer Scientist Should Know About Floating-Point Arithmetic}.
-
-Commands that accept floating point numbers as options, operands or
-input use the standard C functions @code{strtod} and @code{strtold} to
-convert from text to floating point numbers.  These floating point
-numbers therefore can use scientific notation like @code{1.0e-34} and
-@code{-10e100}.  Commands that parse floating point also understand
-case-insensitive @code{inf}, @code{infinity}, and @code{NaN}, although
-whether such values are useful depends on the command in question.
-Modern C implementations also accept hexadecimal floating point
-numbers such as @code{-0x.ep-3}, which stands for @minus{}14/16 times
-@math{2^-3}, which equals @minus{}0.109375.  @xref{Parsing of
-Floats,,, libc, The GNU C Library Reference Manual}.
-
-@vindex LC_NUMERIC
-Normally the @env{LC_NUMERIC} locale determines the decimal-point
-character.  However, some commands' descriptions specify that they
-accept numbers in either the current or the C locale; for example,
-they treat @samp{3.14} like @samp{3,14} if the current locale uses
-comma as a decimal point.
 
 @node Signal specifications
 @section Signal specifications
@@ -1537,6 +1478,71 @@ Many shells extend this list.  For example, Bash has several extra
 special built-in utilities like @command{history}, and
 @command{suspend}, and with Bash the command @samp{nice suspend}
 generates an error message instead of suspending.
+
+
+@node Exit status
+@section Exit status
+
+@macro exitstatus
+An exit status of zero indicates success,
+and a nonzero value indicates failure.
+@end macro
+
+Nearly every command invocation yields an integral @dfn{exit status}
+that can be used to change how other commands work.
+For the vast majority of commands, an exit status of zero indicates
+success.  Failure is indicated by a nonzero value---typically
+@samp{1}, though it may differ on unusual platforms as POSIX
+requires only that it be nonzero.
+
+However, some of the programs documented here do produce
+other exit status values and a few associate different
+meanings with the values @samp{0} and @samp{1}.
+Here are the exceptions:
+@c You can generate the following list with:
+@c grep initialize_exit_failure src/*.c | cut -f1 -d: |
+@c sed -n 's|src/\(.*\)\.c|@command{\1},|p' | sort | fmt
+@command{chroot}, @command{env}, @command{expr}, @command{ls},
+@command{nice}, @command{nohup}, @command{numfmt}, @command{printenv},
+@command{runcon}, @command{sort}, @command{stdbuf}, @command{test},
+@command{timeout}, @command{tty}.
+
+@node Floating point
+@section Floating point numbers
+@cindex floating point
+@cindex IEEE floating point
+
+Commands that accept or produce floating point numbers employ the
+floating point representation of the underlying system, and suffer
+from rounding error, overflow, and similar floating-point issues.
+Almost all modern systems use IEEE-754 floating point, and it is
+typically portable to assume IEEE-754 behavior these days.  IEEE-754
+has positive and negative infinity, distinguishes positive from
+negative zero, and uses special values called NaNs to represent
+invalid computations such as dividing zero by itself.  For more
+information, please see David Goldberg's paper
+@uref{https://@/docs.oracle.com/@/cd/@/E19957-01/@/806-3568/@/ncg_goldberg.html,
+What Every Computer Scientist Should Know About Floating-Point Arithmetic}.
+
+Commands that accept floating point numbers as options, operands or
+input use the standard C functions @code{strtod} and @code{strtold} to
+convert from text to floating point numbers.  These floating point
+numbers therefore can use scientific notation like @code{1.0e-34} and
+@code{-10e100}.  Commands that parse floating point also understand
+case-insensitive @code{inf}, @code{infinity}, and @code{NaN}, although
+whether such values are useful depends on the command in question.
+Modern C implementations also accept hexadecimal floating point
+numbers such as @code{-0x.ep-3}, which stands for @minus{}14/16 times
+@math{2^-3}, which equals @minus{}0.109375.  @xref{Parsing of
+Floats,,, libc, The GNU C Library Reference Manual}.
+
+@vindex LC_NUMERIC
+Normally the @env{LC_NUMERIC} locale determines the decimal-point
+character.  However, some commands' descriptions specify that they
+accept numbers in either the current or the C locale; for example,
+they treat @samp{3.14} like @samp{3,14} if the current locale uses
+comma as a decimal point.
+
 
 @node Standards conformance
 @section Standards conformance
@@ -7610,9 +7616,9 @@ or any of the following options is in effect:
 @opindex --group-directories-first
 Group all the directories before the files and then sort the
 directories and the files separately using the selected sort key
-(see --sort option).
+(see @option{--sort} option).
 That is, this option specifies a primary sort key,
-and the --sort option specifies a secondary key.
+and the @option{--sort} option specifies a secondary key.
 However, any use of @option{--sort=none}
 (@option{-U}) disables this option altogether.
 
@@ -12386,7 +12392,7 @@ are often symbolic links.
 @opindex -d @var{depth}
 @opindex --max-depth=@var{depth}
 @cindex limiting output of @command{du}
-Show the total for each directory (and file if --all) that is at
+Show the total for each directory (and file if @option{--all}) that is at
 most MAX_DEPTH levels down from the root of the hierarchy.  The root
 is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 
