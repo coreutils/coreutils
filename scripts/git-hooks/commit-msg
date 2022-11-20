@@ -120,6 +120,7 @@ sub check_msg($$)
   my $max_len = 72;
   foreach my $line (@line)
     {
+      last if $line =~ '.*-{24} >8 -{24}$';
       my $len = length $line;
       $max_len < $len && $line =~ /^[^#]/
         and return "line length ($len) greater than than max: $max_len";
