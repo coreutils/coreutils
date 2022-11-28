@@ -14079,8 +14079,14 @@ Ignore interrupt signals.
 @itemx --output-error[=@var{mode}]
 @opindex -p
 @opindex --output-error
-Adjust the behavior with errors on the outputs,
-with the long form option supporting selection
+Adjust the behavior with errors on the outputs.
+In summary @option{-p} allows @command{tee} to operate in a more
+standard manner with pipes, and to continue to process data
+to any remaining outputs, if any pipe outputs exit early.
+The default operation when @option{--output-error} is @emph{not}
+specified is to exit immediately on error writing to a pipe,
+and diagnose errors writing to a non-pipe.
+The long form @option{--output-error} option supports selection
 between the following @var{mode}s:
 
 @table @samp
