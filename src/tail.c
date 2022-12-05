@@ -55,7 +55,7 @@
 # include <sys/inotify.h>
 #endif
 
-#if defined _AIX || defined __sun || HAVE_INOTIFY
+#if defined _AIX || defined __sun || defined __APPLE__ || HAVE_INOTIFY
 # include <poll.h>
 #endif
 
