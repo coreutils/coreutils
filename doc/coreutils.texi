@@ -16562,7 +16562,7 @@ Print just the date.  This is the default if @var{timespec} is omitted.
 This is like the format @code{%Y-%m-%d}.
 
 @item hours
-Also print hours and timezone.
+Also print hours and time zone.
 This is like the format @code{%Y-%m-%dT%H%:z}.
 
 @item minutes
