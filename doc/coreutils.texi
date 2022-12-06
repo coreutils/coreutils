@@ -16559,22 +16559,25 @@ terms of the time to include.  It can be one of the following:
 @table @samp
 @item auto
 Print just the date.  This is the default if @var{timespec} is omitted.
+This is like the format @code{%Y-%m-%d}.
 
 @item hours
-Append the hour of the day to the date.
+Also print hours and timezone.
+This is like the format @code{%Y-%m-%dT%H%:z}.
 
 @item minutes
-Append the hours and minutes.
+Also print minutes.
+This is like the format @code{%Y-%m-%dT%H:%M%:z}.
 
 @item seconds
-Append the hours, minutes and seconds.
+Also print seconds.
+This is like the format @code{%Y-%m-%dT%H:%M:%S%:z}.
 
 @item ns
-Append the hours, minutes, seconds and nanoseconds.
+Also print nanoseconds.
+This is like the format @code{%Y-%m-%dT%H:%M:%S,%N%:z}.
 @end table
 
-If showing any time terms, then include the time zone using the format
-@samp{%:z}.
 @macro dateParseNote
 This format is always suitable as input
 for the @option{--date} (@option{-d}) and @option{--file}
@@ -16640,19 +16643,19 @@ It can be one of the following:
 @table @samp
 @item date
 Print just the full-date, e.g., @samp{2020-07-21}.
-This is equivalent to the format @samp{%Y-%m-%d}.
+This is like the format @samp{%Y-%m-%d}.
 
 @item seconds
 Print the full-date and full-time separated by a space, e.g.,
 @samp{2020-07-21 04:30:37+05:30}.  The output ends with a numeric
 time-offset; here the @samp{+05:30} means that local time is five
-hours and thirty minutes east of UTC@.  This is equivalent to
+hours and thirty minutes east of UTC@.  This is like
 the format @samp{%Y-%m-%d %H:%M:%S%:z}.
 
 @item ns
 Like @samp{seconds}, but also print nanoseconds, e.g.,
 @samp{2020-07-21 04:30:37.998458565+05:30}.
-This is equivalent to the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
+This is like the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
 
 @end table
 
