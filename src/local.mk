@@ -396,6 +396,7 @@ src_arch_SOURCES = src/uname.c src/uname-arch.c
 src_cut_SOURCES = src/cut.c src/set-fields.c
 src_numfmt_SOURCES = src/numfmt.c src/set-fields.c
 
+src_tee_SOURCES = src/tee.c src/iopoll.c
 src_sum_SOURCES = src/sum.c src/sum.h src/digest.c
 src_sum_CPPFLAGS = -DHASH_ALGO_SUM=1 $(AM_CPPFLAGS)
 

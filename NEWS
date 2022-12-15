@@ -153,6 +153,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   when their modification time doesn't change when new data is available.
   Previously tail would not show any new data in this case.
 
+  tee -p detects when all remaining outputs have become broken pipes, and
+  exits, rather than waiting for more input to induce an exit when written.
+
+
 
 * Noteworthy changes in release 9.1 (2022-04-15) [stable]
 
