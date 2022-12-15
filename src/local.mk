@@ -51,6 +51,7 @@ noinst_HEADERS =		\
   src/fs-is-local.h		\
   src/group-list.h		\
   src/ioblksize.h		\
+  src/iopoll.h			\
   src/longlong.h		\
   src/ls.h			\
   src/operand2sig.h		\
