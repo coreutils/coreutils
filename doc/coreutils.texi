@@ -12493,13 +12493,10 @@ Although GNU @command{find} can be used to find files of a certain size,
 @command{du}'s @option{--threshold} option can be used to also filter
 directories based on a given size.
 
-Please note that the @option{--threshold} option can be combined with the
-@option{--apparent-size} option, and in this case would elide entries based on
-its apparent size.
-
-Please note that the @option{--threshold} option can be combined with the
-@option{--inodes} option, and in this case would elide entries based on
-its inodes count.
+When combined with the @option{--apparent-size} option, the
+@option{--threshold} option elides entries based on apparent size.
+When combined with the @option{--inodes} option, it elides entries
+based on inode counts.
 
 Here's how you would use @option{--threshold} to find directories with a size
 greater than or equal to 200 megabytes:
