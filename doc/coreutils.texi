@@ -12307,16 +12307,16 @@ or @option{-x} is used together with a file name argument.
 @cindex file space usage
 @cindex disk usage for files
 
-@command{du} reports the amount of file system space used by the set
-of specified files and for each subdirectory (of directory arguments).
+@command{du} reports the space needed to represent a set of files.
 Synopsis:
 
 @example
 du [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-With no arguments, @command{du} reports the file system space for the current
-directory.  Normally the space is printed in units of
+With no arguments, @command{du} reports the space needed to represent
+the files at or under the current directory.
+Normally the space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
 Non-integer quantities are rounded up to the next higher unit.
 
@@ -12614,12 +12614,40 @@ the argument being processed is on.
 
 @end table
 
-@cindex NFS mounts from BSD to HP-UX
-On BSD systems, @command{du} reports sizes that are half the correct
-values for files that are NFS-mounted from HP-UX systems.  On HP-UX
-systems, it reports sizes that are twice the correct values for
-files that are NFS-mounted from BSD systems.  This is due to a flaw
-in HP-UX; it also affects the HP-UX @command{du} program.
+Since @command{du} relies on information reported by the operating
+system, its output might not reflect the space consumed in the
+underlying devices.  For example;
+
+@itemize @bullet
+@item
+Operating systems normally do not report device space consumed by
+duplicate or backup blocks, error correction bits, and so forth.
+This causes @command{du} to underestimate the device space actually used.
+
+@item
+@cindex copy-on-write and @command{du}
+In file systems that use copy-on-write, if two distinct files share
+space the output of @command{du} typically counts the space that would
+be consumed if all files' non-holes were rewritten, not the space
+currently consumed.
+
+@item
+@cindex compression and @command{du}
+In file systems that use compression, the operating system might
+report the uncompressed space.  (If it does report the compressed space,
+that report might change after one merely overwrites existing file data.)
+
+@item
+@cindex networked file systems and @command{du}
+Networked file systems historically have had difficulty communicating
+accurate file system information from server to client.
+@end itemize
+
+@noindent
+For these reasons @command{du} might better be thought of as an
+estimate of the size of a @command{tar} or other conventional backup
+for a set of files, rather than as a measure of space consumed in the
+underlying devices.
 
 @exitstatus
 
