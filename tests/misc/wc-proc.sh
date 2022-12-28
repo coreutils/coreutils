@@ -42,4 +42,11 @@ cat <<\EOF > exp
 EOF
 compare exp out || fail=1
 
+# Ensure we don't read too much when reading,
+# as was the case on 32 bit systems
+# from coreutils-8.24 to coreutils-9.1
+if timeout 10 truncate -s1T do_read; then
+  timeout 10 wc -c do_read || fail=1
+fi
+
 Exit $fail

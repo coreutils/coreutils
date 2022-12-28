@@ -32,6 +32,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   and the system supported set of valid speeds.
   [This bug was present in "the beginning".]
 
+  `wc -c` will again efficiently determine the size of large files
+  on all systems.  It no longer redundantly reads data from certain
+  sized files larger than SIZE_MAX.
+  [bug introduced in coreutils-8.24]
+
 ** Changes in behavior
 
   'cp --reflink=always A B' no longer leaves behind a newly created

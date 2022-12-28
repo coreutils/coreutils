@@ -431,7 +431,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
       if (! fstatus->failed && usable_st_size (&fstatus->st)
           && 0 <= fstatus->st.st_size)
         {
-          size_t end_pos = fstatus->st.st_size;
+          off_t end_pos = fstatus->st.st_size;
           if (current_pos < 0)
             current_pos = lseek (fd, 0, SEEK_CUR);
 
