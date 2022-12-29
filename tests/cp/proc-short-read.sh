@@ -28,8 +28,9 @@ cp $proc_large 1    || fail=1
 cat $proc_large > 2 || fail=1
 
 # adjust varying parts
-sed '/MHz/d; /[Bb][Oo][Gg][Oo][Mm][Ii][Pp][Ss]/d;' 1 > proc.cp || framework_failure_
-sed '/MHz/d; /[Bb][Oo][Gg][Oo][Mm][Ii][Pp][Ss]/d;' 2 > proc.cat || framework_failure_
+del_varying='/MHz/d; /[Bb][Oo][Gg][Oo][Mm][Ii][Pp][Ss]/d;'
+sed "$del_varying" 1 > proc.cp || framework_failure_
+sed "$del_varying" 2 > proc.cat || framework_failure_
 
 compare proc.cp proc.cat || fail=1
 
