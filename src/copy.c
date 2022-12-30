@@ -526,12 +526,12 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
       last_ext_len = ext_len;
 
       /* Copy this extent, looking for further opportunities to not
-         bother to write zeros unless --sparse=never, since SEEK_HOLE
+         bother to write zeros if --sparse=always, since SEEK_HOLE
          is conservative and may miss some holes.  */
       off_t n_read;
       bool read_hole;
       if ( ! sparse_copy (src_fd, dest_fd, abuf, buf_size,
-                          sparse_mode == SPARSE_NEVER ? 0 : hole_size,
+                          sparse_mode != SPARSE_ALWAYS ? 0 : hole_size,
                           true, allow_reflink, src_name, dst_name,
                           ext_len, &n_read, &read_hole))
         return false;

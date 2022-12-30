@@ -69,6 +69,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp --sparse=auto (the default), mv, and install,
+  will use the copy_file_range syscall now also with sparse files.
+  This may be more efficient, by avoiding user space copies,
+  and possibly employing copy offloading or reflinking,
+  for the non sparse portion of such sparse files.
+
   date --debug now diagnoses if multiple --date or --set options are
   specified, as only the last specified is significant in that case.
 
