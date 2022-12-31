@@ -519,7 +519,7 @@ wrapf (char const *message,...)
 
   if (0 < current_col)
     {
-      if (max_col - current_col < buflen)
+      if (max_col - current_col <= buflen)
         {
           putchar ('\n');
           current_col = 0;
