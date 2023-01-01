@@ -10,7 +10,7 @@
 #
 # See: tests/factor/create-test.sh
 
-# Copyright (C) 2012-2022 Free Software Foundation, Inc.
+# Copyright (C) 2012-2023 Free Software Foundation, Inc.
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 
