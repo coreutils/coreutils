@@ -1341,7 +1341,9 @@ copy_reg (char const *src_name, char const *dst_name,
       if (! make_holes)
         {
           /* Compute the least common multiple of the input and output
-             buffer sizes, adjusting for outlandish values.  */
+             buffer sizes, adjusting for outlandish values.
+             Note we read in multiples of the reported block size
+             to support (unusual) devices that have this constraint.  */
           size_t blcm_max = MIN (SIZE_MAX, SSIZE_MAX);
           size_t blcm = buffer_lcm (io_blksize (src_open_sb), buf_size,
                                     blcm_max);
