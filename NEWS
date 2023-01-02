@@ -18,6 +18,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   which can return varied file system I/O block size values for files.
   [bug introduced in coreutils-6.0]
 
+  cp, mv, and install now immediately acknowledge transient errors
+  when creating copy-on-write or cloned reflink files, on supporting
+  file systems like XFS, BTRFS, APFS, etc.
+  Previously they would have tried again with other copy methods
+  which may have resulted in data corruption.
+  [bug introduced in coreutils-7.5 and enabled by default in coreutils-9.0]
+
   'mv --backup=simple f d/' no longer mistakenly backs up d/f to f~.
   [bug introduced in coreutils-9.1]
 
@@ -299,6 +306,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   cp and install now default to copy-on-write (COW) if available.
+  I.e., cp now uses --reflink=auto mode by default.
 
   cp, install and mv now use the copy_file_range syscall if available.
   Also, they use lseek+SEEK_HOLE rather than ioctl+FS_IOC_FIEMAP on sparse

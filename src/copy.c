@@ -224,6 +224,18 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
 }
 
 
+/* Whether the errno from FICLONE, or copy_file_range
+   indicates operation is not supported for this file or file system.  */
+
+static bool
+is_CLONENOTSUP (int err)
+{
+  return err == ENOSYS || is_ENOTSUP (err)
+         || err == EINVAL || err == EBADF
+         || err == EXDEV || err == ETXTBSY;
+}
+
+
 /* Copy the regular file open on SRC_FD/SRC_NAME to DST_FD/DST_NAME,
    honoring the MAKE_HOLES setting and using the BUF_SIZE-byte buffer
    *ABUF for temporary storage, allocating it lazily if *ABUF is null.
@@ -267,9 +279,7 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
           }
         if (n_copied < 0)
           {
-            if (errno == ENOSYS || is_ENOTSUP (errno)
-                || errno == EINVAL || errno == EBADF
-                || errno == EXDEV || errno == ETXTBSY)
+            if (is_CLONENOTSUP (errno))
               break;
 
             /* copy_file_range might not be enabled in seccomp filters,
@@ -1064,6 +1074,43 @@ infer_scantype (int fd, struct stat const *sb,
 }
 
 
+/* Handle failure from FICLONE or fclonefileat.
+   Return FALSE if it's a terminal failure for this file.  */
+
+static bool
+handle_clone_fail (int dst_dirfd, char const* dst_relname,
+                   char const* src_name, char const* dst_name,
+                   int dest_desc, bool new_dst, enum Reflink_type reflink_mode)
+{
+  /* If the clone operation is creating the destination,
+     then don't try and cater for all non transient file system errors,
+     and instead only cater for specific transient errors.  */
+  bool transient_failure;
+  if (dest_desc < 0) /* currently for fclonefileat().  */
+    transient_failure = errno == EIO || errno == ENOMEM
+                        || errno == ENOSPC || errno == EDQUOT;
+  else /* currently for FICLONE.  */
+    transient_failure = ! is_CLONENOTSUP (errno);
+
+  if (reflink_mode == REFLINK_ALWAYS || transient_failure)
+    error (0, errno, _("failed to clone %s from %s"),
+           quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
+
+  /* Remove the destination if cp --reflink=always created it
+     but cloned no data.  */
+  if (new_dst /* currently not for fclonefileat().  */
+      && reflink_mode == REFLINK_ALWAYS
+      && ((! transient_failure) || lseek (dest_desc, 0, SEEK_END) == 0)
+      && unlinkat (dst_dirfd, dst_relname, 0) != 0 && errno != ENOENT)
+    error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
+
+  if (reflink_mode == REFLINK_ALWAYS || transient_failure)
+    return false;
+
+  return true;
+}
+
+
 /* Copy a regular file from SRC_NAME to DST_NAME aka DST_DIRFD+DST_RELNAME.
    If the source file contains holes, copies holes and blocks of zeros
    in the source file as holes in the destination file.
@@ -1198,13 +1245,22 @@ copy_reg (char const *src_name, char const *dst_name,
 # ifndef CLONE_NOOWNERCOPY
 #  define CLONE_NOOWNERCOPY 0
 # endif
-      int clone_flags = x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY;
+      int fc_flags = x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY;
       if (data_copy_required && x->reflink_mode
           && x->preserve_mode && x->preserve_timestamps
-          && (x->preserve_ownership || CLONE_NOOWNERCOPY)
-          && (fclonefileat (source_desc, dst_dirfd, dst_relname, clone_flags)
-              == 0))
-        goto close_src_desc;
+          && (x->preserve_ownership || CLONE_NOOWNERCOPY))
+        {
+          if (fclonefileat (source_desc, dst_dirfd, dst_relname, fc_flags) == 0)
+            goto close_src_desc;
+          else if (! handle_clone_fail (dst_dirfd, dst_relname, src_name,
+                                        dst_name,
+                                        -1, false /* We didn't create dst  */,
+                                        x->reflink_mode))
+            {
+              return_val = false;
+              goto close_src_desc;
+            }
+        }
 #endif
 
       /* To allow copying xattrs on read-only files, create with u+w.
@@ -1275,23 +1331,14 @@ copy_reg (char const *src_name, char const *dst_name,
     {
       if (clone_file (dest_desc, source_desc) == 0)
         data_copy_required = false;
-      else if (x->reflink_mode == REFLINK_ALWAYS)
+      else
         {
-          error (0, errno, _("failed to clone %s from %s"),
-                 quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
-
-          /* Remove the destination if cp --reflink=always created it
-             but cloned no data.  If clone_file failed with
-             EOPNOTSUPP, EXDEV or EINVAL no data were copied so do not
-             go to the expense of lseeking.  */
-          if (*new_dst
-              && (is_ENOTSUP (errno) || errno == EXDEV || errno == EINVAL
-                  || lseek (dest_desc, 0, SEEK_END) == 0)
-              && unlinkat (dst_dirfd, dst_relname, 0) != 0 && errno != ENOENT)
-            error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
-
-          return_val = false;
-          goto close_src_and_dst_desc;
+          if (! handle_clone_fail (dst_dirfd, dst_relname, src_name, dst_name,
+                                   dest_desc, *new_dst, x->reflink_mode))
+           {
+             return_val = false;
+             goto close_src_and_dst_desc;
+           }
         }
     }
 
