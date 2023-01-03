@@ -63,6 +63,16 @@ if test -w /dev/full && test -c /dev/full; then
   test $(wc -l < err) = 1 || { cat err; fail=1; }
 fi
 
+# Test iopoll-powered early exit for closed pipes
+tee_exited() { sleep $1; test -f tee.exited; }
+# Currently this functionality is most useful with
+# intermittent input from a terminal, but here we
+# use an input pipe that doesn't write anything
+# but will exit as soon as tee does, or it times out
+retry_delay_ tee_exited .1 7 | # 12.7s (Must be > following timeout)
+{ timeout 10 tee -p 2>err && touch tee.exited; } | :
+test $(wc -l < err) = 0 || { cat err; fail=1; }
+test -f tee.exited || fail=1
 
 # Ensure tee honors --output-error modes
 mkfifo_or_skip_ fifo
