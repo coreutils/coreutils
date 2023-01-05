@@ -319,7 +319,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
 \n\
 NUM may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
-GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
+GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y, R, Q.\n\
 Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n\
 \n\
 "), stdout);
@@ -2194,7 +2194,7 @@ parse_options (int argc, char **argv,
           else if (*optarg == '-')
             ++optarg;
 
-          *n_units = xdectoumax (optarg, 0, UINTMAX_MAX, "bkKmMGTPEZY0",
+          *n_units = xdectoumax (optarg, 0, UINTMAX_MAX, "bkKmMGTPEZYRQ0",
                                  count_lines
                                  ? _("invalid number of lines")
                                  : _("invalid number of bytes"), 0);

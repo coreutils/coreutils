@@ -116,29 +116,29 @@ my @Tests =
 
      # Test Suffix logic
      ['suf-1', '4000',    {OUT=>'4000'}],
-     ['suf-2', '4Q',
-             {ERR => "$prog: invalid suffix in input: '4Q'\n"},
+     ['suf-2', '4J',
+             {ERR => "$prog: invalid suffix in input: '4J'\n"},
              {EXIT => '2'}],
      ['suf-2.1', '4M',
              {ERR => "$prog: rejecting suffix " .
              "in input: '4M' (consider using --from)\n"},
              {EXIT => '2'}],
      ['suf-3', '--from=si 4M',  {OUT=>'4000000'}],
-     ['suf-4', '--from=si 4Q',
-             {ERR => "$prog: invalid suffix in input: '4Q'\n"},
+     ['suf-4', '--from=si 4J',
+             {ERR => "$prog: invalid suffix in input: '4J'\n"},
              {EXIT => '2'}],
-     ['suf-5', '--from=si 4MQ',
-             {ERR => "$prog: invalid suffix in input '4MQ': 'Q'\n"},
+     ['suf-5', '--from=si 4MJ',
+             {ERR => "$prog: invalid suffix in input '4MJ': 'J'\n"},
              {EXIT => '2'}],
 
      ['suf-6', '--from=iec 4M',  {OUT=>'4194304'}],
      ['suf-7', '--from=auto 4M',  {OUT=>'4000000'}],
      ['suf-8', '--from=auto 4Mi',  {OUT=>'4194304'}],
-     ['suf-9', '--from=auto 4MiQ',
-             {ERR => "$prog: invalid suffix in input '4MiQ': 'Q'\n"},
+     ['suf-9', '--from=auto 4MiJ',
+             {ERR => "$prog: invalid suffix in input '4MiJ': 'J'\n"},
              {EXIT => '2'}],
-     ['suf-10', '--from=auto 4QiQ',
-             {ERR => "$prog: invalid suffix in input: '4QiQ'\n"},
+     ['suf-10', '--from=auto 4JiJ',
+             {ERR => "$prog: invalid suffix in input: '4JiJ'\n"},
              {EXIT => '2'}],
 
      # characters after a white space are OK - printed as-is
@@ -443,8 +443,8 @@ my @Tests =
              {EXIT=>2}],
 
      # INVALID_SUFFIX
-     ['strtod-9', '--from=si 12.2Q',
-             {ERR=>"$prog: invalid suffix in input: '12.2Q'\n"},
+     ['strtod-9', '--from=si 12.2J',
+             {ERR=>"$prog: invalid suffix in input: '12.2J'\n"},
              {EXIT=>2}],
 
      # VALID_BUT_FORBIDDEN_SUFFIX
@@ -731,18 +731,18 @@ my @Tests =
      ## Check all errors again, this time with --invalid=fail
      ##  Input will be printed without conversion,
      ##  and exit code will be 2
-     ['ign-err-1', '--invalid=fail 4Q',
-             {ERR => "$prog: invalid suffix in input: '4Q'\n"},
-             {OUT => "4Q\n"},
+     ['ign-err-1', '--invalid=fail 4J',
+             {ERR => "$prog: invalid suffix in input: '4J'\n"},
+             {OUT => "4J\n"},
              {EXIT => 2}],
      ['ign-err-2', '--invalid=fail 4M',
              {ERR => "$prog: rejecting suffix " .
              "in input: '4M' (consider using --from)\n"},
              {OUT => "4M\n"},
              {EXIT => 2}],
-     ['ign-err-3', '--invalid=fail --from=si 4MQ',
-             {ERR => "$prog: invalid suffix in input '4MQ': 'Q'\n"},
-             {OUT => "4MQ\n"},
+     ['ign-err-3', '--invalid=fail --from=si 4MJ',
+             {ERR => "$prog: invalid suffix in input '4MJ': 'J'\n"},
+             {OUT => "4MJ\n"},
              {EXIT => 2}],
      ['ign-err-4', '--invalid=fail --suffix=Foo --to=si   7000FooF',
               {ERR => "$prog: invalid suffix in input: '7000FooF'\n"},
@@ -851,7 +851,7 @@ my @Limit_Tests =
 
 
      # Test input:
-     # Up to 27 digits is OK.
+     # Up to 33 digits is OK.
      ['large-3.1', '--to=si                           1', {OUT=>   "1"}],
      ['large-3.2', '--to=si                          10', {OUT=>  "10"}],
      ['large-3.3', '--to=si                         100', {OUT=> "100"}],
@@ -879,11 +879,17 @@ my @Limit_Tests =
      ['large-3.25','--to=si   6543210000000000000000000', {OUT=>"6.6Y"}],
      ['large-3.26','--to=si  76543210000000000000000000', {OUT=> "77Y"}],
      ['large-3.27','--to=si 876543210000000000000000000', {OUT=>"877Y"}],
+     ['large-3.28','--to=si      9876543210000000000000000000', {OUT=>"9.9R"}],
+     ['large-3.29','--to=si     19876543210000000000000000000', {OUT=> "20R"}],
+     ['large-3.30','--to=si    219876543210000000000000000000', {OUT=>"220R"}],
+     ['large-3.31','--to=si   3219876543210000000000000000000', {OUT=>"3.3Q"}],
+     ['large-3.32','--to=si  43219876543210000000000000000000', {OUT=> "44Q"}],
+     ['large-3.33','--to=si 543219876543210000000000000000000', {OUT=>"544Q"}],
 
-     # More than 27 digits is not OK
-     ['large-3.28','--to=si 9876543210000000000000000000',
+     # More than 33 digits is not OK
+     ['large-3.34','--to=si 6543219876543210000000000000000000',
              {ERR => "$prog: value too large to be converted: " .
-                     "'9876543210000000000000000000'\n"},
+                     "'6543219876543210000000000000000000'\n"},
              {EXIT => 2}],
 
      # Test Output
@@ -952,15 +958,15 @@ my @Limit_Tests =
              {EXIT => 2}],
      ['large-13.1','--from=si --from-unit=1000000 --to=si 9P', {OUT=>"9.0Z"}],
 
-     # Numbers>999Y are never acceptable, regardless of scaling
-     ['large-14','--from=si --to=si 999Y', {OUT=>"999Y"}],
-     ['large-14.1','--from=si --to=si 1000Y',
-             {ERR => "$prog: value too large to be printed: '1e+27' " .
-                     "(cannot handle values > 999Y)\n"},
+     # Numbers>999Q are never acceptable, regardless of scaling
+     ['large-14','--from=si --to=si 999Q', {OUT=>"999Q"}],
+     ['large-14.1','--from=si --to=si 1000Q',
+             {ERR => "$prog: value too large to be printed: '1e+33' " .
+                     "(cannot handle values > 999Q)\n"},
              {EXIT => 2}],
-     ['large-14.2','--from=si --to=si --from-unit=10000 1Y',
-             {ERR => "$prog: value too large to be printed: '1e+28' " .
-                     "(cannot handle values > 999Y)\n"},
+     ['large-14.2','--from=si --to=si --from-unit=10000 1Q',
+             {ERR => "$prog: value too large to be printed: '1e+34' " .
+                     "(cannot handle values > 999Q)\n"},
              {EXIT => 2}],
 
      # intmax_t overflow when rounding caused this to fail before 8.24
@@ -999,10 +1005,10 @@ my @Limit_Tests =
                      "(consider using --to)\n"},
              {OUT => "10000000000000000000\n"},
              {EXIT=>2}],
-     ['ign-err-11','--invalid=fail --to=si 9876543210000000000000000000',
+     ['ign-err-11','--invalid=fail --to=si 6543219876543210000000000000000000',
              {ERR => "$prog: value too large to be converted: " .
-                     "'9876543210000000000000000000'\n"},
-             {OUT => "9876543210000000000000000000\n"},
+                     "'6543219876543210000000000000000000'\n"},
+             {OUT => "6543219876543210000000000000000000\n"},
              {EXIT => 2}],
   );
 # Restrict these tests to systems with LDBL_DIG == 18
@@ -1067,7 +1073,7 @@ push @Tests, @Locale_Tests if $locale ne 'C';
 
 ## Check all valid/invalid suffixes
 foreach my $suf ( 'A' .. 'Z', 'a' .. 'z' ) {
-  if ( $suf =~ /^[KMGTPEZY]$/ )
+  if ( $suf =~ /^[KMGTPEZYRQ]$/ )
     {
       push @Tests, ["auto-suf-si-$suf","--from=si --to=si 1$suf",
               {OUT=>"1.0$suf"}];

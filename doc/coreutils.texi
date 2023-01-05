@@ -707,7 +707,8 @@ one of the following multiplicative suffixes:
 @samp{GB} => 1000*1000*1000 (GigaBytes)
 @samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
-and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, @samp{Y},
+@samp{R}, and @samp{Q}.
 Binary prefixes can be used, too: @samp{KiB}=@samp{K}, @samp{MiB}=@samp{M},
 and so on.
 @end macro
@@ -724,7 +725,8 @@ one of the following multiplicative suffixes:
 @samp{GB} => 1000*1000*1000 (GigaBytes)
 @samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
-and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, @samp{Y},
+@samp{R}, and @samp{Q}.
 Binary prefixes can be used, too: @samp{KiB}=@samp{K}, @samp{MiB}=@samp{M},
 and so on.
 @end macro
@@ -982,7 +984,7 @@ prepended, except that it causes a size indication to be appended to
 the output.  For example, @samp{--block-size="kB"} displays 3000 as
 @samp{3kB}.
 
-The following suffixes are defined.  Large sizes like @code{1Y}
+The following suffixes are defined.  Large sizes like @code{1Q}
 may be rejected by your computer due to limitations of its arithmetic.
 
 @table @samp
@@ -1036,13 +1038,25 @@ exbibyte: @math{2^{60} = 1,152,921,504,606,846,976}.
 zettabyte: @math{10^{21} = 1,000,000,000,000,000,000,000}
 @item Z
 @itemx ZiB
-@math{2^{70} = 1,180,591,620,717,411,303,424}.
+zebibyte: @math{2^{70} = 1,180,591,620,717,411,303,424}.
 @item YB
 @cindex yottabyte, definition of
 yottabyte: @math{10^{24} = 1,000,000,000,000,000,000,000,000}.
 @item Y
 @itemx YiB
-@math{2^{80} = 1,208,925,819,614,629,174,706,176}.
+yobibyte: @math{2^{80} = 1,208,925,819,614,629,174,706,176}.
+@item RB
+@cindex ronnabyte, definition of
+ronnabyte: @math{10^{27} = 1,000,000,000,000,000,000,000,000,000}.
+@item R
+@itemx RiB
+robibyte: @math{2^{90} = 1,237,940,039,285,380,274,899,124,224}.
+@item QB
+@cindex quettabyte, definition of
+quettabyte: @math{10^{30} = 1,000,000,000,000,000,000,000,000,000,000}.
+@item Q
+@itemx QiB
+quebibyte: @math{2^{100} = 1,267,650,600,228,229,401,496,703,205,376}.
 @end table
 
 @opindex -k
@@ -4522,7 +4536,7 @@ lexicographic sort will be faster.
 @vindex LC_NUMERIC
 Sort numerically, first by numeric sign (negative, zero, or positive);
 then by SI suffix (either empty, or @samp{k} or @samp{K}, or
-one of @samp{MGTPEZY}, in that order; @pxref{Block size}); and finally
+one of @samp{MGTPEZYRQ}, in that order; @pxref{Block size}); and finally
 by numeric value.  For example, @samp{1023M} sorts before @samp{1G}
 because @samp{M} (mega) precedes @samp{G} (giga) as an SI
 suffix.  This option sorts values that are consistently scaled to the
@@ -4759,7 +4773,8 @@ Use a main-memory sort buffer of the given @var{size}.  By default,
 @var{size} to be interpreted as a percentage of physical memory.
 Appending @samp{K} multiplies @var{size} by 1024 (the default),
 @samp{M} by 1,048,576, @samp{G} by 1,073,741,824, and so on for
-@samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}@.  Appending
+@samp{T}, @samp{P}, @samp{E}, @samp{Z}, @samp{Y}, @samp{R}, and @samp{Q}@.
+Appending
 @samp{b} causes @var{size} to be interpreted as a byte count, with no
 multiplication.
 
@@ -18961,6 +18976,8 @@ one of the following suffixes:
 @samp{E}  =>  @math{1000^6 = 10^{18}} (Exa)
 @samp{Z}  =>  @math{1000^7 = 10^{21}} (Zetta)
 @samp{Y}  =>  @math{1000^8 = 10^{24}} (Yotta)
+@samp{R}  =>  @math{1000^9 = 10^{27}} (Ronna)
+@samp{Q}  =>  @math{1000^{10} = 10^{30}} (Quetta)
 @end example
 
 @item iec
@@ -18979,6 +18996,8 @@ one of the following suffixes:
 @samp{E}  =>  @math{1024^6 = 2^{60}} (Exbi)
 @samp{Z}  =>  @math{1024^7 = 2^{70}} (Zebi)
 @samp{Y}  =>  @math{1024^8 = 2^{80}} (Yobi)
+@samp{R}  =>  @math{1024^9 = 2^{90}} (Robi)
+@samp{Q}  =>  @math{1024^{10} = 2^{100}} (Quebi)
 @end example
 
 The @option{iec} option uses a single letter suffix (e.g. @samp{G}), which is
@@ -19002,6 +19021,8 @@ one of the following suffixes:
 @samp{Ei}  =>  @math{1024^6 = 2^{60}} (Exbi)
 @samp{Zi}  =>  @math{1024^7 = 2^{70}} (Zebi)
 @samp{Yi}  =>  @math{1024^8 = 2^{80}} (Yobi)
+@samp{Ri}  =>  @math{1024^9 = 2^{90}} (Robi)
+@samp{Qi}  =>  @math{1024^{10} = 2^{100}} (Quebi)
 @end example
 
 The @option{iec-i} option uses a two-letter suffix symbol (e.g. @samp{Gi}),
@@ -19010,9 +19031,9 @@ practice.  Compare with the @option{iec} option.
 
 @item auto
 @samp{auto} can only be used with @option{--from}.  With this method, numbers
-with @samp{K},@samp{M},@samp{G},@samp{T},@samp{P},@samp{E},@samp{Z},@samp{Y}
-suffixes are interpreted as @emph{SI} values, and numbers with @samp{Ki},
-@samp{Mi},@samp{Gi},@samp{Ti},@samp{Pi},@samp{Ei},@samp{Zi},@samp{Yi} suffixes
+with single-letter suffixes like @samp{K}
+suffixes are interpreted as @emph{SI} values, and numbers with
+two-letter suffixes like @samp{Ki}
 are interpreted as @emph{IEC} values.
 
 @end table

@@ -840,7 +840,7 @@ main (int argc, char **argv)
         case 't':
           {
             enum strtol_error e;
-            e = xstrtoimax (optarg, NULL, 0, &opt_threshold, "kKmMGTPEZY0");
+            e = xstrtoimax (optarg, NULL, 0, &opt_threshold, "kKmMGTPEZYRQ0");
             if (e != LONGINT_OK)
               xstrtol_fatal (e, oi, c, long_options, optarg);
             if (opt_threshold == 0 && *optarg == '-')

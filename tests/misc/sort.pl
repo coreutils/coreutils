@@ -56,10 +56,10 @@ my @Tests =
 
 # human readable suffixes
 ["h1", '-h',
- {IN=>"1Y\n1Z\n1E\n1P\n1T\n1G\n1M\n1K\n02\n1\nY\n-1k\n-1M\n-1G\n-1T\n"
-      . "-1P\n-1E\n-1Z\n-1Y\n"},
- {OUT=>"-1Y\n-1Z\n-1E\n-1P\n-1T\n-1G\n-1M\n-1k\nY\n1\n02\n1K\n1M\n1G\n1T\n"
-      . "1P\n1E\n1Z\n1Y\n"}],
+ {IN=>"1Q\n1R\n1Y\n1Z\n1E\n1P\n1T\n1G\n1M\n1K\n02\n1\nY\n-1k\n-1M\n-1G\n-1T\n"
+      . "-1P\n-1E\n-1Z\n-1Y\n-1Q\n-1R\n"},
+ {OUT=>"-1Q\n-1R\n-1Y\n-1Z\n-1E\n-1P\n-1T\n-1G\n-1M\n-1k\n"
+      . "Y\n1\n02\n1K\n1M\n1G\n1T\n1P\n1E\n1Z\n1Y\n1R\n1Q\n"}],
 ["h2", '-h', {IN=>"1M\n-2G\n-3K"}, {OUT=>"-2G\n-3K\n1M\n"}],
 # check that it works with powers of 1024
 ["h3", '-k 2,2h -k 1,1', {IN=>"a 1G\nb 1023M\n"}, {OUT=>"b 1023M\na 1G\n"}],

@@ -48,6 +48,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  Programs now use the new SI prefixes R (10**27) and Q (10**30)
+  along with their binary counterparts Ri (2**90) and Qi (2**100).
+  In some cases (e.g., 'sort -h') these new prefixes simply work;
+  in others, where they exceed integer width limits, they now elicit
+  the same integer overflow diagnostics as other large prefixes.
+
   'cp --reflink=always A B' no longer leaves behind a newly created
   empty file B merely because copy-on-write clones are not supported.
 

@@ -161,10 +161,10 @@ enum { DELIMITER_DEFAULT = CHAR_MAX + 1 };
 enum { MAX_UNSCALED_DIGITS = LDBL_DIG };
 
 /* Maximum number of digits we can work with.
-   This is equivalent to 999Y.
+   This is equivalent to 999Q.
    NOTE: 'long double' can handle more than that, but there's
-         no official suffix assigned beyond Yotta (1000^8).  */
-enum { MAX_ACCEPTABLE_DIGITS = 27 };
+         no official suffix assigned beyond Quetta (1000^10).  */
+enum { MAX_ACCEPTABLE_DIGITS = 33 };
 
 static enum scale_type scale_from = scale_none;
 static enum scale_type scale_to = scale_none;
@@ -229,11 +229,13 @@ default_scale_base (enum scale_type scale)
     }
 }
 
-static inline int
+static char const zero_and_valid_suffixes[] = "0KMGTPEZYRQ";
+static char const *valid_suffixes = 1 + zero_and_valid_suffixes;
+
+static inline bool
 valid_suffix (const char suf)
 {
-  static char const *valid_suffixes = "KMGTPEZY";
-  return (strchr (valid_suffixes, suf) != NULL);
+  return strchr (valid_suffixes, suf) != NULL;
 }
 
 static inline int
@@ -264,6 +266,12 @@ suffix_power (const char suf)
 
     case 'Y':                  /* yotta or 2**80.  */
       return 8;
+
+    case 'R':                  /* ronna or 2**90.  */
+      return 9;
+
+    case 'Q':                  /* quetta or 2**100.  */
+      return 10;
 
     default:                   /* should never happen. assert?  */
       return 0;
@@ -301,6 +309,12 @@ suffix_power_char (unsigned int power)
 
     case 8:
       return "Y";
+
+    case 9:
+      return "R";
+
+    case 10:
+      return "Q";
 
     default:
       return "(error)";
@@ -460,7 +474,7 @@ enum simple_strtod_error
    Returns:
       SSE_OK - valid number.
       SSE_OK_PRECISION_LOSS - if more than 18 digits were used.
-      SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
+      SSE_OVERFLOW          - if more than 33 digits (999Q) were used.
       SSE_INVALID_NUMBER    - if no digits were found.  */
 static enum simple_strtod_error
 simple_strtod_int (char const *input_str,
@@ -525,7 +539,7 @@ simple_strtod_int (char const *input_str,
    Returns:
       SSE_OK - valid number.
       SSE_OK_PRECISION_LOSS - if more than 18 digits were used.
-      SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
+      SSE_OVERFLOW          - if more than 33 digits (999Q) were used.
       SSE_INVALID_NUMBER    - if no digits were found.  */
 static enum simple_strtod_error
 simple_strtod_float (char const *input_str,
@@ -598,7 +612,7 @@ simple_strtod_float (char const *input_str,
    Returns:
       SSE_OK - valid number.
       SSE_OK_PRECISION_LOSS - if more than LDBL_DIG digits were used.
-      SSE_OVERFLOW          - if more than 27 digits (999Y) were used.
+      SSE_OVERFLOW          - if more than 33 digits (999Q) were used.
       SSE_INVALID_NUMBER    - if no digits were found.
       SSE_VALID_BUT_FORBIDDEN_SUFFIX
       SSE_INVALID_SUFFIX
@@ -830,7 +844,7 @@ unit_to_umax (char const *n_string)
   size_t n_len = strlen (n_string);
   char *end = NULL;
   uintmax_t n;
-  char const *suffixes = "KMGTPEZY";
+  char const *suffixes = valid_suffixes;
 
   /* Adjust suffixes so K=1000, Ki=1024, KiB=invalid.  */
   if (n_len && ! c_isdigit (n_string[n_len - 1]))
@@ -845,7 +859,7 @@ unit_to_umax (char const *n_string)
         {
           *++end = 'B';
           *++end = '\0';
-          suffixes = "KMGTPEZY0";
+          suffixes = zero_and_valid_suffixes;
         }
 
       c_string = t_string;
@@ -1224,7 +1238,7 @@ prepare_padded_number (const long double val, size_t precision)
     {
       if (inval_style != inval_ignore)
         error (conv_exit_code, 0, _("value too large to be printed: '%Lg'"
-                                    " (cannot handle values > 999Y)"), val);
+                                    " (cannot handle values > 999Q)"), val);
       return 0;
     }
 

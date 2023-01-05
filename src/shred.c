@@ -1216,7 +1216,7 @@ main (int argc, char **argv)
           break;
 
         case 's':
-          flags.size = xnumtoumax (optarg, 0, 0, OFF_T_MAX, "cbBkKMGTPEZY0",
+          flags.size = xnumtoumax (optarg, 0, 0, OFF_T_MAX, "cbBkKMGTPEZYRQ0",
                                    _("invalid file size"), 0);
           break;
 
