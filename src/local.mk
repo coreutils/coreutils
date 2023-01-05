@@ -288,7 +288,7 @@ src_uptime_LDADD += $(GETLOADAVG_LIBS)
 
 # for various ACL functions
 copy_ldadd += $(LIB_ACL)
-src_ls_LDADD += $(LIB_HAS_ACL)
+src_ls_LDADD += $(FILE_HAS_ACL_LIB)
 
 # for various xattr functions
 copy_ldadd += $(LIB_XATTR)
