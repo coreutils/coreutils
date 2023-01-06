@@ -1578,7 +1578,7 @@ main (int argc, char **argv)
   bool width_specified = false;
   bool ok = true;
   size_t width_per_block = 0;
-  static char const multipliers[] = "bEGKkMmPTYZ0";
+  static char const multipliers[] = "bEGKkMmPQRTYZ0";
 
   /* The old-style 'pseudo starting address' to be printed in parentheses
      after any true address.  */

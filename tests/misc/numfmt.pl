@@ -947,9 +947,9 @@ my @Limit_Tests =
      ['large-7','--from=si --to=si 80Y', {OUT=>"80Y"}],
      ['large-8','--from=si --to=si 9000Z', {OUT=>"9.0Y"}],
 
-     ['large-10','--from=si --to=si 999Y', {OUT=>"999Y"}],
-     ['large-11','--from=si --to=iec 999Y', {OUT=>"827Y"}],
-     ['large-12','--from=si --round=down --to=iec 999Y', {OUT=>"826Y"}],
+     ['large-10','--from=si --to=si 999Q', {OUT=>"999Q"}],
+     ['large-11','--from=si --to=iec 999Q', {OUT=>"789Q"}],
+     ['large-12','--from=si --round=down --to=iec 999Q', {OUT=>"788Q"}],
 
      # units can also affect the output
      ['large-13','--from=si --from-unit=1000000 9P',

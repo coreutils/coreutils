@@ -19073,6 +19073,13 @@ $ numfmt --from=si --to=iec 1T
 932G
 @end example
 
+With both input and output scales specified,
+the largest defined prefixes are supported:
+
+@example
+$ numfmt --from=si --to=iec-i 2000R
+1.6Qi
+@end example
 
 Converting a single field from an input file / piped input (these contrived
 examples are for demonstration purposes only, as both @command{ls} and

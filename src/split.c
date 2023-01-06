@@ -1307,7 +1307,7 @@ main (int argc, char **argv)
   uintmax_t k_units = 0;
   uintmax_t n_units = 0;
 
-  static char const multipliers[] = "bEGKkMmPTYZ0";
+  static char const multipliers[] = "bEGKkMmPQRTYZ0";
   int c;
   int digits_optind = 0;
   off_t file_size = OFF_T_MAX;

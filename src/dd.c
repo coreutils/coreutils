@@ -1424,7 +1424,7 @@ parse_integer (char const *str, strtol_error *invalid)
   int indeterminate = 0;
   uintmax_t n = indeterminate;
   char *suffix;
-  static char const suffixes[] = "bcEGkKMPTwYZ0";
+  static char const suffixes[] = "bcEGkKMPQRTwYZ0";
   strtol_error e = xstrtoumax (str, &suffix, 10, &n, suffixes);
   intmax_t result;
 

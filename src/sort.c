@@ -519,8 +519,8 @@ the entire line as the key.  Use --debug to diagnose incorrect key usage.\n\
 SIZE may be followed by the following multiplicative suffixes:\n\
 "), stdout);
       fputs (_("\
-% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y, R, Q.\n\
-\n\
+% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y, R, Q.\
+\n\n\
 *** WARNING ***\n\
 The locale specified by the environment affects sort order.\n\
 Set LC_ALL=C to get the traditional sort order that uses\n\
@@ -1387,7 +1387,7 @@ specify_sort_size (int oi, char c, char const *s)
 {
   uintmax_t n;
   char *suffix;
-  enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkKmMPtTYZ");
+  enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkKmMPQRtTYZ");
 
   /* The default unit is KiB.  */
   if (e == LONGINT_OK && ISDIGIT (suffix[-1]))

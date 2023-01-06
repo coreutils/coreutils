@@ -269,7 +269,7 @@ main (int argc, char **argv)
             }
           /* Support dd BLOCK size suffixes + lowercase g,t,m for bsd compat.
              Note we don't support dd's b=512, c=1, w=2 or 21x512MiB formats. */
-          size = xdectoimax (optarg, OFF_T_MIN, OFF_T_MAX, "EgGkKmMPtTYZ0",
+          size = xdectoimax (optarg, OFF_T_MIN, OFF_T_MAX, "EgGkKmMPQRtTYZ0",
                              _("Invalid number"), 0);
           /* Rounding to multiple of 0 is nonsensical */
           if ((rel_mode == rm_rup || rel_mode == rm_rdn) && size == 0)
