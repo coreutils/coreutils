@@ -90,8 +90,8 @@ remove_ldadd =
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
 # But libcoreutils.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libcoreutils.a.
-# Similarly for $(LIB_MBRTOWC).
-LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) $(LIB_MBRTOWC) \
+# Similarly for $(MBRTOWC_LIB).
+LDADD = src/libver.a lib/libcoreutils.a $(LIBINTL) $(MBRTOWC_LIB) \
   lib/libcoreutils.a
 
 # First, list all programs, to make listing per-program libraries easier.
@@ -226,10 +226,10 @@ src_mv_LDADD += $(remove_ldadd)
 src_rm_LDADD += $(remove_ldadd)
 
 # for eaccess, euidaccess
-copy_ldadd += $(LIB_EACCESS)
-remove_ldadd += $(LIB_EACCESS)
-src_sort_LDADD += $(LIB_EACCESS)
-src_test_LDADD += $(LIB_EACCESS)
+copy_ldadd += $(EUIDACCESS_LIBGEN)
+remove_ldadd += $(EUIDACCESS_LIBGEN)
+src_sort_LDADD += $(EUIDACCESS_LIBGEN)
+src_test_LDADD += $(EUIDACCESS_LIBGEN)
 
 # for selinux use
 copy_ldadd += $(LIB_SELINUX)
@@ -252,19 +252,19 @@ src_stat_LDADD += $(LIB_SELINUX)
 src_stat_LDADD += $(LIB_NVPAIR)
 
 # for gettime, settime, tempname, utimecmp, utimens
-copy_ldadd += $(LIB_CLOCK_GETTIME)
-src_date_LDADD += $(LIB_CLOCK_GETTIME)
-src_ginstall_LDADD += $(LIB_CLOCK_GETTIME)
-src_ln_LDADD += $(LIB_CLOCK_GETTIME)
-src_ls_LDADD += $(LIB_CLOCK_GETTIME)
-src_mktemp_LDADD += $(LIB_CLOCK_GETTIME)
-src_pr_LDADD += $(LIB_CLOCK_GETTIME)
-src_tac_LDADD += $(LIB_CLOCK_GETTIME)
+copy_ldadd += $(CLOCK_TIME_LIB)
+src_date_LDADD += $(CLOCK_TIME_LIB)
+src_ginstall_LDADD += $(CLOCK_TIME_LIB)
+src_ln_LDADD += $(CLOCK_TIME_LIB)
+src_ls_LDADD += $(CLOCK_TIME_LIB)
+src_mktemp_LDADD += $(CLOCK_TIME_LIB)
+src_pr_LDADD += $(CLOCK_TIME_LIB)
+src_tac_LDADD += $(CLOCK_TIME_LIB)
 src_timeout_LDADD += $(LIB_TIMER_TIME)
-src_touch_LDADD += $(LIB_CLOCK_GETTIME)
+src_touch_LDADD += $(CLOCK_TIME_LIB)
 
 # for gethrxtime
-src_dd_LDADD += $(LIB_GETHRXTIME)
+src_dd_LDADD += $(GETHRXTIME_LIB)
 
 # for cap_get_file
 src_ls_LDADD += $(LIB_CAP)
@@ -275,9 +275,9 @@ src_shred_LDADD += $(LIB_FDATASYNC)
 src_sync_LDADD += $(LIB_FDATASYNC)
 
 # for xnanosleep
-src_sleep_LDADD += $(LIB_NANOSLEEP)
-src_sort_LDADD += $(LIB_NANOSLEEP)
-src_tail_LDADD += $(LIB_NANOSLEEP)
+src_sleep_LDADD += $(NANOSLEEP_LIB)
+src_sort_LDADD += $(NANOSLEEP_LIB)
+src_tail_LDADD += $(NANOSLEEP_LIB)
 
 # for various GMP functions
 src_expr_LDADD += $(LIBGMP)
@@ -323,7 +323,7 @@ src_kill_LDADD += $(LIBTHREAD)
 src_sort_LDADD += $(LIBPMULTITHREAD)
 
 # for pthread_sigmask
-src_sort_LDADD += $(LIB_PTHREAD_SIGMASK)
+src_sort_LDADD += $(PTHREAD_SIGMASK_LIB)
 
 # Get the release year from lib/version-etc.c.
 RELEASE_YEAR = \
