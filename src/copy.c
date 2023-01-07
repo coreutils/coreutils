@@ -290,6 +290,11 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
             if (errno == EPERM && *total_n_read == 0)
               break;
 
+            /* ENOENT was seen sometimes across CIFS shares, resulting in
+               no data being copied, but subsequent standard copies succeed.  */
+            if (errno == ENOENT && *total_n_read == 0)
+              break;
+
             if (errno == EINTR)
               n_copied = 0;
             else

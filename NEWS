@@ -25,6 +25,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   which may have resulted in data corruption.
   [bug introduced in coreutils-7.5 and enabled by default in coreutils-9.0]
 
+  cp, mv, and install now handle ENOENT failures across CIFS file systems,
+  falling back from copy_file_range to a better supported standard copy.
+  [issue introduced in coreutils-9.0]
+
   'mv --backup=simple f d/' no longer mistakenly backs up d/f to f~.
   [bug introduced in coreutils-9.1]
 
