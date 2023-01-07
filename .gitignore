@@ -32,10 +32,12 @@
 /build-aux/test-driver
 /build-aux/texinfo.tex
 /build-aux/ylwrap
+/confdefs*
 /config.cache
 /config.log
 /config.status
 /configure
+/conftest*
 /coreutils-*.tar.gz
 /coreutils-*.tar.gz.sig
 /coreutils-*.tar.xz
