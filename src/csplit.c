@@ -1471,7 +1471,7 @@ Read standard input if FILE is -\n\
       fputs (_("\
   -n, --digits=DIGITS        use specified number of digits instead of 2\n\
   -s, --quiet, --silent      do not print counts of output file sizes\n\
-  -z, --elide-empty-files    remove empty output files\n\
+  -z, --elide-empty-files    suppress empty output files\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
