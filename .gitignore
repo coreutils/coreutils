@@ -60,6 +60,7 @@
 /lib/ctype.h
 /lib/dirent.h
 /lib/errno.h
+/lib/error.h
 /lib/fcntl.h
 /lib/float.h
 /lib/fnmatch.h
