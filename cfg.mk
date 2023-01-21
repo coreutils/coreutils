@@ -885,8 +885,9 @@ exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
 exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c|getlimits\.c)$$
 
+_cksum = ^tests/misc/cksum-base64\.pl$$
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
-  ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$
+  ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$|$(_cksum)
 
 # Exempt test.c, since it's nominally shared, and relatively static.
 exclude_file_name_regexp--sc_prohibit_operator_at_end_of_line = \
@@ -901,7 +902,7 @@ exclude_file_name_regexp--sc_prohibit-gl-attributes = ^src/libstdbuf\.c$$
 exclude_file_name_regexp--sc_prohibit_uppercase_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_dblspace_after_dot_before_id_est = \.diff$$
 exclude_file_name_regexp--sc_ensure_comma_after_id_est = \.diff|$(_ll)$$
-exclude_file_name_regexp--sc_long_lines = \.diff$$|$(_ll)
+exclude_file_name_regexp--sc_long_lines = \.diff$$|$(_ll)|$(_cksum)
 
 # `grep . -q` is not exactly equivalent to `grep . >/dev/null`
 # and this difference is significant in the NEWS description

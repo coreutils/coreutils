@@ -293,6 +293,7 @@ all_tests =					\
   tests/misc/cksum.sh				\
   tests/misc/cksum-a.sh				\
   tests/misc/cksum-c.sh				\
+  tests/misc/cksum-base64.pl			\
   tests/misc/comm.pl				\
   tests/misc/csplit.sh				\
   tests/misc/csplit-1000.sh			\

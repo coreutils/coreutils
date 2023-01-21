@@ -94,6 +94,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New Features
 
+  cksum now accepts the --base64 (-b) option to print base64-encoded
+  checksums.  It also accepts/checks such checksums.
+
   factor now accepts the --exponents (-h) option to print factors
   in the form p^e, rather than repeating the prime p, e times.
 

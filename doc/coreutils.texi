@@ -4039,6 +4039,22 @@ Supported more modern digest algorithms are:
 @samp{sm3}       only available through @command{cksum}
 @end example
 
+@item -b
+@itemx --base64
+@opindex -b
+@opindex --base64
+@cindex base64 checksum encoding
+Print base64-encoded digests not hexadecimal.
+This option is ignored with @option{--check}.
+The format conforms to
+@uref{https://tools.ietf.org/search/rfc4648#section-4, RFC 4648#4}.
+
+Note that each base64-encoded digest has zero, one or two trailing padding
+(@samp{=}) bytes.  The length of that padding is the checksum-bit-length
+modulo 3, and the @option{--check} parser requires precisely the same
+input digest string as what is output.  I.e., removing or adding any
+@samp{=} padding renders a digest non-matching.
+
 @item --debug
 @opindex --debug
 Output extra information to stderr, like the checksum implementation being used.
@@ -4167,6 +4183,11 @@ but doesn't use a character to distinguish binary and text modes.
 For the @command{cksum} command, the @option{--check} option
 supports auto-detecting the digest algorithm to use,
 when presented with checksum information in the @option{--tag} output format.
+
+Also for the @command{cksum} command, the @option{--check} option
+auto-detects the digest encoding, accepting both standard hexidecimal
+checksums and those generated via @command{cksum} with its
+@option{--base64} option.
 
 Output with @option{--zero} enabled is not supported by @option{--check}.
 @sp 1
