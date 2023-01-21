@@ -123,6 +123,16 @@ diagnose_leading_hyphen (int argc, char **argv)
     }
 }
 
+static bool
+find_duplicates (int n_files, char **files)
+{
+  for (int l = 0; l < n_files-1; l++)
+    for (int r = l+1; r < n_files; r++)
+      if (strcmp(files[l], files[r]) == 0)
+          return true;
+  return false;
+}
+
 void
 usage (int status)
 {
@@ -211,6 +221,7 @@ main (int argc, char **argv)
   bool preserve_root = true;
   struct rm_options x;
   bool prompt_once = false;
+  bool force_rm = false;
   int c;
 
   initialize_main (&argc, &argv);
@@ -238,6 +249,7 @@ main (int argc, char **argv)
           x.interactive = RMI_NEVER;
           x.ignore_missing_files = true;
           prompt_once = false;
+          force_rm = true;
           break;
 
         case 'i':
@@ -351,6 +363,17 @@ main (int argc, char **argv)
 
   uintmax_t n_files = argc - optind;
   char **file =  argv + optind;
+
+  if (!force_rm && find_duplicates(n_files, file))
+    {
+      /* Because usually when the input files are duplicated it means that the user
+         sumbitted both a directory and an * as separate arguments, probably by accident */
+      fprintf (stderr,
+               "%s: input contains duplicates, most likely you've put "
+               "both * and a file from the same directory.\n",
+               program_name);
+      return EXIT_FAILURE;
+    }
 
   if (prompt_once && (x.recursive || 3 < n_files))
     {
