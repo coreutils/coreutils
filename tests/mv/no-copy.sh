@@ -25,8 +25,8 @@ mkdir dir || framework_failure_
 > dir/a || framework_failure_
 > file || framework_failure_
 
-mv --no-copy dir "$other_partition_tmpdir" && fail=1
-mv --no-copy file "$other_partition_tmpdir" && fail=1
+returns_ 1 mv --no-copy dir "$other_partition_tmpdir" || fail=1
+returns_ 1 mv --no-copy file "$other_partition_tmpdir" || fail=1
 mv dir "$other_partition_tmpdir" || fail=1
 mv file "$other_partition_tmpdir" || fail=1
 
