@@ -134,9 +134,9 @@ struct cp_options
      Create destination directories as usual. */
   bool hard_link;
 
-  /* If true, rather than copying, first attempt to use rename.
-     If that fails, then resort to copying.  */
-  bool move_mode;
+  /* If MOVE_MODE, first try to rename.
+     If that fails and NO_COPY, fail instead of copying.  */
+  bool move_mode, no_copy;
 
   /* If true, install(1) is the caller.  */
   bool install_mode;

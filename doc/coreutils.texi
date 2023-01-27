@@ -10038,19 +10038,16 @@ failing that if the last file is a directory and the
 directory, using the @var{source}s' names.
 @end itemize
 
-@command{mv} can move any type of file from one file system to another.
-Prior to version @code{4.0} of the fileutils,
-@command{mv} could move only regular files between file systems.
-For example, now @command{mv} can move an entire directory hierarchy
-including special device files from one partition to another.  It first
-uses some of the same code that's used by @code{cp -a} to copy the
-requested directories and files, then (assuming the copy succeeded)
-it removes the originals.  If the copy fails, then the part that was
-copied to the destination partition is removed.  If you were to copy
-three directories from one partition to another and the copy of the first
+To move a file, @command{mv} ordinarily simply renames it.
+However, if renaming does not work because the destination's file
+system differs, @command{mv} falls back on copying as if by @code{cp -a},
+then (assuming the copy succeeded) it removes the original.
+If the copy fails, then @command{mv} removes any partially created
+copy in the destination.  If you were to copy three directories from
+one file system to another and the copy of the first
 directory succeeded, but the second didn't, the first would be left on
-the destination partition and the second and third would be left on the
-original partition.
+the destination file system and the second and third would be left on the
+original file system.
 
 @cindex extended attributes, xattr
 @command{mv} always tries to copy extended attributes (xattr), which may
@@ -10113,6 +10110,12 @@ If the response is not affirmative, the file is skipped.
 Do not overwrite an existing file; silently do nothing instead.
 @mvOptsIfn
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
+
+@item --no-copy
+@opindex --no-copy
+@cindex renaming files without copying them
+If a file cannot be renamed because the destination file system differs,
+fail with a diagnostic instead of copying and then removing the file.
 
 @item -u
 @itemx --update

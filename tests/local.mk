@@ -686,6 +686,7 @@ all_tests =					\
   tests/mv/leak-fd.sh				\
   tests/mv/mv-n.sh				\
   tests/mv/mv-special-1.sh			\
+  tests/mv/no-copy.sh				\
   tests/mv/no-target-dir.sh			\
   tests/mv/part-fail.sh				\
   tests/mv/part-hardlink.sh			\

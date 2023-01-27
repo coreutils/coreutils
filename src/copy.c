@@ -2617,7 +2617,7 @@ copy_internal (char const *src_name, char const *dst_name,
          where you'd replace '18' with the integer in parentheses that
          was output from the perl one-liner above.
          If necessary, of course, change '/tmp' to some other directory.  */
-      if (rename_errno != EXDEV)
+      if (rename_errno != EXDEV || x->no_copy)
         {
           /* There are many ways this can happen due to a race condition.
              When something happens between the initial follow_fstatat and the

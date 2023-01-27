@@ -95,6 +95,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now supports the --time=modification option, to explicitly
   select the default mtime timestamp for display and sorting.
 
+  mv now supports the --no-copy option, which causes it to fail when
+  asked to move a file to a different file system.
+
   wc now accepts the --total={auto,never,always,only} option
   to give explicit control over when the total is output.
 

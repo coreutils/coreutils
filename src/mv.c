@@ -48,7 +48,8 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  STRIP_TRAILING_SLASHES_OPTION = CHAR_MAX + 1
+  NO_COPY_OPTION = CHAR_MAX + 1,
+  STRIP_TRAILING_SLASHES_OPTION
 };
 
 static struct option const long_options[] =
@@ -58,6 +59,7 @@ static struct option const long_options[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"no-clobber", no_argument, NULL, 'n'},
+  {"no-copy", no_argument, NULL, NO_COPY_OPTION},
   {"no-target-directory", no_argument, NULL, 'T'},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -260,6 +262,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 "), stdout);
       fputs (_("\
+      --no-copy                do not copy if renaming fails\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
@@ -329,6 +332,9 @@ main (int argc, char **argv)
           break;
         case 'n':
           x.interactive = I_ALWAYS_NO;
+          break;
+        case NO_COPY_OPTION:
+          x.no_copy = true;
           break;
         case STRIP_TRAILING_SLASHES_OPTION:
           remove_trailing_slashes = true;
