@@ -37,7 +37,7 @@ Hash: SHA384
 # ignored comment
 EOF
 cat CHECKSUMS >> signed_CHECKSUMS
-cat >> signed_input <<\EOF
+cat >> signed_CHECKSUMS <<\EOF
 -----BEGIN PGP SIGNATURE-----
 
 # Note base64 doesn't have ambiguous delimiters in its charset
