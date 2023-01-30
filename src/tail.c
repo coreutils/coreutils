@@ -1122,7 +1122,8 @@ recheck (struct File_spec *f, bool blocking)
     {
       /* Start at the beginning of the file.  */
       record_open_fd (f, fd, 0, &new_stats, (is_stdin ? -1 : blocking));
-      xlseek (fd, 0, SEEK_SET, pretty_name (f));
+      if (S_ISREG (new_stats.st_mode))
+        xlseek (fd, 0, SEEK_SET, pretty_name (f));
     }
 }
 
