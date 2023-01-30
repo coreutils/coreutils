@@ -1026,7 +1026,6 @@ digest_check (char const *checkfile_name)
 {
   FILE *checkfile_stream;
   uintmax_t n_misformatted_lines = 0;
-  uintmax_t n_improperly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
   bool properly_formatted_lines = false;
@@ -1102,8 +1101,6 @@ digest_check (char const *checkfile_name)
                      quotef (checkfile_name), line_number,
                      DIGEST_TYPE_STRING);
             }
-
-          ++n_improperly_formatted_lines;
         }
       else
         {
@@ -1236,7 +1233,7 @@ digest_check (char const *checkfile_name)
           && matched_checksums
           && n_mismatched_checksums == 0
           && n_open_or_read_failures == 0
-          && (!strict || n_improperly_formatted_lines == 0));
+          && (!strict || n_misformatted_lines == 0));
 }
 
 int
