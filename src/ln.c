@@ -281,7 +281,7 @@ do_link (char const *source, int destdir_fd, char const *dest_base,
                       if (!yesno ())
                         {
                           free (rel_source);
-                          return true;
+                          return false;
                         }
                     }
 

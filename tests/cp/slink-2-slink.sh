@@ -26,7 +26,7 @@ ln -s file b || framework_failure_
 ln -s no-such-file c || framework_failure_
 ln -s no-such-file d || framework_failure_
 
-cp --update --no-dereference a b || fail=1
-cp --update --no-dereference c d || fail=1
+returns_ 1 cp --update --no-dereference a b || fail=1
+returns_ 1 cp --update --no-dereference c d || fail=1
 
 Exit $fail

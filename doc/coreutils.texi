@@ -8924,7 +8924,8 @@ via recursive traversal.
 @opindex -i
 @opindex --interactive
 When copying a file other than a directory, prompt whether to
-overwrite an existing destination file.  The @option{-i} option overrides
+overwrite an existing destination file, and fail if the response
+is not affirmative.  The @option{-i} option overrides
 a previous @option{-n} option.
 
 @item -l
@@ -8946,7 +8947,7 @@ a regular file in the destination tree.
 @itemx --no-clobber
 @opindex -n
 @opindex --no-clobber
-Do not overwrite an existing file; silently do nothing instead.
+Do not overwrite an existing file; silently fail instead.
 This option overrides a previous
 @option{-i} option.  This option is mutually exclusive with @option{-b} or
 @option{--backup} option.
@@ -9190,7 +9191,8 @@ results in an error message on systems that do not support symbolic links.
 @opindex --update
 @cindex newer files, copying only
 Do not copy a non-directory that has an existing destination with the
-same or newer modification timestamp.  If timestamps are being preserved,
+same or newer modification timestamp; silently fail instead.
+If timestamps are being preserved,
 the comparison is to the source timestamp truncated to the
 resolutions of the destination file system and of the system calls
 used to update timestamps; this avoids duplicate work if several
@@ -10098,8 +10100,7 @@ options, only the final one takes effect.
 @opindex --interactive
 @cindex prompts, forcing
 Prompt whether to overwrite each existing destination file, regardless
-of its permissions.
-If the response is not affirmative, the file is skipped.
+of its permissions, and fail if the response is not affirmative.
 @mvOptsIfn
 
 @item -n
@@ -10107,7 +10108,7 @@ If the response is not affirmative, the file is skipped.
 @opindex -n
 @opindex --no-clobber
 @cindex prompts, omitting
-Do not overwrite an existing file; silently do nothing instead.
+Do not overwrite an existing file; silently fail instead.
 @mvOptsIfn
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
 
@@ -10123,7 +10124,7 @@ fail with a diagnostic instead of copying and then removing the file.
 @opindex --update
 @cindex newer files, moving only
 Do not move a non-directory that has an existing destination with the
-same or newer modification timestamp.
+same or newer modification timestamp; silently fail instead.
 If the move is across file system boundaries, the comparison is to the
 source timestamp truncated to the resolutions of the destination file
 system and of the system calls used to update timestamps; this avoids
@@ -10216,7 +10217,7 @@ Ignore any previous @option{--interactive} (@option{-i}) option.
 @item -i
 @opindex -i
 Prompt whether to remove each file.
-If the response is not affirmative, the file is skipped.
+If the response is not affirmative, silently skip the file without failing.
 Ignore any previous @option{--force} (@option{-f}) option.
 Equivalent to @option{--interactive=always}.
 
@@ -10249,7 +10250,7 @@ removal is requested.  Equivalent to @option{-I}.
 @item --one-file-system
 @opindex --one-file-system
 @cindex one file system, restricting @command{rm} to
-When removing a hierarchy recursively, skip any directory that is on a
+When removing a hierarchy recursively, do not remove any directory that is on a
 file system different from that of the corresponding command line argument.
 @cindex bind mount
 This option is useful when removing a build ``chroot'' hierarchy,
@@ -10260,7 +10261,7 @@ unmount @file{/home}.  Then, when you use @command{rm -rf} to remove
 your normally throw-away chroot, that command will remove everything
 under @file{/home}, too.
 Use the @option{--one-file-system} option, and it will
-warn about and skip directories on other file systems.
+diagnose and skip directories on other file systems.
 Of course, this will not save your @file{/home} if it and your
 chroot happen to be on the same file system.
 See also @option{--preserve-root=all} to protect command line arguments
@@ -10802,7 +10803,8 @@ Remove existing destination files.
 @opindex -i
 @opindex --interactive
 @cindex prompting, and @command{ln}
-Prompt whether to remove existing destination files.
+Prompt whether to remove existing destination files,
+and fail if the response is not affirmative.
 
 @item -L
 @itemx --logical

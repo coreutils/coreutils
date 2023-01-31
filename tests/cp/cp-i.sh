@@ -24,7 +24,7 @@ touch a/c || framework_failure_
 
 
 # coreutils 6.2 cp would neglect to prompt in this case.
-echo n | cp -iR a b 2>/dev/null || fail=1
+echo n | returns_ 1 cp -iR a b 2>/dev/null || fail=1
 
 # test miscellaneous combinations of -f -i -n parameters
 touch c d || framework_failure_
@@ -32,7 +32,7 @@ echo "'c' -> 'd'" > out_copy
 > out_empty
 
 # ask for overwrite, answer no
-echo n | cp -vi  c d 2>/dev/null > out1 || fail=1
+echo n | returns_ 1 cp -vi  c d 2>/dev/null > out1 || fail=1
 compare out1 out_empty || fail=1
 
 # ask for overwrite, answer yes
@@ -44,7 +44,7 @@ echo y | cp -vni c d 2>/dev/null > out3 || fail=1
 compare out3 out_copy  || fail=1
 
 # -n wins over -i
-echo y | cp -vin c d 2>/dev/null > out4 || fail=1
+echo y | returns_ 1 cp -vin c d 2>/dev/null > out4 || fail=1
 compare out4 out_empty || fail=1
 
 # ask for overwrite, answer yes
@@ -52,11 +52,11 @@ echo y | cp -vfi c d 2>/dev/null > out5 || fail=1
 compare out5 out_copy  || fail=1
 
 # do not ask, prevent from overwrite
-echo n | cp -vfn c d 2>/dev/null > out6 || fail=1
+echo n | returns_ 1 cp -vfn c d 2>/dev/null > out6 || fail=1
 compare out6 out_empty || fail=1
 
 # do not ask, prevent from overwrite
-echo n | cp -vnf c d 2>/dev/null > out7 || fail=1
+echo n | returns_ 1 cp -vnf c d 2>/dev/null > out7 || fail=1
 compare out7 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive

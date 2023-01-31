@@ -2197,7 +2197,7 @@ copy_internal (char const *src_name, char const *dst_name,
                         }
                     }
 
-                  return true;
+                  return false;
                 }
             }
 
@@ -2216,7 +2216,7 @@ copy_internal (char const *src_name, char const *dst_name,
                      doesn't end up removing the source file.  */
                   if (rename_succeeded)
                     *rename_succeeded = true;
-                  return true;
+                  return false;
                 }
             }
           else
@@ -2226,7 +2226,7 @@ copy_internal (char const *src_name, char const *dst_name,
                       || (x->interactive == I_ASK_USER
                           && ! overwrite_ok (x, dst_name, dst_dirfd,
                                              dst_relname, &dst_sb))))
-                return true;
+                return false;
             }
 
           if (return_now)

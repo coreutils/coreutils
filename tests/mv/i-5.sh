@@ -24,6 +24,6 @@ touch b || framework_failure_
 
 
 # coreutils 6.2 mv would neglect to prompt in this case.
-echo n | mv -i a b 2>/dev/null || fail=1
+echo n | returns_ 1 mv -i a b 2>/dev/null || fail=1
 
 Exit $fail

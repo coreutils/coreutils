@@ -69,6 +69,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   'cp --reflink=always A B' no longer leaves behind a newly created
   empty file B merely because copy-on-write clones are not supported.
 
+  'cp -n' and 'mv -n' now exit with nonzero status if they skip their
+  action because the destination exists, and likewise for 'cp -i',
+  'ln -i', and 'mv -i' when the user declines.  (POSIX specifies this
+  for 'cp -i' and 'mv -i'.)
+
   cp, mv, and install again read in multiples of the reported block size,
   to support unusual devices that may have this constraint.
   [behavior inadvertently changed in coreutils-7.2]

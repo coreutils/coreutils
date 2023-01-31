@@ -32,7 +32,7 @@ my @Tests =
       {IN => {src => "a\n"}}, {IN => {dst => "b\n"}}, '<', {IN => "n\n"},
       {ERR => "mv: overwrite 'dst'? "},
       {POST => sub { -r 'src' or die "test $test_a failed\n"}},
-      {EXIT => 0},
+      {EXIT => 1},
      ],
     );
 

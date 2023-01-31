@@ -27,7 +27,7 @@ echo "renamed 'a' -> 'b'" > out_move
 
 # ask for overwrite, answer no
 touch a b || framework_failure_
-echo n | mv -vi a b 2>/dev/null > out1 || fail=1
+echo n | returns_ 1 mv -vi a b 2>/dev/null > out1 || fail=1
 compare out1 out_empty || fail=1
 
 # ask for overwrite, answer yes
@@ -37,17 +37,17 @@ compare out2 out_move || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | mv -vin a b 2>/dev/null > out3 || fail=1
+echo y | returns_ 1 mv -vin a b 2>/dev/null > out3 || fail=1
 compare out3 out_empty || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | mv -vfn a b 2>/dev/null > out4 || fail=1
+echo y | returns_ 1 mv -vfn a b 2>/dev/null > out4 || fail=1
 compare out4 out_empty || fail=1
 
 # -n wins (as the last option)
 touch a b || framework_failure_
-echo y | mv -vifn a b 2>/dev/null > out5 || fail=1
+echo y | returns_ 1 mv -vifn a b 2>/dev/null > out5 || fail=1
 compare out5 out_empty || fail=1
 
 # options --backup and --no-clobber are mutually exclusive
