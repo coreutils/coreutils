@@ -183,11 +183,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 "), stdout);
       fputs (_("\
   -p                           same as --preserve=mode,ownership,timestamps\n\
-      --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
-                                 mode,ownership,timestamps), if possible\n\
-                                 additional attributes: context, links, xattr,\
-\n\
-                                 all\n\
+      --preserve[=ATTR_LIST]   preserve the specified attributes\n\
 "), stdout);
       fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
@@ -225,6 +221,14 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
+\n\
+ATTR_LIST is a comma-separated list of attributes. Attributes are 'mode' for\n\
+permissions (including any ACL and xattr permissions), 'ownership' for user\n\
+and group, 'timestamps' for file timestamps, 'links' for hard links, 'context'\n\
+for security context, 'xattr' for extended attributes, and 'all' for all\n\
+attributes.\n\
+"), stdout);
       fputs (_("\
 \n\
 By default, sparse SOURCE files are detected by a crude heuristic and the\n\
