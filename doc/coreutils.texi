@@ -8972,7 +8972,13 @@ of one or more of the following strings:
 
 @table @samp
 @item mode
-Preserve the file mode bits and access control lists.
+@cindex access control lists (ACLs)
+Preserve attributes relevant to access permissions,
+including file mode bits and (if possible) access control lists (ACLs).
+ACL preservation is system-dependent, and ACLs are not necessarily
+translated when the source and destination are on file systems with
+different ACL formats (e.g., NFSv4 versus POSIX formats).
+
 @item ownership
 Preserve the owner and group.  On most modern systems,
 only users with appropriate privileges may change the owner of a file,
@@ -9014,6 +9020,7 @@ $ mkdir b c; (cd b; : > a; ln -s a b); cp -aL b c; ls -i1 c/b
 @item context
 Preserve SELinux security context of the file, or fail with full diagnostics.
 @item xattr
+@cindex access control lists (ACLs)
 Preserve extended attributes of the file, or fail with full diagnostics.
 If @command{cp} is built without xattr support, ignore this option.
 If SELinux context, ACLs or Capabilities are implemented using xattrs,
