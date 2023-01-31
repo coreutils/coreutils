@@ -2197,7 +2197,7 @@ copy_internal (char const *src_name, char const *dst_name,
                         }
                     }
 
-                  return false;
+                  return true;
                 }
             }
 
