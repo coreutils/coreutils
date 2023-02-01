@@ -131,6 +131,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   when removing directories.  For example EIO will be faithfully
   diagnosed, rather than being conflated with ENOTEMPTY.
 
+  tail --follow=name now works with single non regular files even
+  when their modification time doesn't change when new data is available.
+  Previously tail would not show any new data in this case.
+
 
 * Noteworthy changes in release 9.1 (2022-04-15) [stable]
 

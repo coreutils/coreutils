@@ -1222,6 +1222,7 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                 f[i].blocking = blocking;
             }
 
+          bool read_unchanged = false;
           if (!f[i].blocking)
             {
               if (fstat (fd, &stats) != 0)
@@ -1244,8 +1245,13 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
                       recheck (&f[i], f[i].blocking);
                       f[i].n_unchanged_stats = 0;
                     }
-                  continue;
+                  if (fd != f[i].fd || S_ISREG (stats.st_mode) || 1 < n_files)
+                    continue;
+                  else
+                    read_unchanged = true;
                 }
+
+              assert (fd == f[i].fd);
 
               /* This file has changed.  Print out what we can, and
                  then keep looping.  */
@@ -1254,7 +1260,8 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
               f[i].mode = stats.st_mode;
 
               /* reset counter */
-              f[i].n_unchanged_stats = 0;
+              if (! read_unchanged)
+                f[i].n_unchanged_stats = 0;
 
               /* XXX: This is only a heuristic, as the file may have also
                  been truncated and written to if st_size >= size
@@ -1288,6 +1295,9 @@ tail_forever (struct File_spec *f, size_t n_files, double sleep_interval)
             bytes_to_read = COPY_TO_EOF;
 
           bytes_read = dump_remainder (false, name, fd, bytes_to_read);
+
+          if (read_unchanged && bytes_read)
+            f[i].n_unchanged_stats = 0;
 
           any_input |= (bytes_read != 0);
           f[i].size += bytes_read;
