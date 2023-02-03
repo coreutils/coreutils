@@ -225,8 +225,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
 ATTR_LIST is a comma-separated list of attributes. Attributes are 'mode' for\n\
 permissions (including any ACL and xattr permissions), 'ownership' for user\n\
-and group, 'timestamps' for file timestamps, 'links' for hard links, 'context'\n\
-for security context, 'xattr' for extended attributes, and 'all' for all\n\
+and group, 'timestamps' for file timestamps, 'links' for hard links, 'context'\
+\nfor security context, 'xattr' for extended attributes, and 'all' for all\n\
 attributes.\n\
 "), stdout);
       fputs (_("\
