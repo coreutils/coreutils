@@ -285,9 +285,17 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
    If ARGS is true, also print the FILE name.  */
 
 void
-output_crc (char const *file, int binary_file, void const *digest,
+output_crc (char const *file, int binary_file, void const *digest, bool raw,
             bool tagged, unsigned char delim, bool args, uintmax_t length)
 {
+  if (raw)
+    {
+      /* Output in network byte order (big endian).  */
+      uint32_t out_int = SWAP (*(uint32_t *)digest);
+      fwrite (&out_int, 1, 32/8, stdout);
+      return;
+    }
+
   char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
   printf ("%u %s", *(unsigned int *)digest, umaxtostr (length, length_buf));
   if (args)

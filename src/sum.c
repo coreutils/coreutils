@@ -26,6 +26,13 @@
 #include "human.h"
 #include "sum.h"
 
+#include <byteswap.h>
+#ifdef WORDS_BIGENDIAN
+# define SWAP(n) (n)
+#else
+# define SWAP(n) bswap_16 (n)
+#endif
+
 /* Calculate the checksum and the size in bytes of stream STREAM.
    Return -1 on error, 0 on success.  */
 
@@ -184,9 +191,16 @@ cleanup_buffer:
 
 void
 output_bsd (char const *file, int binary_file, void const *digest,
-            bool tagged, unsigned char delim, bool args,
+            bool raw, bool tagged, unsigned char delim, bool args,
             uintmax_t length)
 {
+  if (raw)
+    {
+      /* Output in network byte order (big endian).  */
+      uint16_t out_int = SWAP (*(uint16_t *)digest);
+      fwrite (&out_int, 1, 16/8, stdout);
+      return;
+    }
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];
   printf ("%05d %5s", *(int *)digest,
@@ -201,9 +215,16 @@ output_bsd (char const *file, int binary_file, void const *digest,
 
 void
 output_sysv (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, bool args,
+             bool raw, bool tagged, unsigned char delim, bool args,
              uintmax_t length)
 {
+  if (raw)
+    {
+      /* Output in network byte order (big endian).  */
+      uint16_t out_int = SWAP (*(uint16_t *)digest);
+      fwrite (&out_int, 1, 16/8, stdout);
+      return;
+    }
 
   char hbuf[LONGEST_HUMAN_READABLE + 1];
   printf ("%d %s", *(int *)digest,

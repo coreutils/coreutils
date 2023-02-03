@@ -7,7 +7,7 @@ extern int
 crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length);
 
 extern void
-output_crc (char const *file, int binary_file, void const *digest,
+output_crc (char const *file, int binary_file, void const *digest, bool raw,
             bool tagged, unsigned char delim, bool args, uintmax_t length)
   _GL_ATTRIBUTE_NONNULL ((3));
 

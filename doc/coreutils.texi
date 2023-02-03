@@ -4059,6 +4059,17 @@ input digest string as what is output.  I.e., removing or adding any
 @opindex --debug
 Output extra information to stderr, like the checksum implementation being used.
 
+@item --raw
+@opindex --raw
+@cindex raw binary checksum
+Print only the unencoded raw binary digest for a single input.
+Do not output the file name or anything else.
+Use network byte order (big endian) where applicable:
+for @samp{bsd}, @samp{crc}, and @samp{sysv}.
+This option works only with a single input.
+Unlike other output formats, @command{cksum} provides no way to
+@option{--check} a @option{--raw} checksum.
+
 @item --untagged
 @opindex --untagged
 Output using the original Coreutils format used by the other

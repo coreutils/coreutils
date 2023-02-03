@@ -168,7 +168,7 @@
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, bool args,
+             bool raw, bool tagged, unsigned char delim, bool args,
              uintmax_t length);
 #endif
 
@@ -210,12 +210,15 @@ static unsigned char digest_delim = '\n';
 static bool base64_digest = false;
 #endif
 
+/* If true, print binary digests, not hex.  */
+static bool raw_digest = false;
+
 #if HASH_ALGO_BLAKE2 || HASH_ALGO_CKSUM
 # define BLAKE2B_MAX_LEN BLAKE2B_OUTBYTES
 static uintmax_t digest_length;
 #endif /* HASH_ALGO_BLAKE2 */
 
-typedef void (*digest_output_fn)(char const *, int, void const *,
+typedef void (*digest_output_fn)(char const *, int, void const *, bool,
                                  bool, unsigned char, bool, uintmax_t);
 #if HASH_ALGO_SUM
 enum Algorithm
@@ -365,6 +368,7 @@ enum
   TAG_OPTION,
   UNTAG_OPTION,
   DEBUG_PROGRAM_OPTION,
+  RAW_OPTION,
 };
 
 static struct option const long_options[] =
@@ -387,6 +391,7 @@ static struct option const long_options[] =
   { "algorithm", required_argument, NULL, 'a'},
   { "base64", no_argument, NULL, 'b' },
   { "debug", no_argument, NULL, DEBUG_PROGRAM_OPTION},
+  { "raw", no_argument, NULL, RAW_OPTION},
   { "untagged", no_argument, NULL, UNTAG_OPTION },
 # else
   { "binary", no_argument, NULL, 'b' },
@@ -468,6 +473,10 @@ Print or check %s (%d-bit) checksums.\n\
 "), stdout);
 # endif
 # if HASH_ALGO_CKSUM
+        fputs (_("\
+      --raw             emit a raw binary digest, not hexadecimal\
+\n\
+"), stdout);
       fputs (_("\
       --tag             create a BSD-style checksum (the default)\n\
 "), stdout);
@@ -1005,9 +1014,17 @@ digest_file (char const *filename, int *binary, unsigned char *bin_result,
 #if !HASH_ALGO_SUM
 static void
 output_file (char const *file, int binary_file, void const *digest,
-             bool tagged, unsigned char delim, MAYBE_UNUSED bool args,
+             bool raw, bool tagged, unsigned char delim, MAYBE_UNUSED bool args,
              MAYBE_UNUSED uintmax_t length)
 {
+# if HASH_ALGO_CKSUM
+  if (raw)
+    {
+      fwrite (digest, 1, digest_length / 8, stdout);
+      return;
+    }
+# endif
+
   unsigned char const *bin_buffer = digest;
 
   /* Output a leading backslash if the file name contains problematic chars.
@@ -1421,6 +1438,9 @@ main (int argc, char **argv)
       case 'b':
         base64_digest = true;
         break;
+      case RAW_OPTION:
+        raw_digest = true;
+        break;
       case UNTAG_OPTION:
         prefix_tag = false;
         break;
@@ -1490,6 +1510,11 @@ main (int argc, char **argv)
         break;
     }
 
+  if (base64_digest && raw_digest)
+   {
+     error (0, 0, _("--base64 and --raw are mutually exclusive"));
+     usage (EXIT_FAILURE);
+   }
 #endif
 
   if (prefix_tag && !binary)
@@ -1569,6 +1594,11 @@ main (int argc, char **argv)
   char **operand_lim = argv + argc;
   if (optind == argc)
     *operand_lim++ = bad_cast ("-");
+  else if (1 < argc - optind && raw_digest)
+    {
+       die (EXIT_FAILURE, 0,
+            _("the --raw option is not supported with multiple files"));
+    }
 
   for (char **operandp = argv + optind; operandp < operand_lim; operandp++)
     {
@@ -1585,7 +1615,7 @@ main (int argc, char **argv)
             ok = false;
           else
             {
-              DIGEST_OUT (file, binary_file, bin_buffer, prefix_tag,
+              DIGEST_OUT (file, binary_file, bin_buffer, raw_digest, prefix_tag,
                           digest_delim, optind != argc, length);
             }
         }
