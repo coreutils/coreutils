@@ -81,7 +81,7 @@ for f in f linkm; do
 
   # Copy all the hard links across.  With cp from coreutils-8.12
   # and prior, it would sometimes mistakenly copy rather than link.
-  returns_ 1 cp -au s t || fail=1
+  cp -au s t || fail=1
 
   same_inode t/s/f t/s/linkm || fail=1
   same_inode t/s/f t/s/linke || fail=1
