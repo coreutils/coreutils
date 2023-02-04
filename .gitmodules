@@ -1,3 +1,3 @@
 [submodule "gnulib"]
         path = gnulib
-        url = git://git.sv.gnu.org/gnulib.git
+        url = https://git.savannah.gnu.org/git/gnulib.git

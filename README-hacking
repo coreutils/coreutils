@@ -27,7 +27,7 @@ few prerequisites, later, a plain 'git pull && make' typically suffices.
 
 You can get a copy of the source repository like this:
 
-        $ git clone git://git.sv.gnu.org/<packagename>
+        $ git clone https://git.savannah.gnu.org/git/<packagename>
         $ cd <packagename>
 
 where '<packagename>' stands for 'coreutils' or whatever other package

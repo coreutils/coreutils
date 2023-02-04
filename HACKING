@@ -20,7 +20,7 @@ Use the latest upstream sources
 Base any changes you make on the latest upstream sources.
 You can get a copy of the latest with this command:
 
-    git clone git://git.sv.gnu.org/coreutils
+    git clone https://git.savannah.gnu.org/git/coreutils.git
     cd coreutils
 
 That downloads the entire repository, including revision control history
@@ -95,7 +95,7 @@ Make your changes on a private "topic" branch
 =============================================
 So you checked out coreutils like this:
 
-  git clone git://git.sv.gnu.org/coreutils
+  git clone https://git.savannah.gnu.org/git/coreutils.git
 
 Now, cd into the coreutils/ directory and run:
 
