@@ -99,7 +99,6 @@
 /lib/signal.h
 /lib/spawn.h
 /lib/stamp-h1
-/lib/stdalign.h
 /lib/stdarg.h
 /lib/stdbool.h
 /lib/stdckdint.h

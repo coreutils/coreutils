@@ -8,6 +8,7 @@ lib/randread.c
 lib/randread.h
 
 Depends-on:
+alignasof
 error
 exitfail
 inline
@@ -15,7 +16,6 @@ fopen-safer
 getrandom
 quote
 minmax
-stdalign
 stdbool
 stdint
 unlocked-io
