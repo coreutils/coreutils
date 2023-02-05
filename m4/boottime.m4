@@ -27,7 +27,7 @@ AC_DEFUN([GNULIB_BOOT_TIME],
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
       #endif]])
-  AC_CHECK_HEADERS_ONCE([utmp.h utmpx.h OS.h])
+  AC_CHECK_HEADERS_ONCE([utmpx.h OS.h])
   AC_CACHE_CHECK(
     [whether we can get the system boot time],
     [gnulib_cv_have_boot_time],
@@ -43,9 +43,8 @@ AC_DEFUN([GNULIB_BOOT_TIME],
 #endif
 #if HAVE_UTMPX_H
 # include <utmpx.h>
-#elif HAVE_UTMP_H
-# include <utmp.h>
 #endif
+#include <utmp.h>
 #if HAVE_OS_H
 # include <OS.h>
 #endif

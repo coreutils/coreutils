@@ -102,7 +102,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   }
 #endif
 
-#if HAVE_UTMPX_H || HAVE_UTMP_H
+#if HAVE_STRUCT_UTMP_UT_TYPE || HAVE_STRUCT_UTMPX_UT_TYPE
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
@@ -179,7 +179,7 @@ uptime (char const *filename, int options)
   size_t n_users;
   STRUCT_UTMP *utmp_buf = NULL;
 
-#if HAVE_UTMPX_H || HAVE_UTMP_H
+#if HAVE_STRUCT_UTMP_UT_TYPE || HAVE_STRUCT_UTMPX_UT_TYPE
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (filename));
 #endif
