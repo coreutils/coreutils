@@ -450,7 +450,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
                  beyond the end of the file.  As in the example above.  */
 
               bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
-              skip_read = true;
+              if (bytes && 0 <= lseek (fd, bytes, SEEK_CUR))
+                skip_read = true;
+              else
+                bytes = 0;
             }
           else
             {

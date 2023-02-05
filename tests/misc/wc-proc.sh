@@ -42,6 +42,18 @@ cat <<\EOF > exp
 EOF
 compare exp out || fail=1
 
+# Ensure we update the offset even when not reading,
+# which wasn't the case from coreutils-8.27 to coreutils-9.2
+{ wc -c; wc -c; } < no_read >  out || fail=1
+{ wc -c; wc -c; } < do_read >> out || fail=1
+cat <<\EOF > exp
+2
+0
+1048576
+0
+EOF
+compare exp out || fail=1
+
 # Ensure we don't read too much when reading,
 # as was the case on 32 bit systems
 # from coreutils-8.24 to coreutils-9.1
