@@ -212,7 +212,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
 
   int wp_errno = 0;
   if (!x->ignore_missing_files
-      && ((x->interactive == RMI_ALWAYS) || x->stdin_tty)
+      && (x->interactive == RMI_ALWAYS || x->stdin_tty)
       && dirent_type != DT_LNK)
     {
       write_protected = write_protected_non_symlink (fd_cwd, filename, sbuf);
@@ -254,7 +254,7 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
                 prompting the user  */
             if ( ! (x->recursive
                     || (x->remove_empty_directories
-                        && get_dir_status (fts, ent, dir_status) == DS_EMPTY)))
+                        && get_dir_status (fts, ent, dir_status) != 0)))
               {
                 write_protected = -1;
                 wp_errno = *dir_status <= 0 ? EISDIR : *dir_status;
@@ -281,8 +281,23 @@ prompt (FTS const *fts, FTSENT const *ent, bool is_dir,
                  program_name, quoted_name);
       else if (0 < *dir_status)
         {
-          error (0, *dir_status, _("cannot remove %s"), quoted_name);
-          return RM_ERROR;
+          if ( ! (x->remove_empty_directories && *dir_status == EACCES))
+            {
+              error (0, *dir_status, _("cannot remove %s"), quoted_name);
+              return RM_ERROR;
+            }
+
+          /* The following code can lead to a successful deletion only with
+             the --dir (-d) option (remove_empty_directories) and an empty
+             inaccessible directory. In the first prompt call for a directory,
+             we'd normally ask whether to descend into it, but in this case
+             (it's inaccessible), that is not possible, so don't prompt.  */
+          if (mode == PA_DESCEND_INTO_DIR)
+            return RM_OK;
+
+          fprintf (stderr,
+               _("%s: attempt removal of inaccessible directory %s? "),
+                   program_name, quoted_name);
         }
       else
         {
@@ -434,7 +449,7 @@ rm_fts (FTS *fts, FTSENT *ent, struct rm_options const *x)
     case FTS_D:			/* preorder directory */
       if (! x->recursive
           && !(x->remove_empty_directories
-               && get_dir_status (fts, ent, &dir_status) == DS_EMPTY))
+               && get_dir_status (fts, ent, &dir_status) != 0))
         {
           /* This is the first (pre-order) encounter with a directory
              that we cannot delete.
