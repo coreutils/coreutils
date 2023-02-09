@@ -1065,7 +1065,7 @@ infer_scantype (int fd, struct stat const *sb,
       return PLAIN_SCANTYPE;
     }
 
-#ifdef SEEK_HOLE
+#if defined(SEEK_HOLE) && !defined(__APPLE__)
   scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
   if (0 <= scan_inference->ext_start || errno == ENXIO)
     return LSEEK_SCANTYPE;
