@@ -1052,7 +1052,7 @@ union scan_inference
 };
 
 /* Return how to scan a file with descriptor FD and stat buffer SB.
-   Store any information gathered into *SCAN_INFERENCE.  */
+   Set *SCAN_INFERENCE if returning LSEEK_SCANTYPE.  */
 static enum scantype
 infer_scantype (int fd, struct stat const *sb,
                 union scan_inference *scan_inference)
@@ -1060,19 +1060,17 @@ infer_scantype (int fd, struct stat const *sb,
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
-    {
-      scan_inference->ext_start = -1;
-      return PLAIN_SCANTYPE;
-    }
+    return PLAIN_SCANTYPE;
 
 #ifdef SEEK_HOLE
-  scan_inference->ext_start = lseek (fd, 0, SEEK_DATA);
-  if (0 <= scan_inference->ext_start || errno == ENXIO)
-    return LSEEK_SCANTYPE;
+  off_t ext_start = lseek (fd, 0, SEEK_DATA);
+  if (0 <= ext_start || errno == ENXIO)
+    {
+      scan_inference->ext_start = ext_start;
+      return LSEEK_SCANTYPE;
+    }
   else if (errno != EINVAL && !is_ENOTSUP (errno))
     return ERROR_SCANTYPE;
-#else
-  scan_inference->ext_start = -1;
 #endif
 
   return ZERO_SCANTYPE;
