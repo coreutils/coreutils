@@ -24,7 +24,7 @@ use strict;
 
 my $prog = 'comm';
 
-# Turn off localization of executable's ouput.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @inputs = ({IN=>{a=>"1\n3\n3\n3"}}, {IN=>{b=>"2\n2\n3\n3\n3"}});

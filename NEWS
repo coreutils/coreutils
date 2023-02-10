@@ -2683,7 +2683,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   rm -r --one-file-system works once again.
   The rewrite to make rm use fts introduced a regression whereby
-  a commmand of the above form would fail for all subdirectories.
+  a command of the above form would fail for all subdirectories.
   [bug introduced in coreutils-8.0]
 
   stat -f recognizes more file system types: k-afs, fuseblk, gfs/gfs2, ocfs2,

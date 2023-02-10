@@ -2626,7 +2626,7 @@ print_stored (COLUMN *p)
    sequences or control prefixes.
 
    Note: the width of a clump is not necessarily equal to the number of
-   characters in clump_buff.  (e.g, the width of '\b' is -1, while the
+   characters in clump_buff.  (e.g., the width of '\b' is -1, while the
    number of characters is 1.) */
 
 static int

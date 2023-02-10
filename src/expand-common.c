@@ -34,7 +34,7 @@ bool convert_entire_line = false;
 /* If nonzero, the size of all tab stops.  If zero, use 'tab_list' instead.  */
 static uintmax_t tab_size = 0;
 
-/* If nonzero, the size of all tab stops after the last specifed.  */
+/* If nonzero, the size of all tab stops after the last specified.  */
 static uintmax_t extend_size = 0;
 
 /* If nonzero, an increment for additional tab stops after the last specified.*/
