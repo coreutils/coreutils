@@ -1076,6 +1076,25 @@ infer_scantype (int fd, struct stat const *sb,
   return ZERO_SCANTYPE;
 }
 
+#if HAVE_FCLONEFILEAT && !USE_XATTR
+# include <sys/acl.h>
+/* Return true if FD has a nontrivial ACL.  */
+static bool
+fd_has_acl (int fd)
+{
+  /* Every platform with fclonefileat (macOS 10.12 or later) also has
+     acl_get_fd_np.  */
+  bool has_acl = false;
+  acl_t acl = acl_get_fd_np (fd, ACL_TYPE_EXTENDED);
+  if (acl)
+    {
+      acl_entry_t ace;
+      has_acl = 0 <= acl_get_entry (acl, ACL_FIRST_ENTRY, &ace);
+      acl_free (acl);
+    }
+  return has_acl;
+}
+#endif
 
 /* Handle failure from FICLONE or fclonefileat.
    Return FALSE if it's a terminal failure for this file.  */
@@ -1244,24 +1263,86 @@ copy_reg (char const *src_name, char const *dst_name,
   if (*new_dst)
     {
 #if HAVE_FCLONEFILEAT && !USE_XATTR
-/* CLONE_NOOWNERCOPY only available on macos >= 10.13.  */
-# ifndef CLONE_NOOWNERCOPY
-#  define CLONE_NOOWNERCOPY 0
+# ifndef CLONE_ACL
+#  define CLONE_ACL 0 /* Added in macOS 12.6.  */
 # endif
-      int fc_flags = x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY;
+# ifndef CLONE_NOOWNERCOPY
+#  define CLONE_NOOWNERCOPY 0 /* Added in macOS 10.13.  */
+# endif
+      /* Try fclonefileat if copying data in reflink mode.
+         Use CLONE_NOFOLLOW to avoid security issues that could occur
+         if writing through dangling symlinks.  Although the circa
+         2023 macOS documentation doesn't say so, CLONE_NOFOLLOW
+         affects the destination file too.  */
       if (data_copy_required && x->reflink_mode
-          && x->preserve_mode && x->preserve_timestamps
-          && (x->preserve_ownership || CLONE_NOOWNERCOPY))
+          && (CLONE_NOOWNERCOPY || x->preserve_ownership))
         {
-          if (fclonefileat (source_desc, dst_dirfd, dst_relname, fc_flags) == 0)
-            goto close_src_desc;
-          else if (! handle_clone_fail (dst_dirfd, dst_relname, src_name,
-                                        dst_name,
-                                        -1, false /* We didn't create dst  */,
-                                        x->reflink_mode))
+          /* Try fclonefileat so long as it won't create the
+             destination with unwanted permissions, which could lead
+             to a security race.  */
+          mode_t cloned_mode_bits = S_ISVTX | S_IRWXUGO;
+          mode_t cloned_mode = src_mode & cloned_mode_bits;
+          mode_t desired_mode
+            = (x->preserve_mode ? src_mode & CHMOD_MODE_BITS
+               : x->set_mode ? x->mode
+               : ((x->explicit_no_preserve_mode ? MODE_RW_UGO : dst_mode)
+                  & ~ cached_umask ()));
+          if (! (cloned_mode & ~desired_mode))
             {
-              return_val = false;
-              goto close_src_desc;
+              int fc_flags
+                = (CLONE_NOFOLLOW
+                   | (x->preserve_mode ? CLONE_ACL : 0)
+                   | (x->preserve_ownership ? 0 : CLONE_NOOWNERCOPY));
+              int s = fclonefileat (source_desc, dst_dirfd, dst_relname,
+                                    fc_flags);
+              if (s != 0 && (fc_flags & CLONE_ACL) && errno == EINVAL)
+                {
+                  fc_flags &= ~CLONE_ACL;
+                  s = fclonefileat (source_desc, dst_dirfd, dst_relname,
+                                    fc_flags);
+                }
+              if (s == 0)
+                {
+                  /* Update the clone's timestamps and permissions
+                     as needed.  */
+
+                  if (!x->preserve_timestamps)
+                    {
+                      struct timespec timespec[2];
+                      timespec[0].tv_nsec = timespec[1].tv_nsec = UTIME_NOW;
+                      if (utimensat (dst_dirfd, dst_relname, timespec,
+                                     AT_SYMLINK_NOFOLLOW)
+                          != 0)
+                        {
+                          error (0, errno, _("updating times for %s"),
+                                 quoteaf (dst_name));
+                          return_val = false;
+                          goto close_src_desc;
+                        }
+                    }
+
+                  extra_permissions = desired_mode & ~cloned_mode;
+                  if (!extra_permissions
+                      && (!x->preserve_mode || (fc_flags & CLONE_ACL)
+                          || !fd_has_acl (source_desc)))
+                    {
+                      goto close_src_desc;
+                    }
+
+                  /* Either some desired permissions were not cloned,
+                     or ACLs were not cloned despite that being requested.  */
+                  omitted_permissions = 0;
+                  dest_desc = -1;
+                  goto set_dest_mode;
+                }
+              if (! handle_clone_fail (dst_dirfd, dst_relname, src_name,
+                                       dst_name,
+                                       -1, false /* We didn't create dst  */,
+                                       x->reflink_mode))
+                {
+                  return_val = false;
+                  goto close_src_desc;
+                }
             }
         }
 #endif
@@ -1485,6 +1566,9 @@ copy_reg (char const *src_name, char const *dst_name,
 
   set_author (dst_name, dest_desc, src_sb);
 
+#if HAVE_FCLONEFILEAT && !USE_XATTR
+set_dest_mode:
+#endif
   if (x->preserve_mode || x->move_mode)
     {
       if (copy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
@@ -1515,6 +1599,9 @@ copy_reg (char const *src_name, char const *dst_name,
             return_val = false;
         }
     }
+
+  if (dest_desc < 0)
+    goto close_src_desc;
 
 close_src_and_dst_desc:
   if (close (dest_desc) < 0)

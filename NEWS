@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   total line in this case.
   [bug introduced with the --total option in coreutils-8.26]
 
+  'cp -p' no longer has a security hole when cloning into a dangling
+  symbolic link on macOS 10.12 and later.
+  [bug introduced in coreutils-9.1]
+
   'cp -rx / /mnt' no longer complains "cannot create directory /mnt/".
   [bug introduced in coreutils-9.1]
 
@@ -123,6 +127,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   This may be more efficient, by avoiding user space copies,
   and possibly employing copy offloading or reflinking,
   for the non sparse portion of such sparse files.
+
+  On macOS, cp creates a copy-on-write clone in more cases.
+  Previously cp would only do this when preserving mode and timestamps.
 
   date --debug now diagnoses if multiple --date or --set options are
   specified, as only the last specified is significant in that case.
