@@ -107,7 +107,8 @@ static char const *strip_program = "strip";
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1,
+  DEBUG_OPTION = CHAR_MAX + 1,
+  PRESERVE_CONTEXT_OPTION,
   STRIP_PROGRAM_OPTION
 };
 
@@ -116,6 +117,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"compare", no_argument, NULL, 'C'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
+  {"debug", no_argument, NULL, DEBUG_OPTION},
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
@@ -603,6 +605,11 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
   -D                  create all leading components of DEST except the last,\n\
                         or all components of --target-directory,\n\
                         then copy SOURCE to DEST\n\
+"), stdout);
+      fputs (_("\
+      --debug         explain how a file is copied.  Implies -v\n\
+"), stdout);
+      fputs (_("\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
@@ -615,7 +622,9 @@ In the 4th form, create all components of the given DIRECTORY(ies).\n\
   -S, --suffix=SUFFIX  override the usual backup suffix\n\
   -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
   -T, --no-target-directory  treat DEST as a normal file\n\
-  -v, --verbose       print the name of each directory as it is created\n\
+"), stdout);
+      fputs (_("\
+  -v, --verbose       print the name of each created file or directory\n\
 "), stdout);
       fputs (_("\
       --preserve-context  preserve SELinux security context\n\
@@ -815,6 +824,9 @@ main (int argc, char **argv)
           /* System V fork+wait does not work if SIGCHLD is ignored.  */
           signal (SIGCHLD, SIG_DFL);
 #endif
+          break;
+        case DEBUG_OPTION:
+          x.debug = x.verbose = true;
           break;
         case STRIP_PROGRAM_OPTION:
           strip_program = xstrdup (optarg);

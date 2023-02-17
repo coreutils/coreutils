@@ -112,6 +112,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cksum now accepts the --raw option to output a raw binary checksum.
   No file name or other information is output in this mode.
 
+  cp, mv, and install now accept the --debug option to
+  print details on how a file is being copied.
+
   factor now accepts the --exponents (-h) option to print factors
   in the form p^e, rather than repeating the prime p, e times.
 

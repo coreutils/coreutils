@@ -48,7 +48,8 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_COPY_OPTION = CHAR_MAX + 1,
+  DEBUG_OPTION = CHAR_MAX + 1,
+  NO_COPY_OPTION,
   STRIP_TRAILING_SLASHES_OPTION
 };
 
@@ -56,6 +57,7 @@ static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {"context", no_argument, NULL, 'Z'},
+  {"debug", no_argument, NULL, DEBUG_OPTION},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"no-clobber", no_argument, NULL, 'n'},
@@ -256,6 +258,11 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\
 \n\
   -b                           like --backup but does not accept an argument\n\
+"), stdout);
+      fputs (_("\
+      --debug                  explain how a file is copied.  Implies -v\n\
+"), stdout);
+      fputs (_("\
   -f, --force                  do not prompt before overwriting\n\
   -i, --interactive            prompt before overwrite\n\
   -n, --no-clobber             do not overwrite an existing file\n\
@@ -332,6 +339,9 @@ main (int argc, char **argv)
           break;
         case 'n':
           x.interactive = I_ALWAYS_NO;
+          break;
+        case DEBUG_OPTION:
+          x.debug = x.verbose = true;
           break;
         case NO_COPY_OPTION:
           x.no_copy = true;

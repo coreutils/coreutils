@@ -484,6 +484,7 @@ all_tests =					\
   tests/cp/cp-i.sh				\
   tests/cp/cp-mv-backup.sh			\
   tests/cp/cp-parents.sh			\
+  tests/cp/debug.sh				\
   tests/cp/deref-slink.sh			\
   tests/cp/dir-rm-dest.sh			\
   tests/cp/dir-slash.sh				\

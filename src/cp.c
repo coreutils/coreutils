@@ -62,6 +62,7 @@ enum
 {
   ATTRIBUTES_ONLY_OPTION = CHAR_MAX + 1,
   COPY_CONTENTS_OPTION,
+  DEBUG_OPTION,
   NO_PRESERVE_ATTRIBUTES_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
@@ -107,6 +108,7 @@ static struct option const long_opts[] =
   {"attributes-only", no_argument, NULL, ATTRIBUTES_ONLY_OPTION},
   {"backup", optional_argument, NULL, 'b'},
   {"copy-contents", no_argument, NULL, COPY_CONTENTS_OPTION},
+  {"debug", no_argument, NULL, DEBUG_OPTION},
   {"dereference", no_argument, NULL, 'L'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
@@ -162,6 +164,9 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -b                           like --backup but does not accept an argument\n\
       --copy-contents          copy contents of special files when recursive\n\
   -d                           same as --no-dereference --preserve=links\n\
+"), stdout);
+      fputs (_("\
+      --debug                  explain how a file is copied.  Implies -v\n\
 "), stdout);
       fputs (_("\
   -f, --force                  if an existing destination file cannot be\n\
@@ -998,6 +1003,10 @@ main (int argc, char **argv)
 
         case ATTRIBUTES_ONLY_OPTION:
           x.data_copy_required = false;
+          break;
+
+        case DEBUG_OPTION:
+          x.debug = x.verbose = true;
           break;
 
         case COPY_CONTENTS_OPTION:

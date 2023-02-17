@@ -140,6 +140,60 @@ static bool owner_failure_ok (struct cp_options const *x);
 static char const *top_level_src_name;
 static char const *top_level_dst_name;
 
+enum copy_debug_val
+  {
+   COPY_DEBUG_UNKNOWN,
+   COPY_DEBUG_NO,
+   COPY_DEBUG_YES,
+   COPY_DEBUG_EXTERNAL,
+   COPY_DEBUG_AVOIDED,
+   COPY_DEBUG_UNSUPPORTED,
+  };
+
+/* debug info about the last file copy.  */
+static struct copy_debug
+{
+  enum copy_debug_val offload;
+  enum copy_debug_val reflink;
+  enum copy_debug_val sparse_detection;
+} copy_debug;
+
+static const char*
+copy_debug_string (enum copy_debug_val debug_val)
+{
+  switch (debug_val)
+    {
+    case COPY_DEBUG_NO: return "no";
+    case COPY_DEBUG_YES: return "yes";
+    case COPY_DEBUG_AVOIDED: return "avoided";
+    case COPY_DEBUG_UNSUPPORTED: return "unsupported";
+    default: return "unknown";
+    }
+}
+
+static const char*
+copy_debug_sparse_string (enum copy_debug_val debug_val)
+{
+  switch (debug_val)
+    {
+    case COPY_DEBUG_NO: return "no";
+    case COPY_DEBUG_YES: return "zeros";
+    case COPY_DEBUG_EXTERNAL: return "SEEK_HOLE";
+    default: return "unknown";
+    }
+}
+
+/* Print --debug output on standard output.  */
+static void
+emit_debug (const struct cp_options *x)
+{
+  if (! x->hard_link && ! x->symbolic_link)
+    printf ("copy offload: %s, reflink: %s, sparse detection: %s\n",
+            copy_debug_string (copy_debug.offload),
+            copy_debug_string (copy_debug.reflink),
+            copy_debug_sparse_string (copy_debug.sparse_detection));
+}
+
 #ifndef DEV_FD_MIGHT_BE_CHR
 # define DEV_FD_MIGHT_BE_CHR false
 #endif
@@ -256,6 +310,9 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
   *last_write_made_hole = false;
   *total_n_read = 0;
 
+  if (copy_debug.sparse_detection == COPY_DEBUG_UNKNOWN)
+    copy_debug.sparse_detection = hole_size ? COPY_DEBUG_YES : COPY_DEBUG_NO;
+
   /* If not looking for holes, use copy_file_range if functional,
      but don't use if reflink disallowed as that may be implicit.  */
   if (!hole_size && allow_reflink)
@@ -275,10 +332,13 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                input file seems empty.  */
             if (*total_n_read == 0)
               break;
+            copy_debug.offload = COPY_DEBUG_YES;
             return true;
           }
         if (n_copied < 0)
           {
+            copy_debug.offload = COPY_DEBUG_UNSUPPORTED;
+
             if (is_CLONENOTSUP (errno))
               break;
 
@@ -304,9 +364,13 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
                 return false;
               }
           }
+        copy_debug.offload = COPY_DEBUG_YES;
         max_n_read -= n_copied;
         *total_n_read += n_copied;
       }
+  else
+    copy_debug.offload = COPY_DEBUG_AVOIDED;
+
 
   bool make_hole = false;
   off_t psize = 0;
@@ -479,6 +543,8 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
   off_t last_ext_len = 0;
   off_t dest_pos = 0;
   bool wrote_hole_at_eof = true;
+
+  copy_debug.sparse_detection = COPY_DEBUG_EXTERNAL;
 
   while (0 <= ext_start)
     {
@@ -1128,6 +1194,9 @@ handle_clone_fail (int dst_dirfd, char const* dst_relname,
       && unlinkat (dst_dirfd, dst_relname, 0) != 0 && errno != ENOENT)
     error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
 
+  if (! transient_failure)
+    copy_debug.reflink = COPY_DEBUG_UNSUPPORTED;
+
   if (reflink_mode == REFLINK_ALWAYS || transient_failure)
     return false;
 
@@ -1168,6 +1237,10 @@ copy_reg (char const *src_name, char const *dst_name,
   bool return_val = true;
   bool data_copy_required = x->data_copy_required;
   bool preserve_xattr = USE_XATTR & x->preserve_xattr;
+
+  copy_debug.offload = COPY_DEBUG_UNKNOWN;
+  copy_debug.reflink = x->reflink_mode ? COPY_DEBUG_UNKNOWN : COPY_DEBUG_NO;
+  copy_debug.sparse_detection = COPY_DEBUG_UNKNOWN;
 
   source_desc = open (src_name,
                       (O_RDONLY | O_BINARY
@@ -1305,6 +1378,8 @@ copy_reg (char const *src_name, char const *dst_name,
                 }
               if (s == 0)
                 {
+                  copy_debug.reflink = COPY_DEBUG_YES;
+
                   /* Update the clone's timestamps and permissions
                      as needed.  */
 
@@ -1346,6 +1421,13 @@ copy_reg (char const *src_name, char const *dst_name,
                   goto close_src_desc;
                 }
             }
+          else
+            copy_debug.reflink = COPY_DEBUG_AVOIDED;
+        }
+      else if (data_copy_required && x->reflink_mode)
+        {
+          if (! CLONE_NOOWNERCOPY)
+            copy_debug.reflink = COPY_DEBUG_AVOIDED;
         }
 #endif
 
@@ -1416,7 +1498,10 @@ copy_reg (char const *src_name, char const *dst_name,
   if (data_copy_required && x->reflink_mode)
     {
       if (clone_file (dest_desc, source_desc) == 0)
-        data_copy_required = false;
+        {
+          data_copy_required = false;
+          copy_debug.reflink = COPY_DEBUG_YES;
+        }
       else
         {
           if (! handle_clone_fail (dst_dirfd, dst_relname, src_name, dst_name,
@@ -1523,6 +1608,10 @@ copy_reg (char const *src_name, char const *dst_name,
           return_val = false;
           goto close_src_and_dst_desc;
         }
+
+      /* Output debug info for data copying operations.  */
+      if (x->debug)
+        emit_debug (x);
     }
 
   if (x->preserve_timestamps)

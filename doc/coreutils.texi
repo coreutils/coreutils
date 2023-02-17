@@ -8922,6 +8922,15 @@ Copy symbolic links as symbolic links rather than copying the files that
 they point to, and preserve hard links between source files in the copies.
 Equivalent to @option{--no-dereference --preserve=links}.
 
+@macro optDebugCopy
+@item --debug
+@opindex --debug
+@cindex debugging, copying
+Print extra information to stdout, explaining how files are copied.
+This option implies the @option{--verbose} option.
+@end macro
+@optDebugCopy
+
 @item -f
 @itemx --force
 @opindex -f
@@ -9959,6 +9968,8 @@ Create any missing parent directories, giving them the default
 attributes.  Then create each given directory, setting their owner,
 group and mode as given on the command line or to the defaults.
 
+@optDebugCopy
+
 @item -g @var{group}
 @itemx --group=@var{group}
 @opindex -g
@@ -10120,6 +10131,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @table @samp
 
 @optBackup
+
+@optDebugCopy
 
 @item -f
 @itemx --force
