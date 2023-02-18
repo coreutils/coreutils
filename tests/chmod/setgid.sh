@@ -24,6 +24,7 @@ print_ver_ chmod
 umask 0
 mkdir -m 755 d || framework_failure_
 
+# "chmod g+s d" does nothing on some NFS file systems.
 chmod g+s d 2> /dev/null && env -- test -g d ||
   {
     # This is required because on some systems (at least NetBSD 1.4.2A),
@@ -31,14 +32,12 @@ chmod g+s d 2> /dev/null && env -- test -g d ||
     # to which you belong.  When that happens, the above chmod fails.  So
     # here, upon failure, we try to set the group, then rerun the chmod command.
 
-    id_g=$(id -g) &&
-    test -n "$id_g" &&
-    chgrp "$id_g" d &&
-    chmod g+s d || framework_failure_
-  }
-
-# "chmod g+s d" does nothing on some NFS file systems.
-env -- test -g d ||
+    for id_g in $(id -g) $(id -G) ''; do
+      test -n "$id_g" || break
+      chgrp "$id_g" d && chmod g+s d && env -- test -g d && break
+    done
+    test -n "$id_g"
+  } ||
   skip_ 'cannot create setgid directories'
 
 for mode in \
