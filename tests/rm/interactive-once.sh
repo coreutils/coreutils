@@ -35,6 +35,7 @@ rm -I file1-* < in-n >> out 2>> err || fail=1
 echo . >> err || framework_failure_
 test -f file1-1 && fail=1
 
+write_prot_msg1=
 echo 'one file, read only, answer no' >> err || framework_failure_
 if ls /dev/stdin >/dev/null 2>&1; then
   touch file1-1 || framework_failure_
