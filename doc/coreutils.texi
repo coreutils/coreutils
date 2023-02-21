@@ -2237,7 +2237,7 @@ into (or from) base32 encoded form.  The base32 encoded form uses
 printable ASCII characters to represent binary data.
 The usage and options of this command are precisely the
 same as for @command{base64}.  @xref{base64 invocation}.
-For more general encoding functionalty see @ref{basenc invocation}.
+For more general encoding functionality see @ref{basenc invocation}.
 
 
 @node base64 invocation
@@ -2261,7 +2261,7 @@ The base32 encoding expands data to roughly 160% of the original.
 The format conforms to
 @uref{https://tools.ietf.org/search/rfc4648, RFC 4648}.
 
-For more general encoding functionalty see @ref{basenc invocation}.
+For more general encoding functionality see @ref{basenc invocation}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -12767,7 +12767,7 @@ of attribute access, especially useful with remote file systems.
 Always read the already cached attributes if available.
 
 @item never
-Always sychronize with the latest file system attributes.
+Always synchronize with the latest file system attributes.
 This also mounts automounted files.
 
 @item default
@@ -16683,7 +16683,7 @@ Display the timestamp resolution instead of the time.
 Current clock timestamps that are output by @command{date}
 are integer multiples of the timestamp resolution.
 With this option, the format defaults to @samp{%s.%N}.
-For example, if the clock resolution is 1 millsecond,
+For example, if the clock resolution is 1 millisecond,
 the output is:
 
 @example
@@ -17940,7 +17940,7 @@ prompt.
 @cindex @command{env -S}, and single quotes
 @cindex @option{-S}, env and single quotes
 To test @command{env -S} on the command line, use single quotes for the
-@option{-S} string to emulate a single paramter. Single quotes are not
+@option{-S} string to emulate a single parameter. Single quotes are not
 needed when using @command{env -S} in a shebang line on the first line of a
 script (the operating system already treats it as one argument).
 

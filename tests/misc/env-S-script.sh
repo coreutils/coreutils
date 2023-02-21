@@ -69,7 +69,7 @@ compare exp1 out1 || fail=1
 
 
 # similar to the above test but with quotes, the first parameter should be
-# 'A B' and not two paramaters 'A','B'.
+# 'A B' and not two parameters 'A','B'.
 # Ignoring the absolute paths, the script is:
 #     #!env -S printf x%sx\n "A B"
 printf "#!$dir/env -S $dir/printf "'x%%sx\\n "A B"\n' > env2 ||
