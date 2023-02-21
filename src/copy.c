@@ -1052,11 +1052,13 @@ union scan_inference
 };
 
 /* Return how to scan a file with descriptor FD and stat buffer SB.
-   Set *SCAN_INFERENCE if returning LSEEK_SCANTYPE.  */
+   *SCAN_INFERENCE is set to a valid value if returning LSEEK_SCANTYPE.  */
 static enum scantype
 infer_scantype (int fd, struct stat const *sb,
                 union scan_inference *scan_inference)
 {
+  scan_inference->ext_start = -1;  /* avoid -Wmaybe-uninitialized */
+
   if (! (HAVE_STRUCT_STAT_ST_BLOCKS
          && S_ISREG (sb->st_mode)
          && ST_NBLOCKS (*sb) < sb->st_size / ST_NBLOCKSIZE))
