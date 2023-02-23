@@ -393,7 +393,8 @@ With --reference, change the mode of each FILE to that of RFILE.\n\
       --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
       fputs (_("\
-      --reference=RFILE  use RFILE's mode instead of MODE values\n\
+      --reference=RFILE  use RFILE's mode instead of specifying MODE values.\n\
+                         RFILE is always dereferenced if a symbolic link.\n\
 "), stdout);
       fputs (_("\
   -R, --recursive        change files and directories recursively\n\

@@ -136,8 +136,8 @@ With --reference, change the group of each FILE to that of RFILE.\n\
       --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
       fputs (_("\
-      --reference=RFILE  use RFILE's group rather than specifying a\n\
-                         GROUP value\n\
+      --reference=RFILE  use RFILE's group rather than specifying a GROUP.\n\
+                         RFILE is always dereferenced if a symbolic link.\n\
 "), stdout);
       fputs (_("\
   -R, --recursive        operate on files and directories recursively\n\

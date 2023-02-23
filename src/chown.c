@@ -113,8 +113,8 @@ With --reference, change the owner and group of each FILE to those of RFILE.\n\
       --preserve-root    fail to operate recursively on '/'\n\
 "), stdout);
       fputs (_("\
-      --reference=RFILE  use RFILE's owner and group rather than\n\
-                         specifying OWNER:GROUP values\n\
+      --reference=RFILE  use RFILE's owner and group rather than specifying\n\
+                         OWNER:GROUP values.  RFILE is always dereferenced.\n\
 "), stdout);
       fputs (_("\
   -R, --recursive        operate on files and directories recursively\n\
