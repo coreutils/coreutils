@@ -21,7 +21,7 @@ print_ver_ cp stat dd
 
 touch sparse_chk
 seek_data_capable_ sparse_chk \
-  || skip_ "this file system lacks SEEK_DATA support"
+  || skip_ "insufficient SEEK_DATA support"
 
 # Exercise the code that handles a file ending in a hole.
 printf x > k || framework_failure_

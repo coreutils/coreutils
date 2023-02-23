@@ -26,7 +26,7 @@ touch sparse_chk
 if seek_data_capable_ sparse_chk && ! df -t ext3 . >/dev/null; then
   : # Current partition has working extents.  Good!
 else
-  skip_ "current file system has insufficient SEEK_DATA support"
+  skip_ "insufficient SEEK_DATA support"
 
   # It's not;  we need to create one, hence we need root access.
   require_root_

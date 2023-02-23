@@ -28,7 +28,7 @@ timeout 10 truncate -s1T f ||
 # between the creation of the file and the use of SEEK_DATA,
 # for it to determine it's an empty file (return ENXIO).
 seek_data_capable_ f ||
-  skip_ "this file system lacks appropriate SEEK_DATA support"
+  skip_ "insufficient SEEK_DATA support"
 
 # Nothing can read that many bytes in so little time.
 timeout 10 cp --reflink=never f f2 || fail=1

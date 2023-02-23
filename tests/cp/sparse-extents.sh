@@ -23,7 +23,7 @@ require_sparse_support_
 
 touch sparse_chk || framework_failure_
 seek_data_capable_ sparse_chk ||
-  skip_ 'this file system lacks SEEK_DATA support'
+  skip_ 'insufficient SEEK_DATA support'
 
 fallocate --help >/dev/null || skip_ 'The fallocate utility is required'
 touch falloc.test || framework_failure_
