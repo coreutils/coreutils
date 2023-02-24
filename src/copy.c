@@ -187,7 +187,7 @@ copy_debug_sparse_string (enum copy_debug_val debug_val)
 static void
 emit_debug (const struct cp_options *x)
 {
-  if (! x->hard_link && ! x->symbolic_link)
+  if (! x->hard_link && ! x->symbolic_link && x->data_copy_required)
     printf ("copy offload: %s, reflink: %s, sparse detection: %s\n",
             copy_debug_string (copy_debug.offload),
             copy_debug_string (copy_debug.reflink),
@@ -1608,10 +1608,6 @@ copy_reg (char const *src_name, char const *dst_name,
           return_val = false;
           goto close_src_and_dst_desc;
         }
-
-      /* Output debug info for data copying operations.  */
-      if (x->debug)
-        emit_debug (x);
     }
 
   if (x->preserve_timestamps)
@@ -1706,6 +1702,10 @@ close_src_desc:
       error (0, errno, _("failed to close %s"), quoteaf (src_name));
       return_val = false;
     }
+
+  /* Output debug info for data copying operations.  */
+  if (x->debug)
+    emit_debug (x);
 
   alignfree (buf);
   return return_val;
