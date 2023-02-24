@@ -41,6 +41,11 @@ unset CU_TEST_SKIP_EXIT
 USE_GDB=1
 
 if test $USE_GDB = 1; then
+  case $host_triplet in
+    *darwin*) skip_ 'avoiding due to potentially non functioning gdb' ;;
+    *) ;;
+  esac
+
   # Use gdb to provide further protection by limiting calls to unlinkat().
   ( timeout 10s gdb --version ) > gdb.out 2>&1
   case $(cat gdb.out) in
