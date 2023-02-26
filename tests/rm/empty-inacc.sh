@@ -39,23 +39,23 @@ mkdir -m a-r unreadable2 || framework_failure_
 mkdir -m0 inacc2 || framework_failure_
 
 # These would fail for coreutils-9.1 and prior.
-rm -d unreadable2 || fail=1
+rm -d unreadable2 < /dev/null || fail=1
 test -d unreadable2 && fail=1
-rm -d inacc2 || fail=1
+rm -d inacc2 < /dev/null || fail=1
 test -d inacc2 && fail=1
 
 # Test the interactive code paths that are new with 9.2:
-mkdir -m0 inacc2 || framework_failure_
+mkdir -m0 inacc3 || framework_failure_
 
-echo n | rm ---presume-input-tty -di inacc2 > out 2>&1 || fail=1
+echo n | rm ---presume-input-tty -di inacc3 > out 2>&1 || fail=1
 # decline: ensure it was not deleted, and the prompt was as expected.
-printf "rm: attempt removal of inaccessible directory 'inacc2'? " > exp
-test -d inacc2 || fail=1
+printf "rm: attempt removal of inaccessible directory 'inacc3'? " > exp
+test -d inacc3 || fail=1
 compare exp out || fail=1
 
-echo y | rm ---presume-input-tty -di inacc2 > out 2>&1 || fail=1
+echo y | rm ---presume-input-tty -di inacc3 > out 2>&1 || fail=1
 # accept: ensure it **was** deleted, and the prompt was as expected.
-test -d inacc2 && fail=1
+test -d inacc3 && fail=1
 compare exp out || fail=1
 
 Exit $fail
