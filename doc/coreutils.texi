@@ -14179,7 +14179,7 @@ Ignore interrupt signals.
 @opindex --output-error
 Adjust the behavior with errors on the outputs.
 In summary @option{-p} allows @command{tee} to operate in a more
-standard manner with pipes, and to continue to process data
+appropriate manner with pipes, and to continue to process data
 to any remaining outputs, if any pipe outputs exit early.
 The default operation when @option{--output-error} is @emph{not}
 specified is to exit immediately on error writing to a pipe,
@@ -14198,7 +14198,7 @@ This is the default @var{mode} when not specified,
 or when the short form @option{-p} is used.
 Warn on error opening or writing any output, except pipes.
 Writing is continued to still open files/pipes.
-Exit early if all remaining outputs become broken pipes.
+Exit immediately if all remaining outputs become broken pipes.
 Exit status indicates failure if any non pipe output had an error.
 
 @item exit
@@ -14206,7 +14206,7 @@ Exit on error opening or writing any output, including pipes.
 
 @item exit-nopipe
 Exit on error opening or writing any output, except pipes.
-Exit early if all remaining outputs become broken pipes.
+Exit immediately if all remaining outputs become broken pipes.
 @end table
 
 @end table

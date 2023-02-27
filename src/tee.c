@@ -96,7 +96,7 @@ Copy standard input to each FILE, and also to standard output.\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\
 "), stdout);
       fputs (_("\
-  -p                        diagnose errors writing to non pipes\n\
+  -p                        operate in a more appropriate MODE with pipes.\n\
       --output-error[=MODE]   set behavior on write error.  See MODE below\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -109,6 +109,7 @@ MODE determines behavior with write errors on the outputs:\n\
   exit           exit on error writing to any output\n\
   exit-nopipe    exit on error writing to any output not a pipe\n\
 The default MODE for the -p option is 'warn-nopipe'.\n\
+With \"nopipe\" MODEs, exit immediately if all outputs become broken pipes.\n\
 The default operation when --output-error is not specified, is to\n\
 exit immediately on error writing to a pipe, and diagnose errors\n\
 writing to non pipe outputs.\n\
