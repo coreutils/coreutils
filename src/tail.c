@@ -367,9 +367,9 @@ check_output_alive (void)
   struct pollfd pfd;
   pfd.fd = STDOUT_FILENO;
   pfd.events = pfd.revents = 0;
-  pfd.events |= POLLRDBAND; /* Needed for illumos, macos.  */
+  pfd.events |= POLLRDBAND; /* Needed for illumos, macOS.  */
 
-  if (poll (&pfd, 1, 0) >= 0 && (pfd.revents & (POLLERR | POLLHUP)))
+  if (poll (&pfd, 1, 0) > 0 && (pfd.revents & (POLLERR | POLLHUP)))
     die_pipe ();
 #else
   struct timeval delay;
