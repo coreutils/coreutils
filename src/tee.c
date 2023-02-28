@@ -290,7 +290,8 @@ tee_files (int nfiles, char **files)
       if (pipe_check && out_pollable[first_out])
         {
           /* Monitor for input, or errors on first valid output.  */
-          int err = iopoll (STDIN_FILENO, fileno (descriptors[first_out]));
+          int err = iopoll (STDIN_FILENO, fileno (descriptors[first_out]),
+                            true);
 
           /* Close the output if it became a broken pipe.  */
           if (err == IOPOLL_BROKEN_OUTPUT)

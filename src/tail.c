@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <getopt.h>
-#include <sys/select.h>
 #include <sys/types.h>
 #include <signal.h>
 
@@ -38,6 +37,7 @@
 #include "die.h"
 #include "error.h"
 #include "fcntl--.h"
+#include "iopoll.h"
 #include "isapipe.h"
 #include "posixver.h"
 #include "quote.h"
@@ -52,11 +52,8 @@
 
 #if HAVE_INOTIFY
 # include "hash.h"
-# include <sys/inotify.h>
-#endif
-
-#if defined _AIX || defined __sun || defined __APPLE__ || HAVE_INOTIFY
 # include <poll.h>
+# include <sys/inotify.h>
 #endif
 
 /* Linux can optimize the handling of local files.  */
@@ -352,39 +349,8 @@ check_output_alive (void)
   if (! monitor_output)
     return;
 
-  /* Check we've not enabled gnulib's poll module
-     as that will emulate poll() in a way not
-     currently compatible with tail's usage.  */
-#if defined HAVE_POLL
-# error "gnulib's poll() replacement is currently incompatible"
-#endif
-
-  /* poll(2) is needed on AIX (where 'select' gives a readable
-     event immediately) and Solaris (where 'select' never gave
-     a readable event).  Also use poll(2) on systems we know work
-     and/or are already using poll (inotify).  */
-#if defined _AIX || defined __sun || defined __APPLE__ || HAVE_INOTIFY
-  struct pollfd pfd;
-  pfd.fd = STDOUT_FILENO;
-  pfd.events = pfd.revents = 0;
-  pfd.events |= POLLRDBAND; /* Needed for illumos, macOS.  */
-
-  if (poll (&pfd, 1, 0) > 0 && (pfd.revents & (POLLERR | POLLHUP)))
+  if (iopoll (-1, STDOUT_FILENO, false) == IOPOLL_BROKEN_OUTPUT)
     die_pipe ();
-#else
-  struct timeval delay;
-  delay.tv_sec = delay.tv_usec = 0;
-
-  fd_set rfd;
-  FD_ZERO (&rfd);
-  FD_SET (STDOUT_FILENO, &rfd);
-
-  /* readable event on STDOUT is equivalent to POLLERR,
-     and implies an error condition on output like broken pipe.  */
-  if (select (STDOUT_FILENO + 1, &rfd, NULL, NULL, &delay) == 1)
-    die_pipe ();
-#endif
-
 }
 
 static bool

@@ -18,6 +18,8 @@
 
 #include <config.h>
 
+#include <assert.h>
+
   /* poll(2) is needed on AIX (where 'select' gives a readable
      event immediately) and Solaris (where 'select' never gave
      a readable event).  Also use poll(2) on systems we know work
@@ -26,6 +28,12 @@
 #if defined _AIX || defined __sun || defined __APPLE__ || \
     defined __linux__ || defined __ANDROID__
 # define IOPOLL_USES_POLL 1
+  /* Check we've not enabled gnulib's poll module
+     as that will emulate poll() in a way not
+     currently compatible with our usage.  */
+# if defined HAVE_POLL
+#  error "gnulib's poll() replacement is currently incompatible"
+# endif
 #endif
 
 #if IOPOLL_USES_POLL
@@ -39,62 +47,74 @@
 #include "isapipe.h"
 
 
-/* Wait for fdin to become ready for reading or fdout to become a broken pipe.
-   Return 0 if fdin can be read() without blocking, or IOPOLL_BROKEN_OUTPUT if
-   fdout becomes a broken pipe, otherwise IOPOLL_ERROR if there is a poll()
+/* Wait for FDIN to become ready for reading or FDOUT to become a broken pipe.
+   If either of those are -1, then they're not checked.  Set BLOCK to true
+   to wait for an event, otherwise return the status immediately.
+   Return 0 if not BLOCKing and there is no event on the requested descriptors.
+   Return 0 if FDIN can be read() without blocking, or IOPOLL_BROKEN_OUTPUT if
+   FDOUT becomes a broken pipe, otherwise IOPOLL_ERROR if there is a poll()
    or select() error.  */
 
+extern int
+iopoll (int fdin, int fdout, bool block)
+{
 #if IOPOLL_USES_POLL
 
-extern int
-iopoll (int fdin, int fdout)
-{
   struct pollfd pfds[2] = {  /* POLLRDBAND needed for illumos, macOS.  */
     { .fd = fdin,  .events = POLLIN | POLLRDBAND, .revents = 0 },
     { .fd = fdout, .events = POLLRDBAND, .revents = 0 },
   };
+  int ret = 0;
 
-  while (poll (pfds, 2, -1) > 0 || errno == EINTR)
+  while (0 <= ret || errno == EINTR)
     {
-      if (errno == EINTR)
+      ret = poll (pfds, 2, block ? -1 : 0);
+
+      if (ret < 0)
         continue;
+      if (ret == 0 && ! block)
+        return 0;
+      assert (0 < ret);
       if (pfds[0].revents) /* input available or pipe closed indicating EOF; */
         return 0;          /* should now be able to read() without blocking  */
       if (pfds[1].revents)            /* POLLERR, POLLHUP (or POLLNVAL) */
         return IOPOLL_BROKEN_OUTPUT;  /* output error or broken pipe    */
     }
-  return IOPOLL_ERROR;  /* poll error */
-}
 
 #else  /* fall back to select()-based implementation */
 
-extern int
-iopoll (int fdin, int fdout)
-{
   int nfds = (fdin > fdout ? fdin : fdout) + 1;
   int ret = 0;
 
   /* If fdout has an error condition (like a broken pipe) it will be seen
      as ready for reading.  Assumes fdout is not actually readable.  */
-  while (ret >= 0 || errno == EINTR)
+  while (0 <= ret || errno == EINTR)
     {
       fd_set rfds;
       FD_ZERO (&rfds);
-      FD_SET (fdin, &rfds);
-      FD_SET (fdout, &rfds);
-      ret = select (nfds, &rfds, NULL, NULL, NULL);
+      if (0 <= fdin)
+        FD_SET (fdin, &rfds);
+      if (0 <= fdout)
+        FD_SET (fdout, &rfds);
+
+      struct timeval delay = { .tv_sec = 0, .tv_usec = 0 };
+      ret = select (nfds, &rfds, NULL, NULL, block ? NULL : &delay);
 
       if (ret < 0)
         continue;
-      if (FD_ISSET (fdin, &rfds))  /* input available or EOF; should now */
-        return 0;                  /* be able to read() without blocking */
-      if (FD_ISSET (fdout, &rfds))     /* POLLERR, POLLHUP (or POLLIN)   */
-        return IOPOLL_BROKEN_OUTPUT;   /* output error or broken pipe    */
+      if (ret == 0 && ! block)
+        return 0;
+      assert (0 < ret);
+      if (0 <= fdin && FD_ISSET (fdin, &rfds))   /* input available or EOF; */
+        return 0;          /* should now be able to read() without blocking */
+      if (0 <= fdout && FD_ISSET (fdout, &rfds)) /* equiv to POLLERR        */
+        return IOPOLL_BROKEN_OUTPUT;      /* output error or broken pipe    */
     }
-  return IOPOLL_ERROR;  /* select error */
-}
 
 #endif
+  return IOPOLL_ERROR;
+}
+
 
 
 /* Return true if fdin is relevant for iopoll().
