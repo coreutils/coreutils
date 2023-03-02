@@ -163,4 +163,14 @@ exp=$(cd empty && env pwd) || framework_failure_
 got=$(env --chdir=empty pwd) || fail=1
 test "$exp" = "$got" || fail=1
 
+# Verify argv0 overriding
+for arg in 'argv0' ''; do
+env -v -a short --argv0=$arg true 2>err || fail=1
+cat <<EOF >err_exp || framework_failure_
+argv0:     '$arg'
+executing: true
+   arg[0]= '$arg'
+EOF
+done
+
 Exit $fail

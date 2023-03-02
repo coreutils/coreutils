@@ -92,6 +92,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   and the command exits with failure status if existing files.
   The -n,--no-clobber option is best avoided due to platform differences.
 
+  env now accepts the -a,--argv0 option to override the zeroth argument
+  of the command being executed.
+
   mv now accepts an --exchange option, which causes the source and
   destination to be exchanged.  It should be combined with
   --no-target-directory (-T) if the destination is a directory.

@@ -17950,6 +17950,13 @@ Options must precede operands.
 
 @optNull
 
+@item -a @var{arg}
+@itemx --argv0=@var{arg}
+@opindex -a
+@opindex --argv0
+Override the zeroth argument passed to the command being executed.
+Without this option a default value of @var{command} is used.
+
 @item -u @var{name}
 @itemx --unset=@var{name}
 @opindex -u

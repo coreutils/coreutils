@@ -73,7 +73,7 @@ static bool report_signal_handling;
 /* The isspace characters in the C locale.  */
 #define C_ISSPACE_CHARS " \t\n\v\f\r"
 
-static char const shortopts[] = "+C:iS:u:v0" C_ISSPACE_CHARS;
+static char const shortopts[] = "+a:C:iS:u:v0" C_ISSPACE_CHARS;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -87,6 +87,7 @@ enum
 
 static struct option const longopts[] =
 {
+  {"argv0", required_argument, nullptr, 'a'},
   {"ignore-environment", no_argument, nullptr, 'i'},
   {"null", no_argument, nullptr, '0'},
   {"unset", required_argument, nullptr, 'u'},
@@ -118,6 +119,9 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 
       emit_mandatory_arg_note ();
 
+      fputs (_("\
+  -a, --argv0=ARG      pass ARG as the zeroth argument of COMMAND\n\
+"), stdout);
       fputs (_("\
   -i, --ignore-environment  start with an empty environment\n\
   -0, --null           end each output line with NUL, not newline\n\
@@ -759,6 +763,7 @@ main (int argc, char **argv)
   bool ignore_environment = false;
   bool opt_nul_terminate_output = false;
   char const *newdir = nullptr;
+  char *argv0 = nullptr;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -775,6 +780,9 @@ main (int argc, char **argv)
     {
       switch (optc)
         {
+        case 'a':
+          argv0 = optarg;
+          break;
         case 'i':
           ignore_environment = true;
           break;
@@ -865,6 +873,12 @@ main (int argc, char **argv)
       usage (EXIT_CANCELED);
     }
 
+  if (argv0 && ! program_specified)
+    {
+      error (0, 0, _("must specify command with --argv0 (-a)"));
+      usage (EXIT_CANCELED);
+    }
+
   if (! program_specified)
     {
       /* Print the environment and exit.  */
@@ -890,19 +904,26 @@ main (int argc, char **argv)
                quoteaf (newdir));
     }
 
+  char *program = argv[optind];
+  if (argv0)
+    {
+      devmsg ("argv0:     %s\n", quoteaf (argv0));
+      argv[optind] = argv0;
+    }
+
   if (dev_debug)
     {
-      devmsg ("executing: %s\n", argv[optind]);
+      devmsg ("executing: %s\n", program);
       for (int i=optind; i<argc; ++i)
         devmsg ("   arg[%d]= %s\n", i-optind, quote (argv[i]));
     }
 
-  execvp (argv[optind], &argv[optind]);
+  execvp (program, &argv[optind]);
 
   int exit_status = errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE;
-  error (0, errno, "%s", quote (argv[optind]));
+  error (0, errno, "%s", quote (program));
 
-  if (exit_status == EXIT_ENOENT && strpbrk (argv[optind], C_ISSPACE_CHARS))
+  if (exit_status == EXIT_ENOENT && strpbrk (program, C_ISSPACE_CHARS))
     error (0, 0, _("use -[v]S to pass options in shebang lines"));
 
   main_exit (exit_status);
