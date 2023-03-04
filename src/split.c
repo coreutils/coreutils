@@ -61,9 +61,8 @@ static int *open_pipes;
 static size_t open_pipes_alloc;
 static size_t n_open_pipes;
 
-/* Blocked signals.  */
-static sigset_t oldblocked;
-static sigset_t newblocked;
+/* Whether SIGPIPE has the default action, when --filter is used.  */
+static bool default_SIGPIPE;
 
 /* Base name of output files.  */
 static char const *outbase;
@@ -510,7 +509,8 @@ create (char const *name)
               if (close (fd_pair[0]) != 0)
                 die (EXIT_FAILURE, errno, _("closing input pipe"));
             }
-          sigprocmask (SIG_SETMASK, &oldblocked, NULL);
+          if (default_SIGPIPE)
+            signal (SIGPIPE, SIG_DFL);
           execl (shell_prog, last_component (shell_prog), "-c",
                  filter_command, (char *) NULL);
           die (EXIT_FAILURE, errno, _("failed to run command: \"%s -c %s\""),
@@ -1609,14 +1609,7 @@ main (int argc, char **argv)
   /* When filtering, closure of one pipe must not terminate the process,
      as there may still be other streams expecting input from us.  */
   if (filter_command)
-    {
-      struct sigaction act;
-      sigemptyset (&newblocked);
-      sigaction (SIGPIPE, NULL, &act);
-      if (act.sa_handler != SIG_IGN)
-        sigaddset (&newblocked, SIGPIPE);
-      sigprocmask (SIG_BLOCK, &newblocked, &oldblocked);
-    }
+    default_SIGPIPE = signal (SIGPIPE, SIG_IGN) == SIG_DFL;
 
   switch (split_type)
     {
