@@ -516,7 +516,7 @@ create (char const *name)
           die (EXIT_FAILURE, errno, _("failed to run command: \"%s -c %s\""),
                shell_prog, filter_command);
         }
-      if (child_pid == -1)
+      if (child_pid < 0)
         die (EXIT_FAILURE, errno, _("fork system call failed"));
       if (close (fd_pair[0]) != 0)
         die (EXIT_FAILURE, errno, _("failed to close input pipe"));
@@ -642,7 +642,7 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
       else
         {
           if (! filter_ok
-              && lseek (STDIN_FILENO, to_write, SEEK_CUR) != -1)
+              && 0 <= lseek (STDIN_FILENO, to_write, SEEK_CUR))
             {
               to_write = n_bytes + (opened + 1 < rem_bytes);
               new_file_flag = true;
@@ -1088,7 +1088,7 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
                          O_WRONLY | O_BINARY | O_APPEND | O_NONBLOCK);
             }
 
-          if (-1 < fd)
+          if (0 <= fd)
             break;
 
           if (!(errno == EMFILE || errno == ENFILE))
