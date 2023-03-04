@@ -54,7 +54,7 @@
 static char const *filter_command;
 
 /* Process ID of the filter.  */
-static int filter_pid;
+static pid_t filter_pid;
 
 /* Array of open pipes.  */
 static int *open_pipes;
@@ -1037,7 +1037,7 @@ typedef struct of_info
   char *of_name;
   int ofd;
   FILE *ofile;
-  int opid;
+  pid_t opid;
 } of_t;
 
 enum
