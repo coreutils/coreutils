@@ -24,9 +24,10 @@ echo "split: invalid number of chunks: '1o'" > exp
 returns_ 1 split -n l/1o 2>err || fail=1
 compare exp err || fail=1
 
-echo "split: -: cannot determine file size" > exp
-: | returns_ 1 split -n l/1 2>err || fail=1
-compare exp err || fail=1
+rm -f x* || fail=1
+: | split -n l/1 || fail=1
+compare /dev/null xaa || fail=1
+test ! -f xab || fail=1
 
 # N can be greater than the file size
 # in which case no data is extracted, or empty files are written

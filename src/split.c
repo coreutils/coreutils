@@ -283,14 +283,6 @@ CHUNKS may be:\n\
 static off_t
 input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
 {
-  off_t cur = lseek (fd, 0, SEEK_CUR);
-  if (cur < 0)
-    {
-      if (errno == ESPIPE)
-        errno = 0; /* Suppress confusing seek error.  */
-      return -1;
-    }
-
   off_t size = 0;
   do
     {
@@ -303,45 +295,49 @@ input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
     }
   while (size < bufsize);
 
-  /* Note we check st_size _after_ the read() above
-     because /proc files on GNU/Linux are seekable
-     but have st_size == 0.  */
-  if (st->st_size == 0)
+  off_t cur = lseek (fd, 0, SEEK_CUR);
+  if (cur < 0)
     {
-      /* We've filled the buffer, from a seekable file,
-         which has an st_size==0, E.g., /dev/zero on GNU/Linux.
-         Assume there is no limit to file size.  */
-      errno = EOVERFLOW;
-      return -1;
+      if (errno == ESPIPE)
+        errno = 0; /* Suppress confusing seek error.  */
+      return cur;
     }
 
-  cur += size;
   off_t end;
-  if (usable_st_size (st) && cur <= st->st_size)
+  if (usable_st_size (st))
     end = st->st_size;
   else
     {
       end = lseek (fd, 0, SEEK_END);
       if (end < 0)
-        return -1;
-      if (end != cur)
+        return end;
+      if (end == OFF_T_MAX)
+        goto overflow;  /* E.g., /dev/zero on GNU/Hurd.  */
+      if (cur < end)
         {
-          if (lseek (fd, cur, SEEK_SET) < 0)
-            return -1;
-          if (end < cur)
-            end = cur;
+          off_t cur1 = lseek (fd, cur, SEEK_SET);
+          if (cur1 < 0)
+            return cur1;
         }
     }
 
-  size += end - cur;
-  if (size == OFF_T_MAX)
-    {
-      /* E.g., /dev/zero on GNU/Hurd.  */
-      errno = EOVERFLOW;
-      return -1;
-    }
+  /* Report overflow if we filled the buffer from a file with more
+     bytes than stat or lseek reports.  This can happen with mutating
+     (e.g., /proc) files that are larger than the input block size.
+     FIXME: Handle this properly, e.g., by copying the growing file's
+     data into the first output file, and then splitting that output
+     file (which should not grow) into the other output files.  */
+  if (end < size)
+    goto overflow;
+
+  if (cur < end && INT_ADD_WRAPV (size, end - cur, &size))
+    goto overflow;
 
   return size;
+
+ overflow:
+  errno = EOVERFLOW;
+  return -1;
 }
 
 /* Compute the next sequential output file name and store it into the
@@ -886,7 +882,8 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       else
         {
-          if (lseek (STDIN_FILENO, start - initial_read, SEEK_CUR) < 0)
+          if (initial_read < start
+              && lseek (STDIN_FILENO, start - initial_read, SEEK_CUR) < 0)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
           initial_read = SIZE_MAX;
         }
@@ -1005,7 +1002,8 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
     }
   else
     {
-      if (lseek (STDIN_FILENO, start - initial_read, SEEK_CUR) < 0)
+      if (initial_read < start
+          && lseek (STDIN_FILENO, start - initial_read, SEEK_CUR) < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
       initial_read = SIZE_MAX;
     }
