@@ -3393,8 +3393,8 @@ r/@var{n}    like @samp{l} but use round robin distribution
 r/@var{k}/@var{n}  likewise but output only @var{k}th of @var{n} to stdout
 @end example
 
-Any excess bytes remaining after dividing the @var{input}
-into @var{n} chunks, are assigned to the last chunk.
+If the input size is not a multiple of @var{n}, early output files are
+one byte longer than later output files, to make up the difference.
 Any excess bytes appearing after the initial calculation are discarded
 (except when using @samp{r} mode).
 
@@ -3402,8 +3402,8 @@ All @var{n} files are created even if there are fewer than @var{n} lines,
 or the @var{input} is truncated.
 
 For @samp{l} mode, chunks are approximately @var{input} size / @var{n}.
-The @var{input} is partitioned into @var{n} equal sized portions, with
-the last assigned any excess.  If a line @emph{starts} within a partition
+Although the @var{input} is still partitioned as before into @var{n} regions
+of approximately equal size, if a line @emph{starts} within a partition
 it is written completely to the corresponding file.  Since lines or records
 are not split even if they overlap a partition, the files written
 can be larger or smaller than the partition size, and even empty

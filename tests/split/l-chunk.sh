@@ -59,11 +59,11 @@ sed "s/': .*/'/" < err.t > err || framework_failure_
 compare exp err || fail=1
 
 printf '%s' "\
-14 16 09 15 16 10
+14 16 16 08 16 10
 14 08 08 10 14 08 08 10
-06 08 08 02 06 08 08 02 06 08 08 10
-06 08 02 06 08 00 08 02 06 08 02 06 08 00 10
-06 00 08 00 02 06 00 02 06 00 08 00 01 07 00 02 06 00 08 00 02 16
+08 06 08 08 08 08 08 02 06 08 08 02
+06 08 08 02 06 08 02 06 08 02 06 08 00 08 02
+06 02 06 02 06 02 06 02 06 02 06 02 06 02 06 00 08 00 02 06 00 02
 " > exp || framework_failure_
 
 sed 's/00 *//g' exp > exp.elide_empty || framework_failure_
@@ -120,17 +120,13 @@ test "$DEBUGGING" && test "$VERBOSE" && set -x
 
 
 # Check extraction of particular chunks
-> out
-printf '1\n12345\n' > exp
-split -n l/13/15 in > out
+split -n l/13/15 in > out &&
+compare /dev/null out || fail=1
+printf '1\n12345\n' > exp || framework_failure_
+split -n l/14/15 in > out &&
 compare exp out || fail=1
-> out
-printf '' > exp
-split -n l/14/15 in > out
-compare exp out || fail=1
-> out
-printf '1\n12345\n1\n' > exp
-split -n l/15/15 in > out
+printf '1\n' > exp || framework_failure_
+split -n l/15/15 in > out &&
 compare exp out || fail=1
 
 # test input with no \n at end

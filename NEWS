@@ -106,6 +106,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   internal errors it would exit with status 1, which was less distinguishable
   from errors from the invoked command.
 
+  'split -n N' now splits more evenly when the input size is not a
+  multiple of N, by creating N output files whose sizes differ by at
+  most 1 byte.  Formerly, it did this only when the input size was
+  less than N.
+
   'stat -c %s' now prints sizes as unsigned, consistent with 'ls'.
 
 ** New Features

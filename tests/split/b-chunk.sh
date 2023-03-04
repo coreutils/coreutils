@@ -25,6 +25,24 @@ split -n 10 /dev/null || fail=1
 test "$(stat -c %s x* | uniq -c | sed 's/^ *//; s/ /x/')" = "10x0" || fail=1
 rm -f x??
 
+printf 'abc' > abc || framework_failure_
+printf 'a' > exp-a || framework_failure_
+printf 'b' > exp-b || framework_failure_
+printf 'c' > exp-c || framework_failure_
+printf 'ab' > exp-ab || framework_failure_
+split -n 4 abc || fail=1
+compare exp-a xaa || fail=1
+compare exp-b xab || fail=1
+compare exp-c xac || fail=1
+compare /dev/null xad || fail=1
+test ! -f xae || fail=1
+rm -f x??
+split -n 2 abc || fail=1
+compare exp-ab xaa || fail=1
+compare exp-c xab || fail=1
+test ! -f xac || fail=1
+rm -f x??
+
 # When extracting K of N where N > file size
 # no data is extracted, and no files are written
 split -n 2/3 /dev/null || fail=1
@@ -35,9 +53,9 @@ split -e -n 10 /dev/null || fail=1
 returns_ 1 stat x?? 2>/dev/null || fail=1
 
 printf '1\n2\n3\n4\n5\n' > input || framework_failure_
-printf '1\n2' > exp-1 || framework_failure_
-printf '\n3\n' > exp-2 || framework_failure_
-printf '4\n5\n' > exp-3 || framework_failure_
+printf '1\n2\n' > exp-1 || framework_failure_
+printf '3\n4' > exp-2 || framework_failure_
+printf '\n5\n' > exp-3 || framework_failure_
 
 for file in input /proc/version /sys/kernel/profiling; do
   test -f $file || continue

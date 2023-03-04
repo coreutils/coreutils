@@ -619,21 +619,23 @@ cwrite (bool new_file_flag, char const *bp, size_t bytes)
 }
 
 /* Split into pieces of exactly N_BYTES bytes.
+   However, the first REM_BYTES pieces should be 1 byte longer.
    Use buffer BUF, whose size is BUFSIZE.
    BUF contains the first INITIAL_READ input bytes.  */
 
 static void
-bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
+bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
+             char *buf, size_t bufsize, size_t initial_read,
              uintmax_t max_files)
 {
   size_t n_read;
   bool new_file_flag = true;
   bool filter_ok = true;
-  uintmax_t to_write = n_bytes;
   uintmax_t opened = 0;
-  bool eof;
+  uintmax_t to_write = n_bytes + (0 < rem_bytes);
+  bool eof = ! to_write;
 
-  do
+  while (! eof)
     {
       if (initial_read != SIZE_MAX)
         {
@@ -646,7 +648,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
           if (! filter_ok
               && lseek (STDIN_FILENO, to_write, SEEK_CUR) != -1)
             {
-              to_write = n_bytes;
+              to_write = n_bytes + (opened + 1 < rem_bytes);
               new_file_flag = true;
             }
 
@@ -656,7 +658,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
           eof = n_read == 0;
         }
       char *bp_out = buf;
-      while (to_write <= n_read)
+      while (0 < to_write && to_write <= n_read)
         {
           if (filter_ok || new_file_flag)
             filter_ok = cwrite (new_file_flag, bp_out, to_write);
@@ -671,7 +673,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
             }
           bp_out += to_write;
           n_read -= to_write;
-          to_write = n_bytes;
+          to_write = n_bytes + (opened < rem_bytes);
         }
       if (n_read != 0)
         {
@@ -687,7 +689,6 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize, size_t initial_read,
           to_write -= n_read;
         }
     }
-  while (! eof);
 
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.
@@ -864,19 +865,20 @@ static void
 lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
                    size_t initial_read, off_t file_size)
 {
-  assert (n && k <= n && n <= file_size);
+  assert (n && k <= n);
 
-  const off_t chunk_size = file_size / n;
+  uintmax_t rem_bytes = file_size % n;
+  off_t chunk_size = file_size / n;
   uintmax_t chunk_no = 1;
-  off_t chunk_end = chunk_size;
+  off_t chunk_end = chunk_size + (0 < rem_bytes);
   off_t n_written = 0;
   bool new_file_flag = true;
   bool chunk_truncated = false;
 
-  if (k > 1)
+  if (k > 1 && 0 < file_size)
     {
       /* Start reading 1 byte before kth chunk of file.  */
-      off_t start = (k - 1) * chunk_size - 1;
+      off_t start = (k - 1) * chunk_size + MIN (k - 1, rem_bytes) - 1;
       if (start < initial_read)
         {
           memmove (buf, buf + start, initial_read - start);
@@ -890,7 +892,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       n_written = start;
       chunk_no = k - 1;
-      chunk_end = chunk_no * chunk_size;
+      chunk_end = start + 1;
     }
 
   while (n_written < file_size)
@@ -904,13 +906,13 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       else
         {
-          n_read = safe_read (STDIN_FILENO, buf, bufsize);
+          n_read = safe_read (STDIN_FILENO, buf,
+                              MIN (bufsize, file_size - n_written));
           if (n_read == SAFE_READ_ERROR)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       if (n_read == 0)
         break; /* eof.  */
-      n_read = MIN (n_read, file_size - n_written);
       chunk_truncated = false;
       eob = buf + n_read;
 
@@ -956,13 +958,10 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
                   chunk_truncated = true;
                   break;
                 }
-              chunk_no++;
-              if (k && chunk_no > k)
+              if (k == chunk_no)
                 return;
-              if (chunk_no == n)
-                chunk_end = file_size; /* >= chunk_size.  */
-              else
-                chunk_end += chunk_size;
+              chunk_end += chunk_size + (chunk_no < rem_bytes);
+              chunk_no++;
               if (chunk_end <= n_written)
                 {
                   if (! k)
@@ -994,10 +993,10 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   off_t start;
   off_t end;
 
-  assert (k && n && k <= n && n <= file_size);
+  assert (0 < k && k <= n);
 
-  start = (k - 1) * (file_size / n);
-  end = (k == n) ? file_size : k * (file_size / n);
+  start = (k - 1) * (file_size / n) + MIN (k - 1, file_size % n);
+  end = k == n ? file_size : k * (file_size / n) + MIN (k, file_size % n);
 
   if (start < initial_read)
     {
@@ -1607,9 +1606,6 @@ main (int argc, char **argv)
                _("invalid number of chunks"),
                quote (umaxtostr (n_units, buffer)));
         }
-      /* increase file_size to n_units here, so that we still process
-         any input data, and create empty files for the rest.  */
-      file_size = MAX (file_size, n_units);
     }
 
   /* When filtering, closure of one pipe must not terminate the process,
@@ -1632,7 +1628,7 @@ main (int argc, char **argv)
       break;
 
     case type_bytes:
-      bytes_split (n_units, buf, in_blk_size, SIZE_MAX, 0);
+      bytes_split (n_units, 0, buf, in_blk_size, SIZE_MAX, 0);
       break;
 
     case type_byteslines:
@@ -1641,8 +1637,8 @@ main (int argc, char **argv)
 
     case type_chunk_bytes:
       if (k_units == 0)
-        bytes_split (file_size / n_units, buf, in_blk_size, initial_read,
-                     n_units);
+        bytes_split (file_size / n_units, file_size % n_units,
+                     buf, in_blk_size, initial_read, n_units);
       else
         bytes_chunk_extract (k_units, n_units, buf, in_blk_size, initial_read,
                              file_size);
