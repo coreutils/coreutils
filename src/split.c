@@ -980,8 +980,9 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   /* Ensure NUMBER files are created, which truncates
      any existing files or notifies any consumers on fifos.
      FIXME: Should we do this before EXIT_FAILURE?  */
-  while (!k && chunk_no++ <= n)
-    cwrite (true, NULL, 0);
+  if (!k)
+    while (chunk_no++ <= n)
+      cwrite (true, NULL, 0);
 }
 
 /* -n K/N: Extract Kth of N chunks.  */
