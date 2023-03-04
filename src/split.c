@@ -1111,8 +1111,10 @@ ofile_open (of_t *files, idx_t i_check, idx_t nfiles)
         }
 
       files[i_check].ofd = fd;
-      if (!(files[i_check].ofile = fdopen (fd, "a")))
+      FILE *ofile = fdopen (fd, "a");
+      if (!ofile)
         die (EXIT_FAILURE, errno, "%s", quotef (files[i_check].of_name));
+      files[i_check].ofile = ofile;
       files[i_check].opid = filter_pid;
       filter_pid = 0;
     }
