@@ -553,10 +553,10 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
     }
   if (pid > 0)
     {
-      int wstatus = 0;
-      if (waitpid (pid, &wstatus, 0) == -1 && errno != ECHILD)
+      int wstatus;
+      if (waitpid (pid, &wstatus, 0) < 0)
         die (EXIT_FAILURE, errno, _("waiting for child process"));
-      if (WIFSIGNALED (wstatus))
+      else if (WIFSIGNALED (wstatus))
         {
           int sig = WTERMSIG (wstatus);
           if (sig != SIGPIPE)
