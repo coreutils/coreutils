@@ -37,8 +37,8 @@
 #include "full-write.h"
 #include "ioblksize.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "sig2str.h"
+#include "sys-limits.h"
 #include "xbinary-io.h"
 #include "xdectoint.h"
 #include "xstrtol.h"
@@ -285,11 +285,9 @@ input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
   off_t size = 0;
   do
     {
-      size_t n_read = safe_read (fd, buf + size, bufsize - size);
-      if (n_read == 0)
-        return size;
-      if (n_read == SAFE_READ_ERROR)
-        return -1;
+      ssize_t n_read = read (fd, buf + size, bufsize - size);
+      if (n_read <= 0)
+        return n_read < 0 ? n_read : size;
       size += n_read;
     }
   while (size < bufsize);
@@ -624,7 +622,6 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
              char *buf, size_t bufsize, size_t initial_read,
              uintmax_t max_files)
 {
-  size_t n_read;
   bool new_file_flag = true;
   bool filter_ok = true;
   uintmax_t opened = 0;
@@ -633,6 +630,7 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
 
   while (! eof)
     {
+      ssize_t n_read;
       if (initial_read != SIZE_MAX)
         {
           n_read = initial_read;
@@ -648,8 +646,8 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
               new_file_flag = true;
             }
 
-          n_read = safe_read (STDIN_FILENO, buf, bufsize);
-          if (n_read == SAFE_READ_ERROR)
+          n_read = read (STDIN_FILENO, buf, bufsize);
+          if (n_read < 0)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
           eof = n_read == 0;
         }
@@ -699,15 +697,15 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
 static void
 lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 {
-  size_t n_read;
+  ssize_t n_read;
   char *bp, *bp_out, *eob;
   bool new_file_flag = true;
   uintmax_t n = 0;
 
   do
     {
-      n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      n_read = read (STDIN_FILENO, buf, bufsize);
+      if (n_read < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
       bp = bp_out = buf;
       eob = bp + n_read;
@@ -746,7 +744,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 static void
 line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 {
-  size_t n_read;
+  ssize_t n_read;
   uintmax_t n_out = 0;      /* for each split.  */
   size_t n_hold = 0;
   char *hold = NULL;        /* for lines > bufsize.  */
@@ -755,8 +753,8 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 
   do
     {
-      n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      n_read = read (STDIN_FILENO, buf, bufsize);
+      if (n_read < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
       size_t n_left = n_read;
       char *sob = buf;
@@ -895,7 +893,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
   while (n_written < file_size)
     {
       char *bp = buf, *eob;
-      size_t n_read;
+      ssize_t n_read;
       if (initial_read != SIZE_MAX)
         {
           n_read = initial_read;
@@ -903,9 +901,9 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       else
         {
-          n_read = safe_read (STDIN_FILENO, buf,
-                              MIN (bufsize, file_size - n_written));
-          if (n_read == SAFE_READ_ERROR)
+          n_read = read (STDIN_FILENO, buf,
+                         MIN (bufsize, file_size - n_written));
+          if (n_read < 0)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       if (n_read == 0)
@@ -1010,7 +1008,7 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
   while (start < end)
     {
-      size_t n_read;
+      ssize_t n_read;
       if (initial_read != SIZE_MAX)
         {
           n_read = initial_read;
@@ -1018,8 +1016,8 @@ bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       else
         {
-          n_read = safe_read (STDIN_FILENO, buf, bufsize);
-          if (n_read == SAFE_READ_ERROR)
+          n_read = read (STDIN_FILENO, buf, bufsize);
+          if (n_read < 0)
             die (EXIT_FAILURE, errno, "%s", quotef (infile));
         }
       if (n_read == 0)
@@ -1163,8 +1161,8 @@ lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize, of_t **filesp)
   while (true)
     {
       char *bp = buf, *eob;
-      size_t n_read = safe_read (STDIN_FILENO, buf, bufsize);
-      if (n_read == SAFE_READ_ERROR)
+      ssize_t n_read = read (STDIN_FILENO, buf, bufsize);
+      if (n_read < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
       else if (n_read == 0)
         break; /* eof.  */
@@ -1503,7 +1501,9 @@ main (int argc, char **argv)
           break;
 
         case IO_BLKSIZE_OPTION:
-          in_blk_size = xdectoumax (optarg, 1, MIN (IDX_MAX, SIZE_MAX) - 1,
+          in_blk_size = xdectoumax (optarg, 1,
+                                    MIN (SYS_BUFSIZE_MAX,
+                                         MIN (IDX_MAX, SIZE_MAX) - 1),
                                     multipliers, _("invalid IO block size"), 0);
           break;
 
@@ -1581,9 +1581,12 @@ main (int argc, char **argv)
   if (fstat (STDIN_FILENO, &in_stat_buf) != 0)
     die (EXIT_FAILURE, errno, "%s", quotef (infile));
 
-  bool specified_buf_size = !! in_blk_size;
-  if (! specified_buf_size)
-    in_blk_size = io_blksize (in_stat_buf);
+  if (in_blk_size == 0)
+    {
+      in_blk_size = io_blksize (in_stat_buf);
+      if (SYS_BUFSIZE_MAX < in_blk_size)
+        in_blk_size = SYS_BUFSIZE_MAX;
+    }
 
   char *buf = xalignalloc (page_size, in_blk_size + 1);
   size_t initial_read = SIZE_MAX;
