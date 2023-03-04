@@ -38,16 +38,13 @@
   proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
-static bool tee_files (int nfiles, char **files);
+static bool tee_files (int nfiles, char **files, bool);
 
 /* If true, append to output files rather than truncating them. */
 static bool append;
 
 /* If true, ignore interrupts. */
 static bool ignore_interrupts;
-
-/* If true, detect if next output becomes broken while waiting for input. */
-static bool pipe_check;
 
 enum output_error
   {
@@ -122,9 +119,6 @@ writing to non pipe outputs.\n\
 int
 main (int argc, char **argv)
 {
-  bool ok;
-  int optc;
-
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
   setlocale (LC_ALL, "");
@@ -136,6 +130,7 @@ main (int argc, char **argv)
   append = false;
   ignore_interrupts = false;
 
+  int optc;
   while ((optc = getopt_long (argc, argv, "aip", long_options, NULL)) != -1)
     {
       switch (optc)
@@ -154,12 +149,6 @@ main (int argc, char **argv)
                                       output_error_args, output_error_types);
           else
             output_error = output_error_warn_nopipe;
-
-          /* Detect and close a broken pipe output when ignoring EPIPE.  */
-          if (output_error == output_error_warn_nopipe
-              || output_error == output_error_exit_nopipe)
-            pipe_check = true;
-
           break;
 
         case_GETOPT_HELP_CHAR;
@@ -177,14 +166,16 @@ main (int argc, char **argv)
   if (output_error != output_error_sigpipe)
     signal (SIGPIPE, SIG_IGN);
 
-  /* No need to poll outputs if input is always ready for reading.  */
-  if (pipe_check && !iopoll_input_ok (STDIN_FILENO))
-    pipe_check = false;
+  /* Whether to detect and close a broken pipe output.
+     There is no need if the input is always ready for reading.  */
+  bool pipe_check = ((output_error == output_error_warn_nopipe
+                      || output_error == output_error_exit_nopipe)
+                     && iopoll_input_ok (STDIN_FILENO));
 
   /* Do *not* warn if tee is given no file arguments.
      POSIX requires that it work when given no arguments.  */
 
-  ok = tee_files (argc - optind, &argv[optind]);
+  bool ok = tee_files (argc - optind, &argv[optind], pipe_check);
   if (close (STDIN_FILENO) != 0)
     die (EXIT_FAILURE, errno, "%s", _("standard input"));
 
@@ -232,7 +223,7 @@ fail_output (FILE **descriptors, char **files, int i)
    Return true if successful.  */
 
 static bool
-tee_files (int nfiles, char **files)
+tee_files (int nfiles, char **files, bool pipe_check)
 {
   size_t n_outputs = 0;
   FILE **descriptors;
