@@ -868,7 +868,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
   const off_t chunk_size = file_size / n;
   uintmax_t chunk_no = 1;
-  off_t chunk_end = chunk_size - 1;
+  off_t chunk_end = chunk_size;
   off_t n_written = 0;
   bool new_file_flag = true;
   bool chunk_truncated = false;
@@ -890,7 +890,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
         }
       n_written = start;
       chunk_no = k - 1;
-      chunk_end = chunk_no * chunk_size - 1;
+      chunk_end = chunk_no * chunk_size;
     }
 
   while (n_written < file_size)
@@ -920,7 +920,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
           bool next = false;
 
           /* Begin looking for '\n' at last byte of chunk.  */
-          off_t skip = MIN (n_read, MAX (0, chunk_end - n_written));
+          off_t skip = MIN (n_read, MAX (0, chunk_end - 1 - n_written));
           char *bp_out = memchr (bp + skip, eolchar, n_read - skip);
           if (bp_out)
             {
@@ -948,7 +948,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 
           /* A line could have been so long that it skipped
              entire chunks. So create empty files in that case.  */
-          while (next || chunk_end <= n_written - 1)
+          while (next || chunk_end <= n_written)
             {
               if (!next && bp == eob)
                 {
@@ -960,10 +960,10 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
               if (k && chunk_no > k)
                 return;
               if (chunk_no == n)
-                chunk_end = file_size - 1; /* >= chunk_size.  */
+                chunk_end = file_size; /* >= chunk_size.  */
               else
                 chunk_end += chunk_size;
-              if (chunk_end <= n_written - 1)
+              if (chunk_end <= n_written)
                 {
                   if (! k)
                     cwrite (true, NULL, 0);
