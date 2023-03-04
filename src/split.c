@@ -35,6 +35,7 @@
 #include "fd-reopen.h"
 #include "fcntl--.h"
 #include "full-write.h"
+#include "idx.h"
 #include "ioblksize.h"
 #include "quote.h"
 #include "sig2str.h"
@@ -58,8 +59,8 @@ static pid_t filter_pid;
 
 /* Array of open pipes.  */
 static int *open_pipes;
-static size_t open_pipes_alloc;
-static size_t n_open_pipes;
+static idx_t open_pipes_alloc;
+static int n_open_pipes;
 
 /* Whether SIGPIPE has the default action, when --filter is used.  */
 static bool default_SIGPIPE;
@@ -78,7 +79,7 @@ static char *outfile_mid;
 static bool suffix_auto = true;
 
 /* Length of OUTFILE's suffix.  */
-static size_t suffix_length;
+static idx_t suffix_length;
 
 /* Alphabet of characters to use in suffix.  */
 static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -193,7 +194,7 @@ set_suffix_length (intmax_t n_units, enum Split_type split_type)
             }
 
         }
-      size_t alphabet_len = strlen (suffix_alphabet);
+      idx_t alphabet_len = strlen (suffix_alphabet);
       do
         suffix_length_needed++;
       while (n_units_end /= alphabet_len);
@@ -280,7 +281,7 @@ CHUNKS may be:\n\
    input error, set errno and return -1.  */
 
 static off_t
-input_file_size (int fd, struct stat const *st, char *buf, size_t bufsize)
+input_file_size (int fd, struct stat const *st, char *buf, idx_t bufsize)
 {
   off_t size = 0;
   do
@@ -344,14 +345,14 @@ static void
 next_file_name (void)
 {
   /* Index in suffix_alphabet of each character in the suffix.  */
-  static size_t *sufindex;
-  static size_t outbase_length;
-  static size_t outfile_length;
-  static size_t addsuf_length;
+  static idx_t *sufindex;
+  static idx_t outbase_length;
+  static idx_t outfile_length;
+  static idx_t addsuf_length;
 
   if (! outfile)
     {
-      bool widen;
+      bool overflow, widen;
 
 new_name:
       widen = !! outfile_length;
@@ -362,7 +363,8 @@ new_name:
 
           outbase_length = strlen (outbase);
           addsuf_length = additional_suffix ? strlen (additional_suffix) : 0;
-          outfile_length = outbase_length + suffix_length + addsuf_length;
+          overflow = INT_ADD_WRAPV (outbase_length + addsuf_length,
+                                    suffix_length, &outfile_length);
         }
       else
         {
@@ -371,13 +373,15 @@ new_name:
              the generated suffix into the prefix (base), and
              reinitializing the now one longer suffix.  */
 
-          outfile_length += 2;
+          overflow = INT_ADD_WRAPV (outfile_length, 2, &outfile_length);
           suffix_length++;
         }
 
-      if (outfile_length + 1 < outbase_length)
+      idx_t outfile_size;
+      overflow |= INT_ADD_WRAPV (outfile_length, 1, &outfile_size);
+      if (overflow)
         xalloc_die ();
-      outfile = xrealloc (outfile, outfile_length + 1);
+      outfile = xirealloc (outfile, outfile_size);
 
       if (! widen)
         memcpy (outfile, outbase, outbase_length);
@@ -395,18 +399,18 @@ new_name:
       outfile[outfile_length] = 0;
 
       free (sufindex);
-      sufindex = xcalloc (suffix_length, sizeof *sufindex);
+      sufindex = xicalloc (suffix_length, sizeof *sufindex);
 
       if (numeric_suffix_start)
         {
           assert (! widen);
 
           /* Update the output file name.  */
-          size_t i = strlen (numeric_suffix_start);
+          idx_t i = strlen (numeric_suffix_start);
           memcpy (outfile_mid + suffix_length - i, numeric_suffix_start, i);
 
           /* Update the suffix index.  */
-          size_t *sufindex_end = sufindex + suffix_length;
+          idx_t *sufindex_end = sufindex + suffix_length;
           while (i-- != 0)
             *--sufindex_end = numeric_suffix_start[i] - '0';
         }
@@ -429,7 +433,7 @@ new_name:
     {
       /* Increment the suffix in place, if possible.  */
 
-      size_t i = suffix_length;
+      idx_t i = suffix_length;
       while (i-- != 0)
         {
           sufindex[i]++;
@@ -520,8 +524,8 @@ create (char const *name)
         die (EXIT_FAILURE, errno, _("failed to close input pipe"));
       filter_pid = child_pid;
       if (n_open_pipes == open_pipes_alloc)
-        open_pipes = x2nrealloc (open_pipes, &open_pipes_alloc,
-                                 sizeof *open_pipes);
+        open_pipes = xpalloc (open_pipes, &open_pipes_alloc, 1,
+                              MIN (INT_MAX, IDX_MAX), sizeof *open_pipes);
       open_pipes[n_open_pipes++] = fd_pair[1];
       return fd_pair[1];
     }
@@ -589,7 +593,7 @@ closeout (FILE *fp, int fd, pid_t pid, char const *name)
    Return true if successful.  */
 
 static bool
-cwrite (bool new_file_flag, char const *bp, size_t bytes)
+cwrite (bool new_file_flag, char const *bp, idx_t bytes)
 {
   if (new_file_flag)
     {
@@ -620,7 +624,7 @@ cwrite (bool new_file_flag, char const *bp, size_t bytes)
 
 static void
 bytes_split (intmax_t n_bytes, intmax_t rem_bytes,
-             char *buf, size_t bufsize, ssize_t initial_read,
+             char *buf, idx_t bufsize, ssize_t initial_read,
              intmax_t max_files)
 {
   bool new_file_flag = true;
@@ -696,7 +700,7 @@ bytes_split (intmax_t n_bytes, intmax_t rem_bytes,
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (intmax_t n_lines, char *buf, size_t bufsize)
+lines_split (intmax_t n_lines, char *buf, idx_t bufsize)
 {
   ssize_t n_read;
   char *bp, *bp_out, *eob;
@@ -718,7 +722,7 @@ lines_split (intmax_t n_lines, char *buf, size_t bufsize)
             {
               if (eob != bp_out) /* do not write 0 bytes! */
                 {
-                  size_t len = eob - bp_out;
+                  idx_t len = eob - bp_out;
                   cwrite (new_file_flag, bp_out, len);
                   new_file_flag = false;
                 }
@@ -743,13 +747,13 @@ lines_split (intmax_t n_lines, char *buf, size_t bufsize)
    where lines longer than N_BYTES bytes occur. */
 
 static void
-line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
+line_bytes_split (intmax_t n_bytes, char *buf, idx_t bufsize)
 {
   ssize_t n_read;
   intmax_t n_out = 0;      /* for each split.  */
-  size_t n_hold = 0;
+  idx_t n_hold = 0;
   char *hold = NULL;        /* for lines > bufsize.  */
-  size_t hold_size = 0;
+  idx_t hold_size = 0;
   bool split_line = false;  /* Whether a \n was output in a split.  */
 
   do
@@ -757,11 +761,11 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
       n_read = read (STDIN_FILENO, buf, bufsize);
       if (n_read < 0)
         die (EXIT_FAILURE, errno, "%s", quotef (infile));
-      size_t n_left = n_read;
+      idx_t n_left = n_read;
       char *sob = buf;
       while (n_left)
         {
-          size_t split_rest = 0;
+          idx_t split_rest = 0;
           char *eoc = NULL;
           char *eol;
 
@@ -783,7 +787,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
               cwrite (n_out == 0, hold, n_hold);
               n_out += n_hold;
               if (n_hold > bufsize)
-                hold = xrealloc (hold, bufsize);
+                hold = xirealloc (hold, bufsize);
               n_hold = 0;
               hold_size = bufsize;
             }
@@ -792,7 +796,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
           if (eol)
             {
               split_line = true;
-              size_t n_write = eol - sob + 1;
+              idx_t n_write = eol - sob + 1;
               cwrite (n_out == 0, sob, n_write);
               n_out += n_write;
               n_left -= n_write;
@@ -804,7 +808,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
           /* Output to eoc or eob if possible.  */
           if (n_left && !split_line)
             {
-              size_t n_write = eoc ? split_rest : n_left;
+              idx_t n_write = eoc ? split_rest : n_left;
               cwrite (n_out == 0, sob, n_write);
               n_out += n_write;
               n_left -= n_write;
@@ -816,15 +820,10 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
           /* Update hold if needed.  */
           if ((eoc && split_rest) || (!eoc && n_left))
             {
-              size_t n_buf = eoc ? split_rest : n_left;
+              idx_t n_buf = eoc ? split_rest : n_left;
               if (hold_size - n_hold < n_buf)
-                {
-                  if (hold_size <= SIZE_MAX - bufsize)
-                    hold_size += bufsize;
-                  else
-                    xalloc_die ();
-                  hold = xrealloc (hold, hold_size);
-                }
+                hold = xpalloc (hold, &hold_size, n_buf - (hold_size - n_hold),
+                                -1, sizeof *hold);
               memcpy (hold + n_hold, sob, n_buf);
               n_hold += n_buf;
               n_left -= n_buf;
@@ -857,7 +856,7 @@ line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
    if a line is so long as to completely overlap the partition.  */
 
 static void
-lines_chunk_split (intmax_t k, intmax_t n, char *buf, size_t bufsize,
+lines_chunk_split (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
                    ssize_t initial_read, off_t file_size)
 {
   assert (n && k <= n);
@@ -914,7 +913,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, size_t bufsize,
 
       while (bp != eob)
         {
-          size_t to_write;
+          idx_t to_write;
           bool next = false;
 
           /* Begin looking for '\n' at last byte of chunk.  */
@@ -983,7 +982,7 @@ lines_chunk_split (intmax_t k, intmax_t n, char *buf, size_t bufsize,
 /* -n K/N: Extract Kth of N chunks.  */
 
 static void
-bytes_chunk_extract (intmax_t k, intmax_t n, char *buf, size_t bufsize,
+bytes_chunk_extract (intmax_t k, intmax_t n, char *buf, idx_t bufsize,
                      ssize_t initial_read, off_t file_size)
 {
   off_t start;
@@ -1051,14 +1050,14 @@ enum
    If so, it's probably best to close each file when finished with it.  */
 
 static bool
-ofile_open (of_t *files, size_t i_check, size_t nfiles)
+ofile_open (of_t *files, idx_t i_check, idx_t nfiles)
 {
   bool file_limit = false;
 
   if (files[i_check].ofd <= OFD_NEW)
     {
       int fd;
-      size_t i_reopen = i_check ? i_check - 1 : nfiles - 1;
+      idx_t i_reopen = i_check ? i_check - 1 : nfiles - 1;
 
       /* Another process could have opened a file in between the calls to
          close and open, so we should keep trying until open succeeds or
@@ -1129,12 +1128,12 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
    to opening and closing each file for each line.  */
 
 static void
-lines_rr (intmax_t k, intmax_t n, char *buf, size_t bufsize, of_t **filesp)
+lines_rr (intmax_t k, intmax_t n, char *buf, idx_t bufsize, of_t **filesp)
 {
   bool wrapped = false;
   bool wrote = false;
   bool file_limit;
-  size_t i_file;
+  idx_t i_file;
   of_t *files IF_LINT (= NULL);
   intmax_t line_no;
 
@@ -1142,9 +1141,9 @@ lines_rr (intmax_t k, intmax_t n, char *buf, size_t bufsize, of_t **filesp)
     line_no = 1;
   else
     {
-      if (SIZE_MAX < n)
+      if (IDX_MAX < n)
         xalloc_die ();
-      files = *filesp = xnmalloc (n, sizeof *files);
+      files = *filesp = xinmalloc (n, sizeof *files);
 
       /* Generate output file names. */
       for (i_file = 0; i_file < n; i_file++)
@@ -1171,7 +1170,7 @@ lines_rr (intmax_t k, intmax_t n, char *buf, size_t bufsize, of_t **filesp)
 
       while (bp != eob)
         {
-          size_t to_write;
+          idx_t to_write;
           bool next = false;
 
           /* Find end of line. */
@@ -1257,7 +1256,7 @@ no_filters:
      FIXME: Should we do this before EXIT_FAILURE?  */
   if (!k)
     {
-      int ceiling = (wrapped ? n : i_file);
+      idx_t ceiling = wrapped ? n : i_file;
       for (i_file = 0; i_file < n; i_file++)
         {
           if (i_file >= ceiling && !elide_empty_files)
@@ -1331,7 +1330,7 @@ main (int argc, char **argv)
 {
   enum Split_type split_type = type_undef;
   idx_t in_blk_size = 0;	/* optimal block size of input file device */
-  size_t page_size = getpagesize ();
+  idx_t page_size = getpagesize ();
   intmax_t k_units = 0;
   intmax_t n_units = 0;
 
@@ -1366,7 +1365,7 @@ main (int argc, char **argv)
       switch (c)
         {
         case 'a':
-          suffix_length = xdectoumax (optarg, 0, SIZE_MAX / sizeof (size_t),
+          suffix_length = xdectoimax (optarg, 0, IDX_MAX,
                                       "", _("invalid suffix length"), 0);
           break;
 
