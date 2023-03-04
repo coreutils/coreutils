@@ -459,7 +459,11 @@ create (char const *name)
       if (verbose)
         fprintf (stdout, _("creating file %s\n"), quoteaf (name));
 
-      int fd = open (name, O_WRONLY | O_CREAT | O_BINARY, MODE_RW_UGO);
+      int oflags = O_WRONLY | O_CREAT | O_BINARY;
+      int fd = open (name, oflags | O_EXCL, MODE_RW_UGO);
+      if (0 <= fd || errno != EEXIST)
+        return fd;
+      fd = open (name, oflags, MODE_RW_UGO);
       if (fd < 0)
         return fd;
       struct stat out_stat_buf;
@@ -468,8 +472,10 @@ create (char const *name)
       if (SAME_INODE (in_stat_buf, out_stat_buf))
         die (EXIT_FAILURE, 0, _("%s would overwrite input; aborting"),
              quoteaf (name));
-      if (ftruncate (fd, 0) != 0
-          && (S_ISREG (out_stat_buf.st_mode) || S_TYPEISSHM (&out_stat_buf)))
+      bool regularish
+        = S_ISREG (out_stat_buf.st_mode) || S_TYPEISSHM (&out_stat_buf);
+      if (! (regularish && out_stat_buf.st_size == 0)
+          && ftruncate (fd, 0) < 0 && regularish)
         die (EXIT_FAILURE, errno, _("%s: error truncating"), quotef (name));
 
       return fd;
