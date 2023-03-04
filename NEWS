@@ -137,6 +137,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   mv now supports the --no-copy option, which causes it to fail when
   asked to move a file to a different file system.
 
+  split now accepts options like '-n SIZE' that exceed machine integer
+  range, when they can be implemented as if they were infinity.
+
   wc now accepts the --total={auto,never,always,only} option
   to give explicit control over when the total is output.
 

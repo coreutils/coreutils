@@ -160,11 +160,11 @@ ignorable (int err)
 }
 
 static void
-set_suffix_length (uintmax_t n_units, enum Split_type split_type)
+set_suffix_length (intmax_t n_units, enum Split_type split_type)
 {
 #define DEFAULT_SUFFIX_LENGTH 2
 
-  uintmax_t suffix_length_needed = 0;
+  int suffix_length_needed = 0;
 
   /* The suffix auto length feature is incompatible with
      a user specified start value as the generated suffixes
@@ -176,20 +176,20 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
   if (split_type == type_chunk_bytes || split_type == type_chunk_lines
       || split_type == type_rr)
     {
-      uintmax_t n_units_end = n_units - 1;
+      intmax_t n_units_end = n_units - 1;
       if (numeric_suffix_start)
         {
-          uintmax_t n_start;
-          strtol_error e = xstrtoumax (numeric_suffix_start, NULL, 10,
+          intmax_t n_start;
+          strtol_error e = xstrtoimax (numeric_suffix_start, NULL, 10,
                                        &n_start, "");
-          if (e == LONGINT_OK && n_start <= UINTMAX_MAX - n_units)
+          if (e == LONGINT_OK && n_start < n_units)
             {
               /* Restrict auto adjustment so we don't keep
                  incrementing a suffix size arbitrarily,
                  as that would break sort order for files
                  generated from multiple split runs.  */
-              if (n_start < n_units)
-                n_units_end += n_start;
+              if (INT_ADD_WRAPV (n_units_end, n_start, &n_units_end))
+                n_units_end = INTMAX_MAX;
             }
 
         }
@@ -206,7 +206,7 @@ set_suffix_length (uintmax_t n_units, enum Split_type split_type)
       if (suffix_length < suffix_length_needed)
         {
           die (EXIT_FAILURE, 0,
-               _("the suffix length needs to be at least %"PRIuMAX),
+               _("the suffix length needs to be at least %d"),
                suffix_length_needed);
         }
       suffix_auto = false;
@@ -619,14 +619,14 @@ cwrite (bool new_file_flag, char const *bp, size_t bytes)
    BUF contains the first INITIAL_READ input bytes.  */
 
 static void
-bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
+bytes_split (intmax_t n_bytes, intmax_t rem_bytes,
              char *buf, size_t bufsize, ssize_t initial_read,
-             uintmax_t max_files)
+             intmax_t max_files)
 {
   bool new_file_flag = true;
   bool filter_ok = true;
-  uintmax_t opened = 0;
-  uintmax_t to_write = n_bytes + (0 < rem_bytes);
+  intmax_t opened = 0;
+  intmax_t to_write = n_bytes + (0 < rem_bytes);
   bool eof = ! to_write;
 
   while (! eof)
@@ -696,12 +696,12 @@ bytes_split (uintmax_t n_bytes, uintmax_t rem_bytes,
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
+lines_split (intmax_t n_lines, char *buf, size_t bufsize)
 {
   ssize_t n_read;
   char *bp, *bp_out, *eob;
   bool new_file_flag = true;
-  uintmax_t n = 0;
+  intmax_t n = 0;
 
   do
     {
@@ -743,10 +743,10 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
    where lines longer than N_BYTES bytes occur. */
 
 static void
-line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
+line_bytes_split (intmax_t n_bytes, char *buf, size_t bufsize)
 {
   ssize_t n_read;
-  uintmax_t n_out = 0;      /* for each split.  */
+  intmax_t n_out = 0;      /* for each split.  */
   size_t n_hold = 0;
   char *hold = NULL;        /* for lines > bufsize.  */
   size_t hold_size = 0;
@@ -857,14 +857,14 @@ line_bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
    if a line is so long as to completely overlap the partition.  */
 
 static void
-lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
+lines_chunk_split (intmax_t k, intmax_t n, char *buf, size_t bufsize,
                    ssize_t initial_read, off_t file_size)
 {
   assert (n && k <= n);
 
-  uintmax_t rem_bytes = file_size % n;
+  intmax_t rem_bytes = file_size % n;
   off_t chunk_size = file_size / n;
-  uintmax_t chunk_no = 1;
+  intmax_t chunk_no = 1;
   off_t chunk_end = chunk_size + (0 < rem_bytes);
   off_t n_written = 0;
   bool new_file_flag = true;
@@ -983,7 +983,7 @@ lines_chunk_split (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
 /* -n K/N: Extract Kth of N chunks.  */
 
 static void
-bytes_chunk_extract (uintmax_t k, uintmax_t n, char *buf, size_t bufsize,
+bytes_chunk_extract (intmax_t k, intmax_t n, char *buf, size_t bufsize,
                      ssize_t initial_read, off_t file_size)
 {
   off_t start;
@@ -1129,14 +1129,14 @@ ofile_open (of_t *files, size_t i_check, size_t nfiles)
    to opening and closing each file for each line.  */
 
 static void
-lines_rr (uintmax_t k, uintmax_t n, char *buf, size_t bufsize, of_t **filesp)
+lines_rr (intmax_t k, intmax_t n, char *buf, size_t bufsize, of_t **filesp)
 {
   bool wrapped = false;
   bool wrote = false;
   bool file_limit;
   size_t i_file;
   of_t *files IF_LINT (= NULL);
-  uintmax_t line_no;
+  intmax_t line_no;
 
   if (k)
     line_no = 1;
@@ -1278,20 +1278,51 @@ no_filters:
     }								\
   while (0)
 
+/* Report a string-to-integer conversion failure MSGID with ARG.  */
+
+static _Noreturn void
+strtoint_die (char const *msgid, char const *arg)
+{
+  die (EXIT_FAILURE, errno == EINVAL ? 0 : errno, "%s: %s",
+       gettext (msgid), quote (arg));
+}
+
+/* Use OVERFLOW_OK when it is OK to ignore LONGINT_OVERFLOW errors, since the
+   extreme value will do the right thing anyway on any practical platform.  */
+#define OVERFLOW_OK LONGINT_OVERFLOW
+
+/* Parse ARG for number of bytes or lines.  The number can be followed
+   by MULTIPLIERS, and the resulting value must be positive.
+   If the number cannot be parsed, diagnose with MSG.
+   Return the number parsed, or an INTMAX_MAX on overflow.  */
+
+static intmax_t
+parse_n_units (char const *arg, char const *multipliers, char const *msgid)
+{
+  intmax_t n;
+  if (OVERFLOW_OK < xstrtoimax (arg, NULL, 10, &n, multipliers) || n < 1)
+    strtoint_die (msgid, arg);
+  return n;
+}
 
 /* Parse K/N syntax of chunk options.  */
 
 static void
-parse_chunk (uintmax_t *k_units, uintmax_t *n_units, char *slash)
+parse_chunk (intmax_t *k_units, intmax_t *n_units, char const *arg)
 {
-  *n_units = xdectoumax (slash + 1, 1, UINTMAX_MAX, "",
-                         _("invalid number of chunks"), 0);
-  if (slash != optarg)           /* a leading number is specified.  */
+  char *argend;
+  strtol_error e = xstrtoimax (arg, &argend, 10, n_units, "");
+  if (e == LONGINT_INVALID_SUFFIX_CHAR && *argend == '/')
     {
-      *slash = '\0';
-      *k_units = xdectoumax (optarg, 1, *n_units, "",
-                             _("invalid chunk number"), 0);
+      *k_units = *n_units;
+      *n_units = parse_n_units (argend + 1, "",
+                                N_("invalid number of chunks"));
+      if (! (0 < *k_units && *k_units <= *n_units))
+        error (EXIT_FAILURE, 0, "%s: %s", _("invalid chunk number"),
+               quote_mem (arg, argend - arg));
     }
+  else if (! (e <= OVERFLOW_OK && 0 < *n_units))
+    strtoint_die (N_("invalid number of chunks"), arg);
 }
 
 
@@ -1301,8 +1332,8 @@ main (int argc, char **argv)
   enum Split_type split_type = type_undef;
   idx_t in_blk_size = 0;	/* optimal block size of input file device */
   size_t page_size = getpagesize ();
-  uintmax_t k_units = 0;
-  uintmax_t n_units = 0;
+  intmax_t k_units = 0;
+  intmax_t n_units = 0;
 
   static char const multipliers[] = "bEGKkMmPQRTYZ0";
   int c;
@@ -1326,7 +1357,6 @@ main (int argc, char **argv)
     {
       /* This is the argv-index of the option we will read next.  */
       int this_optind = optind ? optind : 1;
-      char *slash;
 
       c = getopt_long (argc, argv, "0123456789C:a:b:del:n:t:ux",
                        longopts, NULL);
@@ -1355,27 +1385,23 @@ main (int argc, char **argv)
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_bytes;
-          /* Limit to OFF_T_MAX, because if input is a pipe, we could get more
-             data than is possible to write to a single file, so indicate that
-             immediately rather than having possibly future invocations fail. */
-          n_units = xdectoumax (optarg, 1, OFF_T_MAX, multipliers,
-                                _("invalid number of bytes"), 0);
+          n_units = parse_n_units (optarg, multipliers,
+                                   N_("invalid number of bytes"));
           break;
 
         case 'l':
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_lines;
-          n_units = xdectoumax (optarg, 1, UINTMAX_MAX, "",
-                                _("invalid number of lines"), 0);
+          n_units = parse_n_units (optarg, "", N_("invalid number of lines"));
           break;
 
         case 'C':
           if (split_type != type_undef)
             FAIL_ONLY_ONE_WAY ();
           split_type = type_byteslines;
-          n_units = xdectoumax (optarg, 1, MIN (SIZE_MAX, OFF_T_MAX),
-                                multipliers, _("invalid number of bytes"), 0);
+          n_units = parse_n_units (optarg, multipliers,
+                                   N_("invalid number of lines"));
           break;
 
         case 'n':
@@ -1396,11 +1422,7 @@ main (int argc, char **argv)
             }
           else
             split_type = type_chunk_bytes;
-          if ((slash = strchr (optarg, '/')))
-            parse_chunk (&k_units, &n_units, slash);
-          else
-            n_units = xdectoumax (optarg, 1, UINTMAX_MAX, "",
-                                  _("invalid number of chunks"), 0);
+          parse_chunk (&k_units, &n_units, optarg);
           break;
 
         case 'u':
@@ -1457,13 +1479,9 @@ main (int argc, char **argv)
           if (digits_optind != 0 && digits_optind != this_optind)
             n_units = 0;	/* More than one number given; ignore other. */
           digits_optind = this_optind;
-          if (!DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', uintmax_t))
-            {
-              char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
-              die (EXIT_FAILURE, 0,
-                   _("line count option -%s%c... is too large"),
-                   umaxtostr (n_units, buffer), c);
-            }
+          if (INT_MULTIPLY_WRAPV (n_units, 10, &n_units)
+              || INT_ADD_WRAPV (n_units, c - '0', &n_units))
+            n_units = INTMAX_MAX;
           break;
 
         case 'd':
@@ -1536,7 +1554,7 @@ main (int argc, char **argv)
 
   if (n_units == 0)
     {
-      error (0, 0, "%s: %s", _("invalid number of lines"), quote ("0"));
+      error (0, 0, _("invalid number of lines: %s"), "0");
       usage (EXIT_FAILURE);
     }
 
@@ -1600,14 +1618,6 @@ main (int argc, char **argv)
         die (EXIT_FAILURE, errno, _("%s: cannot determine file size"),
              quotef (infile));
       initial_read = MIN (file_size, in_blk_size);
-      /* Overflow, and sanity checking.  */
-      if (OFF_T_MAX < n_units)
-        {
-          char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
-          die (EXIT_FAILURE, EOVERFLOW, "%s: %s",
-               _("invalid number of chunks"),
-               quote (umaxtostr (n_units, buffer)));
-        }
     }
 
   /* When filtering, closure of one pipe must not terminate the process,

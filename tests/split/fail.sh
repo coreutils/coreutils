@@ -46,30 +46,17 @@ returns_ 1 split -0 in 2> /dev/null || fail=1
 
 split --lines=$UINTMAX_MAX in || fail=1
 split --bytes=$OFF_T_MAX in || fail=1
-returns_ 1 split --line-bytes=$OFF_T_OFLOW 2> /dev/null in || fail=1
-returns_ 1 split --line-bytes=$SIZE_OFLOW 2> /dev/null in || fail=1
+split --line-bytes=$OFF_T_OFLOW in || fail=1
+split --line-bytes=$SIZE_OFLOW in || fail=1
 if truncate -s$SIZE_OFLOW large; then
   # Ensure we can split chunks of a large file on 32 bit hosts
   split --number=$SIZE_OFLOW/$SIZE_OFLOW large >/dev/null || fail=1
 fi
-split --number=r/$UINTMAX_MAX/$UINTMAX_MAX </dev/null >/dev/null || fail=1
+split --number=r/$INTMAX_MAX/$UINTMAX_MAX </dev/null >/dev/null || fail=1
 returns_ 1 split --number=r/$UINTMAX_OFLOW </dev/null 2>/dev/null || fail=1
 
-# Make sure that a huge obsolete option evokes the right failure.
-split -99999999999999999991 2> out
-
-# On losing systems (x86 Solaris 5.9 c89), we get a message like this:
-#   split: line count option -9999999999... is too large
-# while on most, we get this:
-#   split: line count option -99999999999999999991... is too large
-# so map them both to -99*.
-sed 's/99[19]*/99*/' out > out-t
-mv -f out-t out
-
-cat <<\EOF > exp
-split: line count option -99*... is too large
-EOF
-compare exp out || fail=1
+# Make sure that a huge obsolete option does the right thing.
+split -99999999999999999991 in || fail=1
 
 # Make sure split fails when it can't read input
 # (the current directory in this case)
