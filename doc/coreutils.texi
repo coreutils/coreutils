@@ -12429,6 +12429,9 @@ dd bs=1 seek=2GiB if=/dev/null of=big
 has an apparent size of 2 GiB, yet on most modern
 file systems, it actually uses almost no space.
 
+Apparent sizes are meaningful only for regular files and symbolic links.
+Other file types do not contribute to apparent size.
+
 @item -B @var{size}
 @itemx --block-size=@var{size}
 @opindex -B

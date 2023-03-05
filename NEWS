@@ -98,6 +98,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   to support unusual devices that may have this constraint.
   [behavior inadvertently changed in coreutils-7.2]
 
+  du --apparent now counts apparent sizes only of regular files and
+  symbolic links.  POSIX does not specify the meaning of apparent
+  sizes (i.e., st_size) for other file types, and counting those sizes
+  could cause confusing and unwanted size mismatches.
+
   'ls -v' and 'sort -V' go back to sorting ".0" before ".A",
   reverting to the behavior in coreutils-9.0 and earlier.
   This behavior is now documented.

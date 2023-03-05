@@ -131,7 +131,7 @@ struct dulevel
 static bool opt_all = false;
 
 /* If true, rather than using the device usage of each file,
-   use the apparent size (a la stat.st_size).  */
+   use the apparent size (stat.st_size if usable, 0 otherwise).  */
 static bool apparent_size = false;
 
 /* If true, count each hard link of files with multiple links.  */
@@ -494,8 +494,8 @@ process_file (FTS *fts, FTSENT *ent)
   size_t level;
   static size_t n_alloc;
   /* First element of the structure contains:
-     The sum of the st_size values of all entries in the single directory
-     at the corresponding level.  Although this does include the st_size
+     The sum of the sizes of all entries in the single directory
+     at the corresponding level.  Although this does include the sizes
      corresponding to each subdirectory, it does not include the size of
      any file in a subdirectory. Also corresponding last modified date.
      Second element of the structure contains:
@@ -588,7 +588,7 @@ process_file (FTS *fts, FTSENT *ent)
 
   duinfo_set (&dui,
               (apparent_size
-               ? MAX (0, sb->st_size)
+               ? (usable_st_size (sb) ? MAX (0, sb->st_size) : 0)
                : (uintmax_t) ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
               (time_type == time_mtime ? get_stat_mtime (sb)
                : time_type == time_atime ? get_stat_atime (sb)
