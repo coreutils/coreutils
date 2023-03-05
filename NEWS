@@ -172,6 +172,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   tee -p detects when all remaining outputs have become broken pipes, and
   exits, rather than waiting for more input to induce an exit when written.
 
+  tee now handles non blocking outputs, which can be seen for example with
+  telnet or mpirun piping through tee to a terminal.
+  Previously tee could truncate data written to such an output and fail,
+  and also potentially output a "Resource temporarily unavailable" error.
 
 
 * Noteworthy changes in release 9.1 (2022-04-15) [stable]

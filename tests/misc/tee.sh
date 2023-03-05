@@ -79,8 +79,23 @@ touch file.ro || framework_failure_
 chmod a-w file.ro || framework_failure_
 returns_ 1 tee -p </dev/null file.ro || fail=1
 
-# Ensure tee honors --output-error modes
 mkfifo_or_skip_ fifo
+
+# Ensure tee handles nonblocking output correctly
+# Terminate any background processes
+cleanup_() { kill $pid 2>/dev/null && wait $pid; }
+read_fifo_delayed() {
+  { sleep .1; timeout 10 dd of=/dev/null status=none; } <fifo
+}
+read_fifo_delayed & pid=$!
+dd count=20 bs=100K if=/dev/zero status=none |
+{
+  dd count=0 oflag=nonblock status=none
+  tee || { cleanup_; touch tee.fail; }
+} >fifo
+test -f tee.fail && fail=1
+
+# Ensure tee honors --output-error modes
 read_fifo() { timeout 10 dd count=1 if=fifo of=/dev/null status=none & }
 
 # Determine platform sigpipe exit status

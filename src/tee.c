@@ -26,6 +26,7 @@
 #include "die.h"
 #include "error.h"
 #include "fadvise.h"
+#include "iopoll.h"
 #include "stdio--.h"
 #include "xbinary-io.h"
 #include "iopoll.h"
@@ -313,7 +314,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
          Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
         if (descriptors[i]
-            && fwrite (buffer, bytes_read, 1, descriptors[i]) != 1)
+            && ! fwrite_nonblock (buffer, bytes_read, descriptors[i]))
           {
             if (fail_output (descriptors, files, i))
               ok = false;
@@ -331,7 +332,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
 
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
-    if (descriptors[i] && fclose (descriptors[i]) != 0)
+    if (descriptors[i] && ! fclose_nonblock (descriptors[i]))
       {
         error (0, errno, "%s", quotef (files[i]));
         ok = false;

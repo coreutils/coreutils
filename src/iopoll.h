@@ -4,3 +4,6 @@
 int iopoll (int fdin, int fdout, bool block);
 bool iopoll_input_ok (int fdin);
 bool iopoll_output_ok (int fdout);
+
+bool fclose_nonblock (FILE *f);
+bool fwrite_nonblock (char const *buf, ssize_t size, FILE *f);
