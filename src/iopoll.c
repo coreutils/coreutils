@@ -86,6 +86,12 @@ iopoll (int fdin, int fdout, bool block)
   int nfds = (fdin > fdout ? fdin : fdout) + 1;
   int ret = 0;
 
+  if (FD_SETSIZE < nfds)
+    {
+      errno = EINVAL;
+      ret = -1;
+    }
+
   /* If fdout has an error condition (like a broken pipe) it will be seen
      as ready for reading.  Assumes fdout is not actually readable.  */
   while (0 <= ret || errno == EINTR)
