@@ -1325,8 +1325,8 @@ parse_chunk (intmax_t *k_units, intmax_t *n_units, char const *arg)
       *n_units = parse_n_units (argend + 1, "",
                                 N_("invalid number of chunks"));
       if (! (0 < *k_units && *k_units <= *n_units))
-        error (EXIT_FAILURE, 0, "%s: %s", _("invalid chunk number"),
-               quote_mem (arg, argend - arg));
+        die (EXIT_FAILURE, 0, "%s: %s", _("invalid chunk number"),
+             quote_mem (arg, argend - arg));
     }
   else if (! (e <= OVERFLOW_OK && 0 < *n_units))
     strtoint_die (N_("invalid number of chunks"), arg);
@@ -1561,7 +1561,7 @@ main (int argc, char **argv)
 
   if (n_units == 0)
     {
-      error (0, 0, _("invalid number of lines: %s"), "0");
+      error (0, 0, _("invalid number of lines: %s"), quote ("0"));
       usage (EXIT_FAILURE);
     }
 

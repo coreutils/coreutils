@@ -118,7 +118,6 @@ all_root_tests =				\
   tests/dd/skip-seek-past-dev.sh		\
   tests/df/problematic-chars.sh			\
   tests/df/over-mount-device.sh			\
-  tests/du/apparent.sh				\
   tests/du/bind-mount-dir-cycle.sh		\
   tests/du/bind-mount-dir-cycle-v2.sh		\
   tests/id/setgid.sh				\
@@ -557,6 +556,7 @@ all_tests =					\
   tests/df/total-verify.sh			\
   tests/du/2g.sh				\
   tests/du/8gb.sh				\
+  tests/du/apparent.sh				\
   tests/du/basic.sh				\
   tests/du/bigtime.sh				\
   tests/du/deref.sh				\
