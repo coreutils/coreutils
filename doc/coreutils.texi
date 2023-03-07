@@ -3409,8 +3409,10 @@ are not split even if they overlap a partition, the files written
 can be larger or smaller than the partition size, and even empty
 if a line/record is so long as to completely overlap the partition.
 
-For @samp{r} mode, the size of @var{input} is irrelevant,
-and so can be a pipe for example.
+When the input is a pipe or some other special file where the size
+cannot easily be determined, there is no trouble for @samp{r} mode
+because the size of the input is irrelevant.  For other modes, such an
+input is first copied to a temporary to determine its size.
 
 @item -a @var{length}
 @itemx --suffix-length=@var{length}

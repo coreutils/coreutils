@@ -275,6 +275,39 @@ CHUNKS may be:\n\
   exit (status);
 }
 
+/* Copy the data in FD to a temporary file, then make that file FD.
+   Use BUF, of size BUFSIZE, to copy.  Return the number of
+   bytes copied, or -1 (setting errno) on error.  */
+static off_t
+copy_to_tmpfile (int fd, char *buf, idx_t bufsize)
+{
+  FILE *tmp = tmpfile ();
+  if (!tmp)
+    return -1;
+  off_t copied = 0;
+  off_t r;
+
+  while (0 < (r = read (fd, buf, bufsize)))
+    {
+      if (fwrite (buf, 1, r, tmp) != r)
+        return -1;
+      if (INT_ADD_WRAPV (copied, r, &copied))
+        {
+          errno = EOVERFLOW;
+          return -1;
+        }
+    }
+
+  if (r < 0)
+    return r;
+  r = dup2 (fileno (tmp), fd);
+  if (r < 0)
+    return r;
+  if (fclose (tmp) < 0)
+    return -1;
+  return copied;
+}
+
 /* Return the number of bytes that can be read from FD with status ST.
    Store up to the first BUFSIZE bytes of the file's data into BUF,
    and advance the file position by the number of bytes read.  On
@@ -293,49 +326,35 @@ input_file_size (int fd, struct stat const *st, char *buf, idx_t bufsize)
     }
   while (size < bufsize);
 
-  off_t cur = lseek (fd, 0, SEEK_CUR);
-  if (cur < 0)
+  off_t cur, end;
+  if ((usable_st_size (st) && st->st_size < size)
+      || (cur = lseek (fd, 0, SEEK_CUR)) < 0
+      || cur < size /* E.g., /dev/zero on GNU/Linux.  */
+      || (end = lseek (fd, 0, SEEK_END)) < 0)
     {
-      if (errno == ESPIPE)
-        errno = 0; /* Suppress confusing seek error.  */
-      return cur;
-    }
-
-  off_t end;
-  if (usable_st_size (st))
-    end = st->st_size;
-  else
-    {
-      end = lseek (fd, 0, SEEK_END);
+      char *tmpbuf = xmalloc (bufsize);
+      end = copy_to_tmpfile (fd, tmpbuf, bufsize);
+      free (tmpbuf);
       if (end < 0)
         return end;
-      if (end == OFF_T_MAX)
-        goto overflow;  /* E.g., /dev/zero on GNU/Hurd.  */
-      if (cur < end)
-        {
-          off_t cur1 = lseek (fd, cur, SEEK_SET);
-          if (cur1 < 0)
-            return cur1;
-        }
+      cur = 0;
     }
 
-  /* Report overflow if we filled the buffer from a file with more
-     bytes than stat or lseek reports.  This can happen with mutating
-     (e.g., /proc) files that are larger than the input block size.
-     FIXME: Handle this properly, e.g., by copying the growing file's
-     data into the first output file, and then splitting that output
-     file (which should not grow) into the other output files.  */
-  if (end < size)
-    goto overflow;
+  if (end == OFF_T_MAX /* E.g., /dev/zero on GNU/Hurd.  */
+      || (cur < end && INT_ADD_WRAPV (size, end - cur, &size)))
+    {
+      errno = EOVERFLOW;
+      return -1;
+    }
 
-  if (cur < end && INT_ADD_WRAPV (size, end - cur, &size))
-    goto overflow;
+  if (cur < end)
+    {
+      off_t r = lseek (fd, cur, SEEK_SET);
+      if (r < 0)
+        return r;
+    }
 
   return size;
-
- overflow:
-  errno = EOVERFLOW;
-  return -1;
 }
 
 /* Compute the next sequential output file name and store it into the

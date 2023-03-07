@@ -145,6 +145,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split now accepts options like '-n SIZE' that exceed machine integer
   range, when they can be implemented as if they were infinity.
 
+  split -n now accepts piped input even when not in round-robin mode,
+  by first copying input to a temporary file to determine its size.
+
   wc now accepts the --total={auto,never,always,only} option
   to give explicit control over when the total is output.
 

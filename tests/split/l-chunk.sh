@@ -37,12 +37,15 @@ rm x??
 
 # 'split' should reject any attempt to create an infinitely
 # long output file.
-returns_ 1 split -n l/2 /dev/zero || fail=1
-rm x??
+# This test is very expensive as it runs out of /tmp space.
+if test "${RUN_VERY_EXPENSIVE_TESTS+set}" = set; then
+  returns_ 1 split -n l/2 /dev/zero || fail=1
+  rm x??
 
-# Repeat the above,  but with 1/2, not l/2:
-returns_ 1 split -n 1/2 /dev/zero || fail=1
-rm x??
+  # Repeat the above,  but with 1/2, not l/2:
+  returns_ 1 split -n 1/2 /dev/zero || fail=1
+  rm x??
+fi
 
 # Ensure --elide-empty-files is honored
 split -e -n l/10 /dev/null || fail=1
