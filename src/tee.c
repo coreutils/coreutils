@@ -259,11 +259,11 @@ tee_files (int nfiles, char **files, bool pipe_check)
   for (i = 1; i <= nfiles; i++)
     {
       /* Do not treat "-" specially - as mandated by POSIX.  */
-      descriptors[i] = fopen (files[i], mode_string);
-      if (pipe_check)
-        out_pollable[i] = iopoll_output_ok (fileno (descriptors[i]));
+       descriptors[i] = fopen (files[i], mode_string);
       if (descriptors[i] == NULL)
         {
+          if (pipe_check)
+            out_pollable[i] = false;
           error (output_error == output_error_exit
                  || output_error == output_error_exit_nopipe,
                  errno, "%s", quotef (files[i]));
@@ -271,6 +271,8 @@ tee_files (int nfiles, char **files, bool pipe_check)
         }
       else
         {
+          if (pipe_check)
+            out_pollable[i] = iopoll_output_ok (fileno (descriptors[i]));
           setvbuf (descriptors[i], NULL, _IONBF, 0);
           n_outputs++;
         }

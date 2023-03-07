@@ -74,6 +74,11 @@ retry_delay_ tee_exited .1 7 | # 12.7s (Must be > following timeout)
 test $(wc -l < err) = 0 || { cat err; fail=1; }
 test -f tee.exited || fail=1
 
+# Test with unwriteable files
+touch file.ro || framework_failure_
+chmod a-w file.ro || framework_failure_
+returns_ 1 tee -p </dev/null file.ro || fail=1
+
 # Ensure tee honors --output-error modes
 mkfifo_or_skip_ fifo
 read_fifo() { timeout 10 dd count=1 if=fifo of=/dev/null status=none & }
