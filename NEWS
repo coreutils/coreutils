@@ -54,10 +54,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   long been documented to be platform-dependent.
   [bug introduced 1999-05-02 and only partly fixed in coreutils-8.14]
 
-  split with -l or -n no longer misbehaves on small piped input, on
-  small GNU/Linux /proc files, or on macOS /dev/null.
-  [bug introduced in coreutils-8.8]
-
   stty ispeed and ospeed options no longer accept and silently ignore
   invalid speed arguments, or give false warnings for valid speeds.
   Now they're validated against both the general accepted set,
