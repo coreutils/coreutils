@@ -314,7 +314,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
          Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
         if (descriptors[i]
-            && ! fwrite_nonblock (buffer, bytes_read, descriptors[i]))
+            && ! fwrite_wait (buffer, bytes_read, descriptors[i]))
           {
             if (fail_output (descriptors, files, i))
               ok = false;
@@ -332,7 +332,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
 
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
-    if (descriptors[i] && ! fclose_nonblock (descriptors[i]))
+    if (descriptors[i] && ! fclose_wait (descriptors[i]))
       {
         error (0, errno, "%s", quotef (files[i]));
         ok = false;

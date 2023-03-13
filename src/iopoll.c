@@ -204,23 +204,25 @@ fail:
 /* wrapper for fclose() that also waits for F if non blocking.  */
 
 extern bool
-fclose_nonblock (FILE *f)
+fclose_wait (FILE *f)
 {
   for (;;)
     {
-      if (fclose (f) == 0)
-        return true;
+      if (fflush (f) == 0)
+        break;
 
       if (! fwait_for_nonblocking_write (f))
-        return false;
+        break;
     }
+
+  return fclose (f) == 0;
 }
 
 
 /* wrapper for fwrite() that also waits for F if non blocking.  */
 
 extern bool
-fwrite_nonblock (char const *buf, ssize_t size, FILE *f)
+fwrite_wait (char const *buf, ssize_t size, FILE *f)
 {
   for (;;)
     {
