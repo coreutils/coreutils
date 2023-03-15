@@ -772,7 +772,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
+static _Noreturn void
 integer_overflow (void)
 {
   die (EXIT_FAILURE, 0, _("integer overflow"));
