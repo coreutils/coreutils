@@ -28,7 +28,7 @@ mkfifo_or_skip_ pipe
 timeout 10 cat pipe > copy & pid=$!
 
 truncate -s1M sparse || framework_failure_
-cp sparse pipe || fail=1
+timeout 10 cp sparse pipe || fail=1
 
 # Ensure that the cat has completed before comparing.
 wait $pid
