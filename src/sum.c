@@ -197,7 +197,8 @@ output_bsd (char const *file, int binary_file, void const *digest,
   if (raw)
     {
       /* Output in network byte order (big endian).  */
-      uint16_t out_int = SWAP (*(uint16_t *)digest);
+      uint16_t out_int = *(int *)digest;
+      out_int = SWAP (out_int);
       fwrite (&out_int, 1, 16/8, stdout);
       return;
     }
@@ -221,7 +222,8 @@ output_sysv (char const *file, int binary_file, void const *digest,
   if (raw)
     {
       /* Output in network byte order (big endian).  */
-      uint16_t out_int = SWAP (*(uint16_t *)digest);
+      uint16_t out_int = *(int *)digest;
+      out_int = SWAP (out_int);
       fwrite (&out_int, 1, 16/8, stdout);
       return;
     }
