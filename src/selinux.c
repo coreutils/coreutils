@@ -115,7 +115,7 @@ defaultcon (struct selabel_handle *selabel_handle,
   char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
-  char *constr;
+  char const *constr;
   char *newpath = NULL;
 
   if (! IS_ABSOLUTE_FILE_NAME (path))
@@ -183,7 +183,7 @@ restorecon_private (struct selabel_handle *selabel_handle, char const *path)
   char *tcon = NULL;
   context_t scontext = 0, tcontext = 0;
   char const *contype;
-  char *constr;
+  char const *constr;
   int fd;
 
   if (!selabel_handle)
