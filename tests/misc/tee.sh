@@ -63,6 +63,9 @@ if test -w /dev/full && test -c /dev/full; then
   test $(wc -l < err) = 1 || { cat err; fail=1; }
 fi
 
+case $host_triplet in
+  *aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
+  *)
 # Test iopoll-powered early exit for closed pipes
 tee_exited() { sleep $1; test -f tee.exited; }
 # Currently this functionality is most useful with
@@ -72,7 +75,8 @@ tee_exited() { sleep $1; test -f tee.exited; }
 retry_delay_ tee_exited .1 7 | # 12.7s (Must be > following timeout)
 { timeout 10 tee -p 2>err && touch tee.exited; } | :
 test $(wc -l < err) = 0 || { cat err; fail=1; }
-test -f tee.exited || fail=1
+test -f tee.exited || fail=1 ;;
+esac
 
 # Test with unwriteable files
 touch file.ro || framework_failure_

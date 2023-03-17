@@ -41,6 +41,9 @@ compare exp out || fail=1
 # Also check tail exits if SIGPIPE is being ignored.
 # Note 'trap - SIGPIPE' is ineffective if the initiating shell
 # has ignored SIGPIPE, but that's not the normal case.
+case $host_triplet in
+  *aix*) echo  'avoiding due to no way to detect closed outputs on AIX' ;;
+  *)
 for disposition in '' '-'; do
   (trap "$disposition" PIPE;
    returns_ 124 timeout 10 \
@@ -49,7 +52,8 @@ for disposition in '' '-'; do
   test -e timed_out && fail=1
   compare exp out2 || fail=1
   rm -f timed_out
-done
+done ;;
+esac
 
 # This would wait indefinitely before v8.28 (until first write)
 # test -w /dev/stdout is used to check that >&- is effective
