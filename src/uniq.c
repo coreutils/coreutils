@@ -181,10 +181,9 @@ With no options, matching lines are merged to the first occurrence.\n\
   -d, --repeated        only print duplicate lines, one for each group\n\
 "), stdout);
      fputs (_("\
-  -D                    print all duplicate lines\n\
-      --all-repeated[=METHOD]  like -D, but allow separating groups\n\
-                                 with an empty line;\n\
-                                 METHOD={none(default),prepend,separate}\n\
+  -D, --all-repeated[=METHOD]  print all duplicate lines,\n\
+                          optionally separating groups with an empty line;\n\
+                          METHOD={none(default),prepend,separate}\n\
 "), stdout);
      fputs (_("\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
