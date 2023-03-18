@@ -30,14 +30,17 @@ df --out=source,target symlink > out || fail=1
 compare exp out || fail=1
 
 # Ensure we output the same values for device nodes and '.'
-# This was not the case in coreutil-8.22 on systems
+# This was not the case in coreutils-8.22 on systems
 # where the device in the mount list was a symlink itself.
 # I.e., '.' => /dev/mapper/fedora-home -> /dev/dm-2
 # Restrict this test to systems with a 1:1 mapping between
 # source and target.  This excludes for example BTRFS sub-volumes.
 if test "$(df --output=source | grep -F "$file_system" | wc -l)" = 1; then
-  df --out=source,target '.' > out || fail=1
-  compare exp out || fail=1
+  # Restrict to systems with a single file system root (and have findmnt(1))
+  if test "$(findmnt -nro FSROOT | uniq | wc -l)" =  1; then
+    df --out=source,target '.' > out || fail=1
+    compare exp out || fail=1
+  fi
 fi
 
 test "$fail" = 1 && dump_mount_list_
