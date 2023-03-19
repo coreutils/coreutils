@@ -1290,7 +1290,9 @@ apply_settings (bool checking, char const *device_name,
 int
 main (int argc, char **argv)
 {
-  struct termios mode;
+  /* Initialize to all zeroes so there is no risk memcmp will report a
+     spurious difference in an uninitialized portion of the structure.  */
+  static struct termios mode;
 
   enum output_type output_type;
   int optc;
@@ -1426,7 +1428,9 @@ main (int argc, char **argv)
 
   if (require_set_attr)
     {
-      struct termios new_mode;
+      /* Initialize to all zeroes so there is no risk memcmp will report a
+         spurious difference in an uninitialized portion of the structure.  */
+      static struct termios new_mode;
 
       if (tcsetattr (STDIN_FILENO, tcsetattr_options, &mode))
         die (EXIT_FAILURE, errno, "%s", quotef (device_name));
