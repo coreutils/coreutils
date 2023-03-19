@@ -34,9 +34,10 @@ done
 # To avoid counting those, first get a baseline count for running
 # ls with one empty directory argument.  Then, compare that with the
 # invocation under test.
+count_stats() { grep -vE '\+\+\+|ENOSYS|NOTSUP' "$1" | wc -l; }
 mkdir d || framework_failure_
 strace -q -o log1 -e $stats ls -F --color=always d || fail=1
-n_stat1=$(grep -vF '+++' log1 | wc -l) || framework_failure_
+n_stat1=$(count_stats log1) || framework_failure_
 
 test $n_stat1 = 0 \
   && skip_ 'No stat calls recognized on this platform'
@@ -55,7 +56,7 @@ ln -s x link-to-x || framework_failure_
 
 LS_COLORS='or=0:mi=0:ex=01;32:ln=01;35' \
   strace -qe $stats -o log2 ls -F --color=always x link-to-x > out.tmp || fail=1
-n_stat2=$(grep -vF '+++' log2 | wc -l) || framework_failure_
+n_stat2=$(count_stats log2) || framework_failure_
 
 # Expect one more stat call,
 # which failed with coreutils 6.9 and earlier, which had 2.

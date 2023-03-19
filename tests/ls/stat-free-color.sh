@@ -63,8 +63,9 @@ eval $(dircolors -b color-without-stat)
 # the invocation under test.
 mkdir d || framework_failure_
 
+count_stats() { grep -vE '\+\+\+|ENOSYS|NOTSUP' "$1" | wc -l; }
 strace -q -o log1 -e $stats ls -a --color=always d || fail=1
-n_stat1=$(grep -vF '+++' log1 | wc -l) || framework_failure_
+n_stat1=$(count_stats log1) || framework_failure_
 
 test $n_stat1 = 0 \
   && skip_ 'No stat calls recognized on this platform'
@@ -79,7 +80,7 @@ mkdir d/subdir \
 
 # Invocation under test.
 strace -q -o log2 -e $stats ls --color=always d || fail=1
-n_stat2=$(grep -vF '+++' log2 | wc -l) || framework_failure_
+n_stat2=$(count_stats log2) || framework_failure_
 
 # Expect the same number of stat calls.
 test $n_stat1 = $n_stat2 \
