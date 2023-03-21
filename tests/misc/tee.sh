@@ -79,9 +79,11 @@ test -f tee.exited || fail=1 ;;
 esac
 
 # Test with unwriteable files
-touch file.ro || framework_failure_
-chmod a-w file.ro || framework_failure_
-returns_ 1 tee -p </dev/null file.ro || fail=1
+if ! uid_is_privileged_; then  # root does not get EPERM.
+  touch file.ro || framework_failure_
+  chmod a-w file.ro || framework_failure_
+  returns_ 1 tee -p </dev/null file.ro || fail=1
+fi
 
 mkfifo_or_skip_ fifo
 
