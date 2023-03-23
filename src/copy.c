@@ -278,15 +278,27 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
 }
 
 
-/* Whether the errno from FICLONE, or copy_file_range
-   indicates operation is not supported for this file or file system.  */
+/* Whether the errno indicates the operation is a transient failure.
+   I.e., a failure that would indicate the operation _is_ supported,
+   but has failed in a terminal way.  */
+
+static bool
+is_terminal_error (int err)
+{
+  return err == EIO || err == ENOMEM || err == ENOSPC || err == EDQUOT;
+}
+
+
+/* Whether the errno from FICLONE, or copy_file_range indicates
+   the operation is not supported/allowed for this file or process.  */
 
 static bool
 is_CLONENOTSUP (int err)
 {
-  return err == ENOSYS || is_ENOTSUP (err)
+  return err == ENOSYS || err == ENOTTY || is_ENOTSUP (err)
          || err == EINVAL || err == EBADF
-         || err == EXDEV || err == ETXTBSY;
+         || err == EXDEV || err == ETXTBSY
+         || err == EPERM || err == EACCES;
 }
 
 
@@ -339,20 +351,18 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
           {
             copy_debug.offload = COPY_DEBUG_UNSUPPORTED;
 
-            if (is_CLONENOTSUP (errno))
-              break;
-
-            /* copy_file_range might not be enabled in seccomp filters,
-               so retry with a standard copy.  EPERM can also occur
-               for immutable files, but that would only be in the edge case
-               where the file is made immutable after creating/truncating,
+            /* Consider operation unsupported only if no data copied.
+               For example, EPERM could occur if copy_file_range not enabled
+               in seccomp filters, so retry with a standard copy.  EPERM can
+               also occur for immutable files, but that would only be in the
+               edge case where the file is made immutable after creating,
                in which case the (more accurate) error is still shown.  */
-            if (errno == EPERM && *total_n_read == 0)
+            if (*total_n_read == 0 && is_CLONENOTSUP (errno))
               break;
 
             /* ENOENT was seen sometimes across CIFS shares, resulting in
                no data being copied, but subsequent standard copies succeed.  */
-            if (errno == ENOENT && *total_n_read == 0)
+            if (*total_n_read == 0 && errno == ENOENT)
               break;
 
             if (errno == EINTR)
@@ -1172,17 +1182,15 @@ handle_clone_fail (int dst_dirfd, char const* dst_relname,
                    char const* src_name, char const* dst_name,
                    int dest_desc, bool new_dst, enum Reflink_type reflink_mode)
 {
-  /* If the clone operation is creating the destination,
-     then don't try and cater for all non transient file system errors,
-     and instead only cater for specific transient errors.  */
-  bool transient_failure;
-  if (dest_desc < 0) /* currently for fclonefileat().  */
-    transient_failure = errno == EIO || errno == ENOMEM
-                        || errno == ENOSPC || errno == EDQUOT;
-  else /* currently for FICLONE.  */
-    transient_failure = ! is_CLONENOTSUP (errno);
+  /* When the clone operation fails, report failure only with errno values
+     known to mean trouble when the clone is supported and called properly.
+     Do not report failure merely because !is_CLONENOTSUP (errno),
+     as systems may yield oddball errno values here with FICLONE.
+     Also is_CLONENOTSUP() is not appropriate for the range of errnos
+     possible from fclonefileat(), so it's more consistent to avoid. */
+  bool report_failure = is_terminal_error (errno);
 
-  if (reflink_mode == REFLINK_ALWAYS || transient_failure)
+  if (reflink_mode == REFLINK_ALWAYS || report_failure)
     error (0, errno, _("failed to clone %s from %s"),
            quoteaf_n (0, dst_name), quoteaf_n (1, src_name));
 
@@ -1190,14 +1198,14 @@ handle_clone_fail (int dst_dirfd, char const* dst_relname,
      but cloned no data.  */
   if (new_dst /* currently not for fclonefileat().  */
       && reflink_mode == REFLINK_ALWAYS
-      && ((! transient_failure) || lseek (dest_desc, 0, SEEK_END) == 0)
+      && ((! report_failure) || lseek (dest_desc, 0, SEEK_END) == 0)
       && unlinkat (dst_dirfd, dst_relname, 0) != 0 && errno != ENOENT)
     error (0, errno, _("cannot remove %s"), quoteaf (dst_name));
 
-  if (! transient_failure)
+  if (! report_failure)
     copy_debug.reflink = COPY_DEBUG_UNSUPPORTED;
 
-  if (reflink_mode == REFLINK_ALWAYS || transient_failure)
+  if (reflink_mode == REFLINK_ALWAYS || report_failure)
     return false;
 
   return true;
