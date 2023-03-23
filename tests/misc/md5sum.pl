@@ -101,6 +101,16 @@ my @Tests =
                   . "md5sum: WARNING: 1 line is improperly formatted\n"
                   . "md5sum: WARNING: 2 computed checksums did NOT match\n"},
                                 {EXIT=> 1}],
+     # Ensure we use appropriate state to track failures (broken in 9.2)
+     ['check-multifail-state', '--check', '--warn',
+                                {IN=>{'f.md5' =>
+                                      "$degenerate  f\n"
+                                      . "$degenerate  g\n"
+                                      . "$degenerate  f\n" }},
+                                {AUX=> {f=> ''}}, {AUX=> {g=> 'a'}},
+                                {OUT=>"f: OK\ng: FAILED\nf: OK\n"},
+              {ERR=>"md5sum: WARNING: 1 computed checksum did NOT match\n"},
+                                {EXIT=> 1}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that md5sum does *not* share the part that makes
      # sha1sum accept BSD format.

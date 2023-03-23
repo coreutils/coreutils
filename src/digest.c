@@ -1254,14 +1254,14 @@ digest_check (char const *checkfile_name)
 
               if (!status_only)
                 {
-                  if ( ! matched_checksums || ! quiet)
+                  if (! match || ! quiet)
                     {
                       if (needs_escape)
                         putchar ('\\');
                       print_filename (filename, needs_escape);
                     }
 
-                  if ( ! matched_checksums)
+                  if (! match)
                     printf (": %s\n", _("FAILED"));
                   else if (!quiet)
                     printf (": %s\n", _("OK"));
