@@ -278,9 +278,10 @@ create_hole (int fd, char const *name, bool punch_holes, off_t size)
 }
 
 
-/* Whether the errno indicates the operation is a transient failure.
-   I.e., a failure that would indicate the operation _is_ supported,
-   but has failed in a terminal way.  */
+/* Whether an errno value ERR, set by FICLONE or copy_file_range,
+   indicates that the copying operation has terminally failed, even
+   though it was invoked correctly (so that, e.g, EBADF cannot occur)
+   and even though !is_CLONENOTSUP (ERR).  */
 
 static bool
 is_terminal_error (int err)
@@ -288,9 +289,9 @@ is_terminal_error (int err)
   return err == EIO || err == ENOMEM || err == ENOSPC || err == EDQUOT;
 }
 
-
-/* Whether the errno from FICLONE, or copy_file_range indicates
-   the operation is not supported/allowed for this file or process.  */
+/* Similarly, whether ERR indicates that the copying operation is not
+   supported or allowed for this file or process, even though the
+   operation was invoked correctly.  */
 
 static bool
 is_CLONENOTSUP (int err)
@@ -1178,16 +1179,15 @@ fd_has_acl (int fd)
    Return FALSE if it's a terminal failure for this file.  */
 
 static bool
-handle_clone_fail (int dst_dirfd, char const* dst_relname,
-                   char const* src_name, char const* dst_name,
+handle_clone_fail (int dst_dirfd, char const *dst_relname,
+                   char const *src_name, char const *dst_name,
                    int dest_desc, bool new_dst, enum Reflink_type reflink_mode)
 {
   /* When the clone operation fails, report failure only with errno values
      known to mean trouble when the clone is supported and called properly.
      Do not report failure merely because !is_CLONENOTSUP (errno),
-     as systems may yield oddball errno values here with FICLONE.
-     Also is_CLONENOTSUP() is not appropriate for the range of errnos
-     possible from fclonefileat(), so it's more consistent to avoid. */
+     as systems may yield oddball errno values here with FICLONE,
+     and is_CLONENOTSUP is not appropriate for fclonefileat.  */
   bool report_failure = is_terminal_error (errno);
 
   if (reflink_mode == REFLINK_ALWAYS || report_failure)
