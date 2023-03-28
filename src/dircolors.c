@@ -298,6 +298,11 @@ dc_parse_stream (FILE *fp, char const *filename)
         {
           if (getline (&input_line, &input_line_size, fp) <= 0)
             {
+              if (ferror (fp))
+                {
+                  error (0, errno, _("%s: read error"), quotef (filename));
+                  ok = false;
+                }
               free (input_line);
               break;
             }

@@ -306,6 +306,7 @@ all_tests =					\
   tests/misc/date-sec.sh			\
   tests/misc/date-tz.sh				\
   tests/misc/dircolors.pl			\
+  tests/misc/dircolors.sh			\
   tests/misc/dirname.pl				\
   tests/misc/env-null.sh			\
   tests/misc/env-S.pl				\
