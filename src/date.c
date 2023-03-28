@@ -368,7 +368,9 @@ batch_convert (char const *input_filename, char const *format,
       ssize_t line_length = getline (&line, &buflen, in_stream);
       if (line_length < 0)
         {
-          /* FIXME: detect/handle error here.  */
+          if (ferror (in_stream))
+            die (EXIT_FAILURE, errno, _("%s: read error"),
+                 quotef (input_filename));
           break;
         }
 
