@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   more restricted systems like android or containers etc.
   [bug introduced in coreutils-9.2]
 
+  date --file will now diagnose a failure to read the file.
+  Previously it would have silently ignored the failure.
+  [This bug was present in "the beginning".]
+
   md5sum --check again correctly prints the status of each file checked.
   Previously the status for files was printed as 'OK' once any file had passed.
   This also applies to cksum, sha*sum, and b2sum.

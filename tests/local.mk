@@ -302,6 +302,7 @@ all_tests =					\
   tests/misc/csplit-io-err.sh			\
   tests/misc/csplit-suppress-matched.pl		\
   tests/misc/date-debug.sh			\
+  tests/misc/date-f.sh				\
   tests/misc/date-sec.sh			\
   tests/misc/date-tz.sh				\
   tests/misc/dircolors.pl			\
