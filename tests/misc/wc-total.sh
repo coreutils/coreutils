@@ -18,6 +18,8 @@
 
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ wc
+require_sparse_support_ # for 'truncate --size=$BIG'
+getlimits_
 
 printf '%s\n' '2' > 2b || framework_failure_
 printf '%s\n' '2 words' > 2w || framework_failure_
@@ -39,5 +41,20 @@ compare exp out || fail=1
 
 wc --total=always 2b > out || fail=1
 test "$(wc -l < out)" = 2 || fail=1
+
+if truncate -s 2E big; then
+  if test "$UINTMAX_MAX" = '18446744073709551615'; then
+    # Ensure overflow is diagnosed
+    returns_ 1 wc --total=only -c big big big big big big big big \
+      > out || fail=1
+
+    # Ensure total is saturated
+    printf '%s\n' "$UINTMAX_MAX" > exp || framework_failure_
+    compare exp out || fail=1
+
+    # Ensure overflow is ignored if totals not shown
+    wc --total=never -c big big big big big big big big || fail=1
+  fi
+fi
 
 Exit $fail

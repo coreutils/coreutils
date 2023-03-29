@@ -78,6 +78,10 @@ static uintmax_t total_lines;
 static uintmax_t total_words;
 static uintmax_t total_chars;
 static uintmax_t total_bytes;
+static uintmax_t total_lines_overflow;
+static uintmax_t total_words_overflow;
+static uintmax_t total_chars_overflow;
+static uintmax_t total_bytes_overflow;
 static uintmax_t max_line_length;
 
 /* Which counts to print. */
@@ -703,10 +707,16 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
 
   if (total_mode != total_only)
     write_counts (lines, words, chars, bytes, linelength, file_x);
-  total_lines += lines;
-  total_words += words;
-  total_chars += chars;
-  total_bytes += bytes;
+
+  if (INT_ADD_WRAPV (total_lines, lines, &total_lines))
+    total_lines_overflow = true;
+  if (INT_ADD_WRAPV (total_words, words, &total_words))
+    total_words_overflow = true;
+  if (INT_ADD_WRAPV (total_chars, chars, &total_chars))
+    total_chars_overflow = true;
+  if (INT_ADD_WRAPV (total_bytes, bytes, &total_bytes))
+    total_bytes_overflow = true;
+
   if (linelength > max_line_length)
     max_line_length = linelength;
 
@@ -1022,9 +1032,36 @@ main (int argc, char **argv)
 
   if (total_mode != total_never
       && (total_mode != total_auto || 1 < argv_iter_n_args (ai)))
-    write_counts (total_lines, total_words, total_chars, total_bytes,
-                  max_line_length,
-                  total_mode != total_only ? _("total") : NULL);
+    {
+      if (total_lines_overflow)
+        {
+          total_lines = UINTMAX_MAX;
+          error (0, EOVERFLOW, _("total lines"));
+          ok = false;
+        }
+      if (total_words_overflow)
+        {
+          total_words = UINTMAX_MAX;
+          error (0, EOVERFLOW, _("total words"));
+          ok = false;
+        }
+      if (total_chars_overflow)
+        {
+          total_chars = UINTMAX_MAX;
+          error (0, EOVERFLOW, _("total characters"));
+          ok = false;
+        }
+      if (total_bytes_overflow)
+        {
+          total_bytes = UINTMAX_MAX;
+          error (0, EOVERFLOW, _("total bytes"));
+          ok = false;
+        }
+
+      write_counts (total_lines, total_words, total_chars, total_bytes,
+                    max_line_length,
+                    total_mode != total_only ? _("total") : NULL);
+    }
 
   argv_iter_free (ai);
 
