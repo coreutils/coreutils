@@ -99,7 +99,7 @@ dd count=20 bs=100K if=/dev/zero status=none |
   dd count=0 oflag=nonblock status=none
   tee || { cleanup_; touch tee.fail; }
 } >fifo
-test -f tee.fail && fail=1
+test -f tee.fail && fail=1 || cleanup_
 
 # Ensure tee honors --output-error modes
 read_fifo() { timeout 10 dd count=1 if=fifo of=/dev/null status=none & }
