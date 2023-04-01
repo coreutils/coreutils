@@ -57,11 +57,25 @@ enum Reflink_type
   REFLINK_ALWAYS
 };
 
+/* Control how existing destination files are updated.  */
+enum Update_type
+{
+  /* Always update..  */
+  UPDATE_ALL,
+
+  /* Update if dest older.  */
+  UPDATE_OLDER,
+
+  /* Leave existing files.  */
+  UPDATE_NONE,
+};
+
 /* This type is used to help mv (via copy.c) distinguish these cases.  */
 enum Interactive
 {
   I_ALWAYS_YES = 1,
-  I_ALWAYS_NO,
+  I_ALWAYS_NO,       /* Skip and fail.   */
+  I_ALWAYS_SKIP,     /* Skip and ignore. */
   I_ASK_USER,
   I_UNSPECIFIED
 };

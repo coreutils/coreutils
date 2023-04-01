@@ -24,6 +24,7 @@
 #include <selinux/label.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
@@ -53,6 +54,16 @@ enum
   STRIP_TRAILING_SLASHES_OPTION
 };
 
+static char const *const update_type_string[] =
+{
+  "all", "none", "older", NULL
+};
+static enum Update_type const update_type[] =
+{
+  UPDATE_ALL, UPDATE_NONE, UPDATE_OLDER,
+};
+ARGMATCH_VERIFY (update_type_string, update_type);
+
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
@@ -66,7 +77,7 @@ static struct option const long_options[] =
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
-  {"update", no_argument, NULL, 'u'},
+  {"update", optional_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -277,15 +288,20 @@ If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
       fputs (_("\
   -t, --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -T, --no-target-directory    treat DEST as a normal file\n\
-  -u, --update                 move only when the SOURCE file is newer\n\
-                                 than the destination file or when the\n\
-                                 destination file is missing\n\
+"), stdout);
+      fputs (_("\
+  --update[=UPDATE]            control which existing files are updated;\n\
+                                 UPDATE={all,none,older(default)}.  See below\n\
+  -u                           equivalent to --update[=older]\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose                explain what is being done\n\
   -Z, --context                set SELinux security context of destination\n\
                                  file to default type\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      emit_update_parameters_note ();
       emit_backup_suffix_note ();
       emit_ancillary_info (PROGRAM_NAME);
     }
@@ -358,7 +374,30 @@ main (int argc, char **argv)
           no_target_directory = true;
           break;
         case 'u':
-          x.update = true;
+          if (optarg == NULL)
+            x.update = true;
+          else if (x.interactive != I_ALWAYS_NO)  /* -n takes precedence.  */
+            {
+              enum Update_type update_opt;
+              update_opt = XARGMATCH ("--update", optarg,
+                                      update_type_string, update_type);
+              if (update_opt == UPDATE_ALL)
+                {
+                  /* Default mv operation.  */
+                  x.update = false;
+                  x.interactive = I_UNSPECIFIED;
+                }
+              else if (update_opt == UPDATE_NONE)
+                {
+                  x.update = false;
+                  x.interactive = I_ALWAYS_SKIP;
+                }
+              else if (update_opt == UPDATE_OLDER)
+                {
+                  x.update = true;
+                  x.interactive = I_UNSPECIFIED;
+                }
+            }
           break;
         case 'v':
           x.verbose = true;

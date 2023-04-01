@@ -9236,9 +9236,9 @@ results in an error message on systems that do not support symbolic links.
 @optNoTargetDirectory
 
 @item -u
-@itemx --update
+@itemx --update[=@var{which}]
 @opindex -u
-@opindex --update
+@opindex --update[=@var{which}]
 @cindex newer files, copying only
 Do not copy a non-directory that has an existing destination with the
 same or newer modification timestamp; instead, silently skip the file
@@ -9253,6 +9253,26 @@ Also, if @option{--preserve=links} is also specified (like with @samp{cp -au}
 for example), that will take precedence; consequently, depending on the
 order that files are processed from the source, newer files in the destination
 may be replaced, to mirror hard links in the source.
+
+@macro whichUpdate
+@var{which} gives more control over which existing files in the
+destination are replaced, and its value can be one of the following:
+
+@table @samp
+@item all
+This is the default operation when an @option{--update} option is not specified,
+and results in all existing files in the destination being replaced.
+
+@item none
+This is similar to the @option{--no-clobber} option, in that no files in the
+destination are replaced, but also skipping a file does not induce a failure.
+
+@item older
+This is the default operation when @option{--update} is specified, and results
+in files being replaced if they're older than the corresponding source file.
+@end table
+@end macro
+@whichUpdate
 
 @item -v
 @itemx --verbose
@@ -10165,6 +10185,8 @@ of its permissions, and fail if the response is not affirmative.
 Do not overwrite an existing file; silently fail instead.
 @mvOptsIfn
 This option is mutually exclusive with @option{-b} or @option{--backup} option.
+See also the @option{--update=none} option which will
+skip existing files but not fail.
 
 @item --no-copy
 @opindex --no-copy
@@ -10187,6 +10209,8 @@ duplicate work if several @samp{mv -u} commands are executed with the
 same source and destination.
 This option is ignored if the @option{-n} or @option{--no-clobber}
 option is also specified.
+
+@whichUpdate
 
 @item -v
 @itemx --verbose

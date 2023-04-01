@@ -19,11 +19,13 @@
 . "${srcdir=.}/tests/init.sh"; path_prepend_ ./src
 print_ver_ cp mv
 
-echo old > old || framework_failure_
-touch -d yesterday old || framework_failure_
-echo new > new || framework_failure_
+test_reset() {
+  echo old > old || framework_failure_
+  touch -d yesterday old || framework_failure_
+  echo new > new || framework_failure_
+}
 
-
+test_reset
 for interactive in '' -i; do
   for cp_or_mv in cp mv; do
     # This is a no-op, with no prompt.
@@ -36,19 +38,32 @@ for interactive in '' -i; do
   done
 done
 
-# This will actually perform the rename.
-mv --update new old || fail=1
-test -f new && fail=1
-case "$(cat old)" in new) ;; *) fail=1 ;; esac
+# These should perform the rename / copy
+for update_option in '--update' '--update=older' '--update=all' \
+ '--update=none --update=all'; do
+  test_reset
+  mv $update_option new old || fail=1
+  test -f new && fail=1
+  case "$(cat old)" in new) ;; *) fail=1 ;; esac
 
-# Restore initial conditions.
-echo old > old || framework_failure_
-touch -d yesterday old || fail=1
-echo new > new || framework_failure_
+  test_reset
+  cp $update_option new old || fail=1
+  case "$(cat old)" in new) ;; *) fail=1 ;; esac
+  case "$(cat new)" in new) ;; *) fail=1 ;; esac
+done
 
-# This will actually perform the copy.
-cp --update new old || fail=1
-case "$(cat old)" in new) ;; *) fail=1 ;; esac
-case "$(cat new)" in new) ;; *) fail=1 ;; esac
+# These should not perform the rename / copy
+for update_option in '--update=none' \
+ '--update=all --update=none'; do
+  test_reset
+  mv $update_option new old || fail=1
+  case "$(cat new)" in new) ;; *) fail=1 ;; esac
+  case "$(cat old)" in old) ;; *) fail=1 ;; esac
+
+  test_reset
+  cp $update_option new old || fail=1
+  case "$(cat new)" in new) ;; *) fail=1 ;; esac
+  case "$(cat old)" in old) ;; *) fail=1 ;; esac
+done
 
 Exit $fail

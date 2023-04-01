@@ -2061,6 +2061,7 @@ abandon_move (const struct cp_options *x,
 {
   assert (x->move_mode);
   return (x->interactive == I_ALWAYS_NO
+          || x->interactive == I_ALWAYS_SKIP
           || ((x->interactive == I_ASK_USER
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
@@ -2234,7 +2235,8 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (rename_errno == 0
       ? !x->last_file
-      : rename_errno != EEXIST || x->interactive != I_ALWAYS_NO)
+      : rename_errno != EEXIST
+        || (x->interactive != I_ALWAYS_NO && x->interactive != I_ALWAYS_SKIP))
     {
       char const *name = rename_errno == 0 ? dst_name : src_name;
       int dirfd = rename_errno == 0 ? dst_dirfd : AT_FDCWD;
@@ -2288,7 +2290,9 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (nonexistent_dst <= 0)
     {
-      if (! (rename_errno == EEXIST && x->interactive == I_ALWAYS_NO))
+      if (! (rename_errno == EEXIST
+             && (x->interactive == I_ALWAYS_NO
+                 || x->interactive == I_ALWAYS_SKIP)))
         {
           /* Regular files can be created by writing through symbolic
              links, but other files cannot.  So use stat on the
@@ -2330,7 +2334,7 @@ copy_internal (char const *src_name, char const *dst_name,
         {
           bool return_now = false;
 
-          if (x->interactive != I_ALWAYS_NO
+          if ((x->interactive != I_ALWAYS_NO && x->interactive != I_ALWAYS_SKIP)
               && ! same_file_ok (src_name, &src_sb, dst_dirfd, drelname,
                                  &dst_sb, x, &return_now))
             {
@@ -2400,17 +2404,18 @@ copy_internal (char const *src_name, char const *dst_name,
                      doesn't end up removing the source file.  */
                   if (rename_succeeded)
                     *rename_succeeded = true;
-                  return false;
+                  return x->interactive == I_ALWAYS_SKIP;
                 }
             }
           else
             {
               if (! S_ISDIR (src_mode)
                   && (x->interactive == I_ALWAYS_NO
+                      || x->interactive == I_ALWAYS_SKIP
                       || (x->interactive == I_ASK_USER
                           && ! overwrite_ok (x, dst_name, dst_dirfd,
                                              dst_relname, &dst_sb))))
-                return false;
+                return x->interactive == I_ALWAYS_SKIP;
             }
 
           if (return_now)

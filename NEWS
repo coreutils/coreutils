@@ -27,6 +27,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   wc will now diagnose if any total counts have overflowed.
   [This bug was present in "the beginning".]
 
+** New features
+
+  cp and mv now support --update=none to always skip existing files
+  in the destination, while not affecting the exit status.
+  This is equivalent to the --no-clobber behavior from before v9.2.
+
 
 * Noteworthy changes in release 9.2 (2023-03-20) [stable]
 

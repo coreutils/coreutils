@@ -102,6 +102,16 @@ static enum Reflink_type const reflink_type[] =
 };
 ARGMATCH_VERIFY (reflink_type_string, reflink_type);
 
+static char const *const update_type_string[] =
+{
+  "all", "none", "older", NULL
+};
+static enum Update_type const update_type[] =
+{
+  UPDATE_ALL, UPDATE_NONE, UPDATE_OLDER,
+};
+ARGMATCH_VERIFY (update_type_string, update_type);
+
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -129,7 +139,7 @@ static struct option const long_opts[] =
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
   {"target-directory", required_argument, NULL, 't'},
-  {"update", no_argument, NULL, 'u'},
+  {"update", optional_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {GETOPT_HELP_OPTION_DECL},
@@ -182,8 +192,10 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -n, --no-clobber             do not overwrite an existing file (overrides\n\
-                                 a previous -i option)\n\
+  -n, --no-clobber             do not overwrite an existing file (overrides a\n\
+                                 -u or previous -i option). See also --update\n\
+"), stdout);
+      fputs (_("\
   -P, --no-dereference         never follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
@@ -212,10 +224,14 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -T, --no-target-directory    treat DEST as a normal file\n\
 "), stdout);
       fputs (_("\
-  -u, --update                 copy only when the SOURCE file is newer\n\
-                                 than the destination file or when the\n\
-                                 destination file is missing\n\
+  --update[=UPDATE]            control which existing files are updated;\n\
+                                 UPDATE={all,none,older(default)}.  See below\n\
+  -u                           equivalent to --update[=older]\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose                explain what is being done\n\
+"), stdout);
+      fputs (_("\
   -x, --one-file-system        stay on this file system\n\
 "), stdout);
       fputs (_("\
@@ -242,6 +258,7 @@ selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n\
 file whenever the SOURCE file contains a long enough sequence of zero bytes.\n\
 Use --sparse=never to inhibit creation of sparse files.\n\
 "), stdout);
+      emit_update_parameters_note ();
       fputs (_("\
 \n\
 When --reflink[=always] is specified, perform a lightweight copy, where the\n\
@@ -1103,7 +1120,30 @@ main (int argc, char **argv)
           break;
 
         case 'u':
-          x.update = true;
+          if (optarg == NULL)
+            x.update = true;
+          else if (x.interactive != I_ALWAYS_NO)  /* -n takes precedence.  */
+            {
+              enum Update_type update_opt;
+              update_opt = XARGMATCH ("--update", optarg,
+                                      update_type_string, update_type);
+              if (update_opt == UPDATE_ALL)
+                {
+                  /* Default cp operation.  */
+                  x.update = false;
+                  x.interactive = I_UNSPECIFIED;
+                }
+              else if (update_opt == UPDATE_NONE)
+                {
+                  x.update = false;
+                  x.interactive = I_ALWAYS_SKIP;
+                }
+              else if (update_opt == UPDATE_OLDER)
+                {
+                  x.update = true;
+                  x.interactive = I_UNSPECIFIED;
+                }
+            }
           break;
 
         case 'v':
