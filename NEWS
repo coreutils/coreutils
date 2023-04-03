@@ -4,10 +4,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  cp --relink=auto (the default), mv, and install
+  cp --reflink=auto (the default), mv, and install
   will again fall back to a standard copy in more cases.
   Previously copies could fail with permission errors on
   more restricted systems like android or containers etc.
+  [bug introduced in coreutils-9.2]
+
+  cp --recursive --backup will again operate correctly.
+  Previousy it may have issued "File exists" errors when
+  it failed to appropriately rename files being replaced.
   [bug introduced in coreutils-9.2]
 
   date --file and dircolors will now diagnose a failure to read a file.

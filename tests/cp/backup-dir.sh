@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that cp -b doesn't back up directories.
+# Ensure that cp -b handles directories appropriately
 
 # Copyright (C) 2006-2023 Free Software Foundation, Inc.
 
@@ -28,5 +28,11 @@ cp -a x y || fail=1
 cp -ab x y || fail=1
 test -d y/x || fail=1
 test -d y/x~ && fail=1
+
+# Bug 62607.
+# This would fail to backup using rename, and thus fail to replace the file
+mkdir -p {src,dst}/foo || framework_failure_
+touch {src,dst}/foo/bar || framework_failure_
+cp --recursive --backup src/* dst || fail=1
 
 Exit $fail
