@@ -27,6 +27,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   wc will now diagnose if any total counts have overflowed.
   [This bug was present in "the beginning".]
 
+** Changes in behavior
+
+  'cp -n' and 'mv -n' now issue an error diagnostic if skipping a file,
+  to correspond with -n inducing a nonzero exit status as of coreutils 9.2.
+  Similarly 'cp -v' and 'mv -v' will output a message for each file skipped
+  due to -n, -i, or -u.
+
 ** New features
 
   cp and mv now support --update=none to always skip existing files

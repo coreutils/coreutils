@@ -2333,6 +2333,8 @@ copy_internal (char const *src_name, char const *dst_name,
       if (rename_errno == EEXIST)
         {
           bool return_now = false;
+          bool return_val = true;
+          bool skipped = false;
 
           if ((x->interactive != I_ALWAYS_NO && x->interactive != I_ALWAYS_SKIP)
               && ! same_file_ok (src_name, &src_sb, dst_dirfd, drelname,
@@ -2385,7 +2387,8 @@ copy_internal (char const *src_name, char const *dst_name,
                         }
                     }
 
-                  return true;
+                  skipped = true;
+                  goto skip;
                 }
             }
 
@@ -2404,7 +2407,9 @@ copy_internal (char const *src_name, char const *dst_name,
                      doesn't end up removing the source file.  */
                   if (rename_succeeded)
                     *rename_succeeded = true;
-                  return x->interactive == I_ALWAYS_SKIP;
+
+                  skipped = true;
+                  return_val = x->interactive == I_ALWAYS_SKIP;
                 }
             }
           else
@@ -2415,11 +2420,25 @@ copy_internal (char const *src_name, char const *dst_name,
                       || (x->interactive == I_ASK_USER
                           && ! overwrite_ok (x, dst_name, dst_dirfd,
                                              dst_relname, &dst_sb))))
-                return x->interactive == I_ALWAYS_SKIP;
+                {
+                  skipped = true;
+                  return_val = x->interactive == I_ALWAYS_SKIP;
+                }
+            }
+
+skip:
+          if (skipped)
+            {
+              if (x->verbose)
+                printf (_("skipped %s\n"), quoteaf (dst_name));
+              else if (x->interactive == I_ALWAYS_NO)
+                error (0, 0, _("not replacing %s"), quoteaf (dst_name));
+
+              return_now = true;
             }
 
           if (return_now)
-            return true;
+            return return_val;
 
           if (!S_ISDIR (dst_sb.st_mode))
             {
