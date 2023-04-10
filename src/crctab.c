@@ -1,3 +1,4 @@
+#include <config.h>
 #include <stdint.h>
 
 uint_fast32_t const crctab[8][256] = {

@@ -116,8 +116,9 @@ main (void)
         }
     }
 
-  printf ("#include <stdint.h>\n\n");
-  printf ("uint_fast32_t const crctab[8][256] = {\n");
+  printf ("#include <config.h>\n");
+  printf ("#include <stdint.h>\n");
+  printf ("\nuint_fast32_t const crctab[8][256] = {\n");
   for (int y = 0; y < 8; y++)
     {
       printf ("{\n  0x%08x", crctab[y][0]);
