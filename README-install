@@ -54,13 +54,13 @@ all mention of "[$(EXEEXT)" from src/Makefile.
 32 bit time_t build failures
 ------------------------
 
-On systems where it's determined that 64 bit time_t is supported
-(indicated by touch -t <some time after 2038>), but that coreutils
-would be built with a narrower time_t, the build will fail.
-This can be allowed by passing TIME_T_32_BIT_OK=yes to configure,
-or avoided by enabling 64 bit builds.  For example GCC on AIX defaults
-to 32 bit, and to enable the 64 bit ABI one can use:
-./configure CFLAGS=-maix64 LDFLAGs=-maix64 AR='ar -X64'
+Although 32-bit builds fail if that forces time_t to be 32 bits, this
+can be fixed by using 64-bit builds.  For example, on AIX where GCC
+defaults to 32 bits, one can use "./configure CC='gcc -maix64' AR='ar
+-X64'"; similarly, on Solaris one can configure with CC='gcc -m64'.
+If all else fails one can configure with ac_year2038_required=no;
+however, this will mishandle timestamps after 2038, and please file
+bug reports for any such situations.
 
 
 *************************************************
