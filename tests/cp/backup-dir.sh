@@ -31,8 +31,8 @@ test -d y/x~ && fail=1
 
 # Bug 62607.
 # This would fail to backup using rename, and thus fail to replace the file
-mkdir -p {src,dst}/foo || framework_failure_
-touch {src,dst}/foo/bar || framework_failure_
+mkdir -p src/foo dst/foo || framework_failure_
+touch src/foo/bar dst/foo/bar || framework_failure_
 cp --recursive --backup src/* dst || fail=1
 
 Exit $fail
