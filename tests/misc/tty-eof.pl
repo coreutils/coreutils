@@ -69,15 +69,19 @@ $@
     {
       my $exp = new Expect;
       $exp->log_user(0);
-      $ENV{built_programs} =~ /\b$cmd\b/ || next;
+      my $cmd_name = (split(' ', $cmd))[0];
+      $ENV{built_programs} =~ /\b$cmd_name\b/ || next;
       $exp->spawn("$cmd 2> $stderr")
         or (warn "$ME: cannot run '$cmd': $!\n"), $fail=1, next;
-      # No input for cut -f2.
+      # Test cut in a different mode, even though it supports the standard flow
+      # Ensure that it exits with no input as it used to not do so
       $cmd =~ /^cut/
         or $exp->send("a b\n");
       $exp->send("\cD");  # This is Control-D.  FIXME: what if that's not EOF?
-      $exp->expect (0, '-re', "^a b\\r?\$");
-      my $found = $exp->expect (1, '-re', "^.+\$");
+      $cmd =~ /^cut/
+        or $exp->expect (0, '-re', "^a b\\r?\$");
+      $cmd =~ /^cut/
+        or my $found = $exp->expect (1, '-re', "^.+\$");
       $found and warn "F: $found: " . $exp->exp_match () . "\n";
       $exp->expect(10, 'eof');
       # Expect no output from cut, since we gave it no input.
