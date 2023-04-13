@@ -146,6 +146,7 @@ enum copy_debug_val
    COPY_DEBUG_NO,
    COPY_DEBUG_YES,
    COPY_DEBUG_EXTERNAL,
+   COPY_DEBUG_EXTERNAL_INTERNAL,
    COPY_DEBUG_AVOIDED,
    COPY_DEBUG_UNSUPPORTED,
   };
@@ -179,6 +180,7 @@ copy_debug_sparse_string (enum copy_debug_val debug_val)
     case COPY_DEBUG_NO: return "no";
     case COPY_DEBUG_YES: return "zeros";
     case COPY_DEBUG_EXTERNAL: return "SEEK_HOLE";
+    case COPY_DEBUG_EXTERNAL_INTERNAL: return "SEEK_HOLE + zeros";
     default: return "unknown";
     }
 }
@@ -325,6 +327,8 @@ sparse_copy (int src_fd, int dest_fd, char **abuf, size_t buf_size,
 
   if (copy_debug.sparse_detection == COPY_DEBUG_UNKNOWN)
     copy_debug.sparse_detection = hole_size ? COPY_DEBUG_YES : COPY_DEBUG_NO;
+  else if (hole_size && copy_debug.sparse_detection == COPY_DEBUG_EXTERNAL)
+    copy_debug.sparse_detection = COPY_DEBUG_EXTERNAL_INTERNAL;
 
   /* If not looking for holes, use copy_file_range if functional,
      but don't use if reflink disallowed as that may be implicit.  */
