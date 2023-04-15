@@ -59,7 +59,9 @@ compare exp out || fail=1
 
 # Perform this test only if "." is on a local file system.
 # Otherwise, it would fail e.g., on an NFS-mounted Solaris ZFS file system.
-if is_local_dir_ .; then
+# Also skip local ZFS as that was seen to fail intermittently
+# (perhaps due to async compression affecting allocations)
+if is_local_dir_ . && ! df -T -t zfs .; then
   rm -f out exp
   du --block-size=$B -a d | sort -r -k2,2 > out || fail=1
   echo === >> out
