@@ -27,7 +27,6 @@ sed s/b/B/ \$1 > \$1.t && mv \$1.t \$1
 EOF
 chmod a+x b || framework_failure_
 
-
 echo abc > src || framework_failure_
 echo aBc > exp || framework_failure_
 ginstall src dest -s --strip-program=./b || fail=1
@@ -36,5 +35,14 @@ compare exp dest || fail=1
 # Check that install cleans up properly if strip fails.
 returns_ 1 ginstall src dest2 -s --strip-program=./FOO || fail=1
 test -e dest2 && fail=1
+
+# Ensure naked hyphens not passed
+cat <<EOF > no-hyphen || framework_failure_
+#!$SHELL
+printf -- '%s\\n' "\$1" | grep '^[^-]'
+EOF
+chmod a+x no-hyphen || framework_failure_
+
+ginstall -s --strip-program=./no-hyphen -- src -dest || fail=1
 
 Exit $fail

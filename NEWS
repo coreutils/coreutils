@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bug fixes
+
+  install --strip now supports installing to files with a leading hyphen.
+  Previously such file names would have caused the strip process to fail.
+  [This bug was present in "the beginning".]
+
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
 

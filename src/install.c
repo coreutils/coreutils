@@ -502,8 +502,13 @@ strip (char const *name)
       error (0, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
-      execlp (strip_program, strip_program, name, NULL);
-      die (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
+      {
+        char const *safe_name = name;
+        if (name && *name == '-')
+          safe_name = file_name_concat (".", name, NULL);
+        execlp (strip_program, strip_program, safe_name, NULL);
+        die (EXIT_FAILURE, errno, _("cannot run %s"), quoteaf (strip_program));
+      }
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
         error (0, errno, _("waiting for strip"));
