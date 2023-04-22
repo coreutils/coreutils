@@ -1644,7 +1644,7 @@ main (int argc, char **argv)
         }
 
       if (ferror (stdin))
-        error (0, errno, _("error reading input"));
+        die (EXIT_FAILURE, errno, _("error reading input"));
     }
 
   if (debug && !valid_numbers)
