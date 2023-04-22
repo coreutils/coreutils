@@ -453,7 +453,11 @@ tsort (char const *file)
       /* T2. Next Relation.  */
       size_t len = readtoken (stdin, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
       if (len == (size_t) -1)
-        break;
+        {
+          if (ferror (stdin))
+            die (EXIT_FAILURE, errno, _("%s: read error"), quotef (file));
+          break;
+        }
 
       assert (len != 0);
 
