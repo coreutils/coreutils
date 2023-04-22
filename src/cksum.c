@@ -212,12 +212,6 @@ cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
         }
       length += bytes_read;
 
-      if (bytes_read == 0)
-        {
-          if (ferror (fp))
-            return false;
-        }
-
       /* Process multiples of 8 bytes */
       datap = (uint32_t *)buf;
       while (bytes_read >= 8)
@@ -247,7 +241,7 @@ cksum_slice8 (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
   *crc_out = crc;
   *length_out = length;
 
-  return true;
+  return !ferror (fp);
 }
 
 /* Calculate the checksum and length in bytes of stream STREAM.

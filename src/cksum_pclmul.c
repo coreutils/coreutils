@@ -77,12 +77,6 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
         }
       length += bytes_read;
 
-      if (bytes_read == 0)
-        {
-          if (ferror (fp))
-            return false;
-        }
-
       datap = (__m128i *)buf;
 
       /* Fold in parallel eight 16-byte blocks into four 16-byte blocks */
@@ -191,5 +185,5 @@ cksum_pclmul (FILE *fp, uint_fast32_t *crc_out, uintmax_t *length_out)
   *crc_out = crc;
   *length_out = length;
 
-  return true;
+  return !ferror (fp);
 }
