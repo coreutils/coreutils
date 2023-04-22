@@ -173,6 +173,7 @@ all_tests =					\
   tests/cp/link-heap.sh				\
   tests/cp/no-ctx.sh				\
   tests/misc/tty-eof.pl				\
+  tests/misc/read-errors.sh			\
   tests/tail-2/inotify-hash-abuse.sh		\
   tests/tail-2/inotify-hash-abuse2.sh		\
   tests/tail-2/F-vs-missing.sh			\
@@ -302,11 +303,9 @@ all_tests =					\
   tests/misc/csplit-io-err.sh			\
   tests/misc/csplit-suppress-matched.pl		\
   tests/misc/date-debug.sh			\
-  tests/misc/date-f.sh				\
   tests/misc/date-sec.sh			\
   tests/misc/date-tz.sh				\
   tests/misc/dircolors.pl			\
-  tests/misc/dircolors.sh			\
   tests/misc/dirname.pl				\
   tests/misc/env-null.sh			\
   tests/misc/env-S.pl				\
