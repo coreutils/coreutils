@@ -2588,7 +2588,12 @@ do_stdin (void)
       size_t token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
                                        &tokenbuffer);
       if (token_length == (size_t) -1)
-        break;
+        {
+          if (ferror (stdin))
+            die (EXIT_FAILURE, errno, _("error reading input"));
+          break;
+        }
+
       ok &= print_factors (tokenbuffer.buffer);
     }
   free (tokenbuffer.buffer);

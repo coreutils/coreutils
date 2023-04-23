@@ -11,7 +11,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously such file names would have caused the strip process to fail.
   [This bug was present in "the beginning".]
 
-  tsort and numfmt now diagnose read errors on the input.
+  factor, numfmt, and tsort now diagnose read errors on the input.
   [This bug was present in "the beginning".]
 
 
