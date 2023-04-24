@@ -24,7 +24,13 @@ proc_large=/proc/cpuinfo  # usually > 4KiB
 test -r $proc_large || skip_ "your system lacks $proc_large"
 
 # Before coreutils-7.3, cp would copy less than 4KiB of this file.
-cp $proc_large 1    || fail=1
+# Skip this test when run under QEmu emulation where emulated /proc files
+# have unstable inode numbers.
+cp $proc_large 1 2>err \
+  || { fail=1
+       grep 'replaced while being copied' err \
+         && skip_ "File $proc_large is being replaced while being copied"; }
+
 cat $proc_large > 2 || fail=1
 
 # adjust varying parts
