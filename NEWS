@@ -14,6 +14,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   factor, numfmt, and tsort now diagnose read errors on the input.
   [This bug was present in "the beginning".]
 
+  'pr --length=1 --double-space' no longer enters an infinite loop.
+  [This bug was present in "the beginning".]
+
 ** Changes in behavior
 
   'cp -v' and 'mv -v' will no longer output a message for each file skipped

@@ -1209,7 +1209,7 @@ init_parameters (int number_of_files)
     lines_per_body = lines_per_page;
 
   if (double_space)
-    lines_per_body = lines_per_body / 2;
+    lines_per_body = MAX (1, lines_per_body / 2);
 
   /* If input is stdin, cannot print parallel files.  BSD dumps core
      on this. */

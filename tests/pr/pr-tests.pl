@@ -415,6 +415,9 @@ my @tv = (
 ['padding2', '-t -n,64', "1\n", (" "x 63)."1,1\n", 0],
 # Ensure we handle buffer truncation correctly
 ['padding3', '-t -N1000000 -n,1', "1\n", "0,1\n", 0],
+
+# This entered an infinite loop before coreutils-9.4
+['page-length1', '-dl1', "", "", 0],
 );
 
 # Convert the above old-style test vectors to the newer
