@@ -14,6 +14,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   factor, numfmt, and tsort now diagnose read errors on the input.
   [This bug was present in "the beginning".]
 
+** Changes in behavior
+
+  'cp -v' and 'mv -v' will no longer output a message for each file skipped
+  due to -i, or -u.  Instead they only output this information with --debug.
+  I.e., 'cp -u -v' etc. will have the same verbosity as before coreutils-9.3.
+
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
 

@@ -2433,10 +2433,10 @@ copy_internal (char const *src_name, char const *dst_name,
 skip:
           if (skipped)
             {
-              if (x->verbose)
-                printf (_("skipped %s\n"), quoteaf (dst_name));
-              else if (x->interactive == I_ALWAYS_NO)
+              if (x->interactive == I_ALWAYS_NO)
                 error (0, 0, _("not replacing %s"), quoteaf (dst_name));
+              else if (x->debug)
+                printf (_("skipped %s\n"), quoteaf (dst_name));
 
               return_now = true;
             }

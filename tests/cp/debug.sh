@@ -25,4 +25,8 @@ grep 'copy offload:.*reflink:.*sparse detection:' cp.out || fail=1
 cp --debug --attributes-only file file.cp >cp.out || fail=1
 returns_ 1 grep 'copy offload:.*reflink:.*sparse detection:' cp.out || fail=1
 
+touch file.cp || framework_failure_
+cp --debug --update=none file file.cp >cp.out || fail=1
+grep 'skipped' cp.out || fail=1
+
 Exit $fail
