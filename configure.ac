@@ -578,6 +578,7 @@ AC_COMPILE_IFELSE(
     {
       __m128i a, b;
       a = _mm_clmulepi64_si128 (a, b, 0x00);
+      a = _mm_shuffle_epi8 (a, b);
       return 1;
     }
   ]])
