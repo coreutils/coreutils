@@ -459,7 +459,7 @@ check_file (char const *infile, char const *outfile, char delimiter)
 
  closefiles:
   if (ferror (stdin) || fclose (stdin) != 0)
-    die (EXIT_FAILURE, 0, _("error reading %s"), quoteaf (infile));
+    die (EXIT_FAILURE, errno, _("error reading %s"), quoteaf (infile));
 
   /* stdout is handled via the atexit-invoked close_stdout function.  */
 
