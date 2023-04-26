@@ -58,11 +58,4 @@ returns_ 1 split --number=r/$UINTMAX_OFLOW </dev/null 2>/dev/null || fail=1
 # Make sure that a huge obsolete option does the right thing.
 split -99999999999999999991 in || fail=1
 
-# Make sure split fails when it can't read input
-# (the current directory in this case)
-if ! cat . >/dev/null; then
-  # can't read() directories
-  returns_ 1 split . || fail=1
-fi
-
 Exit $fail

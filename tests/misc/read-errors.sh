@@ -37,7 +37,8 @@ cksum -a sm3 .
 cksum -a sysv .
 comm . .
 csplit . 1
-cut -b1 .
+cut -c1 .
+cut -f1 .
 date -f .
 dd if=.
 dircolors .
@@ -45,7 +46,10 @@ expand .
 factor < .
 fmt .
 fold .
-head .
+head -n1 .
+head -n-1 .
+head -c1 .
+head -c-1 .
 join . .
 nl .
 numfmt < .
@@ -53,17 +57,29 @@ od .
 paste .
 pr .
 ptx .
-shuf .
+shuf -r .
+shuf -n1 .
 sort .
-split .
+split -l1 .
+split -b1 .
+split -C1 .
+split -n1 .
+split -nl/1 .
+split -nr/1 .
 tac .
-tail .
+tail -n1 .
+tail -c1 .
+tail -n+1 .
+tail -c+1 .
 tee < .
 tr 1 1 < .
 tsort .
 unexpand .
 uniq .
+uniq -c .
 wc .
+wc -c .
+wc -l .
 " |
 sort -k 1b,1 > all_readers || framework_failure_
 
