@@ -160,8 +160,7 @@ if test $gl_gcc_warnings != no; then
   ew=
   AS_IF([test $gl_gcc_warnings != expensive],
     [# -fanalyzer and related options slow GCC considerably.
-     ew="$ew -fanalyzer -Wno-analyzer-double-free -Wno-analyzer-malloc-leak"
-     ew="$ew -Wno-analyzer-null-dereference -Wno-analyzer-use-after-free"])
+     ew="$ew -fanalyzer -Wno-analyzer-malloc-leak"])
 
   # This, $nw, is the list of warnings we disable.
   nw=$ew
