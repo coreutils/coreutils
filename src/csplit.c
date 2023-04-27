@@ -382,6 +382,13 @@ record_line_starts (struct buffer_record *b)
   return lines;
 }
 
+/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109614>.  */
+#if 13 <= __GNUC__
+# pragma GCC diagnostic ignored "-Wanalyzer-mismatching-deallocation"
+# pragma GCC diagnostic ignored "-Wanalyzer-use-after-free"
+# pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
+#endif
+
 static void
 free_buffer (struct buffer_record *buf)
 {

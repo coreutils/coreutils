@@ -110,6 +110,11 @@ print_wide_uint (wide_uint n, int nesting, unsigned wide_uint_bits)
   printf ("0x%0*xU", hex_digits_per_literal, remainder);
 }
 
+/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109635>.  */
+#if 13 <= __GNUC__
+# pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
+#endif
+
 static void
 output_primes (const struct prime *primes, unsigned nprimes)
 {

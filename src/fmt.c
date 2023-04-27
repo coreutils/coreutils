@@ -915,6 +915,11 @@ fmt_paragraph (void)
   word_limit->length = saved_length;
 }
 
+/* Work around <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109628>.  */
+#if 13 <= __GNUC__
+# pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
+#endif
+
 /* Return the constant component of the cost of breaking before the
    word THIS.  */
 
