@@ -417,8 +417,8 @@ int
 main (int argc, char **argv)
 {
   char *mode = NULL;
-  size_t mode_len = 0;
-  size_t mode_alloc = 0;
+  idx_t mode_len = 0;
+  idx_t mode_alloc = 0;
   bool ok;
   bool preserve_root = false;
   char const *reference_file = NULL;
@@ -468,14 +468,13 @@ main (int argc, char **argv)
                comma, and the new string (e.g., "-s,-rwx").  */
 
             char const *arg = argv[optind - 1];
-            size_t arg_len = strlen (arg);
-            size_t mode_comma_len = mode_len + !!mode_len;
-            size_t new_mode_len = mode_comma_len + arg_len;
+            idx_t arg_len = strlen (arg);
+            idx_t mode_comma_len = mode_len + !!mode_len;
+            idx_t new_mode_len = mode_comma_len + arg_len;
+            assume (0 <= new_mode_len);  /* Pacify GCC bug #109613.  */
             if (mode_alloc <= new_mode_len)
-              {
-                mode_alloc = new_mode_len + 1;
-                mode = X2REALLOC (mode, &mode_alloc);
-              }
+              mode = xpalloc (mode, &mode_alloc,
+                              new_mode_len + 1 - mode_alloc, -1, 1);
             mode[mode_len] = ',';
             memcpy (mode + mode_comma_len, arg, arg_len + 1);
             mode_len = new_mode_len;
