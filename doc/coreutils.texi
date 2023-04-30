@@ -3984,11 +3984,13 @@ next section) is preferable in new applications.
 @pindex cksum
 @cindex cyclic redundancy check
 @cindex CRC checksum
+@cindex 32-bit checksum
+@cindex checksum, 32-bit
 @cindex digest
 
-@command{cksum} by default computes a cyclic redundancy check (CRC) checksum
-for each given @var{file}, or standard input if none are given or for a
-@var{file} of @samp{-}.
+@command{cksum} by default computes a 32-bit cyclic redundancy check (CRC)
+checksum for each given @var{file}, or standard input if none are given or for
+a @var{file} of @samp{-}.
 
 cksum also supports the @option{-a/--algorithm} option to select the
 digest algorithm to use. @command{cksum} is the preferred interface
@@ -4008,6 +4010,8 @@ distribution).
 @command{cksum} by default prints the POSIX standard CRC checksum
 for each file along with the number of bytes in the file,
 and the file name unless no arguments were given.
+The 32-bit CRC used is based on the polynomial used
+for CRC error checking in the ISO/IEC 8802-3:1996 standard (Ethernet).
 
 The same usage and options as the @command{b2sum}
 command are supported.  @xref{b2sum invocation}.
