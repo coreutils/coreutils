@@ -72,12 +72,11 @@ printf '%s' "\
 
 sed 's/00 *//g' exp > exp.elide_empty || framework_failure_
 
-DEBUGGING=
-test "$DEBUGGING" && test "$VERBOSE" && set +x
+test "$DEBUG" && test "$VERBOSE" && set +x
 for ELIDE_EMPTY in '' '-e'; do
   for IO_BLKSIZE in 1 2 5 10 80 100; do
     > out
-    test "$DEBUGGING" && printf "\n---io-blk-size=$IO_BLKSIZE $ELIDE_EMPTY\n"
+    test "$DEBUG" && printf "\n---io-blk-size=$IO_BLKSIZE $ELIDE_EMPTY\n"
     for N in 6 8 12 15 22; do
       rm -f x*
 
@@ -93,7 +92,7 @@ for ELIDE_EMPTY in '' '-e'; do
         compare chunk.k xab || fail=1
       fi
 
-      if test "$DEBUGGING"; then
+      if test "$DEBUG"; then
         # Output partition pattern
         size=$(printf "%s" "$lines" | wc -c)
         chunk_size=$(($size/$N))
@@ -120,7 +119,7 @@ for ELIDE_EMPTY in '' '-e'; do
     compare out $EXP || fail=1
   done
 done
-test "$DEBUGGING" && test "$VERBOSE" && set -x
+test "$DEBUG" && test "$VERBOSE" && set -x
 
 
 # Check extraction of particular chunks

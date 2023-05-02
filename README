@@ -96,8 +96,8 @@ run this command:
 
   make check TESTS=tests/df/df-P.sh VERBOSE=yes SUBDIRS=. >> log 2>&1
 
-For some tests, you can get even more detail by adding DEBUG=yes.
-Then include the contents of the file 'log' in your bug report.
+For some tests, particularly perl tests, you can get even more detail by adding
+DEBUG=yes. Then include the contents of the file 'log' in your bug report.
 
 
 ***************************************
