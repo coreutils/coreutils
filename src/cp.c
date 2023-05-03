@@ -296,15 +296,19 @@ regular file.\n\
    when done.  */
 
 static bool
-re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_relname,
+re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_fullname,
             struct dir_attr *attr_list, const struct cp_options *x)
 {
   struct dir_attr *p;
   char *dst_name;		/* A copy of CONST_DST_NAME we can change. */
-  char *src_name;		/* The source name in 'dst_name'. */
+  char *src_name;		/* The relative source name in 'dst_name'. */
+  char *full_src_name;		/* The full source name in 'dst_name'. */
 
   ASSIGN_STRDUPA (dst_name, const_dst_name);
-  src_name = dst_name + (dst_relname - const_dst_name);
+  full_src_name = dst_name + (dst_fullname - const_dst_name);
+  src_name = full_src_name;
+  while (*src_name == '/')
+    src_name++;
 
   for (p = attr_list; p; p = p->next)
     {
@@ -347,7 +351,7 @@ re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_relname,
 
       if (x->preserve_mode)
         {
-          if (copy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
+          if (copy_acl (full_src_name, -1, dst_name, -1, p->st.st_mode) != 0)
             return false;
         }
       else if (p->restore_mode)
@@ -687,6 +691,7 @@ do_copy (int n_files, char **file, char const *target_directory,
           bool parent_exists = true;  /* True if dir_name (dst_name) exists. */
           struct dir_attr *attr_list;
           char *arg_in_concat = NULL;
+          char *full_arg_in_concat = NULL;
           char *arg = file[i];
 
           /* Trailing slashes are meaningful (i.e., maybe worth preserving)
@@ -719,6 +724,7 @@ do_copy (int n_files, char **file, char const *target_directory,
                   (x->verbose ? "%s -> %s\n" : NULL),
                   &attr_list, &new_dst, x));
 
+              full_arg_in_concat = arg_in_concat;
               while (*arg_in_concat == '/')
                 arg_in_concat++;
             }
@@ -747,7 +753,7 @@ do_copy (int n_files, char **file, char const *target_directory,
                           new_dst, x, &copy_into_self, NULL);
 
               if (parents_option)
-                ok &= re_protect (dst_name, target_dirfd, arg_in_concat,
+                ok &= re_protect (dst_name, target_dirfd, full_arg_in_concat,
                                   attr_list, x);
             }
 

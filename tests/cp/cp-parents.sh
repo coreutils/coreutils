@@ -66,4 +66,10 @@ p=$(ls -ld g/sym/b/c|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
 cp --parents --no-preserve=mode np/b/file np_dest/ || fail=1
 p=$(ls -ld np_dest/np|cut -b-10); case $p in drwxr-xr-x);; *) fail=1;; esac
 
+# coreutils 9.1-9.3 inclusive would fail to copy acls for absolute dirs
+mkdir dest || framework_failure_
+if test -f /bin/ls; then
+  cp -t dest --parents -p /bin/ls || fail=1
+fi
+
 Exit $fail
