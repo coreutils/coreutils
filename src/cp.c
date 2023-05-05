@@ -278,10 +278,13 @@ regular file.\n\
   exit (status);
 }
 
-/* Ensure that parents of CONST_DST_NAME aka DST_DIRFD+DST_RELNAME have the
-   correct protections, for the --parents option.  This is done
-   after all copying has been completed, to allow permissions
-   that don't include user write/execute.
+/* Ensure that parents of CONST_DST_NAME have correct protections, for
+   the --parents option.  This is done after all copying has been
+   completed, to allow permissions that don't include user write/execute.
+
+   DST_SRC_NAME is the suffix of CONST_DST_NAME that is the source file name,
+   DST_DIRFD+DST_RELNAME is equivalent to CONST_DST_NAME, and
+   DST_RELNAME equals DST_SRC_NAME after skipping any leading '/'s.
 
    ATTR_LIST is a null-terminated linked list of structures that
    indicates the end of the filename of each intermediate directory
@@ -296,19 +299,21 @@ regular file.\n\
    when done.  */
 
 static bool
-re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_fullname,
+re_protect (char const *const_dst_name, char const *dst_src_name,
+            int dst_dirfd, char const *dst_relname,
             struct dir_attr *attr_list, const struct cp_options *x)
 {
   struct dir_attr *p;
   char *dst_name;		/* A copy of CONST_DST_NAME we can change. */
-  char *src_name;		/* The relative source name in 'dst_name'. */
-  char *full_src_name;		/* The full source name in 'dst_name'. */
 
   ASSIGN_STRDUPA (dst_name, const_dst_name);
-  full_src_name = dst_name + (dst_fullname - const_dst_name);
-  src_name = full_src_name;
-  while (*src_name == '/')
-    src_name++;
+
+  /* The suffix of DST_NAME that is a copy of the source file name,
+     possibly truncated to name a parent directory.  */
+  char const *src_name = dst_name + (dst_src_name - const_dst_name);
+
+  /* Likewise, but with any leading '/'s skipped.  */
+  char const *relname = dst_name + (dst_relname - const_dst_name);
 
   for (p = attr_list; p; p = p->next)
     {
@@ -325,7 +330,7 @@ re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_fullname,
           timespec[0] = get_stat_atime (&p->st);
           timespec[1] = get_stat_mtime (&p->st);
 
-          if (utimensat (dst_dirfd, src_name, timespec, 0))
+          if (utimensat (dst_dirfd, relname, timespec, 0))
             {
               error (0, errno, _("failed to preserve times for %s"),
                      quoteaf (dst_name));
@@ -335,7 +340,8 @@ re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_fullname,
 
       if (x->preserve_ownership)
         {
-          if (lchownat (dst_dirfd, src_name, p->st.st_uid, p->st.st_gid) != 0)
+          if (lchownat (dst_dirfd, relname, p->st.st_uid, p->st.st_gid)
+              != 0)
             {
               if (! chown_failure_ok (x))
                 {
@@ -345,18 +351,18 @@ re_protect (char const *const_dst_name, int dst_dirfd, char const *dst_fullname,
                 }
               /* Failing to preserve ownership is OK. Still, try to preserve
                  the group, but ignore the possible error. */
-              ignore_value (lchownat (dst_dirfd, src_name, -1, p->st.st_gid));
+              ignore_value (lchownat (dst_dirfd, relname, -1, p->st.st_gid));
             }
         }
 
       if (x->preserve_mode)
         {
-          if (copy_acl (full_src_name, -1, dst_name, -1, p->st.st_mode) != 0)
+          if (copy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
             return false;
         }
       else if (p->restore_mode)
         {
-          if (lchmodat (dst_dirfd, src_name, p->st.st_mode) != 0)
+          if (lchmodat (dst_dirfd, relname, p->st.st_mode) != 0)
             {
               error (0, errno, _("failed to preserve permissions for %s"),
                      quoteaf (dst_name));
@@ -690,8 +696,7 @@ do_copy (int n_files, char **file, char const *target_directory,
           char *dst_name;
           bool parent_exists = true;  /* True if dir_name (dst_name) exists. */
           struct dir_attr *attr_list;
-          char *arg_in_concat = NULL;
-          char *full_arg_in_concat = NULL;
+          char *arg_in_concat;
           char *arg = file[i];
 
           /* Trailing slashes are meaningful (i.e., maybe worth preserving)
@@ -723,10 +728,6 @@ do_copy (int n_files, char **file, char const *target_directory,
                  (dst_name, arg_in_concat - dst_name, target_dirfd,
                   (x->verbose ? "%s -> %s\n" : NULL),
                   &attr_list, &new_dst, x));
-
-              full_arg_in_concat = arg_in_concat;
-              while (*arg_in_concat == '/')
-                arg_in_concat++;
             }
           else
             {
@@ -748,13 +749,17 @@ do_copy (int n_files, char **file, char const *target_directory,
             }
           else
             {
+              char const *dst_relname = arg_in_concat;
+              while (*dst_relname == '/')
+                dst_relname++;
+
               bool copy_into_self;
-              ok &= copy (arg, dst_name, target_dirfd, arg_in_concat,
+              ok &= copy (arg, dst_name, target_dirfd, dst_relname,
                           new_dst, x, &copy_into_self, NULL);
 
               if (parents_option)
-                ok &= re_protect (dst_name, target_dirfd, full_arg_in_concat,
-                                  attr_list, x);
+                ok &= re_protect (dst_name, arg_in_concat, target_dirfd,
+                                  dst_relname, attr_list, x);
             }
 
           if (parents_option)
