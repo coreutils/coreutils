@@ -1168,6 +1168,12 @@ getoptnum (char const *n_str, int min, int *num, char const *err)
 static void
 getoptarg (char *arg, char switch_char, char *character, int *number)
 {
+  if (!*arg)
+    {
+      error (0, 0, _("'-%c': Invalid argument: %s"), switch_char, quote (arg));
+      usage (EXIT_FAILURE);
+    }
+
   if (!ISDIGIT (*arg))
     *character = *arg++;
   if (*arg)
