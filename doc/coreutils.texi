@@ -16918,6 +16918,16 @@ date --date='1970-01-01 00:02:00 +0000' +%s
 120
 @end example
 
+To convert a date string from one time zone @var{from} to another @var{to},
+specify @samp{TZ="@var{from}"} in the environment and @samp{TZ="@var{to}"}
+in the @option{--date} option.  @xref{Specifying time zone rules}.
+For example:
+
+@smallexample
+TZ="Asia/Tokyo" date --date='TZ="America/New_York" 2023-05-07 12:23'
+Mon May @ 8 01:23:00 JST 2023
+@end smallexample
+
 If you do not specify time zone information in the date string,
 @command{date} uses your computer's idea of the time zone when
 interpreting the string.  For example, if your computer's time zone is
