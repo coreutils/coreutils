@@ -16268,6 +16268,21 @@ Normally, @command{date} uses the time zone rules indicated by the
 is not set.  @xref{TZ Variable,, Specifying the Time Zone with
 @env{TZ}, libc, The GNU C Library Reference Manual}.
 
+@exitstatus
+
+@menu
+* Date format specifiers::         Used in @samp{date '+...'}
+* Setting the time::               Changing the system clock.
+* Options for date::               Instead of the current time.
+@detailmenu
+* Date input formats::             Specifying date strings.
+@end detailmenu
+* Examples of date::               Examples.
+@end menu
+
+@node Date format specifiers
+@subsection Specifying the format of @command{date} output
+
 @findex strftime @r{and @command{date}}
 @cindex time formats
 @cindex formatting times
@@ -16279,23 +16294,15 @@ conversion specifiers, which start with @samp{%}, characters in the
 format string are printed unchanged.  The conversion specifiers are
 described below.
 
-@exitstatus
-
 @menu
 * Time conversion specifiers::     %[HIklMNpPrRsSTXzZ]
 * Date conversion specifiers::     %[aAbBcCdDeFgGhjmuUVwWxyY]
 * Literal conversion specifiers::  %[%nt]
 * Padding and other flags::        Pad with zeros, spaces, etc.
-* Setting the time::               Changing the system clock.
-* Options for date::               Instead of the current time.
-@detailmenu
-* Date input formats::             Specifying date strings.
-@end detailmenu
-* Examples of date::               Examples.
 @end menu
 
 @node Time conversion specifiers
-@subsection Time conversion specifiers
+@subsubsection Time conversion specifiers
 
 @cindex time conversion specifiers
 @cindex conversion specifiers, time
@@ -16376,7 +16383,7 @@ time zone is determinable.  See @samp{%z} for how it is determined.
 
 
 @node Date conversion specifiers
-@subsection Date conversion specifiers
+@subsubsection Date conversion specifiers
 
 @cindex date conversion specifiers
 @cindex conversion specifiers, date
@@ -16467,7 +16474,7 @@ precedes year @samp{0000}.
 
 
 @node Literal conversion specifiers
-@subsection Literal conversion specifiers
+@subsubsection Literal conversion specifiers
 
 @cindex literal conversion specifiers
 @cindex conversion specifiers, literal
@@ -16485,7 +16492,7 @@ a horizontal tab
 
 
 @node Padding and other flags
-@subsection Padding and other flags
+@subsubsection Padding and other flags
 
 @cindex numeric field padding
 @cindex padding of numeric fields
