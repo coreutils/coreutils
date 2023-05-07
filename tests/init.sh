@@ -646,18 +646,19 @@ compare_dev_null_ ()
 
 for diff_opt_ in -u -U3 -c '' no; do
   test "$diff_opt_" != no &&
-    diff_out_=`exec 2>/dev/null; diff $diff_opt_ "$0" "$0" < /dev/null` &&
+    diff_out_=`exec 2>/dev/null
+      LC_ALL=C diff $diff_opt_ "$0" "$0" < /dev/null` &&
     break
 done
 if test "$diff_opt_" != no; then
   if test -z "$diff_out_"; then
-    compare_ () { diff $diff_opt_ "$@"; }
+    compare_ () { LC_ALL=C diff $diff_opt_ "$@"; }
   else
     compare_ ()
     {
       # If no differences were found, AIX and HP-UX 'diff' produce output
       # like "No differences encountered".  Hide this output.
-      diff $diff_opt_ "$@" > diff.out
+      LC_ALL=C diff $diff_opt_ "$@" > diff.out
       diff_status_=$?
       test $diff_status_ -eq 0 || cat diff.out || diff_status_=2
       rm -f diff.out || diff_status_=2
