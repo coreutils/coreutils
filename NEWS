@@ -27,6 +27,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   due to -i, or -u.  Instead they only output this information with --debug.
   I.e., 'cp -u -v' etc. will have the same verbosity as before coreutils-9.3.
 
+** Improvements
+
+  split now uses more tuned access patterns for its potentially large input.
+  This was seen to improve throughput by 5% when reading from SSD.
+
 
 * Noteworthy changes in release 9.3 (2023-04-18) [stable]
 

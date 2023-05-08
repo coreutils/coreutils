@@ -32,6 +32,7 @@
 #include "alignalloc.h"
 #include "die.h"
 #include "error.h"
+#include "fadvise.h"
 #include "fd-reopen.h"
 #include "fcntl--.h"
 #include "full-write.h"
@@ -1620,6 +1621,9 @@ main (int argc, char **argv)
 
   /* Binary I/O is safer when byte counts are used.  */
   xset_binary_mode (STDIN_FILENO, O_BINARY);
+
+  /* Advise the kernel of our access pattern.  */
+  fdadvise (STDIN_FILENO, 0, 0, FADVISE_SEQUENTIAL);
 
   /* Get the optimal block size of input device and make a buffer.  */
 
