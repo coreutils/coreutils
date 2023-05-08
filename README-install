@@ -58,7 +58,7 @@ Although 32-bit builds fail if that forces time_t to be 32 bits, this
 can be fixed by using 64-bit builds.  For example, on AIX where GCC
 defaults to 32 bits, one can use "./configure CC='gcc -maix64' AR='ar
 -X64'"; similarly, on Solaris one can configure with CC='gcc -m64'.
-If all else fails one can configure with ac_year2038_required=no;
+If all else fails one can configure with --disable-year2038;
 however, this will mishandle timestamps after 2038, and please file
 bug reports for any such situations.
 
