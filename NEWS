@@ -4,18 +4,18 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  cp --parents again succeeds to preserve mode for absolute directories.
+  'cp --parents' again succeeds when preserving mode for absolute directories.
   Previously it would have failed with a "No such file or directory" error.
   [bug introduced in coreutils-9.1]
 
   cksum again diagnoses read errors in its default CRC32 mode.
   [bug introduced in coreutils-9.0]
 
-  install --strip now supports installing to files with a leading hyphen.
-  Previously such file names would have caused the strip process to fail.
+  factor, numfmt, and tsort now diagnose read errors on the input.
   [This bug was present in "the beginning".]
 
-  factor, numfmt, and tsort now diagnose read errors on the input.
+  'install --strip' now supports installing to files with a leading hyphen.
+  Previously such file names would have caused the strip process to fail.
   [This bug was present in "the beginning".]
 
   'pr --length=1 --double-space' no longer enters an infinite loop.
