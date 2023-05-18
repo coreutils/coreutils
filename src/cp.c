@@ -441,7 +441,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
       while ((slash = strchr (slash, '/')))
         {
-          struct dir_attr *new;
+          struct dir_attr *new IF_LINT ( = NULL);
           bool missing_dir;
 
           *slash = '\0';

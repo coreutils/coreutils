@@ -1125,6 +1125,9 @@ hex_equal (unsigned char const *hex_digest, unsigned char const *bin_buffer)
   return cnt == digest_bin_bytes;
 }
 
+#if defined __GNUC__ && (__GNUC__ + (__GNUC_MINOR__ >= 7) > 4)
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 static bool
 digest_check (char const *checkfile_name)
 {

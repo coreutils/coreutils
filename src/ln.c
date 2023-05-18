@@ -473,7 +473,7 @@ main (int argc, char **argv)
   char const *backup_suffix = NULL;
   char *version_control_string = NULL;
   char const *target_directory = NULL;
-  int destdir_fd;
+  int destdir_fd IF_LINT ( = -1);
   bool no_target_directory = false;
   int n_files;
   char **file;

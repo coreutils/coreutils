@@ -228,7 +228,7 @@ tee_files (int nfiles, char **files, bool pipe_check)
 {
   size_t n_outputs = 0;
   FILE **descriptors;
-  bool *out_pollable;
+  bool *out_pollable IF_LINT ( = NULL);
   char buffer[BUFSIZ];
   ssize_t bytes_read = 0;
   int i;
