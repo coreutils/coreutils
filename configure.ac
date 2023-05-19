@@ -263,7 +263,6 @@ if test $gl_gcc_warnings != no; then
 
   # FIXME: remove this line when gcc improves
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88443
-  # FP wth -O0 in nstrftime.c w/gcc 12, and 13 at least
   gl_WARN_ADD([-Wno-stringop-overflow])
 
   gl_MANYWARN_COMPLEMENT([GNULIB_WARN_CFLAGS], [$WARN_CFLAGS], [$nw])
