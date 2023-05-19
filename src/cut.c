@@ -433,6 +433,8 @@ cut_file (char const *file, void (*cut_stream) (FILE *))
         }
     }
 
+  assume (stream);
+
   fadvise (stream, FADVISE_SEQUENTIAL);
 
   cut_stream (stream);

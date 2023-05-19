@@ -453,6 +453,8 @@ nl_file (char const *file)
         }
     }
 
+  assume (stream);
+
   fadvise (stream, FADVISE_SEQUENTIAL);
 
   process_file (stream);
