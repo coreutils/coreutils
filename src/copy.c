@@ -1238,8 +1238,8 @@ copy_reg (char const *src_name, char const *dst_name,
           struct stat const *src_sb)
 {
   char *buf = NULL;
-  int dest_desc IF_LINT ( = -1);
-  int dest_errno IF_LINT ( = 0);
+  int dest_desc;
+  int dest_errno;
   int source_desc;
   mode_t src_mode = src_sb->st_mode;
   mode_t extra_permissions;

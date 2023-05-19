@@ -1045,7 +1045,7 @@ pipe_fork (int pipefds[2], size_t tries)
   struct tempnode *saved_temphead;
   int saved_errno;
   double wait_retry = 0.25;
-  pid_t pid IF_LINT ( = -1);
+  pid_t pid;
   struct cs_status cs;
 
   if (pipe2 (pipefds, O_CLOEXEC) < 0)

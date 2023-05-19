@@ -351,7 +351,7 @@ elide_tail_bytes_pipe (char const *filename, int fd, uintmax_t n_elide_0,
          bytes.  Then, for each new buffer we read, also write an old one.  */
 
       bool eof = false;
-      size_t n_read IF_LINT ( = 0);
+      size_t n_read;
       bool buffered_enough;
       size_t i, i_next;
       char **b = NULL;
