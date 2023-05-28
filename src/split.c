@@ -1398,13 +1398,17 @@ main (int argc, char **argv)
           break;
 
         case ADDITIONAL_SUFFIX_OPTION:
-          if (last_component (optarg) != optarg)
-            {
-              error (0, 0,
-                     _("invalid suffix %s, contains directory separator"),
-                     quote (optarg));
-              usage (EXIT_FAILURE);
-            }
+          {
+            int suffix_len = strlen (optarg);
+            if (last_component (optarg) != optarg
+                || (suffix_len && ISSLASH (optarg[suffix_len - 1])))
+              {
+                error (0, 0,
+                       _("invalid suffix %s, contains directory separator"),
+                       quote (optarg));
+                usage (EXIT_FAILURE);
+              }
+          }
           additional_suffix = optarg;
           break;
 
