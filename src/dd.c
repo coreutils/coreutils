@@ -17,6 +17,7 @@
 /* Written by Paul Rubin, David MacKenzie, and Stuart Kemp. */
 
 #include <config.h>
+#define _GL_NO_INLINE_ERROR  /* Avoid gnulib's error macro. */
 
 #include <sys/types.h>
 #include <signal.h>
