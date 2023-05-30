@@ -17,7 +17,6 @@
 /* Written by Paul Rubin, David MacKenzie, and Stuart Kemp. */
 
 #include <config.h>
-#define _GL_NO_INLINE_ERROR  /* Avoid gnulib's error macro. */
 
 #include <sys/types.h>
 #include <signal.h>
@@ -515,11 +514,12 @@ maybe_close_stdout (void)
     _exit (EXIT_FAILURE);
 }
 
-/* Like the 'error' function but handle any pending newline.  */
+/* Like the 'error' function but handle any pending newline,
+   and do not exit.  */
 
-ATTRIBUTE_FORMAT ((__printf__, 3, 4))
+ATTRIBUTE_FORMAT ((__printf__, 2, 3))
 static void
-nl_error (int status, int errnum, char const *fmt, ...)
+diagnose (int errnum, char const *fmt, ...)
 {
   if (0 < progress_len)
     {
@@ -529,11 +529,9 @@ nl_error (int status, int errnum, char const *fmt, ...)
 
   va_list ap;
   va_start (ap, fmt);
-  verror (status, errnum, fmt, ap);
+  verror (0, errnum, fmt, ap);
   va_end (ap);
 }
-
-#define error nl_error
 
 void
 usage (int status)
@@ -1138,12 +1136,12 @@ iread (int fd, char *buf, idx_t size)
         {
           idx_t prev = prev_nread;
           if (status_level != STATUS_NONE)
-            error (0, 0, ngettext (("warning: partial read (%td byte); "
+            diagnose (0, ngettext (("warning: partial read (%td byte); "
                                     "suggest iflag=fullblock"),
                                    ("warning: partial read (%td bytes); "
                                     "suggest iflag=fullblock"),
                                    select_plural (prev)),
-                   prev);
+                      prev);
           warn_partial_read = false;
         }
     }
@@ -1188,8 +1186,8 @@ iwrite (int fd, char const *buf, idx_t size)
       int old_flags = fcntl (STDOUT_FILENO, F_GETFL);
       if (fcntl (STDOUT_FILENO, F_SETFL, old_flags & ~O_DIRECT) != 0
           && status_level != STATUS_NONE)
-        error (0, errno, _("failed to turn off O_DIRECT: %s"),
-               quotef (output_file));
+        diagnose (errno, _("failed to turn off O_DIRECT: %s"),
+                  quotef (output_file));
 
       /* Since we have just turned off O_DIRECT for the final write,
          we try to preserve some of its semantics.  */
@@ -1263,7 +1261,7 @@ write_output (void)
   w_bytes += nwritten;
   if (nwritten != output_blocksize)
     {
-      error (0, errno, _("writing to %s"), quoteaf (output_file));
+      diagnose (errno, _("writing to %s"), quoteaf (output_file));
       if (nwritten != 0)
         w_partial++;
       quit (EXIT_FAILURE);
@@ -1392,8 +1390,9 @@ parse_symbols (char const *str, struct symbol_value const *table,
           if (! entry->symbol[0])
             {
               idx_t slen = strcomma ? strcomma - str : strlen (str);
-              error (0, 0, "%s: %s", _(error_msgid),
-                     quotearg_n_style_mem (0, locale_quoting_style, str, slen));
+              diagnose (0, "%s: %s", _(error_msgid),
+                        quotearg_n_style_mem (0, locale_quoting_style,
+                                              str, slen));
               usage (EXIT_FAILURE);
             }
         }
@@ -1456,10 +1455,9 @@ parse_integer (char const *str, strtol_error *invalid)
       else
         {
           if (result == 0 && STRPREFIX (str, "0x"))
-            error (0, 0,
-                   _("warning: %s is a zero multiplier; "
-                     "use %s if that is intended"),
-                   quote_n (0, "0x"), quote_n (1, "00x"));
+            diagnose (0, _("warning: %s is a zero multiplier; "
+                           "use %s if that is intended"),
+                      quote_n (0, "0x"), quote_n (1, "00x"));
           e = LONGINT_OK;
         }
     }
@@ -1500,8 +1498,7 @@ scanargs (int argc, char *const *argv)
 
       if (val == NULL)
         {
-          error (0, 0, _("unrecognized operand %s"),
-                 quote (name));
+          diagnose (0, _("unrecognized operand %s"), quote (name));
           usage (EXIT_FAILURE);
         }
       val++;
@@ -1579,8 +1576,7 @@ scanargs (int argc, char *const *argv)
             }
           else
             {
-              error (0, 0, _("unrecognized operand %s"),
-                     quote (name));
+              diagnose (0, _("unrecognized operand %s"), quote (name));
               usage (EXIT_FAILURE);
             }
 
@@ -1618,7 +1614,7 @@ scanargs (int argc, char *const *argv)
 
   if (output_flags & O_FULLBLOCK)
     {
-      error (0, 0, "%s: %s", _("invalid output flag"), quote ("fullblock"));
+      diagnose (0, "%s: %s", _("invalid output flag"), quote ("fullblock"));
       usage (EXIT_FAILURE);
     }
 
@@ -1863,10 +1859,11 @@ skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
               lseek_errno = EOVERFLOW;
             }
 
-          if (fdesc == STDIN_FILENO)
-            error (0, lseek_errno, _("%s: cannot skip"), quotef (file));
-          else
-            error (0, lseek_errno, _("%s: cannot seek"), quotef (file));
+          diagnose (lseek_errno,
+                    gettext (fdesc == STDIN_FILENO
+                             ? N_("%s: cannot skip")
+                             : N_("%s: cannot seek")),
+                    quotef (file));
           /* If the file has a specific size and we've asked
              to skip/seek beyond the max allowable, then quit.  */
           quit (EXIT_FAILURE);
@@ -1892,12 +1889,12 @@ skip (int fdesc, char const *file, intmax_t records, idx_t blocksize,
             {
               if (fdesc == STDIN_FILENO)
                 {
-                  error (0, errno, _("error reading %s"), quoteaf (file));
+                  diagnose (errno, _("error reading %s"), quoteaf (file));
                   if (conversions_mask & C_NOERROR)
                     print_stats ();
                 }
               else
-                error (0, lseek_errno, _("%s: cannot seek"), quotef (file));
+                diagnose (lseek_errno, _("%s: cannot seek"), quotef (file));
               quit (EXIT_FAILURE);
             }
           else if (nread == 0)
@@ -1937,8 +1934,8 @@ advance_input_after_read_error (idx_t nbytes)
       advance_input_offset (nbytes);
       if (input_offset < 0)
         {
-          error (0, 0, _("offset overflow while reading file %s"),
-                 quoteaf (input_file));
+          diagnose (0, _("offset overflow while reading file %s"),
+                    quoteaf (input_file));
           return false;
         }
       offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
@@ -1949,15 +1946,15 @@ advance_input_after_read_error (idx_t nbytes)
             return true;
           diff = input_offset - offset;
           if (! (0 <= diff && diff <= nbytes) && status_level != STATUS_NONE)
-            error (0, 0, _("warning: invalid file offset after failed read"));
+            diagnose (0, _("warning: invalid file offset after failed read"));
           if (0 <= lseek (STDIN_FILENO, diff, SEEK_CUR))
             return true;
           if (errno == 0)
-            error (0, 0, _("cannot work around kernel bug after all"));
+            diagnose (0, _("cannot work around kernel bug after all"));
         }
     }
 
-  error (0, errno, _("%s: cannot seek"), quotef (input_file));
+  diagnose (errno, _("%s: cannot seek"), quotef (input_file));
   return false;
 }
 
@@ -2133,8 +2130,8 @@ dd_copy (void)
                    || us_bytes != input_offset - input_offset0)))
           && status_level != STATUS_NONE)
         {
-          error (0, 0,
-                 _("%s: cannot skip to specified offset"), quotef (input_file));
+          diagnose (0, _("%s: cannot skip to specified offset"),
+                    quotef (input_file));
         }
     }
 
@@ -2153,7 +2150,7 @@ dd_copy (void)
               idx_t size = write_records ? output_blocksize : bytes;
               if (iwrite (STDOUT_FILENO, obuf, size) != size)
                 {
-                  error (0, errno, _("writing to %s"), quoteaf (output_file));
+                  diagnose (errno, _("writing to %s"), quoteaf (output_file));
                   quit (EXIT_FAILURE);
                 }
 
@@ -2216,7 +2213,7 @@ dd_copy (void)
       else
         {
           if (!(conversions_mask & C_NOERROR) || status_level != STATUS_NONE)
-            error (0, errno, _("error reading %s"), quoteaf (input_file));
+            diagnose (errno, _("error reading %s"), quoteaf (input_file));
 
           if (conversions_mask & C_NOERROR)
             {
@@ -2279,7 +2276,7 @@ dd_copy (void)
           w_bytes += nwritten;
           if (nwritten != n_bytes_read)
             {
-              error (0, errno, _("error writing %s"), quoteaf (output_file));
+              diagnose (errno, _("error writing %s"), quoteaf (output_file));
               return EXIT_FAILURE;
             }
           else if (n_bytes_read == input_blocksize)
@@ -2342,7 +2339,7 @@ dd_copy (void)
         w_partial++;
       if (nwritten != oc)
         {
-          error (0, errno, _("error writing %s"), quoteaf (output_file));
+          diagnose (errno, _("error writing %s"), quoteaf (output_file));
           return EXIT_FAILURE;
         }
     }
@@ -2354,7 +2351,7 @@ dd_copy (void)
       struct stat stdout_stat;
       if (ifstat (STDOUT_FILENO, &stdout_stat) != 0)
         {
-          error (0, errno, _("cannot fstat %s"), quoteaf (output_file));
+          diagnose (errno, _("cannot fstat %s"), quoteaf (output_file));
           return EXIT_FAILURE;
         }
       if (S_ISREG (stdout_stat.st_mode) || S_TYPEISSHM (&stdout_stat))
@@ -2364,10 +2361,9 @@ dd_copy (void)
             {
               if (iftruncate (STDOUT_FILENO, output_offset) != 0)
                 {
-                  error (0, errno,
-                         _("failed to truncate to %" PRIdMAX " bytes"
-                           " in output file %s"),
-                         (intmax_t) output_offset, quoteaf (output_file));
+                  diagnose (errno, _("failed to truncate to %" PRIdMAX " bytes"
+                                     " in output file %s"),
+                            (intmax_t) output_offset, quoteaf (output_file));
                   return EXIT_FAILURE;
                 }
             }
@@ -2401,7 +2397,7 @@ synchronize_output (void)
     {
       if (errno != ENOSYS && errno != EINVAL)
         {
-          error (0, errno, _("fdatasync failed for %s"), quoteaf (output_file));
+          diagnose (errno, _("fdatasync failed for %s"), quoteaf (output_file));
           exit_status = EXIT_FAILURE;
         }
       mask |= C_FSYNC;
@@ -2409,7 +2405,7 @@ synchronize_output (void)
 
   if ((mask & C_FSYNC) && ifsync (STDOUT_FILENO) != 0)
     {
-      error (0, errno, _("fsync failed for %s"), quoteaf (output_file));
+      diagnose (errno, _("fsync failed for %s"), quoteaf (output_file));
       return EXIT_FAILURE;
     }
 
@@ -2513,8 +2509,7 @@ main (int argc, char **argv)
               struct stat stdout_stat;
               if (ifstat (STDOUT_FILENO, &stdout_stat) != 0)
                 {
-                  error (0, errno, _("cannot fstat %s"),
-                         quoteaf (output_file));
+                  diagnose (errno, _("cannot fstat %s"), quoteaf (output_file));
                   exit_status = EXIT_FAILURE;
                 }
               else if (S_ISREG (stdout_stat.st_mode)
@@ -2522,10 +2517,10 @@ main (int argc, char **argv)
                        || S_TYPEISSHM (&stdout_stat))
                 {
                   intmax_t isize = size;
-                  error (0, ftruncate_errno,
-                         _("failed to truncate to %"PRIdMAX" bytes"
-                           " in output file %s"),
-                         isize, quoteaf (output_file));
+                  diagnose (ftruncate_errno,
+                            _("failed to truncate to %"PRIdMAX" bytes"
+                              " in output file %s"),
+                            isize, quoteaf (output_file));
                   exit_status = EXIT_FAILURE;
                 }
             }
@@ -2546,14 +2541,14 @@ main (int argc, char **argv)
       /* Special case to invalidate cache to end of file.  */
       if (i_nocache && !invalidate_cache (STDIN_FILENO, 0))
         {
-          error (0, errno, _("failed to discard cache for: %s"),
-                 quotef (input_file));
+          diagnose (errno, _("failed to discard cache for: %s"),
+                    quotef (input_file));
           exit_status = EXIT_FAILURE;
         }
       if (o_nocache && !invalidate_cache (STDOUT_FILENO, 0))
         {
-          error (0, errno, _("failed to discard cache for: %s"),
-                 quotef (output_file));
+          diagnose (errno, _("failed to discard cache for: %s"),
+                    quotef (output_file));
           exit_status = EXIT_FAILURE;
         }
     }
