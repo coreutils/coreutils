@@ -25,7 +25,6 @@
 #include "alignalloc.h"
 #include "close-stream.h"
 #include "die.h"
-#include "error.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "human.h"
@@ -1498,7 +1497,7 @@ scanargs (int argc, char *const *argv)
 
       if (val == NULL)
         {
-          diagnose (0, _("unrecognized operand %s"), quote (name));
+          diagnose (0, _("unrecognized operand %s"), quoteaf (name));
           usage (EXIT_FAILURE);
         }
       val++;
@@ -1576,7 +1575,7 @@ scanargs (int argc, char *const *argv)
             }
           else
             {
-              diagnose (0, _("unrecognized operand %s"), quote (name));
+              diagnose (0, _("unrecognized operand %s"), quoteaf (name));
               usage (EXIT_FAILURE);
             }
 
@@ -1587,7 +1586,7 @@ scanargs (int argc, char *const *argv)
 
           if (invalid != LONGINT_OK)
             die (EXIT_FAILURE, invalid == LONGINT_OVERFLOW ? EOVERFLOW : 0,
-                 "%s: %s", _("invalid number"), quote (val));
+                 "%s: %s", _("invalid number"), quoteaf (val));
           else if (converted_idx)
             *converted_idx = n;
         }

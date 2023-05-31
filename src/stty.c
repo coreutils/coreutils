@@ -1732,13 +1732,13 @@ set_speed (enum speed_setting type, char const *arg, struct termios *mode)
     {
       last_ibaud = baud;
       if (cfsetispeed (mode, baud))
-        die (EXIT_FAILURE, 0, "unsupported ispeed %s", quotef (arg));
+        die (EXIT_FAILURE, 0, "unsupported ispeed %s", quoteaf (arg));
     }
   if (type == output_speed || type == both_speeds)
     {
       last_obaud = baud;
       if (cfsetospeed (mode, baud))
-        die (EXIT_FAILURE, 0, "unsupported ospeed %s", quotef (arg));
+        die (EXIT_FAILURE, 0, "unsupported ospeed %s", quoteaf (arg));
     }
 }
 
