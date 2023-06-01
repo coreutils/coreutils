@@ -197,7 +197,7 @@ error_fns = (error|die|diagnose)
 # on a separate line to the arguments, or the arguments in parenthesis.
 sc_error_quotes:
 	@cd $(srcdir)/src \
-	  && GIT_PAGER= git grep -E -n '${error_fns} *\(.*%s.*, [^(]*\);$$' \
+	  && GIT_PAGER= git grep -E -n '$(error_fns) *\(.*%s.*, [^(]*\);$$' \
 	  *.c | grep -v ', q' \
 	  && { echo '$(ME): '"Use quote() for error string arguments" 1>&2; \
 	       exit 1; }  \
@@ -209,7 +209,7 @@ sc_error_quotes:
 sc_error_shell_quotes:
 	@cd $(srcdir)/src && \
 	  { GIT_PAGER= git grep -E \
-	    '${error_fns} \(.*%s[:"], .*(name|file)[^"]*\);$$' *.c; \
+	    '$(error_fns) \(.*%s[:"], .*(name|file)[^"]*\);$$' *.c; \
 	    GIT_PAGER= git grep -E \
 	    ' quote[ _].*file' *.c; } \
 	  | grep -Ev '(quotef|q[^ ]*name)' \
@@ -223,13 +223,13 @@ sc_error_shell_quotes:
 # to provide better support for copy and paste.
 sc_error_shell_always_quotes:
 	@cd $(srcdir)/src && GIT_PAGER= git grep -E \
-	    '${error_fns} \(.*[^:] %s[ "].*, .*(name|file)[^"]*\);$$' \
+	    '$(error_fns) \(.*[^:] %s[ "].*, .*(name|file)[^"]*\);$$' \
 	    *.c | grep -Ev '(quoteaf|q[^ ]*name)' \
 	  && { echo '$(ME): '"Use quoteaf() for space delimited names" 1>&2; \
 	       exit 1; }  \
 	  || :
 	@cd $(srcdir)/src && GIT_PAGER= git grep -E -A1 \
-	    '${error_fns} \([^%]*[^:] %s[ "]' *.c | grep 'quotef' \
+	    '$(error_fns) \([^%]*[^:] %s[ "]' *.c | grep 'quotef' \
 	  && { echo '$(ME): '"Use quoteaf() for space delimited names" 1>&2; \
 	       exit 1; }  \
 	  || :
