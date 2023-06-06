@@ -29,6 +29,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  cp, mv, and install now avoid copy_file_range on linux kernels before 5.3
+  irrespective of which kernel version coreutils is built against,
+  reinstating that behaviour from coreutils-9.0.
+
   split now uses more tuned access patterns for its potentially large input.
   This was seen to improve throughput by 5% when reading from SSD.
 
