@@ -262,7 +262,6 @@ static size_t quote_name_buf (char **inbuf, size_t bufsize, char *name,
                               struct quoting_options const *options,
                               int needs_general_quoting, size_t *width,
                               bool *pad);
-static char *make_link_name (char const *name, char const *linkname);
 static int decode_switches (int argc, char **argv);
 static bool file_ignored (char const *name);
 static uintmax_t gobble_file (char const *name, enum filetype type,
@@ -3575,23 +3574,21 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
           struct stat linkstats;
 
           get_link_name (full_name, f, command_line_arg);
-          char *linkname = make_link_name (full_name, f->linkname);
 
           /* Use the slower quoting path for this entry, though
              don't update CWD_SOME_QUOTED since alignment not affected.  */
-          if (linkname && f->quoted == 0 && needs_quoting (f->linkname))
+          if (f->linkname && f->quoted == 0 && needs_quoting (f->linkname))
             f->quoted = -1;
 
-          /* Avoid following symbolic links when possible, ie, when
+          /* Avoid following symbolic links when possible, i.e., when
              they won't be traced and when no indicator is needed.  */
-          if (linkname
+          if (f->linkname
               && (file_type <= indicator_style || check_symlink_mode)
-              && stat_for_mode (linkname, &linkstats) == 0)
+              && stat_for_mode (full_name, &linkstats) == 0)
             {
               f->linkok = true;
               f->linkmode = linkstats.st_mode;
             }
-          free (linkname);
         }
 
       if (S_ISLNK (f->stat.st_mode))
@@ -3722,38 +3719,6 @@ get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
   if (f->linkname == NULL)
     file_failure (command_line_arg, _("cannot read symbolic link %s"),
                   filename);
-}
-
-/* If LINKNAME is a relative name and NAME contains one or more
-   leading directories, return LINKNAME with those directories
-   prepended; otherwise, return a copy of LINKNAME.
-   If LINKNAME is NULL, return NULL.  */
-
-static char *
-make_link_name (char const *name, char const *linkname)
-{
-  if (!linkname)
-    return NULL;
-
-  if (IS_ABSOLUTE_FILE_NAME (linkname))
-    return xstrdup (linkname);
-
-  /* The link is to a relative name.  Prepend any leading directory
-     in 'name' to the link name.  */
-  size_t prefix_len = dir_len (name);
-  if (prefix_len == 0)
-    return xstrdup (linkname);
-
-  char *p = xmalloc (prefix_len + 1 + strlen (linkname) + 1);
-
-  /* PREFIX_LEN usually specifies a string not ending in slash.
-     In that case, extend it by one, since the next byte *is* a slash.
-     Otherwise, the prefix is "/", so leave the length unchanged.  */
-  if ( ! ISSLASH (name[prefix_len - 1]))
-    ++prefix_len;
-
-  stpcpy (stpncpy (p, name, prefix_len), linkname);
-  return p;
 }
 
 /* Return true if the last component of NAME is '.' or '..'
