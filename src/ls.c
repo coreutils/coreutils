@@ -3485,10 +3485,11 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
               if (!need_lstat)
                 break;
 
-              /* stat failed because of ENOENT, maybe indicating a dangling
-                 symlink.  Or stat succeeded, FULL_NAME does not refer to a
-                 directory, and --dereference-command-line-symlink-to-dir is
-                 in effect.  Fall through so that we call lstat instead.  */
+              /* stat failed because of ENOENT || ELOOP, maybe indicating a
+                 non-traversable symlink.  Or stat succeeded,
+                 FULL_NAME does not refer to a directory,
+                 and --dereference-command-line-symlink-to-dir is in effect.
+                 Fall through so that we call lstat instead.  */
             }
           FALLTHROUGH;
 
