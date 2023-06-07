@@ -18,6 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   Previously such file names would have caused the strip process to fail.
   [This bug was present in "the beginning".]
 
+  ls now shows symlinks specified on the command line that can't be traversed.
+  Previously a "Too many levels of symbolic links" diagnostic was given.
+  [This bug was present in "the beginning".]
+
   'pr --length=1 --double-space' no longer enters an infinite loop.
   [This bug was present in "the beginning".]
 

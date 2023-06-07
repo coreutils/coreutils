@@ -3480,7 +3480,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
                 break;
 
               need_lstat = (err < 0
-                            ? errno == ENOENT
+                            ? (errno == ENOENT || errno == ELOOP)
                             : ! S_ISDIR (f->stat.st_mode));
               if (!need_lstat)
                 break;

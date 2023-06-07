@@ -643,6 +643,7 @@ all_tests =					\
   tests/ls/stat-free-color.sh			\
   tests/ls/stat-free-symlinks.sh		\
   tests/ls/stat-vs-dirent.sh			\
+  tests/ls/symlink-loop.sh			\
   tests/ls/symlink-quote.sh			\
   tests/ls/symlink-slash.sh			\
   tests/ls/time-style-diag.sh			\
