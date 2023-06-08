@@ -356,9 +356,8 @@ suffixes may be . for octal and b for multiply by 512.\n\
 "), stdout);
       fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -S BYTES, --strings[=BYTES]  output strings of at least BYTES graphic chars;\
-\n\
-                                3 is implied when BYTES is not specified\n\
+  -S BYTES, --strings[=BYTES]  show only NUL terminated strings\n\
+                                of at least BYTES (3) printable characters\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w[BYTES], --width[=BYTES]  output BYTES bytes per output line;\n\

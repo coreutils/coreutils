@@ -2058,7 +2058,7 @@ Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @opindex --strings
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
-least @var{bytes} consecutive ASCII graphic characters,
+least @var{bytes} consecutive printable characters,
 followed by a zero byte (ASCII NUL).
 Prefixes and suffixes on @var{bytes} are interpreted as for the
 @option{-j} option.
