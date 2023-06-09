@@ -14,7 +14,6 @@ lib/getopt.c
 lib/mkdir-p.c
 lib/obstack.c
 lib/openat-die.c
-lib/propername.h
 lib/quotearg.c
 lib/randread.c
 lib/regcomp.c

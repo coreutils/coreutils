@@ -78,7 +78,7 @@ date:     user provided time: '(Y-M-D) 2006-04-02 02:30:00'
 date:        normalized time: '(Y-M-D) 2006-04-02 XX:XX:XX'
 date:                                             --
 date:      possible reasons:
-date:        non-existing due to daylight-saving time;
+date:        nonexistent due to daylight-saving time;
 date:        numeric values overflow;
 date:        missing timezone
 date: invalid date 'TZ="America/Edmonton" 2006-04-02 02:30:00'
