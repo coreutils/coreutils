@@ -11,6 +11,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   cksum again diagnoses read errors in its default CRC32 mode.
   [bug introduced in coreutils-9.0]
 
+  dd again supports more than two multipliers for numbers.
+  Previously numbers of the form '1024x1024x32' gave "invalid number" errors.
+  [bug introduced in coreutils-9.1]
+
   factor, numfmt, and tsort now diagnose read errors on the input.
   [This bug was present in "the beginning".]
 

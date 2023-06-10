@@ -9818,7 +9818,7 @@ can be followed by a multiplier: @samp{b}=512, @samp{c}=1,
 standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
 These multipliers are GNU extensions to POSIX, except that
 POSIX allows @var{bytes} to be followed by @samp{k}, @samp{b}, and
-@samp{x@var{m}}.
+@samp{x@var{m}}. Note @samp{x@var{m}} can be used more than once in a number.
 Block sizes (i.e., specified by @var{bytes} strings) must be nonzero.
 
 Any block size you specify via @samp{bs=}, @samp{ibs=}, @samp{obs=}, @samp{cbs=}

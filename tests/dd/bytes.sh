@@ -60,4 +60,16 @@ for operands in "oseek=8B" "seek=8 oflag=seek_bytes"; do
   compare expected2 out2 || fail=1
 done
 
+# Check recursive integer parsing
+for oseek in '1x2x4 oflag=seek_bytes' '1Bx2x4' '1Bx8' '2Bx4B' '2x4B'; do
+  # seek bytes
+  echo abcdefghijklm |
+    dd oseek=$oseek bs=5 > out 2> /dev/null || fail=1
+  compare expected out || fail=1
+done
+
+# Negative checks for integer parsing
+for count in B B1 Bx1 KBB BB KBb KBx x1 1x 1xx1; do
+  returns_ 1 dd count=$count </dev/null >/dev/null || fail=1
+done
 Exit $fail

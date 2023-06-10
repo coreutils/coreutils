@@ -1428,7 +1428,7 @@ parse_integer (char const *str, strtol_error *invalid)
   intmax_t result;
 
   if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
-      && suffix[-1] != 'B' && *suffix == 'B')
+      && *suffix == 'B' && str < suffix && suffix[-1] != 'B')
     {
       suffix++;
       if (!*suffix)
@@ -1436,10 +1436,10 @@ parse_integer (char const *str, strtol_error *invalid)
     }
 
   if ((e & ~LONGINT_OVERFLOW) == LONGINT_INVALID_SUFFIX_CHAR
-      && *suffix == 'x' && ! (suffix[-1] == 'B' && strchr (suffix + 1, 'B')))
+      && *suffix == 'x')
     {
-      uintmax_t o;
-      strtol_error f = xstrtoumax (suffix + 1, &suffix, 10, &o, suffixes);
+      strtol_error f = LONGINT_OK;
+      intmax_t o = parse_integer (suffix + 1, &f);
       if ((f & ~LONGINT_OVERFLOW) != LONGINT_OK)
         {
           e = f;
