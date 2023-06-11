@@ -346,7 +346,7 @@ FILTER_LONG_LINES =						\
   \|^[^:]*NEWS:.*https\{,1\}://| d;					\
   \|^[^:]*doc/fdl.texi:| d;					\
   \|^[^:]*man/help2man:| d;					\
-  \|^[^:]*tests/misc/sha[0-9]*sum.*\.pl[-:]| d;			\
+  \|^[^:]*tests/cksum/sha[0-9]*sum.*\.pl[-:]| d;			\
   \|^[^:]*tests/pr/|{ \|^[^:]*tests/pr/pr-tests:| !d; };
 sc_long_lines:
 	@wc -L /dev/null >/dev/null 2>/dev/null				\
@@ -888,7 +888,7 @@ exclude_file_name_regexp--sc_prohibit_stat_st_blocks = \
 exclude_file_name_regexp--sc_prohibit_continued_string_alpha_in_column_1 = \
   ^src/(system\.h|od\.c|printf\.c|getlimits\.c)$$
 
-_cksum = ^tests/misc/cksum-base64\.pl$$
+_cksum = ^tests/cksum/cksum-base64\.pl$$
 exclude_file_name_regexp--sc_prohibit_test_backticks = \
   ^tests/(local\.mk|(init|misc/stdbuf|factor/create-test)\.sh)$$|$(_cksum)
 
