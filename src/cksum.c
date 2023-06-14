@@ -229,9 +229,9 @@ crc_sum_stream (FILE *stream, void *resstream, uintmax_t *length)
   static bool (*cksum_fp) (FILE *, uint_fast32_t *, uintmax_t *);
   if (! cksum_fp)
     cksum_fp = pclmul_supported () ? cksum_pclmul : cksum_slice8;
-#else
+# else
   bool (*cksum_fp) (FILE *, uint_fast32_t *, uintmax_t *) = cksum_slice8;
-#endif
+# endif
 
   if (! cksum_fp (stream, &crc, &total_bytes))
     return -1;
