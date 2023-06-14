@@ -38,9 +38,6 @@
 #include "safe-read.h"
 #include "stat-size.h"
 #include "xbinary-io.h"
-#ifdef USE_AVX2_WC_LINECOUNT
-# include <cpuid.h>
-#endif
 
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \

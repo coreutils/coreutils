@@ -141,9 +141,7 @@ main (void)
 # include "error.h"
 
 # include "cksum.h"
-# if USE_PCLMUL_CRC32
-#  include "cpuid.h"
-# else
+# if !USE_PCLMUL_CRC32
 #  define cksum_pclmul cksum_slice8
 # endif /* USE_PCLMUL_CRC32 */
 
