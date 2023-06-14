@@ -548,27 +548,6 @@ CFLAGS=$ac_save_CFLAGS
 LDFLAGS=$ac_save_LDFLAGS
 ac_c_werror_flag=$cu_save_c_werror_flag
 
-AC_MSG_CHECKING([if __get_cpuid available])
-AC_LINK_IFELSE(
-  [AC_LANG_SOURCE([[
-    #include <cpuid.h>
-
-    int
-    main (void)
-    {
-      unsigned int eax, ebx, ecx, edx;
-      __get_cpuid (1, &eax, &ebx, &ecx, &edx);
-      return 1;
-    }
-  ]])
-  ],[
-    AC_MSG_RESULT([yes])
-    AC_DEFINE([HAVE_CPUID], [1], [__get_cpuid available])
-    cpuid_exists=yes
-  ],[
-    AC_MSG_RESULT([no])
-  ])
-
 ac_save_CFLAGS=$CFLAGS
 CFLAGS="-mavx -mpclmul $CFLAGS"
 AC_MSG_CHECKING([if pclmul intrinsic exists])
@@ -582,45 +561,22 @@ AC_COMPILE_IFELSE(
       __m128i a, b;
       a = _mm_clmulepi64_si128 (a, b, 0x00);
       a = _mm_shuffle_epi8 (a, b);
-      return 1;
+      return __builtin_cpu_supports ("pclmul");
     }
   ]])
   ],[
-    AC_MSG_RESULT([yes])
-    AC_DEFINE([HAVE_PCLMUL_INTRINSIC], [1], [pclmul intrinsic exists])
     pclmul_intrinsic_exists=yes
   ],[
-    AC_MSG_RESULT([no])
+    pclmul_intrinsic_exists=no
   ])
-if test "x$cpuid_exists" = "xyes" &&
-   test "x$pclmul_intrinsic_exists" = "xyes"; then
+AC_MSG_RESULT([$pclmul_intrinsic_exists])
+if test $pclmul_intrinsic_exists = yes; then
   AC_DEFINE([USE_PCLMUL_CRC32], [1],
             [CRC32 calculation by pclmul hardware instruction enabled])
 fi
 AM_CONDITIONAL([USE_PCLMUL_CRC32],
-               [test "x$cpuid_exists" = "xyes" &&
-                test "x$pclmul_intrinsic_exists" = "xyes"])
+               [test $pclmul_intrinsic_exists = yes])
 CFLAGS=$ac_save_CFLAGS
-
-AC_MSG_CHECKING([if __get_cpuid_count exists])
-AC_LINK_IFELSE(
-  [AC_LANG_SOURCE([[
-    #include <cpuid.h>
-
-    int
-    main (void)
-    {
-      unsigned int eax = 0, ebx = 0, ecx = 0, edx = 0;
-      __get_cpuid_count (7, 0, &eax, &ebx, &ecx, &edx);
-      return 1;
-    }
-  ]])
-  ],[
-    AC_MSG_RESULT([yes])
-    get_cpuid_count_exists=yes
-  ],[
-    AC_MSG_RESULT([no])
-  ])
 
 CFLAGS="-mavx2 $CFLAGS"
 AC_MSG_CHECKING([if avx2 intrinstics exists])
@@ -633,23 +589,20 @@ AC_COMPILE_IFELSE(
     {
       __m256i a, b;
       a = _mm256_sad_epu8 (a, b);
-      return 1;
+      return __builtin_cpu_supports ("avx2");
     }
   ]])
   ],[
-    AC_MSG_RESULT([yes])
-    AC_DEFINE([HAVE_AVX2_INTRINSIC], [1], [avx2 intrinsics exists])
     avx2_intrinsic_exists=yes
   ],[
-    AC_MSG_RESULT([no])
+    avx2_intrinsic_exists=no
   ])
-if test "x$get_cpuid_count_exists" = "xyes" &&
-   test "x$avx2_intrinsic_exists" = "xyes"; then
+AC_MSG_RESULT([$avx2_intrinsic_exists])
+if test $avx2_intrinsic_exists = yes; then
   AC_DEFINE([USE_AVX2_WC_LINECOUNT], [1], [Counting lines with AVX2 enabled])
 fi
 AM_CONDITIONAL([USE_AVX2_WC_LINECOUNT],
-               [test "x$get_cpuid_count_exists" = "xyes" &&
-                test "x$avx2_intrinsic_exists" = "xyes"])
+               [test $avx2_intrinsic_exists = yes])
 
 CFLAGS=$ac_save_CFLAGS
 

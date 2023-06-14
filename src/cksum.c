@@ -160,29 +160,15 @@ static bool
 pclmul_supported (void)
 {
 # if USE_PCLMUL_CRC32
-  unsigned int eax = 0;
-  unsigned int ebx = 0;
-  unsigned int ecx = 0;
-  unsigned int edx = 0;
-
-  if (! __get_cpuid (1, &eax, &ebx, &ecx, &edx))
-    {
-      if (cksum_debug)
-        error (0, 0, "%s", _("failed to get cpuid"));
-      return false;
-    }
-
-  if (! (ecx & bit_PCLMUL) || ! (ecx & bit_AVX))
-    {
-      if (cksum_debug)
-        error (0, 0, "%s", _("pclmul support not detected"));
-      return false;
-    }
+  bool pclmul_enabled = 0 < __builtin_cpu_supports ("pclmul");
 
   if (cksum_debug)
-    error (0, 0, "%s", _("using pclmul hardware support"));
+    error (0, 0, "%s",
+           (pclmul_enabled
+            ? _("using pclmul hardware support")
+            : _("pclmul support not detected")));
 
-  return true;
+  return pclmul_enabled;
 # else
   if (cksum_debug)
     error (0, 0, "%s", _("using generic hardware support"));
