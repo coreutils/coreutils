@@ -160,7 +160,8 @@ static bool
 pclmul_supported (void)
 {
 # if USE_PCLMUL_CRC32
-  bool pclmul_enabled = 0 < __builtin_cpu_supports ("pclmul");
+  bool pclmul_enabled = (0 < __builtin_cpu_supports ("pclmul")
+                         && 0 < __builtin_cpu_supports ("avx"));
 
   if (cksum_debug)
     error (0, 0, "%s",
