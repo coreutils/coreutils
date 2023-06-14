@@ -54,18 +54,12 @@
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 
-static bool
-wc_lines (char const *file, int fd, uintmax_t *lines_out,
-          uintmax_t *bytes_out);
 #ifdef USE_AVX2_WC_LINECOUNT
 /* From wc_avx2.c */
 extern bool
 wc_lines_avx2 (char const *file, int fd, uintmax_t *lines_out,
                uintmax_t *bytes_out);
 #endif
-static bool
-(*wc_lines_p) (char const *file, int fd, uintmax_t *lines_out,
-                uintmax_t *bytes_out) = wc_lines;
 
 static bool debug;
 
@@ -441,8 +435,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus, off_t current_pos)
   else if (!count_chars && !count_complicated)
     {
 #ifdef USE_AVX2_WC_LINECOUNT
-      if (avx2_supported ())
-        wc_lines_p = wc_lines_avx2;
+      static bool (*wc_lines_p) (char const *, int, uintmax_t *, uintmax_t *);
+      if (!wc_lines_p)
+        wc_lines_p = avx2_supported () ? wc_lines_avx2 : wc_lines;
+#else
+      bool (*wc_lines_p) (char const *, int, uintmax_t *, uintmax_t *)
+        = wc_lines;
 #endif
 
       /* Use a separate loop when counting only lines or lines and bytes --
