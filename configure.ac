@@ -183,7 +183,7 @@ if test $gl_gcc_warnings != no; then
   nw="$nw -Wswitch-enum"            # Too many warnings for now
   nw="$nw -Wswitch-default"         # Too many warnings for now
   nw="$nw -Wstack-protector"        # not worth working around
-  nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 80776
+  nw="$nw -Wformat-overflow=2"      # False alarms due to GCC bug 110333
   nw="$nw -Wformat-truncation=2"    # False alarm in ls.c, probably related
   # things I might fix soon:
   nw="$nw -Wfloat-equal"            # sort.c, seq.c
