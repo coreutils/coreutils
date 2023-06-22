@@ -25,6 +25,10 @@ doc_coreutils_TEXINFOS = \
   doc/fdl.texi \
   doc/sort-version.texi
 
+# The customization variable CHECK_NORMAL_MENU_STRUCTURE is necessary with
+# makeinfo versions ≥ 6.8.
+MAKEINFO = @MAKEINFO@ -c CHECK_NORMAL_MENU_STRUCTURE=1
+
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,
 # then this is necessary even if the package name is 7 characters long.
