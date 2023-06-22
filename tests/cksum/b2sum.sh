@@ -61,6 +61,11 @@ printf '%s\n' 'BLAKE2' 'BLAKE2b' 'BLAKE2-' 'BLAKE2(' 'BLAKE2 (' > crash.check \
   || framework_failure_
 returns_ 1 $prog -c crash.check || fail=1
 
+# This would read unallocated memory from coreutils-9.2 to coreutils-9.3
+# which would trigger with ASAN or valgrind
+printf '0A0BA0' > overflow.check || framework_failure_
+returns_ 1 $prog -c overflow.check || fail=1
+
 done
 
 Exit $fail

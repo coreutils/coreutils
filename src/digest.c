@@ -862,6 +862,10 @@ split_3 (char *s, size_t s_len,
   while (s[i] && !ISWHITE (s[i]))
     i++;
 
+  /* The digest must be followed by at least one whitespace character.  */
+  if (i == s_len)
+    return false;
+
   *d_len = &s[i] - (char *) *digest;
   s[i++] = '\0';
 
